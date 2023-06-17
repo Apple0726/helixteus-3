@@ -1,8 +1,8 @@
 extends Panel
 
-onready var game = get_node("/root/Game")
-export var victory_screen = true
-export var id:int
+@onready var game = get_node("/root/Game")
+@export var victory_screen = true
+@export var id:int
 var show_weapon_XPs:bool
 var tween
 
@@ -18,7 +18,7 @@ func _ready():
 func set_visibility():
 	if tween:
 		tween.kill()
-	tween = get_tree().create_tween()
+	tween = create_tween()
 	tween.set_parallel(true)
 	$Ship.texture_normal = load("res://Graphics/Ships/Ship%s.png" % id)
 	if show_weapon_XPs:
@@ -32,7 +32,7 @@ func set_visibility():
 			tween.tween_property($Laser, "modulate", Color(1, 1, 1, 1), 0.15).set_delay(0.05)
 			tween.tween_property($Bomb, "modulate", Color(1, 1, 1, 1), 0.15).set_delay(0.05)
 			tween.tween_property($Light, "modulate", Color(1, 1, 1, 1), 0.15).set_delay(0.05)
-			yield(tween, "finished")
+			await tween.finished
 			$Stats.visible = false
 	else:
 		$Stats.visible = true
@@ -41,7 +41,7 @@ func set_visibility():
 		tween.tween_property($Laser, "modulate", Color(1, 1, 1, 0), 0.15)
 		tween.tween_property($Bomb, "modulate", Color(1, 1, 1, 0), 0.15)
 		tween.tween_property($Light, "modulate", Color(1, 1, 1, 0), 0.15)
-		yield(tween, "finished")
+		await tween.finished
 		$Bullet.visible = false
 		$Laser.visible = false
 		$Bomb.visible = false
@@ -50,16 +50,16 @@ func set_visibility():
 func refresh():
 	if id >= len(game.ship_data):
 		return
-	$XP/TextureProgress.max_value = game.ship_data[id].XP_to_lv
+	$XP/TextureProgressBar.max_value = game.ship_data[id].XP_to_lv
 	$XP/TextureProgress2.max_value = game.ship_data[id].XP_to_lv
-	$XP/TextureProgress.value = game.ship_data[id].XP
+	$XP/TextureProgressBar.value = game.ship_data[id].XP
 	$XP/TextureProgress2.value = game.ship_data[id].XP
 	$Lv.text = "%s %s" % [tr("LV"), game.ship_data[id].lv]
 	for weapon in ["Bullet", "Laser", "Bomb", "Light"]:
 		var weapon_data = game.ship_data[id][weapon.to_lower()]
-		get_node("%s/TextureProgress" % [weapon]).max_value = INF if weapon_data.lv == 5 else weapon_data.XP_to_lv
+		get_node("%s/TextureProgressBar" % [weapon]).max_value = INF if weapon_data.lv == 5 else weapon_data.XP_to_lv
 		get_node("%s/TextureProgress2" % [weapon]).max_value = INF if weapon_data.lv == 5 else weapon_data.XP_to_lv
-		get_node("%s/TextureProgress" % [weapon]).value = weapon_data.XP
+		get_node("%s/TextureProgressBar" % [weapon]).value = weapon_data.XP
 		get_node("%s/TextureProgress2" % [weapon]).value = weapon_data.XP
 		get_node("%s/TextureRect" % [weapon]).texture = load("res://Graphics/Weapons/%s%s.png" % [weapon.to_lower(), weapon_data.lv])
 		get_node("%s/Label2" % [weapon]).text = "%s / %s" % [round(weapon_data.XP), weapon_data.XP_to_lv]
@@ -83,13 +83,13 @@ func _on_weapon_mouse_entered(weapon:String):
 
 func _on_Ship_mouse_entered():
 	if game.bottom_info_action == "use_hx_core":
-		$XP/TextureProgress2.value = $XP/TextureProgress.value + game.other_items_info[game.item_to_use.name].XP * game.item_to_use.num
+		$XP/TextureProgress2.value = $XP/TextureProgressBar.value + game.other_items_info[game.item_to_use.name].XP * game.item_to_use.num
 		$XP/Label.visible = true
 		$XP/Label.text = "+ %s" % [game.other_items_info[game.item_to_use.name].XP * game.item_to_use.num]
 
 func _on_Ship_mouse_exited():
 	if not victory_screen:
-		$XP/TextureProgress2.value = $XP/TextureProgress.value
+		$XP/TextureProgress2.value = $XP/TextureProgressBar.value
 		$XP/Label.visible = false
 
 

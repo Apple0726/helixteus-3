@@ -42,17 +42,16 @@ var point_distribution:Dictionary = {
 
 
 func _ready():
-	set_process(false)
-	set_polygon(rect_size)
+	set_polygon(size)
 
 func refresh():
 	for prop in point_distribution.keys():
 		if prop == "age":
-			$TP/VBox.get_node(prop + "/Label").bbcode_text = "%s [img]Graphics/Icons/help.png[/img]" % tr("AGE_OF_THE_UNIVERSE")
+			$TP/VBox.get_node(prop + "/Label").text = "%s [img]Graphics/Icons/help.png[/img]" % tr("AGE_OF_THE_UNIVERSE")
 		else:
-			$TP/VBox.get_node(prop + "/Label").bbcode_text = "%s [img]Graphics/Icons/help.png[/img]" % tr(prop.to_upper())
+			$TP/VBox.get_node(prop + "/Label").text = "%s [img]Graphics/Icons/help.png[/img]" % tr(prop.to_upper())
 		_on_TP_value_changed(float(get_node("TP/VBox/%s/Label2" % prop).text), prop)
-	$TP/VBox/s_b/Label.bbcode_text = "%s [img]Graphics/Icons/help.png[/img]" % tr("S_B_CTE")
+	$TP/VBox/s_b/Label.text = "%s [img]Graphics/Icons/help.png[/img]" % tr("S_B_CTE")
 	probe_num = 0
 	exploring_probe_num = 0
 	costs.clear()
@@ -87,7 +86,7 @@ func refresh():
 						prop.get_node("HSlider").step = 0.2
 						if value_range > 30:
 							prop.get_node("HSlider").step = 0.5
-			$TP/Points.bbcode_text = "%s: %s [img]Graphics/Icons/help.png[/img]" % [tr("PROBE_POINTS"), Helper.format_num(PP, true)]
+			$TP/Points.text = "%s: %s [img]Graphics/Icons/help.png[/img]" % [tr("PROBE_POINTS"), Helper.format_num(PP, true)]
 			$NoProbes.visible = false
 		else:
 			$NoProbes.text = tr("NO_TRI_PROBES")
@@ -106,7 +105,7 @@ func refresh():
 		dist_exp = n - undiscovered_obj_num + exploring_probe_num
 		dist_mult = pow(1.01, dist_exp)
 		sorted_objs = game.u_i.cluster_data.duplicate(true)
-		sorted_objs.sort_custom(self, "dist_sort")
+		sorted_objs.sort_custom(Callable(self,"dist_sort"))
 		var exploring_probe_offset:int = exploring_probe_num
 		for i in len(sorted_objs):
 			if not sorted_objs[i].visible:
@@ -138,7 +137,7 @@ func refresh_energy(send_all:bool = false):
 	costs2.erase("time")
 	if not send_all:
 		Helper.put_rsrc($Control/Costs, 36, costs2, true, true)
-	$Control/Time.text = Helper.time_to_str(costs.time * 1000.0)
+	$Control/Time.text = Helper.time_to_str(costs.time)
 	
 func dist_sort(a:Dictionary, b:Dictionary):
 	if a.pos.length() < b.pos.length():
@@ -175,7 +174,7 @@ func _on_Send_pressed(send_all:bool = false):
 	if game.viewing_dimension:
 		if PP >= 0:
 			for prop in $TP/VBox.get_children():
-				if prop.get_node("Label2")["custom_colors/font_color"] == Color.red:
+				if prop.get_node("Label2")["theme_override_colors/font_color"] == Color.RED:
 					game.popup(tr("INVALID_INPUT"), 1.5)
 					return false
 			if PP >= 5:
@@ -187,13 +186,13 @@ func _on_Send_pressed(send_all:bool = false):
 		return false
 	else:
 		if game.check_enough(costs):
-			var curr_time = OS.get_system_time_msecs()
+			var curr_time = Time.get_unix_time_from_system()
 			var probe_sent:bool = false
 			if game.c_v == "universe":
 				for probe in game.probe_data:
 					if probe and probe.tier == 0 and not probe.has("start_date"):
 						probe.start_date = curr_time
-						probe.explore_length = costs.time * 1000
+						probe.explore_length = costs.time
 						probe.obj_to_discover = obj_to_discover
 						probe_sent = true
 						break
@@ -229,9 +228,9 @@ func e(n, e):
 	
 func _on_TP_value_changed(value:float, prop:String):
 	var text_node:LineEdit = get_node("TP/VBox/%s/Label2" % prop)
-	if get_focus_owner() is HSlider:
-		text_node["custom_colors/font_color"] = Color.white
-		text_node.text = String(value)
+	if get_viewport().gui_get_focus_owner() is HSlider:
+		text_node["theme_override_colors/font_color"] = Color.WHITE
+		text_node.text = str(value)
 	else:
 		value = float(text_node.text)
 		get_node("TP/VBox/%s/HSlider" % prop).value = value
@@ -252,8 +251,8 @@ func _on_TP_value_changed(value:float, prop:String):
 	if s_b >= 1000:
 		$TP/VBox/s_b/Label2.text = Helper.format_num(round(s_b))
 	else:
-		$TP/VBox/s_b/Label2.text = String(Helper.clever_round(s_b))
-	$TP/Points.bbcode_text = "%s: %s [img]Graphics/Icons/help.png[/img]" % [tr("PROBE_POINTS"), Helper.format_num(PP, true)]
+		$TP/VBox/s_b/Label2.text = str(Helper.clever_round(s_b))
+	$TP/Points.text = "%s: %s [img]Graphics/Icons/help.png[/img]" % [tr("PROBE_POINTS"), Helper.format_num(PP, true)]
 
 func get_lv_sum():
 	var lv:float = 0
@@ -277,9 +276,9 @@ func _on_Label2_text_changed(new_text, prop:String):
 	var new_value:float = float(new_text)
 	if prop == "antimatter" and new_value >= 0 or new_value >= 0.5:
 		_on_TP_value_changed(new_value, prop)
-		get_node("TP/VBox/%s/Label2" % prop)["custom_colors/font_color"] = Color.white
+		get_node("TP/VBox/%s/Label2" % prop)["theme_override_colors/font_color"] = Color.WHITE
 	else:
-		get_node("TP/VBox/%s/Label2" % prop)["custom_colors/font_color"] = Color.red
+		get_node("TP/VBox/%s/Label2" % prop)["theme_override_colors/font_color"] = Color.RED
 
 
 func _on_SendAll_pressed():
@@ -305,7 +304,7 @@ func _on_SendAll_mouse_entered():
 		fill_costs(temp_dist_mult)
 		temp_dist_exp += 1
 		temp_dist_mult = pow(1.01, temp_dist_exp)
-		if costs2.empty():
+		if costs2.is_empty():
 			costs2 = costs.duplicate(true)
 		else:
 			for cost in costs2:
@@ -316,7 +315,7 @@ func _on_SendAll_mouse_entered():
 		max_time = costs.time
 	costs2.erase("time")
 	Helper.put_rsrc($Control/Costs, 36, costs2, true, true)
-	$Control/Time.text = "%s - %s"% [Helper.time_to_str(min_time * 1000.0), Helper.time_to_str(max_time * 1000.0)]
+	$Control/Time.text = "%s - %s"% [Helper.time_to_str(min_time), Helper.time_to_str(max_time)]
 
 func _on_SendAll_mouse_exited():
 	refresh_energy()

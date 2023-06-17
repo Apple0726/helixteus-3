@@ -11,13 +11,13 @@ var prod_cost_mult:float
 var rsrc_from_GK = {}
 
 func _ready():
-	set_polygon(rect_size)
+	set_polygon(size)
 
 func refresh():
 	g_i = game.galaxy_data[game.c_g]
 	$ScrollContainer/VBoxContainer/TriangulumProbe.visible = game.science_unlocked.has("TPCC")
 	prod_cost_mult = g_i.system_num * game.u_i.gravitational * pow(g_i.dark_matter, 3) / 200.0
-	$Control/ProdCostMult.bbcode_text = "%s: %s  %s" % [tr("PRODUCTION_COST_MULT"), Helper.clever_round(prod_cost_mult), "[img]Graphics/Icons/help.png[/img]"]
+	$Control/ProdCostMult.text = "%s: %s  %s" % [tr("PRODUCTION_COST_MULT"), Helper.clever_round(prod_cost_mult), "[img]Graphics/Icons/help.png[/img]"]
 	surface = 4.2e15 * prod_cost_mult * 200.0
 	if bldg != "":
 		update_info()
@@ -34,17 +34,17 @@ func update_info():
 	if bldg in ["PP", "RL"]:
 		var s_b:float = pow(game.u_i.boltzmann, 4) / pow(game.u_i.planck, 3) / pow(game.u_i.speed_of_light, 2)
 		prod_mult = sqrt(s_b) * g_i.B_strength * 1e9
-		$Control/ProdMult.bbcode_text = "%s: %s  %s" % [tr("PRODUCTION_MULTIPLIER"), Helper.clever_round(prod_mult), "[img]Graphics/Icons/help.png[/img]"]
+		$Control/ProdMult.text = "%s: %s  %s" % [tr("PRODUCTION_MULTIPLIER"), Helper.clever_round(prod_mult), "[img]Graphics/Icons/help.png[/img]"]
 		$Control/ProdMult.visible = true
 	else:
 		$Control/ProdMult.visible = false
 	if game.c_g_g == game.ships_c_g_coords.g:
 		$Control/VBox/GalaxyInfo.visible = true
 		$Control/VBox/GalaxyInfo.text = tr("GS_ERROR3")
-		$Control/VBox/GalaxyInfo["custom_colors/font_color"] = Color.yellow
+		$Control/VBox/GalaxyInfo["theme_override_colors/font_color"] = Color.YELLOW
 		error = true
 	if not error:
-		$Control/VBox/GalaxyInfo["custom_colors/font_color"] = Color.white
+		$Control/VBox/GalaxyInfo["theme_override_colors/font_color"] = Color.WHITE
 		if bldg == "TP":
 			if g_i.system_num <= 4999:
 				$Control/VBox/GalaxyInfo.text = tr("TP_ERROR")
@@ -142,7 +142,6 @@ func _on_GS_pressed(extra_arg_0):
 
 func _on_Convert_pressed():
 	if game.check_enough(costs):
-		var dir2 = Directory.new()
 		game.deduct_resources(costs)
 		if costs.has("money"):
 			game.u_i.xp += costs.money
@@ -180,19 +179,20 @@ func _on_Convert_pressed():
 			game.switch_view("cluster", {"fn":"delete_galaxy"})
 		else:
 			game.switch_view("cluster")
-		yield(game.view_tween, "tween_all_completed")
+		await game.view_tween.finished
 		for system in game.system_data:
 			if not system.has("discovered"):
 				continue
-			var dir = Directory.new()
+			var dir = DirAccess.open("user://%s/Univ%s/Planets" % [game.c_sv, game.c_u])
 			for planet_ids in system.planets:
-				if dir.file_exists("user://%s/Univ%s/Planets/%s.hx3" % [game.c_sv, game.c_u, planet_ids.global]):
-					dir.remove("user://%s/Univ%s/Planets/%s.hx3" % [game.c_sv, game.c_u, planet_ids.global])
+				if dir.file_exists("%s.hx3" % planet_ids.global):
+					dir.remove("%s.hx3" % planet_ids.global)
 					if game.MM_data.has(planet_ids.global):
 						game.MM_data.erase(planet_ids.global)
 			if dir.file_exists("user://%s/Univ%s/Systems/%s.hx3" % [game.c_sv, game.c_u, system.id]):
 				dir.remove("user://%s/Univ%s/Systems/%s.hx3" % [game.c_sv, game.c_u, system.id])
-		dir2.remove("user://%s/Univ%s/Galaxies/%s.hx3" % [game.c_sv, game.c_u, game.c_g_g])
+		var dir2 = DirAccess.open("user://%s/Univ%s/Galaxies" % [game.c_sv, game.c_u])
+		dir2.remove("%s.hx3" % [game.c_g_g])
 		game.HUD.refresh()
 	else:
 		game.popup(tr("NOT_ENOUGH_RESOURCES"), 1.5)

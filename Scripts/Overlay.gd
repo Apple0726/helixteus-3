@@ -2,15 +2,15 @@ extends "Panel.gd"
 var editable:bool = false
 var is_int:bool = true
 var hovered_over:String = ""
-onready var option_btn = $HBoxContainer/OptionButton
-onready var toggle_btn = $HBoxContainer/CheckBox
-onready var colorblind_btn = $SettingsPanel/VBox/Colorblind
-onready var hide_obj_btn = $SettingsPanel/VBox/HideObj
+@onready var option_btn = $HBoxContainer/OptionButton
+@onready var toggle_btn = $HBoxContainer/CheckBox
+@onready var colorblind_btn = $SettingsPanel/VBox/Colorblind
+@onready var hide_obj_btn = $SettingsPanel/VBox/HideObj
 var config = ConfigFile.new()
 var err = config.load("user://settings.cfg")
 
 func _ready():
-	set_polygon(rect_size, Vector2(0, 308))
+	set_polygon(size, Vector2(0, 308))
 	toggle_btn.text = tr("TOGGLE") + " (F3)"
 	$ClickToEdit.visible = not game.help.has("overlay")
 
@@ -38,11 +38,11 @@ func refresh_overlay():
 			option_btn.add_item(tr("B_STRENGTH"))
 			option_btn.add_item(tr("DARK_MATTER"))
 			option_btn.add_item(tr("IS_GIGASTRUCTURE"))
-	toggle_btn.pressed = game.overlay_data[game.c_v].visible
+	toggle_btn.button_pressed = game.overlay_data[game.c_v].visible
 	if err == OK:
-		colorblind_btn.pressed = config.get_value("misc", "colorblind", false)
-		hide_obj_btn.pressed = config.get_value("misc", "hide_obj", false)
-		if colorblind_btn.pressed:
+		colorblind_btn.button_pressed = config.get_value("misc", "colorblind", false)
+		hide_obj_btn.button_pressed = config.get_value("misc", "hide_obj", false)
+		if colorblind_btn.button_pressed:
 			$TextureRect.texture.gradient = load("res://Resources/ColorblindOverlay.tres")
 		else:
 			$TextureRect.texture.gradient = load("res://Resources/DefaultOverlay.tres")
@@ -118,7 +118,7 @@ func get_BSL_min_max():
 func refresh_options(index:int, recalculate:bool = true):
 	var c_vl = game.overlay_data[game.c_v].custom_values[index]
 	var min_max:Dictionary
-	$Reset.visible = false if not c_vl else c_vl.modified
+	$Reset.visible = false if c_vl == null else c_vl.modified
 	var unit:String = ""
 	match game.c_v:
 		"galaxy":
@@ -235,6 +235,7 @@ func _on_HSlider_value_changed(value):
 
 func _on_close_button_pressed():
 	visible = false
+	game.block_scroll = false
 
 func _on_Reset_mouse_entered():
 	game.show_tooltip("RESET_TO_DEFAULT")
@@ -245,6 +246,8 @@ func _on_Reset_pressed():
 	game.hide_tooltip()
 
 func _on_Overlay_visibility_changed():
+	if not is_inside_tree():
+		return
 	if visible:
 		get_parent().move_child(self, get_parent().get_child_count())
 		game.sub_panel = self
@@ -253,7 +256,7 @@ func _on_Overlay_visibility_changed():
 
 
 func _on_Colorblind_toggled(button_pressed):
-	if colorblind_btn.pressed and toggle_btn.pressed:
+	if colorblind_btn.button_pressed and toggle_btn.button_pressed:
 		game.get_node("GrayscaleRect/AnimationPlayer").play("Fade")
 	else:
 		if game.get_node("GrayscaleRect").modulate.a > 0:
@@ -269,7 +272,7 @@ func _on_Colorblind_toggled(button_pressed):
 
 
 func _on_CheckBox_toggled(button_pressed):
-	if colorblind_btn.pressed:
+	if colorblind_btn.button_pressed:
 		if button_pressed:
 			game.get_node("GrayscaleRect/AnimationPlayer").play("Fade")
 		else:
@@ -277,7 +280,7 @@ func _on_CheckBox_toggled(button_pressed):
 	game.overlay_data[game.c_v].visible = button_pressed
 	if game.overlay_data[game.c_v].visible:
 		send_overlay_info(game.overlay_data[game.c_v].overlay)
-	toggle_btn.pressed = game.overlay_data[game.c_v].visible
+	toggle_btn.button_pressed = game.overlay_data[game.c_v].visible
 	Helper.toggle_overlay(game.view.obj.obj_btns, game.view.obj.overlays, button_pressed)
 
 
@@ -288,6 +291,7 @@ func _on_LeftNumEdit_text_entered(new_text):
 		game.overlay_data[game.c_v].custom_values[option_btn.selected].left = float(new_text)
 	game.overlay_data[game.c_v].custom_values[option_btn.selected].modified = true
 	refresh_options(option_btn.selected, false)
+	$LeftNumEdit.release_focus()
 	game.help.overlay = true
 	$ClickToEdit.visible = false
 
@@ -298,6 +302,7 @@ func _on_RightNumEdit_text_entered(new_text):
 		game.overlay_data[game.c_v].custom_values[option_btn.selected].right = float(new_text)
 	game.overlay_data[game.c_v].custom_values[option_btn.selected].modified = true
 	refresh_options(option_btn.selected, false)
+	$RightNumEdit.release_focus()
 	game.help.overlay = true
 	$ClickToEdit.visible = false
 

@@ -7,31 +7,31 @@ script = ExtResource( 1 )
 
 [node name="Solid" type="Polygon2D" parent="."]
 color = Color( 0.682353, 0.866667, 1, 1 )
-polygon = PoolVector2Array( 0, 0, 800, 0, 800, 400, 0, 400 )
+polygon = PackedVector2Array( 0, 0, 800, 0, 800, 400, 0, 400 )
 
 [node name="Liquid" type="Polygon2D" parent="."]
 color = Color( 0.776471, 1, 0.8, 1 )
-polygon = PoolVector2Array( 220, 276, 216, 124, 384, 96, 384, 124 )
+polygon = PackedVector2Array( 220, 276, 216, 124, 384, 96, 384, 124 )
 
 [node name="Gas" type="Polygon2D" parent="."]
 color = Color( 1, 0.839216, 0.564706, 1 )
-polygon = PoolVector2Array( 192, 400, 220, 276, 384, 124, 800, 124, 800, 400 )
+polygon = PackedVector2Array( 192, 400, 220, 276, 384, 124, 800, 124, 800, 400 )
 
 [node name="Superfluid" type="Polygon2D" parent="."]
-polygon = PoolVector2Array( 384, 124, 384, 96, 800, 68, 800, 124 )
+polygon = PackedVector2Array( 384, 124, 384, 96, 800, 68, 800, 124 )
 
 [node name="TriplePoint" type="Polygon2D" parent="."]
 color = Color( 1, 0, 0, 1 )
-polygon = PoolVector2Array( 0, 0, 2, 0, 2, 2, 0, 2 )
+polygon = PackedVector2Array( 0, 0, 2, 0, 2, 2, 0, 2 )
 
 [node name="MeltPoint" type="Polygon2D" parent="."]
 color = Color( 1, 0, 0, 1 )
-polygon = PoolVector2Array( 0, 0, 2, 0, 2, 2, 0, 2 )
+polygon = PackedVector2Array( 0, 0, 2, 0, 2, 2, 0, 2 )
 
 [node name="BoilPoint" type="Polygon2D" parent="."]
 color = Color( 1, 0, 0, 1 )
-polygon = PoolVector2Array( 0, 0, 2, 0, 2, 2, 0, 2 )
+polygon = PackedVector2Array( 0, 0, 2, 0, 2, 2, 0, 2 )
 
 [node name="SuperPoint" type="Polygon2D" parent="."]
 color = Color( 1, 0, 0, 1 )
-polygon = PoolVector2Array( 0, 0, 2, 0, 2, 2, 0, 2 )
+polygon = PackedVector2Array( 0, 0, 2, 0, 2, 2, 0, 2 )

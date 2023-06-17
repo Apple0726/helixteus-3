@@ -1,146 +1,120 @@
-[gd_scene load_steps=16 format=2]
+[gd_scene load_steps=15 format=3 uid="uid://c0yiufm0ffo3f"]
 
-[ext_resource path="res://Resources/default_theme.tres" type="Theme" id=1]
-[ext_resource path="res://Scripts/Overlay.gd" type="Script" id=2]
-[ext_resource path="res://Resources/ColorblindOverlay.tres" type="Gradient" id=3]
-[ext_resource path="res://Scenes/CloseButton.tscn" type="PackedScene" id=4]
-[ext_resource path="res://Graphics/Buttons/Reset.png" type="Texture" id=5]
-[ext_resource path="res://Graphics/Icons/Arrow.png" type="Texture" id=6]
-[ext_resource path="res://Text/Arimo-Regular.ttf" type="DynamicFontData" id=7]
-[ext_resource path="res://Text/ArialUnicodeMS.ttf" type="DynamicFontData" id=8]
-[ext_resource path="res://Graphics/Buttons/settings.png" type="Texture" id=9]
+[ext_resource type="Theme" uid="uid://cp2u1kgj60ic" path="res://Resources/default_theme.tres" id="1"]
+[ext_resource type="Script" path="res://Scripts/Overlay.gd" id="2"]
+[ext_resource type="Gradient" path="res://Resources/ColorblindOverlay.tres" id="3"]
+[ext_resource type="PackedScene" uid="uid://ddf2xjwcht77u" path="res://Scenes/CloseButton.tscn" id="4"]
+[ext_resource type="Texture2D" uid="uid://dfnwi85gubj2g" path="res://Graphics/Buttons/Reset.png" id="5"]
+[ext_resource type="Texture2D" uid="uid://cm6qrejg1itog" path="res://Graphics/Icons/Arrow.png" id="6"]
+[ext_resource type="Texture2D" uid="uid://ged6udc4esp6" path="res://Graphics/Buttons/settings.png" id="9"]
 
-[sub_resource type="GradientTexture" id=1]
-gradient = ExtResource( 3 )
+[sub_resource type="GradientTexture2D" id="1"]
+gradient = ExtResource("3")
 
-[sub_resource type="StyleBoxFlat" id=2]
-bg_color = Color( 0.6, 0.6, 0.6, 0.176471 )
+[sub_resource type="InputEventKey" id="InputEventKey_t2q5b"]
+device = -1
+keycode = 4194334
 
-[sub_resource type="StyleBoxEmpty" id=3]
+[sub_resource type="Shortcut" id="Shortcut_ht0n8"]
+events = [SubResource("InputEventKey_t2q5b")]
 
-[sub_resource type="StyleBoxEmpty" id=4]
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_qywem"]
 
-[sub_resource type="DynamicFont" id=5]
-use_mipmaps = true
-use_filter = true
-font_data = ExtResource( 7 )
-fallback/0 = ExtResource( 8 )
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_jhuhg"]
+bg_color = Color(0.305882, 0.305882, 0.305882, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
 
-[sub_resource type="StyleBoxFlat" id=6]
-content_margin_left = 10.0
-content_margin_right = 10.0
-content_margin_top = 10.0
-content_margin_bottom = 10.0
-bg_color = Color( 0.129412, 0.129412, 0.129412, 1 )
-border_width_left = 4
-border_width_top = 4
-border_color = Color( 0.294118, 0.294118, 0.294118, 1 )
-border_blend = true
-shadow_size = 2
-shadow_offset = Vector2( 1, 1 )
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_165lm"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_che1j"]
+bg_color = Color(0.305882, 0.305882, 0.305882, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
 
 [node name="Overlay" type="Panel"]
+anchors_preset = 7
 anchor_left = 0.5
 anchor_top = 1.0
 anchor_right = 0.5
 anchor_bottom = 1.0
-margin_left = -352.0
-margin_top = -108.0
-margin_right = 352.0
-margin_bottom = 4.0
-theme = ExtResource( 1 )
-script = ExtResource( 2 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
+offset_left = -352.0
+offset_top = -108.0
+offset_right = 352.0
+offset_bottom = 4.0
+theme = ExtResource("1")
+script = ExtResource("2")
 
 [node name="TextureRect" type="TextureRect" parent="."]
+layout_mode = 0
 anchor_left = 0.5
 anchor_top = 1.0
 anchor_right = 0.5
 anchor_bottom = 1.0
-margin_left = -288.0
-margin_top = -60.0
-margin_right = 288.0
-margin_bottom = -44.0
-texture = SubResource( 1 )
-expand = true
-__meta__ = {
-"_edit_use_anchors_": false
-}
+offset_left = -288.0
+offset_top = -60.0
+offset_right = 288.0
+offset_bottom = -44.0
+texture = SubResource("1")
+expand_mode = 1
 
 [node name="Yes" type="Label" parent="."]
+layout_mode = 0
 anchor_left = 0.5
 anchor_top = 1.0
 anchor_right = 0.5
 anchor_bottom = 1.0
-margin_left = -324.0
-margin_top = -36.0
-margin_right = -244.0
-margin_bottom = -8.0
+offset_left = -324.0
+offset_top = -36.0
+offset_right = -244.0
+offset_bottom = -8.0
 mouse_filter = 1
 text = "YES"
-align = 1
-valign = 1
-__meta__ = {
-"_edit_use_anchors_": false
-}
+horizontal_alignment = 1
 
 [node name="No" type="Label" parent="."]
+layout_mode = 0
 anchor_left = 0.5
 anchor_top = 1.0
 anchor_right = 0.5
 anchor_bottom = 1.0
-margin_left = 248.0
-margin_top = -36.0
-margin_right = 328.0
-margin_bottom = -8.0
+offset_left = 248.0
+offset_top = -36.0
+offset_right = 328.0
+offset_bottom = -8.0
 mouse_filter = 1
 text = "NO"
-align = 1
-valign = 1
-__meta__ = {
-"_edit_use_anchors_": false
-}
+horizontal_alignment = 1
 
 [node name="HBoxContainer" type="HBoxContainer" parent="."]
+layout_mode = 0
 anchor_left = 0.5
 anchor_top = 1.0
 anchor_right = 0.5
 anchor_bottom = 1.0
-margin_left = -296.0
-margin_top = -100.0
-margin_right = 296.0
-margin_bottom = -68.0
-custom_constants/separation = 20
-__meta__ = {
-"_edit_use_anchors_": false
-}
+offset_left = -296.0
+offset_top = -100.0
+offset_right = 296.0
+offset_bottom = -68.0
+theme_override_constants/separation = 15
 
 [node name="OptionButton" type="OptionButton" parent="HBoxContainer"]
-margin_right = 246.0
-margin_bottom = 34.0
+layout_mode = 2
 size_flags_vertical = 4
-text = "Number of planets"
-align = 1
-__meta__ = {
-"_edit_use_anchors_": false
-}
+alignment = 1
 
 [node name="CheckBox" type="CheckBox" parent="HBoxContainer"]
-margin_left = 266.0
-margin_right = 294.0
-margin_bottom = 34.0
-custom_constants/hseparation = 10
-__meta__ = {
-"_edit_use_anchors_": false
-}
+layout_mode = 2
+shortcut = SubResource("Shortcut_ht0n8")
+shortcut_in_tooltip = false
 
 [node name="HSlider" type="HSlider" parent="HBoxContainer"]
-margin_left = 314.0
-margin_right = 592.0
-margin_bottom = 34.0
-rect_min_size = Vector2( 50, 0 )
+custom_minimum_size = Vector2(50, 0)
+layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 1
 min_value = 0.1
@@ -149,199 +123,180 @@ step = 0.1
 value = 0.5
 tick_count = 20
 ticks_on_borders = true
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="LeftNumEdit" type="LineEdit" parent="."]
+layout_mode = 1
+anchors_preset = 7
 anchor_left = 0.5
 anchor_top = 1.0
 anchor_right = 0.5
 anchor_bottom = 1.0
-margin_left = -324.0
-margin_top = -36.0
-margin_right = -248.0
-margin_bottom = -8.0
+offset_left = -320.0
+offset_top = -36.0
+offset_right = -256.0
+offset_bottom = -8.0
 grow_horizontal = 2
-custom_colors/selection_color = Color( 1, 1, 1, 1 )
-custom_colors/cursor_color = Color( 1, 1, 1, 1 )
-custom_colors/font_color_selected = Color( 0, 0, 0, 1 )
-custom_colors/font_color = Color( 1, 1, 1, 1 )
-custom_styles/focus = SubResource( 2 )
-custom_styles/normal = SubResource( 3 )
-align = 1
+grow_vertical = 0
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_styles/normal = SubResource("StyleBoxEmpty_qywem")
+theme_override_styles/focus = SubResource("StyleBoxFlat_jhuhg")
+text = "1"
+alignment = 1
 expand_to_text_length = true
 caret_blink = true
-caret_blink_speed = 0.5
-__meta__ = {
-"_edit_use_anchors_": false
-}
+caret_blink_interval = 0.5
 
 [node name="RightNumEdit" type="LineEdit" parent="."]
+layout_mode = 1
+anchors_preset = 7
 anchor_left = 0.5
 anchor_top = 1.0
 anchor_right = 0.5
 anchor_bottom = 1.0
-margin_left = 248.0
-margin_top = -36.0
-margin_right = 324.0
-margin_bottom = -8.0
+offset_left = 256.0
+offset_top = -36.0
+offset_right = 320.0
+offset_bottom = -8.0
 grow_horizontal = 2
-custom_colors/selection_color = Color( 1, 1, 1, 1 )
-custom_colors/cursor_color = Color( 1, 1, 1, 1 )
-custom_colors/font_color_selected = Color( 0, 0, 0, 1 )
-custom_colors/font_color = Color( 1, 1, 1, 1 )
-custom_styles/focus = SubResource( 2 )
-custom_styles/normal = SubResource( 4 )
-align = 1
+grow_vertical = 0
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_styles/normal = SubResource("StyleBoxEmpty_165lm")
+theme_override_styles/focus = SubResource("StyleBoxFlat_che1j")
+text = "2"
+alignment = 1
 expand_to_text_length = true
 caret_blink = true
-caret_blink_speed = 0.5
-__meta__ = {
-"_edit_use_anchors_": false
-}
+caret_blink_interval = 0.5
 
-[node name="CloseButton" parent="." instance=ExtResource( 4 )]
+[node name="CloseButton" parent="." instance=ExtResource("4")]
+layout_mode = 0
+anchors_preset = 0
+anchor_left = 0.0
+anchor_right = 0.0
+offset_left = 672.0
+offset_top = 8.0
+offset_right = 696.0
+offset_bottom = 32.0
+grow_horizontal = 1
 
 [node name="ClickToEdit" type="Control" parent="."]
+anchors_preset = 0
 anchor_left = 0.5
 anchor_top = 1.0
 anchor_right = 0.5
 anchor_bottom = 1.0
-margin_left = -255.0
-margin_top = -46.0
-margin_right = 260.0
-margin_bottom = 2.0
-__meta__ = {
-"_edit_use_anchors_": false
-}
+offset_left = -255.0
+offset_top = -46.0
+offset_right = 260.0
+offset_bottom = 2.0
 
 [node name="TextureRect" type="TextureRect" parent="ClickToEdit"]
-modulate = Color( 1, 1, 1, 0.572549 )
+modulate = Color(1, 1, 1, 0.572549)
+layout_mode = 1
+anchors_preset = 4
 anchor_top = 0.5
 anchor_bottom = 0.5
-margin_top = -8.0
-margin_right = 32.0
-margin_bottom = 8.0
-texture = ExtResource( 6 )
-expand = true
+offset_left = 11.0
+offset_top = -8.5
+offset_right = 43.0
+offset_bottom = 7.5
+grow_vertical = 2
+texture = ExtResource("6")
+expand_mode = 1
 stretch_mode = 6
 flip_h = true
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="TextureRect2" type="TextureRect" parent="ClickToEdit"]
-modulate = Color( 1, 1, 1, 0.572549 )
+modulate = Color(1, 1, 1, 0.572549)
+layout_mode = 1
+anchors_preset = 6
 anchor_left = 1.0
 anchor_top = 0.5
 anchor_right = 1.0
 anchor_bottom = 0.5
-margin_left = -33.2599
-margin_top = -8.0
-margin_right = -1.25995
-margin_bottom = 8.0
-texture = ExtResource( 6 )
-expand = true
+offset_left = -48.0
+offset_top = -8.0
+offset_right = -16.0001
+offset_bottom = 8.0
+grow_horizontal = 0
+grow_vertical = 2
+texture = ExtResource("6")
+expand_mode = 1
 stretch_mode = 6
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="Label" type="Label" parent="ClickToEdit"]
+layout_mode = 1
+anchors_preset = 4
 anchor_top = 0.5
 anchor_bottom = 0.5
-margin_left = 38.1838
-margin_top = -9.5
-margin_right = 191.184
-margin_bottom = 9.5
-grow_horizontal = 2
-custom_fonts/font = SubResource( 5 )
+offset_left = 49.1838
+offset_top = -10.0
+offset_right = 202.184
+offset_bottom = 12.0
+grow_vertical = 2
 text = "CLICK_TO_EDIT"
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="Label2" type="Label" parent="ClickToEdit"]
+layout_mode = 1
+anchors_preset = 6
 anchor_left = 1.0
 anchor_top = 0.5
 anchor_right = 1.0
 anchor_bottom = 0.5
-margin_left = -194.2
-margin_top = -9.5
-margin_right = -39.1995
-margin_bottom = 9.5
-grow_horizontal = 2
-custom_fonts/font = SubResource( 5 )
+offset_left = -208.0
+offset_top = -9.5
+offset_right = -52.9995
+offset_bottom = 12.5
+grow_horizontal = 0
+grow_vertical = 2
 text = "CLICK_TO_EDIT"
-align = 2
-__meta__ = {
-"_edit_use_anchors_": false
-}
+horizontal_alignment = 2
 
 [node name="Reset" type="TextureButton" parent="."]
+layout_mode = 1
+anchors_preset = 7
 anchor_left = 0.5
 anchor_top = 1.0
 anchor_right = 0.5
 anchor_bottom = 1.0
-margin_left = -12.0
-margin_top = -28.0
-margin_right = 12.0
-margin_bottom = -8.0
-texture_normal = ExtResource( 5 )
-expand = true
+offset_left = -12.0
+offset_top = -32.0
+offset_right = 12.0
+offset_bottom = -12.0
+grow_horizontal = 2
+grow_vertical = 0
+texture_normal = ExtResource("5")
+ignore_texture_size = true
 stretch_mode = 5
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="Settings" type="TextureButton" parent="."]
-margin_left = 8.0
-margin_top = 8.0
-margin_right = 32.0
-margin_bottom = 32.0
-texture_normal = ExtResource( 9 )
-expand = true
+layout_mode = 0
+offset_left = 8.0
+offset_top = 8.0
+offset_right = 32.0
+offset_bottom = 32.0
+texture_normal = ExtResource("9")
+ignore_texture_size = true
 stretch_mode = 5
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="SettingsPanel" type="PanelContainer" parent="."]
 visible = false
-margin_top = -92.0
-margin_right = 380.0
-margin_bottom = -6.0
-custom_styles/panel = SubResource( 6 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
+layout_mode = 0
+offset_top = -92.0
+offset_right = 380.0
+offset_bottom = -6.0
 
 [node name="VBox" type="VBoxContainer" parent="SettingsPanel"]
-margin_left = 10.0
-margin_top = 10.0
-margin_right = 370.0
-margin_bottom = 76.0
-custom_constants/separation = 10
+layout_mode = 2
+theme_override_constants/separation = 15
 
 [node name="Colorblind" type="CheckBox" parent="SettingsPanel/VBox"]
-margin_right = 360.0
-margin_bottom = 28.0
-custom_constants/hseparation = 10
+layout_mode = 2
 text = "COLORBLIND_MODE"
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="HideObj" type="CheckBox" parent="SettingsPanel/VBox"]
-margin_top = 38.0
-margin_right = 360.0
-margin_bottom = 66.0
-custom_constants/hseparation = 10
+layout_mode = 2
 text = "HIDE_OUT_OF_RANGE_OBJECTS"
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [connection signal="visibility_changed" from="." to="." method="_on_Overlay_visibility_changed"]
 [connection signal="item_selected" from="HBoxContainer/OptionButton" to="." method="_on_OptionButton_item_selected"]
@@ -349,8 +304,8 @@ __meta__ = {
 [connection signal="mouse_entered" from="HBoxContainer/HSlider" to="." method="_on_HSlider_mouse_entered"]
 [connection signal="mouse_exited" from="HBoxContainer/HSlider" to="." method="_on_mouse_exited"]
 [connection signal="value_changed" from="HBoxContainer/HSlider" to="." method="_on_HSlider_value_changed"]
-[connection signal="text_entered" from="LeftNumEdit" to="." method="_on_LeftNumEdit_text_entered"]
-[connection signal="text_entered" from="RightNumEdit" to="." method="_on_RightNumEdit_text_entered"]
+[connection signal="text_submitted" from="LeftNumEdit" to="." method="_on_LeftNumEdit_text_entered"]
+[connection signal="text_submitted" from="RightNumEdit" to="." method="_on_RightNumEdit_text_entered"]
 [connection signal="close_button_pressed" from="CloseButton" to="." method="_on_close_button_pressed"]
 [connection signal="pressed" from="Reset" to="." method="_on_Reset_pressed"]
 [connection signal="mouse_entered" from="Settings" to="." method="_on_Settings_mouse_entered"]

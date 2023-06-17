@@ -1,10 +1,10 @@
 [gd_scene load_steps=6 format=2]
 
 [sub_resource type="Gradient" id=1]
-offsets = PoolRealArray( 0, 0.525822, 1 )
-colors = PoolColorArray( 1, 1, 1, 0, 1, 1, 1, 0.513726, 1, 1, 1, 0 )
+offsets = PackedFloat32Array( 0, 0.525822, 1 )
+colors = PackedColorArray( 1, 1, 1, 0, 1, 1, 1, 0.513726, 1, 1, 1, 0 )
 
-[sub_resource type="GradientTexture" id=2]
+[sub_resource type="GradientTexture2D" id=2]
 gradient = SubResource( 1 )
 
 [sub_resource type="Image" id=6]
@@ -22,7 +22,7 @@ flags = 0
 image = SubResource( 6 )
 size = Vector2( 2048, 10 )
 
-[sub_resource type="ParticlesMaterial" id=5]
+[sub_resource type="ParticleProcessMaterial" id=5]
 emission_shape = 3
 emission_point_texture = SubResource( 4 )
 emission_point_count = 19600
@@ -34,7 +34,7 @@ scale = 4.0
 scale_random = 1.0
 color_ramp = SubResource( 2 )
 
-[node name="Particles2D" type="Particles2D"]
+[node name="GPUParticles2D" type="GPUParticles2D"]
 amount = 30
 lifetime = 2.0
 randomness = 1.0

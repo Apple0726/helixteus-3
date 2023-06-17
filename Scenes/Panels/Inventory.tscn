@@ -1,251 +1,173 @@
-[gd_scene load_steps=9 format=2]
+[gd_scene load_steps=8 format=3 uid="uid://cmh2bqka73geo"]
 
-[ext_resource path="res://Scenes/AdvButton.tscn" type="PackedScene" id=1]
-[ext_resource path="res://Graphics/Particles/electron.png" type="Texture" id=2]
-[ext_resource path="res://Resources/default_theme.tres" type="Theme" id=3]
-[ext_resource path="res://Scripts/Inventory.gd" type="Script" id=4]
-[ext_resource path="res://Scenes/CloseButton.tscn" type="PackedScene" id=5]
-[ext_resource path="res://Graphics/Particles/proton.png" type="Texture" id=6]
-[ext_resource path="res://Graphics/Particles/neutron.png" type="Texture" id=7]
-
-[sub_resource type="StyleBoxFlat" id=1]
-content_margin_bottom = 12.0
-bg_color = Color( 0.6, 0.6, 0.6, 0 )
+[ext_resource type="PackedScene" uid="uid://1hq6qpr1oa3i" path="res://Scenes/AdvButton.tscn" id="1"]
+[ext_resource type="Texture2D" uid="uid://utmoe58oqc7d" path="res://Graphics/Particles/electron.png" id="2"]
+[ext_resource type="Theme" uid="uid://cp2u1kgj60ic" path="res://Resources/default_theme.tres" id="3"]
+[ext_resource type="Script" path="res://Scripts/Inventory.gd" id="4"]
+[ext_resource type="PackedScene" uid="uid://ddf2xjwcht77u" path="res://Scenes/CloseButton.tscn" id="5"]
+[ext_resource type="Texture2D" uid="uid://c6ftupoc1a13b" path="res://Graphics/Particles/proton.png" id="6"]
+[ext_resource type="Texture2D" uid="uid://bmecb3uq7glad" path="res://Graphics/Particles/neutron.png" id="7"]
 
 [node name="Background" type="Panel"]
+anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-margin_left = -512.0
-margin_top = -296.0
-margin_right = 512.0
-margin_bottom = 296.0
-theme = ExtResource( 3 )
-script = ExtResource( 4 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
+offset_left = -512.0
+offset_top = -296.0
+offset_right = 512.0
+offset_bottom = 296.0
+theme = ExtResource("3")
+script = ExtResource("4")
 
-[node name="CloseButton" parent="." instance=ExtResource( 5 )]
+[node name="CloseButton" parent="." instance=ExtResource("5")]
+layout_mode = 1
+offset_left = -32.0
+offset_top = 8.0
+offset_right = -8.0
+offset_bottom = 32.0
 
 [node name="Title" type="Label" parent="."]
+custom_minimum_size = Vector2(0, 38)
+layout_mode = 0
 anchor_right = 1.0
-margin_bottom = 38.0
-rect_min_size = Vector2( 0, 38 )
+offset_bottom = 38.0
+theme_override_font_sizes/font_size = 18
 text = "INVENTORY"
-align = 1
-valign = 1
-__meta__ = {
-"_edit_use_anchors_": false
-}
+horizontal_alignment = 1
+vertical_alignment = 1
 
-[node name="Tabs" type="HBoxContainer" parent="."]
+[node name="TabBar" type="HBoxContainer" parent="."]
+layout_mode = 0
 anchor_right = 1.0
-margin_left = 24.0
-margin_top = 56.0
-margin_right = -24.0
-margin_bottom = 90.0
-custom_constants/separation = -1
-__meta__ = {
-"_edit_use_anchors_": false
-}
+offset_left = 24.0
+offset_top = 56.0
+offset_right = -24.0
+offset_bottom = 90.0
+theme_override_constants/separation = -1
 
-[node name="Items" parent="Tabs" instance=ExtResource( 1 )]
-anchor_right = 0.0
-anchor_bottom = 0.0
-margin_right = 196.0
-margin_bottom = 34.0
+[node name="Items" parent="TabBar" instance=ExtResource("1")]
+layout_mode = 2
 size_flags_horizontal = 3
 button_text = "ITEMS"
 
-[node name="Materials" parent="Tabs" instance=ExtResource( 1 )]
-anchor_right = 0.0
-anchor_bottom = 0.0
-margin_left = 195.0
-margin_right = 391.0
-margin_bottom = 34.0
+[node name="Materials" parent="TabBar" instance=ExtResource("1")]
+layout_mode = 2
 size_flags_horizontal = 3
 button_text = "MATERIALS"
 
-[node name="Metals" parent="Tabs" instance=ExtResource( 1 )]
-anchor_right = 0.0
-anchor_bottom = 0.0
-margin_left = 390.0
-margin_right = 586.0
-margin_bottom = 34.0
+[node name="Metals" parent="TabBar" instance=ExtResource("1")]
+layout_mode = 2
 size_flags_horizontal = 3
 button_text = "METALS"
 
-[node name="Atoms" parent="Tabs" instance=ExtResource( 1 )]
-anchor_right = 0.0
-anchor_bottom = 0.0
-margin_left = 585.0
-margin_right = 781.0
-margin_bottom = 34.0
+[node name="Atoms" parent="TabBar" instance=ExtResource("1")]
+layout_mode = 2
 size_flags_horizontal = 3
 button_text = "ATOMS"
 
-[node name="Particles" parent="Tabs" instance=ExtResource( 1 )]
-anchor_right = 0.0
-anchor_bottom = 0.0
-margin_left = 780.0
-margin_right = 976.0
-margin_bottom = 34.0
+[node name="Particles" parent="TabBar" instance=ExtResource("1")]
+layout_mode = 2
 size_flags_horizontal = 3
 button_text = "PARTICLES"
 
 [node name="Control" type="Panel" parent="."]
+layout_mode = 0
 anchor_right = 1.0
 anchor_bottom = 1.0
-margin_left = 24.0
-margin_top = 104.0
-margin_right = -24.0
-margin_bottom = -24.0
+offset_left = 24.0
+offset_top = 104.0
+offset_right = -24.0
+offset_bottom = -24.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="VBox" type="VBoxContainer" parent="Control"]
+layout_mode = 0
 anchor_right = 1.0
 anchor_bottom = 1.0
-margin_left = 32.0
-margin_right = -32.0
-__meta__ = {
-"_edit_use_anchors_": false
-}
+offset_left = 32.0
+offset_right = -32.0
 
 [node name="Control" type="Control" parent="Control/VBox"]
-margin_right = 912.0
-margin_bottom = 5.0
-rect_min_size = Vector2( 0, 5 )
+custom_minimum_size = Vector2(0, 5)
+layout_mode = 2
 
 [node name="Info" type="Label" parent="Control/VBox"]
-margin_top = 9.0
-margin_right = 912.0
-margin_bottom = 45.0
-custom_styles/normal = SubResource( 1 )
+layout_mode = 2
 text = "Information"
-align = 1
-autowrap = true
-__meta__ = {
-"_edit_use_anchors_": false
-}
+horizontal_alignment = 1
 
 [node name="GridContainer" type="GridContainer" parent="Control/VBox"]
-margin_top = 49.0
-margin_right = 912.0
-margin_bottom = 49.0
+layout_mode = 2
 size_flags_horizontal = 5
-custom_constants/vseparation = 50
+theme_override_constants/v_separation = 30
 columns = 6
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="Inventory" type="GridContainer" parent="Control/VBox"]
-margin_top = 53.0
-margin_right = 912.0
-margin_bottom = 53.0
+layout_mode = 2
 size_flags_horizontal = 5
-custom_constants/vseparation = 1
-custom_constants/hseparation = 1
+theme_override_constants/h_separation = -1
+theme_override_constants/v_separation = -1
 columns = 15
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="BuySell" type="Label" parent="Control/VBox"]
-margin_top = 57.0
-margin_right = 912.0
-margin_bottom = 157.0
-rect_min_size = Vector2( 0, 100 )
-custom_styles/normal = SubResource( 1 )
+custom_minimum_size = Vector2(0, 100)
+layout_mode = 2
 text = "CLICK_TO_BUY_SELL"
-align = 1
-valign = 2
-autowrap = true
-__meta__ = {
-"_edit_use_anchors_": false
-}
+horizontal_alignment = 1
+vertical_alignment = 1
 
 [node name="ParticlesHBox" type="HBoxContainer" parent="Control"]
-margin_left = 40.0
-margin_top = 48.0
-margin_right = 936.0
-margin_bottom = 88.0
-custom_constants/separation = 10
-__meta__ = {
-"_edit_use_anchors_": false
-}
+layout_mode = 0
+offset_left = 40.0
+offset_top = 48.0
+offset_right = 936.0
+offset_bottom = 88.0
 
 [node name="ProtonIcon" type="TextureRect" parent="Control/ParticlesHBox"]
-margin_right = 40.0
-margin_bottom = 40.0
-rect_min_size = Vector2( 40, 0 )
-texture = ExtResource( 6 )
-expand = true
+custom_minimum_size = Vector2(40, 0)
+layout_mode = 2
+texture = ExtResource("6")
+expand_mode = 1
 stretch_mode = 6
 
 [node name="Protons" type="Label" parent="Control/ParticlesHBox"]
-margin_left = 50.0
-margin_top = 8.0
-margin_right = 292.0
-margin_bottom = 32.0
+layout_mode = 2
 size_flags_horizontal = 3
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="NeutronIcon" type="TextureRect" parent="Control/ParticlesHBox"]
-margin_left = 302.0
-margin_right = 342.0
-margin_bottom = 40.0
-rect_min_size = Vector2( 40, 0 )
-texture = ExtResource( 7 )
-expand = true
+custom_minimum_size = Vector2(40, 0)
+layout_mode = 2
+texture = ExtResource("7")
+expand_mode = 1
 stretch_mode = 6
 
 [node name="Neutrons" type="Label" parent="Control/ParticlesHBox"]
-margin_left = 352.0
-margin_top = 8.0
-margin_right = 594.0
-margin_bottom = 32.0
+layout_mode = 2
 size_flags_horizontal = 3
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="ElectronIcon" type="TextureRect" parent="Control/ParticlesHBox"]
-margin_left = 604.0
-margin_right = 644.0
-margin_bottom = 40.0
-rect_min_size = Vector2( 40, 0 )
-texture = ExtResource( 2 )
-expand = true
+custom_minimum_size = Vector2(40, 0)
+layout_mode = 2
+texture = ExtResource("2")
+expand_mode = 1
 stretch_mode = 6
 
 [node name="Electrons" type="Label" parent="Control/ParticlesHBox"]
-margin_left = 654.0
-margin_top = 8.0
-margin_right = 896.0
-margin_bottom = 32.0
+layout_mode = 2
 size_flags_horizontal = 3
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [connection signal="close_button_pressed" from="CloseButton" to="." method="_on_close_button_pressed"]
-[connection signal="pressed" from="Tabs/Items" to="." method="_on_Items_pressed"]
-[connection signal="pressed" from="Tabs/Materials" to="." method="_on_Materials_pressed"]
-[connection signal="pressed" from="Tabs/Metals" to="." method="_on_Metals_pressed"]
-[connection signal="pressed" from="Tabs/Atoms" to="." method="_on_Atoms_pressed"]
-[connection signal="pressed" from="Tabs/Particles" to="." method="_on_Particles_pressed"]
-[connection signal="mouse_entered" from="Control/ParticlesHBox/ProtonIcon" to="." method="show_part" binds= [ "proton" ]]
+[connection signal="pressed" from="TabBar/Items" to="." method="_on_Items_pressed"]
+[connection signal="pressed" from="TabBar/Materials" to="." method="_on_Materials_pressed"]
+[connection signal="pressed" from="TabBar/Metals" to="." method="_on_Metals_pressed"]
+[connection signal="pressed" from="TabBar/Atoms" to="." method="_on_Atoms_pressed"]
+[connection signal="pressed" from="TabBar/Particles" to="." method="_on_Particles_pressed"]
+[connection signal="mouse_entered" from="Control/ParticlesHBox/ProtonIcon" to="." method="show_part" binds= ["proton"]]
 [connection signal="mouse_exited" from="Control/ParticlesHBox/ProtonIcon" to="." method="on_mouse_out"]
-[connection signal="mouse_entered" from="Control/ParticlesHBox/NeutronIcon" to="." method="show_part" binds= [ "neutron" ]]
+[connection signal="mouse_entered" from="Control/ParticlesHBox/NeutronIcon" to="." method="show_part" binds= ["neutron"]]
 [connection signal="mouse_exited" from="Control/ParticlesHBox/NeutronIcon" to="." method="on_mouse_out"]
-[connection signal="mouse_entered" from="Control/ParticlesHBox/ElectronIcon" to="." method="show_part" binds= [ "electron" ]]
+[connection signal="mouse_entered" from="Control/ParticlesHBox/ElectronIcon" to="." method="show_part" binds= ["electron"]]
 [connection signal="mouse_exited" from="Control/ParticlesHBox/ElectronIcon" to="." method="on_mouse_out"]

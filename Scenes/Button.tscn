@@ -8,9 +8,9 @@ signal double_click
 signal button_over
 signal button_out
 var is_button_over = false
-export var double_click_enabled = false
-export var strength = 0.1
-export var fade_duration = 0.1
+@export var double_click_enabled = false
+@export var strength = 0.1
+@export var fade_duration = 0.1
 var anim_player
 
 #export var btn_text = \"\"
@@ -20,9 +20,9 @@ var anim_player
 #	var font = $Label.get_font(\"font\")
 #	#print(font.get_string_size($Label.text))
 #	$Label.text = btn_text
-#	$Label.rect_size.x = font.get_string_size($Label.text).x + 5
-#	$Label.rect_position.x = -$Label.rect_size.x / 2.0
-	#$TextureButton.rect_scale = 
+#	$Label.size.x = font.get_string_size($Label.text).x + 5
+#	$Label.position.x = -$Label.size.x / 2.0
+	#$TextureButton.scale = 
 
 
 func reset_button ():
@@ -45,7 +45,7 @@ func _on_TextureButton_mouse_entered():
 	fade_in.track_insert_key(anim_index, 0, Color(1, 1, 1, 0))
 	fade_in.track_insert_key(anim_index, fade_duration, Color(1, 1, 1, strength))
 	fade_in.length = fade_duration
-	$AnimationPlayer.add_animation(\"FadeIn\", fade_in)
+	$AnimationPlayer.add_animation_library(\"FadeIn\", fade_in)
 	emit_signal(\"button_over\")
 	$AnimationPlayer.play(\"FadeIn\")
 
@@ -67,22 +67,22 @@ __meta__ = {
 }
 
 [node name="ColorRect" type="ColorRect" parent="."]
-margin_left = -20.0
-margin_top = -20.0
-margin_right = 20.0
-margin_bottom = 20.0
-rect_pivot_offset = Vector2( 20, 20 )
+offset_left = -20.0
+offset_top = -20.0
+offset_right = 20.0
+offset_bottom = 20.0
+pivot_offset = Vector2( 20, 20 )
 color = Color( 1, 1, 1, 0 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="TextureButton" type="TextureButton" parent="."]
-margin_left = -20.0
-margin_top = -20.0
-margin_right = 20.0
-margin_bottom = 20.0
-rect_pivot_offset = Vector2( 20, 20 )
+offset_left = -20.0
+offset_top = -20.0
+offset_right = 20.0
+offset_bottom = 20.0
+pivot_offset = Vector2( 20, 20 )
 __meta__ = {
 "_edit_use_anchors_": false
 }

@@ -1,22 +1,21 @@
-[gd_scene load_steps=2 format=2]
+[gd_scene load_steps=2 format=3 uid="uid://cy1jwsk8ofoys"]
 
-[sub_resource type="StyleBoxFlat" id=1]
-content_margin_left = 5.0
-content_margin_right = 5.0
-content_margin_top = 5.0
-content_margin_bottom = 5.0
-bg_color = Color( 0, 0, 0, 1 )
-border_width_left = 2
-border_width_top = 2
-border_color = Color( 0.333333, 0.333333, 0.333333, 1 )
-border_blend = true
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_guigi"]
+bg_color = Color(0, 0, 0, 1)
+border_width_left = 1
+border_width_top = 1
+border_color = Color(0.333333, 0.333333, 0.333333, 1)
+expand_margin_left = 5.0
+expand_margin_right = 5.0
+shadow_size = 1
+shadow_offset = Vector2(1, 1)
 
 [node name="Label" type="Label"]
-margin_right = 42.0
-margin_bottom = 32.0
-rect_min_size = Vector2( 0, 32 )
+custom_minimum_size = Vector2(0, 32)
+offset_right = 42.0
+offset_bottom = 32.0
 size_flags_horizontal = 4
-custom_styles/normal = SubResource( 1 )
+theme_override_styles/normal = SubResource("StyleBoxFlat_guigi")
 text = "dfdfd"
-align = 1
-valign = 1
+horizontal_alignment = 1
+vertical_alignment = 1

@@ -1,17 +1,17 @@
 extends Panel
 
-onready var game = get_node("/root/Game")
+@onready var game = get_node("/root/Game")
 var mode:String = ""
-var shape_color:Color = Color.white
+var shape_color:Color = Color.WHITE
 var thickness:int = 10
-onready var color_picker = $ColorPicker
+@onready var color_picker = $ColorPicker
 var changing_thickness = false
 var mouse_in_panel:bool = false
 
 func _ready():
 	for node in $HBoxContainer.get_children():
 		node.get_node("Button").toggle_mode = true
-		node.get_node("Button").connect("pressed", self, "on_%s_pressed" % node.name)
+		node.get_node("Button").connect("pressed",Callable(self,"on_%s_pressed" % node.name))
 	$HBoxContainer/Line/TextureRect.texture = load("res://Graphics/Icons/Annotator/line.png")
 	$HBoxContainer/Rectangle/TextureRect.texture = load("res://Graphics/Icons/Annotator/rectangle.png")
 	$HBoxContainer/Circle/TextureRect.texture = load("res://Graphics/Icons/Annotator/circle.png")
@@ -29,15 +29,15 @@ func _ready():
 	$VBoxContainer/Stone/TextureRect.texture = load("res://Graphics/Icons/stone.png")
 	$VBoxContainer/Arrow/TextureRect.texture = load("res://Graphics/Icons/Arrow.png")
 	for node in $VBoxContainer.get_children():
-		node.get_node("Button").connect("pressed", self, "on_icon_pressed", [node.get_node("TextureRect").texture])
+		node.get_node("Button").connect("pressed",Callable(self,"on_icon_pressed").bind(node.get_node("TextureRect").texture))
 
 func _input(event):
 	if event is InputEventMouseMotion:
-		mouse_in_panel = Geometry.is_point_in_polygon(event.position - Vector2(256, 656), $Polygon2D.polygon)
+		mouse_in_panel = Geometry2D.is_point_in_polygon(event.position - Vector2(256, 656), $Polygon2D.polygon)
 		if $VBoxContainer.visible:
-			mouse_in_panel = mouse_in_panel or Geometry.is_point_in_polygon(event.position - Vector2(256, 656), $Polygon2D2.polygon)
+			mouse_in_panel = mouse_in_panel or Geometry2D.is_point_in_polygon(event.position - Vector2(256, 656), $Polygon2D2.polygon)
 		if $ColorPicker.visible:
-			mouse_in_panel = mouse_in_panel or Geometry.is_point_in_polygon(event.position - Vector2(256, 656), $Polygon2D3.polygon)
+			mouse_in_panel = mouse_in_panel or Geometry2D.is_point_in_polygon(event.position - Vector2(256, 656), $Polygon2D3.polygon)
 
 func on_icon_pressed(_texture):
 	$HBoxContainer/Icons/TextureRect.texture = _texture
@@ -46,7 +46,7 @@ func on_icon_pressed(_texture):
 func on_Line_pressed():
 	for node in $HBoxContainer.get_children():
 		if node.name != "Line":
-			node.get_node("Button").pressed = false
+			node.get_node("Button").button_pressed = false
 	mode = "line"
 	game.get_node("UI/Panel/AnimationPlayer").play("FadeOut")
 	game.view.annotate_icon.texture = null
@@ -55,7 +55,7 @@ func on_Line_pressed():
 func on_Rectangle_pressed():
 	for node in $HBoxContainer.get_children():
 		if node.name != "Rectangle":
-			node.get_node("Button").pressed = false
+			node.get_node("Button").button_pressed = false
 	mode = "rect"
 	game.get_node("UI/Panel/AnimationPlayer").play("FadeOut")
 	game.view.annotate_icon.texture = null
@@ -64,7 +64,7 @@ func on_Rectangle_pressed():
 func on_Circle_pressed():
 	for node in $HBoxContainer.get_children():
 		if node.name != "Circle":
-			node.get_node("Button").pressed = false
+			node.get_node("Button").button_pressed = false
 	mode = "circ"
 	game.get_node("UI/Panel/AnimationPlayer").play("FadeOut")
 	game.view.annotate_icon.texture = null
@@ -73,7 +73,7 @@ func on_Circle_pressed():
 func on_Eraser_pressed():
 	for node in $HBoxContainer.get_children():
 		if node.name != "Eraser":
-			node.get_node("Button").pressed = false
+			node.get_node("Button").button_pressed = false
 	mode = "eraser"
 	game.get_node("UI/Panel/AnimationPlayer").play("FadeOut")
 	game.view.annotate_icon.texture = null
@@ -82,9 +82,9 @@ func on_Eraser_pressed():
 func on_Icons_pressed(manual:bool = false):
 	for node in $HBoxContainer.get_children():
 		if node.name != "Icons":
-			node.get_node("Button").pressed = false
+			node.get_node("Button").button_pressed = false
 	mode = "icon"
-	if not manual and not $HBoxContainer/Icons/Button.pressed:
+	if not manual and not $HBoxContainer/Icons/Button.button_pressed:
 		$VBoxContainer.visible = not $VBoxContainer.visible
 	game.get_node("UI/Panel").visible = true
 	game.get_node("UI/Panel/AnimationPlayer").play("Fade")
@@ -122,7 +122,7 @@ func _on_Thickness_mouse_entered():
 
 func _on_Thickness_value_changed(value):
 	thickness = value
-	$ThicknessLabel.text = String(value)
+	$ThicknessLabel.text = str(value)
 
 func _on_Thickness_mouse_exited():
 	changing_thickness = false
@@ -134,6 +134,8 @@ func _on_Icons_mouse_entered():
 
 
 func _on_Annotator_visibility_changed():
+	if not is_inside_tree():
+		return
 	if visible:
 		get_parent().move_child(self, get_parent().get_child_count())
 		game.sub_panel = self

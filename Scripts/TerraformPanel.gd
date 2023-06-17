@@ -15,7 +15,7 @@ var unique_bldg_bonus:float
 var unique_bldg_bonus_cap:float
 
 func _ready():
-	set_polygon(rect_size)
+	set_polygon(size)
 
 func refresh():
 	p_i = game.planet_data[game.c_p]
@@ -38,9 +38,9 @@ func update_info():
 	for cost in costs:
 		costs[cost] *= surface * game.engineering_bonus.BCM / cost_div
 	var gradient:Gradient = preload("res://Resources/IntensityGradient.tres")
-	var pressure_mult_color = gradient.interpolate(inverse_lerp(1.0, 100.0, pressure_mult)).to_html(false)
-	var lake_mult_color = gradient.interpolate(inverse_lerp(1.0, 10.0, lake_mult)).to_html(false)
-	$Panel/CostMult.bbcode_text = "%s:\n%s: x %s\n[color=#%s]%s: x %s[/color]\n[color=#%s]%s: x %s[/color]" % [tr("TF_COST_MULT"), tr("SURFACE_AREA"), Helper.format_num(surface), pressure_mult_color, tr("ATMOSPHERE_PRESSURE"), Helper.clever_round(pressure_mult), lake_mult_color, tr("LAKES"), Helper.clever_round(lake_mult)]
+	var pressure_mult_color = gradient.sample(inverse_lerp(1.0, 100.0, pressure_mult)).to_html(false)
+	var lake_mult_color = gradient.sample(inverse_lerp(1.0, 10.0, lake_mult)).to_html(false)
+	$Panel/CostMult.text = "%s:\n%s: x %s\n[color=#%s]%s: x %s[/color]\n[color=#%s]%s: x %s[/color]" % [tr("TF_COST_MULT"), tr("SURFACE_AREA"), Helper.format_num(surface), pressure_mult_color, tr("ATMOSPHERE_PRESSURE"), Helper.clever_round(pressure_mult), lake_mult_color, tr("LAKES"), Helper.clever_round(lake_mult)]
 	Helper.put_rsrc($Panel/TCVBox, 32, tf_costs, true, true)
 	Helper.put_rsrc($Panel/BCGrid, 32, costs, true, true)
 	$Panel.visible = true
@@ -120,15 +120,15 @@ func _on_Terraform_pressed():
 				Helper.add_atom_production(el, base_prod)
 		elif tf_type == "MM" and not p_i.has("depth"):
 			p_i.depth = 0
-			p_i.bldg.collect_date = OS.get_system_time_msecs()
+			p_i.bldg.collect_date = Time.get_unix_time_from_system()
 			game.MM_data[game.c_p_g] = {"c_s_g":game.c_s_g, "c_p":game.c_p}
 		game.view_history.pop_back()
 		game.view_history_pos -= 1
 		game.switch_view("system")
-		var dir = Directory.new()
-		dir.remove("user://%s/Univ%s/Planets/%s.hx3" % [game.c_sv, game.c_u, game.c_p_g])
+		var dir = DirAccess.open("user://%s/Univ%s/Planets" % [game.c_sv, game.c_u])
+		dir.remove("%s.hx3" % game.c_p_g)
 		game.popup(tr("TF_SUCCESS"), 2)
-		if not game.objective.empty() and game.objective.type == game.ObjectiveType.TERRAFORM:
+		if not game.objective.is_empty() and game.objective.type == game.ObjectiveType.TERRAFORM:
 			game.objective.current += 1
 		game.HUD.refresh()
 	else:
@@ -156,7 +156,7 @@ func _on_PP_pressed():
 			unique_bldg_str = "substation"
 		unique_bldg_bonus_cap /= len(game.tile_data)
 		st += tr("ENERGY_MULT_FROM_SUBSTATION") + " " + str(Helper.clever_round(unique_bldg_bonus))
-		st += "\n" + tr("ENERGY_STORAGE_BONUS_FROM_SUBSTATION") % Helper.time_to_str(unique_bldg_bonus_cap * 1000)
+		st += "\n" + tr("ENERGY_STORAGE_BONUS_FROM_SUBSTATION") % Helper.time_to_str(unique_bldg_bonus_cap)
 	$Panel/Note.text = st
 	update_info()
 

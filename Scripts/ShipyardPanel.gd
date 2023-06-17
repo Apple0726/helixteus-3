@@ -10,7 +10,7 @@ var strength_div:float = 1.0
 func _ready():
 	$OptionButton.add_item(tr("FIGHTER"))
 	$OptionButton.add_item(tr("FIGHTER_MK2"))
-	set_polygon(rect_size)
+	set_polygon(size)
 
 func refresh():
 	$OptionButton.visible = game.science_unlocked.has("FG2") and game.tile_data[game.c_t].bldg.path_1 >= 100
@@ -26,7 +26,7 @@ func _on_SpinBox_value_changed(value):
 		costs[cost] *= value
 	strength = value * strength_mult / strength_div
 	Helper.put_rsrc($ScrollContainer/HBox, 32, costs, true, true)
-	$Strength.bbcode_text = "%s: %s  %s" % [tr("FLEET_STRENGTH"), Helper.format_num(strength, true), "[img]Graphics/Icons/help.png[/img]"]
+	$Strength.text = "%s: %s  %s" % [tr("FLEET_STRENGTH"), Helper.format_num(strength, true), "[img]Graphics/Icons/help.png[/img]"]
 
 func _on_Construct_pressed():
 	if game.check_enough(costs):

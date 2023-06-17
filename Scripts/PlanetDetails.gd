@@ -1,7 +1,7 @@
 extends Control
 
-onready var game = get_node("/root/Game")
-onready var layer_scene = preload("res://Scenes/Planet/PlanetComposition.tscn")
+@onready var game = get_node("/root/Game")
+@onready var layer_scene = preload("res://Scenes/Planet/PlanetComposition.tscn")
 var id
 var p_i
 var crust_layer
@@ -12,42 +12,42 @@ var renaming = false
 func _ready():
 	id = game.c_p
 	p_i = game.planet_data[id]
-	var texture = load("res://Graphics/Planets/" + String(p_i.type) + ".png")
+	var texture = load("res://Graphics/Planets/" + str(p_i.type) + ".png")
 	$Planet.texture_normal = texture
 	$Planet.texture_hover = texture
 	$Planet.texture_focused = texture
 	$Name.text = p_i.name
-	$Diameter.text = String(round(p_i.size)) + " km"
-	$Atmosphere.visible = not p_i.atmosphere.empty()
+	$Diameter.text = str(round(p_i.size)) + " km"
+	$Atmosphere.visible = not p_i.atmosphere.is_empty()
 	if not p_i.type in [11, 12]:#if not gas giant
-		crust_layer = layer_scene.instance()
+		crust_layer = layer_scene.instantiate()
 		add_child(crust_layer)
 		crust_layer.get_node("Shadow").visible = false
 		crust_layer.get_node("Background").modulate = Color(0.4, 0.22, 0, 1)
-		crust_layer.rect_scale *= 0.65
-		crust_layer.rect_position = Vector2(654, 357)
-		crust_layer.get_node("Background").connect("mouse_entered", self, "on_crust_enter")
-		crust_layer.get_node("Background").connect("mouse_exited", self, "on_crust_exit")
-		crust_layer.get_node("Background").connect("pressed", self, "on_crust_press")
-	mantle_layer = layer_scene.instance()
+		crust_layer.scale *= 0.65
+		crust_layer.position = Vector2(654, 357)
+		crust_layer.get_node("Background").connect("mouse_entered",Callable(self,"on_crust_enter"))
+		crust_layer.get_node("Background").connect("mouse_exited",Callable(self,"on_crust_exit"))
+		crust_layer.get_node("Background").connect("pressed",Callable(self,"on_crust_press"))
+	mantle_layer = layer_scene.instantiate()
 	add_child(mantle_layer)
-	mantle_layer.rect_scale *= min(0.63, 0.65 - 0.65 * p_i.mantle_start_depth / (p_i.size * 500.0))
+	mantle_layer.scale *= min(0.63, 0.65 - 0.65 * p_i.mantle_start_depth / (p_i.size * 500.0))
 	mantle_layer.get_node("Background").modulate = Color(1, 0.56, 0, 1)
-	mantle_layer.rect_position = Vector2(654, 357)
-	mantle_layer.get_node("Background").connect("mouse_entered", self, "on_mantle_enter")
-	mantle_layer.get_node("Background").connect("mouse_exited", self, "on_mantle_exit")
-	mantle_layer.get_node("Background").connect("pressed", self, "on_mantle_press")
+	mantle_layer.position = Vector2(654, 357)
+	mantle_layer.get_node("Background").connect("mouse_entered",Callable(self,"on_mantle_enter"))
+	mantle_layer.get_node("Background").connect("mouse_exited",Callable(self,"on_mantle_exit"))
+	mantle_layer.get_node("Background").connect("pressed",Callable(self,"on_mantle_press"))
 	if p_i.type == 11:
 		mantle_layer.get_node("Background").modulate = Color(0, 0.3, 0.6, 1)
-	core_layer = layer_scene.instance()
+	core_layer = layer_scene.instantiate()
 	add_child(core_layer)
 	core_layer.get_node("Shadow").visible = false
-	core_layer.rect_scale *= 0.65 - 0.65 * p_i.core_start_depth / (p_i.size * 500.0)
+	core_layer.scale *= 0.65 - 0.65 * p_i.core_start_depth / (p_i.size * 500.0)
 	core_layer.get_node("Background").modulate = Color(1, 0.93, 0.63, 1)
-	core_layer.rect_position = Vector2(654, 357)
-	core_layer.get_node("Background").connect("mouse_entered", self, "on_core_enter")
-	core_layer.get_node("Background").connect("mouse_exited", self, "on_core_exit")
-	core_layer.get_node("Background").connect("pressed", self, "on_core_press")
+	core_layer.position = Vector2(654, 357)
+	core_layer.get_node("Background").connect("mouse_entered",Callable(self,"on_core_enter"))
+	core_layer.get_node("Background").connect("mouse_exited",Callable(self,"on_core_exit"))
+	core_layer.get_node("Background").connect("pressed",Callable(self,"on_core_press"))
 
 var atm_always_visible = false
 var crust_always_visible = false
@@ -65,7 +65,7 @@ func on_crust_enter():
 		make_pie_chart(obj_to_array(p_i.crust), tr("CRUST_COMPOSITION"))
 
 func on_mantle_enter():
-	var tooltip = (tr("MANTLE") + "\n" + tr("DEPTHS") + ": %s km - %s km") % [floor(p_i.mantle_start_depth / 1000.0), floor(p_i.core_start_depth / 1000.0)]
+	var tooltip = (tr("MANTLE") + "\n" + tr("DEPTHS") + ": %.2f km - %.2f km") % [p_i.mantle_start_depth / 1000.0, p_i.core_start_depth / 1000.0]
 	if mantle_always_visible:
 		tooltip += "\nClick to hide mantle composition\nwhen not hovered over"
 	else:
@@ -75,7 +75,7 @@ func on_mantle_enter():
 		make_pie_chart(obj_to_array(p_i.mantle), tr("MANTLE_COMPOSITION"))
 	
 func on_core_enter():
-	var tooltip = (tr("CORE") + "\n" + tr("DEPTHS") + ": %s km - %s km") % [floor(p_i.core_start_depth / 1000.0), floor(p_i.size / 2.0)]
+	var tooltip = (tr("CORE") + "\n" + tr("DEPTHS") + ": %.2f km - %.2f km") % [p_i.core_start_depth / 1000.0, p_i.size / 2.0]
 	if core_always_visible:
 		tooltip += "\nClick to hide core composition\nwhen not hovered over"
 	else:
@@ -115,7 +115,7 @@ var pies:Array = []
 var texts:Array = []
 var pie_scene = preload("res://Scenes/PieGraph.tscn")
 func make_pie_chart(arr:Array, name:String):
-	var pie = pie_scene.instance()
+	var pie = pie_scene.instantiate()
 	pie.name = name
 	pie.get_node("Title").text = name
 	pie.objects = []
@@ -174,7 +174,7 @@ func _on_Planet_mouse_entered():
 func get_surface_string(mats:Dictionary):
 	var string = ""
 	for mat in mats.keys():
-		string += mat + ": " + String(mats[mat]) + "\n"
+		string += mat + ": " + str(mats[mat]) + "\n"
 	string = string.substr(0,len(string) - 1)
 	return string
 
@@ -185,7 +185,7 @@ func obj_to_array(elements:Dictionary):
 	var arr = []
 	for element in elements.keys():
 		arr.append({"element":element, "fraction":elements[element]})
-	arr.sort_custom(self, "sort_elements")
+	arr.sort_custom(Callable(self,"sort_elements"))
 	return arr
 
 func sort_elements (a, b):

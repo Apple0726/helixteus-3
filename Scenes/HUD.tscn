@@ -1,115 +1,87 @@
-[gd_scene load_steps=74 format=2]
+[gd_scene load_steps=72 format=3 uid="uid://cahlkepfiewe4"]
 
-[ext_resource path="res://Graphics/Buttons/Craft.png" type="Texture" id=1]
-[ext_resource path="res://Graphics/Icons/money.png" type="Texture" id=2]
-[ext_resource path="res://Graphics/Icons/energy.png" type="Texture" id=3]
-[ext_resource path="res://Graphics/Icons/minerals.png" type="Texture" id=4]
-[ext_resource path="res://Scripts/HUD.gd" type="Script" id=5]
-[ext_resource path="res://Graphics/Buttons/MineralUpgrades.png" type="Texture" id=6]
-[ext_resource path="res://Resources/default_theme.tres" type="Theme" id=7]
-[ext_resource path="res://Graphics/Icons/stone.png" type="Texture" id=8]
-[ext_resource path="res://Graphics/Buttons/Shop.png" type="Texture" id=9]
-[ext_resource path="res://Graphics/Buttons/Inventory.png" type="Texture" id=10]
-[ext_resource path="res://Graphics/Materials/soil.png" type="Texture" id=11]
-[ext_resource path="res://Graphics/Icons/SP.png" type="Texture" id=12]
-[ext_resource path="res://Graphics/Buttons/ScienceTree.png" type="Texture" id=13]
-[ext_resource path="res://Graphics/Buttons/MainMenu.png" type="Texture" id=14]
-[ext_resource path="res://Graphics/Buttons/convert_minerals.png" type="Texture" id=15]
-[ext_resource path="res://Graphics/Misc/Bar.png" type="Texture" id=16]
-[ext_resource path="res://Graphics/Buttons/Ships.png" type="Texture" id=17]
-[ext_resource path="res://Graphics/Misc/bullet.png" type="Texture" id=18]
-[ext_resource path="res://Graphics/Items/Others/ship_locator.png" type="Texture" id=19]
-[ext_resource path="res://Graphics/Cave/Objects/Map.png" type="Texture" id=20]
-[ext_resource path="res://Graphics/Misc/HUD.png" type="Texture" id=21]
-[ext_resource path="res://Graphics/Buttons/Vehicles.png" type="Texture" id=22]
-[ext_resource path="res://Scenes/Dialogue.tscn" type="PackedScene" id=23]
-[ext_resource path="res://Graphics/NPCs/3_btn.png" type="Texture" id=24]
-[ext_resource path="res://Graphics/Buttons/Wiki.png" type="Texture" id=25]
-[ext_resource path="res://Graphics/Materials/glass.png" type="Texture" id=26]
-[ext_resource path="res://Graphics/Planets/3.png" type="Texture" id=27]
-[ext_resource path="res://Graphics/Effects/spotlight_5.png" type="Texture" id=28]
-[ext_resource path="res://Graphics/Galaxies/6.png" type="Texture" id=29]
-[ext_resource path="res://Graphics/Buttons/NotBookmarked.png" type="Texture" id=30]
-[ext_resource path="res://Graphics/Clusters/0.png" type="Texture" id=31]
-[ext_resource path="res://Graphics/Buttons/Bookmarked.png" type="Texture" id=32]
-[ext_resource path="res://Graphics/Buttons/DimensionView.png" type="Texture" id=33]
-[ext_resource path="res://Graphics/Materials/cellulose.png" type="Texture" id=34]
-[ext_resource path="res://Graphics/Buttons/Stats.png" type="Texture" id=35]
+[ext_resource type="Texture2D" uid="uid://dh8cjopfbnfcr" path="res://Graphics/Buttons/Craft.png" id="1"]
+[ext_resource type="Texture2D" uid="uid://cpkd0ce56vw62" path="res://Graphics/Icons/money.png" id="2"]
+[ext_resource type="Texture2D" uid="uid://dfov6sisin58e" path="res://Graphics/Icons/energy.png" id="3"]
+[ext_resource type="Texture2D" uid="uid://caogp3ych2a60" path="res://Graphics/Icons/minerals.png" id="4"]
+[ext_resource type="Script" path="res://Scripts/HUD.gd" id="5"]
+[ext_resource type="Texture2D" uid="uid://b40lfdnakph6r" path="res://Graphics/Buttons/MineralUpgrades.png" id="6"]
+[ext_resource type="Theme" uid="uid://cp2u1kgj60ic" path="res://Resources/default_theme.tres" id="7"]
+[ext_resource type="Texture2D" uid="uid://3f7a2kcsv1c4" path="res://Graphics/Icons/stone.png" id="8"]
+[ext_resource type="Texture2D" uid="uid://bdwok6iuju7a4" path="res://Graphics/Buttons/Shop.png" id="9"]
+[ext_resource type="Texture2D" uid="uid://b6qk5k6h3fxfi" path="res://Graphics/Buttons/Inventory.png" id="10"]
+[ext_resource type="Texture2D" uid="uid://b4shy3a75qbjw" path="res://Graphics/Materials/soil.png" id="11"]
+[ext_resource type="Texture2D" uid="uid://78ibnuwq78bj" path="res://Graphics/Icons/SP.png" id="12"]
+[ext_resource type="Texture2D" uid="uid://b63svvwgswlf7" path="res://Graphics/Buttons/ScienceTree.png" id="13"]
+[ext_resource type="Texture2D" uid="uid://kxosxwc7kgtc" path="res://Graphics/Buttons/MainMenu.png" id="14"]
+[ext_resource type="Texture2D" uid="uid://8xnlr3akp2dr" path="res://Graphics/Buttons/convert_minerals.png" id="15"]
+[ext_resource type="Texture2D" uid="uid://b3c6f5upmvn5a" path="res://Graphics/Misc/Bar.png" id="16"]
+[ext_resource type="Texture2D" uid="uid://bish12leyxwg1" path="res://Graphics/Buttons/Ships.png" id="17"]
+[ext_resource type="Texture2D" uid="uid://b6fm4xy2j5o2v" path="res://Graphics/Misc/bullet.png" id="18"]
+[ext_resource type="Texture2D" uid="uid://ce34f2u3ilm2l" path="res://Graphics/Items/Others/ship_locator.png" id="19"]
+[ext_resource type="Texture2D" uid="uid://bvafdx2shij2o" path="res://Graphics/Cave/Objects/Map.png" id="20"]
+[ext_resource type="Texture2D" uid="uid://dft5cl6ep4ubm" path="res://Graphics/Misc/HUD.png" id="21"]
+[ext_resource type="Texture2D" uid="uid://cg6u434tso7ut" path="res://Graphics/Buttons/Vehicles.png" id="22"]
+[ext_resource type="PackedScene" path="res://Scenes/Dialogue.tscn" id="23"]
+[ext_resource type="Texture2D" uid="uid://ds6ovu0v0qybb" path="res://Graphics/NPCs/3_btn.png" id="24"]
+[ext_resource type="Texture2D" uid="uid://ie0q7gvnk7iw" path="res://Graphics/Buttons/Wiki.png" id="25"]
+[ext_resource type="Texture2D" uid="uid://cw7bav43mkurh" path="res://Graphics/Materials/glass.png" id="26"]
+[ext_resource type="Texture2D" uid="uid://ckg1wp0kneqps" path="res://Graphics/Planets/3.png" id="27"]
+[ext_resource type="Texture2D" uid="uid://byvlrrx33jsa0" path="res://Graphics/Effects/spotlight_5.png" id="28"]
+[ext_resource type="Texture2D" uid="uid://mjgc4346ykk5" path="res://Graphics/Galaxies/6.png" id="29"]
+[ext_resource type="Texture2D" uid="uid://dvx275pksv6d1" path="res://Graphics/Buttons/NotBookmarked.png" id="30"]
+[ext_resource type="Texture2D" uid="uid://gync3hfn5rsc" path="res://Graphics/Clusters/0.png" id="31"]
+[ext_resource type="Texture2D" uid="uid://bul1xwg550qsq" path="res://Graphics/Buttons/Bookmarked.png" id="32"]
+[ext_resource type="Texture2D" uid="uid://nkxaaipcbulq" path="res://Graphics/Buttons/DimensionView.png" id="33"]
+[ext_resource type="Texture2D" uid="uid://cpbcy3l6bvxa8" path="res://Graphics/Materials/cellulose.png" id="34"]
+[ext_resource type="Texture2D" uid="uid://dbprykul0cbh7" path="res://Graphics/Buttons/Stats.png" id="35"]
 
-[sub_resource type="Animation" id=1]
+[sub_resource type="Animation" id="1"]
 resource_name = "BookmarkAnim"
-length = 0.3
+length = 0.2
 tracks/0/type = "bezier"
-tracks/0/path = NodePath("Bookmarks:rect_position:x")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
 tracks/0/imported = false
 tracks/0/enabled = true
+tracks/0/path = NodePath("Bookmarks:position:x")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
 tracks/0/keys = {
-"points": PoolRealArray( -126, -0.25, 0, 0.11, 76.5, 2, -0.17, -1.5, 0.25, 0 ),
-"times": PoolRealArray( 0, 0.3 )
-}
-tracks/1/type = "bezier"
-tracks/1/path = NodePath("Bookmarks:rect_position:y")
-tracks/1/interp = 1
-tracks/1/loop_wrap = true
-tracks/1/imported = false
-tracks/1/enabled = true
-tracks/1/keys = {
-"points": PoolRealArray( 108, -0.25, 0, 0.25, 0 ),
-"times": PoolRealArray( 0 )
+"handle_modes": PackedInt32Array(0, 2),
+"points": PackedFloat32Array(-126, -0.25, 0, 0.0313038, 89, 0, -0.0666667, 0, 0, 0),
+"times": PackedFloat32Array(0, 0.2)
 }
 
-[sub_resource type="InputEventAction" id=2]
-action = "B"
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_awikt"]
+_data = {
+"BookmarkAnim": SubResource("1")
+}
 
-[sub_resource type="ShortCut" id=3]
-shortcut = SubResource( 2 )
+[sub_resource type="InputEventKey" id="InputEventKey_f1iy7"]
+device = -1
+physical_keycode = 66
+unicode = 98
 
-[sub_resource type="StyleBoxFlat" id=4]
-bg_color = Color( 0.14902, 0.14902, 0.14902, 1 )
-border_width_left = 1
-border_width_top = 1
-border_width_right = 1
-border_width_bottom = 1
-border_color = Color( 0.337255, 1, 0, 1 )
-border_blend = true
-corner_radius_top_left = 2
-corner_radius_top_right = 2
-corner_radius_bottom_right = 2
-corner_radius_bottom_left = 2
+[sub_resource type="Shortcut" id="3"]
+events = [SubResource("InputEventKey_f1iy7")]
 
-[sub_resource type="StyleBoxFlat" id=5]
-bg_color = Color( 0, 0, 0, 1 )
-border_width_left = 1
-border_width_top = 1
-border_width_right = 1
-border_width_bottom = 1
-border_color = Color( 0.337255, 1, 0, 1 )
-border_blend = true
-corner_radius_top_left = 2
-corner_radius_top_right = 2
-corner_radius_bottom_right = 2
-corner_radius_bottom_left = 2
-
-[sub_resource type="StyleBoxFlat" id=6]
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_e2ib3"]
 content_margin_left = 5.0
-content_margin_right = 5.0
 content_margin_top = 5.0
+content_margin_right = 5.0
 content_margin_bottom = 5.0
-bg_color = Color( 0.0901961, 0.0901961, 0.0901961, 1 )
+bg_color = Color(0.203922, 0.203922, 0.203922, 1)
 border_width_left = 2
 border_width_top = 2
-border_width_right = 2
-border_width_bottom = 2
-border_color = Color( 0.478431, 1, 0, 1 )
+border_color = Color(0.341176, 0.341176, 0.341176, 1)
 border_blend = true
+shadow_size = 2
+shadow_offset = Vector2(1, 1)
 
-[sub_resource type="Shader" id=39]
+[sub_resource type="Shader" id="39"]
 code = "shader_type canvas_item;
 
 uniform bool active = false;
-uniform vec4 color:hint_color = vec4(1.0, 1.0, 1.0, 1.0);
+uniform vec4 color:source_color = vec4(1.0, 1.0, 1.0, 1.0);
 uniform float speed = 1.0;
 
 void fragment() {
@@ -119,1118 +91,944 @@ void fragment() {
 	}
 }"
 
-[sub_resource type="ShaderMaterial" id=40]
-shader = SubResource( 39 )
-shader_param/active = false
-shader_param/color = Color( 1, 1, 1, 1 )
-shader_param/speed = 1.0
+[sub_resource type="ShaderMaterial" id="40"]
+shader = SubResource("39")
+shader_parameter/active = false
+shader_parameter/color = Color(1, 1, 1, 1)
+shader_parameter/speed = 1.0
 
-[sub_resource type="InputEventAction" id=11]
-action = "Y"
+[sub_resource type="InputEventKey" id="InputEventKey_04cml"]
+device = -1
+physical_keycode = 89
+unicode = 121
 
-[sub_resource type="ShortCut" id=12]
-shortcut = SubResource( 11 )
+[sub_resource type="Shortcut" id="12"]
+events = [SubResource("InputEventKey_04cml")]
 
-[sub_resource type="InputEventAction" id=13]
-action = "V"
+[sub_resource type="InputEventKey" id="InputEventKey_d0q5n"]
+device = -1
+physical_keycode = 86
+unicode = 118
 
-[sub_resource type="ShortCut" id=14]
-shortcut = SubResource( 13 )
+[sub_resource type="Shortcut" id="14"]
+events = [SubResource("InputEventKey_d0q5n")]
 
-[sub_resource type="InputEventAction" id=15]
-action = "T"
+[sub_resource type="InputEventKey" id="InputEventKey_817r8"]
+device = -1
+physical_keycode = 84
+unicode = 116
 
-[sub_resource type="ShortCut" id=16]
-shortcut = SubResource( 15 )
+[sub_resource type="Shortcut" id="16"]
+events = [SubResource("InputEventKey_817r8")]
 
-[sub_resource type="InputEventAction" id=17]
-action = "E"
+[sub_resource type="InputEventKey" id="InputEventKey_h1pgw"]
+device = -1
+physical_keycode = 69
+unicode = 101
 
-[sub_resource type="ShortCut" id=18]
-shortcut = SubResource( 17 )
+[sub_resource type="Shortcut" id="18"]
+events = [SubResource("InputEventKey_h1pgw")]
 
-[sub_resource type="InputEventAction" id=19]
-action = "R"
+[sub_resource type="InputEventKey" id="InputEventKey_tj8tx"]
+device = -1
+physical_keycode = 82
+unicode = 114
 
-[sub_resource type="ShortCut" id=20]
-shortcut = SubResource( 19 )
+[sub_resource type="Shortcut" id="20"]
+events = [SubResource("InputEventKey_tj8tx")]
 
-[sub_resource type="InputEventAction" id=21]
-action = "U"
+[sub_resource type="InputEventKey" id="InputEventKey_jk272"]
+device = -1
+physical_keycode = 85
+unicode = 117
 
-[sub_resource type="ShortCut" id=22]
-shortcut = SubResource( 21 )
+[sub_resource type="Shortcut" id="22"]
+events = [SubResource("InputEventKey_jk272")]
 
-[sub_resource type="InputEventAction" id=23]
-action = "I"
+[sub_resource type="InputEventKey" id="InputEventKey_m2rrv"]
+device = -1
+physical_keycode = 73
+unicode = 105
 
-[sub_resource type="ShortCut" id=24]
-shortcut = SubResource( 23 )
+[sub_resource type="Shortcut" id="24"]
+events = [SubResource("InputEventKey_m2rrv")]
 
-[sub_resource type="InputEventAction" id=27]
-action = ","
+[sub_resource type="InputEventKey" id="InputEventKey_k5517"]
+device = -1
+physical_keycode = 44
+unicode = 44
 
-[sub_resource type="ShortCut" id=28]
-shortcut = SubResource( 27 )
+[sub_resource type="Shortcut" id="Shortcut_xflk1"]
+events = [SubResource("InputEventKey_k5517")]
 
-[sub_resource type="Animation" id=37]
+[sub_resource type="Animation" id="37"]
 resource_name = "Flash"
 length = 0.5
-loop = true
 step = 0.05
 tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
 tracks/0/path = NodePath("ColorRect:color")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
-tracks/0/imported = false
-tracks/0/enabled = true
 tracks/0/keys = {
-"times": PoolRealArray( 0, 0.25, 0.5 ),
-"transitions": PoolRealArray( 1, 1, 1 ),
+"times": PackedFloat32Array(0, 0.25, 0.5),
+"transitions": PackedFloat32Array(1, 1, 1),
 "update": 0,
-"values": [ Color( 1, 1, 1, 0 ), Color( 1, 1, 1, 0.372549 ), Color( 1, 1, 1, 0 ) ]
+"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 0.372549), Color(1, 1, 1, 0)]
 }
 
-[sub_resource type="Animation" id=38]
+[sub_resource type="Animation" id="38"]
 length = 0.001
 tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
 tracks/0/path = NodePath("ColorRect:color")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
-tracks/0/imported = false
-tracks/0/enabled = true
 tracks/0/keys = {
-"times": PoolRealArray( 0 ),
-"transitions": PoolRealArray( 1 ),
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
 "update": 0,
-"values": [ Color( 1, 1, 1, 0 ) ]
+"values": [Color(1, 1, 1, 0)]
 }
 
-[sub_resource type="InputEventAction" id=29]
-action = "Z"
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_4yly8"]
+_data = {
+"Flash": SubResource("37"),
+"RESET": SubResource("38")
+}
 
-[sub_resource type="ShortCut" id=30]
-shortcut = SubResource( 29 )
+[sub_resource type="InputEventKey" id="InputEventKey_owolo"]
+device = -1
+physical_keycode = 90
+unicode = 122
 
-[sub_resource type="InputEventAction" id=31]
-action = "prev_view"
+[sub_resource type="Shortcut" id="30"]
+events = [SubResource("InputEventKey_owolo")]
 
-[sub_resource type="ShortCut" id=32]
-shortcut = SubResource( 31 )
+[sub_resource type="Shortcut" id="32"]
 
-[sub_resource type="InputEventAction" id=33]
-action = "next_view"
+[sub_resource type="Shortcut" id="34"]
 
-[sub_resource type="ShortCut" id=34]
-shortcut = SubResource( 33 )
-
-[sub_resource type="StyleBoxFlat" id=7]
-content_margin_left = 20.0
-content_margin_right = 20.0
-content_margin_top = 8.0
-content_margin_bottom = 8.0
-bg_color = Color( 0.129412, 0.129412, 0.129412, 1 )
-border_width_left = 4
-border_width_top = 4
-border_color = Color( 0.294118, 0.294118, 0.294118, 1 )
-border_blend = true
-shadow_size = 2
-shadow_offset = Vector2( 1, 1 )
-
-[sub_resource type="StyleBoxFlat" id=8]
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_jjxme"]
 content_margin_left = 12.0
+content_margin_top = 5.0
 content_margin_right = 12.0
-content_margin_top = 5.0
-content_margin_bottom = 5.0
-bg_color = Color( 0, 0, 0, 1 )
+content_margin_bottom = 2.0
+bg_color = Color(0, 0, 0, 1)
 border_width_left = 1
 border_width_top = 1
 border_width_right = 1
 border_width_bottom = 1
-border_color = Color( 0.227451, 0.227451, 0.227451, 1 )
-shadow_color = Color( 0, 0, 0, 0.258824 )
-shadow_size = 1
-shadow_offset = Vector2( 1, 1 )
+border_color = Color(0.341176, 0.341176, 0.341176, 1)
 
-[sub_resource type="StyleBoxFlat" id=9]
-content_margin_left = 10.0
-content_margin_right = 5.0
-content_margin_top = 5.0
-content_margin_bottom = 5.0
-bg_color = Color( 0.219608, 0.219608, 0.219608, 1 )
-border_width_left = 1
-border_width_top = 1
-border_width_right = 1
-border_width_bottom = 1
-border_color = Color( 0.227451, 0.227451, 0.227451, 1 )
-shadow_color = Color( 0, 0, 0, 0.258824 )
-shadow_size = 1
-shadow_offset = Vector2( 1, 1 )
+[sub_resource type="LabelSettings" id="LabelSettings_uu53f"]
+font_size = 18
 
-[sub_resource type="StyleBoxFlat" id=10]
-content_margin_left = 10.0
-content_margin_right = 5.0
-content_margin_top = 5.0
-content_margin_bottom = 5.0
-bg_color = Color( 0, 0, 0, 1 )
-border_width_left = 1
-border_width_top = 1
-border_width_right = 1
-border_width_bottom = 1
-border_color = Color( 0.227451, 0.227451, 0.227451, 1 )
-shadow_color = Color( 0, 0, 0, 0.258824 )
-shadow_size = 1
-shadow_offset = Vector2( 1, 1 )
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_aubol"]
+bg_color = Color(0, 0, 0, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.266667, 0.266667, 0.266667, 1)
+border_blend = true
+expand_margin_left = 10.0
 
-[sub_resource type="Animation" id=35]
+[sub_resource type="Animation" id="35"]
 resource_name = "MoveStuff"
 length = 0.3
 step = 0.05
 tracks/0/type = "bezier"
-tracks/0/path = NodePath("Buttons:rect_position:x")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
 tracks/0/imported = false
 tracks/0/enabled = true
+tracks/0/path = NodePath("Buttons:position:x")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
 tracks/0/keys = {
-"points": PoolRealArray( 1280, -0.25, 0, 0.25, 0, 1280, -0.25, 0, 0, -23.9106, 1232, -0.05, 0.134888, 0.25, 0 ),
-"times": PoolRealArray( 0, 0.15, 0.3 )
+"handle_modes": PackedInt32Array(0, 0),
+"points": PackedFloat32Array(1280, -0.25, 0, 0.1, -43, 1232, -0.25, 0, 0.25, 0),
+"times": PackedFloat32Array(0, 0.3)
 }
 tracks/1/type = "bezier"
-tracks/1/path = NodePath("Bottom:rect_position:y")
-tracks/1/interp = 1
-tracks/1/loop_wrap = true
 tracks/1/imported = false
 tracks/1/enabled = true
+tracks/1/path = NodePath("Bottom:position:y")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
 tracks/1/keys = {
-"points": PoolRealArray( 84, -0.25, 0, 0, -57.0637, 0, -0.05, 0.412369, 0.25, 0 ),
-"times": PoolRealArray( 0.15, 0.3 )
+"handle_modes": PackedInt32Array(0, 0),
+"points": PackedFloat32Array(84, -0.25, 0, 0.05, -86, 0, -0.2, 2, 0.25, 0),
+"times": PackedFloat32Array(0, 0.3)
 }
 tracks/2/type = "bezier"
-tracks/2/path = NodePath("Top:rect_position:y")
-tracks/2/interp = 1
-tracks/2/loop_wrap = true
 tracks/2/imported = false
 tracks/2/enabled = true
+tracks/2/path = NodePath("Top:position:y")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
 tracks/2/keys = {
-"points": PoolRealArray( -76, -0.25, 0, 0, 37.053, 0, -0.1, -1.10351, 0.25, 0 ),
-"times": PoolRealArray( 0.15, 0.3 )
+"handle_modes": PackedInt32Array(0, 0),
+"points": PackedFloat32Array(-76, -0.25, 0, 0.05, 64, 0, -0.25, 0, 0.25, 0),
+"times": PackedFloat32Array(0, 0.3)
 }
 tracks/3/type = "bezier"
-tracks/3/path = NodePath("Bookmarks:rect_position:x")
-tracks/3/interp = 1
-tracks/3/loop_wrap = true
 tracks/3/imported = false
 tracks/3/enabled = true
+tracks/3/path = NodePath("Bookmarks:position:x")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
 tracks/3/keys = {
-"points": PoolRealArray( -156, -0.25, 0, 0, 16.0558, -126, -0.1, 0.268288, 0.25, 0 ),
-"times": PoolRealArray( 0.15, 0.3 )
+"handle_modes": PackedInt32Array(),
+"points": PackedFloat32Array(),
+"times": PackedFloat32Array()
 }
 
-[sub_resource type="Animation" id=36]
+[sub_resource type="Animation" id="36"]
 length = 0.001
 tracks/0/type = "bezier"
-tracks/0/path = NodePath("Buttons:rect_position:x")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
 tracks/0/imported = false
 tracks/0/enabled = true
+tracks/0/path = NodePath("Buttons:position:x")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
 tracks/0/keys = {
-"points": PoolRealArray( 1232, -0.25, 0, 0.25, 0 ),
-"times": PoolRealArray( 0 )
+"handle_modes": PackedInt32Array(),
+"points": PackedFloat32Array(),
+"times": PackedFloat32Array()
 }
 tracks/1/type = "bezier"
-tracks/1/path = NodePath("Bottom:rect_position:y")
-tracks/1/interp = 1
-tracks/1/loop_wrap = true
 tracks/1/imported = false
 tracks/1/enabled = true
+tracks/1/path = NodePath("Bottom:position:y")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
 tracks/1/keys = {
-"points": PoolRealArray( 84, -0.25, 0, 0.25, 0 ),
-"times": PoolRealArray( 0 )
+"handle_modes": PackedInt32Array(),
+"points": PackedFloat32Array(),
+"times": PackedFloat32Array()
 }
 tracks/2/type = "bezier"
-tracks/2/path = NodePath("Top:rect_position:y")
-tracks/2/interp = 1
-tracks/2/loop_wrap = true
 tracks/2/imported = false
 tracks/2/enabled = true
+tracks/2/path = NodePath("Top:position:y")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
 tracks/2/keys = {
-"points": PoolRealArray( -76, -0.25, 0, 0.25, 0 ),
-"times": PoolRealArray( 0 )
+"handle_modes": PackedInt32Array(),
+"points": PackedFloat32Array(),
+"times": PackedFloat32Array()
 }
 tracks/3/type = "bezier"
-tracks/3/path = NodePath("Bookmarks:rect_position:x")
-tracks/3/interp = 1
-tracks/3/loop_wrap = true
 tracks/3/imported = false
 tracks/3/enabled = true
+tracks/3/path = NodePath("Bookmarks:position:x")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
 tracks/3/keys = {
-"points": PoolRealArray( -156, -0.25, 0, 0.25, 0 ),
-"times": PoolRealArray( 0 )
+"handle_modes": PackedInt32Array(),
+"points": PackedFloat32Array(),
+"times": PackedFloat32Array()
 }
 tracks/4/type = "bezier"
-tracks/4/path = NodePath("Bookmarks:rect_position:y")
-tracks/4/interp = 1
-tracks/4/loop_wrap = true
 tracks/4/imported = false
 tracks/4/enabled = true
+tracks/4/path = NodePath("Bookmarks:position:y")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
 tracks/4/keys = {
-"points": PoolRealArray( 108, -0.25, 0, 0.25, 0 ),
-"times": PoolRealArray( 0 )
+"handle_modes": PackedInt32Array(),
+"points": PackedFloat32Array(),
+"times": PackedFloat32Array()
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_f72sx"]
+_data = {
+"MoveStuff": SubResource("35"),
+"RESET": SubResource("36")
 }
 
 [node name="HUD" type="Control"]
+layout_mode = 3
+anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 mouse_filter = 2
-theme = ExtResource( 7 )
-script = ExtResource( 5 )
+theme = ExtResource("7")
+script = ExtResource("5")
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
-anims/BookmarkAnim = SubResource( 1 )
+libraries = {
+"": SubResource("AnimationLibrary_awikt")
+}
 
 [node name="MouseIn" type="Polygon2D" parent="."]
 visible = false
-polygon = PoolVector2Array( 0, 110, 30, 110, 30, 232, 0, 232 )
+polygon = PackedVector2Array(0, 110, 30, 110, 30, 232, 0, 232)
 
 [node name="MouseOut" type="Polygon2D" parent="."]
 visible = false
-position = Vector2( 0, -6.10526 )
-scale = Vector2( 1, 1.02632 )
-polygon = PoolVector2Array( 0, 80, 198, 80, 198, 232, 0, 232 )
+position = Vector2(0, -6.10526)
+scale = Vector2(1, 1.02632)
+polygon = PackedVector2Array(0, 80, 198, 80, 198, 232, 0, 232)
 
 [node name="Bookmarks" type="Control" parent="."]
-margin_left = -156.0
-margin_top = 108.0
-margin_right = -2.0
-margin_bottom = 226.0
+anchors_preset = 0
+offset_left = -126.0
+offset_top = 108.0
+offset_right = 28.0
+offset_bottom = 226.0
 mouse_filter = 1
 
 [node name="Bookmarked" type="TextureButton" parent="Bookmarks"]
-margin_left = 128.0
-margin_top = -28.0
-margin_right = 153.0
-margin_bottom = -4.0
+layout_mode = 0
+offset_left = 128.0
+offset_top = -28.0
+offset_right = 158.0
+offset_bottom = -4.0
 toggle_mode = true
+shortcut = SubResource("3")
 shortcut_in_tooltip = false
-shortcut = SubResource( 3 )
-texture_normal = ExtResource( 30 )
-texture_pressed = ExtResource( 32 )
-expand = true
+texture_normal = ExtResource("30")
+texture_pressed = ExtResource("32")
+ignore_texture_size = true
 stretch_mode = 5
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="BookMarkButtons" type="VBoxContainer" parent="Bookmarks"]
-margin_left = 124.0
-margin_right = 154.0
-margin_bottom = 121.0
-custom_constants/separation = -1
-__meta__ = {
-"_edit_use_anchors_": false
-}
+layout_mode = 0
+offset_left = 126.0
+offset_right = 158.0
+offset_bottom = 125.0
+theme_override_constants/separation = -1
 
 [node name="Planets" type="Button" parent="Bookmarks/BookMarkButtons"]
-margin_right = 32.0
-margin_bottom = 32.0
-rect_min_size = Vector2( 32, 32 )
-custom_styles/hover = SubResource( 4 )
-custom_styles/pressed = SubResource( 4 )
-custom_styles/normal = SubResource( 5 )
+custom_minimum_size = Vector2(32, 32)
+layout_mode = 2
 
 [node name="TextureRect" type="TextureRect" parent="Bookmarks/BookMarkButtons/Planets"]
-margin_left = 5.0
-margin_top = 5.0
-margin_right = 28.0
-margin_bottom = 28.0
-rect_min_size = Vector2( 20, 20 )
-texture = ExtResource( 27 )
-expand = true
-stretch_mode = 6
-__meta__ = {
-"_edit_use_anchors_": false
-}
+custom_minimum_size = Vector2(20, 20)
+layout_mode = 0
+offset_left = 5.0
+offset_top = 5.0
+offset_right = 28.0
+offset_bottom = 28.0
+texture = ExtResource("27")
+expand_mode = 1
+stretch_mode = 5
 
 [node name="Systems" type="Button" parent="Bookmarks/BookMarkButtons"]
-margin_top = 31.0
-margin_right = 32.0
-margin_bottom = 63.0
-rect_min_size = Vector2( 32, 32 )
-custom_styles/hover = SubResource( 4 )
-custom_styles/pressed = SubResource( 4 )
-custom_styles/normal = SubResource( 5 )
+visible = false
+custom_minimum_size = Vector2(32, 32)
+layout_mode = 2
 
 [node name="TextureRect" type="TextureRect" parent="Bookmarks/BookMarkButtons/Systems"]
-modulate = Color( 1, 1, 1, 0.501961 )
-margin_top = 1.0
-margin_right = 32.0
-margin_bottom = 31.0
-rect_min_size = Vector2( 20, 20 )
-texture = ExtResource( 28 )
-expand = true
-stretch_mode = 6
-__meta__ = {
-"_edit_use_anchors_": false
-}
+modulate = Color(1, 1, 1, 0.501961)
+custom_minimum_size = Vector2(20, 20)
+layout_mode = 0
+offset_top = 1.0
+offset_right = 32.0
+offset_bottom = 31.0
+texture = ExtResource("28")
+expand_mode = 1
+stretch_mode = 5
 
 [node name="Galaxies" type="Button" parent="Bookmarks/BookMarkButtons"]
-margin_top = 62.0
-margin_right = 32.0
-margin_bottom = 94.0
-rect_min_size = Vector2( 32, 32 )
-custom_styles/hover = SubResource( 4 )
-custom_styles/pressed = SubResource( 4 )
-custom_styles/normal = SubResource( 5 )
+visible = false
+custom_minimum_size = Vector2(32, 32)
+layout_mode = 2
 
 [node name="TextureRect" type="TextureRect" parent="Bookmarks/BookMarkButtons/Galaxies"]
-modulate = Color( 1, 1, 1, 0.501961 )
-margin_left = 2.0
-margin_top = 4.0
-margin_right = 30.0
-margin_bottom = 28.0
-rect_min_size = Vector2( 20, 20 )
-texture = ExtResource( 29 )
-expand = true
-stretch_mode = 6
-__meta__ = {
-"_edit_use_anchors_": false
-}
+modulate = Color(1, 1, 1, 0.501961)
+custom_minimum_size = Vector2(20, 20)
+layout_mode = 0
+offset_left = 2.0
+offset_top = 4.0
+offset_right = 30.0
+offset_bottom = 28.0
+texture = ExtResource("29")
+expand_mode = 1
+stretch_mode = 5
 
 [node name="Clusters" type="Button" parent="Bookmarks/BookMarkButtons"]
-margin_top = 93.0
-margin_right = 32.0
-margin_bottom = 125.0
-rect_min_size = Vector2( 32, 32 )
-custom_styles/hover = SubResource( 4 )
-custom_styles/pressed = SubResource( 4 )
-custom_styles/normal = SubResource( 5 )
+visible = false
+custom_minimum_size = Vector2(32, 32)
+layout_mode = 2
 
 [node name="TextureRect" type="TextureRect" parent="Bookmarks/BookMarkButtons/Clusters"]
-modulate = Color( 1, 1, 1, 0.501961 )
-margin_left = 2.0
-margin_top = 4.0
-margin_right = 30.0
-margin_bottom = 29.0
-rect_min_size = Vector2( 20, 20 )
-texture = ExtResource( 31 )
-expand = true
-stretch_mode = 6
+modulate = Color(1, 1, 1, 0.501961)
+custom_minimum_size = Vector2(20, 20)
+layout_mode = 0
+offset_left = 2.0
+offset_top = 4.0
+offset_right = 30.0
+offset_bottom = 29.0
+texture = ExtResource("31")
+expand_mode = 1
+stretch_mode = 5
 
-[node name="BookmarksList" type="PanelContainer" parent="Bookmarks"]
-margin_left = -2.0
-margin_right = 126.0
-margin_bottom = 124.0
-custom_styles/panel = SubResource( 6 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
+[node name="BookmarksList" type="Panel" parent="Bookmarks"]
+layout_mode = 0
+offset_left = -2.0
+offset_right = 126.0
+offset_bottom = 124.0
 
-[node name="Planets" type="ScrollContainer" parent="Bookmarks/BookmarksList"]
-margin_left = 5.0
-margin_top = 5.0
-margin_right = 123.0
-margin_bottom = 119.0
-__meta__ = {
-"_edit_use_anchors_": false
-}
+[node name="Buttons" type="ScrollContainer" parent="Bookmarks/BookmarksList"]
+layout_mode = 2
+offset_left = 8.0
+offset_top = 8.0
+offset_right = 120.0
+offset_bottom = 116.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_e2ib3")
+horizontal_scroll_mode = 3
 
-[node name="GridContainer" type="GridContainer" parent="Bookmarks/BookmarksList/Planets"]
-margin_left = 10.0
-margin_top = 10.0
-margin_right = 10.0
-margin_bottom = 10.0
-custom_constants/vseparation = 2
-custom_constants/hseparation = 2
-columns = 3
-
-[node name="Systems" type="ScrollContainer" parent="Bookmarks/BookmarksList"]
-visible = false
-margin_left = 5.0
-margin_top = 5.0
-margin_right = 121.0
-margin_bottom = 119.0
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="GridContainer" type="GridContainer" parent="Bookmarks/BookmarksList/Systems"]
-margin_left = 10.0
-margin_top = 10.0
-margin_right = 10.0
-margin_bottom = 10.0
-custom_constants/vseparation = 2
-custom_constants/hseparation = 2
-columns = 3
-
-[node name="Galaxies" type="ScrollContainer" parent="Bookmarks/BookmarksList"]
-visible = false
-margin_left = 5.0
-margin_top = 5.0
-margin_right = 121.0
-margin_bottom = 119.0
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="GridContainer" type="GridContainer" parent="Bookmarks/BookmarksList/Galaxies"]
-margin_left = 10.0
-margin_top = 10.0
-margin_right = 10.0
-margin_bottom = 10.0
-custom_constants/vseparation = 2
-custom_constants/hseparation = 2
-columns = 3
-
-[node name="Clusters" type="ScrollContainer" parent="Bookmarks/BookmarksList"]
-visible = false
-margin_left = 5.0
-margin_top = 5.0
-margin_right = 121.0
-margin_bottom = 119.0
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="GridContainer" type="GridContainer" parent="Bookmarks/BookmarksList/Clusters"]
-margin_left = 10.0
-margin_top = 10.0
-margin_right = 10.0
-margin_bottom = 10.0
-custom_constants/vseparation = 2
-custom_constants/hseparation = 2
-columns = 3
+[node name="VBoxContainer" type="VBoxContainer" parent="Bookmarks/BookmarksList/Buttons"]
+layout_mode = 2
+theme_override_constants/separation = 0
 
 [node name="Buttons" type="VBoxContainer" parent="."]
-margin_left = 1232.0
-margin_top = 48.0
-margin_right = 1280.0
-margin_bottom = 720.0
+layout_mode = 0
+offset_left = 1280.0
+offset_top = 48.0
+offset_right = 1328.0
+offset_bottom = 720.0
 mouse_filter = 2
-custom_constants/separation = 0
+theme_override_constants/separation = 0
 alignment = 1
 
 [node name="Ships" type="TextureButton" parent="Buttons"]
-material = SubResource( 40 )
-margin_top = 144.0
-margin_right = 48.0
-margin_bottom = 192.0
-rect_min_size = Vector2( 0, 48 )
-shortcut_in_tooltip = false
+material = SubResource("40")
+custom_minimum_size = Vector2(0, 48)
+layout_mode = 2
 keep_pressed_outside = true
-shortcut = SubResource( 12 )
-texture_normal = ExtResource( 17 )
-expand = true
+shortcut = SubResource("12")
+shortcut_in_tooltip = false
+texture_normal = ExtResource("17")
+ignore_texture_size = true
 stretch_mode = 5
 
 [node name="Vehicles" type="TextureButton" parent="Buttons"]
-margin_top = 192.0
-margin_right = 48.0
-margin_bottom = 240.0
-rect_min_size = Vector2( 0, 48 )
-shortcut_in_tooltip = false
+custom_minimum_size = Vector2(0, 48)
+layout_mode = 2
 keep_pressed_outside = true
-shortcut = SubResource( 14 )
-texture_normal = ExtResource( 22 )
-expand = true
+shortcut = SubResource("14")
+shortcut_in_tooltip = false
+texture_normal = ExtResource("22")
+ignore_texture_size = true
 stretch_mode = 5
 
 [node name="Craft" type="TextureButton" parent="Buttons"]
-margin_top = 240.0
-margin_right = 48.0
-margin_bottom = 288.0
-rect_min_size = Vector2( 0, 48 )
-shortcut_in_tooltip = false
+custom_minimum_size = Vector2(0, 48)
+layout_mode = 2
 keep_pressed_outside = true
-shortcut = SubResource( 16 )
-texture_normal = ExtResource( 1 )
-expand = true
+shortcut = SubResource("16")
+shortcut_in_tooltip = false
+texture_normal = ExtResource("1")
+ignore_texture_size = true
 stretch_mode = 5
 
 [node name="Inventory" type="TextureButton" parent="Buttons"]
-margin_top = 288.0
-margin_right = 48.0
-margin_bottom = 336.0
-rect_min_size = Vector2( 0, 48 )
+custom_minimum_size = Vector2(0, 48)
+layout_mode = 2
+shortcut = SubResource("18")
 shortcut_in_tooltip = false
-shortcut = SubResource( 18 )
-texture_normal = ExtResource( 10 )
-expand = true
+texture_normal = ExtResource("10")
+ignore_texture_size = true
 stretch_mode = 5
 
 [node name="Shop" type="TextureButton" parent="Buttons"]
-margin_top = 336.0
-margin_right = 48.0
-margin_bottom = 384.0
-rect_min_size = Vector2( 0, 48 )
+custom_minimum_size = Vector2(0, 48)
+layout_mode = 2
+shortcut = SubResource("20")
 shortcut_in_tooltip = false
-shortcut = SubResource( 20 )
-texture_normal = ExtResource( 9 )
-expand = true
+texture_normal = ExtResource("9")
+ignore_texture_size = true
 stretch_mode = 5
 
 [node name="MineralUpgrades" type="TextureButton" parent="Buttons"]
-margin_top = 384.0
-margin_right = 48.0
-margin_bottom = 432.0
-rect_min_size = Vector2( 0, 48 )
+custom_minimum_size = Vector2(0, 48)
+layout_mode = 2
+shortcut = SubResource("22")
 shortcut_in_tooltip = false
-shortcut = SubResource( 22 )
-texture_normal = ExtResource( 6 )
-expand = true
+texture_normal = ExtResource("6")
+ignore_texture_size = true
 stretch_mode = 5
 
 [node name="ScienceTree" type="TextureButton" parent="Buttons"]
-margin_top = 432.0
-margin_right = 48.0
-margin_bottom = 480.0
-rect_min_size = Vector2( 0, 48 )
+custom_minimum_size = Vector2(0, 48)
+layout_mode = 2
+shortcut = SubResource("24")
 shortcut_in_tooltip = false
-shortcut = SubResource( 24 )
-texture_normal = ExtResource( 13 )
-expand = true
+texture_normal = ExtResource("13")
+ignore_texture_size = true
 stretch_mode = 5
 
 [node name="MainMenu" type="TextureButton" parent="Buttons"]
-margin_top = 480.0
-margin_right = 48.0
-margin_bottom = 528.0
-rect_min_size = Vector2( 0, 48 )
+custom_minimum_size = Vector2(0, 48)
+layout_mode = 2
+shortcut = SubResource("24")
 shortcut_in_tooltip = false
-shortcut = SubResource( 24 )
-texture_normal = ExtResource( 14 )
-expand = true
+texture_normal = ExtResource("14")
+ignore_texture_size = true
 stretch_mode = 5
 
 [node name="Bottom" type="Control" parent="."]
-margin_top = 84.0
-margin_right = 40.0
-margin_bottom = 124.0
+anchors_preset = 0
+offset_top = 84.0
+offset_right = 40.0
+offset_bottom = 124.0
 
 [node name="Panel" type="Panel" parent="Bottom"]
-margin_left = 1220.0
-margin_top = 656.0
-margin_right = 1272.0
-margin_bottom = 704.0
+layout_mode = 0
+offset_left = 1220.0
+offset_top = 656.0
+offset_right = 1272.0
+offset_bottom = 704.0
 
 [node name="ColorRect" type="ColorRect" parent="Bottom/Panel"]
+layout_mode = 0
 anchor_right = 1.0
 anchor_bottom = 1.0
-color = Color( 1, 1, 1, 0 )
+color = Color(1, 1, 1, 0)
 
 [node name="ConvertMinerals" type="TextureButton" parent="Bottom/Panel"]
+layout_mode = 0
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-margin_left = -20.0
-margin_top = -22.0
-margin_right = 20.0
-margin_bottom = 22.0
+offset_left = -20.0
+offset_top = -22.0
+offset_right = 20.0
+offset_bottom = 22.0
+shortcut = SubResource("Shortcut_xflk1")
 shortcut_in_tooltip = false
-shortcut = SubResource( 28 )
-texture_normal = ExtResource( 15 )
-expand = true
+texture_normal = ExtResource("15")
+ignore_texture_size = true
 stretch_mode = 5
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="Bottom/Panel"]
-anims/Flash = SubResource( 37 )
-anims/RESET = SubResource( 38 )
+libraries = {
+"": SubResource("AnimationLibrary_4yly8")
+}
 
 [node name="DimensionBtn" type="TextureButton" parent="Bottom"]
+layout_mode = 0
 anchor_top = 1.0
 anchor_bottom = 1.0
-margin_left = 48.0
-margin_top = 632.0
-margin_right = 96.0
-margin_bottom = 680.0
-texture_normal = ExtResource( 33 )
-expand = true
+offset_left = 48.0
+offset_top = 632.0
+offset_right = 96.0
+offset_bottom = 680.0
+texture_normal = ExtResource("33")
+ignore_texture_size = true
 stretch_mode = 5
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="SwitchBtn" type="TextureButton" parent="Bottom"]
+layout_mode = 0
 anchor_top = 1.0
 anchor_bottom = 1.0
-margin_top = 632.0
-margin_right = 48.0
-margin_bottom = 680.0
+offset_top = 632.0
+offset_right = 48.0
+offset_bottom = 680.0
+shortcut = SubResource("30")
+shortcut_feedback = false
 shortcut_in_tooltip = false
-shortcut = SubResource( 30 )
-expand = true
+ignore_texture_size = true
 stretch_mode = 5
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="PrevView" type="Button" parent="Bottom"]
-margin_top = 636.0
-margin_right = 36.0
-margin_bottom = 670.0
+layout_mode = 0
+offset_top = 636.0
+offset_right = 36.0
+offset_bottom = 670.0
+shortcut = SubResource("32")
 shortcut_in_tooltip = false
-shortcut = SubResource( 32 )
 text = "<"
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="NextView" type="Button" parent="Bottom"]
-margin_left = 36.0
-margin_top = 636.0
-margin_right = 72.0
-margin_bottom = 670.0
+layout_mode = 0
+offset_left = 36.0
+offset_top = 636.0
+offset_right = 72.0
+offset_bottom = 670.0
+shortcut = SubResource("34")
 shortcut_in_tooltip = false
-shortcut = SubResource( 34 )
 text = ">"
 
 [node name="Hotbar" type="HBoxContainer" parent="Bottom"]
-margin_top = 680.0
-margin_right = 1829.0
-margin_bottom = 740.0
-rect_scale = Vector2( 0.7, 0.7 )
+layout_mode = 0
+offset_top = 680.0
+offset_right = 1829.0
+offset_bottom = 740.0
+scale = Vector2(0.7, 0.7)
 mouse_filter = 2
-custom_constants/separation = -2
 alignment = 1
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="ViewHistory" type="ScrollContainer" parent="Bottom"]
 visible = false
-margin_top = 516.0
-margin_right = 216.0
-margin_bottom = 628.0
+layout_mode = 0
+offset_top = 516.0
+offset_right = 216.0
+offset_bottom = 628.0
 
 [node name="VBox" type="VBoxContainer" parent="Bottom/ViewHistory"]
-margin_left = 10.0
-margin_top = 10.0
-margin_right = 10.0
-margin_bottom = 10.0
+layout_mode = 2
 
 [node name="Top" type="Control" parent="."]
-margin_top = -76.0
-margin_right = 40.0
-margin_bottom = -36.0
+anchors_preset = 0
+offset_top = -76.0
+offset_right = 40.0
+offset_bottom = -36.0
 
 [node name="Objectives" type="Control" parent="Top"]
-margin_left = 640.0
-margin_top = 4.0
-margin_right = 680.0
-margin_bottom = 44.0
+anchors_preset = 0
+offset_left = 640.0
+offset_top = 4.0
+offset_right = 680.0
+offset_bottom = 44.0
 mouse_filter = 1
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="Label" type="Label" parent="Top/Objectives"]
 visible = false
-margin_left = -44.0
-margin_right = 48.0
-margin_bottom = 34.0
+layout_mode = 0
+offset_left = -44.0
+offset_right = 48.0
+offset_bottom = 34.0
 grow_horizontal = 2
 mouse_filter = 0
-custom_styles/normal = SubResource( 7 )
 text = "Build 5 mineral extractors"
-align = 1
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
-[node name="TextureProgress" type="TextureProgress" parent="Top/Objectives"]
-modulate = Color( 1, 1, 1, 0.305882 )
-margin_left = -44.0
-margin_right = 100.0
-margin_bottom = 32.0
+[node name="TextureProgressBar" type="TextureProgressBar" parent="Top/Objectives"]
+modulate = Color(1, 1, 1, 0.305882)
+layout_mode = 0
+offset_left = -44.0
+offset_right = 100.0
+offset_bottom = 32.0
 mouse_filter = 2
-texture_progress = ExtResource( 16 )
 nine_patch_stretch = true
+texture_progress = ExtResource("16")
 
 [node name="Lv" type="VBoxContainer" parent="Top"]
-margin_top = 38.0
-margin_right = 70.0
-margin_bottom = 77.0
-custom_constants/separation = 0
-__meta__ = {
-"_edit_use_anchors_": false
-}
+layout_mode = 0
+offset_top = 38.0
+offset_right = 48.0
+offset_bottom = 77.0
 
 [node name="Label" type="Label" parent="Top/Lv"]
-margin_right = 70.0
-margin_bottom = 34.0
+layout_mode = 2
 mouse_filter = 0
-custom_colors/font_color = Color( 1, 1, 1, 1 )
-custom_styles/normal = SubResource( 8 )
-text = "Lv 1"
-align = 1
+theme_override_styles/normal = SubResource("StyleBoxFlat_jjxme")
+text = "Lv 10"
+label_settings = SubResource("LabelSettings_uu53f")
 
-[node name="TextureProgress" type="TextureProgress" parent="Top/Lv"]
-modulate = Color( 0, 1, 0, 1 )
-margin_top = 34.0
-margin_right = 70.0
-margin_bottom = 37.0
-rect_min_size = Vector2( 0, 3 )
+[node name="TextureProgressBar" type="TextureProgressBar" parent="Top/Lv"]
+modulate = Color(0, 1, 0, 1)
+custom_minimum_size = Vector2(0, 3)
+layout_mode = 2
 max_value = 1.0
 step = 0.0
 value = 1.0
-texture_progress = ExtResource( 16 )
 nine_patch_stretch = true
-__meta__ = {
-"_edit_use_anchors_": false
-}
+texture_progress = ExtResource("16")
 
 [node name="Name" type="HBoxContainer" parent="Top"]
-margin_left = 144.0
-margin_top = 38.0
-margin_right = 352.0
-margin_bottom = 72.0
-__meta__ = {
-"_edit_use_anchors_": false
-}
+layout_mode = 0
+offset_left = 144.0
+offset_top = 38.0
+offset_right = 352.0
+offset_bottom = 72.0
 
 [node name="Name" type="LineEdit" parent="Top/Name"]
-margin_right = 21.0
-margin_bottom = 34.0
-custom_colors/selection_color = Color( 1, 1, 1, 1 )
-custom_colors/cursor_color = Color( 1, 1, 1, 1 )
-custom_colors/font_color_selected = Color( 0, 0, 0, 1 )
-custom_colors/font_color = Color( 1, 1, 1, 1 )
-custom_constants/minimum_spaces = 0
-custom_styles/focus = SubResource( 9 )
-custom_styles/normal = SubResource( 10 )
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_selected_color = Color(0, 0, 0, 1)
+theme_override_colors/caret_color = Color(1, 1, 1, 1)
+theme_override_colors/selection_color = Color(1, 1, 1, 1)
+theme_override_styles/normal = SubResource("StyleBoxFlat_aubol")
+theme_override_styles/focus = SubResource("StyleBoxFlat_aubol")
 expand_to_text_length = true
+shortcut_keys_enabled = false
+select_all_on_focus = true
 caret_blink = true
-caret_blink_speed = 0.5
+caret_blink_interval = 0.5
 
 [node name="TextureRect" type="TextureRect" parent="Top"]
-margin_right = 1280.0
-margin_bottom = 45.0
-texture = ExtResource( 21 )
+layout_mode = 0
+offset_right = 1280.0
+offset_bottom = 45.0
+texture = ExtResource("21")
 
 [node name="Resources" type="HBoxContainer" parent="Top"]
-margin_top = 4.0
-margin_right = 1176.0
-margin_bottom = 36.0
+layout_mode = 0
+offset_top = 4.0
+offset_right = 1176.0
+offset_bottom = 36.0
 
 [node name="Money" type="Control" parent="Top/Resources"]
-margin_right = 160.0
-margin_bottom = 32.0
-rect_min_size = Vector2( 40, 0 )
+custom_minimum_size = Vector2(40, 0)
+layout_mode = 2
 size_flags_horizontal = 3
 size_flags_stretch_ratio = 0.8
 
 [node name="Text" type="Label" parent="Top/Resources/Money"]
-margin_left = 44.0
-margin_top = 4.0
-margin_right = 77.0
-margin_bottom = 28.0
-custom_colors/font_color = Color( 1, 1, 1, 1 )
+layout_mode = 0
+offset_left = 44.0
+offset_right = 77.0
+offset_bottom = 32.0
 text = "100"
-valign = 1
+vertical_alignment = 1
 
-[node name="Texture" type="TextureButton" parent="Top/Resources/Money"]
-margin_left = 10.0
-margin_top = 4.0
-margin_right = 40.0
-margin_bottom = 36.0
-rect_scale = Vector2( 0.8, 0.8 )
-texture_normal = ExtResource( 2 )
-expand = true
+[node name="Texture2D" type="TextureButton" parent="Top/Resources/Money"]
+layout_mode = 0
+offset_left = 10.0
+offset_right = 40.0
+offset_bottom = 37.0
+scale = Vector2(0.8, 0.8)
+texture_normal = ExtResource("2")
+ignore_texture_size = true
 stretch_mode = 5
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="Minerals" type="Control" parent="Top/Resources"]
-margin_left = 164.0
-margin_right = 385.0
-margin_bottom = 32.0
-rect_min_size = Vector2( 40, 0 )
+custom_minimum_size = Vector2(40, 0)
+layout_mode = 2
 size_flags_horizontal = 3
 size_flags_stretch_ratio = 1.1
 
 [node name="Text" type="Label" parent="Top/Resources/Minerals"]
-margin_left = 44.0
-margin_top = 4.0
-margin_right = 116.0
-margin_bottom = 28.0
+layout_mode = 0
+offset_left = 44.0
+offset_right = 116.0
+offset_bottom = 32.0
 mouse_filter = 1
-custom_colors/font_color = Color( 1, 1, 1, 1 )
 text = "100/100"
-valign = 1
+vertical_alignment = 1
 
-[node name="Texture" type="TextureButton" parent="Top/Resources/Minerals"]
-margin_left = 4.0
-margin_right = 35.0
-margin_bottom = 31.0
-texture_normal = ExtResource( 4 )
-expand = true
+[node name="Texture2D" type="TextureButton" parent="Top/Resources/Minerals"]
+layout_mode = 0
+offset_left = 4.0
+offset_right = 35.0
+offset_bottom = 32.0
+texture_normal = ExtResource("4")
+ignore_texture_size = true
 stretch_mode = 5
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="Stone" type="Control" parent="Top/Resources"]
-margin_left = 389.0
-margin_right = 591.0
-margin_bottom = 32.0
-rect_min_size = Vector2( 40, 0 )
+custom_minimum_size = Vector2(40, 0)
+layout_mode = 2
 size_flags_horizontal = 3
 
 [node name="Text" type="Label" parent="Top/Resources/Stone"]
-margin_left = 44.0
-margin_top = 4.0
-margin_right = 301.0
-margin_bottom = 28.0
+layout_mode = 0
+offset_left = 44.0
+offset_right = 187.0
+offset_bottom = 32.0
 size_flags_horizontal = 3
-custom_colors/font_color = Color( 1, 1, 1, 1 )
 text = "100"
-valign = 1
+vertical_alignment = 1
 
-[node name="Texture" type="TextureButton" parent="Top/Resources/Stone"]
-margin_left = -2.0
-margin_top = -4.0
-margin_right = 254.0
-margin_bottom = 252.0
-rect_scale = Vector2( 0.14, 0.14 )
-texture_normal = ExtResource( 8 )
+[node name="Texture2D" type="TextureButton" parent="Top/Resources/Stone"]
+layout_mode = 0
+offset_left = -2.0
+offset_top = -4.0
+offset_right = 254.0
+offset_bottom = 252.0
+scale = Vector2(0.14, 0.14)
+texture_normal = ExtResource("8")
+ignore_texture_size = true
 
 [node name="Soil" type="Control" parent="Top/Resources"]
 visible = false
-margin_left = 732.0
-margin_right = 972.0
-margin_bottom = 32.0
-rect_min_size = Vector2( 40, 0 )
+custom_minimum_size = Vector2(40, 0)
+layout_mode = 2
 size_flags_horizontal = 3
 size_flags_stretch_ratio = 0.8
 
 [node name="Text" type="Label" parent="Top/Resources/Soil"]
-margin_left = 44.0
-margin_top = 4.0
-margin_right = 301.0
-margin_bottom = 28.0
+layout_mode = 0
+offset_left = 44.0
+offset_top = 4.0
+offset_right = 301.0
+offset_bottom = 28.0
 size_flags_horizontal = 3
-custom_colors/font_color = Color( 1, 1, 1, 1 )
 text = "100"
-valign = 1
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
-[node name="Texture" type="TextureButton" parent="Top/Resources/Soil"]
-margin_left = -2.0
-margin_top = -4.0
-margin_right = 254.0
-margin_bottom = 252.0
-rect_scale = Vector2( 0.14, 0.14 )
-texture_normal = ExtResource( 11 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
+[node name="Texture2D" type="TextureButton" parent="Top/Resources/Soil"]
+layout_mode = 0
+offset_left = -2.0
+offset_top = -4.0
+offset_right = 254.0
+offset_bottom = 252.0
+scale = Vector2(0.14, 0.14)
+texture_normal = ExtResource("11")
+ignore_texture_size = true
 
 [node name="Glass" type="Control" parent="Top/Resources"]
 visible = false
-margin_left = 609.0
-margin_right = 809.0
-margin_bottom = 32.0
-rect_min_size = Vector2( 40, 0 )
+custom_minimum_size = Vector2(40, 0)
+layout_mode = 2
 size_flags_horizontal = 3
 
 [node name="Text" type="Label" parent="Top/Resources/Glass"]
-margin_left = 44.0
-margin_top = 4.0
-margin_right = 301.0
-margin_bottom = 28.0
+layout_mode = 0
+offset_left = 44.0
+offset_top = 4.0
+offset_right = 301.0
+offset_bottom = 28.0
 size_flags_horizontal = 3
-custom_colors/font_color = Color( 1, 1, 1, 1 )
 text = "100"
-valign = 1
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
-[node name="Texture" type="TextureButton" parent="Top/Resources/Glass"]
-margin_left = -2.0
-margin_top = -4.0
-margin_right = 254.0
-margin_bottom = 252.0
-rect_scale = Vector2( 0.14, 0.14 )
-texture_normal = ExtResource( 26 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
+[node name="Texture2D" type="TextureButton" parent="Top/Resources/Glass"]
+layout_mode = 0
+offset_left = -2.0
+offset_top = -4.0
+offset_right = 254.0
+offset_bottom = 252.0
+scale = Vector2(0.14, 0.14)
+texture_normal = ExtResource("26")
+ignore_texture_size = true
 
 [node name="Cellulose" type="Control" parent="Top/Resources"]
-margin_left = 595.0
-margin_right = 755.0
-margin_bottom = 32.0
-rect_min_size = Vector2( 40, 0 )
+custom_minimum_size = Vector2(40, 0)
+layout_mode = 2
 size_flags_horizontal = 3
 size_flags_stretch_ratio = 0.8
 
 [node name="Text" type="Label" parent="Top/Resources/Cellulose"]
-margin_left = 44.0
-margin_top = 4.0
-margin_right = 301.0
-margin_bottom = 28.0
+layout_mode = 0
+offset_left = 44.0
+offset_right = 157.0
+offset_bottom = 32.0
 size_flags_horizontal = 3
-custom_colors/font_color = Color( 1, 1, 1, 1 )
 text = "100"
-valign = 1
-__meta__ = {
-"_edit_use_anchors_": false
-}
+vertical_alignment = 1
 
-[node name="Texture" type="TextureButton" parent="Top/Resources/Cellulose"]
-margin_left = -1.0
-margin_top = -4.0
-margin_right = 31.0
-margin_bottom = 36.0
-texture_normal = ExtResource( 34 )
-expand = true
+[node name="Texture2D" type="TextureButton" parent="Top/Resources/Cellulose"]
+layout_mode = 0
+offset_left = -1.0
+offset_right = 31.0
+offset_bottom = 32.0
+texture_normal = ExtResource("34")
+ignore_texture_size = true
 stretch_mode = 5
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="Energy" type="Control" parent="Top/Resources"]
-margin_left = 759.0
-margin_right = 981.0
-margin_bottom = 32.0
-rect_min_size = Vector2( 40, 0 )
+custom_minimum_size = Vector2(40, 0)
+layout_mode = 2
 size_flags_horizontal = 3
 size_flags_stretch_ratio = 1.1
 
 [node name="Text" type="Label" parent="Top/Resources/Energy"]
-margin_left = 44.0
-margin_top = 4.0
-margin_right = 284.0
-margin_bottom = 28.0
-custom_colors/font_color = Color( 1, 1, 1, 1 )
+layout_mode = 0
+offset_left = 44.0
+offset_right = 209.0
+offset_bottom = 32.0
 text = "100"
-valign = 1
+vertical_alignment = 1
 
-[node name="Texture" type="TextureButton" parent="Top/Resources/Energy"]
-margin_left = 4.0
-margin_right = 35.0
-margin_bottom = 32.0
-texture_normal = ExtResource( 3 )
-expand = true
+[node name="Texture2D" type="TextureButton" parent="Top/Resources/Energy"]
+layout_mode = 0
+offset_left = 4.0
+offset_right = 35.0
+offset_bottom = 32.0
+texture_normal = ExtResource("3")
+ignore_texture_size = true
 stretch_mode = 5
 
 [node name="SP" type="Control" parent="Top/Resources"]
-margin_left = 985.0
-margin_right = 1176.0
-margin_bottom = 32.0
+layout_mode = 2
 size_flags_horizontal = 3
 size_flags_stretch_ratio = 0.95
 
 [node name="Text" type="Label" parent="Top/Resources/SP"]
-margin_left = 44.0
-margin_top = 4.0
-margin_right = 84.0
-margin_bottom = 28.0
-custom_colors/font_color = Color( 1, 1, 1, 1 )
+layout_mode = 0
+offset_left = 44.0
+offset_right = 84.0
+offset_bottom = 32.0
 text = "100"
-__meta__ = {
-"_edit_use_anchors_": false
-}
+vertical_alignment = 1
 
-[node name="Texture" type="TextureRect" parent="Top/Resources/SP"]
-margin_left = -6.0
-margin_top = 2.0
-margin_right = 32.0
-margin_bottom = 28.0
-texture = ExtResource( 12 )
-expand = true
-stretch_mode = 6
-__meta__ = {
-"_edit_use_anchors_": false
-}
+[node name="Texture2D" type="TextureButton" parent="Top/Resources/SP"]
+layout_mode = 0
+offset_left = -6.0
+offset_top = 4.0
+offset_right = 32.0
+offset_bottom = 28.0
+texture_normal = ExtResource("12")
+ignore_texture_size = true
+stretch_mode = 5
 
 [node name="AutosaveLight" type="TextureRect" parent="Top"]
-modulate = Color( 0, 0.301961, 0, 1 )
-margin_left = 1120.0
-margin_right = 1144.0
-margin_bottom = 40.0
-texture = ExtResource( 18 )
-expand = true
-stretch_mode = 6
-__meta__ = {
-"_edit_use_anchors_": false
-}
+modulate = Color(0, 0.301961, 0, 1)
+layout_mode = 0
+offset_left = 1120.0
+offset_top = 12.0
+offset_right = 1144.0
+offset_bottom = 32.0
+texture = ExtResource("18")
+expand_mode = 1
+stretch_mode = 5
 
 [node name="Wiki" type="TextureButton" parent="Top"]
-margin_left = 1200.0
-margin_right = 1230.0
-margin_bottom = 40.0
-texture_normal = ExtResource( 25 )
-expand = true
+layout_mode = 0
+offset_left = 1200.0
+offset_right = 1230.0
+offset_bottom = 40.0
+texture_normal = ExtResource("25")
+ignore_texture_size = true
 stretch_mode = 5
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="Stats" type="TextureButton" parent="Top"]
-margin_left = 1156.0
-margin_right = 1186.0
-margin_bottom = 40.0
-texture_normal = ExtResource( 35 )
-expand = true
+layout_mode = 0
+offset_left = 1156.0
+offset_right = 1186.0
+offset_bottom = 40.0
+texture_normal = ExtResource("35")
+ignore_texture_size = true
 stretch_mode = 5
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="AnimationPlayer2" type="AnimationPlayer" parent="."]
-anims/MoveStuff = SubResource( 35 )
-anims/RESET = SubResource( 36 )
+libraries = {
+"": SubResource("AnimationLibrary_f72sx")
+}
 
 [node name="Emma" type="TextureButton" parent="."]
 visible = false
-margin_left = 1112.0
-margin_top = 656.0
-margin_right = 1152.0
-margin_bottom = 700.0
+layout_mode = 0
+offset_left = 1112.0
+offset_top = 656.0
+offset_right = 1152.0
+offset_bottom = 700.0
 shortcut_in_tooltip = false
-texture_normal = ExtResource( 24 )
-expand = true
+texture_normal = ExtResource("24")
 stretch_mode = 5
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="ShipLocator" type="TextureButton" parent="."]
 visible = false
-margin_left = 1112.0
-margin_top = 656.0
-margin_right = 1152.0
-margin_bottom = 700.0
+layout_mode = 0
+offset_left = 1112.0
+offset_top = 656.0
+offset_right = 1152.0
+offset_bottom = 700.0
 shortcut_in_tooltip = false
-texture_normal = ExtResource( 19 )
-expand = true
+texture_normal = ExtResource("19")
 stretch_mode = 5
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="Ship2Map" type="TextureButton" parent="."]
 visible = false
-margin_left = 1112.0
-margin_top = 656.0
-margin_right = 1152.0
-margin_bottom = 700.0
+layout_mode = 0
+offset_left = 1112.0
+offset_top = 656.0
+offset_right = 1152.0
+offset_bottom = 700.0
 shortcut_in_tooltip = false
-texture_normal = ExtResource( 20 )
-expand = true
+texture_normal = ExtResource("20")
 stretch_mode = 5
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
-[node name="Dialogue" parent="." instance=ExtResource( 23 )]
+[node name="Dialogue" parent="." instance=ExtResource("23")]
+anchors_preset = 0
 mouse_filter = 2
 
 [connection signal="tree_entered" from="." to="." method="_on_HUD_tree_entered"]
@@ -1292,27 +1090,24 @@ mouse_filter = 2
 [connection signal="mouse_exited" from="Top/Objectives/Label" to="." method="_on_Label_mouse_exited"]
 [connection signal="mouse_entered" from="Top/Lv/Label" to="." method="_on_Label_mouse_entered"]
 [connection signal="mouse_exited" from="Top/Lv/Label" to="." method="_on_Label_mouse_exited"]
-[connection signal="gui_input" from="Top/Name/Name" to="." method="_on_Name_gui_input"]
-[connection signal="mouse_entered" from="Top/Name/Name" to="." method="_on_Name_mouse_entered"]
-[connection signal="mouse_exited" from="Top/Name/Name" to="." method="_on_Name_mouse_exited"]
-[connection signal="text_entered" from="Top/Name/Name" to="." method="_on_Name_text_entered"]
-[connection signal="mouse_entered" from="Top/Resources/Money/Texture" to="." method="_on_Texture_mouse_entered" binds= [ "MONEY" ]]
-[connection signal="mouse_exited" from="Top/Resources/Money/Texture" to="." method="_on_mouse_exited"]
+[connection signal="text_submitted" from="Top/Name/Name" to="." method="_on_Name_text_entered"]
+[connection signal="mouse_entered" from="Top/Resources/Money/Texture2D" to="." method="_on_Texture_mouse_entered" binds= ["MONEY"]]
+[connection signal="mouse_exited" from="Top/Resources/Money/Texture2D" to="." method="_on_mouse_exited"]
 [connection signal="mouse_exited" from="Top/Resources/Minerals/Text" to="." method="_on_mouse_exited"]
-[connection signal="mouse_entered" from="Top/Resources/Minerals/Texture" to="." method="_on_Texture_mouse_entered" binds= [ "MINERALS" ]]
-[connection signal="mouse_exited" from="Top/Resources/Minerals/Texture" to="." method="_on_mouse_exited"]
-[connection signal="mouse_entered" from="Top/Resources/Stone/Texture" to="." method="_on_Texture_mouse_entered" binds= [ "STONE" ]]
-[connection signal="mouse_exited" from="Top/Resources/Stone/Texture" to="." method="_on_mouse_exited"]
-[connection signal="mouse_entered" from="Top/Resources/Soil/Texture" to="." method="_on_Texture_mouse_entered" binds= [ "SOIL" ]]
-[connection signal="mouse_exited" from="Top/Resources/Soil/Texture" to="." method="_on_mouse_exited"]
-[connection signal="mouse_entered" from="Top/Resources/Glass/Texture" to="." method="_on_Texture_mouse_entered" binds= [ "GLASS" ]]
-[connection signal="mouse_exited" from="Top/Resources/Glass/Texture" to="." method="_on_mouse_exited"]
-[connection signal="mouse_entered" from="Top/Resources/Cellulose/Texture" to="." method="_on_Texture_mouse_entered" binds= [ "CELLULOSE" ]]
-[connection signal="mouse_exited" from="Top/Resources/Cellulose/Texture" to="." method="_on_mouse_exited"]
-[connection signal="mouse_entered" from="Top/Resources/Energy/Texture" to="." method="_on_Texture_mouse_entered" binds= [ "ENERGY" ]]
-[connection signal="mouse_exited" from="Top/Resources/Energy/Texture" to="." method="_on_mouse_exited"]
-[connection signal="mouse_entered" from="Top/Resources/SP/Texture" to="." method="_on_Texture_mouse_entered" binds= [ "SP" ]]
-[connection signal="mouse_exited" from="Top/Resources/SP/Texture" to="." method="_on_mouse_exited"]
+[connection signal="mouse_entered" from="Top/Resources/Minerals/Texture2D" to="." method="_on_Texture_mouse_entered" binds= ["MINERALS"]]
+[connection signal="mouse_exited" from="Top/Resources/Minerals/Texture2D" to="." method="_on_mouse_exited"]
+[connection signal="mouse_entered" from="Top/Resources/Stone/Texture2D" to="." method="_on_Texture_mouse_entered" binds= ["STONE"]]
+[connection signal="mouse_exited" from="Top/Resources/Stone/Texture2D" to="." method="_on_mouse_exited"]
+[connection signal="mouse_entered" from="Top/Resources/Soil/Texture2D" to="." method="_on_Texture_mouse_entered" binds= ["SOIL"]]
+[connection signal="mouse_exited" from="Top/Resources/Soil/Texture2D" to="." method="_on_mouse_exited"]
+[connection signal="mouse_entered" from="Top/Resources/Glass/Texture2D" to="." method="_on_Texture_mouse_entered" binds= ["GLASS"]]
+[connection signal="mouse_exited" from="Top/Resources/Glass/Texture2D" to="." method="_on_mouse_exited"]
+[connection signal="mouse_entered" from="Top/Resources/Cellulose/Texture2D" to="." method="_on_Texture_mouse_entered" binds= ["CELLULOSE"]]
+[connection signal="mouse_exited" from="Top/Resources/Cellulose/Texture2D" to="." method="_on_mouse_exited"]
+[connection signal="mouse_entered" from="Top/Resources/Energy/Texture2D" to="." method="_on_Texture_mouse_entered" binds= ["ENERGY"]]
+[connection signal="mouse_exited" from="Top/Resources/Energy/Texture2D" to="." method="_on_mouse_exited"]
+[connection signal="mouse_entered" from="Top/Resources/SP/Texture2D" to="." method="_on_Texture_mouse_entered" binds= ["SP"]]
+[connection signal="mouse_exited" from="Top/Resources/SP/Texture2D" to="." method="_on_mouse_exited"]
 [connection signal="mouse_entered" from="Top/AutosaveLight" to="." method="_on_AutosaveLight_mouse_entered"]
 [connection signal="mouse_exited" from="Top/AutosaveLight" to="." method="_on_mouse_exited"]
 [connection signal="mouse_entered" from="Top/Wiki" to="." method="_on_Wiki_mouse_entered"]

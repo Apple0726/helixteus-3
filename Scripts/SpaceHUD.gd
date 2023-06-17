@@ -1,6 +1,6 @@
 extends Control
-onready var game = get_node("/root/Game")
-onready var click_sound = game.get_node("click")
+@onready var game = get_node("/root/Game")
+@onready var click_sound = game.get_node("click")
 
 func _ready():
 	$AnimationPlayer.play("MoveButtons")

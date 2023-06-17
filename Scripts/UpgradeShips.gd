@@ -1,7 +1,7 @@
 extends Panel
 
-onready var op = $OptionButton
-onready var game = get_node("/root/Game")
+@onready var op = $OptionButton
+@onready var game = get_node("/root/Game")
 
 var Ship0_texture = preload("res://Graphics/Ships/Ship0.png")
 var Ship1_texture = preload("res://Graphics/Ships/Ship1.png")
@@ -9,7 +9,7 @@ var Ship2_texture = preload("res://Graphics/Ships/Ship2.png")
 var Ship3_texture = preload("res://Graphics/Ships/Ship3.png")
 var ship:Dictionary
 
-onready var Ship_textures = [Ship0_texture, Ship1_texture, Ship2_texture, Ship3_texture]
+@onready var Ship_textures = [Ship0_texture, Ship1_texture, Ship2_texture, Ship3_texture]
 
 func _ready():
 	_refresh_op()

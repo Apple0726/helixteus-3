@@ -539,6 +539,7 @@ var default_help = {
 				"STM":true,
 				"battle":true,
 				"battle2":true,
+				"battle3":true,
 				"plant_something_here":true,
 				"boulder_desc":true,
 				"aurora_desc":true,
@@ -570,6 +571,7 @@ var default_help = {
 				"downgrade":true,
 				"artificial_volcano":true,
 				"flash_send_probe_btn":true,
+				"hide_dimension_stuff":true,
 		}
 
 var unique_bldg_icons = {
@@ -596,4 +598,4 @@ var unique_bldg_repair_cost_multipliers = {
 
 var MS_num_stages:Dictionary = {"M_DS":4, "M_MME":3, "M_CBS":3, "M_PK":2, "M_SE":1, "M_MPCC":0, "M_MB":0}
 
-var tier_colors = [Color.white, Color(0, 0.9, 0.0), Color(0.2, 0.2, 1.0), Color(1.0, 0.2, 1.0), Color(1.0, 0.5, 0.0), Color(1.0, 1.0, 0.2), Color.red]
+var tier_colors = [Color.WHITE, Color(0, 0.9, 0.0), Color(0.2, 0.2, 1.0), Color(1.0, 0.2, 1.0), Color(1.0, 0.5, 0.0), Color(1.0, 1.0, 0.2), Color.RED]

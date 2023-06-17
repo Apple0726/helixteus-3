@@ -1,18 +1,18 @@
-extends KinematicBody2D
+extends CharacterBody2D
 
-onready var game = get_node("/root/Game")
-onready var ship:TextureButton = game.get_node("Ship")
+@onready var game = get_node("/root/Game")
+@onready var ship:TextureButton = game.get_node("Ship")
 var obj
 #var shapes = []
 var shapes_data = []
 var drawing_shape = false#For annotation
-var annotate_icon:Sprite
+var annotate_icon:Sprite2D
 var annotate_icons = []
 var line_points = {"start":Vector2.ZERO, "end":Vector2.ZERO}
 var limit_to_viewport
 const CLUSTER_SCALE_THRESHOLD:float = 1.0
 
-var rect:Sprite
+var rect:Sprite2D
 
 #Dragging variables
 var dragged = false
@@ -31,7 +31,7 @@ var move_with_keyboard = true
 var acceleration = 90
 var max_speed = 1000
 var friction = 150
-var velocity = Vector2.ZERO
+var move_speed = Vector2.ZERO
 
 #Variables for zooming smoothly
 var zoom_factor = 1.1
@@ -39,8 +39,9 @@ var zooming = ""
 var progress = 0
 var mouse_position = Vector2.ZERO
 
-var red_line:Line2D
-var green_line:Line2D
+var dep_pos = null
+var dest_pos = null
+var curr_pos = null
 
 #Scaling of objects based on zoom level
 var obj_scaled:bool = false
@@ -48,26 +49,11 @@ var changed:bool = false
 
 func _ready():
 	set_process(false)
-	red_line = Line2D.new()
-	add_child(red_line)
-	red_line.add_point(Vector2.ZERO)
-	red_line.add_point(Vector2.ZERO)
-	red_line.width = 0.1
-	red_line.default_color = Color.red
-	red_line.antialiased = true
-	green_line = Line2D.new()
-	green_line.visible = false
-	add_child(green_line)
-	green_line.add_point(Vector2.ZERO)
-	green_line.add_point(Vector2.ZERO)
-	green_line.width = 0.1
-	green_line.default_color = Color.green
-	green_line.antialiased = true
 	refresh()
-	annotate_icon = Sprite.new()
+	annotate_icon = Sprite2D.new()
 	add_child(annotate_icon)
-	rect = Sprite.new()
-	rect.texture = load("res://Graphics/Tiles/Highlight.jpg")
+	rect = Sprite2D.new()
+	rect.texture = preload("res://Graphics/Tiles/Highlight.jpg")
 	rect.visible = false
 	add_child(rect)
 
@@ -81,30 +67,29 @@ func _process(delta):
 		var scale_mult = 1.0
 		if game.c_v == "system":
 			scale_mult = 70.0 / game.system_data[game.c_s].get("closest_planet_distance", 300)
-		var dep_pos = game.ships_depart_pos * scale_mult
-		var dest_pos = game.ships_dest_pos * scale_mult
-		var pos:Vector2 = lerp(dep_pos, dest_pos, clamp(Helper.update_ship_travel(), 0, 1))
+		dep_pos = game.ships_depart_pos * scale_mult
+		dest_pos = game.ships_dest_pos * scale_mult
+		curr_pos = lerp(dep_pos, dest_pos, clamp(Helper.update_ship_travel(), 0, 1))
 		if game.ships_travel_view == "-":
-			green_line.visible = false
-			red_line.visible = false
+			dep_pos = null
+			dest_pos = null
 		else:
-			red_line.points[0] = dep_pos
-			red_line.points[1] = dest_pos
-			green_line.points[0] = dep_pos
-			green_line.points[1] = pos
-			ship.rect_position = to_global(pos) - Vector2(32, 22)
+			ship.position = to_global(curr_pos) - Vector2(32, 22)
+		queue_redraw()
 	else:
+		dep_pos = null
+		dest_pos = null
 		var sh_c:Dictionary = game.ships_c_coords
 		var sh_c_g:Dictionary = game.ships_c_g_coords
 		if game.c_v == "universe":
-			ship.rect_position = to_global(game.u_i.cluster_data[sh_c.c].pos) - Vector2(32, 22)
+			ship.position = to_global(game.u_i.cluster_data[sh_c.c].pos) - Vector2(32, 22)
 		elif game.c_v == "cluster" and game.c_c == sh_c.c:
-			ship.rect_position = to_global(game.galaxy_data[sh_c.g].pos) - Vector2(32, 22)
+			ship.position = to_global(game.galaxy_data[sh_c.g].pos) - Vector2(32, 22)
 		elif game.c_v == "galaxy" and game.c_g_g == sh_c_g.g:
-			ship.rect_position = to_global(game.system_data[sh_c.s].pos) - Vector2(32, 22)
+			ship.position = to_global(game.system_data[sh_c.s].pos) - Vector2(32, 22)
 		elif game.c_v == "system" and game.c_s_g == sh_c_g.s:
 			var scale_mult = 70.0 / game.system_data[game.c_s].get("closest_planet_distance", 300)
-			ship.rect_position = to_global(polar2cartesian(game.planet_data[sh_c.p].distance * scale_mult, game.planet_data[sh_c.p].angle)) - Vector2(32, 22)
+			ship.position = to_global(Vector2.from_angle(game.planet_data[sh_c.p].angle) * game.planet_data[sh_c.p].distance * scale_mult) - Vector2(32, 22)
 	if is_instance_valid(game.annotator):
 		annotate_icon.position = to_local(mouse_position)
 		annotate_icon.modulate = game.annotator.shape_color
@@ -137,7 +122,7 @@ func _process(delta):
 					game.annotator.mode == "icon"
 					break
 	if drawing_shape:
-		update()
+		queue_redraw()
 	if is_instance_valid(obj) and obj.dimensions:
 		var margin = obj.dimensions * scale.x
 		var right_margin = global_position.x + margin
@@ -162,21 +147,40 @@ func _process(delta):
 				global_position.y = 620 + margin
 			elif bottom_margin < 100:
 				global_position.y = 100 - margin
-	if game.c_v == "universe" and not changed:
+	if game.c_v == "universe" and not changed and not $AnimationPlayer.is_playing():
 		if obj_scaled and scale.x > CLUSTER_SCALE_THRESHOLD:
-			$AnimationPlayer.play("Fade")
+			fade_out_clusters()
 		elif not obj_scaled and scale.x < CLUSTER_SCALE_THRESHOLD:
-			$AnimationPlayer.play("Fade")
+			fade_out_clusters()
+
+func fade_out_clusters():
+	$AnimationPlayer.play("Fade")
+	var tween = create_tween()
+	tween.set_parallel(true)
+	for cluster in obj.btns:
+		if is_instance_valid(cluster):
+			tween.tween_property(cluster.material, "shader_parameter/alpha", 0.0, 0.4)
+
+func fade_in_clusters():
+	$AnimationPlayer.play_backwards("Fade")
+	var tween = create_tween()
+	tween.set_parallel(true)
+	for cluster in obj.btns:
+		if is_instance_valid(cluster):
+			tween.tween_property(cluster.material, "shader_parameter/alpha", 1.0, 0.4)
 
 func _draw():
+	if dest_pos != null and curr_pos != null:
+		draw_line(dep_pos, dest_pos, Color.RED)
+		draw_line(dep_pos, curr_pos, Color.GREEN)
 	if is_instance_valid(game.annotator):
 		for shape in shapes_data:
 			if shape.shape == "line":
-				draw_line(shape.points.start, shape.points.end, shape.color, shape.width, true)
+				draw_line(shape.points.start,shape.points.end,shape.color,shape.width)
 			elif shape.shape == "rect":
 				var rect = Rect2(shape.points.start, Vector2.ZERO)
 				rect.end = shape.points.end
-				draw_rect(rect, shape.color, false, shape.width, true)
+				draw_rect(rect,shape.color,false,shape.width)# true) TODOGODOT4 Antialiasing argument is missing
 			elif shape.shape == "circ":
 				draw_arc(shape.points.start, shape.points.end, 0, 2*PI, 100, shape.color, shape.width, true)
 		var shift = Input.is_action_pressed("shift")
@@ -192,7 +196,7 @@ func _draw():
 						line_points.end = Vector2(init.x, lmp.y)
 				else:
 					line_points.end = lmp
-				draw_line(line_points.start, line_points.end, game.annotator.shape_color, game.annotator.thickness, true)
+				draw_line(line_points.start,line_points.end,game.annotator.shape_color,game.annotator.thickness)
 			elif game.annotator.mode == "rect":
 				var rect = Rect2(line_points.start, Vector2.ZERO)
 				rect.end = to_local(mouse_position)
@@ -204,26 +208,26 @@ func _draw():
 				else:
 					rect.end = to_local(mouse_position)
 				line_points.end = rect.end
-				draw_rect(rect, game.annotator.shape_color, false, game.annotator.thickness, true)
+				draw_rect(rect,game.annotator.shape_color,false,game.annotator.thickness)# true) TODOGODOT4 Antialiasing argument is missing
 			elif game.annotator.mode == "circ":
 				line_points.end = line_points.start.distance_to(lmp)
 				draw_arc(line_points.start, line_points.end, 0, 2*PI, 100, game.annotator.shape_color, game.annotator.thickness, true)
 			elif game.annotator.mode == "eraser":
 				for shape in shapes_data:
 					if shape.shape == "line":
-						if Geometry.segment_intersects_segment_2d(shape.points.start, shape.points.end, to_local(drag_initial_position), lmp):
+						if Geometry2D.segment_intersects_segment(shape.points.start, shape.points.end, to_local(drag_initial_position), lmp):
 							shapes_data.erase(shape)
 					elif shape.shape == "rect":
 						var top_right = Vector2(shape.points.end.x, shape.points.start.y)
 						var bottom_left = Vector2(shape.points.start.x, shape.points.end.y)
-						var bool1 = Geometry.segment_intersects_segment_2d(shape.points.start, top_right, to_local(drag_initial_position), lmp)
-						var bool2 = Geometry.segment_intersects_segment_2d(top_right, shape.points.end, to_local(drag_initial_position), lmp)
-						var bool3 = Geometry.segment_intersects_segment_2d(bottom_left, shape.points.end, to_local(drag_initial_position), lmp)
-						var bool4 = Geometry.segment_intersects_segment_2d(shape.points.start, bottom_left, to_local(drag_initial_position), lmp)
+						var bool1 = Geometry2D.segment_intersects_segment(shape.points.start, top_right, to_local(drag_initial_position), lmp)
+						var bool2 = Geometry2D.segment_intersects_segment(top_right, shape.points.end, to_local(drag_initial_position), lmp)
+						var bool3 = Geometry2D.segment_intersects_segment(bottom_left, shape.points.end, to_local(drag_initial_position), lmp)
+						var bool4 = Geometry2D.segment_intersects_segment(shape.points.start, bottom_left, to_local(drag_initial_position), lmp)
 						if bool1 or bool2 or bool3 or bool4:
 							shapes_data.erase(shape)
 					elif shape.shape == "circ":
-						if Geometry.segment_intersects_circle(to_local(drag_initial_position), lmp, shape.points.start, shape.points.end) != -1:
+						if Geometry2D.segment_intersects_circle(to_local(drag_initial_position), lmp, shape.points.start, shape.points.end) != -1:
 							shapes_data.erase(shape)
 
 func refresh():
@@ -233,7 +237,7 @@ func refresh():
 	var sh_c:Dictionary = game.ships_c_coords
 	if game.c_v == "universe":
 		show_ship = true
-		ship.rect_position = to_global(game.u_i.cluster_data[sh_c.c].pos) - Vector2(32, 22)
+		ship.position = to_global(game.u_i.cluster_data[sh_c.c].pos) - Vector2(32, 22)
 	elif game.c_v == "cluster":
 		show_ship = game.ships_c_coords.c == game.c_c
 	elif game.c_v == "galaxy":
@@ -241,8 +245,6 @@ func refresh():
 	elif game.c_v == "system":
 		show_ship = game.ships_c_g_coords.s == game.c_s_g
 	var show_lines = show_ship and game.ships_travel_view == game.c_v and game.ships_travel_view != ""
-	red_line.visible = show_lines
-	green_line.visible = show_lines
 	ship.visible = show_ship and len(game.ship_data) >= 1
 	game.move_child(ship, game.get_child_count())
 	var progress = Helper.update_ship_travel()
@@ -251,32 +253,27 @@ func refresh():
 	else:
 		ship.mouse_filter = TextureButton.MOUSE_FILTER_STOP
 	if show_lines:
-		move_child(red_line, get_child_count())
-		move_child(green_line, get_child_count())
 		var v = game.ships_travel_view
 		var scale_mult = 1.0
 		if game.c_v == "system":
 			scale_mult = 70.0 / game.system_data[game.c_s].get("closest_planet_distance", 300)
-		var dep_pos:Vector2 = game.ships_depart_pos * scale_mult
-		var dest_pos:Vector2 = game.ships_dest_pos * scale_mult
-		red_line.points[0] = dep_pos
-		green_line.points[0] = dep_pos
-		red_line.points[1] = dest_pos
-		green_line.points[1] = dest_pos
+		dep_pos = game.ships_depart_pos * scale_mult
+		dest_pos = game.ships_dest_pos * scale_mult
+		curr_pos = dest_pos
 		if dest_pos.x < dep_pos.x:
-			ship.rect_scale.x = -1
+			ship.scale.x = -1
 		else:
-			ship.rect_scale.x = 1
+			ship.scale.x = 1
 	for icon_data in annotate_icons:
 		var icon = icon_data.node
 		icon.queue_free()
 	annotate_icons.clear()
-	yield(get_tree().create_timer(0.0), "timeout")#This yield is needed to display annotations
+	await get_tree().create_timer(0.0).timeout#This yield is needed to display annotations
 	if is_instance_valid(game.annotator):
 		for i in len(shapes_data):
 			var shape = shapes_data[i]
 			if shape and shape.shape == "icon":
-				var icon = Sprite.new()
+				var icon = Sprite2D.new()
 				icon.texture = load(shape.texture)
 				icon.scale = shape.scale
 				icon.modulate = shape.color
@@ -284,11 +281,12 @@ func refresh():
 				icon.position = shape.position
 				annotate_icons.append({"node":icon, "data":shapes_data[i]})
 				add_child(icon)
+	queue_redraw()
 
 func add_obj(obj_str:String, pos:Vector2, sc:float, s_m:float = 1.0):
 	#scale_dec_threshold = 5 * pow(20, -2 - floor(Helper.log10(s_m)))
 	#scale_inc_threshold = 5 * pow(20, -1 - floor(Helper.log10(s_m)))
-	obj = load("res://Scenes/Views/" + obj_str + ".tscn").instance()
+	obj = load("res://Scenes/Views/" + obj_str + ".tscn").instantiate()
 	add_child(obj)
 	position = pos
 	scale = Vector2(sc, sc)
@@ -301,8 +299,6 @@ func remove_obj(obj_str:String, save_zooms:bool = true):
 		save_zooms(obj_str)
 	obj.set_process(false)
 	obj.queue_free()
-	red_line.visible = false
-	green_line.visible = false
 	annotate_icon.texture = null
 
 func save_zooms(obj_str:String):
@@ -336,18 +332,16 @@ func _physics_process(_delta):
 	if move_with_keyboard:
 		#Moving tiles code
 		var input_vector = Vector2.ZERO
-		if OS.get_latin_keyboard_variant() == "AZERTY":
-			input_vector.x = Input.get_action_strength("Q") - Input.get_action_strength("D")
-			input_vector.y = Input.get_action_strength("Z") - Input.get_action_strength("S")
-		else:
-			input_vector.x = Input.get_action_strength("A") - Input.get_action_strength("D")
-			input_vector.y = Input.get_action_strength("W") - Input.get_action_strength("S")
+		input_vector.x = Input.get_action_strength("A") - Input.get_action_strength("D")
+		input_vector.y = Input.get_action_strength("W") - Input.get_action_strength("S")
 		input_vector = input_vector.normalized()
 		if input_vector != Vector2.ZERO:
-			velocity = velocity.move_toward(input_vector * max_speed, acceleration)
+			move_speed = move_speed.move_toward(input_vector * max_speed, acceleration)
 		else:
-			velocity = velocity.move_toward(Vector2.ZERO, friction)
-		velocity = move_and_slide(velocity)
+			move_speed = move_speed.move_toward(Vector2.ZERO, friction)
+		set_velocity(move_speed)
+		move_and_slide()
+		move_speed = move_speed
 
 	#Zooming animation
 	if zooming == "in":
@@ -472,10 +466,10 @@ func _input(event):
 			elif size >= game.annotator.thickness / 3.0:#Prevent players from drawing very thick figures compared to their size, which means they'll have a hard time erasing them
 				shapes_data.append({"shape":game.annotator.mode, "width":game.annotator.thickness, "color":game.annotator.shape_color, "points":line_points.duplicate(true)})
 		drawing_shape = false
-		update()
+		queue_redraw()
 	if Input.is_action_just_released("right_click") and drawing_shape:
 		drawing_shape = false
-		update()
+		queue_redraw()
 	if Input.is_action_just_pressed("2"):
 		annotate_icon.rotation = 0
 
@@ -501,6 +495,6 @@ func _on_AnimationPlayer_animation_finished(anim_name):
 			obj_scaled = false
 			obj.change_scale(0.1)
 		changed = true
-		$AnimationPlayer.play_backwards("Fade")
+		fade_in_clusters()
 	else:
 		changed = false

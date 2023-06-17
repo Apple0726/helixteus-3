@@ -1,32 +1,32 @@
 [gd_scene load_steps=4 format=2]
 
 [ext_resource path="res://Resources/default_theme.tres" type="Theme" id=1]
-[ext_resource path="res://Graphics/Buttons/target.png" type="Texture" id=2]
+[ext_resource path="res://Graphics/Buttons/target.png" type="Texture2D" id=2]
 [ext_resource path="res://Scripts/TargetButton.gd" type="Script" id=3]
 
 [node name="Control" type="Node2D"]
 script = ExtResource( 3 )
 
 [node name="TextureButton" type="TextureButton" parent="."]
-margin_left = -44.0
-margin_top = -44.0
-margin_right = 44.0
-margin_bottom = 44.0
+offset_left = -44.0
+offset_top = -44.0
+offset_right = 44.0
+offset_bottom = 44.0
 shortcut_in_tooltip = false
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Sprite" type="Sprite" parent="."]
+[node name="Sprite2D" type="Sprite2D" parent="."]
 position = Vector2( -1.19209e-06, -3.33786e-06 )
 scale = Vector2( 0.2, 0.2 )
 texture = ExtResource( 2 )
 
 [node name="Label" type="Label" parent="."]
-margin_left = 40.0
-margin_top = 32.0
-margin_right = 76.0
-margin_bottom = 56.0
+offset_left = 40.0
+offset_top = 32.0
+offset_right = 76.0
+offset_bottom = 56.0
 theme = ExtResource( 1 )
 text = "1"
 __meta__ = {

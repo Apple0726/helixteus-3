@@ -9,10 +9,10 @@ anchor_left = 0.5
 anchor_top = 1.0
 anchor_right = 0.5
 anchor_bottom = 1.0
-margin_left = -352.0
-margin_top = -112.0
-margin_right = 352.0
-margin_bottom = 4.0
+offset_left = -352.0
+offset_top = -112.0
+offset_right = 352.0
+offset_bottom = 4.0
 theme = ExtResource( 1 )
 script = ExtResource( 2 )
 
@@ -21,18 +21,18 @@ anchor_left = 0.5
 anchor_top = 1.0
 anchor_right = 0.5
 anchor_bottom = 1.0
-margin_left = -296.0
-margin_top = -104.0
-margin_right = 296.0
-margin_bottom = -70.0
+offset_left = -296.0
+offset_top = -104.0
+offset_right = 296.0
+offset_bottom = -70.0
 custom_constants/separation = 20
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="OptionButton" type="OptionButton" parent="HBoxContainer"]
-margin_right = 264.0
-margin_bottom = 34.0
+offset_right = 264.0
+offset_bottom = 34.0
 size_flags_vertical = 4
 text = "PLANET_INTERIOR"
 align = 1
@@ -41,10 +41,10 @@ __meta__ = {
 }
 
 [node name="CheckBox" type="CheckBox" parent="HBoxContainer"]
-margin_left = 284.0
-margin_right = 312.0
-margin_bottom = 34.0
-custom_constants/hseparation = 10
+offset_left = 284.0
+offset_right = 312.0
+offset_bottom = 34.0
+custom_constants/h_separation = 10
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -52,26 +52,26 @@ __meta__ = {
 [node name="CloseButton" parent="." instance=ExtResource( 4 )]
 
 [node name="ScrollContainer" type="ScrollContainer" parent="."]
-margin_left = 192.0
-margin_top = 56.0
-margin_right = 674.0
-margin_bottom = 104.0
+offset_left = 192.0
+offset_top = 56.0
+offset_right = 674.0
+offset_bottom = 104.0
 scroll_vertical_enabled = false
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="HBox" type="HBoxContainer" parent="ScrollContainer"]
-margin_left = 10.0
-margin_top = 10.0
-margin_right = 10.0
-margin_bottom = 10.0
+offset_left = 10.0
+offset_top = 10.0
+offset_right = 10.0
+offset_bottom = 10.0
 
 [node name="LineEdit" type="LineEdit" parent="."]
-margin_left = 56.0
-margin_top = 64.0
-margin_right = 176.0
-margin_bottom = 96.0
+offset_left = 56.0
+offset_top = 64.0
+offset_right = 176.0
+offset_bottom = 96.0
 clear_button_enabled = true
 placeholder_text = "SEARCH"
 __meta__ = {
@@ -84,4 +84,4 @@ __meta__ = {
 [connection signal="focus_entered" from="LineEdit" to="." method="_on_LineEdit_focus_entered"]
 [connection signal="focus_exited" from="LineEdit" to="." method="_on_LineEdit_focus_exited"]
 [connection signal="text_changed" from="LineEdit" to="." method="_on_LineEdit_text_changed"]
-[connection signal="text_entered" from="LineEdit" to="." method="_on_LineEdit_text_entered"]
+[connection signal="text_submitted" from="LineEdit" to="." method="_on_LineEdit_text_entered"]

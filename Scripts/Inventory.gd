@@ -3,22 +3,22 @@ extends "Panel.gd"
 var tab:String
 var buy_sell_scene = preload("res://Scenes/Panels/BuySellPanel.tscn")
 var buy_sell
-onready var inventory_grid = $Control/VBox/Inventory
-onready var grid = $Control/VBox/GridContainer
-onready var particles_hbox = $Control/ParticlesHBox
-onready var info = $Control/VBox/Info
+@onready var inventory_grid = $Control/VBox/Inventory
+@onready var grid = $Control/VBox/GridContainer
+@onready var particles_hbox = $Control/ParticlesHBox
+@onready var info = $Control/VBox/Info
 var item_hovered:String = ""
 var item_stack:int = 0
 var item_slot:int = 0
 var hbox_data:Array = []
 
 func _ready():
-	set_polygon(rect_size)
-	buy_sell = buy_sell_scene.instance()
+	set_polygon(size)
+	buy_sell = buy_sell_scene.instantiate()
 	buy_sell.visible = false
 	add_child(buy_sell)
 	_on_Items_pressed()
-	$Tabs/Items._on_Button_pressed()
+	$TabBar/Items._on_Button_pressed()
 
 func refresh():
 	if tab == "items":
@@ -31,10 +31,10 @@ func refresh():
 		_on_Atoms_pressed()
 	elif tab == "particles":
 		_on_Particles_pressed()
-	$Tabs/Materials.visible = game.show.has("materials")
-	$Tabs/Metals.visible = game.show.has("metals")
-	$Tabs/Atoms.visible = game.show.has("atoms")
-	$Tabs/Particles.visible = game.show.has("particles")
+	$TabBar/Materials.visible = game.show.has("materials")
+	$TabBar/Metals.visible = game.show.has("metals")
+	$TabBar/Atoms.visible = game.show.has("atoms")
+	$TabBar/Particles.visible = game.show.has("particles")
 
 func _on_Items_pressed():
 	set_process(false)
@@ -48,13 +48,13 @@ func _on_Items_pressed():
 		item.free()
 	var i:int = 0
 	for item in game.items:
-		var slot = game.slot_scene.instance()
+		var slot = game.slot_scene.instantiate()
 		if item != null:
-			slot.get_node("Label").text = String(item.num)
+			slot.get_node("Label").text = str(item.num)
 			slot.get_node("TextureRect").texture = load("res://Graphics/" + Helper.get_dir_from_name(item.name)  + "/" + item.name + ".png")
-			slot.get_node("Button").connect("mouse_entered", self, "on_slot_over", [item.name, item.num, i])
-			slot.get_node("Button").connect("mouse_exited", self, "on_slot_out")
-			slot.get_node("Button").connect("pressed", self, "on_slot_press", [item.name])
+			slot.get_node("Button").connect("mouse_entered",Callable(self,"on_slot_over").bind(item.name, item.num, i))
+			slot.get_node("Button").connect("mouse_exited",Callable(self,"on_slot_out"))
+			slot.get_node("Button").connect("pressed",Callable(self,"on_slot_press").bind(item.name))
 		inventory_grid.add_child(slot)
 		i += 1
 	$Control/VBox/BuySell.visible = false
@@ -68,7 +68,7 @@ func on_slot_over (_name:String, num:int, slot:int):
 	item_hovered = _name
 	item_stack = num
 	game.help_str = "inventory_shortcuts"
-	if game.help.has("inventory_shortcuts") and not game.tutorial:
+	if game.help.has("inventory_shortcuts"):
 		st += "\n%s\n%s\n%s\n%s\n%s" % [tr("CLICK_TO_USE"), tr("SHIFT_CLICK_TO_USE_ALL"), tr("X_TO_THROW_ONE"), tr("SHIFT_X_TO_THROW_STACK"), tr("H_FOR_HOTBAR")] + "\n" + tr("HIDE_SHORTCUTS")
 	game.show_tooltip(st)
 
@@ -107,18 +107,10 @@ func on_slot_press(_name:String):
 			game.put_bottom_info(tr("USE_SPEEDUP_MS") % 5, "use_speedup", "hide_item_cursor")
 		else:
 			game.put_bottom_info(tr("USE_SPEEDUP_INFO"), "use_speedup", "hide_item_cursor")
-			if game.tutorial and game.tutorial.tut_num == 19:
-				game.tutorial.fade(0.4, false)
 		game.item_to_use.type = "speedup"
 	elif type == "overclocks_info":
-		if game.tutorial and game.tutorial.tut_num < 21:
-			game.popup(tr("TUTORIAL_OVERCLOCK"), 2.5)
-			return
-		else:
-			game.put_bottom_info(tr("USE_OVERCLOCK_INFO"), "use_overclock", "hide_item_cursor")
-			game.item_to_use.type = "overclock"
-			if game.tutorial and game.tutorial.tut_num == 21:
-				game.tutorial.fade(0.4, false)
+		game.put_bottom_info(tr("USE_OVERCLOCK_INFO"), "use_overclock", "hide_item_cursor")
+		game.item_to_use.type = "overclock"
 	elif type == "other_items_info":
 		if _name.substr(0, 7) == "hx_core":
 			if len(game.ship_data) > 0:
@@ -134,7 +126,7 @@ func on_slot_press(_name:String):
 	game.show_item_cursor(texture)
 
 func _on_Materials_pressed():
-	set_process(not game.autocollect.mats.empty())
+	set_process(not game.autocollect.mats.is_empty())
 	tab = "materials"
 	info.text = tr("INV_MAT_DESC")
 	inventory_grid.visible = false
@@ -145,14 +137,14 @@ func _on_Materials_pressed():
 		if not game.show.has(mat.name):
 			mat.rsrc.visible = false
 			continue
-		var texture = mat.rsrc.get_node("Texture")
-		texture.connect("mouse_entered", self, "show_mat", [mat.name])
-		texture.connect("mouse_exited", self, "on_mouse_out")
-		texture.connect("pressed", self, "show_buy_sell", ["Materials", mat.name])
+		var texture = mat.rsrc.get_node("Texture2D")
+		texture.connect("mouse_entered",Callable(self,"show_mat").bind(mat.name))
+		texture.connect("mouse_exited",Callable(self,"on_mouse_out"))
+		texture.connect("pressed",Callable(self,"show_buy_sell").bind("Materials", mat.name))
 	$Control/VBox/BuySell.visible = true
 
 func _on_Metals_pressed():
-	set_process(not game.autocollect.mets.empty())
+	set_process(not game.autocollect.mets.is_empty())
 	tab = "metals"
 	info.text = tr("INV_MET_DESC")
 	inventory_grid.visible = false
@@ -163,14 +155,14 @@ func _on_Metals_pressed():
 		if not game.show.has(met.name):
 			met.rsrc.visible = false
 			continue
-		var texture = met.rsrc.get_node("Texture")
-		texture.connect("mouse_entered", self, "show_met", [met.name])
-		texture.connect("mouse_exited", self, "on_mouse_out")
-		texture.connect("pressed", self, "show_buy_sell", ["Metals", met.name])
+		var texture = met.rsrc.get_node("Texture2D")
+		texture.connect("mouse_entered",Callable(self,"show_met").bind(met.name))
+		texture.connect("mouse_exited",Callable(self,"on_mouse_out"))
+		texture.connect("pressed",Callable(self,"show_buy_sell").bind("Metals", met.name))
 	$Control/VBox/BuySell.visible = true
 
 func _on_Atoms_pressed():
-	set_process(not game.autocollect.atoms.empty())
+	set_process(not game.autocollect.atoms.is_empty())
 	tab = "atoms"
 	info.text = tr("INV_ATOMS_DESC")
 	inventory_grid.visible = false
@@ -180,9 +172,9 @@ func _on_Atoms_pressed():
 	for atom in hbox_data:
 		if not game.show.has(atom.name):
 			atom.rsrc.visible = false
-		var texture = atom.rsrc.get_node("Texture")
-		texture.connect("mouse_entered", self, "show_atom", [atom.name])
-		texture.connect("mouse_exited", self, "on_mouse_out")
+		var texture = atom.rsrc.get_node("Texture2D")
+		texture.connect("mouse_entered",Callable(self,"show_atom").bind(atom.name))
+		texture.connect("mouse_exited",Callable(self,"on_mouse_out"))
 	$Control/VBox/BuySell.visible = false
 
 func _on_Particles_pressed():
@@ -209,7 +201,7 @@ func show_part(_name:String):
 				num = game.autocollect.particles[_name] - (game.particles.neutron - neutron_cap) * (1 - pow(0.5, game.u_i.time_speed / 900.0))
 			else:
 				num = game.autocollect.particles[_name]
-		st += "\n" + (tr("YOU_PRODUCE") if num >= 0 else tr("YOU_USE")) % ("%s/%s" % [Helper.format_num(num, true), tr("S_SECOND")])
+		st += "\n" + (tr("YOU_PRODUCE") if num >= 0 else tr("YOU_USE")) % ("%s/%s" % [Helper.format_num(abs(num), true), tr("S_SECOND")])
 	game.show_tooltip(st)
 	
 func show_buy_sell(type:String, obj:String):
@@ -255,7 +247,7 @@ func on_mouse_out():
 func show_met(met:String):
 	var st:String = "%s\n%s" % [get_str(met), get_str(met, "_DESC")]
 	if game.autocollect.mets.has(met) and not is_zero_approx(game.autocollect.mets[met]):
-		st += "\n" + (tr("YOU_PRODUCE") if game.autocollect.mets[met] > 0 else tr("YOU_USE")) % ("%s/%s" % [Helper.format_num(game.autocollect.mets[met], true), tr("S_SECOND")])
+		st += "\n" + (tr("YOU_PRODUCE") if game.autocollect.mets[met] > 0 else tr("YOU_USE")) % ("%s/%s" % [Helper.format_num(abs(game.autocollect.mets[met]), true), tr("S_SECOND")])
 	game.show_tooltip(st)
 
 func get_str(obj:String, desc:String = ""):
@@ -302,12 +294,12 @@ func _process(delta):
 		var electron_cap = game.electron_cap * Helper.get_IR_mult("ESF")
 		$Control/ParticlesHBox/Protons.text = "%s mol" % Helper.format_num(game.particles.proton, true)
 		if game.particles.neutron >= neutron_cap:
-			$Control/ParticlesHBox/Neutrons["custom_colors/font_color"] = Color.orange
+			$Control/ParticlesHBox/Neutrons["theme_override_colors/font_color"] = Color.ORANGE
 		else:
-			$Control/ParticlesHBox/Neutrons["custom_colors/font_color"] = Color.white
+			$Control/ParticlesHBox/Neutrons["theme_override_colors/font_color"] = Color.WHITE
 		$Control/ParticlesHBox/Neutrons.text = "%s / %s mol" % [Helper.format_num(game.particles.neutron, true), Helper.format_num(neutron_cap, true)]
 		if game.particles.electron >= electron_cap:
-			$Control/ParticlesHBox/Electrons["custom_colors/font_color"] = Color.red
+			$Control/ParticlesHBox/Electrons["theme_override_colors/font_color"] = Color.RED
 		else:
-			$Control/ParticlesHBox/Electrons["custom_colors/font_color"] = Color.white
+			$Control/ParticlesHBox/Electrons["theme_override_colors/font_color"] = Color.WHITE
 		$Control/ParticlesHBox/Electrons.text = "%s / %s mol" % [Helper.format_num(game.particles.electron, true), Helper.format_num(electron_cap, true)]

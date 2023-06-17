@@ -1,152 +1,126 @@
-[gd_scene load_steps=5 format=2]
+[gd_scene load_steps=4 format=3 uid="uid://c8h07pagkspbb"]
 
-[ext_resource path="res://Scripts/VehiclePanel.gd" type="Script" id=3]
-[ext_resource path="res://Resources/default_theme.tres" type="Theme" id=4]
-[ext_resource path="res://Scenes/CloseButton.tscn" type="PackedScene" id=6]
-
-[sub_resource type="StyleBoxEmpty" id=1]
-content_margin_left = 20.0
-content_margin_top = 15.0
+[ext_resource type="Script" path="res://Scripts/VehiclePanel.gd" id="3"]
+[ext_resource type="Theme" uid="uid://cp2u1kgj60ic" path="res://Resources/default_theme.tres" id="4"]
+[ext_resource type="PackedScene" uid="uid://ddf2xjwcht77u" path="res://Scenes/CloseButton.tscn" id="6"]
 
 [node name="Background" type="Panel"]
+anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-margin_left = -512.0
-margin_top = -300.0
-margin_right = 512.0
-margin_bottom = 296.0
-theme = ExtResource( 4 )
-script = ExtResource( 3 )
-
-[node name="CloseButton" parent="." instance=ExtResource( 6 )]
+offset_left = -512.0
+offset_top = -300.0
+offset_right = 512.0
+offset_bottom = 296.0
+theme = ExtResource("4")
+script = ExtResource("3")
 
 [node name="Title" type="Label" parent="."]
+custom_minimum_size = Vector2(0, 38)
+layout_mode = 0
 anchor_right = 1.0
-margin_bottom = 24.0
-rect_min_size = Vector2( 0, 38 )
+offset_bottom = 24.0
+theme_override_font_sizes/font_size = 18
 text = "VEHICLES"
-align = 1
-valign = 1
-__meta__ = {
-"_edit_use_anchors_": false
-}
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="CloseButton" parent="." instance=ExtResource("6")]
+layout_mode = 1
+offset_left = -32.0
+offset_top = 8.0
+offset_right = -8.0
+offset_bottom = 32.0
 
 [node name="Rovers" type="Panel" parent="."]
-margin_left = 24.0
-margin_top = 52.0
-margin_right = 512.0
-margin_bottom = 300.0
+layout_mode = 0
+offset_left = 24.0
+offset_top = 52.0
+offset_right = 512.0
+offset_bottom = 300.0
 size_flags_vertical = 3
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="Label" type="Label" parent="Rovers"]
+layout_mode = 0
 anchor_right = 1.0
-margin_bottom = 36.0
+offset_bottom = 36.0
 size_flags_horizontal = 3
 text = "ROVERS"
-align = 1
-valign = 1
-__meta__ = {
-"_edit_use_anchors_": false
-}
+horizontal_alignment = 1
+vertical_alignment = 1
 
-[node name="ScrollContainer" type="ScrollContainer" parent="Rovers"]
-anchor_right = 1.0
-anchor_bottom = 1.0
-margin_top = 40.0
-margin_bottom = -8.0
-custom_styles/bg = SubResource( 1 )
-scroll_vertical_enabled = false
-
-[node name="HBox" type="HBoxContainer" parent="Rovers/ScrollContainer"]
-margin_left = 20.0
-margin_top = 15.0
-margin_right = 20.0
-margin_bottom = 15.0
-grow_vertical = 2
+[node name="HBox" type="HBoxContainer" parent="Rovers"]
+layout_mode = 2
+offset_left = 16.0
+offset_top = 48.0
+offset_right = 16.0
+offset_bottom = 48.0
 alignment = 1
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="Probes" type="Panel" parent="."]
+layout_mode = 0
 anchor_left = 1.0
 anchor_top = 0.5
 anchor_right = 1.0
 anchor_bottom = 0.5
-margin_left = -488.0
-margin_top = -246.0
-margin_right = -24.0
-margin_bottom = 2.0
+offset_left = -488.0
+offset_top = -246.0
+offset_right = -24.0
+offset_bottom = 2.0
 size_flags_vertical = 3
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="Label" type="Label" parent="Probes"]
+layout_mode = 0
 anchor_right = 1.0
-margin_bottom = 36.0
+offset_bottom = 36.0
 text = "PROBES"
-align = 1
-valign = 1
-__meta__ = {
-"_edit_use_anchors_": false
-}
+horizontal_alignment = 1
+vertical_alignment = 1
 
 [node name="ScrollContainer" type="ScrollContainer" parent="Probes"]
+layout_mode = 1
+anchors_preset = 12
 anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
-margin_left = 16.0
-margin_top = -208.0
-margin_right = -16.0
-margin_bottom = -16.0
-custom_styles/bg = SubResource( 1 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
+offset_left = 32.0
+offset_top = -208.0
+offset_right = -32.0
+offset_bottom = -16.0
+grow_horizontal = 2
+grow_vertical = 0
 
 [node name="GridContainer" type="GridContainer" parent="Probes/ScrollContainer"]
-margin_left = 20.0
-margin_top = 15.0
-margin_right = 432.0
-margin_bottom = 192.0
+layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
-custom_constants/vseparation = 5
-custom_constants/hseparation = 5
 columns = 4
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="Panel" type="Panel" parent="."]
-margin_left = 24.0
-margin_top = 308.0
-margin_right = 512.0
-margin_bottom = 572.0
+layout_mode = 0
+offset_left = 24.0
+offset_top = 308.0
+offset_right = 512.0
+offset_bottom = 572.0
 
 [node name="Fighters" type="Label" parent="Panel"]
+layout_mode = 0
 anchor_right = 1.0
-margin_bottom = 37.0
+offset_bottom = 37.0
 text = "FG_SC"
-align = 1
-valign = 1
-__meta__ = {
-"_edit_use_anchors_": false
-}
+horizontal_alignment = 1
+vertical_alignment = 1
 
 [node name="GridContainer" type="GridContainer" parent="Panel"]
+layout_mode = 0
 anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
-margin_left = 24.0
-margin_top = -216.0
-margin_right = -24.0
+offset_left = 24.0
+offset_top = -216.0
+offset_right = -24.0
 grow_horizontal = 2
 grow_vertical = 2
 size_flags_horizontal = 3

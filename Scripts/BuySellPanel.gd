@@ -1,6 +1,6 @@
 extends Panel
 
-onready var game = get_node("/root/Game")
+@onready var game = get_node("/root/Game")
 var type:String
 var obj:String
 var polygon
@@ -9,9 +9,9 @@ var obj_node
 var money_node
 
 func _ready():
-	$Resource/Texture.rect_min_size = Vector2(36, 36)
-	$Resource2/Texture.rect_min_size = Vector2(36, 36)
-	$Resource2/Texture.texture_normal = preload("res://Graphics/Icons/money.png")
+	$Resource/Texture2D.custom_minimum_size = Vector2(36, 36)
+	$Resource2/Texture2D.custom_minimum_size = Vector2(36, 36)
+	$Resource2/Texture2D.texture_normal = preload("res://Graphics/Icons/money.png")
 
 var max_value:float
 
@@ -34,8 +34,8 @@ func refresh(_type:String = type, _obj:String = obj):
 		money_node = $Resource
 		max_value = game.money
 		$Buy.text = tr("BUY")
-	obj_node.get_node("Texture").texture_normal = load("res://Graphics/" + type + "/" + obj + ".png")
-	money_node.get_node("Texture").texture_normal = load("res://Graphics/Icons/money.png")
+	obj_node.get_node("Texture2D").texture_normal = load("res://Graphics/" + type + "/" + obj + ".png")
+	money_node.get_node("Texture2D").texture_normal = load("res://Graphics/Icons/money.png")
 	obj_node.get_node("Text").text = "0 kg"
 	money_node.get_node("Text").text = "0"
 
@@ -107,6 +107,8 @@ func _on_TextureButton_pressed():
 func _on_close_button_pressed():
 	visible = false
 	game.sub_panel = null
+	game.view.move_view = true
+	game.view.scroll_view = true
 
 
 func _on_TextureButton_mouse_entered():
@@ -115,3 +117,13 @@ func _on_TextureButton_mouse_entered():
 
 func _on_TextureButton_mouse_exited():
 	$AnimationPlayer2.play_backwards("Grow")
+
+
+func _on_h_slider_mouse_entered():
+	game.view.move_view = false
+	game.view.scroll_view = false
+
+
+func _on_h_slider_mouse_exited():
+	game.view.move_view = true
+	game.view.scroll_view = true

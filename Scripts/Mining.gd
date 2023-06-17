@@ -1,21 +1,21 @@
 extends Control
 
-onready var game = get_node("/root/Game")
-onready var p_i = game.planet_data[game.c_p]
-onready var id:int = game.c_t
-onready var tile = game.tile_data[id]
-onready var tile_texture = load("res://Graphics/Tiles/" + String(p_i["type"]) + ".jpg")
+@onready var game = get_node("/root/Game")
+@onready var p_i = game.planet_data[game.c_p]
+@onready var id:int = game.c_t
+@onready var tile = game.tile_data[id]
+@onready var tile_texture = load("res://Graphics/Tiles/" + str(p_i["type"]) + ".jpg")
 var progress = 0#Mining tile progress
 var contents:Dictionary
-var tween:Tween
-var BG_tween:Tween
+var tile_tween
+var BG_tween
 var layer:String
-onready var met_info = game.met_info
+@onready var met_info = game.met_info
 var metal_sprites = []
 var circ_vel:Vector2 = Vector2.ONE
 var points:float#Points for minigame
-onready var circ = $Circle
-onready var spd_mult_node = $Mults/SpdMult
+@onready var circ = $Circle
+@onready var spd_mult_node = $Mults/SpdMult
 var circ_disabled = false#Useful if pickaxe breaks and auto buy isn't on
 var mouse_pos:Vector2
 var speed_mult:float = 1.0
@@ -25,7 +25,7 @@ var rsrc_mined:Dictionary = {}
 func _ready():
 	Helper.set_back_btn($Back)
 	$Tile/TextureRect.texture = tile_texture
-	if not tile:
+	if tile == null:
 		game.tile_data[id] = {}
 		tile = game.tile_data[id]
 	if tile.has("aurora"):
@@ -38,10 +38,13 @@ func _ready():
 		tile.erase("bridge")
 	progress = tile.mining_progress
 	if game.pickaxe.has("name"):
-		$Pickaxe/Sprite.texture = load("res://Graphics/Items/Pickaxes/" + game.pickaxe.name + ".png")
+		$Pickaxe/Sprite2D.texture = load("res://Graphics/Items/Pickaxes/" + game.pickaxe.name + ".png")
 		update_pickaxe()
 	update_info(true)
 	generate_rock(false)
+	Helper.put_rsrc($Panel/VBoxContainer, 42, contents)
+#	$Panel.visible = false
+#	$Panel.visible = true#A weird workaround to make sure Panel has the right rekt_size
 	$Help.visible = game.help.has("mining")
 	circ.visible = not game.help.has("mining")
 	$Help/Label.text = tr("MINE_HELP")
@@ -49,19 +52,19 @@ func _ready():
 	if $LayerInfo.visible:
 		$LayerAnim.play("Layer fade")
 		$LayerAnim.seek(1, true)
-	$AutoReplace.pressed = game.auto_replace
-	BG_tween = Tween.new()
-	add_child(BG_tween)
+	$AutoReplace.button_pressed = game.auto_replace
 
 func refresh_aurora_bonus():
 	$Mults/AuroraMult.visible = true
 	aurora_mult = Helper.clever_round(Helper.get_au_mult(tile))
-	$Mults/AuroraMult.bbcode_text = "[aurora au_int=%s]%s: x %s" % [tile.aurora.au_int, tr("AURORA_MULTIPLIER"), aurora_mult]
+	$Mults/AuroraMult.text = "[aurora au_int=%s][center]%s: x %s" % [tile.aurora.au_int, tr("AURORA_MULTIPLIER"), aurora_mult]
 	
 func update_info(first_time:bool = false):
 	var upper_depth
 	var lower_depth 
 	var unit:String = "m"
+	if is_instance_valid(BG_tween):
+		BG_tween.kill()
 	if tile.has("crater"):
 		layer = "crater"
 		upper_depth = tile.crater.init_depth
@@ -76,19 +79,14 @@ func update_info(first_time:bool = false):
 				$SurfaceBG.modulate.a = 0
 				$CrustBG.modulate.a = 0.25
 			else:
-				BG_tween.interpolate_property($SurfaceBG, "modulate", null, Color(1, 1, 1, 0), 3)
-				BG_tween.interpolate_property($CrustBG, "modulate", null, Color(1, 1, 1, 0.25), 3)
-				BG_tween.start()
+				BG_tween = create_tween()
+				BG_tween.set_parallel(true)
+				BG_tween.tween_property($SurfaceBG, "modulate", Color(1, 1, 1, 0), 3)
+				BG_tween.tween_property($CrustBG, "modulate", Color(1, 1, 1, 0.25), 3)
 		layer = "crust"
 		upper_depth = p_i.crust_start_depth + 1
 		lower_depth = p_i.mantle_start_depth
 	elif tile.depth <= p_i.core_start_depth:
-		if tile.has("ship_part"):
-			tile.erase("ship_part")
-			if not game.objective.empty():
-				game.objective.current += 1
-			game.popup(tr("SHIP_PART_FOUND"), 2.5)
-			game.third_ship_hints.parts[4] = true
 		if layer != "mantle":
 			if first_time:
 				$SurfaceBG.modulate.a = 0
@@ -100,39 +98,34 @@ func update_info(first_time:bool = false):
 					$MantleBGNoShader.visible = true
 					$MantleBGNoShader.modulate.a = 0.45
 			else:
-				BG_tween.interpolate_property($SurfaceBG, "modulate", null, Color(1, 1, 1, 0), 3)
-				BG_tween.interpolate_property($CrustBG, "modulate", null, Color(1, 1, 1, 0), 3)
+				BG_tween = create_tween()
+				BG_tween.set_parallel(true)
+				BG_tween.tween_property($SurfaceBG, "modulate", Color(1, 1, 1, 0), 3)
+				BG_tween.tween_property($CrustBG, "modulate", Color(1, 1, 1, 0), 3)
 				if game.enable_shaders:
 					$MantleBG.visible = true
-					BG_tween.interpolate_property($MantleBG, "modulate", null, Color(1, 1, 1, 0.25), 3)
+					BG_tween.tween_property($MantleBG, "modulate", Color(1, 1, 1, 0.25), 3)
 				else:
 					$MantleBGNoShader.visible = true
-					BG_tween.interpolate_property($MantleBGNoShader, "modulate", null, Color(1, 1, 1, 0.45), 3)
-				BG_tween.start()
+					BG_tween.tween_property($MantleBGNoShader, "modulate", Color(1, 1, 1, 0.45), 3)
 		layer = "mantle"
 		upper_depth = floor(p_i.mantle_start_depth / 1000.0)
 		lower_depth = floor(p_i.core_start_depth / 1000.0)
 		unit = "km"
 	else:
-		if tile.has("ship_part"):
-			tile.erase("ship_part")
-			if not game.objective.empty():
-				game.objective.current += 1
-			game.popup(tr("SHIP_PART_FOUND"), 2.5)
-			game.third_ship_hints.parts[4] = true
 		layer = "core"
 		upper_depth = floor(p_i.core_start_depth / 1000.0)
 		lower_depth = floor(p_i.size / 2.0)
 		unit = "km"
 	$LayerInfo/Upper.text = "%s %s" % [upper_depth, unit]
 	$LayerInfo/Lower.text = "%s %s" % [lower_depth, unit]
-	$LayerInfo/Layer.bbcode_text = "[center]%s: %s %s" % [tr("LAYER"), tr(layer.to_upper()), "[img]Graphics/Icons/help.png[/img]"]
+	$LayerInfo/Layer.text = "[center]%s: %s %s" % [tr("LAYER"), tr(layer.to_upper()), "[img]Graphics/Icons/help.png[/img]"]
 	$LayerInfo/Layer.help_text = layer.to_upper() + "_DESC"
 	if unit == "m":
-		$LayerInfo/Depth.position.y = range_lerp(tile.depth, upper_depth, lower_depth, 172, 628)
+		$LayerInfo/Depth.position.y = remap(tile.depth, upper_depth, lower_depth, 172, 628)
 		$LayerInfo/Depth/Label.text = "%s %s" % [tile.depth, unit]
 	else:
-		$LayerInfo/Depth.position.y = range_lerp(floor(tile.depth / 1000.0), upper_depth, lower_depth, 172, 628)
+		$LayerInfo/Depth.position.y = remap(floor(tile.depth / 1000.0), upper_depth, lower_depth, 172, 628)
 		$LayerInfo/Depth/Label.text = "%s %s" % [floor(tile.depth / 1000.0), unit]
 	$Tile/SquareBar.set_progress(progress)
 	$Tile/Cracks.frame = min(floor(progress / 20), 4)
@@ -149,18 +142,14 @@ func update_pickaxe():
 
 func generate_rock(new:bool):
 	var tile_sprite = $Tile
-	var vbox = $Panel/VBoxContainer
 	contents = {}
-	if tween:
-		remove_child(tween)
-		tween.free()
-	tween = Tween.new()
-	add_child(tween)
-	tween.interpolate_property(tile_sprite, "rect_scale", Vector2(0.3, 0.3), Vector2(1, 1), 0.4, Tween.TRANS_CIRC, Tween.EASE_OUT)
-	tween.start()
+	tile_sprite.scale = Vector2.ONE * 0.3
+	if is_instance_valid(tile_tween):
+		tile_tween.kill()
+	tile_tween = create_tween()
+	tile_tween.tween_property(tile_sprite, "scale", Vector2.ONE, 0.4).set_trans(Tween.TRANS_CIRC).set_ease(Tween.EASE_OUT)
 	for met_sprite in metal_sprites:
-		tile_sprite.remove_child(met_sprite)
-		met_sprite.free()
+		met_sprite.queue_free()
 	metal_sprites = []
 	if not tile.has("contents") or new:
 		contents = Helper.generate_rock(tile, p_i).duplicate(true)
@@ -171,19 +160,16 @@ func generate_rock(new:bool):
 		var met = tile.current_deposit.met
 		var amount = contents[met]
 		for i in clamp(round(amount / 2.0), 1, 80):
-			var met_sprite = Sprite.new()
+			var met_sprite = Sprite2D.new()
 			met_sprite.texture = game.metal_textures[met]
 			met_sprite.centered = true
-			met_sprite.scale *= rand_range(0.15, 0.2)
+			met_sprite.scale *= randf_range(0.15, 0.2)
 			var half_size_in_px = met_sprite.scale.x * 128
-			met_sprite.rotation = rand_range(0, 2 * PI)
-			met_sprite.position.x = rand_range(half_size_in_px + 5, 195 - half_size_in_px)
-			met_sprite.position.y = rand_range(half_size_in_px + 5, 195 - half_size_in_px)
+			met_sprite.rotation = randf_range(0, 2 * PI)
+			met_sprite.position.x = randf_range(half_size_in_px + 5, 195 - half_size_in_px)
+			met_sprite.position.y = randf_range(half_size_in_px + 5, 195 - half_size_in_px)
 			metal_sprites.append(met_sprite)
 			tile_sprite.add_child(met_sprite)
-	Helper.put_rsrc(vbox, 42, contents)
-	$Panel.visible = false
-	$Panel.visible = true#A weird workaround to make sure Panel has the right rekt_size
 
 func _input(event):
 	if event is InputEventMouse:
@@ -201,14 +187,14 @@ var crumbles = []
 
 func place_crumbles(num:int, sc:float, v:float):
 	for i in num:
-		var crumble = Sprite.new()
+		var crumble = Sprite2D.new()
 		crumble.texture = tile_texture
 		crumble.scale *= sc
 		crumble.centered = true
 		add_child(crumble)
 		move_child($Circle, get_child_count())
 		crumble.position = mouse_pos
-		crumbles.append({"sprite":crumble, "velocity":Vector2(rand_range(-2, 2), rand_range(-8, -4)) * v, "angular_velocity":rand_range(-0.08, 0.08)})
+		crumbles.append({"sprite":crumble, "velocity":Vector2(randf_range(-2, 2), randf_range(-8, -4)) * v, "angular_velocity":randf_range(-0.08, 0.08)})
 
 # Called by HelpAnim node
 func hide_help():
@@ -227,12 +213,12 @@ func pickaxe_hit():
 	if tile.depth > floor(p_i.size * 500.0):
 		if not game.achievement_data.random.has("reach_center_of_planet"):
 			game.earn_achievement("random", "reach_center_of_planet")
-		var VEI:float = log(add_progress / 500.0 * rand_range(0.7, 1.3) + exp(3.0))
+		var VEI:float = log(add_progress / 500.0 * randf_range(0.7, 1.3) + exp(3.0))
 		game.tile_data[id].erase("depth")
 		game.generate_volcano(id, VEI, true)
 		game.switch_view("planet")
 		if game.help.has("artificial_volcano"):
-			game.long_popup(tr("CREATED_FIRST_ARTIFICIAL_VOLCANO") % Helper.clever_round(VEI), tr("ARTIFICIAL_VOLCANO"))
+			game.popup_window(tr("CREATED_FIRST_ARTIFICIAL_VOLCANO") % Helper.clever_round(VEI), tr("ARTIFICIAL_VOLCANO"))
 			game.help.erase("artificial_volcano")
 		else:
 			game.popup(tr("CREATED_ARTIFICIAL_VOLCANO") % Helper.clever_round(VEI), 4.0)
@@ -244,14 +230,14 @@ func pickaxe_hit():
 			game.earn_achievement("random", "use_stick_to_mine_from_surface_to_core")
 	if tile.has("current_deposit"):
 		var amount_multiplier = -abs(2.0/tile.current_deposit.size * (tile.current_deposit.progress - 1) - 1) + 1
-		$HitMetalSound.pitch_scale = rand_range(0.8, 1.2)
+		$HitMetalSound.pitch_scale = randf_range(0.8, 1.2)
 		$HitMetalSound.volume_db = -3 - (1 - amount_multiplier) * 10
 		$HitRockSound.volume_db = -10 - (amount_multiplier) * 10
 		$HitMetalSound.play()
 		$HitRockSound.play()
 	else:
 		$HitRockSound.volume_db = -10
-		$HitRockSound.pitch_scale = rand_range(0.8, 1.2)
+		$HitRockSound.pitch_scale = randf_range(0.8, 1.2)
 		$HitRockSound.play()
 	if $Help.visible:
 		help_counter += 1
@@ -288,7 +274,7 @@ func pickaxe_hit():
 			add_rsrc_mined(contents)
 			Helper.get_rsrc_from_rock(contents, tile, p_i)
 			progress -= 100
-			if not game.objective.empty() and game.objective.type == game.ObjectiveType.MINE:
+			if not game.objective.is_empty() and game.objective.type == game.ObjectiveType.MINE:
 				game.objective.current += 1
 			rock_gen = true
 			game.stats_univ.tiles_mined_mining += 1
@@ -296,9 +282,10 @@ func pickaxe_hit():
 			game.stats_global.tiles_mined_mining += 1
 			tile.depth += 1
 			generate_rock(true)
+	Helper.put_rsrc($Panel/VBoxContainer, 42, contents)
 	tile.mining_progress = progress
 	if rock_gen:
-		$MiningSound.pitch_scale = rand_range(0.8, 1.2)
+		$MiningSound.pitch_scale = randf_range(0.8, 1.2)
 		$MiningSound.play()
 		game.show.stone = true
 		game.HUD.stone.visible = true
@@ -315,7 +302,7 @@ func pickaxe_hit():
 	if game.pickaxe.durability == 0:
 		var curr_pick_info = game.pickaxes_info[game.pickaxe.name]
 		var costs = curr_pick_info.costs
-		if $AutoReplace.pressed and game.check_enough(costs):
+		if $AutoReplace.button_pressed and game.check_enough(costs):
 			game.deduct_resources(costs)
 			game.pickaxe.durability = curr_pick_info.durability
 			update_pickaxe()
@@ -346,38 +333,38 @@ func _process(delta):
 	if circ.visible and not circ_disabled:
 		circ.position += circ_vel * max(1, pow(points / 60.0, 0.4)) * delta * 60 * game.u_i.time_speed
 		if circ.position.x < 284:
-			circ_vel.x = -sign(circ_vel.x) * rand_range(1 / 1.2, 1.2)
+			circ_vel.x = -sign(circ_vel.x) * randf_range(1 / 1.2, 1.2)
 			circ.position.x = 284
 		if circ.position.x > 484 - 100 * circ.scale.x:
-			circ_vel.x = -sign(circ_vel.x) * rand_range(1 / 1.2, 1.2)
+			circ_vel.x = -sign(circ_vel.x) * randf_range(1 / 1.2, 1.2)
 			circ.position.x = 484 - 100 * circ.scale.x
 		if circ.position.y < 284:
-			circ_vel.y = -sign(circ_vel.y) * rand_range(1 / 1.2, 1.2)
+			circ_vel.y = -sign(circ_vel.y) * randf_range(1 / 1.2, 1.2)
 			circ.position.y = 284
 		if circ.position.y > 484 - 100 * circ.scale.x:
-			circ_vel.y = -sign(circ_vel.y) * rand_range(1 / 1.2, 1.2)
+			circ_vel.y = -sign(circ_vel.y) * randf_range(1 / 1.2, 1.2)
 			circ.position.y = 484 - 100 * circ.scale.x
 		if spd_mult_node.visible:
 			speed_mult = Helper.clever_round((points * ((game.MUs.MSMB - 1) * 0.1 + 1) / 3000.0 + 1) * (game.pickaxe.speed_mult if game.pickaxe.has("speed_mult") else 1.0) * (tile.mining_outpost_bonus if tile.has("mining_outpost_bonus") else 1.0))
 			spd_mult_node.text = tr("SPEED_MULTIPLIER") + ": x %s" % [speed_mult]
 		spd_mult_node.visible = bool(points) or game.pickaxe.has("speed_mult")
-		if Input.is_action_pressed("left_click") and Geometry.is_point_in_circle(mouse_pos, circ.position + 50 * circ.scale, 50 * circ.scale.x):
+		if Input.is_action_pressed("left_click") and Geometry2D.is_point_in_circle(mouse_pos, circ.position + 50 * circ.scale, 50 * circ.scale.x):
 			points += delta * 60.0 * game.u_i.time_speed
-			spd_mult_node["custom_colors/font_color"] = Color(0, 1, 0, 1)
+			spd_mult_node["theme_override_colors/font_color"] = Color(0, 1, 0, 1)
 		else:
 			if points > 0:
 				points = max(points - 3 * delta * 60.0 * game.u_i.time_speed, 0)
-				spd_mult_node["custom_colors/font_color"] = Color(1, 0, 0, 1)
+				spd_mult_node["theme_override_colors/font_color"] = Color(1, 0, 0, 1)
 
 func _on_Button_button_down():
 	if game.pickaxe.has("name"):
 		circ_disabled = false
-		$PickaxeAnim.get_animation("Pickaxe swing").loop = true
+		$PickaxeAnim.get_animation("Pickaxe swing").loop_mode = true
 		$PickaxeAnim.play("Pickaxe swing", -1, game.u_i.time_speed)
 
 func _on_Button_button_up():
 	circ_disabled = true
-	$PickaxeAnim.get_animation("Pickaxe swing").loop = false
+	$PickaxeAnim.get_animation("Pickaxe swing").loop_mode = false
 
 func _on_CheckBox_mouse_entered():
 	game.show_tooltip(tr("AUTO_REPLACE_DESC"))
@@ -386,7 +373,7 @@ func _on_CheckBox_mouse_exited():
 	game.hide_tooltip()
 
 func _on_AutoReplace_pressed():
-	game.auto_replace = $AutoReplace.pressed
+	game.auto_replace = $AutoReplace.button_pressed
 
 
 func _on_AuroraMult_mouse_entered():
@@ -398,8 +385,8 @@ func _on_AuroraMult_mouse_exited():
 
 
 func _on_Grid_resized():
-	if $ResourcesMined/Grid.rect_size.x > $ResourcesMined.rect_size.x:
-		$ResourcesMined.rect_min_size.x = $ResourcesMined/Grid.rect_size.x
-		$ResourcesMined.rect_position.x = 892 - $ResourcesMined.rect_min_size.x / 2.0
-	if $ResourcesMined/Grid.rect_size.y + 40 > $ResourcesMined.rect_size.y:
-		$ResourcesMined.rect_min_size.y = $ResourcesMined/Grid.rect_size.y + 40
+	if $ResourcesMined/Grid.size.x > $ResourcesMined.size.x:
+		$ResourcesMined.custom_minimum_size.x = $ResourcesMined/Grid.size.x + 40
+		$ResourcesMined.position.x = 892 - $ResourcesMined.custom_minimum_size.x / 2.0
+	if $ResourcesMined/Grid.size.y + 40 > $ResourcesMined.size.y:
+		$ResourcesMined.custom_minimum_size.y = $ResourcesMined/Grid.size.y + 40

@@ -1,100 +1,101 @@
-[gd_scene load_steps=6 format=2]
+[gd_scene load_steps=7 format=3 uid="uid://cqief0tl3kt44"]
 
-[ext_resource path="res://Resources/default_font.tres" type="DynamicFontData" id=1]
-[ext_resource path="res://Text/ArialUnicodeMS.ttf" type="DynamicFontData" id=3]
+[ext_resource type="Script" path="res://Scripts/Popup.gd" id="2_dj1qj"]
 
-[sub_resource type="GDScript" id=12]
-script/source = "extends Control
-var txt
-var dur
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_mabe5"]
+content_margin_left = 10.0
+content_margin_top = 5.0
+content_margin_right = 10.0
+content_margin_bottom = 5.0
+bg_color = Color(0.176471, 0.176471, 0.176471, 1)
+border_width_left = 2
+border_width_top = 2
+border_color = Color(0.341176, 0.341176, 0.341176, 1)
+border_blend = true
+shadow_size = 2
+shadow_offset = Vector2(1, 1)
 
-func init_popup(txt2:String, dur2:float):
-	$Text.text = \"\"
-	$Text.rect_size.x = 0
-	$Timer2.wait_time = 0.001
-	$Timer2.start()
-	txt = txt2
-	dur = dur2
+[sub_resource type="LabelSettings" id="LabelSettings_xulw5"]
+font_size = 18
 
-func do_popup():
-	self.visible = true
-	$Text.text = txt
-	var font = $Text.get_font(\"font\")
-	$Text.rect_size.x = font.get_string_size(txt).x + 30
-	$Text.rect_position.x = -$Text.rect_size.x / 2
-	if $AnimationPlayer.is_playing():
-		$AnimationPlayer.stop()
-	if $AnimationPlayer.has_animation(\"FadeIn\"):
-		$AnimationPlayer.remove_animation(\"FadeIn\")
-	var fade_in = Animation.new()
-	var anim_index = fade_in.add_track(Animation.TYPE_VALUE)
-	var anim_index2 = fade_in.add_track(Animation.TYPE_VALUE)
-	fade_in.track_set_path(anim_index, \"Text:rect_position\")
-	fade_in.track_set_path(anim_index2, \"Text:modulate\")
-	fade_in.track_insert_key(anim_index, 0, Vector2(-$Text.rect_size.x / 2, -12.5))
-	fade_in.track_insert_key(anim_index2, 0, Color(1, 1, 1, 0))
-	fade_in.track_insert_key(anim_index, 0.15, Vector2(-$Text.rect_size.x / 2, -17.5))
-	fade_in.track_insert_key(anim_index2, 0.15, Color(1, 1, 1, 1))
-	fade_in.length = 0.15
-	$AnimationPlayer.add_animation(\"FadeIn\", fade_in)
-	$AnimationPlayer.play(\"FadeIn\")
-	$Timer.wait_time = dur + 0.15
-	$Timer.start()
-
-
-func _on_Timer_timeout():
-	$AnimationPlayer.play_backwards()
-
-
-func _on_Timer2_timeout():
-	do_popup()
-"
-
-[sub_resource type="StyleBoxFlat" id=10]
-content_margin_left = 15.0
-content_margin_right = 15.0
-bg_color = Color( 0, 0, 0, 1 )
-border_width_left = 1
-border_width_top = 1
-border_width_right = 1
-border_width_bottom = 1
-border_color = Color( 0.584314, 0.584314, 0.584314, 1 )
-
-[sub_resource type="DynamicFont" id=11]
-size = 22
-use_filter = true
-font_data = ExtResource( 1 )
-fallback/0 = ExtResource( 3 )
-
-[node name="Popup" type="Control"]
-anchor_right = 1.0
-anchor_bottom = 1.0
-script = SubResource( 12 )
-__meta__ = {
-"_edit_use_anchors_": false
+[sub_resource type="Animation" id="Animation_yskog"]
+resource_name = "Fade"
+length = 0.2
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.2),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 1)]
+}
+tracks/1/type = "bezier"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath(".:position:y")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"handle_modes": PackedInt32Array(0, 0),
+"points": PackedFloat32Array(100, -0.25, 0, 0.1, -8.93139, 89.5431, -0.1, -0.346718, 0.25, 0),
+"times": PackedFloat32Array(0, 0.2)
 }
 
-[node name="Text" type="Label" parent="."]
-modulate = Color( 1, 1, 1, 0 )
-margin_left = -150.0
-margin_top = -17.5
-margin_right = 150.0
-margin_bottom = 17.5
-custom_styles/normal = SubResource( 10 )
-custom_fonts/font = SubResource( 11 )
+[sub_resource type="Animation" id="Animation_x0yr1"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1, 1, 1, 0)]
+}
+tracks/1/type = "bezier"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath(".:position:y")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"handle_modes": PackedInt32Array(0),
+"points": PackedFloat32Array(100, -0.25, 0, 0.25, 0),
+"times": PackedFloat32Array(0)
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_rtolb"]
+_data = {
+"Fade": SubResource("Animation_yskog"),
+"RESET": SubResource("Animation_x0yr1")
+}
+
+[node name="Popup" type="Label"]
+modulate = Color(1, 1, 1, 0)
+offset_left = 490.0
+offset_top = 100.0
+offset_right = 790.0
+offset_bottom = 141.0
+theme_override_styles/normal = SubResource("StyleBoxFlat_mabe5")
 text = "Popup information"
-align = 1
-valign = 1
-__meta__ = {
-"_edit_use_anchors_": false
-}
+label_settings = SubResource("LabelSettings_xulw5")
+horizontal_alignment = 1
+vertical_alignment = 1
+script = ExtResource("2_dj1qj")
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+libraries = {
+"": SubResource("AnimationLibrary_rtolb")
+}
 
 [node name="Timer" type="Timer" parent="."]
-one_shot = true
 
-[node name="Timer2" type="Timer" parent="."]
-one_shot = true
-[connection signal="timeout" from="Timer" to="." method="_on_Timer_timeout"]
-[connection signal="timeout" from="Timer2" to="." method="_on_Timer2_timeout"]
+[connection signal="animation_finished" from="AnimationPlayer" to="." method="_on_animation_player_animation_finished"]
+[connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]

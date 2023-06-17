@@ -6,8 +6,8 @@ var tween
 
 func _ready():
 	modulate.a = 0
-	tween = get_tree().create_tween()
-	tween.tween_property(self, "modulate", Color.white, 0.1)
+	tween = create_tween()
+	tween.tween_property(self, "modulate", Color.WHITE, 0.1)
 	refresh()
 
 func refresh():
@@ -16,24 +16,30 @@ func refresh():
 	for key in $Keys.get_children():
 		key.queue_free()
 	for key in keys:
-		var label = preload("res://Scenes/Key.tscn").instance()
+		var label = preload("res://Scenes/Key.tscn").instantiate()
 		label.text = key.name
 		$Keys.add_child(label)
 		var label2 = Label.new()
-		label2.rect_min_size.y = 34
-		label2.valign = Label.VALIGN_CENTER
+		label2.custom_minimum_size.y = 32
+		label2.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 		label2.text = tr(key.desc)
 		$KeyInfo.add_child(label2)
 
 func add_key(_name:String, desc:String):
 	keys.append({"name":_name, "desc":desc})
 
+func remove_key(_name:String):
+	for i in len(keys):
+		if keys[i].name == _name:
+			keys.remove_at(i)
+			break
+
 func _on_Keys_resized():
-	$KeyInfo.rect_position.x = $Keys.rect_position.x + $Keys.rect_size.x + 30
-	rect_size.x = max($Keys.rect_position.x + $Keys.rect_size.x + $KeyInfo.rect_size.x + 40, $Label.rect_size.x)
-	rect_size.y = $Keys.rect_size.y + 52
-	rect_position.x = center_position.x - rect_size.x / 2.0
-	rect_position.y = center_position.y - rect_size.y / 2.0
+	$KeyInfo.position.x = $Keys.position.x + $Keys.size.x + 30
+	size.x = max($Keys.position.x + $Keys.size.x + $KeyInfo.size.x + 40, $Label.size.x)
+	size.y = $Keys.size.y + 52
+	position.x = center_position.x - size.x / 2.0
+	position.y = center_position.y - size.y / 2.0
 
 
 func _on_Panel_mouse_entered():
@@ -46,7 +52,7 @@ func _on_Panel_mouse_exited():
 func close():
 	name = "BuildingShortcutsClosing"
 	tween.kill()
-	tween = get_tree().create_tween()
+	tween = create_tween()
 	tween.tween_property(self, "modulate", Color(1, 1, 1, 0), 0.1)
-	yield(tween, "finished")
+	await tween.finished
 	queue_free()

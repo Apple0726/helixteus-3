@@ -1,15 +1,15 @@
 extends Control
 
-onready var game = get_node("/root/Game")
+@onready var game = get_node("/root/Game")
 var moused_over = false
 
 func _input(event):
 	if event is InputEventMouseMotion:
 		if moused_over:
-			if not Geometry.is_point_in_polygon(event.position, $MouseOut.polygon):
+			if not Geometry2D.is_point_in_polygon(event.position, $MouseOut.polygon):
 				$AnimationPlayer.play_backwards("MoveLanguages")
 				moused_over = false
-		elif Geometry.is_point_in_polygon(event.position, $MouseOver.polygon):
+		elif Geometry2D.is_point_in_polygon(event.position, $MouseOver.polygon):
 			$AnimationPlayer.play("MoveLanguages")
 			moused_over = true
 
@@ -23,8 +23,8 @@ func change_language():
 		$Control/TranslatedBy.visible = false
 	else:
 		$Control/TranslatedBy.text = tr("TRANSLATED_BY").format({"translators":tr("TRANSLATORS_CREDITS")})
-		yield(get_tree(), "idle_frame")
-		$Control/TranslatedBy.rect_size.x = 0.0
+		await get_tree().process_frame
+		$Control/TranslatedBy.size.x = 0.0
 		$Control/TranslatedBy.visible = true
 	game.hide_tooltip()
 	Data.reload()

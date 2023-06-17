@@ -1,9 +1,9 @@
 extends Node2D
 
-onready var game = get_node("/root/Game")
-onready var stars_info = game.system_data[game.c_s]["stars"]
-onready var view = get_parent()
-var star_shader = preload("res://Shaders/Star.shader")
+@onready var game = get_node("/root/Game")
+@onready var stars_info = game.system_data[game.c_s]["stars"]
+@onready var view = get_parent()
+var star_shader = preload("res://Shaders/Star.gdshader")
 
 #Used to prevent view from moving outside viewport
 var dimensions:float
@@ -21,6 +21,8 @@ var tile_datas:Array = []
 var build_all_MS_stages:bool = false
 var CBS_range:float = 0.0
 var broken_CBS_range:float = 0.0
+var bldg_costs:Dictionary
+var rsrc_salvaged:Dictionary
 
 func _ready():
 	refresh_stars()
@@ -29,7 +31,7 @@ func refresh_planets():
 	scale_mult = 70.0 / game.system_data[game.c_s].get("closest_planet_distance", 300)
 	CBS_range = 0.0
 	broken_CBS_range = 0.0
-	var curr_time = OS.get_system_time_msecs()
+	var curr_time = Time.get_unix_time_from_system()
 	for planet_thing in get_tree().get_nodes_in_group("planet_stuff"):
 		planet_thing.queue_free()
 	for orbit in get_tree().get_nodes_in_group("orbits"):
@@ -59,50 +61,50 @@ func refresh_planets():
 					planets_affected_by_CBS = max(planets_affected_by_CBS, ceil(p_num * star_info.MS_lv * 0.333))
 	for i in p_num:
 		var p_i:Dictionary = game.planet_data[i]
-		if p_i.empty():
+		if p_i.is_empty():
 			tile_datas.append([])
 			continue
 		var sc:float = p_i["distance"] / 2400.0 * scale_mult
 		var tile_data_to_append:Array = game.open_obj("Planets", p_i.id)
 		tile_datas.append(tile_data_to_append)
 		
-		var v:Vector2 = polar2cartesian(p_i.distance * scale_mult, p_i.angle)
-		var orbit = preload("res://Scenes/Orbit.tscn").instance()
+		var v:Vector2 = Vector2.from_angle(p_i.angle) * p_i.distance * scale_mult
+		var orbit = preload("res://Scenes/Orbit.tscn").instantiate()
 		add_child(orbit)
 		orbit.radius = p_i.distance * scale_mult
 		orbit.alpha = clamp(view.scale.x * orbit.radius / 300.0, 0.3, 1)
 		orbit.add_to_group("orbits")
-		var planet = preload("res://Scenes/PlanetButton.tscn").instance()
+		var planet = preload("res://Scenes/PlanetButton.tscn").instantiate()
 		var planet_btn = planet.get_node("Button")
 		var planet_glow = planet.get_node("Glow")
 		planet_btn.texture_normal = game.planet_textures[p_i.type - 3]
 		add_child(planet)
-		planet_btn.connect("mouse_entered", self, "on_planet_over", [p_i.id, p_i.l_id])
-		planet_glow.connect("mouse_entered", self, "on_glow_planet_over", [p_i.id, p_i.l_id, planet_glow])
-		planet_btn.connect("mouse_exited", self, "on_btn_out")
-		planet_glow.connect("mouse_exited", self, "on_btn_out")
-		planet_btn.connect("pressed", self, "on_planet_click", [p_i["id"], p_i.l_id])
-		planet_glow.connect("pressed", self, "on_planet_click", [p_i["id"], p_i.l_id])
-		planet_btn.rect_scale.x = p_i["size"] / PLANET_SCALE_DIV * scale_mult
-		planet_btn.rect_scale.y = p_i["size"] / PLANET_SCALE_DIV * scale_mult
-		planet_glow.rect_scale *= sc
+		planet_btn.connect("mouse_entered",Callable(self,"on_planet_over").bind(p_i.id, p_i.l_id))
+		planet_glow.connect("mouse_entered",Callable(self,"on_glow_planet_over").bind(p_i.id, p_i.l_id, planet_glow))
+		planet_btn.connect("mouse_exited",Callable(self,"on_btn_out"))
+		planet_glow.connect("mouse_exited",Callable(self,"on_btn_out"))
+		planet_btn.connect("pressed",Callable(self,"on_planet_click").bind(p_i["id"], p_i.l_id))
+		planet_glow.connect("pressed",Callable(self,"on_planet_click").bind(p_i["id"], p_i.l_id))
+		planet_btn.scale.x = p_i["size"] / PLANET_SCALE_DIV * scale_mult
+		planet_btn.scale.y = p_i["size"] / PLANET_SCALE_DIV * scale_mult
+		planet_glow.scale *= sc
 		if game.system_data[game.c_s].has("conquered"):
 			p_i.conquered = true
 		if not is_instance_valid(game.element_overlay):
-			yield(get_tree(), "idle_frame")
+			await get_tree().process_frame
 		if p_i.has("conquered"):
 			if p_i.has("bldg"):
 				planet_glow.modulate = Color(0.2, 0.2, 1, 1)
 			elif p_i.has("wormhole"):
 				planet_glow.modulate = Color(0.74, 0.6, 0.78, 1)
 			elif p_i.type in [11, 12]:
-				planet_glow.modulate = Color.burlywood
+				planet_glow.modulate = Color.BURLYWOOD
 			else:
 				if p_i.has("discovered"):
 					planet_glow.modulate = Color(0, 1, 0, 1)
 				else:
 					planet_glow.modulate = Color(0.8, 1, 0, 1)
-			if game.element_overlay.toggle_btn.pressed:
+			if game.element_overlay.toggle_btn.button_pressed:
 				add_elements(p_i, v, sc)
 			else:
 				var tile_data:Array = tile_datas[p_i.l_id]
@@ -113,43 +115,43 @@ func refresh_planets():
 					for tile in tile_data:
 						if tile and tile.has("bldg") and tile.bldg.has("name"):
 							Helper.add_to_dict(bldgs, tile.bldg.name, 1)
-				if not bldgs.empty():
+				if not bldgs.is_empty():
 					var grid:GridContainer = GridContainer.new()
 					grid.mouse_filter = Control.MOUSE_FILTER_IGNORE
 					grid.columns = 3
-					grid.rect_scale *= sc * 2.5
+					grid.scale *= sc * 2.5
 					for bldg in bldgs:
-						var bldg_count = preload("res://Scenes/EntityCount.tscn").instance()
-						bldg_count.get_node("Texture").connect("mouse_entered", self, "on_entity_icon_over", [tr("%s_NAME" % bldg)])
-						bldg_count.get_node("Texture").connect("mouse_exited", self, "on_entity_icon_out")
+						var bldg_count = preload("res://Scenes/EntityCount.tscn").instantiate()
+						bldg_count.get_node("Texture2D").connect("mouse_entered",Callable(self,"on_entity_icon_over").bind(tr("%s_NAME" % bldg)))
+						bldg_count.get_node("Texture2D").connect("mouse_exited",Callable(self,"on_entity_icon_out"))
 						grid.add_child(bldg_count)
-						bldg_count.get_node("Texture").texture = game.bldg_textures[bldg]
+						bldg_count.get_node("Texture2D").texture = game.bldg_textures[bldg]
 						bldg_count.get_node("Label").text = "x %s" % Helper.format_num(bldgs[bldg])
 					add_child(grid)
 					grid.add_to_group("info_nodes")
-					grid.rect_position.x = v.x - grid.rect_size.x / 2.0 * sc * 2.5
-					grid.rect_position.y = v.y - (grid.rect_size.y + 50) * sc * 2.5
+					grid.position.x = v.x - grid.size.x / 2.0 * sc * 2.5
+					grid.position.y = v.y - (grid.size.y + 50) * sc * 2.5
 		else:
-			if game.element_overlay.toggle_btn.pressed:
+			if game.element_overlay.toggle_btn.button_pressed:
 				add_elements(p_i, v, sc)
 			else:
-				var HX_count = preload("res://Scenes/EntityCount.tscn").instance()
-				HX_count.get_node("Texture").connect("mouse_entered", self, "on_entity_icon_over", [tr("ENEMIES")])
-				HX_count.get_node("Texture").connect("mouse_exited", self, "on_entity_icon_out")
-				HX_count.rect_scale *= sc * 3.0
+				var HX_count = preload("res://Scenes/EntityCount.tscn").instantiate()
+				HX_count.get_node("Texture2D").connect("mouse_entered",Callable(self,"on_entity_icon_over").bind(tr("ENEMIES")))
+				HX_count.get_node("Texture2D").connect("mouse_exited",Callable(self,"on_entity_icon_out"))
+				HX_count.scale *= sc * 3.0
 				HX_count.get_node("Label").text = "x %s" % len(p_i.HX_data)
 				add_child(HX_count)
 				HX_count.add_to_group("info_nodes")
-				HX_count.rect_position.x = v.x - HX_count.rect_size.x / 2.0 * sc * 3.0
-				HX_count.rect_position.y = v.y - (HX_count.rect_size.y + 40) * sc * 3.0
+				HX_count.position.x = v.x - HX_count.size.x / 2.0 * sc * 3.0
+				HX_count.position.y = v.y - (HX_count.size.y + 40) * sc * 3.0
 			if p_i.type in [11, 12]:
-				planet_glow.modulate = Color.burlywood
+				planet_glow.modulate = Color.BURLYWOOD
 			else:
-				planet_glow.modulate = Color.red
+				planet_glow.modulate = Color.RED
 		dimensions = v.length()
 		if p_i.has("MS"):
 			planet_glow.modulate = Color(0.6, 0.6, 0.6, 1)
-			var MS = Sprite.new()
+			var MS = Sprite2D.new()
 			MS.texture = load("res://Graphics/Megastructures/%s_%s.png" % [p_i.MS, p_i.MS_lv])
 			MS.scale *= 0.2
 			if p_i.MS == "M_SE":
@@ -162,9 +164,9 @@ func refresh_planets():
 			MS.scale *= scale_mult
 			planet.add_child(MS)
 			if p_i.bldg.has("is_constructing"):
-				var time_bar = game.time_scene.instance()
-				time_bar.rect_position = Vector2(0, -80 * sc)
-				time_bar.rect_scale *= sc
+				var time_bar = game.time_scene.instantiate()
+				time_bar.position = Vector2(0, -80 * sc)
+				time_bar.scale *= sc
 				planet.add_child(time_bar)
 				time_bar.modulate = Color(0, 0.74, 0, 1)
 				planet_time_bars.append({"node":time_bar, "p_i":p_i, "parent":planet})
@@ -183,7 +185,7 @@ func refresh_planets():
 					add_rsrc(v, Color(0.89, 0.55, 1.0, 1), Data.rsrc_icons.AE, p_i.l_id, false, sc)
 				"MM":
 					add_rsrc(v, Color(0.6, 0.6, 0.6, 1), Data.rsrc_icons.MM, p_i.l_id, false, sc, true)
-		planet.rect_position = v
+		planet.position = v
 		planet.add_to_group("planet_stuff")
 		glows.append(planet_glow)
 		if planets_affected_by_CBS > 0 and i == planets_affected_by_CBS - 1:
@@ -201,7 +203,7 @@ func add_elements(p_i:Dictionary, v:Vector2, sc:float):
 	var grid:GridContainer = GridContainer.new()
 	grid.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	grid.columns = 3
-	grid.rect_scale *= sc * 4.0
+	grid.scale *= sc * 4.0
 	if game.element_overlay.option_btn.get_selected_id() == 0:#Planet interior
 		var R = p_i.size * 1000.0 / 2#in meters
 		var surface_volume = Helper.get_sph_V(R, R - p_i.crust_start_depth)#in m^3
@@ -212,32 +214,33 @@ func add_elements(p_i:Dictionary, v:Vector2, sc:float):
 		var mantle_stone_amount = mantle_volume * ((5690 + (p_i.mantle_start_depth + p_i.core_start_depth) * 0.01) / 2.0)
 		var core_stone_amount = core_volume * ((5700 + (p_i.core_start_depth + R) * 0.01) / 2.0)
 		for atom in game.show_atoms:
-			var atom_count = preload("res://Scenes/EntityCount.tscn").instance()
-			atom_count.get_node("Texture").connect("mouse_entered", self, "on_entity_icon_over", [tr("%s_NAME" % atom.to_upper())])
-			atom_count.get_node("Texture").connect("mouse_exited", self, "on_entity_icon_out")
+			var atom_count = preload("res://Scenes/EntityCount.tscn").instantiate()
+			atom_count.get_node("Texture2D").connect("mouse_entered",Callable(self,"on_entity_icon_over").bind(tr("%s_NAME" % atom.to_upper())))
+			atom_count.get_node("Texture2D").connect("mouse_exited",Callable(self,"on_entity_icon_out"))
 			grid.add_child(atom_count)
-			atom_count.get_node("Texture").texture = load("res://Graphics/Atoms/%s.png" % atom)
+			atom_count.get_node("Texture2D").texture = load("res://Graphics/Atoms/%s.png" % atom)
 			var num:float = ((p_i.crust[atom] if p_i.crust.has(atom) else 0.0) * crust_stone_amount + (p_i.mantle[atom] if p_i.mantle.has(atom) else 0.0) * mantle_stone_amount + (p_i.core[atom] if p_i.core.has(atom) else 0.0) * core_stone_amount)# / Data.molar_mass[atom] / 1000.0
 			atom_count.get_node("Label").text = "%s mol" % Helper.format_num(num, true)
 	elif game.element_overlay.option_btn.get_selected_id() == 1:
 		for atom in game.show_atoms:
-			var atom_count = preload("res://Scenes/EntityCount.tscn").instance()
-			atom_count.get_node("Texture").connect("mouse_entered", self, "on_entity_icon_over", [tr("%s_NAME" % atom.to_upper())])
-			atom_count.get_node("Texture").connect("mouse_exited", self, "on_entity_icon_out")
+			var atom_count = preload("res://Scenes/EntityCount.tscn").instantiate()
+			atom_count.get_node("Texture2D").connect("mouse_entered",Callable(self,"on_entity_icon_over").bind(tr("%s_NAME" % atom.to_upper())))
+			atom_count.get_node("Texture2D").connect("mouse_exited",Callable(self,"on_entity_icon_out"))
 			grid.add_child(atom_count)
-			atom_count.get_node("Texture").texture = load("res://Graphics/Atoms/%s.png" % atom)
+			atom_count.get_node("Texture2D").texture = load("res://Graphics/Atoms/%s.png" % atom)
 			var percentage:float = p_i.atmosphere[atom] * 100.0 if p_i.atmosphere.has(atom) else 0.0
 			atom_count.get_node("Label").text = "%s%%" % Helper.clever_round(percentage)
 	add_child(grid)
 	grid.add_to_group("info_nodes")
-	grid.rect_position.x = v.x - grid.rect_size.x / 2.0 * sc * 4.0
-	grid.rect_position.y = v.y - (grid.rect_size.y + 50) * sc * 4.0
+	grid.position.x = v.x - grid.size.x / 2.0 * sc * 4.0
+	grid.position.y = v.y - (grid.size.y + 50) * sc * 4.0
 
 func on_entity_icon_over(txt:String):
 	game.show_tooltip(txt)
 
 func on_entity_icon_out():
 	game.hide_tooltip()
+
 
 func refresh_stars():
 	scale_mult = 70.0 / game.system_data[game.c_s].get("closest_planet_distance", 300)
@@ -249,31 +252,42 @@ func refresh_stars():
 		rsrc.node.queue_free()
 	star_time_bars.clear()
 	star_rsrcs.clear()
+	var star_tween
+	if game.enable_shaders:
+		star_tween = create_tween()
+		star_tween.set_parallel(true)
 	for i in len(stars_info):
 		var star_info:Dictionary = stars_info[i]
 		var star = TextureButton.new()
 		star.texture_normal = load("res://Graphics/Effects/spotlight_%s.png" % [int(star_info.temperature) % 3 + 4])
 		star.texture_click_mask = preload("res://Graphics/Misc/StarCM.png")
 		self.add_child(star)
-		star.rect_pivot_offset = Vector2(512, 512)
-		star.rect_scale.x = max(5.0 * star_info["size"] / game.STAR_SCALE_DIV, 0.008) * scale_mult
-		star.rect_scale.y = max(5.0 * star_info["size"] / game.STAR_SCALE_DIV, 0.008) * scale_mult
-		star.rect_position = star_info["pos"] * scale_mult - Vector2(512, 512)
-		star.connect("mouse_entered", self, "on_star_over", [i])
-		star.connect("mouse_exited", self, "on_btn_out")
-		star.connect("pressed", self, "on_star_pressed", [i])
+		star.pivot_offset = Vector2(512, 512)
+		star.scale.x = max(5.0 * star_info["size"] / game.STAR_SCALE_DIV, 0.008) * scale_mult
+		star.scale.y = max(5.0 * star_info["size"] / game.STAR_SCALE_DIV, 0.008) * scale_mult
+		star.position = star_info["pos"] * scale_mult - Vector2(512, 512)
+		star.connect("mouse_entered",Callable(self,"on_star_over").bind(i))
+		star.connect("mouse_exited",Callable(self,"on_btn_out"))
+		star.connect("pressed",Callable(self,"on_star_pressed").bind(i))
+		if game.enable_shaders:
+			star.material = ShaderMaterial.new()
+			star.material.shader = preload("res://Shaders/Star.gdshader")
+			star.material.set_shader_parameter("time_offset", 10.0 * randf())
+			star.material.set_shader_parameter("color", Helper.get_star_modulate(star_info["class"]))
+			star.material.set_shader_parameter("alpha", 0.0)
+			star_tween.tween_property(star.material, "shader_parameter/alpha", 1.0, 0.3)
 		star.modulate = Helper.get_star_modulate(star_info["class"])
 		if star_info.type.substr(0, 10) == "hypergiant" and not star_info.has("hypergiant"):
 			star_info.hypergiant = 1
-		if not game.achievement_data.exploration.has("B_star") and star_info.class[0] == "B":
+		if not game.achievement_data.exploration.has("B_star") and star_info["class"][0] == "B":
 			game.earn_achievement("exploration", "B_star")
-		if not game.achievement_data.exploration.has("O_star") and star_info.class[0] == "O":
+		if not game.achievement_data.exploration.has("O_star") and star_info["class"][0] == "O":
 			game.earn_achievement("exploration", "O_star")
-		if not game.achievement_data.exploration.has("Q_star") and star_info.class[0] == "Q":
+		if not game.achievement_data.exploration.has("Q_star") and star_info["class"][0] == "Q":
 			game.earn_achievement("exploration", "Q_star")
-		if not game.achievement_data.exploration.has("R_star") and star_info.class[0] == "R":
+		if not game.achievement_data.exploration.has("R_star") and star_info["class"][0] == "R":
 			game.earn_achievement("exploration", "R_star")
-		if not game.achievement_data.exploration.has("Z_star") and star_info.class[0] == "Z":
+		if not game.achievement_data.exploration.has("Z_star") and star_info["class"][0] == "Z":
 			game.earn_achievement("exploration", "Z_star")
 		if not game.achievement_data.exploration.has("HG_star") and star_info.has("hypergiant"):
 			game.earn_achievement("exploration", "HG_star")
@@ -286,15 +300,8 @@ func refresh_stars():
 		if not game.achievement_data.exploration.has("HG_L_star") and star_info.has("hypergiant") and star_info.hypergiant >= 50:
 			game.earn_achievement("exploration", "HG_L_star")
 		star.add_to_group("stars_system")
-		if game.enable_shaders:
-			star.material = ShaderMaterial.new()
-			star.material.shader = star_shader
-			star.material.set_shader_param("time_offset", 10.0 * randf())
-			star.material.set_shader_param("brightness_offset", 2.0)
-			star.material.set_shader_param("twinkle_speed", 0.8)
-			star.material.set_shader_param("amplitude", 0.3)
 		if star_info.has("MS"):
-			var MS = Sprite.new()
+			var MS = Sprite2D.new()
 			if star_info.MS == "M_MB":
 				MS.texture = preload("res://Graphics/Megastructures/M_MB_0.png")
 			else:
@@ -308,10 +315,10 @@ func refresh_stars():
 			elif star_info.MS == "M_MB":
 				add_rsrc(star_info.pos * scale_mult, Color(0, 0.8, 0, 1), Data.SP_icon, i, true, max(star_info.size / 6.0, 0.5) * scale_mult)
 			if star_info.bldg.has("is_constructing"):
-				var time_bar = game.time_scene.instance()
-				time_bar.rect_scale *= 8.0
-				time_bar.rect_position.x += 512
-				time_bar.rect_position.y -= 100
+				var time_bar = game.time_scene.instantiate()
+				time_bar.scale *= 8.0
+				time_bar.position.x += 512
+				time_bar.position.y -= 100
 				star.add_child(time_bar)
 				time_bar.modulate = Color(0, 0.74, 0, 1)
 				star_time_bars.append({"node":time_bar, "id":i})
@@ -467,12 +474,12 @@ func show_planet_info(id:int, l_id:int):
 		if Data.MS_num_stages[p_i.MS] > 0:
 			stage += " (%s)" % [tr("STAGE_X_X") % [p_i.MS_lv, Data.MS_num_stages[p_i.MS]]]
 		Helper.add_label(stage, -1, true, true)
+		MS_constr_data.obj = p_i
 		if p_i.has("repair_cost"):
 			if p_i.has("conquered"):
 				Helper.add_label(tr("REPAIR_COST") + ":", -1, false)
 				Helper.put_rsrc(vbox, 32, {"money":p_i.repair_cost}, false)
-				MS_constr_data.obj = p_i
-				MS_constr_data.confirm = true
+				MS_constr_data.confirm_repair = true
 				bldg_costs = {"money":p_i.repair_cost, "time":0.2}
 				Helper.add_label(tr("PRESS_F_TO_REPAIR"), -1, false)
 		else:
@@ -486,7 +493,7 @@ func show_planet_info(id:int, l_id:int):
 			if not p_i.bldg.has("is_constructing"):
 				if p_i.MS_lv < Data.MS_num_stages[p_i.MS] and game.science_unlocked.has("%s%s" % [p_i.MS.split("_")[1], (p_i.MS_lv + 1)]):
 					MS_constr_data.obj = p_i
-					MS_constr_data.confirm = false
+					MS_constr_data.confirm_upgrade = false
 					Helper.add_label(tr("PRESS_F_TO_CONTINUE_CONSTR"))
 	if Helper.ships_on_planet(l_id) and not p_i.has("conquered"):
 		game.show_tooltip(tr("CLICK_TO_BATTLE"))
@@ -503,9 +510,9 @@ func show_planet_info(id:int, l_id:int):
 		else:
 			game.help_str = "planet_details"
 			var T_gradient:Gradient = preload("res://Resources/TemperatureGradient.tres")
-			var temp_color:String = T_gradient.interpolate(inverse_lerp(0, 500, p_i.temperature)).to_html(false)
+			var temp_color:String = T_gradient.sample(inverse_lerp(0, 500, p_i.temperature)).to_html(false)
 			var P_gradient:Gradient = preload("res://Resources/IntensityGradient.tres")
-			var pressure_color:String = P_gradient.interpolate(inverse_lerp(1, 150, p_i.pressure)).to_html(false)
+			var pressure_color:String = P_gradient.sample(inverse_lerp(1, 150, p_i.pressure)).to_html(false)
 			tooltip = "%s\n%s: %s km (%sx%s)\n%s: %s AU\n%s: [color=#%s]%s °C (%s K)[/color]\n%s: [color=#%s]%s bar[/color]" % [p_i.name, tr("DIAMETER"), Helper.format_num(round(p_i.size), false, 9), wid, wid, tr("DISTANCE_FROM_STAR"), Helper.format_num(p_i.distance / 569.25, true), tr("SURFACE_TEMPERATURE"), temp_color, Helper.clever_round(p_i.temperature - 273, 4), Helper.clever_round(p_i.temperature, 4), tr("ATMOSPHERE_PRESSURE"), pressure_color, Helper.clever_round(p_i.pressure, 4)]
 			if p_i.has("conquered"):
 				tooltip += "\n%s" % tr("CTRL_CLICK_TO_SEND_SHIPS")
@@ -516,24 +523,76 @@ func show_planet_info(id:int, l_id:int):
 		game.show_adv_tooltip(tooltip, Helper.flatten(icons))
 
 var MS_constr_data:Dictionary = {}
+var current_MS_action = ""
 
 func _input(event):
 	if Input.is_action_just_released("F"):
-		if not MS_constr_data.empty():
-			if not MS_constr_data.confirm:
+		if not MS_constr_data.is_empty():
+			if MS_constr_data.has("confirm_upgrade") and not MS_constr_data.confirm_upgrade:
+				current_MS_action = "upgrading"
 				var MS:String = MS_constr_data.obj.MS
 				call("show_%s_costs" % MS, MS_constr_data.obj)
-				MS_constr_data.confirm = true
-				Helper.add_label(tr("F_TO_CONFIRM"))
-			else:
+				MS_constr_data.confirm_upgrade = true
+				Helper.add_label(tr("X_TO_CONFIRM") % "F")
+			elif current_MS_action == "upgrading":
 				build_MS(MS_constr_data.obj, MS_constr_data.obj.MS)
 		elif planet_hovered != -1 and game.planet_data[planet_hovered].has("bldg") and game.planet_data[planet_hovered].bldg.has("name"):
 			game.upgrade_panel.ids = []
 			game.upgrade_panel.planet = game.planet_data[planet_hovered]
 			game.toggle_panel(game.upgrade_panel)
+	elif Input.is_action_just_released("X"):
+		if not MS_constr_data.has("confirm_destroy"):
+			MS_constr_data.confirm_destroy = true
+			current_MS_action = "destroying"
+			var vbox = game.get_node("UI/Panel/VBox")
+			if MS_constr_data.obj.MS == "M_MB":
+				rsrc_salvaged = Data.MS_costs["M_MB"].duplicate(true)
+			else:
+				rsrc_salvaged = Data.MS_costs["%s_%s" % [MS_constr_data.obj.MS, MS_constr_data.obj.MS_lv]].duplicate(true)
+			rsrc_salvaged.erase("money")
+			rsrc_salvaged.erase("energy")
+			rsrc_salvaged.erase("time")
+			var MS_repair_cost_money = 0.0
+			var MS_repair_cost_energy = 0.0
+			for rsrc in rsrc_salvaged.keys():
+				if MS_constr_data.obj.MS in ["M_DS", "M_MB"]:
+					rsrc_salvaged[rsrc] *= pow(MS_constr_data.obj.size, 2)
+				elif MS_constr_data.obj.MS == "M_CBS":
+					rsrc_salvaged[rsrc] *= game.planet_data[-1].distance / 1000.0
+				elif MS_constr_data.obj.MS == "M_SE":
+					rsrc_salvaged[rsrc] *= MS_constr_data.obj.size.size / 12000.0
+				elif MS_constr_data.obj.MS == "M_MME":
+					rsrc_salvaged[rsrc] *= pow(MS_constr_data.obj.size.size / 13000.0, 2)
+				rsrc_salvaged[rsrc] = round(rsrc_salvaged[rsrc] * game.engineering_bonus.BCM * (0.25 if MS_constr_data.obj.has("repair_cost") else 0.5))
+				if rsrc == "stone":
+					MS_repair_cost_money += rsrc_salvaged[rsrc] * 2.0
+					MS_repair_cost_energy += rsrc_salvaged[rsrc]
+				else:
+					MS_repair_cost_money += rsrc_salvaged[rsrc] * 250.0
+					MS_repair_cost_energy += rsrc_salvaged[rsrc] * 50
+			rsrc_salvaged.erase("stone")
+			bldg_costs = {"money":MS_repair_cost_money, "energy":MS_repair_cost_energy}
+			Helper.put_rsrc(vbox, 32, bldg_costs, true, true)
+			Helper.put_rsrc(vbox, 32, rsrc_salvaged, false)
+			Helper.add_label(tr("DISMANTLING_COSTS"), 0)
+			Helper.add_label(tr("YOU_WILL_SALVAGE"), 3)
+			Helper.add_label(tr("X_TO_CONFIRM") % "X")
+		elif current_MS_action == "destroying":
+			if game.check_enough(bldg_costs):
+				game.deduct_resources(bldg_costs)
+				game.add_resources(rsrc_salvaged)
+				MS_constr_data.obj.erase("MS")
+				MS_constr_data.obj.erase("MS_lv")
+				game.popup(tr("MS_REKT"), 2.0)
+				game.get_node("UI/Panel/AnimationPlayer").play("FadeOut")
+				MS_constr_data.clear()
+				refresh_planets()
+				refresh_stars()
+			else:
+				game.popup(tr("NOT_ENOUGH_RESOURCES"), 1.5)
 
 func build_MS(obj:Dictionary, MS:String):
-	if bldg_costs.empty():
+	if bldg_costs.is_empty():
 		return
 	if obj.has("tile_num"):
 		game.popup(tr("MS_ON_TF_PLANET"), 2.0)
@@ -552,7 +611,7 @@ func build_MS(obj:Dictionary, MS:String):
 		if error:
 			game.popup(tr("NO_SCIENCE_TO_REPAIR_MS"), 2.0)
 			return 
-	var curr_time = OS.get_system_time_msecs()
+	var curr_time = Time.get_unix_time_from_system()
 	if game.check_enough(bldg_costs):
 		game.deduct_resources(bldg_costs)
 		if not game.achievement_data.progression.has("build_MS"):
@@ -592,7 +651,7 @@ func build_MS(obj:Dictionary, MS:String):
 		obj.bldg = {}
 		obj.bldg.is_constructing = true
 		obj.bldg.construction_date = curr_time
-		obj.bldg.construction_length = bldg_costs.time * 1000
+		obj.bldg.construction_length = bldg_costs.time
 		obj.bldg.XP = round(bldg_costs.money / 100.0)
 		game.get_node("UI/Panel/AnimationPlayer").play("FadeOut")
 		MS_constr_data.clear()
@@ -610,8 +669,6 @@ func toggle_GH(p_i:Dictionary, fertilizer:bool):
 	game.toggle_panel(game.greenhouse_panel)
 
 func on_planet_click (id:int, l_id:int):
-	if game.tutorial and game.tutorial.visible:
-		return
 	var p_i = game.planet_data[l_id]
 	if not view.dragged:
 		if Input.is_action_pressed("shift"):
@@ -647,7 +704,7 @@ func on_planet_click (id:int, l_id:int):
 					game.hide_tooltip()
 					return
 			elif p_i.bldg.has("is_constructing"):
-				var curr_time = OS.get_system_time_msecs()
+				var curr_time = Time.get_unix_time_from_system()
 				var orig_num:int = game.item_to_use.num
 				var speedup_time = game.speedups_info[game.item_to_use.name].time / 20.0
 				var time_remaining = p_i.bldg.construction_date + p_i.bldg.construction_length - curr_time
@@ -704,11 +761,9 @@ func on_planet_click (id:int, l_id:int):
 						game.send_ships_panel.dest_p_id = l_id
 						game.toggle_panel(game.send_ships_panel)
 				else:
-					game.long_popup(tr("NO_SHIPS_DESC"), tr("NO_SHIPS"))
-	if game.is_a_parent_of(game.HUD):
+					game.popup_window(tr("NO_SHIPS_DESC"), tr("NO_SHIPS"))
+	if game.is_ancestor_of(game.HUD):
 		game.HUD.refresh()
-
-var bldg_costs:Dictionary
 
 func on_star_over (id:int):
 	var star = stars_info[id]
@@ -717,7 +772,7 @@ func on_star_over (id:int):
 	if star_type.substr(0, 11) == "hypergiant ":
 		star_type = star_type.split(" ")[0]
 		star_tier = " %s" % star.type.split(" ")[1]
-	var tooltip = tr("STAR_TITLE").format({"type":"%s%s" % [tr(star_type.to_upper()), star_tier.to_upper()], "class":star.class})
+	var tooltip = tr("STAR_TITLE").format({"type":"%s%s" % [tr(star_type.to_upper()), star_tier.to_upper()], "class":star["class"]})
 	tooltip += "\n%s\n%s %s\n%s\n%s" % [
 		tr("STAR_TEMPERATURE") % [Helper.format_num(star.temperature, false, 9)], 
 		tr("STAR_SIZE") % [(Helper.clever_round(star.size, 3, true) if star.size < 1000 else Helper.format_num(star.size))], tr("SOLAR_RADII"),
@@ -764,12 +819,12 @@ func on_star_over (id:int):
 		if Data.MS_num_stages[star.MS] > 0:
 			stage += " (%s)" % [tr("STAGE_X_X") % [star.MS_lv, Data.MS_num_stages[star.MS]]]
 		Helper.add_label(stage)
+		MS_constr_data.obj = star
 		if star.has("repair_cost"):
 			if game.system_data[game.c_s].has("conquered"):
 				Helper.add_label(tr("REPAIR_COST"), -1, false)
 				Helper.put_rsrc(vbox, 32, {"money":star.repair_cost}, false)
-				MS_constr_data.obj = star
-				MS_constr_data.confirm = true
+				MS_constr_data.confirm_repair = true
 				bldg_costs = {"money":star.repair_cost, "time":0.2}
 				Helper.add_label(tr("PRESS_F_TO_REPAIR"))
 		else:
@@ -804,15 +859,17 @@ func on_star_over (id:int):
 					continue_upg(star)
 				elif star.MS == "M_CBS" and game.science_unlocked.has("CBS%s" % (star.MS_lv + 1)):
 					continue_upg(star)
+		if game.system_data[game.c_s].has("conquered"):
+			Helper.add_label(tr("PRESS_X_TO_DESTROY"))
 	game.show_tooltip(tooltip)
 
 func continue_upg(obj:Dictionary):
 	MS_constr_data.obj = obj
-	MS_constr_data.confirm = false
+	MS_constr_data.confirm_upgrade = false
 	Helper.add_label(tr("PRESS_F_TO_CONTINUE_CONSTR"))
 
 func on_star_pressed (id:int):
-	var curr_time = OS.get_system_time_msecs()
+	var curr_time = Time.get_unix_time_from_system()
 	var star = stars_info[id]
 	if game.bottom_info_action in ["building_DS", "building_PK", "building_CBS"]:
 		if game.system_data[game.c_s].has("conquered"):
@@ -868,7 +925,7 @@ func on_btn_out ():
 
 func _process(_delta):
 	for glow in glows:
-		glow.modulate.a = clamp(0.6 / (view.scale.x * glow.rect_scale.x) - 0.1, 0, 1)
+		glow.modulate.a = clamp(0.6 / (view.scale.x * glow.scale.x) - 0.1, 0, 1)
 		if glow.modulate.a == 0 and glow.visible:
 			if glow == glow_over:
 				game.hide_tooltip()
@@ -877,8 +934,8 @@ func _process(_delta):
 			glow.visible = true
 	for orbit in get_tree().get_nodes_in_group("orbits"):
 		orbit.alpha = clamp(view.scale.x * orbit.radius / 300.0, 0.1, 1)
-		orbit.update()
-	var curr_time = OS.get_system_time_msecs()
+		orbit.queue_redraw()
+	var curr_time = Time.get_unix_time_from_system()
 	for time_bar_obj in star_time_bars:
 		var time_bar = time_bar_obj.node
 		var id = time_bar_obj.id
@@ -903,7 +960,7 @@ func _process(_delta):
 						p_num = ceil(p_num_total * 0.1)
 					for i in range(0, p_num):
 						var p_i:Dictionary = game.planet_data[i]
-						if p_i.empty():
+						if p_i.is_empty():
 							continue
 						if p_i.has("cost_div"):
 							p_i.cost_div = max(p_i.cost_div, 1 + log(star.luminosity + 1))
@@ -916,7 +973,7 @@ func _process(_delta):
 								_star.cost_div = max(_star.cost_div, 1 + log(star.luminosity + 1))
 							else:
 								_star.cost_div = 1 + log(star.luminosity + 1)
-					update()
+					queue_redraw()
 				game.HUD.refresh()
 			time_bar.queue_free()
 			star_time_bars.erase(time_bar_obj)
@@ -973,12 +1030,12 @@ func finish_construct():
 	pass
 
 func add_rsrc(v:Vector2, mod:Color, icon, id:int, is_star:bool, sc:float = 1, current_bar_visible = false):
-	var rsrc:ResourceStored = game.rsrc_stored_scene.instance()
+	var rsrc:ResourceStored = game.rsrc_stored_scene.instantiate()
 	add_child(rsrc)
 	rsrc.set_icon_texture(icon)
-	rsrc.rect_scale *= sc
-	rsrc.rect_position = v + Vector2(0, 70 * sc)
-	rsrc.set_modulate(mod)
+	rsrc.scale *= sc
+	rsrc.position = v + Vector2(0, 70 * sc)
+	rsrc.set_panel_modulate(mod)
 	rsrc.set_current_bar_visibility(current_bar_visible)
 	if is_star:
 		star_rsrcs.append({"node":rsrc, "id":id})

@@ -1,99 +1,139 @@
-[gd_scene load_steps=9 format=2]
+[gd_scene load_steps=8 format=3 uid="uid://0dmltwoh2b5o"]
 
-[ext_resource path="res://Resources/default_theme.tres" type="Theme" id=1]
-[ext_resource path="res://Scripts/ShipTravelMinigame.gd" type="Script" id=2]
-[ext_resource path="res://Graphics/Ships/Ship0.png" type="Texture" id=3]
-[ext_resource path="res://Text/ArialUnicodeMS.ttf" type="DynamicFontData" id=4]
-[ext_resource path="res://Text/Arimo-Regular.ttf" type="DynamicFontData" id=5]
+[ext_resource type="Theme" uid="uid://cp2u1kgj60ic" path="res://Resources/default_theme.tres" id="1"]
+[ext_resource type="Script" path="res://Scripts/ShipTravelMinigame.gd" id="2"]
+[ext_resource type="Texture2D" uid="uid://rfdqjdj64dnv" path="res://Graphics/Ships/Ship0.png" id="3"]
 
-[sub_resource type="InputEventAction" id=1]
-action = "change_view"
+[sub_resource type="Shortcut" id="2"]
 
-[sub_resource type="ShortCut" id=2]
-shortcut = SubResource( 1 )
+[sub_resource type="Animation" id="Animation_whuii"]
+resource_name = "Fade"
+length = 0.5
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.5),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 1)]
+}
+tracks/1/type = "bezier"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath(".:position:y")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"handle_modes": PackedInt32Array(0, 0),
+"points": PackedFloat32Array(332, -0.25, 0, 0.1, -17.7545, 317, -0.25, 0, 0.25, 0),
+"times": PackedFloat32Array(0, 0.5)
+}
 
-[sub_resource type="DynamicFont" id=3]
-size = 25
-use_mipmaps = true
-use_filter = true
-font_data = ExtResource( 5 )
-fallback/0 = ExtResource( 4 )
+[sub_resource type="Animation" id="Animation_bp777"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1, 1, 1, 0)]
+}
+tracks/1/type = "bezier"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath(".:position:y")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"handle_modes": PackedInt32Array(0),
+"points": PackedFloat32Array(332, -0.25, 0, 0.25, 0),
+"times": PackedFloat32Array(0)
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_hb4pr"]
+_data = {
+"Fade": SubResource("Animation_whuii"),
+"RESET": SubResource("Animation_bp777")
+}
 
 [node name="STM" type="Control"]
-theme = ExtResource( 1 )
-script = ExtResource( 2 )
+layout_mode = 3
+anchors_preset = 0
+theme = ExtResource("1")
+script = ExtResource("2")
 
 [node name="Back" type="Button" parent="."]
-margin_top = 684.0
-margin_right = 136.0
-margin_bottom = 720.0
+layout_mode = 0
+offset_top = 684.0
+offset_right = 136.0
+offset_bottom = 720.0
+shortcut = SubResource("2")
 shortcut_in_tooltip = false
-shortcut = SubResource( 2 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
-[node name="Ship" type="Sprite" parent="."]
-position = Vector2( -872, 364 )
-scale = Vector2( 0.1, 0.1 )
-texture = ExtResource( 3 )
+[node name="Ship" type="Sprite2D" parent="."]
+position = Vector2(-872, 364)
+scale = Vector2(0.1, 0.1)
+texture = ExtResource("3")
 
 [node name="Level" type="Label" parent="."]
-margin_left = 544.0
-margin_top = 12.0
-margin_right = 736.0
-margin_bottom = 44.0
-custom_fonts/font = SubResource( 3 )
+layout_mode = 0
+offset_left = 544.0
+offset_top = 12.0
+offset_right = 736.0
+offset_bottom = 44.0
 text = "Level 1"
-align = 1
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="AccTime" type="Label" parent="."]
-margin_left = 152.0
-margin_top = 688.0
-margin_right = 560.0
-margin_bottom = 712.0
+layout_mode = 0
+offset_left = 152.0
+offset_top = 688.0
+offset_right = 560.0
+offset_bottom = 712.0
 text = "Travel accelerated by "
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="Help" type="Label" parent="."]
-modulate = Color( 1, 1, 1, 0 )
-margin_left = 192.0
-margin_top = 332.0
-margin_right = 1088.0
-margin_bottom = 428.0
-align = 1
-autowrap = true
-__meta__ = {
-"_edit_use_anchors_": false
+modulate = Color(1, 1, 1, 0)
+layout_mode = 0
+offset_left = 192.0
+offset_top = 332.0
+offset_right = 1088.0
+offset_bottom = 428.0
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Help"]
+libraries = {
+"": SubResource("AnimationLibrary_hb4pr")
 }
 
 [node name="Point" type="Node2D" parent="."]
 
 [node name="Point" type="Line2D" parent="Point"]
-points = PoolVector2Array( 0, -12, 0, 12 )
+points = PackedVector2Array(0, -12, 0, 12)
 width = 1.0
-default_color = Color( 1, 0, 0, 1 )
+default_color = Color(1, 0, 0, 1)
 
 [node name="Point2" type="Line2D" parent="Point"]
-points = PoolVector2Array( 12, 0, -12, 0 )
+points = PackedVector2Array(12, 0, -12, 0)
 width = 1.0
-default_color = Color( 1, 0, 0, 1 )
+default_color = Color(1, 0, 0, 1)
 
 [node name="Point3" type="Line2D" parent="Point"]
-position = Vector2( -0.5, 0 )
-points = PoolVector2Array( 0, 0, 1, 0 )
+position = Vector2(-0.5, 0)
+points = PackedVector2Array(0, 0, 1, 0)
 width = 1.0
-default_color = Color( 1, 1, 1, 1 )
 
 [node name="RedFlash" type="Polygon2D" parent="."]
-modulate = Color( 1, 1, 1, 0 )
-color = Color( 1, 0, 0, 1 )
-polygon = PoolVector2Array( 0, 0, 1280, 0, 1280, 720, 0, 720 )
+modulate = Color(1, 1, 1, 0)
+color = Color(1, 0, 0, 1)
+polygon = PackedVector2Array(0, 0, 1280, 0, 1280, 720, 0, 720)
 
 [node name="Timer" type="Timer" parent="."]
 autostart = true

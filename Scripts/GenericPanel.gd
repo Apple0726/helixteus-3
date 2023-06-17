@@ -3,13 +3,13 @@ extends "Panel.gd"
 enum PanelType {SHOP, CRAFT, CONSTRUCT, MEGASTRUCTURES}
 var tab:String = ""
 var item_for_sale_scene = preload("res://Scenes/ItemForSale.tscn")
-onready var amount_node = $VBox/HBox/ItemInfo/VBox/HBox/BuyAmount
-onready var buy_btn = $VBox/HBox/ItemInfo/VBox/HBox/Buy
-onready var buy_hbox = $VBox/HBox/ItemInfo/VBox/HBox
-onready var grid = $VBox/HBox/Items/Items
-onready var desc_txt = $VBox/HBox/ItemInfo/VBox/Desc/Desc
-onready var item_info = $VBox/HBox/ItemInfo
-onready var name_node = $VBox/HBox/ItemInfo/Name
+@onready var amount_node = $VBox/HBox/ItemInfo/VBox/HBox/BuyAmount
+@onready var buy_btn = $VBox/HBox/ItemInfo/VBox/HBox/Buy
+@onready var buy_hbox = $VBox/HBox/ItemInfo/VBox/HBox
+@onready var grid = $VBox/HBox/Items/Items
+@onready var desc_txt = $VBox/HBox/ItemInfo/VBox/Desc/Desc
+@onready var item_info = $VBox/HBox/ItemInfo
+@onready var name_node = $VBox/HBox/ItemInfo/Name
 var num:int = 1
 var type:int
 var locked:bool = false
@@ -22,7 +22,7 @@ var item_total_costs:Dictionary
 var item_name = ""
 
 func _ready():
-	set_polygon(rect_size)
+	set_polygon(size)
 
 func _input(event):
 	if Input.is_action_just_pressed("shift"):
@@ -73,10 +73,10 @@ func set_item_info(name:String, desc:String, costs:Dictionary, _type:String, _di
 	item_dir = _dir
 	for cost in costs:
 		item_total_costs[cost] = costs[cost] * num
-	yield(get_tree(), "idle_frame")
-	$VBox/HBox/ItemInfo/VBox/Costs.visible = not costs.empty()
-	if not costs.empty():
-		Helper.put_rsrc(vbox, 36, item_total_costs, true, true)
+	await get_tree().process_frame
+	$VBox/HBox/ItemInfo/VBox/Costs.visible = not costs.is_empty()
+	if not costs.is_empty():
+		Helper.put_rsrc(vbox, 28, item_total_costs, true, true)
 
 func add_items(not_enough_inv:String, success:String):
 	var items_left = game.add_items(item_name, amount_node.value)

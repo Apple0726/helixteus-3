@@ -1,6 +1,6 @@
 extends Node2D
 
-onready var btn = $Sprite
+@onready var btn = $Sprite2D
 var over:bool = false
 
 func _process(delta):

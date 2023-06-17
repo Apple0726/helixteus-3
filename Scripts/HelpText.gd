@@ -1,25 +1,25 @@
-tool
+@tool
 extends RichTextLabel
 
 var game
 
-export var label_text:String = ""
-export var help_text:String = ""
-export var adv_help:bool = false
-export var translate_help:bool = true
-export var adv_icons:Array
-export var icon_size:int = 17
-export(int, "Left", "Center", "Right") var align
+@export var label_text:String = ""
+@export var help_text:String = ""
+@export var adv_help:bool = false
+@export var translate_help:bool = true
+@export var adv_icons:Array
+@export var icon_size:int = 15
+@export var align:int
 
 func _ready():
-	if not Engine.editor_hint:
+	if not Engine.is_editor_hint():
 		game = get_node("/root/Game")
 	if align == 0:
-		bbcode_text = "%s [img]Graphics/Icons/help.png[/img]" % tr(label_text)
+		text = "%s [img]Graphics/Icons/help.png[/img]" % tr(label_text)
 	elif align == 1:
-		bbcode_text = "[center]%s [img]Graphics/Icons/help.png[/img][/center]" % tr(label_text)
+		text = "[center]%s [img]Graphics/Icons/help.png[/img][/center]" % tr(label_text)
 	elif align == 2:
-		bbcode_text = "[right]%s [img]Graphics/Icons/help.png[/img][/right]" % tr(label_text)
+		text = "[right]%s [img]Graphics/Icons/help.png[/img][/right]" % tr(label_text)
 
 
 func _on_RichTextLabel_mouse_entered():

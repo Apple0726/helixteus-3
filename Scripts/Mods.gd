@@ -21,11 +21,10 @@ func _ready():
 		dont_load = config.get_value("mods", "dont_load", [])
 	
 	# Detect mods
-	var mods = Directory.new()
-	var error = mods.open("user://Mods")
-	if error == OK:
+	var mods = DirAccess.open("user://Mods")
+	if mods:
 		var installed_mods = {}
-		mods.list_dir_begin(true)
+		mods.list_dir_begin() # TODOGODOT4 fill missing arguments https://github.com/godotengine/godot/pull/40547
 		var next = mods.get_next()
 		while next != "":
 			var mod_name = next.rstrip(".zip")

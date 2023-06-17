@@ -1,999 +1,1015 @@
-[gd_scene load_steps=50 format=2]
+[gd_scene load_steps=48 format=3 uid="uid://bg2sov0myafl8"]
 
-[ext_resource path="res://Text/Arimo-Regular.ttf" type="DynamicFontData" id=1]
-[ext_resource path="res://Text/ArialUnicodeMS.ttf" type="DynamicFontData" id=2]
-[ext_resource path="res://Scenes/DimensionType.tscn" type="PackedScene" id=3]
-[ext_resource path="res://Graphics/Misc/Physics.png" type="Texture" id=4]
-[ext_resource path="res://Graphics/Misc/Mathematics.png" type="Texture" id=5]
-[ext_resource path="res://Graphics/Misc/DimensionalPower.png" type="Texture" id=6]
-[ext_resource path="res://Graphics/Misc/Chemistry.png" type="Texture" id=7]
-[ext_resource path="res://Scripts/Dimension.gd" type="Script" id=8]
-[ext_resource path="res://Resources/default_theme.tres" type="Theme" id=9]
-[ext_resource path="res://Graphics/Misc/Engineering.png" type="Texture" id=10]
-[ext_resource path="res://Graphics/Misc/Biology.png" type="Texture" id=11]
-[ext_resource path="res://Scenes/HelpText.tscn" type="PackedScene" id=12]
-[ext_resource path="res://Graphics/Misc/Universe.png" type="Texture" id=13]
-[ext_resource path="res://Graphics/Misc/Philosophy.png" type="Texture" id=14]
-[ext_resource path="res://Graphics/Formulas/BuildingUpgrade.png" type="Texture" id=15]
-[ext_resource path="res://Graphics/Formulas/ShipHitChance.png" type="Texture" id=16]
-[ext_resource path="res://Graphics/Misc/Bar.png" type="Texture" id=17]
-[ext_resource path="res://Graphics/Misc/BarUnder.png" type="Texture" id=18]
-[ext_resource path="res://Scenes/CustomSpinBox.tscn" type="PackedScene" id=19]
-[ext_resource path="res://Graphics/Misc/Bar2.png" type="Texture" id=20]
-[ext_resource path="res://Graphics/Misc/BarUnder2.png" type="Texture" id=21]
-[ext_resource path="res://Graphics/Misc/BarOver.png" type="Texture" id=22]
-[ext_resource path="res://Graphics/Icons/table.png" type="Texture" id=23]
-[ext_resource path="res://Graphics/Formulas/DRs.png" type="Texture" id=24]
-[ext_resource path="res://Graphics/Icons/help.png" type="Texture" id=25]
-[ext_resource path="res://Graphics/Icons/H2O.png" type="Texture" id=26]
-[ext_resource path="res://Graphics/Icons/CH4.png" type="Texture" id=27]
-[ext_resource path="res://Graphics/Icons/CO2.png" type="Texture" id=28]
-[ext_resource path="res://Graphics/Atoms/He.png" type="Texture" id=29]
-[ext_resource path="res://Graphics/Atoms/H.png" type="Texture" id=30]
-[ext_resource path="res://Graphics/Icons/NH3.png" type="Texture" id=31]
-[ext_resource path="res://Graphics/Atoms/O.png" type="Texture" id=32]
-[ext_resource path="res://Graphics/Atoms/Ne.png" type="Texture" id=33]
-[ext_resource path="res://Graphics/Atoms/Xe.png" type="Texture" id=34]
-[ext_resource path="res://Scenes/Plotter.tscn" type="PackedScene" id=35]
+[ext_resource type="PackedScene" uid="uid://bx7irdxpbnhbb" path="res://Scenes/DimensionType.tscn" id="3"]
+[ext_resource type="Texture2D" uid="uid://bixlx8adtltg5" path="res://Graphics/Misc/Physics.png" id="4"]
+[ext_resource type="Texture2D" uid="uid://dojp4y5ge4ptq" path="res://Graphics/Misc/Mathematics.png" id="5"]
+[ext_resource type="Texture2D" uid="uid://ckiaq11odv4db" path="res://Graphics/Misc/DimensionalPower.png" id="6"]
+[ext_resource type="Texture2D" uid="uid://w6c0rthpvisb" path="res://Graphics/Misc/Chemistry.png" id="7"]
+[ext_resource type="Script" path="res://Scripts/Dimension.gd" id="8"]
+[ext_resource type="Theme" uid="uid://cp2u1kgj60ic" path="res://Resources/default_theme.tres" id="9"]
+[ext_resource type="Texture2D" uid="uid://c54rkno4c20pt" path="res://Graphics/Misc/Engineering.png" id="10"]
+[ext_resource type="Texture2D" uid="uid://ci1ktj6ri83h1" path="res://Graphics/Misc/Biology.png" id="11"]
+[ext_resource type="PackedScene" uid="uid://c8jr3e5aiyj1n" path="res://Scenes/HelpText.tscn" id="12"]
+[ext_resource type="Texture2D" uid="uid://c2jr0llim4g2g" path="res://Graphics/Misc/Universe.png" id="13"]
+[ext_resource type="Texture2D" uid="uid://bmur2pge2ijvq" path="res://Graphics/Misc/Philosophy.png" id="14"]
+[ext_resource type="Texture2D" uid="uid://d1j6vfrk5u3a4" path="res://Graphics/Formulas/BuildingUpgrade.png" id="15"]
+[ext_resource type="Texture2D" uid="uid://b6qvm0ub2spud" path="res://Graphics/Formulas/ShipHitChance.png" id="16"]
+[ext_resource type="Texture2D" uid="uid://b3c6f5upmvn5a" path="res://Graphics/Misc/Bar.png" id="17"]
+[ext_resource type="Texture2D" uid="uid://bgs6f5qatqerf" path="res://Graphics/Misc/BarUnder.png" id="18"]
+[ext_resource type="PackedScene" uid="uid://cq2nl2mljdwdf" path="res://Scenes/CustomSpinBox.tscn" id="19"]
+[ext_resource type="Texture2D" uid="uid://clpkbjruduai7" path="res://Graphics/Misc/Bar2.png" id="20"]
+[ext_resource type="Texture2D" uid="uid://bfjl6rnsgqq5f" path="res://Graphics/Misc/BarUnder2.png" id="21"]
+[ext_resource type="Texture2D" uid="uid://kppvrm0ienms" path="res://Graphics/Misc/BarOver.png" id="22"]
+[ext_resource type="Texture2D" uid="uid://dh3e7ywkllerk" path="res://Graphics/Icons/table.png" id="23"]
+[ext_resource type="Texture2D" uid="uid://bip1it60ywx7o" path="res://Graphics/Formulas/DRs.png" id="24"]
+[ext_resource type="Texture2D" uid="uid://bvp52vcrg8q4i" path="res://Graphics/Icons/help.png" id="25"]
+[ext_resource type="Texture2D" uid="uid://doul1ifoutojp" path="res://Graphics/Icons/H2O.png" id="26"]
+[ext_resource type="Texture2D" uid="uid://dnvb8umt3i7t1" path="res://Graphics/Icons/CH4.png" id="27"]
+[ext_resource type="Texture2D" uid="uid://bxesyprjsn2ep" path="res://Graphics/Icons/CO2.png" id="28"]
+[ext_resource type="Texture2D" uid="uid://db621tsp0i5bk" path="res://Graphics/Atoms/He.png" id="29"]
+[ext_resource type="Texture2D" uid="uid://dt4teqgb4p0s3" path="res://Graphics/Atoms/H.png" id="30"]
+[ext_resource type="Texture2D" uid="uid://33lb1naj608y" path="res://Graphics/Icons/NH3.png" id="31"]
+[ext_resource type="Texture2D" uid="uid://de0763f7dpd51" path="res://Graphics/Atoms/O.png" id="32"]
+[ext_resource type="Texture2D" uid="uid://5bvxoumg5yns" path="res://Graphics/Atoms/Ne.png" id="33"]
+[ext_resource type="Texture2D" uid="uid://c62hu3cjtvcwd" path="res://Graphics/Atoms/Xe.png" id="34"]
+[ext_resource type="PackedScene" path="res://Scenes/Plotter.tscn" id="35"]
 
-[sub_resource type="StyleBoxFlat" id=1]
-bg_color = Color( 0.223529, 0.223529, 0.223529, 1 )
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_7ettq"]
+content_margin_left = 5.0
+content_margin_top = 5.0
+content_margin_right = 5.0
+content_margin_bottom = 5.0
+bg_color = Color(0.129412, 0.129412, 0.129412, 1)
+border_width_left = 4
 border_width_top = 4
-border_color = Color( 0.392157, 0.392157, 0.392157, 1 )
+border_color = Color(0.294118, 0.294118, 0.294118, 1)
 border_blend = true
-shadow_size = 1
-shadow_offset = Vector2( 0, 2 )
+shadow_size = 2
+shadow_offset = Vector2(1, 1)
 
-[sub_resource type="Animation" id=6]
+[sub_resource type="Animation" id="6"]
 resource_name = "FlashButton"
 length = 0.6
-loop = true
 step = 0.05
 tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
 tracks/0/path = NodePath("ColorRect:color")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
-tracks/0/imported = false
-tracks/0/enabled = true
 tracks/0/keys = {
-"times": PoolRealArray( 0, 0.3, 0.6 ),
-"transitions": PoolRealArray( 1, 1, 1 ),
+"times": PackedFloat32Array(0, 0.3, 0.6),
+"transitions": PackedFloat32Array(1, 1, 1),
 "update": 0,
-"values": [ Color( 1, 1, 1, 0 ), Color( 1, 1, 1, 0.223529 ), Color( 1, 1, 1, 0 ) ]
+"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 0.223529), Color(1, 1, 1, 0)]
 }
 
-[sub_resource type="Animation" id=7]
+[sub_resource type="Animation" id="7"]
 length = 0.001
 tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
 tracks/0/path = NodePath("ColorRect:color")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
-tracks/0/imported = false
-tracks/0/enabled = true
 tracks/0/keys = {
-"times": PoolRealArray( 0 ),
-"transitions": PoolRealArray( 1 ),
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
 "update": 0,
-"values": [ Color( 1, 1, 1, 0 ) ]
+"values": [Color(1, 1, 1, 0)]
 }
 
-[sub_resource type="DynamicFont" id=3]
-size = 19
-use_mipmaps = true
-use_filter = true
-font_data = ExtResource( 2 )
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_v6efg"]
+_data = {
+"FlashButton": SubResource("6"),
+"RESET": SubResource("7")
+}
 
-[sub_resource type="Animation" id=14]
+[sub_resource type="Animation" id="14"]
 resource_name = "Fade"
 length = 0.2
 tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
 tracks/0/path = NodePath(".:modulate")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
-tracks/0/imported = false
-tracks/0/enabled = true
 tracks/0/keys = {
-"times": PoolRealArray( 0, 0.2 ),
-"transitions": PoolRealArray( 1, 1 ),
+"times": PackedFloat32Array(0, 0.2),
+"transitions": PackedFloat32Array(1, 1),
 "update": 0,
-"values": [ Color( 1, 1, 1, 0 ), Color( 1, 1, 1, 1 ) ]
+"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 1)]
 }
 
-[sub_resource type="Animation" id=15]
+[sub_resource type="Animation" id="15"]
 length = 0.001
 tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
 tracks/0/path = NodePath(".:modulate")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
-tracks/0/imported = false
-tracks/0/enabled = true
 tracks/0/keys = {
-"times": PoolRealArray( 0 ),
-"transitions": PoolRealArray( 1 ),
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
 "update": 0,
-"values": [ Color( 1, 1, 1, 0 ) ]
+"values": [Color(1, 1, 1, 0)]
 }
 
-[sub_resource type="DynamicFont" id=4]
-size = 25
-use_mipmaps = true
-use_filter = true
-font_data = ExtResource( 1 )
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_ahvu0"]
+_data = {
+"Fade": SubResource("14"),
+"RESET": SubResource("15")
+}
 
-[sub_resource type="StyleBoxFlat" id=5]
-content_margin_left = 10.0
-content_margin_right = 10.0
-content_margin_top = 5.0
-content_margin_bottom = 5.0
-bg_color = Color( 0.223529, 0.223529, 0.223529, 1 )
-border_width_left = 4
-border_width_top = 4
-border_color = Color( 0.392157, 0.392157, 0.392157, 1 )
-border_blend = true
-shadow_size = 1
-shadow_offset = Vector2( 0, 2 )
+[sub_resource type="Gradient" id="12"]
+offsets = PackedFloat32Array(0, 0.0977199, 0.192182, 0.286645, 0.394137, 0.488599, 0.583062, 0.684039, 0.785016, 0.892508, 1)
+colors = PackedColorArray(0.0980392, 0, 0, 1, 1, 0.709804, 0.423529, 1, 1, 0.854902, 0.709804, 1, 1, 0.929412, 0.890196, 1, 1, 1, 1, 1, 0.835294, 0.878431, 1, 1, 0.635294, 0.752941, 1, 1, 0.54902, 0.694118, 1, 1, 0.52549, 1, 0.458824, 1, 1, 0, 1, 1, 0.258824, 0, 1, 1)
 
-[sub_resource type="Gradient" id=12]
-offsets = PoolRealArray( 0, 0.0977199, 0.192182, 0.286645, 0.394137, 0.488599, 0.583062, 0.684039, 0.785016, 0.892508, 1 )
-colors = PoolColorArray( 0.0980392, 0, 0, 1, 1, 0.709804, 0.423529, 1, 1, 0.854902, 0.709804, 1, 1, 0.929412, 0.890196, 1, 1, 1, 1, 1, 0.835294, 0.878431, 1, 1, 0.635294, 0.752941, 1, 1, 0.54902, 0.694118, 1, 1, 0.52549, 1, 0.458824, 1, 1, 0, 1, 1, 0.258824, 0, 1, 1 )
+[sub_resource type="GradientTexture2D" id="13"]
+gradient = SubResource("12")
 
-[sub_resource type="GradientTexture" id=13]
-gradient = SubResource( 12 )
+[sub_resource type="Curve" id="11"]
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 2
 
-[sub_resource type="Curve" id=11]
-_data = [ Vector2( 0, 1 ), 0.0, 0.0, 0, 0, Vector2( 1, 0 ), 0.0, 0.0, 0, 0 ]
-
-[sub_resource type="Animation" id=8]
+[sub_resource type="Animation" id="8"]
 resource_name = "Fade"
 tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
 tracks/0/path = NodePath(".:color")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
-tracks/0/imported = false
-tracks/0/enabled = true
 tracks/0/keys = {
-"times": PoolRealArray( 0, 1 ),
-"transitions": PoolRealArray( 1, 1 ),
+"times": PackedFloat32Array(0, 1),
+"transitions": PackedFloat32Array(1, 1),
 "update": 0,
-"values": [ Color( 0, 0, 0, 0 ), Color( 0, 0, 0, 1 ) ]
+"values": [Color(0, 0, 0, 0), Color(0, 0, 0, 1)]
 }
 
-[sub_resource type="Animation" id=10]
+[sub_resource type="Animation" id="10"]
 resource_name = "FadeOut"
 tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
 tracks/0/path = NodePath(".:color")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
-tracks/0/imported = false
-tracks/0/enabled = true
 tracks/0/keys = {
-"times": PoolRealArray( 0, 1 ),
-"transitions": PoolRealArray( 1, 1 ),
+"times": PackedFloat32Array(0, 1),
+"transitions": PackedFloat32Array(1, 1),
 "update": 0,
-"values": [ Color( 0, 0, 0, 1 ), Color( 0, 0, 0, 0 ) ]
+"values": [Color(0, 0, 0, 1), Color(0, 0, 0, 0)]
 }
 
-[sub_resource type="Animation" id=9]
+[sub_resource type="Animation" id="9"]
 length = 0.001
 tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
 tracks/0/path = NodePath(".:color")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
-tracks/0/imported = false
-tracks/0/enabled = true
 tracks/0/keys = {
-"times": PoolRealArray( 0 ),
-"transitions": PoolRealArray( 1 ),
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
 "update": 0,
-"values": [ Color( 0, 0, 0, 0 ) ]
+"values": [Color(0, 0, 0, 0)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_dhvf2"]
+_data = {
+"Fade": SubResource("8"),
+"FadeOut": SubResource("10"),
+"RESET": SubResource("9")
 }
 
 [node name="Dimension" type="Control"]
+layout_mode = 3
+anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 mouse_filter = 2
-theme = ExtResource( 9 )
-script = ExtResource( 8 )
-__meta__ = {
-"_edit_lock_": true,
-"_edit_use_anchors_": false
-}
+theme = ExtResource("9")
+script = ExtResource("8")
 
 [node name="Universes" type="Control" parent="."]
-margin_right = 40.0
-margin_bottom = 40.0
-__meta__ = {
-"_edit_use_anchors_": false
-}
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
 
 [node name="Scroll" type="ScrollContainer" parent="Universes"]
-margin_top = 48.0
-margin_right = 288.0
-margin_bottom = 720.0
-rect_min_size = Vector2( 288, 0 )
+custom_minimum_size = Vector2(288, 0)
+layout_mode = 0
+offset_top = 48.0
+offset_right = 288.0
+offset_bottom = 720.0
 
 [node name="VBox" type="VBoxContainer" parent="Universes/Scroll"]
-margin_left = 10.0
-margin_top = 10.0
-margin_right = 270.0
-margin_bottom = 270.0
+layout_mode = 2
 
 [node name="UniverseIcon" type="TextureButton" parent="Universes/Scroll/VBox"]
-margin_right = 260.0
-margin_bottom = 260.0
-rect_min_size = Vector2( 260, 260 )
-texture_normal = ExtResource( 13 )
-expand = true
+custom_minimum_size = Vector2(260, 260)
+layout_mode = 2
+texture_normal = ExtResource("13")
 stretch_mode = 5
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="Label" type="Label" parent="Universes"]
+layout_mode = 0
 anchor_right = 1.0
 anchor_bottom = 1.0
-margin_top = 48.0
-margin_right = 248.0
-margin_bottom = 40.0
-custom_styles/normal = SubResource( 1 )
+offset_top = 48.0
+offset_right = 248.0
+offset_bottom = 40.0
+theme_override_styles/normal = SubResource("StyleBoxFlat_7ettq")
 text = "DISCOVERED_UNIVERSES"
-align = 1
-__meta__ = {
-"_edit_use_anchors_": false
-}
+horizontal_alignment = 1
+vertical_alignment = 1
 
 [node name="SendProbes" type="Button" parent="Universes"]
-margin_top = 684.0
-margin_right = 288.0
-margin_bottom = 720.0
-custom_colors/font_color = Color( 1, 1, 1, 1 )
-custom_colors/font_color_hover = Color( 1, 1, 1, 1 )
-custom_colors/font_color_pressed = Color( 1, 1, 1, 1 )
+layout_mode = 0
+offset_top = 684.0
+offset_right = 288.0
+offset_bottom = 720.0
 text = "SEND_PROBES"
 
 [node name="ColorRect" type="ColorRect" parent="Universes/SendProbes"]
+layout_mode = 0
 anchor_right = 1.0
 anchor_bottom = 1.0
 mouse_filter = 2
-color = Color( 1, 1, 1, 0 )
+color = Color(1, 1, 1, 0)
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="Universes/SendProbes"]
-anims/FlashButton = SubResource( 6 )
-anims/RESET = SubResource( 7 )
-
-[node name="Panel" type="Panel" parent="."]
-margin_left = 288.0
-margin_top = 48.0
-margin_right = 684.0
-margin_bottom = 720.0
-
-[node name="UnivInfo" type="Label" parent="."]
-modulate = Color( 1, 1, 1, 0 )
-anchor_right = 1.0
-anchor_bottom = 1.0
-margin_left = 300.0
-margin_top = 60.0
-margin_right = -588.0
-margin_bottom = -12.0
-rect_min_size = Vector2( 392, 648 )
-custom_fonts/font = SubResource( 3 )
-autowrap = true
-
-[node name="AnimationPlayer" type="AnimationPlayer" parent="UnivInfo"]
-anims/Fade = SubResource( 14 )
-anims/RESET = SubResource( 15 )
-
-[node name="Subjects" type="ScrollContainer" parent="."]
-margin_left = 684.0
-margin_top = 48.0
-margin_right = 1280.0
-margin_bottom = 720.0
-mouse_filter = 1
-scroll_vertical_enabled = false
-
-[node name="Grid" type="GridContainer" parent="Subjects"]
-margin_left = 10.0
-margin_top = 10.0
-margin_right = 586.0
-margin_bottom = 667.0
-mouse_filter = 2
-size_flags_horizontal = 3
-size_flags_vertical = 3
-columns = 2
-__meta__ = {
-"_edit_use_anchors_": false
+libraries = {
+"": SubResource("AnimationLibrary_v6efg")
 }
 
-[node name="Maths" parent="Subjects/Grid" instance=ExtResource( 3 )]
-margin_right = 286.0
-texture = ExtResource( 5 )
+[node name="Panel" type="Panel" parent="."]
+layout_mode = 0
+offset_left = 288.0
+offset_top = 48.0
+offset_right = 684.0
+offset_bottom = 720.0
+
+[node name="UnivInfo" type="Label" parent="."]
+modulate = Color(1, 1, 1, 0)
+custom_minimum_size = Vector2(392, 648)
+layout_mode = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 300.0
+offset_top = 60.0
+offset_right = -588.0
+offset_bottom = -12.0
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="UnivInfo"]
+libraries = {
+"": SubResource("AnimationLibrary_ahvu0")
+}
+
+[node name="Subjects" type="ScrollContainer" parent="."]
+layout_mode = 0
+offset_left = 684.0
+offset_top = 48.0
+offset_right = 1280.0
+offset_bottom = 720.0
+
+[node name="Grid" type="GridContainer" parent="Subjects"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+mouse_filter = 2
+columns = 2
+
+[node name="Maths" parent="Subjects/Grid" instance=ExtResource("3")]
+layout_mode = 2
+texture = ExtResource("5")
 btn_text = "MODIFY_FORMULAS"
 
-[node name="Physics" parent="Subjects/Grid" instance=ExtResource( 3 )]
+[node name="Physics" parent="Subjects/Grid" instance=ExtResource("3")]
 visible = false
-margin_left = 254.0
-margin_right = 504.0
-texture = ExtResource( 4 )
+layout_mode = 2
+texture = ExtResource("4")
 btn_text = "REWRITE_PHYSICS_LAWS"
 
-[node name="Chemistry" parent="Subjects/Grid" instance=ExtResource( 3 )]
+[node name="Chemistry" parent="Subjects/Grid" instance=ExtResource("3")]
 visible = false
-margin_left = 254.0
-margin_right = 504.0
-texture = ExtResource( 7 )
+layout_mode = 2
+texture = ExtResource("7")
 btn_text = "EXPERIMENT_WITH_MOLECULES"
 
-[node name="Biology" parent="Subjects/Grid" instance=ExtResource( 3 )]
+[node name="Biology" parent="Subjects/Grid" instance=ExtResource("3")]
 visible = false
-margin_left = 254.0
-margin_right = 504.0
-texture = ExtResource( 11 )
+layout_mode = 2
+texture = ExtResource("11")
 btn_text = "FIDDLE_WITH_DNA"
 
-[node name="Philosophy" parent="Subjects/Grid" instance=ExtResource( 3 )]
+[node name="Philosophy" parent="Subjects/Grid" instance=ExtResource("3")]
 visible = false
-margin_left = 508.0
-margin_right = 758.0
-texture = ExtResource( 14 )
+layout_mode = 2
+texture = ExtResource("14")
 
-[node name="Engineering" parent="Subjects/Grid" instance=ExtResource( 3 )]
-margin_left = 290.0
-margin_right = 576.0
-texture = ExtResource( 10 )
+[node name="Engineering" parent="Subjects/Grid" instance=ExtResource("3")]
+layout_mode = 2
+texture = ExtResource("10")
 btn_text = "DO_ENGINEERING"
 
-[node name="Dimensional_Power" parent="Subjects/Grid" instance=ExtResource( 3 )]
-margin_top = 330.0
-margin_right = 286.0
-margin_bottom = 656.0
-texture = ExtResource( 6 )
+[node name="Dimensional_Power" parent="Subjects/Grid" instance=ExtResource("3")]
+layout_mode = 2
+texture = ExtResource("6")
 
 [node name="DimBonusesInfo" type="Label" parent="."]
 visible = false
-margin_left = 800.0
-margin_top = 360.0
-margin_right = 1248.0
-margin_bottom = 384.0
+layout_mode = 0
+offset_left = 800.0
+offset_top = 360.0
+offset_right = 1248.0
+offset_bottom = 384.0
 text = "DIM_BONUSES_INFO"
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="TopInfo" type="Control" parent="."]
+anchors_preset = 0
 anchor_right = 1.0
 anchor_bottom = 1.0
-margin_bottom = -680.0
-__meta__ = {
-"_edit_use_anchors_": false
-}
+offset_bottom = -680.0
 
 [node name="DimensionN" type="Label" parent="TopInfo"]
-margin_left = 16.0
-margin_right = 480.0
-margin_bottom = 48.0
+layout_mode = 0
+offset_left = 16.0
+offset_right = 480.0
+offset_bottom = 48.0
 size_flags_horizontal = 3
 size_flags_vertical = 5
-custom_fonts/font = SubResource( 4 )
-valign = 1
-__meta__ = {
-"_edit_use_anchors_": false
-}
+theme_override_font_sizes/font_size = 18
+text = "Dimension #1"
+vertical_alignment = 1
 
-[node name="DRs" parent="TopInfo" instance=ExtResource( 12 )]
-anchor_right = 1.0
-margin_left = 448.0
-margin_top = 12.0
-margin_right = -448.0
-margin_bottom = 44.0
-rect_min_size = Vector2( 384, 0 )
-bbcode_text = "[center] [img]Graphics/Icons/help.png[/img][/center]"
+[node name="DRs" parent="TopInfo" instance=ExtResource("12")]
+custom_minimum_size = Vector2(384, 0)
+layout_mode = 0
+offset_left = 448.0
+offset_top = 16.0
+offset_right = 832.0
+offset_bottom = 48.0
+text = "[center] [img]Graphics/Icons/help.png[/img][/center]"
 help_text = "DR_DESC"
 adv_help = true
-adv_icons = [ ExtResource( 24 ) ]
+adv_icons = [ExtResource("24")]
 icon_size = 80
 align = 1
 
 [node name="Reset" type="Button" parent="TopInfo"]
-margin_left = 1064.0
-margin_top = 8.0
-margin_right = 1233.0
-margin_bottom = 42.0
+layout_mode = 0
+offset_left = 1064.0
+offset_top = 8.0
+offset_right = 1233.0
+offset_bottom = 42.0
 grow_horizontal = 0
 text = "New dimension"
 
 [node name="ModifyDimension" type="Control" parent="."]
-margin_right = 40.0
-margin_bottom = 40.0
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
 
 [node name="Reset" type="Control" parent="ModifyDimension"]
-margin_right = 40.0
-margin_bottom = 40.0
-__meta__ = {
-"_edit_use_anchors_": false
-}
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
 
 [node name="DimResetInfo" type="Label" parent="ModifyDimension/Reset"]
-margin_left = 32.0
-margin_top = 104.0
-margin_right = 416.0
-margin_bottom = 172.0
+layout_mode = 0
+offset_left = 32.0
+offset_top = 104.0
+offset_right = 416.0
+offset_bottom = 172.0
 text = "DIM_JUST_RESET_INFO"
-autowrap = true
-__meta__ = {
-"_edit_use_anchors_": false
-}
+autowrap_mode = 3
 
 [node name="DRsPerCilck" type="Label" parent="ModifyDimension/Reset"]
-margin_left = 32.0
-margin_top = 468.0
-margin_right = 416.0
-margin_bottom = 492.0
+layout_mode = 0
+offset_left = 32.0
+offset_top = 468.0
+offset_right = 416.0
+offset_bottom = 492.0
 text = "DRS_PER_CLICK"
-autowrap = true
 
 [node name="LineEdit" type="LineEdit" parent="ModifyDimension/Reset"]
-margin_left = 32.0
-margin_top = 505.0
-margin_right = 108.0
-margin_bottom = 533.0
+layout_mode = 0
+offset_left = 32.0
+offset_top = 505.0
+offset_right = 108.0
+offset_bottom = 533.0
 text = "1"
 
 [node name="Generate" type="Button" parent="ModifyDimension/Reset"]
-margin_left = 50.0
-margin_top = 268.0
-margin_right = 400.0
-margin_bottom = 302.0
+layout_mode = 0
+offset_left = 72.0
+offset_top = 272.0
+offset_right = 348.0
+offset_bottom = 306.0
 text = "GENERATE_STARTING_UNIVERSE"
 
 [node name="Maths" type="ScrollContainer" parent="ModifyDimension"]
 visible = false
+custom_minimum_size = Vector2(388, 0)
+layout_mode = 0
 anchor_right = 1.0
 anchor_bottom = 1.0
-margin_left = 32.0
-margin_top = 48.0
-margin_right = 408.0
-margin_bottom = 680.0
-rect_min_size = Vector2( 388, 0 )
-mouse_filter = 1
-custom_styles/bg = SubResource( 5 )
+offset_left = 32.0
+offset_top = 48.0
+offset_right = 408.0
+offset_bottom = 680.0
 
 [node name="Control" type="Control" parent="ModifyDimension/Maths"]
-margin_left = 10.0
-margin_top = 5.0
-margin_right = 310.0
-margin_bottom = 1155.0
-rect_min_size = Vector2( 300, 1150 )
+custom_minimum_size = Vector2(300, 1150)
+layout_mode = 2
 mouse_filter = 1
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="CostGrowthFactors" type="Panel" parent="ModifyDimension/Maths/Control"]
-margin_left = 10.0
-margin_top = 7.0
-margin_right = 386.0
-margin_bottom = 759.0
+layout_mode = 0
+offset_left = 14.0
+offset_top = 86.0
+offset_right = 390.0
+offset_bottom = 788.0
 
 [node name="CostGrowthFactor" type="TextureRect" parent="ModifyDimension/Maths/Control/CostGrowthFactors"]
-margin_left = 52.0
-margin_top = 74.0
-margin_right = 356.0
-margin_bottom = 106.0
-rect_min_size = Vector2( 40, 0 )
-texture = ExtResource( 15 )
-expand = true
-stretch_mode = 6
-__meta__ = {
-"_edit_use_anchors_": false
-}
+custom_minimum_size = Vector2(40, 0)
+layout_mode = 0
+offset_left = 52.0
+offset_top = 45.0
+offset_right = 356.0
+offset_bottom = 77.0
+texture = ExtResource("15")
+expand_mode = 1
+stretch_mode = 5
 
 [node name="Label4" type="Label" parent="ModifyDimension/Maths/Control/CostGrowthFactors"]
-margin_left = 24.0
-margin_top = 16.0
-margin_right = 368.0
-margin_bottom = 40.0
+layout_mode = 0
+offset_left = 24.0
+offset_top = 16.0
+offset_right = 368.0
+offset_bottom = 40.0
 text = "Cost growth factors"
-align = 1
 
 [node name="Label" type="Label" parent="ModifyDimension/Maths/Control/CostGrowthFactors"]
-margin_left = 24.0
-margin_top = 138.0
-margin_right = 338.0
-margin_bottom = 162.0
+layout_mode = 0
+offset_left = 24.0
+offset_top = 107.0
+offset_right = 338.0
+offset_bottom = 131.0
 text = "BUILDING_COSTS"
 
 [node name="Label2" type="Label" parent="ModifyDimension/Maths/Control/CostGrowthFactors"]
-margin_left = 24.0
-margin_top = 174.0
-margin_right = 296.0
-margin_bottom = 206.0
+layout_mode = 0
+offset_left = 24.0
+offset_top = 143.0
+offset_right = 296.0
+offset_bottom = 175.0
 text = "q = "
-valign = 1
-__meta__ = {
-"_edit_use_anchors_": false
-}
+vertical_alignment = 1
 
 [node name="Label5" type="Label" parent="ModifyDimension/Maths/Control/CostGrowthFactors"]
-margin_left = 24.0
-margin_top = 290.0
-margin_right = 296.0
-margin_bottom = 322.0
+layout_mode = 0
+offset_left = 24.0
+offset_top = 259.0
+offset_right = 296.0
+offset_bottom = 291.0
 text = "q_MV = "
-valign = 1
-__meta__ = {
-"_edit_use_anchors_": false
-}
+vertical_alignment = 1
 
 [node name="Label6" type="Label" parent="ModifyDimension/Maths/Control/CostGrowthFactors"]
-margin_left = 24.0
-margin_top = 339.0
-margin_right = 296.0
-margin_bottom = 371.0
+layout_mode = 0
+offset_left = 24.0
+offset_top = 308.0
+offset_right = 296.0
+offset_bottom = 340.0
 text = "q_MSMB = "
-valign = 1
-__meta__ = {
-"_edit_use_anchors_": false
-}
+vertical_alignment = 1
 
 [node name="Label7" type="Label" parent="ModifyDimension/Maths/Control/CostGrowthFactors"]
-margin_left = 24.0
-margin_top = 386.0
-margin_right = 296.0
-margin_bottom = 418.0
+layout_mode = 0
+offset_left = 24.0
+offset_top = 355.0
+offset_right = 296.0
+offset_bottom = 387.0
 text = "q_AIE = "
-valign = 1
-__meta__ = {
-"_edit_use_anchors_": false
-}
+vertical_alignment = 1
 
-[node name="BUCGF" parent="ModifyDimension/Maths/Control/CostGrowthFactors" instance=ExtResource( 19 )]
+[node name="BUCGF" parent="ModifyDimension/Maths/Control/CostGrowthFactors" instance=ExtResource("19")]
+layout_mode = 0
+anchors_preset = 0
 anchor_right = 0.0
 anchor_bottom = 0.0
-margin_left = 64.0
-margin_top = 174.0
-margin_right = 144.0
-margin_bottom = 206.0
+offset_left = 64.0
+offset_top = 143.0
+offset_right = 144.0
+offset_bottom = 175.0
 step = 0.0
 
 [node name="Label3" type="Label" parent="ModifyDimension/Maths/Control/CostGrowthFactors"]
-margin_left = 24.0
-margin_top = 254.0
-margin_right = 344.0
-margin_bottom = 278.0
+layout_mode = 0
+offset_left = 24.0
+offset_top = 223.0
+offset_right = 344.0
+offset_bottom = 247.0
 text = "MINERAL_UPGRADES"
 
-[node name="RichTextLabel" parent="ModifyDimension/Maths/Control/CostGrowthFactors" instance=ExtResource( 12 )]
-margin_left = 208.0
-margin_top = 293.0
-margin_right = 248.0
-margin_bottom = 321.0
+[node name="RichTextLabel" parent="ModifyDimension/Maths/Control/CostGrowthFactors" instance=ExtResource("12")]
+layout_mode = 0
+offset_left = 208.0
+offset_top = 262.0
+offset_right = 248.0
+offset_bottom = 290.0
 help_text = "MV_NAME"
 
-[node name="RichTextLabel2" parent="ModifyDimension/Maths/Control/CostGrowthFactors" instance=ExtResource( 12 )]
-margin_left = 237.0
-margin_top = 342.0
-margin_right = 276.0
-margin_bottom = 370.0
+[node name="RichTextLabel2" parent="ModifyDimension/Maths/Control/CostGrowthFactors" instance=ExtResource("12")]
+layout_mode = 0
+offset_left = 237.0
+offset_top = 311.0
+offset_right = 276.0
+offset_bottom = 339.0
 help_text = "MSMB_NAME"
 
-[node name="RichTextLabel3" parent="ModifyDimension/Maths/Control/CostGrowthFactors" instance=ExtResource( 12 )]
-margin_left = 208.0
-margin_top = 390.0
-margin_right = 248.0
-margin_bottom = 418.0
+[node name="RichTextLabel3" parent="ModifyDimension/Maths/Control/CostGrowthFactors" instance=ExtResource("12")]
+layout_mode = 0
+offset_left = 208.0
+offset_top = 359.0
+offset_right = 248.0
+offset_bottom = 387.0
 help_text = "AIE_NAME"
 
-[node name="MUCGF_MV" parent="ModifyDimension/Maths/Control/CostGrowthFactors" instance=ExtResource( 19 )]
+[node name="MUCGF_MV" parent="ModifyDimension/Maths/Control/CostGrowthFactors" instance=ExtResource("19")]
+layout_mode = 0
+anchors_preset = 0
 anchor_right = 0.0
 anchor_bottom = 0.0
-margin_left = 104.0
-margin_top = 290.0
-margin_right = 184.0
-margin_bottom = 322.0
+offset_left = 104.0
+offset_top = 259.0
+offset_right = 184.0
+offset_bottom = 291.0
 step = 0.01
 
-[node name="MUCGF_MSMB" parent="ModifyDimension/Maths/Control/CostGrowthFactors" instance=ExtResource( 19 )]
+[node name="MUCGF_MSMB" parent="ModifyDimension/Maths/Control/CostGrowthFactors" instance=ExtResource("19")]
+layout_mode = 0
+anchors_preset = 0
 anchor_right = 0.0
 anchor_bottom = 0.0
-margin_left = 132.0
-margin_top = 339.0
-margin_right = 212.0
-margin_bottom = 371.0
+offset_left = 132.0
+offset_top = 308.0
+offset_right = 212.0
+offset_bottom = 340.0
 step = 0.01
 
-[node name="MUCGF_AIE" parent="ModifyDimension/Maths/Control/CostGrowthFactors" instance=ExtResource( 19 )]
+[node name="MUCGF_AIE" parent="ModifyDimension/Maths/Control/CostGrowthFactors" instance=ExtResource("19")]
+layout_mode = 0
+anchors_preset = 0
 anchor_right = 0.0
 anchor_bottom = 0.0
-margin_left = 104.0
-margin_top = 386.0
-margin_right = 184.0
-margin_bottom = 418.0
+offset_left = 104.0
+offset_top = 355.0
+offset_right = 184.0
+offset_bottom = 387.0
 step = 0.01
 
 [node name="Label9" type="Label" parent="ModifyDimension/Maths/Control/CostGrowthFactors"]
-margin_left = 24.0
-margin_top = 466.0
-margin_right = 344.0
-margin_bottom = 490.0
+layout_mode = 0
+offset_left = 24.0
+offset_top = 435.0
+offset_right = 344.0
+offset_bottom = 459.0
 text = "SHIP_XP_REQ"
 
 [node name="Label12" type="Label" parent="ModifyDimension/Maths/Control/CostGrowthFactors"]
-margin_left = 24.0
-margin_top = 557.0
-margin_right = 344.0
-margin_bottom = 581.0
+layout_mode = 0
+offset_left = 24.0
+offset_top = 526.0
+offset_right = 344.0
+offset_bottom = 550.0
 text = "SHIP_STATS"
 
 [node name="Label10" type="Label" parent="ModifyDimension/Maths/Control/CostGrowthFactors"]
-margin_left = 24.0
-margin_top = 502.0
-margin_right = 296.0
-margin_bottom = 534.0
+layout_mode = 0
+offset_left = 24.0
+offset_top = 471.0
+offset_right = 296.0
+offset_bottom = 503.0
 text = "q = "
-valign = 1
+vertical_alignment = 1
 
-[node name="SLUGF_XP" parent="ModifyDimension/Maths/Control/CostGrowthFactors" instance=ExtResource( 19 )]
+[node name="SLUGF_XP" parent="ModifyDimension/Maths/Control/CostGrowthFactors" instance=ExtResource("19")]
+layout_mode = 0
+anchors_preset = 0
 anchor_right = 0.0
 anchor_bottom = 0.0
-margin_left = 64.0
-margin_top = 502.0
-margin_right = 144.0
-margin_bottom = 534.0
+offset_left = 64.0
+offset_top = 471.0
+offset_right = 144.0
+offset_bottom = 503.0
 step = 0.001
 
 [node name="Label11" type="Label" parent="ModifyDimension/Maths/Control/CostGrowthFactors"]
-margin_left = 24.0
-margin_top = 593.0
-margin_right = 296.0
-margin_bottom = 625.0
+layout_mode = 0
+offset_left = 24.0
+offset_top = 562.0
+offset_right = 296.0
+offset_bottom = 594.0
 text = "q = "
-valign = 1
+vertical_alignment = 1
 
-[node name="SLUGF_Stats" parent="ModifyDimension/Maths/Control/CostGrowthFactors" instance=ExtResource( 19 )]
+[node name="SLUGF_Stats" parent="ModifyDimension/Maths/Control/CostGrowthFactors" instance=ExtResource("19")]
+layout_mode = 0
+anchors_preset = 0
 anchor_right = 0.0
 anchor_bottom = 0.0
-margin_left = 64.0
-margin_top = 593.0
-margin_right = 144.0
-margin_bottom = 625.0
+offset_left = 64.0
+offset_top = 562.0
+offset_right = 144.0
+offset_bottom = 594.0
 step = 0.001
 
 [node name="Label14" type="Label" parent="ModifyDimension/Maths/Control/CostGrowthFactors"]
-margin_left = 24.0
-margin_top = 645.0
-margin_right = 344.0
-margin_bottom = 669.0
+layout_mode = 0
+offset_left = 24.0
+offset_top = 614.0
+offset_right = 344.0
+offset_bottom = 638.0
 text = "UNIV_XP_REQ"
 
 [node name="Label15" type="Label" parent="ModifyDimension/Maths/Control/CostGrowthFactors"]
-margin_left = 24.0
-margin_top = 677.0
-margin_right = 76.0
-margin_bottom = 705.0
+layout_mode = 0
+offset_left = 24.0
+offset_top = 646.0
+offset_right = 76.0
+offset_bottom = 674.0
 text = "q = "
-valign = 1
+vertical_alignment = 1
 
-[node name="ULUGF" parent="ModifyDimension/Maths/Control/CostGrowthFactors" instance=ExtResource( 19 )]
+[node name="ULUGF" parent="ModifyDimension/Maths/Control/CostGrowthFactors" instance=ExtResource("19")]
+layout_mode = 0
+anchors_preset = 0
 anchor_right = 0.0
 anchor_bottom = 0.0
-margin_left = 64.0
-margin_top = 676.0
-margin_right = 144.0
-margin_bottom = 708.0
+offset_left = 64.0
+offset_top = 645.0
+offset_right = 144.0
+offset_bottom = 677.0
 step = 0.001
 
 [node name="Label7" type="Label" parent="ModifyDimension/Maths/Control"]
-margin_left = 26.0
-margin_top = 787.0
-margin_right = 346.0
-margin_bottom = 811.0
+layout_mode = 0
+offset_left = 26.0
+offset_top = 801.0
+offset_right = 346.0
+offset_bottom = 825.0
 text = "IRM"
 
 [node name="Label16" type="Label" parent="ModifyDimension/Maths/Control"]
-margin_left = 28.0
-margin_top = 883.0
-margin_right = 359.0
-margin_bottom = 907.0
+layout_mode = 0
+offset_left = 28.0
+offset_top = 897.0
+offset_right = 359.0
+offset_bottom = 921.0
 text = "COSHEF"
 
 [node name="Label12" type="Label" parent="ModifyDimension/Maths/Control"]
-margin_left = 26.0
-margin_top = 1075.0
-margin_right = 346.0
-margin_bottom = 1099.0
+layout_mode = 0
+offset_left = 26.0
+offset_top = 1089.0
+offset_right = 346.0
+offset_bottom = 1113.0
 text = "MMBSVR"
 
 [node name="Label18" type="Label" parent="ModifyDimension/Maths/Control"]
-margin_left = 30.0
-margin_top = 823.0
-margin_right = 123.0
-margin_bottom = 851.0
+layout_mode = 0
+offset_left = 30.0
+offset_top = 837.0
+offset_right = 123.0
+offset_bottom = 865.0
 text = "IR_mult = "
-valign = 1
+vertical_alignment = 1
 
 [node name="Label17" type="Label" parent="ModifyDimension/Maths/Control"]
-margin_left = 34.0
-margin_top = 999.0
-margin_right = 306.0
-margin_bottom = 1027.0
+layout_mode = 0
+offset_left = 34.0
+offset_top = 1013.0
+offset_right = 306.0
+offset_bottom = 1041.0
 text = "a = "
-valign = 1
+vertical_alignment = 1
 
 [node name="Label19" type="Label" parent="ModifyDimension/Maths/Control"]
-margin_left = 34.0
-margin_top = 1107.0
-margin_right = 306.0
-margin_bottom = 1135.0
+layout_mode = 0
+offset_left = 34.0
+offset_top = 1121.0
+offset_right = 306.0
+offset_bottom = 1149.0
 text = "r = "
-valign = 1
+vertical_alignment = 1
 
-[node name="RichTextLabel4" parent="ModifyDimension/Maths/Control" instance=ExtResource( 12 )]
-margin_left = 234.0
-margin_top = 823.0
-margin_right = 267.0
-margin_bottom = 851.0
+[node name="RichTextLabel4" parent="ModifyDimension/Maths/Control" instance=ExtResource("12")]
+layout_mode = 0
+offset_left = 234.0
+offset_top = 837.0
+offset_right = 267.0
+offset_bottom = 865.0
 help_text = "IR_MULT_HELP"
 
-[node name="RichTextLabel5" parent="ModifyDimension/Maths/Control" instance=ExtResource( 12 )]
-margin_left = 178.0
-margin_top = 1109.0
-margin_right = 226.0
-margin_bottom = 1137.0
+[node name="RichTextLabel5" parent="ModifyDimension/Maths/Control" instance=ExtResource("12")]
+layout_mode = 0
+offset_left = 178.0
+offset_top = 1123.0
+offset_right = 226.0
+offset_bottom = 1151.0
 help_text = "RATIO_HELP"
 
 [node name="ShipHitChance" type="TextureRect" parent="ModifyDimension/Maths/Control"]
-margin_left = 36.0
-margin_top = 911.0
-margin_right = 340.0
-margin_bottom = 983.0
-rect_min_size = Vector2( 40, 0 )
-texture = ExtResource( 16 )
-expand = true
-stretch_mode = 6
+custom_minimum_size = Vector2(40, 0)
+layout_mode = 0
+offset_left = 36.0
+offset_top = 925.0
+offset_right = 340.0
+offset_bottom = 997.0
+texture = ExtResource("16")
+expand_mode = 1
+stretch_mode = 5
 
-[node name="IRM" parent="ModifyDimension/Maths/Control" instance=ExtResource( 19 )]
+[node name="IRM" parent="ModifyDimension/Maths/Control" instance=ExtResource("19")]
+layout_mode = 0
+anchors_preset = 0
 anchor_right = 0.0
 anchor_bottom = 0.0
-margin_left = 134.0
-margin_top = 819.0
-margin_right = 210.0
-margin_bottom = 851.0
+offset_left = 134.0
+offset_top = 833.0
+offset_right = 210.0
+offset_bottom = 865.0
 step = 0.001
 
-[node name="COSHEF" parent="ModifyDimension/Maths/Control" instance=ExtResource( 19 )]
+[node name="COSHEF" parent="ModifyDimension/Maths/Control" instance=ExtResource("19")]
+layout_mode = 0
+anchors_preset = 0
 anchor_right = 0.0
 anchor_bottom = 0.0
-margin_left = 78.0
-margin_top = 995.0
-margin_right = 154.0
-margin_bottom = 1027.0
+offset_left = 78.0
+offset_top = 1009.0
+offset_right = 154.0
+offset_bottom = 1041.0
 
-[node name="MMBSVR" parent="ModifyDimension/Maths/Control" instance=ExtResource( 19 )]
+[node name="MMBSVR" parent="ModifyDimension/Maths/Control" instance=ExtResource("19")]
+layout_mode = 0
+anchors_preset = 0
 anchor_right = 0.0
 anchor_bottom = 0.0
-margin_left = 78.0
-margin_top = 1103.0
-margin_right = 154.0
-margin_bottom = 1135.0
+offset_left = 78.0
+offset_top = 1117.0
+offset_right = 154.0
+offset_bottom = 1149.0
 
 [node name="Defaults" type="Control" parent="ModifyDimension/Maths/Control"]
-margin_right = 40.0
-margin_bottom = 40.0
-__meta__ = {
-"_edit_use_anchors_": false
-}
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
 
 [node name="BUCGF" type="Label" parent="ModifyDimension/Maths/Control/Defaults"]
-margin_left = 186.0
-margin_top = 184.0
-margin_right = 228.0
-margin_bottom = 208.0
+layout_mode = 0
+offset_left = 186.0
+offset_top = 232.0
+offset_right = 228.0
+offset_bottom = 256.0
 text = "(1.3)"
+vertical_alignment = 1
 
 [node name="BUCGF_Table" type="TextureRect" parent="ModifyDimension/Maths/Control/Defaults/BUCGF"]
-margin_left = 52.0
-margin_right = 80.0
-margin_bottom = 26.0
-texture = ExtResource( 23 )
-expand = true
+layout_mode = 0
+offset_left = 52.0
+offset_right = 80.0
+offset_bottom = 26.0
+texture = ExtResource("23")
+expand_mode = 1
 stretch_mode = 6
 
 [node name="MUCGF_MV" type="Label" parent="ModifyDimension/Maths/Control/Defaults"]
-margin_left = 258.296
-margin_top = 300.0
-margin_right = 300.296
-margin_bottom = 324.0
-rect_rotation = 0.70657
+layout_mode = 0
+offset_left = 258.296
+offset_top = 348.0
+offset_right = 300.296
+offset_bottom = 372.0
 text = "(1.9)"
+vertical_alignment = 1
 
 [node name="MUCGF_MV_Table" type="TextureRect" parent="ModifyDimension/Maths/Control/Defaults/MUCGF_MV"]
-margin_left = 53.7
-margin_top = -0.662292
-margin_right = 81.7
-margin_bottom = 25.3377
-texture = ExtResource( 23 )
-expand = true
+layout_mode = 0
+offset_left = 53.704
+offset_top = -3.0
+offset_right = 81.704
+offset_bottom = 23.0
+texture = ExtResource("23")
+expand_mode = 1
 stretch_mode = 6
 
 [node name="MUCGF_MSMB" type="Label" parent="ModifyDimension/Maths/Control/Defaults"]
-margin_left = 286.296
-margin_top = 349.0
-margin_right = 328.296
-margin_bottom = 373.0
+layout_mode = 0
+offset_left = 286.296
+offset_top = 397.0
+offset_right = 328.296
+offset_bottom = 421.0
 text = "(1.6)"
+vertical_alignment = 1
 
 [node name="MUCGF_MSMB_Table" type="TextureRect" parent="ModifyDimension/Maths/Control/Defaults/MUCGF_MSMB"]
-margin_left = 54.704
-margin_top = -3.05176e-05
-margin_right = 82.704
-margin_bottom = 26.0
-texture = ExtResource( 23 )
-expand = true
+layout_mode = 0
+offset_left = 54.704
+offset_top = -3.0
+offset_right = 82.704
+offset_bottom = 23.0
+texture = ExtResource("23")
+expand_mode = 1
 stretch_mode = 6
 
 [node name="MUCGF_AIE" type="Label" parent="ModifyDimension/Maths/Control/Defaults"]
-margin_left = 262.296
-margin_top = 397.0
-margin_right = 304.296
-margin_bottom = 421.0
+layout_mode = 0
+offset_left = 262.296
+offset_top = 445.0
+offset_right = 304.296
+offset_bottom = 469.0
 text = "(2.3)"
+vertical_alignment = 1
 
 [node name="MUCGF_AIE_Table" type="TextureRect" parent="ModifyDimension/Maths/Control/Defaults/MUCGF_AIE"]
-margin_left = 53.704
-margin_top = 2.0
-margin_right = 81.704
-margin_bottom = 28.0
-texture = ExtResource( 23 )
-expand = true
+layout_mode = 0
+offset_left = 53.704
+offset_top = -3.0
+offset_right = 81.704
+offset_bottom = 23.0
+texture = ExtResource("23")
+expand_mode = 1
 stretch_mode = 6
 
 [node name="IRM" type="Label" parent="ModifyDimension/Maths/Control/Defaults"]
-margin_left = 271.0
-margin_top = 823.0
-margin_right = 313.0
-margin_bottom = 847.0
+layout_mode = 0
+offset_left = 271.0
+offset_top = 837.0
+offset_right = 313.0
+offset_bottom = 861.0
 text = "(1.2)"
+vertical_alignment = 1
 
 [node name="SLUGF_XP" type="Label" parent="ModifyDimension/Maths/Control/Defaults"]
-margin_left = 182.0
-margin_top = 512.0
-margin_right = 224.0
-margin_bottom = 536.0
+layout_mode = 0
+offset_left = 182.0
+offset_top = 560.0
+offset_right = 224.0
+offset_bottom = 584.0
 text = "(1.3)"
+vertical_alignment = 1
 
 [node name="SLUGF_XP_Table" type="TextureRect" parent="ModifyDimension/Maths/Control/Defaults/SLUGF_XP"]
-margin_left = 56.0
-margin_right = 84.0
-margin_bottom = 26.0
-texture = ExtResource( 23 )
-expand = true
+layout_mode = 0
+offset_left = 55.0
+offset_top = -2.0
+offset_right = 83.0
+offset_bottom = 24.0
+texture = ExtResource("23")
+expand_mode = 1
 stretch_mode = 6
 
 [node name="SLUGF_Stats" type="Label" parent="ModifyDimension/Maths/Control/Defaults"]
-margin_left = 182.0
-margin_top = 604.0
-margin_right = 235.0
-margin_bottom = 628.0
+layout_mode = 0
+offset_left = 182.0
+offset_top = 652.0
+offset_right = 235.0
+offset_bottom = 676.0
 text = "(1.15)"
+vertical_alignment = 1
 
 [node name="SLUGF_Stats_Table" type="TextureRect" parent="ModifyDimension/Maths/Control/Defaults/SLUGF_Stats"]
-margin_left = 64.0
-margin_right = 92.0
-margin_bottom = 26.0
-texture = ExtResource( 23 )
-expand = true
+layout_mode = 0
+offset_left = 65.0
+offset_top = -2.0
+offset_right = 93.0
+offset_bottom = 24.0
+texture = ExtResource("23")
+expand_mode = 1
 stretch_mode = 6
 
 [node name="COSHEF" type="Label" parent="ModifyDimension/Maths/Control/Defaults"]
-margin_left = 194.0
-margin_top = 999.0
-margin_right = 247.0
-margin_bottom = 1023.0
+layout_mode = 0
+offset_left = 194.0
+offset_top = 1013.0
+offset_right = 247.0
+offset_bottom = 1037.0
 text = "(1.5)"
+vertical_alignment = 1
 
 [node name="MMBSVR" type="Label" parent="ModifyDimension/Maths/Control/Defaults"]
-margin_left = 226.0
-margin_top = 1108.0
-margin_right = 279.0
-margin_bottom = 1132.0
+layout_mode = 0
+offset_left = 226.0
+offset_top = 1122.0
+offset_right = 279.0
+offset_bottom = 1146.0
 text = "(10)"
+vertical_alignment = 1
 
 [node name="ULUGF" type="Label" parent="ModifyDimension/Maths/Control/Defaults"]
-margin_left = 182.0
-margin_top = 688.0
-margin_right = 224.0
-margin_bottom = 712.0
+layout_mode = 0
+offset_left = 182.0
+offset_top = 736.0
+offset_right = 224.0
+offset_bottom = 760.0
 text = "(1.63)"
+vertical_alignment = 1
 
 [node name="ULUGF_Table" type="TextureRect" parent="ModifyDimension/Maths/Control/Defaults/ULUGF"]
-margin_left = 52.0
-margin_right = 80.0
-margin_bottom = 26.0
-texture = ExtResource( 23 )
-expand = true
+layout_mode = 0
+offset_left = 59.0
+offset_top = -3.0
+offset_right = 87.0
+offset_bottom = 23.0
+texture = ExtResource("23")
+expand_mode = 1
 stretch_mode = 6
 
 [node name="Physics" type="ScrollContainer" parent="ModifyDimension"]
 visible = false
+custom_minimum_size = Vector2(388, 672)
+layout_mode = 0
 anchor_right = 1.0
 anchor_bottom = 1.0
-margin_left = 32.0
-margin_top = 48.0
-margin_right = 408.0
-margin_bottom = 680.0
-rect_min_size = Vector2( 388, 672 )
-mouse_filter = 1
-custom_styles/bg = SubResource( 5 )
+offset_left = 32.0
+offset_top = 48.0
+offset_right = 408.0
+offset_bottom = 680.0
 
 [node name="Control" type="Control" parent="ModifyDimension/Physics"]
-margin_left = 10.0
-margin_top = 5.0
-margin_right = 310.0
-margin_bottom = 1105.0
-rect_min_size = Vector2( 300, 1100 )
+custom_minimum_size = Vector2(300, 1100)
+layout_mode = 2
 mouse_filter = 1
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="StarGradient" type="TextureRect" parent="ModifyDimension/Physics/Control"]
-margin_left = 30.0
-margin_top = 293.0
-margin_right = 350.0
-margin_bottom = 457.0
-texture = SubResource( 13 )
-expand = true
+layout_mode = 0
+offset_left = 30.0
+offset_top = 293.0
+offset_right = 350.0
+offset_bottom = 457.0
+texture = SubResource("13")
+expand_mode = 1
 
 [node name="Line2D" type="Line2D" parent="ModifyDimension/Physics/Control"]
-position = Vector2( -6, 45 )
-points = PoolVector2Array( 356, 412, 36, 412, 36, 232 )
+position = Vector2(-6, 45)
+points = PackedVector2Array(356, 412, 36, 412, 36, 232)
 width = 2.0
-default_color = Color( 1, 1, 1, 1 )
 
 [node name="Line2D2" type="Line2D" parent="ModifyDimension/Physics/Control"]
-position = Vector2( -14, 41 )
-points = PoolVector2Array( 44, 236, 44, 224 )
-width_curve = SubResource( 11 )
-default_color = Color( 1, 1, 1, 1 )
+position = Vector2(-14, 41)
+points = PackedVector2Array(44, 236, 44, 224)
+width_curve = SubResource("11")
 
 [node name="Line2D3" type="Line2D" parent="ModifyDimension/Physics/Control"]
-position = Vector2( 306, 221 )
-points = PoolVector2Array( 44, 236, 56, 236 )
-width_curve = SubResource( 11 )
-default_color = Color( 1, 1, 1, 1 )
+position = Vector2(306, 221)
+points = PackedVector2Array(44, 236, 56, 236)
+width_curve = SubResource("11")
 
-[node name="PDFPlotter" parent="ModifyDimension/Physics/Control" instance=ExtResource( 35 )]
-margin_left = 30.0
-margin_top = 293.0
-margin_right = 350.0
-margin_bottom = 457.0
+[node name="PDFPlotter" parent="ModifyDimension/Physics/Control" instance=ExtResource("35")]
+anchors_preset = 0
+offset_left = 30.0
+offset_top = 293.0
+offset_right = 350.0
+offset_bottom = 457.0
 
 [node name="Label2" type="Label" parent="ModifyDimension/Physics/Control"]
-margin_left = 16.0
-margin_top = 111.0
-margin_right = 335.0
-margin_bottom = 135.0
+layout_mode = 0
+offset_left = 16.0
+offset_top = 111.0
+offset_right = 335.0
+offset_bottom = 135.0
 text = "INFLUENCE_OF_B_TO_MASS"
 
 [node name="Label4" type="Label" parent="ModifyDimension/Physics/Control"]
-margin_left = 2.0
-margin_top = 235.0
-margin_right = 114.0
-margin_bottom = 259.0
+layout_mode = 0
+offset_left = 2.0
+offset_top = 235.0
+offset_right = 114.0
+offset_bottom = 259.0
 text = "AMOUNT"
 
 [node name="B" type="Label" parent="ModifyDimension/Physics/Control"]
-margin_left = 230.0
-margin_top = 239.0
-margin_right = 366.0
-margin_bottom = 263.0
+layout_mode = 0
+offset_left = 230.0
+offset_top = 239.0
+offset_right = 366.0
+offset_bottom = 263.0
 text = "for B = 1 nT"
 
 [node name="BSlider" type="HSlider" parent="ModifyDimension/Physics/Control"]
-margin_left = 122.0
-margin_top = 243.0
-margin_right = 222.0
-margin_bottom = 259.0
+layout_mode = 0
+offset_left = 122.0
+offset_top = 243.0
+offset_right = 222.0
+offset_bottom = 259.0
 min_value = 0.1
 max_value = 1000.0
 step = 0.1
@@ -1001,33 +1017,39 @@ value = 0.1
 exp_edit = true
 
 [node name="Label3" type="Label" parent="ModifyDimension/Physics/Control"]
-margin_left = 50.0
-margin_top = 461.0
-margin_right = 369.0
-margin_bottom = 485.0
-text = "M   K   G   F   A   B   O   Q   R   Z"
+layout_mode = 0
+offset_left = 50.0
+offset_top = 461.0
+offset_right = 369.0
+offset_bottom = 485.0
+text = "M    K    G    F    A    B    O    Q    R    Z"
 
-[node name="BI" parent="ModifyDimension/Physics/Control" instance=ExtResource( 19 )]
-margin_left = 18.0
-margin_top = 155.0
-margin_right = -206.0
-margin_bottom = -913.0
+[node name="BI" parent="ModifyDimension/Physics/Control" instance=ExtResource("19")]
+layout_mode = 0
+anchors_preset = 0
+anchor_right = 0.0
+anchor_bottom = 0.0
+offset_left = 18.0
+offset_top = 155.0
+offset_right = -206.0
+offset_bottom = -913.0
 step = 0.01
 value = 0.3
 
 [node name="Label" type="Label" parent="ModifyDimension/Physics/Control"]
-margin_left = 16.0
-margin_top = 527.0
-margin_right = 335.0
-margin_bottom = 551.0
+layout_mode = 0
+offset_left = 16.0
+offset_top = 527.0
+offset_right = 335.0
+offset_bottom = 551.0
 text = "MIN_VAL_OF_UNIV_PROPERTIES"
 
 [node name="UnivPropertiesLabel" type="Label" parent="ModifyDimension/Physics/Control"]
-margin_left = 18.0
-margin_top = 683.0
-margin_right = 351.0
-margin_bottom = 1011.0
-custom_constants/line_spacing = 14
+layout_mode = 0
+offset_left = 18.0
+offset_top = 683.0
+offset_right = 351.0
+offset_bottom = 1011.0
 text = "Speed of light
 Planck constant
 Boltzmann constant
@@ -1038,1077 +1060,943 @@ Difficulty
 Time speed
 Age of the universe"
 
-[node name="RichTextLabel" parent="ModifyDimension/Physics/Control" instance=ExtResource( 12 )]
-margin_left = 122.0
-margin_top = 571.0
-margin_right = 158.0
-margin_bottom = 601.0
+[node name="RichTextLabel" parent="ModifyDimension/Physics/Control" instance=ExtResource("12")]
+layout_mode = 0
+offset_left = 122.0
+offset_top = 571.0
+offset_right = 158.0
+offset_bottom = 601.0
 help_text = "MIN_VAL_OF_UNIV_PROPERTIES_DESC"
 
-[node name="RichTextLabel2" parent="ModifyDimension/Physics/Control" instance=ExtResource( 12 )]
-margin_left = 18.0
-margin_top = 627.0
-margin_right = 370.0
-margin_bottom = 657.0
-bbcode_text = "COSTS_OF_UNIV_PROPERTIES [img]Graphics/Icons/help.png[/img]"
-text = "COSTS_OF_UNIV_PROPERTIES "
+[node name="RichTextLabel2" parent="ModifyDimension/Physics/Control" instance=ExtResource("12")]
+layout_mode = 0
+offset_left = 18.0
+offset_top = 627.0
+offset_right = 370.0
+offset_bottom = 657.0
+text = "COSTS_OF_UNIV_PROPERTIES [img]Graphics/Icons/help.png[/img]"
 label_text = "COSTS_OF_UNIV_PROPERTIES"
 help_text = "COSTS_OF_UNIV_PROPERTIES_DESC"
 
-[node name="MVOUP" parent="ModifyDimension/Physics/Control" instance=ExtResource( 19 )]
-margin_left = 18.0
-margin_top = 567.0
-margin_right = -206.0
-margin_bottom = -501.0
+[node name="MVOUP" parent="ModifyDimension/Physics/Control" instance=ExtResource("19")]
+layout_mode = 0
+anchors_preset = 0
+anchor_right = 0.0
+anchor_bottom = 0.0
+offset_left = 18.0
+offset_top = 567.0
+offset_right = -206.0
+offset_bottom = -501.0
 step = 0.05
 value = 0.5
 
 [node name="VBox" type="VBoxContainer" parent="ModifyDimension/Physics/Control"]
-margin_left = 254.0
-margin_top = 683.0
-margin_right = 330.0
-margin_bottom = 1035.0
-custom_constants/separation = 8
-__meta__ = {
-"_edit_use_anchors_": false
-}
+layout_mode = 0
+offset_left = 254.0
+offset_top = 683.0
+offset_right = 330.0
+offset_bottom = 1035.0
+theme_override_constants/separation = 8
 
-[node name="speed_of_light" parent="ModifyDimension/Physics/Control/VBox" instance=ExtResource( 19 )]
-anchor_right = 0.0
-anchor_bottom = 0.0
-margin_right = 76.0
-margin_bottom = 32.0
+[node name="speed_of_light" parent="ModifyDimension/Physics/Control/VBox" instance=ExtResource("19")]
+layout_mode = 2
 step = 1.0
 value = 10.0
 
-[node name="planck" parent="ModifyDimension/Physics/Control/VBox" instance=ExtResource( 19 )]
-anchor_right = 0.0
-anchor_bottom = 0.0
-margin_top = 40.0
-margin_right = 76.0
-margin_bottom = 72.0
+[node name="planck" parent="ModifyDimension/Physics/Control/VBox" instance=ExtResource("19")]
+layout_mode = 2
 step = 1.0
 value = 20.0
 
-[node name="boltzmann" parent="ModifyDimension/Physics/Control/VBox" instance=ExtResource( 19 )]
-anchor_right = 0.0
-anchor_bottom = 0.0
-margin_top = 80.0
-margin_right = 76.0
-margin_bottom = 112.0
+[node name="boltzmann" parent="ModifyDimension/Physics/Control/VBox" instance=ExtResource("19")]
+layout_mode = 2
 step = 1.0
 value = 10.0
 
-[node name="gravitational" parent="ModifyDimension/Physics/Control/VBox" instance=ExtResource( 19 )]
-anchor_right = 0.0
-anchor_bottom = 0.0
-margin_top = 120.0
-margin_right = 76.0
-margin_bottom = 152.0
+[node name="gravitational" parent="ModifyDimension/Physics/Control/VBox" instance=ExtResource("19")]
+layout_mode = 2
 step = 1.0
 value = 30.0
 
-[node name="charge" parent="ModifyDimension/Physics/Control/VBox" instance=ExtResource( 19 )]
-anchor_right = 0.0
-anchor_bottom = 0.0
-margin_top = 160.0
-margin_right = 76.0
-margin_bottom = 192.0
+[node name="charge" parent="ModifyDimension/Physics/Control/VBox" instance=ExtResource("19")]
+layout_mode = 2
 step = 1.0
 value = 25.0
 
-[node name="dark_energy" parent="ModifyDimension/Physics/Control/VBox" instance=ExtResource( 19 )]
-anchor_right = 0.0
-anchor_bottom = 0.0
-margin_top = 200.0
-margin_right = 76.0
-margin_bottom = 232.0
+[node name="dark_energy" parent="ModifyDimension/Physics/Control/VBox" instance=ExtResource("19")]
+layout_mode = 2
 step = 1.0
 value = 25.0
 
-[node name="difficulty" parent="ModifyDimension/Physics/Control/VBox" instance=ExtResource( 19 )]
-anchor_right = 0.0
-anchor_bottom = 0.0
-margin_top = 240.0
-margin_right = 76.0
-margin_bottom = 272.0
+[node name="difficulty" parent="ModifyDimension/Physics/Control/VBox" instance=ExtResource("19")]
+layout_mode = 2
 step = 1.0
 value = 10.0
 
-[node name="time_speed" parent="ModifyDimension/Physics/Control/VBox" instance=ExtResource( 19 )]
-anchor_right = 0.0
-anchor_bottom = 0.0
-margin_top = 280.0
-margin_right = 76.0
-margin_bottom = 312.0
+[node name="time_speed" parent="ModifyDimension/Physics/Control/VBox" instance=ExtResource("19")]
+layout_mode = 2
 step = 1.0
 value = 50.0
 
-[node name="age" parent="ModifyDimension/Physics/Control/VBox" instance=ExtResource( 19 )]
-anchor_right = 0.0
-anchor_bottom = 0.0
-margin_top = 320.0
-margin_right = 76.0
-margin_bottom = 352.0
+[node name="age" parent="ModifyDimension/Physics/Control/VBox" instance=ExtResource("19")]
+layout_mode = 2
 step = 1.0
 value = 50.0
 
 [node name="VBox2" type="VBoxContainer" parent="ModifyDimension/Physics/Control"]
-margin_left = 18.0
-margin_top = 683.0
-margin_right = 254.0
-margin_bottom = 1047.0
-custom_constants/separation = 8
+layout_mode = 0
+offset_left = 18.0
+offset_top = 683.0
+offset_right = 254.0
+offset_bottom = 1047.0
+theme_override_constants/separation = 8
 
 [node name="Defaults" type="Control" parent="ModifyDimension/Physics/Control"]
-margin_top = 407.0
-margin_right = 40.0
-margin_bottom = 447.0
-__meta__ = {
-"_edit_use_anchors_": false
-}
+anchors_preset = 0
+offset_top = 407.0
+offset_right = 40.0
+offset_bottom = 447.0
 
 [node name="BI" type="Label" parent="ModifyDimension/Physics/Control/Defaults"]
-margin_left = 162.0
-margin_top = -248.0
-margin_right = 204.0
-margin_bottom = -224.0
+layout_mode = 0
+offset_left = 162.0
+offset_top = -248.0
+offset_right = 204.0
+offset_bottom = -224.0
 text = "(0.3)"
 
 [node name="MVOUP" type="Label" parent="ModifyDimension/Physics/Control/Defaults"]
-margin_left = 162.0
-margin_top = 163.0
-margin_right = 204.0
-margin_bottom = 187.0
+layout_mode = 0
+offset_left = 162.0
+offset_top = 163.0
+offset_right = 204.0
+offset_bottom = 187.0
 text = "(0.5)"
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="speed_of_light" type="Label" parent="ModifyDimension/Physics/Control/Defaults"]
-margin_left = 362.0
-margin_top = 279.0
-margin_right = 404.0
-margin_bottom = 303.0
+layout_mode = 0
+offset_left = 362.0
+offset_top = 279.0
+offset_right = 404.0
+offset_bottom = 303.0
 text = "(25)"
 
 [node name="planck" type="Label" parent="ModifyDimension/Physics/Control/Defaults"]
-margin_left = 362.0
-margin_top = 319.0
-margin_right = 404.0
-margin_bottom = 343.0
+layout_mode = 0
+offset_left = 362.0
+offset_top = 319.0
+offset_right = 404.0
+offset_bottom = 343.0
 text = "(30)"
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="boltzmann" type="Label" parent="ModifyDimension/Physics/Control/Defaults"]
-margin_left = 362.0
-margin_top = 358.0
-margin_right = 404.0
-margin_bottom = 382.0
+layout_mode = 0
+offset_left = 362.0
+offset_top = 358.0
+offset_right = 404.0
+offset_bottom = 382.0
 text = "(30)"
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="gravitational" type="Label" parent="ModifyDimension/Physics/Control/Defaults"]
-margin_left = 362.0
-margin_top = 398.0
-margin_right = 404.0
-margin_bottom = 422.0
+layout_mode = 0
+offset_left = 362.0
+offset_top = 398.0
+offset_right = 404.0
+offset_bottom = 422.0
 text = "(40)"
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="charge" type="Label" parent="ModifyDimension/Physics/Control/Defaults"]
-margin_left = 362.0
-margin_top = 439.0
-margin_right = 404.0
-margin_bottom = 463.0
+layout_mode = 0
+offset_left = 362.0
+offset_top = 439.0
+offset_right = 404.0
+offset_bottom = 463.0
 text = "(40)"
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="dark_energy" type="Label" parent="ModifyDimension/Physics/Control/Defaults"]
-margin_left = 362.0
-margin_top = 479.0
-margin_right = 404.0
-margin_bottom = 503.0
+layout_mode = 0
+offset_left = 362.0
+offset_top = 479.0
+offset_right = 404.0
+offset_bottom = 503.0
 text = "(40)"
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="difficulty" type="Label" parent="ModifyDimension/Physics/Control/Defaults"]
-margin_left = 362.0
-margin_top = 519.0
-margin_right = 404.0
-margin_bottom = 543.0
+layout_mode = 0
+offset_left = 362.0
+offset_top = 519.0
+offset_right = 404.0
+offset_bottom = 543.0
 text = "(10)"
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="time_speed" type="Label" parent="ModifyDimension/Physics/Control/Defaults"]
-margin_left = 362.0
-margin_top = 559.0
-margin_right = 404.0
-margin_bottom = 583.0
+layout_mode = 0
+offset_left = 362.0
+offset_top = 559.0
+offset_right = 404.0
+offset_bottom = 583.0
 text = "(50)"
 
 [node name="age" type="Label" parent="ModifyDimension/Physics/Control/Defaults"]
-margin_left = 362.0
-margin_top = 600.0
-margin_right = 404.0
-margin_bottom = 624.0
+layout_mode = 0
+offset_left = 362.0
+offset_top = 600.0
+offset_right = 404.0
+offset_bottom = 624.0
 text = "(15)"
 
 [node name="BInfluence" type="TextureRect" parent="ModifyDimension/Physics/Control"]
-margin_left = 114.0
-margin_top = 155.0
-margin_right = 154.0
-margin_bottom = 187.0
-texture = ExtResource( 25 )
-expand = true
-stretch_mode = 4
+layout_mode = 0
+offset_left = 118.0
+offset_top = 161.0
+offset_right = 138.0
+offset_bottom = 180.0
+texture = ExtResource("25")
+expand_mode = 1
+stretch_mode = 5
 
 [node name="Chemistry" type="ScrollContainer" parent="ModifyDimension"]
 visible = false
+custom_minimum_size = Vector2(388, 672)
+layout_mode = 0
 anchor_right = 1.0
 anchor_bottom = 1.0
-margin_left = 32.0
-margin_top = 48.0
-margin_right = 408.0
-margin_bottom = 680.0
-rect_min_size = Vector2( 388, 672 )
-mouse_filter = 1
-custom_styles/bg = SubResource( 5 )
+offset_left = 32.0
+offset_top = 48.0
+offset_right = 408.0
+offset_bottom = 680.0
 
 [node name="Control" type="Control" parent="ModifyDimension/Chemistry"]
-margin_left = 10.0
-margin_top = 5.0
-margin_right = 310.0
-margin_bottom = 655.0
-rect_min_size = Vector2( 300, 650 )
+custom_minimum_size = Vector2(300, 650)
+layout_mode = 2
 mouse_filter = 1
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="Label" type="Label" parent="ModifyDimension/Chemistry/Control"]
-margin_left = 16.0
-margin_top = 119.0
-margin_right = 330.0
-margin_bottom = 143.0
+layout_mode = 0
+offset_left = 16.0
+offset_top = 119.0
+offset_right = 330.0
+offset_bottom = 143.0
 text = "EDIT_PHASE_DIAGRAMS"
 
 [node name="PDLabel" type="TextureRect" parent="ModifyDimension/Chemistry/Control"]
-margin_left = 266.0
-margin_top = 115.0
-margin_right = 298.0
-margin_bottom = 147.0
-texture = ExtResource( 25 )
-expand = true
-stretch_mode = 4
+layout_mode = 0
+offset_left = 270.0
+offset_top = 118.0
+offset_right = 286.0
+offset_bottom = 134.0
+texture = ExtResource("25")
+expand_mode = 1
+stretch_mode = 5
 
 [node name="LakeButtons" type="VBoxContainer" parent="ModifyDimension/Chemistry/Control"]
-margin_left = 26.0
-margin_top = 163.0
-margin_right = 102.0
-margin_bottom = 555.0
+layout_mode = 0
+offset_left = 26.0
+offset_top = 163.0
+offset_right = 102.0
+offset_bottom = 555.0
 
 [node name="H2O" type="Button" parent="ModifyDimension/Chemistry/Control/LakeButtons"]
-margin_right = 76.0
-margin_bottom = 40.0
-rect_min_size = Vector2( 0, 40 )
+custom_minimum_size = Vector2(0, 40)
+layout_mode = 2
 size_flags_horizontal = 3
-icon = ExtResource( 26 )
-icon_align = 1
+icon = ExtResource("26")
+icon_alignment = 1
 expand_icon = true
 
 [node name="CH4" type="Button" parent="ModifyDimension/Chemistry/Control/LakeButtons"]
-margin_top = 44.0
-margin_right = 76.0
-margin_bottom = 84.0
-rect_min_size = Vector2( 0, 40 )
+custom_minimum_size = Vector2(0, 40)
+layout_mode = 2
 size_flags_horizontal = 3
-icon = ExtResource( 27 )
-icon_align = 1
+icon = ExtResource("27")
+icon_alignment = 1
 expand_icon = true
 
 [node name="CO2" type="Button" parent="ModifyDimension/Chemistry/Control/LakeButtons"]
-margin_top = 88.0
-margin_right = 76.0
-margin_bottom = 128.0
-rect_min_size = Vector2( 0, 40 )
+custom_minimum_size = Vector2(0, 40)
+layout_mode = 2
 size_flags_horizontal = 3
-icon = ExtResource( 28 )
-icon_align = 1
+icon = ExtResource("28")
+icon_alignment = 1
 expand_icon = true
 
 [node name="NH3" type="Button" parent="ModifyDimension/Chemistry/Control/LakeButtons"]
-margin_top = 132.0
-margin_right = 76.0
-margin_bottom = 172.0
-rect_min_size = Vector2( 0, 40 )
+custom_minimum_size = Vector2(0, 40)
+layout_mode = 2
 size_flags_horizontal = 3
-icon = ExtResource( 31 )
-icon_align = 1
+icon = ExtResource("31")
+icon_alignment = 1
 expand_icon = true
 
 [node name="H" type="Button" parent="ModifyDimension/Chemistry/Control/LakeButtons"]
-margin_top = 176.0
-margin_right = 76.0
-margin_bottom = 216.0
-rect_min_size = Vector2( 0, 40 )
+custom_minimum_size = Vector2(0, 40)
+layout_mode = 2
 size_flags_horizontal = 3
-icon = ExtResource( 30 )
-icon_align = 1
+icon = ExtResource("30")
+icon_alignment = 1
 expand_icon = true
 
 [node name="He" type="Button" parent="ModifyDimension/Chemistry/Control/LakeButtons"]
-margin_top = 220.0
-margin_right = 76.0
-margin_bottom = 260.0
-rect_min_size = Vector2( 0, 40 )
+custom_minimum_size = Vector2(0, 40)
+layout_mode = 2
 size_flags_horizontal = 3
-icon = ExtResource( 29 )
-icon_align = 1
+icon = ExtResource("29")
+icon_alignment = 1
 expand_icon = true
 
 [node name="O" type="Button" parent="ModifyDimension/Chemistry/Control/LakeButtons"]
-margin_top = 264.0
-margin_right = 76.0
-margin_bottom = 304.0
-rect_min_size = Vector2( 0, 40 )
+custom_minimum_size = Vector2(0, 40)
+layout_mode = 2
 size_flags_horizontal = 3
-icon = ExtResource( 32 )
-icon_align = 1
+icon = ExtResource("32")
+icon_alignment = 1
 expand_icon = true
 
 [node name="Ne" type="Button" parent="ModifyDimension/Chemistry/Control/LakeButtons"]
-margin_top = 308.0
-margin_right = 76.0
-margin_bottom = 348.0
-rect_min_size = Vector2( 0, 40 )
+custom_minimum_size = Vector2(0, 40)
+layout_mode = 2
 size_flags_horizontal = 3
-icon = ExtResource( 33 )
-icon_align = 1
+icon = ExtResource("33")
+icon_alignment = 1
 expand_icon = true
 
 [node name="Xe" type="Button" parent="ModifyDimension/Chemistry/Control/LakeButtons"]
-margin_top = 352.0
-margin_right = 76.0
-margin_bottom = 392.0
-rect_min_size = Vector2( 0, 40 )
+custom_minimum_size = Vector2(0, 40)
+layout_mode = 2
 size_flags_horizontal = 3
-icon = ExtResource( 34 )
-icon_align = 1
+icon = ExtResource("34")
+icon_alignment = 1
 expand_icon = true
 
 [node name="OPMeters" type="VBoxContainer" parent="ModifyDimension/Chemistry/Control"]
-margin_left = 118.0
-margin_top = 163.0
-margin_right = 310.0
-margin_bottom = 555.0
+layout_mode = 0
+offset_left = 118.0
+offset_top = 163.0
+offset_right = 310.0
+offset_bottom = 555.0
 
 [node name="H2O" type="Label" parent="ModifyDimension/Chemistry/Control/OPMeters"]
-margin_right = 192.0
-margin_bottom = 40.0
-rect_min_size = Vector2( 0, 40 )
+custom_minimum_size = Vector2(0, 40)
+layout_mode = 2
 size_flags_horizontal = 3
-valign = 1
+vertical_alignment = 1
 
 [node name="CH4" type="Label" parent="ModifyDimension/Chemistry/Control/OPMeters"]
-margin_top = 44.0
-margin_right = 192.0
-margin_bottom = 84.0
-rect_min_size = Vector2( 0, 40 )
+custom_minimum_size = Vector2(0, 40)
+layout_mode = 2
 size_flags_horizontal = 3
-valign = 1
+vertical_alignment = 1
 
 [node name="CO2" type="Label" parent="ModifyDimension/Chemistry/Control/OPMeters"]
-margin_top = 88.0
-margin_right = 192.0
-margin_bottom = 128.0
-rect_min_size = Vector2( 0, 40 )
+custom_minimum_size = Vector2(0, 40)
+layout_mode = 2
 size_flags_horizontal = 3
-valign = 1
+vertical_alignment = 1
 
 [node name="NH3" type="Label" parent="ModifyDimension/Chemistry/Control/OPMeters"]
-margin_top = 132.0
-margin_right = 192.0
-margin_bottom = 172.0
-rect_min_size = Vector2( 0, 40 )
+custom_minimum_size = Vector2(0, 40)
+layout_mode = 2
 size_flags_horizontal = 3
-valign = 1
+vertical_alignment = 1
 
 [node name="H" type="Label" parent="ModifyDimension/Chemistry/Control/OPMeters"]
-margin_top = 176.0
-margin_right = 192.0
-margin_bottom = 216.0
-rect_min_size = Vector2( 0, 40 )
+custom_minimum_size = Vector2(0, 40)
+layout_mode = 2
 size_flags_horizontal = 3
-valign = 1
+vertical_alignment = 1
 
 [node name="He" type="Label" parent="ModifyDimension/Chemistry/Control/OPMeters"]
-margin_top = 220.0
-margin_right = 192.0
-margin_bottom = 260.0
-rect_min_size = Vector2( 0, 40 )
+custom_minimum_size = Vector2(0, 40)
+layout_mode = 2
 size_flags_horizontal = 3
-valign = 1
+vertical_alignment = 1
 
 [node name="O" type="Label" parent="ModifyDimension/Chemistry/Control/OPMeters"]
-margin_top = 264.0
-margin_right = 192.0
-margin_bottom = 304.0
-rect_min_size = Vector2( 0, 40 )
+custom_minimum_size = Vector2(0, 40)
+layout_mode = 2
 size_flags_horizontal = 3
-valign = 1
+vertical_alignment = 1
 
 [node name="Ne" type="Label" parent="ModifyDimension/Chemistry/Control/OPMeters"]
-margin_top = 308.0
-margin_right = 192.0
-margin_bottom = 348.0
-rect_min_size = Vector2( 0, 40 )
+custom_minimum_size = Vector2(0, 40)
+layout_mode = 2
 size_flags_horizontal = 3
-valign = 1
+vertical_alignment = 1
 
 [node name="Xe" type="Label" parent="ModifyDimension/Chemistry/Control/OPMeters"]
-margin_top = 352.0
-margin_right = 192.0
-margin_bottom = 392.0
-rect_min_size = Vector2( 0, 40 )
+custom_minimum_size = Vector2(0, 40)
+layout_mode = 2
 size_flags_horizontal = 3
-valign = 1
+vertical_alignment = 1
 
 [node name="Biology" type="ScrollContainer" parent="ModifyDimension"]
 visible = false
+custom_minimum_size = Vector2(388, 672)
+layout_mode = 0
 anchor_right = 1.0
 anchor_bottom = 1.0
-margin_left = 32.0
-margin_top = 48.0
-margin_right = 408.0
-margin_bottom = 680.0
-rect_min_size = Vector2( 388, 672 )
-mouse_filter = 1
-custom_styles/bg = SubResource( 5 )
+offset_left = 32.0
+offset_top = 48.0
+offset_right = 408.0
+offset_bottom = 680.0
 
 [node name="Control" type="Control" parent="ModifyDimension/Biology"]
-margin_left = 10.0
-margin_top = 5.0
-margin_right = 310.0
-margin_bottom = 655.0
-rect_min_size = Vector2( 300, 650 )
+custom_minimum_size = Vector2(300, 650)
+layout_mode = 2
 mouse_filter = 1
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="Label" type="Label" parent="ModifyDimension/Biology/Control"]
-margin_left = 16.0
-margin_top = 119.0
-margin_right = 330.0
-margin_bottom = 143.0
+layout_mode = 0
+offset_left = 16.0
+offset_top = 119.0
+offset_right = 330.0
+offset_bottom = 143.0
 text = "PLANT_GROWTH_SPEED_MULTIPLIER"
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="Label2" type="Label" parent="ModifyDimension/Biology/Control"]
-margin_left = 16.0
-margin_top = 215.0
-margin_right = 330.0
-margin_bottom = 239.0
+layout_mode = 0
+offset_left = 16.0
+offset_top = 215.0
+offset_right = 330.0
+offset_bottom = 239.0
 text = "PLANT_YIELD_MULT"
 
 [node name="Label3" type="Label" parent="ModifyDimension/Biology/Control"]
-margin_left = 16.0
-margin_top = 335.0
-margin_right = 330.0
-margin_bottom = 359.0
+layout_mode = 0
+offset_left = 16.0
+offset_top = 335.0
+offset_right = 330.0
+offset_bottom = 359.0
 text = "LAKES"
 
-[node name="PGSM" parent="ModifyDimension/Biology/Control" instance=ExtResource( 19 )]
-margin_left = 22.0
-margin_top = 159.0
-margin_right = -202.0
-margin_bottom = -459.0
+[node name="PGSM" parent="ModifyDimension/Biology/Control" instance=ExtResource("19")]
+layout_mode = 0
+anchors_preset = 0
+anchor_right = 0.0
+anchor_bottom = 0.0
+offset_left = 22.0
+offset_top = 159.0
+offset_right = -202.0
+offset_bottom = -459.0
 value = 1.0
 min_value = 1.0
 
-[node name="PYM" parent="ModifyDimension/Biology/Control" instance=ExtResource( 19 )]
-margin_left = 22.0
-margin_top = 255.0
-margin_right = -202.0
-margin_bottom = -363.0
+[node name="PYM" parent="ModifyDimension/Biology/Control" instance=ExtResource("19")]
+layout_mode = 0
+anchors_preset = 0
+anchor_right = 0.0
+anchor_bottom = 0.0
+offset_left = 22.0
+offset_top = 255.0
+offset_right = -202.0
+offset_bottom = -363.0
 value = 1.0
 min_value = 1.0
 
 [node name="PGSMLabel" type="TextureRect" parent="ModifyDimension/Biology/Control"]
-margin_left = 134.0
-margin_top = 159.0
-margin_right = 166.0
-margin_bottom = 191.0
-texture = ExtResource( 25 )
-expand = true
-stretch_mode = 4
+layout_mode = 0
+offset_left = 134.0
+offset_top = 166.0
+offset_right = 150.0
+offset_bottom = 182.0
+texture = ExtResource("25")
+expand_mode = 1
+stretch_mode = 5
 
 [node name="PYMLabel" type="TextureRect" parent="ModifyDimension/Biology/Control"]
-margin_left = 134.0
-margin_top = 255.0
-margin_right = 166.0
-margin_bottom = 287.0
-texture = ExtResource( 25 )
-expand = true
-stretch_mode = 4
+layout_mode = 0
+offset_left = 134.0
+offset_top = 262.0
+offset_right = 150.0
+offset_bottom = 277.0
+texture = ExtResource("25")
+expand_mode = 1
+stretch_mode = 5
 
 [node name="LakeButtons" type="GridContainer" parent="ModifyDimension/Biology/Control"]
-margin_left = 14.0
-margin_top = 367.0
-margin_right = 370.0
-margin_bottom = 455.0
+layout_mode = 0
+offset_left = 14.0
+offset_top = 367.0
+offset_right = 370.0
+offset_bottom = 455.0
 columns = 5
 
 [node name="H2O" type="Button" parent="ModifyDimension/Biology/Control/LakeButtons"]
-margin_right = 68.0
-margin_bottom = 40.0
-rect_min_size = Vector2( 0, 40 )
+custom_minimum_size = Vector2(0, 40)
+layout_mode = 2
 size_flags_horizontal = 3
-icon = ExtResource( 26 )
-icon_align = 1
+icon = ExtResource("26")
+icon_alignment = 1
 expand_icon = true
 
 [node name="CH4" type="Button" parent="ModifyDimension/Biology/Control/LakeButtons"]
-margin_left = 72.0
-margin_right = 140.0
-margin_bottom = 40.0
-rect_min_size = Vector2( 0, 40 )
+custom_minimum_size = Vector2(0, 40)
+layout_mode = 2
 size_flags_horizontal = 3
-icon = ExtResource( 27 )
-icon_align = 1
+icon = ExtResource("27")
+icon_alignment = 1
 expand_icon = true
 
 [node name="CO2" type="Button" parent="ModifyDimension/Biology/Control/LakeButtons"]
-margin_left = 144.0
-margin_right = 212.0
-margin_bottom = 40.0
-rect_min_size = Vector2( 0, 40 )
+custom_minimum_size = Vector2(0, 40)
+layout_mode = 2
 size_flags_horizontal = 3
-icon = ExtResource( 28 )
-icon_align = 1
+icon = ExtResource("28")
+icon_alignment = 1
 expand_icon = true
 
 [node name="NH3" type="Button" parent="ModifyDimension/Biology/Control/LakeButtons"]
-margin_left = 216.0
-margin_right = 284.0
-margin_bottom = 40.0
-rect_min_size = Vector2( 0, 40 )
+custom_minimum_size = Vector2(0, 40)
+layout_mode = 2
 size_flags_horizontal = 3
-icon = ExtResource( 31 )
-icon_align = 1
+icon = ExtResource("31")
+icon_alignment = 1
 expand_icon = true
 
 [node name="H" type="Button" parent="ModifyDimension/Biology/Control/LakeButtons"]
-margin_left = 288.0
-margin_right = 356.0
-margin_bottom = 40.0
-rect_min_size = Vector2( 0, 40 )
+custom_minimum_size = Vector2(0, 40)
+layout_mode = 2
 size_flags_horizontal = 3
-icon = ExtResource( 30 )
-icon_align = 1
+icon = ExtResource("30")
+icon_alignment = 1
 expand_icon = true
 
 [node name="He" type="Button" parent="ModifyDimension/Biology/Control/LakeButtons"]
-margin_top = 44.0
-margin_right = 68.0
-margin_bottom = 84.0
-rect_min_size = Vector2( 0, 40 )
+custom_minimum_size = Vector2(0, 40)
+layout_mode = 2
 size_flags_horizontal = 3
-icon = ExtResource( 29 )
-icon_align = 1
+icon = ExtResource("29")
+icon_alignment = 1
 expand_icon = true
 
 [node name="O" type="Button" parent="ModifyDimension/Biology/Control/LakeButtons"]
-margin_left = 72.0
-margin_top = 44.0
-margin_right = 140.0
-margin_bottom = 84.0
-rect_min_size = Vector2( 0, 40 )
+custom_minimum_size = Vector2(0, 40)
+layout_mode = 2
 size_flags_horizontal = 3
-icon = ExtResource( 32 )
-icon_align = 1
+icon = ExtResource("32")
+icon_alignment = 1
 expand_icon = true
 
 [node name="Ne" type="Button" parent="ModifyDimension/Biology/Control/LakeButtons"]
-margin_left = 144.0
-margin_top = 44.0
-margin_right = 212.0
-margin_bottom = 84.0
-rect_min_size = Vector2( 0, 40 )
+custom_minimum_size = Vector2(0, 40)
+layout_mode = 2
 size_flags_horizontal = 3
-icon = ExtResource( 33 )
-icon_align = 1
+icon = ExtResource("33")
+icon_alignment = 1
 expand_icon = true
 
 [node name="Xe" type="Button" parent="ModifyDimension/Biology/Control/LakeButtons"]
-margin_left = 216.0
-margin_top = 44.0
-margin_right = 284.0
-margin_bottom = 84.0
-rect_min_size = Vector2( 0, 40 )
+custom_minimum_size = Vector2(0, 40)
+layout_mode = 2
 size_flags_horizontal = 3
-icon = ExtResource( 34 )
-icon_align = 1
+icon = ExtResource("34")
+icon_alignment = 1
 expand_icon = true
 
 [node name="Lake" type="Control" parent="ModifyDimension/Biology/Control"]
 visible = false
-margin_left = 18.0
-margin_top = 487.0
-margin_right = 374.0
-margin_bottom = 537.0
-rect_min_size = Vector2( 0, 50 )
+custom_minimum_size = Vector2(0, 50)
+anchors_preset = 0
+offset_left = 18.0
+offset_top = 487.0
+offset_right = 374.0
+offset_bottom = 537.0
 
 [node name="Operator" type="Label" parent="ModifyDimension/Biology/Control/Lake"]
-margin_left = 20.0
-margin_top = -4.0
-margin_right = 44.0
-margin_bottom = 24.0
+layout_mode = 0
+offset_left = 20.0
+offset_top = -4.0
+offset_right = 44.0
+offset_bottom = 24.0
 text = "x"
-autowrap = true
 
-[node name="Bonus" parent="ModifyDimension/Biology/Control/Lake" instance=ExtResource( 19 )]
+[node name="Bonus" parent="ModifyDimension/Biology/Control/Lake" instance=ExtResource("19")]
+layout_mode = 0
+anchors_preset = 0
 anchor_right = 0.0
 anchor_bottom = 0.0
-margin_left = 44.0
-margin_top = -8.0
-margin_right = 120.0
-margin_bottom = 24.0
+offset_left = 44.0
+offset_top = -8.0
+offset_right = 120.0
+offset_bottom = 24.0
 step = 0.5
 value = 1.0
 
 [node name="LakeDesc" type="RichTextLabel" parent="ModifyDimension/Biology/Control/Lake"]
-margin_top = 48.0
-margin_right = 356.0
-margin_bottom = 152.0
+layout_mode = 0
+offset_top = 48.0
+offset_right = 356.0
+offset_bottom = 152.0
 mouse_filter = 1
 bbcode_enabled = true
-fit_content_height = true
 
 [node name="Engineering" type="ScrollContainer" parent="ModifyDimension"]
 visible = false
+custom_minimum_size = Vector2(388, 672)
+layout_mode = 0
 anchor_right = 1.0
 anchor_bottom = 1.0
-margin_left = 32.0
-margin_top = 48.0
-margin_right = 408.0
-margin_bottom = 680.0
-rect_min_size = Vector2( 388, 672 )
-mouse_filter = 1
-custom_styles/bg = SubResource( 5 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
+offset_left = 32.0
+offset_top = 48.0
+offset_right = 408.0
+offset_bottom = 680.0
 
 [node name="Control" type="Control" parent="ModifyDimension/Engineering"]
-margin_left = 10.0
-margin_top = 5.0
-margin_right = 310.0
-margin_bottom = 655.0
-rect_min_size = Vector2( 300, 650 )
+custom_minimum_size = Vector2(300, 650)
+layout_mode = 2
 mouse_filter = 1
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="Label" type="Label" parent="ModifyDimension/Engineering/Control"]
-margin_left = 16.0
-margin_top = 119.0
-margin_right = 330.0
-margin_bottom = 143.0
+layout_mode = 0
+offset_left = 16.0
+offset_top = 119.0
+offset_right = 330.0
+offset_bottom = 143.0
 text = "BASE_COST_MULT"
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="Label2" type="Label" parent="ModifyDimension/Engineering/Control"]
-margin_left = 16.0
-margin_top = 215.0
-margin_right = 330.0
-margin_bottom = 239.0
+layout_mode = 0
+offset_left = 16.0
+offset_top = 215.0
+offset_right = 330.0
+offset_bottom = 239.0
 text = "PICKAXE_SPEED_MULT"
 
-[node name="RichTextLabel" parent="ModifyDimension/Engineering/Control" instance=ExtResource( 12 )]
-margin_left = 134.0
-margin_top = 163.0
-margin_right = 170.0
-margin_bottom = 193.0
+[node name="RichTextLabel" parent="ModifyDimension/Engineering/Control" instance=ExtResource("12")]
+layout_mode = 0
+offset_left = 134.0
+offset_top = 163.0
+offset_right = 170.0
+offset_bottom = 193.0
 help_text = "BASE_COST_MULT_DESC"
 
-[node name="BCM" parent="ModifyDimension/Engineering/Control" instance=ExtResource( 19 )]
-margin_left = 22.0
-margin_top = 159.0
-margin_right = -202.0
-margin_bottom = -459.0
+[node name="BCM" parent="ModifyDimension/Engineering/Control" instance=ExtResource("19")]
+layout_mode = 0
+anchors_preset = 0
+anchor_right = 0.0
+anchor_bottom = 0.0
+offset_left = 22.0
+offset_top = 159.0
+offset_right = -202.0
+offset_bottom = -459.0
 step = 0.02
 value = 1.0
 
-[node name="PS" parent="ModifyDimension/Engineering/Control" instance=ExtResource( 19 )]
-margin_left = 22.0
-margin_top = 255.0
-margin_right = -202.0
-margin_bottom = -363.0
+[node name="PS" parent="ModifyDimension/Engineering/Control" instance=ExtResource("19")]
+layout_mode = 0
+anchors_preset = 0
+anchor_right = 0.0
+anchor_bottom = 0.0
+offset_left = 22.0
+offset_top = 255.0
+offset_right = -202.0
+offset_bottom = -363.0
 step = 0.5
 value = 1.0
 
-[node name="RSM" parent="ModifyDimension/Engineering/Control" instance=ExtResource( 19 )]
-margin_left = 22.0
-margin_top = 363.0
-margin_right = -202.0
-margin_bottom = -255.0
+[node name="RSM" parent="ModifyDimension/Engineering/Control" instance=ExtResource("19")]
+layout_mode = 0
+anchors_preset = 0
+anchor_right = 0.0
+anchor_bottom = 0.0
+offset_left = 22.0
+offset_top = 363.0
+offset_right = -202.0
+offset_bottom = -255.0
 step = 0.2
 value = 1.0
 
 [node name="Label3" type="Label" parent="ModifyDimension/Engineering/Control"]
-margin_left = 16.0
-margin_top = 315.0
-margin_right = 330.0
-margin_bottom = 339.0
+layout_mode = 0
+offset_left = 16.0
+offset_top = 315.0
+offset_right = 330.0
+offset_bottom = 339.0
 text = "ROVER_STAT_MULT"
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="Dimensional_Power" type="ScrollContainer" parent="ModifyDimension"]
 visible = false
+custom_minimum_size = Vector2(388, 672)
+layout_mode = 0
 anchor_right = 1.0
 anchor_bottom = 1.0
-margin_left = 32.0
-margin_top = 48.0
-margin_right = 408.0
-margin_bottom = 680.0
-rect_min_size = Vector2( 388, 672 )
-mouse_filter = 1
-custom_styles/bg = SubResource( 5 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
+offset_left = 32.0
+offset_top = 48.0
+offset_right = 408.0
+offset_bottom = 680.0
 
 [node name="Control" type="Control" parent="ModifyDimension/Dimensional_Power"]
-margin_left = 10.0
-margin_top = 5.0
-margin_right = 310.0
-margin_bottom = 805.0
-rect_min_size = Vector2( 300, 800 )
+custom_minimum_size = Vector2(300, 800)
+layout_mode = 2
 mouse_filter = 2
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="Level" type="Label" parent="ModifyDimension/Dimensional_Power/Control"]
-margin_left = 14.0
-margin_top = 19.0
-margin_right = 82.0
-margin_bottom = 43.0
+layout_mode = 0
+offset_left = 14.0
+offset_top = 19.0
+offset_right = 82.0
+offset_bottom = 43.0
 text = "LEVEL"
-align = 1
 
 [node name="SpecialBonuses" type="Label" parent="ModifyDimension/Dimensional_Power/Control"]
-margin_left = 146.0
-margin_top = 19.0
-margin_right = 322.0
-margin_bottom = 43.0
+layout_mode = 0
+offset_left = 146.0
+offset_top = 19.0
+offset_right = 322.0
+offset_bottom = 43.0
 text = "EFFECTS"
 
 [node name="VBoxContainer" type="VBoxContainer" parent="ModifyDimension/Dimensional_Power/Control"]
-margin_left = 42.0
-margin_top = 71.0
-margin_right = 82.0
-margin_bottom = 579.0
-custom_constants/separation = 70
-__meta__ = {
-"_edit_use_anchors_": false
-}
+layout_mode = 0
+offset_left = 42.0
+offset_top = 74.0
+offset_right = 82.0
+offset_bottom = 684.0
+theme_override_constants/separation = 72
 
 [node name="Label" type="Label" parent="ModifyDimension/Dimensional_Power/Control/VBoxContainer"]
-margin_right = 40.0
-margin_bottom = 24.0
+layout_mode = 2
 text = "1"
 
 [node name="Label6" type="Label" parent="ModifyDimension/Dimensional_Power/Control/VBoxContainer"]
-modulate = Color( 0.831373, 0.690196, 1, 1 )
-margin_top = 94.0
-margin_right = 40.0
-margin_bottom = 118.0
+modulate = Color(0.831373, 0.690196, 1, 1)
+layout_mode = 2
 text = "2"
 
 [node name="Label2" type="Label" parent="ModifyDimension/Dimensional_Power/Control/VBoxContainer"]
-modulate = Color( 0.764706, 0.564706, 1, 1 )
-margin_top = 188.0
-margin_right = 40.0
-margin_bottom = 212.0
+modulate = Color(0.764706, 0.564706, 1, 1)
+layout_mode = 2
 text = "3"
 
 [node name="Label3" type="Label" parent="ModifyDimension/Dimensional_Power/Control/VBoxContainer"]
-modulate = Color( 0.654902, 0.368627, 1, 1 )
-margin_top = 282.0
-margin_right = 40.0
-margin_bottom = 306.0
+modulate = Color(0.654902, 0.368627, 1, 1)
+layout_mode = 2
 text = "4"
 
 [node name="Label4" type="Label" parent="ModifyDimension/Dimensional_Power/Control/VBoxContainer"]
-modulate = Color( 0.572549, 0.215686, 1, 1 )
-margin_top = 376.0
-margin_right = 40.0
-margin_bottom = 400.0
+modulate = Color(0.572549, 0.215686, 1, 1)
+layout_mode = 2
 text = "5"
 
 [node name="Label5" type="Label" parent="ModifyDimension/Dimensional_Power/Control/VBoxContainer"]
-modulate = Color( 0.454902, 0, 1, 1 )
-margin_top = 470.0
-margin_right = 40.0
-margin_bottom = 494.0
+modulate = Color(0.454902, 0, 1, 1)
+layout_mode = 2
 text = "6"
 
 [node name="Label7" type="Label" parent="ModifyDimension/Dimensional_Power/Control/VBoxContainer"]
-modulate = Color( 0.454902, 0, 1, 1 )
-margin_top = 564.0
-margin_right = 40.0
-margin_bottom = 588.0
+modulate = Color(0.454902, 0, 1, 1)
+layout_mode = 2
 text = "7"
 
 [node name="Line2D" type="Line2D" parent="ModifyDimension/Dimensional_Power/Control"]
-position = Vector2( -18, -9 )
-points = PoolVector2Array( 88, 92, 152, 92 )
+position = Vector2(-18, -9)
+points = PackedVector2Array(88, 92, 152, 92)
 width = 1.0
-default_color = Color( 1, 1, 1, 1 )
 
 [node name="Line2D2" type="Line2D" parent="ModifyDimension/Dimensional_Power/Control"]
-modulate = Color( 0.831373, 0.690196, 1, 1 )
-position = Vector2( -18, 87 )
-points = PoolVector2Array( 88, 92, 148, 92 )
+modulate = Color(0.831373, 0.690196, 1, 1)
+position = Vector2(-18, 87)
+points = PackedVector2Array(88, 92, 148, 92)
 width = 1.0
-default_color = Color( 1, 1, 1, 1 )
 
 [node name="Line2D3" type="Line2D" parent="ModifyDimension/Dimensional_Power/Control"]
-modulate = Color( 0.764706, 0.564706, 1, 1 )
-position = Vector2( -18, 179 )
-points = PoolVector2Array( 88, 92, 152, 92 )
+modulate = Color(0.764706, 0.564706, 1, 1)
+position = Vector2(-18, 179)
+points = PackedVector2Array(88, 92, 152, 92)
 width = 1.0
-default_color = Color( 1, 1, 1, 1 )
 
 [node name="Line2D4" type="Line2D" parent="ModifyDimension/Dimensional_Power/Control"]
-modulate = Color( 0.654902, 0.368627, 1, 1 )
-position = Vector2( -18, 271 )
-points = PoolVector2Array( 88, 92, 152, 92 )
+modulate = Color(0.654902, 0.368627, 1, 1)
+position = Vector2(-18, 271)
+points = PackedVector2Array(88, 92, 152, 92)
 width = 1.0
-default_color = Color( 1, 1, 1, 1 )
 
 [node name="Line2D5" type="Line2D" parent="ModifyDimension/Dimensional_Power/Control"]
-modulate = Color( 0.572549, 0.215686, 1, 1 )
-position = Vector2( -18, 367 )
-points = PoolVector2Array( 88, 92, 152, 92 )
+modulate = Color(0.572549, 0.215686, 1, 1)
+position = Vector2(-18, 367)
+points = PackedVector2Array(88, 92, 152, 92)
 width = 1.0
-default_color = Color( 1, 1, 1, 1 )
 
 [node name="Line2D6" type="Line2D" parent="ModifyDimension/Dimensional_Power/Control"]
-modulate = Color( 0.454902, 0, 1, 1 )
-position = Vector2( -18, 463 )
-points = PoolVector2Array( 88, 92, 152, 92 )
+modulate = Color(0.454902, 0, 1, 1)
+position = Vector2(-18, 463)
+points = PackedVector2Array(88, 92, 152, 92)
 width = 1.0
-default_color = Color( 1, 1, 1, 1 )
 
 [node name="Line2D7" type="Line2D" parent="ModifyDimension/Dimensional_Power/Control"]
-modulate = Color( 0.454902, 0, 1, 1 )
-position = Vector2( -18, 554 )
-points = PoolVector2Array( 88, 92, 152, 92 )
+modulate = Color(0.454902, 0, 1, 1)
+position = Vector2(-18, 554)
+points = PackedVector2Array(88, 92, 152, 92)
 width = 1.0
-default_color = Color( 1, 1, 1, 1 )
 
-[node name="TextureProgress" type="TextureProgress" parent="ModifyDimension/Dimensional_Power/Control"]
-margin_left = 94.0
-margin_top = 83.0
-margin_right = 113.0
-margin_bottom = 647.0
+[node name="TextureProgressBar" type="TextureProgressBar" parent="ModifyDimension/Dimensional_Power/Control"]
+layout_mode = 0
+offset_left = 94.0
+offset_top = 83.0
+offset_right = 113.0
+offset_bottom = 647.0
 min_value = 1.0
 max_value = 7.0
 step = 0.0
 value = 3.0
-texture_under = ExtResource( 18 )
-texture_progress = ExtResource( 17 )
 fill_mode = 2
 nine_patch_stretch = true
+texture_under = ExtResource("18")
+texture_progress = ExtResource("17")
 
 [node name="Label1" type="Label" parent="ModifyDimension/Dimensional_Power/Control"]
-margin_left = 146.0
-margin_top = 71.0
-margin_right = 386.0
-margin_bottom = 122.0
+layout_mode = 0
+offset_left = 146.0
+offset_top = 71.0
+offset_right = 386.0
+offset_bottom = 122.0
 mouse_filter = 1
-custom_colors/font_color = Color( 0.498039, 0.498039, 0.498039, 1 )
-custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
 text = "QOL_PERKS"
-autowrap = true
+autowrap_mode = 3
 
 [node name="Label2" type="Label" parent="ModifyDimension/Dimensional_Power/Control"]
-margin_left = 146.0
-margin_top = 167.0
-margin_right = 386.0
-margin_bottom = 218.0
+layout_mode = 0
+offset_left = 146.0
+offset_top = 167.0
+offset_right = 386.0
+offset_bottom = 218.0
 mouse_filter = 1
-custom_colors/font_color = Color( 0.498039, 0.498039, 0.498039, 1 )
-custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
 text = "UNLOCK_PHY_CHEM_BIO"
-autowrap = true
+autowrap_mode = 3
 
 [node name="Label3" type="Label" parent="ModifyDimension/Dimensional_Power/Control"]
-margin_left = 146.0
-margin_top = 259.0
-margin_right = 386.0
-margin_bottom = 310.0
-custom_colors/font_color = Color( 0.498039, 0.498039, 0.498039, 1 )
-custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+layout_mode = 0
+offset_left = 146.0
+offset_top = 259.0
+offset_right = 386.0
+offset_bottom = 310.0
 text = "MORE_OP_CAPACITY"
-autowrap = true
+autowrap_mode = 3
 
 [node name="Label4" type="Label" parent="ModifyDimension/Dimensional_Power/Control"]
-margin_left = 146.0
-margin_top = 351.0
-margin_right = 386.0
-margin_bottom = 402.0
+layout_mode = 0
+offset_left = 146.0
+offset_top = 351.0
+offset_right = 386.0
+offset_bottom = 402.0
 mouse_filter = 1
-custom_colors/font_color = Color( 0.498039, 0.498039, 0.498039, 1 )
-custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
 text = "MODIFY_CAVE_BATTLE_TIME"
-autowrap = true
-__meta__ = {
-"_edit_use_anchors_": false
-}
+autowrap_mode = 3
 
 [node name="Label5" type="Label" parent="ModifyDimension/Dimensional_Power/Control"]
-margin_left = 146.0
-margin_top = 447.0
-margin_right = 386.0
-margin_bottom = 498.0
-custom_colors/font_color = Color( 0.498039, 0.498039, 0.498039, 1 )
-custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+layout_mode = 0
+offset_left = 146.0
+offset_top = 447.0
+offset_right = 386.0
+offset_bottom = 498.0
 text = "MORE_PP"
-autowrap = true
+autowrap_mode = 3
 
 [node name="Label6" type="Label" parent="ModifyDimension/Dimensional_Power/Control"]
-margin_left = 146.0
-margin_top = 543.0
-margin_right = 386.0
-margin_bottom = 594.0
-custom_colors/font_color = Color( 0.498039, 0.498039, 0.498039, 1 )
-custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+layout_mode = 0
+offset_left = 146.0
+offset_top = 543.0
+offset_right = 386.0
+offset_bottom = 594.0
 text = "Coming soon™"
-autowrap = true
+autowrap_mode = 3
 
 [node name="Label7" type="Label" parent="ModifyDimension/Dimensional_Power/Control"]
-margin_left = 146.0
-margin_top = 634.8
-margin_right = 386.0
-margin_bottom = 766.8
-custom_colors/font_color = Color( 0.498039, 0.498039, 0.498039, 1 )
-custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+layout_mode = 0
+offset_left = 146.0
+offset_top = 634.8
+offset_right = 386.0
+offset_bottom = 766.8
 text = "Unlock a special area to encounter the final boss (lol of course this area doesn't exist yet (nor the final boss))"
-autowrap = true
+autowrap_mode = 3
 
 [node name="EffectsHelp" type="TextureRect" parent="ModifyDimension/Dimensional_Power/Control"]
-margin_left = 258.0
-margin_top = 19.0
-margin_right = 286.0
-margin_bottom = 43.0
-texture = ExtResource( 25 )
-expand = true
-stretch_mode = 4
+layout_mode = 0
+offset_left = 252.0
+offset_top = 20.0
+offset_right = 268.0
+offset_bottom = 36.0
+texture = ExtResource("25")
+expand_mode = 1
+stretch_mode = 5
 
 [node name="OPMeter" type="Panel" parent="ModifyDimension"]
 visible = false
-margin_left = 32.0
-margin_top = 48.0
-margin_right = 448.0
-margin_bottom = 140.0
+layout_mode = 0
+offset_left = 32.0
+offset_top = 48.0
+offset_right = 448.0
+offset_bottom = 140.0
 
-[node name="OPMeterText" parent="ModifyDimension/OPMeter" instance=ExtResource( 12 )]
+[node name="OPMeterText" parent="ModifyDimension/OPMeter" instance=ExtResource("12")]
+layout_mode = 0
 anchor_right = 1.0
-margin_top = 10.0
-margin_right = 0.0
-margin_bottom = 38.0
-bbcode_text = "[center]THE_OPMETER [img]Graphics/Icons/help.png[/img][/center]"
-text = "THE_OPMETER "
+offset_top = 10.0
+offset_right = 0.0
+offset_bottom = 38.0
+text = "[center]THE_OPMETER [img]Graphics/Icons/help.png[/img][/center]"
 label_text = "THE_OPMETER"
 help_text = "THE_OPMETER_DESC"
 align = 1
 
-[node name="OPMeter" type="TextureProgress" parent="ModifyDimension/OPMeter"]
-modulate = Color( 1, 0.4, 0, 1 )
+[node name="OPMeter" type="TextureProgressBar" parent="ModifyDimension/OPMeter"]
+modulate = Color(1, 0.4, 0, 1)
+layout_mode = 0
 anchor_top = 0.5
 anchor_right = 1.0
 anchor_bottom = 0.5
-margin_left = 20.0
-margin_top = -1.0
-margin_right = -20.0
-margin_bottom = 26.0
+offset_left = 20.0
+offset_top = -1.0
+offset_right = -20.0
+offset_bottom = 26.0
 max_value = 10.0
 step = 0.0
 value = 4.0
 allow_greater = true
-texture_under = ExtResource( 21 )
-texture_over = ExtResource( 22 )
-texture_progress = ExtResource( 20 )
 nine_patch_stretch = true
 stretch_margin_left = 9
 stretch_margin_right = 9
+texture_under = ExtResource("21")
+texture_over = ExtResource("22")
+texture_progress = ExtResource("20")
 
 [node name="TooOP" type="Label" parent="ModifyDimension/OPMeter"]
+layout_mode = 0
 anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
-margin_left = 24.0
-margin_top = -47.0
-margin_right = -23.0
-margin_bottom = -20.0
-custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+offset_left = 24.0
+offset_top = -47.0
+offset_right = -23.0
+offset_bottom = -20.0
 text = "TOO_OP"
-align = 1
-valign = 1
-__meta__ = {
-"_edit_use_anchors_": false
-}
+horizontal_alignment = 1
+vertical_alignment = 1
 
 [node name="ColorRect" type="ColorRect" parent="."]
 visible = false
-margin_right = 1280.0
-margin_bottom = 720.0
-color = Color( 0, 0, 0, 0 )
+layout_mode = 0
+offset_right = 1280.0
+offset_bottom = 720.0
+color = Color(0, 0, 0, 0)
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="ColorRect"]
-anims/Fade = SubResource( 8 )
-anims/FadeOut = SubResource( 10 )
-anims/RESET = SubResource( 9 )
+libraries = {
+"": SubResource("AnimationLibrary_dhvf2")
+}
 
 [node name="Label" type="Label" parent="ColorRect"]
-modulate = Color( 1, 1, 1, 0 )
+modulate = Color(1, 1, 1, 0)
+layout_mode = 0
 anchor_top = 0.5
 anchor_right = 1.0
 anchor_bottom = 0.5
-margin_left = 288.0
-margin_top = -12.0
-margin_right = -288.0
-margin_bottom = 12.0
+offset_left = 288.0
+offset_top = -12.0
+offset_right = -288.0
+offset_bottom = 12.0
 text = "aw"
-align = 1
-valign = 1
-autowrap = true
-
-[node name="Tween" type="Tween" parent="ColorRect"]
+horizontal_alignment = 1
 
 [connection signal="pressed" from="Universes/SendProbes" to="." method="_on_SendProbes_pressed"]
 [connection signal="mouse_entered" from="TopInfo/Reset" to="." method="_on_Reset_mouse_entered"]
@@ -2119,90 +2007,90 @@ autowrap = true
 [connection signal="mouse_exited" from="ModifyDimension/Maths/Control/CostGrowthFactors/CostGrowthFactor" to="." method="_on_mouse_exited"]
 [connection signal="mouse_entered" from="ModifyDimension/Maths/Control/ShipHitChance" to="." method="_on_ShipHitChance_mouse_entered"]
 [connection signal="mouse_exited" from="ModifyDimension/Maths/Control/ShipHitChance" to="." method="_on_mouse_exited"]
-[connection signal="mouse_entered" from="ModifyDimension/Maths/Control/Defaults/BUCGF/BUCGF_Table" to="." method="_on_Table_mouse_entered" binds= [ "BUCGF", 100.0 ]]
+[connection signal="mouse_entered" from="ModifyDimension/Maths/Control/Defaults/BUCGF/BUCGF_Table" to="." method="_on_Table_mouse_entered" binds= ["BUCGF", 100.0]]
 [connection signal="mouse_exited" from="ModifyDimension/Maths/Control/Defaults/BUCGF/BUCGF_Table" to="." method="_on_Table_mouse_exited"]
-[connection signal="mouse_entered" from="ModifyDimension/Maths/Control/Defaults/MUCGF_MV/MUCGF_MV_Table" to="." method="_on_Table_mouse_entered" binds= [ "MUCGF_MV", 100.0 ]]
+[connection signal="mouse_entered" from="ModifyDimension/Maths/Control/Defaults/MUCGF_MV/MUCGF_MV_Table" to="." method="_on_Table_mouse_entered" binds= ["MUCGF_MV", 100.0]]
 [connection signal="mouse_exited" from="ModifyDimension/Maths/Control/Defaults/MUCGF_MV/MUCGF_MV_Table" to="." method="_on_Table_mouse_exited"]
-[connection signal="mouse_entered" from="ModifyDimension/Maths/Control/Defaults/MUCGF_MSMB/MUCGF_MSMB_Table" to="." method="_on_Table_mouse_entered" binds= [ "MUCGF_MSMB", 100.0 ]]
+[connection signal="mouse_entered" from="ModifyDimension/Maths/Control/Defaults/MUCGF_MSMB/MUCGF_MSMB_Table" to="." method="_on_Table_mouse_entered" binds= ["MUCGF_MSMB", 100.0]]
 [connection signal="mouse_exited" from="ModifyDimension/Maths/Control/Defaults/MUCGF_MSMB/MUCGF_MSMB_Table" to="." method="_on_Table_mouse_exited"]
-[connection signal="mouse_entered" from="ModifyDimension/Maths/Control/Defaults/MUCGF_AIE/MUCGF_AIE_Table" to="." method="_on_Table_mouse_entered" binds= [ "MUCGF_AIE", 1000.0 ]]
+[connection signal="mouse_entered" from="ModifyDimension/Maths/Control/Defaults/MUCGF_AIE/MUCGF_AIE_Table" to="." method="_on_Table_mouse_entered" binds= ["MUCGF_AIE", 1000.0]]
 [connection signal="mouse_exited" from="ModifyDimension/Maths/Control/Defaults/MUCGF_AIE/MUCGF_AIE_Table" to="." method="_on_Table_mouse_exited"]
-[connection signal="mouse_entered" from="ModifyDimension/Maths/Control/Defaults/SLUGF_XP/SLUGF_XP_Table" to="." method="_on_Table_mouse_entered" binds= [ "SLUGF_XP", 20.0 ]]
+[connection signal="mouse_entered" from="ModifyDimension/Maths/Control/Defaults/SLUGF_XP/SLUGF_XP_Table" to="." method="_on_Table_mouse_entered" binds= ["SLUGF_XP", 20.0]]
 [connection signal="mouse_exited" from="ModifyDimension/Maths/Control/Defaults/SLUGF_XP/SLUGF_XP_Table" to="." method="_on_Table_mouse_exited"]
-[connection signal="mouse_entered" from="ModifyDimension/Maths/Control/Defaults/SLUGF_Stats/SLUGF_Stats_Table" to="." method="_on_Table_mouse_entered" binds= [ "SLUGF_Stats", 10.0 ]]
+[connection signal="mouse_entered" from="ModifyDimension/Maths/Control/Defaults/SLUGF_Stats/SLUGF_Stats_Table" to="." method="_on_Table_mouse_entered" binds= ["SLUGF_Stats", 10.0]]
 [connection signal="mouse_exited" from="ModifyDimension/Maths/Control/Defaults/SLUGF_Stats/SLUGF_Stats_Table" to="." method="_on_Table_mouse_exited"]
-[connection signal="mouse_entered" from="ModifyDimension/Maths/Control/Defaults/ULUGF/ULUGF_Table" to="." method="_on_Table_mouse_entered" binds= [ "ULUGF", 10.0 ]]
+[connection signal="mouse_entered" from="ModifyDimension/Maths/Control/Defaults/ULUGF/ULUGF_Table" to="." method="_on_Table_mouse_entered" binds= ["ULUGF", 10.0]]
 [connection signal="mouse_exited" from="ModifyDimension/Maths/Control/Defaults/ULUGF/ULUGF_Table" to="." method="_on_Table_mouse_exited"]
 [connection signal="value_changed" from="ModifyDimension/Physics/Control/BSlider" to="." method="_on_BSlider_value_changed"]
 [connection signal="value_changed" from="ModifyDimension/Physics/Control/BI" to="." method="_on_BI_value_changed"]
-[connection signal="mouse_entered" from="ModifyDimension/Physics/Control/BInfluence" to="." method="_on_HelpLabel_mouse_entered" binds= [ "INFLUENCE_OF_B_TO_MASS_HELP" ]]
+[connection signal="mouse_entered" from="ModifyDimension/Physics/Control/BInfluence" to="." method="_on_HelpLabel_mouse_entered" binds= ["INFLUENCE_OF_B_TO_MASS_HELP"]]
 [connection signal="mouse_exited" from="ModifyDimension/Physics/Control/BInfluence" to="." method="_on_mouse_exited"]
-[connection signal="mouse_entered" from="ModifyDimension/Chemistry/Control/PDLabel" to="." method="_on_HelpLabel_mouse_entered" binds= [ "PHASE_DIAGRAM_HELP" ]]
+[connection signal="mouse_entered" from="ModifyDimension/Chemistry/Control/PDLabel" to="." method="_on_HelpLabel_mouse_entered" binds= ["PHASE_DIAGRAM_HELP"]]
 [connection signal="mouse_exited" from="ModifyDimension/Chemistry/Control/PDLabel" to="." method="_on_mouse_exited"]
-[connection signal="mouse_entered" from="ModifyDimension/Chemistry/Control/LakeButtons/H2O" to="." method="_on_Lake_mouse_entered" binds= [ "H2O" ]]
+[connection signal="mouse_entered" from="ModifyDimension/Chemistry/Control/LakeButtons/H2O" to="." method="_on_Lake_mouse_entered" binds= ["H2O"]]
 [connection signal="mouse_exited" from="ModifyDimension/Chemistry/Control/LakeButtons/H2O" to="." method="_on_mouse_exited"]
-[connection signal="pressed" from="ModifyDimension/Chemistry/Control/LakeButtons/H2O" to="." method="_on_LakePD_pressed" binds= [ "H2O" ]]
-[connection signal="mouse_entered" from="ModifyDimension/Chemistry/Control/LakeButtons/CH4" to="." method="_on_Lake_mouse_entered" binds= [ "CH4" ]]
+[connection signal="pressed" from="ModifyDimension/Chemistry/Control/LakeButtons/H2O" to="." method="_on_LakePD_pressed" binds= ["H2O"]]
+[connection signal="mouse_entered" from="ModifyDimension/Chemistry/Control/LakeButtons/CH4" to="." method="_on_Lake_mouse_entered" binds= ["CH4"]]
 [connection signal="mouse_exited" from="ModifyDimension/Chemistry/Control/LakeButtons/CH4" to="." method="_on_mouse_exited"]
-[connection signal="pressed" from="ModifyDimension/Chemistry/Control/LakeButtons/CH4" to="." method="_on_LakePD_pressed" binds= [ "CH4" ]]
-[connection signal="mouse_entered" from="ModifyDimension/Chemistry/Control/LakeButtons/CO2" to="." method="_on_Lake_mouse_entered" binds= [ "CO2" ]]
+[connection signal="pressed" from="ModifyDimension/Chemistry/Control/LakeButtons/CH4" to="." method="_on_LakePD_pressed" binds= ["CH4"]]
+[connection signal="mouse_entered" from="ModifyDimension/Chemistry/Control/LakeButtons/CO2" to="." method="_on_Lake_mouse_entered" binds= ["CO2"]]
 [connection signal="mouse_exited" from="ModifyDimension/Chemistry/Control/LakeButtons/CO2" to="." method="_on_mouse_exited"]
-[connection signal="pressed" from="ModifyDimension/Chemistry/Control/LakeButtons/CO2" to="." method="_on_LakePD_pressed" binds= [ "CO2" ]]
-[connection signal="mouse_entered" from="ModifyDimension/Chemistry/Control/LakeButtons/NH3" to="." method="_on_Lake_mouse_entered" binds= [ "NH3" ]]
+[connection signal="pressed" from="ModifyDimension/Chemistry/Control/LakeButtons/CO2" to="." method="_on_LakePD_pressed" binds= ["CO2"]]
+[connection signal="mouse_entered" from="ModifyDimension/Chemistry/Control/LakeButtons/NH3" to="." method="_on_Lake_mouse_entered" binds= ["NH3"]]
 [connection signal="mouse_exited" from="ModifyDimension/Chemistry/Control/LakeButtons/NH3" to="." method="_on_mouse_exited"]
-[connection signal="pressed" from="ModifyDimension/Chemistry/Control/LakeButtons/NH3" to="." method="_on_LakePD_pressed" binds= [ "NH3" ]]
-[connection signal="mouse_entered" from="ModifyDimension/Chemistry/Control/LakeButtons/H" to="." method="_on_Lake_mouse_entered" binds= [ "H" ]]
+[connection signal="pressed" from="ModifyDimension/Chemistry/Control/LakeButtons/NH3" to="." method="_on_LakePD_pressed" binds= ["NH3"]]
+[connection signal="mouse_entered" from="ModifyDimension/Chemistry/Control/LakeButtons/H" to="." method="_on_Lake_mouse_entered" binds= ["H"]]
 [connection signal="mouse_exited" from="ModifyDimension/Chemistry/Control/LakeButtons/H" to="." method="_on_mouse_exited"]
-[connection signal="pressed" from="ModifyDimension/Chemistry/Control/LakeButtons/H" to="." method="_on_LakePD_pressed" binds= [ "H" ]]
-[connection signal="mouse_entered" from="ModifyDimension/Chemistry/Control/LakeButtons/He" to="." method="_on_Lake_mouse_entered" binds= [ "HE" ]]
+[connection signal="pressed" from="ModifyDimension/Chemistry/Control/LakeButtons/H" to="." method="_on_LakePD_pressed" binds= ["H"]]
+[connection signal="mouse_entered" from="ModifyDimension/Chemistry/Control/LakeButtons/He" to="." method="_on_Lake_mouse_entered" binds= ["HE"]]
 [connection signal="mouse_exited" from="ModifyDimension/Chemistry/Control/LakeButtons/He" to="." method="_on_mouse_exited"]
-[connection signal="pressed" from="ModifyDimension/Chemistry/Control/LakeButtons/He" to="." method="_on_LakePD_pressed" binds= [ "He" ]]
-[connection signal="mouse_entered" from="ModifyDimension/Chemistry/Control/LakeButtons/O" to="." method="_on_Lake_mouse_entered" binds= [ "O" ]]
+[connection signal="pressed" from="ModifyDimension/Chemistry/Control/LakeButtons/He" to="." method="_on_LakePD_pressed" binds= ["He"]]
+[connection signal="mouse_entered" from="ModifyDimension/Chemistry/Control/LakeButtons/O" to="." method="_on_Lake_mouse_entered" binds= ["O"]]
 [connection signal="mouse_exited" from="ModifyDimension/Chemistry/Control/LakeButtons/O" to="." method="_on_mouse_exited"]
-[connection signal="pressed" from="ModifyDimension/Chemistry/Control/LakeButtons/O" to="." method="_on_LakePD_pressed" binds= [ "O" ]]
-[connection signal="mouse_entered" from="ModifyDimension/Chemistry/Control/LakeButtons/Ne" to="." method="_on_Lake_mouse_entered" binds= [ "NE" ]]
+[connection signal="pressed" from="ModifyDimension/Chemistry/Control/LakeButtons/O" to="." method="_on_LakePD_pressed" binds= ["O"]]
+[connection signal="mouse_entered" from="ModifyDimension/Chemistry/Control/LakeButtons/Ne" to="." method="_on_Lake_mouse_entered" binds= ["NE"]]
 [connection signal="mouse_exited" from="ModifyDimension/Chemistry/Control/LakeButtons/Ne" to="." method="_on_mouse_exited"]
-[connection signal="pressed" from="ModifyDimension/Chemistry/Control/LakeButtons/Ne" to="." method="_on_LakePD_pressed" binds= [ "Ne" ]]
-[connection signal="mouse_entered" from="ModifyDimension/Chemistry/Control/LakeButtons/Xe" to="." method="_on_Lake_mouse_entered" binds= [ "XE" ]]
+[connection signal="pressed" from="ModifyDimension/Chemistry/Control/LakeButtons/Ne" to="." method="_on_LakePD_pressed" binds= ["Ne"]]
+[connection signal="mouse_entered" from="ModifyDimension/Chemistry/Control/LakeButtons/Xe" to="." method="_on_Lake_mouse_entered" binds= ["XE"]]
 [connection signal="mouse_exited" from="ModifyDimension/Chemistry/Control/LakeButtons/Xe" to="." method="_on_mouse_exited"]
-[connection signal="pressed" from="ModifyDimension/Chemistry/Control/LakeButtons/Xe" to="." method="_on_LakePD_pressed" binds= [ "Xe" ]]
-[connection signal="mouse_entered" from="ModifyDimension/Biology/Control/PGSMLabel" to="." method="_on_HelpLabel_mouse_entered" binds= [ "PGSM_DESC" ]]
+[connection signal="pressed" from="ModifyDimension/Chemistry/Control/LakeButtons/Xe" to="." method="_on_LakePD_pressed" binds= ["Xe"]]
+[connection signal="mouse_entered" from="ModifyDimension/Biology/Control/PGSMLabel" to="." method="_on_HelpLabel_mouse_entered" binds= ["PGSM_DESC"]]
 [connection signal="mouse_exited" from="ModifyDimension/Biology/Control/PGSMLabel" to="." method="_on_mouse_exited"]
-[connection signal="mouse_entered" from="ModifyDimension/Biology/Control/PYMLabel" to="." method="_on_HelpLabel_mouse_entered" binds= [ "PYM_DESC" ]]
+[connection signal="mouse_entered" from="ModifyDimension/Biology/Control/PYMLabel" to="." method="_on_HelpLabel_mouse_entered" binds= ["PYM_DESC"]]
 [connection signal="mouse_exited" from="ModifyDimension/Biology/Control/PYMLabel" to="." method="_on_mouse_exited"]
-[connection signal="mouse_entered" from="ModifyDimension/Biology/Control/LakeButtons/H2O" to="." method="_on_Lake_mouse_entered" binds= [ "H2O" ]]
+[connection signal="mouse_entered" from="ModifyDimension/Biology/Control/LakeButtons/H2O" to="." method="_on_Lake_mouse_entered" binds= ["H2O"]]
 [connection signal="mouse_exited" from="ModifyDimension/Biology/Control/LakeButtons/H2O" to="." method="_on_mouse_exited"]
-[connection signal="pressed" from="ModifyDimension/Biology/Control/LakeButtons/H2O" to="." method="_on_Lake_pressed" binds= [ "H2O" ]]
-[connection signal="mouse_entered" from="ModifyDimension/Biology/Control/LakeButtons/CH4" to="." method="_on_Lake_mouse_entered" binds= [ "CH4" ]]
+[connection signal="pressed" from="ModifyDimension/Biology/Control/LakeButtons/H2O" to="." method="_on_Lake_pressed" binds= ["H2O"]]
+[connection signal="mouse_entered" from="ModifyDimension/Biology/Control/LakeButtons/CH4" to="." method="_on_Lake_mouse_entered" binds= ["CH4"]]
 [connection signal="mouse_exited" from="ModifyDimension/Biology/Control/LakeButtons/CH4" to="." method="_on_mouse_exited"]
-[connection signal="pressed" from="ModifyDimension/Biology/Control/LakeButtons/CH4" to="." method="_on_Lake_pressed" binds= [ "CH4" ]]
-[connection signal="mouse_entered" from="ModifyDimension/Biology/Control/LakeButtons/CO2" to="." method="_on_Lake_mouse_entered" binds= [ "CO2" ]]
+[connection signal="pressed" from="ModifyDimension/Biology/Control/LakeButtons/CH4" to="." method="_on_Lake_pressed" binds= ["CH4"]]
+[connection signal="mouse_entered" from="ModifyDimension/Biology/Control/LakeButtons/CO2" to="." method="_on_Lake_mouse_entered" binds= ["CO2"]]
 [connection signal="mouse_exited" from="ModifyDimension/Biology/Control/LakeButtons/CO2" to="." method="_on_mouse_exited"]
-[connection signal="pressed" from="ModifyDimension/Biology/Control/LakeButtons/CO2" to="." method="_on_Lake_pressed" binds= [ "CO2" ]]
-[connection signal="mouse_entered" from="ModifyDimension/Biology/Control/LakeButtons/NH3" to="." method="_on_Lake_mouse_entered" binds= [ "NH3" ]]
+[connection signal="pressed" from="ModifyDimension/Biology/Control/LakeButtons/CO2" to="." method="_on_Lake_pressed" binds= ["CO2"]]
+[connection signal="mouse_entered" from="ModifyDimension/Biology/Control/LakeButtons/NH3" to="." method="_on_Lake_mouse_entered" binds= ["NH3"]]
 [connection signal="mouse_exited" from="ModifyDimension/Biology/Control/LakeButtons/NH3" to="." method="_on_mouse_exited"]
-[connection signal="pressed" from="ModifyDimension/Biology/Control/LakeButtons/NH3" to="." method="_on_Lake_pressed" binds= [ "NH3" ]]
-[connection signal="mouse_entered" from="ModifyDimension/Biology/Control/LakeButtons/H" to="." method="_on_Lake_mouse_entered" binds= [ "H" ]]
+[connection signal="pressed" from="ModifyDimension/Biology/Control/LakeButtons/NH3" to="." method="_on_Lake_pressed" binds= ["NH3"]]
+[connection signal="mouse_entered" from="ModifyDimension/Biology/Control/LakeButtons/H" to="." method="_on_Lake_mouse_entered" binds= ["H"]]
 [connection signal="mouse_exited" from="ModifyDimension/Biology/Control/LakeButtons/H" to="." method="_on_mouse_exited"]
-[connection signal="pressed" from="ModifyDimension/Biology/Control/LakeButtons/H" to="." method="_on_Lake_pressed" binds= [ "H" ]]
-[connection signal="mouse_entered" from="ModifyDimension/Biology/Control/LakeButtons/He" to="." method="_on_Lake_mouse_entered" binds= [ "HE" ]]
+[connection signal="pressed" from="ModifyDimension/Biology/Control/LakeButtons/H" to="." method="_on_Lake_pressed" binds= ["H"]]
+[connection signal="mouse_entered" from="ModifyDimension/Biology/Control/LakeButtons/He" to="." method="_on_Lake_mouse_entered" binds= ["HE"]]
 [connection signal="mouse_exited" from="ModifyDimension/Biology/Control/LakeButtons/He" to="." method="_on_mouse_exited"]
-[connection signal="pressed" from="ModifyDimension/Biology/Control/LakeButtons/He" to="." method="_on_Lake_pressed" binds= [ "He" ]]
-[connection signal="mouse_entered" from="ModifyDimension/Biology/Control/LakeButtons/O" to="." method="_on_Lake_mouse_entered" binds= [ "O" ]]
+[connection signal="pressed" from="ModifyDimension/Biology/Control/LakeButtons/He" to="." method="_on_Lake_pressed" binds= ["He"]]
+[connection signal="mouse_entered" from="ModifyDimension/Biology/Control/LakeButtons/O" to="." method="_on_Lake_mouse_entered" binds= ["O"]]
 [connection signal="mouse_exited" from="ModifyDimension/Biology/Control/LakeButtons/O" to="." method="_on_mouse_exited"]
-[connection signal="pressed" from="ModifyDimension/Biology/Control/LakeButtons/O" to="." method="_on_Lake_pressed" binds= [ "O" ]]
-[connection signal="mouse_entered" from="ModifyDimension/Biology/Control/LakeButtons/Ne" to="." method="_on_Lake_mouse_entered" binds= [ "NE" ]]
+[connection signal="pressed" from="ModifyDimension/Biology/Control/LakeButtons/O" to="." method="_on_Lake_pressed" binds= ["O"]]
+[connection signal="mouse_entered" from="ModifyDimension/Biology/Control/LakeButtons/Ne" to="." method="_on_Lake_mouse_entered" binds= ["NE"]]
 [connection signal="mouse_exited" from="ModifyDimension/Biology/Control/LakeButtons/Ne" to="." method="_on_mouse_exited"]
-[connection signal="pressed" from="ModifyDimension/Biology/Control/LakeButtons/Ne" to="." method="_on_Lake_pressed" binds= [ "Ne" ]]
-[connection signal="mouse_entered" from="ModifyDimension/Biology/Control/LakeButtons/Xe" to="." method="_on_Lake_mouse_entered" binds= [ "XE" ]]
+[connection signal="pressed" from="ModifyDimension/Biology/Control/LakeButtons/Ne" to="." method="_on_Lake_pressed" binds= ["Ne"]]
+[connection signal="mouse_entered" from="ModifyDimension/Biology/Control/LakeButtons/Xe" to="." method="_on_Lake_mouse_entered" binds= ["XE"]]
 [connection signal="mouse_exited" from="ModifyDimension/Biology/Control/LakeButtons/Xe" to="." method="_on_mouse_exited"]
-[connection signal="pressed" from="ModifyDimension/Biology/Control/LakeButtons/Xe" to="." method="_on_Lake_pressed" binds= [ "Xe" ]]
+[connection signal="pressed" from="ModifyDimension/Biology/Control/LakeButtons/Xe" to="." method="_on_Lake_pressed" binds= ["Xe"]]
 [connection signal="mouse_entered" from="ModifyDimension/Biology/Control/Lake/LakeDesc" to="." method="_on_LakeDesc_mouse_entered"]
 [connection signal="mouse_exited" from="ModifyDimension/Biology/Control/Lake/LakeDesc" to="." method="_on_LakeDesc_mouse_exited"]
-[connection signal="mouse_entered" from="ModifyDimension/Dimensional_Power/Control/Label1" to="." method="_on_text_mouse_entered" binds= [ "QOL_PERKS_DESC" ]]
+[connection signal="mouse_entered" from="ModifyDimension/Dimensional_Power/Control/Label1" to="." method="_on_text_mouse_entered" binds= ["QOL_PERKS_DESC"]]
 [connection signal="mouse_exited" from="ModifyDimension/Dimensional_Power/Control/Label1" to="." method="_on_mouse_exited"]
 [connection signal="mouse_exited" from="ModifyDimension/Dimensional_Power/Control/Label2" to="." method="_on_mouse_exited"]
-[connection signal="mouse_entered" from="ModifyDimension/Dimensional_Power/Control/Label4" to="." method="_on_text_mouse_entered" binds= [ "MODIFY_CAVE_BATTLE_TIME_DESC" ]]
+[connection signal="mouse_entered" from="ModifyDimension/Dimensional_Power/Control/Label4" to="." method="_on_text_mouse_entered" binds= ["MODIFY_CAVE_BATTLE_TIME_DESC"]]
 [connection signal="mouse_exited" from="ModifyDimension/Dimensional_Power/Control/Label4" to="." method="_on_mouse_exited"]
 [connection signal="mouse_entered" from="ModifyDimension/Dimensional_Power/Control/EffectsHelp" to="." method="_on_EffectsHelp_mouse_entered"]
 [connection signal="mouse_exited" from="ModifyDimension/Dimensional_Power/Control/EffectsHelp" to="." method="_on_mouse_exited"]

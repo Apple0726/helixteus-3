@@ -1,76 +1,62 @@
-[gd_scene load_steps=4 format=2]
+[gd_scene load_steps=4 format=3 uid="uid://e54rxxfn6fpn"]
 
-[ext_resource path="res://Graphics/Planets/3.png" type="Texture" id=1]
-[ext_resource path="res://Graphics/Science/TF.png" type="Texture" id=2]
-[ext_resource path="res://Graphics/Science/MAE.png" type="Texture" id=3]
+[ext_resource type="Texture2D" uid="uid://ckg1wp0kneqps" path="res://Graphics/Planets/3.png" id="1"]
+[ext_resource type="Texture2D" uid="uid://cyd1nyybbbiym" path="res://Graphics/Science/TF.png" id="2"]
+[ext_resource type="Texture2D" uid="uid://c6xunrj1bbydo" path="res://Graphics/Science/MAE.png" id="3"]
 
 [node name="Button" type="Button"]
-margin_right = 416.0
-margin_bottom = 80.0
-rect_min_size = Vector2( 0, 80 )
+custom_minimum_size = Vector2(0, 80)
+offset_right = 416.0
+offset_bottom = 80.0
 toggle_mode = true
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="HBoxContainer" type="HBoxContainer" parent="."]
-margin_left = 8.0
-margin_top = 6.0
-margin_right = 422.0
-margin_bottom = 74.0
-rect_min_size = Vector2( 300, 68 )
-custom_constants/separation = 60
-__meta__ = {
-"_edit_use_anchors_": false
-}
+custom_minimum_size = Vector2(300, 68)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 8.0
+grow_horizontal = 2
+grow_vertical = 2
 
 [node name="TextureRect" type="TextureRect" parent="HBoxContainer"]
-margin_right = 70.0
-margin_bottom = 68.0
-rect_min_size = Vector2( 70, 0 )
-texture = ExtResource( 1 )
-expand = true
-stretch_mode = 6
-__meta__ = {
-"_edit_use_anchors_": false
-}
+custom_minimum_size = Vector2(70, 0)
+layout_mode = 2
+texture = ExtResource("1")
+expand_mode = 1
+stretch_mode = 5
 
 [node name="Diameter" type="Label" parent="HBoxContainer"]
-margin_left = 130.0
-margin_top = 27.0
-margin_right = 186.0
-margin_bottom = 41.0
+layout_mode = 2
+size_flags_horizontal = 6
+size_flags_stretch_ratio = 1.58
 text = "4000 km"
 
 [node name="Distance" type="Label" parent="HBoxContainer"]
-margin_left = 246.0
-margin_top = 27.0
-margin_right = 297.0
-margin_bottom = 41.0
+layout_mode = 2
+size_flags_horizontal = 6
 text = "1.05 AU"
+horizontal_alignment = 1
 
 [node name="TF" type="TextureRect" parent="."]
 visible = false
-margin_left = 72.0
-margin_top = 52.0
-margin_right = 96.0
-margin_bottom = 76.0
-texture = ExtResource( 2 )
-expand = true
+layout_mode = 0
+offset_left = 56.0
+offset_top = 56.0
+offset_right = 80.0
+offset_bottom = 80.0
+texture = ExtResource("2")
+expand_mode = 1
 stretch_mode = 6
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="MS" type="TextureRect" parent="."]
 visible = false
-margin_left = 72.0
-margin_top = 52.0
-margin_right = 96.0
-margin_bottom = 76.0
-texture = ExtResource( 3 )
-expand = true
+layout_mode = 0
+offset_left = 56.0
+offset_top = 56.0
+offset_right = 80.0
+offset_bottom = 80.0
+texture = ExtResource("3")
+expand_mode = 1
 stretch_mode = 6
-__meta__ = {
-"_edit_use_anchors_": false
-}

@@ -4,14 +4,14 @@ func _ready():
 	type = PanelType.CRAFT
 	$Title.text = tr("CRAFT")
 	for btn_str in ["Mining", "Cave"]:
-		var btn = preload("res://Scenes/AdvButton.tscn").instance()
+		var btn = preload("res://Scenes/AdvButton.tscn").instantiate()
 		btn.name = btn_str
 		btn.button_text = tr(btn_str.to_upper())
 		btn.size_flags_horizontal = Button.SIZE_EXPAND_FILL
-		btn.connect("pressed", self, "_on_btn_pressed", [btn_str])
-		$VBox/Tabs.add_child(btn)
+		btn.connect("pressed",Callable(self,"_on_btn_pressed").bind(btn_str))
+		$VBox/TabBar.add_child(btn)
 	_on_btn_pressed("Mining")
-	$VBox/Tabs.get_node("Mining")._on_Button_pressed()
+	$VBox/TabBar.get_node("Mining")._on_Button_pressed()
 	buy_btn.text = tr("CRAFT")
 	buy_btn.icon = preload("res://Graphics/Icons/craft.png")
 	$VBox/HBox/ItemInfo/VBox/HBox.visible = true
@@ -24,7 +24,7 @@ func _on_btn_pressed(btn_str:String):
 	var info:String = "craft_%s_info" % btn_str_l
 	for craft in game[info]:
 		var craft_info = game[info][craft]
-		var item = item_for_sale_scene.instance()
+		var item = item_for_sale_scene.instantiate()
 		item.get_node("SmallButton").text = tr("CRAFT")
 		item.item_name = craft
 		item.item_dir = btn_str
@@ -36,12 +36,12 @@ func _on_btn_pressed(btn_str:String):
 		grid.add_child(item)
 
 func refresh():
-	$VBox/Tabs/Cave.visible = game.science_unlocked.has("RC")
+	$VBox/TabBar/Cave.visible = game.science_unlocked.has("RC")
 	if item_name != "":
 		set_item_info(item_name, get_item_desc(item_name, tab, game["craft_%s_info" % tab.to_lower()][item_name]), item_costs, item_type, item_dir)
 
 func set_item_info(_name:String, _desc:String, costs:Dictionary, _type:String, _dir:String):
-	.set_item_info(_name, _desc, costs, _type, _dir)
+	super.set_item_info(_name, _desc, costs, _type, _dir)
 	var imgs = []
 	game.add_text_icons(desc_txt, _desc + "\n", imgs, 22)
 

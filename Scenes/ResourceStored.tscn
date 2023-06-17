@@ -1,130 +1,131 @@
-[gd_scene load_steps=9 format=2]
+[gd_scene load_steps=8 format=3 uid="uid://b5ew526etki0u"]
 
-[ext_resource path="res://Graphics/Icons/minerals.png" type="Texture" id=1]
-[ext_resource path="res://Text/Arimo-Regular.ttf" type="DynamicFontData" id=2]
-[ext_resource path="res://Graphics/Misc/Bar.png" type="Texture" id=3]
-[ext_resource path="res://Scripts/ResourceStored.gd" type="Script" id=4]
+[ext_resource type="Texture2D" uid="uid://caogp3ych2a60" path="res://Graphics/Icons/minerals.png" id="1"]
+[ext_resource type="Texture2D" uid="uid://b3c6f5upmvn5a" path="res://Graphics/Misc/Bar.png" id="3"]
+[ext_resource type="Script" path="res://Scripts/ResourceStored.gd" id="4"]
 
-[sub_resource type="StyleBoxFlat" id=2]
-bg_color = Color( 0, 0, 0, 1 )
-border_width_top = 2
-border_width_right = 2
-border_width_bottom = 2
-border_color = Color( 1, 1, 1, 1 )
-
-[sub_resource type="StyleBoxFlat" id=3]
-bg_color = Color( 0, 0, 0, 1 )
-border_width_top = 2
-border_width_right = 2
-border_width_bottom = 2
-border_color = Color( 1, 1, 1, 1 )
-
-[sub_resource type="DynamicFont" id=4]
-size = 25
-use_mipmaps = true
-use_filter = true
-font_data = ExtResource( 2 )
-
-[sub_resource type="StyleBoxFlat" id=1]
-bg_color = Color( 0, 0, 0, 1 )
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_l3c8g"]
+bg_color = Color(0, 0, 0, 1)
 border_width_left = 2
 border_width_top = 2
 border_width_right = 2
 border_width_bottom = 2
-border_color = Color( 1, 1, 1, 1 )
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_umsqh"]
+bg_color = Color(0, 0, 0, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+
+[sub_resource type="LabelSettings" id="LabelSettings_h6cwk"]
+line_spacing = 0.0
+font_size = 22
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_x6v7q"]
+bg_color = Color(0, 0, 0, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
 
 [node name="RsrcStored" type="Control"]
+layout_mode = 3
+anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-margin_right = -1280.0
-margin_bottom = -720.0
+offset_right = -1280.0
+offset_bottom = -720.0
+grow_horizontal = 2
+grow_vertical = 2
 mouse_filter = 2
-script = ExtResource( 4 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
+script = ExtResource("4")
 
 [node name="VBox" type="VBoxContainer" parent="."]
-margin_left = -39.0
-margin_top = -24.0
-margin_right = 86.0
-margin_bottom = 24.0
+layout_mode = 0
+offset_left = -39.0
+offset_top = -24.0
+offset_right = 86.0
+offset_bottom = 24.0
 mouse_filter = 2
-custom_constants/separation = -2
+theme_override_constants/separation = -1
 
 [node name="Panel2" type="Panel" parent="VBox"]
-margin_right = 125.0
-margin_bottom = 16.0
-mouse_filter = 2
+layout_mode = 2
 size_flags_vertical = 3
-custom_styles/panel = SubResource( 2 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_l3c8g")
 
-[node name="CurrentBar" type="TextureProgress" parent="VBox/Panel2"]
-modulate = Color( 1, 1, 1, 0.521569 )
+[node name="CurrentBar" type="TextureProgressBar" parent="VBox/Panel2"]
+modulate = Color(1, 1, 1, 0.521569)
+layout_mode = 0
 anchor_right = 1.0
 anchor_bottom = 1.0
 mouse_filter = 2
 max_value = 1.0
 step = 0.0
-texture_progress = ExtResource( 3 )
 nine_patch_stretch = true
+texture_progress = ExtResource("3")
 
 [node name="Panel3" type="Panel" parent="VBox"]
-margin_top = 14.0
-margin_right = 125.0
-margin_bottom = 48.0
-mouse_filter = 2
+layout_mode = 2
 size_flags_vertical = 3
 size_flags_stretch_ratio = 2.0
-custom_styles/panel = SubResource( 3 )
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_umsqh")
 
 [node name="Label" type="Label" parent="VBox/Panel3"]
+layout_mode = 1
+anchors_preset = 4
 anchor_top = 0.5
 anchor_bottom = 0.5
-margin_left = 10.0
-margin_top = -14.0
-margin_right = 139.0
-margin_bottom = 15.0
-custom_fonts/font = SubResource( 4 )
+offset_left = 10.0
+offset_top = -22.0
+offset_right = 127.0
+offset_bottom = 22.0
+grow_vertical = 2
+label_settings = SubResource("LabelSettings_h6cwk")
+vertical_alignment = 1
 
-[node name="CapacityBar" type="TextureProgress" parent="VBox/Panel3"]
-modulate = Color( 1, 1, 1, 0.521569 )
+[node name="CapacityBar" type="TextureProgressBar" parent="VBox/Panel3"]
+modulate = Color(1, 1, 1, 0.521569)
+layout_mode = 1
+anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-margin_left = 1.0
-margin_top = 2.0
-margin_right = -2.0
-margin_bottom = -2.0
+offset_left = 1.0
+offset_top = 2.0
+offset_right = -2.0
+offset_bottom = -2.0
+grow_horizontal = 2
+grow_vertical = 2
 mouse_filter = 2
 max_value = 1.0
 step = 0.0
-texture_progress = ExtResource( 3 )
 nine_patch_stretch = true
+texture_progress = ExtResource("3")
+metadata/_edit_lock_ = true
 
 [node name="Panel" type="Panel" parent="."]
-margin_left = -86.0
-margin_top = -24.0
-margin_right = -38.0
-margin_bottom = 24.0
+layout_mode = 0
+offset_left = -86.0
+offset_top = -24.0
+offset_right = -38.0
+offset_bottom = 24.0
 mouse_filter = 2
-custom_styles/panel = SubResource( 1 )
+theme_override_styles/panel = SubResource("StyleBoxFlat_x6v7q")
 
 [node name="Icon" type="TextureRect" parent="Panel"]
+layout_mode = 0
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-margin_left = -20.0
-margin_top = -20.0
-margin_right = 20.0
-margin_bottom = 20.0
+offset_left = -20.0
+offset_top = -20.0
+offset_right = 20.0
+offset_bottom = 20.0
 mouse_filter = 2
-texture = ExtResource( 1 )
-expand = true
-stretch_mode = 6
-__meta__ = {
-"_edit_use_anchors_": false
-}
+texture = ExtResource("1")
+expand_mode = 1
+stretch_mode = 5

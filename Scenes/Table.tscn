@@ -29,22 +29,22 @@ border_color = Color( 0.611765, 0.611765, 0.611765, 1 )
 [node name="Control" type="PanelContainer"]
 anchor_right = 1.0
 anchor_bottom = 1.0
-margin_right = -982.0
-margin_bottom = -593.0
+offset_right = -982.0
+offset_bottom = -593.0
 theme = ExtResource( 1 )
 custom_styles/panel = SubResource( 1 )
 
 [node name="GridContainer" type="GridContainer" parent="."]
-margin_right = 298.0
-margin_bottom = 127.0
-custom_constants/vseparation = -1
-custom_constants/hseparation = -1
+offset_right = 298.0
+offset_bottom = 127.0
+custom_constants/v_separation = -1
+custom_constants/h_separation = -1
 columns = 3
 
 [node name="Level" type="Label" parent="GridContainer"]
-margin_right = 100.0
-margin_bottom = 40.0
-rect_min_size = Vector2( 40, 40 )
+offset_right = 100.0
+offset_bottom = 40.0
+custom_minimum_size = Vector2( 40, 40 )
 custom_colors/font_color = Color( 0, 0, 0, 1 )
 custom_styles/normal = SubResource( 2 )
 text = "LEVEL"
@@ -52,10 +52,10 @@ align = 1
 valign = 1
 
 [node name="Value" type="Label" parent="GridContainer"]
-margin_left = 99.0
-margin_right = 199.0
-margin_bottom = 40.0
-rect_min_size = Vector2( 100, 40 )
+offset_left = 99.0
+offset_right = 199.0
+offset_bottom = 40.0
+custom_minimum_size = Vector2( 100, 40 )
 custom_colors/font_color = Color( 0, 0, 0, 1 )
 custom_styles/normal = SubResource( 2 )
 text = "VALUE"
@@ -63,10 +63,10 @@ align = 1
 valign = 1
 
 [node name="Default" type="Label" parent="GridContainer"]
-margin_left = 198.0
-margin_right = 298.0
-margin_bottom = 40.0
-rect_min_size = Vector2( 100, 40 )
+offset_left = 198.0
+offset_right = 298.0
+offset_bottom = 40.0
+custom_minimum_size = Vector2( 100, 40 )
 custom_colors/font_color = Color( 0, 0, 0, 1 )
 custom_styles/normal = SubResource( 2 )
 text = "DEFAULT"
@@ -74,96 +74,96 @@ align = 1
 valign = 1
 
 [node name="1" type="Label" parent="GridContainer"]
-margin_top = 39.0
-margin_right = 100.0
-margin_bottom = 69.0
-rect_min_size = Vector2( 100, 30 )
+offset_top = 39.0
+offset_right = 100.0
+offset_bottom = 69.0
+custom_minimum_size = Vector2( 100, 30 )
 custom_colors/font_color = Color( 0, 0, 0, 1 )
 custom_styles/normal = SubResource( 2 )
 text = "1"
 align = 1
 
 [node name="1Value" type="Label" parent="GridContainer"]
-margin_left = 99.0
-margin_top = 39.0
-margin_right = 199.0
-margin_bottom = 69.0
-rect_min_size = Vector2( 100, 30 )
+offset_left = 99.0
+offset_top = 39.0
+offset_right = 199.0
+offset_bottom = 69.0
+custom_minimum_size = Vector2( 100, 30 )
 custom_colors/font_color = Color( 0, 0, 0, 1 )
 custom_styles/normal = SubResource( 2 )
 text = "100"
 align = 1
 
 [node name="1Default" type="Label" parent="GridContainer"]
-margin_left = 198.0
-margin_top = 39.0
-margin_right = 298.0
-margin_bottom = 69.0
-rect_min_size = Vector2( 100, 30 )
+offset_left = 198.0
+offset_top = 39.0
+offset_right = 298.0
+offset_bottom = 69.0
+custom_minimum_size = Vector2( 100, 30 )
 custom_colors/font_color = Color( 0, 0, 0, 1 )
 custom_styles/normal = SubResource( 2 )
 text = "100"
 align = 1
 
 [node name="10" type="Label" parent="GridContainer"]
-margin_top = 68.0
-margin_right = 100.0
-margin_bottom = 98.0
-rect_min_size = Vector2( 100, 30 )
+offset_top = 68.0
+offset_right = 100.0
+offset_bottom = 98.0
+custom_minimum_size = Vector2( 100, 30 )
 custom_colors/font_color = Color( 0, 0, 0, 1 )
 custom_styles/normal = SubResource( 2 )
 text = "10"
 align = 1
 
 [node name="10Value" type="Label" parent="GridContainer"]
-margin_left = 99.0
-margin_top = 68.0
-margin_right = 199.0
-margin_bottom = 98.0
-rect_min_size = Vector2( 100, 30 )
+offset_left = 99.0
+offset_top = 68.0
+offset_right = 199.0
+offset_bottom = 98.0
+custom_minimum_size = Vector2( 100, 30 )
 custom_colors/font_color = Color( 0, 0, 0, 1 )
 custom_styles/normal = SubResource( 2 )
 text = "100"
 align = 1
 
 [node name="10Default" type="Label" parent="GridContainer"]
-margin_left = 198.0
-margin_top = 68.0
-margin_right = 298.0
-margin_bottom = 98.0
-rect_min_size = Vector2( 100, 30 )
+offset_left = 198.0
+offset_top = 68.0
+offset_right = 298.0
+offset_bottom = 98.0
+custom_minimum_size = Vector2( 100, 30 )
 custom_colors/font_color = Color( 0, 0, 0, 1 )
 custom_styles/normal = SubResource( 2 )
 text = "100"
 align = 1
 
 [node name="100" type="Label" parent="GridContainer"]
-margin_top = 97.0
-margin_right = 100.0
-margin_bottom = 127.0
-rect_min_size = Vector2( 100, 30 )
+offset_top = 97.0
+offset_right = 100.0
+offset_bottom = 127.0
+custom_minimum_size = Vector2( 100, 30 )
 custom_colors/font_color = Color( 0, 0, 0, 1 )
 custom_styles/normal = SubResource( 2 )
 text = "100"
 align = 1
 
 [node name="100Value" type="Label" parent="GridContainer"]
-margin_left = 99.0
-margin_top = 97.0
-margin_right = 199.0
-margin_bottom = 127.0
-rect_min_size = Vector2( 100, 30 )
+offset_left = 99.0
+offset_top = 97.0
+offset_right = 199.0
+offset_bottom = 127.0
+custom_minimum_size = Vector2( 100, 30 )
 custom_colors/font_color = Color( 0, 0, 0, 1 )
 custom_styles/normal = SubResource( 2 )
 text = "100"
 align = 1
 
 [node name="100Default" type="Label" parent="GridContainer"]
-margin_left = 198.0
-margin_top = 97.0
-margin_right = 298.0
-margin_bottom = 127.0
-rect_min_size = Vector2( 100, 30 )
+offset_left = 198.0
+offset_top = 97.0
+offset_right = 298.0
+offset_bottom = 127.0
+custom_minimum_size = Vector2( 100, 30 )
 custom_colors/font_color = Color( 0, 0, 0, 1 )
 custom_styles/normal = SubResource( 2 )
 text = "100"
@@ -171,10 +171,10 @@ align = 1
 
 [node name="200" type="Label" parent="GridContainer"]
 visible = false
-margin_top = 126.0
-margin_right = 100.0
-margin_bottom = 156.0
-rect_min_size = Vector2( 100, 30 )
+offset_top = 126.0
+offset_right = 100.0
+offset_bottom = 156.0
+custom_minimum_size = Vector2( 100, 30 )
 custom_colors/font_color = Color( 0, 0, 0, 1 )
 custom_styles/normal = SubResource( 2 )
 text = "200"
@@ -182,10 +182,10 @@ align = 1
 
 [node name="200Value" type="Label" parent="GridContainer"]
 visible = false
-margin_top = 126.0
-margin_right = 100.0
-margin_bottom = 156.0
-rect_min_size = Vector2( 100, 30 )
+offset_top = 126.0
+offset_right = 100.0
+offset_bottom = 156.0
+custom_minimum_size = Vector2( 100, 30 )
 custom_colors/font_color = Color( 0, 0, 0, 1 )
 custom_styles/normal = SubResource( 2 )
 text = "100"
@@ -193,10 +193,10 @@ align = 1
 
 [node name="200Default" type="Label" parent="GridContainer"]
 visible = false
-margin_top = 126.0
-margin_right = 100.0
-margin_bottom = 156.0
-rect_min_size = Vector2( 100, 30 )
+offset_top = 126.0
+offset_right = 100.0
+offset_bottom = 156.0
+custom_minimum_size = Vector2( 100, 30 )
 custom_colors/font_color = Color( 0, 0, 0, 1 )
 custom_styles/normal = SubResource( 2 )
 text = "100"

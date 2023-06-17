@@ -1,29 +1,21 @@
-[gd_scene format=2]
+[gd_scene format=3 uid="uid://bdp561gr6s0b8"]
 
 [node name="Resource" type="HBoxContainer"]
+anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-margin_right = -1152.0
-margin_bottom = -664.0
+offset_right = -1152.0
+offset_bottom = -664.0
 size_flags_horizontal = 3
-custom_constants/separation = 10
-__meta__ = {
-"_edit_use_anchors_": false
-}
+theme_override_constants/separation = 10
 
-[node name="Texture" type="TextureButton" parent="."]
-margin_right = 32.0
-margin_bottom = 56.0
-rect_min_size = Vector2( 32, 32 )
-expand = true
+[node name="Texture2D" type="TextureButton" parent="."]
+custom_minimum_size = Vector2(24, 24)
+layout_mode = 2
+ignore_texture_size = true
 stretch_mode = 5
 
 [node name="Text" type="Label" parent="."]
-margin_left = 42.0
-margin_top = 21.0
-margin_right = 50.0
-margin_bottom = 35.0
+layout_mode = 2
 text = "0"
-__meta__ = {
-"_edit_use_anchors_": false
-}
+vertical_alignment = 1

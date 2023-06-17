@@ -1,17 +1,17 @@
 extends Control
 
-onready var game = get_node("/root/Game")
-onready var current = $UI/Current
-onready var ship0 = $Ship0
-onready var ship0_engine = $Ship0/Fire
-onready var ship1 = $Ship1
-onready var ship1_engine = $Ship1/Fire
-onready var ship2 = $Ship2
-onready var ship2_engine = $Ship2/Fire
-onready var ship3 = $Ship3
-onready var ship3_engine = $Ship3/Fire
+@onready var game = get_node("/root/Game")
+@onready var current = $UI/Current
+@onready var ship0 = $Ship0
+@onready var ship0_engine = $Ship0/Fire
+@onready var ship1 = $Ship1
+@onready var ship1_engine = $Ship1/Fire
+@onready var ship2 = $Ship2
+@onready var ship2_engine = $Ship2/Fire
+@onready var ship3 = $Ship3
+@onready var ship3_engine = $Ship3/Fire
 var star_texture = preload("res://Graphics/Effects/spotlight_8_s.png")
-var star_shader = preload("res://Shaders/Star.shader")
+var star_shader = preload("res://Shaders/Star.gdshader")
 var time_speed:float = 1.0
 var hard_battle:bool = false
 var max_lv_ship:int = 0
@@ -44,7 +44,7 @@ var w_4_1 = preload("res://Scenes/HX/Weapons/4_1.tscn")
 var w_4_2 = preload("res://Scenes/HX/Weapons/4_2.tscn")
 var w_4_3 = preload("res://Scenes/HX/Weapons/4_3.tscn")
 
-var star:Sprite#Shown right before HX magic
+var star:Sprite2D#Shown right before HX magic
 
 var ship_data:Array = []# = [{"lv":1, "HP":40, "total_HP":40, "atk":15, "def":15, "acc":15, "eva":15, "XP":0, "XP_to_lv":20, "name":"???" "bullet":{"lv":1, "XP":0, "XP_to_lv":10}, "laser":{"lv":1, "XP":0, "XP_to_lv":10}, "bomb":{"lv":1, "XP":0, "XP_to_lv":10}, "light":{"lv":1, "XP":0, "XP_to_lv":20}, "upgrades":[1.0,1.0,1.0,1.0,1.0], "rage":0, "ability":"none", "superweapon":"none"}]
 var HX_data
@@ -105,27 +105,27 @@ func _ready():
 		for star in game.system_data[game.c_s].stars:
 			var shift:float = 0
 			shift = orbit_vector.dot(star.pos) * 1000.0 / p_i.distance
-			var star_spr = Sprite.new()
+			var star_spr = Sprite2D.new()
 			star_spr.texture = load("res://Graphics/Effects/spotlight_%s.png" % [int(star.temperature) % 3 + 4])
 			star_spr.scale *= 0.5 * star.size / (p_i.distance / 500)
-			star_spr.modulate = Helper.get_star_modulate(star.class) * clamp(range_lerp(star_spr.scale.x, 1.0, 2.25, 1.5, 1.02), 1.02, 1.5)
-			star_spr.position.x = range_lerp(p_i.angle, 0, 2 * PI, 100, 1180) + shift
+			star_spr.modulate = Helper.get_star_modulate(star["class"]) * clamp(remap(star_spr.scale.x, 1.0, 2.25, 1.5, 1.02), 1.02, 1.5)
+			star_spr.position.x = remap(p_i.angle, 0, 2 * PI, 100, 1180) + shift
 			star_spr.position.y = 200 * cos(game.c_p * 10) + 300
 			if star_spr.scale.x > 2:
 				bright_star = true
 			star_spr.material = CanvasItemMaterial.new()
-			star_spr.material.blend_mode = BLEND_MODE_ADD
-			$BG.material.shader = preload("res://Shaders/PlanetBG.shader")
+			star_spr.material.blend_mode = CanvasItemMaterial.BLEND_MODE_ADD
+			$BG.material.shader = preload("res://Shaders/PlanetBG.gdshader")
 			if star.luminosity > max_star_lum:
-				$BG.material.set_shader_param("strength", max(0.3, sqrt(star_spr.scale.x)))
-				$BG.material.set_shader_param("lum", min(0.3, pow(star.luminosity, 0.2)))
-				$BG.material.set_shader_param("star_mod", Helper.get_star_modulate(star.class))
-				$BG.material.set_shader_param("u", range_lerp(star_spr.position.x, 0, 1280, 0.0, 1.0))
+				$BG.material.set_shader_parameter("strength", max(0.3, sqrt(star_spr.scale.x)))
+				$BG.material.set_shader_parameter("lum", min(0.3, pow(star.luminosity, 0.2)))
+				$BG.material.set_shader_parameter("star_mod", Helper.get_star_modulate(star["class"]))
+				$BG.material.set_shader_parameter("u", remap(star_spr.position.x, 0, 1280, 0.0, 1.0))
 				max_star_lum = star.luminosity
 			if star_spr.scale.x > max_star_size:
 				max_star_size = star_spr.scale.x
 			$Stars.add_child(star_spr)
-		light_mult = range_lerp(min(max_star_size, 0.4), 0.4, 0.0, 1.0, 3.0)
+		light_mult = remap(min(max_star_size, 0.4), 0.4, 0.0, 1.0, 3.0)
 		if not p_i.type in [11, 12]:
 			$BG.texture = load("res://Graphics/Planets/BGs/%s.png" % p_i.type)
 		else:
@@ -137,43 +137,40 @@ func _ready():
 		var err = config.load("user://settings.cfg")
 		if err == OK:
 			e_diff = config.get_value("game", "e_diff", 1)
-		$Ship0/Sprite.material.set_shader_param("frequency", 6 * time_speed)
-		$Ship1/Sprite.material.set_shader_param("frequency", 6 * time_speed)
-		$Ship2/Sprite.material.set_shader_param("frequency", 6 * time_speed)
-		$Ship3/Sprite.material.set_shader_param("frequency", 6 * time_speed)
+		$Ship0/Sprite2D.material.set_shader_parameter("frequency", 6 * time_speed)
+		$Ship1/Sprite2D.material.set_shader_parameter("frequency", 6 * time_speed)
+		$Ship2/Sprite2D.material.set_shader_parameter("frequency", 6 * time_speed)
+		$Ship3/Sprite2D.material.set_shader_parameter("frequency", 6 * time_speed)
 	else:
 		for i in 1000:
-			var star:Sprite = Sprite.new()
+			var star:Sprite2D = Sprite2D.new()
 			star.texture = star_texture
-			star.scale *= pow(rand_range(0.4, 0.7), 2)
+			star.scale *= pow(randf_range(0.4, 0.7), 2)
 			star.modulate = Helper.get_star_modulate("%s%s" % [["M", "K", "G", "F", "A", "B", "O"][randi() % 7], randi() % 10])
-			star.modulate.a = pow(rand_range(0.5, 1), 5)
-			star.rotation = rand_range(0, 2*PI)
-			star.position.x = rand_range(0, 1280)
-			star.position.y = rand_range(0, 720)
+			star.modulate.a = pow(randf_range(0.5, 1), 5)
+			star.rotation = randf_range(0, 2*PI)
+			star.position.x = randf_range(0, 1280)
+			star.position.y = randf_range(0, 720)
 			star.material = ShaderMaterial.new()
 			star.material.shader = star_shader
-			star.material.set_shader_param("time_offset", 10.0 * randf())
+			star.material.set_shader_parameter("time_offset", 10.0 * randf())
 			$Stars.add_child(star)
 		HX_data = []
 		ship_data.append({"name":tr("SHIP"), "lv":1, "HP":25, "total_HP":25, "atk":10, "def":5, "acc":10, "eva":10, "points":2, "HP_mult":1.0, "atk_mult":1.0, "def_mult":1.0, "acc_mult":1.0, "eva_mult":1.0, "ability":"none", "superweapon":"none", "rage":0, "XP":0, "XP_to_lv":20, "bullet":{"lv":1, "XP":0, "XP_to_lv":10}, "laser":{"lv":1, "XP":0, "XP_to_lv":10}, "bomb":{"lv":1, "XP":0, "XP_to_lv":10}, "light":{"lv":1, "XP":0, "XP_to_lv":20}})
 		for k in 4:
 			var lv = 1
-			var HP = round(rand_range(1, 1.5) * 15 * pow(1.2, lv))
-			var atk = round(rand_range(1, 1.5) * 8 * pow(1.2, lv))
+			var HP = round(randf_range(1, 1.5) * 15 * pow(1.2, lv))
+			var atk = round(randf_range(1, 1.5) * 8 * pow(1.2, lv))
 			var def = 5
-			var acc = round(rand_range(1, 1.5) * 8 * pow(1.2, lv))
-			var eva = round(rand_range(1, 1.5) * 8 * pow(1.2, lv))
-			var money = round(rand_range(0.2, 2.5) * pow(1.2, lv) * 10000)
+			var acc = round(randf_range(1, 1.5) * 8 * pow(1.2, lv))
+			var eva = round(randf_range(1, 1.5) * 8 * pow(1.2, lv))
+			var money = round(randf_range(0.2, 2.5) * pow(1.2, lv) * 10000)
 			var XP = round(pow(1.3, lv) * 5)
 			HX_data.append({"type":Helper.rand_int(4, 4), "lv":lv, "HP":HP, "total_HP":HP, "atk":atk, "def":def, "acc":acc, "eva":eva, "money":money, "XP":XP})
 	$UI/FightPanel/Panel/BattleProgress.text = "%s / %s" % [HXs_rekt, len(HX_data)]
-	if OS.get_latin_keyboard_variant() == "AZERTY":
-		$UI/ControlKeyboard/GoUp.text = "Z"
-		$Help.text = "%s\n%s\n%s" % [tr("BATTLE_HELP"), tr("BATTLE_HELP2") % ["Z", "M", "S", "ù", "Shift"], tr("PRESS_ANY_KEY_TO_CONTINUE")]
-	else:
-		$Help.text = "%s\n%s\n%s" % [tr("BATTLE_HELP"), tr("BATTLE_HELP2") % ["W", ";", "S", "'", "Shift"], tr("PRESS_ANY_KEY_TO_CONTINUE")]
-	$UI/Current.material["shader_param/frequency"] = 12.0 * time_speed
+	$UI/ControlKeyboard/GoUp.text = OS.get_keycode_string(DisplayServer.keyboard_get_keycode_from_physical(KEY_W))
+	$Help.text = "%s\n%s\n%s" % [tr("BATTLE_HELP"), tr("BATTLE_HELP2") % [OS.get_keycode_string(DisplayServer.keyboard_get_keycode_from_physical(KEY_W)), OS.get_keycode_string(DisplayServer.keyboard_get_keycode_from_physical(KEY_S)), "Shift"], tr("PRESS_ANY_KEY_TO_CONTINUE")]
+	$UI/Current.material["shader_parameter/frequency"] = 12.0 * time_speed
 	for i in len(ship_data):
 		max_lv_ship = max(max_lv_ship, ship_data[i].lv)
 		ship_data[i].HP = ship_data[i].total_HP * ship_data[i].HP_mult
@@ -203,9 +200,9 @@ func _ready():
 		$UI/Back.modulate.a = 0
 		$InitialFade.play("SceneFade", -1, 0.5)
 		game.switch_music(preload("res://Audio/op_battle.ogg"))
-		yield(get_tree().create_timer(0.5), "timeout")
+		await get_tree().create_timer(0.5).timeout
 		send_HXs()
-		yield(get_tree().create_timer(1.0), "timeout")
+		await get_tree().create_timer(1.0).timeout
 		refresh_fight_panel()
 		stage = BattleStages.CHOOSING
 	else:
@@ -216,18 +213,18 @@ func _ready():
 
 func add_stars(num:int, sc:float):
 	for i in num:
-		var star:Sprite = Sprite.new()
+		var star:Sprite2D = Sprite2D.new()
 		star.texture = star_texture
 		star.scale *= sc
 		star.modulate = Helper.get_star_modulate("%s%s" % [["M", "K", "G", "F", "A", "B", "O"][randi() % 7], randi() % 10]) * 1.5
-		star.modulate.a = rand_range(0, 1)
-		star.rotation = rand_range(0, 2*PI)
-		star.position.x = rand_range(0, 1280)
-		star.position.y = rand_range(0, 720)
+		star.modulate.a = randf_range(0, 1)
+		star.rotation = randf_range(0, 2*PI)
+		star.position.x = randf_range(0, 1280)
+		star.position.y = randf_range(0, 720)
 #		if game.enable_shaders and num < 1000:
 #			star.material = ShaderMaterial.new()
 #			star.material.shader = star_shader
-#			star.material.set_shader_param("time_offset", 10.0 * randf())
+#			star.material.set_shader_parameter("time_offset", 10.0 * randf())
 		$Stars.add_child(star)
 	
 func refresh_fight_panel():
@@ -253,15 +250,15 @@ func send_HXs():
 		if k >= len(HX_data):
 			break
 		var btn = TextureButton.new()
-		btn.rect_position = -Vector2(90, 50)
-		btn.rect_size = Vector2(180, 100)
-		var HX = HX1_scene.instance()
-		if HX_data[k].class == 2:
+		btn.position = -Vector2(90, 50)
+		btn.size = Vector2(180, 100)
+		var HX = HX1_scene.instantiate()
+		if HX_data[k]["class"] == 2:
 			green_enemy = k
-		elif HX_data[k].class == 2:
+		elif HX_data[k]["class"] == 2:
 			purple_enemy = k
-		HX.get_node("Sprite").texture = load("res://Graphics/HX/%s_%s.png" % [HX_data[k].class, HX_data[k].type])
-		HX.get_node("Sprite").material.set_shader_param("frequency", 6 * time_speed)
+		HX.get_node("Sprite2D").texture = load("res://Graphics/HX/%s_%s.png" % [HX_data[k]["class"], HX_data[k].type])
+		HX.get_node("Sprite2D").material.set_shader_parameter("frequency", 6 * time_speed)
 		HX.scale *= 0.4
 		HX.get_node("Info/HP").max_value = HX_data[k].total_HP
 		HX.get_node("Info/HP").value = HX_data[k].HP
@@ -270,12 +267,12 @@ func send_HXs():
 			HX.get_node("LabelAnimation").play("LabelAnim")
 		HX.position = Vector2(2000, 360)
 		HX.add_child(btn)
-		btn.connect("mouse_entered", self, "on_HX_over", [k])
-		btn.connect("mouse_exited", self, "on_HX_out")
-		HX.get_node("Info/Effects/Fire").connect("mouse_entered", self, "on_effect_over", [tr("BURN_DESC")])
-		HX.get_node("Info/Effects/Fire").connect("mouse_exited", self, "on_effect_out")
-		HX.get_node("Info/Effects/Stun").connect("mouse_entered", self, "on_effect_over", [tr("STUN_DESC")])
-		HX.get_node("Info/Effects/Stun").connect("mouse_exited", self, "on_effect_out")
+		btn.connect("mouse_entered",Callable(self,"on_HX_over").bind(k))
+		btn.connect("mouse_exited",Callable(self,"on_HX_out"))
+		HX.get_node("Info/Effects/Fire").connect("mouse_entered",Callable(self,"on_effect_over").bind(tr("BURN_DESC")))
+		HX.get_node("Info/Effects/Fire").connect("mouse_exited",Callable(self,"on_effect_out"))
+		HX.get_node("Info/Effects/Stun").connect("mouse_entered",Callable(self,"on_effect_over").bind(tr("STUN_DESC")))
+		HX.get_node("Info/Effects/Stun").connect("mouse_exited",Callable(self,"on_effect_out"))
 		add_child(HX)
 		HXs.append(HX)
 		HX_c_d[HX.name] = {"position":Vector2((j % 2) * 300 + 850, (j / 2) * 200 + 200)}
@@ -318,12 +315,12 @@ func _input(event):
 		if move_method == MoveMethod.CLICK:
 			var curr_ship = self["ship%s" % tgt_sh]
 			if Input.is_action_just_pressed("left_click"):
-				if curr_ship.get_node("Sprite").flip_v:
+				if curr_ship.get_node("Sprite2D").flip_v:
 					curr_ship.y_speed = -3.0
 				else:
 					curr_ship.y_speed = 3.0
 			if Input.is_action_just_pressed("right_click"):
-				curr_ship.get_node("Sprite").flip_v = not curr_ship.get_node("Sprite").flip_v
+				curr_ship.get_node("Sprite2D").flip_v = not curr_ship.get_node("Sprite2D").flip_v
 	if Input.is_action_just_pressed("A"):
 		display_stats("atk")
 	if Input.is_action_just_pressed("D"):
@@ -339,41 +336,40 @@ func _input(event):
 			var HX = HXs[i]
 			HX.get_node("Info/Icon").visible = false
 			HX.get_node("Info/Label").text = "%s %s" % [tr("LV"), HX_data[i].lv]
-			HX.get_node("Info/Label")["custom_colors/font_color"] = Color.white
+			HX.get_node("Info/Label")["theme_override_colors/font_color"] = Color.WHITE
 		for i in len(ship_data):
 			get_node("Ship%s/Icon" % i).visible = false
 			get_node("Ship%s/Label" % i).text = "%s %s" % [tr("LV"), ship_data[i].lv]
-	if Input.is_action_just_pressed("battle_up"):
+	if Input.is_action_just_pressed("W"):
 		ship_dir = "left"
-	if Input.is_action_just_pressed("battle_down"):
+	if Input.is_action_just_pressed("S"):
 		ship_dir = "right"
-	if Input.is_action_just_released("battle_up") and Input.is_action_pressed("battle_down"):
+	if Input.is_action_just_released("W") and Input.is_action_pressed("S"):
 		ship_dir = "right"
-	elif Input.is_action_just_released("battle_up"):
+	elif Input.is_action_just_released("W"):
 		ship_dir = ""
-	if Input.is_action_just_released("battle_down") and Input.is_action_pressed("battle_up"):
+	if Input.is_action_just_released("S") and Input.is_action_pressed("W"):
 		ship_dir = "left"
-	elif Input.is_action_just_released("battle_down"):
+	elif Input.is_action_just_released("S"):
 		ship_dir = ""
 	if $Help.modulate.a == 1:
 		if game.help.has("battle") and event is InputEventKey:
 			game.help.erase("battle")
-			fade_help_out()
+			$Help/AnimationPlayer.play_backwards("Fade")
+			enemy_attack()
 		elif green_enemy != -1 and event is InputEventMouseButton:
-			game.help.battle2 = true
+			game.help.erase("battle")
+			game.help.erase("battle2")
 			green_enemy = -1
-			fade_help_out()
+			$Help/AnimationPlayer.play_backwards("Fade")
+			enemy_attack()
 		elif purple_enemy != -1 and event is InputEventMouseButton:
-			game.help.battle3 = true
+			game.help.erase("battle")
+			game.help.erase("battle3")
 			purple_enemy = -1
-			fade_help_out()
+			$Help/AnimationPlayer.play_backwards("Fade")
+			enemy_attack()
 
-func fade_help_out():
-	tween.interpolate_property($Help, "modulate", Color(1, 1, 1, 1), Color(1, 1, 1, 0), 0.5)
-	tween.interpolate_property($Help, "rect_position", Vector2(0, 339), Vector2(0, 354), 0.5, Tween.TRANS_BACK, Tween.EASE_IN)
-	tween.start()
-	enemy_attack()
-	
 func display_stats(type:String):
 	for i in len(HXs):
 		var HX = HXs[i]
@@ -384,9 +380,9 @@ func display_stats(type:String):
 		else:
 			if HX_c_d[HXs[i].name].has(type):
 				if HX_c_d[HXs[i].name][type] > 0:
-					HX.get_node("Info/Label")["custom_colors/font_color"] = Color.green
+					HX.get_node("Info/Label")["theme_override_colors/font_color"] = Color.GREEN
 				elif HX_c_d[HXs[i].name][type] < 0:
-					HX.get_node("Info/Label")["custom_colors/font_color"] = Color.red
+					HX.get_node("Info/Label")["theme_override_colors/font_color"] = Color.RED
 				HX.get_node("Info/Label").text = Helper.format_num(round(HX_data[i][type] * (1.0 + HX_c_d[HXs[i].name][type])))
 			else:
 				HX.get_node("Info/Label").text = Helper.format_num(HX_data[i][type])
@@ -403,7 +399,7 @@ func _on_Back_pressed():
 	if $UI/Back.modulate.a < 1:
 		return
 	if hard_battle:
-		game.switch_music(load("res://Audio/ambient" + String(Helper.rand_int(1, 3)) + ".ogg"))
+		game.switch_music(load("res://Audio/ambient" + str(Helper.rand_int(1, 3)) + ".ogg"))
 	game.switch_view("system")
 
 var ship_dir:String = ""
@@ -411,7 +407,7 @@ var ship_dir:String = ""
 func damage_HX(id:int, dmg:float, crit:bool = false):
 	HX_data[id].HP -= round(dmg)
 	HXs[id].get_node("Info/HP").value = HX_data[id].HP
-	Helper.show_dmg(round(dmg), HXs[id].position, self, 0.6, false, crit)
+	Helper.show_dmg(round(dmg), HXs[id].position, self, 40, false, crit)
 	if HX_data[id].HP <= 0 and not HX_data[id].has("rekt"):
 		HXs_rekt += 1
 		HX_data[id].rekt = true
@@ -432,9 +428,9 @@ func set_buff_text(buff:float, buff_type:String, node):
 		node.get_node("Info/Effects/%sLabel" % buff_type).visible = true
 		node.get_node("Info/Effects/%sLabel" % buff_type).text = "%s%%" % (buff * 100)
 		if buff > 0:
-			node.get_node("Info/Effects/%sLabel" % buff_type)["custom_colors/font_color"] = Color.green
+			node.get_node("Info/Effects/%sLabel" % buff_type)["theme_override_colors/font_color"] = Color.GREEN
 		elif buff < 0:
-			node.get_node("Info/Effects/%sLabel" % buff_type)["custom_colors/font_color"] = Color.red
+			node.get_node("Info/Effects/%sLabel" % buff_type)["theme_override_colors/font_color"] = Color.RED
 	else:
 		node.get_node("Info/Effects/%s" % buff_type).visible = false
 		node.get_node("Info/Effects/%sLabel" % buff_type).visible = false
@@ -453,7 +449,7 @@ func weapon_hit_HX(sh:int, w_c_d:Dictionary, weapon = null):
 	var atk_buff
 	if weapon_type == "light":
 		remove_weapon_b = true
-		var light = Sprite.new()
+		var light = Sprite2D.new()
 		light.texture = preload("res://Graphics/Decoratives/light.png")
 		light.position = Vector2(1000, 360)
 		light.scale *= 0.2
@@ -477,12 +473,14 @@ func weapon_hit_HX(sh:int, w_c_d:Dictionary, weapon = null):
 				HXs[i].get_node("KnockbackAnimation").stop()
 				HXs[i].get_node("KnockbackAnimation").play("Small knockback" if HX_data[i].HP > 0 else "Dead", -1, time_speed)
 				HXs[i].get_node("LightParticles").emitting = true
-				var int_mult:float = pow(light_mult * range_lerp(weapon_lv, 1, 4, 1, 2), 0.7)
+				var int_mult:float = pow(light_mult * remap(weapon_lv, 1, 4, 1, 2), 0.7)
 				HXs[i].get_node("LightParticles").lifetime = int_mult
 				HXs[i].get_node("LightParticles").speed_scale = time_speed
 				HXs[i].get_node("LightParticles").amount = int(50 * int_mult)
-				HXs[i].get_node("LightParticles").process_material.initial_velocity = 250.0 * int_mult
-				HXs[i].get_node("LightParticles").process_material.scale = 0.1 * int_mult
+				HXs[i].get_node("LightParticles").process_material.initial_velocity_min = 250.0 * int_mult
+				HXs[i].get_node("LightParticles").process_material.initial_velocity_max = 250.0 * int_mult
+				HXs[i].get_node("LightParticles").process_material.scale_min = 0.1 * int_mult
+				HXs[i].get_node("LightParticles").process_material.scale_max = 0.1 * int_mult
 				var debuff:float = -0.2 - weapon_lv * 0.1
 				if HX_c_d[HXs[i].name].has("acc"):
 					HX_c_d[HXs[i].name].acc = max(debuff, HX_c_d[HXs[i].name].acc + debuff)
@@ -492,7 +490,7 @@ func weapon_hit_HX(sh:int, w_c_d:Dictionary, weapon = null):
 			else:
 				HXs[i].get_node("MissAnimation").stop()
 				HXs[i].get_node("MissAnimation").play("Miss", -1, time_speed)
-				Helper.show_dmg(0, HXs[i].position, self, 0.6, true)
+				Helper.show_dmg(0, HXs[i].position, self, 30, true)
 		if light_hit:
 			weapon_XPs[sh].light += 1
 	else:
@@ -516,23 +514,24 @@ func weapon_hit_HX(sh:int, w_c_d:Dictionary, weapon = null):
 				HXs[t].get_node("KnockbackAnimation").play("Knockback" if HX_data[t].HP > 0 else "Dead", -1, time_speed)
 				weapon_XPs[sh][weapon_type] += 1
 			elif weapon_type == "bomb":
-				var explosion = preload("res://Scenes/Explosion.tscn").instance()
+				var explosion = preload("res://Scenes/Explosion.tscn").instantiate()
 				explosion.position = HXs[t].position
 				add_child(explosion)
-				explosion.get_node("AnimationPlayer").connect("animation_finished", self, "on_explosion_finished", [explosion])
+				explosion.get_node("AnimationPlayer").connect("animation_finished",Callable(self,"on_explosion_finished").bind(explosion))
 				explosion.get_node("AnimationPlayer").play("Explosion", -1, time_speed)
 				HXs[t].get_node("BombParticles").amount = 100 + 50 * weapon_lv 
-				HXs[t].get_node("BombParticles").process_material.initial_velocity = 200 + 100 * weapon_lv
+				HXs[t].get_node("BombParticles").process_material.initial_velocity_min = 200 + 100 * weapon_lv
+				HXs[t].get_node("BombParticles").process_material.initial_velocity_max = 200 + 240 * weapon_lv
 				HXs[t].get_node("BombParticles").emitting = true
 				HXs[t].get_node("BombParticles").speed_scale = time_speed
 				HX_c_d[HXs[t].name].burn = weapon_lv
-				HXs[t].get_node("Sprite/Fire").visible = true
+				HXs[t].get_node("Sprite2D/Fire").visible = true
 				HXs[t].get_node("Info/Effects/Fire").visible = true
 				HXs[t].get_node("Info/Effects/FireLabel").visible = true
-				HXs[t].get_node("Info/Effects/FireLabel").text = String(weapon_lv)
+				HXs[t].get_node("Info/Effects/FireLabel").text = str(weapon_lv)
 				#duration = 0.2, frequency = 15, amplitude = 16, priority = 0
 				if game.screen_shake:
-					$Camera2D/Screenshake.start(0.5, 15, 4)
+					$Camera2D/Screenshake.start(0.5,15,4)
 				HXs[t].get_node("KnockbackAnimation").stop()
 				HXs[t].get_node("KnockbackAnimation").play("Big knockback" if HX_data[t].HP > 0 else "Dead", -1, time_speed)
 				weapon_XPs[sh][weapon_type] += weapon_lv
@@ -540,8 +539,8 @@ func weapon_hit_HX(sh:int, w_c_d:Dictionary, weapon = null):
 			elif weapon_type == "laser":
 				if not HX_c_d[HXs[t].name].has("stun"):
 					HX_c_d[HXs[t].name].stun = weapon_lv
-					HXs[t].get_node("Info/Effects/StunLabel").text = String(weapon_lv)
-				HXs[t].get_node("Sprite/Stun").visible = true
+					HXs[t].get_node("Info/Effects/StunLabel").text = str(weapon_lv)
+				HXs[t].get_node("Sprite2D/Stun").visible = true
 				HXs[t].get_node("Info/Effects/Stun").visible = true
 				HXs[t].get_node("Info/Effects/StunLabel").visible = true
 				HXs[t].get_node("KnockbackAnimation").stop()
@@ -562,7 +561,7 @@ func weapon_hit_HX(sh:int, w_c_d:Dictionary, weapon = null):
 						new_t = Helper.rand_int(wave * 4, last_id - 1)
 					var HX_pos:Vector2 = HXs[new_t].position
 					weapon.rotation = atan2(HX_pos.y - HXs[old_t].position.y, HX_pos.x - HXs[old_t].position.x)
-					w_c_d.v = polar2cartesian(30.0, weapon.rotation)
+					w_c_d.v = 30.0 * Vector2.from_angle(weapon.rotation)
 					if is_zero_approx(w_c_d.v.x):
 						w_c_d.v.x = 0.0
 					w_c_d.target = new_t
@@ -578,7 +577,7 @@ func weapon_hit_HX(sh:int, w_c_d:Dictionary, weapon = null):
 			w_c_d.has_hit = true
 			HXs[t].get_node("MissAnimation").stop()
 			HXs[t].get_node("MissAnimation").play("Miss", -1, time_speed)
-			Helper.show_dmg(0, HXs[t].position, self, 0.6, true)
+			Helper.show_dmg(0, HXs[t].position, self, 30, true)
 	$Timer.start(min(timer_delay, timer_delay / time_speed))
 	return remove_weapon_b
 
@@ -602,17 +601,15 @@ func _process(delta):
 		for i in len(ship_data):
 			ship_data[i].HP = ship_data[i].total_HP * ship_data[i].HP_mult
 		if hard_battle:
-			game.switch_music(load("res://Audio/ambient" + String(Helper.rand_int(1, 3)) + ".ogg"))
+			game.switch_music(load("res://Audio/ambient" + str(Helper.rand_int(1, 3)) + ".ogg"))
 		game.switch_view("system")
-		game.long_popup(tr("BATTLE_LOST_DESC"), tr("BATTLE_LOST"))
+		game.popup_window(tr("BATTLE_LOST_DESC"), tr("BATTLE_LOST"))
 		return
 	for i in len(HXs):
 		var HX = HXs[i]
-		if HX_data[i].HP <= 0 and HX.get_node("Sprite").modulate.a > 0:
+		if HX_data[i].HP <= 0 and HX.get_node("Sprite2D").modulate.a > 0:
 			if HX_data[i].lv >= max_lv_ship + 30 and not game.achievement_data.random.has("rekt_enemy_30_levels_higher"):
 				game.earn_achievement("random", "rekt_enemy_30_levels_higher")
-			HX.get_node("Sprite").modulate.a -= 0.02 * time_mult
-			HX.get_node("Info").modulate.a -= 0.02 * time_mult
 		var pos = HX_c_d[HX.name].position
 		HX.position = HX.position.move_toward(pos, HX.position.distance_to(pos) * delta * 5 * game.u_i.time_speed)
 	if stage in [BattleStages.START, BattleStages.CHOOSING]:
@@ -678,7 +675,7 @@ func _process(delta):
 			curr_ship.position.y = clamp(curr_ship.position.y + curr_ship.y_speed * time_mult, 0, 720)
 		elif move_method == MoveMethod.CLICK:
 			self["ship%s_engine" % tgt_sh].emitting = true
-			if curr_ship.get_node("Sprite").flip_v:
+			if curr_ship.get_node("Sprite2D").flip_v:
 				curr_ship.y_acc = -0.8
 			else:
 				curr_ship.y_acc = 0.8
@@ -843,7 +840,7 @@ func remove_weapon(weapon, group:String):
 	weapon.remove_from_group(group)
 	remove_child(weapon)
 	weapon.queue_free()
-	if get_tree().get_nodes_in_group(group).empty():
+	if get_tree().get_nodes_in_group(group).is_empty():
 		$Timer.start()
 
 func remove_targets():
@@ -872,32 +869,32 @@ func place_targets(attacking:bool = true):
 				target_id = -2
 			var HX = HXs[i]
 			HX.modulate.a = 0.5
-			var target = target_scene.instance()
+			var target = target_scene.instantiate()
 			target.position = HX.position
 			add_child(target)
-			target.get_node("TextureButton").shortcut = ShortCut.new()
-			target.get_node("TextureButton").shortcut.shortcut = InputEventAction.new()
-			target.get_node("TextureButton").shortcut.shortcut.action = String((i % 4) + 1)
-			target.get_node("TextureButton").connect("pressed", self, "on_target_pressed", [i])
-			target.get_node("TextureButton").connect("mouse_entered", self, "on_target_over", [i])
-			target.get_node("TextureButton").connect("mouse_exited", self, "on_target_out")
-			target.get_node("Label").text = String((i % 4) + 1)
+			target.get_node("TextureButton").shortcut = Shortcut.new()
+			target.get_node("TextureButton").shortcut.events.append(InputEventKey.new())
+			target.get_node("TextureButton").shortcut.events[0].physical_keycode = 49 + (i % 4)
+			target.get_node("TextureButton").connect("pressed",Callable(self,"on_target_pressed").bind(i))
+			target.get_node("TextureButton").connect("mouse_entered",Callable(self,"on_target_over").bind(i))
+			target.get_node("TextureButton").connect("mouse_exited",Callable(self,"on_target_out"))
+			target.get_node("Label").text = str((i % 4) + 1)
 			target.add_to_group("targets")
 		if target_id != -2:
 			on_target_pressed(target_id, one_enemy)
 	else:
 		for i in len(ship_data): #Target your ships instead
 			if ship_data[i].HP > 0:
-				var target = target_scene.instance()
+				var target = target_scene.instantiate()
 				target.position = get_node("Ship%s" % i).position
 				add_child(target)
-				target.get_node("TextureButton").shortcut = ShortCut.new()
+				target.get_node("TextureButton").shortcut = Shortcut.new()
 				target.get_node("TextureButton").shortcut.shortcut = InputEventAction.new()
-				target.get_node("TextureButton").shortcut.shortcut.action = String((i % 4) + 1)
-				target.get_node("TextureButton").connect("pressed", self, "on_target_pressed", [i])
-				target.get_node("TextureButton").connect("mouse_entered", self, "on_target_over", [i])
-				target.get_node("TextureButton").connect("mouse_exited", self, "on_target_out")
-				target.get_node("Label").text = String((i % 4) + 1)
+				target.get_node("TextureButton").shortcut.shortcut.action = str((i % 4) + 1)
+				target.get_node("TextureButton").connect("pressed",Callable(self,"on_target_pressed").bind(i))
+				target.get_node("TextureButton").connect("mouse_entered",Callable(self,"on_target_over").bind(i))
+				target.get_node("TextureButton").connect("mouse_exited",Callable(self,"on_target_out"))
+				target.get_node("Label").text = str((i % 4) + 1)
 				target.add_to_group("targets")
 
 func on_target_over(target:int):
@@ -926,19 +923,19 @@ func on_target_pressed(target:int, one_enemy:bool = false):
 	if weapon_type == "laser":
 		var HX_pos = Vector2(1000, 360) if target == -1 else HX_c_d[HXs[target].name].position
 		$Laser.visible = true
-		$Laser.rect_position = ship_pos
-		$Laser.rect_rotation = rad2deg(atan2(HX_pos.y - ship_pos.y, HX_pos.x - ship_pos.x))
-		$Laser.rect_scale.x = (HX_pos.x - ship_pos.x) / 650.0
-		$Laser/Texture.material["shader_param/beams"] = weapon_data.lv + 1
-		$Laser/Texture.material["shader_param/outline_thickness"] = (weapon_data.lv + 1) * 0.01
+		$Laser.position = ship_pos
+		$Laser.rotation = atan2(HX_pos.y - ship_pos.y, HX_pos.x - ship_pos.x)
+		$Laser.scale.x = (HX_pos.x - ship_pos.x) / 650.0
+		$Laser/Texture2D.material["shader_parameter/beams"] = weapon_data.lv + 1
+		$Laser/Texture2D.material["shader_parameter/outline_thickness"] = (weapon_data.lv + 1) * 0.01
 		if weapon_data.lv == 2:
-			$Laser/Texture.material["shader_param/outline_color"] = Color.orange
+			$Laser/Texture2D.material["shader_parameter/outline_color"] = Color.ORANGE
 		elif weapon_data.lv == 3:
-			$Laser/Texture.material["shader_param/outline_color"] = Color.yellow
+			$Laser/Texture2D.material["shader_parameter/outline_color"] = Color.YELLOW
 		elif weapon_data.lv == 4:
-			$Laser/Texture.material["shader_param/outline_color"] = Color.green
+			$Laser/Texture2D.material["shader_parameter/outline_color"] = Color.GREEN
 		elif weapon_data.lv == 5:
-			$Laser/Texture.material["shader_param/outline_color"] = Color.blue
+			$Laser/Texture2D.material["shader_parameter/outline_color"] = Color.BLUE
 		$Laser/AnimationPlayer.play("LaserFade", -1, time_speed)
 		weapon_hit_HX(curr_sh, {
 			"target":target,
@@ -974,14 +971,14 @@ func on_target_pressed(target:int, one_enemy:bool = false):
 		$Timer.start(min(0.5, 1 / time_speed))
 	else:
 		var HX_pos = Vector2(1000, 360) if target == -1 else HX_c_d[HXs[target].name].position
-		var weapon = Sprite.new()
+		var weapon = Sprite2D.new()
 		weapon.add_to_group("weapon")
 		weapon.texture = load("res://Graphics/Weapons/%s%s.png" % [weapon_type, weapon_data.lv])
 		weapon.position = ship_pos
 		weapon.scale *= 0.5
 		add_child(weapon)
 		weapon.rotation = atan2(HX_pos.y - ship_pos.y, HX_pos.x - ship_pos.x)
-		w_c_d[weapon.name] = {"v":polar2cartesian(60.0 if weapon_type == "light" else 30.0, weapon.rotation)}
+		w_c_d[weapon.name] = {"v":(60.0 if weapon_type == "light" else 30.0) * Vector2.from_angle(weapon.rotation)}
 		w_c_d[weapon.name].target = target
 		w_c_d[weapon.name].shooter = curr_sh
 		w_c_d[weapon.name].lim = HX_pos
@@ -1008,11 +1005,10 @@ func _on_weapon_pressed(_weapon_type:String):
 		place_targets()
 
 func add_victory_panel():
-	victory_panel = victory_panel_scene.instance()
+	victory_panel = victory_panel_scene.instantiate()
 	victory_panel.HX_data = HX_data
 	victory_panel.ship_data = ship_data
 	victory_panel.weapon_XPs = weapon_XPs
-	victory_panel.rect_position = Vector2(108, 60)
 	victory_panel.p_id = game.c_p
 	if hit_amount == 0:
 		victory_panel.mult = 1.5
@@ -1068,38 +1064,21 @@ func _on_Timer_timeout():
 			$UI/Current.visible = true
 			$UI/Back.visible = true
 
-var tween:Tween
 func enemy_attack():
-	if game:
-		if game.help.has("battle"):
-			tween = Tween.new()
-			add_child(tween)
-			$UI/Help2.modulate.a = 0
-			$UI/Help2.visible = true
-			tween.interpolate_property($UI/Help2, "modulate", Color(1, 1, 1, 0), Color(1, 1, 1, 1), 0.5)
-			tween.interpolate_property($UI/Help2, "rect_position", Vector2(448, 263), Vector2(448, 248), 0.5)
-			tween.start()
-			return
-		elif not game.help.has("battle2") and curr_en == green_enemy:
-			tween = Tween.new()
-			add_child(tween)
-			$Help.text = tr("GREEN_ENEMY_HELP")
-			$Help.modulate.a = 0
-			$Help.visible = true
-			tween.interpolate_property($Help, "modulate", Color(1, 1, 1, 0), Color(1, 1, 1, 1), 0.5)
-			tween.interpolate_property($Help, "rect_position", Vector2(0, 354), Vector2(0, 339), 0.5)
-			tween.start()
-			return
-		elif not game.help.has("battle3") and curr_en == purple_enemy:
-			tween = Tween.new()
-			add_child(tween)
-			$Help.text = tr("PURPLE_ENEMY_HELP")
-			$Help.modulate.a = 0
-			$Help.visible = true
-			tween.interpolate_property($Help, "modulate", Color(1, 1, 1, 0), Color(1, 1, 1, 1), 0.5)
-			tween.interpolate_property($Help, "rect_position", Vector2(0, 354), Vector2(0, 339), 0.5)
-			tween.start()
-			return
+	if game.help.has("battle"):
+		$UI/Help2/AnimationPlayer.play("Fade")
+		$UI/Help2.visible = true
+		return
+	if game.help.has("battle2") and curr_en == green_enemy:
+		$Help.text = tr("GREEN_ENEMY_HELP")
+		$Help/AnimationPlayer.play("Fade")
+		$Help.visible = true
+		return
+	elif game.help.has("battle3") and curr_en == purple_enemy:
+		$Help.text = tr("PURPLE_ENEMY_HELP")
+		$Help/AnimationPlayer.play("Fade")
+		$Help.visible = true
+		return
 	var last_id:int = min((wave + 1) * 4, len(HX_data))
 	self["ship%s_engine" % tgt_sh].emitting = false
 	if curr_en == last_id:
@@ -1115,18 +1094,18 @@ func enemy_attack():
 					HXs[i].get_node("HurtAnimation").stop()
 					HXs[i].get_node("HurtAnimation").play("Hurt", -1, time_speed)
 					HX_c_d[HXs[i].name].burn -= 1
-					HXs[i].get_node("Info/Effects/FireLabel").text = String(HX_c_d[HXs[i].name].burn)
+					HXs[i].get_node("Info/Effects/FireLabel").text = str(HX_c_d[HXs[i].name].burn)
 					if HX_c_d[HXs[i].name].burn <= 0:
 						HX_c_d[HXs[i].name].erase("burn")
-						HXs[i].get_node("Sprite/Fire").visible = false
+						HXs[i].get_node("Sprite2D/Fire").visible = false
 						HXs[i].get_node("Info/Effects/Fire").visible = false
 						HXs[i].get_node("Info/Effects/FireLabel").visible = false
 				if HX_c_d[HXs[i].name].has("stun"):
 					HX_c_d[HXs[i].name].stun -= 1
-					HXs[i].get_node("Info/Effects/StunLabel").text = String(HX_c_d[HXs[i].name].stun)
+					HXs[i].get_node("Info/Effects/StunLabel").text = str(HX_c_d[HXs[i].name].stun)
 					if HX_c_d[HXs[i].name].stun <= 0:
 						HX_c_d[HXs[i].name].erase("stun")
-						HXs[i].get_node("Sprite/Stun").visible = false
+						HXs[i].get_node("Sprite2D/Stun").visible = false
 						HXs[i].get_node("Info/Effects/Stun").visible = false
 						HXs[i].get_node("Info/Effects/StunLabel").visible = false
 				if HX_c_d[HXs[i].name].has("acc"):
@@ -1161,13 +1140,13 @@ func enemy_attack():
 		if $UI/ControlMouse.visible:
 			$UI/ControlMouse/AnimationPlayer.play_backwards("Fade")
 		if HXs_rekt == len(HX_data):
-			yield(get_tree().create_timer(1.0), "timeout")
+			await get_tree().create_timer(1.0).timeout
 			add_victory_panel()
 		else:
 			_on_Timer_timeout()
 	else:
 		pattern = "%s_%s" % [HX_data[curr_en].type, Helper.rand_int(1, 3)]
-		move_method = HX_data[curr_en].class - 1
+		move_method = HX_data[curr_en]["class"] - 1
 		if move_method in [MoveMethod.STANDARD, MoveMethod.FRICTION]:
 			if not $UI/ControlKeyboard.visible:
 				$UI/ControlKeyboard.visible = true
@@ -1184,7 +1163,7 @@ func enemy_attack():
 		curr_en += 1
 
 func put_magic(id:int):
-	star = Sprite.new()
+	star = Sprite2D.new()
 	star.texture = preload("res://Graphics/Decoratives/Star2.png")
 	star.position = HXs[id].position - Vector2(0, 15)
 	star.scale *= 0.5
@@ -1203,7 +1182,7 @@ func atk_1_1(id:int):
 		spd_growth = 0.06
 		delay_mult = 0.2
 	for i in num:
-		var fireball = w_1_1.instance()
+		var fireball = w_1_1.instantiate()
 		fireball.position = HXs[id].position
 		fireball.visible = false
 		fireball.add_to_group("w_1_1")
@@ -1226,13 +1205,13 @@ func atk_1_2(id:int):
 	for i in num:
 		var y_pos:int = 0
 		for j in num2:
-			var beam = w_1_2.instance()
-			var target:Vector2 = Vector2(0, rand_range(0, 720))
+			var beam = w_1_2.instantiate()
+			var target:Vector2 = Vector2(0, randf_range(0, 720))
 			if j == 0:
 				y_pos = target.y
 			else:
 				while abs(target.y - y_pos) < 200:
-					target.y = rand_range(0, 720)
+					target.y = randf_range(0, 720)
 			var pos = HXs[id].position
 			beam.position = pos
 			beam.rotation = atan2(pos.y - target.y, pos.x - target.x)
@@ -1259,8 +1238,8 @@ func atk_1_3(id:int):
 		delay_mult = 0.6
 	for i in num1:
 		for j in num2:
-			var bullet = w_1_3.instance()
-			var target:Vector2 = Vector2(1100, rand_range(0, 720))
+			var bullet = w_1_3.instantiate()
+			var target:Vector2 = Vector2(1100, randf_range(0, 720))
 			var pos = HXs[id].position
 			bullet.position = pos
 			bullet.rotation = atan2(pos.y - target.y, pos.x - target.x)
@@ -1285,12 +1264,12 @@ func atk_2_1(id:int):
 		upper_bound = 130
 		lower_bound2 = 670
 	for i in 8:
-		var pillar = w_2_1.instance()
+		var pillar = w_2_1.instantiate()
 		if i % 2 == 0:
 			pillar.scale.y *= -1
-			pillar.position.y = rand_range(upper_bound, upper_bound2)
+			pillar.position.y = randf_range(upper_bound, upper_bound2)
 		else:
-			pillar.position.y = rand_range(lower_bound, lower_bound2)
+			pillar.position.y = randf_range(lower_bound, lower_bound2)
 		pillar.position.x = 1400
 		add_child(pillar)
 		pillar.add_to_group("w_2_1")
@@ -1310,17 +1289,17 @@ func atk_2_2(id:int):
 		num = 16
 		scale_mult = 1.0
 	for i in num:
-		var ball = w_2_2.instance()
+		var ball = w_2_2.instantiate()
 		if i % 2 == 0:
 			ball.position.y = -200
 		else:
 			ball.position.y = 920
 		ball.scale *= scale_mult
-		var y_target = rand_range(280, 440)
-		var y_target2 = rand_range(-50, 770)
+		var y_target = randf_range(280, 440)
+		var y_target2 = randf_range(-50, 770)
 		while abs(y_target2 - y_target) < 100:
-			y_target2 = rand_range(-50, 770)
-		ball.position.x = rand_range(900, 1250)
+			y_target2 = randf_range(-50, 770)
+		ball.position.x = randf_range(900, 1250)
 		add_child(ball)
 		ball.add_to_group("w_2_2")
 		HX_w_c_d[ball.name] = {"group":"w_2_2", "init_x":ball.position.x, "y_target":y_target, "y_target2":y_target2, "stage":0, "damage":2.5, "id":id, "delay":i * delay_mult + 0.5}
@@ -1339,14 +1318,14 @@ func atk_2_3(id:int):
 		v_mult = 1.7
 		delay_mult = 0.1
 	for i in num:
-		var mine = w_2_3.instance()
-		var v:Vector2 = Vector2(-8, rand_range(0, 6))
-		mine.position = Vector2(1350, rand_range(0, 720))
-		mine.scale *= rand_range(0.6, 0.9)
+		var mine = w_2_3.instantiate()
+		var v:Vector2 = Vector2(-8, randf_range(0, 6))
+		mine.position = Vector2(1350, randf_range(0, 720))
+		mine.scale *= randf_range(0.6, 0.9)
 		if mine.position.y > 360:
 			v.y *= -1
 		v *= (1.7 - mine.scale.x) * v_mult
-		mine.rotation = rand_range(0, 2 * PI)
+		mine.rotation = randf_range(0, 2 * PI)
 		add_child(mine)
 		mine.add_to_group("w_2_3")
 		HX_w_c_d[mine.name] = {"group":"w_2_3", "v":v, "damage":2.5, "id":id, "delay":i * delay_mult + 0.5}
@@ -1368,12 +1347,12 @@ func atk_3_1(id:int):
 		v_mult = 10
 		delay = 0.6
 	for i in num:#orange spikes
-		var y_pos = rand_range(100, 620)
+		var y_pos = randf_range(100, 620)
 		y_poses.append(y_pos)
 		var proj_num:int = (7 if id % 2 == 0 else 11) * proj_num_mult
 		var spread:float = (0.2 if id % 2 == 0 else 0.13) / proj_num_mult
 		for j in proj_num:
-			var spike = w_3_1.instance()
+			var spike = w_3_1.instantiate()
 			spike.rotation = (j - proj_num / 2) * spread
 			spike.position = Vector2(HXs[id].position.x, y_pos)
 			var v = -Vector2(cos(spike.rotation), sin(spike.rotation)) * v_mult
@@ -1387,9 +1366,9 @@ func atk_3_1(id:int):
 func atk_3_2(id:int):
 	put_magic(id)
 	var path:int = randi() % 13
-	var dir = rand_range(0.1, 0.9)
+	var dir = randf_range(0.1, 0.9)
 	while abs(dir - 0.5) < 0.2:
-		dir = rand_range(0.1, 0.9)
+		dir = randf_range(0.1, 0.9)
 	var dir_bool = true
 	var gap:int = 4
 	if e_diff == EDiff.EASY:
@@ -1400,12 +1379,12 @@ func atk_3_2(id:int):
 		for j in 16:
 			if j >= path and j <= path + gap:
 				continue
-			var diamond = w_3_2.instance()
+			var diamond = w_3_2.instantiate()
 			diamond.position = Vector2(1350 + i * 48, j * 48)
 			diamond.get_node("CollisionPolygon2D").disabled = true
 			add_child(diamond)
 			diamond.add_to_group("w_3_2")
-			diamond.modulate = Color(rand_range(0.5, 1), rand_range(0.5, 1), rand_range(0.5, 1), 1)
+			diamond.modulate = Color(randf_range(0.5, 1), randf_range(0.5, 1), randf_range(0.5, 1), 1)
 			HX_w_c_d[diamond.name] = {"group":"w_3_2", "id":id, "damage":2.4, "delay":0.5}
 		if randf() < 0.6:
 			if dir_bool and randf() < dir or not dir_bool and randf() > dir:
@@ -1427,15 +1406,15 @@ func atk_3_3(id:int):
 	elif e_diff == EDiff.HARD:
 		int_mult = 0.8
 	for i in 3:
-		var platform = w_3_3_1.instance()
-		platform.position = Vector2(1400, rand_range(200, 520))
+		var platform = w_3_3_1.instantiate()
+		platform.position = Vector2(1400, randf_range(200, 520))
 		add_child(platform)
 		platform.add_to_group("w_3_3")
 		var platform_delay:float = i * 1.5 + 0.5
 		HX_w_c_d[platform.name] = {"group":"w_3_3", "id":id, "damage":6, "delay":platform_delay}
-		var interval:float = rand_range(0.65, 0.7) * int_mult
+		var interval:float = randf_range(0.65, 0.7) * int_mult
 		for j in 14:
-			var bullet = w_3_3_2.instance()
+			var bullet = w_3_3_2.instantiate()
 			bullet.position = Vector2(1400, platform.position.y)
 			bullet.visible = false
 			add_child(bullet)
@@ -1455,12 +1434,12 @@ func atk_4_1(id:int):
 		v_mult = 10
 		delay_mult = 0.08
 	for i in num:
-		var light = w_4_1.instance()
+		var light = w_4_1.instantiate()
 		light.position = HXs[id].position
 		light.scale *= 0.6
 		var min_angle = atan2(light.position.y, light.position.x) + 0.2
 		var max_angle = atan2(light.position.y - 720, light.position.x) - 0.2
-		light.rotation = rand_range(min_angle, max_angle)
+		light.rotation = randf_range(min_angle, max_angle)
 		light.visible = false
 		var v = -Vector2(cos(light.rotation), sin(light.rotation)) * v_mult
 		if HXs[id].position.x > 853:
@@ -1486,9 +1465,9 @@ func atk_4_2(id:int):
 		v_mult = 25
 		acc = 0.27
 	for i in num:
-		var y_pos = rand_range(50, 670)
+		var y_pos = randf_range(50, 670)
 		y_poses.append(y_pos)
-		var boomerang = w_4_2.instance()
+		var boomerang = w_4_2.instantiate()
 		boomerang.position = Vector2(HXs[id].position.x, y_pos)
 		var v = Vector2(-1, 0) * v_mult
 		if HXs[id].position.x > 853:
@@ -1514,13 +1493,13 @@ func atk_4_3(id:int):
 		delay_mult = 0.3
 		v_mult = 21
 	for i in num:
-		var y_poses = [stepify(rand_range(0, 600), 120) + 64, stepify(rand_range(0, 600), 120) + 64, stepify(rand_range(0, 600), 120) + 64]
+		var y_poses = [snapped(randf_range(0, 600), 120) + 64, snapped(randf_range(0, 600), 120) + 64, snapped(randf_range(0, 600), 120) + 64]
 		while y_poses[1] == y_poses[0]:
-			y_poses[1] = stepify(rand_range(0, 600), 120) + 64
+			y_poses[1] = snapped(randf_range(0, 600), 120) + 64
 		while y_poses[2] == y_poses[0] or y_poses[2] == y_poses[1]:
-			y_poses[2] = stepify(rand_range(0, 600), 120) + 64
+			y_poses[2] = snapped(randf_range(0, 600), 120) + 64
 		for j in 3:
-			var slab = w_4_3.instance()
+			var slab = w_4_3.instantiate()
 			slab.position = Vector2(1350, y_poses[j])
 			add_child(slab)
 			slab.add_to_group("w_4_3")
@@ -1533,11 +1512,11 @@ func _on_Ship_area_entered(area, ship_id:int):
 	var HX = HX_data[shooter]
 	if randf() < hit_formula(HX.acc * (1.0 + HX_c_d[HXs[shooter].name].acc if HX_c_d[HXs[shooter].name].has("acc") else 1.0), ship_data[ship_id].eva * ship_data[ship_id].eva_mult):
 		var dmg:int = HX_w_c_d[area.name].damage * HX.atk * (1.0 + HX_c_d[HXs[shooter].name].atk if HX_c_d[HXs[shooter].name].has("atk") else 1.0) / (ship_data[ship_id].def * ship_data[ship_id].def_mult)
-		Helper.show_dmg(dmg, self["ship%s" % ship_id].position, self, 0.6)
+		Helper.show_dmg(dmg, self["ship%s" % ship_id].position, self, 30)
 		ship_data[ship_id].HP -= dmg
 		ship_data[ship_id].rage = min(ship_data[ship_id].rage + float(dmg) / float(ship_data[ship_id].total_HP) * 300, 100) #Add rage based on the percentage of health lost
 	else:
-		Helper.show_dmg(0, self["ship%s" % ship_id].position, self, 0.6, true)
+		Helper.show_dmg(0, self["ship%s" % ship_id].position, self, 30, true)
 	$ImmuneTimer.start()
 	hit_amount += 1
 	immune = true
@@ -1605,17 +1584,9 @@ func _on_diff_pressed(diff:int):
 		config.set_value("game", "e_diff", diff)
 		config.save("user://settings.cfg")
 		e_diff = diff
-	$UI/Help2.visible = false
-	tween.stop_all()
-	remove_child(tween)
-	tween.free()
-	tween = Tween.new()
-	add_child(tween)
-	$Help.modulate.a = 0
+	$UI/Help2/AnimationPlayer.play_backwards("Fade")
+	$Help/AnimationPlayer.play("Fade")
 	$Help.visible = true
-	tween.interpolate_property($Help, "modulate", Color(1, 1, 1, 0), Color(1, 1, 1, 1), 0.5)
-	tween.interpolate_property($Help, "rect_position", Vector2(0, 354), Vector2(0, 339), 0.5)
-	tween.start()
 
 func _on_AnimationPlayer_animation_finished(anim_name):
 	$Laser.visible = false
@@ -1647,7 +1618,7 @@ func _on_Superweapon_pressed():
 		game.hide_tooltip()
 	if stage != BattleStages.CHOOSING:
 		return
-	var super = ship_data[curr_sh].superweapon
+	var _super = ship_data[curr_sh].superweapon
 	
 	if curr_sh in pending_supers.keys(): #If this ship is charging a superweapon
 		if $UI/FightPanel.modulate.a > 0:
@@ -1657,13 +1628,13 @@ func _on_Superweapon_pressed():
 		else:
 			pending_supers.erase(curr_sh)
 			get_node("Ship%s/Charge" % [curr_sh]).emitting = false
-			weapon_type = super
+			weapon_type = _super
 			var dmg = 50 * ship_data[curr_sh].atk * ship_data[curr_sh].atk_mult * ship_buffs[curr_sh].atk #op damage calculation
 			for id in len(HXs):
 				if HX_data[id].HP > 0:
 					HX_data[id].HP -= dmg / HX_data[id].def
 					HXs[id].get_node("Info/HP").value = HX_data[id].HP
-					Helper.show_dmg(dmg, HXs[id].position, self, 0.6, false)
+					Helper.show_dmg(dmg, HXs[id].position, self, 30, false)
 					HXs[id].get_node("HurtAnimation").stop()
 					HXs[id].get_node("HurtAnimation").play("Hurt", -1, time_speed)
 					HXs[id].get_node("KnockbackAnimation").stop()
@@ -1672,7 +1643,7 @@ func _on_Superweapon_pressed():
 						HXs_rekt += 1
 						HX_data[id].rekt = true
 						$UI/FightPanel/Panel/BattleProgress.text = "%s / %s" % [HXs_rekt, len(HX_data)]
-			if super == "charge":
+			if _super == "charge":
 				ship_data[curr_sh].HP -= dmg / (ship_data[curr_sh].def * ship_data[curr_sh].def_mult)
 				get_node("Ship%s/HP" % [curr_sh]).value = ship_data[curr_sh].HP
 			curr_sh += 1
@@ -1694,4 +1665,13 @@ func _on_Superweapon_pressed():
 			if curr_sh == 4:
 				curr_sh = 0
 		$Timer.start(min(0.5, 0.5 / time_speed))
-	
+
+
+func _on_animation_player_animation_finished(anim_name):
+	if $Help.modulate.a == 0.0:
+		$Help.visible = false
+
+
+func _on_help2_animation_player_animation_finished(anim_name):
+	if $UI/Help2.modulate.a == 0.0:
+		$UI/Help2.visible = false

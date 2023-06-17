@@ -13,21 +13,21 @@ func _ready():
 
 func _input(event):
 	if event is InputEventMouseMotion:
-		mouse_pos = event.position - rect_global_position
-		update()
+		mouse_pos = event.position - global_position
+		queue_redraw()
 	
 func _draw():
 	var n = len(y_values)-1
 	for i in range(n):
-		draw_line(Vector2(i*rect_size.x/n, -y_values[i]*rect_size.y/abs(y_values.max())+rect_size.y), Vector2((i+1)*rect_size.x/n, -y_values[i+1]*rect_size.y/abs(y_values.max())+rect_size.y), Color.white)
-		draw_line(Vector2(i*rect_size.x/n, -y_values[i]*rect_size.y/abs(y_values.max())+rect_size.y+1), Vector2((i+1)*rect_size.x/n, -y_values[i+1]*rect_size.y/abs(y_values.max())+rect_size.y+1), Color.black)
+		draw_line(Vector2(i*size.x/n, -y_values[i]*size.y/abs(y_values.max())+size.y), Vector2((i+1)*size.x/n, -y_values[i+1]*size.y/abs(y_values.max())+size.y), Color.WHITE)
+		draw_line(Vector2(i*size.x/n, -y_values[i]*size.y/abs(y_values.max())+size.y+1), Vector2((i+1)*size.x/n, -y_values[i+1]*size.y/abs(y_values.max())+size.y+1), Color.BLACK)
 	if mouse_pos != Vector2.ZERO:
-		var x_index_at_mouse = clamp(int(range_lerp(mouse_pos.x, 0, rect_size.x, 0, len(y_values))), 0, len(y_values)-1)
-		var corresponding_y = -y_values[x_index_at_mouse]*rect_size.y/abs(y_values.max())+rect_size.y
-		draw_line(Vector2(mouse_pos.x, rect_size.y), Vector2(mouse_pos.x, corresponding_y), Color.white)
-		draw_line(Vector2(mouse_pos.x+1, rect_size.y), Vector2(mouse_pos.x+1, corresponding_y), Color.black)
-		draw_line(Vector2(0, corresponding_y), Vector2(mouse_pos.x, corresponding_y), Color.white)
-		draw_line(Vector2(0, corresponding_y+1), Vector2(mouse_pos.x, corresponding_y+1), Color.black)
+		var x_index_at_mouse = clamp(int(remap(mouse_pos.x, 0, size.x, 0, len(y_values))), 0, len(y_values)-1)
+		var corresponding_y = -y_values[x_index_at_mouse]*size.y/abs(y_values.max())+size.y
+		draw_line(Vector2(mouse_pos.x, size.y), Vector2(mouse_pos.x, corresponding_y), Color.WHITE)
+		draw_line(Vector2(mouse_pos.x+1, size.y), Vector2(mouse_pos.x+1, corresponding_y), Color.BLACK)
+		draw_line(Vector2(0, corresponding_y), Vector2(mouse_pos.x, corresponding_y), Color.WHITE)
+		draw_line(Vector2(0, corresponding_y+1), Vector2(mouse_pos.x, corresponding_y+1), Color.BLACK)
 		$Info.text = "Amount = " + str(Helper.clever_round(y_values[x_index_at_mouse], 3, true))
 	else:
 		$Info.text = ""
@@ -43,7 +43,7 @@ func add_points():
 			y_values.append(integral(_A, j*step + star_class_masses[i], (j+1)*step + star_class_masses[i]))
 		st += "%s: %.5f%%/" % [star_classes[i], 100 * integral(_A, star_class_masses[i], star_class_masses[i+1])]
 	$Label2.text = st
-	update()
+	queue_redraw()
 
 
 func integral(A, a, b):

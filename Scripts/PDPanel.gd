@@ -3,22 +3,23 @@ extends "Panel.gd"
 var el:String = ""
 var bonuses:Dictionary = {}
 var op_points:Dictionary = {}
-var default_l:PoolVector2Array = []
-var default_g:PoolVector2Array = []
-var default_sc:PoolVector2Array = []
+var default_l:PackedVector2Array = []
+var default_g:PackedVector2Array = []
+var default_sc:PackedVector2Array = []
 var default_dP = 0.0
 var default_dT = 0.0
 var error = false
 var state_moused_over = ""
-var point_colors = [Color.violet, Color.red, Color.green, Color.blue]
+var point_colors = [Color.VIOLET, Color.RED, Color.GREEN, Color.BLUE]
 var editable = false
 
 func _ready():
-	set_polygon(rect_size)
+	set_process_input(false)
+	set_polygon(size)
 
 func calc_OP_points():
 	for el in Data.lake_bonus_values.keys():
-		var default = load("res://Scenes/PhaseDiagrams/%s.tscn" % el).instance().get_node("Liquid").polygon
+		var default = load("res://Scenes/PhaseDiagrams/%s.tscn" % el).instantiate().get_node("Liquid").polygon
 		if game.chemistry_bonus.has(el):
 			if not bonuses.has(el):
 				bonuses[el] = game.chemistry_bonus[el]
@@ -31,13 +32,14 @@ func calc_OP_points():
 			op_points[el] = 0.0
 
 func refresh():
+	set_process_input(true)
 	calc_OP_points()
 	for pt in get_tree().get_nodes_in_group("PD_points"):
 		pt.queue_free()
 	$Title.text = "%s (%s)" % [tr("PHASE_DIAGRAM_EDITOR"), tr(el.to_upper() + "_NAME")]
-	default_l = load("res://Scenes/PhaseDiagrams/%s.tscn" % el).instance().get_node("Liquid").polygon
-	default_g = load("res://Scenes/PhaseDiagrams/%s.tscn" % el).instance().get_node("Gas").polygon
-	default_sc = load("res://Scenes/PhaseDiagrams/%s.tscn" % el).instance().get_node("Superfluid").polygon
+	default_l = load("res://Scenes/PhaseDiagrams/%s.tscn" % el).instantiate().get_node("Liquid").polygon
+	default_g = load("res://Scenes/PhaseDiagrams/%s.tscn" % el).instantiate().get_node("Gas").polygon
+	default_sc = load("res://Scenes/PhaseDiagrams/%s.tscn" % el).instantiate().get_node("Superfluid").polygon
 	default_dP = default_sc[1].y - default_sc[2].y
 	default_dT = default_g[1].x - default_g[0].x
 	$Liquid.polygon = bonuses[el]
@@ -49,23 +51,23 @@ func refresh():
 	for i in 4:
 		var pt_default = TextureRect.new()
 		pt_default.texture = preload("res://Graphics/Icons/Circle.png")
-		pt_default.expand = true
+		pt_default.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 		pt_default.stretch_mode = TextureButton.STRETCH_KEEP_ASPECT_CENTERED
-		pt_default.rect_size = Vector2(8, 8)
-		pt_default.rect_position = default_l[i] + $Liquid.position - Vector2(4, 4)
+		pt_default.size = Vector2(8, 8)
+		pt_default.position = default_l[i] + $Liquid.position - Vector2(4, 4)
 		pt_default.add_to_group("PD_points")
 		pt_default.modulate = point_colors[i].darkened(0.3)
 		add_child(pt_default)
 	for i in 4:
 		var pt = TextureButton.new()
 		pt.texture_normal = preload("res://Graphics/Icons/Circle.png")
-		pt.expand = true
+		pt.ignore_texture_size = true
 		pt.stretch_mode = TextureButton.STRETCH_KEEP_ASPECT_CENTERED
-		pt.rect_size = Vector2(16, 16)
+		pt.size = Vector2(16, 16)
 		if editable:
-			pt.connect("button_down", self, "on_drag_start", [pt, i])
-			pt.connect("button_up", self, "on_drag_end")
-		pt.rect_position = $Liquid.polygon[i] + $Liquid.position - Vector2(8, 8)
+			pt.connect("button_down",Callable(self,"on_drag_start").bind(pt, i))
+			pt.connect("button_up",Callable(self,"on_drag_end"))
+		pt.position = $Liquid.polygon[i] + $Liquid.position - Vector2(8, 8)
 		pt.add_to_group("PD_points")
 		pt.modulate = point_colors[i]
 		add_child(pt)
@@ -92,7 +94,7 @@ func on_drag_end():
 	moving_pt = null
 
 func update_OP_points():
-	error = Geometry.triangulate_polygon($Gas.polygon).empty() or Geometry.triangulate_polygon($Liquid.polygon).empty() or Geometry.triangulate_polygon($Supercritical.polygon).empty()
+	error = Geometry2D.triangulate_polygon($Gas.polygon).is_empty() or Geometry2D.triangulate_polygon($Liquid.polygon).is_empty() or Geometry2D.triangulate_polygon($Supercritical.polygon).is_empty()
 	$Error.visible = error
 	$OPPoints.visible = not error
 	op_points[el] = 0
@@ -108,8 +110,10 @@ func update_OP_points():
 	$Reset.visible = op_points[el] != 0 and editable
 
 func _input(event):
+	if not visible:
+		set_process_input(false)
 	if event is InputEventMouseMotion:
-		var pos:Vector2 = event.position - $Liquid.position - rect_global_position
+		var pos:Vector2 = event.position - $Liquid.position - global_position
 		if moving_l_index != -1:
 			pos.x = clamp(pos.x, 0, 800)
 			pos.y = clamp(pos.y, 0, 400)
@@ -126,22 +130,22 @@ func _input(event):
 				$Gas.polygon[2] = pos
 				$Gas.polygon[3].y = pos.y
 			if moving_pt:
-				moving_pt.rect_position = pos - Vector2(8, 8) + $Liquid.position
+				moving_pt.position = pos - Vector2(8, 8) + $Liquid.position
 			update_OP_points()
 		var info:String = ""
-		if Geometry.is_point_in_polygon(pos, $Gas.polygon):
+		if Geometry2D.is_point_in_polygon(pos, $Gas.polygon):
 			if state_moused_over != "g" and moving_l_index == -1:
 				game.show_tooltip(tr("GAS"))
 			state_moused_over = "g"
-		elif Geometry.is_point_in_polygon(pos, $Supercritical.polygon):
+		elif Geometry2D.is_point_in_polygon(pos, $Supercritical.polygon):
 			if state_moused_over != "sc" and moving_l_index == -1:
 				game.show_tooltip(tr("SUPERCRITICAL") + "\n" + tr("%s_LAKE_BONUS" % el.to_upper()) % Data.lake_bonus_values[el].sc)
 			state_moused_over = "sc"
-		elif Geometry.is_point_in_polygon(pos, $Liquid.polygon):
+		elif Geometry2D.is_point_in_polygon(pos, $Liquid.polygon):
 			if state_moused_over != "l" and moving_l_index == -1:
 				game.show_tooltip(tr("LIQUID") + "\n" + tr("%s_LAKE_BONUS" % el.to_upper()) % Data.lake_bonus_values[el].l)
 			state_moused_over = "l"
-		elif Geometry.is_point_in_polygon(pos, $Solid.polygon):
+		elif Geometry2D.is_point_in_polygon(pos, $Solid.polygon):
 			if state_moused_over != "s" and moving_l_index == -1:
 				game.show_tooltip(tr("SOLID") + "\n" + tr("%s_LAKE_BONUS" % el.to_upper()) % Data.lake_bonus_values[el].s)
 			state_moused_over = "s"
@@ -153,7 +157,7 @@ func _input(event):
 			info = "T = %s K, P = %s bar" % [round(1000 * pos.x / 800), Helper.clever_round(pow(10, -12.0 * (pos.y - 200)/400.0))]
 		$Info.text = info
 
-func valid_polygon(polygon:PoolVector2Array):
+func valid_polygon(polygon:PackedVector2Array):
 	var s = polygon.size() - 1
 	for i in range(0,s):
 		var p1: Vector2 = polygon[i]
@@ -161,7 +165,7 @@ func valid_polygon(polygon:PoolVector2Array):
 		for j in range(0,s):
 			var p1a: Vector2 = polygon[j]
 			var p2a: Vector2 = polygon[j+1 % s]
-			var intersect = Geometry.segment_intersects_segment_2d(p1,p2,p1a,p2a)
+			var intersect = Geometry2D.segment_intersects_segment(p1,p2,p1a,p2a)
 			if intersect != null: 
 				return false
 	return true

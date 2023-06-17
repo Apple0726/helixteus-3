@@ -2,5 +2,5 @@
 
 [ext_resource path="res://Scripts/CircleBar.gd" type="Script" id=1]
 
-[node name="CircleBar" type="Sprite"]
+[node name="CircleBar" type="Sprite2D"]
 script = ExtResource( 1 )

@@ -1,59 +1,27 @@
-[gd_scene load_steps=4 format=2]
-
-[sub_resource type="StyleBoxFlat" id=1]
-bg_color = Color( 0.145098, 0.145098, 0.145098, 1 )
-border_width_left = 2
-border_width_top = 2
-border_width_right = 2
-border_width_bottom = 2
-border_color = Color( 0.4, 0.501961, 1, 1 )
-
-[sub_resource type="StyleBoxFlat" id=4]
-bg_color = Color( 0.333333, 0.333333, 0.333333, 1 )
-border_width_left = 2
-border_width_top = 2
-border_width_right = 2
-border_width_bottom = 2
-border_color = Color( 0.4, 0.501961, 1, 1 )
-
-[sub_resource type="StyleBoxFlat" id=3]
-bg_color = Color( 0, 0, 0, 1 )
-border_width_left = 2
-border_width_top = 2
-border_width_right = 2
-border_width_bottom = 2
-border_color = Color( 0.4, 0.501961, 1, 1 )
+[gd_scene format=3 uid="uid://bbgrbjt6243ku"]
 
 [node name="Slot" type="Control"]
+custom_minimum_size = Vector2(60, 60)
+layout_mode = 3
+anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-margin_right = -1280.0
-margin_bottom = -720.0
-rect_min_size = Vector2( 60, 60 )
+offset_right = -1280.0
+offset_bottom = -720.0
 mouse_filter = 1
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="Button" type="Button" parent="."]
-margin_right = 64.0
-margin_bottom = 64.0
+layout_mode = 0
+offset_right = 64.0
+offset_bottom = 64.0
 mouse_filter = 1
-custom_styles/hover = SubResource( 1 )
-custom_styles/pressed = SubResource( 4 )
-custom_styles/normal = SubResource( 3 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="TextureRect" type="TextureRect" parent="."]
-margin_left = 4.0
-margin_top = 4.0
-margin_right = 60.0
-margin_bottom = 60.0
+layout_mode = 0
+offset_left = 4.0
+offset_top = 4.0
+offset_right = 60.0
+offset_bottom = 60.0
 mouse_filter = 2
-expand = true
-stretch_mode = 6
-__meta__ = {
-"_edit_use_anchors_": false
-}
+expand_mode = 1
+stretch_mode = 5

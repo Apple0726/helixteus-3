@@ -1,7 +1,7 @@
 extends "Panel.gd"
 
-onready var hbox = $Seeds/HBox
-onready var f_hbox = $Fertilizer/HBox
+@onready var hbox = $Seeds/HBox
+@onready var f_hbox = $Fertilizer/HBox
 var p_i:Dictionary
 var tile_num:int
 var seeds_to_plant:String = ""
@@ -12,17 +12,17 @@ var tiles_selected:Array
 
 func _ready():
 	for f in game.seeds_produce:
-		var slot = game.slot_scene.instance()
+		var slot = game.slot_scene.instantiate()
 		slot.get_node("TextureRect").texture = load("res://Graphics/Agriculture/" + f + ".png")
-		slot.get_node("Button").connect("mouse_entered", self, "on_slot_over", [f])
-		slot.get_node("Button").connect("mouse_exited", self, "on_slot_out")
-		slot.get_node("Button").connect("pressed", self, "on_slot_press", [f])
+		slot.get_node("Button").connect("mouse_entered",Callable(self,"on_slot_over").bind(f))
+		slot.get_node("Button").connect("mouse_exited",Callable(self,"on_slot_out"))
+		slot.get_node("Button").connect("pressed",Callable(self,"on_slot_press").bind(f))
 		f_hbox.add_child(slot)
 	
 func refresh():
 	$UseFertilizer.visible = game.science_unlocked.has("PF")
 	$Plant.visible = false
-	set_polygon(rect_size)
+	set_polygon(size)
 	if tile_num == 1:
 		$Label.text = tr("GH_NAME")
 	else:
@@ -30,11 +30,11 @@ func refresh():
 	for slot in hbox.get_children():
 		slot.queue_free()
 	for _seed in game.seeds_produce:
-		var slot = game.slot_scene.instance()
+		var slot = game.slot_scene.instantiate()
 		slot.get_node("TextureRect").texture = load("res://Graphics/Agriculture/" + _seed + ".png")
-		slot.get_node("Button").connect("mouse_entered", self, "on_slot_over", [_seed])
-		slot.get_node("Button").connect("mouse_exited", self, "on_slot_out")
-		slot.get_node("Button").connect("pressed", self, "on_slot_press", [_seed])
+		slot.get_node("Button").connect("mouse_entered",Callable(self,"on_slot_over").bind(_seed))
+		slot.get_node("Button").connect("mouse_exited",Callable(self,"on_slot_out"))
+		slot.get_node("Button").connect("pressed",Callable(self,"on_slot_press").bind(_seed))
 		hbox.add_child(slot)
 	calc_prod_per_sec()
 	if seeds_to_plant != "":
@@ -56,7 +56,7 @@ func calc_prod_per_sec():
 		for p in p_i.auto_GH.produce:
 			production[p] = p_i.auto_GH.produce[p]
 		if p_i.auto_GH.has("soil_drain"):
-			$UseFertilizer.pressed = true
+			$UseFertilizer.button_pressed = true
 			production.soil = production.get("soil", 0.0) - p_i.auto_GH.soil_drain
 	elif c_v == "planet":
 		for tile in tiles_selected:
@@ -64,7 +64,7 @@ func calc_prod_per_sec():
 				var tile_p:Dictionary = game.tile_data[tile].auto_GH
 				production.cellulose = production.get("cellulose", 0.0) - tile_p.cellulose_drain
 				if tile_p.has("soil_drain"):
-					$UseFertilizer.pressed = true
+					$UseFertilizer.button_pressed = true
 					production.soil = production.get("soil", 0.0) - tile_p.soil_drain
 				for p in tile_p.produce:
 					production[p] = tile_p.produce[p] * (Helper.get_au_mult(game.tile_data[tile]) if p in game.met_info.keys() else 1.0) + production.get(p, 0.0)
@@ -128,7 +128,7 @@ func on_slot_press(_name:String):
 			else:
 				game.view.obj.rsrcs[tile_id].set_icon_texture(load("res://Graphics/Metals/%s.png" % _name.split("_")[0]))
 			set_auto_harvest(tile, produce, _name, not harvest)
-	if $UseFertilizer.pressed:
+	if $UseFertilizer.button_pressed:
 		_on_UseFertilizer_toggled(true)
 	calc_prod_per_sec()
 
@@ -158,7 +158,7 @@ func _on_UseFertilizer_toggled(button_pressed):
 					game.autocollect.mats.soil = game.autocollect.mats.get("soil", 0) - tile.auto_GH.soil_drain
 					game.autocollect.mats.cellulose -= tile.auto_GH.cellulose_drain * 0.5 * fert_cost_mult
 					tile.auto_GH.cellulose_drain *= 1.0 + 0.5 * fert_cost_mult
-					var fert = Sprite.new()
+					var fert = Sprite2D.new()
 					fert.texture = preload("res://Graphics/Agriculture/fertilizer.png")
 					game.view.obj.bldgs[tile_id].add_child(fert)
 					fert.name = "Fertilizer"

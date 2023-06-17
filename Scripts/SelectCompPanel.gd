@@ -1,13 +1,13 @@
 extends Panel
 
-onready var game = get_node("/root/Game")
-onready var hbox = $ScrollContainer2/HBox
+@onready var game = get_node("/root/Game")
+@onready var hbox = $ScrollContainer2/HBox
 var g_cmp:String#armor, wheels, CC (g: general)
 var s_cmp:String#lead_armor, copper_wheels etc. (s: specific)
 var curr_cmp:String
 var is_inventory
 var index:int = -1
-onready var option_btn = $OptionButton
+@onready var option_btn = $OptionButton
 
 func _ready():
 	$Select.text = tr("SELECT") + " (S)"
@@ -77,11 +77,11 @@ func refresh(type:String, _curr_cmp:String, _is_inventory:bool = false, _index:i
 			if l_metal == "gemstone":
 				if not game.show.has("amethyst") and not game.show.has("emerald") and not game.show.has("quartz") and not game.show.has("ruby") and not game.show.has("sapphire") and not game.show.has("topaz"):
 					continue
-		var slot = game.slot_scene.instance()
+		var slot = game.slot_scene.instantiate()
 		slot.get_node("TextureRect").texture = load("res://Graphics/Cave/%s/%s.png" % [dir, cmp])
-		slot.get_node("Button").connect("mouse_entered", self, "_on_Slot_mouse_entered", [type, cmp, metal])
-		slot.get_node("Button").connect("mouse_exited", self, "_on_Slot_mouse_exited")
-		slot.get_node("Button").connect("pressed", self, "_on_Slot_pressed", [type, cmp, slot])
+		slot.get_node("Button").connect("mouse_entered",Callable(self,"_on_Slot_mouse_entered").bind(type, cmp, metal))
+		slot.get_node("Button").connect("mouse_exited",Callable(self,"_on_Slot_mouse_exited"))
+		slot.get_node("Button").connect("pressed",Callable(self,"_on_Slot_pressed").bind(type, cmp, slot))
 		hbox.add_child(slot)
 		if cmp == curr_cmp:
 			_on_Slot_pressed(type, cmp, slot)

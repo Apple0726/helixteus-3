@@ -1,7 +1,7 @@
 extends Panel
 
-onready var op = $Control/OptionButton
-onready var game = get_node("/root/Game")
+@onready var op = $Control/OptionButton
+@onready var game = get_node("/root/Game")
 
 var coal_texture = preload("res://Graphics/Materials/coal.png")
 var cellulose_texture = Data.cellulose_icon
@@ -19,6 +19,9 @@ var speed = 0
 var unit:String = "kg"
 var type:String = "mats"
 
+func _ready():
+	$Control.visible = false
+
 func refresh_drive_modulate():
 	for drive in $Panel/Drives.get_children():
 		drive.modulate.a = 0.5
@@ -28,43 +31,31 @@ func refresh():
 		drive.visible = game.science_unlocked.has(drive.name)
 
 	meta = op.get_selected_metadata()
-	
-	match meta:
-		"cellulose":
-			$Control/TextureRect.texture = cellulose_texture
-			speed = 4000
-			unit = "kg"
-			type = "mats"
-		"coal":
-			$Control/TextureRect.texture = coal_texture
-			speed = 600
-			unit = "kg"
-			type = "mats"
-		"Ne":
-			$Control/TextureRect.texture = neon_texture
-			speed = 48000
-			unit = "mol"
-			type = "atoms"
-		"Xe":
-			$Control/TextureRect.texture = xenon_texture
-			speed = 8500000
-			unit = "mol"
-			type = "atoms"
-	refresh_costs()
-	$Control/HSlider.value = $Control/HSlider.max_value
+	if meta != null:
+		match meta:
+			"cellulose":
+				$Control/TextureRect.texture = cellulose_texture
+				speed = 4000
+				unit = "kg"
+				type = "mats"
+			"coal":
+				$Control/TextureRect.texture = coal_texture
+				speed = 600
+				unit = "kg"
+				type = "mats"
+			"Ne":
+				$Control/TextureRect.texture = neon_texture
+				speed = 48000
+				unit = "mol"
+				type = "atoms"
+			"Xe":
+				$Control/TextureRect.texture = xenon_texture
+				speed = 8500000
+				unit = "mol"
+				type = "atoms"
+		$Control/HSlider.max_value = min(game[type][meta], (game.ships_travel_length - Time.get_unix_time_from_system() + game.ships_travel_start_date) / float(speed))
+		$Control/HSlider.value = $Control/HSlider.max_value
 
-func refresh_costs():
-	if meta:
-		if game[type][meta] == 0:
-			$Control/HSlider.visible = false
-			$Control/HSlider.value = 0
-		else:
-			$Control/HSlider.visible = true
-			$Control/HSlider.max_value = min(game[type][meta], (game.ships_travel_length - OS.get_system_time_msecs() + game.ships_travel_start_date) / float(speed))
-		cost = $Control/HSlider.value
-		$Control/Label.text = "%s %s" % [Helper.clever_round(cost), unit]
-	$Control/Label2.text = Helper.time_to_str(cost * speed)
-	
 func use_drive():
 	if game.ships_travel_view == "-":
 		game.popup(tr("SHIPS_NEED_TO_BE_TRAVELLING"), 1.5)
@@ -72,7 +63,9 @@ func use_drive():
 		game.ships_travel_start_date -= cost * speed
 		game[type][meta] -= cost
 		game.popup(tr("DRIVE_SUCCESSFULLY_ACTIVATED"), 1.5)
-	refresh_costs()
+	refresh_h_slider()
+	$Control/HSlider.max_value = min(game[type][meta], (game.ships_travel_length - Time.get_unix_time_from_system() + game.ships_travel_start_date) / float(speed))
+	$Control/HSlider.set_value_no_signal($Control/HSlider.max_value)
 
 func _on_ChemicalDrive_pressed():
 	op.clear()
@@ -80,6 +73,7 @@ func _on_ChemicalDrive_pressed():
 	op.add_item(tr("CELLULOSE"))
 	op.set_item_metadata(0, "coal")
 	op.set_item_metadata(1, "cellulose")
+	op.selected = 0
 	$Control.visible = true
 	refresh()
 	refresh_drive_modulate()
@@ -91,6 +85,7 @@ func _on_IonDrive_pressed():
 	op.add_item(tr("XE_NAME"))
 	op.set_item_metadata(0, "Ne")
 	op.set_item_metadata(1, "Xe")
+	op.selected = 0
 	$Control.visible = true
 	refresh()
 	refresh_drive_modulate()
@@ -99,5 +94,16 @@ func _on_IonDrive_pressed():
 func _on_OptionButton_item_selected(index):
 	refresh()
 
-func _on_HSlider_value_changed(value):
-	refresh_costs()
+func _on_h_slider_value_changed(value):
+	refresh_h_slider()
+	cost = $Control/HSlider.value
+	$Control/Label.text = "%s %s" % [Helper.clever_round(cost), unit]
+	$Control/Label2.text = Helper.time_to_str(cost * speed)
+
+func refresh_h_slider():
+	if meta:
+		if is_zero_approx(game[type][meta]):
+			$Control/HSlider.visible = false
+			$Control/HSlider.set_value_no_signal(0)
+		else:
+			$Control/HSlider.visible = true

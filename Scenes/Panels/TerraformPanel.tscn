@@ -1,28 +1,28 @@
-[gd_scene load_steps=20 format=2]
+[gd_scene load_steps=19 format=3 uid="uid://n0lnr888b50d"]
 
-[ext_resource path="res://Scenes/AdvButton.tscn" type="PackedScene" id=1]
-[ext_resource path="res://Graphics/Icons/minerals.png" type="Texture" id=2]
-[ext_resource path="res://Graphics/Icons/SP.png" type="Texture" id=3]
-[ext_resource path="res://Graphics/Icons/energy.png" type="Texture" id=4]
-[ext_resource path="res://Scenes/CloseButton.tscn" type="PackedScene" id=5]
-[ext_resource path="res://Resources/default_theme.tres" type="Theme" id=6]
-[ext_resource path="res://Scripts/TerraformPanel.gd" type="Script" id=7]
-[ext_resource path="res://Graphics/Buildings/MS.png" type="Texture" id=8]
-[ext_resource path="res://Graphics/Buildings/GH.png" type="Texture" id=9]
-[ext_resource path="res://Graphics/Buildings/AMN.png" type="Texture" id=10]
-[ext_resource path="res://Graphics/Buildings/SPR.png" type="Texture" id=11]
-[ext_resource path="res://Graphics/Buildings/AE.png" type="Texture" id=12]
-[ext_resource path="res://Graphics/Buildings/MM.png" type="Texture" id=13]
-[ext_resource path="res://Graphics/Buildings/NSF.png" type="Texture" id=14]
-[ext_resource path="res://Graphics/Buildings/ESF.png" type="Texture" id=15]
-[ext_resource path="res://Graphics/Buildings/B.png" type="Texture" id=16]
+[ext_resource type="PackedScene" uid="uid://1hq6qpr1oa3i" path="res://Scenes/AdvButton.tscn" id="1"]
+[ext_resource type="Texture2D" uid="uid://caogp3ych2a60" path="res://Graphics/Icons/minerals.png" id="2"]
+[ext_resource type="Texture2D" uid="uid://78ibnuwq78bj" path="res://Graphics/Icons/SP.png" id="3"]
+[ext_resource type="Texture2D" uid="uid://dfov6sisin58e" path="res://Graphics/Icons/energy.png" id="4"]
+[ext_resource type="PackedScene" uid="uid://ddf2xjwcht77u" path="res://Scenes/CloseButton.tscn" id="5"]
+[ext_resource type="Theme" uid="uid://cp2u1kgj60ic" path="res://Resources/default_theme.tres" id="6"]
+[ext_resource type="Script" path="res://Scripts/TerraformPanel.gd" id="7"]
+[ext_resource type="Texture2D" uid="uid://bheduwihwbffl" path="res://Graphics/Buildings/MS.png" id="8"]
+[ext_resource type="Texture2D" uid="uid://clki1li52asls" path="res://Graphics/Buildings/GH.png" id="9"]
+[ext_resource type="Texture2D" uid="uid://ctfeyjhrf631j" path="res://Graphics/Buildings/AMN.png" id="10"]
+[ext_resource type="Texture2D" uid="uid://bcgloyiwpxqy" path="res://Graphics/Buildings/SPR.png" id="11"]
+[ext_resource type="Texture2D" uid="uid://blmmrr44svfoj" path="res://Graphics/Buildings/AE.png" id="12"]
+[ext_resource type="Texture2D" uid="uid://ke56ckutx0g0" path="res://Graphics/Buildings/MM.png" id="13"]
+[ext_resource type="Texture2D" uid="uid://csxqgvajiuaqb" path="res://Graphics/Buildings/NSF.png" id="14"]
+[ext_resource type="Texture2D" uid="uid://cbwtsxkce7wlj" path="res://Graphics/Buildings/ESF.png" id="15"]
+[ext_resource type="Texture2D" uid="uid://blqk2djbmtynb" path="res://Graphics/Buildings/B.png" id="16"]
 
-[sub_resource type="Theme" id=1]
-Button/colors/font_color = Color( 0.88, 0.88, 0.88, 1 )
-Button/colors/font_color_disabled = Color( 0.9, 0.9, 0.9, 0.2 )
-Button/colors/font_color_hover = Color( 0.94, 0.94, 0.94, 1 )
-Button/colors/font_color_pressed = Color( 1, 1, 1, 1 )
-Button/constants/hseparation = 2
+[sub_resource type="Theme" id="1"]
+Button/colors/font_color = Color(0.88, 0.88, 0.88, 1)
+Button/colors/font_color_disabled = Color(0.9, 0.9, 0.9, 0.2)
+Button/colors/font_color_hover = Color(0.94, 0.94, 0.94, 1)
+Button/colors/font_color_pressed = Color(1, 1, 1, 1)
+Button/constants/h_separation = 2
 Button/fonts/font = null
 Button/styles/disabled = null
 Button/styles/focus = null
@@ -30,254 +30,213 @@ Button/styles/hover = null
 Button/styles/normal = null
 Button/styles/pressed = null
 
-[sub_resource type="InputEventAction" id=2]
-action = "G"
-
-[sub_resource type="ShortCut" id=3]
-shortcut = SubResource( 2 )
+[sub_resource type="Shortcut" id="3"]
 
 [node name="TerraformPanel" type="Panel"]
-margin_right = 1067.0
-margin_bottom = 600.0
-rect_pivot_offset = Vector2( 533, 300 )
-theme = ExtResource( 6 )
-script = ExtResource( 7 )
-
-[node name="CloseButton" parent="." instance=ExtResource( 5 )]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -533.5
+offset_top = -300.0
+offset_right = 533.5
+offset_bottom = 300.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("6")
+script = ExtResource("7")
 
 [node name="Title" type="Label" parent="."]
+custom_minimum_size = Vector2(0, 38)
+layout_mode = 0
 anchor_right = 1.0
-margin_bottom = 24.0
-rect_min_size = Vector2( 0, 38 )
+offset_bottom = 24.0
+theme_override_font_sizes/font_size = 18
 text = "TERRAFORM"
-align = 1
-valign = 1
-__meta__ = {
-"_edit_use_anchors_": false
-}
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="CloseButton" parent="." instance=ExtResource("5")]
+layout_mode = 1
+offset_left = -35.0
+offset_top = 8.0
+offset_right = -11.0
+offset_bottom = 32.0
 
 [node name="Desc" type="Label" parent="."]
-margin_left = 24.0
-margin_top = 48.0
-margin_right = 1040.0
-margin_bottom = 112.0
+layout_mode = 0
+offset_left = 24.0
+offset_top = 48.0
+offset_right = 1040.0
+offset_bottom = 112.0
 text = "TERRAFORM_DESC"
-align = 1
-autowrap = true
-__meta__ = {
-"_edit_use_anchors_": false
-}
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 3
 
 [node name="ScrollContainer" type="ScrollContainer" parent="."]
-margin_left = 24.0
-margin_top = 112.0
-margin_right = 384.0
-margin_bottom = 576.0
-scroll_horizontal_enabled = false
-__meta__ = {
-"_edit_use_anchors_": false
-}
+layout_mode = 0
+offset_left = 24.0
+offset_top = 112.0
+offset_right = 384.0
+offset_bottom = 576.0
 
 [node name="VBoxContainer" type="VBoxContainer" parent="ScrollContainer"]
-margin_left = 10.0
-margin_top = 10.0
-margin_right = 344.0
-margin_bottom = 534.0
+layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
-theme = SubResource( 1 )
+theme = SubResource("1")
 
-[node name="MineralExtraction" parent="ScrollContainer/VBoxContainer" instance=ExtResource( 1 )]
-anchor_right = 0.0
-anchor_bottom = 0.0
-margin_right = 334.0
-margin_bottom = 40.0
-rect_min_size = Vector2( 0, 40 )
+[node name="MineralExtraction" parent="ScrollContainer/VBoxContainer" instance=ExtResource("1")]
+custom_minimum_size = Vector2(0, 40)
+layout_mode = 2
+expand_icon = true
 button_text = "MINERAL_EXTRACTION"
-icon_texture = ExtResource( 2 )
+icon_texture = ExtResource("2")
 
-[node name="EnergyProduction" parent="ScrollContainer/VBoxContainer" instance=ExtResource( 1 )]
-anchor_right = 0.0
-anchor_bottom = 0.0
-margin_top = 44.0
-margin_right = 334.0
-margin_bottom = 84.0
-rect_min_size = Vector2( 0, 40 )
+[node name="EnergyProduction" parent="ScrollContainer/VBoxContainer" instance=ExtResource("1")]
+custom_minimum_size = Vector2(0, 40)
+layout_mode = 2
+expand_icon = true
 button_text = "ENERGY_PRODUCTION"
-icon_texture = ExtResource( 4 )
+icon_texture = ExtResource("4")
 
-[node name="MineralStorage" parent="ScrollContainer/VBoxContainer" instance=ExtResource( 1 )]
-anchor_right = 0.0
-anchor_bottom = 0.0
-margin_top = 88.0
-margin_right = 334.0
-margin_bottom = 128.0
-rect_min_size = Vector2( 0, 40 )
+[node name="MineralStorage" parent="ScrollContainer/VBoxContainer" instance=ExtResource("1")]
+custom_minimum_size = Vector2(0, 40)
+layout_mode = 2
+expand_icon = true
 button_text = "MINERAL_STORAGE"
-icon_texture = ExtResource( 8 )
+icon_texture = ExtResource("8")
 
-[node name="EnergyStorage" parent="ScrollContainer/VBoxContainer" instance=ExtResource( 1 )]
-anchor_right = 0.0
-anchor_bottom = 0.0
-margin_top = 132.0
-margin_right = 334.0
-margin_bottom = 172.0
-rect_min_size = Vector2( 0, 40 )
+[node name="EnergyStorage" parent="ScrollContainer/VBoxContainer" instance=ExtResource("1")]
+custom_minimum_size = Vector2(0, 40)
+layout_mode = 2
+expand_icon = true
 button_text = "ENERGY_STORAGE"
-icon_texture = ExtResource( 16 )
+icon_texture = ExtResource("16")
 
-[node name="Research" parent="ScrollContainer/VBoxContainer" instance=ExtResource( 1 )]
-anchor_right = 0.0
-anchor_bottom = 0.0
-margin_top = 176.0
-margin_right = 334.0
-margin_bottom = 216.0
-rect_min_size = Vector2( 0, 40 )
+[node name="Research" parent="ScrollContainer/VBoxContainer" instance=ExtResource("1")]
+custom_minimum_size = Vector2(0, 40)
+layout_mode = 2
+expand_icon = true
 button_text = "RESEARCH"
-icon_texture = ExtResource( 3 )
+icon_texture = ExtResource("3")
 
-[node name="AtmosphereExtraction" parent="ScrollContainer/VBoxContainer" instance=ExtResource( 1 )]
-anchor_right = 0.0
-anchor_bottom = 0.0
-margin_top = 220.0
-margin_right = 334.0
-margin_bottom = 260.0
-rect_min_size = Vector2( 0, 40 )
+[node name="AtmosphereExtraction" parent="ScrollContainer/VBoxContainer" instance=ExtResource("1")]
+custom_minimum_size = Vector2(0, 40)
+layout_mode = 2
+expand_icon = true
 button_text = "ATMOSPHERE_EXTRACTION"
-icon_texture = ExtResource( 12 )
+icon_texture = ExtResource("12")
 
-[node name="Mining" parent="ScrollContainer/VBoxContainer" instance=ExtResource( 1 )]
-anchor_right = 0.0
-anchor_bottom = 0.0
-margin_top = 264.0
-margin_right = 334.0
-margin_bottom = 304.0
-rect_min_size = Vector2( 0, 40 )
+[node name="Mining" parent="ScrollContainer/VBoxContainer" instance=ExtResource("1")]
+custom_minimum_size = Vector2(0, 40)
+layout_mode = 2
+expand_icon = true
 button_text = "MINING"
-icon_texture = ExtResource( 13 )
+icon_texture = ExtResource("13")
 
-[node name="SpaceAgriculture" parent="ScrollContainer/VBoxContainer" instance=ExtResource( 1 )]
-anchor_right = 0.0
-anchor_bottom = 0.0
-margin_top = 308.0
-margin_right = 334.0
-margin_bottom = 348.0
-rect_min_size = Vector2( 0, 40 )
+[node name="SpaceAgriculture" parent="ScrollContainer/VBoxContainer" instance=ExtResource("1")]
+custom_minimum_size = Vector2(0, 40)
+layout_mode = 2
+expand_icon = true
 button_text = "SA_SC"
-icon_texture = ExtResource( 9 )
+icon_texture = ExtResource("9")
 
-[node name="AtomManipulation" parent="ScrollContainer/VBoxContainer" instance=ExtResource( 1 )]
-anchor_right = 0.0
-anchor_bottom = 0.0
-margin_top = 352.0
-margin_right = 334.0
-margin_bottom = 392.0
-rect_min_size = Vector2( 0, 40 )
+[node name="AtomManipulation" parent="ScrollContainer/VBoxContainer" instance=ExtResource("1")]
+custom_minimum_size = Vector2(0, 40)
+layout_mode = 2
+expand_icon = true
 button_text = "ATM_SC"
-icon_texture = ExtResource( 10 )
+icon_texture = ExtResource("10")
 
-[node name="SubatomicParticles" parent="ScrollContainer/VBoxContainer" instance=ExtResource( 1 )]
-anchor_right = 0.0
-anchor_bottom = 0.0
-margin_top = 396.0
-margin_right = 334.0
-margin_bottom = 436.0
-rect_min_size = Vector2( 0, 40 )
+[node name="SubatomicParticles" parent="ScrollContainer/VBoxContainer" instance=ExtResource("1")]
+custom_minimum_size = Vector2(0, 40)
+layout_mode = 2
+expand_icon = true
 button_text = "SAP_SC"
-icon_texture = ExtResource( 11 )
+icon_texture = ExtResource("11")
 
-[node name="NeutronStorage" parent="ScrollContainer/VBoxContainer" instance=ExtResource( 1 )]
-anchor_right = 0.0
-anchor_bottom = 0.0
-margin_top = 440.0
-margin_right = 334.0
-margin_bottom = 480.0
-rect_min_size = Vector2( 0, 40 )
+[node name="NeutronStorage" parent="ScrollContainer/VBoxContainer" instance=ExtResource("1")]
+custom_minimum_size = Vector2(0, 40)
+layout_mode = 2
+expand_icon = true
 button_text = "NEUTRON_STORAGE"
-icon_texture = ExtResource( 14 )
+icon_texture = ExtResource("14")
 
-[node name="ElectronStorage" parent="ScrollContainer/VBoxContainer" instance=ExtResource( 1 )]
-anchor_right = 0.0
-anchor_bottom = 0.0
-margin_top = 484.0
-margin_right = 334.0
-margin_bottom = 524.0
-rect_min_size = Vector2( 0, 40 )
+[node name="ElectronStorage" parent="ScrollContainer/VBoxContainer" instance=ExtResource("1")]
+custom_minimum_size = Vector2(0, 40)
+layout_mode = 2
+expand_icon = true
 button_text = "ELECTRON_STORAGE"
-icon_texture = ExtResource( 15 )
+icon_texture = ExtResource("15")
 
 [node name="Panel" type="Panel" parent="."]
 visible = false
-margin_left = 392.0
-margin_top = 112.0
-margin_right = 1040.0
-margin_bottom = 576.0
+layout_mode = 0
+offset_left = 392.0
+offset_top = 112.0
+offset_right = 1040.0
+offset_bottom = 576.0
 
 [node name="Note" type="Label" parent="Panel"]
-margin_left = 48.0
-margin_top = 300.0
-margin_right = 636.0
-margin_bottom = 460.0
-autowrap = true
+layout_mode = 0
+offset_left = 48.0
+offset_top = 300.0
+offset_right = 636.0
+offset_bottom = 460.0
 
 [node name="TerraformingCosts" type="Label" parent="Panel"]
-margin_left = 44.0
-margin_top = 32.0
-margin_right = 312.0
-margin_bottom = 56.0
+layout_mode = 0
+offset_left = 44.0
+offset_top = 32.0
+offset_right = 312.0
+offset_bottom = 56.0
 text = "TERRAFORMING_COSTS"
-autowrap = true
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="TCVBox" type="VBoxContainer" parent="Panel"]
-margin_left = 48.0
-margin_top = 64.0
-margin_right = 88.0
-margin_bottom = 104.0
+layout_mode = 0
+offset_left = 48.0
+offset_top = 64.0
+offset_right = 88.0
+offset_bottom = 104.0
 
 [node name="BuildingCosts" type="Label" parent="Panel"]
-margin_left = 48.0
-margin_top = 168.0
-margin_right = 636.0
-margin_bottom = 192.0
+layout_mode = 0
+offset_left = 48.0
+offset_top = 168.0
+offset_right = 636.0
+offset_bottom = 192.0
 text = "BUILDING_COSTS"
-autowrap = true
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="BCGrid" type="GridContainer" parent="Panel"]
-margin_left = 48.0
-margin_top = 208.0
-margin_right = 632.0
-margin_bottom = 284.0
+layout_mode = 0
+offset_left = 48.0
+offset_top = 208.0
+offset_right = 632.0
+offset_bottom = 284.0
 columns = 2
 
 [node name="CostMult" type="RichTextLabel" parent="Panel"]
-margin_left = 352.0
-margin_top = 32.0
-margin_right = 644.0
-margin_bottom = 152.0
+layout_mode = 0
+offset_left = 352.0
+offset_top = 32.0
+offset_right = 644.0
+offset_bottom = 152.0
 bbcode_enabled = true
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="Terraform" type="Button" parent="Panel"]
+layout_mode = 0
 anchor_left = 1.0
 anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
-margin_left = -204.0
-margin_top = -36.0
+offset_left = -204.0
+offset_top = -36.0
+shortcut = SubResource("3")
 shortcut_in_tooltip = false
-shortcut = SubResource( 3 )
 text = "TERRAFORM"
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [connection signal="close_button_pressed" from="CloseButton" to="." method="_on_close_button_pressed"]
 [connection signal="pressed" from="ScrollContainer/VBoxContainer/MineralExtraction" to="." method="_on_ME_pressed"]

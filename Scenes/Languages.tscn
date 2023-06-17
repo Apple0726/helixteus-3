@@ -1,325 +1,331 @@
-[gd_scene load_steps=20 format=2]
+[gd_scene load_steps=21 format=3 uid="uid://bx5co4ssobffh"]
 
-[ext_resource path="res://Graphics/Buttons/nl.png" type="Texture" id=1]
-[ext_resource path="res://Graphics/Buttons/ko.png" type="Texture" id=2]
-[ext_resource path="res://Graphics/Buttons/en.png" type="Texture" id=3]
-[ext_resource path="res://Graphics/Buttons/es.png" type="Texture" id=4]
-[ext_resource path="res://Graphics/Buttons/sv.png" type="Texture" id=5]
-[ext_resource path="res://Graphics/Buttons/zh.png" type="Texture" id=6]
-[ext_resource path="res://Graphics/Buttons/ja.png" type="Texture" id=7]
-[ext_resource path="res://Graphics/Buttons/it.png" type="Texture" id=8]
-[ext_resource path="res://Graphics/Buttons/fr.png" type="Texture" id=9]
-[ext_resource path="res://Graphics/Buttons/de.png" type="Texture" id=10]
-[ext_resource path="res://Graphics/Buttons/ru.png" type="Texture" id=11]
-[ext_resource path="res://Graphics/Buttons/hu.png" type="Texture" id=12]
-[ext_resource path="res://Graphics/Icons/languages.png" type="Texture" id=13]
-[ext_resource path="res://Scripts/Languages.gd" type="Script" id=14]
-[ext_resource path="res://Resources/default_theme.tres" type="Theme" id=15]
+[ext_resource type="Texture2D" uid="uid://n8cldafftpdj" path="res://Graphics/Buttons/nl.png" id="1"]
+[ext_resource type="Texture2D" uid="uid://dl45w65pb3x7q" path="res://Graphics/Buttons/ko.png" id="2"]
+[ext_resource type="Texture2D" uid="uid://cbkpux3ujd7te" path="res://Graphics/Buttons/en.png" id="3"]
+[ext_resource type="Texture2D" uid="uid://b43yfobf7d3o6" path="res://Graphics/Buttons/es.png" id="4"]
+[ext_resource type="Texture2D" uid="uid://0rslwc4ql6gy" path="res://Graphics/Buttons/sv.png" id="5"]
+[ext_resource type="Texture2D" uid="uid://b1oq4nqkfsiiq" path="res://Graphics/Buttons/zh.png" id="6"]
+[ext_resource type="Texture2D" uid="uid://buocw1esiuref" path="res://Graphics/Buttons/ja.png" id="7"]
+[ext_resource type="Texture2D" uid="uid://t2sm7pkjwjbr" path="res://Graphics/Buttons/it.png" id="8"]
+[ext_resource type="Texture2D" uid="uid://0o2o7f8p7bpr" path="res://Graphics/Buttons/fr.png" id="9"]
+[ext_resource type="Texture2D" uid="uid://cphtsa8womn1n" path="res://Graphics/Buttons/de.png" id="10"]
+[ext_resource type="Texture2D" uid="uid://dtg5pbm2sjtmo" path="res://Graphics/Buttons/ru.png" id="11"]
+[ext_resource type="Texture2D" uid="uid://b20ft7m7obvvr" path="res://Graphics/Buttons/hu.png" id="12"]
+[ext_resource type="Texture2D" uid="uid://bw8dk0gqvcgwg" path="res://Graphics/Icons/languages.png" id="13"]
+[ext_resource type="Script" path="res://Scripts/Languages.gd" id="14"]
+[ext_resource type="Theme" uid="uid://cp2u1kgj60ic" path="res://Resources/default_theme.tres" id="15"]
 
-[sub_resource type="Animation" id=22]
+[sub_resource type="Animation" id="22"]
 resource_name = "MoveLanguages"
 length = 0.4
-tracks/0/type = "bezier"
-tracks/0/path = NodePath(".:rect_position:y")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
+tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
+tracks/0/path = NodePath("../ColorRect:color")
+tracks/0/interp = 2
+tracks/0/loop_wrap = true
 tracks/0/keys = {
-"points": PoolRealArray( 675, -0.25, 0, 0.1, -47.6335, 625, -0.25, 0, 0.25, 0 ),
-"times": PoolRealArray( 0, 0.4 )
-}
-tracks/1/type = "value"
-tracks/1/path = NodePath("../ColorRect:color")
-tracks/1/interp = 2
-tracks/1/loop_wrap = true
-tracks/1/imported = false
-tracks/1/enabled = true
-tracks/1/keys = {
-"times": PoolRealArray( 0, 0.4 ),
-"transitions": PoolRealArray( 1, 1 ),
+"times": PackedFloat32Array(0, 0.4),
+"transitions": PackedFloat32Array(1, 1),
 "update": 0,
-"values": [ Color( 0, 0, 0, 0 ), Color( 0, 0, 0, 0.419608 ) ]
-}
-
-[sub_resource type="Animation" id=23]
-length = 0.001
-tracks/0/type = "bezier"
-tracks/0/path = NodePath(".:rect_position:x")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/keys = {
-"points": PoolRealArray( 0, -0.25, 0, 0.25, 0 ),
-"times": PoolRealArray( 0 )
+"values": [Color(0, 0, 0, 0), Color(0, 0, 0, 0.419608)]
 }
 tracks/1/type = "bezier"
-tracks/1/path = NodePath(".:rect_position:y")
-tracks/1/interp = 1
-tracks/1/loop_wrap = true
 tracks/1/imported = false
 tracks/1/enabled = true
+tracks/1/path = NodePath(".:position:y")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
 tracks/1/keys = {
-"points": PoolRealArray( 675, -0.25, 0, 0.25, 0 ),
-"times": PoolRealArray( 0 )
+"handle_modes": PackedInt32Array(0, 0),
+"points": PackedFloat32Array(675, -0.25, 0, 0.145934, -53.9133, 621.65, -0.2, -2.31616, 0.25, 0),
+"times": PackedFloat32Array(0, 0.4)
 }
-tracks/2/type = "value"
-tracks/2/path = NodePath("../ColorRect:color")
-tracks/2/interp = 1
-tracks/2/loop_wrap = true
-tracks/2/imported = false
-tracks/2/enabled = true
-tracks/2/keys = {
-"times": PoolRealArray( 0 ),
-"transitions": PoolRealArray( 1 ),
+
+[sub_resource type="Animation" id="23"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("../ColorRect:color")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
 "update": 0,
-"values": [ Color( 0, 0, 0, 0 ) ]
+"values": [Color(0, 0, 0, 0)]
+}
+tracks/1/type = "bezier"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath(".:position:y")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"handle_modes": PackedInt32Array(0),
+"points": PackedFloat32Array(675, -0.25, 0, 0.25, 0),
+"times": PackedFloat32Array(0)
 }
 
-[sub_resource type="StyleBoxFlat" id=21]
-bg_color = Color( 0.176471, 0.176471, 0.176471, 1 )
-border_width_left = 2
-border_width_top = 2
-border_color = Color( 0.309804, 0.309804, 0.309804, 1 )
-expand_margin_left = 5.0
-expand_margin_right = 5.0
-expand_margin_top = 5.0
-expand_margin_bottom = 5.0
-shadow_size = 2
-shadow_offset = Vector2( 2, 2 )
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_8wbkt"]
+_data = {
+"MoveLanguages": SubResource("22"),
+"RESET": SubResource("23")
+}
 
-[sub_resource type="StyleBoxFlat" id=24]
-bg_color = Color( 0.168627, 0.168627, 0.168627, 1 )
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_1ffxs"]
+bg_color = Color(0.176471, 0.176471, 0.176471, 1)
 border_width_left = 2
 border_width_top = 2
-border_color = Color( 0.27451, 0.27451, 0.27451, 1 )
+border_color = Color(0.341176, 0.341176, 0.341176, 1)
+border_blend = true
+expand_margin_left = 3.0
+expand_margin_top = 3.0
+expand_margin_right = 3.0
+expand_margin_bottom = 3.0
+shadow_size = 2
+shadow_offset = Vector2(1, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_1h58w"]
+bg_color = Color(0.176471, 0.176471, 0.176471, 1)
+border_width_left = 2
+border_width_top = 2
+border_color = Color(0.341176, 0.341176, 0.341176, 1)
+border_blend = true
+expand_margin_left = 2.0
+expand_margin_top = 2.0
+expand_margin_right = 2.0
+expand_margin_bottom = 2.0
+shadow_size = 2
+shadow_offset = Vector2(1, 1)
 
 [node name="Languages" type="Control"]
+layout_mode = 3
+anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 mouse_filter = 2
-script = ExtResource( 14 )
+script = ExtResource("14")
+metadata/_edit_horizontal_guides_ = [720.0]
 
 [node name="ColorRect" type="ColorRect" parent="."]
+layout_mode = 0
 anchor_right = 1.0
 anchor_bottom = 1.0
 mouse_filter = 2
-color = Color( 0, 0, 0, 0 )
+color = Color(0, 0, 0, 0)
 
 [node name="MouseOut" type="Polygon2D" parent="."]
-color = Color( 1, 1, 1, 0 )
-polygon = PoolVector2Array( 0, 656, 0, 720, 904, 720, 904, 656 )
+color = Color(1, 1, 1, 0)
+polygon = PackedVector2Array(0, 656, 0, 720, 904, 720, 904, 656)
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 root_node = NodePath("../Control")
-anims/MoveLanguages = SubResource( 22 )
-anims/RESET = SubResource( 23 )
+libraries = {
+"": SubResource("AnimationLibrary_8wbkt")
+}
 
 [node name="MouseOver" type="Polygon2D" parent="."]
-color = Color( 1, 1, 1, 0 )
-polygon = PoolVector2Array( 0, 676, 0, 728, 52, 728, 52, 676 )
+color = Color(1, 1, 1, 0)
+polygon = PackedVector2Array(0, 676, 0, 728, 52, 728, 52, 676)
 
 [node name="Control" type="Control" parent="."]
-margin_top = 675.0
-margin_right = 912.0
-margin_bottom = 770.0
+anchors_preset = 0
+offset_top = 675.0
+offset_right = 912.0
+offset_bottom = 770.0
 mouse_filter = 2
 
 [node name="TranslatedBy" type="Label" parent="Control"]
 visible = false
-margin_left = 68.0
-margin_top = 17.0
-margin_right = 452.0
-margin_bottom = 45.0
-theme = ExtResource( 15 )
-custom_styles/normal = SubResource( 21 )
+layout_mode = 0
+offset_left = 68.0
+offset_top = 17.0
+offset_right = 452.0
+offset_bottom = 45.0
+theme = ExtResource("15")
 
 [node name="Panel" type="Panel" parent="Control"]
-margin_left = 7.0
-margin_top = 4.0
-margin_right = 46.0
-margin_bottom = 42.0
-custom_styles/panel = SubResource( 21 )
+layout_mode = 0
+offset_left = 3.0
+offset_top = 5.0
+offset_right = 42.0
+offset_bottom = 43.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_1ffxs")
 
 [node name="TextureRect" type="TextureRect" parent="Control/Panel"]
+layout_mode = 0
 anchor_right = 1.0
 anchor_bottom = 1.0
-texture = ExtResource( 13 )
-expand = true
+texture = ExtResource("13")
+expand_mode = 1
 stretch_mode = 6
 
 [node name="PanelContainer" type="PanelContainer" parent="Control"]
+layout_mode = 1
+anchors_preset = 12
 anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
-margin_top = -47.0
-margin_bottom = 1.0
-custom_styles/panel = SubResource( 24 )
+offset_left = 2.0
+offset_top = -47.0
+offset_right = 2.0
+offset_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_styles/panel = SubResource("StyleBoxFlat_1h58w")
 
 [node name="Languages" type="HBoxContainer" parent="Control/PanelContainer"]
-margin_left = 2.0
-margin_top = 10.0
-margin_right = 912.0
-margin_bottom = 40.0
-rect_min_size = Vector2( 0, 30 )
+custom_minimum_size = Vector2(0, 30)
+layout_mode = 2
 size_flags_vertical = 4
-custom_constants/separation = 15
-alignment = 1
+theme_override_constants/separation = 15
 
 [node name="en" type="TextureButton" parent="Control/PanelContainer/Languages"]
-margin_left = 12.0
-margin_right = 72.0
-margin_bottom = 30.0
-rect_min_size = Vector2( 60, 0 )
+custom_minimum_size = Vector2(60, 0)
+layout_mode = 2
+size_flags_horizontal = 2
 mouse_filter = 1
-texture_normal = ExtResource( 3 )
-expand = true
+texture_normal = ExtResource("3")
+ignore_texture_size = true
 stretch_mode = 5
 
 [node name="de" type="TextureButton" parent="Control/PanelContainer/Languages"]
-margin_left = 87.0
-margin_right = 147.0
-margin_bottom = 30.0
-rect_min_size = Vector2( 60, 0 )
+custom_minimum_size = Vector2(60, 0)
+layout_mode = 2
+size_flags_horizontal = 2
 mouse_filter = 1
-texture_normal = ExtResource( 10 )
-expand = true
+texture_normal = ExtResource("10")
+ignore_texture_size = true
 stretch_mode = 5
 
 [node name="zh" type="TextureButton" parent="Control/PanelContainer/Languages"]
-margin_left = 162.0
-margin_right = 222.0
-margin_bottom = 30.0
-rect_min_size = Vector2( 60, 0 )
+custom_minimum_size = Vector2(60, 0)
+layout_mode = 2
+size_flags_horizontal = 2
 mouse_filter = 1
-texture_normal = ExtResource( 6 )
-expand = true
+texture_normal = ExtResource("6")
+ignore_texture_size = true
 stretch_mode = 5
 
 [node name="ja" type="TextureButton" parent="Control/PanelContainer/Languages"]
-margin_left = 237.0
-margin_right = 297.0
-margin_bottom = 30.0
-rect_min_size = Vector2( 60, 0 )
+custom_minimum_size = Vector2(60, 0)
+layout_mode = 2
+size_flags_horizontal = 2
 mouse_filter = 1
-texture_normal = ExtResource( 7 )
-expand = true
+texture_normal = ExtResource("7")
+ignore_texture_size = true
 stretch_mode = 5
 
 [node name="hu" type="TextureButton" parent="Control/PanelContainer/Languages"]
-margin_left = 312.0
-margin_right = 372.0
-margin_bottom = 30.0
-rect_min_size = Vector2( 60, 0 )
+custom_minimum_size = Vector2(60, 0)
+layout_mode = 2
+size_flags_horizontal = 2
 mouse_filter = 1
-texture_normal = ExtResource( 12 )
-expand = true
+texture_normal = ExtResource("12")
+ignore_texture_size = true
 stretch_mode = 5
 
 [node name="nl" type="TextureButton" parent="Control/PanelContainer/Languages"]
-margin_left = 387.0
-margin_right = 447.0
-margin_bottom = 30.0
-rect_min_size = Vector2( 60, 0 )
+custom_minimum_size = Vector2(60, 0)
+layout_mode = 2
+size_flags_horizontal = 2
 mouse_filter = 1
-texture_normal = ExtResource( 1 )
-expand = true
+texture_normal = ExtResource("1")
+ignore_texture_size = true
 stretch_mode = 5
 
 [node name="es" type="TextureButton" parent="Control/PanelContainer/Languages"]
-margin_left = 462.0
-margin_right = 522.0
-margin_bottom = 30.0
-rect_min_size = Vector2( 60, 0 )
+custom_minimum_size = Vector2(60, 0)
+layout_mode = 2
+size_flags_horizontal = 2
 mouse_filter = 1
-texture_normal = ExtResource( 4 )
-expand = true
+texture_normal = ExtResource("4")
+ignore_texture_size = true
 stretch_mode = 5
 
 [node name="ru" type="TextureButton" parent="Control/PanelContainer/Languages"]
-margin_left = 537.0
-margin_right = 597.0
-margin_bottom = 30.0
-rect_min_size = Vector2( 60, 0 )
+custom_minimum_size = Vector2(60, 0)
+layout_mode = 2
+size_flags_horizontal = 2
 mouse_filter = 1
-texture_normal = ExtResource( 11 )
-expand = true
+texture_normal = ExtResource("11")
+ignore_texture_size = true
 stretch_mode = 5
 
 [node name="fr" type="TextureButton" parent="Control/PanelContainer/Languages"]
-margin_left = 612.0
-margin_right = 672.0
-margin_bottom = 30.0
-rect_min_size = Vector2( 60, 0 )
+custom_minimum_size = Vector2(60, 0)
+layout_mode = 2
+size_flags_horizontal = 2
 mouse_filter = 1
-texture_normal = ExtResource( 9 )
-expand = true
+texture_normal = ExtResource("9")
+ignore_texture_size = true
 stretch_mode = 5
 
 [node name="it" type="TextureButton" parent="Control/PanelContainer/Languages"]
-margin_left = 687.0
-margin_right = 747.0
-margin_bottom = 30.0
-rect_min_size = Vector2( 60, 0 )
+custom_minimum_size = Vector2(60, 0)
+layout_mode = 2
+size_flags_horizontal = 2
 mouse_filter = 1
-texture_normal = ExtResource( 8 )
-expand = true
+texture_normal = ExtResource("8")
+ignore_texture_size = true
 stretch_mode = 5
 
 [node name="ko" type="TextureButton" parent="Control/PanelContainer/Languages"]
-margin_left = 762.0
-margin_right = 822.0
-margin_bottom = 30.0
-rect_min_size = Vector2( 60, 0 )
+custom_minimum_size = Vector2(60, 0)
+layout_mode = 2
+size_flags_horizontal = 2
 mouse_filter = 1
-texture_normal = ExtResource( 2 )
-expand = true
+texture_normal = ExtResource("2")
+ignore_texture_size = true
 stretch_mode = 5
 
 [node name="sv" type="TextureButton" parent="Control/PanelContainer/Languages"]
-margin_left = 837.0
-margin_right = 897.0
-margin_bottom = 30.0
-rect_min_size = Vector2( 60, 0 )
+custom_minimum_size = Vector2(60, 0)
+layout_mode = 2
+size_flags_horizontal = 2
 mouse_filter = 1
-texture_normal = ExtResource( 5 )
-expand = true
+texture_normal = ExtResource("5")
+ignore_texture_size = true
 stretch_mode = 5
 
-[connection signal="mouse_entered" from="Control/PanelContainer/Languages/en" to="." method="_on_lg_mouse_entered" binds= [ "en" ]]
+[connection signal="mouse_entered" from="Control/PanelContainer/Languages/en" to="." method="_on_lg_mouse_entered" binds= ["en"]]
 [connection signal="mouse_exited" from="Control/PanelContainer/Languages/en" to="." method="_on_lg_mouse_exited"]
-[connection signal="pressed" from="Control/PanelContainer/Languages/en" to="." method="_on_lg_pressed" binds= [ "en" ]]
-[connection signal="mouse_entered" from="Control/PanelContainer/Languages/de" to="." method="_on_lg_mouse_entered" binds= [ "de" ]]
+[connection signal="pressed" from="Control/PanelContainer/Languages/en" to="." method="_on_lg_pressed" binds= ["en"]]
+[connection signal="mouse_entered" from="Control/PanelContainer/Languages/de" to="." method="_on_lg_mouse_entered" binds= ["de"]]
 [connection signal="mouse_exited" from="Control/PanelContainer/Languages/de" to="." method="_on_lg_mouse_exited"]
-[connection signal="pressed" from="Control/PanelContainer/Languages/de" to="." method="_on_lg_pressed" binds= [ "de" ]]
-[connection signal="mouse_entered" from="Control/PanelContainer/Languages/zh" to="." method="_on_lg_mouse_entered" binds= [ "zh" ]]
+[connection signal="pressed" from="Control/PanelContainer/Languages/de" to="." method="_on_lg_pressed" binds= ["de"]]
+[connection signal="mouse_entered" from="Control/PanelContainer/Languages/zh" to="." method="_on_lg_mouse_entered" binds= ["zh"]]
 [connection signal="mouse_exited" from="Control/PanelContainer/Languages/zh" to="." method="_on_lg_mouse_exited"]
-[connection signal="pressed" from="Control/PanelContainer/Languages/zh" to="." method="_on_lg_pressed" binds= [ "zh" ]]
-[connection signal="mouse_entered" from="Control/PanelContainer/Languages/ja" to="." method="_on_lg_mouse_entered" binds= [ "ja" ]]
+[connection signal="pressed" from="Control/PanelContainer/Languages/zh" to="." method="_on_lg_pressed" binds= ["zh"]]
+[connection signal="mouse_entered" from="Control/PanelContainer/Languages/ja" to="." method="_on_lg_mouse_entered" binds= ["ja"]]
 [connection signal="mouse_exited" from="Control/PanelContainer/Languages/ja" to="." method="_on_lg_mouse_exited"]
-[connection signal="pressed" from="Control/PanelContainer/Languages/ja" to="." method="_on_lg_pressed" binds= [ "ja" ]]
-[connection signal="mouse_entered" from="Control/PanelContainer/Languages/hu" to="." method="_on_lg_mouse_entered" binds= [ "hu" ]]
+[connection signal="pressed" from="Control/PanelContainer/Languages/ja" to="." method="_on_lg_pressed" binds= ["ja"]]
+[connection signal="mouse_entered" from="Control/PanelContainer/Languages/hu" to="." method="_on_lg_mouse_entered" binds= ["hu"]]
 [connection signal="mouse_exited" from="Control/PanelContainer/Languages/hu" to="." method="_on_lg_mouse_exited"]
-[connection signal="pressed" from="Control/PanelContainer/Languages/hu" to="." method="_on_lg_pressed" binds= [ "hu" ]]
-[connection signal="mouse_entered" from="Control/PanelContainer/Languages/nl" to="." method="_on_lg_mouse_entered" binds= [ "nl" ]]
+[connection signal="pressed" from="Control/PanelContainer/Languages/hu" to="." method="_on_lg_pressed" binds= ["hu"]]
+[connection signal="mouse_entered" from="Control/PanelContainer/Languages/nl" to="." method="_on_lg_mouse_entered" binds= ["nl"]]
 [connection signal="mouse_exited" from="Control/PanelContainer/Languages/nl" to="." method="_on_lg_mouse_exited"]
-[connection signal="pressed" from="Control/PanelContainer/Languages/nl" to="." method="_on_lg_pressed" binds= [ "nl" ]]
-[connection signal="mouse_entered" from="Control/PanelContainer/Languages/es" to="." method="_on_lg_mouse_entered" binds= [ "es" ]]
+[connection signal="pressed" from="Control/PanelContainer/Languages/nl" to="." method="_on_lg_pressed" binds= ["nl"]]
+[connection signal="mouse_entered" from="Control/PanelContainer/Languages/es" to="." method="_on_lg_mouse_entered" binds= ["es"]]
 [connection signal="mouse_exited" from="Control/PanelContainer/Languages/es" to="." method="_on_lg_mouse_exited"]
-[connection signal="pressed" from="Control/PanelContainer/Languages/es" to="." method="_on_lg_pressed" binds= [ "es" ]]
-[connection signal="mouse_entered" from="Control/PanelContainer/Languages/ru" to="." method="_on_lg_mouse_entered" binds= [ "ru" ]]
+[connection signal="pressed" from="Control/PanelContainer/Languages/es" to="." method="_on_lg_pressed" binds= ["es"]]
+[connection signal="mouse_entered" from="Control/PanelContainer/Languages/ru" to="." method="_on_lg_mouse_entered" binds= ["ru"]]
 [connection signal="mouse_exited" from="Control/PanelContainer/Languages/ru" to="." method="_on_lg_mouse_exited"]
-[connection signal="pressed" from="Control/PanelContainer/Languages/ru" to="." method="_on_lg_pressed" binds= [ "ru" ]]
-[connection signal="mouse_entered" from="Control/PanelContainer/Languages/fr" to="." method="_on_lg_mouse_entered" binds= [ "fr" ]]
+[connection signal="pressed" from="Control/PanelContainer/Languages/ru" to="." method="_on_lg_pressed" binds= ["ru"]]
+[connection signal="mouse_entered" from="Control/PanelContainer/Languages/fr" to="." method="_on_lg_mouse_entered" binds= ["fr"]]
 [connection signal="mouse_exited" from="Control/PanelContainer/Languages/fr" to="." method="_on_lg_mouse_exited"]
-[connection signal="pressed" from="Control/PanelContainer/Languages/fr" to="." method="_on_lg_pressed" binds= [ "fr" ]]
-[connection signal="mouse_entered" from="Control/PanelContainer/Languages/it" to="." method="_on_lg_mouse_entered" binds= [ "it" ]]
+[connection signal="pressed" from="Control/PanelContainer/Languages/fr" to="." method="_on_lg_pressed" binds= ["fr"]]
+[connection signal="mouse_entered" from="Control/PanelContainer/Languages/it" to="." method="_on_lg_mouse_entered" binds= ["it"]]
 [connection signal="mouse_exited" from="Control/PanelContainer/Languages/it" to="." method="_on_lg_mouse_exited"]
-[connection signal="pressed" from="Control/PanelContainer/Languages/it" to="." method="_on_lg_pressed" binds= [ "it" ]]
-[connection signal="mouse_entered" from="Control/PanelContainer/Languages/ko" to="." method="_on_lg_mouse_entered" binds= [ "ko" ]]
+[connection signal="pressed" from="Control/PanelContainer/Languages/it" to="." method="_on_lg_pressed" binds= ["it"]]
+[connection signal="mouse_entered" from="Control/PanelContainer/Languages/ko" to="." method="_on_lg_mouse_entered" binds= ["ko"]]
 [connection signal="mouse_exited" from="Control/PanelContainer/Languages/ko" to="." method="_on_lg_mouse_exited"]
-[connection signal="pressed" from="Control/PanelContainer/Languages/ko" to="." method="_on_lg_pressed" binds= [ "ko" ]]
-[connection signal="mouse_entered" from="Control/PanelContainer/Languages/sv" to="." method="_on_lg_mouse_entered" binds= [ "sv" ]]
+[connection signal="pressed" from="Control/PanelContainer/Languages/ko" to="." method="_on_lg_pressed" binds= ["ko"]]
+[connection signal="mouse_entered" from="Control/PanelContainer/Languages/sv" to="." method="_on_lg_mouse_entered" binds= ["sv"]]
 [connection signal="mouse_exited" from="Control/PanelContainer/Languages/sv" to="." method="_on_lg_mouse_exited"]
-[connection signal="pressed" from="Control/PanelContainer/Languages/sv" to="." method="_on_lg_pressed" binds= [ "sv" ]]
+[connection signal="pressed" from="Control/PanelContainer/Languages/sv" to="." method="_on_lg_pressed" binds= ["sv"]]

@@ -16,6 +16,6 @@ func set_text(text):
 func set_icon_texture(texture):
 	$Panel/Icon.texture = texture
 
-func set_modulate(mod):
+func set_panel_modulate(mod):
 	$VBox.modulate = mod
 	$Panel.self_modulate = mod
