@@ -98,7 +98,7 @@ func on_rsrc_out():
 	game.hide_tooltip()
 
 #Converts time in seconds to string format
-func time_to_str (time:float):
+func time_to_str (time:float): # time is in seconds
 	if time < 0:
 		time = 0
 	var seconds = int(floor(time)) % 60

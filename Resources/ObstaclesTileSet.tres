@@ -1,10 +1,10 @@
 [gd_resource type="TileSet" load_steps=11 format=3 uid="uid://dfiuyho24np11"]
 
-[ext_resource type="Texture2D" uid="uid://lwhyuqd2ydv7" path="res://Graphics/Tiles/cave.png" id="1"]
+[ext_resource type="Texture2D" uid="uid://dacp6uyjyo088" path="res://Graphics/Tiles/cave.png" id="1"]
 [ext_resource type="Texture2D" uid="uid://lxfvljbp373f" path="res://Graphics/Tiles/Volcano.png" id="4_ro4qv"]
 [ext_resource type="Texture2D" uid="uid://cck1bhqwjmqd" path="res://Graphics/Tiles/Volcano2.png" id="5_yag5r"]
-[ext_resource type="Texture2D" uid="uid://ddw8qrk0peihm" path="res://Graphics/Tiles/abandoned_ship.png" id="6"]
-[ext_resource type="Texture2D" uid="uid://bj5iam4v46a47" path="res://Graphics/Tiles/Hole.png" id="7"]
+[ext_resource type="Texture2D" uid="uid://cmi0jm4icssxk" path="res://Graphics/Tiles/abandoned_ship.png" id="6"]
+[ext_resource type="Texture2D" uid="uid://cqekqpuwtexyq" path="res://Graphics/Tiles/Hole.png" id="7"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_r3f7a"]
 texture = ExtResource("1")

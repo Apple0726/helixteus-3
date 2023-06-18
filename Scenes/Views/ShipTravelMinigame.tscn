@@ -1,10 +1,16 @@
-[gd_scene load_steps=8 format=3 uid="uid://0dmltwoh2b5o"]
+[gd_scene load_steps=9 format=3 uid="uid://0dmltwoh2b5o"]
 
 [ext_resource type="Theme" uid="uid://cp2u1kgj60ic" path="res://Resources/default_theme.tres" id="1"]
 [ext_resource type="Script" path="res://Scripts/ShipTravelMinigame.gd" id="2"]
-[ext_resource type="Texture2D" uid="uid://rfdqjdj64dnv" path="res://Graphics/Ships/Ship0.png" id="3"]
+[ext_resource type="Texture2D" uid="uid://b2debnqwjt43r" path="res://Graphics/Ships/Ship0.png" id="3"]
+
+[sub_resource type="InputEventKey" id="InputEventKey_dtonr"]
+device = -1
+physical_keycode = 90
+unicode = 122
 
 [sub_resource type="Shortcut" id="2"]
+events = [SubResource("InputEventKey_dtonr")]
 
 [sub_resource type="Animation" id="Animation_whuii"]
 resource_name = "Fade"
@@ -73,8 +79,8 @@ script = ExtResource("2")
 
 [node name="Back" type="Button" parent="."]
 layout_mode = 0
-offset_top = 684.0
-offset_right = 136.0
+offset_top = 688.0
+offset_right = 104.0
 offset_bottom = 720.0
 shortcut = SubResource("2")
 shortcut_in_tooltip = false
@@ -91,14 +97,16 @@ offset_top = 12.0
 offset_right = 736.0
 offset_bottom = 44.0
 text = "Level 1"
+horizontal_alignment = 1
 
 [node name="AccTime" type="Label" parent="."]
 layout_mode = 0
-offset_left = 152.0
+offset_left = 112.0
 offset_top = 688.0
-offset_right = 560.0
-offset_bottom = 712.0
+offset_right = 360.0
+offset_bottom = 720.0
 text = "Travel accelerated by "
+vertical_alignment = 1
 
 [node name="Help" type="Label" parent="."]
 modulate = Color(1, 1, 1, 0)
@@ -107,6 +115,8 @@ offset_left = 192.0
 offset_top = 332.0
 offset_right = 1088.0
 offset_bottom = 428.0
+horizontal_alignment = 1
+autowrap_mode = 3
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="Help"]
 libraries = {
@@ -134,6 +144,7 @@ width = 1.0
 modulate = Color(1, 1, 1, 0)
 color = Color(1, 0, 0, 1)
 polygon = PackedVector2Array(0, 0, 1280, 0, 1280, 720, 0, 720)
+metadata/_edit_lock_ = true
 
 [node name="Timer" type="Timer" parent="."]
 autostart = true

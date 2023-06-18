@@ -945,23 +945,23 @@ func generate_cave(first_floor:bool, going_up:bool):
 	exit.position = pos
 	for enemy in get_tree().get_nodes_in_group("enemies"):
 		enemy.set_rand()
-#	if discord_sdk.get_is_discord_working():
-#		discord_sdk.small_image = "rover"
-#		var cave_adjective = ""
-#		if num_floors >= 12:
-#			cave_adjective = " large"
-#		if num_floors >= 24:
-#			cave_adjective = " huge"
-#		var format_dict = {"adjective":cave_adjective, "volcanic":" volcanic" if volcano_mult > 1.0 else "", "aurora":"" if not aurora else (" illuminated by%s auroras" % [" powerful" if aurora_mult > 5.0 else ""])}
-#		if cave_floor < 8:
-#			discord_sdk.details = "Exploring a{adjective}{volcanic} cave{aurora}".format(format_dict)
-#		elif cave_floor < 16:
-#			discord_sdk.details = "Traversing the depths of a{adjective}{volcanic} cave".format(format_dict)
-#		else:
-#			discord_sdk.details = "Scouting the dark chasms of a{adjective}{volcanic} cave".format(format_dict)
-#		discord_sdk.state = "Floor %s / %s" % [cave_floor, num_floors]
-#		discord_sdk.small_image_text = "Rover HP: %s / %s" % [Helper.format_num(HP), Helper.format_num(total_HP)]
-#		discord_sdk.refresh()
+	if discord_sdk.get_is_discord_working():
+		discord_sdk.small_image = "rover"
+		var cave_adjective = ""
+		if num_floors >= 12:
+			cave_adjective = " large"
+		if num_floors >= 24:
+			cave_adjective = " huge"
+		var format_dict = {"adjective":cave_adjective, "volcanic":" volcanic" if volcano_mult > 1.0 else "", "aurora":"" if not aurora else (" illuminated by%s auroras" % [" powerful" if aurora_mult > 5.0 else ""])}
+		if cave_floor < 8:
+			discord_sdk.details = "Exploring a{adjective}{volcanic} cave{aurora}".format(format_dict)
+		elif cave_floor < 16:
+			discord_sdk.details = "Traversing the depths of a{adjective}{volcanic} cave".format(format_dict)
+		else:
+			discord_sdk.details = "Scouting the dark chasms of a{adjective}{volcanic} cave".format(format_dict)
+		discord_sdk.state = "Floor %s / %s" % [cave_floor, num_floors]
+		discord_sdk.small_image_text = "Rover HP: %s / %s" % [Helper.format_num(HP), Helper.format_num(total_HP)]
+		discord_sdk.refresh()
 
 func add_hole(id:int):
 	var drilled_hole = preload("res://Scenes/CaveHole.tscn").instantiate()
@@ -1554,7 +1554,7 @@ func attack(angle:float):
 	var laser_color:Color = get_color(laser_name)
 	if $WorldEnvironment.environment.glow_enabled:
 		laser_color *= 4.0
-	var proj_scale:float = 1.0
+	var proj_scale:float = 2.0
 	if laser_name in ["yellow", "green"]:
 		proj_scale *= 1.2
 	elif laser_name in ["blue", "purple"]:
@@ -1594,13 +1594,20 @@ func add_proj(enemy:bool, pos:Vector2, spd:float, rot:float, texture, damage:flo
 	if enemy:
 		proj.scale *= size * enemy_projectile_size
 	else:
+		proj.get_node("Sprite2D").material = ShaderMaterial.new()
+		proj.get_node("Sprite2D").material.shader = preload("res://Shaders/RoverAttackLaser.gdshader")
+		var laser_color = other_data.get("mod", Color.WHITE)
+		proj.get_node("Sprite2D").material.set_shader_parameter("laser_color", laser_color)
+		proj.get_node("PointLight2D").enabled = true
+		proj.get_node("PointLight2D").color = laser_color
+		proj.get_node("PointLight2D").energy = 1.0 + 4.0 * cave_darkness
 		proj.scale *= size
 	proj.damage = damage
 	proj.enemy = enemy
 	proj.type = other_data.get("type", Data.ProjType.STANDARD)
 	proj.time_speed = time_speed
 	proj.status_effects = other_data.get("status_effects", {})
-	proj.get_node("Sprite2D").modulate = other_data.get("mod", Color.WHITE)
+	#proj.get_node("Sprite2D").modulate = other_data.get("mod", Color.WHITE)
 	if enemy:
 		proj.collision_layer = 16
 		proj.collision_mask = 1 + 2
@@ -1630,9 +1637,9 @@ func add_proj(enemy:bool, pos:Vector2, spd:float, rot:float, texture, damage:flo
 func get_color(color:String):
 	match color:
 		"red":
-			return Color(1.0, 0.1, 0.1, 1.0)
+			return Color(1.0, 0.0, 0.0, 1.0)
 		"orange":
-			return Color(1.0, 0.2, 0.1, 1.0)
+			return Color(1.0, 0.5, 0.0, 1.0)
 		"yellow":
 			return Color.YELLOW
 		"green":

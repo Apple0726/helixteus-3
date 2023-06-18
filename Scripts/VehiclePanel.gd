@@ -16,6 +16,7 @@ func _ready():
 	set_polygon(size)
 
 func _input(event):
+	super(event)
 	if modulate.a == 1 and Input.is_action_just_released("X"):
 		if rover_over_id != -1:
 			game.rover_data[rover_over_id] = null

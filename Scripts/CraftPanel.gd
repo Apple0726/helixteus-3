@@ -1,6 +1,7 @@
 extends "GenericPanel.gd"
 
 func _ready():
+	super()
 	type = PanelType.CRAFT
 	$Title.text = tr("CRAFT")
 	for btn_str in ["Mining", "Cave"]:

@@ -7,6 +7,7 @@ var support_bldgs:Array = ["GH", "CBD"]
 var vehicles_bldgs:Array = ["RCC", "SY", "PCC"]
 
 func _ready():
+	super()
 	var added_buildings = Mods.added_buildings
 	for key in added_buildings:
 		match added_buildings[key].type:

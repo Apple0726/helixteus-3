@@ -1,6 +1,7 @@
 extends "GenericPanel.gd"
 
 func _ready():
+	super()
 	type = PanelType.SHOP
 	$Title.text = tr("SHOP")
 	for btn_str in ["Speedups", "Overclocks", "Pickaxes"]:

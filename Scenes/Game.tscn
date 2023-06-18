@@ -1,20 +1,20 @@
 [gd_scene load_steps=52 format=3 uid="uid://dt6rr51kda1rb"]
 
 [ext_resource type="Script" path="res://Scripts/Game.gd" id="2"]
-[ext_resource type="Texture2D" uid="uid://ged6udc4esp6" path="res://Graphics/Buttons/settings.png" id="3"]
-[ext_resource type="Texture2D" uid="uid://el8qh62fb6sg" path="res://Graphics/Title screen/Background.png" id="4"]
-[ext_resource type="Texture2D" uid="uid://bmccgdmotwyq7" path="res://Graphics/Title screen/Godot.png" id="5"]
-[ext_resource type="Texture2D" uid="uid://bypjbm4jcgfr2" path="res://Graphics/Title screen/GitHub.png" id="6"]
+[ext_resource type="Texture2D" uid="uid://c0s4bk56cnekf" path="res://Graphics/Buttons/settings.png" id="3"]
+[ext_resource type="Texture2D" uid="uid://bbninlwmpm4n8" path="res://Graphics/Title screen/Background.png" id="4"]
+[ext_resource type="Texture2D" uid="uid://bxgr5qmgymh34" path="res://Graphics/Title screen/Godot.png" id="5"]
+[ext_resource type="Texture2D" uid="uid://cdmm7no71h36y" path="res://Graphics/Title screen/GitHub.png" id="6"]
 [ext_resource type="Theme" uid="uid://cp2u1kgj60ic" path="res://Resources/default_theme.tres" id="7"]
-[ext_resource type="AudioStream" uid="uid://b8pdwholsqglg" path="res://Audio/SFX/click.ogg" id="8"]
+[ext_resource type="AudioStream" uid="uid://dw7ku45in32ep" path="res://Audio/SFX/click.ogg" id="8"]
 [ext_resource type="PackedScene" uid="uid://bx5co4ssobffh" path="res://Scenes/Languages.tscn" id="9"]
-[ext_resource type="Texture2D" uid="uid://bgri7jjs84xoy" path="res://Graphics/Title screen/Discord.png" id="11"]
+[ext_resource type="Texture2D" uid="uid://su3puapjd1ad" path="res://Graphics/Title screen/Discord.png" id="11"]
 [ext_resource type="Shader" path="res://Shaders/Cluster.gdshader" id="19_4v34t"]
 [ext_resource type="PackedScene" uid="uid://ddf2xjwcht77u" path="res://Scenes/CloseButton.tscn" id="25"]
-[ext_resource type="Texture2D" uid="uid://rfdqjdj64dnv" path="res://Graphics/Ships/Ship0.png" id="26"]
+[ext_resource type="Texture2D" uid="uid://b2debnqwjt43r" path="res://Graphics/Ships/Ship0.png" id="26"]
 [ext_resource type="Shader" path="res://Shaders/Blur.gdshader" id="30"]
 [ext_resource type="Shader" path="res://Shaders/Star.gdshader" id="31"]
-[ext_resource type="Texture2D" uid="uid://bgyh5871ksd1j" path="res://Graphics/Effects/spotlight_4.png" id="32"]
+[ext_resource type="Texture2D" uid="uid://pyca5r6mprt3" path="res://Graphics/Effects/spotlight_4.png" id="32"]
 [ext_resource type="PackedScene" uid="uid://dtk1md86gqsln" path="res://Scenes/Fire.tscn" id="33"]
 [ext_resource type="Shader" path="res://Shaders/ScienceTree.gdshader" id="34"]
 [ext_resource type="PackedScene" uid="uid://c5qfs6oo128dp" path="res://Scenes/Nebula.tscn" id="35"]
@@ -491,6 +491,7 @@ offset_right = 96.0
 offset_bottom = 77.0
 
 [node name="MusicPlayer" type="AudioStreamPlayer" parent="."]
+bus = &"Music"
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="MusicPlayer"]
 libraries = {

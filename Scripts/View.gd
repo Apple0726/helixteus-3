@@ -170,7 +170,9 @@ func fade_in_clusters():
 			tween.tween_property(cluster.material, "shader_parameter/alpha", 1.0, 0.4)
 
 func _draw():
-	if dest_pos != null and curr_pos != null:
+	if game.c_v == "STM":
+		return
+	if ship.visible and dest_pos != null and curr_pos != null:
 		draw_line(dep_pos, dest_pos, Color.RED)
 		draw_line(dep_pos, curr_pos, Color.GREEN)
 	if is_instance_valid(game.annotator):

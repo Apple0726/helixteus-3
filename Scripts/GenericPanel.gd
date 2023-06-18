@@ -25,6 +25,7 @@ func _ready():
 	set_polygon(size)
 
 func _input(event):
+	super(event)
 	if Input.is_action_just_pressed("shift"):
 		if type == PanelType.SHOP and tab != "Pickaxes":
 			for grid_el in grid.get_children():

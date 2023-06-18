@@ -68,7 +68,7 @@ func _on_Sound_Effects_value_changed(value):
 
 func update_volumes(bus:int, value:float):
 	AudioServer.set_bus_volume_db(bus, value)
-	AudioServer.set_bus_mute(bus,value < -40)
+	AudioServer.set_bus_mute(bus,value <= -40)
 
 func refresh():
 	if game.c_v == "STM":
@@ -115,7 +115,7 @@ func _on_EnableAutosave_toggled(button_pressed):
 func _on_FPS_value_changed(value):
 	if err == OK:
 		$TabContainer/GRAPHICS/FPS/Label2.text = str(value)
-		OS.low_processor_usage_mode_sleep_usec = 1000000 / value
+		Engine.max_fps = value
 		config.set_value("rendering", "max_fps", value)
 		config.save("user://settings.cfg")
 

@@ -13,8 +13,6 @@ config_version=5
 config/name="Helixteus 3"
 run/main_scene="res://Scenes/Game.tscn"
 config/features=PackedStringArray("4.0")
-run/low_processor_mode=true
-run/low_processor_mode_sleep_usec=16666
 boot_splash/image="res://Splash screen.png"
 config/icon="res://Graphics/Icons/HX3_mc.png"
 
@@ -27,6 +25,7 @@ buses/default_bus_layout="res://Resources/default_bus_layout.tres"
 Data="*res://Scripts/Data.gd"
 Helper="*res://Scripts/Helper.gd"
 Mods="*res://Scripts/Mods.gd"
+DiscordSDKLoader="*res://addons/discord-sdk-gd/nodes/core_updater.gd"
 
 [debug]
 
@@ -37,9 +36,12 @@ gdscript/warnings/enable=false
 window/size/viewport_width=1280
 window/size/viewport_height=720
 window/energy_saving/keep_screen_on=false
-window/stretch/mode="canvas_items"
-window/stretch/aspect="expand"
+window/stretch/mode="viewport"
 mouse_cursor/tooltip_position_offset=Vector2(5, 5)
+
+[editor_plugins]
+
+enabled=PackedStringArray("res://addons/discord-sdk-gd/plugin.cfg")
 
 [global]
 

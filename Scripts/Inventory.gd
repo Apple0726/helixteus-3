@@ -253,7 +253,8 @@ func show_met(met:String):
 func get_str(obj:String, desc:String = ""):
 	return tr(obj.to_upper() + desc)
 
-func _input(_event):
+func _input(event):
+	super(event)
 	if item_hovered != "":
 		if Input.is_action_just_released("shift X"):
 			game.items[item_slot] = null

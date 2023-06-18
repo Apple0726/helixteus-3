@@ -11,7 +11,7 @@ extends Control
 var secs_elapsed:int = 0
 var move_ship_inst:bool = false
 var fn_to_call:String = ""
-var penalty_time:int = 0 #miliseconds
+var penalty_time:int = 0 # in seconds
 var lv:int #minigame level
 var no_hit_combo:int = 0
 var got_hit:bool = false
@@ -298,7 +298,7 @@ func process_21(bullet, delta):
 var playfield:PackedVector2Array = [Vector2(-40, -40), Vector2(1320, -40), Vector2(1320, 760), Vector2(-40, 760)]
 func _process(delta):
 	if red_flash.modulate.a > 0:
-		red_flash.modulate.a -= 0.01
+		red_flash.modulate.a -= 0.01 * delta * 60
 	var m_pos = game.mouse_pos if game else mouse_pos
 	if not game or move_ship_inst:
 		ship.position = m_pos
@@ -354,7 +354,7 @@ func inc_combo():
 func hit_test(bullet):
 	if red_flash.modulate.a <= 0 and Geometry2D.is_point_in_circle(mouse_pos, bullet.position, 13 * bullet.scale.x):
 		red_flash.modulate.a = 0.3 
-		penalty_time += 6000 * (1 + (game.MUs.STMB - 1) * 0.15) #miliseconds removed when hit
+		penalty_time += 6 * (1 + (game.MUs.STMB - 1) * 0.15) # seconds removed when hit
 		got_hit = true
 		no_hit_combo = 0
 

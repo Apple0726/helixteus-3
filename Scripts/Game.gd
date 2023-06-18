@@ -1,9 +1,9 @@
 extends Node2D
 
 const TEST:bool = false
-const DATE:String = "17 Jun 2023"
-const VERSION:String = "v0.27"
-const COMPATIBLE_SAVES = ["v0.27"]
+const DATE:String = "18 Jun 2023"
+const VERSION:String = "v0.27.1"
+const COMPATIBLE_SAVES = ["v0.27", "v0.27.1"]
 const SYS_NUM:int = 400
 const UNIQUE_BLDGS = 7
 
@@ -510,16 +510,16 @@ func update_viewport_dimensions():
 		get_viewport().size = current_viewport_dimensions
 	
 func _ready():
-#	discord_sdk.app_id = 1101755847325003846 # Application ID
-#	print("Discord working: " + str(discord_sdk.get_is_discord_working())) # A boolean if everything worked
-#	if discord_sdk.get_is_discord_working():
-#		discord_sdk.details = "In title screen"
-#		discord_sdk.state = ""
-#		discord_sdk.large_image = "game"
-#		discord_sdk.large_image_text = "Helixteus 3"
-#		discord_sdk.start_timestamp = int(Time.get_unix_time_from_system())
-#		# discord_sdk.end_timestamp = int(Time.get_unix_time_from_system())
-#		discord_sdk.refresh() # Always refresh after changing the values!
+	discord_sdk.app_id = 1101755847325003846 # Application ID
+	print("Discord working: " + str(discord_sdk.get_is_discord_working())) # A boolean if everything worked
+	if discord_sdk.get_is_discord_working():
+		discord_sdk.details = "In title screen"
+		discord_sdk.state = ""
+		discord_sdk.large_image = "game"
+		discord_sdk.large_image_text = "Helixteus 3"
+		discord_sdk.start_timestamp = int(Time.get_unix_time_from_system())
+		# discord_sdk.end_timestamp = int(Time.get_unix_time_from_system())
+		discord_sdk.refresh() # Always refresh after changing the values!
 	$Star/Sprite2D.texture = load("res://Graphics/Effects/spotlight_%s.png" % [4, 5, 6].pick_random())
 	$Star/Sprite2D.material["shader_parameter/color"] = Color(randf_range(0.5, 1.0), randf_range(0.5, 1.0), randf_range(0.5, 1.0))
 	var star_tween = create_tween()
@@ -1616,6 +1616,7 @@ func switch_view(new_view:String, other_params:Dictionary = {}):
 				switch_music(preload("res://Audio/cave1.ogg"), 0.95 if tile_data[c_t].has("aurora") else 1.0)
 			"STM":
 				$Ship.visible = false
+				view.queue_redraw()
 				if is_instance_valid(HUD) and $UI.is_ancestor_of(HUD):
 					$UI.remove_child(HUD)
 				STM = STM_scene.instantiate()
@@ -1639,25 +1640,25 @@ func switch_view(new_view:String, other_params:Dictionary = {}):
 	if not other_params.has("dont_fade_anim"):
 		view_tween = create_tween()
 		view_tween.tween_property(view, "modulate", Color(1.0, 1.0, 1.0, 1.0), 0.25)
-#	if discord_sdk.get_is_discord_working():
-#		if c_v in ["planet", "system", "galaxy", "cluster", "universe"]:
-#			discord_sdk.small_image = c_v
-#			if c_v in ["planet", "system"]:
-#				discord_sdk.state = "Managing planets"
-#			if c_v == "planet":
-#				discord_sdk.small_image_text = "Viewing " + planet_data[c_p].name
-#			elif c_v == "system":
-#				discord_sdk.small_image_text = "Viewing " + system_data[c_s].name
-#			elif c_v == "galaxy":
-#				discord_sdk.state = "Observing the stars"
-#				discord_sdk.small_image_text = "Viewing " + galaxy_data[c_g].name
-#			elif c_v == "cluster":
-#				discord_sdk.state = "Watching galaxies in the distance"
-#				discord_sdk.small_image_text = "Viewing " + u_i.cluster_data[c_c].name
-#			elif c_v == "universe":
-#				discord_sdk.state = "Navigating the universe"
-#				discord_sdk.small_image_text = "Viewing " + u_i.name
-#			discord_sdk.refresh() 
+	if discord_sdk.get_is_discord_working():
+		if c_v in ["planet", "system", "galaxy", "cluster", "universe"]:
+			discord_sdk.small_image = c_v
+			if c_v in ["planet", "system"]:
+				discord_sdk.state = "Managing planets"
+			if c_v == "planet":
+				discord_sdk.small_image_text = "Viewing " + planet_data[c_p].name
+			elif c_v == "system":
+				discord_sdk.small_image_text = "Viewing " + system_data[c_s].name
+			elif c_v == "galaxy":
+				discord_sdk.state = "Observing the stars"
+				discord_sdk.small_image_text = "Viewing " + galaxy_data[c_g].name
+			elif c_v == "cluster":
+				discord_sdk.state = "Watching galaxies in the distance"
+				discord_sdk.small_image_text = "Viewing " + u_i.cluster_data[c_c].name
+			elif c_v == "universe":
+				discord_sdk.state = "Navigating the universe"
+				discord_sdk.small_image_text = "Viewing " + u_i.name
+			discord_sdk.refresh() 
 
 func add_science_tree():
 	$ScienceTreeBG.visible = enable_shaders
