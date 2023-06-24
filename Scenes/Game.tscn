@@ -1,4 +1,4 @@
-[gd_scene load_steps=52 format=3 uid="uid://dt6rr51kda1rb"]
+[gd_scene load_steps=53 format=3 uid="uid://dt6rr51kda1rb"]
 
 [ext_resource type="Script" path="res://Scripts/Game.gd" id="2"]
 [ext_resource type="Texture2D" uid="uid://c0s4bk56cnekf" path="res://Graphics/Buttons/settings.png" id="3"]
@@ -197,7 +197,7 @@ tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
 "handle_modes": PackedInt32Array(0, 0),
-"points": PackedFloat32Array(-30, -0.25, 0, 0.25, 0, 0, -0.2, -7.24913, 0.25, 0),
+"points": PackedFloat32Array(-40, -0.25, 0, 0.25, 0, 0, -0.2, -7.24913, 0.25, 0),
 "times": PackedFloat32Array(0, 1)
 }
 
@@ -254,7 +254,13 @@ _data = {
 "Fade": SubResource("15")
 }
 
+[sub_resource type="InputEventKey" id="InputEventKey_ptddw"]
+device = -1
+physical_keycode = 80
+unicode = 112
+
 [sub_resource type="Shortcut" id="17"]
+events = [SubResource("InputEventKey_ptddw")]
 
 [sub_resource type="ShaderMaterial" id="18"]
 shader = ExtResource("31")

@@ -47,7 +47,7 @@ tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
 "handle_modes": PackedInt32Array(0, 2),
-"points": PackedFloat32Array(-126, -0.25, 0, 0.0313038, 89, 0, -0.0666667, 0, 0, 0),
+"points": PackedFloat32Array(-182, -0.25, 0, 0.0313038, 89, 0, -0.0666667, 0, 0, 0),
 "times": PackedFloat32Array(0, 0.2)
 }
 
@@ -362,21 +362,21 @@ polygon = PackedVector2Array(0, 110, 30, 110, 30, 232, 0, 232)
 visible = false
 position = Vector2(0, -6.10526)
 scale = Vector2(1, 1.02632)
-polygon = PackedVector2Array(0, 80, 198, 80, 198, 232, 0, 232)
+polygon = PackedVector2Array(0, 80, 224, 79.9997, 224, 231.999, 0, 232)
 
 [node name="Bookmarks" type="Control" parent="."]
 anchors_preset = 0
-offset_left = -126.0
+offset_left = -182.0
 offset_top = 108.0
-offset_right = 28.0
+offset_right = 26.0
 offset_bottom = 226.0
 mouse_filter = 1
 
 [node name="Bookmarked" type="TextureButton" parent="Bookmarks"]
 layout_mode = 0
-offset_left = 126.0
+offset_left = 180.0
 offset_top = -32.0
-offset_right = 162.0
+offset_right = 216.0
 offset_bottom = -8.0
 toggle_mode = true
 shortcut = SubResource("3")
@@ -388,9 +388,9 @@ stretch_mode = 5
 
 [node name="BookMarkButtons" type="VBoxContainer" parent="Bookmarks"]
 layout_mode = 0
-offset_left = 126.0
+offset_left = 180.0
 offset_top = -4.0
-offset_right = 162.0
+offset_right = 216.0
 offset_bottom = 124.0
 theme_override_constants/separation = 0
 
@@ -489,7 +489,7 @@ stretch_mode = 5
 layout_mode = 0
 offset_left = -2.0
 offset_top = -4.0
-offset_right = 126.0
+offset_right = 180.0
 offset_bottom = 124.0
 
 [node name="Buttons" type="ScrollContainer" parent="Bookmarks/BookmarksList"]

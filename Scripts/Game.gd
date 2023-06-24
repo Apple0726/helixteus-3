@@ -1,9 +1,9 @@
 extends Node2D
 
 const TEST:bool = false
-const DATE:String = "18 Jun 2023"
-const VERSION:String = "v0.27.1"
-const COMPATIBLE_SAVES = ["v0.27", "v0.27.1"]
+const DATE:String = "24 Jun 2023"
+const VERSION:String = "v0.27.2"
+const COMPATIBLE_SAVES = ["v0.27", "v0.27.1", "v0.27.2"]
 const SYS_NUM:int = 400
 const UNIQUE_BLDGS = 7
 
@@ -440,7 +440,7 @@ var achievements:Dictionary = {
 	}
 }
 
-#Holds information of the tooltip that can be hidden by the player by pressing F7
+#Holds informatopion of the tooltip that can be hidden by the player by pressing F7
 var help_str:String
 var bottom_info_action:String = ""
 #Settings
@@ -510,16 +510,8 @@ func update_viewport_dimensions():
 		get_viewport().size = current_viewport_dimensions
 	
 func _ready():
-	discord_sdk.app_id = 1101755847325003846 # Application ID
-	print("Discord working: " + str(discord_sdk.get_is_discord_working())) # A boolean if everything worked
-	if discord_sdk.get_is_discord_working():
-		discord_sdk.details = "In title screen"
-		discord_sdk.state = ""
-		discord_sdk.large_image = "game"
-		discord_sdk.large_image_text = "Helixteus 3"
-		discord_sdk.start_timestamp = int(Time.get_unix_time_from_system())
-		# discord_sdk.end_timestamp = int(Time.get_unix_time_from_system())
-		discord_sdk.refresh() # Always refresh after changing the values!
+	Helper.setup_discord()
+	Helper.refresh_discord("In title screen")
 	$Star/Sprite2D.texture = load("res://Graphics/Effects/spotlight_%s.png" % [4, 5, 6].pick_random())
 	$Star/Sprite2D.material["shader_parameter/color"] = Color(randf_range(0.5, 1.0), randf_range(0.5, 1.0), randf_range(0.5, 1.0))
 	var star_tween = create_tween()
@@ -602,6 +594,7 @@ func _ready():
 		autosell = config.get_value("game", "autosell", true)
 		cave_gen_info = config.get_value("game", "cave_gen_info", false)
 		op_cursor = config.get_value("misc", "op_cursor", false)
+		Helper.discord = config.get_value("misc", "discord", true)
 		if op_cursor:
 			Input.set_custom_mouse_cursor(preload("res://Cursor.png"))
 		var notation:String =  config.get_value("game", "notation", "SI")
@@ -659,8 +652,9 @@ func switch_music(src, pitch:float = 1.0):
 			music_player.pitch_scale = pitch * u_i.time_speed
 	else:
 		music_player.pitch_scale = pitch
-	music_player.play()
 	$MusicPlayer/AnimationPlayer.play("FadeMusic")
+	await get_tree().process_frame
+	music_player.play()
 
 func load_univ():
 	if is_instance_valid(RC_panel) and $Panels/Control.is_ancestor_of(RC_panel):
@@ -1640,25 +1634,25 @@ func switch_view(new_view:String, other_params:Dictionary = {}):
 	if not other_params.has("dont_fade_anim"):
 		view_tween = create_tween()
 		view_tween.tween_property(view, "modulate", Color(1.0, 1.0, 1.0, 1.0), 0.25)
-	if discord_sdk.get_is_discord_working():
-		if c_v in ["planet", "system", "galaxy", "cluster", "universe"]:
-			discord_sdk.small_image = c_v
-			if c_v in ["planet", "system"]:
-				discord_sdk.state = "Managing planets"
-			if c_v == "planet":
-				discord_sdk.small_image_text = "Viewing " + planet_data[c_p].name
-			elif c_v == "system":
-				discord_sdk.small_image_text = "Viewing " + system_data[c_s].name
-			elif c_v == "galaxy":
-				discord_sdk.state = "Observing the stars"
-				discord_sdk.small_image_text = "Viewing " + galaxy_data[c_g].name
-			elif c_v == "cluster":
-				discord_sdk.state = "Watching galaxies in the distance"
-				discord_sdk.small_image_text = "Viewing " + u_i.cluster_data[c_c].name
-			elif c_v == "universe":
-				discord_sdk.state = "Navigating the universe"
-				discord_sdk.small_image_text = "Viewing " + u_i.name
-			discord_sdk.refresh() 
+	if c_v in ["planet", "system", "galaxy", "cluster", "universe"]:
+		var state = ""
+		var small_image_text = ""
+		if c_v in ["planet", "system"]:
+			state = "Managing planets"
+		if c_v == "planet":
+			small_image_text = "Viewing " + planet_data[c_p].name
+		elif c_v == "system":
+			small_image_text = "Viewing " + system_data[c_s].name
+		elif c_v == "galaxy":
+			state = "Observing the stars"
+			small_image_text = "Viewing " + galaxy_data[c_g].name
+		elif c_v == "cluster":
+			state = "Watching galaxies in the distance"
+			small_image_text = "Viewing " + u_i.cluster_data[c_c].name
+		elif c_v == "universe":
+			state = "Navigating the universe"
+			small_image_text = "Viewing " + u_i.name
+		Helper.refresh_discord("", state, c_v, small_image_text)
 
 func add_science_tree():
 	$ScienceTreeBG.visible = enable_shaders
@@ -1892,7 +1886,7 @@ func add_system():
 	add_obj("system")
 	HUD.switch_btn.texture_normal = preload("res://Graphics/Buttons/GalaxyView.png")
 	if len(ship_data) == 1 and u_i.lv >= 20:
-		popup_window(tr("WANDERING_SHIP_DESC"), tr("WANDERING_SHIP"))
+		popup_window(tr("WANDERING_SHIP_DESC"), tr("WANDERING_SHIP"), [], [], "OK", 0)
 		get_2nd_ship()
 
 func add_planet():

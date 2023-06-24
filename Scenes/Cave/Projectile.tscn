@@ -62,5 +62,12 @@ collision_mask = 5
 
 [node name="PointLight2D" type="PointLight2D" parent="."]
 enabled = false
+range_item_cull_mask = 3
+texture = ExtResource("4_n3kqk")
+texture_scale = 4.0
+
+[node name="PointLight2D2" type="PointLight2D" parent="."]
+enabled = false
+range_item_cull_mask = 3
 texture = ExtResource("4_n3kqk")
 texture_scale = 4.0

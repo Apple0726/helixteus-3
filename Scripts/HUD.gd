@@ -121,12 +121,10 @@ func update_XP():
 		if game.u_i.lv == 60:
 			game.new_bldgs.PCC = true
 			game.popup_window(tr("LEVEL_60_REACHED"), "%s 60" % tr("LEVEL"))
-	if discord_sdk.get_is_discord_working():
-		var d_u_info = ""
-		if game.dim_num > 1 or len(game.universe_data) > 1:
-			d_u_info = " (Dim #%s, Univ %s)" % [game.dim_num, game.c_u + 1]
-		discord_sdk.details = "Level %s%s" % [game.u_i.lv, d_u_info]
-		discord_sdk.refresh() 
+	var d_u_info = ""
+	if game.dim_num > 1 or len(game.universe_data) > 1:
+		d_u_info = " (Dim #%s, Univ %s)" % [game.dim_num, game.c_u + 1]
+	Helper.refresh_discord("Level %s%s" % [game.u_i.lv, d_u_info])
 	lv_txt.text = tr("LV") + " %s" % [game.u_i.lv]
 	lv_progress.value = game.u_i.xp / float(game.u_i.xp_to_lv)
 

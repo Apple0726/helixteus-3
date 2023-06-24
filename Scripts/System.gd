@@ -495,6 +495,8 @@ func show_planet_info(id:int, l_id:int):
 					MS_constr_data.obj = p_i
 					MS_constr_data.confirm_upgrade = false
 					Helper.add_label(tr("PRESS_F_TO_CONTINUE_CONSTR"))
+		Helper.add_label(tr("PRESS_X_TO_DESTROY"))
+		MS_constr_data.destroyable = true
 	if Helper.ships_on_planet(l_id) and not p_i.has("conquered"):
 		game.show_tooltip(tr("CLICK_TO_BATTLE"))
 	else:
@@ -536,11 +538,12 @@ func _input(event):
 				Helper.add_label(tr("X_TO_CONFIRM") % "F")
 			elif current_MS_action == "upgrading":
 				build_MS(MS_constr_data.obj, MS_constr_data.obj.MS)
+				current_MS_action = ""
 		elif planet_hovered != -1 and game.planet_data[planet_hovered].has("bldg") and game.planet_data[planet_hovered].bldg.has("name"):
 			game.upgrade_panel.ids = []
 			game.upgrade_panel.planet = game.planet_data[planet_hovered]
 			game.toggle_panel(game.upgrade_panel)
-	elif Input.is_action_just_released("X"):
+	elif Input.is_action_just_released("X") and MS_constr_data.has("destroyable"):
 		if not MS_constr_data.has("confirm_destroy"):
 			MS_constr_data.confirm_destroy = true
 			current_MS_action = "destroying"
@@ -560,9 +563,9 @@ func _input(event):
 				elif MS_constr_data.obj.MS == "M_CBS":
 					rsrc_salvaged[rsrc] *= game.planet_data[-1].distance / 1000.0
 				elif MS_constr_data.obj.MS == "M_SE":
-					rsrc_salvaged[rsrc] *= MS_constr_data.obj.size.size / 12000.0
+					rsrc_salvaged[rsrc] *= MS_constr_data.obj.size / 12000.0
 				elif MS_constr_data.obj.MS == "M_MME":
-					rsrc_salvaged[rsrc] *= pow(MS_constr_data.obj.size.size / 13000.0, 2)
+					rsrc_salvaged[rsrc] *= pow(MS_constr_data.obj.size / 13000.0, 2)
 				rsrc_salvaged[rsrc] = round(rsrc_salvaged[rsrc] * game.engineering_bonus.BCM * (0.25 if MS_constr_data.obj.has("repair_cost") else 0.5))
 				if rsrc == "stone":
 					MS_repair_cost_money += rsrc_salvaged[rsrc] * 2.0
@@ -861,6 +864,7 @@ func on_star_over (id:int):
 					continue_upg(star)
 		if game.system_data[game.c_s].has("conquered"):
 			Helper.add_label(tr("PRESS_X_TO_DESTROY"))
+			MS_constr_data.destroyable = true
 	game.show_tooltip(tooltip)
 
 func continue_upg(obj:Dictionary):

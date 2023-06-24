@@ -1,8 +1,12 @@
-[gd_scene load_steps=4 format=3 uid="uid://c8h07pagkspbb"]
+[gd_scene load_steps=6 format=3 uid="uid://c8h07pagkspbb"]
 
 [ext_resource type="Script" path="res://Scripts/VehiclePanel.gd" id="3"]
 [ext_resource type="Theme" uid="uid://cp2u1kgj60ic" path="res://Resources/default_theme.tres" id="4"]
 [ext_resource type="PackedScene" uid="uid://ddf2xjwcht77u" path="res://Scenes/CloseButton.tscn" id="6"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_yuqu4"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_420ou"]
 
 [node name="Background" type="Panel"]
 anchors_preset = 8
@@ -51,12 +55,17 @@ text = "ROVERS"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="HBox" type="HBoxContainer" parent="Rovers"]
-layout_mode = 2
+[node name="ScrollContainer" type="ScrollContainer" parent="Rovers"]
+layout_mode = 0
 offset_left = 16.0
-offset_top = 48.0
-offset_right = 16.0
-offset_bottom = 48.0
+offset_top = 40.0
+offset_right = 472.0
+offset_bottom = 232.0
+theme_override_styles/panel = SubResource("StyleBoxEmpty_yuqu4")
+vertical_scroll_mode = 3
+
+[node name="HBox" type="HBoxContainer" parent="Rovers/ScrollContainer"]
+layout_mode = 2
 alignment = 1
 
 [node name="Probes" type="Panel" parent="."]
@@ -85,12 +94,12 @@ anchors_preset = 12
 anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = 32.0
+offset_left = 16.0
 offset_top = -208.0
-offset_right = -32.0
-offset_bottom = -16.0
+offset_right = -16.0
 grow_horizontal = 2
 grow_vertical = 0
+theme_override_styles/panel = SubResource("StyleBoxEmpty_420ou")
 
 [node name="GridContainer" type="GridContainer" parent="Probes/ScrollContainer"]
 layout_mode = 2

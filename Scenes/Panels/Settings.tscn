@@ -35,6 +35,7 @@ offset_right = 892.0
 offset_bottom = 576.0
 
 [node name="SFX" type="TabBar" parent="TabContainer"]
+visible = false
 layout_mode = 2
 
 [node name="Master" type="HSlider" parent="TabContainer/SFX"]
@@ -326,7 +327,6 @@ offset_bottom = 440.0
 text = "RESET_HIDDEN_TOOLTIPS"
 
 [node name="MISC" type="TabBar" parent="TabContainer"]
-visible = false
 layout_mode = 2
 
 [node name="OPCursor" type="CheckBox" parent="TabContainer/MISC"]
@@ -336,6 +336,15 @@ offset_top = 43.0
 offset_right = 695.0
 offset_bottom = 83.0
 text = "op cursor"
+
+[node name="Discord" type="CheckBox" parent="TabContainer/MISC"]
+layout_mode = 0
+offset_left = 104.0
+offset_top = 148.0
+offset_right = 302.0
+offset_bottom = 188.0
+button_pressed = true
+text = "Discord Rich Presence"
 
 [node name="HBoxContainer2" type="HBoxContainer" parent="TabContainer/MISC"]
 layout_mode = 0
@@ -394,6 +403,7 @@ text = "LARGE_NUMBER_NOTATION"
 [connection signal="mouse_entered" from="TabContainer/MISC/OPCursor" to="." method="_on_OPCursor_mouse_entered"]
 [connection signal="mouse_exited" from="TabContainer/MISC/OPCursor" to="." method="_on_OPCursor_mouse_exited"]
 [connection signal="toggled" from="TabContainer/MISC/OPCursor" to="." method="_on_OPCursor_toggled"]
+[connection signal="toggled" from="TabContainer/MISC/Discord" to="." method="_on_discord_toggled"]
 [connection signal="mouse_entered" from="TabContainer/MISC/HBoxContainer2/Standard" to="." method="_on_Standard_mouse_entered"]
 [connection signal="mouse_exited" from="TabContainer/MISC/HBoxContainer2/Standard" to="." method="_on_mouse_exited"]
 [connection signal="pressed" from="TabContainer/MISC/HBoxContainer2/Standard" to="." method="_on_Standard_pressed"]

@@ -363,8 +363,12 @@ func set_slot_info(slot, _inv:Dictionary):
 		slot.get_node("TextureRect").texture = load("res://Graphics/Cave/Weapons/" + _inv.name + ".png")
 	elif rsrc == "rover_mining":
 		var c:Color = get_color(_inv.name.split("_")[0])
-		mining_laser.material["shader_parameter/color"] = c * 4.0
-		mining_laser.material["shader_parameter/outline_color"] = c * 4.0
+		mining_laser.material["shader_parameter/outline_color"] = c
+		mining_laser.get_node("PointLight2D").color = c
+		if _inv.name.split("_")[0] in ["blue"]:
+			mining_laser.get_node("PointLight2D").energy = 3
+		else:
+			mining_laser.get_node("PointLight2D").energy = 2
 		var speed = Data.rover_mining[_inv.name].speed
 		mining_p.amount = int(25 * pow(speed, 0.2) * pow(rover_size, 2 * 0.2))
 		mining_p.process_material.initial_velocity_min = 500 * pow(speed, 0.3) * pow(rover_size, 2 * 0.3)
@@ -455,6 +459,7 @@ func generate_cave(first_floor:bool, going_up:bool):
 	cave_BG.material.set_shader_parameter("modulate_color", BG_mod)
 	rover.get_node("AshParticles").modulate = Color.WHITE * (1.0 - cave_darkness)
 	rover.get_node("AshParticles").modulate.a = 1.0
+	mining_laser.get_node("PointLight2D2").energy = 0.5 + pow(cave_darkness, 2) * 6
 	cave_wall.modulate = star_mod * (1.0 - cave_darkness) * (Color(1.0, 1.0, 1.5) if cave_floor >= 8 else Color.WHITE)
 	cave_wall.modulate.a = 1.0
 	hole.modulate = star_mod * (1.0 - cave_darkness)
@@ -945,23 +950,22 @@ func generate_cave(first_floor:bool, going_up:bool):
 	exit.position = pos
 	for enemy in get_tree().get_nodes_in_group("enemies"):
 		enemy.set_rand()
-	if discord_sdk.get_is_discord_working():
-		discord_sdk.small_image = "rover"
-		var cave_adjective = ""
-		if num_floors >= 12:
-			cave_adjective = " large"
-		if num_floors >= 24:
-			cave_adjective = " huge"
-		var format_dict = {"adjective":cave_adjective, "volcanic":" volcanic" if volcano_mult > 1.0 else "", "aurora":"" if not aurora else (" illuminated by%s auroras" % [" powerful" if aurora_mult > 5.0 else ""])}
-		if cave_floor < 8:
-			discord_sdk.details = "Exploring a{adjective}{volcanic} cave{aurora}".format(format_dict)
-		elif cave_floor < 16:
-			discord_sdk.details = "Traversing the depths of a{adjective}{volcanic} cave".format(format_dict)
-		else:
-			discord_sdk.details = "Scouting the dark chasms of a{adjective}{volcanic} cave".format(format_dict)
-		discord_sdk.state = "Floor %s / %s" % [cave_floor, num_floors]
-		discord_sdk.small_image_text = "Rover HP: %s / %s" % [Helper.format_num(HP), Helper.format_num(total_HP)]
-		discord_sdk.refresh()
+	var cave_adjective = ""
+	if num_floors >= 12:
+		cave_adjective = " large"
+	if num_floors >= 24:
+		cave_adjective = " huge"
+	var format_dict = {"adjective":cave_adjective, "volcanic":" volcanic" if volcano_mult > 1.0 else "", "aurora":"" if not aurora else (" illuminated by%s auroras" % [" powerful" if aurora_mult > 10.0 else ""])}
+	var details = ""
+	if cave_floor < 8:
+		details = "Exploring a{adjective}{volcanic} cave{aurora}".format(format_dict)
+	elif cave_floor < 16:
+		details = "Traversing the depths of a{adjective}{volcanic} cave{aurora}".format(format_dict)
+	else:
+		details = "Scouting the dark chasms of a{adjective}{volcanic} cave{aurora}".format(format_dict)
+	var state = "Floor %s / %s" % [cave_floor, num_floors]
+	var small_image_text = "Rover HP: %s / %s" % [Helper.format_num(HP), Helper.format_num(total_HP)]
+	Helper.refresh_discord(details, state, "rover", small_image_text)
 
 func add_hole(id:int):
 	var drilled_hole = preload("res://Scenes/CaveHole.tscn").instantiate()
@@ -1153,20 +1157,13 @@ func update_ray():
 			tile_highlighted_for_mining = -1
 			mining_debris = -1
 			_tile_highlight.visible = false
-		mining_laser.visible = holding_click
 		if holding_click:
+			mining_laser.get_node("PointLight2D").enabled = game.enable_shaders
+			mining_laser.get_node("PointLight2D2").enabled = game.enable_shaders
 			mining_laser.scale.x = laser_reach / 16.0
 			mining_laser.scale.y = 16.0
-			if _inv.name == "gammaray_mining_laser":
-				mining_laser.material["shader_parameter/beams"] = 2
-				mining_laser.material["shader_parameter/energy"] = 15
-			elif _inv.name == "ultragammaray_mining_laser":
-				mining_laser.material["shader_parameter/beams"] = 3
-				mining_laser.material["shader_parameter/energy"] = 20
-			else:
-				mining_laser.material["shader_parameter/beams"] = 1
-				mining_laser.material["shader_parameter/energy"] = 8
 			mining_laser.rotation = atan2(mouse_pos.y - rover.position.y, mouse_pos.x - rover.position.x)
+		mining_laser.visible = holding_click
 	else:
 		mining_laser.visible = false
 		mining_p.emitting = false
@@ -1554,7 +1551,7 @@ func attack(angle:float):
 	var laser_color:Color = get_color(laser_name)
 	if $WorldEnvironment.environment.glow_enabled:
 		laser_color *= 4.0
-	var proj_scale:float = 2.0
+	var proj_scale:float = 1.5
 	if laser_name in ["yellow", "green"]:
 		proj_scale *= 1.2
 	elif laser_name in ["blue", "purple"]:
@@ -1582,6 +1579,7 @@ func add_enemy_proj(_class:int, rot:float, base_dmg:float, pos:Vector2, proj_spe
 		add_proj(true, pos, 13.0 * proj_speed_mult, rot, bubble_texture, base_dmg * 1.2, {"mod":Color.WHITE * 1.2 * glow, "type":Data.ProjType.BUBBLE, "status_effects":_status_effects})
 	elif _class == 4:
 		add_proj(true, pos, 0.0, rot, purple_texture, base_dmg * 1.1, {"size":2.0, "mod":Color.WHITE * 1.2 * glow, "type":Data.ProjType.PURPLE, "status_effects":_status_effects})
+
 #mod:Color = Color.WHITE, type:int = Data.ProjType.STANDARD, proj_scale:float = 1.0, status_effects:Dictionary = {}
 func add_proj(enemy:bool, pos:Vector2, spd:float, rot:float, texture, damage:float, other_data:Dictionary):
 	var proj:Projectile = bullet_scene.instantiate()
@@ -1598,10 +1596,14 @@ func add_proj(enemy:bool, pos:Vector2, spd:float, rot:float, texture, damage:flo
 		proj.get_node("Sprite2D").material.shader = preload("res://Shaders/RoverAttackLaser.gdshader")
 		var laser_color = other_data.get("mod", Color.WHITE)
 		proj.get_node("Sprite2D").material.set_shader_parameter("laser_color", laser_color)
-		proj.get_node("PointLight2D").enabled = true
-		proj.get_node("PointLight2D").color = laser_color
-		proj.get_node("PointLight2D").energy = 1.0 + 4.0 * cave_darkness
+		if game.enable_shaders:
+			proj.get_node("PointLight2D").enabled = true
+			proj.get_node("PointLight2D").color = laser_color
+			proj.get_node("PointLight2D").energy = (0.6 + pow(cave_darkness, 2) * 2)
+			proj.get_node("PointLight2D2").enabled = true
+			proj.get_node("PointLight2D2").energy = (0.3 + pow(cave_darkness, 2))
 		proj.scale *= size
+		proj.get_node("Sprite2D").light_mask = 2
 	proj.damage = damage
 	proj.enemy = enemy
 	proj.type = other_data.get("type", Data.ProjType.STANDARD)
@@ -1639,13 +1641,13 @@ func get_color(color:String):
 		"red":
 			return Color(1.0, 0.0, 0.0, 1.0)
 		"orange":
-			return Color(1.0, 0.5, 0.0, 1.0)
+			return Color(0.8, 0.4, 0.0, 1.0)
 		"yellow":
-			return Color.YELLOW
+			return Color(0.6, 0.6, 0.0, 1.0)
 		"green":
-			return Color(0.1, 1.0, 0.1, 1.0)
+			return Color(0.0, 1.0, 0.0, 1.0)
 		"blue":
-			return Color(0.13, 0.16, 1.0, 1.0)
+			return Color(0.0, 0.0, 1.0, 1.0)
 		"purple":
 			return Color.PURPLE
 		"UV":

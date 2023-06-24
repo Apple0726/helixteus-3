@@ -1,6 +1,6 @@
 [gd_scene load_steps=5 format=3 uid="uid://dtk1md86gqsln"]
 
-[ext_resource type="Texture2D" uid="uid://c40cgiiy8o1o6" path="res://Graphics/Stars/Star.png" id="1"]
+[ext_resource type="Texture2D" uid="uid://clca8hs8xkyxl" path="res://Graphics/Stars/Star.png" id="1"]
 
 [sub_resource type="Gradient" id="1"]
 offsets = PackedFloat32Array(0, 0.300469, 0.746479, 0.995305, 1)
@@ -13,10 +13,12 @@ gradient = SubResource("1")
 emission_shape = 1
 emission_sphere_radius = 6.0
 direction = Vector3(-1, 0, 0)
-spread = 91.18
+spread = 22.36
 gravity = Vector3(0, 0, 0)
-scale_min = 0.01
-scale_max = 0.02
+initial_velocity_min = 50.0
+initial_velocity_max = 100.0
+scale_min = 0.02
+scale_max = 0.03
 color_ramp = SubResource("2")
 
 [node name="Fire" type="GPUParticles2D"]

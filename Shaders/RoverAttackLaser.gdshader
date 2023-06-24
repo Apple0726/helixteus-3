@@ -1,4 +1,5 @@
 shader_type canvas_item;
+render_mode blend_add;
 
 uniform vec4 laser_color: source_color = vec4(1.0);
 

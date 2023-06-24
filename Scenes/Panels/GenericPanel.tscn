@@ -122,10 +122,9 @@ layout_mode = 2
 [node name="BuyAmount" type="SpinBox" parent="VBox/HBox/ItemInfo/VBox/HBox"]
 layout_mode = 2
 min_value = 1.0
-max_value = 2.0
+max_value = 10000.0
 value = 1.0
 rounded = true
-allow_greater = true
 
 [node name="Buy" type="Button" parent="VBox/HBox/ItemInfo/VBox/HBox"]
 layout_mode = 2

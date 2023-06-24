@@ -46,6 +46,7 @@ func _ready():
 		$TabContainer/GAME/Autosave.value = autosave_interval
 		$TabContainer/GRAPHICS/FPS/FPS.value = max_fps
 		$TabContainer/MISC/OPCursor.button_pressed = config.get_value("misc", "op_cursor", false)
+		$TabContainer/MISC/Discord.button_pressed = config.get_value("misc", "discord", true)
 		set_notation()
 
 func _on_Main_audio_value_changed(value):
@@ -300,3 +301,14 @@ func _on_DisplayRes_item_selected(index):
 	Helper.set_resolution(id)
 #	if not $TabContainer/GRAPHICS/KeepWindowSize.button_pressed and id != 0 and id < 9:
 #		get_window().size = get_viewport().size
+
+
+func _on_discord_toggled(button_pressed):
+	if err == OK:
+		config.set_value("misc", "discord", button_pressed)
+		config.save("user://settings.cfg")
+		if button_pressed:
+			Helper.setup_discord()
+			Helper.refresh_discord()
+		else:
+			Helper.refresh_discord("clear")
