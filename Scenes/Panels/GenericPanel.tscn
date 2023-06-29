@@ -1,6 +1,6 @@
 [gd_scene load_steps=5 format=3 uid="uid://ccvqw3qqp22x"]
 
-[ext_resource type="Script" path="res://Scripts/MegastructuresPanel.gd" id="1"]
+[ext_resource type="Script" path="res://Scripts/GenericPanel.gd" id="2_s5ncc"]
 [ext_resource type="PackedScene" uid="uid://ddf2xjwcht77u" path="res://Scenes/CloseButton.tscn" id="3"]
 [ext_resource type="Theme" uid="uid://cp2u1kgj60ic" path="res://Resources/default_theme.tres" id="5"]
 
@@ -18,7 +18,7 @@ offset_top = -296.0
 offset_right = 512.0
 offset_bottom = 296.0
 theme = ExtResource("5")
-script = ExtResource("1")
+script = ExtResource("2_s5ncc")
 
 [node name="CloseButton" parent="." instance=ExtResource("3")]
 layout_mode = 1

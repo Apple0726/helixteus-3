@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://c5nwag1jaidlq"]
 
-[ext_resource type="Texture2D" uid="uid://dr8ijps7evabc" path="res://Graphics/Icons/Annotator/cross.png" id="1"]
+[ext_resource type="Texture2D" uid="uid://bctutllkctdyo" path="res://Graphics/Icons/Annotator/cross.png" id="1"]
 
 [node name="HBoxContainer" type="HBoxContainer"]
 offset_right = 816.0

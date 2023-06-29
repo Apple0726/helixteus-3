@@ -1,12 +1,12 @@
 [gd_scene load_steps=8 format=3 uid="uid://cmh2bqka73geo"]
 
 [ext_resource type="PackedScene" uid="uid://1hq6qpr1oa3i" path="res://Scenes/AdvButton.tscn" id="1"]
-[ext_resource type="Texture2D" uid="uid://utmoe58oqc7d" path="res://Graphics/Particles/electron.png" id="2"]
+[ext_resource type="Texture2D" uid="uid://cgvc845wu5nly" path="res://Graphics/Particles/electron.png" id="2"]
 [ext_resource type="Theme" uid="uid://cp2u1kgj60ic" path="res://Resources/default_theme.tres" id="3"]
 [ext_resource type="Script" path="res://Scripts/Inventory.gd" id="4"]
 [ext_resource type="PackedScene" uid="uid://ddf2xjwcht77u" path="res://Scenes/CloseButton.tscn" id="5"]
-[ext_resource type="Texture2D" uid="uid://c6ftupoc1a13b" path="res://Graphics/Particles/proton.png" id="6"]
-[ext_resource type="Texture2D" uid="uid://bmecb3uq7glad" path="res://Graphics/Particles/neutron.png" id="7"]
+[ext_resource type="Texture2D" uid="uid://cbs8udgtyedlt" path="res://Graphics/Particles/proton.png" id="6"]
+[ext_resource type="Texture2D" uid="uid://5nvl5jsep6j5" path="res://Graphics/Particles/neutron.png" id="7"]
 
 [node name="Background" type="Panel"]
 anchors_preset = 8

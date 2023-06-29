@@ -2,11 +2,11 @@
 
 [ext_resource type="Texture2D" uid="uid://bvp52vcrg8q4i" path="res://Graphics/Icons/help.png" id="1"]
 [ext_resource type="Theme" uid="uid://cp2u1kgj60ic" path="res://Resources/default_theme.tres" id="3"]
-[ext_resource type="Texture2D" uid="uid://dfov6sisin58e" path="res://Graphics/Icons/energy.png" id="4"]
+[ext_resource type="Texture2D" uid="uid://cq1makvvmrsi4" path="res://Graphics/Icons/energy.png" id="4"]
 [ext_resource type="Script" path="res://Scripts/SendFightersPanel.gd" id="5"]
-[ext_resource type="Texture2D" uid="uid://c8qmitim8mo4k" path="res://Graphics/Icons/Time.png" id="7"]
+[ext_resource type="Texture2D" uid="uid://bjfmtj2gp0t6p" path="res://Graphics/Icons/Time.png" id="7"]
 [ext_resource type="PackedScene" uid="uid://ddf2xjwcht77u" path="res://Scenes/CloseButton.tscn" id="8"]
-[ext_resource type="Texture2D" uid="uid://b3c6f5upmvn5a" path="res://Graphics/Misc/Bar.png" id="9"]
+[ext_resource type="Texture2D" uid="uid://d3y18b21lmrsh" path="res://Graphics/Misc/Bar.png" id="9"]
 
 [node name="SendFightersPanel" type="Panel"]
 anchors_preset = 8

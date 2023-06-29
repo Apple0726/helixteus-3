@@ -4,7 +4,7 @@
 [ext_resource type="PackedScene" uid="uid://bbgrbjt6243ku" path="res://Scenes/AnnotatorShape.tscn" id="2"]
 [ext_resource type="Script" path="res://Scripts/Annotator.gd" id="3"]
 [ext_resource type="PackedScene" uid="uid://ddf2xjwcht77u" path="res://Scenes/CloseButton.tscn" id="4"]
-[ext_resource type="Texture2D" uid="uid://del47iv25l7se" path="res://Graphics/Tiles/Highlight.jpg" id="5"]
+[ext_resource type="Texture2D" uid="uid://bighipkggxcbm" path="res://Graphics/Tiles/Highlight.jpg" id="5"]
 
 [sub_resource type="Shortcut" id="2"]
 

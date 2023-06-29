@@ -1,6 +1,6 @@
 [gd_scene load_steps=8 format=3 uid="uid://c4filbuq4b5ct"]
 
-[ext_resource type="Texture2D" uid="uid://c8qmitim8mo4k" path="res://Graphics/Icons/Time.png" id="1"]
+[ext_resource type="Texture2D" uid="uid://bjfmtj2gp0t6p" path="res://Graphics/Icons/Time.png" id="1"]
 [ext_resource type="Texture2D" uid="uid://bvp52vcrg8q4i" path="res://Graphics/Icons/help.png" id="2"]
 [ext_resource type="Theme" uid="uid://cp2u1kgj60ic" path="res://Resources/default_theme.tres" id="3"]
 [ext_resource type="Script" path="res://Scripts/SendProbesPanel.gd" id="5"]

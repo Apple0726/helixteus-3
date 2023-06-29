@@ -99,7 +99,7 @@ func refresh():
 		var probe_info:Dictionary = game.probe_data[i]
 		var probe = TextureButton.new()
 		probe.texture_normal = load("res://Graphics/Ships/Probe%s.png" % probe_info.tier)
-		probe.expand = true
+		probe.ignore_texture_size = true
 		probe.stretch_mode = TextureButton.STRETCH_KEEP_ASPECT_CENTERED
 		probe.custom_minimum_size = Vector2(80, 80)
 		hbox3.add_child(probe)

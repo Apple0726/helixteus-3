@@ -1,11 +1,11 @@
 [gd_scene load_steps=9 format=3 uid="uid://mkqstuts1rdm"]
 
-[ext_resource type="Texture2D" uid="uid://c8qmitim8mo4k" path="res://Graphics/Icons/Time.png" id="1"]
+[ext_resource type="Texture2D" uid="uid://bjfmtj2gp0t6p" path="res://Graphics/Icons/Time.png" id="1"]
 [ext_resource type="PackedScene" uid="uid://ddf2xjwcht77u" path="res://Scenes/CloseButton.tscn" id="3"]
 [ext_resource type="Theme" uid="uid://cp2u1kgj60ic" path="res://Resources/default_theme.tres" id="4"]
 [ext_resource type="Script" path="res://Scripts/ProductionPanel.gd" id="6"]
-[ext_resource type="Texture2D" uid="uid://d1lcjgnoyv4b3" path="res://Graphics/Materials/sand.png" id="7"]
-[ext_resource type="Texture2D" uid="uid://cw7bav43mkurh" path="res://Graphics/Materials/glass.png" id="8"]
+[ext_resource type="Texture2D" uid="uid://b3enqoy6u32xm" path="res://Graphics/Materials/sand.png" id="7"]
+[ext_resource type="Texture2D" uid="uid://4iyp4bx55gro" path="res://Graphics/Materials/glass.png" id="8"]
 
 [sub_resource type="InputEventKey" id="InputEventKey_abv8r"]
 device = -1

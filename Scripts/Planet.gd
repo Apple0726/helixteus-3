@@ -697,7 +697,7 @@ func destroy_bldg(id2:int, mass:bool = false):
 					continue
 				var id:int = x % wid + y * wid
 				var _tile = game.tile_data[id]
-				if not _tile:
+				if _tile == null:
 					continue
 				if _tile.has("cost_div_dict"):
 					_tile.cost_div_dict.erase(str(id2))

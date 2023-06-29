@@ -155,19 +155,21 @@ func _process(delta):
 
 func fade_out_clusters():
 	$AnimationPlayer.play("Fade")
-	var tween = create_tween()
-	tween.set_parallel(true)
-	for cluster in obj.btns:
-		if is_instance_valid(cluster):
-			tween.tween_property(cluster.material, "shader_parameter/alpha", 0.0, 0.4)
+	if game.enable_shaders:
+		var tween = create_tween()
+		tween.set_parallel(true)
+		for cluster in obj.btns:
+			if is_instance_valid(cluster):
+				tween.tween_property(cluster.material, "shader_parameter/alpha", 0.0, 0.4)
 
 func fade_in_clusters():
 	$AnimationPlayer.play_backwards("Fade")
-	var tween = create_tween()
-	tween.set_parallel(true)
-	for cluster in obj.btns:
-		if is_instance_valid(cluster):
-			tween.tween_property(cluster.material, "shader_parameter/alpha", 1.0, 0.4)
+	if game.enable_shaders:
+		var tween = create_tween()
+		tween.set_parallel(true)
+		for cluster in obj.btns:
+			if is_instance_valid(cluster):
+				tween.tween_property(cluster.material, "shader_parameter/alpha", 1.0, 0.4)
 
 func _draw():
 	if game.c_v == "STM":

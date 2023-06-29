@@ -1,7 +1,7 @@
 [gd_scene load_steps=7 format=3 uid="uid://c0enbmy35rxiq"]
 
 [ext_resource type="Shader" path="res://Shaders/Explosion.gdshader" id="1"]
-[ext_resource type="Texture2D" uid="uid://c40cgiiy8o1o6" path="res://Graphics/Stars/Star.png" id="2"]
+[ext_resource type="Texture2D" uid="uid://clca8hs8xkyxl" path="res://Graphics/Stars/Star.png" id="2"]
 
 [sub_resource type="Animation" id="1"]
 resource_name = "Explosion"

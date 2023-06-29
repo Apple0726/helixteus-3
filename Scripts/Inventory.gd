@@ -132,7 +132,7 @@ func _on_Materials_pressed():
 	inventory_grid.visible = false
 	grid.visible = true
 	particles_hbox.visible = false
-	hbox_data = Helper.put_rsrc(grid, 48, game.mats)
+	hbox_data = Helper.put_rsrc(grid, 48, game.mats, true, false, false)
 	for mat in hbox_data:
 		if not game.show.has(mat.name):
 			mat.rsrc.visible = false
@@ -150,7 +150,7 @@ func _on_Metals_pressed():
 	inventory_grid.visible = false
 	grid.visible = true
 	particles_hbox.visible = false
-	hbox_data = Helper.put_rsrc(grid, 48, game.mets)
+	hbox_data = Helper.put_rsrc(grid, 48, game.mets, true, false, false)
 	for met in hbox_data:
 		if not game.show.has(met.name):
 			met.rsrc.visible = false
@@ -168,7 +168,7 @@ func _on_Atoms_pressed():
 	inventory_grid.visible = false
 	grid.visible = true
 	particles_hbox.visible = false
-	hbox_data = Helper.put_rsrc(grid, 48, game.atoms)
+	hbox_data = Helper.put_rsrc(grid, 48, game.atoms, true, false, false)
 	for atom in hbox_data:
 		if not game.show.has(atom.name):
 			atom.rsrc.visible = false
@@ -264,7 +264,7 @@ func _input(event):
 		elif Input.is_action_just_released("X"):
 			game.remove_items(item_hovered)
 			_on_Items_pressed()
-			if not game.items[item_slot]:
+			if game.items[item_slot] == null:
 				item_hovered = ""
 				game.hide_tooltip()
 		if Input.is_action_just_released("H"):

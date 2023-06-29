@@ -1,7 +1,7 @@
 [gd_scene load_steps=3 format=3 uid="uid://2s0chovxmhln"]
 
 [ext_resource type="Theme" uid="uid://cp2u1kgj60ic" path="res://Resources/default_theme.tres" id="2"]
-[ext_resource type="Texture2D" uid="uid://cjvb6ilj73css" path="res://Graphics/Cave/SlotBorder.png" id="3"]
+[ext_resource type="Texture2D" uid="uid://dqlfi1vdi82ns" path="res://Graphics/Cave/SlotBorder.png" id="3"]
 
 [node name="Slot" type="Panel"]
 custom_minimum_size = Vector2(60, 60)

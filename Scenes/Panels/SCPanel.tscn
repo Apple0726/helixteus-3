@@ -5,8 +5,8 @@
 [ext_resource type="PackedScene" uid="uid://bx0a7iwx3qlo1" path="res://Scenes/PieGraph.tscn" id="3"]
 [ext_resource type="Theme" uid="uid://cp2u1kgj60ic" path="res://Resources/default_theme.tres" id="5"]
 [ext_resource type="Script" path="res://Scripts/SCPanel.gd" id="6"]
-[ext_resource type="Texture2D" uid="uid://3f7a2kcsv1c4" path="res://Graphics/Icons/stone.png" id="7"]
-[ext_resource type="Texture2D" uid="uid://c8qmitim8mo4k" path="res://Graphics/Icons/Time.png" id="10"]
+[ext_resource type="Texture2D" uid="uid://b85wdhdkvhxuv" path="res://Graphics/Icons/stone.png" id="7"]
+[ext_resource type="Texture2D" uid="uid://bjfmtj2gp0t6p" path="res://Graphics/Icons/Time.png" id="10"]
 [ext_resource type="PackedScene" uid="uid://ddf2xjwcht77u" path="res://Scenes/CloseButton.tscn" id="12"]
 
 [sub_resource type="InputEventKey" id="InputEventKey_h3yc4"]

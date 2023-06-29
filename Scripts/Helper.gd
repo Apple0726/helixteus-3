@@ -41,7 +41,7 @@ func format_text(text_node, texture, path:String, show_available:bool, rsrc_cost
 	text_node.text = text
 	text_node["theme_override_colors/font_color"] = color
 
-func put_rsrc(container, min_size, objs, remove:bool = true, show_available:bool = false):
+func put_rsrc(container, min_size, objs, remove:bool = true, show_available:bool = false, mouse_events:bool = true):
 	if remove:
 		for child in container.get_children():
 			child.free()
@@ -84,8 +84,9 @@ func put_rsrc(container, min_size, objs, remove:bool = true, show_available:bool
 			for item_group_info in game.item_groups:
 				if item_group_info.dict.has(obj):
 					format_text(rsrc.get_node("Text"), texture, item_group_info.path + "/" + obj, show_available, objs[obj], game.get_item_num(obj))
-		rsrc.get_node("Texture2D").connect("mouse_entered",Callable(self,"on_rsrc_over").bind(tooltip))
-		rsrc.get_node("Texture2D").connect("mouse_exited",Callable(self,"on_rsrc_out"))
+		if mouse_events:
+			rsrc.get_node("Texture2D").connect("mouse_entered",Callable(self,"on_rsrc_over").bind(tooltip))
+			rsrc.get_node("Texture2D").connect("mouse_exited",Callable(self,"on_rsrc_out"))
 		texture.custom_minimum_size = Vector2(1, 1) * min_size
 		container.add_child(rsrc)
 		data.append({"rsrc":rsrc, "name":obj})
@@ -1590,27 +1591,27 @@ func get_sph_V(outer:float, inner:float = 0):
 var discord = true
 
 func setup_discord():
-#	discord_sdk.app_id = 1101755847325003846 # Application ID
-#	if discord_sdk.get_is_discord_working():
-#		discord_sdk.large_image = "game"
-#		discord_sdk.large_image_text = "Helixteus 3"
-#		discord_sdk.start_timestamp = int(Time.get_unix_time_from_system())
+	discord_sdk.app_id = 1101755847325003846 # Application ID
+	if discord_sdk.get_is_discord_working():
+		discord_sdk.large_image = "game"
+		discord_sdk.large_image_text = "Helixteus 3"
+		discord_sdk.start_timestamp = int(Time.get_unix_time_from_system())
 	pass
 
 func refresh_discord(details:String = "", state:String = "", small_image:String = "", small_image_text:String = ""):
-#	if discord_sdk.get_is_discord_working():
-#		if details == "clear":
-#			discord_sdk.clear()
-#			return
-#		if not discord:
-#			return
-#		if details != "":
-#			discord_sdk.details = details
-#		if state != "":
-#			discord_sdk.state = state
-#		if small_image != "":
-#			discord_sdk.small_image = small_image
-#		if small_image_text != "":
-#			discord_sdk.small_image_text = small_image_text
-#		discord_sdk.refresh()
+	if discord_sdk.get_is_discord_working():
+		if details == "clear":
+			discord_sdk.clear()
+			return
+		if not discord:
+			return
+		if details != "":
+			discord_sdk.details = details
+		if state != "":
+			discord_sdk.state = state
+		if small_image != "":
+			discord_sdk.small_image = small_image
+		if small_image_text != "":
+			discord_sdk.small_image_text = small_image_text
+		discord_sdk.refresh()
 	pass

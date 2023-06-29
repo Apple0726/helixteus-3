@@ -48,7 +48,7 @@ func change_tab(btn_str:String):
 	if btn_str == "Pickaxes":
 		_on_BuyAmount_value_changed(1)
 	else:
-		_on_BuyAmount_value_changed(num)
+		_on_BuyAmount_value_changed($VBox/HBox/ItemInfo/VBox/HBox/BuyAmount.value)
 	remove_costs()
 	item_info.modulate.a = 0
 	$Desc.text = tr("%s_DESC" % btn_str.to_upper())

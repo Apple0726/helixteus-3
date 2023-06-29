@@ -739,6 +739,7 @@ layout_mode = 0
 offset_top = 38.0
 offset_right = 48.0
 offset_bottom = 77.0
+theme_override_constants/separation = 0
 
 [node name="Label" type="Label" parent="Top/Lv"]
 layout_mode = 2

@@ -1,11 +1,11 @@
 [gd_scene load_steps=17 format=3 uid="uid://cgbd1tgsqupqm"]
 
-[ext_resource type="Texture2D" uid="uid://dcse6at72q64g" path="res://Graphics/Buttons/Overlay.png" id="1"]
+[ext_resource type="Texture2D" uid="uid://nipf1kj5dll5" path="res://Graphics/Buttons/Overlay.png" id="1"]
 [ext_resource type="Script" path="res://Scripts/SpaceHUD.gd" id="2"]
 [ext_resource type="Theme" uid="uid://cp2u1kgj60ic" path="res://Resources/default_theme.tres" id="3"]
-[ext_resource type="Texture2D" uid="uid://bm5fxqakm1quo" path="res://Graphics/Buttons/Megastructures.png" id="4"]
-[ext_resource type="Texture2D" uid="uid://cxaw7b8538qb3" path="res://Graphics/Buttons/Annotate.png" id="7"]
-[ext_resource type="Texture2D" uid="uid://b3bnepfxia8o7" path="res://Graphics/Buttons/Gigastructures.png" id="8"]
+[ext_resource type="Texture2D" uid="uid://bybtx4nbo7b3h" path="res://Graphics/Buttons/Megastructures.png" id="4"]
+[ext_resource type="Texture2D" uid="uid://dlem7yhehdt0n" path="res://Graphics/Buttons/Annotate.png" id="7"]
+[ext_resource type="Texture2D" uid="uid://blcl46f5lllbc" path="res://Graphics/Buttons/Gigastructures.png" id="8"]
 [ext_resource type="Texture2D" uid="uid://bpdelfrrpg4rk" path="res://Graphics/Buttons/ElementOverlay.png" id="9"]
 
 [sub_resource type="InputEventKey" id="InputEventKey_o6e2x"]

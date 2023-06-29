@@ -1,6 +1,6 @@
 [gd_scene load_steps=3 format=3 uid="uid://cpfkb4haasun3"]
 
-[ext_resource type="Texture2D" uid="uid://dnis4hwcaltmv" path="res://Graphics/Cave/Objects/Hole.png" id="1"]
+[ext_resource type="Texture2D" uid="uid://bpcj8tnjtkpss" path="res://Graphics/Cave/Objects/Hole.png" id="1"]
 
 [sub_resource type="CircleShape2D" id="1"]
 radius = 36.2215

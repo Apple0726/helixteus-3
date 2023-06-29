@@ -1,6 +1,6 @@
 [gd_scene load_steps=12 format=3 uid="uid://bx7irdxpbnhbb"]
 
-[ext_resource type="Texture2D" uid="uid://b3c6f5upmvn5a" path="res://Graphics/Misc/Bar.png" id="1"]
+[ext_resource type="Texture2D" uid="uid://d3y18b21lmrsh" path="res://Graphics/Misc/Bar.png" id="1"]
 [ext_resource type="PackedScene" uid="uid://c8jr3e5aiyj1n" path="res://Scenes/HelpText.tscn" id="2"]
 [ext_resource type="Script" path="res://Scripts/DimensionType.gd" id="3"]
 [ext_resource type="Texture2D" uid="uid://bfjl6rnsgqq5f" path="res://Graphics/Misc/BarUnder2.png" id="4"]

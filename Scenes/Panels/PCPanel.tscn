@@ -1,10 +1,12 @@
-[gd_scene load_steps=4 format=2]
+[gd_scene load_steps=5 format=3 uid="uid://bketiqkf5fyk0"]
 
-[ext_resource path="res://Scripts/PCPanel.gd" type="Script" id=1]
-[ext_resource path="res://Scenes/CloseButton.tscn" type="PackedScene" id=3]
-[ext_resource path="res://Resources/default_theme.tres" type="Theme" id=4]
+[ext_resource type="Script" path="res://Scripts/PCPanel.gd" id="1"]
+[ext_resource type="PackedScene" uid="uid://ddf2xjwcht77u" path="res://Scenes/CloseButton.tscn" id="3"]
+[ext_resource type="Theme" uid="uid://cp2u1kgj60ic" path="res://Resources/default_theme.tres" id="4"]
+[ext_resource type="Texture2D" uid="uid://b5s3owi38o4tq" path="res://Graphics/Icons/craft.png" id="4_0fkbr"]
 
 [node name="PCPanel" type="Panel"]
+anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
@@ -13,89 +15,53 @@ offset_left = -320.0
 offset_top = -152.0
 offset_right = 320.0
 offset_bottom = 136.0
-theme = ExtResource( 4 )
-script = ExtResource( 1 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
+theme = ExtResource("4")
+script = ExtResource("1")
 
 [node name="Label" type="Label" parent="."]
+custom_minimum_size = Vector2(0, 38)
+layout_mode = 0
 anchor_right = 1.0
 offset_bottom = 24.0
-custom_minimum_size = Vector2( 0, 38 )
 text = "PCC_NAME"
-align = 1
-valign = 1
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="Construct" type="Button" parent="."]
-anchor_left = 1.0
-anchor_top = 1.0
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = -184.0
-offset_top = -48.0
-offset_right = -8.0
-offset_bottom = -8.0
-text = "CONSTRUCT"
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="ViewPlanet" type="Button" parent="."]
-anchor_left = 1.0
-anchor_top = 1.0
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = -184.0
-offset_top = -96.0
-offset_right = -8.0
-offset_bottom = -56.0
-text = "VIEW_PLANET"
-__meta__ = {
-"_edit_use_anchors_": false
-}
+horizontal_alignment = 1
+vertical_alignment = 1
 
 [node name="ScrollContainer" type="ScrollContainer" parent="."]
+layout_mode = 1
+anchors_preset = 2
 anchor_top = 1.0
 anchor_bottom = 1.0
 offset_left = 8.0
-offset_top = -48.0
-offset_right = 432.0
+offset_top = -56.0
+offset_right = 544.0
 offset_bottom = -8.0
-scroll_vertical_enabled = false
-__meta__ = {
-"_edit_use_anchors_": false
-}
+grow_vertical = 0
+vertical_scroll_mode = 3
 
 [node name="HBox" type="HBoxContainer" parent="ScrollContainer"]
-offset_left = 10.0
-offset_top = 5.0
-offset_right = 414.0
-offset_bottom = 35.0
+layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
-custom_constants/separation = -2
-__meta__ = {
-"_edit_lock_": true
-}
 
-[node name="CloseButton" parent="." instance=ExtResource( 3 )]
+[node name="CloseButton" parent="." instance=ExtResource("3")]
+layout_mode = 1
+offset_left = -32.0
+offset_top = 8.0
+offset_right = -8.0
+offset_bottom = 32.0
 
 [node name="TextureRect" type="TextureRect" parent="."]
+layout_mode = 0
 offset_left = 44.0
 offset_top = 40.0
 offset_right = 192.0
 offset_bottom = 172.0
-expand = true
-stretch_mode = 6
-__meta__ = {
-"_edit_use_anchors_": false
-}
+expand_mode = 1
+stretch_mode = 5
 
 [node name="SpinBox" type="SpinBox" parent="."]
+layout_mode = 0
 offset_left = 264.0
 offset_top = 96.0
 offset_right = 356.0
@@ -103,11 +69,34 @@ offset_bottom = 124.0
 max_value = 500.0
 value = 1.0
 rounded = true
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
-[connection signal="pressed" from="Construct" to="." method="_on_Construct_pressed"]
-[connection signal="pressed" from="ViewPlanet" to="." method="_on_ViewPlanet_pressed"]
+[node name="Construct" type="Button" parent="."]
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -88.0
+offset_top = -56.0
+offset_right = -8.0
+offset_bottom = -8.0
+grow_horizontal = 0
+grow_vertical = 0
+
+[node name="TextureRect" type="TextureRect" parent="Construct"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = 8.0
+offset_bottom = -8.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("4_0fkbr")
+expand_mode = 1
+stretch_mode = 5
+
 [connection signal="close_button_pressed" from="CloseButton" to="." method="_on_close_button_pressed"]
 [connection signal="value_changed" from="SpinBox" to="." method="_on_SpinBox_value_changed"]
+[connection signal="pressed" from="Construct" to="." method="_on_construct_pressed"]

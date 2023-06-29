@@ -1,9 +1,9 @@
 [gd_scene load_steps=7 format=3 uid="uid://babu1swh21k4r"]
 
 [ext_resource type="Script" path="res://Scripts/ShipyardPanel.gd" id="1"]
-[ext_resource type="Texture2D" uid="uid://cirqhwxk1cqix" path="res://Graphics/Ships/Fighter.png" id="2"]
+[ext_resource type="Texture2D" uid="uid://bi68pjftu8gfb" path="res://Graphics/Ships/Fighter.png" id="2"]
 [ext_resource type="PackedScene" uid="uid://ddf2xjwcht77u" path="res://Scenes/CloseButton.tscn" id="3"]
-[ext_resource type="Texture2D" uid="uid://1mk72voi5aj6" path="res://Graphics/Icons/craft.png" id="3_mjt7u"]
+[ext_resource type="Texture2D" uid="uid://b5s3owi38o4tq" path="res://Graphics/Icons/craft.png" id="3_mjt7u"]
 [ext_resource type="Theme" uid="uid://cp2u1kgj60ic" path="res://Resources/default_theme.tres" id="4"]
 [ext_resource type="PackedScene" uid="uid://c8jr3e5aiyj1n" path="res://Scenes/HelpText.tscn" id="5"]
 

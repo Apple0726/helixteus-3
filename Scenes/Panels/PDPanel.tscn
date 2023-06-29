@@ -1,7 +1,7 @@
 [gd_scene load_steps=13 format=3 uid="uid://bqwk1plraydm8"]
 
 [ext_resource type="Script" path="res://Scripts/PDPanel.gd" id="1"]
-[ext_resource type="Texture2D" uid="uid://dfnwi85gubj2g" path="res://Graphics/Buttons/Reset.png" id="2"]
+[ext_resource type="Texture2D" uid="uid://dr3yo1440dgap" path="res://Graphics/Buttons/Reset.png" id="2"]
 [ext_resource type="Texture2D" uid="uid://c38s1y70ehkn7" path="res://Graphics/Tiles/water.png" id="3"]
 [ext_resource type="Texture2D" uid="uid://d1o7c8a8q2qsi" path="res://Graphics/Misc/noise_combined.png" id="4"]
 [ext_resource type="Theme" uid="uid://cp2u1kgj60ic" path="res://Resources/default_theme.tres" id="5"]

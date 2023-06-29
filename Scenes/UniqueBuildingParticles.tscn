@@ -1,6 +1,6 @@
 [gd_scene load_steps=5 format=3 uid="uid://cqfev7jrxdfyx"]
 
-[ext_resource type="Texture2D" uid="uid://bgyh5871ksd1j" path="res://Graphics/Effects/spotlight_4.png" id="1"]
+[ext_resource type="Texture2D" uid="uid://pyca5r6mprt3" path="res://Graphics/Effects/spotlight_4.png" id="1"]
 
 [sub_resource type="Gradient" id="1"]
 offsets = PackedFloat32Array(0, 0.184358, 1)

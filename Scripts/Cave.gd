@@ -1624,7 +1624,6 @@ func add_proj(enemy:bool, pos:Vector2, spd:float, rot:float, texture, damage:flo
 		var targ_mod:Color = proj.modulate
 		proj.modulate.a = 0.0
 		var tween = create_tween()
-		proj.add_child(tween)
 		add_child(proj)
 		proj.seek_speed = 15.0
 		tween.tween_property(proj, "modulate", targ_mod, 0.2)

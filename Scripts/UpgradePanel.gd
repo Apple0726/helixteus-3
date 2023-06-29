@@ -335,7 +335,7 @@ func _on_Upgrade_pressed():
 			costs.erase(cost)
 	if game.check_enough(costs):
 		game.deduct_resources(costs)
-		var cost_money = costs.money
+		var cost_money = costs.get("money", 0.0)
 		if planet.is_empty():
 			var cost_time
 			for id in ids:

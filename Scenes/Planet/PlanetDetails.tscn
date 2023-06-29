@@ -2,9 +2,9 @@
 
 [ext_resource type="Theme" uid="uid://cp2u1kgj60ic" path="res://Resources/default_theme.tres" id="1"]
 [ext_resource type="Script" path="res://Scripts/PlanetDetails.gd" id="2"]
-[ext_resource type="Texture2D" uid="uid://ckg1wp0kneqps" path="res://Graphics/Planets/3.png" id="3"]
+[ext_resource type="Texture2D" uid="uid://bnqnfacyafpoy" path="res://Graphics/Planets/3.png" id="3"]
 [ext_resource type="PackedScene" uid="uid://bx0a7iwx3qlo1" path="res://Scenes/PieGraph.tscn" id="5"]
-[ext_resource type="Texture2D" uid="uid://b6fm4xy2j5o2v" path="res://Graphics/Misc/bullet.png" id="6"]
+[ext_resource type="Texture2D" uid="uid://ciko5n2jxtdcn" path="res://Graphics/Misc/bullet.png" id="6"]
 
 [sub_resource type="InputEventKey" id="InputEventKey_q4d4x"]
 device = -1
@@ -22,6 +22,8 @@ layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 theme = ExtResource("1")
 script = ExtResource("2")
 metadata/_edit_use_anchors_ = true

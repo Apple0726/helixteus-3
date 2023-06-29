@@ -1886,7 +1886,7 @@ func add_system():
 	add_obj("system")
 	HUD.switch_btn.texture_normal = preload("res://Graphics/Buttons/GalaxyView.png")
 	if len(ship_data) == 1 and u_i.lv >= 20:
-		popup_window(tr("WANDERING_SHIP_DESC"), tr("WANDERING_SHIP"), [], [], "OK", 0)
+		popup_window(tr("WANDERING_SHIP_DESC"), tr("WANDERING_SHIP"))
 		get_2nd_ship()
 
 func add_planet():
@@ -3311,7 +3311,7 @@ func show_adv_tooltip(txt:String, imgs:Array = [], size:int = 17):
 
 func show_tooltip(txt:String, hide:bool = true):
 	if is_instance_valid(tooltip):
-		tooltip.queue_free()
+		tooltip.free()
 	tooltip = preload("res://Scenes/Tooltip.tscn").instantiate()
 	tooltip.modulate.a = 0.0
 	tooltip.text = txt

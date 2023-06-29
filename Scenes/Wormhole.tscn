@@ -1,7 +1,7 @@
 [gd_scene load_steps=12 format=3 uid="uid://0kc4gny5p56b"]
 
-[ext_resource type="Texture2D" uid="uid://b5a0a4p3w8xf6" path="res://Graphics/Effects/effect_4.png" id="1"]
-[ext_resource type="Texture2D" uid="uid://bunjbkhc3svfd" path="res://Graphics/Effects/spotlight_1.png" id="2"]
+[ext_resource type="Texture2D" uid="uid://b8bx703bvgoys" path="res://Graphics/Effects/effect_4.png" id="1"]
+[ext_resource type="Texture2D" uid="uid://delruecv81gsh" path="res://Graphics/Effects/spotlight_1.png" id="2"]
 
 [sub_resource type="CanvasItemMaterial" id="1"]
 
