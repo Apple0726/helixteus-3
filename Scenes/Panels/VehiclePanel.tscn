@@ -7,6 +7,10 @@
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_yuqu4"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_420ou"]
+content_margin_left = 20.0
+content_margin_top = 20.0
+content_margin_right = 20.0
+content_margin_bottom = 20.0
 
 [node name="Background" type="Panel"]
 anchors_preset = 8

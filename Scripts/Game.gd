@@ -2670,7 +2670,6 @@ func generate_planets(id:int):#local id
 				p_i.MS = "M_SE"
 			if p_i.has("MS"):
 				p_i.MS_lv = randi() % (Data.MS_num_stages[p_i.MS] + 1)
-				p_i.bldg = {}
 				if p_i.MS == "M_MME":
 					p_i.repair_cost = Data.MS_costs[p_i.MS + "_" + str(p_i.MS_lv)].money * randf_range(1, 3) * 24 * pow(p_i.size / 13000.0, 2)
 				elif p_i.MS == "M_SE":

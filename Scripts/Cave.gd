@@ -135,6 +135,7 @@ var star_mod:Color = Color.WHITE
 var tile_avg_mod:Color = Color.WHITE
 var tile_brightness:float
 var brightness_mult:float
+var light_strength_mult:float
 
 var big_debris:Dictionary = {}
 
@@ -219,18 +220,18 @@ func _ready():
 			star_mod = Helper.get_star_modulate(star["class"])
 			if star_mod.get_luminance() < 0.2:
 				star_mod = star_mod.lightened(0.2 - star_mod.get_luminance())
-			cave_BG.material.set_shader_parameter("modulate_color", star_mod)
-			var strength_mult = 1.0
-			if p_i.temperature >= 1500:
-				strength_mult = min(remap(p_i.temperature, 1500, 3000, 1.2, 1.5), 1.5)
-			else:
-				strength_mult = min(remap(p_i.temperature, -273, 1500, 0.3, 1.2), 1.2)
-			var brightness:float = remap(tile_brightness, 40000, 90000, 2.5, 1.1) * strength_mult
-			var contrast:float = sqrt(brightness)
-			cave_BG.material.set_shader_parameter("brightness", min(brightness, 1.6))
-			cave_BG.material.set_shader_parameter("contrast", 1.5)
 			#$TileMap.material.set_shader_parameter("saturation", saturation)
 			lum = star.luminosity
+	cave_BG.material.set_shader_parameter("modulate_color", star_mod)
+	light_strength_mult = 1.0
+	if p_i.temperature >= 1500:
+		light_strength_mult = min(remap(p_i.temperature, 1500, 3000, 1.2, 1.5), 1.5)
+	else:
+		light_strength_mult = min(remap(p_i.temperature, -273, 1500, 0.3, 1.2), 1.2)
+	var brightness:float = remap(tile_brightness, 40000, 90000, 2.5, 1.1) * light_strength_mult
+	var contrast:float = sqrt(brightness)
+	cave_BG.material.set_shader_parameter("brightness", min(brightness, 1.6))
+	cave_BG.material.set_shader_parameter("contrast", 1.5)
 	var cave_type:String = ""
 	if tile.has("cave"):
 		cave_type = "cave"
@@ -459,7 +460,7 @@ func generate_cave(first_floor:bool, going_up:bool):
 	cave_BG.material.set_shader_parameter("modulate_color", BG_mod)
 	rover.get_node("AshParticles").modulate = Color.WHITE * (1.0 - cave_darkness)
 	rover.get_node("AshParticles").modulate.a = 1.0
-	mining_laser.get_node("PointLight2D2").energy = 0.5 + pow(cave_darkness, 2) * 6
+	mining_laser.get_node("PointLight2D2").energy = (0.5 + pow(cave_darkness, 2) * 6) / pow(light_strength_mult, 2) * 3.0
 	cave_wall.modulate = star_mod * (1.0 - cave_darkness) * (Color(1.0, 1.0, 1.5) if cave_floor >= 8 else Color.WHITE)
 	cave_wall.modulate.a = 1.0
 	hole.modulate = star_mod * (1.0 - cave_darkness)
@@ -1599,9 +1600,9 @@ func add_proj(enemy:bool, pos:Vector2, spd:float, rot:float, texture, damage:flo
 		if game.enable_shaders:
 			proj.get_node("PointLight2D").enabled = true
 			proj.get_node("PointLight2D").color = laser_color
-			proj.get_node("PointLight2D").energy = (0.6 + pow(cave_darkness, 2) * 2)
+			proj.get_node("PointLight2D").energy = (0.6 + pow(cave_darkness, 2) * 2) / pow(light_strength_mult, 2)
 			proj.get_node("PointLight2D2").enabled = true
-			proj.get_node("PointLight2D2").energy = (0.3 + pow(cave_darkness, 2))
+			proj.get_node("PointLight2D2").energy = (0.3 + pow(cave_darkness, 2)) / pow(light_strength_mult, 2)
 		proj.scale *= size
 		proj.get_node("Sprite2D").light_mask = 2
 	proj.damage = damage
