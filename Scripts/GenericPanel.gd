@@ -22,6 +22,7 @@ var item_total_costs:Dictionary
 var item_name = ""
 
 func _ready():
+	$VBox/HBox/ItemInfo/VBox/HBox/BuyAmount.get_line_edit().caret_blink = true
 	set_polygon(size)
 
 func _input(event):
@@ -102,4 +103,4 @@ func _on_BuyAmount_value_changed(value):
 	Helper.put_rsrc(vbox, 36, item_total_costs, false, true)
 
 func refresh():
-	pass
+	$VBox/HBox/ItemInfo/VBox/HBox/BuyAmount.get_line_edit().caret_blink_interval = 0.5 / game.u_i.time_speed

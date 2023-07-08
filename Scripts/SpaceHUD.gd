@@ -47,17 +47,24 @@ func _on_SendProbes_pressed():
 
 
 func _on_Gigastructures_pressed():
-	if game.c_g_g == 0:
-		game.popup(tr("GS_ERROR"), 1.5)
-	elif not game.galaxy_data[game.c_g].has("conquered"):
-		game.popup(tr("NO_GS"), 2.0)
-	else:
-		game.gigastructures_panel.g_i = game.galaxy_data[game.c_g]
-		game.toggle_panel(game.gigastructures_panel)
+	if game.c_v == "cluster":
+		game.put_bottom_info(tr("SELECT_GALAXY_TO_CONVERT"), "convert_to_GS")
+	elif game.c_v == "galaxy":
+		if game.c_g_g == 0:
+			game.popup(tr("GS_ERROR"), 1.5)
+		elif not game.galaxy_data[game.c_g].has("conquered"):
+			game.popup(tr("NO_GS"), 2.0)
+		else:
+			game.gigastructures_panel.g_i = game.galaxy_data[game.c_g]
+			game.gigastructures_panel.galaxy_id_g = game.c_g_g
+			game.toggle_panel(game.gigastructures_panel)
 
 
 func _on_Gigastructures_mouse_entered():
-	game.show_tooltip(tr("CONVERT_TO_GS") + " (C)")
+	if game.c_v == "cluster":
+		game.show_tooltip(tr("CONVERT_TO_GS2") + " (C)")
+	elif game.c_v == "galaxy":
+		game.show_tooltip(tr("CONVERT_TO_GS") + " (C)")
 
 
 func _on_mouse_exited():

@@ -37,18 +37,16 @@ func refresh():
 				save.get_node("Delete").connect("pressed",Callable(self,"on_delete").bind(next_dir))
 				save.get_node("Export").connect("pressed",Callable(self,"on_export").bind(next_dir))
 				save.get_node("Button").text = next_dir
-				if save_info_dict.version in game.COMPATIBLE_SAVES:
-					if save_info_dict.version == game.VERSION:
-						save.get_node("Version").connect("mouse_entered",Callable(self,"on_version_over_ok"))
-						save.get_node("Version")["theme_override_colors/font_color"] = Color.GREEN
-					else:
-						save.get_node("Version").connect("mouse_entered",Callable(self,"on_version_over_compatible"))
-						save.get_node("Version")["theme_override_colors/font_color"] = Color.YELLOW
-					save.get_node("Version").connect("mouse_exited",Callable(self,"on_mouse_exit"))
+				if save_info_dict.version == game.VERSION:
+					save.get_node("Version").connect("mouse_entered",Callable(self,"on_version_over_ok"))
+					save.get_node("Version")["theme_override_colors/font_color"] = Color.GREEN
+				elif save_info_dict.version in game.COMPATIBLE_SAVES:
+					save.get_node("Version").connect("mouse_entered",Callable(self,"on_version_over_compatible"))
+					save.get_node("Version")["theme_override_colors/font_color"] = Color.YELLOW
 				else:
 					save.get_node("Version").connect("mouse_entered",Callable(self,"on_version_over_not_ok"))
-					save.get_node("Version").connect("mouse_exited",Callable(self,"on_mouse_exit"))
 					save.get_node("Version")["theme_override_colors/font_color"] = Color.RED
+				save.get_node("Version").connect("mouse_exited",Callable(self,"on_mouse_exit"))
 				var now = Time.get_unix_time_from_system()
 				if now - save_created < 86400 * 2:
 					save.get_node("Created").text = "%s %s" % [tr("SAVE_CREATED"), tr("X_HOURS_AGO") % int((now - save_created) / 3600)]

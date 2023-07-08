@@ -58,12 +58,15 @@ offset_right = -24.0
 offset_bottom = -24.0
 
 [node name="VBox" type="VBoxContainer" parent="Panel"]
-layout_mode = 0
+layout_mode = 1
+anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 offset_left = 16.0
 offset_right = -16.0
 offset_bottom = -24.0
+grow_horizontal = 2
+grow_vertical = 2
 
 [node name="Titles" type="HBoxContainer" parent="Panel/VBox"]
 custom_minimum_size = Vector2(0, 50)
@@ -72,7 +75,7 @@ layout_mode = 2
 [node name="Label" type="Label" parent="Panel/VBox/Titles"]
 custom_minimum_size = Vector2(450, 0)
 layout_mode = 2
-size_flags_horizontal = 3
+size_flags_horizontal = 2
 text = "UPGRADE_NOUN"
 
 [node name="Lv" type="Label" parent="Panel/VBox/Titles"]

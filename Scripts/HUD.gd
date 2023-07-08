@@ -18,7 +18,7 @@ extends Control
 @onready var craft = $Buttons/Craft
 @onready var MU = $Buttons/MineralUpgrades
 @onready var sc_tree = $Buttons/ScienceTree
-@onready var lv_txt = $Top/Lv/Label
+@onready var lv_txt = $Top/Lv/Level
 @onready var lv_progress = $Top/Lv/TextureProgressBar
 @onready var bookmark_btns = $Bookmarks/BookmarksList/Buttons/VBoxContainer
 @onready var planet_b_btn = $Bookmarks/BookMarkButtons/Planets
@@ -171,6 +171,7 @@ func update_money_energy_SP():
 func refresh():
 	if not game:
 		return
+	$Top/Name/Name.caret_blink_interval = 0.5 / game.u_i.time_speed
 	prev_btn.visible = game.view_history_pos > 0 and game.c_v in ["universe", "supercluster", "cluster", "galaxy", "system", "planet"]
 	next_btn.visible = game.view_history_pos != len(game.view_history) - 1 and game.c_v in ["universe", "supercluster", "cluster", "galaxy", "system", "planet"]
 	dimension_btn.visible = (len(game.universe_data) > 1 or not game.help.has("hide_dimension_stuff")) and game.c_v in ["supercluster", "cluster", "galaxy", "system", "planet"]
@@ -302,8 +303,6 @@ func refresh():
 		$Bookmarks/Bookmarked.visible = false
 		if game.c_v == "universe":
 			$Top/Name/Name.text = game.u_i.name
-	$Top/Name.visible = false
-	$Top/Name.visible = true
 	for view in $Bottom/ViewHistory/VBox.get_children():
 		view.queue_free()
 	for view in game.view_history:
@@ -414,9 +413,6 @@ func on_slot_press(i:int):
 	var name = game.hotbar[i]
 	game.inventory.on_slot_press(name)
 
-func _on_Label_mouse_entered():
-	game.show_tooltip((tr("LEVEL") + " %s\nXP: %s / %s\n%s") % [game.u_i.lv, Helper.format_num(round(game.u_i.xp), 4), Helper.format_num(game.u_i.xp_to_lv, 4), tr("XP_HELP")])
-
 func _on_Label_mouse_exited():
 	emma_cave_shortcut = false
 	game.hide_tooltip()
@@ -429,9 +425,8 @@ func _input(event):
 		slot_over = -1
 		update_hotbar()
 		refresh()
-	if Input.is_action_just_released("F2") and game.c_v in ["planet", "system", "galaxy", "cluster"]:
+	if Input.is_action_just_released("F2") and game.c_v in ["planet", "system", "galaxy", "cluster", "universe"]:
 		$Top/Name/Name.grab_focus()
-		$Top/Name/Name.select_all()
 	if event is InputEventMouseMotion:
 		if bookmark_shown and not Geometry2D.is_point_in_polygon(event.position, $MouseOut.polygon):
 			bookmark_shown = false
@@ -439,6 +434,7 @@ func _input(event):
 		if not bookmark_shown and Geometry2D.is_point_in_polygon(event.position, $MouseIn.polygon):
 			bookmark_shown = true
 			$AnimationPlayer.play("BookmarkAnim")
+		$Nice.position = event.position
 
 func _on_ConvertMinerals_mouse_entered():
 	game.show_tooltip(tr("SELL_MINERALS") + " (%s)" % OS.get_keycode_string(DisplayServer.keyboard_get_keycode_from_physical(KEY_COMMA)))
@@ -757,3 +753,12 @@ func set_ship_btn_shader(active:bool, tier:int = -1):
 		ships_btn.material.set_shader_parameter("speed", tier * game.u_i.time_speed)
 		await get_tree().process_frame
 		game.ship_panel.get_node("SpaceportTimer").start(4.0 / tier)
+
+func _on_level_mouse_entered():
+	game.show_tooltip((tr("LEVEL") + " %s\nXP: %s / %s\n%s") % [game.u_i.lv, Helper.format_num(round(game.u_i.xp), 4), Helper.format_num(game.u_i.xp_to_lv, 4), tr("XP_HELP")])
+	if game.u_i.lv == 69 and game.op_cursor:
+		$Nice.visible = true
+
+func _on_level_mouse_exited():
+	$Nice.visible = false
+	game.hide_tooltip()

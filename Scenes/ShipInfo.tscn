@@ -529,13 +529,15 @@ offset_bottom = 150.0
 text = "0"
 vertical_alignment = 1
 
-[node name="TextEdit" type="TextEdit" parent="."]
+[node name="LineEdit" type="LineEdit" parent="."]
 layout_mode = 0
 offset_left = 24.0
 offset_top = 152.0
 offset_right = 200.0
 offset_bottom = 184.0
-scroll_fit_content_height = true
+theme_override_colors/caret_color = Color(0, 0, 0, 1)
+caret_blink = true
+caret_blink_interval = 0.5
 
 [connection signal="mouse_entered" from="Ship" to="." method="_on_Ship_mouse_entered"]
 [connection signal="mouse_exited" from="Ship" to="." method="_on_Ship_mouse_exited"]
@@ -558,4 +560,4 @@ scroll_fit_content_height = true
 [connection signal="mouse_exited" from="Stats/AccIcon" to="." method="_on_icon_mouse_exited"]
 [connection signal="mouse_entered" from="Stats/EvaIcon" to="." method="_on_icon_mouse_entered" binds= ["EVADE"]]
 [connection signal="mouse_exited" from="Stats/EvaIcon" to="." method="_on_icon_mouse_exited"]
-[connection signal="text_changed" from="TextEdit" to="." method="_on_TextEdit_text_changed"]
+[connection signal="text_changed" from="LineEdit" to="." method="_on_line_edit_text_changed"]

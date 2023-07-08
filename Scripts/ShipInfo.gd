@@ -50,6 +50,7 @@ func set_visibility():
 func refresh():
 	if id >= len(game.ship_data):
 		return
+	$LineEdit.caret_blink_interval = 0.5 / game.u_i.time_speed
 	$XP/TextureProgressBar.max_value = game.ship_data[id].XP_to_lv
 	$XP/TextureProgress2.max_value = game.ship_data[id].XP_to_lv
 	$XP/TextureProgressBar.value = game.ship_data[id].XP
@@ -70,7 +71,7 @@ func refresh():
 	$Stats/Def.text = Helper.format_num(game.ship_data[id].def * game.ship_data[id].def_mult)
 	$Stats/Acc.text = Helper.format_num(game.ship_data[id].acc * game.ship_data[id].acc_mult)
 	$Stats/Eva.text = Helper.format_num(game.ship_data[id].eva * game.ship_data[id].eva_mult)
-	$TextEdit.text = game.ship_data[id].name
+	$LineEdit.text = game.ship_data[id].name
 	
 func _on_icon_mouse_entered(stat:String):
 	game.show_tooltip(tr(stat))
@@ -106,6 +107,5 @@ func _on_Ship_pressed():
 				game.update_item_cursor()
 				_on_Ship_mouse_exited()
 
-
-func _on_TextEdit_text_changed():
-	game.ship_data[id].name = $TextEdit.text
+func _on_line_edit_text_changed(new_text):
+	game.ship_data[id].name = new_text

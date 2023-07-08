@@ -17,7 +17,7 @@ var units:Dictionary = {
 	"speed_of_light":"c",
 	"planck":"h",
 	"boltzmann":"k",
-	"s_b":"\u03C3",
+	"s_b":"σ",
 	"gravitational":"G",
 	"charge":"e",
 	"dark_energy":"",

@@ -1,4 +1,4 @@
-[gd_scene load_steps=72 format=3 uid="uid://cahlkepfiewe4"]
+[gd_scene load_steps=74 format=3 uid="uid://cahlkepfiewe4"]
 
 [ext_resource type="Texture2D" uid="uid://dg55ie78qwt6h" path="res://Graphics/Buttons/Craft.png" id="1"]
 [ext_resource type="Texture2D" uid="uid://cbcrapid7igva" path="res://Graphics/Icons/money.png" id="2"]
@@ -35,6 +35,7 @@
 [ext_resource type="Texture2D" uid="uid://courysndj2emr" path="res://Graphics/Buttons/DimensionView.png" id="33"]
 [ext_resource type="Texture2D" uid="uid://ch3vuj2t0ciiy" path="res://Graphics/Materials/cellulose.png" id="34"]
 [ext_resource type="Texture2D" uid="uid://dbprykul0cbh7" path="res://Graphics/Buttons/Stats.png" id="35"]
+[ext_resource type="Texture2D" uid="uid://bpboqrkebcx4a" path="res://Graphics/Misc/nice.png" id="36_6sjdo"]
 
 [sub_resource type="Animation" id="1"]
 resource_name = "BookmarkAnim"
@@ -224,6 +225,18 @@ border_width_bottom = 2
 border_color = Color(0.266667, 0.266667, 0.266667, 1)
 border_blend = true
 expand_margin_left = 10.0
+expand_margin_right = 8.0
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_y5ks2"]
+bg_color = Color(0.14902, 0.14902, 0.14902, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.266667, 0.266667, 0.266667, 1)
+border_blend = true
+expand_margin_left = 10.0
+expand_margin_right = 8.0
 
 [sub_resource type="Animation" id="35"]
 resource_name = "MoveStuff"
@@ -591,7 +604,6 @@ stretch_mode = 5
 [node name="MainMenu" type="TextureButton" parent="Buttons"]
 custom_minimum_size = Vector2(0, 48)
 layout_mode = 2
-shortcut = SubResource("24")
 shortcut_in_tooltip = false
 texture_normal = ExtResource("14")
 ignore_texture_size = true
@@ -741,7 +753,7 @@ offset_right = 48.0
 offset_bottom = 77.0
 theme_override_constants/separation = 0
 
-[node name="Label" type="Label" parent="Top/Lv"]
+[node name="Level" type="Label" parent="Top/Lv"]
 layout_mode = 2
 mouse_filter = 0
 theme_override_styles/normal = SubResource("StyleBoxFlat_jjxme")
@@ -762,7 +774,7 @@ texture_progress = ExtResource("16")
 layout_mode = 0
 offset_left = 144.0
 offset_top = 38.0
-offset_right = 352.0
+offset_right = 201.0
 offset_bottom = 72.0
 
 [node name="Name" type="LineEdit" parent="Top/Name"]
@@ -771,8 +783,9 @@ theme_override_colors/font_color = Color(1, 1, 1, 1)
 theme_override_colors/font_selected_color = Color(0, 0, 0, 1)
 theme_override_colors/caret_color = Color(1, 1, 1, 1)
 theme_override_colors/selection_color = Color(1, 1, 1, 1)
+theme_override_constants/minimum_character_width = 0
 theme_override_styles/normal = SubResource("StyleBoxFlat_aubol")
-theme_override_styles/focus = SubResource("StyleBoxFlat_aubol")
+theme_override_styles/focus = SubResource("StyleBoxFlat_y5ks2")
 expand_to_text_length = true
 shortcut_keys_enabled = false
 select_all_on_focus = true
@@ -1055,6 +1068,14 @@ stretch_mode = 5
 anchors_preset = 0
 mouse_filter = 2
 
+[node name="Nice" type="TextureRect" parent="."]
+visible = false
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+mouse_filter = 2
+texture = ExtResource("36_6sjdo")
+
 [connection signal="tree_entered" from="." to="." method="_on_HUD_tree_entered"]
 [connection signal="mouse_entered" from="Bookmarks/Bookmarked" to="." method="_on_Bookmarked_mouse_entered"]
 [connection signal="mouse_exited" from="Bookmarks/Bookmarked" to="." method="_on_Bookmarked_mouse_exited"]
@@ -1112,8 +1133,8 @@ mouse_filter = 2
 [connection signal="pressed" from="Bottom/NextView" to="." method="_on_NextView_pressed"]
 [connection signal="mouse_entered" from="Top/Objectives/Label" to="." method="_on_ObjectivesLabel_mouse_entered"]
 [connection signal="mouse_exited" from="Top/Objectives/Label" to="." method="_on_Label_mouse_exited"]
-[connection signal="mouse_entered" from="Top/Lv/Label" to="." method="_on_Label_mouse_entered"]
-[connection signal="mouse_exited" from="Top/Lv/Label" to="." method="_on_Label_mouse_exited"]
+[connection signal="mouse_entered" from="Top/Lv/Level" to="." method="_on_level_mouse_entered"]
+[connection signal="mouse_exited" from="Top/Lv/Level" to="." method="_on_level_mouse_exited"]
 [connection signal="text_submitted" from="Top/Name/Name" to="." method="_on_Name_text_entered"]
 [connection signal="mouse_entered" from="Top/Resources/Money/Texture2D" to="." method="_on_Texture_mouse_entered" binds= ["MONEY"]]
 [connection signal="mouse_exited" from="Top/Resources/Money/Texture2D" to="." method="_on_mouse_exited"]

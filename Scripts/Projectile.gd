@@ -42,12 +42,12 @@ func _physics_process(delta):
 	if type == Data.ProjType.BUBBLE:
 		speed = move_toward(speed, 0.0, delta * 5.0)
 		if fading:
-			modulate.a -= 0.03 * delta * 60 * time_speed
+			modulate.a -= 0.03 * delta * 60
 			if modulate.a <= 0:
 				queue_free()
 	elif type == Data.ProjType.PURPLE:
-		speed += 0.35 * delta * 60.0 * time_speed
-	var collision = move_and_collide(speed * direction)
+		speed += 0.35 * delta * 60.0
+	var collision = move_and_collide(speed * direction * time_speed)
 	if collision:
 		collide(collision)
 	if not enemy and not deflected:

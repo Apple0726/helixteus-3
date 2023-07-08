@@ -1,8 +1,8 @@
 extends Node2D
 
 const TEST:bool = false
-const DATE:String = "24 Jun 2023"
-const VERSION:String = "v0.27.2"
+const DATE:String = "8 Jul 2023"
+const VERSION:String = "v0.27.3"
 const COMPATIBLE_SAVES = ["v0.27", "v0.27.1", "v0.27.2"]
 const SYS_NUM:int = 400
 const UNIQUE_BLDGS = 7
@@ -475,15 +475,11 @@ func place_BG_stars():#shown in title screen and planet view
 	for i in 50:
 		var star:Sprite2D = Sprite2D.new()
 		star.texture = star_texture
-		star.scale *= 0.25
+		star.scale *= 0.3
 		star.modulate = Helper.get_star_modulate("%s%s" % [["M", "K", "G", "F", "A", "B", "O"][randi() % 7], randi() % 10])
 		star.rotation = randf_range(0, 2*PI)
 		star.position.x = randf_range(0, 1280)
 		star.position.y = randf_range(0, 720)
-#		star.material = ShaderMaterial.new()
-#		star.material.shader = star_shader
-#		star.material.set_shader_parameter("brightness_offset", 1.5)
-#		star.material.set_shader_parameter("time_offset", 10.0 * randf())
 		$Stars/Stars.add_child(star)
 
 func place_BG_sc_stars():#shown in (super)cluster view
@@ -532,7 +528,7 @@ func _ready():
 	place_BG_stars()
 	place_BG_sc_stars()
 	default_font = preload("res://Resources/default_theme.tres").default_font
-	$UI/Version.text = "Alpha %s: %s" % [VERSION, DATE]
+	$UI/Version.text = "Alpha %s (%s): %s" % [VERSION, OS.get_name(), DATE]
 	for i in range(3, 13):
 		planet_textures.append(load("res://Graphics/Planets/%s.png" % i))
 		if i <= 10:
@@ -568,7 +564,7 @@ func _ready():
 	if not TranslationServer.get_locale() in ["de", "zh", "es", "ja", "nl", "hu"]:
 		TranslationServer.set_locale("en")
 	AudioServer.set_bus_volume_db(0, -40)
-	view = load("res://Scenes/Views/View.tscn").instantiate()
+	view = preload("res://Scenes/Views/View.tscn").instantiate()
 	add_child(view)
 	#noob
 	#AudioServer.set_bus_mute(1,true)
@@ -605,14 +601,15 @@ func _ready():
 		else:
 			Helper.notation = 2
 		config.save("user://settings.cfg")
+	refresh_continue_button()
 	Data.reload()
-	settings = load("res://Scenes/Panels/Settings.tscn").instantiate()
+	settings = preload("res://Scenes/Panels/Settings.tscn").instantiate()
 	settings.visible = false
 	$Panels/Control.add_child(settings)
 	load_panel = preload("res://Scenes/Panels/LoadPanel.tscn").instantiate()
 	load_panel.visible = false
 	$Panels/Control.add_child(load_panel)
-	mods = load("res://Scenes/Panels/Mods.tscn").instantiate()
+	mods = preload("res://Scenes/Panels/Mods.tscn").instantiate()
 	mods.visible = false
 	$Panels/Control.add_child(mods)
 	PD_panel = preload("res://Scenes/Panels/PDPanel.tscn").instantiate()
@@ -623,19 +620,27 @@ func _ready():
 		var main = Mods.mod_list[mod]
 		main.phase_2()
 
+func refresh_continue_button():
+	var config = ConfigFile.new()
+	var err = config.load("user://settings.cfg")
+	var saved_c_sv = ""
+	if err == OK:
+		saved_c_sv = config.get_value("game", "saved_c_sv", "")
+	if saved_c_sv != "":
+		$Title/Menu/VBoxContainer/Continue.visible = true
+		$Title/Menu/VBoxContainer/Continue.text = tr("CONTINUE_X") % saved_c_sv
+	return saved_c_sv
+
 func animate_title_buttons():
 	var tween = create_tween()
 	tween.set_parallel(true)
 	$TitleBackground.modulate.a = 0.0
 	$Title.modulate.a = 0.0
-	$Title/Menu.modulate.a = 0.0
-	$Title/Menu.position = Vector2(83, 464)
+	$Title/Menu/AnimationPlayer.play("Fade")
 	tween.tween_property($TitleBackground, "modulate", Color.WHITE, 1)
 	tween.tween_property($Title, "modulate", Color.WHITE, 1).set_delay(0.2)
 	tween.tween_property($Star/Sprite2D.material, "shader_parameter/brightness_offset", 0.8, 1.0).set_delay(0.5)
 	tween.tween_property($Star, "modulate", Color.WHITE, 1.2)
-	tween.tween_property($Title/Menu, "modulate", Color.WHITE, 1).set_delay(0.5)
-	tween.tween_property($Title/Menu, "position", Vector2(103, 464), 1).set_trans(Tween.TRANS_CIRC).set_ease(Tween.EASE_OUT).set_delay(0.5)
 	
 func switch_music(src, pitch:float = 1.0):
 	#Music fading
@@ -798,7 +803,7 @@ func load_game():
 	if achievement_data.is_empty() or achievement_data.money is Array:#Save migration
 		for ach in achievements:
 			achievement_data[ach] = {}
-	if not save_info_dict.version in COMPATIBLE_SAVES:
+	if save_info_dict.version != VERSION and not save_info_dict.version in COMPATIBLE_SAVES:
 		c_u = -1
 		var beginner_friendly = len(universe_data) == 1 and dim_num == 1
 		var lv_sum:int = 0
@@ -828,13 +833,11 @@ func load_game():
 		switch_view(c_v, {"first_time":true})
 		if not $UI.is_ancestor_of(HUD):
 			$UI.add_child(HUD)
-#
-#func remove_files(dir:Directory):
-#	dir.list_dir_begin() # TODOGODOT4 fill missing arguments https://github.com/godotengine/godot/pull/40547
-#	var file_name = dir.get_next()
-#	while file_name != "":
-#		dir.remove(file_name)
-#		file_name = dir.get_next()
+	var config = ConfigFile.new()
+	var err = config.load("user://settings.cfg")
+	if err == OK:
+		config.set_value("game", "saved_c_sv", c_sv)
+		config.save("user://settings.cfg")
 
 func set_default_dim_bonuses():
 	maths_bonus = {
@@ -1763,7 +1766,7 @@ func add_space_HUD():
 			add_annotator()
 		space_HUD.get_node("VBoxContainer/ElementOverlay").visible = c_v == "system" and science_unlocked.has("ATM")
 		space_HUD.get_node("VBoxContainer/Megastructures").visible = c_v == "system" and science_unlocked.has("MAE")
-		space_HUD.get_node("VBoxContainer/Gigastructures").visible = c_v == "galaxy" and science_unlocked.has("GS")
+		space_HUD.get_node("VBoxContainer/Gigastructures").visible = c_v in ["galaxy", "cluster"] and science_unlocked.has("GS")
 		space_HUD.get_node("ConquerAll").visible = c_v == "system" and (u_i.lv >= 32 or subjects.dimensional_power.lv >= 1) and not system_data[c_s].has("conquered") and len(ship_data) > 0 and ships_c_g_coords.s == c_s_g
 		space_HUD.get_node("SendFighters").visible = c_v == "galaxy" and science_unlocked.has("FG") and not galaxy_data[c_g].has("conquered") or c_v == "cluster" and science_unlocked.has("FG2") and not u_i.cluster_data[c_c].has("conquered")
 		if c_v == "universe":
@@ -1843,8 +1846,10 @@ func add_cluster():
 	$Stars/AnimationPlayer.play("StarFade")
 	if enable_shaders:
 		$ClusterBG.fade_in()
-		var hue:float = fmod(u_i.cluster_data[c_c].pos.x + 300, 1000.0) / 1000.0
-		var sat:float = pow(fmod(u_i.cluster_data[c_c].pos.y + PI, 10.0) / 10.0, 0.2)
+		var r:float = (u_i.cluster_data[c_c].pos + u_i.cluster_data[c_c].pos).length()
+		var th:float = atan2(u_i.cluster_data[c_c].pos.y, u_i.cluster_data[c_c].pos.x)
+		var hue:float = fmod(r + 300, 1000.0) / 1000.0
+		var sat:float = pow(fmod(th + PI, 10.0) / 10.0, 0.2)
 		$ClusterBG.change_color(Color.from_hsv(hue, sat, 0.6))
 	HUD.switch_btn.texture_normal = preload("res://Graphics/Buttons/UniverseView.png")
 	if len(ship_data) == 3 and u_i.lv >= 60:
@@ -3317,7 +3322,10 @@ func show_tooltip(txt:String, hide:bool = true):
 	$Tooltips.add_child(tooltip)
 	if tooltip.size.x > 400:
 		tooltip.autowrap_mode = TextServer.AUTOWRAP_WORD
+		await get_tree().process_frame
 		tooltip.size.x = 400
+		tooltip.custom_minimum_size.y = 30
+		tooltip.size.y = 30
 	set_tooltip_position()
 	var tween = create_tween()
 	tween.tween_property(tooltip, "modulate", Color.WHITE, 0.1)#.set_delay(0.1)
@@ -4014,6 +4022,7 @@ func return_to_menu_confirm():
 	$Ship.visible = false
 	$Autosave.stop()
 	switch_view("")
+	refresh_continue_button()
 	switch_music(load("res://Audio/Title.ogg"))
 	HUD.queue_free()
 	var tween = create_tween()
@@ -4461,3 +4470,9 @@ func _on_command_text_submitted(new_text):
 		popup("Command \"%s\" does not exist" % [cmd], 2)
 	cmd_history.push_front(new_text)
 	HUD.refresh()
+
+
+func _on_continue_pressed():
+	c_sv = refresh_continue_button()
+	if c_sv != "":
+		fade_out_title("load_game")

@@ -790,6 +790,8 @@ func check_tile_change(event, fn:String, fn_args:Array = []):
 
 func collect_prod_bldgs(tile_id:int):
 	var _tile = game.tile_data[tile_id]
+	if _tile.bldg.has("is_constructing"):
+		return
 	var curr_time = Time.get_unix_time_from_system()
 	if _tile.bldg.name in ["GF", "SE"]:
 		if _tile.bldg.has("qty1"):

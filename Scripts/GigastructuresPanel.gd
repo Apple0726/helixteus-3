@@ -3,6 +3,7 @@ extends "Panel.gd"
 var GS_costs:Dictionary = {}
 var costs:Dictionary = {}
 var g_i:Dictionary
+var galaxy_id_g:int
 var tile_num:int
 var bldg:String = ""
 var surface:float
@@ -14,7 +15,6 @@ func _ready():
 	set_polygon(size)
 
 func refresh():
-	g_i = game.galaxy_data[game.c_g]
 	$ScrollContainer/VBoxContainer/TriangulumProbe.visible = game.science_unlocked.has("TPCC")
 	prod_cost_mult = g_i.system_num * game.u_i.gravitational * pow(g_i.dark_matter, 3) / 200.0
 	$Control/ProdCostMult.text = "%s: %s  %s" % [tr("PRODUCTION_COST_MULT"), Helper.clever_round(prod_cost_mult), "[img]Graphics/Icons/help.png[/img]"]
@@ -38,7 +38,7 @@ func update_info():
 		$Control/ProdMult.visible = true
 	else:
 		$Control/ProdMult.visible = false
-	if game.c_g_g == game.ships_c_g_coords.g:
+	if galaxy_id_g == game.ships_c_g_coords.g:
 		$Control/VBox/GalaxyInfo.visible = true
 		$Control/VBox/GalaxyInfo.text = tr("GS_ERROR3")
 		$Control/VBox/GalaxyInfo["theme_override_colors/font_color"] = Color.YELLOW
@@ -163,8 +163,8 @@ func _on_Convert_pressed():
 		if not game.achievement_data.progression.has("build_GS"):
 			game.earn_achievement("progression", "build_GS")
 		if g_i.has("bookmarked"):
-			game.bookmarks.galaxy.erase(str(game.c_g_g))
-			game.HUD.galaxy_grid_btns.remove_child(game.HUD.galaxy_grid_btns.get_node(str(game.c_g_g)))
+			game.bookmarks.galaxy.erase(str(galaxy_id_g))
+			game.HUD.galaxy_grid_btns.remove_child(game.HUD.galaxy_grid_btns.get_node(str(galaxy_id_g)))
 			g_i.erase("bookmarked")
 		game.view_history.pop_back()
 		game.view_history_pos -= 1
@@ -192,7 +192,7 @@ func _on_Convert_pressed():
 			if dir.file_exists("user://%s/Univ%s/Systems/%s.hx3" % [game.c_sv, game.c_u, system.id]):
 				dir.remove("user://%s/Univ%s/Systems/%s.hx3" % [game.c_sv, game.c_u, system.id])
 		var dir2 = DirAccess.open("user://%s/Univ%s/Galaxies" % [game.c_sv, game.c_u])
-		dir2.remove("%s.hx3" % [game.c_g_g])
+		dir2.remove("%s.hx3" % [galaxy_id_g])
 		game.HUD.refresh()
 	else:
 		game.popup(tr("NOT_ENOUGH_RESOURCES"), 1.5)

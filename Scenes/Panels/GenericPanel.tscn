@@ -118,6 +118,8 @@ layout_mode = 2
 
 [node name="HBox" type="HBoxContainer" parent="VBox/HBox/ItemInfo/VBox"]
 layout_mode = 2
+size_flags_vertical = 3
+size_flags_stretch_ratio = 0.2
 
 [node name="BuyAmount" type="SpinBox" parent="VBox/HBox/ItemInfo/VBox/HBox"]
 layout_mode = 2
@@ -125,13 +127,16 @@ min_value = 1.0
 max_value = 10000.0
 value = 1.0
 rounded = true
+update_on_text_changed = true
 
 [node name="Buy" type="Button" parent="VBox/HBox/ItemInfo/VBox/HBox"]
+custom_minimum_size = Vector2(140, 0)
 layout_mode = 2
-size_flags_horizontal = 3
+size_flags_horizontal = 10
 theme = ExtResource("5")
 shortcut_in_tooltip = false
 text = "BUY"
+icon_alignment = 2
 expand_icon = true
 
 [node name="Items" type="ScrollContainer" parent="VBox/HBox"]

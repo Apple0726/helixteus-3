@@ -371,9 +371,9 @@ func set_slot_info(slot, _inv:Dictionary):
 		else:
 			mining_laser.get_node("PointLight2D").energy = 2
 		var speed = Data.rover_mining[_inv.name].speed
-		mining_p.amount = int(25 * pow(speed, 0.2) * pow(rover_size, 2 * 0.2))
-		mining_p.process_material.initial_velocity_min = 500 * pow(speed, 0.3) * pow(rover_size, 2 * 0.3)
-		mining_p.process_material.initial_velocity_max = 500 * pow(speed, 0.3) * pow(rover_size, 2 * 0.3)
+		mining_p.amount = int(25 * pow(speed, 0.2) * pow(rover_size, 2 * 0.2) * time_speed)
+		mining_p.process_material.initial_velocity_min = 300 * pow(speed, 0.3) * pow(rover_size, 2 * 0.3) * time_speed
+		mining_p.process_material.initial_velocity_max = 500 * pow(speed, 0.3) * pow(rover_size, 2 * 0.3) * time_speed
 		mining_p.lifetime = 0.2 / time_speed
 		slot.get_node("TextureRect").texture = load("res://Graphics/Cave/Mining/" + _inv.name + ".png")
 	else:
@@ -460,7 +460,7 @@ func generate_cave(first_floor:bool, going_up:bool):
 	cave_BG.material.set_shader_parameter("modulate_color", BG_mod)
 	rover.get_node("AshParticles").modulate = Color.WHITE * (1.0 - cave_darkness)
 	rover.get_node("AshParticles").modulate.a = 1.0
-	mining_laser.get_node("PointLight2D2").energy = (0.5 + pow(cave_darkness, 2) * 6) / pow(light_strength_mult, 2) * 3.0
+	mining_laser.get_node("PointLight2D2").energy = (0.5 + pow(cave_darkness, 2) * 6) / pow(light_strength_mult, 2) * 1.0
 	cave_wall.modulate = star_mod * (1.0 - cave_darkness) * (Color(1.0, 1.0, 1.5) if cave_floor >= 8 else Color.WHITE)
 	cave_wall.modulate.a = 1.0
 	hole.modulate = star_mod * (1.0 - cave_darkness)

@@ -190,15 +190,26 @@ func on_galaxy_click (id:int, l_id:int):
 	var view = self.get_parent()
 	if not view.dragged:
 		if g_i.has("GS"):
-			if g_i.GS == "TP":
-				game.PC_panel.probe_tier = 2
-				game.toggle_panel(game.PC_panel)
-				game.hide_tooltip()
+#			if g_i.GS == "TP":
+#				game.PC_panel.probe_tier = 2
+#				game.toggle_panel(game.PC_panel)
+#				game.hide_tooltip()
 			return
-		if not g_i.has("discovered") and g_i.system_num > 9000:
-			game.show_YN_panel("op_galaxy", tr("OP_GALAXY_DESC"), [l_id, id], tr("OP_GALAXY"))
+		if game.bottom_info_action == "convert_to_GS":
+			if id == 0:
+				game.popup(tr("GS_ERROR"), 1.5)
+			elif not game.galaxy_data[l_id].has("conquered"):
+				game.popup(tr("NO_GS"), 2.0)
+			elif not game.galaxy_data[l_id].has("GS"):
+				game._on_BottomInfo_close_button_pressed()
+				game.gigastructures_panel.g_i = game.galaxy_data[l_id]
+				game.gigastructures_panel.galaxy_id_g = id
+				game.toggle_panel(game.gigastructures_panel)
 		else:
-			game.switch_view("galaxy", {"fn":"set_custom_coords", "fn_args":[["c_g", "c_g_g"], [l_id, id]]})
+			if not g_i.has("discovered") and g_i.system_num > 9000:
+				game.show_YN_panel("op_galaxy", tr("OP_GALAXY_DESC"), [l_id, id], tr("OP_GALAXY"))
+			else:
+				game.switch_view("galaxy", {"fn":"set_custom_coords", "fn_args":[["c_g", "c_g_g"], [l_id, id]]})
 	view.dragged = false
 
 func change_overlay(overlay_id:int, gradient:Gradient):

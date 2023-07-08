@@ -37,6 +37,7 @@ func _on_btn_pressed(btn_str:String):
 		grid.add_child(item)
 
 func refresh():
+	super()
 	$VBox/TabBar/Cave.visible = game.science_unlocked.has("RC")
 	if item_name != "":
 		set_item_info(item_name, get_item_desc(item_name, tab, game["craft_%s_info" % tab.to_lower()][item_name]), item_costs, item_type, item_dir)

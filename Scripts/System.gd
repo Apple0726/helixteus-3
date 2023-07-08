@@ -163,7 +163,7 @@ func refresh_planets():
 				add_rsrc(v, Color(0, 0.5, 0.9, 1), Data.minerals_icon, p_i.l_id, false, sc)
 			MS.scale *= scale_mult
 			planet.add_child(MS)
-			if p_i.bldg.has("is_constructing"):
+			if p_i.has("bldg") and p_i.bldg.has("is_constructing"):
 				var time_bar = game.time_scene.instantiate()
 				time_bar.position = Vector2(0, -80 * sc)
 				time_bar.scale *= sc
@@ -194,9 +194,9 @@ func refresh_planets():
 			broken_CBS_range = v.length() * 1.1
 
 func _draw():
-	draw_arc(Vector2.ZERO, CBS_range, 0, 2*PI, 100, Color(0.4, 0.4, 1.0, 0.8), 1)
+	draw_arc(Vector2.ZERO, CBS_range, 0, 2*PI, 100, Color(0.4, 0.4, 1.0, 0.8), -1)
 	draw_circle(Vector2.ZERO, CBS_range, Color(0.4, 0.4, 1.0, 0.15))
-	draw_arc(Vector2.ZERO, broken_CBS_range, 0, 2*PI, 100, Color(0.5, 0.5, 0.5, 0.8), 1)
+	draw_arc(Vector2.ZERO, broken_CBS_range, 0, 2*PI, 100, Color(0.5, 0.5, 0.5, 0.8), -1)
 	draw_circle(Vector2.ZERO, broken_CBS_range, Color(0.5, 0.5, 0.5, 0.15))
 
 func add_elements(p_i:Dictionary, v:Vector2, sc:float):
@@ -365,6 +365,7 @@ func show_M_DS_costs(star:Dictionary, base:bool = false):
 	else:
 		Helper.put_rsrc(vbox, 32, {"energy":Helper.get_DS_output(star, 1) * Helper.get_IR_mult("PP") * game.u_i.time_speed}, false)
 	Helper.add_label(tr("CAPACITY_INCREASE"))
+	await get_tree().process_frame
 	if base and build_all_MS_stages:
 		Helper.put_rsrc(vbox, 32, {"energy":Helper.get_DS_capacity(star, Data.MS_num_stages.M_DS + 1) * Helper.get_IR_mult("M_DS")}, false)
 	else:
@@ -385,6 +386,7 @@ func show_M_CBS_costs(star:Dictionary, base:bool = false):
 	add_constr_costs(vbox, star)
 	Helper.add_label(tr("CBD_PATH_1") % Helper.clever_round(1 + log(star.luminosity + 1)))
 	var p_num:int = len(game.planet_data)
+	await get_tree().process_frame
 	if base and build_all_MS_stages:
 		Helper.add_label(tr("CBS_PATH_3") % [p_num, 100])
 	elif base:
@@ -752,19 +754,7 @@ func on_planet_click (id:int, l_id:int):
 				game.SPR_panel.obj = p_i
 				game.SPR_panel.tile_num = p_i.tile_num
 				game.toggle_panel(game.SPR_panel)
-		if (Input.is_action_pressed("Q") or p_i.has("conquered")) and not Input.is_action_pressed("ctrl"):
-			if not p_i.has("conquered"):
-				game.stats_univ.planets_conquered += 1
-				game.stats_dim.planets_conquered += 1
-				game.stats_global.planets_conquered += 1
-				game.planet_data[l_id].conquered = true
-				var all_conquered = true
-				for planet in game.planet_data:
-					if not planet.has("conquered"):
-						all_conquered = false
-				if game.system_data[game.c_s].has("conquered") != all_conquered:
-					game.system_data[game.c_s].conquered = all_conquered
-					Helper.save_obj("Galaxies", game.c_g_g, game.system_data)
+		if p_i.has("conquered") and not Input.is_action_pressed("ctrl"):
 			if not p_i.type in [11, 12]:
 				if not p_i.has("bldg") or not p_i.bldg.has("name"):
 					game.switch_view("planet", {"fn":"set_custom_coords", "fn_args":[["c_p", "c_p_g"], [l_id, id]]})

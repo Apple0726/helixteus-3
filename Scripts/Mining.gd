@@ -365,6 +365,7 @@ func _on_Button_button_down():
 func _on_Button_button_up():
 	circ_disabled = true
 	$PickaxeAnim.get_animation("Pickaxe swing").loop_mode = false
+	$PickaxeAnim.play("Pickaxe swing", -1, -game.u_i.time_speed)
 
 func _on_CheckBox_mouse_entered():
 	game.show_tooltip(tr("AUTO_REPLACE_DESC"))

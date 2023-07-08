@@ -9,6 +9,7 @@ uniform float fog_mvt_spd = 0.05;
 uniform int OCTAVES = 1;
 uniform int seed = 1;
 uniform float alpha: hint_range(0.0, 1.0) = 1.0;
+uniform float alpha_mult: hint_range(0.0, 1.0) = 1.0;
 
 float rand(vec2 coord){
 	return fract(sin(dot(coord, vec2(12.9898, 78.233)))* 43758.5453123);
@@ -47,7 +48,7 @@ void fragment() {
 
 	float final = fbm(coord + motion);
 	COLOR.rgb = color.rgb;
-	COLOR.a = max(final - 0.4, 0.0) * 2.5 * alpha;
+	COLOR.a = max(final - 0.4, 0.0) * 2.5 * alpha * alpha_mult;
 	//COLOR.r = COLOR.a * 2.0;
 	COLOR.rgb += pow(COLOR.a * 1.0, 2.0);
 	//COLOR.b += pow(COLOR.a * 1.0, 2.0);

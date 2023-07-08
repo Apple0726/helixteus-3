@@ -56,9 +56,19 @@ func refresh():
 	$Panel/VBox/STMB.visible = game.STM_lv >= 2
 	$Panel/VBox/SHSR.visible = game.stats_univ.planets_conquered >= 2
 	$Panel/VBox/CHR.visible = game.stats_univ.planets_conquered >= 2
-	$Panel/VBox/SHSR/Upgrade.visible = game.MUs.SHSR < 50
+	if game.MUs.SHSR >= 51:
+		var upgrade_btn = $Panel/VBox/SHSR/Upgrade
+		upgrade_btn.modulate.a = 0.0
+		if upgrade_btn.is_connected("pressed",Callable(self,"_on_Upgrade_pressed")):
+			upgrade_btn.disconnect("mouse_entered",Callable(self,"_on_Upgrade_mouse_entered"))
+			upgrade_btn.disconnect("mouse_exited",Callable(self,"_on_Upgrade_mouse_exited"))
+			upgrade_btn.disconnect("pressed",Callable(self,"_on_Upgrade_pressed"))
 	if game.achievement_data.progression.has("new_universe"):
-		$Panel/VBox/SHSR/UpgradeMax.visible = game.MUs.SHSR < 50
+		if game.MUs.SHSR >= 51:
+			var upgrade_max_btn = $Panel/VBox/SHSR/UpgradeMax
+			upgrade_max_btn.modulate.a = 0.0
+			if upgrade_max_btn.is_connected("pressed",Callable(self,"_on_UpgradeMax_pressed")):
+				upgrade_max_btn.disconnect("pressed",Callable(self,"_on_UpgradeMax_pressed"))
 		$Panel/VBox/CHR/UpgradeMax.visible = game.MUs.CHR < 90
 	$Panel/VBox/CHR/Upgrade.visible = game.MUs.CHR < 90
 	for hbox in $Panel/VBox.get_children():
@@ -94,7 +104,7 @@ func get_min_cost(upg:String):
 func _on_UpgradeMax_pressed(MU:String):
 	var min_cost = get_min_cost(MU)
 	while game.minerals >= min_cost:
-		if MU == "SHSR" and game.MUs.SHSR >= 50 or MU == "CHR" and game.MUs.CHR >= 90:
+		if MU == "SHSR" and game.MUs.SHSR >= 51 or MU == "CHR" and game.MUs.CHR >= 90:
 			break
 		game.minerals -= min_cost
 		game.MUs[MU] += 1
