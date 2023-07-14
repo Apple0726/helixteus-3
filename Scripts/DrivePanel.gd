@@ -13,9 +13,11 @@ var electron_texture = preload("res://Graphics/Particles/electron.png")
 var proton_texture = preload("res://Graphics/Particles/proton.png")
 var neutron_texture = preload("res://Graphics/Particles/neutron.png")
 
+var ships_time_remaining:float = 0
+var ships_time_reduction:float = 0
 var cost = float(0)
 var meta = ""
-var speed = 0
+var energy = 0
 var unit:String = "kg"
 var type:String = "mats"
 
@@ -29,42 +31,43 @@ func refresh_drive_modulate():
 func refresh():
 	for drive in $Panel/Drives.get_children():
 		drive.visible = game.science_unlocked.has(drive.name)
-
+	
 	meta = op.get_selected_metadata()
 	if meta != null:
 		match meta:
 			"cellulose":
 				$Control/TextureRect.texture = cellulose_texture
-				speed = 4000
+				energy = 4000
 				unit = "kg"
 				type = "mats"
 			"coal":
 				$Control/TextureRect.texture = coal_texture
-				speed = 600
+				energy = 600
 				unit = "kg"
 				type = "mats"
 			"Ne":
 				$Control/TextureRect.texture = neon_texture
-				speed = 48000
+				energy = 48000
 				unit = "mol"
 				type = "atoms"
 			"Xe":
 				$Control/TextureRect.texture = xenon_texture
-				speed = 8500000
+				energy = 8500000
 				unit = "mol"
 				type = "atoms"
-		$Control/HSlider.max_value = min(game[type][meta], (game.ships_travel_length - Time.get_unix_time_from_system() + game.ships_travel_start_date) / float(speed))
+		$Control/HSlider.max_value = game[type][meta]
 		$Control/HSlider.value = $Control/HSlider.max_value
 
 func use_drive():
 	if game.ships_travel_view == "-":
 		game.popup(tr("SHIPS_NEED_TO_BE_TRAVELLING"), 1.5)
 	else:
-		game.ships_travel_start_date -= cost * speed
+		game.ships_travel_length -= ships_time_reduction
+		game.ships_travel_cost += cost * energy
 		game[type][meta] -= cost
 		game.popup(tr("DRIVE_SUCCESSFULLY_ACTIVATED"), 1.5)
 	refresh_h_slider()
-	$Control/HSlider.max_value = min(game[type][meta], (game.ships_travel_length - Time.get_unix_time_from_system() + game.ships_travel_start_date) / float(speed))
+	$Control/HSlider.max_value = game[type][meta]
 	$Control/HSlider.set_value_no_signal($Control/HSlider.max_value)
 
 func _on_ChemicalDrive_pressed():
@@ -96,9 +99,13 @@ func _on_OptionButton_item_selected(index):
 
 func _on_h_slider_value_changed(value):
 	refresh_h_slider()
+	ships_time_remaining = game.ships_travel_length - (Time.get_unix_time_from_system() - game.ships_travel_start_date)
+	if ships_time_remaining < 0:
+		ships_time_remaining = 0
 	cost = $Control/HSlider.value
+	ships_time_reduction = ships_time_remaining - ships_time_remaining * (game.ships_travel_cost / (game.ships_travel_cost + cost * energy))
 	$Control/Label.text = "%s %s" % [Helper.clever_round(cost), unit]
-	$Control/Label2.text = Helper.time_to_str(cost * speed)
+	$Control/Label2.text = Helper.time_to_str(ships_time_reduction)
 
 func refresh_h_slider():
 	if meta:
