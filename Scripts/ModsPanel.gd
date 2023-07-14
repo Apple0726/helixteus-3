@@ -54,3 +54,7 @@ func on_load(key, mod_slot):
 			Mods.dont_load.append(key)
 			config.set_value("mods", "dont_load", Mods.dont_load)
 	config.save("user://settings.cfg")
+
+
+func _on_wiki_pressed():
+	OS.shell_open("https://sites.google.com/view/helixteus3moddingwiki")

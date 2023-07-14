@@ -9,6 +9,7 @@ export_presets.cfg
 *.png~
 *.kra
 *.kra~
+addons/
 
 # Mono-specific ignores
 .mono/

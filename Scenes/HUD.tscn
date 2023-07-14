@@ -1,4 +1,4 @@
-[gd_scene load_steps=74 format=3 uid="uid://cahlkepfiewe4"]
+[gd_scene load_steps=76 format=3 uid="uid://cahlkepfiewe4"]
 
 [ext_resource type="Texture2D" uid="uid://dg55ie78qwt6h" path="res://Graphics/Buttons/Craft.png" id="1"]
 [ext_resource type="Texture2D" uid="uid://cbcrapid7igva" path="res://Graphics/Icons/money.png" id="2"]
@@ -197,9 +197,21 @@ unicode = 122
 [sub_resource type="Shortcut" id="30"]
 events = [SubResource("InputEventKey_owolo")]
 
+[sub_resource type="InputEventKey" id="InputEventKey_86llo"]
+device = -1
+ctrl_pressed = true
+keycode = 4194319
+
 [sub_resource type="Shortcut" id="32"]
+events = [SubResource("InputEventKey_86llo")]
+
+[sub_resource type="InputEventKey" id="InputEventKey_pkq2u"]
+device = -1
+ctrl_pressed = true
+keycode = 4194321
 
 [sub_resource type="Shortcut" id="34"]
+events = [SubResource("InputEventKey_pkq2u")]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_jjxme"]
 content_margin_left = 12.0

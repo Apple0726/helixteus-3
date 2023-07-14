@@ -807,7 +807,11 @@ func collect_prod_bldgs(tile_id:int):
 			_tile.bldg.erase("ratio")
 			_tile.bldg.erase("qty2")
 		else:
-			var rsrc_to_deduct = {"sand":_tile.bldg.path_2_value}
+			var rsrc_to_deduct = {}
+			if _tile.bldg.name == "GF":
+				rsrc_to_deduct = {"sand":_tile.bldg.path_2_value}
+			elif _tile.bldg.name == "SE":
+				rsrc_to_deduct = {"coal":_tile.bldg.path_2_value}
 			if game.check_enough(rsrc_to_deduct):
 				game.deduct_resources(rsrc_to_deduct)
 				_tile.bldg.qty1 = _tile.bldg.path_2_value
@@ -1190,7 +1194,7 @@ func on_wormhole_click(tile:Dictionary, tile_id:int):
 				else:
 					game.galaxy_data[game.c_g].wormholes = [{"from":game.c_s, "to":tile.wormhole.l_dest_s_id}]
 				if not game.galaxy_data[game.c_g].has("discovered"):#if galaxy generated systems
-					await game.start_system_generation().completed
+					await game.start_system_generation()
 				else:
 					Helper.save_obj("Clusters", game.c_c, game.galaxy_data)
 				var wh_system:Dictionary = game.system_data[tile.wormhole.l_dest_s_id]

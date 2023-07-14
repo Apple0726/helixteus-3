@@ -1,28 +1,36 @@
-[gd_scene load_steps=3 format=3 uid="uid://cupe8fylt20on"]
+[gd_scene load_steps=3 format=3 uid="uid://tbn5cvb3uo5"]
 
-[ext_resource type="Texture2D" uid="uid://cgjgt6m083ykw" path="res://Graphics/Buttons/Down.png" id="2"]
-[ext_resource type="Texture2D" uid="uid://c4rhc4jubuam8" path="res://Graphics/Buttons/Up.png" id="3"]
+[ext_resource type="Texture2D" uid="uid://bstf6x8lhk2uh" path="res://Graphics/Buttons/Down.png" id="2"]
+[ext_resource type="Texture2D" uid="uid://8xesu30lntdk" path="res://Graphics/Buttons/Up.png" id="3"]
 
 [node name="HBoxContainer" type="HBoxContainer"]
-offset_right = 816.0
-offset_bottom = 46.0
+offset_right = 776.0
+offset_bottom = 44.0
 
 [node name="Name" type="Label" parent="."]
 custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 1.1
 
 [node name="Version" type="Label" parent="."]
 custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
-size_flags_horizontal = 5
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 0.0
 
 [node name="Author" type="Label" parent="."]
 custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 0.65
 
 [node name="Description" type="Label" parent="."]
 layout_mode = 2
 size_flags_horizontal = 3
+size_flags_stretch_ratio = 1.5
+clip_text = true
+text_overrun_behavior = 3
 
 [node name="LoadOrder" type="VBoxContainer" parent="."]
 layout_mode = 2
@@ -32,14 +40,14 @@ custom_minimum_size = Vector2(20, 20)
 layout_mode = 2
 texture_normal = ExtResource("3")
 ignore_texture_size = true
-stretch_mode = 0
+stretch_mode = 5
 
 [node name="Down" type="TextureButton" parent="LoadOrder"]
 custom_minimum_size = Vector2(20, 20)
 layout_mode = 2
 texture_normal = ExtResource("2")
 ignore_texture_size = true
-stretch_mode = 0
+stretch_mode = 5
 
 [node name="Load" type="CheckBox" parent="."]
 layout_mode = 2

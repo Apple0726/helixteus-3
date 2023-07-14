@@ -1600,9 +1600,9 @@ func add_proj(enemy:bool, pos:Vector2, spd:float, rot:float, texture, damage:flo
 		if game.enable_shaders:
 			proj.get_node("PointLight2D").enabled = true
 			proj.get_node("PointLight2D").color = laser_color
-			proj.get_node("PointLight2D").energy = (0.6 + pow(cave_darkness, 2) * 2) / pow(light_strength_mult, 2)
+			proj.get_node("PointLight2D").energy = (0.6 + pow(cave_darkness, 2) * 3) / pow(light_strength_mult, 2)
 			proj.get_node("PointLight2D2").enabled = true
-			proj.get_node("PointLight2D2").energy = (0.3 + pow(cave_darkness, 2)) / pow(light_strength_mult, 2)
+			proj.get_node("PointLight2D2").energy = (0.3 + pow(cave_darkness, 2) * 3) / pow(light_strength_mult, 2)
 		proj.scale *= size
 		proj.get_node("Sprite2D").light_mask = 2
 	proj.damage = damage
@@ -1681,6 +1681,8 @@ func mine_debris(item:Dictionary, delta):
 	var debris = big_debris[mining_debris]
 	if mining_debris != -1:
 		var circ_bar = debris_touched_by_laser[mining_debris].bar
+		if circ_bar == null:
+			return
 		var aurora_factor:float = 1.0/debris.aurora_intensity if debris.aurora_intensity > 0.0 else 1.0
 		var volcano_factor:float = 1.0/debris.lava_intensity if debris.lava_intensity > 0.0 else 1.0
 		var add_progress = Data.rover_mining[item.name].speed * 90 * pow(rover_size, 2) * time_speed / pow(debris.scale.x * 2.0, 3) * aurora_factor * volcano_factor * game.u_i.charge

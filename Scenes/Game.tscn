@@ -95,7 +95,7 @@ _data = {
 }
 
 [sub_resource type="LabelSettings" id="LabelSettings_ycps2"]
-font_size = 14
+font_size = 12
 
 [sub_resource type="Animation" id="21"]
 resource_name = "Fade"

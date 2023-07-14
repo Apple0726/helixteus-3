@@ -586,25 +586,27 @@ func _input(event):
 			if game.check_enough(bldg_costs):
 				game.deduct_resources(bldg_costs)
 				game.add_resources(rsrc_salvaged)
-				if MS_constr_data.obj.MS == "M_DS":
-					game.autocollect.MS.energy -= Helper.get_DS_output(MS_constr_data.obj)
-					game.energy_capacity -= MS_constr_data.obj.energy_cap_to_add
-				elif MS_constr_data.obj.MS == "M_MB":
-					game.autocollect.MS.SP -= Helper.get_MB_output(MS_constr_data.obj)
-					game.energy_capacity -= MS_constr_data.obj.energy_cap_to_add
-				elif MS_constr_data.obj.MS == "M_CBS":
-					var p_num_total:int = len(game.planet_data)
-					var p_num:int = ceil(p_num_total * MS_constr_data.obj.MS_lv * 0.333)
-					if MS_constr_data.obj.MS_lv == 0:
-						p_num = ceil(p_num_total * 0.1)
-					for i in range(0, p_num):
-						game.planet_data[i].erase("cost_div")
-					for i in len(stars_info):
-						if stars_info[i].hash() != MS_constr_data.obj.hash():
-							stars_info[i].erase("cost_div")
-				elif MS_constr_data.obj.MS == "M_MMB":
-					game.autocollect.MS.minerals -= Helper.get_MME_output(MS_constr_data.obj)
-					game.mineral_capacity -= MS_constr_data.obj.min_cap_to_add
+				if not MS_constr_data.obj.has("repair_cost"):
+					if MS_constr_data.obj.MS == "M_DS":
+						game.autocollect.MS.energy -= Helper.get_DS_output(MS_constr_data.obj)
+						game.energy_capacity -= MS_constr_data.obj.energy_cap_to_add
+					elif MS_constr_data.obj.MS == "M_MB":
+						game.autocollect.MS.SP -= Helper.get_MB_output(MS_constr_data.obj)
+						game.energy_capacity -= MS_constr_data.obj.energy_cap_to_add
+					elif MS_constr_data.obj.MS == "M_CBS":
+						var p_num_total:int = len(game.planet_data)
+						var p_num:int = ceil(p_num_total * MS_constr_data.obj.MS_lv * 0.333)
+						if MS_constr_data.obj.MS_lv == 0:
+							p_num = ceil(p_num_total * 0.1)
+						for i in range(0, p_num):
+							game.planet_data[i].erase("cost_div")
+						for i in len(stars_info):
+							if stars_info[i].hash() != MS_constr_data.obj.hash():
+								stars_info[i].erase("cost_div")
+					elif MS_constr_data.obj.MS == "M_MMB":
+						game.autocollect.MS.minerals -= Helper.get_MME_output(MS_constr_data.obj)
+						game.mineral_capacity -= MS_constr_data.obj.min_cap_to_add
+				MS_constr_data.obj.erase("repair_cost")
 				MS_constr_data.obj.erase("MS")
 				MS_constr_data.obj.erase("MS_lv")
 				game.popup(tr("MS_REKT"), 2.0)
