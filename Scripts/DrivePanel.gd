@@ -37,22 +37,22 @@ func refresh():
 		match meta:
 			"cellulose":
 				$Control/TextureRect.texture = cellulose_texture
-				energy = 4000
+				energy = 2500
 				unit = "kg"
 				type = "mats"
 			"coal":
 				$Control/TextureRect.texture = coal_texture
-				energy = 600
+				energy = 400
 				unit = "kg"
 				type = "mats"
 			"Ne":
 				$Control/TextureRect.texture = neon_texture
-				energy = 48000
+				energy = 60000
 				unit = "mol"
 				type = "atoms"
 			"Xe":
 				$Control/TextureRect.texture = xenon_texture
-				energy = 8500000
+				energy = 10000000
 				unit = "mol"
 				type = "atoms"
 		$Control/HSlider.max_value = game[type][meta]
