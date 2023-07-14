@@ -483,7 +483,7 @@ func show_planet_info(id:int, l_id:int):
 				Helper.put_rsrc(vbox, 32, {"money":p_i.repair_cost}, false)
 				MS_constr_data.confirm_repair = true
 				bldg_costs = {"money":p_i.repair_cost, "time":0.2}
-				Helper.add_label(tr("PRESS_F_TO_REPAIR"), -1, false)
+				Helper.add_label(tr("PRESS_F_TO_REPAIR"))
 		else:
 			if p_i.MS == "M_SE":
 				Helper.add_label(tr("M_SE_%s_BENEFITS" % p_i.MS_lv), -1, false)
@@ -532,7 +532,11 @@ var current_MS_action = ""
 func _input(event):
 	if Input.is_action_just_released("F"):
 		if not MS_constr_data.is_empty():
-			if MS_constr_data.has("confirm_upgrade") and not MS_constr_data.confirm_upgrade:
+			if MS_constr_data.has("confirm_repair"):
+				build_MS(MS_constr_data.obj, MS_constr_data.obj.MS)
+				current_MS_action = ""
+				MS_constr_data.erase("confirm_repair")
+			elif MS_constr_data.has("confirm_upgrade") and not MS_constr_data.confirm_upgrade:
 				current_MS_action = "upgrading"
 				var MS:String = MS_constr_data.obj.MS
 				call("show_%s_costs" % MS, MS_constr_data.obj)

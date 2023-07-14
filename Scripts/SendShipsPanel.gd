@@ -178,7 +178,7 @@ func send_ships2(_time):
 	game.toggle_panel(self)
 
 func has_SE(p_i:Dictionary):
-	return p_i.has("MS") and p_i.MS == "M_SE" and not p_i.bldg.has("is_constructing") and not p_i.has("repair_cost")
+	return p_i.has("MS") and p_i.MS == "M_SE" and (not p_i.has("bldg") or not p_i.bldg.has("is_constructing")) and not p_i.has("repair_cost")
 
 func get_atm_exit_cost(pressure:float):
 	var res:float = pow(pressure * 10, 2) * 100
