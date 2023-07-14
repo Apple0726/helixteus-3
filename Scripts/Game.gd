@@ -188,6 +188,7 @@ var ships_dest_pos:Vector2#Destination position of system/galaxy/etc. depending 
 var ships_travel_view:String#View in which ships travel
 var ships_travel_start_date:int
 var ships_travel_length:float
+var ships_travel_cost:float
 var satellite_data:Array
 
 #Your inventory
@@ -3817,6 +3818,7 @@ func fn_save_game():
 		"ships_dest_g_coords":ships_dest_g_coords,
 		"ships_travel_start_date":ships_travel_start_date,
 		"ships_travel_length":ships_travel_length,
+		"ships_travel_cost":ships_travel_cost,
 		"p_num":p_num,
 		"s_num":s_num,
 		"g_num":g_num,

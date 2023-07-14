@@ -175,6 +175,7 @@ func send_ships2(_time):
 	game.ships_travel_view = travel_view
 	game.ships_travel_start_date = Time.get_unix_time_from_system()
 	game.ships_travel_length = time_cost
+	game.ships_travel_cost = travel_energy_cost
 	game.toggle_panel(self)
 
 func has_SE(p_i:Dictionary):
