@@ -10,6 +10,8 @@ export_presets.cfg
 *.kra
 *.kra~
 addons/
+godot-cpp/
+.sconsign.dblite
 
 # Mono-specific ignores
 .mono/
