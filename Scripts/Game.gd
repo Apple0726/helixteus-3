@@ -620,6 +620,9 @@ func _ready():
 	for mod in Mods.mod_list:
 		var main = Mods.mod_list[mod]
 		main.phase_2()
+	send_probes_panel = preload("res://Scenes/Panels/SendProbesPanel.tscn").instantiate()
+	send_probes_panel.visible = false
+	$Panels/Control.add_child(send_probes_panel)
 
 func refresh_continue_button():
 	var config = ConfigFile.new()
@@ -834,6 +837,9 @@ func load_game():
 		switch_view(c_v, {"first_time":true})
 		if not $UI.is_ancestor_of(HUD):
 			$UI.add_child(HUD)
+	set_c_sv()
+
+func set_c_sv():
 	var config = ConfigFile.new()
 	var err = config.load("user://settings.cfg")
 	if err == OK:
@@ -905,17 +911,20 @@ func new_game(univ:int = 0, new_save:bool = false, DR_advantage = false):
 			set_default_dim_bonuses()
 		for ach in achievements:
 			achievement_data[ach] = {}
-		universe_data = [{"id":0, "lv":1, "generated":true, "xp":0, "xp_to_lv":10, "shapes":[], "name":tr("UNIVERSE"), "cluster_num":1000, "view":{"pos":Vector2(640, 360), "zoom":1.0, "sc_mult":0.1}}]
-		universe_data[0].speed_of_light = 1.0#e(3.0, 8)#m/s
-		universe_data[0].planck = 1.0#e(6.626, -34)#J.s
-		universe_data[0].boltzmann = 1.0#e(1.381, -23)#J/K
-		universe_data[0].gravitational = 1.0#e(6.674, -11)#m^3/kg/s^2
-		universe_data[0].charge = 1.0#e(1.602, -19)#C
-		universe_data[0].dark_energy = 1.0
-		universe_data[0].age = 1.0
-		universe_data[0].difficulty = 1.0
-		universe_data[0].time_speed = 1.0
-		universe_data[0].antimatter = 0.0
+		if subjects.dimensional_power.lv <= 4:
+			universe_data = [{"id":0, "lv":1, "generated":true, "xp":0, "xp_to_lv":10, "shapes":[], "name":tr("UNIVERSE"), "cluster_num":1000, "view":{"pos":Vector2(640, 360), "zoom":1.0, "sc_mult":0.1}}]
+			universe_data[0].speed_of_light = 1.0#e(3.0, 8)#m/s
+			universe_data[0].planck = 1.0#e(6.626, -34)#J.s
+			universe_data[0].boltzmann = 1.0#e(1.381, -23)#J/K
+			universe_data[0].gravitational = 1.0#e(6.674, -11)#m^3/kg/s^2
+			universe_data[0].charge = 1.0#e(1.602, -19)#C
+			universe_data[0].dark_energy = 1.0
+			universe_data[0].age = 1.0
+			universe_data[0].difficulty = 1.0
+			universe_data[0].time_speed = 1.0
+			universe_data[0].antimatter = 0.0
+		else:
+			universe_data[0].generated = true
 	else:
 		universe_data[univ].generated = true
 	u_i = universe_data[univ]
@@ -1150,6 +1159,7 @@ func new_game(univ:int = 0, new_save:bool = false, DR_advantage = false):
 	view.zoom_factor = 1.03
 	view.zooming = "in"
 	view.set_process(true)
+	set_c_sv()
 
 func add_panels():
 	upgrade_panel = upgrade_panel_scene.instantiate()
@@ -1182,10 +1192,6 @@ func add_panels():
 	planetkiller_panel = preload("res://Scenes/Panels/PlanetkillerPanel.tscn").instantiate()
 	wiki = preload("res://Scenes/Panels/Wiki.tscn").instantiate()
 	stats_panel = preload("res://Scenes/Panels/StatsPanel.tscn").instantiate()
-	
-	send_probes_panel = preload("res://Scenes/Panels/SendProbesPanel.tscn").instantiate()
-	send_probes_panel.visible = false
-	$Panels/Control.add_child(send_probes_panel)
 	
 	wiki.visible = false
 	$Panels/Control.add_child(wiki)
@@ -4023,7 +4029,7 @@ func return_to_menu_confirm():
 	dim_num = 1
 	$Ship.visible = false
 	$Autosave.stop()
-	switch_view("")
+	await switch_view("")
 	refresh_continue_button()
 	switch_music(load("res://Audio/Title.ogg"))
 	HUD.queue_free()
@@ -4033,6 +4039,7 @@ func return_to_menu_confirm():
 	$Title.visible = true
 	$Star.visible = true
 	animate_title_buttons()
+	universe_data.clear()
 
 func generate_new_univ_confirm():
 	universe_data.append({"id":0, "lv":1, "xp":0, "xp_to_lv":10, "shapes":[], "name":tr("UNIVERSE"), "cluster_num":1000, "view":{"pos":Vector2(640 * 0.5, 360 * 0.5), "zoom":2, "sc_mult":0.1}})

@@ -156,7 +156,7 @@ func discover_univ():
 		if prop.name == "s_b":
 			continue
 		u_i[prop.name] = float(prop.get_node("Label2").text)
-	if not game.achievement_data.progression.has("new_universe"):
+	if not game.achievement_data.is_empty() and not game.achievement_data.progression.has("new_universe"):
 		game.earn_achievement("progression", "new_universe")
 	game.universe_data.append(u_i)
 	if len(game.universe_data) == 1:

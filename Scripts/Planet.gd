@@ -180,9 +180,9 @@ func _ready():
 			if tile.has("aurora"):
 				var aurora = game.aurora_scene.instantiate()
 				aurora.position = Vector2(i, j) * 200 + Vector2(100, 100)
-				aurora.get_node("GPUParticles2D").amount = min(5 + int(tile.aurora.au_int * 10), 50)
-				aurora.get_node("GPUParticles2D").lifetime = 3.0 / game.u_i.time_speed
-				#aurora.get_node("GPUParticles2D").process_material["shader_parameter/strength"] = 1.0 if randf() < 0.5 else 0.0
+				aurora.amount = min(5 + int(tile.aurora.au_int * 10), 50)
+				aurora.lifetime = 3.0 / game.u_i.time_speed
+				#aurora.process_material["shader_parameter/strength"] = 1.0 if randf() < 0.5 else 0.0
 				#var hue:float = 0.4 + max(0, pow(tile.aurora.au_int, 0.35) - pow(4, 0.25)) / 10
 				var hue:float = 0.4 + log(tile.aurora.au_int + 1.0) / 10.0
 				var sat:float = 1.0 - floor(hue - 0.4) / 5.0
