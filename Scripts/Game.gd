@@ -837,13 +837,13 @@ func load_game():
 		switch_view(c_v, {"first_time":true})
 		if not $UI.is_ancestor_of(HUD):
 			$UI.add_child(HUD)
-	set_c_sv()
+	set_c_sv(c_sv)
 
-func set_c_sv():
+func set_c_sv(_c_sv):
 	var config = ConfigFile.new()
 	var err = config.load("user://settings.cfg")
 	if err == OK:
-		config.set_value("game", "saved_c_sv", c_sv)
+		config.set_value("game", "saved_c_sv", _c_sv)
 		config.save("user://settings.cfg")
 
 func set_default_dim_bonuses():
@@ -1159,7 +1159,7 @@ func new_game(univ:int = 0, new_save:bool = false, DR_advantage = false):
 	view.zoom_factor = 1.03
 	view.zooming = "in"
 	view.set_process(true)
-	set_c_sv()
+	set_c_sv(c_sv)
 
 func add_panels():
 	upgrade_panel = upgrade_panel_scene.instantiate()
@@ -4023,6 +4023,16 @@ func show_YN_panel(type:String, text:String, args:Array = [], title:String = "Pl
 	#if type in ["buy_pickaxe", "destroy_building", "destroy_buildings", "op_galaxy", "conquer_all", "destroy_tri_probe", "reset_dimension"]:
 
 func delete_save_confirm(save_str):
+	var config = ConfigFile.new()
+	var err = config.load("user://settings.cfg")
+	var saved_c_sv = ""
+	if err == OK:
+		saved_c_sv = config.get_value("game", "saved_c_sv", "")
+	if saved_c_sv == save_str:
+		$Title/Menu/VBoxContainer/Continue.visible = false
+		$Title/Menu.size.y = 0.0
+		config.set_value("game", "saved_c_sv", "")
+		config.save("user://settings.cfg")
 	load_panel.on_delete_confirm(save_str)
 
 func return_to_menu_confirm():
@@ -4030,8 +4040,9 @@ func return_to_menu_confirm():
 	$Ship.visible = false
 	$Autosave.stop()
 	await switch_view("")
+	$Title/Menu/VBoxContainer/Continue.connect("pressed",Callable(self,"_on_continue_pressed"))
 	refresh_continue_button()
-	switch_music(load("res://Audio/Title.ogg"))
+	switch_music(preload("res://Audio/Title.ogg"))
 	HUD.queue_free()
 	var tween = create_tween()
 	tween.tween_property($Star/Sprite2D.material, "shader_parameter/alpha", 1.0, 1.0)
@@ -4484,4 +4495,5 @@ func _on_command_text_submitted(new_text):
 func _on_continue_pressed():
 	c_sv = refresh_continue_button()
 	if c_sv != "":
+		$Title/Menu/VBoxContainer/Continue.disconnect("pressed",Callable(self,"_on_continue_pressed"))
 		fade_out_title("load_game")
