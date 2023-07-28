@@ -201,6 +201,7 @@ func _ready():
 	if p_i.has("lake_2"):
 		$TileFeatures.set_layer_modulate(1, Data.lake_colors[p_i.lake_2.element][p_i.lake_2.state])
 		$TileFeatures.set_cells_terrain_connect(1, lake_tiles[1], 0, lake_state_id[p_i.lake_2.state])
+	$BadApple.wid_p = wid
 
 func add_particles(pos:Vector2):
 	var particle:GPUParticles2D = game.particles_scene.instantiate()
@@ -1545,3 +1546,6 @@ func get_tile_id_from_pos(pos:Vector2):
 	var x_pos = int(pos.x / 200)
 	var y_pos = int(pos.y / 200)
 	return x_pos % wid + y_pos * wid
+
+func play_bad_apple(LOD):
+	$BadApple.load_data(LOD)

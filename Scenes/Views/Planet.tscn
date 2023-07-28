@@ -1,10 +1,11 @@
-[gd_scene load_steps=9 format=3 uid="uid://bmmss4usqtscn"]
+[gd_scene load_steps=10 format=3 uid="uid://bmmss4usqtscn"]
 
 [ext_resource type="PackedScene" path="res://Scenes/WhiteRect.tscn" id="1"]
 [ext_resource type="TileSet" uid="uid://c7dmux1vdaraf" path="res://Resources/LakeTileSet.tres" id="2"]
 [ext_resource type="Script" path="res://Scripts/Planet.gd" id="3"]
 [ext_resource type="TileSet" uid="uid://djmwwqomsir3r" path="res://Resources/PlanetTileSet.tres" id="4"]
 [ext_resource type="TileSet" uid="uid://dfiuyho24np11" path="res://Resources/ObstaclesTileSet.tres" id="4_ivklb"]
+[ext_resource type="Script" path="res://Scripts/BadApple.gd" id="7_yxni4"]
 [ext_resource type="Texture2D" uid="uid://dtxyo6cfbj8ei" path="res://icon.png" id="12"]
 
 [sub_resource type="Shader" id="3"]
@@ -67,6 +68,9 @@ layer_5/y_sort_enabled = false
 layer_5/y_sort_origin = 0
 layer_5/z_index = 0
 layer_5/tile_data = PackedInt32Array()
+
+[node name="BadApple" type="Node2D" parent="."]
+script = ExtResource("7_yxni4")
 
 [node name="icon" type="Sprite2D" parent="."]
 visible = false

@@ -35,7 +35,7 @@
 [ext_resource type="Texture2D" uid="uid://courysndj2emr" path="res://Graphics/Buttons/DimensionView.png" id="33"]
 [ext_resource type="Texture2D" uid="uid://ch3vuj2t0ciiy" path="res://Graphics/Materials/cellulose.png" id="34"]
 [ext_resource type="Texture2D" uid="uid://dbprykul0cbh7" path="res://Graphics/Buttons/Stats.png" id="35"]
-[ext_resource type="Texture2D" uid="uid://bpboqrkebcx4a" path="res://Graphics/Misc/nice.png" id="36_6sjdo"]
+[ext_resource type="Texture2D" uid="uid://gnqub4umoeb3" path="res://Easter eggs/nice.png" id="36_ckwot"]
 
 [sub_resource type="Animation" id="1"]
 resource_name = "BookmarkAnim"
@@ -1086,7 +1086,7 @@ layout_mode = 0
 offset_right = 40.0
 offset_bottom = 40.0
 mouse_filter = 2
-texture = ExtResource("36_6sjdo")
+texture = ExtResource("36_ckwot")
 
 [connection signal="tree_entered" from="." to="." method="_on_HUD_tree_entered"]
 [connection signal="mouse_entered" from="Bookmarks/Bookmarked" to="." method="_on_Bookmarked_mouse_entered"]
