@@ -3,6 +3,7 @@ extends "Panel.gd"
 var tf_costs:Dictionary = {}
 var tf_type = ""
 var costs:Dictionary = {}
+var total_costs:Dictionary
 var pressure:float
 var tile_num:int
 var surface:float
@@ -52,85 +53,90 @@ func set_bldg_cost_txt():
 	else:
 		$Panel/BuildingCosts.text = "%s (%s %s)" % [tr("BUILDING_COSTS"), Helper.format_num(surface), tr("%s_NAME_S" % tf_type).to_lower()]
 
+func terraform_planet():
+	game.toggle_panel(self)
+	game.deduct_resources(total_costs)
+	if p_i.has("bookmarked"):
+		game.bookmarks.planet.erase(str(game.c_p_g))
+		p_i.erase("bookmarked")
+		game.HUD.refresh_bookmarks()
+	for id in len(game.tile_data):
+		if game.tile_data[id] and game.tile_data[id].has("bldg"):
+			game.view.obj.destroy_bldg(id, true)
+	p_i.tile_num = surface
+	game.stats_univ.bldgs_built += floor(surface)
+	game.stats_dim.bldgs_built += floor(surface)
+	game.stats_global.bldgs_built += floor(surface)
+	p_i.bldg = {}
+	p_i.bldg.name = tf_type
+	p_i.bldg.erase("is_constructing")
+	game.universe_data[game.c_u].xp += round(total_costs.money / 100.0)
+	p_i.bldg.path_1 = 1
+	p_i.bldg.path_1_value = Data.path_1[tf_type].value
+	if unique_bldg_str in ["mineral_replicator", "observatory", "substation", "mining_outpost"]:
+		p_i[unique_bldg_str + "_bonus"] = unique_bldg_bonus
+		if unique_bldg_str == "substation":
+			p_i.unique_bldg_bonus_cap = unique_bldg_bonus_cap
+			game.capacity_bonus_from_substation += Data.path_1.PP.value * surface * p_i.unique_bldg_bonus_cap
+	elif unique_bldg_str == "nuclear_fusion_reactor":
+		for nfr in p_i.unique_bldgs.nuclear_fusion_reactor:
+			if not nfr.has("repair_cost"):
+				Helper.add_energy_from_NFR(p_i, p_i.bldg.path_1_value * Helper.get_NFR_prod_mult(nfr.tier))
+	elif unique_bldg_str == "cellulose_synthesizer":
+		for cs in p_i.unique_bldgs.cellulose_synthesizer:
+			if not cs.has("repair_cost"):
+				Helper.add_energy_from_CS(p_i, p_i.bldg.path_1_value * Helper.get_CS_prod_mult(cs.tier))
+	if tf_type in ["GH", "AMN", "SPR"]:
+		p_i.bldg.path_2 = 1
+		p_i.bldg.path_2_value = Data.path_2[tf_type].value
+	if tf_type == "RL":
+		game.autocollect.rsrc.SP += Data.path_1.RL.value * surface * p_i.get("observatory_bonus", 1)
+	elif tf_type == "GH":
+		p_i.ash = {"richness":ash_mult}
+	elif tf_type == "PP":
+		game.autocollect.rsrc.energy += Data.path_1.PP.value * surface * p_i.get("substation_bonus", 1)
+	elif tf_type == "ME":
+		game.autocollect.rsrc.minerals += Data.path_1.ME.value * surface * p_i.get("mineral_replicator_bonus", 1)
+		p_i.ash = {"richness":ash_mult}
+	elif tf_type == "MS":
+		game.mineral_capacity += Data.path_1.MS.value * surface
+	elif tf_type == "B":
+		game.energy_capacity += Data.path_1.B.value * surface
+	elif tf_type == "NSF":
+		game.neutron_cap += Data.path_1.NSF.value * surface
+	elif tf_type == "ESF":
+		game.electron_cap += Data.path_1.ESF.value * surface
+	elif tf_type == "AE":
+		for el in p_i.atmosphere:
+			var base_prod:float = p_i.bldg.path_1_value * p_i.atmosphere[el] * p_i.pressure * surface
+			game.show[el] = true
+			Helper.add_atom_production(el, base_prod)
+	elif tf_type == "MM" and not p_i.has("depth"):
+		p_i.depth = 0
+		p_i.bldg.collect_date = Time.get_unix_time_from_system()
+		game.MM_data[game.c_p_g] = {"c_s_g":game.c_s_g, "c_p":game.c_p}
+	game.view_history.pop_back()
+	game.view_history_pos -= 1
+	game.switch_view("system")
+	var dir = DirAccess.open("user://%s/Univ%s/Planets" % [game.c_sv, game.c_u])
+	dir.remove("%s.hx3" % game.c_p_g)
+	game.popup(tr("TF_SUCCESS"), 2)
+	if not game.objective.is_empty() and game.objective.type == game.ObjectiveType.TERRAFORM:
+		game.objective.current += 1
+	game.HUD.refresh()
 
 func _on_Terraform_pressed():
-	var total_costs = costs.duplicate(true)
+	total_costs = costs.duplicate(true)
 	for cost in tf_costs:
 		if total_costs.has(cost):
 			total_costs[cost] += tf_costs[cost]
 		else:
 			total_costs[cost] = tf_costs[cost]
 	if game.check_enough(total_costs):
-		game.toggle_panel(self)
-		game.deduct_resources(total_costs)
 		if p_i.has("bookmarked"):
-			game.bookmarks.planet.erase(str(game.c_p_g))
-			game.HUD.planet_grid_btns.remove_child(game.HUD.planet_grid_btns.get_node(str(game.c_p_g)))
-			p_i.erase("bookmarked")
-		for id in len(game.tile_data):
-			if game.tile_data[id] and game.tile_data[id].has("bldg"):
-				game.view.obj.destroy_bldg(id, true)
-		p_i.tile_num = surface
-		game.stats_univ.bldgs_built += floor(surface)
-		game.stats_dim.bldgs_built += floor(surface)
-		game.stats_global.bldgs_built += floor(surface)
-		p_i.bldg = {}
-		p_i.bldg.name = tf_type
-		p_i.bldg.erase("is_constructing")
-		game.universe_data[game.c_u].xp += round(total_costs.money / 100.0)
-		p_i.bldg.path_1 = 1
-		p_i.bldg.path_1_value = Data.path_1[tf_type].value
-		if unique_bldg_str in ["mineral_replicator", "observatory", "substation", "mining_outpost"]:
-			p_i[unique_bldg_str + "_bonus"] = unique_bldg_bonus
-			if unique_bldg_str == "substation":
-				p_i.unique_bldg_bonus_cap = unique_bldg_bonus_cap
-				game.capacity_bonus_from_substation += Data.path_1.PP.value * surface * p_i.unique_bldg_bonus_cap
-		elif unique_bldg_str == "nuclear_fusion_reactor":
-			for nfr in p_i.unique_bldgs.nuclear_fusion_reactor:
-				if not nfr.has("repair_cost"):
-					Helper.add_energy_from_NFR(p_i, p_i.bldg.path_1_value * Helper.get_NFR_prod_mult(nfr.tier))
-		elif unique_bldg_str == "cellulose_synthesizer":
-			for cs in p_i.unique_bldgs.cellulose_synthesizer:
-				if not cs.has("repair_cost"):
-					Helper.add_energy_from_CS(p_i, p_i.bldg.path_1_value * Helper.get_CS_prod_mult(cs.tier))
-		if tf_type in ["GH", "AMN", "SPR"]:
-			p_i.bldg.path_2 = 1
-			p_i.bldg.path_2_value = Data.path_2[tf_type].value
-		if tf_type == "RL":
-			game.autocollect.rsrc.SP += Data.path_1.RL.value * surface * p_i.get("observatory_bonus", 1)
-		elif tf_type == "GH":
-			p_i.ash = {"richness":ash_mult}
-		elif tf_type == "PP":
-			game.autocollect.rsrc.energy += Data.path_1.PP.value * surface * p_i.get("substation_bonus", 1)
-		elif tf_type == "ME":
-			game.autocollect.rsrc.minerals += Data.path_1.ME.value * surface * p_i.get("mineral_replicator_bonus", 1)
-			p_i.ash = {"richness":ash_mult}
-		elif tf_type == "MS":
-			game.mineral_capacity += Data.path_1.MS.value * surface
-		elif tf_type == "B":
-			game.energy_capacity += Data.path_1.B.value * surface
-		elif tf_type == "NSF":
-			game.neutron_cap += Data.path_1.NSF.value * surface
-		elif tf_type == "ESF":
-			game.electron_cap += Data.path_1.ESF.value * surface
-		elif tf_type == "AE":
-			for el in p_i.atmosphere:
-				var base_prod:float = p_i.bldg.path_1_value * p_i.atmosphere[el] * p_i.pressure * surface
-				game.show[el] = true
-				Helper.add_atom_production(el, base_prod)
-		elif tf_type == "MM" and not p_i.has("depth"):
-			p_i.depth = 0
-			p_i.bldg.collect_date = Time.get_unix_time_from_system()
-			game.MM_data[game.c_p_g] = {"c_s_g":game.c_s_g, "c_p":game.c_p}
-		game.view_history.pop_back()
-		game.view_history_pos -= 1
-		game.switch_view("system")
-		var dir = DirAccess.open("user://%s/Univ%s/Planets" % [game.c_sv, game.c_u])
-		dir.remove("%s.hx3" % game.c_p_g)
-		game.popup(tr("TF_SUCCESS"), 2)
-		if not game.objective.is_empty() and game.objective.type == game.ObjectiveType.TERRAFORM:
-			game.objective.current += 1
-		game.HUD.refresh()
+			game.show_YN_panel("terraform_planet", tr("TF_CONFIRM"))
+		else:
+			terraform_planet()
 	else:
 		game.popup(tr("NOT_ENOUGH_RESOURCES"), 1.2)
 

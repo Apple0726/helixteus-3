@@ -263,9 +263,7 @@ func refresh_stars():
 		self.add_child(star)
 		star.scale.x = max(5.0 * star_info["size"] / game.STAR_SCALE_DIV, 0.008) * scale_mult
 		star.scale.y = max(5.0 * star_info["size"] / game.STAR_SCALE_DIV, 0.008) * scale_mult
-		var click_mask = BitMap.new()
-		click_mask.create_from_image_alpha(star.texture_normal.get_image(), 0.1)
-		star.texture_click_mask = click_mask
+		star.texture_click_mask = preload("res://Graphics/Misc/StarCM.png")
 		star.position = star_info["pos"] * scale_mult - Vector2(512, 512) * star.scale.x
 		star.connect("mouse_entered",Callable(self,"on_star_over").bind(i))
 		star.connect("mouse_exited",Callable(self,"on_btn_out"))

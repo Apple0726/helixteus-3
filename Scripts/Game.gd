@@ -1,9 +1,9 @@
 extends Node2D
 
 const TEST:bool = false
-const DATE:String = "14 Jul 2023"
-const VERSION:String = "v0.27.4"
-const COMPATIBLE_SAVES = ["v0.27", "v0.27.1", "v0.27.2", "v0.27.3"]
+const DATE:String = "30 Jul 2023"
+const VERSION:String = "v0.27.5"
+const COMPATIBLE_SAVES = ["v0.27", "v0.27.1", "v0.27.2", "v0.27.3", "v0.27.4"]
 const SYS_NUM:int = 400
 const UNIQUE_BLDGS = 7
 
@@ -1445,19 +1445,19 @@ func switch_view(new_view:String, other_params:Dictionary = {}):
 				var tween2 = create_tween()
 				tween2.set_parallel(true)
 				for star in get_tree().get_nodes_in_group("stars_system"):
-					if is_instance_valid(star):
+					if is_instance_valid(star) and star.material != null:
 						tween2.tween_property(star.material, "shader_parameter/alpha", 0.0, 0.15)
 			if c_v == "galaxy":
 				var tween2 = create_tween()
 				tween2.set_parallel(true)
-				for galaxy in view.obj.obj_btns:
-					if is_instance_valid(galaxy):
-						tween2.tween_property(galaxy.material, "shader_parameter/alpha", 0.0, 0.15)
+				for system in view.obj.obj_btns:
+					if is_instance_valid(system) and system.material != null:
+						tween2.tween_property(system.material, "shader_parameter/alpha", 0.0, 0.15)
 			elif c_v == "universe":
 				var tween2 = create_tween()
 				tween2.set_parallel(true)
 				for cluster in view.obj.btns:
-					if is_instance_valid(cluster):
+					if is_instance_valid(cluster) and cluster.material != null:
 						tween2.tween_property(cluster.material, "shader_parameter/alpha", 0.0, 0.15)
 		if is_instance_valid(planet_HUD) and new_view != "planet":
 			var anim_player:AnimationPlayer = planet_HUD.get_node("AnimationPlayer")
@@ -2019,12 +2019,13 @@ func generate_clusters(parent_id:int):
 		var _rich_elements = rich_element_list.duplicate()
 		_rich_elements.shuffle()
 		for j in range(0, int(remap(dist_from_center, 0, 12000, 1, 5))):
-			c_i.rich_elements[_rich_elements[j]] = 8 * (1 + randf()) * remap(dist_from_center, 0, 16000, 1, 40) * u_i.dark_energy
+			c_i.rich_elements[_rich_elements[j]] = 8 * (1 + randf()) * remap(dist_from_center, 0, 16000, 1, 40)
 		pos = Vector2.from_angle(randf_range(0, 2 * PI)) * dist_from_center
 		c_i["pos"] = pos
 		c_i["id"] = c_id + c_num
-		c_i.FM = Helper.clever_round((1 + pos.length() / 1000.0) * u_i.dark_energy)#Ferromagnetic materials
-		c_i.diff = Helper.clever_round((1 + pos.length() * 2.0) * u_i.difficulty)
+		var DE_factor = pos.length() * u_i.dark_energy
+		c_i.FM = Helper.clever_round(1 + DE_factor / 1000.0)#Ferromagnetic materials
+		c_i.diff = Helper.clever_round((1 + DE_factor) * u_i.difficulty)
 		u_i.cluster_data.append(c_i)
 	c_num += total_clust_num
 	fn_save_game()
@@ -3041,7 +3042,7 @@ func generate_tiles(id:int):
 					if spaceport_spawned:
 						continue
 					spaceport_spawned = true					#Save migration
-				var obj = {"tile":t_id, "tier":max(1, int(-log(randf() / u_i.get("age", 1) / (1.0 + u_i.cluster_data[c_c].pos.length() / 1000.0)) / 4.0 + 1))}
+				var obj = {"tile":t_id, "tier":max(1, int(-log(randf() / u_i.get("age", 1) / (1.0 + u_i.cluster_data[c_c].pos.length() * u_i.dark_energy / 1000.0)) / 4.0 + 1))}
 				if randf() < 1.0 - 0.5 * exp(-pow(p_i.temperature - 273, 2) / 20000.0) / pow(obj.tier, 2):
 					obj.repair_cost = 250000 * pow(obj.tier, 30) * randf_range(1, 3) * Data.unique_bldg_repair_cost_multipliers[unique_bldg]
 				if p_i.unique_bldgs.has(unique_bldg):
@@ -4021,6 +4022,9 @@ func show_YN_panel(type:String, text:String, args:Array = [], title:String = "Pl
 		YN_panel.add_button(tr("YES"), Callable(self,"%s_confirm" % type).bindv(args))
 	$UI.add_child(YN_panel)
 	#if type in ["buy_pickaxe", "destroy_building", "destroy_buildings", "op_galaxy", "conquer_all", "destroy_tri_probe", "reset_dimension"]:
+
+func terraform_planet_confirm():
+	terraform_panel.terraform_planet()
 
 func delete_save_confirm(save_str):
 	var config = ConfigFile.new()

@@ -16,6 +16,7 @@ var frames:Array
 var white_pixel_num = 0
 var phase = 0
 var BG_alpha = 0.0
+var pixel_color:Color
 
 func _ready():
 	set_process(false)
@@ -26,7 +27,7 @@ func load_data(_LOD):
 	wid_p2 = wid_p * LOD
 	if is_processing():
 		return
-	if wid_p2 > 360:
+	if wid_p2 > 480:
 		game.popup("Too many exclamation marks!", 2.0)
 		return
 	var data
@@ -81,11 +82,12 @@ func _draw():
 #			if whites[i]:
 #				draw_rect(Rect2((i%W)*20, i/W*20, 20, 20), Color.WHITE)
 	if phase == 0 or phase == 2:
-		draw_rect(Rect2(0, 0, wid_p*200, wid_p*200), Color(0, 0, 0, BG_alpha))
+		draw_rect(Rect2(0, 0, wid_p*200, wid_p*200), Color(pixel_color.r, pixel_color.g, pixel_color.b, BG_alpha))
 	else:
 		for i in len(whites_p):
 			var shade = whites_p[i]
-			draw_rect(Rect2((i%wid_p2)*200.0/LOD, i/wid_p2*200.0/LOD, 200.0/LOD, 200.0/LOD), Color(0.0, 0.0, 0.0, 1.0 - shade))
+			var F = 200.0/LOD
+			draw_rect(Rect2((i%wid_p2)*F, i/wid_p2*F, F, F), Color(pixel_color.r, pixel_color.g, pixel_color.b, 1.0 - shade))
 
 
 var start_time:float
@@ -145,7 +147,8 @@ func draw_frame(frames_to_process:int):
 							whites_p[ind_p] += coefficients[ind_p] if whites[ind] else -coefficients[ind_p]
 							white_pixel_num += 1 if whites[ind] else -1
 		frame += 1
+		if frame >= len(frames):
+			phase = 2
+			frame = 0
+			break
 	queue_redraw()
-	if frame >= len(frames):
-		phase = 2
-		frame = 0

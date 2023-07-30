@@ -769,3 +769,11 @@ func _on_level_mouse_entered():
 func _on_level_mouse_exited():
 	$Nice.visible = false
 	game.hide_tooltip()
+
+
+func _on_name_focus_entered():
+	game.view.move_with_keyboard = false
+
+
+func _on_name_focus_exited():
+	game.view.move_with_keyboard = true
