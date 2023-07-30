@@ -1,4 +1,4 @@
-[gd_scene load_steps=76 format=3 uid="uid://cahlkepfiewe4"]
+[gd_scene load_steps=75 format=3 uid="uid://cahlkepfiewe4"]
 
 [ext_resource type="Texture2D" uid="uid://dg55ie78qwt6h" path="res://Graphics/Buttons/Craft.png" id="1"]
 [ext_resource type="Texture2D" uid="uid://cbcrapid7igva" path="res://Graphics/Icons/money.png" id="2"]
@@ -19,7 +19,6 @@
 [ext_resource type="Texture2D" uid="uid://o56gklgm3nl2" path="res://Graphics/Buttons/Ships.png" id="17"]
 [ext_resource type="Texture2D" uid="uid://ciko5n2jxtdcn" path="res://Graphics/Misc/bullet.png" id="18"]
 [ext_resource type="Texture2D" uid="uid://dqomvpmonld08" path="res://Graphics/Items/Others/ship_locator.png" id="19"]
-[ext_resource type="Texture2D" uid="uid://dl5u25aeh6vch" path="res://Graphics/Cave/Objects/Map.png" id="20"]
 [ext_resource type="Texture2D" uid="uid://cx2spfic2t1e2" path="res://Graphics/Misc/HUD.png" id="21"]
 [ext_resource type="Texture2D" uid="uid://bkvmwld2l0f10" path="res://Graphics/Buttons/Vehicles.png" id="22"]
 [ext_resource type="PackedScene" path="res://Scenes/Dialogue.tscn" id="23"]
@@ -35,7 +34,7 @@
 [ext_resource type="Texture2D" uid="uid://courysndj2emr" path="res://Graphics/Buttons/DimensionView.png" id="33"]
 [ext_resource type="Texture2D" uid="uid://ch3vuj2t0ciiy" path="res://Graphics/Materials/cellulose.png" id="34"]
 [ext_resource type="Texture2D" uid="uid://dbprykul0cbh7" path="res://Graphics/Buttons/Stats.png" id="35"]
-[ext_resource type="Texture2D" uid="uid://gnqub4umoeb3" path="res://Easter eggs/nice.png" id="36_ckwot"]
+[ext_resource type="Texture2D" uid="uid://12eyiyt6w6l3" path="res://Easter eggs/nice.jpg" id="36_g5ll0"]
 
 [sub_resource type="Animation" id="1"]
 resource_name = "BookmarkAnim"
@@ -1073,7 +1072,6 @@ offset_top = 656.0
 offset_right = 1152.0
 offset_bottom = 700.0
 shortcut_in_tooltip = false
-texture_normal = ExtResource("20")
 stretch_mode = 5
 
 [node name="Dialogue" parent="." instance=ExtResource("23")]
@@ -1086,7 +1084,7 @@ layout_mode = 0
 offset_right = 40.0
 offset_bottom = 40.0
 mouse_filter = 2
-texture = ExtResource("36_ckwot")
+texture = ExtResource("36_g5ll0")
 
 [connection signal="tree_entered" from="." to="." method="_on_HUD_tree_entered"]
 [connection signal="mouse_entered" from="Bookmarks/Bookmarked" to="." method="_on_Bookmarked_mouse_entered"]

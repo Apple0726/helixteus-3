@@ -27,18 +27,18 @@ func load_data(_LOD):
 	wid_p2 = wid_p * LOD
 	if is_processing():
 		return
-	if wid_p2 > 480:
+	if OS.get_name() == "Web" and wid_p2 > 120 or wid_p2 > 240:
 		game.popup("Too many exclamation marks!", 2.0)
 		return
 	var data
 	if wid_p2 > 120:
-		W = 480
-		H = 360
-		data = FileAccess.open_compressed("Easter eggs/Bad apple/badappledata100", FileAccess.READ, FileAccess.COMPRESSION_DEFLATE)
+		W = 240
+		H = 180
+		data = FileAccess.open_compressed("res://Easter eggs/Bad apple/badappledata50", FileAccess.READ, FileAccess.COMPRESSION_DEFLATE)
 	else:
 		W = 120
 		H = 90
-		data = FileAccess.open_compressed("Easter eggs/Bad apple/badappledata25", FileAccess.READ, FileAccess.COMPRESSION_DEFLATE)
+		data = FileAccess.open_compressed("res://Easter eggs/Bad apple/badappledata25", FileAccess.READ, FileAccess.COMPRESSION_DEFLATE)
 	var st = data.get_as_text()
 	frames = st.split("\n")
 #	var data2 = FileAccess.open_compressed("res://badappledata100", FileAccess.WRITE, FileAccess.COMPRESSION_DEFLATE)
