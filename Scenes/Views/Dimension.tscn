@@ -1,4 +1,4 @@
-[gd_scene load_steps=48 format=3 uid="uid://bg2sov0myafl8"]
+[gd_scene load_steps=50 format=3 uid="uid://bg2sov0myafl8"]
 
 [ext_resource type="PackedScene" uid="uid://bx7irdxpbnhbb" path="res://Scenes/DimensionType.tscn" id="3"]
 [ext_resource type="Texture2D" uid="uid://d1q1awtmro8bp" path="res://Graphics/Misc/Physics.png" id="4"]
@@ -33,6 +33,9 @@
 [ext_resource type="Texture2D" uid="uid://dm2eykbvnjdll" path="res://Graphics/Atoms/Ne.png" id="33"]
 [ext_resource type="Texture2D" uid="uid://cqhlbfjlgaqs" path="res://Graphics/Atoms/Xe.png" id="34"]
 [ext_resource type="PackedScene" path="res://Scenes/Plotter.tscn" id="35"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_vyadf"]
+bg_color = Color(0.0745098, 0.0745098, 0.0745098, 1)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_7ettq"]
 content_margin_left = 5.0
@@ -122,6 +125,9 @@ _data = {
 "RESET": SubResource("15")
 }
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_mmkh4"]
+bg_color = Color(0.14902, 0.14902, 0.14902, 1)
+
 [sub_resource type="Gradient" id="12"]
 offsets = PackedFloat32Array(0, 0.0977199, 0.192182, 0.286645, 0.394137, 0.488599, 0.583062, 0.684039, 0.785016, 0.892508, 1)
 colors = PackedColorArray(0.0980392, 0, 0, 1, 1, 0.709804, 0.423529, 1, 1, 0.854902, 0.709804, 1, 1, 0.929412, 0.890196, 1, 1, 1, 1, 1, 0.835294, 0.878431, 1, 1, 0.635294, 0.752941, 1, 1, 0.54902, 0.694118, 1, 1, 0.52549, 1, 0.458824, 1, 1, 0, 1, 1, 0.258824, 0, 1, 1)
@@ -207,14 +213,17 @@ layout_mode = 0
 offset_top = 48.0
 offset_right = 288.0
 offset_bottom = 720.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_vyadf")
 
 [node name="VBox" type="VBoxContainer" parent="Universes/Scroll"]
 layout_mode = 2
+size_flags_horizontal = 3
 
 [node name="UniverseIcon" type="TextureButton" parent="Universes/Scroll/VBox"]
 custom_minimum_size = Vector2(260, 260)
 layout_mode = 2
 texture_normal = ExtResource("13")
+ignore_texture_size = true
 stretch_mode = 5
 
 [node name="Label" type="Label" parent="Universes"]
@@ -415,15 +424,14 @@ offset_bottom = 306.0
 text = "GENERATE_STARTING_UNIVERSE"
 
 [node name="Maths" type="ScrollContainer" parent="ModifyDimension"]
-visible = false
 custom_minimum_size = Vector2(388, 0)
 layout_mode = 0
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = 32.0
 offset_top = 48.0
-offset_right = 408.0
+offset_right = 376.0
 offset_bottom = 680.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_mmkh4")
 
 [node name="Control" type="Control" parent="ModifyDimension/Maths"]
 custom_minimum_size = Vector2(300, 1150)
@@ -939,10 +947,10 @@ custom_minimum_size = Vector2(388, 672)
 layout_mode = 0
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = 32.0
 offset_top = 48.0
-offset_right = 408.0
+offset_right = 376.0
 offset_bottom = 680.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_mmkh4")
 
 [node name="Control" type="Control" parent="ModifyDimension/Physics"]
 custom_minimum_size = Vector2(300, 1100)
@@ -1261,10 +1269,10 @@ custom_minimum_size = Vector2(388, 672)
 layout_mode = 0
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = 32.0
 offset_top = 48.0
-offset_right = 408.0
+offset_right = 376.0
 offset_bottom = 680.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_mmkh4")
 
 [node name="Control" type="Control" parent="ModifyDimension/Chemistry"]
 custom_minimum_size = Vector2(300, 650)
@@ -1435,10 +1443,10 @@ custom_minimum_size = Vector2(388, 672)
 layout_mode = 0
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = 32.0
 offset_top = 48.0
-offset_right = 408.0
+offset_right = 376.0
 offset_bottom = 680.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_mmkh4")
 
 [node name="Control" type="Control" parent="ModifyDimension/Biology"]
 custom_minimum_size = Vector2(300, 650)
@@ -1636,10 +1644,10 @@ custom_minimum_size = Vector2(388, 672)
 layout_mode = 0
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = 32.0
 offset_top = 48.0
-offset_right = 408.0
+offset_right = 376.0
 offset_bottom = 680.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_mmkh4")
 
 [node name="Control" type="Control" parent="ModifyDimension/Engineering"]
 custom_minimum_size = Vector2(300, 650)
@@ -1720,10 +1728,10 @@ custom_minimum_size = Vector2(388, 672)
 layout_mode = 0
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = 32.0
 offset_top = 48.0
-offset_right = 408.0
+offset_right = 376.0
 offset_bottom = 680.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_mmkh4")
 
 [node name="Control" type="Control" parent="ModifyDimension/Dimensional_Power"]
 custom_minimum_size = Vector2(300, 800)
@@ -1923,9 +1931,8 @@ stretch_mode = 5
 [node name="OPMeter" type="Panel" parent="ModifyDimension"]
 visible = false
 layout_mode = 0
-offset_left = 32.0
 offset_top = 48.0
-offset_right = 448.0
+offset_right = 416.0
 offset_bottom = 140.0
 
 [node name="OPMeterText" parent="ModifyDimension/OPMeter" instance=ExtResource("12")]

@@ -235,16 +235,6 @@ func _on_Send_pressed():
 					game.HUD.refresh()
 				else:
 					game.popup(tr("NOT_ENOUGH_ENERGY"), 1.5)
-		else:
-			game.galaxy_data[game.c_g].erase("conquer_start_date")
-			game.galaxy_data[game.c_g].erase("time_for_one_sys")
-			game.galaxy_data[game.c_g].erase("sys_num")
-			game.galaxy_data[game.c_g].erase("sys_conquered")
-			game.galaxy_data[game.c_g].erase("combined_strength")
-			game.galaxy_data[game.c_g].erase("conquer_order")
-			if not game.new_bldgs.has("SP"):
-				game.new_bldgs.SP = true
-			refresh()
 	elif fighter_type == 1:
 		if not game.u_i.cluster_data[game.c_c].has("conquer_start_date"):
 			if obj_num > 0:
@@ -267,16 +257,6 @@ func _on_Send_pressed():
 					game.HUD.refresh()
 				else:
 					game.popup(tr("NOT_ENOUGH_ENERGY"), 1.5)
-		else:
-			game.u_i.cluster_data[game.c_c].erase("conquer_start_date")
-			game.u_i.cluster_data[game.c_c].erase("time_for_one_gal")
-			game.u_i.cluster_data[game.c_c].erase("gal_num")
-			game.u_i.cluster_data[game.c_c].erase("gal_conquered")
-			game.u_i.cluster_data[game.c_c].erase("combined_strength")
-			game.u_i.cluster_data[game.c_c].erase("conquer_order")
-			if not game.new_bldgs.has("SP"):
-				game.new_bldgs.SP = true
-			refresh()
 
 func _process(delta):
 	if not visible:
@@ -340,6 +320,14 @@ func _process(delta):
 				game.stats_dim.galaxies_conquered += 1
 				game.stats_global.galaxies_conquered += 1
 				game.galaxy_data[game.c_g].conquered = true
+				game.galaxy_data[game.c_g].erase("conquer_start_date")
+				game.galaxy_data[game.c_g].erase("time_for_one_sys")
+				game.galaxy_data[game.c_g].erase("sys_num")
+				game.galaxy_data[game.c_g].erase("sys_conquered")
+				game.galaxy_data[game.c_g].erase("combined_strength")
+				game.galaxy_data[game.c_g].erase("conquer_order")
+				if not game.new_bldgs.has("SP"):
+					game.new_bldgs.SP = true
 		else:
 			time_left.text = Helper.time_to_str(game.galaxy_data[game.c_g].time_for_one_sys - Time.get_unix_time_from_system() + game.galaxy_data[game.c_g].conquer_start_date)
 	elif fighter_type == 1:
@@ -390,6 +378,14 @@ func _process(delta):
 				game.stats_dim.clusters_conquered += 1
 				game.stats_global.clusters_conquered += 1
 				game.u_i.cluster_data[game.c_c].conquered = true
+				game.u_i.cluster_data[game.c_c].erase("conquer_start_date")
+				game.u_i.cluster_data[game.c_c].erase("time_for_one_gal")
+				game.u_i.cluster_data[game.c_c].erase("gal_num")
+				game.u_i.cluster_data[game.c_c].erase("gal_conquered")
+				game.u_i.cluster_data[game.c_c].erase("combined_strength")
+				game.u_i.cluster_data[game.c_c].erase("conquer_order")
+				if not game.new_bldgs.has("SP"):
+					game.new_bldgs.SP = true
 		else:
 			time_left.text = Helper.time_to_str(game.u_i.cluster_data[game.c_c].time_for_one_gal - Time.get_unix_time_from_system() + game.u_i.cluster_data[game.c_c].conquer_start_date)
 	

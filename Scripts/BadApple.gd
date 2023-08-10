@@ -22,11 +22,11 @@ func _ready():
 	set_process(false)
 	
 func load_data(_LOD):
+	if is_processing():
+		return
 	LOD = _LOD
 #	var data = FileAccess.open("data100.txt", FileAccess.READ)
 	wid_p2 = wid_p * LOD
-	if is_processing():
-		return
 	if OS.get_name() == "Web" and wid_p2 > 120 or wid_p2 > 240:
 		game.popup("Too many exclamation marks!", 2.0)
 		return

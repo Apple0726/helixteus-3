@@ -75,10 +75,13 @@ size_flags_vertical = 3
 
 [node name="ItemInfo" type="Panel" parent="VBox/HBox"]
 modulate = Color(1, 1, 1, 0)
-layout_mode = 0
+layout_mode = 1
+anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = 656.0
+offset_left = 664.0
+grow_horizontal = 2
+grow_vertical = 2
 
 [node name="Name" type="Label" parent="VBox/HBox/ItemInfo"]
 custom_minimum_size = Vector2(0, 50)
@@ -90,35 +93,33 @@ horizontal_alignment = 1
 vertical_alignment = 1
 
 [node name="VBox" type="VBoxContainer" parent="VBox/HBox/ItemInfo"]
-layout_mode = 0
+layout_mode = 1
+anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 offset_left = 24.0
-offset_top = 52.0
+offset_top = 61.0
 offset_right = -24.0
-theme_override_constants/separation = 20
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 40
 
-[node name="Desc" type="ScrollContainer" parent="VBox/HBox/ItemInfo/VBox"]
-layout_mode = 2
-size_flags_vertical = 3
-
-[node name="Desc" type="RichTextLabel" parent="VBox/HBox/ItemInfo/VBox/Desc"]
-clip_contents = false
+[node name="Desc" type="RichTextLabel" parent="VBox/HBox/ItemInfo/VBox"]
 layout_mode = 2
 size_flags_horizontal = 3
-size_flags_vertical = 3
 bbcode_enabled = true
+fit_content = true
 
 [node name="Costs" type="ScrollContainer" parent="VBox/HBox/ItemInfo/VBox"]
 custom_minimum_size = Vector2(0, 140)
 layout_mode = 2
+size_flags_vertical = 3
 
 [node name="VBox" type="VBoxContainer" parent="VBox/HBox/ItemInfo/VBox/Costs"]
 layout_mode = 2
 
 [node name="HBox" type="HBoxContainer" parent="VBox/HBox/ItemInfo/VBox"]
 layout_mode = 2
-size_flags_vertical = 3
 size_flags_stretch_ratio = 0.2
 
 [node name="BuyAmount" type="SpinBox" parent="VBox/HBox/ItemInfo/VBox/HBox"]
@@ -149,6 +150,8 @@ size_flags_vertical = 3
 [node name="Items" type="GridContainer" parent="VBox/HBox/Items"]
 layout_mode = 2
 size_flags_horizontal = 3
+theme_override_constants/h_separation = 0
+theme_override_constants/v_separation = 0
 columns = 4
 
 [connection signal="close_button_pressed" from="CloseButton" to="." method="_on_close_button_pressed"]

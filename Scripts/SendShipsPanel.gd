@@ -220,11 +220,6 @@ func get_travel_cost_multiplier(lv:int):
 func _on_close_button_pressed():
 	game.toggle_panel(self)
 
-
-func _on_Drive_item_selected(index):
-	refresh()
-
-
 func _on_send_pressed():
 	if game.universe_data[game.c_u].lv < 40:
 		if not game.science_unlocked.has("MAE") and game.planet_data[dest_p_id].pressure > 10 and game.energy < 7000 * pow(game.planet_data[dest_p_id].pressure, 2):
@@ -272,3 +267,6 @@ func _on_h_slider_value_changed(value):
 	total_energy_cost = travel_energy_cost + entry_exit_cost
 	$TotalEnergyCost2.text = Helper.format_num(round(total_energy_cost))
 	$Panel/TimeCost.text = Helper.time_to_str(time_cost)
+
+func _on_drive_item_selected(index):
+	refresh()
