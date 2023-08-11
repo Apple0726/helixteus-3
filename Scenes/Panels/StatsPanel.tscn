@@ -15,7 +15,7 @@
 [ext_resource type="Texture2D" uid="uid://b7emm2jruqvex" path="res://Graphics/Achievements/HypergiantV.png" id="13"]
 [ext_resource type="Texture2D" uid="uid://cf01kylbm4otv" path="res://Graphics/Achievements/Hypergiant.png" id="14"]
 [ext_resource type="Texture2D" uid="uid://ce6i65i15nbx3" path="res://Graphics/Achievements/HypergiantXX.png" id="15"]
-[ext_resource type="Texture2D" uid="uid://bp8nimf0nmh5e" path="res://Graphics/Achievements/20Planets.png" id="16"]
+[ext_resource type="Texture2D" uid="uid://dvvdjsw3en6ra" path="res://Graphics/Achievements/20Planets.png" id="16"]
 [ext_resource type="Texture2D" uid="uid://bukc56nwjq8x" path="res://Graphics/Science/GS.png" id="17"]
 [ext_resource type="Texture2D" uid="uid://ckxvc6ohl8kyv" path="res://Graphics/Ships/Ship2.png" id="18"]
 [ext_resource type="Texture2D" uid="uid://buqwqotm3j4vk" path="res://Graphics/Ships/Ship1.png" id="19"]
@@ -87,6 +87,7 @@ offset_left = 24.0
 offset_top = 48.0
 offset_right = 1000.0
 offset_bottom = 82.0
+theme_override_constants/separation = 0
 alignment = 1
 
 [node name="Achievements" parent="TabBar" instance=ExtResource("2")]
@@ -641,6 +642,7 @@ offset_top = 43.0
 offset_right = 670.0
 offset_bottom = 355.0
 size_flags_vertical = 3
+theme_override_constants/separation = 0
 
 [node name="VBoxContainer" type="VBoxContainer" parent="Statistics/ScrollContainer2/Control/HBox"]
 custom_minimum_size = Vector2(10, 0)
@@ -686,6 +688,7 @@ offset_top = 35.0
 offset_right = 30.0
 offset_bottom = 59.0
 text = "24"
+horizontal_alignment = 2
 
 [node name="Zero" type="Label" parent="Statistics/ScrollContainer2/Control"]
 layout_mode = 0
@@ -694,6 +697,7 @@ offset_top = 315.0
 offset_right = 30.0
 offset_bottom = 339.0
 text = "0"
+horizontal_alignment = 2
 
 [node name="ZoomLabel" type="Label" parent="Statistics/ScrollContainer2/Control"]
 layout_mode = 0

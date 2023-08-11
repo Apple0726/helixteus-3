@@ -1,9 +1,9 @@
 extends Node2D
 
 const TEST:bool = false
-const DATE:String = "30 Jul 2023"
-const VERSION:String = "v0.27.5"
-const COMPATIBLE_SAVES = ["v0.27", "v0.27.1", "v0.27.2", "v0.27.3", "v0.27.4"]
+const DATE:String = "11 Aug 2023"
+const VERSION:String = "v0.27.6"
+const COMPATIBLE_SAVES = ["v0.27", "v0.27.1", "v0.27.2", "v0.27.3", "v0.27.4", "v0.27.5"]
 const SYS_NUM:int = 400
 const UNIQUE_BLDGS = 7
 
@@ -683,7 +683,10 @@ func load_univ():
 		for key in mat_info:
 			if not mats.has(key):
 				mats[key] = 0
-		help.erase("flash_send_probe_btn")
+		ships_c_coords = {"c":0, "g":0, "s":0, "p":2}#Local coords of the planet that the ships are on
+		ships_c_g_coords = {"c":0, "g":0, "s":0}#ship global coordinates (current)
+		ships_dest_coords = {"c":0, "g":0, "s":0, "p":2}#Local coords of the destination planet
+		ships_dest_g_coords = {"c":0, "g":0, "s":0}
 		stats_univ = save_game_dict.get("stats_univ", Data.default_stats.duplicate(true))
 		for stat in Data.default_stats:
 			var val = Data.default_stats[stat]
@@ -1423,8 +1426,8 @@ func set_custom_coords(coords:Array, coord_values:Array):#coords: ["c_p_g", "c_p
 				galaxy_data = open_obj("Clusters", coord_values[i])
 			self[coords[i]] = coord_values[i]
 
-func delete_galaxy():
-	galaxy_data[c_g].clear()
+func delete_galaxy(_c_g:int):
+	galaxy_data[_c_g].clear()
 	Helper.save_obj("Clusters", c_c, galaxy_data)
 
 #															V function to execute after removing objects but before adding new ones
@@ -4055,6 +4058,7 @@ func return_to_menu_confirm():
 	$Star.visible = true
 	animate_title_buttons()
 	universe_data.clear()
+	view.queue_redraw()
 
 func generate_new_univ_confirm():
 	universe_data.append({"id":0, "lv":1, "xp":0, "xp_to_lv":10, "shapes":[], "name":tr("UNIVERSE"), "cluster_num":1000, "view":{"pos":Vector2(640 * 0.5, 360 * 0.5), "zoom":2, "sc_mult":0.1}})

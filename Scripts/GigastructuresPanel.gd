@@ -173,10 +173,10 @@ func _on_Convert_pressed():
 				game.earn_achievement("random", "build_tri_probe_in_slow_univ")
 			game.show.dimensions = true
 			game.probe_data.append({"tier":2})
-			game.switch_view("cluster", {"fn":"delete_galaxy"})
+			game.switch_view("cluster", {"fn":"delete_galaxy", "fn_args":[g_i.l_id]})
 		elif bldg == "GK":
 			game.add_resources(rsrc_from_GK)
-			game.switch_view("cluster", {"fn":"delete_galaxy"})
+			game.switch_view("cluster", {"fn":"delete_galaxy", "fn_args":[g_i.l_id]})
 		else:
 			game.switch_view("cluster")
 		await game.view_tween.finished

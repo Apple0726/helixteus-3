@@ -149,7 +149,7 @@ func refresh_univs(reset:bool = false):
 	for el in lake_params.keys():
 		lake_params[el].value = game.biology_bonus[el]
 	if not reset:
-		$Subjects.offset_left = 704
+		#$Subjects.offset_left = 704
 		for univ_info in game.universe_data:
 			var univ = TextureButton.new()
 			univ.texture_normal = univ_icon
@@ -169,8 +169,8 @@ func refresh_univs(reset:bool = false):
 			if subj.name in ["Maths", "Physics", "Chemistry", "Biology", "Engineering", "Dimensional_Power"]:
 				subj.get_node("HBox/Invest").connect("pressed",Callable(self,"on_invest").bind(subj))
 	$Universes.visible = not reset
-	$Panel.visible = not reset
-	$UnivInfo.visible = not reset
+#	$Panel.visible = not reset
+#	$UnivInfo.visible = not reset
 	$ModifyDimension/Reset.visible = reset
 	$TopInfo/Reset.visible = not reset
 	calc_OP_points()

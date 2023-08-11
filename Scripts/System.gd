@@ -405,6 +405,7 @@ func show_M_PK_costs(star:Dictionary, base:bool = false):
 	Helper.put_rsrc(vbox, 32, bldg_costs, true, true)
 	add_constr_costs(vbox, star)
 	var max_diameter = 4000
+	await get_tree().process_frame
 	if not star.has("MS"):
 		if build_all_MS_stages:
 			Helper.add_label(tr("PK2_POWER"), -1, true, true)
