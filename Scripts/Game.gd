@@ -683,10 +683,6 @@ func load_univ():
 		for key in mat_info:
 			if not mats.has(key):
 				mats[key] = 0
-		ships_c_coords = {"c":0, "g":0, "s":0, "p":2}#Local coords of the planet that the ships are on
-		ships_c_g_coords = {"c":0, "g":0, "s":0}#ship global coordinates (current)
-		ships_dest_coords = {"c":0, "g":0, "s":0, "p":2}#Local coords of the destination planet
-		ships_dest_g_coords = {"c":0, "g":0, "s":0}
 		stats_univ = save_game_dict.get("stats_univ", Data.default_stats.duplicate(true))
 		for stat in Data.default_stats:
 			var val = Data.default_stats[stat]
