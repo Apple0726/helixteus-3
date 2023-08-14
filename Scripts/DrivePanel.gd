@@ -104,7 +104,7 @@ func _on_h_slider_value_changed(value):
 		ships_time_remaining = 0
 	cost = $Control/HSlider.value
 	ships_time_reduction = ships_time_remaining - ships_time_remaining * (game.ships_travel_cost / (game.ships_travel_cost + cost * energy))
-	$Control/Label.text = "%s %s" % [Helper.clever_round(cost), unit]
+	$Control/Label.text = "%s %s" % [Helper.format_num(cost, true), unit]
 	$Control/Label2.text = Helper.time_to_str(ships_time_reduction)
 
 func refresh_h_slider():

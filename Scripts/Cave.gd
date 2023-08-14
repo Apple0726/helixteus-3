@@ -461,8 +461,11 @@ func generate_cave(first_floor:bool, going_up:bool):
 	rover.get_node("AshParticles").modulate = Color.WHITE * (1.0 - cave_darkness)
 	rover.get_node("AshParticles").modulate.a = 1.0
 	mining_laser.get_node("PointLight2D2").energy = (0.5 + pow(cave_darkness, 2) * 6) / pow(light_strength_mult, 2) * 1.0
-	cave_wall.modulate = star_mod * (1.0 - cave_darkness) * (Color(1.0, 1.0, 1.5) if cave_floor >= 8 else Color.WHITE)
-	cave_wall.modulate.a = 1.0
+	if cave_floor >= 8:
+		cave_wall.modulate = Color.BLUE
+	else:
+		cave_wall.modulate = star_mod * (1.0 - cave_darkness) * (Color(0.5, 0.5, 1.0) if cave_floor >= 8 else Color.WHITE)
+		cave_wall.modulate.a = 1.0
 	hole.modulate = star_mod * (1.0 - cave_darkness)
 	hole.modulate.a = 1.0
 	$WorldEnvironment.environment.adjustment_saturation = (1.0 - cave_darkness)
@@ -663,7 +666,7 @@ func generate_cave(first_floor:bool, going_up:bool):
 	
 	$Ash.set_cells_terrain_connect(0, ash_tiles, 0, 4)
 	$Lava.set_cells_terrain_connect(0, lava_tiles, 0, 5)
-	$Ash.set_layer_modulate(0, star_mod * (1.0 - cave_darkness))
+	$Ash.set_layer_modulate(0, Color.WHITE)
 	#$Lava.set_layer_modulate(0, star_mod * (1.0 - cave_darkness))
 	#Add unpassable tiles at the cave borders
 	for i in range(-1, cave_size + 1):
@@ -1600,9 +1603,9 @@ func add_proj(enemy:bool, pos:Vector2, spd:float, rot:float, texture, damage:flo
 		if game.enable_shaders:
 			proj.get_node("PointLight2D").enabled = true
 			proj.get_node("PointLight2D").color = laser_color
-			proj.get_node("PointLight2D").energy = (0.6 + pow(cave_darkness, 2) * 3) / pow(light_strength_mult, 2)
+			proj.get_node("PointLight2D").energy = (0.6 + cave_darkness * 1) / pow(light_strength_mult, 2)
 			proj.get_node("PointLight2D2").enabled = true
-			proj.get_node("PointLight2D2").energy = (0.3 + pow(cave_darkness, 2) * 3) / pow(light_strength_mult, 2)
+			proj.get_node("PointLight2D2").energy = (0.3 + cave_darkness * 1) / pow(light_strength_mult, 2)
 		proj.scale *= size
 		proj.get_node("Sprite2D").light_mask = 2
 	proj.damage = damage
@@ -1714,7 +1717,11 @@ func mine_debris_complete(tile_id:int):
 		if randf() < p_i.surface[mat].chance / 2.5:
 			var amount = Helper.clever_round(p_i.surface[mat].amount * randf_range(0.2, 0.24) * difficulty * debris_aurora_mult * debris_volcano_mult)
 			rsrc[mat] = amount
+	var debris_exp = 3.5
+	if debris_volcano_mult > 1.0:
+		debris_exp += 0.2
 	if debris_aurora_mult > 1.0:
+		debris_exp += 0.2
 		if randf() < 0.3 + debris.aurora_intensity / 10.0:
 			rsrc.quillite = Helper.clever_round(randf_range(0.1, 0.12) * difficulty * debris.aurora_intensity)
 	for met in game.met_info:
@@ -1728,9 +1735,9 @@ func mine_debris_complete(tile_id:int):
 			rsrc[met] = Helper.clever_round(5 * randf_range(0.2, 1.0) / rarity * difficulty * exp(cave_floor / 10.0) * debris_volcano_mult)
 	for r in rsrc.keys():
 		if r in ["stone", "minerals"]:
-			rsrc[r] = round(rsrc[r] * pow(debris.scale.x, 3))
+			rsrc[r] = round(rsrc[r] * pow(debris.scale.x, debris_exp))
 		else:
-			rsrc[r] = Helper.clever_round(rsrc[r] * pow(debris.scale.x, 3))
+			rsrc[r] = Helper.clever_round(rsrc[r] * pow(debris.scale.x, debris_exp))
 		if rsrc[r] == 0:
 			rsrc.erase(r)
 	var remainder:float = filter_and_add(rsrc)

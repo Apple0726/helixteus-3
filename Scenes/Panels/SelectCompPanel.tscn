@@ -84,15 +84,15 @@ text = "SELECT"
 
 [node name="ScrollContainer2" type="ScrollContainer" parent="."]
 layout_mode = 0
-offset_left = 44.0
-offset_top = 96.0
-offset_right = 596.0
+offset_left = 40.0
+offset_top = 104.0
+offset_right = 600.0
 offset_bottom = 176.0
+vertical_scroll_mode = 3
 
 [node name="HBox" type="HBoxContainer" parent="ScrollContainer2"]
 layout_mode = 2
 size_flags_horizontal = 3
-size_flags_vertical = 3
 theme_override_constants/separation = 0
 
 [node name="CloseButton" parent="." instance=ExtResource("3")]

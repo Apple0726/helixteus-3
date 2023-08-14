@@ -153,22 +153,25 @@ button_text = "TRIANGULUM_PROBE"
 
 [node name="Panel" type="Panel" parent="."]
 layout_mode = 0
-offset_left = 472.0
-offset_top = 136.0
+offset_left = 424.0
+offset_top = 128.0
 offset_right = 1000.0
 offset_bottom = 568.0
 
 [node name="Control" type="Control" parent="."]
 modulate = Color(1, 1, 1, 0)
-anchors_preset = 0
+layout_mode = 1
+anchors_preset = 6
 anchor_left = 1.0
 anchor_top = 0.5
 anchor_right = 1.0
 anchor_bottom = 0.5
-offset_left = -552.0
+offset_left = -600.0
 offset_top = -160.0
 offset_right = -24.0
 offset_bottom = 272.0
+grow_horizontal = 0
+grow_vertical = 2
 mouse_filter = 1
 
 [node name="VBox" type="VBoxContainer" parent="Control"]
@@ -177,6 +180,7 @@ offset_left = 20.0
 offset_top = 16.0
 offset_right = 520.0
 offset_bottom = 424.0
+theme_override_constants/separation = 15
 
 [node name="GalaxyInfo" type="Label" parent="Control/VBox"]
 layout_mode = 2

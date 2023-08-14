@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=3 uid="uid://cvpplfu35gnas"]
+[gd_scene load_steps=9 format=3 uid="uid://cvpplfu35gnas"]
 
 [ext_resource type="PackedScene" uid="uid://c8jr3e5aiyj1n" path="res://Scenes/HelpText.tscn" id="1"]
 [ext_resource type="Theme" uid="uid://cp2u1kgj60ic" path="res://Resources/default_theme.tres" id="3"]
@@ -6,6 +6,11 @@
 [ext_resource type="Texture2D" uid="uid://bjfmtj2gp0t6p" path="res://Graphics/Icons/Time.png" id="5"]
 [ext_resource type="Script" path="res://Scripts/SendShipsPanel.gd" id="6"]
 [ext_resource type="PackedScene" uid="uid://ddf2xjwcht77u" path="res://Scenes/CloseButton.tscn" id="8"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_nwrf5"]
+bg_color = Color(0.172549, 0.172549, 0.172549, 1)
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_w728i"]
 
 [node name="SendShipsPanel" type="Panel"]
 anchors_preset = 8
@@ -71,6 +76,7 @@ offset_top = 144.0
 offset_right = 450.0
 offset_bottom = 576.0
 size_flags_vertical = 3
+theme_override_styles/panel = SubResource("StyleBoxFlat_nwrf5")
 
 [node name="Enemies" type="VBoxContainer" parent="Scroll"]
 layout_mode = 2
@@ -80,9 +86,9 @@ size_flags_vertical = 3
 [node name="TotalEnergyCost" type="Label" parent="."]
 layout_mode = 0
 offset_left = 460.0
-offset_top = 460.0
+offset_top = 456.0
 offset_right = 736.0
-offset_bottom = 486.0
+offset_bottom = 482.0
 text = "TOTAL_COST"
 horizontal_alignment = 2
 
@@ -97,18 +103,18 @@ text = "SEND"
 [node name="TotalEnergyCost2" type="Label" parent="."]
 layout_mode = 0
 offset_left = 816.0
-offset_top = 460.0
+offset_top = 456.0
 offset_right = 1000.0
-offset_bottom = 486.0
+offset_bottom = 482.0
 text = "100"
 vertical_alignment = 1
 
 [node name="EnergyIcon3" type="TextureRect" parent="."]
 layout_mode = 0
 offset_left = 764.0
-offset_top = 456.0
+offset_top = 452.0
 offset_right = 796.0
-offset_bottom = 488.0
+offset_bottom = 484.0
 texture = ExtResource("4")
 expand_mode = 1
 stretch_mode = 5
@@ -116,30 +122,31 @@ stretch_mode = 5
 [node name="EnergyIcon2" type="TextureRect" parent="."]
 layout_mode = 0
 offset_left = 764.0
-offset_top = 388.0
+offset_top = 364.0
 offset_right = 796.0
-offset_bottom = 420.0
+offset_bottom = 396.0
 texture = ExtResource("4")
 expand_mode = 1
 stretch_mode = 5
 
 [node name="EnergyCost2" parent="." instance=ExtResource("1")]
-layout_mode = 0
+layout_mode = 1
+anchors_preset = -1
 anchor_top = 0.00333333
 anchor_bottom = 0.00333333
 offset_left = 816.0
-offset_top = 390.0
+offset_top = 366.0
 offset_right = 988.0
-offset_bottom = 420.0
+offset_bottom = 396.0
 adv_help = true
 translate_help = false
 
 [node name="PlanetEECost" parent="." instance=ExtResource("1")]
 layout_mode = 0
 offset_left = 464.0
-offset_top = 392.0
+offset_top = 368.0
 offset_right = 736.0
-offset_bottom = 422.0
+offset_bottom = 398.0
 text = "[right]PLANET_EE_COST [img]Graphics/Icons/help.png[/img][/right]"
 label_text = "PLANET_EE_COST"
 help_text = "PLANET_EE_COST_DESC"
@@ -151,6 +158,7 @@ offset_left = 472.0
 offset_top = 144.0
 offset_right = 1040.0
 offset_bottom = 348.0
+theme_override_styles/panel = SubResource("StyleBoxEmpty_w728i")
 
 [node name="HSlider" type="HSlider" parent="Panel"]
 layout_mode = 0
@@ -240,7 +248,9 @@ offset_left = 636.0
 offset_top = 100.0
 offset_right = 895.0
 offset_bottom = 134.0
+alignment = 1
 
 [connection signal="close_button_pressed" from="CloseButton" to="." method="_on_close_button_pressed"]
 [connection signal="pressed" from="Send" to="." method="_on_send_pressed"]
 [connection signal="value_changed" from="Panel/HSlider" to="." method="_on_h_slider_value_changed"]
+[connection signal="item_selected" from="Drive" to="." method="_on_drive_item_selected"]

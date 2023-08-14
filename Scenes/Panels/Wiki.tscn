@@ -49,6 +49,7 @@ offset_bottom = 232.0
 [node name="Text" type="Label" parent="Panel"]
 layout_mode = 2
 size_flags_horizontal = 3
+autowrap_mode = 3
 
 [node name="ScrollContainer" type="ScrollContainer" parent="."]
 clip_contents = false

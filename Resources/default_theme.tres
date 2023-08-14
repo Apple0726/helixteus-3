@@ -178,6 +178,19 @@ border_blend = true
 shadow_size = 2
 shadow_offset = Vector2(1, 1)
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_40j2p"]
+content_margin_left = 10.0
+content_margin_top = 10.0
+content_margin_right = 10.0
+content_margin_bottom = 10.0
+bg_color = Color(0.129412, 0.129412, 0.129412, 1)
+border_width_left = 4
+border_width_top = 4
+border_color = Color(0.294118, 0.294118, 0.294118, 1)
+border_blend = true
+shadow_size = 2
+shadow_offset = Vector2(1, 1)
+
 [sub_resource type="StyleBoxFlat" id="22"]
 bg_color = Color(0, 0, 0, 1)
 
@@ -187,19 +200,6 @@ bg_color = Color(1, 1, 1, 1)
 [sub_resource type="SystemFont" id="SystemFont_r4v7d"]
 font_names = PackedStringArray("Arimo")
 fallbacks = Array[Font]([SubResource("SystemFont_xvdaj")])
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_yplln"]
-content_margin_left = 10.0
-content_margin_top = 10.0
-content_margin_right = 10.0
-content_margin_bottom = 10.0
-bg_color = Color(0.203922, 0.203922, 0.203922, 1)
-border_width_left = 2
-border_width_top = 2
-border_color = Color(0.341176, 0.341176, 0.341176, 1)
-border_blend = true
-shadow_size = 2
-shadow_offset = Vector2(1, 1)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_s8f2h"]
 content_margin_left = 5.0
@@ -418,8 +418,6 @@ OptionButton/colors/font_color = Color(0.917647, 0.917647, 0.917647, 1)
 OptionButton/colors/font_color_disabled = Color(0.380392, 0.380392, 0.380392, 1)
 OptionButton/colors/font_color_hover = Color(0.917647, 0.917647, 0.917647, 1)
 OptionButton/colors/font_color_pressed = Color(0.917647, 0.917647, 0.917647, 1)
-OptionButton/constants/arrow_margin = 8
-OptionButton/constants/h_separation = 50
 OptionButton/fonts/font = SubResource("SystemFont_ew3ep")
 OptionButton/icons/arrow = null
 OptionButton/styles/disabled = null
@@ -429,6 +427,7 @@ OptionButton/styles/normal = null
 OptionButton/styles/pressed = null
 Panel/styles/panel = SubResource("20")
 PanelContainer/styles/panel = SubResource("20")
+PopupMenu/styles/panel = SubResource("StyleBoxFlat_40j2p")
 ProgressBar/colors/font_color = Color(1, 1, 1, 1)
 ProgressBar/colors/font_color_shadow = Color(0.65098, 0.133333, 0.133333, 1)
 ProgressBar/fonts/font = SubResource("SystemFont_ew3ep")
@@ -451,7 +450,6 @@ RichTextLabel/fonts/mono_font = SubResource("SystemFont_ew3ep")
 RichTextLabel/fonts/normal_font = SubResource("SystemFont_r4v7d")
 RichTextLabel/styles/focus = null
 RichTextLabel/styles/normal = null
-ScrollContainer/styles/panel = SubResource("StyleBoxFlat_yplln")
 SpinBox/icons/updown = null
 TextEdit/colors/caret_background_color = Color(1, 1, 1, 1)
 TextEdit/colors/caret_color = Color(0, 0, 0, 1)

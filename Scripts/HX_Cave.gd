@@ -69,7 +69,7 @@ func move_HX():
 		var room_tiles = cave_ref.rooms[room].tiles
 		var n = len(room_tiles)
 		if sees_player or is_aggr():
-			target_tile = cave_ref.get_tile_index(cave_tm.local_to_map(cave_ref.rover.position))
+			target_tile = cave_ref.get_tile_index(cave_tm.local_to_map(cave_tm.to_local(cave_ref.rover.position)))
 		else:
 			target_tile = room_tiles[randi() % n]
 		var i = 0

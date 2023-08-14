@@ -180,9 +180,9 @@ func _ready():
 			if tile.has("aurora"):
 				var aurora = game.aurora_scene.instantiate()
 				aurora.position = Vector2(i, j) * 200 + Vector2(100, 100)
-				aurora.get_node("GPUParticles2D").amount = min(5 + int(tile.aurora.au_int * 10), 50)
-				aurora.get_node("GPUParticles2D").lifetime = 3.0 / game.u_i.time_speed
-				#aurora.get_node("GPUParticles2D").process_material["shader_parameter/strength"] = 1.0 if randf() < 0.5 else 0.0
+				aurora.amount = min(5 + int(tile.aurora.au_int * 10), 50)
+				aurora.lifetime = 3.0 / game.u_i.time_speed
+				#aurora.process_material["shader_parameter/strength"] = 1.0 if randf() < 0.5 else 0.0
 				#var hue:float = 0.4 + max(0, pow(tile.aurora.au_int, 0.35) - pow(4, 0.25)) / 10
 				var hue:float = 0.4 + log(tile.aurora.au_int + 1.0) / 10.0
 				var sat:float = 1.0 - floor(hue - 0.4) / 5.0
@@ -201,6 +201,8 @@ func _ready():
 	if p_i.has("lake_2"):
 		$TileFeatures.set_layer_modulate(1, Data.lake_colors[p_i.lake_2.element][p_i.lake_2.state])
 		$TileFeatures.set_cells_terrain_connect(1, lake_tiles[1], 0, lake_state_id[p_i.lake_2.state])
+	$BadApple.wid_p = wid
+	$BadApple.pixel_color = Color.BLACK if star_mod.get_luminance() > 0.3 else Color(0.5, 0.5, 0.5, 1.0)
 
 func add_particles(pos:Vector2):
 	var particle:GPUParticles2D = game.particles_scene.instantiate()
@@ -252,7 +254,8 @@ func show_tooltip(tile, tile_id:int):
 		tooltip += "\n"
 		if game.help.has("%s_desc" % tile.unique_bldg.name):
 			tooltip += tr("%s_DESC1" % tile.unique_bldg.name.to_upper())
-			game.help_str = "%s_desc" % tile.unique_bldg.name
+			if game.help_str == "":
+				game.help_str = "%s_desc" % tile.unique_bldg.name
 			tooltip += "\n" + tr("HIDE_HELP") + "\n"
 		var desc = tr("%s_DESC2" % tile.unique_bldg.name.to_upper())
 		match tile.unique_bldg.name:
@@ -277,7 +280,8 @@ func show_tooltip(tile, tile_id:int):
 			tooltip += tr("BROKEN_BLDG_DESC2") % Helper.format_num(tile.unique_bldg.repair_cost, true)
 			icons.append(Data.money_icon)
 	elif tile.has("volcano"):
-		game.help_str = "volcano_desc"
+		if game.help_str == "":
+			game.help_str = "volcano_desc"
 		if not game.help.has("volcano_desc"):
 			tooltip = "%s\n%s\n%s\n%s: %s" % [tr("VOLCANO"), tr("VOLCANO_DESC"), tr("HIDE_HELP"), tr("LARGEST_VEI") % ("(" + tr("VEI") + ") "), Helper.clever_round(tile.volcano.VEI)]
 		else:
@@ -285,7 +289,8 @@ func show_tooltip(tile, tile_id:int):
 	elif tile.has("crater") and tile.crater.has("init_depth"):
 		if tile.has("aurora"):
 			tooltip = "[aurora au_int=%s]" % tile.aurora.au_int
-		game.help_str = "crater_desc"
+		if game.help_str == "":
+			game.help_str = "crater_desc"
 		if game.help.has("crater_desc"):
 			tooltip += tr("METAL_CRATER").format({"metal":tr(tile.crater.metal.to_upper()), "crater":tr("CRATER")}) + "\n%s\n%s\n%s" % [tr("CRATER_DESC"), tr("HIDE_HELP"), tr("HOLE_DEPTH") + ": %s m"  % [tile.depth]]
 		else:
@@ -343,18 +348,21 @@ func show_tooltip(tile, tile_id:int):
 		if game.science_unlocked.has("SCT"):
 			tooltip = tr("CLICK_TO_CONTROL_SHIP")
 		else:
-			game.help_str = "abandoned_ship"
+			if game.help_str == "":
+				game.help_str = "abandoned_ship"
 			if game.help.has("abandoned_ship"):
 				tooltip = tr("ABANDONED_SHIP") + "\n" + tr("HIDE_HELP")
 	elif tile.has("wormhole"):
 		if tile.wormhole.active:
-			game.help_str = "active_wormhole"
+			if game.help_str == "":
+				game.help_str = "active_wormhole"
 			if game.help.has("active_wormhole"):
 				tooltip = "%s\n%s\n%s" % [tr("ACTIVE_WORMHOLE"), tr("ACTIVE_WORMHOLE_DESC"), tr("HIDE_HELP")]
 			else:
 				tooltip = tr("ACTIVE_WORMHOLE")
 		else:
-			game.help_str = "inactive_wormhole"
+			if game.help_str == "":
+				game.help_str = "inactive_wormhole"
 			if game.help.has("inactive_wormhole"):
 				tooltip = "%s\n%s\n%s" % [tr("INACTIVE_WORMHOLE"), tr("INACTIVE_WORMHOLE_DESC"), tr("HIDE_HELP")]
 			else:
@@ -366,7 +374,8 @@ func show_tooltip(tile, tile_id:int):
 	if tile.has("depth") and not tile.has("bldg") and not tile.has("crater") and not tile.has("bridge"):
 		tooltip += "%s: %s m\n%s" % [tr("HOLE_DEPTH"), tile.depth, tr("SHIFT_CLICK_TO_BRIDGE_HOLE")]
 	elif tile.has("aurora") and tooltip == "":
-		game.help_str = "aurora_desc"
+		if game.help_str == "":
+			game.help_str = "aurora_desc"
 		if game.help.has("aurora_desc"):
 			tooltip = "%s\n%s\n%s\n%s" % [tr("AURORA"), tr("AURORA_DESC"), tr("HIDE_HELP"), tr("AURORA_INTENSITY") + ": %s" % [tile.aurora.au_int]]
 		else:
@@ -919,7 +928,8 @@ func _unhandled_input(event):
 		if not is_instance_valid(game.active_panel) and Input.is_action_just_pressed("shift") and tile:
 			tiles_selected.clear()
 			if game.help.has("tile_shortcuts"):
-				game.help_str = "tile_shortcuts"
+				if game.help_str == "":
+					game.help_str = "tile_shortcuts"
 				if game.get_node("UI").has_node("BuildingShortcuts"):
 					game.get_node("UI").get_node("BuildingShortcuts").close()
 				var shortcuts = preload("res://Scenes/KeyboardShortcuts.tscn").instantiate()
@@ -1495,7 +1505,8 @@ func construct(st:String, costs:Dictionary):
 	var tween = create_tween()
 	tween.tween_property(game.HUD.get_node("Top/TextureRect"), "modulate", Color(1.5, 1.5, 1.0, 1.0), 0.2)
 	if game.help.has("mass_build") and game.stats_univ.bldgs_built >= 18:
-		game.help_str = "mass_build"
+		if game.help_str == "":
+			game.help_str = "mass_build"
 		Helper.put_rsrc(game.get_node("UI/Panel/VBox"), 32, {})
 		Helper.add_label(tr("HOLD_SHIFT_TO_MASS_BUILD"), -1, true, true)
 		Helper.add_label(tr("HIDE_HELP"), -1, true, true)
@@ -1545,3 +1556,6 @@ func get_tile_id_from_pos(pos:Vector2):
 	var x_pos = int(pos.x / 200)
 	var y_pos = int(pos.y / 200)
 	return x_pos % wid + y_pos * wid
+
+func play_bad_apple(LOD):
+	$BadApple.load_data(LOD)

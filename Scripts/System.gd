@@ -260,12 +260,11 @@ func refresh_stars():
 		var star_info:Dictionary = stars_info[i]
 		var star = TextureButton.new()
 		star.texture_normal = load("res://Graphics/Effects/spotlight_%s.png" % [int(star_info.temperature) % 3 + 4])
-		star.texture_click_mask = preload("res://Graphics/Misc/StarCM.png")
 		self.add_child(star)
-		star.pivot_offset = Vector2(512, 512)
 		star.scale.x = max(5.0 * star_info["size"] / game.STAR_SCALE_DIV, 0.008) * scale_mult
 		star.scale.y = max(5.0 * star_info["size"] / game.STAR_SCALE_DIV, 0.008) * scale_mult
-		star.position = star_info["pos"] * scale_mult - Vector2(512, 512)
+		star.texture_click_mask = preload("res://Graphics/Misc/StarCM.png")
+		star.position = star_info["pos"] * scale_mult - Vector2(512, 512) * star.scale.x
 		star.connect("mouse_entered",Callable(self,"on_star_over").bind(i))
 		star.connect("mouse_exited",Callable(self,"on_btn_out"))
 		star.connect("pressed",Callable(self,"on_star_pressed").bind(i))
@@ -406,6 +405,7 @@ func show_M_PK_costs(star:Dictionary, base:bool = false):
 	Helper.put_rsrc(vbox, 32, bldg_costs, true, true)
 	add_constr_costs(vbox, star)
 	var max_diameter = 4000
+	await get_tree().process_frame
 	if not star.has("MS"):
 		if build_all_MS_stages:
 			Helper.add_label(tr("PK2_POWER"), -1, true, true)

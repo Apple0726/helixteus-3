@@ -149,7 +149,7 @@ func refresh_univs(reset:bool = false):
 	for el in lake_params.keys():
 		lake_params[el].value = game.biology_bonus[el]
 	if not reset:
-		$Subjects.offset_left = 704
+		#$Subjects.offset_left = 704
 		for univ_info in game.universe_data:
 			var univ = TextureButton.new()
 			univ.texture_normal = univ_icon

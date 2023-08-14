@@ -1,22 +1,17 @@
-[gd_scene load_steps=8 format=3 uid="uid://dlqxgji41vl6b"]
+[gd_scene load_steps=7 format=3 uid="uid://dlqxgji41vl6b"]
 
 [ext_resource type="Script" path="res://Scripts/ItemForSale.gd" id="2"]
 [ext_resource type="Texture2D" uid="uid://lgk3fk8yaa2s" path="res://Graphics/Icons/Notification.png" id="3"]
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_o15vs"]
-bg_color = Color(0.317647, 0.317647, 0.317647, 1)
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_lyvr3"]
+content_margin_left = 5.0
+content_margin_top = 5.0
+content_margin_right = 5.0
+content_margin_bottom = 5.0
+bg_color = Color(0.215686, 0.215686, 0.215686, 1)
 border_width_left = 4
 border_width_top = 4
-border_color = Color(0.458824, 0.458824, 0.458824, 1)
-border_blend = true
-shadow_size = 2
-shadow_offset = Vector2(1, 1)
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_rfqg6"]
-bg_color = Color(0.396078, 0.396078, 0.396078, 1)
-border_width_left = 4
-border_width_top = 4
-border_color = Color(0.458824, 0.458824, 0.458824, 1)
+border_color = Color(0.341176, 0.341176, 0.341176, 1)
 border_blend = true
 shadow_size = 2
 shadow_offset = Vector2(1, 1)
@@ -67,7 +62,7 @@ offset_bottom = 212.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 mouse_filter = 1
-theme_override_styles/panel = SubResource("StyleBoxFlat_o15vs")
+theme_override_styles/panel = SubResource("StyleBoxFlat_lyvr3")
 script = ExtResource("2")
 
 [node name="LockItemInfo" type="Button" parent="."]
@@ -117,10 +112,6 @@ offset_top = -36.0
 grow_horizontal = 2
 grow_vertical = 0
 mouse_filter = 1
-theme_override_styles/normal = SubResource("StyleBoxFlat_o15vs")
-theme_override_styles/hover = SubResource("StyleBoxFlat_rfqg6")
-theme_override_styles/pressed = SubResource("StyleBoxFlat_o15vs")
-theme_override_styles/focus = SubResource("StyleBoxFlat_o15vs")
 text = "BUY"
 
 [node name="ColorRect" type="ColorRect" parent="."]

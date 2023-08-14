@@ -637,6 +637,13 @@ func _on_Name_text_entered(new_text):
 	$Top/Name/Name.release_focus()
 	if game.c_v == "planet":
 		game.planet_data[game.c_p].name = new_text
+		if new_text.substr(0, 9).to_lower() == "bad apple":
+			var LOD = 1
+			var e = 9
+			while len(new_text) > e and new_text[e] == "!":
+				LOD += 1
+				e += 1
+			game.view.obj.play_bad_apple(LOD)
 		if game.bookmarks.planet.has(str(game.c_p_g)):
 			game.bookmarks.planet[str(game.c_p_g)].name = new_text
 	elif game.c_v == "system":
@@ -762,3 +769,11 @@ func _on_level_mouse_entered():
 func _on_level_mouse_exited():
 	$Nice.visible = false
 	game.hide_tooltip()
+
+
+func _on_name_focus_entered():
+	game.view.move_with_keyboard = false
+
+
+func _on_name_focus_exited():
+	game.view.move_with_keyboard = true

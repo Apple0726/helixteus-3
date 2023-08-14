@@ -18,12 +18,10 @@ orbit_velocity_min = 0.0
 orbit_velocity_max = 0.0
 color_ramp = SubResource("GradientTexture1D_jflvi")
 
-[node name="Node2D" type="Node2D"]
-
-[node name="GPUParticles2D" type="GPUParticles2D" parent="."]
+[node name="GPUParticles2D" type="GPUParticles2D"]
 amount = 10
 process_material = SubResource("ParticleProcessMaterial_o4got")
 texture = ExtResource("1")
 lifetime = 3.0
-preprocess = 5.0
+preprocess = 0.3
 local_coords = true

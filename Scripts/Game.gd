@@ -1,9 +1,9 @@
 extends Node2D
 
 const TEST:bool = false
-const DATE:String = "14 Jul 2023"
-const VERSION:String = "v0.27.4"
-const COMPATIBLE_SAVES = ["v0.27", "v0.27.1", "v0.27.2", "v0.27.3"]
+const DATE:String = "11 Aug 2023"
+const VERSION:String = "v0.27.6"
+const COMPATIBLE_SAVES = ["v0.27", "v0.27.1", "v0.27.2", "v0.27.3", "v0.27.4", "v0.27.5"]
 const SYS_NUM:int = 400
 const UNIQUE_BLDGS = 7
 
@@ -620,6 +620,9 @@ func _ready():
 	for mod in Mods.mod_list:
 		var main = Mods.mod_list[mod]
 		main.phase_2()
+	send_probes_panel = preload("res://Scenes/Panels/SendProbesPanel.tscn").instantiate()
+	send_probes_panel.visible = false
+	$Panels/Control.add_child(send_probes_panel)
 
 func refresh_continue_button():
 	var config = ConfigFile.new()
@@ -680,7 +683,6 @@ func load_univ():
 		for key in mat_info:
 			if not mats.has(key):
 				mats[key] = 0
-		help.erase("flash_send_probe_btn")
 		stats_univ = save_game_dict.get("stats_univ", Data.default_stats.duplicate(true))
 		for stat in Data.default_stats:
 			var val = Data.default_stats[stat]
@@ -834,10 +836,13 @@ func load_game():
 		switch_view(c_v, {"first_time":true})
 		if not $UI.is_ancestor_of(HUD):
 			$UI.add_child(HUD)
+	set_c_sv(c_sv)
+
+func set_c_sv(_c_sv):
 	var config = ConfigFile.new()
 	var err = config.load("user://settings.cfg")
 	if err == OK:
-		config.set_value("game", "saved_c_sv", c_sv)
+		config.set_value("game", "saved_c_sv", _c_sv)
 		config.save("user://settings.cfg")
 
 func set_default_dim_bonuses():
@@ -905,17 +910,20 @@ func new_game(univ:int = 0, new_save:bool = false, DR_advantage = false):
 			set_default_dim_bonuses()
 		for ach in achievements:
 			achievement_data[ach] = {}
-		universe_data = [{"id":0, "lv":1, "generated":true, "xp":0, "xp_to_lv":10, "shapes":[], "name":tr("UNIVERSE"), "cluster_num":1000, "view":{"pos":Vector2(640, 360), "zoom":1.0, "sc_mult":0.1}}]
-		universe_data[0].speed_of_light = 1.0#e(3.0, 8)#m/s
-		universe_data[0].planck = 1.0#e(6.626, -34)#J.s
-		universe_data[0].boltzmann = 1.0#e(1.381, -23)#J/K
-		universe_data[0].gravitational = 1.0#e(6.674, -11)#m^3/kg/s^2
-		universe_data[0].charge = 1.0#e(1.602, -19)#C
-		universe_data[0].dark_energy = 1.0
-		universe_data[0].age = 1.0
-		universe_data[0].difficulty = 1.0
-		universe_data[0].time_speed = 1.0
-		universe_data[0].antimatter = 0.0
+		if subjects.dimensional_power.lv <= 4:
+			universe_data = [{"id":0, "lv":1, "generated":true, "xp":0, "xp_to_lv":10, "shapes":[], "name":tr("UNIVERSE"), "cluster_num":1000, "view":{"pos":Vector2(640, 360), "zoom":1.0, "sc_mult":0.1}}]
+			universe_data[0].speed_of_light = 1.0#e(3.0, 8)#m/s
+			universe_data[0].planck = 1.0#e(6.626, -34)#J.s
+			universe_data[0].boltzmann = 1.0#e(1.381, -23)#J/K
+			universe_data[0].gravitational = 1.0#e(6.674, -11)#m^3/kg/s^2
+			universe_data[0].charge = 1.0#e(1.602, -19)#C
+			universe_data[0].dark_energy = 1.0
+			universe_data[0].age = 1.0
+			universe_data[0].difficulty = 1.0
+			universe_data[0].time_speed = 1.0
+			universe_data[0].antimatter = 0.0
+		else:
+			universe_data[0].generated = true
 	else:
 		universe_data[univ].generated = true
 	u_i = universe_data[univ]
@@ -1150,6 +1158,7 @@ func new_game(univ:int = 0, new_save:bool = false, DR_advantage = false):
 	view.zoom_factor = 1.03
 	view.zooming = "in"
 	view.set_process(true)
+	set_c_sv(c_sv)
 
 func add_panels():
 	upgrade_panel = upgrade_panel_scene.instantiate()
@@ -1182,10 +1191,6 @@ func add_panels():
 	planetkiller_panel = preload("res://Scenes/Panels/PlanetkillerPanel.tscn").instantiate()
 	wiki = preload("res://Scenes/Panels/Wiki.tscn").instantiate()
 	stats_panel = preload("res://Scenes/Panels/StatsPanel.tscn").instantiate()
-	
-	send_probes_panel = preload("res://Scenes/Panels/SendProbesPanel.tscn").instantiate()
-	send_probes_panel.visible = false
-	$Panels/Control.add_child(send_probes_panel)
 	
 	wiki.visible = false
 	$Panels/Control.add_child(wiki)
@@ -1417,8 +1422,8 @@ func set_custom_coords(coords:Array, coord_values:Array):#coords: ["c_p_g", "c_p
 				galaxy_data = open_obj("Clusters", coord_values[i])
 			self[coords[i]] = coord_values[i]
 
-func delete_galaxy():
-	galaxy_data[c_g].clear()
+func delete_galaxy(_c_g:int):
+	galaxy_data[_c_g].clear()
 	Helper.save_obj("Clusters", c_c, galaxy_data)
 
 #															V function to execute after removing objects but before adding new ones
@@ -1439,19 +1444,19 @@ func switch_view(new_view:String, other_params:Dictionary = {}):
 				var tween2 = create_tween()
 				tween2.set_parallel(true)
 				for star in get_tree().get_nodes_in_group("stars_system"):
-					if is_instance_valid(star):
+					if is_instance_valid(star) and star.material != null:
 						tween2.tween_property(star.material, "shader_parameter/alpha", 0.0, 0.15)
 			if c_v == "galaxy":
 				var tween2 = create_tween()
 				tween2.set_parallel(true)
-				for galaxy in view.obj.obj_btns:
-					if is_instance_valid(galaxy):
-						tween2.tween_property(galaxy.material, "shader_parameter/alpha", 0.0, 0.15)
+				for system in view.obj.obj_btns:
+					if is_instance_valid(system) and system.material != null:
+						tween2.tween_property(system.material, "shader_parameter/alpha", 0.0, 0.15)
 			elif c_v == "universe":
 				var tween2 = create_tween()
 				tween2.set_parallel(true)
 				for cluster in view.obj.btns:
-					if is_instance_valid(cluster):
+					if is_instance_valid(cluster) and cluster.material != null:
 						tween2.tween_property(cluster.material, "shader_parameter/alpha", 0.0, 0.15)
 		if is_instance_valid(planet_HUD) and new_view != "planet":
 			var anim_player:AnimationPlayer = planet_HUD.get_node("AnimationPlayer")
@@ -2013,12 +2018,13 @@ func generate_clusters(parent_id:int):
 		var _rich_elements = rich_element_list.duplicate()
 		_rich_elements.shuffle()
 		for j in range(0, int(remap(dist_from_center, 0, 12000, 1, 5))):
-			c_i.rich_elements[_rich_elements[j]] = 8 * (1 + randf()) * remap(dist_from_center, 0, 16000, 1, 40) * u_i.dark_energy
+			c_i.rich_elements[_rich_elements[j]] = 8 * (1 + randf()) * remap(dist_from_center, 0, 16000, 1, 40)
 		pos = Vector2.from_angle(randf_range(0, 2 * PI)) * dist_from_center
 		c_i["pos"] = pos
 		c_i["id"] = c_id + c_num
-		c_i.FM = Helper.clever_round((1 + pos.length() / 1000.0) * u_i.dark_energy)#Ferromagnetic materials
-		c_i.diff = Helper.clever_round((1 + pos.length() * 2.0) * u_i.difficulty)
+		var DE_factor = pos.length() * u_i.dark_energy
+		c_i.FM = Helper.clever_round(1 + DE_factor / 1000.0)#Ferromagnetic materials
+		c_i.diff = Helper.clever_round((1 + DE_factor) * u_i.difficulty)
 		u_i.cluster_data.append(c_i)
 	c_num += total_clust_num
 	fn_save_game()
@@ -3035,7 +3041,7 @@ func generate_tiles(id:int):
 					if spaceport_spawned:
 						continue
 					spaceport_spawned = true					#Save migration
-				var obj = {"tile":t_id, "tier":max(1, int(-log(randf() / u_i.get("age", 1) / (1.0 + u_i.cluster_data[c_c].pos.length() / 1000.0)) / 4.0 + 1))}
+				var obj = {"tile":t_id, "tier":max(1, int(-log(randf() / u_i.get("age", 1) / (1.0 + u_i.cluster_data[c_c].pos.length() * u_i.dark_energy / 1000.0)) / 4.0 + 1))}
 				if randf() < 1.0 - 0.5 * exp(-pow(p_i.temperature - 273, 2) / 20000.0) / pow(obj.tier, 2):
 					obj.repair_cost = 250000 * pow(obj.tier, 30) * randf_range(1, 3) * Data.unique_bldg_repair_cost_multipliers[unique_bldg]
 				if p_i.unique_bldgs.has(unique_bldg):
@@ -4016,16 +4022,30 @@ func show_YN_panel(type:String, text:String, args:Array = [], title:String = "Pl
 	$UI.add_child(YN_panel)
 	#if type in ["buy_pickaxe", "destroy_building", "destroy_buildings", "op_galaxy", "conquer_all", "destroy_tri_probe", "reset_dimension"]:
 
+func terraform_planet_confirm():
+	terraform_panel.terraform_planet()
+
 func delete_save_confirm(save_str):
+	var config = ConfigFile.new()
+	var err = config.load("user://settings.cfg")
+	var saved_c_sv = ""
+	if err == OK:
+		saved_c_sv = config.get_value("game", "saved_c_sv", "")
+	if saved_c_sv == save_str:
+		$Title/Menu/VBoxContainer/Continue.visible = false
+		$Title/Menu.size.y = 0.0
+		config.set_value("game", "saved_c_sv", "")
+		config.save("user://settings.cfg")
 	load_panel.on_delete_confirm(save_str)
 
 func return_to_menu_confirm():
 	dim_num = 1
 	$Ship.visible = false
 	$Autosave.stop()
-	switch_view("")
+	await switch_view("")
+	$Title/Menu/VBoxContainer/Continue.connect("pressed",Callable(self,"_on_continue_pressed"))
 	refresh_continue_button()
-	switch_music(load("res://Audio/Title.ogg"))
+	switch_music(preload("res://Audio/Title.ogg"))
 	HUD.queue_free()
 	var tween = create_tween()
 	tween.tween_property($Star/Sprite2D.material, "shader_parameter/alpha", 1.0, 1.0)
@@ -4033,6 +4053,8 @@ func return_to_menu_confirm():
 	$Title.visible = true
 	$Star.visible = true
 	animate_title_buttons()
+	universe_data.clear()
+	view.queue_redraw()
 
 func generate_new_univ_confirm():
 	universe_data.append({"id":0, "lv":1, "xp":0, "xp_to_lv":10, "shapes":[], "name":tr("UNIVERSE"), "cluster_num":1000, "view":{"pos":Vector2(640 * 0.5, 360 * 0.5), "zoom":2, "sc_mult":0.1}})
@@ -4477,4 +4499,5 @@ func _on_command_text_submitted(new_text):
 func _on_continue_pressed():
 	c_sv = refresh_continue_button()
 	if c_sv != "":
+		$Title/Menu/VBoxContainer/Continue.disconnect("pressed",Callable(self,"_on_continue_pressed"))
 		fade_out_title("load_game")
