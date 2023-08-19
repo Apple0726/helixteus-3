@@ -92,7 +92,7 @@ offset_bottom = 67.0
 
 [node name="MusicPitchLabel" parent="TabContainer/SFX" instance=ExtResource("2")]
 layout_mode = 0
-offset_left = 464.0
+offset_left = 400.0
 offset_top = 35.0
 offset_right = 768.0
 offset_bottom = 65.0
@@ -102,12 +102,11 @@ help_text = "TIME_SPEED_AFFECTS_PITCH_DESC"
 align = 2
 
 [node name="GRAPHICS" type="TabBar" parent="TabContainer"]
-visible = false
 layout_mode = 2
 
 [node name="Vsync" type="CheckButton" parent="TabContainer/GRAPHICS"]
 layout_mode = 0
-offset_left = 480.0
+offset_left = 448.0
 offset_top = 43.0
 offset_right = 772.0
 offset_bottom = 83.0
@@ -115,7 +114,7 @@ text = "Vsync (requires restart)"
 
 [node name="Fullscreen" type="CheckButton" parent="TabContainer/GRAPHICS"]
 layout_mode = 0
-offset_left = 524.0
+offset_left = 448.0
 offset_top = 107.0
 offset_right = 772.0
 offset_bottom = 147.0
@@ -133,7 +132,7 @@ offset_left = 5.68961
 offset_top = 39.129
 offset_right = 87.69
 offset_bottom = 63.129
-text = "Max FPS"
+text = "MAX_FPS"
 
 [node name="Label2" type="Label" parent="TabContainer/GRAPHICS/FPS"]
 layout_mode = 0
@@ -163,18 +162,17 @@ offset_bottom = 207.0
 
 [node name="EnableShadersLabel" parent="TabContainer/GRAPHICS" instance=ExtResource("2")]
 layout_mode = 0
-offset_left = 484.0
+offset_left = 453.0
 offset_top = 175.0
 offset_right = 692.0
 offset_bottom = 215.0
-text = "[right]ENABLE_SHADERS [img]Graphics/Icons/help.png[/img][/right]"
+text = "ENABLE_SHADERS [img]Graphics/Icons/help.png[/img]"
 label_text = "ENABLE_SHADERS"
 help_text = "ENABLE_SHADERS_DESC"
-align = 2
 
 [node name="AutosaveLight" type="CheckButton" parent="TabContainer/GRAPHICS"]
 layout_mode = 0
-offset_left = 516.0
+offset_left = 448.0
 offset_top = 227.0
 offset_right = 772.0
 offset_bottom = 267.0
@@ -182,7 +180,7 @@ text = "AUTOSAVE_LIGHT"
 
 [node name="Screenshake" type="CheckButton" parent="TabContainer/GRAPHICS"]
 layout_mode = 0
-offset_left = 476.0
+offset_left = 448.0
 offset_top = 287.0
 offset_right = 772.0
 offset_bottom = 327.0
@@ -220,17 +218,17 @@ layout_mode = 2
 
 [node name="AutosellMinerals" type="CheckButton" parent="TabContainer/GAME"]
 layout_mode = 0
-offset_left = 72.0
-offset_top = 91.0
-offset_right = 352.0
-offset_bottom = 131.0
+offset_left = 120.0
+offset_top = 93.0
+offset_right = 400.0
+offset_bottom = 133.0
 
 [node name="RichTextLabel" parent="TabContainer/GAME" instance=ExtResource("2")]
 layout_mode = 0
-offset_left = 16.0
-offset_top = 99.0
-offset_right = 272.0
-offset_bottom = 129.0
+offset_left = 8.0
+offset_top = 101.0
+offset_right = 320.0
+offset_bottom = 131.0
 text = "[right]AUTOSELL_MINERALS [img]Graphics/Icons/help.png[/img][/right]"
 label_text = "AUTOSELL_MINERALS"
 help_text = "AUTOSELL_MINERALS_DESC"
@@ -238,25 +236,25 @@ align = 2
 
 [node name="EnableAutosave" type="CheckButton" parent="TabContainer/GAME"]
 layout_mode = 0
-offset_left = 88.0
-offset_top = 27.0
-offset_right = 352.0
-offset_bottom = 67.0
+offset_left = 136.0
+offset_top = 29.0
+offset_right = 400.0
+offset_bottom = 69.0
 text = "ENABLE_AUTOSAVE"
 
 [node name="CaveGenInfo" type="CheckButton" parent="TabContainer/GAME"]
 layout_mode = 0
-offset_left = 88.0
-offset_top = 159.0
-offset_right = 352.0
-offset_bottom = 199.0
+offset_left = 136.0
+offset_top = 161.0
+offset_right = 400.0
+offset_bottom = 201.0
 
 [node name="RichTextLabel2" parent="TabContainer/GAME" instance=ExtResource("2")]
 layout_mode = 0
-offset_left = 16.0
-offset_top = 167.0
-offset_right = 272.0
-offset_bottom = 197.0
+offset_left = 8.0
+offset_top = 169.0
+offset_right = 320.0
+offset_bottom = 199.0
 text = "[right]SHOW_CAVE_GEN_INFO [img]Graphics/Icons/help.png[/img][/right]"
 label_text = "SHOW_CAVE_GEN_INFO"
 help_text = "SHOW_CAVE_GEN_INFO_DESC"
@@ -270,6 +268,7 @@ offset_right = 832.0
 offset_bottom = 59.0
 mouse_filter = 1
 text = "ENEMY_DIFFICULTY"
+horizontal_alignment = 1
 
 [node name="HBoxContainer" type="HBoxContainer" parent="TabContainer/GAME"]
 layout_mode = 0
@@ -293,10 +292,10 @@ text = "HARD"
 
 [node name="Autosave" type="HSlider" parent="TabContainer/GAME"]
 layout_mode = 0
-offset_left = 510.0
-offset_top = 161.0
-offset_right = 750.0
-offset_bottom = 225.0
+offset_left = 512.0
+offset_top = 173.0
+offset_right = 752.0
+offset_bottom = 237.0
 min_value = 1.0
 max_value = 60.0
 value = 30.0
@@ -304,18 +303,19 @@ rounded = true
 
 [node name="Label2" type="Label" parent="TabContainer/GAME"]
 layout_mode = 0
-offset_left = 484.0
+offset_left = 480.0
 offset_top = 151.0
 offset_right = 804.0
-offset_bottom = 175.0
+offset_bottom = 177.0
 text = "AUTOSAVE_INTERVAL"
+horizontal_alignment = 1
 
 [node name="Label3" type="Label" parent="TabContainer/GAME"]
 layout_mode = 0
-offset_left = 761.113
-offset_top = 154.715
-offset_right = 915.113
-offset_bottom = 178.715
+offset_left = 760.0
+offset_top = 197.0
+offset_right = 914.0
+offset_bottom = 223.0
 text = "30 s"
 
 [node name="ResetTooltips" type="Button" parent="TabContainer/GAME"]
@@ -327,6 +327,7 @@ offset_bottom = 440.0
 text = "RESET_HIDDEN_TOOLTIPS"
 
 [node name="MISC" type="TabBar" parent="TabContainer"]
+visible = false
 layout_mode = 2
 
 [node name="OPCursor" type="CheckBox" parent="TabContainer/MISC"]

@@ -1,9 +1,9 @@
 extends Node2D
 
 const TEST:bool = false
-const DATE:String = "11 Aug 2023"
-const VERSION:String = "v0.27.6"
-const COMPATIBLE_SAVES = ["v0.27", "v0.27.1", "v0.27.2", "v0.27.3", "v0.27.4", "v0.27.5"]
+const DATE:String = ""
+const VERSION:String = "v0.28"
+const COMPATIBLE_SAVES = ["v0.27", "v0.27.1", "v0.27.2", "v0.27.3", "v0.27.4", "v0.27.5", "v0.27.6"]
 const SYS_NUM:int = 400
 const UNIQUE_BLDGS = 7
 
@@ -1870,7 +1870,7 @@ func add_galaxy():
 	if not galaxy_data[c_g].has("discovered"):
 		if not galaxy_data[c_g].has("name"):
 			galaxy_data[c_g].name = "%s %s" % [tr("GALAXY"), c_g]
-		await start_system_generation()
+		start_system_generation()
 	add_obj("galaxy")
 	HUD.switch_btn.texture_normal = preload("res://Graphics/Buttons/ClusterView.png")
 	if len(ship_data) == 2 and u_i.lv >= 40:
@@ -1878,12 +1878,11 @@ func add_galaxy():
 		get_3rd_ship()
 
 func start_system_generation():
-	add_loading()
 	reset_collisions()
 	gc_remaining = floor(pow(galaxy_data[c_g]["system_num"], 0.8) / 250.0)
 	if c_g_g != 0:
 		system_data.clear()
-	await generate_system_part()
+	generate_system_part()
 	
 func add_system():
 	if obj_exists("Galaxies", c_g_g):
@@ -2131,62 +2130,11 @@ func update_loading_bar(curr:float, total:float, txt:String):
 func generate_system_part():
 	generate_systems(c_g)
 	var N:int = galaxy_data[c_g].system_num
+	var galaxy_generator = GalaxyGenerator.new()
+	galaxy_generator.set_system_data(system_data)
+	galaxy_generator.set_galaxy_properties(c_g_g, N, galaxy_data[c_g].diff)
 	if galaxy_data[c_g].type == 6:
-		var r:float = N / 20.0
-		var init_th:float = randf_range(0, PI)
-		var th:float = init_th
-		update_loading_bar(0, N, tr("GENERATING_GALAXY"))
-		#await get_tree().create_timer(5).timeout
-		var N_init:int = systems_collision_detection2(c_g, 0, 0, 0, true)#Generate stars at the center
-		var N_progress:int = N_init
-		while N_progress < (N + N_init) / 2.0:#Arm #1
-			var progress:float = inverse_lerp(N_init, (N + N_init) / 2.0, N_progress)
-			N_progress = systems_collision_detection2(c_g, N_progress, r, th)
-			th += 0.4 - lerp(0.0, 0.33, progress)
-			r += (1.0 - lerp(0.0, 0.8, progress)) * 1280 * lerp(1.3, 4.0, inverse_lerp(5000, 20000, N))
-			update_loading_bar(N_progress - len(stars_failed), N, tr("GENERATING_GALAXY"))
-			await get_tree().create_timer(0.0000000000001).timeout
-		th = init_th + PI
-		r = N / 20.0
-		while N_progress < N:#Arm #2
-			var progress:float = inverse_lerp((N + N_init) / 2.0, N, N_progress)
-			N_progress = systems_collision_detection2(c_g, N_progress, r, th)
-			th += 0.4 - lerp(0.0, 0.33, progress)
-			r += (1.0 - lerp(0.0, 0.8, progress)) * 1280 * lerp(1.3, 4.0, inverse_lerp(5000, 20000, N))
-			update_loading_bar(N_progress - len(stars_failed), N, tr("GENERATING_GALAXY"))
-			await get_tree().create_timer(0.0000000000001).timeout
-		for i in len(stars_failed):#Put stars that failed to pass the collision tests above
-			var attempts:int = 0
-			var s_i = system_data[stars_failed[i]]
-			var biggest_star_size = get_biggest_star_size(stars_failed[i])
-			#Collision detection
-			var radius = 320 * pow(biggest_star_size / SYSTEM_SCALE_DIV, 0.35)
-			r = randf_range(0, max_outer_radius)
-			th = randf_range(0, 2 * PI)
-			var pos:Vector2 = Vector2.from_angle(th) * r
-			var coll:bool = true
-			while coll:
-				coll = false
-				for circ in obj_shapes + obj_shapes2:
-					if pos.distance_to(circ.pos) < circ.radius + radius:
-						coll = true
-						r = randf_range(0, max_outer_radius)
-						th = randf_range(0, 2 * PI)
-						pos = Vector2.from_angle(th) * r
-						break
-				attempts += 1
-				if attempts > 20:
-					max_outer_radius *= 1.1
-					attempts = 0
-			s_i.pos = pos
-			s_i.diff = get_sys_diff(pos, c_g, s_i)
-			obj_shapes2.append({"pos":pos, "radius":radius})
-			if i % 100 == 0:
-				update_loading_bar(N - len(stars_failed) + i, N, tr("GENERATING_GALAXY"))
-				await get_tree().create_timer(0.0000000000001).timeout
-		if c_g != 0:
-			var view_zoom = 500.0 / max_outer_radius
-			galaxy_data[c_g]["view"] = {"pos":Vector2(640, 360), "zoom":view_zoom}
+		var res = galaxy_generator.generate_spiral_galaxy()
 	else:
 		for i in range(0, N, 500):
 			systems_collision_detection(c_g, i)
@@ -2195,53 +2143,7 @@ func generate_system_part():
 	s_num += galaxy_data[c_g].system_num
 	Helper.save_obj("Galaxies", c_g_g, system_data)
 	Helper.save_obj("Clusters", c_c, galaxy_data)
-	remove_child($Loading)
-
-func systems_collision_detection2(id:int, N_init:int, r, th, center:bool = false):
-	var N:int = galaxy_data[id].system_num
-	var circ_size = pow(N * 1.5, 0.95)# + N_init
-	var N_fin:int = min(N_init + lerp(100, 400, inverse_lerp(5000, 20000, N)), N)
-	if center:
-		N_fin += circ_size / 20.0
-	for i in range(N_init, N_fin):
-		var s_i = system_data[i]
-		var starting_system = c_g_g == 0 and i == 0
-		var biggest_star_size = get_biggest_star_size(i)
-		#Collision detection
-		var radius = 320 * pow(biggest_star_size / SYSTEM_SCALE_DIV, 0.35)
-		var r2 = randf_range(0, circ_size)
-		var th2 = randf_range(0, 2 * PI)
-		var pos:Vector2 = Vector2.from_angle(th) * r + Vector2.from_angle(th2) * r2
-		var coll:bool = true
-		var attempts:int = 0
-		var cont:bool = true
-		while coll:
-			coll = false
-			if attempts > 10:
-				coll = false
-				cont = false
-				stars_failed.append(i)
-				break
-			for circ in obj_shapes + obj_shapes2:
-				if pos.distance_to(circ.pos) < circ.radius + radius:
-					coll = true
-					attempts += 1
-					r2 = randf_range(0, circ_size)
-					th2 = randf_range(0, 2 * PI)
-					pos = Vector2.from_angle(th) * r + Vector2.from_angle(th2) * r2
-					break
-		if cont:
-			if pos.length() > max_outer_radius:
-				max_outer_radius = pos.length()
-			if starting_system:
-				obj_shapes2.append({"pos":system_data[0].pos, "radius":radius})
-			else:
-				s_i.pos = pos
-				s_i.diff = get_sys_diff(pos, id, s_i)
-				obj_shapes2.append({"pos":pos, "radius":radius})
-	obj_shapes.append({"pos":Vector2.from_angle(th) * r, "radius":circ_size})
-	obj_shapes2.clear()
-	return N_fin
+	galaxy_generator.queue_free()
 
 func systems_collision_detection(id:int, N_init:int):
 	var total_sys_num = galaxy_data[id]["system_num"]

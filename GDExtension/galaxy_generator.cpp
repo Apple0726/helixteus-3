@@ -3,7 +3,6 @@
 #include <godot_cpp/variant/utility_functions.hpp>
 
 using namespace godot;
-using namespace godot;
 
 void GalaxyGenerator::_bind_methods() {
     ClassDB::bind_method(D_METHOD("set_system_data", "system_data"), &GalaxyGenerator::setSystemData);

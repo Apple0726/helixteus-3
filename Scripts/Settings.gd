@@ -24,7 +24,6 @@ func _ready():
 	$TabContainer/GRAPHICS/DisplayRes.add_item("64 x 36", 10)
 	$TabContainer/GRAPHICS/DisplayRes.add_item("32 x 18", 11)
 	$TabContainer/GRAPHICS/DisplayRes.add_item("16 x 9", 12)
-	$TabContainer/GRAPHICS/Fullscreen.text = "%s (F11)" % [tr("FULLSCREEN")]
 	if err == OK:
 		set_difficulty()
 		$TabContainer/SFX/Master.value = config.get_value("audio", "master", 0)
@@ -76,6 +75,7 @@ func refresh():
 		Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
 		game.STM.show_help("")
 		game.STM.set_process(false)
+	$TabContainer/GRAPHICS/Fullscreen.text = "%s (F11)" % [tr("FULLSCREEN")]
 	$TabContainer/SFX/MusicPitchLabel.text = "[right]%s  [img]Graphics/Icons/help.png[/img][/right]" % tr("TIME_SPEED_AFFECTS_PITCH")
 	set_difficulty()
 
