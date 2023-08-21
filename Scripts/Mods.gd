@@ -60,6 +60,7 @@ func _ready():
 				mod_list[mod_name] = main
 				mod_load_order.append(mod_name)
 	else:
+		mods = DirAccess.open("user://")
 		mods.make_dir("user://Mods")
 	
 	config.set_value("mods", "load_order", mod_load_order)

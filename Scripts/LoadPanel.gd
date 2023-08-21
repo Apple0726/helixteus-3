@@ -175,14 +175,16 @@ func _on_Import_file_selected(path):
 	var import_save_name:String = $Import.current_file.replace(".hx3", "")
 	if importing_file:
 		var save_dict:Dictionary = importing_file.get_var()
-		var directory = DirAccess.open("user://%s" % import_save_name)
+		var directory = DirAccess.open("user://")
 		var final_save_name:String = import_save_name
-		if directory:
+		if directory.dir_exists(import_save_name):
 			var dupl:int = 2
 			while DirAccess.open("user://%s%s" % [import_save_name, dupl]):
 				dupl += 1
 			final_save_name = "%s%s" % [import_save_name, dupl]
-		if directory.make_dir("user://%s" % final_save_name) == OK:
+		else:
+			final_save_name = import_save_name
+		if directory.make_dir(final_save_name) == OK:
 			var save_info_file = FileAccess.open("user://%s/save_info.hx3" % final_save_name, FileAccess.WRITE)
 			if save_info_file:
 				save_info_file.store_var(save_dict.save_info)

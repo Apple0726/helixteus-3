@@ -35,7 +35,6 @@ offset_right = 892.0
 offset_bottom = 576.0
 
 [node name="SFX" type="TabBar" parent="TabContainer"]
-visible = false
 layout_mode = 2
 
 [node name="Master" type="HSlider" parent="TabContainer/SFX"]
@@ -327,6 +326,7 @@ offset_bottom = 440.0
 text = "RESET_HIDDEN_TOOLTIPS"
 
 [node name="MISC" type="TabBar" parent="TabContainer"]
+visible = false
 layout_mode = 2
 
 [node name="OPCursor" type="CheckBox" parent="TabContainer/MISC"]

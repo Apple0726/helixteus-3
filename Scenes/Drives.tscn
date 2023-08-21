@@ -1,8 +1,8 @@
 [gd_scene load_steps=6 format=3 uid="uid://rkeuei54m30i"]
 
-[ext_resource type="Texture2D" uid="uid://cd15boohfo0nu" path="res://Graphics/Buttons/IonDrive.png" id="3"]
-[ext_resource type="Texture2D" uid="uid://ca4pmasvfr1s" path="res://Graphics/Buttons/ChemicalDrive.png" id="4"]
-[ext_resource type="Texture2D" uid="uid://bjfmtj2gp0t6p" path="res://Graphics/Icons/Time.png" id="5"]
+[ext_resource type="Texture2D" uid="uid://dnemufwetb2ep" path="res://Graphics/Buttons/IonDrive.png" id="3"]
+[ext_resource type="Texture2D" uid="uid://crviowlyda0gj" path="res://Graphics/Buttons/ChemicalDrive.png" id="4"]
+[ext_resource type="Texture2D" uid="uid://cvu07ifc200do" path="res://Graphics/Icons/Time.png" id="5"]
 [ext_resource type="Script" path="res://Scripts/DrivePanel.gd" id="6"]
 [ext_resource type="Theme" uid="uid://cp2u1kgj60ic" path="res://Resources/default_theme.tres" id="7"]
 
@@ -73,21 +73,21 @@ expand_icon = true
 [node name="HSlider" type="HSlider" parent="Control"]
 layout_mode = 0
 offset_left = 392.0
-offset_top = 316.0
+offset_top = 320.0
 offset_right = 548.0
-offset_bottom = 332.0
+offset_bottom = 336.0
 step = 0.0
 
 [node name="TextureRect" type="TextureRect" parent="Control"]
 layout_mode = 0
-offset_left = 564.0
-offset_top = 304.0
-offset_right = 596.0
-offset_bottom = 336.0
+offset_left = 568.0
+offset_top = 312.0
+offset_right = 600.0
+offset_bottom = 344.0
 expand_mode = 1
 stretch_mode = 6
 
-[node name="TextureRect2" type="TextureRect" parent="Control"]
+[node name="TimeIcon1" type="TextureRect" parent="Control"]
 layout_mode = 0
 offset_left = 580.0
 offset_top = 372.0
@@ -97,12 +97,48 @@ texture = ExtResource("5")
 expand_mode = 1
 stretch_mode = 6
 
+[node name="TextureRect3" type="TextureRect" parent="Control"]
+layout_mode = 0
+offset_left = 848.0
+offset_top = 312.0
+offset_right = 880.0
+offset_bottom = 344.0
+expand_mode = 1
+stretch_mode = 6
+
+[node name="RsrcOwned" type="Label" parent="Control"]
+layout_mode = 0
+offset_left = 888.0
+offset_top = 312.0
+offset_right = 1008.0
+offset_bottom = 344.0
+text = "0"
+vertical_alignment = 1
+
+[node name="YouHave" type="Label" parent="Control"]
+layout_mode = 0
+offset_left = 720.0
+offset_top = 312.0
+offset_right = 840.0
+offset_bottom = 344.0
+text = "YOU_HAVE"
+vertical_alignment = 1
+
+[node name="CooldownLabel" type="Label" parent="Control"]
+layout_mode = 0
+offset_left = 680.0
+offset_top = 440.0
+offset_right = 800.0
+offset_bottom = 472.0
+text = "COOLDOWN"
+vertical_alignment = 1
+
 [node name="Label" type="Label" parent="Control"]
 layout_mode = 0
 offset_left = 608.0
-offset_top = 308.0
-offset_right = 728.0
-offset_bottom = 340.0
+offset_top = 312.0
+offset_right = 704.0
+offset_bottom = 344.0
 text = "0"
 vertical_alignment = 1
 
@@ -112,6 +148,25 @@ offset_left = 620.0
 offset_top = 372.0
 offset_right = 740.0
 offset_bottom = 404.0
+text = "0"
+vertical_alignment = 1
+
+[node name="TimeIcon2" type="TextureRect" parent="Control"]
+layout_mode = 0
+offset_left = 792.0
+offset_top = 440.0
+offset_right = 820.0
+offset_bottom = 472.0
+texture = ExtResource("5")
+expand_mode = 1
+stretch_mode = 6
+
+[node name="Cooldown" type="Label" parent="Control"]
+layout_mode = 0
+offset_left = 832.0
+offset_top = 440.0
+offset_right = 952.0
+offset_bottom = 472.0
 text = "0"
 vertical_alignment = 1
 
