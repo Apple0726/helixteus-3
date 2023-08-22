@@ -1,7 +1,7 @@
 [gd_resource type="Theme" load_steps=33 format=3 uid="uid://cp2u1kgj60ic"]
 
-[ext_resource type="Texture2D" uid="uid://bivymeoiehn4o" path="res://Graphics/Buttons/CheckboxChecked.svg" id="1_h4tp5"]
-[ext_resource type="Texture2D" uid="uid://csqwivoxccd0k" path="res://Graphics/Buttons/CheckboxUnhecked.svg" id="2_s3vx0"]
+[ext_resource type="Texture2D" uid="uid://do2uwgx16g8j3" path="res://Graphics/Buttons/CheckboxChecked.svg" id="1_h4tp5"]
+[ext_resource type="Texture2D" uid="uid://bjc6aeod70q1f" path="res://Graphics/Buttons/CheckboxUnhecked.svg" id="2_s3vx0"]
 
 [sub_resource type="SystemFont" id="SystemFont_xvdaj"]
 font_names = PackedStringArray("Sans-Serif")

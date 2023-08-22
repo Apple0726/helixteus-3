@@ -173,6 +173,8 @@ func send_ships2(_time):
 	game.ships_dest_coords = {"c":game.c_c, "g":game.c_g, "s":game.c_s, "p":dest_p_id}
 	game.ships_dest_g_coords = {"g":game.c_g_g, "s":game.c_s_g}
 	game.ships_travel_view = travel_view
+	game.ships_travel_drives_used = 0
+	game.ships_travel_drive_available_time = Time.get_unix_time_from_system()
 	game.ships_travel_start_date = Time.get_unix_time_from_system()
 	game.ships_travel_length = time_cost
 	game.ships_travel_cost = travel_energy_cost

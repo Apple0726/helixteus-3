@@ -35,7 +35,6 @@ offset_right = 892.0
 offset_bottom = 576.0
 
 [node name="SFX" type="TabBar" parent="TabContainer"]
-visible = false
 layout_mode = 2
 
 [node name="Master" type="HSlider" parent="TabContainer/SFX"]

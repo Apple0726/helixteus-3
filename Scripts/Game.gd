@@ -186,6 +186,8 @@ var ships_dest_g_coords:Dictionary#ship global coordinates (destination)
 var ships_depart_pos:Vector2#Depart position of system/galaxy/etc. depending on view
 var ships_dest_pos:Vector2#Destination position of system/galaxy/etc. depending on view
 var ships_travel_view:String#View in which ships travel
+var ships_travel_drives_used:int
+var ships_travel_drive_available_time:int
 var ships_travel_start_date:int
 var ships_travel_length:float
 var ships_travel_cost:float
@@ -1074,6 +1076,8 @@ func new_game(univ:int = 0, new_save:bool = false, DR_advantage = false):
 	ships_depart_pos = Vector2.ZERO#Depart position of system/galaxy/etc. depending on view
 	ships_dest_pos = Vector2.ZERO#Destination position of system/galaxy/etc. depending on view
 	ships_travel_view = "-"#View in which ships travel
+	ships_travel_drives_used = 0 # Number of drives used in one journey
+	ships_travel_drive_available_time = 0 # Drive will be available to use at this time
 	ships_travel_start_date = -1
 	ships_travel_length = NAN
 	satellite_data = []
@@ -3722,6 +3726,8 @@ func fn_save_game():
 		"ships_depart_pos":ships_depart_pos,
 		"ships_dest_pos":ships_dest_pos,
 		"ships_travel_view":ships_travel_view,
+		"ships_travel_drives_used":ships_travel_drives_used,
+		"ships_travel_drive_available_time":ships_travel_drive_available_time,
 		"ships_c_g_coords":ships_c_g_coords,
 		"ships_dest_g_coords":ships_dest_g_coords,
 		"ships_travel_start_date":ships_travel_start_date,

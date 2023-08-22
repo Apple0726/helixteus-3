@@ -1083,9 +1083,9 @@ NO_TRI_PROBES,You don't have any triangulum probes. A certain gigastructure allo
 NEW_UNIV_DISCOVERED,New universe discovered!,,,新的宇宙发现了,Neue Universen Entdeckt!,Nuevo universo descubierto!,,,Új univerzum felfedezve!,新しい宇宙を発見!,Nieuw universum ontdekt!,Обнаружена новая вселенная!
 TP_CONFIRM2,You have a lot of probe points remaining. You should probably spend as much of them as possible. Continue anyway?,,,你还有一些剩余的探测点，你应该尽可能用尽他们，是否继续?,Du hats noch viele Sondenpunkte übrig.Es ist ratsam möglichst viele auszugeben. Trozdem weiter?,Tienes un montón de puntos de sonda restantes. Deberías invertir cuantas muchas puedas de ellas. Deseas continuar de todos modos?,,,"Sok felhasználatlan szondapontod van. Jobb lenne, ha elköltenéd őket. Folytatás mégis?",プローブポイントはまだたくさん残っています。できるだけ多く消費したほうがいいでしょう。とにかく続ける？,Je hebt veel sonde-punten over. Je geeft er best zo veel mogelijk uit. Toch verdergaan?,
 PROBE_POINTS,Probe points,,,探测点,Sondenpunkte,Puntos de sonda,,,Szondapontok,プローブポイント,Sonde-punten,
-GRAPHICS,Graphics,,,图像设置,Anzeige,Gráficos,그래픽,,Grafika,グラフィック,Visueel,Графика
-GAME,Game,,,游戏设置,Spiel,Juego,게임,,Játék,ゲーム,Spel,Игра
-MISC,Misc,,,其他设置,Misc,Misc,기타,,Egyéb,その他,Andere,Прочее
+GRAPHICS,Graphics,Graphismes,,图像设置,Anzeige,Gráficos,그래픽,,Grafika,グラフィック,Visueel,Графика
+GAME,Game,Jeu,,游戏设置,Spiel,Juego,게임,,Játék,ゲーム,Spel,Игра
+MISC,Misc,Autres,,其他设置,Misc,Misc,기타,,Egyéb,その他,Andere,Прочее
 TIME_SPEED_AFFECTS_PITCH,Time speed affects music,,,时间速度会影响音乐,Zeitgeschwindigkeit beinflusst die Musik,La velocidad del juego afecta la música,,,Idősebesség hat a zenére,時間軸が音楽に与える影響,Tijdsnelheid beïnvloedt de muziek.,Скорость времени влияет на музыку
 TIME_SPEED_AFFECTS_PITCH_DESC,"In universes with a time speed different to 1, the music speed and pitch will also be affected. Turn this off if you don't like that feature.",,,在一个宇宙中，如时间被加速了，那么背景音乐也会加速，并且音高也会被影响，如果你不喜欢这个功能那就取消勾选这个选项,Die Geschwindigkeit und Tonhöhe der Musik wird durch die Zeitgeschwindikeit des Universums beinflusst. Schalte das aus wenn es dir nicht gefällt.,"En universos con una velocidad diferente a 1, la velocidad de la música y el tono también serán afectados. Desactiva esto si no te gusta esta función.",,,"Ha egy univerzumban az idő sebessége 1-től külonböző, akkor megváltozik a zene sebessége és magassága. Kapcsold ezt ki, ha ez nem tetszene.",時間速度が1と異なる宇宙では、音楽の速度とピッチも影響を受けます。その機能が嫌な場合は、これをオフにします。,"In universums met een tijdsnelheid verschillend van 1 zal de snelheid en toonhoogte van de muziek ook aangepast worden. Als je dat niet wil, kan je deze optie uitschakelen.",
 ENABLE_SHADERS,Enable shaders,,,启用着色效果,Shader aktivieren,Activa los shaders,,,Shaderek bekapcsolása,シェーダーを有効にする,Shaders inschakelen,Включить шейдеры
@@ -1395,11 +1395,11 @@ FIND_AURORA_CAVE,Find a cave illuminated by auroras,,,发现一个被极光笼�
 FIND_VOLCANO_CAVE,Find a cave on volcanic ash,,,发现一个火山灰中的洞穴,Finde eine Höhle auf Vulkanasche,,,,Találj egy barlangot vulkáni hamuban.,火山灰の上にある洞窟を探す。,,Найдите пещеру на вулканическом пепле.
 FIND_VOLCANO_AURORA_CAVE,Find a cave on volcanic ash -and- illuminated by auroras!,,,发现一个既被极光笼罩，又在火山灰中的洞穴,Finde eine Höhle auf Vulkanasche -und- unter Polarlichtern!,,,,Találj egy aúrórás barlangot... vulkáni hamuban!,オーロラに照らされた火山灰の上にできた洞窟を探す。,,Найдите пещеру на вулканическом пепле и освещенную сиянием!
 REACH_FLOOR_X_CAVE,Reach floor %s in a cave,,,到达洞穴的第%s层,Erreiche Ebene %s in einer Höhle,,,,Érd el a %s. szintet egy barlangban,洞窟で地下%s階まで到達,,Достичь %s этажа в пещере
-MODS,Mods,,,模组,Mod,,모드,,Modok,MOD,,Моды
-NAME,Name,,,名称,Name,,,,Név,名称,,Название
-VERSION,Version,,,版本,Version,,,,Verzió,バージョン,,Версия
-AUTHOR,Author,,,作者,Author,,,,Szerző,作者,,Автор
-DESCRIPTION,Description,,,描述,Beschreibung,,,,Leírás,概要,,Описание
+MODS,Mods,Mods,,模组,Mod,,모드,,Modok,MOD,,Моды
+NAME,Name,Nom,,名称,Name,,,,Név,名称,,Название
+VERSION,Version,Version,,版本,Version,,,,Verzió,バージョン,,Версия
+AUTHOR,Author,Auteur,,作者,Author,,,,Szerző,作者,,Автор
+DESCRIPTION,Description,Description,,描述,Beschreibung,,,,Leírás,概要,,Описание
 ALUMINIUM_DESC,,,,有延展性的轻金属，应用极为广泛,Ein schwer zugängliches Metall das Stahl übertrifft.,,,,,地殻に含まれる量は鉄よりも多い,,
 SILVER_DESC,,,,导热、导电性能很好的贵金属,Eine kostspielige Lotlegierungen.,,,,,金よりも値段が高い時期もあった,,
 GOLD_DESC,,,,展性最好的贵金属,Weich und schön anzusehen.,,,,Mindenki kedvenc nemesféme.,金属の中で最も薄く延ばすことができる,,
@@ -1580,4 +1580,6 @@ CONVERT_TO_GS2,Convert a galaxy into a gigastructure,,,将星系衍化成超巨�
 PROBE_POINT_MORE_INFO,This number is then multiplied by another number that depends on the properties of the probe's galaxy of origin.,,,然后将该数字乘以另一个数字，该数字取决于探测器的起源星系的特性。,Dieser wert wird muiltipliziert basierend auf den eigenschaften der Heimatgalaxie der Probe,,,,,,,
 CONTINUE_X,Continue %s,Continuer %s,,继续 %s,%s fortsetzen,,%s 이어하기,,,,,
 TF_CONFIRM,This planet is bookmarked. Terraform anyway? It will be removed from bookmarks.,,,,Der Planet ist als Favorit markiert. Trotzdem Terraformen ? Dieser wird dann aus den Favoriten entfernt.,,,,,,,
+MAX_FPS,Max FPS,FPS max,,,,,,,,,,
+YOU_HAVE,You have:,,,,,,,,,,,
 MAX_FPS,Max FPS,FPS max,,,,,,,,,,

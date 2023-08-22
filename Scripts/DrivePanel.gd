@@ -37,26 +37,31 @@ func refresh():
 		match meta:
 			"cellulose":
 				$Control/TextureRect.texture = cellulose_texture
+				$Control/TextureRect3.texture = cellulose_texture
 				energy = 2500
 				unit = "kg"
 				type = "mats"
 			"coal":
 				$Control/TextureRect.texture = coal_texture
+				$Control/TextureRect3.texture = coal_texture
 				energy = 400
 				unit = "kg"
 				type = "mats"
 			"Ne":
 				$Control/TextureRect.texture = neon_texture
+				$Control/TextureRect3.texture = neon_texture
 				energy = 60000
 				unit = "mol"
 				type = "atoms"
 			"Xe":
 				$Control/TextureRect.texture = xenon_texture
+				$Control/TextureRect3.texture = xenon_texture
 				energy = 10000000
 				unit = "mol"
 				type = "atoms"
 		$Control/HSlider.max_value = game[type][meta]
-		$Control/HSlider.value = $Control/HSlider.max_value
+		$Control/HSlider.value = 0
+		_on_h_slider_value_changed($Control/HSlider.value)
 
 func use_drive():
 	if game.ships_travel_view == "-":
@@ -65,10 +70,14 @@ func use_drive():
 		game.ships_travel_length -= ships_time_reduction
 		game.ships_travel_cost += cost * energy
 		game[type][meta] -= cost
+		set_process(true)
+		game.ships_travel_drive_available_time = Time.get_unix_time_from_system() + 60 * pow(2, game.ships_travel_drives_used)
+		game.ships_travel_drives_used += 1
 		game.popup(tr("DRIVE_SUCCESSFULLY_ACTIVATED"), 1.5)
-	refresh_h_slider()
+	#refresh_h_slider()
+	_on_h_slider_value_changed($Control/HSlider.value)
 	$Control/HSlider.max_value = game[type][meta]
-	$Control/HSlider.set_value_no_signal($Control/HSlider.max_value)
+	#$Control/HSlider.set_value_no_signal(0)
 
 func _on_ChemicalDrive_pressed():
 	op.clear()
@@ -102,10 +111,21 @@ func _on_h_slider_value_changed(value):
 	ships_time_remaining = game.ships_travel_length - (Time.get_unix_time_from_system() - game.ships_travel_start_date)
 	if ships_time_remaining < 0:
 		ships_time_remaining = 0
+	$Control/Button.disabled = game.ships_travel_drive_available_time > Time.get_unix_time_from_system()
+	if not is_processing():
+		$Control/Cooldown.text = Helper.time_to_str(60 * pow(2, game.ships_travel_drives_used))
 	cost = $Control/HSlider.value
 	ships_time_reduction = ships_time_remaining - ships_time_remaining * (game.ships_travel_cost / (game.ships_travel_cost + cost * energy))
 	$Control/Label.text = "%s %s" % [Helper.format_num(cost, true), unit]
+	$Control/RsrcOwned.text = "%s %s" % [Helper.format_num(game[type][meta], true), unit]
 	$Control/Label2.text = Helper.time_to_str(ships_time_reduction)
+
+func _process(delta):
+	$Control/Cooldown.text = Helper.time_to_str(game.ships_travel_drive_available_time - Time.get_unix_time_from_system())
+	if Time.get_unix_time_from_system() > game.ships_travel_drive_available_time:
+		set_process(false)
+		$Control/Button.disabled = false
+		$Control/Cooldown.text = Helper.time_to_str(60 * pow(2, game.ships_travel_drives_used))
 
 func refresh_h_slider():
 	if meta:

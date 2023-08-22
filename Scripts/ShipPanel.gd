@@ -28,7 +28,11 @@ func refresh():
 		$SpaceportTimer.stop()
 		spaceport_tier = -1
 		$Panel/TravelETA["theme_override_colors/font_color"] = Color.WHITE
+		$Panel/DriveButton.modulate.a = 1.0
+		$Panel/DriveButton.disabled = false
 	else:
+		$Panel/DriveButton.disabled = true
+		$Panel/DriveButton.modulate.a = 0.3
 		if game.autocollect.has("ship_XP"):
 			$Panel/TravelETA["theme_override_colors/font_color"] = Color.GREEN_YELLOW
 			$Panel/TravelETA.text = tr("SHIPS_BENEFITING_FROM_SPACEPORT")
@@ -109,7 +113,8 @@ func _on_GoToShips_pressed():
 	_on_close_button_pressed()
 
 func _on_DriveButton_mouse_entered():
-	game.show_tooltip(tr("OPEN_DRIVE_MENU"))
+	if not $Panel/DriveButton.disabled:
+		game.show_tooltip(tr("OPEN_DRIVE_MENU"))
 
 func _on_BackButton_mouse_entered():
 	game.show_tooltip(tr("BACK"))
