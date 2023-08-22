@@ -19,6 +19,7 @@ private:
 	double galaxyDifficulty;
 	double maxOuterRadius;
 	double getBiggestStarSize(const unsigned int id);
+	bool sortShapes(Dictionary a, Dictionary b);
 	double calculateSystemDifficulty(Vector2 pos, Array stars);
 	unsigned int generateSpiralGalaxyPart(const unsigned int nInit, const double r, const double th, const bool center = false);
 	Array newSystemPositions;
@@ -31,8 +32,8 @@ public:
     GalaxyGenerator();
     ~GalaxyGenerator();
 	
-	void generateClusterGalaxy();
 	Array generateSpiralGalaxy();
+	Array generateClusterGalaxy();
 	void setGalaxyProperties(unsigned int _c_g_g, int _sysN, double _difficulty);
 	void setSystemData(Array _systemData);
 };

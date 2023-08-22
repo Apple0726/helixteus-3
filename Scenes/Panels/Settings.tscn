@@ -101,6 +101,7 @@ help_text = "TIME_SPEED_AFFECTS_PITCH_DESC"
 align = 2
 
 [node name="GRAPHICS" type="TabBar" parent="TabContainer"]
+visible = false
 layout_mode = 2
 
 [node name="Vsync" type="CheckButton" parent="TabContainer/GRAPHICS"]

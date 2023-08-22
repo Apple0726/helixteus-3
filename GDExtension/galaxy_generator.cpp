@@ -8,6 +8,7 @@ void GalaxyGenerator::_bind_methods() {
     ClassDB::bind_method(D_METHOD("set_system_data", "system_data"), &GalaxyGenerator::setSystemData);
     ClassDB::bind_method(D_METHOD("set_galaxy_properties", "c_g_g", "sys_n", "difficulty"), &GalaxyGenerator::setGalaxyProperties);
     ClassDB::bind_method(D_METHOD("generate_spiral_galaxy"), &GalaxyGenerator::generateSpiralGalaxy);
+    ClassDB::bind_method(D_METHOD("generate_cluster_galaxy"), &GalaxyGenerator::generateClusterGalaxy);
 }
 
 GalaxyGenerator::GalaxyGenerator() {
@@ -44,8 +45,125 @@ void GalaxyGenerator::setGalaxyProperties(unsigned int _c_g_g, int _sysN, double
 	newSystemDifficulties.resize(sysN);
 }
 
-void GalaxyGenerator::generateClusterGalaxy() {
-	
+bool GalaxyGenerator::sortShapes (Dictionary a, Dictionary b) {
+	if (a["outer_radius"] < b["outer_radius"]) return true;
+	return false;
+}
+
+Array GalaxyGenerator::generateClusterGalaxy() {
+	double minDistanceFromCenter = 0.0;
+	int gcRemaining = int(UtilityFunctions::pow(sysN, 0.8) / 250.0);
+	int gcStarsRemaining = 0;
+	int gcOffset = 0;
+	Vector2 gcCenter = Vector2(0, 0);
+	double maxDistanceFromCenter = 0;
+	Array gcCircles;
+	for (unsigned int i = 0; i < sysN; i++) {
+		bool startingSystem = c_g_g == 0 && i == 0;
+		int N = objShapes.size();
+		// Whether to move on to a new "ring" for collision detection
+		if (N >= sysN / 8) {
+			objShapes.sort_custom(Callable(this,"sortShapes"));
+			objShapes = objShapes.slice(int((N - 1) * 0.9), N - 1);
+			minDistanceFromCenter = objShapes[0]["outer_radius"];
+			// 								V this condition makes sure globular clusters don't spawn near the center
+			if (gcRemaining > 0 && gcOffset > 1 + int(UtilityFunctions::pow(sysN, 0.1))) {
+				gcRemaining -= 1;
+				gcStarsRemaining = int(UtilityFunctions::pow(sysN, 0.5) * UtilityFunctions::randf_range(1, 3));
+				gcCenter = Vector2::from_angle(UtilityFunctions::randf_range(0, 2 * PI)) * minDistanceFromCenter;
+				maxDistanceFromCenter = 100;
+			}
+			gcOffset += 1;
+		}
+		double biggestStarSize = getBiggestStarSize(i);
+		// Collision detection
+		double radius = 320 * UtilityFunctions::pow(biggestStarSize / 100.0, 0.35);
+		Dictionary circle;
+		Vector2 pos;
+		bool colliding = false;
+		if (gcStarsRemaining == 0) {
+			gcCenter = Vector2(0, 0);
+			if (minDistanceFromCenter == 0) {
+				maxDistanceFromCenter = 3000;
+			} else {
+				maxDistanceFromCenter = minDistanceFromCenter * UtilityFunctions::pow(sysN, 0.04) * 1.1;
+			}
+		}
+		double outer_radius;
+		int radiusIncreaseCounter = 0;
+		do {
+			double distanceFromCenter = UtilityFunctions::randf_range(0, maxDistanceFromCenter);
+			if (gcStarsRemaining == 0) {
+				distanceFromCenter = UtilityFunctions::randf_range(minDistanceFromCenter + radius, maxDistanceFromCenter);
+			}
+			outer_radius = radius + distanceFromCenter;
+			pos = Vector2::from_angle(UtilityFunctions::randf_range(0, 2 * PI)) * distanceFromCenter + gcCenter;
+			circle["pos"] = pos;
+			circle["radius"] = radius;
+			circle["outer_radius"] = outer_radius;
+			for (unsigned int j = 0; j < objShapes.size(); j++) {
+				Dictionary starShape = objShapes[j];
+				if (pos.distance_to(starShape["pos"]) < radius + (double)starShape["radius"]) {
+					colliding = true;
+					radiusIncreaseCounter += 1;
+					if (radiusIncreaseCounter > 5) {
+						maxDistanceFromCenter *= 1.2;
+						radiusIncreaseCounter = 0;
+					}
+					break;
+				}
+			}
+			if (!colliding) {
+				for (unsigned int j = 0; j < gcCircles.size(); j++) {
+					Dictionary gc_circle = gcCircles[j];
+					if (pos.distance_to(gc_circle["pos"]) < radius + (double)gc_circle["radius"]) {
+						colliding = true;
+						radiusIncreaseCounter += 1;
+						if (radiusIncreaseCounter > 5) {
+							maxDistanceFromCenter *= 1.2;
+							radiusIncreaseCounter = 0;
+						}
+						break;
+					}
+				}
+			}
+		} while (colliding);
+		maxOuterRadius = UtilityFunctions::max(outer_radius, maxOuterRadius);
+		if (gcStarsRemaining > 0) {
+			gcStarsRemaining -= 1;
+			gcCircles.append(circle);
+			if (gcStarsRemaining == 0) {
+				// Convert globular cluster to a single huge circle for collision detection purposes
+				gcCircles.sort_custom(Callable(this,"sortShapes"));
+				double big_radius = gcCircles[-1]["outer_radius"];
+				Dictionary shape;
+				shape["pos"] = gcCenter;
+				shape["radius"] = big_radius;
+				shape["outer_radius"] = gcCenter.length() + big_radius;
+				gcCircles.resize(1);
+				gcCircles[0] = shape;
+			}
+		} else if (!startingSystem) {
+			objShapes.append(circle);
+		}
+		Dictionary s_i = systemData[i];
+		if (startingSystem) {
+			radius = 320 * UtilityFunctions::pow(1 / 100.0, 0.3);
+			Dictionary shape;
+			Vector2 s_i_pos = s_i["pos"];
+			shape["pos"] = s_i_pos;
+			shape["radius"] = radius;
+			shape["outer_radius"] = s_i_pos.length() + radius;
+			objShapes.append(shape);
+		} else {
+			newSystemPositions[i] = pos;
+			newSystemDifficulties[i] = calculateSystemDifficulty(pos, s_i["stars"]);
+		}
+	}
+	Array res;
+	res.append(newSystemPositions);
+	res.append(newSystemDifficulties);
+	return res;
 }
 
 Array GalaxyGenerator::generateSpiralGalaxy() {

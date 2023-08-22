@@ -9,6 +9,7 @@ export_presets.cfg
 *.png~
 *.kra
 *.kra~
+*.obj
 addons/
 godot-cpp/
 .sconsign.dblite
@@ -18,3 +19,6 @@ godot-cpp/
 data_*/
 
 bin/libcppmodule.linux.template_debug.x86_64.so
+bin/cppmodule.windows.template_debug.x86_64.dll
+bin/cppmodule.windows.template_debug.x86_64.exp
+bin/cppmodule.windows.template_debug.x86_64.lib
