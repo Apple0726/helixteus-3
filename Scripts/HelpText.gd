@@ -12,6 +12,9 @@ var game
 @export var align:int
 
 func _ready():
+	refresh()
+
+func refresh():
 	if not Engine.is_editor_hint():
 		game = get_node("/root/Game")
 	if align == 0:
@@ -20,8 +23,7 @@ func _ready():
 		text = "[center]%s [img]Graphics/Icons/help.png[/img][/center]" % tr(label_text)
 	elif align == 2:
 		text = "[right]%s [img]Graphics/Icons/help.png[/img][/right]" % tr(label_text)
-
-
+	
 func _on_RichTextLabel_mouse_entered():
 	var _help_text = help_text
 	if translate_help:
@@ -37,3 +39,7 @@ func _on_RichTextLabel_mouse_exited():
 		game.hide_adv_tooltip()
 	else:
 		game.hide_tooltip()
+
+
+func _on_visibility_changed():
+	refresh()

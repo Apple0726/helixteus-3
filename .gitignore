@@ -10,7 +10,11 @@ export_presets.cfg
 *.kra
 *.kra~
 addons/
+godot-cpp/
+.sconsign.dblite
 
 # Mono-specific ignores
 .mono/
 data_*/
+
+bin/libcppmodule.linux.template_debug.x86_64.so
