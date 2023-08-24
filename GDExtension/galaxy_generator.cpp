@@ -9,6 +9,7 @@ void GalaxyGenerator::_bind_methods() {
     ClassDB::bind_method(D_METHOD("set_galaxy_properties", "c_g_g", "sys_n", "difficulty"), &GalaxyGenerator::setGalaxyProperties);
     ClassDB::bind_method(D_METHOD("generate_spiral_galaxy"), &GalaxyGenerator::generateSpiralGalaxy);
     ClassDB::bind_method(D_METHOD("generate_cluster_galaxy"), &GalaxyGenerator::generateClusterGalaxy);
+    ClassDB::bind_method(D_METHOD("sortShapes"), &GalaxyGenerator::sortShapes);
 }
 
 GalaxyGenerator::GalaxyGenerator() {
@@ -20,12 +21,15 @@ GalaxyGenerator::GalaxyGenerator() {
 GalaxyGenerator::~GalaxyGenerator() {
     // Add your cleanup here.
 }
+void GalaxyGenerator::_ready() {
+	
+}
 
 double GalaxyGenerator::getBiggestStarSize(const unsigned int id) {
 	Array stars = systemData[id].get("stars");
-	double starSize = stars[0]["size"];
+	double starSize = stars[0].get("size");
 	for (unsigned int i = 1; i < stars.size(); i++) {
-		double currentStarSize = stars[i]["size"];
+		double currentStarSize = stars[i].get("size");
 		if (currentStarSize > starSize) {
 			starSize = currentStarSize;
 		}
@@ -65,7 +69,7 @@ Array GalaxyGenerator::generateClusterGalaxy() {
 		if (N >= sysN / 8) {
 			objShapes.sort_custom(Callable(this,"sortShapes"));
 			objShapes = objShapes.slice(int((N - 1) * 0.9), N - 1);
-			minDistanceFromCenter = objShapes[0]["outer_radius"];
+			minDistanceFromCenter = objShapes[0].get("outer_radius");
 			// 								V this condition makes sure globular clusters don't spawn near the center
 			if (gcRemaining > 0 && gcOffset > 1 + int(UtilityFunctions::pow(sysN, 0.1))) {
 				gcRemaining -= 1;
@@ -80,10 +84,10 @@ Array GalaxyGenerator::generateClusterGalaxy() {
 		double radius = 320 * UtilityFunctions::pow(biggestStarSize / 100.0, 0.35);
 		Dictionary circle;
 		Vector2 pos;
-		bool colliding = false;
+		bool colliding = true;
 		if (gcStarsRemaining == 0) {
 			gcCenter = Vector2(0, 0);
-			if (minDistanceFromCenter == 0) {
+			if (minDistanceFromCenter == 0.0) {
 				maxDistanceFromCenter = 3000;
 			} else {
 				maxDistanceFromCenter = minDistanceFromCenter * UtilityFunctions::pow(sysN, 0.04) * 1.1;
@@ -91,7 +95,8 @@ Array GalaxyGenerator::generateClusterGalaxy() {
 		}
 		double outer_radius;
 		int radiusIncreaseCounter = 0;
-		do {
+		while (colliding) {
+			colliding = false;
 			double distanceFromCenter = UtilityFunctions::randf_range(0, maxDistanceFromCenter);
 			if (gcStarsRemaining == 0) {
 				distanceFromCenter = UtilityFunctions::randf_range(minDistanceFromCenter + radius, maxDistanceFromCenter);
@@ -127,7 +132,7 @@ Array GalaxyGenerator::generateClusterGalaxy() {
 					}
 				}
 			}
-		} while (colliding);
+		}
 		maxOuterRadius = UtilityFunctions::max(outer_radius, maxOuterRadius);
 		if (gcStarsRemaining > 0) {
 			gcStarsRemaining -= 1;
@@ -135,13 +140,14 @@ Array GalaxyGenerator::generateClusterGalaxy() {
 			if (gcStarsRemaining == 0) {
 				// Convert globular cluster to a single huge circle for collision detection purposes
 				gcCircles.sort_custom(Callable(this,"sortShapes"));
-				double big_radius = gcCircles[-1]["outer_radius"];
+				double big_radius = gcCircles[gcCircles.size()-1].get("outer_radius");
 				Dictionary shape;
 				shape["pos"] = gcCenter;
 				shape["radius"] = big_radius;
 				shape["outer_radius"] = gcCenter.length() + big_radius;
-				gcCircles.resize(1);
-				gcCircles[0] = shape;
+				objShapes.clear();
+				objShapes.append(shape);
+				gcCircles.clear();
 			}
 		} else if (!startingSystem) {
 			objShapes.append(circle);
@@ -154,7 +160,9 @@ Array GalaxyGenerator::generateClusterGalaxy() {
 			shape["pos"] = s_i_pos;
 			shape["radius"] = radius;
 			shape["outer_radius"] = s_i_pos.length() + radius;
+			newSystemPositions[i] = s_i_pos;
 			objShapes.append(shape);
+			newSystemDifficulties[i] = s_i["diff"];
 		} else {
 			newSystemPositions[i] = pos;
 			newSystemDifficulties[i] = calculateSystemDifficulty(pos, s_i["stars"]);
@@ -193,9 +201,10 @@ Array GalaxyGenerator::generateSpiralGalaxy() {
 		r = UtilityFunctions::randf_range(0, maxOuterRadius);
 		th = UtilityFunctions::randf_range(0, 2 * PI);
 		Vector2 pos = Vector2::from_angle(th) * r;
-		bool coll = false;
+		bool coll = true;
 		int attempts = 0;
-		do {
+		while (coll) {
+			coll = false;
 			Array objShapes3 = objShapes + objShapes2;
     		for (unsigned int j = 0; j < objShapes3.size(); j++) {
     			Dictionary circ = objShapes3[j];
@@ -212,7 +221,7 @@ Array GalaxyGenerator::generateSpiralGalaxy() {
     			maxOuterRadius *= 1.1;
     			attempts = 0;
     		}
-		} while (coll);
+		}
 		s_i["pos"] = pos;
 		s_i["diff"] = calculateSystemDifficulty(pos, s_i["stars"]);
 		Dictionary dict;
@@ -270,7 +279,7 @@ unsigned int GalaxyGenerator::generateSpiralGalaxyPart(const unsigned int nInit,
     		dict["pos"] = pos;
     		dict["radius"] = radius;
     		if (startingSystem) {
-    			dict["pos"] = systemData[0]["pos"];
+    			dict["pos"] = systemData[0].get("pos");
     		} else {
     			newSystemPositions[i] = pos;
     			Dictionary s_i = systemData[i];
@@ -290,7 +299,7 @@ unsigned int GalaxyGenerator::generateSpiralGalaxyPart(const unsigned int nInit,
 double GalaxyGenerator::calculateSystemDifficulty(Vector2 pos, Array stars) {
 	double combinedStarMass = 0.0;
 	for (unsigned int i = 0; i < stars.size(); i++) {
-		combinedStarMass += stars[i]["mass"];
+		combinedStarMass += (double)stars[i].get("mass");
 	}
 	if (c_g_g == 0) {
 		return (1.0 + pos.distance_to(systemData[0].get("pos")) * UtilityFunctions::pow(combinedStarMass, 0.5) / 5000) * galaxyDifficulty;

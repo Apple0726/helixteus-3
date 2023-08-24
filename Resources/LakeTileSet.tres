@@ -1,11 +1,11 @@
 [gd_resource type="TileSet" load_steps=13 format=3 uid="uid://c7dmux1vdaraf"]
 
-[ext_resource type="Texture2D" uid="uid://ca2avrnobv0pt" path="res://Graphics/Tiles/SuperfluidSpritesheet.png" id="1"]
-[ext_resource type="Texture2D" uid="uid://cpunfb57165aw" path="res://Graphics/Tiles/IceSpritesheet.png" id="2"]
-[ext_resource type="Texture2D" uid="uid://ces26veu4yxlj" path="res://Graphics/Tiles/WaterSpritesheet.png" id="3"]
-[ext_resource type="Texture2D" uid="uid://cg7m1ahvl5k4q" path="res://Graphics/Tiles/SoilSpritesheet.png" id="4_vd5uc"]
-[ext_resource type="Texture2D" uid="uid://c0k0ffsld0x6d" path="res://Graphics/Tiles/AshSpritesheet.png" id="5_q8vfm"]
-[ext_resource type="Texture2D" uid="uid://b25hl0u4i1qnl" path="res://Graphics/Tiles/Lava.png" id="6_2o06v"]
+[ext_resource type="Texture2D" uid="uid://uqlih58qlxf2" path="res://Graphics/Tiles/SuperfluidSpritesheet.png" id="1"]
+[ext_resource type="Texture2D" uid="uid://bpekoxkks0670" path="res://Graphics/Tiles/IceSpritesheet.png" id="2"]
+[ext_resource type="Texture2D" uid="uid://bvilu0ugs35rd" path="res://Graphics/Tiles/WaterSpritesheet.png" id="3"]
+[ext_resource type="Texture2D" uid="uid://btauov705ftsu" path="res://Graphics/Tiles/SoilSpritesheet.png" id="4_vd5uc"]
+[ext_resource type="Texture2D" uid="uid://lt1q3y5f6ury" path="res://Graphics/Tiles/AshSpritesheet.png" id="5_q8vfm"]
+[ext_resource type="Texture2D" uid="uid://b5haa34ivsnbp" path="res://Graphics/Tiles/Lava.png" id="6_2o06v"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_f2gm2"]
 resource_name = "solid"

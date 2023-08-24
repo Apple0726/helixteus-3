@@ -32,6 +32,7 @@ public:
     GalaxyGenerator();
     ~GalaxyGenerator();
 	
+	void _ready() override;
 	Array generateSpiralGalaxy();
 	Array generateClusterGalaxy();
 	void setGalaxyProperties(unsigned int _c_g_g, int _sysN, double _difficulty);

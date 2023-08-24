@@ -1,10 +1,10 @@
 [gd_resource type="TileSet" load_steps=11 format=3 uid="uid://dfiuyho24np11"]
 
-[ext_resource type="Texture2D" uid="uid://lmgayejbd0qb" path="res://Graphics/Tiles/cave.png" id="1"]
-[ext_resource type="Texture2D" uid="uid://bw8r1vo2sid1r" path="res://Graphics/Tiles/Volcano.png" id="4_ro4qv"]
-[ext_resource type="Texture2D" uid="uid://c8be8eqbsd8hd" path="res://Graphics/Tiles/Volcano2.png" id="5_yag5r"]
-[ext_resource type="Texture2D" uid="uid://c3gu3h0ul2n3r" path="res://Graphics/Tiles/abandoned_ship.png" id="6"]
-[ext_resource type="Texture2D" uid="uid://dkkks4s4fsbwe" path="res://Graphics/Tiles/Hole.png" id="7"]
+[ext_resource type="Texture2D" uid="uid://co48j6yu0ldwx" path="res://Graphics/Tiles/cave.png" id="1"]
+[ext_resource type="Texture2D" uid="uid://c2b7tu818yf8j" path="res://Graphics/Tiles/Volcano.png" id="4_ro4qv"]
+[ext_resource type="Texture2D" uid="uid://ctqxmonoyj5s5" path="res://Graphics/Tiles/Volcano2.png" id="5_yag5r"]
+[ext_resource type="Texture2D" uid="uid://by5fyvkbqn6vy" path="res://Graphics/Tiles/abandoned_ship.png" id="6"]
+[ext_resource type="Texture2D" uid="uid://cpkit1k4g8e3t" path="res://Graphics/Tiles/Hole.png" id="7"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_r3f7a"]
 texture = ExtResource("1")

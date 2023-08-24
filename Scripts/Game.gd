@@ -1874,20 +1874,47 @@ func add_galaxy():
 	if not galaxy_data[c_g].has("discovered"):
 		if not galaxy_data[c_g].has("name"):
 			galaxy_data[c_g].name = "%s %s" % [tr("GALAXY"), c_g]
-		start_system_generation()
+#		start_system_generation()
+		await start_system_generation()
 	add_obj("galaxy")
 	HUD.switch_btn.texture_normal = preload("res://Graphics/Buttons/ClusterView.png")
 	if len(ship_data) == 2 and u_i.lv >= 40:
 		popup_window(tr("WANDERING_SHIP_DESC"), tr("WANDERING_SHIP"))
 		get_3rd_ship()
 
+#func start_system_generation():
+#	reset_collisions()
+#	gc_remaining = floor(pow(galaxy_data[c_g]["system_num"], 0.8) / 250.0)
+#	if c_g_g != 0:
+#		system_data.clear()
+#	generate_systems(c_g)
+#	var N:int = galaxy_data[c_g].system_num
+#	var galaxy_generator = GalaxyGenerator.new()
+#	galaxy_generator.set_system_data(system_data)
+#	galaxy_generator.set_galaxy_properties(c_g_g, N, galaxy_data[c_g].diff)
+#	var res:Array = []
+#	if galaxy_data[c_g].type == 6:
+#		res = galaxy_generator.generate_spiral_galaxy()
+#	else:
+#		res = galaxy_generator.generate_cluster_galaxy()
+#	var system_positions = res[0]
+#	var system_difficulties = res[1]
+#	for i in N:
+#		system_data[i].pos = system_positions[i]
+#		system_data[i].diff = system_difficulties[i]
+#	s_num += N
+#	Helper.save_obj("Galaxies", c_g_g, system_data)
+#	Helper.save_obj("Clusters", c_c, galaxy_data)
+#	galaxy_generator.queue_free()
+	
 func start_system_generation():
+	add_loading()
 	reset_collisions()
 	gc_remaining = floor(pow(galaxy_data[c_g]["system_num"], 0.8) / 250.0)
 	if c_g_g != 0:
 		system_data.clear()
-	generate_system_part()
-	
+	await generate_system_part()
+
 func add_system():
 	if obj_exists("Galaxies", c_g_g):
 		system_data = open_obj("Galaxies", c_g_g)
@@ -1985,7 +2012,7 @@ func reset_collisions():
 	stars_failed.clear()
 
 func sort_shapes (a, b):
-	if a["outer_radius"] < b["outer_radius"]:
+	if a[2] < b[2]:
 		return true
 	return false
 
@@ -2078,7 +2105,7 @@ func generate_galaxies(id:int):
 		if N >= total_gal_num / 6:
 			obj_shapes.sort_custom(Callable(self,"sort_shapes"))
 			obj_shapes = obj_shapes.slice(int((N - 1) * 0.7), N - 1)
-			min_dist_from_center = obj_shapes[0]["outer_radius"]
+			min_dist_from_center = obj_shapes[0][2]
 		
 		var radius = 200 * pow(g_i["system_num"] / GALAXY_SCALE_DIV, 0.5)
 		var circle
@@ -2093,9 +2120,9 @@ func generate_galaxies(id:int):
 			var dist_from_center = randf_range(min_dist_from_center + radius, max_dist_from_center)
 			outer_radius = radius + dist_from_center
 			pos = Vector2.from_angle(randf_range(0, 2 * PI)) * dist_from_center
-			circle = {"pos":pos, "radius":radius, "outer_radius":outer_radius}
+			circle = [pos, radius, outer_radius]
 			for star_shape in obj_shapes:
-				if pos.distance_to(star_shape["pos"]) < radius + star_shape["radius"]:
+				if pos.distance_to(star_shape[0]) < radius + star_shape[1]:
 					colliding = true
 					max_dist_from_center *= 1.2
 					break
@@ -2111,7 +2138,7 @@ func generate_galaxies(id:int):
 			show.g_bk_button = true
 			g_i = galaxy_data[0]
 			radius = 200 * pow(g_i["system_num"] / GALAXY_SCALE_DIV, 0.5)
-			obj_shapes.append({"pos":g_i["pos"], "radius":radius, "outer_radius":g_i["pos"].length() + radius})
+			obj_shapes.append([g_i["pos"], radius, g_i["pos"].length() + radius])
 			u_i.cluster_data[id]["galaxies"].append({"global":0, "local":0})
 		else:
 			if id == 0:#if the galaxies are in starting cluster
@@ -2130,15 +2157,66 @@ func generate_galaxies(id:int):
 func update_loading_bar(curr:float, total:float, txt:String):
 	$Loading.update_bar(curr / total, txt % [curr, total])
 	#await get_tree().create_timer(0.0000000000001).timeout  #Progress Bar doesnt update without this
-	
+
 func generate_system_part():
 	generate_systems(c_g)
 	var N:int = galaxy_data[c_g].system_num
-	var galaxy_generator = GalaxyGenerator.new()
-	galaxy_generator.set_system_data(system_data)
-	galaxy_generator.set_galaxy_properties(c_g_g, N, galaxy_data[c_g].diff)
 	if galaxy_data[c_g].type == 6:
-		var res = galaxy_generator.generate_spiral_galaxy()
+		var r:float = N / 20.0
+		var init_th:float = randf_range(0, PI)
+		var th:float = init_th
+		update_loading_bar(0, N, tr("GENERATING_GALAXY"))
+		#await get_tree().create_timer(5).timeout
+		var N_init:int = systems_collision_detection2(c_g, 0, 0, 0, true)#Generate stars at the center
+		var N_progress:int = N_init
+		while N_progress < (N + N_init) / 2.0:#Arm #1
+			var progress:float = inverse_lerp(N_init, (N + N_init) / 2.0, N_progress)
+			N_progress = systems_collision_detection2(c_g, N_progress, r, th)
+			th += 0.4 - lerp(0.0, 0.33, progress)
+			r += (1.0 - lerp(0.0, 0.8, progress)) * 1280 * lerp(1.3, 4.0, inverse_lerp(5000, 20000, N))
+			update_loading_bar(N_progress - len(stars_failed), N, tr("GENERATING_GALAXY"))
+			await get_tree().create_timer(0.0000000000001).timeout
+		th = init_th + PI
+		r = N / 20.0
+		while N_progress < N:#Arm #2
+			var progress:float = inverse_lerp((N + N_init) / 2.0, N, N_progress)
+			N_progress = systems_collision_detection2(c_g, N_progress, r, th)
+			th += 0.4 - lerp(0.0, 0.33, progress)
+			r += (1.0 - lerp(0.0, 0.8, progress)) * 1280 * lerp(1.3, 4.0, inverse_lerp(5000, 20000, N))
+			update_loading_bar(N_progress - len(stars_failed), N, tr("GENERATING_GALAXY"))
+			await get_tree().create_timer(0.0000000000001).timeout
+		for i in len(stars_failed):#Put stars that failed to pass the collision tests above
+			var attempts:int = 0
+			var s_i = system_data[stars_failed[i]]
+			var biggest_star_size = get_biggest_star_size(stars_failed[i])
+			#Collision detection
+			var radius = 320 * pow(biggest_star_size / SYSTEM_SCALE_DIV, 0.35)
+			r = randf_range(0, max_outer_radius)
+			th = randf_range(0, 2 * PI)
+			var pos:Vector2 = Vector2.from_angle(th) * r
+			var coll:bool = true
+			while coll:
+				coll = false
+				for circ in obj_shapes + obj_shapes2:
+					if pos.distance_to(circ[0]) < circ[1] + radius:
+						coll = true
+						r = randf_range(0, max_outer_radius)
+						th = randf_range(0, 2 * PI)
+						pos = Vector2.from_angle(th) * r
+						break
+				attempts += 1
+				if attempts > 20:
+					max_outer_radius *= 1.1
+					attempts = 0
+			s_i.pos = pos
+			s_i.diff = get_sys_diff(pos, c_g, s_i)
+			obj_shapes2.append([pos, radius])
+			if i % 100 == 0:
+				update_loading_bar(N - len(stars_failed) + i, N, tr("GENERATING_GALAXY"))
+				await get_tree().create_timer(0.0000000000001).timeout
+		if c_g != 0:
+			var view_zoom = 500.0 / max_outer_radius
+			galaxy_data[c_g]["view"] = {"pos":Vector2(640, 360), "zoom":view_zoom}
 	else:
 		for i in range(0, N, 500):
 			systems_collision_detection(c_g, i)
@@ -2147,11 +2225,58 @@ func generate_system_part():
 	s_num += galaxy_data[c_g].system_num
 	Helper.save_obj("Galaxies", c_g_g, system_data)
 	Helper.save_obj("Clusters", c_c, galaxy_data)
-	galaxy_generator.queue_free()
+	remove_child($Loading)
+
+func systems_collision_detection2(id:int, N_init:int, r, th, center:bool = false):
+	var N:int = galaxy_data[id].system_num
+	var circ_size = pow(N * 1.5, 0.95)# + N_init
+	var N_fin:int = min(N_init + lerp(100, 400, inverse_lerp(5000, 20000, N)), N)
+	if center:
+		N_fin += circ_size / 20.0
+	for i in range(N_init, N_fin):
+		var s_i = system_data[i]
+		var starting_system = c_g_g == 0 and i == 0
+		var biggest_star_size = get_biggest_star_size(i)
+		#Collision detection
+		var radius = 320 * pow(biggest_star_size / SYSTEM_SCALE_DIV, 0.35)
+		var r2 = randf_range(0, circ_size)
+		var th2 = randf_range(0, 2 * PI)
+		var pos:Vector2 = Vector2.from_angle(th) * r + Vector2.from_angle(th2) * r2
+		var coll:bool = true
+		var attempts:int = 0
+		var cont:bool = true
+		while coll:
+			coll = false
+			if attempts > 10:
+				coll = false
+				cont = false
+				stars_failed.append(i)
+				break
+			for circ in obj_shapes + obj_shapes2:
+				if pos.distance_to(circ[0]) < circ[1] + radius:
+					coll = true
+					attempts += 1
+					r2 = randf_range(0, circ_size)
+					th2 = randf_range(0, 2 * PI)
+					pos = Vector2.from_angle(th) * r + Vector2.from_angle(th2) * r2
+					break
+		if cont:
+			if pos.length() > max_outer_radius:
+				max_outer_radius = pos.length()
+			if starting_system:
+				obj_shapes2.append([system_data[0].pos, radius])
+			else:
+				s_i.pos = pos
+				s_i.diff = get_sys_diff(pos, id, s_i)
+				obj_shapes2.append([pos, radius])
+	obj_shapes.append([Vector2.from_angle(th) * r, circ_size])
+	obj_shapes2.clear()
+	return N_fin
 
 func systems_collision_detection(id:int, N_init:int):
 	var total_sys_num = galaxy_data[id]["system_num"]
 	var N_fin:int = min(N_init + 500, total_sys_num)
+	#obj_shapes: 0: pos, 1: radius, 2: outer_radius
 	for i in range(N_init, N_fin):
 		var s_i = system_data[i]
 		var starting_system = c_g_g == 0 and i == 0
@@ -2160,7 +2285,7 @@ func systems_collision_detection(id:int, N_init:int):
 		if N >= total_sys_num / 8:
 			obj_shapes.sort_custom(Callable(self,"sort_shapes"))
 			obj_shapes = obj_shapes.slice(int((N - 1) * 0.9), N - 1)
-			min_dist_from_center = obj_shapes[0]["outer_radius"]
+			min_dist_from_center = obj_shapes[0][2]
 			#								V this condition makes sure globular clusters don't spawn near the center
 			if gc_remaining > 0 and gc_offset > 1 + int(pow(total_sys_num, 0.1)):
 				gc_remaining -= 1
@@ -2190,10 +2315,10 @@ func systems_collision_detection(id:int, N_init:int):
 				dist_from_center = randf_range(min_dist_from_center + radius, max_dist_from_center)
 			outer_radius = radius + dist_from_center
 			pos = Vector2.from_angle(randf_range(0, 2 * PI)) * dist_from_center + gc_center
-			circle = {"pos":pos, "radius":radius, "outer_radius":outer_radius}
+			circle = [pos, radius, outer_radius]
 			for star_shape in obj_shapes:
 				#if Geometry.is_point_in_circle(pos, star_shape.pos, radius + star_shape.radius):
-				if pos.distance_to(star_shape["pos"]) < radius + star_shape["radius"]:
+				if pos.distance_to(star_shape[0]) < radius + star_shape[1]:
 					colliding = true
 					radius_increase_counter += 1
 					if radius_increase_counter > 5:
@@ -2203,7 +2328,7 @@ func systems_collision_detection(id:int, N_init:int):
 			if not colliding:
 				for gc_circle in gc_circles:
 					#if Geometry.is_point_in_circle(pos, gc_circle.pos, radius + gc_circle.radius):
-					if pos.distance_to(gc_circle["pos"]) < radius + gc_circle["radius"]:
+					if pos.distance_to(gc_circle[0]) < radius + gc_circle[1]:
 						colliding = true
 						radius_increase_counter += 1
 						if radius_increase_counter > 5:
@@ -2217,15 +2342,15 @@ func systems_collision_detection(id:int, N_init:int):
 			if gc_stars_remaining == 0:
 				#Convert globular cluster to a single huge circle for collision detection purposes
 				gc_circles.sort_custom(Callable(self,"sort_shapes"))
-				var big_radius = gc_circles[-1]["outer_radius"]
-				obj_shapes = [{"pos":gc_center, "radius":big_radius, "outer_radius":gc_center.length() + big_radius}]
+				var big_radius = gc_circles[-1][2]
+				obj_shapes = [[gc_center, big_radius, gc_center.length() + big_radius]]
 				gc_circles = []
 		else:
 			if not starting_system:
 				obj_shapes.append(circle)
 		if starting_system:
 			radius = 320 * pow(1 / SYSTEM_SCALE_DIV, 0.3)
-			obj_shapes.append({"pos":s_i["pos"], "radius":radius, "outer_radius":s_i["pos"].length() + radius})
+			obj_shapes.append([s_i["pos"], radius, s_i["pos"].length() + radius])
 		else:
 			s_i["pos"] = pos
 			s_i.diff = get_sys_diff(pos, id, s_i)
@@ -2419,7 +2544,7 @@ func generate_planets(id:int):#local id
 	var max_star_size = get_max_star_prop(id, "size")
 	var star_size_in_km = max_star_size * e(6.957, 5)
 	var center_star_r_in_pixels:float = star_size_in_pixels(first_star.size) / 2.0
-	var circles:Array = [{"pos":Vector2.ZERO, "radius":center_star_r_in_pixels}]
+	var circles:Array = [[Vector2.ZERO, center_star_r_in_pixels]]
 	var N_stars = len(system_data[id].stars)
 	for i in range(1, N_stars):
 		var colliding = true
@@ -2434,13 +2559,13 @@ func generate_planets(id:int):#local id
 			var th:float = randf_range(0, 2 * PI)
 			pos = Vector2.from_angle(th) * r
 			for circ in circles:
-				if pos.distance_to(circ.pos) < radius_in_pixels + circ.radius:
+				if pos.distance_to(circ[0]) < radius_in_pixels + circ[1]:
 					colliding = true
 					r_offset += 10.0
 					break
 		star.pos = pos
 		star_boundary = max(star_boundary, pos.length() + radius_in_pixels)
-		circles.append({"pos":pos, "radius":radius_in_pixels})
+		circles.append([pos, radius_in_pixels])
 	var planet_num = system_data[id].planet_num
 	var max_distance
 	var j = 0

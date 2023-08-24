@@ -42,7 +42,7 @@ mouse_cursor/tooltip_position_offset=Vector2(5, 5)
 
 [editor_plugins]
 
-enabled=PackedStringArray("res://addons/discord-sdk-gd/plugin.cfg")
+enabled=PackedStringArray()
 
 [global]
 
