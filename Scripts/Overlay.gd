@@ -52,7 +52,7 @@ func refresh_overlay():
 func _on_OptionButton_item_selected(index):
 	refresh_options(index)
 
-func get_obj_min_max(obj:String, property:String):
+func get_obj_min_max(obj:String, property):
 	var overlays = game.view.obj.overlays
 	var _min = game["%s_data" % [obj]][overlays[0].id][property]
 	var _max = _min
@@ -65,13 +65,13 @@ func get_obj_min_max(obj:String, property:String):
 			_max = prop
 	return {"_min":_min, "_max":_max}
 
-func get_HST_min_max():
+func get_star_prop_min_max(prop:int):
 	var overlays = game.view.obj.overlays
-	var _min = game.get_hottest_star_temp(overlays[0].id)
+	var _min = game.get_highest_star_prop(overlays[0].id, prop)
 	var _max = _min
 	for i in range(1, len(overlays)):
 		var id:int = overlays[i].id
-		var T = game.get_hottest_star_temp(id)
+		var T = game.get_highest_star_prop(id, prop)
 		if T < _min:
 			_min = T
 		if T > _max:
@@ -84,35 +84,9 @@ func get_star_num_min_max():
 	var _max = 1
 	for i in range(0, len(overlays)):
 		var id:int = overlays[i].id
-		var n = len(game.system_data[id].stars)
+		var n = len(game.system_data[id][9])
 		if n > _max:
 			_max = n
-	return {"_min":_min, "_max":_max}
-
-func get_BSS_min_max():
-	var overlays = game.view.obj.overlays
-	var _min = game.get_biggest_star_size(overlays[0].id)
-	var _max = _min
-	for i in range(1, len(overlays)):
-		var id:int = overlays[i].id
-		var T = game.get_biggest_star_size(id)
-		if T < _min:
-			_min = T
-		if T > _max:
-			_max = T
-	return {"_min":_min, "_max":_max}
-
-func get_BSL_min_max():
-	var overlays = game.view.obj.overlays
-	var _min = game.get_brightest_star_luminosity(overlays[0].id)
-	var _max = _min
-	for i in range(1, len(overlays)):
-		var id:int = overlays[i].id
-		var T = game.get_brightest_star_luminosity(id)
-		if T < _min:
-			_min = T
-		if T > _max:
-			_max = T
 	return {"_min":_min, "_max":_max}
 
 func refresh_options(index:int, recalculate:bool = true):
@@ -125,7 +99,7 @@ func refresh_options(index:int, recalculate:bool = true):
 			match index:
 				0:
 					if recalculate and not c_vl.modified:
-						min_max = get_obj_min_max("system", "planet_num")
+						min_max = get_obj_min_max("system", 6)
 						c_vl.left = min_max._min
 						c_vl.right = min_max._max
 					editable = true
@@ -141,7 +115,7 @@ func refresh_options(index:int, recalculate:bool = true):
 					editable = false
 				5:
 					if recalculate and not c_vl.modified:
-						min_max = get_obj_min_max("system", "diff")
+						min_max = get_obj_min_max("system", 4)
 						c_vl.left = min_max._min
 						c_vl.right = min_max._max
 					editable = true
@@ -149,7 +123,7 @@ func refresh_options(index:int, recalculate:bool = true):
 					unit = ""
 				6:
 					if recalculate and not c_vl.modified:
-						min_max = get_HST_min_max()#HST: hottest star temperature
+						min_max = get_star_prop_min_max(4)
 						c_vl.left = min_max._min
 						c_vl.right = min_max._max
 					editable = true
@@ -157,7 +131,7 @@ func refresh_options(index:int, recalculate:bool = true):
 					unit = " K"
 				7:
 					if recalculate and not c_vl.modified:
-						min_max = get_BSS_min_max()
+						min_max = get_star_prop_min_max(2)
 						c_vl.left = min_max._min
 						c_vl.right = min_max._max
 					editable = true
@@ -165,7 +139,7 @@ func refresh_options(index:int, recalculate:bool = true):
 					unit = ""
 				8:
 					if recalculate and not c_vl.modified:
-						min_max = get_BSL_min_max()
+						min_max = get_star_prop_min_max(6)
 						c_vl.left = min_max._min
 						c_vl.right = min_max._max
 					editable = true

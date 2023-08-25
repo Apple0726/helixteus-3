@@ -48,10 +48,10 @@ func _ready():
 	var tile_brightness:float = game.tile_brightness[p_i.type - 3]
 	#$TileMap.material.shader = preload("res://Shaders/BCS.gdshader")
 	var lum:float = 0.0
-	for star in game.system_data[game.c_s].stars:
-		var sc:float = 0.5 * star.size / (p_i.distance / 500)
-		if star.luminosity > lum:
-			star_mod = Helper.get_star_modulate(star["class"])
+	for star in game.system_data[game.c_s][9]:
+		var sc:float = 0.5 * star[2] / (p_i.distance / 500)
+		if star[6] > lum:
+			star_mod = Helper.get_star_modulate(star[1])
 			var mod_lum = star_mod.get_luminance()
 			if mod_lum < 0.2:
 				star_mod = star_mod.lightened(0.2 - mod_lum)
@@ -66,7 +66,7 @@ func _ready():
 			#$TileMap.material.set_shader_parameter("brightness", min(brightness, 2.0))
 			#$TileMap.material.set_shader_parameter("contrast", clamp(strength_mult, 1.0, 2.0))
 			#$TileMap.material.set_shader_parameter("saturation", clamp(strength_mult, 1.0, 2.0))
-			lum = star.luminosity
+			lum = star[6]
 	timer = Timer.new()
 	add_child(timer)
 	timer.wait_time = interval
@@ -1216,14 +1216,14 @@ func on_wormhole_click(tile:Dictionary, tile_id:int):
 				Helper.save_obj("Systems", game.c_s_g, game.planet_data)
 				game.c_s = tile.wormhole.l_dest_s_id
 				game.c_s_g = tile.wormhole.g_dest_s_id
-				if wh_system.has("discovered"):#if system generated planets
+				if wh_system[10]:#if system generated planets
 					game.planet_data = game.open_obj("Systems", tile.wormhole.g_dest_s_id)
 				else:
 					game.planet_data.clear()
 					game.generate_planets(tile.wormhole.l_dest_s_id)
-				var wh_planet = game.planet_data[randi() % wh_system.planet_num]
+				var wh_planet = game.planet_data[randi() % wh_system[6]]
 				while wh_planet.type in [11, 12]:
-					wh_planet = game.planet_data[randi() % wh_system.planet_num]
+					wh_planet = game.planet_data[randi() % wh_system[6]]
 				game.planet_data[wh_planet.l_id].conquered = true
 				game.tile_data[tile_id].wormhole.l_dest_p_id = wh_planet.l_id
 				game.tile_data[tile_id].wormhole.g_dest_p_id = wh_planet.id

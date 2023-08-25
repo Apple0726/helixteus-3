@@ -66,7 +66,7 @@ func _process(delta):
 	if game.ships_travel_view == game.c_v:
 		var scale_mult = 1.0
 		if game.c_v == "system":
-			scale_mult = 70.0 / game.system_data[game.c_s].get("closest_planet_distance", 300)
+			scale_mult = 70.0 / game.system_data[game.c_s][12]
 		dep_pos = game.ships_depart_pos * scale_mult
 		dest_pos = game.ships_dest_pos * scale_mult
 		curr_pos = lerp(dep_pos, dest_pos, clamp(Helper.update_ship_travel(), 0, 1))
@@ -86,9 +86,9 @@ func _process(delta):
 		elif game.c_v == "cluster" and game.c_c == sh_c.c:
 			ship.position = to_global(game.galaxy_data[sh_c.g].pos) - Vector2(32, 22)
 		elif game.c_v == "galaxy" and game.c_g_g == sh_c_g.g:
-			ship.position = to_global(game.system_data[sh_c.s].pos) - Vector2(32, 22)
+			ship.position = to_global(game.system_data[sh_c.s][3]) - Vector2(32, 22)
 		elif game.c_v == "system" and game.c_s_g == sh_c_g.s:
-			var scale_mult = 70.0 / game.system_data[game.c_s].get("closest_planet_distance", 300)
+			var scale_mult = 70.0 / game.system_data[game.c_s][12]
 			ship.position = to_global(Vector2.from_angle(game.planet_data[sh_c.p].angle) * game.planet_data[sh_c.p].distance * scale_mult) - Vector2(32, 22)
 	if is_instance_valid(game.annotator):
 		annotate_icon.position = to_local(mouse_position)
@@ -260,7 +260,7 @@ func refresh():
 		var v = game.ships_travel_view
 		var scale_mult = 1.0
 		if game.c_v == "system":
-			scale_mult = 70.0 / game.system_data[game.c_s].get("closest_planet_distance", 300)
+			scale_mult = 70.0 / game.system_data[game.c_s][12]
 		dep_pos = game.ships_depart_pos * scale_mult
 		dest_pos = game.ships_dest_pos * scale_mult
 		curr_pos = dest_pos
@@ -311,8 +311,8 @@ func save_zooms(obj_str:String):
 			game.planet_data[game.c_p]["view"]["pos"] = self.position# / self.scale.x
 			game.planet_data[game.c_p]["view"]["zoom"] = self.scale.x
 		"system":
-			game.system_data[game.c_s]["view"]["pos"] = self.position# / self.scale.x
-			game.system_data[game.c_s]["view"]["zoom"] = self.scale.x
+			game.system_data[game.c_s][8][0] = self.position# / self.scale.x
+			game.system_data[game.c_s][8][1] = self.scale.x
 		"galaxy":
 			game.galaxy_data[game.c_g]["view"]["pos"] = self.position# / self.scale.x
 			game.galaxy_data[game.c_g]["view"]["zoom"] = self.scale.x

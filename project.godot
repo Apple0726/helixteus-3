@@ -26,6 +26,7 @@ Data="*res://Scripts/Data.gd"
 Helper="*res://Scripts/Helper.gd"
 Mods="*res://Scripts/Mods.gd"
 DiscordSDKLoader="*res://addons/discord-sdk-gd/nodes/core_updater.gd"
+StarType="*res://Scripts/StarType.gd"
 
 [debug]
 

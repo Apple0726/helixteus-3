@@ -288,9 +288,9 @@ func refresh():
 		$Bookmarks/Bookmarked.visible = true
 		$Top/Name/Name.text = game.planet_data[game.c_p].name
 	elif game.c_v == "system":
-		$Bookmarks/Bookmarked.button_pressed = game.system_data[game.c_s].has("bookmarked")
+		$Bookmarks/Bookmarked.button_pressed = game.system_data[game.c_s][13].has("bookmarked")
 		$Bookmarks/Bookmarked.visible = true
-		$Top/Name/Name.text = game.system_data[game.c_s].name
+		$Top/Name/Name.text = game.system_data[game.c_s][2]
 	elif game.c_v == "galaxy":
 		$Bookmarks/Bookmarked.button_pressed = game.galaxy_data[game.c_g].has("bookmarked")
 		$Bookmarks/Bookmarked.visible = true
@@ -561,9 +561,9 @@ func _on_Bookmarked_pressed():
 			game.bookmarks.planet[str(game.c_p_g)] = bookmark
 	elif game.c_v == "system":
 		var s_i:Dictionary = game.system_data[game.c_s]
-		if s_i.has("bookmarked"):
+		if s_i[13].has("bookmarked"):
 			game.bookmarks.system.erase(str(game.c_s_g))
-			s_i.erase("bookmarked")
+			s_i[13].erase("bookmarked")
 		else:
 			var star:Dictionary = s_i.stars[0]
 			for i in range(1, len(s_i.stars)):
@@ -647,7 +647,7 @@ func _on_Name_text_entered(new_text):
 		if game.bookmarks.planet.has(str(game.c_p_g)):
 			game.bookmarks.planet[str(game.c_p_g)].name = new_text
 	elif game.c_v == "system":
-		game.system_data[game.c_s].name = new_text
+		game.system_data[game.c_s][2] = new_text
 		if game.bookmarks.system.has(str(game.c_s_g)):
 			game.bookmarks.system[str(game.c_s_g)].name = new_text
 	elif game.c_v == "galaxy":

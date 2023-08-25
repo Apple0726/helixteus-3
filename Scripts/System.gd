@@ -1,7 +1,7 @@
 extends Node2D
 
 @onready var game = get_node("/root/Game")
-@onready var stars_info = game.system_data[game.c_s]["stars"]
+@onready var stars_info = game.system_data[game.c_s][9]
 @onready var view = get_parent()
 var star_shader = preload("res://Shaders/Star.gdshader")
 
@@ -28,7 +28,7 @@ func _ready():
 	refresh_stars()
 
 func refresh_planets():
-	scale_mult = 70.0 / game.system_data[game.c_s].get("closest_planet_distance", 300)
+	scale_mult = 70.0 / game.system_data[game.c_s][12]
 	CBS_range = 0.0
 	broken_CBS_range = 0.0
 	var curr_time = Time.get_unix_time_from_system()
@@ -47,18 +47,18 @@ func refresh_planets():
 	var planets_affected_by_broken_CBS:int = 0
 	var p_num:int = len(game.planet_data)
 	for i in len(stars_info):
-		var star_info:Dictionary = stars_info[i]
-		if star_info.has("MS") and star_info.MS == "M_CBS":
-			if star_info.MS_lv == 0:
-				if star_info.has("repair_cost"):
+		var star_info:Array = stars_info[i]
+		if star_info[7].has("MS") and star_info[7].MS == "M_CBS":
+			if star_info[7].MS_lv == 0:
+				if star_info[7].has("repair_cost"):
 					planets_affected_by_broken_CBS = max(planets_affected_by_broken_CBS, ceil(p_num * 0.1))
 				else:
 					planets_affected_by_CBS = max(planets_affected_by_CBS, ceil(p_num * 0.1))
 			else:
-				if star_info.has("repair_cost"):
-					planets_affected_by_broken_CBS = max(planets_affected_by_broken_CBS, ceil(p_num * star_info.MS_lv * 0.333))
+				if star_info[7].has("repair_cost"):
+					planets_affected_by_broken_CBS = max(planets_affected_by_broken_CBS, ceil(p_num * star_info[7].MS_lv * 0.333))
 				else:
-					planets_affected_by_CBS = max(planets_affected_by_CBS, ceil(p_num * star_info.MS_lv * 0.333))
+					planets_affected_by_CBS = max(planets_affected_by_CBS, ceil(p_num * star_info[7].MS_lv * 0.333))
 	for i in p_num:
 		var p_i:Dictionary = game.planet_data[i]
 		if p_i.is_empty():
@@ -88,7 +88,7 @@ func refresh_planets():
 		planet_btn.scale.x = p_i["size"] / PLANET_SCALE_DIV * scale_mult
 		planet_btn.scale.y = p_i["size"] / PLANET_SCALE_DIV * scale_mult
 		planet_glow.scale *= sc
-		if game.system_data[game.c_s].has("conquered"):
+		if game.system_data[game.c_s][11]:
 			p_i.conquered = true
 		if not is_instance_valid(game.element_overlay):
 			await get_tree().process_frame
@@ -243,7 +243,7 @@ func on_entity_icon_out():
 
 
 func refresh_stars():
-	scale_mult = 70.0 / game.system_data[game.c_s].get("closest_planet_distance", 300)
+	scale_mult = 70.0 / game.system_data[game.c_s][12]
 	for star in get_tree().get_nodes_in_group("stars_system"):
 		star.queue_free()
 	for time_bar in star_time_bars:
@@ -257,14 +257,14 @@ func refresh_stars():
 		star_tween = create_tween()
 		star_tween.set_parallel(true)
 	for i in len(stars_info):
-		var star_info:Dictionary = stars_info[i]
+		var star_info:Array = stars_info[i]
 		var star = TextureButton.new()
-		star.texture_normal = load("res://Graphics/Effects/spotlight_%s.png" % [int(star_info.temperature) % 3 + 4])
+		star.texture_normal = load("res://Graphics/Effects/spotlight_%s.png" % [int(star_info[4]) % 3 + 4])
 		self.add_child(star)
-		star.scale.x = max(5.0 * star_info["size"] / game.STAR_SCALE_DIV, 0.008) * scale_mult
-		star.scale.y = max(5.0 * star_info["size"] / game.STAR_SCALE_DIV, 0.008) * scale_mult
+		star.scale.x = max(5.0 * star_info[2] / game.STAR_SCALE_DIV, 0.008) * scale_mult
+		star.scale.y = max(5.0 * star_info[2] / game.STAR_SCALE_DIV, 0.008) * scale_mult
 		star.texture_click_mask = preload("res://Graphics/Misc/StarCM.png")
-		star.position = star_info["pos"] * scale_mult - Vector2(512, 512) * star.scale.x
+		star.position = star_info[3] * scale_mult - Vector2(512, 512) * star.scale.x
 		star.connect("mouse_entered",Callable(self,"on_star_over").bind(i))
 		star.connect("mouse_exited",Callable(self,"on_btn_out"))
 		star.connect("pressed",Callable(self,"on_star_pressed").bind(i))
@@ -272,48 +272,46 @@ func refresh_stars():
 			star.material = ShaderMaterial.new()
 			star.material.shader = preload("res://Shaders/Star.gdshader")
 			star.material.set_shader_parameter("time_offset", 10.0 * randf())
-			star.material.set_shader_parameter("color", Helper.get_star_modulate(star_info["class"]))
+			star.material.set_shader_parameter("color", Helper.get_star_modulate(star_info[1]))
 			star.material.set_shader_parameter("alpha", 0.0)
 			star_tween.tween_property(star.material, "shader_parameter/alpha", 1.0, 0.3)
-		star.modulate = Helper.get_star_modulate(star_info["class"])
-		if star_info.type.substr(0, 10) == "hypergiant" and not star_info.has("hypergiant"):
-			star_info.hypergiant = 1
-		if not game.achievement_data.exploration.has("B_star") and star_info["class"][0] == "B":
+		star.modulate = Helper.get_star_modulate(star_info[1])
+		if not game.achievement_data.exploration.has("B_star") and star_info[1][0] == "B":
 			game.earn_achievement("exploration", "B_star")
-		if not game.achievement_data.exploration.has("O_star") and star_info["class"][0] == "O":
+		if not game.achievement_data.exploration.has("O_star") and star_info[1][0] == "O":
 			game.earn_achievement("exploration", "O_star")
-		if not game.achievement_data.exploration.has("Q_star") and star_info["class"][0] == "Q":
+		if not game.achievement_data.exploration.has("Q_star") and star_info[1][0] == "Q":
 			game.earn_achievement("exploration", "Q_star")
-		if not game.achievement_data.exploration.has("R_star") and star_info["class"][0] == "R":
+		if not game.achievement_data.exploration.has("R_star") and star_info[1][0] == "R":
 			game.earn_achievement("exploration", "R_star")
-		if not game.achievement_data.exploration.has("Z_star") and star_info["class"][0] == "Z":
+		if not game.achievement_data.exploration.has("Z_star") and star_info[1][0] == "Z":
 			game.earn_achievement("exploration", "Z_star")
-		if not game.achievement_data.exploration.has("HG_star") and star_info.has("hypergiant"):
+		if not game.achievement_data.exploration.has("HG_star") and star_info[0] >= StarType.HYPERGIANT + 1:
 			game.earn_achievement("exploration", "HG_star")
-		if not game.achievement_data.exploration.has("HG_V_star") and star_info.has("hypergiant") and star_info.hypergiant >= 5:
+		if not game.achievement_data.exploration.has("HG_V_star") and star_info[0] >= StarType.HYPERGIANT + 5:
 			game.earn_achievement("exploration", "HG_V_star")
-		if not game.achievement_data.exploration.has("HG_X_star") and star_info.has("hypergiant") and star_info.hypergiant >= 10:
+		if not game.achievement_data.exploration.has("HG_X_star") and star_info[0] >= StarType.HYPERGIANT + 10:
 			game.earn_achievement("exploration", "HG_X_star")
-		if not game.achievement_data.exploration.has("HG_XX_star") and star_info.has("hypergiant") and star_info.hypergiant >= 20:
+		if not game.achievement_data.exploration.has("HG_XX_star") and star_info[0] >= StarType.HYPERGIANT + 20:
 			game.earn_achievement("exploration", "HG_XX_star")
-		if not game.achievement_data.exploration.has("HG_L_star") and star_info.has("hypergiant") and star_info.hypergiant >= 50:
+		if not game.achievement_data.exploration.has("HG_L_star") and star_info[0] >= StarType.HYPERGIANT + 50:
 			game.earn_achievement("exploration", "HG_L_star")
 		star.add_to_group("stars_system")
-		if star_info.has("MS"):
+		if star_info[7].has("MS"):
 			var MS = Sprite2D.new()
-			if star_info.MS == "M_MB":
+			if star_info[7].MS == "M_MB":
 				MS.texture = preload("res://Graphics/Megastructures/M_MB_0.png")
 			else:
-				MS.texture = load("res://Graphics/Megastructures/%s_%s.png" % [star_info.MS, star_info.MS_lv])
+				MS.texture = load("res://Graphics/Megastructures/%s_%s.png" % [star_info[7].MS, star_info[7].MS_lv])
 			MS.position = Vector2(512, 512)
-			if star_info.MS == "M_DS":
+			if star_info[7].MS == "M_DS":
 				MS.scale *= 0.7
 			star.add_child(MS)
-			if star_info.MS == "M_DS":
-				add_rsrc(star_info.pos * scale_mult, Color(0, 0.8, 0, 1), Data.energy_icon, i, true, max(star_info.size / 6.0, 0.5) * scale_mult)
-			elif star_info.MS == "M_MB":
-				add_rsrc(star_info.pos * scale_mult, Color(0, 0.8, 0, 1), Data.SP_icon, i, true, max(star_info.size / 6.0, 0.5) * scale_mult)
-			if star_info.bldg.has("is_constructing"):
+			if star_info[7].MS == "M_DS":
+				add_rsrc(star_info[3] * scale_mult, Color(0, 0.8, 0, 1), Data.energy_icon, i, true, max(star_info[2] / 6.0, 0.5) * scale_mult)
+			elif star_info[7].MS == "M_MB":
+				add_rsrc(star_info[3] * scale_mult, Color(0, 0.8, 0, 1), Data.SP_icon, i, true, max(star_info[2] / 6.0, 0.5) * scale_mult)
+			if star_info[7].bldg.has("is_constructing"):
 				var time_bar = game.time_scene.instantiate()
 				time_bar.scale *= 8.0
 				time_bar.position.x += 512
@@ -337,24 +335,30 @@ func auto_speedup(bldg_costs:Dictionary):
 		bldg_costs.money += bldg_costs.time * 200
 		bldg_costs.time = 0.2
 
-func add_constr_costs(vbox:VBoxContainer, dict:Dictionary):
-	if dict.has("cost_div"):
-		Helper.add_label("%s (%s)" % [tr("CONSTRUCTION_COSTS"), tr("DIV_BY") % Helper.clever_round(dict.cost_div)], 0)
+func add_constr_costs(vbox:VBoxContainer, data):
+	if data is Array:
+		if data[7].has("cost_div"):
+			Helper.add_label("%s (%s)" % [tr("CONSTRUCTION_COSTS"), tr("DIV_BY") % Helper.clever_round(data[7].cost_div)], 0)
+		else:
+			Helper.add_label(tr("CONSTRUCTION_COSTS"), 0)
 	else:
-		Helper.add_label(tr("CONSTRUCTION_COSTS"), 0)
+		if data.has("cost_div"):
+			Helper.add_label("%s (%s)" % [tr("CONSTRUCTION_COSTS"), tr("DIV_BY") % Helper.clever_round(data.cost_div)], 0)
+		else:
+			Helper.add_label(tr("CONSTRUCTION_COSTS"), 0)
 	game.get_node("UI/Panel").visible = true
 	game.get_node("UI/Panel/AnimationPlayer").play("Fade")
 	
 func show_M_DS_costs(star:Dictionary, base:bool = false):
 	var vbox = game.get_node("UI/Panel/VBox")
-	bldg_costs = Data.MS_costs["M_DS_%s" % ((star.MS_lv + 1) if not base else 0)].duplicate(true)
+	bldg_costs = Data.MS_costs["M_DS_%s" % ((star[7].MS_lv + 1) if not base else 0)].duplicate(true)
 	if base and build_all_MS_stages:
 		Helper.add_dict_to_dict(bldg_costs, Data.MS_costs.M_DS_1)
 		Helper.add_dict_to_dict(bldg_costs, Data.MS_costs.M_DS_2)
 		Helper.add_dict_to_dict(bldg_costs, Data.MS_costs.M_DS_3)
 		Helper.add_dict_to_dict(bldg_costs, Data.MS_costs.M_DS_4)
 	for cost in bldg_costs:
-		bldg_costs[cost] = round(bldg_costs[cost] * pow(star.size, 2) * game.engineering_bonus.BCM / (star.cost_div if star.has("cost_div") else 1.0))
+		bldg_costs[cost] = round(bldg_costs[cost] * pow(star[2], 2) * game.engineering_bonus.BCM / (star[7].cost_div if star[7].has("cost_div") else 1.0))
 	auto_speedup(bldg_costs)
 	Helper.put_rsrc(vbox, 32, bldg_costs, true, true)
 	add_constr_costs(vbox, star)
@@ -677,7 +681,7 @@ func build_MS(obj:Dictionary, MS:String):
 			game.stats_dim.MS_constructed += 1
 			game.stats_global.MS_constructed += 1
 		obj.MS = MS
-		game.system_data[game.c_s].has_MS = true
+		game.system_data[game.c_s][13].has_MS = true
 		obj.bldg = {}
 		obj.bldg.is_constructing = true
 		obj.bldg.construction_date = curr_time
@@ -785,19 +789,31 @@ func on_planet_click (id:int, l_id:int):
 
 func on_star_over (id:int):
 	var star = stars_info[id]
-	var star_type:String = star.type
+	var star_type:int = star[0]
+	var star_type_str:String = ""
 	var star_tier:String = ""
-	if star_type.substr(0, 11) == "hypergiant ":
-		star_type = star_type.split(" ")[0]
-		star_tier = " %s" % star.type.split(" ")[1]
-	var tooltip = tr("STAR_TITLE").format({"type":"%s%s" % [tr(star_type.to_upper()), star_tier.to_upper()], "class":star["class"]})
+	match star_type:
+		StarType.MAIN_SEQUENCE:
+			star_type_str = tr("MAIN_SEQUENCE")
+		StarType.WHITE_DWARF:
+			star_type_str = tr("WHITE_DWARF")
+		StarType.BROWN_DWARF:
+			star_type_str = tr("BROWN_DWARF")
+		StarType.GIANT:
+			star_type_str = tr("GIANT")
+		StarType.SUPERGIANT:
+			star_type_str = tr("SUPERGIANT")
+	if star_type >= StarType.HYPERGIANT + 2:
+		star_type_str = tr("HYPERGIANT")
+		star_tier = Helper.get_roman_num(star_type - StarType.HYPERGIANT)
+	var tooltip = tr("STAR_TITLE").format({"type":"%s%s" % [star_type_str, star_tier.to_upper()], "class":star[1]})
 	tooltip += "\n%s\n%s %s\n%s\n%s" % [
-		tr("STAR_TEMPERATURE") % [Helper.format_num(star.temperature, false, 9)], 
-		tr("STAR_SIZE") % [(Helper.clever_round(star.size, 3, true) if star.size < 1000 else Helper.format_num(star.size))], tr("SOLAR_RADII"),
-		tr("STAR_MASS") % (Helper.clever_round(star.mass, 3, true) if star.mass < 1000 else Helper.format_num(star.mass)),
-		tr("STAR_LUMINOSITY") % (Helper.clever_round(star.luminosity, 3, true) if star.luminosity < 1000 else Helper.format_num(star.luminosity))
+		tr("STAR_TEMPERATURE") % [Helper.format_num(star[4], false, 9)], 
+		tr("STAR_SIZE") % [(Helper.clever_round(star[2], 3, true) if star[2] < 1000 else Helper.format_num(star[2]))], tr("SOLAR_RADII"),
+		tr("STAR_MASS") % (Helper.clever_round(star[5], 3, true) if star[5] < 1000 else Helper.format_num(star[5])),
+		tr("STAR_LUMINOSITY") % (Helper.clever_round(star[6], 3, true) if star[6] < 1000 else Helper.format_num(star[6]))
 	]
-	var has_MS:bool = star.has("MS")
+	var has_MS:bool = star[7].has("MS")
 	var vbox = game.get_node("UI/Panel/VBox")
 	if game.bottom_info_action == "building_DS":
 		if not has_MS:
@@ -839,7 +855,7 @@ func on_star_over (id:int):
 		Helper.add_label(stage)
 		MS_constr_data.obj = star
 		if star.has("repair_cost"):
-			if game.system_data[game.c_s].has("conquered"):
+			if game.system_data[game.c_s][11]:
 				Helper.add_label(tr("REPAIR_COST"), -1, false)
 				Helper.put_rsrc(vbox, 32, {"money":star.repair_cost}, false)
 				MS_constr_data.confirm_repair = true
@@ -877,7 +893,7 @@ func on_star_over (id:int):
 					continue_upg(star)
 				elif star.MS == "M_CBS" and game.science_unlocked.has("CBS%s" % (star.MS_lv + 1)):
 					continue_upg(star)
-		if game.system_data[game.c_s].has("conquered"):
+		if game.system_data[game.c_s][11]:
 			Helper.add_label(tr("PRESS_X_TO_DESTROY"))
 			MS_constr_data.destroyable = true
 	game.show_tooltip(tooltip)
@@ -891,7 +907,7 @@ func on_star_pressed (id:int):
 	var curr_time = Time.get_unix_time_from_system()
 	var star = stars_info[id]
 	if game.bottom_info_action in ["building_DS", "building_PK", "building_CBS"]:
-		if game.system_data[game.c_s].has("conquered"):
+		if game.system_data[game.c_s][11]:
 			if not star.has("MS"):
 				if game.bottom_info_action == "building_DS":
 					build_MS(star, "M_DS")
@@ -904,7 +920,7 @@ func on_star_pressed (id:int):
 		else:
 			game.popup(tr("STAR_MS_ERROR"), 3.0)
 	elif game.bottom_info_action == "building_MB":
-		if game.system_data[game.c_s].has("conquered"):
+		if game.system_data[game.c_s][11]:
 			if not star.has("MS") or star.MS != "M_DS":
 				game.popup(tr("MB_ERROR_1"), 3.0)
 			else:

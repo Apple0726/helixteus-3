@@ -315,16 +315,24 @@ func get_prod_info(tile_obj):
 	return {"spd":spd, "progress":progress, "qty_made":qty_made, "qty_left":qty_left}
 
 var overlay_rsrc = preload("res://Graphics/Elements/Default.png")
-func add_overlay(parent, self_node, c_v:String, obj_info:Dictionary, overlays:Array):
+func add_overlay(parent, self_node, c_v:String, obj_info, overlays:Array):
 	var overlay_texture = overlay_rsrc
 	var overlay = TextureButton.new()
 	overlay.texture_normal = overlay_texture
 	overlay.visible = false
 	parent.add_child(overlay)
-	overlays.append({"circle":overlay, "id":obj_info.l_id})
-	overlay.connect("mouse_entered",Callable(self_node,"on_%s_over" % [c_v]).bind(obj_info.l_id))
+	var id
+	var l_id
+	if obj_info is Array:
+		id = obj_info[0]
+		l_id = obj_info[1]
+	else:
+		id = obj_info.id
+		l_id = obj_info.l_id
+	overlays.append({"circle":overlay, "id":l_id})
+	overlay.connect("mouse_entered",Callable(self_node,"on_%s_over" % [c_v]).bind(l_id))
 	overlay.connect("mouse_exited",Callable(self_node,"on_%s_out" % [c_v]))
-	overlay.connect("pressed",Callable(self_node,"on_%s_click" % [c_v]).bind(obj_info.id, obj_info.l_id))
+	overlay.connect("pressed",Callable(self_node,"on_%s_click" % [c_v]).bind(id, l_id))
 	overlay.position = Vector2(-300 / 2, -300 / 2)
 	overlay.pivot_offset = Vector2(300 / 2, 300 / 2)
 
@@ -1028,15 +1036,15 @@ func update_MS_rsrc(dict:Dictionary):
 		return 0
 
 func get_DS_output(star:Dictionary, next_lv:int = 0):
-	return Data.MS_output["M_DS_%s" % ((star.MS_lv + next_lv) if star.has("MS_lv") else next_lv - 1)] * star.luminosity * game.u_i.planck  * 0.5
+	return Data.MS_output["M_DS_%s" % ((star[7].MS_lv + next_lv) if star[7].has("MS_lv") else next_lv - 1)] * star[6] * game.u_i.planck  * 0.5
 
 func get_DS_capacity(star:Dictionary, next_lv:int = 0):
-	if next_lv == -1 and star.has("MS") and star.MS_lv == 0:
+	if next_lv == -1 and star.has("MS") and star[7].MS_lv == 0:
 		return 0
-	return Data.MS_output["M_DS_%s" % ((star.MS_lv + next_lv) if star.has("MS_lv") else next_lv - 1)] * pow(star.size, 2) * game.u_i.planck * 5000.0 * game.u_i.charge
+	return Data.MS_output["M_DS_%s" % ((star[7].MS_lv + next_lv) if star[7].has("MS_lv") else next_lv - 1)] * pow(star[2], 2) * game.u_i.planck * 5000.0 * game.u_i.charge
 
 func get_MB_output(star:Dictionary):
-	return Data.MS_output.M_MB * star.luminosity * game.u_i.planck
+	return Data.MS_output.M_MB * star[6] * game.u_i.planck
 
 func get_MME_output(p_i:Dictionary, next_lv:int = 0):
 	return Data.MS_output["M_MME_%s" % ((p_i.MS_lv + next_lv) if p_i.has("MS_lv") else next_lv - 1)] * pow(p_i.size / 12000.0, 2) * max(1, pow(p_i.pressure, 0.5))
