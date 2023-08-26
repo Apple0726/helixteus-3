@@ -84,7 +84,7 @@ func _process(delta):
 		if game.c_v == "universe":
 			ship.position = to_global(game.u_i.cluster_data[sh_c.c].pos) - Vector2(32, 22)
 		elif game.c_v == "cluster" and game.c_c == sh_c.c:
-			ship.position = to_global(game.galaxy_data[sh_c.g].pos) - Vector2(32, 22)
+			ship.position = to_global(game.galaxy_data[sh_c.g][3]) - Vector2(32, 22)
 		elif game.c_v == "galaxy" and game.c_g_g == sh_c_g.g:
 			ship.position = to_global(game.system_data[sh_c.s][3]) - Vector2(32, 22)
 		elif game.c_v == "system" and game.c_s_g == sh_c_g.s:
@@ -314,8 +314,8 @@ func save_zooms(obj_str:String):
 			game.system_data[game.c_s][8][0] = self.position# / self.scale.x
 			game.system_data[game.c_s][8][1] = self.scale.x
 		"galaxy":
-			game.galaxy_data[game.c_g]["view"]["pos"] = self.position# / self.scale.x
-			game.galaxy_data[game.c_g]["view"]["zoom"] = self.scale.x
+			game.galaxy_data[game.c_g][8][0] = self.position# / self.scale.x
+			game.galaxy_data[game.c_g][8][1] = self.scale.x
 		"cluster":
 			if game.u_i.cluster_data[game.c_c].has("view"):
 				game.u_i.cluster_data[game.c_c]["view"]["pos"] = self.position# / self.scale.x

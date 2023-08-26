@@ -18,27 +18,26 @@ func _ready():
 	for g_i in game.galaxy_data:
 		if g_i.is_empty():
 			continue
-		conquered = conquered and g_i.has("conquered")
+		conquered = conquered and g_i[11]
 		var galaxy_btn = TextureButton.new()
 		var galaxy = Sprite2D.new()
-		galaxy_btn.texture_normal = game.galaxy_textures[g_i.type]
+		galaxy_btn.texture_normal = game.galaxy_textures[g_i[9]]
 		self.add_child(galaxy)
 		galaxy.add_child(galaxy_btn)
 		obj_btns.append(galaxy_btn)
-		galaxy_btn.connect("mouse_entered",Callable(self,"on_galaxy_over").bind(g_i.l_id))
+		galaxy_btn.connect("mouse_entered",Callable(self,"on_galaxy_over").bind(g_i[1]))
 		galaxy_btn.connect("mouse_exited",Callable(self,"on_galaxy_out"))
-		galaxy_btn.connect("pressed",Callable(self,"on_galaxy_click").bind(g_i.id, g_i.l_id))
-		var radius = pow(g_i["system_num"] / game.GALAXY_SCALE_DIV, 0.5)
+		galaxy_btn.connect("pressed",Callable(self,"on_galaxy_click").bind(g_i[0], g_i[1]))
+		var radius = pow(g_i[6] / game.GALAXY_SCALE_DIV, 0.5)
 		galaxy_btn.position = Vector2(-galaxy_btn.texture_normal.get_width(), -galaxy_btn.texture_normal.get_height()) / 2.0 * radius
 		galaxy_btn.scale.x = radius
 		galaxy_btn.scale.y = radius
-		galaxy.rotation = g_i.rotation
-		if g_i.has("modulate"):
-			galaxy_btn.modulate = g_i.modulate
-		galaxy.position = g_i["pos"]
-		dimensions = max(dimensions, g_i.pos.length())
+		galaxy.rotation = g_i[12]
+		galaxy_btn.modulate = g_i[15].get("modulate", Color.WHITE)
+		galaxy.position = g_i[3]
+		dimensions = max(dimensions, g_i[3].length())
 		Helper.add_overlay(galaxy, self, "galaxy", g_i, overlays)
-		if g_i.has("GS"):
+		if g_i[15].has("GS"):
 			var GS_marker:Sprite2D = Sprite2D.new()
 			GS_marker.scale *= 2.0
 			GS_marker.texture = preload("res://Graphics/Effects/spotlight_8.png")
@@ -46,21 +45,21 @@ func _ready():
 			var rsrc
 			var prod:float
 			var rsrc_mult:float = 1.0
-			match g_i.GS:
+			match g_i[15].GS:
 				"ME":
 					rsrc_mult = Helper.get_IR_mult("ME") * game.u_i.time_speed
-					rsrc = add_rsrc(g_i.pos, Color(0, 0.5, 0.9, 1), Data.rsrc_icons.ME, g_i.l_id, radius * 10.0)
+					rsrc = add_rsrc(g_i[3], Color(0, 0.5, 0.9, 1), Data.rsrc_icons.ME, g_i[1], radius * 10.0)
 				"PP":
 					rsrc_mult = Helper.get_IR_mult("PP") * game.u_i.time_speed
-					rsrc = add_rsrc(g_i.pos, Color(0, 0.8, 0, 1), Data.rsrc_icons.PP, g_i.l_id, radius * 10.0)
+					rsrc = add_rsrc(g_i[3], Color(0, 0.8, 0, 1), Data.rsrc_icons.PP, g_i[1], radius * 10.0)
 				"RL":
 					rsrc_mult = Helper.get_IR_mult("RL") * game.u_i.time_speed
-					rsrc = add_rsrc(g_i.pos, Color(0, 0.8, 0, 1), Data.rsrc_icons.RL, g_i.l_id, radius * 10.0)
+					rsrc = add_rsrc(g_i[3], Color(0, 0.8, 0, 1), Data.rsrc_icons.RL, g_i[1], radius * 10.0)
 				_:
 					rsrc = null
 			if is_instance_valid(rsrc):
-				rsrc.set_text("%s/%s" % [Helper.format_num(g_i.prod_num * rsrc_mult), tr("S_SECOND")])
-		if g_i.has("discovered") and not g_i.has("GS"):
+				rsrc.set_text("%s/%s" % [Helper.format_num(g_i[15].prod_num * rsrc_mult), tr("S_SECOND")])
+		if g_i[10] and not g_i[15].has("GS"):
 			discovered_gal.append(g_i)
 	if conquered:
 		game.u_i.cluster_data[game.c_c].conquered = true
@@ -73,11 +72,11 @@ func on_bldg_overlay_timeout():
 	var g_i = discovered_gal[curr_bldg_overlay]
 	var bldgs:Dictionary = {}
 	var MSs:Dictionary = {}
-	var system_data2:Array = game.open_obj("Galaxies", g_i.id)
+	var system_data2:Array = game.open_obj("Galaxies", g_i[0])
 	for s_i in system_data2:
-		if not s_i.has("discovered"):
+		if not s_i[10]:
 			continue
-		var planet_data2:Array = game.open_obj("Systems", s_i.id)
+		var planet_data2:Array = game.open_obj("Systems", s_i[0])
 		for p_i in planet_data2:
 			if p_i.is_empty():
 				continue
@@ -85,11 +84,11 @@ func on_bldg_overlay_timeout():
 				Helper.add_to_dict(bldgs, p_i.bldg.name, p_i.tile_num)
 			if p_i.has("MS"):
 				Helper.add_to_dict(MSs, p_i.MS, 1)
-		for _star in s_i.stars:
-			if _star.has("MS"):
-				Helper.add_to_dict(MSs, _star.MS, 1)
+		for _star in s_i[9]:
+			if _star[7].has("MS"):
+				Helper.add_to_dict(MSs, _star[7].MS, 1)
 		#await get_tree().process_frame
-	var sc:float = pow(g_i["system_num"] / game.GALAXY_SCALE_DIV, 0.5)
+	var sc:float = pow(g_i[6] / game.GALAXY_SCALE_DIV, 0.5)
 	if not bldgs.is_empty():
 		var grid_panel = preload("res://Scenes/BuildingInfo.tscn").instantiate()
 		grid_panel.get_node("Top").visible = false
@@ -103,9 +102,9 @@ func on_bldg_overlay_timeout():
 			bldg_count.get_node("Label").text = "x %s" % Helper.format_num(bldgs[bldg])
 		add_child(grid_panel)
 		grid_panel.add_to_group("Grids")
-		grid_panel.name = "Grid_%s" % g_i.l_id
-		grid_panel.position.x = g_i.pos.x - grid.size.x / 2.0 * grid_panel.scale.x
-		grid_panel.position.y = g_i.pos.y - grid_panel.size.y * grid_panel.scale.y - 170 * sc
+		grid_panel.name = "Grid_%s" % g_i[1]
+		grid_panel.position.x = g_i[3].x - grid.size.x / 2.0 * grid_panel.scale.x
+		grid_panel.position.y = g_i[3].y - grid_panel.size.y * grid_panel.scale.y - 170 * sc
 	if not MSs.is_empty():
 		var MS_grid_panel = preload("res://Scenes/BuildingInfo.tscn").instantiate()
 		MS_grid_panel.get_node("Bottom").visible = false
@@ -118,9 +117,9 @@ func on_bldg_overlay_timeout():
 			MS_count.get_node("Label").text = "x %s" % Helper.format_num(MSs[MS])
 		add_child(MS_grid_panel)
 		MS_grid_panel.add_to_group("MSGrids")
-		MS_grid_panel.name = "MSGrid_%s" % g_i.l_id
-		MS_grid_panel.position.x = g_i.pos.x - MS_grid.size.x / 2.0 * MS_grid_panel.scale.x
-		MS_grid_panel.position.y = g_i.pos.y + 170 * sc
+		MS_grid_panel.name = "MSGrid_%s" % g_i[1]
+		MS_grid_panel.position.x = g_i[3].x - MS_grid.size.x / 2.0 * MS_grid_panel.scale.x
+		MS_grid_panel.position.y = g_i[3].y + 170 * sc
 	curr_bldg_overlay += 1
 	if curr_bldg_overlay >= len(discovered_gal):
 		bldg_overlay_timer.stop()
@@ -141,34 +140,35 @@ func e(n, e):
 
 func on_galaxy_over (id:int):
 	var g_i = game.galaxy_data[id]
-	var tooltip:String = g_i.name if g_i.has("name") else ("%s %s" % [tr("GALAXY"), id])
+	var tooltip:String = g_i[2] if g_i[2] != null else ("%s %s" % [tr("GALAXY"), id])
 	var icons = []
-	if g_i.has("GS"):
+	if g_i[15].has("GS"):
 		tooltip += "\n"
-		if g_i.GS == "MS":
+		var GS = g_i[15].GS
+		if GS == "MS":
 			icons = [Data.minerals_icon]
-			tooltip += Data.path_1.MS.desc % Helper.format_num(g_i.prod_num * Helper.get_IR_mult("MS"))
-		elif g_i.GS == "B":
+			tooltip += Data.path_1.MS.desc % Helper.format_num(g_i[15].prod_num * Helper.get_IR_mult("MS"))
+		elif GS == "B":
 			icons = [Data.energy_icon]
-			tooltip += Data.path_1.B.desc % Helper.format_num(g_i.prod_num * Helper.get_IR_mult("B"))
-		elif g_i.GS == "ME":
+			tooltip += Data.path_1.B.desc % Helper.format_num(g_i[15].prod_num * Helper.get_IR_mult("B"))
+		elif GS == "ME":
 			icons = [Data.minerals_icon]
-			tooltip += Data.path_1.RL.desc % Helper.format_num(g_i.prod_num * Helper.get_IR_mult("ME") * game.u_i.time_speed)
-		elif g_i.GS == "PP":
+			tooltip += Data.path_1.RL.desc % Helper.format_num(g_i[15].prod_num * Helper.get_IR_mult("ME") * game.u_i.time_speed)
+		elif GS == "PP":
 			icons = [Data.energy_icon]
-			tooltip += Data.path_1.PP.desc % Helper.format_num(g_i.prod_num * Helper.get_IR_mult("PP") * game.u_i.time_speed)
-		elif g_i.GS == "RL":
+			tooltip += Data.path_1.PP.desc % Helper.format_num(g_i[15].prod_num * Helper.get_IR_mult("PP") * game.u_i.time_speed)
+		elif GS == "RL":
 			icons = [Data.SP_icon]
-			tooltip += Data.path_1.RL.desc % Helper.format_num(g_i.prod_num * Helper.get_IR_mult("RL") * game.u_i.time_speed)
+			tooltip += Data.path_1.RL.desc % Helper.format_num(g_i[15].prod_num * Helper.get_IR_mult("RL") * game.u_i.time_speed)
 	else:
-		tooltip += "\n%s: %s\n%s: %s\n%s: %s nT\n%s: %s" % [tr("SYSTEMS"), g_i.system_num, tr("DIFFICULTY"), g_i.diff, tr("B_STRENGTH"), g_i.B_strength * e(1, 9), tr("DARK_MATTER"), g_i.dark_matter]
+		tooltip += "\n%s: %s\n%s: %s\n%s: %s nT\n%s: %s" % [tr("SYSTEMS"), g_i[6], tr("DIFFICULTY"), g_i[4], tr("B_STRENGTH"), g_i[13] * e(1, 9), tr("DARK_MATTER"), g_i[14]]
 	for grid in get_tree().get_nodes_in_group("Grids"):
-		if grid.name != "Grid_%s" % g_i.l_id:
+		if grid.name != "Grid_%s" % g_i[1]:
 			var tween = create_tween()
 			tween.tween_property(grid, "modulate", Color(1, 1, 1, 0), 0.1)
 			#grid.visible = false
 	for grid in get_tree().get_nodes_in_group("MSGrids"):
-		if grid.name != "MSGrid_%s" % g_i.l_id:
+		if grid.name != "MSGrid_%s" % g_i[1]:
 			var tween = create_tween()
 			tween.tween_property(grid, "modulate", Color(1, 1, 1, 0), 0.1)
 			#grid.visible = false
@@ -186,27 +186,21 @@ func on_galaxy_out ():
 	game.hide_tooltip()
 
 func on_galaxy_click (id:int, l_id:int):
-	var g_i:Dictionary = game.galaxy_data[l_id]
+	var g_i:Array = game.galaxy_data[l_id]
 	var view = self.get_parent()
 	if not view.dragged:
-		if g_i.has("GS"):
-#			if g_i.GS == "TP":
-#				game.PC_panel.probe_tier = 2
-#				game.toggle_panel(game.PC_panel)
-#				game.hide_tooltip()
-			return
 		if game.bottom_info_action == "convert_to_GS":
 			if id == 0:
 				game.popup(tr("GS_ERROR"), 1.5)
-			elif not game.galaxy_data[l_id].has("conquered"):
+			elif not g_i[11]:
 				game.popup(tr("NO_GS"), 2.0)
-			elif not game.galaxy_data[l_id].has("GS"):
+			elif not g_i[15].has("GS"):
 				game._on_BottomInfo_close_button_pressed()
 				game.gigastructures_panel.g_i = game.galaxy_data[l_id]
 				game.gigastructures_panel.galaxy_id_g = id
 				game.toggle_panel(game.gigastructures_panel)
 		else:
-			if not g_i.has("discovered") and g_i.system_num > 9000:
+			if not g_i[10] and g_i[6] > 9000:
 				game.show_YN_panel("op_galaxy", tr("OP_GALAXY_DESC"), [l_id, id], tr("OP_GALAXY"))
 			else:
 				game.switch_view("galaxy", {"fn":"set_custom_coords", "fn_args":[["c_g", "c_g_g"], [l_id, id]]})
@@ -217,41 +211,41 @@ func change_overlay(overlay_id:int, gradient:Gradient):
 	match overlay_id:
 		0:
 			for overlay in overlays:
-				var offset = inverse_lerp(c_vl.left, c_vl.right, game.galaxy_data[overlay.id].system_num)
+				var offset = inverse_lerp(c_vl.left, c_vl.right, game.galaxy_data[overlay.id][6])
 				Helper.set_overlay_visibility(gradient, overlay, offset)
 		1:
 			for overlay in overlays:
-				if game.galaxy_data[overlay.id].has("discovered"):
+				if game.galaxy_data[overlay.id][10]:
 					overlay.circle.modulate = gradient.sample(0)
 				else:
 					overlay.circle.modulate = gradient.sample(1)
 		2:
 			for overlay in overlays:
-				if game.galaxy_data[overlay.id].has("explored"):
+				if game.galaxy_data[overlay.id][15].has("explored"):
 					overlay.circle.modulate = gradient.sample(0)
 				else:
 					overlay.circle.modulate = gradient.sample(1)
 		3:
 			for overlay in overlays:
-				if game.galaxy_data[overlay.id].has("conquered"):
+				if game.galaxy_data[overlay.id][11]:
 					overlay.circle.modulate = gradient.sample(0)
 				else:
 					overlay.circle.modulate = gradient.sample(1)
 		4:
 			for overlay in overlays:
-				var offset = inverse_lerp(c_vl.left, c_vl.right, game.galaxy_data[overlay.id].diff)
+				var offset = inverse_lerp(c_vl.left, c_vl.right, game.galaxy_data[overlay.id][4])
 				Helper.set_overlay_visibility(gradient, overlay, offset)
 		5:
 			for overlay in overlays:
-				var offset = inverse_lerp(c_vl.left, c_vl.right, game.galaxy_data[overlay.id].B_strength * e(1, 9))
+				var offset = inverse_lerp(c_vl.left, c_vl.right, game.galaxy_data[overlay.id][13] * e(1, 9))
 				Helper.set_overlay_visibility(gradient, overlay, offset)
 		6:
 			for overlay in overlays:
-				var offset = inverse_lerp(c_vl.left, c_vl.right, game.galaxy_data[overlay.id].dark_matter)
+				var offset = inverse_lerp(c_vl.left, c_vl.right, game.galaxy_data[overlay.id][14])
 				Helper.set_overlay_visibility(gradient, overlay, offset)
 		7:
 			for overlay in overlays:
-				if game.galaxy_data[overlay.id].has("GS"):
+				if game.galaxy_data[overlay.id][15].has("GS"):
 					overlay.circle.modulate = gradient.sample(0)
 				else:
 					overlay.circle.modulate = gradient.sample(1)
@@ -259,41 +253,3 @@ func change_overlay(overlay_id:int, gradient:Gradient):
 
 func _on_Galaxy_tree_exited():
 	queue_free()
-
-var items_collected:Dictionary = {}
-
-func collect_all():
-	items_collected.clear()
-	var curr_time = Time.get_unix_time_from_system()
-	var galaxies = game.u_i.cluster_data[game.c_c].galaxies
-	var progress:TextureProgressBar = game.HUD.get_node("Bottom/Panel/CollectProgress")
-	progress.max_value = len(galaxies)
-	var cond = game.collect_speed_lag_ratio != 0
-	for g_ids in galaxies:
-		if game.c_v != "cluster":
-			break
-		if not game.galaxy_data[g_ids.local].has("discovered"):
-			progress.value += 1
-			continue
-		game.system_data = game.open_obj("Galaxies", g_ids.global)
-		if game.system_data.is_empty():
-			continue
-		for s_ids in game.galaxy_data[g_ids.local].systems:
-			var system:Dictionary = game.system_data[s_ids.local]
-			if not system.has("discovered"):
-				continue
-			game.planet_data = game.open_obj("Systems", s_ids.global)
-			for p_ids in system.planets:
-				var planet:Dictionary = game.planet_data[p_ids.local]
-				if planet.is_empty() or p_ids.local >= len(game.planet_data) or not planet.has("discovered"):
-					continue
-				if planet.has("tile_num"):
-					if planet.bldg.name in ["ME", "PP", "MM", "AE"]:
-						Helper.call("collect_%s" % planet.bldg.name, planet, planet, items_collected, curr_time, planet.tile_num)
-			Helper.save_obj("Systems", s_ids.global, game.planet_data)
-		Helper.save_obj("Galaxies", g_ids.global, game.system_data)
-		if cond:
-			progress.value += 1
-			await get_tree().create_timer(0.02 * game.collect_speed_lag_ratio).timeout
-	game.show_collect_info(items_collected)
-	game.HUD.refresh()

@@ -292,9 +292,9 @@ func refresh():
 		$Bookmarks/Bookmarked.visible = true
 		$Top/Name/Name.text = game.system_data[game.c_s][2]
 	elif game.c_v == "galaxy":
-		$Bookmarks/Bookmarked.button_pressed = game.galaxy_data[game.c_g].has("bookmarked")
+		$Bookmarks/Bookmarked.button_pressed = game.galaxy_data[game.c_g][15].has("bookmarked")
 		$Bookmarks/Bookmarked.visible = true
-		$Top/Name/Name.text = game.galaxy_data[game.c_g].name
+		$Top/Name/Name.text = game.galaxy_data[game.c_g][2]
 	elif game.c_v == "cluster":
 		$Bookmarks/Bookmarked.button_pressed = game.u_i.cluster_data[game.c_c].has("bookmarked")
 		$Bookmarks/Bookmarked.visible = true
@@ -580,18 +580,18 @@ func _on_Bookmarked_pressed():
 			s_i.bookmarked = true
 			game.bookmarks.system[str(game.c_s_g)] = bookmark
 	elif game.c_v == "galaxy":
-		var g_i:Dictionary = game.galaxy_data[game.c_g]
-		if g_i.has("bookmarked"):
+		var g_i:Array = game.galaxy_data[game.c_g]
+		if g_i[15].has("bookmarked"):
 			game.bookmarks.galaxy.erase(str(game.c_g_g))
-			g_i.erase("bookmarked")
+			g_i[15].erase("bookmarked")
 		else:
 			var bookmark:Dictionary = {
-				"type":g_i.type,
-				"name":g_i.name,
+				"type":g_i[9],
+				"name":g_i[2],
 				"c_g":game.c_g,
 				"c_g_g":game.c_g_g,
 				"c_c":game.c_c}
-			g_i.bookmarked = true
+			g_i[15].bookmarked = true
 			game.bookmarks.galaxy[str(game.c_g_g)] = bookmark
 	elif game.c_v == "cluster":
 		var c_i:Dictionary = game.u_i.cluster_data[game.c_c]
@@ -651,7 +651,7 @@ func _on_Name_text_entered(new_text):
 		if game.bookmarks.system.has(str(game.c_s_g)):
 			game.bookmarks.system[str(game.c_s_g)].name = new_text
 	elif game.c_v == "galaxy":
-		game.galaxy_data[game.c_g].name = new_text
+		game.galaxy_data[game.c_g][2] = new_text
 		if game.bookmarks.galaxy.has(str(game.c_g_g)):
 			game.bookmarks.galaxy[str(game.c_g_g)].name = new_text
 	elif game.c_v == "cluster":

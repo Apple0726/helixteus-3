@@ -149,7 +149,7 @@ func refresh_options(index:int, recalculate:bool = true):
 			match index:
 				0:
 					if recalculate and not c_vl.modified:
-						min_max = get_obj_min_max("galaxy", "system_num")
+						min_max = get_obj_min_max("galaxy", 6)
 						c_vl.left = min_max._min
 						c_vl.right = min_max._max
 					editable = true
@@ -158,7 +158,7 @@ func refresh_options(index:int, recalculate:bool = true):
 					editable = false
 				4:
 					if recalculate and not c_vl.modified:
-						min_max = get_obj_min_max("galaxy", "diff")
+						min_max = get_obj_min_max("galaxy", 4)
 						c_vl.left = min_max._min
 						c_vl.right = min_max._max
 					editable = true
@@ -166,7 +166,7 @@ func refresh_options(index:int, recalculate:bool = true):
 					unit = ""
 				5:
 					if recalculate and not c_vl.modified:
-						min_max = get_obj_min_max("galaxy", "B_strength")
+						min_max = get_obj_min_max("galaxy", 13)
 						c_vl.left = min_max._min * e(1, 9)
 						c_vl.right = min_max._max * e(1, 9)
 					editable = true
@@ -174,7 +174,7 @@ func refresh_options(index:int, recalculate:bool = true):
 					unit = " nT"
 				6:
 					if recalculate and not c_vl.modified:
-						min_max = get_obj_min_max("galaxy", "dark_matter")
+						min_max = get_obj_min_max("galaxy", 14)
 						c_vl.left = min_max._min
 						c_vl.right = min_max._max
 					editable = true

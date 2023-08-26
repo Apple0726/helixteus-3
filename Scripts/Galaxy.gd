@@ -26,7 +26,7 @@ func _ready():
 		for j in range(1, len(s_i[9])):
 			if s_i[9][j][6] > star[6]:
 				star = s_i[9][j]
-		if game.galaxy_data[game.c_g].has("conquered") and not s_i[11]:
+		if game.galaxy_data[game.c_g][11] and not s_i[11]:
 			s_i[11] = true
 			game.stats_univ.planets_conquered += s_i[6]
 			game.stats_dim.planets_conquered += s_i[6]
@@ -67,8 +67,8 @@ func _ready():
 	queue_redraw()
 
 func _draw():
-	if game.galaxy_data[game.c_g].has("wormholes"):
-		for wh_data in game.galaxy_data[game.c_g].wormholes:
+	if game.galaxy_data[game.c_g][15].has("wormholes"):
+		for wh_data in game.galaxy_data[game.c_g][15].wormholes:
 			draw_line(game.system_data[wh_data.from][3], game.system_data[wh_data.to][3], Color(0.6, 0.4, 1.0, 1.0))
 
 func on_system_over (l_id:int):
@@ -169,46 +169,6 @@ func change_overlay(overlay_id:int, gradient:Gradient):
 
 func _on_Galaxy_tree_exited():
 	queue_free()
-
-var items_collected = {}
-
-func collect_all():
-	items_collected.clear()
-	var curr_time = Time.get_unix_time_from_system()
-	var systems = game.galaxy_data[game.c_g].systems
-	var progress:TextureProgressBar = game.HUD.get_node("Bottom/Panel/CollectProgress")
-	progress.max_value = len(systems)
-	var cond = game.collect_speed_lag_ratio != 0
-	for s_ids in systems:
-		if game.c_v != "galaxy":
-			break
-		if not game.system_data[s_ids.local][10]:
-			progress.value += 1
-			continue
-		game.planet_data = game.open_obj("Systems", s_ids.global)
-		for p_ids in game.system_data[s_ids.local][7]:
-			var planet:Dictionary = game.planet_data[p_ids.local]
-			if planet.is_empty() or not planet.has("discovered"):
-				continue
-			if p_ids.local >= len(game.planet_data):
-				continue
-			if planet.has("tile_num"):
-				if planet.bldg.name in ["ME", "PP", "MM", "AE"]:
-					Helper.call("collect_%s" % planet.bldg.name, planet, planet, items_collected, curr_time, planet.tile_num)
-			else:
-				game.tile_data = game.open_obj("Planets", p_ids.global)
-				var i:int
-				for tile in game.tile_data:
-					if tile:
-						Helper.collect_rsrc(items_collected, planet, tile, i)
-					i += 1
-				Helper.save_obj("Planets", p_ids.global, game.tile_data)
-		Helper.save_obj("Systems", s_ids.global, game.planet_data)
-		if cond:
-			progress.value += 1
-			await get_tree().create_timer(0.02 * game.collect_speed_lag_ratio).timeout
-	game.show_collect_info(items_collected)
-	game.HUD.refresh()
 
 const Y9 = Color(25, 0, 0, 255) / 255.0
 const Y0 = Color(66, 0, 0, 255) / 255.0
