@@ -1,10 +1,12 @@
-[gd_scene load_steps=8 format=3 uid="uid://c4filbuq4b5ct"]
+[gd_scene load_steps=9 format=3 uid="uid://c4filbuq4b5ct"]
 
-[ext_resource type="Texture2D" uid="uid://bjfmtj2gp0t6p" path="res://Graphics/Icons/Time.png" id="1"]
-[ext_resource type="Texture2D" uid="uid://bvp52vcrg8q4i" path="res://Graphics/Icons/help.png" id="2"]
+[ext_resource type="Texture2D" uid="uid://ocunpc0pw8ly" path="res://Graphics/Icons/Time.png" id="1"]
+[ext_resource type="Texture2D" uid="uid://dibh1xlax816t" path="res://Graphics/Icons/help.png" id="2"]
 [ext_resource type="Theme" uid="uid://cp2u1kgj60ic" path="res://Resources/default_theme.tres" id="3"]
 [ext_resource type="Script" path="res://Scripts/SendProbesPanel.gd" id="5"]
 [ext_resource type="PackedScene" uid="uid://ddf2xjwcht77u" path="res://Scenes/CloseButton.tscn" id="8"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_cdiax"]
 
 [sub_resource type="StyleBoxFlat" id="1"]
 bg_color = Color(0.317647, 0.317647, 0.317647, 1)
@@ -137,6 +139,7 @@ offset_top = 56.0
 offset_right = -16.0
 offset_bottom = -24.0
 mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxEmpty_cdiax")
 
 [node name="VBox" type="VBoxContainer" parent="TP"]
 layout_mode = 0
@@ -527,7 +530,7 @@ offset_bottom = 552.0
 [connection signal="mouse_exited" from="TP/VBox/charge/Label" to="." method="_on_mouse_exited"]
 [connection signal="value_changed" from="TP/VBox/charge/HSlider" to="." method="_on_TP_value_changed" binds= ["charge"]]
 [connection signal="text_changed" from="TP/VBox/charge/Label2" to="." method="_on_Label2_text_changed" binds= ["charge"]]
-[connection signal="mouse_entered" from="TP/VBox/dark_energy/Label" to="." method="_on_Label_mouse_entered" binds= ["DARK_ENERGY_DESC2"]]
+[connection signal="mouse_entered" from="TP/VBox/dark_energy/Label" to="." method="_on_Label_mouse_entered" binds= ["DARK_ENERGY_DESC"]]
 [connection signal="mouse_exited" from="TP/VBox/dark_energy/Label" to="." method="_on_mouse_exited"]
 [connection signal="value_changed" from="TP/VBox/dark_energy/HSlider" to="." method="_on_TP_value_changed" binds= ["dark_energy"]]
 [connection signal="text_changed" from="TP/VBox/dark_energy/Label2" to="." method="_on_Label2_text_changed" binds= ["dark_energy"]]

@@ -24,7 +24,7 @@ func refresh():
 	$Drives.refresh()
 	$Upgrade._refresh()
 	$Upgrade._refresh_op()
-	if game.ships_travel_view != "-":
+	if game.ships_travel_data.travel_view != "-":
 		$SpaceportTimer.stop()
 		spaceport_tier = -1
 		$Panel/TravelETA["theme_override_colors/font_color"] = Color.WHITE
@@ -60,8 +60,8 @@ func _process(delta):
 			var curr_XP = game.ship_data[i].XP
 			XP_node.value = move_toward(XP_node.value, curr_XP, abs(curr_XP - XP_node.value) * delta * 2)
 			XP_text_node.text = "%s / %s" % [Helper.format_num(round(XP_node.value)), Helper.format_num(game.ship_data[i].XP_to_lv)]
-	elif game.ships_travel_view != "-":
-		travel_ETA.text = "%s: %s" % [tr("TRAVEL_ETA"), Helper.time_to_str(game.ships_travel_length - Time.get_unix_time_from_system() + game.ships_travel_start_date)]
+	elif game.ships_travel_data.travel_view != "-":
+		travel_ETA.text = "%s: %s" % [tr("TRAVEL_ETA"), Helper.time_to_str(game.ships_travel_data.travel_length - Time.get_unix_time_from_system() + game.ships_travel_data.travel_start_date)]
 	if not visible:
 		set_process(false)
 

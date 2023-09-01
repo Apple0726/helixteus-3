@@ -393,7 +393,7 @@ func show_tooltip(tile, tile_id:int):
 		#game.tooltip.get_node("ColorRect").material.set_shader_parameter("fog_mvt_spd", 1.5)
 
 func get_wh_costs():
-	return {"SP":round(10000 * pow(game.stats_univ.wormholes_activated + 1, 0.8)), "time":900 / game.u_i.time_speed if game.subjects.dimensional_power.lv == 0 else 0.2}
+	return {"SP":round(10000 * pow(game.stats_univ.wormholes_activated + 1, 0.8)), "time":900 / game.u_i.time_speed if game.subject_levels.dimensional_power == 0 else 0.2}
 
 func constr_bldg(tile_id:int, curr_time:int, _bldg_to_construct:String, mass_build:bool = false):
 	if _bldg_to_construct == "":
@@ -414,7 +414,7 @@ func constr_bldg(tile_id:int, curr_time:int, _bldg_to_construct:String, mass_bui
 				game.popup(tr("NOT_ADJACENT_TO_LAKE"), 1.5)
 			return
 	var constr_costs2:Dictionary = constr_costs_total.duplicate()
-	if game.subjects.dimensional_power.lv >= 1:
+	if game.subject_levels.dimensional_power >= 1:
 		constr_costs2.time = 0.2
 	else:
 		constr_costs2.time /= game.u_i.time_speed
@@ -545,11 +545,6 @@ func overclock_bldg(tile, tile_id:int, curr_time):
 		elif tile.bldg.name == "SP":
 			var SP_prod = Helper.get_SP_production(p_i.temperature, tile.bldg.path_1_value * mult_diff * Helper.get_au_mult(tile) * (tile.substation_bonus if tile.has("substation_bonus") else 1.0))
 			game.autocollect.rsrc.energy += SP_prod
-			if tile.has("aurora"):
-				if game.aurora_prod.has(tile.aurora.au_int):
-					game.aurora_prod[tile.aurora.au_int].energy = game.aurora_prod[tile.aurora.au_int].get("energy", 0) + SP_prod
-				else:
-					game.aurora_prod[tile.aurora.au_int] = {"energy":SP_prod}
 		elif tile.bldg.name == "AE":
 			var base = tile.bldg.path_1_value * mult_diff * p_i.pressure
 			for el in p_i.atmosphere:
@@ -663,12 +658,6 @@ func destroy_bldg(id2:int, mass:bool = false):
 		if not tile.bldg.has("is_constructing"):
 			var SP_prod = Helper.get_SP_production(p_i.temperature, tile.bldg.path_1_value * overclock_mult * Helper.get_au_mult(tile))
 			game.autocollect.rsrc.energy -= SP_prod
-			if tile.has("aurora"):
-				game.aurora_prod[tile.aurora.au_int].energy -= SP_prod
-				if is_zero_approx(game.aurora_prod[tile.aurora.au_int].energy):
-					game.aurora_prod[tile.aurora.au_int].erase("energy")
-					if game.aurora_prod[tile.aurora.au_int].is_empty():
-						game.aurora_prod.erase(tile.aurora.au_int)
 		if tile.has("substation_tile"):
 			var cap_to_remove = Helper.get_SP_production(p_i.temperature, tile.bldg.path_1_value * Helper.get_au_mult(tile)) * Helper.get_substation_capacity_bonus(game.tile_data[tile.substation_tile].unique_bldg.tier)
 			game.tile_data[tile.substation_tile].unique_bldg.capacity_bonus -= cap_to_remove
@@ -1454,8 +1443,6 @@ func on_timeout():
 				elif tile.bldg.name == "SP":
 					var SP_prod = Helper.get_SP_production(p_i.temperature, tile.bldg.path_1_value * (mult - 1) * Helper.get_au_mult(tile) * (tile.substation_bonus if tile.has("substation_bonus") else 1.0))
 					game.autocollect.rsrc.energy -= SP_prod
-					if tile.has("aurora"):
-						game.aurora_prod[tile.aurora.au_int].energy -= SP_prod
 				elif tile.bldg.name == "AE":
 					var base = -tile.bldg.path_1_value * (mult - 1) * p_i.pressure
 					for el in p_i.atmosphere:

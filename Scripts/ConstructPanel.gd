@@ -77,7 +77,7 @@ func _on_btn_pressed(btn_str:String):
 		if bldg == "GH":
 			item.costs.energy = round(item.costs.energy * (1 + abs(game.planet_data[game.c_p].temperature - 273) / 10.0))
 		if item.costs.has("time"):
-			if game.subjects.dimensional_power.lv >= 1:
+			if game.subject_levels.dimensional_power >= 1:
 				item.costs.time = 0.2
 			else:
 				item.costs.time /= game.u_i.time_speed

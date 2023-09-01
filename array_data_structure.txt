@@ -31,11 +31,11 @@ type--------------------9-------float
 discovered--------------10------bool
 conquered---------------11------bool
 rotation----------------12------float
-B_strength--------------12------float
-dark_matter-------------13------float
-attributes--------------14------Dictionary
+B_strength--------------13------float
+dark_matter-------------14------float
+attributes--------------15------Dictionary
 ]
-
+"pos":Vector2(7500, 7500) * 0.5 + Vector2(640, 360), "zoom":0.5
 star_data:
 [
 type--------------------0-------int

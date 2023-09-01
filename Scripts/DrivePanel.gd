@@ -108,24 +108,24 @@ func _on_OptionButton_item_selected(index):
 
 func _on_h_slider_value_changed(value):
 	refresh_h_slider()
-	ships_time_remaining = game.ships_travel_length - (Time.get_unix_time_from_system() - game.ships_travel_start_date)
+	ships_time_remaining = game.ships_travel_data.travel_length - (Time.get_unix_time_from_system() - game.ships_travel_data.travel_start_date)
 	if ships_time_remaining < 0:
 		ships_time_remaining = 0
-	$Control/Button.disabled = game.ships_travel_drive_available_time > Time.get_unix_time_from_system()
+	$Control/Button.disabled = game.ships_travel_data.drive_available_time > Time.get_unix_time_from_system()
 	if not is_processing():
-		$Control/Cooldown.text = Helper.time_to_str(60 * pow(2, game.ships_travel_drives_used))
+		$Control/Cooldown.text = Helper.time_to_str(60 * pow(2, game.ships_travel_data.drives_used))
 	cost = $Control/HSlider.value
-	ships_time_reduction = ships_time_remaining - ships_time_remaining * (game.ships_travel_cost / (game.ships_travel_cost + cost * energy))
+	ships_time_reduction = ships_time_remaining - ships_time_remaining * (game.ships_traveL_data.travel_cost / (game.ships_travel_data.travel_cost + cost * energy))
 	$Control/Label.text = "%s %s" % [Helper.format_num(cost, true), unit]
 	$Control/RsrcOwned.text = "%s %s" % [Helper.format_num(game[type][meta], true), unit]
 	$Control/Label2.text = Helper.time_to_str(ships_time_reduction)
 
 func _process(delta):
-	$Control/Cooldown.text = Helper.time_to_str(game.ships_travel_drive_available_time - Time.get_unix_time_from_system())
-	if Time.get_unix_time_from_system() > game.ships_travel_drive_available_time:
+	$Control/Cooldown.text = Helper.time_to_str(game.ships_travel_data.drive_available_time - Time.get_unix_time_from_system())
+	if Time.get_unix_time_from_system() > game.ships_travel_data.drive_available_time:
 		set_process(false)
 		$Control/Button.disabled = false
-		$Control/Cooldown.text = Helper.time_to_str(60 * pow(2, game.ships_travel_drives_used))
+		$Control/Cooldown.text = Helper.time_to_str(60 * pow(2, game.ships_travel_data.drives_used))
 
 func refresh_h_slider():
 	if meta:

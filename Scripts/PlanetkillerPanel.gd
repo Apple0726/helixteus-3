@@ -96,7 +96,7 @@ func refresh_planet_info():
 	rsrc = {"stone":stone}
 	var max_star_temp = game.get_max_star_prop(game.c_s, "temperature")
 	var au_int = 12000.0 * game.galaxy_data[game.c_g].B_strength * max_star_temp
-	var au_mult = pow(1 + au_int, Helper.get_AIE())
+	var au_mult = 1.0 + au_int
 	$Control/MMM.text = "[aurora au_int=%s]%s: %s" % [au_int, tr("MAT_MET_MULT"), Helper.format_num(Helper.clever_round(au_mult, 4))]
 	for mat in target.surface:
 		rsrc[mat] = surface_volume * target.surface[mat].chance * target.surface[mat].amount * au_mult * game.u_i.planck

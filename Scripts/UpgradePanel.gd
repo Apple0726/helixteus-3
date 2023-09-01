@@ -365,9 +365,6 @@ func _on_Upgrade_pressed():
 					game.autocollect.rsrc.energy -= energy_prod
 					if tile.has("substation_tile"):
 						tile.bldg.cap_upgrade = Helper.get_SP_production(p_i.temperature, (new_base_value - tile.bldg.path_1_value) * Helper.get_au_mult(tile) * tile.substation_bonus) * Helper.get_substation_capacity_bonus(game.tile_data[tile.substation_tile].unique_bldg.tier)
-					if tile.has("aurora"):
-						if game.aurora_prod.has(tile.aurora.au_int):
-							game.aurora_prod[tile.aurora.au_int].energy = game.aurora_prod[tile.aurora.au_int].get("energy", 0) - energy_prod
 				elif tile.bldg.name == "AE":
 					var base_prod = -tile.bldg.path_1_value * overclock_mult * p_i.pressure
 					for el in p_i.atmosphere:

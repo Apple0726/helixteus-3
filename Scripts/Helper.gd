@@ -436,17 +436,11 @@ func add_energy(amount:float):
 		game.energy = energy_cap
 		return {"added":energy_space_available, "remainder":amount - energy_space_available}
 
-func get_AIE(next_lv:int = 0):
-	return 0.98 + (game.MUs.AIE + next_lv) / 50.0
-
 func get_au_mult(tile:Dictionary):
 	if tile.has("aurora"):
-		return pow(1 + tile.aurora.au_int, get_AIE())
+		return 1.0 + tile.aurora.au_int
 	else:
 		return 1.0
-
-func get_au_mult_from_int(au_int:float):
-	return pow(1 + au_int, get_AIE())
 
 func get_layer(tile:Dictionary, p_i:Dictionary):
 	var layer:String = ""
@@ -800,18 +794,18 @@ func add_item_to_coll(dict:Dictionary, item:String, num):
 			dict[item] = num
 
 func ships_on_planet(p_id:int):#local planet id
-	return game.c_c == game.ships_c_coords.c and game.c_g == game.ships_c_coords.g and game.c_s == game.ships_c_coords.s and p_id == game.ships_c_coords.p
+	return game.c_c == game.ships_travel_data.c_coords.c and game.c_g == game.ships_travel_data.c_coords.g and game.c_s == game.ships_travel_data.c_coords.s and p_id == game.ships_travel_data.c_coords.p
 
 func update_ship_travel():
-	if game.ships_travel_view == "-" or game.ships_travel_length == NAN:
+	if game.ships_travel_data.travel_view == "-" or game.ships_travel_data.travel_length == NAN:
 		return 1
-	var progress:float = (Time.get_unix_time_from_system() - game.ships_travel_start_date) / float(game.ships_travel_length)
+	var progress:float = (Time.get_unix_time_from_system() - game.ships_travel_data.travel_start_date) / float(game.ships_travel_data.travel_length)
 	if progress >= 1:
 		game.get_node("Ship").mouse_filter = TextureButton.MOUSE_FILTER_IGNORE
-		game.ships_travel_view = "-"
-		game.ships_c_coords = game.ships_dest_coords.duplicate(true)
-		game.ships_c_g_coords = game.ships_dest_g_coords.duplicate(true)
-		var p_i = game.open_obj("Systems", game.ships_c_g_coords.s)[game.ships_c_coords.p]
+		game.ships_travel_data.travel_view = "-"
+		game.ships_travel_data.c_coords = game.ships_travel_data.dest_coords.duplicate(true)
+		game.ships_travel_data.c_g_coords = game.ships_travel_data.dest_g_coords.duplicate(true)
+		var p_i = game.open_obj("Systems", game.ships_travel_data.c_g_coords.s)[game.ships_travel_data.c_coords.p]
 		if p_i.has("unique_bldgs") and p_i.unique_bldgs.has("spaceport") and not p_i.unique_bldgs.spaceport[0].has("repair_cost"):
 			var tier = p_i.unique_bldgs.spaceport[0].tier
 			game.autocollect.ship_XP = tier
@@ -874,11 +868,6 @@ func update_bldg_constr(tile:Dictionary, p_i:Dictionary):
 					game.capacity_bonus_from_substation += tile.bldg.cap_upgrade
 					if tile.has("substation_tile"):
 						game.tile_data[tile.substation_tile].unique_bldg.capacity_bonus += tile.bldg.cap_upgrade
-				if tile.has("aurora"):
-					if game.aurora_prod.has(tile.aurora.au_int):
-						game.aurora_prod[tile.aurora.au_int].energy = game.aurora_prod[tile.aurora.au_int].get("energy", 0) + energy_prod
-					else:
-						game.aurora_prod[tile.aurora.au_int] = {"energy":energy_prod}
 			elif tile.bldg.name == "AE":
 				var base = tile.bldg.path_1_value * overclock_mult * p_i.pressure
 				for el in p_i.atmosphere:
@@ -1405,12 +1394,8 @@ func remove_GH_produce_from_autocollect(produce:Dictionary, au_int:float):
 		elif game.mat_info.has(p):
 			game.autocollect.mats[p] -= produce[p]
 		elif game.met_info.has(p):
-			var met_prod = produce[p] * get_au_mult_from_int(au_int)
-			game.autocollect.mets[p] -=  met_prod
-			if au_int > 0 and game.aurora_prod.has(au_int) and game.aurora_prod[au_int].has(p):
-				game.aurora_prod[au_int][p] -= met_prod
-				if is_zero_approx(game.aurora_prod[au_int][p]):
-					game.aurora_prod[au_int].erase(p)
+			var met_prod = produce[p] * (1.0 + au_int)
+			game.autocollect.mets[p] -= met_prod
 
 func add_GH_produce_to_autocollect(produce:Dictionary, au_int:float):
 	for p in produce:
@@ -1419,13 +1404,8 @@ func add_GH_produce_to_autocollect(produce:Dictionary, au_int:float):
 		elif game.mat_info.has(p):
 			game.autocollect.mats[p] = produce[p] + game.autocollect.mats.get(p, 0.0)
 		elif game.met_info.has(p):
-			var met_prod = produce[p] * get_au_mult_from_int(au_int)
+			var met_prod = produce[p] * (1.0 + au_int)
 			game.autocollect.mets[p] = met_prod + game.autocollect.mets.get(p, 0.0)
-			if au_int > 0:
-				if game.aurora_prod.has(au_int):
-					game.aurora_prod[au_int][p] = game.aurora_prod[au_int].get(p, 0) + met_prod
-				else:
-					game.aurora_prod[au_int] = {p:met_prod}
 
 func set_resolution(index:int):
 	var res:Vector2 = get_viewport().size
@@ -1561,11 +1541,6 @@ func set_unique_bldg_bonuses(p_i:Dictionary, unique_bldg:Dictionary, tile_id:int
 								game.autocollect.rsrc.energy += energy_prod
 								unique_bldg.capacity_bonus = unique_bldg.get("capacity_bonus", 0) + energy_prod_base * cap_bonus_mult
 								game.capacity_bonus_from_substation += unique_bldg.capacity_bonus
-								if tile.has("aurora"):
-									if game.aurora_prod.has(tile.aurora.au_int):
-										game.aurora_prod[tile.aurora.au_int].energy = game.aurora_prod[tile.aurora.au_int].get("energy", 0) + energy_prod
-									else:
-										game.aurora_prod[tile.aurora.au_int] = {"energy":energy_prod}
 				else:
 					game.tile_data[id] = {str(unique_bldg.name + "_bonus"): mult}
 				if unique_bldg.name == "substation":

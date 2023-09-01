@@ -57,11 +57,11 @@ func refresh():
 	costs.clear()
 	if game.viewing_dimension:
 		init_PP = get_lv_sum()
-		if game.subjects.dimensional_power.lv >= 5:
+		if game.subject_levels.dimensional_power >= 5:
 			init_PP += 150
 		PP = init_PP + Helper.get_sum_of_dict(point_distribution)
 		var ok:bool = false
-		if len(game.universe_data) == 0 and game.subjects.dimensional_power.lv >= 5:
+		if len(game.universe_data) == 0 and game.subject_levels.dimensional_power >= 5:
 			ok = true
 		for probe in game.probe_data:
 			if probe and probe.tier == 2:
@@ -74,7 +74,7 @@ func refresh():
 		if ok:
 			for prop in $TP/VBox.get_children():
 				prop.get_node("Unit").text = units[prop.name]
-				if prop.name == "time_speed" and game.subjects.dimensional_power.lv >= 4:
+				if prop.name == "time_speed" and game.subject_levels.dimensional_power >= 4:
 					var cave_battle_time_speed:float = log(prop.get_node("HSlider").value - 1.0 + exp(1.0))
 					prop.get_node("Unit").text = " (%s in battles/caves)" % [cave_battle_time_speed]
 				if prop.has_node("HSlider"):
@@ -163,7 +163,6 @@ func discover_univ():
 		game.dimension.set_bonuses()
 		Data.MUs.MV.pw = game.maths_bonus.MUCGF_MV
 		Data.MUs.MSMB.pw = game.maths_bonus.MUCGF_MSMB
-		Data.MUs.AIE.pw = game.maths_bonus.MUCGF_AIE
 		for el in game.PD_panel.bonuses.keys():
 			game.chemistry_bonus[el] = game.PD_panel.bonuses[el]
 	game.dimension.refresh_univs()
@@ -237,7 +236,7 @@ func _on_TP_value_changed(value:float, prop:String):
 	if prop == "antimatter":
 		point_distribution.antimatter = value * -game.physics_bonus[prop]
 	else:
-		if prop == "time_speed" and game.subjects.dimensional_power.lv >= 4:
+		if prop == "time_speed" and game.subject_levels.dimensional_power >= 4:
 			var cave_battle_time_speed:float = log($TP/VBox/time_speed/HSlider.value - 1.0 + exp(1.0))
 			$TP/VBox/time_speed/Unit.text = " (%.2f in battles/caves)" % [cave_battle_time_speed]
 		if value >= 1:

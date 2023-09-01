@@ -148,8 +148,6 @@ func _on_UseFertilizer_toggled(button_pressed):
 						if p in game.met_info.keys():
 							var add_amount = tile.auto_GH.produce[p] * (0.5 * fert_mult) * au_mult
 							game.autocollect.mets[p] += add_amount
-							if tile.has("aurora"):
-								game.aurora_prod[tile.aurora.au_int][p] += add_amount
 							tile.auto_GH.produce[p] *= 1.0 + 0.5 * fert_mult
 						else:
 							game.autocollect.mats[p] += tile.auto_GH.produce[p] * (0.5 * fert_cost_mult)
@@ -173,8 +171,6 @@ func _on_UseFertilizer_toggled(button_pressed):
 						if p in game.met_info.keys():
 							tile.auto_GH.produce[p] /= 1.0 + 0.5 * fert_mult
 							var subtr_amount = tile.auto_GH.produce[p] * (0.5 * fert_cost_mult) * au_mult
-							if tile.has("aurora"):
-								game.aurora_prod[tile.aurora.au_int][p] -= subtr_amount
 							game.autocollect.mets[p] -= subtr_amount
 						else:
 							tile.auto_GH.produce[p] /= 1.0 + 0.5 * fert_cost_mult

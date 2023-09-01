@@ -62,15 +62,16 @@ func _process(delta):
 		dragged = false
 	if not limit_to_viewport:
 		return
-	ship.get_node("Fire").visible = game.ships_travel_view != "-"
-	if game.ships_travel_view == game.c_v:
+	var travel_view = game.ships_travel_data.travel_view
+	ship.get_node("Fire").visible = travel_view != "-"
+	if travel_view == game.c_v:
 		var scale_mult = 1.0
 		if game.c_v == "system":
 			scale_mult = 70.0 / game.system_data[game.c_s][12]
 		dep_pos = game.ships_depart_pos * scale_mult
 		dest_pos = game.ships_dest_pos * scale_mult
 		curr_pos = lerp(dep_pos, dest_pos, clamp(Helper.update_ship_travel(), 0, 1))
-		if game.ships_travel_view == "-":
+		if travel_view == "-":
 			dep_pos = null
 			dest_pos = null
 		else:
@@ -79,8 +80,8 @@ func _process(delta):
 	else:
 		dep_pos = null
 		dest_pos = null
-		var sh_c:Dictionary = game.ships_c_coords
-		var sh_c_g:Dictionary = game.ships_c_g_coords
+		var sh_c:Dictionary = game.ships_travel_data.c_coords
+		var sh_c_g:Dictionary = game.ships_travel_data.c_g_coords
 		if game.c_v == "universe":
 			ship.position = to_global(game.u_i.cluster_data[sh_c.c].pos) - Vector2(32, 22)
 		elif game.c_v == "cluster" and game.c_c == sh_c.c:
@@ -238,31 +239,31 @@ func refresh():
 	if game.c_v == "":
 		return
 	var show_ship = false
-	var sh_c:Dictionary = game.ships_c_coords
+	var sh_c:Dictionary = game.ships_travel_data.c_coords
 	if game.c_v == "universe":
 		show_ship = true
 		ship.position = to_global(game.u_i.cluster_data[sh_c.c].pos) - Vector2(32, 22)
 	elif game.c_v == "cluster":
-		show_ship = game.ships_c_coords.c == game.c_c
+		show_ship = game.ships_travel_data.c_coords.c == game.c_c
 	elif game.c_v == "galaxy":
-		show_ship = game.ships_c_g_coords.g == game.c_g_g
+		show_ship = game.ships_travel_data.c_g_coords.g == game.c_g_g
 	elif game.c_v == "system":
-		show_ship = game.ships_c_g_coords.s == game.c_s_g
-	var show_lines = show_ship and game.ships_travel_view == game.c_v and game.ships_travel_view != ""
+		show_ship = game.ships_travel_data.c_g_coords.s == game.c_s_g
+	var travel_view = game.ships_travel_data.travel_view
+	var show_lines = show_ship and travel_view == game.c_v and travel_view != ""
 	ship.visible = show_ship and len(game.ship_data) >= 1
 	game.move_child(ship, game.get_child_count())
 	var progress = Helper.update_ship_travel()
-	if game.ships_travel_view == "-":
+	if travel_view == "-":
 		ship.mouse_filter = TextureButton.MOUSE_FILTER_IGNORE
 	else:
 		ship.mouse_filter = TextureButton.MOUSE_FILTER_STOP
 	if show_lines:
-		var v = game.ships_travel_view
 		var scale_mult = 1.0
 		if game.c_v == "system":
 			scale_mult = 70.0 / game.system_data[game.c_s][12]
-		dep_pos = game.ships_depart_pos * scale_mult
-		dest_pos = game.ships_dest_pos * scale_mult
+		dep_pos = game.ships_travel_data.depart_pos * scale_mult
+		dest_pos = game.ships_travel_data.dest_pos * scale_mult
 		curr_pos = dest_pos
 		if dest_pos.x < dep_pos.x:
 			ship.scale.x = -1

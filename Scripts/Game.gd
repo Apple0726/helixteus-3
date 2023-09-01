@@ -118,7 +118,7 @@ var electron_cap:float
 #Dimension remnants
 var DRs:float
 var dim_num:int = 1
-var subjects:Dictionary
+var subject_levels:Dictionary
 var maths_bonus:Dictionary
 var physics_bonus:Dictionary
 var chemistry_bonus:Dictionary
@@ -149,9 +149,6 @@ var mets:Dictionary
 var atoms:Dictionary
 var particles:Dictionary
 
-#Stores production values boosted by an aurora (useful to recalculate resource production after buying AIE upgrade)
-var aurora_prod:Dictionary = {}
-
 #Display help when players see/do things for the first time. true: show help
 var help:Dictionary = {}
 
@@ -177,18 +174,7 @@ var rover_data:Array
 var fighter_data:Array
 var probe_data:Array
 var ship_data:Array
-var ships_c_coords:Dictionary#Local coords of the planet that the ships are on
-var ships_c_g_coords:Dictionary#ship global coordinates (current)
-var ships_dest_coords:Dictionary#Local coords of the destination planet
-var ships_dest_g_coords:Dictionary#ship global coordinates (destination)
-var ships_depart_pos:Vector2#Depart position of system/galaxy/etc. depending on view
-var ships_dest_pos:Vector2#Destination position of system/galaxy/etc. depending on view
-var ships_travel_view:String#View in which ships travel
-var ships_travel_drives_used:int
-var ships_travel_drive_available_time:int
-var ships_travel_start_date:int
-var ships_travel_length:float
-var ships_travel_cost:float
+var ships_travel_data:Dictionary
 var satellite_data:Array
 
 #Your inventory
@@ -629,7 +615,7 @@ func refresh_continue_button():
 	var saved_c_sv = ""
 	if err == OK:
 		saved_c_sv = config.get_value("game", "saved_c_sv", "")
-	if saved_c_sv != "":
+	if saved_c_sv != "" and FileAccess.open("user://%s/save_info.hx3" % [saved_c_sv], FileAccess.READ) != null:
 		$Title/Menu/VBoxContainer/Continue.visible = true
 		$Title/Menu/VBoxContainer/Continue.text = tr("CONTINUE_X") % saved_c_sv
 	return saved_c_sv
@@ -654,7 +640,7 @@ func switch_music(src, pitch:float = 1.0):
 		return
 	music_player.stream = src
 	if pitch_affected and u_i != null and not u_i.is_empty():
-		if c_v in ["cave", "battle"] and subjects.dimensional_power.lv >= 4:
+		if c_v in ["cave", "battle"] and subject_levels.dimensional_power >= 4:
 			music_player.pitch_scale = pitch * log(u_i.time_speed - 1.0 + exp(1.0))
 		else:
 			music_player.pitch_scale = pitch * u_i.time_speed
@@ -769,13 +755,13 @@ func load_game():
 	universe_data = save_info_dict.universe_data
 	DRs = save_info_dict.get("DRs", 0)
 	dim_num = save_info_dict.get("dim_num", 1)
-	subjects = save_info_dict.get("subjects", {"maths":{"DRs":0, "lv":0},
-					"physics":{"DRs":0, "lv":0},
-					"chemistry":{"DRs":0, "lv":0},
-					"biology":{"DRs":0, "lv":0},
-					"philosophy":{"DRs":0, "lv":0},
-					"engineering":{"DRs":0, "lv":0},
-					"dimensional_power":{"DRs":0, "lv":0},
+	subject_levels = save_info_dict.get("subject_levels", {"maths":0,
+					"physics":0,
+					"chemistry":0,
+					"biology":0,
+					"philosophy":0,
+					"engineering":0,
+					"dimensional_power":0,
 		})
 	stats_global = save_info_dict.get("stats_global", Data.default_stats.duplicate(true))
 	stats_dim = save_info_dict.get("stats_dim", Data.default_stats.duplicate(true))
@@ -794,7 +780,6 @@ func load_game():
 	maths_bonus = save_info_dict.maths_bonus
 	Data.MUs.MV.pw = maths_bonus.MUCGF_MV
 	Data.MUs.MSMB.pw = maths_bonus.MUCGF_MSMB
-	Data.MUs.AIE.pw = maths_bonus.MUCGF_AIE
 	physics_bonus = save_info_dict.physics_bonus
 	if not physics_bonus.has("age"):
 		physics_bonus.age = 15
@@ -849,7 +834,6 @@ func set_default_dim_bonuses():
 		"BUCGF":1.3,
 		"MUCGF_MV":1.9,
 		"MUCGF_MSMB":1.6,
-		"MUCGF_AIE":2.3,
 		"IRM":1.2,
 		"SLUGF_XP":1.3,
 		"SLUGF_Stats":1.15,
@@ -879,13 +863,15 @@ func set_default_dim_bonuses():
 		"PS":1.0,
 		"RSM":1.0,
 	}
-	subjects = {"maths":{"DRs":0, "lv":0},
-				"physics":{"DRs":0, "lv":0},
-				"chemistry":{"DRs":0, "lv":0},
-				"biology":{"DRs":0, "lv":0},
-				"philosophy":{"DRs":0, "lv":0},
-				"engineering":{"DRs":0, "lv":0},
-				"dimensional_power":{"DRs":0, "lv":0}}
+	subject_levels = {
+		"maths":0,
+		"physics":0,
+		"chemistry":0,
+		"biology":0,
+		"philosophy":0,
+		"engineering":0,
+		"dimensional_power":0,
+	}
 
 func new_game(univ:int = 0, new_save:bool = false, DR_advantage = false):
 	view_history.clear()
@@ -909,7 +895,7 @@ func new_game(univ:int = 0, new_save:bool = false, DR_advantage = false):
 			set_default_dim_bonuses()
 		for ach in achievements:
 			achievement_data[ach] = {}
-		if subjects.dimensional_power.lv <= 4:
+		if subject_levels.dimensional_power <= 4:
 			universe_data = [{"id":0, "lv":1, "generated":true, "xp":0, "xp_to_lv":10, "shapes":[], "name":tr("UNIVERSE"), "cluster_num":1000, "view":{"pos":Vector2(640, 360), "zoom":1.0, "sc_mult":0.1}}]
 			universe_data[0].speed_of_light = 1.0#e(3.0, 8)#m/s
 			universe_data[0].planck = 1.0#e(6.626, -34)#J.s
@@ -946,7 +932,7 @@ func new_game(univ:int = 0, new_save:bool = false, DR_advantage = false):
 	neutron_cap = 0
 	electron_cap = 0
 	science_unlocked = {}
-	if subjects.dimensional_power.lv >= 1:
+	if subject_levels.dimensional_power >= 1:
 		science_unlocked.ASM = true
 		science_unlocked.ASM2 = true
 	cave_filters = {
@@ -955,7 +941,6 @@ func new_game(univ:int = 0, new_save:bool = false, DR_advantage = false):
 		"stone":false,
 	}
 	MM_data = {}
-	aurora_prod = {}
 	new_bldgs = {}
 
 	#id of the universe/supercluster/etc. you're viewing the object in
@@ -1037,7 +1022,6 @@ func new_game(univ:int = 0, new_save:bool = false, DR_advantage = false):
 	MUs = {	"MV":1,
 			"MSMB":1,
 			"IS":1,
-			"AIE":1,
 			"STMB":1,
 			"SHSR":1,
 			"CHR":1,
@@ -1046,7 +1030,7 @@ func new_game(univ:int = 0, new_save:bool = false, DR_advantage = false):
 	#Measures to not overwhelm beginners. false: not visible
 	show = {}
 	new_bldgs = {"ME":true}
-	if subjects.dimensional_power.lv >= 1:
+	if subject_levels.dimensional_power >= 1:
 		for mat in mat_info.keys():
 			show[mat] = true
 		for met in met_info.keys():
@@ -1066,18 +1050,19 @@ func new_game(univ:int = 0, new_save:bool = false, DR_advantage = false):
 	fighter_data = []
 	probe_data = []
 	ship_data = []
-
-	ships_c_coords = {"c":0, "g":0, "s":0, "p":2}#Local coords of the planet that the ships are on
-	ships_c_g_coords = {"c":0, "g":0, "s":0}#ship global coordinates (current)
-	ships_dest_coords = {"c":0, "g":0, "s":0, "p":2}#Local coords of the destination planet
-	ships_dest_g_coords = {"c":0, "g":0, "s":0}#ship global coordinates (destination)
-	ships_depart_pos = Vector2.ZERO#Depart position of system/galaxy/etc. depending on view
-	ships_dest_pos = Vector2.ZERO#Destination position of system/galaxy/etc. depending on view
-	ships_travel_view = "-"#View in which ships travel
-	ships_travel_drives_used = 0 # Number of drives used in one journey
-	ships_travel_drive_available_time = 0 # Drive will be available to use at this time
-	ships_travel_start_date = -1
-	ships_travel_length = NAN
+	
+	ships_travel_data = {	"c_coords":{"c":0, "g":0, "s":0, "p":2}, # Local coords of the planet that the ships are on
+							"c_g_coords":{"c":0, "g":0, "s":0}, # ship global coordinates (current)
+							"dest_coords":{"c":0, "g":0, "s":0, "p":2}, # Local coords of the destination planet
+							"dest_g_coords":{"c":0, "g":0, "s":0}, # ship global coordinates (destination)
+							"depart_pos":Vector2.ZERO, # Depart position of system/galaxy/etc. depending on view
+							"dest_pos":Vector2.ZERO, # Destination position of system/galaxy/etc. depending on view
+							"travel_view":"-", # View in which ships travel
+							"drives_used":0, # Number of drives used in one journey
+							"drive_available_time":0, # Drive will be available to use at this time
+							"travel_start_date":-1,
+							"travel_length":NAN,
+	}
 	satellite_data = []
 
 	items = [{"name":"speedup1", "num":1, "type":"speedups_info"}, {"name":"overclock1", "num":1, "type":"overclocks_info"}, null, null, null, null, null, null, null, null]
@@ -1368,12 +1353,12 @@ func toggle_panel(_panel):
 	_panel.refresh()
 
 func set_to_ship_coords():
-	var diff_cluster:bool = c_c != ships_dest_coords.c
-	c_c = ships_dest_coords.c
-	c_g_g = ships_dest_g_coords.g
-	c_g = ships_dest_coords.g
-	c_s_g = ships_dest_g_coords.s
-	c_s = ships_dest_coords.s
+	var diff_cluster:bool = c_c != ships_travel_data.dest_coords.c
+	c_c = ships_travel_data.dest_coords.c
+	c_g_g = ships_travel_data.dest_g_coords.g
+	c_g = ships_travel_data.dest_coords.g
+	c_s_g = ships_travel_data.dest_g_coords.s
+	c_s = ships_travel_data.dest_coords.s
 	if diff_cluster:
 		galaxy_data = open_obj("Clusters", c_c)
 
@@ -1733,20 +1718,20 @@ func add_obj(view_str):
 		"system":
 			view.add_obj("System", system_data[c_s][8][0], system_data[c_s][8][1])
 #			view.add_obj("System", system_data[c_s]["view"]["pos"], system_data[c_s]["view"]["zoom"])
-			if ships_c_g_coords.s == c_s_g:
+			if ships_travel_data.c_g_coords.s == c_s_g:
 				system_data[c_s][13].explored = true
 #				system_data[c_s].explored = true
 		"galaxy":
 			view.shapes_data = galaxy_data[c_g][15].get("shapes", [])
 			view.add_obj("Galaxy", galaxy_data[c_g][8][0], galaxy_data[c_g][8][1])
 			add_space_HUD()
-			if ships_c_g_coords.g == c_g_g:
+			if ships_travel_data.c_g_coords.g == c_g_g:
 				galaxy_data[c_g][15].explored = true
 		"cluster":
 			view.shapes_data = u_i.cluster_data[c_c].shapes
 			view.add_obj("Cluster", u_i.cluster_data[c_c]["view"]["pos"], u_i.cluster_data[c_c]["view"]["zoom"])
 			add_space_HUD()
-			if ships_c_coords.c == c_c:
+			if ships_travel_data.c_coords.c == c_c:
 				u_i.cluster_data[c_c].explored = true
 		"universe":
 			view.shapes_data = universe_data[c_u].shapes
@@ -1778,7 +1763,7 @@ func add_space_HUD():
 		space_HUD.get_node("VBoxContainer/ElementOverlay").visible = c_v == "system" and science_unlocked.has("ATM")
 		space_HUD.get_node("VBoxContainer/Megastructures").visible = c_v == "system" and science_unlocked.has("MAE")
 		space_HUD.get_node("VBoxContainer/Gigastructures").visible = c_v in ["galaxy", "cluster"] and science_unlocked.has("GS")
-		space_HUD.get_node("ConquerAll").visible = c_v == "system" and (u_i.lv >= 32 or subjects.dimensional_power.lv >= 1) and not system_data[c_s][11] and len(ship_data) > 0 and ships_c_g_coords.s == c_s_g
+		space_HUD.get_node("ConquerAll").visible = c_v == "system" and (u_i.lv >= 32 or subject_levels.dimensional_power >= 1) and not system_data[c_s][11] and len(ship_data) > 0 and ships_travel_data.c_g_coords.s == c_s_g
 		space_HUD.get_node("SendFighters").visible = c_v == "galaxy" and science_unlocked.has("FG") and not galaxy_data[c_g][11] or c_v == "cluster" and science_unlocked.has("FG2") and not u_i.cluster_data[c_c].has("conquered")
 		if c_v == "universe":
 			space_HUD.get_node("SendProbes").visible = true
@@ -3766,7 +3751,7 @@ func fn_save_game():
 		"version":VERSION,
 		"DRs":DRs,
 		"dim_num":dim_num,
-		"subjects":subjects,
+		"subject_levels":subject_levels,
 		"maths_bonus":maths_bonus,
 		"physics_bonus":physics_bonus,
 		"chemistry_bonus":chemistry_bonus,
@@ -3805,7 +3790,6 @@ func fn_save_game():
 		"stone":stone,
 		"energy":energy,
 		"SP":SP,
-		"aurora_prod":aurora_prod,
 		"c_v":c_v,
 		"l_v":l_v,
 		"c_c":c_c,
@@ -3836,18 +3820,7 @@ func fn_save_game():
 		"fighter_data":fighter_data,
 		"probe_data":probe_data,
 		"ship_data":ship_data,
-		"ships_c_coords":ships_c_coords,
-		"ships_dest_coords":ships_dest_coords,
-		"ships_depart_pos":ships_depart_pos,
-		"ships_dest_pos":ships_dest_pos,
-		"ships_travel_view":ships_travel_view,
-		"ships_travel_drives_used":ships_travel_drives_used,
-		"ships_travel_drive_available_time":ships_travel_drive_available_time,
-		"ships_c_g_coords":ships_c_g_coords,
-		"ships_dest_g_coords":ships_dest_g_coords,
-		"ships_travel_start_date":ships_travel_start_date,
-		"ships_travel_length":ships_travel_length,
-		"ships_travel_cost":ships_travel_cost,
+		"ships_travel_data":ships_travel_data,
 		"p_num":p_num,
 		"s_num":s_num,
 		"g_num":g_num,
@@ -4094,7 +4067,6 @@ func generate_new_univ_confirm():
 	dimension.set_bonuses()
 	Data.MUs.MV.pw = maths_bonus.MUCGF_MV
 	Data.MUs.MSMB.pw = maths_bonus.MUCGF_MSMB
-	Data.MUs.AIE.pw = maths_bonus.MUCGF_AIE
 	for el in PD_panel.bonuses.keys():
 		chemistry_bonus[el] = PD_panel.bonuses[el]
 	dimension.refresh_univs()
@@ -4166,7 +4138,7 @@ func conquer_all_confirm(energy_cost:float, insta_conquer:bool):
 			space_HUD.get_node("ConquerAll").visible = false
 		else:
 			is_conquering_all = true
-			c_p = ships_c_coords.p
+			c_p = ships_travel_data.c_coords.p
 			switch_view("battle")
 	else:
 		popup(tr("NOT_ENOUGH_ENERGY"), 2.0)
@@ -4203,7 +4175,7 @@ func _on_Ship_pressed():
 				ship_panel._on_DriveButton_pressed()
 
 func _on_Ship_mouse_entered():
-	show_tooltip("%s: %s\n%s" % [tr("TIME_LEFT"), Helper.time_to_str(ships_travel_length - Time.get_unix_time_from_system() + ships_travel_start_date), tr("PLAY_SHIP_MINIGAME")])
+	show_tooltip("%s: %s\n%s" % [tr("TIME_LEFT"), Helper.time_to_str(ships_travel_data.travel_length - Time.get_unix_time_from_system() + ships_travel_data.travel_start_date), tr("PLAY_SHIP_MINIGAME")])
 
 func _on_mouse_exited():
 	hide_tooltip()

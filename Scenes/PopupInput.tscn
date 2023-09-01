@@ -44,20 +44,22 @@ custom_minimum_size = Vector2(0, 38)
 layout_mode = 1
 anchors_preset = 10
 anchor_right = 1.0
-offset_top = 16.0
-offset_bottom = 54.0
+offset_left = 72.0
+offset_right = -72.0
+offset_bottom = 72.0
 grow_horizontal = 2
 text = "CONFIRM_DELETION_INFO"
 horizontal_alignment = 1
 vertical_alignment = 1
+autowrap_mode = 3
 
 [node name="Error" type="Label" parent="Panel"]
 custom_minimum_size = Vector2(0, 38)
 layout_mode = 1
 anchors_preset = 10
 anchor_right = 1.0
-offset_top = 88.0
-offset_bottom = 126.0
+offset_top = 96.0
+offset_bottom = 136.0
 grow_horizontal = 2
 theme_override_colors/font_color = Color(1, 0.235294, 0.235294, 1)
 horizontal_alignment = 1
@@ -78,9 +80,10 @@ text = "DELETE"
 [node name="LineEdit" type="LineEdit" parent="Panel"]
 layout_mode = 0
 offset_left = 152.0
-offset_top = 64.0
+offset_top = 72.0
 offset_right = 280.0
-offset_bottom = 92.0
+offset_bottom = 100.0
 
 [connection signal="close_button_pressed" from="Panel/TextureButton" to="." method="_on_close_button_pressed"]
 [connection signal="pressed" from="Panel/Confirm" to="." method="_on_confirm_pressed"]
+[connection signal="text_submitted" from="Panel/LineEdit" to="." method="_on_line_edit_text_submitted"]

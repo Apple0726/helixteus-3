@@ -51,7 +51,6 @@ func _ready():
 		$Panel/VBox.add_child(hbox)
 
 func refresh():
-	$Panel/VBox/AIE.visible = game.show.has("auroras")
 	$Panel/VBox/MSMB.visible = game.show.has("mining")
 	$Panel/VBox/STMB.visible = game.STM_lv >= 2
 	$Panel/VBox/SHSR.visible = game.stats_univ.planets_conquered >= 2
@@ -85,8 +84,6 @@ func set_upg_text(MU:String, next_lv:int = 0):
 			$Panel/VBox/MSMB/Effects.text = "+ %s %%" % ((game.MUs.MSMB + next_lv - 1) * 10)
 		"IS":
 			$Panel/VBox/IS/Effects.text = tr("X_SLOTS") % [game.MUs.IS + next_lv + 9]
-		"AIE":
-			$Panel/VBox/AIE/Effects.text = str(Helper.get_AIE(next_lv))
 		"STMB":
 			$Panel/VBox/STMB/Effects.text = "+ %s %%" % ((game.MUs.STMB + next_lv - 1) * 15)
 		"SHSR":
@@ -109,21 +106,8 @@ func _on_UpgradeMax_pressed(MU:String):
 		game.minerals -= min_cost
 		game.MUs[MU] += 1
 		min_cost = get_min_cost(MU)
-		if MU == "AIE":
-			for AI in game.aurora_prod.keys():
-				for rsrc in game.aurora_prod[AI].keys():
-					var m = pow(1 + AI, 0.02)
-					if rsrc == "energy":
-						game.autocollect.rsrc.energy += game.aurora_prod[AI].energy * (m - 1.0)
-					elif rsrc in game.mat_info.keys():
-						game.autocollect.mats[rsrc] += game.aurora_prod[AI][rsrc] * (m - 1.0)
-					elif rsrc in game.met_info.keys():
-						game.autocollect.mets[rsrc] += game.aurora_prod[AI][rsrc] * (m - 1.0)
-					game.aurora_prod[AI][rsrc] *= m
-		elif MU == "IS":
+		if MU == "IS":
 			game.items.append(null)
-	if MU == "AIE" and game.c_v == "mining" and game.mining_HUD.tile.has("au_int"):
-		game.mining_HUD.refresh_aurora_bonus()
 	refresh()
 	game.HUD.refresh()
 
@@ -136,20 +120,7 @@ func _on_Upgrade_pressed(MU:String):
 		if not game.objective.is_empty() and game.objective.type == game.ObjectiveType.MINERAL_UPG:
 			game.objective.current += 1
 		game.HUD.refresh()
-		if MU == "AIE":
-			if game.c_v == "mining" and game.mining_HUD.tile.has("au_int"):
-				game.mining_HUD.refresh_aurora_bonus()
-			for AI in game.aurora_prod.keys():
-				for rsrc in game.aurora_prod[AI].keys():
-					var m = pow(1 + AI, 0.02)
-					if rsrc == "energy":
-						game.autocollect.rsrc.energy += game.aurora_prod[AI].energy * (m - 1.0)
-					elif rsrc in game.mat_info.keys():
-						game.autocollect.mats[rsrc] += game.aurora_prod[AI][rsrc] * (m - 1.0)
-					elif rsrc in game.met_info.keys():
-						game.autocollect.mets[rsrc] += game.aurora_prod[AI][rsrc] * (m - 1.0)
-					game.aurora_prod[AI][rsrc] *= m
-		elif MU == "IS":
+		if MU == "IS":
 			game.items.append(null)
 	else:
 		game.popup(tr("NOT_ENOUGH_MINERALS"), 1.5)

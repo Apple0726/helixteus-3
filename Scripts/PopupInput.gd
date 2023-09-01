@@ -13,6 +13,7 @@ func _ready():
 	$Panel/Confirm.text = tr(confirm_button_text)
 	var tween = create_tween()
 	tween.tween_property(self, "color", Color(0, 0, 0, 0.4), 0.1)
+	$Panel/LineEdit.call_deferred("grab_focus")
 
 func _on_close_button_pressed():
 	visible = false
@@ -27,3 +28,7 @@ func _on_confirm_pressed():
 			queue_free()
 		else:
 			$Panel/Error.text = error_text
+
+
+func _on_line_edit_text_submitted(new_text):
+	_on_confirm_pressed()

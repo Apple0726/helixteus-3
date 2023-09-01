@@ -55,19 +55,19 @@ func _ready():
 	refresh_univs()
 	refresh_OP_meters()
 	$ModifyDimension/OPMeter/OPMeterText.help_text = tr("THE_OPMETER_DESC") % tr("MATHS")
-	for i in range(1, game.subjects.dimensional_power.lv + 1):
+	for i in range(1, game.subject_levels.dimensional_power + 1):
 		if $ModifyDimension/Dimensional_Power/Control.has_node("Label%s" % i):
 			$ModifyDimension/Dimensional_Power/Control.get_node("Label%s" % i)["theme_override_colors/font_color"] = Color.WHITE
 		else:
 			break
 	set_grid()
-	$ModifyDimension/Dimensional_Power/Control/TextureProgressBar.value = game.subjects.dimensional_power.lv + game.subjects.dimensional_power.DRs / (game.subjects.dimensional_power.lv + 1)
 	for subj in $Subjects/Grid.get_children():
-		subj.get_node("Effects/EffectButton").connect("pressed",Callable(self,"toggle_subj").bind(subj.name))
+		subj.get_node("Effects").connect("pressed",Callable(self,"toggle_subj").bind(subj.name))
 
 func refresh_OP_meters():
+	$ModifyDimension/Dimensional_Power/Control/TextureProgressBar.value = game.subject_levels.dimensional_power
 	for subj in ["Maths", "Physics", "Chemistry", "Biology", "Engineering"]:
-		if game.subjects[subj.to_lower()].lv == 0:
+		if game.subject_levels[subj.to_lower()] == 0:
 			$Subjects/Grid.get_node(subj + "/OPMeter").visible = false
 			continue
 		$Subjects/Grid.get_node(subj + "/OPMeter").visible = true
@@ -86,7 +86,6 @@ func toggle_subj(subj_name:String):
 		$Subjects/Grid.get_node(subj_name + "/Selected/AnimationPlayer").play("New Anim")
 		$ModifyDimension/OPMeter.visible = $ModifyDimension.get_node(subj_name).visible and subj_name in ["Maths", "Physics", "Chemistry", "Biology", "Engineering"]
 		if $ModifyDimension/OPMeter.visible:
-			var subject:Dictionary = game.subjects[subj_name.to_lower()]
 			$ModifyDimension/OPMeter/OPMeterText.help_text = tr("THE_OPMETER_DESC") % tr(subj_name.to_upper())
 			$ModifyDimension/OPMeter/OPMeter.max_value = get_OP_cap(subj_name.to_lower())
 			$ModifyDimension/OPMeter/OPMeter.value = self["%s_OP_points" % subj_name.to_lower()]
@@ -95,7 +94,7 @@ func toggle_subj(subj_name:String):
 		$ModifyDimension/OPMeter.visible = false
 
 func refresh_univs(reset:bool = false):
-	DR_mult = 1 + 0.25 * game.subjects.dimensional_power.lv
+	DR_mult = 1 + 0.25 * game.subject_levels.dimensional_power
 	game.PD_panel.editable = reset
 	if not reset:
 		game.PD_panel.calc_OP_points()
@@ -111,7 +110,8 @@ func refresh_univs(reset:bool = false):
 	for univ in game.universe_data:
 		lv_sum += pow(univ.lv, 2.2)
 	for node in $Subjects/Grid.get_children():
-		node.get_node("HBox/Invest").disabled = game.DRs == 0
+		var subject_level:int = game.subject_levels[node.name.to_lower()]
+		node.get_node("Upgrade").disabled = game.DRs <= subject_level
 	new_dim_DRs = floor(lv_sum / 10000.0 * DR_mult)
 	$TopInfo/Reset.text = "%s (+ %s %s)" % [tr("NEW_DIMENSION"), new_dim_DRs, tr("DR")]
 	$TopInfo/DRs.text = "[center]%s: %s  %s" % [tr("DR_TITLE"), game.DRs, "[img]Graphics/Icons/help.png[/img]"]
@@ -119,10 +119,9 @@ func refresh_univs(reset:bool = false):
 	for univ in $Universes/Scroll/VBox.get_children():
 		univ.queue_free()
 	for subj in $Subjects/Grid.get_children():
-		var subject:Dictionary = game.subjects[subj.name.to_lower()]
-		subj.refresh(subject.DRs, subject.lv)
-		if subj.get_node("HBox/Invest").is_connected("pressed",Callable(self,"on_invest")):
-			subj.get_node("HBox/Invest").disconnect("pressed",Callable(self,"on_invest"))
+		var subject_level:int = game.subject_levels[subj.name.to_lower()]
+		subj.refresh(subject_level)
+		subj.get_node("Upgrade").disabled = not reset or game.DRs <= subject_level
 			
 	for univ_prop in $ModifyDimension/Physics/Control/VBox.get_children():
 		univ_prop.set_value(game.physics_bonus[univ_prop.name])
@@ -149,7 +148,7 @@ func refresh_univs(reset:bool = false):
 	for el in lake_params.keys():
 		lake_params[el].value = game.biology_bonus[el]
 	if not reset:
-		#$Subjects.offset_left = 704
+		$Subjects.offset_left = 704
 		for univ_info in game.universe_data:
 			var univ = TextureButton.new()
 			univ.texture_normal = univ_icon
@@ -162,38 +161,40 @@ func refresh_univs(reset:bool = false):
 			univ.connect("mouse_exited",Callable(self,"on_univ_out"))
 			univ.connect("pressed",Callable(self,"on_univ_press").bind(id))
 	else:
-		$ModifyDimension/Reset/DRsPerCilck.visible = game.dim_num >= 3
-		$ModifyDimension/Reset/LineEdit.visible = game.dim_num >= 3
 		$Subjects.offset_left = 448
 		for subj in $Subjects/Grid.get_children():
 			if subj.name in ["Maths", "Physics", "Chemistry", "Biology", "Engineering", "Dimensional_Power"]:
-				subj.get_node("HBox/Invest").connect("pressed",Callable(self,"on_invest").bind(subj))
+				if not subj.get_node("Upgrade").is_connected("pressed",Callable(self,"on_dimension_upgrade")):
+					subj.get_node("Upgrade").connect("pressed",Callable(self,"on_dimension_upgrade").bind(subj))
 	$Universes.visible = not reset
 	$Panel.visible = not reset
 	$UnivInfo.visible = not reset
 	$ModifyDimension/Reset.visible = reset
 	$TopInfo/Reset.visible = not reset
 	calc_OP_points()
+	set_grid()
 
 func set_grid():
-	$Subjects/Grid.columns = 3 if game.subjects.dimensional_power.lv >= 2 else 2
-	$Subjects/Grid/Physics.visible = game.subjects.dimensional_power.lv >= 2
-	$Subjects/Grid/Chemistry.visible = game.subjects.dimensional_power.lv >= 2
-	$Subjects/Grid/Biology.visible = game.subjects.dimensional_power.lv >= 2
+	$Subjects/Grid.columns = 3 if game.subject_levels.dimensional_power >= 2 else 2
+	$Subjects/Grid/Physics.visible = game.subject_levels.dimensional_power >= 2
+	$Subjects/Grid/Physics.refresh(game.subject_levels.physics)
+	$Subjects/Grid/Chemistry.visible = game.subject_levels.dimensional_power >= 2
+	$Subjects/Grid/Chemistry.refresh(game.subject_levels.chemistry)
+	$Subjects/Grid/Biology.visible = game.subject_levels.dimensional_power >= 2
+	$Subjects/Grid/Biology.refresh(game.subject_levels.biology)
 
-func on_invest(subj_node):
-	if game.DRs > 0:
+func on_dimension_upgrade(subj_node):
+	var subj_name = subj_node.name.to_lower()
+	var subject_level:int = game.subject_levels[subj_name]
+	if game.DRs > subject_level:
 		var old_DRs:int = game.DRs
-		game.DRs = max(game.DRs - int($ModifyDimension/Reset/LineEdit.text), 0)
+		game.DRs -= subject_level + 1
 		$TopInfo/DRs.text = "[center]%s: %s  %s" % [tr("DR_TITLE"), game.DRs, "[img]Graphics/Icons/help.png[/img]"]
-		var subject:Dictionary = game.subjects[subj_node.name.to_lower()]
-		subject.DRs += old_DRs - game.DRs
-		while subject.DRs > subject.lv:
-			subject.lv += 1
-			subject.DRs -= subject.lv
+		game.subject_levels[subj_name] += 1
+		subject_level += 1
 		if $ModifyDimension.get_node(str(subj_node.name)).visible:
 			$ModifyDimension/OPMeter/OPMeter.max_value = get_OP_cap(subj_node.name.to_lower())
-		if subj_node.name == "Dimensional_Power":
+		if subj_name == "dimensional_power":
 			set_grid()
 			refresh_OP_meters()
 			if $ModifyDimension/Maths.visible:
@@ -206,11 +207,12 @@ func on_invest(subj_node):
 				$ModifyDimension/OPMeter/OPMeter.max_value = get_OP_cap("biology")
 			elif $ModifyDimension/Engineering.visible:
 				$ModifyDimension/OPMeter/OPMeter.max_value = get_OP_cap("engineering")
-			$ModifyDimension/Dimensional_Power/Control/TextureProgressBar.value = subject.lv + subject.DRs / float(subject.lv + 1)
-			if $ModifyDimension/Dimensional_Power/Control.has_node("Label%s" % subject.lv):
-				$ModifyDimension/Dimensional_Power/Control.get_node("Label%s" % subject.lv)["theme_override_colors/font_color"] = Color.WHITE
-		subj_node.refresh(subject.DRs, subject.lv)
-		
+			if $ModifyDimension/Dimensional_Power/Control.has_node("Label%s" % subject_level):
+				$ModifyDimension/Dimensional_Power/Control.get_node("Label%s" % subject_level)["theme_override_colors/font_color"] = Color.WHITE
+		subj_node.refresh(subject_level)
+		for subj in $Subjects/Grid.get_children():
+			var lv:int = game.subject_levels[subj.name.to_lower()]
+			subj.get_node("Upgrade").disabled = game.DRs <= lv
 
 func on_univ_out():
 	game.hide_tooltip()
@@ -221,7 +223,7 @@ func on_univ_over(id:int):
 	var u_i = game.universe_data[id] #universe_info
 	$UnivInfo.text = "%s (%s %s)\n%s: %s (%s)\n\n" % [u_i.name, tr("LEVEL"), u_i.lv, tr("DR_CONTRIBUTION"), Helper.clever_round(pow(u_i.lv, 2.2) / 10000.0 * DR_mult), tr("PLUS_X_IF").format({"bonus":Helper.clever_round((pow(u_i.lv + 1, 2.2) - pow(u_i.lv, 2.2)) / 10000.0 * DR_mult), "lv":u_i.lv+1})]
 	$UnivInfo.text += tr("FUNDAMENTAL_PROPERTIES") + "\n"
-	if id == 0 and game.subjects.dimensional_power.lv < 5:
+	if id == 0 and game.subject_levels.dimensional_power < 5:
 		$UnivInfo.text += "%s c = %s m·s\u207B\u00B9\n%s h = %s J·s\n%s k = %s J·K\u207B\u00B9\n%s \u03C3 = %s W·m\u207B\u00B2·K\u207B\u2074\n%s G = %s m\u00B3·kg\u207B\u00B9·s\u207B\u00B2\n%s e = %s C\n%s: %s\n" % [
 			tr("SPEED_OF_LIGHT"),
 			Helper.e_notation(3e8),
@@ -354,15 +356,6 @@ func _input(event):
 	if $ColorRect.visible and $ColorRect/Label.modulate.a == 1.0 and Input.is_action_just_released("left_click"):
 		show_DR_help()
 	if $ModifyDimension/Reset.visible:
-		var DR_per_click:int = int($ModifyDimension/Reset/LineEdit.text)
-		if DR_per_click < 0:
-			$ModifyDimension/Reset/LineEdit.text = "0"
-		if DR_per_click <= 1:
-			for subj in $Subjects/Grid.get_children():
-				subj.get_node("HBox/Invest").text = tr("INVEST")
-		else:
-			for subj in $Subjects/Grid.get_children():
-				subj.get_node("HBox/Invest").text = tr("INVEST_X") % Helper.format_num(DR_per_click, false, 3)
 		if event is InputEventKey or event is InputEventMouse:
 			await get_tree().process_frame
 			calc_OP_points()
@@ -380,7 +373,6 @@ func calc_OP_points():
 	calc_math_points($ModifyDimension/Maths/Control/CostGrowthFactors/BUCGF, 1.3, -3.0, 1.2)#Building upgrade cost
 	calc_math_points($ModifyDimension/Maths/Control/CostGrowthFactors/MUCGF_MV, 1.9, -2.0, 1.2)#Mineral value
 	calc_math_points($ModifyDimension/Maths/Control/CostGrowthFactors/MUCGF_MSMB, 1.6, -1.5, 1.2)#Mining speed multiplier
-	calc_math_points($ModifyDimension/Maths/Control/CostGrowthFactors/MUCGF_AIE, 2.3, -6.0, 1.5)#Aurora intensity exponent
 	calc_math_points($ModifyDimension/Maths/Control/IRM, 1.2, 300.0, 1.0, 3.0)#Infinite research
 	calc_math_points($ModifyDimension/Maths/Control/CostGrowthFactors/SLUGF_XP, 1.3, -1.3, 1.1)#Ship level up XP
 	calc_math_points($ModifyDimension/Maths/Control/CostGrowthFactors/SLUGF_Stats, 1.15, 150.0, 1.0, 3.0)#Ship stats
@@ -390,7 +382,6 @@ func calc_OP_points():
 	math_defaults.get_node("BUCGF").visible = not is_equal_approx($ModifyDimension/Maths/Control/CostGrowthFactors/BUCGF.value, float(math_defaults.get_node("BUCGF").text.substr(1)))
 	math_defaults.get_node("MUCGF_MV").visible = not is_equal_approx($ModifyDimension/Maths/Control/CostGrowthFactors/MUCGF_MV.value, float(math_defaults.get_node("MUCGF_MV").text.substr(1)))
 	math_defaults.get_node("MUCGF_MSMB").visible = not is_equal_approx($ModifyDimension/Maths/Control/CostGrowthFactors/MUCGF_MSMB.value, float(math_defaults.get_node("MUCGF_MSMB").text.substr(1)))
-	math_defaults.get_node("MUCGF_AIE").visible = not is_equal_approx($ModifyDimension/Maths/Control/CostGrowthFactors/MUCGF_AIE.value, float(math_defaults.get_node("MUCGF_AIE").text.substr(1)))
 	math_defaults.get_node("IRM").visible = not is_equal_approx($ModifyDimension/Maths/Control/IRM.value, float(math_defaults.get_node("IRM").text.substr(1)))
 	math_defaults.get_node("SLUGF_XP").visible = not is_equal_approx($ModifyDimension/Maths/Control/CostGrowthFactors/SLUGF_XP.value, float(math_defaults.get_node("SLUGF_XP").text.substr(1)))
 	math_defaults.get_node("SLUGF_Stats").visible = not is_equal_approx($ModifyDimension/Maths/Control/CostGrowthFactors/SLUGF_Stats.value, float(math_defaults.get_node("SLUGF_Stats").text.substr(1)))
@@ -464,8 +455,8 @@ func calc_OP_points():
 		$ModifyDimension/Reset/Generate.disabled = disable_button
 
 func get_OP_cap(subj:String):
-	var OP_cap_mult:float = 1 + 0.15 * game.subjects.dimensional_power.lv
-	return game.subjects[subj].lv * (1.5 if game.subjects.dimensional_power.lv >= 3 else 1.0) * OP_cap_mult
+	var OP_cap_mult:float = 1 + 0.15 * game.subject_levels.dimensional_power
+	return game.subject_levels[subj] * (1.5 if game.subject_levels.dimensional_power >= 3 else 1.0) * OP_cap_mult
 
 func calc_bio_points(node, op_factor:float):
 	if node.value < node.min_value:
@@ -520,7 +511,7 @@ func set_bonuses():
 		game.engineering_bonus[bonus] = $ModifyDimension/Engineering/Control.get_node(bonus).value
 
 func _on_Generate_pressed():
-	if game.subjects.dimensional_power.lv >= 5:
+	if game.subject_levels.dimensional_power >= 5:
 		set_bonuses()
 		game.toggle_panel(game.send_probes_panel)
 	else:
