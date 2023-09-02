@@ -12,10 +12,6 @@ func _ready():
 	if btn_text != "":
 		var st:String = tr(btn_text)
 		$Effects.text = st
-#		if default_font.get_string_size(st).x > 190:
-#			$Effects.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-#			$Effects.custom_minimum_size.x = 190
-			#$Effects.custom_minimum_size.y = default_font.get_wordwrap_string_size(st, 200).y + 10
 
 func refresh(lv:int):
 	$Effects.visible = subject == "dimensional_power" or lv > 0 and btn_text != ""

@@ -35,6 +35,7 @@ offset_right = 892.0
 offset_bottom = 576.0
 
 [node name="SFX" type="TabBar" parent="TabContainer"]
+visible = false
 layout_mode = 2
 
 [node name="Master" type="HSlider" parent="TabContainer/SFX"]
@@ -84,21 +85,20 @@ text = "SFX"
 
 [node name="MusicPitch" type="CheckButton" parent="TabContainer/SFX"]
 layout_mode = 0
-offset_left = 456.0
+offset_left = 484.0
 offset_top = 27.0
-offset_right = 846.0
+offset_right = 818.0
 offset_bottom = 67.0
 
 [node name="MusicPitchLabel" parent="TabContainer/SFX" instance=ExtResource("2")]
 layout_mode = 0
-offset_left = 400.0
+offset_left = 485.0
 offset_top = 35.0
 offset_right = 768.0
 offset_bottom = 65.0
-text = "[right]TIME_SPEED_AFFECTS_PITCH [img]Graphics/Icons/help.png[/img][/right]"
+text = "TIME_SPEED_AFFECTS_PITCH [img]Graphics/Icons/help.png[/img]"
 label_text = "TIME_SPEED_AFFECTS_PITCH"
 help_text = "TIME_SPEED_AFFECTS_PITCH_DESC"
-align = 2
 
 [node name="GRAPHICS" type="TabBar" parent="TabContainer"]
 visible = false
@@ -213,7 +213,6 @@ offset_bottom = 158.0
 text = "Keep window size"
 
 [node name="GAME" type="TabBar" parent="TabContainer"]
-visible = false
 layout_mode = 2
 
 [node name="AutosellMinerals" type="CheckButton" parent="TabContainer/GAME"]
@@ -223,20 +222,19 @@ offset_top = 93.0
 offset_right = 400.0
 offset_bottom = 133.0
 
-[node name="RichTextLabel" parent="TabContainer/GAME" instance=ExtResource("2")]
+[node name="AutosellMineralsLabel" parent="TabContainer/GAME" instance=ExtResource("2")]
 layout_mode = 0
-offset_left = 8.0
+offset_left = 64.0
 offset_top = 101.0
 offset_right = 320.0
 offset_bottom = 131.0
-text = "[right]AUTOSELL_MINERALS [img]Graphics/Icons/help.png[/img][/right]"
+text = "AUTOSELL_MINERALS [img]Graphics/Icons/help.png[/img]"
 label_text = "AUTOSELL_MINERALS"
 help_text = "AUTOSELL_MINERALS_DESC"
-align = 2
 
 [node name="EnableAutosave" type="CheckButton" parent="TabContainer/GAME"]
 layout_mode = 0
-offset_left = 136.0
+offset_left = 58.0
 offset_top = 29.0
 offset_right = 400.0
 offset_bottom = 69.0
@@ -245,20 +243,19 @@ text = "ENABLE_AUTOSAVE"
 [node name="CaveGenInfo" type="CheckButton" parent="TabContainer/GAME"]
 layout_mode = 0
 offset_left = 136.0
-offset_top = 161.0
+offset_top = 157.0
 offset_right = 400.0
-offset_bottom = 201.0
+offset_bottom = 197.0
 
 [node name="RichTextLabel2" parent="TabContainer/GAME" instance=ExtResource("2")]
 layout_mode = 0
-offset_left = 8.0
-offset_top = 169.0
+offset_left = 64.0
+offset_top = 165.0
 offset_right = 320.0
-offset_bottom = 199.0
-text = "[right]SHOW_CAVE_GEN_INFO [img]Graphics/Icons/help.png[/img][/right]"
+offset_bottom = 195.0
+text = "SHOW_CAVE_GEN_INFO [img]Graphics/Icons/help.png[/img]"
 label_text = "SHOW_CAVE_GEN_INFO"
 help_text = "SHOW_CAVE_GEN_INFO_DESC"
-align = 2
 
 [node name="Difficulty" type="Label" parent="TabContainer/GAME"]
 layout_mode = 0
@@ -340,10 +337,10 @@ text = "op cursor"
 
 [node name="Discord" type="CheckBox" parent="TabContainer/MISC"]
 layout_mode = 0
-offset_left = 104.0
-offset_top = 148.0
-offset_right = 302.0
-offset_bottom = 188.0
+offset_left = 139.0
+offset_top = 165.0
+offset_right = 337.0
+offset_bottom = 205.0
 button_pressed = true
 text = "Discord Rich Presence"
 
@@ -369,12 +366,13 @@ text = "SCIENTIFIC"
 
 [node name="Difficulty2" type="Label" parent="TabContainer/MISC"]
 layout_mode = 0
-offset_left = 64.0
-offset_top = 43.0
-offset_right = 416.0
-offset_bottom = 67.0
+offset_left = 104.0
+offset_top = 50.0
+offset_right = 370.0
+offset_bottom = 76.0
 mouse_filter = 1
 text = "LARGE_NUMBER_NOTATION"
+horizontal_alignment = 1
 
 [connection signal="value_changed" from="TabContainer/SFX/Master" to="." method="_on_Main_audio_value_changed"]
 [connection signal="value_changed" from="TabContainer/SFX/Music" to="." method="_on_Music_value_changed"]

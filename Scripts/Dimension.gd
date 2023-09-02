@@ -92,6 +92,18 @@ func toggle_subj(subj_name:String):
 			calc_OP_points()
 	else:
 		$ModifyDimension/OPMeter.visible = false
+	if subj_name == "Physics":
+		var T = max(30000, game.stats_global.hottest_star)
+		var thresh = 0.63
+		if T < 70000:
+			thresh = remap(T, 30000, 70000, 0.63, 0.73)
+		elif T < 120000:
+			thresh = remap(T, 70000, 120000, 0.73, 0.83)
+		elif T < 210000:
+			thresh = remap(T, 120000, 210000, 0.83, 0.92)
+		else:
+			thresh = min(remap(T, 210000, 1000000, 0.92, 1.0), 1.0)
+		$ModifyDimension/Physics/Control/StarGradient.material.set_shader_parameter("threshold", thresh)
 
 func refresh_univs(reset:bool = false):
 	DR_mult = 1 + 0.25 * game.subject_levels.dimensional_power

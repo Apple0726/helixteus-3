@@ -127,11 +127,11 @@ _data = {
 }
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_mmkh4"]
-bg_color = Color(0.14902, 0.14902, 0.14902, 1)
+bg_color = Color(0.0941176, 0.0941176, 0.0941176, 1)
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_p6fsf"]
 shader = ExtResource("18_tqqip")
-shader_parameter/threshold = 0.66
+shader_parameter/threshold = 0.63
 
 [sub_resource type="Gradient" id="12"]
 offsets = PackedFloat32Array(0, 0.0977199, 0.192182, 0.286645, 0.394137, 0.488599, 0.583062, 0.684039, 0.785016, 0.892508, 1)
@@ -968,13 +968,53 @@ step = 0.1
 value = 0.1
 exp_edit = true
 
-[node name="Label3" type="Label" parent="ModifyDimension/Physics/Control"]
+[node name="HBoxContainer" type="HBoxContainer" parent="ModifyDimension/Physics/Control"]
 layout_mode = 0
-offset_left = 50.0
-offset_top = 461.0
-offset_right = 369.0
-offset_bottom = 485.0
-text = "M    K    G    F    A    B    O    Q    R    Z"
+offset_left = 52.0
+offset_top = 456.0
+offset_right = 364.0
+offset_bottom = 496.0
+theme_override_constants/separation = 18
+
+[node name="Label" type="Label" parent="ModifyDimension/Physics/Control/HBoxContainer"]
+layout_mode = 2
+text = "M"
+
+[node name="Label2" type="Label" parent="ModifyDimension/Physics/Control/HBoxContainer"]
+layout_mode = 2
+text = "K"
+
+[node name="Label3" type="Label" parent="ModifyDimension/Physics/Control/HBoxContainer"]
+layout_mode = 2
+text = "G"
+
+[node name="Label4" type="Label" parent="ModifyDimension/Physics/Control/HBoxContainer"]
+layout_mode = 2
+text = "F"
+
+[node name="Label5" type="Label" parent="ModifyDimension/Physics/Control/HBoxContainer"]
+layout_mode = 2
+text = "A"
+
+[node name="Label6" type="Label" parent="ModifyDimension/Physics/Control/HBoxContainer"]
+layout_mode = 2
+text = "B"
+
+[node name="Label7" type="Label" parent="ModifyDimension/Physics/Control/HBoxContainer"]
+layout_mode = 2
+text = "O"
+
+[node name="Label8" type="Label" parent="ModifyDimension/Physics/Control/HBoxContainer"]
+layout_mode = 2
+text = "Q"
+
+[node name="Label9" type="Label" parent="ModifyDimension/Physics/Control/HBoxContainer"]
+layout_mode = 2
+text = "R"
+
+[node name="Label10" type="Label" parent="ModifyDimension/Physics/Control/HBoxContainer"]
+layout_mode = 2
+text = "Z"
 
 [node name="BI" parent="ModifyDimension/Physics/Control" instance=ExtResource("19")]
 layout_mode = 0

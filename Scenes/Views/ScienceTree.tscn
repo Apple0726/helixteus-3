@@ -85,6 +85,8 @@ offset_bottom = 40.0
 custom_minimum_size = Vector2(336, 0)
 layout_mode = 0
 anchors_preset = 0
+anchor_top = 0.0
+anchor_bottom = 0.0
 offset_left = 288.0
 offset_top = 80.0
 offset_right = 624.0
@@ -95,6 +97,8 @@ infinite_research = true
 custom_minimum_size = Vector2(336, 0)
 layout_mode = 0
 anchors_preset = 0
+anchor_top = 0.0
+anchor_bottom = 0.0
 offset_left = 288.0
 offset_top = 176.0
 offset_right = 624.0
@@ -105,6 +109,8 @@ infinite_research = true
 custom_minimum_size = Vector2(336, 0)
 layout_mode = 0
 anchors_preset = 0
+anchor_top = 0.0
+anchor_bottom = 0.0
 offset_left = 288.0
 offset_top = 272.0
 offset_right = 624.0
@@ -115,6 +121,8 @@ infinite_research = true
 custom_minimum_size = Vector2(336, 0)
 layout_mode = 0
 anchors_preset = 0
+anchor_top = 0.0
+anchor_bottom = 0.0
 offset_left = 288.0
 offset_top = 368.0
 offset_right = 624.0
@@ -125,6 +133,8 @@ infinite_research = true
 custom_minimum_size = Vector2(336, 0)
 layout_mode = 0
 anchors_preset = 0
+anchor_top = 0.0
+anchor_bottom = 0.0
 offset_left = 288.0
 offset_top = 464.0
 offset_right = 624.0
@@ -135,6 +145,8 @@ infinite_research = true
 custom_minimum_size = Vector2(336, 0)
 layout_mode = 0
 anchors_preset = 0
+anchor_top = 0.0
+anchor_bottom = 0.0
 offset_left = 288.0
 offset_top = 560.0
 offset_right = 624.0
@@ -150,6 +162,8 @@ offset_bottom = 40.0
 [node name="RC" parent="Main" instance=ExtResource("1")]
 layout_mode = 0
 anchors_preset = 0
+anchor_top = 0.0
+anchor_bottom = 0.0
 offset_left = 224.0
 offset_top = 336.0
 offset_right = 480.0
@@ -159,6 +173,8 @@ size_flags_horizontal = 13
 [node name="SCT" parent="Main" instance=ExtResource("1")]
 layout_mode = 0
 anchors_preset = 0
+anchor_top = 0.0
+anchor_bottom = 0.0
 offset_left = 704.0
 offset_top = 336.0
 offset_right = 960.0
@@ -167,6 +183,8 @@ offset_bottom = 400.0
 [node name="CD" parent="Main" instance=ExtResource("1")]
 layout_mode = 0
 anchors_preset = 0
+anchor_top = 0.0
+anchor_bottom = 0.0
 offset_left = 1184.0
 offset_top = -272.0
 offset_right = 1440.0
@@ -175,6 +193,8 @@ offset_bottom = -208.0
 [node name="ATM" parent="Main" instance=ExtResource("1")]
 layout_mode = 0
 anchors_preset = 0
+anchor_top = 0.0
+anchor_bottom = 0.0
 offset_left = 1184.0
 offset_top = -368.0
 offset_right = 1440.0
@@ -183,6 +203,8 @@ offset_bottom = -304.0
 [node name="SAP" parent="Main" instance=ExtResource("1")]
 layout_mode = 0
 anchors_preset = 0
+anchor_top = 0.0
+anchor_bottom = 0.0
 offset_left = 1600.0
 offset_top = -368.0
 offset_right = 1856.0
@@ -191,6 +213,8 @@ offset_bottom = -304.0
 [node name="AMM" parent="Main" instance=ExtResource("1")]
 layout_mode = 0
 anchors_preset = 0
+anchor_top = 0.0
+anchor_bottom = 0.0
 offset_left = 1600.0
 offset_top = -464.0
 offset_right = 1856.0
@@ -199,6 +223,8 @@ offset_bottom = -400.0
 [node name="ID" parent="Main" instance=ExtResource("1")]
 layout_mode = 0
 anchors_preset = 0
+anchor_top = 0.0
+anchor_bottom = 0.0
 offset_left = 1600.0
 offset_top = -272.0
 offset_right = 1856.0
@@ -214,6 +240,8 @@ antialiased = true
 [node name="PD" parent="Main" instance=ExtResource("1")]
 layout_mode = 0
 anchors_preset = 0
+anchor_top = 0.0
+anchor_bottom = 0.0
 offset_left = 2016.0
 offset_top = -272.0
 offset_right = 2272.0
@@ -222,6 +250,8 @@ offset_bottom = -208.0
 [node name="OL" parent="Main" instance=ExtResource("1")]
 layout_mode = 0
 anchors_preset = 0
+anchor_top = 0.0
+anchor_bottom = 0.0
 offset_left = 704.0
 offset_top = 692.0
 offset_right = 960.0
@@ -230,6 +260,8 @@ offset_bottom = 756.0
 [node name="YL" parent="Main" instance=ExtResource("1")]
 layout_mode = 0
 anchors_preset = 0
+anchor_top = 0.0
+anchor_bottom = 0.0
 offset_left = 1120.0
 offset_top = 692.0
 offset_right = 1376.0
@@ -245,6 +277,8 @@ antialiased = true
 [node name="FTL" parent="Main" instance=ExtResource("1")]
 layout_mode = 0
 anchors_preset = 0
+anchor_top = 0.0
+anchor_bottom = 0.0
 offset_left = 1184.0
 offset_top = -20.0
 offset_right = 1440.0
@@ -260,6 +294,8 @@ antialiased = true
 [node name="IGD" parent="Main" instance=ExtResource("1")]
 layout_mode = 0
 anchors_preset = 0
+anchor_top = 0.0
+anchor_bottom = 0.0
 offset_left = 1600.0
 offset_top = -20.0
 offset_right = 1856.0
@@ -275,6 +311,8 @@ antialiased = true
 [node name="FG" parent="Main" instance=ExtResource("1")]
 layout_mode = 0
 anchors_preset = 0
+anchor_top = 0.0
+anchor_bottom = 0.0
 offset_left = 2016.0
 offset_top = -20.0
 offset_right = 2272.0
@@ -290,6 +328,8 @@ antialiased = true
 [node name="FG2" parent="Main" instance=ExtResource("1")]
 layout_mode = 0
 anchors_preset = 0
+anchor_top = 0.0
+anchor_bottom = 0.0
 offset_left = 2432.0
 offset_top = -20.0
 offset_right = 2688.0
@@ -305,6 +345,8 @@ antialiased = true
 [node name="GL" parent="Main" instance=ExtResource("1")]
 layout_mode = 0
 anchors_preset = 0
+anchor_top = 0.0
+anchor_bottom = 0.0
 offset_left = 1536.0
 offset_top = 692.0
 offset_right = 1792.0
@@ -320,6 +362,8 @@ antialiased = true
 [node name="BL" parent="Main" instance=ExtResource("1")]
 layout_mode = 0
 anchors_preset = 0
+anchor_top = 0.0
+anchor_bottom = 0.0
 offset_left = 1952.0
 offset_top = 692.0
 offset_right = 2208.0
@@ -335,6 +379,8 @@ antialiased = true
 [node name="PL" parent="Main" instance=ExtResource("1")]
 layout_mode = 0
 anchors_preset = 0
+anchor_top = 0.0
+anchor_bottom = 0.0
 offset_left = 2368.0
 offset_top = 692.0
 offset_right = 2624.0
@@ -350,6 +396,8 @@ antialiased = true
 [node name="UVL" parent="Main" instance=ExtResource("1")]
 layout_mode = 0
 anchors_preset = 0
+anchor_top = 0.0
+anchor_bottom = 0.0
 offset_left = 2792.0
 offset_top = 692.0
 offset_right = 3048.0
@@ -365,6 +413,8 @@ antialiased = true
 [node name="XRL" parent="Main" instance=ExtResource("1")]
 layout_mode = 0
 anchors_preset = 0
+anchor_top = 0.0
+anchor_bottom = 0.0
 offset_left = 3200.0
 offset_top = 692.0
 offset_right = 3456.0
@@ -380,6 +430,8 @@ antialiased = true
 [node name="GRL" parent="Main" instance=ExtResource("1")]
 layout_mode = 0
 anchors_preset = 0
+anchor_top = 0.0
+anchor_bottom = 0.0
 offset_left = 3616.0
 offset_top = 692.0
 offset_right = 3872.0
@@ -395,6 +447,8 @@ antialiased = true
 [node name="UGRL" parent="Main" instance=ExtResource("1")]
 layout_mode = 0
 anchors_preset = 0
+anchor_top = 0.0
+anchor_bottom = 0.0
 offset_left = 4032.0
 offset_top = 692.0
 offset_right = 4288.0
@@ -403,6 +457,8 @@ offset_bottom = 756.0
 [node name="RMK2" parent="Main" instance=ExtResource("1")]
 layout_mode = 0
 anchors_preset = 0
+anchor_top = 0.0
+anchor_bottom = 0.0
 offset_left = 704.0
 offset_top = 804.0
 offset_right = 960.0
@@ -418,6 +474,8 @@ antialiased = true
 [node name="RMK3" parent="Main" instance=ExtResource("1")]
 layout_mode = 0
 anchors_preset = 0
+anchor_top = 0.0
+anchor_bottom = 0.0
 offset_left = 1120.0
 offset_top = 804.0
 offset_right = 1376.0
@@ -426,6 +484,8 @@ offset_bottom = 868.0
 [node name="MAE" parent="Main" instance=ExtResource("1")]
 layout_mode = 0
 anchors_preset = 0
+anchor_top = 0.0
+anchor_bottom = 0.0
 offset_left = 1184.0
 offset_top = 336.0
 offset_right = 1440.0
@@ -435,6 +495,8 @@ size_flags_horizontal = 13
 [node name="TF" parent="Main" instance=ExtResource("1")]
 layout_mode = 0
 anchors_preset = 0
+anchor_top = 0.0
+anchor_bottom = 0.0
 offset_left = 1600.0
 offset_top = 212.0
 offset_right = 1856.0
@@ -444,6 +506,8 @@ size_flags_horizontal = 13
 [node name="DS1" parent="Main" instance=ExtResource("1")]
 layout_mode = 0
 anchors_preset = 0
+anchor_top = 0.0
+anchor_bottom = 0.0
 offset_left = 1600.0
 offset_top = 372.0
 offset_right = 1856.0
@@ -467,6 +531,8 @@ antialiased = true
 [node name="DS2" parent="Main" instance=ExtResource("1")]
 layout_mode = 0
 anchors_preset = 0
+anchor_top = 0.0
+anchor_bottom = 0.0
 offset_left = 2016.0
 offset_top = 372.0
 offset_right = 2272.0
@@ -490,6 +556,8 @@ antialiased = true
 [node name="DS3" parent="Main" instance=ExtResource("1")]
 layout_mode = 0
 anchors_preset = 0
+anchor_top = 0.0
+anchor_bottom = 0.0
 offset_left = 2432.0
 offset_top = 372.0
 offset_right = 2688.0
@@ -506,6 +574,8 @@ antialiased = true
 [node name="DS4" parent="Main" instance=ExtResource("1")]
 layout_mode = 0
 anchors_preset = 0
+anchor_top = 0.0
+anchor_bottom = 0.0
 offset_left = 2848.0
 offset_top = 372.0
 offset_right = 3104.0
@@ -522,6 +592,8 @@ antialiased = true
 [node name="MB" parent="Main" instance=ExtResource("1")]
 layout_mode = 0
 anchors_preset = 0
+anchor_top = 0.0
+anchor_bottom = 0.0
 offset_left = 3266.0
 offset_top = 372.0
 offset_right = 3522.0
@@ -538,6 +610,8 @@ antialiased = true
 [node name="GS" parent="Main" instance=ExtResource("1")]
 layout_mode = 0
 anchors_preset = 0
+anchor_top = 0.0
+anchor_bottom = 0.0
 offset_left = 3696.0
 offset_top = 372.0
 offset_right = 3952.0
@@ -554,6 +628,8 @@ antialiased = true
 [node name="TPCC" parent="Main" instance=ExtResource("1")]
 layout_mode = 0
 anchors_preset = 0
+anchor_top = 0.0
+anchor_bottom = 0.0
 offset_left = 4112.0
 offset_top = 372.0
 offset_right = 4368.0
@@ -563,6 +639,8 @@ size_flags_horizontal = 13
 [node name="SE1" parent="Main" instance=ExtResource("1")]
 layout_mode = 0
 anchors_preset = 0
+anchor_top = 0.0
+anchor_bottom = 0.0
 offset_left = 1600.0
 offset_top = 132.0
 offset_right = 1856.0
@@ -572,6 +650,8 @@ size_flags_horizontal = 13
 [node name="PK1" parent="Main" instance=ExtResource("1")]
 layout_mode = 0
 anchors_preset = 0
+anchor_top = 0.0
+anchor_bottom = 0.0
 offset_left = 1600.0
 offset_top = 532.0
 offset_right = 1856.0
@@ -581,6 +661,8 @@ size_flags_horizontal = 13
 [node name="CBS1" parent="Main" instance=ExtResource("1")]
 layout_mode = 0
 anchors_preset = 0
+anchor_top = 0.0
+anchor_bottom = 0.0
 offset_left = 1600.0
 offset_top = 452.0
 offset_right = 1856.0
@@ -590,6 +672,8 @@ size_flags_horizontal = 13
 [node name="CBS2" parent="Main" instance=ExtResource("1")]
 layout_mode = 0
 anchors_preset = 0
+anchor_top = 0.0
+anchor_bottom = 0.0
 offset_left = 2016.0
 offset_top = 452.0
 offset_right = 2272.0
@@ -599,6 +683,8 @@ size_flags_horizontal = 13
 [node name="CBS3" parent="Main" instance=ExtResource("1")]
 layout_mode = 0
 anchors_preset = 0
+anchor_top = 0.0
+anchor_bottom = 0.0
 offset_left = 2432.0
 offset_top = 452.0
 offset_right = 2688.0
@@ -615,6 +701,8 @@ antialiased = true
 [node name="PK2" parent="Main" instance=ExtResource("1")]
 layout_mode = 0
 anchors_preset = 0
+anchor_top = 0.0
+anchor_bottom = 0.0
 offset_left = 2016.0
 offset_top = 532.0
 offset_right = 2272.0
@@ -624,6 +712,8 @@ size_flags_horizontal = 13
 [node name="MME1" parent="Main" instance=ExtResource("1")]
 layout_mode = 0
 anchors_preset = 0
+anchor_top = 0.0
+anchor_bottom = 0.0
 offset_left = 1600.0
 offset_top = 292.0
 offset_right = 1856.0
@@ -640,6 +730,8 @@ antialiased = true
 [node name="MME2" parent="Main" instance=ExtResource("1")]
 layout_mode = 0
 anchors_preset = 0
+anchor_top = 0.0
+anchor_bottom = 0.0
 offset_left = 2016.0
 offset_top = 292.0
 offset_right = 2272.0
@@ -656,6 +748,8 @@ antialiased = true
 [node name="MME3" parent="Main" instance=ExtResource("1")]
 layout_mode = 0
 anchors_preset = 0
+anchor_top = 0.0
+anchor_bottom = 0.0
 offset_left = 2432.0
 offset_top = 292.0
 offset_right = 2688.0
@@ -665,6 +759,8 @@ size_flags_horizontal = 13
 [node name="UP1" parent="Main" instance=ExtResource("1")]
 layout_mode = 0
 anchors_preset = 0
+anchor_top = 0.0
+anchor_bottom = 0.0
 offset_left = 1184.0
 offset_top = -148.0
 offset_right = 1440.0
@@ -680,6 +776,8 @@ default_color = Color(0.4, 1, 0.465625, 1)
 [node name="UP2" parent="Main" instance=ExtResource("1")]
 layout_mode = 0
 anchors_preset = 0
+anchor_top = 0.0
+anchor_bottom = 0.0
 offset_left = 1600.0
 offset_top = -148.0
 offset_right = 1856.0
@@ -695,6 +793,8 @@ default_color = Color(0.4, 1, 0.465625, 1)
 [node name="UP3" parent="Main" instance=ExtResource("1")]
 layout_mode = 0
 anchors_preset = 0
+anchor_top = 0.0
+anchor_bottom = 0.0
 offset_left = 2016.0
 offset_top = -148.0
 offset_right = 2272.0
@@ -710,6 +810,8 @@ default_color = Color(0.4, 1, 0.465625, 1)
 [node name="UP4" parent="Main" instance=ExtResource("1")]
 layout_mode = 0
 anchors_preset = 0
+anchor_top = 0.0
+anchor_bottom = 0.0
 offset_left = 2432.0
 offset_top = -148.0
 offset_right = 2688.0
@@ -878,6 +980,8 @@ offset_bottom = 40.0
 [node name="AM" parent="Other" instance=ExtResource("1")]
 layout_mode = 0
 anchors_preset = 0
+anchor_top = 0.0
+anchor_bottom = 0.0
 offset_left = 288.0
 offset_top = 588.0
 offset_right = 544.0
@@ -886,6 +990,8 @@ offset_bottom = 652.0
 [node name="CI" parent="Other" instance=ExtResource("1")]
 layout_mode = 0
 anchors_preset = 0
+anchor_top = 0.0
+anchor_bottom = 0.0
 offset_left = 288.0
 offset_top = 76.0
 offset_right = 544.0
@@ -901,6 +1007,8 @@ antialiased = true
 [node name="CI2" parent="Other" instance=ExtResource("1")]
 layout_mode = 0
 anchors_preset = 0
+anchor_top = 0.0
+anchor_bottom = 0.0
 offset_left = 704.0
 offset_top = 76.0
 offset_right = 960.0
@@ -916,6 +1024,8 @@ antialiased = true
 [node name="CI3" parent="Other" instance=ExtResource("1")]
 layout_mode = 0
 anchors_preset = 0
+anchor_top = 0.0
+anchor_bottom = 0.0
 offset_left = 1120.0
 offset_top = 76.0
 offset_right = 1376.0
@@ -924,6 +1034,8 @@ offset_bottom = 140.0
 [node name="ISC" parent="Other" instance=ExtResource("1")]
 layout_mode = 0
 anchors_preset = 0
+anchor_top = 0.0
+anchor_bottom = 0.0
 offset_left = 288.0
 offset_top = 460.0
 offset_right = 544.0
@@ -932,6 +1044,8 @@ offset_bottom = 524.0
 [node name="SA" parent="Other" instance=ExtResource("1")]
 layout_mode = 0
 anchors_preset = 0
+anchor_top = 0.0
+anchor_bottom = 0.0
 offset_left = 288.0
 offset_top = 204.0
 offset_right = 544.0
@@ -940,6 +1054,8 @@ offset_bottom = 268.0
 [node name="ASM" parent="Other" instance=ExtResource("1")]
 layout_mode = 0
 anchors_preset = 0
+anchor_top = 0.0
+anchor_bottom = 0.0
 offset_left = 288.0
 offset_top = 332.0
 offset_right = 544.0
@@ -948,6 +1064,8 @@ offset_bottom = 396.0
 [node name="ASM2" parent="Other" instance=ExtResource("1")]
 layout_mode = 0
 anchors_preset = 0
+anchor_top = 0.0
+anchor_bottom = 0.0
 offset_left = 704.0
 offset_top = 332.0
 offset_right = 960.0
@@ -970,6 +1088,8 @@ antialiased = true
 [node name="PF" parent="Other" instance=ExtResource("1")]
 layout_mode = 0
 anchors_preset = 0
+anchor_top = 0.0
+anchor_bottom = 0.0
 offset_left = 704.0
 offset_top = 204.0
 offset_right = 960.0

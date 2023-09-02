@@ -75,8 +75,14 @@ func refresh():
 		Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
 		game.STM.show_help("")
 		game.STM.set_process(false)
+	if game.c_v != "" and game.science_unlocked.has("ASM"):
+		$TabContainer/GAME/AutosellMinerals.disabled = false
+		$TabContainer/GAME/AutosellMineralsLabel.modulate = Color.WHITE
+	else:
+		$TabContainer/GAME/AutosellMinerals.disabled = true
+		$TabContainer/GAME/AutosellMineralsLabel.modulate = Color(0.5, 0.5, 0.5, 1.0)
 	$TabContainer/GRAPHICS/Fullscreen.text = "%s (F11)" % [tr("FULLSCREEN")]
-	$TabContainer/SFX/MusicPitchLabel.text = "[right]%s  [img]Graphics/Icons/help.png[/img][/right]" % tr("TIME_SPEED_AFFECTS_PITCH")
+	$TabContainer/SFX/MusicPitchLabel.text = "%s  [img]Graphics/Icons/help.png[/img]" % tr("TIME_SPEED_AFFECTS_PITCH")
 	set_difficulty()
 
 func _on_Vsync_toggled(button_pressed):

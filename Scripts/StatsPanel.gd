@@ -24,9 +24,11 @@ func refresh():
 		for ach in grid.get_children():
 			if game.achievement_data[grid.name].has(ach.name):
 				ach.modulate = Color.WHITE
+				ach.get_node("TextureRect").material.set_shader_parameter("gray", false)
 				ach_get += 1
 			else:
 				ach.modulate = Color(0.2, 0.2, 0.2, 1.0)
+				ach.get_node("TextureRect").material.set_shader_parameter("gray", true)
 	$Achievements/Progress.text = "%s: %s / %s" % [tr("ACHIEVEMENTS_EARNED"), ach_get, ach_num]
 	$Statistics/HBox.visible = game.dim_num > 1 or len(game.universe_data) > 1
 	$Statistics/HBox/OptionButton.clear()

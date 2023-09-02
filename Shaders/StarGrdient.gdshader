@@ -1,5 +1,5 @@
 shader_type canvas_item;
-uniform float threshold = 0.66;
+uniform float threshold:hint_range(0.63, 1.0, 0.01) = 0.63;
 
 void fragment() {
 	COLOR = texture(TEXTURE, UV);

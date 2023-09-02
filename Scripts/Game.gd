@@ -3313,6 +3313,9 @@ func add_surface_materials(temp:float, crust_comp:Dictionary):#Amount in kg
 		surface_mat_info[mat].amount = Helper.clever_round(surface_mat_info[mat].amount)
 	return surface_mat_info
 
+var tooltip_display_position_x = 0
+var tooltip_display_position_y = 0
+
 func show_adv_tooltip(txt:String, imgs:Array = [], size:int = 17):
 	if is_instance_valid(tooltip):
 		tooltip.queue_free()
@@ -3321,6 +3324,14 @@ func show_adv_tooltip(txt:String, imgs:Array = [], size:int = 17):
 	$Tooltips.add_child(tooltip)
 	add_text_icons(tooltip, txt, imgs, size, true)
 	await get_tree().create_timer(0.01).timeout
+	if mouse_pos.x > 1250 - tooltip.size.x:
+		tooltip_display_position_x = 1
+	else:
+		tooltip_display_position_x = 0
+	if mouse_pos.y > 690 - tooltip.size.y:
+		tooltip_display_position_y = 1
+	else:
+		tooltip_display_position_y = 0
 	set_tooltip_position()
 	var tween = create_tween()
 	tween.tween_property(tooltip, "modulate", Color.WHITE, 0.1)#.set_delay(0.1)
@@ -3338,6 +3349,14 @@ func show_tooltip(txt:String, hide:bool = true):
 		tooltip.size.x = 400
 		tooltip.custom_minimum_size.y = 30
 		tooltip.size.y = 30
+	if mouse_pos.x > 1250 - tooltip.size.x:
+		tooltip_display_position_x = 1
+	else:
+		tooltip_display_position_x = 0
+	if mouse_pos.y > 690 - tooltip.size.y:
+		tooltip_display_position_y = 1
+	else:
+		tooltip_display_position_y = 0
 	set_tooltip_position()
 	var tween = create_tween()
 	tween.tween_property(tooltip, "modulate", Color.WHITE, 0.1)#.set_delay(0.1)
@@ -3593,23 +3612,17 @@ var sub_panel
 
 func set_tooltip_position():
 	if op_cursor:
-		if mouse_pos.x < tooltip.size.x:
-			tooltip.position.x = mouse_pos.x + 9
-		else:
-			tooltip.position.x = mouse_pos.x - tooltip.size.x - 9
-		if mouse_pos.y > tooltip.size.y:
-			tooltip.position.y = mouse_pos.y - tooltip.size.y - 9
-		else:
-			tooltip.position.y = mouse_pos.y + 9
+		tooltip.position.x = max(mouse_pos.x - tooltip.size.x - 5, 0)
+		tooltip.position.y = max(mouse_pos.y - tooltip.size.y - 5, 0)
 	else:
-		if mouse_pos.x < (1262 if $UI/Panel.modulate.a == 0.0 else 900) - tooltip.size.x:
-			tooltip.position.x = mouse_pos.x + 9
-		else:
-			tooltip.position.x = mouse_pos.x - tooltip.size.x - 9
-		if mouse_pos.y < 720 - tooltip.size.y - 16:
-			tooltip.position.y = mouse_pos.y + 9
-		else:
-			tooltip.position.y = mouse_pos.y - tooltip.size.y - 9
+		if tooltip_display_position_x == 0:
+			tooltip.position.x = min(mouse_pos.x + 9, (1278 if $UI/Panel.modulate.a == 0.0 else 900) - tooltip.size.x)
+		elif tooltip_display_position_x == 1:
+			tooltip.position.x = max(mouse_pos.x - tooltip.size.x - 9, 0)
+		if tooltip_display_position_y == 0:
+			tooltip.position.y = min(mouse_pos.y + 9, 720 - tooltip.size.y)
+		elif tooltip_display_position_y == 1:
+			tooltip.position.y = max(mouse_pos.y - tooltip.size.y - 9, 0)
 
 func _input(event):
 	if event is InputEventMouseMotion:
