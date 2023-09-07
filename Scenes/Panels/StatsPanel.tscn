@@ -43,8 +43,8 @@
 [ext_resource type="Texture2D" uid="uid://dbbfo6c1p1nlw" path="res://Graphics/Atoms/Ne.png" id="42"]
 [ext_resource type="Texture2D" uid="uid://2axyfvd64jpe" path="res://Graphics/Atoms/Xe.png" id="43"]
 [ext_resource type="Texture2D" uid="uid://kgqd4tt2onox" path="res://Graphics/Tiles/3.jpg" id="44"]
-[ext_resource type="Texture2D" uid="uid://boytevj7nefdo" path="res://Graphics/Buildings/GH.png" id="45"]
 [ext_resource type="Texture2D" uid="uid://d2jiwygt3vuig" path="res://Graphics/Buildings/Unique/mineral_replicator.png" id="46"]
+[ext_resource type="Texture2D" uid="uid://bw1htjuyhjjd0" path="res://Graphics/Buildings/greenhouse.png" id="46_0ykb7"]
 [ext_resource type="Texture2D" uid="uid://cwbio38umjd1n" path="res://Graphics/Achievements/UniqueBuildings.png" id="47"]
 
 [node name="StatsPanel" type="Panel"]
@@ -542,7 +542,7 @@ achievement_icon = ExtResource("26")
 
 [node name="op_gh" parent="Achievements/ScrollContainer/HBox/Slots/random" instance=ExtResource("4")]
 layout_mode = 2
-achievement_icon = ExtResource("45")
+achievement_icon = ExtResource("46_0ykb7")
 
 [node name="Statistics" type="Control" parent="."]
 visible = false

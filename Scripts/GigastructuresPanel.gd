@@ -187,8 +187,8 @@ func _on_Convert_pressed():
 			for planet_ids in system.planets:
 				if dir.file_exists("%s.hx3" % planet_ids.global):
 					dir.remove("%s.hx3" % planet_ids.global)
-					if game.MM_data.has(planet_ids.global):
-						game.MM_data.erase(planet_ids.global)
+					if game.boring_machine_data.has(planet_ids.global):
+						game.boring_machine_data.erase(planet_ids.global)
 			if dir.file_exists("user://%s/Univ%s/Systems/%s.hx3" % [game.c_sv, game.c_u, system.id]):
 				dir.remove("user://%s/Univ%s/Systems/%s.hx3" % [game.c_sv, game.c_u, system.id])
 		var dir2 = DirAccess.open("user://%s/Univ%s/Galaxies" % [game.c_sv, game.c_u])

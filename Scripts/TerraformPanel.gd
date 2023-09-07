@@ -114,7 +114,7 @@ func terraform_planet():
 	elif tf_type == "MM" and not p_i.has("depth"):
 		p_i.depth = 0
 		p_i.bldg.collect_date = Time.get_unix_time_from_system()
-		game.MM_data[game.c_p_g] = {"c_s_g":game.c_s_g, "c_p":game.c_p}
+		game.boring_machine_data[game.c_p_g] = {"c_s_g":game.c_s_g, "c_p":game.c_p}
 	game.view_history.pop_back()
 	game.view_history_pos -= 1
 	game.switch_view("system")

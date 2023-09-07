@@ -2,69 +2,69 @@ extends Node
 
 enum ProjType {STANDARD, LASER, BUBBLE, PURPLE}#For caves
 
-var path_1 = {	"ME":{"value":0.36, "pw":1.15, "time_based":true, "metal_costs":{"lead":20, "copper":35, "iron":50, "aluminium":70, "silver":100, "gold":150, "platinum":250}},
-				"PP":{"value":0.6, "pw":1.15, "time_based":true, "metal_costs":{"lead":20, "copper":30, "iron":40, "aluminium":40, "silver":40, "gold":40}},
-				"RL":{"value":0.06, "pw":1.15, "time_based":true, "metal_costs":{"lead":100, "copper":150, "iron":150, "aluminium":150, "silver":150, "gold":150, "platinum":150}},
-				"B":{"value":12000, "pw":1.17, "is_value_integer":true, "metal_costs":{"lead":35, "copper":25, "iron":35, "aluminium":40, "silver":40, "gold":40}},
-				"MS":{"value":100, "pw":1.15, "is_value_integer":true, "metal_costs":{"lead":35, "copper":25, "iron":35, "aluminium":40, "silver":40, "gold":40}},
-				"RCC":{"value":1.0, "pw":1.07, "metal_costs":{"lead":1500, "copper":3500, "iron":8000, "aluminium":16000, "silver":32000, "gold":64000, "platinum":128000}},
-				"SC":{"value":50.0, "pw":1.15, "time_based":true, "metal_costs":{"lead":300, "copper":300, "iron":300, "aluminium":300, "silver":300, "gold":300}},
-				"GF":{"value":1, "pw":1.15, "time_based":true, "metal_costs":{"lead":350, "copper":350, "iron":350, "aluminium":350, "silver":350, "gold":350}},
-				"SE":{"value":40.0, "pw":1.15, "time_based":true, "metal_costs":{"lead":200, "copper":200, "iron":200, "aluminium":200, "silver":200, "gold":200}},
-				"MM":{"value":0.02, "pw":1.1, "time_based":true, "metal_costs":{"lead":500, "copper":700, "iron":900, "aluminium":1100, "silver":1300, "gold":1500}},
-				"GH":{"value":1.0, "pw":1.11, "metal_costs":{"lead":500, "copper":500, "iron":600, "aluminium":600, "silver":700, "gold":700}},
-				"SP":{"value":2.0, "pw":1.15, "time_based":true, "metal_costs":{"lead":70, "copper":70, "iron":70, "aluminium":70, "silver":70, "gold":70}},
-				"AE":{"value":0.2, "pw":1.15, "time_based":true, "metal_costs":{"lead":200, "copper":200, "iron":200, "aluminium":200, "silver":200, "gold":200}},
-				"AMN":{"value":1.0, "pw":1.16, "metal_costs":{"lead":50000, "copper":50000, "iron":50000, "aluminium":50000, "silver":50000, "gold":50000}},
-				"SPR":{"value":1.0, "pw":1.16, "metal_costs":{"lead":270000, "copper":270000, "iron":270000, "aluminium":270000, "silver":270000, "gold":270000}},
-				"SY":{"value":1.0, "pw":1.16, "metal_costs":{"lead":640000, "copper":640000, "iron":640000, "aluminium":960000, "silver":960000, "gold":1280000}},
-				"CBD":{"value":1.111111, "pw":1.03, "cost_mult":1.5, "metal_costs":{"lead":2000, "copper":4000, "iron":8000, "aluminium":16000, "silver":32000, "gold":64000, "platinum":128000}},
-				"PC":{"value":1000.0, "pw":1.15, "time_based":true, "metal_costs":{"lead":2000, "copper":3000, "iron":5000, "aluminium":8000, "silver":13000, "gold":21000, "platinum":34000}},
-				"NC":{"value":1000.0, "pw":1.15, "time_based":true, "metal_costs":{"lead":2000, "copper":3000, "iron":5000, "aluminium":8000, "silver":13000, "gold":21000, "platinum":34000}},
-				"EC":{"value":1000.0, "pw":1.15, "time_based":true, "metal_costs":{"lead":2000, "copper":3000, "iron":5000, "aluminium":8000, "silver":13000, "gold":21000, "platinum":34000}},
-				"NSF":{"value":50000.0, "pw":1.15, "metal_costs":{"lead":2000, "copper":3000, "iron":5000, "aluminium":8000, "silver":13000, "gold":21000, "platinum":34000}},
-				"ESF":{"value":50000.0, "pw":1.15, "metal_costs":{"lead":2000, "copper":3000, "iron":5000, "aluminium":8000, "silver":13000, "gold":21000, "platinum":34000}},
+var path_1 = {	Building.MINERAL_EXTRACTOR:			{"value":0.36, "pw":1.15, "time_based":true, "metal_costs":{"lead":20, "copper":35, "iron":50, "aluminium":70, "silver":100, "gold":150, "platinum":250}},
+				Building.POWER_PLANT:				{"value":0.6, "pw":1.15, "time_based":true, "metal_costs":{"lead":20, "copper":30, "iron":40, "aluminium":40, "silver":40, "gold":40}},
+				Building.RESEARCH_LAB:				{"value":0.06, "pw":1.15, "time_based":true, "metal_costs":{"lead":100, "copper":150, "iron":150, "aluminium":150, "silver":150, "gold":150, "platinum":150}},
+				Building.BATTERY:					{"value":12000, "pw":1.17, "is_value_integer":true, "metal_costs":{"lead":35, "copper":25, "iron":35, "aluminium":40, "silver":40, "gold":40}},
+				Building.MINERAL_SILO:				{"value":100, "pw":1.15, "is_value_integer":true, "metal_costs":{"lead":35, "copper":25, "iron":35, "aluminium":40, "silver":40, "gold":40}},
+				Building.ROVER_CONSTRUCTION_CENTER:	{"value":1.0, "pw":1.07, "metal_costs":{"lead":1500, "copper":3500, "iron":8000, "aluminium":16000, "silver":32000, "gold":64000, "platinum":128000}},
+				Building.STONE_CRUSHER:				{"value":50.0, "pw":1.15, "time_based":true, "metal_costs":{"lead":300, "copper":300, "iron":300, "aluminium":300, "silver":300, "gold":300}},
+				Building.GLASS_FACTORY:				{"value":1, "pw":1.15, "time_based":true, "metal_costs":{"lead":350, "copper":350, "iron":350, "aluminium":350, "silver":350, "gold":350}},
+				Building.STEAM_ENGINE:				{"value":40.0, "pw":1.15, "time_based":true, "metal_costs":{"lead":200, "copper":200, "iron":200, "aluminium":200, "silver":200, "gold":200}},
+				Building.BORING_MACHINE:			{"value":0.02, "pw":1.1, "time_based":true, "metal_costs":{"lead":500, "copper":700, "iron":900, "aluminium":1100, "silver":1300, "gold":1500}},
+				Building.GREENHOUSE:				{"value":1.0, "pw":1.11, "metal_costs":{"lead":500, "copper":500, "iron":600, "aluminium":600, "silver":700, "gold":700}},
+				Building.SOLAR_PANEL:				{"value":2.0, "pw":1.15, "time_based":true, "metal_costs":{"lead":70, "copper":70, "iron":70, "aluminium":70, "silver":70, "gold":70}},
+				Building.ATMOSPHERE_EXTRACTOR:		{"value":0.2, "pw":1.15, "time_based":true, "metal_costs":{"lead":200, "copper":200, "iron":200, "aluminium":200, "silver":200, "gold":200}},
+				Building.ATOM_MANIPULATOR:			{"value":1.0, "pw":1.16, "metal_costs":{"lead":50000, "copper":50000, "iron":50000, "aluminium":50000, "silver":50000, "gold":50000}},
+				Building.SUBATOMIC_PARTICLE_REACTOR:{"value":1.0, "pw":1.16, "metal_costs":{"lead":270000, "copper":270000, "iron":270000, "aluminium":270000, "silver":270000, "gold":270000}},
+				Building.SHIPYARD:					{"value":1.0, "pw":1.16, "metal_costs":{"lead":640000, "copper":640000, "iron":640000, "aluminium":960000, "silver":960000, "gold":1280000}},
+				Building.CENTRAL_BUSINESS_DISTRICT:	{"value":1.111111, "pw":1.03, "cost_mult":1.5, "metal_costs":{"lead":2000, "copper":4000, "iron":8000, "aluminium":16000, "silver":32000, "gold":64000, "platinum":128000}},
+#				"PC":{"value":1000.0, "pw":1.15, "time_based":true, "metal_costs":{"lead":2000, "copper":3000, "iron":5000, "aluminium":8000, "silver":13000, "gold":21000, "platinum":34000}},
+#				"NC":{"value":1000.0, "pw":1.15, "time_based":true, "metal_costs":{"lead":2000, "copper":3000, "iron":5000, "aluminium":8000, "silver":13000, "gold":21000, "platinum":34000}},
+#				"EC":{"value":1000.0, "pw":1.15, "time_based":true, "metal_costs":{"lead":2000, "copper":3000, "iron":5000, "aluminium":8000, "silver":13000, "gold":21000, "platinum":34000}},
+#				"NSF":{"value":50000.0, "pw":1.15, "metal_costs":{"lead":2000, "copper":3000, "iron":5000, "aluminium":8000, "silver":13000, "gold":21000, "platinum":34000}},
+#				"ESF":{"value":50000.0, "pw":1.15, "metal_costs":{"lead":2000, "copper":3000, "iron":5000, "aluminium":8000, "silver":13000, "gold":21000, "platinum":34000}},
 }
-var path_2 = {	"SC":{"value":4000, "pw":1.16, "is_value_integer":true, "metal_costs":{"lead":300, "copper":300, "iron":300, "aluminium":300, "silver":300, "gold":300}},
-				"GF":{"value":600, "pw":1.16, "is_value_integer":true, "metal_costs":{"lead":350, "copper":350, "iron":350, "aluminium":350, "silver":350, "gold":350}},
-				"SE":{"value":100, "pw":1.16, "is_value_integer":true, "metal_costs":{"lead":350, "copper":350, "iron":350, "aluminium":350, "silver":350, "gold":350}},
-				"GH":{"value":1.0, "pw":1.07, "metal_costs":{"lead":1000, "copper":1000, "iron":1200, "aluminium":1200, "silver":1400, "gold":1400}},
-				"AMN":{"value":1.0, "pw":1.05, "metal_costs":{"lead":50000, "copper":50000, "iron":50000, "aluminium":50000, "silver":50000, "gold":50000}},
-				"SPR":{"value":1.0, "pw":1.05, "metal_costs":{"lead":270000, "copper":270000, "iron":270000, "aluminium":270000, "silver":270000, "gold":270000}},
-				"CBD":{"value":1.1, "step":0.02, "metal_costs":{"lead":2000, "copper":4000, "iron":8000, "aluminium":16000, "silver":32000, "gold":64000, "platinum":128000}},
+var path_2 = {	Building.STONE_CRUSHER:				{"value":4000, "pw":1.16, "is_value_integer":true, "metal_costs":{"lead":300, "copper":300, "iron":300, "aluminium":300, "silver":300, "gold":300}},
+				Building.GLASS_FACTORY:				{"value":600, "pw":1.16, "is_value_integer":true, "metal_costs":{"lead":350, "copper":350, "iron":350, "aluminium":350, "silver":350, "gold":350}},
+				Building.STEAM_ENGINE:				{"value":100, "pw":1.16, "is_value_integer":true, "metal_costs":{"lead":350, "copper":350, "iron":350, "aluminium":350, "silver":350, "gold":350}},
+				Building.GREENHOUSE:				{"value":1.0, "pw":1.07, "metal_costs":{"lead":1000, "copper":1000, "iron":1200, "aluminium":1200, "silver":1400, "gold":1400}},
+				Building.ATOM_MANIPULATOR:			{"value":1.0, "pw":1.05, "metal_costs":{"lead":50000, "copper":50000, "iron":50000, "aluminium":50000, "silver":50000, "gold":50000}},
+				Building.SUBATOMIC_PARTICLE_REACTOR:{"value":1.0, "pw":1.05, "metal_costs":{"lead":270000, "copper":270000, "iron":270000, "aluminium":270000, "silver":270000, "gold":270000}},
+				Building.CENTRAL_BUSINESS_DISTRICT:	{"value":1.1, "step":0.02, "metal_costs":{"lead":2000, "copper":4000, "iron":8000, "aluminium":16000, "silver":32000, "gold":64000, "platinum":128000}},
 }
-var path_3 = {	"SC":{"value":1.0, "pw":1.01, "cap":70, "metal_costs":{"lead":600, "copper":1800, "iron":5400, "aluminium":16200, "silver":48600, "gold":145800}},
-				"GF":{"value":1.0, "pw":1.01, "cap":70, "metal_costs":{"lead":600, "copper":1800, "iron":5400, "aluminium":16200, "silver":48600, "gold":145800}},
-				"SE":{"value":1.0, "pw":1.04, "metal_costs":{"lead":700, "copper":1400, "iron":2800, "aluminium":5600, "silver":11200, "gold":22400}},
-				"CBD":{"value":3, "step":2, "cost_mult":12, "cost_pw":2.7, "is_value_integer":true},
+var path_3 = {	Building.STONE_CRUSHER:				{"value":1.0, "pw":1.01, "cap":70, "metal_costs":{"lead":600, "copper":1800, "iron":5400, "aluminium":16200, "silver":48600, "gold":145800}},
+				Building.GLASS_FACTORY:				{"value":1.0, "pw":1.01, "cap":70, "metal_costs":{"lead":600, "copper":1800, "iron":5400, "aluminium":16200, "silver":48600, "gold":145800}},
+				Building.STEAM_ENGINE:				{"value":1.0, "pw":1.04, "metal_costs":{"lead":700, "copper":1400, "iron":2800, "aluminium":5600, "silver":11200, "gold":22400}},
+				Building.CENTRAL_BUSINESS_DISTRICT:	{"value":3, "step":2, "cost_mult":12, "cost_pw":2.7, "is_value_integer":true},
 }
 
-var costs = {	"ME":{"money":100, "energy":40, "time":6.0},
-				"PP":{"money":80, "time":3.0},
-				"RL":{"money":2000, "energy":600, "time":130.0},
-				"B":{"money":400, "energy":100, "time":20.0},
-				"MS":{"money":500, "energy":60, "time":20.0},
-				"RCC":{"money":5000, "energy":400, "time":140.0},
-				"SC":{"money":900, "energy":150, "time":50.0},
-				"GF":{"money":1500, "energy":1000, "time":120.0},
-				"SE":{"money":1500, "energy":500, "time":120.0},
-				"MM":{"money":13000, "energy":7000, "time":200.0},
-				"GH":{"money":10000, "energy":1500, "glass":50, "soil":100, "time":75.0},
-				"SP":{"money":4000, "time":90.0},
-				"AE":{"money":41500, "energy":15000, "time":180.0},
-				"AMN":{"money":580000, "energy":8200, "time":490.0},
-				"SPR":{"money":3500000, "energy":61300, "time":1400.0},
-				"SY":{"money":e(5, 8), "energy":900000, "time":5000.0},
-				"PCC":{"money":2.5e12, "energy":7.8e10, "time":840000},
-				"CBD":{"money":7000, "energy":1000, "time":360.0},
+var costs = {	Building.MINERAL_EXTRACTOR:			{"money":100, "energy":40, "time":6.0},
+				Building.POWER_PLANT:				{"money":80, "time":3.0},
+				Building.RESEARCH_LAB:				{"money":2000, "energy":600, "time":130.0},
+				Building.BATTERY:					{"money":400, "energy":100, "time":20.0},
+				Building.MINERAL_SILO:				{"money":500, "energy":60, "time":20.0},
+				Building.ROVER_CONSTRUCTION_CENTER:	{"money":5000, "energy":400, "time":140.0},
+				Building.STONE_CRUSHER:				{"money":900, "energy":150, "time":50.0},
+				Building.GLASS_FACTORY:				{"money":1500, "energy":1000, "time":120.0},
+				Building.STEAM_ENGINE:				{"money":1500, "energy":500, "time":120.0},
+				Building.BORING_MACHINE:			{"money":13000, "energy":7000, "time":200.0},
+				Building.GREENHOUSE:				{"money":10000, "energy":1500, "glass":50, "soil":100, "time":75.0},
+				Building.SOLAR_PANEL:				{"money":4000, "time":90.0},
+				Building.ATMOSPHERE_EXTRACTOR:		{"money":41500, "energy":15000, "time":180.0},
+				Building.ATOM_MANIPULATOR:			{"money":580000, "energy":8200, "time":490.0},
+				Building.SUBATOMIC_PARTICLE_REACTOR:{"money":3500000, "energy":61300, "time":1400.0},
+				Building.SHIPYARD:					{"money":e(5, 8), "energy":900000, "time":5000.0},
+				Building.PROBE_CONSTRUCTION_CENTER:	{"money":2.5e12, "energy":7.8e10, "time":840000},
+				Building.CENTRAL_BUSINESS_DISTRICT:	{"money":7000, "energy":1000, "time":360.0},
 				"TP":{"money":e(1.5, 24), "energy":e(1.5, 24)},#Triangulum probe
 				"GK":{"money":e(7.5, 23), "energy":e(5.0, 24)},#Galaxy-killer
 				"rover":{"money":2000, "energy":400, "time":50.0},
-				"PC":{"money":1000000, "energy":50000, "time":600.0},
-				"NC":{"money":e(2.0, 7), "energy":e(3.2, 6), "time":4000.0},
-				"EC":{"money":e(3.0, 7), "energy":e(4.0, 6), "time":9001.0},
-				"NSF":{"money":e(7.5, 6), "energy":e(1.0, 6), "time":4000.0},
-				"ESF":{"money":e(1.2, 7), "energy":e(7.0, 6), "time":10000.0},
+#				"PC":{"money":1000000, "energy":50000, "time":600.0},
+#				"NC":{"money":e(2.0, 7), "energy":e(3.2, 6), "time":4000.0},
+#				"EC":{"money":e(3.0, 7), "energy":e(4.0, 6), "time":9001.0},
+#				"NSF":{"money":e(7.5, 6), "energy":e(1.0, 6), "time":4000.0},
+#				"ESF":{"money":e(1.2, 7), "energy":e(7.0, 6), "time":10000.0},
 }
 
 func e(n, e):
@@ -132,39 +132,39 @@ var proton_icon = preload("res://Graphics/Particles/proton.png")
 var neutron_icon = preload("res://Graphics/Particles/neutron.png")
 var electron_icon = preload("res://Graphics/Particles/electron.png")
 
-var desc_icons = {	"ME":[[minerals_icon]],
-					"PP":[[energy_icon]],
-					"RL":[[SP_icon]],
-					"B":[[energy_icon]],
-					"MS":[[minerals_icon]],
-					"SC":[[stone_icon], [stone_icon], []],
-					"GF":[[glass_icon], [sand_icon], []],
-					"SE":[[energy_icon], [coal_icon], []],
-					"SP":[[energy_icon]],
-					"PC":[[proton_icon]],
-					"NC":[[neutron_icon]],
-					"NSF":[[neutron_icon]],
-					"EC":[[electron_icon]],
-					"ESF":[[electron_icon]],
-					"CBD":[[], [], []]
+var desc_icons = {	Building.MINERAL_EXTRACTOR:[[minerals_icon]],
+					Building.POWER_PLANT:[[energy_icon]],
+					Building.RESEARCH_LAB:[[SP_icon]],
+					Building.BATTERY:[[energy_icon]],
+					Building.MINERAL_SILO:[[minerals_icon]],
+					Building.STONE_CRUSHER:[[stone_icon], [stone_icon], []],
+					Building.GLASS_FACTORY:[[glass_icon], [sand_icon], []],
+					Building.STEAM_ENGINE:[[energy_icon], [coal_icon], []],
+					Building.SOLAR_PANEL:[[energy_icon]],
+#					"PC":[[proton_icon]],
+#					"NC":[[neutron_icon]],
+#					"NSF":[[neutron_icon]],
+#					"EC":[[electron_icon]],
+#					"ESF":[[electron_icon]],
+					Building.CENTRAL_BUSINESS_DISTRICT:[[], [], []]
 }
 
-var rsrc_icons = {	"ME":minerals_icon,
-					"PP":energy_icon,
-					"RL":SP_icon,
-					"SC":stone_icon,
-					"GF":glass_icon,
-					"SE":energy_icon,
-					"MM":stone_icon,
-					"SP":energy_icon,
-					"AE":atom_icon,
-					"AMN":atom_icon,
-					"SPR":particle_icon,
-					"PC":proton_icon,
-					"NC":neutron_icon,
-					"NSF":neutron_icon,
-					"EC":electron_icon,
-					"ESF":electron_icon,
+var rsrc_icons = {	Building.MINERAL_EXTRACTOR:minerals_icon,
+					Building.POWER_PLANT:energy_icon,
+					Building.RESEARCH_LAB:SP_icon,
+					Building.STONE_CRUSHER:stone_icon,
+					Building.GLASS_FACTORY:glass_icon,
+					Building.STEAM_ENGINE:energy_icon,
+					Building.BORING_MACHINE:stone_icon,
+					Building.SOLAR_PANEL:energy_icon,
+					Building.ATMOSPHERE_EXTRACTOR:atom_icon,
+					Building.ATOM_MANIPULATOR:atom_icon,
+					Building.SUBATOMIC_PARTICLE_REACTOR:particle_icon,
+#					"PC":proton_icon,
+#					"NC":neutron_icon,
+#					"NSF":neutron_icon,
+#					"EC":electron_icon,
+#					"ESF":electron_icon,
 }
 
 var default_stats:Dictionary = {
@@ -228,39 +228,39 @@ var univ_prop_weights:Dictionary = {
 	}
 
 func reload():
-	path_1.ME.desc = tr("EXTRACTS_X") % ["@i %s/" + tr("S_SECOND")]
-	path_1.AE.desc = tr("EXTRACTS_X") % ["%s mol/" + tr("S_SECOND")]
-	path_1.PP.desc = tr("GENERATES_X") % ["@i %s/" + tr("S_SECOND")]
-	path_1.RL.desc = tr("PRODUCES_X") % ["@i %s/" + tr("S_SECOND")]
-	path_1.RCC.desc = tr("MULT_ROVER_STAT_BY") % ["%s"]
-	path_1.SY.desc = tr("MULT_FIGHTER_STAT_BY") % ["%s"]
-	path_1.MS.desc = tr("STORES_X") % [" @i %s"]
-	path_1.B.desc = tr("STORES_X") % [" @i %s"]
-	path_1.SC.desc = tr("CRUSHES_X") % ["@i %s kg/" + tr("S_SECOND")]
-	path_1.GF.desc = tr("PRODUCES_X") % ["@i %s kg/" + tr("S_SECOND")]
-	path_1.SE.desc = tr("GENERATES_X") % ["@i %s/" + tr("S_SECOND")]
-	path_1.MM.desc = tr("X_M_PER_SECOND") % ["%s", tr("S_SECOND")]
-	path_1.GH.desc = tr("X_PLANT_GROWTH")
-	path_1.SP.desc = tr("GENERATES_X") % ["@i %s/" + tr("S_SECOND")]
-	path_1.AMN.desc = "%s: %%s" % [tr("BASE_SPEED")]
-	path_1.SPR.desc = "%s: %%s" % [tr("BASE_SPEED")]
-	path_1.PC.desc = tr("COLLECTS_X") % ["@i %s/" + tr("S_SECOND")]
-	path_1.NC.desc = tr("COLLECTS_X") % ["@i %s/" + tr("S_SECOND")]
-	path_1.EC.desc = tr("COLLECTS_X") % ["@i %s/" + tr("S_SECOND")]
-	path_1.NSF.desc = tr("STORES_X") % ["@i %s mol"]
-	path_1.ESF.desc = tr("STORES_X") % ["@i %s mol"]
-	path_2.SC.desc = tr("CAN_STORE_UP_TO") % [" @i %s kg"]
-	path_2.GF.desc = tr("CAN_STORE_UP_TO") % [" @i %s kg"]
-	path_2.SE.desc = tr("CAN_STORE_UP_TO") % [" @i %s kg"]
-	path_2.GH.desc = tr("X_PLANT_PRODUCE")
-	path_3.SC.desc = tr("OUTPUT_MULTIPLIER")
-	path_3.GF.desc = tr("OUTPUT_MULTIPLIER")
-	path_3.SE.desc = tr("OUTPUT_MULTIPLIER")
-	path_1.CBD.desc = tr("CBD_PATH_1")
-	path_2.CBD.desc = tr("CBD_PATH_2")
-	path_3.CBD.desc = tr("CBD_PATH_3")
-	path_2.AMN.desc = tr("DIVIDES_ENERGY_COSTS_BY")
-	path_2.SPR.desc = tr("DIVIDES_ENERGY_COSTS_BY")
+	path_1[Building.MINERAL_EXTRACTOR].desc = tr("EXTRACTS_X") % ["@i %s/" + tr("S_SECOND")]
+	path_1[Building.ATMOSPHERE_EXTRACTOR].desc = tr("EXTRACTS_X") % ["%s mol/" + tr("S_SECOND")]
+	path_1[Building.POWER_PLANT].desc = tr("GENERATES_X") % ["@i %s/" + tr("S_SECOND")]
+	path_1[Building.RESEARCH_LAB].desc = tr("PRODUCES_X") % ["@i %s/" + tr("S_SECOND")]
+	path_1[Building.ROVER_CONSTRUCTION_CENTER].desc = tr("MULT_ROVER_STAT_BY") % ["%s"]
+	path_1[Building.SHIPYARD].desc = tr("MULT_FIGHTER_STAT_BY") % ["%s"]
+	path_1[Building.MINERAL_SILO].desc = tr("STORES_X") % [" @i %s"]
+	path_1[Building.BATTERY].desc = tr("STORES_X") % [" @i %s"]
+	path_1[Building.STONE_CRUSHER].desc = tr("CRUSHES_X") % ["@i %s kg/" + tr("S_SECOND")]
+	path_1[Building.GLASS_FACTORY].desc = tr("PRODUCES_X") % ["@i %s kg/" + tr("S_SECOND")]
+	path_1[Building.STEAM_ENGINE].desc = tr("GENERATES_X") % ["@i %s/" + tr("S_SECOND")]
+	path_1[Building.BORING_MACHINE].desc = tr("X_M_PER_SECOND") % ["%s", tr("S_SECOND")]
+	path_1[Building.GREENHOUSE].desc = tr("X_PLANT_GROWTH")
+	path_1[Building.SOLAR_PANEL].desc = tr("GENERATES_X") % ["@i %s/" + tr("S_SECOND")]
+	path_1[Building.ATOM_MANIPULATOR].desc = "%s: %%s" % [tr("BASE_SPEED")]
+	path_1[Building.SUBATOMIC_PARTICLE_REACTOR].desc = "%s: %%s" % [tr("BASE_SPEED")]
+#	path_1.PC.desc = tr("COLLECTS_X") % ["@i %s/" + tr("S_SECOND")]
+#	path_1.NC.desc = tr("COLLECTS_X") % ["@i %s/" + tr("S_SECOND")]
+#	path_1.EC.desc = tr("COLLECTS_X") % ["@i %s/" + tr("S_SECOND")]
+#	path_1.NSF.desc = tr("STORES_X") % ["@i %s mol"]
+#	path_1.ESF.desc = tr("STORES_X") % ["@i %s mol"]
+	path_2[Building.STONE_CRUSHER].desc = tr("CAN_STORE_UP_TO") % [" @i %s kg"]
+	path_2[Building.GLASS_FACTORY].desc = tr("CAN_STORE_UP_TO") % [" @i %s kg"]
+	path_2[Building.STEAM_ENGINE].desc = tr("CAN_STORE_UP_TO") % [" @i %s kg"]
+	path_2[Building.GREENHOUSE].desc = tr("X_PLANT_PRODUCE")
+	path_3[Building.STONE_CRUSHER].desc = tr("OUTPUT_MULTIPLIER")
+	path_3[Building.GLASS_FACTORY].desc = tr("OUTPUT_MULTIPLIER")
+	path_3[Building.STEAM_ENGINE].desc = tr("OUTPUT_MULTIPLIER")
+	path_1[Building.CENTRAL_BUSINESS_DISTRICT].desc = tr("CBD_PATH_1")
+	path_2[Building.CENTRAL_BUSINESS_DISTRICT].desc = tr("CBD_PATH_2")
+	path_3[Building.CENTRAL_BUSINESS_DISTRICT].desc = tr("CBD_PATH_3")
+	path_2[Building.ATOM_MANIPULATOR].desc = tr("DIVIDES_ENERGY_COSTS_BY")
+	path_2[Building.SUBATOMIC_PARTICLE_REACTOR].desc = tr("DIVIDES_ENERGY_COSTS_BY")
 
 #Science for unlocking game features
 var science_unlocks = {	
@@ -574,25 +574,25 @@ var default_help = {
 		}
 
 var unique_bldg_icons = {
-	"spaceport":[energy_icon, energy_icon],
-	"mineral_replicator":[minerals_icon],
-	"substation":[energy_icon, energy_icon, energy_icon],
-	"aurora_generator":[],
-	"nuclear_fusion_reactor":[energy_icon],
-	"mining_outpost":[],
-	"observatory":[SP_icon],
-	"cellulose_synthesizer":[cellulose_icon],
+	UniqueBuilding.SPACEPORT:[energy_icon, energy_icon],
+	UniqueBuilding.MINERAL_REPLICATOR:[minerals_icon],
+	UniqueBuilding.SUBSTATION:[energy_icon, energy_icon, energy_icon],
+#	UniqueBuilding.AURORA_GENERATOR:[],
+	UniqueBuilding.NUCLEAR_FUSION_REACTOR:[energy_icon],
+	UniqueBuilding.MINING_OUTPOST:[],
+	UniqueBuilding.OBSERVATORY:[SP_icon],
+	UniqueBuilding.CELLULOSE_SYNTHESIZER:[cellulose_icon],
 }
 
 var unique_bldg_repair_cost_multipliers = {
-	"spaceport":1.2,
-	"mineral_replicator":2.4,
-	"substation":2.5,
-	"aurora_generator":3.0,
-	"nuclear_fusion_reactor":8.5,
-	"mining_outpost":1.0,
-	"observatory":2.8,
-	"cellulose_synthesizer":1.5,
+	UniqueBuilding.SPACEPORT:1.2,
+	UniqueBuilding.MINERAL_REPLICATOR:2.4,
+	UniqueBuilding.SUBSTATION:2.5,
+#	UniqueBuilding.AURORA_GENERATOR:3.0,
+	UniqueBuilding.NUCLEAR_FUSION_REACTOR:8.5,
+	UniqueBuilding.MINING_OUTPOST:1.0,
+	UniqueBuilding.OBSERVATORY:2.8,
+	UniqueBuilding.CELLULOSE_SYNTHESIZER:1.5,
 }
 
 var MS_num_stages:Dictionary = {"M_DS":4, "M_MME":3, "M_CBS":3, "M_PK":2, "M_SE":1, "M_MPCC":0, "M_MB":0}

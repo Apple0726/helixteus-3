@@ -1,10 +1,10 @@
 extends "GenericPanel.gd"
 
-var basic_bldgs:Array = ["ME", "PP", "RL", "MM", "SP", "AE", "PC", "NC", "EC"]
-var storage_bldgs:Array = ["MS", "B", "NSF", "ESF"]
-var production_bldgs:Array = ["SC", "GF", "SE", "AMN", "SPR"]
-var support_bldgs:Array = ["GH", "CBD"]
-var vehicles_bldgs:Array = ["RCC", "SY", "PCC"]
+var basic_bldgs:Array = [Building.MINERAL_EXTRACTOR, Building.POWER_PLANT, Building.RESEARCH_LAB, Building.BORING_MACHINE, Building.SOLAR_PANEL, Building.ATMOSPHERE_EXTRACTOR]
+var storage_bldgs:Array = [Building.MINERAL_SILO, Building.BATTERY]
+var production_bldgs:Array = [Building.STONE_CRUSHER, Building.GLASS_FACTORY, Building.STEAM_ENGINE, Building.ATOM_MANIPULATOR, Building.SUBATOMIC_PARTICLE_REACTOR]
+var support_bldgs:Array = [Building.GREENHOUSE, Building.CENTRAL_BUSINESS_DISTRICT]
+var vehicles_bldgs:Array = [Building.ROVER_CONSTRUCTION_CENTER, Building.SHIPYARD, Building.PROBE_CONSTRUCTION_CENTER]
 
 func _ready():
 	super()
@@ -48,15 +48,15 @@ func _on_btn_pressed(btn_str:String):
 		var txt:String = ""
 		var time_speed:float = game.u_i.time_speed if Data.path_1.has(bldg) and Data.path_1[bldg].has("time_based") else 1.0
 		item.get_node("New").visible = game.new_bldgs.has(bldg) and game.new_bldgs[bldg]
-		if bldg == "SP":
+		if bldg == Building.SOLAR_PANEL:
 			txt = (Data.path_1[bldg].desc + "\n") % [Helper.format_num(Helper.get_SP_production(game.planet_data[game.c_p].temperature, Data.path_1[bldg].value * Helper.get_IR_mult(bldg) * time_speed), true)]
-		elif bldg == "AE":
+		elif bldg == Building.ATMOSPHERE_EXTRACTOR:
 			txt = (Data.path_1[bldg].desc + "\n") % [Helper.format_num(Helper.get_AE_production(game.planet_data[game.c_p].pressure, Data.path_1[bldg].value * Helper.get_IR_mult(bldg) * time_speed), true)]
-		elif bldg in ["PC", "NC"]:
-			txt = (Data.path_1[bldg].desc + "\n") % [Helper.format_num(Data.path_1[bldg].value / game.planet_data[game.c_p].pressure * time_speed, true)]
-		elif bldg in ["MS", "NSF", "ESF"]:
-			txt = (Data.path_1[bldg].desc + "\n") % [Helper.format_num(round(Data.path_1[bldg].value * Helper.get_IR_mult(bldg)))]
-		elif bldg == "B":
+#		elif bldg in ["PC", "NC"]:
+#			txt = (Data.path_1[bldg].desc + "\n") % [Helper.format_num(Data.path_1[bldg].value / game.planet_data[game.c_p].pressure * time_speed, true)]
+#		elif bldg in ["MS", "NSF", "ESF"]:
+#			txt = (Data.path_1[bldg].desc + "\n") % [Helper.format_num(round(Data.path_1[bldg].value * Helper.get_IR_mult(bldg)))]
+		elif bldg == Building.BATTERY:
 			txt = (Data.path_1[bldg].desc + "\n") % [Helper.format_num(round(Data.path_1[bldg].value * Helper.get_IR_mult(bldg) * game.u_i.charge))]
 		elif Data.path_1.has(bldg):
 			txt = (Data.path_1[bldg].desc + "\n") % [Helper.format_num(Data.path_1[bldg].value * Helper.get_IR_mult(bldg) * time_speed, true)]
@@ -66,7 +66,7 @@ func _on_btn_pressed(btn_str:String):
 			else:
 				txt += (Data.path_2[bldg].desc + "\n") % [Helper.format_num(Data.path_2[bldg].value * Helper.get_IR_mult(bldg), true)]
 		if Data.path_3.has(bldg):
-			if bldg == "CBD":
+			if bldg == Building.CENTRAL_BUSINESS_DISTRICT:
 				txt += Data.path_3[bldg].desc.format({"n":Data.path_3[bldg].value}) + "\n"
 			else:
 				txt += (Data.path_3[bldg].desc + "\n") % [Data.path_3[bldg].value]
@@ -74,7 +74,7 @@ func _on_btn_pressed(btn_str:String):
 		item.costs = Data.costs[bldg].duplicate(true)
 		for cost in item.costs:
 			item.costs[cost] *= game.engineering_bonus.BCM
-		if bldg == "GH":
+		if bldg == Building.GREENHOUSE:
 			item.costs.energy = round(item.costs.energy * (1 + abs(game.planet_data[game.c_p].temperature - 273) / 10.0))
 		if item.costs.has("time"):
 			if game.subject_levels.dimensional_power >= 1:
@@ -85,7 +85,7 @@ func _on_btn_pressed(btn_str:String):
 		item.add_to_group("bldgs")
 		grid.add_child(item)
 	for bldg in get_tree().get_nodes_in_group("bldgs"):
-		if bldg.item_name == "ME":
+		if bldg.item_name == Building.MINERAL_EXTRACTOR:
 			bldg.visible = true
 		else:
 			bldg.visible = game.new_bldgs.has(bldg.item_name)
@@ -111,7 +111,7 @@ func get_item(_name, _type, _dir):
 	var base_cost = Data.costs[_name].duplicate(true)
 	for cost in base_cost:
 		base_cost[cost] *= game.engineering_bonus.BCM
-	if _name == "GH":
+	if _name == Building.GREENHOUSE:
 		base_cost.energy = round(base_cost.energy * (1 + abs(game.planet_data[game.c_p].temperature - 273) / 10.0))
 	game.view.obj.construct(_name, base_cost)
 

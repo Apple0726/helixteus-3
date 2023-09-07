@@ -1,21 +1,19 @@
-[gd_scene load_steps=19 format=3 uid="uid://n0lnr888b50d"]
+[gd_scene load_steps=17 format=3 uid="uid://n0lnr888b50d"]
 
 [ext_resource type="PackedScene" uid="uid://1hq6qpr1oa3i" path="res://Scenes/AdvButton.tscn" id="1"]
-[ext_resource type="Texture2D" uid="uid://dw76ym2y2gede" path="res://Graphics/Icons/minerals.png" id="2"]
-[ext_resource type="Texture2D" uid="uid://deeyll4gfd665" path="res://Graphics/Icons/SP.png" id="3"]
-[ext_resource type="Texture2D" uid="uid://cq1makvvmrsi4" path="res://Graphics/Icons/energy.png" id="4"]
+[ext_resource type="Texture2D" uid="uid://coh6u6gsdcspp" path="res://Graphics/Icons/minerals.png" id="2"]
+[ext_resource type="Texture2D" uid="uid://1std6qu3420r" path="res://Graphics/Icons/SP.png" id="3"]
+[ext_resource type="Texture2D" uid="uid://cy1dr243nvwap" path="res://Graphics/Icons/energy.png" id="4"]
 [ext_resource type="PackedScene" uid="uid://ddf2xjwcht77u" path="res://Scenes/CloseButton.tscn" id="5"]
 [ext_resource type="Theme" uid="uid://cp2u1kgj60ic" path="res://Resources/default_theme.tres" id="6"]
 [ext_resource type="Script" path="res://Scripts/TerraformPanel.gd" id="7"]
-[ext_resource type="Texture2D" uid="uid://ccmxua74mcd0g" path="res://Graphics/Buildings/MS.png" id="8"]
-[ext_resource type="Texture2D" uid="uid://cs7q00ikjhnb" path="res://Graphics/Buildings/GH.png" id="9"]
-[ext_resource type="Texture2D" uid="uid://o24dhg34dkxj" path="res://Graphics/Buildings/AMN.png" id="10"]
-[ext_resource type="Texture2D" uid="uid://c4vgm6jqypwko" path="res://Graphics/Buildings/SPR.png" id="11"]
-[ext_resource type="Texture2D" uid="uid://dwi2fwr6mvig4" path="res://Graphics/Buildings/AE.png" id="12"]
-[ext_resource type="Texture2D" uid="uid://70npuvek1w8w" path="res://Graphics/Buildings/MM.png" id="13"]
-[ext_resource type="Texture2D" uid="uid://csxqgvajiuaqb" path="res://Graphics/Buildings/NSF.png" id="14"]
-[ext_resource type="Texture2D" uid="uid://cbwtsxkce7wlj" path="res://Graphics/Buildings/ESF.png" id="15"]
-[ext_resource type="Texture2D" uid="uid://blqk2djbmtynb" path="res://Graphics/Buildings/B.png" id="16"]
+[ext_resource type="Texture2D" uid="uid://du31t3pgslqt1" path="res://Graphics/Buildings/mineral_silo.png" id="7_x2n7j"]
+[ext_resource type="Texture2D" uid="uid://grfrxtwh26if" path="res://Graphics/Buildings/battery.png" id="8_5blic"]
+[ext_resource type="Texture2D" uid="uid://ctf2xlkfggn3r" path="res://Graphics/Buildings/atmosphere_extractor.png" id="10_8yhhm"]
+[ext_resource type="Texture2D" uid="uid://crbvd3yk4rom" path="res://Graphics/Buildings/boring_machine.png" id="11_t44yc"]
+[ext_resource type="Texture2D" uid="uid://bw1htjuyhjjd0" path="res://Graphics/Buildings/greenhouse.png" id="12_1h162"]
+[ext_resource type="Texture2D" uid="uid://cx0bx1wyxwxcw" path="res://Graphics/Buildings/atom_manipulator.png" id="13_fkb41"]
+[ext_resource type="Texture2D" uid="uid://f358ltewogk" path="res://Graphics/Buildings/subatomic_particle_reactor.png" id="14_7vv42"]
 
 [sub_resource type="Theme" id="1"]
 Button/colors/font_color = Color(0.88, 0.88, 0.88, 1)
@@ -107,14 +105,14 @@ custom_minimum_size = Vector2(0, 40)
 layout_mode = 2
 expand_icon = true
 button_text = "MINERAL_STORAGE"
-icon_texture = ExtResource("8")
+icon_texture = ExtResource("7_x2n7j")
 
 [node name="EnergyStorage" parent="ScrollContainer/VBoxContainer" instance=ExtResource("1")]
 custom_minimum_size = Vector2(0, 40)
 layout_mode = 2
 expand_icon = true
 button_text = "ENERGY_STORAGE"
-icon_texture = ExtResource("16")
+icon_texture = ExtResource("8_5blic")
 
 [node name="Research" parent="ScrollContainer/VBoxContainer" instance=ExtResource("1")]
 custom_minimum_size = Vector2(0, 40)
@@ -128,49 +126,35 @@ custom_minimum_size = Vector2(0, 40)
 layout_mode = 2
 expand_icon = true
 button_text = "ATMOSPHERE_EXTRACTION"
-icon_texture = ExtResource("12")
+icon_texture = ExtResource("10_8yhhm")
 
 [node name="Mining" parent="ScrollContainer/VBoxContainer" instance=ExtResource("1")]
 custom_minimum_size = Vector2(0, 40)
 layout_mode = 2
 expand_icon = true
 button_text = "MINING"
-icon_texture = ExtResource("13")
+icon_texture = ExtResource("11_t44yc")
 
 [node name="SpaceAgriculture" parent="ScrollContainer/VBoxContainer" instance=ExtResource("1")]
 custom_minimum_size = Vector2(0, 40)
 layout_mode = 2
 expand_icon = true
 button_text = "SA_SC"
-icon_texture = ExtResource("9")
+icon_texture = ExtResource("12_1h162")
 
 [node name="AtomManipulation" parent="ScrollContainer/VBoxContainer" instance=ExtResource("1")]
 custom_minimum_size = Vector2(0, 40)
 layout_mode = 2
 expand_icon = true
 button_text = "ATM_SC"
-icon_texture = ExtResource("10")
+icon_texture = ExtResource("13_fkb41")
 
 [node name="SubatomicParticles" parent="ScrollContainer/VBoxContainer" instance=ExtResource("1")]
 custom_minimum_size = Vector2(0, 40)
 layout_mode = 2
 expand_icon = true
 button_text = "SAP_SC"
-icon_texture = ExtResource("11")
-
-[node name="NeutronStorage" parent="ScrollContainer/VBoxContainer" instance=ExtResource("1")]
-custom_minimum_size = Vector2(0, 40)
-layout_mode = 2
-expand_icon = true
-button_text = "NEUTRON_STORAGE"
-icon_texture = ExtResource("14")
-
-[node name="ElectronStorage" parent="ScrollContainer/VBoxContainer" instance=ExtResource("1")]
-custom_minimum_size = Vector2(0, 40)
-layout_mode = 2
-expand_icon = true
-button_text = "ELECTRON_STORAGE"
-icon_texture = ExtResource("15")
+icon_texture = ExtResource("14_7vv42")
 
 [node name="Panel" type="Panel" parent="."]
 visible = false
@@ -249,6 +233,4 @@ text = "TERRAFORM"
 [connection signal="pressed" from="ScrollContainer/VBoxContainer/SpaceAgriculture" to="." method="_on_GH_pressed"]
 [connection signal="pressed" from="ScrollContainer/VBoxContainer/AtomManipulation" to="." method="_on_AMN_pressed"]
 [connection signal="pressed" from="ScrollContainer/VBoxContainer/SubatomicParticles" to="." method="_on_SPR_pressed"]
-[connection signal="pressed" from="ScrollContainer/VBoxContainer/NeutronStorage" to="." method="_on_NSF_pressed"]
-[connection signal="pressed" from="ScrollContainer/VBoxContainer/ElectronStorage" to="." method="_on_ESF_pressed"]
 [connection signal="pressed" from="Panel/Terraform" to="." method="_on_Terraform_pressed"]
