@@ -215,16 +215,22 @@ func add_particles(pos:Vector2):
 	particle.lifetime = 2.0 / game.u_i.time_speed
 	add_child(particle)
 
-func show_tooltip(tile, tile_id:int):
-	if tile == null:
-		return
+func show_tooltip(tile_id:int):
 	var tooltip:String = ""
 	var icons = []
 	var fiery_tooltip:int = -1
 	var fire_strength:float = 0.0
-	if tile.has("bldg"):
-		tooltip += Helper.get_bldg_tooltip(p_i, tile, 1)
-		icons.append_array(Helper.flatten(Data.desc_icons[tile.bldg.name]) if Data.desc_icons.has(tile.bldg.name) else [])
+	var tile_data:Dictionary = game.tile_data
+	var has_aurora = Helper.tile_defined(tile_data.auroras, tile_id)
+	var has_ash = Helper.tile_defined(tile_data.ashes, tile_id)
+	var has_crater = Helper.tile_defined(tile_data.craters, tile_id)
+	var depth = -1
+	if tile_data.attributes.has(tile_id) and tile_data.attributes[tile_id].has("depth"):
+		depth = tile_data.attributes[tile_id].depth
+	if tile_data[tile_id].has("building"):
+		var building = tile_data[tile_id].building
+		tooltip += Helper.get_bldg_tooltip(p_i, tile_id, 1)
+		icons.append_array(Helper.flatten(Data.desc_icons[building.name]) if Data.desc_icons.has(building.name) else [])
 		if game.help_str == "":
 			game.help_str = "tile_shortcuts"
 		if game.help.has("tile_shortcuts") and bldg_to_construct == -1:
@@ -241,95 +247,103 @@ func show_tooltip(tile, tile_id:int):
 			shortcuts.center_position.y = 360
 			shortcuts.name = "BuildingShortcuts"
 			game.get_node("UI").add_child(shortcuts)
-		if tile.has("overclock_bonus") and overclockable(tile.bldg.name):
-			tooltip += "\n[color=#EEEE00]" + tr("BENEFITS_FROM_OVERCLOCK") % tile.overclock_bonus + "[/color]"
-		if tile.bldg.name == "MM":
-			tooltip += "\n%s: %s m" % [tr("HOLE_DEPTH"), tile.depth]
-		elif tile.bldg.name in ["GF", "SE", "SC"]:
+		var tile_attributes = tile_data.attributes[tile_id]
+		if tile_attributes.has("overclock_bonus") and overclockable(building.name):
+			tooltip += "\n[color=#EEEE00]" + tr("BENEFITS_FROM_OVERCLOCK") % tile_attributes.overclock_bonus + "[/color]"
+		if building.name == Building.BORING_MACHINE:
+			tooltip += "\n%s: %s m" % [tr("HOLE_DEPTH"), tile_attributes.depth]
+		elif building.name in ["GF", "SE", "SC"]:
 			tooltip += "\n[color=#88CCFF]%s\nG: %s[/color]" % [tr("CLICK_TO_CONFIGURE"), tr("LOAD_UNLOAD")]
-	elif tile.has("unique_bldg"):
-		tooltip += "[color=#%s]" % Data.tier_colors[tile.unique_bldg.tier - 1].to_html(false)
-		if tile.unique_bldg.has("repair_cost"):
-			tooltip += tr("BROKEN_X").format({"building_name":tr(tile.unique_bldg.name.to_upper())})
+	elif Helper.tile_defined(tile_data.unique_buildings, tile_id):
+		var unique_building = tile_data.unique_buildings[tile_id]
+		tooltip += "[color=#%s]" % Data.tier_colors[unique_building.tier - 1].to_html(false)
+		var unique_building_name = UniqueBuilding.names[unique_building.name]
+		if unique_building.has("repair_cost"):
+			tooltip += tr("BROKEN_X").format({"building_name":tr(unique_building_name.to_upper())})
 		else:
-			tooltip += tr(tile.unique_bldg.name.to_upper())
-		if tile.unique_bldg.tier > 1:
-			tooltip += " " + Helper.get_roman_num(tile.unique_bldg.tier)
+			tooltip += tr(unique_building.name.to_upper())
+		if unique_building.tier > 1:
+			tooltip += " " + Helper.get_roman_num(unique_building.tier)
 		tooltip += "[/color]"
 		tooltip += "\n"
-		if game.help.has("%s_desc" % tile.unique_bldg.name):
-			tooltip += tr("%s_DESC1" % tile.unique_bldg.name.to_upper())
+		if game.help.has("%s_desc" % unique_building_name):
+			tooltip += tr("%s_DESC1" % unique_building_name.to_upper())
 			if game.help_str == "":
-				game.help_str = "%s_desc" % tile.unique_bldg.name
+				game.help_str = "%s_desc" % unique_building_name
 			tooltip += "\n" + tr("HIDE_HELP") + "\n"
-		var desc = tr("%s_DESC2" % tile.unique_bldg.name.to_upper())
-		match tile.unique_bldg.name:
-			"spaceport":
-				desc = desc % [	Helper.get_spaceport_exit_cost_reduction(tile.unique_bldg.tier) * 100,
-								Helper.get_spaceport_travel_cost_reduction(tile.unique_bldg.tier) * 100]
-			"mineral_replicator", "mining_outpost", "observatory":
-				desc = desc.format({"n":Helper.get_unique_bldg_area(tile.unique_bldg.tier)}) % Helper.get_MR_Obs_Outpost_prod_mult(tile.unique_bldg.tier)
-			"substation":
-				desc = desc.format({"n":Helper.get_unique_bldg_area(tile.unique_bldg.tier), "time":Helper.time_to_str(Helper.get_substation_capacity_bonus(tile.unique_bldg.tier))}) % Helper.get_substation_prod_mult(tile.unique_bldg.tier)
-			"aurora_generator":
-				desc = desc.format({"intensity":Helper.get_AG_au_int_mult(tile.unique_bldg.tier), "n":Helper.get_AG_num_auroras(tile.unique_bldg.tier)})
-			"nuclear_fusion_reactor":
-				desc = desc % Helper.format_num(Helper.get_NFR_prod_mult(tile.unique_bldg.tier))
-			"cellulose_synthesizer":
-				desc = desc % Helper.format_num(Helper.get_CS_prod_mult(tile.unique_bldg.tier))
+		var desc = tr("%s_DESC2" % unique_building_name.to_upper())
+		match unique_building.name:
+			UniqueBuilding.SPACEPORT:
+				desc = desc % [	Helper.get_spaceport_exit_cost_reduction(unique_building.tier) * 100,
+								Helper.get_spaceport_travel_cost_reduction(unique_building.tier) * 100]
+			UniqueBuilding.MINERAL_REPLICATOR, UniqueBuilding.MINING_OUTPOST, UniqueBuilding.OBSERVATORY:
+				desc = desc.format({"n":Helper.get_unique_bldg_area(unique_building.tier)}) % Helper.get_MR_Obs_Outpost_prod_mult(unique_building.tier)
+			UniqueBuilding.SUBSTATION:
+				desc = desc.format({"n":Helper.get_unique_bldg_area(unique_building.tier), "time":Helper.time_to_str(Helper.get_substation_capacity_bonus(unique_building.tier))}) % Helper.get_substation_prod_mult(unique_building.tier)
+			UniqueBuilding.AURORA_GENERATOR:
+				desc = desc.format({"intensity":Helper.get_AG_au_int_mult(unique_building.tier), "n":Helper.get_AG_num_auroras(unique_building.tier)})
+			UniqueBuilding.NUCLEAR_FUSION_REACTOR:
+				desc = desc % Helper.format_num(Helper.get_NFR_prod_mult(unique_building.tier))
+			UniqueBuilding.CELLULOSE_SYNTHESIZER:
+				desc = desc % Helper.format_num(Helper.get_CS_prod_mult(unique_building.tier))
 		tooltip += desc
-		icons.append_array(Data.unique_bldg_icons[tile.unique_bldg.name])
-		if tile.unique_bldg.has("repair_cost"):
+		icons.append_array(Data.unique_bldg_icons[unique_building.name])
+		if unique_building.has("repair_cost"):
 			tooltip += "\n" + tr("BROKEN_BLDG_DESC1") + "\n"
 			icons.append(Data.money_icon)
-			tooltip += tr("BROKEN_BLDG_DESC2") % Helper.format_num(tile.unique_bldg.repair_cost, true)
+			tooltip += tr("BROKEN_BLDG_DESC2") % Helper.format_num(unique_building.repair_cost, true)
 			icons.append(Data.money_icon)
-	elif tile.has("volcano"):
+	elif Helper.tile_defined(tile_data.volcanoes, tile_id):
 		if game.help_str == "":
 			game.help_str = "volcano_desc"
+		var VEI:float = Helper.clever_round(tile_data.volcanoes[tile_id].VEI)
 		if not game.help.has("volcano_desc"):
-			tooltip = "%s\n%s\n%s\n%s: %s" % [tr("VOLCANO"), tr("VOLCANO_DESC"), tr("HIDE_HELP"), tr("LARGEST_VEI") % ("(" + tr("VEI") + ") "), Helper.clever_round(tile.volcano.VEI)]
+			tooltip = "%s\n%s\n%s\n%s: %s" % [tr("VOLCANO"), tr("VOLCANO_DESC"), tr("HIDE_HELP"), tr("LARGEST_VEI") % ("(" + tr("VEI") + ") "), VEI]
 		else:
-			tooltip = "%s\n%s: %s" % [tr("VOLCANO"), tr("LARGEST_VEI") % "", Helper.clever_round(tile.volcano.VEI)]
-	elif tile.has("crater") and tile.crater.has("init_depth"):
-		if tile.has("aurora"):
-			tooltip = "[aurora au_int=%s]" % tile.aurora.au_int
+			tooltip = "%s\n%s: %s" % [tr("VOLCANO"), tr("LARGEST_VEI") % "", VEI]
+	elif has_crater and tile_data.craters[tile_id][1] != null:
+		if has_aurora:
+			tooltip = "[aurora au_int=%s]" % tile_data.auroras[tile_id]
 		if game.help_str == "":
 			game.help_str = "crater_desc"
+		var metal:String = Metals.names[tile_data.craters[tile_id][2]]
 		if game.help.has("crater_desc"):
-			tooltip += tr("METAL_CRATER").format({"metal":tr(tile.crater.metal.to_upper()), "crater":tr("CRATER")}) + "\n%s\n%s\n%s" % [tr("CRATER_DESC"), tr("HIDE_HELP"), tr("HOLE_DEPTH") + ": %s m"  % [tile.depth]]
+			tooltip += tr("METAL_CRATER").format({"metal":tr(metal.to_upper()), "crater":tr("CRATER")}) + "\n%s\n%s\n%s" % [tr("CRATER_DESC"), tr("HIDE_HELP"), tr("HOLE_DEPTH") + ": %s m"  % [depth]]
 		else:
-			tooltip += tr("METAL_CRATER").format({"metal":tr(tile.crater.metal.to_upper()), "crater":tr("CRATER")}) + "\n%s" % [tr("HOLE_DEPTH") + ": %s m"  % [tile.depth]]
-	elif tile.has("cave"):
+			tooltip += tr("METAL_CRATER").format({"metal":tr(metal.to_upper()), "crater":tr("CRATER")}) + "\n%s" % [tr("HOLE_DEPTH") + ": %s m"  % [depth]]
+	elif Helper.tile_defined(tile_data.caves, tile_id):
 		var au_str:String = ""
-		if tile.has("aurora"):
-			au_str = "[aurora au_int=%s]" % tile.aurora.au_int
+		if has_aurora:
+			au_str = "[aurora au_int=%s]" % tile_data.auroras[tile_id]
 			tooltip = au_str
-		if tile.has("ash"):
+		if has_ash:
 			fiery_tooltip = tile_over
-			fire_strength = tile.ash.richness
+			fire_strength = abs(tile_data.ashes[tile_id])
 		tooltip += tr("CAVE")
-		var floor_size:String = tr("FLOOR_SIZE").format({"size":tile.cave.floor_size})
+		var num_floors:int = tile_data.caves[tile_id][0]
+		var floor_size:String = tr("FLOOR_SIZE").format({"size":tile_data.caves[tile_id][1]})
 		if not game.science_unlocked.has("RC"):
-			tooltip += "\n%s\n%s\n%s" % [tr("CAVE_DESC"), tr("NUM_FLOORS") % tile.cave.num_floors, floor_size]
+			tooltip += "\n%s\n%s\n%s" % [tr("CAVE_DESC"), tr("NUM_FLOORS") % num_floors, floor_size]
 		else:
-			tooltip += "\n%s" % tr("NUM_FLOORS") % tile.cave.num_floors
+			tooltip += "\n%s" % tr("NUM_FLOORS") % num_floors
 			if caves_data.has(tile_id):
-				if caves_data[tile_id] == tile.cave.num_floors:
+				if caves_data[tile_id] == num_floors:
 					tooltip += " [color=#00FF00](%s)[/color]" % (tr("EXPLORED_X") % caves_data[tile_id])
 				else:
 					tooltip += " [color=#FFFF00](%s)[/color]" % (tr("EXPLORED_X") % caves_data[tile_id])
 			tooltip += "\n%s" % floor_size
 			if game.help.has("cave_controls"):
 				tooltip += "\n[color=#88CCFF]%s[/color]" % [tr("CLICK_CAVE_TO_EXPLORE")]
-		if tile.cave.has("modifiers"):
-			tooltip += Helper.get_modifier_string(tile.cave.modifiers, au_str, icons)
+		if not tile_data.caves[tile_id][4].is_empty():
+			tooltip += Helper.get_modifier_string(tile_data.caves[tile_id][4], au_str, icons)
 		if game.cave_gen_info:
-			tooltip += "\n%s: %s\n%s: %.2f" % [tr("PERIOD"), tile.cave.get("period", 0), tr("AMOUNT_OF_DEBRIS"), tile.cave.get("debris", 0)]
-	elif tile.has("ash"):
-			tooltip = "%s\n%s: %s" % [tr("VOLCANIC_ASH"), tr("MINERAL_RICHNESS"), Helper.clever_round(tile.ash.richness)]
-	elif tile.has("lake"):
-		var lake_info = p_i["lake_%s" % tile.lake]
+			var period:int = tile_data.caves[tile_id][2]
+			var debris:int = tile_data.caves[tile_id][3]
+			tooltip += "\n%s: %s\n%s: %.2f" % [tr("PERIOD"), period, tr("AMOUNT_OF_DEBRIS"), debris]
+	elif has_ash:
+			tooltip = "%s\n%s: %s" % [tr("VOLCANIC_ASH"), tr("MINERAL_RICHNESS"), Helper.clever_round(abs(tile_data.ashes[tile_id]))]
+	elif Helper.tile_defined(tile_data.lakes, tile_id):
+		var lake_info = p_i["lake_%s" % tile_data.lakes[tile_id]]
 		if lake_info.state == "s" and lake_info.element == "H2O":
 			tooltip = tr("ICE")
 		elif lake_info.state == "l" and lake_info.element == "H2O":
@@ -349,7 +363,7 @@ func show_tooltip(tile, tile_id:int):
 			tooltip += tr("%s_LAKE_BONUS" % lake_info.element.to_upper()) % Helper.clever_round(Data.lake_bonus_values[lake_info.element][lake_info.state] / game.biology_bonus[lake_info.element])
 		elif Data.lake_bonus_values[lake_info.element].operator == "+":
 			tooltip += tr("%s_LAKE_BONUS" % lake_info.element.to_upper()) % (Data.lake_bonus_values[lake_info.element][lake_info.state] + game.biology_bonus[lake_info.element])
-	elif tile.has("ship"):
+	elif tile_data.attributes[tile_id].has("ship"):
 		if game.science_unlocked.has("SCT"):
 			tooltip = tr("CLICK_TO_CONTROL_SHIP")
 		else:
@@ -357,8 +371,8 @@ func show_tooltip(tile, tile_id:int):
 				game.help_str = "abandoned_ship"
 			if game.help.has("abandoned_ship"):
 				tooltip = tr("ABANDONED_SHIP") + "\n" + tr("HIDE_HELP")
-	elif tile.has("wormhole"):
-		if tile.wormhole.active:
+	elif tile_data.has("wormhole"):
+		if tile_data.wormhole.active:
 			if game.help_str == "":
 				game.help_str = "active_wormhole"
 			if game.help.has("active_wormhole"):
@@ -373,29 +387,27 @@ func show_tooltip(tile, tile_id:int):
 			else:
 				tooltip = tr("INACTIVE_WORMHOLE")
 			var wh_costs:Dictionary = get_wh_costs()
-			if not tile.wormhole.has("investigation_length"):
+			if not tile_data.wormhole.has("investigation_length"):
 				tooltip += "\n%s: @i %s  @i %s" % [tr("INVESTIGATION_COSTS"), Helper.format_num(wh_costs.SP), Helper.time_to_str(wh_costs.time)]
 				icons = [Data.SP_icon, Data.time_icon]
-	if tile.has("depth") and not tile.has("bldg") and not tile.has("crater") and not tile.has("bridge"):
-		tooltip += "%s: %s m\n%s" % [tr("HOLE_DEPTH"), tile.depth, tr("SHIFT_CLICK_TO_BRIDGE_HOLE")]
-	elif tile.has("aurora") and tooltip == "":
+	if depth != -1 and not Helper.tile_defined(tile_data.building, tile_id) and not has_crater and not tile_data.attributes[tile_id].has("bridge"):
+		tooltip += "%s: %s m\n%s" % [tr("HOLE_DEPTH"), depth, tr("SHIFT_CLICK_TO_BRIDGE_HOLE")]
+	elif has_aurora and tooltip == "":
 		if game.help_str == "":
 			game.help_str = "aurora_desc"
 		if game.help.has("aurora_desc"):
-			tooltip = "%s\n%s\n%s\n%s" % [tr("AURORA"), tr("AURORA_DESC"), tr("HIDE_HELP"), tr("AURORA_INTENSITY") + ": %s" % [tile.aurora.au_int]]
+			tooltip = "%s\n%s\n%s\n%s" % [tr("AURORA"), tr("AURORA_DESC"), tr("HIDE_HELP"), tr("AURORA_INTENSITY") + ": %s" % [tile_data.auroras[tile_id]]]
 		else:
-			tooltip = tr("AURORA_INTENSITY") + ": %s" % [tile.aurora.au_int]
-	if tile.has("ruins"):
-		tooltip = "%s\n%s" % [tr("ABANDONED_RUINS"), tr("AR_DESC")]
+			tooltip = tr("AURORA_INTENSITY") + ": %s" % [tile_data.auroras[tile_id]]
+#	if tile.has("ruins"):
+#		tooltip = "%s\n%s" % [tr("ABANDONED_RUINS"), tr("AR_DESC")]
 	if tooltip != "":
 		game.show_adv_tooltip(tooltip, icons)
 	if fiery_tooltip != -1 and is_instance_valid(game.tooltip):
 		game.tooltip.get_node("ColorRect").visible = true
 		game.tooltip.get_node("ColorRect").material.set_shader_parameter("seed", fiery_tooltip)
 		game.tooltip.get_node("ColorRect").material.set_shader_parameter("color", Color(1, 0.51, 0, 1) * clamp(remap(fire_strength, 6.0, 12.0, 0.5, 2.0), 0.5, 2.0))
-		#game.tooltip.get_node("ColorRect").material.set_shader_parameter("color", Color(1, 0.51, 0, 1) * 2.0)
 		game.tooltip.get_node("ColorRect").material.set_shader_parameter("fog_mvt_spd", clamp(remap(fire_strength, 6.0, 12.0, 0.5, 1.5), 0.5, 1.5))
-		#game.tooltip.get_node("ColorRect").material.set_shader_parameter("fog_mvt_spd", 1.5)
 
 func get_wh_costs():
 	return {"SP":round(10000 * pow(game.stats_univ.wormholes_activated + 1, 0.8)), "time":900 / game.u_i.time_speed if game.subject_levels.dimensional_power == 0 else 0.2}
@@ -992,9 +1004,8 @@ func _unhandled_input(event):
 			shortcuts.refresh()
 		view.move_view = true
 		view.scroll_view = true
-		if tile_over != -1 and not game.upgrade_panel.visible:
-			if game.tile_data[tile_over] and not is_instance_valid(game.active_panel) and not game.item_cursor.visible:
-				show_tooltip(game.tile_data[tile_over], tile_over)
+		if tile_over != -1 and not game.upgrade_panel.visible and not is_instance_valid(game.active_panel) and not game.item_cursor.visible:
+			show_tooltip(tile_over)
 	if not is_instance_valid(game.planet_HUD) or not is_instance_valid(game.HUD):
 		return
 	var not_on_button:bool = not game.planet_HUD.on_button and not game.HUD.on_button and not game.close_button_over
@@ -1033,7 +1044,7 @@ func _unhandled_input(event):
 				if tile_over >= len(game.tile_data):
 					return
 				var tile = game.tile_data[tile_over]
-				show_tooltip(tile, tile_over)
+				show_tooltip(tile_over)
 				for white_rect in get_tree().get_nodes_in_group("CBD_white_rects"):
 					white_rect.queue_free()
 					white_rect.remove_from_group("CBD_white_rects")

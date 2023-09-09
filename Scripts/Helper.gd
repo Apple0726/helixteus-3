@@ -295,14 +295,16 @@ func mult_dict_by(dict:Dictionary, value:float):
 		dict2[el] = dict[el] * value
 	return dict2
 
-func get_crush_info(tile_obj):
+func get_crush_info(tile_id:int):
+	var tile_data = game.tile_data
+	var building = tile_data.buildings[tile_id]
 	var time = Time.get_unix_time_from_system()
-	var crush_spd = tile_obj.bldg.path_1_value * game.u_i.time_speed
+	var crush_spd = building.path_1_value * game.u_i.time_speed
 	var constr_delay = 0
-	if tile_obj.bldg.has("is_constructing"):
-		constr_delay = tile_obj.bldg.construction_date + tile_obj.bldg.construction_length - time
-	var progress = max(0, (time - tile_obj.bldg.start_date + constr_delay) * crush_spd / tile_obj.bldg.stone_qty)
-	var qty_left = max(0, round(tile_obj.bldg.stone_qty - (time - tile_obj.bldg.start_date + constr_delay) * crush_spd))
+	if building.has("is_constructing"):
+		constr_delay = building.construction_date + building.construction_length - time
+	var progress = max(0, (time - building.start_date + constr_delay) * crush_spd / building.stone_qty)
+	var qty_left = max(0, round(building.stone_qty - (time - building.start_date + constr_delay) * crush_spd))
 	return {"crush_spd":crush_spd, "progress":progress, "qty_left":qty_left}
 
 func get_prod_info(tile_obj):
@@ -682,6 +684,12 @@ func update_rsrc(p_i, tile_id:int, rsrc = null, active:bool = false):
 	var capacity_bar_value = 0
 	var rsrc_text = ""
 	var tile_data:Dictionary = game.tile_data
+	var au_mult = 0.0
+	if tile_defined(tile_data.auroras, tile_id):
+		au_mult = tile_data.auroras[tile_id] + 1.0
+	var ash_mult = 1.0
+	if tile_defined(tile_data.ashes, tile_id):
+		ash_mult = abs(tile_data.ashes[tile_id])
 	if tile_defined(tile_data.unique_buildings, tile_id):
 		if tile_data.unique_buildings[tile_id].has("repair_cost"):
 			return
@@ -708,29 +716,29 @@ func update_rsrc(p_i, tile_id:int, rsrc = null, active:bool = false):
 			return
 	var prod:float = p_i.tile_num if p_i.has("tile_num") else 1
 	if building.name == "AE":
-		prod *= building.path_1_value * get_prod_mult(tile) * p_i.pressure
+		prod *= building.path_1_value * get_prod_mult_tile(tile_id) * p_i.pressure
 		rsrc_text = "%s mol/%s" % [format_num(prod, true), tr("S_SECOND")]
 	elif building.name == "ME":
-		prod *= building.path_1_value * get_prod_mult(tile) * (tile.ash.richness if tile.has("ash") else 1.0) * (tile.mineral_replicator_bonus if tile.has("mineral_replicator_bonus") else 1.0)
+		prod *= building.path_1_value * get_prod_mult_tile(tile_id) * ash_mult * tile_data.attributes[tile_id].get("mineral_replicator_bonus", 1.0)
 		rsrc_text = "%s/%s" % [format_num(prod, true), tr("S_SECOND")]
 	elif building.name == "SP":
-		prod *= get_SP_production(p_i.temperature, building.path_1_value * get_prod_mult(tile) * get_au_mult(tile)) * (tile.substation_bonus if tile.has("substation_bonus") else 1.0)
+		prod *= get_SP_production(p_i.temperature, building.path_1_value) * get_prod_mult_tile(tile_id) * (au_mult + 1.0) * tile_data.attributes[tile_id].get("substation_bonus", 1.0)
 		rsrc_text = "%s/%s" % [format_num(prod, true), tr("S_SECOND")]
 	elif building.name == "PP":
-		prod *= building.path_1_value * get_prod_mult(tile) * (tile.substation_bonus if tile.has("substation_bonus") else 1.0)
+		prod *= building.path_1_value * get_prod_mult_tile(tile_id) * tile_data.attributes[tile_id].get("substation_bonus", 1.0)
 		rsrc_text = "%s/%s" % [format_num(prod, true), tr("S_SECOND")]
 	elif building.name == "RL":
-		prod *= building.path_1_value * get_prod_mult(tile) * (tile.observatory_bonus if tile.has("observatory_bonus") else 1.0)
+		prod *= building.path_1_value * get_prod_mult_tile(tile_id) * tile_data.attributes[tile_id].get("observatory_bonus", 1.0)
 		rsrc_text = "%s/%s" % [format_num(prod, true), tr("S_SECOND")]
-	elif building.name in ["PC", "NC"]:
-		prod *= building.path_1_value * p_i.pressure * get_prod_mult(tile)
-		rsrc_text = "%s/%s" % [format_num(prod, true), tr("S_SECOND")]
-	elif building.name == "EC":
-		prod *= building.path_1_value / tile.aurora.au_int * get_prod_mult(tile)
-		rsrc_text = "%s/%s" % [format_num(prod, true), tr("S_SECOND")]
+#	elif building.name in ["PC", "NC"]:
+#		prod *= building.path_1_value * p_i.pressure * get_prod_mult_tile(tile_id)
+#		rsrc_text = "%s/%s" % [format_num(prod, true), tr("S_SECOND")]
+#	elif building.name == "EC":
+#		prod *= building.path_1_value / tile.aurora.au_int * get_prod_mult_tile(tile_id)
+#		rsrc_text = "%s/%s" % [format_num(prod, true), tr("S_SECOND")]
 	elif building.name == "SC":
 		if building.has("stone"):
-			var c_i = get_crush_info(tile)
+			var c_i = get_crush_info(tile_id)
 			rsrc_text = str(c_i.qty_left)
 			capacity_bar_value = 1 - c_i.progress
 		else:
@@ -738,7 +746,7 @@ func update_rsrc(p_i, tile_id:int, rsrc = null, active:bool = false):
 			capacity_bar_value = 0
 	elif building.name == "GF":
 		if building.has("qty1"):
-			var prod_i = get_prod_info(tile)
+			var prod_i = get_prod_info(tile_id)
 			rsrc_text = "%s kg" % [prod_i.qty_made]
 			capacity_bar_value = prod_i.progress
 		else:
@@ -746,33 +754,38 @@ func update_rsrc(p_i, tile_id:int, rsrc = null, active:bool = false):
 			capacity_bar_value = 0
 	elif building.name == "SE":
 		if building.has("qty1"):
-			var prod_i = get_prod_info(tile)
+			var prod_i = get_prod_info(tile_id)
 			rsrc_text = "%s" % [round(prod_i.qty_made)]
 			capacity_bar_value = prod_i.progress
 		else:
 			rsrc_text = ""
 			capacity_bar_value = 0
 	elif building.name == "GH":
-		if tile.has("auto_GH"):
-			rsrc_text = "%s kg/s" % format_num(tile.auto_GH.produce[tile.auto_GH.seed.split("_")[0]] * get_au_mult(tile), true)
+		if tile_data.attributes[tile_id].has("auto_GH"):
+			rsrc_text = "%s kg/s" % format_num(tile_data.attributes[tile_id].auto_GH.produce[tile_data.attributes[tile_id].auto_GH.seed.split("_")[0]] * au_mult, true)
 		else:
 			rsrc_text = ""
 	elif building.name == "MM":
-		prod = building.path_1_value * get_prod_mult(tile) * tile.get("mining_outpost_bonus", 1.0)
+		prod = building.path_1_value * get_prod_mult_tile(tile_id) * tile_data.attributes[tile_id].get("mining_outpost_bonus", 1.0)
 		rsrc_text = "%s m/s" % format_num(prod, true)
 		current_bar_value = fposmod((curr_time - building.collect_date) * prod, 1.0)
-	else:
-		if Mods.added_buildings.has(building.name):
-			Mods.mod_list[Mods.added_buildings[building.name].mod].calculate(p_i, tile, rsrc, curr_time)
+#	else:
+#		if Mods.added_buildings.has(building.name):
+#			Mods.mod_list[Mods.added_buildings[building.name].mod].calculate(p_i, tile, rsrc, curr_time)
 	if is_instance_valid(rsrc):
 		rsrc.set_current_bar_value(current_bar_value)
 		rsrc.set_capacity_bar_value(capacity_bar_value)
 		rsrc.set_text(rsrc_text)
 
-func get_prod_mult(tile):
-	var mult = get_IR_mult(tile.bldg.name) * (game.u_i.time_speed if Data.path_1.has(tile.bldg.name) and Data.path_1[tile.bldg.name].has("time_based") else 1.0)
-	if tile.bldg.has("overclock_mult"):
-		mult *= tile.bldg.overclock_mult
+func get_prod_mult_tile(tile_id:int):
+	var tile_data:Dictionary = game.tile_data
+	var mult = get_IR_mult(tile_data.buildings[tile_id].name) * (game.u_i.time_speed if Data.path_1.has(tile_data.buildings[tile_id].name) and Data.path_1[tile_data.buildings[tile_id].name].has("time_based") else 1.0)
+	if tile_data.attributes.has(tile_id):
+		mult *= tile_data.attributes[tile_id].get("overclock_mult", 1.0)
+	return mult
+
+func get_prod_mult_planet(planet_info:Dictionary):
+	var mult = get_IR_mult(planet_info.bldg.name) * (game.u_i.time_speed if Data.path_1.has(planet_info.bldg.name) and Data.path_1[planet_info.bldg.name].has("time_based") else 1.0) * planet_info.get("overclock_mult", 1.0)
 	return mult
 
 func has_IR(bldg_name:String):
@@ -818,11 +831,17 @@ func update_ship_travel():
 func update_bldg_constr(tile_id:int, p_i:Dictionary):
 	var curr_time = Time.get_unix_time_from_system()
 	var tile_data:Dictionary = game.tile_data
-	var building = game.tile_data.buildings[tile_id]
+	var building = tile_data.buildings[tile_id]
 	var start_date = building.construction_date
 	var length = building.construction_length
 	var progress = (curr_time - start_date) / float(length)
 	var update_boxes:bool = false
+	var au_int = 0.0
+	if tile_defined(tile_data.auroras, tile_id):
+		au_int = tile_data.auroras[tile_id]
+	var ash_mult = 1.0
+	if tile_defined(tile_data.ashes, tile_id):
+		ash_mult = abs(tile_data.ashes[tile_id])
 	if progress >= 1:
 		if building.has("is_constructing"):
 			building.erase("is_constructing")
@@ -840,7 +859,7 @@ func update_bldg_constr(tile_id:int, p_i:Dictionary):
 						auto_GH.produce[p] *= building.prod_mult
 					else:# Any production other than metal will be considered proportional to cellulose drain
 						auto_GH.produce[p] *= building.cell_mult
-				add_GH_produce_to_autocollect(auto_GH.produce, tile.aurora.au_int if tile.has("aurora") else 0.0)
+				add_GH_produce_to_autocollect(auto_GH.produce, au_int)
 				game.autocollect.mats.cellulose -= auto_GH.cellulose_drain
 				if auto_GH.has("soil_drain"):
 					game.autocollect.mats.soil -= auto_GH.soil_drain
@@ -856,23 +875,23 @@ func update_bldg_constr(tile_id:int, p_i:Dictionary):
 			elif building.name == "ESF":
 				game.electron_cap += building.cap_upgrade
 			elif building.name == "RL":
-				game.autocollect.rsrc.SP += building.path_1_value * overclock_mult * tile.get("observatory_bonus", 1.0)
+				game.autocollect.rsrc.SP += building.path_1_value * overclock_mult * tile_data.attributes[tile_id].get("observatory_bonus", 1.0)
 			elif building.name == "ME":
-				game.autocollect.rsrc.minerals += building.path_1_value * overclock_mult * (tile.ash.richness if tile.has("ash") else 1.0) * tile.get("mineral_replicator_bonus", 1.0)
+				game.autocollect.rsrc.minerals += building.path_1_value * overclock_mult * ash_mult * tile_data.attributes[tile_id].get("mineral_replicator_bonus", 1.0)
 			elif building.name == "PP":
-				var energy_prod = building.path_1_value * overclock_mult * (tile.substation_bonus if tile.has("substation_bonus") else 1.0)
+				var energy_prod = building.path_1_value * overclock_mult * tile_data.attributes[tile_id].get("substation_bonus", 1.0)
 				game.autocollect.rsrc.energy += energy_prod
 				if building.has("cap_upgrade") and building.cap_upgrade > 0: # Save migration
 					game.capacity_bonus_from_substation += building.cap_upgrade
-					if tile.has("substation_tile"):
-						game.tile_data[tile.substation_tile].unique_bldg.capacity_bonus += building.cap_upgrade
+					if tile_data.attributes[tile_id].has("substation_tile"):
+						tile_data[tile_data.attributes[tile_id].substation_tile].unique_bldg.capacity_bonus += building.cap_upgrade
 			elif building.name == "SP":
-				var energy_prod = get_SP_production(p_i.temperature, building.path_1_value * overclock_mult * get_au_mult(tile) * tile.get("substation_bonus", 1.0))
+				var energy_prod = get_SP_production(p_i.temperature, building.path_1_value * overclock_mult * (au_int + 1.0) * tile_data.attributes[tile_id].get("substation_bonus", 1.0))
 				game.autocollect.rsrc.energy += energy_prod
 				if building.has("cap_upgrade"): # Save migration
 					game.capacity_bonus_from_substation += building.cap_upgrade
-					if tile.has("substation_tile"):
-						game.tile_data[tile.substation_tile].unique_bldg.capacity_bonus += building.cap_upgrade
+					if tile_data.attributes[tile_id].has("substation_tile"):
+						tile_data[tile_data.attributes[tile_id].substation_tile].unique_bldg.capacity_bonus += building.cap_upgrade
 			elif building.name == "AE":
 				var base = building.path_1_value * overclock_mult * p_i.pressure
 				for el in p_i.atmosphere:
@@ -888,9 +907,9 @@ func update_bldg_constr(tile_id:int, p_i:Dictionary):
 #			elif building.name == "EC":
 #				game.autocollect.particles.electron += building.path_1_value * overclock_mult * tile.aurora.au_int
 			elif building.name == "CBD":
-				var _tile_data:Array
-				var same_p:bool = game.c_p_g == building.c_p_g
-				if same_p:
+				var _tile_data:Dictionary
+				var same_planet:bool = game.c_p_g == building.c_p_g
+				if same_planet:
 					_tile_data = game.tile_data
 				else:
 					_tile_data = game.open_obj("Planets", building.c_p_g)
@@ -904,24 +923,21 @@ func update_bldg_constr(tile_id:int, p_i:Dictionary):
 						var y:int = building.y_pos + j - n / 2
 						if y < 0 or y >= building.wid or x == building.x_pos and y == building.y_pos:
 							continue
-						var id:int = x % wid + y * wid
-						if _tile_data[id] == null:
-							_tile_data[id] = {}
-						var _tile = _tile_data[id]
-						var id_str:String = str(_tile_data.find(tile))
-						if not _tile.has("cost_div_dict"):
-							_tile.cost_div = building.path_1_value
-							_tile.cost_div_dict = {}
+						var _tile_id:int = x % wid + y * wid
+#						var id_str:String = str(_tile_data.find(tile))
+						if not _tile_data.attributes[_tile_id].has("cost_div_dict"):
+							_tile_data.attributes[_tile_id].cost_div = building.path_1_value
+							_tile_data.attributes[_tile_id].cost_div_dict = {}
 						else:
-							_tile.cost_div = max(_tile.cost_div, building.path_1_value)
-						_tile.cost_div_dict[id_str] = building.path_1_value
-						if not _tile.has("overclock_dict"):
-							_tile.overclock_bonus = building.path_2_value
-							_tile.overclock_dict = {}
+							_tile_data.attributes[_tile_id].cost_div = max(_tile_data.attributes[_tile_id].cost_div, building.path_1_value)
+						_tile_data.attributes[_tile_id].cost_div_dict[tile_id] = building.path_1_value
+						if not _tile_data.attributes[_tile_id].has("overclock_dict"):
+							_tile_data.attributes[_tile_id].overclock_bonus = building.path_2_value
+							_tile_data.attributes[_tile_id].overclock_dict = {}
 						else:
-							_tile.overclock_bonus = max(_tile.overclock_bonus, building.path_2_value)
-						_tile.overclock_dict[id_str] = building.path_2_value
-				if not same_p:
+							_tile_data.attributes[_tile_id].overclock_bonus = max(_tile_data.attributes[_tile_id].overclock_bonus, building.path_2_value)
+						_tile_data.attributes[_tile_id].overclock_dict[tile_id] = building.path_2_value
+				if not same_planet:
 					save_obj("Planets", building.c_p_g, _tile_data)
 	return update_boxes
 
@@ -1002,7 +1018,7 @@ func update_MS_rsrc(dict:Dictionary):
 			prod = 1.0 / dict.bldg.path_1_value
 			if dict.bldg.name != "MM":
 				prod /= dict.tile_num
-			prod /= get_prod_mult(dict)
+			prod /= get_prod_mult_planet(dict)
 		var stored = dict.bldg.stored
 		var c_d = dict.bldg.collect_date
 		var c_t = curr_time
@@ -1177,74 +1193,103 @@ func get_star_modulate (star_class:String):
 			m = lerp(Z0, R0, w)
 	return m
 
-func get_final_value(p_i:Dictionary, dict:Dictionary, path:int, n:int = 1):
-	var bldg:String = dict.bldg.name
-	var mult:float = get_prod_mult(dict)
+func get_final_value(p_i:Dictionary, data, path:int, n:int = 1): # data can be an int to indicate tile id, or a dictionary that contains planet_data for terrafromed planets
+	var building:Dictionary
+	var mult:float
+	var au_mult:float = 1.0
+	var ash_mult:float = 1.0
+	var substation_bonus:float = 1.0
+	var mineral_replicator_bonus:float = 1.0
+	var observatory_bonus:float = 1.0
+	var mining_outpost_bonus:float = 1.0
+	if data is int:
+		building = game.tile_data.buildings[data]
+		mult = get_prod_mult_tile(data)
+		if tile_defined(game.tile_data.auroras, data):
+			au_mult = game.tile_data.auroras[data]
+		if tile_defined(game.tile_data.ashes, data):
+			ash_mult = abs(game.tile_data.ashes[data])
+		substation_bonus = game.tile_data.attributes[data].get("substation_bonus", 1.0)
+		mineral_replicator_bonus = game.tile_data.attributes[data].get("mineral_replicator_bonus", 1.0)
+		observatory_bonus = game.tile_data.attributes[data].get("observatory_bonus", 1.0)
+		mining_outpost_bonus = game.tile_data.attributes[data].get("mining_outpost_bonus", 1.0)
+	elif data is Dictionary:
+		building = data.bldg
+		mult = get_prod_mult_planet(data)
+		substation_bonus = data.get("substation_bonus", 1.0)
+		mineral_replicator_bonus = data.get("mineral_replicator_bonus", 1.0)
+		observatory_bonus = data.get("observatory_bonus", 1.0)
+		mining_outpost_bonus = data.get("mining_outpost_bonus", 1.0)
+	var bldg:int = building.name
 	if bldg in ["MM", "GH", "AMN", "SPR"]:
 		n = 1
 	if path == 1:
-		if bldg == "SP":
-			return clever_round(get_SP_production(p_i.temperature, dict.bldg.path_1_value * mult * get_au_mult(dict) * (dict.substation_bonus if dict.has("substation_bonus") else 1.0)) * n)
-		elif bldg == "AE":
-			return clever_round(get_AE_production(p_i.pressure, dict.bldg.path_1_value) * n)
-		elif bldg in ["MS", "NSF", "ESF"]:
-			return dict.bldg.path_1_value * get_IR_mult(bldg) * n
-		elif bldg == "B":
-			return dict.bldg.path_1_value * mult * get_IR_mult("B") * n * game.u_i.charge
-		elif bldg in ["SPR"]:
-			return dict.bldg.path_1_value * mult * n * game.u_i.charge
-		elif bldg in ["PC", "NC"]:
-			return dict.bldg.path_1_value * mult * n / p_i.pressure
-		elif bldg == "EC":
-			return dict.bldg.path_1_value * mult * n * (dict.aurora.au_int if dict.has("aurora") else 1.0)
-		elif bldg == "ME":
-			return dict.bldg.path_1_value * (dict.ash.richness if dict.has("ash") else 1.0) * mult * n * (dict.mineral_replicator_bonus if dict.has("mineral_replicator_bonus") else 1.0)
-		elif bldg == "PP":
-			return dict.bldg.path_1_value * mult * n * (dict.substation_bonus if dict.has("substation_bonus") else 1.0)
-		elif bldg == "RL":
-			return dict.bldg.path_1_value * mult * n * (dict.observatory_bonus if dict.has("observatory_bonus") else 1.0)
-		elif bldg == "MM":
-			return dict.bldg.path_1_value * mult * n * (dict.mining_outpost_bonus if dict.has("mining_outpost_bonus") else 1.0)
+		if bldg == Building.SOLAR_PANEL:
+			return clever_round(get_SP_production(p_i.temperature, building.path_1_value * mult * au_mult * substation_bonus) * n)
+		elif bldg == Building.ATMOSPHERE_EXTRACTOR:
+			return clever_round(get_AE_production(p_i.pressure, building.path_1_value) * n)
+		elif bldg == Building.MINERAL_SILO:
+			return building.path_1_value * get_IR_mult(bldg) * n
+		elif bldg == Building.BATTERY:
+			return building.path_1_value * mult * get_IR_mult("B") * n * game.u_i.charge
+		elif bldg == Building.SUBATOMIC_PARTICLE_REACTOR:
+			return building.path_1_value * mult * n * game.u_i.charge
+#		elif bldg in ["PC", "NC"]:
+#			return building.path_1_value * mult * n / p_i.pressure
+#		elif bldg == "EC":
+#			return building.path_1_value * mult * n * au_mult
+		elif bldg == Building.MINERAL_EXTRACTOR:
+			return building.path_1_value * ash_mult * mult * n * mineral_replicator_bonus
+		elif bldg == Building.POWER_PLANT:
+			return building.path_1_value * mult * n * substation_bonus
+		elif bldg == Building.RESEARCH_LAB:
+			return building.path_1_value * mult * n * observatory_bonus
+		elif bldg == Building.BORING_MACHINE:
+			return building.path_1_value * mult * n * mining_outpost_bonus
 		else:
-			return dict.bldg.path_1_value * mult * n
+			return building.path_1_value * mult * n
 	elif path == 2:
-		if bldg == "SPR":
-			return dict.bldg.path_2_value * mult * n * game.u_i.charge
-		elif bldg == "SE":
-			return dict.bldg.path_2_value * n
+		if bldg == Building.SUBATOMIC_PARTICLE_REACTOR:
+			return building.path_2_value * mult * n * game.u_i.charge
+		elif bldg == Building.STEAM_ENGINE:
+			return building.path_2_value * n
 		else:
-			return dict.bldg.path_2_value * mult * n
+			return building.path_2_value * mult * n
 	elif path == 3:
-		if bldg == "SE":
-			return dict.bldg.path_3_value * get_IR_mult("SE")
+		if bldg == Building.STEAM_ENGINE:
+			return building.path_3_value * get_IR_mult(Building.STEAM_ENGINE)
 		else:
-			return dict.bldg.path_3_value
+			return building.path_3_value
 
-func get_bldg_tooltip(p_i:Dictionary, dict:Dictionary, n:float = 1):
+func get_bldg_tooltip(p_i:Dictionary, data, n:float = 1):
 	var tooltip:String = ""
-	var bldg:String = dict.bldg.name
-	var path_1_value = get_final_value(p_i, dict, 1, n) if dict.bldg.has("path_1_value") else 0.0
-	var path_2_value = get_final_value(p_i, dict, 2, n) if dict.bldg.has("path_2_value") else 0.0
-	var path_3_value = get_final_value(p_i, dict, 3, n) if dict.bldg.has("path_3_value") else 0.0
-	return get_bldg_tooltip2(bldg, path_1_value, path_2_value, path_3_value)
+	var building:Dictionary
+	if data is int:
+		building = game.tile_data.buildings[data]
+	elif data is Dictionary:
+		building = data.bldg
+	var path_1_value = get_final_value(p_i, data, 1, n) if building.has("path_1_value") else 0.0
+	var path_2_value = get_final_value(p_i, data, 2, n) if building.has("path_2_value") else 0.0
+	var path_3_value = get_final_value(p_i, data, 3, n) if building.has("path_3_value") else 0.0
+	return get_bldg_tooltip2(building.name, path_1_value, path_2_value, path_3_value)
 
-func get_bldg_tooltip2(bldg:String, path_1_value, path_2_value, path_3_value):
+func get_bldg_tooltip2(bldg:int, path_1_value, path_2_value, path_3_value):
 	match bldg:
-		"ME", "PP", "SP", "AE", "MM":
+		Building.MINERAL_EXTRACTOR, Building.POWER_PLANT, Building.SOLAR_PANEL, Building.ATMOSPHERE_EXTRACTOR, Building.BORING_MACHINE:
 			return (Data.path_1[bldg].desc) % [format_num(path_1_value, true)]
-		"AMN", "SPR":
+		Building.ATOM_MANIPULATOR, Building.SUBATOMIC_PARTICLE_REACTOR:
 			return (Data.path_1[bldg].desc + "\n" + Data.path_2[bldg].desc) % [format_num(path_1_value, true), format_num(path_2_value, true)]
-		"SC", "GF", "SE":
+		Building.STONE_CRUSHER, Building.GLASS_FACTORY, Building.STEAM_ENGINE:
 			return "%s\n%s\n%s" % [Data.path_1[bldg].desc % format_num(path_1_value, true), Data.path_2[bldg].desc % format_num(path_2_value, true), Data.path_3[bldg].desc % clever_round(path_3_value)]
-		"RL", "PC", "NC", "EC":
+		Building.RESEARCH_LAB:
 			return (Data.path_1[bldg].desc) % [format_num(path_1_value, true)]
-		"MS", "NSF", "ESF", "B":
+		Building.MINERAL_SILO, Building.BATTERY:
 			return (Data.path_1[bldg].desc) % [format_num(round(path_1_value))]
-		"RCC", "SY":
+		Building.ROVER_CONSTRUCTION_CENTER, Building.SHIPYARD:
 			return (Data.path_1[bldg].desc % format_num(path_1_value, true)) + "\n[color=#88CCFF]" + tr("CLICK_TO_CONFIGURE") + "[/color]"
-		"GH":
+		Building.GREENHOUSE:
 			return (Data.path_1[bldg].desc + "\n" + Data.path_2[bldg].desc) % [format_num(path_1_value, true), format_num(path_2_value, true)]
-		"CBD":
+		Building.CENTRAL_BUSINESS_DISTRICT:
 			return "%s\n%s\n%s" % [
 				Data.path_1[bldg].desc % clever_round(path_1_value),
 				Data.path_2[bldg].desc % path_2_value,

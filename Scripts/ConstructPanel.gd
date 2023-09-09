@@ -43,34 +43,35 @@ func _on_btn_pressed(btn_str:String):
 	for bldg in self["%s_bldgs" % btn_str_l]:
 		var item = item_for_sale_scene.instantiate()
 		item.get_node("SmallButton").text = tr("CONSTRUCT")
-		item.item_name = bldg
+		item.item_name = Building.names[bldg]
 		item.item_dir = "Buildings"
 		var txt:String = ""
 		var time_speed:float = game.u_i.time_speed if Data.path_1.has(bldg) and Data.path_1[bldg].has("time_based") else 1.0
 		item.get_node("New").visible = game.new_bldgs.has(bldg) and game.new_bldgs[bldg]
+		var IR_mult = Helper.get_IR_mult(bldg)
 		if bldg == Building.SOLAR_PANEL:
-			txt = (Data.path_1[bldg].desc + "\n") % [Helper.format_num(Helper.get_SP_production(game.planet_data[game.c_p].temperature, Data.path_1[bldg].value * Helper.get_IR_mult(bldg) * time_speed), true)]
+			txt = (Data.path_1[bldg].desc + "\n") % [Helper.format_num(Helper.get_SP_production(game.planet_data[game.c_p].temperature, Data.path_1[bldg].value * IR_mult * time_speed), true)]
 		elif bldg == Building.ATMOSPHERE_EXTRACTOR:
-			txt = (Data.path_1[bldg].desc + "\n") % [Helper.format_num(Helper.get_AE_production(game.planet_data[game.c_p].pressure, Data.path_1[bldg].value * Helper.get_IR_mult(bldg) * time_speed), true)]
+			txt = (Data.path_1[bldg].desc + "\n") % [Helper.format_num(Helper.get_AE_production(game.planet_data[game.c_p].pressure, Data.path_1[bldg].value * IR_mult * time_speed), true)]
 #		elif bldg in ["PC", "NC"]:
 #			txt = (Data.path_1[bldg].desc + "\n") % [Helper.format_num(Data.path_1[bldg].value / game.planet_data[game.c_p].pressure * time_speed, true)]
 #		elif bldg in ["MS", "NSF", "ESF"]:
-#			txt = (Data.path_1[bldg].desc + "\n") % [Helper.format_num(round(Data.path_1[bldg].value * Helper.get_IR_mult(bldg)))]
+#			txt = (Data.path_1[bldg].desc + "\n") % [Helper.format_num(round(Data.path_1[bldg].value * IR_mult))]
 		elif bldg == Building.BATTERY:
-			txt = (Data.path_1[bldg].desc + "\n") % [Helper.format_num(round(Data.path_1[bldg].value * Helper.get_IR_mult(bldg) * game.u_i.charge))]
+			txt = (Data.path_1[bldg].desc + "\n") % [Helper.format_num(round(Data.path_1[bldg].value * IR_mult * game.u_i.charge))]
 		elif Data.path_1.has(bldg):
-			txt = (Data.path_1[bldg].desc + "\n") % [Helper.format_num(Data.path_1[bldg].value * Helper.get_IR_mult(bldg) * time_speed, true)]
+			txt = (Data.path_1[bldg].desc + "\n") % [Helper.format_num(Data.path_1[bldg].value * IR_mult * time_speed, true)]
 		if Data.path_2.has(bldg):
 			if Data.path_2[bldg].has("is_value_integer"):
-				txt += (Data.path_2[bldg].desc + "\n") % [Helper.format_num(round(Data.path_2[bldg].value * Helper.get_IR_mult(bldg)))]
+				txt += (Data.path_2[bldg].desc + "\n") % [Helper.format_num(round(Data.path_2[bldg].value * IR_mult))]
 			else:
-				txt += (Data.path_2[bldg].desc + "\n") % [Helper.format_num(Data.path_2[bldg].value * Helper.get_IR_mult(bldg), true)]
+				txt += (Data.path_2[bldg].desc + "\n") % [Helper.format_num(Data.path_2[bldg].value * IR_mult, true)]
 		if Data.path_3.has(bldg):
 			if bldg == Building.CENTRAL_BUSINESS_DISTRICT:
 				txt += Data.path_3[bldg].desc.format({"n":Data.path_3[bldg].value}) + "\n"
 			else:
 				txt += (Data.path_3[bldg].desc + "\n") % [Data.path_3[bldg].value]
-		item.item_desc = "%s\n\n%s" % [tr("%s_DESC" % bldg), txt]
+		item.item_desc = "%s\n\n%s" % [tr("%s_DESC" % Building.names[bldg].to_upper()), txt]
 		item.costs = Data.costs[bldg].duplicate(true)
 		for cost in item.costs:
 			item.costs[cost] *= game.engineering_bonus.BCM
@@ -85,7 +86,7 @@ func _on_btn_pressed(btn_str:String):
 		item.add_to_group("bldgs")
 		grid.add_child(item)
 	for bldg in get_tree().get_nodes_in_group("bldgs"):
-		if bldg.item_name == Building.MINERAL_EXTRACTOR:
+		if bldg.item_name == "mineral_extractor":
 			bldg.visible = true
 		else:
 			bldg.visible = game.new_bldgs.has(bldg.item_name)
@@ -94,9 +95,10 @@ func set_item_info(_name:String, desc:String, costs:Dictionary, _type:String, _d
 	super.set_item_info(_name, desc, costs, _type, _dir)
 	desc_txt.text = ""
 	var icons = []
-	var has_theme_icon = Data.desc_icons.has(_name)
+	var building_id = Building.names.find(_name)
+	var has_theme_icon = Data.desc_icons.has(building_id)
 	if has_theme_icon:
-		icons = Helper.flatten(Data.desc_icons[_name])
+		icons = Helper.flatten(Data.desc_icons[building_id])
 	game.add_text_icons(desc_txt, desc, icons, 22)
 
 func _on_Buy_pressed():

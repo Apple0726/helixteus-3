@@ -64,7 +64,7 @@ func set_item_info(name:String, desc:String, costs:Dictionary, _type:String, _di
 	remove_costs()
 	var vbox = $VBox/HBox/ItemInfo/VBox/Costs/VBox
 	if _dir == "Buildings":
-		name_node.text = tr("%s_NAME" % name)
+		name_node.text = tr("%s_NAME" % name.to_upper())
 	else:
 		name_node.text = Helper.get_item_name(name)
 	item_costs = costs

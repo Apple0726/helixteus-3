@@ -1,15 +1,15 @@
 [gd_scene load_steps=13 format=3 uid="uid://co61nnn5s8e4n"]
 
 [ext_resource type="PackedScene" uid="uid://c8jr3e5aiyj1n" path="res://Scenes/HelpText.tscn" id="1"]
-[ext_resource type="Texture2D" uid="uid://bfjl6rnsgqq5f" path="res://Graphics/Misc/BarUnder2.png" id="2"]
-[ext_resource type="Texture2D" uid="uid://b5k11eu0jv2dw" path="res://Graphics/Buttons/Switch.png" id="3"]
-[ext_resource type="Texture2D" uid="uid://clpkbjruduai7" path="res://Graphics/Misc/Bar2.png" id="4"]
+[ext_resource type="Texture2D" uid="uid://c67y71rs3ver2" path="res://Graphics/Misc/BarUnder2.png" id="2"]
+[ext_resource type="Texture2D" uid="uid://b2qwco8ng2ght" path="res://Graphics/Buttons/Switch.png" id="3"]
+[ext_resource type="Texture2D" uid="uid://1h4b4lcm50vf" path="res://Graphics/Misc/Bar2.png" id="4"]
 [ext_resource type="PackedScene" uid="uid://ddf2xjwcht77u" path="res://Scenes/CloseButton.tscn" id="5"]
 [ext_resource type="Theme" uid="uid://cp2u1kgj60ic" path="res://Resources/default_theme.tres" id="6"]
-[ext_resource type="Texture2D" uid="uid://kppvrm0ienms" path="res://Graphics/Misc/BarOver.png" id="7"]
-[ext_resource type="Texture2D" uid="uid://cq1makvvmrsi4" path="res://Graphics/Icons/energy.png" id="10"]
-[ext_resource type="Texture2D" uid="uid://bjfmtj2gp0t6p" path="res://Graphics/Icons/Time.png" id="11"]
-[ext_resource type="Texture2D" uid="uid://dtpm1dy3ljc0y" path="res://Graphics/Icons/Arrow.png" id="12"]
+[ext_resource type="Texture2D" uid="uid://o1t3hqx27iw" path="res://Graphics/Misc/BarOver.png" id="7"]
+[ext_resource type="Texture2D" uid="uid://cy1dr243nvwap" path="res://Graphics/Icons/energy.png" id="10"]
+[ext_resource type="Texture2D" uid="uid://ocunpc0pw8ly" path="res://Graphics/Icons/Time.png" id="11"]
+[ext_resource type="Texture2D" uid="uid://ddqntjvwfsr20" path="res://Graphics/Icons/Arrow.png" id="12"]
 
 [sub_resource type="Theme" id="1"]
 Button/colors/font_color = Color(0.88, 0.88, 0.88, 1)

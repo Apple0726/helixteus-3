@@ -1,7 +1,7 @@
 extends Panel
 
 @onready var game = get_node("/root/Game")
-@export var item_name:int = -1
+@export var item_name:String = ""
 var item_desc:String = ""
 var item_type:String = ""
 var item_dir:String = ""#Directory of the item sprite
@@ -12,9 +12,9 @@ var parent = ""
 func _ready():
 	if item_dir != "":
 		if use_expanded_texture:
-			$ItemTextureFull.texture = load("res://Graphics/" + item_dir + "/" + Building.names[item_name] + ".png")
+			$ItemTextureFull.texture = load("res://Graphics/" + item_dir + "/" + item_name + ".png")
 		else:
-			$ItemTexture.texture = load("res://Graphics/" + item_dir + "/" + Building.names[item_name] + ".png")
+			$ItemTexture.texture = load("res://Graphics/" + item_dir + "/" + item_name + ".png")
 
 func _on_ItemForSale_mouse_entered():
 	if not game[parent].locked:
