@@ -110,12 +110,13 @@ func get_item(_name, _type, _dir):
 	await get_tree().create_timer(0.01).timeout
 	game.toggle_panel(game.construct_panel)
 	game.put_bottom_info(tr("CLICK_TILE_TO_CONSTRUCT"), "building", "cancel_building")
-	var base_cost = Data.costs[_name].duplicate(true)
+	var building_name:int = Building.names.find(_name)
+	var base_cost = Data.costs[building_name].duplicate(true)
 	for cost in base_cost:
 		base_cost[cost] *= game.engineering_bonus.BCM
-	if _name == Building.GREENHOUSE:
+	if building_name == Building.GREENHOUSE:
 		base_cost.energy = round(base_cost.energy * (1 + abs(game.planet_data[game.c_p].temperature - 273) / 10.0))
-	game.view.obj.construct(_name, base_cost)
+	game.view.obj.construct(building_name, base_cost)
 
 func refresh():
 	if game.c_v == "planet":

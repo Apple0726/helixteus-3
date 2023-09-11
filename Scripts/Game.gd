@@ -167,7 +167,7 @@ var universe_data:Array
 var galaxy_data:Array# = [{"id":0, "l_id":0, "type":0, "modulate":Color.WHITE, "name":"Milky Way", "pos":Vector2.ZERO, "rotation":0, "diff":1, "B_strength":e(5, -10), "dark_matter":1.0, "discovered":false, "conquered":false, "parent":0, "system_num":SYS_NUM, "systems":[{"global":0, "local":0}], "view":{"pos":Vector2(15000 + 1280, 15000 + 720), "zoom":0.5}}]
 var system_data:Array
 var planet_data:Array
-var tile_data:Dictionary
+var tile_data:Array
 var caves_generated:int
 
 #Vehicle data
@@ -713,17 +713,6 @@ func load_univ():
 				mets[met] += autocollect.mets[met] * plant_time_elapsed * u_i.time_speed
 			for atom in autocollect.atoms:
 				atoms[atom] += autocollect.atoms[atom] * time_elapsed * u_i.time_speed
-			if not autocollect.has("particles"):#Save migration
-				autocollect.particles = {"proton":0, "neutron":0, "electron":0}
-			particles.proton += autocollect.particles.proton * time_elapsed * u_i.time_speed
-			particles.neutron += autocollect.particles.neutron * time_elapsed * u_i.time_speed
-			particles.electron += autocollect.particles.electron * time_elapsed * u_i.time_speed
-			if particles.neutron > neutron_cap:
-				var diff:float = particles.neutron - neutron_cap
-				var amount_decayed:float = diff * pow(0.5, time_elapsed * u_i.time_speed / 900.0) #900 seconds = 15 minutes
-				particles.neutron -= diff - amount_decayed
-				particles.proton += (diff - amount_decayed) / 2.0
-				particles.electron += (diff - amount_decayed) / 2.0
 		tile_data = open_obj("Planets", c_p_g)
 		if c_v == "mining" or c_v == "cave":
 			c_v = "planet"
@@ -741,7 +730,7 @@ func load_univ():
 		if FileAccess.file_exists("user://%s/Univ%s/Clusters/%s.hx3" % [c_sv, c_u, c_c]):
 			galaxy_data = open_obj("Clusters", c_c)
 		else:
-			galaxy_data = [[0, 0, tr("MILKY_WAY"), Vector2.ZERO, u_i.difficulty, 0, 400, [[0, 0]], [Vector2(7500, 7500) * 0.5 + Vector2(640, 360), 0.5], 0, false, false, 0.0, 1e-9 * u_i.charge * u_i.dark_energy, 1.0, {}]]
+			galaxy_data = [{"id":0, "l_id":0, "type":0, "shapes":[], "name":tr("MILKY_WAY"), "pos":Vector2.ZERO, "rotation":0, "diff":u_i.difficulty, "B_strength":1e-9 * u_i.charge * u_i.dark_energy, "dark_matter":1.0, "parent":0, "system_num":400, "systems":[{"global":0, "local":0}], "view":{"pos":Vector2(7500, 7500) * 0.5 + Vector2(640, 360), "zoom":0.5}}]
 			Helper.save_obj("Clusters", 0, galaxy_data)
 	else:
 		popup("load error", 1.5)
@@ -1013,9 +1002,7 @@ func new_game(univ:int = 0, new_save:bool = false, DR_advantage = false):
 				"Pu":0,
 	}
 
-	particles = {	"proton":0,
-					"neutron":0,
-					"electron":0,
+	particles = {	
 	}
 
 	#Display help when players see/do things for the first time. true: show help
@@ -1038,12 +1025,11 @@ func new_game(univ:int = 0, new_save:bool = false, DR_advantage = false):
 			show[met] = true
 	#Stores information of all objects discovered
 	u_i.cluster_data = [{"id":0, "visible":true, "type":0, "shapes":[], "class":ClusterType.GROUP, "name":tr("LOCAL_GROUP"), "pos":Vector2.ZERO, "diff":u_i.difficulty, "FM":u_i.dark_energy, "parent":0, "galaxy_num":55, "galaxies":[], "view":{"pos":Vector2(640, 360), "zoom":1 / 4.0}, "rich_elements":{}}]
-	galaxy_data = [[0, 0, tr("MILKY_WAY"), Vector2.ZERO, u_i.difficulty, 0, 400, [[0, 0]], [Vector2(7500, 7500) * 0.5 + Vector2(640, 360), 0.5], 0, false, false, 0.0, 1e-9 * u_i.charge * u_i.dark_energy, 1.0, {}]]
+	galaxy_data = [{"id":0, "l_id":0, "type":0, "shapes":[], "name":tr("MILKY_WAY"), "pos":Vector2.ZERO, "rotation":0, "diff":u_i.difficulty, "B_strength":1e-9 * u_i.charge * u_i.dark_energy, "dark_matter":1.0, "parent":0, "system_num":400, "systems":[{"global":0, "local":0}], "view":{"pos":Vector2(7500, 7500) * 0.5 + Vector2(640, 360), "zoom":0.5}}]
 	var s_b:float = pow(u_i.boltzmann, 4) / pow(u_i.planck, 3) / pow(u_i.speed_of_light, 2)
-	system_data = [[0, 0, tr("SOLAR_SYSTEM"), Vector2(-7500.0, -7500.0), u_i.difficulty, 0, 7, [], [Vector2(640, 150), 2.0], [[StarType.MAIN_SEQUENCE, "G2", 1.0, Vector2.ZERO, 5500.0, u_i.planck, s_b, {}]], true, false, null, {}]]
-#	system_data = [{"id":0, "l_id":0, "name":tr("SOLAR_SYSTEM"), "pos":Vector2(-7500, -7500), "diff":u_i.difficulty, "parent":0, "planet_num":7, "planets":[], "view":{"pos":Vector2(640, 150), "zoom":2}, "stars":[{"type":"main_sequence", "class":"G2", "size":1, "temperature":5500, "mass":u_i.planck, "luminosity":s_b, "pos":Vector2(0, 0)}]}]
+	system_data = [{"id":0, "l_id":0, "name":tr("SOLAR_SYSTEM"), "pos":Vector2(-7500, -7500), "diff":u_i.difficulty, "parent":0, "planet_num":7, "planets":[], "view":{"pos":Vector2(640, 150), "zoom":2}, "stars":[{"type":StarType.MAIN_SEQUENCE, "class":"G2", "size":1, "temperature":5500, "mass":u_i.planck, "luminosity":s_b, "pos":Vector2(0, 0)}]}]
 	planet_data = []
-	tile_data = {}
+	tile_data = []
 	caves_generated = 0
 
 	#Vehicle data
@@ -1083,7 +1069,7 @@ func new_game(univ:int = 0, new_save:bool = false, DR_advantage = false):
 		"mats":{"cellulose":0},
 		"mets":{},
 		"atoms":{},
-		"particles":{"proton":0, "neutron":0, "electron":0},
+		"particles":{},
 		"MS":{"minerals":0, "energy":0, "SP":0},
 		"GS":{"minerals":0, "energy":0, "SP":0},
 		"rsrc":{"minerals":0, "energy":0, "SP":0},
@@ -1639,8 +1625,7 @@ func switch_view(new_view:String, other_params:Dictionary = {}):
 		if c_v == "planet":
 			small_image_text = "Viewing " + planet_data[c_p].name
 		elif c_v == "system":
-			small_image_text = "Viewing " + system_data[c_s][2]
-#			small_image_text = "Viewing " + system_data[c_s].name
+			small_image_text = "Viewing " + system_data[c_s].name
 		elif c_v == "galaxy":
 			state = "Observing the stars"
 			small_image_text = "Viewing " + galaxy_data[c_g][2]
@@ -1717,11 +1702,9 @@ func add_obj(view_str):
 			tile_data = open_obj("Planets", c_p_g)
 			view.add_obj("Planet", planet_data[c_p]["view"]["pos"], planet_data[c_p]["view"]["zoom"])
 		"system":
-			view.add_obj("System", system_data[c_s][8][0], system_data[c_s][8][1])
-#			view.add_obj("System", system_data[c_s]["view"]["pos"], system_data[c_s]["view"]["zoom"])
+			view.add_obj("System", system_data[c_s]["view"]["pos"], system_data[c_s]["view"]["zoom"])
 			if ships_travel_data.c_g_coords.s == c_s_g:
-				system_data[c_s][13].explored = true
-#				system_data[c_s].explored = true
+				system_data[c_s].explored = true
 		"galaxy":
 			view.shapes_data = galaxy_data[c_g][15].get("shapes", [])
 			view.add_obj("Galaxy", galaxy_data[c_g][8][0], galaxy_data[c_g][8][1])
@@ -1764,8 +1747,8 @@ func add_space_HUD():
 		space_HUD.get_node("VBoxContainer/ElementOverlay").visible = c_v == "system" and science_unlocked.has("ATM")
 		space_HUD.get_node("VBoxContainer/Megastructures").visible = c_v == "system" and science_unlocked.has("MAE")
 		space_HUD.get_node("VBoxContainer/Gigastructures").visible = c_v in ["galaxy", "cluster"] and science_unlocked.has("GS")
-		space_HUD.get_node("ConquerAll").visible = c_v == "system" and (u_i.lv >= 32 or subject_levels.dimensional_power >= 1) and not system_data[c_s][11] and len(ship_data) > 0 and ships_travel_data.c_g_coords.s == c_s_g
-		space_HUD.get_node("SendFighters").visible = c_v == "galaxy" and science_unlocked.has("FG") and not galaxy_data[c_g][11] or c_v == "cluster" and science_unlocked.has("FG2") and not u_i.cluster_data[c_c].has("conquered")
+		space_HUD.get_node("ConquerAll").visible = c_v == "system" and (u_i.lv >= 32 or subject_levels.dimensional_power >= 1) and not system_data[c_s].has("conquered") and len(ship_data) > 0 and ships_travel_data.c_g_coords.s == c_s_g
+		space_HUD.get_node("SendFighters").visible = c_v == "galaxy" and science_unlocked.has("FG") and not galaxy_data[c_g].has("conquered") or c_v == "cluster" and science_unlocked.has("FG2") and not u_i.cluster_data[c_c].has("conquered")
 		if c_v == "universe":
 			space_HUD.get_node("SendProbes").visible = true
 		else:
@@ -1858,9 +1841,9 @@ func add_galaxy():
 		galaxy_data = open_obj("Clusters", c_c)
 	if obj_exists("Galaxies", c_g_g):
 		system_data = open_obj("Galaxies", c_g_g)
-	if not galaxy_data[c_g][10]:
-		if galaxy_data[c_g][2] == null:
-			galaxy_data[c_g][2] = "%s %s" % [tr("GALAXY"), c_g]
+	if not galaxy_data[c_g].has("discovered"):
+		if galaxy_data[c_g].name == null:
+			galaxy_data[c_g].name = "%s %s" % [tr("GALAXY"), c_g]
 #		start_system_generation()
 		await start_system_generation()
 	add_obj("galaxy")
@@ -1897,7 +1880,7 @@ func add_galaxy():
 func start_system_generation():
 	add_loading()
 	reset_collisions()
-	gc_remaining = floor(pow(galaxy_data[c_g][6], 0.8) / 250.0)
+	gc_remaining = floor(pow(galaxy_data[c_g].system_num, 0.8) / 250.0)
 	if c_g_g != 0:
 		system_data.clear()
 	await generate_system_part()
@@ -1906,7 +1889,7 @@ func add_system():
 	if obj_exists("Galaxies", c_g_g):
 		system_data = open_obj("Galaxies", c_g_g)
 	planet_data = open_obj("Systems", c_s_g)
-	if not system_data[c_s][10] or planet_data.is_empty():
+	if not system_data[c_s].has("discovered") or planet_data.is_empty():
 		if c_s_g != 0:
 			planet_data.clear()
 		generate_planets(c_s)
@@ -2067,26 +2050,26 @@ func generate_galaxies(id:int):
 	for i in range(0, gal_num_to_load):
 		var g_i = []
 		g_i.resize(16)
-		g_i[5] = id
-		g_i[7] = []
-		g_i[9] = randi() % 7
+		g_i.parent = id
+		g_i.systems = []
+		g_i.type = randi() % 7
 		var rand = randf()
-		g_i[14] = randf_range(0.85, 1.15) #Influences planet numbers and size
-		if g_i[9] == 6:
-			g_i[6] = int(5000 + 10000 * pow(randf(), 2))
-			g_i[13] = Helper.clever_round(1e-9 * randf_range(3, 5) * FM * u_i.charge)#Influences star classes
+		g_i.dark_matter = randf_range(0.85, 1.15) #Influences planet numbers and size
+		if g_i.type == 6:
+			g_i.system_num = int(5000 + 10000 * pow(randf(), 2))
+			g_i.B_strength = Helper.clever_round(1e-9 * randf_range(3, 5) * FM * u_i.charge)#Influences star classes
 #			var sat:float = randf_range(0, 0.5)
 #			var hue:float = randf_range(sat / 5.0, 1 - sat / 5.0)
 #			g_i.modulate = Color().from_hsv(hue, sat, 1.0)
-			g_i[14] -= 0.05
+			g_i.dark_matter -= 0.05
 		else:
-			g_i[6] = int(pow(randf(), 2) * 8000) + 2000
-			g_i[13] = Helper.clever_round(1e-9 * randf_range(0.5, 4) * FM * u_i.charge)
+			g_i.system_num = int(pow(randf(), 2) * 8000) + 2000
+			g_i.B_strength = Helper.clever_round(1e-9 * randf_range(0.5, 4) * FM * u_i.charge)
 			if randf() < 0.6: #Dwarf galaxy
-				g_i[6] /= 10
-		g_i[14] = Helper.clever_round(pow(g_i[14], -log(rand)*u_i.dark_energy/2.5 + 1))
-		g_i[12] = randf_range(0, 2 * PI)
-		g_i[8] = [Vector2(640, 360), 0.2]
+				g_i.system_num /= 10
+		g_i.dark_matter = Helper.clever_round(pow(g_i[14], -log(rand)*u_i.dark_energy/2.5 + 1))
+		g_i.rotation = randf_range(0, 2 * PI)
+		g_i.zoom = [Vector2(640, 360), 0.2]
 		var pos:Vector2
 		var N = obj_shapes.size()
 		if N >= total_gal_num / 6:
@@ -2094,7 +2077,7 @@ func generate_galaxies(id:int):
 			obj_shapes = obj_shapes.slice(int((N - 1) * 0.7), N - 1)
 			min_dist_from_center = obj_shapes[0][2]
 		
-		var radius = 200 * pow(g_i[6] / GALAXY_SCALE_DIV, 0.5)
+		var radius = 200 * pow(g_i.system_num / GALAXY_SCALE_DIV, 0.5)
 		var circle
 		var colliding = true
 		if min_dist_from_center == 0:
@@ -2116,23 +2099,22 @@ func generate_galaxies(id:int):
 		if outer_radius > max_outer_radius:
 			max_outer_radius = outer_radius
 		obj_shapes.append(circle)
-		g_i[3] = pos
+		g_i.pos = pos
 		var g_id = galaxy_data.size()
-		g_i[0] = g_id + g_num
-		g_i[1] = g_id
-		g_i[15] = {}
+		g_i.id = g_id + g_num
+		g_i.l_id = g_id
 		var starting_galaxy = c_c == 0 and galaxy_num == total_gal_num and i == 0
 		if starting_galaxy:
 			show.g_bk_button = true
 			g_i = galaxy_data[0]
-			radius = 200 * pow(g_i[6] / GALAXY_SCALE_DIV, 0.5)
+			radius = 200 * pow(g_i.system_num / GALAXY_SCALE_DIV, 0.5)
 			obj_shapes.append([g_i[3], radius, g_i[3].length() + radius])
 			u_i.cluster_data[id]["galaxies"].append([0, 0])
 		else:
 			if id == 0:#if the galaxies are in starting cluster
-				g_i[4] = Helper.clever_round((1 + pos.distance_to(galaxy_data[0][3]) / 70) * u_i.cluster_data[id].diff)
+				g_i.diff = Helper.clever_round((1 + pos.distance_to(galaxy_data[0][3]) / 70) * u_i.cluster_data[id].diff)
 			else:
-				g_i[4] = Helper.clever_round(u_i.cluster_data[id].diff * randf_range(120, 150) / max(100, pow(pos.length(), 0.5)))
+				g_i.diff = Helper.clever_round(u_i.cluster_data[id].diff * randf_range(120, 150) / max(100, pow(pos.length(), 0.5)))
 			u_i.cluster_data[id]["galaxies"].append([g_i[0], g_i[1]])
 			galaxy_data.append(g_i)
 	if progress == 1:
@@ -2148,8 +2130,8 @@ func update_loading_bar(curr:float, total:float, txt:String):
 
 func generate_system_part():
 	generate_systems(c_g)
-	var N:int = galaxy_data[c_g][6]
-	if galaxy_data[c_g][9] == 6:
+	var N:int = galaxy_data[c_g].system_num
+	if galaxy_data[c_g].type == 6:
 		var r:float = N / 20.0
 		var init_th:float = randf_range(0, PI)
 		var th:float = init_th
@@ -2176,7 +2158,7 @@ func generate_system_part():
 		for i in len(stars_failed):#Put stars that failed to pass the collision tests above
 			var attempts:int = 0
 			var s_i = system_data[stars_failed[i]]
-			var biggest_star_size = get_highest_star_prop(stars_failed[i], 2)
+			var biggest_star_size = get_max_star_prop(stars_failed[i], "size")
 			#Collision detection
 			var radius = 320 * pow(biggest_star_size / SYSTEM_SCALE_DIV, 0.35)
 			r = randf_range(0, max_outer_radius)
@@ -2196,8 +2178,8 @@ func generate_system_part():
 				if attempts > 20:
 					max_outer_radius *= 1.1
 					attempts = 0
-			s_i[3] = pos
-			s_i[4] = get_sys_diff(pos, c_g, s_i)
+			s_i.pos = pos
+			s_i.diff = get_sys_diff(pos, c_g, s_i)
 			obj_shapes2.append([pos, radius])
 			if i % 100 == 0:
 				update_loading_bar(N - len(stars_failed) + i, N, tr("GENERATING_GALAXY"))
@@ -2210,13 +2192,13 @@ func generate_system_part():
 			systems_collision_detection(c_g, i)
 			update_loading_bar(i, N, tr("GENERATING_GALAXY"))
 			await get_tree().create_timer(0.0000000000001).timeout
-	s_num += galaxy_data[c_g][6]
+	s_num += galaxy_data[c_g].system_num
 	Helper.save_obj("Galaxies", c_g_g, system_data)
 	Helper.save_obj("Clusters", c_c, galaxy_data)
 	remove_child($Loading)
 
 func systems_collision_detection2(id:int, N_init:int, r, th, center:bool = false):
-	var N:int = galaxy_data[id][6]
+	var N:int = galaxy_data[id].system_num
 	var circ_size = pow(N * 1.5, 0.95)# + N_init
 	var N_fin:int = min(N_init + lerp(100, 400, inverse_lerp(5000, 20000, N)), N)
 	if center:
@@ -2224,7 +2206,7 @@ func systems_collision_detection2(id:int, N_init:int, r, th, center:bool = false
 	for i in range(N_init, N_fin):
 		var s_i = system_data[i]
 		var starting_system = c_g_g == 0 and i == 0
-		var biggest_star_size = get_highest_star_prop(i, 2)
+		var biggest_star_size = get_max_star_prop(i, "size")
 		#Collision detection
 		var radius = 320 * pow(biggest_star_size / SYSTEM_SCALE_DIV, 0.35)
 		var r2 = randf_range(0, circ_size)
@@ -2254,15 +2236,15 @@ func systems_collision_detection2(id:int, N_init:int, r, th, center:bool = false
 			if starting_system:
 				obj_shapes2.append([system_data[0].pos, radius])
 			else:
-				s_i[3] = pos
-				s_i[4] = get_sys_diff(pos, id, s_i)
+				s_i.pos = pos
+				s_i.diff = get_sys_diff(pos, id, s_i)
 				obj_shapes2.append([pos, radius])
 	obj_shapes.append([Vector2.from_angle(th) * r, circ_size])
 	obj_shapes2.clear()
 	return N_fin
 
 func systems_collision_detection(id:int, N_init:int):
-	var total_sys_num = galaxy_data[id][6]
+	var total_sys_num = galaxy_data[id].system_num
 	var N_fin:int = min(N_init + 500, total_sys_num)
 	#obj_shapes: 0: pos, 1: radius, 2: outer_radius
 	for i in range(N_init, N_fin):
@@ -2282,7 +2264,7 @@ func systems_collision_detection(id:int, N_init:int):
 				max_dist_from_center = 100
 			gc_offset += 1
 		
-		var biggest_star_size = get_highest_star_prop(i, 2)
+		var biggest_star_size = get_max_star_prop(i, "size")
 		#Collision detection
 		var radius = 320 * pow(biggest_star_size / SYSTEM_SCALE_DIV, 0.35)
 		var circle
@@ -2338,51 +2320,49 @@ func systems_collision_detection(id:int, N_init:int):
 				obj_shapes.append(circle)
 		if starting_system:
 			radius = 320 * pow(1 / SYSTEM_SCALE_DIV, 0.3)
-			obj_shapes.append([s_i[3], radius, s_i[3].length() + radius])
+			obj_shapes.append([s_i.pos, radius, s_i.pos.length() + radius])
 		else:
-			s_i[3] = pos
-			s_i[4] = get_sys_diff(pos, id, s_i)
+			s_i.pos = pos
+			s_i.diff = get_sys_diff(pos, id, s_i)
 	if c_g_g != 0 and N_fin == total_sys_num:
 		var view_zoom = 500.0 / max_outer_radius
-		galaxy_data[id][8] = [Vector2(640, 360), view_zoom]
+		galaxy_data[id].zoom = [Vector2(640, 360), view_zoom]
 
-func get_sys_diff(pos:Vector2, id:int, s_i:Array):
-	var stars:Array = s_i[9]
+func get_sys_diff(pos:Vector2, id:int, s_i:Dictionary):
+	var stars:Dictionary = s_i.stars
 	var combined_star_mass = 0
 	for star in stars:
-		combined_star_mass += star[5]
+		combined_star_mass += star.mass
 	if c_g_g == 0:
-		return Helper.clever_round((1 + pos.distance_to(system_data[0][3]) * pow(combined_star_mass, 0.5) / 5000) * galaxy_data[id][4])
+		return Helper.clever_round((1 + pos.distance_to(system_data[0].name) * pow(combined_star_mass, 0.5) / 5000) * galaxy_data[id].diff)
 	else:
-		return Helper.clever_round(galaxy_data[id][4] * pow(combined_star_mass, 0.4) * randf_range(120, 150) / max(100, pow(pos.length(), 0.5)))
+		return Helper.clever_round(galaxy_data[id].diff * pow(combined_star_mass, 0.4) * randf_range(120, 150) / max(100, pow(pos.length(), 0.5)))
 	
 func generate_systems(id:int):
 	randomize()
-	var total_sys_num = galaxy_data[id][6]
-	var spiral:bool = galaxy_data[id][9] == 6
+	var total_sys_num = galaxy_data[id].system_num
+	var spiral:bool = galaxy_data[id].type == 6
 	
 	#For reference, globular clusters are tightly packed old stars (class G etc)
 	#Most of the stars in them are around the same temperature, but put some outliers
 	#They have low metallicity
 
 	#Open clusters are
-	var B = galaxy_data[id][13]#Magnetic field strength
-	var dark_matter = galaxy_data[id][14]
+	var B = galaxy_data[id].B#Magnetic field strength
+	var dark_matter = galaxy_data[id].dark_matter
 	var G = u_i.gravitational
 	for i in range(0, total_sys_num):
 		if c_g_g == 0 and i == 0:
 			show.s_bk_button = true
 			continue
-		var s_i:Array
-		s_i.resize(14)
-		s_i[5] = id
-		s_i[7] = []
+		var s_i:Dictionary = {}
+		s_i.parent = id
+		s_i.planets = []
 		
 		var num_stars:int = max(-log(randf()/dark_matter)/1.5 + 1, 1)
 		var stars = []
 		for _j in range(0, num_stars):
-			var star = []#Higher a: lower temperature (older) stars
-			star.resize(8)
+			var star = {}#Higher a: lower temperature (older) stars
 			var a = (1.65 if gc_stars_remaining == 0 else 4.0) * pow(u_i.get("age", 1.0), 0.25)
 			a *= pow(e(1, -9) / B, physics_bonus.BI)#Higher B: hotter stars
 			#Solar masses
@@ -2466,44 +2446,50 @@ func generate_systems(id:int):
 			stats_univ.star_types[star_type] = stats_univ.star_types.get(star_type, 0) + 1
 			stats_dim.star_types[star_type] = stats_dim.star_types.get(star_type, 0) + 1
 			stats_global.star_types[star_type] = stats_global.star_types.get(star_type, 0) + 1
-			star[0] = star_type
-			star[1] = star_class
-			star[2] = Helper.clever_round(star_size, 4)
-			star[3] = Vector2.ZERO
-			star[4] = Helper.clever_round(temp, 4)
-			star[5] = Helper.clever_round(mass * u_i.planck, 4)
-			star[6] = Helper.clever_round(4 * PI * pow(star_size * e(6.957, 8), 2) * e(5.67, -8) * s_b * pow(temp, 4) / e(3.828, 26), 4)
-			star[7] = {}
+			star.type = star_type
+			star["class"] = star_class
+			star.size = Helper.clever_round(star_size, 4)
+			star.pos = Vector2.ZERO
+			star.temperature = Helper.clever_round(temp, 4)
+			star.mass = Helper.clever_round(mass * u_i.planck, 4)
+			star.luminosity = Helper.clever_round(4 * PI * pow(star_size * e(6.957, 8), 2) * e(5.67, -8) * s_b * pow(temp, 4) / e(3.828, 26), 4)
 			stars.append(star)
 		var combined_star_mass = 0
 		for star in stars:
-			combined_star_mass += star[5]
+			combined_star_mass += star.mass
 		stars.sort_custom(Callable(self,"sort_by_mass"))
 		var planet_num:int = clamp(round(pow(combined_star_mass, 0.2) * randf_range(3, 9) * pow(dark_matter, 0.25)), 2, 50)
-		s_i[6] = planet_num
-		if galaxy_data[id][11]:
-			s_i[11] = true
+		s_i.planet_num = planet_num
+		if galaxy_data[id].has("conquered"):
+			s_i.conquered = true
 			stats_univ.planets_conquered += planet_num
 			stats_dim.planets_conquered += planet_num
 			stats_global.planets_conquered += planet_num
 		
 		var s_id = system_data.size()
-		s_i[0] = s_id + s_num
-		s_i[1] = s_id
-		s_i[3] = Vector2.ZERO
-		s_i[9] = stars
+		s_i.id = s_id + s_num
+		s_i.l_id = s_id
+		s_i.pos = Vector2.ZERO
+		s_i.stars = stars
 		#galaxy_data[id][7].append([s_i[0], s_i[1]])
 		system_data.append(s_i)
-	galaxy_data[id][10] = true
+	galaxy_data[id].discovered = true
 
-func sort_by_mass(star1:Array, star2:Array):
-	if star1[5] > star2[5]:
+func sort_by_mass(star1:Dictionary, star2:Dictionary):
+	if star1.mass > star2.mass:
 		return true
 	return false
 
-func get_max_star_prop(s_id:int, prop:int):
+func get_min_star_prop(s_id:int, prop:String):
+	var min_star_prop = INF
+	for star in system_data[s_id].stars:
+		if star[prop] < min_star_prop:
+			min_star_prop = star[prop]
+	return min_star_prop
+
+func get_max_star_prop(s_id:int, prop:String):
 	var max_star_prop = 0.0
-	for star in system_data[s_id][9]:
+	for star in system_data[s_id].stars:
 		if star[prop] > max_star_prop:
 			max_star_prop = star[prop]
 	return max_star_prop
@@ -2513,9 +2499,9 @@ func star_size_in_pixels(size:float):
 
 func generate_planets(id:int):#local id
 	randomize()
-	if system_data[id][2] == null:
+	if not system_data[id].has("name"):
 		var _name:String = "%s %s" % [tr("SYSTEM"), id]
-		match len(system_data[id][9]):
+		match len(system_data[id].stars):
 			2:
 				_name = "%s %s" % [tr("BINARY_SYSTEM"), id]
 			3:
@@ -2524,23 +2510,23 @@ func generate_planets(id:int):#local id
 				_name = "%s %s" % [tr("QUADRUPLE_SYSTEM"), id]
 			5:
 				_name = "%s %s" % [tr("QUINTUPLE_SYSTEM"), id]
-		system_data[id][2] = _name
-	var first_star:Array = system_data[id][9][0]
-	var combined_star_mass = first_star[5]
-	var star_boundary = star_size_in_pixels(first_star[2] / 2.0)
-	var max_star_temp = get_max_star_prop(id, 4)
-	var max_star_size = get_max_star_prop(id, 2)
+		system_data[id].name = _name
+	var first_star:Dictionary = system_data[id].stars[0]
+	var combined_star_mass = first_star.mass
+	var star_boundary = star_size_in_pixels(first_star.size / 2.0)
+	var max_star_temp = get_max_star_prop(id, "temperature")
+	var max_star_size = get_max_star_prop(id, "size")
 	var star_size_in_km = max_star_size * e(6.957, 5)
-	var center_star_r_in_pixels:float = star_size_in_pixels(first_star[2]) / 2.0
+	var center_star_r_in_pixels:float = star_size_in_pixels(first_star.size) / 2.0
 	var circles:Array = [[Vector2.ZERO, center_star_r_in_pixels]]
-	var N_stars = len(system_data[id][9])
+	var N_stars = len(system_data[id].stars)
 	for i in range(1, N_stars):
 		var colliding = true
 		var pos:Vector2
-		var star = system_data[id][9][i]
-		combined_star_mass += star[5]
+		var star = system_data[id].stars[i]
+		combined_star_mass += star.mass
 		var r_offset:float = 10.0
-		var radius_in_pixels = star_size_in_pixels(star[2]) / 2.0
+		var radius_in_pixels = star_size_in_pixels(star.size) / 2.0
 		while colliding:
 			colliding = false
 			var r:float = center_star_r_in_pixels + radius_in_pixels + r_offset
@@ -2551,16 +2537,16 @@ func generate_planets(id:int):#local id
 					colliding = true
 					r_offset += 10.0
 					break
-		star[3] = pos
+		star.pos = pos
 		star_boundary = max(star_boundary, pos.length() + radius_in_pixels)
 		circles.append([pos, radius_in_pixels])
-	var planet_num = system_data[id][6]
+	var planet_num = system_data[id].planet_num
 	var max_distance
 	var j = 0
 	while pow(1.3, j) * 240 < star_boundary * 2.63:
 		j += 1
-	var dark_matter = galaxy_data[c_g][14]
-	system_data[id][7].clear()
+	var dark_matter = galaxy_data[c_g].dark_matter
+	system_data[id]["planets"].clear()
 	if not achievement_data.exploration.has("20_planet_system") and planet_num >= 20:
 		earn_achievement("exploration", "20_planet_system")
 	if not achievement_data.exploration.has("25_planet_system") and planet_num >= 25:
@@ -2578,7 +2564,7 @@ func generate_planets(id:int):#local id
 	for i in range(1, planet_num + 1):
 		# p_i = planet_info
 		var p_i = {}
-		if system_data[id][11]:
+		if system_data[id].has("conquered"):
 			p_i["conquered"] = true
 		p_i["ring"] = i
 		p_i["type"] = Helper.rand_int(3, 10)
@@ -2602,7 +2588,7 @@ func generate_planets(id:int):#local id
 		var p_id = planet_data.size()
 		p_i["id"] = p_id + p_num
 		p_i["l_id"] = p_id
-		system_data[id][7].append({"local":p_id, "global":p_id + p_num})
+		system_data[id]["planets"].append({"local":p_id, "global":p_id + p_num})
 		var dist_in_km = p_i.distance / 569.0 * e(1.5, 8)#                             V bond albedo
 		var temp = max_star_temp * pow(star_size_in_km / (2 * dist_in_km), 0.5) * pow(1 - 0.1, 0.25)
 		p_i.temperature = temp# in K
@@ -2644,7 +2630,7 @@ func generate_planets(id:int):#local id
 			p_i.lake_1 = {"element":get_random_element(list_of_element_probabilities)}
 			p_i.lake_2 = {"element":get_random_element(list_of_element_probabilities)}
 		p_i.HX_data = []
-		var diff:float = system_data[id][4]
+		var diff:float = system_data[id].diff
 		var power:float = diff * pow(p_i.size / 2500.0, 0.5)
 		var num:int = 0
 		var total_num:int = Helper.rand_int(1, 12)
@@ -2706,40 +2692,39 @@ func generate_planets(id:int):#local id
 				elif p_i.MS == "M_SE":
 					p_i.repair_cost = Data.MS_costs[p_i.MS + "_" + str(p_i.MS_lv)].money * 24 * randf_range(1, 3) * p_i.size / 12000.0
 				p_i.repair_cost *= engineering_bonus.BCM
-				system_data[id][13].has_MS = true
+				system_data[id].has_MS = true
 		planet_data.append(p_i)
 	if c_s_g != 0:
 		for i in range(0, N_stars):
-			var star = system_data[id][9][i]
-			var star_size = star[2]
-			var star_temp = star[4]
-			var star_lum = star[6]
+			var star = system_data[id].stars[i]
+			var star_size = star.size
+			var star_temp = star.temperature
+			var star_lum = star.luminosity
 			var MSes = ["M_DS", "M_MB", "M_PK", "M_CBS"]
 			if c_g_g == 0:
 				MSes.erase("M_MB")
 			var MS = MSes[randi() % len(MSes)]
 			if MS in ["M_DS", "M_MB"] and randf() < min(sqrt(star_temp) / pow(star_size, 1.5) / 100.0, 0.03):
-				star[7].MS = MS
+				star.MS = MS
 			elif randf() < min(pow(star_lum, 0.1) / 25.0, 0.03):
-				star[7].MS = MS
-			if star[7].has("MS"):
-				var star_MS:String = star[7].MS
-				star[7].MS_lv = randi() % (Data.MS_num_stages[star[7].MS] + 1)
-				star[7].bldg = {}
-				if star_MS == "M_MB":
-					star[7].repair_cost = Data.MS_costs[star_MS].money * 72 * randf_range(1, 3) * pow(star.size, 2)
-				elif star_MS == "M_DS":
-					star[7].repair_cost = Data.MS_costs[star_MS + "_" + str(star[7].MS_lv)].money * 24 * randf_range(1, 3) * pow(star[2], 2)
-				elif star_MS == "M_CBS":
-					star[7].repair_cost = Data.MS_costs[star_MS + "_" + str(star[7].MS_lv)].money * 24 * randf_range(1, 3)
-				elif star_MS == "M_PK":
-					star[7].repair_cost = Data.MS_costs[star_MS + "_" + str(star[7].MS_lv)].money * 24 * randf_range(1, 3) * planet_data[-1].distance / 1000.0
-				star[7].repair_cost *= engineering_bonus.BCM
-				system_data[id][13].has_MS = true
+				star.MS = MS
+			if star.has("MS"):
+				star.MS_lv = randi() % (Data.MS_num_stages[star.MS] + 1)
+				star.bldg = {}
+				if star.MS == "M_MB":
+					star.repair_cost = Data.MS_costs[star.MS].money * 72 * randf_range(1, 3) * pow(star.size, 2)
+				elif star.MS == "M_DS":
+					star.repair_cost = Data.MS_costs[star.MS + "_" + str(star.MS_lv)].money * 24 * randf_range(1, 3) * pow(star.size, 2)
+				elif star.MS == "M_CBS":
+					star.repair_cost = Data.MS_costs[star.MS + "_" + str(star.MS_lv)].money * 24 * randf_range(1, 3)
+				elif star.MS == "M_PK":
+					star.repair_cost = Data.MS_costs[star.MS + "_" + str(star.MS_lv)].money * 24 * randf_range(1, 3) * planet_data[-1].distance / 1000.0
+				star.repair_cost *= engineering_bonus.BCM
+				system_data[id].has_MS = true
+		system_data[id].closest_planet_distance = planet_data[0].distance
 		var view_zoom = 400.0 / max_distance * (planet_data[0].distance / 70)
-		system_data[id][8] = [Vector2(640, 360), view_zoom]
-	system_data[id][12] = planet_data[0].distance
-	system_data[id][10]  = true
+		system_data[id]["view"] = {"pos":Vector2(640, 360), "zoom":view_zoom}
+	system_data[id]["discovered"] = true
 	p_num += planet_num
 	Helper.save_obj("Systems", c_s_g, planet_data)
 	Helper.save_obj("Galaxies", c_g_g, system_data)
@@ -2760,20 +2745,6 @@ func get_random_element(elements:Dictionary):
 		chosen_el = els[k]
 	return chosen_el
 
-func get_lowest_star_prop(s_id, prop:int):
-	var res = system_data[s_id][9][0][prop]
-	for i in range(1, len(system_data[s_id][9])):
-		if system_data[s_id][9][i][prop] < res:
-			res = system_data[s_id][9][i][prop]
-	return res
-
-func get_highest_star_prop(s_id, prop:int):
-	var res = system_data[s_id][9][0][prop]
-	for i in range(1, len(system_data[s_id][9])):
-		if system_data[s_id][9][i][prop] > res:
-			res = system_data[s_id][9][i][prop]
-	return res
-
 func generate_volcano(t_id:int, VEI:float, artificial:bool = false):
 	var richness:float = VEI if VEI <= 7.0 else pow(VEI - 6.0, 1.6) + 6.0
 	var size:int = snapped(VEI - 2, 2) + 1
@@ -2781,57 +2752,42 @@ func generate_volcano(t_id:int, VEI:float, artificial:bool = false):
 	var wid:int = Helper.get_wid(planet_data[c_p].size)
 	var i:int = t_id % wid
 	var j:int = t_id / wid
-	var ash_tiles_arr:Array = tile_data.get("ashes", [])
-	if len(ash_tiles_arr) == 0:
-		ash_tiles_arr.resize(int(pow(wid, 2)))
 	for k in range(max(0, i - half_size), min(i + half_size + 1, wid)):
 		for l in range(max(0, j - half_size), min(j + half_size + 1, wid)):
 			var t_id2:int = k % wid + l * wid
-			if tile_data.has("lakes") and Helper.tile_defined(tile_data.lakes, t_id2):
+			var tile2 = tile_data[t_id2]
+			if tile2 and tile2.has("lake"):
 				continue
 			if abs(i - k) + abs(j - l) <= half_size + 1 - (int(VEI) & 1):
-				var ash_on_planet:bool = tile_data.has("ashes")
-				var ash_on_tile:bool = Helper.tile_defined(ash_tiles_arr, t_id2)
-				var has_mineral_extractor = Helper.tile_defined(tile_data.buildings, t_id2) and tile_data.buildings[t_id2].name == Building.MINERAL_EXTRACTOR
-				var has_cave = Helper.tile_defined(tile_data.caves, t_id2)
-				if ash_on_planet and ash_on_tile:
-					if not has_cave:
-						var diff = max(richness - ash_tiles_arr[t_id2], 0)
-						if has_mineral_extractor:
-							autocollect.rsrc.minerals += diff * tile_data.buildings[t_id2].path_1_value * tile_data.buildings[t_id2].get("overclock_mult", 1.0) * tile_data.attributes[t_id2].get("mineral_replicator_bonus", 1.0)
-						ash_tiles_arr[t_id2] = max(richness, ash_tiles_arr[t_id2])
+				tile_data[t_id2] = {} if tile2 == null else tile2
+				tile2 = tile_data[t_id2]
+				if tile2.has("ash"):
+					if not tile2.has("cave"):
+						var diff = max(richness - tile2.ash.richness, 0)
+						if tile2.has("bldg") and tile2.bldg.name == "ME":
+							autocollect.rsrc.minerals += diff * tile2.bldg.path_1_value * tile2.bldg.get("overclock_mult", 1.0) * tile2.get("mineral_replicator_bonus", 1.0)
+						tile2.ash.richness = max(richness, tile2.ash.richness)
 				else:
-					ash_tiles_arr[t_id2] = richness
-					if has_mineral_extractor:
-						autocollect.rsrc.minerals += (richness - 1.0) * tile_data.buildings[t_id2].path_1_value * tile_data.buildings[t_id2].get("overclock_mult", 1.0) * tile_data.attributes[t_id2].get("mineral_replicator_bonus", 1.0)
-				if artificial and ash_tiles_arr[t_id2] > 0.0:
-					ash_tiles_arr[t_id2] *= -1 # Negative richness to distinguish artificial ash from natural ash. op data compression
-				if not achievement_data.exploration.has("volcano_cave") and has_cave:
+					tile2.ash = {"richness":richness}
+					if tile2.has("bldg") and tile2.bldg.name == "ME":
+						autocollect.rsrc.minerals += (richness - 1.0) * tile2.bldg.path_1_value * tile2.bldg.get("overclock_mult", 1.0) * tile2.get("mineral_replicator_bonus", 1.0)
+					if artificial:
+						tile2.ash.artificial = true
+				if not achievement_data.exploration.has("volcano_cave") and tile2.has("cave"):
 					earn_achievement("exploration", "volcano_cave")
-				if not achievement_data.exploration.has("volcano_aurora_cave") and has_cave and tile_data.has("auroras") and Helper.tile_defined(tile_data.auroras, t_id2):
+				if not achievement_data.exploration.has("volcano_aurora_cave") and tile2.has("cave") and tile2.has("aurora"):
 					earn_achievement("exploration", "volcano_aurora_cave")
-	tile_data.ashes = ash_tiles_arr
-	if tile_data.has("volcanoes"):
-		tile_data.volcanoes[t_id] = VEI
-	else:
-		tile_data.volcanoes = {t_id:VEI}
+	tile_data[t_id] = {} if tile_data[t_id] == null else tile_data[t_id]
+	tile_data[t_id].volcano = {"VEI":VEI}
 
 func generate_tiles(id:int):
 	tile_data.clear()
-	tile_data.ashes = {}
-	tile_data.volcanoes = {}
-	tile_data.caves = {}
-	tile_data.auroras = {}
-	tile_data.lakes = {}
-	tile_data.craters = {}
-	tile_data.buildings = {}
-	tile_data.unique_buildings = {}
-	tile_data.attributes = {}
 	var p_i:Dictionary = planet_data[id]
 	#wid is number of tiles horizontally/vertically
 	#So total number of tiles is wid squared
 	var wid:int = Helper.get_wid(p_i.size)
 	var N:int = pow(wid, 2)
+	tile_data.resize(N)
 	#Aurora spawn
 	var diff:int = 0
 	var tile_from:int = -1
@@ -2840,13 +2796,10 @@ func generate_tiles(id:int):
 	var thiccness:int = ceil(Helper.rand_int(1, 3) * wid / 50.0)
 	var pulsation:float = randf_range(0.4, 1)
 	var amplitude:float = 0.85
-	var max_star_temp = get_max_star_prop(c_s, 4)
+	var max_star_temp = get_max_star_prop(c_s, "temperature")
 	var num_auroras:int = 2
 	var home_planet:bool = c_p_g == 2 and c_u == 0
-	var B_strength:float = galaxy_data[c_g][13]
-	var aurora_tiles_dict = {}
-	var aurora_tiles_arr = []
-	aurora_tiles_arr.resize(N)
+	var B_strength:float = galaxy_data[c_g].B_strength
 	for i in num_auroras:
 		if not home_planet and (randf() < 0.35 * pow(p_i.pressure, 0.15)):
 			#au_int: aurora_intensity
@@ -2861,8 +2814,8 @@ func generate_tiles(id:int):
 						if k < 0 or k > wid - 1:
 							continue
 						show.auroras = true
-						aurora_tiles_dict[k + j * wid] = au_int
-						aurora_tiles_arr[k + j * wid] = au_int
+						tile_data[k + j * wid] = {}
+						tile_data[k + j * wid].aurora = {"au_int":au_int}
 			else:#Horizontal
 				for j in wid:
 					var y_pos:int = lerp(tile_from, tile_to, j / float(wid)) + diff + thiccness * amplitude * sin(j / float(wid) * 4 * pulsation * PI)
@@ -2870,8 +2823,8 @@ func generate_tiles(id:int):
 						if k < 0 or k > wid - 1:
 							continue
 						show.auroras = true
-						aurora_tiles_dict[k + j * wid] = au_int
-						aurora_tiles_arr[k + j * wid] = au_int
+						tile_data[j + k * wid] = {}
+						tile_data[j + k * wid].aurora = {"au_int":au_int}
 			stats_global.highest_au_int = max(au_int, stats_global.highest_au_int)
 			stats_dim.highest_au_int = max(au_int, stats_dim.highest_au_int)
 			stats_univ.highest_au_int = max(au_int, stats_univ.highest_au_int)
@@ -2879,15 +2832,9 @@ func generate_tiles(id:int):
 				diff = thiccness + 1
 			else:
 				diff = Helper.rand_int(thiccness + 1, wid / 3) * sign(randf_range(-1, 1))
-	var aurora_tile_num = len(aurora_tiles_dict.keys())
-	if aurora_tile_num > 0:
-		if N <= 5 * aurora_tile_num:
-			tile_data.auroras = PackedFloat32Array(aurora_tiles_arr)
-		else:
-			tile_data.auroras = aurora_tiles_dict
 	#We assume that the star system's age is inversely proportional to the coldest star's temperature
 	#Age is a factor in crater rarity. Older systems have more craters
-	var coldest_star_temp = get_lowest_star_prop(c_s, 4)
+	var coldest_star_temp = get_min_star_prop(c_s, "temperature")
 	var noise = FastNoiseLite.new()
 	noise.seed = p_i.liq_seed
 	noise.fractal_octaves = 1
@@ -2910,31 +2857,28 @@ func generate_tiles(id:int):
 	if randf() < log(20.0 / sqrt(coldest_star_temp/u_i.gravitational) + 1.0):
 		volcano_probability = min(sqrt(u_i.gravitational) / sqrt(randf()) / N, 0.15)
 	var empty_tiles = []
+	var crater_num:int = 0
 	var total_VEI:float = 0.0
-	var lake_tiles_arr:Array = []
-	lake_tiles_arr.resize(N)
-	var lake_tiles_dict:Dictionary = {}
-	var cave_tiles_dict:Dictionary = {}
-	var crater_tiles_arr:Array = []
-	crater_tiles_arr.resize(N)
-	var crater_tiles_dict:Dictionary = {}
 	for i in wid:
 		for j in wid:
 			var level:float = noise.get_noise_2d(i / float(wid), j / float(wid))
 			var t_id = i % wid + j * wid
-			var has_ash = Helper.tile_defined(tile_data.ashes, t_id)
-			var has_aurora = Helper.tile_defined(tile_data.auroras, t_id)
-			if level > 0.5 and p_i.has("lake_1") and p_i.lake_1.state != "g" and not has_ash:
-				lake_tiles_arr[t_id] = 1
-				lake_tiles_dict[t_id] = 1
-				continue
-			if level < -0.5 and p_i.has("lake_2") and p_i.lake_2.state != "g" and not has_ash:
-				lake_tiles_arr[t_id] = 2
-				lake_tiles_dict[t_id] = 2
-				continue
+			if level > 0.5 and p_i.has("lake_1"):
+				if p_i.lake_1.state != "g":
+					tile_data[t_id] = {} if tile_data[t_id] == null else tile_data[t_id]
+					if not tile_data[t_id].has("ash"):
+						tile_data[t_id].lake = 1
+					continue
+			if level < -0.5 and p_i.has("lake_2"):
+				if p_i.lake_2.state != "g":
+					tile_data[t_id] = {} if tile_data[t_id] == null else tile_data[t_id]
+					if not tile_data[t_id].has("ash"):
+						tile_data[t_id].lake = 2
+					continue
 			if home_planet:
 				continue
 			if randf() < 0.1 / pow(wid, 0.9):
+				tile_data[t_id] = {} if tile_data[t_id] == null else tile_data[t_id]
 				var floor_size:int = randf_range(25 * min(wid / 8.0, 1), 40 * randf_range(1, 1 + wid / 100.0))
 				var num_floors:int = Helper.rand_int(1, int(wid / 2.5)) + 2
 				var modifiers:Dictionary = {}
@@ -2968,12 +2912,14 @@ func generate_tiles(id:int):
 							modifiers[key] = modifiers2[key].treasure_if_true
 						modifiers2.erase(key)
 				var period:int = 65 + sign(randf() - 0.5) * randf() * 40
-				cave_tiles_dict[t_id] = [num_floors, floor_size, period, randf() + 0.2, modifiers, -1]
-				if not achievement_data.exploration.has("volcano_cave") and has_ash:
+				tile_data[t_id].cave = {"num_floors":num_floors, "floor_size":floor_size, "period":period, "debris":randf() + 0.2}
+				if tile_data[t_id].has("ash") and not achievement_data.exploration.has("volcano_cave") and tile_data[t_id].has("cave"):
 					earn_achievement("exploration", "volcano_cave")
-				if not achievement_data.exploration.has("aurora_cave") and has_aurora:
+				if not modifiers.is_empty():
+					tile_data[t_id].cave.modifiers = modifiers
+				if not achievement_data.exploration.has("aurora_cave") and tile_data[t_id].has("aurora"):
 					earn_achievement("exploration", "aurora_cave")
-				if not achievement_data.exploration.has("volcano_aurora_cave") and has_ash and has_aurora:
+				if not achievement_data.exploration.has("volcano_aurora_cave") and tile_data[t_id].has("ash") and tile_data[t_id].has("aurora"):
 					earn_achievement("exploration", "volcano_aurora_cave")
 				continue
 			if c_s_g != 0 and randf() < volcano_probability:
@@ -2981,54 +2927,39 @@ func generate_tiles(id:int):
 				total_VEI += VEI
 				generate_volcano(t_id, VEI)
 				continue
-			if has_ash:
-				continue
 			var crater_size = max(0.25, pow(p_i.pressure, 0.3))
 			if randf() < 15 / crater_size / pow(coldest_star_temp, 0.8):
-				var crater_metal:int = Metals.LEAD
-				var depth:int = ceil(pow(10, randf_range(2, 3)) * pow(crater_size, 0.8))
-				if Helper.tile_defined(tile_data.attributes, t_id):
-					tile_data.attributes[t_id].depth = depth
-				else:
-					tile_data.attributes[t_id] = {"depth":depth}
+				tile_data[t_id] = {} if tile_data[t_id] == null else tile_data[t_id]
+				if tile_data[t_id].has("ash"):
+					continue
+				tile_data[t_id].crater = {}
+				tile_data[t_id].crater.variant = randi() % 2 + 1
+				var depth = ceil(pow(10, randf_range(2, 3)) * pow(crater_size, 0.8))
+				tile_data[t_id].crater.init_depth = depth
+				tile_data[t_id].depth = depth
+				tile_data[t_id].crater.metal = "lead"
+				crater_num += 1
 				for met in met_info:
-					if met == Metals.LEAD:
+					if met == "lead":
 						continue
 					if randf() < 0.3 / pow(met_info[met].rarity, 0.95):
 						if c_s_g == 0 and met_info[met].rarity > 8:
 							continue
 						if c_g_g == 0 and met_info[met].rarity > 50:
 							continue
-						crater_metal = met
-						if not achievement_data.exploration.has("diamond_crater") and met == Metals.DIAMOND:
+						tile_data[t_id].crater.metal = met
+						if not achievement_data.exploration.has("diamond_crater") and met == "diamond":
 							earn_achievement("exploration", "diamond_crater")
-						if not achievement_data.exploration.has("nanocrystal_crater") and met == Metals.NANOCRYSTAL:
+						if not achievement_data.exploration.has("nanocrystal_crater") and met == "nanocrystal":
 							earn_achievement("exploration", "nanocrystal_crater")
-						if not achievement_data.exploration.has("mythril_crater") and met == Metals.MYTHRIL:
+						if not achievement_data.exploration.has("mythril_crater") and met == "mythril":
 							earn_achievement("exploration", "mythril_crater")
-				var crater_data = [randi() % 2 + 1, depth, crater_metal]
-				crater_tiles_arr[t_id] = PackedInt32Array(crater_data)
-				crater_tiles_dict[t_id] = PackedInt32Array(crater_data)
 				continue
 			empty_tiles.append(t_id)
-	if not cave_tiles_dict.is_empty() or home_planet or c_p_g == 2:
-		tile_data.caves = cave_tiles_dict
-	var N_craters = len(crater_tiles_dict.keys())
-	if N_craters > 0:
-		if N <= 3 * N_craters:
-			tile_data.craters = crater_tiles_arr
-		else:
-			tile_data.craters = crater_tiles_dict
-	var N_lake_tiles = len(lake_tiles_dict.keys())
-	if N_lake_tiles > 0:
-		if N <= 7 + 4 * N_lake_tiles:
-			tile_data.lakes = lake_tiles_arr
-		else:
-			tile_data.lakes = lake_tiles_dict
 	var unique_bldgs_list:Dictionary = {	UniqueBuilding.SPACEPORT:				log(p_i.pressure + 1), 
 											UniqueBuilding.MINERAL_REPLICATOR:		1.0 + total_VEI / 6.0,
 											UniqueBuilding.OBSERVATORY:				max(-log(p_i.pressure / 2.0 + 0.001), 0),
-											UniqueBuilding.MINING_OUTPOST:			1.0 + 15.0 * len(crater_tiles_dict.keys()) / N,
+											UniqueBuilding.MINING_OUTPOST:			1.0 + 15.0 * crater_num / N,
 											#UniqueBuilding.AURORA_GENERATOR:		5.0 if diff == 0 else 1.0,
 											UniqueBuilding.SUBSTATION:				max(-log(p_i.pressure / 10.0 + 0.1), 0),
 											UniqueBuilding.CELLULOSE_SYNTHESIZER:	log(p_i.pressure * (1.0 + p_i.atmosphere.CH4 + p_i.atmosphere.CO2 + p_i.atmosphere.H + p_i.atmosphere.O + p_i.atmosphere.H2O) + 1)
@@ -3089,8 +3020,7 @@ func generate_tiles(id:int):
 					if spaceport_spawned:
 						continue
 					spaceport_spawned = true					#Save migration
-				var tier = max(1, int(-log(randf() / u_i.get("age", 1) / (1.0 + u_i.cluster_data[c_c].pos.length() * u_i.dark_energy / 1000.0)) / 4.0 + 1))
-				var obj = {"tile":t_id, "tier":tier}
+				var obj = {"tile":t_id, "tier":max(1, int(-log(randf() / u_i.get("age", 1) / (1.0 + u_i.cluster_data[c_c].pos.length() * u_i.dark_energy / 1000.0)) / 4.0 + 1))}
 				if randf() < 1.0 - 0.5 * exp(-pow(p_i.temperature - 273, 2) / 20000.0) / pow(obj.tier, 2):
 					obj.repair_cost = 250000 * pow(obj.tier, 30) * randf_range(1, 3) * Data.unique_bldg_repair_cost_multipliers[unique_bldg]
 				if p_i.unique_bldgs.has(unique_bldg):
@@ -3098,16 +3028,16 @@ func generate_tiles(id:int):
 				else:
 					p_i.unique_bldgs[unique_bldg] = [obj]
 	if p_i.id == 6:#Guaranteed wormhole spawn on furthest planet in solar system
-		var random_tile:int = randi() % N
+		var random_tile:int = randi() % len(tile_data)
 		erase_tile(random_tile)
-		var dest_id:int = Helper.rand_int(1, galaxy_data[0][6] - 1)#				local_destination_system_id		global_dest_s_id
-		tile_data.wormhole = {"tile_id":random_tile, "active":false, "new":true, "l_dest_s_id":dest_id, "g_dest_s_id":dest_id}
+		var dest_id:int = Helper.rand_int(1, galaxy_data[0].system_num - 1)#		local_destination_system_id		global_dest_s_id
+		tile_data[random_tile].wormhole = {"active":false, "new":true, "l_dest_s_id":dest_id, "g_dest_s_id":dest_id}
 		p_i.wormhole = true
 	elif c_s_g != 0 and randf() < 0.1:#10% chance to spawn a wormhole on a planet outside solar system
-		var random_tile:int = randi() % N
+		var random_tile:int = randi() % len(tile_data)
 		erase_tile(random_tile)
 		var dest_id:int = randi() % len(system_data)
-		tile_data.wormhole = {"tile_id":random_tile, "active":false, "new":true, "l_dest_s_id":dest_id, "g_dest_s_id":dest_id + system_data[0][0]}
+		tile_data[random_tile].wormhole = {"active":false, "new":true, "l_dest_s_id":dest_id, "g_dest_s_id":dest_id + system_data[0].id}
 		p_i.wormhole = true#								new: whether the wormhole should generate a new wormhole on another planet
 	if p_i.has("lake_1") and p_i.lake_1.state == "g":
 		p_i.erase("lake_1")
@@ -3115,9 +3045,12 @@ func generate_tiles(id:int):
 		p_i.erase("lake_2")
 	planet_data[id]["discovered"] = true
 	if home_planet:
-		tile_data.caves[42] = [5, 25, 65, 0.3, {}, -1]
-		tile_data.caves[215] = [8, 30, 50, 0.4, {}, -1]
-		tile_data.ship = 112
+		tile_data[42] = {}
+		tile_data[42].cave = {"num_floors":5, "floor_size":25, "period":65, "debris":0.3}
+		tile_data[215] = {}
+		tile_data[215].cave = {"num_floors":8, "floor_size":30, "period":50, "debris":0.4}
+		tile_data[112] = {}
+		tile_data[112].ship = true
 		p_i.unique_bldgs = {UniqueBuilding.SPACEPORT:[{"tile":113, "tier":1, "repair_cost":10000 * Data.unique_bldg_repair_cost_multipliers[UniqueBuilding.SPACEPORT]}],
 							UniqueBuilding.MINERAL_REPLICATOR:[{"tile":55, "tier":1, "repair_cost":10000 * Data.unique_bldg_repair_cost_multipliers[UniqueBuilding.MINERAL_REPLICATOR]}]}
 	elif c_p_g == 2:
@@ -3131,7 +3064,7 @@ func generate_tiles(id:int):
 			random_tile3 = randi() % N
 		erase_tile(random_tile2)
 		erase_tile(random_tile3)
-		tile_data.ship = random_tile
+		tile_data[random_tile].ship = true
 		var mineral_replicator = {"tile":random_tile3, "tier":max(1, int(-log(randf() / u_i.get("age", 1)) / 4.0 + 1))}
 		var spaceport:Dictionary
 		mineral_replicator.repair_cost = 10000 * pow(mineral_replicator.tier, 30) * randf_range(1, 5) * Data.unique_bldg_repair_cost_multipliers[UniqueBuilding.MINERAL_REPLICATOR]
@@ -3143,17 +3076,20 @@ func generate_tiles(id:int):
 			erase_tile(random_tile + 1)
 		spaceport.repair_cost = 10000 * pow(spaceport.tier, 30) * randf_range(1, 5) * Data.unique_bldg_repair_cost_multipliers[UniqueBuilding.SPACEPORT]
 		p_i.unique_bldgs = {UniqueBuilding.SPACEPORT:[spaceport], UniqueBuilding.MINERAL_REPLICATOR:[mineral_replicator]}
-		tile_data.caves[random_tile2] = [8, 30, 50, 0.4, {}, -1]
+		tile_data[random_tile2].cave = {"num_floors":8, "floor_size":30, "period":50, "debris":0.4}
 	for bldg in p_i.unique_bldgs.keys():
 		for i in len(p_i.unique_bldgs[bldg]):
 			var tier = p_i.unique_bldgs[bldg][i].tier
 			var t_id = p_i.unique_bldgs[bldg][i].tile
 			for j in ([t_id, t_id+1, t_id+wid, t_id+1+wid] if bldg == UniqueBuilding.NUCLEAR_FUSION_REACTOR else [t_id]):
-				tile_data.unique_buildings[j] = {"name":bldg, "tier":tier, "id":i}
+				if tile_data[j]:
+					tile_data[j].unique_bldg = {"name":bldg, "tier":tier, "id":i}
+				else:
+					tile_data[j] = {"unique_bldg":{"name":bldg, "tier":tier, "id":i}}
 				if p_i.unique_bldgs[bldg][i].has("repair_cost"):
-					tile_data.unique_buildings[j].repair_cost = p_i.unique_bldgs[bldg][i].repair_cost
+					tile_data[j].unique_bldg.repair_cost = p_i.unique_bldgs[bldg][i].repair_cost
 			if not p_i.unique_bldgs[bldg][i].has("repair_cost"):
-				Helper.set_unique_bldg_bonuses(p_i, tile_data.unique_buildings[t_id], t_id, wid)
+				Helper.set_unique_bldg_bonuses(p_i, tile_data[t_id].unique_bldg, t_id, wid)
 			if not achievement_data.exploration.has("tier_2_unique_bldg") and tier >= 2:
 				earn_achievement("exploration", "tier_2_unique_bldg")
 			if not achievement_data.exploration.has("tier_3_unique_bldg") and tier >= 3:
@@ -3169,7 +3105,7 @@ func generate_tiles(id:int):
 			if not achievement_data.exploration.has("find_all_unique_bldgs") and len(unique_bldgs_discovered.keys()) == UNIQUE_BLDGS:
 				earn_achievement("exploration", "find_all_unique_bldgs")
 	
-	# Give lake data to adjacent tiles
+	#Give lake data to adjacent tiles
 	var lake_1_au_int:float = 0.0
 	var lake_2_au_int:float = 0.0
 	if not achievement_data.exploration.has("find_neon_lake"):
@@ -3188,52 +3124,45 @@ func generate_tiles(id:int):
 			lake_2_au_int = Helper.clever_round(1.2e5 * (randf_range(1, 2)) * B_strength * max_star_temp)
 		elif p_i.lake_2.element == "Xe":
 			lake_2_au_int = Helper.clever_round(3.6e6 * (randf_range(1, 2)) * B_strength * max_star_temp)
-	
-	# Cast auroras around neon/xenon lakes, and give lake attributes to surrounding tiles
-	if N_lake_tiles > 0:
-		for i in wid:
-			for j in wid:
-				var t_id = i % wid + j * wid
-				if lake_tiles_arr[t_id] != null:
-					var lake_info = p_i["lake_%s" % lake_tiles_arr[t_id]]
-					var distance_from_lake:int = 1
-					if lake_info.element in ["H", "Xe"]:
-						distance_from_lake += Data.lake_bonus_values[lake_info.element][lake_info.state] + biology_bonus[lake_info.element]
-					for k in range(max(0, i - distance_from_lake), min(i + distance_from_lake + 1, wid)):
-						for l in range(max(0, j - distance_from_lake), min(j + distance_from_lake + 1, wid)):
-							var id2 = k % wid + l * wid
-							if lake_tiles_arr[id2] != null or Vector2(k, l) == Vector2(i, j):
-								continue
-							var attributes_defined = Helper.tile_defined(tile_data.attributes, id2)
-							var lake_elements_defined = attributes_defined and tile_data.attributes[id2].has("lake_elements")
-							if lake_tiles_arr[t_id] == 1 and lake_1_au_int > 0.0:
-								if aurora_tiles_arr[id2] != null:
-									if not lake_elements_defined:
-										aurora_tiles_arr[id2] += lake_1_au_int + 1.0
-									else:
-										aurora_tiles_arr[id2] = max(lake_1_au_int, aurora_tiles_arr[id2])
-								else:
-									aurora_tiles_arr[id2] = lake_1_au_int
-							elif lake_tiles_arr[t_id] == 2 and lake_2_au_int > 0.0:
-								if aurora_tiles_arr[id2] != null:
-									if not lake_elements_defined:
-										aurora_tiles_arr[id2] += lake_2_au_int + 1.0
-									else:
-										aurora_tiles_arr[id2] = max(lake_2_au_int, aurora_tiles_arr[id2])
-								else:
-									aurora_tiles_arr[id2] = lake_2_au_int
-							if lake_elements_defined:
-								tile_data.attributes[id2].lake_elements[lake_info.element] = lake_info.state
-							else:
-								if attributes_defined:
-									tile_data.attributes[id2].lake_elements = {lake_info.element:lake_info.state}
-								else:
-									tile_data.attributes[id2] = {"lake_elements":{lake_info.element:lake_info.state}}
 	var planet_with_nothing = true
-	for feature in ["auroras", "craters", "unique_buildings", "ashes", "lakes", "caves"]:
-		if not tile_data[feature].is_empty():
-			planet_with_nothing = false
-			break
+	for i in wid:
+		for j in wid:
+			var t_id = i % wid + j * wid
+			var tile = tile_data[t_id]
+			if tile:
+				planet_with_nothing = false
+			if tile and tile.has("lake"):
+				var lake_info = p_i["lake_%s" % tile.lake]
+				var distance_from_lake:int = 1
+				if lake_info.element in ["H", "Xe"]:
+					distance_from_lake += Data.lake_bonus_values[lake_info.element][lake_info.state] + biology_bonus[lake_info.element]
+				for k in range(max(0, i - distance_from_lake), min(i + distance_from_lake + 1, wid)):
+					for l in range(max(0, j - distance_from_lake), min(j + distance_from_lake + 1, wid)):
+						var id2 = k % wid + l * wid
+						if tile_data[id2] and tile_data[id2].has("lake") or Vector2(k, l) == Vector2(i, j):
+							continue
+						if tile_data[id2] == null:
+							tile_data[id2] = {}
+						if tile.lake == 1 and lake_1_au_int > 0.0:
+							if tile_data[id2].has("aurora"):
+								if not tile_data[id2].has("lake_elements"):
+									tile_data[id2].aurora.au_int += lake_1_au_int + 1.0
+								else:
+									tile_data[id2].aurora.au_int = max(lake_1_au_int, tile_data[id2].aurora.au_int)
+							else:
+								tile_data[id2].aurora = {"au_int":lake_1_au_int}
+						elif tile.lake == 2 and lake_2_au_int > 0.0:
+							if tile_data[id2].has("aurora"):
+								if not tile_data[id2].has("lake_elements"):
+									tile_data[id2].aurora.au_int += lake_2_au_int + 1.0
+								else:
+									tile_data[id2].aurora.au_int = max(lake_2_au_int, tile_data[id2].aurora.au_int)
+							else:
+								tile_data[id2].aurora = {"au_int":lake_2_au_int}
+						if tile_data[id2].has("lake_elements"):
+							tile_data[id2].lake_elements[lake_info.element] = lake_info.state
+						else:
+							tile_data[id2].lake_elements = {lake_info.element:lake_info.state}
 	if not achievement_data.exploration.has("planet_with_nothing") and planet_with_nothing:
 		earn_achievement("exploration", "planet_with_nothing")
 	Helper.save_obj("Planets", c_p_g, tile_data)
@@ -3241,12 +3170,11 @@ func generate_tiles(id:int):
 	tile_data.clear()
 
 func erase_tile(tile:int):
-	for key in ["volcanoes", "lakes", "craters", "caves", "unique_buildings"]:
-		if tile_data.has(key):
-			if tile_data[key] is Array:
-				tile_data[key][tile] = null
-			elif tile_data[key] is Dictionary:
-				tile_data[key].erase(tile)
+	if tile_data[tile] == null:
+		tile_data[tile] = {}
+	for key in tile_data[tile].keys():
+		if not key in ["aurora", "ash"]:
+			tile_data[tile].erase(key)
 
 func make_atmosphere_composition(temp:float, pressure:float, list_of_element_probabilities:Dictionary):
 	var atm = {}
@@ -3625,17 +3553,6 @@ func _process(_delta):
 					atoms[atom] += autocollect.atoms[atom] * delta
 			Helper.add_minerals(min_to_add)
 			Helper.add_energy(energy_to_add)
-			particles.proton += autocollect.particles.proton * delta * u_i.time_speed
-			particles.neutron += autocollect.particles.neutron * delta * u_i.time_speed
-			particles.electron += autocollect.particles.electron * delta * u_i.time_speed
-			if particles.neutron > neutron_cap * Helper.get_IR_mult("NSF"):
-				var diff:float = particles.neutron - neutron_cap * Helper.get_IR_mult("NSF")
-				var amount_decayed:float = diff * pow(0.5, delta * u_i.time_speed / 900.0) #900 seconds = 15 minutes
-				particles.neutron -= diff - amount_decayed
-				particles.proton += (diff - amount_decayed) / 2.0
-				particles.electron += (diff - amount_decayed) / 2.0
-			if particles.electron > electron_cap * Helper.get_IR_mult("ESF"):
-				particles.electron = electron_cap * Helper.get_IR_mult("ESF")
 			if is_instance_valid(HUD) and is_ancestor_of(HUD):
 				HUD.update_minerals()
 				HUD.update_money_energy_SP()
@@ -4191,7 +4108,7 @@ func conquer_all_confirm(energy_cost:float, insta_conquer:bool):
 			stats_global.systems_conquered += 1
 			if not new_bldgs.has("SP"):
 				new_bldgs.SP = true
-			system_data[c_s][11] = true
+			system_data[c_s].conquered = true
 			view.obj.refresh_planets()
 			space_HUD.get_node("ConquerAll").visible = false
 		else:

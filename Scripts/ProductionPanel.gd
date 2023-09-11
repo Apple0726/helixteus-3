@@ -5,7 +5,7 @@ var tile
 @onready var time_txt = $Control/TimeRemaining
 @onready var amount_produced_txt = $Control/AmountProduced
 var ratio:float
-var bldg_type:String
+var bldg_type:int
 var input_type:String
 var output_type:String
 var input:String
@@ -26,7 +26,7 @@ func refresh_values():
 	var spd = tile.bldg.path_1_value * game.u_i.time_speed * Helper.get_IR_mult(tile.bldg.name)
 	time_txt.text = Helper.time_to_str($Control/HBox/HSlider.value * ratio / spd)
 	
-func refresh2(_bldg_type:String, _input:String, _output:String, _input_type:String, _output_type:String):
+func refresh2(_bldg_type:int, _input:String, _output:String, _input_type:String, _output_type:String):
 	bldg_type = _bldg_type
 	input_type = _input_type
 	input = _input
@@ -34,11 +34,11 @@ func refresh2(_bldg_type:String, _input:String, _output:String, _input_type:Stri
 	output = _output
 	tile = game.tile_data[game.c_t]
 	match bldg_type:
-		"GF":
+		Building.GLASS_FACTORY:
 			ratio = 1 / 15.0
 			$Title.text = tr("GF_NAME")
-		"SE":
-			ratio = 40.0 * Helper.get_IR_mult("SE")
+		Building.STEAM_ENGINE:
+			ratio = 40.0 * Helper.get_IR_mult(Building.STEAM_ENGINE)
 			$Title.text = tr("SE_NAME")
 		_:
 			ratio = 0.0

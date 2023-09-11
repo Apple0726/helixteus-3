@@ -257,7 +257,7 @@ func refresh():
 		obj = game.tile_data[game.c_t]
 		au_int = obj.aurora.au_int if obj.has("aurora") else 0.0
 		au_mult = Helper.get_au_mult(obj)
-	path_2_value = obj.bldg.path_2_value * Helper.get_IR_mult("AMN")
+	path_2_value = obj.bldg.path_2_value * Helper.get_IR_mult(Building.ATOM_MANIPULATOR)
 	$Control/EnergyCostText.text = Helper.format_num(round(energy_cost * $Control/HSlider.value / au_mult / path_2_value)) + "  [img]Graphics/Icons/help.png[/img]"
 	if au_mult > 1:
 		$Control/EnergyCostText.help_text = ("[aurora au_int=%s]" % au_int) + tr("MORE_ENERGY_EFFICIENT") % Helper.clever_round(au_mult)
@@ -267,7 +267,7 @@ func refresh():
 	$Control.visible = not $Control3.visible and reaction != ""
 	$Transform3D.visible = $Control3.visible or $Control.visible
 	refresh_time_icon()
-	$Control/TimeCostText.text = Helper.time_to_str(difficulty * $Control/HSlider.value / obj.bldg.path_1_value / tile_num / Helper.get_IR_mult("AMN") / game.u_i.time_speed)
+	$Control/TimeCostText.text = Helper.time_to_str(difficulty * $Control/HSlider.value / obj.bldg.path_1_value / tile_num / Helper.get_IR_mult(Building.ATOM_MANIPULATOR) / game.u_i.time_speed)
 	for reaction_name in reactions:
 		var disabled:bool = false
 		for atom in reactions[reaction_name].atoms:
@@ -462,10 +462,10 @@ func _process(delta):
 		hbox.rsrc.get_node("Text").text = "%s kg" % [Helper.format_num(round(MM_dict[hbox.name]))]
 	#Helper.put_rsrc($Control2/ScrollContainer/From, 32, atom_dict)
 	#Helper.put_rsrc($Control2/To, 32, MM_dict)
-	$Control3/TimeRemainingText.text = Helper.time_to_str(max(0, difficulty * (obj.bldg.qty - MM_value) / obj.bldg.path_1_value / tile_num / Helper.get_IR_mult("AMN") / game.u_i.time_speed))
+	$Control3/TimeRemainingText.text = Helper.time_to_str(max(0, difficulty * (obj.bldg.qty - MM_value) / obj.bldg.path_1_value / tile_num / Helper.get_IR_mult(Building.ATOM_MANIPULATOR) / game.u_i.time_speed))
 
 func get_reaction_info(obj):
-	var MM_value:float = clamp((Time.get_unix_time_from_system() - obj.bldg.start_date) / difficulty * obj.bldg.path_1_value * tile_num * Helper.get_IR_mult("AMN") * game.u_i.time_speed, 0, obj.bldg.qty)
+	var MM_value:float = clamp((Time.get_unix_time_from_system() - obj.bldg.start_date) / difficulty * obj.bldg.path_1_value * tile_num * Helper.get_IR_mult(Building.ATOM_MANIPULATOR) * game.u_i.time_speed, 0, obj.bldg.qty)
 	return {"MM_value":MM_value, "progress":MM_value / obj.bldg.qty}
 
 func _on_EnergyCostText_mouse_entered():

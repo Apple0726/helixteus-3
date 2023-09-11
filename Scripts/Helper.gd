@@ -63,7 +63,7 @@ func put_rsrc(container, min_size, objs, remove:bool = true, show_available:bool
 			format_text(rsrc.get_node("Text"), texture, "Icons/minerals", show_available, objs[obj], game.minerals)
 		elif obj == "energy":
 			format_text(rsrc.get_node("Text"), texture, "Icons/energy", show_available, objs[obj], game.energy)
-		elif obj == "SP":
+		elif obj == Building.SOLAR_PANEL:
 			format_text(rsrc.get_node("Text"), texture, "Icons/SP", show_available, objs[obj], game.SP)
 		elif obj == "time":
 			texture.texture_normal = Data.time_icon
@@ -295,16 +295,14 @@ func mult_dict_by(dict:Dictionary, value:float):
 		dict2[el] = dict[el] * value
 	return dict2
 
-func get_crush_info(tile_id:int):
-	var tile_data = game.tile_data
-	var building = tile_data.buildings[tile_id]
+func get_crush_info(tile_obj):
 	var time = Time.get_unix_time_from_system()
-	var crush_spd = building.path_1_value * game.u_i.time_speed
+	var crush_spd = tile_obj.bldg.path_1_value * game.u_i.time_speed
 	var constr_delay = 0
-	if building.has("is_constructing"):
-		constr_delay = building.construction_date + building.construction_length - time
-	var progress = max(0, (time - building.start_date + constr_delay) * crush_spd / building.stone_qty)
-	var qty_left = max(0, round(building.stone_qty - (time - building.start_date + constr_delay) * crush_spd))
+	if tile_obj.bldg.has("is_constructing"):
+		constr_delay = tile_obj.bldg.construction_date + tile_obj.bldg.construction_length - time
+	var progress = max(0, (time - tile_obj.bldg.start_date + constr_delay) * crush_spd / tile_obj.bldg.stone_qty)
+	var qty_left = max(0, round(tile_obj.bldg.stone_qty - (time - tile_obj.bldg.start_date + constr_delay) * crush_spd))
 	return {"crush_spd":crush_spd, "progress":progress, "qty_left":qty_left}
 
 func get_prod_info(tile_obj):
@@ -317,24 +315,16 @@ func get_prod_info(tile_obj):
 	return {"spd":spd, "progress":progress, "qty_made":qty_made, "qty_left":qty_left}
 
 var overlay_rsrc = preload("res://Graphics/Elements/Default.png")
-func add_overlay(parent, self_node, c_v:String, obj_info, overlays:Array):
+func add_overlay(parent, self_node, c_v:String, obj_info:Dictionary, overlays:Array):
 	var overlay_texture = overlay_rsrc
 	var overlay = TextureButton.new()
 	overlay.texture_normal = overlay_texture
 	overlay.visible = false
 	parent.add_child(overlay)
-	var id
-	var l_id
-	if obj_info is Array:
-		id = obj_info[0]
-		l_id = obj_info[1]
-	else:
-		id = obj_info.id
-		l_id = obj_info.l_id
-	overlays.append({"circle":overlay, "id":l_id})
-	overlay.connect("mouse_entered",Callable(self_node,"on_%s_over" % [c_v]).bind(l_id))
+	overlays.append({"circle":overlay, "id":obj_info.l_id})
+	overlay.connect("mouse_entered",Callable(self_node,"on_%s_over" % [c_v]).bind(obj_info.l_id))
 	overlay.connect("mouse_exited",Callable(self_node,"on_%s_out" % [c_v]))
-	overlay.connect("pressed",Callable(self_node,"on_%s_click" % [c_v]).bind(id, l_id))
+	overlay.connect("pressed",Callable(self_node,"on_%s_click" % [c_v]).bind(obj_info.id, obj_info.l_id))
 	overlay.position = Vector2(-300 / 2, -300 / 2)
 	overlay.pivot_offset = Vector2(300 / 2, 300 / 2)
 
@@ -349,7 +339,7 @@ func change_circle_size(value, overlays):
 		overlay.circle.scale.x = 2 * value
 		overlay.circle.scale.y = 2 * value
 
-func save_obj(type:String, id:int, arr):
+func save_obj(type:String, id:int, arr:Array):
 	var file_path:String = "user://%s/Univ%s/%s/%s.hx3" % [game.c_sv, game.c_u, type, id]
 	var save = FileAccess.open(file_path, FileAccess.WRITE)
 	save.store_var(arr)
@@ -402,7 +392,7 @@ func show_dmg(dmg:float, pos:Vector2, parent, size:int = 40, missed:bool = false
 	#lb.light_mask = 2
 
 func add_minerals(amount:float, add:bool = true):
-	var min_cap = 200 + (game.mineral_capacity - 200) * get_IR_mult("MS")
+	var min_cap = 200 + (game.mineral_capacity - 200) * get_IR_mult(Building.MINERAL_SILO)
 	var mineral_space_available:float = round(min_cap) - round(game.minerals)
 	if mineral_space_available >= amount:
 		if add:
@@ -426,7 +416,7 @@ func add_minerals(amount:float, add:bool = true):
 			return {"added":mineral_space_available, "remainder":amount - mineral_space_available}
 
 func get_total_energy_cap():
-	return 7500 + (game.energy_capacity - 7500) * get_IR_mult("B") + game.capacity_bonus_from_substation * get_IR_mult("PP") * game.u_i.time_speed
+	return 7500 + (game.energy_capacity - 7500) * get_IR_mult(Building.BATTERY) + game.capacity_bonus_from_substation * get_IR_mult(Building.POWER_PLANT) * game.u_i.time_speed
 
 func add_energy(amount:float):
 	var energy_cap = get_total_energy_cap()
@@ -438,11 +428,17 @@ func add_energy(amount:float):
 		game.energy = energy_cap
 		return {"added":energy_space_available, "remainder":amount - energy_space_available}
 
+func get_AIE(next_lv:int = 0):
+	return 0.98 + (game.MUs.AIE + next_lv) / 50.0
+
 func get_au_mult(tile:Dictionary):
 	if tile.has("aurora"):
-		return 1.0 + tile.aurora.au_int
+		return pow(1 + tile.aurora.au_int, get_AIE())
 	else:
 		return 1.0
+
+func get_au_mult_from_int(au_int:float):
+	return pow(1 + au_int, get_AIE())
 
 func get_layer(tile:Dictionary, p_i:Dictionary):
 	var layer:String = ""
@@ -511,11 +507,11 @@ func get_rsrc_from_rock(contents:Dictionary, tile:Dictionary, p_i:Dictionary, is
 				game.popup_window(tr("ARTIFACT_FOUND_DESC"), tr("ARTIFACT_FOUND"))
 		if not game.show.has(content):
 			game.show[content] = true
-		if content == "sand" and not game.new_bldgs.has("GF"):
+		if content == "sand" and not game.new_bldgs.has(Building.GREENHOUSE):
 			game.new_bldgs.GF = true
-		if content == "coal" and not game.new_bldgs.has("SE"):
+		if content == "coal" and not game.new_bldgs.has(Building.STEAM_ENGINE):
 			game.new_bldgs.SE = true
-		if content == "stone" and not game.new_bldgs.has("SC"):
+		if content == "stone" and not game.new_bldgs.has(Building.STONE_CRUSHER):
 			game.new_bldgs.SC = true
 	if tile.has("current_deposit") and tile.current_deposit.progress > tile.current_deposit.size - 1:
 		tile.erase("current_deposit")
@@ -615,14 +611,14 @@ func generate_rock(tile:Dictionary, p_i:Dictionary):
 		contents.ship_locator = 1
 	return contents
 
-func get_IR_mult(bldg_name):
+func get_IR_mult(bldg_name:int):
 	var mult = 1.0
 	var sc:String
 	if bldg_name in [Building.POWER_PLANT, Building.SOLAR_PANEL, Building.STEAM_ENGINE]:
 		sc = "EPE"
 	elif bldg_name in [Building.ATOM_MANIPULATOR, Building.SUBATOMIC_PARTICLE_REACTOR]:
 		sc = "PME"
-	elif bldg_name in [Building.MINERAL_SILO, Building.BATTERY, "M_DS", "M_MME"]:
+	elif bldg_name in [Building.MINERAL_SILO, Building.BATTERY, "NSF", "ESF", "M_DS", "M_MME"]:
 		sc = "STE"
 	else:
 		sc = "%sE" % bldg_name
@@ -678,118 +674,105 @@ func get_AE_production(pressure:float, value:float):
 func get_PCNC_production(pressure:float, value:float):
 	return value / pressure
 
-func update_rsrc(p_i, tile_id:int, rsrc = null, active:bool = false):
+func update_rsrc(p_i, tile, rsrc = null, active:bool = false):
 	var curr_time = Time.get_unix_time_from_system()
 	var current_bar_value = 0
 	var capacity_bar_value = 0
 	var rsrc_text = ""
-	var tile_data:Dictionary = game.tile_data
-	var au_mult = 0.0
-	if tile_defined(tile_data.auroras, tile_id):
-		au_mult = tile_data.auroras[tile_id] + 1.0
-	var ash_mult = 1.0
-	if tile_defined(tile_data.ashes, tile_id):
-		ash_mult = abs(tile_data.ashes[tile_id])
-	if tile_defined(tile_data.unique_buildings, tile_id):
-		if tile_data.unique_buildings[tile_id].has("repair_cost"):
+	if tile.has("unique_bldg"):
+		if tile.unique_bldg.has("repair_cost"):
 			return
-		if tile_data.unique_buildings[tile_id].name == "cellulose_synthesizer":
-			current_bar_value = tile_data.unique_buildings[tile_id].get("production", 0.0)
+		if tile.unique_bldg.name == UniqueBuilding.CELLULOSE_SYNTHESIZER:
+			current_bar_value = tile.unique_bldg.get("production", 0.0)
 			rsrc_text = "%s kg/s" % format_num(current_bar_value, true)
-		elif tile_data.unique_buildings[tile_id].name == "nuclear_fusion_reactor":
-			current_bar_value = tile_data.unique_buildings[tile_id].get("production", 0.0)
+		elif tile.unique_bldg.name == UniqueBuilding.NUCLEAR_FUSION_REACTOR:
+			current_bar_value = tile.unique_bldg.get("production", 0.0)
 			rsrc_text = "%s/s" % format_num(round(current_bar_value))
-		elif tile_data.unique_buildings[tile_id].name == "substation":
-			current_bar_value = round(tile_data.unique_buildings[tile_id].get("capacity_bonus", 0.0) * get_IR_mult("PP") * game.u_i.time_speed)
+		elif tile.unique_bldg.name == UniqueBuilding.SUBSTATION:
+			current_bar_value = round(tile.unique_bldg.get("capacity_bonus", 0.0) * get_IR_mult(Building.POWER_PLANT) * game.u_i.time_speed)
 			rsrc_text = "+ %s" % format_num(current_bar_value)
 		if is_instance_valid(rsrc):
 			rsrc.set_current_bar_value(current_bar_value)
 			rsrc.set_capacity_bar_value(capacity_bar_value)
 			rsrc.set_text(rsrc_text)
 		return
-	var building:Dictionary = tile_data.buildings[tile_id]
-	if not is_instance_valid(rsrc) and building.name in [Building.STONE_CRUSHER, Building.GLASS_FACTORY, Building.STEAM_ENGINE, Building.SUBATOMIC_PARTICLE_REACTOR]:
+	if not is_instance_valid(rsrc) and tile.bldg.name in [Building.STONE_CRUSHER, Building.GREENHOUSE, Building.STEAM_ENGINE, Building.SUBATOMIC_PARTICLE_REACTOR]:
 		return
-	if building.has("construction_date"):
-		update_bldg_constr(tile_id, p_i)
-		if building.has("is_constructing"):
+	if tile.bldg.has("construction_date"):
+		update_bldg_constr(tile, p_i)
+		if tile.bldg.has("is_constructing"):
 			return
 	var prod:float = p_i.tile_num if p_i.has("tile_num") else 1
-	if building.name == "AE":
-		prod *= building.path_1_value * get_prod_mult_tile(tile_id) * p_i.pressure
+	if tile.bldg.name == Building.ATMOSPHERE_EXTRACTOR:
+		prod *= tile.bldg.path_1_value * get_prod_mult(tile) * p_i.pressure
 		rsrc_text = "%s mol/%s" % [format_num(prod, true), tr("S_SECOND")]
-	elif building.name == "ME":
-		prod *= building.path_1_value * get_prod_mult_tile(tile_id) * ash_mult * tile_data.attributes[tile_id].get("mineral_replicator_bonus", 1.0)
+	elif tile.bldg.name == Building.MINERAL_EXTRACTOR:
+		prod *= tile.bldg.path_1_value * get_prod_mult(tile) * (tile.ash.richness if tile.has("ash") else 1.0) * (tile.mineral_replicator_bonus if tile.has("mineral_replicator_bonus") else 1.0)
 		rsrc_text = "%s/%s" % [format_num(prod, true), tr("S_SECOND")]
-	elif building.name == "SP":
-		prod *= get_SP_production(p_i.temperature, building.path_1_value) * get_prod_mult_tile(tile_id) * (au_mult + 1.0) * tile_data.attributes[tile_id].get("substation_bonus", 1.0)
+	elif tile.bldg.name == Building.SOLAR_PANEL:
+		prod *= get_SP_production(p_i.temperature, tile.bldg.path_1_value * get_prod_mult(tile) * get_au_mult(tile)) * (tile.substation_bonus if tile.has("substation_bonus") else 1.0)
 		rsrc_text = "%s/%s" % [format_num(prod, true), tr("S_SECOND")]
-	elif building.name == "PP":
-		prod *= building.path_1_value * get_prod_mult_tile(tile_id) * tile_data.attributes[tile_id].get("substation_bonus", 1.0)
+	elif tile.bldg.name == Building.POWER_PLANT:
+		prod *= tile.bldg.path_1_value * get_prod_mult(tile) * (tile.substation_bonus if tile.has("substation_bonus") else 1.0)
 		rsrc_text = "%s/%s" % [format_num(prod, true), tr("S_SECOND")]
-	elif building.name == "RL":
-		prod *= building.path_1_value * get_prod_mult_tile(tile_id) * tile_data.attributes[tile_id].get("observatory_bonus", 1.0)
+	elif tile.bldg.name == Building.RESEARCH_LAB:
+		prod *= tile.bldg.path_1_value * get_prod_mult(tile) * (tile.observatory_bonus if tile.has("observatory_bonus") else 1.0)
 		rsrc_text = "%s/%s" % [format_num(prod, true), tr("S_SECOND")]
-#	elif building.name in ["PC", "NC"]:
-#		prod *= building.path_1_value * p_i.pressure * get_prod_mult_tile(tile_id)
-#		rsrc_text = "%s/%s" % [format_num(prod, true), tr("S_SECOND")]
-#	elif building.name == "EC":
-#		prod *= building.path_1_value / tile.aurora.au_int * get_prod_mult_tile(tile_id)
-#		rsrc_text = "%s/%s" % [format_num(prod, true), tr("S_SECOND")]
-	elif building.name == "SC":
-		if building.has("stone"):
-			var c_i = get_crush_info(tile_id)
+	elif tile.bldg.name in ["PC", "NC"]:
+		prod *= tile.bldg.path_1_value * p_i.pressure * get_prod_mult(tile)
+		rsrc_text = "%s/%s" % [format_num(prod, true), tr("S_SECOND")]
+	elif tile.bldg.name == "EC":
+		prod *= tile.bldg.path_1_value / tile.aurora.au_int * get_prod_mult(tile)
+		rsrc_text = "%s/%s" % [format_num(prod, true), tr("S_SECOND")]
+	elif tile.bldg.name == Building.STONE_CRUSHER:
+		if tile.bldg.has("stone"):
+			var c_i = get_crush_info(tile)
 			rsrc_text = str(c_i.qty_left)
 			capacity_bar_value = 1 - c_i.progress
 		else:
 			rsrc_text = ""
 			capacity_bar_value = 0
-	elif building.name == "GF":
-		if building.has("qty1"):
-			var prod_i = get_prod_info(tile_id)
+	elif tile.bldg.name == Building.GREENHOUSE:
+		if tile.bldg.has("qty1"):
+			var prod_i = get_prod_info(tile)
 			rsrc_text = "%s kg" % [prod_i.qty_made]
 			capacity_bar_value = prod_i.progress
 		else:
 			rsrc_text = ""
 			capacity_bar_value = 0
-	elif building.name == "SE":
-		if building.has("qty1"):
-			var prod_i = get_prod_info(tile_id)
+	elif tile.bldg.name == Building.STEAM_ENGINE:
+		if tile.bldg.has("qty1"):
+			var prod_i = get_prod_info(tile)
 			rsrc_text = "%s" % [round(prod_i.qty_made)]
 			capacity_bar_value = prod_i.progress
 		else:
 			rsrc_text = ""
 			capacity_bar_value = 0
-	elif building.name == "GH":
-		if tile_data.attributes[tile_id].has("auto_GH"):
-			rsrc_text = "%s kg/s" % format_num(tile_data.attributes[tile_id].auto_GH.produce[tile_data.attributes[tile_id].auto_GH.seed.split("_")[0]] * au_mult, true)
+	elif tile.bldg.name == Building.GREENHOUSE:
+		if tile.has("auto_GH"):
+			rsrc_text = "%s kg/s" % format_num(tile.auto_GH.produce[tile.auto_GH.seed.split("_")[0]] * get_au_mult(tile), true)
 		else:
 			rsrc_text = ""
-	elif building.name == "MM":
-		prod = building.path_1_value * get_prod_mult_tile(tile_id) * tile_data.attributes[tile_id].get("mining_outpost_bonus", 1.0)
+	elif tile.bldg.name == Building.BORING_MACHINE:
+		prod = tile.bldg.path_1_value * get_prod_mult(tile) * tile.get("mining_outpost_bonus", 1.0)
 		rsrc_text = "%s m/s" % format_num(prod, true)
-		current_bar_value = fposmod((curr_time - building.collect_date) * prod, 1.0)
-#	else:
-#		if Mods.added_buildings.has(building.name):
-#			Mods.mod_list[Mods.added_buildings[building.name].mod].calculate(p_i, tile, rsrc, curr_time)
+		current_bar_value = fposmod((curr_time - tile.bldg.collect_date) * prod, 1.0)
+	else:
+		if Mods.added_buildings.has(tile.bldg.name):
+			Mods.mod_list[Mods.added_buildings[tile.bldg.name].mod].calculate(p_i, tile, rsrc, curr_time)
 	if is_instance_valid(rsrc):
 		rsrc.set_current_bar_value(current_bar_value)
 		rsrc.set_capacity_bar_value(capacity_bar_value)
 		rsrc.set_text(rsrc_text)
 
-func get_prod_mult_tile(tile_id:int):
-	var tile_data:Dictionary = game.tile_data
-	var mult = get_IR_mult(tile_data.buildings[tile_id].name) * (game.u_i.time_speed if Data.path_1.has(tile_data.buildings[tile_id].name) and Data.path_1[tile_data.buildings[tile_id].name].has("time_based") else 1.0)
-	if tile_data.attributes.has(tile_id):
-		mult *= tile_data.attributes[tile_id].get("overclock_mult", 1.0)
-	return mult
-
-func get_prod_mult_planet(planet_info:Dictionary):
-	var mult = get_IR_mult(planet_info.bldg.name) * (game.u_i.time_speed if Data.path_1.has(planet_info.bldg.name) and Data.path_1[planet_info.bldg.name].has("time_based") else 1.0) * planet_info.get("overclock_mult", 1.0)
+func get_prod_mult(tile):
+	var mult = get_IR_mult(tile.bldg.name) * (game.u_i.time_speed if Data.path_1.has(tile.bldg.name) and Data.path_1[tile.bldg.name].has("time_based") else 1.0)
+	if tile.bldg.has("overclock_mult"):
+		mult *= tile.bldg.overclock_mult
 	return mult
 
 func has_IR(bldg_name:String):
-	return bldg_name in ["ME", "PP", "RL", "MS", "SP", "AMN", "SPR"]
+	return bldg_name in [Building.MINERAL_EXTRACTOR, Building.POWER_PLANT, Building.RESEARCH_LAB, Building.MINERAL_SILO, Building.SOLAR_PANEL, Building.ATOM_MANIPULATOR, Building.SUBATOMIC_PARTICLE_REACTOR]
 
 func add_item_to_coll(dict:Dictionary, item:String, num):
 	if num is Dictionary:
@@ -826,123 +809,117 @@ func update_ship_travel():
 			game.autocollect.ship_XP = tier
 			if is_instance_valid(game.HUD):
 				game.HUD.set_ship_btn_shader(true, tier)
-	return progress
+	return
 
-func update_bldg_constr(tile_id:int, p_i:Dictionary):
+func update_bldg_constr(tile:Dictionary, p_i:Dictionary):
 	var curr_time = Time.get_unix_time_from_system()
-	var tile_data:Dictionary = game.tile_data
-	var building = tile_data.buildings[tile_id]
-	var start_date = building.construction_date
-	var length = building.construction_length
+	var start_date = tile.bldg.construction_date
+	var length = tile.bldg.construction_length
 	var progress = (curr_time - start_date) / float(length)
 	var update_boxes:bool = false
-	var au_int = 0.0
-	if tile_defined(tile_data.auroras, tile_id):
-		au_int = tile_data.auroras[tile_id]
-	var ash_mult = 1.0
-	if tile_defined(tile_data.ashes, tile_id):
-		ash_mult = abs(tile_data.ashes[tile_id])
 	if progress >= 1:
-		if building.has("is_constructing"):
-			building.erase("is_constructing")
-			game.universe_data[game.c_u].xp += building.XP
-			if not game.objective.is_empty() and game.objective.type == game.ObjectiveType.BUILD and game.objective.data == building.name:
+		if tile.bldg.has("is_constructing"):
+			tile.bldg.erase("is_constructing")
+			game.universe_data[game.c_u].xp += tile.bldg.XP
+			if not game.objective.is_empty() and game.objective.type == game.ObjectiveType.BUILD and game.objective.data == tile.bldg.name:
 				game.objective.current += 1
-			if building.has("rover_id"):
-				game.rover_data[building.rover_id].ready = true
-				building.erase("rover_id")
-			if tile_data.attributes.has(tile_id) and tile_data.attributes[tile_id].has("auto_GH"):
-				var auto_GH:Dictionary = tile_data.attributes[tile_id].auto_GH
-				auto_GH.cellulose_drain *= building.cell_mult
-				for p in auto_GH.produce:
+			if tile.bldg.has("rover_id"):
+				game.rover_data[tile.bldg.rover_id].ready = true
+				tile.bldg.erase("rover_id")
+			if tile.has("auto_GH"):
+				tile.auto_GH.cellulose_drain *= tile.bldg.cell_mult
+				for p in tile.auto_GH.produce:
 					if p in game.met_info.keys():
-						auto_GH.produce[p] *= building.prod_mult
+						tile.auto_GH.produce[p] *= tile.bldg.prod_mult
 					else:# Any production other than metal will be considered proportional to cellulose drain
-						auto_GH.produce[p] *= building.cell_mult
-				add_GH_produce_to_autocollect(auto_GH.produce, au_int)
-				game.autocollect.mats.cellulose -= auto_GH.cellulose_drain
-				if auto_GH.has("soil_drain"):
-					game.autocollect.mats.soil -= auto_GH.soil_drain
+						tile.auto_GH.produce[p] *= tile.bldg.cell_mult
+				add_GH_produce_to_autocollect(tile.auto_GH.produce, tile.aurora.au_int if tile.has("aurora") else 0.0)
+				game.autocollect.mats.cellulose -= tile.auto_GH.cellulose_drain
+				if tile.auto_GH.has("soil_drain"):
+					game.autocollect.mats.soil -= tile.auto_GH.soil_drain
 			if game.c_v == "planet":
 				update_boxes = true
-			var overclock_mult:float = building.overclock_mult if building.has("overclock_mult") else 1.0
-			if building.name == "MS":
-				game.mineral_capacity += building.cap_upgrade
-			elif building.name == "B":
-				game.energy_capacity += building.cap_upgrade
-			elif building.name == "NSF":
-				game.neutron_cap += building.cap_upgrade
-			elif building.name == "ESF":
-				game.electron_cap += building.cap_upgrade
-			elif building.name == "RL":
-				game.autocollect.rsrc.SP += building.path_1_value * overclock_mult * tile_data.attributes[tile_id].get("observatory_bonus", 1.0)
-			elif building.name == "ME":
-				game.autocollect.rsrc.minerals += building.path_1_value * overclock_mult * ash_mult * tile_data.attributes[tile_id].get("mineral_replicator_bonus", 1.0)
-			elif building.name == "PP":
-				var energy_prod = building.path_1_value * overclock_mult * tile_data.attributes[tile_id].get("substation_bonus", 1.0)
+			var overclock_mult:float = tile.bldg.get("overclock_mult", 1.0)
+			if tile.bldg.name == Building.MINERAL_SILO:
+				game.mineral_capacity += tile.bldg.cap_upgrade
+			elif tile.bldg.name == Building.BATTERY:
+				game.energy_capacity += tile.bldg.cap_upgrade
+			elif tile.bldg.name == "NSF":
+				game.neutron_cap += tile.bldg.cap_upgrade
+			elif tile.bldg.name == "ESF":
+				game.electron_cap += tile.bldg.cap_upgrade
+			elif tile.bldg.name == Building.RESEARCH_LAB:
+				game.autocollect.rsrc.SP += tile.bldg.path_1_value * overclock_mult * tile.get("observatory_bonus", 1.0)
+			elif tile.bldg.name == Building.MINERAL_EXTRACTOR:
+				game.autocollect.rsrc.minerals += tile.bldg.path_1_value * overclock_mult * (tile.ash.richness if tile.has("ash") else 1.0) * tile.get("mineral_replicator_bonus", 1.0)
+			elif tile.bldg.name == Building.POWER_PLANT:
+				var energy_prod = tile.bldg.path_1_value * overclock_mult * (tile.substation_bonus if tile.has("substation_bonus") else 1.0)
 				game.autocollect.rsrc.energy += energy_prod
-				if building.has("cap_upgrade") and building.cap_upgrade > 0: # Save migration
-					game.capacity_bonus_from_substation += building.cap_upgrade
-					if tile_data.attributes[tile_id].has("substation_tile"):
-						tile_data[tile_data.attributes[tile_id].substation_tile].unique_bldg.capacity_bonus += building.cap_upgrade
-			elif building.name == "SP":
-				var energy_prod = get_SP_production(p_i.temperature, building.path_1_value * overclock_mult * (au_int + 1.0) * tile_data.attributes[tile_id].get("substation_bonus", 1.0))
+				if tile.bldg.has("cap_upgrade") and tile.bldg.cap_upgrade > 0: # Save migration
+					game.capacity_bonus_from_substation += tile.bldg.cap_upgrade
+					if tile.has("substation_tile"):
+						game.tile_data[tile.substation_tile].unique_bldg.capacity_bonus += tile.bldg.cap_upgrade
+			elif tile.bldg.name == Building.SOLAR_PANEL:
+				var energy_prod = get_SP_production(p_i.temperature, tile.bldg.path_1_value * overclock_mult * get_au_mult(tile) * tile.get("substation_bonus", 1.0))
 				game.autocollect.rsrc.energy += energy_prod
-				if building.has("cap_upgrade"): # Save migration
-					game.capacity_bonus_from_substation += building.cap_upgrade
-					if tile_data.attributes[tile_id].has("substation_tile"):
-						tile_data[tile_data.attributes[tile_id].substation_tile].unique_bldg.capacity_bonus += building.cap_upgrade
-			elif building.name == "AE":
-				var base = building.path_1_value * overclock_mult * p_i.pressure
+				if tile.bldg.has("cap_upgrade"): # Save migration
+					game.capacity_bonus_from_substation += tile.bldg.cap_upgrade
+					if tile.has("substation_tile"):
+						game.tile_data[tile.substation_tile].unique_bldg.capacity_bonus += tile.bldg.cap_upgrade
+			elif tile.bldg.name == Building.ATMOSPHERE_EXTRACTOR:
+				var base = tile.bldg.path_1_value * overclock_mult * p_i.pressure
 				for el in p_i.atmosphere:
 					var base_prod:float = base * p_i.atmosphere[el]
 					game.show[el] = true
 					add_atom_production(el, base_prod)
 				add_energy_from_NFR(p_i, base)
 				add_energy_from_CS(p_i, base)
-#			elif building.name == "PC":
-#				game.autocollect.particles.proton += building.path_1_value * overclock_mult / building.planet_pressure
-#			elif building.name == "NC":
-#				game.autocollect.particles.neutron += building.path_1_value * overclock_mult / building.planet_pressure
-#			elif building.name == "EC":
-#				game.autocollect.particles.electron += building.path_1_value * overclock_mult * tile.aurora.au_int
-			elif building.name == "CBD":
-				var _tile_data:Dictionary
-				var same_planet:bool = game.c_p_g == building.c_p_g
-				if same_planet:
-					_tile_data = game.tile_data
+			elif tile.bldg.name == "PC":
+				game.autocollect.particles.proton += tile.bldg.path_1_value * overclock_mult / tile.bldg.planet_pressure
+			elif tile.bldg.name == "NC":
+				game.autocollect.particles.neutron += tile.bldg.path_1_value * overclock_mult / tile.bldg.planet_pressure
+			elif tile.bldg.name == "EC":
+				game.autocollect.particles.electron += tile.bldg.path_1_value * overclock_mult * tile.aurora.au_int
+			elif tile.bldg.name == Building.CENTRAL_BUSINESS_DISTRICT:
+				var tile_data:Array
+				var same_p:bool = game.c_p_g == tile.bldg.c_p_g
+				if same_p:
+					tile_data = game.tile_data
 				else:
-					_tile_data = game.open_obj("Planets", building.c_p_g)
-				var n:int = building.path_3_value
-				var wid:int = building.wid
+					tile_data = game.open_obj("Planets", tile.bldg.c_p_g)
+				var n:int = tile.bldg.path_3_value
+				var wid:int = tile.bldg.wid
 				for i in n:
-					var x:int = building.x_pos + i - n / 2
+					var x:int = tile.bldg.x_pos + i - n / 2
 					if x < 0 or x >= wid:
 						continue
 					for j in n:
-						var y:int = building.y_pos + j - n / 2
-						if y < 0 or y >= building.wid or x == building.x_pos and y == building.y_pos:
+						var y:int = tile.bldg.y_pos + j - n / 2
+						if y < 0 or y >= tile.bldg.wid or x == tile.bldg.x_pos and y == tile.bldg.y_pos:
 							continue
-						var _tile_id:int = x % wid + y * wid
-#						var id_str:String = str(_tile_data.find(tile))
-						if not _tile_data.attributes[_tile_id].has("cost_div_dict"):
-							_tile_data.attributes[_tile_id].cost_div = building.path_1_value
-							_tile_data.attributes[_tile_id].cost_div_dict = {}
+						var id:int = x % wid + y * wid
+						if tile_data[id] == null:
+							tile_data[id] = {}
+						var _tile = tile_data[id]
+						var id_str:String = str(tile_data.find(tile))
+						if not _tile.has("cost_div_dict"):
+							_tile.cost_div = tile.bldg.path_1_value
+							_tile.cost_div_dict = {}
 						else:
-							_tile_data.attributes[_tile_id].cost_div = max(_tile_data.attributes[_tile_id].cost_div, building.path_1_value)
-						_tile_data.attributes[_tile_id].cost_div_dict[tile_id] = building.path_1_value
-						if not _tile_data.attributes[_tile_id].has("overclock_dict"):
-							_tile_data.attributes[_tile_id].overclock_bonus = building.path_2_value
-							_tile_data.attributes[_tile_id].overclock_dict = {}
+							_tile.cost_div = max(_tile.cost_div, tile.bldg.path_1_value)
+						_tile.cost_div_dict[id_str] = tile.bldg.path_1_value
+						if not _tile.has("overclock_dict"):
+							_tile.overclock_bonus = tile.bldg.path_2_value
+							_tile.overclock_dict = {}
 						else:
-							_tile_data.attributes[_tile_id].overclock_bonus = max(_tile_data.attributes[_tile_id].overclock_bonus, building.path_2_value)
-						_tile_data.attributes[_tile_id].overclock_dict[tile_id] = building.path_2_value
-				if not same_planet:
-					save_obj("Planets", building.c_p_g, _tile_data)
+							_tile.overclock_bonus = max(_tile.overclock_bonus, tile.bldg.path_2_value)
+						_tile.overclock_dict[id_str] = tile.bldg.path_2_value
+				if not same_p:
+					save_obj("Planets", tile.bldg.c_p_g, tile_data)
 	return update_boxes
 
 func add_energy_from_NFR(p_i:Dictionary, base:float):
-	if not p_i.unique_bldgs.has("nuclear_fusion_reactor"):
+	if not p_i.unique_bldgs.has(UniqueBuilding.NUCLEAR_FUSION_REACTOR):
 		return
 	for nfr in p_i.unique_bldgs.nuclear_fusion_reactor:
 		var unique_mult = get_NFR_prod_mult(nfr.tier)
@@ -960,7 +937,7 @@ func add_energy_from_NFR(p_i:Dictionary, base:float):
 			game.tile_data[nfr.tile].unique_bldg.production = game.tile_data[nfr.tile].unique_bldg.get("production", 0) + S
 
 func add_energy_from_CS(p_i:Dictionary, base:float):
-	if not p_i.unique_bldgs.has("cellulose_synthesizer"):
+	if not p_i.unique_bldgs.has(UniqueBuilding.CELLULOSE_SYNTHESIZER):
 		return
 	for cs in p_i.unique_bldgs.cellulose_synthesizer:
 		var unique_mult = get_CS_prod_mult(cs.tier)
@@ -1012,23 +989,23 @@ func update_MS_rsrc(dict:Dictionary):
 	var curr_time = Time.get_unix_time_from_system()
 	var prod:float
 	if dict.has("tile_num"):
-		if dict.bldg.name == "AE":
+		if dict.bldg.name == Building.ATMOSPHERE_EXTRACTOR:
 			prod = 1.0 / get_AE_production(dict.pressure, dict.bldg.path_1_value) / dict.tile_num / game.u_i.time_speed
 		else:
 			prod = 1.0 / dict.bldg.path_1_value
-			if dict.bldg.name != "MM":
+			if dict.bldg.name != Building.BORING_MACHINE:
 				prod /= dict.tile_num
-			prod /= get_prod_mult_planet(dict)
+			prod /= get_prod_mult(dict)
 		var stored = dict.bldg.stored
 		var c_d = dict.bldg.collect_date
 		var c_t = curr_time
 		if dict.bldg.has("path_2_value"):
 			var cap = dict.bldg.path_2_value * dict.bldg.IR_mult
-			if dict.bldg.name != "MM":
+			if dict.bldg.name != Building.BORING_MACHINE:
 				cap = round(cap * dict.tile_num)
 			else:
 				cap = round(cap)
-			var ac_b:bool = dict.bldg.name in ["PP", "ME"]
+			var ac_b:bool = dict.bldg.name in [Building.POWER_PLANT, Building.MINERAL_EXTRACTOR]
 			if stored < cap and c_t - c_d > prod and (not dict.has("autocollect") and ac_b or not ac_b):
 				var rsrc_num = floor((c_t - c_d) / prod)
 				dict.bldg.stored += rsrc_num
@@ -1046,21 +1023,21 @@ func update_MS_rsrc(dict:Dictionary):
 		return 0
 
 func get_DS_output(star:Dictionary, next_lv:int = 0):
-	return Data.MS_output["M_DS_%s" % ((star[7].MS_lv + next_lv) if star[7].has("MS_lv") else next_lv - 1)] * star[6] * game.u_i.planck  * 0.5
+	return Data.MS_output["M_DS_%s" % ((star.MS_lv + next_lv) if star.has("MS_lv") else next_lv - 1)] * star.luminosity * game.u_i.planck  * 0.5
 
 func get_DS_capacity(star:Dictionary, next_lv:int = 0):
-	if next_lv == -1 and star.has("MS") and star[7].MS_lv == 0:
+	if next_lv == -1 and star.has(Building.MINERAL_SILO) and star.MS_lv == 0:
 		return 0
-	return Data.MS_output["M_DS_%s" % ((star[7].MS_lv + next_lv) if star[7].has("MS_lv") else next_lv - 1)] * pow(star[2], 2) * game.u_i.planck * 5000.0 * game.u_i.charge
+	return Data.MS_output["M_DS_%s" % ((star.MS_lv + next_lv) if star.has("MS_lv") else next_lv - 1)] * pow(star.size, 2) * game.u_i.planck * 5000.0 * game.u_i.charge
 
 func get_MB_output(star:Dictionary):
-	return Data.MS_output.M_MB * star[6] * game.u_i.planck
+	return Data.MS_output.M_MB * star.luminosity * game.u_i.planck
 
 func get_MME_output(p_i:Dictionary, next_lv:int = 0):
 	return Data.MS_output["M_MME_%s" % ((p_i.MS_lv + next_lv) if p_i.has("MS_lv") else next_lv - 1)] * pow(p_i.size / 12000.0, 2) * max(1, pow(p_i.pressure, 0.5))
 
 func get_MME_capacity(p_i:Dictionary, next_lv:int = 0):
-	if next_lv == -1 and p_i.has("MS") and p_i.MS_lv == 0:
+	if next_lv == -1 and p_i.has(Building.MINERAL_SILO) and p_i.MS_lv == 0:
 		return 0
 	return Data.MS_output["M_MME_%s" % ((p_i.MS_lv + next_lv) if p_i.has("MS_lv") else next_lv - 1)] * pow(p_i.size / 1200.0, 2)
 
@@ -1193,93 +1170,60 @@ func get_star_modulate (star_class:String):
 			m = lerp(Z0, R0, w)
 	return m
 
-func get_final_value(p_i:Dictionary, data, path:int, n:int = 1): # data can be an int to indicate tile id, or a dictionary that contains planet_data for terrafromed planets
-	var building:Dictionary
-	var mult:float
-	var au_mult:float = 1.0
-	var ash_mult:float = 1.0
-	var substation_bonus:float = 1.0
-	var mineral_replicator_bonus:float = 1.0
-	var observatory_bonus:float = 1.0
-	var mining_outpost_bonus:float = 1.0
-	if data is int:
-		building = game.tile_data.buildings[data]
-		mult = get_prod_mult_tile(data)
-		if tile_defined(game.tile_data.auroras, data):
-			au_mult = game.tile_data.auroras[data]
-		if tile_defined(game.tile_data.ashes, data):
-			ash_mult = abs(game.tile_data.ashes[data])
-		substation_bonus = game.tile_data.attributes[data].get("substation_bonus", 1.0)
-		mineral_replicator_bonus = game.tile_data.attributes[data].get("mineral_replicator_bonus", 1.0)
-		observatory_bonus = game.tile_data.attributes[data].get("observatory_bonus", 1.0)
-		mining_outpost_bonus = game.tile_data.attributes[data].get("mining_outpost_bonus", 1.0)
-	elif data is Dictionary:
-		building = data.bldg
-		mult = get_prod_mult_planet(data)
-		substation_bonus = data.get("substation_bonus", 1.0)
-		mineral_replicator_bonus = data.get("mineral_replicator_bonus", 1.0)
-		observatory_bonus = data.get("observatory_bonus", 1.0)
-		mining_outpost_bonus = data.get("mining_outpost_bonus", 1.0)
-	var bldg:int = building.name
-	if bldg in ["MM", "GH", "AMN", "SPR"]:
+func get_final_value(p_i:Dictionary, dict:Dictionary, path:int, n:int = 1):
+	var bldg:int = dict.bldg.name
+	var mult:float = get_prod_mult(dict)
+	if bldg in [Building.BORING_MACHINE, Building.GREENHOUSE, Building.ATOM_MANIPULATOR, Building.SUBATOMIC_PARTICLE_REACTOR]:
 		n = 1
 	if path == 1:
 		if bldg == Building.SOLAR_PANEL:
-			return clever_round(get_SP_production(p_i.temperature, building.path_1_value * mult * au_mult * substation_bonus) * n)
+			return clever_round(get_SP_production(p_i.temperature, dict.bldg.path_1_value * mult * get_au_mult(dict) * (dict.substation_bonus if dict.has("substation_bonus") else 1.0)) * n)
 		elif bldg == Building.ATMOSPHERE_EXTRACTOR:
-			return clever_round(get_AE_production(p_i.pressure, building.path_1_value) * n)
-		elif bldg == Building.MINERAL_SILO:
-			return building.path_1_value * get_IR_mult(bldg) * n
+			return clever_round(get_AE_production(p_i.pressure, dict.bldg.path_1_value) * n)
+		elif bldg in [Building.MINERAL_SILO]:
+			return dict.bldg.path_1_value * get_IR_mult(bldg) * n
 		elif bldg == Building.BATTERY:
-			return building.path_1_value * mult * get_IR_mult("B") * n * game.u_i.charge
-		elif bldg == Building.SUBATOMIC_PARTICLE_REACTOR:
-			return building.path_1_value * mult * n * game.u_i.charge
-#		elif bldg in ["PC", "NC"]:
-#			return building.path_1_value * mult * n / p_i.pressure
-#		elif bldg == "EC":
-#			return building.path_1_value * mult * n * au_mult
+			return dict.bldg.path_1_value * mult * get_IR_mult(Building.BATTERY) * n * game.u_i.charge
+		elif bldg in [Building.SUBATOMIC_PARTICLE_REACTOR]:
+			return dict.bldg.path_1_value * mult * n * game.u_i.charge
 		elif bldg == Building.MINERAL_EXTRACTOR:
-			return building.path_1_value * ash_mult * mult * n * mineral_replicator_bonus
+			return dict.bldg.path_1_value * (dict.ash.richness if dict.has("ash") else 1.0) * mult * n * (dict.mineral_replicator_bonus if dict.has("mineral_replicator_bonus") else 1.0)
 		elif bldg == Building.POWER_PLANT:
-			return building.path_1_value * mult * n * substation_bonus
+			return dict.bldg.path_1_value * mult * n * (dict.substation_bonus if dict.has("substation_bonus") else 1.0)
 		elif bldg == Building.RESEARCH_LAB:
-			return building.path_1_value * mult * n * observatory_bonus
+			return dict.bldg.path_1_value * mult * n * (dict.observatory_bonus if dict.has("observatory_bonus") else 1.0)
 		elif bldg == Building.BORING_MACHINE:
-			return building.path_1_value * mult * n * mining_outpost_bonus
+			return dict.bldg.path_1_value * mult * n * (dict.mining_outpost_bonus if dict.has("mining_outpost_bonus") else 1.0)
 		else:
-			return building.path_1_value * mult * n
+			return dict.bldg.path_1_value * mult * n
 	elif path == 2:
 		if bldg == Building.SUBATOMIC_PARTICLE_REACTOR:
-			return building.path_2_value * mult * n * game.u_i.charge
+			return dict.bldg.path_2_value * mult * n * game.u_i.charge
 		elif bldg == Building.STEAM_ENGINE:
-			return building.path_2_value * n
+			return dict.bldg.path_2_value * n
 		else:
-			return building.path_2_value * mult * n
+			return dict.bldg.path_2_value * mult * n
 	elif path == 3:
 		if bldg == Building.STEAM_ENGINE:
-			return building.path_3_value * get_IR_mult(Building.STEAM_ENGINE)
+			return dict.bldg.path_3_value * get_IR_mult(Building.STEAM_ENGINE)
 		else:
-			return building.path_3_value
+			return dict.bldg.path_3_value
 
-func get_bldg_tooltip(p_i:Dictionary, data, n:float = 1):
+func get_bldg_tooltip(p_i:Dictionary, dict:Dictionary, n:float = 1):
 	var tooltip:String = ""
-	var building:Dictionary
-	if data is int:
-		building = game.tile_data.buildings[data]
-	elif data is Dictionary:
-		building = data.bldg
-	var path_1_value = get_final_value(p_i, data, 1, n) if building.has("path_1_value") else 0.0
-	var path_2_value = get_final_value(p_i, data, 2, n) if building.has("path_2_value") else 0.0
-	var path_3_value = get_final_value(p_i, data, 3, n) if building.has("path_3_value") else 0.0
-	return get_bldg_tooltip2(building.name, path_1_value, path_2_value, path_3_value)
+	var bldg:String = dict.bldg.name
+	var path_1_value = get_final_value(p_i, dict, 1, n) if dict.bldg.has("path_1_value") else 0.0
+	var path_2_value = get_final_value(p_i, dict, 2, n) if dict.bldg.has("path_2_value") else 0.0
+	var path_3_value = get_final_value(p_i, dict, 3, n) if dict.bldg.has("path_3_value") else 0.0
+	return get_bldg_tooltip2(bldg, path_1_value, path_2_value, path_3_value)
 
-func get_bldg_tooltip2(bldg:int, path_1_value, path_2_value, path_3_value):
+func get_bldg_tooltip2(bldg:String, path_1_value, path_2_value, path_3_value):
 	match bldg:
 		Building.MINERAL_EXTRACTOR, Building.POWER_PLANT, Building.SOLAR_PANEL, Building.ATMOSPHERE_EXTRACTOR, Building.BORING_MACHINE:
 			return (Data.path_1[bldg].desc) % [format_num(path_1_value, true)]
 		Building.ATOM_MANIPULATOR, Building.SUBATOMIC_PARTICLE_REACTOR:
 			return (Data.path_1[bldg].desc + "\n" + Data.path_2[bldg].desc) % [format_num(path_1_value, true), format_num(path_2_value, true)]
-		Building.STONE_CRUSHER, Building.GLASS_FACTORY, Building.STEAM_ENGINE:
+		Building.STONE_CRUSHER, Building.GREENHOUSE, Building.STEAM_ENGINE:
 			return "%s\n%s\n%s" % [Data.path_1[bldg].desc % format_num(path_1_value, true), Data.path_2[bldg].desc % format_num(path_2_value, true), Data.path_3[bldg].desc % clever_round(path_3_value)]
 		Building.RESEARCH_LAB:
 			return (Data.path_1[bldg].desc) % [format_num(path_1_value, true)]
@@ -1444,8 +1388,8 @@ func remove_GH_produce_from_autocollect(produce:Dictionary, au_int:float):
 		elif game.mat_info.has(p):
 			game.autocollect.mats[p] -= produce[p]
 		elif game.met_info.has(p):
-			var met_prod = produce[p] * (1.0 + au_int)
-			game.autocollect.mets[p] -= met_prod
+			var met_prod = produce[p] * get_au_mult_from_int(au_int)
+			game.autocollect.mets[p] -=  met_prod
 
 func add_GH_produce_to_autocollect(produce:Dictionary, au_int:float):
 	for p in produce:
@@ -1454,7 +1398,7 @@ func add_GH_produce_to_autocollect(produce:Dictionary, au_int:float):
 		elif game.mat_info.has(p):
 			game.autocollect.mats[p] = produce[p] + game.autocollect.mats.get(p, 0.0)
 		elif game.met_info.has(p):
-			var met_prod = produce[p] * (1.0 + au_int)
+			var met_prod = produce[p] * get_au_mult_from_int(au_int)
 			game.autocollect.mets[p] = met_prod + game.autocollect.mets.get(p, 0.0)
 
 func set_resolution(index:int):
@@ -1500,7 +1444,7 @@ func set_resolution(index:int):
 func get_roman_num(num:int):
 	if num > 3999:
 		return str(num)
-	var strs = [["","I","II","III","IV","V","VI","VII","VIII","IX"],["","X","XX","XXX","XL","L","LX","LXX","LXXX","XC"],["","C","CC","CCC","CD","D","DC","DCC","DCCC","CM"],["","M","MM","MMM"]];
+	var strs = [["","I","II","III","IV","V","VI","VII","VIII","IX"],["","X","XX","XXX","XL","L","LX","LXX","LXXX","XC"],["","C","CC","CCC","CD","D","DC","DCC","DCCC","CM"],["","M",Building.BORING_MACHINE,"MMM"]];
 	var num_str:String = str(num)
 
 	var res = ""
@@ -1555,7 +1499,6 @@ func set_unique_bldg_bonuses(p_i:Dictionary, unique_bldg:Dictionary, tile_id:int
 	var y_pos = tile_id / wid
 	var tier = unique_bldg.tier
 	var n = Helper.get_unique_bldg_area(tier)
-	var tile_data = game.tile_data
 	if unique_bldg.name in [UniqueBuilding.MINERAL_REPLICATOR, UniqueBuilding.OBSERVATORY, UniqueBuilding.SUBSTATION, UniqueBuilding.MINING_OUTPOST]:
 		for i in n:
 			var x:int = x_pos + i - n / 2
@@ -1566,73 +1509,61 @@ func set_unique_bldg_bonuses(p_i:Dictionary, unique_bldg:Dictionary, tile_id:int
 				if y < 0 or y >= wid or x == x_pos and y == y_pos:
 					continue
 				var id:int = x + y * wid
+				var tile = game.tile_data[id]
 				var mult = Helper.get_substation_prod_mult(tier) if unique_bldg.name == UniqueBuilding.SUBSTATION else Helper.get_MR_Obs_Outpost_prod_mult(tier)
-				var bonus_str = str(unique_bldg.name + "_bonus")
-				if Helper.tile_defined(tile_data.attributes, id):
-					if tile_data.attributes[id].has(bonus_str) and mult < tile_data.attributes[id][bonus_str]:
+				if tile:
+					if tile.has(str(unique_bldg.name + "_bonus")) and mult < tile[str(unique_bldg.name + "_bonus")]:
 						return
-					tile_data.attributes[id][bonus_str] = mult
+					tile[str(unique_bldg.name + "_bonus")] = mult
+					if tile.has("bldg") and not tile.bldg.has("is_constructing") and unique_bldg.name != UniqueBuilding.MINING_OUTPOST:
+						var overclock_mult:float = tile.bldg.get("overclock_mult", 1.0)
+						var base = tile.bldg.path_1_value * overclock_mult * mult
+						var diff = tile.bldg.path_1_value * overclock_mult * (mult - 1.0)
+						if unique_bldg.name == UniqueBuilding.MINERAL_REPLICATOR and tile.bldg.name == Building.MINERAL_EXTRACTOR:
+							game.autocollect.rsrc.minerals += diff * (tile.ash.richness if tile.has("ash") else 1.0)
+						elif unique_bldg.name == UniqueBuilding.OBSERVATORY and tile.bldg.name == Building.RESEARCH_LAB:
+							game.autocollect.rsrc.SP += diff
+						elif unique_bldg.name == UniqueBuilding.SUBSTATION:
+							var cap_bonus_mult = Helper.get_substation_capacity_bonus(tier)# 1200 seconds for tier 1, more for tier 2 etc.
+							if tile.bldg.name == Building.POWER_PLANT:
+								game.autocollect.rsrc.energy += diff
+								unique_bldg.capacity_bonus = unique_bldg.get("capacity_bonus", 0) + base * cap_bonus_mult
+								game.capacity_bonus_from_substation += unique_bldg.capacity_bonus
+							elif tile.bldg.name == Building.SOLAR_PANEL:
+								var energy_prod = Helper.get_SP_production(p_i.temperature, diff * Helper.get_au_mult(tile))
+								var energy_prod_base = Helper.get_SP_production(p_i.temperature, base * Helper.get_au_mult(tile))
+								game.autocollect.rsrc.energy += energy_prod
+								unique_bldg.capacity_bonus = unique_bldg.get("capacity_bonus", 0) + energy_prod_base * cap_bonus_mult
+								game.capacity_bonus_from_substation += unique_bldg.capacity_bonus
 				else:
-					tile_data.attributes[id] = {bonus_str:mult}
-				if Helper.tile_defined(tile_data.buildings, id) and not tile_data.buildings[id].has("is_constructing") and unique_bldg.name != "mining_outpost":
-					var overclock_mult:float = tile_data.buildings[id].get("overclock_mult", 1.0)
-					var bldg_name = tile_data.buildings[id].name
-					var prod = tile_data.buildings[id].path_1_value
-					var base = prod * overclock_mult * mult
-					var diff = prod * overclock_mult * (mult - 1.0)
-					if unique_bldg.name == "mineral_replicator" and bldg_name == "ME":
-						if Helper.tile_defined(tile_data.ashes, id):
-							game.autocollect.rsrc.minerals += diff * abs(tile_data.ashes[id])
-						else:
-							game.autocollect.rsrc.minerals += diff
-					elif unique_bldg.name == "observatory" and bldg_name == "RL":
-						game.autocollect.rsrc.SP += diff
-					elif unique_bldg.name == "substation":
-						var cap_bonus_mult = Helper.get_substation_capacity_bonus(tier)# 1200 seconds for tier 1, more for tier 2 etc.
-						if bldg_name == "PP":
-							game.autocollect.rsrc.energy += diff
-							unique_bldg.capacity_bonus = unique_bldg.get("capacity_bonus", 0) + base * cap_bonus_mult
-							game.capacity_bonus_from_substation += unique_bldg.capacity_bonus
-						elif bldg_name == "SP":
-							var au_mult = 1.0
-							if Helper.tile_defined(tile_data.auroras, id):
-								au_mult = tile_data.auroras[id]
-							var energy_prod = Helper.get_SP_production(p_i.temperature, diff * au_mult)
-							var energy_prod_base = Helper.get_SP_production(p_i.temperature, base * au_mult)
-							game.autocollect.rsrc.energy += energy_prod
-							unique_bldg.capacity_bonus = unique_bldg.get("capacity_bonus", 0) + energy_prod_base * cap_bonus_mult
-							game.capacity_bonus_from_substation += unique_bldg.capacity_bonus
-				if unique_bldg.name == "substation":
-					tile_data.attributes[id].substation_tile = tile_id
+					game.tile_data[id] = {str(unique_bldg.name + "_bonus"): mult}
+				if unique_bldg.name == UniqueBuilding.SUBSTATION:
+					game.tile_data[id].substation_tile = tile_id
 					unique_bldg.capacity_bonus = unique_bldg.get("capacity_bonus", 0)
 	elif unique_bldg.name in [UniqueBuilding.NUCLEAR_FUSION_REACTOR, UniqueBuilding.CELLULOSE_SYNTHESIZER]:
-		for i in len(game.tile_data.buildings):
-			if Helper.tile_defined(tile_data.buildings, i) and tile_data.buildings[i].name == "AE" and not tile_data.buildings[i].has("is_constructing"):
-				var overclock_mult = tile_data.buildings[i].get("overclock_mult", 1.0)
+		for tile in game.tile_data:
+			if tile and tile.has("bldg") and tile.bldg.name == Building.ATMOSPHERE_EXTRACTOR and not tile.bldg.has("is_constructing"):
+				var overclock_mult = tile.bldg.get("overclock_mult", 1.0)
 				var mult = 1.0
 				var base = 1.0
-				var prod = tile_data.buildings[i].path_1_value
 				if unique_bldg.name == UniqueBuilding.NUCLEAR_FUSION_REACTOR:
-					mult = Helper.get_NFR_prod_mult(tier)
-					base = prod * overclock_mult * mult
+					mult = Helper.get_NFR_prod_mult(unique_bldg.tier)
+					base = tile.bldg.path_1_value * overclock_mult * mult
 					Helper.add_energy_from_NFR(p_i, base)
 				elif unique_bldg.name == UniqueBuilding.CELLULOSE_SYNTHESIZER:
-					mult = Helper.get_CS_prod_mult(tier)
-					base = prod * overclock_mult * mult
+					mult = Helper.get_CS_prod_mult(unique_bldg.tier)
+					base = tile.bldg.path_1_value * overclock_mult * mult
 					Helper.add_energy_from_CS(p_i, base)
-	elif unique_bldg.name == UniqueBuilding.SPACEPORT:
-		if game.c_s_g == game.ships_travel_data.c_g_coords.s and game.c_p == game.ships_travel_data.c_coords.p:
-			game.autocollect.ship_XP = tier
-			game.HUD.set_ship_btn_shader(true, tier)
+	elif unique_bldg.name == "spaceport":
+		if game.c_s_g == game.ships_c_g_coords.s and game.c_p == game.ships_c_coords.p:
+			game.autocollect.ship_XP = unique_bldg.tier
+			game.HUD.set_ship_btn_shader(true, unique_bldg.tier)
 
 # get_sphere_volume
 func get_sph_V(outer:float, inner:float = 0):
 	outer /= 150.0#I have to reduce the size of planets otherwise it's too OP
 	inner /= 150.0
 	return 4/3.0 * PI * (pow(outer, 3) - pow(inner, 3))
-
-func tile_defined(data, id:int):
-	return data is Array and data[id] != null or data is Dictionary and data.has(id)
 
 var discord = true
 

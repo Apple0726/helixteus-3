@@ -5,11 +5,14 @@ var costs:Dictionary = {}
 var g_i:Dictionary
 var galaxy_id_g:int
 var tile_num:int
-var bldg:String = ""
+var bldg:int = -1
 var surface:float
 var num:float
 var prod_cost_mult:float
 var rsrc_from_GK = {}
+
+const TRIANGULUM_PROBE = 9001
+const GALAXY_KILLER = 9002
 
 func _ready():
 	set_polygon(size)
@@ -19,19 +22,19 @@ func refresh():
 	prod_cost_mult = g_i.system_num * game.u_i.gravitational * pow(g_i.dark_matter, 3) / 200.0
 	$Control/ProdCostMult.text = "%s: %s  %s" % [tr("PRODUCTION_COST_MULT"), Helper.clever_round(prod_cost_mult), "[img]Graphics/Icons/help.png[/img]"]
 	surface = 4.2e15 * prod_cost_mult * 200.0
-	if bldg != "":
+	if bldg != -1:
 		update_info()
 
 func update_info():
 	var error:bool = false
 	costs = Data.costs[bldg].duplicate(true)
-	$Control/ProdCostMult.visible = bldg != "TP"
-	$Control/VBox/ProductionPerSec.visible = bldg != "TP"
-	$Control/VBox/Production.visible = not bldg in ["TP", "GK"]
-	$Control/VBox/StoneMM.visible = bldg == "GK"
-	$Control/VBox/GalaxyInfo.visible = bldg in ["TP", "GK"]
+	$Control/ProdCostMult.visible = bldg != TRIANGULUM_PROBE
+	$Control/VBox/ProductionPerSec.visible = bldg != TRIANGULUM_PROBE
+	$Control/VBox/Production.visible = not bldg in [TRIANGULUM_PROBE, GALAXY_KILLER]
+	$Control/VBox/StoneMM.visible = bldg == GALAXY_KILLER
+	$Control/VBox/GalaxyInfo.visible = bldg in [TRIANGULUM_PROBE, GALAXY_KILLER]
 	var prod_mult = 1.0
-	if bldg in ["PP", "RL"]:
+	if bldg in [Building.POWER_PLANT, Building.RESEARCH_LAB]:
 		var s_b:float = pow(game.u_i.boltzmann, 4) / pow(game.u_i.planck, 3) / pow(game.u_i.speed_of_light, 2)
 		prod_mult = sqrt(s_b) * g_i.B_strength * 1e9
 		$Control/ProdMult.text = "%s: %s  %s" % [tr("PRODUCTION_MULTIPLIER"), Helper.clever_round(prod_mult), "[img]Graphics/Icons/help.png[/img]"]
@@ -45,21 +48,21 @@ func update_info():
 		error = true
 	if not error:
 		$Control/VBox/GalaxyInfo["theme_override_colors/font_color"] = Color.WHITE
-		if bldg == "TP":
+		if bldg == TRIANGULUM_PROBE:
 			if g_i.system_num <= 4999:
 				$Control/VBox/GalaxyInfo.text = tr("TP_ERROR")
 				error = true
 			else:
 				$Control/VBox/GalaxyInfo.text = tr("TP_CONFIRM")
-		elif bldg != "GK":
+		elif bldg != GALAXY_KILLER:
 			$Control/VBox/Production.visible = true
 			$Control/VBox/GalaxyInfo.visible = false
 			costs.stone = PI * 100
-			if bldg == "ME":
+			if bldg == Building.MINERAL_EXTRACTOR:
 				costs.mythril = 1 / 240000.0
-			elif bldg in ["MS", "B", "PP"]:
+			elif bldg in [Building.MINERAL_SILO, Building.BATTERY, Building.POWER_PLANT]:
 				costs.mythril = 1 / 300000.0
-			elif bldg == "RL":
+			elif bldg == Building.RESEARCH_LAB:
 				costs.mythril = 1 / 120000.0
 			if costs.has("energy"):
 				costs.energy *= 200.0
@@ -70,27 +73,27 @@ func update_info():
 			$Control/VBox/GalaxyInfo.text = tr("GALAXY_KILLER_DESC")
 			for cost in costs.keys():
 				costs[cost] *= game.engineering_bonus.BCM * prod_cost_mult
-	if bldg == "ME":
+	if bldg == Building.MINERAL_EXTRACTOR:
 		$Control/VBox/ProductionPerSec.text = tr("PRODUCTION_PER_SECOND")
 		num = surface * 0.01
-		Helper.put_rsrc($Control/VBox/Production, 32, {"minerals":num * game.u_i.time_speed * Helper.get_IR_mult("ME")})
-	elif bldg == "PP":
+		Helper.put_rsrc($Control/VBox/Production, 32, {"minerals":num * game.u_i.time_speed * Helper.get_IR_mult(Building.MINERAL_EXTRACTOR)})
+	elif bldg == Building.POWER_PLANT:
 		$Control/VBox/ProductionPerSec.text = tr("PRODUCTION_PER_SECOND")
 		num = surface * 20.0 * prod_mult
-		Helper.put_rsrc($Control/VBox/Production, 32, {"energy":num * game.u_i.time_speed * Helper.get_IR_mult("PP")})
-	elif bldg == "RL":
+		Helper.put_rsrc($Control/VBox/Production, 32, {"energy":num * game.u_i.time_speed * Helper.get_IR_mult(Building.POWER_PLANT)})
+	elif bldg == Building.RESEARCH_LAB:
 		$Control/VBox/ProductionPerSec.text = tr("PRODUCTION_PER_SECOND")
 		num = surface * 0.5 * prod_mult
-		Helper.put_rsrc($Control/VBox/Production, 32, {"SP":num * game.u_i.time_speed * Helper.get_IR_mult("RL")})
-	elif bldg == "MS":
+		Helper.put_rsrc($Control/VBox/Production, 32, {"SP":num * game.u_i.time_speed * Helper.get_IR_mult(Building.RESEARCH_LAB)})
+	elif bldg == Building.MINERAL_SILO:
 		$Control/VBox/ProductionPerSec.text = tr("STORAGE")
 		num = surface
-		Helper.put_rsrc($Control/VBox/Production, 32, {"minerals":num * Helper.get_IR_mult("MS")})
-	elif bldg == "B":
+		Helper.put_rsrc($Control/VBox/Production, 32, {"minerals":num * Helper.get_IR_mult(Building.MINERAL_SILO)})
+	elif bldg == Building.BATTERY:
 		$Control/VBox/ProductionPerSec.text = tr("STORAGE")
 		num = surface * 60000.0 * game.u_i.charge
-		Helper.put_rsrc($Control/VBox/Production, 32, {"energy":num * Helper.get_IR_mult("B")})
-	elif bldg == "GK":
+		Helper.put_rsrc($Control/VBox/Production, 32, {"energy":num * Helper.get_IR_mult(Building.BATTERY)})
+	elif bldg == GALAXY_KILLER:
 		var stone_from_GK = {}
 		$Control/VBox/ProductionPerSec.text = tr("EXPECTED_RESOURCES")
 		var num_planets = g_i.system_num * game.u_i.gravitational * pow(g_i.dark_matter, 3) * 8
@@ -148,15 +151,15 @@ func _on_Convert_pressed():
 		g_i.GS = bldg
 		g_i.prod_num = num
 		g_i.surface = surface
-		if bldg == "ME":
+		if bldg == Building.MINERAL_EXTRACTOR:
 			game.autocollect.GS.minerals += num
-		elif bldg == "PP":
+		elif bldg == Building.POWER_PLANT:
 			game.autocollect.GS.energy += num
-		elif bldg == "MS":
+		elif bldg == Building.MINERAL_SILO:
 			game.mineral_capacity += num
-		elif bldg == "B":
+		elif bldg == Building.BATTERY:
 			game.energy_capacity += num
-		elif bldg == "RL":
+		elif bldg == Building.RESEARCH_LAB:
 			game.autocollect.GS.SP += num
 		game.toggle_panel(self)
 		game.popup(tr("CONVERT_SUCCESS"), 2.0)
@@ -168,13 +171,13 @@ func _on_Convert_pressed():
 			g_i.erase("bookmarked")
 		game.view_history.pop_back()
 		game.view_history_pos -= 1
-		if bldg == "TP":
+		if bldg == TRIANGULUM_PROBE:
 			if not game.achievement_data.random.has("build_tri_probe_in_slow_univ") and game.u_i.time_speed <= 0.2:
 				game.earn_achievement("random", "build_tri_probe_in_slow_univ")
 			game.show.dimensions = true
 			game.probe_data.append({"tier":2})
 			game.switch_view("cluster", {"fn":"delete_galaxy", "fn_args":[g_i.l_id]})
-		elif bldg == "GK":
+		elif bldg == GALAXY_KILLER:
 			game.add_resources(rsrc_from_GK)
 			game.switch_view("cluster", {"fn":"delete_galaxy", "fn_args":[g_i.l_id]})
 		else:

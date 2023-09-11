@@ -22,43 +22,43 @@ func _ready():
 		galaxy_tween = create_tween()
 		galaxy_tween.set_parallel(true)
 	for s_i in game.system_data:
-		var star:Array = s_i[9][0]
-		for j in range(1, len(s_i[9])):
-			if s_i[9][j][6] > star[6]:
-				star = s_i[9][j]
-		if game.galaxy_data[game.c_g][11] and not s_i[11]:
-			s_i[11] = true
-			game.stats_univ.planets_conquered += s_i[6]
-			game.stats_dim.planets_conquered += s_i[6]
-			game.stats_global.planets_conquered += s_i[6]
+		var star:Dictionary = s_i.stars[0]
+		for i in range(1, len(s_i.stars)):
+			if s_i.stars[i].luminosity > star.luminosity:
+				star = s_i.stars[i]
+		if game.galaxy_data[game.c_g].has("conquered") and not s_i.has("conquered"):
+			s_i.conquered = true
+			game.stats_univ.planets_conquered += s_i.planet_num
+			game.stats_dim.planets_conquered += s_i.planet_num
+			game.stats_global.planets_conquered += s_i.planet_num
 		var star_btn = TextureButton.new()
 		var system = Sprite2D.new()
-		star_btn.texture_normal = star_texture[int(star[4]) % 3]
+		star_btn.texture_normal = star_texture[int(star.temperature) % 3]
 		star_btn.texture_click_mask = preload("res://Graphics/Misc/StarCM.png")
 		if game.enable_shaders:
 			star_btn.material = ShaderMaterial.new()
 			star_btn.material.shader = preload("res://Shaders/Star.gdshader")
 			star_btn.material.set_shader_parameter("time_offset", 10.0 * randf())
-			star_btn.material.set_shader_parameter("color", get_star_modulate(star[1]))
+			star_btn.material.set_shader_parameter("color", get_star_modulate(star["class"]))
 			star_btn.material.set_shader_parameter("alpha", 0.0)
 			galaxy_tween.tween_property(star_btn.material, "shader_parameter/alpha", 1.0, 0.3)
 		else:
-			star_btn.modulate = get_star_modulate(star[1])
+			star_btn.modulate = get_star_modulate(star["class"])
 		add_child(system)
 		system.add_child(star_btn)
 		obj_btns.append(star_btn)
-		star_btn.connect("mouse_entered",Callable(self,"on_system_over").bind(s_i[1]))
+		star_btn.connect("mouse_entered",Callable(self,"on_system_over").bind(s_i.l_id))
 		star_btn.connect("mouse_exited",Callable(self,"on_system_out"))
-		star_btn.connect("pressed",Callable(self,"on_system_click").bind(s_i[0], s_i[1]))
-		star_btn.rotation = sin(star[4]) * 180
+		star_btn.connect("pressed",Callable(self,"on_system_click").bind(s_i.id, s_i.l_id))
+		star_btn.rotation = sin(star.temperature) * 180
 		star_btn.position = Vector2(-1024 / 2, -1024 / 2)
 		star_btn.pivot_offset = Vector2(1024 / 2, 1024 / 2)
-		var radius = pow(star[2] / game.SYSTEM_SCALE_DIV, 0.35)
+		var radius = pow(star["size"] / game.SYSTEM_SCALE_DIV, 0.35)
 		star_btn.scale *= radius
-		system.position = s_i[3]
-		dimensions = max(dimensions, s_i[3].length())
+		system.position = s_i["pos"]
+		dimensions = max(dimensions, s_i.pos.length())
 		Helper.add_overlay(system, self, "system", s_i, overlays)
-		if s_i[10]:
+		if s_i.has("discovered"):
 			discovered_sys.append(s_i)
 	if game.overlay_data.galaxy.visible:
 		Helper.toggle_overlay(obj_btns, overlays, true)
@@ -67,18 +67,18 @@ func _ready():
 	queue_redraw()
 
 func _draw():
-	if game.galaxy_data[game.c_g][15].has("wormholes"):
-		for wh_data in game.galaxy_data[game.c_g][15].wormholes:
-			draw_line(game.system_data[wh_data.from][3], game.system_data[wh_data.to][3], Color(0.6, 0.4, 1.0, 1.0))
+	if game.galaxy_data[game.c_g].has("wormholes"):
+		for wh_data in game.galaxy_data[game.c_g].wormholes:
+			draw_line(game.system_data[wh_data.from].pos, game.system_data[wh_data.to].pos, Color(0.6, 0.4, 1.0, 1.0))
 
 func on_system_over (l_id:int):
 	var s_i = game.system_data[l_id]
 	var _name:String
-	if s_i[2] != null:
-		_name = s_i[2]
+	if s_i.has("name"):
+		_name = s_i.name
 	else:
 		_name = "%s %s" % [tr("SYSTEM"), l_id]
-		match len(game.system_data[l_id][9]):
+		match len(game.system_data[l_id].stars):
 			2:
 				_name = "%s %s" % [tr("BINARY_SYSTEM"), l_id]
 			3:
@@ -95,7 +95,7 @@ func on_system_over (l_id:int):
 		if grid.name != "MSGrid_%s" % l_id:
 			var tween = create_tween()
 			tween.tween_property(grid, "modulate", Color(1, 1, 1, 0), 0.1)
-	game.show_tooltip("%s\n%s: %s\n%s: %s" % [_name, tr("PLANETS"), s_i[6], tr("DIFFICULTY"), Helper.format_num(s_i[4])])
+	game.show_tooltip("%s\n%s: %s\n%s: %s" % [_name, tr("PLANETS"), s_i.planet_num, tr("DIFFICULTY"), Helper.format_num(s_i.diff)])
 
 func on_system_out ():
 	for grid in get_tree().get_nodes_in_group("Grids"):
@@ -117,33 +117,33 @@ func change_overlay(overlay_id:int, gradient:Gradient):
 	match overlay_id:
 		0:
 			for overlay in overlays:
-				var offset = inverse_lerp(c_vl.left, c_vl.right, game.system_data[overlay.id][6])
+				var offset = inverse_lerp(c_vl.left, c_vl.right, game.system_data[overlay.id].planet_num)
 				Helper.set_overlay_visibility(gradient, overlay, offset)
 		1:
 			for overlay in overlays:
-				var offset = inverse_lerp(c_vl.left, c_vl.right, len(game.system_data[overlay.id][9]))
+				var offset = inverse_lerp(c_vl.left, c_vl.right, len(game.system_data[overlay.id].stars))
 				Helper.set_overlay_visibility(gradient, overlay, offset)
 		2:
 			for overlay in overlays:
-				if game.system_data[overlay.id][10]:
+				if game.system_data[overlay.id].has("discovered"):
 					overlay.circle.modulate = gradient.sample(0)
 				else:
 					overlay.circle.modulate = gradient.sample(1)
 		3:
 			for overlay in overlays:
-				if game.system_data[overlay.id][13].has("explored"):
+				if game.system_data[overlay.id].has("explored"):
 					overlay.circle.modulate = gradient.sample(0)
 				else:
 					overlay.circle.modulate = gradient.sample(1)
 		4:
 			for overlay in overlays:
-				if game.system_data[overlay.id][11]:
+				if game.system_data[overlay.id].has("conquered"):
 					overlay.circle.modulate = gradient.sample(0)
 				else:
 					overlay.circle.modulate = gradient.sample(1)
 		5:
 			for overlay in overlays:
-				var offset = inverse_lerp(c_vl.left, c_vl.right, game.system_data[overlay.id][4])
+				var offset = inverse_lerp(c_vl.left, c_vl.right, game.system_data[overlay.id].diff)
 				Helper.set_overlay_visibility(gradient, overlay, offset)
 		6:
 			for overlay in overlays:
@@ -162,7 +162,7 @@ func change_overlay(overlay_id:int, gradient:Gradient):
 				Helper.set_overlay_visibility(gradient, overlay, offset)
 		9:
 			for overlay in overlays:
-				if game.system_data[overlay.id][13].has("has_MS"):
+				if game.system_data[overlay.id].has("has_MS"):
 					overlay.circle.modulate = gradient.sample(0)
 				else:
 					overlay.circle.modulate = gradient.sample(1)
@@ -220,7 +220,7 @@ func get_star_modulate (star_class:String):
 
 func _on_BuildingOverlayTimer_timeout():
 	var s_i = discovered_sys[curr_bldg_overlay]
-	var planet_data:Array = game.open_obj("Systems", s_i[0])
+	var planet_data:Array = game.open_obj("Systems", s_i.id)
 	var bldgs:Dictionary = {}
 	var MSs:Dictionary = {}
 	for p_i in planet_data:
@@ -235,7 +235,7 @@ func _on_BuildingOverlayTimer_timeout():
 			if tile and tile.has("bldg"):
 				Helper.add_to_dict(bldgs, tile.bldg.name, 1)
 	#await get_tree().idle_frame
-	for _star in s_i[9]:
+	for _star in s_i.stars:
 		if _star.has("MS"):
 			Helper.add_to_dict(MSs, _star.MS, 1)
 	if not bldgs.is_empty():
@@ -251,9 +251,9 @@ func _on_BuildingOverlayTimer_timeout():
 			bldg_count.get_node("Label").text = "x %s" % Helper.format_num(bldgs[bldg])
 		add_child(grid_panel)
 		grid_panel.add_to_group("Grids")
-		grid_panel.name = "Grid_%s" % s_i[1]
-		grid_panel.position.x = s_i[3].x - grid.size.x / 2.0 * grid_panel.scale.x
-		grid_panel.position.y = s_i[3].y - (grid.size.y + 30) * grid_panel.scale.y
+		grid_panel.name = "Grid_%s" % s_i.l_id
+		grid_panel.position.x = s_i.pos.x - grid.size.x / 2.0 * grid_panel.scale.x
+		grid_panel.position.y = s_i.pos.y - (grid.size.y + 30) * grid_panel.scale.y
 	if not MSs.is_empty():
 		var MS_grid_panel = preload("res://Scenes/BuildingInfo.tscn").instantiate()
 		MS_grid_panel.get_node("Bottom").visible = false
@@ -266,9 +266,9 @@ func _on_BuildingOverlayTimer_timeout():
 			MS_count.get_node("Label").text = "x %s" % Helper.format_num(MSs[MS])
 		add_child(MS_grid_panel)
 		MS_grid_panel.add_to_group("MSGrids")
-		MS_grid_panel.name = "MSGrid_%s" % s_i[1]
-		MS_grid_panel.position.x = s_i[3].x - MS_grid.size.x / 2.0 * MS_grid_panel.scale.x
-		MS_grid_panel.position.y = s_i[3].y + MS_grid.size.y * MS_grid_panel.scale.y
+		MS_grid_panel.name = "MSGrid_%s" % s_i.l_id
+		MS_grid_panel.position.x = s_i.pos.x - MS_grid.size.x / 2.0 * MS_grid_panel.scale.x
+		MS_grid_panel.position.y = s_i.pos.y + MS_grid.size.y * MS_grid_panel.scale.y
 		
 	curr_bldg_overlay += 1
 	if curr_bldg_overlay >= len(discovered_sys):

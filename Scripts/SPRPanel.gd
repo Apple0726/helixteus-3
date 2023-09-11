@@ -67,13 +67,13 @@ func refresh():
 		obj = game.tile_data[game.c_t]
 		au_int = obj.aurora.au_int if obj.has("aurora") else 0.0
 		au_mult = Helper.get_au_mult(obj)
-	path_2_value = obj.bldg.path_2_value * Helper.get_IR_mult("SPR")
+	path_2_value = obj.bldg.path_2_value * Helper.get_IR_mult(Building.SUBATOMIC_PARTICLE_REACTOR)
 	$Control/EnergyCostText.text = Helper.format_num(round(energy_cost * $Control/HSlider.value / au_mult / game.u_i.charge / path_2_value)) + "  [img]Graphics/Icons/help.png[/img]"
 	if au_mult > 1:
 		$Control/EnergyCostText.help_text = ("[aurora au_int=%s]" % au_int) + tr("MORE_ENERGY_EFFICIENT") % Helper.clever_round(au_mult)
 	else:
 		$Control/EnergyCostText.help_text = tr("AMN_TIP")
-	$Control/TimeCostText.text = Helper.time_to_str(difficulty * $Control/HSlider.value / obj.bldg.path_1_value / Helper.get_IR_mult("SPR") / tile_num / game.u_i.time_speed / game.u_i.charge)
+	$Control/TimeCostText.text = Helper.time_to_str(difficulty * $Control/HSlider.value / obj.bldg.path_1_value / Helper.get_IR_mult(Building.SUBATOMIC_PARTICLE_REACTOR) / tile_num / game.u_i.time_speed / game.u_i.charge)
 	$Control3.visible = obj.bldg.has("qty") and reaction == obj.bldg.reaction
 	$Control.visible = not $Control3.visible and reaction != ""
 	$Transform3D.visible = $Control3.visible or $Control.visible
@@ -236,7 +236,7 @@ func _process(delta):
 		hbox.rsrc.get_node("Text").text = "%s mol" % [Helper.format_num(atom_dict[hbox.name], true)]
 	for hbox in rsrc_nodes_to:
 		hbox.rsrc.get_node("Text").text = "%s mol" % [Helper.format_num(MM_dict[hbox.name], true)]
-	$Control3/TimeRemainingText.text = Helper.time_to_str(max(0, difficulty * (obj.bldg.qty - MM_value) / obj.bldg.path_1_value / Helper.get_IR_mult("SPR") / tile_num / game.u_i.time_speed / game.u_i.charge))
+	$Control3/TimeRemainingText.text = Helper.time_to_str(max(0, difficulty * (obj.bldg.qty - MM_value) / obj.bldg.path_1_value / Helper.get_IR_mult(Building.SUBATOMIC_PARTICLE_REACTOR) / tile_num / game.u_i.time_speed / game.u_i.charge))
 
 func refresh_time_icon():
 	for r in $ScrollContainer/VBoxContainer.get_children():
@@ -251,7 +251,7 @@ func _on_EnergyCostText_mouse_entered():
 		game.show_adv_tooltip(("[aurora au_int=%s]" % au_int) + tr("MORE_ENERGY_EFFICIENT") % Helper.clever_round(au_mult))
 
 func get_reaction_info(obj):
-	var MM_value:float = clamp((Time.get_unix_time_from_system() - obj.bldg.start_date) / difficulty * obj.bldg.path_1_value * tile_num * Helper.get_IR_mult("SPR") * game.u_i.time_speed * game.u_i.charge, 0, obj.bldg.qty)
+	var MM_value:float = clamp((Time.get_unix_time_from_system() - obj.bldg.start_date) / difficulty * obj.bldg.path_1_value * tile_num * Helper.get_IR_mult(Building.SUBATOMIC_PARTICLE_REACTOR) * game.u_i.time_speed * game.u_i.charge, 0, obj.bldg.qty)
 	return {"MM_value":MM_value, "progress":MM_value / obj.bldg.qty}
 
 func _on_EnergyCostText_mouse_exited():

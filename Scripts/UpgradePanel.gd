@@ -4,7 +4,7 @@ var BASE_PW:float = 1.3
 var ids:Array = []
 var planet:Dictionary#Only for terraformed planets
 var p_i:Dictionary#Information on the planet you're on
-var bldg:String = ""#You can mass-upgrade only one type of building
+var bldg:int = -1#You can mass-upgrade only one type of building
 var costs:Dictionary
 var path_selected:int = 1
 var path_str:String
@@ -221,26 +221,26 @@ func set_bldg_value(first_tile_bldg_info:Dictionary, first_tile:Dictionary, lv:i
 	var rsrc_icon = Data.desc_icons[bldg][path_selected - 1] if Data.desc_icons.has(bldg) and Data.desc_icons[bldg] else []
 	var curr_value:float
 	var IR_mult:float = Helper.get_IR_mult(bldg)
-	if bldg == "SP" and path_selected == 1:
+	if bldg == Building.SOLAR_PANEL and path_selected == 1:
 		curr_value = bldg_value(Helper.get_SP_production(p_i.temperature, first_tile_bldg_info.value), lv, first_tile_bldg_info.pw)
-	elif bldg == "AE" and path_selected == 1:
+	elif bldg == Building.ATMOSPHERE_EXTRACTOR and path_selected == 1:
 		curr_value = bldg_value(Helper.get_AE_production(p_i.pressure if planet.is_empty() else planet.pressure, first_tile_bldg_info.value), lv, first_tile_bldg_info.pw)
-	elif bldg == "ME" and path_selected == 1:
+	elif bldg == Building.MINERAL_EXTRACTOR and path_selected == 1:
 		curr_value = bldg_value(first_tile_bldg_info.value * planet.get("mineral_replicator_bonus", 1.0), lv, first_tile_bldg_info.pw)
-	elif bldg == "PP" and path_selected == 1:
+	elif bldg == Building.POWER_PLANT and path_selected == 1:
 		curr_value = bldg_value(first_tile_bldg_info.value * planet.get("substation_bonus", 1.0), lv, first_tile_bldg_info.pw)
-	elif bldg == "RL" and path_selected == 1:
+	elif bldg == Building.RESEARCH_LAB and path_selected == 1:
 		curr_value = bldg_value(first_tile_bldg_info.value * planet.get("observatory_bonus", 1.0), lv, first_tile_bldg_info.pw)
-	elif bldg in ["MS", "B", "NSF", "ESF"]:
+	elif bldg in [Building.MINERAL_SILO, Building.BATTERY]:
 		curr_value = bldg_value(first_tile_bldg_info.value, lv, first_tile_bldg_info.pw)
 	else:
 		if first_tile_bldg_info.has("pw"):
 			curr_value = bldg_value(first_tile_bldg_info.value, lv, first_tile_bldg_info.pw)
 		elif first_tile_bldg_info.has("step"):
 			curr_value = first_tile_bldg_info.value + (lv - 1) * first_tile_bldg_info.step
-	if bldg == "SE" and path_selected != 3:
+	if bldg == Building.STEAM_ENGINE and path_selected != 3:
 		IR_mult = 1.0
-	if bldg == "B":
+	if bldg == Building.BATTERY:
 		curr_value *= game.u_i.charge
 	curr_value *= IR_mult
 	if first_tile_bldg_info.has("time_based"):
@@ -255,7 +255,7 @@ func set_bldg_value(first_tile_bldg_info:Dictionary, first_tile:Dictionary, lv:i
 		
 	if not planet.is_empty():
 		curr_value *= n
-	if bldg == "CBD" and path_selected == 3:
+	if bldg == Building.CENTRAL_BUSINESS_DISTRICT and path_selected == 3:
 		game.add_text_icons(text_to_modify, "[center]" + first_tile_bldg_info.desc.format({"n":Helper.format_num(curr_value, true)}), rsrc_icon, 20)
 	else:
 		game.add_text_icons(text_to_modify, ("[center]" + first_tile_bldg_info.desc) % [Helper.format_num(curr_value, true)], rsrc_icon, 20)
@@ -270,7 +270,7 @@ func _on_Path1_pressed():
 	update(true)
 
 func _on_Path2_pressed():
-	if bldg != "" and Data.path_2[bldg].has("cap"):
+	if bldg != -1 and Data.path_2[bldg].has("cap"):
 		if len(ids) == 1:
 			if game.tile_data[ids[0]].bldg.path_2 >= Data.path_2[bldg].cap:
 				game.popup(tr("MAX_LV_REACHED"), 1.5)
@@ -292,7 +292,7 @@ func _on_Path2_pressed():
 	update(true)
 
 func _on_Path3_pressed():
-	if bldg != "" and Data.path_3[bldg].has("cap"):
+	if bldg != -1 and Data.path_3[bldg].has("cap"):
 		if len(ids) == 1:
 			if game.tile_data[ids[0]].bldg.path_3 >= Data.path_3[bldg].cap:
 				game.popup(tr("MAX_LV_REACHED"), 1.5)
@@ -352,28 +352,28 @@ func _on_Upgrade_pressed():
 				var overclock_mult:float = tile.bldg.overclock_mult if tile.bldg.has("overclock_mult") else 1.0
 				if auto_speedup:
 					cost_time = 0.2
-				if tile.bldg.name == "ME":
+				if tile.bldg.name == Building.MINERAL_EXTRACTOR:
 					game.autocollect.rsrc.minerals -= tile.bldg.path_1_value * overclock_mult * (tile.ash.richness if tile.has("ash") else 1.0) * (tile.mineral_replicator_bonus if tile.has("mineral_replicator_bonus") else 1.0)
-				elif tile.bldg.name == "PP":
+				elif tile.bldg.name == Building.POWER_PLANT:
 					game.autocollect.rsrc.energy -= tile.bldg.path_1_value * overclock_mult * (tile.substation_bonus if tile.has("substation_bonus") else 1.0)
 					if tile.has("substation_tile"):
 						tile.bldg.cap_upgrade = (new_base_value - tile.bldg.path_1_value) * tile.substation_bonus * Helper.get_substation_capacity_bonus(game.tile_data[tile.substation_tile].unique_bldg.tier)
-				elif tile.bldg.name == "RL":
+				elif tile.bldg.name == Building.RESEARCH_LAB:
 					game.autocollect.rsrc.SP -= tile.bldg.path_1_value * overclock_mult * (tile.observatory_bonus if tile.has("observatory_bonus") else 1.0)
-				elif tile.bldg.name == "SP":
+				elif tile.bldg.name == Building.SOLAR_PANEL:
 					var energy_prod = Helper.get_SP_production(p_i.temperature, tile.bldg.path_1_value * overclock_mult * Helper.get_au_mult(tile) * (tile.substation_bonus if tile.has("substation_bonus") else 1.0))
 					game.autocollect.rsrc.energy -= energy_prod
 					if tile.has("substation_tile"):
 						tile.bldg.cap_upgrade = Helper.get_SP_production(p_i.temperature, (new_base_value - tile.bldg.path_1_value) * Helper.get_au_mult(tile) * tile.substation_bonus) * Helper.get_substation_capacity_bonus(game.tile_data[tile.substation_tile].unique_bldg.tier)
-				elif tile.bldg.name == "AE":
+				elif tile.bldg.name == Building.ATMOSPHERE_EXTRACTOR:
 					var base_prod = -tile.bldg.path_1_value * overclock_mult * p_i.pressure
 					for el in p_i.atmosphere:
 						Helper.add_atom_production(el, base_prod * p_i.atmosphere[el])
 					Helper.add_energy_from_NFR(p_i, base_prod)
 					Helper.add_energy_from_CS(p_i, base_prod)
-				elif tile.bldg.name in ["MS", "NSF", "ESF"]:
+				elif tile.bldg.name in [Building.MINERAL_SILO, "NSF", "ESF"]:
 					tile.bldg.cap_upgrade = new_base_value - tile.bldg.path_1_value
-				elif tile.bldg.name == "B":
+				elif tile.bldg.name == Building.BATTERY:
 					tile.bldg.cap_upgrade = (new_base_value - tile.bldg.path_1_value) * game.u_i.charge
 				elif tile.bldg.name == "GH" and tile.has("auto_GH"):
 					Helper.remove_GH_produce_from_autocollect(tile.auto_GH.produce, tile.aurora.au_int if tile.has("aurora") else 0.0)
@@ -403,11 +403,11 @@ func _on_Upgrade_pressed():
 				game.objective.current += 1
 		else:
 			var diff:float = (new_base_value - planet.bldg.path_1_value) * planet.tile_num
-			if planet.bldg.name == "MS":
+			if planet.bldg.name == Building.MINERAL_SILO:
 				game.mineral_capacity += diff
-			elif planet.bldg.name == "B":
+			elif planet.bldg.name == Building.BATTERY:
 				game.energy_capacity += diff * game.u_i.charge
-			elif planet.bldg.name == "AE":
+			elif planet.bldg.name == Building.ATMOSPHERE_EXTRACTOR:
 				var base_prod:float = diff * planet.pressure
 				for el in planet.atmosphere:
 					Helper.add_atom_production(el, base_prod * planet.atmosphere[el])
@@ -417,11 +417,11 @@ func _on_Upgrade_pressed():
 				game.neutron_cap += diff
 			elif planet.bldg.name == "ESF":
 				game.electron_cap += diff
-			elif planet.bldg.name == "RL":
+			elif planet.bldg.name == Building.RESEARCH_LAB:
 				game.autocollect.rsrc.SP += diff * planet.get("observatory_bonus", 1.0)
-			elif planet.bldg.name == "ME":
+			elif planet.bldg.name == Building.MINERAL_EXTRACTOR:
 				game.autocollect.rsrc.minerals += diff * (planet.ash.richness if planet.has("ash") else 1.0) * planet.get("mineral_replicator_bonus", 1.0)
-			elif planet.bldg.name == "PP":
+			elif planet.bldg.name == Building.POWER_PLANT:
 				game.autocollect.rsrc.energy += diff * planet.get("substation_bonus", 1.0)
 				game.capacity_bonus_from_substation += diff * planet.get("unique_bldg_bonus_cap", 0.0)
 			elif planet.has("auto_GH"):

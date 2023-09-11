@@ -129,7 +129,7 @@ func update_XP():
 	lv_progress.value = game.u_i.xp / float(game.u_i.xp_to_lv)
 
 func update_minerals():
-	var min_cap = round(200 + (game.mineral_capacity - 200) * Helper.get_IR_mult("MS"))
+	var min_cap = round(200 + (game.mineral_capacity - 200) * Helper.get_IR_mult(Building.MINERAL_SILO))
 	minerals_text.text = "%s / %s" % [Helper.format_num(round(game.minerals)), Helper.format_num(min_cap)]
 	if game.minerals >= min_cap:
 		if not game.science_unlocked.has("ASM") and not $Bottom/Panel/AnimationPlayer.is_playing():
@@ -288,13 +288,13 @@ func refresh():
 		$Bookmarks/Bookmarked.visible = true
 		$Top/Name/Name.text = game.planet_data[game.c_p].name
 	elif game.c_v == "system":
-		$Bookmarks/Bookmarked.button_pressed = game.system_data[game.c_s][13].has("bookmarked")
+		$Bookmarks/Bookmarked.button_pressed = game.system_data[game.c_s].has("bookmarked")
 		$Bookmarks/Bookmarked.visible = true
-		$Top/Name/Name.text = game.system_data[game.c_s][2]
+		$Top/Name/Name.text = game.system_data[game.c_s].name
 	elif game.c_v == "galaxy":
-		$Bookmarks/Bookmarked.button_pressed = game.galaxy_data[game.c_g][15].has("bookmarked")
+		$Bookmarks/Bookmarked.button_pressed = game.galaxy_data[game.c_g].has("bookmarked")
 		$Bookmarks/Bookmarked.visible = true
-		$Top/Name/Name.text = game.galaxy_data[game.c_g][2]
+		$Top/Name/Name.text = game.galaxy_data[game.c_g].name
 	elif game.c_v == "cluster":
 		$Bookmarks/Bookmarked.button_pressed = game.u_i.cluster_data[game.c_c].has("bookmarked")
 		$Bookmarks/Bookmarked.visible = true
@@ -561,9 +561,9 @@ func _on_Bookmarked_pressed():
 			game.bookmarks.planet[str(game.c_p_g)] = bookmark
 	elif game.c_v == "system":
 		var s_i:Dictionary = game.system_data[game.c_s]
-		if s_i[13].has("bookmarked"):
+		if s_i.has("bookmarked"):
 			game.bookmarks.system.erase(str(game.c_s_g))
-			s_i[13].erase("bookmarked")
+			s_i.erase("bookmarked")
 		else:
 			var star:Dictionary = s_i.stars[0]
 			for i in range(1, len(s_i.stars)):
@@ -581,9 +581,9 @@ func _on_Bookmarked_pressed():
 			game.bookmarks.system[str(game.c_s_g)] = bookmark
 	elif game.c_v == "galaxy":
 		var g_i:Array = game.galaxy_data[game.c_g]
-		if g_i[15].has("bookmarked"):
+		if g_i.has("bookmarked"):
 			game.bookmarks.galaxy.erase(str(game.c_g_g))
-			g_i[15].erase("bookmarked")
+			g_i.erase("bookmarked")
 		else:
 			var bookmark:Dictionary = {
 				"type":g_i[9],

@@ -52,7 +52,7 @@ func refresh_overlay():
 func _on_OptionButton_item_selected(index):
 	refresh_options(index)
 
-func get_obj_min_max(obj:String, property):
+func get_obj_min_max(obj:String, property:String):
 	var overlays = game.view.obj.overlays
 	var _min = game["%s_data" % [obj]][overlays[0].id][property]
 	var _max = _min
@@ -65,7 +65,7 @@ func get_obj_min_max(obj:String, property):
 			_max = prop
 	return {"_min":_min, "_max":_max}
 
-func get_star_prop_min_max(prop:int):
+func get_star_prop_min_max(prop:String):
 	var overlays = game.view.obj.overlays
 	var _min = game.get_highest_star_prop(overlays[0].id, prop)
 	var _max = _min
@@ -99,7 +99,7 @@ func refresh_options(index:int, recalculate:bool = true):
 			match index:
 				0:
 					if recalculate and not c_vl.modified:
-						min_max = get_obj_min_max("system", 6)
+						min_max = get_obj_min_max("system", "planet_num")
 						c_vl.left = min_max._min
 						c_vl.right = min_max._max
 					editable = true
@@ -115,7 +115,7 @@ func refresh_options(index:int, recalculate:bool = true):
 					editable = false
 				5:
 					if recalculate and not c_vl.modified:
-						min_max = get_obj_min_max("system", 4)
+						min_max = get_obj_min_max("system", "diff")
 						c_vl.left = min_max._min
 						c_vl.right = min_max._max
 					editable = true
@@ -123,7 +123,7 @@ func refresh_options(index:int, recalculate:bool = true):
 					unit = ""
 				6:
 					if recalculate and not c_vl.modified:
-						min_max = get_star_prop_min_max(4)
+						min_max = get_star_prop_min_max("temperature")
 						c_vl.left = min_max._min
 						c_vl.right = min_max._max
 					editable = true
@@ -131,7 +131,7 @@ func refresh_options(index:int, recalculate:bool = true):
 					unit = " K"
 				7:
 					if recalculate and not c_vl.modified:
-						min_max = get_star_prop_min_max(2)
+						min_max = get_star_prop_min_max("size")
 						c_vl.left = min_max._min
 						c_vl.right = min_max._max
 					editable = true
@@ -139,7 +139,7 @@ func refresh_options(index:int, recalculate:bool = true):
 					unit = ""
 				8:
 					if recalculate and not c_vl.modified:
-						min_max = get_star_prop_min_max(6)
+						min_max = get_star_prop_min_max("luminosity")
 						c_vl.left = min_max._min
 						c_vl.right = min_max._max
 					editable = true
@@ -149,7 +149,7 @@ func refresh_options(index:int, recalculate:bool = true):
 			match index:
 				0:
 					if recalculate and not c_vl.modified:
-						min_max = get_obj_min_max("galaxy", 6)
+						min_max = get_obj_min_max("galaxy", "system_num")
 						c_vl.left = min_max._min
 						c_vl.right = min_max._max
 					editable = true
@@ -158,7 +158,7 @@ func refresh_options(index:int, recalculate:bool = true):
 					editable = false
 				4:
 					if recalculate and not c_vl.modified:
-						min_max = get_obj_min_max("galaxy", 4)
+						min_max = get_obj_min_max("galaxy", "diff")
 						c_vl.left = min_max._min
 						c_vl.right = min_max._max
 					editable = true
@@ -166,7 +166,7 @@ func refresh_options(index:int, recalculate:bool = true):
 					unit = ""
 				5:
 					if recalculate and not c_vl.modified:
-						min_max = get_obj_min_max("galaxy", 13)
+						min_max = get_obj_min_max("galaxy", "B_strength")
 						c_vl.left = min_max._min * e(1, 9)
 						c_vl.right = min_max._max * e(1, 9)
 					editable = true
@@ -174,7 +174,7 @@ func refresh_options(index:int, recalculate:bool = true):
 					unit = " nT"
 				6:
 					if recalculate and not c_vl.modified:
-						min_max = get_obj_min_max("galaxy", 14)
+						min_max = get_obj_min_max("galaxy", "dark_matter")
 						c_vl.left = min_max._min
 						c_vl.right = min_max._max
 					editable = true

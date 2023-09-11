@@ -186,23 +186,23 @@ func _on_Particles_pressed():
 	particles_hbox.visible = true
 	$Control/VBox/BuySell.visible = false
 
-func show_part(_name:String):
-	var neutron_cap = game.neutron_cap * Helper.get_IR_mult("NSF")
-	var st:String = "%s\n%s" % [tr(_name.to_upper()), tr(_name.to_upper() + "_DESC")]
-	if game.autocollect.particles.has(_name):
-		var num:float = 0.0
-		if _name in ["proton", "electron"]:
-			if game.particles.neutron > neutron_cap:
-				num = game.autocollect.particles[_name] + (game.particles.neutron - neutron_cap) * (1 - pow(0.5, game.u_i.time_speed / 900.0)) / 2.0
-			else:
-				num = game.autocollect.particles[_name]
-		elif _name == "neutron":
-			if game.particles.neutron > neutron_cap:
-				num = game.autocollect.particles[_name] - (game.particles.neutron - neutron_cap) * (1 - pow(0.5, game.u_i.time_speed / 900.0))
-			else:
-				num = game.autocollect.particles[_name]
-		st += "\n" + (tr("YOU_PRODUCE") if num >= 0 else tr("YOU_USE")) % ("%s/%s" % [Helper.format_num(abs(num), true), tr("S_SECOND")])
-	game.show_tooltip(st)
+#func show_part(_name:String):
+#	var neutron_cap = game.neutron_cap * Helper.get_IR_mult("NSF")
+#	var st:String = "%s\n%s" % [tr(_name.to_upper()), tr(_name.to_upper() + "_DESC")]
+#	if game.autocollect.particles.has(_name):
+#		var num:float = 0.0
+#		if _name in ["proton", "electron"]:
+#			if game.particles.neutron > neutron_cap:
+#				num = game.autocollect.particles[_name] + (game.particles.neutron - neutron_cap) * (1 - pow(0.5, game.u_i.time_speed / 900.0)) / 2.0
+#			else:
+#				num = game.autocollect.particles[_name]
+#		elif _name == "neutron":
+#			if game.particles.neutron > neutron_cap:
+#				num = game.autocollect.particles[_name] - (game.particles.neutron - neutron_cap) * (1 - pow(0.5, game.u_i.time_speed / 900.0))
+#			else:
+#				num = game.autocollect.particles[_name]
+#		st += "\n" + (tr("YOU_PRODUCE") if num >= 0 else tr("YOU_USE")) % ("%s/%s" % [Helper.format_num(abs(num), true), tr("S_SECOND")])
+#	game.show_tooltip(st)
 	
 func show_buy_sell(type:String, obj:String):
 	var amount = 0
@@ -291,16 +291,4 @@ func _process(delta):
 		for hbox in hbox_data:
 			hbox.rsrc.get_node("Text").text = "%s mol" % [Helper.format_num(game.atoms[hbox.name], true)]
 	elif tab == "particles":
-		var neutron_cap = game.neutron_cap * Helper.get_IR_mult("NSF")
-		var electron_cap = game.electron_cap * Helper.get_IR_mult("ESF")
-		$Control/ParticlesHBox/Protons.text = "%s mol" % Helper.format_num(game.particles.proton, true)
-		if game.particles.neutron >= neutron_cap:
-			$Control/ParticlesHBox/Neutrons["theme_override_colors/font_color"] = Color.ORANGE
-		else:
-			$Control/ParticlesHBox/Neutrons["theme_override_colors/font_color"] = Color.WHITE
-		$Control/ParticlesHBox/Neutrons.text = "%s / %s mol" % [Helper.format_num(game.particles.neutron, true), Helper.format_num(neutron_cap, true)]
-		if game.particles.electron >= electron_cap:
-			$Control/ParticlesHBox/Electrons["theme_override_colors/font_color"] = Color.RED
-		else:
-			$Control/ParticlesHBox/Electrons["theme_override_colors/font_color"] = Color.WHITE
-		$Control/ParticlesHBox/Electrons.text = "%s / %s mol" % [Helper.format_num(game.particles.electron, true), Helper.format_num(electron_cap, true)]
+		pass
