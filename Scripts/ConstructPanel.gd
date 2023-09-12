@@ -89,7 +89,7 @@ func _on_btn_pressed(btn_str:String):
 		if bldg.item_name == "mineral_extractor":
 			bldg.visible = true
 		else:
-			bldg.visible = game.new_bldgs.has(bldg.item_name)
+			bldg.visible = game.new_bldgs.has(Building.names.find(bldg.item_name))
 
 func set_item_info(_name:String, desc:String, costs:Dictionary, _type:String, _dir:String):
 	super.set_item_info(_name, desc, costs, _type, _dir)

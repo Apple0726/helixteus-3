@@ -181,13 +181,13 @@ func _ready():
 			if tile.has("aurora"):
 				var aurora = game.aurora_scene.instantiate()
 				aurora.position = Vector2(i, j) * 200 + Vector2(100, 100)
-				aurora.amount = min(5 + int(tile.aurora.au_int * 10), 50)
+				aurora.amount = min(5 + int(tile.aurora * 10), 50)
 				aurora.lifetime = 3.0 / game.u_i.time_speed
 				#aurora.process_material["shader_parameter/strength"] = 1.0 if randf() < 0.5 else 0.0
 				#var hue:float = 0.4 + max(0, pow(tile.aurora.au_int, 0.35) - pow(4, 0.25)) / 10
-				var hue:float = 0.4 + log(tile.aurora.au_int + 1.0) / 10.0
+				var hue:float = 0.4 + log(tile.aurora + 1.0) / 10.0
 				var sat:float = 1.0 - floor(hue - 0.4) / 5.0
-				aurora.modulate = Color.from_hsv(fmod(hue, 1.0), sat, 1.0) * max(log(tile.aurora.au_int) / 10.0, 1.0)
+				aurora.modulate = Color.from_hsv(fmod(hue, 1.0), sat, 1.0) * max(log(tile.aurora) / 10.0, 1.0)
 				add_child(aurora)
 	var lake_state_id = {
 		"s":0,
@@ -219,24 +219,12 @@ func show_tooltip(tile, tile_id:int):
 	var fiery_tooltip:int = -1
 	var fire_strength:float = 0.0
 	if tile.has("bldg"):
+		tooltip = tr(Building.names[tile.bldg.name].to_upper() + "_NAME") + "\n"
 		tooltip += Helper.get_bldg_tooltip(p_i, tile, 1)
 		icons.append_array(Helper.flatten(Data.desc_icons[tile.bldg.name]) if Data.desc_icons.has(tile.bldg.name) else [])
-		if game.help_str == "":
-			game.help_str = "tile_shortcuts"
-		if game.help.has("tile_shortcuts") and bldg_to_construct == -1:
-			if game.get_node("UI").has_node("BuildingShortcuts"):
-				game.get_node("UI").get_node("BuildingShortcuts").close()
-			var shortcuts = preload("res://Scenes/KeyboardShortcuts.tscn").instantiate()
-			shortcuts.keys.clear()
-			shortcuts.add_key("F", "UPGRADE")
-			shortcuts.add_key("Q", "DUPLICATE")
-			shortcuts.add_key("X", "DESTROY")
-			shortcuts.add_key("Shift", "SELECT_ALL")
-			shortcuts.add_key("J", "HIDE_THIS_PANEL")
-			shortcuts.center_position.x = 1048
-			shortcuts.center_position.y = 360
-			shortcuts.name = "BuildingShortcuts"
-			game.get_node("UI").add_child(shortcuts)
+		if bldg_to_construct == -1:
+			if not game.get_node("UI").has_node("BuildingShortcuts") and $BuildingShortcutTimer.is_stopped():
+				$BuildingShortcutTimer.start()
 		if tile.has("overclock_bonus") and overclockable(tile.bldg.name):
 			tooltip += "\n[color=#EEEE00]" + tr("BENEFITS_FROM_OVERCLOCK") % tile.overclock_bonus + "[/color]"
 		if tile.bldg.name == Building.BORING_MACHINE:
@@ -290,7 +278,7 @@ func show_tooltip(tile, tile_id:int):
 			tooltip = "%s\n%s: %s" % [tr("VOLCANO"), tr("LARGEST_VEI") % "", Helper.clever_round(tile.volcano.VEI)]
 	elif tile.has("crater") and tile.crater.has("init_depth"):
 		if tile.has("aurora"):
-			tooltip = "[aurora au_int=%s]" % tile.aurora.au_int
+			tooltip = "[aurora au_int=%s]" % tile.aurora
 		if game.help_str == "":
 			game.help_str = "crater_desc"
 		if game.help.has("crater_desc"):
@@ -300,7 +288,7 @@ func show_tooltip(tile, tile_id:int):
 	elif tile.has("cave"):
 		var au_str:String = ""
 		if tile.has("aurora"):
-			au_str = "[aurora au_int=%s]" % tile.aurora.au_int
+			au_str = "[aurora au_int=%s]" % tile.aurora
 			tooltip = au_str
 		if tile.has("ash"):
 			fiery_tooltip = tile_over
@@ -379,9 +367,9 @@ func show_tooltip(tile, tile_id:int):
 		if game.help_str == "":
 			game.help_str = "aurora_desc"
 		if game.help.has("aurora_desc"):
-			tooltip = "%s\n%s\n%s\n%s" % [tr("AURORA"), tr("AURORA_DESC"), tr("HIDE_HELP"), tr("AURORA_INTENSITY") + ": %s" % [tile.aurora.au_int]]
+			tooltip = "%s\n%s\n%s\n%s" % [tr("AURORA"), tr("AURORA_DESC"), tr("HIDE_HELP"), tr("AURORA_INTENSITY") + ": %s" % [tile.aurora]]
 		else:
-			tooltip = tr("AURORA_INTENSITY") + ": %s" % [tile.aurora.au_int]
+			tooltip = tr("AURORA_INTENSITY") + ": %s" % [tile.aurora]
 	if tile.has("ruins"):
 		tooltip = "%s\n%s" % [tr("ABANDONED_RUINS"), tr("AR_DESC")]
 	if tooltip != "":
@@ -395,7 +383,7 @@ func show_tooltip(tile, tile_id:int):
 		#game.tooltip.get_node("ColorRect").material.set_shader_parameter("fog_mvt_spd", 1.5)
 
 func get_wh_costs():
-	return {"SP":round(10000 * pow(game.stats_univ.wormholes_activated + 1, 0.8)), "time":900 / game.u_i.time_speed if game.subjects.dimensional_power.lv == 0 else 0.2}
+	return {"SP":round(10000 * pow(game.stats_univ.wormholes_activated + 1, 0.8)), "time":900 / game.u_i.time_speed if game.subject_levels.dimensional_power == 0 else 0.2}
 
 func constr_bldg(tile_id:int, curr_time:int, _bldg_to_construct:int, mass_build:bool = false):
 	if _bldg_to_construct == -1:
@@ -407,7 +395,7 @@ func constr_bldg(tile_id:int, curr_time:int, _bldg_to_construct:int, mass_build:
 				game.popup(tr("NOT_ADJACENT_TO_LAKE"), 1.5)
 			return
 	var constr_costs2:Dictionary = constr_costs_total.duplicate()
-	if game.subjects.dimensional_power.lv >= 1:
+	if game.subject_levels.dimensional_power >= 1:
 		constr_costs2.time = 0.2
 	else:
 		constr_costs2.time /= game.u_i.time_speed
@@ -417,13 +405,13 @@ func constr_bldg(tile_id:int, curr_time:int, _bldg_to_construct:int, mass_build:
 		game.stats_dim.bldgs_built += 1
 		game.stats_global.bldgs_built += 1
 		if game.stats_univ.bldgs_built >= 1 and not game.new_bldgs.has(Building.POWER_PLANT):
-			game.new_bldgs.PP = true
+			game.new_bldgs[Building.POWER_PLANT] = true
 		if game.stats_univ.bldgs_built >= 5 and not game.new_bldgs.has(Building.MINERAL_SILO):
-			game.new_bldgs.B = true
-			game.new_bldgs.MS = true
+			game.new_bldgs[Building.BATTERY] = true
+			game.new_bldgs[Building.MINERAL_SILO] = true
 		if game.stats_univ.bldgs_built >= 18 and not game.new_bldgs.has(Building.RESEARCH_LAB):
-			game.new_bldgs.RL = true
-			game.new_bldgs.CBD = true
+			game.new_bldgs[Building.RESEARCH_LAB] = true
+			game.new_bldgs[Building.CENTRAL_BUSINESS_DISTRICT] = true
 		if tile == null:
 			tile = {}
 		tile.bldg = {}
@@ -439,9 +427,10 @@ func constr_bldg(tile_id:int, curr_time:int, _bldg_to_construct:int, mass_build:
 		tile.bldg.construction_date = curr_time
 		tile.bldg.construction_length = constr_costs2.time
 		tile.bldg.XP = constr_costs2.money / 100.0
+		var path_1_value = Data.path_1[_bldg_to_construct].value
 		if _bldg_to_construct != Building.PROBE_CONSTRUCTION_CENTER:
 			tile.bldg.path_1 = 1
-			tile.bldg.path_1_value = Data.path_1[_bldg_to_construct].value
+			tile.bldg.path_1_value = path_1_value
 		if _bldg_to_construct in [Building.STONE_CRUSHER, Building.GLASS_FACTORY, Building.STEAM_ENGINE, Building.GREENHOUSE, Building.CENTRAL_BUSINESS_DISTRICT, Building.ATOM_MANIPULATOR, Building.SUBATOMIC_PARTICLE_REACTOR]:
 			tile.bldg.path_2 = 1
 			tile.bldg.path_2_value = Data.path_2[_bldg_to_construct].value
@@ -456,19 +445,19 @@ func constr_bldg(tile_id:int, curr_time:int, _bldg_to_construct:int, mass_build:
 			game.HUD.SP.visible = true
 			game.HUD.sc_tree.visible = true
 		elif _bldg_to_construct == Building.MINERAL_SILO:
-			tile.bldg.cap_upgrade = Data.path_1.MS.value#The amount of cap to add once construction is done
+			tile.bldg.cap_upgrade = path_1_value # The amount of cap to add once construction is done
 		elif _bldg_to_construct == Building.POWER_PLANT:
 			if tile.has("substation_bonus"):
-				tile.bldg.cap_upgrade = Data.path_1.PP.value * tile.substation_bonus * Helper.get_substation_capacity_bonus(game.tile_data[tile.substation_tile].unique_bldg.tier)
+				tile.bldg.cap_upgrade = path_1_value * tile.substation_bonus * Helper.get_substation_capacity_bonus(game.tile_data[tile.substation_tile].unique_bldg.tier)
 			else:
 				tile.bldg.cap_upgrade = 0
 		elif _bldg_to_construct == Building.SOLAR_PANEL:
 			if tile.has("substation_bonus"):
-				tile.bldg.cap_upgrade = Helper.get_SP_production(p_i.temperature, Data.path_1.SP.value * Helper.get_au_mult(tile) * tile.substation_bonus) * Helper.get_substation_capacity_bonus(game.tile_data[tile.substation_tile].unique_bldg.tier)
+				tile.bldg.cap_upgrade = Helper.get_SP_production(p_i.temperature, path_1_value * Helper.get_au_mult(tile) * tile.substation_bonus) * Helper.get_substation_capacity_bonus(game.tile_data[tile.substation_tile].unique_bldg.tier)
 			else:
 				tile.bldg.cap_upgrade = 0
 		elif _bldg_to_construct == Building.BATTERY:
-			tile.bldg.cap_upgrade = Data.path_1.B.value * game.u_i.charge#The amount of cap to add once construction is done
+			tile.bldg.cap_upgrade = path_1_value * game.u_i.charge#The amount of cap to add once construction is done
 		elif _bldg_to_construct == Building.CENTRAL_BUSINESS_DISTRICT:
 			tile.bldg.x_pos = tile_id % wid
 			tile.bldg.y_pos = tile_id / wid
@@ -533,10 +522,10 @@ func overclock_bldg(tile, tile_id:int, curr_time):
 			var SP_prod = Helper.get_SP_production(p_i.temperature, tile.bldg.path_1_value * mult_diff * Helper.get_au_mult(tile) * (tile.substation_bonus if tile.has("substation_bonus") else 1.0))
 			game.autocollect.rsrc.energy += SP_prod
 			if tile.has("aurora"):
-				if game.aurora_prod.has(tile.aurora.au_int):
-					game.aurora_prod[tile.aurora.au_int].energy = game.aurora_prod[tile.aurora.au_int].get("energy", 0) + SP_prod
+				if game.aurora_prod.has(tile.aurora):
+					game.aurora_prod[tile.aurora].energy = game.aurora_prod[tile.aurora].get("energy", 0) + SP_prod
 				else:
-					game.aurora_prod[tile.aurora.au_int] = {"energy":SP_prod}
+					game.aurora_prod[tile.aurora] = {"energy":SP_prod}
 		elif tile.bldg.name == Building.ATMOSPHERE_EXTRACTOR:
 			var base = tile.bldg.path_1_value * mult_diff * p_i.pressure
 			for el in p_i.atmosphere:
@@ -549,7 +538,7 @@ func overclock_bldg(tile, tile_id:int, curr_time):
 		elif tile.bldg.name == "NC":
 			game.autocollect.particles.neutron += tile.bldg.path_1_value / tile.bldg.planet_pressure * mult_diff
 		elif tile.bldg.name == "EC":
-			game.autocollect.particles.electron += tile.bldg.path_1_value * tile.aurora.au_int * mult_diff
+			game.autocollect.particles.electron += tile.bldg.path_1_value * tile.aurora * mult_diff
 		elif tile.bldg.name == Building.BORING_MACHINE:
 			var tiles_mined = (curr_time - tile.bldg.collect_date) * tile.bldg.path_1_value * Helper.get_prod_mult(tile) * (tile.mining_outpost_bonus if tile.has("mining_outpost_bonus") else 1.0)
 			if tiles_mined >= 1:
@@ -641,11 +630,11 @@ func destroy_bldg(id2:int, mass:bool = false):
 			var SP_prod = Helper.get_SP_production(p_i.temperature, tile.bldg.path_1_value * overclock_mult * Helper.get_au_mult(tile))
 			game.autocollect.rsrc.energy -= SP_prod
 			if tile.has("aurora"):
-				game.aurora_prod[tile.aurora.au_int].energy -= SP_prod
-				if is_zero_approx(game.aurora_prod[tile.aurora.au_int].energy):
-					game.aurora_prod[tile.aurora.au_int].erase("energy")
-					if game.aurora_prod[tile.aurora.au_int].is_empty():
-						game.aurora_prod.erase(tile.aurora.au_int)
+				game.aurora_prod[tile.aurora].energy -= SP_prod
+				if is_zero_approx(game.aurora_prod[tile.aurora].energy):
+					game.aurora_prod[tile.aurora].erase("energy")
+					if game.aurora_prod[tile.aurora].is_empty():
+						game.aurora_prod.erase(tile.aurora)
 		if tile.has("substation_tile"):
 			var cap_to_remove = Helper.get_SP_production(p_i.temperature, tile.bldg.path_1_value * Helper.get_au_mult(tile)) * Helper.get_substation_capacity_bonus(game.tile_data[tile.substation_tile].unique_bldg.tier)
 			game.tile_data[tile.substation_tile].unique_bldg.capacity_bonus -= cap_to_remove
@@ -704,7 +693,7 @@ func destroy_bldg(id2:int, mass:bool = false):
 		if game.MM_data[game.c_p_g].tiles.is_empty():
 			game.MM_data.erase(game.c_p_g)
 	if tile.has("auto_GH"):
-		Helper.remove_GH_produce_from_autocollect(tile.auto_GH.produce, tile.aurora.au_int if tile.has("aurora") else 0.0)
+		Helper.remove_GH_produce_from_autocollect(tile.auto_GH.produce, tile.get("aurora", 0.0))
 		game.autocollect.mats.cellulose += tile.auto_GH.cellulose_drain
 		if tile.auto_GH.has("soil_drain"):
 			game.autocollect.mats.soil += tile.auto_GH.soil_drain
@@ -857,6 +846,8 @@ func _unhandled_input(event):
 			elif Input.is_action_just_released("F"):
 				if game.get_node("UI").has_node("BuildingShortcuts"):
 					game.get_node("UI").get_node("BuildingShortcuts").close()
+				else:
+					$BuildingShortcutTimer.stop()
 				game.upgrade_panel.planet.clear()
 				if tiles_selected.is_empty():
 					game.upgrade_panel.ids = [tile_over]
@@ -895,22 +886,20 @@ func _unhandled_input(event):
 				game.HUD.refresh()
 		if not is_instance_valid(game.active_panel) and Input.is_action_just_pressed("shift") and tile:
 			tiles_selected.clear()
-			if game.help.has("tile_shortcuts"):
-				if game.help_str == "":
-					game.help_str = "tile_shortcuts"
-				if game.get_node("UI").has_node("BuildingShortcuts"):
-					game.get_node("UI").get_node("BuildingShortcuts").close()
-				var shortcuts = preload("res://Scenes/KeyboardShortcuts.tscn").instantiate()
+			if game.get_node("UI").has_node("BuildingShortcuts"):
+#				game.get_node("UI").get_node("BuildingShortcuts").close()
+#				var shortcuts = preload("res://Scenes/KeyboardShortcuts.tscn").instantiate()
+				var shortcuts = game.get_node("UI").get_node("BuildingShortcuts")
 				shortcuts.keys.clear()
 				shortcuts.add_key("F", "UPGRADE_ALL")
 				shortcuts.add_key("Q", "DUPLICATE")
 				shortcuts.add_key("X", "DESTROY_ALL")
 				shortcuts.add_key("Shift", "SELECT_ALL")
-				shortcuts.add_key("J", "HIDE_THIS_PANEL")
-				shortcuts.center_position.x = 1048
-				shortcuts.center_position.y = 360
-				shortcuts.name = "BuildingShortcuts"
-				game.get_node("UI").add_child(shortcuts)
+#				shortcuts.center_position.x = 1048
+#				shortcuts.center_position.y = 360
+#				shortcuts.name = "BuildingShortcuts"
+#				game.get_node("UI").add_child(shortcuts)
+				shortcuts.refresh()
 			var path_1_value_sum:float = 0
 			var path_2_value_sum:float = 0
 			var path_3_value_sum:float = 0
@@ -945,10 +934,15 @@ func _unhandled_input(event):
 				game.shop_panel.num = len(tiles_selected)
 			if tile.has("bldg") and not game.item_cursor.visible:
 				if Data.desc_icons.has(tile.bldg.name):
-					var tooltip:String = Helper.get_bldg_tooltip2(tile.bldg.name, path_1_value_sum, path_2_value_sum, path_3_value_sum)
+					var tooltip:String = ""
+					var N:int = len(tiles_selected)
+					if N > 1:
+						tooltip = str(N) + " " + tr(Building.names[tile.bldg.name].to_upper() + "_NAME_S") + "\n"
+					else:
+						tooltip = str(N) + " " + tr(Building.names[tile.bldg.name].to_upper() + "_NAME") + "\n"
+					tooltip += Helper.get_bldg_tooltip2(tile.bldg.name, path_1_value_sum, path_2_value_sum, path_3_value_sum)
 					if tile.bldg.name in [Building.GLASS_FACTORY, Building.STEAM_ENGINE, Building.STONE_CRUSHER]:
 						tooltip += "\n[color=#88CCFF]G: %s[/color]" % tr("LOAD_UNLOAD_ALL")
-					tooltip += "\n" + tr("SELECTED_X_BLDGS") % len(tiles_selected)
 					game.show_adv_tooltip(tooltip, Helper.flatten(Data.desc_icons[tile.bldg.name]))
 				else:
 					game.show_adv_tooltip(Helper.get_bldg_tooltip2(tile.bldg.name, path_1_value_sum, path_2_value_sum, path_3_value_sum) + "\n" + tr("SELECTED_X_BLDGS") % len(tiles_selected))
@@ -957,11 +951,10 @@ func _unhandled_input(event):
 		if game.get_node("UI").has_node("BuildingShortcuts"):
 			var shortcuts = game.get_node("UI").get_node("BuildingShortcuts")
 			shortcuts.keys.clear()
-			shortcuts.add_key("F", "UPGRADE_ALL")
+			shortcuts.add_key("F", "UPGRADE")
 			shortcuts.add_key("Q", "DUPLICATE")
-			shortcuts.add_key("X", "DESTROY_ALL")
+			shortcuts.add_key("X", "DESTROY")
 			shortcuts.add_key("Shift", "SELECT_ALL")
-			shortcuts.add_key("J", "HIDE_THIS_PANEL")
 			shortcuts.refresh()
 		view.move_view = true
 		view.scroll_view = true
@@ -1247,9 +1240,12 @@ func on_wormhole_click(tile:Dictionary, tile_id:int):
 func hide_tooltip():
 	if game.get_node("UI").has_node("BuildingShortcuts"):
 		game.get_node("UI").get_node("BuildingShortcuts").close()
+	else:
+		$BuildingShortcutTimer.stop()
 	game.hide_tooltip()
 	game.hide_adv_tooltip()
-	game.help_str = ""
+	if game.help_str != "mass_build":
+		game.help_str = ""
 
 func is_obstacle(tile, bldg_is_obstacle:bool = true):
 	if tile == null:
@@ -1308,31 +1304,25 @@ func add_bldg(id2:int, type:int):
 	var tile = game.tile_data[id2]
 	match type:
 		Building.MINERAL_EXTRACTOR:
-			add_rsrc(v, Color(0, 0.5, 0.9, 1), Data.rsrc_icons.ME, id2)
+			add_rsrc(v, Color(0, 0.5, 0.9, 1), Data.rsrc_icons[Building.MINERAL_EXTRACTOR], id2)
 		Building.POWER_PLANT:
-			add_rsrc(v, Color(0, 0.8, 0, 1), Data.rsrc_icons.PP, id2)
+			add_rsrc(v, Color(0, 0.8, 0, 1), Data.rsrc_icons[Building.POWER_PLANT], id2)
 		Building.SOLAR_PANEL:
-			add_rsrc(v, Color(0, 0.8, 0, 1), Data.rsrc_icons.SP, id2)
+			add_rsrc(v, Color(0, 0.8, 0, 1), Data.rsrc_icons[Building.SOLAR_PANEL], id2)
 		Building.ATMOSPHERE_EXTRACTOR:
-			add_rsrc(v, Color(0.89, 0.55, 1.0, 1), Data.rsrc_icons.AE, id2)
+			add_rsrc(v, Color(0.89, 0.55, 1.0, 1), Data.rsrc_icons[Building.ATMOSPHERE_EXTRACTOR], id2)
 		Building.RESEARCH_LAB:
-			add_rsrc(v, Color(0.3, 1.0, 0.3, 1), Data.rsrc_icons.RL, id2)
-		"PC":
-			add_rsrc(v, Color.WHITE, Data.proton_icon, id2)
-		"NC":
-			add_rsrc(v, Color.WHITE, Data.neutron_icon, id2)
-		"EC":
-			add_rsrc(v, Color.WHITE, Data.electron_icon, id2)
+			add_rsrc(v, Color(0.3, 1.0, 0.3, 1), Data.rsrc_icons[Building.RESEARCH_LAB], id2)
 		Building.BORING_MACHINE:
-			add_rsrc(v, Color(0.6, 0.6, 0.6, 1), Data.rsrc_icons.MM, id2, true)
+			add_rsrc(v, Color(0.6, 0.6, 0.6, 1), Data.rsrc_icons[Building.BORING_MACHINE], id2, true)
 		Building.STONE_CRUSHER:
-			add_rsrc(v, Color(0.6, 0.6, 0.6, 1), Data.rsrc_icons.SC, id2)
+			add_rsrc(v, Color(0.6, 0.6, 0.6, 1), Data.rsrc_icons[Building.STONE_CRUSHER], id2)
 		Building.GLASS_FACTORY:
-			add_rsrc(v, Color(0.8, 0.9, 0.85, 1), Data.rsrc_icons.GF, id2)
+			add_rsrc(v, Color(0.8, 0.9, 0.85, 1), Data.rsrc_icons[Building.GLASS_FACTORY], id2)
 		Building.STEAM_ENGINE:
-			add_rsrc(v, Color(0, 0.8, 0, 1), Data.rsrc_icons.SE, id2)
+			add_rsrc(v, Color(0, 0.8, 0, 1), Data.rsrc_icons[Building.STEAM_ENGINE], id2)
 		Building.ATOM_MANIPULATOR:
-			add_rsrc(v, Color(0.89, 0.55, 1.0, 1), Data.rsrc_icons.AMN, id2)
+			add_rsrc(v, Color(0.89, 0.55, 1.0, 1), Data.rsrc_icons[Building.ATOM_MANIPULATOR], id2)
 		Building.GREENHOUSE:
 			if tile.has("auto_GH"):
 				if tile.auto_GH.has("soil_drain"):
@@ -1347,7 +1337,7 @@ func add_bldg(id2:int, type:int):
 			if tile.bldg.has("reaction"):
 				add_rsrc(v, Color.WHITE, load("res://Graphics/Atoms/%s.png" % tile.bldg.reaction), id2)
 			else:
-				add_rsrc(v, Color.WHITE, Data.rsrc_icons.SPR, id2)
+				add_rsrc(v, Color.WHITE, Data.rsrc_icons[Building.SUBATOMIC_PARTICLE_REACTOR], id2)
 		_:
 			if Mods.added_buildings.has(type):
 				add_rsrc(v, Mods.added_buildings[type].icon_color, Data.rsrc_icons[type], id2)
@@ -1423,7 +1413,7 @@ func on_timeout():
 					var SP_prod = Helper.get_SP_production(p_i.temperature, tile.bldg.path_1_value * (mult - 1) * Helper.get_au_mult(tile) * (tile.substation_bonus if tile.has("substation_bonus") else 1.0))
 					game.autocollect.rsrc.energy -= SP_prod
 					if tile.has("aurora"):
-						game.aurora_prod[tile.aurora.au_int].energy -= SP_prod
+						game.aurora_prod[tile.aurora].energy -= SP_prod
 				elif tile.bldg.name == Building.ATMOSPHERE_EXTRACTOR:
 					var base = -tile.bldg.path_1_value * (mult - 1) * p_i.pressure
 					for el in p_i.atmosphere:
@@ -1436,7 +1426,7 @@ func on_timeout():
 				elif tile.bldg.name == "NC":
 					game.autocollect.particles.neutron -= tile.bldg.path_1_value / tile.bldg.planet_pressure * (mult - 1)
 				elif tile.bldg.name == "EC":
-					game.autocollect.particles.electron -= tile.bldg.path_1_value * tile.aurora.au_int * (mult - 1)
+					game.autocollect.particles.electron -= tile.bldg.path_1_value * tile.aurora * (mult - 1)
 				tile.bldg.erase("overclock_date")
 				tile.bldg.erase("overclock_length")
 				tile.bldg.erase("overclock_mult")
@@ -1470,6 +1460,8 @@ func construct(type:int, costs:Dictionary):
 	finish_construct()
 	if game.get_node("UI").has_node("BuildingShortcuts"):
 		game.get_node("UI").get_node("BuildingShortcuts").close()
+	else:
+		$BuildingShortcutTimer.stop()
 	var tween = create_tween()
 	tween.tween_property(game.HUD.get_node("Top/TextureRect"), "modulate", Color(1.5, 1.5, 1.0, 1.0), 0.2)
 	if game.help.has("mass_build") and game.stats_univ.bldgs_built >= 18:
@@ -1527,3 +1519,18 @@ func get_tile_id_from_pos(pos:Vector2):
 
 func play_bad_apple(LOD):
 	$BadApple.load_data(LOD)
+
+
+func _on_building_shortcut_timer_timeout():
+	if is_instance_valid(game.active_panel):
+		return
+	var shortcuts = preload("res://Scenes/KeyboardShortcuts.tscn").instantiate()
+	shortcuts.keys.clear()
+	shortcuts.add_key("F", "UPGRADE")
+	shortcuts.add_key("Q", "DUPLICATE")
+	shortcuts.add_key("X", "DESTROY")
+	shortcuts.add_key("Shift", "SELECT_ALL")
+	shortcuts.center_position.x = 1048
+	shortcuts.center_position.y = 360
+	shortcuts.name = "BuildingShortcuts"
+	game.get_node("UI").add_child(shortcuts)

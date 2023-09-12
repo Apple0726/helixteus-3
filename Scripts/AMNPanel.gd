@@ -255,8 +255,8 @@ func refresh():
 		tile_num = 1
 		$Title.text = tr("AMN_NAME")
 		obj = game.tile_data[game.c_t]
-		au_int = obj.aurora.au_int if obj.has("aurora") else 0.0
-		au_mult = Helper.get_au_mult(obj)
+		au_int = obj.get("aurora", 0.0)
+		au_mult = au_int + 1.0
 	path_2_value = obj.bldg.path_2_value * Helper.get_IR_mult(Building.ATOM_MANIPULATOR)
 	$Control/EnergyCostText.text = Helper.format_num(round(energy_cost * $Control/HSlider.value / au_mult / path_2_value)) + "  [img]Graphics/Icons/help.png[/img]"
 	if au_mult > 1:

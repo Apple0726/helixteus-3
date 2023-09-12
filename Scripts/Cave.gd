@@ -6,12 +6,11 @@ var astar_node = AStar2D.new()
 @onready var game = get_node("/root/Game")
 @onready var p_i = game.planet_data[game.c_p]
 @onready var tile = game.tile_data[game.c_t]
-@onready var aurora:bool = tile.has("aurora")
-@onready var tower:bool = tile.has("diamond_tower")
-@onready var tile_type = 10 if tower else p_i.type - 3
+@onready var is_aurora_cave:bool = tile.has("aurora")
+@onready var tile_type = p_i.type - 3
 var time_speed:float = 1.0
 #Aurora intensity
-@onready var au_int:float = tile.aurora.au_int if aurora else 0
+@onready var au_int:float = tile.get("aurora", 0.0)
 @onready var aurora_mult:float = Helper.clever_round(pow(1 + au_int, 1.5))
 @onready var volcano_mult:float = tile.ash.richness if tile.has("ash") else 1.0
 @onready var artificial_volcano = tile.has("ash") and tile.ash.has("artificial")
@@ -286,7 +285,7 @@ func _ready():
 	minimap_cave.scale *= minimap_zoom
 	minimap_rover.scale *= 0.1
 	generate_cave(true, false)
-	if aurora:
+	if is_aurora_cave:
 		$AuroraPlayer.play("Aurora", -1, 0.2)
 	for rsrc in game.show:
 		if game.show[rsrc]:
@@ -475,11 +474,7 @@ func generate_cave(first_floor:bool, going_up:bool):
 	rover_light.energy = cave_darkness * 0.3
 	$UI2/CaveInfo/Difficulty.text = "%s: %s" % [tr("DIFFICULTY"), Helper.format_num(difficulty, true)]
 	var rng = RandomNumberGenerator.new()
-	if tower:
-		$UI2/CaveInfo/Floor.text = "%sF" % [cave_floor]
-		cave_size = 41 - cave_floor
-	else:
-		$UI2/CaveInfo/Floor.text = "B%sF" % [cave_floor]
+	$UI2/CaveInfo/Floor.text = "B%sF" % [cave_floor]
 	var noise = FastNoiseLite.new()
 	var lava_noise = FastNoiseLite.new()
 	var first_time:bool = cave_floor > len(seeds)
@@ -507,7 +502,6 @@ func generate_cave(first_floor:bool, going_up:bool):
 	lava_noise.frequency = 1.0 / rng.randi_range(30, 120)
 	camera.zoom = Vector2.ONE * rover_size / 2.5
 	$Rover.scale = Vector2.ONE * rover_size
-	var top_of_the_tower = tower and cave_floor == num_floors
 	var seeking_proj = enhancements.has("laser_3")
 	var debris_height:int = -1020
 	var ash_tiles = []
@@ -563,7 +557,7 @@ func generate_cave(first_floor:bool, going_up:bool):
 					debris_height += 1
 					debris.scale = Vector2.ONE * rand_scale_x
 					debris.position = Vector2(i, j) * 200 + Vector2(100, 100) + Vector2(rng.randf_range(-80, 80), rng.randf_range(-80, 80)) / debris.scale / 2.0
-					if aurora and rng.randf() < 0.05:
+					if is_aurora_cave and rng.randf() < 0.05:
 						debris_mod = Color.WHITE
 						debris.aurora_intensity = 1.0 + log(rng.randf_range(1.0, au_int + 1.0))
 					if debris_rekt[cave_floor - 1].has(tile_id):
@@ -606,7 +600,7 @@ func generate_cave(first_floor:bool, going_up:bool):
 						HX_node.free()
 						continue
 					HX_node.get_node("Sprite2D").texture = load("res://Graphics/HX/%s_%s.png" % [_class, type])
-					HX_node.get_node("Sprite2D").material.set_shader_parameter("aurora", aurora)
+					HX_node.get_node("Sprite2D").material.set_shader_parameter("aurora", is_aurora_cave)
 					if volcano_mult == 1:
 						HX_node.get_node("Sprite2D").material.set_shader_parameter("light", 1.0 - cave_darkness)
 					HX_node.get_node("Info/Label").visible = false
@@ -639,7 +633,7 @@ func generate_cave(first_floor:bool, going_up:bool):
 						var rarity:float = game.met_info[met].rarity
 						if cave_floor >= 8:
 							rarity = pow(rarity, remap(cave_floor, 8, 32, 0.9, 0.6))
-						if aurora:
+						if is_aurora_cave:
 							rarity = pow(rarity, 0.9)
 						if volcano_mult > 1 and not artificial_volcano:
 							rarity = pow(rarity, 0.9)
@@ -793,7 +787,7 @@ func generate_cave(first_floor:bool, going_up:bool):
 		MM_exit.rotation = rot
 	else:
 		exit.rotation = 0
-		MM_exit.rotation_degrees = 180 if tower else 0
+		MM_exit.rotation_degrees = 0
 		$Exit/Sprite2D.texture = preload("res://Graphics/Cave/Objects/go_up.png")
 		$Exit/Sprite2D.modulate = Color(1, 1, 3, 1)
 		$Exit/GPUParticles2D.emitting = true
@@ -959,7 +953,7 @@ func generate_cave(first_floor:bool, going_up:bool):
 		cave_adjective = " large"
 	if num_floors >= 24:
 		cave_adjective = " huge"
-	var format_dict = {"adjective":cave_adjective, "volcanic":" volcanic" if volcano_mult > 1.0 else "", "aurora":"" if not aurora else (" illuminated by%s auroras" % [" powerful" if aurora_mult > 10.0 else ""])}
+	var format_dict = {"adjective":cave_adjective, "volcanic":" volcanic" if volcano_mult > 1.0 else "", "aurora":"" if not is_aurora_cave else (" illuminated by%s auroras" % [" powerful" if aurora_mult > 10.0 else ""])}
 	var details = ""
 	if cave_floor < 8:
 		details = "Exploring a{adjective}{volcanic} cave{aurora}".format(format_dict)
@@ -1048,7 +1042,7 @@ func generate_treasure(tier:int, rng:RandomNumberGenerator):
 		var rarity = met_value.rarity
 		if cave_floor >= 8:
 			rarity = pow(rarity, remap(cave_floor, 8, 32, 0.9, 0.6))
-		if aurora:
+		if is_aurora_cave:
 			rarity = pow(rarity, 0.9)
 		if volcano_mult > 1 and not artificial_volcano:
 			rarity = pow(rarity, 0.9)
@@ -1324,9 +1318,9 @@ func _input(event):
 					game.switch_music(preload("res://Audio/cave2.ogg"), 0.95 if tile.has("aurora") else 1.0)
 				elif cave_floor == 16:
 					game.switch_music(preload("res://Audio/cave3.ogg"), 0.95 if tile.has("aurora") else 1.0)
-				if volcano_mult > 1 and not artificial_volcano and aurora:
+				if volcano_mult > 1 and not artificial_volcano and is_aurora_cave:
 					difficulty *= 2.5
-				elif volcano_mult > 1 and not artificial_volcano or aurora:
+				elif volcano_mult > 1 and not artificial_volcano or is_aurora_cave:
 					difficulty *= 2.25
 				else:
 					difficulty *= 2.0
@@ -1346,9 +1340,9 @@ func _input(event):
 					game.switch_music(preload("res://Audio/cave1.ogg"), 0.95 if tile.has("aurora") else 1.0)
 #				if cave_floor == 15:
 #					game.switch_music(preload("res://Audio/cave2.ogg"), 0.95 if tile.has("aurora") else 1.0)
-				if volcano_mult > 1 and not artificial_volcano and aurora:
+				if volcano_mult > 1 and not artificial_volcano and is_aurora_cave:
 					difficulty /= 2.5
-				elif volcano_mult > 1 and not artificial_volcano or aurora:
+				elif volcano_mult > 1 and not artificial_volcano or is_aurora_cave:
 					difficulty /= 2.25
 				else:
 					difficulty /= 2.0
@@ -1477,7 +1471,7 @@ func _process(delta):
 		use_item(inventory[curr_slot], tile_highlight_left, delta)
 	if not status_effects.has("stun") and Input.is_action_pressed("right_click") and right_inventory_ready[0] and not right_inventory[0].is_empty():
 		use_item(right_inventory[0], tile_highlight_right, delta)
-	if aurora:
+	if is_aurora_cave:
 		canvas_mod.color = aurora_mod.modulate
 		canvas_mod.color.a = 1
 	if MM.visible:
@@ -2079,10 +2073,7 @@ func _on_Exit_area_entered(_body):
 		show_right_info(tr("F_TO_EXIT"))
 		active_type = "exit"
 	else:
-		if tower:
-			show_right_info(tr("F_TO_GO_DOWN"))
-		else:
-			show_right_info(tr("F_TO_GO_UP"))
+		show_right_info(tr("F_TO_GO_UP"))
 		active_type = "go_up"
 
 func on_WH_entered(_body):
@@ -2091,10 +2082,7 @@ func on_WH_entered(_body):
 
 func _on_Hole_area_entered(_body):
 	active_chest = "-1"
-	if tower:
-		show_right_info(tr("F_TO_GO_UP"))
-	else:
-		show_right_info(tr("F_TO_GO_DOWN"))
+	show_right_info(tr("F_TO_GO_DOWN"))
 	active_type = "go_down"
 
 func show_right_info(txt:String):
@@ -2118,9 +2106,9 @@ func _on_mouse_exited():
 
 func _on_Difficulty_mouse_entered():
 	var floor_mult = pow(2, cave_floor - 1)
-	if volcano_mult > 1 and not artificial_volcano and aurora:
+	if volcano_mult > 1 and not artificial_volcano and is_aurora_cave:
 		floor_mult = pow(2.5, cave_floor - 1)
-	elif volcano_mult > 1 and not artificial_volcano or aurora:
+	elif volcano_mult > 1 and not artificial_volcano or is_aurora_cave:
 		floor_mult = pow(2.25, cave_floor - 1)
 	var tooltip:String = "%s: %s\n%s: %s" % [
 		tr("STAR_SYSTEM_DIFFICULTY"),

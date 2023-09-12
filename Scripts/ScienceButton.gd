@@ -110,23 +110,18 @@ func _input(event):
 				game.science_unlocked[name] = true
 				game.popup(tr("RESEARCH_SUCCESS"), 1.5)
 				if name == "RC":
-					game.new_bldgs.RCC = true
+					game.new_bldgs[Building.ROVER_CONSTRUCTION_CENTER] = true
 					game.show.vehicles_button = true
 					game.HUD.get_node("Buttons/Vehicles").visible = true
 				elif name == "SA":
-					game.new_bldgs.GH = true
+					game.new_bldgs[Building.GREENHOUSE] = true
 				elif name == "ATM":
 					game.show.atoms = true
-					game.new_bldgs.AE = true
-					game.new_bldgs.AMN = true
+					game.new_bldgs[Building.ATMOSPHERE_EXTRACTOR] = true
+					game.new_bldgs[Building.ATOM_MANIPULATOR] = true
 				elif name == "SAP":
 					game.show.particles = true
-					game.new_bldgs.SPR = true
-					game.new_bldgs.PC = true
-					game.new_bldgs.NC = true
-					game.new_bldgs.EC = true
-					game.new_bldgs.NSF = true
-					game.new_bldgs.ESF = true
+					game.new_bldgs[Building.SUBATOMIC_PARTICLE_REACTOR] = true
 				elif name == "CI":
 					game.stack_size = 32
 				elif name == "CI2":
@@ -134,9 +129,9 @@ func _input(event):
 				elif name == "CI3":
 					game.stack_size = 128
 				elif name == "AM":
-					game.new_bldgs.MM = true
+					game.new_bldgs[Building.BORING_MACHINE] = true
 				elif name == "FG":
-					game.new_bldgs.SY = true
+					game.new_bldgs[Building.SHIPYARD] = true
 				game.HUD.refresh()
 				$Label["theme_override_colors/font_color"] = Color(0.4, 0.9, 1, 1)
 				self_modulate = Color(0.24, 0.0, 1.0, 1.0)

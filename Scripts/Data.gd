@@ -530,6 +530,18 @@ var lake_bonus_values = {
 	"NH3":{"s":0.4, "l":0.15, "sc":0.3, "operator":"÷"},
 }
 
+var lake_SP_bonus = {
+	"H2O":1.0,
+	"CH4":0.6,
+	"CO2":1.8,
+	"H":0.5,
+	"He":0.8,
+	"Ne":5.0,
+	"Xe":50.0,
+	"O":3.0,
+	"NH3":1.4,
+}
+
 var default_help = {
 				"materials":true,
 				"close_btn1":true,

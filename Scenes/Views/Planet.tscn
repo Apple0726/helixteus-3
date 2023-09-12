@@ -6,7 +6,7 @@
 [ext_resource type="TileSet" uid="uid://djmwwqomsir3r" path="res://Resources/PlanetTileSet.tres" id="4"]
 [ext_resource type="TileSet" uid="uid://dfiuyho24np11" path="res://Resources/ObstaclesTileSet.tres" id="4_ivklb"]
 [ext_resource type="Script" path="res://Scripts/BadApple.gd" id="7_yxni4"]
-[ext_resource type="Texture2D" uid="uid://dtxyo6cfbj8ei" path="res://icon.png" id="12"]
+[ext_resource type="Texture2D" uid="uid://ch2kvtr3hagxr" path="res://icon.png" id="12"]
 
 [sub_resource type="Shader" id="3"]
 code = "shader_type canvas_item;
@@ -114,4 +114,9 @@ format = 2
 
 [node name="WhiteRect" parent="." instance=ExtResource("1")]
 
+[node name="BuildingShortcutTimer" type="Timer" parent="."]
+wait_time = 0.7
+one_shot = true
+
 [connection signal="tree_exited" from="." to="." method="_on_Planet_tree_exited"]
+[connection signal="timeout" from="BuildingShortcutTimer" to="." method="_on_building_shortcut_timer_timeout"]

@@ -27,7 +27,6 @@ Helper="*res://Scripts/Helper.gd"
 Mods="*res://Scripts/Mods.gd"
 DiscordSDKLoader="*res://addons/discord-sdk-gd/nodes/core_updater.gd"
 StarType="*res://Scripts/StarType.gd"
-Metals="*res://Scripts/Metals.gd"
 UniqueBuilding="*res://Scripts/UniqueBuilding.gd"
 Building="*res://Scripts/Building.gd"
 

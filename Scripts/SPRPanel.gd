@@ -65,7 +65,7 @@ func refresh():
 		$Title.text = tr("SPR_NAME")
 		tile_num = 1
 		obj = game.tile_data[game.c_t]
-		au_int = obj.aurora.au_int if obj.has("aurora") else 0.0
+		au_int = obj.get("aurora", 0.0)
 		au_mult = Helper.get_au_mult(obj)
 	path_2_value = obj.bldg.path_2_value * Helper.get_IR_mult(Building.SUBATOMIC_PARTICLE_REACTOR)
 	$Control/EnergyCostText.text = Helper.format_num(round(energy_cost * $Control/HSlider.value / au_mult / game.u_i.charge / path_2_value)) + "  [img]Graphics/Icons/help.png[/img]"

@@ -63,7 +63,7 @@ func put_rsrc(container, min_size, objs, remove:bool = true, show_available:bool
 			format_text(rsrc.get_node("Text"), texture, "Icons/minerals", show_available, objs[obj], game.minerals)
 		elif obj == "energy":
 			format_text(rsrc.get_node("Text"), texture, "Icons/energy", show_available, objs[obj], game.energy)
-		elif obj == Building.SOLAR_PANEL:
+		elif obj == "SP":
 			format_text(rsrc.get_node("Text"), texture, "Icons/SP", show_available, objs[obj], game.SP)
 		elif obj == "time":
 			texture.texture_normal = Data.time_icon
@@ -428,18 +428,6 @@ func add_energy(amount:float):
 		game.energy = energy_cap
 		return {"added":energy_space_available, "remainder":amount - energy_space_available}
 
-func get_AIE(next_lv:int = 0):
-	return 0.98 + (game.MUs.AIE + next_lv) / 50.0
-
-func get_au_mult(tile:Dictionary):
-	if tile.has("aurora"):
-		return pow(1 + tile.aurora.au_int, get_AIE())
-	else:
-		return 1.0
-
-func get_au_mult_from_int(au_int:float):
-	return pow(1 + au_int, get_AIE())
-
 func get_layer(tile:Dictionary, p_i:Dictionary):
 	var layer:String = ""
 	if tile.has("crater") and tile.crater.has("init_depth"):
@@ -507,19 +495,19 @@ func get_rsrc_from_rock(contents:Dictionary, tile:Dictionary, p_i:Dictionary, is
 				game.popup_window(tr("ARTIFACT_FOUND_DESC"), tr("ARTIFACT_FOUND"))
 		if not game.show.has(content):
 			game.show[content] = true
-		if content == "sand" and not game.new_bldgs.has(Building.GREENHOUSE):
-			game.new_bldgs.GF = true
+		if content == "sand" and not game.new_bldgs.has(Building.GLASS_FACTORY):
+			game.new_bldgs[Building.GLASS_FACTORY] = true
 		if content == "coal" and not game.new_bldgs.has(Building.STEAM_ENGINE):
-			game.new_bldgs.SE = true
+			game.new_bldgs[Building.STEAM_ENGINE] = true
 		if content == "stone" and not game.new_bldgs.has(Building.STONE_CRUSHER):
-			game.new_bldgs.SC = true
+			game.new_bldgs[Building.STONE_CRUSHER] = true
 	if tile.has("current_deposit") and tile.current_deposit.progress > tile.current_deposit.size - 1:
 		tile.erase("current_deposit")
 	if tile.has("crater") and tile.crater.has("init_depth") and tile.depth > 3 * tile.crater.init_depth:
 		tile.erase("crater")
 
 func mass_generate_rock(tile:Dictionary, p_i:Dictionary, depth:int):
-	var aurora_mult = clever_round(get_au_mult(tile))
+	var aurora_mult = tile.get("aurora", 0.0) + 1.0
 	var h_mult = game.u_i.planck
 	var contents = {}
 	var other_volume = 0#in m^3
@@ -567,7 +555,7 @@ func get_stone_comp_from_amount(p_i_layer:Dictionary, amount:float):
 	return stone
 
 func generate_rock(tile:Dictionary, p_i:Dictionary):
-	var aurora_mult = clever_round(get_au_mult(tile))
+	var aurora_mult = tile.get("aurora", 0.0) + 1.0
 	var h_mult = game.u_i.planck
 	var contents = {}
 	var other_volume = 0#in m^3
@@ -710,19 +698,13 @@ func update_rsrc(p_i, tile, rsrc = null, active:bool = false):
 		prod *= tile.bldg.path_1_value * get_prod_mult(tile) * (tile.ash.richness if tile.has("ash") else 1.0) * (tile.mineral_replicator_bonus if tile.has("mineral_replicator_bonus") else 1.0)
 		rsrc_text = "%s/%s" % [format_num(prod, true), tr("S_SECOND")]
 	elif tile.bldg.name == Building.SOLAR_PANEL:
-		prod *= get_SP_production(p_i.temperature, tile.bldg.path_1_value * get_prod_mult(tile) * get_au_mult(tile)) * (tile.substation_bonus if tile.has("substation_bonus") else 1.0)
+		prod *= get_SP_production(p_i.temperature, tile.bldg.path_1_value * get_prod_mult(tile) * (tile.get("aurora", 0.0) + 1.0)) * (tile.substation_bonus if tile.has("substation_bonus") else 1.0)
 		rsrc_text = "%s/%s" % [format_num(prod, true), tr("S_SECOND")]
 	elif tile.bldg.name == Building.POWER_PLANT:
 		prod *= tile.bldg.path_1_value * get_prod_mult(tile) * (tile.substation_bonus if tile.has("substation_bonus") else 1.0)
 		rsrc_text = "%s/%s" % [format_num(prod, true), tr("S_SECOND")]
 	elif tile.bldg.name == Building.RESEARCH_LAB:
 		prod *= tile.bldg.path_1_value * get_prod_mult(tile) * (tile.observatory_bonus if tile.has("observatory_bonus") else 1.0)
-		rsrc_text = "%s/%s" % [format_num(prod, true), tr("S_SECOND")]
-	elif tile.bldg.name in ["PC", "NC"]:
-		prod *= tile.bldg.path_1_value * p_i.pressure * get_prod_mult(tile)
-		rsrc_text = "%s/%s" % [format_num(prod, true), tr("S_SECOND")]
-	elif tile.bldg.name == "EC":
-		prod *= tile.bldg.path_1_value / tile.aurora.au_int * get_prod_mult(tile)
 		rsrc_text = "%s/%s" % [format_num(prod, true), tr("S_SECOND")]
 	elif tile.bldg.name == Building.STONE_CRUSHER:
 		if tile.bldg.has("stone"):
@@ -750,7 +732,7 @@ func update_rsrc(p_i, tile, rsrc = null, active:bool = false):
 			capacity_bar_value = 0
 	elif tile.bldg.name == Building.GREENHOUSE:
 		if tile.has("auto_GH"):
-			rsrc_text = "%s kg/s" % format_num(tile.auto_GH.produce[tile.auto_GH.seed.split("_")[0]] * get_au_mult(tile), true)
+			rsrc_text = "%s kg/s" % format_num(tile.auto_GH.produce[tile.auto_GH.seed.split("_")[0]] * (tile.get("aurora", 0.0) + 1.0), true)
 		else:
 			rsrc_text = ""
 	elif tile.bldg.name == Building.BORING_MACHINE:
@@ -833,7 +815,7 @@ func update_bldg_constr(tile:Dictionary, p_i:Dictionary):
 						tile.auto_GH.produce[p] *= tile.bldg.prod_mult
 					else:# Any production other than metal will be considered proportional to cellulose drain
 						tile.auto_GH.produce[p] *= tile.bldg.cell_mult
-				add_GH_produce_to_autocollect(tile.auto_GH.produce, tile.aurora.au_int if tile.has("aurora") else 0.0)
+				add_GH_produce_to_autocollect(tile.auto_GH.produce, tile.get("aurora", 0.0))
 				game.autocollect.mats.cellulose -= tile.auto_GH.cellulose_drain
 				if tile.auto_GH.has("soil_drain"):
 					game.autocollect.mats.soil -= tile.auto_GH.soil_drain
@@ -844,10 +826,6 @@ func update_bldg_constr(tile:Dictionary, p_i:Dictionary):
 				game.mineral_capacity += tile.bldg.cap_upgrade
 			elif tile.bldg.name == Building.BATTERY:
 				game.energy_capacity += tile.bldg.cap_upgrade
-			elif tile.bldg.name == "NSF":
-				game.neutron_cap += tile.bldg.cap_upgrade
-			elif tile.bldg.name == "ESF":
-				game.electron_cap += tile.bldg.cap_upgrade
 			elif tile.bldg.name == Building.RESEARCH_LAB:
 				game.autocollect.rsrc.SP += tile.bldg.path_1_value * overclock_mult * tile.get("observatory_bonus", 1.0)
 			elif tile.bldg.name == Building.MINERAL_EXTRACTOR:
@@ -860,7 +838,7 @@ func update_bldg_constr(tile:Dictionary, p_i:Dictionary):
 					if tile.has("substation_tile"):
 						game.tile_data[tile.substation_tile].unique_bldg.capacity_bonus += tile.bldg.cap_upgrade
 			elif tile.bldg.name == Building.SOLAR_PANEL:
-				var energy_prod = get_SP_production(p_i.temperature, tile.bldg.path_1_value * overclock_mult * get_au_mult(tile) * tile.get("substation_bonus", 1.0))
+				var energy_prod = get_SP_production(p_i.temperature, tile.bldg.path_1_value * overclock_mult * (tile.get("aurora", 0.0) + 1.0) * tile.get("substation_bonus", 1.0))
 				game.autocollect.rsrc.energy += energy_prod
 				if tile.bldg.has("cap_upgrade"): # Save migration
 					game.capacity_bonus_from_substation += tile.bldg.cap_upgrade
@@ -874,12 +852,6 @@ func update_bldg_constr(tile:Dictionary, p_i:Dictionary):
 					add_atom_production(el, base_prod)
 				add_energy_from_NFR(p_i, base)
 				add_energy_from_CS(p_i, base)
-			elif tile.bldg.name == "PC":
-				game.autocollect.particles.proton += tile.bldg.path_1_value * overclock_mult / tile.bldg.planet_pressure
-			elif tile.bldg.name == "NC":
-				game.autocollect.particles.neutron += tile.bldg.path_1_value * overclock_mult / tile.bldg.planet_pressure
-			elif tile.bldg.name == "EC":
-				game.autocollect.particles.electron += tile.bldg.path_1_value * overclock_mult * tile.aurora.au_int
 			elif tile.bldg.name == Building.CENTRAL_BUSINESS_DISTRICT:
 				var tile_data:Array
 				var same_p:bool = game.c_p_g == tile.bldg.c_p_g
@@ -1177,7 +1149,7 @@ func get_final_value(p_i:Dictionary, dict:Dictionary, path:int, n:int = 1):
 		n = 1
 	if path == 1:
 		if bldg == Building.SOLAR_PANEL:
-			return clever_round(get_SP_production(p_i.temperature, dict.bldg.path_1_value * mult * get_au_mult(dict) * (dict.substation_bonus if dict.has("substation_bonus") else 1.0)) * n)
+			return clever_round(get_SP_production(p_i.temperature, dict.bldg.path_1_value * mult * (dict.get("aurora", 0.0) + 1.0) * (dict.substation_bonus if dict.has("substation_bonus") else 1.0)) * n)
 		elif bldg == Building.ATMOSPHERE_EXTRACTOR:
 			return clever_round(get_AE_production(p_i.pressure, dict.bldg.path_1_value) * n)
 		elif bldg in [Building.MINERAL_SILO]:
@@ -1211,13 +1183,13 @@ func get_final_value(p_i:Dictionary, dict:Dictionary, path:int, n:int = 1):
 
 func get_bldg_tooltip(p_i:Dictionary, dict:Dictionary, n:float = 1):
 	var tooltip:String = ""
-	var bldg:String = dict.bldg.name
+	var bldg:int = dict.bldg.name
 	var path_1_value = get_final_value(p_i, dict, 1, n) if dict.bldg.has("path_1_value") else 0.0
 	var path_2_value = get_final_value(p_i, dict, 2, n) if dict.bldg.has("path_2_value") else 0.0
 	var path_3_value = get_final_value(p_i, dict, 3, n) if dict.bldg.has("path_3_value") else 0.0
 	return get_bldg_tooltip2(bldg, path_1_value, path_2_value, path_3_value)
 
-func get_bldg_tooltip2(bldg:String, path_1_value, path_2_value, path_3_value):
+func get_bldg_tooltip2(bldg:int, path_1_value, path_2_value, path_3_value):
 	match bldg:
 		Building.MINERAL_EXTRACTOR, Building.POWER_PLANT, Building.SOLAR_PANEL, Building.ATMOSPHERE_EXTRACTOR, Building.BORING_MACHINE:
 			return (Data.path_1[bldg].desc) % [format_num(path_1_value, true)]
@@ -1388,7 +1360,7 @@ func remove_GH_produce_from_autocollect(produce:Dictionary, au_int:float):
 		elif game.mat_info.has(p):
 			game.autocollect.mats[p] -= produce[p]
 		elif game.met_info.has(p):
-			var met_prod = produce[p] * get_au_mult_from_int(au_int)
+			var met_prod = produce[p] * (au_int + 1.0)
 			game.autocollect.mets[p] -=  met_prod
 
 func add_GH_produce_to_autocollect(produce:Dictionary, au_int:float):
@@ -1398,7 +1370,7 @@ func add_GH_produce_to_autocollect(produce:Dictionary, au_int:float):
 		elif game.mat_info.has(p):
 			game.autocollect.mats[p] = produce[p] + game.autocollect.mats.get(p, 0.0)
 		elif game.met_info.has(p):
-			var met_prod = produce[p] * get_au_mult_from_int(au_int)
+			var met_prod = produce[p] * (au_int + 1.0)
 			game.autocollect.mets[p] = met_prod + game.autocollect.mets.get(p, 0.0)
 
 func set_resolution(index:int):

@@ -326,8 +326,8 @@ func _process(delta):
 				game.galaxy_data[game.c_g].erase("sys_conquered")
 				game.galaxy_data[game.c_g].erase("combined_strength")
 				game.galaxy_data[game.c_g].erase("conquer_order")
-				if not game.new_bldgs.has("SP"):
-					game.new_bldgs.SP = true
+				if not game.new_bldgs.has(Building.SOLAR_PANEL):
+					game.new_bldgs[Building.SOLAR_PANEL] = true
 		else:
 			time_left.text = Helper.time_to_str(game.galaxy_data[game.c_g].time_for_one_sys - Time.get_unix_time_from_system() + game.galaxy_data[game.c_g].conquer_start_date)
 	elif fighter_type == 1:
@@ -384,8 +384,8 @@ func _process(delta):
 				game.u_i.cluster_data[game.c_c].erase("gal_conquered")
 				game.u_i.cluster_data[game.c_c].erase("combined_strength")
 				game.u_i.cluster_data[game.c_c].erase("conquer_order")
-				if not game.new_bldgs.has("SP"):
-					game.new_bldgs.SP = true
+				if not game.new_bldgs.has(Building.SOLAR_PANEL):
+					game.new_bldgs[Building.SOLAR_PANEL] = true
 		else:
 			time_left.text = Helper.time_to_str(game.u_i.cluster_data[game.c_c].time_for_one_gal - Time.get_unix_time_from_system() + game.u_i.cluster_data[game.c_c].conquer_start_date)
 	

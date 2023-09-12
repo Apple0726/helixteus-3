@@ -74,7 +74,7 @@ func calc_prod_per_sec():
 
 func set_auto_harvest(obj:Dictionary, produce:Dictionary, _name:String, plant_new:bool = true):
 	if obj.has("auto_GH"):
-		Helper.remove_GH_produce_from_autocollect(obj.auto_GH.produce, obj.aurora.au_int if obj.has("aurora") else 0.0)
+		Helper.remove_GH_produce_from_autocollect(obj.auto_GH.produce, obj.get("aurora", 0.0))
 		game.autocollect.mats.cellulose += obj.auto_GH.cellulose_drain
 		if obj.auto_GH.has("soil_drain"):
 			game.autocollect.mats.soil += obj.auto_GH.soil_drain
@@ -92,7 +92,7 @@ func set_auto_harvest(obj:Dictionary, produce:Dictionary, _name:String, plant_ne
 				produce.minerals = cellulose_drain * Data.lake_bonus_values.He[obj.lake_elements.He] * game.biology_bonus.He
 			if obj.lake_elements.has("Ne"):
 				produce.quillite = cellulose_drain * Data.lake_bonus_values.Ne[obj.lake_elements.Ne] * game.biology_bonus.Ne
-		Helper.add_GH_produce_to_autocollect(produce, obj.aurora.au_int if obj.has("aurora") else 0.0)
+		Helper.add_GH_produce_to_autocollect(produce, obj.get("aurora", 0.0))
 		obj.auto_GH = {
 			"produce":produce,
 			"cellulose_drain":cellulose_drain,

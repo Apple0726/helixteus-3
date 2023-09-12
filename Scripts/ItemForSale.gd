@@ -19,7 +19,7 @@ func _ready():
 func _on_ItemForSale_mouse_entered():
 	if not game[parent].locked:
 		if parent == "construct_panel":
-			game.new_bldgs[item_name] = false
+			game.new_bldgs[Building.names.find(item_name)] = false
 			var tween = create_tween()
 			tween.tween_property($New, "modulate", Color(1, 1, 1, 0), 0.2)
 		game[parent].set_item_info(item_name, item_desc, costs, item_type, item_dir)

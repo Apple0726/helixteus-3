@@ -38,17 +38,19 @@ func refresh():
 		auto_speedup = true
 		_on_Path1_pressed()
 		path1._on_Button_pressed()
-		$Label.text = tr("UPGRADE_X_BLDGS").format({"bldg":tr(planet.bldg.name + "_NAME_S"), "num":Helper.format_num(planet.tile_num)})
+		var name_str:String = Building.names[planet.bldg.name]
+		$Label.text = tr("UPGRADE_X_BLDGS").format({"bldg":tr(name_str.to_upper() + "_NAME_S"), "num":Helper.format_num(planet.tile_num)})
 	else:
 		p_i = game.planet_data[game.c_p]
 		var first_tile_bldg = game.tile_data[ids[0]].bldg
+		var name_str:String = Building.names[first_tile_bldg.name]
 		if len(ids) == 1:
-			$Label.text = tr("UPGRADE_X").format({"bldg":tr(first_tile_bldg.name + "_NAME")})
+			$Label.text = tr("UPGRADE_X").format({"bldg":tr(name_str.to_upper() + "_NAME")})
 		else:
-			$Label.text = tr("UPGRADE_X_BLDGS").format({"bldg":tr(first_tile_bldg.name + "_NAME_S"), "num":len(ids)})
+			$Label.text = tr("UPGRADE_X_BLDGS").format({"bldg":tr(name_str.to_upper() + "_NAME_S"), "num":len(ids)})
 		path2.visible = first_tile_bldg.has("path_2")
 		path3.visible = first_tile_bldg.has("path_3")
-		$AutoSpeedup.visible = game.universe_data[game.c_u].lv >= 28 or game.subjects.dimensional_power.lv >= 1
+		$AutoSpeedup.visible = game.universe_data[game.c_u].lv >= 28 or game.subject_levels.dimensional_power >= 1
 		$AutoSpeedup.button_pressed = $AutoSpeedup.visible
 		if first_tile_bldg.has("path_1"):
 			_on_Path1_pressed()
@@ -72,7 +74,7 @@ func get_min_lv():
 	else:
 		return planet.bldg[path_str]
 
-func calc_costs(tile_bldg:String, lv_curr:int, lv_to:int, cost_div:float, num:int = 1):
+func calc_costs(tile_bldg:int, lv_curr:int, lv_to:int, cost_div:float, num:int = 1):
 	var base_costs = Data.costs[tile_bldg].duplicate(true)
 	var base_metal_costs = Data[path_str][tile_bldg].metal_costs.duplicate(true) if Data[path_str][tile_bldg].has("metal_costs") else {}
 	var base_pw:float = Data[path_str][tile_bldg].cost_pw if Data[path_str][tile_bldg].has("cost_pw") else BASE_PW
@@ -142,7 +144,7 @@ func update(changing_paths:bool = false):
 			var cost_div_sum:float = 0.0
 			for id in ids:
 				var tile = game.tile_data[id]
-				var tile_bldg:String = tile.bldg.name
+				var tile_bldg:int = tile.bldg.name
 				var lv_curr = tile.bldg[path_str]
 				if lv_curr != first_tile_bldg[path_str]:
 					same_lv = false
@@ -376,7 +378,7 @@ func _on_Upgrade_pressed():
 				elif tile.bldg.name == Building.BATTERY:
 					tile.bldg.cap_upgrade = (new_base_value - tile.bldg.path_1_value) * game.u_i.charge
 				elif tile.bldg.name == "GH" and tile.has("auto_GH"):
-					Helper.remove_GH_produce_from_autocollect(tile.auto_GH.produce, tile.aurora.au_int if tile.has("aurora") else 0.0)
+					Helper.remove_GH_produce_from_autocollect(tile.auto_GH.produce, tile.get("aurora", 0.0))
 					if path_selected == 1:
 						tile.bldg.prod_mult = new_base_value / tile.bldg.path_1_value
 						tile.bldg.cell_mult = new_base_value / tile.bldg.path_1_value

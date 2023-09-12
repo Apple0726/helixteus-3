@@ -249,23 +249,23 @@ var mat_info = {	"coal":{"value":15},#One kg of coal = $15
 					"silicon":{"value":80},
 }
 #Changing length of met_info changes cave rng!
-var met_info = {	Metals.LEAD:{"min_depth":0, "max_depth":500, "rarity":1, "density":11.34, "value":300},
-					Metals.COPPER:{"min_depth":100, "max_depth":750, "rarity":1.7, "density":8.96, "value":660},
-					Metals.IRON:{"min_depth":200, "max_depth":1000, "rarity":2.8, "density":7.87, "value":1400},
-					Metals.ALUMINIUM:{"min_depth":300, "max_depth":1500, "rarity":5.0, "density":2.7, "value":3350},
-					Metals.SILVER:{"min_depth":400, "max_depth":1750, "rarity":8.5, "density":10.49, "value":7430},
-					Metals.GOLD:{"min_depth":600, "max_depth":2500, "rarity":15.3, "density":19.3, "value":17950},
-					Metals.AMETHYST:{"min_depth":800, "max_depth":3000, "rarity":25.5, "density":2.66, "value":38630},
-					Metals.EMERALD:{"min_depth":800, "max_depth":3000, "rarity":25.6, "density":2.70, "value":38850},
-					Metals.QUARTZ:{"min_depth":800, "max_depth":3000, "rarity":25.7, "density":2.32, "value":39080},
-					Metals.TOPAZ:{"min_depth":800, "max_depth":3000, "rarity":25.8, "density":3.50, "value":39310},
-					Metals.RUBY:{"min_depth":800, "max_depth":3000, "rarity":25.9, "density":4.01, "value":39540},
-					Metals.SAPPHIRE:{"min_depth":800, "max_depth":3000, "rarity":26.0, "density":3.99, "value":39770},
-					Metals.TITANIUM:{"min_depth":1500, "max_depth":4000, "rarity":46.0, "density":4.51, "value":93590},
-					Metals.PLATINUM:{"min_depth":2400, "max_depth":6000, "rarity":79.5, "density":21.45, "value":212650},
-					Metals.DIAMOND:{"min_depth":5800, "max_depth":9000, "rarity":157.3, "density":4.20, "value":591850},
-					Metals.NANOCRYSTAL:{"min_depth":9400, "max_depth":14000, "rarity":298.9, "density":1.5, "value":1550270},
-					Metals.MYTHRIL:{"min_depth":23000, "max_depth":28000, "rarity":1586.4, "density":13.4, "value":18955720},
+var met_info = {	"lead":{"min_depth":0, "max_depth":500, "rarity":1, "density":11.34, "value":300},
+					"copper":{"min_depth":100, "max_depth":750, "rarity":1.7, "density":8.96, "value":660},
+					"iron":{"min_depth":200, "max_depth":1000, "rarity":2.8, "density":7.87, "value":1400},
+					"aluminium":{"min_depth":300, "max_depth":1500, "rarity":5.0, "density":2.7, "value":3350},
+					"silver":{"min_depth":400, "max_depth":1750, "rarity":8.5, "density":10.49, "value":7430},
+					"gold":{"min_depth":600, "max_depth":2500, "rarity":15.3, "density":19.3, "value":17950},
+					"amethyst":{"min_depth":800, "max_depth":3000, "rarity":25.5, "density":2.66, "value":38630},
+					"emerald":{"min_depth":800, "max_depth":3000, "rarity":25.6, "density":2.70, "value":38850},
+					"quartz":{"min_depth":800, "max_depth":3000, "rarity":25.7, "density":2.32, "value":39080},
+					"topaz":{"min_depth":800, "max_depth":3000, "rarity":25.8, "density":3.50, "value":39310},
+					"ruby":{"min_depth":800, "max_depth":3000, "rarity":25.9, "density":4.01, "value":39540},
+					"sapphire":{"min_depth":800, "max_depth":3000, "rarity":26.0, "density":3.99, "value":39770},
+					"titanium":{"min_depth":1500, "max_depth":4000, "rarity":46.0, "density":4.51, "value":93590},
+					"platinum":{"min_depth":2400, "max_depth":6000, "rarity":79.5, "density":21.45, "value":212650},
+					"diamond":{"min_depth":5800, "max_depth":9000, "rarity":157.3, "density":4.20, "value":591850},
+					"nanocrystal":{"min_depth":9400, "max_depth":14000, "rarity":298.9, "density":1.5, "value":1550270},
+					"mythril":{"min_depth":23000, "max_depth":28000, "rarity":1586.4, "density":13.4, "value":18955720},
 }
 
 var pickaxes_info = {"stick":{"speed":1.0, "durability":140, "costs":{"money":300}},
@@ -302,11 +302,11 @@ var overclocks_info = {	"overclock1":{"costs":{"money":2800}, "mult":1.5, "durat
 }
 
 var seeds_produce = {"lead_seeds":{"costs":{"cellulose":0.05}, "produce":{"lead":0.1}},
-					"copper_seeds":{"costs":{"cellulose":0.06}, "produce":{"copper":0.1*met_info[Metals.LEAD].value / met_info[Metals.COPPER].value}},
-					"iron_seeds":{"costs":{"cellulose":0.07}, "produce":{"iron":0.1*met_info[Metals.LEAD].value / met_info[Metals.IRON].value}},
-					"aluminium_seeds":{"costs":{"cellulose":0.08}, "produce":{"aluminium":0.1*met_info[Metals.LEAD].value / met_info[Metals.ALUMINIUM].value}},
-					"silver_seeds":{"costs":{"cellulose":0.09}, "produce":{"silver":0.1*met_info[Metals.LEAD].value / met_info[Metals.SILVER].value}},
-					"gold_seeds":{"costs":{"cellulose":0.1}, "produce":{"gold":0.1*met_info[Metals.LEAD].value / met_info[Metals.GOLD].value}},
+					"copper_seeds":{"costs":{"cellulose":0.06}, "produce":{"copper":0.1*met_info.lead.value / met_info.copper.value}},
+					"iron_seeds":{"costs":{"cellulose":0.07}, "produce":{"iron":0.1*met_info.lead.value / met_info.iron.value}},
+					"aluminium_seeds":{"costs":{"cellulose":0.08}, "produce":{"aluminium":0.1*met_info.lead.value / met_info.aluminium.value}},
+					"silver_seeds":{"costs":{"cellulose":0.09}, "produce":{"silver":0.1*met_info.lead.value / met_info.silver.value}},
+					"gold_seeds":{"costs":{"cellulose":0.1}, "produce":{"gold":0.1*met_info.lead.value / met_info.gold.value}},
 }
 var craft_mining_info = {	"mining_liquid":{"costs":{"coal":200, "glass":20}, "speed_mult":1.5, "durability":400},
 							"purple_mining_liquid":{"costs":{"H":4000, "O":2000, "glass":500}, "speed_mult":4.0, "durability":800},
@@ -546,7 +546,7 @@ func _ready():
 		var dir_str = "res://Graphics/Buildings/Unique/%s.png" % bldg
 		if ResourceLoader.exists(dir_str):
 			unique_bldg_textures.append(load(dir_str))
-	for metal in Metals.names:
+	for metal in met_info.keys():
 		metal_textures[metal] = load("res://Graphics/Metals/%s.png" % metal)
 	if not TranslationServer.get_locale() in ["de", "zh", "es", "ja", "nl", "hu"]:
 		TranslationServer.set_locale("en")
@@ -1017,7 +1017,7 @@ func new_game(univ:int = 0, new_save:bool = false, DR_advantage = false):
 
 	#Measures to not overwhelm beginners. false: not visible
 	show = {}
-	new_bldgs = {"ME":true}
+	new_bldgs = {Building.MINERAL_EXTRACTOR:true}
 	if subject_levels.dimensional_power >= 1:
 		for mat in mat_info.keys():
 			show[mat] = true
@@ -2764,13 +2764,21 @@ func generate_volcano(t_id:int, VEI:float, artificial:bool = false):
 				if tile2.has("ash"):
 					if not tile2.has("cave"):
 						var diff = max(richness - tile2.ash.richness, 0)
-						if tile2.has("bldg") and tile2.bldg.name == "ME":
-							autocollect.rsrc.minerals += diff * tile2.bldg.path_1_value * tile2.bldg.get("overclock_mult", 1.0) * tile2.get("mineral_replicator_bonus", 1.0)
+						if tile2.has("bldg"):
+							if tile2.bldg.name == Building.MINERAL_EXTRACTOR:
+								autocollect.rsrc.minerals += diff * tile2.bldg.path_1_value * tile2.bldg.get("overclock_mult", 1.0) * tile2.get("mineral_replicator_bonus", 1.0)
+							elif tile2.bldg.name == Building.RESEARCH_LAB:
+								autocollect.rsrc.SP += diff * tile2.bldg.path_1_value * tile2.bldg.get("overclock_mult", 1.0) * tile2.get("observatory_bonus", 1.0)
 						tile2.ash.richness = max(richness, tile2.ash.richness)
+						tile2.SP_bonus = tile2.get("SP_bonus", 1.0) + diff / 2.0
 				else:
 					tile2.ash = {"richness":richness}
-					if tile2.has("bldg") and tile2.bldg.name == "ME":
-						autocollect.rsrc.minerals += (richness - 1.0) * tile2.bldg.path_1_value * tile2.bldg.get("overclock_mult", 1.0) * tile2.get("mineral_replicator_bonus", 1.0)
+					tile2.SP_bonus = tile2.get("SP_bonus", 1.0) + (richness - 1.0) / 2.0
+					if tile2.has("bldg"):
+						if tile2.bldg.name == Building.MINERAL_EXTRACTOR:
+							autocollect.rsrc.minerals += (richness - 1.0) * tile2.bldg.path_1_value * tile2.bldg.get("overclock_mult", 1.0) * tile2.get("mineral_replicator_bonus", 1.0)
+						elif tile2.bldg.name == Building.RESEARCH_LAB:
+							autocollect.rsrc.SP += (richness - 1.0) * tile2.bldg.path_1_value * tile2.bldg.get("overclock_mult", 1.0) * tile2.get("observatory_bonus", 1.0)
 					if artificial:
 						tile2.ash.artificial = true
 				if not achievement_data.exploration.has("volcano_cave") and tile2.has("cave"):
@@ -2805,8 +2813,8 @@ func generate_tiles(id:int):
 			#au_int: aurora_intensity
 			var au_int = Helper.clever_round(80000 * randf_range(1, 2) * B_strength * max_star_temp)
 			if tile_from == -1:
-				tile_from = Helper.rand_int(0, wid)
-				tile_to = Helper.rand_int(0, wid)
+				tile_from = randi() % wid
+				tile_to = randi() % wid
 			if rand < 0.5:#Vertical
 				for j in wid:
 					var x_pos:int = lerp(tile_from, tile_to, j / float(wid)) + diff + thiccness * amplitude * sin(j / float(wid) * 4 * pulsation * PI)
@@ -2814,8 +2822,10 @@ func generate_tiles(id:int):
 						if k < 0 or k > wid - 1:
 							continue
 						show.auroras = true
-						tile_data[k + j * wid] = {}
-						tile_data[k + j * wid].aurora = {"au_int":au_int}
+						var id2:int = k + j * wid
+						tile_data[id2] = {}
+						tile_data[id2].aurora = au_int
+						tile_data[id2].SP_bonus = tile_data[id2].get("SP_bonus", 1.0) + au_int
 			else:#Horizontal
 				for j in wid:
 					var y_pos:int = lerp(tile_from, tile_to, j / float(wid)) + diff + thiccness * amplitude * sin(j / float(wid) * 4 * pulsation * PI)
@@ -2823,15 +2833,17 @@ func generate_tiles(id:int):
 						if k < 0 or k > wid - 1:
 							continue
 						show.auroras = true
-						tile_data[j + k * wid] = {}
-						tile_data[j + k * wid].aurora = {"au_int":au_int}
+						var id2:int = j + k * wid
+						tile_data[id2] = {}
+						tile_data[id2].aurora = au_int
+						tile_data[id2].SP_bonus = tile_data[id2].get("SP_bonus", 1.0) + au_int
 			stats_global.highest_au_int = max(au_int, stats_global.highest_au_int)
 			stats_dim.highest_au_int = max(au_int, stats_dim.highest_au_int)
 			stats_univ.highest_au_int = max(au_int, stats_univ.highest_au_int)
 			if wid / 3 == 1:
 				diff = thiccness + 1
 			else:
-				diff = Helper.rand_int(thiccness + 1, wid / 3) * sign(randf_range(-1, 1))
+				diff = Helper.rand_int(thiccness + 1, wid / 3) * sign(randf_range(-69, 69))
 	#We assume that the star system's age is inversely proportional to the coldest star's temperature
 	#Age is a factor in crater rarity. Older systems have more craters
 	var coldest_star_temp = get_min_star_prop(c_s, "temperature")
@@ -3019,8 +3031,8 @@ func generate_tiles(id:int):
 				if unique_bldg == UniqueBuilding.SPACEPORT:
 					if spaceport_spawned:
 						continue
-					spaceport_spawned = true					#Save migration
-				var obj = {"tile":t_id, "tier":max(1, int(-log(randf() / u_i.get("age", 1) / (1.0 + u_i.cluster_data[c_c].pos.length() * u_i.dark_energy / 1000.0)) / 4.0 + 1))}
+					spaceport_spawned = true
+				var obj = {"tile":t_id, "tier":max(1, int(-log(randf() / u_i.age / (1.0 + u_i.cluster_data[c_c].pos.length() * u_i.dark_energy / 1000.0)) / 4.0 + 1))}
 				if randf() < 1.0 - 0.5 * exp(-pow(p_i.temperature - 273, 2) / 20000.0) / pow(obj.tier, 2):
 					obj.repair_cost = 250000 * pow(obj.tier, 30) * randf_range(1, 3) * Data.unique_bldg_repair_cost_multipliers[unique_bldg]
 				if p_i.unique_bldgs.has(unique_bldg):
@@ -3131,38 +3143,62 @@ func generate_tiles(id:int):
 			var tile = tile_data[t_id]
 			if tile:
 				planet_with_nothing = false
-			if tile and tile.has("lake"):
-				var lake_info = p_i["lake_%s" % tile.lake]
-				var distance_from_lake:int = 1
-				if lake_info.element in ["H", "Xe"]:
-					distance_from_lake += Data.lake_bonus_values[lake_info.element][lake_info.state] + biology_bonus[lake_info.element]
-				for k in range(max(0, i - distance_from_lake), min(i + distance_from_lake + 1, wid)):
-					for l in range(max(0, j - distance_from_lake), min(j + distance_from_lake + 1, wid)):
-						var id2 = k % wid + l * wid
-						if tile_data[id2] and tile_data[id2].has("lake") or Vector2(k, l) == Vector2(i, j):
-							continue
-						if tile_data[id2] == null:
-							tile_data[id2] = {}
-						if tile.lake == 1 and lake_1_au_int > 0.0:
-							if tile_data[id2].has("aurora"):
-								if not tile_data[id2].has("lake_elements"):
-									tile_data[id2].aurora.au_int += lake_1_au_int + 1.0
+			if tile:
+				if tile.has("lake"):
+					var lake_info = p_i["lake_%s" % tile.lake]
+					var distance_from_lake:int = 1
+					if lake_info.element in ["H", "Xe"]:
+						distance_from_lake += Data.lake_bonus_values[lake_info.element][lake_info.state] + biology_bonus[lake_info.element]
+					for k in range(max(0, i - distance_from_lake), min(i + distance_from_lake + 1, wid)):
+						for l in range(max(0, j - distance_from_lake), min(j + distance_from_lake + 1, wid)):
+							var id2 = k % wid + l * wid
+							if tile_data[id2] and tile_data[id2].has("lake") or Vector2(k, l) == Vector2(i, j):
+								continue
+							if tile_data[id2] == null:
+								tile_data[id2] = {}
+							if tile.lake == 1 and lake_1_au_int > 0.0:
+								if tile_data[id2].has("aurora"):
+									if not tile_data[id2].has("lake_elements"):
+										tile_data[id2].aurora += lake_1_au_int + 1.0
+									else:
+										tile_data[id2].aurora = max(lake_1_au_int, tile_data[id2].aurora)
 								else:
-									tile_data[id2].aurora.au_int = max(lake_1_au_int, tile_data[id2].aurora.au_int)
-							else:
-								tile_data[id2].aurora = {"au_int":lake_1_au_int}
-						elif tile.lake == 2 and lake_2_au_int > 0.0:
-							if tile_data[id2].has("aurora"):
-								if not tile_data[id2].has("lake_elements"):
-									tile_data[id2].aurora.au_int += lake_2_au_int + 1.0
+									tile_data[id2].aurora = lake_1_au_int
+							elif tile.lake == 2 and lake_2_au_int > 0.0:
+								if tile_data[id2].has("aurora"):
+									if not tile_data[id2].has("lake_elements"):
+										tile_data[id2].aurora += lake_2_au_int + 1.0
+									else:
+										tile_data[id2].aurora = max(lake_2_au_int, tile_data[id2].aurora)
 								else:
-									tile_data[id2].aurora.au_int = max(lake_2_au_int, tile_data[id2].aurora.au_int)
+									tile_data[id2].aurora = lake_2_au_int
+							if tile_data[id2].has("lake_elements"):
+								tile_data[id2].lake_elements[lake_info.element] = lake_info.state
 							else:
-								tile_data[id2].aurora = {"au_int":lake_2_au_int}
-						if tile_data[id2].has("lake_elements"):
-							tile_data[id2].lake_elements[lake_info.element] = lake_info.state
-						else:
-							tile_data[id2].lake_elements = {lake_info.element:lake_info.state}
+								tile_data[id2].lake_elements = {lake_info.element:lake_info.state}
+				elif tile.has("crater"):
+					for k in range(max(0, i - 1), min(i + 1 + 1, wid)):
+						for l in range(max(0, j - 1), min(j + 1 + 1, wid)):
+							var id2 = k % wid + l * wid
+							if Vector2(k, l) == Vector2(i, j):
+								continue
+							if tile_data[id2] == null:
+								tile_data[id2] = {}
+								tile_data[id2].SP_bonus = tile_data[id2].get("SP_bonus", 1.0) + met_info[tile.crater].value
+	# Give science point production bonus to tiles surrounding lakes
+	for i in wid:
+		for j in wid:
+			var t_id = i % wid + j * wid
+			var tile = tile_data[t_id]
+			if tile and tile.has("lake_elements"):
+				for el in tile.lake_elements.keys():
+					var state_multiplier = 1.0
+					var state = tile.lake_elements[el]
+					if state == "l":
+						state_multiplier = 2.0
+					elif state == "sc":
+						state_multiplier = 1.5
+					tile.SP_bonus = tile.get("SP_bonus", 1.0) + Data.lake_SP_bonus[el] * state_multiplier
 	if not achievement_data.exploration.has("planet_with_nothing") and planet_with_nothing:
 		earn_achievement("exploration", "planet_with_nothing")
 	Helper.save_obj("Planets", c_p_g, tile_data)
@@ -3504,11 +3540,11 @@ func add_resources(costs):
 		if not show.has(cost):
 			show[cost] = true
 			if cost == "sand":
-				new_bldgs.GF = true
+				new_bldgs[Building.GLASS_FACTORY] = true
 			elif cost == "coal":
-				new_bldgs.SE = true
+				new_bldgs[Building.STEAM_ENGINE] = true
 			elif cost == "stone":
-				new_bldgs.SC = true
+				new_bldgs[Building.STONE_CRUSHER] = true
 
 func e(n, e):
 	return n * pow(10, e)
@@ -3645,10 +3681,6 @@ func _input(event):
 				view.scroll_view = true
 			elif is_instance_valid(active_panel):
 				if c_v != "":
-#					if is_instance_valid(sub_panel):
-#						sub_panel.visible = false
-#						sub_panel = null
-#					else:
 					fade_out_panel(active_panel)
 					active_panel = null
 				else:
@@ -4106,8 +4138,8 @@ func conquer_all_confirm(energy_cost:float, insta_conquer:bool):
 			stats_univ.systems_conquered += 1
 			stats_dim.systems_conquered += 1
 			stats_global.systems_conquered += 1
-			if not new_bldgs.has("SP"):
-				new_bldgs.SP = true
+			if not new_bldgs.has(Building.SOLAR_PANEL):
+				new_bldgs[Building.SOLAR_PANEL] = true
 			system_data[c_s].conquered = true
 			view.obj.refresh_planets()
 			space_HUD.get_node("ConquerAll").visible = false
