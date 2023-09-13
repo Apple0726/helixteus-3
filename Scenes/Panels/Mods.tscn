@@ -103,20 +103,30 @@ offset_right = 640.0
 offset_bottom = 360.0
 color = Color(0, 0, 0, 0.564706)
 
-[node name="Wiki" type="Button" parent="."]
+[node name="HBoxContainer" type="HBoxContainer" parent="."]
 layout_mode = 1
 anchors_preset = 7
 anchor_left = 0.5
 anchor_top = 1.0
 anchor_right = 0.5
 anchor_bottom = 1.0
-offset_left = -96.0
-offset_top = -44.0
-offset_right = 96.0
-offset_bottom = -11.0
+offset_left = -200.0
+offset_top = -60.0
+offset_right = 200.0
+offset_bottom = -20.0
 grow_horizontal = 2
 grow_vertical = 0
+theme_override_constants/separation = 20
+alignment = 1
+
+[node name="Wiki" type="Button" parent="HBoxContainer"]
+layout_mode = 2
 text = "Modding Wiki"
 
+[node name="OpenModsFolder" type="Button" parent="HBoxContainer"]
+layout_mode = 2
+text = "OPEN_MODS_FOLDER"
+
 [connection signal="close_button_pressed" from="TextureButton" to="." method="_on_close_button_pressed"]
-[connection signal="pressed" from="Wiki" to="." method="_on_wiki_pressed"]
+[connection signal="pressed" from="HBoxContainer/Wiki" to="." method="_on_wiki_pressed"]
+[connection signal="pressed" from="HBoxContainer/OpenModsFolder" to="." method="_on_open_mods_folder_pressed"]

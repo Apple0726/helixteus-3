@@ -1912,7 +1912,8 @@ func add_planet():
 	planet_HUD = planet_HUD_scene.instantiate()
 	$UI.add_child(planet_HUD)
 	if stats_global.bldgs_built == 0:
-		planet_HUD.get_node("VBoxContainer/Construct").material.set_shader_parameter("enabled", true)
+		planet_HUD.get_node("VBoxContainer/Construct").material.set_shader_parameter("color", Color(1.0, 0.75, 0.0, 1.0))
+		planet_HUD.get_node("VBoxContainer/Construct/AnimationPlayer").play("FlashRepeat")
 
 func remove_dimension():
 	viewing_dimension = false

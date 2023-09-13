@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=3 uid="uid://r015wxpe82b3"]
+[gd_scene load_steps=9 format=3 uid="uid://r015wxpe82b3"]
 
 [sub_resource type="ShaderMaterial" id="4"]
 
@@ -14,8 +14,17 @@ border_color = Color(0.419608, 0.584314, 1, 0.32549)
 shadow_size = 1
 shadow_offset = Vector2(1, 1)
 
+[sub_resource type="SystemFont" id="SystemFont_xvdaj"]
+font_names = PackedStringArray("Sans-Serif")
+
+[sub_resource type="SystemFont" id="SystemFont_sb8iq"]
+font_names = PackedStringArray("Ebrima")
+multichannel_signed_distance_field = true
+fallbacks = Array[Font]([SubResource("SystemFont_xvdaj")])
+
 [sub_resource type="LabelSettings" id="LabelSettings_b8ug1"]
 line_spacing = 0.0
+font = SubResource("SystemFont_sb8iq")
 
 [sub_resource type="Animation" id="5"]
 resource_name = "Fade"
@@ -58,7 +67,7 @@ _data = {
 [node name="Tooltip" type="Label"]
 material = SubResource("4")
 offset_right = 32.0
-offset_bottom = 33.0
+offset_bottom = 32.0
 theme_override_styles/normal = SubResource("StyleBoxFlat_naegc")
 text = "a"
 label_settings = SubResource("LabelSettings_b8ug1")

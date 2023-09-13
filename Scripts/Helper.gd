@@ -599,14 +599,14 @@ func generate_rock(tile:Dictionary, p_i:Dictionary):
 		contents.ship_locator = 1
 	return contents
 
-func get_IR_mult(bldg_name:int):
+func get_IR_mult(bldg_name):
 	var mult = 1.0
 	var sc:String
 	if bldg_name in [Building.POWER_PLANT, Building.SOLAR_PANEL, Building.STEAM_ENGINE]:
 		sc = "EPE"
 	elif bldg_name in [Building.ATOM_MANIPULATOR, Building.SUBATOMIC_PARTICLE_REACTOR]:
 		sc = "PME"
-	elif bldg_name in [Building.MINERAL_SILO, Building.BATTERY, "NSF", "ESF", "M_DS", "M_MME"]:
+	elif bldg_name in [Building.MINERAL_SILO, Building.BATTERY, "M_DS", "M_MME"]:
 		sc = "STE"
 	else:
 		sc = "%sE" % bldg_name

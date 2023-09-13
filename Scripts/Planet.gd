@@ -224,7 +224,10 @@ func show_tooltip(tile, tile_id:int):
 		icons.append_array(Helper.flatten(Data.desc_icons[tile.bldg.name]) if Data.desc_icons.has(tile.bldg.name) else [])
 		if bldg_to_construct == -1:
 			if not game.get_node("UI").has_node("BuildingShortcuts") and $BuildingShortcutTimer.is_stopped():
-				$BuildingShortcutTimer.start()
+				if game.dim_num == 1 and game.c_u == 0:
+					$BuildingShortcutTimer.start(remap(game.u_i.lv, 1, 18, 0.5, 3.0))
+				else:
+					$BuildingShortcutTimer.start(3.0)
 		if tile.has("overclock_bonus") and overclockable(tile.bldg.name):
 			tooltip += "\n[color=#EEEE00]" + tr("BENEFITS_FROM_OVERCLOCK") % tile.overclock_bonus + "[/color]"
 		if tile.bldg.name == Building.BORING_MACHINE:
@@ -243,10 +246,11 @@ func show_tooltip(tile, tile_id:int):
 		tooltip += "[/color]"
 		tooltip += "\n"
 		if game.help.has("%s_desc" % unique_building_name):
+			tooltip += "[color=#FFBBFF]"
 			tooltip += tr("%s_DESC1" % unique_building_name.to_upper())
 			if game.help_str == "":
 				game.help_str = "%s_desc" % unique_building_name
-			tooltip += "\n" + tr("HIDE_HELP") + "\n"
+			tooltip += "\n[/color][color=#BB77BB]" + tr("HIDE_HELP") + "\n[/color]"
 		var desc = tr("%s_DESC2" % unique_building_name.to_upper())
 		match tile.unique_bldg.name:
 			UniqueBuilding.SPACEPORT:
@@ -273,7 +277,7 @@ func show_tooltip(tile, tile_id:int):
 		if game.help_str == "":
 			game.help_str = "volcano_desc"
 		if not game.help.has("volcano_desc"):
-			tooltip = "%s\n%s\n%s\n%s: %s" % [tr("VOLCANO"), tr("VOLCANO_DESC"), tr("HIDE_HELP"), tr("LARGEST_VEI") % ("(" + tr("VEI") + ") "), Helper.clever_round(tile.volcano.VEI)]
+			tooltip = "%s\n[color=#FFBBFF]%s\n[/color][color=#BB77BB]%s[/color]\n%s: %s" % [tr("VOLCANO"), tr("VOLCANO_DESC"), tr("HIDE_HELP"), tr("LARGEST_VEI") % ("(" + tr("VEI") + ") "), Helper.clever_round(tile.volcano.VEI)]
 		else:
 			tooltip = "%s\n%s: %s" % [tr("VOLCANO"), tr("LARGEST_VEI") % "", Helper.clever_round(tile.volcano.VEI)]
 	elif tile.has("crater") and tile.crater.has("init_depth"):
@@ -282,7 +286,7 @@ func show_tooltip(tile, tile_id:int):
 		if game.help_str == "":
 			game.help_str = "crater_desc"
 		if game.help.has("crater_desc"):
-			tooltip += tr("METAL_CRATER").format({"metal":tr(tile.crater.metal.to_upper()), "crater":tr("CRATER")}) + "\n%s\n%s\n%s" % [tr("CRATER_DESC"), tr("HIDE_HELP"), tr("HOLE_DEPTH") + ": %s m"  % [tile.depth]]
+			tooltip += tr("METAL_CRATER").format({"metal":tr(tile.crater.metal.to_upper()), "crater":tr("CRATER")}) + "[color=#FFBBFF]\n%s\n[/color][color=#BB77BB]%s[/color]\n%s" % [tr("CRATER_DESC"), tr("HIDE_HELP"), tr("HOLE_DEPTH") + ": %s m"  % [tile.depth]]
 		else:
 			tooltip += tr("METAL_CRATER").format({"metal":tr(tile.crater.metal.to_upper()), "crater":tr("CRATER")}) + "\n%s" % [tr("HOLE_DEPTH") + ": %s m"  % [tile.depth]]
 	elif tile.has("cave"):
@@ -327,34 +331,36 @@ func show_tooltip(tile, tile_id:int):
 					tooltip = tr("LAKE_CONTENTS").format({"state":tr("SOLID"), "contents":tr("%s_NAME" % lake_info.element.to_upper())})
 				"sc":
 					tooltip = tr("LAKE_CONTENTS").format({"state":tr("SUPERCRITICAL"), "contents":tr("%s_NAME" % lake_info.element.to_upper())})
-		tooltip += "\n" + tr("EFFECT_ON_PLANTS") + "\n"
+		tooltip += "\n" + tr("EFFECT_ON_PLANTS") + "\n[color=#00FF00]"
 		if Data.lake_bonus_values[lake_info.element].operator == "x":
 			tooltip += tr("%s_LAKE_BONUS" % lake_info.element.to_upper()) % Helper.clever_round(Data.lake_bonus_values[lake_info.element][lake_info.state] * game.biology_bonus[lake_info.element])
 		elif Data.lake_bonus_values[lake_info.element].operator == "÷":
 			tooltip += tr("%s_LAKE_BONUS" % lake_info.element.to_upper()) % Helper.clever_round(Data.lake_bonus_values[lake_info.element][lake_info.state] / game.biology_bonus[lake_info.element])
 		elif Data.lake_bonus_values[lake_info.element].operator == "+":
 			tooltip += tr("%s_LAKE_BONUS" % lake_info.element.to_upper()) % (Data.lake_bonus_values[lake_info.element][lake_info.state] + game.biology_bonus[lake_info.element])
+		tooltip += "[/color]"
 	elif tile.has("ship"):
+		tooltip = tr("SPACESHIP") + "\n"
 		if game.science_unlocked.has("SCT"):
-			tooltip = tr("CLICK_TO_CONTROL_SHIP")
+			tooltip += tr("CLICK_TO_CONTROL_SHIP")
 		else:
 			if game.help_str == "":
 				game.help_str = "abandoned_ship"
 			if game.help.has("abandoned_ship"):
-				tooltip = tr("ABANDONED_SHIP") + "\n" + tr("HIDE_HELP")
+				tooltip += "[color=#FFBBFF]" + tr("ABANDONED_SHIP") + "\n[/color][color=#BB77BB]" + tr("HIDE_HELP") + "[/color]"
 	elif tile.has("wormhole"):
 		if tile.wormhole.active:
 			if game.help_str == "":
 				game.help_str = "active_wormhole"
 			if game.help.has("active_wormhole"):
-				tooltip = "%s\n%s\n%s" % [tr("ACTIVE_WORMHOLE"), tr("ACTIVE_WORMHOLE_DESC"), tr("HIDE_HELP")]
+				tooltip = "%s[color=#FFBBFF]\n%s[/color][color=#BB77BB]\n%s[/color]" % [tr("ACTIVE_WORMHOLE"), tr("ACTIVE_WORMHOLE_DESC"), tr("HIDE_HELP")]
 			else:
 				tooltip = tr("ACTIVE_WORMHOLE")
 		else:
 			if game.help_str == "":
 				game.help_str = "inactive_wormhole"
 			if game.help.has("inactive_wormhole"):
-				tooltip = "%s\n%s\n%s" % [tr("INACTIVE_WORMHOLE"), tr("INACTIVE_WORMHOLE_DESC"), tr("HIDE_HELP")]
+				tooltip = "%s[color=#FFBBFF]\n%s[/color][color=#BB77BB]\n%s[/color]" % [tr("INACTIVE_WORMHOLE"), tr("INACTIVE_WORMHOLE_DESC"), tr("HIDE_HELP")]
 			else:
 				tooltip = tr("INACTIVE_WORMHOLE")
 			var wh_costs:Dictionary = get_wh_costs()
@@ -367,7 +373,7 @@ func show_tooltip(tile, tile_id:int):
 		if game.help_str == "":
 			game.help_str = "aurora_desc"
 		if game.help.has("aurora_desc"):
-			tooltip = "%s\n%s\n%s\n%s" % [tr("AURORA"), tr("AURORA_DESC"), tr("HIDE_HELP"), tr("AURORA_INTENSITY") + ": %s" % [tile.aurora]]
+			tooltip = "%s\n[color=#FFBBFF]%s\n[/color][color=#BB77BB]%s[/color]\n%s" % [tr("AURORA"), tr("AURORA_DESC"), tr("HIDE_HELP"), tr("AURORA_INTENSITY") + ": %s" % [tile.aurora]]
 		else:
 			tooltip = tr("AURORA_INTENSITY") + ": %s" % [tile.aurora]
 	if tile.has("ruins"):
@@ -385,6 +391,10 @@ func show_tooltip(tile, tile_id:int):
 func get_wh_costs():
 	return {"SP":round(10000 * pow(game.stats_univ.wormholes_activated + 1, 0.8)), "time":900 / game.u_i.time_speed if game.subject_levels.dimensional_power == 0 else 0.2}
 
+func flash_construction_button():
+	game.planet_HUD.get_node("VBoxContainer/Construct").material.set_shader_parameter("color", Color.WHITE)
+	game.planet_HUD.get_node("VBoxContainer/Construct/AnimationPlayer").play("FlashOnce")
+	
 func constr_bldg(tile_id:int, curr_time:int, _bldg_to_construct:int, mass_build:bool = false):
 	if _bldg_to_construct == -1:
 		return
@@ -406,12 +416,17 @@ func constr_bldg(tile_id:int, curr_time:int, _bldg_to_construct:int, mass_build:
 		game.stats_global.bldgs_built += 1
 		if game.stats_univ.bldgs_built >= 1 and not game.new_bldgs.has(Building.POWER_PLANT):
 			game.new_bldgs[Building.POWER_PLANT] = true
+			flash_construction_button()
 		if game.stats_univ.bldgs_built >= 5 and not game.new_bldgs.has(Building.MINERAL_SILO):
 			game.new_bldgs[Building.BATTERY] = true
 			game.new_bldgs[Building.MINERAL_SILO] = true
-		if game.stats_univ.bldgs_built >= 18 and not game.new_bldgs.has(Building.RESEARCH_LAB):
+			flash_construction_button()
+		if game.stats_univ.bldgs_built >= 10 and not game.new_bldgs.has(Building.RESEARCH_LAB):
 			game.new_bldgs[Building.RESEARCH_LAB] = true
+			flash_construction_button()
+		if game.stats_univ.bldgs_built >= 18 and not game.new_bldgs.has(Building.CENTRAL_BUSINESS_DISTRICT):
 			game.new_bldgs[Building.CENTRAL_BUSINESS_DISTRICT] = true
+			flash_construction_button()
 		if tile == null:
 			tile = {}
 		tile.bldg = {}

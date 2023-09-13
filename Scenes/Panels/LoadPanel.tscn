@@ -50,19 +50,6 @@ offset_top = 8.0
 offset_right = -8.0
 offset_bottom = 32.0
 
-[node name="ImportSave" type="Button" parent="."]
-layout_mode = 0
-anchor_left = 0.5
-anchor_top = 1.0
-anchor_right = 0.5
-anchor_bottom = 1.0
-offset_left = -80.0
-offset_top = -48.0
-offset_right = 81.0
-offset_bottom = -14.0
-grow_horizontal = 2
-text = "IMPORT_SAVE"
-
 [node name="Import" type="FileDialog" parent="."]
 title = "Import save"
 size = Vector2i(898, 400)
@@ -92,9 +79,27 @@ grow_horizontal = 2
 grow_vertical = 2
 color = Color(0, 0, 0, 0.564706)
 
+[node name="HBoxContainer" type="HBoxContainer" parent="."]
+layout_mode = 0
+offset_left = 220.0
+offset_top = 212.0
+offset_right = 708.0
+offset_bottom = 252.0
+theme_override_constants/separation = 20
+alignment = 1
+
+[node name="ImportSave" type="Button" parent="HBoxContainer"]
+layout_mode = 2
+text = "IMPORT_SAVE"
+
+[node name="ShowInFileManager" type="Button" parent="HBoxContainer"]
+layout_mode = 2
+text = "SHOW_IN_FILE_MANAGER"
+
 [connection signal="close_button_pressed" from="TextureButton" to="." method="_on_close_button_pressed"]
-[connection signal="pressed" from="ImportSave" to="." method="_on_ImportSave_pressed"]
 [connection signal="file_selected" from="Import" to="." method="_on_Import_file_selected"]
 [connection signal="visibility_changed" from="Import" to="." method="_on_import_visibility_changed"]
 [connection signal="file_selected" from="Export" to="." method="_on_Export_file_selected"]
 [connection signal="visibility_changed" from="Export" to="." method="_on_export_visibility_changed"]
+[connection signal="pressed" from="HBoxContainer/ImportSave" to="." method="_on_ImportSave_pressed"]
+[connection signal="pressed" from="HBoxContainer/ShowInFileManager" to="." method="_on_show_in_file_manager_pressed"]

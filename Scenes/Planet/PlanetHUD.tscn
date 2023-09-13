@@ -1,10 +1,10 @@
-[gd_scene load_steps=15 format=3 uid="uid://b4u80l6nm3dei"]
+[gd_scene load_steps=19 format=3 uid="uid://b4u80l6nm3dei"]
 
-[ext_resource type="Texture2D" uid="uid://q51bt5jton33" path="res://Graphics/Buttons/ConstructBuildings.png" id="1"]
+[ext_resource type="Texture2D" uid="uid://225akwsdo1ln" path="res://Graphics/Buttons/ConstructBuildings.png" id="1"]
 [ext_resource type="Script" path="res://Scripts/PlanetHUD.gd" id="2"]
-[ext_resource type="Texture2D" uid="uid://lgk3fk8yaa2s" path="res://Graphics/Icons/Notification.png" id="4"]
-[ext_resource type="Texture2D" uid="uid://cm87p62ne51wq" path="res://Graphics/Buttons/Mine.png" id="5"]
-[ext_resource type="Texture2D" uid="uid://8rftuutjln2x" path="res://Graphics/Buttons/Terraform.png" id="7"]
+[ext_resource type="Texture2D" uid="uid://cnp4b35umhf44" path="res://Graphics/Icons/Notification.png" id="4"]
+[ext_resource type="Texture2D" uid="uid://difn1gg0v68lt" path="res://Graphics/Buttons/Mine.png" id="5"]
+[ext_resource type="Texture2D" uid="uid://wcinw8e5y0jp" path="res://Graphics/Buttons/Terraform.png" id="7"]
 
 [sub_resource type="InputEventKey" id="InputEventKey_gr57q"]
 device = -1
@@ -17,19 +17,18 @@ events = [SubResource("InputEventKey_gr57q")]
 [sub_resource type="Shader" id="9"]
 code = "shader_type canvas_item;
 
-uniform bool enabled = true;
+uniform vec4 color:source_color = vec4(1.0);
+uniform float alpha:hint_range(0.0, 1.0) = 0.0;
 
 void fragment() {
 	COLOR = texture(TEXTURE, UV);
-	if (enabled) {
-		COLOR.r += 0.15 * (sin(3.1415 * 3.0 * TIME) + 1.0);
-		COLOR.g += 0.1 * (sin(3.1415 * 3.0 * TIME) + 1.0);
-	}
+	COLOR.rgb += vec3(color.rgb) * alpha;
 }"
 
 [sub_resource type="ShaderMaterial" id="10"]
 shader = SubResource("9")
-shader_parameter/enabled = false
+shader_parameter/color = Color(1, 1, 1, 1)
+shader_parameter/alpha = 0.0
 
 [sub_resource type="InputEventKey" id="InputEventKey_5kixi"]
 device = -1
@@ -38,6 +37,62 @@ unicode = 99
 
 [sub_resource type="Shortcut" id="6"]
 events = [SubResource("InputEventKey_5kixi")]
+
+[sub_resource type="Animation" id="Animation_ov68r"]
+resource_name = "FlashOnce"
+length = 1.6
+step = 0.05
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:material:shader_parameter/alpha")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.4, 0.8, 1.2, 1.6),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1),
+"update": 0,
+"values": [0.0, 0.4, 0.0, 0.4, 0.0]
+}
+
+[sub_resource type="Animation" id="Animation_8yif4"]
+resource_name = "FlashRepeat"
+length = 0.6
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:material:shader_parameter/alpha")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.3, 0.6),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [0.0, 0.4, 0.0]
+}
+
+[sub_resource type="Animation" id="Animation_f67xs"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:material:shader_parameter/alpha")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [0.0]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_qi0uf"]
+_data = {
+"FlashOnce": SubResource("Animation_ov68r"),
+"FlashRepeat": SubResource("Animation_8yif4"),
+"RESET": SubResource("Animation_f67xs")
+}
 
 [sub_resource type="Animation" id="7"]
 resource_name = "MoveButtons"
@@ -143,6 +198,11 @@ mouse_filter = 2
 texture = ExtResource("4")
 expand_mode = 1
 stretch_mode = 6
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="VBoxContainer/Construct"]
+libraries = {
+"": SubResource("AnimationLibrary_qi0uf")
+}
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 autoplay = "MoveButtons"

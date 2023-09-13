@@ -1,4 +1,4 @@
-[gd_resource type="Theme" load_steps=33 format=3 uid="uid://cp2u1kgj60ic"]
+[gd_resource type="Theme" load_steps=38 format=3 uid="uid://cp2u1kgj60ic"]
 
 [ext_resource type="Texture2D" uid="uid://c7dhi5uyajeow" path="res://Graphics/Buttons/CheckboxChecked.svg" id="1_h4tp5"]
 [ext_resource type="Texture2D" uid="uid://b8wob2ylae00s" path="res://Graphics/Buttons/CheckboxUnhecked.svg" id="2_s3vx0"]
@@ -6,8 +6,9 @@
 [sub_resource type="SystemFont" id="SystemFont_xvdaj"]
 font_names = PackedStringArray("Sans-Serif")
 
-[sub_resource type="SystemFont" id="SystemFont_ew3ep"]
-font_names = PackedStringArray("Arimo")
+[sub_resource type="SystemFont" id="SystemFont_s3jam"]
+font_names = PackedStringArray("Ebrima")
+multichannel_signed_distance_field = true
 fallbacks = Array[Font]([SubResource("SystemFont_xvdaj")])
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_78575"]
@@ -70,6 +71,9 @@ border_color = Color(0.341176, 0.341176, 0.341176, 1)
 border_blend = true
 shadow_size = 2
 shadow_offset = Vector2(1, 1)
+
+[sub_resource type="SystemFont" id="SystemFont_ew3ep"]
+fallbacks = Array[Font]([SubResource("SystemFont_xvdaj")])
 
 [sub_resource type="StyleBoxEmpty" id="5"]
 
@@ -154,7 +158,8 @@ border_blend = true
 corner_detail = 5
 
 [sub_resource type="SystemFont" id="SystemFont_c5eyb"]
-font_names = PackedStringArray("Arimo")
+font_names = PackedStringArray("Ebrima")
+multichannel_signed_distance_field = true
 fallbacks = Array[Font]([SubResource("SystemFont_xvdaj")])
 
 [sub_resource type="StyleBoxFlat" id="19"]
@@ -197,8 +202,29 @@ bg_color = Color(0, 0, 0, 1)
 [sub_resource type="StyleBoxFlat" id="23"]
 bg_color = Color(1, 1, 1, 1)
 
-[sub_resource type="SystemFont" id="SystemFont_r4v7d"]
-font_names = PackedStringArray("Arimo")
+[sub_resource type="SystemFont" id="SystemFont_biaqw"]
+font_names = PackedStringArray("Ebrima")
+multichannel_signed_distance_field = true
+fallbacks = Array[Font]([SubResource("SystemFont_xvdaj")])
+
+[sub_resource type="SystemFont" id="SystemFont_mdnev"]
+font_names = PackedStringArray("Ebrima")
+multichannel_signed_distance_field = true
+fallbacks = Array[Font]([SubResource("SystemFont_xvdaj")])
+
+[sub_resource type="SystemFont" id="SystemFont_7ywt1"]
+font_names = PackedStringArray("Ebrima")
+multichannel_signed_distance_field = true
+fallbacks = Array[Font]([SubResource("SystemFont_xvdaj")])
+
+[sub_resource type="SystemFont" id="SystemFont_cr4fx"]
+font_names = PackedStringArray("Ebrima")
+multichannel_signed_distance_field = true
+fallbacks = Array[Font]([SubResource("SystemFont_xvdaj")])
+
+[sub_resource type="SystemFont" id="SystemFont_y8qt8"]
+font_names = PackedStringArray("Ebrima")
+multichannel_signed_distance_field = true
 fallbacks = Array[Font]([SubResource("SystemFont_xvdaj")])
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_s8f2h"]
@@ -229,7 +255,7 @@ Button/colors/font_color_disabled = Color(0, 0, 0, 1)
 Button/colors/font_color_hover = Color(1, 1, 1, 1)
 Button/colors/font_color_pressed = Color(1, 1, 1, 1)
 Button/constants/hseparation = 3
-Button/fonts/font = SubResource("SystemFont_ew3ep")
+Button/fonts/font = SubResource("SystemFont_s3jam")
 Button/styles/disabled = SubResource("StyleBoxFlat_78575")
 Button/styles/focus = SubResource("StyleBoxFlat_ab6o6")
 Button/styles/hover = SubResource("StyleBoxFlat_ac0dv")
@@ -443,11 +469,11 @@ RichTextLabel/constants/shadow_offset_x = 1
 RichTextLabel/constants/shadow_offset_y = 1
 RichTextLabel/constants/table_hseparation = 3
 RichTextLabel/constants/table_vseparation = 3
-RichTextLabel/fonts/bold_font = SubResource("SystemFont_ew3ep")
-RichTextLabel/fonts/bold_italics_font = SubResource("SystemFont_ew3ep")
-RichTextLabel/fonts/italics_font = SubResource("SystemFont_ew3ep")
-RichTextLabel/fonts/mono_font = SubResource("SystemFont_ew3ep")
-RichTextLabel/fonts/normal_font = SubResource("SystemFont_r4v7d")
+RichTextLabel/fonts/bold_font = SubResource("SystemFont_biaqw")
+RichTextLabel/fonts/bold_italics_font = SubResource("SystemFont_mdnev")
+RichTextLabel/fonts/italics_font = SubResource("SystemFont_7ywt1")
+RichTextLabel/fonts/mono_font = SubResource("SystemFont_cr4fx")
+RichTextLabel/fonts/normal_font = SubResource("SystemFont_y8qt8")
 RichTextLabel/styles/focus = null
 RichTextLabel/styles/normal = null
 SpinBox/icons/updown = null

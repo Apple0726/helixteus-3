@@ -23,10 +23,9 @@ func _input(event):
 	refresh()
 
 func _on_Construct_pressed():
-	if not Input.is_action_pressed("shift"):
-		click_sound.play()
-		$VBoxContainer/Construct.material.set_shader_parameter("enabled", false)
-		game.toggle_panel(game.construct_panel)
+	click_sound.play()
+	game.planet_HUD.get_node("VBoxContainer/Construct/AnimationPlayer").stop()
+	game.toggle_panel(game.construct_panel)
 
 func _on_Mine_pressed():
 	click_sound.play()

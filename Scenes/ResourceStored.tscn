@@ -1,7 +1,7 @@
-[gd_scene load_steps=8 format=3 uid="uid://b5ew526etki0u"]
+[gd_scene load_steps=9 format=3 uid="uid://b5ew526etki0u"]
 
-[ext_resource type="Texture2D" uid="uid://dw76ym2y2gede" path="res://Graphics/Icons/minerals.png" id="1"]
-[ext_resource type="Texture2D" uid="uid://d3y18b21lmrsh" path="res://Graphics/Misc/Bar.png" id="3"]
+[ext_resource type="Texture2D" uid="uid://coh6u6gsdcspp" path="res://Graphics/Icons/minerals.png" id="1"]
+[ext_resource type="Texture2D" uid="uid://082kblfbcuhg" path="res://Graphics/Misc/Bar.png" id="3"]
 [ext_resource type="Script" path="res://Scripts/ResourceStored.gd" id="4"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_l3c8g"]
@@ -18,8 +18,13 @@ border_width_top = 2
 border_width_right = 2
 border_width_bottom = 2
 
+[sub_resource type="SystemFont" id="SystemFont_m40e0"]
+font_names = PackedStringArray("Ebrima")
+multichannel_signed_distance_field = true
+
 [sub_resource type="LabelSettings" id="LabelSettings_h6cwk"]
 line_spacing = 0.0
+font = SubResource("SystemFont_m40e0")
 font_size = 22
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_x6v7q"]
@@ -80,9 +85,9 @@ anchors_preset = 4
 anchor_top = 0.5
 anchor_bottom = 0.5
 offset_left = 10.0
-offset_top = -22.0
+offset_top = -22.5
 offset_right = 127.0
-offset_bottom = 22.0
+offset_bottom = 21.5
 grow_vertical = 2
 label_settings = SubResource("LabelSettings_h6cwk")
 vertical_alignment = 1

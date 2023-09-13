@@ -3,6 +3,9 @@ extends "Panel.gd"
 var save_slot_scene = preload("res://Scenes/SaveSlot.tscn")
 var save_to_export:String = ""
 
+func _ready():
+	$HBoxContainer/ShowInFileManager.visible = OS.get_name() in ["Windows", "Linux"]
+
 func on_version_over_ok():
 	game.show_tooltip(tr("SAME_VERSION"))
 
@@ -220,3 +223,7 @@ func _on_export_visibility_changed():
 
 func _on_import_visibility_changed():
 	$PopupBackground.visible = $Import.visible
+
+
+func _on_show_in_file_manager_pressed():
+	OS.shell_open(ProjectSettings.globalize_path("user://"))

@@ -1,7 +1,15 @@
-[gd_scene load_steps=9 format=3 uid="uid://bxfp8oao3bfyl"]
+[gd_scene load_steps=11 format=3 uid="uid://bxfp8oao3bfyl"]
 
 [ext_resource type="Script" path="res://Scripts/TextEffects/AuroraText.gd" id="3"]
 [ext_resource type="Shader" path="res://Shaders/FireTooltip.gdshader" id="4"]
+
+[sub_resource type="SystemFont" id="SystemFont_xvdaj"]
+font_names = PackedStringArray("Sans-Serif")
+
+[sub_resource type="SystemFont" id="SystemFont_bckp1"]
+font_names = PackedStringArray("Ebrima")
+multichannel_signed_distance_field = true
+fallbacks = Array[Font]([SubResource("SystemFont_xvdaj")])
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_sjq4l"]
 content_margin_left = 10.0
@@ -69,6 +77,7 @@ clip_contents = false
 offset_right = 400.0
 offset_bottom = 33.0
 mouse_filter = 2
+theme_override_fonts/normal_font = SubResource("SystemFont_bckp1")
 theme_override_styles/normal = SubResource("StyleBoxFlat_sjq4l")
 text = "a"
 scroll_active = false

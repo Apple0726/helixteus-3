@@ -175,7 +175,7 @@ func refresh_planets():
 			match p_i.bldg.name:
 				"ME":
 					add_rsrc(v, Color(0, 0.5, 0.9, 1), Data.rsrc_icons.ME, p_i.l_id, false, sc)
-				"PP":
+				Building.POWER_PLANT:
 					add_rsrc(v, Color(0, 0.8, 0, 1), Data.rsrc_icons.PP, p_i.l_id, false, sc)
 				"RL":
 					add_rsrc(v, Color(0, 0.8, 0, 1), Data.rsrc_icons.RL, p_i.l_id, false, sc)
@@ -364,9 +364,9 @@ func show_M_DS_costs(star:Dictionary, base:bool = false):
 	add_constr_costs(vbox, star)
 	Helper.add_label(tr("PRODUCTION_PER_SECOND"))
 	if base and build_all_MS_stages:
-		Helper.put_rsrc(vbox, 32, {"energy":Helper.get_DS_output(star, Data.MS_num_stages.M_DS + 1) * Helper.get_IR_mult("PP") * game.u_i.time_speed}, false)
+		Helper.put_rsrc(vbox, 32, {"energy":Helper.get_DS_output(star, Data.MS_num_stages.M_DS + 1) * Helper.get_IR_mult(Building.POWER_PLANT) * game.u_i.time_speed}, false)
 	else:
-		Helper.put_rsrc(vbox, 32, {"energy":Helper.get_DS_output(star, 1) * Helper.get_IR_mult("PP") * game.u_i.time_speed}, false)
+		Helper.put_rsrc(vbox, 32, {"energy":Helper.get_DS_output(star, 1) * Helper.get_IR_mult(Building.POWER_PLANT) * game.u_i.time_speed}, false)
 	Helper.add_label(tr("CAPACITY_INCREASE"))
 	await get_tree().process_frame
 	if base and build_all_MS_stages:
@@ -864,7 +864,7 @@ func on_star_over (id:int):
 		else:
 			if star.MS == "M_DS":
 				Helper.add_label(tr("PRODUCTION_PER_SECOND"), -1, false)
-				Helper.put_rsrc(vbox, 32, {"energy":Helper.get_DS_output(star) * Helper.get_IR_mult("PP") * game.u_i.time_speed}, false)
+				Helper.put_rsrc(vbox, 32, {"energy":Helper.get_DS_output(star) * Helper.get_IR_mult(Building.POWER_PLANT) * game.u_i.time_speed}, false)
 				Helper.add_label(tr("CAPACITY_INCREASE"), -1, false)
 				Helper.put_rsrc(vbox, 32, {"energy":Helper.get_DS_capacity(star) * Helper.get_IR_mult("M_DS")}, false)
 			elif star.MS == "M_MB":
@@ -1039,7 +1039,7 @@ func _process(_delta):
 		var rsrc:ResourceStored = rsrc_obj.node
 		var prod:float
 		if star.MS == "M_DS":
-			prod = Helper.get_DS_output(star) * Helper.get_IR_mult("PP") * game.u_i.time_speed
+			prod = Helper.get_DS_output(star) * Helper.get_IR_mult(Building.POWER_PLANT) * game.u_i.time_speed
 		elif star.MS == "M_MB":
 			prod = Helper.get_MB_output(star) * Helper.get_IR_mult("RL") * game.u_i.time_speed
 		rsrc.set_text("%s/%s" % [Helper.format_num(prod), tr("S_SECOND")])

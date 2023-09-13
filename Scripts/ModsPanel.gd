@@ -3,6 +3,7 @@ extends "Panel.gd"
 var mod_slot_scene = preload("res://Scenes/ModSlot.tscn")
 
 func _ready():
+	$HBoxContainer/OpenModsFolder.visible = OS.get_name() in ["Windows", "Linux"]
 	for key in Mods.mod_list:
 		var mod = Mods.mod_list[key]
 		var mod_slot = mod_slot_scene.instantiate()
@@ -58,3 +59,7 @@ func on_load(key, mod_slot):
 
 func _on_wiki_pressed():
 	OS.shell_open("https://sites.google.com/view/helixteus3moddingwiki")
+
+
+func _on_open_mods_folder_pressed():
+	OS.shell_open(ProjectSettings.globalize_path("user://Mods"))
