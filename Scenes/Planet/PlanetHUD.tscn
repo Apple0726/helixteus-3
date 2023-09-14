@@ -1,6 +1,7 @@
-[gd_scene load_steps=19 format=3 uid="uid://b4u80l6nm3dei"]
+[gd_scene load_steps=21 format=3 uid="uid://b4u80l6nm3dei"]
 
 [ext_resource type="Texture2D" uid="uid://225akwsdo1ln" path="res://Graphics/Buttons/ConstructBuildings.png" id="1"]
+[ext_resource type="Theme" uid="uid://cp2u1kgj60ic" path="res://Resources/default_theme.tres" id="1_ankd5"]
 [ext_resource type="Script" path="res://Scripts/PlanetHUD.gd" id="2"]
 [ext_resource type="Texture2D" uid="uid://cnp4b35umhf44" path="res://Graphics/Icons/Notification.png" id="4"]
 [ext_resource type="Texture2D" uid="uid://difn1gg0v68lt" path="res://Graphics/Buttons/Mine.png" id="5"]
@@ -141,6 +142,9 @@ _data = {
 "RESET": SubResource("8")
 }
 
+[sub_resource type="LabelSettings" id="LabelSettings_1kyj1"]
+shadow_color = Color(0, 0, 0, 0.505882)
+
 [node name="PlanetHUD" type="Control"]
 layout_mode = 3
 anchors_preset = 15
@@ -149,6 +153,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
+theme = ExtResource("1_ankd5")
 script = ExtResource("2")
 
 [node name="VBoxContainer" type="VBoxContainer" parent="."]
@@ -209,6 +214,17 @@ autoplay = "MoveButtons"
 libraries = {
 "": SubResource("AnimationLibrary_qgp35")
 }
+
+[node name="MassBuild" type="Label" parent="."]
+visible = false
+layout_mode = 0
+offset_left = 680.0
+offset_top = 48.0
+offset_right = 1268.0
+offset_bottom = 74.0
+text = "HOLD_SHIFT_TO_MASS_BUILD"
+label_settings = SubResource("LabelSettings_1kyj1")
+horizontal_alignment = 2
 
 [connection signal="mouse_entered" from="VBoxContainer/Terraform" to="." method="_on_Terraform_mouse_entered"]
 [connection signal="mouse_exited" from="VBoxContainer/Terraform" to="." method="_on_mouse_exited"]

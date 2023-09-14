@@ -1299,6 +1299,7 @@ func fade_in_panel(panel:Control):
 	$Panels/Control.move_child(panel, $Panels/Control.get_child_count())
 	if is_instance_valid(panel.tween):
 		panel.tween.kill()
+	_on_BottomInfo_close_button_pressed()
 	panel.tween = create_tween()
 	panel.tween.set_parallel(true)
 	panel.tween.tween_property(panel, "modulate", Color(1, 1, 1, 1), 0.1)
@@ -2753,6 +2754,10 @@ func generate_volcano(t_id:int, VEI:float, artificial:bool = false):
 	var wid:int = Helper.get_wid(planet_data[c_p].size)
 	var i:int = t_id % wid
 	var j:int = t_id / wid
+	var building_to_resource = {
+		Building.MINERAL_EXTRACTOR:"minerals",
+		Building.RESEARCH_LAB:"SP",
+	}
 	for k in range(max(0, i - half_size), min(i + half_size + 1, wid)):
 		for l in range(max(0, j - half_size), min(j + half_size + 1, wid)):
 			var t_id2:int = k % wid + l * wid
@@ -2762,24 +2767,23 @@ func generate_volcano(t_id:int, VEI:float, artificial:bool = false):
 			if abs(i - k) + abs(j - l) <= half_size + 1 - (int(VEI) & 1):
 				tile_data[t_id2] = {} if tile2 == null else tile2
 				tile2 = tile_data[t_id2]
+				var overclock_mult = tile2.bldg.get("overclock_mult", 1.0)
 				if tile2.has("ash"):
 					if not tile2.has("cave"):
 						var diff = max(richness - tile2.ash.richness, 0)
 						if tile2.has("bldg"):
-							if tile2.bldg.name == Building.MINERAL_EXTRACTOR:
-								autocollect.rsrc.minerals += diff * tile2.bldg.path_1_value * tile2.bldg.get("overclock_mult", 1.0) * tile2.get("mineral_replicator_bonus", 1.0)
-							elif tile2.bldg.name == Building.RESEARCH_LAB:
-								autocollect.rsrc.SP += diff * tile2.bldg.path_1_value * tile2.bldg.get("overclock_mult", 1.0) * tile2.get("observatory_bonus", 1.0)
+							var rsrc = building_to_resource[tile2.bldg.name]
+							autocollect.rsrc[rsrc] += diff * tile2.bldg.path_1_value * overclock_mult * tile2.resource_production_bonus.get(rsrc, 1.0)
 						tile2.ash.richness = max(richness, tile2.ash.richness)
-						tile2.SP_bonus = tile2.get("SP_bonus", 1.0) + diff / 2.0
+						tile2.resource_production_bonus.minerals = tile2.resource_production_bonus.get("minerals", 1.0) + diff
+						tile2.resource_production_bonus.SP = tile2.resource_production_bonus.get("SP", 1.0) + diff / 2.0
 				else:
 					tile2.ash = {"richness":richness}
-					tile2.SP_bonus = tile2.get("SP_bonus", 1.0) + (richness - 1.0) / 2.0
+					tile2.resource_production_bonus.minerals = tile2.resource_production_bonus.get("minerals", 1.0) + (richness - 1.0)
+					tile2.resource_production_bonus.SP = tile2.resource_production_bonus.get("SP", 1.0) + (richness - 1.0) / 2.0
 					if tile2.has("bldg"):
-						if tile2.bldg.name == Building.MINERAL_EXTRACTOR:
-							autocollect.rsrc.minerals += (richness - 1.0) * tile2.bldg.path_1_value * tile2.bldg.get("overclock_mult", 1.0) * tile2.get("mineral_replicator_bonus", 1.0)
-						elif tile2.bldg.name == Building.RESEARCH_LAB:
-							autocollect.rsrc.SP += (richness - 1.0) * tile2.bldg.path_1_value * tile2.bldg.get("overclock_mult", 1.0) * tile2.get("observatory_bonus", 1.0)
+							var rsrc = building_to_resource[tile2.bldg.name]
+							autocollect.rsrc[rsrc] += (richness - 1.0) * tile2.bldg.path_1_value * overclock_mult * tile2.resource_production_bonus.get(rsrc, 1.0)
 					if artificial:
 						tile2.ash.artificial = true
 				if not achievement_data.exploration.has("volcano_cave") and tile2.has("cave"):
@@ -2797,6 +2801,8 @@ func generate_tiles(id:int):
 	var wid:int = Helper.get_wid(p_i.size)
 	var N:int = pow(wid, 2)
 	tile_data.resize(N)
+	for i in N:
+		tile_data[i] = {"resource_production_bonus":{}}
 	#Aurora spawn
 	var diff:int = 0
 	var tile_from:int = -1
@@ -2824,9 +2830,8 @@ func generate_tiles(id:int):
 							continue
 						show.auroras = true
 						var id2:int = k + j * wid
-						tile_data[id2] = {}
 						tile_data[id2].aurora = au_int
-						tile_data[id2].SP_bonus = tile_data[id2].get("SP_bonus", 1.0) + au_int
+						tile_data[id2].resource_production_bonus.SP = tile_data[id2].resource_production_bonus.get("SP", 1.0) + au_int
 			else:#Horizontal
 				for j in wid:
 					var y_pos:int = lerp(tile_from, tile_to, j / float(wid)) + diff + thiccness * amplitude * sin(j / float(wid) * 4 * pulsation * PI)
@@ -2835,9 +2840,8 @@ func generate_tiles(id:int):
 							continue
 						show.auroras = true
 						var id2:int = j + k * wid
-						tile_data[id2] = {}
 						tile_data[id2].aurora = au_int
-						tile_data[id2].SP_bonus = tile_data[id2].get("SP_bonus", 1.0) + au_int
+						tile_data[id2].resource_production_bonus.SP = tile_data[id2].resource_production_bonus.get("SP", 1.0) + au_int
 			stats_global.highest_au_int = max(au_int, stats_global.highest_au_int)
 			stats_dim.highest_au_int = max(au_int, stats_dim.highest_au_int)
 			stats_univ.highest_au_int = max(au_int, stats_univ.highest_au_int)
@@ -2878,20 +2882,17 @@ func generate_tiles(id:int):
 			var t_id = i % wid + j * wid
 			if level > 0.5 and p_i.has("lake_1"):
 				if p_i.lake_1.state != "g":
-					tile_data[t_id] = {} if tile_data[t_id] == null else tile_data[t_id]
 					if not tile_data[t_id].has("ash"):
 						tile_data[t_id].lake = 1
 					continue
 			if level < -0.5 and p_i.has("lake_2"):
 				if p_i.lake_2.state != "g":
-					tile_data[t_id] = {} if tile_data[t_id] == null else tile_data[t_id]
 					if not tile_data[t_id].has("ash"):
 						tile_data[t_id].lake = 2
 					continue
 			if home_planet:
 				continue
 			if randf() < 0.1 / pow(wid, 0.9):
-				tile_data[t_id] = {} if tile_data[t_id] == null else tile_data[t_id]
 				var floor_size:int = randf_range(25 * min(wid / 8.0, 1), 40 * randf_range(1, 1 + wid / 100.0))
 				var num_floors:int = Helper.rand_int(1, int(wid / 2.5)) + 2
 				var modifiers:Dictionary = {}
@@ -2942,7 +2943,6 @@ func generate_tiles(id:int):
 				continue
 			var crater_size = max(0.25, pow(p_i.pressure, 0.3))
 			if randf() < 15 / crater_size / pow(coldest_star_temp, 0.8):
-				tile_data[t_id] = {} if tile_data[t_id] == null else tile_data[t_id]
 				if tile_data[t_id].has("ash"):
 					continue
 				tile_data[t_id].crater = {}
@@ -3058,11 +3058,8 @@ func generate_tiles(id:int):
 		p_i.erase("lake_2")
 	planet_data[id]["discovered"] = true
 	if home_planet:
-		tile_data[42] = {}
 		tile_data[42].cave = {"num_floors":5, "floor_size":25, "period":65, "debris":0.3}
-		tile_data[215] = {}
 		tile_data[215].cave = {"num_floors":8, "floor_size":30, "period":50, "debris":0.4}
-		tile_data[112] = {}
 		tile_data[112].ship = true
 		p_i.unique_bldgs = {UniqueBuilding.SPACEPORT:[{"tile":113, "tier":1, "repair_cost":10000 * Data.unique_bldg_repair_cost_multipliers[UniqueBuilding.SPACEPORT]}],
 							UniqueBuilding.MINERAL_REPLICATOR:[{"tile":55, "tier":1, "repair_cost":10000 * Data.unique_bldg_repair_cost_multipliers[UniqueBuilding.MINERAL_REPLICATOR]}]}
@@ -3095,10 +3092,7 @@ func generate_tiles(id:int):
 			var tier = p_i.unique_bldgs[bldg][i].tier
 			var t_id = p_i.unique_bldgs[bldg][i].tile
 			for j in ([t_id, t_id+1, t_id+wid, t_id+1+wid] if bldg == UniqueBuilding.NUCLEAR_FUSION_REACTOR else [t_id]):
-				if tile_data[j]:
-					tile_data[j].unique_bldg = {"name":bldg, "tier":tier, "id":i}
-				else:
-					tile_data[j] = {"unique_bldg":{"name":bldg, "tier":tier, "id":i}}
+				tile_data[j].unique_bldg = {"name":bldg, "tier":tier, "id":i}
 				if p_i.unique_bldgs[bldg][i].has("repair_cost"):
 					tile_data[j].unique_bldg.repair_cost = p_i.unique_bldgs[bldg][i].repair_cost
 			if not p_i.unique_bldgs[bldg][i].has("repair_cost"):
@@ -3137,61 +3131,53 @@ func generate_tiles(id:int):
 			lake_2_au_int = Helper.clever_round(1.2e5 * (randf_range(1, 2)) * B_strength * max_star_temp)
 		elif p_i.lake_2.element == "Xe":
 			lake_2_au_int = Helper.clever_round(3.6e6 * (randf_range(1, 2)) * B_strength * max_star_temp)
-	var planet_with_nothing = true
 	for i in wid:
 		for j in wid:
 			var t_id = i % wid + j * wid
 			var tile = tile_data[t_id]
-			if tile:
-				planet_with_nothing = false
-			if tile:
-				if tile.has("lake"):
-					var lake_info = p_i["lake_%s" % tile.lake]
-					var distance_from_lake:int = 1
-					if lake_info.element in ["H", "Xe"]:
-						distance_from_lake += Data.lake_bonus_values[lake_info.element][lake_info.state] + biology_bonus[lake_info.element]
-					for k in range(max(0, i - distance_from_lake), min(i + distance_from_lake + 1, wid)):
-						for l in range(max(0, j - distance_from_lake), min(j + distance_from_lake + 1, wid)):
-							var id2 = k % wid + l * wid
-							if tile_data[id2] and tile_data[id2].has("lake") or Vector2(k, l) == Vector2(i, j):
-								continue
-							if tile_data[id2] == null:
-								tile_data[id2] = {}
-							if tile.lake == 1 and lake_1_au_int > 0.0:
-								if tile_data[id2].has("aurora"):
-									if not tile_data[id2].has("lake_elements"):
-										tile_data[id2].aurora += lake_1_au_int + 1.0
-									else:
-										tile_data[id2].aurora = max(lake_1_au_int, tile_data[id2].aurora)
+			if tile.has("lake"):
+				var lake_info = p_i["lake_%s" % tile.lake]
+				var distance_from_lake:int = 1
+				if lake_info.element in ["H", "Xe"]:
+					distance_from_lake += Data.lake_bonus_values[lake_info.element][lake_info.state] + biology_bonus[lake_info.element]
+				for k in range(max(0, i - distance_from_lake), min(i + distance_from_lake + 1, wid)):
+					for l in range(max(0, j - distance_from_lake), min(j + distance_from_lake + 1, wid)):
+						var id2 = k % wid + l * wid
+						if tile_data[id2].has("lake") or Vector2(k, l) == Vector2(i, j):
+							continue
+						if tile.lake == 1 and lake_1_au_int > 0.0:
+							if tile_data[id2].has("aurora"):
+								if not tile_data[id2].has("lake_elements"):
+									tile_data[id2].aurora += lake_1_au_int + 1.0
 								else:
-									tile_data[id2].aurora = lake_1_au_int
-							elif tile.lake == 2 and lake_2_au_int > 0.0:
-								if tile_data[id2].has("aurora"):
-									if not tile_data[id2].has("lake_elements"):
-										tile_data[id2].aurora += lake_2_au_int + 1.0
-									else:
-										tile_data[id2].aurora = max(lake_2_au_int, tile_data[id2].aurora)
-								else:
-									tile_data[id2].aurora = lake_2_au_int
-							if tile_data[id2].has("lake_elements"):
-								tile_data[id2].lake_elements[lake_info.element] = lake_info.state
+									tile_data[id2].aurora = max(lake_1_au_int, tile_data[id2].aurora)
 							else:
-								tile_data[id2].lake_elements = {lake_info.element:lake_info.state}
-				elif tile.has("crater"):
-					for k in range(max(0, i - 1), min(i + 1 + 1, wid)):
-						for l in range(max(0, j - 1), min(j + 1 + 1, wid)):
-							var id2 = k % wid + l * wid
-							if Vector2(k, l) == Vector2(i, j):
-								continue
-							if tile_data[id2] == null:
-								tile_data[id2] = {}
-								tile_data[id2].SP_bonus = tile_data[id2].get("SP_bonus", 1.0) + met_info[tile.crater].value
+								tile_data[id2].aurora = lake_1_au_int
+						elif tile.lake == 2 and lake_2_au_int > 0.0:
+							if tile_data[id2].has("aurora"):
+								if not tile_data[id2].has("lake_elements"):
+									tile_data[id2].aurora += lake_2_au_int + 1.0
+								else:
+									tile_data[id2].aurora = max(lake_2_au_int, tile_data[id2].aurora)
+							else:
+								tile_data[id2].aurora = lake_2_au_int
+						if tile_data[id2].has("lake_elements"):
+							tile_data[id2].lake_elements[lake_info.element] = lake_info.state
+						else:
+							tile_data[id2].lake_elements = {lake_info.element:lake_info.state}
+			elif tile.has("crater"):
+				for k in range(max(0, i - 1), min(i + 1 + 1, wid)):
+					for l in range(max(0, j - 1), min(j + 1 + 1, wid)):
+						var id2 = k % wid + l * wid
+						if Vector2(k, l) == Vector2(i, j):
+							continue
+						tile_data[id2].resource_production_bonus.SP = tile_data[id2].resource_production_bonus.get("SP", 1.0) + met_info[tile.crater].value
 	# Give science point production bonus to tiles surrounding lakes
 	for i in wid:
 		for j in wid:
 			var t_id = i % wid + j * wid
 			var tile = tile_data[t_id]
-			if tile and tile.has("lake_elements"):
+			if tile.has("lake_elements"):
 				for el in tile.lake_elements.keys():
 					var state_multiplier = 1.0
 					var state = tile.lake_elements[el]
@@ -3199,7 +3185,13 @@ func generate_tiles(id:int):
 						state_multiplier = 2.0
 					elif state == "sc":
 						state_multiplier = 1.5
-					tile.SP_bonus = tile.get("SP_bonus", 1.0) + Data.lake_SP_bonus[el] * state_multiplier
+					tile.resource_production_bonus.SP = tile.resource_production_bonus.get("SP", 1.0) + Data.lake_SP_bonus[el] * state_multiplier
+	var planet_with_nothing = true
+	for i in N:
+		if len(tile_data[i].keys()) == 1 and tile_data[i].resource_production_bonus.is_empty():
+			tile_data[i] = null
+		else:
+			planet_with_nothing = false
 	if not achievement_data.exploration.has("planet_with_nothing") and planet_with_nothing:
 		earn_achievement("exploration", "planet_with_nothing")
 	Helper.save_obj("Planets", c_p_g, tile_data)

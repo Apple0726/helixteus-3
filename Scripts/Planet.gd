@@ -376,8 +376,13 @@ func show_tooltip(tile, tile_id:int):
 			tooltip = "%s\n[color=#FFBBFF]%s\n[/color][color=#BB77BB]%s[/color]\n%s" % [tr("AURORA"), tr("AURORA_DESC"), tr("HIDE_HELP"), tr("AURORA_INTENSITY") + ": %s" % [tile.aurora]]
 		else:
 			tooltip = tr("AURORA_INTENSITY") + ": %s" % [tile.aurora]
-	if tile.has("ruins"):
-		tooltip = "%s\n%s" % [tr("ABANDONED_RUINS"), tr("AR_DESC")]
+	elif bldg_to_construct in [Building.MINERAL_EXTRACTOR, Building.RESEARCH_LAB] and tile.has("resource_production_bonus"):
+		if bldg_to_construct == Building.MINERAL_EXTRACTOR and tile.resource_production_bonus.has("minerals"):
+			tooltip = tr("BUILD_HERE_FOR_X_BONUS")
+			icons = [Data.minerals_icon]
+		elif bldg_to_construct == Building.RESEARCH_LAB and tile.resource_production_bonus.has("SP"):
+			tooltip = tr("BUILD_HERE_FOR_X_BONUS")
+			icons = [Data.SP_icon]
 	if tooltip != "":
 		game.show_adv_tooltip(tooltip, icons)
 	if fiery_tooltip != -1 and is_instance_valid(game.tooltip):
@@ -429,6 +434,8 @@ func constr_bldg(tile_id:int, curr_time:int, _bldg_to_construct:int, mass_build:
 			flash_construction_button()
 		if tile == null:
 			tile = {}
+		if not tile.has("resource_production_bonus"):
+			tile.resource_production_bonus = {}
 		tile.bldg = {}
 		tile.bldg.name = _bldg_to_construct
 		if not game.show.has("minerals") and _bldg_to_construct == Building.MINERAL_EXTRACTOR:
@@ -468,7 +475,7 @@ func constr_bldg(tile_id:int, curr_time:int, _bldg_to_construct:int, mass_build:
 				tile.bldg.cap_upgrade = 0
 		elif _bldg_to_construct == Building.SOLAR_PANEL:
 			if tile.has("substation_bonus"):
-				tile.bldg.cap_upgrade = Helper.get_SP_production(p_i.temperature, path_1_value * Helper.get_au_mult(tile) * tile.substation_bonus) * Helper.get_substation_capacity_bonus(game.tile_data[tile.substation_tile].unique_bldg.tier)
+				tile.bldg.cap_upgrade = Helper.get_SP_production(p_i.temperature, path_1_value * (tile.get("aurora", 0.0) + 1.0) * tile.substation_bonus) * Helper.get_substation_capacity_bonus(game.tile_data[tile.substation_tile].unique_bldg.tier)
 			else:
 				tile.bldg.cap_upgrade = 0
 		elif _bldg_to_construct == Building.BATTERY:
@@ -528,19 +535,14 @@ func overclock_bldg(tile, tile_id:int, curr_time):
 		tile.bldg.overclock_length = game.overclocks_info[game.item_to_use.name].duration / game.u_i.time_speed
 		tile.bldg.overclock_mult = mult
 		if tile.bldg.name == Building.RESEARCH_LAB:
-			game.autocollect.rsrc.SP += tile.bldg.path_1_value * mult_diff * (tile.observatory_bonus if tile.has("observatory_bonus") else 1.0)
+			game.autocollect.rsrc.SP += tile.bldg.path_1_value * mult_diff * tile.resource_production_bonus.get("SP", 1.0)
 		elif tile.bldg.name == Building.MINERAL_EXTRACTOR:
-			game.autocollect.rsrc.minerals += tile.bldg.path_1_value * mult_diff * (tile.ash.richness if tile.has("ash") else 1.0) * (tile.mineral_replicator_bonus if tile.has("mineral_replicator_bonus") else 1.0)
+			game.autocollect.rsrc.minerals += tile.bldg.path_1_value * mult_diff * tile.resource_production_bonus.get("minerals", 1.0)
 		elif tile.bldg.name == Building.POWER_PLANT:
-			game.autocollect.rsrc.energy += tile.bldg.path_1_value * mult_diff * (tile.substation_bonus if tile.has("substation_bonus") else 1.0)
+			game.autocollect.rsrc.energy += tile.bldg.path_1_value * mult_diff * tile.resource_production_bonus.get("energy", 1.0)
 		elif tile.bldg.name == Building.SOLAR_PANEL:
-			var SP_prod = Helper.get_SP_production(p_i.temperature, tile.bldg.path_1_value * mult_diff * Helper.get_au_mult(tile) * (tile.substation_bonus if tile.has("substation_bonus") else 1.0))
+			var SP_prod = Helper.get_SP_production(p_i.temperature, tile.bldg.path_1_value * mult_diff * (tile.get("aurora", 0.0) + 1.0) * tile.resource_production_bonus.get("energy", 1.0))
 			game.autocollect.rsrc.energy += SP_prod
-			if tile.has("aurora"):
-				if game.aurora_prod.has(tile.aurora):
-					game.aurora_prod[tile.aurora].energy = game.aurora_prod[tile.aurora].get("energy", 0) + SP_prod
-				else:
-					game.aurora_prod[tile.aurora] = {"energy":SP_prod}
 		elif tile.bldg.name == Building.ATMOSPHERE_EXTRACTOR:
 			var base = tile.bldg.path_1_value * mult_diff * p_i.pressure
 			for el in p_i.atmosphere:
@@ -548,12 +550,6 @@ func overclock_bldg(tile, tile_id:int, curr_time):
 				Helper.add_atom_production(el, base_prod)
 			Helper.add_energy_from_NFR(p_i, base)
 			Helper.add_energy_from_CS(p_i, base)
-		elif tile.bldg.name == "PC":
-			game.autocollect.particles.proton += tile.bldg.path_1_value / tile.bldg.planet_pressure * mult_diff
-		elif tile.bldg.name == "NC":
-			game.autocollect.particles.neutron += tile.bldg.path_1_value / tile.bldg.planet_pressure * mult_diff
-		elif tile.bldg.name == "EC":
-			game.autocollect.particles.electron += tile.bldg.path_1_value * tile.aurora * mult_diff
 		elif tile.bldg.name == Building.BORING_MACHINE:
 			var tiles_mined = (curr_time - tile.bldg.collect_date) * tile.bldg.path_1_value * Helper.get_prod_mult(tile) * (tile.mining_outpost_bonus if tile.has("mining_outpost_bonus") else 1.0)
 			if tiles_mined >= 1:
@@ -632,31 +628,25 @@ func destroy_bldg(id2:int, mass:bool = false):
 			game.energy_capacity = 7500
 	elif bldg == Building.MINERAL_EXTRACTOR:
 		if not tile.bldg.has("is_constructing"):
-			game.autocollect.rsrc.minerals -= tile.bldg.path_1_value * overclock_mult * (tile.ash.richness if tile.has("ash") else 1.0) * (tile.mineral_replicator_bonus if tile.has("mineral_replicator_bonus") else 1.0)
+			game.autocollect.rsrc.minerals -= tile.bldg.path_1_value * overclock_mult * tile.resource_production_bonus.get("minerals", 1.0)
 	elif bldg == Building.POWER_PLANT:
 		if not tile.bldg.has("is_constructing"):
-			game.autocollect.rsrc.energy -= tile.bldg.path_1_value * overclock_mult * (tile.substation_bonus if tile.has("substation_bonus") else 1.0)
+			game.autocollect.rsrc.energy -= tile.bldg.path_1_value * overclock_mult * tile.resource_production_bonus.get("energy", 1.0)
 		if tile.has("substation_tile"):
 			var cap_to_remove = tile.bldg.path_1_value * tile.substation_bonus * Helper.get_substation_capacity_bonus(game.tile_data[tile.substation_tile].unique_bldg.tier)
 			game.tile_data[tile.substation_tile].unique_bldg.capacity_bonus -= cap_to_remove
 			game.capacity_bonus_from_substation -= cap_to_remove
 	elif bldg == Building.SOLAR_PANEL:
 		if not tile.bldg.has("is_constructing"):
-			var SP_prod = Helper.get_SP_production(p_i.temperature, tile.bldg.path_1_value * overclock_mult * Helper.get_au_mult(tile))
+			var SP_prod = Helper.get_SP_production(p_i.temperature, tile.bldg.path_1_value * overclock_mult * (tile.get("aurora", 0.0) + 1.0))
 			game.autocollect.rsrc.energy -= SP_prod
-			if tile.has("aurora"):
-				game.aurora_prod[tile.aurora].energy -= SP_prod
-				if is_zero_approx(game.aurora_prod[tile.aurora].energy):
-					game.aurora_prod[tile.aurora].erase("energy")
-					if game.aurora_prod[tile.aurora].is_empty():
-						game.aurora_prod.erase(tile.aurora)
 		if tile.has("substation_tile"):
-			var cap_to_remove = Helper.get_SP_production(p_i.temperature, tile.bldg.path_1_value * Helper.get_au_mult(tile)) * Helper.get_substation_capacity_bonus(game.tile_data[tile.substation_tile].unique_bldg.tier)
+			var cap_to_remove = Helper.get_SP_production(p_i.temperature, tile.bldg.path_1_value * (tile.get("aurora", 0.0) + 1.0)) * Helper.get_substation_capacity_bonus(game.tile_data[tile.substation_tile].unique_bldg.tier)
 			game.tile_data[tile.substation_tile].unique_bldg.capacity_bonus -= cap_to_remove
 			game.capacity_bonus_from_substation -= cap_to_remove
 	elif bldg == Building.RESEARCH_LAB:
 		if not tile.bldg.has("is_constructing"):
-			game.autocollect.rsrc.SP -= tile.bldg.path_1_value * overclock_mult * (tile.observatory_bonus if tile.has("observatory_bonus") else 1.0)
+			game.autocollect.rsrc.SP -= tile.bldg.path_1_value * overclock_mult * tile.resource_production_bonus.get("SP", 1.0)
 	elif bldg == Building.ATMOSPHERE_EXTRACTOR:
 		if not tile.bldg.has("is_constructing"):
 			var base = -tile.bldg.path_1_value * overclock_mult * p_i.pressure
@@ -1018,7 +1008,7 @@ func _unhandled_input(event):
 				for white_rect in get_tree().get_nodes_in_group("CBD_white_rects"):
 					white_rect.queue_free()
 					white_rect.remove_from_group("CBD_white_rects")
-				if tile and (tile.has("bldg") and tile.bldg.name == Building.CENTRAL_BUSINESS_DISTRICT or tile.has("unique_bldg") and tile.unique_bldg.name in ["mineral_replicator", "observatory", UniqueBuilding.SUBSTATION, "mining_outpost"]):
+				if tile and (tile.has("bldg") and tile.bldg.name == Building.CENTRAL_BUSINESS_DISTRICT or tile.has("unique_bldg") and tile.unique_bldg.name in [UniqueBuilding.MINERAL_REPLICATOR, UniqueBuilding.OBSERVATORY, UniqueBuilding.SUBSTATION, UniqueBuilding.MINING_OUTPOST]):
 					var n:int = tile.bldg.path_3_value if tile.has("bldg") else Helper.get_unique_bldg_area(tile.unique_bldg.tier)
 					for i in n:
 						var x:int = x_over + i - n / 2
@@ -1366,7 +1356,7 @@ func add_bldg(id2:int, type:int):
 	else:
 		Helper.update_rsrc(p_i, tile)
 
-func overclockable(bldg:String):
+func overclockable(bldg:int):
 	return bldg in [Building.MINERAL_EXTRACTOR, Building.POWER_PLANT, Building.RESEARCH_LAB, Building.BORING_MACHINE, Building.SOLAR_PANEL, Building.ATMOSPHERE_EXTRACTOR]
 
 func add_rsrc(v:Vector2, mod:Color, icon, id2:int, current_bar_visible = false):
@@ -1419,16 +1409,14 @@ func on_timeout():
 			if progress < 0:
 				var mult:float = tile.bldg.overclock_mult
 				if tile.bldg.name == Building.POWER_PLANT:
-					game.autocollect.rsrc.energy -= tile.bldg.path_1_value * (mult - 1) * (tile.substation_bonus if tile.has("substation_bonus") else 1.0)
+					game.autocollect.rsrc.energy -= tile.bldg.path_1_value * (mult - 1) * tile.resource_production_bonus.get("energy", 1.0)
 				elif tile.bldg.name == Building.MINERAL_EXTRACTOR:
-					game.autocollect.rsrc.minerals -= tile.bldg.path_1_value * (mult - 1) * (tile.ash.richness if tile.has("ash") else 1.0) * (tile.mineral_replicator_bonus if tile.has("mineral_replicator_bonus") else 1.0)
+					game.autocollect.rsrc.minerals -= tile.bldg.path_1_value * (mult - 1) * tile.resource_production_bonus.get("minerals", 1.0)
 				elif tile.bldg.name == Building.RESEARCH_LAB:
-					game.autocollect.rsrc.SP -= tile.bldg.path_1_value * (mult - 1) * (tile.observatory_bonus if tile.has("observatory_bonus") else 1.0)
+					game.autocollect.rsrc.SP -= tile.bldg.path_1_value * (mult - 1) * tile.resource_production_bonus.get("SP", 1.0)
 				elif tile.bldg.name == Building.SOLAR_PANEL:
-					var SP_prod = Helper.get_SP_production(p_i.temperature, tile.bldg.path_1_value * (mult - 1) * Helper.get_au_mult(tile) * (tile.substation_bonus if tile.has("substation_bonus") else 1.0))
+					var SP_prod = Helper.get_SP_production(p_i.temperature, tile.bldg.path_1_value * (mult - 1) * (tile.get("aurora", 0.0) + 1.0) * tile.resource_production_bonus.get("energy", 1.0))
 					game.autocollect.rsrc.energy -= SP_prod
-					if tile.has("aurora"):
-						game.aurora_prod[tile.aurora].energy -= SP_prod
 				elif tile.bldg.name == Building.ATMOSPHERE_EXTRACTOR:
 					var base = -tile.bldg.path_1_value * (mult - 1) * p_i.pressure
 					for el in p_i.atmosphere:
@@ -1479,14 +1467,8 @@ func construct(type:int, costs:Dictionary):
 		$BuildingShortcutTimer.stop()
 	var tween = create_tween()
 	tween.tween_property(game.HUD.get_node("Top/TextureRect"), "modulate", Color(1.5, 1.5, 1.0, 1.0), 0.2)
-	if game.help.has("mass_build") and game.stats_univ.bldgs_built >= 18:
-		if game.help_str == "":
-			game.help_str = "mass_build"
-		Helper.put_rsrc(game.get_node("UI/Panel/VBox"), 32, {})
-		Helper.add_label(tr("HOLD_SHIFT_TO_MASS_BUILD"), -1, true, true)
-		Helper.add_label(tr("HIDE_HELP"), -1, true, true)
-		game.get_node("UI/Panel").visible = true
-		game.get_node("UI/Panel/AnimationPlayer").play("Fade")
+	if game.stats_univ.bldgs_built >= 10:
+		game.planet_HUD.get_node("MassBuild").visible = true
 	bldg_to_construct = type
 	constr_costs = costs
 	constr_costs_total = costs.duplicate()
@@ -1499,6 +1481,27 @@ func construct(type:int, costs:Dictionary):
 	if type == Building.GREENHOUSE:
 		game.HUD.get_node("Top/Resources/Glass").visible = true
 		game.HUD.get_node("Top/Resources/Soil").visible = true
+	var rsrc = ""
+	if type == Building.MINERAL_EXTRACTOR:
+		rsrc = "minerals"
+	elif type == Building.RESEARCH_LAB:
+		rsrc = "SP"
+	elif type in [Building.POWER_PLANT, Building.SOLAR_PANEL]:
+		rsrc = "energy"
+	for i in wid:
+		for j in wid:
+			var id2 = i % wid + j * wid
+			var tile = game.tile_data[id2]
+			if tile and tile.has("resource_production_bonus") and tile.resource_production_bonus.has(rsrc):
+				var tile_bonus_node = preload("res://Scenes/TileBonus.tscn").instantiate()
+				tile_bonus_node.position = Vector2(i, j) * 200 + Vector2.ONE * 100 + Vector2(-92, 30)
+				tile_bonus_node.set_icon(Data["%s_icon" % rsrc])
+				tile_bonus_node.set_multiplier(tile.resource_production_bonus[rsrc])
+				tile_bonus_node.modulate.a = 0
+				add_child(tile_bonus_node)
+				var tween2 = create_tween()
+				tween2.tween_property(tile_bonus_node, "modulate:a", 0.8, 0.2).set_delay((i + j) / 7.5 / wid)
+				tile_bonus_node.add_to_group("tile_bonus_nodes")
 	game.HUD.refresh()
 
 func put_shadow(spr:Sprite2D, pos:Vector2 = Vector2.ZERO):
@@ -1514,15 +1517,21 @@ func finish_construct():
 	if is_instance_valid(shadow):
 		bldg_to_construct = -1
 		shadow.free()
+	if not get_tree().get_nodes_in_group("tile_bonus_nodes").is_empty():
+		var tween = create_tween()
+		tween.set_parallel(true)
+		for tile_bonus_node in get_tree().get_nodes_in_group("tile_bonus_nodes"):
+			tween.tween_property(tile_bonus_node, "modulate:a", 0.0, 0.2)
+			tween.tween_callback(tile_bonus_node.queue_free).set_delay(0.2)
 	if mass_build_rect.visible:
 		mass_build_rect.visible = false
 		for i in len(shadows):
 			if is_instance_valid(shadows[i]):
 				shadows[i].queue_free()
 		shadow_num = 0
-	var tween = create_tween()
-	tween.tween_property(game.HUD.get_node("Top/TextureRect"), "modulate", Color.WHITE, 0.2)
-	game.get_node("UI/Panel/AnimationPlayer").play("FadeOut")
+	var tween2 = create_tween()
+	tween2.tween_property(game.HUD.get_node("Top/TextureRect"), "modulate", Color.WHITE, 0.2)
+	game.planet_HUD.get_node("MassBuild").visible = false
 
 func _on_Planet_tree_exited():
 	queue_free()
