@@ -249,9 +249,9 @@ vertical_alignment = 1
 
 [node name="SendProbes" type="Button" parent="Universes"]
 layout_mode = 0
-offset_top = 916.0
+offset_top = 684.0
 offset_right = 288.0
-offset_bottom = 952.0
+offset_bottom = 720.0
 text = "SEND_PROBES"
 
 [node name="ColorRect" type="ColorRect" parent="Universes/SendProbes"]
@@ -889,7 +889,7 @@ expand_mode = 1
 stretch_mode = 6
 
 [node name="Physics" type="ScrollContainer" parent="ModifyDimension"]
-clip_contents = false
+visible = false
 custom_minimum_size = Vector2(388, 672)
 layout_mode = 0
 anchor_right = 1.0
@@ -900,41 +900,33 @@ offset_bottom = 680.0
 theme_override_styles/panel = SubResource("StyleBoxFlat_mmkh4")
 
 [node name="Control" type="Control" parent="ModifyDimension/Physics"]
-custom_minimum_size = Vector2(300, 1500)
+custom_minimum_size = Vector2(300, 1550)
 layout_mode = 2
 mouse_filter = 1
 
 [node name="Label3" type="Label" parent="ModifyDimension/Physics/Control"]
 layout_mode = 0
 offset_left = 16.0
-offset_top = 32.0
+offset_top = 108.0
 offset_right = 335.0
-offset_bottom = 63.0
+offset_bottom = 139.0
 text = "AURORAS"
 label_settings = SubResource("LabelSettings_3lwqu")
 
 [node name="Label7" type="Label" parent="ModifyDimension/Physics/Control"]
 layout_mode = 0
 offset_left = 16.0
-offset_top = 88.0
+offset_top = 164.0
 offset_right = 335.0
-offset_bottom = 113.0
+offset_bottom = 189.0
 text = "SPAWN_PROBABILITY"
-
-[node name="Label9" type="Label" parent="ModifyDimension/Physics/Control"]
-layout_mode = 0
-offset_left = 16.0
-offset_top = 252.0
-offset_right = 335.0
-offset_bottom = 277.0
-text = "MAX_AURORAS"
 
 [node name="TextureRect" type="TextureRect" parent="ModifyDimension/Physics/Control"]
 layout_mode = 0
 offset_left = 16.0
-offset_top = 112.0
+offset_top = 188.0
 offset_right = 340.0
-offset_bottom = 168.0
+offset_bottom = 244.0
 texture = ExtResource("18_drllu")
 expand_mode = 1
 stretch_mode = 5
@@ -942,26 +934,80 @@ stretch_mode = 5
 [node name="Label8" type="Label" parent="ModifyDimension/Physics/Control"]
 layout_mode = 0
 offset_left = 24.0
-offset_top = 176.0
+offset_top = 252.0
 offset_right = 60.0
-offset_bottom = 201.0
+offset_bottom = 277.0
 text = "a = "
+
+[node name="aurora_spawn_probability" parent="ModifyDimension/Physics/Control" instance=ExtResource("19")]
+layout_mode = 0
+anchors_preset = 0
+anchor_right = 0.0
+anchor_bottom = 0.0
+offset_left = 68.0
+offset_top = 248.0
+offset_right = 131.063
+offset_bottom = 280.0
+step = 0.01
+value = 0.35
+
+[node name="Label9" type="Label" parent="ModifyDimension/Physics/Control"]
+layout_mode = 0
+offset_left = 16.0
+offset_top = 308.0
+offset_right = 336.0
+offset_bottom = 333.0
+text = "AURORA_WIDTH_MULTIPLIER"
 
 [node name="Label5" type="Label" parent="ModifyDimension/Physics/Control"]
 layout_mode = 0
 offset_left = 16.0
-offset_top = 604.0
+offset_top = 508.0
 offset_right = 335.0
-offset_bottom = 635.0
+offset_bottom = 539.0
 text = "STARS"
 label_settings = SubResource("LabelSettings_3lwqu")
+
+[node name="aurora_width_multiplier" parent="ModifyDimension/Physics/Control" instance=ExtResource("19")]
+layout_mode = 0
+anchors_preset = 0
+anchor_right = 0.0
+anchor_bottom = 0.0
+offset_left = 68.0
+offset_top = 348.0
+offset_right = 131.063
+offset_bottom = 380.0
+value = 1.0
+max_value = 3.0
+
+[node name="perpendicular_auroras" parent="ModifyDimension/Physics/Control" instance=ExtResource("19")]
+layout_mode = 0
+anchors_preset = 0
+anchor_right = 0.0
+anchor_bottom = 0.0
+offset_left = 68.0
+offset_top = 440.0
+offset_right = 131.063
+offset_bottom = 472.0
+step = 0.01
+max_value = 1.0
+
+[node name="RichTextLabel3" parent="ModifyDimension/Physics/Control" instance=ExtResource("12")]
+layout_mode = 0
+offset_left = 16.0
+offset_top = 400.0
+offset_right = 368.0
+offset_bottom = 430.0
+text = "PERPENDICULAR_AURORAS [img]Graphics/Icons/help.png[/img]"
+label_text = "PERPENDICULAR_AURORAS"
+help_text = "PERPENDICULAR_AURORAS_DESC"
 
 [node name="Label2" type="Label" parent="ModifyDimension/Physics/Control"]
 layout_mode = 0
 offset_left = 16.0
-offset_top = 664.0
+offset_top = 568.0
 offset_right = 335.0
-offset_bottom = 689.0
+offset_bottom = 593.0
 text = "INFLUENCE_OF_B_TO_MASS"
 
 [node name="BI" parent="ModifyDimension/Physics/Control" instance=ExtResource("19")]
@@ -970,58 +1016,34 @@ anchors_preset = 0
 anchor_right = 0.0
 anchor_bottom = 0.0
 offset_left = 18.0
-offset_top = 708.0
+offset_top = 612.0
 offset_right = 81.0625
-offset_bottom = 740.0
+offset_bottom = 644.0
 step = 0.01
 value = 0.3
-
-[node name="BI2" parent="ModifyDimension/Physics/Control" instance=ExtResource("19")]
-layout_mode = 0
-anchors_preset = 0
-anchor_right = 0.0
-anchor_bottom = 0.0
-offset_left = 68.0
-offset_top = 172.0
-offset_right = 131.063
-offset_bottom = 204.0
-step = 0.01
-value = 0.35
-
-[node name="BI3" parent="ModifyDimension/Physics/Control" instance=ExtResource("19")]
-layout_mode = 0
-anchors_preset = 0
-anchor_right = 0.0
-anchor_bottom = 0.0
-offset_left = 160.0
-offset_top = 248.0
-offset_right = 223.063
-offset_bottom = 280.0
-step = 0.01
-value = 0.35
 
 [node name="Label4" type="Label" parent="ModifyDimension/Physics/Control"]
 layout_mode = 0
 offset_left = 2.0
-offset_top = 788.0
+offset_top = 692.0
 offset_right = 114.0
-offset_bottom = 813.0
+offset_bottom = 717.0
 text = "AMOUNT"
 
 [node name="B" type="Label" parent="ModifyDimension/Physics/Control"]
 layout_mode = 0
 offset_left = 230.0
-offset_top = 792.0
+offset_top = 696.0
 offset_right = 366.0
-offset_bottom = 817.0
+offset_bottom = 721.0
 text = "for B = 1 nT"
 
 [node name="BSlider" type="HSlider" parent="ModifyDimension/Physics/Control"]
 layout_mode = 0
 offset_left = 122.0
-offset_top = 796.0
+offset_top = 700.0
 offset_right = 222.0
-offset_bottom = 812.0
+offset_bottom = 716.0
 min_value = 0.1
 max_value = 1000.0
 step = 0.1
@@ -1029,43 +1051,43 @@ value = 0.1
 exp_edit = true
 
 [node name="Line2D" type="Line2D" parent="ModifyDimension/Physics/Control"]
-position = Vector2(-6, 598)
+position = Vector2(-6, 502)
 points = PackedVector2Array(356, 412, 36, 412, 36, 232)
 width = 2.0
 
 [node name="Line2D2" type="Line2D" parent="ModifyDimension/Physics/Control"]
-position = Vector2(-14, 594)
+position = Vector2(-14, 498)
 points = PackedVector2Array(44, 236, 44, 224)
 width_curve = SubResource("11")
 
 [node name="Line2D3" type="Line2D" parent="ModifyDimension/Physics/Control"]
-position = Vector2(306, 774)
+position = Vector2(306, 678)
 points = PackedVector2Array(44, 236, 56, 236)
 width_curve = SubResource("11")
 
 [node name="PDFPlotter" parent="ModifyDimension/Physics/Control" instance=ExtResource("35")]
 anchors_preset = 0
 offset_left = 30.0
-offset_top = 846.0
+offset_top = 750.0
 offset_right = 350.0
-offset_bottom = 1010.0
+offset_bottom = 914.0
 
 [node name="StarGradient" type="TextureRect" parent="ModifyDimension/Physics/Control"]
 material = SubResource("ShaderMaterial_p6fsf")
 layout_mode = 0
 offset_left = 30.0
-offset_top = 846.0
+offset_top = 750.0
 offset_right = 350.0
-offset_bottom = 1010.0
+offset_bottom = 914.0
 texture = SubResource("13")
 expand_mode = 1
 
 [node name="HBoxContainer" type="HBoxContainer" parent="ModifyDimension/Physics/Control"]
 layout_mode = 0
 offset_left = 52.0
-offset_top = 1009.0
+offset_top = 913.0
 offset_right = 364.0
-offset_bottom = 1049.0
+offset_bottom = 953.0
 theme_override_constants/separation = 18
 
 [node name="Label" type="Label" parent="ModifyDimension/Physics/Control/HBoxContainer"]
@@ -1111,26 +1133,26 @@ text = "Z"
 [node name="Label6" type="Label" parent="ModifyDimension/Physics/Control"]
 layout_mode = 0
 offset_left = 16.0
-offset_top = 1076.0
+offset_top = 980.0
 offset_right = 335.0
-offset_bottom = 1107.0
+offset_bottom = 1011.0
 text = "UNIVERSES"
 label_settings = SubResource("LabelSettings_3lwqu")
 
 [node name="Label" type="Label" parent="ModifyDimension/Physics/Control"]
 layout_mode = 0
 offset_left = 16.0
-offset_top = 1128.0
+offset_top = 1032.0
 offset_right = 335.0
-offset_bottom = 1153.0
+offset_bottom = 1057.0
 text = "MIN_VAL_OF_UNIV_PROPERTIES"
 
 [node name="RichTextLabel" parent="ModifyDimension/Physics/Control" instance=ExtResource("12")]
 layout_mode = 0
 offset_left = 122.0
-offset_top = 1172.0
+offset_top = 1076.0
 offset_right = 158.0
-offset_bottom = 1202.0
+offset_bottom = 1106.0
 help_text = "MIN_VAL_OF_UNIV_PROPERTIES_DESC"
 
 [node name="MVOUP" parent="ModifyDimension/Physics/Control" instance=ExtResource("19")]
@@ -1139,18 +1161,18 @@ anchors_preset = 0
 anchor_right = 0.0
 anchor_bottom = 0.0
 offset_left = 18.0
-offset_top = 1168.0
+offset_top = 1072.0
 offset_right = 81.0625
-offset_bottom = 1200.0
+offset_bottom = 1104.0
 step = 0.05
 value = 0.5
 
 [node name="RichTextLabel2" parent="ModifyDimension/Physics/Control" instance=ExtResource("12")]
 layout_mode = 0
 offset_left = 18.0
-offset_top = 1228.0
+offset_top = 1132.0
 offset_right = 370.0
-offset_bottom = 1258.0
+offset_bottom = 1162.0
 text = "COSTS_OF_UNIV_PROPERTIES [img]Graphics/Icons/help.png[/img]"
 label_text = "COSTS_OF_UNIV_PROPERTIES"
 help_text = "COSTS_OF_UNIV_PROPERTIES_DESC"
@@ -1158,9 +1180,9 @@ help_text = "COSTS_OF_UNIV_PROPERTIES_DESC"
 [node name="UnivPropertiesLabel" type="Label" parent="ModifyDimension/Physics/Control"]
 layout_mode = 0
 offset_left = 18.0
-offset_top = 1284.0
+offset_top = 1188.0
 offset_right = 351.0
-offset_bottom = 1612.0
+offset_bottom = 1516.0
 text = "Speed of light
 Planck constant
 Boltzmann constant
@@ -1174,9 +1196,9 @@ Age of the universe"
 [node name="VBox" type="VBoxContainer" parent="ModifyDimension/Physics/Control"]
 layout_mode = 0
 offset_left = 254.0
-offset_top = 1284.0
+offset_top = 1188.0
 offset_right = 330.0
-offset_bottom = 1636.0
+offset_bottom = 1540.0
 theme_override_constants/separation = 8
 
 [node name="speed_of_light" parent="ModifyDimension/Physics/Control/VBox" instance=ExtResource("19")]
@@ -1227,119 +1249,134 @@ value = 50.0
 [node name="VBox2" type="VBoxContainer" parent="ModifyDimension/Physics/Control"]
 layout_mode = 0
 offset_left = 18.0
-offset_top = 1284.0
+offset_top = 1188.0
 offset_right = 254.0
-offset_bottom = 1648.0
+offset_bottom = 1552.0
 theme_override_constants/separation = 8
 
 [node name="Defaults" type="Control" parent="ModifyDimension/Physics/Control"]
 anchors_preset = 0
-offset_top = 960.0
 offset_right = 40.0
-offset_bottom = 1000.0
+offset_bottom = 40.0
 
-[node name="AuroraSpawnProbability" type="Label" parent="ModifyDimension/Physics/Control/Defaults"]
+[node name="aurora_spawn_probability" type="Label" parent="ModifyDimension/Physics/Control/Defaults"]
 layout_mode = 0
 offset_left = 172.0
-offset_top = -784.0
+offset_top = 252.0
 offset_right = 214.0
-offset_bottom = -759.0
+offset_bottom = 277.0
 text = "(0.35)"
+
+[node name="aurora_width_multiplier" type="Label" parent="ModifyDimension/Physics/Control/Defaults"]
+layout_mode = 0
+offset_left = 172.0
+offset_top = 352.0
+offset_right = 214.0
+offset_bottom = 377.0
+text = "(1)"
+
+[node name="perpendicular_auroras" type="Label" parent="ModifyDimension/Physics/Control/Defaults"]
+layout_mode = 0
+offset_left = 172.0
+offset_top = 444.0
+offset_right = 214.0
+offset_bottom = 469.0
+text = "(0)"
 
 [node name="BI" type="Label" parent="ModifyDimension/Physics/Control/Defaults"]
 layout_mode = 0
 offset_left = 162.0
-offset_top = -248.0
+offset_top = 616.0
 offset_right = 204.0
-offset_bottom = -224.0
+offset_bottom = 641.0
 text = "(0.3)"
 
 [node name="MVOUP" type="Label" parent="ModifyDimension/Physics/Control/Defaults"]
 layout_mode = 0
 offset_left = 162.0
-offset_top = 211.0
+offset_top = 1075.0
 offset_right = 204.0
-offset_bottom = 236.0
+offset_bottom = 1100.0
 text = "(0.5)"
 
 [node name="speed_of_light" type="Label" parent="ModifyDimension/Physics/Control/Defaults"]
 layout_mode = 0
 offset_left = 362.0
-offset_top = 327.0
+offset_top = 1191.0
 offset_right = 404.0
-offset_bottom = 352.0
+offset_bottom = 1216.0
 text = "(25)"
 
 [node name="planck" type="Label" parent="ModifyDimension/Physics/Control/Defaults"]
 layout_mode = 0
 offset_left = 362.0
-offset_top = 367.0
+offset_top = 1231.0
 offset_right = 404.0
-offset_bottom = 392.0
+offset_bottom = 1256.0
 text = "(30)"
 
 [node name="boltzmann" type="Label" parent="ModifyDimension/Physics/Control/Defaults"]
 layout_mode = 0
 offset_left = 362.0
-offset_top = 406.0
+offset_top = 1270.0
 offset_right = 404.0
-offset_bottom = 431.0
+offset_bottom = 1295.0
 text = "(30)"
 
 [node name="gravitational" type="Label" parent="ModifyDimension/Physics/Control/Defaults"]
 layout_mode = 0
 offset_left = 362.0
-offset_top = 446.0
+offset_top = 1310.0
 offset_right = 404.0
-offset_bottom = 471.0
+offset_bottom = 1335.0
 text = "(40)"
 
 [node name="charge" type="Label" parent="ModifyDimension/Physics/Control/Defaults"]
 layout_mode = 0
 offset_left = 362.0
-offset_top = 487.0
+offset_top = 1351.0
 offset_right = 404.0
-offset_bottom = 512.0
+offset_bottom = 1376.0
 text = "(40)"
 
 [node name="dark_energy" type="Label" parent="ModifyDimension/Physics/Control/Defaults"]
 layout_mode = 0
 offset_left = 362.0
-offset_top = 527.0
+offset_top = 1391.0
 offset_right = 404.0
-offset_bottom = 552.0
+offset_bottom = 1416.0
 text = "(40)"
 
 [node name="difficulty" type="Label" parent="ModifyDimension/Physics/Control/Defaults"]
 layout_mode = 0
 offset_left = 362.0
-offset_top = 567.0
+offset_top = 1431.0
 offset_right = 404.0
-offset_bottom = 592.0
+offset_bottom = 1456.0
 text = "(10)"
 
 [node name="time_speed" type="Label" parent="ModifyDimension/Physics/Control/Defaults"]
 layout_mode = 0
 offset_left = 362.0
-offset_top = 607.0
+offset_top = 1471.0
 offset_right = 404.0
-offset_bottom = 632.0
+offset_bottom = 1496.0
 text = "(50)"
 
 [node name="age" type="Label" parent="ModifyDimension/Physics/Control/Defaults"]
 layout_mode = 0
 offset_left = 362.0
-offset_top = 648.0
+offset_top = 1512.0
 offset_right = 404.0
-offset_bottom = 673.0
+offset_bottom = 1537.0
 text = "(15)"
 
 [node name="BInfluence" type="TextureRect" parent="ModifyDimension/Physics/Control"]
 layout_mode = 0
 offset_left = 118.0
-offset_top = 714.0
+offset_top = 618.0
 offset_right = 138.0
-offset_bottom = 733.0
+offset_bottom = 637.0
 texture = ExtResource("25")
 expand_mode = 1
 stretch_mode = 5
@@ -2114,9 +2151,10 @@ horizontal_alignment = 1
 [connection signal="mouse_exited" from="ModifyDimension/Maths/Control/Defaults/SLUGF_Stats/SLUGF_Stats_Table" to="." method="_on_Table_mouse_exited"]
 [connection signal="mouse_entered" from="ModifyDimension/Maths/Control/Defaults/ULUGF/ULUGF_Table" to="." method="_on_Table_mouse_entered" binds= ["ULUGF", 10.0]]
 [connection signal="mouse_exited" from="ModifyDimension/Maths/Control/Defaults/ULUGF/ULUGF_Table" to="." method="_on_Table_mouse_exited"]
+[connection signal="value_changed" from="ModifyDimension/Physics/Control/aurora_spawn_probability" to="." method="_on_BI_value_changed"]
+[connection signal="value_changed" from="ModifyDimension/Physics/Control/aurora_width_multiplier" to="." method="_on_BI_value_changed"]
+[connection signal="value_changed" from="ModifyDimension/Physics/Control/perpendicular_auroras" to="." method="_on_BI_value_changed"]
 [connection signal="value_changed" from="ModifyDimension/Physics/Control/BI" to="." method="_on_BI_value_changed"]
-[connection signal="value_changed" from="ModifyDimension/Physics/Control/BI2" to="." method="_on_BI_value_changed"]
-[connection signal="value_changed" from="ModifyDimension/Physics/Control/BI3" to="." method="_on_BI_value_changed"]
 [connection signal="value_changed" from="ModifyDimension/Physics/Control/BSlider" to="." method="_on_BSlider_value_changed"]
 [connection signal="mouse_entered" from="ModifyDimension/Physics/Control/BInfluence" to="." method="_on_HelpLabel_mouse_entered" binds= ["INFLUENCE_OF_B_TO_MASS_HELP"]]
 [connection signal="mouse_exited" from="ModifyDimension/Physics/Control/BInfluence" to="." method="_on_mouse_exited"]

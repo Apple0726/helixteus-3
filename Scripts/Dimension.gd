@@ -93,7 +93,7 @@ func toggle_subj(subj_name:String):
 	else:
 		$ModifyDimension/OPMeter.visible = false
 	if subj_name == "Physics":
-		var T = max(30000, game.stats_global.hottest_star)
+		var T = max(30000, game.stats_global.get("hottest_star", 0.0))
 		var thresh = 0.63
 		if T < 70000:
 			thresh = remap(T, 30000, 70000, 0.63, 0.73)
@@ -138,10 +138,10 @@ func refresh_univs(reset:bool = false):
 	for univ_prop in $ModifyDimension/Physics/Control/VBox.get_children():
 		univ_prop.set_value(game.physics_bonus[univ_prop.name])
 		univ_prop.editable = reset
-	$ModifyDimension/Physics/Control/MVOUP.set_value(game.physics_bonus.MVOUP)
-	$ModifyDimension/Physics/Control/MVOUP.editable = reset
-	$ModifyDimension/Physics/Control/BI.set_value(game.physics_bonus.BI)
-	$ModifyDimension/Physics/Control/BI.editable = reset
+	for line_edit in $ModifyDimension/Physics/Control.get_children():
+		if line_edit is LineEdit:
+			line_edit.set_value(game.physics_bonus[line_edit.name])
+			line_edit.editable = reset
 	for maths_bonus in game.maths_bonus:
 		if $ModifyDimension/Maths/Control/CostGrowthFactors.has_node(maths_bonus):
 			$ModifyDimension/Maths/Control/CostGrowthFactors.get_node(maths_bonus).set_value(game.maths_bonus[maths_bonus])
@@ -401,20 +401,51 @@ func calc_OP_points():
 	math_defaults.get_node("MMBSVR").visible = not is_equal_approx($ModifyDimension/Maths/Control/MMBSVR.value, float(math_defaults.get_node("MMBSVR").text.substr(1)))
 	math_defaults.get_node("ULUGF").visible = not is_equal_approx($ModifyDimension/Maths/Control/CostGrowthFactors/ULUGF.value, float(math_defaults.get_node("ULUGF").text.substr(1)))
 	physics_OP_points = 0
+	
 	if $ModifyDimension/Physics/Control/MVOUP.value <= 0:
 		$ModifyDimension/Physics/Control/MVOUP["theme_override_colors/font_color"] = Color.RED
 		num_errors.physics = true
 	else:
 		$ModifyDimension/Physics/Control/MVOUP["theme_override_colors/font_color"] = Color.BLACK
 		physics_OP_points += 0.5 / min($ModifyDimension/Physics/Control/MVOUP.value, 0.5) - 1.0
+		
 	if $ModifyDimension/Physics/Control/BI.value < 0:
 		$ModifyDimension/Physics/Control/BI["theme_override_colors/font_color"] = Color.RED
 		num_errors.physics = true
 	else:
 		$ModifyDimension/Physics/Control/BI["theme_override_colors/font_color"] = Color.BLACK
 		physics_OP_points += pow(max(0, 9.0 * ($ModifyDimension/Physics/Control/BI.value - 0.3)), 1.5)
-	physics_defaults.get_node("MVOUP").visible = not is_equal_approx($ModifyDimension/Physics/Control/MVOUP.value, float(physics_defaults.get_node("MVOUP").text.substr(1)))
-	physics_defaults.get_node("BI").visible = not is_equal_approx($ModifyDimension/Physics/Control/BI.value, float(physics_defaults.get_node("BI").text.substr(1)))
+		
+	var aurora_spawn_probability_value = $ModifyDimension/Physics/Control/aurora_spawn_probability.value
+	if aurora_spawn_probability_value < 0:
+		$ModifyDimension/Physics/Control/aurora_spawn_probability["theme_override_colors/font_color"] = Color.RED
+		num_errors.physics = true
+	else:
+		$ModifyDimension/Physics/Control/aurora_spawn_probability["theme_override_colors/font_color"] = Color.BLACK
+		if aurora_spawn_probability_value >= 0.35:
+			physics_OP_points += 10.0 * (aurora_spawn_probability_value - 0.35)
+		else:
+			physics_OP_points += 1.5 * (aurora_spawn_probability_value - 0.35)
+	
+	var aurora_width_multiplier_value = $ModifyDimension/Physics/Control/aurora_width_multiplier.value
+	if aurora_width_multiplier_value < 0:
+		$ModifyDimension/Physics/Control/aurora_width_multiplier["theme_override_colors/font_color"] = Color.RED
+		num_errors.physics = true
+	else:
+		$ModifyDimension/Physics/Control/aurora_width_multiplier["theme_override_colors/font_color"] = Color.BLACK
+		physics_OP_points += pow(2.0 * max(0.0, aurora_width_multiplier_value - 1.0), 1.8)
+	
+	var perpendicular_auroras_value = $ModifyDimension/Physics/Control/perpendicular_auroras.value
+	if perpendicular_auroras_value < 0:
+		$ModifyDimension/Physics/Control/perpendicular_auroras["theme_override_colors/font_color"] = Color.RED
+		num_errors.physics = true
+	else:
+		$ModifyDimension/Physics/Control/perpendicular_auroras["theme_override_colors/font_color"] = Color.BLACK
+		physics_OP_points += 30.0 * perpendicular_auroras_value
+	
+	for upg in ["MVOUP", "BI", "aurora_spawn_probability", "aurora_width_multiplier", "perpendicular_auroras"]:
+		physics_defaults.get_node(upg).visible = not is_equal_approx($ModifyDimension/Physics/Control.get_node(upg).value, float(physics_defaults.get_node(upg).text.substr(1)))
+	
 	for cost in $ModifyDimension/Physics/Control/VBox.get_children():
 		if cost.value <= 0:
 			cost["theme_override_colors/font_color"] = Color.RED
@@ -510,7 +541,7 @@ func set_bonuses():
 		else:
 			game.maths_bonus[bonus] = $ModifyDimension/Maths/Control.get_node(bonus).value
 	for bonus in game.physics_bonus:
-		if bonus in ["MVOUP", "BI"]:
+		if bonus in ["MVOUP", "BI", "aurora_spawn_probability", "aurora_width_multiplier", "perpendicular_auroras"]:
 			game.physics_bonus[bonus] = $ModifyDimension/Physics/Control.get_node(bonus).value
 		elif bonus != "antimatter":
 			game.physics_bonus[bonus] = $ModifyDimension/Physics/Control/VBox.get_node(bonus).value

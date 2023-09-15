@@ -1,7 +1,7 @@
 [gd_scene load_steps=4 format=3 uid="uid://cq2nl2mljdwdf"]
 
 [ext_resource type="Theme" uid="uid://cp2u1kgj60ic" path="res://Resources/default_theme.tres" id="2"]
-[ext_resource type="Texture2D" uid="uid://mt1lwj1o5oim" path="res://Graphics/Icons/DropdownArrow.png" id="3"]
+[ext_resource type="Texture2D" uid="uid://daigwh3ufekby" path="res://Graphics/Icons/DropdownArrow.png" id="3"]
 [ext_resource type="Script" path="res://Scripts/CustomSpinBox.gd" id="4"]
 
 [node name="CustomSpinBox" type="LineEdit"]

@@ -101,7 +101,6 @@ label_text = "TIME_SPEED_AFFECTS_PITCH"
 help_text = "TIME_SPEED_AFFECTS_PITCH_DESC"
 
 [node name="GRAPHICS" type="TabBar" parent="TabContainer"]
-visible = false
 layout_mode = 2
 
 [node name="Vsync" type="CheckButton" parent="TabContainer/GRAPHICS"]
@@ -152,6 +151,30 @@ min_value = 1.0
 max_value = 144.0
 value = 1.0
 rounded = true
+
+[node name="30FPS" type="Button" parent="TabContainer/GRAPHICS/FPS"]
+layout_mode = 0
+offset_left = -88.0
+offset_top = 109.0
+offset_right = -30.0
+offset_bottom = 140.0
+text = "30 FPS"
+
+[node name="60FPS" type="Button" parent="TabContainer/GRAPHICS/FPS"]
+layout_mode = 0
+offset_left = 12.0
+offset_top = 109.0
+offset_right = 70.0
+offset_bottom = 140.0
+text = "60 FPS"
+
+[node name="120FPS" type="Button" parent="TabContainer/GRAPHICS/FPS"]
+layout_mode = 0
+offset_left = 112.0
+offset_top = 109.0
+offset_right = 179.0
+offset_bottom = 140.0
+text = "120 FPS"
 
 [node name="EnableShaders" type="CheckButton" parent="TabContainer/GRAPHICS"]
 layout_mode = 0
@@ -213,6 +236,7 @@ offset_bottom = 158.0
 text = "Keep window size"
 
 [node name="GAME" type="TabBar" parent="TabContainer"]
+visible = false
 layout_mode = 2
 
 [node name="AutosellMinerals" type="CheckButton" parent="TabContainer/GAME"]
@@ -381,6 +405,9 @@ horizontal_alignment = 1
 [connection signal="toggled" from="TabContainer/GRAPHICS/Vsync" to="." method="_on_Vsync_toggled"]
 [connection signal="toggled" from="TabContainer/GRAPHICS/Fullscreen" to="." method="_on_Fullscreen_toggled"]
 [connection signal="value_changed" from="TabContainer/GRAPHICS/FPS/FPS" to="." method="_on_FPS_value_changed"]
+[connection signal="pressed" from="TabContainer/GRAPHICS/FPS/30FPS" to="." method="_on_fps_pressed" binds= [30]]
+[connection signal="pressed" from="TabContainer/GRAPHICS/FPS/60FPS" to="." method="_on_fps_pressed" binds= [60]]
+[connection signal="pressed" from="TabContainer/GRAPHICS/FPS/120FPS" to="." method="_on_fps_pressed" binds= [120]]
 [connection signal="toggled" from="TabContainer/GRAPHICS/EnableShaders" to="." method="_on_EnableShaders_toggled"]
 [connection signal="toggled" from="TabContainer/GRAPHICS/AutosaveLight" to="." method="_on_AutosaveLight_toggled"]
 [connection signal="toggled" from="TabContainer/GRAPHICS/Screenshake" to="." method="_on_Screenshake_toggled"]

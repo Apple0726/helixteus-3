@@ -318,3 +318,7 @@ func _on_discord_toggled(button_pressed):
 			Helper.refresh_discord()
 		else:
 			Helper.refresh_discord("clear")
+
+
+func _on_fps_pressed(extra_arg_0):
+	$TabContainer/GRAPHICS/FPS/FPS.set_value(extra_arg_0)

@@ -1,0 +1,72 @@
+[gd_scene load_steps=6 format=3 uid="uid://bxpp7ecqx57tq"]
+
+[ext_resource type="Theme" uid="uid://cp2u1kgj60ic" path="res://Resources/default_theme.tres" id="1_ikvkt"]
+[ext_resource type="Texture2D" uid="uid://1std6qu3420r" path="res://Graphics/Icons/SP.png" id="2_8plqd"]
+[ext_resource type="Script" path="res://Scripts/TileBonus.gd" id="2_t0pjy"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ewgeq"]
+bg_color = Color(0, 0, 0, 1)
+border_width_left = 25
+border_width_top = 10
+border_width_right = 25
+border_width_bottom = 10
+border_color = Color(0, 0, 0, 0)
+border_blend = true
+corner_radius_top_left = 15
+corner_radius_top_right = 15
+corner_radius_bottom_right = 15
+corner_radius_bottom_left = 15
+
+[sub_resource type="LabelSettings" id="LabelSettings_qx8xy"]
+font_size = 32
+shadow_size = 2
+shadow_color = Color(0, 0, 0, 1)
+shadow_offset = Vector2(2, 2)
+
+[node name="TileBonus" type="Panel"]
+custom_minimum_size = Vector2(184, 72)
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -640.0
+offset_top = -360.0
+offset_right = -456.0
+offset_bottom = -288.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_vertical = 3
+mouse_filter = 2
+theme = ExtResource("1_ikvkt")
+theme_override_styles/panel = SubResource("StyleBoxFlat_ewgeq")
+script = ExtResource("2_t0pjy")
+
+[node name="TextureRect" type="TextureRect" parent="."]
+layout_mode = 1
+anchors_preset = 4
+anchor_top = 0.5
+anchor_bottom = 0.5
+offset_left = 36.0
+offset_top = -36.0
+offset_right = 60.0
+offset_bottom = 36.0
+grow_vertical = 2
+texture = ExtResource("2_8plqd")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Label" type="Label" parent="."]
+layout_mode = 1
+anchors_preset = 4
+anchor_top = 0.5
+anchor_bottom = 0.5
+offset_left = 52.0
+offset_top = -36.0
+offset_right = 168.0
+offset_bottom = 36.0
+grow_vertical = 2
+text = "x 2"
+label_settings = SubResource("LabelSettings_qx8xy")
+horizontal_alignment = 1
+vertical_alignment = 1

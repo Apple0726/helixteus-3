@@ -771,8 +771,6 @@ func load_game():
 	Data.MUs.MV.pw = maths_bonus.MUCGF_MV
 	Data.MUs.MSMB.pw = maths_bonus.MUCGF_MSMB
 	physics_bonus = save_info_dict.physics_bonus
-	if not physics_bonus.has("age"):
-		physics_bonus.age = 15
 	chemistry_bonus = save_info_dict.chemistry_bonus
 	biology_bonus = save_info_dict.biology_bonus
 	engineering_bonus = save_info_dict.engineering_bonus
@@ -834,6 +832,9 @@ func set_default_dim_bonuses():
 	physics_bonus = Data.univ_prop_weights.duplicate()
 	physics_bonus.MVOUP = 0.5
 	physics_bonus.BI = 0.3
+	physics_bonus.aurora_spawn_probability = 0.35
+	physics_bonus.aurora_width_multiplier = 1.0
+	physics_bonus.perpendicular_auroras = 0.0
 	chemistry_bonus = {}
 	biology_bonus = {
 		"PGSM":1.0,
@@ -2808,7 +2809,7 @@ func generate_tiles(id:int):
 	var tile_from:int = -1
 	var tile_to:int = -1
 	var rand:float = randf()
-	var thiccness:int = ceil(Helper.rand_int(1, 3) * wid / 50.0)
+	var thiccness:int = ceil(randf_range(1, 3) * wid / 50.0 * physics_bonus.aurora_width_multiplier)
 	var pulsation:float = randf_range(0.4, 1)
 	var amplitude:float = 0.85
 	var max_star_temp = get_max_star_prop(c_s, "temperature")
@@ -2816,7 +2817,7 @@ func generate_tiles(id:int):
 	var home_planet:bool = c_p_g == 2 and c_u == 0
 	var B_strength:float = galaxy_data[c_g].B_strength
 	for i in num_auroras:
-		if not home_planet and (randf() < 0.35 * pow(p_i.pressure, 0.15)):
+		if not home_planet and (randf() < physics_bonus.aurora_spawn_probability * pow(p_i.pressure, 0.15)):
 			#au_int: aurora_intensity
 			var au_int = Helper.clever_round(80000 * randf_range(1, 2) * B_strength * max_star_temp)
 			if tile_from == -1:
@@ -2830,8 +2831,12 @@ func generate_tiles(id:int):
 							continue
 						show.auroras = true
 						var id2:int = k + j * wid
-						tile_data[id2].aurora = au_int
-						tile_data[id2].resource_production_bonus.SP = tile_data[id2].resource_production_bonus.get("SP", 1.0) + au_int
+						if tile_data[id2].has("aurora"):
+							tile_data[id2].aurora *= au_int
+							tile_data[id2].resource_production_bonus.SP *= au_int
+						else:
+							tile_data[id2].aurora = au_int
+							tile_data[id2].resource_production_bonus.SP = tile_data[id2].resource_production_bonus.get("SP", 1.0) + au_int
 			else:#Horizontal
 				for j in wid:
 					var y_pos:int = lerp(tile_from, tile_to, j / float(wid)) + diff + thiccness * amplitude * sin(j / float(wid) * 4 * pulsation * PI)
@@ -2840,8 +2845,12 @@ func generate_tiles(id:int):
 							continue
 						show.auroras = true
 						var id2:int = j + k * wid
-						tile_data[id2].aurora = au_int
-						tile_data[id2].resource_production_bonus.SP = tile_data[id2].resource_production_bonus.get("SP", 1.0) + au_int
+						if tile_data[id2].has("aurora"):
+							tile_data[id2].aurora *= au_int
+							tile_data[id2].resource_production_bonus.SP *= au_int
+						else:
+							tile_data[id2].aurora = au_int
+							tile_data[id2].resource_production_bonus.SP = tile_data[id2].resource_production_bonus.get("SP", 1.0) + au_int
 			stats_global.highest_au_int = max(au_int, stats_global.highest_au_int)
 			stats_dim.highest_au_int = max(au_int, stats_dim.highest_au_int)
 			stats_univ.highest_au_int = max(au_int, stats_univ.highest_au_int)
@@ -2849,6 +2858,8 @@ func generate_tiles(id:int):
 				diff = thiccness + 1
 			else:
 				diff = Helper.rand_int(thiccness + 1, wid / 3) * sign(randf_range(-69, 69))
+			if i == 0 and randf() < physics_bonus.perpendicular_auroras:
+				rand = 1.0 - rand
 	#We assume that the star system's age is inversely proportional to the coldest star's temperature
 	#Age is a factor in crater rarity. Older systems have more craters
 	var coldest_star_temp = get_min_star_prop(c_s, "temperature")
