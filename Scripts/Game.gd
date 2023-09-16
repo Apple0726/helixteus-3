@@ -1435,7 +1435,7 @@ func switch_view(new_view:String, other_params:Dictionary = {}):
 					if is_instance_valid(cluster) and cluster.material != null:
 						tween2.tween_property(cluster.material, "shader_parameter/alpha", 0.0, 0.15)
 		if is_instance_valid(planet_HUD) and new_view != "planet":
-			var anim_player:AnimationPlayer = planet_HUD.get_node("AnimationPlayer")
+			var anim_player:AnimationPlayer = planet_HUD.get_node("ButtonsAnimation")
 			anim_player.play_backwards("MoveButtons")
 		if is_instance_valid(space_HUD) and not new_view in ["system", "galaxy", "cluster", "universe"]:
 			var anim_player:AnimationPlayer = space_HUD.get_node("AnimationPlayer")

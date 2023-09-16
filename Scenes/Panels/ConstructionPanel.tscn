@@ -1,0 +1,167 @@
+[gd_scene load_steps=10 format=3 uid="uid://b3nhmyabvl606"]
+
+[ext_resource type="Theme" uid="uid://cp2u1kgj60ic" path="res://Resources/default_theme.tres" id="1_q53tt"]
+[ext_resource type="Texture2D" uid="uid://ddfdowwjku0dd" path="res://Graphics/Buildings/mineral_extractor.png" id="2_ktgp8"]
+[ext_resource type="Script" path="res://Scripts/ConstructPanel.gd" id="2_v0xsx"]
+[ext_resource type="Texture2D" uid="uid://coh6u6gsdcspp" path="res://Graphics/Icons/minerals.png" id="3_qlc6f"]
+[ext_resource type="Texture2D" uid="uid://du31t3pgslqt1" path="res://Graphics/Buildings/mineral_silo.png" id="4_pprlh"]
+[ext_resource type="Texture2D" uid="uid://t20blxqytxk6" path="res://Graphics/Materials/glass.png" id="5_vrfgh"]
+[ext_resource type="Texture2D" uid="uid://b3c4afph0xse0" path="res://Graphics/Buildings/central_business_district.png" id="6_uh0od"]
+[ext_resource type="Texture2D" uid="uid://rxo80y4e6v57" path="res://Graphics/Cave/Rover.png" id="7_nh4w1"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_seglp"]
+content_margin_left = 20.0
+content_margin_top = 20.0
+content_margin_right = 20.0
+content_margin_bottom = 20.0
+
+[node name="Panel" type="Panel"]
+anchors_preset = 4
+anchor_top = 0.5
+anchor_bottom = 0.5
+offset_top = -360.0
+offset_right = 140.0
+offset_bottom = 120.0
+grow_vertical = 2
+mouse_filter = 1
+theme = ExtResource("1_q53tt")
+script = ExtResource("2_v0xsx")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+show_behind_parent = true
+layout_mode = 0
+offset_left = 140.0
+offset_right = 189.0
+offset_bottom = 204.0
+theme_override_constants/separation = 0
+
+[node name="Basic" type="Button" parent="VBoxContainer"]
+show_behind_parent = true
+custom_minimum_size = Vector2(0, 48)
+layout_mode = 2
+icon = ExtResource("3_qlc6f")
+icon_alignment = 2
+expand_icon = true
+
+[node name="Label" type="Label" parent="VBoxContainer/Basic"]
+layout_mode = 0
+offset_left = 60.0
+offset_right = 156.0
+offset_bottom = 48.0
+text = "BASIC"
+vertical_alignment = 1
+
+[node name="Storage" type="Button" parent="VBoxContainer"]
+show_behind_parent = true
+custom_minimum_size = Vector2(0, 48)
+layout_mode = 2
+icon = ExtResource("4_pprlh")
+alignment = 0
+icon_alignment = 2
+expand_icon = true
+
+[node name="Label" type="Label" parent="VBoxContainer/Storage"]
+modulate = Color(1, 1, 1, 0)
+layout_mode = 0
+offset_left = 60.0
+offset_right = 164.0
+offset_bottom = 48.0
+text = "STORAGE"
+vertical_alignment = 1
+
+[node name="Production" type="Button" parent="VBoxContainer"]
+show_behind_parent = true
+custom_minimum_size = Vector2(0, 48)
+layout_mode = 2
+icon = ExtResource("5_vrfgh")
+alignment = 0
+icon_alignment = 2
+expand_icon = true
+
+[node name="Label" type="Label" parent="VBoxContainer/Production"]
+modulate = Color(1, 1, 1, 0)
+offset_left = 60.0
+offset_right = 192.0
+offset_bottom = 48.0
+text = "PRODUCTION"
+vertical_alignment = 1
+
+[node name="Support" type="Button" parent="VBoxContainer"]
+show_behind_parent = true
+custom_minimum_size = Vector2(0, 48)
+layout_mode = 2
+icon = ExtResource("6_uh0od")
+alignment = 0
+icon_alignment = 2
+expand_icon = true
+
+[node name="Label" type="Label" parent="VBoxContainer/Support"]
+modulate = Color(1, 1, 1, 0)
+offset_left = 60.0
+offset_right = 164.0
+offset_bottom = 48.0
+text = "SUPPORT"
+vertical_alignment = 1
+
+[node name="Vehicles" type="Button" parent="VBoxContainer"]
+show_behind_parent = true
+custom_minimum_size = Vector2(0, 48)
+layout_mode = 2
+icon = ExtResource("7_nh4w1")
+alignment = 0
+icon_alignment = 2
+expand_icon = true
+
+[node name="Label" type="Label" parent="VBoxContainer/Vehicles"]
+modulate = Color(1, 1, 1, 0)
+offset_left = 60.0
+offset_right = 160.0
+offset_bottom = 48.0
+text = "VEHICLES"
+vertical_alignment = 1
+
+[node name="ScrollContainer" type="ScrollContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxEmpty_seglp")
+horizontal_scroll_mode = 3
+
+[node name="VBoxContainer" type="VBoxContainer" parent="ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="Button" type="Button" parent="ScrollContainer/VBoxContainer"]
+custom_minimum_size = Vector2(0, 100)
+layout_mode = 2
+icon = ExtResource("2_ktgp8")
+icon_alignment = 1
+expand_icon = true
+
+[node name="Label" type="Label" parent="."]
+layout_mode = 0
+offset_top = -28.0
+offset_right = 140.0
+offset_bottom = -3.0
+text = "CONSTRUCT"
+horizontal_alignment = 1
+
+[connection signal="mouse_entered" from="VBoxContainer/Basic" to="." method="_on_basic_mouse_entered"]
+[connection signal="mouse_exited" from="VBoxContainer/Basic" to="." method="_on_basic_mouse_exited"]
+[connection signal="pressed" from="VBoxContainer/Basic" to="." method="_on_tab_pressed" binds= ["Basic"]]
+[connection signal="mouse_entered" from="VBoxContainer/Storage" to="." method="_on_storage_mouse_entered"]
+[connection signal="mouse_exited" from="VBoxContainer/Storage" to="." method="_on_storage_mouse_exited"]
+[connection signal="pressed" from="VBoxContainer/Storage" to="." method="_on_tab_pressed" binds= ["Storage"]]
+[connection signal="mouse_entered" from="VBoxContainer/Production" to="." method="_on_production_mouse_entered"]
+[connection signal="mouse_exited" from="VBoxContainer/Production" to="." method="_on_production_mouse_exited"]
+[connection signal="pressed" from="VBoxContainer/Production" to="." method="_on_tab_pressed" binds= ["Production"]]
+[connection signal="mouse_entered" from="VBoxContainer/Support" to="." method="_on_support_mouse_entered"]
+[connection signal="mouse_exited" from="VBoxContainer/Support" to="." method="_on_support_mouse_exited"]
+[connection signal="pressed" from="VBoxContainer/Support" to="." method="_on_tab_pressed" binds= ["Support"]]
+[connection signal="mouse_entered" from="VBoxContainer/Vehicles" to="." method="_on_vehicles_mouse_entered"]
+[connection signal="mouse_exited" from="VBoxContainer/Vehicles" to="." method="_on_vehicles_mouse_exited"]
+[connection signal="pressed" from="VBoxContainer/Vehicles" to="." method="_on_tab_pressed" binds= ["Vehicles"]]

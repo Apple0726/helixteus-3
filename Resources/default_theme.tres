@@ -1,4 +1,4 @@
-[gd_resource type="Theme" load_steps=38 format=3 uid="uid://cp2u1kgj60ic"]
+[gd_resource type="Theme" load_steps=39 format=3 uid="uid://cp2u1kgj60ic"]
 
 [ext_resource type="Texture2D" uid="uid://c7dhi5uyajeow" path="res://Graphics/Buttons/CheckboxChecked.svg" id="1_h4tp5"]
 [ext_resource type="Texture2D" uid="uid://b8wob2ylae00s" path="res://Graphics/Buttons/CheckboxUnhecked.svg" id="2_s3vx0"]
@@ -158,6 +158,11 @@ border_blend = true
 corner_detail = 5
 
 [sub_resource type="SystemFont" id="SystemFont_c5eyb"]
+font_names = PackedStringArray("Ebrima")
+multichannel_signed_distance_field = true
+fallbacks = Array[Font]([SubResource("SystemFont_xvdaj")])
+
+[sub_resource type="SystemFont" id="SystemFont_st2a7"]
 font_names = PackedStringArray("Ebrima")
 multichannel_signed_distance_field = true
 fallbacks = Array[Font]([SubResource("SystemFont_xvdaj")])
@@ -414,7 +419,7 @@ LineEdit/colors/font_color_selected = Color(0.694118, 0.694118, 0.694118, 1)
 LineEdit/colors/font_color_uneditable = Color(0.521569, 0.521569, 0.521569, 1)
 LineEdit/colors/selection_color = Color(0, 0, 0, 1)
 LineEdit/constants/minimum_spaces = 12
-LineEdit/fonts/font = SubResource("SystemFont_ew3ep")
+LineEdit/fonts/font = SubResource("SystemFont_st2a7")
 LineEdit/icons/clear = null
 LineEdit/styles/focus = null
 LineEdit/styles/normal = SubResource("19")

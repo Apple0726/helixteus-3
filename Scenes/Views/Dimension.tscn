@@ -889,7 +889,6 @@ expand_mode = 1
 stretch_mode = 6
 
 [node name="Physics" type="ScrollContainer" parent="ModifyDimension"]
-visible = false
 custom_minimum_size = Vector2(388, 672)
 layout_mode = 0
 anchor_right = 1.0

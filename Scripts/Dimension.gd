@@ -104,6 +104,10 @@ func toggle_subj(subj_name:String):
 		else:
 			thresh = min(remap(T, 210000, 1000000, 0.92, 1.0), 1.0)
 		$ModifyDimension/Physics/Control/StarGradient.material.set_shader_parameter("threshold", thresh)
+		if game.op_cursor:
+			$ModifyDimension/Physics/Control/Label9.text = tr("AURORA_WIDTH_MULTIPLIER").replace("width", "thiccness")
+		else:
+			$ModifyDimension/Physics/Control/Label9.text = tr("AURORA_WIDTH_MULTIPLIER")
 
 func refresh_univs(reset:bool = false):
 	DR_mult = 1 + 0.25 * game.subject_levels.dimensional_power

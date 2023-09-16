@@ -1,4 +1,4 @@
-[gd_scene load_steps=21 format=3 uid="uid://b4u80l6nm3dei"]
+[gd_scene load_steps=25 format=3 uid="uid://b4u80l6nm3dei"]
 
 [ext_resource type="Texture2D" uid="uid://225akwsdo1ln" path="res://Graphics/Buttons/ConstructBuildings.png" id="1"]
 [ext_resource type="Theme" uid="uid://cp2u1kgj60ic" path="res://Resources/default_theme.tres" id="1_ankd5"]
@@ -6,6 +6,7 @@
 [ext_resource type="Texture2D" uid="uid://cnp4b35umhf44" path="res://Graphics/Icons/Notification.png" id="4"]
 [ext_resource type="Texture2D" uid="uid://difn1gg0v68lt" path="res://Graphics/Buttons/Mine.png" id="5"]
 [ext_resource type="Texture2D" uid="uid://wcinw8e5y0jp" path="res://Graphics/Buttons/Terraform.png" id="7"]
+[ext_resource type="PackedScene" uid="uid://b3nhmyabvl606" path="res://Scenes/Panels/ConstructionPanel.tscn" id="7_cy5mr"]
 
 [sub_resource type="InputEventKey" id="InputEventKey_gr57q"]
 device = -1
@@ -145,6 +146,89 @@ _data = {
 [sub_resource type="LabelSettings" id="LabelSettings_1kyj1"]
 shadow_color = Color(0, 0, 0, 0.505882)
 
+[sub_resource type="Animation" id="Animation_tg7hu"]
+resource_name = "Fade"
+length = 0.3
+tracks/0/type = "bezier"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("ConstructPanel:position:x")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"handle_modes": PackedInt32Array(0, 0),
+"points": PackedFloat32Array(-60, 0, 0, 0.1, 42.9187, -1.99468, -0.2, -2.63043, 0.2, 2.63043),
+"times": PackedFloat32Array(0, 0.3)
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("ConstructPanel:modulate")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.3),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 1)]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("BlackRect:color")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0, 0.3),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(0, 0, 0, 0), Color(0, 0, 0, 0.192157)]
+}
+
+[sub_resource type="Animation" id="Animation_h6jf6"]
+length = 0.001
+tracks/0/type = "bezier"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("ConstructPanel:position:x")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"handle_modes": PackedInt32Array(0),
+"points": PackedFloat32Array(-60, -0.25, 0, 0.25, 0),
+"times": PackedFloat32Array(0)
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("ConstructPanel:modulate")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1, 1, 1, 0)]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("BlackRect:color")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(0, 0, 0, 0)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_bp5hg"]
+_data = {
+"Fade": SubResource("Animation_tg7hu"),
+"RESET": SubResource("Animation_h6jf6")
+}
+
 [node name="PlanetHUD" type="Control"]
 layout_mode = 3
 anchors_preset = 15
@@ -155,6 +239,16 @@ grow_vertical = 2
 mouse_filter = 2
 theme = ExtResource("1_ankd5")
 script = ExtResource("2")
+
+[node name="BlackRect" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0, 0, 0, 0)
 
 [node name="VBoxContainer" type="VBoxContainer" parent="."]
 layout_mode = 0
@@ -209,7 +303,7 @@ libraries = {
 "": SubResource("AnimationLibrary_qi0uf")
 }
 
-[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+[node name="ButtonsAnimation" type="AnimationPlayer" parent="."]
 autoplay = "MoveButtons"
 libraries = {
 "": SubResource("AnimationLibrary_qgp35")
@@ -226,6 +320,24 @@ text = "HOLD_SHIFT_TO_MASS_BUILD"
 label_settings = SubResource("LabelSettings_1kyj1")
 horizontal_alignment = 2
 
+[node name="ConstructPanel" parent="." instance=ExtResource("7_cy5mr")]
+visible = false
+modulate = Color(1, 1, 1, 0)
+layout_mode = 1
+anchors_preset = 0
+anchor_top = 0.0
+anchor_bottom = 0.0
+offset_left = -60.0
+offset_top = 136.0
+offset_right = 80.0
+offset_bottom = 616.0
+grow_vertical = 1
+
+[node name="ConstructPanelAnimation" type="AnimationPlayer" parent="."]
+libraries = {
+"": SubResource("AnimationLibrary_bp5hg")
+}
+
 [connection signal="mouse_entered" from="VBoxContainer/Terraform" to="." method="_on_Terraform_mouse_entered"]
 [connection signal="mouse_exited" from="VBoxContainer/Terraform" to="." method="_on_mouse_exited"]
 [connection signal="pressed" from="VBoxContainer/Terraform" to="." method="_on_Terraform_pressed"]
@@ -235,3 +347,5 @@ horizontal_alignment = 2
 [connection signal="mouse_entered" from="VBoxContainer/Construct" to="." method="_on_Construct_mouse_entered"]
 [connection signal="mouse_exited" from="VBoxContainer/Construct" to="." method="_on_mouse_exited"]
 [connection signal="pressed" from="VBoxContainer/Construct" to="." method="_on_Construct_pressed"]
+[connection signal="hide_construct" from="ConstructPanel" to="." method="_on_construct_panel_hide_construct"]
+[connection signal="animation_finished" from="ConstructPanelAnimation" to="." method="_on_construct_panel_animation_animation_finished"]

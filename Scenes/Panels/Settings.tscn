@@ -35,7 +35,6 @@ offset_right = 892.0
 offset_bottom = 576.0
 
 [node name="SFX" type="TabBar" parent="TabContainer"]
-visible = false
 layout_mode = 2
 
 [node name="Master" type="HSlider" parent="TabContainer/SFX"]
@@ -101,6 +100,7 @@ label_text = "TIME_SPEED_AFFECTS_PITCH"
 help_text = "TIME_SPEED_AFFECTS_PITCH_DESC"
 
 [node name="GRAPHICS" type="TabBar" parent="TabContainer"]
+visible = false
 layout_mode = 2
 
 [node name="Vsync" type="CheckButton" parent="TabContainer/GRAPHICS"]

@@ -19,13 +19,37 @@ func refresh():
 	$VBoxContainer/Terraform.visible = game.science_unlocked.has("TF")
 	$VBoxContainer/Mine.visible = game.show.has("mining")
 
+var mouse_pos:Vector2
+
 func _input(event):
 	refresh()
+	if event is InputEventMouseMotion:
+		mouse_pos = event.position
+		if $ConstructPanel.visible and event.position.x > 320:
+			hide_construct()
+
+var last_mouse_x_pos:float = INF
 
 func _on_Construct_pressed():
 	click_sound.play()
 	game.planet_HUD.get_node("VBoxContainer/Construct/AnimationPlayer").stop()
-	game.toggle_panel(game.construct_panel)
+	if $ConstructPanel.visible:
+		hide_construct()
+	else:
+		$ConstructPanelAnimation.play("Fade")
+		$ConstructPanel.visible = true
+		game.block_scroll = true
+		$ConstructPanel.refresh()
+		if mouse_pos.x > 320:
+			last_mouse_x_pos = mouse_pos.x
+			warp_mouse(Vector2(80, mouse_pos.y))
+
+func hide_construct():
+	$ConstructPanelAnimation.play_backwards("Fade")
+	game.block_scroll = false
+	if last_mouse_x_pos != INF:
+		warp_mouse(Vector2(last_mouse_x_pos, mouse_pos.y))
+		last_mouse_x_pos = INF
 
 func _on_Mine_pressed():
 	click_sound.play()
@@ -69,3 +93,12 @@ func _on_Terraform_pressed():
 
 func _on_Terraform_mouse_entered():
 	game.show_tooltip(tr("TERRAFORM"))
+
+
+func _on_construct_panel_animation_animation_finished(anim_name):
+	if $ConstructPanel.modulate.a == 0.0:
+		$ConstructPanel.visible = false
+
+
+func _on_construct_panel_hide_construct():
+	hide_construct()
