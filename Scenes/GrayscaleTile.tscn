@@ -1,0 +1,21 @@
+[gd_scene load_steps=3 format=3 uid="uid://dixqdp1o0moib"]
+
+[sub_resource type="Shader" id="Shader_gucwq"]
+code = "shader_type canvas_item;
+
+uniform float amount: hint_range(0.0, 1.0) = 0.0;
+uniform sampler2D SCREEN_TEXTURE : hint_screen_texture, filter_linear_mipmap;
+
+void fragment() {
+	vec4 tex = textureLod(SCREEN_TEXTURE, SCREEN_UV, 0.0);
+	COLOR.rgb = mix(tex.rgb, vec3((tex.r + tex.g + tex.b) / 6.0), amount);
+}
+"
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_vpybf"]
+shader = SubResource("Shader_gucwq")
+shader_parameter/amount = 0.0
+
+[node name="Polygon2D" type="Polygon2D"]
+material = SubResource("ShaderMaterial_vpybf")
+polygon = PackedVector2Array(0, 0, 0, 200, 200, 200, 200, 0)

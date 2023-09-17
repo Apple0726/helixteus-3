@@ -1488,28 +1488,58 @@ func construct(type:int, costs:Dictionary):
 		rsrc = "SP"
 	elif type in [Building.POWER_PLANT, Building.SOLAR_PANEL]:
 		rsrc = "energy"
+	var grayed_out_tile_positions:PackedVector2Array
 	for i in wid:
 		for j in wid:
 			var id2 = i % wid + j * wid
 			var tile = game.tile_data[id2]
-			if tile and tile.has("resource_production_bonus") and tile.resource_production_bonus.has(rsrc):
-				var tile_bonus_node = preload("res://Scenes/TileBonus.tscn").instantiate()
-				tile_bonus_node.position = Vector2(i, j) * 200 + Vector2.ONE * 100 + Vector2(-92, 30)
-				tile_bonus_node.set_icon(Data["%s_icon" % rsrc])
-				tile_bonus_node.set_multiplier(tile.resource_production_bonus[rsrc])
-				tile_bonus_node.modulate.a = 0
-				add_child(tile_bonus_node)
-				var tween2 = create_tween()
-				tween2.tween_property(tile_bonus_node, "modulate:a", 0.8, 0.2).set_delay((i + j) / 7.5 / wid)
-				tile_bonus_node.add_to_group("tile_bonus_nodes")
+			if tile:
+				if type == Building.GREENHOUSE and not tile.has("lake_elements") or not available_to_build(tile):
+					grayed_out_tile_positions.append(Vector2(i, j))
+				if tile.has("resource_production_bonus") and tile.resource_production_bonus.has(rsrc):
+					var tile_bonus_node = preload("res://Scenes/TileBonus.tscn").instantiate()
+					tile_bonus_node.position = Vector2(i, j) * 200 + Vector2.ONE * 100 + Vector2(-92, 30)
+					tile_bonus_node.set_icon(Data["%s_icon" % rsrc])
+					tile_bonus_node.set_multiplier(tile.resource_production_bonus[rsrc])
+					tile_bonus_node.modulate.a = 0
+					add_child(tile_bonus_node)
+					var tween2 = create_tween()
+					tween2.tween_property(tile_bonus_node, "modulate:a", 0.8, 0.2).set_delay((i + j) / 7.5 / wid)
+					tile_bonus_node.add_to_group("tile_bonus_nodes")
+	for v in grayed_out_tile_positions:
+		var gray_tile = preload("res://Scenes/GrayscaleTile.tscn").instantiate()
+		gray_tile.position = v * 200.0
+		add_child(gray_tile)
+		gray_tile.add_to_group("gray_tiles")
+	if len(grayed_out_tile_positions) > 0:
+		var gray_tile = get_tree().get_first_node_in_group("gray_tiles")
+		var tween2 = create_tween()
+		var v = gray_tile.position / 200.0
+		tween2.tween_property(gray_tile.material, "shader_parameter/amount", 1.0, 0.2).set_delay((v.x + v.y) / 7.5 / wid)
 	game.HUD.refresh()
 
+func place_gray_tiles_mining():
+	var grayed_out_tile_positions:PackedVector2Array
+	for i in wid:
+		for j in wid:
+			var id2 = i % wid + j * wid
+			var tile = game.tile_data[id2]
+			if not available_for_mining(tile):
+				var gray_tile = preload("res://Scenes/GrayscaleTile.tscn").instantiate()
+				gray_tile.position = Vector2(i, j) * 200.0
+				add_child(gray_tile)
+				gray_tile.add_to_group("gray_tiles")
+	if len(get_tree().get_nodes_in_group("gray_tiles")) > 0:
+		var gray_tile = get_tree().get_first_node_in_group("gray_tiles")
+		var tween2 = create_tween()
+		var v = gray_tile.position / 200.0
+		tween2.tween_property(gray_tile.material, "shader_parameter/amount", 1.0, 0.2).set_delay((v.x + v.y) / 7.5 / wid)
+	
 func put_shadow(spr:Sprite2D, pos:Vector2 = Vector2.ZERO):
 	spr.texture = game.bldg_textures[bldg_to_construct]
 	spr.scale *= 0.4
 	spr.modulate.a = 0.5
-	spr.position.x = floor(pos.x / 200) * 200 + 100
-	spr.position.y = floor(pos.y / 200) * 200 + 100
+	spr.position = floor(pos / 200) * 200 + 100
 	add_child(spr)
 	return spr
 	
@@ -1523,6 +1553,7 @@ func finish_construct():
 		for tile_bonus_node in get_tree().get_nodes_in_group("tile_bonus_nodes"):
 			tween.tween_property(tile_bonus_node, "modulate:a", 0.0, 0.2)
 			tween.tween_callback(tile_bonus_node.queue_free).set_delay(0.2)
+			tile_bonus_node.remove_from_group("tile_bonus_nodes")
 	if mass_build_rect.visible:
 		mass_build_rect.visible = false
 		for i in len(shadows):

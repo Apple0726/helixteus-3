@@ -17,3 +17,6 @@ func refresh(lv:int):
 	$Effects.visible = subject == "dimensional_power" or lv > 0 and btn_text != ""
 	$RichTextLabel.text = "[center]%s %s %s  %s" % [tr(subject.to_upper()), tr("LV"), lv, "[img]Graphics/Icons/help.png[/img]"]
 	$Upgrade.text = "%s (%s %s)" % [tr("UPGRADE"), lv + 1, tr("DR")]
+
+func animate_effect_button():
+	$Effects/AnimationPlayer.play("Fade")

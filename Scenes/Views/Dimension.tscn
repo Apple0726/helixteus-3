@@ -1,4 +1,4 @@
-[gd_scene load_steps=54 format=3 uid="uid://bg2sov0myafl8"]
+[gd_scene load_steps=57 format=3 uid="uid://bg2sov0myafl8"]
 
 [ext_resource type="PackedScene" uid="uid://bx7irdxpbnhbb" path="res://Scenes/DimensionType.tscn" id="3"]
 [ext_resource type="Texture2D" uid="uid://bi11obvckb4yu" path="res://Graphics/Misc/Physics.png" id="4"]
@@ -125,6 +125,57 @@ tracks/0/keys = {
 _data = {
 "Fade": SubResource("Animation_gp2ko"),
 "RESET": SubResource("Animation_q2bul")
+}
+
+[sub_resource type="Animation" id="Animation_nf555"]
+resource_name = "Fade"
+length = 2.0
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:color")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.5, 0.8, 2),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 0,
+"values": [Color(0, 0, 0, 0), Color(0, 0, 0, 1), Color(0, 0, 0, 1), Color(0, 0, 0, 0)]
+}
+tracks/1/type = "method"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("..")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0.8),
+"transitions": PackedFloat32Array(1),
+"values": [{
+"args": [],
+"method": &"refresh_subjects_grid"
+}]
+}
+
+[sub_resource type="Animation" id="Animation_2dw8a"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:color")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(0, 0, 0, 0)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_a687h"]
+_data = {
+"Fade": SubResource("Animation_nf555"),
+"RESET": SubResource("Animation_2dw8a")
 }
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_mmkh4"]
@@ -339,6 +390,20 @@ subject = "engineering"
 layout_mode = 2
 texture = ExtResource("6")
 subject = "dimensional_power"
+
+[node name="BlackRect" type="ColorRect" parent="."]
+visible = false
+layout_mode = 2
+offset_left = 448.0
+offset_top = 48.0
+offset_right = 1280.0
+offset_bottom = 720.0
+color = Color(0, 0, 0, 0)
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="BlackRect"]
+libraries = {
+"": SubResource("AnimationLibrary_a687h")
+}
 
 [node name="DimBonusesInfo" type="Label" parent="."]
 visible = false
@@ -889,6 +954,7 @@ expand_mode = 1
 stretch_mode = 6
 
 [node name="Physics" type="ScrollContainer" parent="ModifyDimension"]
+visible = false
 custom_minimum_size = Vector2(388, 672)
 layout_mode = 0
 anchor_right = 1.0
@@ -2130,6 +2196,7 @@ text = "aw"
 horizontal_alignment = 1
 
 [connection signal="pressed" from="Universes/SendProbes" to="." method="_on_SendProbes_pressed"]
+[connection signal="animation_finished" from="BlackRect/AnimationPlayer" to="." method="_on_black_rect_animation_finished"]
 [connection signal="mouse_entered" from="TopInfo/Reset" to="." method="_on_Reset_mouse_entered"]
 [connection signal="mouse_exited" from="TopInfo/Reset" to="." method="_on_mouse_exited"]
 [connection signal="pressed" from="TopInfo/Reset" to="." method="_on_Reset_pressed"]

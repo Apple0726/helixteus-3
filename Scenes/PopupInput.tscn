@@ -83,6 +83,7 @@ offset_left = 152.0
 offset_top = 72.0
 offset_right = 280.0
 offset_bottom = 100.0
+alignment = 1
 
 [connection signal="close_button_pressed" from="Panel/TextureButton" to="." method="_on_close_button_pressed"]
 [connection signal="pressed" from="Panel/Confirm" to="." method="_on_confirm_pressed"]

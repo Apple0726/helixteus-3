@@ -80,6 +80,7 @@ expand_icon = true
 
 [node name="Label" type="Label" parent="VBoxContainer/Production"]
 modulate = Color(1, 1, 1, 0)
+layout_mode = 0
 offset_left = 60.0
 offset_right = 192.0
 offset_bottom = 48.0
@@ -97,6 +98,7 @@ expand_icon = true
 
 [node name="Label" type="Label" parent="VBoxContainer/Support"]
 modulate = Color(1, 1, 1, 0)
+layout_mode = 0
 offset_left = 60.0
 offset_right = 164.0
 offset_bottom = 48.0
@@ -114,6 +116,7 @@ expand_icon = true
 
 [node name="Label" type="Label" parent="VBoxContainer/Vehicles"]
 modulate = Color(1, 1, 1, 0)
+layout_mode = 0
 offset_left = 60.0
 offset_right = 160.0
 offset_bottom = 48.0

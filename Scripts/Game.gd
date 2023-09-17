@@ -40,7 +40,7 @@ var galaxy_textures:Array
 var bldg_textures:Array
 var unique_bldg_textures:Array
 
-var construct_panel:Control
+#var construct_panel:Control
 var megastructures_panel:Control
 var gigastructures_panel:Control
 var shop_panel:Control
@@ -1141,8 +1141,8 @@ func add_panels():
 	shop_panel = generic_panel_scene.instantiate()
 	shop_panel.set_script(load("Scripts/ShopPanel.gd"))
 	ship_panel = preload("res://Scenes/Panels/ShipPanel.tscn").instantiate()
-	construct_panel = generic_panel_scene.instantiate()
-	construct_panel.set_script(load("Scripts/ConstructPanel.gd"))
+#	construct_panel = generic_panel_scene.instantiate()
+#	construct_panel.set_script(load("Scripts/ConstructPanel.gd"))
 	megastructures_panel = generic_panel_scene.instantiate()
 	megastructures_panel.set_script(load("Scripts/MegastructuresPanel.gd"))
 	gigastructures_panel = preload("res://Scenes/Panels/GigastructuresPanel.tscn").instantiate()
@@ -1200,8 +1200,8 @@ func add_panels():
 	PC_panel.visible = false
 	$Panels/Control.add_child(PC_panel)
 	
-	construct_panel.visible = false
-	$Panels/Control.add_child(construct_panel)
+#	construct_panel.visible = false
+#	$Panels/Control.add_child(construct_panel)
 
 	megastructures_panel.visible = false
 	$Panels/Control.add_child(megastructures_panel)
@@ -3936,6 +3936,13 @@ func _on_BottomInfo_close_button_pressed(direct:bool = false):
 			call($UI/BottomInfo/CloseButton.on_close)
 		$UI/BottomInfo/CloseButton.on_close = ""
 		bottom_info_action = ""
+		if not get_tree().get_nodes_in_group("gray_tiles").is_empty():
+			var tween = create_tween()
+			tween.set_parallel(true)
+			tween.tween_property(get_tree().get_first_node_in_group("gray_tiles").material, "shader_parameter/amount", 0.0, 0.2)
+			for gray_tile in get_tree().get_nodes_in_group("gray_tiles"):
+				tween.tween_callback(gray_tile.queue_free).set_delay(0.2)
+				gray_tile.remove_from_group("gray_tiles")
 		HUD.refresh()
 		if not direct:
 			$UI/BottomInfo/MoveAnim.play_backwards("MoveLabel")
@@ -3987,6 +3994,7 @@ func fade_out_title(fn:String):
 	
 func _on_NewGame_pressed():
 	if op_cursor and Input.is_action_pressed("ctrl"):
+		settings._on_OPCursor_toggled(false)
 		var popup_input = preload("res://Scenes/PopupInput.tscn").instantiate()
 		popup_input.label_text = "Enter the number of DRs to start the game with:"
 		popup_input.check_input = func(x): return int(x) >= 0
@@ -4197,6 +4205,7 @@ func mine_tile(tile_id:int = -1):
 			toggle_panel(shop_panel)
 		if tile_id == -1:
 			put_bottom_info(tr("START_MINE"), "about_to_mine")
+			view.obj.place_gray_tiles_mining()
 		else:
 			c_t = tile_id
 			switch_view("mining")

@@ -47,9 +47,7 @@ func _on_Construct_pressed():
 func hide_construct():
 	$ConstructPanelAnimation.play_backwards("Fade")
 	game.block_scroll = false
-	if last_mouse_x_pos != INF:
-		warp_mouse(Vector2(last_mouse_x_pos, mouse_pos.y))
-		last_mouse_x_pos = INF
+	last_mouse_x_pos = INF
 
 func _on_Mine_pressed():
 	click_sound.play()
@@ -101,4 +99,6 @@ func _on_construct_panel_animation_animation_finished(anim_name):
 
 
 func _on_construct_panel_hide_construct():
+	if last_mouse_x_pos != INF:
+		warp_mouse(Vector2(last_mouse_x_pos, mouse_pos.y))
 	hide_construct()

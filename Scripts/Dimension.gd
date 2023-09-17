@@ -211,24 +211,33 @@ func on_dimension_upgrade(subj_node):
 		if $ModifyDimension.get_node(str(subj_node.name)).visible:
 			$ModifyDimension/OPMeter/OPMeter.max_value = get_OP_cap(subj_node.name.to_lower())
 		if subj_name == "dimensional_power":
-			set_grid()
-			refresh_OP_meters()
-			if $ModifyDimension/Maths.visible:
-				$ModifyDimension/OPMeter/OPMeter.max_value = get_OP_cap("maths")
-			elif $ModifyDimension/Physics.visible:
-				$ModifyDimension/OPMeter/OPMeter.max_value = get_OP_cap("physics")
-			elif $ModifyDimension/Chemistry.visible:
-				$ModifyDimension/OPMeter/OPMeter.max_value = get_OP_cap("chemistry")
-			elif $ModifyDimension/Biology.visible:
-				$ModifyDimension/OPMeter/OPMeter.max_value = get_OP_cap("biology")
-			elif $ModifyDimension/Engineering.visible:
-				$ModifyDimension/OPMeter/OPMeter.max_value = get_OP_cap("engineering")
 			if $ModifyDimension/Dimensional_Power/Control.has_node("Label%s" % subject_level):
 				$ModifyDimension/Dimensional_Power/Control.get_node("Label%s" % subject_level)["theme_override_colors/font_color"] = Color.WHITE
+			if subject_level == 2:
+				$BlackRect.visible = true
+				$BlackRect/AnimationPlayer.play("Fade")
+			else:
+				refresh_subjects_grid()
+		elif subject_level == 1:
+			subj_node.animate_effect_button()
 		subj_node.refresh(subject_level)
 		for subj in $Subjects/Grid.get_children():
 			var lv:int = game.subject_levels[subj.name.to_lower()]
 			subj.get_node("Upgrade").disabled = game.DRs <= lv
+
+func refresh_subjects_grid():
+	set_grid()
+	refresh_OP_meters()
+	if $ModifyDimension/Maths.visible:
+		$ModifyDimension/OPMeter/OPMeter.max_value = get_OP_cap("maths")
+	elif $ModifyDimension/Physics.visible:
+		$ModifyDimension/OPMeter/OPMeter.max_value = get_OP_cap("physics")
+	elif $ModifyDimension/Chemistry.visible:
+		$ModifyDimension/OPMeter/OPMeter.max_value = get_OP_cap("chemistry")
+	elif $ModifyDimension/Biology.visible:
+		$ModifyDimension/OPMeter/OPMeter.max_value = get_OP_cap("biology")
+	elif $ModifyDimension/Engineering.visible:
+		$ModifyDimension/OPMeter/OPMeter.max_value = get_OP_cap("engineering")
 
 func on_univ_out():
 	game.hide_tooltip()
@@ -484,10 +493,16 @@ func calc_OP_points():
 			$ModifyDimension/OPMeter/TooOP.text = "%s / %s" % [Helper.clever_round(self["%s_OP_points" % subj.to_lower()]), $ModifyDimension/OPMeter/OPMeter.max_value]
 			if self["%s_OP_points" % subj.to_lower()] > $ModifyDimension/OPMeter/OPMeter.max_value:
 				$Subjects/Grid.get_node(subj + "/Effects")["theme_override_colors/font_color"] = Color(0.8, 0, 0)
+				$Subjects/Grid.get_node(subj + "/Effects")["theme_override_colors/font_hover_color"] = Color(0.8, 0, 0)
+				$Subjects/Grid.get_node(subj + "/Effects")["theme_override_colors/font_pressed_color"] = Color(0.8, 0, 0)
+				$Subjects/Grid.get_node(subj + "/Effects")["theme_override_colors/font_focus_color"] = Color(0.8, 0, 0)
 				num_errors[subj.to_lower()] = true
 				$ModifyDimension/OPMeter/TooOP.text += " - %s" % tr("TOO_OP")
 			else:
 				$Subjects/Grid.get_node(subj + "/Effects")["theme_override_colors/font_color"] = Color(0.8, 0, 0) if num_errors.has(subj.to_lower()) else Color.WHITE
+				$Subjects/Grid.get_node(subj + "/Effects")["theme_override_colors/font_hover_color"] = Color(0.8, 0, 0) if num_errors.has(subj.to_lower()) else Color.WHITE
+				$Subjects/Grid.get_node(subj + "/Effects")["theme_override_colors/font_pressed_color"] = Color(0.8, 0, 0) if num_errors.has(subj.to_lower()) else Color.WHITE
+				$Subjects/Grid.get_node(subj + "/Effects")["theme_override_colors/font_focus_color"] = Color(0.8, 0, 0) if num_errors.has(subj.to_lower()) else Color.WHITE
 		else:
 			if self["%s_OP_points" % subj.to_lower()] > get_OP_cap(subj.to_lower()):
 				num_errors[subj.to_lower()] = true
@@ -687,3 +702,7 @@ func _on_BI_value_changed(value):
 
 func _on_EffectsHelp_mouse_entered():
 	game.show_tooltip(tr("DIM_POWER_EFFECTS"))
+
+
+func _on_black_rect_animation_finished(anim_name):
+	$BlackRect.visible = false
