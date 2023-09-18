@@ -29,6 +29,7 @@ var lake_params:Dictionary = {
 	"Xe":{"min_value":0, "max_value":3, "value":0, "is_integer":true, "OP_factor":5, "pw":3},
 }
 func _ready():
+	$ModifyDimension/Engineering/Control/unique_building_a_value.min_value = -INF
 	var prop_text:String = ""
 	$ModifyDimension/Maths/Control/CostGrowthFactors/BUCGF.step = 0.0005
 	$ModifyDimension/Maths/Control/CostGrowthFactors/ULUGF.step = 0.0005
@@ -358,6 +359,7 @@ func calc_math_points(node, default_value:float, op_factor:float, lower_limit:fl
 
 @onready var math_defaults = $ModifyDimension/Maths/Control/Defaults
 @onready var physics_defaults = $ModifyDimension/Physics/Control/Defaults
+@onready var engineering_defaults = $ModifyDimension/Engineering/Control/Defaults
 
 func _input(event):
 	if event is InputEventMouseMotion:
@@ -459,6 +461,9 @@ func calc_OP_points():
 	for upg in ["MVOUP", "BI", "aurora_spawn_probability", "aurora_width_multiplier", "perpendicular_auroras"]:
 		physics_defaults.get_node(upg).visible = not is_equal_approx($ModifyDimension/Physics/Control.get_node(upg).value, float(physics_defaults.get_node(upg).text.substr(1)))
 	
+	for upg in ["unique_building_a_value", "unique_building_b_value"]:
+		engineering_defaults.get_node(upg).visible = not is_equal_approx($ModifyDimension/Engineering/Control.get_node(upg).value, float(engineering_defaults.get_node(upg).text.substr(1)))
+	
 	for cost in $ModifyDimension/Physics/Control/VBox.get_children():
 		if cost.value <= 0:
 			cost["theme_override_colors/font_color"] = Color.RED
@@ -482,9 +487,19 @@ func calc_OP_points():
 		calc_bio_points_lake(lake_params[el])
 	
 	engineering_OP_points = 0
-	calc_engi_points($ModifyDimension/Engineering/Control/BCM, 7.0, false)
-	calc_engi_points($ModifyDimension/Engineering/Control/PS, 0.15, true)
-	calc_engi_points($ModifyDimension/Engineering/Control/RSM, 0.4, true)
+	var BCM_node = $ModifyDimension/Engineering/Control/BCM
+	var PS_node = $ModifyDimension/Engineering/Control/PS
+	var RSM_node = $ModifyDimension/Engineering/Control/RSM
+	var max_tier_node = $ModifyDimension/Engineering/Control/max_unique_building_tier
+	var a_value_node = $ModifyDimension/Engineering/Control/unique_building_a_value
+	var b_value_node = $ModifyDimension/Engineering/Control/unique_building_b_value
+	calc_engi_points(BCM_node, 7.0 * (1.0 / BCM_node.value - 1.0))
+	calc_engi_points(PS_node, 0.15 * (PS_node.value - 1.0))
+	calc_engi_points(RSM_node, 0.4 * (RSM_node.value - 1.0))
+	engineering_OP_points += (pow(3, max_tier_node.value) - 1.0)
+	calc_engi_points(a_value_node, 4 * (pow(1.5, max(0, a_value_node.value)) - 1))
+	$ModifyDimension/Engineering/Control/Label7.text = "10^-a = " + str(Helper.clever_round(pow(10, -a_value_node.value), 3, true))
+	calc_engi_points(b_value_node, max(0, 30.0 * (1.5 / b_value_node.value - 1.0)))
 	for subj in ["Maths", "Physics", "Chemistry", "Biology", "Engineering"]:
 		if $ModifyDimension.get_node(subj).visible:
 			if is_zero_approx(self["%s_OP_points" % subj.to_lower()]):
@@ -541,17 +556,18 @@ func calc_bio_points_lake(lake:Dictionary):
 			biology_OP_points += lake.OP_factor * (lake.value - lake.min_value)
 		$ModifyDimension/Biology/Control/Lake/Bonus["theme_override_colors/font_color"] = Color.BLACK
 
-func calc_engi_points(node, op_factor:float, growth:bool):
+func calc_engi_points(node, OP_points):
 	if node.value <= node.min_value:
 		node["theme_override_colors/font_color"] = Color.RED
 		num_errors.engineering = true
 		return
 	else:
 		node["theme_override_colors/font_color"] = Color.BLACK
-		if growth:
-			engineering_OP_points += op_factor * (node.value - 1.0)
-		else:
-			engineering_OP_points += op_factor * (1.0 / node.value - 1.0)
+		engineering_OP_points += OP_points
+#		if growth:
+#			engineering_OP_points += op_factor * (node.value - 1.0)
+#		else:
+#			engineering_OP_points += op_factor * (1.0 / node.value - 1.0)
 
 func set_bonuses():
 	for bonus in game.maths_bonus:
@@ -706,3 +722,11 @@ func _on_EffectsHelp_mouse_entered():
 
 func _on_black_rect_animation_finished(anim_name):
 	$BlackRect.visible = false
+
+
+func _on_unique_building_formula_mouse_entered():
+	game.show_tooltip(tr("UNIQUE_BLDG_FORMULA_DESC"))
+
+
+func _on_unique_building_formula_mouse_exited():
+	game.hide_tooltip()

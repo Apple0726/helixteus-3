@@ -15,7 +15,7 @@ func is_one_element_true(dict:Dictionary):
 	return res
 
 func refresh():
-	$VBoxContainer/Construct/New.visible = not game.new_bldgs.is_empty() and is_one_element_true(game.new_bldgs)
+	#$VBoxContainer/Construct/New.visible = not game.new_bldgs.is_empty() and is_one_element_true(game.new_bldgs)
 	$VBoxContainer/Terraform.visible = game.science_unlocked.has("TF")
 	$VBoxContainer/Mine.visible = game.show.has("mining")
 
@@ -36,6 +36,7 @@ func _on_Construct_pressed():
 	if $ConstructPanel.visible:
 		hide_construct()
 	else:
+		game.hide_tooltip()
 		$ConstructPanelAnimation.play("Fade")
 		$ConstructPanel.visible = true
 		game.block_scroll = true

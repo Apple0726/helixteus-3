@@ -415,10 +415,6 @@ func _on_Upgrade_pressed():
 					Helper.add_atom_production(el, base_prod * planet.atmosphere[el])
 				Helper.add_energy_from_NFR(planet, base_prod)
 				Helper.add_energy_from_CS(planet, base_prod)
-			elif planet.bldg.name == "NSF":
-				game.neutron_cap += diff
-			elif planet.bldg.name == "ESF":
-				game.electron_cap += diff
 			elif planet.bldg.name == Building.RESEARCH_LAB:
 				game.autocollect.rsrc.SP += diff * planet.get("observatory_bonus", 1.0)
 			elif planet.bldg.name == Building.MINERAL_EXTRACTOR:

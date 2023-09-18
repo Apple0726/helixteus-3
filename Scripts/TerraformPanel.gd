@@ -102,10 +102,6 @@ func terraform_planet():
 		game.mineral_capacity += Data.path_1.MS.value * surface
 	elif tf_type == "B":
 		game.energy_capacity += Data.path_1.B.value * surface
-	elif tf_type == "NSF":
-		game.neutron_cap += Data.path_1.NSF.value * surface
-	elif tf_type == "ESF":
-		game.electron_cap += Data.path_1.ESF.value * surface
 	elif tf_type == "AE":
 		for el in p_i.atmosphere:
 			var base_prod:float = p_i.bldg.path_1_value * p_i.atmosphere[el] * p_i.pressure * surface

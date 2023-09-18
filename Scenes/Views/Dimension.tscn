@@ -1,4 +1,4 @@
-[gd_scene load_steps=57 format=3 uid="uid://bg2sov0myafl8"]
+[gd_scene load_steps=58 format=3 uid="uid://bg2sov0myafl8"]
 
 [ext_resource type="PackedScene" uid="uid://bx7irdxpbnhbb" path="res://Scenes/DimensionType.tscn" id="3"]
 [ext_resource type="Texture2D" uid="uid://bi11obvckb4yu" path="res://Graphics/Misc/Physics.png" id="4"]
@@ -31,6 +31,7 @@
 [ext_resource type="Texture2D" uid="uid://bk8ent5xw5v3m" path="res://Graphics/Atoms/He.png" id="29"]
 [ext_resource type="Texture2D" uid="uid://c8najo7s65j3j" path="res://Graphics/Atoms/H.png" id="30"]
 [ext_resource type="Texture2D" uid="uid://1m4b1i3nbth0" path="res://Graphics/Icons/NH3.png" id="31"]
+[ext_resource type="Texture2D" uid="uid://c7ndfykf5w3jm" path="res://Graphics/Formulas/UniqueBuildingCost.png" id="31_7v8j0"]
 [ext_resource type="Texture2D" uid="uid://opgrkrxetqbi" path="res://Graphics/Atoms/O.png" id="32"]
 [ext_resource type="Texture2D" uid="uid://dbbfo6c1p1nlw" path="res://Graphics/Atoms/Ne.png" id="33"]
 [ext_resource type="Texture2D" uid="uid://2axyfvd64jpe" path="res://Graphics/Atoms/Xe.png" id="34"]
@@ -1823,17 +1824,21 @@ bbcode_enabled = true
 
 [node name="Engineering" type="ScrollContainer" parent="ModifyDimension"]
 visible = false
+clip_contents = false
 custom_minimum_size = Vector2(388, 672)
-layout_mode = 0
+layout_mode = 1
+anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 offset_top = 48.0
 offset_right = 376.0
 offset_bottom = 680.0
+grow_horizontal = 2
+grow_vertical = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_mmkh4")
 
 [node name="Control" type="Control" parent="ModifyDimension/Engineering"]
-custom_minimum_size = Vector2(300, 650)
+custom_minimum_size = Vector2(300, 700)
 layout_mode = 2
 mouse_filter = 1
 
@@ -1844,22 +1849,6 @@ offset_top = 119.0
 offset_right = 330.0
 offset_bottom = 143.0
 text = "BASE_COST_MULT"
-
-[node name="Label2" type="Label" parent="ModifyDimension/Engineering/Control"]
-layout_mode = 0
-offset_left = 16.0
-offset_top = 215.0
-offset_right = 330.0
-offset_bottom = 239.0
-text = "PICKAXE_SPEED_MULT"
-
-[node name="RichTextLabel" parent="ModifyDimension/Engineering/Control" instance=ExtResource("12")]
-layout_mode = 0
-offset_left = 134.0
-offset_top = 163.0
-offset_right = 170.0
-offset_bottom = 193.0
-help_text = "BASE_COST_MULT_DESC"
 
 [node name="BCM" parent="ModifyDimension/Engineering/Control" instance=ExtResource("19")]
 layout_mode = 0
@@ -1873,6 +1862,22 @@ offset_bottom = -459.0
 step = 0.02
 value = 1.0
 
+[node name="RichTextLabel" parent="ModifyDimension/Engineering/Control" instance=ExtResource("12")]
+layout_mode = 0
+offset_left = 134.0
+offset_top = 163.0
+offset_right = 170.0
+offset_bottom = 193.0
+help_text = "BASE_COST_MULT_DESC"
+
+[node name="Label2" type="Label" parent="ModifyDimension/Engineering/Control"]
+layout_mode = 0
+offset_left = 16.0
+offset_top = 215.0
+offset_right = 330.0
+offset_bottom = 240.0
+text = "PICKAXE_SPEED_MULT"
+
 [node name="PS" parent="ModifyDimension/Engineering/Control" instance=ExtResource("19")]
 layout_mode = 0
 anchors_preset = 0
@@ -1884,6 +1889,14 @@ offset_right = -202.0
 offset_bottom = -363.0
 step = 0.5
 value = 1.0
+
+[node name="Label3" type="Label" parent="ModifyDimension/Engineering/Control"]
+layout_mode = 0
+offset_left = 16.0
+offset_top = 315.0
+offset_right = 330.0
+offset_bottom = 340.0
+text = "ROVER_STAT_MULT"
 
 [node name="RSM" parent="ModifyDimension/Engineering/Control" instance=ExtResource("19")]
 layout_mode = 0
@@ -1897,13 +1910,128 @@ offset_bottom = -255.0
 step = 0.2
 value = 1.0
 
-[node name="Label3" type="Label" parent="ModifyDimension/Engineering/Control"]
+[node name="RichTextLabel2" parent="ModifyDimension/Engineering/Control" instance=ExtResource("12")]
 layout_mode = 0
 offset_left = 16.0
-offset_top = 315.0
-offset_right = 330.0
-offset_bottom = 339.0
-text = "ROVER_STAT_MULT"
+offset_top = 424.0
+offset_right = 368.0
+offset_bottom = 454.0
+text = "CONSTRUCT_UNIQUE_BUILDINGS [img]Graphics/Icons/help.png[/img]"
+label_text = "CONSTRUCT_UNIQUE_BUILDINGS"
+help_text = "CONSTRUCT_UNIQUE_BUILDINGS_DESC"
+
+[node name="Label4" type="Label" parent="ModifyDimension/Engineering/Control"]
+layout_mode = 0
+offset_left = 16.0
+offset_top = 476.0
+offset_right = 112.0
+offset_bottom = 501.0
+text = "MAX_TIER"
+
+[node name="max_unique_building_tier" parent="ModifyDimension/Engineering/Control" instance=ExtResource("19")]
+layout_mode = 0
+anchors_preset = 0
+anchor_right = 0.0
+anchor_bottom = 0.0
+offset_left = 104.0
+offset_top = 472.0
+offset_right = 165.479
+offset_bottom = 504.0
+step = 1.0
+is_integer = true
+
+[node name="UniqueBuildingFormula" type="TextureRect" parent="ModifyDimension/Engineering/Control"]
+layout_mode = 0
+offset_left = 20.0
+offset_top = 524.0
+offset_right = 240.0
+offset_bottom = 552.0
+texture = ExtResource("31_7v8j0")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Label5" type="Label" parent="ModifyDimension/Engineering/Control"]
+layout_mode = 0
+offset_left = 64.0
+offset_top = 576.0
+offset_right = 112.0
+offset_bottom = 601.0
+text = "a = "
+
+[node name="unique_building_a_value" parent="ModifyDimension/Engineering/Control" instance=ExtResource("19")]
+layout_mode = 0
+anchors_preset = 0
+anchor_right = 0.0
+anchor_bottom = 0.0
+offset_left = 104.0
+offset_top = 572.0
+offset_right = 165.479
+offset_bottom = 604.0
+
+[node name="Label7" type="Label" parent="ModifyDimension/Engineering/Control"]
+layout_mode = 0
+offset_left = 276.0
+offset_top = 576.0
+offset_right = 396.0
+offset_bottom = 601.0
+text = "10^-a = "
+
+[node name="RichTextLabel3" parent="ModifyDimension/Engineering/Control" instance=ExtResource("12")]
+layout_mode = 0
+offset_left = 196.0
+offset_top = 576.0
+offset_right = 232.0
+offset_bottom = 606.0
+help_text = "UB_A_DESC"
+
+[node name="Label6" type="Label" parent="ModifyDimension/Engineering/Control"]
+layout_mode = 0
+offset_left = 64.0
+offset_top = 624.0
+offset_right = 116.0
+offset_bottom = 649.0
+text = "b = "
+
+[node name="unique_building_b_value" parent="ModifyDimension/Engineering/Control" instance=ExtResource("19")]
+layout_mode = 0
+anchors_preset = 0
+anchor_right = 0.0
+anchor_bottom = 0.0
+offset_left = 104.0
+offset_top = 620.0
+offset_right = 165.479
+offset_bottom = 652.0
+step = 0.01
+value = 1.5
+
+[node name="RichTextLabel4" parent="ModifyDimension/Engineering/Control" instance=ExtResource("12")]
+layout_mode = 0
+offset_left = 196.0
+offset_top = 624.0
+offset_right = 232.0
+offset_bottom = 654.0
+help_text = "UB_B_DESC"
+
+[node name="Defaults" type="Control" parent="ModifyDimension/Engineering/Control"]
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="unique_building_a_value" type="Label" parent="ModifyDimension/Engineering/Control/Defaults"]
+layout_mode = 0
+offset_left = 228.0
+offset_top = 576.0
+offset_right = 268.0
+offset_bottom = 601.0
+text = "(0.0)"
+
+[node name="unique_building_b_value" type="Label" parent="ModifyDimension/Engineering/Control/Defaults"]
+layout_mode = 0
+offset_left = 228.0
+offset_top = 624.0
+offset_right = 268.0
+offset_bottom = 649.0
+text = "(1.5)"
 
 [node name="Dimensional_Power" type="ScrollContainer" parent="ModifyDimension"]
 visible = false
@@ -2286,6 +2414,8 @@ horizontal_alignment = 1
 [connection signal="pressed" from="ModifyDimension/Biology/Control/LakeButtons/Xe" to="." method="_on_Lake_pressed" binds= ["Xe"]]
 [connection signal="mouse_entered" from="ModifyDimension/Biology/Control/Lake/LakeDesc" to="." method="_on_LakeDesc_mouse_entered"]
 [connection signal="mouse_exited" from="ModifyDimension/Biology/Control/Lake/LakeDesc" to="." method="_on_LakeDesc_mouse_exited"]
+[connection signal="mouse_entered" from="ModifyDimension/Engineering/Control/UniqueBuildingFormula" to="." method="_on_unique_building_formula_mouse_entered"]
+[connection signal="mouse_exited" from="ModifyDimension/Engineering/Control/UniqueBuildingFormula" to="." method="_on_unique_building_formula_mouse_exited"]
 [connection signal="mouse_entered" from="ModifyDimension/Dimensional_Power/Control/Label1" to="." method="_on_text_mouse_entered" binds= ["QOL_PERKS_DESC"]]
 [connection signal="mouse_exited" from="ModifyDimension/Dimensional_Power/Control/Label1" to="." method="_on_mouse_exited"]
 [connection signal="mouse_exited" from="ModifyDimension/Dimensional_Power/Control/Label2" to="." method="_on_mouse_exited"]

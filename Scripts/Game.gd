@@ -114,8 +114,6 @@ var energy:float
 var energy_capacity:float
 var capacity_bonus_from_substation:float
 var SP:float
-var neutron_cap:float
-var electron_cap:float
 #Dimension remnants
 var DRs:float
 var dim_num:int = 1
@@ -161,6 +159,9 @@ var show:Dictionary
 
 #Used to notify the player with an icon when new buildings are unlocked
 var new_bldgs:Dictionary = {}
+
+#Used to determine the costs of a unique building
+var unique_building_counters:Dictionary
 
 #Stores information of all objects discovered
 var universe_data:Array
@@ -853,6 +854,9 @@ func set_default_dim_bonuses():
 		"BCM":1.0,
 		"PS":1.0,
 		"RSM":1.0,
+		"max_unique_building_tier":0,
+		"unique_building_a_value":0.0,
+		"unique_building_b_value":1.5,
 	}
 	subject_levels = {
 		"maths":0,
@@ -920,8 +924,6 @@ func new_game(univ:int = 0, new_save:bool = false, DR_advantage = false):
 	energy_capacity = 7500
 	capacity_bonus_from_substation = 0
 	SP = 0
-	neutron_cap = 0
-	electron_cap = 0
 	science_unlocked = {}
 	if subject_levels.dimensional_power >= 1:
 		science_unlocked.ASM = true
@@ -933,6 +935,15 @@ func new_game(univ:int = 0, new_save:bool = false, DR_advantage = false):
 	}
 	boring_machine_data = {}
 	new_bldgs = {}
+	unique_building_counters = {
+		UniqueBuilding.SPACEPORT:{},
+		UniqueBuilding.MINERAL_REPLICATOR:{},
+		UniqueBuilding.OBSERVATORY:{},
+		UniqueBuilding.MINING_OUTPOST:{},
+		UniqueBuilding.SUBSTATION:{},
+		UniqueBuilding.CELLULOSE_SYNTHESIZER:{},
+		UniqueBuilding.NUCLEAR_FUSION_REACTOR:{},
+	}
 
 	#id of the universe/supercluster/etc. you're viewing the object in
 	c_u = univ#c_u: current_universe
@@ -1112,7 +1123,15 @@ func new_game(univ:int = 0, new_save:bool = false, DR_advantage = false):
 				"c_g":0,
 				"c_g_g":0,
 				"c_c":0}}, "system":{}, "galaxy":{}, "cluster":{}}
-	unique_bldgs_discovered = {}
+	unique_bldgs_discovered = {
+		UniqueBuilding.SPACEPORT:{},
+		UniqueBuilding.MINERAL_REPLICATOR:{},
+		UniqueBuilding.OBSERVATORY:{},
+		UniqueBuilding.MINING_OUTPOST:{},
+		UniqueBuilding.SUBSTATION:{},
+		UniqueBuilding.CELLULOSE_SYNTHESIZER:{},
+		UniqueBuilding.NUCLEAR_FUSION_REACTOR:{},
+	}
 	Helper.save_obj("Systems", 0, planet_data)
 	generate_tiles(2)
 	
@@ -3116,12 +3135,15 @@ func generate_tiles(id:int):
 				earn_achievement("exploration", "tier_4_unique_bldg")
 			if not achievement_data.exploration.has("tier_5_unique_bldg") and tier >= 5:
 				earn_achievement("exploration", "tier_5_unique_bldg")
-			if unique_bldgs_discovered.has(bldg):
-				unique_bldgs_discovered[bldg] += 1
-			else:
-				unique_bldgs_discovered[bldg] = 1
-			if not achievement_data.exploration.has("find_all_unique_bldgs") and len(unique_bldgs_discovered.keys()) == UNIQUE_BLDGS:
-				earn_achievement("exploration", "find_all_unique_bldgs")
+			unique_bldgs_discovered[bldg][tier] = unique_bldgs_discovered[bldg].get(tier, 0) + 1
+			if not achievement_data.exploration.has("find_all_unique_bldgs"):
+				var all_discovered = true
+				for UB in unique_bldgs_discovered.keys():
+					if unique_bldgs_discovered[UB].is_empty():
+						all_discovered = false
+						break
+				if all_discovered:
+					earn_achievement("exploration", "find_all_unique_bldgs")
 	
 	#Give lake data to adjacent tiles
 	var lake_1_au_int:float = 0.0
@@ -3796,8 +3818,6 @@ func fn_save_game():
 		"mineral_capacity":mineral_capacity,
 		"energy_capacity":energy_capacity,
 		"capacity_bonus_from_substation":capacity_bonus_from_substation,
-		"neutron_cap":neutron_cap,
-		"electron_cap":electron_cap,
 		"stone":stone,
 		"energy":energy,
 		"SP":SP,

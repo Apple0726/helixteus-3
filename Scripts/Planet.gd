@@ -848,6 +848,8 @@ func _unhandled_input(event):
 				if tile.bldg.name == Building.GREENHOUSE:
 					base_cost.energy = round(base_cost.energy * (1 + abs(p_i.temperature - 273) / 10.0))
 				construct(tile.bldg.name, base_cost)
+				shadow.modulate.a = 0.5
+				shadow.position = floor(mouse_pos / 200) * 200 + Vector2.ONE * 100
 			elif Input.is_action_just_released("F"):
 				if game.get_node("UI").has_node("BuildingShortcuts"):
 					game.get_node("UI").get_node("BuildingShortcuts").close()
@@ -964,7 +966,7 @@ func _unhandled_input(event):
 		view.move_view = true
 		view.scroll_view = true
 		if tile_over != -1 and not game.upgrade_panel.visible:
-			if game.tile_data[tile_over] and not is_instance_valid(game.active_panel) and not game.item_cursor.visible:
+			if game.tile_data[tile_over] and not is_instance_valid(game.active_panel) and not game.item_cursor.visible and not game.planet_HUD.get_node("ConstructPanel").visible:
 				show_tooltip(game.tile_data[tile_over], tile_over)
 	if not is_instance_valid(game.planet_HUD) or not is_instance_valid(game.HUD):
 		return
@@ -997,7 +999,7 @@ func _unhandled_input(event):
 			var x_over:int = int(mouse_pos.x / 200)
 			var y_over:int = int(mouse_pos.y / 200)
 			tile_over = x_over % wid + y_over * wid
-			if tile_over != prev_tile_over and not_on_button and not game.item_cursor.visible and not black_bg and not game.active_panel:
+			if tile_over != prev_tile_over and not_on_button and not game.item_cursor.visible and not black_bg and not game.active_panel and not game.planet_HUD.get_node("ConstructPanel").visible:
 				hide_tooltip()
 				if not tiles_selected.is_empty() and not tile_over in tiles_selected:
 					remove_selected_tiles()
@@ -1032,8 +1034,7 @@ func _unhandled_input(event):
 		if is_instance_valid(shadow):
 			shadow.visible = mouse_on_tiles and not mass_build
 			shadow.modulate.a = 0.5
-			shadow.position.x = floor(mouse_pos.x / 200) * 200 + 100
-			shadow.position.y = floor(mouse_pos.y / 200) * 200 + 100
+			shadow.position = floor(mouse_pos / 200) * 200 + Vector2.ONE * 100
 	#finish mass build
 	if Input.is_action_just_released("left_click") and mass_build_rect.visible:
 		mass_build_rect.visible = false
@@ -1539,7 +1540,7 @@ func put_shadow(spr:Sprite2D, pos:Vector2 = Vector2.ZERO):
 	spr.texture = game.bldg_textures[bldg_to_construct]
 	spr.scale *= 0.4
 	spr.modulate.a = 0.5
-	spr.position = floor(pos / 200) * 200 + 100
+	spr.position = floor(pos / 200) * 200 + Vector2.ONE * 100
 	add_child(spr)
 	return spr
 	

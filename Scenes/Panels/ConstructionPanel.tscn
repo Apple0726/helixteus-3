@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=3 uid="uid://b3nhmyabvl606"]
+[gd_scene load_steps=11 format=3 uid="uid://b3nhmyabvl606"]
 
 [ext_resource type="Theme" uid="uid://cp2u1kgj60ic" path="res://Resources/default_theme.tres" id="1_q53tt"]
 [ext_resource type="Texture2D" uid="uid://ddfdowwjku0dd" path="res://Graphics/Buildings/mineral_extractor.png" id="2_ktgp8"]
@@ -8,6 +8,7 @@
 [ext_resource type="Texture2D" uid="uid://t20blxqytxk6" path="res://Graphics/Materials/glass.png" id="5_vrfgh"]
 [ext_resource type="Texture2D" uid="uid://b3c4afph0xse0" path="res://Graphics/Buildings/central_business_district.png" id="6_uh0od"]
 [ext_resource type="Texture2D" uid="uid://rxo80y4e6v57" path="res://Graphics/Cave/Rover.png" id="7_nh4w1"]
+[ext_resource type="Texture2D" uid="uid://d2jiwygt3vuig" path="res://Graphics/Buildings/Unique/mineral_replicator.png" id="8_2xax1"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_seglp"]
 content_margin_left = 20.0
@@ -123,6 +124,24 @@ offset_bottom = 48.0
 text = "VEHICLES"
 vertical_alignment = 1
 
+[node name="Unique" type="Button" parent="VBoxContainer"]
+show_behind_parent = true
+custom_minimum_size = Vector2(0, 48)
+layout_mode = 2
+icon = ExtResource("8_2xax1")
+alignment = 0
+icon_alignment = 2
+expand_icon = true
+
+[node name="Label" type="Label" parent="VBoxContainer/Unique"]
+modulate = Color(1, 1, 1, 0)
+layout_mode = 0
+offset_left = 60.0
+offset_right = 160.0
+offset_bottom = 48.0
+text = "UNIQUE"
+vertical_alignment = 1
+
 [node name="ScrollContainer" type="ScrollContainer" parent="."]
 layout_mode = 1
 anchors_preset = 15
@@ -137,6 +156,21 @@ horizontal_scroll_mode = 3
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
+
+[node name="HBoxContainer" type="HBoxContainer" parent="ScrollContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="ScrollContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+text = "TIER"
+
+[node name="Tier" type="SpinBox" parent="ScrollContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+min_value = 1.0
+value = 1.0
+allow_greater = true
+alignment = 1
+update_on_text_changed = true
 
 [node name="Button" type="Button" parent="ScrollContainer/VBoxContainer"]
 custom_minimum_size = Vector2(0, 100)
@@ -168,3 +202,7 @@ horizontal_alignment = 1
 [connection signal="mouse_entered" from="VBoxContainer/Vehicles" to="." method="_on_vehicles_mouse_entered"]
 [connection signal="mouse_exited" from="VBoxContainer/Vehicles" to="." method="_on_vehicles_mouse_exited"]
 [connection signal="pressed" from="VBoxContainer/Vehicles" to="." method="_on_tab_pressed" binds= ["Vehicles"]]
+[connection signal="mouse_entered" from="VBoxContainer/Unique" to="." method="_on_unique_mouse_entered"]
+[connection signal="mouse_exited" from="VBoxContainer/Unique" to="." method="_on_unique_mouse_exited"]
+[connection signal="pressed" from="VBoxContainer/Unique" to="." method="_on_tab_pressed" binds= ["Unique"]]
+[connection signal="value_changed" from="ScrollContainer/VBoxContainer/HBoxContainer/Tier" to="." method="_on_tier_value_changed"]
