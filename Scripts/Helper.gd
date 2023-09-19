@@ -873,19 +873,19 @@ func update_bldg_constr(tile:Dictionary, p_i:Dictionary):
 						if tile_data[id] == null:
 							tile_data[id] = {}
 						var _tile = tile_data[id]
-						var id_str:String = str(tile_data.find(tile))
+						var id2 = tile_data.find(tile)
 						if not _tile.has("cost_div_dict"):
 							_tile.cost_div = tile.bldg.path_1_value
 							_tile.cost_div_dict = {}
 						else:
 							_tile.cost_div = max(_tile.cost_div, tile.bldg.path_1_value)
-						_tile.cost_div_dict[id_str] = tile.bldg.path_1_value
+						_tile.cost_div_dict[id2] = tile.bldg.path_1_value
 						if not _tile.has("overclock_dict"):
 							_tile.overclock_bonus = tile.bldg.path_2_value
 							_tile.overclock_dict = {}
 						else:
 							_tile.overclock_bonus = max(_tile.overclock_bonus, tile.bldg.path_2_value)
-						_tile.overclock_dict[id_str] = tile.bldg.path_2_value
+						_tile.overclock_dict[id2] = tile.bldg.path_2_value
 				if not same_p:
 					save_obj("Planets", tile.bldg.c_p_g, tile_data)
 	return update_boxes
@@ -1489,20 +1489,29 @@ func set_unique_bldg_bonuses(p_i:Dictionary, unique_bldg:Dictionary, tile_id:int
 				var tile = game.tile_data[id]
 				var mult = Helper.get_MR_Obs_Outpost_prod_mult(tier)
 				var rsrc = building_to_resource[unique_bldg.name]
+				var bonus_name_str = "%s_bonus_dict" % UniqueBuilding.names[unique_bldg.name]
 				if tile:
+					if tile.has(bonus_name_str):
+						var max_bonus = 1.0
+						for UB_id in tile[bonus_name_str].keys():
+							max_bonus = max(tile[bonus_name_str][UB_id], max_bonus)
+						tile[bonus_name_str][tile_id] = mult
+						mult = max(1.0, mult / max_bonus)
+					else:
+						tile[bonus_name_str] = {tile_id:mult}
 					if tile.has("resource_production_bonus"):
 						tile.resource_production_bonus[rsrc] = tile.resource_production_bonus.get(rsrc, 1.0) * mult
-						if tile.has("bldg") and not tile.bldg.has("is_constructing"):
-							var overclock_mult:float = tile.bldg.get("overclock_mult", 1.0)
-							var diff = tile.bldg.path_1_value * overclock_mult * (mult - 1.0)
-							if unique_bldg.name == UniqueBuilding.MINERAL_REPLICATOR and tile.bldg.name == Building.MINERAL_EXTRACTOR:
-								game.autocollect.rsrc.minerals += diff
-							elif unique_bldg.name == UniqueBuilding.OBSERVATORY and tile.bldg.name == Building.RESEARCH_LAB:
-								game.autocollect.rsrc.SP += diff
 					else:
 						game.tile_data[id].resource_production_bonus = {rsrc:mult}
+					if tile.has("bldg") and not tile.bldg.has("is_constructing"):
+						var overclock_mult:float = tile.bldg.get("overclock_mult", 1.0)
+						var diff = tile.bldg.path_1_value * overclock_mult * (mult - 1.0)
+						if unique_bldg.name == UniqueBuilding.MINERAL_REPLICATOR and tile.bldg.name == Building.MINERAL_EXTRACTOR:
+							game.autocollect.rsrc.minerals += diff
+						elif unique_bldg.name == UniqueBuilding.OBSERVATORY and tile.bldg.name == Building.RESEARCH_LAB:
+							game.autocollect.rsrc.SP += diff
 				else:
-					game.tile_data[id] = {"resource_production_bonus":{rsrc:mult}}
+					game.tile_data[id] = {"resource_production_bonus":{rsrc:mult}, bonus_name_str:{tile_id:mult}}
 	elif unique_bldg.name == UniqueBuilding.SUBSTATION:
 		for i in n:
 			var x:int = x_pos + i - n / 2
@@ -1516,28 +1525,36 @@ func set_unique_bldg_bonuses(p_i:Dictionary, unique_bldg:Dictionary, tile_id:int
 				var tile = game.tile_data[id]
 				var mult = Helper.get_substation_prod_mult(tier)
 				if tile:
+					if tile.has("substation_bonus_dict"):
+						var max_bonus = 1.0
+						for UB_id in tile["substation_bonus_dict"].keys():
+							max_bonus = max(tile["substation_bonus_dict"][UB_id], max_bonus)
+						tile["substation_bonus_dict"][tile_id] = mult
+						mult = max(1.0, mult / max_bonus)
+					else:
+						tile["substation_bonus_dict"] = {tile_id:mult}
 					if tile.has("resource_production_bonus"):
 						tile.resource_production_bonus.energy = tile.resource_production_bonus.get("energy", 1.0) * mult
-						tile.substation_bonus = tile.get("substation_bonus", 1.0) * mult
-						if tile.has("bldg") and not tile.bldg.has("is_constructing"):
-							var overclock_mult:float = tile.bldg.get("overclock_mult", 1.0)
-							var base = tile.bldg.path_1_value * overclock_mult * mult
-							var diff = tile.bldg.path_1_value * overclock_mult * (mult - 1.0)
-							var cap_bonus_mult = Helper.get_substation_capacity_bonus(tier)# 1200 seconds for tier 1, more for tier 2 etc.
-							if tile.bldg.name == Building.POWER_PLANT:
-								game.autocollect.rsrc.energy += diff
-								unique_bldg.capacity_bonus = unique_bldg.get("capacity_bonus", 0) + base * cap_bonus_mult
-								game.capacity_bonus_from_substation += unique_bldg.capacity_bonus
-							elif tile.bldg.name == Building.SOLAR_PANEL:
-								var energy_prod = Helper.get_SP_production(p_i.temperature, diff * (tile.get("aurora", 0.0) + 1.0))
-								var energy_prod_base = Helper.get_SP_production(p_i.temperature, base * (tile.get("aurora", 0.0) + 1.0))
-								game.autocollect.rsrc.energy += energy_prod
-								unique_bldg.capacity_bonus = unique_bldg.get("capacity_bonus", 0) + energy_prod_base * cap_bonus_mult
-								game.capacity_bonus_from_substation += unique_bldg.capacity_bonus
 					else:
 						game.tile_data[id].resource_production_bonus = {"energy":mult}
+					tile.substation_bonus = tile.get("substation_bonus", 1.0) * mult
+					if tile.has("bldg") and not tile.bldg.has("is_constructing"):
+						var overclock_mult:float = tile.bldg.get("overclock_mult", 1.0)
+						var base = tile.bldg.path_1_value * overclock_mult * mult
+						var diff = tile.bldg.path_1_value * overclock_mult * (mult - 1.0)
+						var cap_bonus_mult = Helper.get_substation_capacity_bonus(tier)# 1200 seconds for tier 1, more for tier 2 etc.
+						if tile.bldg.name == Building.POWER_PLANT:
+							game.autocollect.rsrc.energy += diff
+							unique_bldg.capacity_bonus = unique_bldg.get("capacity_bonus", 0) + base * cap_bonus_mult
+							game.capacity_bonus_from_substation += unique_bldg.capacity_bonus
+						elif tile.bldg.name == Building.SOLAR_PANEL:
+							var energy_prod = Helper.get_SP_production(p_i.temperature, diff * (tile.get("aurora", 0.0) + 1.0))
+							var energy_prod_base = Helper.get_SP_production(p_i.temperature, base * (tile.get("aurora", 0.0) + 1.0))
+							game.autocollect.rsrc.energy += energy_prod
+							unique_bldg.capacity_bonus = unique_bldg.get("capacity_bonus", 0) + energy_prod_base * cap_bonus_mult
+							game.capacity_bonus_from_substation += unique_bldg.capacity_bonus
 				else:
-					game.tile_data[id] = {"resource_production_bonus":{"energy":mult}}
+					game.tile_data[id] = {"resource_production_bonus":{"energy":mult}, "substation_bonus":mult, "substation_bonus_dict":{tile_id:mult}}
 				game.tile_data[id].substation_tile = tile_id
 				unique_bldg.capacity_bonus = unique_bldg.get("capacity_bonus", 0)
 	elif unique_bldg.name == UniqueBuilding.MINING_OUTPOST:
@@ -1553,9 +1570,17 @@ func set_unique_bldg_bonuses(p_i:Dictionary, unique_bldg:Dictionary, tile_id:int
 				var tile = game.tile_data[id]
 				var mult = Helper.get_MR_Obs_Outpost_prod_mult(tier)
 				if tile:
+					if tile.has("mining_outpost_bonus_dict"):
+						var max_bonus = 1.0
+						for UB_id in tile["mining_outpost_bonus_dict"].keys():
+							max_bonus = max(tile["mining_outpost_bonus_dict"][UB_id], max_bonus)
+						tile["mining_outpost_bonus_dict"][tile_id] = mult
+						mult = max(1.0, mult / max_bonus)
+					else:
+						tile["mining_outpost_bonus_dict"] = {tile_id:mult}
 					tile.mining_outpost_bonus = tile.get("mining_outpost_bonus", 1.0) * mult
 				else:
-					game.tile_data[id] = {"mining_outpost_bonus": mult}
+					game.tile_data[id] = {"mining_outpost_bonus": mult, "mining_outpost_bonus_dict":{tile_id:mult}}
 	elif unique_bldg.name in [UniqueBuilding.NUCLEAR_FUSION_REACTOR, UniqueBuilding.CELLULOSE_SYNTHESIZER]:
 		for tile in game.tile_data:
 			if tile and tile.has("bldg") and tile.bldg.name == Building.ATMOSPHERE_EXTRACTOR and not tile.bldg.has("is_constructing"):
@@ -1570,8 +1595,8 @@ func set_unique_bldg_bonuses(p_i:Dictionary, unique_bldg:Dictionary, tile_id:int
 					mult = Helper.get_CS_prod_mult(unique_bldg.tier)
 					base = tile.bldg.path_1_value * overclock_mult * mult
 					Helper.add_energy_from_CS(p_i, base)
-	elif unique_bldg.name == "spaceport":
-		if game.c_s_g == game.ships_c_g_coords.s and game.c_p == game.ships_c_coords.p:
+	elif unique_bldg.name == UniqueBuilding.SPACEPORT:
+		if game.c_s_g == game.ships_travel_data.c_g_coords.s and game.c_p == game.ships_travel_data.c_coords.p:
 			game.autocollect.ship_XP = unique_bldg.tier
 			game.HUD.set_ship_btn_shader(true, unique_bldg.tier)
 

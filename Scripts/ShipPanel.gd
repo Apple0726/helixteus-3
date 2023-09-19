@@ -103,14 +103,18 @@ func _on_UpgradeButton_pressed():
 	$Upgrade._refresh_op()
 
 func _on_GoToShips_mouse_entered():
-	game.show_tooltip(tr("GO_TO_SHIPS"))
+	var st = tr("GO_TO_SHIPS")
+	if game.u_i.lv < 9:
+		st += "\n%s" % [tr("REACH_X_TO_UNLOCK") % [tr("LV") + " 8"]]
+	game.show_tooltip(st)
 
 func _on_mouse_exited():
 	game.hide_tooltip()
 
 func _on_GoToShips_pressed():
-	game.switch_view("system", {"fn":"set_to_ship_coords"})
-	_on_close_button_pressed()
+	if game.u_i.lv >= 8:
+		game.switch_view("system", {"fn":"set_to_ship_coords"})
+		_on_close_button_pressed()
 
 func _on_DriveButton_mouse_entered():
 	if not $Panel/DriveButton.disabled:

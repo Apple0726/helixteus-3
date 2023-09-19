@@ -246,11 +246,11 @@ func show_tooltip(tile, tile_id:int):
 		tooltip += "[/color]"
 		tooltip += "\n"
 		if game.help.has("%s_desc" % unique_building_name):
-			tooltip += "[color=#FFBBFF]"
+			tooltip += "[color=#BBFFFF]"
 			tooltip += tr("%s_DESC1" % unique_building_name.to_upper())
 			if game.help_str == "":
 				game.help_str = "%s_desc" % unique_building_name
-			tooltip += "\n[/color][color=#BB77BB]" + tr("HIDE_HELP") + "\n[/color]"
+			tooltip += "\n[/color][color=#77BBBB]" + tr("HIDE_HELP") + "\n[/color]"
 		var desc = tr("%s_DESC2" % unique_building_name.to_upper())
 		match tile.unique_bldg.name:
 			UniqueBuilding.SPACEPORT:
@@ -277,7 +277,7 @@ func show_tooltip(tile, tile_id:int):
 		if game.help_str == "":
 			game.help_str = "volcano_desc"
 		if not game.help.has("volcano_desc"):
-			tooltip = "%s\n[color=#FFBBFF]%s\n[/color][color=#BB77BB]%s[/color]\n%s: %s" % [tr("VOLCANO"), tr("VOLCANO_DESC"), tr("HIDE_HELP"), tr("LARGEST_VEI") % ("(" + tr("VEI") + ") "), Helper.clever_round(tile.volcano.VEI)]
+			tooltip = "%s\n[color=#BBFFFF]%s\n[/color][color=#77BBBB]%s[/color]\n%s: %s" % [tr("VOLCANO"), tr("VOLCANO_DESC"), tr("HIDE_HELP"), tr("LARGEST_VEI") % ("(" + tr("VEI") + ") "), Helper.clever_round(tile.volcano.VEI)]
 		else:
 			tooltip = "%s\n%s: %s" % [tr("VOLCANO"), tr("LARGEST_VEI") % "", Helper.clever_round(tile.volcano.VEI)]
 	elif tile.has("crater") and tile.crater.has("init_depth"):
@@ -286,7 +286,7 @@ func show_tooltip(tile, tile_id:int):
 		if game.help_str == "":
 			game.help_str = "crater_desc"
 		if game.help.has("crater_desc"):
-			tooltip += tr("METAL_CRATER").format({"metal":tr(tile.crater.metal.to_upper()), "crater":tr("CRATER")}) + "[color=#FFBBFF]\n%s\n[/color][color=#BB77BB]%s[/color]\n%s" % [tr("CRATER_DESC"), tr("HIDE_HELP"), tr("HOLE_DEPTH") + ": %s m"  % [tile.depth]]
+			tooltip += tr("METAL_CRATER").format({"metal":tr(tile.crater.metal.to_upper()), "crater":tr("CRATER")}) + "[color=#BBFFFF]\n%s\n[/color][color=#77BBBB]%s[/color]\n%s" % [tr("CRATER_DESC"), tr("HIDE_HELP"), tr("HOLE_DEPTH") + ": %s m"  % [tile.depth]]
 		else:
 			tooltip += tr("METAL_CRATER").format({"metal":tr(tile.crater.metal.to_upper()), "crater":tr("CRATER")}) + "\n%s" % [tr("HOLE_DEPTH") + ": %s m"  % [tile.depth]]
 	elif tile.has("cave"):
@@ -347,20 +347,20 @@ func show_tooltip(tile, tile_id:int):
 			if game.help_str == "":
 				game.help_str = "abandoned_ship"
 			if game.help.has("abandoned_ship"):
-				tooltip += "[color=#FFBBFF]" + tr("ABANDONED_SHIP") + "\n[/color][color=#BB77BB]" + tr("HIDE_HELP") + "[/color]"
+				tooltip += "[color=#BBFFFF]" + tr("ABANDONED_SHIP") + "\n[/color][color=#77BBBB]" + tr("HIDE_HELP") + "[/color]"
 	elif tile.has("wormhole"):
 		if tile.wormhole.active:
 			if game.help_str == "":
 				game.help_str = "active_wormhole"
 			if game.help.has("active_wormhole"):
-				tooltip = "%s[color=#FFBBFF]\n%s[/color][color=#BB77BB]\n%s[/color]" % [tr("ACTIVE_WORMHOLE"), tr("ACTIVE_WORMHOLE_DESC"), tr("HIDE_HELP")]
+				tooltip = "%s[color=#BBFFFF]\n%s[/color][color=#77BBBB]\n%s[/color]" % [tr("ACTIVE_WORMHOLE"), tr("ACTIVE_WORMHOLE_DESC"), tr("HIDE_HELP")]
 			else:
 				tooltip = tr("ACTIVE_WORMHOLE")
 		else:
 			if game.help_str == "":
 				game.help_str = "inactive_wormhole"
 			if game.help.has("inactive_wormhole"):
-				tooltip = "%s[color=#FFBBFF]\n%s[/color][color=#BB77BB]\n%s[/color]" % [tr("INACTIVE_WORMHOLE"), tr("INACTIVE_WORMHOLE_DESC"), tr("HIDE_HELP")]
+				tooltip = "%s[color=#BBFFFF]\n%s[/color][color=#77BBBB]\n%s[/color]" % [tr("INACTIVE_WORMHOLE"), tr("INACTIVE_WORMHOLE_DESC"), tr("HIDE_HELP")]
 			else:
 				tooltip = tr("INACTIVE_WORMHOLE")
 			var wh_costs:Dictionary = get_wh_costs()
@@ -373,7 +373,7 @@ func show_tooltip(tile, tile_id:int):
 		if game.help_str == "":
 			game.help_str = "aurora_desc"
 		if game.help.has("aurora_desc"):
-			tooltip = "%s\n[color=#FFBBFF]%s\n[/color][color=#BB77BB]%s[/color]\n%s" % [tr("AURORA"), tr("AURORA_DESC"), tr("HIDE_HELP"), tr("AURORA_INTENSITY") + ": %s" % [tile.aurora]]
+			tooltip = "%s\n[color=#BBFFFF]%s\n[/color][color=#77BBBB]%s[/color]\n%s" % [tr("AURORA"), tr("AURORA_DESC"), tr("HIDE_HELP"), tr("AURORA_INTENSITY") + ": %s" % [tile.aurora]]
 		else:
 			tooltip = tr("AURORA_INTENSITY") + ": %s" % [tile.aurora]
 	elif bldg_to_construct in [Building.MINERAL_EXTRACTOR, Building.RESEARCH_LAB] and tile.has("resource_production_bonus"):
@@ -561,7 +561,7 @@ func overclock_bldg(tile, tile_id:int, curr_time):
 func click_tile(tile, tile_id:int):
 	if not tile.has("bldg") or is_instance_valid(game.active_panel):
 		return
-	var bldg:String = tile.bldg.name
+	var bldg:int = tile.bldg.name
 	if not tile.bldg.has("is_constructing"):
 		game.c_t = tile_id
 		match bldg:
@@ -668,28 +668,24 @@ func destroy_bldg(id2:int, mass:bool = false):
 					continue
 				var id:int = x % wid + y * wid
 				var _tile = game.tile_data[id]
-				if _tile == null:
-					continue
-				if _tile.has("cost_div_dict"):
-					_tile.cost_div_dict.erase(str(id2))
-					if _tile.cost_div_dict.is_empty():
-						_tile.erase("cost_div_dict")
-						_tile.erase("cost_div")
-					else:
-						var div:float = 1.0
-						for st in _tile.cost_div_dict:
-							div = max(div, _tile.cost_div_dict[st])
-						_tile.cost_div = div
-				if _tile.has("overclock_dict"):
-					_tile.overclock_dict.erase(str(id2))
-					if _tile.overclock_dict.is_empty():
-						_tile.erase("overclock_dict")
-						_tile.erase("overclock_bonus")
-					else:
-						var bonus:float = 1.0
-						for st in _tile.overclock_dict:
-							bonus = max(bonus, _tile.overclock_dict[st])
-						_tile.overclock_bonus = bonus
+				_tile.cost_div_dict.erase(id2)
+				if _tile.cost_div_dict.is_empty():
+					_tile.erase("cost_div_dict")
+					_tile.erase("cost_div")
+				else:
+					var div:float = 1.0
+					for st in _tile.cost_div_dict.keys():
+						div = max(div, _tile.cost_div_dict[st])
+					_tile.cost_div = div
+				_tile.overclock_dict.erase(id2)
+				if _tile.overclock_dict.is_empty():
+					_tile.erase("overclock_dict")
+					_tile.erase("overclock_bonus")
+				else:
+					var bonus:float = 1.0
+					for st in _tile.overclock_dict.keys():
+						bonus = max(bonus, _tile.overclock_dict[st])
+					_tile.overclock_bonus = bonus
 	elif bldg == Building.GREENHOUSE:
 		$Soil.set_cell(id2 % wid, int(id2 / wid), -1)
 		$Soil.update_bitmask_region()

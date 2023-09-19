@@ -456,7 +456,7 @@ func calc_OP_points():
 		num_errors.physics = true
 	else:
 		$ModifyDimension/Physics/Control/perpendicular_auroras["theme_override_colors/font_color"] = Color.BLACK
-		physics_OP_points += 30.0 * perpendicular_auroras_value
+		physics_OP_points += 60.0 * perpendicular_auroras_value
 	
 	for upg in ["MVOUP", "BI", "aurora_spawn_probability", "aurora_width_multiplier", "perpendicular_auroras"]:
 		physics_defaults.get_node(upg).visible = not is_equal_approx($ModifyDimension/Physics/Control.get_node(upg).value, float(physics_defaults.get_node(upg).text.substr(1)))

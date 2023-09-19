@@ -1705,7 +1705,7 @@ func add_loading():
 	loading.name = "Loading"
 
 func open_obj(type:String, id:int):
-	var arr
+	var arr:Array = []
 	var file_path:String = "user://%s/Univ%s/%s/%s.hx3" % [c_sv, c_u, type, id]
 	var save = FileAccess.open(file_path, FileAccess.READ)
 	if save:
@@ -1964,6 +1964,7 @@ func remove_system():
 func remove_planet(save_zooms:bool = true):
 	if is_instance_valid(active_panel):
 		fade_out_panel(active_panel)
+	active_panel = null
 	if is_instance_valid(stars_tween):
 		stars_tween.kill()
 	stars_tween = create_tween()
@@ -2743,9 +2744,9 @@ func generate_planets(id:int):#local id
 					star.repair_cost = Data.MS_costs[star.MS + "_" + str(star.MS_lv)].money * 24 * randf_range(1, 3) * planet_data[-1].distance / 1000.0
 				star.repair_cost *= engineering_bonus.BCM
 				system_data[id].has_MS = true
-		system_data[id].closest_planet_distance = planet_data[0].distance
 		var view_zoom = 400.0 / max_distance * (planet_data[0].distance / 70)
 		system_data[id]["view"] = {"pos":Vector2(640, 360), "zoom":view_zoom}
+	system_data[id].closest_planet_distance = planet_data[0].distance
 	system_data[id]["discovered"] = true
 	p_num += planet_num
 	Helper.save_obj("Systems", c_s_g, planet_data)
@@ -3961,7 +3962,7 @@ func _on_BottomInfo_close_button_pressed(direct:bool = false):
 			tween.set_parallel(true)
 			tween.tween_property(get_tree().get_first_node_in_group("gray_tiles").material, "shader_parameter/amount", 0.0, 0.2)
 			for gray_tile in get_tree().get_nodes_in_group("gray_tiles"):
-				tween.tween_callback(gray_tile.queue_free).set_delay(0.2)
+				tween.tween_callback(gray_tile.queue_free).set_delay(0.15)
 				gray_tile.remove_from_group("gray_tiles")
 		HUD.refresh()
 		if not direct:

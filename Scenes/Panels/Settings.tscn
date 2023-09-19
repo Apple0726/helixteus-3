@@ -241,7 +241,7 @@ layout_mode = 2
 
 [node name="AutosellMinerals" type="CheckButton" parent="TabContainer/GAME"]
 layout_mode = 0
-offset_left = 120.0
+offset_left = 56.0
 offset_top = 93.0
 offset_right = 400.0
 offset_bottom = 133.0

@@ -1055,7 +1055,7 @@ offset_left = 68.0
 offset_top = 440.0
 offset_right = 131.063
 offset_bottom = 472.0
-step = 0.01
+step = 0.005
 max_value = 1.0
 
 [node name="RichTextLabel3" parent="ModifyDimension/Physics/Control" instance=ExtResource("12")]
@@ -1131,13 +1131,6 @@ position = Vector2(306, 678)
 points = PackedVector2Array(44, 236, 56, 236)
 width_curve = SubResource("11")
 
-[node name="PDFPlotter" parent="ModifyDimension/Physics/Control" instance=ExtResource("35")]
-anchors_preset = 0
-offset_left = 30.0
-offset_top = 750.0
-offset_right = 350.0
-offset_bottom = 914.0
-
 [node name="StarGradient" type="TextureRect" parent="ModifyDimension/Physics/Control"]
 material = SubResource("ShaderMaterial_p6fsf")
 layout_mode = 0
@@ -1147,6 +1140,13 @@ offset_right = 350.0
 offset_bottom = 914.0
 texture = SubResource("13")
 expand_mode = 1
+
+[node name="PDFPlotter" parent="ModifyDimension/Physics/Control" instance=ExtResource("35")]
+anchors_preset = 0
+offset_left = 30.0
+offset_top = 750.0
+offset_right = 350.0
+offset_bottom = 914.0
 
 [node name="HBoxContainer" type="HBoxContainer" parent="ModifyDimension/Physics/Control"]
 layout_mode = 0
@@ -1232,6 +1232,7 @@ offset_right = 81.0625
 offset_bottom = 1104.0
 step = 0.05
 value = 0.5
+max_value = 1.0
 
 [node name="RichTextLabel2" parent="ModifyDimension/Physics/Control" instance=ExtResource("12")]
 layout_mode = 0

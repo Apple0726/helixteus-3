@@ -18,7 +18,6 @@ func fade_in():
 	$AnimationPlayer.play("Fade")
 
 func change_color(color:Color):
-	print()
 	$Nebula.material.set_shader_parameter("alpha_mult", (1.0 - color.get_luminance()) / 2.5)
 	$Nebula.material.set_shader_parameter("color", color)
 
