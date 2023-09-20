@@ -32,9 +32,9 @@ func refresh():
 	$Drive.visible = game.science_unlocked.has("PD")
 	var depart_id:int
 	var dest_id:int
-	var coords:Dictionary = game.ships_c_coords
-	var g_coords:Dictionary = game.ships_c_g_coords
-	var g_s:int = game.ships_c_g_coords.s
+	var coords:Dictionary = game.ships_travel_data.c_coords
+	var g_coords:Dictionary = game.ships_travel_data.c_g_coords
+	var g_s:int = game.ships_travel_data.c_g_coords.s
 	var file = FileAccess.open("user://%s/Univ%s/Systems/%s.hx3" % [game.c_sv, game.c_u, g_s], FileAccess.READ)
 	planets_in_depart_system = file.get_var()
 	file.close()
@@ -117,25 +117,25 @@ func refresh():
 	$Scroll/Enemies.visible = not game.planet_data[dest_p_id].has("conquered")
 
 func send_ships():
-	if game.ships_travel_view == "-":
+	if game.ships_travel_data.travel_view == "-":
 		if $Drive.selected == 1:
 			if game.atoms.Pu >= total_energy_cost:
 				game.atoms.Pu -= total_energy_cost
-				game.ships_c_coords.p = dest_p_id
-				game.ships_dest_coords.p = dest_p_id
-				game.ships_c_coords.s = game.c_s
-				game.ships_dest_coords.s = game.c_s
-				game.ships_c_g_coords.s = game.c_s_g
-				game.ships_dest_g_coords.s = game.c_s_g
-				game.ships_c_coords.g = game.c_g
-				game.ships_dest_coords.g = game.c_g
-				game.ships_c_g_coords.g = game.c_g_g
-				game.ships_dest_g_coords.g = game.c_g_g
-				game.ships_c_coords.c = game.c_c
-				game.ships_dest_coords.c = game.c_c
+				game.ships_travel_data.c_coords.p = dest_p_id
+				game.ships_travel_data.dest_coords.p = dest_p_id
+				game.ships_travel_data.c_coords.s = game.c_s
+				game.ships_travel_data.dest_coords.s = game.c_s
+				game.ships_travel_data.c_g_coords.s = game.c_s_g
+				game.ships_travel_data.dest_g_coords.s = game.c_s_g
+				game.ships_travel_data.c_coords.g = game.c_g
+				game.ships_travel_data.dest_coords.g = game.c_g
+				game.ships_travel_data.c_g_coords.g = game.c_g_g
+				game.ships_travel_data.dest_g_coords.g = game.c_g_g
+				game.ships_travel_data.c_coords.c = game.c_c
+				game.ships_travel_data.dest_coords.c = game.c_c
 				game.view.obj.refresh_planets()
 				game.view.refresh()
-				var p_i = game.planet_data[game.ships_c_coords.p]
+				var p_i = game.planet_data[game.ships_travel_data.c_coords.p]
 				if p_i.has("unique_bldgs"):
 					if p_i.unique_bldgs.has("spaceport") and not p_i.unique_bldgs.spaceport[0].has("repair_cost"):
 						game.autocollect.ship_XP = p_i.unique_bldgs.spaceport[0].tier
@@ -168,16 +168,16 @@ func send_ships():
 		game.popup(tr("SHIPS_ALREADY_TRAVELLING"), 1.5)
 
 func send_ships2(_time):
-	game.ships_depart_pos = depart_pos
-	game.ships_dest_pos = dest_pos
-	game.ships_dest_coords = {"c":game.c_c, "g":game.c_g, "s":game.c_s, "p":dest_p_id}
-	game.ships_dest_g_coords = {"g":game.c_g_g, "s":game.c_s_g}
-	game.ships_travel_view = travel_view
-	game.ships_travel_drives_used = 0
-	game.ships_travel_drive_available_time = Time.get_unix_time_from_system()
-	game.ships_travel_start_date = Time.get_unix_time_from_system()
-	game.ships_travel_length = time_cost
-	game.ships_travel_cost = travel_energy_cost
+	game.ships_travel_data.depart_pos = depart_pos
+	game.ships_travel_data.dest_pos = dest_pos
+	game.ships_travel_data.dest_coords = {"c":game.c_c, "g":game.c_g, "s":game.c_s, "p":dest_p_id}
+	game.ships_travel_data.dest_g_coords = {"g":game.c_g_g, "s":game.c_s_g}
+	game.ships_travel_data.travel_view = travel_view
+	game.ships_travel_data.drives_used = 0
+	game.ships_travel_data.drive_available_time = Time.get_unix_time_from_system()
+	game.ships_travel_data.travel_start_date = Time.get_unix_time_from_system()
+	game.ships_travel_data.travel_length = time_cost
+	game.ships_travel_data.travel_cost = travel_energy_cost
 	game.toggle_panel(self)
 
 func has_SE(p_i:Dictionary):

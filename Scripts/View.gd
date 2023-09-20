@@ -68,8 +68,8 @@ func _process(delta):
 		var scale_mult = 1.0
 		if game.c_v == "system":
 			scale_mult = 70.0 / game.system_data[game.c_s].closest_planet_distance
-		dep_pos = game.ships_depart_pos * scale_mult
-		dest_pos = game.ships_dest_pos * scale_mult
+		dep_pos = game.ships_travel_data.depart_pos * scale_mult
+		dest_pos = game.ships_travel_data.dest_pos * scale_mult
 		curr_pos = lerp(dep_pos, dest_pos, clamp(Helper.update_ship_travel(), 0, 1))
 		if travel_view == "-":
 			dep_pos = null

@@ -1319,7 +1319,7 @@ func fade_in_panel(panel:Control):
 	$Panels/Control.move_child(panel, $Panels/Control.get_child_count())
 	if is_instance_valid(panel.tween):
 		panel.tween.kill()
-	_on_BottomInfo_close_button_pressed()
+	#_on_BottomInfo_close_button_pressed()
 	panel.tween = create_tween()
 	panel.tween.set_parallel(true)
 	panel.tween.tween_property(panel, "modulate", Color(1, 1, 1, 1), 0.1)

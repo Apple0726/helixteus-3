@@ -122,7 +122,7 @@ func refresh_planets():
 					grid.scale *= sc * 2.5
 					for bldg in bldgs:
 						var bldg_count = preload("res://Scenes/EntityCount.tscn").instantiate()
-						bldg_count.get_node("Texture2D").connect("mouse_entered",Callable(self,"on_entity_icon_over").bind(tr("%s_NAME" % bldg)))
+						bldg_count.get_node("Texture2D").connect("mouse_entered",Callable(self,"on_entity_icon_over").bind(tr("%s_NAME" % Building.names[bldg].to_upper())))
 						bldg_count.get_node("Texture2D").connect("mouse_exited",Callable(self,"on_entity_icon_out"))
 						grid.add_child(bldg_count)
 						bldg_count.get_node("Texture2D").texture = game.bldg_textures[bldg]

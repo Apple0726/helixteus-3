@@ -43,7 +43,7 @@ func _on_Construct_pressed():
 		$ConstructPanel.refresh()
 		if mouse_pos.x > 320:
 			last_mouse_x_pos = mouse_pos.x
-			warp_mouse(Vector2(80, mouse_pos.y))
+			warp_mouse(Vector2(120, mouse_pos.y))
 
 func hide_construct():
 	$ConstructPanelAnimation.play_backwards("Fade")
@@ -100,6 +100,6 @@ func _on_construct_panel_animation_animation_finished(anim_name):
 
 
 func _on_construct_panel_hide_construct():
-	if last_mouse_x_pos != INF:
-		warp_mouse(Vector2(last_mouse_x_pos, mouse_pos.y))
+#	if last_mouse_x_pos != INF:
+#		warp_mouse(Vector2(last_mouse_x_pos, mouse_pos.y))
 	hide_construct()

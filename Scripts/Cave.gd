@@ -163,7 +163,7 @@ func _ready():
 		game.help_str = "cave_controls"
 	$UI2/Controls.refresh()
 	
-	if game.subjects.dimensional_power.lv >= 4:
+	if game.subject_levels.dimensional_power >= 4:
 		time_speed = log(game.u_i.time_speed - 1.0 + exp(1.0))
 	else:
 		time_speed = game.u_i.time_speed

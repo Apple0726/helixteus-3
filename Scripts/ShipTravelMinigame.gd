@@ -80,7 +80,7 @@ func hide_help():
 
 func _on_Back_pressed():
 	game.STM_lv = lv
-	game.ships_travel_start_date -= max(0, secs_elapsed - penalty_time)
+	game.ships_travel_data.travel_start_date -= max(0, secs_elapsed - penalty_time)
 	Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
 	game.switch_view(game.l_v)
 

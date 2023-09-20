@@ -49,6 +49,7 @@ layout_mode = 0
 offset_left = 60.0
 offset_right = 156.0
 offset_bottom = 48.0
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
 text = "BASIC"
 vertical_alignment = 1
 
@@ -67,6 +68,7 @@ layout_mode = 0
 offset_left = 60.0
 offset_right = 164.0
 offset_bottom = 48.0
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
 text = "STORAGE"
 vertical_alignment = 1
 
@@ -85,6 +87,7 @@ layout_mode = 0
 offset_left = 60.0
 offset_right = 192.0
 offset_bottom = 48.0
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
 text = "PRODUCTION"
 vertical_alignment = 1
 
@@ -103,6 +106,7 @@ layout_mode = 0
 offset_left = 60.0
 offset_right = 164.0
 offset_bottom = 48.0
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
 text = "SUPPORT"
 vertical_alignment = 1
 
@@ -121,6 +125,7 @@ layout_mode = 0
 offset_left = 60.0
 offset_right = 160.0
 offset_bottom = 48.0
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
 text = "VEHICLES"
 vertical_alignment = 1
 
@@ -139,6 +144,7 @@ layout_mode = 0
 offset_left = 60.0
 offset_right = 160.0
 offset_bottom = 48.0
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
 text = "UNIQUE"
 vertical_alignment = 1
 

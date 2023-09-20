@@ -10,7 +10,7 @@ func _ready():
 	shoot_timer.connect("timeout",Callable(self,"on_time_out"))
 	ray_length = 1400.0
 
-	if cave_ref.aurora:
+	if cave_ref.is_aurora_cave:
 		special_attack_timer = Timer.new()
 		add_child(special_attack_timer)
 		special_attack_timer.wait_time = 4.0

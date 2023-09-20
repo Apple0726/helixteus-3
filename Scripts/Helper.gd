@@ -608,6 +608,8 @@ func get_IR_mult(bldg_name):
 		sc = "PME"
 	elif bldg_name in [Building.MINERAL_SILO, Building.BATTERY, "M_DS", "M_MME"]:
 		sc = "STE"
+	elif bldg_name == Building.RESEARCH_LAB:
+		sc = "RLE"
 	else:
 		sc = "%sE" % bldg_name
 	if game.infinite_research.has(sc):
@@ -791,7 +793,7 @@ func update_ship_travel():
 			game.autocollect.ship_XP = tier
 			if is_instance_valid(game.HUD):
 				game.HUD.set_ship_btn_shader(true, tier)
-	return
+	return progress
 
 func update_bldg_constr(tile:Dictionary, p_i:Dictionary):
 	var curr_time = Time.get_unix_time_from_system()
@@ -1159,7 +1161,7 @@ func get_final_value(p_i:Dictionary, dict:Dictionary, path:int, n:int = 1):
 		elif bldg in [Building.SUBATOMIC_PARTICLE_REACTOR]:
 			return dict.bldg.path_1_value * mult * n * game.u_i.charge
 		elif bldg == Building.MINERAL_EXTRACTOR:
-			return dict.bldg.path_1_value * dict.resource_production_bonus.get("minerals", 1.0)
+			return dict.bldg.path_1_value * mult * n * dict.resource_production_bonus.get("minerals", 1.0)
 		elif bldg == Building.POWER_PLANT:
 			return dict.bldg.path_1_value * mult * n * dict.resource_production_bonus.get("energy", 1.0)
 		elif bldg == Building.RESEARCH_LAB:
@@ -1266,7 +1268,7 @@ func flatten(arr:Array):
 		arr2.append_array(arr[i])
 	return arr2
 
-func add_to_dict(dict:Dictionary, key:String, value):
+func add_to_dict(dict:Dictionary, key, value):
 	if dict.has(key):
 		dict[key] += value
 	else:

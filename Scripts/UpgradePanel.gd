@@ -180,7 +180,7 @@ func update(changing_paths:bool = false):
 		bldg = first_tile_bldg.name
 		first_tile_bldg_info = Data[path_str][bldg]
 		all_tiles_constructing = false
-		num = 1 if bldg in ["GH", "MM", "AMN", "SPR"] else planet.tile_num
+		num = 1 if bldg in [Building.GREENHOUSE, Building.BORING_MACHINE, Building.ATOM_MANIPULATOR, Building.SUBATOMIC_PARTICLE_REACTOR] else planet.tile_num
 		var lv_to:int = next_lv.value
 		var a:int = next_lv.min_value
 		var calculated:bool = false
@@ -377,7 +377,7 @@ func _on_Upgrade_pressed():
 					tile.bldg.cap_upgrade = new_base_value - tile.bldg.path_1_value
 				elif tile.bldg.name == Building.BATTERY:
 					tile.bldg.cap_upgrade = (new_base_value - tile.bldg.path_1_value) * game.u_i.charge
-				elif tile.bldg.name == "GH" and tile.has("auto_GH"):
+				elif tile.bldg.name == Building.GREENHOUSE and tile.has("auto_GH"):
 					Helper.remove_GH_produce_from_autocollect(tile.auto_GH.produce, tile.get("aurora", 0.0))
 					if path_selected == 1:
 						tile.bldg.prod_mult = new_base_value / tile.bldg.path_1_value

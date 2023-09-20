@@ -1,12 +1,12 @@
 [gd_scene load_steps=11 format=3 uid="uid://cut1or30pxsib"]
 
-[ext_resource type="Texture2D" uid="uid://bfjl6rnsgqq5f" path="res://Graphics/Misc/BarUnder2.png" id="1"]
-[ext_resource type="Texture2D" uid="uid://clpkbjruduai7" path="res://Graphics/Misc/Bar2.png" id="2"]
+[ext_resource type="Texture2D" uid="uid://c67y71rs3ver2" path="res://Graphics/Misc/BarUnder2.png" id="1"]
+[ext_resource type="Texture2D" uid="uid://1h4b4lcm50vf" path="res://Graphics/Misc/Bar2.png" id="2"]
 [ext_resource type="PackedScene" uid="uid://bx0a7iwx3qlo1" path="res://Scenes/PieGraph.tscn" id="3"]
 [ext_resource type="Theme" uid="uid://cp2u1kgj60ic" path="res://Resources/default_theme.tres" id="5"]
 [ext_resource type="Script" path="res://Scripts/SCPanel.gd" id="6"]
-[ext_resource type="Texture2D" uid="uid://b85wdhdkvhxuv" path="res://Graphics/Icons/stone.png" id="7"]
-[ext_resource type="Texture2D" uid="uid://bjfmtj2gp0t6p" path="res://Graphics/Icons/Time.png" id="10"]
+[ext_resource type="Texture2D" uid="uid://b03bc5a1k5a27" path="res://Graphics/Icons/stone.png" id="7"]
+[ext_resource type="Texture2D" uid="uid://ocunpc0pw8ly" path="res://Graphics/Icons/Time.png" id="10"]
 [ext_resource type="PackedScene" uid="uid://ddf2xjwcht77u" path="res://Scenes/CloseButton.tscn" id="12"]
 
 [sub_resource type="InputEventKey" id="InputEventKey_h3yc4"]
@@ -49,7 +49,7 @@ layout_mode = 0
 anchor_right = 1.0
 offset_bottom = 38.0
 theme_override_font_sizes/font_size = 18
-text = "SC_NAME"
+text = "STONE_CRUSHER_NAME"
 horizontal_alignment = 1
 vertical_alignment = 1
 
