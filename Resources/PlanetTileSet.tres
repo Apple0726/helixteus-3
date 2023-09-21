@@ -1,14 +1,14 @@
 [gd_resource type="TileSet" load_steps=19 format=3 uid="uid://djmwwqomsir3r"]
 
-[ext_resource type="Texture2D" uid="uid://dr2ldeci5punl" path="res://Graphics/Tiles/Empty.jpg" id="1"]
-[ext_resource type="Texture2D" uid="uid://kgqd4tt2onox" path="res://Graphics/Tiles/3.jpg" id="2"]
-[ext_resource type="Texture2D" uid="uid://bd3ekyhg88ghf" path="res://Graphics/Tiles/5.jpg" id="3"]
-[ext_resource type="Texture2D" uid="uid://bdmivns85hqc8" path="res://Graphics/Tiles/9.jpg" id="4"]
-[ext_resource type="Texture2D" uid="uid://6p58rgtssvfq" path="res://Graphics/Tiles/4.jpg" id="5"]
-[ext_resource type="Texture2D" uid="uid://drdqkf4sqtgk4" path="res://Graphics/Tiles/8.jpg" id="6"]
-[ext_resource type="Texture2D" uid="uid://dcqi4rmxrm6lh" path="res://Graphics/Tiles/7.jpg" id="7"]
-[ext_resource type="Texture2D" uid="uid://k6j7jqy7n6m" path="res://Graphics/Tiles/6.jpg" id="8"]
-[ext_resource type="Texture2D" uid="uid://dqaguob7iu1m6" path="res://Graphics/Tiles/10.jpg" id="9"]
+[ext_resource type="Texture2D" uid="uid://c4lx63nyfl7o6" path="res://Graphics/Tiles/Empty.jpg" id="1"]
+[ext_resource type="Texture2D" uid="uid://bcevftef45num" path="res://Graphics/Tiles/3.jpg" id="2"]
+[ext_resource type="Texture2D" uid="uid://bjtu25a0t27kb" path="res://Graphics/Tiles/5.jpg" id="3"]
+[ext_resource type="Texture2D" uid="uid://eaog6w2djig5" path="res://Graphics/Tiles/9.jpg" id="4"]
+[ext_resource type="Texture2D" uid="uid://e17rg0vh47vv" path="res://Graphics/Tiles/4.jpg" id="5"]
+[ext_resource type="Texture2D" uid="uid://bpm5j3a38a436" path="res://Graphics/Tiles/8.jpg" id="6"]
+[ext_resource type="Texture2D" uid="uid://d0rjpol0g1hur" path="res://Graphics/Tiles/7.jpg" id="7"]
+[ext_resource type="Texture2D" uid="uid://cv71wu31ewocb" path="res://Graphics/Tiles/6.jpg" id="8"]
+[ext_resource type="Texture2D" uid="uid://esapo1jtwgbi" path="res://Graphics/Tiles/10.jpg" id="9"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_8d7cr"]
 texture = ExtResource("2")

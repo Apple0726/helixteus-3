@@ -257,7 +257,7 @@ func pickaxe_hit():
 		$ResourcesMined.visible = true
 	if progress >= 1000:
 		add_rsrc_mined(contents)
-		Helper.get_rsrc_from_rock(contents, tile, p_i)
+		Helper.get_rsrc_from_rock(contents, tile, p_i, id)
 		var new_contents:Dictionary = Helper.mass_generate_rock(tile, p_i, (progress - 100) / 100)
 		add_rsrc_mined(new_contents)
 		game.add_resources(new_contents)
@@ -272,7 +272,7 @@ func pickaxe_hit():
 	else:
 		while progress >= 100:
 			add_rsrc_mined(contents)
-			Helper.get_rsrc_from_rock(contents, tile, p_i)
+			Helper.get_rsrc_from_rock(contents, tile, p_i, id)
 			progress -= 100
 			if not game.objective.is_empty() and game.objective.type == game.ObjectiveType.MINE:
 				game.objective.current += 1

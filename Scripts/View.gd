@@ -253,6 +253,7 @@ func refresh():
 	ship.visible = show_ship and len(game.ship_data) >= 1
 	game.move_child(ship, game.get_child_count())
 	var progress = Helper.update_ship_travel()
+	travel_view = game.ships_travel_data.travel_view
 	if travel_view == "-":
 		ship.mouse_filter = TextureButton.MOUSE_FILTER_IGNORE
 	else:

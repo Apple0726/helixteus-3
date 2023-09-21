@@ -64,15 +64,15 @@ func refresh():
 		_on_h_slider_value_changed($Control/HSlider.value)
 
 func use_drive():
-	if game.ships_travel_view == "-":
+	if game.ships_travel_data.travel_view == "-":
 		game.popup(tr("SHIPS_NEED_TO_BE_TRAVELLING"), 1.5)
 	else:
-		game.ships_travel_length -= ships_time_reduction
-		game.ships_travel_cost += cost * energy
+		game.ships_travel_data.travel_length -= ships_time_reduction
+		game.ships_travel_data.travel_cost += cost * energy
 		game[type][meta] -= cost
 		set_process(true)
-		game.ships_travel_drive_available_time = Time.get_unix_time_from_system() + 60 * pow(2, game.ships_travel_drives_used)
-		game.ships_travel_drives_used += 1
+		game.ships_travel_data.drive_available_time = Time.get_unix_time_from_system() + 60 * pow(2, game.ships_travel_data.drives_used)
+		game.ships_travel_data.drives_used += 1
 		game.popup(tr("DRIVE_SUCCESSFULLY_ACTIVATED"), 1.5)
 	#refresh_h_slider()
 	_on_h_slider_value_changed($Control/HSlider.value)
@@ -115,7 +115,7 @@ func _on_h_slider_value_changed(value):
 	if not is_processing():
 		$Control/Cooldown.text = Helper.time_to_str(60 * pow(2, game.ships_travel_data.drives_used))
 	cost = $Control/HSlider.value
-	ships_time_reduction = ships_time_remaining - ships_time_remaining * (game.ships_traveL_data.travel_cost / (game.ships_travel_data.travel_cost + cost * energy))
+	ships_time_reduction = ships_time_remaining - ships_time_remaining * (game.ships_travel_data.travel_cost / (game.ships_travel_data.travel_cost + cost * energy))
 	$Control/Label.text = "%s %s" % [Helper.format_num(cost, true), unit]
 	$Control/RsrcOwned.text = "%s %s" % [Helper.format_num(game[type][meta], true), unit]
 	$Control/Label2.text = Helper.time_to_str(ships_time_reduction)

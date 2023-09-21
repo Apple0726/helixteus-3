@@ -1320,6 +1320,10 @@ func fade_in_panel(panel:Control):
 	if is_instance_valid(panel.tween):
 		panel.tween.kill()
 	#_on_BottomInfo_close_button_pressed()
+	if $UI.has_node("BuildingShortcuts"):
+		$UI.get_node("BuildingShortcuts").close()
+	elif c_v == "planet":
+		view.obj.get_node("BuildingShortcutTimer").stop()
 	panel.tween = create_tween()
 	panel.tween.set_parallel(true)
 	panel.tween.tween_property(panel, "modulate", Color(1, 1, 1, 1), 0.1)
@@ -2352,12 +2356,12 @@ func systems_collision_detection(id:int, N_init:int):
 		galaxy_data[id].zoom = [Vector2(640, 360), view_zoom]
 
 func get_sys_diff(pos:Vector2, id:int, s_i:Dictionary):
-	var stars:Dictionary = s_i.stars
+	var stars:Array = s_i.stars
 	var combined_star_mass = 0
 	for star in stars:
 		combined_star_mass += star.mass
 	if c_g_g == 0:
-		return Helper.clever_round((1 + pos.distance_to(system_data[0].name) * pow(combined_star_mass, 0.5) / 5000) * galaxy_data[id].diff)
+		return Helper.clever_round((1 + pos.distance_to(system_data[0].pos) * pow(combined_star_mass, 0.5) / 5000) * galaxy_data[id].diff)
 	else:
 		return Helper.clever_round(galaxy_data[id].diff * pow(combined_star_mass, 0.4) * randf_range(120, 150) / max(100, pow(pos.length(), 0.5)))
 	
@@ -2371,7 +2375,7 @@ func generate_systems(id:int):
 	#They have low metallicity
 
 	#Open clusters are
-	var B = galaxy_data[id].B#Magnetic field strength
+	var B = galaxy_data[id].B_strength#Magnetic field strength
 	var dark_matter = galaxy_data[id].dark_matter
 	var G = u_i.gravitational
 	for i in range(0, total_sys_num):
@@ -2788,7 +2792,7 @@ func generate_volcano(t_id:int, VEI:float, artificial:bool = false):
 			if abs(i - k) + abs(j - l) <= half_size + 1 - (int(VEI) & 1):
 				tile_data[t_id2] = {} if tile2 == null else tile2
 				tile2 = tile_data[t_id2]
-				var overclock_mult = tile2.bldg.get("overclock_mult", 1.0)
+				var overclock_mult = tile2.bldg.get("overclock_mult", 1.0) if tile2.has("bldg") else 1.0
 				if tile2.has("ash"):
 					if not tile2.has("cave"):
 						var diff = max(richness - tile2.ash.richness, 0)
@@ -2915,20 +2919,22 @@ func generate_tiles(id:int):
 				if p_i.lake_1.state != "g":
 					if not tile_data[t_id].has("ash"):
 						tile_data[t_id].lake = 1
+						tile_data[t_id].resource_production_bonus.clear()
 					continue
 			if level < -0.5 and p_i.has("lake_2"):
 				if p_i.lake_2.state != "g":
 					if not tile_data[t_id].has("ash"):
 						tile_data[t_id].lake = 2
+						tile_data[t_id].resource_production_bonus.clear()
 					continue
 			if home_planet:
 				continue
 			if randf() < 0.1 / pow(wid, 0.9):
 				var floor_size:int = randf_range(25 * min(wid / 8.0, 1), 40 * randf_range(1, 1 + wid / 100.0))
-				var num_floors:int = Helper.rand_int(1, int(wid / 2.5)) + 2
+				var num_floors:int = randi() % (int(wid / 2.5) + 1) + 3
 				var modifiers:Dictionary = {}
 				if c_s_g != 0:
-					var number_of_modifiers:int = log(1.0 / randf() + 1.1) * log(system_data[c_s][4]) / log(10)
+					var number_of_modifiers:int = log(1.0 / randf() + 1.1) * log(system_data[c_s].diff) / log(10)
 					var modifiers2:Dictionary = Data.cave_modifiers.duplicate(true)
 					if c_g_g == 0:
 						number_of_modifiers = min(number_of_modifiers, 2)
@@ -2942,7 +2948,7 @@ func generate_tiles(id:int):
 						modifier_keys.shuffle()
 						var key:String = modifier_keys[0]
 						if modifiers2[key].has("double_treasure_at"):
-							var mod_power:float = log(1.0 / randf() + 0.5) / max(remap(log(system_data[c_s][4]) / log(20), 0.0, 4.0, 2.0, 1.0), 1.0)
+							var mod_power:float = log(1.0 / randf() + 0.5) / max(remap(log(system_data[c_s].diff) / log(20), 0.0, 4.0, 2.0, 1.0), 1.0)
 							var direction:float
 							if modifiers2[key].has("one_direction"):
 								direction = modifiers2[key].one_direction
@@ -3177,35 +3183,45 @@ func generate_tiles(id:int):
 				for k in range(max(0, i - distance_from_lake), min(i + distance_from_lake + 1, wid)):
 					for l in range(max(0, j - distance_from_lake), min(j + distance_from_lake + 1, wid)):
 						var id2 = k % wid + l * wid
-						if tile_data[id2].has("lake") or Vector2(k, l) == Vector2(i, j):
+						var _tile = tile_data[id2]
+						if _tile.has("cave") or _tile.has("volcano") or _tile.has("lake") or _tile.has("wormhole") or Vector2(k, l) == Vector2(i, j):
 							continue
 						if tile.lake == 1 and lake_1_au_int > 0.0:
-							if tile_data[id2].has("aurora"):
-								if not tile_data[id2].has("lake_elements"):
-									tile_data[id2].aurora += lake_1_au_int + 1.0
+							if _tile.has("aurora"):
+								if not _tile.has("lake_elements"):
+									_tile.aurora += lake_1_au_int + 1.0
 								else:
-									tile_data[id2].aurora = max(lake_1_au_int, tile_data[id2].aurora)
+									_tile.aurora = max(lake_1_au_int, _tile.aurora)
 							else:
-								tile_data[id2].aurora = lake_1_au_int
+								_tile.aurora = lake_1_au_int
 						elif tile.lake == 2 and lake_2_au_int > 0.0:
-							if tile_data[id2].has("aurora"):
-								if not tile_data[id2].has("lake_elements"):
-									tile_data[id2].aurora += lake_2_au_int + 1.0
+							if _tile.has("aurora"):
+								if not _tile.has("lake_elements"):
+									_tile.aurora += lake_2_au_int + 1.0
 								else:
-									tile_data[id2].aurora = max(lake_2_au_int, tile_data[id2].aurora)
+									_tile.aurora = max(lake_2_au_int, _tile.aurora)
 							else:
-								tile_data[id2].aurora = lake_2_au_int
-						if tile_data[id2].has("lake_elements"):
-							tile_data[id2].lake_elements[lake_info.element] = lake_info.state
+								_tile.aurora = lake_2_au_int
+						if _tile.has("lake_elements"):
+							_tile.lake_elements[lake_info.element] = lake_info.state
 						else:
-							tile_data[id2].lake_elements = {lake_info.element:lake_info.state}
+							_tile.lake_elements = {lake_info.element:lake_info.state}
 			elif tile.has("crater"):
 				for k in range(max(0, i - 1), min(i + 1 + 1, wid)):
 					for l in range(max(0, j - 1), min(j + 1 + 1, wid)):
 						var id2 = k % wid + l * wid
-						if Vector2(k, l) == Vector2(i, j):
+						var _tile = tile_data[id2]
+						if Vector2(k, l) == Vector2(i, j) or _tile.has("cave") or _tile.has("volcano") or _tile.has("lake") or _tile.has("wormhole"):
 							continue
-						tile_data[id2].resource_production_bonus.SP = tile_data[id2].resource_production_bonus.get("SP", 1.0) + met_info[tile.crater].value
+						_tile.resource_production_bonus.SP = _tile.resource_production_bonus.get("SP", 1.0) + met_info[tile.crater.metal].rarity - 0.8
+			elif tile.has("wormhole"):
+				for k in range(max(0, i - 2), min(i + 2 + 1, wid)):
+					for l in range(max(0, j - 2), min(j + 2 + 1, wid)):
+						var id2 = k % wid + l * wid
+						var _tile = tile_data[id2]
+						if Vector2(k, l) == Vector2(i, j) or _tile.has("cave") or _tile.has("volcano") or _tile.has("lake") or _tile.has("wormhole"):
+							continue
+						_tile.resource_production_bonus.SP = _tile.resource_production_bonus.get("SP", 1.0) + 7.0
 	# Give science point production bonus to tiles surrounding lakes
 	for i in wid:
 		for j in wid:
@@ -3236,7 +3252,7 @@ func erase_tile(tile:int):
 	if tile_data[tile] == null:
 		tile_data[tile] = {}
 	for key in tile_data[tile].keys():
-		if not key in ["aurora", "ash"]:
+		if not key in ["aurora", "ash", "resource_production_bonus"]:
 			tile_data[tile].erase(key)
 
 func make_atmosphere_composition(temp:float, pressure:float, list_of_element_probabilities:Dictionary):
@@ -4386,6 +4402,7 @@ func _on_MMTimer_timeout():
 					tile.bldg.collect_date += int(tiles_mined) / tile.bldg.path_1_value / prod_mult
 					tile.depth += int(tiles_mined)
 					if tile.has("crater") and tile.crater.has("init_depth") and tile.depth > 3 * tile.crater.init_depth:
+						Helper.remove_crater_bonuses(tile, t_id, round(Helper.get_wid(p_i.size)))
 						tile.erase("crater")
 			if p != c_p_g:
 				Helper.save_obj("Planets", p, _tile_data)

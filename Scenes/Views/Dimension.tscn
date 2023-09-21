@@ -1,20 +1,20 @@
 [gd_scene load_steps=58 format=3 uid="uid://bg2sov0myafl8"]
 
 [ext_resource type="PackedScene" uid="uid://bx7irdxpbnhbb" path="res://Scenes/DimensionType.tscn" id="3"]
-[ext_resource type="Texture2D" uid="uid://bi11obvckb4yu" path="res://Graphics/Misc/Physics.png" id="4"]
-[ext_resource type="Texture2D" uid="uid://c0tn5pee6iv6m" path="res://Graphics/Misc/Mathematics.png" id="5"]
+[ext_resource type="Texture2D" uid="uid://bxii2uo6kfc1w" path="res://Graphics/Misc/Physics.png" id="4"]
+[ext_resource type="Texture2D" uid="uid://cijhg3nnaejqm" path="res://Graphics/Misc/Mathematics.png" id="5"]
 [ext_resource type="Texture2D" uid="uid://coci5ygj3rqpx" path="res://Graphics/Misc/DimensionalPower.png" id="6"]
-[ext_resource type="Texture2D" uid="uid://b45kwhc7tnoki" path="res://Graphics/Misc/Chemistry.png" id="7"]
+[ext_resource type="Texture2D" uid="uid://bcneexk41ympe" path="res://Graphics/Misc/Chemistry.png" id="7"]
 [ext_resource type="Script" path="res://Scripts/Dimension.gd" id="8"]
 [ext_resource type="Theme" uid="uid://cp2u1kgj60ic" path="res://Resources/default_theme.tres" id="9"]
-[ext_resource type="Texture2D" uid="uid://p1lqot7eg8o" path="res://Graphics/Misc/Engineering.png" id="10"]
-[ext_resource type="Texture2D" uid="uid://b8rgvi3wfvd46" path="res://Graphics/Misc/Biology.png" id="11"]
+[ext_resource type="Texture2D" uid="uid://bnn1tk70f5txt" path="res://Graphics/Misc/Engineering.png" id="10"]
+[ext_resource type="Texture2D" uid="uid://t8qxth15pf7v" path="res://Graphics/Misc/Biology.png" id="11"]
 [ext_resource type="PackedScene" uid="uid://c8jr3e5aiyj1n" path="res://Scenes/HelpText.tscn" id="12"]
-[ext_resource type="Texture2D" uid="uid://d0mghqcs0ckrw" path="res://Graphics/Misc/Universe.png" id="13"]
-[ext_resource type="Texture2D" uid="uid://dhpogm28y5rpm" path="res://Graphics/Misc/Philosophy.png" id="14"]
+[ext_resource type="Texture2D" uid="uid://bl2a67ybx3crb" path="res://Graphics/Misc/Universe.png" id="13"]
+[ext_resource type="Texture2D" uid="uid://capt4p7vy5k5m" path="res://Graphics/Misc/Philosophy.png" id="14"]
 [ext_resource type="Texture2D" uid="uid://bqkvj2j31ryk" path="res://Graphics/Formulas/BuildingUpgrade.png" id="15"]
 [ext_resource type="Texture2D" uid="uid://chcggjj4lwy5l" path="res://Graphics/Formulas/ShipHitChance.png" id="16"]
-[ext_resource type="Texture2D" uid="uid://082kblfbcuhg" path="res://Graphics/Misc/Bar.png" id="17"]
+[ext_resource type="Texture2D" uid="uid://dwf3b6bp70ymq" path="res://Graphics/Misc/Bar.png" id="17"]
 [ext_resource type="Texture2D" uid="uid://cqupg8bw86gnu" path="res://Graphics/Misc/BarUnder.png" id="18"]
 [ext_resource type="Texture2D" uid="uid://7n4ffyq4183x" path="res://Graphics/Formulas/AuroraSpawn.png" id="18_drllu"]
 [ext_resource type="Shader" path="res://Shaders/StarGrdient.gdshader" id="18_tqqip"]
@@ -2046,7 +2046,7 @@ offset_bottom = 680.0
 theme_override_styles/panel = SubResource("StyleBoxFlat_mmkh4")
 
 [node name="Control" type="Control" parent="ModifyDimension/Dimensional_Power"]
-custom_minimum_size = Vector2(300, 800)
+custom_minimum_size = Vector2(300, 850)
 layout_mode = 2
 mouse_filter = 2
 
@@ -2108,6 +2108,11 @@ modulate = Color(0.454902, 0, 1, 1)
 layout_mode = 2
 text = "7"
 
+[node name="Label8" type="Label" parent="ModifyDimension/Dimensional_Power/Control/VBoxContainer"]
+modulate = Color(0.454902, 0, 1, 1)
+layout_mode = 2
+text = "8"
+
 [node name="Line2D" type="Line2D" parent="ModifyDimension/Dimensional_Power/Control"]
 position = Vector2(-18, -9)
 points = PackedVector2Array(88, 92, 152, 92)
@@ -2149,14 +2154,20 @@ position = Vector2(-18, 554)
 points = PackedVector2Array(88, 92, 152, 92)
 width = 1.0
 
+[node name="Line2D8" type="Line2D" parent="ModifyDimension/Dimensional_Power/Control"]
+modulate = Color(0.454902, 0, 1, 1)
+position = Vector2(-18, 644)
+points = PackedVector2Array(88, 92, 152, 92)
+width = 1.0
+
 [node name="TextureProgressBar" type="TextureProgressBar" parent="ModifyDimension/Dimensional_Power/Control"]
 layout_mode = 0
 offset_left = 94.0
 offset_top = 83.0
 offset_right = 113.0
-offset_bottom = 647.0
+offset_bottom = 736.0
 min_value = 1.0
-max_value = 7.0
+max_value = 8.0
 step = 0.0
 value = 3.0
 fill_mode = 2
@@ -2224,15 +2235,26 @@ offset_top = 543.0
 offset_right = 386.0
 offset_bottom = 594.0
 theme_override_colors/font_color = Color(0.635294, 0.635294, 0.635294, 1)
-text = "Coming soon™"
+text = "TP_COST_POWER_VARIES"
 autowrap_mode = 3
 
 [node name="Label7" type="Label" parent="ModifyDimension/Dimensional_Power/Control"]
 layout_mode = 0
 offset_left = 146.0
-offset_top = 634.8
+offset_top = 636.0
 offset_right = 386.0
-offset_bottom = 766.8
+offset_bottom = 687.0
+mouse_filter = 1
+theme_override_colors/font_color = Color(0.635294, 0.635294, 0.635294, 1)
+text = "CBD_SECOND_PATH_CHANGE"
+autowrap_mode = 3
+
+[node name="Label8" type="Label" parent="ModifyDimension/Dimensional_Power/Control"]
+layout_mode = 0
+offset_left = 146.0
+offset_top = 724.0
+offset_right = 386.0
+offset_bottom = 856.0
 theme_override_colors/font_color = Color(0.635294, 0.635294, 0.635294, 1)
 text = "Unlock a special area to encounter the final boss (lol of course this area doesn't exist yet (nor the final boss))"
 autowrap_mode = 3
@@ -2422,6 +2444,8 @@ horizontal_alignment = 1
 [connection signal="mouse_exited" from="ModifyDimension/Dimensional_Power/Control/Label2" to="." method="_on_mouse_exited"]
 [connection signal="mouse_entered" from="ModifyDimension/Dimensional_Power/Control/Label4" to="." method="_on_text_mouse_entered" binds= ["MODIFY_CAVE_BATTLE_TIME_DESC"]]
 [connection signal="mouse_exited" from="ModifyDimension/Dimensional_Power/Control/Label4" to="." method="_on_mouse_exited"]
+[connection signal="mouse_entered" from="ModifyDimension/Dimensional_Power/Control/Label7" to="." method="_on_text_mouse_entered" binds= ["CBD_SECOND_PATH_CHANGE_DESC"]]
+[connection signal="mouse_exited" from="ModifyDimension/Dimensional_Power/Control/Label7" to="." method="_on_mouse_exited"]
 [connection signal="mouse_entered" from="ModifyDimension/Dimensional_Power/Control/EffectsHelp" to="." method="_on_EffectsHelp_mouse_entered"]
 [connection signal="mouse_exited" from="ModifyDimension/Dimensional_Power/Control/EffectsHelp" to="." method="_on_mouse_exited"]
 [connection signal="visibility_changed" from="ColorRect" to="." method="_on_ColorRect_visibility_changed"]

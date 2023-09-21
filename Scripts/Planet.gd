@@ -225,7 +225,7 @@ func show_tooltip(tile, tile_id:int):
 		if bldg_to_construct == -1:
 			if not game.get_node("UI").has_node("BuildingShortcuts") and $BuildingShortcutTimer.is_stopped():
 				if game.dim_num == 1 and game.c_u == 0:
-					$BuildingShortcutTimer.start(remap(game.u_i.lv, 1, 18, 0.5, 3.0))
+					$BuildingShortcutTimer.start(remap(game.u_i.lv, 1, 18, 0.5, 6.0))
 				else:
 					$BuildingShortcutTimer.start(3.0)
 		if tile.has("overclock_bonus") and overclockable(tile.bldg.name):
@@ -860,17 +860,17 @@ func _unhandled_input(event):
 			elif Input.is_action_just_released("X") and not game.active_panel:
 				hide_tooltip()
 				if tiles_selected.is_empty():
-					var bldg:String = tile.bldg.name
+					var bldg:int = tile.bldg.name
 					var money_cost = 0.0
 					if Data.path_1.has(bldg):
-						money_cost += Data.costs[bldg].money * pow(Data.path_1[bldg].cost_pw if Data.path_1[bldg].has("cost_pw") else 1.3, tile.bldg.path_1)
+						money_cost += Data.costs[bldg].money * pow(Data.path_1[bldg].get("cost_pw", 1.3), tile.bldg.path_1)
 					if Data.path_2.has(bldg):
-						money_cost += Data.costs[bldg].money * pow(Data.path_2[bldg].cost_pw if Data.path_2[bldg].has("cost_pw") else 1.3, tile.bldg.path_2)
+						money_cost += Data.costs[bldg].money * pow(Data.path_2[bldg].get("cost_pw", 1.3), tile.bldg.path_2)
 					if Data.path_3.has(bldg):
-						money_cost += Data.costs[bldg].money * pow(Data.path_3[bldg].cost_pw if Data.path_3[bldg].has("cost_pw") else 1.3, tile.bldg.path_3)
+						money_cost += Data.costs[bldg].money * pow(Data.path_3[bldg].get("cost_pw", 1.3), tile.bldg.path_3)
 					if tile.has("cost_div"):
 						money_cost /= tile.cost_div
-					var total_XP = 10 * (1 - pow(1.6, game.u_i.lv - 1)) / (1 - 1.6) + game.u_i.xp
+					var total_XP = 10 * (1 - pow(game.maths_bonus.ULUGF, game.u_i.lv - 1)) / (1 - game.maths_bonus.ULUGF) + game.u_i.xp
 					if money_cost >= total_XP + game.money / 100.0:
 						game.show_YN_panel("destroy_building", tr("DESTROY_BLDG_CONFIRM"), [tile_over])
 					else:
@@ -1150,7 +1150,7 @@ func on_wormhole_click(tile:Dictionary, tile_id:int):
 			game.popup_window(tr("LV_18_NEEDED_DESC"), tr("LV_18_NEEDED"))
 			return
 		Helper.update_ship_travel()
-		if game.ships_travel_view != "-":
+		if game.ships_travel_data.travel_view != "-":
 			game.popup(tr("SHIPS_ALREADY_TRAVELLING"), 1.5)
 			return
 		if Helper.ships_on_planet(p_id):
@@ -1188,6 +1188,7 @@ func on_wormhole_click(tile:Dictionary, tile_id:int):
 				while wh_planet.type in [11, 12]:
 					wh_planet = game.planet_data[randi() % wh_system.planet_num]
 				game.planet_data[wh_planet.l_id].conquered = true
+				game.erase_tile(tile_id)
 				game.tile_data[tile_id].wormhole.l_dest_p_id = wh_planet.l_id
 				game.tile_data[tile_id].wormhole.g_dest_p_id = wh_planet.id
 				game.tile_data[tile_id].wormhole.new = false
@@ -1198,7 +1199,7 @@ func on_wormhole_click(tile:Dictionary, tile_id:int):
 					game.generate_tiles(wh_planet.l_id)
 				game.tile_data = game.open_obj("Planets", wh_planet.id)
 				var wh_tile:int = randi() % len(game.tile_data)
-				while game.tile_data[wh_tile] and (game.tile_data[wh_tile].has("ship_locator_depth") or game.tile_data[wh_tile].has("cave")):
+				while game.tile_data[wh_tile] and game.tile_data[wh_tile].has("cave"):
 					wh_tile = randi() % len(game.tile_data)
 				game.erase_tile(wh_tile)
 				game.tile_data[wh_tile].wormhole = {"active":true, "new":false, "l_dest_s_id":orig_s_l, "g_dest_s_id":orig_s_g, "l_dest_p_id":orig_p_l, "g_dest_p_id":orig_p_g}
@@ -1212,12 +1213,12 @@ func on_wormhole_click(tile:Dictionary, tile_id:int):
 				game.c_s_g = tile.wormhole.g_dest_s_id
 				game.tile_data = game.open_obj("Planets", game.c_p_g)
 				game.planet_data = game.open_obj("Systems", game.c_s_g)
-			game.ships_c_coords.p = game.c_p
-			game.ships_dest_coords.p = game.c_p
-			game.ships_c_coords.s = game.c_s
-			game.ships_dest_coords.s = game.c_s
-			game.ships_c_g_coords.s = game.c_s_g
-			game.ships_dest_g_coords.s = game.c_s_g
+			game.ships_travel_data.c_coords.p = game.c_p
+			game.ships_travel_data.dest_coords.p = game.c_p
+			game.ships_travel_data.c_coords.s = game.c_s
+			game.ships_travel_data.dest_coords.s = game.c_s
+			game.ships_travel_data.c_g_coords.s = game.c_s_g
+			game.ships_travel_data.dest_g_coords.s = game.c_s_g
 			game.switch_view("planet", {"dont_save_zooms":true})
 		else:
 			game.send_ships_panel.dest_p_id = p_id

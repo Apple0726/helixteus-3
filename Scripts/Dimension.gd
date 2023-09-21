@@ -275,7 +275,7 @@ func on_univ_over(id:int):
 			tr("BOLTZMANN"),
 			u_i.boltzmann,
 			tr("S_B_CTE"),
-			pow(u_i.boltzmann, 4) / pow(u_i.planck, 3) / pow(u_i.speed_of_light, 2),
+			Helper.format_num(pow(u_i.boltzmann, 4) / pow(u_i.planck, 3) / pow(u_i.speed_of_light, 2), true),
 			tr("GRAVITATIONAL"),
 			u_i.gravitational,
 			tr("CHARGE"),

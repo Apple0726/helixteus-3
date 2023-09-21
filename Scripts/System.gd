@@ -507,12 +507,12 @@ func show_planet_info(id:int, l_id:int):
 		var tooltip:String = ""
 		var icons:Array = Data.desc_icons[p_i.bldg.name] if p_i.has("tile_num") and Data.desc_icons.has(p_i.bldg.name) else []
 		if p_i.has("tile_num"):
-			if p_i.bldg.name in ["MM", "GH", "AMN", "SPR"]:
-				tooltip += "%s (%s %s)\n%s" %  [p_i.name, Helper.format_num(p_i.tile_num), tr("%s_NAME_S" % p_i.bldg.name).to_lower(), Helper.get_bldg_tooltip(p_i, p_i, 1)]
-				if p_i.bldg.name == "MM":
+			if p_i.bldg.name in [Building.BORING_MACHINE, Building.GREENHOUSE, Building.ATOM_MANIPULATOR, Building.SUBATOMIC_PARTICLE_REACTOR]:
+				tooltip += "%s (%s %s)\n%s" %  [p_i.name, Helper.format_num(p_i.tile_num), tr("%s_NAME_S" % Building.names[p_i.bldg.name].to_upper()).to_lower(), Helper.get_bldg_tooltip(p_i, p_i, 1)]
+				if p_i.bldg.name == Building.BORING_MACHINE:
 					tooltip += "\n%s: %s m" % [tr("HOLE_DEPTH"), p_i.depth]
 			else:
-				tooltip += "%s (%s %s)\n%s" %  [p_i.name, Helper.format_num(p_i.tile_num), tr("%s_NAME_S" % p_i.bldg.name).to_lower(), Helper.get_bldg_tooltip(p_i, p_i, p_i.tile_num)]
+				tooltip += "%s (%s %s)\n%s" %  [p_i.name, Helper.format_num(p_i.tile_num), tr("%s_NAME_S" % Building.names[p_i.bldg.name].to_upper()).to_lower(), Helper.get_bldg_tooltip(p_i, p_i, p_i.tile_num)]
 		else:
 			game.help_str = "planet_details"
 			var T_gradient:Gradient = preload("res://Resources/TemperatureGradient.tres")

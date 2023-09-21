@@ -36,10 +36,10 @@ func refresh2(_bldg_type:int, _input:String, _output:String, _input_type:String,
 	match bldg_type:
 		Building.GLASS_FACTORY:
 			ratio = 1 / 15.0
-			$Title.text = tr("GF_NAME")
+			$Title.text = tr("GLASS_FACTORY_NAME")
 		Building.STEAM_ENGINE:
 			ratio = 40.0 * Helper.get_IR_mult(Building.STEAM_ENGINE)
-			$Title.text = tr("SE_NAME")
+			$Title.text = tr("STEAM_ENGINE_NAME")
 		_:
 			ratio = 0.0
 	ratio *=  tile.bldg.path_3_value

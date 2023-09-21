@@ -452,7 +452,7 @@ func get_rock_layer(tile:Dictionary, p_i:Dictionary):
 		layer = "core"
 	return layer
 
-func get_rsrc_from_rock(contents:Dictionary, tile:Dictionary, p_i:Dictionary, is_MM:bool = false):
+func get_rsrc_from_rock(contents:Dictionary, tile:Dictionary, p_i:Dictionary, tile_id:int):
 	var layer:String = get_layer(tile, p_i)
 	for content in contents:
 		var amount = contents[content]
@@ -461,8 +461,7 @@ func get_rsrc_from_rock(contents:Dictionary, tile:Dictionary, p_i:Dictionary, is
 			if not game.show.has("plant_button") and content == "soil":
 				game.show.plant_button = true
 			if game.help.has("materials"):
-				if not is_MM:
-					game.popup_window(tr("YOU_MINED_MATERIALS"), tr("MATERIALS"))
+				game.popup_window(tr("YOU_MINED_MATERIALS"), tr("MATERIALS"))
 				game.help.erase("materials")
 			if not game.show.has("materials"):
 				game.show.materials = true
@@ -470,8 +469,7 @@ func get_rsrc_from_rock(contents:Dictionary, tile:Dictionary, p_i:Dictionary, is
 				game.inventory.get_node("TabBar/Materials").visible = true
 		elif game.mets.has(content):
 			if not game.help.has("metals"):
-				if not is_MM:
-					game.popup_window(tr("YOU_MINED_METALS"), tr("METALS"))
+				game.popup_window(tr("YOU_MINED_METALS"), tr("METALS"))
 				game.help.metals = true
 			if not game.show.has("metals"):
 				game.show.metals = true
@@ -504,8 +502,23 @@ func get_rsrc_from_rock(contents:Dictionary, tile:Dictionary, p_i:Dictionary, is
 	if tile.has("current_deposit") and tile.current_deposit.progress > tile.current_deposit.size - 1:
 		tile.erase("current_deposit")
 	if tile.has("crater") and tile.crater.has("init_depth") and tile.depth > 3 * tile.crater.init_depth:
+		var wid:int = round(get_wid(p_i.size))
+		remove_crater_bonuses(tile, tile_id, wid)
 		tile.erase("crater")
 
+func remove_crater_bonuses(tile:Dictionary, tile_id:int, wid:int):
+	var i:int = tile_id % wid
+	var j:int = tile_id / wid
+	for k in range(max(0, i - 1), min(i + 1 + 1, wid)):
+		for l in range(max(0, j - 1), min(j + 1 + 1, wid)):
+			var id2 = k % wid + l * wid
+			var _tile = game.tile_data[id2]
+			if Vector2(k, l) == Vector2(i, j) or _tile.has("cave") or _tile.has("volcano") or _tile.has("lake") or _tile.has("wormhole"):
+				continue
+			_tile.resource_production_bonus.SP -= game.met_info[tile.crater.metal].rarity - 0.8
+			if is_equal_approx(_tile.resource_production_bonus.SP, 1.0):
+				_tile.resource_production_bonus.erase("SP")
+	
 func mass_generate_rock(tile:Dictionary, p_i:Dictionary, depth:int):
 	var aurora_mult = tile.get("aurora", 0.0) + 1.0
 	var h_mult = game.u_i.planck
@@ -1335,7 +1348,12 @@ func get_modifier_string(modifiers:Dictionary, au_str:String, icons:Array):
 	return st
 
 func get_time_div(time:float):
-	return round(time / game.u_i.time_speed * 10.0) / 10.0
+	var time_speed
+	if game.subject_levels.dimensional_power >= 4:
+		time_speed = log(game.u_i.time_speed - 1.0 + exp(1.0))
+	else:
+		time_speed = game.u_i.time_speed
+	return round(time / time_speed * 100.0) / 100.0
 
 func get_RE_info(RE_name:String):
 	if RE_name == "armor_3":

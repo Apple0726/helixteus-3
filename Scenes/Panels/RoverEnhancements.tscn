@@ -1,4 +1,4 @@
-[gd_scene load_steps=39 format=3 uid="uid://cpfr5s4frfko3"]
+[gd_scene load_steps=43 format=3 uid="uid://cpfr5s4frfko3"]
 
 [ext_resource type="Theme" uid="uid://cp2u1kgj60ic" path="res://Resources/default_theme.tres" id="1"]
 [ext_resource type="PackedScene" uid="uid://ddf2xjwcht77u" path="res://Scenes/CloseButton.tscn" id="2"]
@@ -38,6 +38,42 @@
 [ext_resource type="Texture2D" uid="uid://bh1cmrcxr8a6h" path="res://Graphics/Cave/RE/wheels_7.png" id="36"]
 [ext_resource type="Texture2D" uid="uid://hlmjekjxmfaw" path="res://Graphics/Cave/RE/wheels_6.png" id="37"]
 [ext_resource type="Texture2D" uid="uid://tji8eobiu5sl" path="res://Graphics/Cave/RE/wheels_8.png" id="38"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_mcplm"]
+draw_center = false
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.313726, 0.313726, 0.313726, 1)
+border_blend = true
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_8qmu0"]
+draw_center = false
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.313726, 0.313726, 0.313726, 1)
+border_blend = true
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_xkl76"]
+draw_center = false
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.313726, 0.313726, 0.313726, 1)
+border_blend = true
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_nu83c"]
+draw_center = false
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.313726, 0.313726, 0.313726, 1)
+border_blend = true
 
 [node name="Control" type="Panel"]
 anchors_preset = 8
@@ -91,6 +127,7 @@ offset_left = -256.0
 offset_top = -104.0
 offset_right = 256.0
 offset_bottom = 120.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_mcplm")
 
 [node name="Control" type="Control" parent="Armor"]
 custom_minimum_size = Vector2(450, 370)
@@ -272,6 +309,7 @@ offset_left = -256.0
 offset_top = -104.0
 offset_right = 256.0
 offset_bottom = 120.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_8qmu0")
 
 [node name="Control" type="Control" parent="Wheels"]
 custom_minimum_size = Vector2(450, 450)
@@ -398,6 +436,7 @@ offset_left = -256.0
 offset_top = -104.0
 offset_right = 256.0
 offset_bottom = 120.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_xkl76")
 
 [node name="Control" type="Control" parent="CC"]
 custom_minimum_size = Vector2(450, 200)
@@ -450,6 +489,7 @@ offset_left = -256.0
 offset_top = -104.0
 offset_right = 256.0
 offset_bottom = 120.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_nu83c")
 
 [node name="Control" type="Control" parent="Laser"]
 custom_minimum_size = Vector2(450, 300)

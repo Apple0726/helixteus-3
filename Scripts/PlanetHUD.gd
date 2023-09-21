@@ -43,7 +43,7 @@ func _on_Construct_pressed():
 		$ConstructPanel.refresh()
 		if mouse_pos.x > 320:
 			last_mouse_x_pos = mouse_pos.x
-			warp_mouse(Vector2(120, mouse_pos.y))
+			warp_mouse(Vector2(150, mouse_pos.y))
 
 func hide_construct():
 	$ConstructPanelAnimation.play_backwards("Fade")

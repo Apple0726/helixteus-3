@@ -14,7 +14,7 @@ var time_speed:float = 1.0
 @onready var aurora_mult:float = Helper.clever_round(pow(1 + au_int, 1.5))
 @onready var volcano_mult:float = tile.ash.richness if tile.has("ash") else 1.0
 @onready var artificial_volcano = tile.has("ash") and tile.ash.has("artificial")
-@onready var difficulty:float = game.system_data[game.c_s].diff * aurora_mult * (volcano_mult if tile.has("ash") and not tile.ash.has("artificial") else 1.0)
+@onready var difficulty:float = game.system_data[game.c_s].diff * aurora_mult * (pow(volcano_mult, 2.5) if tile.has("ash") and not tile.ash.has("artificial") else 1.0)
 
 var laser_texture = preload("res://Graphics/Cave/Projectiles/laser.png")
 var bullet_scene = preload("res://Scenes/Cave/Projectile.tscn")
@@ -2119,10 +2119,10 @@ func _on_Difficulty_mouse_entered():
 	if aurora_mult > 1:
 		tooltip += "\n%s: %s" % [tr("AURORA_MULTIPLIER"), Helper.format_num(aurora_mult)]
 	if volcano_mult > 1 and not artificial_volcano:
-		tooltip += "\n%s: %s" % [tr("PROXIMITY_TO_VOLCANO_MULT"), Helper.clever_round(volcano_mult)]
+		tooltip += "\n%s: %s" % [tr("PROXIMITY_TO_VOLCANO_MULT"), Helper.clever_round(pow(volcano_mult, 2.5))]
 	game.help_str = "cave_diff_info"
 	if game.help.has("cave_diff_info"):
-		game.show_tooltip("%s\n%s\n%s" % [tr("CAVE_DIFF_INFO"), tr("HIDE_HELP"), tooltip])
+		game.show_adv_tooltip("[color=#BBFFFF]%s[/color]\n[color=#77BBBB]%s[/color]\n%s" % [tr("CAVE_DIFF_INFO"), tr("HIDE_HELP"), tooltip])
 	else:
 		game.show_tooltip(tooltip)
 
