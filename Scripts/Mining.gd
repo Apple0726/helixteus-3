@@ -91,7 +91,7 @@ func update_info(first_time:bool = false):
 			if first_time:
 				$SurfaceBG.modulate.a = 0
 				$CrustBG.modulate.a = 0
-				if game.enable_shaders:
+				if Settings.enable_shaders:
 					$MantleBG.visible = true
 					$MantleBG.modulate.a = 0.25
 				else:
@@ -102,7 +102,7 @@ func update_info(first_time:bool = false):
 				BG_tween.set_parallel(true)
 				BG_tween.tween_property($SurfaceBG, "modulate", Color(1, 1, 1, 0), 3)
 				BG_tween.tween_property($CrustBG, "modulate", Color(1, 1, 1, 0), 3)
-				if game.enable_shaders:
+				if Settings.enable_shaders:
 					$MantleBG.visible = true
 					BG_tween.tween_property($MantleBG, "modulate", Color(1, 1, 1, 0.25), 3)
 				else:
@@ -222,7 +222,7 @@ func pickaxe_hit():
 			game.help.erase("artificial_volcano")
 		else:
 			game.popup(tr("CREATED_ARTIFICIAL_VOLCANO") % Helper.clever_round(VEI), 4.0)
-		if game.screen_shake:
+		if Settings.screen_shake:
 			game.get_node("Camera2D/Screenshake").start(1.5, 20, 3)
 		return
 	if game.pickaxe.name == "stick" and add_progress * 100 > floor(p_i.size * 500.0):

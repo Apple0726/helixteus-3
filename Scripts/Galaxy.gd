@@ -18,7 +18,7 @@ var discovered_sys:Array
 func _ready():
 	discovered_sys = []
 	var galaxy_tween
-	if game.enable_shaders:
+	if Settings.enable_shaders:
 		galaxy_tween = create_tween()
 		galaxy_tween.set_parallel(true)
 	for s_i in game.system_data:
@@ -35,7 +35,7 @@ func _ready():
 		var system = Sprite2D.new()
 		star_btn.texture_normal = star_texture[int(star.temperature) % 3]
 		star_btn.texture_click_mask = preload("res://Graphics/Misc/StarCM.png")
-		if game.enable_shaders:
+		if Settings.enable_shaders:
 			star_btn.material = ShaderMaterial.new()
 			star_btn.material.shader = preload("res://Shaders/Star.gdshader")
 			star_btn.material.set_shader_parameter("time_offset", 10.0 * randf())

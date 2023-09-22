@@ -18,7 +18,6 @@ var annotator_scene = preload("res://Scenes/Annotator.tscn")
 var rsrc_scene = preload("res://Scenes/Resource.tscn")
 var rsrc_stored_scene = preload("res://Scenes/ResourceStored.tscn")
 var cave_scene = preload("res://Scenes/Views/Cave.tscn")
-var ruins_scene = preload("res://Scenes/Views/Ruins.tscn")
 var STM_scene = preload("res://Scenes/Views/ShipTravelMinigame.tscn")
 var battle_scene = preload("res://Scenes/Views/Battle.tscn")
 var particles_scene = preload("res://Scenes/LiquidParticles.tscn")
@@ -41,7 +40,7 @@ var bldg_textures:Array
 var unique_bldg_textures:Array
 
 #var construct_panel:Control
-var megastructures_panel:Control
+#var megastructures_panel:Control
 var gigastructures_panel:Control
 var shop_panel:Control
 var ship_panel:Control
@@ -64,7 +63,7 @@ var AMN_panel:Control
 var SPR_panel:Control
 var planetkiller_panel:Control
 var inventory:Control
-var settings:Control
+var settings_panel:Control
 var dimension:Control
 var planet_details:Control
 var overlay:Control
@@ -432,14 +431,6 @@ var achievements:Dictionary = {
 #Holds informatopion of the tooltip that can be hidden by the player by pressing F7
 var help_str:String
 var bottom_info_action:String = ""
-#Settings
-var pitch_affected:bool = false
-var autosave_interval:int = 10
-var autosell:bool = true
-var enable_shaders:bool = true
-var screen_shake:bool = true
-var cave_gen_info:bool = false
-var op_cursor:bool = false
 
 @onready var music_player = $MusicPlayer
 @onready var cmd_node = $Tooltips/Command
@@ -491,7 +482,7 @@ func place_BG_sc_stars():#shown in (super)cluster view
 
 var current_viewport_dimensions:Vector2
 func update_viewport_dimensions():
-	if settings.get_node("TabContainer/GRAPHICS/DisplayRes").selected != 0:
+	if settings_panel.get_node("TabContainer/GRAPHICS/DisplayRes").selected != 0:
 		get_viewport().size = current_viewport_dimensions
 	
 func _ready():
@@ -567,19 +558,19 @@ func _ready():
 		TranslationServer.set_locale(config.get_value("interface", "language", "en"))
 		$Title/Languages.change_language()
 		DisplayServer.window_set_vsync_mode(DisplayServer.VSYNC_ENABLED if (config.get_value("graphics", "vsync", true)) else DisplayServer.VSYNC_DISABLED)
-		pitch_affected = config.get_value("audio", "pitch_affected", true)
-		enable_shaders = config.get_value("graphics", "enable_shaders", true)
-		screen_shake = config.get_value("graphics", "screen_shake", true)
+		Settings.pitch_affected = config.get_value("audio", "pitch_affected", true)
+		Settings.enable_shaders = config.get_value("graphics", "enable_shaders", true)
+		Settings.screen_shake = config.get_value("graphics", "screen_shake", true)
 		$Autosave.wait_time = config.get_value("saving", "autosave", 10)
-		autosave_interval = 10
+		Settings.autosave_interval = 10
 		if OS.get_name() == "Web" and not config.get_value("misc", "HTML5", false):
 			popup_window("You're playing the browser version of Helixteus 3. While it's convenient, it has\nmany issues not present in the executables:\n\n - High RAM usage, especially on Firefox\n - Less FPS\n - Import/export save feature does not work\n - Audio glitches\n - Saving delay (5-10 seconds)", "Browser version", [], [], "I understand", 0)
 			config.set_value("misc", "HTML5", true)
-		autosell = config.get_value("game", "autosell", true)
-		cave_gen_info = config.get_value("game", "cave_gen_info", false)
-		op_cursor = config.get_value("misc", "op_cursor", false)
+		Settings.autosell = config.get_value("game", "autosell", true)
+		Settings.cave_gen_info = config.get_value("game", "cave_gen_info", false)
+		Settings.op_cursor = config.get_value("misc", "op_cursor", false)
 		Helper.discord = config.get_value("misc", "discord", true)
-		if op_cursor:
+		if Settings.op_cursor:
 			Input.set_custom_mouse_cursor(preload("res://Cursor.png"))
 		var notation:String =  config.get_value("game", "notation", "SI")
 		if notation == "standard":
@@ -591,9 +582,9 @@ func _ready():
 		config.save("user://settings.cfg")
 	refresh_continue_button()
 	Data.reload()
-	settings = preload("res://Scenes/Panels/Settings.tscn").instantiate()
-	settings.visible = false
-	$Panels/Control.add_child(settings)
+	settings_panel = preload("res://Scenes/Panels/SettingsPanel.tscn").instantiate()
+	settings_panel.visible = false
+	$Panels/Control.add_child(settings_panel)
 	load_panel = preload("res://Scenes/Panels/LoadPanel.tscn").instantiate()
 	load_panel.visible = false
 	$Panels/Control.add_child(load_panel)
@@ -641,7 +632,7 @@ func switch_music(src, pitch:float = 1.0):
 	if not src:
 		return
 	music_player.stream = src
-	if pitch_affected and u_i != null and not u_i.is_empty():
+	if Settings.pitch_affected and u_i != null and not u_i.is_empty():
 		if c_v in ["cave", "battle"] and subject_levels.dimensional_power >= 4:
 			music_player.pitch_scale = pitch * log(u_i.time_speed - 1.0 + exp(1.0))
 		else:
@@ -1162,8 +1153,8 @@ func add_panels():
 	ship_panel = preload("res://Scenes/Panels/ShipPanel.tscn").instantiate()
 #	construct_panel = generic_panel_scene.instantiate()
 #	construct_panel.set_script(load("Scripts/ConstructPanel.gd"))
-	megastructures_panel = generic_panel_scene.instantiate()
-	megastructures_panel.set_script(load("Scripts/MegastructuresPanel.gd"))
+#	megastructures_panel = generic_panel_scene.instantiate()
+#	megastructures_panel.set_script(load("Scripts/MegastructuresPanel.gd"))
 	gigastructures_panel = preload("res://Scenes/Panels/GigastructuresPanel.tscn").instantiate()
 	craft_panel = generic_panel_scene.instantiate()
 	craft_panel.set_script(load("Scripts/CraftPanel.gd"))
@@ -1222,8 +1213,8 @@ func add_panels():
 #	construct_panel.visible = false
 #	$Panels/Control.add_child(construct_panel)
 
-	megastructures_panel.visible = false
-	$Panels/Control.add_child(megastructures_panel)
+#	megastructures_panel.visible = false
+#	$Panels/Control.add_child(megastructures_panel)
 
 	gigastructures_panel.visible = false
 	$Panels/Control.add_child(gigastructures_panel)
@@ -1438,7 +1429,7 @@ func switch_view(new_view:String, other_params:Dictionary = {}):
 	if not other_params.has("dont_fade_anim"):
 		view_tween = create_tween()
 		view_tween.tween_property(view, "modulate", Color(1.0, 1.0, 1.0, 0.0), 0.15)
-		if is_instance_valid(view.obj) and enable_shaders:
+		if is_instance_valid(view.obj) and Settings.enable_shaders:
 			if c_v == "system":
 				var tween2 = create_tween()
 				tween2.set_parallel(true)
@@ -1653,7 +1644,7 @@ func switch_view(new_view:String, other_params:Dictionary = {}):
 			small_image_text = "Viewing " + system_data[c_s].name
 		elif c_v == "galaxy":
 			state = "Observing the stars"
-			small_image_text = "Viewing " + galaxy_data[c_g][2]
+			small_image_text = "Viewing " + galaxy_data[c_g].name
 		elif c_v == "cluster":
 			state = "Watching galaxies in the distance"
 			small_image_text = "Viewing " + u_i.cluster_data[c_c].name
@@ -1663,7 +1654,7 @@ func switch_view(new_view:String, other_params:Dictionary = {}):
 		Helper.refresh_discord("", state, c_v, small_image_text)
 
 func add_science_tree():
-	$ScienceTreeBG.visible = enable_shaders
+	$ScienceTreeBG.visible = Settings.enable_shaders
 	var tween = create_tween()
 	tween.tween_property($ScienceTreeBG, "modulate", Color.WHITE, 0.5)
 	$ClusterBG.visible = false
@@ -1731,11 +1722,11 @@ func add_obj(view_str):
 			if ships_travel_data.c_g_coords.s == c_s_g:
 				system_data[c_s].explored = true
 		"galaxy":
-			view.shapes_data = galaxy_data[c_g][15].get("shapes", [])
-			view.add_obj("Galaxy", galaxy_data[c_g][8][0], galaxy_data[c_g][8][1])
+			view.shapes_data = galaxy_data[c_g].get("shapes", [])
+			view.add_obj("Galaxy", galaxy_data[c_g].view.pos, galaxy_data[c_g].view.zoom)
 			add_space_HUD()
 			if ships_travel_data.c_g_coords.g == c_g_g:
-				galaxy_data[c_g][15].explored = true
+				galaxy_data[c_g].explored = true
 		"cluster":
 			view.shapes_data = u_i.cluster_data[c_c].shapes
 			view.add_obj("Cluster", u_i.cluster_data[c_c]["view"]["pos"], u_i.cluster_data[c_c]["view"]["zoom"])
@@ -1849,7 +1840,7 @@ func add_cluster():
 		add_obj("cluster")
 	$Stars/WhiteStars.visible = true
 	$Stars/AnimationPlayer.play("StarFade")
-	if enable_shaders:
+	if Settings.enable_shaders:
 		$ClusterBG.fade_in()
 		var r:float = (u_i.cluster_data[c_c].pos + u_i.cluster_data[c_c].pos).length()
 		var th:float = atan2(u_i.cluster_data[c_c].pos.y, u_i.cluster_data[c_c].pos.x)
@@ -1949,7 +1940,7 @@ func remove_universe():
 	view.remove_obj("universe")
 
 func remove_cluster():
-	if enable_shaders:
+	if Settings.enable_shaders:
 		$ClusterBG.fade_out()
 	$Stars/AnimationPlayer.play_backwards("StarFade")
 	view.remove_obj("cluster")
@@ -2213,7 +2204,7 @@ func generate_system_part():
 				await get_tree().create_timer(0.0000000000001).timeout
 		if c_g != 0:
 			var view_zoom = 500.0 / max_outer_radius
-			galaxy_data[c_g][8] = [Vector2(640, 360), view_zoom]
+			galaxy_data[c_g].view = {"pos":Vector2(640, 360), "zoom":view_zoom}
 	else:
 		for i in range(0, N, 500):
 			systems_collision_detection(c_g, i)
@@ -2709,14 +2700,14 @@ func generate_planets(id:int):#local id
 		if c_s_g != 0:
 			if p_i.type in [11, 12]:
 				if randf() < min(sqrt(p_i.size) / 3000.0 + pow(p_i.pressure, 0.3) / 100.0, 0.03) * pow(u_i.get("age", 1.0), 0.15):
-					p_i.MS = "M_MME"
+					p_i.MS = "MME"
 			elif randf() < min(p_i.size / 500000.0 + pow(p_i.pressure, 0.7) / 400.0, 0.03) * pow(u_i.get("age", 1.0), 0.15):
-				p_i.MS = "M_SE"
+				p_i.MS = "SE"
 			if p_i.has("MS"):
 				p_i.MS_lv = randi() % (Data.MS_num_stages[p_i.MS] + 1)
-				if p_i.MS == "M_MME":
+				if p_i.MS == "MME":
 					p_i.repair_cost = Data.MS_costs[p_i.MS + "_" + str(p_i.MS_lv)].money * randf_range(1, 3) * 24 * pow(p_i.size / 13000.0, 2)
-				elif p_i.MS == "M_SE":
+				elif p_i.MS == "SE":
 					p_i.repair_cost = Data.MS_costs[p_i.MS + "_" + str(p_i.MS_lv)].money * 24 * randf_range(1, 3) * p_i.size / 12000.0
 				p_i.repair_cost *= engineering_bonus.BCM
 				system_data[id].has_MS = true
@@ -2727,24 +2718,24 @@ func generate_planets(id:int):#local id
 			var star_size = star.size
 			var star_temp = star.temperature
 			var star_lum = star.luminosity
-			var MSes = ["M_DS", "M_MB", "M_PK", "M_CBS"]
+			var MSes = ["DS", "MB", "PK", "CBS"]
 			if c_g_g == 0:
-				MSes.erase("M_MB")
+				MSes.erase("MB")
 			var MS = MSes[randi() % len(MSes)]
-			if MS in ["M_DS", "M_MB"] and randf() < min(sqrt(star_temp) / pow(star_size, 1.5) / 100.0, 0.03):
+			if MS in ["DS", "MB"] and randf() < min(sqrt(star_temp) / pow(star_size, 1.5) / 100.0, 0.03):
 				star.MS = MS
 			elif randf() < min(pow(star_lum, 0.1) / 25.0, 0.03):
 				star.MS = MS
 			if star.has("MS"):
 				star.MS_lv = randi() % (Data.MS_num_stages[star.MS] + 1)
 				star.bldg = {}
-				if star.MS == "M_MB":
+				if star.MS == "MB":
 					star.repair_cost = Data.MS_costs[star.MS].money * 72 * randf_range(1, 3) * pow(star.size, 2)
-				elif star.MS == "M_DS":
+				elif star.MS == "DS":
 					star.repair_cost = Data.MS_costs[star.MS + "_" + str(star.MS_lv)].money * 24 * randf_range(1, 3) * pow(star.size, 2)
-				elif star.MS == "M_CBS":
+				elif star.MS == "CBS":
 					star.repair_cost = Data.MS_costs[star.MS + "_" + str(star.MS_lv)].money * 24 * randf_range(1, 3)
-				elif star.MS == "M_PK":
+				elif star.MS == "PK":
 					star.repair_cost = Data.MS_costs[star.MS + "_" + str(star.MS_lv)].money * 24 * randf_range(1, 3) * planet_data[-1].distance / 1000.0
 				star.repair_cost *= engineering_bonus.BCM
 				system_data[id].has_MS = true
@@ -3652,7 +3643,7 @@ var cmd_history_index:int = -1
 var sub_panel
 
 func set_tooltip_position():
-	if op_cursor:
+	if Settings.op_cursor:
 		tooltip.position.x = max(mouse_pos.x - tooltip.size.x - 5, 0)
 		tooltip.position.y = max(mouse_pos.y - tooltip.size.y - 5, 0)
 	else:
@@ -3709,7 +3700,7 @@ func _input(event):
 	#Press F11 to toggle fullscreen
 	if Input.is_action_just_released("fullscreen"):
 		get_window().mode = Window.MODE_EXCLUSIVE_FULLSCREEN if (not ((get_window().mode == Window.MODE_EXCLUSIVE_FULLSCREEN) or (get_window().mode == Window.MODE_FULLSCREEN))) else Window.MODE_WINDOWED
-		settings.get_node("TabContainer/GRAPHICS/Fullscreen").button_pressed = ((get_window().mode == Window.MODE_EXCLUSIVE_FULLSCREEN) or (get_window().mode == Window.MODE_FULLSCREEN))
+		settings_panel.get_node("TabContainer/GRAPHICS/Fullscreen").button_pressed = ((get_window().mode == Window.MODE_EXCLUSIVE_FULLSCREEN) or (get_window().mode == Window.MODE_FULLSCREEN))
 
 	if Input.is_action_just_released("right_click"):
 		if bottom_info_action != "":
@@ -3962,7 +3953,7 @@ func _on_Settings_mouse_exited():
 
 func _on_Settings_pressed():
 	$click.play()
-	toggle_panel(settings)
+	toggle_panel(settings_panel)
 
 func _on_BottomInfo_close_button_pressed(direct:bool = false):
 	close_button_over = false
@@ -4030,8 +4021,8 @@ func fade_out_title(fn:String):
 		$Autosave.start()
 	
 func _on_NewGame_pressed():
-	if op_cursor and Input.is_action_pressed("ctrl"):
-		settings._on_OPCursor_toggled(false)
+	if Settings.op_cursor and Input.is_action_pressed("ctrl"):
+		settings_panel._on_OPCursor_toggled(false)
 		var popup_input = preload("res://Scenes/PopupInput.tscn").instantiate()
 		popup_input.label_text = "Enter the number of DRs to start the game with:"
 		popup_input.check_input = func(x): return int(x) >= 0

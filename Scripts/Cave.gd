@@ -468,7 +468,7 @@ func generate_cave(first_floor:bool, going_up:bool):
 	hole.modulate = star_mod * (1.0 - cave_darkness)
 	hole.modulate.a = 1.0
 	$WorldEnvironment.environment.adjustment_saturation = (1.0 - cave_darkness)
-	if game.enable_shaders:
+	if Settings.enable_shaders:
 		$TileMap.material.set_shader_parameter("star_mod", lerp(star_mod, Color.WHITE, clamp(cave_floor * 0.125, 0, 1)))
 		$TileMap.material.set_shader_parameter("strength", max(1.0, brightness_mult - 0.1 * (cave_floor - 1)))
 	rover_light.energy = cave_darkness * 0.3
@@ -1156,8 +1156,8 @@ func update_ray():
 			mining_debris = -1
 			_tile_highlight.visible = false
 		if holding_click:
-			mining_laser.get_node("PointLight2D").enabled = game.enable_shaders
-			mining_laser.get_node("PointLight2D2").enabled = game.enable_shaders
+			mining_laser.get_node("PointLight2D").enabled = Settings.enable_shaders
+			mining_laser.get_node("PointLight2D2").enabled = Settings.enable_shaders
 			mining_laser.scale.x = laser_reach / 16.0
 			mining_laser.scale.y = 16.0
 			mining_laser.rotation = atan2(mouse_pos.y - rover.position.y, mouse_pos.x - rover.position.x)
@@ -1215,7 +1215,7 @@ func _input(event):
 					ability_timer.start(15.0 / time_speed)
 				elif ability == "laser_2":
 					RoDray.enabled = true
-					if game.screen_shake:
+					if Settings.screen_shake:
 						$Camera2D/Screenshake.start(10.0 / time_speed, 15, 4)
 					$Rover/RayOfDoom/Sprite2D.material.set_shader_parameter("outline_color", get_color(laser_name))
 					$Rover/RayOfDoom/AnimationPlayer.play("RayFade", -1, time_speed)
@@ -1594,7 +1594,7 @@ func add_proj(enemy:bool, pos:Vector2, spd:float, rot:float, texture, damage:flo
 		proj.get_node("Sprite2D").material.shader = preload("res://Shaders/RoverAttackLaser.gdshader")
 		var laser_color = other_data.get("mod", Color.WHITE)
 		proj.get_node("Sprite2D").material.set_shader_parameter("laser_color", laser_color)
-		if game.enable_shaders:
+		if Settings.enable_shaders:
 			proj.get_node("PointLight2D").enabled = true
 			proj.get_node("PointLight2D").color = laser_color
 			proj.get_node("PointLight2D").energy = (0.6 + cave_darkness * 1) / pow(light_strength_mult, 2)
@@ -1699,7 +1699,7 @@ func mine_debris(item:Dictionary, delta):
 func mine_debris_complete(tile_id:int):
 	var debris = big_debris[tile_id]
 	if debris.scale.x > 1.5:
-		if game.screen_shake:
+		if Settings.screen_shake:
 			$Camera2D/Screenshake.start(remap(debris.scale.x, 1.5, 7.5, 1.0, 7.0),10, remap(debris.scale.x, 1.5, 7.5, 5, 65))
 		if not game.achievement_data.random.has("destroy_BBB") and debris.scale.x > 6.0:
 			game.earn_achievement("random", "destroy_BBB")

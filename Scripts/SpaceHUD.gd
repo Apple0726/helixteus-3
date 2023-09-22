@@ -5,6 +5,11 @@ extends Control
 func _ready():
 	$AnimationPlayer.play("MoveButtons")
 
+func _input(event):
+	if event is InputEventMouseButton:
+		if $ConstructPanel.visible and event.position.x > 320:
+			$ConstructPanel.hide()
+
 func _on_Overlay_mouse_entered():
 	game.show_tooltip(tr("OVERLAY") + " (O)\n" + tr("OVERLAY_DESC"))
 
@@ -15,7 +20,15 @@ func _on_Overlay_pressed():
 	game.overlay.visible = not game.overlay.visible
 
 func _on_Megastructures_pressed():
-	game.toggle_panel(game.megastructures_panel)
+	if $ConstructPanel.visible:
+		$ConstructPanel.hide()
+	else:
+		game.hide_tooltip()
+		$ConstructPanel.tab = "megastructures"
+		$ConstructPanel/AnimationPlayer.play("Fade")
+		$ConstructPanel.visible = true
+		game.block_scroll = true
+		$ConstructPanel.refresh()
 
 func _on_Megastructures_mouse_entered():
 	game.show_tooltip(tr("MEGASTRUCTURES") + " (C)")

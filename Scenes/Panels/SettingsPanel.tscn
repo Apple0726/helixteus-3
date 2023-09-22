@@ -1,7 +1,7 @@
 [gd_scene load_steps=4 format=3 uid="uid://blgeu8fsfvpi6"]
 
-[ext_resource type="Script" path="res://Scripts/Settings.gd" id="1"]
-[ext_resource type="PackedScene" uid="uid://c8jr3e5aiyj1n" path="res://Scenes/HelpText.tscn" id="2"]
+[ext_resource type="Script" path="res://Scripts/SettingsPanel.gd" id="1_trlpe"]
+[ext_resource type="PackedScene" uid="uid://c8jr3e5aiyj1n" path="res://Scenes/HelpText.tscn" id="2_611qd"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_0r7ov"]
 font_size = 18
@@ -16,7 +16,7 @@ offset_left = -448.0
 offset_top = -288.0
 offset_right = 448.0
 offset_bottom = 288.0
-script = ExtResource("1")
+script = ExtResource("1_trlpe")
 
 [node name="Title" type="Label" parent="."]
 layout_mode = 0
@@ -89,7 +89,7 @@ offset_top = 27.0
 offset_right = 818.0
 offset_bottom = 67.0
 
-[node name="MusicPitchLabel" parent="TabContainer/SFX" instance=ExtResource("2")]
+[node name="MusicPitchLabel" parent="TabContainer/SFX" instance=ExtResource("2_611qd")]
 layout_mode = 0
 offset_left = 485.0
 offset_top = 35.0
@@ -183,7 +183,7 @@ offset_top = 167.0
 offset_right = 772.0
 offset_bottom = 207.0
 
-[node name="EnableShadersLabel" parent="TabContainer/GRAPHICS" instance=ExtResource("2")]
+[node name="EnableShadersLabel" parent="TabContainer/GRAPHICS" instance=ExtResource("2_611qd")]
 layout_mode = 0
 offset_left = 453.0
 offset_top = 175.0
@@ -246,7 +246,7 @@ offset_top = 93.0
 offset_right = 400.0
 offset_bottom = 133.0
 
-[node name="AutosellMineralsLabel" parent="TabContainer/GAME" instance=ExtResource("2")]
+[node name="AutosellMineralsLabel" parent="TabContainer/GAME" instance=ExtResource("2_611qd")]
 layout_mode = 0
 offset_left = 64.0
 offset_top = 101.0
@@ -266,12 +266,19 @@ text = "ENABLE_AUTOSAVE"
 
 [node name="CaveGenInfo" type="CheckButton" parent="TabContainer/GAME"]
 layout_mode = 0
-offset_left = 136.0
+offset_left = 56.0
 offset_top = 157.0
 offset_right = 400.0
 offset_bottom = 197.0
 
-[node name="RichTextLabel2" parent="TabContainer/GAME" instance=ExtResource("2")]
+[node name="AutoSwitch" type="CheckButton" parent="TabContainer/GAME"]
+layout_mode = 0
+offset_left = 56.0
+offset_top = 217.0
+offset_right = 400.0
+offset_bottom = 257.0
+
+[node name="RichTextLabel2" parent="TabContainer/GAME" instance=ExtResource("2_611qd")]
 layout_mode = 0
 offset_left = 64.0
 offset_top = 165.0
@@ -280,6 +287,16 @@ offset_bottom = 195.0
 text = "SHOW_CAVE_GEN_INFO [img]Graphics/Icons/help.png[/img]"
 label_text = "SHOW_CAVE_GEN_INFO"
 help_text = "SHOW_CAVE_GEN_INFO_DESC"
+
+[node name="RichTextLabel3" parent="TabContainer/GAME" instance=ExtResource("2_611qd")]
+layout_mode = 0
+offset_left = 64.0
+offset_top = 225.0
+offset_right = 320.0
+offset_bottom = 255.0
+text = "AUTO_SWITCH_SELL_BUY [img]Graphics/Icons/help.png[/img]"
+label_text = "AUTO_SWITCH_SELL_BUY"
+help_text = "AUTO_SWITCH_SELL_BUY_DESC"
 
 [node name="Difficulty" type="Label" parent="TabContainer/GAME"]
 layout_mode = 0
@@ -415,6 +432,7 @@ horizontal_alignment = 1
 [connection signal="toggled" from="TabContainer/GAME/AutosellMinerals" to="." method="_on_AutosellMinerals_toggled"]
 [connection signal="toggled" from="TabContainer/GAME/EnableAutosave" to="." method="_on_EnableAutosave_toggled"]
 [connection signal="toggled" from="TabContainer/GAME/CaveGenInfo" to="." method="_on_CaveGenInfo_toggled"]
+[connection signal="toggled" from="TabContainer/GAME/AutoSwitch" to="." method="_on_auto_switch_toggled"]
 [connection signal="mouse_entered" from="TabContainer/GAME/HBoxContainer/Easy" to="." method="_on_Easy_mouse_entered"]
 [connection signal="mouse_exited" from="TabContainer/GAME/HBoxContainer/Easy" to="." method="_on_mouse_exited"]
 [connection signal="pressed" from="TabContainer/GAME/HBoxContainer/Easy" to="." method="_on_Easy_pressed"]

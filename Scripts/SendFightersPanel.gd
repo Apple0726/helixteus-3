@@ -176,7 +176,7 @@ func diff_sort(a:Dictionary, b:Dictionary):
 	return false
 
 func has_SE(p_i:Dictionary):
-	return p_i.has("MS") and p_i.MS == "M_SE" and not p_i.bldg.has("is_constructing")
+	return p_i.has("MS") and p_i.MS == "SE" and not p_i.bldg.has("is_constructing")
 
 func get_atm_exit_cost(p_i:Dictionary):
 	var res:float = pow(p_i.pressure * 10, 1.5) * 300000

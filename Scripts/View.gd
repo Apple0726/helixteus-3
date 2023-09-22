@@ -155,7 +155,7 @@ func _process(delta):
 
 func fade_out_clusters():
 	$AnimationPlayer.play("Fade")
-	if game.enable_shaders:
+	if Settings.enable_shaders:
 		var tween = create_tween()
 		tween.set_parallel(true)
 		for cluster in obj.btns:
@@ -164,7 +164,7 @@ func fade_out_clusters():
 
 func fade_in_clusters():
 	$AnimationPlayer.play_backwards("Fade")
-	if game.enable_shaders:
+	if Settings.enable_shaders:
 		var tween = create_tween()
 		tween.set_parallel(true)
 		for cluster in obj.btns:

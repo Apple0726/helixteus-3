@@ -1,13 +1,13 @@
-[gd_scene load_steps=11 format=3 uid="uid://b3nhmyabvl606"]
+[gd_scene load_steps=14 format=3 uid="uid://b3nhmyabvl606"]
 
 [ext_resource type="Theme" uid="uid://cp2u1kgj60ic" path="res://Resources/default_theme.tres" id="1_q53tt"]
 [ext_resource type="Texture2D" uid="uid://ddfdowwjku0dd" path="res://Graphics/Buildings/mineral_extractor.png" id="2_ktgp8"]
 [ext_resource type="Script" path="res://Scripts/ConstructPanel.gd" id="2_v0xsx"]
-[ext_resource type="Texture2D" uid="uid://coh6u6gsdcspp" path="res://Graphics/Icons/minerals.png" id="3_qlc6f"]
+[ext_resource type="Texture2D" uid="uid://bf6b40qawy1mj" path="res://Graphics/Icons/minerals.png" id="3_qlc6f"]
 [ext_resource type="Texture2D" uid="uid://du31t3pgslqt1" path="res://Graphics/Buildings/mineral_silo.png" id="4_pprlh"]
-[ext_resource type="Texture2D" uid="uid://t20blxqytxk6" path="res://Graphics/Materials/glass.png" id="5_vrfgh"]
+[ext_resource type="Texture2D" uid="uid://ckdtklvotu7ic" path="res://Graphics/Materials/glass.png" id="5_vrfgh"]
 [ext_resource type="Texture2D" uid="uid://b3c4afph0xse0" path="res://Graphics/Buildings/central_business_district.png" id="6_uh0od"]
-[ext_resource type="Texture2D" uid="uid://rxo80y4e6v57" path="res://Graphics/Cave/Rover.png" id="7_nh4w1"]
+[ext_resource type="Texture2D" uid="uid://bq2aciup0fjgb" path="res://Graphics/Cave/Rover.png" id="7_nh4w1"]
 [ext_resource type="Texture2D" uid="uid://d2jiwygt3vuig" path="res://Graphics/Buildings/Unique/mineral_replicator.png" id="8_2xax1"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_seglp"]
@@ -16,19 +16,119 @@ content_margin_top = 20.0
 content_margin_right = 20.0
 content_margin_bottom = 20.0
 
-[node name="Panel" type="Panel"]
-anchors_preset = 4
-anchor_top = 0.5
-anchor_bottom = 0.5
-offset_top = -360.0
-offset_right = 140.0
-offset_bottom = 120.0
+[sub_resource type="Animation" id="Animation_tg7hu"]
+resource_name = "Fade"
+length = 0.3
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("BlackRect:color")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.3),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(0, 0, 0, 0), Color(0, 0, 0, 0.192157)]
+}
+tracks/1/type = "bezier"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Panel:position:x")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"handle_modes": PackedInt32Array(0, 0),
+"points": PackedFloat32Array(-60, -0.25, 0, 0.1, 53.3855, -2, -0.25, 0, 0.25, 0),
+"times": PackedFloat32Array(0, 0.3)
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Panel:modulate")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0, 0.3),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 1)]
+}
+
+[sub_resource type="Animation" id="Animation_h6jf6"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("BlackRect:color")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(0, 0, 0, 0)]
+}
+tracks/1/type = "bezier"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Panel:position:x")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"handle_modes": PackedInt32Array(0),
+"points": PackedFloat32Array(0, -0.25, 0, 0.25, 0),
+"times": PackedFloat32Array(0)
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Panel:modulate")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1, 1, 1, 0)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_bp5hg"]
+_data = {
+"Fade": SubResource("Animation_tg7hu"),
+"RESET": SubResource("Animation_h6jf6")
+}
+
+[node name="Control" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
 grow_vertical = 2
-mouse_filter = 1
-theme = ExtResource("1_q53tt")
+mouse_filter = 2
 script = ExtResource("2_v0xsx")
 
-[node name="VBoxContainer" type="VBoxContainer" parent="."]
+[node name="BlackRect" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0, 0, 0, 0)
+
+[node name="Panel" type="Panel" parent="."]
+modulate = Color(1, 1, 1, 0)
+layout_mode = 1
+offset_top = 120.0
+offset_right = 140.0
+offset_bottom = 600.0
+mouse_filter = 1
+theme = ExtResource("1_q53tt")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Panel"]
 show_behind_parent = true
 layout_mode = 0
 offset_left = 140.0
@@ -36,7 +136,7 @@ offset_right = 189.0
 offset_bottom = 204.0
 theme_override_constants/separation = 0
 
-[node name="Basic" type="Button" parent="VBoxContainer"]
+[node name="Basic" type="Button" parent="Panel/VBoxContainer"]
 show_behind_parent = true
 custom_minimum_size = Vector2(0, 48)
 layout_mode = 2
@@ -44,7 +144,7 @@ icon = ExtResource("3_qlc6f")
 icon_alignment = 2
 expand_icon = true
 
-[node name="Label" type="Label" parent="VBoxContainer/Basic"]
+[node name="Label" type="Label" parent="Panel/VBoxContainer/Basic"]
 layout_mode = 0
 offset_left = 60.0
 offset_right = 156.0
@@ -53,7 +153,7 @@ theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
 text = "BASIC"
 vertical_alignment = 1
 
-[node name="Storage" type="Button" parent="VBoxContainer"]
+[node name="Storage" type="Button" parent="Panel/VBoxContainer"]
 show_behind_parent = true
 custom_minimum_size = Vector2(0, 48)
 layout_mode = 2
@@ -62,7 +162,7 @@ alignment = 0
 icon_alignment = 2
 expand_icon = true
 
-[node name="Label" type="Label" parent="VBoxContainer/Storage"]
+[node name="Label" type="Label" parent="Panel/VBoxContainer/Storage"]
 modulate = Color(1, 1, 1, 0)
 layout_mode = 0
 offset_left = 60.0
@@ -72,7 +172,7 @@ theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
 text = "STORAGE"
 vertical_alignment = 1
 
-[node name="Production" type="Button" parent="VBoxContainer"]
+[node name="Production" type="Button" parent="Panel/VBoxContainer"]
 show_behind_parent = true
 custom_minimum_size = Vector2(0, 48)
 layout_mode = 2
@@ -81,7 +181,7 @@ alignment = 0
 icon_alignment = 2
 expand_icon = true
 
-[node name="Label" type="Label" parent="VBoxContainer/Production"]
+[node name="Label" type="Label" parent="Panel/VBoxContainer/Production"]
 modulate = Color(1, 1, 1, 0)
 layout_mode = 0
 offset_left = 60.0
@@ -91,7 +191,7 @@ theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
 text = "PRODUCTION"
 vertical_alignment = 1
 
-[node name="Support" type="Button" parent="VBoxContainer"]
+[node name="Support" type="Button" parent="Panel/VBoxContainer"]
 show_behind_parent = true
 custom_minimum_size = Vector2(0, 48)
 layout_mode = 2
@@ -100,7 +200,7 @@ alignment = 0
 icon_alignment = 2
 expand_icon = true
 
-[node name="Label" type="Label" parent="VBoxContainer/Support"]
+[node name="Label" type="Label" parent="Panel/VBoxContainer/Support"]
 modulate = Color(1, 1, 1, 0)
 layout_mode = 0
 offset_left = 60.0
@@ -110,7 +210,7 @@ theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
 text = "SUPPORT"
 vertical_alignment = 1
 
-[node name="Vehicles" type="Button" parent="VBoxContainer"]
+[node name="Vehicles" type="Button" parent="Panel/VBoxContainer"]
 show_behind_parent = true
 custom_minimum_size = Vector2(0, 48)
 layout_mode = 2
@@ -119,7 +219,7 @@ alignment = 0
 icon_alignment = 2
 expand_icon = true
 
-[node name="Label" type="Label" parent="VBoxContainer/Vehicles"]
+[node name="Label" type="Label" parent="Panel/VBoxContainer/Vehicles"]
 modulate = Color(1, 1, 1, 0)
 layout_mode = 0
 offset_left = 60.0
@@ -129,7 +229,7 @@ theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
 text = "VEHICLES"
 vertical_alignment = 1
 
-[node name="Unique" type="Button" parent="VBoxContainer"]
+[node name="Unique" type="Button" parent="Panel/VBoxContainer"]
 show_behind_parent = true
 custom_minimum_size = Vector2(0, 48)
 layout_mode = 2
@@ -138,7 +238,7 @@ alignment = 0
 icon_alignment = 2
 expand_icon = true
 
-[node name="Label" type="Label" parent="VBoxContainer/Unique"]
+[node name="Label" type="Label" parent="Panel/VBoxContainer/Unique"]
 modulate = Color(1, 1, 1, 0)
 layout_mode = 0
 offset_left = 60.0
@@ -148,29 +248,30 @@ theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
 text = "UNIQUE"
 vertical_alignment = 1
 
-[node name="ScrollContainer" type="ScrollContainer" parent="."]
+[node name="ScrollContainer" type="ScrollContainer" parent="Panel"]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+mouse_filter = 0
 theme_override_styles/panel = SubResource("StyleBoxEmpty_seglp")
 horizontal_scroll_mode = 3
 
-[node name="VBoxContainer" type="VBoxContainer" parent="ScrollContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="Panel/ScrollContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="HBoxContainer" type="HBoxContainer" parent="ScrollContainer/VBoxContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="Panel/ScrollContainer/VBoxContainer"]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="ScrollContainer/VBoxContainer/HBoxContainer"]
+[node name="Label" type="Label" parent="Panel/ScrollContainer/VBoxContainer/HBoxContainer"]
 layout_mode = 2
 text = "TIER"
 
-[node name="Tier" type="SpinBox" parent="ScrollContainer/VBoxContainer/HBoxContainer"]
+[node name="Tier" type="SpinBox" parent="Panel/ScrollContainer/VBoxContainer/HBoxContainer"]
 layout_mode = 2
 min_value = 1.0
 value = 1.0
@@ -178,14 +279,19 @@ allow_greater = true
 alignment = 1
 update_on_text_changed = true
 
-[node name="Button" type="Button" parent="ScrollContainer/VBoxContainer"]
+[node name="BuildAll" type="CheckBox" parent="Panel/ScrollContainer/VBoxContainer"]
+layout_mode = 2
+text = "BUILD_ALL_AT_ONCE"
+text_overrun_behavior = 1
+
+[node name="Button" type="Button" parent="Panel/ScrollContainer/VBoxContainer"]
 custom_minimum_size = Vector2(0, 100)
 layout_mode = 2
 icon = ExtResource("2_ktgp8")
 icon_alignment = 1
 expand_icon = true
 
-[node name="Label" type="Label" parent="."]
+[node name="Label" type="Label" parent="Panel"]
 layout_mode = 0
 offset_top = -28.0
 offset_right = 140.0
@@ -193,22 +299,29 @@ offset_bottom = -3.0
 text = "CONSTRUCT"
 horizontal_alignment = 1
 
-[connection signal="mouse_entered" from="VBoxContainer/Basic" to="." method="_on_basic_mouse_entered"]
-[connection signal="mouse_exited" from="VBoxContainer/Basic" to="." method="_on_basic_mouse_exited"]
-[connection signal="pressed" from="VBoxContainer/Basic" to="." method="_on_tab_pressed" binds= ["Basic"]]
-[connection signal="mouse_entered" from="VBoxContainer/Storage" to="." method="_on_storage_mouse_entered"]
-[connection signal="mouse_exited" from="VBoxContainer/Storage" to="." method="_on_storage_mouse_exited"]
-[connection signal="pressed" from="VBoxContainer/Storage" to="." method="_on_tab_pressed" binds= ["Storage"]]
-[connection signal="mouse_entered" from="VBoxContainer/Production" to="." method="_on_production_mouse_entered"]
-[connection signal="mouse_exited" from="VBoxContainer/Production" to="." method="_on_production_mouse_exited"]
-[connection signal="pressed" from="VBoxContainer/Production" to="." method="_on_tab_pressed" binds= ["Production"]]
-[connection signal="mouse_entered" from="VBoxContainer/Support" to="." method="_on_support_mouse_entered"]
-[connection signal="mouse_exited" from="VBoxContainer/Support" to="." method="_on_support_mouse_exited"]
-[connection signal="pressed" from="VBoxContainer/Support" to="." method="_on_tab_pressed" binds= ["Support"]]
-[connection signal="mouse_entered" from="VBoxContainer/Vehicles" to="." method="_on_vehicles_mouse_entered"]
-[connection signal="mouse_exited" from="VBoxContainer/Vehicles" to="." method="_on_vehicles_mouse_exited"]
-[connection signal="pressed" from="VBoxContainer/Vehicles" to="." method="_on_tab_pressed" binds= ["Vehicles"]]
-[connection signal="mouse_entered" from="VBoxContainer/Unique" to="." method="_on_unique_mouse_entered"]
-[connection signal="mouse_exited" from="VBoxContainer/Unique" to="." method="_on_unique_mouse_exited"]
-[connection signal="pressed" from="VBoxContainer/Unique" to="." method="_on_tab_pressed" binds= ["Unique"]]
-[connection signal="value_changed" from="ScrollContainer/VBoxContainer/HBoxContainer/Tier" to="." method="_on_tier_value_changed"]
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+libraries = {
+"": SubResource("AnimationLibrary_bp5hg")
+}
+
+[connection signal="mouse_entered" from="Panel/VBoxContainer/Basic" to="." method="_on_basic_mouse_entered"]
+[connection signal="mouse_exited" from="Panel/VBoxContainer/Basic" to="." method="_on_basic_mouse_exited"]
+[connection signal="pressed" from="Panel/VBoxContainer/Basic" to="." method="_on_tab_pressed" binds= ["Basic"]]
+[connection signal="mouse_entered" from="Panel/VBoxContainer/Storage" to="." method="_on_storage_mouse_entered"]
+[connection signal="mouse_exited" from="Panel/VBoxContainer/Storage" to="." method="_on_storage_mouse_exited"]
+[connection signal="pressed" from="Panel/VBoxContainer/Storage" to="." method="_on_tab_pressed" binds= ["Storage"]]
+[connection signal="mouse_entered" from="Panel/VBoxContainer/Production" to="." method="_on_production_mouse_entered"]
+[connection signal="mouse_exited" from="Panel/VBoxContainer/Production" to="." method="_on_production_mouse_exited"]
+[connection signal="pressed" from="Panel/VBoxContainer/Production" to="." method="_on_tab_pressed" binds= ["Production"]]
+[connection signal="mouse_entered" from="Panel/VBoxContainer/Support" to="." method="_on_support_mouse_entered"]
+[connection signal="mouse_exited" from="Panel/VBoxContainer/Support" to="." method="_on_support_mouse_exited"]
+[connection signal="pressed" from="Panel/VBoxContainer/Support" to="." method="_on_tab_pressed" binds= ["Support"]]
+[connection signal="mouse_entered" from="Panel/VBoxContainer/Vehicles" to="." method="_on_vehicles_mouse_entered"]
+[connection signal="mouse_exited" from="Panel/VBoxContainer/Vehicles" to="." method="_on_vehicles_mouse_exited"]
+[connection signal="pressed" from="Panel/VBoxContainer/Vehicles" to="." method="_on_tab_pressed" binds= ["Vehicles"]]
+[connection signal="mouse_entered" from="Panel/VBoxContainer/Unique" to="." method="_on_unique_mouse_entered"]
+[connection signal="mouse_exited" from="Panel/VBoxContainer/Unique" to="." method="_on_unique_mouse_exited"]
+[connection signal="pressed" from="Panel/VBoxContainer/Unique" to="." method="_on_tab_pressed" binds= ["Unique"]]
+[connection signal="value_changed" from="Panel/ScrollContainer/VBoxContainer/HBoxContainer/Tier" to="Panel" method="_on_tier_value_changed"]
+[connection signal="toggled" from="Panel/ScrollContainer/VBoxContainer/BuildAll" to="Panel" method="_on_build_all_toggled"]
+[connection signal="animation_finished" from="AnimationPlayer" to="." method="_on_construct_panel_animation_animation_finished"]

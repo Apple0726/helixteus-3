@@ -11,7 +11,7 @@ var btns = []
 func _ready():
 	btns.resize(len(game.u_i.cluster_data))
 	var cluster_tween
-	if game.enable_shaders:
+	if Settings.enable_shaders:
 		cluster_tween = create_tween()
 		cluster_tween.set_parallel(true)
 	for i in len(game.u_i.cluster_data):
@@ -24,7 +24,7 @@ func _ready():
 		var th:float = atan2(c_i.pos.y, c_i.pos.x)
 		var hue:float = fmod(r + 300, 1000.0) / 1000.0
 		var sat:float = pow(fmod(th + PI, 10.0) / 10.0, 0.2)
-		if game.enable_shaders:
+		if Settings.enable_shaders:
 			cluster_btn.material = ShaderMaterial.new()
 			cluster_btn.material.shader = preload("res://Shaders/Cluster.gdshader")
 			cluster_btn.material.set_shader_parameter("seed", int(c_i.diff))

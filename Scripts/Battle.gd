@@ -87,7 +87,7 @@ func _ready():
 	var total_ship_stats:float = 0.0
 	var bright_star:bool = false
 	if game:
-		$WorldEnvironment.environment.glow_enabled = game.enable_shaders
+		$WorldEnvironment.environment.glow_enabled = Settings.enable_shaders
 		ship_data = game.ship_data
 		var p_i:Dictionary = game.planet_data[game.c_p]
 		if game.is_conquering_all:
@@ -530,7 +530,7 @@ func weapon_hit_HX(sh:int, w_c_d:Dictionary, weapon = null):
 				HXs[t].get_node("Info/Effects/FireLabel").visible = true
 				HXs[t].get_node("Info/Effects/FireLabel").text = str(weapon_lv)
 				#duration = 0.2, frequency = 15, amplitude = 16, priority = 0
-				if game.screen_shake:
+				if Settings.screen_shake:
 					$Camera2D/Screenshake.start(0.5,15,4)
 				HXs[t].get_node("KnockbackAnimation").stop()
 				HXs[t].get_node("KnockbackAnimation").play("Big knockback" if HX_data[t].HP > 0 else "Dead", -1, time_speed)

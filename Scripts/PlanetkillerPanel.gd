@@ -121,14 +121,14 @@ func _on_StartCharging_pressed():
 			return
 		var p_i:Dictionary = game.planet_data[star.p_id]
 		if not p_i.is_empty():
-			if game.screen_shake:
+			if Settings.screen_shake:
 				game.get_node("Camera2D/Screenshake").start(2.0, 10, 5)
 			game.popup(tr("PLANET_REKT") % target.name, 2.5)
 			if p_i.has("bookmarked"):
 				game.bookmarks.planet.erase(str(target.id))
 				game.HUD.planet_grid_btns.remove_child(game.HUD.planet_grid_btns.get_node(str(target.id)))
 				p_i.erase("bookmarked")
-			if p_i.has("MS") and p_i.MS == "M_MME":
+			if p_i.has("MS") and p_i.MS == "MME":
 				game.autocollect.MS.minerals -= Helper.get_MME_output(p_i)
 			if p_i.has("tile_num"):
 				if p_i.bldg.name == "RL":

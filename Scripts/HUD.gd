@@ -102,7 +102,7 @@ func on_bookmark_pressed(view:String, bookmark:Dictionary):
 	game.switch_view(view, {"fn":"set_bookmark_coords", "fn_args":[bookmark]})
 
 func _process(delta):
-	$Top/AutosaveLight.modulate.g = lerp(0.3, 1.0, game.get_node("Autosave").time_left / game.autosave_interval)
+	$Top/AutosaveLight.modulate.g = lerp(0.3, 1.0, game.get_node("Autosave").time_left / Settings.autosave_interval)
 
 func update_XP():
 	while game.u_i.xp >= game.u_i.xp_to_lv:
@@ -374,7 +374,7 @@ func _on_Texture_mouse_entered(extra_arg_0):
 		elif extra_arg_0 == "SP":
 			rsrc_amount = (game.autocollect.rsrc.SP + game.autocollect.GS.SP + game.autocollect.MS.SP) * SP_mult
 			tooltip += "\n" + tr("YOU_PRODUCE") % ("%s/%s" % [Helper.format_num(rsrc_amount, true), tr("S_SECOND")])
-	if extra_arg_0 == "STONE" and tooltip == "Stone" and game.op_cursor:
+	if extra_arg_0 == "STONE" and tooltip == "Stone" and Settings.op_cursor:
 		tooltip = "Rok"
 	game.show_tooltip(tooltip)
 
@@ -763,7 +763,7 @@ func set_ship_btn_shader(active:bool, tier:int = -1):
 
 func _on_level_mouse_entered():
 	game.show_tooltip((tr("LEVEL") + " %s\nXP: %s / %s\n%s") % [game.u_i.lv, Helper.format_num(round(game.u_i.xp), 4), Helper.format_num(game.u_i.xp_to_lv, 4), tr("XP_HELP")])
-	if game.u_i.lv == 69 and game.op_cursor:
+	if game.u_i.lv == 69 and Settings.op_cursor:
 		$Nice.visible = true
 
 func _on_level_mouse_exited():

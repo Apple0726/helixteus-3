@@ -313,7 +313,7 @@ func show_tooltip(tile, tile_id:int):
 				tooltip += "\n[color=#88CCFF]%s[/color]" % [tr("CLICK_CAVE_TO_EXPLORE")]
 		if tile.cave.has("modifiers"):
 			tooltip += Helper.get_modifier_string(tile.cave.modifiers, au_str, icons)
-		if game.cave_gen_info:
+		if Settings.cave_gen_info:
 			tooltip += "\n%s: %s\n%s: %.2f" % [tr("PERIOD"), tile.cave.get("period", 0), tr("AMOUNT_OF_DEBRIS"), tile.cave.get("debris", 0)]
 	elif tile.has("ash"):
 			tooltip = "%s\n%s: %s" % [tr("VOLCANIC_ASH"), tr("MINERAL_RICHNESS"), Helper.clever_round(tile.ash.richness)]
