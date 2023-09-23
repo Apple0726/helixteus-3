@@ -564,11 +564,12 @@ func _ready():
 		$Autosave.wait_time = config.get_value("saving", "autosave", 10)
 		Settings.autosave_interval = 10
 		if OS.get_name() == "Web" and not config.get_value("misc", "HTML5", false):
-			popup_window("You're playing the browser version of Helixteus 3. While it's convenient, it has\nmany issues not present in the executables:\n\n - High RAM usage, especially on Firefox\n - Less FPS\n - Import/export save feature does not work\n - Audio glitches\n - Saving delay (5-10 seconds)", "Browser version", [], [], "I understand", 0)
+			popup_window("You're playing the browser version of Helixteus 3. While it's convenient, it has\nmany issues not present in the executables:\n\n - High RAM usage\n - Less FPS\n - Importing saves does not work\n - Audio glitches\n - Saving delay (5-10 seconds)", "Browser version", [], [], "I understand", 0)
 			config.set_value("misc", "HTML5", true)
 		Settings.autosell = config.get_value("game", "autosell", true)
 		Settings.cave_gen_info = config.get_value("game", "cave_gen_info", false)
 		Settings.op_cursor = config.get_value("misc", "op_cursor", false)
+		Settings.auto_switch_buy_sell = config.get_value("game", "auto_switch_buy_sell", false)
 		Helper.discord = config.get_value("misc", "discord", true)
 		if Settings.op_cursor:
 			Input.set_custom_mouse_cursor(preload("res://Cursor.png"))
@@ -3061,9 +3062,9 @@ func generate_tiles(id:int):
 					if spaceport_spawned:
 						continue
 					spaceport_spawned = true
-				var obj = {"tile":t_id, "tier":max(1, int(-log(randf() / u_i.age / (1.0 + u_i.cluster_data[c_c].pos.length() * u_i.dark_energy / 1000.0)) / 4.0 + 1))}
+				var obj = {"tile":t_id, "tier":max(1, int(-log(randf() / u_i.age / (1.0 + u_i.cluster_data[c_c].pos.length() * u_i.dark_energy / 1000.0)) / 3.0 + 1))}
 				if randf() < 1.0 - 0.5 * exp(-pow(p_i.temperature - 273, 2) / 20000.0) / pow(obj.tier, 2):
-					obj.repair_cost = 250000 * pow(obj.tier, 30) * randf_range(1, 3) * Data.unique_bldg_repair_cost_multipliers[unique_bldg]
+					obj.repair_cost = 250000 * pow(obj.tier, 20) * randf_range(1, 3) * Data.unique_bldg_repair_cost_multipliers[unique_bldg]
 				if p_i.unique_bldgs.has(unique_bldg):
 					p_i.unique_bldgs[unique_bldg].append(obj)
 				else:
@@ -3103,16 +3104,16 @@ func generate_tiles(id:int):
 		erase_tile(random_tile2)
 		erase_tile(random_tile3)
 		tile_data[random_tile].ship = true
-		var mineral_replicator = {"tile":random_tile3, "tier":max(1, int(-log(randf() / u_i.get("age", 1)) / 4.0 + 1))}
+		var mineral_replicator = {"tile":random_tile3, "tier":max(1, int(-log(randf() / u_i.age) / 3.0 + 1))}
 		var spaceport:Dictionary
-		mineral_replicator.repair_cost = 10000 * pow(mineral_replicator.tier, 30) * randf_range(1, 5) * Data.unique_bldg_repair_cost_multipliers[UniqueBuilding.MINERAL_REPLICATOR]
+		mineral_replicator.repair_cost = 10000 * pow(mineral_replicator.tier, 20) * randf_range(1, 5) * Data.unique_bldg_repair_cost_multipliers[UniqueBuilding.MINERAL_REPLICATOR]
 		if random_tile == N-1:
-			spaceport = {"tile":random_tile - 1, "tier":max(1, int(-log(randf() / u_i.get("age", 1)) / 4.0 + 1))}
-			erase_tile(random_tile - 1) 														# Save migration
+			spaceport = {"tile":random_tile - 1, "tier":max(1, int(-log(randf() / u_i.age) / 3.0 + 1))}
+			erase_tile(random_tile - 1)
 		else:
-			spaceport = {"tile":random_tile + 1, "tier":max(1, int(-log(randf() / u_i.get("age", 1)) / 4.0 + 1))}
+			spaceport = {"tile":random_tile + 1, "tier":max(1, int(-log(randf() / u_i.age) / 3.0 + 1))}
 			erase_tile(random_tile + 1)
-		spaceport.repair_cost = 10000 * pow(spaceport.tier, 30) * randf_range(1, 5) * Data.unique_bldg_repair_cost_multipliers[UniqueBuilding.SPACEPORT]
+		spaceport.repair_cost = 10000 * pow(spaceport.tier, 20) * randf_range(1, 5) * Data.unique_bldg_repair_cost_multipliers[UniqueBuilding.SPACEPORT]
 		p_i.unique_bldgs = {UniqueBuilding.SPACEPORT:[spaceport], UniqueBuilding.MINERAL_REPLICATOR:[mineral_replicator]}
 		tile_data[random_tile2].cave = {"num_floors":8, "floor_size":30, "period":50, "debris":0.4}
 	for bldg in p_i.unique_bldgs.keys():
@@ -3204,7 +3205,7 @@ func generate_tiles(id:int):
 						var _tile = tile_data[id2]
 						if Vector2(k, l) == Vector2(i, j) or _tile.has("cave") or _tile.has("volcano") or _tile.has("lake") or _tile.has("wormhole"):
 							continue
-						_tile.resource_production_bonus.SP = _tile.resource_production_bonus.get("SP", 1.0) + met_info[tile.crater.metal].rarity - 0.8
+						_tile.resource_production_bonus.SP = _tile.resource_production_bonus.get("SP", 1.0) + sqrt(met_info[tile.crater.metal].rarity) - 0.8
 			elif tile.has("wormhole"):
 				for k in range(max(0, i - 2), min(i + 2 + 1, wid)):
 					for l in range(max(0, j - 2), min(j + 2 + 1, wid)):

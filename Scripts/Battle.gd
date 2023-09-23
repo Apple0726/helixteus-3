@@ -108,7 +108,15 @@ func _ready():
 			var star_spr = Sprite2D.new()
 			star_spr.texture = load("res://Graphics/Effects/spotlight_%s.png" % [int(star.temperature) % 3 + 4])
 			star_spr.scale *= 0.5 * star.size / (p_i.distance / 500)
-			star_spr.modulate = Helper.get_star_modulate(star["class"]) * clamp(remap(star_spr.scale.x, 1.0, 2.25, 1.5, 1.02), 1.02, 1.5)
+			var star_mod = Helper.get_star_modulate(star["class"])
+			star_spr.modulate = star_mod# * clamp(remap(star_spr.scale.x, 1.0, 2.25, 1.5, 1.02), 1.02, 1.5)
+			
+			star_spr.material = ShaderMaterial.new()
+			star_spr.material.shader = preload("res://Shaders/Star.gdshader")
+			star_spr.material.set_shader_parameter("time_offset", 10.0 * randf())
+			star_spr.material.set_shader_parameter("color", star_mod)
+			star_spr.material.set_shader_parameter("alpha", 0.0)
+			
 			star_spr.position.x = remap(p_i.angle, 0, 2 * PI, 100, 1180) + shift
 			star_spr.position.y = 200 * cos(game.c_p * 10) + 300
 			if star_spr.scale.x > 2:

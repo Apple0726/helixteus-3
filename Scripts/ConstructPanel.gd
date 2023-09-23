@@ -31,7 +31,7 @@ func _input(event):
 		hide_panel()
 
 func _unhandled_input(event):
-	if event is InputEventMouseButton and visible:
+	if Input.is_action_just_released("left_click") and visible:
 		hide_panel()
 
 func refresh():
@@ -68,7 +68,7 @@ func refresh():
 				var btn = Button.new()
 				btn.icon_alignment = HORIZONTAL_ALIGNMENT_CENTER
 				btn.expand_icon = true
-				btn.icon = load("res://Graphics/Megastrcutures/%s.png" % MS)
+				btn.icon = load("res://Graphics/Megastructures/%s_0.png" % MS)
 				btn.custom_minimum_size.y = 100
 				$Panel/ScrollContainer/VBoxContainer.add_child(btn)
 				btn.connect("mouse_entered", Callable(self, "on_MS_over").bind(MS))
@@ -280,3 +280,7 @@ func hide_panel():
 	if not $AnimationPlayer.is_playing():
 		$AnimationPlayer.play_backwards("Fade")
 		game.block_scroll = false
+
+
+func _on_tree_exited():
+	game.block_scroll = false

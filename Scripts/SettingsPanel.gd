@@ -43,6 +43,7 @@ func _ready():
 		var max_fps = config.get_value("rendering", "max_fps", 60)
 		$TabContainer/GRAPHICS/Fullscreen.button_pressed = ((get_window().mode == Window.MODE_EXCLUSIVE_FULLSCREEN) or (get_window().mode == Window.MODE_FULLSCREEN))
 		$TabContainer/GAME/Autosave.value = autosave_interval
+		$TabContainer/GAME/AutoSwitch.button_pressed = config.get_value("game", "auto_switch_buy_sell", false)
 		$TabContainer/GRAPHICS/FPS/FPS.value = max_fps
 		$TabContainer/MISC/OPCursor.button_pressed = config.get_value("misc", "op_cursor", false)
 		$TabContainer/MISC/Discord.button_pressed = config.get_value("misc", "discord", true)
@@ -325,4 +326,7 @@ func _on_fps_pressed(extra_arg_0):
 
 
 func _on_auto_switch_toggled(button_pressed):
-	pass # Replace with function body.
+	Settings.auto_switch_buy_sell = button_pressed
+	if err == OK:
+		config.set_value("game", "auto_switch_buy_sell", button_pressed)
+		config.save("user://settings.cfg")

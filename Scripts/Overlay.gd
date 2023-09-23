@@ -67,11 +67,11 @@ func get_obj_min_max(obj:String, property:String):
 
 func get_star_prop_min_max(prop:String):
 	var overlays = game.view.obj.overlays
-	var _min = game.get_highest_star_prop(overlays[0].id, prop)
+	var _min = game.get_max_star_prop(overlays[0].id, prop)
 	var _max = _min
 	for i in range(1, len(overlays)):
 		var id:int = overlays[i].id
-		var T = game.get_highest_star_prop(id, prop)
+		var T = game.get_max_star_prop(id, prop)
 		if T < _min:
 			_min = T
 		if T > _max:

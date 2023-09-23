@@ -3,7 +3,6 @@ extends Node2D
 @onready var game = get_node("/root/Game")
 @onready var stars_info = game.system_data[game.c_s].stars
 @onready var view = get_parent()
-var star_shader = preload("res://Shaders/Star.gdshader")
 
 #Used to prevent view from moving outside viewport
 var dimensions:float
@@ -329,7 +328,7 @@ func on_glow_planet_over (id:int, l_id:int, glow):
 
 func auto_speedup(bldg_costs:Dictionary):
 	bldg_costs.time /= game.u_i.time_speed
-	if game.universe_data[game.c_u].lv >= 55 or game.subjects.dimensional_power.lv >= 1:
+	if game.universe_data[game.c_u].lv >= 55 or game.subject_levels.dimensional_power >= 1:
 		bldg_costs.money += bldg_costs.time * 200
 		bldg_costs.time = 0.2
 
@@ -368,9 +367,9 @@ func show_DS_costs(star:Dictionary, base:bool = false):
 	Helper.add_label(tr("CAPACITY_INCREASE"))
 	await get_tree().process_frame
 	if base and build_all_MS_stages:
-		Helper.put_rsrc(vbox, 32, {"energy":Helper.get_DS_capacity(star, Data.MS_num_stages.DS + 1) * Helper.get_IR_mult("DS")}, false)
+		Helper.put_rsrc(vbox, 32, {"energy":Helper.get_DS_capacity(star, Data.MS_num_stages.DS + 1) * Helper.get_IR_mult(Building.BATTERY)}, false)
 	else:
-		Helper.put_rsrc(vbox, 32, {"energy":Helper.get_DS_capacity(star, 1) * Helper.get_IR_mult("DS")}, false)
+		Helper.put_rsrc(vbox, 32, {"energy":Helper.get_DS_capacity(star, 1) * Helper.get_IR_mult(Building.BATTERY)}, false)
 
 func show_CBS_costs(star:Dictionary, base:bool = false):
 	var vbox = game.get_node("UI/Panel/VBox")
@@ -445,15 +444,16 @@ func show_MME_costs(p_i:Dictionary, base:bool = false):
 	Helper.put_rsrc(vbox, 32, bldg_costs, true, true)
 	add_constr_costs(vbox, p_i)
 	Helper.add_label(tr("PRODUCTION_PER_SECOND"), -1, false)
+	await get_tree().process_frame
 	if build_all_MS_stages:
-		Helper.put_rsrc(vbox, 32, {"minerals":Helper.get_MME_output(p_i, Data.MS_num_stages.MME + 1) * Helper.get_IR_mult("ME") * game.u_i.time_speed}, false)
+		Helper.put_rsrc(vbox, 32, {"minerals":Helper.get_MME_output(p_i, Data.MS_num_stages.MME + 1) * Helper.get_IR_mult(Building.MINERAL_EXTRACTOR) * game.u_i.time_speed}, false)
 	else:
-		Helper.put_rsrc(vbox, 32, {"minerals":Helper.get_MME_output(p_i, 1) * Helper.get_IR_mult("ME") * game.u_i.time_speed}, false)
+		Helper.put_rsrc(vbox, 32, {"minerals":Helper.get_MME_output(p_i, 1) * Helper.get_IR_mult(Building.MINERAL_EXTRACTOR) * game.u_i.time_speed}, false)
 	Helper.add_label(tr("CAPACITY_INCREASE"), -1, false)
 	if build_all_MS_stages:
-		Helper.put_rsrc(vbox, 32, {"minerals":Helper.get_MME_capacity(p_i, Data.MS_num_stages.MME + 1) * Helper.get_IR_mult("MME")}, false)
+		Helper.put_rsrc(vbox, 32, {"minerals":Helper.get_MME_capacity(p_i, Data.MS_num_stages.MME + 1) * Helper.get_IR_mult(Building.MINERAL_SILO)}, false)
 	else:
-		Helper.put_rsrc(vbox, 32, {"minerals":Helper.get_MME_capacity(p_i, 1) * Helper.get_IR_mult("MME")}, false)
+		Helper.put_rsrc(vbox, 32, {"minerals":Helper.get_MME_capacity(p_i, 1) * Helper.get_IR_mult(Building.MINERAL_SILO)}, false)
 
 func show_planet_info(id:int, l_id:int):
 	planet_hovered = l_id
@@ -474,7 +474,7 @@ func show_planet_info(id:int, l_id:int):
 		if p_i.has("repair_cost"):
 			stage = tr("BROKEN_X").format({"building_name":tr("%s_NAME" % p_i.MS)})
 		else:
-			stage = tr("%s_NAME" % p_i.MS)
+			stage = tr("M_%s_NAME" % p_i.MS)
 		if Data.MS_num_stages[p_i.MS] > 0:
 			stage += " (%s)" % [tr("STAGE_X_X") % [p_i.MS_lv, Data.MS_num_stages[p_i.MS]]]
 		Helper.add_label(stage, -1, true, true)
@@ -491,11 +491,11 @@ func show_planet_info(id:int, l_id:int):
 				Helper.add_label(tr("M_SE_%s_BENEFITS" % p_i.MS_lv), -1, false)
 			elif p_i.MS == "MME":
 				Helper.add_label(tr("PRODUCTION_PER_SECOND"), -1, false)
-				Helper.put_rsrc(vbox, 32, {"minerals":Helper.get_MME_output(p_i) * Helper.get_IR_mult("ME") * game.u_i.time_speed}, false)
+				Helper.put_rsrc(vbox, 32, {"minerals":Helper.get_MME_output(p_i) * Helper.get_IR_mult(Building.MINERAL_EXTRACTOR) * game.u_i.time_speed}, false)
 				Helper.add_label(tr("CAPACITY_INCREASE"), -1, false)
-				Helper.put_rsrc(vbox, 32, {"minerals":Helper.get_MME_capacity(p_i) * Helper.get_IR_mult("MME")}, false)
+				Helper.put_rsrc(vbox, 32, {"minerals":Helper.get_MME_capacity(p_i) * Helper.get_IR_mult(Building.MINERAL_SILO)}, false)
 			if not p_i.bldg.has("is_constructing"):
-				if p_i.MS_lv < Data.MS_num_stages[p_i.MS] and game.science_unlocked.has("%s%s" % [p_i.MS.split("_")[1], (p_i.MS_lv + 1)]):
+				if p_i.MS_lv < Data.MS_num_stages[p_i.MS] and game.science_unlocked.has("%s%s" % [p_i.MS, (p_i.MS_lv + 1)]):
 					MS_constr_data.obj = p_i
 					MS_constr_data.confirm_upgrade = false
 					Helper.add_label(tr("PRESS_F_TO_CONTINUE_CONSTR"))
@@ -695,7 +695,7 @@ func build_MS(obj:Dictionary, MS:String):
 			game.stats_dim.MS_constructed += 1
 			game.stats_global.MS_constructed += 1
 		obj.MS = MS
-		game.system_data[game.c_s][13].has_MS = true
+		game.system_data[game.c_s].has_MS = true
 		obj.bldg = {}
 		obj.bldg.is_constructing = true
 		obj.bldg.construction_date = curr_time
@@ -843,7 +843,7 @@ func on_star_over (id:int):
 			Helper.add_label(tr("PRODUCTION_PER_SECOND"))
 			Helper.put_rsrc(vbox, 32, {"SP":Helper.get_MB_output(star) * Helper.get_IR_mult(Building.RESEARCH_LAB)}, false)
 			Helper.add_label(tr("CAPACITY_INCREASE"), -1, false)
-			Helper.put_rsrc(vbox, 32, {"energy":Data.MS_output["DS_4"] * pow(star.size, 2) * game.u_i.planck * game.u_i.time_speed * 5000.0 * Helper.get_IR_mult("DS")}, false)
+			Helper.put_rsrc(vbox, 32, {"energy":Data.MS_output["DS_4"] * pow(star.size, 2) * game.u_i.planck * game.u_i.time_speed * 5000.0 * Helper.get_IR_mult(Building.POWER_PLANT)}, false)
 	elif game.bottom_info_action == "building_PK":
 		if not has_MS:
 			show_PK_costs(star, true)
@@ -873,12 +873,12 @@ func on_star_over (id:int):
 				Helper.add_label(tr("PRODUCTION_PER_SECOND"), -1, false)
 				Helper.put_rsrc(vbox, 32, {"energy":Helper.get_DS_output(star) * Helper.get_IR_mult(Building.POWER_PLANT) * game.u_i.time_speed}, false)
 				Helper.add_label(tr("CAPACITY_INCREASE"), -1, false)
-				Helper.put_rsrc(vbox, 32, {"energy":Helper.get_DS_capacity(star) * Helper.get_IR_mult("DS")}, false)
+				Helper.put_rsrc(vbox, 32, {"energy":Helper.get_DS_capacity(star) * Helper.get_IR_mult(Building.BATTERY)}, false)
 			elif star.MS == "MB":
 				Helper.add_label(tr("PRODUCTION_PER_SECOND"), -1, false)
-				Helper.put_rsrc(vbox, 32, {"SP":Helper.get_MB_output(star) * Helper.get_IR_mult("RL") * game.u_i.time_speed}, false)
+				Helper.put_rsrc(vbox, 32, {"SP":Helper.get_MB_output(star) * Helper.get_IR_mult(Building.RESEARCH_LAB) * game.u_i.time_speed}, false)
 				Helper.add_label(tr("CAPACITY_INCREASE"), -1, false)
-				Helper.put_rsrc(vbox, 32, {"energy":Helper.get_DS_capacity(star) * Helper.get_IR_mult("DS")}, false)
+				Helper.put_rsrc(vbox, 32, {"energy":Helper.get_DS_capacity(star) * Helper.get_IR_mult(Building.BATTERY)}, false)
 			elif star.MS == "PK":
 				if star.MS_lv == 0:
 					Helper.add_label(tr("PK0_POWER") % int(4000 * sqrt(game.u_i.gravitational)), -1, true, true)
@@ -914,7 +914,7 @@ func on_star_pressed (id:int):
 	var curr_time = Time.get_unix_time_from_system()
 	var star = stars_info[id]
 	if game.bottom_info_action in ["building_DS", "building_PK", "building_CBS"]:
-		if game.system_data[game.c_s][11]:
+		if game.system_data[game.c_s].has("conquered"):
 			if not star.has("MS"):
 				if game.bottom_info_action == "building_DS":
 					build_MS(star, "DS")
@@ -927,7 +927,7 @@ func on_star_pressed (id:int):
 		else:
 			game.popup(tr("STAR_MS_ERROR"), 3.0)
 	elif game.bottom_info_action == "building_MB":
-		if game.system_data[game.c_s][11]:
+		if game.system_data[game.c_s].has("conquered"):
 			if not star.has("MS") or star.MS != "DS":
 				game.popup(tr("MB_ERROR_1"), 3.0)
 			else:
@@ -1051,7 +1051,7 @@ func _process(_delta):
 		if star.MS == "DS":
 			prod = Helper.get_DS_output(star) * Helper.get_IR_mult(Building.POWER_PLANT) * game.u_i.time_speed
 		elif star.MS == "MB":
-			prod = Helper.get_MB_output(star) * Helper.get_IR_mult("RL") * game.u_i.time_speed
+			prod = Helper.get_MB_output(star) * Helper.get_IR_mult(Building.RESEARCH_LAB) * game.u_i.time_speed
 		rsrc.set_text("%s/%s" % [Helper.format_num(prod), tr("S_SECOND")])
 	for rsrc_obj in planet_rsrcs:
 		var planet = game.planet_data[rsrc_obj.id]
@@ -1065,7 +1065,7 @@ func _process(_delta):
 		elif planet.has("MS") and not planet.has("repair_cost"):
 			var prod:float
 			if planet.MS == "MME":
-				prod = round(Helper.get_MME_output(planet) * Helper.get_IR_mult("ME") * game.u_i.time_speed)
+				prod = round(Helper.get_MME_output(planet) * Helper.get_IR_mult(Building.MINERAL_EXTRACTOR) * game.u_i.time_speed)
 			rsrc.set_text("%s/%s" % [Helper.format_num(prod), tr("S_SECOND")])
 
 func _on_System_tree_exited():

@@ -105,7 +105,7 @@ func toggle_subj(subj_name:String):
 		else:
 			thresh = min(remap(T, 210000, 1000000, 0.92, 1.0), 1.0)
 		$ModifyDimension/Physics/Control/StarGradient.material.set_shader_parameter("threshold", thresh)
-		if game.op_cursor:
+		if Settings.op_cursor:
 			$ModifyDimension/Physics/Control/Label9.text = tr("AURORA_WIDTH_MULTIPLIER").replace("width", "thiccness")
 		else:
 			$ModifyDimension/Physics/Control/Label9.text = tr("AURORA_WIDTH_MULTIPLIER")
@@ -365,7 +365,7 @@ func _input(event):
 	if event is InputEventMouseMotion:
 		if is_instance_valid(table):
 			var mouse_pos:Vector2 = game.mouse_pos
-			if game.op_cursor:
+			if Settings.op_cursor:
 				if Geometry2D.is_point_in_polygon(mouse_pos, game.quadrant_top_left) or Geometry2D.is_point_in_polygon(mouse_pos, game.quadrant_bottom_left):
 					table.position = mouse_pos - Vector2(-9, table.size.y + 9)
 				else:

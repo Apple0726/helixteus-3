@@ -5,11 +5,6 @@ extends Control
 func _ready():
 	$AnimationPlayer.play("MoveButtons")
 
-func _input(event):
-	if event is InputEventMouseButton:
-		if $ConstructPanel.visible and event.position.x > 320:
-			$ConstructPanel.hide()
-
 func _on_Overlay_mouse_entered():
 	game.show_tooltip(tr("OVERLAY") + " (O)\n" + tr("OVERLAY_DESC"))
 

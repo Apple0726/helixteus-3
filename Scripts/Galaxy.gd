@@ -147,18 +147,18 @@ func change_overlay(overlay_id:int, gradient:Gradient):
 				Helper.set_overlay_visibility(gradient, overlay, offset)
 		6:
 			for overlay in overlays:
-				var temp = game.get_highest_star_prop(overlay.id, 4)
+				var temp = game.get_max_star_prop(overlay.id, "temperature")
 				var offset = inverse_lerp(c_vl.left, c_vl.right, temp)
 				Helper.set_overlay_visibility(gradient, overlay, offset)
 		7:
 			for overlay in overlays:
-				var temp = game.get_highest_star_prop(overlay.id, 2)
-				var offset = inverse_lerp(c_vl.left, c_vl.right, temp)
+				var size = game.get_max_star_prop(overlay.id, "size")
+				var offset = inverse_lerp(c_vl.left, c_vl.right, size)
 				Helper.set_overlay_visibility(gradient, overlay, offset)
 		8:
 			for overlay in overlays:
-				var temp = game.get_highest_star_prop(overlay.id, 6)
-				var offset = inverse_lerp(c_vl.left, c_vl.right, temp)
+				var luminosity = game.get_max_star_prop(overlay.id, "luminosity")
+				var offset = inverse_lerp(c_vl.left, c_vl.right, luminosity)
 				Helper.set_overlay_visibility(gradient, overlay, offset)
 		9:
 			for overlay in overlays:

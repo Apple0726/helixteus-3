@@ -154,26 +154,26 @@ rounded = true
 
 [node name="30FPS" type="Button" parent="TabContainer/GRAPHICS/FPS"]
 layout_mode = 0
-offset_left = -88.0
+offset_left = -96.0
 offset_top = 109.0
-offset_right = -30.0
-offset_bottom = 140.0
+offset_right = -24.0
+offset_bottom = 149.0
 text = "30 FPS"
 
 [node name="60FPS" type="Button" parent="TabContainer/GRAPHICS/FPS"]
 layout_mode = 0
-offset_left = 12.0
+offset_left = 8.0
 offset_top = 109.0
-offset_right = 70.0
-offset_bottom = 140.0
+offset_right = 76.0
+offset_bottom = 149.0
 text = "60 FPS"
 
 [node name="120FPS" type="Button" parent="TabContainer/GRAPHICS/FPS"]
 layout_mode = 0
-offset_left = 112.0
+offset_left = 104.0
 offset_top = 109.0
-offset_right = 179.0
-offset_bottom = 140.0
+offset_right = 184.0
+offset_bottom = 149.0
 text = "120 FPS"
 
 [node name="EnableShaders" type="CheckButton" parent="TabContainer/GRAPHICS"]

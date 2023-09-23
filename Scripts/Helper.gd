@@ -54,7 +54,7 @@ func put_rsrc(container, min_size, objs, remove:bool = true, show_available:bool
 		if obj == "money":
 			format_text(rsrc.get_node("Text"), texture, "Icons/money", show_available, objs[obj], game.money)
 		elif obj == "stone":
-			if tooltip == "Stone" and game.op_cursor:
+			if tooltip == "Stone" and Settings.op_cursor:
 				tooltip = "Rok"
 			if not game.show.has("mining"):
 				tooltip += "\n%s" % [tr("STONE_HELP")]
@@ -619,7 +619,7 @@ func get_IR_mult(bldg_name):
 		sc = "EPE"
 	elif bldg_name in [Building.ATOM_MANIPULATOR, Building.SUBATOMIC_PARTICLE_REACTOR]:
 		sc = "PME"
-	elif bldg_name in [Building.MINERAL_SILO, Building.BATTERY, "DS", "MME"]:
+	elif bldg_name in [Building.MINERAL_SILO, Building.BATTERY]:
 		sc = "STE"
 	elif bldg_name == Building.RESEARCH_LAB:
 		sc = "RLE"
@@ -801,8 +801,8 @@ func update_ship_travel():
 		game.ships_travel_data.c_coords = game.ships_travel_data.dest_coords.duplicate(true)
 		game.ships_travel_data.c_g_coords = game.ships_travel_data.dest_g_coords.duplicate(true)
 		var p_i = game.open_obj("Systems", game.ships_travel_data.c_g_coords.s)[game.ships_travel_data.c_coords.p]
-		if p_i.has("unique_bldgs") and p_i.unique_bldgs.has("spaceport") and not p_i.unique_bldgs.spaceport[0].has("repair_cost"):
-			var tier = p_i.unique_bldgs.spaceport[0].tier
+		if p_i.has("unique_bldgs") and p_i.unique_bldgs.has(UniqueBuilding.SPACEPORT) and not p_i.unique_bldgs[UniqueBuilding.SPACEPORT][0].has("repair_cost"):
+			var tier = p_i.unique_bldgs[UniqueBuilding.SPACEPORT][0].tier
 			game.autocollect.ship_XP = tier
 			if is_instance_valid(game.HUD):
 				game.HUD.set_ship_btn_shader(true, tier)

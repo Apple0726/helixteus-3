@@ -304,6 +304,7 @@ libraries = {
 "": SubResource("AnimationLibrary_bp5hg")
 }
 
+[connection signal="tree_exited" from="." to="." method="_on_tree_exited"]
 [connection signal="mouse_entered" from="Panel/VBoxContainer/Basic" to="." method="_on_basic_mouse_entered"]
 [connection signal="mouse_exited" from="Panel/VBoxContainer/Basic" to="." method="_on_basic_mouse_exited"]
 [connection signal="pressed" from="Panel/VBoxContainer/Basic" to="." method="_on_tab_pressed" binds= ["Basic"]]
@@ -323,5 +324,5 @@ libraries = {
 [connection signal="mouse_exited" from="Panel/VBoxContainer/Unique" to="." method="_on_unique_mouse_exited"]
 [connection signal="pressed" from="Panel/VBoxContainer/Unique" to="." method="_on_tab_pressed" binds= ["Unique"]]
 [connection signal="value_changed" from="Panel/ScrollContainer/VBoxContainer/HBoxContainer/Tier" to="Panel" method="_on_tier_value_changed"]
-[connection signal="toggled" from="Panel/ScrollContainer/VBoxContainer/BuildAll" to="Panel" method="_on_build_all_toggled"]
+[connection signal="toggled" from="Panel/ScrollContainer/VBoxContainer/BuildAll" to="." method="_on_build_all_toggled"]
 [connection signal="animation_finished" from="AnimationPlayer" to="." method="_on_construct_panel_animation_animation_finished"]

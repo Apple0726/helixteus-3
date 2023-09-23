@@ -6,7 +6,7 @@
 [ext_resource type="TileSet" uid="uid://djmwwqomsir3r" path="res://Resources/PlanetTileSet.tres" id="4"]
 [ext_resource type="TileSet" uid="uid://dfiuyho24np11" path="res://Resources/ObstaclesTileSet.tres" id="4_ivklb"]
 [ext_resource type="Script" path="res://Scripts/BadApple.gd" id="7_yxni4"]
-[ext_resource type="Texture2D" uid="uid://ch2kvtr3hagxr" path="res://icon.png" id="12"]
+[ext_resource type="Texture2D" uid="uid://7dx34oq2nf2r" path="res://icon.png" id="12"]
 
 [sub_resource type="Shader" id="3"]
 code = "shader_type canvas_item;

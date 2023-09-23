@@ -89,8 +89,8 @@ func _ready():
 	if not p_i.has("unique_bldgs"): # Save migration
 		p_i.unique_bldgs = {}
 	if p_i.unique_bldgs.has(UniqueBuilding.NUCLEAR_FUSION_REACTOR):
-		for i in len(p_i.unique_bldgs.nuclear_fusion_reactor):
-			nuclear_fusion_reactor_main_tiles.append(p_i.unique_bldgs.nuclear_fusion_reactor[i].tile)
+		for i in len(p_i.unique_bldgs[UniqueBuilding.NUCLEAR_FUSION_REACTOR]):
+			nuclear_fusion_reactor_main_tiles.append(p_i.unique_bldgs[UniqueBuilding.NUCLEAR_FUSION_REACTOR][i].tile)
 	var lake_tiles:Array = [[], []]
 	var ash_tiles:Array = []
 	var soil_tiles:Array = []
@@ -132,7 +132,7 @@ func _ready():
 				if tile.unique_bldg.name == UniqueBuilding.NUCLEAR_FUSION_REACTOR:
 					if id2 in nuclear_fusion_reactor_main_tiles:
 						bldgs[id2] = add_bldg_sprite(v, unique_building_name, game.unique_bldg_textures[unique_building_name], mod, 0.8, Vector2(200, 200))
-						add_rsrc(v + Vector2(200, 200), Color(0, 0.8, 0, 1), Data.rsrc_icons.PP, id2)
+						add_rsrc(v + Vector2(200, 200), Color(0, 0.8, 0, 1), Data.energy_icon, id2)
 				else:
 					bldgs[id2] = add_bldg_sprite(v, unique_building_name, game.unique_bldg_textures[unique_building_name], mod)
 					if unique_building_name == UniqueBuilding.CELLULOSE_SYNTHESIZER:
@@ -1189,9 +1189,21 @@ func on_wormhole_click(tile:Dictionary, tile_id:int):
 					wh_planet = game.planet_data[randi() % wh_system.planet_num]
 				game.planet_data[wh_planet.l_id].conquered = true
 				game.erase_tile(tile_id)
+				game.tile_data[tile_id].wormhole = {}
 				game.tile_data[tile_id].wormhole.l_dest_p_id = wh_planet.l_id
 				game.tile_data[tile_id].wormhole.g_dest_p_id = wh_planet.id
 				game.tile_data[tile_id].wormhole.new = false
+				game.tile_data[tile_id].wormhole.active = true
+				var _wid:int = sqrt(len(game.tile_data))
+				var tile_x:int = tile_id % _wid
+				var tile_y:int = tile_id / _wid
+				for k in range(max(0, tile_x - 2), min(tile_x + 2 + 1, wid)):
+					for l in range(max(0, tile_y - 2), min(tile_y + 2 + 1, wid)):
+						var id2 = k % wid + l * wid
+						var _tile = game.tile_data[id2]
+						if Vector2(k, l) == Vector2(tile_x, tile_y) or _tile.has("cave") or _tile.has("volcano") or _tile.has("lake") or _tile.has("wormhole"):
+							continue
+						_tile.resource_production_bonus.SP = _tile.resource_production_bonus.get("SP", 1.0) + 7.0
 				Helper.save_obj("Planets", game.c_p_g, game.tile_data)#update current tile info (original wormhole)
 				game.c_p = wh_planet.l_id
 				game.c_p_g = wh_planet.id

@@ -224,7 +224,10 @@ func show_buy_sell(type:String, obj:String):
 		buy_sell.is_selling = false
 		forced = true
 	if not forced:
-		buy_sell.is_selling = game.money < amount * value * game.maths_bonus.MMBSVR * 5.0
+		if Settings.auto_switch_buy_sell:
+			buy_sell.is_selling = game.money < amount * value * game.maths_bonus.MMBSVR * 5.0
+		else:
+			buy_sell.is_selling = true
 	buy_sell.visible = true
 	game.sub_panel = buy_sell
 	buy_sell.refresh(type, obj)

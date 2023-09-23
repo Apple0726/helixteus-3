@@ -137,13 +137,13 @@ func send_ships():
 				game.view.refresh()
 				var p_i = game.planet_data[game.ships_travel_data.c_coords.p]
 				if p_i.has("unique_bldgs"):
-					if p_i.unique_bldgs.has("spaceport") and not p_i.unique_bldgs.spaceport[0].has("repair_cost"):
-						game.autocollect.ship_XP = p_i.unique_bldgs.spaceport[0].tier
-						game.HUD.set_ship_btn_shader(true, p_i.unique_bldgs.spaceport[0].tier)
+					if p_i.unique_bldgs.has(UniqueBuilding.SPACEPORT) and not p_i.unique_bldgs[UniqueBuilding.SPACEPORT][0].has("repair_cost"):
+						game.autocollect.ship_XP = p_i.unique_bldgs[UniqueBuilding.SPACEPORT][0].tier
+						game.HUD.set_ship_btn_shader(true, p_i.unique_bldgs[UniqueBuilding.SPACEPORT][0].tier)
 					else:
 						game.autocollect.erase("ship_XP")
 						game.HUD.set_ship_btn_shader(false)
-				game.space_HUD.get_node("ConquerAll").visible = (game.u_i.lv >= 32 or game.subjects.dimensional_power.lv >= 1) and not game.system_data[game.c_s].has("conquered")
+				game.space_HUD.get_node("ConquerAll").visible = (game.u_i.lv >= 32 or game.subject_levels.dimensional_power >= 1) and not game.system_data[game.c_s].has("conquered")
 				game.HUD.refresh()
 				game.toggle_panel(self)
 			else:
@@ -245,9 +245,9 @@ func _on_h_slider_value_changed(value):
 	gravity_exit_cost = get_grav_exit_cost(depart_planet_data.size)
 	spaceport_exit_cost_reduction = 1.0
 	spaceport_travel_cost_reduction = 1.0
-	if depart_planet_data.has("unique_bldgs") and depart_planet_data.unique_bldgs.has("spaceport") and not depart_planet_data.unique_bldgs.spaceport[0].has("repair_cost"):
-		spaceport_exit_cost_reduction = 1.0 - Helper.get_spaceport_exit_cost_reduction(depart_planet_data.unique_bldgs.spaceport[0].tier)
-		spaceport_travel_cost_reduction = 1.0 - Helper.get_spaceport_travel_cost_reduction(depart_planet_data.unique_bldgs.spaceport[0].tier)
+	if depart_planet_data.has("unique_bldgs") and depart_planet_data.unique_bldgs.has(UniqueBuilding.SPACEPORT) and not depart_planet_data.unique_bldgs[UniqueBuilding.SPACEPORT][0].has("repair_cost"):
+		spaceport_exit_cost_reduction = 1.0 - Helper.get_spaceport_exit_cost_reduction(depart_planet_data.unique_bldgs[UniqueBuilding.SPACEPORT][0].tier)
+		spaceport_travel_cost_reduction = 1.0 - Helper.get_spaceport_travel_cost_reduction(depart_planet_data.unique_bldgs[UniqueBuilding.SPACEPORT][0].tier)
 		atm_exit_cost *= spaceport_exit_cost_reduction
 		gravity_exit_cost *= spaceport_exit_cost_reduction
 	atm_entry_cost = get_atm_entry_cost(game.planet_data[dest_p_id].pressure)
