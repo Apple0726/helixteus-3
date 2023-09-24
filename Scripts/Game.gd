@@ -673,6 +673,8 @@ func load_univ():
 		if save_game_dict.has("caves_generated"):
 			caves_generated = save_game_dict.caves_generated
 		capacity_bonus_from_substation = 0
+		if not particles.has("subatomic_particles"):
+			particles.subatomic_particles = 0
 		u_i = universe_data[c_u]
 		if science_unlocked.has("CI"):
 			stack_size = 32
@@ -1007,6 +1009,7 @@ func new_game(univ:int = 0, new_save:bool = false, DR_advantage = false):
 	}
 
 	particles = {	
+		"subatomic_particles":0,
 	}
 
 	#Display help when players see/do things for the first time. true: show help
@@ -1279,7 +1282,7 @@ func popup_window(txt:String, title:String, other_buttons:Array = [], other_func
 	popup.set_text(txt)
 	popup.set_OK_text(ok_txt)
 	for i in range(0, len(other_buttons)):
-		popup.add_button(other_buttons[i], Callable(self, other_functions[i]))
+		popup.add_button(other_buttons[i], other_functions[i])
 
 func open_shop_pickaxe():
 	if not shop_panel.visible:
@@ -1497,13 +1500,11 @@ func switch_view(new_view:String, other_params:Dictionary = {}):
 				"cave":
 					$UI.add_child(HUD)
 					if is_instance_valid(cave):
-						remove_child(cave)
-					cave = null
+						cave.queue_free()
 					switch_music(load("res://Audio/ambient" + str(Helper.rand_int(1, 3)) + ".ogg"))
 				"STM":
 					$UI.add_child(HUD)
-					remove_child(STM)
-					STM = null
+					STM.queue_free()
 					switch_music(load("res://Audio/ambient" + str(Helper.rand_int(1, 3)) + ".ogg"))
 				"battle":
 					$UI.add_child(HUD)
@@ -1606,8 +1607,9 @@ func switch_view(new_view:String, other_params:Dictionary = {}):
 					$UI.remove_child(HUD)
 				cave = cave_scene.instantiate()
 				cave.rover_data = rover_data[rover_id]
-				add_child(cave)
+				cave.start_at_floor = other_params.get("start_floor", 1)
 				switch_music(preload("res://Audio/cave1.ogg"), 0.95 if tile_data[c_t].has("aurora") else 1.0)
+				add_child(cave)
 			"STM":
 				$Ship.visible = false
 				view.queue_redraw()
@@ -2067,8 +2069,7 @@ func generate_galaxies(id:int):
 	var progress = 1 - (galaxy_num - gal_num_to_load) / float(total_gal_num)
 	var FM:float = u_i.cluster_data[id].FM
 	for i in range(0, gal_num_to_load):
-		var g_i = []
-		g_i.resize(16)
+		var g_i = {}
 		g_i.parent = id
 		g_i.systems = []
 		g_i.type = randi() % 7
@@ -2086,7 +2087,7 @@ func generate_galaxies(id:int):
 			g_i.B_strength = Helper.clever_round(1e-9 * randf_range(0.5, 4) * FM * u_i.charge)
 			if randf() < 0.6: #Dwarf galaxy
 				g_i.system_num /= 10
-		g_i.dark_matter = Helper.clever_round(pow(g_i[14], -log(rand)*u_i.dark_energy/2.5 + 1))
+		g_i.dark_matter = Helper.clever_round(pow(g_i.dark_matter, -log(rand)*u_i.dark_energy/2.5 + 1))
 		g_i.rotation = randf_range(0, 2 * PI)
 		g_i.zoom = [Vector2(640, 360), 0.2]
 		var pos:Vector2
@@ -2127,14 +2128,14 @@ func generate_galaxies(id:int):
 			show.g_bk_button = true
 			g_i = galaxy_data[0]
 			radius = 200 * pow(g_i.system_num / GALAXY_SCALE_DIV, 0.5)
-			obj_shapes.append([g_i[3], radius, g_i[3].length() + radius])
+			obj_shapes.append([g_i.pos, radius, g_i.pos.length() + radius])
 			u_i.cluster_data[id]["galaxies"].append([0, 0])
 		else:
 			if id == 0:#if the galaxies are in starting cluster
-				g_i.diff = Helper.clever_round((1 + pos.distance_to(galaxy_data[0][3]) / 70) * u_i.cluster_data[id].diff)
+				g_i.diff = Helper.clever_round((1 + pos.distance_to(galaxy_data[0].pos) / 70) * u_i.cluster_data[id].diff)
 			else:
 				g_i.diff = Helper.clever_round(u_i.cluster_data[id].diff * randf_range(120, 150) / max(100, pow(pos.length(), 0.5)))
-			u_i.cluster_data[id]["galaxies"].append([g_i[0], g_i[1]])
+			u_i.cluster_data[id]["galaxies"].append([g_i.id, g_i.l_id])
 			galaxy_data.append(g_i)
 	if progress == 1:
 		u_i.cluster_data[id]["discovered"] = true
@@ -2850,9 +2851,11 @@ func generate_tiles(id:int):
 						if tile_data[id2].has("aurora"):
 							tile_data[id2].aurora *= au_int
 							tile_data[id2].resource_production_bonus.SP *= au_int
+							tile_data[id2].resource_production_bonus.energy *= au_int
 						else:
 							tile_data[id2].aurora = au_int
 							tile_data[id2].resource_production_bonus.SP = tile_data[id2].resource_production_bonus.get("SP", 1.0) + au_int
+							tile_data[id2].resource_production_bonus.energy = tile_data[id2].resource_production_bonus.get("energy", 1.0) + au_int
 			else:#Horizontal
 				for j in wid:
 					var y_pos:int = lerp(tile_from, tile_to, j / float(wid)) + diff + thiccness * amplitude * sin(j / float(wid) * 4 * pulsation * PI)
@@ -2864,9 +2867,11 @@ func generate_tiles(id:int):
 						if tile_data[id2].has("aurora"):
 							tile_data[id2].aurora *= au_int
 							tile_data[id2].resource_production_bonus.SP *= au_int
+							tile_data[id2].resource_production_bonus.energy *= au_int
 						else:
 							tile_data[id2].aurora = au_int
 							tile_data[id2].resource_production_bonus.SP = tile_data[id2].resource_production_bonus.get("SP", 1.0) + au_int
+							tile_data[id2].resource_production_bonus.energy = tile_data[id2].resource_production_bonus.get("energy", 1.0) + au_int
 			stats_global.highest_au_int = max(au_int, stats_global.highest_au_int)
 			stats_dim.highest_au_int = max(au_int, stats_dim.highest_au_int)
 			stats_univ.highest_au_int = max(au_int, stats_univ.highest_au_int)
@@ -4239,7 +4244,7 @@ func mine_tile(tile_id:int = -1):
 			c_t = tile_id
 			switch_view("mining")
 	else:
-		popup_window(tr("NO_PICKAXE"), tr("NO_PICKAXE_TITLE"), [tr("BUY_ONE")], ["open_shop_pickaxe"], tr("LATER"))
+		popup_window(tr("NO_PICKAXE"), tr("NO_PICKAXE_TITLE"), [tr("BUY_ONE")], [Callable(self, "open_shop_pickaxe")], tr("LATER"))
 
 func game_fade(fn, args:Array = []):
 	game_tween = create_tween()
@@ -4296,7 +4301,7 @@ func earn_achievement(type:String, ach_id:String):
 	ach.add_to_group("achievement_nodes")
 	$UI.add_child(ach)
 	ach.get_node("AnimationPlayer").connect("animation_finished",Callable(self,"on_ach_anim_finished").bind(ach))
-	await get_tree().create_timer(0.5 * len(get_tree().get_nodes_in_group("achievement_nodes"))).timeout
+	await get_tree().create_timer(0.8 * len(get_tree().get_nodes_in_group("achievement_nodes"))).timeout
 	ach.get_node("AnimationPlayer").play("FadeInOut")
 
 func on_ach_anim_finished(anin_name:String, node):

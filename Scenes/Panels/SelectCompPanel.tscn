@@ -61,11 +61,14 @@ text = "Select"
 horizontal_alignment = 1
 
 [node name="ScrollContainer" type="ScrollContainer" parent="."]
-layout_mode = 0
+layout_mode = 1
+anchors_preset = 2
 anchor_top = 1.0
 anchor_bottom = 1.0
+offset_left = 37.0
 offset_top = -48.0
 offset_right = 468.0
+grow_vertical = 0
 vertical_scroll_mode = 3
 
 [node name="Cost" parent="ScrollContainer" instance=ExtResource("2")]
@@ -88,7 +91,7 @@ offset_left = 40.0
 offset_top = 104.0
 offset_right = 600.0
 offset_bottom = 176.0
-vertical_scroll_mode = 3
+vertical_scroll_mode = 0
 
 [node name="HBox" type="HBoxContainer" parent="ScrollContainer2"]
 layout_mode = 2

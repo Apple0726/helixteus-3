@@ -36,6 +36,7 @@ func _ready():
 		$TabContainer/GRAPHICS/Vsync.button_pressed = config.get_value("graphics", "vsync", true)
 		$TabContainer/GRAPHICS/AutosaveLight.button_pressed = config.get_value("saving", "autosave_light", true)
 		$TabContainer/GRAPHICS/EnableShaders.button_pressed = config.get_value("graphics", "enable_shaders", true)
+		$TabContainer/GRAPHICS/Screenshake.button_pressed = config.get_value("graphics", "screen_shake", true)
 		$TabContainer/GAME/EnableAutosave.button_pressed = config.get_value("saving", "enable_autosave", true)
 		$TabContainer/GAME/AutosellMinerals.button_pressed = config.get_value("game", "autosell", true)
 		$TabContainer/GAME/CaveGenInfo.button_pressed = config.get_value("game", "cave_gen_info", false)

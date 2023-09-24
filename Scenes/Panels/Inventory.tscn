@@ -1,12 +1,10 @@
-[gd_scene load_steps=8 format=3 uid="uid://cmh2bqka73geo"]
+[gd_scene load_steps=6 format=3 uid="uid://cmh2bqka73geo"]
 
 [ext_resource type="PackedScene" uid="uid://1hq6qpr1oa3i" path="res://Scenes/AdvButton.tscn" id="1"]
-[ext_resource type="Texture2D" uid="uid://ci86yipjhlrwb" path="res://Graphics/Particles/electron.png" id="2"]
 [ext_resource type="Theme" uid="uid://cp2u1kgj60ic" path="res://Resources/default_theme.tres" id="3"]
 [ext_resource type="Script" path="res://Scripts/Inventory.gd" id="4"]
 [ext_resource type="PackedScene" uid="uid://ddf2xjwcht77u" path="res://Scenes/CloseButton.tscn" id="5"]
-[ext_resource type="Texture2D" uid="uid://cd2xnt2iavuex" path="res://Graphics/Particles/proton.png" id="6"]
-[ext_resource type="Texture2D" uid="uid://cgj18hjp3fuf5" path="res://Graphics/Particles/neutron.png" id="7"]
+[ext_resource type="Texture2D" uid="uid://d0b5fuukufocu" path="res://Graphics/Particles/subatomic_particles.png" id="5_duh3p"]
 
 [node name="Background" type="Panel"]
 anchors_preset = 8
@@ -123,39 +121,17 @@ vertical_alignment = 1
 layout_mode = 0
 offset_left = 40.0
 offset_top = 48.0
-offset_right = 936.0
+offset_right = 258.0
 offset_bottom = 88.0
 
-[node name="ProtonIcon" type="TextureRect" parent="Control/ParticlesHBox"]
+[node name="SubatomicParticleIcon" type="TextureRect" parent="Control/ParticlesHBox"]
 custom_minimum_size = Vector2(40, 0)
 layout_mode = 2
-texture = ExtResource("6")
+texture = ExtResource("5_duh3p")
 expand_mode = 1
 stretch_mode = 6
 
-[node name="Protons" type="Label" parent="Control/ParticlesHBox"]
-layout_mode = 2
-size_flags_horizontal = 3
-
-[node name="NeutronIcon" type="TextureRect" parent="Control/ParticlesHBox"]
-custom_minimum_size = Vector2(40, 0)
-layout_mode = 2
-texture = ExtResource("7")
-expand_mode = 1
-stretch_mode = 6
-
-[node name="Neutrons" type="Label" parent="Control/ParticlesHBox"]
-layout_mode = 2
-size_flags_horizontal = 3
-
-[node name="ElectronIcon" type="TextureRect" parent="Control/ParticlesHBox"]
-custom_minimum_size = Vector2(40, 0)
-layout_mode = 2
-texture = ExtResource("2")
-expand_mode = 1
-stretch_mode = 6
-
-[node name="Electrons" type="Label" parent="Control/ParticlesHBox"]
+[node name="SubatomicParticles" type="Label" parent="Control/ParticlesHBox"]
 layout_mode = 2
 size_flags_horizontal = 3
 
@@ -165,9 +141,5 @@ size_flags_horizontal = 3
 [connection signal="pressed" from="TabBar/Metals" to="." method="_on_Metals_pressed"]
 [connection signal="pressed" from="TabBar/Atoms" to="." method="_on_Atoms_pressed"]
 [connection signal="pressed" from="TabBar/Particles" to="." method="_on_Particles_pressed"]
-[connection signal="mouse_entered" from="Control/ParticlesHBox/ProtonIcon" to="." method="show_part" binds= ["proton"]]
-[connection signal="mouse_exited" from="Control/ParticlesHBox/ProtonIcon" to="." method="on_mouse_out"]
-[connection signal="mouse_entered" from="Control/ParticlesHBox/NeutronIcon" to="." method="show_part" binds= ["neutron"]]
-[connection signal="mouse_exited" from="Control/ParticlesHBox/NeutronIcon" to="." method="on_mouse_out"]
-[connection signal="mouse_entered" from="Control/ParticlesHBox/ElectronIcon" to="." method="show_part" binds= ["electron"]]
-[connection signal="mouse_exited" from="Control/ParticlesHBox/ElectronIcon" to="." method="on_mouse_out"]
+[connection signal="mouse_entered" from="Control/ParticlesHBox/SubatomicParticleIcon" to="." method="show_part" binds= ["subatomic_particles"]]
+[connection signal="mouse_exited" from="Control/ParticlesHBox/SubatomicParticleIcon" to="." method="on_mouse_out"]

@@ -93,7 +93,7 @@ func update_info(first_time:bool = false):
 				$CrustBG.modulate.a = 0
 				if Settings.enable_shaders:
 					$MantleBG.visible = true
-					$MantleBG.modulate.a = 0.25
+					$MantleBG.material.set_shader_parameter("alpha", 0.5)
 				else:
 					$MantleBGNoShader.visible = true
 					$MantleBGNoShader.modulate.a = 0.45
@@ -104,7 +104,7 @@ func update_info(first_time:bool = false):
 				BG_tween.tween_property($CrustBG, "modulate", Color(1, 1, 1, 0), 3)
 				if Settings.enable_shaders:
 					$MantleBG.visible = true
-					BG_tween.tween_property($MantleBG, "modulate", Color(1, 1, 1, 0.25), 3)
+					BG_tween.tween_property($MantleBG, "modulate:a", 0.55, 3)
 				else:
 					$MantleBGNoShader.visible = true
 					BG_tween.tween_property($MantleBGNoShader, "modulate", Color(1, 1, 1, 0.45), 3)

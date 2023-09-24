@@ -908,7 +908,7 @@ func update_bldg_constr(tile:Dictionary, p_i:Dictionary):
 func add_energy_from_NFR(p_i:Dictionary, base:float):
 	if not p_i.unique_bldgs.has(UniqueBuilding.NUCLEAR_FUSION_REACTOR):
 		return
-	for nfr in p_i.unique_bldgs.nuclear_fusion_reactor:
+	for nfr in p_i.unique_bldgs[UniqueBuilding.NUCLEAR_FUSION_REACTOR]:
 		var unique_mult = get_NFR_prod_mult(nfr.tier)
 		if not nfr.has("repair_cost"):
 			var S = 0.0
@@ -926,7 +926,7 @@ func add_energy_from_NFR(p_i:Dictionary, base:float):
 func add_energy_from_CS(p_i:Dictionary, base:float):
 	if not p_i.unique_bldgs.has(UniqueBuilding.CELLULOSE_SYNTHESIZER):
 		return
-	for cs in p_i.unique_bldgs.cellulose_synthesizer:
+	for cs in p_i.unique_bldgs[UniqueBuilding.CELLULOSE_SYNTHESIZER]:
 		var unique_mult = get_CS_prod_mult(cs.tier)
 		if not cs.has("repair_cost"):
 			var cellulose = {"C":0, "H":0, "O":0}

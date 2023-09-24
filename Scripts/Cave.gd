@@ -72,6 +72,7 @@ var wormhole
 var on_ash:bool = false
 var on_lava:bool = false
 var input_vector:Vector2 = Vector2.ZERO
+var start_at_floor:int
 
 var velocity = Vector2.ZERO
 var max_speed = 1000
@@ -155,12 +156,14 @@ func _ready():
 	$UI2/Controls.add_key("M", "TOGGLE_MINIMAP")
 	if not game.help.has("sprint_mode"):
 		$UI2/Controls.add_key("E", "SPRINT_MODE")
-	$UI2/Controls/Label.text = tr("CONTROLS")
+	if enhancements.has("wheels_0"):
+		$UI2/Controls.add_key(tr("SPACEBAR"), "DASH")
 	if game.help.has("cave_controls"):
 		$UI2/Controls.add_key("J", "HIDE_THIS_PANEL")
 		$UI2/CaveInfo/Ctrls.visible = false
 		$UI2/Controls.visible = true
 		game.help_str = "cave_controls"
+	$UI2/Controls/Label.text = tr("CONTROLS")
 	$UI2/Controls.refresh()
 	
 	if game.subject_levels.dimensional_power >= 4:
@@ -184,19 +187,18 @@ func _ready():
 			if inventory[i].get("type") == "rover_weapons":
 				laser_name = inventory[i].name.split("_")[0]
 	laser_damage = Data.rover_weapons[laser_name + "_laser"].damage * atk * rover_size * game.u_i.charge
-	if rover_data.get("MK", 1) == 2:#Save migration
+	if rover_data.MK == 2:
 		$Rover/Sprite2D.texture = preload("res://Graphics/Cave/Rover top down 2.png")
-	elif rover_data.get("MK", 1) == 3:
+	elif rover_data.MK == 3:
 		$Rover/Sprite2D.texture = preload("res://Graphics/Cave/Rover top down 3.png")
-	if rover_data.has("ability"):#Save migration
-		ability = rover_data.ability
-		ability_num = rover_data.ability_num
-		if ability != "":
-			$UI2/Ability.visible = true
-			$UI2/Ability/TextureRect.texture = load("res://Graphics/Cave/RE/%s.png" % rover_data.ability)
-			$UI2/Ability/Panel/Num.text = str(ability_num)
-		else:
-			$UI2/Ability.visible = false
+	ability = rover_data.ability
+	ability_num = rover_data.ability_num
+	if ability != "":
+		$UI2/Ability.visible = true
+		$UI2/Ability/TextureRect.texture = load("res://Graphics/Cave/RE/%s.png" % rover_data.ability)
+		$UI2/Ability/Panel/Num.text = str(ability_num)
+	else:
+		$UI2/Ability.visible = false
 	if enhancements.has("wheels_2"):
 		dashes_remaining = 3
 	elif enhancements.has("wheels_1"):
@@ -285,6 +287,13 @@ func _ready():
 	minimap_cave.scale *= minimap_zoom
 	minimap_rover.scale *= 0.1
 	generate_cave(true, false)
+	if start_at_floor > 1:
+		for i in int(start_at_floor - 1):
+			go_down_cave()
+			var avg_dmg:float = 6.0 * difficulty / def / rover_size * armor_damage_mult
+			var dmg_to_HP_ratio:float = avg_dmg / total_HP
+			if cave_floor == num_floors or dmg_to_HP_ratio > 0.2:
+				break
 	if is_aurora_cave:
 		$AuroraPlayer.play("Aurora", -1, 0.2)
 	for rsrc in game.show:
@@ -445,11 +454,11 @@ func generate_cave(first_floor:bool, going_up:bool):
 		HP = total_HP * 0.2
 	set_avg_dmg()
 	cave_darkness = cave_floor * 0.1
-	if rover_data.get("MK", 1) >= 2:#Save migration
+	if rover_data.MK >= 2:
 		cave_darkness /= 1.1
-	if rover_data.get("MK", 1) >= 3:
+	if rover_data.MK >= 3:
 		cave_darkness /= 1.1
-	var darkness_mod:float = modifiers.darkness if modifiers.has("darkness") else 1.0
+	var darkness_mod:float = modifiers.get("darkness", 1.0)
 	cave_darkness *= darkness_mod
 	cave_darkness = clamp(cave_darkness, 0.0, 1.0 - ((0.2 / darkness_mod) if darkness_mod > 1.0 else 0.2))
 	if not game.objective.is_empty() and game.objective.type == game.ObjectiveType.CAVE:
@@ -460,7 +469,9 @@ func generate_cave(first_floor:bool, going_up:bool):
 	rover.get_node("AshParticles").modulate = Color.WHITE * (1.0 - cave_darkness)
 	rover.get_node("AshParticles").modulate.a = 1.0
 	mining_laser.get_node("PointLight2D2").energy = (0.5 + pow(cave_darkness, 2) * 6) / pow(light_strength_mult, 2) * 1.0
-	if cave_floor >= 8:
+	if cave_floor >= 16:
+		cave_wall.modulate = Color.PURPLE
+	elif cave_floor >= 8:
 		cave_wall.modulate = Color.BLUE
 	else:
 		cave_wall.modulate = star_mod * (1.0 - cave_darkness) * (Color(0.5, 0.5, 1.0) if cave_floor >= 8 else Color.WHITE)
@@ -1312,27 +1323,7 @@ func _input(event):
 			elif active_type == "exit":
 				exit_cave()
 			elif active_type == "go_down":
-				remove_cave()
-				cave_floor += 1
-				if cave_floor == 8:
-					game.switch_music(preload("res://Audio/cave2.ogg"), 0.95 if tile.has("aurora") else 1.0)
-				elif cave_floor == 16:
-					game.switch_music(preload("res://Audio/cave3.ogg"), 0.95 if tile.has("aurora") else 1.0)
-				if volcano_mult > 1 and not artificial_volcano and is_aurora_cave:
-					difficulty *= 2.5
-				elif volcano_mult > 1 and not artificial_volcano or is_aurora_cave:
-					difficulty *= 2.25
-				else:
-					difficulty *= 2.0
-				generate_cave(false, false)
-				if not game.achievement_data.exploration.has("reach_floor_8") and cave_floor == 8:
-					game.earn_achievement("exploration", "reach_floor_8")
-				if not game.achievement_data.exploration.has("reach_floor_16") and cave_floor == 16:
-					game.earn_achievement("exploration", "reach_floor_16")
-				if not game.achievement_data.exploration.has("reach_floor_24") and cave_floor == 24:
-					game.earn_achievement("exploration", "reach_floor_24")
-				if not game.achievement_data.exploration.has("reach_floor_32") and cave_floor == 32:
-					game.earn_achievement("exploration", "reach_floor_32")
+				go_down_cave()
 			elif active_type == "go_up":
 				remove_cave()
 				cave_floor -= 1
@@ -1364,6 +1355,29 @@ func _input(event):
 			$UI2/Controls.refresh()
 			$UI2/CaveInfo/Ctrls.visible = true
 		update_ray()
+
+func go_down_cave():
+	remove_cave()
+	cave_floor += 1
+	if cave_floor == 8:
+		game.switch_music(preload("res://Audio/cave2.ogg"), 0.95 if tile.has("aurora") else 1.0)
+	elif cave_floor == 16:
+		game.switch_music(preload("res://Audio/cave3.ogg"), 0.95 if tile.has("aurora") else 1.0)
+	if volcano_mult > 1 and not artificial_volcano and is_aurora_cave:
+		difficulty *= 2.5
+	elif volcano_mult > 1 and not artificial_volcano or is_aurora_cave:
+		difficulty *= 2.25
+	else:
+		difficulty *= 2.0
+	generate_cave(false, false)
+	if not game.achievement_data.exploration.has("reach_floor_8") and cave_floor == 8:
+		game.earn_achievement("exploration", "reach_floor_8")
+	if not game.achievement_data.exploration.has("reach_floor_16") and cave_floor == 16:
+		game.earn_achievement("exploration", "reach_floor_16")
+	if not game.achievement_data.exploration.has("reach_floor_24") and cave_floor == 24:
+		game.earn_achievement("exploration", "reach_floor_24")
+	if not game.achievement_data.exploration.has("reach_floor_32") and cave_floor == 32:
+		game.earn_achievement("exploration", "reach_floor_32")
 
 func add_to_inventory(rsrc:String, content:float, remainders:Dictionary):
 	for i in len(inventory):
@@ -1926,7 +1940,7 @@ func hit_player(damage:float, _status_effects:Dictionary = {}, passive:bool = fa
 			st = tr("ROVER_DEATH_MESSAGE_OVERLOAD")
 		elif cave_darkness > 0.9:
 			st = tr("ROVER_DEATH_MESSAGE_DARK")
-		if game.op_cursor or randf() < 0.01:
+		if Settings.op_cursor:
 			st = st.replace("wrecked", "rekt")
 		call_deferred("exit_cave")
 		game.popup_window(st + " " + tr("LOST_RESOURCES") + " " + st2, tr("ROVER_REKT_TITLE"))
@@ -2041,7 +2055,6 @@ func _physics_process(delta):
 		velocity = velocity.move_toward(Vector2.ZERO, friction * speed_mult2 * acc_penalty)
 	rover.set_velocity(velocity)
 	rover.move_and_slide()
-	rover.velocity
 	travel_distance += velocity.length() * delta
 	if rover.collision_mask == 32:
 		if rover.position.x < 64 * rover_size:

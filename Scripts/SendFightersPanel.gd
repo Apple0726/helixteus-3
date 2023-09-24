@@ -231,10 +231,11 @@ func _on_Send_pressed():
 					game.galaxy_data[game.c_g].sys_conquered = 0
 					game.galaxy_data[game.c_g].combined_strength = combined_strength
 					game.galaxy_data[game.c_g].conquer_order = $Control/CheckBox.button_pressed#true: ascending difficulty
-					refresh()
 					game.HUD.refresh()
 				else:
 					game.popup(tr("NOT_ENOUGH_ENERGY"), 1.5)
+		else:
+			game.galaxy_data[game.c_g].erase("conquer_start_date")
 	elif fighter_type == 1:
 		if not game.u_i.cluster_data[game.c_c].has("conquer_start_date"):
 			if obj_num > 0:
@@ -253,10 +254,12 @@ func _on_Send_pressed():
 					game.u_i.cluster_data[game.c_c].gal_conquered = 0
 					game.u_i.cluster_data[game.c_c].combined_strength = combined_strength
 					game.u_i.cluster_data[game.c_c].conquer_order = $Control/CheckBox.button_pressed#true: ascending difficulty
-					refresh()
 					game.HUD.refresh()
 				else:
 					game.popup(tr("NOT_ENOUGH_ENERGY"), 1.5)
+		else:
+			game.u_i.cluster_data[game.c_c].erase("conquer_start_date")
+	refresh()
 
 func _process(delta):
 	if not visible:

@@ -930,6 +930,9 @@ func _unhandled_input(event):
 					var white_rect = game.white_rect_scene.instantiate()
 					white_rect.position.x = (i % wid) * 200
 					white_rect.position.y = (i / wid) * 200
+					white_rect.modulate.a = 0.0
+					var tween = create_tween()
+					tween.tween_property(white_rect, "modulate:a", 1.0, 0.1)
 					add_child(white_rect)
 					white_rect.add_to_group("white_rects")
 			if game.shop_panel.tab in ["Speedups", "Overclocks"]:
@@ -1019,6 +1022,9 @@ func _unhandled_input(event):
 							var white_rect = game.white_rect_scene.instantiate()
 							white_rect.position.x = x * 200
 							white_rect.position.y = y * 200
+							white_rect.modulate.a = 0.0
+							var tween = create_tween()
+							tween.tween_property(white_rect, "modulate:a", 1.0, 0.1)
 							add_child(white_rect)
 							white_rect.add_to_group("CBD_white_rects")
 			prev_tile_over = tile_over
@@ -1120,7 +1126,12 @@ func _unhandled_input(event):
 				if game.bottom_info_action == "enter_cave":
 					game.c_t = tile_id
 					game.rover_id = rover_selected
-					game.switch_view("cave")
+					if game.rover_data[rover_selected].MK == 3:
+						game.popup_window("", "", [tr("GO_TO_FLOOR_X") % 16, tr("GO_TO_FLOOR_X") % 8, tr("START_AT_FLOOR_1")], [Callable(game, "switch_view").bind("cave", {"start_floor":16}), Callable(game, "switch_view").bind("cave", {"start_floor":8}), Callable(game, "switch_view").bind("cave")], tr("CANCEL"))
+					elif game.rover_data[rover_selected].MK == 2:
+						game.popup_window("", "", [tr("GO_TO_FLOOR_X") % 8, tr("START_AT_FLOOR_1")], [Callable(game, "switch_view").bind("cave", {"start_floor":8}), Callable(game, "switch_view").bind("cave")], tr("CANCEL"))
+					else:
+						game.switch_view("cave")
 				else:
 					if (game.show.has("vehicles_button") or len(game.rover_data) > 0) and not game.vehicle_panel.visible:
 						game.toggle_panel(game.vehicle_panel)
@@ -1197,9 +1208,9 @@ func on_wormhole_click(tile:Dictionary, tile_id:int):
 				var _wid:int = sqrt(len(game.tile_data))
 				var tile_x:int = tile_id % _wid
 				var tile_y:int = tile_id / _wid
-				for k in range(max(0, tile_x - 2), min(tile_x + 2 + 1, wid)):
-					for l in range(max(0, tile_y - 2), min(tile_y + 2 + 1, wid)):
-						var id2 = k % wid + l * wid
+				for k in range(max(0, tile_x - 2), min(tile_x + 2 + 1, _wid)):
+					for l in range(max(0, tile_y - 2), min(tile_y + 2 + 1, _wid)):
+						var id2 = k % _wid + l * _wid
 						var _tile = game.tile_data[id2]
 						if Vector2(k, l) == Vector2(tile_x, tile_y) or _tile.has("cave") or _tile.has("volcano") or _tile.has("lake") or _tile.has("wormhole"):
 							continue
@@ -1434,12 +1445,6 @@ func on_timeout():
 						Helper.add_atom_production(el, base_prod)
 					Helper.add_energy_from_NFR(p_i, base)
 					Helper.add_energy_from_CS(p_i, base)
-				elif tile.bldg.name == "PC":
-					game.autocollect.particles.proton -= tile.bldg.path_1_value / tile.bldg.planet_pressure * (mult - 1)
-				elif tile.bldg.name == "NC":
-					game.autocollect.particles.neutron -= tile.bldg.path_1_value / tile.bldg.planet_pressure * (mult - 1)
-				elif tile.bldg.name == "EC":
-					game.autocollect.particles.electron -= tile.bldg.path_1_value * tile.aurora * (mult - 1)
 				tile.bldg.erase("overclock_date")
 				tile.bldg.erase("overclock_length")
 				tile.bldg.erase("overclock_mult")
@@ -1477,8 +1482,7 @@ func construct(type:int, costs:Dictionary):
 		$BuildingShortcutTimer.stop()
 	var tween = create_tween()
 	tween.tween_property(game.HUD.get_node("Top/TextureRect"), "modulate", Color(1.5, 1.5, 1.0, 1.0), 0.2)
-	if game.stats_univ.bldgs_built >= 10:
-		game.planet_HUD.get_node("MassBuild").visible = true
+	game.planet_HUD.get_node("MassBuild").visible = game.stats_univ.bldgs_built >= 10
 	bldg_to_construct = type
 	constr_costs = costs
 	constr_costs_total = costs.duplicate()
@@ -1496,37 +1500,48 @@ func construct(type:int, costs:Dictionary):
 		rsrc = "minerals"
 	elif type == Building.RESEARCH_LAB:
 		rsrc = "SP"
-	elif type in [Building.POWER_PLANT, Building.SOLAR_PANEL]:
+	elif type == Building.SOLAR_PANEL:
 		rsrc = "energy"
 	var grayed_out_tile_positions:PackedVector2Array
 	for i in wid:
 		for j in wid:
 			var id2 = i % wid + j * wid
 			var tile = game.tile_data[id2]
-			if tile:
-				if type == Building.GREENHOUSE and not tile.has("lake_elements") or not available_to_build(tile):
-					grayed_out_tile_positions.append(Vector2(i, j))
-				if tile.has("resource_production_bonus") and tile.resource_production_bonus.has(rsrc):
-					var tile_bonus_node = preload("res://Scenes/TileBonus.tscn").instantiate()
-					tile_bonus_node.position = Vector2(i, j) * 200 + Vector2.ONE * 100 + Vector2(-92, 30)
-					tile_bonus_node.set_icon(Data["%s_icon" % rsrc])
-					tile_bonus_node.set_multiplier(tile.resource_production_bonus[rsrc])
-					tile_bonus_node.modulate.a = 0
-					add_child(tile_bonus_node)
-					var tween2 = create_tween()
-					tween2.tween_property(tile_bonus_node, "modulate:a", 0.8, 0.2).set_delay((i + j) / 7.5 / wid)
-					tile_bonus_node.add_to_group("tile_bonus_nodes")
-	for v in grayed_out_tile_positions:
-		var gray_tile = preload("res://Scenes/GrayscaleTile.tscn").instantiate()
-		gray_tile.position = v * 200.0
-		add_child(gray_tile)
-		gray_tile.add_to_group("gray_tiles")
+			if tile and type == Building.GREENHOUSE and not tile.has("lake_elements") or not available_to_build(tile):
+				grayed_out_tile_positions.append(Vector2(i, j))
+				var gray_tile = preload("res://Scenes/GrayscaleTile.tscn").instantiate()
+				gray_tile.position = Vector2(i, j) * 200.0
+				add_child(gray_tile)
+				gray_tile.add_to_group("gray_tiles")
 	if len(grayed_out_tile_positions) > 0:
 		var gray_tile = get_tree().get_first_node_in_group("gray_tiles")
 		var tween2 = create_tween()
 		var v = gray_tile.position / 200.0
-		tween2.tween_property(gray_tile.material, "shader_parameter/amount", 1.0, 0.2).set_delay((v.x + v.y) / 7.5 / wid)
+		tween2.tween_property(gray_tile.material, "shader_parameter/amount", 1.0, 0.2)
 	game.HUD.refresh()
+	var bonus_rsrc_icon
+	if rsrc != "":
+		bonus_rsrc_icon = Data["%s_icon" % rsrc]
+	var counter = 0
+	for i in wid:
+		for j in wid:
+			var id2 = i % wid + j * wid
+			var tile = game.tile_data[id2]
+			if tile and tile.has("resource_production_bonus") and tile.resource_production_bonus.has(rsrc):
+				if bldg_to_construct == -1:
+					return
+				var tile_bonus_node = preload("res://Scenes/TileBonus.tscn").instantiate()
+				tile_bonus_node.position = Vector2(i, j) * 200 + Vector2.ONE * 100 + Vector2(-92, 30)
+				add_child(tile_bonus_node)
+				tile_bonus_node.set_icon(bonus_rsrc_icon)
+				tile_bonus_node.set_multiplier(tile.resource_production_bonus[rsrc])
+				tile_bonus_node.modulate.a = 0
+				var tween2 = create_tween()
+				tween2.tween_property(tile_bonus_node, "modulate:a", 0.8, 0.2)
+				tile_bonus_node.add_to_group("tile_bonus_nodes")
+				if counter % int(1000.0 / Engine.get_frames_per_second()) == 0:
+					await get_tree().process_frame
+				counter += 1
 
 func place_gray_tiles_mining():
 	var grayed_out_tile_positions:PackedVector2Array

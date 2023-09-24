@@ -9,9 +9,6 @@ var helium_texture = preload("res://Graphics/Atoms/He.png")
 var neon_texture = preload("res://Graphics/Atoms/Ne.png")
 var xenon_texture = preload("res://Graphics/Atoms/Xe.png")
 var hydrogen_texture = preload("res://Graphics/Atoms/H.png")
-var electron_texture = preload("res://Graphics/Particles/electron.png")
-var proton_texture = preload("res://Graphics/Particles/proton.png")
-var neutron_texture = preload("res://Graphics/Particles/neutron.png")
 
 var ships_time_remaining:float = 0
 var ships_time_reduction:float = 0

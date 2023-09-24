@@ -37,7 +37,7 @@ var path_2_value:float = 1.0
 func _ready():
 	set_process(false)
 	set_polygon(size)
-	$Title.text = tr("AMN_NAME")
+	$Title.text = tr("ATOM_MANIPULATOR_NAME")
 	$Desc.text = tr("REACTIONS_PANEL_DESC")
 	for _name in reactions:
 		var btn = preload("res://Scenes/AdvButton.tscn").instantiate()
@@ -247,13 +247,13 @@ func refresh():
 	for btn in $ScrollContainer/VBoxContainer.get_children():
 		btn.visible = not btn.name in ["nanocrystal", "mythril", "quillite"] or game.science_unlocked.has("AMM")
 	if tf:
-		$Title.text = "%s %s" % [Helper.format_num(tile_num), tr("AMN_NAME_S").to_lower(),]
+		$Title.text = "%s %s" % [Helper.format_num(tile_num), tr("ATOM_MANIPULATOR_NAME_S").to_lower(),]
 		var max_star_temp = game.get_max_star_prop(game.c_s, "temperature")
 		au_int = 12000.0 * game.galaxy_data[game.c_g].B_strength * max_star_temp
 		au_mult = 1.0 + au_int
 	else:
 		tile_num = 1
-		$Title.text = tr("AMN_NAME")
+		$Title.text = tr("ATOM_MANIPULATOR_NAME")
 		obj = game.tile_data[game.c_t]
 		au_int = obj.get("aurora", 0.0)
 		au_mult = au_int + 1.0

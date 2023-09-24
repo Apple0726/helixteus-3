@@ -186,24 +186,6 @@ func _on_Particles_pressed():
 	particles_hbox.visible = true
 	$Control/VBox/BuySell.visible = false
 
-#func show_part(_name:String):
-#	var neutron_cap = game.neutron_cap * Helper.get_IR_mult("NSF")
-#	var st:String = "%s\n%s" % [tr(_name.to_upper()), tr(_name.to_upper() + "_DESC")]
-#	if game.autocollect.particles.has(_name):
-#		var num:float = 0.0
-#		if _name in ["proton", "electron"]:
-#			if game.particles.neutron > neutron_cap:
-#				num = game.autocollect.particles[_name] + (game.particles.neutron - neutron_cap) * (1 - pow(0.5, game.u_i.time_speed / 900.0)) / 2.0
-#			else:
-#				num = game.autocollect.particles[_name]
-#		elif _name == "neutron":
-#			if game.particles.neutron > neutron_cap:
-#				num = game.autocollect.particles[_name] - (game.particles.neutron - neutron_cap) * (1 - pow(0.5, game.u_i.time_speed / 900.0))
-#			else:
-#				num = game.autocollect.particles[_name]
-#		st += "\n" + (tr("YOU_PRODUCE") if num >= 0 else tr("YOU_USE")) % ("%s/%s" % [Helper.format_num(abs(num), true), tr("S_SECOND")])
-#	game.show_tooltip(st)
-	
 func show_buy_sell(type:String, obj:String):
 	var amount = 0
 	var value = 0
@@ -281,6 +263,8 @@ func _input(event):
 func _on_close_button_pressed():
 	game.toggle_panel(self)
 
+@onready var subatomic_particles_label = $Control/ParticlesHBox/SubatomicParticles
+
 func _process(delta):
 	if not visible:
 		set_process(false)
@@ -294,4 +278,9 @@ func _process(delta):
 		for hbox in hbox_data:
 			hbox.rsrc.get_node("Text").text = "%s mol" % [Helper.format_num(game.atoms[hbox.name], true)]
 	elif tab == "particles":
-		pass
+		subatomic_particles_label.text = "%s mol" % [Helper.format_num(game.particles.subatomic_particles, true)]
+
+
+func show_part(_name:String):
+	var st:String = "%s\n%s" % [tr(_name.to_upper()), tr(_name.to_upper() + "_DESC")]
+	game.show_tooltip(st)

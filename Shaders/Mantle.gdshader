@@ -2,6 +2,7 @@ shader_type canvas_item;
 
 uniform vec4 color:source_color = vec4(3.0, 1.5, 1.0, 1.0);
 uniform float speed = 0.03;
+uniform float alpha = 0.0;
 
 void fragment() {
 	vec2 uv = vec2(UV.x * 2.5, UV.y * 1.406);
@@ -17,5 +18,5 @@ void fragment() {
 	
 	vec3 new_color = vec3(noise_r, noise_g, noise_b);
 	COLOR.rgb = color.rgb;
-	COLOR.a = new_alpha * 5.0;
+	COLOR.a = new_alpha * 5.0 * alpha;
 }

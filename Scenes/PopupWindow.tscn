@@ -34,9 +34,9 @@ anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
 offset_left = -81.0
-offset_top = -41.5
+offset_top = -28.5
 offset_right = 81.0
-offset_bottom = 41.5
+offset_bottom = 28.5
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_is2bl")
@@ -46,6 +46,7 @@ layout_mode = 2
 theme_override_constants/separation = 10
 
 [node name="Label" type="Label" parent="Panel/VBoxContainer"]
+visible = false
 layout_mode = 2
 horizontal_alignment = 1
 

@@ -215,10 +215,12 @@ func on_rover_press(rov:Dictionary, rov_id:int):
 			game.c_t = tile_id
 			tile_id = -1
 			game.rover_id = rov_id
-			if game.tile_data[game.c_t].has("cave") or game.tile_data[game.c_t].has("diamond_tower"):
-				game.switch_view("cave")
+			if rov.MK == 3:
+				game.popup_window("", "", [tr("GO_TO_FLOOR_X") % 16, tr("GO_TO_FLOOR_X") % 8, tr("START_AT_FLOOR_1")], [Callable(game, "switch_view").bind("cave", {"start_floor":16}), Callable(game, "switch_view").bind("cave", {"start_floor":8}), Callable(game, "switch_view").bind("cave")], tr("CANCEL"))
+			elif rov.MK == 2:
+				game.popup_window("", "", [tr("GO_TO_FLOOR_X") % 8, tr("START_AT_FLOOR_1")], [Callable(game, "switch_view").bind("cave", {"start_floor":8}), Callable(game, "switch_view").bind("cave")], tr("CANCEL"))
 			else:
-				game.switch_view("ruins")
+				game.switch_view("cave")
 			game.toggle_panel(self)
 	elif game.item_to_use.type == "cave":
 		var ok:bool = false

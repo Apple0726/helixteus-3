@@ -62,17 +62,30 @@ func _on_Terraform_pressed():
 		game.terraform_panel.surface = round(surface)
 		var lake_num:int = 0
 		var ash_mult:float = 0.0
+		var SP_feature_mult:float = 0.0
+		var energy_feature_mult:float = 0.0
 		for tile in game.tile_data:
 			ash_mult += 1.0
+			SP_feature_mult += 1.0
+			energy_feature_mult += 1.0
 			if tile:
 				if tile.has("lake"):
 					lake_num += 1
 				elif tile.has("ash"):
 					ash_mult += tile.ash.richness - 1.0
+				if tile.has("resource_production_bonus"):
+					if tile.resource_production_bonus.has("SP"):
+						SP_feature_mult += tile.resource_production_bonus.SP - 1.0
+					if tile.resource_production_bonus.has("energy"):
+						energy_feature_mult += tile.resource_production_bonus.energy - 1.0
 		ash_mult /= len(game.tile_data)
+		SP_feature_mult /= len(game.tile_data)
+		energy_feature_mult /= len(game.tile_data)
 		game.terraform_panel.lake_num = lake_num
 		game.terraform_panel.tile_num = len(game.tile_data)
 		game.terraform_panel.ash_mult = ash_mult
+		game.terraform_panel.SP_feature_mult = SP_feature_mult
+		game.terraform_panel.energy_feature_mult = energy_feature_mult
 		game.toggle_panel(game.terraform_panel)
 
 func _on_Terraform_mouse_entered():

@@ -128,9 +128,7 @@ var coal_icon = preload("res://Graphics/Materials/coal.png")
 var MM_icon = preload("res://Graphics/Icons/MM.png")
 var atom_icon = preload("res://Graphics/Science/ATM.png")
 var particle_icon = preload("res://Graphics/Science/SAP.png")
-var proton_icon = preload("res://Graphics/Particles/proton.png")
-var neutron_icon = preload("res://Graphics/Particles/neutron.png")
-var electron_icon = preload("res://Graphics/Particles/electron.png")
+var subatomic_particles_icon = preload("res://Graphics/Particles/subatomic_particles.png")
 
 var desc_icons = {	Building.MINERAL_EXTRACTOR:[[minerals_icon]],
 					Building.POWER_PLANT:[[energy_icon]],
@@ -159,7 +157,7 @@ var rsrc_icons = {	Building.MINERAL_EXTRACTOR:minerals_icon,
 					Building.SOLAR_PANEL:energy_icon,
 					Building.ATMOSPHERE_EXTRACTOR:atom_icon,
 					Building.ATOM_MANIPULATOR:atom_icon,
-					Building.SUBATOMIC_PARTICLE_REACTOR:particle_icon,
+					Building.SUBATOMIC_PARTICLE_REACTOR:subatomic_particles_icon,
 #					"PC":proton_icon,
 #					"NC":neutron_icon,
 #					"NSF":neutron_icon,

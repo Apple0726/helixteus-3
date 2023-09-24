@@ -228,11 +228,11 @@ func set_bldg_value(first_tile_bldg_info:Dictionary, first_tile:Dictionary, lv:i
 	elif bldg == Building.ATMOSPHERE_EXTRACTOR and path_selected == 1:
 		curr_value = bldg_value(Helper.get_AE_production(p_i.pressure if planet.is_empty() else planet.pressure, first_tile_bldg_info.value), lv, first_tile_bldg_info.pw)
 	elif bldg == Building.MINERAL_EXTRACTOR and path_selected == 1:
-		curr_value = bldg_value(first_tile_bldg_info.value * planet.get("mineral_replicator_bonus", 1.0), lv, first_tile_bldg_info.pw)
+		curr_value = bldg_value(first_tile_bldg_info.value * planet.resource_production_bonus.get("minerals", 1), lv, first_tile_bldg_info.pw)
 	elif bldg == Building.POWER_PLANT and path_selected == 1:
-		curr_value = bldg_value(first_tile_bldg_info.value * planet.get("substation_bonus", 1.0), lv, first_tile_bldg_info.pw)
+		curr_value = bldg_value(first_tile_bldg_info.value * planet.resource_production_bonus.get("energy", 1), lv, first_tile_bldg_info.pw)
 	elif bldg == Building.RESEARCH_LAB and path_selected == 1:
-		curr_value = bldg_value(first_tile_bldg_info.value * planet.get("observatory_bonus", 1.0), lv, first_tile_bldg_info.pw)
+		curr_value = bldg_value(first_tile_bldg_info.value * planet.resource_production_bonus.get("SP", 1), lv, first_tile_bldg_info.pw)
 	elif bldg in [Building.MINERAL_SILO, Building.BATTERY]:
 		curr_value = bldg_value(first_tile_bldg_info.value, lv, first_tile_bldg_info.pw)
 	else:

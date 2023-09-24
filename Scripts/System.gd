@@ -305,9 +305,9 @@ func refresh_stars():
 				MS.scale *= 0.7
 			star.add_child(MS)
 			if star_info.MS == "DS":
-				add_rsrc(star_info[3] * scale_mult, Color(0, 0.8, 0, 1), Data.energy_icon, i, true, max(star_info.size / 6.0, 0.5) * scale_mult)
+				add_rsrc(star_info.pos * scale_mult, Color(0, 0.8, 0, 1), Data.energy_icon, i, true, max(star_info.size / 6.0, 0.5) * scale_mult)
 			elif star_info.MS == "MB":
-				add_rsrc(star_info[3] * scale_mult, Color(0, 0.8, 0, 1), Data.SP_icon, i, true, max(star_info.size / 6.0, 0.5) * scale_mult)
+				add_rsrc(star_info.pos * scale_mult, Color(0, 0.8, 0, 1), Data.SP_icon, i, true, max(star_info.size / 6.0, 0.5) * scale_mult)
 			if star_info.bldg.has("is_constructing"):
 				var time_bar = game.time_scene.instantiate()
 				time_bar.scale *= 8.0
@@ -333,29 +333,23 @@ func auto_speedup(bldg_costs:Dictionary):
 		bldg_costs.time = 0.2
 
 func add_constr_costs(vbox:VBoxContainer, data):
-	if data is Array:
-		if data[7].has("cost_div"):
-			Helper.add_label("%s (%s)" % [tr("CONSTRUCTION_COSTS"), tr("DIV_BY") % Helper.clever_round(data[7].cost_div)], 0)
-		else:
-			Helper.add_label(tr("CONSTRUCTION_COSTS"), 0)
+	if data.has("cost_div"):
+		Helper.add_label("%s (%s)" % [tr("CONSTRUCTION_COSTS"), tr("DIV_BY") % Helper.clever_round(data.cost_div)], 0)
 	else:
-		if data.has("cost_div"):
-			Helper.add_label("%s (%s)" % [tr("CONSTRUCTION_COSTS"), tr("DIV_BY") % Helper.clever_round(data.cost_div)], 0)
-		else:
-			Helper.add_label(tr("CONSTRUCTION_COSTS"), 0)
+		Helper.add_label(tr("CONSTRUCTION_COSTS"), 0)
 	game.get_node("UI/Panel").visible = true
 	game.get_node("UI/Panel/AnimationPlayer").play("Fade")
 	
 func show_DS_costs(star:Dictionary, base:bool = false):
 	var vbox = game.get_node("UI/Panel/VBox")
-	bldg_costs = Data.MS_costs["DS_%s" % ((star[7].MS_lv + 1) if not base else 0)].duplicate(true)
+	bldg_costs = Data.MS_costs["DS_%s" % ((star.MS_lv + 1) if not base else 0)].duplicate(true)
 	if base and build_all_MS_stages:
 		Helper.add_dict_to_dict(bldg_costs, Data.MS_costs.DS_1)
 		Helper.add_dict_to_dict(bldg_costs, Data.MS_costs.DS_2)
 		Helper.add_dict_to_dict(bldg_costs, Data.MS_costs.DS_3)
 		Helper.add_dict_to_dict(bldg_costs, Data.MS_costs.DS_4)
 	for cost in bldg_costs:
-		bldg_costs[cost] = round(bldg_costs[cost] * pow(star[2], 2) * game.engineering_bonus.BCM / (star[7].cost_div if star[7].has("cost_div") else 1.0))
+		bldg_costs[cost] = round(bldg_costs[cost] * pow(star.size, 2) * game.engineering_bonus.BCM / star.get("cost_div", 1.0))
 	auto_speedup(bldg_costs)
 	Helper.put_rsrc(vbox, 32, bldg_costs, true, true)
 	add_constr_costs(vbox, star)
@@ -472,7 +466,7 @@ func show_planet_info(id:int, l_id:int):
 		Helper.put_rsrc(vbox, 32, {})
 		var stage:String
 		if p_i.has("repair_cost"):
-			stage = tr("BROKEN_X").format({"building_name":tr("%s_NAME" % p_i.MS)})
+			stage = tr("BROKEN_X").format({"building_name":tr("M_%s_NAME" % p_i.MS)})
 		else:
 			stage = tr("M_%s_NAME" % p_i.MS)
 		if Data.MS_num_stages[p_i.MS] > 0:
@@ -543,6 +537,7 @@ func _input(event):
 				var MS:String = MS_constr_data.obj.MS
 				call("show_%s_costs" % MS, MS_constr_data.obj)
 				MS_constr_data.confirm_upgrade = true
+				await get_tree().process_frame
 				Helper.add_label(tr("X_TO_CONFIRM") % "F")
 			elif current_MS_action == "upgrading":
 				build_MS(MS_constr_data.obj, MS_constr_data.obj.MS)
@@ -758,14 +753,14 @@ func on_planet_click (id:int, l_id:int):
 				game.update_item_cursor()
 				return
 		elif p_i.has("tile_num"):
-			if p_i.bldg.name == "GH":
+			if p_i.bldg.name == Building.GREENHOUSE:
 				toggle_GH(p_i, false)
-			elif p_i.bldg.name == "AMN":
+			elif p_i.bldg.name == Building.ATOM_MANIPULATOR:
 				game.AMN_panel.tf = true
 				game.AMN_panel.obj = p_i
 				game.AMN_panel.tile_num = p_i.tile_num
 				game.toggle_panel(game.AMN_panel)
-			elif p_i.bldg.name == "SPR":
+			elif p_i.bldg.name == Building.SUBATOMIC_PARTICLE_REACTOR:
 				game.SPR_panel.tf = true
 				game.SPR_panel.obj = p_i
 				game.SPR_panel.tile_num = p_i.tile_num
@@ -809,10 +804,10 @@ func on_star_over (id:int):
 			star_type_str = tr("GIANT")
 		StarType.SUPERGIANT:
 			star_type_str = tr("SUPERGIANT")
-	if star_type >= StarType.HYPERGIANT + 2:
+	if star_type >= StarType.HYPERGIANT + 1:
 		star_type_str = tr("HYPERGIANT")
 		star_tier = Helper.get_roman_num(star_type - StarType.HYPERGIANT)
-	var tooltip = tr("STAR_TITLE").format({"type":"%s%s" % [star_type_str, star_tier.to_upper()], "class":star["class"]})
+	var tooltip = tr("STAR_TITLE").format({"type":"%s %s" % [star_type_str, star_tier.to_upper()], "class":star["class"]})
 	tooltip += "\n%s\n%s %s\n%s\n%s" % [
 		tr("STAR_TEMPERATURE") % [Helper.format_num(star.temperature, false, 9)], 
 		tr("STAR_SIZE") % [(Helper.clever_round(star.size, 3, true) if star.size < 1000 else Helper.format_num(star.size))], tr("SOLAR_RADII"),
@@ -853,9 +848,9 @@ func on_star_over (id:int):
 		Helper.put_rsrc(vbox, 32, {})
 		var stage:String
 		if star.has("repair_cost"):
-			stage = tr("BROKEN_X").format({"building_name":tr("%s_NAME" % star.MS)})
+			stage = tr("BROKEN_X").format({"building_name":tr("M_%s_NAME" % star.MS)})
 		else:
-			stage = tr("%s_NAME" % star.MS)
+			stage = tr("M_%s_NAME" % star.MS)
 		if Data.MS_num_stages[star.MS] > 0:
 			stage += " (%s)" % [tr("STAGE_X_X") % [star.MS_lv, Data.MS_num_stages[star.MS]]]
 		Helper.add_label(stage)

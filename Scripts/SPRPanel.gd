@@ -34,7 +34,7 @@ var path_2_value:float = 1.0
 func _ready():
 	set_process(false)
 	set_polygon(size)
-	$Title.text = tr("SPR_NAME")
+	$Title.text = tr("SUBATOMIC_PARTICLE_REACTOR_NAME")
 	$Desc.text = tr("REACTIONS_PANEL_DESC")
 	for _name in reactions:
 		var btn = preload("res://Scenes/AdvButton.tscn").instantiate()
@@ -57,16 +57,16 @@ func refresh():
 	for btn in $ScrollContainer/VBoxContainer.get_children():
 		btn.visible = not btn.name in ["Ta", "W", "Os"] or game.science_unlocked.has("AMM")
 	if tf:
-		$Title.text = "%s %s" % [Helper.format_num(tile_num), tr("SPR_NAME_S").to_lower(),]
+		$Title.text = "%s %s" % [Helper.format_num(tile_num), tr("SUBATOMIC_PARTICLE_REACTOR_NAME_S").to_lower(),]
 		var max_star_temp = game.get_max_star_prop(game.c_s, "temperature")
 		au_int = 12000.0 * game.galaxy_data[game.c_g].B_strength * max_star_temp
 		au_mult = 1.0 + au_int
 	else:
-		$Title.text = tr("SPR_NAME")
+		$Title.text = tr("SUBATOMIC_PARTICLE_REACTOR_NAME")
 		tile_num = 1
 		obj = game.tile_data[game.c_t]
 		au_int = obj.get("aurora", 0.0)
-		au_mult = Helper.get_au_mult(obj)
+		au_mult = au_int + 1.0
 	path_2_value = obj.bldg.path_2_value * Helper.get_IR_mult(Building.SUBATOMIC_PARTICLE_REACTOR)
 	$Control/EnergyCostText.text = Helper.format_num(round(energy_cost * $Control/HSlider.value / au_mult / game.u_i.charge / path_2_value)) + "  [img]Graphics/Icons/help.png[/img]"
 	if au_mult > 1:
@@ -79,9 +79,9 @@ func refresh():
 	$Transform3D.visible = $Control3.visible or $Control.visible
 	for reaction_name in reactions:
 		var disabled:bool = false
-		if game.particles.proton == 0 or game.particles.neutron == 0 or game.particles.electron == 0:
+		if is_zero_approx(game.particles.subatomic_particles):
 			disabled = true
-		disabled = disabled and game.atoms[reaction_name] == 0 and (not obj.bldg.has("qty") or not obj.bldg.reaction == reaction_name)
+		disabled = disabled and is_zero_approx(game.atoms[reaction_name]) and (not obj.bldg.has("qty") or not obj.bldg.reaction == reaction_name)
 		$ScrollContainer/VBoxContainer.get_node(reaction_name).disabled = disabled
 	refresh_time_icon()
 	if reaction == "":
@@ -91,12 +91,9 @@ func refresh():
 	if atom_to_p:
 		max_value = game.atoms[reaction]
 	else:
-		for particle in game.particles:
-			if not particle in ["proton", "electron", "neutron"]:
-				continue
-			var max_value2 = game.particles[particle] / Z
-			if max_value2 < max_value or max_value == 0.0:
-				max_value = max_value2
+		var max_value2 = game.particles.subatomic_particles / Z
+		if max_value2 < max_value or max_value == 0.0:
+			max_value = max_value2
 	$Control/HSlider.max_value = min(game.energy * au_mult * game.u_i.charge / energy_cost * path_2_value, max_value)
 	$Control/HSlider.step = $Control/HSlider.max_value / 500.0
 	$Control/HSlider.visible = $Control/HSlider.max_value != 0
@@ -109,7 +106,7 @@ func refresh():
 		$Transform3D.text = "%s (G)" % tr("TRANSFORM")
 	var value = $Control/HSlider.value
 	var atom_dict = {}
-	var p_costs = {"proton":value, "neutron":value, "electron":value}
+	var p_costs = {"subatomic_particles":value}
 	for particle in p_costs:
 		p_costs[particle] *= Z
 	atom_dict[reaction] = value
@@ -164,9 +161,7 @@ func _on_Transform_pressed():
 		else:
 			rsrc_to_add[reaction] = MM_value
 			num = max(0, obj.bldg.qty - MM_value) * Z
-		rsrc_to_add.proton = num
-		rsrc_to_add.neutron = num
-		rsrc_to_add.electron = num
+		rsrc_to_add.subatomic_particles = num
 		rsrc_to_add.energy = round((1 - progress) * energy_cost / au_mult / game.u_i.charge * obj.bldg.qty / path_2_value)
 		game.add_resources(rsrc_to_add)
 		obj.bldg.erase("qty")
@@ -186,7 +181,7 @@ func _on_Transform_pressed():
 		if atom_to_p:
 			rsrc_to_deduct[reaction] = rsrc
 		else:
-			rsrc_to_deduct = {"proton":rsrc * Z, "neutron":rsrc * Z, "electron":rsrc * Z}
+			rsrc_to_deduct = {"subatomic_particles":rsrc * Z}
 		rsrc_to_deduct.energy = round(energy_cost * rsrc / au_mult / game.u_i.charge / path_2_value)
 		if not game.check_enough(rsrc_to_deduct):
 			game.popup(tr("NOT_ENOUGH_RESOURCES"), 1.5)
@@ -231,7 +226,7 @@ func _process(delta):
 	else:
 		num = max(0, obj.bldg.qty - MM_value) * Z
 		atom_dict[reaction] = MM_value
-	MM_dict = {"proton":num, "neutron":num, "electron":num}
+	MM_dict = {"subatomic_particles":num}
 	for hbox in rsrc_nodes_from:
 		hbox.rsrc.get_node("Text").text = "%s mol" % [Helper.format_num(atom_dict[hbox.name], true)]
 	for hbox in rsrc_nodes_to:

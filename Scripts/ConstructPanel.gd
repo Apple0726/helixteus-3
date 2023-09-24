@@ -284,3 +284,11 @@ func hide_panel():
 
 func _on_tree_exited():
 	game.block_scroll = false
+
+
+func _on_build_all_mouse_entered():
+	game.show_tooltip(tr("BUILD_ALL_AT_ONCE"))
+
+
+func _on_build_all_mouse_exited():
+	game.hide_tooltip()
