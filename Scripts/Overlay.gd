@@ -167,8 +167,8 @@ func refresh_options(index:int, recalculate:bool = true):
 				5:
 					if recalculate and not c_vl.modified:
 						min_max = get_obj_min_max("galaxy", "B_strength")
-						c_vl.left = min_max._min * e(1, 9)
-						c_vl.right = min_max._max * e(1, 9)
+						c_vl.left = Helper.clever_round(min_max._min * 1e9)
+						c_vl.right = Helper.clever_round(min_max._max * 1e9)
 					editable = true
 					is_int = false
 					unit = " nT"

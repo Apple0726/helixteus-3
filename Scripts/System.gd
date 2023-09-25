@@ -806,8 +806,8 @@ func on_star_over (id:int):
 			star_type_str = tr("SUPERGIANT")
 	if star_type >= StarType.HYPERGIANT + 1:
 		star_type_str = tr("HYPERGIANT")
-		star_tier = Helper.get_roman_num(star_type - StarType.HYPERGIANT)
-	var tooltip = tr("STAR_TITLE").format({"type":"%s %s" % [star_type_str, star_tier.to_upper()], "class":star["class"]})
+		star_tier = " " + Helper.get_roman_num(star_type - StarType.HYPERGIANT)
+	var tooltip = tr("STAR_TITLE").format({"type":"%s%s" % [star_type_str, star_tier.to_upper()], "class":star["class"]})
 	tooltip += "\n%s\n%s %s\n%s\n%s" % [
 		tr("STAR_TEMPERATURE") % [Helper.format_num(star.temperature, false, 9)], 
 		tr("STAR_SIZE") % [(Helper.clever_round(star.size, 3, true) if star.size < 1000 else Helper.format_num(star.size))], tr("SOLAR_RADII"),

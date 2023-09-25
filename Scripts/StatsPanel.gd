@@ -130,7 +130,7 @@ func _on_StarClasses_pressed():
 func on_star_class_bar_entered(star_class:String, i:int):
 	game.show_tooltip("%s%s: %s" % [star_class, i, game["stats_%s" % stats_for].star_classes[star_class][i]])
 
-func on_star_type_bar_entered(star_type:String, _str:String):
+func on_star_type_bar_entered(star_type:int, _str:String):
 	game.show_tooltip("%s: %s" % [_str, game["stats_%s" % stats_for].star_types[star_type]])
 
 func on_bar_exited():
@@ -165,12 +165,20 @@ func _on_StarTypes_pressed():
 		bar.name = "ColorRect"
 		bar.size_flags_vertical = 10
 		label["theme_override_fonts/font"] = max_label["theme_override_fonts/font"]
-		if star_type.substr(0, 11) == "hypergiant ":
-			var arr:Array = star_type.split(" ")
-			var star_tier:String = arr[1]
-			label.text = "%s %s" % [tr(arr[0].to_upper()), star_tier]
+		if star_type >= StarType.HYPERGIANT + 1:
+			label.text = "%s %s" % [tr("HYPERGIANT"), Helper.get_roman_num(star_type - StarType.HYPERGIANT)]
 		else:
-			label.text = tr(star_type.to_upper())
+			match star_type:
+				StarType.MAIN_SEQUENCE:
+					label.text = tr("MAIN_SEQUENCE")
+				StarType.WHITE_DWARF:
+					label.text = tr("WHITE_DWARF")
+				StarType.BROWN_DWARF:
+					label.text = tr("BROWN_DWARF")
+				StarType.GIANT:
+					label.text = tr("GIANT")
+				StarType.SUPERGIANT:
+					label.text = tr("SUPERGIANT")
 		bar.connect("mouse_entered",Callable(self,"on_star_type_bar_entered").bind(star_type, label.text))
 		label.connect("mouse_entered",Callable(self,"on_star_type_bar_entered").bind(star_type, label.text))
 		bar.connect("mouse_exited",Callable(self,"on_bar_exited"))

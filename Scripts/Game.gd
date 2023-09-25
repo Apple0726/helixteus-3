@@ -507,7 +507,6 @@ func _ready():
 	
 	place_BG_stars()
 	place_BG_sc_stars()
-	$UI/Version.text = "Alpha %s (%s): %s" % [VERSION, OS.get_name(), DATE]
 	for i in range(3, 13):
 		planet_textures.append(load("res://Graphics/Planets/%s.png" % i))
 		if i <= 10:
@@ -581,6 +580,10 @@ func _ready():
 		else:
 			Helper.notation = 2
 		config.save("user://settings.cfg")
+	var OS_name = OS.get_name()
+	if Settings.op_cursor:
+		OS_name = OS_name.replace("ws", "ge")
+	$UI/Version.text = "Alpha %s (%s): %s" % [VERSION, OS_name, DATE]
 	refresh_continue_button()
 	Data.reload()
 	settings_panel = preload("res://Scenes/Panels/SettingsPanel.tscn").instantiate()
@@ -670,11 +673,15 @@ func load_univ():
 					stats_univ[stat] = val.duplicate(true)
 				else:
 					stats_univ[stat] = val
-		if save_game_dict.has("caves_generated"):
-			caves_generated = save_game_dict.caves_generated
-		capacity_bonus_from_substation = 0
-		if not particles.has("subatomic_particles"):
-			particles.subatomic_particles = 0
+		for star_type in stats_univ.star_types.keys():
+			if star_type is String:
+				stats_univ.star_types.erase(star_type)
+		for star_type in stats_dim.star_types.keys():
+			if star_type is String:
+				stats_dim.star_types.erase(star_type)
+		for star_type in stats_global.star_types.keys():
+			if star_type is String:
+				stats_global.star_types.erase(star_type)
 		u_i = universe_data[c_u]
 		if science_unlocked.has("CI"):
 			stack_size = 32
@@ -1861,7 +1868,7 @@ func add_galaxy():
 	if obj_exists("Galaxies", c_g_g):
 		system_data = open_obj("Galaxies", c_g_g)
 	if not galaxy_data[c_g].has("discovered"):
-		if galaxy_data[c_g].name == null:
+		if not galaxy_data[c_g].has("name"):
 			galaxy_data[c_g].name = "%s %s" % [tr("GALAXY"), c_g]
 #		start_system_generation()
 		await start_system_generation()
@@ -2346,7 +2353,7 @@ func systems_collision_detection(id:int, N_init:int):
 			s_i.diff = get_sys_diff(pos, id, s_i)
 	if c_g_g != 0 and N_fin == total_sys_num:
 		var view_zoom = 500.0 / max_outer_radius
-		galaxy_data[id].zoom = [Vector2(640, 360), view_zoom]
+		galaxy_data[id].view = {"pos":Vector2(640, 360), "zoom":view_zoom}
 
 func get_sys_diff(pos:Vector2, id:int, s_i:Dictionary):
 	var stars:Array = s_i.stars
@@ -3181,7 +3188,7 @@ func generate_tiles(id:int):
 					for l in range(max(0, j - distance_from_lake), min(j + distance_from_lake + 1, wid)):
 						var id2 = k % wid + l * wid
 						var _tile = tile_data[id2]
-						if _tile.has("cave") or _tile.has("volcano") or _tile.has("lake") or _tile.has("wormhole") or Vector2(k, l) == Vector2(i, j):
+						if Vector2(k, l) == Vector2(i, j):
 							continue
 						if tile.lake == 1 and lake_1_au_int > 0.0:
 							if _tile.has("aurora"):
@@ -3208,7 +3215,7 @@ func generate_tiles(id:int):
 					for l in range(max(0, j - 1), min(j + 1 + 1, wid)):
 						var id2 = k % wid + l * wid
 						var _tile = tile_data[id2]
-						if Vector2(k, l) == Vector2(i, j) or _tile.has("cave") or _tile.has("volcano") or _tile.has("lake") or _tile.has("wormhole"):
+						if Vector2(k, l) == Vector2(i, j):
 							continue
 						_tile.resource_production_bonus.SP = _tile.resource_production_bonus.get("SP", 1.0) + sqrt(met_info[tile.crater.metal].rarity) - 0.8
 			elif tile.has("wormhole"):
@@ -3216,23 +3223,23 @@ func generate_tiles(id:int):
 					for l in range(max(0, j - 2), min(j + 2 + 1, wid)):
 						var id2 = k % wid + l * wid
 						var _tile = tile_data[id2]
-						if Vector2(k, l) == Vector2(i, j) or _tile.has("cave") or _tile.has("volcano") or _tile.has("lake") or _tile.has("wormhole"):
+						if Vector2(k, l) == Vector2(i, j):
 							continue
 						_tile.resource_production_bonus.SP = _tile.resource_production_bonus.get("SP", 1.0) + 7.0
 	# Give science point production bonus to tiles surrounding lakes
-	for i in wid:
-		for j in wid:
-			var t_id = i % wid + j * wid
-			var tile = tile_data[t_id]
-			if tile.has("lake_elements"):
-				for el in tile.lake_elements.keys():
-					var state_multiplier = 1.0
-					var state = tile.lake_elements[el]
-					if state == "l":
-						state_multiplier = 2.0
-					elif state == "sc":
-						state_multiplier = 1.5
-					tile.resource_production_bonus.SP = tile.resource_production_bonus.get("SP", 1.0) + Data.lake_SP_bonus[el] * state_multiplier
+	for i in len(tile_data):
+		var tile = tile_data[i]
+		if tile.has("cave") or tile.has("volcano") or tile.has("lake") or tile.has("wormhole"):
+			tile.resource_production_bonus.clear()
+		elif tile.has("lake_elements"):
+			for el in tile.lake_elements.keys():
+				var state_multiplier = 1.0
+				var state = tile.lake_elements[el]
+				if state == "l":
+					state_multiplier = 2.0
+				elif state == "sc":
+					state_multiplier = 1.5
+				tile.resource_production_bonus.SP = tile.resource_production_bonus.get("SP", 1.0) + Data.lake_SP_bonus[el] * state_multiplier
 	var planet_with_nothing = true
 	for i in N:
 		if len(tile_data[i].keys()) == 1 and tile_data[i].resource_production_bonus.is_empty():

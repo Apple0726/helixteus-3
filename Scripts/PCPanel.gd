@@ -16,7 +16,7 @@ func refresh():
 			continue
 		probe_num += 1
 	if probe_tier == 0:
-		$Label.text = tr("PCC_NAME")
+		$Label.text = tr("PROBE_CONSTRUCTION_CENTER_NAME")
 	$SpinBox.max_value = max(0, 500 - probe_num)
 	$Construct.visible = $SpinBox.max_value > 0
 	$TextureRect.texture = load("res://Graphics/Ships/Probe%s.png" % probe_tier)

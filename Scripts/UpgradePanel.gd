@@ -228,11 +228,11 @@ func set_bldg_value(first_tile_bldg_info:Dictionary, first_tile:Dictionary, lv:i
 	elif bldg == Building.ATMOSPHERE_EXTRACTOR and path_selected == 1:
 		curr_value = bldg_value(Helper.get_AE_production(p_i.pressure if planet.is_empty() else planet.pressure, first_tile_bldg_info.value), lv, first_tile_bldg_info.pw)
 	elif bldg == Building.MINERAL_EXTRACTOR and path_selected == 1:
-		curr_value = bldg_value(first_tile_bldg_info.value * planet.resource_production_bonus.get("minerals", 1), lv, first_tile_bldg_info.pw)
+		curr_value = bldg_value(first_tile_bldg_info.value * (planet.resource_production_bonus.get("minerals", 1) if planet.has("resource_production_bonus") else 1.0), lv, first_tile_bldg_info.pw)
 	elif bldg == Building.POWER_PLANT and path_selected == 1:
-		curr_value = bldg_value(first_tile_bldg_info.value * planet.resource_production_bonus.get("energy", 1), lv, first_tile_bldg_info.pw)
+		curr_value = bldg_value(first_tile_bldg_info.value * (planet.resource_production_bonus.get("energy", 1) if planet.has("resource_production_bonus") else 1.0), lv, first_tile_bldg_info.pw)
 	elif bldg == Building.RESEARCH_LAB and path_selected == 1:
-		curr_value = bldg_value(first_tile_bldg_info.value * planet.resource_production_bonus.get("SP", 1), lv, first_tile_bldg_info.pw)
+		curr_value = bldg_value(first_tile_bldg_info.value * (planet.resource_production_bonus.get("SP", 1) if planet.has("resource_production_bonus") else 1.0), lv, first_tile_bldg_info.pw)
 	elif bldg in [Building.MINERAL_SILO, Building.BATTERY]:
 		curr_value = bldg_value(first_tile_bldg_info.value, lv, first_tile_bldg_info.pw)
 	else:
@@ -416,11 +416,11 @@ func _on_Upgrade_pressed():
 				Helper.add_energy_from_NFR(planet, base_prod)
 				Helper.add_energy_from_CS(planet, base_prod)
 			elif planet.bldg.name == Building.RESEARCH_LAB:
-				game.autocollect.rsrc.SP += diff * planet.get("observatory_bonus", 1.0)
+				game.autocollect.rsrc.SP += diff * planet.resource_production_bonus.get("SP", 1.0)
 			elif planet.bldg.name == Building.MINERAL_EXTRACTOR:
-				game.autocollect.rsrc.minerals += diff * (planet.ash.richness if planet.has("ash") else 1.0) * planet.get("mineral_replicator_bonus", 1.0)
+				game.autocollect.rsrc.minerals += diff * planet.resource_production_bonus.get("minerals", 1.0)
 			elif planet.bldg.name == Building.POWER_PLANT:
-				game.autocollect.rsrc.energy += diff * planet.get("substation_bonus", 1.0)
+				game.autocollect.rsrc.energy += diff * planet.resource_production_bonus.get("energy", 1.0)
 				game.capacity_bonus_from_substation += diff * planet.get("unique_bldg_bonus_cap", 0.0)
 			elif planet.has("auto_GH"):
 				for p in planet.auto_GH.produce:

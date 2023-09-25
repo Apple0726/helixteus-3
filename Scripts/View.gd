@@ -377,6 +377,12 @@ func _physics_process(_delta):
 				hbox.visible = false
 			obj.icons_hidden = true
 			obj.timer.wait_time = 1.0
+			if not get_tree().get_nodes_in_group("tile_bonus_nodes").is_empty():
+				for tile_bonus_node in get_tree().get_nodes_in_group("tile_bonus_nodes"):
+					var tween = create_tween()
+					tween.set_parallel(true)
+					tween.tween_property(tile_bonus_node, "color:a", 0.6, 0.1)
+					tween.tween_property(tile_bonus_node.get_node("TileBonus"), "modulate:a", 0.0, 0.1)
 		elif scale.x >= 0.25 and obj.icons_hidden:
 			for time_bar in obj.time_bars:
 				time_bar.node.visible = true
@@ -389,6 +395,12 @@ func _physics_process(_delta):
 				hbox.visible = true
 			obj.icons_hidden = false
 			obj.timer.wait_time = 0.1
+			if not get_tree().get_nodes_in_group("tile_bonus_nodes").is_empty():
+				for tile_bonus_node in get_tree().get_nodes_in_group("tile_bonus_nodes"):
+					var tween = create_tween()
+					tween.set_parallel(true)
+					tween.tween_property(tile_bonus_node, "color:a", 0.0, 0.1)
+					tween.tween_property(tile_bonus_node.get_node("TileBonus"), "modulate:a", 1.0, 0.1)
 
 var dragging:bool = false
 var touch_events = {}

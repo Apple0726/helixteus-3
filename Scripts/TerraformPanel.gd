@@ -80,7 +80,7 @@ func terraform_planet():
 		UniqueBuilding.SUBSTATION:"energy",
 	}
 	if unique_bldg_id in [UniqueBuilding.MINERAL_REPLICATOR, UniqueBuilding.OBSERVATORY, UniqueBuilding.SUBSTATION, UniqueBuilding.MINING_OUTPOST]:
-		p_i.resource_production_bonus[building_to_resource[unique_bldg_id]] = unique_bldg_bonus
+		p_i.resource_production_bonus[building_to_resource[unique_bldg_id]] = unique_bldg_bonus * (p_i.ash.richness if p_i.has("ash") else 1.0)
 		if unique_bldg_id == UniqueBuilding.SUBSTATION:
 			p_i.unique_bldg_bonus_cap = unique_bldg_bonus_cap
 			game.capacity_bonus_from_substation += Data.path_1[Building.POWER_PLANT].value * surface * p_i.unique_bldg_bonus_cap

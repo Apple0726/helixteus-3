@@ -369,6 +369,22 @@ func show_tooltip(tile, tile_id:int):
 				icons = [Data.SP_icon, Data.time_icon]
 	if tile.has("depth") and not tile.has("bldg") and not tile.has("crater") and not tile.has("bridge"):
 		tooltip += "%s: %s m\n%s" % [tr("HOLE_DEPTH"), tile.depth, tr("SHIFT_CLICK_TO_BRIDGE_HOLE")]
+	elif bldg_to_construct in [Building.MINERAL_EXTRACTOR, Building.RESEARCH_LAB, Building.SOLAR_PANEL] and tile.has("resource_production_bonus") and not tile.resource_production_bonus.is_empty() and (game.u_i.lv < 18 or view.scale.x < 0.25):
+		tooltip = tr("BUILD_HERE_FOR_X_BONUS")
+		if bldg_to_construct == Building.MINERAL_EXTRACTOR and tile.resource_production_bonus.has("minerals"):
+			if game.u_i.lv >= 18:
+				tooltip += "(x %s)" % Helper.clever_round(tile.resource_production_bonus.minerals)
+			icons = [Data.minerals_icon]
+		elif bldg_to_construct == Building.RESEARCH_LAB and tile.resource_production_bonus.has("SP"):
+			if game.u_i.lv >= 18:
+				tooltip += "(x %s)" % Helper.clever_round(tile.resource_production_bonus.SP)
+			icons = [Data.SP_icon]
+		elif bldg_to_construct == Building.SOLAR_PANEL and tile.resource_production_bonus.has("energy"):
+			if game.u_i.lv >= 18:
+				tooltip += "(x %s)" % Helper.clever_round(tile.resource_production_bonus.energy)
+			icons = [Data.energy_icon]
+		else:
+			tooltip = ""
 	elif tile.has("aurora") and tooltip == "":
 		if game.help_str == "":
 			game.help_str = "aurora_desc"
@@ -376,13 +392,6 @@ func show_tooltip(tile, tile_id:int):
 			tooltip = "%s\n[color=#BBFFFF]%s\n[/color][color=#77BBBB]%s[/color]\n%s" % [tr("AURORA"), tr("AURORA_DESC"), tr("HIDE_HELP"), tr("AURORA_INTENSITY") + ": %s" % [tile.aurora]]
 		else:
 			tooltip = tr("AURORA_INTENSITY") + ": %s" % [tile.aurora]
-	elif bldg_to_construct in [Building.MINERAL_EXTRACTOR, Building.RESEARCH_LAB] and tile.has("resource_production_bonus"):
-		if bldg_to_construct == Building.MINERAL_EXTRACTOR and tile.resource_production_bonus.has("minerals"):
-			tooltip = tr("BUILD_HERE_FOR_X_BONUS")
-			icons = [Data.minerals_icon]
-		elif bldg_to_construct == Building.RESEARCH_LAB and tile.resource_production_bonus.has("SP"):
-			tooltip = tr("BUILD_HERE_FOR_X_BONUS")
-			icons = [Data.SP_icon]
 	if tooltip != "":
 		game.show_adv_tooltip(tooltip, icons)
 	if fiery_tooltip != -1 and is_instance_valid(game.tooltip):
@@ -449,8 +458,9 @@ func constr_bldg(tile_id:int, curr_time:int, _bldg_to_construct:int, mass_build:
 		tile.bldg.construction_date = curr_time
 		tile.bldg.construction_length = constr_costs2.time
 		tile.bldg.XP = constr_costs2.money / 100.0
-		var path_1_value = Data.path_1[_bldg_to_construct].value
+		var path_1_value
 		if _bldg_to_construct != Building.PROBE_CONSTRUCTION_CENTER:
+			path_1_value = Data.path_1[_bldg_to_construct].value
 			tile.bldg.path_1 = 1
 			tile.bldg.path_1_value = path_1_value
 		if _bldg_to_construct in [Building.STONE_CRUSHER, Building.GLASS_FACTORY, Building.STEAM_ENGINE, Building.GREENHOUSE, Building.CENTRAL_BUSINESS_DISTRICT, Building.ATOM_MANIPULATOR, Building.SUBATOMIC_PARTICLE_REACTOR]:
@@ -1531,7 +1541,7 @@ func construct(type:int, costs:Dictionary):
 				if bldg_to_construct == -1:
 					return
 				var tile_bonus_node = preload("res://Scenes/TileBonus.tscn").instantiate()
-				tile_bonus_node.position = Vector2(i, j) * 200 + Vector2.ONE * 100 + Vector2(-92, 30)
+				tile_bonus_node.position = Vector2(i, j) * 200
 				add_child(tile_bonus_node)
 				tile_bonus_node.set_icon(bonus_rsrc_icon)
 				tile_bonus_node.set_multiplier(tile.resource_production_bonus[rsrc])
@@ -1539,6 +1549,9 @@ func construct(type:int, costs:Dictionary):
 				var tween2 = create_tween()
 				tween2.tween_property(tile_bonus_node, "modulate:a", 0.8, 0.2)
 				tile_bonus_node.add_to_group("tile_bonus_nodes")
+				if view.scale.x < 0.25:
+					tile_bonus_node.color.a = 0.6
+					tile_bonus_node.get_node("TileBonus").modulate.a = 0.0
 				if counter % int(1000.0 / Engine.get_frames_per_second()) == 0:
 					await get_tree().process_frame
 				counter += 1

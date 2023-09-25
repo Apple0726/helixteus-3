@@ -161,7 +161,7 @@ func on_galaxy_over (id:int):
 			icons = [Data.SP_icon]
 			tooltip += Data.path_1.RL.desc % Helper.format_num(g_i.prod_num * Helper.get_IR_mult("RL") * game.u_i.time_speed)
 	else:
-		tooltip += "\n%s: %s\n%s: %s\n%s: %s nT\n%s: %s" % [tr("SYSTEMS"), g_i.system_num, tr("DIFFICULTY"), g_i.diff, tr("B_STRENGTH"), g_i.B_strength * e(1, 9), tr("DARK_MATTER"), g_i.dark_matter]
+		tooltip += "\n%s: %s\n%s: %s\n%s: %s nT\n%s: %s" % [tr("SYSTEMS"), g_i.system_num, tr("DIFFICULTY"), g_i.diff, tr("B_STRENGTH"), Helper.clever_round(g_i.B_strength * 1e9), tr("DARK_MATTER"), g_i.dark_matter]
 	for grid in get_tree().get_nodes_in_group("Grids"):
 		if grid.name != "Grid_%s" % g_i.l_id:
 			var tween = create_tween()
