@@ -673,15 +673,6 @@ func load_univ():
 					stats_univ[stat] = val.duplicate(true)
 				else:
 					stats_univ[stat] = val
-		for star_type in stats_univ.star_types.keys():
-			if star_type is String:
-				stats_univ.star_types.erase(star_type)
-		for star_type in stats_dim.star_types.keys():
-			if star_type is String:
-				stats_dim.star_types.erase(star_type)
-		for star_type in stats_global.star_types.keys():
-			if star_type is String:
-				stats_global.star_types.erase(star_type)
 		u_i = universe_data[c_u]
 		if science_unlocked.has("CI"):
 			stack_size = 32
@@ -3217,7 +3208,7 @@ func generate_tiles(id:int):
 						var _tile = tile_data[id2]
 						if Vector2(k, l) == Vector2(i, j):
 							continue
-						_tile.resource_production_bonus.SP = _tile.resource_production_bonus.get("SP", 1.0) + sqrt(met_info[tile.crater.metal].rarity) - 0.8
+						_tile.resource_production_bonus.SP = _tile.resource_production_bonus.get("SP", 1.0) + pow(met_info[tile.crater.metal].rarity, 0.6) - 0.8
 			elif tile.has("wormhole"):
 				for k in range(max(0, i - 2), min(i + 2 + 1, wid)):
 					for l in range(max(0, j - 2), min(j + 2 + 1, wid)):
@@ -3612,11 +3603,9 @@ func _process(_delta):
 			var min_mult:float = pow(maths_bonus.IRM, infinite_research.MEE) * u_i.time_speed
 			var energy_mult:float = pow(maths_bonus.IRM, infinite_research.EPE) * u_i.time_speed
 			var SP_mult:float = pow(maths_bonus.IRM, infinite_research.RLE) * u_i.time_speed
-			var min_to_add:float = delta * (autocollect.MS.minerals + autocollect.GS.minerals) * min_mult
-			var energy_to_add = delta * (autocollect.MS.energy + autocollect.GS.energy) * energy_mult
+			var min_to_add:float = delta * (autocollect.MS.minerals + autocollect.GS.minerals + autocollect.rsrc.minerals) * min_mult
+			var energy_to_add = delta * (autocollect.MS.energy + autocollect.GS.energy + autocollect.rsrc.energy) * energy_mult
 			SP += delta * (autocollect.MS.SP + autocollect.GS.SP) * SP_mult
-			min_to_add += autocollect.rsrc.minerals * delta * min_mult
-			energy_to_add += autocollect.rsrc.energy * delta * energy_mult
 			SP += autocollect.rsrc.SP * delta * SP_mult
 			if mats.cellulose > 0:
 				if not autocollect.mats.has("soil") or is_zero_approx(autocollect.mats.soil) or mats.soil > 0:

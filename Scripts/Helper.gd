@@ -623,6 +623,8 @@ func get_IR_mult(bldg_name):
 		sc = "STE"
 	elif bldg_name == Building.RESEARCH_LAB:
 		sc = "RLE"
+	elif bldg_name == Building.MINERAL_EXTRACTOR:
+		sc = "MEE"
 	else:
 		sc = "%sE" % bldg_name
 	if game.infinite_research.has(sc):
@@ -1629,27 +1631,27 @@ func get_sph_V(outer:float, inner:float = 0):
 var discord = true
 
 func setup_discord():
-#	discord_sdk.app_id = 1101755847325003846 # Application ID
-#	if discord_sdk.get_is_discord_working():
-#		discord_sdk.large_image = "game"
-#		discord_sdk.large_image_text = "Helixteus 3"
-#		discord_sdk.start_timestamp = int(Time.get_unix_time_from_system())
+	discord_sdk.app_id = 1101755847325003846 # Application ID
+	if discord_sdk.get_is_discord_working():
+		discord_sdk.large_image = "game"
+		discord_sdk.large_image_text = "Helixteus 3"
+		discord_sdk.start_timestamp = int(Time.get_unix_time_from_system())
 	pass
 
 func refresh_discord(details:String = "", state:String = "", small_image:String = "", small_image_text:String = ""):
-#	if discord_sdk.get_is_discord_working():
-#		if details == "clear":
-#			discord_sdk.clear()
-#			return
-#		if not discord:
-#			return
-#		if details != "":
-#			discord_sdk.details = details
-#		if state != "":
-#			discord_sdk.state = state
-#		if small_image != "":
-#			discord_sdk.small_image = small_image
-#		if small_image_text != "":
-#			discord_sdk.small_image_text = small_image_text
-#		discord_sdk.refresh()
+	if discord_sdk.get_is_discord_working():
+		if details == "clear":
+			discord_sdk.clear()
+			return
+		if not discord:
+			return
+		if details != "":
+			discord_sdk.details = details
+		if state != "":
+			discord_sdk.state = state
+		if small_image != "":
+			discord_sdk.small_image = small_image
+		if small_image_text != "":
+			discord_sdk.small_image_text = small_image_text
+		discord_sdk.refresh()
 	pass

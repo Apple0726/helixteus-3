@@ -167,12 +167,12 @@ func refresh_univs(reset:bool = false):
 	if not reset:
 		$Subjects.offset_left = 704
 		for univ_info in game.universe_data:
-			var univ = TextureButton.new()
-			univ.texture_normal = univ_icon
-			univ.ignore_texture_size = true
-			univ.stretch_mode = TextureButton.STRETCH_KEEP_ASPECT_CENTERED
-			univ.custom_minimum_size = Vector2.ONE * 260.0
+			var univ = preload("res://Scenes/UniverseIcon.tscn").instantiate()
 			var id = univ_info["id"]
+			univ.get_node("Level").text = tr("LEVEL") + " " + str(univ_info.lv)
+			univ.get_node("DRs").text = str(Helper.clever_round(pow(univ_info.lv, 2.2) / 10000.0 * DR_mult)) + " " + tr("DR")
+			univ.get_node("Props1").text = "%.1fc/%.1fh/%.1fk/%.1fG/%.1fe/%.1f*13.8Gy" % [univ_info.speed_of_light, univ_info.planck, univ_info.boltzmann, univ_info.gravitational, univ_info.charge, univ_info.age]
+			univ.get_node("Props2").text = "%.1f/%.1f/%.1f" % [univ_info.dark_energy, univ_info.difficulty, univ_info.time_speed]
 			$Universes/Scroll/VBox.add_child(univ)
 			univ.connect("mouse_entered",Callable(self,"on_univ_over").bind(id))
 			univ.connect("mouse_exited",Callable(self,"on_univ_out"))

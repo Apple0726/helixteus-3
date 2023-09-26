@@ -145,21 +145,21 @@ func on_galaxy_over (id:int):
 	var icons = []
 	if g_i.has("GS"):
 		tooltip += "\n"
-		if g_i.GS == "MS":
+		if g_i.GS == Building.MINERAL_SILO:
 			icons = [Data.minerals_icon]
-			tooltip += Data.path_1.MS.desc % Helper.format_num(g_i.prod_num * Helper.get_IR_mult("MS"))
-		elif g_i.GS == "B":
+			tooltip += Data.path_1[Building.MINERAL_SILO].desc % Helper.format_num(g_i.prod_num * Helper.get_IR_mult(Building.MINERAL_SILO))
+		elif g_i.GS == Building.BATTERY:
 			icons = [Data.energy_icon]
-			tooltip += Data.path_1.B.desc % Helper.format_num(g_i.prod_num * Helper.get_IR_mult("B"))
-		elif g_i.GS == "ME":
+			tooltip += Data.path_1[Building.BATTERY].desc % Helper.format_num(g_i.prod_num * Helper.get_IR_mult(Building.BATTERY))
+		elif g_i.GS == Building.MINERAL_EXTRACTOR:
 			icons = [Data.minerals_icon]
-			tooltip += Data.path_1.RL.desc % Helper.format_num(g_i.prod_num * Helper.get_IR_mult("ME") * game.u_i.time_speed)
-		elif g_i.GS == "PP":
+			tooltip += Data.path_1[Building.MINERAL_EXTRACTOR].desc % Helper.format_num(g_i.prod_num * Helper.get_IR_mult(Building.MINERAL_EXTRACTOR) * game.u_i.time_speed)
+		elif g_i.GS == Building.POWER_PLANT:
 			icons = [Data.energy_icon]
-			tooltip += Data.path_1.PP.desc % Helper.format_num(g_i.prod_num * Helper.get_IR_mult("PP") * game.u_i.time_speed)
-		elif g_i.GS == "RL":
+			tooltip += Data.path_1[Building.POWER_PLANT].desc % Helper.format_num(g_i.prod_num * Helper.get_IR_mult(Building.POWER_PLANT) * game.u_i.time_speed)
+		elif g_i.GS == Building.RESEARCH_LAB:
 			icons = [Data.SP_icon]
-			tooltip += Data.path_1.RL.desc % Helper.format_num(g_i.prod_num * Helper.get_IR_mult("RL") * game.u_i.time_speed)
+			tooltip += Data.path_1[Building.RESEARCH_LAB].desc % Helper.format_num(g_i.prod_num * Helper.get_IR_mult(Building.RESEARCH_LAB) * game.u_i.time_speed)
 	else:
 		tooltip += "\n%s: %s\n%s: %s\n%s: %s nT\n%s: %s" % [tr("SYSTEMS"), g_i.system_num, tr("DIFFICULTY"), g_i.diff, tr("B_STRENGTH"), Helper.clever_round(g_i.B_strength * 1e9), tr("DARK_MATTER"), g_i.dark_matter]
 	for grid in get_tree().get_nodes_in_group("Grids"):

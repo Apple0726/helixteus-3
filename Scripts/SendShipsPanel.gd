@@ -30,6 +30,8 @@ func _ready():
 
 func refresh():
 	$Drive.visible = game.science_unlocked.has("PD")
+	if not $Drive.visible:
+		$Drive.select(0)
 	var depart_id:int
 	var dest_id:int
 	var coords:Dictionary = game.ships_travel_data.c_coords

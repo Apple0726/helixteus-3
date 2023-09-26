@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=3 uid="uid://b8xnmt28vqj7i"]
+[gd_scene load_steps=12 format=3 uid="uid://b8xnmt28vqj7i"]
 
 [ext_resource type="PackedScene" uid="uid://1hq6qpr1oa3i" path="res://Scenes/AdvButton.tscn" id="1"]
 [ext_resource type="PackedScene" uid="uid://c8jr3e5aiyj1n" path="res://Scenes/HelpText.tscn" id="2"]
@@ -19,12 +19,21 @@ Button/styles/hover = null
 Button/styles/normal = null
 Button/styles/pressed = null
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_8v1ds"]
+draw_center = false
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.313726, 0.313726, 0.313726, 1)
+border_blend = true
+
 [sub_resource type="Shortcut" id="3"]
 
 [sub_resource type="Animation" id="4"]
 resource_name = "Fade"
-length = 0.1
-step = 0.05
+length = 0.08
+step = 0.02
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
@@ -32,7 +41,7 @@ tracks/0/path = NodePath(".:modulate")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
-"times": PackedFloat32Array(0, 0.1),
+"times": PackedFloat32Array(0, 0.08),
 "transitions": PackedFloat32Array(1, 1),
 "update": 0,
 "values": [Color(1, 1, 1, 0), Color(1, 1, 1, 1)]
@@ -202,6 +211,7 @@ text = "PRODUCTION_PER_SECOND"
 visible = false
 custom_minimum_size = Vector2(0, 170)
 layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_8v1ds")
 
 [node name="GridContainer" type="GridContainer" parent="Control/VBox/StoneMM"]
 layout_mode = 2
@@ -223,7 +233,7 @@ help_text = "PCM_DESC"
 layout_mode = 0
 offset_left = 24.0
 offset_top = 340.0
-offset_right = 292.0
+offset_right = 436.0
 offset_bottom = 370.0
 help_text = "GS_PROD_MULT_BY_X"
 
@@ -247,12 +257,12 @@ libraries = {
 }
 
 [connection signal="close_button_pressed" from="CloseButton" to="." method="_on_close_button_pressed"]
-[connection signal="pressed" from="ScrollContainer/VBoxContainer/MineralExtraction" to="." method="_on_GS_pressed" binds= ["ME"]]
-[connection signal="pressed" from="ScrollContainer/VBoxContainer/EnergyProduction" to="." method="_on_GS_pressed" binds= ["PP"]]
-[connection signal="pressed" from="ScrollContainer/VBoxContainer/MineralStorage" to="." method="_on_GS_pressed" binds= ["MS"]]
-[connection signal="pressed" from="ScrollContainer/VBoxContainer/EnergyStorage" to="." method="_on_GS_pressed" binds= ["B"]]
-[connection signal="pressed" from="ScrollContainer/VBoxContainer/Research" to="." method="_on_GS_pressed" binds= ["RL"]]
-[connection signal="pressed" from="ScrollContainer/VBoxContainer/GalaxyKiller" to="." method="_on_GS_pressed" binds= ["GK"]]
-[connection signal="pressed" from="ScrollContainer/VBoxContainer/TriangulumProbe" to="." method="_on_GS_pressed" binds= ["TP"]]
+[connection signal="pressed" from="ScrollContainer/VBoxContainer/MineralExtraction" to="." method="_on_GS_pressed" binds= ["mineral_extractor"]]
+[connection signal="pressed" from="ScrollContainer/VBoxContainer/EnergyProduction" to="." method="_on_GS_pressed" binds= ["power_plant"]]
+[connection signal="pressed" from="ScrollContainer/VBoxContainer/MineralStorage" to="." method="_on_GS_pressed" binds= ["mineral_silo"]]
+[connection signal="pressed" from="ScrollContainer/VBoxContainer/EnergyStorage" to="." method="_on_GS_pressed" binds= ["battery"]]
+[connection signal="pressed" from="ScrollContainer/VBoxContainer/Research" to="." method="_on_GS_pressed" binds= ["research_lab"]]
+[connection signal="pressed" from="ScrollContainer/VBoxContainer/GalaxyKiller" to="." method="_on_GS_pressed" binds= ["galaxy_killer"]]
+[connection signal="pressed" from="ScrollContainer/VBoxContainer/TriangulumProbe" to="." method="_on_GS_pressed" binds= ["triangulum_probe"]]
 [connection signal="pressed" from="Control/Convert" to="." method="_on_Convert_pressed"]
 [connection signal="animation_finished" from="Control/AnimationPlayer" to="." method="_on_AnimationPlayer_animation_finished"]

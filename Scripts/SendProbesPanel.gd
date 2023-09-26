@@ -326,9 +326,9 @@ func _on_TierDistribution_mouse_entered():
 		var age = float($TP/VBox/age/Label2.text)
 		var prob:float
 		if tier == 1:
-			prob = max(1 - age * exp(-4 * tier), 0)
+			prob = max(1 - age * exp(-3 * tier), 0)
 		else:
-			prob = max(min(age * exp(-4 * (tier-1)), 1) - age * exp(-4 * tier), 0)
+			prob = max(min(age * exp(-3 * (tier-1)), 1) - age * exp(-3 * tier), 0)
 		st += "\n" + tr("TIER_X") % tier + ": " + str(Helper.clever_round(100 * prob)) + "%"
 	game.show_tooltip(st)
 

@@ -20,14 +20,20 @@ func _ready():
 func refresh():
 	$ScrollContainer/VBoxContainer/TriangulumProbe.visible = game.science_unlocked.has("TPCC")
 	prod_cost_mult = g_i.system_num * game.u_i.gravitational * pow(g_i.dark_matter, 3) / 200.0
-	$Control/ProdCostMult.text = "%s: %s  %s" % [tr("PRODUCTION_COST_MULT"), Helper.clever_round(prod_cost_mult), "[img]Graphics/Icons/help.png[/img]"]
+	$Control/ProdCostMult.label_text = "%s: %s " % [tr("PRODUCTION_COST_MULT"), Helper.clever_round(prod_cost_mult)]
+	$Control/ProdCostMult.refresh()
 	surface = 4.2e15 * prod_cost_mult * 200.0
 	if bldg != -1:
 		update_info()
 
 func update_info():
 	var error:bool = false
-	costs = Data.costs[bldg].duplicate(true)
+	if bldg == GALAXY_KILLER:
+		costs = {"money":7.5e23, "energy":5e24}
+	elif bldg == TRIANGULUM_PROBE:
+		costs = {"money":1.5e24, "energy":1.5e24}
+	else:
+		costs = Data.costs[bldg].duplicate(true)
 	$Control/ProdCostMult.visible = bldg != TRIANGULUM_PROBE
 	$Control/VBox/ProductionPerSec.visible = bldg != TRIANGULUM_PROBE
 	$Control/VBox/Production.visible = not bldg in [TRIANGULUM_PROBE, GALAXY_KILLER]
@@ -37,11 +43,12 @@ func update_info():
 	if bldg in [Building.POWER_PLANT, Building.RESEARCH_LAB]:
 		var s_b:float = pow(game.u_i.boltzmann, 4) / pow(game.u_i.planck, 3) / pow(game.u_i.speed_of_light, 2)
 		prod_mult = sqrt(s_b) * g_i.B_strength * 1e9
-		$Control/ProdMult.text = "%s: %s  %s" % [tr("PRODUCTION_MULTIPLIER"), Helper.clever_round(prod_mult), "[img]Graphics/Icons/help.png[/img]"]
+		$Control/ProdMult.label_text = "%s: %s " % [tr("PRODUCTION_MULTIPLIER"), Helper.clever_round(prod_mult)]
+		$Control/ProdMult.refresh()
 		$Control/ProdMult.visible = true
 	else:
 		$Control/ProdMult.visible = false
-	if galaxy_id_g == game.ships_c_g_coords.g:
+	if galaxy_id_g == game.ships_travel_data.c_g_coords.g:
 		$Control/VBox/GalaxyInfo.visible = true
 		$Control/VBox/GalaxyInfo.text = tr("GS_ERROR3")
 		$Control/VBox/GalaxyInfo["theme_override_colors/font_color"] = Color.YELLOW
@@ -136,7 +143,12 @@ func add_stone(stone:Dictionary, layer:Dictionary, amount:float):
 			stone[comp] = layer[comp] * amount * game.u_i.planck
 
 func _on_GS_pressed(extra_arg_0):
-	bldg = extra_arg_0
+	if extra_arg_0 == "galaxy_killer":
+		bldg = GALAXY_KILLER
+	elif extra_arg_0 == "triangulum_probe":
+		bldg = TRIANGULUM_PROBE
+	else:
+		bldg = Building.names.find(extra_arg_0)
 	if $Control.modulate.a > 0:
 		$Control/AnimationPlayer.play_backwards("Fade")
 	else:
@@ -147,7 +159,7 @@ func _on_Convert_pressed():
 	if game.check_enough(costs):
 		game.deduct_resources(costs)
 		if costs.has("money"):
-			game.u_i.xp += costs.money
+			game.u_i.xp += costs.money / 100.0
 		g_i.GS = bldg
 		g_i.prod_num = num
 		g_i.surface = surface
@@ -183,6 +195,7 @@ func _on_Convert_pressed():
 		else:
 			game.switch_view("cluster")
 		await game.view_tween.finished
+		game.system_data = game.open_obj("Galaxies", galaxy_id_g)
 		for system in game.system_data:
 			if not system.has("discovered"):
 				continue

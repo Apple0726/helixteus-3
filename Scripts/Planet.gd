@@ -372,15 +372,15 @@ func show_tooltip(tile, tile_id:int):
 	elif bldg_to_construct in [Building.MINERAL_EXTRACTOR, Building.RESEARCH_LAB, Building.SOLAR_PANEL] and tile.has("resource_production_bonus") and not tile.resource_production_bonus.is_empty() and (game.u_i.lv < 18 or view.scale.x < 0.25):
 		tooltip = tr("BUILD_HERE_FOR_X_BONUS")
 		if bldg_to_construct == Building.MINERAL_EXTRACTOR and tile.resource_production_bonus.has("minerals"):
-			if game.u_i.lv >= 18:
+			if view.scale.x < 0.25:
 				tooltip += "(x %s)" % Helper.clever_round(tile.resource_production_bonus.minerals)
 			icons = [Data.minerals_icon]
 		elif bldg_to_construct == Building.RESEARCH_LAB and tile.resource_production_bonus.has("SP"):
-			if game.u_i.lv >= 18:
+			if view.scale.x < 0.25:
 				tooltip += "(x %s)" % Helper.clever_round(tile.resource_production_bonus.SP)
 			icons = [Data.SP_icon]
 		elif bldg_to_construct == Building.SOLAR_PANEL and tile.resource_production_bonus.has("energy"):
-			if game.u_i.lv >= 18:
+			if view.scale.x < 0.25:
 				tooltip += "(x %s)" % Helper.clever_round(tile.resource_production_bonus.energy)
 			icons = [Data.energy_icon]
 		else:

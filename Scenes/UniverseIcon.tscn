@@ -1,0 +1,66 @@
+[gd_scene load_steps=3 format=3 uid="uid://5s56ablx84rs"]
+
+[ext_resource type="Theme" uid="uid://cp2u1kgj60ic" path="res://Resources/default_theme.tres" id="1_8ivd7"]
+[ext_resource type="Texture2D" uid="uid://bl2a67ybx3crb" path="res://Graphics/Misc/Universe.png" id="1_a026h"]
+
+[node name="UniverseIcon" type="TextureButton"]
+custom_minimum_size = Vector2(260, 260)
+theme = ExtResource("1_8ivd7")
+texture_normal = ExtResource("1_a026h")
+ignore_texture_size = true
+stretch_mode = 5
+
+[node name="Level" type="Label" parent="."]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -64.0
+offset_top = 24.0
+offset_right = 64.0
+offset_bottom = 57.0
+grow_horizontal = 2
+theme_override_font_sizes/font_size = 22
+text = "Level 100"
+horizontal_alignment = 1
+
+[node name="DRs" type="Label" parent="."]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -96.0
+offset_top = 76.0
+offset_right = 96.0
+offset_bottom = 109.0
+grow_horizontal = 2
+text = "7.04 DRs"
+horizontal_alignment = 1
+
+[node name="Props1" type="Label" parent="."]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -126.0
+offset_top = 124.0
+offset_right = 126.0
+offset_bottom = 157.0
+grow_horizontal = 2
+theme_override_font_sizes/font_size = 15
+text = "8.8c/8.8h/8.8k/8.8G/8.8e/8.8*13.8Gy"
+horizontal_alignment = 1
+
+[node name="Props2" type="Label" parent="."]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -64.0
+offset_top = 180.0
+offset_right = 64.0
+offset_bottom = 213.0
+grow_horizontal = 2
+theme_override_font_sizes/font_size = 15
+text = "8.8/8.8/8.8"
+horizontal_alignment = 1

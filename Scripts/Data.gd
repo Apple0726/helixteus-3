@@ -57,8 +57,6 @@ var costs = {	Building.MINERAL_EXTRACTOR:			{"money":100, "energy":40, "time":6.
 				Building.SHIPYARD:					{"money":e(5, 8), "energy":900000, "time":5000.0},
 				Building.PROBE_CONSTRUCTION_CENTER:	{"money":2.5e12, "energy":7.8e10, "time":840000},
 				Building.CENTRAL_BUSINESS_DISTRICT:	{"money":7000, "energy":1000, "time":360.0},
-				"TP":{"money":e(1.5, 24), "energy":e(1.5, 24)},#Triangulum probe
-				"GK":{"money":e(7.5, 23), "energy":e(5.0, 24)},#Galaxy-killer
 				"rover":{"money":2000, "energy":400, "time":50.0},
 #				"PC":{"money":1000000, "energy":50000, "time":600.0},
 #				"NC":{"money":e(2.0, 7), "energy":e(3.2, 6), "time":4000.0},

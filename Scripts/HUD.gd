@@ -647,11 +647,11 @@ func _on_Name_text_entered(new_text):
 		if game.bookmarks.planet.has(str(game.c_p_g)):
 			game.bookmarks.planet[str(game.c_p_g)].name = new_text
 	elif game.c_v == "system":
-		game.system_data[game.c_s][2] = new_text
+		game.system_data[game.c_s].name = new_text
 		if game.bookmarks.system.has(str(game.c_s_g)):
 			game.bookmarks.system[str(game.c_s_g)].name = new_text
 	elif game.c_v == "galaxy":
-		game.galaxy_data[game.c_g][2] = new_text
+		game.galaxy_data[game.c_g].name = new_text
 		if game.bookmarks.galaxy.has(str(game.c_g_g)):
 			game.bookmarks.galaxy[str(game.c_g_g)].name = new_text
 	elif game.c_v == "cluster":
