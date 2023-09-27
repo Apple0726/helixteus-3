@@ -513,7 +513,7 @@ func remove_crater_bonuses(tile:Dictionary, tile_id:int, wid:int):
 		for l in range(max(0, j - 1), min(j + 1 + 1, wid)):
 			var id2 = k % wid + l * wid
 			var _tile = game.tile_data[id2]
-			if Vector2(k, l) == Vector2(i, j) or _tile.has("cave") or _tile.has("volcano") or _tile.has("lake") or _tile.has("wormhole"):
+			if _tile == null or Vector2(k, l) == Vector2(i, j) or _tile.has("cave") or _tile.has("volcano") or _tile.has("lake") or _tile.has("wormhole"):
 				continue
 			_tile.resource_production_bonus.SP -= game.met_info[tile.crater.metal].rarity - 0.8
 			if is_equal_approx(_tile.resource_production_bonus.SP, 1.0):
@@ -1212,7 +1212,7 @@ func get_bldg_tooltip2(bldg:int, path_1_value, path_2_value, path_3_value):
 			return (Data.path_1[bldg].desc) % [format_num(path_1_value, true)]
 		Building.ATOM_MANIPULATOR, Building.SUBATOMIC_PARTICLE_REACTOR:
 			return (Data.path_1[bldg].desc + "\n" + Data.path_2[bldg].desc) % [format_num(path_1_value, true), format_num(path_2_value, true)]
-		Building.STONE_CRUSHER, Building.GREENHOUSE, Building.STEAM_ENGINE:
+		Building.STONE_CRUSHER, Building.GLASS_FACTORY, Building.STEAM_ENGINE:
 			return "%s\n%s\n%s" % [Data.path_1[bldg].desc % format_num(path_1_value, true), Data.path_2[bldg].desc % format_num(path_2_value, true), Data.path_3[bldg].desc % clever_round(path_3_value)]
 		Building.RESEARCH_LAB:
 			return (Data.path_1[bldg].desc) % [format_num(path_1_value, true)]

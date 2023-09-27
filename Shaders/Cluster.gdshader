@@ -6,9 +6,12 @@ shader_type canvas_item;
 uniform vec4 color: source_color = vec4(0.35, 0.48, 0.95, 1.0);
 uniform float fog_size: hint_range(0.01, 50.0) = 7.2;
 uniform float fog_mvt_spd = 0.0;
+uniform float fog_mvt_spd_2 = 0.0;
 uniform int OCTAVES = 4;
 uniform int seed = 1;
 uniform float alpha:hint_range(0.0, 1.0) = 1.0;
+uniform float expo:hint_range(0.1, 0.3) = 0.3;
+
 
 float rand(vec2 coord){
 	return fract(sin(dot(coord, vec2(12.9898, 78.233)))* 43758.5453123);
@@ -44,7 +47,7 @@ float fbm(vec2 coord){
 void fragment() {
 	vec2 coord = UV * fog_size + mod(vec2(float(seed)), 100.0);
 	vec2 coord2 = UV * fog_size + mod(vec2(float(seed) + 2.0), 100.0);
-	vec2 motion = vec2( fbm(coord + vec2(TIME * -fog_mvt_spd, TIME * fog_mvt_spd)) );
+	vec2 motion = vec2( fbm(coord + vec2(TIME * -fog_mvt_spd, TIME * fog_mvt_spd)) ) + vec2(TIME * fog_mvt_spd_2, TIME * fog_mvt_spd_2);
 
 	float final = fbm(coord + motion) + fbm(coord2) * 0.3;
 	COLOR.rgb = color.rgb;
@@ -54,5 +57,5 @@ void fragment() {
 	COLOR.rgb += 2.5 * (pow(0.708 - distance(UV, vec2(0.5, 0.5)), 2.5));
 	//COLOR.rgb += pow(COLOR.a * 1.0, 1.0);
 	//COLOR.b += pow(COLOR.a * 1.0, 2.0);
-	COLOR.a = max(0.0, pow(COLOR.a * 1.3, 1.2) * (1.0 - 1.2 * pow(distance(UV, vec2(0.5, 0.5)), 0.3))) * alpha;
+	COLOR.a = max(0.0, pow(COLOR.a * 1.3, 1.2) * (1.0 - 1.2 * pow(distance(UV, vec2(0.5, 0.5)), expo))) * alpha;
 }

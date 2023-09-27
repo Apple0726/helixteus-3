@@ -279,6 +279,7 @@ theme_override_styles/panel = SubResource("StyleBoxFlat_vyadf")
 [node name="VBox" type="VBoxContainer" parent="Universes/Scroll"]
 layout_mode = 2
 size_flags_horizontal = 3
+theme_override_constants/separation = 15
 
 [node name="UniverseIcon" parent="Universes/Scroll/VBox" instance=ExtResource("3_wld1s")]
 layout_mode = 2

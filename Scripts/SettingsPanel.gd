@@ -125,6 +125,7 @@ func _on_FPS_value_changed(value):
 	if err == OK:
 		$TabContainer/GRAPHICS/FPS/Label2.text = str(value)
 		Engine.max_fps = value
+		Settings.max_fps = value
 		config.set_value("rendering", "max_fps", value)
 		config.save("user://settings.cfg")
 

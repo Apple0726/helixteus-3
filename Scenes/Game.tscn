@@ -372,9 +372,11 @@ shader = ExtResource("19_4v34t")
 shader_parameter/color = Color(1, 1, 1, 1)
 shader_parameter/fog_size = 50.0
 shader_parameter/fog_mvt_spd = 0.0
+shader_parameter/fog_mvt_spd_2 = 0.0
 shader_parameter/OCTAVES = 3
 shader_parameter/seed = 1
 shader_parameter/alpha = 1.0
+shader_parameter/expo = 0.3
 
 [node name="Game" type="Node2D"]
 script = ExtResource("2")

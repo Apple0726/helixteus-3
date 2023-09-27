@@ -3595,39 +3595,44 @@ var quadrant_bottom_right:PackedVector2Array = [Vector2(640, 360), Vector2(1280,
 var last_process_time = Time.get_unix_time_from_system()
 
 func _process(_delta):
-	if _delta != 0:
-		var delta = (Time.get_unix_time_from_system() - last_process_time)
-		last_process_time = Time.get_unix_time_from_system()
-		fps_text.text = "%s FPS" % [Engine.get_frames_per_second()]
-		if autocollect:
-			var min_mult:float = pow(maths_bonus.IRM, infinite_research.MEE) * u_i.time_speed
-			var energy_mult:float = pow(maths_bonus.IRM, infinite_research.EPE) * u_i.time_speed
-			var SP_mult:float = pow(maths_bonus.IRM, infinite_research.RLE) * u_i.time_speed
-			var min_to_add:float = delta * (autocollect.MS.minerals + autocollect.GS.minerals + autocollect.rsrc.minerals) * min_mult
-			var energy_to_add = delta * (autocollect.MS.energy + autocollect.GS.energy + autocollect.rsrc.energy) * energy_mult
-			SP += delta * (autocollect.MS.SP + autocollect.GS.SP) * SP_mult
-			SP += autocollect.rsrc.SP * delta * SP_mult
-			if mats.cellulose > 0:
-				if not autocollect.mats.has("soil") or is_zero_approx(autocollect.mats.soil) or mats.soil > 0:
-					for mat in autocollect.mats:
-						if mat == "minerals":
-							min_to_add += autocollect.mats[mat] * delta
-						else:
-							mats[mat] += autocollect.mats[mat] * delta
-					for met in autocollect.mets:
-						mets[met] += autocollect.mets[met] * delta
-			else:
-				mats.cellulose = 0
-			if mats.soil < 0:
-				mats.soil = 0
-			if autocollect.has("atoms"):
-				for atom in autocollect.atoms:
-					atoms[atom] += autocollect.atoms[atom] * delta
-			Helper.add_minerals(min_to_add)
-			Helper.add_energy(energy_to_add)
-			if is_instance_valid(HUD) and is_ancestor_of(HUD):
-				HUD.update_minerals()
-				HUD.update_money_energy_SP()
+	if _delta == 0:
+		return
+	if DisplayServer.window_is_focused(0):
+		Engine.max_fps = Settings.max_fps
+	else:
+		Engine.max_fps = 5
+	var delta = (Time.get_unix_time_from_system() - last_process_time)
+	last_process_time = Time.get_unix_time_from_system()
+	fps_text.text = "%s FPS" % [Engine.get_frames_per_second()]
+	if autocollect:
+		var min_mult:float = pow(maths_bonus.IRM, infinite_research.MEE) * u_i.time_speed
+		var energy_mult:float = pow(maths_bonus.IRM, infinite_research.EPE) * u_i.time_speed
+		var SP_mult:float = pow(maths_bonus.IRM, infinite_research.RLE) * u_i.time_speed
+		var min_to_add:float = delta * (autocollect.MS.minerals + autocollect.GS.minerals + autocollect.rsrc.minerals) * min_mult
+		var energy_to_add = delta * (autocollect.MS.energy + autocollect.GS.energy + autocollect.rsrc.energy) * energy_mult
+		SP += delta * (autocollect.MS.SP + autocollect.GS.SP) * SP_mult
+		SP += autocollect.rsrc.SP * delta * SP_mult
+		if mats.cellulose > 0:
+			if not autocollect.mats.has("soil") or is_zero_approx(autocollect.mats.soil) or mats.soil > 0:
+				for mat in autocollect.mats:
+					if mat == "minerals":
+						min_to_add += autocollect.mats[mat] * delta
+					else:
+						mats[mat] += autocollect.mats[mat] * delta
+				for met in autocollect.mets:
+					mets[met] += autocollect.mets[met] * delta
+		else:
+			mats.cellulose = 0
+		if mats.soil < 0:
+			mats.soil = 0
+		if autocollect.has("atoms"):
+			for atom in autocollect.atoms:
+				atoms[atom] += autocollect.atoms[atom] * delta
+		Helper.add_minerals(min_to_add)
+		Helper.add_energy(energy_to_add)
+		if is_instance_valid(HUD) and is_ancestor_of(HUD):
+			HUD.update_minerals()
+			HUD.update_money_energy_SP()
 
 var mouse_pos = Vector2.ZERO
 @onready var item_cursor = $Tooltips/ItemCursor

@@ -227,7 +227,7 @@ func show_tooltip(tile, tile_id:int):
 				if game.dim_num == 1 and game.c_u == 0:
 					$BuildingShortcutTimer.start(remap(game.u_i.lv, 1, 18, 0.5, 6.0))
 				else:
-					$BuildingShortcutTimer.start(3.0)
+					$BuildingShortcutTimer.start(6.0)
 		if tile.has("overclock_bonus") and overclockable(tile.bldg.name):
 			tooltip += "\n[color=#EEEE00]" + tr("BENEFITS_FROM_OVERCLOCK") % tile.overclock_bonus + "[/color]"
 		if tile.bldg.name == Building.BORING_MACHINE:
@@ -373,15 +373,15 @@ func show_tooltip(tile, tile_id:int):
 		tooltip = tr("BUILD_HERE_FOR_X_BONUS")
 		if bldg_to_construct == Building.MINERAL_EXTRACTOR and tile.resource_production_bonus.has("minerals"):
 			if view.scale.x < 0.25:
-				tooltip += "(x %s)" % Helper.clever_round(tile.resource_production_bonus.minerals)
+				tooltip += " (x %s)" % Helper.clever_round(tile.resource_production_bonus.minerals)
 			icons = [Data.minerals_icon]
 		elif bldg_to_construct == Building.RESEARCH_LAB and tile.resource_production_bonus.has("SP"):
 			if view.scale.x < 0.25:
-				tooltip += "(x %s)" % Helper.clever_round(tile.resource_production_bonus.SP)
+				tooltip += " (x %s)" % Helper.clever_round(tile.resource_production_bonus.SP)
 			icons = [Data.SP_icon]
 		elif bldg_to_construct == Building.SOLAR_PANEL and tile.resource_production_bonus.has("energy"):
 			if view.scale.x < 0.25:
-				tooltip += "(x %s)" % Helper.clever_round(tile.resource_production_bonus.energy)
+				tooltip += " (x %s)" % Helper.clever_round(tile.resource_production_bonus.energy)
 			icons = [Data.energy_icon]
 		else:
 			tooltip = ""
@@ -502,10 +502,10 @@ func constr_bldg(tile_id:int, curr_time:int, _bldg_to_construct:int, mass_build:
 		if _bldg_to_construct == Building.BORING_MACHINE:
 			if not tile.has("depth"):
 				tile.depth = 0
-			if not game.MM_data.has(game.c_p_g):
-				game.MM_data[game.c_p_g] = {"tiles":[tile_id], "c_s_g":game.c_s_g, "c_p":game.c_p}
+			if not game.boring_machine_data.has(game.c_p_g):
+				game.boring_machine_data[game.c_p_g] = {"tiles":[tile_id], "c_s_g":game.c_s_g, "c_p":game.c_p}
 			else:
-				game.MM_data[game.c_p_g].tiles.append(tile_id)
+				game.boring_machine_data[game.c_p_g].tiles.append(tile_id)
 			tile.bldg.collect_date = tile.bldg.construction_date + tile.bldg.construction_length
 		game.tile_data[tile_id] = tile
 		add_bldg(tile_id, _bldg_to_construct)
@@ -700,9 +700,9 @@ func destroy_bldg(id2:int, mass:bool = false):
 		$Soil.set_cell(id2 % wid, int(id2 / wid), -1)
 		$Soil.update_bitmask_region()
 	elif bldg == Building.BORING_MACHINE:
-		game.MM_data[game.c_p_g].tiles.erase(id2)
-		if game.MM_data[game.c_p_g].tiles.is_empty():
-			game.MM_data.erase(game.c_p_g)
+		game.boring_machine_data[game.c_p_g].tiles.erase(id2)
+		if game.boring_machine_data[game.c_p_g].tiles.is_empty():
+			game.boring_machine_data.erase(game.c_p_g)
 	if tile.has("auto_GH"):
 		Helper.remove_GH_produce_from_autocollect(tile.auto_GH.produce, tile.get("aurora", 0.0))
 		game.autocollect.mats.cellulose += tile.auto_GH.cellulose_drain
@@ -1598,6 +1598,8 @@ func finish_construct():
 			if is_instance_valid(shadows[i]):
 				shadows[i].queue_free()
 		shadow_num = 0
+	constr_costs.clear()
+	constr_costs_total.clear()
 	var tween2 = create_tween()
 	tween2.tween_property(game.HUD.get_node("Top/TextureRect"), "modulate", Color.WHITE, 0.2)
 	game.planet_HUD.get_node("MassBuild").visible = false

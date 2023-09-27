@@ -1,7 +1,6 @@
 extends "Panel.gd"
 
 @onready var hbox = $Seeds/HBox
-@onready var f_hbox = $Fertilizer/HBox
 var p_i:Dictionary
 var tile_num:int
 var seeds_to_plant:String = ""
@@ -17,7 +16,7 @@ func _ready():
 		slot.get_node("Button").connect("mouse_entered",Callable(self,"on_slot_over").bind(f))
 		slot.get_node("Button").connect("mouse_exited",Callable(self,"on_slot_out"))
 		slot.get_node("Button").connect("pressed",Callable(self,"on_slot_press").bind(f))
-		f_hbox.add_child(slot)
+		hbox.add_child(slot)
 	
 func refresh():
 	$UseFertilizer.visible = game.science_unlocked.has("PF")

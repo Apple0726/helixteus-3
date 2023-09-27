@@ -69,7 +69,7 @@ offset_left = 37.0
 offset_top = -48.0
 offset_right = 468.0
 grow_vertical = 0
-vertical_scroll_mode = 3
+vertical_scroll_mode = 0
 
 [node name="Cost" parent="ScrollContainer" instance=ExtResource("2")]
 layout_mode = 2
