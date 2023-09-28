@@ -275,7 +275,6 @@ text = "TIER"
 layout_mode = 2
 min_value = 1.0
 value = 1.0
-allow_greater = true
 alignment = 1
 update_on_text_changed = true
 
@@ -323,7 +322,7 @@ libraries = {
 [connection signal="mouse_entered" from="Panel/VBoxContainer/Unique" to="." method="_on_unique_mouse_entered"]
 [connection signal="mouse_exited" from="Panel/VBoxContainer/Unique" to="." method="_on_unique_mouse_exited"]
 [connection signal="pressed" from="Panel/VBoxContainer/Unique" to="." method="_on_tab_pressed" binds= ["Unique"]]
-[connection signal="value_changed" from="Panel/ScrollContainer/VBoxContainer/HBoxContainer/Tier" to="Panel" method="_on_tier_value_changed"]
+[connection signal="value_changed" from="Panel/ScrollContainer/VBoxContainer/HBoxContainer/Tier" to="." method="_on_tier_value_changed"]
 [connection signal="mouse_entered" from="Panel/ScrollContainer/VBoxContainer/BuildAll" to="." method="_on_build_all_mouse_entered"]
 [connection signal="mouse_exited" from="Panel/ScrollContainer/VBoxContainer/BuildAll" to="." method="_on_build_all_mouse_exited"]
 [connection signal="toggled" from="Panel/ScrollContainer/VBoxContainer/BuildAll" to="." method="_on_build_all_toggled"]

@@ -601,6 +601,16 @@ var unique_bldg_repair_cost_multipliers = {
 	UniqueBuilding.CELLULOSE_SYNTHESIZER:1.5,
 }
 
+var unique_building_costs = {
+	UniqueBuilding.SPACEPORT:{"money":1e5, "energy":2e4, "SP":1e4},
+	UniqueBuilding.MINERAL_REPLICATOR:{"money":1.5e5, "energy":8e4, "SP":3e4},
+	UniqueBuilding.SUBSTATION:{"money":3e5, "energy":2.5e4, "SP":1e4},
+	UniqueBuilding.NUCLEAR_FUSION_REACTOR:{"money":1e6, "energy":3.5e5, "SP":9e4},
+	UniqueBuilding.MINING_OUTPOST:{"money":8e4, "energy":1.2e4, "SP":7e3},
+	UniqueBuilding.OBSERVATORY:{"money":1.2e5, "energy":1.5e4, "SP":1e4},
+	UniqueBuilding.CELLULOSE_SYNTHESIZER:{"money":2e5, "energy":6e4, "SP":2.5e4},
+}
+
 var MS_num_stages:Dictionary = {"DS":4, "MME":3, "CBS":3, "PK":2, "SE":1, "MB":0}
 
 var tier_colors = [Color.WHITE, Color(0, 0.9, 0.0), Color(0.2, 0.2, 1.0), Color(1.0, 0.2, 1.0), Color(1.0, 0.5, 0.0), Color(1.0, 1.0, 0.2), Color.RED]

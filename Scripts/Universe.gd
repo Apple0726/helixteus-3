@@ -62,6 +62,7 @@ func on_cluster_over (id:int):
 	for el in c_i.rich_elements.keys():
 		tooltip += "\n" + tr("RICH_IN_X").format({"rsrc":tr(el.to_upper() + "_NAME"), "mult":Helper.clever_round(c_i.rich_elements[el])})
 		icons.append(load("res://Graphics/Atoms/%s.png" % el))
+	#print("Distance from local group: ", c_i.pos.length())
 	game.show_adv_tooltip(tooltip, icons)
 
 func on_cluster_out ():

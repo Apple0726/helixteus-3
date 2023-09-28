@@ -36,6 +36,7 @@ func _unhandled_input(event):
 
 func refresh():
 	$Panel/VBoxContainer/Unique.visible = game.engineering_bonus.max_unique_building_tier > 0
+	$Panel/ScrollContainer/VBoxContainer/HBoxContainer/Tier.max_value = game.engineering_bonus.max_unique_building_tier
 	for btn in $Panel/ScrollContainer/VBoxContainer.get_children():
 		if btn is Button and btn.name != "BuildAll":
 			btn.queue_free()
@@ -258,10 +259,50 @@ func _on_unique_mouse_exited():
 		tween_label($Panel/VBoxContainer/Unique/Label, 0.0)
 
 func on_unique_bldg_over(bldg:int):
-	pass
+	var icons = []
+	var tier:int = $Panel/ScrollContainer/VBoxContainer/HBoxContainer/Tier.value
+	var tooltip = "[font_size=20][color=#%s]" % Data.tier_colors[tier - 1].to_html(false)
+	var unique_building_name = UniqueBuilding.names[bldg]
+	tooltip += tr(unique_building_name.to_upper())
+	if tier > 1:
+		tooltip += " " + Helper.get_roman_num(tier)
+	tooltip += "[/color][/font_size]"
+	tooltip += "\n"
+	var desc = tr("%s_DESC2" % unique_building_name.to_upper())
+	match bldg:
+		UniqueBuilding.SPACEPORT:
+			desc = desc % [	Helper.get_spaceport_exit_cost_reduction(tier) * 100,
+							Helper.get_spaceport_travel_cost_reduction(tier) * 100]
+		UniqueBuilding.MINERAL_REPLICATOR, UniqueBuilding.MINING_OUTPOST, UniqueBuilding.OBSERVATORY:
+			desc = desc.format({"n":Helper.get_unique_bldg_area(tier)}) % Helper.get_MR_Obs_Outpost_prod_mult(tier)
+		UniqueBuilding.SUBSTATION:
+			desc = desc.format({"n":Helper.get_unique_bldg_area(tier), "time":Helper.time_to_str(Helper.get_substation_capacity_bonus(tier))}) % Helper.get_substation_prod_mult(tier)
+		UniqueBuilding.NUCLEAR_FUSION_REACTOR:
+			desc = desc % Helper.format_num(Helper.get_NFR_prod_mult(tier))
+		UniqueBuilding.CELLULOSE_SYNTHESIZER:
+			desc = desc % Helper.format_num(Helper.get_CS_prod_mult(tier))
+	tooltip += desc
+	icons.append_array(Data.unique_bldg_icons[bldg])
+	tooltip += "\n\n" + tr("COSTS") + "\n"
+	var costs = Data.unique_building_costs[bldg]
+	var n = game.unique_building_counters[bldg].get(tier, 0) + 1
+	for cost in costs.keys():
+		tooltip += "@i  \t"
+		tooltip += Helper.format_num(costs[cost] * pow(10, -game.engineering_bonus.unique_building_a_value) * pow(n, tier * game.engineering_bonus.unique_building_b_value), true)
+		icons.append(Data["%s_icon" % cost])
+		tooltip += "\n"
+	game.show_adv_tooltip(tooltip, icons)
 
 func on_unique_bldg_click(bldg:int):
-	pass
+	hide_panel()
+	var tier = $Panel/ScrollContainer/VBoxContainer/HBoxContainer/Tier.value
+	game.put_bottom_info(tr("CLICK_TILE_TO_CONSTRUCT"), "building", "cancel_building")
+	var base_cost = Data.unique_building_costs[bldg].duplicate(true)
+	var n = game.unique_building_counters[bldg].get(tier, 0) + 1
+	for cost in base_cost:
+		base_cost[cost] *= pow(10, -game.engineering_bonus.unique_building_a_value) * pow(n, tier * game.engineering_bonus.unique_building_b_value)
+	game.view.obj.constructing_unique_building_tier = tier
+	game.view.obj.initiate_unique_building_construction(bldg, base_cost)
 
 
 func _on_tier_value_changed(value):

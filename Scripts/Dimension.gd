@@ -185,6 +185,7 @@ func refresh_univs(reset:bool = false):
 			if Settings.enable_shaders:
 				univ.material = ShaderMaterial.new()
 				univ.material.shader = preload("res://Shaders/Cluster.gdshader")
+				univ.material.resource_local_to_scene = true
 				var c:Color
 				if univ_info.lv < 100:
 					c = Color.WHITE

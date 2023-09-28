@@ -819,7 +819,7 @@ func update_bldg_constr(tile:Dictionary, p_i:Dictionary):
 	if progress >= 1:
 		if tile.bldg.has("is_constructing"):
 			tile.bldg.erase("is_constructing")
-			game.universe_data[game.c_u].xp += tile.bldg.XP
+			game.u_i.xp += tile.bldg.XP
 			if not game.objective.is_empty() and game.objective.type == game.ObjectiveType.BUILD and game.objective.data == tile.bldg.name:
 				game.objective.current += 1
 			if tile.bldg.has("rover_id"):
@@ -1522,7 +1522,7 @@ func set_unique_bldg_bonuses(p_i:Dictionary, unique_bldg:Dictionary, tile_id:int
 					else:
 						tile[bonus_name_str] = {tile_id:mult}
 					if tile.has("resource_production_bonus"):
-						tile.resource_production_bonus[rsrc] = tile.resource_production_bonus.get(rsrc, 1.0) * mult
+						tile.resource_production_bonus[rsrc] = tile.resource_production_bonus.get(rsrc, 1.0) + (mult - 1.0)
 					else:
 						game.tile_data[id].resource_production_bonus = {rsrc:mult}
 					if tile.has("bldg") and not tile.bldg.has("is_constructing"):
@@ -1556,10 +1556,10 @@ func set_unique_bldg_bonuses(p_i:Dictionary, unique_bldg:Dictionary, tile_id:int
 					else:
 						tile["substation_bonus_dict"] = {tile_id:mult}
 					if tile.has("resource_production_bonus"):
-						tile.resource_production_bonus.energy = tile.resource_production_bonus.get("energy", 1.0) * mult
+						tile.resource_production_bonus.energy = tile.resource_production_bonus.get("energy", 1.0) + (mult - 1.0)
 					else:
 						game.tile_data[id].resource_production_bonus = {"energy":mult}
-					tile.substation_bonus = tile.get("substation_bonus", 1.0) * mult
+					tile.substation_bonus = tile.get("substation_bonus", 1.0) + (mult - 1.0)
 					if tile.has("bldg") and not tile.bldg.has("is_constructing"):
 						var overclock_mult:float = tile.bldg.get("overclock_mult", 1.0)
 						var base = tile.bldg.path_1_value * overclock_mult * mult

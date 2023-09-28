@@ -1315,7 +1315,7 @@ func fade_in_panel(panel:Control):
 	#_on_BottomInfo_close_button_pressed()
 	if $UI.has_node("BuildingShortcuts"):
 		$UI.get_node("BuildingShortcuts").close()
-	elif c_v == "planet":
+	elif c_v == "planet" and not viewing_dimension:
 		view.obj.get_node("BuildingShortcutTimer").stop()
 	panel.tween = create_tween()
 	panel.tween.set_parallel(true)
@@ -2987,7 +2987,7 @@ func generate_tiles(id:int):
 				for met in met_info:
 					if met == "lead":
 						continue
-					if randf() < 0.3 / pow(met_info[met].rarity, 0.95):
+					if randf() < 0.3 / pow(met_info[met].rarity, 0.95) * sqrt(1 + u_i.cluster_data[c_c].pos.length() / 1000.0):
 						if c_s_g == 0 and met_info[met].rarity > 8:
 							continue
 						if c_g_g == 0 and met_info[met].rarity > 50:
@@ -3121,7 +3121,7 @@ func generate_tiles(id:int):
 		tile_data[random_tile2].cave = {"num_floors":8, "floor_size":30, "period":50, "debris":0.4}
 	for bldg in p_i.unique_bldgs.keys():
 		for i in len(p_i.unique_bldgs[bldg]):
-			var tier = p_i.unique_bldgs[bldg][i].tier
+			var tier:int = p_i.unique_bldgs[bldg][i].tier
 			var t_id = p_i.unique_bldgs[bldg][i].tile
 			for j in ([t_id, t_id+1, t_id+wid, t_id+1+wid] if bldg == UniqueBuilding.NUCLEAR_FUSION_REACTOR else [t_id]):
 				tile_data[j].unique_bldg = {"name":bldg, "tier":tier, "id":i}
@@ -3521,6 +3521,8 @@ func check_enough(costs):
 			return false
 		if cost == "energy" and energy < costs[cost]:
 			return false
+		if cost == "SP" and SP < costs[cost]:
+			return false
 		if mats.has(cost) and mats[cost] < costs[cost]:
 			return false
 		if mets.has(cost) and mets[cost] < costs[cost]:
@@ -3535,19 +3537,21 @@ func deduct_resources(costs):
 	for cost in costs:
 		if cost == "money":
 			money -= costs.money
-		if cost == "energy":
+		elif cost == "energy":
 			energy -= costs.energy
-		if cost == "stone":
+		elif cost == "SP":
+			SP -= costs.SP
+		elif cost == "stone":
 			var ratio:float = 1 - costs.stone / float(Helper.get_sum_of_dict(stone))
 			for el in stone:
 				stone[el] *= ratio
-		if mats.has(cost):
+		elif mats.has(cost):
 			mats[cost] = max(0, mats[cost] - costs[cost])
-		if mets.has(cost):
+		elif mets.has(cost):
 			mets[cost] = max(0, mets[cost] - costs[cost])
-		if atoms.has(cost):
+		elif atoms.has(cost):
 			atoms[cost] = max(0, atoms[cost] - costs[cost])
-		if particles.has(cost):
+		elif particles.has(cost):
 			particles[cost] = max(0, particles[cost] - costs[cost])
 
 func add_resources(costs):
@@ -3877,6 +3881,7 @@ func fn_save_game():
 		"save_date":save_date,
 		"bookmarks":bookmarks,
 		"unique_bldgs_discovered":unique_bldgs_discovered,
+		"unique_building_counters":unique_building_counters,
 		"cave_filters":cave_filters,
 		"caves_generated":caves_generated,
 		"boring_machine_data":boring_machine_data,

@@ -135,6 +135,8 @@ func send_ships():
 				game.ships_travel_data.dest_g_coords.g = game.c_g_g
 				game.ships_travel_data.c_coords.c = game.c_c
 				game.ships_travel_data.dest_coords.c = game.c_c
+				game.autocollect.erase("ship_XP")
+				game.HUD.set_ship_btn_shader(false)
 				game.view.obj.refresh_planets()
 				game.view.refresh()
 				var p_i = game.planet_data[game.ships_travel_data.c_coords.p]
