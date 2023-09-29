@@ -109,7 +109,7 @@ func _on_button_pressed():
 		tile.bldg.expected_rsrc = expected_rsrc
 	else:
 		var time = Time.get_unix_time_from_system()
-		var crush_spd = tile.bldg.path_1_value * game.u_i.time_speed
+		var crush_spd = tile.bldg.path_1_value * game.u_i.time_speed * tile.get("time_speed_bonus", 1.0)
 		var qty_left = max(0, round(tile.bldg.stone_qty - (time - tile.bldg.start_date) * crush_spd))
 		if qty_left > 0:
 			var progress = (time - tile.bldg.start_date) * crush_spd / tile.bldg.stone_qty

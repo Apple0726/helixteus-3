@@ -23,7 +23,7 @@ func refresh_values():
 		$Control/AmountProduced.text = "%s %s" % [Helper.format_num($Control/HBox/HSlider.value * ratio, true), output_unit]
 	else:
 		$Control/AmountProduced.text = "%s %s" % [Helper.format_num(round($Control/HBox/HSlider.value * ratio)), output_unit]
-	var spd = tile.bldg.path_1_value * game.u_i.time_speed * Helper.get_IR_mult(tile.bldg.name)
+	var spd = tile.bldg.path_1_value * game.u_i.time_speed * tile.get("time_speed_bonus", 1.0) * Helper.get_IR_mult(tile.bldg.name)
 	time_txt.text = Helper.time_to_str($Control/HBox/HSlider.value * ratio / spd)
 	
 func refresh2(_bldg_type:int, _input:String, _output:String, _input_type:String, _output_type:String):

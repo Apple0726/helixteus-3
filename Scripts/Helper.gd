@@ -297,7 +297,7 @@ func mult_dict_by(dict:Dictionary, value:float):
 
 func get_crush_info(tile_obj):
 	var time = Time.get_unix_time_from_system()
-	var crush_spd = tile_obj.bldg.path_1_value * game.u_i.time_speed
+	var crush_spd = tile_obj.bldg.path_1_value * game.u_i.time_speed * tile_obj.get("time_speed_bonus", 1.0)
 	var constr_delay = 0
 	if tile_obj.bldg.has("is_constructing"):
 		constr_delay = tile_obj.bldg.construction_date + tile_obj.bldg.construction_length - time
@@ -307,7 +307,7 @@ func get_crush_info(tile_obj):
 
 func get_prod_info(tile_obj):
 	var time = Time.get_unix_time_from_system()
-	var spd = tile_obj.bldg.path_1_value * game.u_i.time_speed * get_IR_mult(tile_obj.bldg.name)
+	var spd = tile_obj.bldg.path_1_value * game.u_i.time_speed * tile_obj.get("time_speed_bonus", 1.0) * get_IR_mult(tile_obj.bldg.name)
 	#qty1: resource being used. qty2: resource being produced
 	var qty_left = clever_round(max(0, tile_obj.bldg.qty1 - (time - tile_obj.bldg.start_date) * spd / tile_obj.bldg.ratio))
 	var qty_made = clever_round(min(tile_obj.bldg.qty2, (time - tile_obj.bldg.start_date) * spd))
@@ -382,8 +382,6 @@ func show_dmg(dmg:float, pos:Vector2, parent, size:int = 40, missed:bool = false
 	lb["theme_override_font_sizes/font_size"] = size
 	parent.add_child(lb)
 	var dur = 1.5 if crit else 1.0
-	if game:
-		dur /= game.u_i.time_speed
 	var tween = create_tween()
 	tween.set_parallel(true)
 	tween.tween_property(lb, "modulate", Color(1, 1, 1, 0), dur)
@@ -765,10 +763,8 @@ func update_rsrc(p_i, tile, rsrc = null, active:bool = false):
 		rsrc.set_text(rsrc_text)
 
 func get_prod_mult(tile):
-	var mult = get_IR_mult(tile.bldg.name) * (game.u_i.time_speed if Data.path_1.has(tile.bldg.name) and Data.path_1[tile.bldg.name].has("time_based") else 1.0)
-	if tile.bldg.has("overclock_mult"):
-		mult *= tile.bldg.overclock_mult
-	return mult
+	var time_bonus = game.u_i.time_speed * tile.get("time_speed_bonus", 1.0)
+	return get_IR_mult(tile.bldg.name) * (time_bonus if Data.path_1.has(tile.bldg.name) and Data.path_1[tile.bldg.name].has("time_based") else 1.0) * tile.bldg.get("overclock_mult", 1.0)
 
 func has_IR(bldg_name:String):
 	return bldg_name in [Building.MINERAL_EXTRACTOR, Building.POWER_PLANT, Building.RESEARCH_LAB, Building.MINERAL_SILO, Building.SOLAR_PANEL, Building.ATOM_MANIPULATOR, Building.SUBATOMIC_PARTICLE_REACTOR]
@@ -870,6 +866,9 @@ func update_bldg_constr(tile:Dictionary, p_i:Dictionary):
 				add_energy_from_NFR(p_i, base)
 				add_energy_from_CS(p_i, base)
 			elif tile.bldg.name == Building.CENTRAL_BUSINESS_DISTRICT:
+				var second_path_str = "overclock"
+				if game.subject_levels.dimensional_power >= 7:
+					second_path_str = "time_speed"
 				var tile_data:Array
 				var same_p:bool = game.c_p_g == tile.bldg.c_p_g
 				if same_p:
@@ -897,15 +896,38 @@ func update_bldg_constr(tile:Dictionary, p_i:Dictionary):
 						else:
 							_tile.cost_div = max(_tile.cost_div, tile.bldg.path_1_value)
 						_tile.cost_div_dict[id2] = tile.bldg.path_1_value
-						if not _tile.has("overclock_dict"):
-							_tile.overclock_bonus = tile.bldg.path_2_value
-							_tile.overclock_dict = {}
+						if not _tile.has("%s_dict" % second_path_str):
+							_tile["%s_bonus" % second_path_str] = tile.bldg.path_2_value
+							_tile["%s_dict" % second_path_str] = {}
+							if second_path_str == "time_speed" and _tile.has("bldg"):
+								add_autocollect(p_i, _tile, tile.bldg.path_2_value - 1.0)
 						else:
-							_tile.overclock_bonus = max(_tile.overclock_bonus, tile.bldg.path_2_value)
-						_tile.overclock_dict[id2] = tile.bldg.path_2_value
+							_tile["%s_bonus" % second_path_str] = max(_tile["%s_bonus" % second_path_str], tile.bldg.path_2_value)
+							if second_path_str == "time_speed" and _tile.has("bldg"):
+								add_autocollect(p_i, _tile, tile.bldg.path_2_value - 1.0)
+						_tile["%s_dict" % second_path_str][id2] = tile.bldg.path_2_value
 				if not same_p:
 					save_obj("Planets", tile.bldg.c_p_g, tile_data)
 	return update_boxes
+
+func add_autocollect(p_i:Dictionary, tile:Dictionary, mult_diff:float):
+	var overclock_mult:float = tile.bldg.get("overclock_mult", 1.0)
+	if tile.bldg.name == Building.RESEARCH_LAB:
+		game.autocollect.rsrc.SP += tile.bldg.path_1_value * mult_diff * tile.resource_production_bonus.get("SP", 1.0) * overclock_mult
+	elif tile.bldg.name == Building.MINERAL_EXTRACTOR:
+		game.autocollect.rsrc.minerals += tile.bldg.path_1_value * mult_diff * tile.resource_production_bonus.get("minerals", 1.0) * overclock_mult
+	elif tile.bldg.name == Building.POWER_PLANT:
+		game.autocollect.rsrc.energy += tile.bldg.path_1_value * mult_diff * tile.resource_production_bonus.get("energy", 1.0) * overclock_mult
+	elif tile.bldg.name == Building.SOLAR_PANEL:
+		var SP_prod = Helper.get_SP_production(p_i.temperature, tile.bldg.path_1_value * mult_diff * (tile.get("aurora", 0.0) + 1.0) * tile.resource_production_bonus.get("energy", 1.0) * overclock_mult)
+		game.autocollect.rsrc.energy += SP_prod
+	elif tile.bldg.name == Building.ATMOSPHERE_EXTRACTOR:
+		var base = tile.bldg.path_1_value * mult_diff * p_i.pressure * overclock_mult
+		for el in p_i.atmosphere:
+			var base_prod:float = base * p_i.atmosphere[el]
+			Helper.add_atom_production(el, base_prod)
+		Helper.add_energy_from_NFR(p_i, base)
+		Helper.add_energy_from_CS(p_i, base)
 
 func add_energy_from_NFR(p_i:Dictionary, base:float):
 	if not p_i.unique_bldgs.has(UniqueBuilding.NUCLEAR_FUSION_REACTOR):
@@ -971,7 +993,7 @@ func add_atom_production(el:String, base_prod:float):
 		game.autocollect.atoms[el] = 1 * base_prod + game.autocollect.atoms.get(el, 0)
 
 func get_reaction_info(tile):
-	var MM_value:float = clamp((Time.get_unix_time_from_system() - tile.bldg.start_date) / tile.bldg.difficulty * tile.bldg.path_1_value * get_IR_mult(tile.bldg.name) * game.u_i.time_speed, 0, tile.bldg.qty)
+	var MM_value:float = clamp((Time.get_unix_time_from_system() - tile.bldg.start_date) / tile.bldg.difficulty * tile.bldg.path_1_value * get_IR_mult(tile.bldg.name) * game.u_i.time_speed * tile.get("time_speed_bonus", 1.0), 0, tile.bldg.qty)
 	return {"MM_value":MM_value, "progress":MM_value / tile.bldg.qty}
 
 func update_MS_rsrc(dict:Dictionary):
@@ -979,7 +1001,7 @@ func update_MS_rsrc(dict:Dictionary):
 	var prod:float
 	if dict.has("tile_num"):
 		if dict.bldg.name == Building.ATMOSPHERE_EXTRACTOR:
-			prod = 1.0 / get_AE_production(dict.pressure, dict.bldg.path_1_value) / dict.tile_num / game.u_i.time_speed
+			prod = 1.0 / get_AE_production(dict.pressure, dict.bldg.path_1_value) / dict.tile_num / game.u_i.time_speed / dict.get("time_speed_bonus", 1.0)
 		else:
 			prod = 1.0 / dict.bldg.path_1_value
 			if dict.bldg.name != Building.BORING_MACHINE:
@@ -1350,7 +1372,7 @@ func get_modifier_string(modifiers:Dictionary, au_str:String, icons:Array):
 	return st
 
 func get_time_div(time:float):
-	var time_speed
+	var time_speed:float
 	if game.subject_levels.dimensional_power >= 4:
 		time_speed = log(game.u_i.time_speed - 1.0 + exp(1.0))
 	else:

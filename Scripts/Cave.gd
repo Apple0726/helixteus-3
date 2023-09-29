@@ -167,9 +167,9 @@ func _ready():
 	$UI2/Controls.refresh()
 	
 	if game.subject_levels.dimensional_power >= 4:
-		time_speed = log(game.u_i.time_speed - 1.0 + exp(1.0))
+		time_speed = log(game.u_i.time_speed * tile.get("time_speed_bonus", 1.0) - 1.0 + exp(1.0))
 	else:
-		time_speed = game.u_i.time_speed
+		time_speed = game.u_i.time_speed * tile.get("time_speed_bonus", 1.0)
 	HP = rover_data.HP
 	total_HP = rover_data.HP
 	atk = rover_data.atk
@@ -1328,9 +1328,9 @@ func _input(event):
 				remove_cave()
 				cave_floor -= 1
 				if cave_floor == 7:
-					game.switch_music(preload("res://Audio/cave1.ogg"), 0.95 if tile.has("aurora") else 1.0)
-#				if cave_floor == 15:
-#					game.switch_music(preload("res://Audio/cave2.ogg"), 0.95 if tile.has("aurora") else 1.0)
+					game.switch_music(preload("res://Audio/cave1.ogg"), time_speed, 0.95 if tile.has("aurora") else 1.0)
+				if cave_floor == 15:
+					game.switch_music(preload("res://Audio/cave2.ogg"), time_speed, 0.95 if tile.has("aurora") else 1.0)
 				if volcano_mult > 1 and not artificial_volcano and is_aurora_cave:
 					difficulty /= 2.5
 				elif volcano_mult > 1 and not artificial_volcano or is_aurora_cave:
@@ -1360,9 +1360,9 @@ func go_down_cave():
 	remove_cave()
 	cave_floor += 1
 	if cave_floor == 8:
-		game.switch_music(preload("res://Audio/cave2.ogg"), 0.95 if tile.has("aurora") else 1.0)
+		game.switch_music(preload("res://Audio/cave2.ogg"), time_speed, 0.95 if tile.has("aurora") else 1.0)
 	elif cave_floor == 16:
-		game.switch_music(preload("res://Audio/cave3.ogg"), 0.95 if tile.has("aurora") else 1.0)
+		game.switch_music(preload("res://Audio/cave3.ogg"), time_speed, 0.95 if tile.has("aurora") else 1.0)
 	if volcano_mult > 1 and not artificial_volcano and is_aurora_cave:
 		difficulty *= 2.5
 	elif volcano_mult > 1 and not artificial_volcano or is_aurora_cave:

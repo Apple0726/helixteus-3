@@ -207,7 +207,7 @@ func _ready():
 		$UI/FightPanel.modulate.a = 0
 		$UI/Back.modulate.a = 0
 		$InitialFade.play("SceneFade", -1, 0.5)
-		game.switch_music(preload("res://Audio/op_battle.ogg"))
+		game.switch_music(preload("res://Audio/op_battle.ogg"), game.u_i.time_speed)
 		await get_tree().create_timer(0.5).timeout
 		send_HXs()
 		await get_tree().create_timer(1.0).timeout
@@ -407,7 +407,7 @@ func _on_Back_pressed():
 	if $UI/Back.modulate.a < 1:
 		return
 	if hard_battle:
-		game.switch_music(load("res://Audio/ambient" + str(Helper.rand_int(1, 3)) + ".ogg"))
+		game.switch_music(load("res://Audio/ambient" + str(Helper.rand_int(1, 3)) + ".ogg"), game.u_i.time_speed)
 	game.switch_view("system")
 
 var ship_dir:String = ""
@@ -609,7 +609,7 @@ func _process(delta):
 		for i in len(ship_data):
 			ship_data[i].HP = ship_data[i].total_HP * ship_data[i].HP_mult
 		if hard_battle:
-			game.switch_music(load("res://Audio/ambient" + str(Helper.rand_int(1, 3)) + ".ogg"))
+			game.switch_music(load("res://Audio/ambient" + str(Helper.rand_int(1, 3)) + ".ogg"), game.u_i.time_speed)
 		game.switch_view("system")
 		game.popup_window(tr("BATTLE_LOST_DESC"), tr("BATTLE_LOST"))
 		return

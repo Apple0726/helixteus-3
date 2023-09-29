@@ -88,7 +88,7 @@ func _on_close_button_pressed():
 	if all_conquered:
 		Helper.save_obj("Galaxies", game.c_g_g, game.system_data)
 	if game.battle.hard_battle:
-		game.switch_music(load("res://Audio/ambient" + str(Helper.rand_int(1, 3)) + ".ogg"))
+		game.switch_music(load("res://Audio/ambient" + str(Helper.rand_int(1, 3)) + ".ogg"), game.u_i.time_speed)
 	queue_free()
 	if not game.help.has("SP"):
 		game.popup_window(tr("NEW_BLDGS_UNLOCKED_DESC"), tr("NEW_BLDGS_UNLOCKED"))

@@ -154,7 +154,7 @@ func _ready():
 				var aurora = game.aurora_scene.instantiate()
 				aurora.position = Vector2(i, j) * 200 + Vector2(100, 100)
 				aurora.amount = min(5 + int(tile.aurora * 10), 50)
-				aurora.lifetime = 3.0 / game.u_i.time_speed
+				aurora.lifetime = 3.0 / game.u_i.time_speed / tile.get("time_speed_bonus", 1.0)
 				#aurora.process_material["shader_parameter/strength"] = 1.0 if randf() < 0.5 else 0.0
 				#var hue:float = 0.4 + max(0, pow(tile.aurora.au_int, 0.35) - pow(4, 0.25)) / 10
 				var hue:float = 0.4 + log(tile.aurora + 1.0) / 10.0
@@ -202,7 +202,7 @@ func add_unique_building_sprite(tile:Dictionary, tile_id:int, v:Vector2):
 		particles.modulate = particle_props[tile.unique_bldg.tier - 2].c
 		particles.amount = particle_props[tile.unique_bldg.tier - 2].amount
 		particles.lifetime = particle_props[tile.unique_bldg.tier - 2].lifetime
-		particles.speed_scale = game.u_i.time_speed
+		particles.speed_scale = game.u_i.time_speed * tile.get("time_speed_bonus", 1.0)
 		bldgs[tile_id].add_child(particles)
 
 func add_particles(pos:Vector2):
@@ -392,6 +392,8 @@ func show_tooltip(tile, tile_id:int):
 			tooltip = "%s\n[color=#BBFFFF]%s\n[/color][color=#77BBBB]%s[/color]\n%s" % [tr("AURORA"), tr("AURORA_DESC"), tr("HIDE_HELP"), tr("AURORA_INTENSITY") + ": %s" % [tile.aurora]]
 		else:
 			tooltip = tr("AURORA_INTENSITY") + ": %s" % [tile.aurora]
+	if tile.has("time_speed_bonus"):
+		tooltip += ("\n" if tooltip != "" else "") + "[color=#FFBBBB]" + tr("TIME_FLOWS_X_FASTER_HERE") % tile.time_speed_bonus + "[/color]"
 	if tooltip != "":
 		game.show_adv_tooltip(tooltip, icons)
 	if fiery_tooltip != -1 and is_instance_valid(game.tooltip):
@@ -557,7 +559,7 @@ func speedup_bldg(tile, tile_id:int, curr_time):
 		game.item_to_use.num -= num_needed
 
 func overclock_bldg(tile, tile_id:int, curr_time):
-	var mult:float = game.overclocks_info[game.item_to_use.name].mult * (tile.overclock_bonus if tile.has("overclock_bonus") else 1.0)
+	var mult:float = game.overclocks_info[game.item_to_use.name].mult * tile.get("overclock_bonus", 1.0)
 	if overclockable(tile.bldg.name) and not tile.bldg.has("is_constructing") and (not tile.bldg.has("overclock_mult") or tile.bldg.overclock_mult < mult):
 		var mult_diff:float
 		if not tile.bldg.has("overclock_mult"):
@@ -566,26 +568,26 @@ func overclock_bldg(tile, tile_id:int, curr_time):
 		else:
 			mult_diff = mult - tile.bldg.overclock_mult
 		tile.bldg.overclock_date = curr_time
-		tile.bldg.overclock_length = game.overclocks_info[game.item_to_use.name].duration / game.u_i.time_speed
+		tile.bldg.overclock_length = game.overclocks_info[game.item_to_use.name].duration / game.u_i.time_speed / tile.get("time_speed_bonus", 1.0)
 		tile.bldg.overclock_mult = mult
 		if tile.bldg.name == Building.RESEARCH_LAB:
-			game.autocollect.rsrc.SP += tile.bldg.path_1_value * mult_diff * tile.resource_production_bonus.get("SP", 1.0)
+			game.autocollect.rsrc.SP += tile.bldg.path_1_value * mult_diff * tile.resource_production_bonus.get("SP", 1.0) * tile.get("time_speed_bonus", 1.0)
 		elif tile.bldg.name == Building.MINERAL_EXTRACTOR:
-			game.autocollect.rsrc.minerals += tile.bldg.path_1_value * mult_diff * tile.resource_production_bonus.get("minerals", 1.0)
+			game.autocollect.rsrc.minerals += tile.bldg.path_1_value * mult_diff * tile.resource_production_bonus.get("minerals", 1.0) * tile.get("time_speed_bonus", 1.0)
 		elif tile.bldg.name == Building.POWER_PLANT:
-			game.autocollect.rsrc.energy += tile.bldg.path_1_value * mult_diff * tile.resource_production_bonus.get("energy", 1.0)
+			game.autocollect.rsrc.energy += tile.bldg.path_1_value * mult_diff * tile.resource_production_bonus.get("energy", 1.0) * tile.get("time_speed_bonus", 1.0)
 		elif tile.bldg.name == Building.SOLAR_PANEL:
-			var SP_prod = Helper.get_SP_production(p_i.temperature, tile.bldg.path_1_value * mult_diff * (tile.get("aurora", 0.0) + 1.0) * tile.resource_production_bonus.get("energy", 1.0))
+			var SP_prod = Helper.get_SP_production(p_i.temperature, tile.bldg.path_1_value * mult_diff * (tile.get("aurora", 0.0) + 1.0) * tile.resource_production_bonus.get("energy", 1.0) * tile.get("time_speed_bonus", 1.0))
 			game.autocollect.rsrc.energy += SP_prod
 		elif tile.bldg.name == Building.ATMOSPHERE_EXTRACTOR:
-			var base = tile.bldg.path_1_value * mult_diff * p_i.pressure
+			var base = tile.bldg.path_1_value * mult_diff * p_i.pressure * tile.get("time_speed_bonus", 1.0)
 			for el in p_i.atmosphere:
 				var base_prod:float = base * p_i.atmosphere[el]
 				Helper.add_atom_production(el, base_prod)
 			Helper.add_energy_from_NFR(p_i, base)
 			Helper.add_energy_from_CS(p_i, base)
 		elif tile.bldg.name == Building.BORING_MACHINE:
-			var tiles_mined = (curr_time - tile.bldg.collect_date) * tile.bldg.path_1_value * Helper.get_prod_mult(tile) * (tile.mining_outpost_bonus if tile.has("mining_outpost_bonus") else 1.0)
+			var tiles_mined = (curr_time - tile.bldg.collect_date) * tile.bldg.path_1_value * Helper.get_prod_mult(tile) * tile.get("mining_outpost_bonus", 1.0)
 			if tiles_mined >= 1:
 				game.add_resources(Helper.mass_generate_rock(tile, p_i, int(tiles_mined)))
 				tile.bldg.collect_date = curr_time
@@ -692,6 +694,9 @@ func destroy_bldg(id2:int, mass:bool = false):
 	elif bldg == Building.CENTRAL_BUSINESS_DISTRICT:
 		var n:int = tile.bldg.path_3_value
 		var wid:int = tile.bldg.wid
+		var second_path_str = "overclock"
+		if game.subject_levels.dimensional_power >= 7:
+			second_path_str = "time_speed"
 		for i in n:
 			var x:int = tile.bldg.x_pos + i - n / 2
 			if x < 0 or x >= wid:
@@ -711,15 +716,20 @@ func destroy_bldg(id2:int, mass:bool = false):
 					for st in _tile.cost_div_dict.keys():
 						div = max(div, _tile.cost_div_dict[st])
 					_tile.cost_div = div
-				_tile.overclock_dict.erase(id2)
-				if _tile.overclock_dict.is_empty():
-					_tile.erase("overclock_dict")
-					_tile.erase("overclock_bonus")
+				_tile["%s_dict" % second_path_str].erase(id2)
+				if _tile["%s_dict" % second_path_str].is_empty():
+					if second_path_str == "time_speed" and _tile.has("bldg"):
+						Helper.add_autocollect(p_i, _tile, -_tile.time_speed_bonus + 1.0)
+					_tile.erase("%s_dict" % second_path_str)
+					_tile.erase("%s_bonus" % second_path_str)
 				else:
 					var bonus:float = 1.0
-					for st in _tile.overclock_dict.keys():
-						bonus = max(bonus, _tile.overclock_dict[st])
-					_tile.overclock_bonus = bonus
+					for st in _tile["%s_dict" % second_path_str].keys():
+						bonus = max(bonus, _tile["%s_dict" % second_path_str][st])
+					if second_path_str == "time_speed" and _tile.has("bldg"):
+						var diff:float = bonus - _tile.time_speed_bonus
+						Helper.add_autocollect(p_i, _tile, diff)
+					_tile["%s_bonus" % second_path_str] = bonus
 	elif bldg == Building.GREENHOUSE:
 		$Soil.set_cell(id2 % wid, int(id2 / wid), -1)
 		$Soil.update_bitmask_region()
@@ -841,7 +851,7 @@ func collect_prod_bldgs(tile_id:int):
 				Helper.get_SC_output(expected_rsrc, qty_to_crush, _tile.bldg.path_3_value, stone_total)
 				_tile.bldg.expected_rsrc = expected_rsrc
 		else:
-			var crush_spd = _tile.bldg.path_1_value * game.u_i.time_speed
+			var crush_spd = _tile.bldg.path_1_value * game.u_i.time_speed * _tile.get("time_speed_bonus", 1.0)
 			var qty_left = max(0, round(_tile.bldg.stone_qty - (curr_time - _tile.bldg.start_date) * crush_spd))
 			if qty_left > 0:
 				var progress = (curr_time - _tile.bldg.start_date) * crush_spd / _tile.bldg.stone_qty

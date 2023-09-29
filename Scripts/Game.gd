@@ -628,7 +628,7 @@ func animate_title_buttons():
 	tween.tween_property($Star/Sprite2D.material, "shader_parameter/brightness_offset", 0.8, 1.0).set_delay(0.5)
 	tween.tween_property($Star, "modulate", Color.WHITE, 1.2)
 	
-func switch_music(src, pitch:float = 1.0):
+func switch_music(src, time_speed:float = 1.0, pitch_scale:float = 1.0):
 	#Music fading
 	if music_player.playing:
 		$MusicPlayer/AnimationPlayer.play_backwards("FadeMusic")
@@ -636,13 +636,13 @@ func switch_music(src, pitch:float = 1.0):
 	if not src:
 		return
 	music_player.stream = src
-	if Settings.pitch_affected and u_i != null and not u_i.is_empty():
+	if Settings.pitch_affected:
 		if c_v in ["cave", "battle"] and subject_levels.dimensional_power >= 4:
-			music_player.pitch_scale = pitch * log(u_i.time_speed - 1.0 + exp(1.0))
+			music_player.pitch_scale = pitch_scale * log(time_speed - 1.0 + exp(1.0))
 		else:
-			music_player.pitch_scale = pitch * u_i.time_speed
+			music_player.pitch_scale = pitch_scale * time_speed
 	else:
-		music_player.pitch_scale = pitch
+		music_player.pitch_scale = pitch_scale
 	$MusicPlayer/AnimationPlayer.play("FadeMusic")
 	await get_tree().process_frame
 	music_player.play()
@@ -746,6 +746,10 @@ func load_game():
 					"engineering":0,
 					"dimensional_power":0,
 		})
+	if subject_levels.dimensional_power >= 7:
+		Data.path_2[Building.CENTRAL_BUSINESS_DISTRICT].desc = "x %s " + tr("TIME_SPEED")
+	else:
+		Data.path_2[Building.CENTRAL_BUSINESS_DISTRICT].desc = tr("CBD_PATH_2")
 	stats_global = save_info_dict.get("stats_global", Data.default_stats.duplicate(true))
 	stats_dim = save_info_dict.get("stats_dim", Data.default_stats.duplicate(true))
 	for stat in Data.default_stats:
@@ -1470,7 +1474,7 @@ func switch_view(new_view:String, other_params:Dictionary = {}):
 		remove_dimension()
 		if not $UI.is_ancestor_of(HUD):
 			$UI.add_child(HUD)
-		switch_music(load("res://Audio/ambient" + str(Helper.rand_int(1, 3)) + ".ogg"))
+		switch_music(load("res://Audio/ambient" + str(Helper.rand_int(1, 3)) + ".ogg"), u_i.time_speed)
 	else:
 		if not other_params.has("first_time"):
 			match c_v:
@@ -1499,16 +1503,16 @@ func switch_view(new_view:String, other_params:Dictionary = {}):
 					$UI.add_child(HUD)
 					if is_instance_valid(cave):
 						cave.queue_free()
-					switch_music(load("res://Audio/ambient" + str(Helper.rand_int(1, 3)) + ".ogg"))
+					switch_music(load("res://Audio/ambient" + str(Helper.rand_int(1, 3)) + ".ogg"), u_i.time_speed)
 				"STM":
 					$UI.add_child(HUD)
 					STM.queue_free()
-					switch_music(load("res://Audio/ambient" + str(Helper.rand_int(1, 3)) + ".ogg"))
+					switch_music(load("res://Audio/ambient" + str(Helper.rand_int(1, 3)) + ".ogg"), u_i.time_speed)
 				"battle":
 					$UI.add_child(HUD)
 					HUD.refresh()
 					battle.queue_free()
-			if c_v in  ["science_tree", "STM", "planet_details"]:
+			if c_v in ["science_tree", "STM", "planet_details"]:
 				c_v = l_v
 			elif new_view != "":
 				l_v = c_v
@@ -1606,7 +1610,7 @@ func switch_view(new_view:String, other_params:Dictionary = {}):
 				cave = cave_scene.instantiate()
 				cave.rover_data = rover_data[rover_id]
 				cave.start_at_floor = other_params.get("start_floor", 1)
-				switch_music(preload("res://Audio/cave1.ogg"), 0.95 if tile_data[c_t].has("aurora") else 1.0)
+				switch_music(preload("res://Audio/cave1.ogg"), u_i.time_speed * tile_data[c_t].get("time_speed_bonus", 1.0), 0.95 if tile_data[c_t].has("aurora") else 1.0)
 				add_child(cave)
 			"STM":
 				$Ship.visible = false
@@ -1616,9 +1620,9 @@ func switch_view(new_view:String, other_params:Dictionary = {}):
 				STM = STM_scene.instantiate()
 				add_child(STM)
 				if randf() < 0.5:
-					switch_music(preload("res://Audio/STM.ogg"))
+					switch_music(preload("res://Audio/STM.ogg"), u_i.time_speed)
 				else:
-					switch_music(preload("res://Audio/STM2.ogg"))
+					switch_music(preload("res://Audio/STM2.ogg"), u_i.time_speed)
 			"battle":
 				$Ship.visible = false
 				if is_instance_valid(HUD) and $UI.is_ancestor_of(HUD):
@@ -1669,10 +1673,15 @@ func add_science_tree():
 		if rsrc.name != "SP":
 			rsrc.modulate.a = 0.5
 
+var pitch_increased_mining = false
+
 func add_mining():
 	HUD.get_node("Bottom/Hotbar").visible = false
 	mining_HUD = mining_HUD_scene.instantiate()
 	add_child(mining_HUD)
+	if tile_data[c_t].has("time_speed_bonus") and Settings.pitch_affected:
+		music_player.pitch_scale *= tile_data[c_t].time_speed_bonus
+		pitch_increased_mining = true
 
 func remove_mining():
 	Helper.save_obj("Planets", c_p_g, tile_data)
@@ -1680,6 +1689,9 @@ func remove_mining():
 		HUD.get_node("Bottom/Hotbar").visible = true
 	if is_instance_valid(mining_HUD):
 		mining_HUD.queue_free()
+	if tile_data[c_t].has("time_speed_bonus") and Settings.pitch_affected and pitch_increased_mining:
+		music_player.pitch_scale /= tile_data[c_t].time_speed_bonus
+		pitch_increased_mining = false
 
 func remove_science_tree():
 	$ScienceTreeBG.visible = false
@@ -4016,7 +4028,6 @@ func fade_out_title(fn:String):
 	$Star.visible = false
 	$Title.visible = false
 	$Settings/Settings.visible = true
-	switch_music(load("res://Audio/ambient" + str(Helper.rand_int(1, 3)) + ".ogg"))
 	HUD = preload("res://Scenes/HUD.tscn").instantiate()
 	if fn == "new_game":
 		if DRs > 0:
@@ -4031,6 +4042,7 @@ func fade_out_title(fn:String):
 		call(fn)
 		add_panels()
 		$Autosave.start()
+		switch_music(load("res://Audio/ambient" + str(Helper.rand_int(1, 3)) + ".ogg"), u_i.time_speed)
 	
 func _on_NewGame_pressed():
 	if Settings.op_cursor and Input.is_action_pressed("ctrl"):
@@ -4098,6 +4110,7 @@ func return_to_menu_confirm():
 	$Ship.visible = false
 	$Autosave.stop()
 	await switch_view("")
+	c_v = ""
 	$Title/Menu/VBoxContainer/Continue.connect("pressed",Callable(self,"_on_continue_pressed"))
 	refresh_continue_button()
 	switch_music(preload("res://Audio/Title.ogg"))

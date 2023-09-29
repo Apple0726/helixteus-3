@@ -28,14 +28,16 @@ func _ready():
 	if tile == null:
 		game.tile_data[id] = {}
 		tile = game.tile_data[id]
-	if tile.has("aurora"):
-		refresh_aurora_bonus()
 	if not tile.has("mining_progress"):
 		tile.mining_progress = 0.0
 	if not tile.has("depth"):
 		tile.depth = 0
 	if tile.has("bridge"):
 		tile.erase("bridge")
+	if tile.has("aurora"):
+		aurora_mult = tile.aurora + 1.0
+		$Mults/AuroraMult.visible = true
+		$Mults/AuroraMult.text = "[aurora au_int=%s][center]%s: x %s" % [tile.aurora, tr("AURORA_MULTIPLIER"), Helper.clever_round(aurora_mult)]
 	progress = tile.mining_progress
 	if game.pickaxe.has("name"):
 		$Pickaxe/Sprite2D.texture = load("res://Graphics/Items/Pickaxes/" + game.pickaxe.name + ".png")
@@ -54,11 +56,6 @@ func _ready():
 		$LayerAnim.seek(1, true)
 	$AutoReplace.button_pressed = game.auto_replace
 
-func refresh_aurora_bonus():
-	$Mults/AuroraMult.visible = true
-	aurora_mult = Helper.clever_round(Helper.get_au_mult(tile))
-	$Mults/AuroraMult.text = "[aurora au_int=%s][center]%s: x %s" % [tile.aurora.au_int, tr("AURORA_MULTIPLIER"), aurora_mult]
-	
 func update_info(first_time:bool = false):
 	var upper_depth
 	var lower_depth 
@@ -324,14 +321,14 @@ func add_rsrc_mined(_contents:Dictionary):
 
 func _process(delta):
 	for cr in crumbles:
-		cr.sprite.position += cr.velocity * delta * 60 * game.u_i.time_speed
-		cr.velocity.y += 0.6 * delta * 60 * game.u_i.time_speed
-		cr.sprite.rotation += cr.angular_velocity * delta * 60 * game.u_i.time_speed
+		cr.sprite.position += cr.velocity * delta * 60 * game.u_i.time_speed * tile.get("time_speed_bonus", 1.0)
+		cr.velocity.y += 0.6 * delta * 60 * game.u_i.time_speed * tile.get("time_speed_bonus", 1.0)
+		cr.sprite.rotation += cr.angular_velocity * delta * 60 * game.u_i.time_speed * tile.get("time_speed_bonus", 1.0)
 		if cr.sprite.position.y > 1000:
 			cr.sprite.free()
 			crumbles.erase(cr)
 	if circ.visible and not circ_disabled:
-		circ.position += circ_vel * max(1, pow(points / 60.0, 0.4)) * delta * 60 * game.u_i.time_speed
+		circ.position += circ_vel * max(1, pow(points / 60.0, 0.4)) * delta * 60 * game.u_i.time_speed * tile.get("time_speed_bonus", 1.0)
 		if circ.position.x < 284:
 			circ_vel.x = -sign(circ_vel.x) * randf_range(1 / 1.2, 1.2)
 			circ.position.x = 284
@@ -349,23 +346,23 @@ func _process(delta):
 			spd_mult_node.text = tr("SPEED_MULTIPLIER") + ": x %s" % [speed_mult]
 		spd_mult_node.visible = bool(points) or game.pickaxe.has("speed_mult")
 		if Input.is_action_pressed("left_click") and Geometry2D.is_point_in_circle(mouse_pos, circ.position + 50 * circ.scale, 50 * circ.scale.x):
-			points += delta * 60.0 * game.u_i.time_speed
+			points += delta * 60.0 * game.u_i.time_speed * tile.get("time_speed_bonus", 1.0)
 			spd_mult_node["theme_override_colors/font_color"] = Color(0, 1, 0, 1)
 		else:
 			if points > 0:
-				points = max(points - 3 * delta * 60.0 * game.u_i.time_speed, 0)
+				points = max(points - 3 * delta * 60.0 * game.u_i.time_speed * tile.get("time_speed_bonus", 1.0), 0)
 				spd_mult_node["theme_override_colors/font_color"] = Color(1, 0, 0, 1)
 
 func _on_Button_button_down():
 	if game.pickaxe.has("name"):
 		circ_disabled = false
 		$PickaxeAnim.get_animation("Pickaxe swing").loop_mode = true
-		$PickaxeAnim.play("Pickaxe swing", -1, game.u_i.time_speed)
+		$PickaxeAnim.play("Pickaxe swing", -1, game.u_i.time_speed * tile.get("time_speed_bonus", 1.0))
 
 func _on_Button_button_up():
 	circ_disabled = true
 	$PickaxeAnim.get_animation("Pickaxe swing").loop_mode = false
-	$PickaxeAnim.play("Pickaxe swing", -1, -game.u_i.time_speed)
+	$PickaxeAnim.play("Pickaxe swing", -1, -game.u_i.time_speed * tile.get("time_speed_bonus", 1.0))
 
 func _on_CheckBox_mouse_entered():
 	game.show_tooltip(tr("AUTO_REPLACE_DESC"))
