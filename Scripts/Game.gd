@@ -4038,6 +4038,7 @@ func fade_out_title(fn:String):
 			dimension.refresh_univs(true)
 		else:
 			new_game(0, true)
+			switch_music(load("res://Audio/ambient" + str(Helper.rand_int(1, 3)) + ".ogg"), u_i.time_speed)
 	else:
 		call(fn)
 		add_panels()
