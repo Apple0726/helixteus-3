@@ -150,17 +150,6 @@ func _ready():
 				lake_tiles[tile.lake-1].append(Vector2i(i, j))
 			if tile.has("ash"):
 				ash_tiles.append(Vector2i(i, j))
-			if tile.has("aurora"):
-				var aurora = game.aurora_scene.instantiate()
-				aurora.position = Vector2(i, j) * 200 + Vector2(100, 100)
-				aurora.amount = min(5 + int(tile.aurora * 10), 50)
-				aurora.lifetime = 3.0 / game.u_i.time_speed / tile.get("time_speed_bonus", 1.0)
-				#aurora.process_material["shader_parameter/strength"] = 1.0 if randf() < 0.5 else 0.0
-				#var hue:float = 0.4 + max(0, pow(tile.aurora.au_int, 0.35) - pow(4, 0.25)) / 10
-				var hue:float = 0.4 + log(tile.aurora + 1.0) / 10.0
-				var sat:float = 1.0 - floor(hue - 0.4) / 5.0
-				aurora.modulate = Color.from_hsv(fmod(hue, 1.0), sat, 1.0) * max(log(tile.aurora) / 10.0, 1.0)
-				add_child(aurora)
 	var lake_state_id = {
 		"s":0,
 		"l":1,
@@ -176,6 +165,27 @@ func _ready():
 		$TileFeatures.set_cells_terrain_connect(1, lake_tiles[1], 0, lake_state_id[p_i.lake_2.state])
 	$BadApple.wid_p = wid
 	$BadApple.pixel_color = Color.BLACK if star_mod.get_luminance() > 0.3 else Color(0.5, 0.5, 0.5, 1.0)
+#	var aurora_counter:int = 0
+	for i in wid:
+		for j in wid:
+			if not is_inside_tree():
+				return
+			var id2 = i % wid + j * wid
+			var tile = game.tile_data[id2]
+			if tile and tile.has("aurora"):
+				var aurora = game.aurora_scene.instantiate()
+				aurora.position = Vector2(i, j) * 200 + Vector2(100, 100)
+				aurora.amount = min(5 + int(tile.aurora * 10), 50)
+				aurora.lifetime = 3.0 / game.u_i.time_speed / tile.get("time_speed_bonus", 1.0)
+				#aurora.process_material["shader_parameter/strength"] = 1.0 if randf() < 0.5 else 0.0
+				#var hue:float = 0.4 + max(0, pow(tile.aurora.au_int, 0.35) - pow(4, 0.25)) / 10
+				var hue:float = 0.4 + log(tile.aurora + 1.0) / 10.0
+				var sat:float = 1.0 - floor(hue - 0.4) / 5.0
+				aurora.modulate = Color.from_hsv(fmod(hue, 1.0), sat, 1.0) * max(log(tile.aurora) / 10.0, 1.0)
+				add_child(aurora)
+#				aurora_counter += 1
+#				if aurora_counter % int(1000.0 / Engine.get_frames_per_second()) == 0:
+#					await get_tree().process_frame
 
 func add_unique_building_sprite(tile:Dictionary, tile_id:int, v:Vector2):
 	var mod:Color = Color.WHITE
@@ -1092,7 +1102,10 @@ func _unhandled_input(event):
 		if is_instance_valid(shadow):
 			shadow.visible = mouse_on_tiles and not mass_build
 			shadow.modulate.a = 0.5
-			shadow.position = floor(mouse_pos / 200) * 200 + Vector2.ONE * 100
+			if constructing_unique_building_tier != -1 and bldg_to_construct == UniqueBuilding.NUCLEAR_FUSION_REACTOR:
+				shadow.position = floor(mouse_pos / 200) * 200 + Vector2.ONE * 200
+			else:
+				shadow.position = floor(mouse_pos / 200) * 200 + Vector2.ONE * 100
 	#finish mass build
 	if Input.is_action_just_released("left_click") and mass_build_rect.visible:
 		mass_build_rect.visible = false
@@ -1135,10 +1148,10 @@ func _unhandled_input(event):
 					constr_bldg(tile_id, curr_time, bldg_to_construct)
 			else:
 				if bldg_to_construct == UniqueBuilding.NUCLEAR_FUSION_REACTOR:
-					if x_pos < wid and y_pos < wid:
+					if x_pos < wid-1 and y_pos < wid-1:
 						for _tile_id in [tile_id, tile_id+1, tile_id+wid, tile_id+1+wid]:
 							if is_obstacle(game.tile_data[_tile_id]):
-								break
+								return
 						construct_unique_building(tile_id, bldg_to_construct)
 				else:
 					if bldg_to_construct == UniqueBuilding.SPACEPORT and p_i.unique_bldgs.has(UniqueBuilding.SPACEPORT) and not p_i.unique_bldgs[UniqueBuilding.SPACEPORT].is_empty():
@@ -1558,7 +1571,10 @@ func initiate_unique_building_construction(type:int, costs:Dictionary):
 	constr_costs = costs
 	constr_costs_total = costs.duplicate()
 	shadow = Sprite2D.new()
-	put_shadow(shadow, game.unique_bldg_textures[bldg_to_construct])
+	if type == UniqueBuilding.NUCLEAR_FUSION_REACTOR:
+		put_shadow(shadow, game.unique_bldg_textures[bldg_to_construct], mouse_pos, 0.8, Vector2.ONE * 200)
+	else:
+		put_shadow(shadow, game.unique_bldg_textures[bldg_to_construct], mouse_pos)
 	game.HUD.get_node("Top/Resources/Stone").visible = false
 	game.HUD.get_node("Top/Resources/Minerals").visible = false
 	game.HUD.get_node("Top/Resources/Cellulose").visible = false
@@ -1567,7 +1583,7 @@ func initiate_unique_building_construction(type:int, costs:Dictionary):
 		for j in wid:
 			var id2 = i % wid + j * wid
 			var tile = game.tile_data[id2]
-			if tile and is_obstacle(tile):
+			if tile and is_obstacle(tile) or type == UniqueBuilding.NUCLEAR_FUSION_REACTOR and (i == wid-1 or j == wid-1):
 				grayed_out_tile_positions.append(Vector2(i, j))
 				var gray_tile = preload("res://Scenes/GrayscaleTile.tscn").instantiate()
 				gray_tile.position = Vector2(i, j) * 200.0
@@ -1614,7 +1630,7 @@ func construct(type:int, costs:Dictionary):
 		for j in wid:
 			var id2 = i % wid + j * wid
 			var tile = game.tile_data[id2]
-			if tile and type == Building.GREENHOUSE and not tile.has("lake_elements") or not available_to_build(tile):
+			if (type == Building.GREENHOUSE and (not tile or not tile.has("lake_elements"))) or tile and not available_to_build(tile):
 				grayed_out_tile_positions.append(Vector2(i, j))
 				var gray_tile = preload("res://Scenes/GrayscaleTile.tscn").instantiate()
 				gray_tile.position = Vector2(i, j) * 200.0
@@ -1633,6 +1649,8 @@ func construct(type:int, costs:Dictionary):
 	for i in wid:
 		for j in wid:
 			var id2 = i % wid + j * wid
+			if not is_inside_tree():
+				return
 			var tile = game.tile_data[id2]
 			if tile and tile.has("resource_production_bonus") and tile.resource_production_bonus.has(rsrc):
 				if bldg_to_construct == -1:
@@ -1670,11 +1688,11 @@ func place_gray_tiles_mining():
 		var v = gray_tile.position / 200.0
 		tween2.tween_property(gray_tile.material, "shader_parameter/amount", 1.0, 0.2).set_delay((v.x + v.y) / 7.5 / wid)
 	
-func put_shadow(spr:Sprite2D, texture, pos:Vector2 = Vector2.ZERO):
+func put_shadow(spr:Sprite2D, texture, pos:Vector2 = Vector2.ZERO, sc:float = 0.4, offset:Vector2 = Vector2.ONE * 100):
 	spr.texture = texture
-	spr.scale *= 0.4
+	spr.scale *= sc
 	spr.modulate.a = 0.5
-	spr.position = floor(pos / 200) * 200 + Vector2.ONE * 100
+	spr.position = (floor(pos / 200) * 200).clamp(Vector2.ZERO, Vector2.ONE * wid * 200) + offset
 	add_child(spr)
 	return spr
 	

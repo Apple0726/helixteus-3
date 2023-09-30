@@ -342,15 +342,15 @@ func _process(delta):
 			circ_vel.y = -sign(circ_vel.y) * randf_range(1 / 1.2, 1.2)
 			circ.position.y = 484 - 100 * circ.scale.x
 		if spd_mult_node.visible:
-			speed_mult = Helper.clever_round((points * ((game.MUs.MSMB - 1) * 0.1 + 1) / 3000.0 + 1) * (game.pickaxe.speed_mult if game.pickaxe.has("speed_mult") else 1.0) * (tile.mining_outpost_bonus if tile.has("mining_outpost_bonus") else 1.0))
+			speed_mult = Helper.clever_round((points * ((game.MUs.MSMB - 1) * 0.1 + 1) / 3000.0 + 1) * game.pickaxe.get("speed_mult", 1.0) * tile.get("mining_outpost_bonus", 1.0))
 			spd_mult_node.text = tr("SPEED_MULTIPLIER") + ": x %s" % [speed_mult]
 		spd_mult_node.visible = bool(points) or game.pickaxe.has("speed_mult")
 		if Input.is_action_pressed("left_click") and Geometry2D.is_point_in_circle(mouse_pos, circ.position + 50 * circ.scale, 50 * circ.scale.x):
-			points += delta * 60.0 * game.u_i.time_speed * tile.get("time_speed_bonus", 1.0)
+			points += delta * 60.0 * pow(game.u_i.time_speed * tile.get("time_speed_bonus", 1.0), 2)
 			spd_mult_node["theme_override_colors/font_color"] = Color(0, 1, 0, 1)
 		else:
 			if points > 0:
-				points = max(points - 3 * delta * 60.0 * game.u_i.time_speed * tile.get("time_speed_bonus", 1.0), 0)
+				points = max(points - 3 * delta * 60.0 * pow(game.u_i.time_speed * tile.get("time_speed_bonus", 1.0), 2), 0)
 				spd_mult_node["theme_override_colors/font_color"] = Color(1, 0, 0, 1)
 
 func _on_Button_button_down():

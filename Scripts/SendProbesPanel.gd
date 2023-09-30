@@ -11,6 +11,7 @@ var undiscovered_obj_num:int = 0
 var dist_mult:float = 1
 var PP:float
 var init_PP:float
+var PP_multiplier:float = 1.0
 var dist_exp:int
 
 var units:Dictionary = {
@@ -59,13 +60,16 @@ func refresh():
 		init_PP = get_lv_sum()
 		if game.subject_levels.dimensional_power >= 5:
 			init_PP += 150
-		PP = init_PP + Helper.get_sum_of_dict(point_distribution)
 		var ok:bool = false
 		if len(game.universe_data) == 0 and game.subject_levels.dimensional_power >= 5:
 			ok = true
+		PP_multiplier = 1.0
 		for probe in game.probe_data:
 			if probe and probe.tier == 2:
 				ok = true
+				PP_multiplier = probe.get("PP_multiplier", 1.0)
+				break
+		PP = init_PP * PP_multiplier + Helper.get_sum_of_dict(point_distribution)
 		$Control.visible = false
 		$Send.visible = ok
 		$SendAll.visible = false
@@ -76,10 +80,10 @@ func refresh():
 				prop.get_node("Unit").text = units[prop.name]
 				if prop.name == "time_speed" and game.subject_levels.dimensional_power >= 4:
 					var cave_battle_time_speed:float = log(prop.get_node("HSlider").value - 1.0 + exp(1.0))
-					prop.get_node("Unit").text = " (%s in battles/caves)" % [cave_battle_time_speed]
+					prop.get_node("Unit").text = " (%s)" % [tr("TIME_SPEED_IN_BATTLES_CAVES") % cave_battle_time_speed]
 				if prop.has_node("HSlider"):
 					prop.get_node("HSlider").min_value = game.physics_bonus.MVOUP
-					prop.get_node("HSlider").max_value = ceil(init_PP / Data.univ_prop_weights[prop.name] / 2.0)
+					prop.get_node("HSlider").max_value = ceil(init_PP * PP_multiplier / Data.univ_prop_weights[prop.name] / 2.0)
 					prop.get_node("HSlider").step = 0.1
 					var value_range = prop.get_node("HSlider").max_value - prop.get_node("HSlider").min_value
 					if value_range > 10:
@@ -243,7 +247,7 @@ func _on_TP_value_changed(value:float, prop:String):
 			point_distribution[prop] = (value - 1) * -game.physics_bonus[prop]
 		else:
 			point_distribution[prop] = (1 / value - 1) * min(game.physics_bonus[prop], Data.univ_prop_weights[prop])
-	PP = init_PP + Helper.get_sum_of_dict(point_distribution)
+	PP = init_PP * PP_multiplier + Helper.get_sum_of_dict(point_distribution)
 	if is_equal_approx(PP, 0):
 		PP = 0
 	var s_b:float = pow(float($TP/VBox/boltzmann/Label2.text), 4) / pow(float($TP/VBox/planck/Label2.text), 3) / pow(float($TP/VBox/speed_of_light/Label2.text), 2)

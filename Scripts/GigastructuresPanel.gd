@@ -22,7 +22,7 @@ func refresh():
 	prod_cost_mult = g_i.system_num * game.u_i.gravitational * pow(g_i.dark_matter, 3) / 200.0
 	$Control/ProdCostMult.label_text = "%s: %s " % [tr("PRODUCTION_COST_MULT"), Helper.clever_round(prod_cost_mult)]
 	$Control/ProdCostMult.refresh()
-	surface = 4.2e15 * prod_cost_mult * 200.0
+	surface = 8.4e17 * prod_cost_mult
 	if bldg != -1:
 		update_info()
 
@@ -32,9 +32,14 @@ func update_info():
 		costs = {"money":7.5e23, "energy":5e24}
 	elif bldg == TRIANGULUM_PROBE:
 		costs = {"money":1.5e24, "energy":1.5e24}
+		if game.subject_levels.dimensional_power >= 6:
+			costs.money *= prod_cost_mult
+			costs.energy *= prod_cost_mult
 	else:
 		costs = Data.costs[bldg].duplicate(true)
-	$Control/ProdCostMult.visible = bldg != TRIANGULUM_PROBE
+	$Control/PPMult.visible = bldg == TRIANGULUM_PROBE and game.subject_levels.dimensional_power >= 6 and g_i.system_num >= 5000
+	$Control/PPMult.text = tr("PP_MULTIPLIER") + ": " + str(Helper.clever_round(log(prod_cost_mult + 1.0) / 2.0))
+	$Control/ProdCostMult.visible = bldg != TRIANGULUM_PROBE or game.subject_levels.dimensional_power >= 6 and g_i.system_num >= 5000
 	$Control/VBox/ProductionPerSec.visible = bldg != TRIANGULUM_PROBE
 	$Control/VBox/Production.visible = not bldg in [TRIANGULUM_PROBE, GALAXY_KILLER]
 	$Control/VBox/StoneMM.visible = bldg == GALAXY_KILLER
@@ -187,7 +192,10 @@ func _on_Convert_pressed():
 			if not game.achievement_data.random.has("build_tri_probe_in_slow_univ") and game.u_i.time_speed <= 0.2:
 				game.earn_achievement("random", "build_tri_probe_in_slow_univ")
 			game.show.dimensions = true
-			game.probe_data.append({"tier":2})
+			var probe_data = {"tier":2}
+			if game.subject_levels.dimensional_power >= 6:
+				probe_data.PP_multiplier = log(prod_cost_mult + 1.0) / 2.0
+			game.probe_data.append(probe_data)
 			game.switch_view("cluster", {"fn":"delete_galaxy", "fn_args":[g_i.l_id]})
 		elif bldg == GALAXY_KILLER:
 			game.add_resources(rsrc_from_GK)

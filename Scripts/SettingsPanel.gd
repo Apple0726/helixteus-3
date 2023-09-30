@@ -242,7 +242,16 @@ func _on_MusicPitch_toggled(button_pressed):
 	if err == OK:
 		Settings.pitch_affected = button_pressed
 		if button_pressed and game.u_i:
-			if game.c_v in ["cave", "battle"] and game.subject_levels.dimensional_power >= 4:
+			if game.c_v == "cave":
+				if game.subject_levels.dimensional_power >= 4:
+					game.music_player.pitch_scale = log(game.u_i.time_speed * game.tile_data[game.c_t].get("time_speed_bonus", 1.0) - 1.0 + exp(1.0))
+				else:
+					game.music_player.pitch_scale = game.u_i.time_speed
+			elif game.c_v == "mining":
+				if button_pressed and game.tile_data[game.c_t].has("time_speed_bonus"):
+					game.pitch_increased_mining = true
+				game.music_player.pitch_scale = game.u_i.time_speed * game.tile_data[game.c_t].get("time_speed_bonus", 1.0)
+			elif game.c_v == "battle" and game.subject_levels.dimensional_power >= 4:
 				game.music_player.pitch_scale = log(game.u_i.time_speed - 1.0 + exp(1.0))
 			else:
 				game.music_player.pitch_scale = game.u_i.time_speed

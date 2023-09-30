@@ -295,7 +295,7 @@ func on_unique_bldg_over(bldg:int):
 
 func on_unique_bldg_click(bldg:int):
 	hide_panel()
-	var tier = $Panel/ScrollContainer/VBoxContainer/HBoxContainer/Tier.value
+	var tier:int = $Panel/ScrollContainer/VBoxContainer/HBoxContainer/Tier.value
 	game.put_bottom_info(tr("CLICK_TILE_TO_CONSTRUCT"), "building", "cancel_building")
 	var base_cost = Data.unique_building_costs[bldg].duplicate(true)
 	var n = game.unique_building_counters[bldg].get(tier, 0) + 1

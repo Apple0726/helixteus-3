@@ -569,7 +569,7 @@ func _ready():
 		Settings.cave_gen_info = config.get_value("game", "cave_gen_info", false)
 		Settings.op_cursor = config.get_value("misc", "op_cursor", false)
 		Settings.auto_switch_buy_sell = config.get_value("game", "auto_switch_buy_sell", false)
-		Helper.discord = config.get_value("misc", "discord", true)
+		Settings.discord = config.get_value("misc", "discord", true)
 		if Settings.op_cursor:
 			Input.set_custom_mouse_cursor(preload("res://Cursor.png"))
 		var notation:String =  config.get_value("game", "notation", "SI")
@@ -3170,14 +3170,14 @@ func generate_tiles(id:int):
 			earn_achievement("exploration", "find_xenon_lake")
 	if p_i.has("lake_1"):
 		if p_i.lake_1.element == "Ne":
-			lake_1_au_int = Helper.clever_round(1.2e5 * (randf_range(1, 2)) * B_strength * max_star_temp)
+			lake_1_au_int = Helper.clever_round(1.2e6 * (randf_range(1, 2)) * B_strength * max_star_temp)
 		elif p_i.lake_1.element == "Xe":
-			lake_1_au_int = Helper.clever_round(3.6e6 * (randf_range(1, 2)) * B_strength * max_star_temp)
+			lake_1_au_int = Helper.clever_round(9.5e7 * (randf_range(1, 2)) * B_strength * max_star_temp)
 	if p_i.has("lake_2"):
 		if p_i.lake_2.element == "Ne":
-			lake_2_au_int = Helper.clever_round(1.2e5 * (randf_range(1, 2)) * B_strength * max_star_temp)
+			lake_2_au_int = Helper.clever_round(1.2e6 * (randf_range(1, 2)) * B_strength * max_star_temp)
 		elif p_i.lake_2.element == "Xe":
-			lake_2_au_int = Helper.clever_round(3.6e6 * (randf_range(1, 2)) * B_strength * max_star_temp)
+			lake_2_au_int = Helper.clever_round(9.5e7 * (randf_range(1, 2)) * B_strength * max_star_temp)
 	for i in wid:
 		for j in wid:
 			var t_id = i % wid + j * wid
@@ -3193,21 +3193,27 @@ func generate_tiles(id:int):
 						var _tile = tile_data[id2]
 						if Vector2(k, l) == Vector2(i, j):
 							continue
-						if tile.lake == 1 and lake_1_au_int > 0.0:
+						if tile.lake == 1 and lake_1_au_int > 0.0 and not _tile.has("lake"):
 							if _tile.has("aurora"):
 								if not _tile.has("lake_elements"):
-									_tile.aurora += lake_1_au_int + 1.0
+									_tile.aurora += lake_1_au_int
+									_tile.resource_production_bonus.SP = _tile.resource_production_bonus.get("SP", 1.0) + lake_1_au_int
 								else:
+									_tile.resource_production_bonus.SP = _tile.resource_production_bonus.get("SP", 1.0) + max(0, lake_1_au_int - _tile.aurora)
 									_tile.aurora = max(lake_1_au_int, _tile.aurora)
 							else:
+								_tile.resource_production_bonus.SP = _tile.resource_production_bonus.get("SP", 1.0) + lake_1_au_int
 								_tile.aurora = lake_1_au_int
-						elif tile.lake == 2 and lake_2_au_int > 0.0:
+						elif tile.lake == 2 and lake_2_au_int > 0.0 and not _tile.has("lake"):
 							if _tile.has("aurora"):
 								if not _tile.has("lake_elements"):
-									_tile.aurora += lake_2_au_int + 1.0
+									_tile.aurora += lake_2_au_int
+									_tile.resource_production_bonus.SP = _tile.resource_production_bonus.get("SP", 1.0) + lake_2_au_int
 								else:
+									_tile.resource_production_bonus.SP = _tile.resource_production_bonus.get("SP", 1.0) + max(0, lake_2_au_int - _tile.aurora)
 									_tile.aurora = max(lake_2_au_int, _tile.aurora)
 							else:
+								_tile.resource_production_bonus.SP = _tile.resource_production_bonus.get("SP", 1.0) + lake_2_au_int
 								_tile.aurora = lake_2_au_int
 						if _tile.has("lake_elements"):
 							_tile.lake_elements[lake_info.element] = lake_info.state
@@ -4107,7 +4113,6 @@ func delete_save_confirm(save_str):
 	load_panel.on_delete_confirm(save_str)
 
 func return_to_menu_confirm():
-	dim_num = 1
 	$Ship.visible = false
 	$Autosave.stop()
 	await switch_view("")
@@ -4124,6 +4129,7 @@ func return_to_menu_confirm():
 	animate_title_buttons()
 	universe_data.clear()
 	view.queue_redraw()
+	dim_num = 1
 
 func generate_new_univ_confirm():
 	universe_data.append({"id":0, "lv":1, "xp":0, "xp_to_lv":10, "shapes":[], "name":tr("UNIVERSE"), "cluster_num":1000, "view":{"pos":Vector2(640 * 0.5, 360 * 0.5), "zoom":2, "sc_mult":0.1}})

@@ -23,7 +23,7 @@ func refresh():
 	$Plant.visible = false
 	set_polygon(size)
 	if tile_num == 1:
-		$Label.text = tr("GH_NAME")
+		$Label.text = tr("GREENHOUSE_NAME")
 	else:
 		$Label.text = "%s %s" % [Helper.format_num(tile_num), tr("GREENHOUSES").to_lower()]
 	for slot in hbox.get_children():
@@ -66,7 +66,7 @@ func calc_prod_per_sec():
 					$UseFertilizer.button_pressed = true
 					production.soil = production.get("soil", 0.0) - tile_p.soil_drain
 				for p in tile_p.produce:
-					production[p] = tile_p.produce[p] * (Helper.get_au_mult(game.tile_data[tile]) if p in game.met_info.keys() else 1.0) + production.get(p, 0.0)
+					production[p] = tile_p.produce[p] * ((game.tile_data[tile].get("aurora", 0.0) + 1.0) if p in game.met_info.keys() else 1.0) + production.get(p, 0.0)
 	Helper.put_rsrc($HBoxContainer, 32, production)
 	$ProductionPerSec.visible = $HBoxContainer.get_child_count() != 0
 	calculating = false

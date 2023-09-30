@@ -256,6 +256,14 @@ libraries = {
 "": SubResource("AnimationLibrary_5a0wr")
 }
 
+[node name="PPMult" type="Label" parent="Control"]
+visible = false
+layout_mode = 0
+offset_left = 24.0
+offset_top = 320.0
+offset_right = 340.0
+offset_bottom = 342.0
+
 [connection signal="close_button_pressed" from="CloseButton" to="." method="_on_close_button_pressed"]
 [connection signal="pressed" from="ScrollContainer/VBoxContainer/MineralExtraction" to="." method="_on_GS_pressed" binds= ["mineral_extractor"]]
 [connection signal="pressed" from="ScrollContainer/VBoxContainer/EnergyProduction" to="." method="_on_GS_pressed" binds= ["power_plant"]]

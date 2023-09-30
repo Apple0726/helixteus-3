@@ -9,3 +9,4 @@ var cave_gen_info:bool = false
 var op_cursor:bool = false
 var auto_switch_buy_sell:bool = false
 var max_fps:int = 60
+var discord = true

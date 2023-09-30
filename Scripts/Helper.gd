@@ -724,7 +724,7 @@ func update_rsrc(p_i, tile, rsrc = null, active:bool = false):
 	elif tile.bldg.name == Building.STONE_CRUSHER:
 		if tile.bldg.has("stone"):
 			var c_i = get_crush_info(tile)
-			rsrc_text = str(c_i.qty_left)
+			rsrc_text = format_num(c_i.qty_left) + " kg"
 			capacity_bar_value = 1 - c_i.progress
 		else:
 			rsrc_text = ""
@@ -740,7 +740,7 @@ func update_rsrc(p_i, tile, rsrc = null, active:bool = false):
 	elif tile.bldg.name == Building.STEAM_ENGINE:
 		if tile.bldg.has("qty1"):
 			var prod_i = get_prod_info(tile)
-			rsrc_text = "%s" % [round(prod_i.qty_made)]
+			rsrc_text = format_num(round(prod_i.qty_made))
 			capacity_bar_value = prod_i.progress
 		else:
 			rsrc_text = ""
@@ -1650,30 +1650,28 @@ func get_sph_V(outer:float, inner:float = 0):
 	inner /= 150.0
 	return 4/3.0 * PI * (pow(outer, 3) - pow(inner, 3))
 
-var discord = true
-
 func setup_discord():
-	discord_sdk.app_id = 1101755847325003846 # Application ID
-	if discord_sdk.get_is_discord_working():
-		discord_sdk.large_image = "game"
-		discord_sdk.large_image_text = "Helixteus 3"
-		discord_sdk.start_timestamp = int(Time.get_unix_time_from_system())
+#	discord_sdk.app_id = 1101755847325003846 # Application ID
+#	if discord_sdk.get_is_discord_working():
+#		discord_sdk.large_image = "game"
+#		discord_sdk.large_image_text = "Helixteus 3"
+#		discord_sdk.start_timestamp = int(Time.get_unix_time_from_system())
 	pass
 
 func refresh_discord(details:String = "", state:String = "", small_image:String = "", small_image_text:String = ""):
-	if discord_sdk.get_is_discord_working():
-		if details == "clear":
-			discord_sdk.clear()
-			return
-		if not discord:
-			return
-		if details != "":
-			discord_sdk.details = details
-		if state != "":
-			discord_sdk.state = state
-		if small_image != "":
-			discord_sdk.small_image = small_image
-		if small_image_text != "":
-			discord_sdk.small_image_text = small_image_text
-		discord_sdk.refresh()
+#	if discord_sdk.get_is_discord_working():
+#		if details == "clear":
+#			discord_sdk.clear()
+#			return
+#		if not Settings.discord:
+#			return
+#		if details != "":
+#			discord_sdk.details = details
+#		if state != "":
+#			discord_sdk.state = state
+#		if small_image != "":
+#			discord_sdk.small_image = small_image
+#		if small_image_text != "":
+#			discord_sdk.small_image_text = small_image_text
+#		discord_sdk.refresh()
 	pass

@@ -191,7 +191,7 @@ func refresh():
 	update_money_energy_SP()
 	update_minerals()
 	if $Top/Resources/Glass.visible:
-		var GH_glass_cost = Data.costs.GH.glass * game.engineering_bonus.BCM
+		var GH_glass_cost = Data.costs[Building.GREENHOUSE].glass * game.engineering_bonus.BCM
 		if game.mats.glass >= GH_glass_cost:
 			glass_text["theme_override_colors/font_color"] = Color.GREEN
 		else:
