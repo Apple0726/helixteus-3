@@ -1,7 +1,7 @@
 extends Node2D
 
 const TEST:bool = false
-const DATE:String = ""
+const DATE:String = "30 Sep 2023"
 const VERSION:String = "v0.28"
 const COMPATIBLE_SAVES = []
 const UNIQUE_BLDGS = 7
@@ -78,7 +78,6 @@ var tooltip
 const SYSTEM_SCALE_DIV = 100.0
 const GALAXY_SCALE_DIV = 750.0
 const CLUSTER_SCALE_DIV = 1600.0
-const SC_SCALE_DIV = 400.0
 const STAR_SCALE_DIV = 300.0/2.63
 
 #HUD shows the player resources at the top

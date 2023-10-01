@@ -118,5 +118,9 @@ format = 2
 wait_time = 0.7
 one_shot = true
 
+[node name="Buildings" type="Node2D" parent="."]
+
+[node name="Auroras" type="Node2D" parent="."]
+
 [connection signal="tree_exited" from="." to="." method="_on_Planet_tree_exited"]
 [connection signal="timeout" from="BuildingShortcutTimer" to="." method="_on_building_shortcut_timer_timeout"]

@@ -15,6 +15,7 @@ var curr_bldg_overlay:int = 0
 func _ready():
 	rsrcs.resize(len(game.galaxy_data))
 	var conquered = true
+	var await_counter:int = 0
 	for g_i in game.galaxy_data:
 		if g_i.is_empty():
 			continue
@@ -30,11 +31,12 @@ func _ready():
 		galaxy_btn.connect("pressed",Callable(self,"on_galaxy_click").bind(g_i.id, g_i.l_id))
 		var radius = pow(g_i["system_num"] / game.GALAXY_SCALE_DIV, 0.5)
 		galaxy_btn.position = Vector2(-galaxy_btn.texture_normal.get_width(), -galaxy_btn.texture_normal.get_height()) / 2.0 * radius
-		galaxy_btn.scale.x = radius
-		galaxy_btn.scale.y = radius
+		galaxy_btn.scale = Vector2.ONE * radius
 		galaxy.rotation = g_i.rotation
-		if g_i.has("modulate"):
-			galaxy_btn.modulate = g_i.modulate
+		galaxy_btn.modulate = g_i.get("modulate", Color.WHITE)
+		galaxy_btn.modulate.a = 0.0
+		var tween = create_tween()
+		tween.tween_property(galaxy_btn, "modulate:a", 1.0, 0.15)
 		galaxy.position = g_i["pos"]
 		dimensions = max(dimensions, g_i.pos.length())
 		Helper.add_overlay(galaxy, self, "galaxy", g_i, overlays)
@@ -47,21 +49,24 @@ func _ready():
 			var prod:float
 			var rsrc_mult:float = 1.0
 			match g_i.GS:
-				"ME":
-					rsrc_mult = Helper.get_IR_mult("ME") * game.u_i.time_speed
-					rsrc = add_rsrc(g_i.pos, Color(0, 0.5, 0.9, 1), Data.rsrc_icons.ME, g_i.l_id, radius * 10.0)
-				"PP":
-					rsrc_mult = Helper.get_IR_mult("PP") * game.u_i.time_speed
-					rsrc = add_rsrc(g_i.pos, Color(0, 0.8, 0, 1), Data.rsrc_icons.PP, g_i.l_id, radius * 10.0)
-				"RL":
-					rsrc_mult = Helper.get_IR_mult("RL") * game.u_i.time_speed
-					rsrc = add_rsrc(g_i.pos, Color(0, 0.8, 0, 1), Data.rsrc_icons.RL, g_i.l_id, radius * 10.0)
+				Building.MINERAL_EXTRACTOR:
+					rsrc_mult = Helper.get_IR_mult(Building.MINERAL_EXTRACTOR) * game.u_i.time_speed
+					rsrc = add_rsrc(g_i.pos, Color(0, 0.5, 0.9, 1), Data.rsrc_icons[Building.MINERAL_EXTRACTOR], g_i.l_id, radius * 10.0)
+				Building.POWER_PLANT:
+					rsrc_mult = Helper.get_IR_mult(Building.POWER_PLANT) * game.u_i.time_speed
+					rsrc = add_rsrc(g_i.pos, Color(0, 0.8, 0, 1), Data.rsrc_icons[Building.POWER_PLANT], g_i.l_id, radius * 10.0)
+				Building.RESEARCH_LAB:
+					rsrc_mult = Helper.get_IR_mult(Building.RESEARCH_LAB) * game.u_i.time_speed
+					rsrc = add_rsrc(g_i.pos, Color(0, 0.8, 0, 1), Data.rsrc_icons[Building.RESEARCH_LAB], g_i.l_id, radius * 10.0)
 				_:
 					rsrc = null
 			if is_instance_valid(rsrc):
 				rsrc.set_text("%s/%s" % [Helper.format_num(g_i.prod_num * rsrc_mult), tr("S_SECOND")])
 		if g_i.has("discovered") and not g_i.has("GS"):
 			discovered_gal.append(g_i)
+		await_counter += 1
+		if await_counter % int(3000.0 / Engine.get_frames_per_second()) == 0:
+			await get_tree().process_frame
 	if conquered:
 		game.u_i.cluster_data[game.c_c].conquered = true
 	if game.overlay_data.cluster.visible:

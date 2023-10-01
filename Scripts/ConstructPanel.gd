@@ -286,9 +286,10 @@ func on_unique_bldg_over(bldg:int):
 	tooltip += "\n\n" + tr("COSTS") + "\n"
 	var costs = Data.unique_building_costs[bldg]
 	var n = game.unique_building_counters[bldg].get(tier, 0) + 1
+	var cost_multiplier = pow(tier, 20) * pow(10, -game.engineering_bonus.unique_building_a_value) * pow(n, tier * game.engineering_bonus.unique_building_b_value)
 	for cost in costs.keys():
 		tooltip += "@i  \t"
-		tooltip += Helper.format_num(costs[cost] * pow(10, -game.engineering_bonus.unique_building_a_value) * pow(n, tier * game.engineering_bonus.unique_building_b_value), true)
+		tooltip += Helper.format_num(costs[cost] * cost_multiplier, true)
 		icons.append(Data["%s_icon" % cost])
 		tooltip += "\n"
 	game.show_adv_tooltip(tooltip, icons)
@@ -299,8 +300,9 @@ func on_unique_bldg_click(bldg:int):
 	game.put_bottom_info(tr("CLICK_TILE_TO_CONSTRUCT"), "building", "cancel_building")
 	var base_cost = Data.unique_building_costs[bldg].duplicate(true)
 	var n = game.unique_building_counters[bldg].get(tier, 0) + 1
+	var cost_multiplier = pow(tier, 20) * pow(10, -game.engineering_bonus.unique_building_a_value) * pow(n, tier * game.engineering_bonus.unique_building_b_value)
 	for cost in base_cost:
-		base_cost[cost] *= pow(10, -game.engineering_bonus.unique_building_a_value) * pow(n, tier * game.engineering_bonus.unique_building_b_value)
+		base_cost[cost] *= cost_multiplier
 	game.view.obj.constructing_unique_building_tier = tier
 	game.view.obj.initiate_unique_building_construction(bldg, base_cost)
 

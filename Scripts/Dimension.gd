@@ -196,7 +196,7 @@ func refresh_univs(reset:bool = false):
 					var sat:float = 1.0 - floor(hue - 0.4) / 5.0
 					c = Color.from_hsv(fmod(hue, 1.0), sat, 1.0)
 				univ.material.set_shader_parameter("color", c)
-				univ.material.set_shader_parameter("fog_size", 22 * univ_info.dark_energy)
+				univ.material.set_shader_parameter("fog_size", 22 * sqrt(univ_info.dark_energy))
 				univ.material.set_shader_parameter("fog_mvt_spd_2", 0.1 * univ_info.time_speed)
 				univ.material.set_shader_parameter("seed", id)
 				univ.material.set_shader_parameter("alpha", 0.65)

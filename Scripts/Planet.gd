@@ -117,11 +117,18 @@ func _ready():
 				crater.position = Vector2(i, j) * 200 + Vector2(100, 100)
 			if tile.has("depth") and not tile.has("bridge") and not tile.has("crater"):
 				$Obstacles.set_cell(0, Vector2i(i, j), 2, Vector2(0, 0))
-			if tile.has("bldg"):
-				add_bldg(id2, tile.bldg.name)
-				if tile.bldg.name == Building.GREENHOUSE:
-					soil_tiles.append(Vector2i(i, j))
-			elif tile.has("unique_bldg"):
+			if tile.has("aurora"):
+				var aurora = game.aurora_scene.instantiate()
+				aurora.position = Vector2(i, j) * 200 + Vector2(100, 100)
+				aurora.amount = min(5 + int(tile.aurora * 10), 50)
+				aurora.lifetime = 3.0 / game.u_i.time_speed / tile.get("time_speed_bonus", 1.0)
+				#aurora.process_material["shader_parameter/strength"] = 1.0 if randf() < 0.5 else 0.0
+				#var hue:float = 0.4 + max(0, pow(tile.aurora.au_int, 0.35) - pow(4, 0.25)) / 10
+				var hue:float = 0.4 + log(tile.aurora + 1.0) / 10.0
+				var sat:float = 1.0 - floor(hue - 0.4) / 5.0
+				aurora.modulate = Color.from_hsv(fmod(hue, 1.0), sat, 1.0) * max(log(tile.aurora) / 10.0, 1.0)
+				$Auroras.add_child(aurora)
+			if tile.has("unique_bldg"):
 				if tile.unique_bldg.name != UniqueBuilding.NUCLEAR_FUSION_REACTOR or id2 in nuclear_fusion_reactor_main_tiles:
 					add_unique_building_sprite(tile, id2, Vector2(i, j) * 200)
 			elif tile.has("cave"):
@@ -165,27 +172,23 @@ func _ready():
 		$TileFeatures.set_cells_terrain_connect(1, lake_tiles[1], 0, lake_state_id[p_i.lake_2.state])
 	$BadApple.wid_p = wid
 	$BadApple.pixel_color = Color.BLACK if star_mod.get_luminance() > 0.3 else Color(0.5, 0.5, 0.5, 1.0)
-#	var aurora_counter:int = 0
-	for i in wid:
-		for j in wid:
-			if not is_inside_tree():
-				return
-			var id2 = i % wid + j * wid
-			var tile = game.tile_data[id2]
-			if tile and tile.has("aurora"):
-				var aurora = game.aurora_scene.instantiate()
-				aurora.position = Vector2(i, j) * 200 + Vector2(100, 100)
-				aurora.amount = min(5 + int(tile.aurora * 10), 50)
-				aurora.lifetime = 3.0 / game.u_i.time_speed / tile.get("time_speed_bonus", 1.0)
-				#aurora.process_material["shader_parameter/strength"] = 1.0 if randf() < 0.5 else 0.0
-				#var hue:float = 0.4 + max(0, pow(tile.aurora.au_int, 0.35) - pow(4, 0.25)) / 10
-				var hue:float = 0.4 + log(tile.aurora + 1.0) / 10.0
-				var sat:float = 1.0 - floor(hue - 0.4) / 5.0
-				aurora.modulate = Color.from_hsv(fmod(hue, 1.0), sat, 1.0) * max(log(tile.aurora) / 10.0, 1.0)
-				add_child(aurora)
-#				aurora_counter += 1
-#				if aurora_counter % int(1000.0 / Engine.get_frames_per_second()) == 0:
-#					await get_tree().process_frame
+	var await_counter:int = 0
+	for id2 in len(game.tile_data):
+		if not is_inside_tree():
+			return
+		var i:int = id2 % wid
+		var j:int = id2 / wid
+		var tile = game.tile_data[id2]
+		if tile and tile.has("bldg"):
+			add_bldg(id2, tile.bldg.name)
+			bldgs[id2].modulate.a = 0
+			var tween = create_tween()
+			tween.tween_property(bldgs[id2], "modulate:a", 1.0, 0.15)
+			if tile.bldg.name == Building.GREENHOUSE:
+				soil_tiles.append(Vector2i(i, j))
+			await_counter += 1
+			if await_counter % int(1000.0 / Engine.get_frames_per_second()) == 0:
+				await get_tree().process_frame
 
 func add_unique_building_sprite(tile:Dictionary, tile_id:int, v:Vector2):
 	var mod:Color = Color.WHITE
@@ -440,7 +443,7 @@ func construct_unique_building(tile_id:int, unique_building:int):
 		constr_costs_total = Data.unique_building_costs[unique_building].duplicate(true)
 		var n = game.unique_building_counters[unique_building][constructing_unique_building_tier] + 1
 		for cost in constr_costs_total.keys():
-			constr_costs_total[cost] *= pow(10, -game.engineering_bonus.unique_building_a_value) * pow(n, constructing_unique_building_tier * game.engineering_bonus.unique_building_b_value)
+			constr_costs_total[cost] *= pow(constructing_unique_building_tier, 20) * pow(10, -game.engineering_bonus.unique_building_a_value) * pow(n, constructing_unique_building_tier * game.engineering_bonus.unique_building_b_value)
 		add_unique_building_sprite(game.tile_data[tile_id], tile_id, Vector2(tile_id % wid, tile_id / wid) * 200)
 		Helper.set_unique_bldg_bonuses(p_i, game.tile_data[tile_id].unique_bldg, tile_id, wid)
 		game.HUD.refresh()
@@ -897,7 +900,7 @@ func _unhandled_input(event):
 					var base_cost = Data.unique_building_costs[tile.unique_bldg.name].duplicate(true)
 					var n = game.unique_building_counters[tile.unique_bldg.name].get(tier, 0) + 1
 					for cost in base_cost:
-						base_cost[cost] *= pow(10, -game.engineering_bonus.unique_building_a_value) * pow(n, tier * game.engineering_bonus.unique_building_b_value)
+						base_cost[cost] *= pow(tier, 20) * pow(10, -game.engineering_bonus.unique_building_a_value) * pow(n, tier * game.engineering_bonus.unique_building_b_value)
 					constructing_unique_building_tier = tier
 					initiate_unique_building_construction(tile.unique_bldg.name, base_cost)
 			if tile.has("bldg"):
@@ -1401,7 +1404,7 @@ func add_bldg_sprite(pos:Vector2, _name:int, texture, mod:Color = Color.WHITE, s
 	bldg.scale *= sc
 	bldg.position = pos + offset
 	bldg.self_modulate = mod
-	add_child(bldg)
+	$Buildings.add_child(bldg)
 	return bldg
 	
 func add_bldg(id2:int, type:int):
@@ -1645,7 +1648,7 @@ func construct(type:int, costs:Dictionary):
 	var bonus_rsrc_icon
 	if rsrc != "":
 		bonus_rsrc_icon = Data["%s_icon" % rsrc]
-	var counter = 0
+	var await_counter:int = 0
 	for i in wid:
 		for j in wid:
 			var id2 = i % wid + j * wid
@@ -1667,9 +1670,9 @@ func construct(type:int, costs:Dictionary):
 				if view.scale.x < 0.25:
 					tile_bonus_node.color.a = 0.6
 					tile_bonus_node.get_node("TileBonus").modulate.a = 0.0
-				if counter % int(1000.0 / Engine.get_frames_per_second()) == 0:
+				if await_counter % int(1000.0 / Engine.get_frames_per_second()) == 0:
 					await get_tree().process_frame
-				counter += 1
+				await_counter += 1
 
 func place_gray_tiles_mining():
 	var grayed_out_tile_positions:PackedVector2Array

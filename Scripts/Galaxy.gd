@@ -17,11 +17,11 @@ var discovered_sys:Array
 
 func _ready():
 	discovered_sys = []
-	var galaxy_tween
-	if Settings.enable_shaders:
-		galaxy_tween = create_tween()
-		galaxy_tween.set_parallel(true)
+	queue_redraw()
+	var await_counter:int = 0
 	for s_i in game.system_data:
+		if not is_inside_tree():
+			return
 		var star:Dictionary = s_i.stars[0]
 		for i in range(1, len(s_i.stars)):
 			if s_i.stars[i].luminosity > star.luminosity:
@@ -41,6 +41,7 @@ func _ready():
 			star_btn.material.set_shader_parameter("time_offset", 10.0 * randf())
 			star_btn.material.set_shader_parameter("color", get_star_modulate(star["class"]))
 			star_btn.material.set_shader_parameter("alpha", 0.0)
+			var galaxy_tween = create_tween()
 			galaxy_tween.tween_property(star_btn.material, "shader_parameter/alpha", 1.0, 0.3)
 		else:
 			star_btn.modulate = get_star_modulate(star["class"])
@@ -60,11 +61,13 @@ func _ready():
 		Helper.add_overlay(system, self, "system", s_i, overlays)
 		if s_i.has("discovered"):
 			discovered_sys.append(s_i)
+		await_counter += 1
+		if await_counter % int(3000.0 / Engine.get_frames_per_second()) == 0:
+			await get_tree().process_frame
 	if game.overlay_data.galaxy.visible:
 		Helper.toggle_overlay(obj_btns, overlays, true)
 	if len(discovered_sys) > 0:
 		bldg_overlay_timer.start(0.05)
-	queue_redraw()
 
 func _draw():
 	if game.galaxy_data[game.c_g].has("wormholes"):
