@@ -620,6 +620,7 @@ func _input(event):
 									for st in stars_info[i].cost_div_dict.keys():
 										div = max(div, stars_info[i].cost_div_dict[st])
 									stars_info[i].cost_div = div
+						queue_redraw()
 					elif MS_constr_data.obj.MS == "M_MMB":
 						game.autocollect.MS.minerals -= Helper.get_MME_output(MS_constr_data.obj)
 						game.mineral_capacity -= MS_constr_data.obj.min_cap_to_add
@@ -649,7 +650,7 @@ func build_MS(obj:Dictionary, MS:String):
 			if not game.science_unlocked.has("MAE"):
 				error = true
 		else:
-			if not game.science_unlocked.has(obj.MS.substr(2) + str(obj.MS_lv)):
+			if not game.science_unlocked.has(obj.MS + str(obj.MS_lv)):
 				error = true
 		if error:
 			game.popup(tr("NO_SCIENCE_TO_REPAIR_MS"), 2.0)

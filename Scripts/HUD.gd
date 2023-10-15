@@ -584,18 +584,18 @@ func _on_Bookmarked_pressed():
 			s_i.bookmarked = true
 			game.bookmarks.system[str(game.c_s_g)] = bookmark
 	elif game.c_v == "galaxy":
-		var g_i:Array = game.galaxy_data[game.c_g]
+		var g_i:Dictionary = game.galaxy_data[game.c_g]
 		if g_i.has("bookmarked"):
 			game.bookmarks.galaxy.erase(str(game.c_g_g))
 			g_i.erase("bookmarked")
 		else:
 			var bookmark:Dictionary = {
-				"type":g_i[9],
-				"name":g_i[2],
+				"type":g_i.type,
+				"name":g_i.name,
 				"c_g":game.c_g,
 				"c_g_g":game.c_g_g,
 				"c_c":game.c_c}
-			g_i[15].bookmarked = true
+			g_i.bookmarked = true
 			game.bookmarks.galaxy[str(game.c_g_g)] = bookmark
 	elif game.c_v == "cluster":
 		var c_i:Dictionary = game.u_i.cluster_data[game.c_c]

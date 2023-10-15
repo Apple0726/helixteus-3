@@ -4,9 +4,9 @@
 [ext_resource type="Script" path="res://Scripts/Overlay.gd" id="2"]
 [ext_resource type="Gradient" path="res://Resources/ColorblindOverlay.tres" id="3"]
 [ext_resource type="PackedScene" uid="uid://ddf2xjwcht77u" path="res://Scenes/CloseButton.tscn" id="4"]
-[ext_resource type="Texture2D" uid="uid://dr3yo1440dgap" path="res://Graphics/Buttons/Reset.png" id="5"]
-[ext_resource type="Texture2D" uid="uid://dtpm1dy3ljc0y" path="res://Graphics/Icons/Arrow.png" id="6"]
-[ext_resource type="Texture2D" uid="uid://c0s4bk56cnekf" path="res://Graphics/Buttons/settings.png" id="9"]
+[ext_resource type="Texture2D" uid="uid://jqnq7knpimy3" path="res://Graphics/Buttons/Reset.png" id="5"]
+[ext_resource type="Texture2D" uid="uid://d1exdy8b54nk0" path="res://Graphics/Icons/Arrow.png" id="6"]
+[ext_resource type="Texture2D" uid="uid://oi8jj8etn7cq" path="res://Graphics/Buttons/settings.png" id="9"]
 
 [sub_resource type="GradientTexture2D" id="1"]
 gradient = ExtResource("3")

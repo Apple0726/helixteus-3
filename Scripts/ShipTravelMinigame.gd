@@ -63,7 +63,7 @@ func show_help(st:String):
 	$Timer.paused = true
 
 func hide_help():
-	if game and game.settings.visible:
+	if game and game.settings_panel.visible:
 		return
 	set_process(true)
 	$Help/AnimationPlayer.play_backwards("Fade")

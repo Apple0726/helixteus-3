@@ -65,12 +65,14 @@ func _ready():
 		if g_i.has("discovered") and not g_i.has("GS"):
 			discovered_gal.append(g_i)
 		await_counter += 1
+		if is_instance_valid(game.overlay):
+			change_overlay(game.overlay.option_btn.selected, game.overlay.get_node("TextureRect").texture.gradient, overlays[-1])
+		galaxy_btn.visible = not game.overlay_data.cluster.visible
+		overlays[-1].circle.visible = game.overlay_data.cluster.visible
 		if await_counter % int(3000.0 / Engine.get_frames_per_second()) == 0:
 			await get_tree().process_frame
 	if conquered:
 		game.u_i.cluster_data[game.c_c].conquered = true
-	if game.overlay_data.cluster.visible:
-		Helper.toggle_overlay(obj_btns, overlays, true)
 	if len(discovered_gal) > 0:
 		bldg_overlay_timer.start(0.05)
 
@@ -217,45 +219,48 @@ func on_galaxy_click (id:int, l_id:int):
 				game.switch_view("galaxy", {"fn":"set_custom_coords", "fn_args":[["c_g", "c_g_g"], [l_id, id]]})
 	view.dragged = false
 
-func change_overlay(overlay_id:int, gradient:Gradient):
+func change_overlay(overlay_id:int, gradient:Gradient, object:Dictionary = {}):
+	var _overlays = overlays
+	if not object.is_empty():
+		_overlays = [object]
 	var c_vl = game.overlay_data.cluster.custom_values[overlay_id]
 	match overlay_id:
 		0:
-			for overlay in overlays:
+			for overlay in _overlays:
 				var offset = inverse_lerp(c_vl.left, c_vl.right, game.galaxy_data[overlay.id].system_num)
 				Helper.set_overlay_visibility(gradient, overlay, offset)
 		1:
-			for overlay in overlays:
+			for overlay in _overlays:
 				if game.galaxy_data[overlay.id].has("discovered"):
 					overlay.circle.modulate = gradient.sample(0)
 				else:
 					overlay.circle.modulate = gradient.sample(1)
 		2:
-			for overlay in overlays:
+			for overlay in _overlays:
 				if game.galaxy_data[overlay.id].has("explored"):
 					overlay.circle.modulate = gradient.sample(0)
 				else:
 					overlay.circle.modulate = gradient.sample(1)
 		3:
-			for overlay in overlays:
+			for overlay in _overlays:
 				if game.galaxy_data[overlay.id].has("conquered"):
 					overlay.circle.modulate = gradient.sample(0)
 				else:
 					overlay.circle.modulate = gradient.sample(1)
 		4:
-			for overlay in overlays:
+			for overlay in _overlays:
 				var offset = inverse_lerp(c_vl.left, c_vl.right, game.galaxy_data[overlay.id].diff)
 				Helper.set_overlay_visibility(gradient, overlay, offset)
 		5:
-			for overlay in overlays:
+			for overlay in _overlays:
 				var offset = inverse_lerp(c_vl.left, c_vl.right, game.galaxy_data[overlay.id].B_strength * e(1, 9))
 				Helper.set_overlay_visibility(gradient, overlay, offset)
 		6:
-			for overlay in overlays:
+			for overlay in _overlays:
 				var offset = inverse_lerp(c_vl.left, c_vl.right, game.galaxy_data[overlay.id].dark_matter)
 				Helper.set_overlay_visibility(gradient, overlay, offset)
 		7:
-			for overlay in overlays:
+			for overlay in _overlays:
 				if game.galaxy_data[overlay.id].has("GS"):
 					overlay.circle.modulate = gradient.sample(0)
 				else:

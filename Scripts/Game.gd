@@ -1,8 +1,8 @@
 extends Node2D
 
 const TEST:bool = false
-const DATE:String = "30 Sep 2023"
-const VERSION:String = "v0.28"
+const DATE:String = "15 Oct 2023"
+const VERSION:String = "v0.28.1"
 const COMPATIBLE_SAVES = []
 const UNIQUE_BLDGS = 7
 
@@ -1424,6 +1424,8 @@ func delete_galaxy(_c_g:int):
 #															V function to execute after removing objects but before adding new ones
 #func switch_view(new_view:String, first_time:bool = false, fn:String = "", fn_args:Array = [], save_zooms:bool = true, fade_anim:bool = true):
 func switch_view(new_view:String, other_params:Dictionary = {}):
+	if is_generating:
+		return
 	_on_BottomInfo_close_button_pressed()
 	if $UI.has_node("BuildingShortcuts"):
 		$UI.get_node("BuildingShortcuts").queue_free()
@@ -1465,8 +1467,6 @@ func switch_view(new_view:String, other_params:Dictionary = {}):
 		if c_v == "planet" and is_instance_valid(view.obj):
 			view.obj.timer.stop()
 		await view_tween.finished
-	hide_tooltip()
-	hide_adv_tooltip()
 	if not other_params.has("first_time"):
 		save_views(true)
 	if viewing_dimension:
@@ -1656,6 +1656,9 @@ func switch_view(new_view:String, other_params:Dictionary = {}):
 			state = "Navigating the universe"
 			small_image_text = "Viewing " + u_i.name
 		Helper.refresh_discord("", state, c_v, small_image_text)
+	await get_tree().process_frame
+	hide_tooltip()
+	hide_adv_tooltip()
 
 func add_science_tree():
 	$ScienceTreeBG.visible = Settings.enable_shaders
@@ -1792,7 +1795,6 @@ func remove_overlay():
 	if is_instance_valid(overlay) and $UI.is_ancestor_of(overlay):
 		if $GrayscaleRect.modulate.a > 0:
 			$GrayscaleRect/AnimationPlayer.play_backwards("Fade")
-		$UI.remove_child(overlay)
 		overlay.queue_free()
 
 func add_annotator():
@@ -1838,6 +1840,7 @@ func add_cluster():
 	if obj_exists("Clusters", c_c):
 		galaxy_data = open_obj("Clusters", c_c)
 	if not u_i.cluster_data[c_c].has("discovered"):
+		is_generating = true
 		add_loading()
 		reset_collisions()
 		if c_c != 0:
@@ -1848,6 +1851,7 @@ func add_cluster():
 			else:
 				u_i.cluster_data[c_c].name = tr("GALAXY_CLUSTER") + " %s" % c_c
 		generate_galaxy_part()
+		is_generating = false
 	else:
 		add_obj("cluster")
 	$Stars/WhiteStars.visible = true
@@ -1906,12 +1910,14 @@ func add_galaxy():
 #	galaxy_generator.queue_free()
 	
 func start_system_generation():
+	is_generating = true
 	add_loading()
 	reset_collisions()
 	gc_remaining = floor(pow(galaxy_data[c_g].system_num, 0.8) / 250.0)
 	if c_g_g != 0:
 		system_data.clear()
 	await generate_system_part()
+	is_generating = false
 
 func add_system():
 	if obj_exists("Galaxies", c_g_g):
@@ -2058,6 +2064,8 @@ func generate_clusters(parent_id:int):
 		u_i.cluster_data.append(c_i)
 	c_num += total_clust_num
 	fn_save_game()
+
+var is_generating:bool = false
 
 func generate_galaxy_part():
 	var progress = 0.0
