@@ -3,7 +3,7 @@ extends Node2D
 const TEST:bool = false
 const DATE:String = "15 Oct 2023"
 const VERSION:String = "v0.28.1"
-const COMPATIBLE_SAVES = []
+const COMPATIBLE_SAVES = ["v0.28"]
 const UNIQUE_BLDGS = 7
 
 var generic_panel_scene = preload("res://Scenes/Panels/GenericPanel.tscn")
