@@ -26,7 +26,7 @@ func _on_Construct_pressed():
 	click_sound.play()
 	game.planet_HUD.get_node("VBoxContainer/Construct/AnimationPlayer").stop()
 	if $ConstructPanel.visible:
-		$ConstructPanel.hide()
+		$ConstructPanel.hide_panel()
 	else:
 		game.hide_tooltip()
 		$ConstructPanel/AnimationPlayer.play("Fade")

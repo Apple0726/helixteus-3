@@ -1,30 +1,35 @@
 [gd_scene load_steps=13 format=3 uid="uid://bqwk1plraydm8"]
 
 [ext_resource type="Script" path="res://Scripts/PDPanel.gd" id="1"]
-[ext_resource type="Texture2D" uid="uid://dr3yo1440dgap" path="res://Graphics/Buttons/Reset.png" id="2"]
-[ext_resource type="Texture2D" uid="uid://c38s1y70ehkn7" path="res://Graphics/Tiles/water.png" id="3"]
-[ext_resource type="Texture2D" uid="uid://d1o7c8a8q2qsi" path="res://Graphics/Misc/noise_combined.png" id="4"]
+[ext_resource type="Texture2D" uid="uid://jqnq7knpimy3" path="res://Graphics/Buttons/Reset.png" id="2"]
+[ext_resource type="Texture2D" uid="uid://bb5gsadnb80mb" path="res://Graphics/Tiles/water.png" id="3"]
+[ext_resource type="Texture2D" uid="uid://dpttt5mbdfmow" path="res://Graphics/Misc/noise_combined.png" id="4"]
 [ext_resource type="Theme" uid="uid://cp2u1kgj60ic" path="res://Resources/default_theme.tres" id="5"]
 [ext_resource type="PackedScene" uid="uid://ddf2xjwcht77u" path="res://Scenes/CloseButton.tscn" id="7"]
 
 [sub_resource type="Shader" id="7"]
 code = "shader_type canvas_item;
 
+uniform vec4 modul:source_color = vec4(1.0);
+
 void fragment() {
 	vec4 c1 = texture(TEXTURE, 0.8 * UV + vec2(0, -0.03 * TIME));
 	vec4 c2 = texture(TEXTURE, 2.0 * UV + vec2(0, -0.02 * TIME));
 	COLOR.rgb = vec3(pow(length(1.0-c2), 10.0))/40.0+c1.rgb;
 	COLOR.a = 0.8;
+	COLOR *= modul;
 }"
 
 [sub_resource type="ShaderMaterial" id="8"]
 shader = SubResource("7")
+shader_parameter/modul = Color(1, 1, 1, 1)
 
 [sub_resource type="Shader" id="3"]
 code = "shader_type canvas_item;
 
 uniform vec4 color:source_color = vec4(1.0, 1.0, 1.0, 1.0);
 uniform float speed = 0.03;
+uniform vec4 modul:source_color = vec4(1.0);
 
 void fragment() {
 	vec2 uv = vec2(UV.x * 2.5, UV.y * 1.406);
@@ -41,12 +46,14 @@ void fragment() {
 	vec3 new_color = vec3(noise_r, noise_g, noise_b);
 	COLOR.rgb = color.rgb;
 	COLOR.a = new_alpha * 5.0;
+	COLOR *= modul;
 }"
 
 [sub_resource type="ShaderMaterial" id="4"]
 shader = SubResource("3")
 shader_parameter/color = Color(1, 1, 1, 1)
 shader_parameter/speed = 0.03
+shader_parameter/modul = Color(1, 1, 1, 1)
 
 [sub_resource type="Shader" id="5"]
 code = "shader_type canvas_item;

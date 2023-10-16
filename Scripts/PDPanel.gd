@@ -20,7 +20,7 @@ func _ready():
 func calc_OP_points():
 	for el in Data.lake_bonus_values.keys():
 		var default = load("res://Scenes/PhaseDiagrams/%s.tscn" % el).instantiate().get_node("Liquid").polygon
-		if game.chemistry_bonus.has(el):
+		if game.chemistry_bonus.has(el) or bonuses.has(el):
 			if not bonuses.has(el):
 				bonuses[el] = game.chemistry_bonus[el]
 			op_points[el] = 0.0
@@ -43,9 +43,9 @@ func refresh():
 	default_dP = default_sc[1].y - default_sc[2].y
 	default_dT = default_g[1].x - default_g[0].x
 	$Liquid.polygon = bonuses[el]
-	$Liquid.modulate = Data.lake_colors[el].l
+	$Liquid.material.set_shader_parameter("modul",Data.lake_colors[el].l)
 	$Gas.polygon = default_g
-	$Gas.modulate = Data.lake_colors[el].s
+	$Gas.material.set_shader_parameter("modul",Data.lake_colors[el].s)
 	$Solid.modulate = Data.lake_colors[el].s
 	$Supercritical.polygon = default_sc
 	for i in 4:

@@ -108,7 +108,7 @@ func _on_h_slider_value_changed(value):
 	ships_time_remaining = game.ships_travel_data.travel_length - (Time.get_unix_time_from_system() - game.ships_travel_data.travel_start_date)
 	if ships_time_remaining < 0:
 		ships_time_remaining = 0
-	$Control/Button.disabled = game.ships_travel_data.drive_available_time > Time.get_unix_time_from_system()
+	$Control/UseDrive.disabled = game.ships_travel_data.drive_available_time > Time.get_unix_time_from_system() or is_zero_approx(value)
 	if not is_processing():
 		$Control/Cooldown.text = Helper.time_to_str(60 * pow(2, game.ships_travel_data.drives_used))
 	cost = $Control/HSlider.value
@@ -121,7 +121,7 @@ func _process(delta):
 	$Control/Cooldown.text = Helper.time_to_str(game.ships_travel_data.drive_available_time - Time.get_unix_time_from_system())
 	if Time.get_unix_time_from_system() > game.ships_travel_data.drive_available_time:
 		set_process(false)
-		$Control/Button.disabled = false
+		$Control/UseDrive.disabled = false
 		$Control/Cooldown.text = Helper.time_to_str(60 * pow(2, game.ships_travel_data.drives_used))
 
 func refresh_h_slider():

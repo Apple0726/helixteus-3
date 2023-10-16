@@ -4029,6 +4029,7 @@ func _on_CloseButton_close_button_out():
 
 func fade_out_title(fn:String):
 	$Title/Menu/VBoxContainer/NewGame.disconnect("pressed",Callable(self,"_on_NewGame_pressed"))
+	$Title/Menu/VBoxContainer/Continue.disconnect("pressed",Callable(self,"_on_continue_pressed"))
 	var tween = create_tween()
 	tween.set_parallel(true)
 	tween.tween_property($Title, "modulate", Color(1, 1, 1, 0), 0.5)
@@ -4582,5 +4583,4 @@ func _on_command_text_submitted(new_text):
 func _on_continue_pressed():
 	c_sv = refresh_continue_button()
 	if c_sv != "":
-		$Title/Menu/VBoxContainer/Continue.disconnect("pressed",Callable(self,"_on_continue_pressed"))
 		fade_out_title("load_game")

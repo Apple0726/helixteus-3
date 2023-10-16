@@ -633,30 +633,30 @@ libraries = {
 
 [node name="Discord" type="TextureButton" parent="Title"]
 layout_mode = 0
-offset_left = 888.0
-offset_top = 664.0
-offset_right = 944.0
-offset_bottom = 720.0
+offset_left = 841.0
+offset_top = 666.0
+offset_right = 897.0
+offset_bottom = 722.0
 texture_normal = ExtResource("11")
 ignore_texture_size = true
 stretch_mode = 5
 
 [node name="GitHub" type="TextureButton" parent="Title"]
 layout_mode = 0
-offset_left = 968.0
-offset_top = 664.0
-offset_right = 1024.0
-offset_bottom = 712.0
+offset_left = 921.0
+offset_top = 666.0
+offset_right = 977.0
+offset_bottom = 714.0
 texture_normal = ExtResource("6")
 ignore_texture_size = true
 stretch_mode = 5
 
 [node name="Godot" type="TextureButton" parent="Title"]
 layout_mode = 0
-offset_left = 1048.0
-offset_top = 664.0
-offset_right = 1096.0
-offset_bottom = 712.0
+offset_left = 1001.0
+offset_top = 666.0
+offset_right = 1049.0
+offset_bottom = 714.0
 texture_normal = ExtResource("5")
 ignore_texture_size = true
 stretch_mode = 5

@@ -729,7 +729,7 @@ func update_rsrc(p_i, tile, rsrc = null, active:bool = false):
 		else:
 			rsrc_text = ""
 			capacity_bar_value = 0
-	elif tile.bldg.name == Building.GREENHOUSE:
+	elif tile.bldg.name == Building.GLASS_FACTORY:
 		if tile.bldg.has("qty1"):
 			var prod_i = get_prod_info(tile)
 			rsrc_text = "%s kg" % [prod_i.qty_made]
@@ -897,14 +897,18 @@ func update_bldg_constr(tile:Dictionary, p_i:Dictionary):
 							_tile.cost_div = max(_tile.cost_div, tile.bldg.path_1_value)
 						_tile.cost_div_dict[id2] = tile.bldg.path_1_value
 						if not _tile.has("%s_dict" % second_path_str):
+							if second_path_str == "time_speed" and _tile.has("bldg"):
+								var old_time_speed = _tile.get("time_speed_bonus", 1.0)
+								add_autocollect(p_i, _tile, tile.bldg.path_2_value - old_time_speed)
 							_tile["%s_bonus" % second_path_str] = tile.bldg.path_2_value
 							_tile["%s_dict" % second_path_str] = {}
-							if second_path_str == "time_speed" and _tile.has("bldg"):
-								add_autocollect(p_i, _tile, tile.bldg.path_2_value - 1.0)
 						else:
-							_tile["%s_bonus" % second_path_str] = max(_tile["%s_bonus" % second_path_str], tile.bldg.path_2_value)
+							var new_bonus = max(_tile["%s_bonus" % second_path_str], tile.bldg.path_2_value)
 							if second_path_str == "time_speed" and _tile.has("bldg"):
-								add_autocollect(p_i, _tile, tile.bldg.path_2_value - 1.0)
+								var old_time_speed = _tile.get("time_speed_bonus", 1.0)
+								if new_bonus > old_time_speed:
+									add_autocollect(p_i, _tile, new_bonus - old_time_speed)
+							_tile["%s_bonus" % second_path_str] = new_bonus
 						_tile["%s_dict" % second_path_str][id2] = tile.bldg.path_2_value
 				if not same_p:
 					save_obj("Planets", tile.bldg.c_p_g, tile_data)
@@ -928,6 +932,15 @@ func add_autocollect(p_i:Dictionary, tile:Dictionary, mult_diff:float):
 			Helper.add_atom_production(el, base_prod)
 		Helper.add_energy_from_NFR(p_i, base)
 		Helper.add_energy_from_CS(p_i, base)
+	elif tile.bldg.name == Building.GREENHOUSE and tile.has("auto_GH"):
+		game.autocollect.mats.cellulose -= tile.auto_GH.cellulose_drain * mult_diff
+		tile.auto_GH.cellulose_drain *= mult_diff
+		var extra_produce:Dictionary = tile.auto_GH.produce.duplicate(true)
+		for rsrc in extra_produce.keys():
+			extra_produce[rsrc] *= mult_diff
+			tile.auto_GH.produce[rsrc] *= 1.0 + mult_diff
+		add_GH_produce_to_autocollect(extra_produce, 1.0)
+		
 
 func add_energy_from_NFR(p_i:Dictionary, base:float):
 	if not p_i.unique_bldgs.has(UniqueBuilding.NUCLEAR_FUSION_REACTOR):
@@ -1643,6 +1656,7 @@ func set_unique_bldg_bonuses(p_i:Dictionary, unique_bldg:Dictionary, tile_id:int
 		if game.c_s_g == game.ships_travel_data.c_g_coords.s and game.c_p == game.ships_travel_data.c_coords.p:
 			game.autocollect.ship_XP = unique_bldg.tier
 			game.HUD.set_ship_btn_shader(true, unique_bldg.tier)
+			game.ship_panel.get_node("SpaceportTimer").start(4.0 / unique_bldg.tier)
 
 # get_sphere_volume
 func get_sph_V(outer:float, inner:float = 0):

@@ -84,7 +84,7 @@ func get_star_num_min_max():
 	var _max = 1
 	for i in range(0, len(overlays)):
 		var id:int = overlays[i].id
-		var n = len(game.system_data[id][9])
+		var n = len(game.system_data[id].stars)
 		if n > _max:
 			_max = n
 	return {"_min":_min, "_max":_max}

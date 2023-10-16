@@ -79,7 +79,7 @@ func set_auto_harvest(obj:Dictionary, produce:Dictionary, _name:String, plant_ne
 			game.autocollect.mats.soil += obj.auto_GH.soil_drain
 		obj.erase("auto_GH")
 	if plant_new:
-		var cellulose_drain:float = game.seeds_produce[_name].costs.cellulose * obj.bldg.path_1_value * game.biology_bonus.PGSM
+		var cellulose_drain:float = game.seeds_produce[_name].costs.cellulose * obj.bldg.path_1_value * game.biology_bonus.PGSM * game.u_i.planck
 		if c_v == "system":
 			cellulose_drain *= tile_num
 		else:
@@ -119,7 +119,7 @@ func on_slot_press(_name:String):
 			var produce:Dictionary = game.seeds_produce[_name].produce.duplicate(true)
 			var H2O_mult = (Data.lake_bonus_values.H2O[tile.lake_elements.H2O] * game.biology_bonus.H2O) if tile.lake_elements.has("H2O") else 1.0
 			for p in produce:
-				produce[p] *= game.u_i.time_speed * game.u_i.planck * tile.bldg.path_1_value * tile.bldg.path_2_value * game.biology_bonus.PGSM * game.biology_bonus.PYM * H2O_mult * (tile.ash.richness if tile.has("ash") else 1.0)
+				produce[p] *= game.u_i.time_speed * tile.get("time_speed_bonus", 1.0) * game.u_i.planck * tile.bldg.path_1_value * tile.bldg.path_2_value * game.biology_bonus.PGSM * game.biology_bonus.PYM * H2O_mult * (tile.ash.richness if tile.has("ash") else 1.0)
 			if harvest:
 				if tile.has("auto_GH") and tile.auto_GH.has("soil_drain"):
 					game.view.obj.bldgs[tile_id].get_node("Fertilizer").queue_free()
