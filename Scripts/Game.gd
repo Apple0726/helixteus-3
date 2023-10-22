@@ -1,9 +1,9 @@
 extends Node2D
 
 const TEST:bool = false
-const DATE:String = "15 Oct 2023"
-const VERSION:String = "v0.28.1"
-const COMPATIBLE_SAVES = ["v0.28"]
+const DATE:String = "17 Oct 2023"
+const VERSION:String = "v0.28.2"
+const COMPATIBLE_SAVES = ["v0.28", "v0.28.1"]
 const UNIQUE_BLDGS = 7
 
 var generic_panel_scene = preload("res://Scenes/Panels/GenericPanel.tscn")
@@ -4433,7 +4433,7 @@ func _on_MMTimer_timeout():
 					tile.bldg.collect_date += int(tiles_mined) / tile.bldg.path_1_value / prod_mult
 					tile.depth += int(tiles_mined)
 					if tile.has("crater") and tile.crater.has("init_depth") and tile.depth > 3 * tile.crater.init_depth:
-						Helper.remove_crater_bonuses(tile, t_id, round(Helper.get_wid(p_i.size)))
+						Helper.remove_crater_bonuses(_tile_data, t_id, tile.crater.metal)
 						tile.erase("crater")
 			if p != c_p_g:
 				Helper.save_obj("Planets", p, _tile_data)

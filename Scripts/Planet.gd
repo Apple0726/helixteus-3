@@ -406,7 +406,10 @@ func show_tooltip(tile, tile_id:int):
 		else:
 			tooltip = tr("AURORA_INTENSITY") + ": %s" % [tile.aurora]
 	if tile.has("time_speed_bonus"):
-		tooltip += ("\n" if tooltip != "" else "") + "[color=#FFBBBB]" + tr("TIME_FLOWS_X_FASTER_HERE") % tile.time_speed_bonus + "[/color]"
+		var real_time_speed_bonus = tile.time_speed_bonus
+		if tile.has("cave") and game.subject_levels.dimensional_power >= 4:
+			real_time_speed_bonus = Helper.clever_round(log(game.u_i.time_speed * tile.time_speed_bonus - 1.0 + exp(1.0)) / log(game.u_i.time_speed - 1.0 + exp(1.0)))
+		tooltip += ("\n" if tooltip != "" else "") + "[color=#FFBBBB]" + tr("TIME_FLOWS_X_FASTER_HERE") % real_time_speed_bonus + "[/color]"
 	if tooltip != "":
 		game.show_adv_tooltip(tooltip, icons)
 	if fiery_tooltip != -1 and is_instance_valid(game.tooltip):

@@ -500,22 +500,23 @@ func get_rsrc_from_rock(contents:Dictionary, tile:Dictionary, p_i:Dictionary, ti
 	if tile.has("current_deposit") and tile.current_deposit.progress > tile.current_deposit.size - 1:
 		tile.erase("current_deposit")
 	if tile.has("crater") and tile.crater.has("init_depth") and tile.depth > 3 * tile.crater.init_depth:
-		var wid:int = round(get_wid(p_i.size))
-		remove_crater_bonuses(tile, tile_id, wid)
+		remove_crater_bonuses(game.tile_data, tile_id, tile.crater.metal)
 		tile.erase("crater")
 
-func remove_crater_bonuses(tile:Dictionary, tile_id:int, wid:int):
+func remove_crater_bonuses(tile_data:Array, tile_id:int, metal:String):
+	var wid:int = sqrt(len(tile_data))
 	var i:int = tile_id % wid
 	var j:int = tile_id / wid
 	for k in range(max(0, i - 1), min(i + 1 + 1, wid)):
 		for l in range(max(0, j - 1), min(j + 1 + 1, wid)):
 			var id2 = k % wid + l * wid
-			var _tile = game.tile_data[id2]
+			var _tile = tile_data[id2]
 			if _tile == null or Vector2(k, l) == Vector2(i, j) or _tile.has("cave") or _tile.has("volcano") or _tile.has("lake") or _tile.has("wormhole"):
 				continue
-			_tile.resource_production_bonus.SP -= game.met_info[tile.crater.metal].rarity - 0.8
-			if is_equal_approx(_tile.resource_production_bonus.SP, 1.0):
-				_tile.resource_production_bonus.erase("SP")
+			if _tile.resource_production_bonus.has("SP"):
+				_tile.resource_production_bonus.SP -= game.met_info[metal].rarity - 0.8
+				if is_equal_approx(_tile.resource_production_bonus.SP, 1.0):
+					_tile.resource_production_bonus.erase("SP")
 	
 func mass_generate_rock(tile:Dictionary, p_i:Dictionary, depth:int):
 	var aurora_mult = tile.get("aurora", 0.0) + 1.0
