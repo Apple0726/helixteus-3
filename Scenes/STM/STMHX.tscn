@@ -1,0 +1,41 @@
+[gd_scene load_steps=6 format=3 uid="uid://0xkqr6plocaj"]
+
+[ext_resource type="Texture2D" uid="uid://2lajx7mp13nq" path="res://Graphics/HX/1_1.png" id="1_412vd"]
+[ext_resource type="Script" path="res://Scripts/STMHX.gd" id="1_iy65u"]
+[ext_resource type="Shader" path="res://Shaders/HX.gdshader" id="2_upyw0"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_yeviy"]
+resource_local_to_scene = true
+shader = ExtResource("2_upyw0")
+shader_parameter/amplitude = 6.0
+shader_parameter/frequency = 6.0
+shader_parameter/aurora = false
+shader_parameter/light = 1.0
+shader_parameter/modulate_color = Color(1, 1, 1, 1)
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_j3r8e"]
+radius = 56.0
+height = 232.0
+
+[node name="Node2D" type="Node2D"]
+script = ExtResource("1_iy65u")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+material = SubResource("ShaderMaterial_yeviy")
+texture = ExtResource("1_412vd")
+
+[node name="Area2D" type="Area2D" parent="."]
+collision_layer = 4
+collision_mask = 8
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
+rotation = 1.5708
+shape = SubResource("CapsuleShape2D_j3r8e")
+
+[node name="HPBar" type="HBoxContainer" parent="."]
+offset_left = -224.0
+offset_top = 73.0
+offset_right = 224.0
+offset_bottom = 113.0
+theme_override_constants/separation = 0
+alignment = 1

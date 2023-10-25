@@ -1,0 +1,70 @@
+[gd_scene load_steps=7 format=3 uid="uid://ck487g2ydj8tn"]
+
+[ext_resource type="Script" path="res://Scripts/ShipTravelMinigame2.gd" id="1_8lr8q"]
+[ext_resource type="Script" path="res://Scripts/STMShip.gd" id="2_dfkgr"]
+[ext_resource type="Texture2D" uid="uid://f6vce2wfk8js" path="res://Graphics/Ships/Ship0.png" id="2_v17i1"]
+[ext_resource type="Theme" uid="uid://cp2u1kgj60ic" path="res://Resources/default_theme.tres" id="3_jfubh"]
+
+[sub_resource type="InputEventKey" id="InputEventKey_dtonr"]
+device = -1
+physical_keycode = 90
+unicode = 122
+
+[sub_resource type="Shortcut" id="Shortcut_8ju2g"]
+events = [SubResource("InputEventKey_dtonr")]
+
+[node name="STM" type="Node2D"]
+script = ExtResource("1_8lr8q")
+
+[node name="Ship" type="Node2D" parent="."]
+script = ExtResource("2_dfkgr")
+
+[node name="BulletTimer" type="Timer" parent="Ship"]
+wait_time = 0.15
+autostart = true
+
+[node name="LaserTimer" type="Timer" parent="Ship"]
+one_shot = true
+autostart = true
+
+[node name="BombTimer" type="Timer" parent="Ship"]
+wait_time = 3.0
+one_shot = true
+autostart = true
+
+[node name="Sprite2D" type="Sprite2D" parent="Ship"]
+scale = Vector2(0.115, 0.115)
+texture = ExtResource("2_v17i1")
+
+[node name="Control" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+theme = ExtResource("3_jfubh")
+
+[node name="Back" type="Button" parent="Control"]
+layout_mode = 0
+offset_top = 688.0
+offset_right = 104.0
+offset_bottom = 720.0
+shortcut = SubResource("Shortcut_8ju2g")
+shortcut_in_tooltip = false
+
+[node name="AccTime" type="Label" parent="Control"]
+layout_mode = 0
+offset_left = 112.0
+offset_top = 688.0
+offset_right = 360.0
+offset_bottom = 720.0
+text = "Travel accelerated by "
+vertical_alignment = 1
+
+[node name="EnemySpawnTimer" type="Timer" parent="."]
+wait_time = 0.7
+autostart = true
+
+[connection signal="timeout" from="Ship/BulletTimer" to="Ship" method="_on_bullet_timer_timeout"]
+[connection signal="timeout" from="Ship/LaserTimer" to="Ship" method="_on_laser_timer_timeout"]
+[connection signal="timeout" from="Ship/BombTimer" to="Ship" method="_on_bomb_timer_timeout"]
+[connection signal="timeout" from="EnemySpawnTimer" to="." method="_on_enemy_spawn_timer_timeout"]
