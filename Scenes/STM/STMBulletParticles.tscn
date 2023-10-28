@@ -1,0 +1,29 @@
+[gd_scene load_steps=5 format=3 uid="uid://bxeyt4nfuybpo"]
+
+[ext_resource type="Script" path="res://Scripts/STMParticles.gd" id="1_05ogm"]
+
+[sub_resource type="Gradient" id="Gradient_t4lda"]
+offsets = PackedFloat32Array(0, 0.625, 1)
+colors = PackedColorArray(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_yly2m"]
+gradient = SubResource("Gradient_t4lda")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_0uipm"]
+particle_flag_disable_z = true
+spread = 180.0
+initial_velocity_min = 19.42
+initial_velocity_max = 145.63
+orbit_velocity_min = 0.0
+orbit_velocity_max = 0.0
+scale_min = 3.0
+scale_max = 3.0
+color_ramp = SubResource("GradientTexture1D_yly2m")
+
+[node name="GPUParticles2D" type="GPUParticles2D"]
+amount = 16
+process_material = SubResource("ParticleProcessMaterial_0uipm")
+lifetime = 0.3
+one_shot = true
+explosiveness = 1.0
+script = ExtResource("1_05ogm")

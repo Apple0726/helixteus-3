@@ -1,9 +1,13 @@
-[gd_scene load_steps=7 format=3 uid="uid://ck487g2ydj8tn"]
+[gd_scene load_steps=8 format=3 uid="uid://ck487g2ydj8tn"]
 
 [ext_resource type="Script" path="res://Scripts/ShipTravelMinigame2.gd" id="1_8lr8q"]
 [ext_resource type="Script" path="res://Scripts/STMShip.gd" id="2_dfkgr"]
 [ext_resource type="Texture2D" uid="uid://f6vce2wfk8js" path="res://Graphics/Ships/Ship0.png" id="2_v17i1"]
 [ext_resource type="Theme" uid="uid://cp2u1kgj60ic" path="res://Resources/default_theme.tres" id="3_jfubh"]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_ne72f"]
+radius = 9.0
+height = 86.0
 
 [sub_resource type="InputEventKey" id="InputEventKey_dtonr"]
 device = -1
@@ -36,6 +40,14 @@ autostart = true
 scale = Vector2(0.115, 0.115)
 texture = ExtResource("2_v17i1")
 
+[node name="Area2D" type="Area2D" parent="Ship"]
+collision_layer = 2
+collision_mask = 16
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Ship/Area2D"]
+rotation = 1.5708
+shape = SubResource("CapsuleShape2D_ne72f")
+
 [node name="Control" type="Control" parent="."]
 layout_mode = 3
 anchors_preset = 0
@@ -61,7 +73,7 @@ text = "Travel accelerated by "
 vertical_alignment = 1
 
 [node name="EnemySpawnTimer" type="Timer" parent="."]
-wait_time = 0.7
+wait_time = 1.4
 autostart = true
 
 [connection signal="timeout" from="Ship/BulletTimer" to="Ship" method="_on_bullet_timer_timeout"]
