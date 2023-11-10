@@ -2794,38 +2794,40 @@ func generate_volcano(t_id:int, VEI:float, artificial:bool = false):
 		Building.RESEARCH_LAB:"SP",
 	}
 	for k in range(max(0, i - half_size), min(i + half_size + 1, wid)):
-		for l in range(max(0, j - half_size), min(j + half_size + 1, wid)):
-			var t_id2:int = k % wid + l * wid
-			var tile2 = tile_data[t_id2]
-			if tile2 and tile2.has("lake"):
+		for l in range(max(0, j - half_size + abs(k-i)), min(j + half_size - abs(k-i) + 1, wid)):
+			var current_tile_id:int = k % wid + l * wid
+			if !tile_data[current_tile_id]:
+				tile_data[current_tile_id] = {}
+			var current_tile = tile_data[current_tile_id]
+			if current_tile.has("lake"):
 				continue
-			if abs(i - k) + abs(j - l) <= half_size + 1 - (int(VEI) & 1):
-				tile_data[t_id2] = {} if tile2 == null else tile2
-				tile2 = tile_data[t_id2]
-				var overclock_mult = tile2.bldg.get("overclock_mult", 1.0) if tile2.has("bldg") else 1.0
-				if tile2.has("ash"):
-					if not tile2.has("cave"):
-						var diff = max(richness - tile2.ash.richness, 0)
-						if tile2.has("bldg"):
-							var rsrc = building_to_resource[tile2.bldg.name]
-							autocollect.rsrc[rsrc] += diff * tile2.bldg.path_1_value * overclock_mult * tile2.resource_production_bonus.get(rsrc, 1.0)
-						tile2.ash.richness = max(richness, tile2.ash.richness)
-						tile2.resource_production_bonus.minerals = tile2.resource_production_bonus.get("minerals", 1.0) + diff
-						tile2.resource_production_bonus.SP = tile2.resource_production_bonus.get("SP", 1.0) + diff / 2.0
-				else:
-					tile2.ash = {"richness":richness}
-					tile2.resource_production_bonus.minerals = tile2.resource_production_bonus.get("minerals", 1.0) + (richness - 1.0)
-					tile2.resource_production_bonus.SP = tile2.resource_production_bonus.get("SP", 1.0) + (richness - 1.0) / 2.0
-					if tile2.has("bldg"):
-							var rsrc = building_to_resource[tile2.bldg.name]
-							autocollect.rsrc[rsrc] += (richness - 1.0) * tile2.bldg.path_1_value * overclock_mult * tile2.resource_production_bonus.get(rsrc, 1.0)
-					if artificial:
-						tile2.ash.artificial = true
-				if not achievement_data.exploration.has("volcano_cave") and tile2.has("cave"):
-					earn_achievement("exploration", "volcano_cave")
-				if not achievement_data.exploration.has("volcano_aurora_cave") and tile2.has("cave") and tile2.has("aurora"):
-					earn_achievement("exploration", "volcano_aurora_cave")
-	tile_data[t_id] = {} if tile_data[t_id] == null else tile_data[t_id]
+			if !current_tile.has("resource_production_bonus"):
+				current_tile.resource_production_bonus = {}
+			var overclock_mult = current_tile.bldg.get("overclock_mult", 1.0) if current_tile.has("bldg") else 1.0
+			if current_tile.has("ash"):
+				if not current_tile.has("cave"):
+					var diff = max(richness - current_tile.ash.richness, 0)
+					if current_tile.has("bldg"):
+						var rsrc = building_to_resource[current_tile.bldg.name]
+						autocollect.rsrc[rsrc] += diff * current_tile.bldg.path_1_value * overclock_mult * current_tile.resource_production_bonus.get(rsrc, 1.0)
+					current_tile.ash.richness = max(richness, current_tile.ash.richness)
+					current_tile.resource_production_bonus.minerals = current_tile.resource_production_bonus.get("minerals", 1.0) + diff
+					current_tile.resource_production_bonus.SP = current_tile.resource_production_bonus.get("SP", 1.0) + diff / 2.0
+			else:
+				current_tile.ash = {"richness":richness}
+				current_tile.resource_production_bonus.minerals = current_tile.resource_production_bonus.get("minerals", 1.0) + (richness - 1.0)
+				current_tile.resource_production_bonus.SP = current_tile.resource_production_bonus.get("SP", 1.0) + (richness - 1.0) / 2.0
+				if current_tile.has("bldg"):
+						var rsrc = building_to_resource[current_tile.bldg.name]
+						autocollect.rsrc[rsrc] += (richness - 1.0) * current_tile.bldg.path_1_value * overclock_mult * current_tile.resource_production_bonus.get(rsrc, 1.0)
+				if artificial:
+					current_tile.ash.artificial = true
+			if not achievement_data.exploration.has("volcano_cave") and current_tile.has("cave"):
+				earn_achievement("exploration", "volcano_cave")
+			if not achievement_data.exploration.has("volcano_aurora_cave") and current_tile.has("cave") and current_tile.has("aurora"):
+				earn_achievement("exploration", "volcano_aurora_cave")
+	if !tile_data[t_id]:
+		tile_data[t_id] = {}
 	tile_data[t_id].volcano = {"VEI":VEI}
 
 func generate_tiles(id:int):
