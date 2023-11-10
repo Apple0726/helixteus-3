@@ -2809,7 +2809,7 @@ func generate_volcano(t_id:int, VEI:float, artificial:bool = false):
 					var diff = max(richness - current_tile.ash.richness, 0)
 					if current_tile.has("bldg"):
 						var rsrc = building_to_resource[current_tile.bldg.name]
-						if rsrc
+						if rsrc:
 						autocollect.rsrc[rsrc] += diff * current_tile.bldg.path_1_value * overclock_mult * current_tile.resource_production_bonus.get(rsrc, 1.0)
 					current_tile.ash.richness = max(richness, current_tile.ash.richness)
 					current_tile.resource_production_bonus.minerals = current_tile.resource_production_bonus.get("minerals", 1.0) + diff
@@ -2820,7 +2820,7 @@ func generate_volcano(t_id:int, VEI:float, artificial:bool = false):
 				current_tile.resource_production_bonus.SP = current_tile.resource_production_bonus.get("SP", 1.0) + (richness - 1.0) / 2.0
 				if current_tile.has("bldg"):
 						var rsrc = building_to_resource[current_tile.bldg.name]
-						if rsrc
+						if rsrc:
 							autocollect.rsrc[rsrc] += (richness - 1.0) * current_tile.bldg.path_1_value * overclock_mult * current_tile.resource_production_bonus.get(rsrc, 1.0)
 				if artificial:
 					current_tile.ash.artificial = true
