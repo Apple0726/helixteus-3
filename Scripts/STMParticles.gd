@@ -1,4 +1,4 @@
-extends GPUParticles2D
+extends Node2D
 
 var queue_free_delay:float
 

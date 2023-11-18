@@ -1,13 +1,19 @@
-[gd_scene load_steps=8 format=3 uid="uid://ck487g2ydj8tn"]
+[gd_scene load_steps=14 format=3 uid="uid://ck487g2ydj8tn"]
 
 [ext_resource type="Script" path="res://Scripts/ShipTravelMinigame2.gd" id="1_8lr8q"]
 [ext_resource type="Script" path="res://Scripts/STMShip.gd" id="2_dfkgr"]
 [ext_resource type="Texture2D" uid="uid://f6vce2wfk8js" path="res://Graphics/Ships/Ship0.png" id="2_v17i1"]
 [ext_resource type="Theme" uid="uid://cp2u1kgj60ic" path="res://Resources/default_theme.tres" id="3_jfubh"]
+[ext_resource type="Texture2D" uid="uid://c67y71rs3ver2" path="res://Graphics/Misc/BarUnder2.png" id="5_6lon2"]
+[ext_resource type="Texture2D" uid="uid://o1t3hqx27iw" path="res://Graphics/Misc/BarOver.png" id="6_8qal3"]
+[ext_resource type="Texture2D" uid="uid://1h4b4lcm50vf" path="res://Graphics/Misc/Bar2.png" id="7_6fhtq"]
+[ext_resource type="Texture2D" uid="uid://c2hhyr4csmt6n" path="res://Graphics/Cave/Weapons/red_laser.png" id="8_rnocu"]
 
-[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_ne72f"]
-radius = 9.0
-height = 86.0
+[sub_resource type="CircleShape2D" id="CircleShape2D_m5dak"]
+radius = 5.0
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_amlly"]
+radius = 240.0
 
 [sub_resource type="InputEventKey" id="InputEventKey_dtonr"]
 device = -1
@@ -16,6 +22,15 @@ unicode = 122
 
 [sub_resource type="Shortcut" id="Shortcut_8ju2g"]
 events = [SubResource("InputEventKey_dtonr")]
+
+[sub_resource type="Environment" id="Environment_i0p4l"]
+background_mode = 3
+background_canvas_max_layer = -1
+glow_enabled = true
+glow_intensity = 2.04
+glow_strength = 1.16
+glow_bloom = 0.07
+glow_blend_mode = 0
 
 [node name="STM" type="Node2D"]
 script = ExtResource("1_8lr8q")
@@ -36,6 +51,11 @@ wait_time = 3.0
 one_shot = true
 autostart = true
 
+[node name="LightTimer" type="Timer" parent="Ship"]
+wait_time = 3.0
+one_shot = true
+autostart = true
+
 [node name="Sprite2D" type="Sprite2D" parent="Ship"]
 scale = Vector2(0.115, 0.115)
 texture = ExtResource("2_v17i1")
@@ -45,8 +65,14 @@ collision_layer = 2
 collision_mask = 16
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Ship/Area2D"]
-rotation = 1.5708
-shape = SubResource("CapsuleShape2D_ne72f")
+shape = SubResource("CircleShape2D_m5dak")
+
+[node name="LaserArea" type="Area2D" parent="Ship"]
+collision_layer = 0
+collision_mask = 4
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Ship/LaserArea"]
+shape = SubResource("CircleShape2D_amlly")
 
 [node name="Control" type="Control" parent="."]
 layout_mode = 3
@@ -76,7 +102,50 @@ vertical_alignment = 1
 wait_time = 1.4
 autostart = true
 
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_i0p4l")
+
+[node name="GlowLayer" type="CanvasLayer" parent="."]
+layer = -1
+
+[node name="Laser" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="TextureProgressBar" type="TextureProgressBar" parent="Laser"]
+modulate = Color(1, 0.28, 0.28, 1)
+layout_mode = 0
+offset_left = 28.0
+offset_top = 128.0
+offset_right = 43.0
+offset_bottom = 227.0
+max_value = 1.0
+step = 0.0
+fill_mode = 3
+nine_patch_stretch = true
+stretch_margin_left = 3
+stretch_margin_top = 1
+stretch_margin_right = 3
+stretch_margin_bottom = 1
+texture_under = ExtResource("5_6lon2")
+texture_over = ExtResource("6_8qal3")
+texture_progress = ExtResource("7_6fhtq")
+
+[node name="TextureRect" type="TextureRect" parent="Laser"]
+layout_mode = 0
+offset_left = 48.0
+offset_top = 160.0
+offset_right = 80.0
+offset_bottom = 192.0
+texture = ExtResource("8_rnocu")
+expand_mode = 1
+stretch_mode = 5
+
 [connection signal="timeout" from="Ship/BulletTimer" to="Ship" method="_on_bullet_timer_timeout"]
 [connection signal="timeout" from="Ship/LaserTimer" to="Ship" method="_on_laser_timer_timeout"]
 [connection signal="timeout" from="Ship/BombTimer" to="Ship" method="_on_bomb_timer_timeout"]
+[connection signal="timeout" from="Ship/LightTimer" to="Ship" method="_on_light_timer_timeout"]
+[connection signal="area_entered" from="Ship/LaserArea" to="Ship" method="_on_laser_area_area_entered"]
 [connection signal="timeout" from="EnemySpawnTimer" to="." method="_on_enemy_spawn_timer_timeout"]

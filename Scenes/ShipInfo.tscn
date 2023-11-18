@@ -1,16 +1,16 @@
 [gd_scene load_steps=12 format=3 uid="uid://gy6plqno7n0y"]
 
-[ext_resource type="Texture2D" uid="uid://1ntmlngtdtqy" path="res://Graphics/Stars/Star.png" id="2"]
-[ext_resource type="Texture2D" uid="uid://c8xnn7fvox25n" path="res://Graphics/Icons/XP.png" id="4"]
+[ext_resource type="Texture2D" uid="uid://c0ug8cttagnot" path="res://Graphics/Stars/Star.png" id="2"]
+[ext_resource type="Texture2D" uid="uid://clm1wcxs53orq" path="res://Graphics/Icons/XP.png" id="4"]
 [ext_resource type="Texture2D" uid="uid://c67y71rs3ver2" path="res://Graphics/Misc/BarUnder2.png" id="5"]
 [ext_resource type="Texture2D" uid="uid://1h4b4lcm50vf" path="res://Graphics/Misc/Bar2.png" id="6"]
 [ext_resource type="Texture2D" uid="uid://o1t3hqx27iw" path="res://Graphics/Misc/BarOver.png" id="7"]
 [ext_resource type="Script" path="res://Scripts/ShipInfo.gd" id="9"]
-[ext_resource type="Texture2D" uid="uid://dqjvtfdxx1q84" path="res://Graphics/Icons/HP.png" id="10"]
-[ext_resource type="Texture2D" uid="uid://flqkawywcf4k" path="res://Graphics/Icons/eva.png" id="11"]
-[ext_resource type="Texture2D" uid="uid://bj2apqdtbsvvc" path="res://Graphics/Icons/atk.png" id="12"]
-[ext_resource type="Texture2D" uid="uid://86tu1djj2q67" path="res://Graphics/Icons/def.png" id="13"]
-[ext_resource type="Texture2D" uid="uid://crsi7kdeg3vmm" path="res://Graphics/Icons/acc.png" id="14"]
+[ext_resource type="Texture2D" uid="uid://db5kteojlsibm" path="res://Graphics/Icons/HP.png" id="10"]
+[ext_resource type="Texture2D" uid="uid://bpldbtxg6m15w" path="res://Graphics/Icons/eva.png" id="11"]
+[ext_resource type="Texture2D" uid="uid://pbmpca8v331w" path="res://Graphics/Icons/atk.png" id="12"]
+[ext_resource type="Texture2D" uid="uid://c7ihn34uct4pa" path="res://Graphics/Icons/def.png" id="13"]
+[ext_resource type="Texture2D" uid="uid://colvrraclfm2q" path="res://Graphics/Icons/acc.png" id="14"]
 
 [node name="Panel1" type="Panel"]
 offset_right = 533.0

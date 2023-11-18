@@ -21,6 +21,7 @@ scale_max = 3.0
 color_ramp = SubResource("GradientTexture1D_yly2m")
 
 [node name="GPUParticles2D" type="GPUParticles2D"]
+modulate = Color(0.454902, 0.454902, 0.454902, 1)
 amount = 16
 process_material = SubResource("ParticleProcessMaterial_0uipm")
 lifetime = 0.3
