@@ -1156,10 +1156,6 @@ func add_panels():
 	shop_panel = generic_panel_scene.instantiate()
 	shop_panel.set_script(load("Scripts/ShopPanel.gd"))
 	ship_panel = preload("res://Scenes/Panels/ShipPanel.tscn").instantiate()
-#	construct_panel = generic_panel_scene.instantiate()
-#	construct_panel.set_script(load("Scripts/ConstructPanel.gd"))
-#	megastructures_panel = generic_panel_scene.instantiate()
-#	megastructures_panel.set_script(load("Scripts/MegastructuresPanel.gd"))
 	gigastructures_panel = preload("res://Scenes/Panels/GigastructuresPanel.tscn").instantiate()
 	craft_panel = generic_panel_scene.instantiate()
 	craft_panel.set_script(load("Scripts/CraftPanel.gd"))
@@ -1215,12 +1211,6 @@ func add_panels():
 	PC_panel.visible = false
 	$Panels/Control.add_child(PC_panel)
 	
-#	construct_panel.visible = false
-#	$Panels/Control.add_child(construct_panel)
-
-#	megastructures_panel.visible = false
-#	$Panels/Control.add_child(megastructures_panel)
-
 	gigastructures_panel.visible = false
 	$Panels/Control.add_child(gigastructures_panel)
 

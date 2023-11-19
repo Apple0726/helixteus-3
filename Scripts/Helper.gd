@@ -1202,9 +1202,9 @@ func get_final_value(p_i:Dictionary, dict:Dictionary, path:int, n:int = 1):
 		n = 1
 	if path == 1:
 		if bldg == Building.SOLAR_PANEL:
-			return clever_round(get_SP_production(p_i.temperature, dict.bldg.path_1_value * mult * (dict.get("aurora", 0.0) + 1.0) * (dict.substation_bonus if dict.has("substation_bonus") else 1.0)) * n)
+			return clever_round(get_SP_production(p_i.temperature, dict.bldg.path_1_value * mult * (dict.get("aurora", 0.0) + 1.0) * dict.get("substation_bonus", 1.0)) * n)
 		elif bldg == Building.ATMOSPHERE_EXTRACTOR:
-			return clever_round(get_AE_production(p_i.pressure, dict.bldg.path_1_value) * n)
+			return clever_round(get_AE_production(p_i.pressure, dict.bldg.path_1_value) * n * mult)
 		elif bldg in [Building.MINERAL_SILO]:
 			return dict.bldg.path_1_value * get_IR_mult(bldg) * n
 		elif bldg == Building.BATTERY:

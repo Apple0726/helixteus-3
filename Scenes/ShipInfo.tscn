@@ -296,7 +296,7 @@ texture_under = ExtResource("5")
 texture_progress = ExtResource("6")
 
 [node name="TextureProgressBar" type="TextureProgressBar" parent="Light"]
-modulate = Color(0.81, 0.81, 0.3645, 1)
+modulate = Color(0.811765, 0.811765, 0.364706, 1)
 layout_mode = 0
 offset_left = 228.0
 offset_top = 48.0

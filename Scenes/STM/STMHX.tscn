@@ -1,8 +1,10 @@
-[gd_scene load_steps=9 format=3 uid="uid://0xkqr6plocaj"]
+[gd_scene load_steps=13 format=3 uid="uid://0xkqr6plocaj"]
 
 [ext_resource type="Texture2D" uid="uid://2lajx7mp13nq" path="res://Graphics/HX/1_1.png" id="1_412vd"]
 [ext_resource type="Script" path="res://Scripts/STMHX.gd" id="1_iy65u"]
 [ext_resource type="Shader" path="res://Shaders/HX.gdshader" id="2_upyw0"]
+[ext_resource type="Shader" path="res://Shaders/Laser.gdshader" id="4_khxtp"]
+[ext_resource type="Texture2D" uid="uid://dy2p8vocmg6qx" path="res://Graphics/HX/Status effects/Stun.png" id="5_7hnfy"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_yeviy"]
 resource_local_to_scene = true
@@ -12,6 +14,45 @@ shader_parameter/frequency = 6.0
 shader_parameter/aurora = false
 shader_parameter/light = 1.0
 shader_parameter/modulate_color = Color(1, 1, 1, 1)
+shader_parameter/flash = 0.0
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_il0bk"]
+shader = ExtResource("4_khxtp")
+shader_parameter/beams = 1
+shader_parameter/energy = 20.0
+shader_parameter/roughness = 3
+shader_parameter/frequency = 10
+shader_parameter/speed = 1.0
+shader_parameter/thickness = 0.021
+shader_parameter/outline_thickness = 0.044
+shader_parameter/beam_difference = 0.0
+shader_parameter/glow = 0.0
+shader_parameter/outline_glow = 0.0
+shader_parameter/color = Color(0.91, 1.5, 1.5, 1)
+shader_parameter/outline_color = Color(0.501961, 1, 0.960784, 1)
+shader_parameter/progress = 1.0
+shader_parameter/y_offset = 0.0
+shader_parameter/fixed_edge_size = 0.05
+shader_parameter/noise_scale = Vector2(1, 1)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_aiw00"]
+shader = ExtResource("4_khxtp")
+shader_parameter/beams = 1
+shader_parameter/energy = 10.0
+shader_parameter/roughness = 8
+shader_parameter/frequency = 15
+shader_parameter/speed = 1.0
+shader_parameter/thickness = 0.012
+shader_parameter/outline_thickness = 0.043
+shader_parameter/beam_difference = 0.0
+shader_parameter/glow = 0.0
+shader_parameter/outline_glow = 0.0
+shader_parameter/color = Color(0.91, 2, 2, 1)
+shader_parameter/outline_color = Color(0.5, 1, 0.96, 1)
+shader_parameter/progress = 1.0
+shader_parameter/y_offset = 0.0
+shader_parameter/fixed_edge_size = 0.05
+shader_parameter/noise_scale = Vector2(1, 1)
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_j3r8e"]
 radius = 56.0
@@ -105,6 +146,26 @@ script = ExtResource("1_iy65u")
 material = SubResource("ShaderMaterial_yeviy")
 texture = ExtResource("1_412vd")
 
+[node name="Stun" type="Node2D" parent="Sprite2D"]
+visible = false
+position = Vector2(0, -6.29962)
+
+[node name="Sprite2D" type="Sprite2D" parent="Sprite2D/Stun"]
+material = SubResource("ShaderMaterial_il0bk")
+position = Vector2(47.1782, 64.5085)
+rotation = 0.496553
+scale = Vector2(2.36037, 2.36037)
+texture = ExtResource("5_7hnfy")
+offset = Vector2(-21.4132, -17.9986)
+
+[node name="Sprite2" type="Sprite2D" parent="Sprite2D/Stun"]
+material = SubResource("ShaderMaterial_aiw00")
+position = Vector2(11.3541, 50.4711)
+rotation = -0.583007
+scale = Vector2(1.67193, 1.67193)
+texture = ExtResource("5_7hnfy")
+offset = Vector2(-21.4132, -17.9986)
+
 [node name="Area2D" type="Area2D" parent="."]
 collision_layer = 4
 collision_mask = 8
@@ -129,4 +190,8 @@ libraries = {
 "": SubResource("AnimationLibrary_5u3l7")
 }
 
+[node name="StunTimer" type="Timer" parent="."]
+one_shot = true
+
 [connection signal="timeout" from="ShootTimer" to="." method="_on_shoot_timer_timeout"]
+[connection signal="timeout" from="StunTimer" to="." method="_on_stun_timer_timeout"]
