@@ -1,4 +1,4 @@
-[gd_scene load_steps=27 format=3 uid="uid://ck487g2ydj8tn"]
+[gd_scene load_steps=30 format=3 uid="uid://ck487g2ydj8tn"]
 
 [ext_resource type="Script" path="res://Scripts/ShipTravelMinigame2.gd" id="1_8lr8q"]
 [ext_resource type="Script" path="res://Scripts/STMShip.gd" id="2_dfkgr"]
@@ -11,6 +11,20 @@
 [ext_resource type="Texture2D" uid="uid://c2hhyr4csmt6n" path="res://Graphics/Cave/Weapons/red_laser.png" id="8_rnocu"]
 [ext_resource type="Texture2D" uid="uid://6tq7tm3vvims" path="res://Graphics/Weapons/bomb1.png" id="10_yqhvw"]
 [ext_resource type="Texture2D" uid="uid://bagqruqqqw580" path="res://Graphics/Weapons/light1.png" id="11_1xlo5"]
+[ext_resource type="PackedScene" uid="uid://ca730ks6x5s88" path="res://Scenes/Screenshake.tscn" id="12_npp1l"]
+
+[sub_resource type="Shader" id="Shader_yo3bn"]
+code = "shader_type canvas_item;
+uniform float glow:hint_range(0.0, 1.0, 0.1) = 0.0;
+
+void fragment() {
+	COLOR.rgb = mix(texture(TEXTURE, UV).rgb, vec3(1.0), glow);
+}
+"
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_nasxo"]
+shader = SubResource("Shader_yo3bn")
+shader_parameter/glow = 0.0
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_m5dak"]
 radius = 5.0
@@ -221,6 +235,7 @@ one_shot = true
 autostart = true
 
 [node name="Sprite2D" type="Sprite2D" parent="Ship"]
+material = SubResource("ShaderMaterial_nasxo")
 scale = Vector2(0.115, 0.115)
 texture = ExtResource("2_v17i1")
 
@@ -278,6 +293,24 @@ offset_top = 688.0
 offset_right = 360.0
 offset_bottom = 720.0
 text = "Travel accelerated by "
+vertical_alignment = 1
+
+[node name="BombActivateLabel" type="Label" parent="Control"]
+layout_mode = 0
+offset_left = 92.0
+offset_top = 304.0
+offset_right = 340.0
+offset_bottom = 336.0
+text = "Left click to activate"
+vertical_alignment = 1
+
+[node name="LightActivateLabel" type="Label" parent="Control"]
+layout_mode = 0
+offset_left = 92.0
+offset_top = 452.0
+offset_right = 340.0
+offset_bottom = 484.0
+text = "Right click to activate"
 vertical_alignment = 1
 
 [node name="EnemySpawnTimer" type="Timer" parent="."]
@@ -442,6 +475,11 @@ offset_bottom = 720.0
 mouse_filter = 2
 color = Color(1, 1, 1, 0)
 metadata/_edit_lock_ = true
+
+[node name="Camera2D" type="Camera2D" parent="."]
+anchor_mode = 0
+
+[node name="Screenshake" parent="Camera2D" instance=ExtResource("12_npp1l")]
 
 [connection signal="timeout" from="Ship/BulletTimer" to="Ship" method="_on_bullet_timer_timeout"]
 [connection signal="timeout" from="Ship/LaserTimer" to="Ship" method="_on_laser_timer_timeout"]

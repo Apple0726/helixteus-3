@@ -2,6 +2,8 @@ extends Node2D
 
 func _ready():
 	Helper.set_back_btn($Control/Back)
+	$Control/BombActivateLabel.modulate.a = 0.0
+	$Control/LightActivateLabel.modulate.a = 0.0
 
 var mouse_pos:Vector2 = Vector2.ZERO
 

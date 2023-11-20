@@ -29,7 +29,18 @@ func _input(event):
 		bomb.is_enemy_projectile = false
 		bomb.position = position
 		bomb.STM_node = STM_node
-		get_parent().add_child(bomb)
+		STM_node.add_child(bomb)
+		get_node("../Control/BombActivateLabel").visible = false
+	if light_ready and Input.is_action_just_pressed("right_click"):
+		light_ready = false
+		$LightTimer.start()
+		$Sprite2D.material.set_shader_parameter("glow", 0.0)
+		var light = preload("res://Scenes/STM/STMLight.tscn").instantiate()
+		light.fade_speed = 2.0
+		light.position = position
+		STM_node.add_child(light)
+		get_node("../Control/LightActivateLabel").visible = false
+		
 		
 func _on_bullet_timer_timeout():
 	var projectile:STMProjectile = preload("res://Scenes/STM/STMProjectile.tscn").instantiate()
@@ -40,7 +51,7 @@ func _on_bullet_timer_timeout():
 	projectile.is_enemy_projectile = false
 	projectile.position = position
 	projectile.STM_node = STM_node
-	get_parent().add_child(projectile)
+	STM_node.add_child(projectile)
 
 
 func _on_laser_timer_timeout():
@@ -64,10 +75,20 @@ func _on_bomb_timer_timeout():
 	bomb_ready = true
 	$Bomb/AnimationPlayer.play("Bomb grow")
 	$BombParticles.emitting = true
+	var bomb_activate_label:Label = get_node("../Control/BombActivateLabel")
+	if bomb_activate_label.visible:
+		var label_tween = create_tween()
+		label_tween.tween_property(bomb_activate_label, "modulate:a", 1.0, 0.3)
 
 func _on_light_timer_timeout():
 	animate_flash(get_node("../LightTimerBar/TextureProgressBar/ColorRect"))
 	light_ready = true
+	var tween = create_tween()
+	tween.tween_property($Sprite2D.material, "shader_parameter/glow", 0.7, 0.3)
+	var light_activate_label:Label = get_node("../Control/LightActivateLabel")
+	if light_activate_label.visible:
+		var label_tween = create_tween()
+		label_tween.tween_property(light_activate_label, "modulate:a", 1.0, 0.3)
 
 func animate_flash(flash):
 	flash.visible = true

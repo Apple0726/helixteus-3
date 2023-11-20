@@ -6,19 +6,17 @@
 [sub_resource type="CircleShape2D" id="CircleShape2D_in1ri"]
 radius = 3.0
 
-[node name="Node2D" type="Node2D"]
+[node name="Area2D" type="Area2D"]
+collision_layer = 8
+collision_mask = 4
 script = ExtResource("1_eptwt")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+rotation = 1.5708
+shape = SubResource("CircleShape2D_in1ri")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 scale = Vector2(0.315, 0.315)
 texture = ExtResource("2_be4c6")
 
-[node name="Area2D" type="Area2D" parent="."]
-collision_layer = 8
-collision_mask = 4
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
-rotation = 1.5708
-shape = SubResource("CircleShape2D_in1ri")
-
-[connection signal="area_entered" from="Area2D" to="." method="_on_area_2d_area_entered"]
+[connection signal="area_entered" from="." to="." method="_on_area_entered"]

@@ -1,5 +1,5 @@
 class_name STMProjectile
-extends Node2D
+extends Area2D
 
 enum {BULLET, BOMB}
 
@@ -11,8 +11,8 @@ var STM_node:Node2D
 
 func _ready():
 	if is_enemy_projectile:
-		$Area2D.collision_layer = 16
-		$Area2D.collision_mask = 2
+		collision_layer = 16
+		collision_mask = 2
 
 func _process(delta):
 	position += delta * velocity
@@ -35,7 +35,8 @@ func add_effects(scene, particles_queue_free_delay, impact_light_queue_free_dela
 	impact_light.queue_free_delay = impact_light_queue_free_delay
 	STM_node.get_node("GlowLayer").add_child(impact_light)
 
-func _on_area_2d_area_entered(area):
+
+func _on_area_entered(area):
 	if type == BULLET:
 		add_effects(preload("res://Scenes/STM/STMBulletParticles.tscn"), 0.3, 0.1)
 	elif type == BOMB:
@@ -44,6 +45,7 @@ func _on_area_2d_area_entered(area):
 		white_rect.color.a = 0.05
 		var tween = get_tree().create_tween()
 		tween.tween_property(white_rect, "color:a", 0.0, 0.3)
-		
+		if Settings.screen_shake:
+			STM_node.get_node("Camera2D/Screenshake").start(0.5, 15, 4)
 	area.get_parent().hit(damage)
 	queue_free()

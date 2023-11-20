@@ -1,6 +1,8 @@
 class_name STMHX
 extends Node2D
 
+static var enemies_on_screen:int = 0
+
 var HP:int = 3
 var move_tween
 var STM_node:Node2D
@@ -20,6 +22,7 @@ func _ready():
 		HP_dot.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 		HP_dot.custom_minimum_size.x = 48
 		$HPBar.add_child(HP_dot)
+	enemies_on_screen += 1
 
 func hit(damage:int):
 	HP -= damage
@@ -66,3 +69,7 @@ func _on_stun_timer_timeout():
 	$ShootTimer.paused = false
 	if is_instance_valid(move_tween) and move_tween.is_valid():
 		move_tween.play()
+
+
+func _on_tree_exited():
+	enemies_on_screen -= 1

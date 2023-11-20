@@ -193,5 +193,6 @@ libraries = {
 [node name="StunTimer" type="Timer" parent="."]
 one_shot = true
 
+[connection signal="tree_exited" from="." to="." method="_on_tree_exited"]
 [connection signal="timeout" from="ShootTimer" to="." method="_on_shoot_timer_timeout"]
 [connection signal="timeout" from="StunTimer" to="." method="_on_stun_timer_timeout"]
