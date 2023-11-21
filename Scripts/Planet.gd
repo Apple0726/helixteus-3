@@ -190,16 +190,16 @@ func _ready():
 			if await_counter % int(1000.0 / Engine.get_frames_per_second()) == 0:
 				await get_tree().process_frame
 
-func add_unique_building_sprite(tile:Dictionary, tile_id:int, v:Vector2):
+func add_unique_building_sprite(tile:Dictionary, tile_id:int, v:Vector2, building_animation:bool = false):
 	var mod:Color = Color.WHITE
 	if tile.unique_bldg.has("repair_cost"):
 		mod = Color(0.3, 0.3, 0.3)
 	var unique_building_name = tile.unique_bldg.name
 	if tile.unique_bldg.name == UniqueBuilding.NUCLEAR_FUSION_REACTOR:
-		bldgs[tile_id] = add_bldg_sprite(v, unique_building_name, game.unique_bldg_textures[unique_building_name], mod, 0.8, Vector2(200, 200))
+		bldgs[tile_id] = add_bldg_sprite(v, unique_building_name, game.unique_bldg_textures[unique_building_name], building_animation, mod, 0.8, Vector2(200, 200))
 		add_rsrc(v + Vector2(200, 200), Color(0, 0.8, 0, 1), Data.energy_icon, tile_id)
 	else:
-		bldgs[tile_id] = add_bldg_sprite(v, unique_building_name, game.unique_bldg_textures[unique_building_name], mod)
+		bldgs[tile_id] = add_bldg_sprite(v, unique_building_name, game.unique_bldg_textures[unique_building_name], building_animation, mod)
 		if unique_building_name == UniqueBuilding.CELLULOSE_SYNTHESIZER:
 			add_rsrc(v + Vector2(100, 100), Color.BROWN, Data.cellulose_icon, tile_id)
 		elif unique_building_name == UniqueBuilding.SUBSTATION:
@@ -552,7 +552,7 @@ func constr_bldg(tile_id:int, curr_time:int, _bldg_to_construct:int, mass_build:
 				game.boring_machine_data[game.c_p_g].tiles.append(tile_id)
 			tile.bldg.collect_date = tile.bldg.construction_date + tile.bldg.construction_length
 		game.tile_data[tile_id] = tile
-		add_bldg(tile_id, _bldg_to_construct)
+		add_bldg(tile_id, _bldg_to_construct, true)
 	elif not mass_build:
 		game.popup(tr("NOT_ENOUGH_RESOURCES"), 1.2)
 
@@ -1401,20 +1401,28 @@ func add_time_bar(id2:int, type:String):
 			time_bar.modulate = Color(105/255.0, 0, 1, 1)
 	time_bars.append({"node":time_bar, "id":id2, "type":type})
 
-func add_bldg_sprite(pos:Vector2, _name:int, texture, mod:Color = Color.WHITE, sc:float = 0.4, offset:Vector2 = Vector2(100, 100)):
+func add_bldg_sprite(pos:Vector2, _name:int, texture, building_animation:bool = false, mod:Color = Color.WHITE, sc:float = 0.4, offset:Vector2 = Vector2(100, 100)):
 	var bldg = Sprite2D.new()
 	bldg.texture = texture
 	bldg.scale *= sc
 	bldg.position = pos + offset
 	bldg.self_modulate = mod
+	if building_animation:
+		bldg.material = ShaderMaterial.new()
+		bldg.material.shader = preload("res://Shaders/BuildingConstruction.gdshader")
+		bldg.material.set_shader_parameter("alpha", 0.0)
+		bldg.material.set_shader_parameter("progress", 0.0)
+		var tween = create_tween()
+		tween.tween_property(bldg.material, "shader_parameter/alpha", 1.0, 0.5)
+		tween.tween_property(bldg.material, "shader_parameter/progress", 1.0, 0.8)
 	$Buildings.add_child(bldg)
 	return bldg
 	
-func add_bldg(id2:int, type:int):
+func add_bldg(id2:int, type:int, building_animation:bool = false):
 	var v = Vector2.ZERO
 	v.x = (id2 % wid) * 200
 	v.y = floor(id2 / wid) * 200
-	bldgs[id2] = add_bldg_sprite(v, type, game.bldg_textures[type])
+	bldgs[id2] = add_bldg_sprite(v, type, game.bldg_textures[type], building_animation)
 	v += Vector2(100, 100)
 	var tile = game.tile_data[id2]
 	match type:
