@@ -3,12 +3,12 @@ shader_type canvas_item;
 uniform vec2 mouse;
 uniform float time;
 
-const int iterations = 12;
+uniform int iterations:hint_range(1, 20, 1) = 12;
 uniform float formuparam2 = 0.79;
-uniform float volsteps = 7.0;
-const float stepsize = 0.290;
+uniform int volsteps:hint_range(0, 10, 1) = 7;
+uniform float stepsize = 0.290;
 const float zoom = 1.0;
-const float tile = 0.850;
+uniform float tile:hint_range(0.8, 1.5, 0.01) = 0.850;
 uniform float speed2 = 0.2;
  
 uniform float brightness:hint_range(0.0, 0.01, 0.0001) = 0.0015;
@@ -103,7 +103,7 @@ void fragment() {
 	float t3 = 0.0;	
 	
 	vec3 backCol2 = vec3(0.);
-	for (float r=0.0; r<volsteps; r++) {
+	for (float r=0.0; r<float(volsteps); r++) {
 		vec3 p2=from+(s+zoffset)*dir;// + vec3(0.,0.,zoffset);
 		vec3 p3=from+(s3+zoffset)*dir;// + vec3(0.,0.,zoffset);
 		
@@ -137,7 +137,7 @@ void fragment() {
 		if( r == 0.0 )
 			fade *= (1. - (sampleShift));
 		// fade in samples as they approach from the distance
-		if( r == volsteps-1.0 )
+		if( r == float(volsteps)-1.0 )
 			fade *= sampleShift;
 		v+=vec3(s1,s1*s1,s1*s1*s1*s1)*a*brightness*fade; // coloring based on distance
 		

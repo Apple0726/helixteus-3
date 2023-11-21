@@ -38,7 +38,7 @@ func _input(event):
 		var light = preload("res://Scenes/STM/STMLight.tscn").instantiate()
 		light.fade_speed = 2.0
 		light.position = position
-		STM_node.add_child(light)
+		STM_node.get_node("GlowLayer").add_child(light)
 		get_node("../Control/LightActivateLabel").visible = false
 		
 		

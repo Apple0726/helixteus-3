@@ -1,4 +1,4 @@
-[gd_scene load_steps=30 format=3 uid="uid://ck487g2ydj8tn"]
+[gd_scene load_steps=32 format=3 uid="uid://ck487g2ydj8tn"]
 
 [ext_resource type="Script" path="res://Scripts/ShipTravelMinigame2.gd" id="1_8lr8q"]
 [ext_resource type="Script" path="res://Scripts/STMShip.gd" id="2_dfkgr"]
@@ -12,6 +12,7 @@
 [ext_resource type="Texture2D" uid="uid://6tq7tm3vvims" path="res://Graphics/Weapons/bomb1.png" id="10_yqhvw"]
 [ext_resource type="Texture2D" uid="uid://bagqruqqqw580" path="res://Graphics/Weapons/light1.png" id="11_1xlo5"]
 [ext_resource type="PackedScene" uid="uid://ca730ks6x5s88" path="res://Scenes/Screenshake.tscn" id="12_npp1l"]
+[ext_resource type="Shader" path="res://Shaders/Starfield.gdshader" id="13_jjtrq"]
 
 [sub_resource type="Shader" id="Shader_yo3bn"]
 code = "shader_type canvas_item;
@@ -154,6 +155,22 @@ glow_intensity = 2.04
 glow_strength = 1.16
 glow_bloom = 0.07
 glow_blend_mode = 0
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_sr1i2"]
+shader = ExtResource("13_jjtrq")
+shader_parameter/mouse = Vector2(1.48, 0)
+shader_parameter/time = 0.0
+shader_parameter/iterations = 12
+shader_parameter/formuparam2 = 0.79
+shader_parameter/volsteps = 7
+shader_parameter/stepsize = 0.29
+shader_parameter/tile = 0.85
+shader_parameter/speed2 = 0.2
+shader_parameter/brightness = 0.0015
+shader_parameter/distfading = 0.56
+shader_parameter/saturation = 0.9
+shader_parameter/cloud = 0.17
+shader_parameter/color = Color(0, 1, 0, 1)
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_vgp4n"]
 shader = ExtResource("5_4dc0n")
@@ -322,6 +339,11 @@ environment = SubResource("Environment_i0p4l")
 
 [node name="GlowLayer" type="CanvasLayer" parent="."]
 layer = -1
+
+[node name="Background" type="ColorRect" parent="GlowLayer"]
+material = SubResource("ShaderMaterial_sr1i2")
+offset_right = 1280.0
+offset_bottom = 720.0
 
 [node name="Laser" type="ColorRect" parent="GlowLayer"]
 visible = false
