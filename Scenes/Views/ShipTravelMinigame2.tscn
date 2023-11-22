@@ -158,19 +158,22 @@ glow_blend_mode = 0
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_sr1i2"]
 shader = ExtResource("13_jjtrq")
-shader_parameter/mouse = Vector2(1.48, 0)
+shader_parameter/position = null
 shader_parameter/time = 0.0
 shader_parameter/iterations = 12
 shader_parameter/formuparam2 = 0.79
 shader_parameter/volsteps = 7
 shader_parameter/stepsize = 0.29
+shader_parameter/zoom = 1.0
 shader_parameter/tile = 0.85
 shader_parameter/speed2 = 0.2
 shader_parameter/brightness = 0.0015
 shader_parameter/distfading = 0.56
 shader_parameter/saturation = 0.9
+shader_parameter/transverseSpeed = 1.0
 shader_parameter/cloud = 0.17
 shader_parameter/color = Color(0, 1, 0, 1)
+shader_parameter/max_alpha = 1.0
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_vgp4n"]
 shader = ExtResource("5_4dc0n")

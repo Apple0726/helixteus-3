@@ -1620,7 +1620,7 @@ func switch_view(new_view:String, other_params:Dictionary = {}):
 					$UI.remove_child(HUD)
 				battle = battle_scene.instantiate()
 				add_child(battle)
-				show_starfield(0.00012, {"max_alpha":1.0, "zoom":0.8})
+				show_starfield($Starfield, 0.00012, {"max_alpha":1.0, "zoom":0.8})
 		if c_v in ["planet", "system", "galaxy", "cluster", "universe", "mining", "science_tree"] and is_instance_valid(HUD) and is_ancestor_of(HUD):
 			HUD.refresh()
 		if c_v == "universe" and is_instance_valid(HUD) and HUD.dimension_btn.visible:
@@ -1822,6 +1822,8 @@ func add_dimension():
 	tween.tween_property(dimension, "modulate", Color.WHITE, 0.2)
 
 func add_universe():
+	var starfield_color_param = 0.1 * pow(1.0 / pow(u_i.age, 0.25) / pow(1.0 / u_i.charge / 4.0, physics_bonus.BI), 0.65)
+	show_starfield($Starfield2, 0.0015, {"max_alpha":0.5, "position":u_i.view.pos, "stepsize":starfield_color_param, "distfading":clamp(remap(starfield_color_param, 0.25, 0.4, 0.73, 0.3), 0.3, 0.73)})
 	if not universe_data[c_u].has("discovered"):
 		reset_collisions()
 		generate_clusters(c_u)
@@ -1862,7 +1864,6 @@ func add_cluster():
 		get_4th_ship()
 
 func add_galaxy():
-	show_starfield(0.00075, {"zoom":2.0, "max_alpha":0.5})
 	if obj_exists("Clusters", c_c):
 		galaxy_data = open_obj("Clusters", c_c)
 	if obj_exists("Galaxies", c_g_g):
@@ -1913,16 +1914,17 @@ func start_system_generation():
 	await generate_system_part()
 	is_generating = false
 
-func show_starfield(max_brightness:float, params:Dictionary = {}):
-	$Starfield.material.set_shader_parameter("brightness", 0.0)
+func show_starfield(node, max_brightness:float, params:Dictionary = {}):
+	node.material.set_shader_parameter("brightness", 0.0)
 	for param in params.keys():
-		$Starfield.material.set_shader_parameter(param, params[param])
-	$Starfield.visible = true
+		node.material.set_shader_parameter(param, params[param])
+	node.visible = true
 	var starfield_tween = create_tween()
-	starfield_tween.tween_property($Starfield.material, "shader_parameter/brightness", max_brightness, 0.5)
+	starfield_tween.tween_property(node.material, "shader_parameter/brightness", max_brightness, 0.5)
 	
 func add_system():
-	show_starfield(0.00075, {"max_alpha":0.5, "zoom":0.8})
+	var starfield_color_param = 0.1 * pow(1.0 / pow(u_i.age, 0.25) / pow(1e-9 / galaxy_data[c_g].B_strength, physics_bonus.BI), 0.65)
+	show_starfield($Starfield, 0.00075, {"max_alpha":0.5, "position":system_data[c_s].pos / 10000.0, "stepsize":starfield_color_param, "distfading":clamp(remap(starfield_color_param, 0.15, 0.4, 0.73, 0.3), 0.3, 0.73)})
 	if obj_exists("Galaxies", c_g_g):
 		system_data = open_obj("Galaxies", c_g_g)
 	planet_data = open_obj("Systems", c_s_g)
@@ -1938,7 +1940,8 @@ func add_system():
 		get_2nd_ship()
 
 func add_planet():
-	show_starfield(0.0012, {"max_alpha":1.0, "zoom":0.8})
+	var starfield_color_param = 0.1 * pow(1.0 / pow(u_i.age, 0.25) / pow(1e-9 / galaxy_data[c_g].B_strength, physics_bonus.BI), 0.65)
+	show_starfield($Starfield, 0.0012, {"max_alpha":0.8, "position":system_data[c_s].pos / 10000.0, "stepsize":starfield_color_param, "distfading":clamp(remap(starfield_color_param, 0.15, 0.4, 0.73, 0.3), 0.3, 0.73)})
 	planet_data = open_obj("Systems", c_s_g)
 	if not planet_data[c_p].has("discovered") or open_obj("Planets", c_p_g).is_empty():
 		generate_tiles(c_p)
@@ -1957,6 +1960,7 @@ func remove_dimension():
 	view.dragged = true
 
 func remove_universe():
+	$Starfield2.visible = false
 	view.remove_obj("universe")
 
 func remove_cluster():
@@ -1967,7 +1971,6 @@ func remove_cluster():
 	Helper.save_obj("Clusters", c_c, galaxy_data)
 
 func remove_galaxy():
-	$Starfield.visible = false
 	view.remove_obj("galaxy")
 	Helper.save_obj("Clusters", c_c, galaxy_data)
 	Helper.save_obj("Galaxies", c_g_g, system_data)
@@ -2389,6 +2392,9 @@ func generate_systems(id:int):
 	var B = galaxy_data[id].B_strength#Magnetic field strength
 	var dark_matter = galaxy_data[id].dark_matter
 	var G = u_i.gravitational
+	# Higher star_mass_param: lower temperature (older) stars
+	# Higher B: hotter stars
+	var star_mass_param = pow(u_i.age, 0.25) * pow(1e-9 / B, physics_bonus.BI)
 	for i in range(0, total_sys_num):
 		if c_g_g == 0 and i == 0:
 			show.s_bk_button = true
@@ -2396,15 +2402,12 @@ func generate_systems(id:int):
 		var s_i:Dictionary = {}
 		s_i.parent = id
 		s_i.planets = []
-		
 		var num_stars:int = max(-log(randf()/dark_matter)/1.5 + 1, 1)
 		var stars = []
 		for _j in range(0, num_stars):
-			var star = {}#Higher a: lower temperature (older) stars
-			var a = (1.65 if gc_stars_remaining == 0 else 4.0) * pow(u_i.get("age", 1.0), 0.25)
-			a *= pow(e(1, -9) / B, physics_bonus.BI)#Higher B: hotter stars
+			var star = {}
 			#Solar masses
-			var mass:float = -log(randf()) / a
+			var mass:float = -log(randf()) / star_mass_param / (1.65 if gc_stars_remaining == 0 else 4.0)
 			var star_size = 1
 			var star_class = ""
 			#Temperature in K

@@ -147,11 +147,14 @@ func _process(delta):
 				global_position.y = 620 + margin
 			elif bottom_margin < 100:
 				global_position.y = 100 - margin
-	if game.c_v == "universe" and not changed and not $AnimationPlayer.is_playing():
-		if obj_scaled and scale.x > CLUSTER_SCALE_THRESHOLD:
-			fade_out_clusters()
-		elif not obj_scaled and scale.x < CLUSTER_SCALE_THRESHOLD:
-			fade_out_clusters()
+	if game.c_v == "universe":
+		game.get_node("Starfield2").material.set_shader_parameter("position", position / 10000.0 / sqrt(scale.x))
+		#game.get_node("Starfield2").material.set_shader_parameter("zoom", scale.x)
+		if not changed and not $AnimationPlayer.is_playing():
+			if obj_scaled and scale.x > CLUSTER_SCALE_THRESHOLD:
+				fade_out_clusters()
+			elif not obj_scaled and scale.x < CLUSTER_SCALE_THRESHOLD:
+				fade_out_clusters()
 
 func fade_out_clusters():
 	$AnimationPlayer.play("Fade")

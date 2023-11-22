@@ -3,6 +3,7 @@ extends Node2D
 @onready var game = get_node("/root/Game")
 
 var dimensions:float
+var dimensions_temp:float
 
 const DIST_MULT = 200.0
 var obj_btns = []
@@ -57,7 +58,7 @@ func _ready():
 		var radius = pow(star["size"] / game.SYSTEM_SCALE_DIV, 0.35)
 		star_btn.scale *= radius
 		system.position = s_i["pos"]
-		dimensions = max(dimensions, s_i.pos.length())
+		dimensions_temp = max(dimensions_temp, s_i.pos.length())
 		Helper.add_overlay(system, self, "system", s_i, overlays)
 		if s_i.has("discovered"):
 			discovered_sys.append(s_i)
@@ -70,6 +71,7 @@ func _ready():
 			await get_tree().process_frame
 	if len(discovered_sys) > 0:
 		bldg_overlay_timer.start(0.05)
+	dimensions = dimensions_temp
 
 func _draw():
 	if game.galaxy_data[game.c_g].has("wormholes"):

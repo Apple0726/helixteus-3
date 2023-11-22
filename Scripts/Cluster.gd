@@ -3,6 +3,7 @@ extends Node2D
 @onready var game = get_node("/root/Game")
 
 var dimensions:float
+var dimensions_temp:float
 
 const DIST_MULT = 200.0
 var obj_btns:Array = []
@@ -38,7 +39,7 @@ func _ready():
 		var tween = create_tween()
 		tween.tween_property(galaxy_btn, "modulate:a", 1.0, 0.15)
 		galaxy.position = g_i["pos"]
-		dimensions = max(dimensions, g_i.pos.length())
+		dimensions_temp = max(dimensions_temp, g_i.pos.length())
 		Helper.add_overlay(galaxy, self, "galaxy", g_i, overlays)
 		if g_i.has("GS"):
 			var GS_marker:Sprite2D = Sprite2D.new()
@@ -75,6 +76,7 @@ func _ready():
 		game.u_i.cluster_data[game.c_c].conquered = true
 	if len(discovered_gal) > 0:
 		bldg_overlay_timer.start(0.05)
+	dimensions = dimensions_temp
 
 func on_bldg_overlay_timeout():
 	var g_i = discovered_gal[curr_bldg_overlay]

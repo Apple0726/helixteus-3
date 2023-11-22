@@ -1,13 +1,13 @@
 shader_type canvas_item;
 
-uniform vec2 mouse;
+uniform vec2 position;
 uniform float time;
 
 uniform int iterations:hint_range(1, 20, 1) = 12;
 uniform float formuparam2 = 0.79;
 uniform int volsteps:hint_range(0, 10, 1) = 7;
 uniform float stepsize = 0.290;
-const float zoom = 1.0;
+uniform float zoom = 1.0;
 uniform float tile:hint_range(0.8, 1.5, 0.01) = 0.850;
 uniform float speed2 = 0.2;
  
@@ -17,10 +17,10 @@ uniform float distfading = 0.560;
 uniform float saturation = 0.90;
 
 
-const float transverseSpeed = 1.0; //zoom;
+uniform float transverseSpeed = 1.0; //zoom;
 uniform float cloud = 0.17;
 uniform vec4 color:source_color = vec4(1.0);
-
+uniform float max_alpha:hint_range(0.0, 1.0, 0.01) = 1.0;
  
 float triangle(float x, float a) { 
 	float output2 = 2.0*abs(  3.0*  ( (x/a) - floor( (x/a) + 0.5) ) ) - 1.0;
@@ -45,7 +45,7 @@ float field(in vec3 p) {
 }
 
 void fragment() {
-    vec2 uv2 = 2. * FRAGCOORD.xy / vec2(512) - 1.;
+    vec2 uv2 = 2. * FRAGCOORD.xy * zoom / vec2(512) - 1.;
 	vec2 uvs = uv2 * vec2(512)  / 512.;
 	
 	//float time = TIME;
@@ -67,10 +67,10 @@ void fragment() {
 	mat2 rot_xy = mat2(vec2(cos(a_xy),sin(a_xy)),vec2(-sin(a_xy),cos(a_xy)));
 	
 	float v2 =1.0;	
-	vec3 dir=vec3(uv*zoom,1.); 
+	vec3 dir=vec3(uv,1.); 
 	vec3 from=vec3(0.0, 0.0,0.0);                               
-        from.x -= 2.0*(mouse.x-0.5);
-        from.y -= 2.0*(mouse.y-0.5);
+        from.x -= 2.0*(position.x-0.5);
+        from.y -= 2.0*(position.y-0.5);
 
 	vec3 forward = vec3(0.,0.,1.);   
 	from.x += transverseSpeed*(1.0)*cos(0.01*time) + 0.001*time;
@@ -153,13 +153,14 @@ void fragment() {
 	vec4 forCol2 = vec4(v*.01,1.);	
 	backCol2 *= cloud;	
 	//backCol2.b *= 1.8;
-	backCol2.b *= color.b;
+	backCol2.b *= color.b * 2.0;
 	//backCol2.r *= 0.05;	
 	backCol2.r *= color.r;	
 	backCol2.g *= color.g;	
 	
 	backCol2.b = 0.5*mix(backCol2.g, backCol2.b, 0.8);
-	backCol2.g = 0.0;
+	//backCol2.g = 0.0;
 	backCol2.bg = mix(backCol2.gb, backCol2.bg, 0.5*(cos(time*0.01) + 1.0));	
 	COLOR = forCol2 + vec4(backCol2, 1.0);
+	COLOR.a = min(max_alpha, COLOR.a);
 }

@@ -5,13 +5,13 @@ shader_type canvas_item;
 
 uniform vec2 position;
 uniform int iterations:hint_range(1, 30, 1) = 17;
-uniform float formuparam:hint_range(0.5, 0.55, 0.001) = 0.53;
+uniform float formuparam:hint_range(0.5, 1.0, 0.01) = 0.53;
 
 uniform int volsteps = 10;
-uniform float stepsize:hint_range(0.0, 0.2, 0.001) = 0.1;
+uniform float stepsize:hint_range(0.0, 0.4, 0.01) = 0.1;
 
 uniform float zoom   = 0.800;
-uniform float tile   = 0.850;
+uniform float tile:hint_range(0.8, 0.9, 0.001)   = 0.850;
 uniform float speed  = 0.001;
 
 uniform float brightness:hint_range(0.0, 0.01, 0.0001) = 0.0015;
