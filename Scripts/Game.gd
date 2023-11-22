@@ -437,29 +437,28 @@ var bottom_info_action:String = ""
 var metal_textures:Dictionary = {}
 var game_tween:Tween
 var view_tween:Tween
-var stars_tween:Tween
 var tile_brightness:Array = []
 var tile_avg_mod:Array = []
 
-func place_BG_stars():#shown in title screen and planet view
-	for i in 500:
-		var star:Sprite2D = Sprite2D.new()
-		star.texture = star_texture
-		star.scale *= 0.15
-		star.modulate = Helper.get_star_modulate("%s%s" % [["M", "K", "G", "F", "A", "B", "O"][randi() % 7], randi() % 10])
-		star.rotation = randf_range(0, 2*PI)
-		star.position.x = randf_range(0, 1280)
-		star.position.y = randf_range(0, 720)
-		$Stars/Stars.add_child(star)
-	for i in 50:
-		var star:Sprite2D = Sprite2D.new()
-		star.texture = star_texture
-		star.scale *= 0.3
-		star.modulate = Helper.get_star_modulate("%s%s" % [["M", "K", "G", "F", "A", "B", "O"][randi() % 7], randi() % 10])
-		star.rotation = randf_range(0, 2*PI)
-		star.position.x = randf_range(0, 1280)
-		star.position.y = randf_range(0, 720)
-		$Stars/Stars.add_child(star)
+#func place_BG_stars():#shown in title screen and planet view
+#	for i in 500:
+#		var star:Sprite2D = Sprite2D.new()
+#		star.texture = star_texture
+#		star.scale *= 0.15
+#		star.modulate = Helper.get_star_modulate("%s%s" % [["M", "K", "G", "F", "A", "B", "O"][randi() % 7], randi() % 10])
+#		star.rotation = randf_range(0, 2*PI)
+#		star.position.x = randf_range(0, 1280)
+#		star.position.y = randf_range(0, 720)
+#		$Stars/Stars.add_child(star)
+#	for i in 50:
+#		var star:Sprite2D = Sprite2D.new()
+#		star.texture = star_texture
+#		star.scale *= 0.3
+#		star.modulate = Helper.get_star_modulate("%s%s" % [["M", "K", "G", "F", "A", "B", "O"][randi() % 7], randi() % 10])
+#		star.rotation = randf_range(0, 2*PI)
+#		star.position.x = randf_range(0, 1280)
+#		star.position.y = randf_range(0, 720)
+#		$Stars/Stars.add_child(star)
 
 func place_BG_sc_stars():#shown in (super)cluster view
 	for i in 2000:
@@ -1426,6 +1425,9 @@ func switch_view(new_view:String, other_params:Dictionary = {}):
 	if not other_params.has("dont_fade_anim"):
 		view_tween = create_tween()
 		view_tween.tween_property(view, "modulate", Color(1.0, 1.0, 1.0, 0.0), 0.15)
+		if $Starfield.visible:
+			var starfield_tween = create_tween()
+			starfield_tween.tween_property($Starfield.material, "shader_parameter/brightness", 0.0, 0.15)
 		if is_instance_valid(view.obj) and Settings.enable_shaders:
 			if c_v == "system":
 				var tween2 = create_tween()
@@ -1618,6 +1620,7 @@ func switch_view(new_view:String, other_params:Dictionary = {}):
 					$UI.remove_child(HUD)
 				battle = battle_scene.instantiate()
 				add_child(battle)
+				show_starfield(0.00012, {"max_alpha":1.0, "zoom":0.8})
 		if c_v in ["planet", "system", "galaxy", "cluster", "universe", "mining", "science_tree"] and is_instance_valid(HUD) and is_ancestor_of(HUD):
 			HUD.refresh()
 		if c_v == "universe" and is_instance_valid(HUD) and HUD.dimension_btn.visible:
@@ -1859,7 +1862,7 @@ func add_cluster():
 		get_4th_ship()
 
 func add_galaxy():
-	$Starfield2.visible = true
+	show_starfield(0.00075, {"zoom":2.0, "max_alpha":0.5})
 	if obj_exists("Clusters", c_c):
 		galaxy_data = open_obj("Clusters", c_c)
 	if obj_exists("Galaxies", c_g_g):
@@ -1910,8 +1913,16 @@ func start_system_generation():
 	await generate_system_part()
 	is_generating = false
 
-func add_system():
+func show_starfield(max_brightness:float, params:Dictionary = {}):
+	$Starfield.material.set_shader_parameter("brightness", 0.0)
+	for param in params.keys():
+		$Starfield.material.set_shader_parameter(param, params[param])
 	$Starfield.visible = true
+	var starfield_tween = create_tween()
+	starfield_tween.tween_property($Starfield.material, "shader_parameter/brightness", max_brightness, 0.5)
+	
+func add_system():
+	show_starfield(0.00075, {"max_alpha":0.5, "zoom":0.8})
 	if obj_exists("Galaxies", c_g_g):
 		system_data = open_obj("Galaxies", c_g_g)
 	planet_data = open_obj("Systems", c_s_g)
@@ -1927,9 +1938,7 @@ func add_system():
 		get_2nd_ship()
 
 func add_planet():
-	$Starfield.visible = true
-	stars_tween = create_tween()
-	stars_tween.tween_property($Stars/Stars, "modulate", Color.WHITE, 0.3)
+	show_starfield(0.0012, {"max_alpha":1.0, "zoom":0.8})
 	planet_data = open_obj("Systems", c_s_g)
 	if not planet_data[c_p].has("discovered") or open_obj("Planets", c_p_g).is_empty():
 		generate_tiles(c_p)
@@ -1958,7 +1967,7 @@ func remove_cluster():
 	Helper.save_obj("Clusters", c_c, galaxy_data)
 
 func remove_galaxy():
-	$Starfield2.visible = false
+	$Starfield.visible = false
 	view.remove_obj("galaxy")
 	Helper.save_obj("Clusters", c_c, galaxy_data)
 	Helper.save_obj("Galaxies", c_g_g, system_data)
@@ -1974,10 +1983,6 @@ func remove_planet(save_zooms:bool = true):
 	if is_instance_valid(active_panel):
 		fade_out_panel(active_panel)
 	active_panel = null
-	if is_instance_valid(stars_tween):
-		stars_tween.kill()
-	stars_tween = create_tween()
-	stars_tween.tween_property($Stars/Stars, "modulate", Color(1, 1, 1, 0), 0.2)
 	view.remove_obj("planet", save_zooms)
 	vehicle_panel.tile_id = -1
 	Helper.save_obj("Systems", c_s_g, planet_data)
@@ -4034,7 +4039,6 @@ func fade_out_title(fn:String):
 	tween.tween_property($TitleBackground, "modulate", Color(1, 1, 1, 0), 0.5)
 	tween.tween_property($Star/Sprite2D.material, "shader_parameter/brightness_offset", 0.0, 0.5)
 	tween.tween_property($Star, "modulate", Color(1, 1, 1, 0), 0.5)
-	tween.tween_property($Stars/Stars, "modulate", Color(1, 1, 1, 0), 0.5)
 	tween.tween_property($Star/Sprite2D.material, "shader_parameter/alpha", 0.0, 0.5)
 	await tween.finished
 	$Star.visible = false

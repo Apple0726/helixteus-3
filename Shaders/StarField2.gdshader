@@ -24,6 +24,8 @@ uniform sampler2D coloramp;
 uniform float colorampMix = .5;
 uniform bool isColoramp;
 
+uniform float max_alpha:hint_range(0.0, 1.0, 0.01) = 1.0;
+
 void fragment()
 {
 	vec2 fragCoord = FRAGCOORD.xy;
@@ -77,5 +79,5 @@ void fragment()
 	if (isColoramp) {
 		COLOR += texture(coloramp, vec2(v.r * .01, 0.)) * colorampMix;
 	}
-
+	COLOR.a = min(COLOR.a, max_alpha);
 }
