@@ -1413,8 +1413,9 @@ func add_bldg_sprite(pos:Vector2, _name:int, texture, building_animation:bool = 
 		bldg.material.set_shader_parameter("alpha", 0.0)
 		bldg.material.set_shader_parameter("progress", 0.0)
 		var tween = create_tween()
+		tween.set_parallel(true)
 		tween.tween_property(bldg.material, "shader_parameter/alpha", 1.0, 0.5)
-		tween.tween_property(bldg.material, "shader_parameter/progress", 1.0, 0.8)
+		tween.tween_property(bldg.material, "shader_parameter/progress", 1.0, 0.8).set_delay(0.3)
 	$Buildings.add_child(bldg)
 	return bldg
 	

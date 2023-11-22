@@ -71,7 +71,6 @@ func refresh_planets():
 		var orbit = preload("res://Scenes/Orbit.tscn").instantiate()
 		add_child(orbit)
 		orbit.radius = p_i.distance * scale_mult
-		orbit.alpha = clamp(view.scale.x * orbit.radius / 300.0, 0.3, 1)
 		orbit.add_to_group("orbits")
 		var planet = preload("res://Scenes/PlanetButton.tscn").instantiate()
 		var planet_btn = planet.get_node("Button")
@@ -971,7 +970,7 @@ func _process(_delta):
 		if glow.modulate.a != 0:
 			glow.visible = true
 	for orbit in get_tree().get_nodes_in_group("orbits"):
-		orbit.alpha = clamp(view.scale.x * orbit.radius / 300.0, 0.1, 1)
+		orbit.alpha = clamp(view.scale.x * orbit.radius / 300.0, 0.05, 0.6)
 		orbit.queue_redraw()
 	var curr_time = Time.get_unix_time_from_system()
 	for time_bar_obj in star_time_bars:

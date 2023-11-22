@@ -504,8 +504,8 @@ func _ready():
 	for key in Mods.added_overclocks:
 		overclocks_info[key] = Mods.added_overclocks[key]
 	
-	place_BG_stars()
-	place_BG_sc_stars()
+#	place_BG_stars()
+#	place_BG_sc_stars()
 	for i in range(3, 13):
 		planet_textures.append(load("res://Graphics/Planets/%s.png" % i))
 		if i <= 10:
@@ -1859,6 +1859,7 @@ func add_cluster():
 		get_4th_ship()
 
 func add_galaxy():
+	$Starfield2.visible = true
 	if obj_exists("Clusters", c_c):
 		galaxy_data = open_obj("Clusters", c_c)
 	if obj_exists("Galaxies", c_g_g):
@@ -1910,6 +1911,7 @@ func start_system_generation():
 	is_generating = false
 
 func add_system():
+	$Starfield.visible = true
 	if obj_exists("Galaxies", c_g_g):
 		system_data = open_obj("Galaxies", c_g_g)
 	planet_data = open_obj("Systems", c_s_g)
@@ -1925,6 +1927,7 @@ func add_system():
 		get_2nd_ship()
 
 func add_planet():
+	$Starfield.visible = true
 	stars_tween = create_tween()
 	stars_tween.tween_property($Stars/Stars, "modulate", Color.WHITE, 0.3)
 	planet_data = open_obj("Systems", c_s_g)
@@ -1955,16 +1958,19 @@ func remove_cluster():
 	Helper.save_obj("Clusters", c_c, galaxy_data)
 
 func remove_galaxy():
+	$Starfield2.visible = false
 	view.remove_obj("galaxy")
 	Helper.save_obj("Clusters", c_c, galaxy_data)
 	Helper.save_obj("Galaxies", c_g_g, system_data)
 
 func remove_system():
+	$Starfield.visible = false
 	view.remove_obj("system")
 	Helper.save_obj("Galaxies", c_g_g, system_data)
 	Helper.save_obj("Systems", c_s_g, planet_data)
 
 func remove_planet(save_zooms:bool = true):
+	$Starfield.visible = false
 	if is_instance_valid(active_panel):
 		fade_out_panel(active_panel)
 	active_panel = null

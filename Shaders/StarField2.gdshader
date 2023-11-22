@@ -3,6 +3,7 @@
 // License: MIT
 shader_type canvas_item;
 
+uniform vec2 position;
 uniform int iterations:hint_range(1, 30, 1) = 17;
 uniform float formuparam:hint_range(0.5, 0.55, 0.001) = 0.53;
 
@@ -32,6 +33,7 @@ void fragment()
 	//get coords and direction
 	vec2 uv=fragCoord.xy/iResolution.xy-.5;
 	uv.y*=iResolution.y/iResolution.x;
+	uv+=position;
 	vec3 dir=vec3(uv*zoom,1.);
 	float time=iTime*speed+.25;
 
