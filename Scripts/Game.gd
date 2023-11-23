@@ -1425,9 +1425,15 @@ func switch_view(new_view:String, other_params:Dictionary = {}):
 	if not other_params.has("dont_fade_anim"):
 		view_tween = create_tween()
 		view_tween.tween_property(view, "modulate", Color(1.0, 1.0, 1.0, 0.0), 0.15)
-		if $Starfield.visible:
+		if $Starfield.visible and not (old_view == "system" and new_view == "planet"):
 			var starfield_tween = create_tween()
-			starfield_tween.tween_property($Starfield.material, "shader_parameter/brightness", 0.0, 0.15)
+			if old_view == "planet" and new_view == "system":
+				starfield_tween.tween_property($Starfield.material, "shader_parameter/brightness", 0.00075, 0.15)
+			else:
+				starfield_tween.tween_property($Starfield.material, "shader_parameter/brightness", 0.0, 0.15)
+		if $Starfield2.visible:
+			var starfield_tween = create_tween()
+			starfield_tween.tween_property($Starfield2.material, "shader_parameter/brightness", 0.0, 0.15)
 		if is_instance_valid(view.obj) and Settings.enable_shaders:
 			if c_v == "system":
 				var tween2 = create_tween()
@@ -1914,7 +1920,6 @@ func start_system_generation():
 	is_generating = false
 
 func show_starfield(node, max_brightness:float, params:Dictionary = {}):
-	node.material.set_shader_parameter("brightness", 0.0)
 	for param in params.keys():
 		node.material.set_shader_parameter(param, params[param])
 	node.visible = true

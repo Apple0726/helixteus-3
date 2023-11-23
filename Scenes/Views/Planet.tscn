@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=3 uid="uid://bmmss4usqtscn"]
+[gd_scene load_steps=11 format=3 uid="uid://bmmss4usqtscn"]
 
 [ext_resource type="PackedScene" path="res://Scenes/WhiteRect.tscn" id="1"]
 [ext_resource type="TileSet" uid="uid://c7dmux1vdaraf" path="res://Resources/LakeTileSet.tres" id="2"]
@@ -7,6 +7,11 @@
 [ext_resource type="TileSet" uid="uid://dfiuyho24np11" path="res://Resources/ObstaclesTileSet.tres" id="4_ivklb"]
 [ext_resource type="Script" path="res://Scripts/BadApple.gd" id="7_yxni4"]
 [ext_resource type="Texture2D" uid="uid://7dx34oq2nf2r" path="res://icon.png" id="12"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_g1ur1"]
+draw_center = false
+shadow_color = Color(0, 0, 0, 1)
+shadow_size = 40
 
 [sub_resource type="Shader" id="3"]
 code = "shader_type canvas_item;
@@ -27,6 +32,10 @@ shader = SubResource("3")
 
 [node name="Planet" type="Node2D"]
 script = ExtResource("3")
+
+[node name="Shadow" type="Panel" parent="."]
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_g1ur1")
 
 [node name="TileMap" type="TileMap" parent="."]
 tile_set = ExtResource("4")

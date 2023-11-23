@@ -92,6 +92,7 @@ func _ready():
 	var lake_tiles:Array = [[], []]
 	var ash_tiles:Array = []
 	var soil_tiles:Array = []
+	var aurora_tiles:Array = []
 	for i in wid:
 		for j in wid:
 			var id2 = i % wid + j * wid
@@ -118,16 +119,7 @@ func _ready():
 			if tile.has("depth") and not tile.has("bridge") and not tile.has("crater"):
 				$Obstacles.set_cell(0, Vector2i(i, j), 2, Vector2(0, 0))
 			if tile.has("aurora"):
-				var aurora = game.aurora_scene.instantiate()
-				aurora.position = Vector2(i, j) * 200 + Vector2(100, 100)
-				aurora.amount = min(5 + int(tile.aurora * 10), 50)
-				aurora.lifetime = 3.0 / game.u_i.time_speed / tile.get("time_speed_bonus", 1.0)
-				#aurora.process_material["shader_parameter/strength"] = 1.0 if randf() < 0.5 else 0.0
-				#var hue:float = 0.4 + max(0, pow(tile.aurora.au_int, 0.35) - pow(4, 0.25)) / 10
-				var hue:float = 0.4 + log(tile.aurora + 1.0) / 10.0
-				var sat:float = 1.0 - floor(hue - 0.4) / 5.0
-				aurora.modulate = Color.from_hsv(fmod(hue, 1.0), sat, 1.0) * max(log(tile.aurora) / 10.0, 1.0)
-				$Auroras.add_child(aurora)
+				aurora_tiles.append(id2)
 			if tile.has("unique_bldg"):
 				if tile.unique_bldg.name != UniqueBuilding.NUCLEAR_FUSION_REACTOR or id2 in nuclear_fusion_reactor_main_tiles:
 					add_unique_building_sprite(tile, id2, Vector2(i, j) * 200)
@@ -157,6 +149,35 @@ func _ready():
 				lake_tiles[tile.lake-1].append(Vector2i(i, j))
 			if tile.has("ash"):
 				ash_tiles.append(Vector2i(i, j))
+	if len(aurora_tiles) > 400:
+		for id in aurora_tiles:
+			var tile = game.tile_data[id]
+			var i:int = id % wid
+			var j:int = id / wid
+			var aurora_image = Sprite2D.new()
+			aurora_image.texture = preload("res://Graphics/Tiles/Auroras.png")
+			aurora_image.position = Vector2(i, j) * 200 + Vector2(100, 100)
+			var hue:float = 0.4 + log(tile.aurora + 1.0) / 10.0
+			var sat:float = 1.0 - floor(hue - 0.4) / 5.0
+			aurora_image.modulate = Color.from_hsv(fmod(hue, 1.0), sat, 1.0) * max(log(tile.aurora) / 10.0, 1.0)
+			$Auroras.add_child(aurora_image)
+	else:
+		for id in aurora_tiles:
+			var tile = game.tile_data[id]
+			var i:int = id % wid
+			var j:int = id / wid
+			var aurora = game.aurora_scene.instantiate()
+			aurora.position = Vector2(i, j) * 200 + Vector2(100, 100)
+			aurora.amount = min(5 + int(tile.aurora * 10), 50)
+			aurora.lifetime = 3.0 / game.u_i.time_speed / tile.get("time_speed_bonus", 1.0)
+			#aurora.process_material["shader_parameter/strength"] = 1.0 if randf() < 0.5 else 0.0
+			#var hue:float = 0.4 + max(0, pow(tile.aurora.au_int, 0.35) - pow(4, 0.25)) / 10
+			var hue:float = 0.4 + log(tile.aurora + 1.0) / 10.0
+			var sat:float = 1.0 - floor(hue - 0.4) / 5.0
+			aurora.modulate = Color.from_hsv(fmod(hue, 1.0), sat, 1.0) * max(log(tile.aurora) / 10.0, 1.0)
+			$Auroras.add_child(aurora)
+	$Shadow.size = Vector2.ONE * 200 * wid
+	$Shadow["theme_override_styles/panel"].shadow_color = game.tile_avg_mod[p_i.type - 3] * $TileMap.modulate
 	var lake_state_id = {
 		"s":0,
 		"l":1,

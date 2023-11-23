@@ -1,22 +1,22 @@
 [gd_scene load_steps=60 format=3 uid="uid://dt6rr51kda1rb"]
 
 [ext_resource type="Script" path="res://Scripts/Game.gd" id="2"]
-[ext_resource type="Texture2D" uid="uid://bot5itow8o46" path="res://Graphics/Buttons/settings.png" id="3"]
-[ext_resource type="Texture2D" uid="uid://tj2a3sm8lqsc" path="res://Graphics/Title screen/Background.png" id="4"]
-[ext_resource type="Texture2D" uid="uid://wb22jx3nw1hw" path="res://Graphics/Title screen/Godot.png" id="5"]
-[ext_resource type="Texture2D" uid="uid://dju5rok3txbow" path="res://Graphics/Title screen/GitHub.png" id="6"]
+[ext_resource type="Texture2D" uid="uid://oi8jj8etn7cq" path="res://Graphics/Buttons/settings.png" id="3"]
+[ext_resource type="Texture2D" uid="uid://cg63kmqox3tvp" path="res://Graphics/Title screen/Background.png" id="4"]
+[ext_resource type="Texture2D" uid="uid://ckvf1og7h3yik" path="res://Graphics/Title screen/Godot.png" id="5"]
+[ext_resource type="Texture2D" uid="uid://byn3jxyt83rjj" path="res://Graphics/Title screen/GitHub.png" id="6"]
 [ext_resource type="Theme" uid="uid://cp2u1kgj60ic" path="res://Resources/default_theme.tres" id="7"]
-[ext_resource type="AudioStream" uid="uid://now83kjjyv82" path="res://Audio/SFX/click.ogg" id="8"]
+[ext_resource type="AudioStream" uid="uid://elek86vrpr1y" path="res://Audio/SFX/click.ogg" id="8"]
 [ext_resource type="Shader" path="res://Shaders/StarField2.gdshader" id="8_axm3r"]
 [ext_resource type="PackedScene" uid="uid://bx5co4ssobffh" path="res://Scenes/Languages.tscn" id="9"]
 [ext_resource type="Shader" path="res://Shaders/Starfield.gdshader" id="9_0dcpd"]
-[ext_resource type="Texture2D" uid="uid://cmv0bkgwxfw76" path="res://Graphics/Title screen/Discord.png" id="11"]
+[ext_resource type="Texture2D" uid="uid://dglk67f8xs41i" path="res://Graphics/Title screen/Discord.png" id="11"]
 [ext_resource type="Shader" path="res://Shaders/Cluster.gdshader" id="19_4v34t"]
 [ext_resource type="PackedScene" uid="uid://ddf2xjwcht77u" path="res://Scenes/CloseButton.tscn" id="25"]
-[ext_resource type="Texture2D" uid="uid://cyawqiuggcvk1" path="res://Graphics/Ships/Ship0.png" id="26"]
+[ext_resource type="Texture2D" uid="uid://f6vce2wfk8js" path="res://Graphics/Ships/Ship0.png" id="26"]
 [ext_resource type="Shader" path="res://Shaders/Blur.gdshader" id="30"]
 [ext_resource type="Shader" path="res://Shaders/Star.gdshader" id="31"]
-[ext_resource type="Texture2D" uid="uid://boakjwemvla83" path="res://Graphics/Effects/spotlight_4.png" id="32"]
+[ext_resource type="Texture2D" uid="uid://dr8l581d8rjhg" path="res://Graphics/Effects/spotlight_4.png" id="32"]
 [ext_resource type="PackedScene" uid="uid://dtk1md86gqsln" path="res://Scenes/Fire.tscn" id="33"]
 [ext_resource type="Shader" path="res://Shaders/ScienceTree.gdshader" id="34"]
 [ext_resource type="PackedScene" uid="uid://c5qfs6oo128dp" path="res://Scenes/Nebula.tscn" id="35"]
@@ -236,7 +236,7 @@ shader_parameter/stepsize = 0.1
 shader_parameter/zoom = 0.8
 shader_parameter/tile = 0.85
 shader_parameter/speed = 0.0
-shader_parameter/brightness = 0.0015
+shader_parameter/brightness = 0.0
 shader_parameter/darkmatter = 0.3
 shader_parameter/distfading = 0.73
 shader_parameter/saturation = 0.85
@@ -256,7 +256,7 @@ shader_parameter/stepsize = 0.12
 shader_parameter/zoom = 1.0
 shader_parameter/tile = 0.85
 shader_parameter/speed2 = 0.2
-shader_parameter/brightness = 0.0015
+shader_parameter/brightness = 0.0
 shader_parameter/distfading = 0.92
 shader_parameter/saturation = 0.9
 shader_parameter/transverseSpeed = 1.0

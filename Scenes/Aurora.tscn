@@ -1,6 +1,6 @@
 [gd_scene load_steps=5 format=3 uid="uid://cfaqrjc0xlrh4"]
 
-[ext_resource type="Texture2D" uid="uid://daitoy7rhsobx" path="res://Graphics/Tiles/Aurora.png" id="1"]
+[ext_resource type="Texture2D" uid="uid://b1agjvgljg3ns" path="res://Graphics/Tiles/Aurora.png" id="1"]
 
 [sub_resource type="Gradient" id="Gradient_62gep"]
 offsets = PackedFloat32Array(0, 0.512, 1)
