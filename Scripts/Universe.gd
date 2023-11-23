@@ -3,7 +3,7 @@ extends Node2D
 @onready var game = self.get_parent().get_parent()
 @onready var view = self.get_parent()
 
-var dimensions:float = 1000.0
+var dimensions:float = 500.0
 
 var clusters_info = []
 var btns = []

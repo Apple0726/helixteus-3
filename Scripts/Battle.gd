@@ -109,20 +109,20 @@ func _ready():
 			star_spr.texture = load("res://Graphics/Effects/spotlight_%s.png" % [int(star.temperature) % 3 + 4])
 			star_spr.scale *= 0.5 * star.size / (p_i.distance / 500)
 			var star_mod = Helper.get_star_modulate(star["class"])
-			star_spr.modulate = star_mod# * clamp(remap(star_spr.scale.x, 1.0, 2.25, 1.5, 1.02), 1.02, 1.5)
 			
 			star_spr.material = ShaderMaterial.new()
 			star_spr.material.shader = preload("res://Shaders/Star.gdshader")
 			star_spr.material.set_shader_parameter("time_offset", 10.0 * randf())
 			star_spr.material.set_shader_parameter("color", star_mod)
-			star_spr.material.set_shader_parameter("alpha", 0.0)
+			#star_spr.material.set_shader_parameter("alpha", 0.0)
+			star_spr.modulate = star_mod# * clamp(remap(star_spr.scale.x, 1.0, 2.25, 1.5, 1.02), 1.02, 1.5)
 			
 			star_spr.position.x = remap(p_i.angle, 0, 2 * PI, 100, 1180) + shift
 			star_spr.position.y = 200 * cos(game.c_p * 10) + 300
 			if star_spr.scale.x > 2:
 				bright_star = true
-			star_spr.material = CanvasItemMaterial.new()
-			star_spr.material.blend_mode = CanvasItemMaterial.BLEND_MODE_ADD
+				star_spr.material = CanvasItemMaterial.new()
+				star_spr.material.blend_mode = CanvasItemMaterial.BLEND_MODE_ADD
 			$BG.material.shader = preload("res://Shaders/PlanetBG.gdshader")
 			if star.luminosity > max_star_lum:
 				$BG.material.set_shader_parameter("strength", max(0.3, sqrt(star_spr.scale.x)))
@@ -138,9 +138,6 @@ func _ready():
 			$BG.texture = load("res://Graphics/Planets/BGs/%s.png" % p_i.type)
 		else:
 			$BG.texture = null
-		var num_stars:int = min(9000, 2 * game.galaxy_data[game.c_g].system_num / pow(game.system_data[game.c_s].pos.length(), 0.2))
-		add_stars(num_stars, 0.15)
-		add_stars(num_stars / 10, 0.25)
 		var config = ConfigFile.new()
 		var err = config.load("user://settings.cfg")
 		if err == OK:
@@ -218,23 +215,13 @@ func _ready():
 		send_HXs()
 		refresh_fight_panel()
 		stage = BattleStages.CHOOSING
+	var starfield_color_param = 0.1 * pow(1.0 / pow(game.u_i.age, 0.25) / pow(1.0 / game.u_i.charge / 4.0, game.physics_bonus.BI), 0.65)
+	$Stars/Starfield.material.set_shader_parameter("brightness", 0.00075)
+	$Stars/Starfield.material.set_shader_parameter("max_alpha", 0.5)
+	$Stars/Starfield.material.set_shader_parameter("position", (game.system_data[game.c_s].pos / 10000.0).rotated(game.planet_data[game.c_p].angle))
+	$Stars/Starfield.material.set_shader_parameter("stepsize", starfield_color_param)
+	$Stars/Starfield.material.set_shader_parameter("distfading", clamp(remap(starfield_color_param, 0.15, 0.4, 0.73, 0.3), 0.3, 0.73))
 
-func add_stars(num:int, sc:float):
-	for i in num:
-		var star:Sprite2D = Sprite2D.new()
-		star.texture = star_texture
-		star.scale *= sc
-		star.modulate = Helper.get_star_modulate("%s%s" % [["M", "K", "G", "F", "A", "B", "O"][randi() % 7], randi() % 10]) * 1.5
-		star.modulate.a = randf_range(0, 1)
-		star.rotation = randf_range(0, 2*PI)
-		star.position.x = randf_range(0, 1280)
-		star.position.y = randf_range(0, 720)
-#		if game.enable_shaders and num < 1000:
-#			star.material = ShaderMaterial.new()
-#			star.material.shader = star_shader
-#			star.material.set_shader_parameter("time_offset", 10.0 * randf())
-		$Stars.add_child(star)
-	
 func refresh_fight_panel():
 	$UI/FightPanel/AnimationPlayer.play("FightPanelAnim")
 	for weapon in ["Bullet", "Laser", "Bomb", "Light"]:

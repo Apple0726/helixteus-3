@@ -1620,7 +1620,6 @@ func switch_view(new_view:String, other_params:Dictionary = {}):
 					$UI.remove_child(HUD)
 				battle = battle_scene.instantiate()
 				add_child(battle)
-				show_starfield($Starfield, 0.00012, {"max_alpha":1.0, "zoom":0.8})
 		if c_v in ["planet", "system", "galaxy", "cluster", "universe", "mining", "science_tree"] and is_instance_valid(HUD) and is_ancestor_of(HUD):
 			HUD.refresh()
 		if c_v == "universe" and is_instance_valid(HUD) and HUD.dimension_btn.visible:
@@ -1924,9 +1923,9 @@ func show_starfield(node, max_brightness:float, params:Dictionary = {}):
 	
 func add_system():
 	var starfield_color_param = 0.1 * pow(1.0 / pow(u_i.age, 0.25) / pow(1e-9 / galaxy_data[c_g].B_strength, physics_bonus.BI), 0.65)
-	show_starfield($Starfield, 0.00075, {"max_alpha":0.5, "position":system_data[c_s].pos / 10000.0, "stepsize":starfield_color_param, "distfading":clamp(remap(starfield_color_param, 0.15, 0.4, 0.73, 0.3), 0.3, 0.73)})
 	if obj_exists("Galaxies", c_g_g):
 		system_data = open_obj("Galaxies", c_g_g)
+	show_starfield($Starfield, 0.00075, {"max_alpha":0.5, "position":system_data[c_s].pos / 10000.0, "stepsize":starfield_color_param, "distfading":clamp(remap(starfield_color_param, 0.15, 0.4, 0.73, 0.3), 0.3, 0.73)})
 	planet_data = open_obj("Systems", c_s_g)
 	if not system_data[c_s].has("discovered") or planet_data.is_empty():
 		if c_s_g != 0:

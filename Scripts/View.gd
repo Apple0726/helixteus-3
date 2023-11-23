@@ -148,8 +148,7 @@ func _process(delta):
 			elif bottom_margin < 100:
 				global_position.y = 100 - margin
 	if game.c_v == "universe":
-		game.get_node("Starfield2").material.set_shader_parameter("position", position / 10000.0 / sqrt(scale.x))
-		#game.get_node("Starfield2").material.set_shader_parameter("zoom", scale.x)
+		game.get_node("Starfield2").material.set_shader_parameter("position", (position - Vector2(640, 360)) / 20000.0 / sqrt(scale.x))
 		if not changed and not $AnimationPlayer.is_playing():
 			if obj_scaled and scale.x > CLUSTER_SCALE_THRESHOLD:
 				fade_out_clusters()
@@ -499,7 +498,10 @@ func _zoom_at_point(zoom_change, center:Vector2 = mouse_position):
 	if limit_to_viewport and is_instance_valid(obj) and obj.dimensions and scale.x < 250 / obj.dimensions and zoom_change < 1: #max zoom out
 		return
 	if game.c_v == "planet":
-		if limit_to_viewport and is_instance_valid(obj) and obj.dimensions and scale.x >= 10000 / obj.dimensions and zoom_change > 1: #max zoom in
+		if is_instance_valid(obj) and obj.dimensions and scale.x >= 10000 / obj.dimensions and zoom_change > 1: #max zoom in
+			return
+	elif game.c_v == "universe":
+		if scale.x >= 25.0 and zoom_change > 1: #max zoom in
 			return
 	scale = scale * zoom_change
 	var delta_x = (center.x - global_position.x) * (zoom_change - 1)
