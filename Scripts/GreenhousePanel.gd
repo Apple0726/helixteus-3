@@ -114,8 +114,6 @@ func on_slot_press(_name:String):
 				break
 		for tile_id in tiles_selected:
 			var tile:Dictionary = game.tile_data[tile_id]
-			if tile.bldg.has("is_constructing"):
-				continue
 			var produce:Dictionary = game.seeds_produce[_name].produce.duplicate(true)
 			var H2O_mult = (Data.lake_bonus_values.H2O[tile.lake_elements.H2O] * game.biology_bonus.H2O) if tile.lake_elements.has("H2O") else 1.0
 			for p in produce:

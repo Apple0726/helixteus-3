@@ -151,14 +151,10 @@ func _on_Button_pressed():
 	if game.check_enough(rover_costs):
 		game.deduct_resources(rover_costs)
 		game.popup("ROVER_UNDER_CONSTR", 1.5)
-		tile.bldg.is_constructing = true
-		tile.bldg.rover_id = len(game.rover_data)
-		tile.bldg.construction_date = Time.get_unix_time_from_system()
-		tile.bldg.construction_length = rover_costs.time
-		tile.bldg.XP = round(rover_costs.money / 100.0)
+		game.u_i.xp += round(rover_costs.money / 100.0)
 		var rover_data:Dictionary = {
 			"c_p":game.c_p,
-			"ready":false,
+			"ready":true,
 			"HP":round((HP + HP_bonus) * mult * engi_mult),
 			"atk":round(atk * mult * engi_mult),
 			"def":round(def + def_bonus),
@@ -176,12 +172,10 @@ func _on_Button_pressed():
 		for i in len(game.rover_data):
 			if game.rover_data[i] == null:
 				game.rover_data[i] = rover_data
-				tile.bldg.rover_id = i
 				append = false
 				break
 		if append:
 			game.rover_data.append(rover_data)
-		game.view.obj.add_time_bar(game.c_t, "bldg")
 		game.toggle_panel(self)
 #		if not game.show.has("vehicles_button"):
 #			game.show.vehicles_button = true

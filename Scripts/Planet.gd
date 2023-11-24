@@ -483,13 +483,9 @@ func constr_bldg(tile_id:int, curr_time:int, _bldg_to_construct:int, mass_build:
 			if not mass_build:
 				game.popup(tr("NOT_ADJACENT_TO_LAKE"), 1.5)
 			return
-	var constr_costs2:Dictionary = constr_costs_total.duplicate()
-	if game.subject_levels.dimensional_power >= 1:
-		constr_costs2.time = 0.2
-	else:
-		constr_costs2.time /= game.u_i.time_speed
-	if game.check_enough(constr_costs2):
-		game.deduct_resources(constr_costs2)
+	if game.check_enough(constr_costs_total):
+		var current_time = Time.get_unix_time_from_system()
+		game.deduct_resources(constr_costs_total)
 		game.stats_univ.bldgs_built += 1
 		game.stats_dim.bldgs_built += 1
 		game.stats_global.bldgs_built += 1
@@ -519,10 +515,7 @@ func constr_bldg(tile_id:int, curr_time:int, _bldg_to_construct:int, mass_build:
 			game.HUD.shop.visible = true
 			game.HUD.MU.visible = true
 			game.HUD.get_node("Bottom/Panel").visible = true
-		tile.bldg.is_constructing = true
-		tile.bldg.construction_date = curr_time
-		tile.bldg.construction_length = constr_costs2.time
-		tile.bldg.XP = constr_costs2.money / 100.0
+		tile.bldg.XP = constr_costs_total.money / 100.0
 		var path_1_value
 		if _bldg_to_construct != Building.PROBE_CONSTRUCTION_CENTER:
 			path_1_value = Data.path_1[_bldg_to_construct].value
@@ -532,7 +525,7 @@ func constr_bldg(tile_id:int, curr_time:int, _bldg_to_construct:int, mass_build:
 			tile.bldg.path_2 = 1
 			tile.bldg.path_2_value = Data.path_2[_bldg_to_construct].value
 		if _bldg_to_construct in [Building.STONE_CRUSHER, Building.GLASS_FACTORY, Building.STEAM_ENGINE]:
-			tile.bldg.collect_date = tile.bldg.construction_date + tile.bldg.construction_length
+			tile.bldg.collect_date = current_time
 			tile.bldg.stored = 0
 		if _bldg_to_construct in [Building.STONE_CRUSHER, Building.GLASS_FACTORY, Building.STEAM_ENGINE, Building.CENTRAL_BUSINESS_DISTRICT]:
 			tile.bldg.path_3 = 1
@@ -571,29 +564,12 @@ func constr_bldg(tile_id:int, curr_time:int, _bldg_to_construct:int, mass_build:
 				game.boring_machine_data[game.c_p_g] = {"tiles":[tile_id], "c_s_g":game.c_s_g, "c_p":game.c_p}
 			else:
 				game.boring_machine_data[game.c_p_g].tiles.append(tile_id)
-			tile.bldg.collect_date = tile.bldg.construction_date + tile.bldg.construction_length
+			tile.bldg.collect_date = current_time
 		game.tile_data[tile_id] = tile
+		Helper.set_building_properties(tile, p_i)
 		add_bldg(tile_id, _bldg_to_construct, true)
 	elif not mass_build:
 		game.popup(tr("NOT_ENOUGH_RESOURCES"), 1.2)
-
-func speedup_bldg(tile, tile_id:int, curr_time):
-	if tile.bldg.has("is_constructing"):
-		var speedup_time = game.speedups_info[game.item_to_use.name].time
-		#Time remaining to finish construction
-		var time_remaining = tile.bldg.construction_date + tile.bldg.construction_length - curr_time
-		var num_needed = min(game.item_to_use.num, ceil((time_remaining) / float(speedup_time)))
-		if not tiles_selected.is_empty():
-			min(game.item_to_use.num / len(tiles_selected), ceil((time_remaining) / float(speedup_time)))
-		tile.bldg.construction_date -= speedup_time * num_needed
-		var time_sped_up = min(speedup_time * num_needed, time_remaining)
-		if tile.bldg.has("overclock_date"):
-			tile.bldg.overclock_date -= time_sped_up
-		if tile.bldg.has("collect_date"):
-			tile.bldg.collect_date -= time_sped_up
-		if tile.bldg.has("start_date"):
-			tile.bldg.start_date -= time_sped_up
-		game.item_to_use.num -= num_needed
 
 func overclock_bldg(tile, tile_id:int, curr_time):
 	var mult:float = game.overclocks_info[game.item_to_use.name].mult * tile.get("overclock_bonus", 1.0)
@@ -686,48 +662,37 @@ func destroy_bldg(id2:int, mass:bool = false):
 		rsrcs[id2].queue_free()
 	var overclock_mult:float = tile.bldg.get("overclock_mult", 1.0)
 	if bldg == Building.MINERAL_SILO:
-		if tile.bldg.has("is_constructing"):
-			game.mineral_capacity -= tile.bldg.path_1_value - tile.bldg.cap_upgrade
-		else:
-			game.mineral_capacity -= tile.bldg.path_1_value
+		game.mineral_capacity -= tile.bldg.path_1_value
 		if game.mineral_capacity < 200:
 			game.mineral_capacity = 200
 	elif bldg == Building.BATTERY:
-		if tile.bldg.has("is_constructing"):
-			game.energy_capacity -= (tile.bldg.path_1_value - tile.bldg.cap_upgrade) * game.u_i.charge
-		else:
-			game.energy_capacity -= tile.bldg.path_1_value * game.u_i.charge
+		game.energy_capacity -= tile.bldg.path_1_value * game.u_i.charge
 		if game.energy_capacity < 7500:
 			game.energy_capacity = 7500
 	elif bldg == Building.MINERAL_EXTRACTOR:
-		if not tile.bldg.has("is_constructing"):
-			game.autocollect.rsrc.minerals -= tile.bldg.path_1_value * overclock_mult * tile.resource_production_bonus.get("minerals", 1.0)
+		game.autocollect.rsrc.minerals -= tile.bldg.path_1_value * overclock_mult * tile.resource_production_bonus.get("minerals", 1.0)
 	elif bldg == Building.POWER_PLANT:
-		if not tile.bldg.has("is_constructing"):
-			game.autocollect.rsrc.energy -= tile.bldg.path_1_value * overclock_mult * tile.resource_production_bonus.get("energy", 1.0)
+		game.autocollect.rsrc.energy -= tile.bldg.path_1_value * overclock_mult * tile.resource_production_bonus.get("energy", 1.0)
 		if tile.has("substation_tile"):
 			var cap_to_remove = tile.bldg.path_1_value * tile.substation_bonus * Helper.get_substation_capacity_bonus(game.tile_data[tile.substation_tile].unique_bldg.tier)
 			game.tile_data[tile.substation_tile].unique_bldg.capacity_bonus -= cap_to_remove
 			game.capacity_bonus_from_substation -= cap_to_remove
 	elif bldg == Building.SOLAR_PANEL:
-		if not tile.bldg.has("is_constructing"):
-			var SP_prod = Helper.get_SP_production(p_i.temperature, tile.bldg.path_1_value * overclock_mult * (tile.get("aurora", 0.0) + 1.0))
-			game.autocollect.rsrc.energy -= SP_prod
+		var SP_prod = Helper.get_SP_production(p_i.temperature, tile.bldg.path_1_value * overclock_mult * (tile.get("aurora", 0.0) + 1.0))
+		game.autocollect.rsrc.energy -= SP_prod
 		if tile.has("substation_tile"):
 			var cap_to_remove = Helper.get_SP_production(p_i.temperature, tile.bldg.path_1_value * (tile.get("aurora", 0.0) + 1.0)) * Helper.get_substation_capacity_bonus(game.tile_data[tile.substation_tile].unique_bldg.tier)
 			game.tile_data[tile.substation_tile].unique_bldg.capacity_bonus -= cap_to_remove
 			game.capacity_bonus_from_substation -= cap_to_remove
 	elif bldg == Building.RESEARCH_LAB:
-		if not tile.bldg.has("is_constructing"):
-			game.autocollect.rsrc.SP -= tile.bldg.path_1_value * overclock_mult * tile.resource_production_bonus.get("SP", 1.0)
+		game.autocollect.rsrc.SP -= tile.bldg.path_1_value * overclock_mult * tile.resource_production_bonus.get("SP", 1.0)
 	elif bldg == Building.ATMOSPHERE_EXTRACTOR:
-		if not tile.bldg.has("is_constructing"):
-			var base = -tile.bldg.path_1_value * overclock_mult * p_i.pressure
-			for el in p_i.atmosphere:
-				var base_prod:float = base * p_i.atmosphere[el]
-				Helper.add_atom_production(el, base_prod)
-			Helper.add_energy_from_NFR(p_i, base)
-			Helper.add_energy_from_CS(p_i, base)
+		var base = -tile.bldg.path_1_value * overclock_mult * p_i.pressure
+		for el in p_i.atmosphere:
+			var base_prod:float = base * p_i.atmosphere[el]
+			Helper.add_atom_production(el, base_prod)
+		Helper.add_energy_from_NFR(p_i, base)
+		Helper.add_energy_from_CS(p_i, base)
 	elif bldg == Building.CENTRAL_BUSINESS_DISTRICT:
 		var n:int = tile.bldg.path_3_value
 		var wid:int = tile.bldg.wid
@@ -838,8 +803,6 @@ func check_tile_change(event, fn:String, fn_args:Array = []):
 
 func collect_prod_bldgs(tile_id:int):
 	var _tile = game.tile_data[tile_id]
-	if _tile.bldg.has("is_constructing"):
-		return
 	var curr_time = Time.get_unix_time_from_system()
 	if _tile.bldg.name in [Building.GLASS_FACTORY, Building.STEAM_ENGINE]:
 		if _tile.bldg.has("qty1"):
@@ -1491,10 +1454,7 @@ func add_bldg(id2:int, type:int, building_animation:bool = false):
 	hboxes[id2] = hbox
 	if tile.bldg.has("overclock_mult"):
 		add_time_bar(id2, "overclock")
-	if tile.bldg.has("is_constructing"):
-		add_time_bar(id2, "bldg")
-	else:
-		Helper.update_rsrc(p_i, tile)
+	Helper.update_rsrc(p_i, tile)
 
 func overclockable(bldg:int):
 	return bldg in [Building.MINERAL_EXTRACTOR, Building.POWER_PLANT, Building.RESEARCH_LAB, Building.BORING_MACHINE, Building.SOLAR_PANEL, Building.ATMOSPHERE_EXTRACTOR]
@@ -1513,7 +1473,6 @@ func on_timeout():
 	if game.c_v != "planet":
 		return
 	var curr_time = Time.get_unix_time_from_system()
-	var update_XP:bool = false
 	for time_bar_obj in time_bars:
 		var time_bar = time_bar_obj.node
 		var id2 = time_bar_obj.id
@@ -1522,23 +1481,7 @@ func on_timeout():
 		var start_date:int
 		var length:float
 		var progress:float
-		if type == "bldg":
-			if tile == null or not tile.has("bldg") or not tile.bldg.has("is_constructing"):
-				time_bar.queue_free()
-				time_bars.erase(time_bar_obj)
-				continue
-			start_date = tile.bldg.construction_date
-			length = tile.bldg.construction_length
-			progress = (curr_time - start_date) / float(length)
-			if Helper.update_bldg_constr(tile, p_i):
-				if tile.bldg.has("path_1"):
-					hboxes[id2].get_node("Path1").text = str(tile.bldg.path_1)
-				if tile.bldg.has("path_2"):
-					hboxes[id2].get_node("Path2").text = str(tile.bldg.path_2)
-				if tile.bldg.has("path_3"):
-					hboxes[id2].get_node("Path3").text = str(tile.bldg.path_3)
-				update_XP = true
-		elif type == "overclock":
+		if type == "overclock":
 			if tile == null or not tile.has("bldg") or not tile.bldg.has("overclock_date"):
 				time_bar.queue_free()
 				time_bars.erase(time_bar_obj)
@@ -1585,13 +1528,11 @@ func on_timeout():
 		return
 	for i in len(rsrcs):
 		var tile = game.tile_data[i]
-		if tile == null or not tile.has("bldg") and not tile.has("unique_bldg") or tile.has("bldg") and tile.bldg.has("is_constructing"):
+		if tile == null or not tile.has("bldg") and not tile.has("unique_bldg"):
 			continue
 		Helper.update_rsrc(p_i, tile, rsrcs[i])
 	game.HUD.update_money_energy_SP()
 	game.HUD.update_minerals()
-	if update_XP:
-		game.HUD.update_XP()
 
 var constructing_unique_building_tier:int = -1
 

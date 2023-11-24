@@ -70,7 +70,6 @@ func terraform_planet():
 	p_i.resource_production_bonus = {}
 	p_i.bldg = {}
 	p_i.bldg.name = tf_type
-	p_i.bldg.erase("is_constructing")
 	game.universe_data[game.c_u].xp += round(total_costs.money / 100.0)
 	p_i.bldg.path_1 = 1
 	p_i.bldg.path_1_value = Data.path_1[tf_type].value

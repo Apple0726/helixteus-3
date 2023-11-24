@@ -4530,18 +4530,8 @@ func _on_command_text_submitted(new_text):
 		"fc":
 			if c_v == "planet":
 				for tile in tile_data:
-					if tile:
-						if tile.has("bldg") and tile.bldg.has("is_constructing"):
-							var diff_time = tile.bldg.construction_date + tile.bldg.construction_length - Time.get_unix_time_from_system()
-							tile.bldg.construction_length = 1
-							if tile.bldg.has("collect_date"):
-								tile.bldg.collect_date -= diff_time
-							if tile.bldg.has("start_date"):
-								tile.bldg.start_date -= diff_time
-							if tile.bldg.has("overclock_date"):
-								tile.bldg.overclock_date -= diff_time
-						elif tile.has("wormhole") and tile.wormhole.has("investigation_length"):
-							tile.wormhole.investigation_length = 1
+					if tile and tile.has("wormhole") and tile.wormhole.has("investigation_length"):
+						tile.wormhole.investigation_length = 1
 			for probe in probe_data:
 				if probe and probe.has("start_date"):
 					var diff_time = probe.start_date + probe.explore_length - Time.get_unix_time_from_system()

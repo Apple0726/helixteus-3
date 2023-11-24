@@ -8,7 +8,6 @@ var bldg:int = -1#You can mass-upgrade only one type of building
 var costs:Dictionary
 var path_selected:int = 1
 var path_str:String
-var auto_speedup:bool = false
 var new_base_value:float
 var set_min_lv:bool = false
 
@@ -33,9 +32,6 @@ func refresh():
 	if not planet.is_empty():
 		path2.visible = Data.path_2.has(planet.bldg.name)
 		path3.visible = Data.path_3.has(planet.bldg.name)
-		$AutoSpeedup.visible = false
-		$AutoSpeedup.button_pressed = true
-		auto_speedup = true
 		_on_Path1_pressed()
 		path1._on_Button_pressed()
 		var name_str:String = Building.names[planet.bldg.name]
@@ -50,8 +46,6 @@ func refresh():
 			$Label.text = tr("UPGRADE_X_BLDGS").format({"bldg":tr(name_str.to_upper() + "_NAME_S"), "num":len(ids)})
 		path2.visible = first_tile_bldg.has("path_2")
 		path3.visible = first_tile_bldg.has("path_3")
-		$AutoSpeedup.visible = game.universe_data[game.c_u].lv >= 28 or game.subject_levels.dimensional_power >= 1
-		$AutoSpeedup.button_pressed = $AutoSpeedup.visible
 		if first_tile_bldg.has("path_1"):
 			_on_Path1_pressed()
 			path1._on_Button_pressed()
@@ -81,7 +75,6 @@ func calc_costs(tile_bldg:int, lv_curr:int, lv_to:int, cost_div:float, num:int =
 	if Data[path_str][tile_bldg].has("cost_mult"):
 		var mult:float = Data[path_str][tile_bldg].cost_mult
 		base_costs.money *= mult
-		base_costs.time *= mult
 		base_costs.energy *= mult
 	if cost_div != 1.0 or game.engineering_bonus.BCM != 1.0:
 		for cost in base_costs:
@@ -91,7 +84,6 @@ func calc_costs(tile_bldg:int, lv_curr:int, lv_to:int, cost_div:float, num:int =
 			base_metal_costs[cost] /= cost_div
 			base_metal_costs[cost] *= game.engineering_bonus.BCM
 	costs.money += round(base_costs.money * geo_seq(base_pw + 0.05, lv_curr, lv_to) * num)
-	costs.time = round(base_costs.time * geo_seq(base_pw, lv_curr, lv_to) / game.u_i.time_speed)
 	if base_costs.has("energy"):
 		costs.energy += round(base_costs.energy * geo_seq(base_pw, lv_curr, lv_to) * num)
 	if not base_metal_costs.is_empty():
@@ -109,21 +101,16 @@ func calc_costs(tile_bldg:int, lv_curr:int, lv_to:int, cost_div:float, num:int =
 			costs.gold += base_metal_costs.gold * num
 		if lv_curr <= 71 and lv_to >= 71 and base_metal_costs.has("platinum"):
 			costs.platinum += base_metal_costs.platinum * num
-	if auto_speedup:
-		costs.money += costs.time * 10 * num
-		costs.time = 0
 
 func update(changing_paths:bool = false):
 	set_min_lv = true
 	next_lv.min_value = get_min_lv() + 1
 	set_min_lv = false
-	auto_speedup = $AutoSpeedup.button_pressed
-	costs = {"money":0, "energy":0, "lead":0, "copper":0, "iron":0, "aluminium":0, "silver":0, "gold":0, "platinum":0, "time":0.0}
+	costs = {"money":0, "energy":0, "lead":0, "copper":0, "iron":0, "aluminium":0, "silver":0, "gold":0, "platinum":0}
 	var same_lv = true
 	var first_tile:Dictionary
 	var first_tile_bldg:Dictionary
 	var first_tile_bldg_info:Dictionary
-	var all_tiles_constructing = true
 	var num:int = 1
 	if planet.is_empty():
 		first_tile = game.tile_data[ids[0]]
@@ -140,7 +127,7 @@ func update(changing_paths:bool = false):
 		var calculated:bool = false
 		while not calculated or lv_to != a:
 			if calculated:
-				costs = {"money":0, "energy":0, "lead":0, "copper":0, "iron":0, "aluminium":0, "silver":0, "gold":0, "platinum":0, "time":0.0}
+				costs = {"money":0, "energy":0, "lead":0, "copper":0, "iron":0, "aluminium":0, "silver":0, "gold":0, "platinum":0}
 			var cost_div_sum:float = 0.0
 			for id in ids:
 				var tile = game.tile_data[id]
@@ -148,9 +135,8 @@ func update(changing_paths:bool = false):
 				var lv_curr = tile.bldg[path_str]
 				if lv_curr != first_tile_bldg[path_str]:
 					same_lv = false
-				if tile.bldg.has("is_constructing") or tile.bldg[path_str] >= next_lv.value or Data[path_str][bldg].has("cap") and tile.bldg[path_str] >= Data[path_str][bldg].cap:
+				if tile.bldg[path_str] >= next_lv.value or Data[path_str][bldg].has("cap") and tile.bldg[path_str] >= Data[path_str][bldg].cap:
 					continue
-				all_tiles_constructing = false
 				calc_costs(tile_bldg, lv_curr, lv_to, tile.cost_div if tile.has("cost_div") else 1.0, 1)
 				cost_div_sum += tile.cost_div if tile.has("cost_div") else 1.0
 			cost_div_sum /= len(ids)
@@ -179,7 +165,6 @@ func update(changing_paths:bool = false):
 		first_tile_bldg = planet.bldg
 		bldg = first_tile_bldg.name
 		first_tile_bldg_info = Data[path_str][bldg]
-		all_tiles_constructing = false
 		num = 1 if bldg in [Building.GREENHOUSE, Building.BORING_MACHINE, Building.ATOM_MANIPULATOR, Building.SUBATOMIC_PARTICLE_REACTOR] else planet.tile_num
 		var lv_to:int = next_lv.value
 		var a:int = next_lv.min_value
@@ -187,7 +172,7 @@ func update(changing_paths:bool = false):
 		if changing_paths:
 			while not calculated or lv_to != a:
 				if calculated:
-					costs = {"money":0, "energy":0, "lead":0, "copper":0, "iron":0, "aluminium":0, "silver":0, "gold":0, "platinum":0, "time":0.0}
+					costs = {"money":0, "energy":0, "lead":0, "copper":0, "iron":0, "aluminium":0, "silver":0, "gold":0, "platinum":0}
 				calc_costs(planet.bldg.name, planet.bldg[path_str], lv_to, planet.cost_div if planet.has("cost_div") else 1.0, planet.tile_num)
 				if game.check_enough(costs):
 					if lv_to == next_lv.value:
@@ -205,13 +190,8 @@ func update(changing_paths:bool = false):
 		current.text = ""
 		set_bldg_value(first_tile_bldg_info, first_tile, first_tile_bldg[path_str], num, current, false)
 	else:
-		costs.erase("time")
 		current_lv.text = tr("VARYING_LEVELS")
 		current.text = "[center] %s" % tr("VARIES")
-	if all_tiles_constructing:
-		game.popup(tr("SELECTED_BLDGS_UNDER_CONSTR"), 2)
-		game.toggle_panel(self)
-		return
 	next.text = ""
 	set_bldg_value(first_tile_bldg_info, first_tile, next_lv.value, num, next, true)
 	var icons = Helper.put_rsrc(cost_icons, 32, costs, true, true)
@@ -339,21 +319,13 @@ func _on_Upgrade_pressed():
 		game.deduct_resources(costs)
 		var cost_money = costs.get("money", 0.0)
 		if planet.is_empty():
-			var cost_time
 			for id in ids:
 				var tile = game.tile_data[id]
-				if tile.bldg.has("is_constructing") or tile.bldg[path_str] >= next_lv.value or Data[path_str][bldg].has("cap") and tile.bldg[path_str] >= Data[path_str][bldg].cap:
+				if tile.bldg[path_str] >= next_lv.value or Data[path_str][bldg].has("cap") and tile.bldg[path_str] >= Data[path_str][bldg].cap:
 					continue
 				var base_costs = Data.costs[bldg].duplicate(true)
-				if Data[path_str][bldg].has("cost_mult"):
-					base_costs.time *= Data[path_str][bldg].cost_mult
 				var base_pw:float = Data[path_str][bldg].cost_pw if Data[path_str][bldg].has("cost_pw") else BASE_PW
-				cost_time = round(base_costs.time * geo_seq(base_pw, tile.bldg[path_str], next_lv.value) / game.u_i.time_speed * game.engineering_bonus.BCM)
-				if tile.has("cost_div"):
-					cost_time /= tile.cost_div
 				var overclock_mult:float = tile.bldg.overclock_mult if tile.bldg.has("overclock_mult") else 1.0
-				if auto_speedup:
-					cost_time = 0.2
 				if tile.bldg.name == Building.MINERAL_EXTRACTOR:
 					game.autocollect.rsrc.minerals -= tile.bldg.path_1_value * overclock_mult * tile.resource_production_bonus.get("minerals", 1.0)
 				elif tile.bldg.name == Building.POWER_PLANT:
@@ -388,19 +360,9 @@ func _on_Upgrade_pressed():
 					game.autocollect.mats.cellulose += tile.auto_GH.cellulose_drain
 					if tile.auto_GH.has("soil_drain"):
 						game.autocollect.mats.soil += tile.auto_GH.soil_drain
-				if tile.bldg.has("start_date"):
-					tile.bldg.start_date += cost_time
-				if tile.bldg.has("collect_date"):
-					tile.bldg.collect_date += cost_time
-				if tile.bldg.has("overclock_mult"):
-					tile.bldg.overclock_date += cost_time
 				tile.bldg[path_str] = next_lv.value
 				tile.bldg[path_str + "_value"] = new_base_value
-				tile.bldg.construction_date = curr_time
 				tile.bldg.XP = cost_money / 100.0 / len(ids)
-				tile.bldg.construction_length = cost_time
-				tile.bldg.is_constructing = true
-				game.view.obj.add_time_bar(id, "bldg")
 			if not game.objective.is_empty() and game.objective.type == game.ObjectiveType.UPGRADE:
 				game.objective.current += 1
 		else:
@@ -451,17 +413,6 @@ func _on_Upgrade_pressed():
 
 func _on_close_button_pressed():
 	game.toggle_panel(self)
-
-func _on_AutoSpeedup_mouse_entered():
-	game.show_tooltip(tr("AUTO_SPEEDUP_DESC"))
-
-func _on_AutoSpeedup_pressed():
-	update()
-
-
-func _on_AutoSpeedup_mouse_exited():
-	game.hide_tooltip()
-
 
 func _on_Control_tree_exited():
 	queue_free()

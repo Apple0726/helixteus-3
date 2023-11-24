@@ -4,15 +4,15 @@ func _ready():
 	super()
 	type = PanelType.SHOP
 	$Title.text = tr("SHOP")
-	for btn_str in ["Speedups", "Overclocks", "Pickaxes"]:
+	for btn_str in ["Overclocks", "Pickaxes"]:
 		var btn = preload("res://Scenes/AdvButton.tscn").instantiate()
 		btn.name = btn_str
 		btn.button_text = tr(btn_str.to_upper())
 		btn.size_flags_horizontal = Button.SIZE_EXPAND_FILL
 		btn.connect("pressed",Callable(self,"_on_btn_pressed").bind(btn_str))
 		$VBox/TabBar.add_child(btn)
-	_on_btn_pressed("Speedups")
-	$VBox/TabBar.get_node("Speedups")._on_Button_pressed()
+	_on_btn_pressed("Overclocks")
+	$VBox/TabBar.get_node("Overclocks")._on_Button_pressed()
 
 func _on_btn_pressed(btn_str:String):
 	var btn_str_l:String = btn_str.to_lower()
@@ -27,8 +27,6 @@ func _on_btn_pressed(btn_str:String):
 		item.item_dir = "Items/%s" % btn_str
 		item.item_type = "%s_info" % btn_str_l
 		match btn_str_l:
-			"speedups":
-				item.item_desc = tr("SPEEDUPS_DESC2") % [Helper.time_to_str(obj_info.time)]
 			"overclocks":
 				item.item_desc = tr("OVERCLOCKS_DESC2") % [obj_info.mult, Helper.time_to_str(obj_info.duration / game.u_i.time_speed)]
 			"pickaxes":
@@ -40,7 +38,7 @@ func _on_btn_pressed(btn_str:String):
 func set_item_info(_name:String, _desc:String, costs:Dictionary, _type:String, _dir:String):
 	super.set_item_info(_name, _desc, costs, _type, _dir)
 	desc_txt.text = _desc
-	$VBox/HBox/ItemInfo/VBox/HBox.visible = tab in ["Speedups", "Overclocks"]
+	$VBox/HBox/ItemInfo/VBox/HBox.visible = tab == "Overclocks"
 
 func _on_Buy_pressed():
 	get_item(item_name, item_type, item_dir)
