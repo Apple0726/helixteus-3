@@ -318,51 +318,70 @@ func _on_Upgrade_pressed():
 	if game.check_enough(costs):
 		game.deduct_resources(costs)
 		var cost_money = costs.get("money", 0.0)
+		game.u_i.xp += cost_money / 100.0
 		if planet.is_empty():
 			for id in ids:
 				var tile = game.tile_data[id]
 				if tile.bldg[path_str] >= next_lv.value or Data[path_str][bldg].has("cap") and tile.bldg[path_str] >= Data[path_str][bldg].cap:
 					continue
 				var base_costs = Data.costs[bldg].duplicate(true)
-				var base_pw:float = Data[path_str][bldg].cost_pw if Data[path_str][bldg].has("cost_pw") else BASE_PW
-				var overclock_mult:float = tile.bldg.overclock_mult if tile.bldg.has("overclock_mult") else 1.0
+				var base_pw:float = Data[path_str][bldg].get("cost_pw", BASE_PW)
+				var overclock_mult:float = tile.bldg.get("overclock_mult", 1.0)
+				var time_speed_bonus = tile.get("time_speed_bonus", 1.0)
 				if tile.bldg.name == Building.MINERAL_EXTRACTOR:
-					game.autocollect.rsrc.minerals -= tile.bldg.path_1_value * overclock_mult * tile.resource_production_bonus.get("minerals", 1.0)
+					game.autocollect.rsrc.minerals += (new_base_value - tile.bldg.path_1_value) * overclock_mult * tile.resource_production_bonus.get("minerals", 1.0) * time_speed_bonus
 				elif tile.bldg.name == Building.POWER_PLANT:
-					game.autocollect.rsrc.energy -= tile.bldg.path_1_value * overclock_mult * tile.resource_production_bonus.get("energy", 1.0)
+					var energy_prod = (new_base_value - tile.bldg.path_1_value) * tile.resource_production_bonus.get("energy", 1.0)
+					game.autocollect.rsrc.energy += energy_prod * overclock_mult * time_speed_bonus
 					if tile.has("substation_tile"):
-						tile.bldg.cap_upgrade = (new_base_value - tile.bldg.path_1_value) * tile.substation_bonus * Helper.get_substation_capacity_bonus(game.tile_data[tile.substation_tile].unique_bldg.tier)
+						var cap_upgrade = energy_prod * tile.substation_bonus * Helper.get_substation_capacity_bonus(game.tile_data[tile.substation_tile].unique_bldg.tier)
+						game.tile_data[tile.substation_tile].unique_bldg.capacity_bonus += cap_upgrade
+						game.capacity_bonus_from_substation += cap_upgrade
 				elif tile.bldg.name == Building.RESEARCH_LAB:
-					game.autocollect.rsrc.SP -= tile.bldg.path_1_value * overclock_mult * tile.resource_production_bonus.get("SP", 1.0)
+					game.autocollect.rsrc.SP += (new_base_value - tile.bldg.path_1_value) * overclock_mult * tile.resource_production_bonus.get("SP", 1.0) * time_speed_bonus
 				elif tile.bldg.name == Building.SOLAR_PANEL:
-					var energy_prod = Helper.get_SP_production(p_i.temperature, tile.bldg.path_1_value * overclock_mult * (tile.get("aurora", 0.0) + 1.0) * tile.resource_production_bonus.get("energy", 1.0))
-					game.autocollect.rsrc.energy -= energy_prod
+					var energy_prod = Helper.get_SP_production(p_i.temperature, (new_base_value - tile.bldg.path_1_value) * (tile.get("aurora", 0.0) + 1.0) * tile.resource_production_bonus.get("energy", 1.0))
+					game.autocollect.rsrc.energy += energy_prod * overclock_mult * time_speed_bonus
 					if tile.has("substation_tile"):
-						tile.bldg.cap_upgrade = Helper.get_SP_production(p_i.temperature, (new_base_value - tile.bldg.path_1_value) * (tile.get("aurora", 0.0) + 1.0) * tile.substation_bonus) * Helper.get_substation_capacity_bonus(game.tile_data[tile.substation_tile].unique_bldg.tier)
+						var cap_upgrade = energy_prod * tile.substation_bonus * Helper.get_substation_capacity_bonus(game.tile_data[tile.substation_tile].unique_bldg.tier)
+						game.tile_data[tile.substation_tile].unique_bldg.capacity_bonus += cap_upgrade
+						game.capacity_bonus_from_substation += cap_upgrade
 				elif tile.bldg.name == Building.ATMOSPHERE_EXTRACTOR:
-					var base_prod = -tile.bldg.path_1_value * overclock_mult * p_i.pressure
+					var base_prod = (new_base_value - tile.bldg.path_1_value) * overclock_mult * p_i.pressure * time_speed_bonus
 					for el in p_i.atmosphere:
 						Helper.add_atom_production(el, base_prod * p_i.atmosphere[el])
 					Helper.add_energy_from_NFR(p_i, base_prod)
 					Helper.add_energy_from_CS(p_i, base_prod)
-				elif tile.bldg.name in [Building.MINERAL_SILO]:
-					tile.bldg.cap_upgrade = new_base_value - tile.bldg.path_1_value
+				elif tile.bldg.name == Building.MINERAL_SILO:
+					game.mineral_capacity += new_base_value - tile.bldg.path_1_value
 				elif tile.bldg.name == Building.BATTERY:
-					tile.bldg.cap_upgrade = (new_base_value - tile.bldg.path_1_value) * game.u_i.charge
+					game.energy_capacity += (new_base_value - tile.bldg.path_1_value) * game.u_i.charge
 				elif tile.bldg.name == Building.GREENHOUSE and tile.has("auto_GH"):
-					Helper.remove_GH_produce_from_autocollect(tile.auto_GH.produce, tile.get("aurora", 0.0))
+					var prod_mult:float
 					if path_selected == 1:
-						tile.bldg.prod_mult = new_base_value / tile.bldg.path_1_value
-						tile.bldg.cell_mult = new_base_value / tile.bldg.path_1_value
+						prod_mult = new_base_value / tile.bldg.path_1_value
 					elif path_selected == 2:
-						tile.bldg.prod_mult = new_base_value / tile.bldg.path_2_value
-						tile.bldg.cell_mult = 1.0
-					game.autocollect.mats.cellulose += tile.auto_GH.cellulose_drain
-					if tile.auto_GH.has("soil_drain"):
-						game.autocollect.mats.soil += tile.auto_GH.soil_drain
+						prod_mult = new_base_value / tile.bldg.path_2_value
+					for p in tile.auto_GH.produce.keys():
+						if p == "minerals":
+							game.autocollect.mats.minerals += tile.auto_GH.produce[p] * (prod_mult - 1.0)
+						elif game.mat_info.has(p):
+							game.autocollect.mats[p] += tile.auto_GH.produce[p] * (prod_mult - 1.0)
+						elif game.met_info.has(p):
+							var met_prod = tile.auto_GH.produce[p] * (tile.get("aurora", 0.0) + 1.0)
+							game.autocollect.mets[p] += met_prod * (prod_mult - 1.0)
+						tile.auto_GH.produce[p] *= prod_mult
+					if path_selected == 1:
+						game.autocollect.mats.cellulose -= tile.auto_GH.cellulose_drain * (prod_mult - 1.0)
+						tile.auto_GH.cellulose_drain *= prod_mult
+						if tile.auto_GH.has("soil_drain"):
+							game.autocollect.mats.soil -= tile.auto_GH.soil_drain * (prod_mult - 1.0)
+							tile.auto_GH.soil_drain *= prod_mult
 				tile.bldg[path_str] = next_lv.value
 				tile.bldg[path_str + "_value"] = new_base_value
-				tile.bldg.XP = cost_money / 100.0 / len(ids)
+				if tile.bldg.name == Building.CENTRAL_BUSINESS_DISTRICT:
+					Helper.update_CBD_affected_tiles(tile, id, p_i)
+				game.view.obj.hboxes[id].get_node("Path%s" % path_selected).text = str(next_lv.value)
 			if not game.objective.is_empty() and game.objective.type == game.ObjectiveType.UPGRADE:
 				game.objective.current += 1
 		else:
@@ -393,6 +412,7 @@ func _on_Upgrade_pressed():
 						game.autocollect.mats.cellulose -= planet.auto_GH.cellulose_drain * (upgrade_mult - 1)
 						planet.auto_GH.cellulose_drain *= upgrade_mult
 						if planet.auto_GH.has("soil_drain"):
+							game.autocollect.mats.soil -= planet.auto_GH.soil_drain * (upgrade_mult - 1.0)
 							planet.auto_GH.soil_drain *= upgrade_mult
 			if planet.bldg.has("collect_date"):
 				var prod_ratio

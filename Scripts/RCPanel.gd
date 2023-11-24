@@ -271,7 +271,6 @@ func refresh():
 	$Inventory.add_child(right_slot)
 	right_slot.position = Vector2(32, 84)
 	set_slot(right_inventory[0], right_slot, 0, true)
-	rover_costs.time /= game.u_i.time_speed / tile.get("time_speed_bonus", 1.0)
 	Helper.put_rsrc($ScrollContainer/Grid, 36, rover_costs, true, true)
 	spd_bonus = Data.rover_wheels[wheels].speed
 	$Stats/HPText.text = Helper.format_num(round((HP + HP_bonus) * mult * engi_mult)) + "  [img]Graphics/Icons/help.png[/img]"

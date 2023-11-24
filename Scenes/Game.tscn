@@ -243,7 +243,7 @@ shader_parameter/saturation = 0.85
 shader_parameter/rotation = Vector2(0, 0)
 shader_parameter/colorampMix = 0.5
 shader_parameter/isColoramp = null
-shader_parameter/max_alpha = 1.0
+shader_parameter/max_alpha = 0.0
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_ol7ro"]
 shader = ExtResource("9_0dcpd")
@@ -262,7 +262,7 @@ shader_parameter/saturation = 0.9
 shader_parameter/transverseSpeed = 1.0
 shader_parameter/cloud = 0.045
 shader_parameter/color = Color(0.027451, 0, 1, 1)
-shader_parameter/max_alpha = 0.54
+shader_parameter/max_alpha = 0.0
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_3we6a"]
 content_margin_left = 10.0

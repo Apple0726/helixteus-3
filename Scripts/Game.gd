@@ -1426,9 +1426,11 @@ func switch_view(new_view:String, other_params:Dictionary = {}):
 		view_tween = create_tween()
 		view_tween.tween_property(view, "modulate", Color(1.0, 1.0, 1.0, 0.0), 0.15)
 		if $Starfield.visible and not (old_view == "system" and new_view == "planet"):
-			var starfield_tween = create_tween()
+			var starfield_tween = get_tree().create_tween()
+			starfield_tween.set_parallel(true)
 			if old_view == "planet" and new_view == "system":
 				starfield_tween.tween_property($Starfield.material, "shader_parameter/brightness", 0.00075, 0.15)
+				starfield_tween.tween_property($Starfield.material, "shader_parameter/max_alpha", 0.5, 0.15)
 			else:
 				starfield_tween.tween_property($Starfield.material, "shader_parameter/brightness", 0.0, 0.15)
 		if $Starfield2.visible:
@@ -1828,7 +1830,7 @@ func add_dimension():
 
 func add_universe():
 	var starfield_color_param = 0.1 * pow(1.0 / pow(u_i.age, 0.25) / pow(1.0 / u_i.charge / 4.0, physics_bonus.BI), 0.65)
-	show_starfield($Starfield2, 0.0015, {"max_alpha":0.5, "position":u_i.view.pos, "stepsize":starfield_color_param, "distfading":clamp(remap(starfield_color_param, 0.25, 0.4, 0.73, 0.3), 0.3, 0.73)})
+	show_starfield($Starfield2, 0.0015, 0.5, {"position":u_i.view.pos, "stepsize":starfield_color_param, "distfading":clamp(remap(starfield_color_param, 0.25, 0.4, 0.73, 0.3), 0.3, 0.73)})
 	if not universe_data[c_u].has("discovered"):
 		reset_collisions()
 		generate_clusters(c_u)
@@ -1919,18 +1921,20 @@ func start_system_generation():
 	await generate_system_part()
 	is_generating = false
 
-func show_starfield(node, max_brightness:float, params:Dictionary = {}):
+func show_starfield(node, max_brightness:float, max_alpha:float, params:Dictionary = {}):
 	for param in params.keys():
 		node.material.set_shader_parameter(param, params[param])
 	node.visible = true
 	var starfield_tween = create_tween()
+	starfield_tween.set_parallel(true)
 	starfield_tween.tween_property(node.material, "shader_parameter/brightness", max_brightness, 0.5)
+	starfield_tween.tween_property(node.material, "shader_parameter/max_alpha", max_alpha, 0.5)
 	
 func add_system():
 	var starfield_color_param = 0.1 * pow(1.0 / pow(u_i.age, 0.25) / pow(1e-9 / galaxy_data[c_g].B_strength, physics_bonus.BI), 0.65)
 	if obj_exists("Galaxies", c_g_g):
 		system_data = open_obj("Galaxies", c_g_g)
-	show_starfield($Starfield, 0.00075, {"max_alpha":0.5, "position":system_data[c_s].pos / 10000.0, "stepsize":starfield_color_param, "distfading":clamp(remap(starfield_color_param, 0.15, 0.4, 0.73, 0.3), 0.3, 0.73)})
+	show_starfield($Starfield, 0.00075, 0.5, {"position":system_data[c_s].pos / 10000.0, "stepsize":starfield_color_param, "distfading":clamp(remap(starfield_color_param, 0.15, 0.4, 0.73, 0.3), 0.3, 0.73)})
 	planet_data = open_obj("Systems", c_s_g)
 	if not system_data[c_s].has("discovered") or planet_data.is_empty():
 		if c_s_g != 0:
@@ -1945,7 +1949,7 @@ func add_system():
 
 func add_planet():
 	var starfield_color_param = 0.1 * pow(1.0 / pow(u_i.age, 0.25) / pow(1e-9 / galaxy_data[c_g].B_strength, physics_bonus.BI), 0.65)
-	show_starfield($Starfield, 0.0012, {"max_alpha":0.8, "position":system_data[c_s].pos / 10000.0, "stepsize":starfield_color_param, "distfading":clamp(remap(starfield_color_param, 0.15, 0.4, 0.73, 0.3), 0.3, 0.73)})
+	show_starfield($Starfield, 0.0012, 0.8, {"position":system_data[c_s].pos / 10000.0, "stepsize":starfield_color_param, "distfading":clamp(remap(starfield_color_param, 0.15, 0.4, 0.73, 0.3), 0.3, 0.73)})
 	planet_data = open_obj("Systems", c_s_g)
 	if not planet_data[c_p].has("discovered") or open_obj("Planets", c_p_g).is_empty():
 		generate_tiles(c_p)
