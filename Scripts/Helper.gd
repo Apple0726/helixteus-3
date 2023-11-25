@@ -707,7 +707,7 @@ func update_rsrc(p_i, tile, rsrc = null, active:bool = false):
 		prod *= tile.bldg.path_1_value * get_prod_mult(tile) * tile.resource_production_bonus.get("minerals", 1.0)
 		rsrc_text = "%s/%s" % [format_num(prod, true), tr("S_SECOND")]
 	elif tile.bldg.name == Building.SOLAR_PANEL:
-		prod *= get_SP_production(p_i.temperature, tile.bldg.path_1_value * get_prod_mult(tile) * (tile.get("aurora", 0.0) + 1.0)) * tile.resource_production_bonus.get("energy", 1.0)
+		prod *= get_SP_production(p_i.temperature, tile.bldg.path_1_value * get_prod_mult(tile)) * tile.resource_production_bonus.get("energy", 1.0)
 		rsrc_text = "%s/%s" % [format_num(prod, true), tr("S_SECOND")]
 	elif tile.bldg.name == Building.POWER_PLANT:
 		prod *= tile.bldg.path_1_value * get_prod_mult(tile) * tile.resource_production_bonus.get("energy", 1.0)

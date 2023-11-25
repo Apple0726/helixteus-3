@@ -548,7 +548,7 @@ func constr_bldg(tile_id:int, curr_time:int, _bldg_to_construct:int, mass_build:
 				game.tile_data[tile.substation_tile].unique_bldg.capacity_bonus += cap_upgrade
 				game.capacity_bonus_from_substation += cap_upgrade
 		elif _bldg_to_construct == Building.SOLAR_PANEL:
-			var energy_prod = Helper.get_SP_production(p_i.temperature, path_1_value * (tile.get("aurora", 0.0) + 1.0) * tile.resource_production_bonus.get("energy", 1.0))
+			var energy_prod = Helper.get_SP_production(p_i.temperature, path_1_value * tile.resource_production_bonus.get("energy", 1.0))
 			game.autocollect.rsrc.energy += energy_prod * time_speed_bonus
 			if tile.has("substation_bonus"):
 				var cap_upgrade:float = energy_prod * tile.substation_bonus * Helper.get_substation_capacity_bonus(game.tile_data[tile.substation_tile].unique_bldg.tier)
@@ -581,6 +581,7 @@ func constr_bldg(tile_id:int, curr_time:int, _bldg_to_construct:int, mass_build:
 		tile.bldg.c_p_g = game.c_p_g
 		game.tile_data[tile_id] = tile
 		add_bldg(tile_id, _bldg_to_construct, true)
+		shadow.visible = false
 	elif not mass_build:
 		game.popup(tr("NOT_ENOUGH_RESOURCES"), 1.2)
 
@@ -668,7 +669,16 @@ func destroy_bldg(id2:int, mass:bool = false):
 	var bldg:int = tile.bldg.name
 	items_collected.clear()
 	Helper.update_rsrc(p_i, tile)
-	bldgs[id2].queue_free()
+	var bldg_sprite = bldgs[id2]
+	bldg_sprite.material = ShaderMaterial.new()
+	bldg_sprite.material.shader = preload("res://Shaders/BuildingDestruction.gdshader")
+	bldg_sprite.material.set_shader_parameter("red", 0.0)
+	bldg_sprite.material.set_shader_parameter("progress", 0.0)
+	var tween = create_tween()
+	tween.set_parallel(true)
+	tween.tween_property(bldg_sprite.material, "shader_parameter/red", 1.0, 0.4)
+	tween.tween_property(bldg_sprite.material, "shader_parameter/progress", 1.0, 0.8).set_delay(0.2)
+	tween.tween_callback(bldg_sprite.queue_free).set_delay(1.0)
 	hboxes[id2].queue_free()
 	if is_instance_valid(rsrcs[id2]):
 		rsrcs[id2].queue_free()
@@ -923,7 +933,6 @@ func _unhandled_input(event):
 					if tile.bldg.name == Building.GREENHOUSE:
 						base_cost.energy = round(base_cost.energy * (1 + abs(p_i.temperature - 273) / 10.0))
 					construct(tile.bldg.name, base_cost)
-					shadow.modulate.a = 0.5
 					shadow.position = floor(mouse_pos / 200) * 200 + Vector2.ONE * 100
 				elif Input.is_action_just_released("F"):
 					if game.get_node("UI").has_node("BuildingShortcuts"):
@@ -1086,6 +1095,8 @@ func _unhandled_input(event):
 					return
 				var tile = game.tile_data[tile_over]
 				show_tooltip(tile, tile_over)
+				if is_instance_valid(shadow):
+					shadow.visible = mouse_on_tiles and not mass_build
 				for white_rect in get_tree().get_nodes_in_group("CBD_white_rects"):
 					white_rect.queue_free()
 					white_rect.remove_from_group("CBD_white_rects")
@@ -1114,8 +1125,6 @@ func _unhandled_input(event):
 				prev_tile_over = -1
 			hide_tooltip()
 		if is_instance_valid(shadow):
-			shadow.visible = mouse_on_tiles and not mass_build
-			shadow.modulate.a = 0.5
 			if constructing_unique_building_tier != -1 and bldg_to_construct == UniqueBuilding.NUCLEAR_FUSION_REACTOR:
 				shadow.position = floor(mouse_pos / 200) * 200 + Vector2.ONE * 200
 			else:
@@ -1418,12 +1427,14 @@ func add_bldg_sprite(pos:Vector2, _name:int, texture, building_animation:bool = 
 	if building_animation:
 		bldg.material = ShaderMaterial.new()
 		bldg.material.shader = preload("res://Shaders/BuildingConstruction.gdshader")
-		bldg.material.set_shader_parameter("alpha", 0.0)
+		bldg.material.set_shader_parameter("alpha", 0.5)
+		bldg.material.set_shader_parameter("white", 0.0)
 		bldg.material.set_shader_parameter("progress", 0.0)
 		var tween = create_tween()
 		tween.set_parallel(true)
-		tween.tween_property(bldg.material, "shader_parameter/alpha", 1.0, 0.5)
-		tween.tween_property(bldg.material, "shader_parameter/progress", 1.0, 0.8).set_delay(0.3)
+		tween.tween_property(bldg.material, "shader_parameter/alpha", 1.0, 0.4)
+		tween.tween_property(bldg.material, "shader_parameter/white", 1.0, 0.4)
+		tween.tween_property(bldg.material, "shader_parameter/progress", 1.0, 0.8).set_delay(0.2)
 	$Buildings.add_child(bldg)
 	return bldg
 	
@@ -1572,6 +1583,7 @@ func initiate_unique_building_construction(type:int, costs:Dictionary):
 	constr_costs = costs
 	constr_costs_total = costs.duplicate()
 	shadow = Sprite2D.new()
+	shadow.modulate.a = 0.5
 	if type == UniqueBuilding.NUCLEAR_FUSION_REACTOR:
 		put_shadow(shadow, game.unique_bldg_textures[bldg_to_construct], mouse_pos, 0.8, Vector2.ONE * 200)
 	else:

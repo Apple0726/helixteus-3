@@ -1922,6 +1922,8 @@ func start_system_generation():
 	is_generating = false
 
 func show_starfield(node, max_brightness:float, max_alpha:float, params:Dictionary = {}):
+	if not Settings.enable_shaders:
+		return
 	for param in params.keys():
 		node.material.set_shader_parameter(param, params[param])
 	node.visible = true
@@ -3445,7 +3447,7 @@ func show_tooltip(txt:String, hide:bool = true):
 		tooltip_display_position_y = 0
 	set_tooltip_position()
 	var tween = create_tween()
-	tween.tween_property(tooltip, "modulate", Color.WHITE, 0.1)#.set_delay(0.1)
+	tween.tween_property(tooltip, "modulate", Color.WHITE, 0.1).set_delay(0.1)
 
 func hide_tooltip():
 	if is_instance_valid(tooltip):

@@ -150,7 +150,7 @@ func _on_Slot_pressed(type:String):
 func _on_Button_pressed():
 	if game.check_enough(rover_costs):
 		game.deduct_resources(rover_costs)
-		game.popup("ROVER_UNDER_CONSTR", 1.5)
+		game.popup(tr("ROVER_CONSTRUCTED"), 1.5)
 		game.u_i.xp += round(rover_costs.money / 100.0)
 		var rover_data:Dictionary = {
 			"c_p":game.c_p,
@@ -183,8 +183,9 @@ func _on_Button_pressed():
 #			if game.planet_HUD:
 #				game.planet_HUD.get_node("VBoxContainer/Vehicles").visible = true
 		game.HUD.refresh()
+		game.HUD.get_node("Buttons/Vehicles/AnimationPlayer").play("Flash")
 	else:
-		game.popup("NOT_ENOUGH_RESOURCES", 1.5)
+		game.popup(tr("NOT_ENOUGH_RESOURCES"), 1.5)
 
 func refresh():
 	set_process_input(visible)

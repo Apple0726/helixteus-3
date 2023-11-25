@@ -340,7 +340,7 @@ func _on_Upgrade_pressed():
 				elif tile.bldg.name == Building.RESEARCH_LAB:
 					game.autocollect.rsrc.SP += (new_base_value - tile.bldg.path_1_value) * overclock_mult * tile.resource_production_bonus.get("SP", 1.0) * time_speed_bonus
 				elif tile.bldg.name == Building.SOLAR_PANEL:
-					var energy_prod = Helper.get_SP_production(p_i.temperature, (new_base_value - tile.bldg.path_1_value) * (tile.get("aurora", 0.0) + 1.0) * tile.resource_production_bonus.get("energy", 1.0))
+					var energy_prod = Helper.get_SP_production(p_i.temperature, (new_base_value - tile.bldg.path_1_value) * tile.resource_production_bonus.get("energy", 1.0))
 					game.autocollect.rsrc.energy += energy_prod * overclock_mult * time_speed_bonus
 					if tile.has("substation_tile"):
 						var cap_upgrade = energy_prod * tile.substation_bonus * Helper.get_substation_capacity_bonus(game.tile_data[tile.substation_tile].unique_bldg.tier)
@@ -382,6 +382,16 @@ func _on_Upgrade_pressed():
 				if tile.bldg.name == Building.CENTRAL_BUSINESS_DISTRICT:
 					Helper.update_CBD_affected_tiles(tile, id, p_i)
 				game.view.obj.hboxes[id].get_node("Path%s" % path_selected).text = str(next_lv.value)
+				var bldg_sprite = game.view.obj.bldgs[id]
+				bldg_sprite.material = ShaderMaterial.new()
+				bldg_sprite.material.shader = preload("res://Shaders/BuildingUpgrade.gdshader")
+				bldg_sprite.material.set_shader_parameter("color", Color.CYAN)
+				bldg_sprite.material.set_shader_parameter("progress", 0.2)
+				var tween = create_tween()
+				tween.tween_property(bldg_sprite.material, "shader_parameter/progress", 0.42, 0.6)
+				tween.tween_property(bldg_sprite.material, "shader_parameter/color", Color.WHITE, 0.4)
+				tween.tween_property(bldg_sprite.material, "shader_parameter/color", Color.CYAN, 0.3)
+				tween.tween_property(bldg_sprite.material, "shader_parameter/progress", 0.9, 1.2)
 			if not game.objective.is_empty() and game.objective.type == game.ObjectiveType.UPGRADE:
 				game.objective.current += 1
 		else:

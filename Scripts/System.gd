@@ -317,12 +317,6 @@ func on_glow_planet_over (id:int, l_id:int, glow):
 	glow_over = glow
 	show_planet_info(id, l_id)
 
-func auto_speedup(bldg_costs:Dictionary):
-	bldg_costs.time /= game.u_i.time_speed
-	if game.universe_data[game.c_u].lv >= 55 or game.subject_levels.dimensional_power >= 1:
-		bldg_costs.money += bldg_costs.time * 200
-		bldg_costs.time = 0.2
-
 func add_constr_costs(vbox:VBoxContainer, data):
 	if data.has("cost_div"):
 		Helper.add_label("%s (%s)" % [tr("CONSTRUCTION_COSTS"), tr("DIV_BY") % Helper.clever_round(data.cost_div)], 0)
@@ -341,7 +335,6 @@ func show_DS_costs(star:Dictionary, base:bool = false):
 		Helper.add_dict_to_dict(bldg_costs, Data.MS_costs.DS_4)
 	for cost in bldg_costs:
 		bldg_costs[cost] = round(bldg_costs[cost] * pow(star.size, 2) * game.engineering_bonus.BCM / star.get("cost_div", 1.0))
-	auto_speedup(bldg_costs)
 	Helper.put_rsrc(vbox, 32, bldg_costs, true, true)
 	add_constr_costs(vbox, star)
 	Helper.add_label(tr("PRODUCTION_PER_SECOND"))
@@ -366,7 +359,6 @@ func show_CBS_costs(star:Dictionary, base:bool = false):
 		Helper.add_dict_to_dict(bldg_costs, Data.MS_costs.CBS_3)
 	for cost in bldg_costs:
 		bldg_costs[cost] = round(bldg_costs[cost] * game.planet_data[-1].distance / 1000.0 * game.engineering_bonus.BCM / (star.cost_div if star.has("cost_div") else 1.0))
-	auto_speedup(bldg_costs)
 	Helper.put_rsrc(vbox, 32, bldg_costs, true, true)
 	add_constr_costs(vbox, star)
 	Helper.add_label(tr("CBD_PATH_1") % Helper.clever_round(1 + log(star.luminosity + 1)))
@@ -387,7 +379,6 @@ func show_PK_costs(star:Dictionary, base:bool = false):
 		Helper.add_dict_to_dict(bldg_costs, Data.MS_costs.PK_2)
 	for cost in bldg_costs:
 		bldg_costs[cost] = round(bldg_costs[cost] * game.engineering_bonus.BCM / (star.cost_div if star.has("cost_div") else 1.0))
-	auto_speedup(bldg_costs)
 	Helper.put_rsrc(vbox, 32, bldg_costs, true, true)
 	add_constr_costs(vbox, star)
 	var max_diameter = 4000
@@ -412,7 +403,6 @@ func show_SE_costs(p_i:Dictionary, base:bool = false):
 			bldg_costs[cost] = round(bldg_costs[cost] * p_i.size / 12000.0 * game.engineering_bonus.BCM / (p_i.cost_div if p_i.has("cost_div") else 1.0))
 		else:
 			bldg_costs.energy = round(bldg_costs.energy * p_i.size / 48000.0 * pow(max(0.25, p_i.pressure), 1.1)) * game.engineering_bonus.BCM / (p_i.cost_div if p_i.has("cost_div") else 1.0)
-	auto_speedup(bldg_costs)
 	Helper.put_rsrc(vbox, 32, bldg_costs, true, true)
 	add_constr_costs(vbox, p_i)
 
@@ -425,7 +415,6 @@ func show_MME_costs(p_i:Dictionary, base:bool = false):
 		Helper.add_dict_to_dict(bldg_costs, Data.MS_costs.MME_3)
 	for cost in bldg_costs:
 		bldg_costs[cost] = round(bldg_costs[cost] * pow(p_i.size / 13000.0, 2) * game.engineering_bonus.BCM / (p_i.cost_div if p_i.has("cost_div") else 1.0))
-	auto_speedup(bldg_costs)
 	Helper.put_rsrc(vbox, 32, bldg_costs, true, true)
 	add_constr_costs(vbox, p_i)
 	Helper.add_label(tr("PRODUCTION_PER_SECOND"), -1, false)

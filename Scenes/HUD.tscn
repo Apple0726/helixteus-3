@@ -1,4 +1,4 @@
-[gd_scene load_steps=75 format=3 uid="uid://cahlkepfiewe4"]
+[gd_scene load_steps=80 format=3 uid="uid://cahlkepfiewe4"]
 
 [ext_resource type="Texture2D" uid="uid://rk0ya5g0f8u6" path="res://Graphics/Buttons/Craft.png" id="1"]
 [ext_resource type="Texture2D" uid="uid://btgin855mojfx" path="res://Graphics/Icons/money.png" id="2"]
@@ -94,6 +94,22 @@ unicode = 121
 [sub_resource type="Shortcut" id="12"]
 events = [SubResource("InputEventKey_04cml")]
 
+[sub_resource type="Shader" id="Shader_4de7i"]
+code = "shader_type canvas_item;
+
+uniform vec4 color:source_color = vec4(1.0);
+uniform float alpha:hint_range(0.0, 1.0) = 0.0;
+
+void fragment() {
+	COLOR = texture(TEXTURE, UV);
+	COLOR.rgb += vec3(color.rgb) * alpha;
+}"
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_fio52"]
+shader = SubResource("Shader_4de7i")
+shader_parameter/color = Color(1, 1, 1, 1)
+shader_parameter/alpha = 0.0
+
 [sub_resource type="InputEventKey" id="InputEventKey_d0q5n"]
 device = -1
 physical_keycode = 86
@@ -101,6 +117,43 @@ unicode = 118
 
 [sub_resource type="Shortcut" id="14"]
 events = [SubResource("InputEventKey_d0q5n")]
+
+[sub_resource type="Animation" id="Animation_o7tw1"]
+resource_name = "Flash"
+length = 1.6
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:material:shader_parameter/alpha")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.4, 0.8, 1.2, 1.6),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1),
+"update": 0,
+"values": [0.0, 0.6, 0.0, 0.6, 0.0]
+}
+
+[sub_resource type="Animation" id="Animation_1ispb"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:material:shader_parameter/alpha")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [0.0]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_bsw7h"]
+_data = {
+"Flash": SubResource("Animation_o7tw1"),
+"RESET": SubResource("Animation_1ispb")
+}
 
 [sub_resource type="InputEventKey" id="InputEventKey_817r8"]
 device = -1
@@ -557,6 +610,7 @@ ignore_texture_size = true
 stretch_mode = 5
 
 [node name="Vehicles" type="TextureButton" parent="Buttons"]
+material = SubResource("ShaderMaterial_fio52")
 custom_minimum_size = Vector2(0, 48)
 layout_mode = 2
 keep_pressed_outside = true
@@ -565,6 +619,11 @@ shortcut_in_tooltip = false
 texture_normal = ExtResource("22")
 ignore_texture_size = true
 stretch_mode = 5
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Buttons/Vehicles"]
+libraries = {
+"": SubResource("AnimationLibrary_bsw7h")
+}
 
 [node name="Craft" type="TextureButton" parent="Buttons"]
 custom_minimum_size = Vector2(0, 48)
