@@ -221,6 +221,8 @@ func _ready():
 	$Stars/Starfield.material.set_shader_parameter("position", (game.system_data[game.c_s].pos / 10000.0).rotated(game.planet_data[game.c_p].angle))
 	$Stars/Starfield.material.set_shader_parameter("stepsize", starfield_color_param)
 	$Stars/Starfield.material.set_shader_parameter("distfading", clamp(remap(starfield_color_param, 0.15, 0.4, 0.73, 0.3), 0.3, 0.73))
+	$Stars/Starfield.material.set_shader_parameter("volsteps", Settings.space_LOD)
+	$Stars/Starfield.material.set_shader_parameter("iterations", 14 + Settings.space_LOD / 2)
 
 func refresh_fight_panel():
 	$UI/FightPanel/AnimationPlayer.play("FightPanelAnim")

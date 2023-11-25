@@ -176,6 +176,67 @@ offset_right = 184.0
 offset_bottom = 149.0
 text = "120 FPS"
 
+[node name="SpaceLOD" type="Control" parent="TabContainer/GRAPHICS"]
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="StaticSpaceLODLabel" parent="TabContainer/GRAPHICS/SpaceLOD" instance=ExtResource("2_611qd")]
+layout_mode = 0
+offset_left = 64.0
+offset_top = 181.0
+offset_right = 384.0
+offset_bottom = 221.0
+text = "[center]STATIC_SPACE_BACKGROUND_LOD [img]Graphics/Icons/help.png[/img][/center]"
+label_text = "STATIC_SPACE_BACKGROUND_LOD"
+help_text = "STATIC_SPACE_BACKGROUND_LOD_DESC"
+align = 1
+
+[node name="StaticSpaceLOD" type="HSlider" parent="TabContainer/GRAPHICS/SpaceLOD"]
+layout_mode = 0
+offset_left = 82.046
+offset_top = 225.0
+offset_right = 302.046
+offset_bottom = 241.0
+max_value = 30.0
+value = 15.0
+
+[node name="StaticSpaceLODValue" type="Label" parent="TabContainer/GRAPHICS/SpaceLOD"]
+layout_mode = 0
+offset_left = 320.0
+offset_top = 221.0
+offset_right = 372.0
+offset_bottom = 247.0
+text = "15"
+
+[node name="DynamicSpaceLODLabel" parent="TabContainer/GRAPHICS/SpaceLOD" instance=ExtResource("2_611qd")]
+layout_mode = 0
+offset_left = 64.0
+offset_top = 269.0
+offset_right = 384.0
+offset_bottom = 309.0
+text = "[center]DYNAMIC_SPACE_BACKGROUND_LOD [img]Graphics/Icons/help.png[/img][/center]"
+label_text = "DYNAMIC_SPACE_BACKGROUND_LOD"
+help_text = "DYNAMIC_SPACE_BACKGROUND_LOD_DESC"
+align = 1
+
+[node name="DynamicSpaceLOD" type="HSlider" parent="TabContainer/GRAPHICS/SpaceLOD"]
+layout_mode = 0
+offset_left = 82.046
+offset_top = 309.0
+offset_right = 302.046
+offset_bottom = 325.0
+max_value = 20.0
+value = 8.0
+
+[node name="DynamicSpaceLODValue" type="Label" parent="TabContainer/GRAPHICS/SpaceLOD"]
+layout_mode = 0
+offset_left = 320.0
+offset_top = 305.0
+offset_right = 372.0
+offset_bottom = 331.0
+text = "8"
+
 [node name="EnableShaders" type="CheckButton" parent="TabContainer/GRAPHICS"]
 layout_mode = 0
 offset_left = 492.0
@@ -425,6 +486,8 @@ horizontal_alignment = 1
 [connection signal="pressed" from="TabContainer/GRAPHICS/FPS/30FPS" to="." method="_on_fps_pressed" binds= [30]]
 [connection signal="pressed" from="TabContainer/GRAPHICS/FPS/60FPS" to="." method="_on_fps_pressed" binds= [60]]
 [connection signal="pressed" from="TabContainer/GRAPHICS/FPS/120FPS" to="." method="_on_fps_pressed" binds= [120]]
+[connection signal="value_changed" from="TabContainer/GRAPHICS/SpaceLOD/StaticSpaceLOD" to="." method="_on_static_space_lod_value_changed"]
+[connection signal="value_changed" from="TabContainer/GRAPHICS/SpaceLOD/DynamicSpaceLOD" to="." method="_on_dynamic_space_lod_value_changed"]
 [connection signal="toggled" from="TabContainer/GRAPHICS/EnableShaders" to="." method="_on_EnableShaders_toggled"]
 [connection signal="toggled" from="TabContainer/GRAPHICS/AutosaveLight" to="." method="_on_AutosaveLight_toggled"]
 [connection signal="toggled" from="TabContainer/GRAPHICS/Screenshake" to="." method="_on_Screenshake_toggled"]

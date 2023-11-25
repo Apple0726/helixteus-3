@@ -22,6 +22,36 @@
 [ext_resource type="PackedScene" uid="uid://c5qfs6oo128dp" path="res://Scenes/Nebula.tscn" id="35"]
 [ext_resource type="PackedScene" uid="uid://ca730ks6x5s88" path="res://Scenes/Screenshake.tscn" id="36"]
 
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_fsurd"]
+shader = ExtResource("8_axm3r")
+shader_parameter/position = Vector2(0, 0)
+shader_parameter/iterations = 18
+shader_parameter/formuparam = 0.53
+shader_parameter/volsteps = 8
+shader_parameter/stepsize = 0.1
+shader_parameter/zoom = 0.8
+shader_parameter/tile = 0.85
+shader_parameter/speed = 0.0
+shader_parameter/brightness = 0.0015
+shader_parameter/darkmatter = 0.3
+shader_parameter/distfading = 0.73
+shader_parameter/saturation = 0.85
+shader_parameter/rotation = Vector2(0, 0)
+shader_parameter/colorampMix = 0.5
+shader_parameter/isColoramp = null
+shader_parameter/max_alpha = 1.0
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_tvths"]
+shader = ExtResource("19_4v34t")
+shader_parameter/color = Color(1, 1, 1, 1)
+shader_parameter/fog_size = 50.0
+shader_parameter/fog_mvt_spd = 0.0
+shader_parameter/fog_mvt_spd_2 = 0.0
+shader_parameter/OCTAVES = 3
+shader_parameter/seed = 1
+shader_parameter/alpha = 1.0
+shader_parameter/expo = 0.3
+
 [sub_resource type="ShaderMaterial" id="1"]
 shader = ExtResource("30")
 shader_parameter/amount = 0.0
@@ -226,43 +256,24 @@ _data = {
 [sub_resource type="ShaderMaterial" id="12"]
 shader = ExtResource("34")
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_fsurd"]
-shader = ExtResource("8_axm3r")
-shader_parameter/position = Vector2(0, 0)
-shader_parameter/iterations = 17
-shader_parameter/formuparam = 0.53
-shader_parameter/volsteps = 10
-shader_parameter/stepsize = 0.1
-shader_parameter/zoom = 0.8
-shader_parameter/tile = 0.85
-shader_parameter/speed = 0.0
-shader_parameter/brightness = 0.0
-shader_parameter/darkmatter = 0.3
-shader_parameter/distfading = 0.73
-shader_parameter/saturation = 0.85
-shader_parameter/rotation = Vector2(0, 0)
-shader_parameter/colorampMix = 0.5
-shader_parameter/isColoramp = null
-shader_parameter/max_alpha = 0.0
-
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_ol7ro"]
 shader = ExtResource("9_0dcpd")
 shader_parameter/position = Vector2(0, 0)
 shader_parameter/time = 0.0
 shader_parameter/iterations = 15
 shader_parameter/formuparam2 = 0.79
-shader_parameter/volsteps = 9
+shader_parameter/volsteps = 10
 shader_parameter/stepsize = 0.12
 shader_parameter/zoom = 1.0
 shader_parameter/tile = 0.85
 shader_parameter/speed2 = 0.2
-shader_parameter/brightness = 0.0
+shader_parameter/brightness = 0.0015
 shader_parameter/distfading = 0.92
 shader_parameter/saturation = 0.9
 shader_parameter/transverseSpeed = 1.0
 shader_parameter/cloud = 0.045
 shader_parameter/color = Color(0.027451, 0, 1, 1)
-shader_parameter/max_alpha = 0.0
+shader_parameter/max_alpha = 1.0
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_3we6a"]
 content_margin_left = 10.0
@@ -407,19 +418,33 @@ _data = {
 "StarFade": SubResource("20")
 }
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_tvths"]
-shader = ExtResource("19_4v34t")
-shader_parameter/color = Color(1, 1, 1, 1)
-shader_parameter/fog_size = 50.0
-shader_parameter/fog_mvt_spd = 0.0
-shader_parameter/fog_mvt_spd_2 = 0.0
-shader_parameter/OCTAVES = 3
-shader_parameter/seed = 1
-shader_parameter/alpha = 1.0
-shader_parameter/expo = 0.3
-
 [node name="Game" type="Node2D"]
 script = ExtResource("2")
+
+[node name="ShaderExport" type="SubViewportContainer" parent="."]
+offset_top = 720.0
+offset_right = 1920.0
+offset_bottom = 1800.0
+mouse_filter = 2
+stretch = true
+
+[node name="SubViewport" type="SubViewport" parent="ShaderExport"]
+disable_3d = true
+handle_input_locally = false
+size = Vector2i(1920, 1080)
+render_target_update_mode = 4
+
+[node name="Starfield" type="ColorRect" parent="ShaderExport/SubViewport"]
+material = SubResource("ShaderMaterial_fsurd")
+offset_right = 1920.0
+offset_bottom = 1080.0
+mouse_filter = 2
+
+[node name="ColorRect" type="ColorRect" parent="ShaderExport/SubViewport"]
+visible = false
+material = SubResource("ShaderMaterial_tvths")
+offset_right = 512.0
+offset_bottom = 512.0
 
 [node name="click" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("8")
@@ -612,15 +637,17 @@ offset_right = 1280.0
 offset_bottom = 720.0
 color = Color(0, 0, 0, 1)
 
-[node name="Starfield" type="ColorRect" parent="."]
-visible = false
-material = SubResource("ShaderMaterial_fsurd")
+[node name="Starfield" type="TextureRect" parent="."]
+modulate = Color(1, 1, 1, 0)
 offset_right = 1280.0
 offset_bottom = 720.0
 mouse_filter = 2
+expand_mode = 1
+stretch_mode = 5
 
-[node name="Starfield2" type="ColorRect" parent="."]
+[node name="StarfieldUniverse" type="ColorRect" parent="."]
 visible = false
+modulate = Color(1, 1, 1, 0)
 material = SubResource("ShaderMaterial_ol7ro")
 offset_right = 1280.0
 offset_bottom = 720.0
@@ -792,21 +819,6 @@ position = Vector2(640, 360)
 
 [node name="MMTimer" type="Timer" parent="."]
 wait_time = 0.5
-
-[node name="ShaderExport" type="SubViewportContainer" parent="."]
-visible = false
-offset_right = 512.0
-offset_bottom = 512.0
-
-[node name="SubViewport" type="SubViewport" parent="ShaderExport"]
-transparent_bg = true
-handle_input_locally = false
-render_target_update_mode = 0
-
-[node name="ColorRect" type="ColorRect" parent="ShaderExport/SubViewport"]
-material = SubResource("ShaderMaterial_tvths")
-offset_right = 512.0
-offset_bottom = 512.0
 
 [connection signal="close_button_out" from="UI/BottomInfo/CloseButton" to="." method="_on_CloseButton_close_button_out"]
 [connection signal="close_button_over" from="UI/BottomInfo/CloseButton" to="." method="_on_CloseButton_close_button_over"]

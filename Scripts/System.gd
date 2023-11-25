@@ -10,8 +10,6 @@ var dimensions:float
 const PLANET_SCALE_DIV = 1200000.0
 var scale_mult = 1.0
 var glows = []
-var star_time_bars = []
-var planet_time_bars = []
 var planet_plant_bars = []
 var star_rsrcs = []
 var planet_rsrcs = []
@@ -161,13 +159,6 @@ func refresh_planets():
 				add_rsrc(v, Color(0, 0.5, 0.9, 1), Data.minerals_icon, p_i.l_id, false, sc)
 			MS.scale *= scale_mult
 			planet.add_child(MS)
-			if p_i.has("bldg"):
-				var time_bar = game.time_scene.instantiate()
-				time_bar.position = Vector2(0, -80 * sc)
-				time_bar.scale *= sc
-				planet.add_child(time_bar)
-				time_bar.modulate = Color(0, 0.74, 0, 1)
-				planet_time_bars.append({"node":time_bar, "p_i":p_i, "parent":planet})
 		if p_i.has("tile_num") and p_i.bldg.has("name"):
 			planet.add_child(Helper.add_lv_boxes(p_i, Vector2.ZERO, sc))
 			match p_i.bldg.name:
@@ -242,11 +233,8 @@ func refresh_stars():
 	scale_mult = 70.0 / game.system_data[game.c_s].closest_planet_distance
 	for star in get_tree().get_nodes_in_group("stars_system"):
 		star.queue_free()
-	for time_bar in star_time_bars:
-		time_bar.node.queue_free()
 	for rsrc in star_rsrcs:
 		rsrc.node.queue_free()
-	star_time_bars.clear()
 	star_rsrcs.clear()
 	var star_tween
 	if Settings.enable_shaders:
@@ -579,7 +567,7 @@ func _input(event):
 						if MS_constr_data.obj.MS_lv == 0:
 							p_num = ceil(p_num_total * 0.1)
 						for i in range(0, p_num):
-							game.planet_data[i].cost_div_dict.erase(MS_constr_data.id)
+							game.planet_data[i].cost_div_dict.erase(star_over_id)
 							if game.planet_data[i].cost_div_dict.is_empty():
 								game.planet_data[i].erase("cost_div")
 								game.planet_data[i].erase("cost_div_dict")
@@ -590,7 +578,7 @@ func _input(event):
 								game.planet_data[i].cost_div = div
 						for i in len(stars_info):
 							if stars_info[i].hash() != MS_constr_data.obj.hash():
-								stars_info[i].cost_div_dict.erase(MS_constr_data.id)
+								stars_info[i].cost_div_dict.erase(star_over_id)
 								if stars_info[i].cost_div_dict.is_empty():
 									stars_info[i].erase("cost_div")
 									stars_info[i].erase("cost_div_dict")
@@ -685,17 +673,17 @@ func build_MS(obj:Dictionary, MS:String):
 					continue
 				p_i.cost_div = max(p_i.get("cost_div", 1.0), cost_div)
 				if p_i.has("cost_div_dict"):
-					p_i.cost_div_dict[MS_constr_data.id] = cost_div
+					p_i.cost_div_dict[star_over_id] = cost_div
 				else:
-					p_i.cost_div_dict = {MS_constr_data.id:cost_div}
+					p_i.cost_div_dict = {star_over_id:cost_div}
 			for i in len(stars_info):
-				if i != MS_constr_data.id:
+				if i != star_over_id:
 					var _star:Dictionary = stars_info[i]
 					_star.cost_div = max(_star.get("cost_div", 1.0), cost_div)
 					if _star.has("cost_div_dict"):
-						_star.cost_div_dict[MS_constr_data.id] = cost_div
+						_star.cost_div_dict[star_over_id] = cost_div
 					else:
-						_star.cost_div_dict = {MS_constr_data.id:cost_div}
+						_star.cost_div_dict = {star_over_id:cost_div}
 			queue_redraw()
 		game.HUD.refresh()
 		game.get_node("UI/Panel/AnimationPlayer").play("FadeOut")
@@ -771,7 +759,10 @@ func on_planet_click (id:int, l_id:int):
 	if game.is_ancestor_of(game.HUD):
 		game.HUD.refresh()
 
+var star_over_id:int
+
 func on_star_over (id:int):
+	star_over_id = id
 	var star = stars_info[id]
 	var star_type:int = star.type
 	var star_type_str:String = ""
@@ -838,7 +829,6 @@ func on_star_over (id:int):
 			stage += " (%s)" % [tr("STAGE_X_X") % [star.MS_lv, Data.MS_num_stages[star.MS]]]
 		Helper.add_label(stage)
 		MS_constr_data.obj = star
-		MS_constr_data.id = id
 		if star.has("repair_cost"):
 			if game.system_data[game.c_s].has("conquered"):
 				Helper.add_label(tr("REPAIR_COST"), -1, false)

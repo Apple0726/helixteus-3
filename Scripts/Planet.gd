@@ -149,7 +149,7 @@ func _ready():
 				lake_tiles[tile.lake-1].append(Vector2i(i, j))
 			if tile.has("ash"):
 				ash_tiles.append(Vector2i(i, j))
-	if len(aurora_tiles) > 400:
+	if len(aurora_tiles) > 300:
 		for id in aurora_tiles:
 			var tile = game.tile_data[id]
 			var i:int = id % wid

@@ -148,7 +148,7 @@ func _process(delta):
 			elif bottom_margin < 100:
 				global_position.y = 100 - margin
 	if game.c_v == "universe":
-		game.get_node("Starfield2").material.set_shader_parameter("position", (position - Vector2(640, 360)) / 20000.0 / sqrt(scale.x))
+		game.get_node("StarfieldUniverse").material.set_shader_parameter("position", (position - Vector2(640, 360)) / 20000.0 / sqrt(scale.x))
 		if not changed and not $AnimationPlayer.is_playing():
 			if obj_scaled and scale.x > CLUSTER_SCALE_THRESHOLD:
 				fade_out_clusters()

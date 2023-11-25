@@ -46,6 +46,8 @@ func _ready():
 		$TabContainer/GAME/Autosave.value = autosave_interval
 		$TabContainer/GAME/AutoSwitch.button_pressed = config.get_value("game", "auto_switch_buy_sell", false)
 		$TabContainer/GRAPHICS/FPS/FPS.value = max_fps
+		$TabContainer/GRAPHICS/SpaceLOD/StaticSpaceLOD.value = config.get_value("graphics", "static_space_LOD", 15)
+		$TabContainer/GRAPHICS/SpaceLOD/DynamicSpaceLOD.value = config.get_value("graphics", "dynamic_space_LOD", 8)
 		$TabContainer/MISC/OPCursor.button_pressed = config.get_value("misc", "op_cursor", false)
 		$TabContainer/MISC/Discord.button_pressed = config.get_value("misc", "discord", true)
 		set_notation()
@@ -270,7 +272,7 @@ func _on_EnableShaders_toggled(button_pressed):
 		Settings.enable_shaders = button_pressed
 		game.get_node("ClusterBG").visible = button_pressed
 		game.get_node("Starfield").visible = button_pressed
-		game.get_node("Starfield2").visible = button_pressed
+		game.get_node("StarfieldUniverse").visible = button_pressed
 		config.set_value("graphics", "enable_shaders", button_pressed)
 		config.save("user://settings.cfg")
 
@@ -342,4 +344,29 @@ func _on_auto_switch_toggled(button_pressed):
 	Settings.auto_switch_buy_sell = button_pressed
 	if err == OK:
 		config.set_value("game", "auto_switch_buy_sell", button_pressed)
+		config.save("user://settings.cfg")
+
+
+func _on_static_space_lod_value_changed(value):
+	Settings.static_space_LOD = value
+	game.get_node("ShaderExport/SubViewport/Starfield").material.set_shader_parameter("volsteps", value)
+	game.get_node("ShaderExport/SubViewport/Starfield").material.set_shader_parameter("iterations", 14 + value / 2)
+	if game.c_v in ["system", "planet"]:
+		game.update_starfield_BG()
+	elif game.c_v == "battle":
+		game.battle.get_node("Stars/Starfield").material.set_shader_parameter("volsteps", value)
+		game.battle.get_node("Stars/Starfield").material.set_shader_parameter("iterations", 14 + value / 2)
+	$TabContainer/GRAPHICS/SpaceLOD/StaticSpaceLODValue.text = str(value)
+	if err == OK:
+		config.set_value("graphics", "static_space_LOD", value)
+		config.save("user://settings.cfg")
+
+
+func _on_dynamic_space_lod_value_changed(value):
+	Settings.dynamic_space_LOD = value
+	game.get_node("StarfieldUniverse").material.set_shader_parameter("volsteps", value)
+	game.get_node("StarfieldUniverse").material.set_shader_parameter("iterations", 14 + value / 2)
+	$TabContainer/GRAPHICS/SpaceLOD/DynamicSpaceLODValue.text = str(value)
+	if err == OK:
+		config.set_value("graphics", "dynamic_space_LOD", value)
 		config.save("user://settings.cfg")

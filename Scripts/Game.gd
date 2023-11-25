@@ -568,6 +568,12 @@ func _ready():
 		Settings.op_cursor = config.get_value("misc", "op_cursor", false)
 		Settings.auto_switch_buy_sell = config.get_value("game", "auto_switch_buy_sell", false)
 		Settings.discord = config.get_value("misc", "discord", true)
+		Settings.static_space_LOD = config.get_value("graphics", "static_space_LOD", 15)
+		Settings.dynamic_space_LOD = config.get_value("graphics", "dynamic_space_LOD", 8)
+		$ShaderExport/SubViewport/Starfield.material.set_shader_parameter("volsteps", Settings.static_space_LOD)
+		$ShaderExport/SubViewport/Starfield.material.set_shader_parameter("iterations", 14 + Settings.static_space_LOD / 2)
+		$StarfieldUniverse.material.set_shader_parameter("volsteps", Settings.dynamic_space_LOD)
+		$StarfieldUniverse.material.set_shader_parameter("iterations", 14 + Settings.dynamic_space_LOD / 2)
 		if Settings.op_cursor:
 			Input.set_custom_mouse_cursor(preload("res://Cursor.png"))
 		var notation:String =  config.get_value("game", "notation", "SI")
@@ -1315,7 +1321,8 @@ func fade_in_panel(panel:Control):
 	var s = panel.size
 	panel.position.y = -s.y / 2.0 + 10
 	panel.tween.tween_property(panel, "position", Vector2(-s.x / 2.0, -s.y / 2.0), 0.3).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
-	panel.tween.tween_property($Panels/Blur.material, "shader_parameter/amount", 1.0, 0.2)
+	if panel != settings_panel:
+		panel.tween.tween_property($Panels/Blur.material, "shader_parameter/amount", 1.0, 0.2)
 	if panel.tween.is_connected("finished",Callable(self,"on_fade_complete")):
 		panel.tween.disconnect("finished",Callable(self,"on_fade_complete"))
 	hide_tooltip()
@@ -1329,7 +1336,8 @@ func fade_out_panel(panel:Control):
 	panel.tween = create_tween()
 	panel.tween.set_parallel(true)
 	panel.tween.tween_property(panel, "modulate", Color(1, 1, 1, 0), 0.1)
-	panel.tween.tween_property($Panels/Blur.material, "shader_parameter/amount", 0.0, 0.2)
+	if panel != settings_panel:
+		panel.tween.tween_property($Panels/Blur.material, "shader_parameter/amount", 0.0, 0.2)
 	if not panel.tween.is_connected("finished",Callable(self,"on_fade_complete")):
 		panel.tween.connect("finished",Callable(self,"on_fade_complete").bind(panel))
 
@@ -1427,15 +1435,13 @@ func switch_view(new_view:String, other_params:Dictionary = {}):
 		view_tween.tween_property(view, "modulate", Color(1.0, 1.0, 1.0, 0.0), 0.15)
 		if $Starfield.visible and not (old_view == "system" and new_view == "planet"):
 			var starfield_tween = get_tree().create_tween()
-			starfield_tween.set_parallel(true)
 			if old_view == "planet" and new_view == "system":
-				starfield_tween.tween_property($Starfield.material, "shader_parameter/brightness", 0.00075, 0.15)
-				starfield_tween.tween_property($Starfield.material, "shader_parameter/max_alpha", 0.5, 0.15)
+				starfield_tween.tween_property($Starfield, "modulate:a", 0.5, 0.15)
 			else:
-				starfield_tween.tween_property($Starfield.material, "shader_parameter/brightness", 0.0, 0.15)
-		if $Starfield2.visible:
+				starfield_tween.tween_property($Starfield, "modulate:a", 0.0, 0.15)
+		if $StarfieldUniverse.visible:
 			var starfield_tween = create_tween()
-			starfield_tween.tween_property($Starfield2.material, "shader_parameter/brightness", 0.0, 0.15)
+			starfield_tween.tween_property($StarfieldUniverse.material, "shader_parameter/brightness", 0.0, 0.15)
 		if is_instance_valid(view.obj) and Settings.enable_shaders:
 			if c_v == "system":
 				var tween2 = create_tween()
@@ -1830,7 +1836,15 @@ func add_dimension():
 
 func add_universe():
 	var starfield_color_param = 0.1 * pow(1.0 / pow(u_i.age, 0.25) / pow(1.0 / u_i.charge / 4.0, physics_bonus.BI), 0.65)
-	show_starfield($Starfield2, 0.0015, 0.5, {"position":u_i.view.pos, "stepsize":starfield_color_param, "distfading":clamp(remap(starfield_color_param, 0.25, 0.4, 0.73, 0.3), 0.3, 0.73)})
+	if Settings.enable_shaders:
+		$StarfieldUniverse.material.set_shader_parameter("position", u_i.view.pos)
+		$StarfieldUniverse.material.set_shader_parameter("stepsize", starfield_color_param)
+		$StarfieldUniverse.material.set_shader_parameter("distfading", clamp(remap(starfield_color_param, 0.25, 0.4, 0.73, 0.3), 0.3, 0.73))
+		$StarfieldUniverse.modulate.a = 1.0
+		var starfield_tween = create_tween()
+		starfield_tween.set_parallel(true)
+		starfield_tween.tween_property($StarfieldUniverse.material, "shader_parameter/brightness", 0.0015, 0.5)
+		starfield_tween.tween_property($StarfieldUniverse.material, "shader_parameter/max_alpha", 0.5, 0.5)
 	if not universe_data[c_u].has("discovered"):
 		reset_collisions()
 		generate_clusters(c_u)
@@ -1921,22 +1935,32 @@ func start_system_generation():
 	await generate_system_part()
 	is_generating = false
 
-func show_starfield(node, max_brightness:float, max_alpha:float, params:Dictionary = {}):
-	if not Settings.enable_shaders:
-		return
+func show_starfield(params:Dictionary):
 	for param in params.keys():
-		node.material.set_shader_parameter(param, params[param])
-	node.visible = true
-	var starfield_tween = create_tween()
-	starfield_tween.set_parallel(true)
-	starfield_tween.tween_property(node.material, "shader_parameter/brightness", max_brightness, 0.5)
-	starfield_tween.tween_property(node.material, "shader_parameter/max_alpha", max_alpha, 0.5)
+		$ShaderExport/SubViewport/Starfield.material.set_shader_parameter(param, params[param])
+	if $Starfield.modulate.a == 0.0:
+		update_starfield_BG()
+
+func update_starfield_BG():
+	$ShaderExport.visible = true
+	var game_size:Vector2 = DisplayServer.window_get_size()
+	if game_size.y < game_size.x / 1.7777777:
+		game_size.x = game_size.y * 1.7777777
+	elif game_size.x < game_size.y * 1.7777777:
+		game_size.y = game_size.x / 1.7777777
+	$ShaderExport.size = game_size
+	await RenderingServer.frame_post_draw
+	var BG_image:Image = $ShaderExport/SubViewport.get_texture().get_image()
+	$Starfield.texture = ImageTexture.create_from_image(BG_image)
+	$ShaderExport.visible = false
 	
 func add_system():
 	var starfield_color_param = 0.1 * pow(1.0 / pow(u_i.age, 0.25) / pow(1e-9 / galaxy_data[c_g].B_strength, physics_bonus.BI), 0.65)
 	if obj_exists("Galaxies", c_g_g):
 		system_data = open_obj("Galaxies", c_g_g)
-	show_starfield($Starfield, 0.00075, 0.5, {"position":system_data[c_s].pos / 10000.0, "stepsize":starfield_color_param, "distfading":clamp(remap(starfield_color_param, 0.15, 0.4, 0.73, 0.3), 0.3, 0.73)})
+	show_starfield({"position":system_data[c_s].pos / 10000.0, "stepsize":starfield_color_param, "distfading":clamp(remap(starfield_color_param, 0.15, 0.4, 0.73, 0.3), 0.3, 0.73)})
+	var starfield_tween = create_tween()
+	starfield_tween.tween_property($Starfield, "modulate:a", 0.5, 0.5)
 	planet_data = open_obj("Systems", c_s_g)
 	if not system_data[c_s].has("discovered") or planet_data.is_empty():
 		if c_s_g != 0:
@@ -1951,7 +1975,9 @@ func add_system():
 
 func add_planet():
 	var starfield_color_param = 0.1 * pow(1.0 / pow(u_i.age, 0.25) / pow(1e-9 / galaxy_data[c_g].B_strength, physics_bonus.BI), 0.65)
-	show_starfield($Starfield, 0.0012, 0.8, {"position":system_data[c_s].pos / 10000.0, "stepsize":starfield_color_param, "distfading":clamp(remap(starfield_color_param, 0.15, 0.4, 0.73, 0.3), 0.3, 0.73)})
+	show_starfield({"position":system_data[c_s].pos / 10000.0, "stepsize":starfield_color_param, "distfading":clamp(remap(starfield_color_param, 0.15, 0.4, 0.73, 0.3), 0.3, 0.73)})
+	var starfield_tween = create_tween()
+	starfield_tween.tween_property($Starfield, "modulate:a", 0.8, 0.5)
 	planet_data = open_obj("Systems", c_s_g)
 	if not planet_data[c_p].has("discovered") or open_obj("Planets", c_p_g).is_empty():
 		generate_tiles(c_p)
@@ -1970,7 +1996,7 @@ func remove_dimension():
 	view.dragged = true
 
 func remove_universe():
-	$Starfield2.visible = false
+	$StarfieldUniverse.modulate.a = 0.0
 	view.remove_obj("universe")
 
 func remove_cluster():
@@ -1986,13 +2012,13 @@ func remove_galaxy():
 	Helper.save_obj("Galaxies", c_g_g, system_data)
 
 func remove_system():
-	$Starfield.visible = false
+#	$Starfield.modulate.a = 0.0
 	view.remove_obj("system")
 	Helper.save_obj("Galaxies", c_g_g, system_data)
 	Helper.save_obj("Systems", c_s_g, planet_data)
 
 func remove_planet(save_zooms:bool = true):
-	$Starfield.visible = false
+#	$Starfield.modulate.a = 0.0
 	if is_instance_valid(active_panel):
 		fade_out_panel(active_panel)
 	active_panel = null
