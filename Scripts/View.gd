@@ -354,8 +354,8 @@ func _physics_process(_delta):
 	#Zooming animation
 	if zooming == "in":
 		if first_zoom:
-			_zoom_at_point(-ease(progress, 0.1) * (zoom_factor - 1) + zoom_factor, Vector2(640, 200))
-			progress += 0.003
+			_zoom_at_point(-ease(progress, 0.1) * (zoom_factor - 1) + zoom_factor, Vector2(640, 320))
+			progress += 0.002
 			modulate.a = min(1, modulate.a + 0.01)
 		else:
 			_zoom_at_point(-ease(progress, 0.1) * (zoom_factor - 1) + zoom_factor)

@@ -515,7 +515,7 @@ func constr_bldg(tile_id:int, curr_time:int, _bldg_to_construct:int, mass_build:
 			game.HUD.shop.visible = true
 			game.HUD.MU.visible = true
 			game.HUD.get_node("Bottom/Panel").visible = true
-		game.u_i.xp = constr_costs_total.money / 100.0
+		game.u_i.xp += constr_costs_total.money / 100.0
 		var path_1_value
 		if _bldg_to_construct != Building.PROBE_CONSTRUCTION_CENTER:
 			path_1_value = Data.path_1[_bldg_to_construct].value

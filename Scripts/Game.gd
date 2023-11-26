@@ -1,9 +1,9 @@
 extends Node2D
 
 const TEST:bool = false
-const DATE:String = "17 Oct 2023"
-const VERSION:String = "v0.28.2"
-const COMPATIBLE_SAVES = ["v0.28", "v0.28.1"]
+const DATE:String = ""
+const VERSION:String = "v0.29"
+const COMPATIBLE_SAVES = ["v0.28", "v0.28.1", "v0.28.2"]
 const UNIQUE_BLDGS = 7
 
 var generic_panel_scene = preload("res://Scenes/Panels/GenericPanel.tscn")
@@ -1143,7 +1143,7 @@ func new_game(univ:int = 0, new_save:bool = false, DR_advantage = false):
 	if not is_ancestor_of(HUD):
 		$UI.add_child(HUD)
 	HUD.refresh()
-	add_planet()
+	add_planet(true)
 	$Autosave.start()
 	var init_time = Time.get_unix_time_from_system()
 	add_panels()
@@ -1973,22 +1973,26 @@ func add_system():
 		popup_window(tr("WANDERING_SHIP_DESC"), tr("WANDERING_SHIP"))
 		get_2nd_ship()
 
-func add_planet():
+func add_planet(new_game:bool = false):
 	var starfield_color_param = 0.1 * pow(1.0 / pow(u_i.age, 0.25) / pow(1e-9 / galaxy_data[c_g].B_strength, physics_bonus.BI), 0.65)
 	show_starfield({"position":system_data[c_s].pos / 10000.0, "stepsize":starfield_color_param, "distfading":clamp(remap(starfield_color_param, 0.15, 0.4, 0.73, 0.3), 0.3, 0.73)})
 	var starfield_tween = create_tween()
-	starfield_tween.tween_property($Starfield, "modulate:a", 0.8, 0.5)
+	starfield_tween.tween_property($Starfield, "modulate:a", 0.8, 1.5 if new_game else 0.5)
 	planet_data = open_obj("Systems", c_s_g)
 	if not planet_data[c_p].has("discovered") or open_obj("Planets", c_p_g).is_empty():
 		generate_tiles(c_p)
-	add_obj("planet")
-	HUD.switch_btn.texture_normal = preload("res://Graphics/Buttons/SystemView.png")
-	view.obj.icons_hidden = view.scale.x >= 0.25
 	planet_HUD = planet_HUD_scene.instantiate()
 	$UI.add_child(planet_HUD)
-	if stats_global.bldgs_built == 0:
+	HUD.switch_btn.texture_normal = preload("res://Graphics/Buttons/SystemView.png")
+	if new_game:
 		planet_HUD.get_node("VBoxContainer/Construct").material.set_shader_parameter("color", Color(1.0, 0.75, 0.0, 1.0))
 		planet_HUD.get_node("VBoxContainer/Construct/AnimationPlayer").play("FlashRepeat")
+		await get_tree().create_timer(1.5).timeout
+	add_obj("planet")
+	if new_game:
+		view.scale = Vector2.ONE * 0.1
+		view.position = Vector2(640-160, 360-160)
+	view.obj.icons_hidden = view.scale.x >= 0.25
 
 func remove_dimension():
 	viewing_dimension = false
