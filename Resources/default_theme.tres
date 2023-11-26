@@ -7,9 +7,9 @@
 font_names = PackedStringArray("Sans-Serif")
 
 [sub_resource type="SystemFont" id="SystemFont_s3jam"]
+fallbacks = Array[Font]([SubResource("SystemFont_xvdaj")])
 font_names = PackedStringArray("Ebrima")
 multichannel_signed_distance_field = true
-fallbacks = Array[Font]([SubResource("SystemFont_xvdaj")])
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_78575"]
 bg_color = Color(0.12549, 0.12549, 0.12549, 1)
@@ -73,9 +73,9 @@ shadow_size = 2
 shadow_offset = Vector2(1, 1)
 
 [sub_resource type="SystemFont" id="SystemFont_uf2dt"]
+fallbacks = Array[Font]([SubResource("SystemFont_xvdaj")])
 font_names = PackedStringArray("Ebrima")
 multichannel_signed_distance_field = true
-fallbacks = Array[Font]([SubResource("SystemFont_xvdaj")])
 
 [sub_resource type="StyleBoxEmpty" id="5"]
 
@@ -103,14 +103,14 @@ content_margin_left = 8.0
 bg_color = Color(1, 1, 1, 0)
 
 [sub_resource type="SystemFont" id="SystemFont_01v61"]
+fallbacks = Array[Font]([SubResource("SystemFont_xvdaj")])
 font_names = PackedStringArray("Ebrima")
 multichannel_signed_distance_field = true
-fallbacks = Array[Font]([SubResource("SystemFont_xvdaj")])
 
 [sub_resource type="SystemFont" id="SystemFont_ve4h2"]
+fallbacks = Array[Font]([SubResource("SystemFont_xvdaj")])
 font_names = PackedStringArray("Ebrima")
 multichannel_signed_distance_field = true
-fallbacks = Array[Font]([SubResource("SystemFont_xvdaj")])
 
 [sub_resource type="StyleBoxFlat" id="13"]
 bg_color = Color(0.145098, 0.670588, 0.670588, 1)
@@ -173,19 +173,19 @@ border_blend = true
 corner_detail = 5
 
 [sub_resource type="SystemFont" id="SystemFont_6dkr5"]
+fallbacks = Array[Font]([SubResource("SystemFont_xvdaj")])
 font_names = PackedStringArray("Ebrima")
 multichannel_signed_distance_field = true
-fallbacks = Array[Font]([SubResource("SystemFont_xvdaj")])
 
 [sub_resource type="SystemFont" id="SystemFont_c5eyb"]
+fallbacks = Array[Font]([SubResource("SystemFont_xvdaj")])
 font_names = PackedStringArray("Ebrima")
 multichannel_signed_distance_field = true
-fallbacks = Array[Font]([SubResource("SystemFont_xvdaj")])
 
 [sub_resource type="SystemFont" id="SystemFont_st2a7"]
+fallbacks = Array[Font]([SubResource("SystemFont_xvdaj")])
 font_names = PackedStringArray("Ebrima")
 multichannel_signed_distance_field = true
-fallbacks = Array[Font]([SubResource("SystemFont_xvdaj")])
 
 [sub_resource type="StyleBoxFlat" id="19"]
 bg_color = Color(0.847059, 0.847059, 0.847059, 1)
@@ -196,14 +196,14 @@ border_width_bottom = 2
 border_color = Color(0.384314, 0.384314, 0.384314, 1)
 
 [sub_resource type="SystemFont" id="SystemFont_nacjo"]
+fallbacks = Array[Font]([SubResource("SystemFont_xvdaj")])
 font_names = PackedStringArray("Ebrima")
 multichannel_signed_distance_field = true
-fallbacks = Array[Font]([SubResource("SystemFont_xvdaj")])
 
 [sub_resource type="SystemFont" id="SystemFont_5yoc4"]
+fallbacks = Array[Font]([SubResource("SystemFont_xvdaj")])
 font_names = PackedStringArray("Ebrima")
 multichannel_signed_distance_field = true
-fallbacks = Array[Font]([SubResource("SystemFont_xvdaj")])
 
 [sub_resource type="StyleBoxFlat" id="20"]
 content_margin_left = 10.0
@@ -232,9 +232,9 @@ shadow_size = 2
 shadow_offset = Vector2(1, 1)
 
 [sub_resource type="SystemFont" id="SystemFont_p5i3r"]
+fallbacks = Array[Font]([SubResource("SystemFont_xvdaj")])
 font_names = PackedStringArray("Ebrima")
 multichannel_signed_distance_field = true
-fallbacks = Array[Font]([SubResource("SystemFont_xvdaj")])
 
 [sub_resource type="StyleBoxFlat" id="22"]
 bg_color = Color(0, 0, 0, 1)
@@ -243,29 +243,29 @@ bg_color = Color(0, 0, 0, 1)
 bg_color = Color(1, 1, 1, 1)
 
 [sub_resource type="SystemFont" id="SystemFont_biaqw"]
+fallbacks = Array[Font]([SubResource("SystemFont_xvdaj")])
 font_names = PackedStringArray("Ebrima")
 multichannel_signed_distance_field = true
-fallbacks = Array[Font]([SubResource("SystemFont_xvdaj")])
 
 [sub_resource type="SystemFont" id="SystemFont_mdnev"]
+fallbacks = Array[Font]([SubResource("SystemFont_xvdaj")])
 font_names = PackedStringArray("Ebrima")
 multichannel_signed_distance_field = true
-fallbacks = Array[Font]([SubResource("SystemFont_xvdaj")])
 
 [sub_resource type="SystemFont" id="SystemFont_7ywt1"]
+fallbacks = Array[Font]([SubResource("SystemFont_xvdaj")])
 font_names = PackedStringArray("Ebrima")
 multichannel_signed_distance_field = true
-fallbacks = Array[Font]([SubResource("SystemFont_xvdaj")])
 
 [sub_resource type="SystemFont" id="SystemFont_cr4fx"]
+fallbacks = Array[Font]([SubResource("SystemFont_xvdaj")])
 font_names = PackedStringArray("Ebrima")
 multichannel_signed_distance_field = true
-fallbacks = Array[Font]([SubResource("SystemFont_xvdaj")])
 
 [sub_resource type="SystemFont" id="SystemFont_y8qt8"]
+fallbacks = Array[Font]([SubResource("SystemFont_xvdaj")])
 font_names = PackedStringArray("Ebrima")
 multichannel_signed_distance_field = true
-fallbacks = Array[Font]([SubResource("SystemFont_xvdaj")])
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_s8f2h"]
 content_margin_left = 5.0
@@ -288,9 +288,9 @@ border_blend = true
 corner_detail = 5
 
 [sub_resource type="SystemFont" id="SystemFont_ny0d8"]
+fallbacks = Array[Font]([SubResource("SystemFont_xvdaj")])
 font_names = PackedStringArray("Ebrima")
 multichannel_signed_distance_field = true
-fallbacks = Array[Font]([SubResource("SystemFont_xvdaj")])
 
 [resource]
 default_font = SubResource("SystemFont_ny0d8")

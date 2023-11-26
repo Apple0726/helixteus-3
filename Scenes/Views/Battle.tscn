@@ -1,4 +1,4 @@
-[gd_scene load_steps=56 format=3 uid="uid://dkeiijs55u4pd"]
+[gd_scene load_steps=54 format=3 uid="uid://dkeiijs55u4pd"]
 
 [ext_resource type="Script" path="res://Scripts/Battle.gd" id="1"]
 [ext_resource type="Theme" uid="uid://cp2u1kgj60ic" path="res://Resources/default_theme.tres" id="2"]
@@ -153,9 +153,9 @@ tracks/0/path = NodePath(".:position:y")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
-"handle_modes": PackedInt32Array(),
-"points": PackedFloat32Array(),
-"times": PackedFloat32Array()
+"handle_modes": PackedInt32Array(0, 0),
+"points": PackedFloat32Array(700.749, -0.25, 0, 0.1, -42.3724, 650, -0.2, 1.91321, 0.25, 0),
+"times": PackedFloat32Array(0, 0.3)
 }
 tracks/1/type = "value"
 tracks/1/imported = false
@@ -176,9 +176,9 @@ tracks/2/path = NodePath("../Back:position:y")
 tracks/2/interp = 1
 tracks/2/loop_wrap = true
 tracks/2/keys = {
-"handle_modes": PackedInt32Array(),
-"points": PackedFloat32Array(),
-"times": PackedFloat32Array()
+"handle_modes": PackedInt32Array(0, 0),
+"points": PackedFloat32Array(715, -0.25, 0, 0, -22.1508, 684, -0.25, 0, 0.25, 0),
+"times": PackedFloat32Array(0, 0.3)
 }
 tracks/3/type = "value"
 tracks/3/imported = false
@@ -311,110 +311,6 @@ tracks/0/keys = {
 _data = {
 "Fade": SubResource("39")
 }
-
-[sub_resource type="Shader" id="Shader_rkw82"]
-code = "// Star Nest by Pablo Roman Andrioli
-// Ported to Godot by Lyagva
-// License: MIT
-shader_type canvas_item;
-
-uniform vec2 position;
-uniform int iterations:hint_range(1, 30, 1) = 17;
-uniform float formuparam:hint_range(0.5, 1.0, 0.01) = 0.53;
-
-uniform int volsteps = 10;
-uniform float stepsize:hint_range(0.0, 0.4, 0.01) = 0.1;
-
-uniform float zoom   = 0.800;
-uniform float tile:hint_range(0.8, 0.9, 0.001)   = 0.850;
-uniform float speed  = 0.001;
-
-uniform float brightness:hint_range(0.0, 0.01, 0.0001) = 0.0015;
-uniform float darkmatter = 0.300;
-uniform float distfading = 0.730;
-uniform float saturation = 0.850;
-
-uniform vec2 rotation;
-uniform sampler2D coloramp;
-uniform float colorampMix = .5;
-uniform bool isColoramp;
-
-uniform float max_alpha:hint_range(0.0, 1.0, 0.01) = 1.0;
-
-void fragment()
-{
-	vec2 fragCoord = FRAGCOORD.xy;
-	vec2 iResolution = 1.0 / SCREEN_PIXEL_SIZE;
-	float iTime = TIME;
-
-	//get coords and direction
-	vec2 uv=fragCoord.xy/iResolution.xy-.5;
-	uv.y*=iResolution.y/iResolution.x;
-	uv+=position;
-	vec3 dir=vec3(uv*zoom,1.);
-	float time=iTime*speed+.25;
-
-	//mouse rotation
-	float a1 = .5 + rotation.x / iResolution.x * 2.;
-	float a2 = .8 + rotation.y / iResolution.y * 2.;
-	mat2 rot1 = mat2(vec2(cos(a1), sin(a1)), vec2(-sin(a1), cos(a1)));
-	mat2 rot2 = mat2(vec2(cos(a2), sin(a2)), vec2(-sin(a2), cos(a2)));
-	dir.xz *= rot1;
-	dir.xy *= rot2;
-	vec3 from = vec3(1.,.5,0.5);
-	from += vec3(time * 2., time, -2.);
-	from.xz *= rot1;
-	from.xy *= rot2;
-
-	//volumetric rendering
-	float s = 0.1, fade = 1.;
-	vec3 v=vec3(0.);
-	for (int r=0; r<volsteps; r++) {
-		vec3 p=from+s*dir*.5;
-		p = abs(vec3(tile)-mod(p,vec3(tile*2.))); // tiling fold
-		float pa,a=pa=0.;
-		for (int i=0; i<iterations; i++) {
-			p=abs(p)/dot(p,p)-formuparam; // the magic formula
-			a+=abs(length(p)-pa); // absolute sum of average change
-			pa=length(p);
-		}
-		float dm=max(0.,darkmatter-a*a*.001); //dark matter
-		a*=a*a; // add contrast
-		if (r>6) fade*=1.-dm; // dark matter, don't render near
-		//v+=vec3(dm,dm*.5,0.);
-		v+=fade;
-		v+=vec3(s,s*s,s*s*s*s)*a*brightness*fade; // coloring based on distance
-		fade*=distfading; // distance fading
-		s+=stepsize;
-	}
-	v=mix(vec3(length(v)),v,saturation); //color adjust
-
-	COLOR = vec4(v*.01,1.);
-
-	if (isColoramp) {
-		COLOR += texture(coloramp, vec2(v.r * .01, 0.)) * colorampMix;
-	}
-	COLOR.a = min(COLOR.a, max_alpha);
-}"
-
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_o80sx"]
-shader = SubResource("Shader_rkw82")
-shader_parameter/position = Vector2(0, 0)
-shader_parameter/iterations = 17
-shader_parameter/formuparam = 0.53
-shader_parameter/volsteps = 10
-shader_parameter/stepsize = 0.1
-shader_parameter/zoom = 0.8
-shader_parameter/tile = 0.85
-shader_parameter/speed = 0.0
-shader_parameter/brightness = 0.0015
-shader_parameter/darkmatter = 0.3
-shader_parameter/distfading = 0.73
-shader_parameter/saturation = 0.85
-shader_parameter/rotation = Vector2(0, 0)
-shader_parameter/colorampMix = 0.5
-shader_parameter/isColoramp = null
-shader_parameter/max_alpha = 1.0
 
 [sub_resource type="ShaderMaterial" id="22"]
 shader = ExtResource("8")
@@ -593,8 +489,9 @@ anchor_top = 1.0
 anchor_right = 0.5
 anchor_bottom = 1.0
 offset_left = -416.0
-offset_top = -64.0
+offset_top = -70.0
 offset_right = 416.0
+offset_bottom = -6.0
 grow_horizontal = 2
 theme = ExtResource("2")
 
@@ -897,10 +794,10 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = 2368.0
-offset_top = -112.0
-offset_right = 2752.0
-offset_bottom = 60.0
+offset_left = 3648.0
+offset_top = 248.0
+offset_right = 4032.0
+offset_bottom = 420.0
 grow_horizontal = 2
 grow_vertical = 2
 theme = ExtResource("2")
@@ -967,7 +864,7 @@ texture = ExtResource("4")
 offset_right = 1280.0
 offset_bottom = 720.0
 mouse_filter = 2
-color = Color(0, 0, 0, 0)
+color = Color(0, 0, 0, 1)
 metadata/_edit_lock_ = true
 
 [node name="ControlKeyboard" type="Control" parent="UI"]
@@ -1046,12 +943,6 @@ libraries = {
 
 [node name="Stars" type="CanvasLayer" parent="."]
 layer = -1
-
-[node name="Starfield" type="ColorRect" parent="Stars"]
-material = SubResource("ShaderMaterial_o80sx")
-offset_right = 1280.0
-offset_bottom = 720.0
-mouse_filter = 2
 
 [node name="Laser" type="Control" parent="."]
 visible = false

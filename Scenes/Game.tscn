@@ -40,6 +40,9 @@ shader_parameter/rotation = Vector2(0, 0)
 shader_parameter/colorampMix = 0.5
 shader_parameter/isColoramp = null
 shader_parameter/max_alpha = 1.0
+shader_parameter/red_p = 1.0
+shader_parameter/green_p = 2.0
+shader_parameter/blue_p = 4.0
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_tvths"]
 shader = ExtResource("19_4v34t")
@@ -274,6 +277,9 @@ shader_parameter/transverseSpeed = 1.0
 shader_parameter/cloud = 0.045
 shader_parameter/color = Color(0.027451, 0, 1, 1)
 shader_parameter/max_alpha = 1.0
+shader_parameter/red_p = 1.0
+shader_parameter/green_p = 2.0
+shader_parameter/blue_p = 4.0
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_3we6a"]
 content_margin_left = 10.0
@@ -422,6 +428,7 @@ _data = {
 script = ExtResource("2")
 
 [node name="ShaderExport" type="SubViewportContainer" parent="."]
+visible = false
 offset_top = 720.0
 offset_right = 1920.0
 offset_bottom = 1800.0
@@ -432,7 +439,7 @@ stretch = true
 disable_3d = true
 handle_input_locally = false
 size = Vector2i(1920, 1080)
-render_target_update_mode = 4
+render_target_update_mode = 0
 
 [node name="Starfield" type="ColorRect" parent="ShaderExport/SubViewport"]
 material = SubResource("ShaderMaterial_fsurd")
@@ -501,10 +508,10 @@ layout_mode = 2
 close_button_type = 2
 
 [node name="FlashAnim" type="AnimationPlayer" parent="UI/BottomInfo"]
-autoplay = "Flashing"
 libraries = {
 "": SubResource("AnimationLibrary_ci5uo")
 }
+autoplay = "Flashing"
 
 [node name="MoveAnim" type="AnimationPlayer" parent="UI/BottomInfo"]
 libraries = {
@@ -546,6 +553,7 @@ libraries = {
 }
 
 [node name="ClusterBG" parent="." instance=ExtResource("35")]
+visible = false
 color = Color(0.686275, 0, 1, 1)
 
 [node name="GrayscaleRect" type="TextureRect" parent="."]
@@ -636,14 +644,6 @@ material = SubResource("12")
 offset_right = 1280.0
 offset_bottom = 720.0
 color = Color(0, 0, 0, 1)
-
-[node name="Starfield" type="TextureRect" parent="."]
-modulate = Color(1, 1, 1, 0)
-offset_right = 1280.0
-offset_bottom = 720.0
-mouse_filter = 2
-expand_mode = 1
-stretch_mode = 5
 
 [node name="StarfieldUniverse" type="ColorRect" parent="."]
 visible = false
@@ -800,7 +800,15 @@ scale = Vector2(0.506222, 0.506222)
 texture = ExtResource("32")
 
 [node name="Stars" type="CanvasLayer" parent="."]
-layer = -1
+layer = -2
+
+[node name="Starfield" type="TextureRect" parent="Stars"]
+modulate = Color(1, 1, 1, 0)
+offset_right = 1280.0
+offset_bottom = 720.0
+mouse_filter = 2
+expand_mode = 1
+stretch_mode = 5
 
 [node name="WhiteStars" type="Node2D" parent="Stars"]
 visible = false

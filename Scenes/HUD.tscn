@@ -1,4 +1,4 @@
-[gd_scene load_steps=80 format=3 uid="uid://cahlkepfiewe4"]
+[gd_scene load_steps=81 format=3 uid="uid://cahlkepfiewe4"]
 
 [ext_resource type="Texture2D" uid="uid://rk0ya5g0f8u6" path="res://Graphics/Buttons/Craft.png" id="1"]
 [ext_resource type="Texture2D" uid="uid://btgin855mojfx" path="res://Graphics/Icons/money.png" id="2"]
@@ -36,7 +36,7 @@
 [ext_resource type="Texture2D" uid="uid://ca7cpphvyqf3a" path="res://Graphics/Buttons/Stats.png" id="35"]
 [ext_resource type="Texture2D" uid="uid://d46f80wrys34" path="res://Easter eggs/nice.jpg" id="36_g5ll0"]
 
-[sub_resource type="Animation" id="1"]
+[sub_resource type="Animation" id="Animation_lrqkk"]
 resource_name = "BookmarkAnim"
 length = 0.2
 tracks/0/type = "bezier"
@@ -47,13 +47,50 @@ tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
 "handle_modes": PackedInt32Array(0, 2),
-"points": PackedFloat32Array(-182, -0.25, 0, 0.0313038, 89, 0, -0.0666667, 0, 0, 0),
+"points": PackedFloat32Array(-180, -0.25, 0, 0.0390581, 142, 0, -0.112119, 1, 0, 0),
 "times": PackedFloat32Array(0, 0.2)
 }
+tracks/1/type = "bezier"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Bookmarks:position:y")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"handle_modes": PackedInt32Array(0),
+"points": PackedFloat32Array(108, -0.25, 0, 0.25, 0),
+"times": PackedFloat32Array(0)
+}
 
-[sub_resource type="AnimationLibrary" id="AnimationLibrary_awikt"]
+[sub_resource type="Animation" id="Animation_ps4yj"]
+length = 0.001
+tracks/0/type = "bezier"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Bookmarks:position:x")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"handle_modes": PackedInt32Array(0),
+"points": PackedFloat32Array(-180, -0.25, 0, 0.25, 0),
+"times": PackedFloat32Array(0)
+}
+tracks/1/type = "bezier"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Bookmarks:position:y")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"handle_modes": PackedInt32Array(0),
+"points": PackedFloat32Array(108, -0.25, 0, 0.25, 0),
+"times": PackedFloat32Array(0)
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_noa68"]
 _data = {
-"BookmarkAnim": SubResource("1")
+"BookmarkAnim": SubResource("Animation_lrqkk"),
+"RESET": SubResource("Animation_ps4yj")
 }
 
 [sub_resource type="InputEventKey" id="InputEventKey_f1iy7"]
@@ -339,17 +376,6 @@ tracks/2/keys = {
 "points": PackedFloat32Array(-76, -0.25, 0, 0.05, 64, 0, -0.25, 0, 0.25, 0),
 "times": PackedFloat32Array(0, 0.3)
 }
-tracks/3/type = "bezier"
-tracks/3/imported = false
-tracks/3/enabled = true
-tracks/3/path = NodePath("Bookmarks:position:x")
-tracks/3/interp = 1
-tracks/3/loop_wrap = true
-tracks/3/keys = {
-"handle_modes": PackedInt32Array(),
-"points": PackedFloat32Array(),
-"times": PackedFloat32Array()
-}
 
 [sub_resource type="Animation" id="36"]
 length = 0.001
@@ -386,28 +412,6 @@ tracks/2/keys = {
 "points": PackedFloat32Array(),
 "times": PackedFloat32Array()
 }
-tracks/3/type = "bezier"
-tracks/3/imported = false
-tracks/3/enabled = true
-tracks/3/path = NodePath("Bookmarks:position:x")
-tracks/3/interp = 1
-tracks/3/loop_wrap = true
-tracks/3/keys = {
-"handle_modes": PackedInt32Array(),
-"points": PackedFloat32Array(),
-"times": PackedFloat32Array()
-}
-tracks/4/type = "bezier"
-tracks/4/imported = false
-tracks/4/enabled = true
-tracks/4/path = NodePath("Bookmarks:position:y")
-tracks/4/interp = 1
-tracks/4/loop_wrap = true
-tracks/4/keys = {
-"handle_modes": PackedInt32Array(),
-"points": PackedFloat32Array(),
-"times": PackedFloat32Array()
-}
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_f72sx"]
 _data = {
@@ -428,7 +432,7 @@ script = ExtResource("5")
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 libraries = {
-"": SubResource("AnimationLibrary_awikt")
+"": SubResource("AnimationLibrary_noa68")
 }
 
 [node name="MouseIn" type="Polygon2D" parent="."]
@@ -442,11 +446,12 @@ scale = Vector2(1, 1.02632)
 polygon = PackedVector2Array(0, 80, 224, 79.9997, 224, 231.999, 0, 232)
 
 [node name="Bookmarks" type="Control" parent="."]
+layout_mode = 1
 anchors_preset = 0
-offset_left = -182.0
+offset_left = -180.0
 offset_top = 108.0
-offset_right = 26.0
-offset_bottom = 226.0
+offset_right = -180.0
+offset_bottom = 108.0
 mouse_filter = 1
 
 [node name="Bookmarked" type="TextureButton" parent="Bookmarks"]
@@ -590,9 +595,8 @@ theme_override_constants/separation = 0
 
 [node name="Buttons" type="VBoxContainer" parent="."]
 layout_mode = 0
-offset_left = 1280.0
 offset_top = 48.0
-offset_right = 1328.0
+offset_right = 48.0
 offset_bottom = 720.0
 mouse_filter = 2
 theme_override_constants/separation = 0
@@ -681,9 +685,8 @@ stretch_mode = 5
 
 [node name="Bottom" type="Control" parent="."]
 anchors_preset = 0
-offset_top = 84.0
 offset_right = 40.0
-offset_bottom = 124.0
+offset_bottom = 40.0
 
 [node name="Panel" type="Panel" parent="Bottom"]
 layout_mode = 0
@@ -771,6 +774,7 @@ offset_bottom = 740.0
 scale = Vector2(0.7, 0.7)
 mouse_filter = 2
 alignment = 1
+metadata/_edit_lock_ = true
 
 [node name="ViewHistory" type="ScrollContainer" parent="Bottom"]
 visible = false
@@ -784,9 +788,8 @@ layout_mode = 2
 
 [node name="Top" type="Control" parent="."]
 anchors_preset = 0
-offset_top = -76.0
 offset_right = 40.0
-offset_bottom = -36.0
+offset_bottom = 40.0
 
 [node name="Objectives" type="Control" parent="Top"]
 anchors_preset = 0

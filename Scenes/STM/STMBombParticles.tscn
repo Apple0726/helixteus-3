@@ -14,7 +14,6 @@ particle_flag_disable_z = true
 spread = 180.0
 initial_velocity_min = 300.0
 initial_velocity_max = 500.0
-orbit_velocity_min = 0.0
 orbit_velocity_max = 0.1
 damping_min = 100.0
 damping_max = 100.0

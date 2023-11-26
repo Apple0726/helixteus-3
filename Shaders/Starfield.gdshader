@@ -22,6 +22,10 @@ uniform float cloud = 0.17;
 uniform vec4 color:source_color = vec4(1.0);
 uniform float max_alpha:hint_range(0.0, 1.0, 0.01) = 1.0;
  
+uniform float red_p:hint_range(1.0, 4.0, 0.1) = 1.0;
+uniform float green_p:hint_range(1.0, 4.0, 0.1) = 2.0;
+uniform float blue_p:hint_range(1.0, 4.0, 0.1) = 4.0;
+
 float triangle(float x, float a) { 
 	float output2 = 2.0*abs(  3.0*  ( (x/a) - floor( (x/a) + 0.5) ) ) - 1.0;
 	return output2;
@@ -139,7 +143,7 @@ void fragment() {
 		// fade in samples as they approach from the distance
 		if( r == float(volsteps)-1.0 )
 			fade *= sampleShift;
-		v+=vec3(s1,s1*s1,s1*s1*s1*s1)*a*brightness*fade; // coloring based on distance
+		v+=vec3(pow(s1, red_p),pow(s1, green_p), pow(s1, blue_p))*a*brightness*fade; // coloring based on distance
 		
 		backCol2 += mix(.4, 1., v2) * vec3(1.8 * t3 * t3 * t3, 1.4 * t3 * t3, t3) * fade;
 

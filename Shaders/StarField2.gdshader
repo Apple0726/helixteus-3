@@ -26,6 +26,10 @@ uniform bool isColoramp;
 
 uniform float max_alpha:hint_range(0.0, 1.0, 0.01) = 1.0;
 
+uniform float red_p:hint_range(1.0, 4.0, 0.1) = 1.0;
+uniform float green_p:hint_range(1.0, 4.0, 0.1) = 2.0;
+uniform float blue_p:hint_range(1.0, 4.0, 0.1) = 4.0;
+
 void fragment()
 {
 	vec2 fragCoord = FRAGCOORD.xy;
@@ -68,7 +72,7 @@ void fragment()
 		if (r>6) fade*=1.-dm; // dark matter, don't render near
 		//v+=vec3(dm,dm*.5,0.);
 		v+=fade;
-		v+=vec3(s,s*s,s*s*s*s)*a*brightness*fade; // coloring based on distance
+		v+=vec3(pow(s, red_p),pow(s, green_p), pow(s, blue_p))*a*brightness*fade; // coloring based on distance
 		fade*=distfading; // distance fading
 		s+=stepsize;
 	}

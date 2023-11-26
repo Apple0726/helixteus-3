@@ -199,6 +199,8 @@ func _ready():
 	else:
 		$WorldEnvironment.environment.adjustment_enabled = false
 	$CurrentPattern.text = "Ship strength: %s | Enemy strength: %s" % [Helper.format_num(total_ship_stats), Helper.format_num(total_enemy_stats)]
+	game.get_node("ShaderExport/SubViewport/Starfield").material.set_shader_parameter("position", (game.system_data[game.c_s].pos / 10000.0).rotated(game.planet_data[game.c_p].angle))
+	game.update_starfield_BG()
 	if total_enemy_stats > total_ship_stats:
 		hard_battle = true
 		$UI/FightPanel.modulate.a = 0
@@ -215,14 +217,6 @@ func _ready():
 		send_HXs()
 		refresh_fight_panel()
 		stage = BattleStages.CHOOSING
-	var starfield_color_param = 0.1 * pow(1.0 / pow(game.u_i.age, 0.25) / pow(1.0 / game.u_i.charge / 4.0, game.physics_bonus.BI), 0.65)
-	$Stars/Starfield.material.set_shader_parameter("brightness", 0.00075)
-	$Stars/Starfield.material.set_shader_parameter("max_alpha", 0.5)
-	$Stars/Starfield.material.set_shader_parameter("position", (game.system_data[game.c_s].pos / 10000.0).rotated(game.planet_data[game.c_p].angle))
-	$Stars/Starfield.material.set_shader_parameter("stepsize", starfield_color_param)
-	$Stars/Starfield.material.set_shader_parameter("distfading", clamp(remap(starfield_color_param, 0.15, 0.4, 0.73, 0.3), 0.3, 0.73))
-	$Stars/Starfield.material.set_shader_parameter("volsteps", Settings.space_LOD)
-	$Stars/Starfield.material.set_shader_parameter("iterations", 14 + Settings.space_LOD / 2)
 
 func refresh_fight_panel():
 	$UI/FightPanel/AnimationPlayer.play("FightPanelAnim")

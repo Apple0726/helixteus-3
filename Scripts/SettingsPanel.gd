@@ -271,7 +271,7 @@ func _on_EnableShaders_toggled(button_pressed):
 	if err == OK:
 		Settings.enable_shaders = button_pressed
 		game.get_node("ClusterBG").visible = button_pressed
-		game.get_node("Starfield").visible = button_pressed
+		game.get_node("Stars/Starfield").visible = button_pressed
 		game.get_node("StarfieldUniverse").visible = button_pressed
 		config.set_value("graphics", "enable_shaders", button_pressed)
 		config.save("user://settings.cfg")
@@ -351,11 +351,8 @@ func _on_static_space_lod_value_changed(value):
 	Settings.static_space_LOD = value
 	game.get_node("ShaderExport/SubViewport/Starfield").material.set_shader_parameter("volsteps", value)
 	game.get_node("ShaderExport/SubViewport/Starfield").material.set_shader_parameter("iterations", 14 + value / 2)
-	if game.c_v in ["system", "planet"]:
+	if game.c_v in ["system", "planet", "battle"]:
 		game.update_starfield_BG()
-	elif game.c_v == "battle":
-		game.battle.get_node("Stars/Starfield").material.set_shader_parameter("volsteps", value)
-		game.battle.get_node("Stars/Starfield").material.set_shader_parameter("iterations", 14 + value / 2)
 	$TabContainer/GRAPHICS/SpaceLOD/StaticSpaceLODValue.text = str(value)
 	if err == OK:
 		config.set_value("graphics", "static_space_LOD", value)

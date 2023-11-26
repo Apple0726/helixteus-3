@@ -97,13 +97,13 @@ func toggle_subj(subj_name:String):
 		var T = max(30000, game.stats_global.get("hottest_star", 0.0))
 		var thresh = 0.63
 		if T < 70000:
-			thresh = remap(T, 30000, 70000, 0.63, 0.73)
+			thresh = remap(T, 30000, 70000, 0.63, 0.7)
 		elif T < 120000:
-			thresh = remap(T, 70000, 120000, 0.73, 0.83)
+			thresh = remap(T, 70000, 120000, 0.7, 0.8)
 		elif T < 210000:
-			thresh = remap(T, 120000, 210000, 0.83, 0.92)
+			thresh = remap(T, 120000, 210000, 0.8, 0.9)
 		else:
-			thresh = min(remap(T, 210000, 1000000, 0.92, 1.0), 1.0)
+			thresh = min(remap(T, 210000, 1000000, 0.9, 1.0), 1.0)
 		$ModifyDimension/Physics/Control/StarGradient.material.set_shader_parameter("threshold", thresh)
 		if Settings.op_cursor:
 			$ModifyDimension/Physics/Control/Label9.text = tr("AURORA_WIDTH_MULTIPLIER").replace("width", "thiccness")

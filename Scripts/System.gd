@@ -446,7 +446,7 @@ func show_planet_info(id:int, l_id:int):
 				Helper.add_label(tr("REPAIR_COST") + ":", -1, false)
 				Helper.put_rsrc(vbox, 32, {"money":p_i.repair_cost}, false)
 				MS_constr_data.confirm_repair = true
-				bldg_costs = {"money":p_i.repair_cost, "time":0.2}
+				bldg_costs = {"money":p_i.repair_cost}
 				Helper.add_label(tr("PRESS_F_TO_REPAIR"))
 		else:
 			if p_i.MS == "SE":
@@ -524,7 +524,6 @@ func _input(event):
 				rsrc_salvaged = Data.MS_costs["%s_%s" % [MS_constr_data.obj.MS, MS_constr_data.obj.MS_lv]].duplicate(true)
 			rsrc_salvaged.erase("money")
 			rsrc_salvaged.erase("energy")
-			rsrc_salvaged.erase("time")
 			var MS_repair_cost_money = 0.0
 			var MS_repair_cost_energy = 0.0
 			for rsrc in rsrc_salvaged.keys():
@@ -557,10 +556,10 @@ func _input(event):
 				if not MS_constr_data.obj.has("repair_cost"):
 					if MS_constr_data.obj.MS == "DS":
 						game.autocollect.MS.energy -= Helper.get_DS_output(MS_constr_data.obj)
-						game.energy_capacity -= MS_constr_data.obj.energy_cap_to_add
+						game.energy_capacity -= Helper.get_DS_capacity(MS_constr_data.obj)
 					elif MS_constr_data.obj.MS == "MB":
 						game.autocollect.MS.SP -= Helper.get_MB_output(MS_constr_data.obj)
-						game.energy_capacity -= MS_constr_data.obj.energy_cap_to_add
+						game.energy_capacity -= Helper.get_DS_capacity(MS_constr_data.obj)
 					elif MS_constr_data.obj.MS == "CBS":
 						var p_num_total:int = len(game.planet_data)
 						var p_num:int = ceil(p_num_total * MS_constr_data.obj.MS_lv * 0.333)
@@ -803,10 +802,6 @@ func on_star_over (id:int):
 			bldg_costs = Data.MS_costs.MB.duplicate(true)
 			for cost in bldg_costs:
 				bldg_costs[cost] = round(bldg_costs[cost] * pow(star.size, 2) / star.get("cost_div", 1.0))
-			bldg_costs.time /= game.u_i.time_speed
-			if game.universe_data[game.c_u].lv >= 55:
-				bldg_costs.money += bldg_costs.time * 200
-				bldg_costs.time = 0.2
 			Helper.put_rsrc(vbox, 32, bldg_costs, true, true)
 			add_constr_costs(vbox, star)
 			Helper.add_label(tr("PRODUCTION_PER_SECOND"))
@@ -834,7 +829,7 @@ func on_star_over (id:int):
 				Helper.add_label(tr("REPAIR_COST"), -1, false)
 				Helper.put_rsrc(vbox, 32, {"money":star.repair_cost}, false)
 				MS_constr_data.confirm_repair = true
-				bldg_costs = {"money":star.repair_cost, "time":0.2}
+				bldg_costs = {"money":star.repair_cost}
 				Helper.add_label(tr("PRESS_F_TO_REPAIR"))
 		else:
 			if star.MS == "DS":
