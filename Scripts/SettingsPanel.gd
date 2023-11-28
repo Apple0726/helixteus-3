@@ -46,7 +46,7 @@ func _ready():
 		$TabContainer/GAME/Autosave.value = autosave_interval
 		$TabContainer/GAME/AutoSwitch.button_pressed = config.get_value("game", "auto_switch_buy_sell", false)
 		$TabContainer/GRAPHICS/FPS/FPS.value = max_fps
-		$TabContainer/GRAPHICS/SpaceLOD/StaticSpaceLOD.value = config.get_value("graphics", "static_space_LOD", 15)
+		$TabContainer/GRAPHICS/SpaceLOD/StaticSpaceLOD.value = config.get_value("graphics", "static_space_LOD", 12)
 		$TabContainer/GRAPHICS/SpaceLOD/DynamicSpaceLOD.value = config.get_value("graphics", "dynamic_space_LOD", 8)
 		$TabContainer/MISC/OPCursor.button_pressed = config.get_value("misc", "op_cursor", false)
 		$TabContainer/MISC/Discord.button_pressed = config.get_value("misc", "discord", true)

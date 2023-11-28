@@ -137,7 +137,7 @@ func _on_UseFertilizer_toggled(button_pressed):
 		if button_pressed:
 			for tile_id in tiles_selected:
 				var tile:Dictionary = game.tile_data[tile_id]
-				var au_mult = Helper.get_au_mult(tile)
+				var au_mult = tile.get("aurora", 0.0) + 1.0
 				if tile.has("auto_GH") and not tile.auto_GH.has("soil_drain"):
 					var fert_mult = (Data.lake_bonus_values.O[tile.lake_elements.O] * game.biology_bonus.O) if tile.lake_elements.has("O") else 1.0
 					var fert_cost_mult = (Data.lake_bonus_values.NH3[tile.lake_elements.NH3] / game.biology_bonus.NH3) if tile.lake_elements.has("NH3") else 1.0
@@ -160,7 +160,7 @@ func _on_UseFertilizer_toggled(button_pressed):
 		else:
 			for tile_id in tiles_selected:
 				var tile:Dictionary = game.tile_data[tile_id]
-				var au_mult = Helper.get_au_mult(tile)
+				var au_mult = tile.get("aurora", 0.0) + 1.0
 				if tile.has("auto_GH") and tile.auto_GH.has("soil_drain"):
 					var fert_mult = (Data.lake_bonus_values.O[tile.lake_elements.O] * game.biology_bonus.O) if tile.lake_elements.has("O") else 1.0
 					var fert_cost_mult = (Data.lake_bonus_values.NH3[tile.lake_elements.NH3] / game.biology_bonus.NH3) if tile.lake_elements.has("NH3") else 1.0

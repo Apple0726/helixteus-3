@@ -340,10 +340,10 @@ func save_obj(type:String, id:int, arr:Array):
 	var file_path:String = "user://%s/Univ%s/%s/%s.hx3" % [game.c_sv, game.c_u, type, id]
 	var save = FileAccess.open(file_path, FileAccess.WRITE)
 	var properties:Array = []
-	if type == "Galaxies":
-		properties = ["id", "l_id", "name", "pos", "diff", "parent", "planet_num", "planets", "view", "stars", "discovered", "conquered", "closest_planet_distance"]
-	elif type == "Clusters":
-		properties = ["id", "l_id", "name", "pos", "diff", "parent", "system_num", "systems", "view", "type", "discovered", "conquered", "rotation", "B_strength", "dark_matter"]
+	#if type == "Galaxies":
+		#properties = ["id", "l_id", "name", "pos", "diff", "parent", "planet_num", "planets", "view", "stars", "discovered", "conquered", "closest_planet_distance"]
+	#elif type == "Clusters":
+		#properties = ["id", "l_id", "name", "pos", "diff", "parent", "system_num", "systems", "view", "type", "discovered", "conquered", "rotation", "B_strength", "dark_matter"]
 	if not properties.is_empty():
 		var arr_compressed = []
 		for obj in arr:
@@ -1317,12 +1317,12 @@ func get_RE_info(RE_name:String):
 func remove_GH_produce_from_autocollect(produce:Dictionary, au_int:float):
 	for p in produce:
 		if p == "minerals":
-			game.autocollect.mats.minerals -= produce[p]
+			game.autocollect.mats.minerals = max(game.autocollect.mats.minerals - produce[p], 0.0)
 		elif game.mat_info.has(p):
-			game.autocollect.mats[p] -= produce[p]
+			game.autocollect.mats[p] = max(game.autocollect.mats[p] - produce[p], 0.0)
 		elif game.met_info.has(p):
 			var met_prod = produce[p] * (au_int + 1.0)
-			game.autocollect.mets[p] -=  met_prod
+			game.autocollect.mets[p] = max(game.autocollect.mets[p] - met_prod, 0.0)
 
 func add_GH_produce_to_autocollect(produce:Dictionary, au_int:float):
 	for p in produce:
@@ -1595,7 +1595,7 @@ func update_CBD_affected_tiles(tile:Dictionary, tile_id:int, p_i:Dictionary):
 			if not _tile.has("%s_dict" % second_path_str):
 				if second_path_str == "time_speed" and _tile.has("bldg"):
 					var old_time_speed = _tile.get("time_speed_bonus", 1.0)
-					Helper.add_autocollect(p_i, _tile, tile.bldg.path_2_value - old_time_speed)
+					Helper.add_autocollect(p_i, _tile, tile.bldg.path_2_value / old_time_speed)
 				_tile["%s_bonus" % second_path_str] = tile.bldg.path_2_value
 				_tile["%s_dict" % second_path_str] = {}
 			else:
@@ -1603,7 +1603,7 @@ func update_CBD_affected_tiles(tile:Dictionary, tile_id:int, p_i:Dictionary):
 				if second_path_str == "time_speed" and _tile.has("bldg"):
 					var old_time_speed = _tile.get("time_speed_bonus", 1.0)
 					if new_bonus > old_time_speed:
-						Helper.add_autocollect(p_i, _tile, new_bonus - old_time_speed)
+						Helper.add_autocollect(p_i, _tile, new_bonus / old_time_speed)
 				_tile["%s_bonus" % second_path_str] = new_bonus
 			_tile["%s_dict" % second_path_str][id2] = tile.bldg.path_2_value
 

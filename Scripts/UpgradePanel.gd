@@ -388,6 +388,7 @@ func _on_Upgrade_pressed():
 				bldg_sprite.material.set_shader_parameter("color", Color.CYAN)
 				bldg_sprite.material.set_shader_parameter("progress", 0.2)
 				var tween = create_tween()
+				tween.set_speed_scale(game.u_i.time_speed)
 				tween.tween_property(bldg_sprite.material, "shader_parameter/progress", 0.42, 0.6)
 				tween.tween_property(bldg_sprite.material, "shader_parameter/color", Color.WHITE, 0.4)
 				tween.tween_property(bldg_sprite.material, "shader_parameter/color", Color.CYAN, 0.3)

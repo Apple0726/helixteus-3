@@ -568,7 +568,7 @@ func _ready():
 		Settings.op_cursor = config.get_value("misc", "op_cursor", false)
 		Settings.auto_switch_buy_sell = config.get_value("game", "auto_switch_buy_sell", false)
 		Settings.discord = config.get_value("misc", "discord", true)
-		Settings.static_space_LOD = config.get_value("graphics", "static_space_LOD", 15)
+		Settings.static_space_LOD = config.get_value("graphics", "static_space_LOD", 12)
 		Settings.dynamic_space_LOD = config.get_value("graphics", "dynamic_space_LOD", 8)
 		$ShaderExport/SubViewport/Starfield.material.set_shader_parameter("volsteps", Settings.static_space_LOD)
 		$ShaderExport/SubViewport/Starfield.material.set_shader_parameter("iterations", 14 + Settings.static_space_LOD / 2)
