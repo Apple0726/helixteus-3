@@ -718,9 +718,7 @@ func load_univ():
 		elif c_v == "battle":
 			c_v = "system"
 		view.set_process(true)
-		if FileAccess.file_exists("user://%s/Univ%s/Planets/%s.hx3" % [c_sv, c_u, c_p_g]):
-			planet_data = open_obj("Systems", c_s_g)
-		if FileAccess.file_exists("user://%s/Univ%s/Systems/%s.hx3" % [c_sv, c_u, c_s_g]):
+		if FileAccess.file_exists("user://%s/Univ%s/Planets/%s.hx3" % [c_sv, c_u, c_p_g]) or FileAccess.file_exists("user://%s/Univ%s/Systems/%s.hx3" % [c_sv, c_u, c_s_g]):
 			planet_data = open_obj("Systems", c_s_g)
 		if FileAccess.file_exists("user://%s/Univ%s/Galaxies/%s.hx3" % [c_sv, c_u, c_g_g]):
 			system_data = open_obj("Galaxies", c_g_g)
@@ -1743,6 +1741,24 @@ func open_obj(type:String, id:int):
 	var save = FileAccess.open(file_path, FileAccess.READ)
 	if save:
 		arr = save.get_var() if save.get_length() > 0 else []
+		if not arr.is_empty() and arr[0] is Array:
+			var arr_decompressed = []
+			for compressed_obj in arr:
+				var decompressed_obj = {}
+				var properties:Array = []
+				if type == "Galaxies":
+					properties = ["id", "l_id", "name", "pos", "diff", "parent", "planet_num", "planets", "view", "stars", "discovered", "conquered", "closest_planet_distance"]
+				elif type == "Clusters":
+					properties = ["id", "l_id", "name", "pos", "diff", "parent", "system_num", "systems", "view", "type", "discovered", "conquared", "rotation", "B_strength", "dark_matter"]
+				for i in len(properties):
+					if compressed_obj[i] != null:
+						decompressed_obj[properties[i]] = compressed_obj[i]
+				var attr_dict:Dictionary = compressed_obj[-1]
+				for attr in attr_dict.keys():
+					decompressed_obj[attr] = attr_dict[attr]
+				arr_decompressed.append(decompressed_obj)
+			save.close()
+			return arr_decompressed
 		save.close()
 	return arr
 	
@@ -2190,7 +2206,7 @@ func generate_galaxies(id:int):
 				g_i.system_num /= 10
 		g_i.dark_matter = Helper.clever_round(pow(g_i.dark_matter, -log(rand)*u_i.dark_energy/2.5 + 1))
 		g_i.rotation = randf_range(0, 2 * PI)
-		g_i.zoom = [Vector2(640, 360), 0.2]
+		g_i.view = {"pos":Vector2(640, 360), "zoom": 0.2}
 		var pos:Vector2
 		var N = obj_shapes.size()
 		if N >= total_gal_num / 6:

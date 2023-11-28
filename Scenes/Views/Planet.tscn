@@ -6,7 +6,7 @@
 [ext_resource type="TileSet" uid="uid://djmwwqomsir3r" path="res://Resources/PlanetTileSet.tres" id="4"]
 [ext_resource type="TileSet" uid="uid://dfiuyho24np11" path="res://Resources/ObstaclesTileSet.tres" id="4_ivklb"]
 [ext_resource type="Script" path="res://Scripts/BadApple.gd" id="7_yxni4"]
-[ext_resource type="Texture2D" uid="uid://7dx34oq2nf2r" path="res://icon.png" id="12"]
+[ext_resource type="Texture2D" uid="uid://bij43clyt8o8o" path="res://icon.png" id="12"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_g1ur1"]
 draw_center = false
@@ -43,39 +43,14 @@ format = 2
 layer_0/name = "Planet tiles"
 layer_0/tile_data = PackedInt32Array(0, 0, 0, 1, 0, 0, 2, 0, 0, 3, 0, 0, 65536, 0, 0, 65537, 0, 0, 65538, 0, 0, 65539, 0, 0)
 layer_1/name = "Lakes 1"
-layer_1/enabled = true
-layer_1/modulate = Color(1, 1, 1, 1)
-layer_1/y_sort_enabled = false
-layer_1/y_sort_origin = 0
-layer_1/z_index = 0
 layer_1/tile_data = PackedInt32Array()
 layer_2/name = "Lakes 2"
-layer_2/enabled = true
-layer_2/modulate = Color(1, 1, 1, 1)
-layer_2/y_sort_enabled = false
-layer_2/y_sort_origin = 0
-layer_2/z_index = 0
 layer_2/tile_data = PackedInt32Array()
 layer_3/name = "Soil"
-layer_3/enabled = true
-layer_3/modulate = Color(1, 1, 1, 1)
-layer_3/y_sort_enabled = false
-layer_3/y_sort_origin = 0
-layer_3/z_index = 0
 layer_3/tile_data = PackedInt32Array()
 layer_4/name = "Ash"
-layer_4/enabled = true
-layer_4/modulate = Color(1, 1, 1, 1)
-layer_4/y_sort_enabled = false
-layer_4/y_sort_origin = 0
-layer_4/z_index = 0
 layer_4/tile_data = PackedInt32Array()
 layer_5/name = "Obstacles"
-layer_5/enabled = true
-layer_5/modulate = Color(1, 1, 1, 1)
-layer_5/y_sort_enabled = false
-layer_5/y_sort_origin = 0
-layer_5/z_index = 0
 layer_5/tile_data = PackedInt32Array()
 
 [node name="BadApple" type="Node2D" parent="."]
@@ -90,35 +65,18 @@ texture = ExtResource("12")
 
 [node name="TileFeatures" type="TileMap" parent="."]
 tile_set = ExtResource("2")
-cell_quadrant_size = 100
 format = 2
 layer_0/name = "Lake 1"
 layer_1/name = "Lake 2"
-layer_1/enabled = true
-layer_1/modulate = Color(1, 1, 1, 1)
-layer_1/y_sort_enabled = false
-layer_1/y_sort_origin = 0
-layer_1/z_index = 0
 layer_1/tile_data = PackedInt32Array()
 layer_2/name = "Soil"
-layer_2/enabled = true
-layer_2/modulate = Color(1, 1, 1, 1)
-layer_2/y_sort_enabled = false
-layer_2/y_sort_origin = 0
-layer_2/z_index = 0
 layer_2/tile_data = PackedInt32Array()
 layer_3/name = "Ash"
-layer_3/enabled = true
-layer_3/modulate = Color(1, 1, 1, 1)
-layer_3/y_sort_enabled = false
-layer_3/y_sort_origin = 0
-layer_3/z_index = 0
 layer_3/tile_data = PackedInt32Array()
 
 [node name="Obstacles" type="TileMap" parent="."]
 position = Vector2(0, 1)
 tile_set = ExtResource("4_ivklb")
-cell_quadrant_size = 100
 format = 2
 
 [node name="WhiteRect" parent="." instance=ExtResource("1")]

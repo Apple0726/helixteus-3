@@ -339,7 +339,25 @@ func change_circle_size(value, overlays):
 func save_obj(type:String, id:int, arr:Array):
 	var file_path:String = "user://%s/Univ%s/%s/%s.hx3" % [game.c_sv, game.c_u, type, id]
 	var save = FileAccess.open(file_path, FileAccess.WRITE)
-	save.store_var(arr)
+	var properties:Array = []
+	if type == "Galaxies":
+		properties = ["id", "l_id", "name", "pos", "diff", "parent", "planet_num", "planets", "view", "stars", "discovered", "conquered", "closest_planet_distance"]
+	elif type == "Clusters":
+		properties = ["id", "l_id", "name", "pos", "diff", "parent", "system_num", "systems", "view", "type", "discovered", "conquered", "rotation", "B_strength", "dark_matter"]
+	if not properties.is_empty():
+		var arr_compressed = []
+		for obj in arr:
+			var obj_copy = obj.duplicate(true)
+			var obj_compressed = []
+			for prop in properties:
+				obj_compressed.append(obj_copy.get(prop))
+				obj_copy.erase(prop)
+			# Obj at this piont will only have other attrbutes. Append it to obj_compressed
+			obj_compressed.append(obj_copy)
+			arr_compressed.append(obj_compressed)
+		save.store_var(arr_compressed)
+	else:
+		save.store_var(arr)
 	save.close()
 
 func get_rover_weapon_text(_name:String):
