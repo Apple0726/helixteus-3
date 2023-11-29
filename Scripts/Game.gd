@@ -18,7 +18,7 @@ var annotator_scene = preload("res://Scenes/Annotator.tscn")
 var rsrc_scene = preload("res://Scenes/Resource.tscn")
 var rsrc_stored_scene = preload("res://Scenes/ResourceStored.tscn")
 var cave_scene = preload("res://Scenes/Views/Cave.tscn")
-var STM_scene = preload("res://Scenes/Views/ShipTravelMinigame.tscn")
+var STM_scene = preload("res://Scenes/Views/ShipTravelMinigame2.tscn")
 var battle_scene = preload("res://Scenes/Views/Battle.tscn")
 var particles_scene = preload("res://Scenes/LiquidParticles.tscn")
 var time_scene = preload("res://Scenes/TimeLeft.tscn")
@@ -163,7 +163,7 @@ var unique_building_counters:Dictionary
 
 #Stores information of all objects discovered
 var universe_data:Array
-var galaxy_data:Array# = [{"id":0, "l_id":0, "type":0, "modulate":Color.WHITE, "name":"Milky Way", "pos":Vector2.ZERO, "rotation":0, "diff":1, "B_strength":e(5, -10), "dark_matter":1.0, "discovered":false, "conquered":false, "parent":0, "system_num":SYS_NUM, "systems":[{"global":0, "local":0}], "view":{"pos":Vector2(15000 + 1280, 15000 + 720), "zoom":0.5}}]
+var galaxy_data:Array
 var system_data:Array
 var planet_data:Array
 var tile_data:Array
@@ -725,7 +725,7 @@ func load_univ():
 		if FileAccess.file_exists("user://%s/Univ%s/Clusters/%s.hx3" % [c_sv, c_u, c_c]):
 			galaxy_data = open_obj("Clusters", c_c)
 		else:
-			galaxy_data = [{"id":0, "l_id":0, "type":0, "shapes":[], "name":tr("MILKY_WAY"), "pos":Vector2.ZERO, "rotation":0, "diff":u_i.difficulty, "B_strength":1e-9 * u_i.charge * u_i.dark_energy, "dark_matter":1.0, "parent":0, "system_num":400, "systems":[{"global":0, "local":0}], "view":{"pos":Vector2(7500, 7500) * 0.5 + Vector2(640, 360), "zoom":0.5}}]
+			galaxy_data = [{"id":0, "l_id":0, "type":0, "shapes":[], "name":tr("MILKY_WAY"), "pos":Vector2.ZERO, "rotation":0, "diff":u_i.difficulty, "B_strength":1e-9 * u_i.charge * u_i.dark_energy, "dark_matter":1.0, "parent":0, "system_num":400, "view":{"pos":Vector2(7500, 7500) * 0.5 + Vector2(640, 360), "zoom":0.5}}]
 			Helper.save_obj("Clusters", 0, galaxy_data)
 	else:
 		popup("load error", 1.5)
@@ -1036,7 +1036,7 @@ func new_game(univ:int = 0, new_save:bool = false, DR_advantage = false):
 			show[met] = true
 	#Stores information of all objects discovered
 	u_i.cluster_data = [{"id":0, "visible":true, "type":0, "shapes":[], "class":ClusterType.GROUP, "name":tr("LOCAL_GROUP"), "pos":Vector2.ZERO, "diff":u_i.difficulty, "FM":u_i.dark_energy, "parent":0, "galaxy_num":55, "galaxies":[], "view":{"pos":Vector2(640, 360), "zoom":1 / 4.0}, "rich_elements":{}}]
-	galaxy_data = [{"id":0, "l_id":0, "type":0, "shapes":[], "name":tr("MILKY_WAY"), "pos":Vector2.ZERO, "rotation":0, "diff":u_i.difficulty, "B_strength":1e-9 * u_i.charge * u_i.dark_energy, "dark_matter":1.0, "parent":0, "system_num":400, "systems":[{"global":0, "local":0}], "view":{"pos":Vector2(7500, 7500) * 0.5 + Vector2(640, 360), "zoom":0.5}}]
+	galaxy_data = [{"id":0, "l_id":0, "type":0, "shapes":[], "name":tr("MILKY_WAY"), "pos":Vector2.ZERO, "rotation":0, "diff":u_i.difficulty, "B_strength":1e-9 * u_i.charge * u_i.dark_energy, "dark_matter":1.0, "parent":0, "system_num":400, "view":{"pos":Vector2(7500, 7500) * 0.5 + Vector2(640, 360), "zoom":0.5}}]
 	var s_b:float = pow(u_i.boltzmann, 4) / pow(u_i.planck, 3) / pow(u_i.speed_of_light, 2)
 	system_data = [{"id":0, "l_id":0, "name":tr("SOLAR_SYSTEM"), "pos":Vector2(-7500, -7500), "diff":u_i.difficulty, "parent":0, "planet_num":7, "planets":[], "view":{"pos":Vector2(640, 150), "zoom":2}, "stars":[{"type":StarType.MAIN_SEQUENCE, "class":"G2", "size":1, "temperature":5500, "mass":u_i.planck, "luminosity":s_b, "pos":Vector2(0, 0)}]}]
 	planet_data = []
@@ -1141,6 +1141,7 @@ func new_game(univ:int = 0, new_save:bool = false, DR_advantage = false):
 	if not is_ancestor_of(HUD):
 		$UI.add_child(HUD)
 	HUD.refresh()
+	update_starfield = true
 	add_planet(true)
 	$Autosave.start()
 	var init_time = Time.get_unix_time_from_system()
@@ -1743,16 +1744,27 @@ func open_obj(type:String, id:int):
 		arr = save.get_var() if save.get_length() > 0 else []
 		if not arr.is_empty() and arr[0] is Array:
 			var arr_decompressed = []
+			var star_properties = ["type", "class", "size", "pos", "temperature", "mass", "luminosity"]
 			for compressed_obj in arr:
 				var decompressed_obj = {}
 				var properties:Array = []
 				if type == "Galaxies":
 					properties = ["id", "l_id", "name", "pos", "diff", "parent", "planet_num", "planets", "view", "stars", "discovered", "conquered", "closest_planet_distance"]
 				elif type == "Clusters":
-					properties = ["id", "l_id", "name", "pos", "diff", "parent", "system_num", "systems", "view", "type", "discovered", "conquared", "rotation", "B_strength", "dark_matter"]
+					properties = ["id", "l_id", "name", "pos", "diff", "parent", "system_num", "view", "type", "discovered", "conquered", "rotation", "B_strength", "dark_matter"]
 				for i in len(properties):
 					if compressed_obj[i] != null:
-						decompressed_obj[properties[i]] = compressed_obj[i]
+						if properties[i] == "stars":
+							var stars = []
+							for star_info:Array in compressed_obj[i]:
+								var star_dict = {}
+								for j in len(star_properties):
+									var star_prop:String = star_properties[j]
+									star_dict[star_prop] = star_info[j]
+								stars.append(star_dict)
+								decompressed_obj.stars = stars
+						else:
+							decompressed_obj[properties[i]] = compressed_obj[i]
 				var attr_dict:Dictionary = compressed_obj[-1]
 				for attr in attr_dict.keys():
 					decompressed_obj[attr] = attr_dict[attr]
@@ -2188,7 +2200,6 @@ func generate_galaxies(id:int):
 	for i in range(0, gal_num_to_load):
 		var g_i = {}
 		g_i.parent = id
-		g_i.systems = []
 		g_i.type = randi() % 7
 		var rand = randf()
 		g_i.dark_matter = randf_range(0.85, 1.15) #Influences planet numbers and size

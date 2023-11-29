@@ -1,21 +1,20 @@
-[gd_scene load_steps=49 format=3 uid="uid://cpjo82l86k61"]
+[gd_scene load_steps=48 format=3 uid="uid://cpjo82l86k61"]
 
-[ext_resource type="Texture2D" uid="uid://bj2apqdtbsvvc" path="res://Graphics/Icons/atk.png" id="1"]
+[ext_resource type="Texture2D" uid="uid://cmvxylg2hsl5h" path="res://Graphics/Icons/atk.png" id="1"]
 [ext_resource type="Shader" path="res://Shaders/HX.gdshader" id="1_bfi0c"]
-[ext_resource type="Texture2D" uid="uid://2lajx7mp13nq" path="res://Graphics/HX/1_1.png" id="1_t5dxa"]
+[ext_resource type="Texture2D" uid="uid://ct6fd2rpxoqo1" path="res://Graphics/HX/1_1.png" id="1_t5dxa"]
 [ext_resource type="Theme" uid="uid://cp2u1kgj60ic" path="res://Resources/default_theme.tres" id="2"]
-[ext_resource type="Texture2D" uid="uid://c67y71rs3ver2" path="res://Graphics/Misc/BarUnder2.png" id="3"]
-[ext_resource type="Texture2D" uid="uid://cppk2krhq3251" path="res://Graphics/Decoratives/BulletHit.jpg" id="5"]
-[ext_resource type="Texture2D" uid="uid://1h4b4lcm50vf" path="res://Graphics/Misc/Bar2.png" id="6"]
+[ext_resource type="Texture2D" uid="uid://cew70ie8pqr20" path="res://Graphics/Misc/BarUnder2.png" id="3"]
+[ext_resource type="Texture2D" uid="uid://bfeqkjyahkybo" path="res://Graphics/Decoratives/BulletHit.jpg" id="5"]
+[ext_resource type="Texture2D" uid="uid://cv27fq3enpebi" path="res://Graphics/Misc/Bar2.png" id="6"]
 [ext_resource type="Shader" path="res://Shaders/Fire.gdshader" id="7"]
-[ext_resource type="Texture2D" uid="uid://ch2kvtr3hagxr" path="res://icon.png" id="8"]
-[ext_resource type="Texture2D" uid="uid://c6dq7glt1v01" path="res://Graphics/Icons/Fire.png" id="9"]
-[ext_resource type="Texture2D" uid="uid://ck06y217oy0jm" path="res://Graphics/Icons/Debris.png" id="10"]
+[ext_resource type="Texture2D" uid="uid://bij43clyt8o8o" path="res://icon.png" id="8"]
+[ext_resource type="Texture2D" uid="uid://l7onfy6bqqug" path="res://Graphics/Icons/Fire.png" id="9"]
 [ext_resource type="Shader" path="res://Shaders/Laser.gdshader" id="11"]
-[ext_resource type="Texture2D" uid="uid://dy2p8vocmg6qx" path="res://Graphics/HX/Status effects/Stun.png" id="12"]
-[ext_resource type="Texture2D" uid="uid://cotowibf6idxj" path="res://Graphics/Icons/Stun.png" id="13"]
-[ext_resource type="Texture2D" uid="uid://chkfomyqvhpi6" path="res://Graphics/Effects/spotlight_1.png" id="14"]
-[ext_resource type="Texture2D" uid="uid://crsi7kdeg3vmm" path="res://Graphics/Icons/acc.png" id="15"]
+[ext_resource type="Texture2D" uid="uid://cm7o715bpjd18" path="res://Graphics/HX/Status effects/Stun.png" id="12"]
+[ext_resource type="Texture2D" uid="uid://byb4dfbx12p8y" path="res://Graphics/Icons/Stun.png" id="13"]
+[ext_resource type="Texture2D" uid="uid://dd4sl5gawwovj" path="res://Graphics/Effects/spotlight_1.png" id="14"]
+[ext_resource type="Texture2D" uid="uid://cpgepcaejvr8o" path="res://Graphics/Icons/acc.png" id="15"]
 
 [sub_resource type="CircleShape2D" id="24"]
 radius = 1252.0
@@ -32,6 +31,7 @@ shader_parameter/frequency = 6.0
 shader_parameter/aurora = false
 shader_parameter/light = 1.0
 shader_parameter/modulate_color = Color(1, 1, 1, 1)
+shader_parameter/flash = 0.0
 
 [sub_resource type="ShaderMaterial" id="3"]
 shader = ExtResource("7")
@@ -358,41 +358,32 @@ gradient = SubResource("Gradient_vwroj")
 [sub_resource type="ParticleProcessMaterial" id="14"]
 particle_flag_align_y = true
 particle_flag_disable_z = true
+angle_max = 360.0
 direction = Vector3(-1, 0, 0)
 spread = 180.0
-gravity = Vector3(0, 0, 0)
 initial_velocity_min = 250.0
 initial_velocity_max = 750.0
-orbit_velocity_min = 0.0
-orbit_velocity_max = 0.0
-angle_max = 360.0
+gravity = Vector3(0, 0, 0)
 scale_min = 0.5
 color_ramp = SubResource("GradientTexture1D_hnbg8")
 
-[sub_resource type="Gradient" id="Gradient_0ylws"]
-offsets = PackedFloat32Array(0, 0.264317, 0.546256, 1)
-colors = PackedColorArray(1, 1, 1, 1, 1, 0.458824, 0, 1, 1, 0, 0, 1, 0, 0, 0, 0)
+[sub_resource type="Gradient" id="Gradient_imv4j"]
+offsets = PackedFloat32Array(0, 0.157895, 0.585526, 1)
+colors = PackedColorArray(1, 1, 1, 1, 1, 1, 0, 1, 1, 0, 0, 1, 0, 0, 0, 0)
 
-[sub_resource type="GradientTexture1D" id="GradientTexture1D_ly5ll"]
-gradient = SubResource("Gradient_0ylws")
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_gb66n"]
+gradient = SubResource("Gradient_imv4j")
 
-[sub_resource type="ParticleProcessMaterial" id="19"]
-lifetime_randomness = 1.0
-particle_flag_align_y = true
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_x45cj"]
 particle_flag_disable_z = true
-direction = Vector3(-1, 0, 0)
 spread = 180.0
-gravity = Vector3(0, 0, 0)
-initial_velocity_min = 200.0
+initial_velocity_min = 300.0
 initial_velocity_max = 500.0
-angular_velocity_max = 200.0
-orbit_velocity_min = 0.0
-orbit_velocity_max = 0.0
+orbit_velocity_max = 0.1
 damping_min = 100.0
-damping_max = 200.0
-scale_min = 0.1
-scale_max = 0.5
-color_ramp = SubResource("GradientTexture1D_ly5ll")
+damping_max = 100.0
+scale_max = 4.0
+color_ramp = SubResource("GradientTexture1D_gb66n")
 
 [sub_resource type="Gradient" id="Gradient_ywuum"]
 colors = PackedColorArray(1, 1, 1, 1, 1, 1, 1, 0)
@@ -405,11 +396,9 @@ lifetime_randomness = 1.0
 particle_flag_disable_z = true
 direction = Vector3(-1, 0, 0)
 spread = 180.0
-gravity = Vector3(0, 0, 0)
 initial_velocity_min = 150.0
 initial_velocity_max = 300.0
-orbit_velocity_min = 0.0
-orbit_velocity_max = 0.0
+gravity = Vector3(0, 0, 0)
 color_ramp = SubResource("GradientTexture1D_ihuwx")
 
 [sub_resource type="Animation" id="23"]
@@ -624,10 +613,8 @@ one_shot = true
 explosiveness = 1.0
 
 [node name="BombParticles" type="GPUParticles2D" parent="."]
-emitting = false
 amount = 150
-process_material = SubResource("19")
-texture = ExtResource("10")
+process_material = SubResource("ParticleProcessMaterial_x45cj")
 lifetime = 3.0
 one_shot = true
 explosiveness = 0.95

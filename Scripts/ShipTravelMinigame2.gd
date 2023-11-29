@@ -1,9 +1,12 @@
 extends Node2D
 
+@onready var BG_material = $GlowLayer/Background.material
+
 func _ready():
 	Helper.set_back_btn($Control/Back)
 	$Control/BombActivateLabel.modulate.a = 0.0
 	$Control/LightActivateLabel.modulate.a = 0.0
+	BG_material.set_shader_parameter("position", Vector2.ZERO)
 
 var mouse_pos:Vector2 = Vector2.ZERO
 
@@ -12,13 +15,12 @@ func _input(event):
 		mouse_pos = event.position
 		$GlowLayer/Laser.position = mouse_pos - Vector2(0, 332)
 
-@onready var BG_material = $GlowLayer/Background.material
 func _process(delta):
 	$Ship.position = mouse_pos
 	$LaserTimerBar/TextureProgressBar.value = 1.0 - $Ship/LaserTimer.time_left / $Ship/LaserTimer.wait_time
 	$BombTimerBar/TextureProgressBar.value = 1.0 - $Ship/BombTimer.time_left / $Ship/BombTimer.wait_time
 	$LightTimerBar/TextureProgressBar.value = 1.0 - $Ship/LightTimer.time_left / $Ship/LightTimer.wait_time
-	BG_material.set_shader_parameter("mouse", Vector2(BG_material.get_shader_parameter("mouse").x + 0.1 * delta, 0.0))
+	BG_material.set_shader_parameter("position", Vector2(BG_material.get_shader_parameter("position").x + 0.1 * delta, 0.0))
 
 func _on_enemy_spawn_timer_timeout():
 	var HX:STMHX = preload("res://Scenes/STM/STMHX.tscn").instantiate()
