@@ -11,6 +11,7 @@ config_version=5
 [application]
 
 config/name="Helixteus 3"
+config/tags=PackedStringArray("2d", "game")
 run/main_scene="res://Scenes/Game.tscn"
 config/features=PackedStringArray("4.2")
 run/max_fps=60
@@ -43,6 +44,19 @@ window/energy_saving/keep_screen_on=false
 window/stretch/mode="canvas_items"
 window/vsync/vsync_mode=0
 mouse_cursor/tooltip_position_offset=Vector2(5, 5)
+
+[file_customization]
+
+folder_colors={
+"res://Audio/": "red",
+"res://Easter eggs/": "orange",
+"res://Graphics/": "yellow",
+"res://Resources/": "green",
+"res://Scenes/": "teal",
+"res://Scripts/": "blue",
+"res://Shaders/": "purple",
+"res://Text/": "pink"
+}
 
 [global]
 

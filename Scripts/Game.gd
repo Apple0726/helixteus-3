@@ -6,6 +6,7 @@ const VERSION:String = "v0.29"
 const COMPATIBLE_SAVES = ["v0.28", "v0.28.1", "v0.28.2"]
 const UNIQUE_BLDGS = 7
 
+#region Scenes
 var generic_panel_scene = preload("res://Scenes/Panels/GenericPanel.tscn")
 var upgrade_panel_scene = preload("res://Scenes/Panels/UpgradePanel.tscn")
 var planet_HUD_scene = preload("res://Scenes/Planet/PlanetHUD.tscn")
@@ -30,6 +31,8 @@ var slot_scene = preload("res://Scenes/InventorySlot.tscn")
 var white_rect_scene = preload("res://Scenes/WhiteRect.tscn")
 var mass_build_rect = preload("res://Scenes/MassBuildRect.tscn")
 var wormhole_scene = preload("res://Scenes/Wormhole.tscn")
+#endregion
+
 var surface_BG = preload("res://Graphics/Decoratives/Surface.jpg")
 var crust_BG = preload("res://Graphics/Decoratives/Crust.jpg")
 var star_texture = preload("res://Graphics/Effects/spotlight_8_s.png")
@@ -39,6 +42,7 @@ var galaxy_textures:Array
 var bldg_textures:Array
 var unique_bldg_textures:Array
 
+#region GUI nodes
 #var construct_panel:Control
 #var megastructures_panel:Control
 var gigastructures_panel:Control
@@ -74,6 +78,7 @@ var wiki:Panel
 var stats_panel:Panel
 var load_panel:Panel
 var tooltip
+#endregion
 
 const SYSTEM_SCALE_DIV = 100.0
 const GALAXY_SCALE_DIV = 750.0
@@ -96,8 +101,7 @@ var active_panel
 var view
 var show_atoms:Array = []#For element overlay
 
-############ Save data ############
-
+#region Save data
 #Current view
 var c_v:String = ""
 var viewing_dimension:bool = false
@@ -194,16 +198,17 @@ var stats_univ:Dictionary
 var stats_dim:Dictionary
 var stats_global:Dictionary
 
-enum ObjectiveType {BUILD, UPGRADE, MINERAL_UPG, SAVE, MINE, CONQUER, CRUST, CAVE, LEVEL, WORMHOLE, SIGNAL, DAVID, COLLECT_PARTS, MANIPULATORS, EMMA, TERRAFORM}
-enum ClusterType {GROUP, CLUSTER}
-var objective:Dictionary# = {"type":ObjectiveType.BUILD, "data":"PP", "current":0, "goal":0}
+#enum ObjectiveType {BUILD, UPGRADE, MINERAL_UPG, SAVE, MINE, CONQUER, CRUST, CAVE, LEVEL, WORMHOLE, SIGNAL, DAVID, COLLECT_PARTS, MANIPULATORS, EMMA, TERRAFORM}
+#var objective:Dictionary# = {"type":ObjectiveType.BUILD, "data":"PP", "current":0, "goal":0}
 
 var autocollect:Dictionary
 var save_date:int
 var bookmarks:Dictionary
 var unique_bldgs_discovered:Dictionary
+#endregion
 
-############ End save data ############
+enum ClusterType {GROUP, CLUSTER}
+
 var block_scroll:bool = false
 var overlay_CS:float = 0.5
 var overlay_data = {	"galaxy":{"overlay":0, "visible":false, "custom_values":[{"left":2, "right":30, "modified":false}, {"left":1, "right":5, "modified":false}, null, null, null, {"left":0.5, "right":15, "modified":false}, {"left":250, "right":100000, "modified":false}, {"left":1, "right":1, "modified":false}, {"left":1, "right":1, "modified":false}, null]},
@@ -238,6 +243,7 @@ var boring_machine_data = {
 	
 }
 
+#region Item info
 var mat_info = {	"coal":{"value":15},#One kg of coal = $15
 					"glass":{"value":1000},
 					"sand":{"value":8},
@@ -331,10 +337,13 @@ var item_groups = [	{"dict":speedups_info, "path":"Items/Speedups"},
 					{"dict":overclocks_info, "path":"Items/Overclocks"},
 					{"dict":other_items_info, "path":"Items/Others"},
 					]
+#endregion
+
 #Density is in g/cm^3
 var element = {	"Si":{"density":2.329},
 				"O":{"density":1.429}}
 
+#region Achievements
 var achievement_data:Dictionary = {}
 var achievements:Dictionary = {
 	"money":{
@@ -426,6 +435,7 @@ var achievements:Dictionary = {
 		"op_gh":tr("OP_GH"),
 	}
 }
+#endregion
 
 #Holds informatopion of the tooltip that can be hidden by the player by pressing F7
 var help_str:String
@@ -439,44 +449,6 @@ var game_tween:Tween
 var view_tween:Tween
 var tile_brightness:Array = []
 var tile_avg_mod:Array = []
-
-#func place_BG_stars():#shown in title screen and planet view
-#	for i in 500:
-#		var star:Sprite2D = Sprite2D.new()
-#		star.texture = star_texture
-#		star.scale *= 0.15
-#		star.modulate = Helper.get_star_modulate("%s%s" % [["M", "K", "G", "F", "A", "B", "O"][randi() % 7], randi() % 10])
-#		star.rotation = randf_range(0, 2*PI)
-#		star.position.x = randf_range(0, 1280)
-#		star.position.y = randf_range(0, 720)
-#		$Stars/Stars.add_child(star)
-#	for i in 50:
-#		var star:Sprite2D = Sprite2D.new()
-#		star.texture = star_texture
-#		star.scale *= 0.3
-#		star.modulate = Helper.get_star_modulate("%s%s" % [["M", "K", "G", "F", "A", "B", "O"][randi() % 7], randi() % 10])
-#		star.rotation = randf_range(0, 2*PI)
-#		star.position.x = randf_range(0, 1280)
-#		star.position.y = randf_range(0, 720)
-#		$Stars/Stars.add_child(star)
-
-func place_BG_sc_stars():#shown in (super)cluster view
-	for i in 2000:
-		var star:Sprite2D = Sprite2D.new()
-		star.texture = preload("res://Graphics/Misc/STMBullet.png")
-		star.scale *= 0.05
-		star.modulate.a = randf_range(0.2, 0.3)
-		star.position.x = randf_range(0, 1280)
-		star.position.y = randf_range(0, 720)
-		$Stars/WhiteStars.add_child(star)
-	for i in 100:
-		var star:Sprite2D = Sprite2D.new()
-		star.texture = preload("res://Graphics/Misc/STMBullet.png")
-		star.scale *= 0.07
-		star.modulate.a = 0.4
-		star.position.x = randf_range(0, 1280)
-		star.position.y = randf_range(0, 720)
-		$Stars/WhiteStars.add_child(star)
 
 var current_viewport_dimensions:Vector2
 func update_viewport_dimensions():
@@ -1075,7 +1047,7 @@ func new_game(univ:int = 0, new_save:bool = false, DR_advantage = false):
 	g_num = 0#Total number of galaxies generated
 	c_num = 0
 
-	objective = {}# = {"type":ObjectiveType.BUILD, "data":"PP", "current":0, "goal":0}
+	#objective = {}# = {"type":ObjectiveType.BUILD, "data":"PP", "current":0, "goal":0}
 	autocollect = {
 		"mats":{"cellulose":0},
 		"mets":{},
@@ -4014,7 +3986,7 @@ func fn_save_game():
 		"g_num":g_num,
 		"c_num":c_num,
 		"stats_univ":stats_univ,
-		"objective":objective,
+		#"objective":objective,
 		"autocollect":autocollect,
 		"save_date":save_date,
 		"bookmarks":bookmarks,

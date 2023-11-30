@@ -7,12 +7,13 @@ var light_ready = false
 var areas_in_laser_range = []
 
 func _draw():
+	var laser_range = 200.0 * (1.0 + STM_node.laser_lv / 5.0)
 	if laser_ready:
-		draw_arc(Vector2.ZERO, 240.0, 0, 2*PI, 100, Color(1.0, 0.0, 0.0, 0.3), -1)
-		draw_circle(Vector2.ZERO, 240.0, Color(1.0, 0.0, 0.0, 0.1))
+		draw_arc(Vector2.ZERO, laser_range, 0, 2*PI, 100, Color(1.0, 0.0, 0.0, 0.3), -1)
+		draw_circle(Vector2.ZERO, laser_range, Color(1.0, 0.0, 0.0, 0.1))
 	else:
-		draw_arc(Vector2.ZERO, 240.0, 0, 2*PI, 100, Color(0.4, 0.4, 0.4, 0.3), -1)
-		draw_circle(Vector2.ZERO, 240.0, Color(0.4, 0.4, 0.4, 0.1))
+		draw_arc(Vector2.ZERO, laser_range, 0, 2*PI, 100, Color(0.4, 0.4, 0.4, 0.3), -1)
+		draw_circle(Vector2.ZERO, laser_range, Color(0.4, 0.4, 0.4, 0.1))
 
 func _input(event):
 	if bomb_ready and Input.is_action_just_pressed("left_click"):
@@ -22,10 +23,10 @@ func _input(event):
 		$BombParticles.emitting = false
 		var bomb:STMProjectile = preload("res://Scenes/STM/STMProjectile.tscn").instantiate()
 		bomb.type = bomb.BOMB
-		bomb.get_node("Sprite2D").texture = preload("res://Graphics/Weapons/bomb1.png")
+		bomb.get_node("Sprite2D").texture = load("res://Graphics/Weapons/bomb%s.png" % STM_node.bomb_lv)
 		bomb.velocity = Vector2(700, 0)
 		bomb.scale *= 3.0
-		bomb.damage = 3
+		bomb.damage = 2 + STM_node.bomb_lv
 		bomb.is_enemy_projectile = false
 		bomb.position = position
 		bomb.STM_node = STM_node
@@ -45,7 +46,7 @@ func _input(event):
 func _on_bullet_timer_timeout():
 	var projectile:STMProjectile = preload("res://Scenes/STM/STMProjectile.tscn").instantiate()
 	projectile.type = projectile.BULLET
-	projectile.get_node("Sprite2D").texture = preload("res://Graphics/Weapons/bullet1.png")
+	projectile.get_node("Sprite2D").texture = load("res://Graphics/Weapons/bullet%s.png" % STM_node.bullet_lv)
 	projectile.velocity = Vector2(1200, 0)
 	projectile.damage = 1
 	projectile.is_enemy_projectile = false
@@ -109,7 +110,7 @@ func shoot_laser(enemy:STMHX):
 	laser_ready = false
 	queue_redraw()
 	$LaserTimer.start()
-	enemy.stun(0.6)
+	enemy.stun(1.2 * STM_node.laser_lv)
 	var laser:Control = get_node("../GlowLayer/Laser")
 	laser.visible = true
 	laser.rotation = atan2(enemy.position.y - position.y, enemy.position.x - position.x)

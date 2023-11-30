@@ -1,12 +1,22 @@
 extends Node2D
 
+@onready var game = get_node("/root/Game")
 @onready var BG_material = $GlowLayer/Background.material
+
+var bullet_lv:int
+var laser_lv:int
+var bomb_lv:int
+var light_lv:int
 
 func _ready():
 	Helper.set_back_btn($Control/Back)
 	$Control/BombActivateLabel.modulate.a = 0.0
 	$Control/LightActivateLabel.modulate.a = 0.0
 	BG_material.set_shader_parameter("position", Vector2.ZERO)
+	bullet_lv = game.ship_data[0].bullet.lv
+	laser_lv = game.ship_data[0].laser.lv
+	bomb_lv = game.ship_data[0].bomb.lv
+	light_lv = game.ship_data[0].light.lv
 
 var mouse_pos:Vector2 = Vector2.ZERO
 
