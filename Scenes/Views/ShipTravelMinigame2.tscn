@@ -2,15 +2,15 @@
 
 [ext_resource type="Script" path="res://Scripts/ShipTravelMinigame2.gd" id="1_8lr8q"]
 [ext_resource type="Script" path="res://Scripts/STMShip.gd" id="2_dfkgr"]
-[ext_resource type="Texture2D" uid="uid://f6vce2wfk8js" path="res://Graphics/Ships/Ship0.png" id="2_v17i1"]
+[ext_resource type="Texture2D" uid="uid://cyawqiuggcvk1" path="res://Graphics/Ships/Ship0.png" id="2_v17i1"]
 [ext_resource type="Theme" uid="uid://cp2u1kgj60ic" path="res://Resources/default_theme.tres" id="3_jfubh"]
 [ext_resource type="Shader" path="res://Shaders/Laser.gdshader" id="5_4dc0n"]
-[ext_resource type="Texture2D" uid="uid://c67y71rs3ver2" path="res://Graphics/Misc/BarUnder2.png" id="5_6lon2"]
-[ext_resource type="Texture2D" uid="uid://o1t3hqx27iw" path="res://Graphics/Misc/BarOver.png" id="6_8qal3"]
-[ext_resource type="Texture2D" uid="uid://1h4b4lcm50vf" path="res://Graphics/Misc/Bar2.png" id="7_6fhtq"]
-[ext_resource type="Texture2D" uid="uid://c2hhyr4csmt6n" path="res://Graphics/Cave/Weapons/red_laser.png" id="8_rnocu"]
-[ext_resource type="Texture2D" uid="uid://6tq7tm3vvims" path="res://Graphics/Weapons/bomb1.png" id="10_yqhvw"]
-[ext_resource type="Texture2D" uid="uid://bagqruqqqw580" path="res://Graphics/Weapons/light1.png" id="11_1xlo5"]
+[ext_resource type="Texture2D" uid="uid://cew70ie8pqr20" path="res://Graphics/Misc/BarUnder2.png" id="5_6lon2"]
+[ext_resource type="Texture2D" uid="uid://bhlpov4iuqi3k" path="res://Graphics/Misc/BarOver.png" id="6_8qal3"]
+[ext_resource type="Texture2D" uid="uid://cv27fq3enpebi" path="res://Graphics/Misc/Bar2.png" id="7_6fhtq"]
+[ext_resource type="Texture2D" uid="uid://tnetpjoy31hi" path="res://Graphics/Cave/Weapons/red_laser.png" id="8_rnocu"]
+[ext_resource type="Texture2D" uid="uid://dahpwsf5jqaoe" path="res://Graphics/Weapons/bomb1.png" id="10_yqhvw"]
+[ext_resource type="Texture2D" uid="uid://b3rrr5os4bwxc" path="res://Graphics/Weapons/light1.png" id="11_1xlo5"]
 [ext_resource type="PackedScene" uid="uid://ca730ks6x5s88" path="res://Scenes/Screenshake.tscn" id="12_npp1l"]
 [ext_resource type="Shader" path="res://Shaders/Starfield.gdshader" id="13_jjtrq"]
 
@@ -348,6 +348,7 @@ layer = -1
 material = SubResource("ShaderMaterial_sr1i2")
 offset_right = 1280.0
 offset_bottom = 720.0
+metadata/_edit_lock_ = true
 
 [node name="Laser" type="ColorRect" parent="GlowLayer"]
 visible = false
@@ -513,5 +514,6 @@ anchor_mode = 0
 [connection signal="timeout" from="Ship/LightTimer" to="Ship" method="_on_light_timer_timeout"]
 [connection signal="area_entered" from="Ship/LaserArea" to="Ship" method="_on_laser_area_area_entered"]
 [connection signal="area_exited" from="Ship/LaserArea" to="Ship" method="_on_laser_area_area_exited"]
+[connection signal="pressed" from="Control/Back" to="." method="_on_back_pressed"]
 [connection signal="timeout" from="EnemySpawnTimer" to="." method="_on_enemy_spawn_timer_timeout"]
 [connection signal="animation_finished" from="GlowLayer/LaserAnimationPlayer" to="." method="_on_laser_animation_player_animation_finished"]

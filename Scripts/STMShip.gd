@@ -1,5 +1,6 @@
 extends Node2D
 
+@onready var game = get_node("/root/Game")
 @onready var STM_node = get_parent()
 var laser_ready = false
 var bomb_ready = false
@@ -49,6 +50,7 @@ func _on_bullet_timer_timeout():
 	projectile.get_node("Sprite2D").texture = load("res://Graphics/Weapons/bullet%s.png" % STM_node.bullet_lv)
 	projectile.velocity = Vector2(1200, 0)
 	projectile.damage = 1
+	projectile.scale *= [1.0, 1.2, 1.4, 1.7, 2.0][STM_node.bullet_lv - 1]
 	projectile.is_enemy_projectile = false
 	projectile.position = position
 	projectile.STM_node = STM_node
@@ -64,7 +66,10 @@ func _on_laser_timer_timeout():
 	var closest_enemy_distance = INF
 	var closest_area = null
 	for area in areas_in_laser_range:
-		var enemy_distance = area.get_parent().position.distance_to(position)
+		var enemy:STMHX = area.get_parent()
+		if enemy.stunned:
+			continue
+		var enemy_distance = enemy.position.distance_to(position)
 		if enemy_distance < closest_enemy_distance:
 			closest_enemy_distance = enemy_distance
 			closest_area = area
@@ -98,7 +103,7 @@ func animate_flash(flash):
 	tween.tween_property(flash, "modulate:a", 0.0, 0.3)
 	
 func hit(damage:int):
-	print("ship hit for %d damage" % damage)
+	STM_node.penalty_time += 6 * (1 + (game.MUs.STMB - 1) * 0.15) * damage
 
 
 func _on_laser_area_area_entered(area):
@@ -110,14 +115,14 @@ func shoot_laser(enemy:STMHX):
 	laser_ready = false
 	queue_redraw()
 	$LaserTimer.start()
-	enemy.stun(1.2 * STM_node.laser_lv)
+	enemy.stun(1.2 * STM_node.laser_lv / STM_node.minigame_time_speed)
 	var laser:Control = get_node("../GlowLayer/Laser")
 	laser.visible = true
 	laser.rotation = atan2(enemy.position.y - position.y, enemy.position.x - position.x)
 	var laser_length = enemy.position.distance_to(position)
 	laser.size.x = laser_length
 	laser.material.set_shader_parameter("noise_scale", Vector2(100.0 / laser_length, 0.0))
-	get_node("../GlowLayer/LaserAnimationPlayer").play("Laser fade")
+	get_node("../GlowLayer/LaserAnimationPlayer").play("Laser fade", -1, STM_node.minigame_time_speed)
 
 func _on_laser_area_area_exited(area):
 	areas_in_laser_range.erase(area)

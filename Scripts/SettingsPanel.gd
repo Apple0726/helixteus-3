@@ -363,6 +363,9 @@ func _on_dynamic_space_lod_value_changed(value):
 	Settings.dynamic_space_LOD = value
 	game.get_node("StarfieldUniverse").material.set_shader_parameter("volsteps", value)
 	game.get_node("StarfieldUniverse").material.set_shader_parameter("iterations", 14 + value / 2)
+	if game.c_v == "STM":
+		game.STM.get_node("GlowLayer/Background").material.set_shader_parameter("volsteps", value)
+		game.STM.get_node("GlowLayer/Background").material.set_shader_parameter("iterations", 14 + value / 2)
 	$TabContainer/GRAPHICS/SpaceLOD/DynamicSpaceLODValue.text = str(value)
 	if err == OK:
 		config.set_value("graphics", "dynamic_space_LOD", value)

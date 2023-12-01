@@ -199,90 +199,90 @@ func refresh():
 		glass_text.text = "%s / %s kg" % [Helper.format_num(game.mats.glass, true), GH_glass_cost]
 	update_XP()
 	update_hotbar()
-	if not game.objective.is_empty():
-		if game.objective.type == game.ObjectiveType.SAVE:
-			var split:Array = game.objective.data.split("/")
-			var primary_resource = len(split) == 1
-			if primary_resource:
-				game.objective.current = game[game.objective.data]
-			else:
-				game.objective.current = game[split[0]][split[1]]
-		elif game.objective.type == game.ObjectiveType.CRUST and game.c_v == "mining":
-			game.objective.current = game.mining_HUD.tile.depth
-			game.objective.goal = game.planet_data[game.c_p].crust_start_depth + 1
-		if game.objective.current >= game.objective.goal:
-			if game.objective.id == 0:#Build 10 mineral silos
-				game.objective = {"type":game.ObjectiveType.BUILD, "data":"MS", "id":1, "current":0, "goal":10}
-			elif game.objective.id == 1:#Purchase a mineral upgrade
-				game.objective = {"type":game.ObjectiveType.MINERAL_UPG, "id":2, "current":0, "goal":1}
-			elif game.objective.id == 2:#Build 1 rover constr center
-				game.objective = {"type":game.ObjectiveType.BUILD, "data":"RCC", "id":3, "current":0, "goal":1}
-			elif game.objective.id == 3:#Explore a cave
-				game.objective = {"type":game.ObjectiveType.CAVE, "id":4, "current":0, "goal":1}
-			elif game.objective.id == 4:#Mine 3 tiles
-				game.objective = {"type":game.ObjectiveType.MINE, "id":5, "current":0, "goal":3}
-			elif game.objective.id == 5:#Reach the crust
-				game.objective = {"type":game.ObjectiveType.CRUST, "id":6, "current":game.mining_HUD.tile.depth, "goal":game.planet_data[game.c_p].crust_start_depth + 1}
-			elif game.objective.id == 6:#Build 4 research labs
-				game.objective = {"type":game.ObjectiveType.BUILD, "data":"RL", "id":7, "current":0, "goal":4}
-			elif game.objective.id == 7:#Reach level 8
-				game.objective = {"type":game.ObjectiveType.LEVEL, "id":8, "current":game.u_i.lv, "goal":8}
-			elif game.objective.id == 8:#Conquer a planet
-				game.objective = {"type":game.ObjectiveType.CONQUER, "data":"planet", "id":9, "current":0, "goal":1}
-			elif game.objective.id == 9:#Find wormhole
-				game.objective = {"type":game.ObjectiveType.WORMHOLE, "id":10, "current":0, "goal":1}
-			elif game.objective.id == 10:#Reach level 18
-				game.objective = {"type":game.ObjectiveType.LEVEL, "id":-1, "current":game.u_i.lv, "goal":18}
-			elif game.objective.id == 11:
-				game.objective = {"type":game.ObjectiveType.DAVID, "id":-1, "current":0, "goal":1}
-			elif game.objective.id == 12:
-				game.objective = {"type":game.ObjectiveType.EMMA, "id":-1, "current":0, "goal":1}
-			else:
-				game.objective.clear()
-			$Top/Objectives/TextureProgressBar.value = 0
-	$Top/Objectives.visible = not game.objective.is_empty()
-	if $Top/Objectives.visible:
-		$Top/Objectives/Label.visible = false
-		if game.objective.type == game.ObjectiveType.BUILD:
-			$Top/Objectives/Label.text = tr("BUILD_OBJECTIVE").format({"num":game.objective.goal, "bldg":tr("%s_NAME%s" % [game.objective.data.to_upper(), "" if game.objective.goal == 1 else "_S"]).to_lower()})
-		elif game.objective.type == game.ObjectiveType.SAVE:
-			var split:Array = game.objective.data.split("/")
-			var primary_resource = len(split) == 1
-			if primary_resource:
-				$Top/Objectives/Label.text = tr("SAVE_OBJECTIVE").format({"num":game.objective.goal, "rsrc":tr(split[0].to_upper()).to_lower()})
-			else:
-				$Top/Objectives/Label.text = tr("SAVE_W_OBJECTIVE").format({"num":game.objective.goal, "rsrc":tr(split[1].to_upper()).to_lower()})
-		elif game.objective.type == game.ObjectiveType.MINE:
-			$Top/Objectives/Label.text = tr("MINE_OBJECTIVE") % game.objective.goal
-		elif game.objective.type == game.ObjectiveType.LEVEL:
-			$Top/Objectives/Label.text = tr("LEVEL_OBJECTIVE") % game.objective.goal
-		elif game.objective.type == game.ObjectiveType.CONQUER:
-			$Top/Objectives/Label.text = tr("CONQUER_OBJECTIVE").format({"num":game.objective.goal, "object":tr(game.objective.data.to_upper() + ("S" if game.objective.goal > 1 else "")).to_lower()})
-		elif game.objective.type == game.ObjectiveType.CAVE:
-			$Top/Objectives/Label.text = tr("CAVE_OBJECTIVE")
-		elif game.objective.type == game.ObjectiveType.CRUST:
-			$Top/Objectives/Label.text = tr("CRUST_OBJECTIVE")
-		elif game.objective.type == game.ObjectiveType.WORMHOLE:
-			$Top/Objectives/Label.text = tr("WORMHOLE_OBJECTIVE")
-		elif game.objective.type == game.ObjectiveType.SIGNAL:
-			$Top/Objectives/Label.text = tr("SIGNAL_OBJECTIVE")
-		elif game.objective.type == game.ObjectiveType.DAVID:
-			$Top/Objectives/Label.text = tr("DAVID_OBJECTIVE")
-		elif game.objective.type == game.ObjectiveType.COLLECT_PARTS:
-			$Top/Objectives/Label.text = tr("COLLECT_SHIP_PARTS")
-		elif game.objective.type == game.ObjectiveType.MANIPULATORS:
-			$Top/Objectives/Label.text = tr("FIND_GEM_MANIPULATORS")
-		elif game.objective.type == game.ObjectiveType.EMMA:
-			$Top/Objectives/Label.text = tr("SELECT_EMMA_CAVE")
-		elif game.objective.type == game.ObjectiveType.UPGRADE:
-			$Top/Objectives/Label.text = tr("UPGRADE_BLDG")
-		elif game.objective.type == game.ObjectiveType.MINERAL_UPG:
-			$Top/Objectives/Label.text = tr("PURCHASE_MIN_UPG")
-		$Top/Objectives/Label.visible = true
-		$Top/Objectives/TextureProgressBar.size = $Top/Objectives/Label.size
-		$Top/Objectives/TextureProgressBar.position = $Top/Objectives/Label.position
-	else:
-		$Top/Objectives.position.y = 4
+	#if not game.objective.is_empty():
+		#if game.objective.type == game.ObjectiveType.SAVE:
+			#var split:Array = game.objective.data.split("/")
+			#var primary_resource = len(split) == 1
+			#if primary_resource:
+				#game.objective.current = game[game.objective.data]
+			#else:
+				#game.objective.current = game[split[0]][split[1]]
+		#elif game.objective.type == game.ObjectiveType.CRUST and game.c_v == "mining":
+			#game.objective.current = game.mining_HUD.tile.depth
+			#game.objective.goal = game.planet_data[game.c_p].crust_start_depth + 1
+		#if game.objective.current >= game.objective.goal:
+			#if game.objective.id == 0:#Build 10 mineral silos
+				#game.objective = {"type":game.ObjectiveType.BUILD, "data":"MS", "id":1, "current":0, "goal":10}
+			#elif game.objective.id == 1:#Purchase a mineral upgrade
+				#game.objective = {"type":game.ObjectiveType.MINERAL_UPG, "id":2, "current":0, "goal":1}
+			#elif game.objective.id == 2:#Build 1 rover constr center
+				#game.objective = {"type":game.ObjectiveType.BUILD, "data":"RCC", "id":3, "current":0, "goal":1}
+			#elif game.objective.id == 3:#Explore a cave
+				#game.objective = {"type":game.ObjectiveType.CAVE, "id":4, "current":0, "goal":1}
+			#elif game.objective.id == 4:#Mine 3 tiles
+				#game.objective = {"type":game.ObjectiveType.MINE, "id":5, "current":0, "goal":3}
+			#elif game.objective.id == 5:#Reach the crust
+				#game.objective = {"type":game.ObjectiveType.CRUST, "id":6, "current":game.mining_HUD.tile.depth, "goal":game.planet_data[game.c_p].crust_start_depth + 1}
+			#elif game.objective.id == 6:#Build 4 research labs
+				#game.objective = {"type":game.ObjectiveType.BUILD, "data":"RL", "id":7, "current":0, "goal":4}
+			#elif game.objective.id == 7:#Reach level 8
+				#game.objective = {"type":game.ObjectiveType.LEVEL, "id":8, "current":game.u_i.lv, "goal":8}
+			#elif game.objective.id == 8:#Conquer a planet
+				#game.objective = {"type":game.ObjectiveType.CONQUER, "data":"planet", "id":9, "current":0, "goal":1}
+			#elif game.objective.id == 9:#Find wormhole
+				#game.objective = {"type":game.ObjectiveType.WORMHOLE, "id":10, "current":0, "goal":1}
+			#elif game.objective.id == 10:#Reach level 18
+				#game.objective = {"type":game.ObjectiveType.LEVEL, "id":-1, "current":game.u_i.lv, "goal":18}
+			#elif game.objective.id == 11:
+				#game.objective = {"type":game.ObjectiveType.DAVID, "id":-1, "current":0, "goal":1}
+			#elif game.objective.id == 12:
+				#game.objective = {"type":game.ObjectiveType.EMMA, "id":-1, "current":0, "goal":1}
+			#else:
+				#game.objective.clear()
+			#$Top/Objectives/TextureProgressBar.value = 0
+	#$Top/Objectives.visible = not game.objective.is_empty()
+	#if $Top/Objectives.visible:
+		#$Top/Objectives/Label.visible = false
+		#if game.objective.type == game.ObjectiveType.BUILD:
+			#$Top/Objectives/Label.text = tr("BUILD_OBJECTIVE").format({"num":game.objective.goal, "bldg":tr("%s_NAME%s" % [game.objective.data.to_upper(), "" if game.objective.goal == 1 else "_S"]).to_lower()})
+		#elif game.objective.type == game.ObjectiveType.SAVE:
+			#var split:Array = game.objective.data.split("/")
+			#var primary_resource = len(split) == 1
+			#if primary_resource:
+				#$Top/Objectives/Label.text = tr("SAVE_OBJECTIVE").format({"num":game.objective.goal, "rsrc":tr(split[0].to_upper()).to_lower()})
+			#else:
+				#$Top/Objectives/Label.text = tr("SAVE_W_OBJECTIVE").format({"num":game.objective.goal, "rsrc":tr(split[1].to_upper()).to_lower()})
+		#elif game.objective.type == game.ObjectiveType.MINE:
+			#$Top/Objectives/Label.text = tr("MINE_OBJECTIVE") % game.objective.goal
+		#elif game.objective.type == game.ObjectiveType.LEVEL:
+			#$Top/Objectives/Label.text = tr("LEVEL_OBJECTIVE") % game.objective.goal
+		#elif game.objective.type == game.ObjectiveType.CONQUER:
+			#$Top/Objectives/Label.text = tr("CONQUER_OBJECTIVE").format({"num":game.objective.goal, "object":tr(game.objective.data.to_upper() + ("S" if game.objective.goal > 1 else "")).to_lower()})
+		#elif game.objective.type == game.ObjectiveType.CAVE:
+			#$Top/Objectives/Label.text = tr("CAVE_OBJECTIVE")
+		#elif game.objective.type == game.ObjectiveType.CRUST:
+			#$Top/Objectives/Label.text = tr("CRUST_OBJECTIVE")
+		#elif game.objective.type == game.ObjectiveType.WORMHOLE:
+			#$Top/Objectives/Label.text = tr("WORMHOLE_OBJECTIVE")
+		#elif game.objective.type == game.ObjectiveType.SIGNAL:
+			#$Top/Objectives/Label.text = tr("SIGNAL_OBJECTIVE")
+		#elif game.objective.type == game.ObjectiveType.DAVID:
+			#$Top/Objectives/Label.text = tr("DAVID_OBJECTIVE")
+		#elif game.objective.type == game.ObjectiveType.COLLECT_PARTS:
+			#$Top/Objectives/Label.text = tr("COLLECT_SHIP_PARTS")
+		#elif game.objective.type == game.ObjectiveType.MANIPULATORS:
+			#$Top/Objectives/Label.text = tr("FIND_GEM_MANIPULATORS")
+		#elif game.objective.type == game.ObjectiveType.EMMA:
+			#$Top/Objectives/Label.text = tr("SELECT_EMMA_CAVE")
+		#elif game.objective.type == game.ObjectiveType.UPGRADE:
+			#$Top/Objectives/Label.text = tr("UPGRADE_BLDG")
+		#elif game.objective.type == game.ObjectiveType.MINERAL_UPG:
+			#$Top/Objectives/Label.text = tr("PURCHASE_MIN_UPG")
+		#$Top/Objectives/Label.visible = true
+		#$Top/Objectives/TextureProgressBar.size = $Top/Objectives/Label.size
+		#$Top/Objectives/TextureProgressBar.position = $Top/Objectives/Label.position
+	#else:
+		#$Top/Objectives.position.y = 4
 	$Bookmarks.visible = game.show.has("bookmarks") and game.c_v != "science_tree"
 	system_b_btn.visible = game.show.has("s_bk_button")
 	galaxy_b_btn.visible = game.show.has("g_bk_button")

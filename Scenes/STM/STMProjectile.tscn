@@ -1,22 +1,36 @@
-[gd_scene load_steps=4 format=3 uid="uid://cd1ho8d2qufs6"]
+[gd_scene load_steps=5 format=3 uid="uid://cd1ho8d2qufs6"]
 
 [ext_resource type="Script" path="res://Scripts/STMProjectile.gd" id="1_eptwt"]
-[ext_resource type="Texture2D" uid="uid://b23k4vsw47lfd" path="res://Graphics/Weapons/bullet1.png" id="2_be4c6"]
+[ext_resource type="Texture2D" uid="uid://cxdt1unu5c54o" path="res://Graphics/Weapons/bullet1.png" id="2_be4c6"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_in1ri"]
 radius = 3.0
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_yl6lj"]
+radius = 16.0312
 
 [node name="Area2D" type="Area2D"]
 collision_layer = 8
 collision_mask = 4
 script = ExtResource("1_eptwt")
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+[node name="CollisionShape2DBullet" type="CollisionShape2D" parent="."]
 rotation = 1.5708
 shape = SubResource("CircleShape2D_in1ri")
 
-[node name="Sprite2D" type="Sprite2D" parent="."]
+[node name="CollisionShape2DBomb" type="CollisionShape2D" parent="."]
+rotation = 1.5708
+shape = SubResource("CircleShape2D_yl6lj")
+disabled = true
+
+[node name="Sprite2D" type="TextureRect" parent="."]
+offset_left = -17.0
+offset_top = -19.0
+offset_right = 90.0
+offset_bottom = 99.0
 scale = Vector2(0.315, 0.315)
 texture = ExtResource("2_be4c6")
+expand_mode = 1
+stretch_mode = 5
 
 [connection signal="area_entered" from="." to="." method="_on_area_entered"]

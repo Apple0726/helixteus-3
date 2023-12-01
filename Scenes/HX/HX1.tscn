@@ -613,6 +613,7 @@ one_shot = true
 explosiveness = 1.0
 
 [node name="BombParticles" type="GPUParticles2D" parent="."]
+emitting = false
 amount = 150
 process_material = SubResource("ParticleProcessMaterial_x45cj")
 lifetime = 3.0

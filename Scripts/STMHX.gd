@@ -6,6 +6,7 @@ static var enemies_on_screen:int = 0
 var HP:int = 3
 var move_tween
 var STM_node:Node2D
+var stunned = false
 
 func _ready():
 	position.x = 1400
@@ -13,8 +14,9 @@ func _ready():
 	var target_position = Vector2(randf_range(750, 1200), randf_range(50, 670))
 	var travel_duration = (position - target_position).length() / 100.0 * sqrt(scale.x)
 	move_tween = create_tween()
+	move_tween.set_speed_scale(STM_node.minigame_time_speed)
 	move_tween.tween_property(self, "position", target_position, travel_duration).set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_CUBIC)
-	$ShootTimer.start(travel_duration)
+	$ShootTimer.start(travel_duration / STM_node.minigame_time_speed)
 	for i in HP:
 		var HP_dot = TextureRect.new()
 		HP_dot.texture = preload("res://Graphics/Misc/bullet.png")
@@ -32,14 +34,16 @@ func hit(damage:int):
 	if HP <= 0:
 		$Area2D.set_deferred("monitorable", false)
 		$Area2D.set_deferred("monitoring", false)
-		$AnimationPlayer.play("DeathAnim")
+		$AnimationPlayer.play("DeathAnim", -1, STM_node.minigame_time_speed)
 		await $AnimationPlayer.animation_finished
 		queue_free()
 
 func stun(duration:float):
+	stunned = true
 	$StunTimer.start(duration)
 	$Sprite2D.material.set_shader_parameter("flash", 1.0)
 	var tween = create_tween()
+	tween.set_speed_scale(STM_node.minigame_time_speed)
 	tween.tween_property($Sprite2D.material, "shader_parameter/flash", 0.0, 0.3)
 	$Sprite2D/Stun.visible = true
 	$ShootTimer.paused = true
@@ -48,7 +52,7 @@ func stun(duration:float):
 
 func _on_shoot_timer_timeout():
 	if $ShootTimer.one_shot:
-		$ShootTimer.start(1.4)
+		$ShootTimer.start(1.4 / STM_node.minigame_time_speed)
 		$ShootTimer.one_shot = false
 	var ship_pos:Vector2 = STM_node.mouse_pos
 	var angle_relative_to_ship = atan2(position.y - ship_pos.y, position.x - ship_pos.x)
@@ -56,6 +60,7 @@ func _on_shoot_timer_timeout():
 		var angle = remap(i, 0, 4, -0.7, 0.7)
 		var projectile:STMProjectile = preload("res://Scenes/STM/STMProjectile.tscn").instantiate()
 		projectile.is_enemy_projectile = true
+		projectile.scale *= 0.5
 		projectile.velocity = 200 * Vector2(-cos(angle - angle_relative_to_ship), sin(angle - angle_relative_to_ship))
 		projectile.position = position
 		projectile.damage = 1
@@ -65,6 +70,7 @@ func _on_shoot_timer_timeout():
 
 
 func _on_stun_timer_timeout():
+	stunned = false
 	$Sprite2D/Stun.visible = false
 	$ShootTimer.paused = false
 	if is_instance_valid(move_tween) and move_tween.is_valid():
