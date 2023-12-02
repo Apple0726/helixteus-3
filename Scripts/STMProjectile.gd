@@ -49,6 +49,6 @@ func _on_area_entered(area):
 		var tween = get_tree().create_tween()
 		tween.tween_property(white_rect, "color:a", 0.0, 0.3 + STM_node.bomb_lv * 0.02)
 		if Settings.screen_shake:
-			STM_node.get_node("Camera2D/Screenshake").start(0.5, 15, 4)
+			get_node("/root/Game/Camera2D/Screenshake").start(0.5, 15, 4)
 	area.get_parent().hit(damage)
 	queue_free()

@@ -340,10 +340,10 @@ func save_obj(type:String, id:int, arr:Array):
 	var file_path:String = "user://%s/Univ%s/%s/%s.hx3" % [game.c_sv, game.c_u, type, id]
 	var save = FileAccess.open(file_path, FileAccess.WRITE)
 	var properties:Array = []
-	#if type == "Galaxies":
-		#properties = ["id", "l_id", "name", "pos", "diff", "parent", "planet_num", "planets", "view", "stars", "discovered", "conquered", "closest_planet_distance"]
-	#elif type == "Clusters":
-		#properties = ["id", "l_id", "name", "pos", "diff", "parent", "system_num", "view", "type", "discovered", "conquered", "rotation", "B_strength", "dark_matter"]
+	if type == "Galaxies":
+		properties = ["id", "l_id", "name", "pos", "diff", "parent", "planet_num", "planets", "view", "stars", "discovered", "conquered", "closest_planet_distance"]
+	elif type == "Clusters":
+		properties = ["id", "l_id", "name", "pos", "diff", "parent", "system_num", "view", "type", "discovered", "conquered", "rotation", "B_strength", "dark_matter"]
 	if not properties.is_empty():
 		var arr_compressed = []
 		var star_properties = ["type", "class", "size", "pos", "temperature", "mass", "luminosity"]

@@ -393,8 +393,8 @@ func _on_Upgrade_pressed():
 				tween.tween_property(bldg_sprite.material, "shader_parameter/color", Color.WHITE, 0.4)
 				tween.tween_property(bldg_sprite.material, "shader_parameter/color", Color.CYAN, 0.3)
 				tween.tween_property(bldg_sprite.material, "shader_parameter/progress", 0.9, 1.2)
-			if not game.objective.is_empty() and game.objective.type == game.ObjectiveType.UPGRADE:
-				game.objective.current += 1
+			#if not game.objective.is_empty() and game.objective.type == game.ObjectiveType.UPGRADE:
+				#game.objective.current += 1
 		else:
 			var diff:float = (new_base_value - planet.bldg.path_1_value) * planet.tile_num
 			if planet.bldg.name == Building.MINERAL_SILO:

@@ -1,18 +1,17 @@
-[gd_scene load_steps=54 format=3 uid="uid://dkeiijs55u4pd"]
+[gd_scene load_steps=53 format=3 uid="uid://dkeiijs55u4pd"]
 
 [ext_resource type="Script" path="res://Scripts/Battle.gd" id="1"]
 [ext_resource type="Theme" uid="uid://cp2u1kgj60ic" path="res://Resources/default_theme.tres" id="2"]
-[ext_resource type="Texture2D" uid="uid://cyawqiuggcvk1" path="res://Graphics/Ships/Ship0.png" id="3"]
-[ext_resource type="Texture2D" uid="uid://bbc7wu8u34l2d" path="res://Graphics/Icons/current.png" id="4"]
-[ext_resource type="PackedScene" uid="uid://ca730ks6x5s88" path="res://Scenes/Screenshake.tscn" id="5"]
-[ext_resource type="Texture2D" uid="uid://c5tl535fuuun7" path="res://Graphics/Ships/Ship1.png" id="6"]
-[ext_resource type="Texture2D" uid="uid://d3myq4roahs13" path="res://Graphics/Ships/Ship2.png" id="7"]
+[ext_resource type="Texture2D" uid="uid://f6vce2wfk8js" path="res://Graphics/Ships/Ship0.png" id="3"]
+[ext_resource type="Texture2D" uid="uid://q55xud5tw2h" path="res://Graphics/Icons/current.png" id="4"]
+[ext_resource type="Texture2D" uid="uid://dlbg18k6yek4g" path="res://Graphics/Ships/Ship1.png" id="6"]
+[ext_resource type="Texture2D" uid="uid://6j08igidqls1" path="res://Graphics/Ships/Ship2.png" id="7"]
 [ext_resource type="Shader" path="res://Shaders/Laser.gdshader" id="8"]
-[ext_resource type="Texture2D" uid="uid://c3s5pfc183fjg" path="res://Graphics/Planets/BGs/9.png" id="9"]
+[ext_resource type="Texture2D" uid="uid://dr1jslt00fmy5" path="res://Graphics/Planets/BGs/9.png" id="9"]
 [ext_resource type="PackedScene" uid="uid://cy1jwsk8ofoys" path="res://Scenes/Key.tscn" id="11"]
 [ext_resource type="PackedScene" uid="uid://cxykmxd6r2wgm" path="res://Scenes/Ship.tscn" id="12"]
-[ext_resource type="Texture2D" uid="uid://clhi7cgujddf3" path="res://Graphics/Ships/Ship3.png" id="13"]
-[ext_resource type="Texture2D" uid="uid://drmkacfnrhx0b" path="res://Graphics/Icons/HX_icon.png" id="14"]
+[ext_resource type="Texture2D" uid="uid://c6tqunvs87mls" path="res://Graphics/Ships/Ship3.png" id="13"]
+[ext_resource type="Texture2D" uid="uid://cbg5j5i6vrldj" path="res://Graphics/Icons/HX_icon.png" id="14"]
 [ext_resource type="Shader" path="res://Shaders/FloatAnimation.gdshader" id="15"]
 
 [sub_resource type="ShaderMaterial" id="6"]
@@ -795,9 +794,9 @@ anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
 offset_left = 6848.0
-offset_top = 248.0
+offset_top = -112.0
 offset_right = 7232.0
-offset_bottom = 420.0
+offset_bottom = 60.0
 grow_horizontal = 2
 grow_vertical = 2
 theme = ExtResource("2")
@@ -968,11 +967,6 @@ offset_bottom = 332.0
 libraries = {
 "": SubResource("AnimationLibrary_ry58s")
 }
-
-[node name="Camera2D" type="Camera2D" parent="."]
-position = Vector2(640, 360)
-
-[node name="Screenshake" parent="Camera2D" instance=ExtResource("5")]
 
 [node name="CurrentPattern" type="Label" parent="."]
 layout_mode = 0

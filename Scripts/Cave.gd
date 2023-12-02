@@ -461,8 +461,8 @@ func generate_cave(first_floor:bool, going_up:bool):
 	var darkness_mod:float = modifiers.get("darkness", 1.0)
 	cave_darkness *= darkness_mod
 	cave_darkness = clamp(cave_darkness, 0.0, 1.0 - ((0.2 / darkness_mod) if darkness_mod > 1.0 else 0.2))
-	if not game.objective.is_empty() and game.objective.type == game.ObjectiveType.CAVE:
-		game.objective.current += 1
+	#if not game.objective.is_empty() and game.objective.type == game.ObjectiveType.CAVE:
+		#game.objective.current += 1
 	var BG_mod = star_mod * (1.0 - cave_darkness)
 	BG_mod.a = 1.0
 	cave_BG.material.set_shader_parameter("modulate_color", BG_mod)

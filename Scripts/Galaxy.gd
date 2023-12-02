@@ -79,6 +79,8 @@ func _draw():
 			draw_line(game.system_data[wh_data.from].pos, game.system_data[wh_data.to].pos, Color(0.6, 0.4, 1.0, 1.0))
 
 func on_system_over (l_id:int):
+	if l_id >= len(game.system_data):
+		return
 	var s_i = game.system_data[l_id]
 	var _name:String
 	if s_i.has("name"):

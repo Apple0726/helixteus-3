@@ -26,7 +26,7 @@ func _input(event):
 		bomb.type = bomb.BOMB
 		bomb.get_node("Sprite2D").texture = load("res://Graphics/Weapons/bomb%s.png" % STM_node.bomb_lv)
 		bomb.velocity = Vector2(700, 0)
-		bomb.scale *= 3.0
+		bomb.scale *= 2.0
 		bomb.damage = 2 + STM_node.bomb_lv
 		bomb.is_enemy_projectile = false
 		bomb.position = position
@@ -73,7 +73,8 @@ func _on_laser_timer_timeout():
 		if enemy_distance < closest_enemy_distance:
 			closest_enemy_distance = enemy_distance
 			closest_area = area
-	shoot_laser(closest_area.get_parent())
+	if closest_area != null:
+		shoot_laser(closest_area.get_parent())
 
 
 func _on_bomb_timer_timeout():

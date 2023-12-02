@@ -507,13 +507,13 @@ func weapon_hit_HX(sh:int, w_c_d:Dictionary, weapon = null):
 			elif weapon_type == "bomb":
 				var impact_light = Sprite2D.new()
 				impact_light.texture = preload("res://Graphics/Misc/bullet.png")
-				impact_light.set_script(preload("res://Scripts/STMParticles.gd"))
 				impact_light.scale *= 4.0
-				impact_light.position = position
+				impact_light.position = HXs[t].position
+				add_child(impact_light)
 				var tween = get_tree().create_tween()
 				tween.set_speed_scale(time_speed)
 				tween.tween_property(impact_light, "modulate:a", 0.0, 0.2)
-				impact_light.queue_free_delay = 0.2
+				tween.tween_callback(impact_light.queue_free)
 				HXs[t].get_node("BombParticles").amount = 100 + 50 * weapon_lv 
 				HXs[t].get_node("BombParticles").emitting = true
 				HXs[t].get_node("BombParticles").speed_scale = time_speed
@@ -529,7 +529,7 @@ func weapon_hit_HX(sh:int, w_c_d:Dictionary, weapon = null):
 				tween_white_rect.tween_property(white_rect, "color:a", 0.0, 0.3)
 				#duration = 0.2, frequency = 15, amplitude = 16, priority = 0
 				if Settings.screen_shake:
-					$Camera2D/Screenshake.start(0.5,15,4)
+					get_node("/root/Game/Camera2D/Screenshake").start(0.5,15,4)
 				HXs[t].get_node("KnockbackAnimation").stop()
 				HXs[t].get_node("KnockbackAnimation").play("Big knockback" if HX_data[t].HP > 0 else "Dead", -1, time_speed)
 				weapon_XPs[sh][weapon_type] += weapon_lv

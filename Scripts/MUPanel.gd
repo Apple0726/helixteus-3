@@ -117,8 +117,8 @@ func _on_Upgrade_pressed(MU:String):
 		game.minerals -= min_cost
 		game.MUs[MU] += 1
 		refresh()
-		if not game.objective.is_empty() and game.objective.type == game.ObjectiveType.MINERAL_UPG:
-			game.objective.current += 1
+		#if not game.objective.is_empty() and game.objective.type == game.ObjectiveType.MINERAL_UPG:
+			#game.objective.current += 1
 		game.HUD.refresh()
 		if MU == "IS":
 			game.items.append(null)

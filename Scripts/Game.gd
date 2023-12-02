@@ -1035,7 +1035,7 @@ func new_game(univ:int = 0, new_save:bool = false, DR_advantage = false):
 	}
 	satellite_data = []
 
-	items = [{"name":"speedup1", "num":1, "type":"speedups_info"}, {"name":"overclock1", "num":1, "type":"overclocks_info"}, null, null, null, null, null, null, null, null]
+	items = [{"name":"overclock1", "num":5, "type":"overclocks_info"}, null, null, null, null, null, null, null, null]
 
 	hotbar = []
 

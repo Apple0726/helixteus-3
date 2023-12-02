@@ -271,8 +271,8 @@ func pickaxe_hit():
 			add_rsrc_mined(contents)
 			Helper.get_rsrc_from_rock(contents, tile, p_i, id)
 			progress -= 100
-			if not game.objective.is_empty() and game.objective.type == game.ObjectiveType.MINE:
-				game.objective.current += 1
+			#if not game.objective.is_empty() and game.objective.type == game.ObjectiveType.MINE:
+				#game.objective.current += 1
 			rock_gen = true
 			game.stats_univ.tiles_mined_mining += 1
 			game.stats_dim.tiles_mined_mining += 1

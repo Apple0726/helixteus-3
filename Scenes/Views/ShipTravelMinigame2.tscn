@@ -1,17 +1,16 @@
-[gd_scene load_steps=32 format=3 uid="uid://ck487g2ydj8tn"]
+[gd_scene load_steps=31 format=3 uid="uid://ck487g2ydj8tn"]
 
 [ext_resource type="Script" path="res://Scripts/ShipTravelMinigame2.gd" id="1_8lr8q"]
 [ext_resource type="Script" path="res://Scripts/STMShip.gd" id="2_dfkgr"]
-[ext_resource type="Texture2D" uid="uid://cyawqiuggcvk1" path="res://Graphics/Ships/Ship0.png" id="2_v17i1"]
+[ext_resource type="Texture2D" uid="uid://f6vce2wfk8js" path="res://Graphics/Ships/Ship0.png" id="2_v17i1"]
 [ext_resource type="Theme" uid="uid://cp2u1kgj60ic" path="res://Resources/default_theme.tres" id="3_jfubh"]
 [ext_resource type="Shader" path="res://Shaders/Laser.gdshader" id="5_4dc0n"]
-[ext_resource type="Texture2D" uid="uid://cew70ie8pqr20" path="res://Graphics/Misc/BarUnder2.png" id="5_6lon2"]
-[ext_resource type="Texture2D" uid="uid://bhlpov4iuqi3k" path="res://Graphics/Misc/BarOver.png" id="6_8qal3"]
-[ext_resource type="Texture2D" uid="uid://cv27fq3enpebi" path="res://Graphics/Misc/Bar2.png" id="7_6fhtq"]
-[ext_resource type="Texture2D" uid="uid://tnetpjoy31hi" path="res://Graphics/Cave/Weapons/red_laser.png" id="8_rnocu"]
-[ext_resource type="Texture2D" uid="uid://dahpwsf5jqaoe" path="res://Graphics/Weapons/bomb1.png" id="10_yqhvw"]
-[ext_resource type="Texture2D" uid="uid://b3rrr5os4bwxc" path="res://Graphics/Weapons/light1.png" id="11_1xlo5"]
-[ext_resource type="PackedScene" uid="uid://ca730ks6x5s88" path="res://Scenes/Screenshake.tscn" id="12_npp1l"]
+[ext_resource type="Texture2D" uid="uid://c67y71rs3ver2" path="res://Graphics/Misc/BarUnder2.png" id="5_6lon2"]
+[ext_resource type="Texture2D" uid="uid://o1t3hqx27iw" path="res://Graphics/Misc/BarOver.png" id="6_8qal3"]
+[ext_resource type="Texture2D" uid="uid://1h4b4lcm50vf" path="res://Graphics/Misc/Bar2.png" id="7_6fhtq"]
+[ext_resource type="Texture2D" uid="uid://c2hhyr4csmt6n" path="res://Graphics/Cave/Weapons/red_laser.png" id="8_rnocu"]
+[ext_resource type="Texture2D" uid="uid://6tq7tm3vvims" path="res://Graphics/Weapons/bomb1.png" id="10_yqhvw"]
+[ext_resource type="Texture2D" uid="uid://bagqruqqqw580" path="res://Graphics/Weapons/light1.png" id="11_1xlo5"]
 [ext_resource type="Shader" path="res://Shaders/Starfield.gdshader" id="13_jjtrq"]
 
 [sub_resource type="Shader" id="Shader_yo3bn"]
@@ -502,11 +501,6 @@ offset_bottom = 720.0
 mouse_filter = 2
 color = Color(1, 1, 1, 0)
 metadata/_edit_lock_ = true
-
-[node name="Camera2D" type="Camera2D" parent="."]
-anchor_mode = 0
-
-[node name="Screenshake" parent="Camera2D" instance=ExtResource("12_npp1l")]
 
 [connection signal="timeout" from="Ship/BulletTimer" to="Ship" method="_on_bullet_timer_timeout"]
 [connection signal="timeout" from="Ship/LaserTimer" to="Ship" method="_on_laser_timer_timeout"]

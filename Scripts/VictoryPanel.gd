@@ -64,8 +64,8 @@ func _on_close_button_pressed():
 		game.stats_univ.planets_conquered += 1
 		game.stats_dim.planets_conquered += 1
 		game.stats_global.planets_conquered += 1
-		if not game.objective.is_empty() and game.objective.type == game.ObjectiveType.CONQUER and game.objective.data == "planet":
-			game.objective.current += 1
+		#if not game.objective.is_empty() and game.objective.type == game.ObjectiveType.CONQUER and game.objective.data == "planet":
+			#game.objective.current += 1
 	else:
 		for planet in game.planet_data:
 			if not planet.has("conquered") and planet.has("HX_data"):

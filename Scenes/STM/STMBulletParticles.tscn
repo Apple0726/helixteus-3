@@ -1,4 +1,4 @@
-[gd_scene load_steps=5 format=3 uid="uid://bxeyt4nfuybpo"]
+[gd_scene load_steps=4 format=3 uid="uid://bxeyt4nfuybpo"]
 
 [sub_resource type="Gradient" id="Gradient_t4lda"]
 offsets = PackedFloat32Array(0, 0.625, 1)
@@ -16,17 +16,6 @@ scale_min = 3.0
 scale_max = 3.0
 color_ramp = SubResource("GradientTexture1D_yly2m")
 
-[sub_resource type="GDScript" id="GDScript_mw8c1"]
-script/source = "extends Node2D
-
-var queue_free_delay:float
-
-func _ready():
-	await get_tree().create_timer(queue_free_delay).timeout
-	queue_free()
-
-"
-
 [node name="GPUParticles2D" type="GPUParticles2D"]
 modulate = Color(0.454902, 0.454902, 0.454902, 1)
 emitting = false
@@ -35,4 +24,3 @@ process_material = SubResource("ParticleProcessMaterial_0uipm")
 lifetime = 0.3
 one_shot = true
 explosiveness = 1.0
-script = SubResource("GDScript_mw8c1")
