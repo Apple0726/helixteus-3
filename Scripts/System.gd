@@ -228,7 +228,6 @@ func on_entity_icon_over(txt:String):
 func on_entity_icon_out():
 	game.hide_tooltip()
 
-
 func refresh_stars():
 	scale_mult = 70.0 / game.system_data[game.c_s].closest_planet_distance
 	for star in get_tree().get_nodes_in_group("stars_system"):
@@ -252,13 +251,12 @@ func refresh_stars():
 		star.connect("mouse_entered",Callable(self,"on_star_over").bind(i))
 		star.connect("mouse_exited",Callable(self,"on_btn_out"))
 		star.connect("pressed",Callable(self,"on_star_pressed").bind(i))
-		if Settings.enable_shaders:
-			star.material = ShaderMaterial.new()
-			star.material.shader = preload("res://Shaders/Star.gdshader")
-			star.material.set_shader_parameter("time_offset", 10.0 * randf())
-			star.material.set_shader_parameter("color", Helper.get_star_modulate(star_info["class"]))
-			star.material.set_shader_parameter("alpha", 0.0)
-			star_tween.tween_property(star.material, "shader_parameter/alpha", 1.0, 0.3)
+		star.material = ShaderMaterial.new()
+		star.material.shader = preload("res://Shaders/Star.gdshader")
+		star.material.set_shader_parameter("time_offset", 10.0 * randf())
+		star.material.set_shader_parameter("color", Helper.get_star_modulate(star_info["class"]))
+		star.material.set_shader_parameter("alpha", 0.0)
+		star_tween.tween_property(star.material, "shader_parameter/alpha", 1.0, 0.3)
 		star.modulate = Helper.get_star_modulate(star_info["class"])
 		if not game.achievement_data.exploration.has("B_star") and star_info["class"][0] == "B":
 			game.earn_achievement("exploration", "B_star")

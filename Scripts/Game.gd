@@ -1583,6 +1583,7 @@ func switch_view(new_view:String, other_params:Dictionary = {}):
 			"system":
 				add_system()
 				add_space_HUD()
+				space_HUD.get_node("StarPanel").refresh()
 			"galaxy":
 				add_galaxy()
 			"cluster":
@@ -1725,18 +1726,19 @@ func open_obj(type:String, id:int):
 				elif type == "Clusters":
 					properties = ["id", "l_id", "name", "pos", "diff", "parent", "system_num", "view", "type", "discovered", "conquered", "rotation", "B_strength", "dark_matter"]
 				for i in len(properties):
-					if compressed_obj[i] != null:
-						if properties[i] == "stars":
-							var stars = []
-							for star_info:Array in compressed_obj[i]:
-								var star_dict = {}
-								for j in len(star_properties):
-									var star_prop:String = star_properties[j]
-									star_dict[star_prop] = star_info[j]
-								stars.append(star_dict)
-								decompressed_obj.stars = stars
-						else:
-							decompressed_obj[properties[i]] = compressed_obj[i]
+					if compressed_obj[i] == null:
+						continue
+					if properties[i] == "stars":
+						var stars = []
+						for star_info:Array in compressed_obj[i]:
+							var star_dict = {}
+							for j in len(star_properties):
+								var star_prop:String = star_properties[j]
+								star_dict[star_prop] = star_info[j]
+							stars.append(star_dict)
+							decompressed_obj.stars = stars
+					else:
+						decompressed_obj[properties[i]] = compressed_obj[i]
 				var attr_dict:Dictionary = compressed_obj[-1]
 				for attr in attr_dict.keys():
 					decompressed_obj[attr] = attr_dict[attr]
@@ -1799,14 +1801,12 @@ func add_space_HUD():
 			space_HUD.get_node("VBoxContainer/Annotate").visible = true
 			add_annotator()
 		space_HUD.get_node("VBoxContainer/ElementOverlay").visible = c_v == "system" and science_unlocked.has("ATM")
+		space_HUD.get_node("VBoxContainer/Stars").visible = c_v == "system"
 		space_HUD.get_node("VBoxContainer/Megastructures").visible = c_v == "system" and science_unlocked.has("MAE")
 		space_HUD.get_node("VBoxContainer/Gigastructures").visible = c_v in ["galaxy", "cluster"] and science_unlocked.has("GS")
 		space_HUD.get_node("ConquerAll").visible = c_v == "system" and (u_i.lv >= 32 or subject_levels.dimensional_power >= 1) and not system_data[c_s].has("conquered") and len(ship_data) > 0 and ships_travel_data.c_g_coords.s == c_s_g
 		space_HUD.get_node("SendFighters").visible = c_v == "galaxy" and science_unlocked.has("FG") and not galaxy_data[c_g].has("conquered") or c_v == "cluster" and science_unlocked.has("FG2") and not u_i.cluster_data[c_c].has("conquered")
-		if c_v == "universe":
-			space_HUD.get_node("SendProbes").visible = true
-		else:
-			space_HUD.get_node("SendProbes").visible = false
+		space_HUD.get_node("SendProbes").visible = c_v == "universe"
 
 func add_overlay():
 	overlay = overlay_scene.instantiate()
@@ -2001,7 +2001,7 @@ func add_system():
 	set_starfield_color($ShaderExport/SubViewport/Starfield.material, starfield_color_param)
 	show_starfield({"position":system_data[c_s].pos / 10000.0})
 	var starfield_tween = create_tween()
-	starfield_tween.tween_property($Stars/Starfield, "modulate:a", 0.5, 0.5)
+	starfield_tween.tween_property($Stars/Starfield, "modulate:a", 0.35, 0.5)
 	planet_data = open_obj("Systems", c_s_g)
 	if not system_data[c_s].has("discovered") or planet_data.is_empty():
 		if c_s_g != 0:

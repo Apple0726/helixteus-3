@@ -558,10 +558,6 @@ func constr_bldg(tile_id:int, curr_time:int, _bldg_to_construct:int, mass_build:
 			game.energy_capacity += path_1_value * game.u_i.charge
 		elif _bldg_to_construct == Building.CENTRAL_BUSINESS_DISTRICT:
 			Helper.update_CBD_affected_tiles(tile, tile_id, p_i)
-		elif _bldg_to_construct == Building.GREENHOUSE:
-			var soil_tiles = $TileFeatures.get_used_cells_by_id(2, 3, Vector2i.ZERO)
-			soil_tiles.append(Vector2i(tile_id % wid, int(tile_id / wid)))
-			$TileFeatures.set_cells_terrain_connect(2, soil_tiles, 0, 3)
 		elif _bldg_to_construct == Building.BORING_MACHINE:
 			if not tile.has("depth"):
 				tile.depth = 0
@@ -1134,10 +1130,15 @@ func _unhandled_input(event):
 	if Input.is_action_just_released("left_click") and mass_build_rect.visible:
 		mass_build_rect.visible = false
 		var curr_time = Time.get_unix_time_from_system()
+		var soil_tiles = $TileFeatures.get_used_cells_by_id(2, 3, Vector2i.ZERO)
 		for i in len(shadows):
 			if is_instance_valid(shadows[i]):
-				constr_bldg(get_tile_id_from_pos(shadows[i].position), curr_time, bldg_to_construct, true)
+				var tile_id:int = get_tile_id_from_pos(shadows[i].position)
+				constr_bldg(tile_id, curr_time, bldg_to_construct, true)
 				shadows[i].queue_free()
+				soil_tiles.append(Vector2i(tile_id % wid, int(tile_id / wid)))
+		if bldg_to_construct == Building.GREENHOUSE:
+			$TileFeatures.set_cells_terrain_connect(2, soil_tiles, 0, 3)
 		shadow_num = 0
 		game.HUD.refresh()
 		return
@@ -1170,6 +1171,10 @@ func _unhandled_input(event):
 			if constructing_unique_building_tier == -1:
 				if available_to_build(tile):
 					constr_bldg(tile_id, curr_time, bldg_to_construct)
+					if bldg_to_construct == Building.GREENHOUSE:
+						var soil_tiles = $TileFeatures.get_used_cells_by_id(2, 3, Vector2i.ZERO)
+						soil_tiles.append(Vector2i(tile_id % wid, int(tile_id / wid)))
+						$TileFeatures.set_cells_terrain_connect(2, soil_tiles, 0, 3)
 			else:
 				if bldg_to_construct == UniqueBuilding.NUCLEAR_FUSION_REACTOR:
 					if x_pos < wid-1 and y_pos < wid-1:
@@ -1357,8 +1362,8 @@ func on_wormhole_click(tile:Dictionary, tile_id:int):
 		if not tile.wormhole.has("investigation_length"):
 			var costs:Dictionary = get_wh_costs()
 			if game.SP >= costs.SP:
-				if not game.objective.is_empty() and game.objective.type == game.ObjectiveType.WORMHOLE:
-					game.objective.current += 1
+				#if not game.objective.is_empty() and game.objective.type == game.ObjectiveType.WORMHOLE:
+					#game.objective.current += 1
 				game.SP -= costs.SP
 				game.stats_univ.wormholes_activated += 1
 				game.stats_dim.wormholes_activated += 1

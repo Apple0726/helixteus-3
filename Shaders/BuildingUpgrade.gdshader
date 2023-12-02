@@ -7,4 +7,7 @@ void fragment() {
 	COLOR = texture(TEXTURE, UV);
 	float p = min(2.0 * exp(-pow(UV.y + 8.0 * progress - 4.0, 2)), 1.0);
 	COLOR.rgb = mix(COLOR.rgb, color.rgb, p);
+	if (COLOR.a > 0.0) {
+		COLOR.a = mix(COLOR.a, 1.0, p);
+	}
 }

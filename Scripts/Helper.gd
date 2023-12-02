@@ -849,12 +849,12 @@ func add_autocollect(p_i:Dictionary, tile:Dictionary, mult_diff:float):
 		Helper.add_energy_from_NFR(p_i, base)
 		Helper.add_energy_from_CS(p_i, base)
 	elif tile.bldg.name == Building.GREENHOUSE and tile.has("auto_GH"):
-		game.autocollect.mats.cellulose -= tile.auto_GH.cellulose_drain * mult_diff
+		game.autocollect.mats.cellulose -= tile.auto_GH.cellulose_drain * (mult_diff - 1.0)
 		tile.auto_GH.cellulose_drain *= mult_diff
 		var extra_produce:Dictionary = tile.auto_GH.produce.duplicate(true)
 		for rsrc in extra_produce.keys():
-			extra_produce[rsrc] *= mult_diff
-			tile.auto_GH.produce[rsrc] *= 1.0 + mult_diff
+			extra_produce[rsrc] *= mult_diff - 1.0
+			tile.auto_GH.produce[rsrc] *= mult_diff
 		add_GH_produce_to_autocollect(extra_produce, 1.0)
 		
 

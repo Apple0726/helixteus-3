@@ -826,7 +826,7 @@ position = Vector2(640, 360)
 [node name="Screenshake" parent="Camera2D" instance=ExtResource("36")]
 
 [node name="MMTimer" type="Timer" parent="."]
-wait_time = 0.5
+wait_time = 0.1
 
 [connection signal="close_button_out" from="UI/BottomInfo/CloseButton" to="." method="_on_CloseButton_close_button_out"]
 [connection signal="close_button_over" from="UI/BottomInfo/CloseButton" to="." method="_on_CloseButton_close_button_over"]

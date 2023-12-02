@@ -1,13 +1,23 @@
-[gd_scene load_steps=18 format=3 uid="uid://cgbd1tgsqupqm"]
+[gd_scene load_steps=20 format=3 uid="uid://cgbd1tgsqupqm"]
 
 [ext_resource type="Texture2D" uid="uid://c6bssilpelk7t" path="res://Graphics/Buttons/Overlay.png" id="1"]
 [ext_resource type="Script" path="res://Scripts/SpaceHUD.gd" id="2"]
 [ext_resource type="Theme" uid="uid://cp2u1kgj60ic" path="res://Resources/default_theme.tres" id="3"]
 [ext_resource type="Texture2D" uid="uid://bqdtj803gnifh" path="res://Graphics/Buttons/Megastructures.png" id="4"]
 [ext_resource type="Texture2D" uid="uid://dhmes6om6bc4a" path="res://Graphics/Buttons/Annotate.png" id="7"]
+[ext_resource type="Texture2D" uid="uid://dj2l1ch57lnv0" path="res://Graphics/Buttons/Stars.png" id="7_xbfvs"]
 [ext_resource type="Texture2D" uid="uid://cuhfqeeaure2b" path="res://Graphics/Buttons/Gigastructures.png" id="8"]
 [ext_resource type="PackedScene" uid="uid://b3nhmyabvl606" path="res://Scenes/Panels/ConstructionPanel.tscn" id="8_4lxnk"]
 [ext_resource type="Texture2D" uid="uid://dpeem5n7o8g3h" path="res://Graphics/Buttons/ElementOverlay.png" id="9"]
+[ext_resource type="PackedScene" uid="uid://cobxcj7wuwecq" path="res://Scenes/Panels/StarPanel.tscn" id="10_cgit7"]
+
+[sub_resource type="InputEventKey" id="InputEventKey_1bc5f"]
+device = -1
+physical_keycode = 67
+unicode = 99
+
+[sub_resource type="Shortcut" id="6"]
+events = [SubResource("InputEventKey_1bc5f")]
 
 [sub_resource type="InputEventKey" id="InputEventKey_o6e2x"]
 device = -1
@@ -24,14 +34,6 @@ unicode = 110
 
 [sub_resource type="Shortcut" id="4"]
 events = [SubResource("InputEventKey_t3ovf")]
-
-[sub_resource type="InputEventKey" id="InputEventKey_1bc5f"]
-device = -1
-physical_keycode = 67
-unicode = 99
-
-[sub_resource type="Shortcut" id="6"]
-events = [SubResource("InputEventKey_1bc5f")]
 
 [sub_resource type="Animation" id="8"]
 resource_name = "MoveButtons"
@@ -89,6 +91,16 @@ offset_bottom = 720.0
 mouse_filter = 2
 theme_override_constants/separation = 0
 alignment = 1
+
+[node name="Stars" type="TextureButton" parent="VBoxContainer"]
+visible = false
+custom_minimum_size = Vector2(0, 48)
+layout_mode = 2
+shortcut = SubResource("6")
+shortcut_in_tooltip = false
+texture_normal = ExtResource("7_xbfvs")
+ignore_texture_size = true
+stretch_mode = 5
 
 [node name="ElementOverlay" type="TextureButton" parent="VBoxContainer"]
 visible = false
@@ -178,6 +190,13 @@ anchor_bottom = 0.0
 grow_horizontal = 1
 grow_vertical = 1
 
+[node name="StarPanel" parent="." instance=ExtResource("10_cgit7")]
+visible = false
+layout_mode = 1
+
+[connection signal="mouse_entered" from="VBoxContainer/Stars" to="." method="_on_stars_mouse_entered"]
+[connection signal="mouse_exited" from="VBoxContainer/Stars" to="." method="_on_mouse_exited"]
+[connection signal="pressed" from="VBoxContainer/Stars" to="." method="_on_stars_pressed"]
 [connection signal="mouse_entered" from="VBoxContainer/ElementOverlay" to="." method="_on_ElementOverlay_mouse_entered"]
 [connection signal="mouse_exited" from="VBoxContainer/ElementOverlay" to="." method="_on_mouse_exited"]
 [connection signal="pressed" from="VBoxContainer/ElementOverlay" to="." method="_on_ElementOverlay_pressed"]
