@@ -31,7 +31,7 @@ func _on_Construct_pressed():
 		game.hide_tooltip()
 		$ConstructPanel/AnimationPlayer.play("Fade")
 		$ConstructPanel.visible = true
-		game.block_scroll = true
+		$ConstructPanel.set_process_input(true)
 		$ConstructPanel.refresh()
 
 

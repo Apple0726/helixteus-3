@@ -459,7 +459,12 @@ func _ready():
 	Helper.setup_discord()
 	Helper.refresh_discord("In title screen")
 	$Star/Sprite2D.texture = load("res://Graphics/Effects/spotlight_%s.png" % [4, 5, 6].pick_random())
-	$Star/Sprite2D.material["shader_parameter/color"] = Color(randf_range(0.5, 1.0), randf_range(0.5, 1.0), randf_range(0.5, 1.0))
+	var op_star_colors = [
+		Color(0.7428, 0.9162, 0.7401, 1),
+	]
+	var star_color = Color(randf_range(0.5, 1.0), randf_range(0.5, 1.0), randf_range(0.5, 1.0))
+	print(star_color)
+	$Star/Sprite2D.material["shader_parameter/color"] = star_color
 	var star_tween = create_tween()
 	star_tween.tween_property($Star/Sprite2D.material, "shader_parameter/alpha", 1.0, 2.0)
 	current_viewport_dimensions = get_viewport().size
@@ -1735,6 +1740,9 @@ func open_obj(type:String, id:int):
 							for j in len(star_properties):
 								var star_prop:String = star_properties[j]
 								star_dict[star_prop] = star_info[j]
+							var attr_dict:Dictionary = star_info[-1]
+							for attr in attr_dict.keys():
+								star_dict[attr] = attr_dict[attr]
 							stars.append(star_dict)
 							decompressed_obj.stars = stars
 					else:

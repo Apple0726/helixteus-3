@@ -12,6 +12,7 @@ var build_all:bool = false
 var tab = "basic"
 
 func _ready():
+	set_process_input(false)
 	var added_buildings = Mods.added_buildings
 	for key in added_buildings:
 		match added_buildings[key].type:
@@ -27,6 +28,9 @@ func _ready():
 				vehicles_bldgs.append(key)
 
 func _input(event):
+	if event is InputEventMouseMotion:
+		var rect:Rect2 = Rect2($Panel.position, $Panel.size)
+		game.block_scroll = rect.has_point(event.position)
 	if visible and (Input.is_action_just_released("cancel") or Input.is_action_just_released("right_click")):
 		hide_panel()
 
@@ -97,20 +101,24 @@ func on_MS_click(MS:String):
 	if MS == "DS":
 		if not build_all or build_all and game.science_unlocked.has("DS1") and game.science_unlocked.has("DS2") and game.science_unlocked.has("DS3") and game.science_unlocked.has("DS4"):
 			game.put_bottom_info(tr("CLICK_STAR_TO_CONSTRUCT"), "building_DS", "cancel_building_MS")
+			game.space_HUD._on_stars_pressed()
 		else:
 			game.popup(tr("NOT_ALL_STAGES_UNLOCKED"), 2.0)
 			return
 	elif MS == "CBS":
 		if not build_all or build_all and game.science_unlocked.has("CBS1") and game.science_unlocked.has("CBS2") and game.science_unlocked.has("CBS3"):
 			game.put_bottom_info(tr("CLICK_STAR_TO_CONSTRUCT"), "building_CBS", "cancel_building_MS")
+			game.space_HUD._on_stars_pressed()
 		else:
 			game.popup(tr("NOT_ALL_STAGES_UNLOCKED"), 2.0)
 			return
 	elif MS == "MB":
 		game.put_bottom_info(tr("CLICK_STAR_TO_CONSTRUCT"), "building_MB", "cancel_building_MS")
+		game.space_HUD._on_stars_pressed()
 	elif MS == "PK":
 		if not build_all or build_all and game.science_unlocked.has("PK1") and game.science_unlocked.has("PK2"):
 			game.put_bottom_info(tr("CLICK_STAR_TO_CONSTRUCT"), "building_PK", "cancel_building_MS")
+			game.space_HUD._on_stars_pressed()
 		else:
 			game.popup(tr("NOT_ALL_STAGES_UNLOCKED"), 2.0)
 			return
@@ -322,6 +330,8 @@ func _on_construct_panel_animation_animation_finished(anim_name):
 func hide_panel():
 	if not $AnimationPlayer.is_playing():
 		$AnimationPlayer.play_backwards("Fade")
+		set_process_input(false)
+		await get_tree().process_frame
 		game.block_scroll = false
 
 

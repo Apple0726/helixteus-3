@@ -685,7 +685,7 @@ func build_MS(obj:Dictionary, MS:String):
 		game.HUD.refresh()
 		game.get_node("UI/Panel/AnimationPlayer").play("FadeOut")
 		MS_constr_data.clear()
-		Helper.save_obj("Systems", game.c_s_g, game.planet_data)
+		game.space_HUD.get_node("StarPanel").refresh()
 		refresh_planets()
 		refresh_stars()
 	else:
@@ -759,7 +759,6 @@ func on_planet_click (id:int, l_id:int):
 var star_over_id:int
 
 func on_star_over (id:int):
-	star_over_id = id
 	var star = stars_info[id]
 	var star_type:int = star.type
 	var star_type_str:String = ""
@@ -785,6 +784,10 @@ func on_star_over (id:int):
 		tr("STAR_MASS") % (Helper.clever_round(star.mass, 3, true) if star.mass < 1000 else Helper.format_num(star.mass)),
 		tr("STAR_LUMINOSITY") % (Helper.clever_round(star.luminosity, 3, true) if star.luminosity < 1000 else Helper.format_num(star.luminosity))
 	]
+	show_MS_construct_info(star)
+	game.show_tooltip(tooltip)
+
+func show_MS_construct_info(star:Dictionary):
 	var has_MS:bool = star.has("MS")
 	var vbox = game.get_node("UI/Panel/VBox")
 	if game.bottom_info_action == "building_DS":
@@ -864,7 +867,6 @@ func on_star_over (id:int):
 		if game.system_data[game.c_s].has("conquered"):
 			Helper.add_label(tr("PRESS_X_TO_DESTROY"))
 			MS_constr_data.destroyable = true
-	game.show_tooltip(tooltip)
 
 func continue_upg(obj:Dictionary):
 	MS_constr_data.obj = obj
@@ -872,6 +874,7 @@ func continue_upg(obj:Dictionary):
 	Helper.add_label(tr("PRESS_F_TO_CONTINUE_CONSTR"))
 
 func on_star_pressed (id:int):
+	star_over_id = id
 	var curr_time = Time.get_unix_time_from_system()
 	var star = stars_info[id]
 	if game.bottom_info_action in ["building_DS", "building_PK", "building_CBS"]:

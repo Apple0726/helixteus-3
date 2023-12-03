@@ -22,8 +22,10 @@ func _on_Megastructures_pressed():
 		$ConstructPanel.tab = "megastructures"
 		$ConstructPanel/AnimationPlayer.play("Fade")
 		$ConstructPanel.visible = true
-		game.block_scroll = true
+		$ConstructPanel.set_process_input(true)
 		$ConstructPanel.refresh()
+	if $StarPanel.visible:
+		$StarPanel/AnimationPlayer.play_backwards("Fade")
 
 func _on_Megastructures_mouse_entered():
 	game.show_tooltip(tr("MEGASTRUCTURES") + " (C)")
@@ -94,4 +96,4 @@ func _on_stars_mouse_entered():
 func _on_stars_pressed():
 	$StarPanel/AnimationPlayer.play("Fade")
 	$StarPanel.visible = true
-	game.block_scroll = true
+	$StarPanel.set_process_input(true)

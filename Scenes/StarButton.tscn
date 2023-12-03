@@ -1,8 +1,9 @@
-[gd_scene load_steps=5 format=3 uid="uid://byh1hjd76sl65"]
+[gd_scene load_steps=6 format=3 uid="uid://byh1hjd76sl65"]
 
 [ext_resource type="Script" path="res://Scripts/StarButton.gd" id="1_vfiau"]
 [ext_resource type="Texture2D" uid="uid://dr8l581d8rjhg" path="res://Graphics/Effects/spotlight_4.png" id="1_w4ys2"]
 [ext_resource type="Shader" path="res://Shaders/Star.gdshader" id="2_dveyw"]
+[ext_resource type="Texture2D" uid="uid://cwopqd20uvnkn" path="res://Graphics/Science/MAE.png" id="4_77icn"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_18mo0"]
 resource_local_to_scene = true
@@ -72,3 +73,13 @@ offset_right = 366.0
 offset_bottom = 40.0
 text = "1.0 R☉"
 vertical_alignment = 1
+
+[node name="MS" type="TextureRect" parent="."]
+layout_mode = 0
+offset_left = 64.0
+offset_top = 60.0
+offset_right = 92.0
+offset_bottom = 88.0
+texture = ExtResource("4_77icn")
+expand_mode = 1
+stretch_mode = 5

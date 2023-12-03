@@ -1117,6 +1117,7 @@ CENTER_OF_PLANET,,You're at the center of the planet!,,,你在行星的中心。
 X_HOURS_AGO,,%s hours ago,il y a %s heures,%s ore fa,%s 小时以前,vor %s stunden,Hace %s horas atrás,,,%s órája,%s時間前,%s uur geleden,%s часов назад
 X_DAYS_AGO,,%s days ago,il y a %s jours,%s giorni fa,%s 天以前,vor %s Tagen,Hace %s días atrás,,,%s napja,%s日前,%s dagen geleden,%s дней назад
 DESTROY_TRI_PROBE,,Destroy this triangulum probe?,,,摧毁这个奥尔德森碟？,Diese  Trangulum-Sonde zerstören ?,Deseas destruir esta sonda de triangulación?,,,Elpusztítod ezt a triangulumszondát?,この三角形のプローブを破壊する？,Triangulum-sonde vernietigen?,
+STAR_HAS_MS,,There is a megastructure around this star.,,,,,,,,,,,
 PLANET_HAS_MS,,There is a megastructure on this planet.,Il y a une mégastructure sur cette planète.,,这个行星有一个巨型结构,Es ist eine Megastruktur auf diesem Planeten.,Hay una megaestructura en este planeta.,,,Már van megastruktúra ezen a bolygón.,この惑星には巨大な構造物がある。,Er staat een megagebouw op deze planeet.,
 PLANET_TFED,,This planet is terraformed.,Cette planète est terraformée.,,这个行星已经被星球格式化,Dieser Planet wurde geterraformt.,Este planeta ya está terraformado.,,,Ez a bolygó át van alakítva.,この星はテラフォーミングされている。,Deze planeet is geterraformeerd.,Эта планета терраформирована
 RESET_HIDDEN_TOOLTIPS,,Reset hidden tooltips,,,重置隐藏的工具提示,Versteckte Tooltips zurücksetzen,Reinicia las herramientas ocultas,,,Elrejtett segédüzenetek mutatása,非表示のツールチップをリセットする,Reset verborgen tooltips.,Сбросить спрятанные подсказки
