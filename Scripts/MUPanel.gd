@@ -52,7 +52,7 @@ func _ready():
 
 func refresh():
 	$Panel/VBox/MSMB.visible = game.show.has("mining")
-	$Panel/VBox/STMB.visible = game.STM_lv >= 2
+	$Panel/VBox/STMB.visible = game.STM_lv >= 1
 	$Panel/VBox/SHSR.visible = game.stats_univ.planets_conquered >= 2
 	$Panel/VBox/CHR.visible = game.stats_univ.planets_conquered >= 2
 	if game.MUs.SHSR >= 51:

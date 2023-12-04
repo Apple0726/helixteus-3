@@ -461,6 +461,7 @@ func _ready():
 	$Star/Sprite2D.texture = load("res://Graphics/Effects/spotlight_%s.png" % [4, 5, 6].pick_random())
 	var op_star_colors = [
 		Color(0.7428, 0.9162, 0.7401, 1),
+		Color(0.6895, 0.5263, 0.965, 1),
 	]
 	var star_color = Color(randf_range(0.5, 1.0), randf_range(0.5, 1.0), randf_range(0.5, 1.0))
 	print(star_color)
@@ -1044,7 +1045,7 @@ func new_game(univ:int = 0, new_save:bool = false, DR_advantage = false):
 
 	hotbar = []
 
-	STM_lv = 1#ship travel minigame level
+	STM_lv = 0#ship travel minigame level
 	rover_id = -1#Rover id when in cave
 
 	p_num = 0

@@ -14,6 +14,8 @@ var minigame_time_speed:float
 var universe_time_speed:float
 
 func _ready():
+	if game.STM_lv == 0:
+		game.STM_lv = 1
 	$GlowLayer/Background.material.set_shader_parameter("volsteps", Settings.dynamic_space_LOD)
 	$GlowLayer/Background.material.set_shader_parameter("iterations", 14 + Settings.dynamic_space_LOD / 2)
 	Helper.set_back_btn($Control/Back)
@@ -66,6 +68,7 @@ func _on_enemy_spawn_timer_timeout():
 	HX.scale = Vector2.ONE * randf_range(0.35, 0.45)
 	HX.get_node("Sprite2D").material.set_shader_parameter("frequency", remap(HX.scale.x, 0.35, 0.45, 6.2, 5.8))
 	HX.STM_node = self
+	HX.type = randi() % 2
 	add_child(HX)
 
 

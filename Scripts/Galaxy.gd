@@ -67,8 +67,9 @@ func _ready():
 			change_overlay(game.overlay.option_btn.selected, game.overlay.get_node("TextureRect").texture.gradient, overlays[-1])
 		star_btn.visible = not game.overlay_data.galaxy.visible
 		overlays[-1].circle.visible = game.overlay_data.galaxy.visible
-		if await_counter % int(3000.0 / Engine.get_frames_per_second()) == 0:
+		if await_counter % int(6000.0 / Engine.get_frames_per_second()) == 0:
 			await get_tree().process_frame
+	game.overlay.refresh_options(game.overlay_data[game.c_v].overlay)
 	if len(discovered_sys) > 0:
 		bldg_overlay_timer.start(0.05)
 	dimensions = dimensions_temp

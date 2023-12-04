@@ -72,6 +72,7 @@ func _ready():
 		overlays[-1].circle.visible = game.overlay_data.cluster.visible
 		if await_counter % int(3000.0 / Engine.get_frames_per_second()) == 0:
 			await get_tree().process_frame
+	game.overlay.refresh_options(game.overlay_data[game.c_v].overlay)
 	if conquered:
 		game.u_i.cluster_data[game.c_c].conquered = true
 	if len(discovered_gal) > 0:
