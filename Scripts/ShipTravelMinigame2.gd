@@ -68,7 +68,7 @@ func _on_enemy_spawn_timer_timeout():
 	HX.scale = Vector2.ONE * randf_range(0.35, 0.45)
 	HX.get_node("Sprite2D").material.set_shader_parameter("frequency", remap(HX.scale.x, 0.35, 0.45, 6.2, 5.8))
 	HX.STM_node = self
-	HX.type = randi() % 2
+	HX.type = randi() % 4
 	add_child(HX)
 
 
