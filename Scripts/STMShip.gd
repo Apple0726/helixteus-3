@@ -17,6 +17,8 @@ func _draw():
 		draw_circle(Vector2.ZERO, laser_range, Color(0.4, 0.4, 0.4, 0.1))
 
 func _input(event):
+	if not $StunTimer.is_stopped():
+		return
 	if bomb_ready and Input.is_action_just_pressed("left_click"):
 		bomb_ready = false
 		$BombTimer.start()
@@ -28,7 +30,6 @@ func _input(event):
 		bomb.velocity = Vector2(700, 0)
 		bomb.scale *= 2.0
 		bomb.damage = 2 + STM_node.bomb_lv
-		bomb.is_enemy_projectile = false
 		bomb.position = position
 		bomb.STM_node = STM_node
 		STM_node.add_child(bomb)
@@ -42,8 +43,14 @@ func _input(event):
 		light.position = position
 		STM_node.get_node("GlowLayer").add_child(light)
 		get_node("../Control/LightActivateLabel").visible = false
-		
-		
+
+func stun():
+	$Stun.show()
+	$BulletTimer.paused = true
+	$LaserTimer.paused = true
+	$BombTimer.paused = true
+	$LightTimer.paused = true
+
 func _on_bullet_timer_timeout():
 	var projectile:STMProjectile = preload("res://Scenes/STM/STMProjectile.tscn").instantiate()
 	projectile.type = projectile.BULLET
@@ -51,7 +58,6 @@ func _on_bullet_timer_timeout():
 	projectile.velocity = Vector2(1200, 0)
 	projectile.damage = 1
 	projectile.scale *= [1.0, 1.2, 1.4, 1.7, 2.0][STM_node.bullet_lv - 1]
-	projectile.is_enemy_projectile = false
 	projectile.position = position
 	projectile.STM_node = STM_node
 	STM_node.add_child(projectile)
@@ -127,3 +133,10 @@ func shoot_laser(enemy:STMHX):
 
 func _on_laser_area_area_exited(area):
 	areas_in_laser_range.erase(area)
+
+func _on_stun_timer_timeout():
+	$Stun.hide()
+	$BulletTimer.paused = false
+	$LaserTimer.paused = false
+	$BombTimer.paused = false
+	$LightTimer.paused = false

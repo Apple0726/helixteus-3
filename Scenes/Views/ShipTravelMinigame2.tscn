@@ -1,16 +1,17 @@
-[gd_scene load_steps=31 format=3 uid="uid://ck487g2ydj8tn"]
+[gd_scene load_steps=34 format=3 uid="uid://ck487g2ydj8tn"]
 
 [ext_resource type="Script" path="res://Scripts/ShipTravelMinigame2.gd" id="1_8lr8q"]
 [ext_resource type="Script" path="res://Scripts/STMShip.gd" id="2_dfkgr"]
-[ext_resource type="Texture2D" uid="uid://f6vce2wfk8js" path="res://Graphics/Ships/Ship0.png" id="2_v17i1"]
+[ext_resource type="Texture2D" uid="uid://cyawqiuggcvk1" path="res://Graphics/Ships/Ship0.png" id="2_v17i1"]
 [ext_resource type="Theme" uid="uid://cp2u1kgj60ic" path="res://Resources/default_theme.tres" id="3_jfubh"]
 [ext_resource type="Shader" path="res://Shaders/Laser.gdshader" id="5_4dc0n"]
-[ext_resource type="Texture2D" uid="uid://c67y71rs3ver2" path="res://Graphics/Misc/BarUnder2.png" id="5_6lon2"]
-[ext_resource type="Texture2D" uid="uid://o1t3hqx27iw" path="res://Graphics/Misc/BarOver.png" id="6_8qal3"]
-[ext_resource type="Texture2D" uid="uid://1h4b4lcm50vf" path="res://Graphics/Misc/Bar2.png" id="7_6fhtq"]
-[ext_resource type="Texture2D" uid="uid://c2hhyr4csmt6n" path="res://Graphics/Cave/Weapons/red_laser.png" id="8_rnocu"]
-[ext_resource type="Texture2D" uid="uid://6tq7tm3vvims" path="res://Graphics/Weapons/bomb1.png" id="10_yqhvw"]
-[ext_resource type="Texture2D" uid="uid://bagqruqqqw580" path="res://Graphics/Weapons/light1.png" id="11_1xlo5"]
+[ext_resource type="Texture2D" uid="uid://cew70ie8pqr20" path="res://Graphics/Misc/BarUnder2.png" id="5_6lon2"]
+[ext_resource type="Texture2D" uid="uid://bhlpov4iuqi3k" path="res://Graphics/Misc/BarOver.png" id="6_8qal3"]
+[ext_resource type="Texture2D" uid="uid://cm7o715bpjd18" path="res://Graphics/HX/Status effects/Stun.png" id="6_us3u3"]
+[ext_resource type="Texture2D" uid="uid://cv27fq3enpebi" path="res://Graphics/Misc/Bar2.png" id="7_6fhtq"]
+[ext_resource type="Texture2D" uid="uid://tnetpjoy31hi" path="res://Graphics/Cave/Weapons/red_laser.png" id="8_rnocu"]
+[ext_resource type="Texture2D" uid="uid://dahpwsf5jqaoe" path="res://Graphics/Weapons/bomb1.png" id="10_yqhvw"]
+[ext_resource type="Texture2D" uid="uid://b3rrr5os4bwxc" path="res://Graphics/Weapons/light1.png" id="11_1xlo5"]
 [ext_resource type="Shader" path="res://Shaders/Starfield.gdshader" id="13_jjtrq"]
 
 [sub_resource type="Shader" id="Shader_yo3bn"]
@@ -134,6 +135,44 @@ scale_min = 1.5
 scale_max = 1.5
 color_ramp = SubResource("GradientTexture1D_ey7i5")
 
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_urlkg"]
+shader = ExtResource("5_4dc0n")
+shader_parameter/beams = 1
+shader_parameter/energy = 20.0
+shader_parameter/roughness = 3
+shader_parameter/frequency = 10
+shader_parameter/speed = 1.0
+shader_parameter/thickness = 0.021
+shader_parameter/outline_thickness = 0.044
+shader_parameter/beam_difference = 0.0
+shader_parameter/glow = 0.0
+shader_parameter/outline_glow = 0.0
+shader_parameter/color = Color(0.91, 1.5, 1.5, 1)
+shader_parameter/outline_color = Color(0.501961, 1, 0.960784, 1)
+shader_parameter/progress = 1.0
+shader_parameter/y_offset = 0.0
+shader_parameter/fixed_edge_size = 0.05
+shader_parameter/noise_scale = Vector2(1, 1)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_yb1pm"]
+shader = ExtResource("5_4dc0n")
+shader_parameter/beams = 1
+shader_parameter/energy = 10.0
+shader_parameter/roughness = 8
+shader_parameter/frequency = 15
+shader_parameter/speed = 1.0
+shader_parameter/thickness = 0.012
+shader_parameter/outline_thickness = 0.043
+shader_parameter/beam_difference = 0.0
+shader_parameter/glow = 0.0
+shader_parameter/outline_glow = 0.0
+shader_parameter/color = Color(0.91, 2, 2, 1)
+shader_parameter/outline_color = Color(0.5, 1, 0.96, 1)
+shader_parameter/progress = 1.0
+shader_parameter/y_offset = 0.0
+shader_parameter/fixed_edge_size = 0.05
+shader_parameter/noise_scale = Vector2(1, 1)
+
 [sub_resource type="InputEventKey" id="InputEventKey_dtonr"]
 device = -1
 physical_keycode = 90
@@ -254,6 +293,9 @@ wait_time = 8.0
 one_shot = true
 autostart = true
 
+[node name="StunTimer" type="Timer" parent="Ship"]
+one_shot = true
+
 [node name="Sprite2D" type="Sprite2D" parent="Ship"]
 material = SubResource("ShaderMaterial_nasxo")
 scale = Vector2(0.115, 0.115)
@@ -290,6 +332,27 @@ scale = Vector2(0.281818, 0.281818)
 emitting = false
 amount = 32
 process_material = SubResource("ParticleProcessMaterial_ortqj")
+
+[node name="Stun" type="Node2D" parent="Ship"]
+visible = false
+position = Vector2(0, -6.29962)
+scale = Vector2(0.455, 0.455)
+
+[node name="Sprite2D" type="Sprite2D" parent="Ship/Stun"]
+material = SubResource("ShaderMaterial_urlkg")
+position = Vector2(47.1782, 64.5085)
+rotation = 0.496553
+scale = Vector2(2.36037, 2.36037)
+texture = ExtResource("6_us3u3")
+offset = Vector2(-21.4132, -17.9986)
+
+[node name="Sprite2" type="Sprite2D" parent="Ship/Stun"]
+material = SubResource("ShaderMaterial_yb1pm")
+position = Vector2(11.3541, 50.4711)
+rotation = -0.583007
+scale = Vector2(1.67193, 1.67193)
+texture = ExtResource("6_us3u3")
+offset = Vector2(-21.4132, -17.9986)
 
 [node name="Control" type="Control" parent="."]
 layout_mode = 3
@@ -506,6 +569,7 @@ metadata/_edit_lock_ = true
 [connection signal="timeout" from="Ship/LaserTimer" to="Ship" method="_on_laser_timer_timeout"]
 [connection signal="timeout" from="Ship/BombTimer" to="Ship" method="_on_bomb_timer_timeout"]
 [connection signal="timeout" from="Ship/LightTimer" to="Ship" method="_on_light_timer_timeout"]
+[connection signal="timeout" from="Ship/StunTimer" to="Ship" method="_on_stun_timer_timeout"]
 [connection signal="area_entered" from="Ship/LaserArea" to="Ship" method="_on_laser_area_area_entered"]
 [connection signal="area_exited" from="Ship/LaserArea" to="Ship" method="_on_laser_area_area_exited"]
 [connection signal="pressed" from="Control/Back" to="." method="_on_back_pressed"]

@@ -4,20 +4,28 @@ extends Area2D
 enum {BULLET, BOMB}
 
 var type:int
-var is_enemy_projectile:bool
+var enemy_projectile_type:int = -1
 var velocity:Vector2
 var damage:int
 var STM_node:Node2D
 
 func _ready():
-	if is_enemy_projectile:
+	if enemy_projectile_type != -1:
 		collision_layer = 16
 		collision_mask = 2
-	if type == BOMB or is_enemy_projectile:
+	if type == BOMB or enemy_projectile_type != -1:
 		$CollisionShape2DBullet.disabled = true
 		$CollisionShape2DBomb.disabled = false
 
 func _process(delta):
+	if enemy_projectile_type == 3:
+		velocity = velocity.move_toward(Vector2.ZERO, delta * 5.0)
+		if velocity == Vector2.ZERO:
+			modulate.a -= 0.03 * delta * 60
+			if modulate.a <= 0:
+				queue_free()
+	elif enemy_projectile_type == 4:
+		velocity *= 1.0 + delta
 	position += delta * velocity * STM_node.minigame_time_speed
 	if position.x >= 1400 or position.x < -120 or position.y < -120 or position.y > 840:
 		queue_free()

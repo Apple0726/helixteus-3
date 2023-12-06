@@ -7,9 +7,11 @@ var HP:int = 3
 var move_tween
 var STM_node:Node2D
 var stunned = false
+var color:int
 var type:int
 var shoot_delay:float
 var props:Dictionary = {}
+var projectile_initial_speed:float
 
 func _ready():
 	position.x = 1400
@@ -20,8 +22,14 @@ func _ready():
 	move_tween.set_speed_scale(STM_node.minigame_time_speed)
 	move_tween.tween_property(self, "position", target_position, travel_duration).set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_CUBIC)
 	move_tween.tween_callback(setup_shoot_timer)
-	$Sprite2D.texture = load("res://Graphics/HX/1_%s.png" % (type+1))
+	$Sprite2D.texture = load("res://Graphics/HX/%s_%s.png" % [color, type+1])
 	set_process(false)
+	if color == 1:
+		projectile_initial_speed = 500
+	elif color == 4:
+		projectile_initial_speed = 150
+	else:
+		projectile_initial_speed = 200
 	if type == 0:
 		shoot_delay = 1.4
 	elif type == 1:
@@ -92,10 +100,10 @@ func _on_enemy1_shoot_timer_timeout():
 	var angle_relative_to_ship = atan2(position.y - ship_pos.y, position.x - ship_pos.x)
 	for i in 5:
 		var angle = remap(i, 0, 4, -0.6, 0.6)
-		add_enemy_projectile(200 * Vector2(-cos(angle - angle_relative_to_ship), sin(angle - angle_relative_to_ship)))
+		add_enemy_projectile(projectile_initial_speed * Vector2(-cos(angle - angle_relative_to_ship), sin(angle - angle_relative_to_ship)))
 
 func _on_enemy2_shoot_timer_timeout():
-	add_enemy_projectile(200 * Vector2.LEFT)
+	add_enemy_projectile(projectile_initial_speed * Vector2.LEFT)
 
 func _on_enemy3_shoot_timer_timeout():
 	if props.cooldown_timer > 0.0:
@@ -103,11 +111,11 @@ func _on_enemy3_shoot_timer_timeout():
 	if props.shots_before_cooldown % 2 == 1:
 		for i in 8:
 			var angle = remap(i, 0, 7, -0.9, 0.9)
-			add_enemy_projectile(200 * Vector2.LEFT)
+			add_enemy_projectile(projectile_initial_speed * Vector2.LEFT)
 	else:
 		for i in 7:
 			var angle = remap(i, 0, 6, -0.8, 0.8)
-			add_enemy_projectile(200 * Vector2.LEFT)
+			add_enemy_projectile(projectile_initial_speed * Vector2.LEFT)
 	props.shots_before_cooldown -= 1
 	if props.shots_before_cooldown <= 0:
 		props.cooldown_timer = 2.5
@@ -116,7 +124,7 @@ func _on_enemy3_shoot_timer_timeout():
 func _on_enemy4_shoot_timer_timeout():
 	if move_tween:
 		return
-	add_enemy_projectile(200 * Vector2(-cos(props.angle), sin(props.angle)))
+	add_enemy_projectile(projectile_initial_speed * Vector2(-cos(props.angle), sin(props.angle)))
 	props.angle += props.angle_variation_direction * 0.05
 	props.shots_before_moving -= 1
 	if props.shots_before_moving <= 0:
@@ -129,7 +137,7 @@ func _on_enemy4_shoot_timer_timeout():
 
 func add_enemy_projectile(velocity:Vector2):
 	var projectile:STMProjectile = preload("res://Scenes/STM/STMProjectile.tscn").instantiate()
-	projectile.is_enemy_projectile = true
+	projectile.enemy_projectile_type = color
 	projectile.scale *= 0.5
 	projectile.velocity = velocity
 	projectile.position = position

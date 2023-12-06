@@ -36,6 +36,8 @@ func _ready():
 	$Ship/LaserTimer.wait_time = (1.1 - laser_lv / 10.0) / minigame_time_speed
 	$Ship/BombTimer.wait_time = (3.0 - bomb_lv / 8.0) / minigame_time_speed
 	$Ship/LightTimer.wait_time = (8.0 - light_lv / 2.0) / minigame_time_speed
+	$Ship/StunTimer.wait_time = 1.0 / minigame_time_speed
+	$Ship/Bomb.texture = load("res://Graphics/Weapons/bomb%s.png" % bomb_lv)
 	$GlowLayer/Laser.material["shader_parameter/beams"] = laser_lv + 1
 	$GlowLayer/Laser.material["shader_parameter/outline_thickness"] = (laser_lv + 1) * 0.01
 	if laser_lv == 2:
@@ -55,19 +57,21 @@ func _input(event):
 		$GlowLayer/Laser.position = mouse_pos - Vector2(0, 332)
 
 func _process(delta):
-	$Ship.position = mouse_pos
-	$LaserTimerBar/TextureProgressBar.value = 1.0 - $Ship/LaserTimer.time_left / $Ship/LaserTimer.wait_time
-	$BombTimerBar/TextureProgressBar.value = 1.0 - $Ship/BombTimer.time_left / $Ship/BombTimer.wait_time
-	$LightTimerBar/TextureProgressBar.value = 1.0 - $Ship/LightTimer.time_left / $Ship/LightTimer.wait_time
+	if $Ship.get_node("StunTimer").is_stopped():
+		$Ship.position = mouse_pos
+		$LaserTimerBar/TextureProgressBar.value = 1.0 - $Ship/LaserTimer.time_left / $Ship/LaserTimer.wait_time
+		$BombTimerBar/TextureProgressBar.value = 1.0 - $Ship/BombTimer.time_left / $Ship/BombTimer.wait_time
+		$LightTimerBar/TextureProgressBar.value = 1.0 - $Ship/LightTimer.time_left / $Ship/LightTimer.wait_time
+		secs_elapsed += delta * universe_time_speed
 	BG_material.set_shader_parameter("position", Vector2(BG_material.get_shader_parameter("position").x + 0.1 * delta * minigame_time_speed, 0.0))
 	accelerated_time_label.text = tr("TRAVEL_ACCELERATED_BY") % [Helper.time_to_str(max(0.0, secs_elapsed - penalty_time))]
-	secs_elapsed += delta * universe_time_speed
 
 func _on_enemy_spawn_timer_timeout():
 	var HX:STMHX = preload("res://Scenes/STM/STMHX.tscn").instantiate()
 	HX.scale = Vector2.ONE * randf_range(0.35, 0.45)
 	HX.get_node("Sprite2D").material.set_shader_parameter("frequency", remap(HX.scale.x, 0.35, 0.45, 6.2, 5.8))
 	HX.STM_node = self
+	HX.color = randi() % 4 + 1
 	HX.type = randi() % 4
 	add_child(HX)
 
