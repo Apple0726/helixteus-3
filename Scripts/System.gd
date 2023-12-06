@@ -658,6 +658,8 @@ func build_MS(obj:Dictionary, MS:String):
 			game.autocollect.MS.energy += Helper.get_DS_output(obj)
 		elif obj.MS == "MB":
 			game.autocollect.MS.SP += Helper.get_MB_output(obj)
+		elif obj.MS == "MME":
+			game.autocollect.MS.minerals += Helper.get_MME_output(obj)
 		elif obj.MS == "CBS":
 			var p_num_total:int = len(game.planet_data)
 			var p_num:int = ceil(p_num_total * obj.MS_lv * 0.333)

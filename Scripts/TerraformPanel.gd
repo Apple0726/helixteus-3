@@ -122,8 +122,8 @@ func terraform_planet():
 	var dir = DirAccess.open("user://%s/Univ%s/Planets" % [game.c_sv, game.c_u])
 	dir.remove("%s.hx3" % game.c_p_g)
 	game.popup(tr("TF_SUCCESS"), 2)
-	if not game.objective.is_empty() and game.objective.type == game.ObjectiveType.TERRAFORM:
-		game.objective.current += 1
+	#if not game.objective.is_empty() and game.objective.type == game.ObjectiveType.TERRAFORM:
+		#game.objective.current += 1
 	game.HUD.refresh()
 
 func _on_Terraform_pressed():

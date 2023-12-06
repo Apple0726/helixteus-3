@@ -12,6 +12,7 @@ var secs_elapsed:float = 0
 var penalty_time:float = 0
 var minigame_time_speed:float
 var universe_time_speed:float
+var laser_range
 
 func _ready():
 	if game.STM_lv == 0:
@@ -27,6 +28,8 @@ func _ready():
 	bomb_lv = game.ship_data[0].bomb.lv
 	light_lv = game.ship_data[0].light.lv
 	universe_time_speed = game.u_i.time_speed
+	laser_range = 200.0 * (1.0 + laser_lv / 5.0)
+	$Ship/LaserArea/CollisionShape2D.shape.radius = laser_range
 	if game.subject_levels.dimensional_power >= 4:
 		minigame_time_speed = log(universe_time_speed - 1.0 + exp(1.0))
 	else:
@@ -62,7 +65,7 @@ func _process(delta):
 		$LaserTimerBar/TextureProgressBar.value = 1.0 - $Ship/LaserTimer.time_left / $Ship/LaserTimer.wait_time
 		$BombTimerBar/TextureProgressBar.value = 1.0 - $Ship/BombTimer.time_left / $Ship/BombTimer.wait_time
 		$LightTimerBar/TextureProgressBar.value = 1.0 - $Ship/LightTimer.time_left / $Ship/LightTimer.wait_time
-		secs_elapsed += delta * universe_time_speed
+		secs_elapsed += delta * universe_time_speed * (1 + (game.MUs.STMB - 1) * 0.15)
 	BG_material.set_shader_parameter("position", Vector2(BG_material.get_shader_parameter("position").x + 0.1 * delta * minigame_time_speed, 0.0))
 	accelerated_time_label.text = tr("TRAVEL_ACCELERATED_BY") % [Helper.time_to_str(max(0.0, secs_elapsed - penalty_time))]
 

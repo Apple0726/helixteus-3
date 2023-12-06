@@ -8,13 +8,12 @@ var light_ready = false
 var areas_in_laser_range = []
 
 func _draw():
-	var laser_range = 200.0 * (1.0 + STM_node.laser_lv / 5.0)
 	if laser_ready:
-		draw_arc(Vector2.ZERO, laser_range, 0, 2*PI, 100, Color(1.0, 0.0, 0.0, 0.3), -1)
-		draw_circle(Vector2.ZERO, laser_range, Color(1.0, 0.0, 0.0, 0.1))
+		draw_arc(Vector2.ZERO, STM_node.laser_range, 0, 2*PI, 100, Color(1.0, 0.0, 0.0, 0.3), -1)
+		draw_circle(Vector2.ZERO, STM_node.laser_range, Color(1.0, 0.0, 0.0, 0.1))
 	else:
-		draw_arc(Vector2.ZERO, laser_range, 0, 2*PI, 100, Color(0.4, 0.4, 0.4, 0.3), -1)
-		draw_circle(Vector2.ZERO, laser_range, Color(0.4, 0.4, 0.4, 0.1))
+		draw_arc(Vector2.ZERO, STM_node.laser_range, 0, 2*PI, 100, Color(0.4, 0.4, 0.4, 0.3), -1)
+		draw_circle(Vector2.ZERO, STM_node.laser_range, Color(0.4, 0.4, 0.4, 0.1))
 
 func _input(event):
 	if not $StunTimer.is_stopped():

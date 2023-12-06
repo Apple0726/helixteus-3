@@ -3,7 +3,7 @@ extends Node2D
 const TEST:bool = false
 const DATE:String = ""
 const VERSION:String = "v0.29"
-const COMPATIBLE_SAVES = ["v0.28", "v0.28.1", "v0.28.2"]
+const COMPATIBLE_SAVES = []
 const UNIQUE_BLDGS = 7
 
 #region Scenes
@@ -460,6 +460,7 @@ func _ready():
 	Helper.refresh_discord("In title screen")
 	$Star/Sprite2D.texture = load("res://Graphics/Effects/spotlight_%s.png" % [4, 5, 6].pick_random())
 	var op_star_colors = [
+		Color(0.6169, 0.9533, 0.7249, 1),
 		Color(0.7428, 0.9162, 0.7401, 1),
 		Color(0.6895, 0.5263, 0.965, 1),
 	]

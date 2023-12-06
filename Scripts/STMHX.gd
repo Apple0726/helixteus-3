@@ -40,8 +40,8 @@ func _ready():
 		shoot_delay = 0.5
 		props.shots_before_cooldown = 5
 		props.cooldown_timer = 0.0
-	elif type == 4:
-		shoot_delay = 0.1
+	elif type == 3:
+		shoot_delay = 0.15
 		props.shots_before_moving = 50
 		props.angle = randf_range(0, TAU)
 		props.angle_variation_direction = [-1, 1][randi() % 2]
@@ -71,7 +71,8 @@ func hit(damage:int):
 		if $HPBar.get_child_count() > 0:
 			$HPBar.get_child(0).queue_free()
 	if HP <= 0:
-		$ShootTimer.timeout.disconnect(self["_on_enemy%s_shoot_timer_timeout" % (type+1)])
+		if $ShootTimer.timeout.is_connected(self["_on_enemy%s_shoot_timer_timeout" % (type+1)]):
+			$ShootTimer.timeout.disconnect(self["_on_enemy%s_shoot_timer_timeout" % (type+1)])
 		$Area2D.set_deferred("monitorable", false)
 		$Area2D.set_deferred("monitoring", false)
 		$AnimationPlayer.play("DeathAnim", -1, STM_node.minigame_time_speed)
@@ -111,29 +112,32 @@ func _on_enemy3_shoot_timer_timeout():
 	if props.shots_before_cooldown % 2 == 1:
 		for i in 8:
 			var angle = remap(i, 0, 7, -0.9, 0.9)
-			add_enemy_projectile(projectile_initial_speed * Vector2.LEFT)
+			add_enemy_projectile(projectile_initial_speed * Vector2(-cos(angle), sin(angle)))
 	else:
 		for i in 7:
 			var angle = remap(i, 0, 6, -0.8, 0.8)
-			add_enemy_projectile(projectile_initial_speed * Vector2.LEFT)
+			add_enemy_projectile(projectile_initial_speed * Vector2(-cos(angle), sin(angle)))
 	props.shots_before_cooldown -= 1
 	if props.shots_before_cooldown <= 0:
 		props.cooldown_timer = 2.5
 		set_process(true)
 
 func _on_enemy4_shoot_timer_timeout():
-	if move_tween:
+	if props.has("moving"):
 		return
 	add_enemy_projectile(projectile_initial_speed * Vector2(-cos(props.angle), sin(props.angle)))
 	props.angle += props.angle_variation_direction * 0.05
 	props.shots_before_moving -= 1
 	if props.shots_before_moving <= 0:
+		props.moving = true
 		move_tween = create_tween()
 		move_tween.set_speed_scale(STM_node.minigame_time_speed)
 		var target_position = Vector2(randf_range(60, 1220), randf_range(60, 660))
 		var travel_duration = (position - target_position).length() / 100.0 * sqrt(scale.x)
 		move_tween.tween_property(self, "position", target_position, travel_duration).set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_CUBIC)
-		move_tween.tween_callback(func(): props.shots_before_moving = 50)
+		move_tween.tween_callback(func():
+			props.shots_before_moving = 50
+			props.erase("moving"))
 
 func add_enemy_projectile(velocity:Vector2):
 	var projectile:STMProjectile = preload("res://Scenes/STM/STMProjectile.tscn").instantiate()
@@ -147,6 +151,8 @@ func add_enemy_projectile(velocity:Vector2):
 	STM_node.get_node("GlowLayer").add_child(projectile)
 	
 func _on_stun_timer_timeout():
+	if not is_inside_tree():
+		return
 	stunned = false
 	$Sprite2D/Stun.visible = false
 	$ShootTimer.paused = false

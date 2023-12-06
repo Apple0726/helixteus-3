@@ -23,6 +23,6 @@ func set_star_info(type:int, _class:String, temperature:float, radius:float, mas
 		star_tier = " " + Helper.get_roman_num(type - StarType.HYPERGIANT)
 	$ClassType.text = "%s %s" % [_class, star_type_str + star_tier]
 	$Temperature.text = "%s K" % Helper.format_num(temperature, false, 9)
-	$Radius.text = "%s R☉" % Helper.clever_round(radius, 3, true) if radius < 1000 else Helper.format_num(radius)
-	$Mass.text = "%s M☉" % Helper.clever_round(mass, 3, true) if mass < 1000 else Helper.format_num(mass)
-	$Luminosity.text = "%s L☉" % Helper.clever_round(luminosity, 3, true) if luminosity < 1000 else Helper.format_num(luminosity)
+	$Radius.text = "%s R☉" % (Helper.clever_round(radius, 3, true) if radius < 1000 else Helper.format_num(radius))
+	$Mass.text = "%s M☉" % (Helper.clever_round(mass, 3, true) if mass < 1000 else Helper.format_num(mass))
+	$Luminosity.text = "%s L☉" % (Helper.clever_round(luminosity, 3, true) if luminosity < 1000 else Helper.format_num(luminosity))
