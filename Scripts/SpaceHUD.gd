@@ -35,7 +35,7 @@ func _on_ConquerAll_mouse_entered():
 
 func _on_ConquerAll_pressed():
 	var info = Helper.get_conquer_all_data()
-	game.show_YN_panel("conquer_all", tr("CONQUER_ALL_INFO") % [len(info.HX_data), Helper.format_num(info.energy_cost)], [info.energy_cost, len(info.HX_data) == 0])
+	game.show_YN_panel("conquer_all", tr("CONQUER_ALL_INFO") % [min(12, len(info.HX_data)), Helper.format_num(info.energy_cost)], [info.energy_cost, len(info.HX_data) == 0])
 
 func _on_Annotate_pressed():
 	game.annotator.visible = not game.annotator.visible

@@ -147,6 +147,8 @@ func _ready():
 				p_i.wormhole = true
 			elif tile.has("lake"):
 				lake_tiles[tile.lake-1].append(Vector2i(i, j))
+			elif tile.has("bldg") and tile.bldg.name == Building.GREENHOUSE:
+				soil_tiles.append(Vector2i(i, j))
 			if tile.has("ash"):
 				ash_tiles.append(Vector2i(i, j))
 	if len(aurora_tiles) > 300:
@@ -763,9 +765,6 @@ func destroy_bldg(id2:int, mass:bool = false):
 						var diff:float = bonus - _tile.time_speed_bonus
 						Helper.add_autocollect(p_i, _tile, diff)
 					_tile["%s_bonus" % second_path_str] = bonus
-	elif bldg == Building.GREENHOUSE:
-		$Soil.set_cell(id2 % wid, int(id2 / wid), -1)
-		$Soil.update_bitmask_region()
 	elif bldg == Building.BORING_MACHINE:
 		game.boring_machine_data[game.c_p_g].tiles.erase(id2)
 		if game.boring_machine_data[game.c_p_g].tiles.is_empty():
@@ -946,21 +945,26 @@ func _unhandled_input(event):
 					hide_tooltip()
 					if tiles_selected.is_empty():
 						var bldg:int = tile.bldg.name
-						var money_cost = 0.0
-						if Data.path_1.has(bldg):
-							money_cost += Data.costs[bldg].money * pow(Data.path_1[bldg].get("cost_pw", 1.3), tile.bldg.path_1)
-						if Data.path_2.has(bldg):
-							money_cost += Data.costs[bldg].money * pow(Data.path_2[bldg].get("cost_pw", 1.3), tile.bldg.path_2)
-						if Data.path_3.has(bldg):
-							money_cost += Data.costs[bldg].money * pow(Data.path_3[bldg].get("cost_pw", 1.3), tile.bldg.path_3)
-						if tile.has("cost_div"):
-							money_cost /= tile.cost_div
-						var total_XP = 10 * (1 - pow(game.maths_bonus.ULUGF, game.u_i.lv - 1)) / (1 - game.maths_bonus.ULUGF) + game.u_i.xp
-						if money_cost >= total_XP + game.money / 100.0:
-							game.show_YN_panel("destroy_building", tr("DESTROY_BLDG_CONFIRM"), [tile_over])
-						else:
-							destroy_bldg(tile_over)
-							game.HUD.refresh()
+						#var money_cost = 0.0
+						#if Data.path_1.has(bldg):
+							#money_cost += Data.costs[bldg].money * pow(Data.path_1[bldg].get("cost_pw", 1.3), tile.bldg.path_1)
+						#if Data.path_2.has(bldg):
+							#money_cost += Data.costs[bldg].money * pow(Data.path_2[bldg].get("cost_pw", 1.3), tile.bldg.path_2)
+						#if Data.path_3.has(bldg):
+							#money_cost += Data.costs[bldg].money * pow(Data.path_3[bldg].get("cost_pw", 1.3), tile.bldg.path_3)
+						#if tile.has("cost_div"):
+							#money_cost /= tile.cost_div
+						#var total_XP = 10 * (1 - pow(game.maths_bonus.ULUGF, game.u_i.lv - 1)) / (1 - game.maths_bonus.ULUGF) + game.u_i.xp
+						#if money_cost >= total_XP + game.money / 100.0:
+							#game.show_YN_panel("destroy_building", tr("DESTROY_BLDG_CONFIRM"), [tile_over])
+						#else:
+						destroy_bldg(tile_over)
+						game.HUD.refresh()
+						if bldg == Building.GREENHOUSE:
+							#var soil_tiles = $TileFeatures.get_used_cells(2)
+							#soil_tiles.erase(Vector2i(tile_over % wid, tile_over / wid))
+							$TileFeatures.erase_cell(2, Vector2i(tile_over % wid, tile_over / wid))
+							#$TileFeatures.set_cells_terrain_connect(2, soil_tiles, 0, 3)
 					else:
 						game.show_YN_panel("destroy_buildings", tr("DESTROY_X_BUILDINGS") % [len(tiles_selected)], [tiles_selected.duplicate(true)])
 				elif Input.is_action_just_released("G") and not is_instance_valid(game.active_panel):
@@ -1130,7 +1134,7 @@ func _unhandled_input(event):
 	if Input.is_action_just_released("left_click") and mass_build_rect.visible:
 		mass_build_rect.visible = false
 		var curr_time = Time.get_unix_time_from_system()
-		var soil_tiles = $TileFeatures.get_used_cells_by_id(2, 3, Vector2i.ZERO)
+		var soil_tiles = $TileFeatures.get_used_cells(2)
 		for i in len(shadows):
 			if is_instance_valid(shadows[i]):
 				var tile_id:int = get_tile_id_from_pos(shadows[i].position)
@@ -1172,7 +1176,7 @@ func _unhandled_input(event):
 				if available_to_build(tile):
 					constr_bldg(tile_id, curr_time, bldg_to_construct)
 					if bldg_to_construct == Building.GREENHOUSE:
-						var soil_tiles = $TileFeatures.get_used_cells_by_id(2, 3, Vector2i.ZERO)
+						var soil_tiles = $TileFeatures.get_used_cells(2)
 						soil_tiles.append(Vector2i(tile_id % wid, int(tile_id / wid)))
 						$TileFeatures.set_cells_terrain_connect(2, soil_tiles, 0, 3)
 			else:

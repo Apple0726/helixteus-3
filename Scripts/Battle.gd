@@ -47,7 +47,7 @@ var w_4_3 = preload("res://Scenes/HX/Weapons/4_3.tscn")
 var star:Sprite2D#Shown right before HX magic
 
 var ship_data:Array = []# = [{"lv":1, "HP":40, "total_HP":40, "atk":15, "def":15, "acc":15, "eva":15, "XP":0, "XP_to_lv":20, "name":"???" "bullet":{"lv":1, "XP":0, "XP_to_lv":10}, "laser":{"lv":1, "XP":0, "XP_to_lv":10}, "bomb":{"lv":1, "XP":0, "XP_to_lv":10}, "light":{"lv":1, "XP":0, "XP_to_lv":20}, "upgrades":[1.0,1.0,1.0,1.0,1.0], "rage":0, "ability":"none", "superweapon":"none"}]
-var HX_data
+var HX_data:Array
 var HXs = []
 var HX_c_d:Dictionary = {}#HX_custom_data
 var w_c_d:Dictionary = {}#weapon_custom_data
@@ -86,92 +86,66 @@ func _ready():
 	var total_enemy_stats:float = 0.0
 	var total_ship_stats:float = 0.0
 	var bright_star:bool = false
-	if game:
-		$WorldEnvironment.environment.glow_enabled = Settings.enable_shaders
-		ship_data = game.ship_data
-		var p_i:Dictionary = game.planet_data[game.c_p]
-		if game.is_conquering_all:
-			HX_data = Helper.get_conquer_all_data().HX_data
-		else:
-			HX_data = p_i.HX_data
-		for HX in HX_data:
-			total_enemy_stats += pow(HX.total_HP, 2)
-			total_enemy_stats += pow(HX.atk * 2.5, 2)
-			total_enemy_stats += pow(HX.acc, 2)
-			total_enemy_stats += pow(HX.eva, 2)
-		var orbit_vector = Vector2(cos(p_i.angle - PI/2), sin(p_i.angle + PI/2)).rotated(PI / 2.0) * Vector2(-1, 0)
-		var max_star_lum:float = 0.0
-		var max_star_size:float = 0.0
-		for star in game.system_data[game.c_s].stars:
-			var shift:float = 0
-			shift = orbit_vector.dot(star.pos) * 1000.0 / p_i.distance
-			var star_spr = Sprite2D.new()
-			star_spr.texture = load("res://Graphics/Effects/spotlight_%s.png" % [int(star.temperature) % 3 + 4])
-			star_spr.scale *= 0.5 * star.size / (p_i.distance / 500)
-			var star_mod = Helper.get_star_modulate(star["class"])
-			
-			star_spr.material = ShaderMaterial.new()
-			star_spr.material.shader = preload("res://Shaders/Star.gdshader")
-			star_spr.material.set_shader_parameter("time_offset", 10.0 * randf())
-			star_spr.material.set_shader_parameter("color", star_mod)
-			#star_spr.material.set_shader_parameter("alpha", 0.0)
-			star_spr.modulate = star_mod# * clamp(remap(star_spr.scale.x, 1.0, 2.25, 1.5, 1.02), 1.02, 1.5)
-			
-			star_spr.position.x = remap(p_i.angle, 0, 2 * PI, 100, 1180) + shift
-			star_spr.position.y = 200 * cos(game.c_p * 10) + 300
-			if star_spr.scale.x > 2:
-				bright_star = true
-				star_spr.material = CanvasItemMaterial.new()
-				star_spr.material.blend_mode = CanvasItemMaterial.BLEND_MODE_ADD
-			$BG.material.shader = preload("res://Shaders/PlanetBG.gdshader")
-			if star.luminosity > max_star_lum:
-				$BG.material.set_shader_parameter("strength", max(0.3, sqrt(star_spr.scale.x)))
-				$BG.material.set_shader_parameter("lum", min(0.3, pow(star.luminosity, 0.2)))
-				$BG.material.set_shader_parameter("star_mod", Helper.get_star_modulate(star["class"]))
-				$BG.material.set_shader_parameter("u", remap(star_spr.position.x, 0, 1280, 0.0, 1.0))
-				max_star_lum = star.luminosity
-			if star_spr.scale.x > max_star_size:
-				max_star_size = star_spr.scale.x
-			$Stars.add_child(star_spr)
-		light_mult = remap(min(max_star_size, 0.4), 0.4, 0.0, 1.0, 3.0)
-		if not p_i.type in [11, 12]:
-			$BG.texture = load("res://Graphics/Planets/BGs/%s.png" % p_i.type)
-		else:
-			$BG.texture = null
-		var config = ConfigFile.new()
-		var err = config.load("user://settings.cfg")
-		if err == OK:
-			e_diff = config.get_value("game", "e_diff", 1)
-		$Ship0/Sprite2D.material.set_shader_parameter("frequency", 6 * time_speed)
-		$Ship1/Sprite2D.material.set_shader_parameter("frequency", 6 * time_speed)
-		$Ship2/Sprite2D.material.set_shader_parameter("frequency", 6 * time_speed)
-		$Ship3/Sprite2D.material.set_shader_parameter("frequency", 6 * time_speed)
+	$WorldEnvironment.environment.glow_enabled = Settings.enable_shaders
+	ship_data = game.ship_data
+	var p_i:Dictionary = game.planet_data[game.c_p]
+	if game.is_conquering_all:
+		HX_data = Helper.get_conquer_all_data().HX_data
 	else:
-		for i in 1000:
-			var star:Sprite2D = Sprite2D.new()
-			star.texture = star_texture
-			star.scale *= pow(randf_range(0.4, 0.7), 2)
-			star.modulate = Helper.get_star_modulate("%s%s" % [["M", "K", "G", "F", "A", "B", "O"][randi() % 7], randi() % 10])
-			star.modulate.a = pow(randf_range(0.5, 1), 5)
-			star.rotation = randf_range(0, 2*PI)
-			star.position.x = randf_range(0, 1280)
-			star.position.y = randf_range(0, 720)
-			star.material = ShaderMaterial.new()
-			star.material.shader = star_shader
-			star.material.set_shader_parameter("time_offset", 10.0 * randf())
-			$Stars.add_child(star)
-		HX_data = []
-		ship_data.append({"name":tr("SHIP"), "lv":1, "HP":25, "total_HP":25, "atk":10, "def":5, "acc":10, "eva":10, "points":2, "HP_mult":1.0, "atk_mult":1.0, "def_mult":1.0, "acc_mult":1.0, "eva_mult":1.0, "ability":"none", "superweapon":"none", "rage":0, "XP":0, "XP_to_lv":20, "bullet":{"lv":1, "XP":0, "XP_to_lv":10}, "laser":{"lv":1, "XP":0, "XP_to_lv":10}, "bomb":{"lv":1, "XP":0, "XP_to_lv":10}, "light":{"lv":1, "XP":0, "XP_to_lv":20}})
-		for k in 4:
-			var lv = 1
-			var HP = round(randf_range(1, 1.5) * 15 * pow(1.2, lv))
-			var atk = round(randf_range(1, 1.5) * 8 * pow(1.2, lv))
-			var def = 5
-			var acc = round(randf_range(1, 1.5) * 8 * pow(1.2, lv))
-			var eva = round(randf_range(1, 1.5) * 8 * pow(1.2, lv))
-			var money = round(randf_range(0.2, 2.5) * pow(1.2, lv) * 10000)
-			var XP = round(pow(1.3, lv) * 5)
-			HX_data.append({"type":Helper.rand_int(4, 4), "lv":lv, "HP":HP, "total_HP":HP, "atk":atk, "def":def, "acc":acc, "eva":eva, "money":money, "XP":XP})
+		HX_data = p_i.HX_data
+	for HX in HX_data:
+		var total_stats = pow(HX.total_HP, 2) + pow(HX.atk * 2.5, 2) + pow(HX.acc, 2) + pow(HX.eva, 2)
+		total_enemy_stats += total_stats
+		HX.total_stats = total_stats
+	HX_data.sort_custom(func(a, b): return a.total_stats > b.total_stats)
+	HX_data = HX_data.slice(0, 12)
+	var orbit_vector = Vector2(cos(p_i.angle - PI/2), sin(p_i.angle + PI/2)).rotated(PI / 2.0) * Vector2(-1, 0)
+	var max_star_lum:float = 0.0
+	var max_star_size:float = 0.0
+	for star in game.system_data[game.c_s].stars:
+		var shift:float = 0
+		shift = orbit_vector.dot(star.pos) * 1000.0 / p_i.distance
+		var star_spr = Sprite2D.new()
+		star_spr.texture = load("res://Graphics/Effects/spotlight_%s.png" % [int(star.temperature) % 3 + 4])
+		star_spr.scale *= 0.5 * star.size / (p_i.distance / 500)
+		var star_mod = Helper.get_star_modulate(star["class"])
+		
+		star_spr.material = ShaderMaterial.new()
+		star_spr.material.shader = preload("res://Shaders/Star.gdshader")
+		star_spr.material.set_shader_parameter("time_offset", 10.0 * randf())
+		star_spr.material.set_shader_parameter("color", star_mod)
+		#star_spr.material.set_shader_parameter("alpha", 0.0)
+		star_spr.modulate = star_mod# * clamp(remap(star_spr.scale.x, 1.0, 2.25, 1.5, 1.02), 1.02, 1.5)
+		
+		star_spr.position.x = remap(p_i.angle, 0, 2 * PI, 100, 1180) + shift
+		star_spr.position.y = 200 * cos(game.c_p * 10) + 300
+		if star_spr.scale.x > 2:
+			bright_star = true
+			star_spr.material = CanvasItemMaterial.new()
+			star_spr.material.blend_mode = CanvasItemMaterial.BLEND_MODE_ADD
+		$BG.material.shader = preload("res://Shaders/PlanetBG.gdshader")
+		if star.luminosity > max_star_lum:
+			$BG.material.set_shader_parameter("strength", max(0.3, sqrt(star_spr.scale.x)))
+			$BG.material.set_shader_parameter("lum", min(0.3, pow(star.luminosity, 0.2)))
+			$BG.material.set_shader_parameter("star_mod", Helper.get_star_modulate(star["class"]))
+			$BG.material.set_shader_parameter("u", remap(star_spr.position.x, 0, 1280, 0.0, 1.0))
+			max_star_lum = star.luminosity
+		if star_spr.scale.x > max_star_size:
+			max_star_size = star_spr.scale.x
+		$Stars.add_child(star_spr)
+	light_mult = remap(min(max_star_size, 0.4), 0.4, 0.0, 1.0, 3.0)
+	if not p_i.type in [11, 12]:
+		$BG.texture = load("res://Graphics/Planets/BGs/%s.png" % p_i.type)
+	else:
+		$BG.texture = null
+	var config = ConfigFile.new()
+	var err = config.load("user://settings.cfg")
+	if err == OK:
+		e_diff = config.get_value("game", "e_diff", 1)
+	$Ship0/Sprite2D.material.set_shader_parameter("frequency", 6 * time_speed)
+	$Ship1/Sprite2D.material.set_shader_parameter("frequency", 6 * time_speed)
+	$Ship2/Sprite2D.material.set_shader_parameter("frequency", 6 * time_speed)
+	$Ship3/Sprite2D.material.set_shader_parameter("frequency", 6 * time_speed)
 	$UI/FightPanel/Panel/BattleProgress.text = "%s / %s" % [HXs_rekt, len(HX_data)]
 	$UI/ControlKeyboard/GoUp.text = OS.get_keycode_string(DisplayServer.keyboard_get_keycode_from_physical(KEY_W))
 	$Help.text = "%s\n%s\n%s" % [tr("BATTLE_HELP"), tr("BATTLE_HELP2") % [OS.get_keycode_string(DisplayServer.keyboard_get_keycode_from_physical(KEY_W)), OS.get_keycode_string(DisplayServer.keyboard_get_keycode_from_physical(KEY_S)), "Shift"], tr("PRESS_ANY_KEY_TO_CONTINUE")]

@@ -463,6 +463,7 @@ func _ready():
 		Color(0.6169, 0.9533, 0.7249, 1),
 		Color(0.7428, 0.9162, 0.7401, 1),
 		Color(0.6895, 0.5263, 0.965, 1),
+		Color(0.5061, 0.9214, 0.8825, 1),
 	]
 	var star_color = Color(randf_range(0.5, 1.0), randf_range(0.5, 1.0), randf_range(0.5, 1.0))
 	print(star_color)
@@ -1528,7 +1529,6 @@ func switch_view(new_view:String, other_params:Dictionary = {}):
 		else:
 			callv(fn, fn_args)
 	if new_view in ["universe", "cluster", "galaxy", "system", "planet"]:
-		$MMTimer.start()
 		var new_dict:Dictionary = {"view":new_view, "c_c":c_c, "c_g_g":c_g_g, "c_g":c_g, "c_s_g":c_s_g, "c_s":c_s, "c_p_g":c_p_g, "c_p":c_p}
 		if other_params.has("fn"):
 			var fn_args:Array = other_params.fn_args if other_params.has("fn_args") else []
@@ -2043,7 +2043,8 @@ func add_planet(new_game:bool = false):
 	add_obj("planet")
 	if new_game:
 		view.scale = Vector2.ONE * 0.1
-		view.position = Vector2(640-160, 360-160)
+		var wid = Helper.get_wid(planet_data[c_p].size)
+		view.position = Vector2(640-wid*100*0.1, 360-wid*100*0.1)
 	view.obj.icons_hidden = view.scale.x >= 0.25
 
 func remove_dimension():
@@ -4281,8 +4282,10 @@ func reset_dimension_confirm(DR_num:int):
 func buy_pickaxe_confirm(_costs:Dictionary):
 	shop_panel.buy_pickaxe(_costs)
 
-func destroy_buildings_confirm(arr:Array):
-	for id in arr:
+func destroy_buildings_confirm(tile_ids:Array):
+	if tile_data[tile_ids[0]].bldg.name == Building.GREENHOUSE:
+		view.obj.get_node("TileFeatures").clear_layer(2)
+	for id in tile_ids:
 		view.obj.destroy_bldg(id, true)
 	show_collect_info(view.obj.items_collected)
 	HUD.refresh()
@@ -4498,7 +4501,7 @@ func _on_Godot_mouse_entered():
 var curr_MM_p = 0
 
 func _on_MMTimer_timeout():
-	if c_sv != "":
+	if is_instance_valid(HUD) and is_ancestor_of(HUD):
 		var curr_time = Time.get_unix_time_from_system()
 		var planets_with_MM:Array = boring_machine_data.keys()
 		if len(planets_with_MM) == 0:
@@ -4516,6 +4519,7 @@ func _on_MMTimer_timeout():
 			if len(_tile_data) == 0:
 				curr_MM_p += 1
 				return
+			var await_counter:int = 0
 			for t_id in boring_machine_data[p].tiles:
 				var tile = _tile_data[t_id]
 				if tile == null or not tile.has("bldg"):
@@ -4529,6 +4533,9 @@ func _on_MMTimer_timeout():
 					if tile.has("crater") and tile.crater.has("init_depth") and tile.depth > 3 * tile.crater.init_depth:
 						Helper.remove_crater_bonuses(_tile_data, t_id, tile.crater.metal)
 						tile.erase("crater")
+				await_counter += 1
+				if await_counter % int(1000.0 / Engine.get_frames_per_second()) == 0:
+					await get_tree().process_frame
 			if p != c_p_g:
 				Helper.save_obj("Planets", p, _tile_data)
 		else:
@@ -4560,6 +4567,7 @@ func _on_MMTimer_timeout():
 		curr_MM_p += 1
 		if is_instance_valid(HUD):
 			HUD.update_money_energy_SP()
+	$MMTimer.start()
 
 
 func _on_PanelAnimationPlayer_animation_finished(anim_name):

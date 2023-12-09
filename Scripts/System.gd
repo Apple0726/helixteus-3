@@ -599,7 +599,7 @@ func _input(event):
 			else:
 				game.popup(tr("NOT_ENOUGH_RESOURCES"), 1.5)
 
-func build_MS(obj:Dictionary, MS:String):
+func build_MS(obj:Dictionary, MS_to_build:String):
 	if bldg_costs.is_empty():
 		return
 	if obj.has("tile_num"):
@@ -628,7 +628,9 @@ func build_MS(obj:Dictionary, MS:String):
 			if not obj.has("repair_cost"):
 				obj.MS_lv += 1
 				if obj.MS == "DS":
-					if MS != "MB":
+					if MS_to_build == "MB":
+						game.autocollect.MS.energy -= Helper.get_DS_output(obj, -1)
+					else:
 						game.energy_capacity += Helper.get_DS_capacity(obj) - Helper.get_DS_capacity(obj, -1)
 				elif obj.MS == "MME":
 					game.mineral_capacity += Helper.get_MME_capacity(obj) - Helper.get_MME_capacity(obj, -1)
@@ -640,17 +642,17 @@ func build_MS(obj:Dictionary, MS:String):
 					game.mineral_capacity += Helper.get_MME_capacity(obj)
 		else:
 			if build_all_MS_stages:
-				obj.MS_lv = Data.MS_num_stages[MS]
+				obj.MS_lv = Data.MS_num_stages[MS_to_build]
 			else:
 				obj.MS_lv = 0
-			if MS == "DS":
+			if MS_to_build == "DS":
 				game.energy_capacity += Helper.get_DS_capacity(obj)
-			elif MS == "MME":
+			elif MS_to_build == "MME":
 				game.mineral_capacity += Helper.get_MME_capacity(obj)
 			game.stats_univ.MS_constructed += 1
 			game.stats_dim.MS_constructed += 1
 			game.stats_global.MS_constructed += 1
-		obj.MS = MS
+		obj.MS = MS_to_build
 		game.system_data[game.c_s].has_MS = true
 		obj.bldg = {}
 		game.universe_data[game.c_u].xp += round(bldg_costs.money / 100.0)
