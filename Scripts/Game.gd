@@ -1,7 +1,7 @@
 extends Node2D
 
 const TEST:bool = false
-const DATE:String = ""
+const DATE:String = "13 Dec 2023"
 const VERSION:String = "v0.29"
 const COMPATIBLE_SAVES = []
 const UNIQUE_BLDGS = 7

@@ -19,7 +19,7 @@ func _ready():
 
 func _process(delta):
 	if enemy_projectile_type == 3:
-		velocity = velocity.move_toward(Vector2.ZERO, delta * 5.0)
+		velocity = velocity.move_toward(Vector2.ZERO, delta * 35.0)
 		if velocity == Vector2.ZERO:
 			modulate.a -= 0.03 * delta * 60
 			if modulate.a <= 0:

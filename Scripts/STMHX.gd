@@ -24,7 +24,7 @@ func _ready():
 	move_tween.tween_callback(setup_shoot_timer)
 	$Sprite2D.texture = load("res://Graphics/HX/%s_%s.png" % [color, type+1])
 	set_process(false)
-	if color == 1:
+	if color == 2:
 		projectile_initial_speed = 500
 	elif color == 4:
 		projectile_initial_speed = 150
@@ -142,11 +142,21 @@ func _on_enemy4_shoot_timer_timeout():
 func add_enemy_projectile(velocity:Vector2):
 	var projectile:STMProjectile = preload("res://Scenes/STM/STMProjectile.tscn").instantiate()
 	projectile.enemy_projectile_type = color
-	projectile.scale *= 0.5
 	projectile.velocity = velocity
+	projectile.rotation = atan2(velocity.y, velocity.x)
 	projectile.position = position
 	projectile.damage = 1
-	projectile.get_node("Sprite2D").texture = preload("res://Graphics/Cave/Projectiles/enemy_bullet.png")
+	if color == 1:
+		projectile.scale *= 0.5
+		projectile.get_node("Sprite2D").texture = preload("res://Graphics/Cave/Projectiles/enemy_bullet.png")
+	elif color == 2:
+		projectile.scale *= 2.0
+		projectile.get_node("Sprite2D").texture = preload("res://Graphics/Cave/Projectiles/laser.png")
+	elif color == 3:
+		projectile.get_node("Sprite2D").texture = preload("res://Graphics/Cave/Projectiles/bubble.png")
+	elif color == 4:
+		projectile.scale *= 0.5
+		projectile.get_node("Sprite2D").texture = preload("res://Graphics/Cave/Projectiles/purple_bullet.png")
 	projectile.STM_node = STM_node
 	STM_node.get_node("GlowLayer").add_child(projectile)
 	
