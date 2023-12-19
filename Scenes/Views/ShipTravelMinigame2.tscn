@@ -277,21 +277,17 @@ script = ExtResource("2_dfkgr")
 
 [node name="BulletTimer" type="Timer" parent="Ship"]
 wait_time = 0.15
-autostart = true
 
 [node name="LaserTimer" type="Timer" parent="Ship"]
 one_shot = true
-autostart = true
 
 [node name="BombTimer" type="Timer" parent="Ship"]
 wait_time = 3.0
 one_shot = true
-autostart = true
 
 [node name="LightTimer" type="Timer" parent="Ship"]
 wait_time = 8.0
 one_shot = true
-autostart = true
 
 [node name="StunTimer" type="Timer" parent="Ship"]
 one_shot = true

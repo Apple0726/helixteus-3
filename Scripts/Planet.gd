@@ -910,7 +910,7 @@ func _unhandled_input(event):
 	if tile_over != -1 and game.bottom_info_action != "building" and tile_over < len(game.tile_data):
 		var tile = game.tile_data[tile_over]
 		if tile:
-			if tile.has("unique_bldg") and tile.unique_bldg.name != UniqueBuilding.SPACEPORT and tile.unique_bldg.name in game.unique_bldgs_discovered.keys() and int(tile.unique_bldg.tier) in game.unique_bldgs_discovered[tile.unique_bldg.name].keys():
+			if tile.has("unique_bldg") and tile.unique_bldg.name != UniqueBuilding.SPACEPORT and game.engineering_bonus.max_unique_building_tier >= int(tile.unique_bldg.tier) and tile.unique_bldg.name in game.unique_bldgs_discovered.keys() and int(tile.unique_bldg.tier) in game.unique_bldgs_discovered[tile.unique_bldg.name].keys():
 				if Input.is_action_just_released("Q"):
 					var tier:int = tile.unique_bldg.tier
 					game.put_bottom_info(tr("CLICK_TILE_TO_CONSTRUCT"), "building", "cancel_building")
@@ -1287,30 +1287,34 @@ func on_wormhole_click(tile:Dictionary, tile_id:int):
 			game.view_tween.tween_property(game.view, "modulate", Color(1.0, 1.0, 1.0, 0.0), 0.1)
 			await game.view_tween.finished
 			rsrcs.clear()
+			var l_dest_p_id = tile.wormhole.get("l_dest_p_id")
+			var g_dest_p_id = tile.wormhole.get("g_dest_p_id")
+			var l_dest_s_id:int = tile.wormhole.l_dest_s_id
+			var g_dest_s_id:int = tile.wormhole.g_dest_s_id
 			if tile.wormhole.new:#generate galaxy -> remove tiles -> generate system -> open/close tile_data to update wormhole info -> open destination tile_data to place destination wormhole
 				visible = false
 				if game.galaxy_data[game.c_g].has("wormholes"):
-					game.galaxy_data[game.c_g].wormholes.append({"from":game.c_s, "to":tile.wormhole.l_dest_s_id})
+					game.galaxy_data[game.c_g].wormholes.append({"from":game.c_s, "to":l_dest_s_id})
 				else:
-					game.galaxy_data[game.c_g].wormholes = [{"from":game.c_s, "to":tile.wormhole.l_dest_s_id}]
+					game.galaxy_data[game.c_g].wormholes = [{"from":game.c_s, "to":l_dest_s_id}]
 				if not game.galaxy_data[game.c_g].has("discovered"):#if galaxy generated systems
 					await game.start_system_generation()
 				else:
 					Helper.save_obj("Clusters", game.c_c, game.galaxy_data)
-				var wh_system:Dictionary = game.system_data[tile.wormhole.l_dest_s_id]
+				var wh_system:Dictionary = game.system_data[l_dest_s_id]
 				var orig_s_l:int = game.c_s
 				var orig_s_g:int = game.c_s_g
 				var orig_p_l:int = game.c_p
 				var orig_p_g:int = game.c_p_g
 				view.save_zooms("planet")
 				Helper.save_obj("Systems", game.c_s_g, game.planet_data)
-				game.c_s = tile.wormhole.l_dest_s_id
-				game.c_s_g = tile.wormhole.g_dest_s_id
+				game.c_s = l_dest_s_id
+				game.c_s_g = g_dest_s_id
 				if wh_system.has("discovered"):#if system generated planets
-					game.planet_data = game.open_obj("Systems", tile.wormhole.g_dest_s_id)
+					game.planet_data = game.open_obj("Systems", g_dest_s_id)
 				else:
 					game.planet_data.clear()
-					game.generate_planets(tile.wormhole.l_dest_s_id)
+					game.generate_planets(l_dest_s_id)
 				var wh_planet = game.planet_data[randi() % wh_system.planet_num]
 				while wh_planet.type in [11, 12]:
 					wh_planet = game.planet_data[randi() % wh_system.planet_num]
@@ -1346,10 +1350,10 @@ func on_wormhole_click(tile:Dictionary, tile_id:int):
 			else:
 				game.remove_planet()
 				game.c_v = ""
-				game.c_p = tile.wormhole.l_dest_p_id
-				game.c_p_g = tile.wormhole.g_dest_p_id
-				game.c_s = tile.wormhole.l_dest_s_id
-				game.c_s_g = tile.wormhole.g_dest_s_id
+				game.c_p = l_dest_p_id
+				game.c_p_g = g_dest_p_id
+				game.c_s = l_dest_s_id
+				game.c_s_g = g_dest_s_id
 				game.tile_data = game.open_obj("Planets", game.c_p_g)
 				game.planet_data = game.open_obj("Systems", game.c_s_g)
 			game.ships_travel_data.c_coords.p = game.c_p

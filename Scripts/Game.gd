@@ -1,9 +1,9 @@
 extends Node2D
 
 const TEST:bool = false
-const DATE:String = "13 Dec 2023"
-const VERSION:String = "v0.29"
-const COMPATIBLE_SAVES = []
+const DATE:String = "19 Dec 2023"
+const VERSION:String = "v0.29.1"
+const COMPATIBLE_SAVES = ["v0.29"]
 const UNIQUE_BLDGS = 7
 
 #region Scenes

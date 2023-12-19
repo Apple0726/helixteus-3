@@ -39,6 +39,10 @@ func _ready():
 	$Ship/LaserTimer.wait_time = (1.1 - laser_lv / 10.0) / minigame_time_speed
 	$Ship/BombTimer.wait_time = (3.0 - bomb_lv / 8.0) / minigame_time_speed
 	$Ship/LightTimer.wait_time = (8.0 - light_lv / 2.0) / minigame_time_speed
+	$Ship/BulletTimer.start()
+	$Ship/LaserTimer.start()
+	$Ship/BombTimer.start()
+	$Ship/LightTimer.start()
 	$Ship/StunTimer.wait_time = 1.0 / minigame_time_speed
 	$Ship/Bomb.texture = load("res://Graphics/Weapons/bomb%s.png" % bomb_lv)
 	$GlowLayer/Laser.material["shader_parameter/beams"] = laser_lv + 1
