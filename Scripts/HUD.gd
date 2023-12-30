@@ -111,11 +111,8 @@ func update_XP():
 		game.u_i.xp_to_lv = round(game.u_i.xp_to_lv * game.maths_bonus.ULUGF)
 		#if not game.objective.is_empty() and game.objective.type == game.ObjectiveType.LEVEL:
 			#game.objective.current += 1
-		if game.subject_levels.dimensional_power == 0:
-			if game.u_i.lv == 28:
-				game.popup_window(tr("LEVEL_28_REACHED"), "%s 28" % tr("LEVEL"))
-			if game.u_i.lv == 32:
-				game.popup_window(tr("LEVEL_32_REACHED"), "%s 32" % tr("LEVEL"))
+		if game.subject_levels.dimensional_power == 0 and game.u_i.lv == 32:
+			game.popup_window(tr("LEVEL_32_REACHED"), "%s 32" % tr("LEVEL"))
 		if game.u_i.lv == 60:
 			game.new_bldgs[Building.PROBE_CONSTRUCTION_CENTER] = true
 			game.popup_window(tr("LEVEL_60_REACHED"), "%s 60" % tr("LEVEL"))

@@ -469,7 +469,7 @@ func show_planet_info(id:int, l_id:int):
 			if p_i.bldg.name in [Building.BORING_MACHINE, Building.GREENHOUSE, Building.ATOM_MANIPULATOR, Building.SUBATOMIC_PARTICLE_REACTOR]:
 				tooltip += "%s (%s %s)\n%s" %  [p_i.name, Helper.format_num(p_i.tile_num), tr("%s_NAME_S" % Building.names[p_i.bldg.name].to_upper()).to_lower(), Helper.get_bldg_tooltip(p_i, p_i, 1)]
 				if p_i.bldg.name == Building.BORING_MACHINE:
-					tooltip += "\n%s: %s m" % [tr("HOLE_DEPTH"), p_i.depth]
+					tooltip += "\n%s: %s m" % [tr("HOLE_DEPTH"), Helper.format_num(p_i.depth)]
 			else:
 				tooltip += "%s (%s %s)\n%s" %  [p_i.name, Helper.format_num(p_i.tile_num), tr("%s_NAME_S" % Building.names[p_i.bldg.name].to_upper()).to_lower(), Helper.get_bldg_tooltip(p_i, p_i, p_i.tile_num)]
 		else:

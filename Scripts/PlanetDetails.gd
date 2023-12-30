@@ -55,7 +55,7 @@ var mantle_always_visible = false
 var core_always_visible = false
 
 func on_crust_enter():
-	var tooltip = (tr("CRUST") + "\n" + tr("DEPTHS") + ": %s m - %s m") % [p_i.crust_start_depth + 1, p_i.mantle_start_depth]
+	var tooltip = (tr("CRUST") + "\n" + tr("DEPTHS") + ": %s m - %s m") % [Helper.format_num(p_i.crust_start_depth + 1), Helper.format_num(p_i.mantle_start_depth)]
 	if crust_always_visible:
 		tooltip += "\nClick to hide crust composition\nwhen not hovered over"
 	else:
@@ -169,7 +169,7 @@ func _on_Planet_mouse_entered():
 	if game.planet_data[id].type == 11:
 		game.show_tooltip(tr("SURFACE"))
 	else:
-		game.show_tooltip((tr("SURFACE") + "\n" + tr("DEPTHS") + ": 0 m - %s m\n" + tr("MATERIALS") + ":\n%s") % [p_i.crust_start_depth + 1, get_surface_string(p_i.surface)])
+		game.show_tooltip((tr("SURFACE") + "\n" + tr("DEPTHS") + ": 0 m - %s m\n" + tr("MATERIALS") + ":\n%s") % [Helper.format_num(p_i.crust_start_depth + 1), get_surface_string(p_i.surface)])
 
 func get_surface_string(mats:Dictionary):
 	var string = ""

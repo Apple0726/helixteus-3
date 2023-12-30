@@ -1,9 +1,9 @@
 extends Node2D
 
 const TEST:bool = false
-const DATE:String = "19 Dec 2023"
-const VERSION:String = "v0.29.1"
-const COMPATIBLE_SAVES = ["v0.29"]
+const DATE:String = "30 Dec 2023"
+const VERSION:String = "v0.29.2"
+const COMPATIBLE_SAVES = ["v0.29", "v0.29.1"]
 const UNIQUE_BLDGS = 7
 
 #region Scenes
@@ -1407,7 +1407,7 @@ func switch_view(new_view:String, other_params:Dictionary = {}):
 		$UI.get_node("BuildingShortcuts").queue_free()
 	$UI/Panel/AnimationPlayer.play("FadeOut")
 	var old_view:String = c_v
-	if is_instance_valid(view_tween) and view_tween.is_running():
+	if view_tween and view_tween.is_running():
 		return
 	if not other_params.has("dont_fade_anim"):
 		view_tween = create_tween()
@@ -1427,14 +1427,18 @@ func switch_view(new_view:String, other_params:Dictionary = {}):
 					if c_s_g_index != -1 and c_s_g != other_params.get("fn_args")[1][c_s_g_index]:
 						fade_out_starfield = true
 			if fade_out_starfield:
-				var starfield_tween = get_tree().create_tween()
+				if starfield_tween:
+					starfield_tween.kill()
+				starfield_tween = create_tween()
 				starfield_tween.tween_property($Stars/Starfield, "modulate:a", 0.0, 0.15)
 				update_starfield = true
 		elif new_view in ["planet", "system"]:
 			update_starfield = true
 		if $StarfieldUniverse.visible:
-			var starfield_tween = create_tween()
-			starfield_tween.tween_property($StarfieldUniverse.material, "shader_parameter/brightness", 0.0, 0.15)
+			if starfield_universe_tween:
+				starfield_universe_tween.kill()
+			starfield_universe_tween = create_tween()
+			starfield_universe_tween.tween_property($StarfieldUniverse.material, "shader_parameter/brightness", 0.0, 0.15)
 		if is_instance_valid(view.obj) and Settings.enable_shaders:
 			if c_v == "system":
 				var tween2 = create_tween()
@@ -1627,7 +1631,9 @@ func switch_view(new_view:String, other_params:Dictionary = {}):
 					$UI.remove_child(HUD)
 				battle = battle_scene.instantiate()
 				add_child(battle)
-				var starfield_tween = create_tween()
+				if starfield_tween:
+					starfield_tween.kill()
+				starfield_tween = create_tween()
 				starfield_tween.tween_property($Stars/Starfield, "modulate:a", 0.5, 0.5)
 		if c_v in ["planet", "system", "galaxy", "cluster", "universe", "mining", "science_tree"] and is_instance_valid(HUD) and is_ancestor_of(HUD):
 			HUD.refresh()
@@ -1881,16 +1887,20 @@ func set_starfield_color(_material, param:float):
 		_material.set_shader_parameter("green_p", 1.0)
 		_material.set_shader_parameter("blue_p", 4.0)
 	
+var starfield_universe_tween
+
 func add_universe():
 	var starfield_color_param:float = 0.1 * pow(1.0 / pow(u_i.age, 0.25) / pow(1.0 / u_i.charge / 4.0, physics_bonus.BI), 0.65)
 	if Settings.enable_shaders:
 		$StarfieldUniverse.material.set_shader_parameter("position", u_i.view.pos)
 		set_starfield_color($StarfieldUniverse.material, starfield_color_param)
 		$StarfieldUniverse.modulate.a = 1.0
-		var starfield_tween = create_tween()
-		starfield_tween.set_parallel(true)
-		starfield_tween.tween_property($StarfieldUniverse.material, "shader_parameter/brightness", 0.0015, 0.5)
-		starfield_tween.tween_property($StarfieldUniverse.material, "shader_parameter/max_alpha", 0.6, 0.5)
+		if starfield_universe_tween:
+			starfield_universe_tween.kill()
+		starfield_universe_tween = create_tween()
+		starfield_universe_tween.set_parallel(true)
+		starfield_universe_tween.tween_property($StarfieldUniverse.material, "shader_parameter/brightness", 0.0015, 0.5)
+		starfield_universe_tween.tween_property($StarfieldUniverse.material, "shader_parameter/max_alpha", 0.6, 0.5)
 	if not universe_data[c_u].has("discovered"):
 		reset_collisions()
 		generate_clusters(c_u)
@@ -2003,15 +2013,19 @@ func update_starfield_BG():
 	var BG_image:Image = $ShaderExport/SubViewport.get_texture().get_image()
 	$Stars/Starfield.texture = ImageTexture.create_from_image(BG_image)
 	$ShaderExport.visible = false
-	
+
+var starfield_tween
+
 func add_system():
 	var starfield_color_param = 0.1 * pow(1.0 / pow(u_i.age, 0.25) / pow(1e-9 / galaxy_data[c_g].B_strength, physics_bonus.BI), 0.65)
 	if obj_exists("Galaxies", c_g_g):
 		system_data = open_obj("Galaxies", c_g_g)
 	set_starfield_color($ShaderExport/SubViewport/Starfield.material, starfield_color_param)
 	show_starfield({"position":system_data[c_s].pos / 10000.0})
-	var starfield_tween = create_tween()
-	starfield_tween.tween_property($Stars/Starfield, "modulate:a", 0.35, 0.5)
+	if starfield_tween:
+		starfield_tween.kill()
+	starfield_tween = create_tween()
+	starfield_tween.tween_property($Stars/Starfield, "modulate:a", 0.35, 0.3)
 	planet_data = open_obj("Systems", c_s_g)
 	if not system_data[c_s].has("discovered") or planet_data.is_empty():
 		if c_s_g != 0:
@@ -2028,8 +2042,10 @@ func add_planet(new_game:bool = false):
 	var starfield_color_param = 0.1 * pow(1.0 / pow(u_i.age, 0.25) / pow(1e-9 / galaxy_data[c_g].B_strength, physics_bonus.BI), 0.65)
 	set_starfield_color($ShaderExport/SubViewport/Starfield.material, starfield_color_param)
 	show_starfield({"position":system_data[c_s].pos / 10000.0})
-	var starfield_tween = create_tween()
-	starfield_tween.tween_property($Stars/Starfield, "modulate:a", 0.8, 1.5 if new_game else 0.5)
+	if starfield_tween:
+		starfield_tween.kill()
+	starfield_tween = create_tween()
+	starfield_tween.tween_property($Stars/Starfield, "modulate:a", 0.65, 1.5 if new_game else 0.8)
 	planet_data = open_obj("Systems", c_s_g)
 	if not planet_data[c_p].has("discovered") or open_obj("Planets", c_p_g).is_empty():
 		generate_tiles(c_p)
@@ -4505,6 +4521,7 @@ func _on_MMTimer_timeout():
 		var curr_time = Time.get_unix_time_from_system()
 		var planets_with_MM:Array = boring_machine_data.keys()
 		if len(planets_with_MM) == 0:
+			$MMTimer.start()
 			return
 		if curr_MM_p > len(planets_with_MM)-1:
 			curr_MM_p = 0
@@ -4518,6 +4535,7 @@ func _on_MMTimer_timeout():
 				_tile_data = open_obj("Planets", p)
 			if len(_tile_data) == 0:
 				curr_MM_p += 1
+				$MMTimer.start()
 				return
 			var await_counter:int = 0
 			for t_id in boring_machine_data[p].tiles:
@@ -4547,6 +4565,7 @@ func _on_MMTimer_timeout():
 				_planet_data = open_obj("Systems", boring_machine_data[p].c_s_g)
 				if _planet_data.is_empty():
 					boring_machine_data.erase(p)
+					$MMTimer.start()
 					return
 				p_i = _planet_data[boring_machine_data[p].c_p]
 			var prod_mult = Helper.get_prod_mult(p_i) * p_i.get("mining_outpost_bonus", 1.0)

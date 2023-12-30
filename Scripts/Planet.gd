@@ -267,7 +267,7 @@ func show_tooltip(tile, tile_id:int):
 		if tile.has("overclock_bonus") and overclockable(tile.bldg.name):
 			tooltip += "\n[color=#EEEE00]" + tr("BENEFITS_FROM_OVERCLOCK") % tile.overclock_bonus + "[/color]"
 		if tile.bldg.name == Building.BORING_MACHINE:
-			tooltip += "\n%s: %s m" % [tr("HOLE_DEPTH"), tile.depth]
+			tooltip += "\n%s: %s m" % [tr("HOLE_DEPTH"), Helper.format_num(tile.depth)]
 		elif tile.bldg.name in [Building.GLASS_FACTORY, Building.STEAM_ENGINE, Building.STONE_CRUSHER]:
 			tooltip += "\n[color=#88CCFF]%s\nG: %s[/color]" % [tr("CLICK_TO_CONFIGURE"), tr("LOAD_UNLOAD")]
 	elif tile.has("unique_bldg"):
@@ -322,9 +322,9 @@ func show_tooltip(tile, tile_id:int):
 		if game.help_str == "":
 			game.help_str = "crater_desc"
 		if game.help.has("crater_desc"):
-			tooltip += tr("METAL_CRATER").format({"metal":tr(tile.crater.metal.to_upper()), "crater":tr("CRATER")}) + "[color=#BBFFFF]\n%s\n[/color][color=#77BBBB]%s[/color]\n%s" % [tr("CRATER_DESC"), tr("HIDE_HELP"), tr("HOLE_DEPTH") + ": %s m"  % [tile.depth]]
+			tooltip += tr("METAL_CRATER").format({"metal":tr(tile.crater.metal.to_upper()), "crater":tr("CRATER")}) + "[color=#BBFFFF]\n%s\n[/color][color=#77BBBB]%s[/color]\n%s" % [tr("CRATER_DESC"), tr("HIDE_HELP"), tr("HOLE_DEPTH") + ": %s m"  % Helper.format_num(tile.depth)]
 		else:
-			tooltip += tr("METAL_CRATER").format({"metal":tr(tile.crater.metal.to_upper()), "crater":tr("CRATER")}) + "\n%s" % [tr("HOLE_DEPTH") + ": %s m"  % [tile.depth]]
+			tooltip += tr("METAL_CRATER").format({"metal":tr(tile.crater.metal.to_upper()), "crater":tr("CRATER")}) + "\n%s" % [tr("HOLE_DEPTH") + ": %s m"  % Helper.format_num(tile.depth)]
 	elif tile.has("cave"):
 		var au_str:String = ""
 		if tile.has("aurora"):
@@ -404,7 +404,7 @@ func show_tooltip(tile, tile_id:int):
 				tooltip += "\n%s: @i %s  @i %s" % [tr("INVESTIGATION_COSTS"), Helper.format_num(wh_costs.SP), Helper.time_to_str(wh_costs.time)]
 				icons = [Data.SP_icon, Data.time_icon]
 	if tile.has("depth") and not tile.has("bldg") and not tile.has("crater") and not tile.has("bridge"):
-		tooltip += "%s: %s m\n%s" % [tr("HOLE_DEPTH"), tile.depth, tr("SHIFT_CLICK_TO_BRIDGE_HOLE")]
+		tooltip += "%s: %s m\n%s" % [tr("HOLE_DEPTH"), Helper.formt_num(tile.depth), tr("SHIFT_CLICK_TO_BRIDGE_HOLE")]
 	elif bldg_to_construct in [Building.MINERAL_EXTRACTOR, Building.RESEARCH_LAB, Building.SOLAR_PANEL] and tile.has("resource_production_bonus") and not tile.resource_production_bonus.is_empty() and (game.u_i.lv < 18 or view.scale.x < 0.25):
 		tooltip = tr("BUILD_HERE_FOR_X_BONUS")
 		if bldg_to_construct == Building.MINERAL_EXTRACTOR and tile.resource_production_bonus.has("minerals"):
@@ -1281,7 +1281,7 @@ func on_wormhole_click(tile:Dictionary, tile_id:int):
 			game.popup(tr("SHIPS_ALREADY_TRAVELLING"), 1.5)
 			return
 		if Helper.ships_on_planet(p_id):
-			if game.view_tween.is_running():
+			if game.view_tween and game.view_tween.is_valid():
 				return
 			game.view_tween = create_tween()
 			game.view_tween.tween_property(game.view, "modulate", Color(1.0, 1.0, 1.0, 0.0), 0.1)
@@ -1289,8 +1289,8 @@ func on_wormhole_click(tile:Dictionary, tile_id:int):
 			rsrcs.clear()
 			var l_dest_p_id = tile.wormhole.get("l_dest_p_id")
 			var g_dest_p_id = tile.wormhole.get("g_dest_p_id")
-			var l_dest_s_id:int = tile.wormhole.l_dest_s_id
-			var g_dest_s_id:int = tile.wormhole.g_dest_s_id
+			var l_dest_s_id = tile.wormhole.get("l_dest_s_id")
+			var g_dest_s_id = tile.wormhole.get("g_dest_s_id")
 			if tile.wormhole.new:#generate galaxy -> remove tiles -> generate system -> open/close tile_data to update wormhole info -> open destination tile_data to place destination wormhole
 				visible = false
 				if game.galaxy_data[game.c_g].has("wormholes"):
@@ -1319,12 +1319,11 @@ func on_wormhole_click(tile:Dictionary, tile_id:int):
 				while wh_planet.type in [11, 12]:
 					wh_planet = game.planet_data[randi() % wh_system.planet_num]
 				game.planet_data[wh_planet.l_id].conquered = true
-				game.erase_tile(tile_id)
-				game.tile_data[tile_id].wormhole = {}
 				game.tile_data[tile_id].wormhole.l_dest_p_id = wh_planet.l_id
 				game.tile_data[tile_id].wormhole.g_dest_p_id = wh_planet.id
+				game.tile_data[tile_id].wormhole.l_dest_s_id = l_dest_s_id
+				game.tile_data[tile_id].wormhole.g_dest_s_id = g_dest_s_id
 				game.tile_data[tile_id].wormhole.new = false
-				game.tile_data[tile_id].wormhole.active = true
 				var _wid:int = sqrt(len(game.tile_data))
 				var tile_x:int = tile_id % _wid
 				var tile_y:int = tile_id / _wid
