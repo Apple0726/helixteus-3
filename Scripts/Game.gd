@@ -1945,10 +1945,16 @@ func add_galaxy():
 		galaxy_data = open_obj("Clusters", c_c)
 	if obj_exists("Galaxies", c_g_g):
 		system_data = open_obj("Galaxies", c_g_g)
-	if not galaxy_data[c_g].has("discovered"):
+	var generate_normal_galaxy = true
+	if c_g_g != 0 and galaxy_data[c_g].get("name") == "Paris" and not galaxy_data[c_g].has("baguette"):
+		var file = FileAccess.open("Easter eggs/Paris public transit/data.txt", FileAccess.READ)
+		if not file.get_open_error():
+			galaxy_data[c_g].baguette = true
+			generate_paris_galaxy(file)
+			generate_normal_galaxy = false
+	if generate_normal_galaxy and not galaxy_data[c_g].has("discovered"):
 		if not galaxy_data[c_g].has("name"):
 			galaxy_data[c_g].name = "%s %s" % [tr("GALAXY"), c_g]
-#		start_system_generation()
 		await start_system_generation()
 	add_obj("galaxy")
 	HUD.switch_btn.texture_normal = preload("res://Graphics/Buttons/ClusterView.png")
@@ -2275,6 +2281,91 @@ func update_loading_bar(curr:float, total:float, txt:String):
 	$Loading.update_bar(curr / total, txt % [curr, total])
 	#await get_tree().create_timer(0.0000000000001).timeout  #Progress Bar doesnt update without this
 
+func generate_paris_galaxy(file):
+	var N:int = galaxy_data[c_g].system_num
+	var B = galaxy_data[c_g].B_strength
+	var dark_matter = galaxy_data[c_g].dark_matter
+	var G = u_i.gravitational
+	var star_mass_param = 1.0#pow(u_i.age, 0.25) * pow(1e-9 / B, physics_bonus.BI)
+	system_data.clear()
+	print(star_mass_param)
+	while file.get_position() < file.get_length():
+		var line_data = file.get_line()
+		var arr = line_data.split("¤")
+		
+		var s_i:Dictionary = {}
+		s_i.parent = c_g
+		s_i.planets = []
+		s_i.pos = Vector2(float(arr[1]) * 100000, -float(arr[0]) * 100000)
+		s_i.name = arr[2]
+		
+		var star = {}
+		#Solar masses
+		var mass:float = float(arr[3]) / star_mass_param / 1600000.0
+		var star_size = 1
+		var star_class = ""
+		#Temperature in K
+		var temp = 0
+		if mass < 0.08:#Y, T, L
+			star_size = remap(mass, 0, 0.08, 0.01, 0.1)
+			temp = remap(mass, 0, 0.08, 250, 2400)
+		elif mass >= 0.08 and mass < 0.45:#M
+			star_size = remap(mass, 0.08, 0.45, 0.1, 0.7)
+			temp = remap(mass, 0.08, 0.45, 2400, 3700)
+		elif mass >= 0.45 and mass < 0.8:#K
+			star_size = remap(mass, 0.45, 0.8, 0.7, 0.96)
+			temp = remap(mass, 0.45, 0.8, 3700, 5200)
+		elif mass >= 0.8 and mass < 1.04:#G
+			star_size = remap(mass, 0.8, 1.04, 0.96, 1.15)
+			temp = remap(mass, 0.8, 1.04, 5200, 6000)
+		elif mass >= 1.04 and mass < 1.4:#F
+			star_size = remap(mass, 1.04, 1.4, 1.15, 1.4)
+			temp = remap(mass, 1.04, 1.4, 6000, 7500)
+		elif mass >= 1.4 and mass < 2.1:#A
+			star_size = remap(mass, 1.4, 2.1, 1.4, 1.8)
+			temp = remap(mass, 1.4, 2.1, 7500, 10000)
+		elif mass >= 2.1 and mass < 9:#B
+			star_size = remap(mass, 2.1, 9, 1.8, 6.6)
+			temp = remap(mass, 2.1, 9, 10000, 30000)
+		elif mass >= 9 and mass < 100:#O
+			star_size = remap(mass, 9, 100, 6.6, 22)
+			temp = remap(mass, 16, 100, 30000, 70000)
+		elif mass >= 100 and mass < 1000:#Q
+			star_size = remap(mass, 100, 1000, 22, 60)
+			temp = remap(mass, 100, 1000, 70000, 120000)
+		elif mass >= 1000 and mass < 10000:#R
+			star_size = remap(mass, 1000, 10000, 60, 200)
+			temp = remap(mass, 1000, 10000, 120000, 210000)
+		elif mass >= 10000:#Z
+			var pw = pow(mass, 1/3.0) / pow(10000, 1/3.0)
+			star_size = pw * 200
+			temp = pw * 210000
+		
+		var star_type:int = StarType.MAIN_SEQUENCE
+		star_class = get_star_class(temp)
+		var s_b:float = pow(u_i.boltzmann, 4) / pow(u_i.planck, 3) / pow(u_i.speed_of_light, 2)
+		star.type = star_type
+		star["class"] = star_class
+		star.size = Helper.clever_round(star_size, 4)
+		star.pos = Vector2.ZERO
+		star.temperature = Helper.clever_round(temp, 4)
+		star.mass = Helper.clever_round(mass * u_i.planck, 4)
+		star.luminosity = Helper.clever_round(4 * PI * pow(star_size * e(6.957, 8), 2) * e(5.67, -8) * s_b * pow(temp, 4) / e(3.828, 26), 4)
+		var planet_num:int = clamp(round(pow(star.mass, 0.2) * randf_range(3, 9) * pow(dark_matter, 0.25)), 2, 50)
+		s_i.planet_num = planet_num
+		if galaxy_data[c_g].has("conquered"):
+			s_i.conquered = true
+		
+		var s_id = system_data.size()
+		s_i.id = s_id + s_num
+		s_i.l_id = s_id
+		s_i.stars = [star]
+		s_i.diff = get_sys_diff(s_i.pos, c_g, s_i)
+		system_data.append(s_i)
+	galaxy_data[c_g].discovered = true
+	Helper.save_obj("Galaxies", c_g_g, system_data)
+	Helper.save_obj("Clusters", c_c, galaxy_data)
+	
 func generate_system_part():
 	generate_systems(c_g)
 	var N:int = galaxy_data[c_g].system_num
