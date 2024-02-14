@@ -2,11 +2,11 @@
 
 [ext_resource type="PackedScene" path="res://Scenes/WhiteRect.tscn" id="1"]
 [ext_resource type="TileSet" uid="uid://c7dmux1vdaraf" path="res://Resources/LakeTileSet.tres" id="2"]
+[ext_resource type="TileSet" uid="uid://djmwwqomsir3r" path="res://Resources/PlanetTileSet.tres" id="2_jwdf7"]
 [ext_resource type="Script" path="res://Scripts/Planet.gd" id="3"]
-[ext_resource type="TileSet" uid="uid://djmwwqomsir3r" path="res://Resources/PlanetTileSet.tres" id="4"]
 [ext_resource type="TileSet" uid="uid://dfiuyho24np11" path="res://Resources/ObstaclesTileSet.tres" id="4_ivklb"]
 [ext_resource type="Script" path="res://Scripts/BadApple.gd" id="7_yxni4"]
-[ext_resource type="Texture2D" uid="uid://7dx34oq2nf2r" path="res://icon.png" id="12"]
+[ext_resource type="Texture2D" uid="uid://b75py2v8fpng1" path="res://icon.png" id="12"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_g1ur1"]
 draw_center = false
@@ -38,7 +38,7 @@ mouse_filter = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_g1ur1")
 
 [node name="TileMap" type="TileMap" parent="."]
-tile_set = ExtResource("4")
+tile_set = ExtResource("2_jwdf7")
 format = 2
 layer_0/name = "Planet tiles"
 layer_0/tile_data = PackedInt32Array(0, 0, 0, 1, 0, 0, 2, 0, 0, 3, 0, 0, 65536, 0, 0, 65537, 0, 0, 65538, 0, 0, 65539, 0, 0)

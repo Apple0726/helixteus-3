@@ -1,7 +1,4 @@
-[gd_resource type="Theme" load_steps=47 format=3 uid="uid://cp2u1kgj60ic"]
-
-[ext_resource type="Texture2D" uid="uid://c7dhi5uyajeow" path="res://Graphics/Buttons/CheckboxChecked.svg" id="1_h4tp5"]
-[ext_resource type="Texture2D" uid="uid://b8wob2ylae00s" path="res://Graphics/Buttons/CheckboxUnhecked.svg" id="2_s3vx0"]
+[gd_resource type="Theme" load_steps=45 format=3 uid="uid://cp2u1kgj60ic"]
 
 [sub_resource type="SystemFont" id="SystemFont_xvdaj"]
 font_names = PackedStringArray("Sans-Serif")
@@ -313,10 +310,10 @@ CheckBox/colors/font_color_hover_pressed = Color(1, 1, 1, 1)
 CheckBox/colors/font_color_pressed = Color(1, 1, 1, 1)
 CheckBox/constants/h_separation = 15
 CheckBox/fonts/font = SubResource("SystemFont_uf2dt")
-CheckBox/icons/checked = ExtResource("1_h4tp5")
+CheckBox/icons/checked = null
 CheckBox/icons/radio_checked = null
 CheckBox/icons/radio_unchecked = null
-CheckBox/icons/unchecked = ExtResource("2_s3vx0")
+CheckBox/icons/unchecked = null
 CheckBox/styles/disabled = null
 CheckBox/styles/focus = SubResource("5")
 CheckBox/styles/hover = SubResource("6")

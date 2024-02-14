@@ -1,15 +1,15 @@
 [gd_resource type="TileSet" load_steps=13 format=3 uid="uid://c7dmux1vdaraf"]
 
-[ext_resource type="Texture2D" uid="uid://bw3p66vkx5rv2" path="res://Graphics/Tiles/SuperfluidSpritesheet.png" id="1"]
-[ext_resource type="Texture2D" uid="uid://ckx3no85anov1" path="res://Graphics/Tiles/IceSpritesheet.png" id="2"]
-[ext_resource type="Texture2D" uid="uid://cmq5my0kobw84" path="res://Graphics/Tiles/WaterSpritesheet.png" id="3"]
-[ext_resource type="Texture2D" uid="uid://cs4d61c66ofei" path="res://Graphics/Tiles/SoilSpritesheet.png" id="4_vd5uc"]
-[ext_resource type="Texture2D" uid="uid://lt1q3y5f6ury" path="res://Graphics/Tiles/AshSpritesheet.png" id="5_q8vfm"]
-[ext_resource type="Texture2D" uid="uid://b5haa34ivsnbp" path="res://Graphics/Tiles/Lava.png" id="6_2o06v"]
+[ext_resource type="Texture2D" uid="uid://yx8ssqxybsbx" path="res://Graphics/Tiles/IceSpritesheet.png" id="1_ytang"]
+[ext_resource type="Texture2D" uid="uid://cu0be66cxtd3y" path="res://Graphics/Tiles/WaterSpritesheet.png" id="2_u61i5"]
+[ext_resource type="Texture2D" uid="uid://cwa3qvocx7sqx" path="res://Graphics/Tiles/SuperfluidSpritesheet.png" id="3_p0mbx"]
+[ext_resource type="Texture2D" uid="uid://1ld8yt2mefk5" path="res://Graphics/Tiles/SoilSpritesheet.png" id="4_7ike0"]
+[ext_resource type="Texture2D" uid="uid://cm0kqj8uy6307" path="res://Graphics/Tiles/AshSpritesheet.png" id="5_hoxnt"]
+[ext_resource type="Texture2D" uid="uid://b2gxkbbrpm17e" path="res://Graphics/Tiles/Lava.png" id="6_1bymq"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_f2gm2"]
 resource_name = "solid"
-texture = ExtResource("2")
+texture = ExtResource("1_ytang")
 texture_region_size = Vector2i(200, 200)
 0:0/0 = 0
 0:0/0/terrain_set = 0
@@ -461,7 +461,7 @@ texture_region_size = Vector2i(200, 200)
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_bycos"]
 resource_name = "liquid"
-texture = ExtResource("3")
+texture = ExtResource("2_u61i5")
 texture_region_size = Vector2i(200, 200)
 0:0/0 = 0
 0:0/0/terrain_set = 0
@@ -889,7 +889,7 @@ texture_region_size = Vector2i(200, 200)
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_1nofp"]
 resource_name = "supercritical"
-texture = ExtResource("1")
+texture = ExtResource("3_p0mbx")
 texture_region_size = Vector2i(200, 200)
 0:0/0 = 0
 0:0/0/terrain_set = 0
@@ -1340,7 +1340,7 @@ texture_region_size = Vector2i(200, 200)
 10:4/0/physics_layer_0/angular_velocity = 0.0
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_nqsuy"]
-texture = ExtResource("4_vd5uc")
+texture = ExtResource("4_7ike0")
 texture_region_size = Vector2i(200, 200)
 0:0/0 = 0
 0:0/0/terrain_set = 0
@@ -1767,7 +1767,7 @@ texture_region_size = Vector2i(200, 200)
 8:4/0/terrains_peering_bit/top_side = 3
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_n4lfp"]
-texture = ExtResource("5_q8vfm")
+texture = ExtResource("5_hoxnt")
 texture_region_size = Vector2i(200, 200)
 0:0/0 = 0
 0:0/0/terrain_set = 0
@@ -2241,7 +2241,7 @@ texture_region_size = Vector2i(200, 200)
 8:4/0/terrains_peering_bit/top_side = 4
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_tdbpo"]
-texture = ExtResource("6_2o06v")
+texture = ExtResource("6_1bymq")
 texture_region_size = Vector2i(200, 200)
 0:0/0 = 0
 0:0/0/terrain_set = 0
