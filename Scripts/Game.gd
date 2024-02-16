@@ -4730,7 +4730,7 @@ func _on_command_text_submitted(new_text):
 			else:
 				popup("No such particle", 1.5)
 				return
-		"fc":
+		"speedup":
 			if c_v == "planet":
 				for tile in tile_data:
 					if tile and tile.has("wormhole") and tile.wormhole.has("investigation_length"):
@@ -4772,6 +4772,9 @@ func _on_command_text_submitted(new_text):
 		"fixshipdata":
 			for sh in ship_data:
 				sh.rage = 0
+		"unlockbldgs":
+			for i in len(Building.names):
+				new_bldgs[i] = true
 		_:
 			fail = true
 	if not fail:

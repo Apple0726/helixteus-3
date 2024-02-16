@@ -44,15 +44,15 @@ Commands list:
 
 /setPart [particle] [value]
 - Sets the amount of [particle] to [value]
-- Possible values of [particle]: proton, neutron, electron
-- Example: /setpart electron 15
+- Possible values of [particle]: subatomic_particles
+- Example: /setpart subatomic_particles 1.5e6
 
-/fc
-- Finish construction of all buildings on the planet you're viewing. If you're not viewing a planet, it considers the last planet you viewed
+/speedup
+- Finish investigating any wormholes on current planet, and speeds up all probes
 
 /setMULv [upgrade] [value]
 - Sets [upgrade]'s mineral upgrade level to [value]
-- Possible values of [upgrade]: mv, msmb, is, aie, stmb, shsr
+- Possible values of [upgrade]: mv, msmb, is, stmb, shsr
 - Example: /setMULv mv 5
 
 /setLv [value]
@@ -61,12 +61,12 @@ Commands list:
 
 /switchView [view]
 - Makes you view [view]. Useful if you get stuck somewhere
-- Possible values of [view]: planet, system, galaxy, cluster, supercluster, universe, dimension
+- Possible values of [view]: planet, system, galaxy, cluster, universe, dimension
 - Example: /switchview planet
 
 /setUnivProp [property] [value]
 - Sets the current universe's [property] to [value]
-- Possible values of [property]: speed_of_light, planck, boltzmann, gravitational, charge, dark_energy, difficulty, time_speed, antimatter, value
+- Possible values of [property]: speed_of_light, planck, boltzmann, gravitational, charge, dark_energy, difficulty, time_speed, antimatter, age
 - Example: /setunivprop time_speed 5.4
 
 /get2ndship
