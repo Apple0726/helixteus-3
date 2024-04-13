@@ -1,67 +1,72 @@
-extends "GenericPanel.gd"
+extends "Panel.gd"
+
+var tab:String = ""
+var item_name:String = ""
+var item_costs:Dictionary = {}
 
 func _ready():
-	super()
-	type = PanelType.SHOP
+	set_polygon(size)
 	$Title.text = tr("SHOP")
-	for btn_str in ["Overclocks", "Pickaxes"]:
-		var btn = preload("res://Scenes/AdvButton.tscn").instantiate()
-		btn.name = btn_str
-		btn.button_text = tr(btn_str.to_upper())
-		btn.size_flags_horizontal = Button.SIZE_EXPAND_FILL
-		btn.connect("pressed",Callable(self,"_on_btn_pressed").bind(btn_str))
-		$VBox/TabBar.add_child(btn)
-	_on_btn_pressed("Overclocks")
-	$VBox/TabBar.get_node("Overclocks")._on_Button_pressed()
+	_on_overclocks_button_pressed()
+	$Tabs/OverclocksButton._on_Button_pressed()
+	
+func change_tab(btn_str:String):
+	for item in $Items/Grid.get_children():
+		item.free()
+	item_name = ""
+	item_costs.clear()
+	$Desc.text = tr("%s_DESC" % btn_str.to_upper())
 
 func _on_btn_pressed(btn_str:String):
 	var btn_str_l:String = btn_str.to_lower()
 	var btn_str_u:String = btn_str.to_upper()
 	tab = btn_str
 	change_tab(btn_str)
-	for obj in game["%s_info" % btn_str_l]:
-		var obj_info = game["%s_info" % btn_str_l][obj]
-		var item = item_for_sale_scene.instantiate()
-		item.get_node("SmallButton").text = tr("BUY")
-		item.item_name = obj
-		item.item_dir = "Items/%s" % btn_str
-		item.item_type = "%s_info" % btn_str_l
+	for _item_name in game["%s_info" % btn_str_l]:
+		var _item_info = game["%s_info" % btn_str_l][_item_name]
+		var item = preload("res://Scenes/ShopItem.tscn").instantiate()
+		var _item_texture = load("res://Graphics/Items/%s/%s.png" % [btn_str, _item_name])
+		item.get_node("TextureRect").texture = _item_texture
+		var item_description:String = ""
 		match btn_str_l:
 			"overclocks":
-				item.item_desc = tr("OVERCLOCKS_DESC2") % [obj_info.mult, Helper.time_to_str(obj_info.duration / game.u_i.time_speed)]
+				item_description = tr("OVERCLOCKS_DESC2") % [_item_info.mult, Helper.time_to_str(_item_info.duration / game.u_i.time_speed)]
 			"pickaxes":
-				item.item_desc = "%s\n\n%s: %s\n%s: %s" % [tr("%s_DESC" % obj.to_upper()), tr("MINING_SPEED"), obj_info.speed * game.engineering_bonus.PS, tr("DURABILITY"), obj_info.durability]
-		item.costs = obj_info.costs
-		item.parent = "shop_panel"
-		grid.add_child(item)
-
-func set_item_info(_name:String, _desc:String, costs:Dictionary, _type:String, _dir:String):
-	super.set_item_info(_name, _desc, costs, _type, _dir)
-	desc_txt.text = _desc
-	$VBox/HBox/ItemInfo/VBox/HBox.visible = tab == "Overclocks"
-
-func _on_Buy_pressed():
-	get_item(item_name, item_type, item_dir)
-
-func get_item(_name, _type, _dir):
-	if _name == "":
-		return
-	item_name = _name
-	item_type = _type
-	item_dir = _dir
-	if game.check_enough(item_total_costs):
-		if tab == "Pickaxes":
-			if game.pickaxe.has("name"):
-				game.show_YN_panel("buy_pickaxe", tr("REPLACE_PICKAXE") % [Helper.get_item_name(game.pickaxe.name).to_lower(), Helper.get_item_name(_name).to_lower()], [item_total_costs.duplicate(true)])
+				item_description = "%s\n\n%s: %s\n%s: %s" % [tr("%s_DESC" % _item_name.to_upper()), tr("MINING_SPEED"), _item_info.speed * game.engineering_bonus.PS, tr("DURABILITY"), _item_info.durability]
+		$Items/Grid.add_child(item)
+		var _tooltip_text:String = "%s\n%s\n" % [Helper.get_item_name(_item_name), item_description]
+		var _tooltip_icons:Array = []
+		for cost in _item_info.costs.keys():
+			_tooltip_text += "@i %s" % Helper.format_num(_item_info.costs[cost])
+			if cost == "money":
+				_tooltip_icons.append(Data.money_icon)
 			else:
-				buy_pickaxe(item_total_costs)
-		else:
-			game.deduct_resources(item_total_costs)
-			add_items(tr("NOT_ENOUGH_INV_SPACE_BUY"), tr("PURCHASE_SUCCESS"))
-			game.HUD.refresh()
-	else:
-		game.popup(tr("NOT_ENOUGH_RESOURCES"), 1.5)
+				_tooltip_icons.append(null)
+		item.get_node("TextureButton").mouse_entered.connect(Callable(game, "show_adv_tooltip").bind(_tooltip_text, _tooltip_icons))
+		item.get_node("TextureButton").mouse_exited.connect(Callable(game, "hide_tooltip"))
+		item.get_node("TextureButton").pressed.connect(Callable(self, "set_item_info").bind(_item_name, _item_info.costs, _item_texture, item))
 
+func set_item_info(_item_name:String, _item_costs:Dictionary, _item_texture, _item_node):
+	for item in $Items/Grid.get_children():
+		item.get_node("Highlight").visible = item == _item_node
+	item_name = _item_name
+	$ItemInfo/ItemName.text = Helper.get_item_name(_item_name)
+	$ItemInfo/ItemName.modulate.a = 1.0
+	item_costs = _item_costs.duplicate(true)
+	$ItemInfo/Panel/TextureRect.texture = _item_texture
+	if tab == "Overclocks":
+		$ItemInfo/BuyAmount.visible = true
+	elif tab == "Pickaxes":
+		$ItemInfo/BuyAmount.visible = false
+	update_and_check_costs()
+
+func update_and_check_costs():
+	var item_total_costs = item_costs.duplicate(true)
+	for cost in item_total_costs.keys():
+		item_total_costs[cost] *= $ItemInfo/BuyAmount.value
+	Helper.put_rsrc($ItemInfo/ScrollContainer/Costs, 28, item_total_costs, true, true)
+	$ItemInfo/Buy.disabled = not game.check_enough(item_total_costs)
+	
 func buy_pickaxe(_costs:Dictionary):
 	if not game.check_enough(_costs):
 		return
@@ -78,7 +83,37 @@ func buy_pickaxe(_costs:Dictionary):
 	game.popup(tr("BUY_PICKAXE") % [Helper.get_item_name(item_name).to_lower()], 1.0)
 
 func _on_close_button_pressed():
-	super._on_close_button_pressed()
+	game.fade_out_panel(self)
+	game.active_panel = null
 
-func _on_BuyAmount_value_changed(value):
-	super._on_BuyAmount_value_changed(value)
+func _on_overclocks_button_pressed():
+	_on_btn_pressed("Overclocks")
+
+func _on_pickaxes_button_pressed():
+	_on_btn_pressed("Pickaxes")
+
+
+func _on_buy_pressed():
+	if item_name == "":
+		return
+	var item_total_costs = item_costs.duplicate(true)
+	for cost in item_total_costs.keys():
+		item_total_costs[cost] *= $ItemInfo/BuyAmount.value
+	if game.check_enough(item_total_costs):
+		if tab == "Pickaxes":
+			if game.pickaxe.has("name"):
+				game.show_YN_panel("buy_pickaxe", tr("REPLACE_PICKAXE") % [Helper.get_item_name(game.pickaxe.name).to_lower(), Helper.get_item_name(item_name).to_lower()], [item_total_costs.duplicate(true)])
+			else:
+				buy_pickaxe(item_total_costs)
+		else:
+			game.deduct_resources(item_total_costs)
+			Helper.add_items_to_inventory(item_name, $ItemInfo/BuyAmount.value, item_costs, tr("NOT_ENOUGH_INV_SPACE_BUY"), tr("PURCHASE_SUCCESS"))
+			update_and_check_costs()
+			game.HUD.refresh()
+	else:
+		game.popup(tr("NOT_ENOUGH_RESOURCES"), 1.5)
+
+
+func _on_buy_amount_value_changed(value):
+	update_and_check_costs()
+

@@ -1,22 +1,22 @@
 [gd_scene load_steps=60 format=3 uid="uid://dt6rr51kda1rb"]
 
 [ext_resource type="Script" path="res://Scripts/Game.gd" id="2"]
-[ext_resource type="Texture2D" uid="uid://7r14kwh4yk7k" path="res://Graphics/Buttons/settings.png" id="3"]
-[ext_resource type="Texture2D" uid="uid://b5x4q28k2cwns" path="res://Graphics/Title screen/Background.png" id="4"]
-[ext_resource type="Texture2D" uid="uid://j3teo0tsjdf8" path="res://Graphics/Title screen/Godot.png" id="5"]
-[ext_resource type="Texture2D" uid="uid://dmftnsbcxckly" path="res://Graphics/Title screen/GitHub.png" id="6"]
+[ext_resource type="Texture2D" uid="uid://dgyulfv1lo6pj" path="res://Graphics/Buttons/settings.png" id="3"]
+[ext_resource type="Texture2D" uid="uid://bd7qmj1e4n2fk" path="res://Graphics/Title screen/Background.png" id="4"]
+[ext_resource type="Texture2D" uid="uid://ya573udb4oke" path="res://Graphics/Title screen/Godot.png" id="5"]
+[ext_resource type="Texture2D" uid="uid://v4b6ujcnnf0y" path="res://Graphics/Title screen/GitHub.png" id="6"]
 [ext_resource type="Theme" uid="uid://cp2u1kgj60ic" path="res://Resources/default_theme.tres" id="7"]
-[ext_resource type="AudioStream" uid="uid://dv7mejciq5xwx" path="res://Audio/SFX/click.ogg" id="8"]
+[ext_resource type="AudioStream" uid="uid://gbocrrucuc3v" path="res://Audio/SFX/click.ogg" id="8"]
 [ext_resource type="Shader" path="res://Shaders/StarField2.gdshader" id="8_axm3r"]
 [ext_resource type="PackedScene" uid="uid://bx5co4ssobffh" path="res://Scenes/Languages.tscn" id="9"]
 [ext_resource type="Shader" path="res://Shaders/Starfield.gdshader" id="9_0dcpd"]
-[ext_resource type="Texture2D" uid="uid://db61cmdcwbrfq" path="res://Graphics/Title screen/Discord.png" id="11"]
+[ext_resource type="Texture2D" uid="uid://cgybn4hmova58" path="res://Graphics/Title screen/Discord.png" id="11"]
 [ext_resource type="Shader" path="res://Shaders/Cluster.gdshader" id="19_4v34t"]
 [ext_resource type="PackedScene" uid="uid://ddf2xjwcht77u" path="res://Scenes/CloseButton.tscn" id="25"]
-[ext_resource type="Texture2D" uid="uid://bdsib5x1ny88g" path="res://Graphics/Ships/Ship0.png" id="26"]
+[ext_resource type="Texture2D" uid="uid://b1a83wv5x70a8" path="res://Graphics/Ships/Ship0.png" id="26"]
 [ext_resource type="Shader" path="res://Shaders/Blur.gdshader" id="30"]
 [ext_resource type="Shader" path="res://Shaders/Star.gdshader" id="31"]
-[ext_resource type="Texture2D" uid="uid://c6jwd1cctyyel" path="res://Graphics/Effects/spotlight_4.png" id="32"]
+[ext_resource type="Texture2D" uid="uid://q3hj3mes7gr" path="res://Graphics/Effects/spotlight_4.png" id="32"]
 [ext_resource type="PackedScene" uid="uid://dtk1md86gqsln" path="res://Scenes/Fire.tscn" id="33"]
 [ext_resource type="Shader" path="res://Shaders/ScienceTree.gdshader" id="34"]
 [ext_resource type="PackedScene" uid="uid://c5qfs6oo128dp" path="res://Scenes/Nebula.tscn" id="35"]
@@ -54,10 +54,6 @@ shader_parameter/OCTAVES = 3
 shader_parameter/seed = 1
 shader_parameter/alpha = 1.0
 shader_parameter/expo = 0.3
-
-[sub_resource type="ShaderMaterial" id="1"]
-shader = ExtResource("30")
-shader_parameter/amount = 0.0
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_rfoca"]
 content_margin_left = 10.0
@@ -424,6 +420,10 @@ _data = {
 "StarFade": SubResource("20")
 }
 
+[sub_resource type="ShaderMaterial" id="1"]
+shader = ExtResource("30")
+shader_parameter/amount = 0.0
+
 [node name="Game" type="Node2D"]
 script = ExtResource("2")
 
@@ -459,17 +459,7 @@ volume_db = 14.116
 bus = &"SFX"
 
 [node name="Panels" type="CanvasLayer" parent="."]
-layer = 2
-
-[node name="Blur" type="ColorRect" parent="Panels"]
-material = SubResource("1")
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-mouse_filter = 2
-color = Color(0.364706, 0.968627, 0.968627, 1)
+layer = 3
 
 [node name="Control" type="Control" parent="Panels"]
 layout_mode = 3
@@ -483,7 +473,7 @@ grow_vertical = 2
 mouse_filter = 2
 
 [node name="UI" type="CanvasLayer" parent="."]
-layer = 3
+layer = 2
 
 [node name="BottomInfo" type="HBoxContainer" parent="UI"]
 visible = false
@@ -829,6 +819,18 @@ position = Vector2(640, 360)
 wait_time = 0.1
 one_shot = true
 autostart = true
+
+[node name="Blur" type="CanvasLayer" parent="."]
+
+[node name="BlurRect" type="ColorRect" parent="Blur"]
+material = SubResource("1")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0.364706, 0.968627, 0.968627, 1)
 
 [connection signal="close_button_out" from="UI/BottomInfo/CloseButton" to="." method="_on_CloseButton_close_button_out"]
 [connection signal="close_button_over" from="UI/BottomInfo/CloseButton" to="." method="_on_CloseButton_close_button_over"]

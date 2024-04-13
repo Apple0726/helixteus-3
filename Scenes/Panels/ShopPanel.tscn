@@ -1,0 +1,217 @@
+[gd_scene load_steps=11 format=3 uid="uid://ce00kfbdjl4rk"]
+
+[ext_resource type="Theme" uid="uid://cp2u1kgj60ic" path="res://Resources/default_theme.tres" id="1_ks4xu"]
+[ext_resource type="Script" path="res://Scripts/ShopPanel.gd" id="2_adys4"]
+[ext_resource type="Texture2D" uid="uid://ds7wkl1q870po" path="res://Graphics/GUI/Panel.png" id="3_d1dka"]
+[ext_resource type="Texture2D" uid="uid://bc8dirylcuw6l" path="res://Graphics/GUI/CloseButtonNormal.png" id="4_q0u5r"]
+[ext_resource type="Texture2D" uid="uid://8nxpio61rtvq" path="res://Graphics/GUI/CloseButtonHover.png" id="5_3b6lu"]
+[ext_resource type="PackedScene" uid="uid://1hq6qpr1oa3i" path="res://Scenes/AdvButton.tscn" id="5_ixx63"]
+
+[sub_resource type="SystemFont" id="SystemFont_sxpbd"]
+font_names = PackedStringArray("Arial")
+multichannel_signed_distance_field = true
+
+[sub_resource type="LabelSettings" id="LabelSettings_jee6n"]
+font = SubResource("SystemFont_sxpbd")
+font_size = 24
+shadow_size = 2
+shadow_color = Color(0, 0, 0, 0.372549)
+shadow_offset = Vector2(2, 2)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_bppng"]
+bg_color = Color(0.0509804, 0.0509804, 0.0509804, 1)
+border_width_left = 4
+border_width_top = 4
+border_color = Color(0.192157, 0.192157, 0.192157, 1)
+border_blend = true
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_rngm8"]
+bg_color = Color(0, 0, 0.164706, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.105882, 0.196078, 0.305882, 1)
+border_blend = true
+
+[node name="Panel" type="Control"]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 1024.0
+offset_bottom = 592.0
+mouse_filter = 2
+theme = ExtResource("1_ks4xu")
+script = ExtResource("2_adys4")
+
+[node name="GUI" type="TextureRect" parent="."]
+layout_mode = 0
+offset_right = 1280.0
+offset_bottom = 720.0
+mouse_filter = 2
+texture = ExtResource("3_d1dka")
+
+[node name="CloseButton" type="TextureButton" parent="."]
+layout_mode = 0
+offset_left = 1136.0
+offset_top = 67.0
+offset_right = 1185.0
+offset_bottom = 116.0
+texture_normal = ExtResource("4_q0u5r")
+texture_hover = ExtResource("5_3b6lu")
+
+[node name="Title" type="Label" parent="."]
+custom_minimum_size = Vector2(0, 38)
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_left = 128.0
+offset_top = 72.0
+offset_right = -576.0
+offset_bottom = 110.0
+grow_horizontal = 2
+text = "Shop"
+label_settings = SubResource("LabelSettings_jee6n")
+vertical_alignment = 1
+
+[node name="Desc" type="Label" parent="."]
+custom_minimum_size = Vector2(0, 38)
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_left = 192.0
+offset_top = 153.0
+offset_right = 40.0
+offset_bottom = 193.0
+grow_horizontal = 2
+text = "Overclock items temporarily boost resource production of the affected buildings."
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Tabs" type="HBoxContainer" parent="."]
+layout_mode = 0
+offset_left = 240.0
+offset_top = 353.0
+offset_right = 544.0
+offset_bottom = 393.0
+theme_override_constants/separation = 15
+
+[node name="OverclocksButton" parent="Tabs" instance=ExtResource("5_ixx63")]
+layout_mode = 2
+size_flags_horizontal = 3
+button_text = "Overclocks"
+
+[node name="PickaxesButton" parent="Tabs" instance=ExtResource("5_ixx63")]
+layout_mode = 2
+size_flags_horizontal = 3
+button_text = "Pickaxes"
+
+[node name="Items" type="ScrollContainer" parent="."]
+layout_mode = 1
+anchors_preset = 9
+anchor_bottom = 1.0
+offset_left = 226.0
+offset_top = 192.0
+offset_right = 1030.0
+offset_bottom = -236.0
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_styles/panel = SubResource("StyleBoxFlat_bppng")
+
+[node name="Grid" type="GridContainer" parent="Items"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+columns = 10
+
+[node name="ItemInfo" type="Panel" parent="."]
+layout_mode = 0
+offset_left = 352.0
+offset_top = 416.0
+offset_right = 928.0
+offset_bottom = 624.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_bppng")
+
+[node name="BuyAmount" type="SpinBox" parent="ItemInfo"]
+visible = false
+layout_mode = 0
+offset_left = 248.0
+offset_top = 80.0
+offset_right = 325.479
+offset_bottom = 112.0
+min_value = 1.0
+max_value = 10000.0
+value = 1.0
+rounded = true
+update_on_text_changed = true
+
+[node name="Buy" type="Button" parent="ItemInfo"]
+custom_minimum_size = Vector2(140, 0)
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -88.0
+offset_top = -48.0
+offset_right = 84.0
+offset_bottom = -16.0
+grow_horizontal = 2
+grow_vertical = 0
+size_flags_horizontal = 10
+theme = ExtResource("1_ks4xu")
+disabled = true
+shortcut_in_tooltip = false
+text = "BUY"
+icon_alignment = 2
+expand_icon = true
+
+[node name="ItemName" type="Label" parent="ItemInfo"]
+modulate = Color(1, 1, 1, 0.52549)
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_top = 16.0
+offset_bottom = 38.0
+grow_horizontal = 2
+text = "Click on an item above to buy"
+horizontal_alignment = 1
+
+[node name="Panel" type="Panel" parent="ItemInfo"]
+custom_minimum_size = Vector2(64, 64)
+layout_mode = 0
+offset_left = 80.0
+offset_top = 56.0
+offset_right = 160.0
+offset_bottom = 136.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_rngm8")
+
+[node name="TextureRect" type="TextureRect" parent="ItemInfo/Panel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+expand_mode = 1
+stretch_mode = 5
+
+[node name="ScrollContainer" type="ScrollContainer" parent="ItemInfo"]
+layout_mode = 0
+offset_left = 384.0
+offset_top = 56.0
+offset_right = 568.0
+offset_bottom = 136.0
+
+[node name="Costs" type="VBoxContainer" parent="ItemInfo/ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+alignment = 1
+
+[connection signal="pressed" from="CloseButton" to="." method="_on_close_button_pressed"]
+[connection signal="pressed" from="Tabs/OverclocksButton" to="." method="_on_overclocks_button_pressed"]
+[connection signal="pressed" from="Tabs/PickaxesButton" to="." method="_on_pickaxes_button_pressed"]
+[connection signal="value_changed" from="ItemInfo/BuyAmount" to="." method="_on_buy_amount_value_changed"]
+[connection signal="pressed" from="ItemInfo/Buy" to="." method="_on_buy_pressed"]

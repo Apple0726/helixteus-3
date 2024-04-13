@@ -404,7 +404,7 @@ func show_tooltip(tile, tile_id:int):
 				tooltip += "\n%s: @i %s  @i %s" % [tr("INVESTIGATION_COSTS"), Helper.format_num(wh_costs.SP), Helper.time_to_str(wh_costs.time)]
 				icons = [Data.SP_icon, Data.time_icon]
 	if tile.has("depth") and not tile.has("bldg") and not tile.has("crater") and not tile.has("bridge"):
-		tooltip += "%s: %s m\n%s" % [tr("HOLE_DEPTH"), Helper.formt_num(tile.depth), tr("SHIFT_CLICK_TO_BRIDGE_HOLE")]
+		tooltip += "%s: %s m\n%s" % [tr("HOLE_DEPTH"), Helper.format_num(tile.depth), tr("SHIFT_CLICK_TO_BRIDGE_HOLE")]
 	elif bldg_to_construct in [Building.MINERAL_EXTRACTOR, Building.RESEARCH_LAB, Building.SOLAR_PANEL] and tile.has("resource_production_bonus") and not tile.resource_production_bonus.is_empty() and (game.u_i.lv < 18 or view.scale.x < 0.25):
 		tooltip = tr("BUILD_HERE_FOR_X_BONUS")
 		if bldg_to_construct == Building.MINERAL_EXTRACTOR and tile.resource_production_bonus.has("minerals"):

@@ -1,62 +1,170 @@
-[gd_scene load_steps=5 format=3 uid="uid://ccvqw3qqp22x"]
+[gd_scene load_steps=7 format=3 uid="uid://nd0pbk1f0ii2"]
 
-[ext_resource type="Script" path="res://Scripts/GenericPanel.gd" id="2_s5ncc"]
 [ext_resource type="PackedScene" uid="uid://ddf2xjwcht77u" path="res://Scenes/CloseButton.tscn" id="3"]
+[ext_resource type="Texture2D" uid="uid://ds7wkl1q870po" path="res://Graphics/GUI/Panel.png" id="3_2altr"]
 [ext_resource type="Theme" uid="uid://cp2u1kgj60ic" path="res://Resources/default_theme.tres" id="5"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_cnj7i"]
+
+[sub_resource type="GDScript" id="GDScript_c16sh"]
+script/source = "extends \"Panel.gd\"
+
+enum PanelType {SHOP, CRAFT, CONSTRUCT, MEGASTRUCTURES}
+var tab:String = \"\"
+var item_for_sale_scene = preload(\"res://Scenes/ItemForSale.tscn\")
+@onready var amount_node = $VBox/HBox/ItemInfo/VBox/HBox/BuyAmount
+@onready var buy_btn = $VBox/HBox/ItemInfo/VBox/HBox/Buy
+@onready var buy_hbox = $VBox/HBox/ItemInfo/VBox/HBox
+@onready var grid = $VBox/HBox/Items/Items
+@onready var desc_txt = $VBox/HBox/ItemInfo/VBox/Desc
+@onready var item_info = $VBox/HBox/ItemInfo
+@onready var name_node = $VBox/HBox/ItemInfo/Name
+var num:int = 1
+var type:int
+var locked:bool = false
+
+var item_type:String = \"\"
+var item_dir:String = \"\"
+var item_costs:Dictionary
+var item_desc:String = \"\"
+var item_total_costs:Dictionary
+var item_name = \"\"
+
+func _ready():
+	$VBox/HBox/ItemInfo/VBox/HBox/BuyAmount.get_line_edit().caret_blink = true
+	set_polygon(size)
+
+func _input(event):
+	super(event)
+	if Input.is_action_just_pressed(\"shift\"):
+		if type == PanelType.SHOP and tab != \"Pickaxes\":
+			for grid_el in grid.get_children():
+				grid_el.get_node(\"SmallButton\").text = \"%s 10\" % tr(\"BUY\")
+		elif type == PanelType.CRAFT:
+			for grid_el in grid.get_children():
+				grid_el.get_node(\"SmallButton\").text = \"%s 10\" % tr(\"CRAFT\")
+	elif Input.is_action_just_released(\"shift\"):
+		if type == PanelType.SHOP and tab != \"Pickaxes\":
+			for grid_el in grid.get_children():
+				grid_el.get_node(\"SmallButton\").text = tr(\"BUY\")
+		elif type == PanelType.CRAFT:
+			for grid_el in grid.get_children():
+				grid_el.get_node(\"SmallButton\").text = tr(\"CRAFT\")
+
+func change_tab(btn_str:String):
+	for item in $VBox/HBox/Items/Items.get_children():
+		item.free()
+	item_name = \"\"
+	if btn_str == \"Pickaxes\":
+		_on_BuyAmount_value_changed(1)
+	else:
+		_on_BuyAmount_value_changed($VBox/HBox/ItemInfo/VBox/HBox/BuyAmount.value)
+	remove_costs()
+	item_info.modulate.a = 0
+	$Desc.text = tr(\"%s_DESC\" % btn_str.to_upper())
+	locked = false
+	
+func remove_costs():
+	var vbox = $VBox/HBox/ItemInfo/VBox/Costs/VBox
+	for child in vbox.get_children():
+		child.free()
+
+func set_item_info(name:String, desc:String, costs:Dictionary, _type:String, _dir:String):
+	remove_costs()
+	var vbox = $VBox/HBox/ItemInfo/VBox/Costs/VBox
+	if _dir == \"Buildings\":
+		name_node.text = tr(\"%s_NAME\" % name.to_upper())
+	else:
+		name_node.text = Helper.get_item_name(name)
+	item_costs = costs
+	item_total_costs = costs.duplicate(true)
+	item_name = name
+	item_type = _type
+	item_desc = desc
+	item_dir = _dir
+	for cost in costs:
+		item_total_costs[cost] = costs[cost] * num
+	await get_tree().process_frame
+	$VBox/HBox/ItemInfo/VBox/Costs.visible = not costs.is_empty()
+	if not costs.is_empty():
+		Helper.put_rsrc(vbox, 28, item_total_costs, true, true)
+
+func _on_BuyAmount_value_changed(value):
+	num = value
+	remove_costs()
+	for cost in item_costs:
+		item_total_costs[cost] = item_costs[cost] * num
+	var vbox = $VBox/HBox/ItemInfo/VBox/Costs/VBox
+	Helper.put_rsrc(vbox, 36, item_total_costs, false, true)
+
+func refresh():
+	$VBox/HBox/ItemInfo/VBox/HBox/BuyAmount.get_line_edit().caret_blink_interval = 0.5 / game.u_i.time_speed
+"
 
 [sub_resource type="LabelSettings" id="LabelSettings_jee6n"]
 font_size = 18
 
 [node name="Panel" type="Panel"]
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -512.0
-offset_top = -296.0
-offset_right = 512.0
-offset_bottom = 296.0
+offset_right = 1024.0
+offset_bottom = 592.0
+mouse_filter = 2
 theme = ExtResource("5")
-script = ExtResource("2_s5ncc")
+theme_override_styles/panel = SubResource("StyleBoxEmpty_cnj7i")
+script = SubResource("GDScript_c16sh")
+
+[node name="TextureRect" type="TextureRect" parent="."]
+layout_mode = 0
+offset_right = 1280.0
+offset_bottom = 720.0
+mouse_filter = 2
+texture = ExtResource("3_2altr")
 
 [node name="CloseButton" parent="." instance=ExtResource("3")]
+visible = false
 layout_mode = 1
-offset_left = -32.0
-offset_top = 8.0
-offset_right = -8.0
-offset_bottom = 32.0
+offset_left = 124.0
+offset_top = 79.0
+offset_right = 148.0
+offset_bottom = 103.0
 
 [node name="Title" type="Label" parent="."]
 custom_minimum_size = Vector2(0, 38)
 layout_mode = 1
 anchors_preset = 10
 anchor_right = 1.0
-offset_bottom = 38.0
+offset_left = 112.0
+offset_top = 72.0
+offset_right = -515.0
+offset_bottom = 110.0
 grow_horizontal = 2
 text = "AS"
 label_settings = SubResource("LabelSettings_jee6n")
-horizontal_alignment = 1
 vertical_alignment = 1
 
 [node name="Desc" type="Label" parent="."]
 custom_minimum_size = Vector2(0, 38)
-layout_mode = 0
+layout_mode = 1
+anchors_preset = 10
 anchor_right = 1.0
-offset_top = 40.0
-offset_bottom = 78.0
+offset_left = 488.0
+offset_top = 72.0
+offset_right = 88.0
+offset_bottom = 120.0
+grow_horizontal = 2
 text = "AS"
-horizontal_alignment = 1
 vertical_alignment = 1
 
 [node name="VBox" type="VBoxContainer" parent="."]
-layout_mode = 0
+layout_mode = 1
+anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = 24.0
-offset_top = 80.0
-offset_right = -24.0
-offset_bottom = -40.0
+offset_left = 104.0
+offset_top = 136.0
+offset_right = 144.0
+offset_bottom = 48.0
+grow_horizontal = 2
+grow_vertical = 2
 theme_override_constants/separation = 3
 
 [node name="TabBar" type="HBoxContainer" parent="VBox"]

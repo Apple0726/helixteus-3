@@ -470,6 +470,7 @@ limits/message_queue/max_size_kb=2048
 
 [rendering]
 
+textures/canvas_textures/default_texture_filter=2
 renderer/rendering_method="mobile"
 environment/defaults/default_clear_color=Color(0, 0, 0, 1)
 quality/driver/fallback_to_gles2=true

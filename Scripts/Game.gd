@@ -7,7 +7,6 @@ const COMPATIBLE_SAVES = ["v0.29", "v0.29.1"]
 const UNIQUE_BLDGS = 7
 
 #region Scenes
-var generic_panel_scene = preload("res://Scenes/Panels/GenericPanel.tscn")
 var upgrade_panel_scene = preload("res://Scenes/Panels/UpgradePanel.tscn")
 var planet_HUD_scene = preload("res://Scenes/Planet/PlanetHUD.tscn")
 var space_HUD_scene = preload("res://Scenes/SpaceHUD.tscn")
@@ -1137,12 +1136,10 @@ func new_game(univ:int = 0, new_save:bool = false, DR_advantage = false):
 func add_panels():
 	upgrade_panel = upgrade_panel_scene.instantiate()
 	inventory = preload("res://Scenes/Panels/Inventory.tscn").instantiate()
-	shop_panel = generic_panel_scene.instantiate()
-	shop_panel.set_script(load("Scripts/ShopPanel.gd"))
+	shop_panel = preload("res://Scenes/Panels/ShopPanel.tscn").instantiate()
 	ship_panel = preload("res://Scenes/Panels/ShipPanel.tscn").instantiate()
 	gigastructures_panel = preload("res://Scenes/Panels/GigastructuresPanel.tscn").instantiate()
-	craft_panel = generic_panel_scene.instantiate()
-	craft_panel.set_script(load("Scripts/CraftPanel.gd"))
+	craft_panel = preload("res://Scenes/Panels/CraftPanel.tscn").instantiate()
 	vehicle_panel = preload("res://Scenes/Panels/VehiclePanel.tscn").instantiate()
 	RC_panel = preload("res://Scenes/Panels/RCPanel.tscn").instantiate()
 	MU_panel = preload("res://Scenes/Panels/MUPanel.tscn").instantiate()
@@ -1233,12 +1230,12 @@ func add_panels():
 	$UI.add_child(element_overlay)
 
 func popup(txt, delay):
-	if $UI.has_node("Popup"):
-		$UI.get_node("Popup").free()
+	if $Panels.has_node("Popup"):
+		$Panels.get_node("Popup").free()
 	var popup = preload("res://Scenes/Popup.tscn").instantiate()
 	popup.delay = delay
 	popup.name = "Popup"
-	$UI.add_child(popup)
+	$Panels.add_child(popup)
 	popup.text = txt
 	popup.modulate.a = 0
 	await get_tree().process_frame
@@ -1294,37 +1291,32 @@ func fade_in_panel(panel:Control):
 		$UI.get_node("BuildingShortcuts").close()
 	elif c_v == "planet" and not viewing_dimension:
 		view.obj.get_node("BuildingShortcutTimer").stop()
+	#panel.modulate.a = 0.0
 	panel.tween = create_tween()
 	panel.tween.set_parallel(true)
-	panel.tween.tween_property(panel, "modulate", Color(1, 1, 1, 1), 0.1)
+	#panel.tween.tween_property(panel, "modulate", Color(1, 1, 1, 1), 0.1)
 	var s = panel.size
-	panel.position.y = -s.y / 2.0 + 10
-	panel.tween.tween_property(panel, "position", Vector2(-s.x / 2.0, -s.y / 2.0), 0.3).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+	panel.position = Vector2(-1280.0 / 2.0, -720.0 / 2.0)
+	#panel.tween.tween_property(panel, "position", Vector2(-s.x / 2.0, -s.y / 2.0), 0.3).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
 	if panel != settings_panel:
-		panel.tween.tween_property($Panels/Blur.material, "shader_parameter/amount", 1.0, 0.2)
-	if panel.tween.is_connected("finished",Callable(self,"on_fade_complete")):
-		panel.tween.disconnect("finished",Callable(self,"on_fade_complete"))
+		panel.tween.tween_property($Blur/BlurRect.material, "shader_parameter/amount", 1.0, 0.2)
 	hide_tooltip()
 	hide_adv_tooltip()
 
 func fade_out_panel(panel:Control):
 	#$ShaderExport/SubViewport.get_texture().get_image().save_png("user://universe.png")
-	var s = panel.size
+	#var s = panel.size
 	if is_instance_valid(panel.tween):
 		panel.tween.kill()
 	panel.tween = create_tween()
 	panel.tween.set_parallel(true)
-	panel.tween.tween_property(panel, "modulate", Color(1, 1, 1, 0), 0.1)
-	if panel != settings_panel:
-		panel.tween.tween_property($Panels/Blur.material, "shader_parameter/amount", 0.0, 0.2)
-	if not panel.tween.is_connected("finished",Callable(self,"on_fade_complete")):
-		panel.tween.connect("finished",Callable(self,"on_fade_complete").bind(panel))
-
-func on_fade_complete(panel:Control):
+	#panel.tween.tween_property(panel, "modulate", Color(1, 1, 1, 0), 0.1)
 	panel.visible = false
 	block_scroll = false
 	hide_tooltip()
 	hide_adv_tooltip()
+	if panel != settings_panel:
+		panel.tween.tween_property($Blur/BlurRect.material, "shader_parameter/amount", 0.0, 0.2)
 
 func toggle_panel(_panel):
 	if is_instance_valid(active_panel):

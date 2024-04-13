@@ -1619,6 +1619,20 @@ func update_CBD_affected_tiles(tile:Dictionary, tile_id:int, p_i:Dictionary):
 				_tile["%s_bonus" % second_path_str] = new_bonus
 			_tile["%s_dict" % second_path_str][id2] = tile.bldg.path_2_value
 
+func add_items_to_inventory(item_name:String, item_amount:int, item_base_costs:Dictionary, no_space_in_inventory_string:String, add_item_success_string:String):
+	var items_left = game.add_items(item_name, item_amount)
+	if items_left > 0:
+		var refund = item_base_costs.duplicate(true)
+		for rsrc in item_base_costs:
+			refund[rsrc] = item_base_costs[rsrc] * items_left
+		game.add_resources(refund)
+		game.popup(no_space_in_inventory_string, 2.0)
+	else:
+		game.popup(add_item_success_string, 1.5)
+		#set_item_info(item_name, item_desc, item_base_costs, item_type, item_dir)
+	if game.HUD:
+		game.HUD.update_hotbar()
+
 # get_sphere_volume
 func get_sph_V(outer:float, inner:float = 0):
 	outer /= 150.0#I have to reduce the size of planets otherwise it's too OP
