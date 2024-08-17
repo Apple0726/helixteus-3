@@ -46,7 +46,7 @@ var caves_data:Dictionary = {}
 func _ready():
 	shadows.resize(wid * wid)
 	var tile_brightness:float = game.tile_brightness[p_i.type - 3]
-	#$TileMap.material.shader = preload("res://Shaders/BCS.gdshader")
+	#$PlanetTiles.material.shader = preload("res://Shaders/BCS.gdshader")
 	var lum:float = 0.0
 	for star in game.system_data[game.c_s].stars:
 		var sc:float = 0.5 * star.size / (p_i.distance / 500)
@@ -55,7 +55,7 @@ func _ready():
 			var mod_lum = star_mod.get_luminance()
 			if mod_lum < 0.2:
 				star_mod = star_mod.lightened(0.2 - mod_lum)
-			$TileMap.modulate = star_mod
+			$PlanetTiles.modulate = star_mod
 			var strength_mult = 1.0
 			if p_i.temperature >= 1500:
 				strength_mult = min(remap(p_i.temperature, 1000, 3000, 1.2, 1.5), 1.5)
@@ -63,16 +63,16 @@ func _ready():
 				strength_mult = min(remap(p_i.temperature, -273, 1000, 0.3, 1.2), 1.2)
 			#var brightness:float = remap(tile_brightness, 40000, 90000, 2.5, 1.1) * strength_mult
 			#var contrast:float = sqrt(brightness)
-			#$TileMap.material.set_shader_parameter("brightness", min(brightness, 2.0))
-			#$TileMap.material.set_shader_parameter("contrast", clamp(strength_mult, 1.0, 2.0))
-			#$TileMap.material.set_shader_parameter("saturation", clamp(strength_mult, 1.0, 2.0))
+			#$PlanetTiles.material.set_shader_parameter("brightness", min(brightness, 2.0))
+			#$PlanetTiles.material.set_shader_parameter("contrast", clamp(strength_mult, 1.0, 2.0))
+			#$PlanetTiles.material.set_shader_parameter("saturation", clamp(strength_mult, 1.0, 2.0))
 			lum = star.luminosity
 	timer = Timer.new()
 	add_child(timer)
 	timer.wait_time = interval
 	timer.start()
 	timer.connect("timeout",Callable(self,"on_timeout"))
-	mass_build_rect = game.mass_build_rect.instantiate()
+	mass_build_rect = load("res://Scenes/MassBuildRect.tscn").instantiate()
 	mass_build_rect.visible = false
 	add_child(mass_build_rect)
 	bldgs = []
@@ -82,8 +82,8 @@ func _ready():
 	rsrcs = []
 	rsrcs.resize(wid * wid)
 	dimensions = wid * 200
-	$TileMap.tile_set = game.planet_TS
-	$Obstacles.tile_set = game.obstacles_TS
+	$PlanetTiles.tile_set = load("res://Resources/PlanetTileSet.tres")
+	$Obstacles.tile_set = load("res://Resources/ObstaclesTileSet.tres")
 	$Obstacles.modulate = star_mod
 	var nuclear_fusion_reactor_main_tiles = []
 	if p_i.unique_bldgs.has(UniqueBuilding.NUCLEAR_FUSION_REACTOR):
@@ -97,7 +97,7 @@ func _ready():
 		for j in wid:
 			var id2 = i % wid + j * wid
 			var tile = game.tile_data[id2]
-			$TileMap.set_cell(0, Vector2i(i, j), p_i.type - 3, Vector2(0, 0))
+			$PlanetTiles.set_cell(Vector2i(i, j), p_i.type - 3, Vector2(0, 0))
 			if tile == null:
 				continue
 			if tile.has("crater"):
@@ -117,7 +117,7 @@ func _ready():
 				add_child(crater)
 				crater.position = Vector2(i, j) * 200 + Vector2(100, 100)
 			if tile.has("depth") and not tile.has("bridge") and not tile.has("crater"):
-				$Obstacles.set_cell(0, Vector2i(i, j), 2, Vector2(0, 0))
+				$Obstacles.set_cell(Vector2i(i, j), 2, Vector2(0, 0))
 			if tile.has("aurora"):
 				aurora_tiles.append(id2)
 			if tile.has("unique_bldg"):
@@ -130,12 +130,12 @@ func _ready():
 					var cave_data = cave_data_file.get_var()
 					cave_data_file.close()
 					caves_data[id2] = len(cave_data.seeds)
-				$Obstacles.set_cell(0, Vector2i(i, j), 0, Vector2(0, 0))
+				$Obstacles.set_cell(Vector2i(i, j), 0, Vector2(0, 0))
 			elif tile.has("volcano"):
-				$Obstacles.set_cell(0, Vector2i(i, j), 4, Vector2(0, 0))
+				$Obstacles.set_cell(Vector2i(i, j), 4, Vector2(0, 0))
 			elif tile.has("ship"):
 				if len(game.ship_data) == 0:
-					$Obstacles.set_cell(0, Vector2i(i, j), 1, Vector2(0, 0))
+					$Obstacles.set_cell(Vector2i(i, j), 1, Vector2(0, 0))
 			elif tile.has("wormhole"):
 				wormhole = game.wormhole_scene.instantiate()
 				wormhole.get_node("Active").visible = tile.wormhole.active
@@ -179,20 +179,20 @@ func _ready():
 			aurora.modulate = Color.from_hsv(fmod(hue, 1.0), sat, 1.0) * max(log(tile.aurora) / 10.0, 1.0)
 			$Auroras.add_child(aurora)
 	$Shadow.size = Vector2.ONE * 200 * wid
-	$Shadow["theme_override_styles/panel"].shadow_color = game.tile_avg_mod[p_i.type - 3] * $TileMap.modulate
+	$Shadow["theme_override_styles/panel"].shadow_color = game.tile_avg_mod[p_i.type - 3] * $PlanetTiles.modulate
 	var lake_state_id = {
 		"s":0,
 		"l":1,
 		"sc":2
 	}
-	$TileFeatures.set_cells_terrain_connect(2, soil_tiles, 0, 3)
-	$TileFeatures.set_cells_terrain_connect(3, ash_tiles, 0, 4)
+	$Soil.set_cells_terrain_connect(soil_tiles, 0, 3)
+	$Ash.set_cells_terrain_connect(ash_tiles, 0, 4)
 	if p_i.has("lake_1"):
-		$TileFeatures.set_layer_modulate(0, Data.lake_colors[p_i.lake_1.element][p_i.lake_1.state])
-		$TileFeatures.set_cells_terrain_connect(0, lake_tiles[0], 0, lake_state_id[p_i.lake_1.state])
+		$Lakes1.modulate = Data.lake_colors[p_i.lake_1.element][p_i.lake_1.state]
+		$Lakes1.set_cells_terrain_connect(lake_tiles[0], 0, lake_state_id[p_i.lake_1.state])
 	if p_i.has("lake_2"):
-		$TileFeatures.set_layer_modulate(1, Data.lake_colors[p_i.lake_2.element][p_i.lake_2.state])
-		$TileFeatures.set_cells_terrain_connect(1, lake_tiles[1], 0, lake_state_id[p_i.lake_2.state])
+		$Lakes2.modulate = Data.lake_colors[p_i.lake_2.element][p_i.lake_2.state]
+		$Lakes2.set_cells_terrain_connect(lake_tiles[1], 0, lake_state_id[p_i.lake_2.state])
 	$BadApple.wid_p = wid
 	$BadApple.pixel_color = Color.BLACK if star_mod.get_luminance() > 0.3 else Color(0.5, 0.5, 0.5, 1.0)
 	var await_counter:int = 0
@@ -1111,7 +1111,7 @@ func _unhandled_input(event):
 							var y:int = y_over + j - n / 2
 							if y < 0 or y >= wid or x == x_over and y == y_over:
 								continue
-							var white_rect = game.white_rect_scene.instantiate()
+							var white_rect = load("res://Scenes/WhiteRect.tscn").instantiate()
 							white_rect.position.x = x * 200
 							white_rect.position.y = y * 200
 							white_rect.modulate.a = 0.0
@@ -1198,7 +1198,7 @@ func _unhandled_input(event):
 		if tile and tile.has("depth") and not tile.has("bldg") and bldg_to_construct == -1 and not tile.has("bridge"):
 			if Input.is_action_pressed("shift"):
 				game.tile_data[tile_id].bridge = true
-				$Obstacles.set_cell(0, Vector2i(x_pos, y_pos))
+				$Obstacles.set_cell(Vector2i(x_pos, y_pos))
 			else:
 				game.mine_tile(tile_id)
 		if tile and bldg_to_construct == -1:
@@ -1256,7 +1256,7 @@ func _unhandled_input(event):
 				if game.science_unlocked.has("SCT"):
 					if len(game.ship_data) == 0:
 						game.tile_data[tile_id].erase("ship")
-						$Obstacles.set_cell(0, Vector2i(x_pos, y_pos))
+						$Obstacles.set_cell(Vector2i(x_pos, y_pos))
 						game.popup(tr("SHIP_CONTROL_SUCCESS"), 1.5)
 						game.HUD.ships.visible = true
 						game.ship_data.append({"name":tr("SHIP"), "lv":1, "HP":25, "total_HP":25, "atk":10, "def":5, "acc":10, "eva":10, "points":2, "max_points":2, "HP_mult":1.0, "atk_mult":1.0, "def_mult":1.0, "acc_mult":1.0, "eva_mult":1.0, "ability":"none", "superweapon":"none", "XP":0, "XP_to_lv":20, "bullet":{"lv":1, "XP":0, "XP_to_lv":10}, "laser":{"lv":1, "XP":0, "XP_to_lv":10}, "bomb":{"lv":1, "XP":0, "XP_to_lv":10}, "light":{"lv":1, "XP":0, "XP_to_lv":20}})
@@ -1509,7 +1509,7 @@ func overclockable(bldg:int):
 	return bldg in [Building.MINERAL_EXTRACTOR, Building.POWER_PLANT, Building.RESEARCH_LAB, Building.BORING_MACHINE, Building.SOLAR_PANEL, Building.ATMOSPHERE_EXTRACTOR]
 
 func add_rsrc(v:Vector2, mod:Color, icon, id2:int, current_bar_visible = false):
-	var rsrc:ResourceStored = game.rsrc_stored_scene.instantiate()
+	var rsrc:ResourceStored = preload("res://Scenes/ResourceStored.tscn").instantiate()
 	rsrc.visible = get_parent().scale.x >= 0.25
 	add_child(rsrc)
 	rsrc.set_icon_texture(icon)

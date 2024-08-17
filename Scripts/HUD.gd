@@ -313,7 +313,7 @@ func refresh():
 
 func _on_Shop_pressed():
 	click_sound.play()
-	game.toggle_panel(game.shop_panel)
+	game.toggle_panel("shop_panel")
 
 func _on_Shop_mouse_entered():
 	game.show_tooltip(tr("SHOP") + " (%s)" % OS.get_keycode_string(DisplayServer.keyboard_get_keycode_from_physical(KEY_R)))
@@ -323,14 +323,14 @@ func _on_Inventory_mouse_entered():
 
 func _on_Inventory_pressed():
 	click_sound.play()
-	game.toggle_panel(game.inventory)
+	game.toggle_panel("inventory")
 
 func _on_Craft_mouse_entered():
 	game.show_tooltip(tr("CRAFT") + " (%s)" % OS.get_keycode_string(DisplayServer.keyboard_get_keycode_from_physical(KEY_T)))
 
 func _on_Craft_pressed():
 	click_sound.play()
-	game.toggle_panel(game.craft_panel)
+	game.toggle_panel("craft_panel")
 
 func _on_ScienceTree_pressed():
 	click_sound.play()
@@ -341,7 +341,7 @@ func _on_ScienceTree_mouse_entered():
 	game.show_tooltip(tr("SCIENCE_TREE") + " (%s)" % OS.get_keycode_string(DisplayServer.keyboard_get_keycode_from_physical(KEY_I)))
 
 func _on_MineralUpgrades_pressed():
-	game.toggle_panel(game.MU_panel)
+	game.toggle_panel("MU_panel")
 
 func _on_MineralUpgrades_mouse_entered():
 	game.show_tooltip(tr("MINERAL_UPGRADES") + " (%s)" % OS.get_keycode_string(DisplayServer.keyboard_get_keycode_from_physical(KEY_U)))

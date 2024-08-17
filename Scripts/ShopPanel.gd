@@ -30,7 +30,7 @@ func _on_btn_pressed(btn_str:String):
 		var item_description:String = ""
 		match btn_str_l:
 			"overclocks":
-				item_description = tr("OVERCLOCKS_DESC2") % [_item_info.mult, Helper.time_to_str(_item_info.duration / game.u_i.time_speed)]
+				item_description = tr("OVERCLOCKS_DESC2") % [_item_info.mult, Helper.time_to_str(_item_info.duration / game.u_i.get("time_speed", 1.0))]
 			"pickaxes":
 				item_description = "%s\n\n%s: %s\n%s: %s" % [tr("%s_DESC" % _item_name.to_upper()), tr("MINING_SPEED"), _item_info.speed * game.engineering_bonus.PS, tr("DURABILITY"), _item_info.durability]
 		$Items/Grid.add_child(item)
@@ -116,4 +116,3 @@ func _on_buy_pressed():
 
 func _on_buy_amount_value_changed(value):
 	update_and_check_costs()
-

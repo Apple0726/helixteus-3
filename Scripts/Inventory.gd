@@ -48,7 +48,7 @@ func _on_Items_pressed():
 		item.free()
 	var i:int = 0
 	for item in game.items:
-		var slot = game.slot_scene.instantiate()
+		var slot = preload("res://Scenes/InventorySlot.tscn").instantiate()
 		if item != null:
 			slot.get_node("Label").text = str(item.num)
 			slot.get_node("TextureRect").texture = load("res://Graphics/" + Helper.get_dir_from_name(item.name)  + "/" + item.name + ".png")

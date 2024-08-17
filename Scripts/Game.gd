@@ -1,41 +1,41 @@
 extends Node2D
 
 const TEST:bool = false
-const DATE:String = "30 Dec 2023"
-const VERSION:String = "v0.29.2"
-const COMPATIBLE_SAVES = ["v0.29", "v0.29.1"]
+const DATE:String = ""
+const VERSION:String = "v0.30"
+const COMPATIBLE_SAVES = []
 const UNIQUE_BLDGS = 7
 
 #region Scenes
-var upgrade_panel_scene = preload("res://Scenes/Panels/UpgradePanel.tscn")
-var planet_HUD_scene = preload("res://Scenes/Planet/PlanetHUD.tscn")
-var space_HUD_scene = preload("res://Scenes/SpaceHUD.tscn")
-var planet_details_scene = preload("res://Scenes/Planet/PlanetDetails.tscn")
-var mining_HUD_scene = preload("res://Scenes/Views/Mining.tscn")
-var overlay_scene = preload("res://Scenes/Overlay.tscn")
-var element_overlay_scene = preload("res://Scenes/ElementOverlay.tscn")
-var annotator_scene = preload("res://Scenes/Annotator.tscn")
-var rsrc_scene = preload("res://Scenes/Resource.tscn")
-var rsrc_stored_scene = preload("res://Scenes/ResourceStored.tscn")
-var cave_scene = preload("res://Scenes/Views/Cave.tscn")
-var STM_scene = preload("res://Scenes/Views/ShipTravelMinigame2.tscn")
-var battle_scene = preload("res://Scenes/Views/Battle.tscn")
-var particles_scene = preload("res://Scenes/LiquidParticles.tscn")
-var time_scene = preload("res://Scenes/TimeLeft.tscn")
-var planet_TS = preload("res://Resources/PlanetTileSet.tres")
-var lake_TS = preload("res://Resources/LakeTileSet.tres")
-var obstacles_TS = preload("res://Resources/ObstaclesTileSet.tres")
-var aurora_scene = preload("res://Scenes/Aurora.tscn")
-var slot_scene = preload("res://Scenes/InventorySlot.tscn")
-var white_rect_scene = preload("res://Scenes/WhiteRect.tscn")
-var mass_build_rect = preload("res://Scenes/MassBuildRect.tscn")
-var wormhole_scene = preload("res://Scenes/Wormhole.tscn")
+#var upgrade_panel_scene = preload("res://Scenes/Panels/UpgradePanel.tscn")
+#var planet_HUD_scene = preload("res://Scenes/Planet/PlanetHUD.tscn")
+#var space_HUD_scene = preload("res://Scenes/SpaceHUD.tscn")
+#var planet_details_scene = preload("res://Scenes/Planet/PlanetDetails.tscn")
+#var mining_HUD_scene = preload("res://Scenes/Views/Mining.tscn")
+#var overlay_scene = preload("res://Scenes/Overlay.tscn")
+#var element_overlay_scene = preload("res://Scenes/ElementOverlay.tscn")
+#var annotator_scene = preload("res://Scenes/Annotator.tscn")
+#var rsrc_scene = preload("res://Scenes/Resource.tscn")
+#var rsrc_stored_scene = preload("res://Scenes/ResourceStored.tscn")
+#var cave_scene = preload("res://Scenes/Views/Cave.tscn")
+#var STM_scene = preload("res://Scenes/Views/ShipTravelMinigame2.tscn")
+#var battle_scene = preload("res://Scenes/Views/Battle.tscn")
+#var particles_scene = preload("res://Scenes/LiquidParticles.tscn")
+#var time_scene = preload("res://Scenes/TimeLeft.tscn")
+#var planet_TS = preload("res://Resources/PlanetTileSet.tres")
+#var lake_TS = preload("res://Resources/LakeTileSet.tres")
+#var obstacles_TS = preload("res://Resources/ObstaclesTileSet.tres")
+#var aurora_scene = preload("res://Scenes/Aurora.tscn")
+#var slot_scene = preload("res://Scenes/InventorySlot.tscn")
+#var white_rect_scene = preload("res://Scenes/WhiteRect.tscn")
+#var mass_build_rect = preload("res://Scenes/MassBuildRect.tscn")
+#var wormhole_scene = preload("res://Scenes/Wormhole.tscn")
 #endregion
 
-var surface_BG = preload("res://Graphics/Decoratives/Surface.jpg")
-var crust_BG = preload("res://Graphics/Decoratives/Crust.jpg")
-var star_texture = preload("res://Graphics/Effects/spotlight_8_s.png")
-var star_shader = preload("res://Shaders/Star.gdshader")
+#var surface_BG = preload("res://Graphics/Decoratives/Surface.jpg")
+#var crust_BG = preload("res://Graphics/Decoratives/Crust.jpg")
+#var star_texture = preload("res://Graphics/Effects/spotlight_8_s.png")
+#var star_shader = preload("res://Shaders/Star.gdshader")
 var planet_textures:Array
 var galaxy_textures:Array
 var bldg_textures:Array
@@ -46,7 +46,7 @@ var unique_bldg_textures:Array
 #var megastructures_panel:Control
 var gigastructures_panel:Control
 var shop_panel:Control
-var ship_panel:Control
+var ships_panel:Control
 var upgrade_panel:Control
 var craft_panel:Control
 var vehicle_panel:Control
@@ -75,8 +75,18 @@ var annotator:Control
 var mods:Control
 var wiki:Panel
 var stats_panel:Panel
-var load_panel:Panel
+var load_save_panel:Panel
 var tooltip
+var panel_var_name_to_file_name = {
+	"craft_panel":"Craft",
+	"inventory":"Inventory",
+	"load_save_panel":"LoadSave",
+	"mods":"Mods",
+	"MU_panel":"MineralUpgrades",
+	"settings_panel":"Settings",
+	"ships_panel":"Ships",
+	"shop_panel":"Shop",
+}
 #endregion
 
 const SYSTEM_SCALE_DIV = 100.0
@@ -569,18 +579,12 @@ func _ready():
 	$UI/Version.text = "Alpha %s (%s): %s" % [VERSION, OS_name, DATE]
 	refresh_continue_button()
 	Data.reload()
-	settings_panel = preload("res://Scenes/Panels/SettingsPanel.tscn").instantiate()
-	settings_panel.visible = false
-	$Panels/Control.add_child(settings_panel)
-	load_panel = preload("res://Scenes/Panels/LoadPanel.tscn").instantiate()
-	load_panel.visible = false
-	$Panels/Control.add_child(load_panel)
 	mods = preload("res://Scenes/Panels/Mods.tscn").instantiate()
 	mods.visible = false
 	$Panels/Control.add_child(mods)
-	PD_panel = preload("res://Scenes/Panels/PDPanel.tscn").instantiate()
-	PD_panel.visible = false
-	$Panels/Control.add_child(PD_panel)
+	#PD_panel = preload("res://Scenes/Panels/PDPanel.tscn").instantiate()
+	#PD_panel.visible = false
+	#$Panels/Control.add_child(PD_panel)
 	animate_title_buttons()
 	for mod in Mods.mod_list:
 		var main = Mods.mod_list[mod]
@@ -1134,100 +1138,101 @@ func new_game(univ:int = 0, new_save:bool = false, DR_advantage = false):
 	set_c_sv(c_sv)
 
 func add_panels():
-	upgrade_panel = upgrade_panel_scene.instantiate()
-	inventory = preload("res://Scenes/Panels/Inventory.tscn").instantiate()
-	shop_panel = preload("res://Scenes/Panels/ShopPanel.tscn").instantiate()
-	ship_panel = preload("res://Scenes/Panels/ShipPanel.tscn").instantiate()
-	gigastructures_panel = preload("res://Scenes/Panels/GigastructuresPanel.tscn").instantiate()
-	craft_panel = preload("res://Scenes/Panels/CraftPanel.tscn").instantiate()
-	vehicle_panel = preload("res://Scenes/Panels/VehiclePanel.tscn").instantiate()
-	RC_panel = preload("res://Scenes/Panels/RCPanel.tscn").instantiate()
-	MU_panel = preload("res://Scenes/Panels/MUPanel.tscn").instantiate()
-	SC_panel = preload("res://Scenes/Panels/SCPanel.tscn").instantiate()
-	production_panel = preload("res://Scenes/Panels/ProductionPanel.tscn").instantiate()
-	send_ships_panel = preload("res://Scenes/Panels/SendShipsPanel.tscn").instantiate()
-	send_fighters_panel = preload("res://Scenes/Panels/SendFightersPanel.tscn").instantiate()
-	terraform_panel = preload("res://Scenes/Panels/TerraformPanel.tscn").instantiate()
-	greenhouse_panel = preload("res://Scenes/Panels/GreenhousePanel.tscn").instantiate()
-	shipyard_panel = preload("res://Scenes/Panels/ShipyardPanel.tscn").instantiate()
-	PC_panel = preload("res://Scenes/Panels/PCPanel.tscn").instantiate()
-	AMN_panel = preload("res://Scenes/Panels/ReactionsPanel.tscn").instantiate()
-	AMN_panel.set_script(load("Scripts/AMNPanel.gd"))
-	SPR_panel = preload("res://Scenes/Panels/ReactionsPanel.tscn").instantiate()
-	SPR_panel.set_script(load("Scripts/SPRPanel.gd"))
-	planetkiller_panel = preload("res://Scenes/Panels/PlanetkillerPanel.tscn").instantiate()
-	wiki = preload("res://Scenes/Panels/Wiki.tscn").instantiate()
-	stats_panel = preload("res://Scenes/Panels/StatsPanel.tscn").instantiate()
-	
-	wiki.visible = false
-	$Panels/Control.add_child(wiki)
-	
-	stats_panel.visible = false
-	$Panels/Control.add_child(stats_panel)
-	
-	planetkiller_panel.visible = false
-	$Panels/Control.add_child(planetkiller_panel)
-	
-	AMN_panel.visible = false
-	$Panels/Control.add_child(AMN_panel)
-	
-	SPR_panel.visible = false
-	$Panels/Control.add_child(SPR_panel)
-	
-	send_ships_panel.visible = false
-	$Panels/Control.add_child(send_ships_panel)
-	
-	send_fighters_panel.visible = false
-	$Panels/Control.add_child(send_fighters_panel)
-	
-	terraform_panel.visible = false
-	$Panels/Control.add_child(terraform_panel)
-	
-	greenhouse_panel.visible = false
-	$Panels/Control.add_child(greenhouse_panel)
-	
-	shipyard_panel.visible = false
-	$Panels/Control.add_child(shipyard_panel)
-	
-	PC_panel.visible = false
-	$Panels/Control.add_child(PC_panel)
-	
-	gigastructures_panel.visible = false
-	$Panels/Control.add_child(gigastructures_panel)
-
-	shop_panel.visible = false
-	$Panels/Control.add_child(shop_panel)
-
-	ship_panel.visible = false
-	$Panels/Control.add_child(ship_panel)
-
-	craft_panel.visible = false
-	$Panels/Control.add_child(craft_panel)
-
-	vehicle_panel.visible = false
-	$Panels/Control.add_child(vehicle_panel)
-
-	RC_panel.visible = false
-	$Panels/Control.add_child(RC_panel)
-
-	MU_panel.visible = false
-	$Panels/Control.add_child(MU_panel)
-
-	SC_panel.visible = false
-	$Panels/Control.add_child(SC_panel)
-
-	production_panel.visible = false
-	$Panels/Control.add_child(production_panel)
-
-	inventory.visible = false
-	$Panels/Control.add_child(inventory)
-
-	upgrade_panel.visible = false
-	$Panels/Control.add_child(upgrade_panel)
-	
-	element_overlay = element_overlay_scene.instantiate()
-	element_overlay.visible = false
-	$UI.add_child(element_overlay)
+	pass
+	#upgrade_panel = upgrade_panel_scene.instantiate()
+	#inventory = preload("res://Scenes/Panels/Inventory.tscn").instantiate()
+	#shop_panel = preload("res://Scenes/Panels/ShopPanel.tscn").instantiate()
+	#ships_panel = preload("res://Scenes/Panels/ShipPanel.tscn").instantiate()
+	#gigastructures_panel = preload("res://Scenes/Panels/GigastructuresPanel.tscn").instantiate()
+	#craft_panel = preload("res://Scenes/Panels/CraftPanel.tscn").instantiate()
+	#vehicle_panel = preload("res://Scenes/Panels/VehiclePanel.tscn").instantiate()
+	#RC_panel = preload("res://Scenes/Panels/RCPanel.tscn").instantiate()
+	#MU_panel = preload("res://Scenes/Panels/MUPanel.tscn").instantiate()
+	#SC_panel = preload("res://Scenes/Panels/SCPanel.tscn").instantiate()
+	#production_panel = preload("res://Scenes/Panels/ProductionPanel.tscn").instantiate()
+	#send_ships_panel = preload("res://Scenes/Panels/SendShipsPanel.tscn").instantiate()
+	#send_fighters_panel = preload("res://Scenes/Panels/SendFightersPanel.tscn").instantiate()
+	#terraform_panel = preload("res://Scenes/Panels/TerraformPanel.tscn").instantiate()
+	#greenhouse_panel = preload("res://Scenes/Panels/GreenhousePanel.tscn").instantiate()
+	#shipyard_panel = preload("res://Scenes/Panels/ShipyardPanel.tscn").instantiate()
+	#PC_panel = preload("res://Scenes/Panels/PCPanel.tscn").instantiate()
+	#AMN_panel = preload("res://Scenes/Panels/ReactionsPanel.tscn").instantiate()
+	#AMN_panel.set_script(load("Scripts/AMNPanel.gd"))
+	#SPR_panel = preload("res://Scenes/Panels/ReactionsPanel.tscn").instantiate()
+	#SPR_panel.set_script(load("Scripts/SPRPanel.gd"))
+	#planetkiller_panel = preload("res://Scenes/Panels/PlanetkillerPanel.tscn").instantiate()
+	#wiki = preload("res://Scenes/Panels/Wiki.tscn").instantiate()
+	#stats_panel = preload("res://Scenes/Panels/StatsPanel.tscn").instantiate()
+	#
+	#wiki.visible = false
+	#$Panels/Control.add_child(wiki)
+	#
+	#stats_panel.visible = false
+	#$Panels/Control.add_child(stats_panel)
+	#
+	#planetkiller_panel.visible = false
+	#$Panels/Control.add_child(planetkiller_panel)
+	#
+	#AMN_panel.visible = false
+	#$Panels/Control.add_child(AMN_panel)
+	#
+	#SPR_panel.visible = false
+	#$Panels/Control.add_child(SPR_panel)
+	#
+	#send_ships_panel.visible = false
+	#$Panels/Control.add_child(send_ships_panel)
+	#
+	#send_fighters_panel.visible = false
+	#$Panels/Control.add_child(send_fighters_panel)
+	#
+	#terraform_panel.visible = false
+	#$Panels/Control.add_child(terraform_panel)
+	#
+	#greenhouse_panel.visible = false
+	#$Panels/Control.add_child(greenhouse_panel)
+	#
+	#shipyard_panel.visible = false
+	#$Panels/Control.add_child(shipyard_panel)
+	#
+	#PC_panel.visible = false
+	#$Panels/Control.add_child(PC_panel)
+	#
+	#gigastructures_panel.visible = false
+	#$Panels/Control.add_child(gigastructures_panel)
+#
+	#shop_panel.visible = false
+	#$Panels/Control.add_child(shop_panel)
+#
+	#ships_panel.visible = false
+	#$Panels/Control.add_child(ships_panel)
+#
+	#craft_panel.visible = false
+	#$Panels/Control.add_child(craft_panel)
+#
+	#vehicle_panel.visible = false
+	#$Panels/Control.add_child(vehicle_panel)
+#
+	#RC_panel.visible = false
+	#$Panels/Control.add_child(RC_panel)
+#
+	#MU_panel.visible = false
+	#$Panels/Control.add_child(MU_panel)
+#
+	#SC_panel.visible = false
+	#$Panels/Control.add_child(SC_panel)
+#
+	#production_panel.visible = false
+	#$Panels/Control.add_child(production_panel)
+#
+	#inventory.visible = false
+	#$Panels/Control.add_child(inventory)
+#
+	#upgrade_panel.visible = false
+	#$Panels/Control.add_child(upgrade_panel)
+	#
+	#element_overlay = element_overlay_scene.instantiate()
+	#element_overlay.visible = false
+	#$UI.add_child(element_overlay)
 
 func popup(txt, delay):
 	if $Panels.has_node("Popup"):
@@ -1257,8 +1262,8 @@ func popup_window(txt:String, title:String, other_buttons:Array = [], other_func
 		popup.add_button(other_buttons[i], other_functions[i])
 
 func open_shop_pickaxe():
-	if not shop_panel.visible:
-		toggle_panel(shop_panel)
+	if not is_instance_valid(shop_panel) or not shop_panel.visible:
+		fade_in_panel("shop_panel")
 	shop_panel._on_btn_pressed("Pickaxes")
 	shop_panel.get_node("VBox/TabBar/Pickaxes")._on_Button_pressed()
 
@@ -1281,52 +1286,45 @@ func put_bottom_info(txt:String, action:String, on_close:String = ""):
 	$UI/BottomInfo/CloseButton.on_close = on_close
 	$UI/BottomInfo/MoveAnim.play("MoveLabel")
 
-func fade_in_panel(panel:Control):
-	panel.visible = true
-	$Panels/Control.move_child(panel, $Panels/Control.get_child_count())
-	if is_instance_valid(panel.tween):
-		panel.tween.kill()
-	#_on_BottomInfo_close_button_pressed()
+func fade_in_panel(panel_var_name:String):
+	if is_instance_valid(self[panel_var_name]):
+		self[panel_var_name].show()
+		$Panels/Control.move_child(self[panel_var_name], $Panels/Control.get_child_count())
+	else:
+		self[panel_var_name] = load("res://Scenes/Panels/%s.tscn" % panel_var_name_to_file_name[panel_var_name]).instantiate()
+		$Panels/Control.add_child(self[panel_var_name])
+	active_panel = self[panel_var_name]
+	self[panel_var_name].refresh()
 	if $UI.has_node("BuildingShortcuts"):
 		$UI.get_node("BuildingShortcuts").close()
 	elif c_v == "planet" and not viewing_dimension:
 		view.obj.get_node("BuildingShortcutTimer").stop()
-	#panel.modulate.a = 0.0
-	panel.tween = create_tween()
-	panel.tween.set_parallel(true)
-	#panel.tween.tween_property(panel, "modulate", Color(1, 1, 1, 1), 0.1)
-	var s = panel.size
-	panel.position = Vector2(-1280.0 / 2.0, -720.0 / 2.0)
-	#panel.tween.tween_property(panel, "position", Vector2(-s.x / 2.0, -s.y / 2.0), 0.3).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
-	if panel != settings_panel:
-		panel.tween.tween_property($Blur/BlurRect.material, "shader_parameter/amount", 1.0, 0.2)
+	self[panel_var_name].modulate.a = 0.0
+	self[panel_var_name].tween = create_tween()
+	if panel_var_name != "settings_panel":
+		self[panel_var_name].tween.set_parallel(true)
+		self[panel_var_name].tween.tween_property($Blur/BlurRect.material, "shader_parameter/amount", 1.0, 0.2)
+	self[panel_var_name].tween.tween_property(self[panel_var_name], "modulate", Color(1, 1, 1, 1), 0.07)
 	hide_tooltip()
 	hide_adv_tooltip()
 
 func fade_out_panel(panel:Control):
 	#$ShaderExport/SubViewport.get_texture().get_image().save_png("user://universe.png")
-	#var s = panel.size
-	if is_instance_valid(panel.tween):
-		panel.tween.kill()
-	panel.tween = create_tween()
-	panel.tween.set_parallel(true)
-	#panel.tween.tween_property(panel, "modulate", Color(1, 1, 1, 0), 0.1)
-	panel.visible = false
+	panel.hide()
 	block_scroll = false
 	hide_tooltip()
 	hide_adv_tooltip()
 	if panel != settings_panel:
+		panel.tween = create_tween()
 		panel.tween.tween_property($Blur/BlurRect.material, "shader_parameter/amount", 0.0, 0.2)
 
-func toggle_panel(_panel):
-	if is_instance_valid(active_panel):
+func toggle_panel(new_panel_var_name):
+	if is_instance_valid(active_panel) and active_panel != self[new_panel_var_name]:
 		fade_out_panel(active_panel)
-		if active_panel == _panel:
-			active_panel = null
-			return
-	active_panel = _panel
-	fade_in_panel(_panel)
-	_panel.refresh()
+	if not is_instance_valid(self[new_panel_var_name]) or not self[new_panel_var_name].visible:
+		fade_in_panel(new_panel_var_name)
+	else:
+		fade_out_panel(self[new_panel_var_name])
 
 func set_to_ship_coords():
 	var diff_cluster:bool = c_c != ships_travel_data.dest_coords.c
@@ -1579,7 +1577,7 @@ func switch_view(new_view:String, other_params:Dictionary = {}):
 			"planet":
 				add_planet()
 			"planet_details":
-				planet_details = planet_details_scene.instantiate()
+				planet_details = load("res://Scenes/Planet/PlanetDetails.tscn").instantiate()
 				$UI.add_child(planet_details)
 				if is_instance_valid(HUD) and $UI.is_ancestor_of(HUD):
 					$UI.remove_child(HUD)
@@ -1601,7 +1599,7 @@ func switch_view(new_view:String, other_params:Dictionary = {}):
 			"cave":
 				if is_instance_valid(HUD) and $UI.is_ancestor_of(HUD):
 					$UI.remove_child(HUD)
-				cave = cave_scene.instantiate()
+				cave = load("res://Scenes/Views/Cave.tscn").instantiate()
 				cave.rover_data = rover_data[rover_id]
 				cave.start_at_floor = other_params.get("start_floor", 1)
 				switch_music(preload("res://Audio/cave1.ogg"), u_i.time_speed * tile_data[c_t].get("time_speed_bonus", 1.0), 0.95 if tile_data[c_t].has("aurora") else 1.0)
@@ -1611,7 +1609,7 @@ func switch_view(new_view:String, other_params:Dictionary = {}):
 				view.queue_redraw()
 				if is_instance_valid(HUD) and $UI.is_ancestor_of(HUD):
 					$UI.remove_child(HUD)
-				STM = STM_scene.instantiate()
+				STM = load("res://Scenes/Views/ShipTravelMinigame2.tscn").instantiate()
 				add_child(STM)
 				if randf() < 0.5:
 					switch_music(preload("res://Audio/STM.ogg"), u_i.time_speed)
@@ -1621,7 +1619,7 @@ func switch_view(new_view:String, other_params:Dictionary = {}):
 				$Ship.visible = false
 				if is_instance_valid(HUD) and $UI.is_ancestor_of(HUD):
 					$UI.remove_child(HUD)
-				battle = battle_scene.instantiate()
+				battle = load("res://Scenes/Views/Battle.tscn").instantiate()
 				add_child(battle)
 				if starfield_tween:
 					starfield_tween.kill()
@@ -1678,7 +1676,7 @@ var pitch_increased_mining = false
 
 func add_mining():
 	HUD.get_node("Bottom/Hotbar").visible = false
-	mining_HUD = mining_HUD_scene.instantiate()
+	mining_HUD = load("res://Scenes/Views/Mining.tscn").instantiate()
 	add_child(mining_HUD)
 	if tile_data[c_t].has("time_speed_bonus") and Settings.pitch_affected:
 		music_player.pitch_scale *= tile_data[c_t].time_speed_bonus
@@ -1800,7 +1798,7 @@ func add_obj(view_str):
 
 func add_space_HUD():
 	if not is_instance_valid(space_HUD) or not $UI.is_ancestor_of(space_HUD):
-		space_HUD = space_HUD_scene.instantiate()
+		space_HUD = load("res://Scenes/SpaceHUD.tscn").instantiate()
 		$UI.add_child(space_HUD)
 		if c_v in ["galaxy", "cluster"]:
 			space_HUD.get_node("VBoxContainer/Overlay").visible = true
@@ -1817,7 +1815,7 @@ func add_space_HUD():
 		space_HUD.get_node("SendProbes").visible = c_v == "universe"
 
 func add_overlay():
-	overlay = overlay_scene.instantiate()
+	overlay = load("res://Scenes/Overlay.tscn").instantiate()
 	overlay.visible = false
 	$UI.add_child(overlay)
 	overlay.refresh_overlay()
@@ -1829,7 +1827,7 @@ func remove_overlay():
 		overlay.queue_free()
 
 func add_annotator():
-	annotator = annotator_scene.instantiate()
+	annotator = load("res://Scenes/Annotator.tscn").instantiate()
 	annotator.visible = false
 	$UI.add_child(annotator)
 
@@ -2047,7 +2045,7 @@ func add_planet(new_game:bool = false):
 	planet_data = open_obj("Systems", c_s_g)
 	if not planet_data[c_p].has("discovered") or open_obj("Planets", c_p_g).is_empty():
 		generate_tiles(c_p)
-	planet_HUD = planet_HUD_scene.instantiate()
+	planet_HUD = load("res://Scenes/Planet/PlanetHUD.tscn").instantiate()
 	$UI.add_child(planet_HUD)
 	HUD.switch_btn.texture_normal = preload("res://Graphics/Buttons/SystemView.png")
 	if new_game:
@@ -3914,7 +3912,7 @@ func _input(event):
 			stats_univ.right_clicks += 1
 			if is_instance_valid(tooltip):
 				tooltip.get_node("AnimationPlayer").play("Fade")
-		elif Input.is_action_just_released("right_click"):
+		elif Input.is_action_just_released("cancel"):
 			if is_instance_valid(tooltip):
 				tooltip.get_node("AnimationPlayer").play_backwards("Fade")
 		if Input.is_action_just_pressed("scroll"):
@@ -3933,7 +3931,7 @@ func _input(event):
 		get_window().mode = Window.MODE_EXCLUSIVE_FULLSCREEN if (not ((get_window().mode == Window.MODE_EXCLUSIVE_FULLSCREEN) or (get_window().mode == Window.MODE_FULLSCREEN))) else Window.MODE_WINDOWED
 		settings_panel.get_node("TabContainer/GRAPHICS/Fullscreen").button_pressed = ((get_window().mode == Window.MODE_EXCLUSIVE_FULLSCREEN) or (get_window().mode == Window.MODE_FULLSCREEN))
 
-	if Input.is_action_just_released("right_click"):
+	if Input.is_action_just_released("cancel"):
 		if bottom_info_action != "":
 			if not c_v in ["STM", ""]:
 				item_to_use.num = 0
@@ -3945,11 +3943,8 @@ func _input(event):
 				view.move_view = true
 				view.scroll_view = true
 			elif is_instance_valid(active_panel):
-				if c_v != "":
-					fade_out_panel(active_panel)
-					active_panel = null
-				else:
-					toggle_panel(active_panel)
+				fade_out_panel(active_panel)
+				active_panel = null
 				hide_tooltip()
 				hide_adv_tooltip()
 	
@@ -4185,7 +4180,10 @@ func _on_Settings_mouse_exited():
 
 func _on_Settings_pressed():
 	$click.play()
-	toggle_panel(settings_panel)
+	if not is_instance_valid(settings_panel) or not settings_panel.visible:
+		fade_in_panel("settings_panel")
+	else:
+		fade_out_panel(settings_panel)
 
 func _on_BottomInfo_close_button_pressed(direct:bool = false):
 	close_button_over = false
@@ -4249,9 +4247,9 @@ func fade_out_title(fn:String):
 			switch_music(load("res://Audio/ambient" + str(Helper.rand_int(1, 3)) + ".ogg"), u_i.time_speed)
 	else:
 		call(fn)
-		add_panels()
+		#add_panels()
 		$Autosave.start()
-		switch_music(load("res://Audio/ambient" + str(Helper.rand_int(1, 3)) + ".ogg"), u_i.time_speed)
+		switch_music(load("res://Audio/ambient" + str(Helper.rand_int(1, 3)) + ".ogg"), u_i.get("time_speed", 1.0))
 	
 func _on_NewGame_pressed():
 	if Settings.op_cursor and Input.is_action_pressed("ctrl"):
@@ -4272,7 +4270,7 @@ func _on_NewGame_pressed():
 		fade_out_title("new_game")
 
 func _on_LoadGame_pressed():
-	toggle_panel(load_panel)
+	toggle_panel(load_save_panel)
 
 func _on_Autosave_timeout():
 	var config = ConfigFile.new()
@@ -4312,7 +4310,7 @@ func delete_save_confirm(save_str):
 		$Title/Menu.size.y = 0.0
 		config.set_value("game", "saved_c_sv", "")
 		config.save("user://settings.cfg")
-	load_panel.on_delete_confirm(save_str)
+	load_save_panel.on_delete_confirm(save_str)
 
 func return_to_menu_confirm():
 	$Ship.visible = false
@@ -4453,9 +4451,9 @@ func _on_Ship_pressed():
 		switch_view("STM")#Ship travel minigame
 	else:
 		if science_unlocked.has("CD"):
-			if not ship_panel.visible:
-				toggle_panel(ship_panel)
-				ship_panel._on_DriveButton_pressed()
+			if not is_instance_valid(ships_panel) or not ships_panel.visible:
+				toggle_panel(ships_panel)
+				ships_panel._on_DriveButton_pressed()
 
 func _on_Ship_mouse_entered():
 	show_tooltip("%s: %s\n%s" % [tr("TIME_LEFT"), Helper.time_to_str(ships_travel_data.travel_length - Time.get_unix_time_from_system() + ships_travel_data.travel_start_date), tr("PLAY_SHIP_MINIGAME")])

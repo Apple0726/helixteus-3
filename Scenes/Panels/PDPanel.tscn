@@ -1,9 +1,9 @@
 [gd_scene load_steps=13 format=3 uid="uid://bqwk1plraydm8"]
 
 [ext_resource type="Script" path="res://Scripts/PDPanel.gd" id="1"]
-[ext_resource type="Texture2D" uid="uid://jqnq7knpimy3" path="res://Graphics/Buttons/Reset.png" id="2"]
-[ext_resource type="Texture2D" uid="uid://bb5gsadnb80mb" path="res://Graphics/Tiles/water.png" id="3"]
-[ext_resource type="Texture2D" uid="uid://dpttt5mbdfmow" path="res://Graphics/Misc/noise_combined.png" id="4"]
+[ext_resource type="Texture2D" uid="uid://bqt15nl3bjdw0" path="res://Graphics/Buttons/Reset.png" id="2"]
+[ext_resource type="Texture2D" uid="uid://dfaapbxopm6xx" path="res://Graphics/Tiles/water.png" id="3"]
+[ext_resource type="Texture2D" uid="uid://dl0tbc2d816cj" path="res://Graphics/Misc/noise_combined.png" id="4"]
 [ext_resource type="Theme" uid="uid://cp2u1kgj60ic" path="res://Resources/default_theme.tres" id="5"]
 [ext_resource type="PackedScene" uid="uid://ddf2xjwcht77u" path="res://Scenes/CloseButton.tscn" id="7"]
 

@@ -1,11 +1,11 @@
 [gd_scene load_steps=22 format=3 uid="uid://b4u80l6nm3dei"]
 
-[ext_resource type="Texture2D" uid="uid://cg4e0ruewbmro" path="res://Graphics/Buttons/ConstructBuildings.png" id="1"]
+[ext_resource type="Texture2D" uid="uid://cb5mqqhnxbe26" path="res://Graphics/Buttons/ConstructBuildings.png" id="1"]
 [ext_resource type="Theme" uid="uid://cp2u1kgj60ic" path="res://Resources/default_theme.tres" id="1_ankd5"]
 [ext_resource type="Script" path="res://Scripts/PlanetHUD.gd" id="2"]
-[ext_resource type="Texture2D" uid="uid://cnp4b35umhf44" path="res://Graphics/Icons/Notification.png" id="4"]
-[ext_resource type="Texture2D" uid="uid://mw6ns15llj6w" path="res://Graphics/Buttons/Mine.png" id="5"]
-[ext_resource type="Texture2D" uid="uid://wcinw8e5y0jp" path="res://Graphics/Buttons/Terraform.png" id="7"]
+[ext_resource type="Texture2D" uid="uid://vshnis3gqj4t" path="res://Graphics/Icons/Notification.png" id="4"]
+[ext_resource type="Texture2D" uid="uid://paygstyf1c0p" path="res://Graphics/Buttons/Mine.png" id="5"]
+[ext_resource type="Texture2D" uid="uid://cb4q7wfu4xa2i" path="res://Graphics/Buttons/Terraform.png" id="7"]
 [ext_resource type="PackedScene" uid="uid://b3nhmyabvl606" path="res://Scenes/Panels/ConstructionPanel.tscn" id="7_cy5mr"]
 
 [sub_resource type="InputEventKey" id="InputEventKey_gr57q"]
@@ -117,21 +117,10 @@ length = 0.001
 tracks/0/type = "bezier"
 tracks/0/imported = false
 tracks/0/enabled = true
-tracks/0/path = NodePath("VBoxContainer:size:x")
+tracks/0/path = NodePath("VBoxContainer:position:x")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
-"handle_modes": PackedInt32Array(),
-"points": PackedFloat32Array(),
-"times": PackedFloat32Array()
-}
-tracks/1/type = "bezier"
-tracks/1/imported = false
-tracks/1/enabled = true
-tracks/1/path = NodePath("VBoxContainer:position:x")
-tracks/1/interp = 1
-tracks/1/loop_wrap = true
-tracks/1/keys = {
 "handle_modes": PackedInt32Array(0),
 "points": PackedFloat32Array(-48, -0.25, 0, 0.25, 0),
 "times": PackedFloat32Array(0)
@@ -211,10 +200,10 @@ libraries = {
 }
 
 [node name="ButtonsAnimation" type="AnimationPlayer" parent="."]
-autoplay = "MoveButtons"
 libraries = {
 "": SubResource("AnimationLibrary_qgp35")
 }
+autoplay = "MoveButtons"
 
 [node name="MassBuild" type="Label" parent="."]
 visible = false
