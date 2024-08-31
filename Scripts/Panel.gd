@@ -5,6 +5,7 @@ const C = Vector2(640, 360)
 #Tween for fading in/out panel
 var polygon:PackedVector2Array# = [Vector2(106.5, 70), Vector2(106.5 + 1067, 70), Vector2(106.5 + 1067, 70 + 600), Vector2(106.5, 70 + 600)]
 var tween
+var panel_var_name:String
 
 func _ready():
 	set_process_input(false)
@@ -25,7 +26,7 @@ func set_polygon(v:Vector2, offset:Vector2 = Vector2.ZERO):
 	polygon = [C - Vector2(w, h) / 2 + offset, C + Vector2(w, -h) / 2 + offset, C + Vector2(w, h) / 2 + offset, C + Vector2(-w, h) / 2 + offset]
 
 func _on_close_button_pressed():
-	game.toggle_panel(self)
+	game.toggle_panel(panel_var_name)
 
 func _input(event):
 	if event is InputEventMouseMotion and visible:

@@ -86,6 +86,8 @@ var panel_var_name_to_file_name = {
 	"settings_panel":"Settings",
 	"ships_panel":"Ships",
 	"shop_panel":"Shop",
+	"stats_panel":"Stats",
+	"wiki":"Wiki",
 }
 #endregion
 
@@ -714,6 +716,12 @@ func load_univ():
 		popup("load error", 1.5)
 
 func load_game():
+	# Instantiate necessary panels on game load
+	if not is_instance_valid(stats_panel):
+		stats_panel = load("res://Scenes/Panels/Stats.tscn").instantiate()
+		stats_panel.panel_var_name = "stats_panel"
+		stats_panel.hide()
+		$Panels/Control.add_child(stats_panel)
 	var save_info = FileAccess.open("user://%s/save_info.hx3" % [c_sv], FileAccess.READ)
 	var save_info_dict:Dictionary = save_info.get_var()
 	save_info.close()
@@ -1292,6 +1300,7 @@ func fade_in_panel(panel_var_name:String):
 		$Panels/Control.move_child(self[panel_var_name], $Panels/Control.get_child_count())
 	else:
 		self[panel_var_name] = load("res://Scenes/Panels/%s.tscn" % panel_var_name_to_file_name[panel_var_name]).instantiate()
+		self[panel_var_name].panel_var_name = panel_var_name
 		$Panels/Control.add_child(self[panel_var_name])
 	active_panel = self[panel_var_name]
 	self[panel_var_name].refresh()
@@ -1319,12 +1328,15 @@ func fade_out_panel(panel:Control):
 		panel.tween.tween_property($Blur/BlurRect.material, "shader_parameter/amount", 0.0, 0.2)
 
 func toggle_panel(new_panel_var_name):
+	# If opening a panel different to currently open panel, close current panel
 	if is_instance_valid(active_panel) and active_panel != self[new_panel_var_name]:
 		fade_out_panel(active_panel)
+	# Check if the panel to open is already open. If it is open, close it
 	if not is_instance_valid(self[new_panel_var_name]) or not self[new_panel_var_name].visible:
 		fade_in_panel(new_panel_var_name)
 	else:
 		fade_out_panel(self[new_panel_var_name])
+		active_panel = null
 
 func set_to_ship_coords():
 	var diff_cluster:bool = c_c != ships_travel_data.dest_coords.c
@@ -3912,7 +3924,7 @@ func _input(event):
 			stats_univ.right_clicks += 1
 			if is_instance_valid(tooltip):
 				tooltip.get_node("AnimationPlayer").play("Fade")
-		elif Input.is_action_just_released("cancel"):
+		elif Input.is_action_just_released("right_click"):
 			if is_instance_valid(tooltip):
 				tooltip.get_node("AnimationPlayer").play_backwards("Fade")
 		if Input.is_action_just_pressed("scroll"):
@@ -3944,9 +3956,9 @@ func _input(event):
 				view.scroll_view = true
 			elif is_instance_valid(active_panel):
 				fade_out_panel(active_panel)
-				active_panel = null
-				hide_tooltip()
-				hide_adv_tooltip()
+			active_panel = null
+		hide_tooltip()
+		hide_adv_tooltip()
 	
 	#F3 to toggle overlay
 	if Input.is_action_just_pressed("toggle"):
@@ -4000,7 +4012,7 @@ func _input(event):
 
 func _unhandled_key_input(event):
 	var hotbar_presses = [Input.is_action_just_released("1"), Input.is_action_just_released("2"), Input.is_action_just_released("3"), Input.is_action_just_released("4"), Input.is_action_just_released("5"), Input.is_action_just_released("6"), Input.is_action_just_released("7"), Input.is_action_just_released("8"), Input.is_action_just_released("9"), Input.is_action_just_released("0")]
-	if not c_v in ["battle", "cave", ""] and not viewing_dimension and not shop_panel.visible and not craft_panel.visible and not shipyard_panel.visible and not upgrade_panel.visible and not is_instance_valid(overlay):
+	if not c_v in ["battle", "cave", ""] and not viewing_dimension and not is_instance_valid(overlay):
 		for i in 10:
 			if len(hotbar) > i and hotbar_presses[i]:
 				var _name = hotbar[i]
@@ -4270,7 +4282,7 @@ func _on_NewGame_pressed():
 		fade_out_title("new_game")
 
 func _on_LoadGame_pressed():
-	toggle_panel(load_save_panel)
+	toggle_panel("load_save_panel")
 
 func _on_Autosave_timeout():
 	var config = ConfigFile.new()
@@ -4452,7 +4464,7 @@ func _on_Ship_pressed():
 	else:
 		if science_unlocked.has("CD"):
 			if not is_instance_valid(ships_panel) or not ships_panel.visible:
-				toggle_panel(ships_panel)
+				toggle_panel("ships_panel")
 				ships_panel._on_DriveButton_pressed()
 
 func _on_Ship_mouse_entered():
@@ -4464,7 +4476,7 @@ func _on_mouse_exited():
 func mine_tile(tile_id:int = -1):
 	if pickaxe.has("name"):
 		if shop_panel.visible:
-			toggle_panel(shop_panel)
+			toggle_panel("shop_panel")
 		if tile_id == -1:
 			put_bottom_info(tr("START_MINE"), "about_to_mine")
 			view.obj.place_gray_tiles_mining()
@@ -4569,7 +4581,7 @@ func _on_StarFade_animation_finished(anim_name):
 
 func _on_Mods_pressed():
 	$click.play()
-	toggle_panel(mods)
+	toggle_panel("mods")
 
 
 func _on_Discord_pressed():

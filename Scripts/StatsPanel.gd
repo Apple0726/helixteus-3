@@ -16,7 +16,6 @@ func _ready():
 			ach_num += 1
 			ach.connect("mouse_entered",Callable(self,"on_ach_entered").bind(grid.name, ach.name))
 			ach.connect("mouse_exited",Callable(self,"on_ach_exited"))
-	refresh()
 
 func refresh():
 	var ach_get:int = 0

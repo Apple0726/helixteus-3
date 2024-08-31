@@ -47,7 +47,7 @@ func put_rsrc(container, min_size, objs, remove:bool = true, show_available:bool
 			child.free()
 	var data = []
 	for obj in objs:
-		var rsrc = game.rsrc_scene.instantiate()
+		var rsrc = load("res://Scenes/Resource.tscn").instantiate()
 		var texture = rsrc.get_node("Texture2D")
 		var atom:bool = false
 		var tooltip:String = tr(obj.to_upper())

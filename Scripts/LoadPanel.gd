@@ -82,7 +82,7 @@ func on_export(save_str:String):
 func on_load(sv:String):
 	if modulate.a == 1:
 		game.c_sv = sv
-		game.toggle_panel(self)
+		game.toggle_panel(panel_var_name)
 		game.fade_out_title("load_game")
 
 func on_delete(save_str:String):

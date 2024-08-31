@@ -31,7 +31,6 @@ StarType="*res://Scripts/StarType.gd"
 UniqueBuilding="*res://Scripts/UniqueBuilding.gd"
 Building="*res://Scripts/Building.gd"
 Settings="*res://Scripts/Settings.gd"
-Scenes="*res://Scripts/Scenes.gd"
 
 [debug]
 

@@ -501,7 +501,7 @@ func _on_Wiki_mouse_entered():
 
 
 func _on_Wiki_pressed():
-	game.toggle_panel(game.wiki)
+	game.toggle_panel("wiki")
 
 
 func _on_Dialogue_dialogue_finished(_NPC_id:int, _dialogue_id:int):
@@ -719,7 +719,7 @@ func _on_Stats_mouse_entered():
 
 
 func _on_Stats_pressed():
-	game.toggle_panel(game.stats_panel)
+	game.toggle_panel("stats_panel")
 
 
 func _on_PrevView_pressed():
