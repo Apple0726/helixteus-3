@@ -20,6 +20,7 @@ var shadow:Sprite2D
 var shadows:Array = []
 #Local id of the tile hovered
 var tile_over:int = -1
+var right_clicked_tile:int = -1
 var hboxes:Array
 var time_bars = []
 var rsrcs:Array
@@ -901,6 +902,109 @@ func collect_prod_bldgs(tile_id:int):
 			_tile.bldg.erase("start_date")
 			_tile.bldg.erase("expected_rsrc")
 
+func duplicate_unique_building_callable():
+	var unique_bldg = game.tile_data[tile_over].unique_bldg
+	var tier:int = unique_bldg.tier
+	game.put_bottom_info(tr("CLICK_TILE_TO_CONSTRUCT"), "building", "cancel_building")
+	var base_cost = Data.unique_building_costs[unique_bldg.name].duplicate(true)
+	var n = game.unique_building_counters[unique_bldg.name].get(tier, 0) + 1
+	for cost in base_cost:
+		base_cost[cost] *= pow(tier, 20) * pow(10, -game.engineering_bonus.unique_building_a_value) * pow(n, tier * game.engineering_bonus.unique_building_b_value)
+	constructing_unique_building_tier = tier
+	initiate_unique_building_construction(unique_bldg.name, base_cost)
+	
+func duplicate_building_callable():
+	var bldg_name = game.tile_data[tile_over].bldg.name
+	game.put_bottom_info(tr("CLICK_TILE_TO_CONSTRUCT"), "building", "cancel_building")
+	var base_cost = Data.costs[bldg_name].duplicate(true)
+	for cost in base_cost:
+		base_cost[cost] *= game.engineering_bonus.BCM
+	if bldg_name == Building.GREENHOUSE:
+		base_cost.energy = round(base_cost.energy * (1 + abs(p_i.temperature - 273) / 10.0))
+	construct(bldg_name, base_cost)
+	shadow.position = floor(mouse_pos / 200) * 200 + Vector2.ONE * 100
+
+func upgrade_building_callable(called_from_right_click = true):
+	if is_instance_valid(game.upgrade_panel):
+		game.upgrade_panel.planet.clear()
+	if called_from_right_click:
+		tile_over = right_clicked_tile
+	game.toggle_panel("upgrade_panel")
+
+func destroy_building_callable():
+	hide_tooltip()
+	if tiles_selected.is_empty():
+		destroy_bldg(tile_over)
+		game.HUD.refresh()
+		if game.tile_data[tile_over].bldg.name == Building.GREENHOUSE:
+			#var soil_tiles = $TileFeatures.get_used_cells(2)
+			#soil_tiles.erase(Vector2i(tile_over % wid, tile_over / wid))
+			$TileFeatures.erase_cell(2, Vector2i(tile_over % wid, tile_over / wid))
+			#$TileFeatures.set_cells_terrain_connect(2, soil_tiles, 0, 3)
+	else:
+		game.show_YN_panel("destroy_buildings", tr("DESTROY_X_BUILDINGS") % [len(tiles_selected)], [tiles_selected.duplicate(true)])
+
+func collect_resources_callable():
+	items_collected.clear()
+	if not tiles_selected.is_empty():
+		for tile_id in tiles_selected:
+			collect_prod_bldgs(tile_id)
+	else:
+		collect_prod_bldgs(tile_over)
+	game.show_collect_info(items_collected)
+	game.HUD.refresh()
+
+func select_all_of_same_type_callable():
+	var tile = game.tile_data[tile_over]
+	tiles_selected.clear()
+	var path_1_value_sum:float = 0
+	var path_2_value_sum:float = 0
+	var path_3_value_sum:float = 0
+	for i in len(game.tile_data):
+		var select:bool = false
+		var tile2 = game.tile_data[i]
+		if tile2 == null or not tile2.has("bldg"):
+			continue
+		if tile.has("bldg"):
+			if tile2.has("bldg") and tile2.bldg.name == tile.bldg.name:
+				if not Input.is_action_pressed("alt") or tile2.has("cost_div"):
+					select = true
+		if select:
+			if tile.has("bldg"):
+				if tile.bldg.name in [Building.STONE_CRUSHER, Building.STEAM_ENGINE, Building.GLASS_FACTORY]:
+					path_1_value_sum += Helper.get_final_value(p_i, tile2, 1)
+					path_2_value_sum += Helper.get_final_value(p_i, tile2, 2)
+				elif tile.bldg.name in [Building.MINERAL_EXTRACTOR, Building.POWER_PLANT, Building.SOLAR_PANEL, Building.ATMOSPHERE_EXTRACTOR, Building.BORING_MACHINE, Building.BATTERY, Building.RESEARCH_LAB, Building.MINERAL_SILO, "PC", "NC", "EC", "NSF", "ESF"]:
+					path_1_value_sum += Helper.get_final_value(p_i, tile2, 1)
+				else:
+					path_1_value_sum = Helper.get_final_value(p_i, tile2, 1) if tile2.bldg.has("path_1_value") else 0
+					path_2_value_sum = Helper.get_final_value(p_i, tile2, 2) if tile2.bldg.has("path_2_value") else 0
+				path_3_value_sum = Helper.get_final_value(p_i, tile2, 3) if tile2.bldg.has("path_3_value") else 0
+			tiles_selected.append(i)
+			var white_rect = preload("res://Scenes/WhiteRect.tscn").instantiate()
+			white_rect.position.x = (i % wid) * 200
+			white_rect.position.y = (i / wid) * 200
+			white_rect.modulate.a = 0.0
+			var tween = create_tween()
+			tween.tween_property(white_rect, "modulate:a", 1.0, 0.1)
+			add_child(white_rect)
+			white_rect.add_to_group("white_rects")
+	if game.shop_panel.tab == "Overclocks":
+		game.shop_panel.get_node("ItemInfo/BuyAmount").value = len(tiles_selected)
+	if tile.has("bldg") and not game.item_cursor.visible:
+		if Data.desc_icons.has(tile.bldg.name):
+			var tooltip:String = ""
+			var N:int = len(tiles_selected)
+			if N > 1:
+				tooltip = str(N) + " " + tr(Building.names[tile.bldg.name].to_upper() + "_NAME_S") + "\n"
+			else:
+				tooltip = str(N) + " " + tr(Building.names[tile.bldg.name].to_upper() + "_NAME") + "\n"
+			tooltip += Helper.get_bldg_tooltip2(tile.bldg.name, path_1_value_sum, path_2_value_sum, path_3_value_sum)
+			if tile.bldg.name in [Building.GLASS_FACTORY, Building.STEAM_ENGINE, Building.STONE_CRUSHER]:
+				tooltip += "\n[color=#88CCFF]G: %s[/color]" % tr("LOAD_UNLOAD_ALL")
+			game.show_adv_tooltip(tooltip, Helper.flatten(Data.desc_icons[tile.bldg.name]))
+		else:
+			game.show_adv_tooltip(Helper.get_bldg_tooltip2(tile.bldg.name, path_1_value_sum, path_2_value_sum, path_3_value_sum) + "\n" + tr("SELECTED_X_BLDGS") % len(tiles_selected))
 
 func _unhandled_input(event):
 	var about_to_mine = game.bottom_info_action == "about_to_mine"
@@ -911,146 +1015,52 @@ func _unhandled_input(event):
 		var tile = game.tile_data[tile_over]
 		if tile:
 			if tile.has("unique_bldg") and tile.unique_bldg.name != UniqueBuilding.SPACEPORT and game.engineering_bonus.max_unique_building_tier >= int(tile.unique_bldg.tier) and tile.unique_bldg.name in game.unique_bldgs_discovered.keys() and int(tile.unique_bldg.tier) in game.unique_bldgs_discovered[tile.unique_bldg.name].keys():
-				if Input.is_action_just_released("Q"):
-					var tier:int = tile.unique_bldg.tier
-					game.put_bottom_info(tr("CLICK_TILE_TO_CONSTRUCT"), "building", "cancel_building")
-					var base_cost = Data.unique_building_costs[tile.unique_bldg.name].duplicate(true)
-					var n = game.unique_building_counters[tile.unique_bldg.name].get(tier, 0) + 1
-					for cost in base_cost:
-						base_cost[cost] *= pow(tier, 20) * pow(10, -game.engineering_bonus.unique_building_a_value) * pow(n, tier * game.engineering_bonus.unique_building_b_value)
-					constructing_unique_building_tier = tier
-					initiate_unique_building_construction(tile.unique_bldg.name, base_cost)
-			if tile.has("bldg"):
-				if Input.is_action_just_released("Q"):
-					game.put_bottom_info(tr("CLICK_TILE_TO_CONSTRUCT"), "building", "cancel_building")
-					var base_cost = Data.costs[tile.bldg.name].duplicate(true)
-					for cost in base_cost:
-						base_cost[cost] *= game.engineering_bonus.BCM
-					if tile.bldg.name == Building.GREENHOUSE:
-						base_cost.energy = round(base_cost.energy * (1 + abs(p_i.temperature - 273) / 10.0))
-					construct(tile.bldg.name, base_cost)
-					shadow.position = floor(mouse_pos / 200) * 200 + Vector2.ONE * 100
-				elif Input.is_action_just_released("F"):
-					if game.get_node("UI").has_node("BuildingShortcuts"):
-						game.get_node("UI").get_node("BuildingShortcuts").close()
-					else:
-						$BuildingShortcutTimer.stop()
-					game.upgrade_panel.planet.clear()
-					if tiles_selected.is_empty():
-						game.upgrade_panel.ids = [tile_over]
-					else:
-						game.upgrade_panel.ids = tiles_selected.duplicate(true)
-					game.toggle_panel(game.upgrade_panel)
-				elif Input.is_action_just_released("X") and not game.active_panel:
-					hide_tooltip()
-					if tiles_selected.is_empty():
-						var bldg:int = tile.bldg.name
-						#var money_cost = 0.0
-						#if Data.path_1.has(bldg):
-							#money_cost += Data.costs[bldg].money * pow(Data.path_1[bldg].get("cost_pw", 1.3), tile.bldg.path_1)
-						#if Data.path_2.has(bldg):
-							#money_cost += Data.costs[bldg].money * pow(Data.path_2[bldg].get("cost_pw", 1.3), tile.bldg.path_2)
-						#if Data.path_3.has(bldg):
-							#money_cost += Data.costs[bldg].money * pow(Data.path_3[bldg].get("cost_pw", 1.3), tile.bldg.path_3)
-						#if tile.has("cost_div"):
-							#money_cost /= tile.cost_div
-						#var total_XP = 10 * (1 - pow(game.maths_bonus.ULUGF, game.u_i.lv - 1)) / (1 - game.maths_bonus.ULUGF) + game.u_i.xp
-						#if money_cost >= total_XP + game.money / 100.0:
-							#game.show_YN_panel("destroy_building", tr("DESTROY_BLDG_CONFIRM"), [tile_over])
-						#else:
-						destroy_bldg(tile_over)
-						game.HUD.refresh()
-						if bldg == Building.GREENHOUSE:
-							#var soil_tiles = $TileFeatures.get_used_cells(2)
-							#soil_tiles.erase(Vector2i(tile_over % wid, tile_over / wid))
-							$TileFeatures.erase_cell(2, Vector2i(tile_over % wid, tile_over / wid))
-							#$TileFeatures.set_cells_terrain_connect(2, soil_tiles, 0, 3)
-					else:
-						game.show_YN_panel("destroy_buildings", tr("DESTROY_X_BUILDINGS") % [len(tiles_selected)], [tiles_selected.duplicate(true)])
-				elif Input.is_action_just_released("G") and not is_instance_valid(game.active_panel):
-					items_collected.clear()
-					if not tiles_selected.is_empty():
-						for tile_id in tiles_selected:
-							collect_prod_bldgs(tile_id)
-					else:
-						collect_prod_bldgs(tile_over)
-					game.show_collect_info(items_collected)
-					game.HUD.refresh()
+				if Input.is_action_just_pressed("right_click"):
+					right_clicked_tile = tile_over
+					game.add_right_click_menu([{
+						"button_text":tr("DUPLICATE") + " (Q)",
+						"button_callable":duplicate_unique_building_callable,
+						}])
+				elif Input.is_action_just_pressed("Q"):
+					duplicate_unique_building_callable()
+			elif tile.has("bldg"):
+				if Input.is_action_just_pressed("right_click"):
+					right_clicked_tile = tile_over
+					var right_click_info_list = [{
+						"button_text":tr("DUPLICATE") + " (Q)",
+						"button_callable":duplicate_building_callable,
+						},
+						{
+						"button_text":tr("UPGRADE") + " (F)",
+						"button_callable":upgrade_building_callable,
+						},
+						{
+						"button_text":tr("DESTROY") + " (X)",
+						"button_callable":destroy_building_callable,
+						},
+					]
+					if tile.bldg.name in [Building.STONE_CRUSHER, Building.GLASS_FACTORY, Building.STEAM_ENGINE]:
+						right_click_info_list.append({
+						"button_text":tr("COLLECT_INSERT_RESOURCES") + " (G)",
+						"button_callable":collect_resources_callable,
+						})
+					right_click_info_list.append({
+					"button_text":tr("SELECT_ALL_OF_SAME_TYPE") + " (Shift)",
+					"button_callable":select_all_of_same_type_callable,
+					})
+					game.add_right_click_menu(right_click_info_list)
+				elif Input.is_action_just_pressed("Q"):
+					duplicate_building_callable()
+				elif Input.is_action_just_pressed("F"):
+					upgrade_building_callable(false)
+				elif Input.is_action_just_pressed("X") and game.active_panel == null:
+					destroy_building_callable()
+				elif Input.is_action_just_pressed("G") and game.active_panel == null:
+					collect_resources_callable()
 		if not is_instance_valid(game.active_panel) and Input.is_action_just_pressed("shift") and tile:
-			tiles_selected.clear()
-			if game.get_node("UI").has_node("BuildingShortcuts"):
-#				game.get_node("UI").get_node("BuildingShortcuts").close()
-#				var shortcuts = preload("res://Scenes/KeyboardShortcuts.tscn").instantiate()
-				var shortcuts = game.get_node("UI").get_node("BuildingShortcuts")
-				shortcuts.keys.clear()
-				shortcuts.add_key("F", "UPGRADE_ALL")
-				shortcuts.add_key("Q", "DUPLICATE")
-				shortcuts.add_key("X", "DESTROY_ALL")
-				shortcuts.add_key("Shift", "SELECT_ALL")
-#				shortcuts.center_position.x = 1048
-#				shortcuts.center_position.y = 360
-#				shortcuts.name = "BuildingShortcuts"
-#				game.get_node("UI").add_child(shortcuts)
-				shortcuts.refresh()
-			var path_1_value_sum:float = 0
-			var path_2_value_sum:float = 0
-			var path_3_value_sum:float = 0
-			for i in len(game.tile_data):
-				var select:bool = false
-				var tile2 = game.tile_data[i]
-				if tile2 == null or not tile2.has("bldg"):
-					continue
-				if tile.has("bldg"):
-					if tile2.has("bldg") and tile2.bldg.name == tile.bldg.name:
-						if not Input.is_action_pressed("alt") or tile2.has("cost_div"):
-							select = true
-				if select:
-					if tile.has("bldg"):
-						if tile.bldg.name in [Building.STONE_CRUSHER, Building.STEAM_ENGINE, Building.GLASS_FACTORY]:
-							path_1_value_sum += Helper.get_final_value(p_i, tile2, 1)
-							path_2_value_sum += Helper.get_final_value(p_i, tile2, 2)
-						elif tile.bldg.name in [Building.MINERAL_EXTRACTOR, Building.POWER_PLANT, Building.SOLAR_PANEL, Building.ATMOSPHERE_EXTRACTOR, Building.BORING_MACHINE, Building.BATTERY, Building.RESEARCH_LAB, Building.MINERAL_SILO, "PC", "NC", "EC", "NSF", "ESF"]:
-							path_1_value_sum += Helper.get_final_value(p_i, tile2, 1)
-						else:
-							path_1_value_sum = Helper.get_final_value(p_i, tile2, 1) if tile2.bldg.has("path_1_value") else 0
-							path_2_value_sum = Helper.get_final_value(p_i, tile2, 2) if tile2.bldg.has("path_2_value") else 0
-						path_3_value_sum = Helper.get_final_value(p_i, tile2, 3) if tile2.bldg.has("path_3_value") else 0
-					tiles_selected.append(i)
-					var white_rect = game.white_rect_scene.instantiate()
-					white_rect.position.x = (i % wid) * 200
-					white_rect.position.y = (i / wid) * 200
-					white_rect.modulate.a = 0.0
-					var tween = create_tween()
-					tween.tween_property(white_rect, "modulate:a", 1.0, 0.1)
-					add_child(white_rect)
-					white_rect.add_to_group("white_rects")
-			if game.shop_panel.tab == "Overclocks":
-				game.shop_panel.get_node("VBox/HBox/ItemInfo/VBox/HBox/BuyAmount").value = len(tiles_selected)
-				game.shop_panel.num = len(tiles_selected)
-			if tile.has("bldg") and not game.item_cursor.visible:
-				if Data.desc_icons.has(tile.bldg.name):
-					var tooltip:String = ""
-					var N:int = len(tiles_selected)
-					if N > 1:
-						tooltip = str(N) + " " + tr(Building.names[tile.bldg.name].to_upper() + "_NAME_S") + "\n"
-					else:
-						tooltip = str(N) + " " + tr(Building.names[tile.bldg.name].to_upper() + "_NAME") + "\n"
-					tooltip += Helper.get_bldg_tooltip2(tile.bldg.name, path_1_value_sum, path_2_value_sum, path_3_value_sum)
-					if tile.bldg.name in [Building.GLASS_FACTORY, Building.STEAM_ENGINE, Building.STONE_CRUSHER]:
-						tooltip += "\n[color=#88CCFF]G: %s[/color]" % tr("LOAD_UNLOAD_ALL")
-					game.show_adv_tooltip(tooltip, Helper.flatten(Data.desc_icons[tile.bldg.name]))
-				else:
-					game.show_adv_tooltip(Helper.get_bldg_tooltip2(tile.bldg.name, path_1_value_sum, path_2_value_sum, path_3_value_sum) + "\n" + tr("SELECTED_X_BLDGS") % len(tiles_selected))
+			select_all_of_same_type_callable()
 	if Input.is_action_just_released("shift"):
 		remove_selected_tiles()
-		if game.get_node("UI").has_node("BuildingShortcuts"):
-			var shortcuts = game.get_node("UI").get_node("BuildingShortcuts")
-			shortcuts.keys.clear()
-			shortcuts.add_key("F", "UPGRADE")
-			shortcuts.add_key("Q", "DUPLICATE")
-			shortcuts.add_key("X", "DESTROY")
-			shortcuts.add_key("Shift", "SELECT_ALL")
-			shortcuts.refresh()
 		view.move_view = true
 		view.scroll_view = true
 		if tile_over != -1 and not game.upgrade_panel.visible:
@@ -1383,10 +1393,6 @@ func on_wormhole_click(tile:Dictionary, tile_id:int):
 				game.popup(tr("NOT_ENOUGH_SP"), 1.5)
 
 func hide_tooltip():
-	if game.get_node("UI").has_node("BuildingShortcuts"):
-		game.get_node("UI").get_node("BuildingShortcuts").close()
-	else:
-		$BuildingShortcutTimer.stop()
 	game.hide_tooltip()
 	game.hide_adv_tooltip()
 	if game.help_str != "mass_build":
@@ -1587,10 +1593,6 @@ var constructing_unique_building_tier:int = -1
 
 func initiate_unique_building_construction(type:int, costs:Dictionary):
 	finish_construct()
-	if game.get_node("UI").has_node("BuildingShortcuts"):
-		game.get_node("UI").get_node("BuildingShortcuts").close()
-	else:
-		$BuildingShortcutTimer.stop()
 	var tween = create_tween()
 	tween.tween_property(game.HUD.get_node("Top/TextureRect"), "modulate", Color(1.5, 1.5, 1.0, 1.0), 0.2)
 	bldg_to_construct = type
@@ -1626,10 +1628,6 @@ func initiate_unique_building_construction(type:int, costs:Dictionary):
 func construct(type:int, costs:Dictionary):
 	constructing_unique_building_tier = -1
 	finish_construct()
-	if game.get_node("UI").has_node("BuildingShortcuts"):
-		game.get_node("UI").get_node("BuildingShortcuts").close()
-	else:
-		$BuildingShortcutTimer.stop()
 	var tween = create_tween()
 	tween.tween_property(game.HUD.get_node("Top/TextureRect"), "modulate", Color(1.5, 1.5, 1.0, 1.0), 0.2)
 	game.planet_HUD.get_node("MassBuild").visible = game.stats_univ.bldgs_built >= 10
@@ -1756,18 +1754,3 @@ func get_tile_id_from_pos(pos:Vector2):
 
 func play_bad_apple(LOD):
 	$BadApple.load_data(LOD)
-
-
-func _on_building_shortcut_timer_timeout():
-	if is_instance_valid(game.active_panel):
-		return
-	var shortcuts = preload("res://Scenes/KeyboardShortcuts.tscn").instantiate()
-	shortcuts.keys.clear()
-	shortcuts.add_key("F", "UPGRADE")
-	shortcuts.add_key("Q", "DUPLICATE")
-	shortcuts.add_key("X", "DESTROY")
-	shortcuts.add_key("Shift", "SELECT_ALL")
-	shortcuts.center_position.x = 1048
-	shortcuts.center_position.y = 360
-	shortcuts.name = "BuildingShortcuts"
-	game.get_node("UI").add_child(shortcuts)

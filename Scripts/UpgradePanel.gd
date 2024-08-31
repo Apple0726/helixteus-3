@@ -38,6 +38,10 @@ func refresh():
 		$Label.text = tr("UPGRADE_X_BLDGS").format({"bldg":tr(name_str.to_upper() + "_NAME_S"), "num":Helper.format_num(planet.tile_num)})
 	else:
 		p_i = game.planet_data[game.c_p]
+		if game.view.obj.tiles_selected.is_empty():
+			ids = [game.view.obj.tile_over]
+		else:
+			ids = game.view.obj.tiles_selected.duplicate(true)
 		var first_tile_bldg = game.tile_data[ids[0]].bldg
 		var name_str:String = Building.names[first_tile_bldg.name]
 		if len(ids) == 1:
@@ -438,12 +442,12 @@ func _on_Upgrade_pressed():
 			game.universe_data[game.c_u].xp += cost_money / 100.0
 			game.view.obj.refresh_planets()
 		game.HUD.refresh()
-		game.toggle_panel(self)
+		game.toggle_panel("upgrade_panel")
 	else:
 		game.popup(tr("NOT_ENOUGH_RESOURCES"), 1.2)
 
 func _on_close_button_pressed():
-	game.toggle_panel(self)
+	game.toggle_panel("upgrade_panel")
 
 func _on_Control_tree_exited():
 	queue_free()

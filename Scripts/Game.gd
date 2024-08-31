@@ -78,6 +78,7 @@ var stats_panel:Panel
 var load_save_panel:Panel
 var tooltip
 var panel_var_name_to_file_name = {
+	"upgrade_panel":"Upgrade",
 	"craft_panel":"Craft",
 	"inventory":"Inventory",
 	"load_save_panel":"LoadSave",
@@ -462,9 +463,9 @@ var tile_brightness:Array = []
 var tile_avg_mod:Array = []
 
 var current_viewport_dimensions:Vector2
-func update_viewport_dimensions():
-	if settings_panel.get_node("TabContainer/GRAPHICS/DisplayRes").selected != 0:
-		get_viewport().size = current_viewport_dimensions
+#func update_viewport_dimensions():
+	#if settings_panel.get_node("TabContainer/GRAPHICS/DisplayRes").selected != 0:
+		#get_viewport().size = current_viewport_dimensions
 	
 func _ready():
 	Helper.setup_discord()
@@ -481,8 +482,8 @@ func _ready():
 	$Star/Sprite2D.material["shader_parameter/color"] = star_color
 	var star_tween = create_tween()
 	star_tween.tween_property($Star/Sprite2D.material, "shader_parameter/alpha", 1.0, 2.0)
-	current_viewport_dimensions = get_viewport().size
-	get_viewport().connect("size_changed",Callable(self,"update_viewport_dimensions"))
+	#current_viewport_dimensions = get_viewport().size
+	#get_viewport().connect("size_changed",Callable(self,"update_viewport_dimensions"))
 	for key in Mods.added_mats:
 		mat_info[key] = Mods.added_mats[key]
 	for key in Mods.added_mets:
@@ -722,6 +723,11 @@ func load_game():
 		stats_panel.panel_var_name = "stats_panel"
 		stats_panel.hide()
 		$Panels/Control.add_child(stats_panel)
+	if not is_instance_valid(shop_panel):
+		shop_panel = load("res://Scenes/Panels/Shop.tscn").instantiate()
+		shop_panel.panel_var_name = "shop_panel"
+		shop_panel.hide()
+		$Panels/Control.add_child(shop_panel)
 	var save_info = FileAccess.open("user://%s/save_info.hx3" % [c_sv], FileAccess.READ)
 	var save_info_dict:Dictionary = save_info.get_var()
 	save_info.close()
@@ -2102,7 +2108,8 @@ func remove_planet(save_zooms:bool = true):
 		fade_out_panel(active_panel)
 	active_panel = null
 	view.remove_obj("planet", save_zooms)
-	vehicle_panel.tile_id = -1
+	if is_instance_valid(vehicle_panel):
+		vehicle_panel.queue_free()
 	Helper.save_obj("Systems", c_s_g, planet_data)
 	Helper.save_obj("Planets", c_p_g, tile_data)
 	_on_BottomInfo_close_button_pressed()
@@ -3941,7 +3948,8 @@ func _input(event):
 	#Press F11 to toggle fullscreen
 	if Input.is_action_just_released("fullscreen"):
 		get_window().mode = Window.MODE_EXCLUSIVE_FULLSCREEN if (not ((get_window().mode == Window.MODE_EXCLUSIVE_FULLSCREEN) or (get_window().mode == Window.MODE_FULLSCREEN))) else Window.MODE_WINDOWED
-		settings_panel.get_node("TabContainer/GRAPHICS/Fullscreen").button_pressed = ((get_window().mode == Window.MODE_EXCLUSIVE_FULLSCREEN) or (get_window().mode == Window.MODE_FULLSCREEN))
+		if is_instance_valid(settings_panel):
+			settings_panel.get_node("TabContainer/GRAPHICS/Fullscreen").button_pressed = ((get_window().mode == Window.MODE_EXCLUSIVE_FULLSCREEN) or (get_window().mode == Window.MODE_FULLSCREEN))
 
 	if Input.is_action_just_released("cancel"):
 		if bottom_info_action != "":
@@ -4791,3 +4799,10 @@ func _on_continue_pressed():
 	c_sv = refresh_continue_button()
 	if c_sv != "":
 		fade_out_title("load_game")
+
+func add_right_click_menu(items:Array):
+	var menu = load("res://Scenes/RightClickMenu.tscn").instantiate()
+	menu.items = items
+	menu.position = mouse_pos
+	hide_tooltip()
+	$Panels/Control.add_child(menu)
