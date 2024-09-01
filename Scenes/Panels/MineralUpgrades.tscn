@@ -1,99 +1,113 @@
-[gd_scene load_steps=4 format=3 uid="uid://ev7ll8hmf3xe"]
+[gd_scene load_steps=8 format=3 uid="uid://ev7ll8hmf3xe"]
 
+[ext_resource type="Texture2D" uid="uid://ccntlctxytsi2" path="res://Graphics/GUI/Panel.png" id="3_mwsw1"]
 [ext_resource type="Theme" uid="uid://cp2u1kgj60ic" path="res://Resources/default_theme.tres" id="5"]
+[ext_resource type="Texture2D" uid="uid://baowebna7hgr5" path="res://Graphics/GUI/CloseButtonNormal.png" id="5_q566h"]
 [ext_resource type="Script" path="res://Scripts/MUPanel.gd" id="6"]
-[ext_resource type="PackedScene" uid="uid://ddf2xjwcht77u" path="res://Scenes/CloseButton.tscn" id="7"]
+[ext_resource type="Texture2D" uid="uid://c1vwn7p5uxu1r" path="res://Graphics/GUI/CloseButtonHover.png" id="6_suxbt"]
 
-[node name="Background" type="Panel"]
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -512.0
-offset_top = -296.0
-offset_right = 512.0
-offset_bottom = 296.0
+[sub_resource type="SystemFont" id="SystemFont_sxpbd"]
+font_names = PackedStringArray("Arial")
+multichannel_signed_distance_field = true
+
+[sub_resource type="LabelSettings" id="LabelSettings_c5lds"]
+font = SubResource("SystemFont_sxpbd")
+font_size = 24
+shadow_size = 2
+shadow_color = Color(0, 0, 0, 0.372549)
+shadow_offset = Vector2(2, 2)
+
+[node name="Panel" type="Control"]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 1024.0
+offset_bottom = 592.0
 theme = ExtResource("5")
 script = ExtResource("6")
 
+[node name="GUI" type="TextureRect" parent="."]
+layout_mode = 1
+offset_right = 1280.0
+offset_bottom = 720.0
+mouse_filter = 2
+texture = ExtResource("3_mwsw1")
+metadata/_edit_lock_ = true
+
+[node name="CloseButton" type="TextureButton" parent="."]
+layout_mode = 0
+offset_left = 1136.0
+offset_top = 72.0
+offset_right = 1185.0
+offset_bottom = 121.0
+texture_normal = ExtResource("5_q566h")
+texture_hover = ExtResource("6_suxbt")
+
 [node name="Title" type="Label" parent="."]
 custom_minimum_size = Vector2(0, 38)
-layout_mode = 0
+layout_mode = 1
+anchors_preset = 10
 anchor_right = 1.0
-offset_bottom = 29.0
+offset_left = 112.0
+offset_top = 72.0
+offset_right = -352.0
+offset_bottom = 110.0
+grow_horizontal = 2
 theme_override_font_sizes/font_size = 18
 text = "MINERAL_UPGRADES"
-horizontal_alignment = 1
+label_settings = SubResource("LabelSettings_c5lds")
 vertical_alignment = 1
 
-[node name="CloseButton" parent="." instance=ExtResource("7")]
-layout_mode = 0
-anchors_preset = 0
-anchor_left = 0.0
-anchor_right = 0.0
-offset_left = 992.0
-offset_top = 8.0
-offset_right = 1016.0
-offset_bottom = 32.0
-grow_horizontal = 1
-
 [node name="Desc" type="Label" parent="."]
-layout_mode = 0
+layout_mode = 1
+anchors_preset = 10
 anchor_right = 1.0
-offset_top = 40.0
-offset_bottom = 77.0
+offset_left = 128.0
+offset_top = 136.0
+offset_right = 128.0
+offset_bottom = 173.0
+grow_horizontal = 2
 text = "MU_DESC"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="Panel" type="Panel" parent="."]
-layout_mode = 0
-anchor_top = 1.0
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = 24.0
-offset_top = -496.0
-offset_right = -24.0
-offset_bottom = -24.0
-
-[node name="VBox" type="VBoxContainer" parent="Panel"]
+[node name="VBox" type="VBoxContainer" parent="."]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = 16.0
-offset_right = -16.0
-offset_bottom = -24.0
+offset_left = 152.0
+offset_top = 184.0
+offset_right = 104.0
+offset_bottom = -56.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="Titles" type="HBoxContainer" parent="Panel/VBox"]
+[node name="Titles" type="HBoxContainer" parent="VBox"]
 custom_minimum_size = Vector2(0, 50)
 layout_mode = 2
 
-[node name="Label" type="Label" parent="Panel/VBox/Titles"]
+[node name="Label" type="Label" parent="VBox/Titles"]
 custom_minimum_size = Vector2(450, 0)
 layout_mode = 2
 size_flags_horizontal = 2
 text = "UPGRADE_NOUN"
 
-[node name="Lv" type="Label" parent="Panel/VBox/Titles"]
+[node name="Lv" type="Label" parent="VBox/Titles"]
 layout_mode = 2
 size_flags_horizontal = 3
 text = "LEVEL"
 
-[node name="Info" type="Label" parent="Panel/VBox/Titles"]
+[node name="Info" type="Label" parent="VBox/Titles"]
 layout_mode = 2
 size_flags_horizontal = 3
 text = "EFFECTS"
 
-[node name="Lv3" type="Label" parent="Panel/VBox/Titles"]
+[node name="Lv3" type="Label" parent="VBox/Titles"]
 layout_mode = 2
 size_flags_horizontal = 3
 text = "UPGRADE"
 
-[node name="RichTextLabel" type="RichTextLabel" parent="Panel/VBox/Titles"]
+[node name="RichTextLabel" type="RichTextLabel" parent="VBox/Titles"]
 layout_mode = 2
 
-[connection signal="close_button_pressed" from="CloseButton" to="." method="_on_close_button_pressed"]
+[connection signal="pressed" from="CloseButton" to="." method="_on_close_button_pressed"]

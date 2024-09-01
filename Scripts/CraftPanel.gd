@@ -48,8 +48,8 @@ func set_item_info(_item_name:String, _item_costs:Dictionary, _item_texture, _it
 	for item in $Items/Grid.get_children():
 		item.get_node("Highlight").visible = item == _item_node
 	item_name = _item_name
+	$ItemInfo.show()
 	$ItemInfo/ItemName.text = Helper.get_item_name(_item_name)
-	$ItemInfo/ItemName.modulate.a = 1.0
 	item_costs = _item_costs.duplicate(true)
 	$ItemInfo/Panel/TextureRect.texture = _item_texture
 	$ItemInfo/BuyAmount.visible = true
@@ -61,10 +61,6 @@ func update_and_check_costs():
 		item_total_costs[cost] *= $ItemInfo/BuyAmount.value
 	Helper.put_rsrc($ItemInfo/ScrollContainer/Costs, 28, item_total_costs, true, true)
 	$ItemInfo/Buy.disabled = not game.check_enough(item_total_costs)
-	
-func _on_close_button_pressed():
-	game.fade_out_panel(self)
-	game.active_panel = null
 
 func _on_mining_button_pressed():
 	_on_btn_pressed("Mining")

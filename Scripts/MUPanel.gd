@@ -10,13 +10,12 @@ func _ready():
 		title.help_text = "%s_DESC" % MU
 		title.custom_minimum_size.x = 450
 		title.custom_minimum_size.y = 30
-		title.size_flags_horizontal = Label.SIZE_EXPAND_FILL
 		title.size_flags_vertical = Label.SIZE_SHRINK_CENTER
 		title.mouse_filter = Label.MOUSE_FILTER_PASS
 		hbox.add_child(title)
 		var lv = Label.new()
 		lv.name = "Lv"
-		lv.size_flags_horizontal = Label.SIZE_EXPAND_FILL
+		lv.custom_minimum_size.x = 170
 		hbox.add_child(lv)
 		var effects
 		if MU == "MV":
@@ -26,21 +25,23 @@ func _ready():
 		else:
 			effects = Label.new()
 		effects.name = "Effects"
-		effects.size_flags_horizontal = Label.SIZE_EXPAND_FILL
+		effects.custom_minimum_size.x = 160
 		hbox.add_child(effects)
 		var btn = Button.new()
 		btn.name = "Upgrade"
 		btn.connect("mouse_entered",Callable(self,"_on_Upgrade_mouse_entered").bind(MU))
 		btn.connect("mouse_exited",Callable(self,"_on_Upgrade_mouse_exited").bind(MU))
 		btn.connect("pressed",Callable(self,"_on_Upgrade_pressed").bind(MU))
-		btn.custom_minimum_size.x = 178
+		btn.custom_minimum_size.x = 100
 		btn.expand_icon = true
 		btn.icon = Data.minerals_icon
 		btn.alignment = HORIZONTAL_ALIGNMENT_LEFT
 		hbox.name = MU
 		hbox.add_child(btn)
+		var spacer = Control.new()
+		hbox.add_child(spacer)
+		spacer.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		if game.achievement_data.progression.has("new_universe"):
-			btn.custom_minimum_size.x = 178 - 32
 			var btn_max = Button.new()
 			btn_max.connect("pressed",Callable(self,"_on_UpgradeMax_pressed").bind(MU))
 			btn_max.custom_minimum_size.x = 32
@@ -48,15 +49,15 @@ func _ready():
 			btn_max.expand_icon = true
 			btn_max.icon = preload("res://Graphics/Science/UP2.png")
 			hbox.add_child(btn_max)
-		$Panel/VBox.add_child(hbox)
+		$VBox.add_child(hbox)
 
 func refresh():
-	$Panel/VBox/MSMB.visible = game.show.has("mining")
-	$Panel/VBox/STMB.visible = game.STM_lv >= 1
-	$Panel/VBox/SHSR.visible = game.stats_univ.planets_conquered >= 2
-	$Panel/VBox/CHR.visible = game.stats_univ.planets_conquered >= 2
+	$VBox/MSMB.visible = game.show.has("mining")
+	$VBox/STMB.visible = game.STM_lv >= 1
+	$VBox/SHSR.visible = game.stats_univ.planets_conquered >= 2
+	$VBox/CHR.visible = game.stats_univ.planets_conquered >= 2
 	if game.MUs.SHSR >= 51:
-		var upgrade_btn = $Panel/VBox/SHSR/Upgrade
+		var upgrade_btn = $VBox/SHSR/Upgrade
 		upgrade_btn.modulate.a = 0.0
 		if upgrade_btn.is_connected("pressed",Callable(self,"_on_Upgrade_pressed")):
 			upgrade_btn.disconnect("mouse_entered",Callable(self,"_on_Upgrade_mouse_entered"))
@@ -64,13 +65,13 @@ func refresh():
 			upgrade_btn.disconnect("pressed",Callable(self,"_on_Upgrade_pressed"))
 	if game.achievement_data.progression.has("new_universe"):
 		if game.MUs.SHSR >= 51:
-			var upgrade_max_btn = $Panel/VBox/SHSR/UpgradeMax
+			var upgrade_max_btn = $VBox/SHSR/UpgradeMax
 			upgrade_max_btn.modulate.a = 0.0
 			if upgrade_max_btn.is_connected("pressed",Callable(self,"_on_UpgradeMax_pressed")):
 				upgrade_max_btn.disconnect("pressed",Callable(self,"_on_UpgradeMax_pressed"))
-		$Panel/VBox/CHR/UpgradeMax.visible = game.MUs.CHR < 90
-	$Panel/VBox/CHR/Upgrade.visible = game.MUs.CHR < 90
-	for hbox in $Panel/VBox.get_children():
+		$VBox/CHR/UpgradeMax.visible = game.MUs.CHR < 90
+	$VBox/CHR/Upgrade.visible = game.MUs.CHR < 90
+	for hbox in $VBox.get_children():
 		if hbox.name != "Titles":
 			hbox.get_node("Lv").text = str(game.MUs[hbox.name])
 			hbox.get_node("Upgrade").text = "  %s" % [Helper.format_num(get_min_cost(hbox.name))]
@@ -79,21 +80,21 @@ func refresh():
 func set_upg_text(MU:String, next_lv:int = 0):
 	match MU:
 		"MV":
-			game.add_text_icons($Panel/VBox/MV/Effects, "@i 1 = @i %s" % [game.MUs.MV + next_lv + 4], [Data.minerals_icon, Data.money_icon], 15)
+			game.add_text_icons($VBox/MV/Effects, "@i 1 = @i %s" % [game.MUs.MV + next_lv + 4], [Data.minerals_icon, Data.money_icon], 15)
 		"MSMB":
-			$Panel/VBox/MSMB/Effects.text = "+ %s %%" % ((game.MUs.MSMB + next_lv - 1) * 10)
+			$VBox/MSMB/Effects.text = "+ %s %%" % ((game.MUs.MSMB + next_lv - 1) * 10)
 		"IS":
-			$Panel/VBox/IS/Effects.text = tr("X_SLOTS") % [game.MUs.IS + next_lv + 9]
+			$VBox/IS/Effects.text = tr("X_SLOTS") % [game.MUs.IS + next_lv + 9]
 		"STMB":
-			$Panel/VBox/STMB/Effects.text = "+ %s %%" % ((game.MUs.STMB + next_lv - 1) * 15)
+			$VBox/STMB/Effects.text = "+ %s %%" % ((game.MUs.STMB + next_lv - 1) * 15)
 		"SHSR":
-			$Panel/VBox/SHSR/Effects.text = "- %s %%" % (game.MUs.SHSR + next_lv - 1)
+			$VBox/SHSR/Effects.text = "- %s %%" % (game.MUs.SHSR + next_lv - 1)
 		"CHR":
-			$Panel/VBox/CHR/Effects.text = "%s %%" % (10 + game.MUs.CHR + next_lv - 1)
+			$VBox/CHR/Effects.text = "%s %%" % (10 + game.MUs.CHR + next_lv - 1)
 	if next_lv == 0:
-		get_node("Panel/VBox/%s/Effects" % [MU])["theme_override_colors/%s" % ["default_color" if MU == "MV" else "font_color"]] = Color.WHITE
+		get_node("VBox/%s/Effects" % [MU])["theme_override_colors/%s" % ["default_color" if MU == "MV" else "font_color"]] = Color.WHITE
 	else:
-		get_node("Panel/VBox/%s/Effects" % [MU])["theme_override_colors/%s" % ["default_color" if MU == "MV" else "font_color"]] = Color.GREEN
+		get_node("VBox/%s/Effects" % [MU])["theme_override_colors/%s" % ["default_color" if MU == "MV" else "font_color"]] = Color.GREEN
 			
 func get_min_cost(upg:String):
 	return round(Data.MUs[upg].base_cost * pow(Data.MUs[upg].pw, game.MUs[upg] - 1))

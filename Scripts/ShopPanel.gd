@@ -82,10 +82,6 @@ func buy_pickaxe(_costs:Dictionary):
 	game.pickaxe.durability = game.pickaxes_info[item_name].durability
 	game.popup(tr("BUY_PICKAXE") % [Helper.get_item_name(item_name).to_lower()], 1.0)
 
-func _on_close_button_pressed():
-	game.fade_out_panel(self)
-	game.active_panel = null
-
 func _on_overclocks_button_pressed():
 	_on_btn_pressed("Overclocks")
 

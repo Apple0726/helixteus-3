@@ -2,9 +2,9 @@
 
 [ext_resource type="Theme" uid="uid://cp2u1kgj60ic" path="res://Resources/default_theme.tres" id="1_nvp2m"]
 [ext_resource type="Script" path="res://Scripts/CraftPanel.gd" id="2_mcqm5"]
-[ext_resource type="Texture2D" uid="uid://ds7wkl1q870po" path="res://Graphics/GUI/Panel.png" id="3_kdk5l"]
-[ext_resource type="Texture2D" uid="uid://bc8dirylcuw6l" path="res://Graphics/GUI/CloseButtonNormal.png" id="4_c88uc"]
-[ext_resource type="Texture2D" uid="uid://8nxpio61rtvq" path="res://Graphics/GUI/CloseButtonHover.png" id="5_40q1n"]
+[ext_resource type="Texture2D" uid="uid://ccntlctxytsi2" path="res://Graphics/GUI/Panel.png" id="3_kdk5l"]
+[ext_resource type="Texture2D" uid="uid://baowebna7hgr5" path="res://Graphics/GUI/CloseButtonNormal.png" id="4_c88uc"]
+[ext_resource type="Texture2D" uid="uid://c1vwn7p5uxu1r" path="res://Graphics/GUI/CloseButtonHover.png" id="5_40q1n"]
 [ext_resource type="PackedScene" uid="uid://1hq6qpr1oa3i" path="res://Scenes/AdvButton.tscn" id="5_wuk46"]
 
 [sub_resource type="SystemFont" id="SystemFont_sxpbd"]
@@ -125,6 +125,7 @@ size_flags_vertical = 3
 columns = 10
 
 [node name="ItemInfo" type="Panel" parent="."]
+visible = false
 layout_mode = 0
 offset_left = 352.0
 offset_top = 416.0
@@ -168,7 +169,6 @@ icon_alignment = 2
 expand_icon = true
 
 [node name="ItemName" type="Label" parent="ItemInfo"]
-modulate = Color(1, 1, 1, 0.52549)
 layout_mode = 1
 anchors_preset = 10
 anchor_right = 1.0

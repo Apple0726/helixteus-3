@@ -27,6 +27,7 @@ func set_polygon(v:Vector2, offset:Vector2 = Vector2.ZERO):
 
 func _on_close_button_pressed():
 	game.toggle_panel(panel_var_name)
+	game.active_panel = null
 
 func _input(event):
 	if event is InputEventMouseMotion and visible:
