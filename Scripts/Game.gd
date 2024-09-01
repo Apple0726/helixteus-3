@@ -87,6 +87,7 @@ var panel_var_name_to_file_name = {
 	"settings_panel":"Settings",
 	"ships_panel":"Ships",
 	"shop_panel":"Shop",
+	"SC_panel":"SCPanel",
 	"stats_panel":"Stats",
 	"wiki":"Wiki",
 }
@@ -147,7 +148,7 @@ var c_s:int
 var c_s_g:int
 var c_p:int
 var c_p_g:int
-var c_t:int
+var c_t:int # current_tile
 
 #Number of items per stack
 var stack_size:int

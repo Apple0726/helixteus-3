@@ -1,13 +1,26 @@
-[gd_scene load_steps=11 format=3 uid="uid://cut1or30pxsib"]
+[gd_scene load_steps=15 format=3 uid="uid://cut1or30pxsib"]
 
-[ext_resource type="Texture2D" uid="uid://c67y71rs3ver2" path="res://Graphics/Misc/BarUnder2.png" id="1"]
-[ext_resource type="Texture2D" uid="uid://1h4b4lcm50vf" path="res://Graphics/Misc/Bar2.png" id="2"]
+[ext_resource type="Texture2D" uid="uid://kr2fdk8dptv1" path="res://Graphics/Misc/BarUnder2.png" id="1"]
+[ext_resource type="Texture2D" uid="uid://bx1hvetixqpwi" path="res://Graphics/Misc/Bar2.png" id="2"]
 [ext_resource type="PackedScene" uid="uid://bx0a7iwx3qlo1" path="res://Scenes/PieGraph.tscn" id="3"]
+[ext_resource type="Texture2D" uid="uid://baowebna7hgr5" path="res://Graphics/GUI/CloseButtonNormal.png" id="3_6yfos"]
+[ext_resource type="Texture2D" uid="uid://c1vwn7p5uxu1r" path="res://Graphics/GUI/CloseButtonHover.png" id="4_wkbos"]
 [ext_resource type="Theme" uid="uid://cp2u1kgj60ic" path="res://Resources/default_theme.tres" id="5"]
+[ext_resource type="Texture2D" uid="uid://ccntlctxytsi2" path="res://Graphics/GUI/Panel.png" id="5_0aci7"]
 [ext_resource type="Script" path="res://Scripts/SCPanel.gd" id="6"]
-[ext_resource type="Texture2D" uid="uid://b03bc5a1k5a27" path="res://Graphics/Icons/stone.png" id="7"]
-[ext_resource type="Texture2D" uid="uid://ocunpc0pw8ly" path="res://Graphics/Icons/Time.png" id="10"]
-[ext_resource type="PackedScene" uid="uid://ddf2xjwcht77u" path="res://Scenes/CloseButton.tscn" id="12"]
+[ext_resource type="Texture2D" uid="uid://hvuwdl8ox0yv" path="res://Graphics/Icons/stone.png" id="7"]
+[ext_resource type="Texture2D" uid="uid://bn8t8jmrkuvdk" path="res://Graphics/Icons/Time.png" id="10"]
+
+[sub_resource type="SystemFont" id="SystemFont_sxpbd"]
+font_names = PackedStringArray("Arial")
+multichannel_signed_distance_field = true
+
+[sub_resource type="LabelSettings" id="LabelSettings_1i2i7"]
+font = SubResource("SystemFont_sxpbd")
+font_size = 24
+shadow_size = 2
+shadow_color = Color(0, 0, 0, 0.372549)
+shadow_offset = Vector2(2, 2)
 
 [sub_resource type="InputEventKey" id="InputEventKey_h3yc4"]
 device = -1
@@ -17,47 +30,51 @@ unicode = 103
 [sub_resource type="Shortcut" id="2"]
 events = [SubResource("InputEventKey_h3yc4")]
 
-[node name="SCPanel" type="Panel"]
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -532.0
-offset_top = -300.0
-offset_right = 532.0
-offset_bottom = 300.0
-grow_horizontal = 2
-grow_vertical = 2
+[node name="SCPanel" type="Control"]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 1064.0
+offset_bottom = 600.0
 theme = ExtResource("5")
 script = ExtResource("6")
 
-[node name="CloseButton" parent="." instance=ExtResource("12")]
+[node name="GUI" type="TextureRect" parent="."]
+offset_right = 1280.0
+offset_bottom = 720.0
+mouse_filter = 2
+texture = ExtResource("5_0aci7")
+metadata/_edit_lock_ = true
+
+[node name="CloseButton" type="TextureButton" parent="."]
 layout_mode = 0
-anchors_preset = 0
-anchor_left = 0.0
-anchor_right = 0.0
-offset_left = 1032.0
-offset_top = 8.0
-offset_right = 1056.0
-offset_bottom = 32.0
-grow_horizontal = 1
+offset_left = 1136.0
+offset_top = 67.0
+offset_right = 1185.0
+offset_bottom = 116.0
+texture_normal = ExtResource("3_6yfos")
+texture_hover = ExtResource("4_wkbos")
 
 [node name="Title" type="Label" parent="."]
 custom_minimum_size = Vector2(0, 38)
-layout_mode = 0
+layout_mode = 1
+anchors_preset = 10
 anchor_right = 1.0
-offset_bottom = 38.0
+offset_left = 128.0
+offset_top = 72.0
+offset_right = 64.0
+offset_bottom = 110.0
+grow_horizontal = 2
 theme_override_font_sizes/font_size = 18
 text = "STONE_CRUSHER_NAME"
-horizontal_alignment = 1
+label_settings = SubResource("LabelSettings_1i2i7")
 vertical_alignment = 1
 
 [node name="Desc" type="Label" parent="."]
 layout_mode = 0
-offset_top = 64.0
-offset_right = 1064.0
-offset_bottom = 100.0
+offset_left = 112.0
+offset_top = 128.0
+offset_right = 1176.0
+offset_bottom = 164.0
 horizontal_alignment = 1
 vertical_alignment = 1
 
@@ -65,20 +82,21 @@ vertical_alignment = 1
 anchors_preset = 0
 offset_right = 40.0
 offset_bottom = 40.0
+metadata/_edit_lock_ = true
 
 [node name="PieGraph" parent="Control" instance=ExtResource("3")]
 layout_mode = 0
-offset_left = 68.0
-offset_top = 136.0
-offset_right = 368.0
-offset_bottom = 464.0
+offset_left = 152.0
+offset_top = 176.0
+offset_right = 452.0
+offset_bottom = 504.0
 
 [node name="Button" type="Button" parent="Control"]
 layout_mode = 0
-offset_left = 768.0
-offset_top = 544.0
-offset_right = 1048.0
-offset_bottom = 584.0
+offset_left = 872.0
+offset_top = 584.0
+offset_right = 1152.0
+offset_bottom = 624.0
 theme = ExtResource("5")
 shortcut = SubResource("2")
 shortcut_in_tooltip = false
@@ -86,10 +104,10 @@ text = "START_CRUSHING"
 
 [node name="HBoxContainer" type="HBoxContainer" parent="Control"]
 layout_mode = 0
-offset_left = 580.0
-offset_top = 136.0
-offset_right = 952.0
-offset_bottom = 176.0
+offset_left = 624.0
+offset_top = 168.0
+offset_right = 996.0
+offset_bottom = 208.0
 
 [node name="HSlider" type="HSlider" parent="Control/HBoxContainer"]
 layout_mode = 2
@@ -110,17 +128,17 @@ vertical_alignment = 1
 
 [node name="VBoxContainer" type="VBoxContainer" parent="Control"]
 layout_mode = 0
-offset_left = 580.0
-offset_top = 244.0
-offset_right = 620.0
-offset_bottom = 284.0
+offset_left = 584.0
+offset_top = 280.0
+offset_right = 624.0
+offset_bottom = 320.0
 
 [node name="Label" type="Label" parent="Control"]
 layout_mode = 0
-offset_left = 580.0
-offset_top = 204.0
-offset_right = 820.0
-offset_bottom = 228.0
+offset_left = 584.0
+offset_top = 240.0
+offset_right = 824.0
+offset_bottom = 264.0
 
 [node name="Control" type="Control" parent="Control"]
 anchors_preset = 0
@@ -129,20 +147,20 @@ offset_bottom = 40.0
 
 [node name="Time" type="Label" parent="Control/Control"]
 layout_mode = 0
-offset_left = 596.0
-offset_top = 552.0
-offset_right = 804.0
-offset_bottom = 576.0
+offset_left = 692.0
+offset_top = 592.0
+offset_right = 900.0
+offset_bottom = 616.0
 text = "00:00"
 vertical_alignment = 1
 
 [node name="TextureProgressBar" type="TextureProgressBar" parent="Control/Control"]
 modulate = Color(0.505882, 0.505882, 0.505882, 1)
 layout_mode = 0
-offset_left = 40.0
-offset_top = 552.0
-offset_right = 516.0
-offset_bottom = 576.0
+offset_left = 136.0
+offset_top = 592.0
+offset_right = 612.0
+offset_bottom = 616.0
 max_value = 1.0
 step = 0.0
 value = 0.5
@@ -153,26 +171,26 @@ tint_under = Color(0.478431, 0.478431, 0.478431, 1)
 
 [node name="TextureRect" type="TextureRect" parent="Control/Control"]
 layout_mode = 0
-offset_left = 560.0
-offset_top = 552.0
-offset_right = 584.0
-offset_bottom = 576.0
+offset_left = 656.0
+offset_top = 592.0
+offset_right = 680.0
+offset_bottom = 616.0
 texture = ExtResource("10")
 expand_mode = 1
 stretch_mode = 6
 
 [node name="Stone" type="Label" parent="Control/Control"]
 layout_mode = 0
-offset_left = 40.0
-offset_top = 552.0
-offset_right = 516.0
-offset_bottom = 576.0
+offset_left = 136.0
+offset_top = 592.0
+offset_right = 612.0
+offset_bottom = 616.0
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
 text = "1000 kg"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[connection signal="close_button_pressed" from="CloseButton" to="." method="_on_close_button_pressed"]
+[connection signal="pressed" from="CloseButton" to="." method="_on_close_button_pressed"]
 [connection signal="pressed" from="Control/Button" to="." method="_on_button_pressed"]
 [connection signal="mouse_entered" from="Control/HBoxContainer/HSlider" to="." method="_on_h_slider_mouse_entered"]
 [connection signal="mouse_exited" from="Control/HBoxContainer/HSlider" to="." method="_on_h_slider_mouse_exited"]

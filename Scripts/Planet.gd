@@ -649,8 +649,7 @@ func click_tile(tile, tile_id:int):
 			game.PC_panel.probe_tier = 0
 			game.toggle_panel(game.PC_panel)
 		Building.STONE_CRUSHER:
-			game.SC_panel.c_t = tile_id
-			game.toggle_panel(game.SC_panel)
+			game.toggle_panel("SC_panel")
 			game.SC_panel.hslider.value = game.SC_panel.hslider.max_value
 		Building.GLASS_FACTORY:
 			game.toggle_panel(game.production_panel)

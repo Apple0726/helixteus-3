@@ -8,7 +8,6 @@ extends "Panel.gd"
 @onready var CC_bar = $Control/Control/TextureProgressBar
 @onready var CC_stone = $Control/Control/Stone
 @onready var CC_time = $Control/Control/Time
-var c_t:int
 var tile
 var stone_to_crush:Dictionary = {}
 var expected_rsrc:Dictionary
@@ -18,7 +17,7 @@ func _ready():
 	set_polygon(size)
 
 func refresh():
-	tile = game.tile_data[c_t]
+	tile = game.tile_data[game.c_t]
 	expected_rsrc = {}
 	var is_crushing = tile.bldg.has("stone")
 	set_process(is_crushing)
@@ -79,10 +78,6 @@ func _process(delta):
 	CC_time.text = Helper.time_to_str(c_i.qty_left / c_i.crush_spd)
 	for hbox in rsrc_nodes:
 		hbox.rsrc.get_node("Text").text = "%s kg" % [Helper.format_num(tile.bldg.expected_rsrc[hbox.name] * (1 - CC_bar.value), true)]
-
-func _on_close_button_pressed():
-	game.toggle_panel(self)
-
 
 func _on_h_slider_value_changed(value):
 	refresh()
