@@ -4800,9 +4800,12 @@ func _on_continue_pressed():
 	if c_sv != "":
 		fade_out_title("load_game")
 
-func add_right_click_menu(items:Array):
+func add_right_click_menu(items:Array, on_close_no_action_callable = null):
 	var menu = load("res://Scenes/RightClickMenu.tscn").instantiate()
 	menu.items = items
 	menu.position = mouse_pos
+	if on_close_no_action_callable:
+		menu.on_close_no_action.connect(on_close_no_action_callable)
 	hide_tooltip()
 	$Panels/Control.add_child(menu)
+	return menu

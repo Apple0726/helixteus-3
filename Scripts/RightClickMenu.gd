@@ -1,5 +1,7 @@
 extends PanelContainer
 
+signal on_close_no_action
+
 var items:Array
 var button_hovered = false
 
@@ -20,4 +22,5 @@ func _ready():
 
 func _input(event):
 	if event is InputEventKey or Input.is_action_just_pressed("left_click") and not button_hovered:
+		on_close_no_action.emit()
 		queue_free()

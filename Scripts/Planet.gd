@@ -5,9 +5,10 @@ extends Node2D
 @onready var p_id = game.c_p
 @onready var p_i = game.planet_data[p_id]
 
+var right_click_menu
+
 #Used to prevent view from moving outside viewport
 var dimensions:float
-
 #For exploring a cave
 var rover_selected:int = -1
 #The building you selected in construct panel
@@ -809,7 +810,6 @@ func add_shadows():
 			
 
 func remove_selected_tiles():
-	tiles_selected.clear()
 	for white_rect in get_tree().get_nodes_in_group("white_rects"):
 		white_rect.queue_free()
 		white_rect.remove_from_group("white_rects")
@@ -954,9 +954,23 @@ func collect_resources_callable():
 	game.show_collect_info(items_collected)
 	game.HUD.refresh()
 
-func select_all_of_same_type_callable():
-	var tile = game.tile_data[tile_over]
+func add_white_rect(pos:Vector2, group_name:String):
+	var white_rect = preload("res://Scenes/WhiteRect.tscn").instantiate()
+	white_rect.position = pos
+	white_rect.modulate.a = 0.0
+	var tween = create_tween()
+	tween.tween_property(white_rect, "modulate:a", 1.0, 0.1)
+	add_child(white_rect)
+	white_rect.add_to_group(group_name)
+	
+func select_all_of_same_type_callable(called_from_right_click = true):
+	var tile
+	if called_from_right_click:
+		tile = game.tile_data[right_clicked_tile]
+	else:
+		tile = game.tile_data[tile_over]
 	tiles_selected.clear()
+	remove_selected_white_rects()
 	var path_1_value_sum:float = 0
 	var path_2_value_sum:float = 0
 	var path_3_value_sum:float = 0
@@ -981,14 +995,7 @@ func select_all_of_same_type_callable():
 					path_2_value_sum = Helper.get_final_value(p_i, tile2, 2) if tile2.bldg.has("path_2_value") else 0
 				path_3_value_sum = Helper.get_final_value(p_i, tile2, 3) if tile2.bldg.has("path_3_value") else 0
 			tiles_selected.append(i)
-			var white_rect = preload("res://Scenes/WhiteRect.tscn").instantiate()
-			white_rect.position.x = (i % wid) * 200
-			white_rect.position.y = (i / wid) * 200
-			white_rect.modulate.a = 0.0
-			var tween = create_tween()
-			tween.tween_property(white_rect, "modulate:a", 1.0, 0.1)
-			add_child(white_rect)
-			white_rect.add_to_group("white_rects")
+			add_white_rect(Vector2(i % wid, i / wid) * 200, "selected_white_rects")
 	if game.shop_panel.tab == "Overclocks":
 		game.shop_panel.get_node("ItemInfo/BuyAmount").value = len(tiles_selected)
 	if tile.has("bldg") and not game.item_cursor.visible:
@@ -1006,6 +1013,15 @@ func select_all_of_same_type_callable():
 		else:
 			game.show_adv_tooltip(Helper.get_bldg_tooltip2(tile.bldg.name, path_1_value_sum, path_2_value_sum, path_3_value_sum) + "\n" + tr("SELECTED_X_BLDGS") % len(tiles_selected))
 
+func on_right_click_menu_closed():
+	# Only called if no button in right click menu was clicked
+	remove_selected_white_rects()
+
+func remove_selected_white_rects():
+	for white_rect in get_tree().get_nodes_in_group("selected_white_rects"):
+		white_rect.queue_free()
+		white_rect.remove_from_group("selected_white_rects")
+	
 func _unhandled_input(event):
 	var about_to_mine = game.bottom_info_action == "about_to_mine"
 	var mass_build:bool = Input.is_action_pressed("left_click") and Input.is_action_pressed("shift") and game.bottom_info_action == "building" and constructing_unique_building_tier == -1
@@ -1014,41 +1030,57 @@ func _unhandled_input(event):
 	if tile_over != -1 and game.bottom_info_action != "building" and tile_over < len(game.tile_data):
 		var tile = game.tile_data[tile_over]
 		if tile:
-			if tile.has("unique_bldg") and tile.unique_bldg.name != UniqueBuilding.SPACEPORT and game.engineering_bonus.max_unique_building_tier >= int(tile.unique_bldg.tier) and tile.unique_bldg.name in game.unique_bldgs_discovered.keys() and int(tile.unique_bldg.tier) in game.unique_bldgs_discovered[tile.unique_bldg.name].keys():
+			if (tile.has("unique_bldg")
+			and tile.unique_bldg.name != UniqueBuilding.SPACEPORT
+			and game.engineering_bonus.max_unique_building_tier >= int(tile.unique_bldg.tier)
+			and tile.unique_bldg.name in game.unique_bldgs_discovered.keys()
+			and int(tile.unique_bldg.tier) in game.unique_bldgs_discovered[tile.unique_bldg.name].keys()):
 				if Input.is_action_just_pressed("right_click"):
 					right_clicked_tile = tile_over
-					game.add_right_click_menu([{
+					var right_click_info_list = [{
 						"button_text":tr("DUPLICATE") + " (Q)",
 						"button_callable":duplicate_unique_building_callable,
-						}])
+						}]
+					right_click_menu = game.add_right_click_menu(right_click_info_list, on_right_click_menu_closed)
+					add_white_rect(Vector2(tile_over % wid, tile_over / wid) * 200, "selected_white_rects")
 				elif Input.is_action_just_pressed("Q"):
 					duplicate_unique_building_callable()
 			elif tile.has("bldg"):
 				if Input.is_action_just_pressed("right_click"):
 					right_clicked_tile = tile_over
+					var upgrade_button_dict = {
+						"button_text":tr("UPGRADE") + " (F)",
+						"button_callable":upgrade_building_callable,
+						}
+					var destroy_button_dict = {
+						"button_text":tr("DESTROY") + " (X)",
+						"button_callable":destroy_building_callable,
+						}
 					var right_click_info_list = [{
 						"button_text":tr("DUPLICATE") + " (Q)",
 						"button_callable":duplicate_building_callable,
 						},
-						{
-						"button_text":tr("UPGRADE") + " (F)",
-						"button_callable":upgrade_building_callable,
-						},
-						{
-						"button_text":tr("DESTROY") + " (X)",
-						"button_callable":destroy_building_callable,
-						},
+						upgrade_button_dict, destroy_button_dict
 					]
+					var load_unload_button_dict = {}
 					if tile.bldg.name in [Building.STONE_CRUSHER, Building.GLASS_FACTORY, Building.STEAM_ENGINE]:
-						right_click_info_list.append({
-						"button_text":tr("COLLECT_INSERT_RESOURCES") + " (G)",
+						load_unload_button_dict = {
+						"button_text":tr("LOAD_UNLOAD") + " (G)",
 						"button_callable":collect_resources_callable,
+						}
+						right_click_info_list.append(load_unload_button_dict)
+					if tiles_selected.is_empty():
+						right_click_info_list.append({
+						"button_text":tr("SELECT_ALL_OF_SAME_TYPE") + " (Shift)",
+						"button_callable":select_all_of_same_type_callable,
 						})
-					right_click_info_list.append({
-					"button_text":tr("SELECT_ALL_OF_SAME_TYPE") + " (Shift)",
-					"button_callable":select_all_of_same_type_callable,
-					})
-					game.add_right_click_menu(right_click_info_list)
+						add_white_rect(Vector2(tile_over % wid, tile_over / wid) * 200, "selected_white_rects")
+					else:
+						upgrade_button_dict.button_text = tr("UPGRADE_ALL") + " (F)"
+						destroy_button_dict.button_text = tr("DESTROY_ALL") + " (X)"
+						if not load_unload_button_dict.is_empty():
+							load_unload_button_dict.button_text = tr("LOAD_UNLOAD_ALL") + " (G)"
+					right_click_menu = game.add_right_click_menu(right_click_info_list, on_right_click_menu_closed)
 				elif Input.is_action_just_pressed("Q"):
 					duplicate_building_callable()
 				elif Input.is_action_just_pressed("F"):
@@ -1057,13 +1089,13 @@ func _unhandled_input(event):
 					destroy_building_callable()
 				elif Input.is_action_just_pressed("G") and game.active_panel == null:
 					collect_resources_callable()
-		if not is_instance_valid(game.active_panel) and Input.is_action_just_pressed("shift") and tile:
-			select_all_of_same_type_callable()
+			if not is_instance_valid(game.active_panel) and Input.is_action_just_pressed("shift"):
+				select_all_of_same_type_callable(false)
 	if Input.is_action_just_released("shift"):
 		remove_selected_tiles()
 		view.move_view = true
 		view.scroll_view = true
-		if tile_over != -1 and not game.upgrade_panel.visible:
+		if tile_over != -1:
 			if game.tile_data[tile_over] and not is_instance_valid(game.active_panel) and not game.item_cursor.visible and not game.planet_HUD.get_node("ConstructPanel").visible:
 				show_tooltip(game.tile_data[tile_over], tile_over)
 	if not is_instance_valid(game.planet_HUD) or not is_instance_valid(game.HUD):
@@ -1091,13 +1123,13 @@ func _unhandled_input(event):
 				for cost in constr_costs.keys():
 					constr_costs_total[cost] = constr_costs[cost] / (game.tile_data[tile_over].cost_div if game.tile_data[tile_over] and game.tile_data[tile_over].has("cost_div") else 1.0)
 		var black_bg = game.get_node("UI/PopupBackground").visible
-		$WhiteRect.visible = mouse_on_tiles and not black_bg
 		$WhiteRect.position.x = floor(mouse_pos.x / 200) * 200
 		$WhiteRect.position.y = floor(mouse_pos.y / 200) * 200
 		if mouse_on_tiles:
 			var x_over:int = int(mouse_pos.x / 200)
 			var y_over:int = int(mouse_pos.y / 200)
 			tile_over = x_over % wid + y_over * wid
+			$WhiteRect.visible = not black_bg and get_tree().get_nodes_in_group("selected_white_rects").is_empty()
 			if tile_over != prev_tile_over and not_on_button and not game.item_cursor.visible and not black_bg and not game.active_panel and not game.planet_HUD.get_node("ConstructPanel").visible:
 				hide_tooltip()
 				if not tiles_selected.is_empty() and not tile_over in tiles_selected:
@@ -1108,9 +1140,9 @@ func _unhandled_input(event):
 				show_tooltip(tile, tile_over)
 				if is_instance_valid(shadow):
 					shadow.visible = mouse_on_tiles and not mass_build
-				for white_rect in get_tree().get_nodes_in_group("CBD_white_rects"):
+				for white_rect in get_tree().get_nodes_in_group("AOE_white_rects"):
 					white_rect.queue_free()
-					white_rect.remove_from_group("CBD_white_rects")
+					white_rect.remove_from_group("AOE_white_rects")
 				if tile and (tile.has("bldg") and tile.bldg.name == Building.CENTRAL_BUSINESS_DISTRICT or tile.has("unique_bldg") and tile.unique_bldg.name in [UniqueBuilding.MINERAL_REPLICATOR, UniqueBuilding.OBSERVATORY, UniqueBuilding.SUBSTATION, UniqueBuilding.MINING_OUTPOST]):
 					var n:int = tile.bldg.path_3_value if tile.has("bldg") else Helper.get_unique_bldg_area(tile.unique_bldg.tier)
 					for i in n:
@@ -1121,16 +1153,10 @@ func _unhandled_input(event):
 							var y:int = y_over + j - n / 2
 							if y < 0 or y >= wid or x == x_over and y == y_over:
 								continue
-							var white_rect = load("res://Scenes/WhiteRect.tscn").instantiate()
-							white_rect.position.x = x * 200
-							white_rect.position.y = y * 200
-							white_rect.modulate.a = 0.0
-							var tween = create_tween()
-							tween.tween_property(white_rect, "modulate:a", 1.0, 0.1)
-							add_child(white_rect)
-							white_rect.add_to_group("CBD_white_rects")
+							add_white_rect(Vector2(x, y) * 200, "AOE_white_rects")
 			prev_tile_over = tile_over
 		else:
+			$WhiteRect.hide()
 			if tile_over != -1 and not_on_button:
 				tile_over = -1
 				prev_tile_over = -1
@@ -1144,7 +1170,7 @@ func _unhandled_input(event):
 	if Input.is_action_just_released("left_click") and mass_build_rect.visible:
 		mass_build_rect.visible = false
 		var curr_time = Time.get_unix_time_from_system()
-		var soil_tiles = $TileFeatures.get_used_cells(2)
+		var soil_tiles = $Soil.get_used_cells()
 		for i in len(shadows):
 			if is_instance_valid(shadows[i]):
 				var tile_id:int = get_tile_id_from_pos(shadows[i].position)
@@ -1152,7 +1178,7 @@ func _unhandled_input(event):
 				shadows[i].queue_free()
 				soil_tiles.append(Vector2i(tile_id % wid, int(tile_id / wid)))
 		if bldg_to_construct == Building.GREENHOUSE:
-			$TileFeatures.set_cells_terrain_connect(2, soil_tiles, 0, 3)
+			$Soil.set_cells_terrain_connect(soil_tiles, 0, 0)
 		shadow_num = 0
 		game.HUD.refresh()
 		return
@@ -1170,12 +1196,15 @@ func _unhandled_input(event):
 		shadow.visible = false
 	if mass_build:
 		return
-	if (not Input.is_action_pressed("shift") and Input.is_action_just_released("left_click") or Input.is_action_pressed("shift") and Input.is_action_just_pressed("left_click") or event is InputEventScreenTouch) and not view.dragged and not_on_button and Geometry2D.is_point_in_polygon(mouse_pos, planet_bounds):
-		var x_pos = int(mouse_pos.x / 200)
-		var y_pos = int(mouse_pos.y / 200)
-		var tile_id = get_tile_id_from_pos(mouse_pos)
-		var tile = game.tile_data[tile_id]
+	#if (not Input.is_action_pressed("shift") and Input.is_action_just_released("left_click") or Input.is_action_pressed("shift") and Input.is_action_just_pressed("left_click") or event is InputEventScreenTouch) and not view.dragged and not_on_button and Geometry2D.is_point_in_polygon(mouse_pos, planet_bounds):
+		#var x_pos = int(mouse_pos.x / 200)
+		#var y_pos = int(mouse_pos.y / 200)
+		#var tile_id = get_tile_id_from_pos(mouse_pos)
+		#var tile = game.tile_data[tile_id]
 	if (Input.is_action_just_released("left_click") or event is InputEventScreenTouch) and not view.dragged and not_on_button and Geometry2D.is_point_in_polygon(mouse_pos, planet_bounds):
+		if not is_instance_valid(right_click_menu):
+			tiles_selected.clear()
+			remove_selected_white_rects()
 		var curr_time = Time.get_unix_time_from_system()
 		var x_pos = int(mouse_pos.x / 200)
 		var y_pos = int(mouse_pos.y / 200)
