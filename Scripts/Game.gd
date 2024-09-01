@@ -559,6 +559,7 @@ func _ready():
 		Settings.cave_gen_info = config.get_value("game", "cave_gen_info", false)
 		Settings.op_cursor = config.get_value("misc", "op_cursor", false)
 		Settings.auto_switch_buy_sell = config.get_value("game", "auto_switch_buy_sell", false)
+		Settings.max_fps = config.get_value("rendering", "max_fps", 60)
 		Settings.discord = config.get_value("misc", "discord", true)
 		Settings.static_space_LOD = config.get_value("graphics", "static_space_LOD", 12)
 		Settings.dynamic_space_LOD = config.get_value("graphics", "dynamic_space_LOD", 8)

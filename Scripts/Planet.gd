@@ -84,8 +84,12 @@ func _ready():
 	rsrcs = []
 	rsrcs.resize(wid * wid)
 	dimensions = wid * 200
-	$PlanetTiles.tile_set = load("res://Resources/PlanetTileSet.tres")
-	$Obstacles.tile_set = load("res://Resources/ObstaclesTileSet.tres")
+	$Ash.tile_set = ResourceFiles.ash_tile_set
+	$Lakes1.tile_set = ResourceFiles.lake_tile_set
+	$Lakes2.tile_set = ResourceFiles.lake_tile_set
+	$PlanetTiles.tile_set = ResourceFiles.planet_tile_set
+	$Obstacles.tile_set = ResourceFiles.obstacles_tile_set
+	$Soil.tile_set = ResourceFiles.soil_tile_set
 	$Obstacles.modulate = star_mod
 	var nuclear_fusion_reactor_main_tiles = []
 	if p_i.unique_bldgs.has(UniqueBuilding.NUCLEAR_FUSION_REACTOR):
@@ -187,8 +191,8 @@ func _ready():
 		"l":1,
 		"sc":2
 	}
-	$Soil.set_cells_terrain_connect(soil_tiles, 0, 3)
-	$Ash.set_cells_terrain_connect(ash_tiles, 0, 4)
+	$Soil.set_cells_terrain_connect(soil_tiles, 0, 0)
+	$Ash.set_cells_terrain_connect(ash_tiles, 0, 0)
 	if p_i.has("lake_1"):
 		$Lakes1.modulate = Data.lake_colors[p_i.lake_1.element][p_i.lake_1.state]
 		$Lakes1.set_cells_terrain_connect(lake_tiles[0], 0, lake_state_id[p_i.lake_1.state])

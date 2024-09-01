@@ -1,22 +1,22 @@
-[gd_scene load_steps=46 format=3 uid="uid://jyuxsqn6smkw"]
+[gd_scene load_steps=40 format=3 uid="uid://jyuxsqn6smkw"]
 
-[ext_resource type="Texture2D" uid="uid://d1exdy8b54nk0" path="res://Graphics/Icons/Arrow.png" id="1"]
+[ext_resource type="Texture2D" uid="uid://ds6nct7g63284" path="res://Graphics/Icons/Arrow.png" id="1"]
 [ext_resource type="Theme" uid="uid://cp2u1kgj60ic" path="res://Resources/default_theme.tres" id="2"]
 [ext_resource type="Script" path="res://Scripts/Mining.gd" id="3"]
-[ext_resource type="Texture2D" uid="uid://dwf3b6bp70ymq" path="res://Graphics/Misc/Bar.png" id="4"]
-[ext_resource type="AudioStream" uid="uid://d02l8ys34uf56" path="res://Audio/SFX/break_rock.ogg" id="5"]
-[ext_resource type="Texture2D" uid="uid://btsg5ff7pjkr3" path="res://Graphics/Spritesheets/cracks.png" id="6"]
-[ext_resource type="AudioStream" uid="uid://bcqe74fkfs71q" path="res://Audio/SFX/mining_stone.ogg" id="7"]
-[ext_resource type="Texture2D" uid="uid://dmcaf8608k1eh" path="res://Graphics/Materials/coal.png" id="8"]
-[ext_resource type="AudioStream" uid="uid://b11pyijirqcem" path="res://Audio/SFX/mining_metal.ogg" id="9"]
+[ext_resource type="Texture2D" uid="uid://4tf3teqmkahc" path="res://Graphics/Misc/Bar.png" id="4"]
+[ext_resource type="AudioStream" uid="uid://djsyjnactuti8" path="res://Audio/SFX/break_rock.ogg" id="5"]
+[ext_resource type="Texture2D" uid="uid://dj4mh887jy68d" path="res://Graphics/Spritesheets/cracks.png" id="6"]
+[ext_resource type="AudioStream" uid="uid://c8utjcp7ne3dn" path="res://Audio/SFX/mining_stone.ogg" id="7"]
+[ext_resource type="Texture2D" uid="uid://c2gvy8266bgkb" path="res://Graphics/Materials/coal.png" id="8"]
+[ext_resource type="AudioStream" uid="uid://dvok0oof7xxj5" path="res://Audio/SFX/mining_metal.ogg" id="9"]
 [ext_resource type="PackedScene" uid="uid://bwon75bhhf24u" path="res://Scenes/SquareBar.tscn" id="10"]
-[ext_resource type="Texture2D" uid="uid://d3ndemeuvtvib" path="res://Graphics/Icons/Circle.png" id="11"]
-[ext_resource type="Texture2D" uid="uid://bmcj5twpgsrvy" path="res://Graphics/Decoratives/Surface.jpg" id="12"]
-[ext_resource type="Texture2D" uid="uid://clbc4nquwmxyg" path="res://Graphics/Decoratives/Mantle.jpg" id="13"]
-[ext_resource type="Texture2D" uid="uid://cku7paeo1q4xn" path="res://Graphics/Decoratives/Crust.jpg" id="14"]
+[ext_resource type="Texture2D" uid="uid://dwstl3xmwv5vh" path="res://Graphics/Icons/Circle.png" id="11"]
+[ext_resource type="Texture2D" uid="uid://de22mr1khmw2" path="res://Graphics/Decoratives/Surface.jpg" id="12"]
+[ext_resource type="Texture2D" uid="uid://cverxuaowfm22" path="res://Graphics/Decoratives/Mantle.jpg" id="13"]
+[ext_resource type="Texture2D" uid="uid://ibqyp4tcqbub" path="res://Graphics/Decoratives/Crust.jpg" id="14"]
 [ext_resource type="Shader" path="res://Shaders/Mantle.gdshader" id="15"]
 [ext_resource type="Script" path="res://Scripts/TextEffects/AuroraText.gd" id="16"]
-[ext_resource type="Texture2D" uid="uid://dpttt5mbdfmow" path="res://Graphics/Misc/noise_combined.png" id="17"]
+[ext_resource type="Texture2D" uid="uid://dl0tbc2d816cj" path="res://Graphics/Misc/noise_combined.png" id="17"]
 [ext_resource type="PackedScene" uid="uid://c8jr3e5aiyj1n" path="res://Scenes/HelpText.tscn" id="18"]
 
 [sub_resource type="ShaderMaterial" id="1"]
@@ -25,16 +25,16 @@ shader_parameter/color = Color(0.94902, 0.47451, 0, 1)
 shader_parameter/speed = 0.03
 shader_parameter/alpha = 0.25
 
-[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_myhhw"]
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_rnukk"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_gcimq"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_lg265"]
 bg_color = Color(1, 1, 1, 0.164706)
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_7ahnm"]
 
-[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_gcimq"]
-
-[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_rnukk"]
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_myhhw"]
 
 [sub_resource type="AtlasTexture" id="6"]
 atlas = ExtResource("6")
@@ -86,71 +86,6 @@ unicode = 122
 [sub_resource type="Shortcut" id="13"]
 events = [SubResource("InputEventKey_sulwg")]
 
-[sub_resource type="Animation" id="14"]
-length = 0.5
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("Help:modulate")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0, 0.5),
-"transitions": PackedFloat32Array(1, 1),
-"update": 0,
-"values": [Color(1, 1, 1, 1), Color(1, 1, 1, 0)]
-}
-tracks/1/type = "method"
-tracks/1/imported = false
-tracks/1/enabled = true
-tracks/1/path = NodePath(".")
-tracks/1/interp = 1
-tracks/1/loop_wrap = true
-tracks/1/keys = {
-"times": PackedFloat32Array(0.5),
-"transitions": PackedFloat32Array(1),
-"values": [{
-"args": [],
-"method": &"hide_help"
-}]
-}
-
-[sub_resource type="Animation" id="15"]
-tracks/0/type = "bezier"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("LayerInfo:position:x")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"handle_modes": PackedInt32Array(),
-"points": PackedFloat32Array(),
-"times": PackedFloat32Array()
-}
-tracks/1/type = "bezier"
-tracks/1/imported = false
-tracks/1/enabled = true
-tracks/1/path = NodePath("LayerInfo:position:y")
-tracks/1/interp = 1
-tracks/1/loop_wrap = true
-tracks/1/keys = {
-"handle_modes": PackedInt32Array(),
-"points": PackedFloat32Array(),
-"times": PackedFloat32Array()
-}
-tracks/2/type = "value"
-tracks/2/imported = false
-tracks/2/enabled = true
-tracks/2/path = NodePath("LayerInfo:modulate")
-tracks/2/interp = 1
-tracks/2/loop_wrap = true
-tracks/2/keys = {
-"times": PackedFloat32Array(0, 1),
-"transitions": PackedFloat32Array(1, 1),
-"update": 0,
-"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 1)]
-}
-
 [sub_resource type="Animation" id="16"]
 length = 0.266667
 step = 0.0166667
@@ -195,8 +130,6 @@ tracks/2/keys = {
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_ryu2u"]
 _data = {
-"Help fade": SubResource("14"),
-"Layer fade": SubResource("15"),
 "Pickaxe swing": SubResource("16")
 }
 
@@ -229,107 +162,9 @@ tracks/1/keys = {
 }]
 }
 
-[sub_resource type="Animation" id="18"]
-tracks/0/type = "bezier"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("LayerInfo:position:x")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"handle_modes": PackedInt32Array(),
-"points": PackedFloat32Array(),
-"times": PackedFloat32Array()
-}
-tracks/1/type = "value"
-tracks/1/imported = false
-tracks/1/enabled = true
-tracks/1/path = NodePath("LayerInfo:modulate")
-tracks/1/interp = 1
-tracks/1/loop_wrap = true
-tracks/1/keys = {
-"times": PackedFloat32Array(0, 1),
-"transitions": PackedFloat32Array(1, 1),
-"update": 0,
-"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 1)]
-}
-
-[sub_resource type="Animation" id="19"]
-length = 0.266667
-step = 0.0166667
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("Pickaxe/Sprite2D:rotation_degrees")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0, 0.133333, 0.266667),
-"transitions": PackedFloat32Array(1, 1, 1),
-"update": 0,
-"values": [0.0, -90.0, 0.0]
-}
-tracks/1/type = "value"
-tracks/1/imported = false
-tracks/1/enabled = false
-tracks/1/path = NodePath("Pickaxe/Sprite2D:position")
-tracks/1/interp = 1
-tracks/1/loop_wrap = true
-tracks/1/keys = {
-"times": PackedFloat32Array(0, 0.133333, 0.266667),
-"transitions": PackedFloat32Array(1, 1, 1),
-"update": 0,
-"values": [Vector2(648, 176), Vector2(504, 416), Vector2(648, 176)]
-}
-tracks/2/type = "method"
-tracks/2/imported = false
-tracks/2/enabled = true
-tracks/2/path = NodePath(".")
-tracks/2/interp = 1
-tracks/2/loop_wrap = true
-tracks/2/keys = {
-"times": PackedFloat32Array(0.133333),
-"transitions": PackedFloat32Array(1),
-"values": [{
-"args": [],
-"method": &"pickaxe_hit"
-}]
-}
-
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_iottv"]
 _data = {
-"Help fade": SubResource("17"),
-"Layer fade": SubResource("18"),
-"Pickaxe swing": SubResource("19")
-}
-
-[sub_resource type="Animation" id="20"]
-length = 0.5
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("Help:modulate")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0, 0.5),
-"transitions": PackedFloat32Array(1, 1),
-"update": 0,
-"values": [Color(1, 1, 1, 1), Color(1, 1, 1, 0)]
-}
-tracks/1/type = "method"
-tracks/1/imported = false
-tracks/1/enabled = true
-tracks/1/path = NodePath(".")
-tracks/1/interp = 1
-tracks/1/loop_wrap = true
-tracks/1/keys = {
-"times": PackedFloat32Array(0.5),
-"transitions": PackedFloat32Array(1),
-"values": [{
-"args": [],
-"method": &"hide_help"
-}]
+"Help fade": SubResource("17")
 }
 
 [sub_resource type="Animation" id="21"]
@@ -369,48 +204,6 @@ tracks/2/keys = {
 "times": PackedFloat32Array(0, 1)
 }
 
-[sub_resource type="Animation" id="22"]
-length = 0.266667
-step = 0.0166667
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("Pickaxe/Sprite2D:rotation_degrees")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0, 0.133333, 0.266667),
-"transitions": PackedFloat32Array(1, 1, 1),
-"update": 0,
-"values": [0.0, -90.0, 0.0]
-}
-tracks/1/type = "value"
-tracks/1/imported = false
-tracks/1/enabled = false
-tracks/1/path = NodePath("Pickaxe/Sprite2D:position")
-tracks/1/interp = 1
-tracks/1/loop_wrap = true
-tracks/1/keys = {
-"times": PackedFloat32Array(0, 0.133333, 0.266667),
-"transitions": PackedFloat32Array(1, 1, 1),
-"update": 0,
-"values": [Vector2(648, 176), Vector2(504, 416), Vector2(648, 176)]
-}
-tracks/2/type = "method"
-tracks/2/imported = false
-tracks/2/enabled = true
-tracks/2/path = NodePath(".")
-tracks/2/interp = 1
-tracks/2/loop_wrap = true
-tracks/2/keys = {
-"times": PackedFloat32Array(0.133333),
-"transitions": PackedFloat32Array(1),
-"values": [{
-"args": [],
-"method": &"pickaxe_hit"
-}]
-}
-
 [sub_resource type="Animation" id="24"]
 length = 0.001
 tracks/0/type = "value"
@@ -439,9 +232,7 @@ tracks/1/keys = {
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_nby3l"]
 _data = {
-"Help fade": SubResource("20"),
 "Layer fade": SubResource("21"),
-"Pickaxe swing": SubResource("22"),
 "RESET": SubResource("24")
 }
 
@@ -499,11 +290,11 @@ offset_bottom = 200.0
 layout_mode = 0
 offset_right = 200.0
 offset_bottom = 200.0
-theme_override_styles/normal = SubResource("StyleBoxEmpty_myhhw")
+theme_override_styles/focus = SubResource("StyleBoxEmpty_rnukk")
+theme_override_styles/disabled = SubResource("StyleBoxEmpty_gcimq")
 theme_override_styles/hover = SubResource("StyleBoxFlat_lg265")
 theme_override_styles/pressed = SubResource("StyleBoxEmpty_7ahnm")
-theme_override_styles/disabled = SubResource("StyleBoxEmpty_gcimq")
-theme_override_styles/focus = SubResource("StyleBoxEmpty_rnukk")
+theme_override_styles/normal = SubResource("StyleBoxEmpty_myhhw")
 
 [node name="Cracks" type="AnimatedSprite2D" parent="Tile"]
 position = Vector2(100, 100)

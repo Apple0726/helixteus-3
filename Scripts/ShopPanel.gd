@@ -50,8 +50,8 @@ func set_item_info(_item_name:String, _item_costs:Dictionary, _item_texture, _it
 	for item in $Items/Grid.get_children():
 		item.get_node("Highlight").visible = item == _item_node
 	item_name = _item_name
+	$ItemInfo.show()
 	$ItemInfo/ItemName.text = Helper.get_item_name(_item_name)
-	$ItemInfo/ItemName.modulate.a = 1.0
 	item_costs = _item_costs.duplicate(true)
 	$ItemInfo/Panel/TextureRect.texture = _item_texture
 	if tab == "Overclocks":

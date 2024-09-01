@@ -491,14 +491,16 @@ func get_rsrc_from_rock(contents:Dictionary, tile:Dictionary, p_i:Dictionary, ti
 			if not game.show.has("materials"):
 				game.show.materials = true
 				game.HUD.craft.visible = true
-				game.inventory.get_node("TabBar/Materials").visible = true
+				if is_instance_valid(game.inventory):
+					game.inventory.get_node("TabBar/Materials").visible = true
 		elif game.mets.has(content):
 			if not game.help.has("metals"):
 				game.popup_window(tr("YOU_MINED_METALS"), tr("METALS"))
 				game.help.metals = true
 			if not game.show.has("metals"):
 				game.show.metals = true
-				game.inventory.get_node("TabBar/Metals").visible = true
+				if is_instance_valid(game.inventory):
+					game.inventory.get_node("TabBar/Metals").visible = true
 			game.mets[content] += amount
 		elif content == "stone":
 			game.add_resources({"stone":contents.stone})
