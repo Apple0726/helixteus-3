@@ -352,9 +352,6 @@ func _input(event):
 			else:
 				game.popup(tr("REMOVE_WHEELS_ATTEMPT"), 2.5)
 
-func _on_close_button_pressed():
-	game.toggle_panel(self)
-
 func _on_Ability_mouse_entered():
 	game.show_tooltip(Helper.get_RE_info(ability))
 

@@ -642,7 +642,7 @@ func click_tile(tile, tile_id:int):
 			game.greenhouse_panel.p_i = p_i
 			game.toggle_panel(game.greenhouse_panel)
 		Building.ROVER_CONSTRUCTION_CENTER:
-			game.toggle_panel(game.RC_panel)
+			game.toggle_panel("RC_panel")
 		Building.SHIPYARD:
 			game.toggle_panel(game.shipyard_panel)
 		Building.PROBE_CONSTRUCTION_CENTER:

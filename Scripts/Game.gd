@@ -88,6 +88,7 @@ var panel_var_name_to_file_name = {
 	"ships_panel":"Ships",
 	"shop_panel":"Shop",
 	"SC_panel":"SCPanel",
+	"RC_panel":"RCPanel",
 	"stats_panel":"Stats",
 	"wiki":"Wiki",
 }
@@ -640,11 +641,6 @@ func switch_music(src, time_speed:float = 1.0, pitch_scale:float = 1.0):
 	music_player.play()
 
 func load_univ():
-	if is_instance_valid(RC_panel) and $Panels/Control.is_ancestor_of(RC_panel):
-		RC_panel.queue_free()
-	RC_panel = preload("res://Scenes/Panels/RCPanel.tscn").instantiate()
-	RC_panel.visible = false
-	$Panels/Control.add_child(RC_panel)
 	view_history.clear()
 	view_history_pos = -1
 	var save_game = FileAccess.open("user://%s/Univ%s/main.hx3" % [c_sv, c_u], FileAccess.READ)
@@ -4202,10 +4198,7 @@ func _on_Settings_mouse_exited():
 
 func _on_Settings_pressed():
 	$click.play()
-	if not is_instance_valid(settings_panel) or not settings_panel.visible:
-		fade_in_panel("settings_panel")
-	else:
-		fade_out_panel(settings_panel)
+	toggle_panel("settings_panel")
 
 func _on_BottomInfo_close_button_pressed(direct:bool = false):
 	close_button_over = false
@@ -4305,8 +4298,8 @@ func _on_Autosave_timeout():
 
 func show_YN_panel(type:String, text:String, args:Array = [], title:String = "Please Confirm..."):
 	#var width = min(800, default_font.get_string_size(text).x) + 40
-	if $UI.has_node("YN_panel"):
-		$UI.get_node("YN_panel").free()
+	if $Panels.has_node("YN_panel"):
+		$Panels.get_node("YN_panel").free()
 	var YN_panel = preload("res://Scenes/PopupWindow.tscn").instantiate()
 	YN_panel.set_text(text)
 	YN_panel.set_OK_text(tr("NO"))
@@ -4315,7 +4308,7 @@ func show_YN_panel(type:String, text:String, args:Array = [], title:String = "Pl
 		YN_panel.add_button(tr("YES"), Callable(self,"%s_confirm" % type))
 	else:
 		YN_panel.add_button(tr("YES"), Callable(self,"%s_confirm" % type).bindv(args))
-	$UI.add_child(YN_panel)
+	$Panels.add_child(YN_panel)
 	#if type in ["buy_pickaxe", "destroy_building", "destroy_buildings", "op_galaxy", "conquer_all", "destroy_tri_probe", "reset_dimension"]:
 
 func terraform_planet_confirm():

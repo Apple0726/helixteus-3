@@ -1,62 +1,130 @@
-[gd_scene load_steps=16 format=3 uid="uid://prhf201evhra"]
+[gd_scene load_steps=20 format=3 uid="uid://prhf201evhra"]
 
 [ext_resource type="PackedScene" uid="uid://c8jr3e5aiyj1n" path="res://Scenes/HelpText.tscn" id="1"]
 [ext_resource type="PackedScene" uid="uid://pbckpnc3olsx" path="res://Scenes/RoverSlot.tscn" id="2"]
-[ext_resource type="Texture2D" uid="uid://dxuelmrvsnw03" path="res://Graphics/Icons/Inventory.png" id="3"]
-[ext_resource type="Texture2D" uid="uid://oiiwy7ykiyjj" path="res://Graphics/Icons/REP.png" id="4"]
+[ext_resource type="Texture2D" uid="uid://d03u105amdf1c" path="res://Graphics/Icons/Inventory.png" id="3"]
+[ext_resource type="Texture2D" uid="uid://ccntlctxytsi2" path="res://Graphics/GUI/Panel.png" id="3_rrp1r"]
+[ext_resource type="Texture2D" uid="uid://q7un3vpelvdi" path="res://Graphics/Icons/REP.png" id="4"]
+[ext_resource type="Texture2D" uid="uid://baowebna7hgr5" path="res://Graphics/GUI/CloseButtonNormal.png" id="4_x5wr4"]
 [ext_resource type="Theme" uid="uid://cp2u1kgj60ic" path="res://Resources/default_theme.tres" id="5"]
-[ext_resource type="Texture2D" uid="uid://bj2apqdtbsvvc" path="res://Graphics/Icons/atk.png" id="6"]
-[ext_resource type="Texture2D" uid="uid://86tu1djj2q67" path="res://Graphics/Icons/def.png" id="7"]
-[ext_resource type="Texture2D" uid="uid://dqjvtfdxx1q84" path="res://Graphics/Icons/HP.png" id="8"]
-[ext_resource type="Texture2D" uid="uid://rxo80y4e6v57" path="res://Graphics/Cave/Rover.png" id="9"]
+[ext_resource type="Texture2D" uid="uid://c1vwn7p5uxu1r" path="res://Graphics/GUI/CloseButtonHover.png" id="5_pwoab"]
+[ext_resource type="Texture2D" uid="uid://7ffsf7xuvfw2" path="res://Graphics/Icons/atk.png" id="6"]
+[ext_resource type="Texture2D" uid="uid://cqiyti2xdxtcw" path="res://Graphics/Icons/def.png" id="7"]
+[ext_resource type="Texture2D" uid="uid://bl07f3wef0muv" path="res://Graphics/Icons/HP.png" id="8"]
+[ext_resource type="Texture2D" uid="uid://crncbjr12yfpx" path="res://Graphics/Cave/Rover.png" id="9"]
 [ext_resource type="Script" path="res://Scripts/RCPanel.gd" id="10"]
 [ext_resource type="PackedScene" path="res://Scenes/RESlot.tscn" id="11"]
-[ext_resource type="Texture2D" uid="uid://flqkawywcf4k" path="res://Graphics/Icons/eva.png" id="12"]
-[ext_resource type="PackedScene" uid="uid://ddf2xjwcht77u" path="res://Scenes/CloseButton.tscn" id="13"]
-[ext_resource type="Texture2D" uid="uid://dibh1xlax816t" path="res://Graphics/Icons/help.png" id="14"]
-[ext_resource type="Texture2D" uid="uid://c7ayqqe0fgfjn" path="res://Graphics/Icons/craft.png" id="15_ku4oa"]
+[ext_resource type="Texture2D" uid="uid://bapj1r8e5pwia" path="res://Graphics/Icons/eva.png" id="12"]
+[ext_resource type="Texture2D" uid="uid://hjl8rhhr18ke" path="res://Graphics/Icons/help.png" id="14"]
+[ext_resource type="Texture2D" uid="uid://if1usn38yajs" path="res://Graphics/Icons/craft.png" id="15_ku4oa"]
 
-[node name="RCPanel" type="Panel"]
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -533.5
-offset_top = -300.0
-offset_right = 533.5
-offset_bottom = 300.0
-grow_horizontal = 2
-grow_vertical = 2
+[sub_resource type="SystemFont" id="SystemFont_sxpbd"]
+font_names = PackedStringArray("Arial")
+multichannel_signed_distance_field = true
+
+[sub_resource type="LabelSettings" id="LabelSettings_m2p2b"]
+font = SubResource("SystemFont_sxpbd")
+font_size = 24
+shadow_size = 2
+shadow_color = Color(0, 0, 0, 0.372549)
+shadow_offset = Vector2(2, 2)
+
+[node name="RCPanel" type="Control"]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 1067.0
+offset_bottom = 600.0
 pivot_offset = Vector2(533, 300)
 theme = ExtResource("5")
 script = ExtResource("10")
+
+[node name="GUI" type="TextureRect" parent="."]
+offset_right = 1280.0
+offset_bottom = 720.0
+mouse_filter = 2
+texture = ExtResource("3_rrp1r")
+
+[node name="CloseButton" type="TextureButton" parent="."]
+offset_left = 1136.0
+offset_top = 67.0
+offset_right = 1185.0
+offset_bottom = 116.0
+texture_normal = ExtResource("4_x5wr4")
+texture_hover = ExtResource("5_pwoab")
 
 [node name="Title" type="Label" parent="."]
 custom_minimum_size = Vector2(0, 38)
 layout_mode = 1
 anchors_preset = 10
 anchor_right = 1.0
-offset_bottom = 44.0
+offset_left = 128.0
+offset_top = 68.0
+offset_right = -563.0
+offset_bottom = 112.0
 grow_horizontal = 2
 theme_override_font_sizes/font_size = 18
 text = "CONSTRUCT_ROVER"
+label_settings = SubResource("LabelSettings_m2p2b")
+vertical_alignment = 1
+
+[node name="Inventory" type="Panel" parent="."]
+layout_mode = 0
+offset_left = 632.0
+offset_top = 144.0
+offset_right = 1104.0
+offset_bottom = 416.0
+size_flags_vertical = 3
+mouse_filter = 1
+
+[node name="Label" type="Label" parent="Inventory"]
+layout_mode = 0
+anchor_right = 1.0
+offset_top = 8.0
+offset_right = 2.0
+offset_bottom = 32.0
+text = "INVENTORY"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="CloseButton" parent="." instance=ExtResource("13")]
-layout_mode = 1
-offset_left = -35.0
-offset_top = 12.0
-offset_right = -11.0
-offset_bottom = 36.0
+[node name="LeftClick" type="Label" parent="Inventory"]
+layout_mode = 0
+anchor_right = 1.0
+offset_left = 32.0
+offset_top = 160.0
+offset_right = 4.0
+offset_bottom = 190.0
+text = "LEFT_CLICK"
+
+[node name="RightClick" type="Label" parent="Inventory"]
+layout_mode = 0
+anchor_right = 1.0
+offset_left = 28.0
+offset_top = 44.0
+offset_right = 8.0
+offset_bottom = 74.0
+text = "RIGHT_CLICK"
+
+[node name="HBoxLeft" type="HBoxContainer" parent="Inventory"]
+layout_mode = 0
+offset_left = 32.0
+offset_top = 192.0
+offset_right = 500.0
+offset_bottom = 252.0
+theme_override_constants/separation = 0
+
+[node name="RightSlot" parent="Inventory" instance=ExtResource("2")]
+layout_mode = 0
+offset_left = 32.0
+offset_top = 84.0
+offset_right = 92.0
+offset_bottom = 144.0
 
 [node name="Stats" type="Panel" parent="."]
 layout_mode = 0
-offset_left = 28.0
-offset_top = 48.0
-offset_right = 524.0
-offset_bottom = 552.0
+offset_left = 128.0
+offset_top = 144.0
+offset_right = 632.0
+offset_bottom = 616.0
 size_flags_vertical = 3
 
 [node name="Ability" parent="Stats" instance=ExtResource("11")]
@@ -120,10 +188,10 @@ vertical_alignment = 1
 
 [node name="HP" type="TextureRect" parent="Stats"]
 layout_mode = 0
-offset_left = 52.0
-offset_top = 324.0
-offset_right = 92.0
-offset_bottom = 364.0
+offset_left = 56.0
+offset_top = 312.0
+offset_right = 96.0
+offset_bottom = 352.0
 texture = ExtResource("8")
 expand_mode = 1
 stretch_mode = 5
@@ -138,78 +206,78 @@ texture = ExtResource("4")
 
 [node name="Attack" type="TextureRect" parent="Stats"]
 layout_mode = 0
-offset_left = 52.0
-offset_top = 372.0
-offset_right = 92.0
-offset_bottom = 412.0
+offset_left = 56.0
+offset_top = 360.0
+offset_right = 96.0
+offset_bottom = 400.0
 texture = ExtResource("6")
 expand_mode = 1
 stretch_mode = 5
 
 [node name="Defense" type="TextureRect" parent="Stats"]
 layout_mode = 0
-offset_left = 52.0
-offset_top = 420.0
-offset_right = 92.0
-offset_bottom = 460.0
+offset_left = 56.0
+offset_top = 408.0
+offset_right = 96.0
+offset_bottom = 448.0
 texture = ExtResource("7")
 expand_mode = 1
 stretch_mode = 5
 
 [node name="Cargo" type="TextureRect" parent="Stats"]
 layout_mode = 0
-offset_left = 256.0
-offset_top = 368.0
-offset_right = 296.0
-offset_bottom = 408.0
+offset_left = 260.0
+offset_top = 356.0
+offset_right = 300.0
+offset_bottom = 396.0
 texture = ExtResource("3")
 expand_mode = 1
 stretch_mode = 5
 
 [node name="Speed" type="TextureRect" parent="Stats"]
 layout_mode = 0
-offset_left = 256.0
-offset_top = 420.0
-offset_right = 296.0
-offset_bottom = 460.0
+offset_left = 260.0
+offset_top = 408.0
+offset_right = 300.0
+offset_bottom = 448.0
 texture = ExtResource("12")
 expand_mode = 1
 stretch_mode = 5
 
 [node name="HPText" parent="Stats" instance=ExtResource("1")]
 layout_mode = 0
-offset_left = 108.0
-offset_top = 332.0
-offset_right = 221.0
-offset_bottom = 360.0
+offset_left = 112.0
+offset_top = 320.0
+offset_right = 225.0
+offset_bottom = 348.0
 
 [node name="AtkText" parent="Stats" instance=ExtResource("1")]
 layout_mode = 0
-offset_left = 108.0
-offset_top = 380.0
-offset_right = 221.0
-offset_bottom = 408.0
+offset_left = 112.0
+offset_top = 368.0
+offset_right = 225.0
+offset_bottom = 396.0
 
 [node name="DefText" parent="Stats" instance=ExtResource("1")]
 layout_mode = 0
-offset_left = 108.0
-offset_top = 428.0
-offset_right = 221.0
-offset_bottom = 456.0
+offset_left = 112.0
+offset_top = 416.0
+offset_right = 225.0
+offset_bottom = 444.0
 
 [node name="CargoText" parent="Stats" instance=ExtResource("1")]
 layout_mode = 0
-offset_left = 312.0
-offset_top = 380.0
-offset_right = 476.0
-offset_bottom = 408.0
+offset_left = 316.0
+offset_top = 368.0
+offset_right = 480.0
+offset_bottom = 396.0
 
 [node name="SpeedText" parent="Stats" instance=ExtResource("1")]
 layout_mode = 0
-offset_left = 312.0
-offset_top = 428.0
-offset_right = 428.0
-offset_bottom = 456.0
+offset_left = 316.0
+offset_top = 416.0
+offset_right = 432.0
+offset_bottom = 444.0
 
 [node name="REPText" parent="Stats" instance=ExtResource("1")]
 layout_mode = 0
@@ -219,64 +287,12 @@ offset_right = 272.0
 offset_bottom = 104.0
 help_text = "REP_DESC"
 
-[node name="Inventory" type="Panel" parent="."]
-layout_mode = 0
-offset_left = 544.0
-offset_top = 48.0
-offset_right = 1040.0
-offset_bottom = 328.0
-size_flags_vertical = 3
-mouse_filter = 1
-
-[node name="Label" type="Label" parent="Inventory"]
-layout_mode = 0
-anchor_right = 1.0
-offset_top = 8.0
-offset_right = 2.0
-offset_bottom = 32.0
-text = "INVENTORY"
-horizontal_alignment = 1
-vertical_alignment = 1
-
-[node name="LeftClick" type="Label" parent="Inventory"]
-layout_mode = 0
-anchor_right = 1.0
-offset_left = 32.0
-offset_top = 160.0
-offset_right = 4.0
-offset_bottom = 190.0
-text = "LEFT_CLICK"
-
-[node name="RightClick" type="Label" parent="Inventory"]
-layout_mode = 0
-anchor_right = 1.0
-offset_left = 28.0
-offset_top = 44.0
-offset_right = 8.0
-offset_bottom = 74.0
-text = "RIGHT_CLICK"
-
-[node name="HBoxLeft" type="HBoxContainer" parent="Inventory"]
-layout_mode = 0
-offset_left = 32.0
-offset_top = 192.0
-offset_right = 500.0
-offset_bottom = 252.0
-theme_override_constants/separation = 0
-
-[node name="RightSlot" parent="Inventory" instance=ExtResource("2")]
-layout_mode = 0
-offset_left = 32.0
-offset_top = 84.0
-offset_right = 92.0
-offset_bottom = 144.0
-
 [node name="Costs" type="Label" parent="."]
 layout_mode = 0
-offset_left = 552.0
-offset_top = 344.0
-offset_right = 1040.0
-offset_bottom = 368.0
+offset_left = 664.0
+offset_top = 432.0
+offset_right = 1056.0
+offset_bottom = 456.0
 text = "COSTS"
 horizontal_alignment = 1
 
@@ -287,10 +303,10 @@ anchor_left = 1.0
 anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = -93.0
-offset_top = -60.0
-offset_right = -14.0
-offset_bottom = -12.0
+offset_left = 13.0
+offset_top = -24.0
+offset_right = 92.0
+offset_bottom = 24.0
 grow_horizontal = 0
 grow_vertical = 0
 theme = ExtResource("5")
@@ -310,10 +326,10 @@ stretch_mode = 5
 
 [node name="ScrollContainer" type="ScrollContainer" parent="."]
 layout_mode = 0
-offset_left = 616.0
-offset_top = 376.0
-offset_right = 976.0
-offset_bottom = 516.0
+offset_left = 664.0
+offset_top = 472.0
+offset_right = 1056.0
+offset_bottom = 612.0
 
 [node name="Grid" type="GridContainer" parent="ScrollContainer"]
 layout_mode = 2
@@ -321,21 +337,21 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 columns = 2
 
-[connection signal="close_button_pressed" from="CloseButton" to="." method="_on_close_button_pressed"]
+[connection signal="pressed" from="CloseButton" to="." method="_on_close_button_pressed"]
 [connection signal="mouse_entered" from="Stats/Ability" to="." method="_on_Ability_mouse_entered"]
 [connection signal="mouse_exited" from="Stats/Ability" to="." method="_on_mouse_exited"]
 [connection signal="mouse_entered" from="Stats/Ability/AbilityInfo" to="." method="_on_AbilityInfo_mouse_entered"]
 [connection signal="mouse_exited" from="Stats/Ability/AbilityInfo" to="." method="_on_mouse_exited"]
-[connection signal="mouse_entered" from="Stats/HP" to="." method="_on_icon_mouse_entered" binds= ["HEALTH_POINTS"]]
+[connection signal="mouse_entered" from="Stats/HP" to="." method="_on_icon_mouse_entered"]
 [connection signal="mouse_exited" from="Stats/HP" to="." method="_on_mouse_exited"]
-[connection signal="mouse_entered" from="Stats/REPIcon" to="." method="_on_icon_mouse_entered" binds= ["REP"]]
+[connection signal="mouse_entered" from="Stats/REPIcon" to="." method="_on_icon_mouse_entered"]
 [connection signal="mouse_exited" from="Stats/REPIcon" to="." method="_on_mouse_exited"]
-[connection signal="mouse_entered" from="Stats/Attack" to="." method="_on_icon_mouse_entered" binds= ["ATTACK"]]
+[connection signal="mouse_entered" from="Stats/Attack" to="." method="_on_icon_mouse_entered"]
 [connection signal="mouse_exited" from="Stats/Attack" to="." method="_on_mouse_exited"]
-[connection signal="mouse_entered" from="Stats/Defense" to="." method="_on_icon_mouse_entered" binds= ["DEFENSE"]]
+[connection signal="mouse_entered" from="Stats/Defense" to="." method="_on_icon_mouse_entered"]
 [connection signal="mouse_exited" from="Stats/Defense" to="." method="_on_mouse_exited"]
-[connection signal="mouse_entered" from="Stats/Cargo" to="." method="_on_icon_mouse_entered" binds= ["CARGO_CAPACITY"]]
-[connection signal="mouse_exited" from="Stats/Cargo" to="." method="_on_icon_mouse_exited"]
-[connection signal="mouse_entered" from="Stats/Speed" to="." method="_on_icon_mouse_entered" binds= ["MOVEMENT_SPEED"]]
+[connection signal="mouse_entered" from="Stats/Cargo" to="." method="_on_icon_mouse_entered"]
+[connection signal="mouse_exited" from="Stats/Cargo" to="." method="_on_mouse_exited"]
+[connection signal="mouse_entered" from="Stats/Speed" to="." method="_on_icon_mouse_entered"]
 [connection signal="mouse_exited" from="Stats/Speed" to="." method="_on_mouse_exited"]
 [connection signal="pressed" from="Button" to="." method="_on_Button_pressed"]
