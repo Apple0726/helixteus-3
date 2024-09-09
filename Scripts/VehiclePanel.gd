@@ -210,7 +210,7 @@ func on_rover_press(rov:Dictionary, rov_id:int):
 		if tile_id == -1:
 			game.view.obj.rover_selected = rov_id
 			game.put_bottom_info(tr("CLICK_A_CAVE_TO_EXPLORE"), "enter_cave")
-			game.toggle_panel(self)
+			game.toggle_panel("vehicle_panel")
 		else:
 			game.c_t = tile_id
 			tile_id = -1
@@ -221,7 +221,7 @@ func on_rover_press(rov:Dictionary, rov_id:int):
 				game.popup_window("", "", [tr("GO_TO_FLOOR_X") % 8, tr("START_AT_FLOOR_1")], [Callable(game, "switch_view").bind("cave", {"start_floor":8}), Callable(game, "switch_view").bind("cave")], tr("CANCEL"))
 			else:
 				game.switch_view("cave")
-			game.toggle_panel(self)
+			game.toggle_panel("vehicle_panel")
 	elif game.item_to_use.type == "cave":
 		var ok:bool = false
 		for i in len(rov.inventory):

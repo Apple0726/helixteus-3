@@ -1,7 +1,7 @@
 [gd_scene load_steps=4 format=3 uid="uid://5s56ablx84rs"]
 
 [ext_resource type="Theme" uid="uid://cp2u1kgj60ic" path="res://Resources/default_theme.tres" id="1_8ivd7"]
-[ext_resource type="Texture2D" uid="uid://02b353r48gfn" path="res://Graphics/Clusters/universe.png" id="2_rveul"]
+[ext_resource type="Texture2D" uid="uid://l588wyvd2qdq" path="res://Graphics/Clusters/universe.png" id="2_rveul"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_jl8q8"]
 

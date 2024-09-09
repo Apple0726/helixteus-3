@@ -1,7 +1,7 @@
 [gd_scene load_steps=9 format=3 uid="uid://b5ew526etki0u"]
 
-[ext_resource type="Texture2D" uid="uid://coh6u6gsdcspp" path="res://Graphics/Icons/minerals.png" id="1"]
-[ext_resource type="Texture2D" uid="uid://082kblfbcuhg" path="res://Graphics/Misc/Bar.png" id="3"]
+[ext_resource type="Texture2D" uid="uid://d3kwtgk0sw40p" path="res://Graphics/Icons/minerals.png" id="1"]
+[ext_resource type="Texture2D" uid="uid://4tf3teqmkahc" path="res://Graphics/Misc/Bar.png" id="3"]
 [ext_resource type="Script" path="res://Scripts/ResourceStored.gd" id="4"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_l3c8g"]
@@ -20,6 +20,7 @@ border_width_bottom = 2
 
 [sub_resource type="SystemFont" id="SystemFont_m40e0"]
 font_names = PackedStringArray("Ebrima")
+subpixel_positioning = 0
 multichannel_signed_distance_field = true
 
 [sub_resource type="LabelSettings" id="LabelSettings_h6cwk"]

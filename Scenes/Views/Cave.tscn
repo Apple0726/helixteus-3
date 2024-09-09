@@ -3,45 +3,45 @@
 [ext_resource type="Shader" path="res://Shaders/Laser.gdshader" id="1"]
 [ext_resource type="Script" path="res://Scripts/Cave.gd" id="2"]
 [ext_resource type="PackedScene" path="res://Scenes/FilterButton.tscn" id="3"]
-[ext_resource type="Texture2D" uid="uid://dhm18v6balnml" path="res://Graphics/Misc/Bar.png" id="4"]
-[ext_resource type="Texture2D" uid="uid://mdxefu5ip7jd" path="res://Graphics/Cave/MiningLaser.png" id="5"]
-[ext_resource type="TileSet" uid="uid://c7dmux1vdaraf" path="res://Resources/LakeTileSet.tres" id="5_qgrjc"]
-[ext_resource type="Texture2D" uid="uid://b38tj001r5ukm" path="res://Graphics/Icons/minerals.png" id="6"]
-[ext_resource type="Texture2D" uid="uid://dlcqufc17yked" path="res://Graphics/Icons/money.png" id="7"]
-[ext_resource type="Texture2D" uid="uid://ct174ag107gdf" path="res://Graphics/Icons/stone.png" id="8"]
+[ext_resource type="Texture2D" uid="uid://4tf3teqmkahc" path="res://Graphics/Misc/Bar.png" id="4"]
+[ext_resource type="Texture2D" uid="uid://qbiggp0bodp1" path="res://Graphics/Cave/MiningLaser.png" id="5"]
+[ext_resource type="TileSet" uid="uid://bmti7h3x1g1xw" path="res://Resources/LakeTileSet.tres" id="5_qgrjc"]
+[ext_resource type="Texture2D" uid="uid://d3kwtgk0sw40p" path="res://Graphics/Icons/minerals.png" id="6"]
+[ext_resource type="Texture2D" uid="uid://b0brlrg52bjln" path="res://Graphics/Icons/money.png" id="7"]
+[ext_resource type="Texture2D" uid="uid://hvuwdl8ox0yv" path="res://Graphics/Icons/stone.png" id="8"]
 [ext_resource type="PackedScene" uid="uid://cpfkb4haasun3" path="res://Scenes/CaveHole.tscn" id="9"]
-[ext_resource type="Texture2D" uid="uid://b8jee8532b4bh" path="res://Graphics/HX/Status effects/Stun.png" id="10"]
-[ext_resource type="Texture2D" uid="uid://by4i5oscl28ds" path="res://Graphics/Cave/Rover top down.png" id="11"]
+[ext_resource type="Texture2D" uid="uid://yhdxrw2q1yep" path="res://Graphics/HX/Status effects/Stun.png" id="10"]
+[ext_resource type="Texture2D" uid="uid://64ywd74o1wk7" path="res://Graphics/Cave/Rover top down.png" id="11"]
 [ext_resource type="TileSet" uid="uid://c38qxbp5cjiy0" path="res://Resources/CaveWalls.tres" id="12"]
-[ext_resource type="Texture2D" uid="uid://dqdi0oc7q2jef" path="res://Graphics/Cave/Objects/exit.png" id="13"]
+[ext_resource type="Texture2D" uid="uid://vj3h3by1epm8" path="res://Graphics/Cave/Objects/exit.png" id="13"]
 [ext_resource type="Shader" path="res://Shaders/Fire.gdshader" id="14"]
-[ext_resource type="Texture2D" uid="uid://bmy4y3lylvpns" path="res://Graphics/Cave/minimap.png" id="15"]
-[ext_resource type="Texture2D" uid="uid://b2cu1a8l0jruy" path="res://Graphics/Cave/MMIcons/Rover.png" id="16"]
-[ext_resource type="Texture2D" uid="uid://ct1gmkk58brfl" path="res://Graphics/Cave/Projectiles/mining_laser_glow.png" id="16_6cmh4"]
-[ext_resource type="Texture2D" uid="uid://drrti47xs1ot0" path="res://Graphics/Cave/MMIcons/NextFloor.png" id="17"]
-[ext_resource type="Texture2D" uid="uid://b75py2v8fpng1" path="res://icon.png" id="18"]
-[ext_resource type="Texture2D" uid="uid://c6jwd1cctyyel" path="res://Graphics/Effects/spotlight_4.png" id="19"]
+[ext_resource type="Texture2D" uid="uid://3aket0dmatt4" path="res://Graphics/Cave/minimap.png" id="15"]
+[ext_resource type="Texture2D" uid="uid://csyq1ka6cgn87" path="res://Graphics/Cave/MMIcons/Rover.png" id="16"]
+[ext_resource type="Texture2D" uid="uid://dctvflbbcrqs4" path="res://Graphics/Cave/Projectiles/mining_laser_glow.png" id="16_6cmh4"]
+[ext_resource type="Texture2D" uid="uid://cslf5agen531d" path="res://Graphics/Cave/MMIcons/NextFloor.png" id="17"]
+[ext_resource type="Texture2D" uid="uid://cdblvpftr6875" path="res://icon.png" id="18"]
+[ext_resource type="Texture2D" uid="uid://t70si4f413j5" path="res://Graphics/Effects/spotlight_4.png" id="19"]
 [ext_resource type="PackedScene" uid="uid://2s0chovxmhln" path="res://Scenes/InventorySlot.tscn" id="20"]
-[ext_resource type="Texture2D" uid="uid://lbq23qyy603m" path="res://Graphics/Cave/MMIcons/Exit.png" id="21"]
-[ext_resource type="Texture2D" uid="uid://b4pyibuacy5x" path="res://Graphics/Tiles/Highlight.jpg" id="22"]
-[ext_resource type="Texture2D" uid="uid://ru5us4i27lo1" path="res://Graphics/Icons/HP.png" id="23"]
+[ext_resource type="Texture2D" uid="uid://cbployr7rnqpu" path="res://Graphics/Cave/MMIcons/Exit.png" id="21"]
+[ext_resource type="Texture2D" uid="uid://dxr8x86jdcd2p" path="res://Graphics/Tiles/Highlight.jpg" id="22"]
+[ext_resource type="Texture2D" uid="uid://bl07f3wef0muv" path="res://Graphics/Icons/HP.png" id="23"]
 [ext_resource type="PackedScene" path="res://Scenes/Dialogue.tscn" id="24"]
-[ext_resource type="Texture2D" uid="uid://bufnfeqrc6itt" path="res://Graphics/Icons/Inventory.png" id="25"]
-[ext_resource type="Texture2D" uid="uid://js2mui3vqbsj" path="res://Graphics/Cave/RelicDetails.png" id="28"]
+[ext_resource type="Texture2D" uid="uid://d03u105amdf1c" path="res://Graphics/Icons/Inventory.png" id="25"]
+[ext_resource type="Texture2D" uid="uid://bxisftoek0j0e" path="res://Graphics/Cave/RelicDetails.png" id="28"]
 [ext_resource type="Theme" uid="uid://cp2u1kgj60ic" path="res://Resources/default_theme.tres" id="29"]
-[ext_resource type="Texture2D" uid="uid://cp3sbns27faof" path="res://Graphics/Misc/Glow.png" id="30"]
-[ext_resource type="Texture2D" uid="uid://c3b6ypouns8ls" path="res://Graphics/Stars/Star.png" id="31"]
+[ext_resource type="Texture2D" uid="uid://by5owi4dvg1i" path="res://Graphics/Misc/Glow.png" id="30"]
+[ext_resource type="Texture2D" uid="uid://cvetejccba6ge" path="res://Graphics/Stars/Star.png" id="31"]
 [ext_resource type="TileSet" uid="uid://djmwwqomsir3r" path="res://Resources/PlanetTileSet.tres" id="33"]
-[ext_resource type="Texture2D" uid="uid://b13pbqgvembu2" path="res://Graphics/Cave/RE/armor_3.png" id="35"]
+[ext_resource type="Texture2D" uid="uid://t47m4j5cowx1" path="res://Graphics/Cave/RE/armor_3.png" id="35"]
 [ext_resource type="PackedScene" uid="uid://ca730ks6x5s88" path="res://Scenes/Screenshake.tscn" id="36"]
 [ext_resource type="Shader" path="res://Shaders/Shine.gdshader" id="37"]
-[ext_resource type="Texture2D" uid="uid://dmq0j0itdetd" path="res://Graphics/Effects/spotlight_8.png" id="38"]
-[ext_resource type="Texture2D" uid="uid://d8yv3yv4x65l" path="res://Graphics/Cave/DebrisAnim.png" id="39"]
-[ext_resource type="Texture2D" uid="uid://cv1c4uvvnlgvv" path="res://Graphics/Cave/RoverHurt.png" id="40"]
-[ext_resource type="Texture2D" uid="uid://d016pfhl2cbln" path="res://Graphics/Misc/Bar2.png" id="41"]
-[ext_resource type="Texture2D" uid="uid://bnukptcbau6nm" path="res://Graphics/Misc/BarUnder2.png" id="42"]
-[ext_resource type="Texture2D" uid="uid://kr3501c65jdr" path="res://Graphics/Misc/BarOver.png" id="43"]
-[ext_resource type="Texture2D" uid="uid://bhwm6rg7dmaqs" path="res://Graphics/Misc/noise_combined.png" id="45"]
+[ext_resource type="Texture2D" uid="uid://cksgkxw6a815w" path="res://Graphics/Effects/spotlight_8.png" id="38"]
+[ext_resource type="Texture2D" uid="uid://doyhcr5ker08v" path="res://Graphics/Cave/DebrisAnim.png" id="39"]
+[ext_resource type="Texture2D" uid="uid://can3vijhtjeb4" path="res://Graphics/Cave/RoverHurt.png" id="40"]
+[ext_resource type="Texture2D" uid="uid://bx1hvetixqpwi" path="res://Graphics/Misc/Bar2.png" id="41"]
+[ext_resource type="Texture2D" uid="uid://kr2fdk8dptv1" path="res://Graphics/Misc/BarUnder2.png" id="42"]
+[ext_resource type="Texture2D" uid="uid://cxij5pk8nug0r" path="res://Graphics/Misc/BarOver.png" id="43"]
+[ext_resource type="Texture2D" uid="uid://dl0tbc2d816cj" path="res://Graphics/Misc/noise_combined.png" id="45"]
 [ext_resource type="Shader" path="res://Shaders/BCS.gdshader" id="46"]
 [ext_resource type="PackedScene" uid="uid://bbykejbtwsdag" path="res://Scenes/KeyboardShortcuts.tscn" id="47"]
 
@@ -571,32 +571,24 @@ adjustment_enabled = true
 [node name="Cave" type="Node2D"]
 script = ExtResource("2")
 
-[node name="TileMap" type="TileMap" parent="."]
+[node name="TileMap" type="TileMapLayer" parent="."]
 z_index = -1024
 material = SubResource("1")
 tile_set = ExtResource("33")
 rendering_quadrant_size = 100
-format = 2
 
-[node name="Lava" type="TileMap" parent="."]
+[node name="Lava" type="TileMapLayer" parent="."]
 z_index = -1022
 tile_set = ExtResource("5_qgrjc")
 rendering_quadrant_size = 100
-format = 2
 
-[node name="Ash" type="TileMap" parent="."]
+[node name="Ash" type="TileMapLayer" parent="."]
 z_index = -1022
-tile_set = ExtResource("5_qgrjc")
 rendering_quadrant_size = 100
-format = 2
 
-[node name="Walls" type="TileMap" parent="."]
+[node name="Walls" type="TileMapLayer" parent="."]
 tile_set = ExtResource("12")
 rendering_quadrant_size = 100
-format = 2
-layer_0/name = "Walls"
-layer_1/name = "Impassable walls"
-layer_1/tile_data = PackedInt32Array()
 
 [node name="Camera2D" type="Camera2D" parent="."]
 position_smoothing_enabled = true
@@ -902,11 +894,10 @@ light_mask = -2147483647
 texture = ExtResource("15")
 centered = false
 
-[node name="TileMap" type="TileMap" parent="UI/Minimap"]
+[node name="TileMap" type="TileMapLayer" parent="UI/Minimap"]
 light_mask = -2147483647
 tile_set = ExtResource("33")
 rendering_quadrant_size = 100
-format = 2
 
 [node name="Hole" type="Sprite2D" parent="UI/Minimap"]
 light_mask = -2147483647

@@ -2,9 +2,9 @@
 
 [ext_resource type="PackedScene" uid="uid://c8jr3e5aiyj1n" path="res://Scenes/HelpText.tscn" id="2"]
 [ext_resource type="Script" path="res://Scripts/DimensionType.gd" id="3"]
-[ext_resource type="Texture2D" uid="uid://c67y71rs3ver2" path="res://Graphics/Misc/BarUnder2.png" id="4"]
-[ext_resource type="Texture2D" uid="uid://1h4b4lcm50vf" path="res://Graphics/Misc/Bar2.png" id="6"]
-[ext_resource type="Texture2D" uid="uid://o1t3hqx27iw" path="res://Graphics/Misc/BarOver.png" id="7"]
+[ext_resource type="Texture2D" uid="uid://kr2fdk8dptv1" path="res://Graphics/Misc/BarUnder2.png" id="4"]
+[ext_resource type="Texture2D" uid="uid://bx1hvetixqpwi" path="res://Graphics/Misc/Bar2.png" id="6"]
+[ext_resource type="Texture2D" uid="uid://cxij5pk8nug0r" path="res://Graphics/Misc/BarOver.png" id="7"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_epxrv"]
 draw_center = false

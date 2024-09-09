@@ -1,6 +1,6 @@
 [gd_scene load_steps=5 format=3 uid="uid://cqfev7jrxdfyx"]
 
-[ext_resource type="Texture2D" uid="uid://pyca5r6mprt3" path="res://Graphics/Effects/spotlight_4.png" id="1"]
+[ext_resource type="Texture2D" uid="uid://t70si4f413j5" path="res://Graphics/Effects/spotlight_4.png" id="1"]
 
 [sub_resource type="Gradient" id="1"]
 offsets = PackedFloat32Array(0, 0.184358, 1)
@@ -11,9 +11,9 @@ gradient = SubResource("1")
 
 [sub_resource type="ParticleProcessMaterial" id="3"]
 spread = 180.0
-gravity = Vector3(0, 0, 0)
 initial_velocity_min = 50.0
 initial_velocity_max = 100.0
+gravity = Vector3(0, 0, 0)
 scale_min = 0.02
 scale_max = 0.05
 color_ramp = SubResource("2")

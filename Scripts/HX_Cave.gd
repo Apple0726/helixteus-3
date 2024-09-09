@@ -15,7 +15,7 @@ var aggressive_timer:Timer
 var sees_player:bool = false
 var AI_enabled:bool = false
 var a_n:AStar2D
-var cave_tm:TileMap
+var cave_tm:TileMapLayer
 var room:int
 var spawn_tile:int#Tile on which the enemy spawned
 var move_speed:float = 200.0

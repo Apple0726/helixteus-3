@@ -1,6 +1,10 @@
-[gd_resource type="TileSet" load_steps=3 format=3 uid="uid://c38qxbp5cjiy0"]
+[gd_resource type="TileSet" load_steps=5 format=3 uid="uid://c38qxbp5cjiy0"]
+
+[ext_resource type="Texture2D" uid="uid://cxcyr8qa3cyxp" path="res://Graphics/Tiles/CaveSpritesheet.png" id="1_15al1"]
+[ext_resource type="Texture2D" uid="uid://6n3dlkawv1yf" path="res://Graphics/Tiles/Empty.jpg" id="2_mq400"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_a4kio"]
+texture = ExtResource("1_15al1")
 texture_region_size = Vector2i(200, 200)
 0:0/0 = 0
 0:0/0/terrain_set = 0
@@ -380,6 +384,7 @@ texture_region_size = Vector2i(200, 200)
 8:4/0/terrains_peering_bit/top_side = 0
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_ypmk4"]
+texture = ExtResource("2_mq400")
 texture_region_size = Vector2i(200, 200)
 0:0/next_alternative_id = 8
 0:0/0 = 0

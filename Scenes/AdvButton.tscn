@@ -1,9 +1,9 @@
 [gd_scene load_steps=8 format=3 uid="uid://1hq6qpr1oa3i"]
 
 [ext_resource type="Theme" uid="uid://cp2u1kgj60ic" path="res://Resources/default_theme.tres" id="1"]
-[ext_resource type="Texture2D" uid="uid://pyca5r6mprt3" path="res://Graphics/Effects/spotlight_4.png" id="2"]
+[ext_resource type="Texture2D" uid="uid://t70si4f413j5" path="res://Graphics/Effects/spotlight_4.png" id="2"]
 [ext_resource type="Script" path="res://Scripts/AdvButton.gd" id="3"]
-[ext_resource type="Texture2D" uid="uid://lgk3fk8yaa2s" path="res://Graphics/Icons/Notification.png" id="4"]
+[ext_resource type="Texture2D" uid="uid://vshnis3gqj4t" path="res://Graphics/Icons/Notification.png" id="4"]
 
 [sub_resource type="Animation" id="2"]
 length = 0.001

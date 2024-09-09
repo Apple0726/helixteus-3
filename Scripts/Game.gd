@@ -89,6 +89,7 @@ var panel_var_name_to_file_name = {
 	"shop_panel":"Shop",
 	"SC_panel":"SCPanel",
 	"RC_panel":"RCPanel",
+	"vehicle_panel":"VehiclePanel",
 	"stats_panel":"Stats",
 	"wiki":"Wiki",
 }

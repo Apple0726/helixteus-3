@@ -1291,8 +1291,8 @@ func _unhandled_input(event):
 					else:
 						game.switch_view("cave")
 				else:
-					if (game.show.has("vehicles_button") or len(game.rover_data) > 0) and not game.vehicle_panel.visible:
-						game.toggle_panel(game.vehicle_panel)
+					if (game.show.has("vehicles_button") or len(game.rover_data) > 0) and (not is_instance_valid(game.vehicle_panel) or not game.vehicle_panel.visible):
+						game.toggle_panel("vehicle_panel")
 						game.vehicle_panel.tile_id = tile_id
 			elif tile.has("ship"):
 				if game.science_unlocked.has("SCT"):

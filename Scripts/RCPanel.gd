@@ -176,7 +176,7 @@ func _on_Button_pressed():
 				break
 		if append:
 			game.rover_data.append(rover_data)
-		game.toggle_panel(self)
+		game.toggle_panel("RC_panel")
 #		if not game.show.has("vehicles_button"):
 #			game.show.vehicles_button = true
 #			game.HUD.get_node("Buttons/Vehicles").visible = true

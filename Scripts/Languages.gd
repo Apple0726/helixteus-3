@@ -79,4 +79,3 @@ func _on_lg_mouse_entered(extra_arg_0):
 
 func _on_lg_mouse_exited():
 	game.hide_tooltip()
-

@@ -1,7 +1,7 @@
 [gd_scene load_steps=3 format=3 uid="uid://tbn5cvb3uo5"]
 
-[ext_resource type="Texture2D" uid="uid://bstf6x8lhk2uh" path="res://Graphics/Buttons/Down.png" id="2"]
-[ext_resource type="Texture2D" uid="uid://8xesu30lntdk" path="res://Graphics/Buttons/Up.png" id="3"]
+[ext_resource type="Texture2D" uid="uid://irnrwmwb2qvs" path="res://Graphics/Buttons/Down.png" id="2"]
+[ext_resource type="Texture2D" uid="uid://baql2tlnb7ayd" path="res://Graphics/Buttons/Up.png" id="3"]
 
 [node name="HBoxContainer" type="HBoxContainer"]
 offset_right = 776.0

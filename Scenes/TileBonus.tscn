@@ -1,7 +1,7 @@
 [gd_scene load_steps=5 format=3 uid="uid://bxpp7ecqx57tq"]
 
 [ext_resource type="Theme" uid="uid://cp2u1kgj60ic" path="res://Resources/default_theme.tres" id="1_ikvkt"]
-[ext_resource type="Texture2D" uid="uid://bg0vde5ye5b53" path="res://Graphics/Icons/SP.png" id="2_8plqd"]
+[ext_resource type="Texture2D" uid="uid://dg25fshk35326" path="res://Graphics/Icons/SP.png" id="2_8plqd"]
 [ext_resource type="Script" path="res://Scripts/TileBonus.gd" id="2_t0pjy"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ewgeq"]

@@ -147,6 +147,7 @@ var treasure_mult:float = 1.0
 var debris_amount:float
 
 func _ready():
+	$Ash.tile_set = ResourceFiles.ash_tile_set
 	camera.make_current()
 	$Exit/GPUParticles2D.emitting = true
 	$UI2/Controls.center_position = Vector2(640, 160)
@@ -312,7 +313,7 @@ func _ready():
 		inventory_ready.append(true)
 	right_inventory_ready.append(true)
 	for i in range(0, len(inventory)):
-		var slot = game.slot_scene.instantiate()
+		var slot = preload("res://Scenes/InventorySlot.tscn").instantiate()
 		slot.get_node("Button").modulate = Color.RED
 		inventory_slots.add_child(slot)
 		slots.append(slot)
@@ -523,7 +524,7 @@ func generate_cave(first_floor:bool, going_up:bool):
 		for j in cave_size:
 			var level = noise.get_noise_2d(i * 10.0, j * 10.0)
 			var tile_id:int = get_tile_index(Vector2(i, j))
-			cave_BG.set_cell(0, Vector2i(i, j), tile_type, Vector2i.ZERO)
+			cave_BG.set_cell(Vector2i(i, j), tile_type, Vector2i.ZERO)
 			# Decorative pebbles
 #			for k in rng.randi_range(0, 2):
 #				var debris = Sprite2D.new()
@@ -582,7 +583,7 @@ func generate_cave(first_floor:bool, going_up:bool):
 				if volcano_mult > 1.0:
 					if cave_floor <= 8 and level < remap(cave_floor, 1, 8, 0.6, 0.0):
 						ash_tiles.append(Vector2(i, j))
-				minimap_cave.set_cell(0, Vector2i(i, j), tile_type, Vector2i.ZERO)
+				minimap_cave.set_cell(Vector2i(i, j), tile_type, Vector2i.ZERO)
 				tiles.append(Vector2(i, j))
 				astar_node.add_point(tile_id, Vector2(i, j))
 				if rng.randf() < 0.006 * min(5, cave_floor) * (modifiers.enemy_number if modifiers.has("enemy_number") else 1.0):
@@ -669,23 +670,23 @@ func generate_cave(first_floor:bool, going_up:bool):
 				if lava_level > max(remap(cave_floor, 12, 24, 0.8, 0.0), 0.0):
 					lava_tiles.append(Vector2i(i, j))
 	
-	$Ash.set_cells_terrain_connect(0, ash_tiles, 0, 4)
-	$Lava.set_cells_terrain_connect(0, lava_tiles, 0, 5)
-	$Ash.set_layer_modulate(0, Color.WHITE)
+	$Ash.set_cells_terrain_connect(ash_tiles, 0, 4)
+	$Lava.set_cells_terrain_connect(lava_tiles, 0, 5)
+	$Ash.modulate = Color.WHITE
 	#$Lava.set_layer_modulate(0, star_mod * (1.0 - cave_darkness))
 	#Add unpassable tiles at the cave borders
 	for i in range(-1, cave_size + 1):
-		cave_wall.set_cell(1, Vector2i(i, -1), 1, Vector2i.ZERO)
-		cave_wall.set_cell(1, Vector2i(i, -2), 1, Vector2i.ZERO)
+		cave_wall.set_cell(Vector2i(i, -1), 1, Vector2i.ZERO)
+		cave_wall.set_cell(Vector2i(i, -2), 1, Vector2i.ZERO)
 	for i in range(-1, cave_size + 1):
-		cave_wall.set_cell(1, Vector2i(i, cave_size), 1, Vector2i.ZERO)
-		cave_wall.set_cell(1, Vector2i(i, cave_size + 1), 1, Vector2i.ZERO)
+		cave_wall.set_cell(Vector2i(i, cave_size), 1, Vector2i.ZERO)
+		cave_wall.set_cell(Vector2i(i, cave_size + 1), 1, Vector2i.ZERO)
 	for i in range(-1, cave_size + 1):
-		cave_wall.set_cell(1, Vector2i(-1, i), 1, Vector2i.ZERO)
-		cave_wall.set_cell(1, Vector2i(-2, i), 1, Vector2i.ZERO)
+		cave_wall.set_cell(Vector2i(-1, i), 1, Vector2i.ZERO)
+		cave_wall.set_cell(Vector2i(-2, i), 1, Vector2i.ZERO)
 	for i in range(-1, cave_size + 1):
-		cave_wall.set_cell(1, Vector2i(cave_size, i), 1, Vector2i.ZERO)
-		cave_wall.set_cell(1, Vector2i(cave_size + 1, i), 1, Vector2i.ZERO)
+		cave_wall.set_cell(Vector2i(cave_size, i), 1, Vector2i.ZERO)
+		cave_wall.set_cell(Vector2i(cave_size + 1, i), 1, Vector2i.ZERO)
 	#tiles = cave_wall.get_used_cells(-1)
 	for tile in tiles:#tile is a Vector2D
 		connect_points(tile)
@@ -735,15 +736,15 @@ func generate_cave(first_floor:bool, going_up:bool):
 		for j in cave_size:
 			var tile_id:int = get_tile_index(Vector2(i, j))
 			if tiles_mined[cave_floor - 1].has(tile_id):
-				cave_BG.set_cell(0, Vector2i(i, j), tile_type, Vector2i.ZERO)
-				minimap_cave.set_cell(0, Vector2i(i, j), tile_type, Vector2i.ZERO)
+				cave_BG.set_cell(Vector2i(i, j), tile_type, Vector2i.ZERO)
+				minimap_cave.set_cell(Vector2i(i, j), tile_type, Vector2i.ZERO)
 				astar_node.add_point(tile_id, Vector2(i, j))
 				connect_points(Vector2(i, j), true)
 				walls.erase(Vector2i(i, j))
 				if deposits.has(str(tile_id)):
 					deposits[str(tile_id)].queue_free()
 					deposits.erase(str(tile_id))
-	cave_wall.set_cells_terrain_connect(0, walls, 0, 0)
+	cave_wall.set_cells_terrain_connect(walls, 0, 0)
 	#Assigns each enemy the room number they're in
 	for enemy in get_tree().get_nodes_in_group("enemies"):
 		var _id = get_tile_index(cave_BG.local_to_map(enemy.position))
@@ -1077,7 +1078,7 @@ func connect_points(tile:Vector2, bidir:bool = false):
 		var neighbor_tile_index = get_tile_index(neighbor_tile)
 		if not astar_node.has_point(neighbor_tile_index):
 			continue
-		if cave_wall.get_cell_tile_data(0, neighbor_tile) == null:
+		if cave_wall.get_cell_tile_data(neighbor_tile) == null:
 			astar_node.connect_points(tile_index, neighbor_tile_index, bidir)
 
 var HP_tween
@@ -1810,18 +1811,18 @@ func mine_wall_complete(tile_pos:Vector2, tile_id:int):
 	var remainder:float = filter_and_add(rsrc)
 	if remainder != 0:
 		game.popup(tr("WEIGHT_INV_FULL_MINING"), 1.7)
-	var walls = cave_wall.get_used_cells(0)
+	var walls = cave_wall.get_used_cells()
 	walls.erase(map_pos)
 	
-	cave_wall.set_cell(0, map_pos)
+	cave_wall.set_cell(map_pos)
 	#cave_wall.set_cells_terrain_connect(0, walls, 0, 0)
-	minimap_cave.set_cell(0, map_pos, tile_type, Vector2i.ZERO)
+	minimap_cave.set_cell(map_pos, tile_type, Vector2i.ZERO)
 	astar_node.add_point(tile_id, Vector2(map_pos.x, map_pos.y))
 	connect_points(map_pos, true)
 	if tiles_touched_by_laser.has(st):
 		tiles_touched_by_laser[st].bar.queue_free()
 		tiles_touched_by_laser.erase(st)
-	cave_BG.set_cell(0, map_pos, tile_type, Vector2i.ZERO)
+	cave_BG.set_cell(map_pos, tile_type, Vector2i.ZERO)
 	tiles_mined[cave_floor - 1].append(tile_id)
 
 var inv_bar_tween
@@ -2158,7 +2159,7 @@ func _on_Filter_pressed():
 		$UI2/Filters.visible = true
 
 func _on_CheckAchievements_timeout():
-	if cave_wall.get_used_cells(0).is_empty() and chests.is_empty() and big_debris.is_empty() and get_tree().get_nodes_in_group("enemies").is_empty():
+	if cave_wall.get_used_cells().is_empty() and chests.is_empty() and big_debris.is_empty() and get_tree().get_nodes_in_group("enemies").is_empty():
 		game.earn_achievement("random", "clear_out_cave_floor")
 		$CheckAchievements.stop()
 		$CheckAchievements.disconnect("timeout",Callable(self,"_on_CheckAchievements_timeout"))

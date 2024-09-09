@@ -1,6 +1,6 @@
 [gd_scene load_steps=8 format=3 uid="uid://c5qfs6oo128dp"]
 
-[ext_resource type="Texture2D" uid="uid://bcevftef45num" path="res://Graphics/Tiles/3.jpg" id="1"]
+[ext_resource type="Texture2D" uid="uid://cw7v66ruuqgwb" path="res://Graphics/Tiles/3.jpg" id="1"]
 [ext_resource type="Shader" path="res://Shaders/Nebula.gdshader" id="3"]
 [ext_resource type="Script" path="res://Scripts/Nebula.gd" id="4"]
 

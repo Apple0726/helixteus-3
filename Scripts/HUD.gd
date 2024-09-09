@@ -489,7 +489,7 @@ func _on_Vehicles_mouse_entered():
 func _on_Vehicles_pressed():
 	if not Input.is_action_pressed("shift"):
 		click_sound.play()
-		game.toggle_panel(game.vehicle_panel)
+		game.toggle_panel("vehicle_panel")
 
 #func _on_ObjectivesLabel_mouse_entered():
 	#if game.objective.type == game.ObjectiveType.EMMA:
