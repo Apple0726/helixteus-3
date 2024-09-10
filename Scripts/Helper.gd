@@ -3,7 +3,6 @@ extends Node
 
 @onready var game = get_node("/root/Game")
 #var game
-var notation:int = 1#0: standard, 1: SI, 2: scientific
 
 func set_btn_color(btn):
 	if not btn.get_parent_control():
@@ -231,28 +230,28 @@ func format_num(num:float, clever_round:bool = false, threshold:int = 6):
 		else:
 			p = int(p)
 		var div = max(pow(10, snapped(p - 1, 3)), 1)
-		if notation == 2 and p >= 3 or p >= 33:
+		if Settings.notation == "scientific" and p >= 3 or p >= 33:
 			return e_notation(num, 3)
 		if p >= 3 and p < 6:
 			suff = "k"
 		elif p < 9:
 			suff = "M"
 		elif p < 12:
-			suff = "G" if notation == 1 else "B"
+			suff = "G" if Settings.notation == "SI" else "B"
 		elif p < 15:
 			suff = "T"
 		elif p < 18:
-			suff = "P" if notation == 1 else "q"
+			suff = "P" if Settings.notation == "SI" else "q"
 		elif p < 21:
-			suff = "E" if notation == 1 else "Q"
+			suff = "E" if Settings.notation == "SI" else "Q"
 		elif p < 24:
-			suff = "Z" if notation == 1 else "s"
+			suff = "Z" if Settings.notation == "SI" else "s"
 		elif p < 27:
-			suff = "Y" if notation == 1 else "S"
+			suff = "Y" if Settings.notation == "SI" else "S"
 		elif p < 30:
-			suff = "R" if notation == 1 else "O"
+			suff = "R" if Settings.notation == "SI" else "O"
 		elif p < 33:
-			suff = "Q" if notation == 1 else "N"
+			suff = "Q" if Settings.notation == "SI" else "N"
 		return "%s%s%s" % [sgn, clever_round(num / div, 3), suff]
 
 #Assumes that all values of dict are floats/integers
@@ -1640,6 +1639,10 @@ func get_sph_V(outer:float, inner:float = 0):
 	outer /= 150.0#I have to reduce the size of planets otherwise it's too OP
 	inner /= 150.0
 	return 4/3.0 * PI * (pow(outer, 3) - pow(inner, 3))
+
+func update_volumes(bus:int, value:float):
+	AudioServer.set_bus_volume_db(bus, value)
+	AudioServer.set_bus_mute(bus,value <= -40)
 
 func setup_discord():
 	#discord_sdk.app_id = 1101755847325003846 # Application ID

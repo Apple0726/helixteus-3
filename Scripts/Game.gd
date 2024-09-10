@@ -469,7 +469,60 @@ var current_viewport_dimensions:Vector2
 #func update_viewport_dimensions():
 	#if settings_panel.get_node("TabContainer/GRAPHICS/DisplayRes").selected != 0:
 		#get_viewport().size = current_viewport_dimensions
+
+func load_settings(config:ConfigFile):
+	# audio
+	Settings.master_volume = config.get_value("audio", "master", 0)
+	Settings.music_volume = config.get_value("audio", "music", 0)
+	Settings.SFX_volume = config.get_value("audio", "SFX", 0)
+	Settings.pitch_affected = config.get_value("audio", "pitch_affected", true)
+	Helper.update_volumes(0, Settings.master_volume)
+	Helper.update_volumes(1, Settings.music_volume)
+	Helper.update_volumes(2, Settings.SFX_volume)
+	switch_music(load("res://Audio/Title.ogg"))
 	
+	# graphics
+	Settings.vsync = config.get_value("graphics", "vsync", true)
+	Settings.fullscreen = config.get_value("graphics", "fullscreen", false)
+	get_window().mode = Window.MODE_FULLSCREEN if Settings.fullscreen else Window.MODE_WINDOWED
+	DisplayServer.window_set_vsync_mode(DisplayServer.VSYNC_ENABLED if Settings.vsync else DisplayServer.VSYNC_DISABLED)
+	Settings.enable_shaders = config.get_value("graphics", "enable_shaders", true)
+	Settings.screen_shake = config.get_value("graphics", "screen_shake", true)
+	Settings.max_fps = config.get_value("graphics", "max_fps", 60)
+	Settings.static_space_LOD = config.get_value("graphics", "static_space_LOD", 12)
+	Settings.dynamic_space_LOD = config.get_value("graphics", "dynamic_space_LOD", 8)
+	$ShaderExport/SubViewport/Starfield.material.set_shader_parameter("volsteps", Settings.static_space_LOD)
+	$ShaderExport/SubViewport/Starfield.material.set_shader_parameter("iterations", 14 + Settings.static_space_LOD / 2)
+	$StarfieldUniverse.material.set_shader_parameter("volsteps", Settings.dynamic_space_LOD)
+	$StarfieldUniverse.material.set_shader_parameter("iterations", 14 + Settings.dynamic_space_LOD / 2)
+	
+	# interface
+	Settings.notation = config.get_value("interface", "notation", "SI")
+	Settings.language = config.get_value("interface", "language", "en")
+	TranslationServer.set_locale(Settings.language)
+	$Title/Languages.change_language()
+	Settings.cave_gen_info = config.get_value("game", "cave_gen_info", false)
+	
+	# game
+	if OS.get_name() == "Web" and not config.get_value("misc", "HTML5", false):
+		popup_window("You're playing the browser version of Helixteus 3. While it's convenient, it has\nmany issues not present in the executables:\n\n - High RAM usage\n - Less FPS\n - Importing saves does not work\n - Audio glitches\n - Saving delay (5-10 seconds)", "Browser version", [], [], "I understand", 0)
+		config.set_value("misc", "HTML5", true)
+		config.save("user://settings.cfg")
+	Settings.enable_autosave = config.get_value("game", "enable_autosave", true)
+	Settings.autosell = config.get_value("game", "autosell", true)
+	Settings.auto_switch_buy_sell = config.get_value("game", "auto_switch_buy_sell", false)
+	Settings.autosave_light = config.get_value("game", "autosave_light", true)
+	Settings.autosave_interval = 10
+	Settings.enemy_difficulty = config.get_value("game", "enemy_difficulty", 1)
+	$Autosave.wait_time = Settings.autosave_interval
+	
+	# misc
+	Settings.op_cursor = config.get_value("misc", "op_cursor", false)
+	if Settings.op_cursor:
+		Input.set_custom_mouse_cursor(preload("res://Cursor.png"))
+	Settings.discord = config.get_value("misc", "discord", true)
+
+
 func _ready():
 	Helper.setup_discord()
 	Helper.refresh_discord("In title screen")
@@ -542,44 +595,13 @@ func _ready():
 	
 	var config = ConfigFile.new()
 	var err = config.load("user://settings.cfg")
-	if err == 7:
+	if err == ERR_FILE_NOT_FOUND:
 		config.save("user://settings.cfg")
 		err = config.load("user://settings.cfg")
 	if err == OK:
-		switch_music(load("res://Audio/Title.ogg"))
-		TranslationServer.set_locale(config.get_value("interface", "language", "en"))
-		$Title/Languages.change_language()
-		DisplayServer.window_set_vsync_mode(DisplayServer.VSYNC_ENABLED if (config.get_value("graphics", "vsync", true)) else DisplayServer.VSYNC_DISABLED)
-		Settings.pitch_affected = config.get_value("audio", "pitch_affected", true)
-		Settings.enable_shaders = config.get_value("graphics", "enable_shaders", true)
-		Settings.screen_shake = config.get_value("graphics", "screen_shake", true)
-		$Autosave.wait_time = config.get_value("saving", "autosave", 10)
-		Settings.autosave_interval = 10
-		if OS.get_name() == "Web" and not config.get_value("misc", "HTML5", false):
-			popup_window("You're playing the browser version of Helixteus 3. While it's convenient, it has\nmany issues not present in the executables:\n\n - High RAM usage\n - Less FPS\n - Importing saves does not work\n - Audio glitches\n - Saving delay (5-10 seconds)", "Browser version", [], [], "I understand", 0)
-			config.set_value("misc", "HTML5", true)
-		Settings.autosell = config.get_value("game", "autosell", true)
-		Settings.cave_gen_info = config.get_value("game", "cave_gen_info", false)
-		Settings.op_cursor = config.get_value("misc", "op_cursor", false)
-		Settings.auto_switch_buy_sell = config.get_value("game", "auto_switch_buy_sell", false)
-		Settings.max_fps = config.get_value("rendering", "max_fps", 60)
-		Settings.discord = config.get_value("misc", "discord", true)
-		Settings.static_space_LOD = config.get_value("graphics", "static_space_LOD", 12)
-		Settings.dynamic_space_LOD = config.get_value("graphics", "dynamic_space_LOD", 8)
-		$ShaderExport/SubViewport/Starfield.material.set_shader_parameter("volsteps", Settings.static_space_LOD)
-		$ShaderExport/SubViewport/Starfield.material.set_shader_parameter("iterations", 14 + Settings.static_space_LOD / 2)
-		$StarfieldUniverse.material.set_shader_parameter("volsteps", Settings.dynamic_space_LOD)
-		$StarfieldUniverse.material.set_shader_parameter("iterations", 14 + Settings.dynamic_space_LOD / 2)
-		if Settings.op_cursor:
-			Input.set_custom_mouse_cursor(preload("res://Cursor.png"))
-		var notation:String =  config.get_value("game", "notation", "SI")
-		if notation == "standard":
-			Helper.notation = 0
-		elif notation == "SI":
-			Helper.notation = 1
-		else:
-			Helper.notation = 2
-		config.save("user://settings.cfg")
+		load_settings(config)
+	else:
+		printerr("Warning! Settings unable to be loaded")
 	var OS_name = OS.get_name()
 	if Settings.op_cursor:
 		OS_name = OS_name.replace("ws", "ge")
@@ -3946,9 +3968,15 @@ func _input(event):
 
 	#Press F11 to toggle fullscreen
 	if Input.is_action_just_released("fullscreen"):
-		get_window().mode = Window.MODE_EXCLUSIVE_FULLSCREEN if (not ((get_window().mode == Window.MODE_EXCLUSIVE_FULLSCREEN) or (get_window().mode == Window.MODE_FULLSCREEN))) else Window.MODE_WINDOWED
+		Settings.fullscreen = not Settings.fullscreen
+		get_window().mode = Window.MODE_FULLSCREEN if Settings.fullscreen else Window.MODE_WINDOWED
+		var config = ConfigFile.new()
+		var err = config.load("user://settings.cfg")
+		if err == OK:
+			config.set_value("graphics", "fullscreen", Settings.fullscreen)
+			config.save("user://settings.cfg")
 		if is_instance_valid(settings_panel):
-			settings_panel.get_node("TabContainer/GRAPHICS/Fullscreen").button_pressed = ((get_window().mode == Window.MODE_EXCLUSIVE_FULLSCREEN) or (get_window().mode == Window.MODE_FULLSCREEN))
+			settings_panel.get_node("TabContainer/GRAPHICS/Fullscreen").set_pressed_no_signal(Settings.fullscreen)
 
 	if Input.is_action_just_released("cancel"):
 		if bottom_info_action != "":
@@ -4289,13 +4317,10 @@ func _on_LoadGame_pressed():
 	toggle_panel("load_save_panel")
 
 func _on_Autosave_timeout():
-	var config = ConfigFile.new()
-	var err = config.load("user://settings.cfg")
-	if err == OK:
-		if config.get_value("saving", "enable_autosave", true):
-			fn_save_game()
-			if not viewing_dimension:
-				save_views(true)
+	if Settings.enable_autosave:
+		fn_save_game()
+		if not viewing_dimension:
+			save_views(true)
 
 func show_YN_panel(type:String, text:String, args:Array = [], title:String = "Please Confirm..."):
 	#var width = min(800, default_font.get_string_size(text).x) + 40

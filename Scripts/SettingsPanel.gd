@@ -24,55 +24,46 @@ func _ready():
 	$TabContainer/GRAPHICS/DisplayRes.add_item("64 x 36", 10)
 	$TabContainer/GRAPHICS/DisplayRes.add_item("32 x 18", 11)
 	$TabContainer/GRAPHICS/DisplayRes.add_item("16 x 9", 12)
-	if err == OK:
-		set_difficulty()
-		$TabContainer/SFX/Master.value = config.get_value("audio", "master", 0)
-		update_volumes(0, config.get_value("audio", "master", 0))
-		$TabContainer/SFX/Music.value = config.get_value("audio", "music", 0)
-		update_volumes(1, config.get_value("audio", "music", 0))
-		$TabContainer/SFX/SFX.value = config.get_value("audio", "SFX", 0)
-		update_volumes(2, config.get_value("audio", "SFX", 0))
-		$TabContainer/SFX/MusicPitch.button_pressed = config.get_value("audio", "pitch_affected", true)
-		$TabContainer/GRAPHICS/Vsync.button_pressed = config.get_value("graphics", "vsync", true)
-		$TabContainer/GRAPHICS/AutosaveLight.button_pressed = config.get_value("saving", "autosave_light", true)
-		$TabContainer/GRAPHICS/EnableShaders.button_pressed = config.get_value("graphics", "enable_shaders", true)
-		$TabContainer/GRAPHICS/Screenshake.button_pressed = config.get_value("graphics", "screen_shake", true)
-		$TabContainer/GAME/EnableAutosave.button_pressed = config.get_value("saving", "enable_autosave", true)
-		$TabContainer/GAME/AutosellMinerals.button_pressed = config.get_value("game", "autosell", true)
-		$TabContainer/GAME/CaveGenInfo.button_pressed = config.get_value("game", "cave_gen_info", false)
-		var autosave_interval = config.get_value("saving", "autosave", 10)
-		var max_fps = config.get_value("rendering", "max_fps", 60)
-		$TabContainer/GRAPHICS/Fullscreen.button_pressed = ((get_window().mode == Window.MODE_EXCLUSIVE_FULLSCREEN) or (get_window().mode == Window.MODE_FULLSCREEN))
-		$TabContainer/GAME/Autosave.value = autosave_interval
-		$TabContainer/GAME/AutoSwitch.button_pressed = config.get_value("game", "auto_switch_buy_sell", false)
-		$TabContainer/GRAPHICS/FPS/FPS.value = max_fps
-		$TabContainer/GRAPHICS/SpaceLOD/StaticSpaceLOD.value = config.get_value("graphics", "static_space_LOD", 12)
-		$TabContainer/GRAPHICS/SpaceLOD/DynamicSpaceLOD.value = config.get_value("graphics", "dynamic_space_LOD", 8)
-		$TabContainer/MISC/OPCursor.button_pressed = config.get_value("misc", "op_cursor", false)
-		$TabContainer/MISC/Discord.button_pressed = config.get_value("misc", "discord", true)
-		set_notation()
+	set_enemy_difficulty()
+	$TabContainer/SFX/Master.value = Settings.master_volume
+	$TabContainer/SFX/Music.value = Settings.music_volume
+	$TabContainer/SFX/SFX.value = Settings.SFX_volume
+	$TabContainer/SFX/MusicPitch.button_pressed = Settings.pitch_affected
+	$TabContainer/GRAPHICS/Vsync.button_pressed = Settings.vsync
+	$TabContainer/GRAPHICS/AutosaveLight.button_pressed = Settings.autosave_light
+	$TabContainer/GRAPHICS/EnableShaders.button_pressed = Settings.enable_shaders
+	$TabContainer/GRAPHICS/Screenshake.button_pressed = Settings.screen_shake
+	$TabContainer/GAME/EnableAutosave.button_pressed = Settings.enable_autosave
+	$TabContainer/GAME/AutosellMinerals.button_pressed = Settings.autosell
+	$TabContainer/GAME/CaveGenInfo.button_pressed = Settings.cave_gen_info
+	$TabContainer/GRAPHICS/Fullscreen.set_pressed_no_signal(Settings.fullscreen)
+	$TabContainer/GAME/Autosave.value = Settings.autosave_interval
+	$TabContainer/GAME/AutoSwitch.button_pressed = Settings.auto_switch_buy_sell
+	$TabContainer/GRAPHICS/FPS/FPS.value = Settings.max_fps
+	$TabContainer/GRAPHICS/SpaceLOD/StaticSpaceLOD.value = Settings.static_space_LOD
+	$TabContainer/GRAPHICS/SpaceLOD/DynamicSpaceLOD.value = Settings.dynamic_space_LOD
+	$TabContainer/MISC/OPCursor.button_pressed = Settings.op_cursor
+	$TabContainer/MISC/Discord.button_pressed = Settings.discord
+	set_notation()
 
 func _on_Main_audio_value_changed(value):
-	update_volumes(0, value)
+	Helper.update_volumes(0, value)
 	if err == OK:
 		config.set_value("audio", "master", value)
 		config.save("user://settings.cfg")
 
 func _on_Music_value_changed(value):
-	update_volumes(1, value)
+	Helper.update_volumes(1, value)
 	if err == OK:
 		config.set_value("audio", "music", value)
 		config.save("user://settings.cfg")
 
 func _on_Sound_Effects_value_changed(value):
-	update_volumes(2, value)
+	Helper.update_volumes(2, value)
 	if err == OK:
 		config.set_value("audio", "SFX", value)
 		config.save("user://settings.cfg")
 
-func update_volumes(bus:int, value:float):
-	AudioServer.set_bus_volume_db(bus, value)
-	AudioServer.set_bus_mute(bus,value <= -40)
 
 func refresh():
 	if game.c_v == "STM":
@@ -87,7 +78,7 @@ func refresh():
 		$TabContainer/GAME/AutosellMineralsLabel.modulate = Color(0.5, 0.5, 0.5, 1.0)
 	$TabContainer/GRAPHICS/Fullscreen.text = "%s (F11)" % [tr("FULLSCREEN")]
 	$TabContainer/SFX/MusicPitchLabel.text = "%s  [img]Graphics/Icons/help.png[/img]" % tr("TIME_SPEED_AFFECTS_PITCH")
-	set_difficulty()
+	set_enemy_difficulty()
 
 func _on_Vsync_toggled(button_pressed):
 	if err == OK:
@@ -100,7 +91,7 @@ func _on_Autosave_value_changed(value):
 	if err == OK:
 		$TabContainer/GAME/Label3.text = "%s %s" % [value, tr("S_SECOND")]
 		Settings.autosave_interval = value
-		config.set_value("saving", "autosave", value)
+		config.set_value("game", "autosave", value)
 		config.save("user://settings.cfg")
 		if game.c_v != "":
 			game.get_node("Autosave").stop()
@@ -110,7 +101,7 @@ func _on_Autosave_value_changed(value):
 
 func _on_AutosaveLight_toggled(button_pressed):
 	if err == OK:
-		config.set_value("saving", "autosave_light", button_pressed)
+		config.set_value("game", "autosave_light", button_pressed)
 		config.save("user://settings.cfg")
 		if game.HUD:
 			game.HUD.refresh()
@@ -118,7 +109,7 @@ func _on_AutosaveLight_toggled(button_pressed):
 
 func _on_EnableAutosave_toggled(button_pressed):
 	if err == OK:
-		config.set_value("saving", "enable_autosave", button_pressed)
+		config.set_value("game", "enable_autosave", button_pressed)
 		config.save("user://settings.cfg")
 		if game.HUD:
 			game.HUD.refresh()
@@ -156,36 +147,31 @@ func _on_Hard_mouse_entered():
 	game.show_tooltip("%s: x %s" % [tr("LOOT_XP_BONUS"), 1.5])
 
 
-func set_difficulty():
-	$TabContainer/GAME/HBoxContainer/Easy.button_pressed = false
-	$TabContainer/GAME/HBoxContainer/Normal.button_pressed = false
-	$TabContainer/GAME/HBoxContainer/Hard.button_pressed = false
-	if err == OK:
-		var diff = config.get_value("game", "e_diff", 1)
-		if diff == 0:
-			$TabContainer/GAME/HBoxContainer/Easy.button_pressed = true
-		elif diff == 1:
-			$TabContainer/GAME/HBoxContainer/Normal.button_pressed = true
-		else:
-			$TabContainer/GAME/HBoxContainer/Hard.button_pressed = true
+func set_enemy_difficulty():
+	$TabContainer/GAME/HBoxContainer/Easy.button_pressed = Settings.enemy_difficulty == 0
+	$TabContainer/GAME/HBoxContainer/Normal.button_pressed = Settings.enemy_difficulty == 1
+	$TabContainer/GAME/HBoxContainer/Hard.button_pressed = Settings.enemy_difficulty == 2
 
 func _on_Easy_pressed():
 	if err == OK:
-		config.set_value("game", "e_diff", 0)
+		config.set_value("game", "enemy_difficulty", 0)
+		Settings.enemy_difficulty = 0
 		config.save("user://settings.cfg")
-		set_difficulty()
+		set_enemy_difficulty()
 
 func _on_Normal_pressed():
 	if err == OK:
-		config.set_value("game", "e_diff", 1)
+		config.set_value("game", "enemy_difficulty", 1)
+		Settings.enemy_difficulty = 1
 		config.save("user://settings.cfg")
-		set_difficulty()
+		set_enemy_difficulty()
 
 func _on_Hard_pressed():
 	if err == OK:
-		config.set_value("game", "e_diff", 2)
+		config.set_value("game", "enemy_difficulty", 2)
+		Settings.enemy_difficulty = 2
 		config.save("user://settings.cfg")
-		set_difficulty()
+		set_enemy_difficulty()
 
 func _on_Fullscreen_toggled(button_pressed):
 	get_window().mode = Window.MODE_EXCLUSIVE_FULLSCREEN if (button_pressed) else Window.MODE_WINDOWED
@@ -193,7 +179,8 @@ func _on_Fullscreen_toggled(button_pressed):
 
 func _on_Standard_pressed():
 	if err == OK:
-		config.set_value("game", "notation", "standard")
+		config.set_value("interface", "notation", "standard")
+		Settings.notation = "standard"
 		config.save("user://settings.cfg")
 		set_notation()
 
@@ -203,7 +190,15 @@ func _on_Standard_mouse_entered():
 
 func _on_SI_pressed():
 	if err == OK:
-		config.set_value("game", "notation", "SI")
+		config.set_value("interface", "notation", "SI")
+		Settings.notation = "SI"
+		config.save("user://settings.cfg")
+		set_notation()
+
+func _on_Scientific_pressed():
+	if err == OK:
+		config.set_value("interface", "notation", "scientific")
+		Settings.notation = "scientific"
 		config.save("user://settings.cfg")
 		set_notation()
 
@@ -211,34 +206,14 @@ func _on_SI_mouse_entered():
 	game.show_tooltip("k < M < G < T < P < E < Z < Y < R < Q")
 
 func set_notation():
-	$TabContainer/MISC/HBoxContainer2/Standard.button_pressed = false
-	$TabContainer/MISC/HBoxContainer2/SI.button_pressed = false
-	$TabContainer/MISC/HBoxContainer2/Scientific.button_pressed = false
-	if err == OK:
-		var notation = config.get_value("game", "notation", "SI")
-		if notation == "standard":
-			$TabContainer/MISC/HBoxContainer2/Standard.button_pressed = true
-			Helper.notation = 0
-		elif notation == "SI":
-			$TabContainer/MISC/HBoxContainer2/SI.button_pressed = true
-			Helper.notation = 1
-		else:
-			$TabContainer/MISC/HBoxContainer2/Scientific.button_pressed = true
-			Helper.notation = 2
+	$TabContainer/MISC/HBoxContainer2/Standard.set_pressed_no_signal(Settings.notation == "standard")
+	$TabContainer/MISC/HBoxContainer2/SI.set_pressed_no_signal(Settings.notation == "SI")
+	$TabContainer/MISC/HBoxContainer2/Scientific.set_pressed_no_signal(Settings.notation == "scientific")
 	if is_instance_valid(game.HUD):
 		game.HUD.refresh()
 
-
-func _on_Scientific_pressed():
-	if err == OK:
-		config.set_value("game", "notation", "scientific")
-		config.save("user://settings.cfg")
-		set_notation()
-
-
 func _on_MusicPitch_mouse_entered():
 	game.show_tooltip(tr("TIME_SPEED_AFFECTS_PITCH_DESC"))
-
 
 func _on_MusicPitch_toggled(button_pressed):
 	if err == OK:
