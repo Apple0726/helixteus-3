@@ -307,22 +307,6 @@ var pickaxes_info = {"stick":{"speed":1.0, "durability":140, "costs":{"money":30
 					"mythril_pickaxe":{"speed":19600.0, "durability":4000, "costs":{"money":e(6.4, 12)}},
 }
 
-var speedups_info = {	"speedup1":{"costs":{"money":400}, "time":2*60, "name":"X_MINUTE_SPEEDUP", "name_param":2},
-						"speedup2":{"costs":{"money":2800}, "time":15*60, "name":"X_MINUTE_SPEEDUP", "name_param":15},
-						"speedup3":{"costs":{"money":11000}, "time":60*60, "name":"X_HOUR_SPEEDUP", "name_param":1},
-						"speedup4":{"costs":{"money":65000}, "time":6*60*60, "name":"X_HOUR_SPEEDUP", "name_param":6},
-						"speedup5":{"costs":{"money":255000}, "time":24*60*60, "name":"X_HOUR_SPEEDUP", "name_param":24},
-						"speedup6":{"costs":{"money":1750000}, "time":7*24*60*60, "name":"X_DAY_SPEEDUP", "name_param":7},
-}
-
-var overclocks_info = {	"overclock1":{"costs":{"money":2800}, "mult":1.5, "duration":10*60},
-						"overclock2":{"costs":{"money":17000}, "mult":2, "duration":30*60},
-						"overclock3":{"costs":{"money":90000}, "mult":2.5, "duration":60*60},
-						"overclock4":{"costs":{"money":340000}, "mult":3, "duration":2*60*60},
-						"overclock5":{"costs":{"money":2200000}, "mult":4, "duration":6*60*60},
-						"overclock6":{"costs":{"money":18000000}, "mult":5, "duration":24*60*60},
-}
-
 var seeds_produce = {"lead_seeds":{"costs":{"cellulose":0.05}, "produce":{"lead":0.1}},
 					"copper_seeds":{"costs":{"cellulose":0.06}, "produce":{"copper":0.1*met_info.lead.value / met_info.copper.value}},
 					"iron_seeds":{"costs":{"cellulose":0.07}, "produce":{"iron":0.1*met_info.lead.value / met_info.iron.value}},
@@ -330,30 +314,6 @@ var seeds_produce = {"lead_seeds":{"costs":{"cellulose":0.05}, "produce":{"lead"
 					"silver_seeds":{"costs":{"cellulose":0.09}, "produce":{"silver":0.1*met_info.lead.value / met_info.silver.value}},
 					"gold_seeds":{"costs":{"cellulose":0.1}, "produce":{"gold":0.1*met_info.lead.value / met_info.gold.value}},
 }
-var craft_mining_info = {	"mining_liquid":{"costs":{"coal":200, "glass":20}, "speed_mult":1.5, "durability":400},
-							"purple_mining_liquid":{"costs":{"H":4000, "O":2000, "glass":500}, "speed_mult":4.0, "durability":800},
-}
-
-var craft_cave_info = {
-	"drill1":{"costs":{"iron":100, "aluminium":20}, "limit":8},
-	"drill2":{"costs":{"aluminium":600, "titanium":150}, "limit":16},
-	"drill3":{"costs":{"platinum":4000, "diamond":3000}, "limit":24},
-	"portable_wormhole1":{"costs":{"glass":80, "aluminium":80}, "limit":8},
-	"portable_wormhole2":{"costs":{"quartz":300, "diamond":20}, "limit":16},
-	"portable_wormhole3":{"costs":{"platinum":5000, "quillite":1000}, "limit":24},
-}
-
-var other_items_info = {
-	"hx_core":{"XP":6},
-	"hx_core2":{"XP":800},
-	"hx_core3":{"XP":120000},
-	"hx_core4":{"XP":1.6e7},
-	"ship_locator":{}}
-
-var item_groups = [	{"dict":speedups_info, "path":"Items/Speedups"},
-					{"dict":overclocks_info, "path":"Items/Overclocks"},
-					{"dict":other_items_info, "path":"Items/Others"},
-					]
 #endregion
 
 #Density is in g/cm^3
@@ -549,10 +509,6 @@ func _ready():
 		met_info[key] = Mods.added_mets[key]
 	for key in Mods.added_picks:
 		pickaxes_info[key] = Mods.added_picks[key]
-	for key in Mods.added_speedups:
-		speedups_info[key] = Mods.added_speedups[key]
-	for key in Mods.added_overclocks:
-		overclocks_info[key] = Mods.added_overclocks[key]
 	
 #	place_BG_stars()
 #	place_BG_sc_stars()
@@ -1084,7 +1040,7 @@ func new_game(univ:int = 0, new_save:bool = false, DR_advantage = false):
 	}
 	satellite_data = []
 
-	items = [{"name":"overclock1", "num":5, "type":"overclocks_info"}, null, null, null, null, null, null, null, null]
+	items = [{"item_id":Item.OVERCLOCK1, "num":5}, null, null, null, null, null, null, null]
 
 	hotbar = []
 
@@ -3703,43 +3659,42 @@ func add_text_icons(RTL:RichTextLabel, txt:String, imgs:Array, size:int = 17, _t
 			RTL.size.x = RTL.get_content_width() + 20
 			RTL.size.y = RTL.get_content_height() + 10
 
-func add_items(item:String, num:int = 1):
+func add_items(item_id:int, num:int = 1):
 	var cycles = 0
 	while num > 0 and cycles < 2:
-		var i:int = 0
-		for st in items:
+		for i in len(items):
 			if num <= 0:
 				break
-			if st != null and st.name == item and st.num != stack_size or st == null:
-				if st == null:
-					items[i] = {"name":item, "num":0, "type":Helper.get_type_from_name(item), "directory":Helper.get_dir_from_name(item)}
+			var item_slot = items[i]
+			if item_slot == null:
+				items[i] = {"item_id":item_id, "num":0}
+			if item_slot.item_id == item_id and item_slot.num < stack_size:
 				var sum = items[i].num + num
 				var diff = stack_size - items[i].num
 				items[i].num = min(stack_size, sum)
 				num = max(num - diff, 0)
-			i += 1
 		cycles += 1
 	return num
 
-func remove_items(item:String, num:int = 1):
-	if get_item_num(item) == 0:
+func remove_items(item_id:int, num:int = 1):
+	if get_item_num(item_id) == 0:
 		return 0
 	while num > 0:
-		for st in items:
-			if st != null and st.name == item:
-				st.num -= num
-				if st.num <= 0:
-					num = -st.num
-					items[items.find(st)] = null
+		for item_slot in items:
+			if item_slot != null and item_slot.item_id == item_id:
+				item_slot.num -= num
+				if item_slot.num <= 0:
+					num = -item_slot.num
+					items[items.find(item_slot)] = null
 				else:
-					return get_item_num(item)
-	return get_item_num(item)
+					return get_item_num(item_id)
+	return get_item_num(item_id)
 
-func get_item_num(item:String):
+func get_item_num(item_id:int):
 	var n = 0
-	for st in items:
-		if st and st.name == item:
-			n += st.num
+	for item_slot in items:
+		if item_slot and item_slot.item_id == item_id:
+			n += item_slot.num
 	return n
 
 func get_star_class (temp):

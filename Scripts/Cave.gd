@@ -1293,9 +1293,6 @@ func _input(event):
 						game.show[rsrc] = true
 						add_filter(rsrc)
 					var has_weight = true
-					for item_group in game.item_groups:
-						if item_group.dict.has(rsrc):
-							has_weight = false
 					if rsrc == "money" or rsrc == "minerals":
 						has_weight = false
 					if has_weight:

@@ -6,7 +6,7 @@ var buy_sell
 @onready var inventory_grid = $Control/VBox/Inventory
 @onready var grid = $Control/VBox/GridContainer
 @onready var particles_hbox = $Control/ParticlesHBox
-@onready var info = $Control/VBox/Info
+@onready var info = $Information
 var item_hovered:String = ""
 var item_stack:int = 0
 var item_slot:int = 0
@@ -59,7 +59,7 @@ func _on_Items_pressed():
 		i += 1
 	$Control/VBox/BuySell.visible = false
 
-func on_slot_over (_name:String, num:int, slot:int):
+func on_slot_over(_name:String, num:int, slot:int):
 	var st:String = Helper.get_item_name(_name)
 	if game.other_items_info.has(_name):
 		if _name.substr(0, 7) == "hx_core":
@@ -258,10 +258,6 @@ func _input(event):
 			else:
 				game.hotbar.erase(item_hovered)
 			game.HUD.update_hotbar()
-
-
-func _on_close_button_pressed():
-	game.toggle_panel(self)
 
 @onready var subatomic_particles_label = $Control/ParticlesHBox/SubatomicParticles
 

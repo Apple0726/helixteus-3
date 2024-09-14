@@ -79,10 +79,6 @@ func put_rsrc(container, min_size, objs, remove:bool = true, show_available:bool
 			format_text(rsrc.get_node("Text"), texture, "Atoms/" + obj, show_available, objs[obj], game.atoms[obj], " mol")
 		elif game.particles.has(obj):
 			format_text(rsrc.get_node("Text"), texture, "Particles/" + obj, show_available, objs[obj], game.particles[obj], " mol")
-		else:
-			for item_group_info in game.item_groups:
-				if item_group_info.dict.has(obj):
-					format_text(rsrc.get_node("Text"), texture, item_group_info.path + "/" + obj, show_available, objs[obj], game.get_item_num(obj))
 		if mouse_events:
 			rsrc.get_node("Texture2D").connect("mouse_entered",Callable(self,"on_rsrc_over").bind(tooltip))
 			rsrc.get_node("Texture2D").connect("mouse_exited",Callable(self,"on_rsrc_out"))

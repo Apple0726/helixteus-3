@@ -32,6 +32,7 @@ UniqueBuilding="*res://Scripts/UniqueBuilding.gd"
 Building="*res://Scripts/Building.gd"
 Settings="*res://Scripts/Settings.gd"
 ResourceFiles="*res://Scripts/ResourceFiles.gd"
+Item="*res://Scripts/Item.gd"
 
 [debug]
 

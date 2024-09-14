@@ -619,9 +619,9 @@ theme_override_constants/separation = 0
 
 [node name="Buttons" type="VBoxContainer" parent="."]
 layout_mode = 0
-offset_left = 1232.0
+offset_left = 1280.0
 offset_top = 48.0
-offset_right = 1280.0
+offset_right = 1328.0
 offset_bottom = 720.0
 mouse_filter = 2
 theme_override_constants/separation = 0
@@ -710,8 +710,9 @@ stretch_mode = 5
 
 [node name="Bottom" type="Control" parent="."]
 anchors_preset = 0
+offset_top = 84.0
 offset_right = 40.0
-offset_bottom = 40.0
+offset_bottom = 124.0
 
 [node name="Panel" type="Panel" parent="Bottom"]
 layout_mode = 0
@@ -813,8 +814,9 @@ layout_mode = 2
 
 [node name="Top" type="Control" parent="."]
 anchors_preset = 0
+offset_top = -76.0
 offset_right = 40.0
-offset_bottom = 40.0
+offset_bottom = -36.0
 
 [node name="Objectives" type="Control" parent="Top"]
 anchors_preset = 0
