@@ -168,7 +168,7 @@ func update_money_energy_SP():
 	stone_text.text = Helper.format_num(total_stone) + " kg"
 	
 func refresh():
-	if not game:
+	if not game or not is_inside_tree():
 		return
 	$Top/Name/Name.caret_blink_interval = 0.5 / game.u_i.time_speed
 	prev_btn.visible = game.view_history_pos > 0 and game.c_v in ["universe", "supercluster", "cluster", "galaxy", "system", "planet"]
@@ -743,6 +743,8 @@ func _on_NextView_mouse_entered():
 
 func _on_HUD_tree_entered():
 	$AnimationPlayer2.play("MoveStuff")
+	await get_tree().process_frame
+	show()
 
 
 func _on_MainMenu_mouse_entered():

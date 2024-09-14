@@ -571,7 +571,7 @@ adjustment_enabled = true
 [node name="Cave" type="Node2D"]
 script = ExtResource("2")
 
-[node name="TileMap" type="TileMapLayer" parent="."]
+[node name="Floor" type="TileMapLayer" parent="."]
 z_index = -1024
 material = SubResource("1")
 tile_set = ExtResource("33")
@@ -894,7 +894,7 @@ light_mask = -2147483647
 texture = ExtResource("15")
 centered = false
 
-[node name="TileMap" type="TileMapLayer" parent="UI/Minimap"]
+[node name="Floor" type="TileMapLayer" parent="UI/Minimap"]
 light_mask = -2147483647
 tile_set = ExtResource("33")
 rendering_quadrant_size = 100

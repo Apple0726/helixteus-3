@@ -4282,6 +4282,7 @@ func fade_out_title(fn:String):
 	$Title.visible = false
 	$Settings/Settings.visible = true
 	HUD = preload("res://Scenes/HUD.tscn").instantiate()
+	HUD.hide()
 	if fn == "new_game":
 		if DRs > 0:
 			switch_music(null)

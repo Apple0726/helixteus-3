@@ -103,7 +103,7 @@ func _on_AutosaveLight_toggled(button_pressed):
 	if err == OK:
 		config.set_value("game", "autosave_light", button_pressed)
 		config.save("user://settings.cfg")
-		if game.HUD:
+		if is_instance_valid(game.HUD):
 			game.HUD.refresh()
 
 
@@ -111,7 +111,7 @@ func _on_EnableAutosave_toggled(button_pressed):
 	if err == OK:
 		config.set_value("game", "enable_autosave", button_pressed)
 		config.save("user://settings.cfg")
-		if game.HUD:
+		if is_instance_valid(game.HUD):
 			game.HUD.refresh()
 
 func _on_FPS_value_changed(value):
@@ -119,7 +119,7 @@ func _on_FPS_value_changed(value):
 		$TabContainer/GRAPHICS/FPS/Label2.text = str(value)
 		Engine.max_fps = value
 		Settings.max_fps = value
-		config.set_value("rendering", "max_fps", value)
+		config.set_value("graphics", "max_fps", value)
 		config.save("user://settings.cfg")
 
 

@@ -22,9 +22,9 @@ var bullet_texture = preload("res://Graphics/Cave/Projectiles/enemy_bullet.png")
 var bubble_texture = preload("res://Graphics/Cave/Projectiles/bubble.png")
 var purple_texture = preload("res://Graphics/Cave/Projectiles/purple_bullet.png")
 
-@onready var cave_BG = $TileMap
+@onready var cave_BG = $Floor
 @onready var cave_wall = $Walls
-@onready var minimap_cave = $UI/Minimap/TileMap
+@onready var minimap_cave = $UI/Minimap/Floor
 @onready var minimap_rover = $UI/Rover
 @onready var MM_hole = $UI/Minimap/Hole
 @onready var MM_exit = $UI/Minimap/Exit
@@ -481,8 +481,8 @@ func generate_cave(first_floor:bool, going_up:bool):
 	hole.modulate.a = 1.0
 	$WorldEnvironment.environment.adjustment_saturation = (1.0 - cave_darkness)
 	if Settings.enable_shaders:
-		$TileMap.material.set_shader_parameter("star_mod", lerp(star_mod, Color.WHITE, clamp(cave_floor * 0.125, 0, 1)))
-		$TileMap.material.set_shader_parameter("strength", max(1.0, brightness_mult - 0.1 * (cave_floor - 1)))
+		$Floor.material.set_shader_parameter("star_mod", lerp(star_mod, Color.WHITE, clamp(cave_floor * 0.125, 0, 1)))
+		$Floor.material.set_shader_parameter("strength", max(1.0, brightness_mult - 0.1 * (cave_floor - 1)))
 	rover_light.energy = cave_darkness * 0.3
 	$UI2/CaveInfo/Difficulty.text = "%s: %s" % [tr("DIFFICULTY"), Helper.format_num(difficulty, true)]
 	var rng = RandomNumberGenerator.new()
@@ -1140,7 +1140,7 @@ func update_ray():
 			var pos = ray.get_collision_point() + ray.target_position / 200.0
 			laser_reach = rover.position.distance_to(pos) / rover_size
 			tile_highlighted_for_mining = get_tile_index(cave_wall.local_to_map(pos))
-			var is_wall = coll is TileMap and cave_wall.get_cell_source_id(0, cave_wall.local_to_map(pos)) == 0
+			var is_wall = coll is TileMapLayer and cave_wall.get_cell_source_id(cave_wall.local_to_map(pos)) == 0
 			mining_p.position = pos
 			if tile_highlighted_for_mining != -1 and is_wall:
 				_tile_highlight.visible = true
@@ -2292,7 +2292,7 @@ func _on_EnergyBallTimer_timeout():
 
 
 func _on_BreakRocksWithDash_body_entered(body):
-	if body is TileMap:
+	if body is TileMapLayer:
 		if enhancements.has("wheels_5"):
 			var pos:Vector2 = Vector2(snapped(rover.position.x - 100, 200), snapped(rover.position.y - 100, 200))
 			mine_wall_complete(pos, get_tile_index(pos / 200))
@@ -2306,7 +2306,7 @@ func _on_BreakRocksWithDash_body_entered(body):
 			$Rover/SuffocationTimer.start()
 
 func _on_BreakRocksWithDash_body_exited(body):
-	if body is TileMap or body.get_parent() is Debris:
+	if body is TileMapLayer or body.get_parent() is Debris:
 		if not enhancements.has("wheels_5"):
 			$Rover/SuffocationTimer.stop()
 
