@@ -1,10 +1,11 @@
-[gd_scene load_steps=4 format=2]
+[gd_scene load_steps=4 format=3 uid="uid://3ynx67vuxs2o"]
 
-[ext_resource path="res://Resources/default_theme.tres" type="Theme" id=1]
-[ext_resource path="res://Scripts/ElementOverlay.gd" type="Script" id=2]
-[ext_resource path="res://Scenes/CloseButton.tscn" type="PackedScene" id=4]
+[ext_resource type="Theme" uid="uid://cp2u1kgj60ic" path="res://Resources/default_theme.tres" id="1"]
+[ext_resource type="Script" path="res://Scripts/ElementOverlay.gd" id="2"]
+[ext_resource type="PackedScene" uid="uid://ddf2xjwcht77u" path="res://Scenes/CloseButton.tscn" id="4"]
 
 [node name="ElementOverlay" type="Panel"]
+anchors_preset = 7
 anchor_left = 0.5
 anchor_top = 1.0
 anchor_right = 0.5
@@ -13,10 +14,11 @@ offset_left = -352.0
 offset_top = -112.0
 offset_right = 352.0
 offset_bottom = 4.0
-theme = ExtResource( 1 )
-script = ExtResource( 2 )
+theme = ExtResource("1")
+script = ExtResource("2")
 
 [node name="HBoxContainer" type="HBoxContainer" parent="."]
+layout_mode = 0
 anchor_left = 0.5
 anchor_top = 1.0
 anchor_right = 0.5
@@ -25,61 +27,39 @@ offset_left = -296.0
 offset_top = -104.0
 offset_right = 296.0
 offset_bottom = -70.0
-custom_constants/separation = 20
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
-[node name="OptionButton" type="OptionButton" parent="HBoxContainer"]
-offset_right = 264.0
-offset_bottom = 34.0
+[node name="OverlayType" type="OptionButton" parent="HBoxContainer"]
+layout_mode = 2
 size_flags_vertical = 4
-text = "PLANET_INTERIOR"
-align = 1
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
-[node name="CheckBox" type="CheckBox" parent="HBoxContainer"]
-offset_left = 284.0
-offset_right = 312.0
-offset_bottom = 34.0
-custom_constants/h_separation = 10
-__meta__ = {
-"_edit_use_anchors_": false
-}
+[node name="ToggleOverlay" type="CheckBox" parent="HBoxContainer"]
+layout_mode = 2
 
-[node name="CloseButton" parent="." instance=ExtResource( 4 )]
+[node name="CloseButton" parent="." instance=ExtResource("4")]
+layout_mode = 0
+anchors_preset = 0
 
 [node name="ScrollContainer" type="ScrollContainer" parent="."]
+layout_mode = 0
 offset_left = 192.0
 offset_top = 56.0
 offset_right = 674.0
 offset_bottom = 104.0
-scroll_vertical_enabled = false
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="HBox" type="HBoxContainer" parent="ScrollContainer"]
-offset_left = 10.0
-offset_top = 10.0
-offset_right = 10.0
-offset_bottom = 10.0
+layout_mode = 2
 
 [node name="LineEdit" type="LineEdit" parent="."]
+layout_mode = 0
 offset_left = 56.0
 offset_top = 64.0
 offset_right = 176.0
 offset_bottom = 96.0
-clear_button_enabled = true
 placeholder_text = "SEARCH"
-__meta__ = {
-"_edit_use_anchors_": false
-}
+clear_button_enabled = true
 
-[connection signal="item_selected" from="HBoxContainer/OptionButton" to="." method="_on_OptionButton_item_selected"]
-[connection signal="toggled" from="HBoxContainer/CheckBox" to="." method="_on_CheckBox_toggled"]
+[connection signal="item_selected" from="HBoxContainer/OverlayType" to="." method="_on_overlay_type_item_selected"]
+[connection signal="toggled" from="HBoxContainer/ToggleOverlay" to="." method="_on_toggle_overlay_toggled"]
 [connection signal="close_button_pressed" from="CloseButton" to="." method="_on_close_button_pressed"]
 [connection signal="focus_entered" from="LineEdit" to="." method="_on_LineEdit_focus_entered"]
 [connection signal="focus_exited" from="LineEdit" to="." method="_on_LineEdit_focus_exited"]

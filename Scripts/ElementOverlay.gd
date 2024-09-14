@@ -1,7 +1,7 @@
 extends "Panel.gd"
 @onready var hbox = $ScrollContainer/HBox
-@onready var toggle_btn = $HBoxContainer/CheckBox
-@onready var option_btn = $HBoxContainer/OptionButton
+@onready var toggle_btn = $HBoxContainer/ToggleOverlay
+@onready var option_btn = $HBoxContainer/OverlayType
 
 func _ready():
 	option_btn.add_item(tr("PLANET_INTERIOR"), 0)
@@ -33,12 +33,6 @@ func on_atom_entered(st:String):
 func on_atom_exited():
 	game.hide_tooltip()
 
-func _on_CheckBox_toggled(button_pressed):
-	game.view.obj.refresh_planets()
-
-
-func _on_OptionButton_item_selected(index):
-	game.view.obj.refresh_planets()
 
 func _on_close_button_pressed():
 	visible = false
@@ -58,3 +52,13 @@ func _on_LineEdit_focus_exited():
 
 func _on_LineEdit_text_entered(new_text):
 	$LineEdit.release_focus()
+
+
+func _on_overlay_type_item_selected(index):
+	game.element_overlay_type = index
+	game.view.obj.refresh_planets()
+
+
+func _on_toggle_overlay_toggled(toggled_on):
+	game.element_overlay_enabled = toggled_on
+	game.view.obj.refresh_planets()

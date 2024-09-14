@@ -86,8 +86,12 @@ func _on_ElementOverlay_mouse_entered():
 
 
 func _on_ElementOverlay_pressed():
-	game.get_node("UI").move_child(game.element_overlay, game.get_node("UI").get_child_count())
-	game.element_overlay.visible = not game.element_overlay.visible
+	if is_instance_valid(game.element_overlay):
+		game.get_node("UI").move_child(game.element_overlay, game.get_node("UI").get_child_count())
+		game.element_overlay.visible = not game.element_overlay.visible
+	else:
+		game.element_overlay = load("res://Scenes/ElementOverlay.tscn").instantiate()
+		game.get_node("UI").add_child(game.element_overlay)
 	
 func _on_stars_mouse_entered():
 	game.show_tooltip(tr("STARS"))

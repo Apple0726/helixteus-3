@@ -86,8 +86,6 @@ func refresh_planets():
 		planet_glow.scale *= sc
 		if game.system_data[game.c_s].has("conquered"):
 			p_i.conquered = true
-		if not is_instance_valid(game.element_overlay):
-			await get_tree().process_frame
 		if p_i.has("conquered"):
 			if p_i.has("bldg"):
 				planet_glow.modulate = Color(0.2, 0.2, 1, 1)
@@ -100,7 +98,7 @@ func refresh_planets():
 					planet_glow.modulate = Color(0, 1, 0, 1)
 				else:
 					planet_glow.modulate = Color(0.8, 1, 0, 1)
-			if game.element_overlay.toggle_btn.button_pressed:
+			if game.element_overlay_enabled:
 				add_elements(p_i, v, sc)
 			else:
 				var tile_data:Array = tile_datas[p_i.l_id]
@@ -128,7 +126,7 @@ func refresh_planets():
 					grid.position.x = v.x - grid.size.x / 2.0 * sc * 2.5
 					grid.position.y = v.y - (grid.size.y + 50) * sc * 2.5
 		else:
-			if game.element_overlay.toggle_btn.button_pressed:
+			if game.element_overlay_enabled:
 				add_elements(p_i, v, sc)
 			else:
 				var HX_count = preload("res://Scenes/EntityCount.tscn").instantiate()
@@ -191,7 +189,7 @@ func add_elements(p_i:Dictionary, v:Vector2, sc:float):
 	grid.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	grid.columns = 3
 	grid.scale *= sc * 4.0
-	if game.element_overlay.option_btn.get_selected_id() == 0:#Planet interior
+	if game.element_overlay_type == 0:#Planet interior
 		var R = p_i.size * 1000.0 / 2#in meters
 		var surface_volume = Helper.get_sph_V(R, R - p_i.crust_start_depth)#in m^3
 		var crust_volume = Helper.get_sph_V(R - p_i.crust_start_depth, R - p_i.mantle_start_depth)
@@ -208,7 +206,7 @@ func add_elements(p_i:Dictionary, v:Vector2, sc:float):
 			atom_count.get_node("Texture2D").texture = load("res://Graphics/Atoms/%s.png" % atom)
 			var num:float = ((p_i.crust[atom] if p_i.crust.has(atom) else 0.0) * crust_stone_amount + (p_i.mantle[atom] if p_i.mantle.has(atom) else 0.0) * mantle_stone_amount + (p_i.core[atom] if p_i.core.has(atom) else 0.0) * core_stone_amount)# / Data.molar_mass[atom] / 1000.0
 			atom_count.get_node("Label").text = "%s mol" % Helper.format_num(num, true)
-	elif game.element_overlay.option_btn.get_selected_id() == 1:
+	elif game.element_overlay_type == 1:
 		for atom in game.show_atoms:
 			var atom_count = preload("res://Scenes/EntityCount.tscn").instantiate()
 			atom_count.get_node("Texture2D").connect("mouse_entered",Callable(self,"on_entity_icon_over").bind(tr("%s_NAME" % atom.to_upper())))

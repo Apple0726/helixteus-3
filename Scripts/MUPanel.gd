@@ -32,7 +32,7 @@ func _ready():
 		btn.connect("mouse_entered",Callable(self,"_on_Upgrade_mouse_entered").bind(MU))
 		btn.connect("mouse_exited",Callable(self,"_on_Upgrade_mouse_exited").bind(MU))
 		btn.connect("pressed",Callable(self,"_on_Upgrade_pressed").bind(MU))
-		btn.custom_minimum_size.x = 100
+		btn.custom_minimum_size.x = 190
 		btn.expand_icon = true
 		btn.icon = Data.minerals_icon
 		btn.alignment = HORIZONTAL_ALIGNMENT_LEFT

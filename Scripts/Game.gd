@@ -229,6 +229,8 @@ var overlay_CS:float = 0.5
 var overlay_data = {	"galaxy":{"overlay":0, "visible":false, "custom_values":[{"left":2, "right":30, "modified":false}, {"left":1, "right":5, "modified":false}, null, null, null, {"left":0.5, "right":15, "modified":false}, {"left":250, "right":100000, "modified":false}, {"left":1, "right":1, "modified":false}, {"left":1, "right":1, "modified":false}, null]},
 						"cluster":{"overlay":0, "visible":false, "custom_values":[{"left":200, "right":10000, "modified":false}, null, null, null, {"left":1, "right":100, "modified":false}, {"left":0.2, "right":5, "modified":false}, {"left":0.8, "right":1.2, "modified":false}, null]},
 }
+var element_overlay_enabled = false
+var element_overlay_type = 0
 var c_sv:String = ""#current_save
 var save_created
 var u_i:Dictionary
@@ -532,6 +534,7 @@ func _ready():
 		Color(0.7428, 0.9162, 0.7401, 1),
 		Color(0.6895, 0.5263, 0.965, 1),
 		Color(0.5061, 0.9214, 0.8825, 1),
+		Color(0.8829, 0.5799, 0.9917, 1),
 	]
 	var star_color = Color(randf_range(0.5, 1.0), randf_range(0.5, 1.0), randf_range(0.5, 1.0))
 	print(star_color)
