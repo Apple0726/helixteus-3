@@ -271,6 +271,8 @@ func _ready():
 	if tile[cave_type].has("id"):
 		id = tile.cave.id
 		var cave_data_file = FileAccess.open("user://%s/Univ%s/Caves/%s.hx3" % [game.c_sv, game.c_u, id], FileAccess.READ)
+		if cave_data_file == null:
+			cave_data_file = FileAccess.open("user://%s/Univ%s/Caves/%s.hx3~" % [game.c_sv, game.c_u, id], FileAccess.READ)
 		cave_data = cave_data_file.get_var()
 		cave_data_file.close()
 		seeds = cave_data.seeds
@@ -1395,20 +1397,24 @@ func add_to_inventory(rsrc:String, content:float, remainders:Dictionary):
 		elif i == len(inventory) - 1:
 			remainders[rsrc] = content
 
-func exit_cave():
-	Helper.save_obj("Planets", game.c_p_g, game.tile_data)
-	var cave_data_file = FileAccess.open("user://%s/Univ%s/Caves/%s.hx3" % [game.c_sv, game.c_u, id], FileAccess.WRITE)
+func save_cave_data():
+	var cave_data_file = FileAccess.open("user://%s/Univ%s/Caves/%s.hx3~" % [game.c_sv, game.c_u, id], FileAccess.WRITE)
 	var cave_data_dict = {
-		"seeds":seeds.duplicate(true),
-		"tiles_mined":tiles_mined.duplicate(true),
-		"enemies_rekt":enemies_rekt.duplicate(true),
-		"debris_rekt":debris_rekt.duplicate(true),
-		"chests_looted":chests_looted.duplicate(true),
-		"partially_looted_chests":partially_looted_chests.duplicate(true),
-		"hole_exits":hole_exits.duplicate(true),
+		"seeds":seeds,
+		"tiles_mined":tiles_mined,
+		"enemies_rekt":enemies_rekt,
+		"debris_rekt":debris_rekt,
+		"chests_looted":chests_looted,
+		"partially_looted_chests":partially_looted_chests,
+		"hole_exits":hole_exits,
 	}
 	cave_data_file.store_var(cave_data_dict)
 	cave_data_file.close()
+	DirAccess.copy_absolute("user://%s/Univ%s/Caves/%s.hx3~" % [game.c_sv, game.c_u, id], "user://%s/Univ%s/Caves/%s.hx3" % [game.c_sv, game.c_u, id])
+	
+func exit_cave():
+	Helper.save_obj("Planets", game.c_p_g, game.tile_data)
+	save_cave_data()
 	for i in len(inventory):
 		if inventory[i].is_empty() or inventory[i].type == "consumable":
 			continue

@@ -626,75 +626,68 @@ func load_univ():
 	view_history.clear()
 	view_history_pos = -1
 	var save_game = FileAccess.open("user://%s/Univ%s/main.hx3" % [c_sv, c_u], FileAccess.READ)
-	if save_game:
-		var save_game_dict:Dictionary = save_game.get_var()
-		save_game.close()
-		for key in save_game_dict:
-			if key in self:
-				self[key] = save_game_dict[key]
-		for key in mat_info:
-			if not mats.has(key):
-				mats[key] = 0
-		stats_univ = save_game_dict.get("stats_univ", Data.default_stats.duplicate(true))
-		for stat in Data.default_stats:
-			var val = Data.default_stats[stat]
-			if not stats_univ.has(stat):
-				if val is Dictionary:
-					stats_univ[stat] = val.duplicate(true)
-				else:
-					stats_univ[stat] = val
-		u_i = universe_data[c_u]
-		if science_unlocked.has("CI"):
-			stack_size = 32
-		if science_unlocked.has("CI2"):
-			stack_size = 64
-		if science_unlocked.has("CI3"):
-			stack_size = 128
-		if not autocollect.is_empty():
-			var time_elapsed = max(Time.get_unix_time_from_system() - save_date, 0)
-			if autocollect.has("ship_XP"):
-				var xp_mult = Helper.get_spaceport_xp_mult(autocollect.ship_XP)
-				for i in len(ship_data):
-					Helper.add_ship_XP(i, xp_mult * pow(1.15, u_i.lv) * time_elapsed / (4.0 / autocollect.ship_XP) * u_i.time_speed)
-					for weapon in ["Bullet", "Laser", "Bomb", "Light"]:
-						Helper.add_weapon_XP(i, weapon.to_lower(), xp_mult * pow(1.07, u_i.lv) / 64.0 * time_elapsed / (4.0 / autocollect.ship_XP) * u_i.time_speed)
-			var min_mult:float = pow(maths_bonus.IRM, infinite_research.MEE)
-			var energy_mult:float = pow(maths_bonus.IRM, infinite_research.EPE)
-			var SP_mult:float = pow(maths_bonus.IRM, infinite_research.RLE)
-			Helper.add_minerals(((autocollect.rsrc.minerals + autocollect.MS.minerals + autocollect.GS.minerals) * min_mult) * time_elapsed * u_i.time_speed)
-			energy += ((autocollect.rsrc.energy + autocollect.MS.energy + autocollect.GS.energy) * energy_mult) * time_elapsed * u_i.time_speed
-			SP += ((autocollect.rsrc.SP + autocollect.MS.SP + autocollect.GS.SP) * SP_mult) * time_elapsed * u_i.time_speed
-			var plant_time_elapsed = min(time_elapsed, mats.cellulose / abs(autocollect.mats.cellulose)) if not is_zero_approx(autocollect.mats.cellulose) else 0
-			if autocollect.mats.has("soil") and not is_zero_approx(autocollect.mats.soil):
-				plant_time_elapsed = min(plant_time_elapsed, mats.soil / abs(autocollect.mats.soil))
-			for mat in autocollect.mats:
-				if mat == "minerals":
-					Helper.add_minerals(autocollect.mats[mat] * plant_time_elapsed * u_i.time_speed)
-				else:
-					mats[mat] += autocollect.mats[mat] * plant_time_elapsed * u_i.time_speed
-			for met in autocollect.mets:
-				mets[met] += autocollect.mets[met] * plant_time_elapsed * u_i.time_speed
-			for atom in autocollect.atoms:
-				atoms[atom] += autocollect.atoms[atom] * time_elapsed * u_i.time_speed
-		tile_data = open_obj("Planets", c_p_g)
-		if c_v == "mining" or c_v == "cave":
-			c_v = "planet"
-		elif c_v in ["science_tree", "STM", "planet_details"]:
-			c_v = l_v
-		elif c_v == "battle":
-			c_v = "system"
-		view.set_process(true)
-		if FileAccess.file_exists("user://%s/Univ%s/Planets/%s.hx3" % [c_sv, c_u, c_p_g]) or FileAccess.file_exists("user://%s/Univ%s/Systems/%s.hx3" % [c_sv, c_u, c_s_g]):
-			planet_data = open_obj("Systems", c_s_g)
-		if FileAccess.file_exists("user://%s/Univ%s/Galaxies/%s.hx3" % [c_sv, c_u, c_g_g]):
-			system_data = open_obj("Galaxies", c_g_g)
-		if FileAccess.file_exists("user://%s/Univ%s/Clusters/%s.hx3" % [c_sv, c_u, c_c]):
-			galaxy_data = open_obj("Clusters", c_c)
-		else:
-			galaxy_data = [{"id":0, "l_id":0, "type":0, "shapes":[], "name":tr("MILKY_WAY"), "pos":Vector2.ZERO, "rotation":0, "diff":u_i.difficulty, "B_strength":1e-9 * u_i.charge * u_i.dark_energy, "dark_matter":1.0, "parent":0, "system_num":400, "view":{"pos":Vector2(7500, 7500) * 0.5 + Vector2(640, 360), "zoom":0.5}}]
-			Helper.save_obj("Clusters", 0, galaxy_data)
-	else:
-		popup("load error", 1.5)
+	if save_game == null:
+		save_game = FileAccess.open("user://%s/Univ%s/main~.hx3" % [c_sv, c_u], FileAccess.READ)
+	var save_game_dict:Dictionary = save_game.get_var()
+	save_game.close()
+	for key in save_game_dict:
+		if key in self:
+			self[key] = save_game_dict[key]
+	for key in mat_info:
+		if not mats.has(key):
+			mats[key] = 0
+	stats_univ = save_game_dict.get("stats_univ", Data.default_stats.duplicate(true))
+	for stat in Data.default_stats:
+		var val = Data.default_stats[stat]
+		if not stats_univ.has(stat):
+			if val is Dictionary:
+				stats_univ[stat] = val.duplicate(true)
+			else:
+				stats_univ[stat] = val
+	u_i = universe_data[c_u]
+	if science_unlocked.has("CI"):
+		stack_size = 32
+	if science_unlocked.has("CI2"):
+		stack_size = 64
+	if science_unlocked.has("CI3"):
+		stack_size = 128
+	if not autocollect.is_empty():
+		var time_elapsed = max(Time.get_unix_time_from_system() - save_date, 0)
+		if autocollect.has("ship_XP"):
+			var xp_mult = Helper.get_spaceport_xp_mult(autocollect.ship_XP)
+			for i in len(ship_data):
+				Helper.add_ship_XP(i, xp_mult * pow(1.15, u_i.lv) * time_elapsed / (4.0 / autocollect.ship_XP) * u_i.time_speed)
+				for weapon in ["Bullet", "Laser", "Bomb", "Light"]:
+					Helper.add_weapon_XP(i, weapon.to_lower(), xp_mult * pow(1.07, u_i.lv) / 64.0 * time_elapsed / (4.0 / autocollect.ship_XP) * u_i.time_speed)
+		var min_mult:float = pow(maths_bonus.IRM, infinite_research.MEE)
+		var energy_mult:float = pow(maths_bonus.IRM, infinite_research.EPE)
+		var SP_mult:float = pow(maths_bonus.IRM, infinite_research.RLE)
+		Helper.add_minerals(((autocollect.rsrc.minerals + autocollect.MS.minerals + autocollect.GS.minerals) * min_mult) * time_elapsed * u_i.time_speed)
+		energy += ((autocollect.rsrc.energy + autocollect.MS.energy + autocollect.GS.energy) * energy_mult) * time_elapsed * u_i.time_speed
+		SP += ((autocollect.rsrc.SP + autocollect.MS.SP + autocollect.GS.SP) * SP_mult) * time_elapsed * u_i.time_speed
+		var plant_time_elapsed = min(time_elapsed, mats.cellulose / abs(autocollect.mats.cellulose)) if not is_zero_approx(autocollect.mats.cellulose) else 0
+		if autocollect.mats.has("soil") and not is_zero_approx(autocollect.mats.soil):
+			plant_time_elapsed = min(plant_time_elapsed, mats.soil / abs(autocollect.mats.soil))
+		for mat in autocollect.mats:
+			if mat == "minerals":
+				Helper.add_minerals(autocollect.mats[mat] * plant_time_elapsed * u_i.time_speed)
+			else:
+				mats[mat] += autocollect.mats[mat] * plant_time_elapsed * u_i.time_speed
+		for met in autocollect.mets:
+			mets[met] += autocollect.mets[met] * plant_time_elapsed * u_i.time_speed
+		for atom in autocollect.atoms:
+			atoms[atom] += autocollect.atoms[atom] * time_elapsed * u_i.time_speed
+	if c_v == "mining" or c_v == "cave":
+		c_v = "planet"
+	elif c_v in ["science_tree", "STM", "planet_details"]:
+		c_v = l_v
+	elif c_v == "battle":
+		c_v = "system"
+	view.set_process(true)
+	tile_data = open_obj("Planets", c_p_g)
+	planet_data = open_obj("Systems", c_s_g)
+	system_data = open_obj("Galaxies", c_g_g)
+	galaxy_data = open_obj("Clusters", c_c)
 
 func load_game():
 	# Instantiate necessary panels on game load
@@ -709,6 +702,8 @@ func load_game():
 		shop_panel.hide()
 		$Panels/Control.add_child(shop_panel)
 	var save_info = FileAccess.open("user://%s/save_info.hx3" % [c_sv], FileAccess.READ)
+	if save_info == null:
+		save_info = FileAccess.open("user://%s/save_info.hx3~" % [c_sv], FileAccess.READ)
 	var save_info_dict:Dictionary = save_info.get_var()
 	save_info.close()
 	save_created = save_info_dict.save_created
@@ -1714,47 +1709,47 @@ func open_obj(type:String, id:int):
 	var arr:Array = []
 	var file_path:String = "user://%s/Univ%s/%s/%s.hx3" % [c_sv, c_u, type, id]
 	var save = FileAccess.open(file_path, FileAccess.READ)
-	if save:
-		arr = save.get_var() if save.get_length() > 0 else []
-		if not arr.is_empty() and arr[0] is Array:
-			var arr_decompressed = []
-			var star_properties = ["type", "class", "size", "pos", "temperature", "mass", "luminosity"]
-			for compressed_obj in arr:
-				var decompressed_obj = {}
-				var properties:Array = []
-				if type == "Galaxies":
-					properties = ["id", "l_id", "name", "pos", "diff", "parent", "planet_num", "planets", "view", "stars", "discovered", "conquered", "closest_planet_distance"]
-				elif type == "Clusters":
-					properties = ["id", "l_id", "name", "pos", "diff", "parent", "system_num", "view", "type", "discovered", "conquered", "rotation", "B_strength", "dark_matter"]
-				for i in len(properties):
-					if compressed_obj[i] == null:
-						continue
-					if properties[i] == "stars":
-						var stars = []
-						for star_info:Array in compressed_obj[i]:
-							var star_dict = {}
-							for j in len(star_properties):
-								var star_prop:String = star_properties[j]
-								star_dict[star_prop] = star_info[j]
-							var attr_dict:Dictionary = star_info[-1]
-							for attr in attr_dict.keys():
-								star_dict[attr] = attr_dict[attr]
-							stars.append(star_dict)
-							decompressed_obj.stars = stars
-					else:
-						decompressed_obj[properties[i]] = compressed_obj[i]
-				var attr_dict:Dictionary = compressed_obj[-1]
-				for attr in attr_dict.keys():
-					decompressed_obj[attr] = attr_dict[attr]
-				arr_decompressed.append(decompressed_obj)
-			save.close()
-			return arr_decompressed
-		save.close()
+	if save == null or save.get_length() == 0:
+		save = FileAccess.open(file_path + "~", FileAccess.READ)
+	arr = save.get_var()
+	save.close()
+	if not arr.is_empty() and arr[0] is Array:
+		var arr_decompressed = []
+		var star_properties = ["type", "class", "size", "pos", "temperature", "mass", "luminosity"]
+		for compressed_obj in arr:
+			var decompressed_obj = {}
+			var properties:Array = []
+			if type == "Galaxies":
+				properties = ["id", "l_id", "name", "pos", "diff", "parent", "planet_num", "planets", "view", "stars", "discovered", "conquered", "closest_planet_distance"]
+			elif type == "Clusters":
+				properties = ["id", "l_id", "name", "pos", "diff", "parent", "system_num", "view", "type", "discovered", "conquered", "rotation", "B_strength", "dark_matter"]
+			for i in len(properties):
+				if compressed_obj[i] == null:
+					continue
+				if properties[i] == "stars":
+					var stars = []
+					for star_info:Array in compressed_obj[i]:
+						var star_dict = {}
+						for j in len(star_properties):
+							var star_prop:String = star_properties[j]
+							star_dict[star_prop] = star_info[j]
+						var attr_dict:Dictionary = star_info[-1]
+						for attr in attr_dict.keys():
+							star_dict[attr] = attr_dict[attr]
+						stars.append(star_dict)
+						decompressed_obj.stars = stars
+				else:
+					decompressed_obj[properties[i]] = compressed_obj[i]
+			var attr_dict:Dictionary = compressed_obj[-1]
+			for attr in attr_dict.keys():
+				decompressed_obj[attr] = attr_dict[attr]
+			arr_decompressed.append(decompressed_obj)
+		return arr_decompressed
 	return arr
 	
 func obj_exists(type:String, id:int):
 	var file_path:String = "user://%s/Univ%s/%s/%s.hx3" % [c_sv, c_u, type, id]
-	return FileAccess.open(file_path, FileAccess.READ)
+	return FileAccess.open(file_path, FileAccess.READ) or FileAccess.open(file_path + "~", FileAccess.READ)
 
 func add_obj(view_str):
 	match view_str:
@@ -4050,10 +4045,10 @@ func _unhandled_key_input(event):
 					inventory.on_slot_press(_name)
 
 func fn_save_game():
-	var save_info_file = FileAccess.open("user://%s/save_info.hx3" % [c_sv], FileAccess.WRITE)
+	save_date = Time.get_unix_time_from_system()
 	var save_info:Dictionary = {
 		"save_created":save_created,
-		"save_modified":Time.get_unix_time_from_system(),
+		"save_modified":save_date,
 		"help":help,
 		"c_u":c_u,
 		"universe_data":universe_data,
@@ -4070,24 +4065,11 @@ func fn_save_game():
 		"stats_dim":stats_dim,
 		"achievement_data":achievement_data,
 	}
+	var save_info_file = FileAccess.open("user://%s/save_info.hx3~" % [c_sv], FileAccess.WRITE)
 	save_info_file.store_var(save_info)
 	save_info_file.close()
 	if c_u == -1:
 		return
-	var save_game = FileAccess.open("user://%s/Univ%s/main.hx3" % [c_sv, c_u], FileAccess.WRITE)
-	if c_v == "cave" and is_instance_valid(cave):
-		var cave_data_file = FileAccess.open("user://%s/Univ%s/Caves/%s.hx3" % [c_sv, c_u, cave.id], FileAccess.WRITE)
-		var cave_data_dict = {
-			"seeds":cave.seeds.duplicate(true),
-			"tiles_mined":cave.tiles_mined.duplicate(true),
-			"enemies_rekt":cave.enemies_rekt.duplicate(true),
-			"chests_looted":cave.chests_looted.duplicate(true),
-			"partially_looted_chests":cave.partially_looted_chests.duplicate(true),
-			"hole_exits":cave.hole_exits.duplicate(true),
-		}
-		cave_data_file.store_var(cave_data_dict)
-		cave_data_file.close()
-	save_date = Time.get_unix_time_from_system()
 	var save_game_dict = {
 		"money":money,
 		"minerals":minerals,
@@ -4143,8 +4125,13 @@ func fn_save_game():
 		"caves_generated":caves_generated,
 		"boring_machine_data":boring_machine_data,
 	}
+	var save_game = FileAccess.open("user://%s/Univ%s/main.hx3~" % [c_sv, c_u], FileAccess.WRITE)
 	save_game.store_var(save_game_dict)
 	save_game.close()
+	if c_v == "cave" and is_instance_valid(cave):
+		cave.save_cave_data()
+	DirAccess.copy_absolute("user://%s/save_info.hx3~" % [c_sv], "user://%s/save_info.hx3" % [c_sv])
+	DirAccess.copy_absolute("user://%s/Univ%s/main.hx3~" % [c_sv, c_u], "user://%s/Univ%s/main.hx3" % [c_sv, c_u])
 
 func save_views(autosave:bool):
 	if is_instance_valid(view.obj) and is_ancestor_of(view.obj):

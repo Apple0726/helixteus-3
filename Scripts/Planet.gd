@@ -133,9 +133,10 @@ func _ready():
 				if tile.cave.has("id"):
 					var cave_file_path:String = "user://%s/Univ%s/Caves/%s.hx3" % [game.c_sv, game.c_u, tile.cave.id]
 					var cave_data_file = FileAccess.open(cave_file_path, FileAccess.READ)
-					var cave_data = cave_data_file.get_var()
-					cave_data_file.close()
-					caves_data[id2] = len(cave_data.seeds)
+					if cave_data_file:
+						var cave_data = cave_data_file.get_var()
+						cave_data_file.close()
+						caves_data[id2] = len(cave_data.seeds)
 				$Obstacles.set_cell(Vector2i(i, j), 0, Vector2(0, 0))
 			elif tile.has("volcano"):
 				$Obstacles.set_cell(Vector2i(i, j), 4, Vector2(0, 0))

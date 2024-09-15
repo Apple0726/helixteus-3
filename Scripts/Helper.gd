@@ -332,13 +332,13 @@ func change_circle_size(value, overlays):
 		overlay.circle.scale.y = 2 * value
 
 func save_obj(type:String, id:int, arr:Array):
-	var file_path:String = "user://%s/Univ%s/%s/%s.hx3" % [game.c_sv, game.c_u, type, id]
-	var save = FileAccess.open(file_path, FileAccess.WRITE)
 	var properties:Array = []
 	if type == "Galaxies":
 		properties = ["id", "l_id", "name", "pos", "diff", "parent", "planet_num", "planets", "view", "stars", "discovered", "conquered", "closest_planet_distance"]
 	elif type == "Clusters":
 		properties = ["id", "l_id", "name", "pos", "diff", "parent", "system_num", "view", "type", "discovered", "conquered", "rotation", "B_strength", "dark_matter"]
+	var save:FileAccess
+	var file_path:String = "user://%s/Univ%s/%s/%s.hx3" % [game.c_sv, game.c_u, type, id]
 	if not properties.is_empty():
 		var arr_compressed = []
 		var star_properties = ["type", "class", "size", "pos", "temperature", "mass", "luminosity"]
@@ -362,10 +362,13 @@ func save_obj(type:String, id:int, arr:Array):
 			# Obj at this point will only have other attributes. Append it to obj_compressed
 			obj_compressed.append(obj_copy)
 			arr_compressed.append(obj_compressed)
+		save = FileAccess.open(file_path + "~", FileAccess.WRITE)
 		save.store_var(arr_compressed)
 	else:
+		save = FileAccess.open(file_path + "~", FileAccess.WRITE)
 		save.store_var(arr)
 	save.close()
+	DirAccess.copy_absolute(file_path + "~", file_path)
 
 func get_rover_weapon_text(_name:String):
 	return "%s\n%s\n%s" % [get_rover_weapon_name(_name), "%s: %s" % [tr("DAMAGE"), Data.rover_weapons[_name].damage], "%s: %s%s" % [tr("COOLDOWN"), Data.rover_weapons[_name].cooldown, tr("S_SECOND")]]

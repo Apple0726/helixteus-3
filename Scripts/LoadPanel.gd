@@ -26,43 +26,55 @@ func refresh():
 	var next_dir:String = file.get_next()
 	while next_dir != "":
 		var save_info = FileAccess.open("user://%s/save_info.hx3" % [next_dir], FileAccess.READ)
-		if save_info:
-			var save_info_dict = save_info.get_var()
-			if not save_info_dict is Dictionary:
+		var save_info_dict
+		var try_backup = false
+		if save_info == null:
+			try_backup = true
+		else:
+			save_info_dict = save_info.get_var()
+			if save_info_dict is not Dictionary:
+				try_backup = true
+		if try_backup:
+			save_info = FileAccess.open("user://%s/save_info.hx3~" % [next_dir], FileAccess.READ)
+			if save_info == null:
 				next_dir = file.get_next()
 				continue
-			var save = save_slot_scene.instantiate()
-			if save_info.get_length() == save_info.get_position():
-				var save_created = save_info_dict.save_created
-				var save_modified = save_info_dict.save_modified
-				save.get_node("Version").text = save_info_dict.version
-				save.get_node("Button").connect("pressed",Callable(self,"on_load").bind(next_dir))
-				save.get_node("Delete").connect("pressed",Callable(self,"on_delete").bind(next_dir))
-				save.get_node("Export").connect("pressed",Callable(self,"on_export").bind(next_dir))
-				save.get_node("Button").text = next_dir
-				if save_info_dict.version == game.VERSION:
-					save.get_node("Version").connect("mouse_entered",Callable(self,"on_version_over_ok"))
-					save.get_node("Version")["theme_override_colors/font_color"] = Color.GREEN
-				elif save_info_dict.version in game.COMPATIBLE_SAVES:
-					save.get_node("Version").connect("mouse_entered",Callable(self,"on_version_over_compatible"))
-					save.get_node("Version")["theme_override_colors/font_color"] = Color.YELLOW
-				else:
-					save.get_node("Version").connect("mouse_entered",Callable(self,"on_version_over_not_ok"))
-					save.get_node("Version")["theme_override_colors/font_color"] = Color.RED
-				save.get_node("Version").connect("mouse_exited",Callable(self,"on_mouse_exit"))
-				var now = Time.get_unix_time_from_system()
-				if now - save_created < 86400 * 2:
-					save.get_node("Created").text = "%s %s" % [tr("SAVE_CREATED"), tr("X_HOURS_AGO") % int((now - save_created) / 3600)]
-				else:
-					save.get_node("Created").text = "%s %s" % [tr("SAVE_CREATED"), tr("X_DAYS_AGO") % int((now - save_created) / 86400)]
-				if now - save_modified < 86400 * 2:
-					save.get_node("Saved").text = "%s %s" % [tr("SAVE_MODIFIED"), tr("X_HOURS_AGO") % int((now - save_modified) / 3600)]
-				else:
-					save.get_node("Saved").text = "%s %s" % [tr("SAVE_MODIFIED"), tr("X_DAYS_AGO") % int((now - save_modified) / 86400)]
-				$ScrollContainer/VBox.add_child(save)
 			else:
-				Helper.remove_recursive("user://%s" % next_dir)
-			save_info.close()
+				save_info_dict = save_info.get_var()
+				if save_info_dict is not Dictionary:
+					next_dir = file.get_next()
+					continue
+		var correct_file_structure = save_info.get_length() == save_info.get_position()
+		save_info.close()
+		if correct_file_structure:
+			var save = save_slot_scene.instantiate()
+			var save_created = save_info_dict.save_created
+			var save_modified = save_info_dict.save_modified
+			save.get_node("Version").text = save_info_dict.version
+			save.get_node("Button").connect("pressed",Callable(self,"on_load").bind(next_dir))
+			save.get_node("Delete").connect("pressed",Callable(self,"on_delete").bind(next_dir))
+			save.get_node("Export").connect("pressed",Callable(self,"on_export").bind(next_dir))
+			save.get_node("Button").text = next_dir
+			if save_info_dict.version == game.VERSION:
+				save.get_node("Version").connect("mouse_entered",Callable(self,"on_version_over_ok"))
+				save.get_node("Version")["theme_override_colors/font_color"] = Color.GREEN
+			elif save_info_dict.version in game.COMPATIBLE_SAVES:
+				save.get_node("Version").connect("mouse_entered",Callable(self,"on_version_over_compatible"))
+				save.get_node("Version")["theme_override_colors/font_color"] = Color.YELLOW
+			else:
+				save.get_node("Version").connect("mouse_entered",Callable(self,"on_version_over_not_ok"))
+				save.get_node("Version")["theme_override_colors/font_color"] = Color.RED
+			save.get_node("Version").connect("mouse_exited",Callable(self,"on_mouse_exit"))
+			var now = Time.get_unix_time_from_system()
+			if now - save_created < 86400 * 2:
+				save.get_node("Created").text = "%s %s" % [tr("SAVE_CREATED"), tr("X_HOURS_AGO") % int((now - save_created) / 3600)]
+			else:
+				save.get_node("Created").text = "%s %s" % [tr("SAVE_CREATED"), tr("X_DAYS_AGO") % int((now - save_created) / 86400)]
+			if now - save_modified < 86400 * 2:
+				save.get_node("Saved").text = "%s %s" % [tr("SAVE_MODIFIED"), tr("X_HOURS_AGO") % int((now - save_modified) / 3600)]
+			else:
+				save.get_node("Saved").text = "%s %s" % [tr("SAVE_MODIFIED"), tr("X_DAYS_AGO") % int((now - save_modified) / 86400)]
+			$ScrollContainer/VBox.add_child(save)
 		next_dir = file.get_next()
 
 func on_export(save_str:String):
