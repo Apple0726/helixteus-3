@@ -1040,7 +1040,7 @@ func new_game(univ:int = 0, new_save:bool = false, DR_advantage = false):
 	}
 	satellite_data = []
 
-	items = [{"item_id":Item.OVERCLOCK1, "num":5}, null, null, null, null, null, null, null]
+	items = [{"id":Item.OVERCLOCK1, "num":5}, null, null, null, null, null, null, null, null, null]
 
 	hotbar = []
 
@@ -3667,8 +3667,8 @@ func add_items(item_id:int, num:int = 1):
 				break
 			var item_slot = items[i]
 			if item_slot == null:
-				items[i] = {"item_id":item_id, "num":0}
-			if item_slot.item_id == item_id and item_slot.num < stack_size:
+				items[i] = {"id":item_id, "num":0}
+			if item_slot.id == item_id and item_slot.num < stack_size:
 				var sum = items[i].num + num
 				var diff = stack_size - items[i].num
 				items[i].num = min(stack_size, sum)
@@ -3681,7 +3681,7 @@ func remove_items(item_id:int, num:int = 1):
 		return 0
 	while num > 0:
 		for item_slot in items:
-			if item_slot != null and item_slot.item_id == item_id:
+			if item_slot != null and item_slot.id == item_id:
 				item_slot.num -= num
 				if item_slot.num <= 0:
 					num = -item_slot.num
@@ -3693,9 +3693,47 @@ func remove_items(item_id:int, num:int = 1):
 func get_item_num(item_id:int):
 	var n = 0
 	for item_slot in items:
-		if item_slot and item_slot.item_id == item_id:
+		if item_slot and item_slot.id == item_id:
 			n += item_slot.num
 	return n
+
+func use_item(item_id:int):
+	hide_tooltip()
+	var num:int
+	if Input.is_action_pressed("shift"):
+		num = get_item_num(item_id)
+	else:
+		num = 1
+	if $UI/BottomInfo.visible:
+		_on_BottomInfo_close_button_pressed(true)
+	item_to_use.id = item_id
+	item_to_use.num = num
+	var item_type:int = Item.data[item_id].type
+	if item_type == Item.Type.MINING_LIQUID:
+		remove_items(item_id)
+		pickaxe.liquid_id = item_id
+		pickaxe.liquid_durability = Item.data[item_id].durability
+		if active_panel == inventory:
+			toggle_panel("inventory")
+		popup("SUCCESSFULLY_APPLIED", 1.5)
+		return
+	elif item_type == Item.Type.DRILL:
+		put_bottom_info(tr("CLICK_ON_ROVER_TO_GIVE"), "give_rover_items", "hide_item_cursor")
+		toggle_panel("vehicle_panel")
+	elif item_type == Item.Type.OVERCLOCK:
+		put_bottom_info(tr("USE_OVERCLOCK_INFO"), "use_overclock", "hide_item_cursor")
+		item_to_use.type = "overclock"
+	elif item_type == Item.Type.HELIX_CORE:
+		if len(ship_data) > 0:
+			put_bottom_info(tr("CLICK_SHIP_TO_GIVE_XP"), "use_hx_core", "hide_item_cursor")
+			toggle_panel("ships_panel")
+			ships_panel._on_BackButton_pressed()
+		else:
+			popup(tr("NO_SHIPS_2"), 1.5)
+			return
+	if active_panel == inventory:
+		toggle_panel("inventory")
+	show_item_cursor(load("res://Graphics/Items/%s/%s.png" % [Item.icon_directory(item_type), Item.data[item_id].icon_name]))
 
 func get_star_class (temp):
 	var cl = ""
@@ -4127,18 +4165,6 @@ func save_views(autosave:bool):
 	if not autosave:
 		popup(tr("GAME_SAVED"), 1.2)
 
-var ship_locator
-
-func show_ship_locator():
-	ship_locator = preload("res://Scenes/ShipLocator.tscn").instantiate()
-	add_child(ship_locator)
-	Input.set_mouse_mode(Input.MOUSE_MODE_HIDDEN)
-
-func hide_ship_locator():
-	remove_child(ship_locator)
-	ship_locator = null
-	Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
-	
 func show_item_cursor(texture):
 	item_cursor.get_node("Sprite2D").texture = texture
 	item_cursor.get_node("Num").text = "x " + str(item_to_use.num)

@@ -1,4 +1,4 @@
-[gd_scene load_steps=81 format=3 uid="uid://cahlkepfiewe4"]
+[gd_scene load_steps=79 format=3 uid="uid://cahlkepfiewe4"]
 
 [ext_resource type="Texture2D" uid="uid://lmoht72ywdfr" path="res://Graphics/Buttons/Craft.png" id="1"]
 [ext_resource type="Texture2D" uid="uid://b0brlrg52bjln" path="res://Graphics/Icons/money.png" id="2"]
@@ -18,11 +18,9 @@
 [ext_resource type="Texture2D" uid="uid://4tf3teqmkahc" path="res://Graphics/Misc/Bar.png" id="16"]
 [ext_resource type="Texture2D" uid="uid://b4dsp4wg7pubg" path="res://Graphics/Buttons/Ships.png" id="17"]
 [ext_resource type="Texture2D" uid="uid://cbg7ol8hmg3w0" path="res://Graphics/Misc/bullet.png" id="18"]
-[ext_resource type="Texture2D" uid="uid://7j36jxocc28" path="res://Graphics/Items/Others/ship_locator.png" id="19"]
 [ext_resource type="Texture2D" uid="uid://cwuyoxtq8q862" path="res://Graphics/Misc/HUD.png" id="21"]
 [ext_resource type="Texture2D" uid="uid://dfiorea57c2oe" path="res://Graphics/Buttons/Vehicles.png" id="22"]
 [ext_resource type="PackedScene" path="res://Scenes/Dialogue.tscn" id="23"]
-[ext_resource type="Texture2D" uid="uid://df7lgbp36iowv" path="res://Graphics/NPCs/3_btn.png" id="24"]
 [ext_resource type="Texture2D" uid="uid://8xmbgjeh4gj0" path="res://Graphics/Buttons/Wiki.png" id="25"]
 [ext_resource type="Texture2D" uid="uid://bqcnfk18r8y88" path="res://Graphics/Materials/glass.png" id="26"]
 [ext_resource type="Texture2D" uid="uid://cq01wa1mq6mrr" path="res://Graphics/Planets/3.png" id="27"]
@@ -1131,38 +1129,6 @@ libraries = {
 "": SubResource("AnimationLibrary_f72sx")
 }
 
-[node name="Emma" type="TextureButton" parent="."]
-visible = false
-layout_mode = 0
-offset_left = 1112.0
-offset_top = 656.0
-offset_right = 1152.0
-offset_bottom = 700.0
-shortcut_in_tooltip = false
-texture_normal = ExtResource("24")
-stretch_mode = 5
-
-[node name="ShipLocator" type="TextureButton" parent="."]
-visible = false
-layout_mode = 0
-offset_left = 1112.0
-offset_top = 656.0
-offset_right = 1152.0
-offset_bottom = 700.0
-shortcut_in_tooltip = false
-texture_normal = ExtResource("19")
-stretch_mode = 5
-
-[node name="Ship2Map" type="TextureButton" parent="."]
-visible = false
-layout_mode = 0
-offset_left = 1112.0
-offset_top = 656.0
-offset_right = 1152.0
-offset_bottom = 700.0
-shortcut_in_tooltip = false
-stretch_mode = 5
-
 [node name="Dialogue" parent="." instance=ExtResource("23")]
 anchors_preset = 0
 mouse_filter = 2
@@ -1262,13 +1228,4 @@ texture = ExtResource("36_g5ll0")
 [connection signal="mouse_entered" from="Top/Stats" to="." method="_on_Stats_mouse_entered"]
 [connection signal="mouse_exited" from="Top/Stats" to="." method="_on_mouse_exited"]
 [connection signal="pressed" from="Top/Stats" to="." method="_on_Stats_pressed"]
-[connection signal="mouse_entered" from="Emma" to="." method="_on_Emma_mouse_entered"]
-[connection signal="mouse_exited" from="Emma" to="." method="_on_mouse_exited"]
-[connection signal="pressed" from="Emma" to="." method="_on_Emma_pressed"]
-[connection signal="mouse_entered" from="ShipLocator" to="." method="_on_ShipLocator_mouse_entered"]
-[connection signal="mouse_exited" from="ShipLocator" to="." method="_on_mouse_exited"]
-[connection signal="pressed" from="ShipLocator" to="." method="_on_ShipLocator_pressed"]
-[connection signal="mouse_entered" from="Ship2Map" to="." method="_on_Ship2Map_mouse_entered"]
-[connection signal="mouse_exited" from="Ship2Map" to="." method="_on_mouse_exited"]
-[connection signal="pressed" from="Ship2Map" to="." method="_on_Ship2Map_pressed"]
 [connection signal="dialogue_finished" from="Dialogue" to="." method="_on_Dialogue_dialogue_finished"]

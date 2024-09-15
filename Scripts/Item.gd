@@ -1,5 +1,7 @@
 extends Node
 
+@onready var game = get_node("/root/Game")
+
 enum {
 	OVERCLOCK1,
 	OVERCLOCK2,
@@ -22,9 +24,11 @@ enum {
 }
 
 enum Type {
-	OVERCLOCK,
+	DRILL,
 	HELIX_CORE,
-	OTHER,
+	MINING_LIQUID,
+	OVERCLOCK,
+	PORTABLE_WORMHOLE,
 }
 
 var data:Dictionary = {
@@ -41,21 +45,21 @@ var data:Dictionary = {
 	OVERCLOCK6:
 		{"icon_name":"overclock6", "type":Type.OVERCLOCK, "costs":{"money":1.8e7}, "mult":5, "duration":24 * 60 * 60},
 	MINING_LIQUID:
-		{"icon_name":"mining_liquid", "type":Type.OTHER, "costs":{"coal":200, "glass":20}, "speed_mult":1.5, "durability":400},
+		{"icon_name":"mining_liquid", "type":Type.MINING_LIQUID, "costs":{"coal":200, "glass":20}, "speed_mult":1.5, "durability":400},
 	PURPLE_MINING_LIQUID:
-		{"icon_name":"purple_mining_liquid", "type":Type.OTHER, "costs":{"H":4000, "O":2000, "glass":500}, "speed_mult":4.0, "durability":800},
+		{"icon_name":"purple_mining_liquid", "type":Type.MINING_LIQUID, "costs":{"H":4000, "O":2000, "glass":500}, "speed_mult":4.0, "durability":800},
 	DRILL1:
-		{"icon_name":"drill1", "type":Type.OTHER, "costs":{"iron":100, "aluminium":20}, "limit":8}, # "limit": cave floor limit
+		{"icon_name":"drill1", "type":Type.DRILL, "costs":{"iron":100, "aluminium":20}, "limit":8}, # "limit": cave floor limit
 	DRILL2:
-		{"icon_name":"drill2", "type":Type.OTHER, "costs":{"aluminium":600, "titanium":150}, "limit":16},
+		{"icon_name":"drill2", "type":Type.DRILL, "costs":{"aluminium":600, "titanium":150}, "limit":16},
 	DRILL3:
-		{"icon_name":"drill3", "type":Type.OTHER, "costs":{"platinum":4000, "diamond":3000}, "limit":24},
+		{"icon_name":"drill3", "type":Type.DRILL, "costs":{"platinum":4000, "diamond":3000}, "limit":24},
 	PORTABLE_WORMHOLE1:
-		{"icon_name":"portable_wormhole1", "type":Type.OTHER, "costs":{"glass":80, "aluminium":80}, "limit":8},
+		{"icon_name":"portable_wormhole1", "type":Type.PORTABLE_WORMHOLE, "costs":{"glass":80, "aluminium":80}, "limit":8},
 	PORTABLE_WORMHOLE2:
-		{"icon_name":"portable_wormhole2", "type":Type.OTHER, "costs":{"quartz":300, "diamond":20}, "limit":16},
+		{"icon_name":"portable_wormhole2", "type":Type.PORTABLE_WORMHOLE, "costs":{"quartz":300, "diamond":20}, "limit":16},
 	PORTABLE_WORMHOLE3:
-		{"icon_name":"portable_wormhole3", "type":Type.OTHER, "costs":{"platinum":5000, "quillite":1000}, "limit":24},
+		{"icon_name":"portable_wormhole3", "type":Type.PORTABLE_WORMHOLE, "costs":{"platinum":5000, "quillite":1000}, "limit":24},
 	HELIX_CORE1:
 		{"icon_name": "hx_core", "type":Type.HELIX_CORE, "XP": 6},
 	HELIX_CORE2:
@@ -65,6 +69,18 @@ var data:Dictionary = {
 	HELIX_CORE4:
 		{"icon_name": "hx_core4", "type":Type.HELIX_CORE, "XP": 1.6e7},
 }
+
+func icon_directory(type:int):
+	if type == Type.OVERCLOCK:
+		return "Overclocks"
+	elif type == Type.MINING_LIQUID:
+		return "Mining liquids"
+	elif type == Type.HELIX_CORE:
+		return "Helix cores"
+	elif type == Type.DRILL:
+		return "Drills"
+	elif type == Type.PORTABLE_WORMHOLE:
+		return "Portable wormholes"
 
 func name(item_id:int):
 	if item_id == OVERCLOCK1:
@@ -79,3 +95,9 @@ func name(item_id:int):
 		return tr("OVERCLOCK") + " V"
 	elif item_id == OVERCLOCK6:
 		return tr("OVERCLOCK") + " VI"
+
+func description(item_id:int):
+	if data[item_id].type == Type.OVERCLOCK:
+		return tr("OVERCLOCKS_DESC2") % [data[item_id].mult, Helper.time_to_str(data[item_id].duration / game.u_i.get("time_speed", 1.0))]
+	elif data[item_id].type == Type.HELIX_CORE:
+		return tr("HX_CORE_DESC") % Helper.format_num(data[item_id].XP)

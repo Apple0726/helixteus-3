@@ -40,7 +40,7 @@ func _ready():
 		$Mults/AuroraMult.text = "[aurora au_int=%s][center]%s: x %s" % [tile.aurora, tr("AURORA_MULTIPLIER"), Helper.clever_round(aurora_mult)]
 	progress = tile.mining_progress
 	if game.pickaxe.has("name"):
-		$Pickaxe/Sprite2D.texture = load("res://Graphics/Items/Pickaxes/" + game.pickaxe.name + ".png")
+		$Pickaxe/Sprite2D.texture = load("res://Graphics/Pickaxes/" + game.pickaxe.name + ".png")
 		update_pickaxe()
 	update_info(true)
 	generate_rock(false)
@@ -129,10 +129,10 @@ func update_info(first_time:bool = false):
 
 func update_pickaxe():
 	$HBox/Durability/Numbers.text = "%s / %s" % [game.pickaxe.durability, game.pickaxes_info[game.pickaxe.name].durability]
-	if game.pickaxe.has("liquid_name"):
+	if game.pickaxe.has("liquid_id"):
 		$HBox/Liquid.visible = true
-		$HBox/Liquid/Numbers.text = "%s / %s" % [game.pickaxe.liquid_dur, game.craft_mining_info[game.pickaxe.liquid_name].durability]
-		$HBox/Liquid/Bar.value = game.pickaxe.liquid_dur / float(game.craft_mining_info[game.pickaxe.liquid_name].durability) * 100
+		$HBox/Liquid/Numbers.text = "%s / %s" % [game.pickaxe.liquid_durability, Item.data[game.pickaxe.liquid_id].durability]
+		$HBox/Liquid/Bar.value = game.pickaxe.liquid_durability / float(Item.data[game.pickaxe.liquid_id].durability) * 100
 	else:
 		$HBox/Liquid.visible = false
 	$HBox/Durability/Bar.value = game.pickaxe.durability / float(game.pickaxes_info[game.pickaxe.name].durability) * 100
@@ -243,11 +243,11 @@ func pickaxe_hit():
 	place_crumbles(3, 0.1, 1)
 	progress += add_progress
 	game.pickaxe.durability -= 1
-	if game.pickaxe.has("liquid_dur"):
-		game.pickaxe.liquid_dur -= 1
-		if game.pickaxe.liquid_dur <= 0:
-			game.pickaxe.erase("liquid_dur")
-			game.pickaxe.erase("liquid_name")
+	if game.pickaxe.has("liquid_durability"):
+		game.pickaxe.liquid_durability -= 1
+		if game.pickaxe.liquid_durability <= 0:
+			game.pickaxe.erase("liquid_durability")
+			game.pickaxe.erase("liquid_id")
 			game.pickaxe.erase("speed_mult")
 	var rock_gen:bool = false
 	if progress >= 100 and $LayerInfo.visible:

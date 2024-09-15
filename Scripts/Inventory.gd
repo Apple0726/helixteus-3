@@ -7,9 +7,7 @@ var buy_sell
 @onready var grid = $Control/VBox/GridContainer
 @onready var particles_hbox = $Control/ParticlesHBox
 @onready var info = $Information
-var item_hovered:String = ""
-var item_stack:int = 0
-var item_slot:int = 0
+var item_hovered:int = -1
 var hbox_data:Array = []
 
 func _ready():
@@ -44,86 +42,29 @@ func _on_Items_pressed():
 	grid.visible = false
 	particles_hbox.visible = false
 	for item in inventory_grid.get_children():
-		inventory_grid.remove_child(item)
-		item.free()
-	var i:int = 0
-	for item in game.items:
+		item.queue_free()
+	for i in len(game.items):
 		var slot = preload("res://Scenes/InventorySlot.tscn").instantiate()
-		if item != null:
-			slot.get_node("Label").text = str(item.num)
-			slot.get_node("TextureRect").texture = load("res://Graphics/" + Helper.get_dir_from_name(item.name)  + "/" + item.name + ".png")
-			slot.get_node("Button").connect("mouse_entered",Callable(self,"on_slot_over").bind(item.name, item.num, i))
-			slot.get_node("Button").connect("mouse_exited",Callable(self,"on_slot_out"))
-			slot.get_node("Button").connect("pressed",Callable(self,"on_slot_press").bind(item.name))
+		var item_slot = game.items[i]
+		if item_slot != null:
+			slot.get_node("Label").text = str(item_slot.num)
+			slot.get_node("TextureRect").texture = load("res://Graphics/Items/%s/%s.png" % [Item.icon_directory(Item.data[item_slot.id].type), Item.data[item_slot.id].icon_name])
+			slot.get_node("Button").mouse_entered.connect(on_slot_over.bind(i))
+			slot.get_node("Button").mouse_exited.connect(on_slot_out)
+			slot.get_node("Button").pressed.connect(game.use_item.bind(item_slot.id))
 		inventory_grid.add_child(slot)
-		i += 1
 	$Control/VBox/BuySell.visible = false
 
-func on_slot_over(_name:String, num:int, slot:int):
-	var st:String = Helper.get_item_name(_name)
-	if game.other_items_info.has(_name):
-		if _name.substr(0, 7) == "hx_core":
-			st += "\n%s" % [tr("HX_CORE_DESC") % Helper.format_num(game.other_items_info[_name].XP)]
-	item_slot = slot
-	item_hovered = _name
-	item_stack = num
-	game.help_str = "inventory_shortcuts"
-	if game.help.has("inventory_shortcuts"):
-		st += "\n%s\n%s\n%s\n%s\n%s" % [tr("CLICK_TO_USE"), tr("SHIFT_CLICK_TO_USE_ALL"), tr("X_TO_THROW_ONE"), tr("SHIFT_X_TO_THROW_STACK"), tr("H_FOR_HOTBAR")] + "\n" + tr("HIDE_SHORTCUTS")
-	game.show_tooltip(st)
+func on_slot_over(item_slot:int):
+	item_hovered = item_slot
+	var item_id:int = game.items[item_hovered].id
+	var tooltip_txt = Item.name(item_id) + "\n" + Item.description(item_id)
+	tooltip_txt += "\n%s\n%s\n" % [tr("CLICK_TO_USE"), tr("RIGHT_CLICK_FOR_MORE_OPTIONS")]
+	game.show_tooltip(tooltip_txt)
 
 func on_slot_out():
-	item_hovered = ""
+	item_hovered = -1
 	game.hide_tooltip()
-
-func on_slot_press(_name:String):
-	game.hide_tooltip()
-	var num:int
-	if Input.is_action_pressed("shift"):
-		num = game.get_item_num(_name)
-	else:
-		num = 1
-	if game.get_node("UI/BottomInfo").visible:
-		game._on_BottomInfo_close_button_pressed(true)
-	game.item_to_use.name = _name
-	game.item_to_use.num = num
-	var texture
-	var type:String = Helper.get_type_from_name(_name)
-	if type == "craft_mining_info":
-		game.remove_items(_name)
-		game.pickaxe.speed_mult = game.craft_mining_info[_name].speed_mult
-		game.pickaxe.liquid_dur = game.craft_mining_info[_name].durability
-		game.pickaxe.liquid_name = _name
-		if game.active_panel == self:
-			game.toggle_panel(self)
-		game.popup("SUCCESSFULLY_APPLIED", 1.5)
-		return
-	elif type == "craft_cave_info":
-		game.put_bottom_info(tr("CLICK_ON_ROVER_TO_GIVE"), "give_rover_items", "hide_item_cursor")
-		game.item_to_use.type = "cave"
-		game.toggle_panel(game.vehicle_panel)
-	elif type == "speedups_info":
-		if game.c_v == "system" and game.science_unlocked.has("MAE"):
-			game.put_bottom_info(tr("USE_SPEEDUP_MS") % 5, "use_speedup", "hide_item_cursor")
-		else:
-			game.put_bottom_info(tr("USE_SPEEDUP_INFO"), "use_speedup", "hide_item_cursor")
-		game.item_to_use.type = "speedup"
-	elif type == "overclocks_info":
-		game.put_bottom_info(tr("USE_OVERCLOCK_INFO"), "use_overclock", "hide_item_cursor")
-		game.item_to_use.type = "overclock"
-	elif type == "other_items_info":
-		if _name.substr(0, 7) == "hx_core":
-			if len(game.ship_data) > 0:
-				game.put_bottom_info(tr("CLICK_SHIP_TO_GIVE_XP"), "use_hx_core", "hide_item_cursor")
-				game.toggle_panel(game.ship_panel)
-				game.ship_panel._on_BackButton_pressed()
-			else:
-				game.popup(tr("NO_SHIPS_2"), 1.5)
-				return
-	if game.active_panel == self:
-		game.toggle_panel(self)
-	texture = load("res://Graphics/" + Helper.get_dir_from_name(_name) + "/" + _name + ".png")
-	game.show_item_cursor(texture)
 
 func _on_Materials_pressed():
 	set_process(not game.autocollect.mats.is_empty())
@@ -240,23 +181,24 @@ func get_str(obj:String, desc:String = ""):
 
 func _input(event):
 	super(event)
-	if item_hovered != "":
+	if item_hovered != -1:
+		var item_id:int = game.items[item_hovered].id
 		if Input.is_action_just_released("shift X"):
-			game.items[item_slot] = null
+			game.items[item_hovered] = null
 			_on_Items_pressed()
-			item_hovered = ""
+			item_hovered = -1
 			game.hide_tooltip()
 		elif Input.is_action_just_released("X"):
-			game.remove_items(item_hovered)
+			game.remove_items(item_id)
 			_on_Items_pressed()
-			if game.items[item_slot] == null:
-				item_hovered = ""
+			if game.items[item_hovered] == null:
+				item_hovered = -1
 				game.hide_tooltip()
 		if Input.is_action_just_released("H"):
-			if game.hotbar.find(item_hovered) == -1:
-				game.hotbar.append(item_hovered)
+			if game.hotbar.find(item_id) == -1:
+				game.hotbar.append(item_id)
 			else:
-				game.hotbar.erase(item_hovered)
+				game.hotbar.erase(item_id)
 			game.HUD.update_hotbar()
 
 @onready var subatomic_particles_label = $Control/ParticlesHBox/SubatomicParticles

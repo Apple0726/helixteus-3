@@ -33,7 +33,7 @@ func _on_btn_pressed(btn_str:String):
 		for item_id in [Item.OVERCLOCK1, Item.OVERCLOCK2, Item.OVERCLOCK3, Item.OVERCLOCK4, Item.OVERCLOCK5, Item.OVERCLOCK6]:
 			var item_name = Item.name(item_id)
 			var item_texture = load("res://Graphics/Items/Overclocks/%s.png" % Item.data[item_id].icon_name)
-			var description = tr("OVERCLOCKS_DESC2") % [Item.data[item_id].mult, Helper.time_to_str(Item.data[item_id].duration / game.u_i.get("time_speed", 1.0))]
+			var description = Item.description(item_id)
 			var tooltip_txt:String = "%s\n%s\n" % [item_name, description]
 			var tooltip_icons:Array = []
 			var costs:Dictionary = Item.data[item_id].costs
@@ -48,6 +48,7 @@ func _on_btn_pressed(btn_str:String):
 			item.get_node("TextureButton").mouse_entered.connect(Callable(game, "show_adv_tooltip").bind(tooltip_txt, tooltip_icons))
 			item.get_node("TextureButton").mouse_exited.connect(Callable(game, "hide_tooltip"))
 			item.get_node("TextureButton").pressed.connect(Callable(self, "set_item_info").bind(item_name, costs, item_texture, item, OVERCLOCK, item_id))
+			$Items/Grid.add_child(item)
 	elif btn_str == "Pickaxes":
 		for pickaxe_name in game.pickaxes_info:
 			var item_name = tr(pickaxe_name.to_upper())
@@ -67,6 +68,7 @@ func _on_btn_pressed(btn_str:String):
 			item.get_node("TextureButton").mouse_entered.connect(Callable(game, "show_adv_tooltip").bind(tooltip_txt, tooltip_icons))
 			item.get_node("TextureButton").mouse_exited.connect(Callable(game, "hide_tooltip"))
 			item.get_node("TextureButton").pressed.connect(Callable(self, "set_item_info").bind(item_name, costs, item_texture, item, PICKAXE, pickaxe_name))
+			$Items/Grid.add_child(item)
 
 func set_item_info(_item_name:String, _item_costs:Dictionary, _item_texture, _item_node, item_type:int, item_id):
 	for item in $Items/Grid.get_children():
@@ -110,7 +112,7 @@ func _on_pickaxes_button_pressed():
 
 
 func _on_buy_pressed():
-	if item_selected.costs.is_mpeyt():
+	if item_selected.costs.is_empty():
 		return
 	var item_total_costs = item_selected.costs.duplicate(true)
 	for cost in item_total_costs.keys():
@@ -123,7 +125,7 @@ func _on_buy_pressed():
 				buy_pickaxe(item_total_costs)
 		elif item_selected.type == OVERCLOCK:
 			game.deduct_resources(item_total_costs)
-			Helper.add_items_to_inventory(item_name, $ItemInfo/BuyAmount.value, item_costs, tr("NOT_ENOUGH_INV_SPACE_BUY"), tr("PURCHASE_SUCCESS"))
+			Helper.add_items_to_inventory(item_selected.id, $ItemInfo/BuyAmount.value, item_selected.costs, tr("NOT_ENOUGH_INV_SPACE_BUY"), tr("PURCHASE_SUCCESS"))
 			update_and_check_costs()
 			game.HUD.refresh()
 	else:
