@@ -125,7 +125,6 @@ size_flags_vertical = 3
 columns = 10
 
 [node name="ItemInfo" type="Panel" parent="."]
-visible = false
 layout_mode = 0
 offset_left = 352.0
 offset_top = 416.0
@@ -134,7 +133,6 @@ offset_bottom = 624.0
 theme_override_styles/panel = SubResource("StyleBoxFlat_bppng")
 
 [node name="BuyAmount" type="SpinBox" parent="ItemInfo"]
-visible = false
 layout_mode = 0
 offset_left = 248.0
 offset_top = 80.0
@@ -202,7 +200,7 @@ layout_mode = 0
 offset_left = 384.0
 offset_top = 56.0
 offset_right = 568.0
-offset_bottom = 136.0
+offset_bottom = 160.0
 
 [node name="Costs" type="VBoxContainer" parent="ItemInfo/ScrollContainer"]
 layout_mode = 2

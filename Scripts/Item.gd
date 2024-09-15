@@ -95,9 +95,31 @@ func name(item_id:int):
 		return tr("OVERCLOCK") + " V"
 	elif item_id == OVERCLOCK6:
 		return tr("OVERCLOCK") + " VI"
+	elif item_id == MINING_LIQUID:
+		return tr("MINING_LIQUID")
+	elif item_id == PURPLE_MINING_LIQUID:
+		return tr("PURPLE_MINING_LIQUID")
+	elif item_id == DRILL1:
+		return tr("DRILL")
+	elif item_id == DRILL2:
+		return tr("DRILL") + " II"
+	elif item_id == DRILL3:
+		return tr("DRILL") + " III"
+	elif item_id == PORTABLE_WORMHOLE1:
+		return tr("PORTABLE_WORMHOLE")
+	elif item_id == PORTABLE_WORMHOLE2:
+		return tr("PORTABLE_WORMHOLE") + " II"
+	elif item_id == PORTABLE_WORMHOLE3:
+		return tr("PORTABLE_WORMHOLE") + " III"
 
 func description(item_id:int):
 	if data[item_id].type == Type.OVERCLOCK:
 		return tr("OVERCLOCKS_DESC2") % [data[item_id].mult, Helper.time_to_str(data[item_id].duration / game.u_i.get("time_speed", 1.0))]
 	elif data[item_id].type == Type.HELIX_CORE:
 		return tr("HX_CORE_DESC") % Helper.format_num(data[item_id].XP)
+	elif data[item_id].type == Type.MINING_LIQUID:
+		return "%s: %s\n%s: %s" % [tr("SPEED_MULTIPLIER"), data[item_id].speed_mult, tr("DURABILITY"), data[item_id].durability]
+	elif data[item_id].type == Type.DRILL:
+		return tr("DRILL_DESC") % data[item_id].limit
+	elif data[item_id].type == Type.PORTABLE_WORMHOLE:
+		return tr("PORTABLE_WORMHOLE_DESC") % data[item_id].limit

@@ -4,9 +4,9 @@ enum {
 	OVERCLOCK,
 	PICKAXE,
 }
-var tab:String = ""
+var tab:int = OVERCLOCK
+
 var item_selected = {
-	"type": OVERCLOCK,
 	"id": null,
 	"costs": {},
 }
@@ -17,19 +17,20 @@ func _ready():
 	_on_overclocks_button_pressed()
 	$Tabs/OverclocksButton._on_Button_pressed()
 	
-func change_tab(btn_str:String):
+func change_tab(_tab:int):
 	for item in $Items/Grid.get_children():
 		item.free()
 	$ItemInfo.hide()
 	item_selected.costs.clear()
-	$Desc.text = tr("%s_DESC" % btn_str.to_upper())
+	if _tab == OVERCLOCK:
+		$Desc.text = tr("OVERCLOCK_DESC")
+	elif _tab == PICKAXE:
+		$Desc.text = tr("PICKAXE_DESC")
 
-func _on_btn_pressed(btn_str:String):
-	var btn_str_l:String = btn_str.to_lower()
-	var btn_str_u:String = btn_str.to_upper()
-	tab = btn_str
-	change_tab(btn_str)
-	if btn_str == "Overclocks":
+func _on_btn_pressed(_tab:int):
+	tab = _tab
+	change_tab(_tab)
+	if tab == OVERCLOCK:
 		for item_id in [Item.OVERCLOCK1, Item.OVERCLOCK2, Item.OVERCLOCK3, Item.OVERCLOCK4, Item.OVERCLOCK5, Item.OVERCLOCK6]:
 			var item_name = Item.name(item_id)
 			var item_texture = load("res://Graphics/Items/Overclocks/%s.png" % Item.data[item_id].icon_name)
@@ -47,9 +48,9 @@ func _on_btn_pressed(btn_str:String):
 			item.get_node("TextureRect").texture = item_texture
 			item.get_node("TextureButton").mouse_entered.connect(Callable(game, "show_adv_tooltip").bind(tooltip_txt, tooltip_icons))
 			item.get_node("TextureButton").mouse_exited.connect(Callable(game, "hide_tooltip"))
-			item.get_node("TextureButton").pressed.connect(Callable(self, "set_item_info").bind(item_name, costs, item_texture, item, OVERCLOCK, item_id))
+			item.get_node("TextureButton").pressed.connect(Callable(self, "set_item_info").bind(item_name, costs, item_texture, item, item_id))
 			$Items/Grid.add_child(item)
-	elif btn_str == "Pickaxes":
+	elif tab == PICKAXE:
 		for pickaxe_name in game.pickaxes_info:
 			var item_name = tr(pickaxe_name.to_upper())
 			var item_texture = load("res://Graphics//Pickaxes/%s.png" % pickaxe_name)
@@ -67,19 +68,18 @@ func _on_btn_pressed(btn_str:String):
 			item.get_node("TextureRect").texture = item_texture
 			item.get_node("TextureButton").mouse_entered.connect(Callable(game, "show_adv_tooltip").bind(tooltip_txt, tooltip_icons))
 			item.get_node("TextureButton").mouse_exited.connect(Callable(game, "hide_tooltip"))
-			item.get_node("TextureButton").pressed.connect(Callable(self, "set_item_info").bind(item_name, costs, item_texture, item, PICKAXE, pickaxe_name))
+			item.get_node("TextureButton").pressed.connect(Callable(self, "set_item_info").bind(item_name, costs, item_texture, item, pickaxe_name))
 			$Items/Grid.add_child(item)
 
-func set_item_info(_item_name:String, _item_costs:Dictionary, _item_texture, _item_node, item_type:int, item_id):
+func set_item_info(_item_name:String, _item_costs:Dictionary, _item_texture, _item_node, item_id):
 	for item in $Items/Grid.get_children():
 		item.get_node("Highlight").visible = item == _item_node
 	$ItemInfo.show()
 	$ItemInfo/ItemName.text = _item_name
-	item_selected.type = item_type
 	item_selected.id = item_id # item_id can be an int (overclocks) or a string (pickaxe)
 	item_selected.costs = _item_costs.duplicate(true)
 	$ItemInfo/Panel/TextureRect.texture = _item_texture
-	$ItemInfo/BuyAmount.visible = tab == "Overclocks"
+	$ItemInfo/BuyAmount.visible = tab == OVERCLOCK
 	update_and_check_costs()
 
 func update_and_check_costs():
@@ -105,10 +105,10 @@ func buy_pickaxe(_costs:Dictionary):
 	game.popup(tr("BUY_PICKAXE") % [tr(item_selected.id.to_upper())], 1.0)
 
 func _on_overclocks_button_pressed():
-	_on_btn_pressed("Overclocks")
+	_on_btn_pressed(OVERCLOCK)
 
 func _on_pickaxes_button_pressed():
-	_on_btn_pressed("Pickaxes")
+	_on_btn_pressed(PICKAXE)
 
 
 func _on_buy_pressed():
@@ -118,12 +118,12 @@ func _on_buy_pressed():
 	for cost in item_total_costs.keys():
 		item_total_costs[cost] *= $ItemInfo/BuyAmount.value
 	if game.check_enough(item_total_costs):
-		if item_selected.type == PICKAXE:
+		if tab == PICKAXE:
 			if game.pickaxe.has("name"):
 				game.show_YN_panel("buy_pickaxe", tr("REPLACE_PICKAXE") % [tr(game.pickaxe.name.to_upper()), tr(item_selected.id.to_upper())], [item_total_costs])
 			else:
 				buy_pickaxe(item_total_costs)
-		elif item_selected.type == OVERCLOCK:
+		elif tab == OVERCLOCK:
 			game.deduct_resources(item_total_costs)
 			Helper.add_items_to_inventory(item_selected.id, $ItemInfo/BuyAmount.value, item_selected.costs, tr("NOT_ENOUGH_INV_SPACE_BUY"), tr("PURCHASE_SUCCESS"))
 			update_and_check_costs()
