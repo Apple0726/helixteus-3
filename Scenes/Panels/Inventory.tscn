@@ -169,6 +169,7 @@ stretch_mode = 6
 layout_mode = 2
 size_flags_horizontal = 3
 
+[connection signal="pressed" from="CloseButton" to="." method="_on_close_button_pressed"]
 [connection signal="pressed" from="TabBar/Items" to="." method="_on_Items_pressed"]
 [connection signal="pressed" from="TabBar/Materials" to="." method="_on_Materials_pressed"]
 [connection signal="pressed" from="TabBar/Metals" to="." method="_on_Metals_pressed"]

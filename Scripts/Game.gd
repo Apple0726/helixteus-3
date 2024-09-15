@@ -238,7 +238,7 @@ var view_history:Array = []
 var view_history_pos:int = -1
 
 #Stores data of the item that you clicked in your inventory
-var item_to_use = {"name":"", "type":"", "num":0}
+var item_to_use = {"id":-1, "num":0}
 
 var mining_HUD
 var science_tree_view = {"pos":Vector2.ZERO, "zoom":1.0}
@@ -3722,7 +3722,6 @@ func use_item(item_id:int):
 		toggle_panel("vehicle_panel")
 	elif item_type == Item.Type.OVERCLOCK:
 		put_bottom_info(tr("USE_OVERCLOCK_INFO"), "use_overclock", "hide_item_cursor")
-		item_to_use.type = "overclock"
 	elif item_type == Item.Type.HELIX_CORE:
 		if len(ship_data) > 0:
 			put_bottom_info(tr("CLICK_SHIP_TO_GIVE_XP"), "use_hx_core", "hide_item_cursor")
@@ -4176,14 +4175,16 @@ func show_item_cursor(texture):
 func update_item_cursor():
 	if item_to_use.num <= 0:
 		_on_BottomInfo_close_button_pressed()
-		item_to_use = {"name":"", "type":"", "num":0}
+		item_to_use.id = -1
+		item_to_use.num = 0
 	else:
 		item_cursor.get_node("Num").text = "x " + str(item_to_use.num)
 	if is_instance_valid(HUD):
 		HUD.update_hotbar()
 
 func hide_item_cursor():
-	item_to_use = {"name":"", "type":"", "num":0}
+	item_to_use.id = -1
+	item_to_use.num = 0
 	item_cursor.visible = false
 	Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
 	

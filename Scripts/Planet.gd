@@ -590,7 +590,7 @@ func constr_bldg(tile_id:int, curr_time:int, _bldg_to_construct:int, mass_build:
 		game.popup(tr("NOT_ENOUGH_RESOURCES"), 1.2)
 
 func overclock_bldg(tile, tile_id:int, curr_time):
-	var mult:float = game.overclocks_info[game.item_to_use.name].mult * tile.get("overclock_bonus", 1.0)
+	var mult:float = Item.data[game.item_to_use.id].mult * tile.get("overclock_bonus", 1.0)
 	if overclockable(tile.bldg.name) and (not tile.bldg.has("overclock_mult") or tile.bldg.overclock_mult < mult):
 		var mult_diff:float
 		if not tile.bldg.has("overclock_mult"):
@@ -599,7 +599,7 @@ func overclock_bldg(tile, tile_id:int, curr_time):
 		else:
 			mult_diff = mult - tile.bldg.overclock_mult
 		tile.bldg.overclock_date = curr_time
-		tile.bldg.overclock_length = game.overclocks_info[game.item_to_use.name].duration / game.u_i.time_speed / tile.get("time_speed_bonus", 1.0)
+		tile.bldg.overclock_length = Item.data[game.item_to_use.id].duration / game.u_i.time_speed / tile.get("time_speed_bonus", 1.0)
 		tile.bldg.overclock_mult = mult
 		if tile.bldg.name == Building.RESEARCH_LAB:
 			game.autocollect.rsrc.SP += tile.bldg.path_1_value * mult_diff * tile.resource_production_bonus.get("SP", 1.0) * tile.get("time_speed_bonus", 1.0)
@@ -999,7 +999,7 @@ func select_all_of_same_type_callable(called_from_right_click = true):
 				path_3_value_sum = Helper.get_final_value(p_i, tile2, 3) if tile2.bldg.has("path_3_value") else 0
 			tiles_selected.append(i)
 			add_white_rect(Vector2(i % wid, i / wid) * 200, "selected_white_rects")
-	if game.shop_panel.tab == "Overclocks":
+	if game.shop_panel.tab == game.shop_panel.OVERCLOCK:
 		game.shop_panel.get_node("ItemInfo/BuyAmount").value = len(tiles_selected)
 	if tile.has("bldg") and not game.item_cursor.visible:
 		if Data.desc_icons.has(tile.bldg.name):
@@ -1094,8 +1094,12 @@ func _unhandled_input(event):
 					collect_resources_callable()
 			if not is_instance_valid(game.active_panel) and Input.is_action_just_pressed("shift"):
 				select_all_of_same_type_callable(false)
+	if Input.is_action_just_released("cancel"):
+		tiles_selected.clear()
+		remove_selected_white_rects()
 	if Input.is_action_just_released("shift"):
-		remove_selected_tiles()
+		tiles_selected.clear()
+		remove_selected_white_rects()
 		view.move_view = true
 		view.scroll_view = true
 		if tile_over != -1:
@@ -1245,18 +1249,17 @@ func _unhandled_input(event):
 				game.mine_tile(tile_id)
 		if tile and bldg_to_construct == -1:
 			items_collected.clear()
-			var t:String = game.item_to_use.type
 			if tile.has("bldg"):
-				if t in ["speedup", "overclock"]:
+				if game.item_to_use.id != -1 and Item.data[game.item_to_use.id].type == Item.Type.OVERCLOCK:
 					var orig_num:int = game.item_to_use.num
 					if tiles_selected.is_empty():
-						call("%s_bldg" % [t], tile, tile_id, curr_time)
+						overclock_bldg(tile, tile_id, curr_time)
 					else:
 						for _tile in tiles_selected:
-							call("%s_bldg" % [t], game.tile_data[_tile], _tile, curr_time)
+							overclock_bldg(game.tile_data[_tile], _tile, curr_time)
 							if game.item_to_use.num <= 0:
 								break
-					game.remove_items(game.item_to_use.name, orig_num - game.item_to_use.num)
+					game.remove_items(game.item_to_use.id, orig_num - game.item_to_use.num)
 					game.update_item_cursor()
 				else:
 					click_tile(tile, tile_id)
@@ -1456,7 +1459,7 @@ func add_time_bar(id2:int, type:String):
 	v.x = (local_id % wid) * 200
 	v.y = floor(local_id / wid) * 200
 	v += Vector2(100, 15)
-	var time_bar = game.time_scene.instantiate()
+	var time_bar = preload("res://Scenes/TimeLeft.tscn").instantiate()
 	time_bar.visible = get_parent().scale.x >= 0.25
 	time_bar.position = v
 	add_child(time_bar)
