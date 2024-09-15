@@ -1,7 +1,19 @@
-[gd_scene load_steps=3 format=3 uid="uid://2s0chovxmhln"]
+[gd_scene load_steps=4 format=3 uid="uid://2s0chovxmhln"]
 
-[ext_resource type="Theme" uid="uid://cp2u1kgj60ic" path="res://Resources/default_theme.tres" id="2"]
 [ext_resource type="Texture2D" uid="uid://ckolepkruyseb" path="res://Graphics/Cave/SlotBorder.png" id="3"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_xippp"]
+bg_color = Color(7.52043e-10, 1.50409e-09, 0.0381053, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.105882, 0.196078, 0.305882, 1)
+border_blend = true
+
+[sub_resource type="LabelSettings" id="LabelSettings_xue0l"]
+outline_size = 3
+outline_color = Color(0, 0, 0, 1)
 
 [node name="Slot" type="Panel"]
 custom_minimum_size = Vector2(60, 60)
@@ -11,9 +23,9 @@ anchor_bottom = 1.0
 offset_right = -1220.0
 offset_bottom = -660.0
 mouse_filter = 1
-theme = ExtResource("2")
+theme_override_styles/panel = SubResource("StyleBoxFlat_xippp")
 
-[node name="Button" type="Button" parent="."]
+[node name="Button" type="TextureButton" parent="."]
 layout_mode = 0
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -39,6 +51,7 @@ anchor_bottom = 1.0
 offset_top = -24.0
 offset_right = -4.0
 offset_bottom = -3.0
+label_settings = SubResource("LabelSettings_xue0l")
 horizontal_alignment = 2
 vertical_alignment = 1
 

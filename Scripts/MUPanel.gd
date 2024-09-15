@@ -49,15 +49,15 @@ func _ready():
 			btn_max.expand_icon = true
 			btn_max.icon = preload("res://Graphics/Science/UP2.png")
 			hbox.add_child(btn_max)
-		$VBox.add_child(hbox)
+		$PanelContainer/VBox.add_child(hbox)
 
 func refresh():
-	$VBox/MSMB.visible = game.show.has("mining")
-	$VBox/STMB.visible = game.STM_lv >= 1
-	$VBox/SHSR.visible = game.stats_univ.planets_conquered >= 2
-	$VBox/CHR.visible = game.stats_univ.planets_conquered >= 2
+	$PanelContainer/VBox/MSMB.visible = game.show.has("mining")
+	$PanelContainer/VBox/STMB.visible = game.STM_lv >= 1
+	$PanelContainer/VBox/SHSR.visible = game.stats_univ.planets_conquered >= 2
+	$PanelContainer/VBox/CHR.visible = game.stats_univ.planets_conquered >= 2
 	if game.MUs.SHSR >= 51:
-		var upgrade_btn = $VBox/SHSR/Upgrade
+		var upgrade_btn = $PanelContainer/VBox/SHSR/Upgrade
 		upgrade_btn.modulate.a = 0.0
 		if upgrade_btn.is_connected("pressed",Callable(self,"_on_Upgrade_pressed")):
 			upgrade_btn.disconnect("mouse_entered",Callable(self,"_on_Upgrade_mouse_entered"))
@@ -65,13 +65,13 @@ func refresh():
 			upgrade_btn.disconnect("pressed",Callable(self,"_on_Upgrade_pressed"))
 	if game.achievement_data.progression.has("new_universe"):
 		if game.MUs.SHSR >= 51:
-			var upgrade_max_btn = $VBox/SHSR/UpgradeMax
+			var upgrade_max_btn = $PanelContainer/VBox/SHSR/UpgradeMax
 			upgrade_max_btn.modulate.a = 0.0
 			if upgrade_max_btn.is_connected("pressed",Callable(self,"_on_UpgradeMax_pressed")):
 				upgrade_max_btn.disconnect("pressed",Callable(self,"_on_UpgradeMax_pressed"))
-		$VBox/CHR/UpgradeMax.visible = game.MUs.CHR < 90
-	$VBox/CHR/Upgrade.visible = game.MUs.CHR < 90
-	for hbox in $VBox.get_children():
+		$PanelContainer/VBox/CHR/UpgradeMax.visible = game.MUs.CHR < 90
+	$PanelContainer/VBox/CHR/Upgrade.visible = game.MUs.CHR < 90
+	for hbox in $PanelContainer/VBox.get_children():
 		if hbox.name != "Titles":
 			hbox.get_node("Lv").text = str(game.MUs[hbox.name])
 			hbox.get_node("Upgrade").text = "  %s" % [Helper.format_num(get_min_cost(hbox.name))]
@@ -80,21 +80,21 @@ func refresh():
 func set_upg_text(MU:String, next_lv:int = 0):
 	match MU:
 		"MV":
-			game.add_text_icons($VBox/MV/Effects, "@i 1 = @i %s" % [game.MUs.MV + next_lv + 4], [Data.minerals_icon, Data.money_icon], 15)
+			game.add_text_icons($PanelContainer/VBox/MV/Effects, "@i 1 = @i %s" % [game.MUs.MV + next_lv + 4], [Data.minerals_icon, Data.money_icon], 15)
 		"MSMB":
-			$VBox/MSMB/Effects.text = "+ %s %%" % ((game.MUs.MSMB + next_lv - 1) * 10)
+			$PanelContainer/VBox/MSMB/Effects.text = "+ %s %%" % ((game.MUs.MSMB + next_lv - 1) * 10)
 		"IS":
-			$VBox/IS/Effects.text = tr("X_SLOTS") % [game.MUs.IS + next_lv + 9]
+			$PanelContainer/VBox/IS/Effects.text = tr("X_SLOTS") % [game.MUs.IS + next_lv + 9]
 		"STMB":
-			$VBox/STMB/Effects.text = "+ %s %%" % ((game.MUs.STMB + next_lv - 1) * 15)
+			$PanelContainer/VBox/STMB/Effects.text = "+ %s %%" % ((game.MUs.STMB + next_lv - 1) * 15)
 		"SHSR":
-			$VBox/SHSR/Effects.text = "- %s %%" % (game.MUs.SHSR + next_lv - 1)
+			$PanelContainer/VBox/SHSR/Effects.text = "- %s %%" % (game.MUs.SHSR + next_lv - 1)
 		"CHR":
-			$VBox/CHR/Effects.text = "%s %%" % (10 + game.MUs.CHR + next_lv - 1)
+			$PanelContainer/VBox/CHR/Effects.text = "%s %%" % (10 + game.MUs.CHR + next_lv - 1)
 	if next_lv == 0:
-		get_node("VBox/%s/Effects" % [MU])["theme_override_colors/%s" % ["default_color" if MU == "MV" else "font_color"]] = Color.WHITE
+		get_node("PanelContainer/VBox/%s/Effects" % [MU])["theme_override_colors/%s" % ["default_color" if MU == "MV" else "font_color"]] = Color.WHITE
 	else:
-		get_node("VBox/%s/Effects" % [MU])["theme_override_colors/%s" % ["default_color" if MU == "MV" else "font_color"]] = Color.GREEN
+		get_node("PanelContainer/VBox/%s/Effects" % [MU])["theme_override_colors/%s" % ["default_color" if MU == "MV" else "font_color"]] = Color.GREEN
 			
 func get_min_cost(upg:String):
 	return round(Data.MUs[upg].base_cost * pow(Data.MUs[upg].pw, game.MUs[upg] - 1))

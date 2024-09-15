@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=3 uid="uid://ev7ll8hmf3xe"]
+[gd_scene load_steps=9 format=3 uid="uid://ev7ll8hmf3xe"]
 
 [ext_resource type="Texture2D" uid="uid://ccntlctxytsi2" path="res://Graphics/GUI/Panel.png" id="3_mwsw1"]
 [ext_resource type="Theme" uid="uid://cp2u1kgj60ic" path="res://Resources/default_theme.tres" id="5"]
@@ -16,6 +16,14 @@ font_size = 24
 shadow_size = 2
 shadow_color = Color(0, 0, 0, 0.372549)
 shadow_offset = Vector2(2, 2)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_vo676"]
+content_margin_left = 15.0
+bg_color = Color(0.0509804, 0.0509804, 0.0509804, 1)
+border_width_left = 4
+border_width_top = 4
+border_color = Color(0.192157, 0.192157, 0.192157, 1)
+border_blend = true
 
 [node name="Panel" type="Control"]
 layout_mode = 3
@@ -69,44 +77,43 @@ text = "MU_DESC"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="VBox" type="VBoxContainer" parent="."]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = 152.0
-offset_top = 184.0
-offset_right = 104.0
-offset_bottom = -56.0
-grow_horizontal = 2
-grow_vertical = 2
+[node name="PanelContainer" type="PanelContainer" parent="."]
+layout_mode = 0
+offset_left = 128.0
+offset_top = 176.0
+offset_right = 1152.0
+offset_bottom = 616.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_vo676")
 
-[node name="Titles" type="HBoxContainer" parent="VBox"]
+[node name="VBox" type="VBoxContainer" parent="PanelContainer"]
+layout_mode = 2
+
+[node name="Titles" type="HBoxContainer" parent="PanelContainer/VBox"]
 custom_minimum_size = Vector2(0, 50)
 layout_mode = 2
 
-[node name="Label" type="Label" parent="VBox/Titles"]
+[node name="Label" type="Label" parent="PanelContainer/VBox/Titles"]
 custom_minimum_size = Vector2(450, 0)
 layout_mode = 2
 size_flags_horizontal = 2
 text = "UPGRADE_NOUN"
 
-[node name="Lv" type="Label" parent="VBox/Titles"]
+[node name="Lv" type="Label" parent="PanelContainer/VBox/Titles"]
 layout_mode = 2
 size_flags_horizontal = 3
 text = "LEVEL"
 
-[node name="Info" type="Label" parent="VBox/Titles"]
+[node name="Info" type="Label" parent="PanelContainer/VBox/Titles"]
 layout_mode = 2
 size_flags_horizontal = 3
 text = "EFFECTS"
 
-[node name="Lv3" type="Label" parent="VBox/Titles"]
+[node name="Lv3" type="Label" parent="PanelContainer/VBox/Titles"]
 layout_mode = 2
 size_flags_horizontal = 3
 text = "UPGRADE"
 
-[node name="RichTextLabel" type="RichTextLabel" parent="VBox/Titles"]
+[node name="RichTextLabel" type="RichTextLabel" parent="PanelContainer/VBox/Titles"]
 layout_mode = 2
 
 [connection signal="pressed" from="CloseButton" to="." method="_on_close_button_pressed"]

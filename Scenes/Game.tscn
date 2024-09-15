@@ -1,4 +1,4 @@
-[gd_scene load_steps=60 format=3 uid="uid://dt6rr51kda1rb"]
+[gd_scene load_steps=63 format=3 uid="uid://dt6rr51kda1rb"]
 
 [ext_resource type="Script" path="res://Scripts/Game.gd" id="2"]
 [ext_resource type="Texture2D" uid="uid://gcp7f61r2ee1" path="res://Graphics/Buttons/settings.png" id="3"]
@@ -217,6 +217,17 @@ bg_color = Color(0, 0, 0, 1)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_3pnlf"]
 bg_color = Color(0, 0, 0, 1)
+
+[sub_resource type="Gradient" id="Gradient_i07u7"]
+offsets = PackedFloat32Array(0.0239521, 0.101796)
+colors = PackedColorArray(1, 1, 1, 1, 0, 0, 0, 1)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_b50pl"]
+gradient = SubResource("Gradient_i07u7")
+
+[sub_resource type="LabelSettings" id="LabelSettings_ubx28"]
+outline_size = 4
+outline_color = Color(0, 0, 0, 1)
 
 [sub_resource type="Animation" id="Animation_g0rgc"]
 resource_name = "FadeMusic"
@@ -609,6 +620,8 @@ position = Vector2(32, 32)
 scale = Vector2(0.25, 0.25)
 
 [node name="Polygon2D" type="Polygon2D" parent="Tooltips/ItemCursor"]
+texture = SubResource("GradientTexture1D_b50pl")
+texture_rotation = -0.785398
 polygon = PackedVector2Array(0, 0, 0, 24, 24, 0)
 
 [node name="Num" type="Label" parent="Tooltips/ItemCursor"]
@@ -616,6 +629,7 @@ offset_left = 56.0
 offset_top = 48.0
 offset_right = 96.0
 offset_bottom = 77.0
+label_settings = SubResource("LabelSettings_ubx28")
 
 [node name="MusicPlayer" type="AudioStreamPlayer" parent="."]
 bus = &"Music"
