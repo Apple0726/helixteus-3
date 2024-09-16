@@ -9,6 +9,7 @@ var buy_sell
 @onready var info = $Information
 var item_hovered:int = -1
 var hbox_data:Array = []
+var send_to_rover:int = -1 # Used when the player sends items to rover and the inventory panel opens
 
 func _ready():
 	set_polygon(size)
@@ -51,7 +52,7 @@ func _on_Items_pressed():
 			slot.get_node("TextureRect").texture = load("res://Graphics/Items/%s/%s.png" % [Item.icon_directory(Item.data[item_slot.id].type), Item.data[item_slot.id].icon_name])
 			slot.get_node("Button").mouse_entered.connect(on_slot_over.bind(i))
 			slot.get_node("Button").mouse_exited.connect(on_slot_out)
-			slot.get_node("Button").pressed.connect(game.use_item.bind(item_slot.id))
+			slot.get_node("Button").pressed.connect(game.use_item.bind(item_slot.id, send_to_rover))
 		inventory_grid.add_child(slot)
 	$Control/VBox/BuySell.visible = false
 

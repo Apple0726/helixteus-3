@@ -33,9 +33,24 @@ func _on_Construct_pressed():
 		game.deduct_resources(costs)
 		game.popup(tr("FIGHTERS_CONSTRUCTED"), 3)
 		if fighter_type == 0:
-			game.fighter_data.append({"c_c":game.c_c, "c_g_g":game.c_g_g, "c_g":game.c_g, "c_s_g":game.c_s_g, "c_p":game.c_p, "strength":strength, "number":$SpinBox.value, "tier":0})
+			game.fighter_data.append({
+				"c_c":game.c_c,
+				"c_g_g":game.c_g_g,
+				"c_g":game.c_g,
+				"c_s_g":game.c_s_g,
+				"c_p":game.c_p,
+				"strength":strength,
+				"number":$SpinBox.value,
+				"tier":0,
+				"location_name":game.galaxy_data[game.c_g].name,
+				})
 		elif fighter_type == 1:
-			game.fighter_data.append({"c_c":game.c_c, "strength":strength, "number":$SpinBox.value, "tier":1})
+			game.fighter_data.append({"c_c":game.c_c,
+			"strength":strength,
+			"number":$SpinBox.value,
+			"tier":1,
+			"location_name":game.cluster_data[game.c_c].name,
+			})
 		_on_close_button_pressed()
 	else:
 		game.popup(tr("NOT_ENOUGH_MONEY"), 1.5)

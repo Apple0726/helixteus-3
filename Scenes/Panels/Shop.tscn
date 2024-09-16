@@ -9,6 +9,7 @@
 
 [sub_resource type="SystemFont" id="SystemFont_sxpbd"]
 font_names = PackedStringArray("Arial")
+subpixel_positioning = 0
 multichannel_signed_distance_field = true
 
 [sub_resource type="LabelSettings" id="LabelSettings_jee6n"]
@@ -99,12 +100,12 @@ theme_override_constants/separation = 15
 [node name="OverclocksButton" parent="Tabs" instance=ExtResource("5_ixx63")]
 layout_mode = 2
 size_flags_horizontal = 3
-button_text = "Overclocks"
+button_text = "OVERCLOCKS"
 
 [node name="PickaxesButton" parent="Tabs" instance=ExtResource("5_ixx63")]
 layout_mode = 2
 size_flags_horizontal = 3
-button_text = "Pickaxes"
+button_text = "PICKAXES"
 
 [node name="Items" type="ScrollContainer" parent="."]
 layout_mode = 1

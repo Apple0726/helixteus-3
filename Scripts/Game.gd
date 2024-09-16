@@ -3692,13 +3692,33 @@ func get_item_num(item_id:int):
 			n += item_slot.num
 	return n
 
-func use_item(item_id:int):
+func use_item(item_id:int, send_to_rover:int = -1):
 	hide_tooltip()
 	var num:int
 	if Input.is_action_pressed("shift"):
 		num = get_item_num(item_id)
 	else:
 		num = 1
+	if send_to_rover != -1:
+		var rover_has_inv_space:bool = false
+		var rover = rover_data[send_to_rover]
+		for i in len(rover.inventory):
+			if rover.inventory[i].has("id") and rover.inventory[i].id == item_id:
+				rover.inventory[i].num += num
+				rover_has_inv_space = true
+				break
+			if not rover.inventory[i].has("id"):
+				rover.inventory[i].type = "consumable"
+				rover.inventory[i].id = item_id
+				rover.inventory[i].num = num
+				rover_has_inv_space = true
+				break
+		if rover_has_inv_space:
+			remove_items(item_id, num)
+			popup(tr("ITEMS_SENT_TO_ROVER"), 2.0)
+		else:
+			popup(tr("ROVERS_INV_FULL"), 2.0)
+		return
 	if $UI/BottomInfo.visible:
 		_on_BottomInfo_close_button_pressed(true)
 	item_to_use.id = item_id
