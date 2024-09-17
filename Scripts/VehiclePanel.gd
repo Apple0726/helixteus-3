@@ -1,5 +1,12 @@
 extends "Panel.gd"
 
+enum {
+	ROVERS,
+	FIGHTERS,
+	PROBES,
+}
+var tab = ROVERS
+
 var HP_icon = preload("res://Graphics/Icons/HP.png")
 var atk_icon = preload("res://Graphics/Icons/atk.png")
 var def_icon = preload("res://Graphics/Icons/def.png")
@@ -20,6 +27,12 @@ func _input(event):
 func refresh():
 	$HBoxContainer/Fighters.visible = game.science_unlocked.has("FG")
 	$HBoxContainer/Probes.visible = game.u_i.lv >= 60
+	if tab == ROVERS:
+		_on_rovers_pressed()
+	elif tab == FIGHTERS:
+		_on_fighters_pressed()
+	elif tab == PROBES:
+		_on_probes_pressed()
 
 func _on_Timer_timeout():
 	if not visible:
@@ -50,6 +63,7 @@ func _on_Timer_timeout():
 
 
 func _on_rovers_pressed():
+	tab = ROVERS
 	for vehicle in $ScrollContainer/VBoxContainer.get_children():
 		vehicle.queue_free()
 	for i in len(game.rover_data):
@@ -60,11 +74,11 @@ func _on_rovers_pressed():
 			var rover_info = preload("res://Scenes/RoverInfo.tscn").instantiate()
 			$ScrollContainer/VBoxContainer.add_child(rover_info)
 			if rover.get("MK", 1) == 2:
-				rover_info.get_node("RoverIcon").texture_normal = preload("res://Graphics/Cave/Rover2.png")
+				rover_info.get_node("RoverIcon").texture = preload("res://Graphics/Cave/Rover2.png")
 			elif rover.get("MK", 1) == 3:
-				rover_info.get_node("RoverIcon").texture_normal = preload("res://Graphics/Cave/Rover3.png")
+				rover_info.get_node("RoverIcon").texture = preload("res://Graphics/Cave/Rover3.png")
 			else:
-				rover_info.get_node("RoverIcon").texture_normal = preload("res://Graphics/Cave/Rover.png")
+				rover_info.get_node("RoverIcon").texture = preload("res://Graphics/Cave/Rover.png")
 			rover_info.get_node("HPLabel").text = Helper.format_num(rover.HP)
 			rover_info.get_node("InventoryLabel").text = Helper.format_num(rover.weight_cap) + " kg"
 			var rover_has_items = false
@@ -85,6 +99,7 @@ func _on_rovers_pressed():
 			rover_info.get_node("RoverIcon").mouse_entered.connect(rover_show_details.bind(i))
 			rover_info.get_node("RoverIcon").mouse_exited.connect(game.hide_tooltip)
 			rover_info.get_node("Explore").pressed.connect(rover_explore.bind(i))
+			rover_info.get_node("Destroy").pressed.connect(rover_destroy.bind(i, rover_info))
 
 func rover_show_details(rover_id:int):
 	var rover = game.rover_data[rover_id]
@@ -104,7 +119,14 @@ func rover_take_all(rover_id:int):
 	for i in len(rover.inventory):
 		if rover.inventory[i].is_empty() or rover.inventory[i].type in ["rover_weapons", "rover_mining"]:
 			continue
-		if rover.inventory[i].id == "minerals":
+		if rover.inventory[i].id is int:
+			var remainder:int = game.add_items(rover.inventory[i].id, rover.inventory[i].num)
+			if remainder > 0:
+				remaining = true
+				rover.inventory[i].num = remainder
+			else:
+				rover.inventory[i].clear()
+		elif rover.inventory[i].id == "minerals":
 			rover.inventory[i].num = Helper.add_minerals(rover.inventory[i].num).remainder
 			if rover.inventory[i].num <= 0:
 				rover.inventory[i].clear()
@@ -113,17 +135,11 @@ func rover_take_all(rover_id:int):
 		elif rover.inventory[i].id == "money":
 			game.money += rover.inventory[i].num
 			rover.inventory[i].clear()
-		elif rover.inventory[i].id is int:
-			var remainder:int = game.add_items(rover.inventory[i].id, rover.inventory[i].num)
-			if remainder > 0:
-				remaining = true
-				rover.inventory[i].num = remainder
-			else:
-				rover.inventory[i].clear()
 	if remaining:
 		game.popup(tr("NOT_ENOUGH_INV_SPACE_COLLECT"), 2)
 	else:
 		game.popup(tr("ITEMS_COLLECTED"), 1.5)
+	_on_rovers_pressed()
 	game.HUD.refresh()
 
 func rover_send_items(rover_id:int):
@@ -148,8 +164,12 @@ func rover_explore(rover_id:int):
 			game.switch_view("cave")
 		game.toggle_panel("vehicle_panel")
 
+func rover_destroy(rover_id:int, rover_node):
+	game.rover_data[rover_id] = null
+	rover_node.queue_free()
 
 func _on_fighters_pressed():
+	tab = FIGHTERS
 	for vehicle in $ScrollContainer/VBoxContainer.get_children():
 		vehicle.queue_free()
 	for i in len(game.fighter_data):
@@ -181,6 +201,7 @@ func fighter_disband(fighter_id:int, fighter_node):
 
 
 func _on_probes_pressed():
+	tab = PROBES
 	for vehicle in $ScrollContainer/VBoxContainer.get_children():
 		vehicle.queue_free()
 	var probe_num:int = 0

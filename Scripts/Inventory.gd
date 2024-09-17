@@ -52,7 +52,7 @@ func _on_Items_pressed():
 			slot.get_node("TextureRect").texture = load("res://Graphics/Items/%s/%s.png" % [Item.icon_directory(Item.data[item_slot.id].type), Item.data[item_slot.id].icon_name])
 			slot.get_node("Button").mouse_entered.connect(on_slot_over.bind(i))
 			slot.get_node("Button").mouse_exited.connect(on_slot_out)
-			slot.get_node("Button").pressed.connect(game.use_item.bind(item_slot.id, send_to_rover))
+			slot.get_node("Button").pressed.connect(on_slot_pressed)
 		inventory_grid.add_child(slot)
 	$Control/VBox/BuySell.visible = false
 
@@ -66,6 +66,10 @@ func on_slot_over(item_slot:int):
 func on_slot_out():
 	item_hovered = -1
 	game.hide_tooltip()
+
+func on_slot_pressed():
+	var item_id:int = game.items[item_hovered].id
+	game.use_item(item_id, send_to_rover)
 
 func _on_Materials_pressed():
 	set_process(not game.autocollect.mats.is_empty())

@@ -1,4 +1,4 @@
-[gd_scene load_steps=20 format=3 uid="uid://prhf201evhra"]
+[gd_scene load_steps=22 format=3 uid="uid://prhf201evhra"]
 
 [ext_resource type="PackedScene" uid="uid://c8jr3e5aiyj1n" path="res://Scenes/HelpText.tscn" id="1"]
 [ext_resource type="PackedScene" uid="uid://pbckpnc3olsx" path="res://Scenes/RoverSlot.tscn" id="2"]
@@ -28,6 +28,20 @@ font_size = 24
 shadow_size = 2
 shadow_color = Color(0, 0, 0, 0.372549)
 shadow_offset = Vector2(2, 2)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_oka8v"]
+bg_color = Color(0.0509804, 0.0509804, 0.0509804, 1)
+border_width_left = 4
+border_width_top = 4
+border_color = Color(0.192157, 0.192157, 0.192157, 1)
+border_blend = true
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_wro7v"]
+bg_color = Color(0.0509804, 0.0509804, 0.0509804, 1)
+border_width_left = 4
+border_width_top = 4
+border_color = Color(0.192157, 0.192157, 0.192157, 1)
+border_blend = true
 
 [node name="RCPanel" type="Control"]
 layout_mode = 3
@@ -77,6 +91,7 @@ offset_right = 1104.0
 offset_bottom = 416.0
 size_flags_vertical = 3
 mouse_filter = 1
+theme_override_styles/panel = SubResource("StyleBoxFlat_oka8v")
 
 [node name="Label" type="Label" parent="Inventory"]
 layout_mode = 0
@@ -128,6 +143,7 @@ offset_top = 144.0
 offset_right = 632.0
 offset_bottom = 616.0
 size_flags_vertical = 3
+theme_override_styles/panel = SubResource("StyleBoxFlat_wro7v")
 
 [node name="Ability" parent="Stats" instance=ExtResource("11")]
 layout_mode = 0
@@ -344,16 +360,16 @@ columns = 2
 [connection signal="mouse_exited" from="Stats/Ability" to="." method="_on_mouse_exited"]
 [connection signal="mouse_entered" from="Stats/Ability/AbilityInfo" to="." method="_on_AbilityInfo_mouse_entered"]
 [connection signal="mouse_exited" from="Stats/Ability/AbilityInfo" to="." method="_on_mouse_exited"]
-[connection signal="mouse_entered" from="Stats/HP" to="." method="_on_icon_mouse_entered"]
+[connection signal="mouse_entered" from="Stats/HP" to="." method="_on_icon_mouse_entered" binds= ["HEALTH_POINTS"]]
 [connection signal="mouse_exited" from="Stats/HP" to="." method="_on_mouse_exited"]
-[connection signal="mouse_entered" from="Stats/REPIcon" to="." method="_on_icon_mouse_entered"]
+[connection signal="mouse_entered" from="Stats/REPIcon" to="." method="_on_icon_mouse_entered" binds= ["REP"]]
 [connection signal="mouse_exited" from="Stats/REPIcon" to="." method="_on_mouse_exited"]
-[connection signal="mouse_entered" from="Stats/Attack" to="." method="_on_icon_mouse_entered"]
+[connection signal="mouse_entered" from="Stats/Attack" to="." method="_on_icon_mouse_entered" binds= ["ATTACK"]]
 [connection signal="mouse_exited" from="Stats/Attack" to="." method="_on_mouse_exited"]
-[connection signal="mouse_entered" from="Stats/Defense" to="." method="_on_icon_mouse_entered"]
+[connection signal="mouse_entered" from="Stats/Defense" to="." method="_on_icon_mouse_entered" binds= ["DEFENSE"]]
 [connection signal="mouse_exited" from="Stats/Defense" to="." method="_on_mouse_exited"]
-[connection signal="mouse_entered" from="Stats/Cargo" to="." method="_on_icon_mouse_entered"]
+[connection signal="mouse_entered" from="Stats/Cargo" to="." method="_on_icon_mouse_entered" binds= ["CARGO_CAPACITY"]]
 [connection signal="mouse_exited" from="Stats/Cargo" to="." method="_on_mouse_exited"]
-[connection signal="mouse_entered" from="Stats/Speed" to="." method="_on_icon_mouse_entered"]
+[connection signal="mouse_entered" from="Stats/Speed" to="." method="_on_icon_mouse_entered" binds= ["MOVEMENT_SPEED"]]
 [connection signal="mouse_exited" from="Stats/Speed" to="." method="_on_mouse_exited"]
 [connection signal="pressed" from="Button" to="." method="_on_Button_pressed"]

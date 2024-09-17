@@ -22,10 +22,6 @@ func change_tab(_tab:int):
 		item.free()
 	$ItemInfo.hide()
 	item_selected.costs.clear()
-	if _tab == OVERCLOCK:
-		$Desc.text = tr("OVERCLOCK_DESC")
-	elif _tab == PICKAXE:
-		$Desc.text = tr("PICKAXE_DESC")
 
 func _on_btn_pressed(_tab:int):
 	tab = _tab
@@ -105,9 +101,11 @@ func buy_pickaxe(_costs:Dictionary):
 	game.popup(tr("BUY_PICKAXE") % [tr(item_selected.id.to_upper())], 1.0)
 
 func _on_overclocks_button_pressed():
+	$Desc.text = tr("OVERCLOCKS_DESC")
 	_on_btn_pressed(OVERCLOCK)
 
 func _on_pickaxes_button_pressed():
+	$Desc.text = tr("PICKAXES_DESC")
 	_on_btn_pressed(PICKAXE)
 
 

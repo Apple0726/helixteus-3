@@ -182,11 +182,11 @@ func _ready():
 	i_w_w = rover_data.i_w_w
 	enhancements = rover_data.get("enhancements", {})
 	if right_inventory[0].get("type") == "rover_weapons":
-		laser_name = right_inventory[0].name.split("_")[0]
+		laser_name = right_inventory[0].id.split("_")[0]
 	else:
 		for i in len(inventory):
 			if inventory[i].get("type") == "rover_weapons":
-				laser_name = inventory[i].name.split("_")[0]
+				laser_name = inventory[i].id.split("_")[0]
 	laser_damage = Data.rover_weapons[laser_name + "_laser"].damage * atk * rover_size * game.u_i.charge
 	if rover_data.MK == 2:
 		$Rover/Sprite2D.texture = preload("res://Graphics/Cave/Rover top down 2.png")
@@ -343,12 +343,15 @@ func add_filter(rsrc:String):
 		add_filter_slot("Materials", rsrc)
 	elif rsrc in game.met_info.keys():
 		add_filter_slot("Metals", rsrc)
-	elif rsrc in game.other_items_info.keys():
-		add_filter_slot("Items/Others", rsrc)
+	elif rsrc in Item.data.keys():
+		add_filter_slot("Items", rsrc)
 	
-func add_filter_slot(type:String, rsrc:String):
+func add_filter_slot(type:String, rsrc):
 	var filter_slot = filter_btn_scene.instantiate()
-	filter_slot.texture = load("res://Graphics/%s/%s.png" % [type, rsrc])
+	if rsrc is int:
+		filter_slot.texture = load("res://Graphics/%s/%s.png" % [type, Item.data[rsrc].icon_name])
+	else:
+		filter_slot.texture = load("res://Graphics/%s/%s.png" % [type, rsrc])
 	$UI2/Filters/Grid.add_child(filter_slot)
 	if not game.cave_filters.has(rsrc):
 		game.cave_filters[rsrc] = false
@@ -357,8 +360,11 @@ func add_filter_slot(type:String, rsrc:String):
 	filter_slot.connect("mouse_exited",Callable(self,"on_filter_mouse_exited"))
 	filter_slot.connect("pressed",Callable(self,"on_filter_pressed").bind(rsrc, filter_slot))
 
-func on_filter_mouse_entered(rsrc:String):
-	game.show_tooltip(tr(rsrc.to_upper()))
+func on_filter_mouse_entered(rsrc):
+	if rsrc is int:
+		game.show_tooltip(Item.name(rsrc))
+	else:
+		game.show_tooltip(tr(rsrc.to_upper()))
 
 func on_filter_pressed(rsrc:String, filter_slot):
 	game.cave_filters[rsrc] = not game.cave_filters[rsrc]
@@ -372,23 +378,23 @@ func set_slot_info(slot, _inv:Dictionary):
 	if rsrc == "":
 		return
 	if rsrc == "rover_weapons":
-		slot.get_node("TextureRect").texture = load("res://Graphics/Cave/Weapons/" + _inv.name + ".png")
+		slot.get_node("TextureRect").texture = load("res://Graphics/Cave/Weapons/" + _inv.id + ".png")
 	elif rsrc == "rover_mining":
-		var c:Color = get_color(_inv.name.split("_")[0])
+		var c:Color = get_color(_inv.id.split("_")[0])
 		mining_laser.material["shader_parameter/outline_color"] = c
 		mining_laser.get_node("PointLight2D").color = c
-		if _inv.name.split("_")[0] in ["blue"]:
+		if _inv.id.split("_")[0] in ["blue"]:
 			mining_laser.get_node("PointLight2D").energy = 3
 		else:
 			mining_laser.get_node("PointLight2D").energy = 2
-		var speed = Data.rover_mining[_inv.name].speed
+		var speed = Data.rover_mining[_inv.id].speed
 		mining_p.amount = int(25 * pow(speed, 0.2) * pow(rover_size, 2 * 0.2) * time_speed)
 		mining_p.process_material.initial_velocity_min = 300 * pow(speed, 0.3) * pow(rover_size, 2 * 0.3) * time_speed
 		mining_p.process_material.initial_velocity_max = 500 * pow(speed, 0.3) * pow(rover_size, 2 * 0.3) * time_speed
 		mining_p.lifetime = 0.2 / time_speed
-		slot.get_node("TextureRect").texture = load("res://Graphics/Cave/Mining/" + _inv.name + ".png")
+		slot.get_node("TextureRect").texture = load("res://Graphics/Cave/Mining/" + _inv.id + ".png")
 	else:
-		slot.get_node("TextureRect").texture = load("res://Graphics/%s/%s.png" % [Helper.get_dir_from_name(_inv.name), _inv.name])
+		slot.get_node("TextureRect").texture = load("res://Graphics/%s/%s.png" % [Helper.get_dir_from_name(_inv.id), _inv.id])
 		if _inv.has("num"):
 			slot.get_node("Label").text = Helper.format_num(_inv.num, false, 3)
 	
@@ -998,7 +1004,6 @@ func on_chest_entered(_area, tile:String):
 	var vbox = $UI2/Panel/VBoxContainer
 	reset_panel_anim()
 	for child in vbox.get_children():
-		vbox.remove_child(child)
 		child.free()
 	var tier_txt = Label.new()
 	tier_txt.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
@@ -1033,24 +1038,24 @@ func on_map_exited(_body):
 func generate_treasure(tier:int, rng:RandomNumberGenerator):
 	var contents = {	"money":round(rng.randf_range(1500, 1800) * pow(tier, 3.0) * difficulty * exp(cave_floor / 6.0)),
 						"minerals":round(rng.randf_range(100, 150) * pow(tier, 3.0) * difficulty * exp(cave_floor / 9.0)),
-						"hx_core":int(rng.randf_range(0, 2) * pow(tier, 1.5) * pow(difficulty, 0.9))}
-	if contents.hx_core > 128:
-		contents.hx_core2 = int(contents.hx_core / 128.0)
-		contents.hx_core %= 128
-		if contents.hx_core == 0:
-			contents.erase("hx_core")
-		if contents.hx_core2 > 128:
-			contents.hx_core3 = int(contents.hx_core2 / 128.0)
-			contents.hx_core2 %= 128
-			if contents.hx_core2 == 0:
+						Item.HELIX_CORE1:int(rng.randf_range(0, 2) * pow(tier, 1.5) * pow(difficulty, 0.9))}
+	if contents[Item.HELIX_CORE1] > 128:
+		contents[Item.HELIX_CORE2] = int(contents.hx_core / 128.0)
+		contents[Item.HELIX_CORE1] %= 128
+		if contents[Item.HELIX_CORE1] == 0:
+			contents.erase(Item.HELIX_CORE1)
+		if contents[Item.HELIX_CORE2] > 128:
+			contents[Item.HELIX_CORE3] = int(contents[Item.HELIX_CORE2] / 128.0)
+			contents[Item.HELIX_CORE2] %= 128
+			if contents[Item.HELIX_CORE2] == 0:
 				contents.erase("hx_core2")
-			if contents.hx_core3 > 128:
-				contents.hx_core4 = int(contents.hx_core3 / 128.0)
-				contents.hx_core3 %= 128
-				if contents.hx_core3 == 0:
+			if contents[Item.HELIX_CORE3] > 128:
+				contents[Item.HELIX_CORE4] = int(contents[Item.HELIX_CORE3] / 128.0)
+				contents[Item.HELIX_CORE3] %= 128
+				if contents[Item.HELIX_CORE3] == 0:
 					contents.erase("hx_core3")
-	if contents.has("hx_core") and contents.hx_core == 0:
-		contents.erase("hx_core")
+	if contents.has(Item.HELIX_CORE1) and contents[Item.HELIX_CORE1] == 0:
+		contents.erase(Item.HELIX_CORE1)
 	for met in game.met_info:
 		var met_value = game.met_info[met]
 		var rarity = met_value.rarity
@@ -1134,7 +1139,7 @@ func update_ray():
 		RoD_coll.shape.b.x = l
 		RoD_coll2.shape.b.x = l
 	if ray.enabled:
-		var laser_reach = Data.rover_mining[_inv.name].rnge
+		var laser_reach = Data.rover_mining[_inv.id].rnge
 		ray.target_position = (mouse_pos - rover.position).normalized() * laser_reach
 		var coll = ray.get_collider()
 		mining_p.emitting = holding_click if coll else false
@@ -1384,7 +1389,7 @@ func add_to_inventory(rsrc:String, content:float, remainders:Dictionary):
 		var slot = slots[i]
 		if inventory[i].is_empty():
 			inventory[i].type = "item"
-			inventory[i].name = rsrc
+			inventory[i].id = rsrc
 			slot.get_node("TextureRect").texture = load("res://Graphics/%s/%s.png" % [Helper.get_dir_from_name(rsrc), rsrc])
 			slot.get_node("Label").text = Helper.format_num(content, false, 3)
 			inventory[i].num = content
@@ -1418,15 +1423,15 @@ func exit_cave():
 	for i in len(inventory):
 		if inventory[i].is_empty() or inventory[i].type == "consumable":
 			continue
-		if inventory[i].name == "money":
+		if inventory[i].id == "money":
 			game.add_resources({"money":inventory[i].num}) 
 			inventory[i].clear()
-		elif inventory[i].name == "minerals":
+		elif inventory[i].id == "minerals":
 			inventory[i].num = Helper.add_minerals(inventory[i].num).remainder
 			if inventory[i].num <= 0:
 				inventory[i].clear()
-		elif inventory[i].type != "rover_weapons" and inventory[i].type != "rover_mining":
-			var remaining:int = game.add_items(inventory[i].name, inventory[i].num)
+		elif inventory[i].id is int:
+			var remaining:int = game.add_items(inventory[i].id, inventory[i].num)
 			if remaining > 0:
 				inventory[i].num = remaining
 			else:
@@ -1686,7 +1691,7 @@ func mine_wall(item:Dictionary, _tile_highlight, delta):
 		tile.bar = sq_bar
 	if st != "-1":
 		var sq_bar = tiles_touched_by_laser[st].bar
-		tiles_touched_by_laser[st].progress += Data.rover_mining[item.name].speed * delta * 60 * pow(rover_size, 2) * time_speed * game.u_i.charge
+		tiles_touched_by_laser[st].progress += Data.rover_mining[item.id].speed * delta * 60 * pow(rover_size, 2) * time_speed * game.u_i.charge
 		sq_bar.set_progress(tiles_touched_by_laser[st].progress)
 		if tiles_touched_by_laser[st].progress >= 100:
 			mine_wall_complete(_tile_highlight.position, tile_highlighted_for_mining)
@@ -1700,7 +1705,7 @@ func mine_debris(item:Dictionary, delta):
 			return
 		var aurora_factor:float = 1.0/debris.aurora_intensity if debris.aurora_intensity > 0.0 else 1.0
 		var volcano_factor:float = 1.0/debris.lava_intensity if debris.lava_intensity > 0.0 else 1.0
-		var add_progress = Data.rover_mining[item.name].speed * 90 * pow(rover_size, 2) * time_speed / pow(debris.scale.x * 2.0, 3) * aurora_factor * volcano_factor * game.u_i.charge
+		var add_progress = Data.rover_mining[item.id].speed * 90 * pow(rover_size, 2) * time_speed / pow(debris.scale.x * 2.0, 3) * aurora_factor * volcano_factor * game.u_i.charge
 		debris_touched_by_laser[mining_debris].progress += add_progress * debris.cracked_mining_factor * delta
 		circ_bar.color = Color(1.0, 0.6, 1.0) if debris.cracked_mining_factor > 1.0 else Color.GREEN
 		circ_bar.progress = debris_touched_by_laser[mining_debris].progress
@@ -1983,14 +1988,14 @@ func set_border(i:int):
 		active_item.text = ""
 		return
 	if inventory[i].type == "rover_mining":
-		active_item.text = Helper.get_rover_mining_name(inventory[i].name)
+		active_item.text = Helper.get_rover_mining_name(inventory[i].id)
 	elif inventory[i].type == "rover_weapons":
-		active_item.text = Helper.get_rover_weapon_name(inventory[i].name)
-	elif inventory[i].has("name"):
-		active_item.text = Helper.get_item_name(tr(inventory[i].name))
+		active_item.text = Helper.get_rover_weapon_name(inventory[i].id)
+	elif inventory[i].has("id") and inventory[i].id is int:
+		active_item.text = Item.name(inventory[id].id)
 	else:
 		active_item.text = ""
-	if inventory[i].has("name") and inventory[i].name == "drill":
+	if inventory[i].has("id") and inventory[i].id is int and Item.data[inventory[i].id].type == Item.Type.DRILL:
 		tile_highlight_left.visible = true
 	elif inventory[i].type != "rover_mining":
 		tile_highlight_left.visible = false

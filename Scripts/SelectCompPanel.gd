@@ -131,10 +131,10 @@ func set_cmp():
 		if is_inventory:
 			if get_parent().right_inv:
 				get_parent().right_inventory[0].type = "rover_" + g_cmp
-				get_parent().right_inventory[0].name = s_cmp
+				get_parent().right_inventory[0].id = s_cmp
 			else:
 				get_parent().inventory[index].type = "rover_" + g_cmp
-				get_parent().inventory[index].name = s_cmp
+				get_parent().inventory[index].id = s_cmp
 			get_parent()["rover_" + g_cmp] = true
 		else:
 			get_parent()[g_cmp] = s_cmp

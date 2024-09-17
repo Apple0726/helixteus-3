@@ -3715,6 +3715,8 @@ func use_item(item_id:int, send_to_rover:int = -1):
 				break
 		if rover_has_inv_space:
 			remove_items(item_id, num)
+			toggle_panel("vehicle_panel")
+			vehicle_panel._on_rovers_pressed()
 			popup(tr("ITEMS_SENT_TO_ROVER"), 2.0)
 		else:
 			popup(tr("ROVERS_INV_FULL"), 2.0)

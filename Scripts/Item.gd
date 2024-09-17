@@ -111,6 +111,14 @@ func name(item_id:int):
 		return tr("PORTABLE_WORMHOLE") + " II"
 	elif item_id == PORTABLE_WORMHOLE3:
 		return tr("PORTABLE_WORMHOLE") + " III"
+	elif item_id == HELIX_CORE1:
+		return tr("HX_CORE")
+	elif item_id == HELIX_CORE2:
+		return tr("HX_CORE") + " II"
+	elif item_id == HELIX_CORE3:
+		return tr("HX_CORE") + " III"
+	elif item_id == HELIX_CORE4:
+		return tr("HX_CORE") + " IV"
 
 func description(item_id:int):
 	if data[item_id].type == Type.OVERCLOCK:

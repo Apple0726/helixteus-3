@@ -1,9 +1,10 @@
-[gd_scene load_steps=5 format=3 uid="uid://bn0axfrmbaj16"]
+[gd_scene load_steps=6 format=3 uid="uid://bn0axfrmbaj16"]
 
 [ext_resource type="Theme" uid="uid://cp2u1kgj60ic" path="res://Resources/default_theme.tres" id="1_a5hlb"]
 [ext_resource type="Texture2D" uid="uid://crncbjr12yfpx" path="res://Graphics/Cave/Rover.png" id="2_j5p00"]
 [ext_resource type="Texture2D" uid="uid://d03u105amdf1c" path="res://Graphics/Icons/Inventory.png" id="2_p7e76"]
 [ext_resource type="Texture2D" uid="uid://bl07f3wef0muv" path="res://Graphics/Icons/HP.png" id="4_mpuki"]
+[ext_resource type="Texture2D" uid="uid://bpuwwlxltaow4" path="res://Graphics/Tiles/cave.png" id="4_rdkix"]
 
 [node name="Control" type="Control"]
 custom_minimum_size = Vector2(0, 96)
@@ -12,13 +13,14 @@ anchors_preset = 10
 anchor_right = 1.0
 offset_bottom = 96.0
 grow_horizontal = 2
+size_flags_horizontal = 3
 theme = ExtResource("1_a5hlb")
 
 [node name="InventoryIcon" type="TextureRect" parent="."]
 layout_mode = 1
-offset_left = 280.0
+offset_left = 268.0
 offset_top = 28.0
-offset_right = 312.0
+offset_right = 300.0
 offset_bottom = 60.0
 texture = ExtResource("2_p7e76")
 expand_mode = 1
@@ -37,31 +39,41 @@ stretch_mode = 5
 layout_mode = 0
 offset_left = 412.0
 offset_top = 28.0
-offset_right = 532.0
+offset_right = 496.0
 offset_bottom = 61.0
 text = "TAKE_ALL"
 
 [node name="SendItems" type="Button" parent="."]
 layout_mode = 0
-offset_left = 568.0
+offset_left = 532.0
 offset_top = 28.0
-offset_right = 688.0
+offset_right = 638.0
 offset_bottom = 61.0
 text = "SEND_ITEMS"
 
 [node name="Explore" type="Button" parent="."]
 layout_mode = 0
-offset_left = 728.0
+offset_left = 664.0
 offset_top = 28.0
-offset_right = 848.0
+offset_right = 780.0
 offset_bottom = 61.0
 text = "EXPLORE"
+icon = ExtResource("4_rdkix")
+expand_icon = true
+
+[node name="Destroy" type="Button" parent="."]
+layout_mode = 0
+offset_left = 800.0
+offset_top = 28.0
+offset_right = 881.0
+offset_bottom = 61.0
+text = "DESTROY"
 
 [node name="HPIcon" type="TextureRect" parent="."]
 layout_mode = 1
-offset_left = 176.0
+offset_left = 164.0
 offset_top = 32.0
-offset_right = 208.0
+offset_right = 196.0
 offset_bottom = 56.0
 texture = ExtResource("4_mpuki")
 expand_mode = 1
@@ -69,16 +81,16 @@ stretch_mode = 5
 
 [node name="HPLabel" type="Label" parent="."]
 layout_mode = 0
-offset_left = 216.0
+offset_left = 204.0
 offset_top = 32.0
-offset_right = 280.0
+offset_right = 268.0
 offset_bottom = 55.0
 text = "200"
 
 [node name="InventoryLabel" type="Label" parent="."]
 layout_mode = 0
-offset_left = 324.0
+offset_left = 312.0
 offset_top = 32.0
-offset_right = 404.0
+offset_right = 392.0
 offset_bottom = 55.0
 text = "200 kg"

@@ -9,8 +9,8 @@ var HP:float = 20.0
 var atk:float = 5.0
 var def:float = 2.0
 var weight_cap:float = 5000.0
-var inventory = [{"type":"rover_weapons", "name":"red_laser"}, {}, {}, {}, {}, {}]
-var right_inventory = [{"type":"rover_mining", "name":"red_mining_laser"}]
+var inventory = [{"type":"rover_weapons", "id":"red_laser"}, {}, {}, {}, {}, {}]
+var right_inventory = [{"type":"rover_mining", "id":"red_mining_laser"}]
 var right_inv:bool = false
 var tile
 var rover_costs:Dictionary
@@ -135,7 +135,7 @@ func _on_InvSlot_pressed(index:int):
 		return
 	select_comp.visible = true
 	game.sub_panel = select_comp
-	select_comp.refresh(default_type, inv.name if inv.has("name") else "", true, index)
+	select_comp.refresh(default_type, inv.id if inv.has("id") else "", true, index)
 
 func _on_Slot_pressed(type:String):
 	select_comp.visible = true
@@ -299,23 +299,23 @@ func set_slot(inv:Dictionary, slot, i:int, _right_inv:bool = false):
 	if inv.is_empty():
 		btn.connect("mouse_entered",Callable(self,"_on_InvSlot_mouse_entered").bind("", i, _right_inv))
 	elif inv.type == "rover_weapons":
-		slot.get_node("TextureRect").texture = load("res://Graphics/Cave/Weapons/%s.png" % [inv.name])
-		btn.connect("mouse_entered",Callable(self,"_on_InvSlot_mouse_entered").bind("%s" % [Helper.get_rover_weapon_text(inv.name)], i, _right_inv))
+		slot.get_node("TextureRect").texture = load("res://Graphics/Cave/Weapons/%s.png" % [inv.id])
+		btn.connect("mouse_entered",Callable(self,"_on_InvSlot_mouse_entered").bind("%s" % [Helper.get_rover_weapon_text(inv.id)], i, _right_inv))
 		slot.get_node("REP").visible = REPs != 0
 		slot.get_node("REP").connect("mouse_entered",Callable(self,"_on_REP_mouse_entered"))
 		slot.get_node("REP").connect("mouse_exited",Callable(self,"_on_mouse_exited"))
 		slot.get_node("REP").connect("pressed",Callable(self,"_on_REP_pressed").bind("Laser"))
-		for cost_key in Data.rover_weapons[inv.name].costs.keys():
-			var cost = Data.rover_weapons[inv.name].costs[cost_key]
+		for cost_key in Data.rover_weapons[inv.id].costs.keys():
+			var cost = Data.rover_weapons[inv.id].costs[cost_key]
 			if rover_costs.has(cost_key):
 				rover_costs[cost_key] += cost
 			else:
 				rover_costs[cost_key] = cost
 	elif inv.type == "rover_mining":
-		slot.get_node("TextureRect").texture = load("res://Graphics/Cave/Mining/%s.png" % [inv.name])
-		btn.connect("mouse_entered",Callable(self,"_on_InvSlot_mouse_entered").bind("%s" % [Helper.get_rover_mining_text(inv.name)], i, _right_inv))
-		for cost_key in Data.rover_mining[inv.name].costs.keys():
-			var cost = Data.rover_mining[inv.name].costs[cost_key]
+		slot.get_node("TextureRect").texture = load("res://Graphics/Cave/Mining/%s.png" % [inv.id])
+		btn.connect("mouse_entered",Callable(self,"_on_InvSlot_mouse_entered").bind("%s" % [Helper.get_rover_mining_text(inv.id)], i, _right_inv))
+		for cost_key in Data.rover_mining[inv.id].costs.keys():
+			var cost = Data.rover_mining[inv.id].costs[cost_key]
 			if rover_costs.has(cost_key):
 				rover_costs[cost_key] += cost
 			else:
