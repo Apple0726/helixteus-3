@@ -9,6 +9,10 @@ font_names = PackedStringArray("Ebrima")
 multichannel_signed_distance_field = true
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_78575"]
+content_margin_left = 10.0
+content_margin_top = 5.0
+content_margin_right = 10.0
+content_margin_bottom = 5.0
 bg_color = Color(0.12549, 0.12549, 0.12549, 1)
 border_width_left = 2
 border_width_top = 2
@@ -18,9 +22,9 @@ shadow_size = 2
 shadow_offset = Vector2(1, 1)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ab6o6"]
-content_margin_left = 5.0
+content_margin_left = 10.0
 content_margin_top = 5.0
-content_margin_right = 5.0
+content_margin_right = 10.0
 content_margin_bottom = 5.0
 bg_color = Color(0.176471, 0.176471, 0.176471, 1)
 border_width_left = 4
@@ -31,9 +35,9 @@ shadow_size = 2
 shadow_offset = Vector2(1, 1)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ac0dv"]
-content_margin_left = 5.0
+content_margin_left = 10.0
 content_margin_top = 5.0
-content_margin_right = 5.0
+content_margin_right = 10.0
 content_margin_bottom = 5.0
 bg_color = Color(0.254902, 0.254902, 0.254902, 1)
 border_width_left = 4
@@ -44,9 +48,9 @@ shadow_size = 2
 shadow_offset = Vector2(1, 1)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_tgbmf"]
-content_margin_left = 5.0
+content_margin_left = 10.0
 content_margin_top = 5.0
-content_margin_right = 5.0
+content_margin_right = 10.0
 content_margin_bottom = 5.0
 bg_color = Color(0.176471, 0.176471, 0.176471, 1)
 border_width_left = 4
@@ -57,9 +61,9 @@ shadow_size = 2
 shadow_offset = Vector2(1, 1)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_cxevd"]
-content_margin_left = 5.0
+content_margin_left = 10.0
 content_margin_top = 5.0
-content_margin_right = 5.0
+content_margin_right = 10.0
 content_margin_bottom = 5.0
 bg_color = Color(0.176471, 0.176471, 0.176471, 1)
 border_width_left = 4
@@ -455,7 +459,7 @@ LineEdit/colors/font_color = Color(0, 0, 0, 1)
 LineEdit/colors/font_color_selected = Color(0.694118, 0.694118, 0.694118, 1)
 LineEdit/colors/font_color_uneditable = Color(0.521569, 0.521569, 0.521569, 1)
 LineEdit/colors/selection_color = Color(0, 0, 0, 1)
-LineEdit/constants/minimum_spaces = 12
+LineEdit/constants/minimum_character_width = 0
 LineEdit/fonts/font = SubResource("SystemFont_st2a7")
 LineEdit/icons/clear = null
 LineEdit/styles/focus = null

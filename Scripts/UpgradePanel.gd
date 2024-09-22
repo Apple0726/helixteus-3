@@ -446,8 +446,5 @@ func _on_Upgrade_pressed():
 	else:
 		game.popup(tr("NOT_ENOUGH_RESOURCES"), 1.2)
 
-func _on_close_button_pressed():
-	game.toggle_panel("upgrade_panel")
-
 func _on_Control_tree_exited():
 	queue_free()

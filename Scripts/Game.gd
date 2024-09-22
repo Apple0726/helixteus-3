@@ -1706,12 +1706,16 @@ func add_loading():
 	loading.name = "Loading"
 
 func open_obj(type:String, id:int):
-	var arr:Array = []
 	var file_path:String = "user://%s/Univ%s/%s/%s.hx3" % [c_sv, c_u, type, id]
 	var save = FileAccess.open(file_path, FileAccess.READ)
 	if save == null or save.get_length() == 0:
 		save = FileAccess.open(file_path + "~", FileAccess.READ)
-	arr = save.get_var()
+		if save == null:
+			return []
+		if save.get_length() == 0:
+			save.close()
+			return []
+	var arr = save.get_var()
 	save.close()
 	if not arr.is_empty() and arr[0] is Array:
 		var arr_decompressed = []

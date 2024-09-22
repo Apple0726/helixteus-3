@@ -89,17 +89,17 @@ func _on_rovers_pressed():
 				if inv.is_empty():
 					rover_has_space_for_items = true
 			if rover_has_items:
-				rover_info.get_node("TakeAll").pressed.connect(rover_take_all.bind(i))
+				rover_info.get_node("HBox/TakeAll").pressed.connect(rover_take_all.bind(i))
 			else:
-				rover_info.get_node("TakeAll").disabled = true
+				rover_info.get_node("HBox/TakeAll").disabled = true
 			if rover_has_space_for_items:
-				rover_info.get_node("SendItems").pressed.connect(rover_send_items.bind(i))
+				rover_info.get_node("HBox/SendItems").pressed.connect(rover_send_items.bind(i))
 			else:
-				rover_info.get_node("SendItems").disabled = true
+				rover_info.get_node("HBox/SendItems").disabled = true
 			rover_info.get_node("RoverIcon").mouse_entered.connect(rover_show_details.bind(i))
 			rover_info.get_node("RoverIcon").mouse_exited.connect(game.hide_tooltip)
-			rover_info.get_node("Explore").pressed.connect(rover_explore.bind(i))
-			rover_info.get_node("Destroy").pressed.connect(rover_destroy.bind(i, rover_info))
+			rover_info.get_node("HBox/Explore").pressed.connect(rover_explore.bind(i))
+			rover_info.get_node("HBox/Destroy").pressed.connect(rover_destroy.bind(i, rover_info))
 
 func rover_show_details(rover_id:int):
 	var rover = game.rover_data[rover_id]

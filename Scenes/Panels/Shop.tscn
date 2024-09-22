@@ -149,16 +149,15 @@ rounded = true
 update_on_text_changed = true
 
 [node name="Buy" type="Button" parent="ItemInfo"]
-custom_minimum_size = Vector2(140, 0)
 layout_mode = 1
 anchors_preset = 7
 anchor_left = 0.5
 anchor_top = 1.0
 anchor_right = 0.5
 anchor_bottom = 1.0
-offset_left = -88.0
+offset_left = -64.0
 offset_top = -48.0
-offset_right = 84.0
+offset_right = 64.0
 offset_bottom = -16.0
 grow_horizontal = 2
 grow_vertical = 0

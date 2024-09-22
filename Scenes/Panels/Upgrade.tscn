@@ -1,10 +1,19 @@
-[gd_scene load_steps=7 format=3 uid="uid://yyqlhh3cjdh6"]
+[gd_scene load_steps=10 format=3 uid="uid://yyqlhh3cjdh6"]
 
 [ext_resource type="PackedScene" uid="uid://1hq6qpr1oa3i" path="res://Scenes/AdvButton.tscn" id="1"]
-[ext_resource type="Texture2D" uid="uid://cneoj5s4buyd7" path="res://Graphics/Icons/Arrow.png" id="2"]
+[ext_resource type="Texture2D" uid="uid://ds6nct7g63284" path="res://Graphics/Icons/Arrow.png" id="2"]
 [ext_resource type="Theme" uid="uid://cp2u1kgj60ic" path="res://Resources/default_theme.tres" id="3"]
 [ext_resource type="Script" path="res://Scripts/UpgradePanel.gd" id="4"]
-[ext_resource type="PackedScene" uid="uid://ddf2xjwcht77u" path="res://Scenes/CloseButton.tscn" id="5"]
+[ext_resource type="Texture2D" uid="uid://baowebna7hgr5" path="res://Graphics/GUI/CloseButtonNormal.png" id="4_023v2"]
+[ext_resource type="Texture2D" uid="uid://c1vwn7p5uxu1r" path="res://Graphics/GUI/CloseButtonHover.png" id="5_cj333"]
+[ext_resource type="Texture2D" uid="uid://d206j13sitom3" path="res://Graphics/GUI/SmallPanel.png" id="5_y6oqk"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_osxg2"]
+bg_color = Color(0.0509804, 0.0509804, 0.0509804, 1)
+border_width_left = 4
+border_width_top = 4
+border_color = Color(0.192157, 0.192157, 0.192157, 1)
+border_blend = true
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_xcyis"]
 bg_color = Color(0.172549, 0.172549, 0.172549, 1)
@@ -16,31 +25,37 @@ shadow_color = Color(0, 0, 0, 1)
 shadow_size = 4
 shadow_offset = Vector2(2, 2)
 
-[node name="UpgradePanel" type="Panel"]
-custom_minimum_size = Vector2(768, 368)
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -384.0
-offset_top = -184.0
-offset_right = 384.0
-offset_bottom = 184.0
-grow_horizontal = 2
-grow_vertical = 2
+[node name="UpgradePanel" type="Control"]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 252.0
+offset_bottom = 96.0
 mouse_filter = 1
 theme = ExtResource("3")
 script = ExtResource("4")
+metadata/_edit_lock_ = true
+
+[node name="TextureRect" type="TextureRect" parent="."]
+layout_mode = 1
+offset_right = 1280.0
+offset_bottom = 720.0
+texture = ExtResource("5_y6oqk")
+
+[node name="CloseButton" type="TextureButton" parent="."]
+offset_left = 832.0
+offset_top = 96.0
+offset_right = 881.0
+offset_bottom = 145.0
+texture_normal = ExtResource("4_023v2")
+texture_hover = ExtResource("5_cj333")
 
 [node name="PathButtons" type="HBoxContainer" parent="."]
 custom_minimum_size = Vector2(0, 35)
-layout_mode = 0
-anchor_right = 1.0
-offset_left = 8.0
-offset_top = 40.0
-offset_right = -8.0
-offset_bottom = 75.0
+layout_mode = 1
+offset_left = 320.0
+offset_top = 184.0
+offset_right = 864.0
+offset_bottom = 219.0
 size_flags_horizontal = 3
 theme_override_constants/separation = 0
 
@@ -56,103 +71,92 @@ size_flags_horizontal = 3
 layout_mode = 2
 size_flags_horizontal = 3
 
+[node name="Panel" type="Panel" parent="."]
+layout_mode = 0
+offset_left = 316.0
+offset_top = 220.0
+offset_right = 864.0
+offset_bottom = 524.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_osxg2")
+
 [node name="Current" type="RichTextLabel" parent="."]
 clip_contents = false
-layout_mode = 0
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -384.0
-offset_bottom = 24.0
-grow_vertical = 2
+layout_mode = 1
+offset_left = 400.0
+offset_top = 280.0
+offset_right = 784.0
+offset_bottom = 304.0
 size_flags_horizontal = 3
 bbcode_enabled = true
 scroll_active = false
 
 [node name="Arrow" type="TextureRect" parent="."]
 modulate = Color(1, 1, 1, 0.635294)
-layout_mode = 0
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -32.0
-offset_top = -72.0
-offset_right = 32.0
-offset_bottom = -24.0
+layout_mode = 1
+offset_left = 604.0
+offset_top = 332.0
+offset_right = 679.0
+offset_bottom = 374.0
+rotation = 1.5708
+scale = Vector2(0.56, 0.56)
 size_flags_horizontal = 4
 size_flags_vertical = 4
 texture = ExtResource("2")
-expand_mode = 1
-stretch_mode = 5
 
 [node name="Next" type="RichTextLabel" parent="."]
 clip_contents = false
-layout_mode = 0
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_right = 384.0
-offset_bottom = 24.0
-grow_vertical = 2
+layout_mode = 1
+offset_left = 400.0
+offset_top = 452.0
+offset_right = 784.0
+offset_bottom = 476.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 bbcode_enabled = true
 scroll_active = false
 
 [node name="CurrentLv" type="Label" parent="."]
-layout_mode = 0
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -224.0
-offset_top = -64.0
-offset_right = -160.0
-offset_bottom = -32.0
+layout_mode = 1
+offset_left = 560.0
+offset_top = 240.0
+offset_right = 624.0
+offset_bottom = 272.0
 text = "Level 1"
 horizontal_alignment = 1
 vertical_alignment = 1
 
 [node name="CurrentLv2" type="Label" parent="."]
-layout_mode = 0
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = 72.0
-offset_top = -64.0
-offset_right = 174.0
-offset_bottom = -32.0
+layout_mode = 1
+offset_left = 480.0
+offset_top = 400.0
+offset_right = 582.0
+offset_bottom = 432.0
 text = "LEVEL"
 horizontal_alignment = 2
 vertical_alignment = 1
 
 [node name="DivBy" type="Label" parent="."]
-layout_mode = 0
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -376.0
-offset_top = 96.0
-offset_right = 200.0
-offset_bottom = 128.0
+layout_mode = 1
+offset_left = 316.0
+offset_top = 528.0
+offset_right = 680.0
+offset_bottom = 560.0
 horizontal_alignment = 1
 vertical_alignment = 1
 
 [node name="NextLv" type="SpinBox" parent="."]
-layout_mode = 0
+layout_mode = 1
+anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = 184.0
-offset_top = -64.0
-offset_right = 276.0
-offset_bottom = -32.0
+offset_left = 474.0
+offset_top = 352.0
+offset_right = 538.0
+offset_bottom = 384.0
+grow_horizontal = 2
+grow_vertical = 2
 value = 2.0
 rounded = true
 allow_greater = true
@@ -161,13 +165,11 @@ select_all_on_focus = true
 
 [node name="ScrollContainer" type="ScrollContainer" parent="."]
 custom_minimum_size = Vector2(200, 40)
-layout_mode = 0
-anchor_top = 1.0
-anchor_bottom = 1.0
-offset_left = 8.0
-offset_top = -56.0
-offset_right = 584.0
-offset_bottom = -8.0
+layout_mode = 1
+offset_left = 316.0
+offset_top = 560.0
+offset_right = 680.0
+offset_bottom = 608.0
 theme_override_styles/panel = SubResource("StyleBoxFlat_xcyis")
 vertical_scroll_mode = 3
 
@@ -178,40 +180,30 @@ size_flags_vertical = 3
 
 [node name="Upgrade" type="Button" parent="."]
 custom_minimum_size = Vector2(0, 40)
-layout_mode = 0
-anchor_left = 1.0
-anchor_top = 1.0
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = -176.0
-offset_top = -56.0
-offset_right = -6.0
-offset_bottom = -8.0
+layout_mode = 1
+offset_left = 692.0
+offset_top = 560.0
+offset_right = 862.0
+offset_bottom = 608.0
 size_flags_horizontal = 3
 theme = ExtResource("3")
 text = "UPGRADE"
 
 [node name="Label" type="Label" parent="."]
 custom_minimum_size = Vector2(0, 38)
-layout_mode = 0
-anchor_right = 1.0
-offset_bottom = 24.0
+layout_mode = 1
+offset_left = 320.0
+offset_top = 100.0
+offset_right = 652.0
+offset_bottom = 138.0
 size_flags_vertical = 3
 theme_override_font_sizes/font_size = 18
 text = "UPGRADE"
-horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="CloseButton" parent="." instance=ExtResource("5")]
-layout_mode = 1
-offset_left = -32.0
-offset_top = 8.0
-offset_right = -8.0
-offset_bottom = 32.0
-
+[connection signal="pressed" from="CloseButton" to="." method="_on_close_button_pressed"]
 [connection signal="pressed" from="PathButtons/Path1" to="." method="_on_Path1_pressed"]
 [connection signal="pressed" from="PathButtons/Path2" to="." method="_on_Path2_pressed"]
 [connection signal="pressed" from="PathButtons/Path3" to="." method="_on_Path3_pressed"]
 [connection signal="value_changed" from="NextLv" to="." method="_on_NextLv_value_changed"]
 [connection signal="pressed" from="Upgrade" to="." method="_on_Upgrade_pressed"]
-[connection signal="close_button_pressed" from="CloseButton" to="." method="_on_close_button_pressed"]

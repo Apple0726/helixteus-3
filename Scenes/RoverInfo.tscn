@@ -35,40 +35,6 @@ texture = ExtResource("2_j5p00")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="TakeAll" type="Button" parent="."]
-layout_mode = 0
-offset_left = 412.0
-offset_top = 28.0
-offset_right = 496.0
-offset_bottom = 61.0
-text = "TAKE_ALL"
-
-[node name="SendItems" type="Button" parent="."]
-layout_mode = 0
-offset_left = 532.0
-offset_top = 28.0
-offset_right = 638.0
-offset_bottom = 61.0
-text = "SEND_ITEMS"
-
-[node name="Explore" type="Button" parent="."]
-layout_mode = 0
-offset_left = 664.0
-offset_top = 28.0
-offset_right = 780.0
-offset_bottom = 61.0
-text = "EXPLORE"
-icon = ExtResource("4_rdkix")
-expand_icon = true
-
-[node name="Destroy" type="Button" parent="."]
-layout_mode = 0
-offset_left = 800.0
-offset_top = 28.0
-offset_right = 881.0
-offset_bottom = 61.0
-text = "DESTROY"
-
 [node name="HPIcon" type="TextureRect" parent="."]
 layout_mode = 1
 offset_left = 164.0
@@ -94,3 +60,31 @@ offset_top = 32.0
 offset_right = 392.0
 offset_bottom = 55.0
 text = "200 kg"
+
+[node name="HBox" type="HBoxContainer" parent="."]
+layout_mode = 0
+offset_left = 400.0
+offset_top = 28.0
+offset_right = 848.0
+offset_bottom = 61.0
+theme_override_constants/separation = 15
+
+[node name="TakeAll" type="Button" parent="HBox"]
+layout_mode = 2
+text = "TAKE_ALL"
+
+[node name="SendItems" type="Button" parent="HBox"]
+layout_mode = 2
+text = "SEND_ITEMS"
+
+[node name="Destroy" type="Button" parent="HBox"]
+layout_mode = 2
+text = "DESTROY"
+
+[node name="Explore" type="Button" parent="HBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "EXPLORE"
+icon = ExtResource("4_rdkix")
+icon_alignment = 2
+expand_icon = true
