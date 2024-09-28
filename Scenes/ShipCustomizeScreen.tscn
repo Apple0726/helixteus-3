@@ -1,0 +1,363 @@
+[gd_scene load_steps=11 format=3 uid="uid://d25bie4radplj"]
+
+[ext_resource type="Theme" uid="uid://cp2u1kgj60ic" path="res://Resources/default_theme.tres" id="1_fik65"]
+[ext_resource type="Texture2D" uid="uid://koi0aarpqj30" path="res://Graphics/Ships/Ship0.png" id="1_krjc3"]
+[ext_resource type="Script" path="res://Scripts/ShipCustomizeScreen.gd" id="2_2k68d"]
+[ext_resource type="PackedScene" uid="uid://1hq6qpr1oa3i" path="res://Scenes/AdvButton.tscn" id="3_hi247"]
+[ext_resource type="Texture2D" uid="uid://bl07f3wef0muv" path="res://Graphics/Icons/HP.png" id="5_elefb"]
+[ext_resource type="Texture2D" uid="uid://7ffsf7xuvfw2" path="res://Graphics/Icons/attack.png" id="6_5p6u7"]
+[ext_resource type="Texture2D" uid="uid://cqiyti2xdxtcw" path="res://Graphics/Icons/defense.png" id="7_sfcj0"]
+[ext_resource type="Texture2D" uid="uid://bn520d6r5iwik" path="res://Graphics/Icons/accuracy.png" id="8_72tah"]
+[ext_resource type="Texture2D" uid="uid://bapj1r8e5pwia" path="res://Graphics/Icons/agility.png" id="9_cosga"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_q0bap"]
+content_margin_left = 10.0
+content_margin_right = 10.0
+bg_color = Color(0.0509804, 0.0509804, 0.0509804, 1)
+border_width_left = 4
+border_width_top = 4
+border_color = Color(0.192157, 0.192157, 0.192157, 1)
+border_blend = true
+
+[node name="Control" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("1_fik65")
+script = ExtResource("2_2k68d")
+metadata/_edit_lock_ = true
+
+[node name="ShipClass" type="PanelContainer" parent="."]
+layout_mode = 0
+offset_left = 396.0
+offset_top = 96.0
+offset_right = 592.0
+offset_bottom = 472.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_q0bap")
+
+[node name="VBox" type="VBoxContainer" parent="ShipClass"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="ShipClass/VBox"]
+layout_mode = 2
+text = "SHIP_CLASS"
+horizontal_alignment = 1
+
+[node name="VBox" type="VBoxContainer" parent="ShipClass/VBox"]
+layout_mode = 2
+
+[node name="Standard" parent="ShipClass/VBox/VBox" instance=ExtResource("3_hi247")]
+layout_mode = 2
+button_text = "STANDARD"
+
+[node name="Offensive" parent="ShipClass/VBox/VBox" instance=ExtResource("3_hi247")]
+layout_mode = 2
+button_text = "OFFENSIVE"
+
+[node name="Defensive" parent="ShipClass/VBox/VBox" instance=ExtResource("3_hi247")]
+layout_mode = 2
+button_text = "DEFENSIVE"
+
+[node name="Accurate" parent="ShipClass/VBox/VBox" instance=ExtResource("3_hi247")]
+layout_mode = 2
+button_text = "ACCURATE"
+
+[node name="Agile" parent="ShipClass/VBox/VBox" instance=ExtResource("3_hi247")]
+layout_mode = 2
+button_text = "AGILE"
+
+[node name="Energetic" parent="ShipClass/VBox/VBox" instance=ExtResource("3_hi247")]
+layout_mode = 2
+button_text = "ENERGETIC"
+
+[node name="Support" parent="ShipClass/VBox/VBox" instance=ExtResource("3_hi247")]
+layout_mode = 2
+button_text = "SUPPORT"
+
+[node name="Reckless" parent="ShipClass/VBox/VBox" instance=ExtResource("3_hi247")]
+layout_mode = 2
+button_text = "RECKLESS"
+
+[node name="Tank" parent="ShipClass/VBox/VBox" instance=ExtResource("3_hi247")]
+layout_mode = 2
+button_text = "TANK"
+
+[node name="Uber" parent="ShipClass/VBox/VBox" instance=ExtResource("3_hi247")]
+layout_mode = 2
+button_text = "UBER"
+
+[node name="Ship0" type="TextureRect" parent="."]
+layout_mode = 0
+offset_left = 80.0
+offset_top = 116.0
+offset_right = 336.0
+offset_bottom = 244.0
+texture = ExtResource("1_krjc3")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Button" type="Button" parent="."]
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -92.0
+offset_top = -44.0
+offset_right = -8.0
+offset_bottom = -8.0
+grow_horizontal = 0
+grow_vertical = 0
+text = "DONE"
+
+[node name="ShipStats" type="Panel" parent="."]
+layout_mode = 0
+offset_left = 660.0
+offset_top = 96.0
+offset_right = 992.0
+offset_bottom = 432.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_q0bap")
+
+[node name="Label" type="Label" parent="ShipStats"]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_bottom = 23.0
+grow_horizontal = 2
+text = "SHIP_STATS"
+horizontal_alignment = 1
+
+[node name="PointsAllocated" type="Label" parent="ShipStats"]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_top = 32.0
+offset_bottom = 55.0
+grow_horizontal = 2
+text = "POINTS_ALLOCATED"
+horizontal_alignment = 1
+
+[node name="HPIcon" type="TextureRect" parent="ShipStats"]
+layout_mode = 0
+offset_left = 56.0
+offset_top = 80.0
+offset_right = 88.0
+offset_bottom = 112.0
+texture = ExtResource("5_elefb")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="HPLabel" type="Label" parent="ShipStats"]
+layout_mode = 0
+offset_left = 184.0
+offset_top = 84.0
+offset_right = 244.0
+offset_bottom = 107.0
+text = "10"
+horizontal_alignment = 1
+
+[node name="RemoveHP" type="Button" parent="ShipStats"]
+layout_mode = 0
+offset_left = 148.0
+offset_top = 80.0
+offset_right = 180.0
+offset_bottom = 113.0
+disabled = true
+text = "-"
+
+[node name="AddHP" type="Button" parent="ShipStats"]
+layout_mode = 0
+offset_left = 248.0
+offset_top = 80.0
+offset_right = 278.0
+offset_bottom = 113.0
+text = "+"
+
+[node name="AttackIcon" type="TextureRect" parent="ShipStats"]
+layout_mode = 0
+offset_left = 56.0
+offset_top = 128.0
+offset_right = 88.0
+offset_bottom = 160.0
+texture = ExtResource("6_5p6u7")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="AttackLabel" type="Label" parent="ShipStats"]
+layout_mode = 0
+offset_left = 184.0
+offset_top = 132.0
+offset_right = 244.0
+offset_bottom = 155.0
+text = "10"
+horizontal_alignment = 1
+
+[node name="RemoveAttack" type="Button" parent="ShipStats"]
+layout_mode = 0
+offset_left = 148.0
+offset_top = 128.0
+offset_right = 180.0
+offset_bottom = 161.0
+disabled = true
+text = "-"
+
+[node name="AddAttack" type="Button" parent="ShipStats"]
+layout_mode = 0
+offset_left = 248.0
+offset_top = 128.0
+offset_right = 278.0
+offset_bottom = 161.0
+text = "+"
+
+[node name="DefenseIcon" type="TextureRect" parent="ShipStats"]
+layout_mode = 0
+offset_left = 56.0
+offset_top = 180.0
+offset_right = 88.0
+offset_bottom = 212.0
+texture = ExtResource("7_sfcj0")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="DefenseLabel" type="Label" parent="ShipStats"]
+layout_mode = 0
+offset_left = 184.0
+offset_top = 184.0
+offset_right = 244.0
+offset_bottom = 207.0
+text = "10"
+horizontal_alignment = 1
+
+[node name="RemoveDefense" type="Button" parent="ShipStats"]
+layout_mode = 0
+offset_left = 148.0
+offset_top = 180.0
+offset_right = 180.0
+offset_bottom = 213.0
+disabled = true
+text = "-"
+
+[node name="AddDefense" type="Button" parent="ShipStats"]
+layout_mode = 0
+offset_left = 248.0
+offset_top = 180.0
+offset_right = 278.0
+offset_bottom = 213.0
+text = "+"
+
+[node name="AccuracyIcon" type="TextureRect" parent="ShipStats"]
+layout_mode = 0
+offset_left = 56.0
+offset_top = 232.0
+offset_right = 88.0
+offset_bottom = 264.0
+texture = ExtResource("8_72tah")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="AccuracyLabel" type="Label" parent="ShipStats"]
+layout_mode = 0
+offset_left = 184.0
+offset_top = 236.0
+offset_right = 244.0
+offset_bottom = 259.0
+text = "10"
+horizontal_alignment = 1
+
+[node name="RemoveAccuracy" type="Button" parent="ShipStats"]
+layout_mode = 0
+offset_left = 148.0
+offset_top = 232.0
+offset_right = 180.0
+offset_bottom = 265.0
+disabled = true
+text = "-"
+
+[node name="AddAccuracy" type="Button" parent="ShipStats"]
+layout_mode = 0
+offset_left = 248.0
+offset_top = 232.0
+offset_right = 278.0
+offset_bottom = 265.0
+text = "+"
+
+[node name="AgilityIcon" type="TextureRect" parent="ShipStats"]
+layout_mode = 0
+offset_left = 56.0
+offset_top = 280.0
+offset_right = 88.0
+offset_bottom = 312.0
+texture = ExtResource("9_cosga")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="AgilityLabel" type="Label" parent="ShipStats"]
+layout_mode = 0
+offset_left = 184.0
+offset_top = 284.0
+offset_right = 244.0
+offset_bottom = 307.0
+text = "10"
+horizontal_alignment = 1
+
+[node name="RemoveAgility" type="Button" parent="ShipStats"]
+layout_mode = 0
+offset_left = 148.0
+offset_top = 280.0
+offset_right = 180.0
+offset_bottom = 313.0
+disabled = true
+text = "-"
+
+[node name="AddAgility" type="Button" parent="ShipStats"]
+layout_mode = 0
+offset_left = 248.0
+offset_top = 280.0
+offset_right = 278.0
+offset_bottom = 313.0
+text = "+"
+
+[node name="PassiveAbility" type="Panel" parent="."]
+layout_mode = 0
+offset_left = 312.0
+offset_top = 496.0
+offset_right = 680.0
+offset_bottom = 700.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_q0bap")
+
+[node name="Label" type="Label" parent="PassiveAbility"]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_top = 8.0
+offset_bottom = 31.0
+grow_horizontal = 2
+text = "PASSIVE_ABILITY"
+horizontal_alignment = 1
+
+[node name="Label2" type="Label" parent="PassiveAbility"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 16.0
+offset_top = 40.0
+offset_right = -16.0
+grow_horizontal = 2
+grow_vertical = 2
+autowrap_mode = 3
+
+[connection signal="pressed" from="ShipClass/VBox/VBox/Standard" to="." method="update_ship_stats" binds= [0]]
+[connection signal="pressed" from="ShipClass/VBox/VBox/Offensive" to="." method="update_ship_stats" binds= [1]]
+[connection signal="pressed" from="ShipClass/VBox/VBox/Defensive" to="." method="update_ship_stats" binds= [2]]
+[connection signal="pressed" from="ShipClass/VBox/VBox/Accurate" to="." method="update_ship_stats" binds= [3]]
+[connection signal="pressed" from="ShipClass/VBox/VBox/Agile" to="." method="update_ship_stats" binds= [4]]
+[connection signal="pressed" from="ShipClass/VBox/VBox/Energetic" to="." method="update_ship_stats" binds= [5]]
+[connection signal="pressed" from="ShipClass/VBox/VBox/Support" to="." method="update_ship_stats" binds= [6]]
+[connection signal="pressed" from="ShipClass/VBox/VBox/Reckless" to="." method="update_ship_stats" binds= [7]]
+[connection signal="pressed" from="ShipClass/VBox/VBox/Tank" to="." method="update_ship_stats" binds= [8]]
+[connection signal="pressed" from="ShipClass/VBox/VBox/Uber" to="." method="update_ship_stats" binds= [9]]

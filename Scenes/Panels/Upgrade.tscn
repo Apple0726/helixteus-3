@@ -42,6 +42,7 @@ offset_bottom = 720.0
 texture = ExtResource("5_y6oqk")
 
 [node name="CloseButton" type="TextureButton" parent="."]
+layout_mode = 0
 offset_left = 832.0
 offset_top = 96.0
 offset_right = 881.0
