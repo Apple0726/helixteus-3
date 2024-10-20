@@ -50,28 +50,26 @@ func set_visibility():
 func refresh():
 	if id >= len(game.ship_data):
 		return
-	$LineEdit.caret_blink_interval = 0.5 / game.u_i.time_speed
 	$XP/TextureProgressBar.max_value = game.ship_data[id].XP_to_lv
-	$XP/TextureProgress2.max_value = game.ship_data[id].XP_to_lv
+	$XP/TextureProgressGained.max_value = game.ship_data[id].XP_to_lv
 	$XP/TextureProgressBar.value = game.ship_data[id].XP
-	$XP/TextureProgress2.value = game.ship_data[id].XP
+	$XP/TextureProgressGained.value = game.ship_data[id].XP
 	$Lv.text = "%s %s" % [tr("LV"), game.ship_data[id].lv]
 	for weapon in ["Bullet", "Laser", "Bomb", "Light"]:
 		var weapon_data = game.ship_data[id][weapon.to_lower()]
 		get_node("%s/TextureProgressBar" % [weapon]).max_value = INF if weapon_data.lv == 5 else weapon_data.XP_to_lv
-		get_node("%s/TextureProgress2" % [weapon]).max_value = INF if weapon_data.lv == 5 else weapon_data.XP_to_lv
+		get_node("%s/TextureProgressGained" % [weapon]).max_value = INF if weapon_data.lv == 5 else weapon_data.XP_to_lv
 		get_node("%s/TextureProgressBar" % [weapon]).value = weapon_data.XP
-		get_node("%s/TextureProgress2" % [weapon]).value = weapon_data.XP
-		get_node("%s/TextureRect" % [weapon]).texture = load("res://Graphics/Weapons/%s%s.png" % [weapon.to_lower(), weapon_data.lv])
+		get_node("%s/TextureProgressGained" % [weapon]).value = weapon_data.XP
+		get_node("%s/Icon" % [weapon]).texture = load("res://Graphics/Weapons/%s%s.png" % [weapon.to_lower(), weapon_data.lv])
 		get_node("%s/Label2" % [weapon]).text = "%s / %s" % [round(weapon_data.XP), weapon_data.XP_to_lv]
 	$XP/Label2.text = "%s / %s" % [Helper.format_num(round(game.ship_data[id].XP)), Helper.format_num(game.ship_data[id].XP_to_lv)]
 	set_visibility()
-	$Stats/HP.text = Helper.format_num(game.ship_data[id].total_HP * game.ship_data[id].HP_mult)
-	$Stats/Atk.text = Helper.format_num(game.ship_data[id].atk * game.ship_data[id].atk_mult)
-	$Stats/Def.text = Helper.format_num(game.ship_data[id].def * game.ship_data[id].def_mult)
-	$Stats/Acc.text = Helper.format_num(game.ship_data[id].acc * game.ship_data[id].acc_mult)
-	$Stats/Eva.text = Helper.format_num(game.ship_data[id].eva * game.ship_data[id].eva_mult)
-	$LineEdit.text = game.ship_data[id].name
+	$Stats/HP.text = Helper.format_num(game.ship_data[id].HP)
+	$Stats/Attack.text = Helper.format_num(game.ship_data[id].attack)
+	$Stats/Defense.text = Helper.format_num(game.ship_data[id].defense)
+	$Stats/Accuracy.text = Helper.format_num(game.ship_data[id].accuracy)
+	$Stats/Agility.text = Helper.format_num(game.ship_data[id].agility)
 	
 func _on_icon_mouse_entered(stat:String):
 	game.show_tooltip(tr(stat))
@@ -84,13 +82,13 @@ func _on_weapon_mouse_entered(weapon:String):
 
 func _on_Ship_mouse_entered():
 	if game.bottom_info_action == "use_hx_core":
-		$XP/TextureProgress2.value = $XP/TextureProgressBar.value + game.other_items_info[game.item_to_use.name].XP * game.item_to_use.num
+		$XP/TextureProgressGained.value = $XP/TextureProgressBar.value + game.other_items_info[game.item_to_use.name].XP * game.item_to_use.num
 		$XP/Label.visible = true
 		$XP/Label.text = "+ %s" % [game.other_items_info[game.item_to_use.name].XP * game.item_to_use.num]
 
 func _on_Ship_mouse_exited():
 	if not victory_screen:
-		$XP/TextureProgress2.value = $XP/TextureProgressBar.value
+		$XP/TextureProgressGained.value = $XP/TextureProgressBar.value
 		$XP/Label.visible = false
 
 
@@ -107,5 +105,7 @@ func _on_Ship_pressed():
 				game.update_item_cursor()
 				_on_Ship_mouse_exited()
 
-func _on_line_edit_text_changed(new_text):
-	game.ship_data[id].name = new_text
+
+func _on_respec_pressed() -> void:
+	game.toggle_panel("ships_panel")
+	game.switch_view("ship_customize_screen", {"ship_id":id})

@@ -1,22 +1,22 @@
-[gd_scene load_steps=12 format=3 uid="uid://gy6plqno7n0y"]
+[gd_scene load_steps=13 format=3 uid="uid://gy6plqno7n0y"]
 
-[ext_resource type="Texture2D" uid="uid://c0ug8cttagnot" path="res://Graphics/Stars/Star.png" id="2"]
-[ext_resource type="Texture2D" uid="uid://clm1wcxs53orq" path="res://Graphics/Icons/XP.png" id="4"]
-[ext_resource type="Texture2D" uid="uid://c67y71rs3ver2" path="res://Graphics/Misc/BarUnder2.png" id="5"]
-[ext_resource type="Texture2D" uid="uid://1h4b4lcm50vf" path="res://Graphics/Misc/Bar2.png" id="6"]
-[ext_resource type="Texture2D" uid="uid://o1t3hqx27iw" path="res://Graphics/Misc/BarOver.png" id="7"]
+[ext_resource type="Texture2D" uid="uid://cvetejccba6ge" path="res://Graphics/Stars/Star.png" id="2"]
+[ext_resource type="Texture2D" uid="uid://koi0aarpqj30" path="res://Graphics/Ships/Ship0.png" id="3_jvlpn"]
+[ext_resource type="Texture2D" uid="uid://csmhsuosfqrec" path="res://Graphics/Icons/XP.png" id="4"]
+[ext_resource type="Texture2D" uid="uid://kr2fdk8dptv1" path="res://Graphics/Misc/BarUnder2.png" id="5"]
+[ext_resource type="Texture2D" uid="uid://bx1hvetixqpwi" path="res://Graphics/Misc/Bar2.png" id="6"]
+[ext_resource type="Texture2D" uid="uid://cxij5pk8nug0r" path="res://Graphics/Misc/BarOver.png" id="7"]
 [ext_resource type="Script" path="res://Scripts/ShipInfo.gd" id="9"]
-[ext_resource type="Texture2D" uid="uid://db5kteojlsibm" path="res://Graphics/Icons/HP.png" id="10"]
-[ext_resource type="Texture2D" uid="uid://bpldbtxg6m15w" path="res://Graphics/Icons/eva.png" id="11"]
-[ext_resource type="Texture2D" uid="uid://pbmpca8v331w" path="res://Graphics/Icons/atk.png" id="12"]
-[ext_resource type="Texture2D" uid="uid://c7ihn34uct4pa" path="res://Graphics/Icons/def.png" id="13"]
-[ext_resource type="Texture2D" uid="uid://colvrraclfm2q" path="res://Graphics/Icons/acc.png" id="14"]
+[ext_resource type="Texture2D" uid="uid://bl07f3wef0muv" path="res://Graphics/Icons/HP.png" id="10"]
+[ext_resource type="Texture2D" uid="uid://bapj1r8e5pwia" path="res://Graphics/Icons/agility.png" id="11"]
+[ext_resource type="Texture2D" uid="uid://7ffsf7xuvfw2" path="res://Graphics/Icons/attack.png" id="12"]
+[ext_resource type="Texture2D" uid="uid://cqiyti2xdxtcw" path="res://Graphics/Icons/defense.png" id="13"]
+[ext_resource type="Texture2D" uid="uid://bn520d6r5iwik" path="res://Graphics/Icons/accuracy.png" id="14"]
 
 [node name="Panel1" type="Panel"]
+custom_minimum_size = Vector2(533, 239)
 offset_right = 533.0
 offset_bottom = 239.0
-size_flags_horizontal = 3
-size_flags_vertical = 3
 script = ExtResource("9")
 
 [node name="TextureRect" type="TextureRect" parent="."]
@@ -36,15 +36,15 @@ offset_left = 28.0
 offset_top = 56.0
 offset_right = 188.0
 offset_bottom = 140.0
+texture_normal = ExtResource("3_jvlpn")
 ignore_texture_size = true
 stretch_mode = 5
 
 [node name="Bullet" type="Control" parent="."]
+layout_mode = 1
 anchors_preset = 0
-offset_left = 12.0
-offset_top = -12.0
-offset_right = 52.0
-offset_bottom = 28.0
+offset_right = 40.0
+offset_bottom = 40.0
 
 [node name="ColorRect" type="ColorRect" parent="Bullet"]
 layout_mode = 0
@@ -54,7 +54,7 @@ offset_right = 460.0
 offset_bottom = 68.0
 color = Color(0, 0.235294, 0.411765, 1)
 
-[node name="TextureProgress2" type="TextureProgressBar" parent="Bullet"]
+[node name="TextureProgressGained" type="TextureProgressBar" parent="Bullet"]
 modulate = Color(0.34902, 0.682353, 0.941176, 1)
 layout_mode = 0
 offset_left = 228.0
@@ -106,7 +106,7 @@ text = "0 / 20"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="TextureRect" type="TextureRect" parent="Bullet"]
+[node name="Icon" type="TextureRect" parent="Bullet"]
 layout_mode = 0
 offset_left = 192.0
 offset_top = 52.0
@@ -116,27 +116,26 @@ expand_mode = 1
 stretch_mode = 5
 
 [node name="Laser" type="Control" parent="."]
+layout_mode = 1
 anchors_preset = 0
-offset_left = 12.0
-offset_top = 28.0
-offset_right = 52.0
-offset_bottom = 68.0
+offset_right = 40.0
+offset_bottom = 40.0
 
 [node name="ColorRect" type="ColorRect" parent="Laser"]
 layout_mode = 0
 offset_left = 228.0
-offset_top = 44.0
+offset_top = 76.0
 offset_right = 460.0
-offset_bottom = 64.0
+offset_bottom = 96.0
 color = Color(0.55, 0.2475, 0.2475, 1)
 
-[node name="TextureProgress2" type="TextureProgressBar" parent="Laser"]
+[node name="TextureProgressGained" type="TextureProgressBar" parent="Laser"]
 modulate = Color(0.94, 0.5546, 0.5546, 1)
 layout_mode = 0
 offset_left = 228.0
-offset_top = 44.0
+offset_top = 76.0
 offset_right = 460.0
-offset_bottom = 64.0
+offset_bottom = 96.0
 step = 0.0
 value = 60.0
 nine_patch_stretch = true
@@ -147,9 +146,9 @@ texture_progress = ExtResource("6")
 modulate = Color(1, 0.28, 0.28, 1)
 layout_mode = 0
 offset_left = 228.0
-offset_top = 44.0
+offset_top = 76.0
 offset_right = 460.0
-offset_bottom = 64.0
+offset_bottom = 96.0
 step = 0.0
 value = 50.0
 nine_patch_stretch = true
@@ -163,9 +162,9 @@ texture_progress = ExtResource("6")
 [node name="Label" type="Label" parent="Laser"]
 layout_mode = 0
 offset_left = 476.0
-offset_top = 40.0
+offset_top = 72.0
 offset_right = 516.0
-offset_bottom = 71.0
+offset_bottom = 103.0
 scale = Vector2(0.9, 0.9)
 text = "+ 5"
 vertical_alignment = 1
@@ -173,46 +172,45 @@ vertical_alignment = 1
 [node name="Label2" type="Label" parent="Laser"]
 layout_mode = 0
 offset_left = 228.0
-offset_top = 43.0
+offset_top = 75.0
 offset_right = 460.0
-offset_bottom = 66.0
+offset_bottom = 98.0
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
 theme_override_font_sizes/font_size = 14
 text = "0 / 20"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="TextureRect" type="TextureRect" parent="Laser"]
+[node name="Icon" type="TextureRect" parent="Laser"]
 layout_mode = 0
 offset_left = 192.0
-offset_top = 44.0
+offset_top = 76.0
 offset_right = 220.0
-offset_bottom = 64.0
+offset_bottom = 96.0
 expand_mode = 1
 stretch_mode = 5
 
 [node name="Bomb" type="Control" parent="."]
+layout_mode = 1
 anchors_preset = 0
-offset_left = 12.0
-offset_top = 60.0
-offset_right = 52.0
-offset_bottom = 100.0
+offset_right = 40.0
+offset_bottom = 40.0
 
 [node name="ColorRect" type="ColorRect" parent="Bomb"]
 layout_mode = 0
 offset_left = 228.0
-offset_top = 48.0
+offset_top = 104.0
 offset_right = 460.0
-offset_bottom = 68.0
+offset_bottom = 124.0
 color = Color(0.137255, 0.137255, 0.137255, 1)
 
-[node name="TextureProgress2" type="TextureProgressBar" parent="Bomb"]
+[node name="TextureProgressGained" type="TextureProgressBar" parent="Bomb"]
 modulate = Color(0.454902, 0.454902, 0.454902, 1)
 layout_mode = 0
 offset_left = 228.0
-offset_top = 48.0
+offset_top = 104.0
 offset_right = 460.0
-offset_bottom = 68.0
+offset_bottom = 124.0
 step = 0.0
 value = 60.0
 nine_patch_stretch = true
@@ -223,9 +221,9 @@ texture_progress = ExtResource("6")
 modulate = Color(0.286275, 0.286275, 0.286275, 1)
 layout_mode = 0
 offset_left = 228.0
-offset_top = 48.0
+offset_top = 104.0
 offset_right = 460.0
-offset_bottom = 68.0
+offset_bottom = 124.0
 step = 0.0
 value = 50.0
 nine_patch_stretch = true
@@ -239,9 +237,9 @@ texture_progress = ExtResource("6")
 [node name="Label" type="Label" parent="Bomb"]
 layout_mode = 0
 offset_left = 476.0
-offset_top = 44.0
+offset_top = 100.0
 offset_right = 516.0
-offset_bottom = 75.0
+offset_bottom = 131.0
 scale = Vector2(0.9, 0.9)
 text = "+ 5"
 vertical_alignment = 1
@@ -249,46 +247,45 @@ vertical_alignment = 1
 [node name="Label2" type="Label" parent="Bomb"]
 layout_mode = 0
 offset_left = 228.0
-offset_top = 47.0
+offset_top = 103.0
 offset_right = 460.0
-offset_bottom = 70.0
+offset_bottom = 126.0
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
 theme_override_font_sizes/font_size = 14
 text = "0 / 20"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="TextureRect" type="TextureRect" parent="Bomb"]
+[node name="Icon" type="TextureRect" parent="Bomb"]
 layout_mode = 0
 offset_left = 192.0
-offset_top = 48.0
+offset_top = 104.0
 offset_right = 220.0
-offset_bottom = 68.0
+offset_bottom = 124.0
 expand_mode = 1
 stretch_mode = 5
 
 [node name="Light" type="Control" parent="."]
+layout_mode = 1
 anchors_preset = 0
-offset_left = 12.0
-offset_top = 96.0
-offset_right = 52.0
-offset_bottom = 136.0
+offset_right = 40.0
+offset_bottom = 40.0
 
 [node name="ColorRect" type="ColorRect" parent="Light"]
 layout_mode = 0
 offset_left = 228.0
-offset_top = 48.0
+offset_top = 132.0
 offset_right = 460.0
-offset_bottom = 68.0
+offset_bottom = 152.0
 color = Color(0.51, 0.50796, 0.3876, 1)
 
-[node name="TextureProgress2" type="TextureProgressBar" parent="Light"]
+[node name="TextureProgressGained" type="TextureProgressBar" parent="Light"]
 modulate = Color(1, 1, 0.61, 1)
 layout_mode = 0
 offset_left = 228.0
-offset_top = 48.0
+offset_top = 132.0
 offset_right = 460.0
-offset_bottom = 68.0
+offset_bottom = 152.0
 step = 0.0
 value = 60.0
 nine_patch_stretch = true
@@ -299,9 +296,9 @@ texture_progress = ExtResource("6")
 modulate = Color(0.811765, 0.811765, 0.364706, 1)
 layout_mode = 0
 offset_left = 228.0
-offset_top = 48.0
+offset_top = 132.0
 offset_right = 460.0
-offset_bottom = 68.0
+offset_bottom = 152.0
 step = 0.0
 value = 50.0
 nine_patch_stretch = true
@@ -315,9 +312,9 @@ texture_progress = ExtResource("6")
 [node name="Label" type="Label" parent="Light"]
 layout_mode = 0
 offset_left = 476.0
-offset_top = 44.0
+offset_top = 128.0
 offset_right = 516.0
-offset_bottom = 75.0
+offset_bottom = 159.0
 scale = Vector2(0.9, 0.9)
 text = "+ 5"
 vertical_alignment = 1
@@ -325,45 +322,45 @@ vertical_alignment = 1
 [node name="Label2" type="Label" parent="Light"]
 layout_mode = 0
 offset_left = 228.0
-offset_top = 47.0
+offset_top = 131.0
 offset_right = 460.0
-offset_bottom = 70.0
+offset_bottom = 154.0
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
 theme_override_font_sizes/font_size = 14
 text = "0 / 20"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="TextureRect" type="TextureRect" parent="Light"]
+[node name="Icon" type="TextureRect" parent="Light"]
 layout_mode = 0
 offset_left = 192.0
-offset_top = 48.0
+offset_top = 132.0
 offset_right = 220.0
-offset_bottom = 68.0
+offset_bottom = 152.0
 expand_mode = 1
 stretch_mode = 5
 
 [node name="XP" type="Control" parent="."]
+layout_mode = 1
 anchors_preset = 0
-offset_top = 148.0
 offset_right = 40.0
-offset_bottom = 188.0
+offset_bottom = 40.0
 
 [node name="ColorRect" type="ColorRect" parent="XP"]
 layout_mode = 0
 offset_left = 60.0
-offset_top = 52.0
+offset_top = 196.0
 offset_right = 460.0
-offset_bottom = 72.0
+offset_bottom = 216.0
 color = Color(0.59, 0.46669, 0.2537, 1)
 
-[node name="TextureProgress2" type="TextureProgressBar" parent="XP"]
+[node name="TextureProgressGained" type="TextureProgressBar" parent="XP"]
 modulate = Color(1, 0.819608, 0.611765, 1)
 layout_mode = 0
 offset_left = 60.0
-offset_top = 52.0
+offset_top = 196.0
 offset_right = 460.0
-offset_bottom = 72.0
+offset_bottom = 216.0
 step = 0.0
 value = 60.0
 nine_patch_stretch = true
@@ -374,9 +371,9 @@ texture_progress = ExtResource("6")
 modulate = Color(0.921569, 0.631373, 0.203922, 1)
 layout_mode = 0
 offset_left = 60.0
-offset_top = 52.0
+offset_top = 196.0
 offset_right = 460.0
-offset_bottom = 72.0
+offset_bottom = 216.0
 step = 0.0
 value = 50.0
 nine_patch_stretch = true
@@ -390,9 +387,9 @@ texture_progress = ExtResource("6")
 [node name="Label" type="Label" parent="XP"]
 layout_mode = 0
 offset_left = 476.0
-offset_top = 48.0
+offset_top = 192.0
 offset_right = 516.0
-offset_bottom = 79.0
+offset_bottom = 223.0
 scale = Vector2(0.9, 0.9)
 text = "+ 5"
 vertical_alignment = 1
@@ -400,21 +397,21 @@ vertical_alignment = 1
 [node name="Label2" type="Label" parent="XP"]
 layout_mode = 0
 offset_left = 60.0
-offset_top = 51.0
+offset_top = 195.0
 offset_right = 456.0
-offset_bottom = 74.0
+offset_bottom = 218.0
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
 theme_override_font_sizes/font_size = 14
 text = "0 / 20"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="TextureRect" type="TextureRect" parent="XP"]
+[node name="Icon" type="TextureRect" parent="XP"]
 layout_mode = 0
 offset_left = 20.0
-offset_top = 48.0
+offset_top = 192.0
 offset_right = 52.0
-offset_bottom = 76.0
+offset_bottom = 220.0
 texture = ExtResource("4")
 expand_mode = 1
 stretch_mode = 5
@@ -444,7 +441,7 @@ texture = ExtResource("10")
 expand_mode = 1
 stretch_mode = 6
 
-[node name="AtkIcon" type="TextureRect" parent="Stats"]
+[node name="AttackIcon" type="TextureRect" parent="Stats"]
 layout_mode = 0
 offset_left = 244.0
 offset_top = 52.0
@@ -454,7 +451,7 @@ texture = ExtResource("12")
 expand_mode = 1
 stretch_mode = 6
 
-[node name="DefIcon" type="TextureRect" parent="Stats"]
+[node name="DefenseIcon" type="TextureRect" parent="Stats"]
 layout_mode = 0
 offset_left = 244.0
 offset_top = 80.0
@@ -464,7 +461,7 @@ texture = ExtResource("13")
 expand_mode = 1
 stretch_mode = 6
 
-[node name="AccIcon" type="TextureRect" parent="Stats"]
+[node name="AccuracyIcon" type="TextureRect" parent="Stats"]
 layout_mode = 0
 offset_left = 244.0
 offset_top = 108.0
@@ -474,7 +471,7 @@ texture = ExtResource("14")
 expand_mode = 1
 stretch_mode = 6
 
-[node name="EvaIcon" type="TextureRect" parent="Stats"]
+[node name="AgilityIcon" type="TextureRect" parent="Stats"]
 layout_mode = 0
 offset_left = 244.0
 offset_top = 136.0
@@ -493,7 +490,7 @@ offset_bottom = 38.0
 text = "0"
 vertical_alignment = 1
 
-[node name="Atk" type="Label" parent="Stats"]
+[node name="Attack" type="Label" parent="Stats"]
 layout_mode = 0
 offset_left = 288.0
 offset_top = 52.0
@@ -502,7 +499,7 @@ offset_bottom = 66.0
 text = "0"
 vertical_alignment = 1
 
-[node name="Def" type="Label" parent="Stats"]
+[node name="Defense" type="Label" parent="Stats"]
 layout_mode = 0
 offset_left = 288.0
 offset_top = 80.0
@@ -511,7 +508,7 @@ offset_bottom = 94.0
 text = "0"
 vertical_alignment = 1
 
-[node name="Acc" type="Label" parent="Stats"]
+[node name="Accuracy" type="Label" parent="Stats"]
 layout_mode = 0
 offset_left = 288.0
 offset_top = 108.0
@@ -520,7 +517,7 @@ offset_bottom = 122.0
 text = "0"
 vertical_alignment = 1
 
-[node name="Eva" type="Label" parent="Stats"]
+[node name="Agility" type="Label" parent="Stats"]
 layout_mode = 0
 offset_left = 288.0
 offset_top = 136.0
@@ -529,35 +526,33 @@ offset_bottom = 150.0
 text = "0"
 vertical_alignment = 1
 
-[node name="LineEdit" type="LineEdit" parent="."]
+[node name="Respec" type="Button" parent="."]
 layout_mode = 0
-offset_left = 24.0
+offset_left = 64.0
 offset_top = 152.0
-offset_right = 200.0
-offset_bottom = 184.0
-theme_override_colors/caret_color = Color(0, 0, 0, 1)
-caret_blink = true
-caret_blink_interval = 0.5
+offset_right = 172.0
+offset_bottom = 183.0
+text = "Respec (free)"
 
 [connection signal="mouse_entered" from="Ship" to="." method="_on_Ship_mouse_entered"]
 [connection signal="mouse_exited" from="Ship" to="." method="_on_Ship_mouse_exited"]
 [connection signal="pressed" from="Ship" to="." method="_on_Ship_pressed"]
-[connection signal="mouse_entered" from="Bullet/TextureRect" to="." method="_on_weapon_mouse_entered" binds= ["BULLET"]]
-[connection signal="mouse_exited" from="Bullet/TextureRect" to="." method="_on_icon_mouse_exited"]
-[connection signal="mouse_entered" from="Laser/TextureRect" to="." method="_on_weapon_mouse_entered" binds= ["LASER"]]
-[connection signal="mouse_exited" from="Laser/TextureRect" to="." method="_on_icon_mouse_exited"]
-[connection signal="mouse_entered" from="Bomb/TextureRect" to="." method="_on_weapon_mouse_entered" binds= ["BOMB"]]
-[connection signal="mouse_exited" from="Bomb/TextureRect" to="." method="_on_icon_mouse_exited"]
-[connection signal="mouse_entered" from="Light/TextureRect" to="." method="_on_weapon_mouse_entered" binds= ["LIGHT"]]
-[connection signal="mouse_exited" from="Light/TextureRect" to="." method="_on_icon_mouse_exited"]
+[connection signal="mouse_entered" from="Bullet/Icon" to="." method="_on_weapon_mouse_entered" binds= ["BULLET"]]
+[connection signal="mouse_exited" from="Bullet/Icon" to="." method="_on_icon_mouse_exited"]
+[connection signal="mouse_entered" from="Laser/Icon" to="." method="_on_weapon_mouse_entered" binds= ["LASER"]]
+[connection signal="mouse_exited" from="Laser/Icon" to="." method="_on_icon_mouse_exited"]
+[connection signal="mouse_entered" from="Bomb/Icon" to="." method="_on_weapon_mouse_entered" binds= ["BOMB"]]
+[connection signal="mouse_exited" from="Bomb/Icon" to="." method="_on_icon_mouse_exited"]
+[connection signal="mouse_entered" from="Light/Icon" to="." method="_on_weapon_mouse_entered" binds= ["LIGHT"]]
+[connection signal="mouse_exited" from="Light/Icon" to="." method="_on_icon_mouse_exited"]
 [connection signal="mouse_entered" from="Stats/HPIcon" to="." method="_on_icon_mouse_entered" binds= ["HEALTH_POINTS"]]
 [connection signal="mouse_exited" from="Stats/HPIcon" to="." method="_on_icon_mouse_exited"]
-[connection signal="mouse_entered" from="Stats/AtkIcon" to="." method="_on_icon_mouse_entered" binds= ["ATTACK"]]
-[connection signal="mouse_exited" from="Stats/AtkIcon" to="." method="_on_icon_mouse_exited"]
-[connection signal="mouse_entered" from="Stats/DefIcon" to="." method="_on_icon_mouse_entered" binds= ["DEFENSE"]]
-[connection signal="mouse_exited" from="Stats/DefIcon" to="." method="_on_icon_mouse_exited"]
-[connection signal="mouse_entered" from="Stats/AccIcon" to="." method="_on_icon_mouse_entered" binds= ["ACCURACY"]]
-[connection signal="mouse_exited" from="Stats/AccIcon" to="." method="_on_icon_mouse_exited"]
-[connection signal="mouse_entered" from="Stats/EvaIcon" to="." method="_on_icon_mouse_entered" binds= ["EVADE"]]
-[connection signal="mouse_exited" from="Stats/EvaIcon" to="." method="_on_icon_mouse_exited"]
-[connection signal="text_changed" from="LineEdit" to="." method="_on_line_edit_text_changed"]
+[connection signal="mouse_entered" from="Stats/AttackIcon" to="." method="_on_icon_mouse_entered" binds= ["ATTACK"]]
+[connection signal="mouse_exited" from="Stats/AttackIcon" to="." method="_on_icon_mouse_exited"]
+[connection signal="mouse_entered" from="Stats/DefenseIcon" to="." method="_on_icon_mouse_entered" binds= ["DEFENSE"]]
+[connection signal="mouse_exited" from="Stats/DefenseIcon" to="." method="_on_icon_mouse_exited"]
+[connection signal="mouse_entered" from="Stats/AccuracyIcon" to="." method="_on_icon_mouse_entered" binds= ["ACCURACY"]]
+[connection signal="mouse_exited" from="Stats/AccuracyIcon" to="." method="_on_icon_mouse_exited"]
+[connection signal="mouse_entered" from="Stats/AgilityIcon" to="." method="_on_icon_mouse_entered" binds= ["EVADE"]]
+[connection signal="mouse_exited" from="Stats/AgilityIcon" to="." method="_on_icon_mouse_exited"]
+[connection signal="pressed" from="Respec" to="." method="_on_respec_pressed"]

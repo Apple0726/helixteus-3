@@ -24,15 +24,16 @@ buses/default_bus_layout="res://Resources/default_bus_layout.tres"
 
 [autoload]
 
-Data="*res://Scripts/Data.gd"
-Helper="*res://Scripts/Helper.gd"
-Mods="*res://Scripts/Mods.gd"
-StarType="*res://Scripts/StarType.gd"
-UniqueBuilding="*res://Scripts/UniqueBuilding.gd"
-Building="*res://Scripts/Building.gd"
-Settings="*res://Scripts/Settings.gd"
-ResourceFiles="*res://Scripts/ResourceFiles.gd"
-Item="*res://Scripts/Item.gd"
+Data="*res://Scripts/Globals/Data.gd"
+Helper="*res://Scripts/Globals/Helper.gd"
+Mods="*res://Scripts/Globals/Mods.gd"
+StarType="*res://Scripts/Globals/StarType.gd"
+UniqueBuilding="*res://Scripts/Globals/UniqueBuilding.gd"
+Building="*res://Scripts/Globals/Building.gd"
+Settings="*res://Scripts/Globals/Settings.gd"
+ResourceFiles="*res://Scripts/Globals/ResourceFiles.gd"
+Item="*res://Scripts/Globals/Item.gd"
+ShipClass="*res://Scripts/Globals/ShipClass.gd"
 
 [debug]
 

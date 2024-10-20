@@ -664,11 +664,11 @@ func add_ship_XP(id:int, XP:float):
 		ship_data[id].XP -= ship_data[id].XP_to_lv
 		ship_data[id].XP_to_lv = round(ship_data[id].XP_to_lv * game.maths_bonus.SLUGF_XP)
 		ship_data[id].lv += 1
-		ship_data[id].total_HP = round(ship_data[id].total_HP * game.maths_bonus.SLUGF_Stats)
-		ship_data[id].HP = ship_data[id].total_HP
-		ship_data[id].atk = round(ship_data[id].atk * game.maths_bonus.SLUGF_Stats)
-		ship_data[id].acc = round(ship_data[id].acc * game.maths_bonus.SLUGF_Stats)
-		ship_data[id].eva = round(ship_data[id].eva * game.maths_bonus.SLUGF_Stats)
+		ship_data[id].HP = round(ship_data[id].HP * game.maths_bonus.SLUGF_Stats)
+
+func calculate_total_ship_XP(id:int):
+	var q = game.maths_bonus.SLUGF_XP
+	return 20 * max(0, q * (1 - pow(q, game.ship_data[id].lv - 1)) / (1 - q)) + game.ship_data[id].XP
 
 func add_weapon_XP(id:int, weapon:String, XP:float):
 	var ship_data = game.ship_data

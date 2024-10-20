@@ -2,7 +2,7 @@ extends Control
 
 @onready var game = get_node("/root/Game")
 var HX_data# = [{"money":100, "XP":14}]
-var ship_data# = [{"lv":1, "HP":20, "total_HP":20, "atk":15, "def":15, "acc":15, "eva":15, "XP":0, "XP_to_lv":20, "bullet":{"lv":1, "XP":0, "XP_to_lv":10}, "laser":{"lv":1, "XP":0, "XP_to_lv":10}, "bomb":{"lv":1, "XP":0, "XP_to_lv":10}, "light":{"lv":1, "XP":0, "XP_to_lv":20}}]
+var ship_data
 var weapon_XPs:Array# = [{"bullet":0, "laser":2, "bomb":0, "light":0}]
 var XP:float = 0
 var money:float = 0

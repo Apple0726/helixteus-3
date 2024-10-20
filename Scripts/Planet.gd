@@ -1305,7 +1305,7 @@ func _unhandled_input(event):
 						$Obstacles.set_cell(Vector2i(x_pos, y_pos))
 						game.popup(tr("SHIP_CONTROL_SUCCESS"), 1.5)
 						game.HUD.ships.visible = true
-						game.ship_data.append({"name":tr("SHIP"), "lv":1, "HP":25, "total_HP":25, "atk":10, "def":5, "acc":10, "eva":10, "points":2, "max_points":2, "HP_mult":1.0, "atk_mult":1.0, "def_mult":1.0, "acc_mult":1.0, "eva_mult":1.0, "ability":"none", "superweapon":"none", "XP":0, "XP_to_lv":20, "bullet":{"lv":1, "XP":0, "XP_to_lv":10}, "laser":{"lv":1, "XP":0, "XP_to_lv":10}, "bomb":{"lv":1, "XP":0, "XP_to_lv":10}, "light":{"lv":1, "XP":0, "XP_to_lv":20}})
+						game.get_1st_ship()
 				else:
 					if game.show.has("SP"):
 						game.popup(tr("SHIP_CONTROL_FAIL"), 1.5)

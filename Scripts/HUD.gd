@@ -444,7 +444,7 @@ func _on_ConvertMinerals_pressed():
 	$Bottom/Panel/ColorRect.color.a = 0.0
 
 func _on_Ships_pressed():
-	game.toggle_panel(game.ship_panel)
+	game.toggle_panel("ships_panel")
 
 func _on_Ships_mouse_entered():
 	game.show_tooltip("%s (%s)" % [tr("SHIPS"), OS.get_keycode_string(DisplayServer.keyboard_get_keycode_from_physical(KEY_Y))])

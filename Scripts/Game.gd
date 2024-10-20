@@ -246,6 +246,7 @@ var cave
 var ruins
 var STM
 var battle
+var ship_customize_screen
 var is_conquering_all:bool = false
 
 var cave_filters = {
@@ -679,7 +680,7 @@ func load_univ():
 			atoms[atom] += autocollect.atoms[atom] * time_elapsed * u_i.time_speed
 	if c_v == "mining" or c_v == "cave":
 		c_v = "planet"
-	elif c_v in ["science_tree", "STM", "planet_details"]:
+	elif c_v in ["science_tree", "STM", "planet_details", "ship_customize_screen"]:
 		c_v = l_v
 	elif c_v == "battle":
 		c_v = "system"
@@ -1495,8 +1496,10 @@ func switch_view(new_view:String, other_params:Dictionary = {}):
 					switch_music(load("res://Audio/ambient" + str(Helper.rand_int(1, 3)) + ".ogg"), u_i.time_speed)
 				"battle":
 					$UI.add_child(HUD)
-					HUD.refresh()
 					battle.queue_free()
+				"ship_customize_screen":
+					$UI.add_child(HUD)
+					ship_customize_screen.queue_free()
 			if c_v in ["science_tree", "STM", "planet_details"]:
 				c_v = l_v
 			elif new_view != "":
@@ -1618,6 +1621,12 @@ func switch_view(new_view:String, other_params:Dictionary = {}):
 					starfield_tween.kill()
 				starfield_tween = create_tween()
 				starfield_tween.tween_property($Stars/Starfield, "modulate:a", 0.5, 0.5)
+			"ship_customize_screen":
+				ship_customize_screen = load("res://Scenes/ShipCustomizeScreen.tscn").instantiate()
+				ship_customize_screen.ship_id = other_params.ship_id
+				add_child(ship_customize_screen)
+				if is_instance_valid(HUD) and $UI.is_ancestor_of(HUD):
+					$UI.remove_child(HUD)
 		if c_v in ["planet", "system", "galaxy", "cluster", "universe", "mining", "science_tree"] and is_instance_valid(HUD) and is_ancestor_of(HUD):
 			HUD.refresh()
 		if c_v == "universe" and is_instance_valid(HUD) and HUD.dimension_btn.visible:
@@ -4526,9 +4535,31 @@ func game_fade(fn, args:Array = []):
 	game_tween = create_tween()
 	game_tween.tween_property(self, "modulate", Color(1, 1, 1, 1), 0.5)
 
+func add_new_ship_data():
+	ship_data.append({
+		"name": tr("SHIP"),
+		"lv": 1,
+		"HP": 11,
+		"attack": 11,
+		"defense": 11,
+		"accuracy": 11,
+		"agility": 11,
+		"XP": 0,
+		"XP_to_lv": 20,
+		"bullet": {"lv":1, "XP":0, "XP_to_lv":10},
+		"laser": {"lv":1, "XP":0, "XP_to_lv":10},
+		"bomb": {"lv":1, "XP":0, "XP_to_lv":10},
+		"light": {"lv":1, "XP":0, "XP_to_lv":20},
+		"respec_count": 0,
+		"ship_class":ShipClass.STANDARD,
+	})
+
+func get_1st_ship():
+	add_new_ship_data()
+
 func get_2nd_ship():
 	if len(ship_data) == 1:
-		ship_data.append({"name":tr("SHIP"), "lv":1, "HP":18, "total_HP":18, "atk":15, "def":3, "acc":13, "eva":8, "points":2, "max_points":2, "HP_mult":1.0, "atk_mult":1.0, "def_mult":1.0, "acc_mult":1.0, "eva_mult":1.0, "ability":"none", "superweapon":"none", "rage":0, "XP":0, "XP_to_lv":20, "bullet":{"lv":1, "XP":0, "XP_to_lv":10}, "laser":{"lv":1, "XP":0, "XP_to_lv":10}, "bomb":{"lv":1, "XP":0, "XP_to_lv":10}, "light":{"lv":1, "XP":0, "XP_to_lv":20}})
+		add_new_ship_data()
 		Helper.add_ship_XP(1, 2000)
 		Helper.add_weapon_XP(1, "bullet", 50)
 		Helper.add_weapon_XP(1, "laser", 50)
@@ -4539,7 +4570,7 @@ func get_2nd_ship():
 
 func get_3rd_ship():
 	if len(ship_data) == 2:
-		ship_data.append({"name":tr("SHIP"), "lv":1, "HP":22, "total_HP":22, "atk":12, "def":4, "acc":12, "eva":15, "points":2, "max_points":2, "HP_mult":1.0, "atk_mult":1.0, "def_mult":1.0, "acc_mult":1.0, "eva_mult":1.0, "ability":"none", "superweapon":"none", "rage":0, "XP":0, "XP_to_lv":20, "bullet":{"lv":1, "XP":0, "XP_to_lv":10}, "laser":{"lv":1, "XP":0, "XP_to_lv":10}, "bomb":{"lv":1, "XP":0, "XP_to_lv":10}, "light":{"lv":1, "XP":0, "XP_to_lv":20}})
+		add_new_ship_data()
 		Helper.add_ship_XP(2, 60000)
 		Helper.add_weapon_XP(2, "bullet", 140)
 		Helper.add_weapon_XP(2, "laser", 140)
@@ -4551,7 +4582,7 @@ func get_3rd_ship():
 func get_4th_ship():
 	if len(ship_data) == 3:
 		popup(tr("SHIP_CONTROL_SUCCESS"), 1.5)
-		ship_data.append({"name":tr("SHIP"),  "lv":1, "HP":18, "total_HP":18, "atk":14, "def":8, "acc":14, "eva":14, "points":2, "max_points":2, "HP_mult":1.0, "atk_mult":1.0, "def_mult":1.0, "acc_mult":1.0, "eva_mult":1.0, "ability":"none", "superweapon":"none", "rage":0, "XP":0, "XP_to_lv":20, "bullet":{"lv":1, "XP":0, "XP_to_lv":10}, "laser":{"lv":1, "XP":0, "XP_to_lv":10}, "bomb":{"lv":1, "XP":0, "XP_to_lv":10}, "light":{"lv":1, "XP":0, "XP_to_lv":20}})
+		add_new_ship_data()
 		Helper.add_ship_XP(3, 1000000)
 		Helper.add_weapon_XP(3, "bullet", 400)
 		Helper.add_weapon_XP(3, "laser", 400)

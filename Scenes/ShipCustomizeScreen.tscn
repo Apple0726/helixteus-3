@@ -32,10 +32,10 @@ metadata/_edit_lock_ = true
 
 [node name="ShipClass" type="PanelContainer" parent="."]
 layout_mode = 0
-offset_left = 396.0
-offset_top = 96.0
-offset_right = 592.0
-offset_bottom = 472.0
+offset_left = 520.0
+offset_top = 76.0
+offset_right = 716.0
+offset_bottom = 452.0
 theme_override_styles/panel = SubResource("StyleBoxFlat_q0bap")
 
 [node name="VBox" type="VBoxContainer" parent="ShipClass"]
@@ -89,44 +89,49 @@ button_text = "TANK"
 layout_mode = 2
 button_text = "UBER"
 
+[node name="Actions" type="HBoxContainer" parent="."]
+layout_mode = 1
+offset_left = 512.0
+offset_top = 624.0
+offset_right = 768.0
+offset_bottom = 665.0
+theme_override_constants/separation = 25
+alignment = 2
+
+[node name="Cancel" type="Button" parent="Actions"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "CANCEL"
+
+[node name="Done" type="Button" parent="Actions"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "DONE"
+
 [node name="Ship0" type="TextureRect" parent="."]
 layout_mode = 0
-offset_left = 80.0
-offset_top = 116.0
-offset_right = 336.0
-offset_bottom = 244.0
+offset_left = 172.0
+offset_top = 84.0
+offset_right = 428.0
+offset_bottom = 212.0
 texture = ExtResource("1_krjc3")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="Button" type="Button" parent="."]
-layout_mode = 1
-anchors_preset = 3
-anchor_left = 1.0
-anchor_top = 1.0
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = -92.0
-offset_top = -44.0
-offset_right = -8.0
-offset_bottom = -8.0
-grow_horizontal = 0
-grow_vertical = 0
-text = "DONE"
-
 [node name="ShipStats" type="Panel" parent="."]
 layout_mode = 0
-offset_left = 660.0
-offset_top = 96.0
-offset_right = 992.0
-offset_bottom = 432.0
+offset_left = 756.0
+offset_top = 76.0
+offset_right = 1132.0
+offset_bottom = 452.0
 theme_override_styles/panel = SubResource("StyleBoxFlat_q0bap")
 
 [node name="Label" type="Label" parent="ShipStats"]
 layout_mode = 1
 anchors_preset = 10
 anchor_right = 1.0
-offset_bottom = 23.0
+offset_top = 8.0
+offset_bottom = 31.0
 grow_horizontal = 2
 text = "SHIP_STATS"
 horizontal_alignment = 1
@@ -135,198 +140,248 @@ horizontal_alignment = 1
 layout_mode = 1
 anchors_preset = 10
 anchor_right = 1.0
-offset_top = 32.0
-offset_bottom = 55.0
+offset_top = 52.0
+offset_bottom = 75.0
 grow_horizontal = 2
 text = "POINTS_ALLOCATED"
 horizontal_alignment = 1
 
 [node name="HPIcon" type="TextureRect" parent="ShipStats"]
 layout_mode = 0
-offset_left = 56.0
-offset_top = 80.0
-offset_right = 88.0
-offset_bottom = 112.0
+offset_left = 40.0
+offset_top = 100.0
+offset_right = 72.0
+offset_bottom = 132.0
 texture = ExtResource("5_elefb")
 expand_mode = 1
 stretch_mode = 5
 
 [node name="HPLabel" type="Label" parent="ShipStats"]
 layout_mode = 0
-offset_left = 184.0
-offset_top = 84.0
-offset_right = 244.0
-offset_bottom = 107.0
+offset_left = 244.0
+offset_top = 104.0
+offset_right = 304.0
+offset_bottom = 127.0
 text = "10"
 horizontal_alignment = 1
 
+[node name="HPLabel2" type="Label" parent="ShipStats"]
+layout_mode = 0
+offset_left = 84.0
+offset_top = 104.0
+offset_right = 238.0
+offset_bottom = 127.0
+text = "HEALTH_POINTS"
+
+[node name="AttackLabel2" type="Label" parent="ShipStats"]
+layout_mode = 0
+offset_left = 84.0
+offset_top = 152.0
+offset_right = 238.0
+offset_bottom = 175.0
+text = "ATTACK"
+
+[node name="DefenseLabel2" type="Label" parent="ShipStats"]
+layout_mode = 0
+offset_left = 84.0
+offset_top = 204.0
+offset_right = 238.0
+offset_bottom = 227.0
+text = "DEFENSE"
+
+[node name="AccuracyLabel2" type="Label" parent="ShipStats"]
+layout_mode = 0
+offset_left = 84.0
+offset_top = 256.0
+offset_right = 238.0
+offset_bottom = 279.0
+text = "ACCURACY"
+
+[node name="AgilityLabel2" type="Label" parent="ShipStats"]
+layout_mode = 0
+offset_left = 84.0
+offset_top = 304.0
+offset_right = 238.0
+offset_bottom = 327.0
+text = "AGILITY"
+
 [node name="RemoveHP" type="Button" parent="ShipStats"]
 layout_mode = 0
-offset_left = 148.0
-offset_top = 80.0
-offset_right = 180.0
-offset_bottom = 113.0
+offset_left = 208.0
+offset_top = 100.0
+offset_right = 240.0
+offset_bottom = 133.0
+focus_mode = 0
 disabled = true
 text = "-"
 
 [node name="AddHP" type="Button" parent="ShipStats"]
 layout_mode = 0
-offset_left = 248.0
-offset_top = 80.0
-offset_right = 278.0
-offset_bottom = 113.0
+offset_left = 308.0
+offset_top = 100.0
+offset_right = 338.0
+offset_bottom = 133.0
+focus_mode = 0
 text = "+"
 
 [node name="AttackIcon" type="TextureRect" parent="ShipStats"]
 layout_mode = 0
-offset_left = 56.0
-offset_top = 128.0
-offset_right = 88.0
-offset_bottom = 160.0
+offset_left = 40.0
+offset_top = 148.0
+offset_right = 72.0
+offset_bottom = 180.0
 texture = ExtResource("6_5p6u7")
 expand_mode = 1
 stretch_mode = 5
 
 [node name="AttackLabel" type="Label" parent="ShipStats"]
 layout_mode = 0
-offset_left = 184.0
-offset_top = 132.0
-offset_right = 244.0
-offset_bottom = 155.0
+offset_left = 244.0
+offset_top = 152.0
+offset_right = 304.0
+offset_bottom = 175.0
 text = "10"
 horizontal_alignment = 1
 
 [node name="RemoveAttack" type="Button" parent="ShipStats"]
 layout_mode = 0
-offset_left = 148.0
-offset_top = 128.0
-offset_right = 180.0
-offset_bottom = 161.0
+offset_left = 208.0
+offset_top = 148.0
+offset_right = 240.0
+offset_bottom = 181.0
+focus_mode = 0
 disabled = true
 text = "-"
 
 [node name="AddAttack" type="Button" parent="ShipStats"]
 layout_mode = 0
-offset_left = 248.0
-offset_top = 128.0
-offset_right = 278.0
-offset_bottom = 161.0
+offset_left = 308.0
+offset_top = 148.0
+offset_right = 338.0
+offset_bottom = 181.0
+focus_mode = 0
 text = "+"
 
 [node name="DefenseIcon" type="TextureRect" parent="ShipStats"]
 layout_mode = 0
-offset_left = 56.0
-offset_top = 180.0
-offset_right = 88.0
-offset_bottom = 212.0
+offset_left = 40.0
+offset_top = 200.0
+offset_right = 72.0
+offset_bottom = 232.0
 texture = ExtResource("7_sfcj0")
 expand_mode = 1
 stretch_mode = 5
 
 [node name="DefenseLabel" type="Label" parent="ShipStats"]
 layout_mode = 0
-offset_left = 184.0
-offset_top = 184.0
-offset_right = 244.0
-offset_bottom = 207.0
+offset_left = 244.0
+offset_top = 204.0
+offset_right = 304.0
+offset_bottom = 227.0
 text = "10"
 horizontal_alignment = 1
 
 [node name="RemoveDefense" type="Button" parent="ShipStats"]
 layout_mode = 0
-offset_left = 148.0
-offset_top = 180.0
-offset_right = 180.0
-offset_bottom = 213.0
+offset_left = 208.0
+offset_top = 200.0
+offset_right = 240.0
+offset_bottom = 233.0
+focus_mode = 0
 disabled = true
 text = "-"
 
 [node name="AddDefense" type="Button" parent="ShipStats"]
 layout_mode = 0
-offset_left = 248.0
-offset_top = 180.0
-offset_right = 278.0
-offset_bottom = 213.0
+offset_left = 308.0
+offset_top = 200.0
+offset_right = 338.0
+offset_bottom = 233.0
+focus_mode = 0
 text = "+"
 
 [node name="AccuracyIcon" type="TextureRect" parent="ShipStats"]
 layout_mode = 0
-offset_left = 56.0
-offset_top = 232.0
-offset_right = 88.0
-offset_bottom = 264.0
+offset_left = 40.0
+offset_top = 252.0
+offset_right = 72.0
+offset_bottom = 284.0
 texture = ExtResource("8_72tah")
 expand_mode = 1
 stretch_mode = 5
 
 [node name="AccuracyLabel" type="Label" parent="ShipStats"]
 layout_mode = 0
-offset_left = 184.0
-offset_top = 236.0
-offset_right = 244.0
-offset_bottom = 259.0
+offset_left = 244.0
+offset_top = 256.0
+offset_right = 304.0
+offset_bottom = 279.0
 text = "10"
 horizontal_alignment = 1
 
 [node name="RemoveAccuracy" type="Button" parent="ShipStats"]
 layout_mode = 0
-offset_left = 148.0
-offset_top = 232.0
-offset_right = 180.0
-offset_bottom = 265.0
+offset_left = 208.0
+offset_top = 252.0
+offset_right = 240.0
+offset_bottom = 285.0
+focus_mode = 0
 disabled = true
 text = "-"
 
 [node name="AddAccuracy" type="Button" parent="ShipStats"]
 layout_mode = 0
-offset_left = 248.0
-offset_top = 232.0
-offset_right = 278.0
-offset_bottom = 265.0
+offset_left = 308.0
+offset_top = 252.0
+offset_right = 338.0
+offset_bottom = 285.0
+focus_mode = 0
 text = "+"
 
 [node name="AgilityIcon" type="TextureRect" parent="ShipStats"]
 layout_mode = 0
-offset_left = 56.0
-offset_top = 280.0
-offset_right = 88.0
-offset_bottom = 312.0
+offset_left = 40.0
+offset_top = 300.0
+offset_right = 72.0
+offset_bottom = 332.0
 texture = ExtResource("9_cosga")
 expand_mode = 1
 stretch_mode = 5
 
 [node name="AgilityLabel" type="Label" parent="ShipStats"]
 layout_mode = 0
-offset_left = 184.0
-offset_top = 284.0
-offset_right = 244.0
-offset_bottom = 307.0
+offset_left = 244.0
+offset_top = 304.0
+offset_right = 304.0
+offset_bottom = 327.0
 text = "10"
 horizontal_alignment = 1
 
 [node name="RemoveAgility" type="Button" parent="ShipStats"]
 layout_mode = 0
-offset_left = 148.0
-offset_top = 280.0
-offset_right = 180.0
-offset_bottom = 313.0
+offset_left = 208.0
+offset_top = 300.0
+offset_right = 240.0
+offset_bottom = 333.0
+focus_mode = 0
 disabled = true
 text = "-"
 
 [node name="AddAgility" type="Button" parent="ShipStats"]
 layout_mode = 0
-offset_left = 248.0
-offset_top = 280.0
-offset_right = 278.0
-offset_bottom = 313.0
+offset_left = 308.0
+offset_top = 300.0
+offset_right = 338.0
+offset_bottom = 333.0
+focus_mode = 0
 text = "+"
 
 [node name="PassiveAbility" type="Panel" parent="."]
 layout_mode = 0
-offset_left = 312.0
-offset_top = 496.0
-offset_right = 680.0
-offset_bottom = 700.0
+offset_left = 112.0
+offset_top = 248.0
+offset_right = 480.0
+offset_bottom = 452.0
 theme_override_styles/panel = SubResource("StyleBoxFlat_q0bap")
 
 [node name="Label" type="Label" parent="PassiveAbility"]
@@ -361,3 +416,15 @@ autowrap_mode = 3
 [connection signal="pressed" from="ShipClass/VBox/VBox/Reckless" to="." method="update_ship_stats" binds= [7]]
 [connection signal="pressed" from="ShipClass/VBox/VBox/Tank" to="." method="update_ship_stats" binds= [8]]
 [connection signal="pressed" from="ShipClass/VBox/VBox/Uber" to="." method="update_ship_stats" binds= [9]]
+[connection signal="pressed" from="Actions/Cancel" to="." method="_on_cancel_pressed"]
+[connection signal="pressed" from="Actions/Done" to="." method="_on_done_pressed"]
+[connection signal="pressed" from="ShipStats/RemoveHP" to="." method="_on_remove_hp_pressed"]
+[connection signal="pressed" from="ShipStats/AddHP" to="." method="_on_add_hp_pressed"]
+[connection signal="pressed" from="ShipStats/RemoveAttack" to="." method="_on_remove_attack_pressed"]
+[connection signal="pressed" from="ShipStats/AddAttack" to="." method="_on_add_attack_pressed"]
+[connection signal="pressed" from="ShipStats/RemoveDefense" to="." method="_on_remove_defense_pressed"]
+[connection signal="pressed" from="ShipStats/AddDefense" to="." method="_on_add_defense_pressed"]
+[connection signal="pressed" from="ShipStats/RemoveAccuracy" to="." method="_on_remove_accuracy_pressed"]
+[connection signal="pressed" from="ShipStats/AddAccuracy" to="." method="_on_add_accuracy_pressed"]
+[connection signal="pressed" from="ShipStats/RemoveAgility" to="." method="_on_remove_agility_pressed"]
+[connection signal="pressed" from="ShipStats/AddAgility" to="." method="_on_add_agility_pressed"]

@@ -1,58 +1,73 @@
-[gd_scene load_steps=11 format=3 uid="uid://csljwgggftgxb"]
+[gd_scene load_steps=13 format=3 uid="uid://csljwgggftgxb"]
 
 [ext_resource type="Script" path="res://Scripts/ShipPanel.gd" id="3"]
+[ext_resource type="Texture2D" uid="uid://ccntlctxytsi2" path="res://Graphics/GUI/Panel.png" id="3_xp52f"]
+[ext_resource type="Texture2D" uid="uid://baowebna7hgr5" path="res://Graphics/GUI/CloseButtonNormal.png" id="4_ekxvq"]
 [ext_resource type="PackedScene" uid="uid://gy6plqno7n0y" path="res://Scenes/ShipInfo.tscn" id="5"]
-[ext_resource type="PackedScene" uid="uid://ddf2xjwcht77u" path="res://Scenes/CloseButton.tscn" id="6"]
+[ext_resource type="Texture2D" uid="uid://c1vwn7p5uxu1r" path="res://Graphics/GUI/CloseButtonHover.png" id="5_5824e"]
 [ext_resource type="Theme" uid="uid://cp2u1kgj60ic" path="res://Resources/default_theme.tres" id="7"]
 [ext_resource type="PackedScene" uid="uid://rkeuei54m30i" path="res://Scenes/Drives.tscn" id="8"]
-[ext_resource type="Texture2D" uid="uid://d1exdy8b54nk0" path="res://Graphics/Icons/Arrow.png" id="9"]
-[ext_resource type="Texture2D" uid="uid://ukmqsjqh05sp" path="res://Graphics/Science/SCT.png" id="10"]
-[ext_resource type="Texture2D" uid="uid://bkrg5no182mqp" path="res://Graphics/Science/CD.png" id="11"]
-[ext_resource type="Texture2D" uid="uid://dlr5si00wyqwh" path="res://Graphics/Buttons/Upgrade.png" id="12"]
-[ext_resource type="PackedScene" path="res://Scenes/Upgrade.tscn" id="13"]
+[ext_resource type="Texture2D" uid="uid://ds6nct7g63284" path="res://Graphics/Icons/Arrow.png" id="9"]
+[ext_resource type="Texture2D" uid="uid://btrkjgmmocq55" path="res://Graphics/Science/SCT.png" id="10"]
+[ext_resource type="Texture2D" uid="uid://di3sx4ynm6kot" path="res://Graphics/Science/CD.png" id="11"]
 
-[node name="Background" type="Panel"]
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -512.0
-offset_top = -296.0
-offset_right = 512.0
-offset_bottom = 296.0
+[sub_resource type="SystemFont" id="SystemFont_sxpbd"]
+font_names = PackedStringArray("Arial")
+subpixel_positioning = 0
+multichannel_signed_distance_field = true
+
+[sub_resource type="LabelSettings" id="LabelSettings_wweft"]
+font = SubResource("SystemFont_sxpbd")
+font_size = 24
+shadow_size = 2
+shadow_color = Color(0, 0, 0, 0.372549)
+shadow_offset = Vector2(2, 2)
+
+[node name="Background" type="Control"]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 1024.0
+offset_bottom = 592.0
 theme = ExtResource("7")
 script = ExtResource("3")
 
+[node name="GUI" type="TextureRect" parent="."]
+layout_mode = 0
+offset_right = 1280.0
+offset_bottom = 720.0
+mouse_filter = 2
+texture = ExtResource("3_xp52f")
+
+[node name="CloseButton" type="TextureButton" parent="."]
+layout_mode = 0
+offset_left = 1136.0
+offset_top = 67.0
+offset_right = 1185.0
+offset_bottom = 116.0
+texture_normal = ExtResource("4_ekxvq")
+texture_hover = ExtResource("5_5824e")
+
 [node name="Title" type="Label" parent="."]
 custom_minimum_size = Vector2(0, 38)
-layout_mode = 0
+layout_mode = 1
+anchors_preset = 10
 anchor_right = 1.0
-offset_bottom = 35.0
+offset_left = 128.0
+offset_top = 72.0
+offset_right = 128.0
+offset_bottom = 110.0
+grow_horizontal = 2
 theme_override_font_sizes/font_size = 18
 text = "SHIPS"
-horizontal_alignment = 1
+label_settings = SubResource("LabelSettings_wweft")
 vertical_alignment = 1
 
-[node name="CloseButton" parent="." instance=ExtResource("6")]
-layout_mode = 0
-anchors_preset = 0
-anchor_left = 0.0
-anchor_right = 0.0
-offset_left = 992.0
-offset_top = 8.0
-offset_right = 1016.0
-offset_bottom = 32.0
-grow_horizontal = 1
-
 [node name="Grid" type="GridContainer" parent="."]
-layout_mode = 0
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = 8.0
-offset_top = 96.0
-offset_right = -8.0
-offset_bottom = -4.0
+layout_mode = 1
+offset_left = 112.0
+offset_top = 180.0
+offset_right = 1168.0
+offset_bottom = 632.0
 columns = 2
 
 [node name="Panel1" parent="Grid" instance=ExtResource("5")]
@@ -60,51 +75,41 @@ layout_mode = 2
 victory_screen = false
 
 [node name="Panel2" parent="Grid" instance=ExtResource("5")]
-visible = false
 layout_mode = 2
 victory_screen = false
 id = 1
 
 [node name="Panel3" parent="Grid" instance=ExtResource("5")]
-visible = false
 layout_mode = 2
 victory_screen = false
 id = 2
 
 [node name="Panel4" parent="Grid" instance=ExtResource("5")]
-visible = false
 layout_mode = 2
 victory_screen = false
 id = 3
 
 [node name="Drives" parent="." instance=ExtResource("8")]
 visible = false
-layout_mode = 0
+layout_mode = 1
+anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = 8.0
-offset_top = 96.0
-offset_right = -8.0
-offset_bottom = -8.0
+offset_left = 120.0
+offset_top = 152.0
+offset_right = 104.0
+offset_bottom = 48.0
+grow_horizontal = 2
+grow_vertical = 2
 
-[node name="Upgrade" parent="." instance=ExtResource("13")]
-visible = false
-layout_mode = 0
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_top = 88.0
-offset_right = 0.0
-offset_bottom = 0.0
-
-[node name="Panel" type="Panel" parent="."]
+[node name="Panel" type="Control" parent="."]
 custom_minimum_size = Vector2(0, 48)
-layout_mode = 0
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = 8.0
-offset_top = 40.0
-offset_right = -8.0
-offset_bottom = -504.0
+layout_mode = 1
+anchors_preset = 0
+offset_left = 108.0
+offset_top = 132.0
+offset_right = 1176.0
+offset_bottom = 180.0
 mouse_filter = 1
 
 [node name="TravelETA" type="Label" parent="Panel"]
@@ -130,7 +135,8 @@ theme = ExtResource("7")
 text = "SHOW_WEAPON_XPS"
 
 [node name="DriveButton" type="TextureButton" parent="Panel"]
-layout_mode = 0
+layout_mode = 1
+anchors_preset = 6
 anchor_left = 1.0
 anchor_top = 0.5
 anchor_right = 1.0
@@ -139,6 +145,8 @@ offset_left = -120.0
 offset_top = -24.0
 offset_right = -72.0
 offset_bottom = 20.0
+grow_horizontal = 0
+grow_vertical = 2
 texture_normal = ExtResource("11")
 ignore_texture_size = true
 stretch_mode = 5
@@ -172,23 +180,8 @@ texture_normal = ExtResource("9")
 ignore_texture_size = true
 stretch_mode = 5
 
-[node name="UpgradeButton" type="TextureButton" parent="Panel"]
-layout_mode = 0
-anchor_left = 1.0
-anchor_top = 0.5
-anchor_right = 1.0
-anchor_bottom = 0.5
-offset_left = -168.0
-offset_top = -20.0
-offset_right = -128.0
-offset_bottom = 20.0
-texture_normal = ExtResource("12")
-ignore_texture_size = true
-stretch_mode = 4
-
 [node name="SpaceportTimer" type="Timer" parent="."]
 
-[connection signal="close_button_pressed" from="CloseButton" to="." method="_on_close_button_pressed"]
 [connection signal="toggled" from="Panel/CheckBox" to="." method="_on_CheckBox_toggled"]
 [connection signal="mouse_entered" from="Panel/DriveButton" to="." method="_on_DriveButton_mouse_entered"]
 [connection signal="mouse_exited" from="Panel/DriveButton" to="." method="_on_mouse_exited"]
@@ -199,7 +192,4 @@ stretch_mode = 4
 [connection signal="mouse_entered" from="Panel/GoToShips" to="." method="_on_GoToShips_mouse_entered"]
 [connection signal="mouse_exited" from="Panel/GoToShips" to="." method="_on_mouse_exited"]
 [connection signal="pressed" from="Panel/GoToShips" to="." method="_on_GoToShips_pressed"]
-[connection signal="mouse_entered" from="Panel/UpgradeButton" to="." method="_on_UpgradeButton_mouse_entered"]
-[connection signal="mouse_exited" from="Panel/UpgradeButton" to="." method="_on_mouse_exited"]
-[connection signal="pressed" from="Panel/UpgradeButton" to="." method="_on_UpgradeButton_pressed"]
 [connection signal="timeout" from="SpaceportTimer" to="." method="_on_SpaceportTimer_timeout"]

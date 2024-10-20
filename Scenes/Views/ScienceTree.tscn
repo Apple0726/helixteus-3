@@ -756,68 +756,6 @@ offset_right = 2688.0
 offset_bottom = 356.0
 size_flags_horizontal = 13
 
-[node name="UP1" parent="Main" instance=ExtResource("1")]
-layout_mode = 0
-anchors_preset = 0
-anchor_top = 0.0
-anchor_bottom = 0.0
-offset_left = 1184.0
-offset_top = -148.0
-offset_right = 1440.0
-offset_bottom = -84.0
-size_flags_horizontal = 13
-
-[node name="L_UP1" type="Line2D" parent="Main"]
-position = Vector2(-576, -656)
-points = PackedVector2Array(2048, 560, 2144, 560)
-width = 2.0
-default_color = Color(0.4, 1, 0.465625, 1)
-
-[node name="UP2" parent="Main" instance=ExtResource("1")]
-layout_mode = 0
-anchors_preset = 0
-anchor_top = 0.0
-anchor_bottom = 0.0
-offset_left = 1600.0
-offset_top = -148.0
-offset_right = 1856.0
-offset_bottom = -84.0
-size_flags_horizontal = 13
-
-[node name="L_UP2" type="Line2D" parent="Main"]
-position = Vector2(-576, -656)
-points = PackedVector2Array(2464, 560, 2560, 560)
-width = 2.0
-default_color = Color(0.4, 1, 0.465625, 1)
-
-[node name="UP3" parent="Main" instance=ExtResource("1")]
-layout_mode = 0
-anchors_preset = 0
-anchor_top = 0.0
-anchor_bottom = 0.0
-offset_left = 2016.0
-offset_top = -148.0
-offset_right = 2272.0
-offset_bottom = -84.0
-size_flags_horizontal = 13
-
-[node name="L_UP3" type="Line2D" parent="Main"]
-position = Vector2(-160, -656)
-points = PackedVector2Array(2464, 560, 2560, 560)
-width = 2.0
-default_color = Color(0.4, 1, 0.465625, 1)
-
-[node name="UP4" parent="Main" instance=ExtResource("1")]
-layout_mode = 0
-anchors_preset = 0
-anchor_top = 0.0
-anchor_bottom = 0.0
-offset_left = 2432.0
-offset_top = -148.0
-offset_right = 2688.0
-offset_bottom = -84.0
-size_flags_horizontal = 13
-
 [node name="L_CD" type="Line2D" parent="Main"]
 position = Vector2(1484.25, -288)
 scale = Vector2(0.875, 1)
@@ -895,12 +833,6 @@ points = PackedVector2Array(88, 12, 168, 12)
 width = 2.0
 default_color = Color(0.4, 1, 0.465625, 1)
 antialiased = true
-
-[node name="L_UP1" type="Line2D" parent="Main/L_SCT"]
-position = Vector2(-576, -656)
-points = PackedVector2Array(1648, 560, 1728, 560)
-width = 2.0
-default_color = Color(0.4, 1, 0.465625, 1)
 
 [node name="L_MAE" type="Node2D" parent="Main"]
 

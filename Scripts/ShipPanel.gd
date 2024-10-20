@@ -20,10 +20,7 @@ func refresh():
 	$Grid/Panel2.visible = len(game.ship_data) >= 2
 	$Grid/Panel3.visible = len(game.ship_data) >= 3
 	$Grid/Panel4.visible = len(game.ship_data) >= 4
-	$Panel/UpgradeButton.visible = game.science_unlocked.has("UP1")
 	$Drives.refresh()
-	$Upgrade._refresh()
-	$Upgrade._refresh_op()
 	if game.ships_travel_data.travel_view != "-":
 		$SpaceportTimer.stop()
 		spaceport_tier = -1
@@ -84,23 +81,10 @@ func _on_DriveButton_pressed():
 func _on_BackButton_pressed():
 	$Grid.visible = true
 	$Drives.visible = false
-	$Upgrade.visible = false
 	$Panel/CheckBox.visible = true
 	$Panel/DriveButton.visible = true
 	$Panel/BackButton.visible = false
-	$Panel/UpgradeButton.visible = true
 	refresh()
-
-func _on_UpgradeButton_pressed():
-	$Grid.visible = false
-	$Drives.visible = false
-	$Upgrade.visible = true
-	$Panel/CheckBox.visible = false
-	$Panel/DriveButton.visible = false
-	$Panel/BackButton.visible = true
-	$Panel/UpgradeButton.visible = false
-	$Upgrade._refresh()
-	$Upgrade._refresh_op()
 
 func _on_GoToShips_mouse_entered():
 	var st = tr("GO_TO_SHIPS")
@@ -122,9 +106,6 @@ func _on_DriveButton_mouse_entered():
 
 func _on_BackButton_mouse_entered():
 	game.show_tooltip(tr("BACK"))
-
-func _on_UpgradeButton_mouse_entered():
-	game.show_tooltip("UP1_SC")
 
 var bar_colors = {
 	"bullet":Color(0, 0.46, 0.81),
