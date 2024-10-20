@@ -10,9 +10,6 @@ func _ready():
 		panel.show_weapon_XPs = false
 	refresh()
 
-func _on_close_button_pressed():
-	game.toggle_panel(self)
-
 func refresh():
 	for panel in $Grid.get_children():
 		panel.refresh()

@@ -526,14 +526,6 @@ offset_bottom = 150.0
 text = "0"
 vertical_alignment = 1
 
-[node name="Respec" type="Button" parent="."]
-layout_mode = 0
-offset_left = 64.0
-offset_top = 152.0
-offset_right = 172.0
-offset_bottom = 183.0
-text = "Respec (free)"
-
 [connection signal="mouse_entered" from="Ship" to="." method="_on_Ship_mouse_entered"]
 [connection signal="mouse_exited" from="Ship" to="." method="_on_Ship_mouse_exited"]
 [connection signal="pressed" from="Ship" to="." method="_on_Ship_pressed"]
@@ -555,4 +547,3 @@ text = "Respec (free)"
 [connection signal="mouse_exited" from="Stats/AccuracyIcon" to="." method="_on_icon_mouse_exited"]
 [connection signal="mouse_entered" from="Stats/AgilityIcon" to="." method="_on_icon_mouse_entered" binds= ["EVADE"]]
 [connection signal="mouse_exited" from="Stats/AgilityIcon" to="." method="_on_icon_mouse_exited"]
-[connection signal="pressed" from="Respec" to="." method="_on_respec_pressed"]

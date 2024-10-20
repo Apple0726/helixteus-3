@@ -59,21 +59,21 @@ func update_ship_stats_display():
 	if ship_class == ShipClass.STANDARD:
 		$PassiveAbility/Label2.text = tr("STANDARD_PASSIVE_ABILITY")
 	elif ship_class == ShipClass.OFFENSIVE:
-		$PassiveAbility/Label2.text = tr("OFFENSIVE_PASSIVE_ABILITY")
+		$PassiveAbility/Label2.text = tr("OFFENSIVE_PASSIVE_ABILITY") % [25]
 	elif ship_class == ShipClass.DEFENSIVE:
-		$PassiveAbility/Label2.text = tr("DEFENSIVE_PASSIVE_ABILITY")
+		$PassiveAbility/Label2.text = tr("DEFENSIVE_PASSIVE_ABILITY") % [15]
 	elif ship_class == ShipClass.ACCURATE:
-		$PassiveAbility/Label2.text = tr("ACCURATE_PASSIVE_ABILITY")
+		$PassiveAbility/Label2.text = tr("ACCURATE_PASSIVE_ABILITY") % [15]
 	elif ship_class == ShipClass.AGILE:
-		$PassiveAbility/Label2.text = tr("AGILE_PASSIVE_ABILITY")
+		$PassiveAbility/Label2.text = tr("AGILE_PASSIVE_ABILITY") % [15]
 	elif ship_class == ShipClass.ENERGETIC:
-		$PassiveAbility/Label2.text = tr("ENERGETIC_PASSIVE_ABILITY")
+		$PassiveAbility/Label2.text = tr("ENERGETIC_PASSIVE_ABILITY") % [15]
 	elif ship_class == ShipClass.SUPPORT:
 		$PassiveAbility/Label2.text = tr("SUPPORT_PASSIVE_ABILITY")
 	elif ship_class == ShipClass.RECKLESS:
 		$PassiveAbility/Label2.text = tr("RECKLESS_PASSIVE_ABILITY")
 	elif ship_class == ShipClass.TANK:
-		$PassiveAbility/Label2.text = tr("TANK_PASSIVE_ABILITY")
+		$PassiveAbility/Label2.text = tr("TANK_PASSIVE_ABILITY") % [15, 25, 50]
 	elif ship_class == ShipClass.UBER:
 		$PassiveAbility/Label2.text = tr("UBER_PASSIVE_ABILITY")
 	var points_allocated = allocated_HP + allocated_attack + allocated_defense + allocated_accuracy + allocated_agility
@@ -81,8 +81,10 @@ func update_ship_stats_display():
 	var no_more_allocatable_points = points_allocated >= allocatable_points
 	if no_more_allocatable_points:
 		$ShipStats/PointsAllocated["theme_override_colors/font_color"] = Color.WHITE
+		$Actions/Done.disabled = false
 	else:
 		$ShipStats/PointsAllocated["theme_override_colors/font_color"] = Color.YELLOW
+		$Actions/Done.disabled = true
 	$ShipStats/AddHP.disabled = no_more_allocatable_points
 	$ShipStats/AddAttack.disabled = no_more_allocatable_points
 	$ShipStats/AddDefense.disabled = no_more_allocatable_points

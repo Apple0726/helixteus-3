@@ -70,6 +70,10 @@ func refresh():
 	$Stats/Defense.text = Helper.format_num(game.ship_data[id].defense)
 	$Stats/Accuracy.text = Helper.format_num(game.ship_data[id].accuracy)
 	$Stats/Agility.text = Helper.format_num(game.ship_data[id].agility)
+	if game.ship_data[id].respec_count == 0:
+		$Respec.text = "%s (%s)" % [tr("RESPEC"), tr("FREE")]
+	else:
+		$Respec.text = "%s (-0.5 %s)" % [tr("RESPEC"), tr("LV")]
 	
 func _on_icon_mouse_entered(stat:String):
 	game.show_tooltip(tr(stat))

@@ -1,15 +1,23 @@
-[gd_scene load_steps=13 format=3 uid="uid://csljwgggftgxb"]
+[gd_scene load_steps=26 format=3 uid="uid://csljwgggftgxb"]
 
 [ext_resource type="Script" path="res://Scripts/ShipPanel.gd" id="3"]
 [ext_resource type="Texture2D" uid="uid://ccntlctxytsi2" path="res://Graphics/GUI/Panel.png" id="3_xp52f"]
 [ext_resource type="Texture2D" uid="uid://baowebna7hgr5" path="res://Graphics/GUI/CloseButtonNormal.png" id="4_ekxvq"]
-[ext_resource type="PackedScene" uid="uid://gy6plqno7n0y" path="res://Scenes/ShipInfo.tscn" id="5"]
 [ext_resource type="Texture2D" uid="uid://c1vwn7p5uxu1r" path="res://Graphics/GUI/CloseButtonHover.png" id="5_5824e"]
 [ext_resource type="Theme" uid="uid://cp2u1kgj60ic" path="res://Resources/default_theme.tres" id="7"]
 [ext_resource type="PackedScene" uid="uid://rkeuei54m30i" path="res://Scenes/Drives.tscn" id="8"]
-[ext_resource type="Texture2D" uid="uid://ds6nct7g63284" path="res://Graphics/Icons/Arrow.png" id="9"]
+[ext_resource type="Texture2D" uid="uid://ccwp7j6mkde7u" path="res://Graphics/Buttons/SystemView.png" id="9_dhoc8"]
 [ext_resource type="Texture2D" uid="uid://btrkjgmmocq55" path="res://Graphics/Science/SCT.png" id="10"]
 [ext_resource type="Texture2D" uid="uid://di3sx4ynm6kot" path="res://Graphics/Science/CD.png" id="11"]
+[ext_resource type="Texture2D" uid="uid://kr2fdk8dptv1" path="res://Graphics/Misc/BarUnder2.png" id="11_s3b4g"]
+[ext_resource type="Texture2D" uid="uid://bx1hvetixqpwi" path="res://Graphics/Misc/Bar2.png" id="12_3x4ks"]
+[ext_resource type="Texture2D" uid="uid://cxij5pk8nug0r" path="res://Graphics/Misc/BarOver.png" id="13_y4ybd"]
+[ext_resource type="Texture2D" uid="uid://csmhsuosfqrec" path="res://Graphics/Icons/XP.png" id="14_gqpul"]
+[ext_resource type="Texture2D" uid="uid://bl07f3wef0muv" path="res://Graphics/Icons/HP.png" id="15_0livu"]
+[ext_resource type="Texture2D" uid="uid://7ffsf7xuvfw2" path="res://Graphics/Icons/attack.png" id="16_grg2r"]
+[ext_resource type="Texture2D" uid="uid://cqiyti2xdxtcw" path="res://Graphics/Icons/defense.png" id="17_uo1ep"]
+[ext_resource type="Texture2D" uid="uid://bn520d6r5iwik" path="res://Graphics/Icons/accuracy.png" id="18_befyh"]
+[ext_resource type="Texture2D" uid="uid://bapj1r8e5pwia" path="res://Graphics/Icons/agility.png" id="19_d6hw1"]
 
 [sub_resource type="SystemFont" id="SystemFont_sxpbd"]
 font_names = PackedStringArray("Arial")
@@ -23,13 +31,41 @@ shadow_size = 2
 shadow_color = Color(0, 0, 0, 0.372549)
 shadow_offset = Vector2(2, 2)
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_8pffm"]
+bg_color = Color(0, 0, 0, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_pdtjp"]
+bg_color = Color(0, 0.0196078, 0.109804, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.372549, 0.372549, 1, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_aaq6n"]
+font_size = 12
+font_color = Color(0.52549, 0.52549, 1, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_s5j2h"]
+bg_color = Color(0.109804, 0, 0, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(1, 0.372549, 0.372549, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_bfwgg"]
+font_size = 12
+font_color = Color(1, 0.52549, 0.52549, 1)
+
 [node name="Background" type="Control"]
 layout_mode = 3
 anchors_preset = 0
-offset_right = 1024.0
-offset_bottom = 592.0
+offset_right = 40.0
+offset_bottom = 36.0
 theme = ExtResource("7")
 script = ExtResource("3")
+metadata/_edit_lock_ = true
 
 [node name="GUI" type="TextureRect" parent="."]
 layout_mode = 0
@@ -37,6 +73,7 @@ offset_right = 1280.0
 offset_bottom = 720.0
 mouse_filter = 2
 texture = ExtResource("3_xp52f")
+metadata/_edit_lock_ = true
 
 [node name="CloseButton" type="TextureButton" parent="."]
 layout_mode = 0
@@ -50,44 +87,14 @@ texture_hover = ExtResource("5_5824e")
 [node name="Title" type="Label" parent="."]
 custom_minimum_size = Vector2(0, 38)
 layout_mode = 1
-anchors_preset = 10
-anchor_right = 1.0
 offset_left = 128.0
 offset_top = 72.0
-offset_right = 128.0
+offset_right = 168.0
 offset_bottom = 110.0
-grow_horizontal = 2
 theme_override_font_sizes/font_size = 18
 text = "SHIPS"
 label_settings = SubResource("LabelSettings_wweft")
 vertical_alignment = 1
-
-[node name="Grid" type="GridContainer" parent="."]
-layout_mode = 1
-offset_left = 112.0
-offset_top = 180.0
-offset_right = 1168.0
-offset_bottom = 632.0
-columns = 2
-
-[node name="Panel1" parent="Grid" instance=ExtResource("5")]
-layout_mode = 2
-victory_screen = false
-
-[node name="Panel2" parent="Grid" instance=ExtResource("5")]
-layout_mode = 2
-victory_screen = false
-id = 1
-
-[node name="Panel3" parent="Grid" instance=ExtResource("5")]
-layout_mode = 2
-victory_screen = false
-id = 2
-
-[node name="Panel4" parent="Grid" instance=ExtResource("5")]
-layout_mode = 2
-victory_screen = false
-id = 3
 
 [node name="Drives" parent="." instance=ExtResource("8")]
 visible = false
@@ -106,10 +113,10 @@ grow_vertical = 2
 custom_minimum_size = Vector2(0, 48)
 layout_mode = 1
 anchors_preset = 0
-offset_left = 108.0
-offset_top = 132.0
-offset_right = 1176.0
-offset_bottom = 180.0
+offset_left = 1340.0
+offset_top = 252.0
+offset_right = 1456.0
+offset_bottom = 300.0
 mouse_filter = 1
 
 [node name="TravelETA" type="Label" parent="Panel"]
@@ -124,32 +131,6 @@ grow_horizontal = 2
 grow_vertical = 2
 horizontal_alignment = 1
 vertical_alignment = 1
-
-[node name="CheckBox" type="CheckBox" parent="Panel"]
-layout_mode = 0
-anchor_bottom = 1.0
-offset_left = 20.0
-offset_right = 270.0
-offset_bottom = 4.0
-theme = ExtResource("7")
-text = "SHOW_WEAPON_XPS"
-
-[node name="DriveButton" type="TextureButton" parent="Panel"]
-layout_mode = 1
-anchors_preset = 6
-anchor_left = 1.0
-anchor_top = 0.5
-anchor_right = 1.0
-anchor_bottom = 0.5
-offset_left = -120.0
-offset_top = -24.0
-offset_right = -72.0
-offset_bottom = 20.0
-grow_horizontal = 0
-grow_vertical = 2
-texture_normal = ExtResource("11")
-ignore_texture_size = true
-stretch_mode = 5
 
 [node name="BackButton" type="TextureButton" parent="Panel"]
 visible = false
@@ -166,30 +147,594 @@ texture_normal = ExtResource("10")
 ignore_texture_size = true
 stretch_mode = 5
 
-[node name="GoToShips" type="TextureButton" parent="Panel"]
+[node name="SpaceportTimer" type="Timer" parent="."]
+
+[node name="Battlefield" type="Panel" parent="."]
+clip_contents = true
 layout_mode = 0
-anchor_left = 1.0
-anchor_top = 0.5
-anchor_right = 1.0
-anchor_bottom = 0.5
-offset_left = -64.0
-offset_top = -24.0
-offset_right = -14.0
-offset_bottom = 24.0
-texture_normal = ExtResource("9")
+offset_left = 128.0
+offset_top = 148.0
+offset_right = 740.0
+offset_bottom = 620.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_8pffm")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Battlefield"]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -38.0
+offset_top = 16.0
+offset_right = 22.0
+offset_bottom = 56.0
+grow_horizontal = 2
+
+[node name="DriveButton" type="TextureButton" parent="Battlefield/HBoxContainer"]
+custom_minimum_size = Vector2(50, 0)
+layout_mode = 2
+texture_normal = ExtResource("11")
 ignore_texture_size = true
 stretch_mode = 5
 
-[node name="SpaceportTimer" type="Timer" parent="."]
+[node name="GoToShips" type="TextureButton" parent="Battlefield/HBoxContainer"]
+custom_minimum_size = Vector2(50, 0)
+layout_mode = 2
+texture_normal = ExtResource("9_dhoc8")
+ignore_texture_size = true
+stretch_mode = 5
 
-[connection signal="toggled" from="Panel/CheckBox" to="." method="_on_CheckBox_toggled"]
-[connection signal="mouse_entered" from="Panel/DriveButton" to="." method="_on_DriveButton_mouse_entered"]
-[connection signal="mouse_exited" from="Panel/DriveButton" to="." method="_on_mouse_exited"]
-[connection signal="pressed" from="Panel/DriveButton" to="." method="_on_DriveButton_pressed"]
+[node name="Ships" type="Panel" parent="Battlefield"]
+layout_mode = 0
+offset_left = 32.0
+offset_top = 84.0
+offset_right = 376.0
+offset_bottom = 436.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_pdtjp")
+
+[node name="InitialPositionsLabel" type="Label" parent="Battlefield/Ships"]
+layout_mode = 0
+offset_left = 8.0
+offset_top = 8.0
+offset_right = 164.0
+offset_bottom = 25.0
+text = "SHIP_INITIAL_POSITIONS"
+label_settings = SubResource("LabelSettings_aaq6n")
+
+[node name="Enemies" type="Panel" parent="Battlefield"]
+layout_mode = 0
+offset_left = 392.0
+offset_top = 84.0
+offset_right = 724.0
+offset_bottom = 436.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_s5j2h")
+
+[node name="InitialPositionsLabel" type="Label" parent="Battlefield/Enemies"]
+offset_left = 8.0
+offset_top = 8.0
+offset_right = 164.0
+offset_bottom = 25.0
+text = "ENEMY_INITIAL_POSITIONS"
+label_settings = SubResource("LabelSettings_bfwgg")
+
+[node name="Stats" type="Panel" parent="."]
+layout_mode = 0
+offset_left = 768.0
+offset_top = 148.0
+offset_right = 1152.0
+offset_bottom = 620.0
+metadata/_edit_lock_ = true
+
+[node name="Label" type="Label" parent="Stats"]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_top = 8.0
+offset_bottom = 40.0
+grow_horizontal = 2
+text = "Level 1 Standard Ship"
+horizontal_alignment = 1
+
+[node name="Respec" type="Button" parent="Stats"]
+layout_mode = 0
+offset_left = 132.0
+offset_top = 56.0
+offset_right = 252.0
+offset_bottom = 89.0
+text = "Respec (free)"
+
+[node name="Bullet" type="Control" parent="Stats"]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="ColorRect" type="ColorRect" parent="Stats/Bullet"]
+layout_mode = 0
+offset_left = 76.0
+offset_top = 293.0
+offset_right = 308.0
+offset_bottom = 313.0
+color = Color(0, 0.235294, 0.411765, 1)
+
+[node name="TextureProgressGained" type="TextureProgressBar" parent="Stats/Bullet"]
+modulate = Color(0.34902, 0.682353, 0.941176, 1)
+layout_mode = 0
+offset_left = 76.0
+offset_top = 293.0
+offset_right = 308.0
+offset_bottom = 313.0
+step = 0.0
+value = 60.0
+nine_patch_stretch = true
+texture_under = ExtResource("11_s3b4g")
+texture_progress = ExtResource("12_3x4ks")
+
+[node name="TextureProgressBar" type="TextureProgressBar" parent="Stats/Bullet"]
+modulate = Color(0, 0.462745, 0.811765, 1)
+layout_mode = 0
+offset_left = 76.0
+offset_top = 293.0
+offset_right = 308.0
+offset_bottom = 313.0
+step = 0.0
+value = 50.0
+nine_patch_stretch = true
+stretch_margin_left = 3
+stretch_margin_top = 1
+stretch_margin_right = 3
+stretch_margin_bottom = 1
+texture_over = ExtResource("13_y4ybd")
+texture_progress = ExtResource("12_3x4ks")
+
+[node name="Label" type="Label" parent="Stats/Bullet"]
+visible = false
+layout_mode = 0
+offset_left = 324.0
+offset_top = 64.0
+offset_right = 364.0
+offset_bottom = 95.0
+scale = Vector2(0.9, 0.9)
+text = "+ 5"
+vertical_alignment = 1
+
+[node name="Label2" type="Label" parent="Stats/Bullet"]
+layout_mode = 0
+offset_left = 76.0
+offset_top = 292.0
+offset_right = 308.0
+offset_bottom = 315.0
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 14
+text = "0 / 20"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Icon" type="TextureRect" parent="Stats/Bullet"]
+layout_mode = 0
+offset_left = 40.0
+offset_top = 297.0
+offset_right = 68.0
+offset_bottom = 309.0
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Laser" type="Control" parent="Stats"]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="ColorRect" type="ColorRect" parent="Stats/Laser"]
+layout_mode = 0
+offset_left = 76.0
+offset_top = 321.0
+offset_right = 308.0
+offset_bottom = 341.0
+color = Color(0.55, 0.2475, 0.2475, 1)
+
+[node name="TextureProgressGained" type="TextureProgressBar" parent="Stats/Laser"]
+modulate = Color(0.94, 0.5546, 0.5546, 1)
+layout_mode = 0
+offset_left = 76.0
+offset_top = 321.0
+offset_right = 308.0
+offset_bottom = 341.0
+step = 0.0
+value = 60.0
+nine_patch_stretch = true
+texture_under = ExtResource("11_s3b4g")
+texture_progress = ExtResource("12_3x4ks")
+
+[node name="TextureProgressBar" type="TextureProgressBar" parent="Stats/Laser"]
+modulate = Color(1, 0.28, 0.28, 1)
+layout_mode = 0
+offset_left = 76.0
+offset_top = 321.0
+offset_right = 308.0
+offset_bottom = 341.0
+step = 0.0
+value = 50.0
+nine_patch_stretch = true
+stretch_margin_left = 3
+stretch_margin_top = 1
+stretch_margin_right = 3
+stretch_margin_bottom = 1
+texture_over = ExtResource("13_y4ybd")
+texture_progress = ExtResource("12_3x4ks")
+
+[node name="Label" type="Label" parent="Stats/Laser"]
+visible = false
+layout_mode = 0
+offset_left = 324.0
+offset_top = 92.0
+offset_right = 364.0
+offset_bottom = 123.0
+scale = Vector2(0.9, 0.9)
+text = "+ 5"
+vertical_alignment = 1
+
+[node name="Label2" type="Label" parent="Stats/Laser"]
+layout_mode = 0
+offset_left = 76.0
+offset_top = 320.0
+offset_right = 308.0
+offset_bottom = 343.0
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 14
+text = "0 / 20"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Icon" type="TextureRect" parent="Stats/Laser"]
+layout_mode = 0
+offset_left = 40.0
+offset_top = 321.0
+offset_right = 68.0
+offset_bottom = 341.0
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Bomb" type="Control" parent="Stats"]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="ColorRect" type="ColorRect" parent="Stats/Bomb"]
+layout_mode = 0
+offset_left = 76.0
+offset_top = 349.0
+offset_right = 308.0
+offset_bottom = 369.0
+color = Color(0.137255, 0.137255, 0.137255, 1)
+
+[node name="TextureProgressGained" type="TextureProgressBar" parent="Stats/Bomb"]
+modulate = Color(0.454902, 0.454902, 0.454902, 1)
+layout_mode = 0
+offset_left = 76.0
+offset_top = 349.0
+offset_right = 308.0
+offset_bottom = 369.0
+step = 0.0
+value = 60.0
+nine_patch_stretch = true
+texture_under = ExtResource("11_s3b4g")
+texture_progress = ExtResource("12_3x4ks")
+
+[node name="TextureProgressBar" type="TextureProgressBar" parent="Stats/Bomb"]
+modulate = Color(0.286275, 0.286275, 0.286275, 1)
+layout_mode = 0
+offset_left = 76.0
+offset_top = 349.0
+offset_right = 308.0
+offset_bottom = 369.0
+step = 0.0
+value = 50.0
+nine_patch_stretch = true
+stretch_margin_left = 3
+stretch_margin_top = 1
+stretch_margin_right = 3
+stretch_margin_bottom = 1
+texture_over = ExtResource("13_y4ybd")
+texture_progress = ExtResource("12_3x4ks")
+
+[node name="Label" type="Label" parent="Stats/Bomb"]
+visible = false
+layout_mode = 0
+offset_left = 324.0
+offset_top = 120.0
+offset_right = 364.0
+offset_bottom = 151.0
+scale = Vector2(0.9, 0.9)
+text = "+ 5"
+vertical_alignment = 1
+
+[node name="Label2" type="Label" parent="Stats/Bomb"]
+layout_mode = 0
+offset_left = 76.0
+offset_top = 348.0
+offset_right = 308.0
+offset_bottom = 371.0
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 14
+text = "0 / 20"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Icon" type="TextureRect" parent="Stats/Bomb"]
+layout_mode = 0
+offset_left = 40.0
+offset_top = 349.0
+offset_right = 68.0
+offset_bottom = 369.0
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Light" type="Control" parent="Stats"]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="ColorRect" type="ColorRect" parent="Stats/Light"]
+layout_mode = 0
+offset_left = 76.0
+offset_top = 377.0
+offset_right = 308.0
+offset_bottom = 397.0
+color = Color(0.51, 0.50796, 0.3876, 1)
+
+[node name="TextureProgressGained" type="TextureProgressBar" parent="Stats/Light"]
+modulate = Color(1, 1, 0.61, 1)
+layout_mode = 0
+offset_left = 76.0
+offset_top = 377.0
+offset_right = 308.0
+offset_bottom = 397.0
+step = 0.0
+value = 60.0
+nine_patch_stretch = true
+texture_under = ExtResource("11_s3b4g")
+texture_progress = ExtResource("12_3x4ks")
+
+[node name="TextureProgressBar" type="TextureProgressBar" parent="Stats/Light"]
+modulate = Color(0.811765, 0.811765, 0.364706, 1)
+layout_mode = 0
+offset_left = 76.0
+offset_top = 377.0
+offset_right = 308.0
+offset_bottom = 397.0
+step = 0.0
+value = 50.0
+nine_patch_stretch = true
+stretch_margin_left = 3
+stretch_margin_top = 1
+stretch_margin_right = 3
+stretch_margin_bottom = 1
+texture_over = ExtResource("13_y4ybd")
+texture_progress = ExtResource("12_3x4ks")
+
+[node name="Label" type="Label" parent="Stats/Light"]
+visible = false
+layout_mode = 0
+offset_left = 324.0
+offset_top = 148.0
+offset_right = 364.0
+offset_bottom = 179.0
+scale = Vector2(0.9, 0.9)
+text = "+ 5"
+vertical_alignment = 1
+
+[node name="Label2" type="Label" parent="Stats/Light"]
+layout_mode = 0
+offset_left = 76.0
+offset_top = 376.0
+offset_right = 308.0
+offset_bottom = 399.0
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 14
+text = "0 / 20"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Icon" type="TextureRect" parent="Stats/Light"]
+layout_mode = 0
+offset_left = 40.0
+offset_top = 377.0
+offset_right = 68.0
+offset_bottom = 397.0
+expand_mode = 1
+stretch_mode = 5
+
+[node name="XP" type="Control" parent="Stats"]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="ColorRect" type="ColorRect" parent="Stats/XP"]
+layout_mode = 0
+offset_left = 60.0
+offset_top = 433.0
+offset_right = 308.0
+offset_bottom = 453.0
+color = Color(0.59, 0.46669, 0.2537, 1)
+
+[node name="TextureProgressGained" type="TextureProgressBar" parent="Stats/XP"]
+modulate = Color(1, 0.819608, 0.611765, 1)
+layout_mode = 0
+offset_left = 60.0
+offset_top = 433.0
+offset_right = 308.0
+offset_bottom = 453.0
+step = 0.0
+value = 60.0
+nine_patch_stretch = true
+texture_under = ExtResource("11_s3b4g")
+texture_progress = ExtResource("12_3x4ks")
+
+[node name="TextureProgressBar" type="TextureProgressBar" parent="Stats/XP"]
+modulate = Color(0.921569, 0.631373, 0.203922, 1)
+layout_mode = 0
+offset_left = 60.0
+offset_top = 433.0
+offset_right = 308.0
+offset_bottom = 453.0
+step = 0.0
+value = 50.0
+nine_patch_stretch = true
+stretch_margin_left = 3
+stretch_margin_top = 1
+stretch_margin_right = 3
+stretch_margin_bottom = 1
+texture_over = ExtResource("13_y4ybd")
+texture_progress = ExtResource("12_3x4ks")
+
+[node name="Label" type="Label" parent="Stats/XP"]
+visible = false
+layout_mode = 0
+offset_left = 324.0
+offset_top = 204.0
+offset_right = 364.0
+offset_bottom = 235.0
+scale = Vector2(0.9, 0.9)
+text = "+ 5"
+vertical_alignment = 1
+
+[node name="Label2" type="Label" parent="Stats/XP"]
+layout_mode = 0
+offset_left = 60.0
+offset_top = 432.0
+offset_right = 308.0
+offset_bottom = 455.0
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 14
+text = "0 / 20"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Icon" type="TextureRect" parent="Stats/XP"]
+layout_mode = 0
+offset_left = 20.0
+offset_top = 429.0
+offset_right = 52.0
+offset_bottom = 457.0
+texture = ExtResource("14_gqpul")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Stats" type="Control" parent="Stats"]
+layout_mode = 3
+anchors_preset = 0
+offset_left = 56.0
+offset_top = 88.0
+offset_right = 96.0
+offset_bottom = 128.0
+metadata/_edit_lock_ = true
+
+[node name="HPIcon" type="TextureRect" parent="Stats/Stats"]
+layout_mode = 0
+offset_left = 32.0
+offset_top = 24.0
+offset_right = 56.0
+offset_bottom = 48.0
+texture = ExtResource("15_0livu")
+expand_mode = 1
+stretch_mode = 6
+
+[node name="AttackIcon" type="TextureRect" parent="Stats/Stats"]
+layout_mode = 0
+offset_left = 32.0
+offset_top = 56.0
+offset_right = 56.0
+offset_bottom = 80.0
+texture = ExtResource("16_grg2r")
+expand_mode = 1
+stretch_mode = 6
+
+[node name="DefenseIcon" type="TextureRect" parent="Stats/Stats"]
+layout_mode = 0
+offset_left = 32.0
+offset_top = 88.0
+offset_right = 56.0
+offset_bottom = 112.0
+texture = ExtResource("17_uo1ep")
+expand_mode = 1
+stretch_mode = 6
+
+[node name="AccuracyIcon" type="TextureRect" parent="Stats/Stats"]
+layout_mode = 0
+offset_left = 32.0
+offset_top = 120.0
+offset_right = 56.0
+offset_bottom = 144.0
+texture = ExtResource("18_befyh")
+expand_mode = 1
+stretch_mode = 6
+
+[node name="AgilityIcon" type="TextureRect" parent="Stats/Stats"]
+layout_mode = 0
+offset_left = 32.0
+offset_top = 152.0
+offset_right = 56.0
+offset_bottom = 176.0
+texture = ExtResource("19_d6hw1")
+expand_mode = 1
+stretch_mode = 6
+
+[node name="HP" type="Label" parent="Stats/Stats"]
+layout_mode = 0
+offset_left = 92.0
+offset_top = 24.0
+offset_right = 248.0
+offset_bottom = 47.0
+text = "0"
+vertical_alignment = 1
+
+[node name="Attack" type="Label" parent="Stats/Stats"]
+layout_mode = 0
+offset_left = 92.0
+offset_top = 56.0
+offset_right = 248.0
+offset_bottom = 79.0
+text = "0"
+vertical_alignment = 1
+
+[node name="Defense" type="Label" parent="Stats/Stats"]
+layout_mode = 0
+offset_left = 92.0
+offset_top = 88.0
+offset_right = 248.0
+offset_bottom = 111.0
+text = "0"
+vertical_alignment = 1
+
+[node name="Accuracy" type="Label" parent="Stats/Stats"]
+layout_mode = 0
+offset_left = 92.0
+offset_top = 120.0
+offset_right = 248.0
+offset_bottom = 143.0
+text = "0"
+vertical_alignment = 1
+
+[node name="Agility" type="Label" parent="Stats/Stats"]
+layout_mode = 0
+offset_left = 92.0
+offset_top = 152.0
+offset_right = 248.0
+offset_bottom = 175.0
+text = "0"
+vertical_alignment = 1
+
+[connection signal="pressed" from="CloseButton" to="." method="_on_close_button_pressed"]
 [connection signal="mouse_entered" from="Panel/BackButton" to="." method="_on_BackButton_mouse_entered"]
 [connection signal="mouse_exited" from="Panel/BackButton" to="." method="_on_mouse_exited"]
 [connection signal="pressed" from="Panel/BackButton" to="." method="_on_BackButton_pressed"]
-[connection signal="mouse_entered" from="Panel/GoToShips" to="." method="_on_GoToShips_mouse_entered"]
-[connection signal="mouse_exited" from="Panel/GoToShips" to="." method="_on_mouse_exited"]
-[connection signal="pressed" from="Panel/GoToShips" to="." method="_on_GoToShips_pressed"]
 [connection signal="timeout" from="SpaceportTimer" to="." method="_on_SpaceportTimer_timeout"]
+[connection signal="mouse_entered" from="Battlefield/HBoxContainer/DriveButton" to="." method="_on_DriveButton_mouse_entered"]
+[connection signal="mouse_exited" from="Battlefield/HBoxContainer/DriveButton" to="." method="_on_mouse_exited"]
+[connection signal="pressed" from="Battlefield/HBoxContainer/DriveButton" to="." method="_on_DriveButton_pressed"]
+[connection signal="mouse_entered" from="Battlefield/HBoxContainer/GoToShips" to="." method="_on_GoToShips_mouse_entered"]
+[connection signal="mouse_exited" from="Battlefield/HBoxContainer/GoToShips" to="." method="_on_mouse_exited"]
+[connection signal="pressed" from="Battlefield/HBoxContainer/GoToShips" to="." method="_on_GoToShips_pressed"]

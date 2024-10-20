@@ -3606,7 +3606,7 @@ func show_adv_tooltip(txt:String, imgs:Array = [], size:int = 17):
 		tooltip_display_position_y = 0
 	set_tooltip_position()
 	var tween = create_tween()
-	tween.tween_property(tooltip, "modulate", Color.WHITE, 0.1)#.set_delay(0.1)
+	tween.tween_property(tooltip, "modulate", Color.WHITE, 0.0).set_delay(0.05)
 
 func show_tooltip(txt:String, hide:bool = true):
 	if is_instance_valid(tooltip):
@@ -3631,7 +3631,7 @@ func show_tooltip(txt:String, hide:bool = true):
 		tooltip_display_position_y = 0
 	set_tooltip_position()
 	var tween = create_tween()
-	tween.tween_property(tooltip, "modulate", Color.WHITE, 0.1).set_delay(0.1)
+	tween.tween_property(tooltip, "modulate", Color.WHITE, 0.0).set_delay(0.05)
 
 func hide_tooltip():
 	if is_instance_valid(tooltip):
@@ -3664,8 +3664,8 @@ func add_text_icons(RTL:RichTextLabel, txt:String, imgs:Array, size:int = 17, _t
 			max_width = max(width, max_width)
 		await get_tree().process_frame
 		if is_instance_valid(RTL):
-			RTL.size.x = RTL.get_content_width() + 20
-			RTL.size.y = RTL.get_content_height() + 10
+			RTL.size.x = RTL.get_content_width() + 30
+			RTL.size.y = RTL.get_content_height() + 20
 
 func add_items(item_id:int, num:int = 1):
 	var cycles = 0
@@ -4553,6 +4553,14 @@ func add_new_ship_data():
 		"respec_count": 0,
 		"ship_class":ShipClass.STANDARD,
 	})
+	if len(ship_data) == 1:
+		ship_data[-1].initial_position = Vector2.ZERO
+	elif len(ship_data) == 2:
+		ship_data[-1].initial_position = Vector2(100, 0)
+	elif len(ship_data) == 3:
+		ship_data[-1].initial_position = Vector2(0, 100)
+	elif len(ship_data) == 4:
+		ship_data[-1].initial_position = Vector2(100, 100)
 
 func get_1st_ship():
 	add_new_ship_data()

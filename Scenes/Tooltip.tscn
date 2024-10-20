@@ -3,10 +3,10 @@
 [sub_resource type="ShaderMaterial" id="4"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_naegc"]
-content_margin_left = 10.0
-content_margin_top = 5.0
-content_margin_right = 10.0
-content_margin_bottom = 5.0
+content_margin_left = 15.0
+content_margin_top = 10.0
+content_margin_right = 15.0
+content_margin_bottom = 10.0
 bg_color = Color(0, 0.0705882, 0.172549, 1)
 border_width_left = 2
 border_width_top = 2
@@ -16,11 +16,13 @@ shadow_offset = Vector2(1, 1)
 
 [sub_resource type="SystemFont" id="SystemFont_xvdaj"]
 font_names = PackedStringArray("Sans-Serif")
+subpixel_positioning = 0
 
 [sub_resource type="SystemFont" id="SystemFont_sb8iq"]
-font_names = PackedStringArray("Ebrima")
-multichannel_signed_distance_field = true
 fallbacks = Array[Font]([SubResource("SystemFont_xvdaj")])
+font_names = PackedStringArray("Ebrima")
+subpixel_positioning = 0
+multichannel_signed_distance_field = true
 
 [sub_resource type="LabelSettings" id="LabelSettings_b8ug1"]
 line_spacing = 0.0

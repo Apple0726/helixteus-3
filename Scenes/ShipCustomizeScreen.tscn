@@ -106,6 +106,7 @@ text = "CANCEL"
 [node name="Done" type="Button" parent="Actions"]
 layout_mode = 2
 size_flags_horizontal = 3
+disabled = true
 text = "DONE"
 
 [node name="Ship0" type="TextureRect" parent="."]
