@@ -1,4 +1,4 @@
-[gd_scene load_steps=26 format=3 uid="uid://csljwgggftgxb"]
+[gd_scene load_steps=28 format=3 uid="uid://csljwgggftgxb"]
 
 [ext_resource type="Script" path="res://Scripts/ShipPanel.gd" id="3"]
 [ext_resource type="Texture2D" uid="uid://ccntlctxytsi2" path="res://Graphics/GUI/Panel.png" id="3_xp52f"]
@@ -42,21 +42,23 @@ border_width_right = 1
 border_width_bottom = 1
 border_color = Color(0.372549, 0.372549, 1, 1)
 
+[sub_resource type="SegmentShape2D" id="SegmentShape2D_4vtgr"]
+b = Vector2(0, 352)
+
+[sub_resource type="SegmentShape2D" id="SegmentShape2D_ignkx"]
+a = Vector2(448, 352)
+b = Vector2(0, 352)
+
+[sub_resource type="SegmentShape2D" id="SegmentShape2D_54v24"]
+a = Vector2(448, 352)
+b = Vector2(448, 0)
+
+[sub_resource type="SegmentShape2D" id="SegmentShape2D_yjbqr"]
+b = Vector2(448, 0)
+
 [sub_resource type="LabelSettings" id="LabelSettings_aaq6n"]
 font_size = 12
 font_color = Color(0.52549, 0.52549, 1, 1)
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_s5j2h"]
-bg_color = Color(0.109804, 0, 0, 1)
-border_width_left = 1
-border_width_top = 1
-border_width_right = 1
-border_width_bottom = 1
-border_color = Color(1, 0.372549, 0.372549, 1)
-
-[sub_resource type="LabelSettings" id="LabelSettings_bfwgg"]
-font_size = 12
-font_color = Color(1, 0.52549, 0.52549, 1)
 
 [node name="Background" type="Control"]
 layout_mode = 3
@@ -154,7 +156,7 @@ clip_contents = true
 layout_mode = 0
 offset_left = 128.0
 offset_top = 148.0
-offset_right = 740.0
+offset_right = 644.0
 offset_bottom = 620.0
 theme_override_styles/panel = SubResource("StyleBoxFlat_8pffm")
 
@@ -187,9 +189,23 @@ stretch_mode = 5
 layout_mode = 0
 offset_left = 32.0
 offset_top = 84.0
-offset_right = 376.0
+offset_right = 480.0
 offset_bottom = 436.0
 theme_override_styles/panel = SubResource("StyleBoxFlat_pdtjp")
+
+[node name="StaticBody2D" type="StaticBody2D" parent="Battlefield/Ships"]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Battlefield/Ships/StaticBody2D"]
+shape = SubResource("SegmentShape2D_4vtgr")
+
+[node name="CollisionShape2D2" type="CollisionShape2D" parent="Battlefield/Ships/StaticBody2D"]
+shape = SubResource("SegmentShape2D_ignkx")
+
+[node name="CollisionShape2D3" type="CollisionShape2D" parent="Battlefield/Ships/StaticBody2D"]
+shape = SubResource("SegmentShape2D_54v24")
+
+[node name="CollisionShape2D4" type="CollisionShape2D" parent="Battlefield/Ships/StaticBody2D"]
+shape = SubResource("SegmentShape2D_yjbqr")
 
 [node name="InitialPositionsLabel" type="Label" parent="Battlefield/Ships"]
 layout_mode = 0
@@ -200,31 +216,14 @@ offset_bottom = 25.0
 text = "SHIP_INITIAL_POSITIONS"
 label_settings = SubResource("LabelSettings_aaq6n")
 
-[node name="Enemies" type="Panel" parent="Battlefield"]
+[node name="ShipDetails" type="Panel" parent="."]
 layout_mode = 0
-offset_left = 392.0
-offset_top = 84.0
-offset_right = 724.0
-offset_bottom = 436.0
-theme_override_styles/panel = SubResource("StyleBoxFlat_s5j2h")
-
-[node name="InitialPositionsLabel" type="Label" parent="Battlefield/Enemies"]
-offset_left = 8.0
-offset_top = 8.0
-offset_right = 164.0
-offset_bottom = 25.0
-text = "ENEMY_INITIAL_POSITIONS"
-label_settings = SubResource("LabelSettings_bfwgg")
-
-[node name="Stats" type="Panel" parent="."]
-layout_mode = 0
-offset_left = 768.0
+offset_left = 736.0
 offset_top = 148.0
 offset_right = 1152.0
 offset_bottom = 620.0
-metadata/_edit_lock_ = true
 
-[node name="Label" type="Label" parent="Stats"]
+[node name="Label" type="Label" parent="ShipDetails"]
 layout_mode = 1
 anchors_preset = 10
 anchor_right = 1.0
@@ -234,21 +233,25 @@ grow_horizontal = 2
 text = "Level 1 Standard Ship"
 horizontal_alignment = 1
 
-[node name="Respec" type="Button" parent="Stats"]
-layout_mode = 0
-offset_left = 132.0
-offset_top = 56.0
-offset_right = 252.0
-offset_bottom = 89.0
+[node name="Respec" type="Button" parent="ShipDetails"]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -60.0
+offset_top = 52.0
+offset_right = 60.0
+offset_bottom = 85.0
+grow_horizontal = 2
 text = "Respec (free)"
 
-[node name="Bullet" type="Control" parent="Stats"]
+[node name="Bullet" type="Control" parent="ShipDetails"]
 layout_mode = 3
 anchors_preset = 0
 offset_right = 40.0
 offset_bottom = 40.0
 
-[node name="ColorRect" type="ColorRect" parent="Stats/Bullet"]
+[node name="ColorRect" type="ColorRect" parent="ShipDetails/Bullet"]
 layout_mode = 0
 offset_left = 76.0
 offset_top = 293.0
@@ -256,7 +259,7 @@ offset_right = 308.0
 offset_bottom = 313.0
 color = Color(0, 0.235294, 0.411765, 1)
 
-[node name="TextureProgressGained" type="TextureProgressBar" parent="Stats/Bullet"]
+[node name="TextureProgressGained" type="TextureProgressBar" parent="ShipDetails/Bullet"]
 modulate = Color(0.34902, 0.682353, 0.941176, 1)
 layout_mode = 0
 offset_left = 76.0
@@ -269,7 +272,7 @@ nine_patch_stretch = true
 texture_under = ExtResource("11_s3b4g")
 texture_progress = ExtResource("12_3x4ks")
 
-[node name="TextureProgressBar" type="TextureProgressBar" parent="Stats/Bullet"]
+[node name="TextureProgressBar" type="TextureProgressBar" parent="ShipDetails/Bullet"]
 modulate = Color(0, 0.462745, 0.811765, 1)
 layout_mode = 0
 offset_left = 76.0
@@ -286,7 +289,7 @@ stretch_margin_bottom = 1
 texture_over = ExtResource("13_y4ybd")
 texture_progress = ExtResource("12_3x4ks")
 
-[node name="Label" type="Label" parent="Stats/Bullet"]
+[node name="Label" type="Label" parent="ShipDetails/Bullet"]
 visible = false
 layout_mode = 0
 offset_left = 324.0
@@ -297,7 +300,7 @@ scale = Vector2(0.9, 0.9)
 text = "+ 5"
 vertical_alignment = 1
 
-[node name="Label2" type="Label" parent="Stats/Bullet"]
+[node name="Label2" type="Label" parent="ShipDetails/Bullet"]
 layout_mode = 0
 offset_left = 76.0
 offset_top = 292.0
@@ -309,7 +312,7 @@ text = "0 / 20"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="Icon" type="TextureRect" parent="Stats/Bullet"]
+[node name="Icon" type="TextureRect" parent="ShipDetails/Bullet"]
 layout_mode = 0
 offset_left = 40.0
 offset_top = 297.0
@@ -318,13 +321,13 @@ offset_bottom = 309.0
 expand_mode = 1
 stretch_mode = 5
 
-[node name="Laser" type="Control" parent="Stats"]
+[node name="Laser" type="Control" parent="ShipDetails"]
 layout_mode = 3
 anchors_preset = 0
 offset_right = 40.0
 offset_bottom = 40.0
 
-[node name="ColorRect" type="ColorRect" parent="Stats/Laser"]
+[node name="ColorRect" type="ColorRect" parent="ShipDetails/Laser"]
 layout_mode = 0
 offset_left = 76.0
 offset_top = 321.0
@@ -332,7 +335,7 @@ offset_right = 308.0
 offset_bottom = 341.0
 color = Color(0.55, 0.2475, 0.2475, 1)
 
-[node name="TextureProgressGained" type="TextureProgressBar" parent="Stats/Laser"]
+[node name="TextureProgressGained" type="TextureProgressBar" parent="ShipDetails/Laser"]
 modulate = Color(0.94, 0.5546, 0.5546, 1)
 layout_mode = 0
 offset_left = 76.0
@@ -345,7 +348,7 @@ nine_patch_stretch = true
 texture_under = ExtResource("11_s3b4g")
 texture_progress = ExtResource("12_3x4ks")
 
-[node name="TextureProgressBar" type="TextureProgressBar" parent="Stats/Laser"]
+[node name="TextureProgressBar" type="TextureProgressBar" parent="ShipDetails/Laser"]
 modulate = Color(1, 0.28, 0.28, 1)
 layout_mode = 0
 offset_left = 76.0
@@ -362,7 +365,7 @@ stretch_margin_bottom = 1
 texture_over = ExtResource("13_y4ybd")
 texture_progress = ExtResource("12_3x4ks")
 
-[node name="Label" type="Label" parent="Stats/Laser"]
+[node name="Label" type="Label" parent="ShipDetails/Laser"]
 visible = false
 layout_mode = 0
 offset_left = 324.0
@@ -373,7 +376,7 @@ scale = Vector2(0.9, 0.9)
 text = "+ 5"
 vertical_alignment = 1
 
-[node name="Label2" type="Label" parent="Stats/Laser"]
+[node name="Label2" type="Label" parent="ShipDetails/Laser"]
 layout_mode = 0
 offset_left = 76.0
 offset_top = 320.0
@@ -385,7 +388,7 @@ text = "0 / 20"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="Icon" type="TextureRect" parent="Stats/Laser"]
+[node name="Icon" type="TextureRect" parent="ShipDetails/Laser"]
 layout_mode = 0
 offset_left = 40.0
 offset_top = 321.0
@@ -394,13 +397,13 @@ offset_bottom = 341.0
 expand_mode = 1
 stretch_mode = 5
 
-[node name="Bomb" type="Control" parent="Stats"]
+[node name="Bomb" type="Control" parent="ShipDetails"]
 layout_mode = 3
 anchors_preset = 0
 offset_right = 40.0
 offset_bottom = 40.0
 
-[node name="ColorRect" type="ColorRect" parent="Stats/Bomb"]
+[node name="ColorRect" type="ColorRect" parent="ShipDetails/Bomb"]
 layout_mode = 0
 offset_left = 76.0
 offset_top = 349.0
@@ -408,7 +411,7 @@ offset_right = 308.0
 offset_bottom = 369.0
 color = Color(0.137255, 0.137255, 0.137255, 1)
 
-[node name="TextureProgressGained" type="TextureProgressBar" parent="Stats/Bomb"]
+[node name="TextureProgressGained" type="TextureProgressBar" parent="ShipDetails/Bomb"]
 modulate = Color(0.454902, 0.454902, 0.454902, 1)
 layout_mode = 0
 offset_left = 76.0
@@ -421,7 +424,7 @@ nine_patch_stretch = true
 texture_under = ExtResource("11_s3b4g")
 texture_progress = ExtResource("12_3x4ks")
 
-[node name="TextureProgressBar" type="TextureProgressBar" parent="Stats/Bomb"]
+[node name="TextureProgressBar" type="TextureProgressBar" parent="ShipDetails/Bomb"]
 modulate = Color(0.286275, 0.286275, 0.286275, 1)
 layout_mode = 0
 offset_left = 76.0
@@ -438,7 +441,7 @@ stretch_margin_bottom = 1
 texture_over = ExtResource("13_y4ybd")
 texture_progress = ExtResource("12_3x4ks")
 
-[node name="Label" type="Label" parent="Stats/Bomb"]
+[node name="Label" type="Label" parent="ShipDetails/Bomb"]
 visible = false
 layout_mode = 0
 offset_left = 324.0
@@ -449,7 +452,7 @@ scale = Vector2(0.9, 0.9)
 text = "+ 5"
 vertical_alignment = 1
 
-[node name="Label2" type="Label" parent="Stats/Bomb"]
+[node name="Label2" type="Label" parent="ShipDetails/Bomb"]
 layout_mode = 0
 offset_left = 76.0
 offset_top = 348.0
@@ -461,7 +464,7 @@ text = "0 / 20"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="Icon" type="TextureRect" parent="Stats/Bomb"]
+[node name="Icon" type="TextureRect" parent="ShipDetails/Bomb"]
 layout_mode = 0
 offset_left = 40.0
 offset_top = 349.0
@@ -470,13 +473,13 @@ offset_bottom = 369.0
 expand_mode = 1
 stretch_mode = 5
 
-[node name="Light" type="Control" parent="Stats"]
+[node name="Light" type="Control" parent="ShipDetails"]
 layout_mode = 3
 anchors_preset = 0
 offset_right = 40.0
 offset_bottom = 40.0
 
-[node name="ColorRect" type="ColorRect" parent="Stats/Light"]
+[node name="ColorRect" type="ColorRect" parent="ShipDetails/Light"]
 layout_mode = 0
 offset_left = 76.0
 offset_top = 377.0
@@ -484,7 +487,7 @@ offset_right = 308.0
 offset_bottom = 397.0
 color = Color(0.51, 0.50796, 0.3876, 1)
 
-[node name="TextureProgressGained" type="TextureProgressBar" parent="Stats/Light"]
+[node name="TextureProgressGained" type="TextureProgressBar" parent="ShipDetails/Light"]
 modulate = Color(1, 1, 0.61, 1)
 layout_mode = 0
 offset_left = 76.0
@@ -497,7 +500,7 @@ nine_patch_stretch = true
 texture_under = ExtResource("11_s3b4g")
 texture_progress = ExtResource("12_3x4ks")
 
-[node name="TextureProgressBar" type="TextureProgressBar" parent="Stats/Light"]
+[node name="TextureProgressBar" type="TextureProgressBar" parent="ShipDetails/Light"]
 modulate = Color(0.811765, 0.811765, 0.364706, 1)
 layout_mode = 0
 offset_left = 76.0
@@ -514,7 +517,7 @@ stretch_margin_bottom = 1
 texture_over = ExtResource("13_y4ybd")
 texture_progress = ExtResource("12_3x4ks")
 
-[node name="Label" type="Label" parent="Stats/Light"]
+[node name="Label" type="Label" parent="ShipDetails/Light"]
 visible = false
 layout_mode = 0
 offset_left = 324.0
@@ -525,7 +528,7 @@ scale = Vector2(0.9, 0.9)
 text = "+ 5"
 vertical_alignment = 1
 
-[node name="Label2" type="Label" parent="Stats/Light"]
+[node name="Label2" type="Label" parent="ShipDetails/Light"]
 layout_mode = 0
 offset_left = 76.0
 offset_top = 376.0
@@ -537,7 +540,7 @@ text = "0 / 20"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="Icon" type="TextureRect" parent="Stats/Light"]
+[node name="Icon" type="TextureRect" parent="ShipDetails/Light"]
 layout_mode = 0
 offset_left = 40.0
 offset_top = 377.0
@@ -546,13 +549,13 @@ offset_bottom = 397.0
 expand_mode = 1
 stretch_mode = 5
 
-[node name="XP" type="Control" parent="Stats"]
+[node name="XP" type="Control" parent="ShipDetails"]
 layout_mode = 3
 anchors_preset = 0
 offset_right = 40.0
 offset_bottom = 40.0
 
-[node name="ColorRect" type="ColorRect" parent="Stats/XP"]
+[node name="ColorRect" type="ColorRect" parent="ShipDetails/XP"]
 layout_mode = 0
 offset_left = 60.0
 offset_top = 433.0
@@ -560,7 +563,7 @@ offset_right = 308.0
 offset_bottom = 453.0
 color = Color(0.59, 0.46669, 0.2537, 1)
 
-[node name="TextureProgressGained" type="TextureProgressBar" parent="Stats/XP"]
+[node name="TextureProgressGained" type="TextureProgressBar" parent="ShipDetails/XP"]
 modulate = Color(1, 0.819608, 0.611765, 1)
 layout_mode = 0
 offset_left = 60.0
@@ -573,7 +576,7 @@ nine_patch_stretch = true
 texture_under = ExtResource("11_s3b4g")
 texture_progress = ExtResource("12_3x4ks")
 
-[node name="TextureProgressBar" type="TextureProgressBar" parent="Stats/XP"]
+[node name="TextureProgressBar" type="TextureProgressBar" parent="ShipDetails/XP"]
 modulate = Color(0.921569, 0.631373, 0.203922, 1)
 layout_mode = 0
 offset_left = 60.0
@@ -590,7 +593,7 @@ stretch_margin_bottom = 1
 texture_over = ExtResource("13_y4ybd")
 texture_progress = ExtResource("12_3x4ks")
 
-[node name="Label" type="Label" parent="Stats/XP"]
+[node name="Label" type="Label" parent="ShipDetails/XP"]
 visible = false
 layout_mode = 0
 offset_left = 324.0
@@ -601,7 +604,7 @@ scale = Vector2(0.9, 0.9)
 text = "+ 5"
 vertical_alignment = 1
 
-[node name="Label2" type="Label" parent="Stats/XP"]
+[node name="Label2" type="Label" parent="ShipDetails/XP"]
 layout_mode = 0
 offset_left = 60.0
 offset_top = 432.0
@@ -613,7 +616,7 @@ text = "0 / 20"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="Icon" type="TextureRect" parent="Stats/XP"]
+[node name="Icon" type="TextureRect" parent="ShipDetails/XP"]
 layout_mode = 0
 offset_left = 20.0
 offset_top = 429.0
@@ -623,7 +626,7 @@ texture = ExtResource("14_gqpul")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="Stats" type="Control" parent="Stats"]
+[node name="Stats" type="Control" parent="ShipDetails"]
 layout_mode = 3
 anchors_preset = 0
 offset_left = 56.0
@@ -632,97 +635,137 @@ offset_right = 96.0
 offset_bottom = 128.0
 metadata/_edit_lock_ = true
 
-[node name="HPIcon" type="TextureRect" parent="Stats/Stats"]
+[node name="HPIcon" type="TextureRect" parent="ShipDetails/Stats"]
 layout_mode = 0
-offset_left = 32.0
+offset_left = -24.0
 offset_top = 24.0
-offset_right = 56.0
 offset_bottom = 48.0
 texture = ExtResource("15_0livu")
 expand_mode = 1
 stretch_mode = 6
 
-[node name="AttackIcon" type="TextureRect" parent="Stats/Stats"]
+[node name="AttackIcon" type="TextureRect" parent="ShipDetails/Stats"]
 layout_mode = 0
-offset_left = 32.0
+offset_left = -24.0
 offset_top = 56.0
-offset_right = 56.0
 offset_bottom = 80.0
 texture = ExtResource("16_grg2r")
 expand_mode = 1
 stretch_mode = 6
 
-[node name="DefenseIcon" type="TextureRect" parent="Stats/Stats"]
+[node name="DefenseIcon" type="TextureRect" parent="ShipDetails/Stats"]
 layout_mode = 0
-offset_left = 32.0
+offset_left = -24.0
 offset_top = 88.0
-offset_right = 56.0
 offset_bottom = 112.0
 texture = ExtResource("17_uo1ep")
 expand_mode = 1
 stretch_mode = 6
 
-[node name="AccuracyIcon" type="TextureRect" parent="Stats/Stats"]
+[node name="AccuracyIcon" type="TextureRect" parent="ShipDetails/Stats"]
 layout_mode = 0
-offset_left = 32.0
+offset_left = -24.0
 offset_top = 120.0
-offset_right = 56.0
 offset_bottom = 144.0
 texture = ExtResource("18_befyh")
 expand_mode = 1
 stretch_mode = 6
 
-[node name="AgilityIcon" type="TextureRect" parent="Stats/Stats"]
+[node name="AgilityIcon" type="TextureRect" parent="ShipDetails/Stats"]
 layout_mode = 0
-offset_left = 32.0
+offset_left = -24.0
 offset_top = 152.0
-offset_right = 56.0
 offset_bottom = 176.0
 texture = ExtResource("19_d6hw1")
 expand_mode = 1
 stretch_mode = 6
 
-[node name="HP" type="Label" parent="Stats/Stats"]
+[node name="HP" type="Label" parent="ShipDetails/Stats"]
 layout_mode = 0
-offset_left = 92.0
+offset_left = 188.0
 offset_top = 24.0
-offset_right = 248.0
+offset_right = 344.0
 offset_bottom = 47.0
 text = "0"
 vertical_alignment = 1
 
-[node name="Attack" type="Label" parent="Stats/Stats"]
+[node name="HPLabel" type="Label" parent="ShipDetails/Stats"]
 layout_mode = 0
-offset_left = 92.0
+offset_left = 16.0
+offset_top = 24.0
+offset_right = 152.0
+offset_bottom = 47.0
+text = "HEALTH_POINTS"
+vertical_alignment = 1
+
+[node name="AttackLabel" type="Label" parent="ShipDetails/Stats"]
+layout_mode = 0
+offset_left = 16.0
 offset_top = 56.0
-offset_right = 248.0
+offset_right = 152.0
+offset_bottom = 79.0
+text = "ATTACK"
+vertical_alignment = 1
+
+[node name="DefenseLabel" type="Label" parent="ShipDetails/Stats"]
+layout_mode = 0
+offset_left = 16.0
+offset_top = 88.0
+offset_right = 152.0
+offset_bottom = 111.0
+text = "DEFENSE"
+vertical_alignment = 1
+
+[node name="AccuracyLabel" type="Label" parent="ShipDetails/Stats"]
+layout_mode = 0
+offset_left = 16.0
+offset_top = 120.0
+offset_right = 152.0
+offset_bottom = 143.0
+text = "ACCURACY"
+vertical_alignment = 1
+
+[node name="AgilityLabel" type="Label" parent="ShipDetails/Stats"]
+layout_mode = 0
+offset_left = 16.0
+offset_top = 152.0
+offset_right = 152.0
+offset_bottom = 175.0
+text = "AGILITY"
+vertical_alignment = 1
+
+[node name="Attack" type="Label" parent="ShipDetails/Stats"]
+layout_mode = 0
+offset_left = 188.0
+offset_top = 56.0
+offset_right = 344.0
 offset_bottom = 79.0
 text = "0"
 vertical_alignment = 1
 
-[node name="Defense" type="Label" parent="Stats/Stats"]
+[node name="Defense" type="Label" parent="ShipDetails/Stats"]
 layout_mode = 0
-offset_left = 92.0
+offset_left = 188.0
 offset_top = 88.0
-offset_right = 248.0
+offset_right = 344.0
 offset_bottom = 111.0
 text = "0"
 vertical_alignment = 1
 
-[node name="Accuracy" type="Label" parent="Stats/Stats"]
+[node name="Accuracy" type="Label" parent="ShipDetails/Stats"]
 layout_mode = 0
-offset_left = 92.0
+offset_left = 188.0
 offset_top = 120.0
-offset_right = 248.0
+offset_right = 344.0
 offset_bottom = 143.0
 text = "0"
 vertical_alignment = 1
 
-[node name="Agility" type="Label" parent="Stats/Stats"]
+[node name="Agility" type="Label" parent="ShipDetails/Stats"]
 layout_mode = 0
-offset_left = 92.0
+offset_left = 188.0
 offset_top = 152.0
-offset_right = 248.0
+offset_right = 344.0
 offset_bottom = 175.0
 text = "0"
 vertical_alignment = 1

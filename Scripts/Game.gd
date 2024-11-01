@@ -4554,13 +4554,13 @@ func add_new_ship_data():
 		"ship_class":ShipClass.STANDARD,
 	})
 	if len(ship_data) == 1:
-		ship_data[-1].initial_position = Vector2.ZERO
+		ship_data[-1].initial_position = Vector2(128, 88)
 	elif len(ship_data) == 2:
-		ship_data[-1].initial_position = Vector2(100, 0)
+		ship_data[-1].initial_position = Vector2(320, 88)
 	elif len(ship_data) == 3:
-		ship_data[-1].initial_position = Vector2(0, 100)
+		ship_data[-1].initial_position = Vector2(128, 216)
 	elif len(ship_data) == 4:
-		ship_data[-1].initial_position = Vector2(100, 100)
+		ship_data[-1].initial_position = Vector2(320, 216)
 
 func get_1st_ship():
 	add_new_ship_data()

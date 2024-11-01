@@ -1,0 +1,22 @@
+[gd_scene load_steps=2 format=3 uid="uid://luee38r6k4vl"]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_358nv"]
+radius = 16.0
+height = 112.0
+
+[node name="Ship2" type="RigidBody2D"]
+position = Vector2(320, 88)
+gravity_scale = 0.0
+lock_rotation = true
+linear_damp = 10000.0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+rotation = 1.5708
+shape = SubResource("CapsuleShape2D_358nv")
+
+[node name="TextureButton" type="TextureButton" parent="."]
+offset_left = -60.0
+offset_top = -28.0
+offset_right = 964.0
+offset_bottom = 484.0
+scale = Vector2(0.121, 0.121)

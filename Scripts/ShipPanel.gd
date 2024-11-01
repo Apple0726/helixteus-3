@@ -2,31 +2,39 @@ extends "Panel.gd"
 
 var spaceport_tier:int
 @onready var travel_ETA = $Panel/TravelETA
-@onready var grid = $Grid
+
+var target_ship_positions:Array
+var ship_nodes = []
 
 func _ready():
+	$ShipDetails.hide()
+	game.ship_data[0].initial_position = Vector2(128, 88)
+	for i in len(game.ship_data):
+		add_ship_node(i)
 	set_polygon(size)
-	for panel in $Grid.get_children():
-		panel.show_weapon_XPs = false
 	refresh()
 
+func add_ship_node(id: int):
+	var ship = preload("res://Scenes/ShipsPanelShip.tscn").instantiate()
+	ship.get_node("TextureButton").button_down.connect(_on_ship_button_down.bind(id))
+	ship.get_node("TextureButton").button_up.connect(_on_ship_button_up)
+	ship.get_node("TextureButton").texture_normal = load("res://Graphics/Ships/Ship%s.png" % id)
+	ship.position = game.ship_data[id].initial_position
+	target_ship_positions.append(ship.position)
+	$Battlefield/Ships.add_child(ship)
+	ship_nodes.append(ship)
+
 func refresh():
-	for panel in $Grid.get_children():
-		panel.refresh()
-	$Grid/Panel1.visible = len(game.ship_data) >= 1
-	$Grid/Panel2.visible = len(game.ship_data) >= 2
-	$Grid/Panel3.visible = len(game.ship_data) >= 3
-	$Grid/Panel4.visible = len(game.ship_data) >= 4
 	$Drives.refresh()
 	if game.ships_travel_data.travel_view != "-":
 		$SpaceportTimer.stop()
 		spaceport_tier = -1
 		$Panel/TravelETA["theme_override_colors/font_color"] = Color.WHITE
-		$Panel/DriveButton.modulate.a = 1.0
-		$Panel/DriveButton.disabled = false
+		$Battlefield/HBoxContainer/DriveButton.modulate.a = 1.0
+		$Battlefield/HBoxContainer/DriveButton.disabled = false
 	else:
-		$Panel/DriveButton.disabled = true
-		$Panel/DriveButton.modulate.a = 0.3
+		$Battlefield/HBoxContainer/DriveButton.disabled = true
+		$Battlefield/HBoxContainer/DriveButton.modulate.a = 0.3
 		if game.autocollect.has("ship_XP"):
 			$Panel/TravelETA["theme_override_colors/font_color"] = Color.GREEN_YELLOW
 			$Panel/TravelETA.text = tr("SHIPS_BENEFITING_FROM_SPACEPORT")
@@ -41,16 +49,16 @@ func refresh():
 	set_process(true)
 
 func _process(delta):
-	if spaceport_tier != -1:
+	if spaceport_tier != -1 and $ShipDetails.visible:
 		for i in len(game.ship_data):
 			for weapon in ["Bullet", "Laser", "Bomb", "Light"]:
-				var node = grid.get_node("Panel%s/%s/TextureProgressBar" % [i + 1, weapon])
-				var text_node = grid.get_node("Panel%s/%s/Label2" % [i + 1, weapon])
+				var node = get_node("ShipDetails/%s/TextureProgressBar" % [i + 1, weapon])
+				var text_node = get_node("ShipDetails/%s/Label2" % [i + 1, weapon])
 				var curr_weapon_XP = game.ship_data[i][weapon.to_lower()].XP
 				node.value = move_toward(node.value, curr_weapon_XP, abs(curr_weapon_XP - node.value) * delta * 0.5)
 				text_node.text = "%s / %s" % [round(node.value), game.ship_data[i][weapon.to_lower()].XP_to_lv]
-			var XP_node = grid.get_node("Panel%s/XP/TextureProgressBar" % (i + 1))
-			var XP_text_node = grid.get_node("Panel%s/XP/Label2" % (i + 1))
+			var XP_node = get_node("ShipDetails/XP/TextureProgressBar" % (i + 1))
+			var XP_text_node = get_node("ShipDetails/XP/Label2" % (i + 1))
 			var curr_XP = game.ship_data[i].XP
 			XP_node.value = move_toward(XP_node.value, curr_XP, abs(curr_XP - XP_node.value) * delta * 2)
 			XP_text_node.text = "%s / %s" % [Helper.format_num(round(XP_node.value)), Helper.format_num(game.ship_data[i].XP_to_lv)]
@@ -69,7 +77,7 @@ func _on_DriveButton_pressed():
 		$Grid.visible = false
 		$Drives.visible = true
 		$Panel/CheckBox.visible = false
-		$Panel/DriveButton.visible = false
+		$Battlefield/HBoxContainer/DriveButton.visible = false
 		$Panel/BackButton.visible = true
 		$Panel/UpgradeButton.visible = false
 	else:
@@ -79,7 +87,7 @@ func _on_BackButton_pressed():
 	$Grid.visible = true
 	$Drives.visible = false
 	$Panel/CheckBox.visible = true
-	$Panel/DriveButton.visible = true
+	$Battlefield/HBoxContainer/DriveButton.visible = true
 	$Panel/BackButton.visible = false
 	refresh()
 
@@ -98,7 +106,7 @@ func _on_GoToShips_pressed():
 		_on_close_button_pressed()
 
 func _on_DriveButton_mouse_entered():
-	if not $Panel/DriveButton.disabled:
+	if not $Battlefield/HBoxContainer/DriveButton.disabled:
 		game.show_tooltip(tr("OPEN_DRIVE_MENU"))
 
 func _on_BackButton_mouse_entered():
@@ -118,21 +126,50 @@ func _on_SpaceportTimer_timeout():
 		Helper.add_ship_XP(i, xp_mult * pow(1.15, game.u_i.lv) * game.u_i.time_speed)
 		Helper.add_weapon_XP(i, weapon.to_lower(), xp_mult / 16.0 * pow(1.07, game.u_i.lv) * game.u_i.time_speed)
 		if visible:
-			grid.get_node("Panel%s/XP/TextureProgress2" % (i+1)).value = 0
-			grid.get_node("Panel%s/%s/TextureProgress2" % [i+1, weapon]).value = 0
-			grid.get_node("Panel%s/Lv" % (i+1)).text = "%s %s" % [tr("LV"), game.ship_data[i].lv]
-			grid.get_node("Panel%s/XP/TextureProgressBar" % (i+1)).max_value = game.ship_data[i].XP_to_lv
-			grid.get_node("Panel%s/XP/TextureProgressBar" % (i+1)).modulate = Color.WHITE
-			grid.get_node("Panel%s/%s/TextureProgressBar" % [i+1, weapon]).modulate = Color.WHITE
+			get_node("ShipDetails/XP/TextureProgress2" % (i+1)).value = 0
+			get_node("ShipDetails/%s/TextureProgress2" % [i+1, weapon]).value = 0
+			get_node("ShipDetails/Lv" % (i+1)).text = "%s %s" % [tr("LV"), game.ship_data[i].lv]
+			get_node("ShipDetails/XP/TextureProgressBar" % (i+1)).max_value = game.ship_data[i].XP_to_lv
+			get_node("ShipDetails/XP/TextureProgressBar" % (i+1)).modulate = Color.WHITE
+			get_node("ShipDetails/%s/TextureProgressBar" % [i+1, weapon]).modulate = Color.WHITE
 			var weapon_data = game.ship_data[i][weapon.to_lower()]
 			var tween = create_tween()
-			tween.tween_property(grid.get_node("Panel%s/XP/TextureProgressBar" % (i+1)), "modulate", Color(0.92, 0.63, 0.2), 1.0)
+			tween.tween_property(get_node("ShipDetails/XP/TextureProgressBar" % (i+1)), "modulate", Color(0.92, 0.63, 0.2), 1.0)
 			var tween2 = create_tween()
-			tween2.tween_property(grid.get_node("Panel%s/%s/TextureProgressBar" % [i+1, weapon]), "modulate", bar_colors[weapon.to_lower()], 1.0)
-			grid.get_node("Panel%s/%s/TextureRect" % [i+1, weapon]).texture = load("res://Graphics/Weapons/%s%s.png" % [weapon.to_lower(), weapon_data.lv])
-			grid.get_node("Panel%s/%s/TextureProgressBar" % [i+1, weapon]).max_value = INF if weapon_data.lv == 5 else weapon_data.XP_to_lv
-			grid.get_node("Panel%s/Stats/HP" % (i+1)).text = Helper.format_num(game.ship_data[i].total_HP * game.ship_data[i].HP_mult)
-			grid.get_node("Panel%s/Stats/Atk" % (i+1)).text = Helper.format_num(game.ship_data[i].atk * game.ship_data[i].atk_mult)
-			grid.get_node("Panel%s/Stats/Def" % (i+1)).text = Helper.format_num(game.ship_data[i].def * game.ship_data[i].def_mult)
-			grid.get_node("Panel%s/Stats/Acc" % (i+1)).text = Helper.format_num(game.ship_data[i].acc * game.ship_data[i].acc_mult)
-			grid.get_node("Panel%s/Stats/Eva" % (i+1)).text = Helper.format_num(game.ship_data[i].eva * game.ship_data[i].eva_mult)
+			tween2.tween_property(get_node("ShipDetails/%s/TextureProgressBar" % [i+1, weapon]), "modulate", bar_colors[weapon.to_lower()], 1.0)
+			get_node("ShipDetails/%s/TextureRect" % [i+1, weapon]).texture = load("res://Graphics/Weapons/%s%s.png" % [weapon.to_lower(), weapon_data.lv])
+			get_node("ShipDetails/%s/TextureProgressBar" % [i+1, weapon]).max_value = INF if weapon_data.lv == 5 else weapon_data.XP_to_lv
+			get_node("ShipDetails/Stats/HP" % (i+1)).text = Helper.format_num(game.ship_data[i].total_HP * game.ship_data[i].HP_mult)
+			get_node("ShipDetails/Stats/Atk" % (i+1)).text = Helper.format_num(game.ship_data[i].atk * game.ship_data[i].atk_mult)
+			get_node("ShipDetails/Stats/Def" % (i+1)).text = Helper.format_num(game.ship_data[i].def * game.ship_data[i].def_mult)
+			get_node("ShipDetails/Stats/Acc" % (i+1)).text = Helper.format_num(game.ship_data[i].acc * game.ship_data[i].acc_mult)
+			get_node("ShipDetails/Stats/Eva" % (i+1)).text = Helper.format_num(game.ship_data[i].eva * game.ship_data[i].eva_mult)
+
+var dragging_ship_id:int = -1
+var ship_mouse_offset:Vector2
+var mouse_position:Vector2
+
+func _input(event: InputEvent) -> void:
+	if event is InputEventMouseMotion:
+		mouse_position = event.position
+		if dragging_ship_id != -1:
+			var target_position = mouse_position - $Battlefield/Ships.global_position
+			target_ship_positions[dragging_ship_id] = target_position - ship_mouse_offset
+			game.ship_data[dragging_ship_id].initial_position = target_ship_positions[dragging_ship_id]
+
+func _physics_process(delta: float) -> void:
+	for i in len(target_ship_positions):
+		var F:Vector2 = 1000 * (target_ship_positions[i] - ship_nodes[i].position)
+		F = F.clamp(-50000 * Vector2.ONE, 50000 * Vector2.ONE)
+		ship_nodes[i].apply_force(F)
+
+func _on_ship_button_down(ship_id: int) -> void:
+	game.view.move_view = false
+	dragging_ship_id = ship_id
+	ship_mouse_offset = mouse_position - ship_nodes[ship_id].global_position
+
+
+func _on_ship_button_up() -> void:
+	game.view.move_view = true
+	dragging_ship_id = -1
+	$ShipDetails.show()
