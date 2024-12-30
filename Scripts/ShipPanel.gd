@@ -1,15 +1,14 @@
 extends "Panel.gd"
 
 var spaceport_tier:int
-@onready var travel_ETA = $Panel/TravelETA
 
 var target_ship_positions:Array
 var ship_nodes = []
 var selected_ship_id:int = -1
 
 func _ready():
-	$ShipDetails.hide()
-	game.ship_data[0].initial_position = Vector2(128, 88)
+	$Panel/ShipDetails.hide()
+	$Panel/Label.show()
 	for i in len(game.ship_data):
 		add_ship_node(i)
 	set_polygon(size)
@@ -26,47 +25,49 @@ func add_ship_node(id: int):
 	ship_nodes.append(ship)
 
 func refresh():
-	$Drives.refresh()
-	if game.ships_travel_data.travel_view != "-":
-		$SpaceportTimer.stop()
-		spaceport_tier = -1
-		$Panel/TravelETA["theme_override_colors/font_color"] = Color.WHITE
-		$Battlefield/HBoxContainer/DriveButton.modulate.a = 1.0
-		$Battlefield/HBoxContainer/DriveButton.disabled = false
-	else:
-		$Battlefield/HBoxContainer/DriveButton.disabled = true
-		$Battlefield/HBoxContainer/DriveButton.modulate.a = 0.3
-		if game.autocollect.has("ship_XP"):
-			$Panel/TravelETA["theme_override_colors/font_color"] = Color.GREEN_YELLOW
-			$Panel/TravelETA.text = tr("SHIPS_BENEFITING_FROM_SPACEPORT")
-			spaceport_tier = game.autocollect.ship_XP
-			if $SpaceportTimer.is_stopped():
-				$SpaceportTimer.start(4.0 / spaceport_tier)
-		else:
-			$SpaceportTimer.stop()
-			spaceport_tier = -1
-			$Panel/TravelETA["theme_override_colors/font_color"] = Color.WHITE
-			$Panel/TravelETA.text = ""
-	set_process(true)
+	pass
+	#$Drives.refresh()
+	#if game.ships_travel_data.travel_view != "-":
+		#$SpaceportTimer.stop()
+		#spaceport_tier = -1
+		#$Panel/TravelETA["theme_override_colors/font_color"] = Color.WHITE
+		#$Battlefield/HBoxContainer/DriveButton.modulate.a = 1.0
+		#$Battlefield/HBoxContainer/DriveButton.disabled = false
+	#else:
+		#$Battlefield/HBoxContainer/DriveButton.disabled = true
+		#$Battlefield/HBoxContainer/DriveButton.modulate.a = 0.3
+		#if game.autocollect.has("ship_XP"):
+			#$Panel/TravelETA["theme_override_colors/font_color"] = Color.GREEN_YELLOW
+			#$Panel/TravelETA.text = tr("SHIPS_BENEFITING_FROM_SPACEPORT")
+			#spaceport_tier = game.autocollect.ship_XP
+			#if $SpaceportTimer.is_stopped():
+				#$SpaceportTimer.start(4.0 / spaceport_tier)
+		#else:
+			#$SpaceportTimer.stop()
+			#spaceport_tier = -1
+			#$Panel/TravelETA["theme_override_colors/font_color"] = Color.WHITE
+			#$Panel/TravelETA.text = ""
+	#set_process(true)
 
 func _process(delta):
-	if spaceport_tier != -1 and $ShipDetails.visible:
-		for i in len(game.ship_data):
-			for weapon in ["Bullet", "Laser", "Bomb", "Light"]:
-				var node = get_node("ShipDetails/%s/TextureProgressBar" % [i + 1, weapon])
-				var text_node = get_node("ShipDetails/%s/Label2" % [i + 1, weapon])
-				var curr_weapon_XP = game.ship_data[i][weapon.to_lower()].XP
-				node.value = move_toward(node.value, curr_weapon_XP, abs(curr_weapon_XP - node.value) * delta * 0.5)
-				text_node.text = "%s / %s" % [round(node.value), game.ship_data[i][weapon.to_lower()].XP_to_lv]
-			var XP_node = get_node("ShipDetails/XP/TextureProgressBar" % (i + 1))
-			var XP_text_node = get_node("ShipDetails/XP/Label2" % (i + 1))
-			var curr_XP = game.ship_data[i].XP
-			XP_node.value = move_toward(XP_node.value, curr_XP, abs(curr_XP - XP_node.value) * delta * 2)
-			XP_text_node.text = "%s / %s" % [Helper.format_num(round(XP_node.value)), Helper.format_num(game.ship_data[i].XP_to_lv)]
-	elif game.ships_travel_data.travel_view != "-":
-		travel_ETA.text = "%s: %s" % [tr("TRAVEL_ETA"), Helper.time_to_str(game.ships_travel_data.travel_length - Time.get_unix_time_from_system() + game.ships_travel_data.travel_start_date)]
-	if not visible:
-		set_process(false)
+	pass
+	#if spaceport_tier != -1 and $ShipDetails.visible:
+		#for i in len(game.ship_data):
+			#for weapon in ["Bullet", "Laser", "Bomb", "Light"]:
+				#var node = get_node("ShipDetails/%s/TextureProgressBar" % [i + 1, weapon])
+				#var text_node = get_node("ShipDetails/%s/Label2" % [i + 1, weapon])
+				#var curr_weapon_XP = game.ship_data[i][weapon.to_lower()].XP
+				#node.value = move_toward(node.value, curr_weapon_XP, abs(curr_weapon_XP - node.value) * delta * 0.5)
+				#text_node.text = "%s / %s" % [round(node.value), game.ship_data[i][weapon.to_lower()].XP_to_lv]
+			#var XP_node = get_node("ShipDetails/XP/TextureProgressBar" % (i + 1))
+			#var XP_text_node = get_node("ShipDetails/XP/Label2" % (i + 1))
+			#var curr_XP = game.ship_data[i].XP
+			#XP_node.value = move_toward(XP_node.value, curr_XP, abs(curr_XP - XP_node.value) * delta * 2)
+			#XP_text_node.text = "%s / %s" % [Helper.format_num(round(XP_node.value)), Helper.format_num(game.ship_data[i].XP_to_lv)]
+	#elif game.ships_travel_data.travel_view != "-":
+		#travel_ETA.text = "%s: %s" % [tr("TRAVEL_ETA"), Helper.time_to_str(game.ships_travel_data.travel_length - Time.get_unix_time_from_system() + game.ships_travel_data.travel_start_date)]
+	#if not visible:
+		#set_process(false)
 
 func _on_CheckBox_toggled(button_pressed):
 	for panel in $Grid.get_children():
@@ -174,10 +175,44 @@ func _on_ship_button_up(ship_id: int) -> void:
 	game.view.move_view = true
 	dragging_ship_id = -1
 	selected_ship_id = ship_id
-	$ShipDetails.show()
+	$Panel/ShipDetails.show()
+	$Panel/Label.hide()
 	var ship_info = game.ship_data[ship_id]
-	$ShipDetails/Label.text = "%s %s %s" % [tr("LEVEL"), ship_info.lv, tr("%s_SHIP") % ShipClass.names[ship_info.ship_class].to_upper()]
+	$Panel/ShipDetails/Label.text = "%s %s %s" % [tr("LEVEL"), ship_info.lv, tr("%s_SHIP") % ShipClass.names[ship_info.ship_class].to_upper()]
 	if ship_info.respec_count == 0:
-		$ShipDetails/Respec.text = "%s (%s)" % [tr("RESPEC"), tr("FREE")]
+		$Panel/ShipDetails/Respec.text = "%s (%s)" % [tr("RESPEC"), tr("FREE")]
 	else:
-		$ShipDetails/Respec.text = "%s (%s)" % [tr("RESPEC"), "-0.5 %s" % tr("LEVEL")]
+		$Panel/ShipDetails/Respec.text = "%s (%s)" % [tr("RESPEC"), "-0.5 %s" % tr("LEVEL")]
+	$Panel/ShipDetails/Stats/HP.text = str(ship_info.HP)
+	$Panel/ShipDetails/Stats/Attack.text = str(ship_info.attack)
+	$Panel/ShipDetails/Stats/Defense.text = str(ship_info.defense)
+	$Panel/ShipDetails/Stats/Accuracy.text = str(ship_info.accuracy)
+	$Panel/ShipDetails/Stats/Agility.text = str(ship_info.agility)
+	for weapon in ["Bullet", "Laser", "Bomb", "Light"]:
+		var weapon_data = ship_info[weapon.to_lower()]
+		get_node("Panel/ShipDetails/%s/TextureProgressBar" % [weapon]).max_value = INF if weapon_data.lv == 5 else weapon_data.XP_to_lv
+		get_node("Panel/ShipDetails/%s/TextureProgressGained" % [weapon]).max_value = INF if weapon_data.lv == 5 else weapon_data.XP_to_lv
+		get_node("Panel/ShipDetails/%s/TextureProgressBar" % [weapon]).value = weapon_data.XP
+		get_node("Panel/ShipDetails/%s/TextureProgressGained" % [weapon]).value = weapon_data.XP
+		get_node("Panel/ShipDetails/%s/Icon" % [weapon]).texture = load("res://Graphics/Weapons/%s%s.png" % [weapon.to_lower(), weapon_data.lv])
+		get_node("Panel/ShipDetails/%s/Label2" % [weapon]).text = "%s / %s" % [round(weapon_data.XP), weapon_data.XP_to_lv]
+	$Panel/ShipDetails/XP/Label2.text = "%s / %s" % [Helper.format_num(round(ship_info.XP)), Helper.format_num(ship_info.XP_to_lv)]
+	$Panel/ShipDetails/XP/TextureProgressBar.max_value = ship_info.XP_to_lv
+	$Panel/ShipDetails/XP/TextureProgressGained.max_value = ship_info.XP_to_lv
+	$Panel/ShipDetails/XP/TextureProgressBar.value = ship_info.XP
+	$Panel/ShipDetails/XP/TextureProgressGained.value = ship_info.XP
+
+
+func _on_weaponIcon_mouse_entered(weapon: String) -> void:
+	if selected_ship_id != -1:
+		game.show_tooltip("%s %s %s\n%s" % [tr("LV"), game.ship_data[selected_ship_id][weapon].lv, tr(weapon.to_upper()), tr(weapon.to_upper() + "_DESC")])
+
+
+func _on_weaponIcon_mouse_exited() -> void:
+	game.hide_tooltip()
+
+
+func _on_respec_pressed() -> void:
+	_on_close_button_pressed()
+	if selected_ship_id != -1:
+		game.switch_view("ship_customize_screen", {"ship_id":selected_ship_id})
