@@ -29,8 +29,8 @@ func _ready() -> void:
 		$ShipClass/VBox/VBox/Support._on_Button_pressed()
 	elif ship_data.ship_class == ShipClass.RECKLESS:
 		$ShipClass/VBox/VBox/Reckless._on_Button_pressed()
-	elif ship_data.ship_class == ShipClass.TANK:
-		$ShipClass/VBox/VBox/Tank._on_Button_pressed()
+	elif ship_data.ship_class == ShipClass.IMPENETRABLE:
+		$ShipClass/VBox/VBox/Impenetrable._on_Button_pressed()
 	elif ship_data.ship_class == ShipClass.UBER:
 		$ShipClass/VBox/VBox/Uber._on_Button_pressed()
 	update_ship_stats_display()
@@ -72,8 +72,8 @@ func update_ship_stats_display():
 		$PassiveAbility/Label2.text = tr("SUPPORT_PASSIVE_ABILITY")
 	elif ship_class == ShipClass.RECKLESS:
 		$PassiveAbility/Label2.text = tr("RECKLESS_PASSIVE_ABILITY")
-	elif ship_class == ShipClass.TANK:
-		$PassiveAbility/Label2.text = tr("TANK_PASSIVE_ABILITY") % [15, 25, 50]
+	elif ship_class == ShipClass.IMPENETRABLE:
+		$PassiveAbility/Label2.text = tr("IMPENETRABLE_PASSIVE_ABILITY") % [15, 25, 50]
 	elif ship_class == ShipClass.UBER:
 		$PassiveAbility/Label2.text = tr("UBER_PASSIVE_ABILITY")
 	var points_allocated = allocated_HP + allocated_attack + allocated_defense + allocated_accuracy + allocated_agility

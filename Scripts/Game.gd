@@ -4537,7 +4537,6 @@ func game_fade(fn, args:Array = []):
 
 func add_new_ship_data():
 	ship_data.append({
-		"name": tr("SHIP"),
 		"lv": 1,
 		"HP": 11,
 		"attack": 11,

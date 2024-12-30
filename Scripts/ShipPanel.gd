@@ -5,6 +5,7 @@ var spaceport_tier:int
 
 var target_ship_positions:Array
 var ship_nodes = []
+var selected_ship_id:int = -1
 
 func _ready():
 	$ShipDetails.hide()
@@ -17,7 +18,7 @@ func _ready():
 func add_ship_node(id: int):
 	var ship = preload("res://Scenes/ShipsPanelShip.tscn").instantiate()
 	ship.get_node("TextureButton").button_down.connect(_on_ship_button_down.bind(id))
-	ship.get_node("TextureButton").button_up.connect(_on_ship_button_up)
+	ship.get_node("TextureButton").button_up.connect(_on_ship_button_up.bind(id))
 	ship.get_node("TextureButton").texture_normal = load("res://Graphics/Ships/Ship%s.png" % id)
 	ship.position = game.ship_data[id].initial_position
 	target_ship_positions.append(ship.position)
@@ -169,7 +170,14 @@ func _on_ship_button_down(ship_id: int) -> void:
 	ship_mouse_offset = mouse_position - ship_nodes[ship_id].global_position
 
 
-func _on_ship_button_up() -> void:
+func _on_ship_button_up(ship_id: int) -> void:
 	game.view.move_view = true
 	dragging_ship_id = -1
+	selected_ship_id = ship_id
 	$ShipDetails.show()
+	var ship_info = game.ship_data[ship_id]
+	$ShipDetails/Label.text = "%s %s %s" % [tr("LEVEL"), ship_info.lv, tr("%s_SHIP") % ShipClass.names[ship_info.ship_class].to_upper()]
+	if ship_info.respec_count == 0:
+		$ShipDetails/Respec.text = "%s (%s)" % [tr("RESPEC"), tr("FREE")]
+	else:
+		$ShipDetails/Respec.text = "%s (%s)" % [tr("RESPEC"), "-0.5 %s" % tr("LEVEL")]

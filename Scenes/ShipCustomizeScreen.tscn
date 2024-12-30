@@ -81,9 +81,9 @@ button_text = "SUPPORT"
 layout_mode = 2
 button_text = "RECKLESS"
 
-[node name="Tank" parent="ShipClass/VBox/VBox" instance=ExtResource("3_hi247")]
+[node name="Impenetrable" parent="ShipClass/VBox/VBox" instance=ExtResource("3_hi247")]
 layout_mode = 2
-button_text = "TANK"
+button_text = "IMPENETRABLE"
 
 [node name="Uber" parent="ShipClass/VBox/VBox" instance=ExtResource("3_hi247")]
 layout_mode = 2
@@ -415,7 +415,7 @@ autowrap_mode = 3
 [connection signal="pressed" from="ShipClass/VBox/VBox/Energetic" to="." method="update_ship_stats" binds= [5]]
 [connection signal="pressed" from="ShipClass/VBox/VBox/Support" to="." method="update_ship_stats" binds= [6]]
 [connection signal="pressed" from="ShipClass/VBox/VBox/Reckless" to="." method="update_ship_stats" binds= [7]]
-[connection signal="pressed" from="ShipClass/VBox/VBox/Tank" to="." method="update_ship_stats" binds= [8]]
+[connection signal="pressed" from="ShipClass/VBox/VBox/Impenetrable" to="." method="update_ship_stats" binds= [8]]
 [connection signal="pressed" from="ShipClass/VBox/VBox/Uber" to="." method="update_ship_stats" binds= [9]]
 [connection signal="pressed" from="Actions/Cancel" to="." method="_on_cancel_pressed"]
 [connection signal="pressed" from="Actions/Done" to="." method="_on_done_pressed"]

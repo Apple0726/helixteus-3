@@ -9,9 +9,22 @@ enum {
 	ENERGETIC,
 	SUPPORT,
 	RECKLESS,
-	TANK,
+	IMPENETRABLE,
 	UBER
 }
+
+var names = [
+	"standard",
+	"offensive",
+	"defensive",
+	"accurate",
+	"agile",
+	"energetic",
+	"support",
+	"reckless",
+	"impenetrable",
+	"uber",
+]
 
 
 var class_modifiers = {
@@ -79,7 +92,7 @@ var class_modifiers = {
 		"accuracy": -4,
 		"agility": 3,
 	},
-	TANK: {
+	IMPENETRABLE: {
 		"HP": 5,
 		"HP_increase_on_levelup": 10,
 		"attack": -1,
