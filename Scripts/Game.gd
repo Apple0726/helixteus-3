@@ -204,10 +204,10 @@ var hotbar:Array
 var STM_lv:int#ship travel minigame level
 var rover_id:int#Rover id when in cave
 
-var p_num:int
-var s_num:int
-var g_num:int#Total number of galaxies generated
-var c_num:int
+var planets_generated:int
+var systems_generated:int
+var galaxies_generated:int#Total number of galaxies generated
+var clusters_generated:int
 
 var stats_univ:Dictionary
 var stats_dim:Dictionary
@@ -1043,10 +1043,10 @@ func new_game(univ:int = 0, new_save:bool = false, DR_advantage = false):
 	STM_lv = 0#ship travel minigame level
 	rover_id = -1#Rover id when in cave
 
-	p_num = 0
-	s_num = 0
-	g_num = 0#Total number of galaxies generated
-	c_num = 0
+	planets_generated = 0
+	systems_generated = 0
+	galaxies_generated = 0#Total number of galaxies generated
+	clusters_generated = 0
 
 	#objective = {}# = {"type":ObjectiveType.BUILD, "data":"PP", "current":0, "goal":0}
 	autocollect = {
@@ -1978,7 +1978,7 @@ func add_galaxy():
 #	for i in N:
 #		system_data[i].pos = system_positions[i]
 #		system_data[i].diff = system_difficulties[i]
-#	s_num += N
+#	systems_generated += N
 #	Helper.save_obj("Galaxies", c_g_g, system_data)
 #	Helper.save_obj("Clusters", c_c, galaxy_data)
 #	galaxy_generator.queue_free()
@@ -2171,12 +2171,12 @@ func generate_clusters(parent_id:int):
 			c_i.rich_elements[_rich_elements[j]] = 8 * (1 + randf()) * remap(dist_from_center, 0, 16000, 1, 40)
 		pos = Vector2.from_angle(randf_range(0, 2 * PI)) * dist_from_center
 		c_i["pos"] = pos
-		c_i["id"] = c_id + c_num
+		c_i["id"] = c_id + clusters_generated
 		var DE_factor = pos.length() * u_i.dark_energy
 		c_i.FM = Helper.clever_round(1 + DE_factor / 1000.0)#Ferromagnetic materials
 		c_i.diff = Helper.clever_round((1 + DE_factor) * u_i.difficulty)
 		u_i.cluster_data.append(c_i)
-	c_num += total_clust_num
+	clusters_generated += total_clust_num
 	fn_save_game()
 
 var is_generating:bool = false
@@ -2187,7 +2187,7 @@ func generate_galaxy_part():
 		progress = generate_galaxies(c_c)
 		$Loading.update_bar(progress, tr("GENERATING_CLUSTER") % [u_i.cluster_data[c_c]["galaxies"].size(), u_i.cluster_data[c_c]["galaxy_num"]])
 		await get_tree().create_timer(0.0000000000001).timeout  #Progress Bar doesnt update without this
-	g_num += u_i.cluster_data[c_c].galaxy_num
+	galaxies_generated += u_i.cluster_data[c_c].galaxy_num
 	Helper.save_obj("Clusters", c_c, galaxy_data)
 	add_obj("cluster")
 	remove_child($Loading)
@@ -2251,7 +2251,7 @@ func generate_galaxies(id:int):
 		obj_shapes.append(circle)
 		g_i.pos = pos
 		var g_id = galaxy_data.size()
-		g_i.id = g_id + g_num
+		g_i.id = g_id + galaxies_generated
 		g_i.l_id = g_id
 		var starting_galaxy = c_c == 0 and galaxy_num == total_gal_num and i == 0
 		if starting_galaxy:
@@ -2354,7 +2354,7 @@ func generate_paris_galaxy(file):
 			s_i.conquered = true
 		
 		var s_id = system_data.size()
-		s_i.id = s_id + s_num
+		s_i.id = s_id + systems_generated
 		s_i.l_id = s_id
 		s_i.stars = [star]
 		s_i.diff = get_sys_diff(s_i.pos, c_g, s_i)
@@ -2427,7 +2427,7 @@ func generate_system_part():
 			systems_collision_detection(c_g, i)
 			update_loading_bar(i, N, tr("GENERATING_GALAXY"))
 			await get_tree().create_timer(0.0000000000001).timeout
-	s_num += galaxy_data[c_g].system_num
+	systems_generated += galaxy_data[c_g].system_num
 	Helper.save_obj("Galaxies", c_g_g, system_data)
 	Helper.save_obj("Clusters", c_c, galaxy_data)
 	remove_child($Loading)
@@ -2702,7 +2702,7 @@ func generate_systems(id:int):
 			stats_global.planets_conquered += planet_num
 		
 		var s_id = system_data.size()
-		s_i.id = s_id + s_num
+		s_i.id = s_id + systems_generated
 		s_i.l_id = s_id
 		s_i.pos = Vector2.ZERO
 		s_i.stars = stars
@@ -2803,14 +2803,14 @@ func generate_planets(id:int):#local id
 			p_i["conquered"] = true
 		p_i["ring"] = i
 		p_i["type"] = Helper.rand_int(3, 10)
-		if p_num == 0:# Starting solar system has smaller planets
+		if planets_generated == 0:# Starting solar system has smaller planets
 			p_i["size"] = int((2000 + randf_range(0, 7000) * (i + 1) / 2.0) * pow(u_i.gravitational, 0.5) * dark_matter)
 			p_i.pressure = pow(10, randf_range(-3, log(p_i.size / 5.0) / log(10) - 3)) * u_i.boltzmann
 		else:
 			p_i["size"] = int((2000 + randf_range(0, 12000) * (i + 1) / 2.0) * pow(u_i.gravitational, 0.5) * dark_matter)
 			p_i.pressure = pow(10, randf_range(-3, log(p_i.size) / log(10) - 2)) * u_i.boltzmann
 		p_i["angle"] = randf_range(0, 2 * PI)
-		if p_num == 0 and i == 2:
+		if planets_generated == 0 and i == 2:
 			p_i.angle = randf_range(PI/4, 3*PI/4)
 		#p_i["distance"] = pow(1.3,i+(max(1.0,log(combined_star_size*(0.75+0.25/max(1.0,log(combined_star_size)))))/log(1.3)))
 		p_i["distance"] = pow(1.3,i + j) * randf_range(240, 270)
@@ -2821,9 +2821,9 @@ func generate_planets(id:int):#local id
 		p_i["view"] = {"pos":Vector2.ZERO, "zoom":1.0}
 		p_i["tiles"] = []
 		var p_id = planet_data.size()
-		p_i["id"] = p_id + p_num
+		p_i["id"] = p_id + planets_generated
 		p_i["l_id"] = p_id
-		system_data[id]["planets"].append({"local":p_id, "global":p_id + p_num})
+		system_data[id]["planets"].append({"local":p_id, "global":p_id + planets_generated})
 		var dist_in_km = p_i.distance / 569.0 * e(1.5, 8)#                             V bond albedo
 		var temp = max_star_temp * pow(star_size_in_km / (2 * dist_in_km), 0.5) * pow(1 - 0.1, 0.25)
 		p_i.temperature = temp# in K
@@ -2856,7 +2856,7 @@ func generate_planets(id:int):#local id
 		p_i.surface = add_surface_materials(temp, p_i.crust)
 		p_i.liq_seed = randi()
 		p_i.liq_period = randf_range(0.1, 1)
-		if id + s_num == 0 and c_u == 0:#Only water in solar system
+		if id + systems_generated == 0 and c_u == 0:#Only water in solar system
 			if randf() < 0.2:
 				p_i.lake_1 = {"element":"H2O"}
 			if randf() < 0.2:
@@ -2868,7 +2868,7 @@ func generate_planets(id:int):#local id
 		var diff:float = system_data[id].diff
 		var power:float = diff * pow(p_i.size / 2500.0, 0.5)
 		var num:int = 0
-		var total_num:int = Helper.rand_int(1, 12)
+		var total_num:int = randi() % 12 + 1
 		if not p_i.has("conquered"):
 			while num < total_num:
 				num += 1
@@ -2880,9 +2880,8 @@ func generate_planets(id:int):#local id
 					_class += 1
 				if randf() < log(diff / 10000.0) / log(100) - 1.0:
 					_class += 1
-				if p_num == 0:
-					if lv > 4:
-						lv = 4
+				if planets_generated == 0:
+					lv = min(lv, 4)
 					if i == 2:
 						lv = 1
 				if num == total_num:
@@ -2892,13 +2891,13 @@ func generate_planets(id:int):#local id
 					HP = round(HP * randf_range(4.0, 6.0))
 				elif _class >= 3:
 					HP = round(HP * randf_range(8.0, 12.0))
-				var def = round(randf() * 7.0 + 3.0)
-				var atk = round(randf_range(0.8, 1.2) * (15 - def) * pow(1.15, lv - 1))
-				var acc = round(randf_range(0.8, 1.2) * 8 * pow(1.15, lv - 1))
-				var eva = round(randf_range(0.8, 1.2) * 8 * pow(1.15, lv - 1))
+				var defense = round(randf() * 7.0 + 3.0)
+				var attack = round(randf_range(0.8, 1.2) * (15 - defense) * pow(1.15, lv - 1))
+				var accuracy = round(randf_range(0.8, 1.2) * 8 * pow(1.15, lv - 1))
+				var agility = round(randf_range(0.8, 1.2) * 8 * pow(1.15, lv - 1))
 				var _money = round(randf_range(1, 2) * pow(1.3, lv - 1) * 50000)
 				var XP = round(pow(1.25, lv - 1) * 5)
-				p_i.HX_data.append({"class":_class, "type":Helper.rand_int(1, 4), "lv":lv, "HP":HP, "total_HP":HP, "atk":atk, "def":def, "acc":acc, "eva":eva, "money":_money, "XP":XP})
+				p_i.HX_data.append({"class":_class, "type":Helper.rand_int(1, 4), "lv":lv, "HP":HP, "total_HP":HP, "attack":attack, "defense":defense, "accuracy":accuracy, "agility":agility, "money":_money, "XP":XP})
 				power -= floor(pow(1.15, lv))
 				if power <= 1:
 					break
@@ -2906,7 +2905,7 @@ func generate_planets(id:int):#local id
 		var wid:int = Helper.get_wid(p_i.size)
 		var view_zoom = 3.0 / wid
 		p_i.view = {"pos":Vector2(340, 80), "zoom":view_zoom}
-		if c_u != 0 and p_num == 0 and i == 3:
+		if c_u != 0 and planets_generated == 0 and i == 3:
 			p_i.discovered = true
 			p_i.conquered = true
 			p_i.angle = PI / 2
@@ -2960,7 +2959,7 @@ func generate_planets(id:int):#local id
 		system_data[id]["view"] = {"pos":Vector2(640, 360), "zoom":view_zoom}
 	system_data[id].closest_planet_distance = planet_data[0].distance
 	system_data[id]["discovered"] = true
-	p_num += planet_num
+	planets_generated += planet_num
 	Helper.save_obj("Systems", c_s_g, planet_data)
 	Helper.save_obj("Galaxies", c_g_g, system_data)
 
@@ -4145,10 +4144,10 @@ func fn_save_game():
 		"probe_data":probe_data,
 		"ship_data":ship_data,
 		"ships_travel_data":ships_travel_data,
-		"p_num":p_num,
-		"s_num":s_num,
-		"g_num":g_num,
-		"c_num":c_num,
+		"planets_generated":planets_generated,
+		"systems_generated":systems_generated,
+		"galaxies_generated":galaxies_generated,
+		"clusters_generated":clusters_generated,
 		"stats_univ":stats_univ,
 		#"objective":objective,
 		"autocollect":autocollect,
@@ -4544,7 +4543,7 @@ func add_new_ship_data():
 		"accuracy": 11,
 		"agility": 11,
 		"XP": 0,
-		"XP_to_lv": 20,
+		"XP_to_lv": Constants.base_ship_XP_to_lv,
 		"bullet": {"lv":1, "XP":0, "XP_to_lv":10},
 		"laser": {"lv":1, "XP":0, "XP_to_lv":10},
 		"bomb": {"lv":1, "XP":0, "XP_to_lv":10},
