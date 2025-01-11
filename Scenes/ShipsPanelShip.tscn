@@ -1,10 +1,13 @@
-[gd_scene load_steps=2 format=3 uid="uid://luee38r6k4vl"]
+[gd_scene load_steps=4 format=3 uid="uid://luee38r6k4vl"]
+
+[ext_resource type="Texture2D" uid="uid://koi0aarpqj30" path="res://Graphics/Ships/Ship0.png" id="2_8uj1y"]
+[ext_resource type="Script" path="res://Scripts/Highlightable.gd" id="3_1x1wg"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_358nv"]
 radius = 16.0
 height = 112.0
 
-[node name="Ship2" type="RigidBody2D"]
+[node name="Ship" type="RigidBody2D"]
 position = Vector2(320, 88)
 gravity_scale = 0.0
 lock_rotation = true
@@ -20,3 +23,8 @@ offset_top = -28.0
 offset_right = 964.0
 offset_bottom = 484.0
 scale = Vector2(0.121, 0.121)
+texture_normal = ExtResource("2_8uj1y")
+script = ExtResource("3_1x1wg")
+
+[connection signal="mouse_entered" from="TextureButton" to="TextureButton" method="_on_mouse_entered"]
+[connection signal="mouse_exited" from="TextureButton" to="TextureButton" method="_on_mouse_exited"]

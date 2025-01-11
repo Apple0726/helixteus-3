@@ -1,4 +1,4 @@
-[gd_scene load_steps=27 format=3 uid="uid://csljwgggftgxb"]
+[gd_scene load_steps=31 format=3 uid="uid://csljwgggftgxb"]
 
 [ext_resource type="Script" path="res://Scripts/ShipPanel.gd" id="3"]
 [ext_resource type="Texture2D" uid="uid://ccntlctxytsi2" path="res://Graphics/GUI/Panel.png" id="3_xp52f"]
@@ -6,7 +6,9 @@
 [ext_resource type="Texture2D" uid="uid://c1vwn7p5uxu1r" path="res://Graphics/GUI/CloseButtonHover.png" id="5_5824e"]
 [ext_resource type="Theme" uid="uid://cp2u1kgj60ic" path="res://Resources/default_theme.tres" id="7"]
 [ext_resource type="PackedScene" uid="uid://rkeuei54m30i" path="res://Scenes/Drives.tscn" id="8"]
+[ext_resource type="Shader" path="res://Shaders/FloatAnimation.gdshader" id="9_aivc5"]
 [ext_resource type="Texture2D" uid="uid://ccwp7j6mkde7u" path="res://Graphics/Buttons/SystemView.png" id="9_dhoc8"]
+[ext_resource type="Texture2D" uid="uid://47ckp0wuhpfy" path="res://Graphics/Icons/current.png" id="10_800g5"]
 [ext_resource type="Texture2D" uid="uid://di3sx4ynm6kot" path="res://Graphics/Science/CD.png" id="11"]
 [ext_resource type="Texture2D" uid="uid://kr2fdk8dptv1" path="res://Graphics/Misc/BarUnder2.png" id="11_s3b4g"]
 [ext_resource type="Texture2D" uid="uid://bx1hvetixqpwi" path="res://Graphics/Misc/Bar2.png" id="12_3x4ks"]
@@ -58,6 +60,15 @@ b = Vector2(448, 0)
 [sub_resource type="LabelSettings" id="LabelSettings_aaq6n"]
 font_size = 13
 font_color = Color(0.52549, 0.52549, 1, 1)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_pjijs"]
+shader = ExtResource("9_aivc5")
+shader_parameter/amplitude = 10.0
+shader_parameter/frequency = 6.0
+
+[sub_resource type="LabelSettings" id="LabelSettings_sx08b"]
+font_size = 14
+font_color = Color(0.585062, 0.585062, 0.585062, 1)
 
 [node name="Background" type="Control"]
 layout_mode = 3
@@ -112,7 +123,7 @@ grow_vertical = 2
 
 [node name="SpaceportTimer" type="Timer" parent="."]
 
-[node name="Battlefield" type="Panel" parent="."]
+[node name="Ships" type="Panel" parent="."]
 clip_contents = true
 layout_mode = 0
 offset_left = 604.0
@@ -121,54 +132,49 @@ offset_right = 1120.0
 offset_bottom = 620.0
 theme_override_styles/panel = SubResource("StyleBoxFlat_8pffm")
 
-[node name="HBoxContainer" type="HBoxContainer" parent="Battlefield"]
-layout_mode = 1
-anchors_preset = 5
-anchor_left = 0.5
-anchor_right = 0.5
-offset_left = -38.0
-offset_top = 16.0
-offset_right = 22.0
-offset_bottom = 56.0
-grow_horizontal = 2
-
-[node name="DriveButton" type="TextureButton" parent="Battlefield/HBoxContainer"]
-custom_minimum_size = Vector2(50, 0)
+[node name="DriveButton" type="TextureButton" parent="Ships"]
 layout_mode = 2
+offset_left = 156.0
+offset_top = 404.0
+offset_right = 196.0
+offset_bottom = 444.0
 texture_normal = ExtResource("11")
 ignore_texture_size = true
 stretch_mode = 5
 
-[node name="GoToShips" type="TextureButton" parent="Battlefield/HBoxContainer"]
-custom_minimum_size = Vector2(50, 0)
+[node name="GoToShips" type="TextureButton" parent="Ships"]
 layout_mode = 2
+offset_left = 312.0
+offset_top = 408.0
+offset_right = 352.0
+offset_bottom = 448.0
 texture_normal = ExtResource("9_dhoc8")
 ignore_texture_size = true
 stretch_mode = 5
 
-[node name="Ships" type="Panel" parent="Battlefield"]
+[node name="Battlefield" type="Panel" parent="Ships"]
 layout_mode = 0
 offset_left = 32.0
-offset_top = 84.0
+offset_top = 40.0
 offset_right = 480.0
-offset_bottom = 436.0
+offset_bottom = 392.0
 theme_override_styles/panel = SubResource("StyleBoxFlat_pdtjp")
 
-[node name="StaticBody2D" type="StaticBody2D" parent="Battlefield/Ships"]
+[node name="StaticBody2D" type="StaticBody2D" parent="Ships/Battlefield"]
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Battlefield/Ships/StaticBody2D"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Ships/Battlefield/StaticBody2D"]
 shape = SubResource("SegmentShape2D_4vtgr")
 
-[node name="CollisionShape2D2" type="CollisionShape2D" parent="Battlefield/Ships/StaticBody2D"]
+[node name="CollisionShape2D2" type="CollisionShape2D" parent="Ships/Battlefield/StaticBody2D"]
 shape = SubResource("SegmentShape2D_ignkx")
 
-[node name="CollisionShape2D3" type="CollisionShape2D" parent="Battlefield/Ships/StaticBody2D"]
+[node name="CollisionShape2D3" type="CollisionShape2D" parent="Ships/Battlefield/StaticBody2D"]
 shape = SubResource("SegmentShape2D_54v24")
 
-[node name="CollisionShape2D4" type="CollisionShape2D" parent="Battlefield/Ships/StaticBody2D"]
+[node name="CollisionShape2D4" type="CollisionShape2D" parent="Ships/Battlefield/StaticBody2D"]
 shape = SubResource("SegmentShape2D_yjbqr")
 
-[node name="InitialPositionsLabel" type="Label" parent="Battlefield/Ships"]
+[node name="InitialPositionsLabel" type="Label" parent="Ships/Battlefield"]
 layout_mode = 0
 offset_left = 8.0
 offset_top = 8.0
@@ -177,22 +183,29 @@ offset_bottom = 25.0
 text = "SHIP_INITIAL_POSITIONS"
 label_settings = SubResource("LabelSettings_aaq6n")
 
+[node name="Selected" type="Sprite2D" parent="Ships/Battlefield"]
+visible = false
+material = SubResource("ShaderMaterial_pjijs")
+position = Vector2(68, 40)
+scale = Vector2(0.295, 0.295)
+texture = ExtResource("10_800g5")
+
 [node name="Panel" type="Panel" parent="."]
 layout_mode = 0
-offset_left = 148.0
+offset_left = 152.0
 offset_top = 148.0
-offset_right = 564.0
+offset_right = 556.0
 offset_bottom = 620.0
 
 [node name="Label" type="Label" parent="Panel"]
 visible = false
 layout_mode = 1
-anchors_preset = 15
+anchors_preset = 10
 anchor_right = 1.0
-anchor_bottom = 1.0
+offset_bottom = 140.0
 grow_horizontal = 2
-grow_vertical = 2
 text = "Select a ship on the right to view its details."
+label_settings = SubResource("LabelSettings_sx08b")
 horizontal_alignment = 1
 vertical_alignment = 1
 
@@ -541,7 +554,7 @@ offset_bottom = 40.0
 
 [node name="ColorRect" type="ColorRect" parent="Panel/ShipDetails/XP"]
 layout_mode = 0
-offset_left = 60.0
+offset_left = 76.0
 offset_top = 433.0
 offset_right = 308.0
 offset_bottom = 453.0
@@ -550,7 +563,7 @@ color = Color(0.59, 0.46669, 0.2537, 1)
 [node name="TextureProgressGained" type="TextureProgressBar" parent="Panel/ShipDetails/XP"]
 modulate = Color(1, 0.819608, 0.611765, 1)
 layout_mode = 0
-offset_left = 60.0
+offset_left = 76.0
 offset_top = 433.0
 offset_right = 308.0
 offset_bottom = 453.0
@@ -563,7 +576,7 @@ texture_progress = ExtResource("12_3x4ks")
 [node name="TextureProgressBar" type="TextureProgressBar" parent="Panel/ShipDetails/XP"]
 modulate = Color(0.921569, 0.631373, 0.203922, 1)
 layout_mode = 0
-offset_left = 60.0
+offset_left = 76.0
 offset_top = 433.0
 offset_right = 308.0
 offset_bottom = 453.0
@@ -590,7 +603,7 @@ vertical_alignment = 1
 
 [node name="Label2" type="Label" parent="Panel/ShipDetails/XP"]
 layout_mode = 0
-offset_left = 60.0
+offset_left = 76.0
 offset_top = 432.0
 offset_right = 308.0
 offset_bottom = 455.0
@@ -602,10 +615,10 @@ vertical_alignment = 1
 
 [node name="Icon" type="TextureRect" parent="Panel/ShipDetails/XP"]
 layout_mode = 0
-offset_left = 20.0
-offset_top = 429.0
-offset_right = 52.0
-offset_bottom = 457.0
+offset_left = 36.0
+offset_top = 428.0
+offset_right = 68.0
+offset_bottom = 456.0
 texture = ExtResource("14_gqpul")
 expand_mode = 1
 stretch_mode = 5
@@ -756,12 +769,12 @@ vertical_alignment = 1
 
 [connection signal="pressed" from="CloseButton" to="." method="_on_close_button_pressed"]
 [connection signal="timeout" from="SpaceportTimer" to="." method="_on_SpaceportTimer_timeout"]
-[connection signal="mouse_entered" from="Battlefield/HBoxContainer/DriveButton" to="." method="_on_DriveButton_mouse_entered"]
-[connection signal="mouse_exited" from="Battlefield/HBoxContainer/DriveButton" to="." method="_on_mouse_exited"]
-[connection signal="pressed" from="Battlefield/HBoxContainer/DriveButton" to="." method="_on_DriveButton_pressed"]
-[connection signal="mouse_entered" from="Battlefield/HBoxContainer/GoToShips" to="." method="_on_GoToShips_mouse_entered"]
-[connection signal="mouse_exited" from="Battlefield/HBoxContainer/GoToShips" to="." method="_on_mouse_exited"]
-[connection signal="pressed" from="Battlefield/HBoxContainer/GoToShips" to="." method="_on_GoToShips_pressed"]
+[connection signal="mouse_entered" from="Ships/DriveButton" to="." method="_on_DriveButton_mouse_entered"]
+[connection signal="mouse_exited" from="Ships/DriveButton" to="." method="_on_mouse_exited"]
+[connection signal="pressed" from="Ships/DriveButton" to="." method="_on_DriveButton_pressed"]
+[connection signal="mouse_entered" from="Ships/GoToShips" to="." method="_on_GoToShips_mouse_entered"]
+[connection signal="mouse_exited" from="Ships/GoToShips" to="." method="_on_mouse_exited"]
+[connection signal="pressed" from="Ships/GoToShips" to="." method="_on_GoToShips_pressed"]
 [connection signal="pressed" from="Panel/ShipDetails/Respec" to="." method="_on_respec_pressed"]
 [connection signal="mouse_entered" from="Panel/ShipDetails/Bullet/Icon" to="." method="_on_weaponIcon_mouse_entered" binds= ["bullet"]]
 [connection signal="mouse_exited" from="Panel/ShipDetails/Bullet/Icon" to="." method="_on_weaponIcon_mouse_exited"]

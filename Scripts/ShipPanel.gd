@@ -19,9 +19,10 @@ func add_ship_node(id: int):
 	ship.get_node("TextureButton").button_down.connect(_on_ship_button_down.bind(id))
 	ship.get_node("TextureButton").button_up.connect(_on_ship_button_up.bind(id))
 	ship.get_node("TextureButton").texture_normal = load("res://Graphics/Ships/Ship%s.png" % id)
+	ship.get_node("TextureButton").texture_click_mask = load("res://Graphics/Ships/Ship%sCM.png" % id)
 	ship.position = game.ship_data[id].initial_position
 	target_ship_positions.append(ship.position)
-	$Battlefield/Ships.add_child(ship)
+	$Ships/Battlefield.add_child(ship)
 	ship_nodes.append(ship)
 
 func refresh():
@@ -50,7 +51,8 @@ func refresh():
 	#set_process(true)
 
 func _process(delta):
-	pass
+	if selected_ship_id != -1:
+		$Ships/Battlefield/Selected.position = ship_nodes[selected_ship_id].position - Vector2(0, 40)
 	#if spaceport_tier != -1 and $ShipDetails.visible:
 		#for i in len(game.ship_data):
 			#for weapon in ["Bullet", "Laser", "Bomb", "Light"]:
@@ -79,7 +81,7 @@ func _on_DriveButton_pressed():
 		$Grid.visible = false
 		$Drives.visible = true
 		$Panel/CheckBox.visible = false
-		$Battlefield/HBoxContainer/DriveButton.visible = false
+		$Ships/DriveButton.visible = false
 		$Panel/BackButton.visible = true
 		$Panel/UpgradeButton.visible = false
 	else:
@@ -89,7 +91,7 @@ func _on_BackButton_pressed():
 	$Grid.visible = true
 	$Drives.visible = false
 	$Panel/CheckBox.visible = true
-	$Battlefield/HBoxContainer/DriveButton.visible = true
+	$Ships/DriveButton.visible = true
 	$Panel/BackButton.visible = false
 	refresh()
 
@@ -108,7 +110,7 @@ func _on_GoToShips_pressed():
 		_on_close_button_pressed()
 
 func _on_DriveButton_mouse_entered():
-	if not $Battlefield/HBoxContainer/DriveButton.disabled:
+	if not $Ships/DriveButton.disabled:
 		game.show_tooltip(tr("OPEN_DRIVE_MENU"))
 
 func _on_BackButton_mouse_entered():
@@ -155,7 +157,7 @@ func _input(event: InputEvent) -> void:
 	if event is InputEventMouseMotion:
 		mouse_position = event.position
 		if dragging_ship_id != -1:
-			var target_position = mouse_position - $Battlefield/Ships.global_position
+			var target_position = mouse_position - $Ships/Battlefield.global_position
 			target_ship_positions[dragging_ship_id] = target_position - ship_mouse_offset
 			game.ship_data[dragging_ship_id].initial_position = target_ship_positions[dragging_ship_id]
 
@@ -175,10 +177,12 @@ func _on_ship_button_up(ship_id: int) -> void:
 	game.view.move_view = true
 	dragging_ship_id = -1
 	selected_ship_id = ship_id
+	$Ships/Battlefield/Selected.show()
+	$Ships/Battlefield/Selected.position = ship_nodes[ship_id].position - Vector2(0, 40)
 	$Panel/ShipDetails.show()
 	$Panel/Label.hide()
 	var ship_info = game.ship_data[ship_id]
-	$Panel/ShipDetails/Label.text = "%s %s %s" % [tr("LEVEL"), ship_info.lv, tr("%s_SHIP") % ShipClass.names[ship_info.ship_class].to_upper()]
+	$Panel/ShipDetails/Label.text = "%s %s %s" % [tr("LEVEL"), ship_info.lv, tr("%s_SHIP" % ShipClass.names[ship_info.ship_class].to_upper())]
 	if ship_info.respec_count == 0:
 		$Panel/ShipDetails/Respec.text = "%s (%s)" % [tr("RESPEC"), tr("FREE")]
 	else:
