@@ -86,6 +86,7 @@ var panel_var_name_to_file_name = {
 	"MU_panel":"MineralUpgrades",
 	"settings_panel":"Settings",
 	"ships_panel":"Ships",
+	"send_ships_panel":"SendShipsPanel",
 	"shop_panel":"Shop",
 	"SC_panel":"SCPanel",
 	"RC_panel":"RCPanel",
@@ -2866,13 +2867,13 @@ func generate_planets(id:int):#local id
 			p_i.lake_2 = {"element":get_random_element(list_of_element_probabilities)}
 		p_i.HX_data = []
 		var diff:float = system_data[id].diff
-		var power:float = diff * pow(p_i.size / 2500.0, 0.5)
+		var power_left:float = diff * pow(p_i.size / 2500.0, 0.5)
 		var num:int = 0
 		var total_num:int = randi() % 12 + 1
 		if not p_i.has("conquered"):
 			while num < total_num:
 				num += 1
-				var lv:int = max(ceil(randf_range(0.5, 0.9) * log(power) / log(1.15)), 1)
+				var lv:int = max(ceil(randf_range(0.5, 0.9) * log(power_left) / log(1.15)), 1)
 				var _class:int = 1
 				if randf() < log(diff) / log(100) - 1.0:#difficulty < 100 = no green enemies, difficulty = 1000 = 50% chance of green enemies, difficulty > 10000 = no more red enemies, always green or higher
 					_class += 1
@@ -2885,21 +2886,28 @@ func generate_planets(id:int):#local id
 					if i == 2:
 						lv = 1
 				if num == total_num:
-					lv = max(ceil(log(power) / log(1.15)), 1)
-				var HP = round(randf_range(0.8, 1.2) * 15 * pow(1.16, lv - 1))
+					lv = max(ceil(log(power_left) / log(1.15)), 1)
+				var x = randf()
+				var HP_power = 7.5 * (2.0 * x + 0.2)
+				var stat_power = 50.0 - HP_power
+				var HP = round(7.5 * (lv + 1.0))
 				if _class == 2:
 					HP = round(HP * randf_range(4.0, 6.0))
 				elif _class >= 3:
 					HP = round(HP * randf_range(8.0, 12.0))
-				var defense = round(randf() * 7.0 + 3.0)
-				var attack = round(randf_range(0.8, 1.2) * (15 - defense) * pow(1.15, lv - 1))
-				var accuracy = round(randf_range(0.8, 1.2) * 8 * pow(1.15, lv - 1))
-				var agility = round(randf_range(0.8, 1.2) * 8 * pow(1.15, lv - 1))
+				var stats = [0.0, 0.0, 0.0, 0.0]
+				while stat_power > 0:
+					stats[randi() % 4] += 1
+					stat_power -= 1
+				var attack = stats[0]
+				var defense = stats[1]
+				var accuracy = stats[2]
+				var agility = stats[3]
 				var _money = round(randf_range(1, 2) * pow(1.3, lv - 1) * 50000)
 				var XP = round(pow(1.25, lv - 1) * 5)
-				p_i.HX_data.append({"class":_class, "type":Helper.rand_int(1, 4), "lv":lv, "HP":HP, "total_HP":HP, "attack":attack, "defense":defense, "accuracy":accuracy, "agility":agility, "money":_money, "XP":XP})
-				power -= floor(pow(1.15, lv))
-				if power <= 1:
+				p_i.HX_data.append({"class":_class, "type":randi() % 4 + 1, "lv":lv, "HP":HP, "total_HP":HP, "attack":attack, "defense":defense, "accuracy":accuracy, "agility":agility, "money":_money, "XP":XP})
+				power_left -= floor(pow(1.15, lv))
+				if power_left <= 1:
 					break
 			p_i.HX_data.shuffle()
 		var wid:int = Helper.get_wid(p_i.size)
@@ -4177,7 +4185,7 @@ func save_views(autosave:bool):
 		Helper.save_obj("Systems", c_s_g, planet_data)
 		Helper.save_obj("Galaxies", c_g_g, system_data)
 	elif c_v == "galaxy":
-		if send_probes_panel.is_processing() or send_fighters_panel.is_processing():
+		if is_instance_valid(send_probes_panel) and send_probes_panel.is_processing() or is_instance_valid(send_fighters_panel) and send_fighters_panel.is_processing():
 			Helper.save_obj("Galaxies", c_g_g, system_data)
 		Helper.save_obj("Clusters", c_c, galaxy_data)
 	elif c_v == "cluster":

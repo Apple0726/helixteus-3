@@ -24,7 +24,7 @@ func _ready():
 	$VBoxContainer/Energy/TextureRect.texture = load("res://Graphics/Icons/energy.png")
 	$VBoxContainer/SP/TextureRect.texture = load("res://Graphics/Icons/SP.png")
 	$VBoxContainer/Greenhouse/TextureRect.texture = load("res://Graphics/Buildings/greenhouse.png")
-	$VBoxContainer/Mining/TextureRect.texture = load("res://Graphics/Items/Pickaxes/stone_pickaxe.png")
+	$VBoxContainer/Mining/TextureRect.texture = load("res://Graphics/Pickaxes/stone_pickaxe.png")
 	$VBoxContainer/Cave/TextureRect.texture = load("res://Graphics/Tiles/cave.png")
 	$VBoxContainer/Stone/TextureRect.texture = load("res://Graphics/Icons/stone.png")
 	$VBoxContainer/Arrow/TextureRect.texture = load("res://Graphics/Icons/Arrow.png")

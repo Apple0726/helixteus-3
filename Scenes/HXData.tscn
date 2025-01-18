@@ -1,10 +1,10 @@
 [gd_scene load_steps=6 format=3 uid="uid://cf8ryoyfgym8g"]
 
-[ext_resource type="Texture2D" uid="uid://bxuwnu6yxc1l3" path="res://Graphics/Icons/acc.png" id="1"]
-[ext_resource type="Texture2D" uid="uid://s7ntl2fx0yvo" path="res://Graphics/Icons/def.png" id="2"]
-[ext_resource type="Texture2D" uid="uid://dpgg01ca0t1r2" path="res://Graphics/Icons/atk.png" id="3"]
-[ext_resource type="Texture2D" uid="uid://ckyjgh2osk7sa" path="res://Graphics/Icons/eva.png" id="4"]
-[ext_resource type="Texture2D" uid="uid://dwtoqgfax85t" path="res://Graphics/Icons/HP.png" id="5"]
+[ext_resource type="Texture2D" uid="uid://cqiyti2xdxtcw" path="res://Graphics/Icons/defense.png" id="2"]
+[ext_resource type="Texture2D" uid="uid://7ffsf7xuvfw2" path="res://Graphics/Icons/attack.png" id="3"]
+[ext_resource type="Texture2D" uid="uid://bn520d6r5iwik" path="res://Graphics/Icons/accuracy.png" id="4"]
+[ext_resource type="Texture2D" uid="uid://bl07f3wef0muv" path="res://Graphics/Icons/HP.png" id="5"]
+[ext_resource type="Texture2D" uid="uid://bapj1r8e5pwia" path="res://Graphics/Icons/agility.png" id="5_p6m03"]
 
 [node name="Control" type="HBoxContainer"]
 anchors_preset = 15
@@ -46,31 +46,31 @@ layout_mode = 2
 layout_mode = 2
 alignment = 1
 
-[node name="Atk" type="HBoxContainer" parent="VBoxContainer"]
+[node name="Attack" type="HBoxContainer" parent="VBoxContainer"]
 layout_mode = 2
 
-[node name="TextureRect" type="TextureRect" parent="VBoxContainer/Atk"]
+[node name="TextureRect" type="TextureRect" parent="VBoxContainer/Attack"]
 custom_minimum_size = Vector2(20, 0)
 layout_mode = 2
 texture = ExtResource("3")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="Label" type="Label" parent="VBoxContainer/Atk"]
+[node name="Label" type="Label" parent="VBoxContainer/Attack"]
 layout_mode = 2
 text = "10"
 
-[node name="Acc" type="HBoxContainer" parent="VBoxContainer"]
+[node name="Accuracy" type="HBoxContainer" parent="VBoxContainer"]
 layout_mode = 2
 
-[node name="TextureRect" type="TextureRect" parent="VBoxContainer/Acc"]
+[node name="TextureRect" type="TextureRect" parent="VBoxContainer/Accuracy"]
 custom_minimum_size = Vector2(20, 0)
 layout_mode = 2
-texture = ExtResource("1")
+texture = ExtResource("4")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="Label" type="Label" parent="VBoxContainer/Acc"]
+[node name="Label" type="Label" parent="VBoxContainer/Accuracy"]
 layout_mode = 2
 text = "10"
 
@@ -78,30 +78,30 @@ text = "10"
 layout_mode = 2
 alignment = 1
 
-[node name="Def" type="HBoxContainer" parent="VBoxContainer2"]
+[node name="Defense" type="HBoxContainer" parent="VBoxContainer2"]
 layout_mode = 2
 
-[node name="TextureRect" type="TextureRect" parent="VBoxContainer2/Def"]
+[node name="TextureRect" type="TextureRect" parent="VBoxContainer2/Defense"]
 custom_minimum_size = Vector2(20, 0)
 layout_mode = 2
 texture = ExtResource("2")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="Label" type="Label" parent="VBoxContainer2/Def"]
+[node name="Label" type="Label" parent="VBoxContainer2/Defense"]
 layout_mode = 2
 text = "10"
 
-[node name="Eva" type="HBoxContainer" parent="VBoxContainer2"]
+[node name="Agility" type="HBoxContainer" parent="VBoxContainer2"]
 layout_mode = 2
 
-[node name="TextureRect" type="TextureRect" parent="VBoxContainer2/Eva"]
+[node name="TextureRect" type="TextureRect" parent="VBoxContainer2/Agility"]
 custom_minimum_size = Vector2(20, 0)
 layout_mode = 2
-texture = ExtResource("4")
+texture = ExtResource("5_p6m03")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="Label" type="Label" parent="VBoxContainer2/Eva"]
+[node name="Label" type="Label" parent="VBoxContainer2/Agility"]
 layout_mode = 2
 text = "10"

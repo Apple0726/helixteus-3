@@ -104,10 +104,10 @@ func refresh():
 			HX_data_node.get_node("HX").texture = load("res://Graphics/HX/%s_%s.png" % [HX_data["class"], HX_data.type])
 			HX_data_node.get_node("HP").text = "%s / %s" % [Helper.format_num(HX_data.HP, false, 4), Helper.format_num(HX_data.total_HP, false, 4)]
 			HX_data_node.get_node("Lv").text = "%s %s" % [tr("LV"), HX_data.lv]
-			HX_data_node.get_node("VBoxContainer/Atk/Label").text = Helper.format_num(HX_data.atk, false, 4)
-			HX_data_node.get_node("VBoxContainer/Acc/Label").text = Helper.format_num(HX_data.acc, false, 4)
-			HX_data_node.get_node("VBoxContainer2/Def/Label").text = Helper.format_num(HX_data.def, false, 4)
-			HX_data_node.get_node("VBoxContainer2/Eva/Label").text = Helper.format_num(HX_data.eva, false, 4)
+			HX_data_node.get_node("VBoxContainer/Attack/Label").text = Helper.format_num(HX_data.attack, false, 4)
+			HX_data_node.get_node("VBoxContainer/Accuracy/Label").text = Helper.format_num(HX_data.accuracy, false, 4)
+			HX_data_node.get_node("VBoxContainer2/Defense/Label").text = Helper.format_num(HX_data.defense, false, 4)
+			HX_data_node.get_node("VBoxContainer2/Agility/Label").text = Helper.format_num(HX_data.agility, false, 4)
 			$Scroll/Enemies.add_child(HX_data_node)
 			HX_data_node.custom_minimum_size.y = 70
 		if game.planet_data[dest_p_id].has("conquered"):
@@ -224,7 +224,7 @@ func get_travel_cost_multiplier(lv:int):
 		return 0.75
 
 func _on_close_button_pressed():
-	game.toggle_panel(self)
+	game.toggle_panel("send_ships_panel")
 
 func _on_send_pressed():
 	if game.universe_data[game.c_u].lv < 40:
