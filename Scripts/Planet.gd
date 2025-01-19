@@ -1000,7 +1000,7 @@ func select_all_of_same_type_callable(called_from_right_click = true):
 				path_3_value_sum = Helper.get_final_value(p_i, tile2, 3) if tile2.bldg.has("path_3_value") else 0
 			tiles_selected.append(i)
 			add_white_rect(Vector2(i % wid, i / wid) * 200, "selected_white_rects")
-	if game.shop_panel.tab == game.shop_panel.OVERCLOCK:
+	if is_instance_valid(game.shop_panel) and game.shop_panel.tab == game.shop_panel.OVERCLOCK:
 		game.shop_panel.get_node("ItemInfo/BuyAmount").value = len(tiles_selected)
 	if tile.has("bldg") and not game.item_cursor.visible:
 		if Data.desc_icons.has(tile.bldg.name):

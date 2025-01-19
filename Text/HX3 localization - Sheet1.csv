@@ -910,7 +910,7 @@ CENTRAL_BUSINESS_DISTRICT_NAME,,Central business district,,,商业区,Zentrales 
 CENTRAL_BUSINESS_DISTRICT_DESC,,Gives helpful bonuses to nearby buildings.,,,提供一些邻近商业区建筑物的加成,Verstärkt umliegende Gebäude,Da bonos útiles a estructuras cercanas.,,,Hasznos bónuszokat ad a közeli épületeknek,近くの建物に役立つボーナスを与える。,Geeft nuttige bonussen aan omliggende gebouwen,
 CBD_PATH_1,,Building costs divided by %s,,,建筑消费折扣 %s,Konstruktionskosten geteilt durch %s,Costos de construcción dividido por %s,,,Építési ár elosztva ennyivel: %s,建築費が%sで割った金額になる,Bouwkosten gedeeld door %s,
 CBD_PATH_2,,x %s overclock bonus,,,%s倍生产速度加成,%s fache Übertaktung,x %s bonus por overclock,,,x %s gyorsítási bónusz,,,
-CBD_PATH_3,,{n}x{n} range,,,影响范围{n}x{n},{n}x{n} Reichweite,rango de {n}x{n},,,Hatósugár: {n}x{n},有効範囲 {n}x{n},Radius: {n}x{n} ,
+CBD_PATH_3,"%s = ""3x3"", ""5x5"" etc. Indicates the tiles that a building will affect around it, e.g. the influence radius of the central business district",%s range,,,影响范围%s,%s Reichweite,Rango de %s,,,Hatósugár: %s,有効範囲 %s,Radius: %s,
 ADD_TO_BOOKMARKS,,Add to bookmarks,Ajouter aux favoris,,加入收藏,Zu Favoriten hinzufügen,Añadir a marcadores,,,Hozzáadás a kedvencekhez,ブックマークへ追加,Toevoegen aan bladwijzers,Добавить в закладки
 REMOVE_FROM_BOOKMARKS,,Remove from bookmarks,Retirer des favoris,,取消收藏,Aus Favoriten entfernen,Eliminar de marcadores,,,Eltüntetés a kedvencelkből,ブックマークから削除する,Verwijder uit bladwijzers,Убрать из закладок
 COLORBLIND_MODE,,Colorblind mode,,,色盲模式,Farbenblind-Modus,Modo para personas con dificultades para visualizar colores,,,Színvak mód,カラーブラインドモード,Kleurenblindheidsmodus,Режим дальтоника

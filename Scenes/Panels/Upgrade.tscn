@@ -5,15 +5,9 @@
 [ext_resource type="Theme" uid="uid://cp2u1kgj60ic" path="res://Resources/default_theme.tres" id="3"]
 [ext_resource type="Script" path="res://Scripts/UpgradePanel.gd" id="4"]
 [ext_resource type="Texture2D" uid="uid://baowebna7hgr5" path="res://Graphics/GUI/CloseButtonNormal.png" id="4_023v2"]
+[ext_resource type="Texture2D" uid="uid://nqbxkpmiwy3c" path="res://Graphics/Buildings/mineral_extractor.png" id="4_kd7jk"]
 [ext_resource type="Texture2D" uid="uid://c1vwn7p5uxu1r" path="res://Graphics/GUI/CloseButtonHover.png" id="5_cj333"]
 [ext_resource type="Texture2D" uid="uid://d206j13sitom3" path="res://Graphics/GUI/SmallPanel.png" id="5_y6oqk"]
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_osxg2"]
-bg_color = Color(0.0509804, 0.0509804, 0.0509804, 1)
-border_width_left = 4
-border_width_top = 4
-border_color = Color(0.192157, 0.192157, 0.192157, 1)
-border_blend = true
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_xcyis"]
 bg_color = Color(0.172549, 0.172549, 0.172549, 1)
@@ -34,6 +28,7 @@ mouse_filter = 1
 theme = ExtResource("3")
 script = ExtResource("4")
 metadata/_edit_lock_ = true
+metadata/_edit_vertical_guides_ = [640.0]
 
 [node name="TextureRect" type="TextureRect" parent="."]
 layout_mode = 1
@@ -41,22 +36,40 @@ offset_right = 1280.0
 offset_bottom = 720.0
 texture = ExtResource("5_y6oqk")
 
+[node name="Panel" type="Panel" parent="."]
+layout_mode = 0
+offset_left = 404.0
+offset_top = 312.0
+offset_right = 876.0
+offset_bottom = 528.0
+
+[node name="Building" type="TextureRect" parent="."]
+modulate = Color(1, 1, 1, 0.286275)
+layout_mode = 0
+offset_left = 416.0
+offset_top = 340.0
+offset_right = 536.0
+offset_bottom = 460.0
+texture = ExtResource("4_kd7jk")
+expand_mode = 1
+stretch_mode = 5
+
 [node name="CloseButton" type="TextureButton" parent="."]
 layout_mode = 0
-offset_left = 832.0
-offset_top = 96.0
-offset_right = 881.0
-offset_bottom = 145.0
+offset_left = 835.0
+offset_top = 200.0
+offset_right = 884.0
+offset_bottom = 249.0
 texture_normal = ExtResource("4_023v2")
 texture_hover = ExtResource("5_cj333")
 
 [node name="PathButtons" type="HBoxContainer" parent="."]
 custom_minimum_size = Vector2(0, 35)
 layout_mode = 1
-offset_left = 320.0
-offset_top = 184.0
-offset_right = 864.0
-offset_bottom = 219.0
+offset_left = 404.0
+offset_top = 280.0
+offset_right = 876.0
+offset_bottom = 315.0
 size_flags_horizontal = 3
 theme_override_constants/separation = 0
 
@@ -72,21 +85,13 @@ size_flags_horizontal = 3
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="Panel" type="Panel" parent="."]
-layout_mode = 0
-offset_left = 316.0
-offset_top = 220.0
-offset_right = 864.0
-offset_bottom = 524.0
-theme_override_styles/panel = SubResource("StyleBoxFlat_osxg2")
-
-[node name="Current" type="RichTextLabel" parent="."]
+[node name="CurrentAndNext" type="RichTextLabel" parent="."]
 clip_contents = false
 layout_mode = 1
-offset_left = 400.0
-offset_top = 280.0
-offset_right = 784.0
-offset_bottom = 304.0
+offset_left = 452.0
+offset_top = 420.0
+offset_right = 836.0
+offset_bottom = 444.0
 size_flags_horizontal = 3
 bbcode_enabled = true
 scroll_active = false
@@ -94,54 +99,31 @@ scroll_active = false
 [node name="Arrow" type="TextureRect" parent="."]
 modulate = Color(1, 1, 1, 0.635294)
 layout_mode = 1
-offset_left = 604.0
-offset_top = 332.0
-offset_right = 679.0
-offset_bottom = 374.0
-rotation = 1.5708
+offset_left = 620.0
+offset_top = 352.0
+offset_right = 695.0
+offset_bottom = 394.0
 scale = Vector2(0.56, 0.56)
 size_flags_horizontal = 4
 size_flags_vertical = 4
 texture = ExtResource("2")
 
-[node name="Next" type="RichTextLabel" parent="."]
-clip_contents = false
-layout_mode = 1
-offset_left = 400.0
-offset_top = 452.0
-offset_right = 784.0
-offset_bottom = 476.0
-size_flags_horizontal = 3
-size_flags_vertical = 3
-bbcode_enabled = true
-scroll_active = false
-
 [node name="CurrentLv" type="Label" parent="."]
 layout_mode = 1
-offset_left = 560.0
-offset_top = 240.0
-offset_right = 624.0
-offset_bottom = 272.0
+offset_left = 532.0
+offset_top = 348.0
+offset_right = 596.0
+offset_bottom = 380.0
 text = "Level 1"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="CurrentLv2" type="Label" parent="."]
-layout_mode = 1
-offset_left = 480.0
-offset_top = 400.0
-offset_right = 582.0
-offset_bottom = 432.0
-text = "LEVEL"
-horizontal_alignment = 2
-vertical_alignment = 1
-
 [node name="DivBy" type="Label" parent="."]
 layout_mode = 1
-offset_left = 316.0
-offset_top = 528.0
-offset_right = 680.0
-offset_bottom = 560.0
+offset_left = 412.0
+offset_top = 452.0
+offset_right = 736.0
+offset_bottom = 484.0
 horizontal_alignment = 1
 vertical_alignment = 1
 
@@ -152,10 +134,10 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = 474.0
-offset_top = 352.0
-offset_right = 538.0
-offset_bottom = 384.0
+offset_left = 566.0
+offset_top = 300.0
+offset_right = 630.0
+offset_bottom = 332.0
 grow_horizontal = 2
 grow_vertical = 2
 value = 2.0
@@ -167,10 +149,10 @@ select_all_on_focus = true
 [node name="ScrollContainer" type="ScrollContainer" parent="."]
 custom_minimum_size = Vector2(200, 40)
 layout_mode = 1
-offset_left = 316.0
-offset_top = 560.0
-offset_right = 680.0
-offset_bottom = 608.0
+offset_left = 408.0
+offset_top = 484.0
+offset_right = 740.0
+offset_bottom = 528.0
 theme_override_styles/panel = SubResource("StyleBoxFlat_xcyis")
 vertical_scroll_mode = 3
 
@@ -182,10 +164,10 @@ size_flags_vertical = 3
 [node name="Upgrade" type="Button" parent="."]
 custom_minimum_size = Vector2(0, 40)
 layout_mode = 1
-offset_left = 692.0
-offset_top = 560.0
-offset_right = 862.0
-offset_bottom = 608.0
+offset_left = 744.0
+offset_top = 484.0
+offset_right = 876.0
+offset_bottom = 528.0
 size_flags_horizontal = 3
 theme = ExtResource("3")
 text = "UPGRADE"
@@ -193,10 +175,10 @@ text = "UPGRADE"
 [node name="Label" type="Label" parent="."]
 custom_minimum_size = Vector2(0, 38)
 layout_mode = 1
-offset_left = 320.0
-offset_top = 100.0
-offset_right = 652.0
-offset_bottom = 138.0
+offset_left = 416.0
+offset_top = 204.0
+offset_right = 748.0
+offset_bottom = 242.0
 size_flags_vertical = 3
 theme_override_font_sizes/font_size = 18
 text = "UPGRADE"

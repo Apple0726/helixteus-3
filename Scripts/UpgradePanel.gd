@@ -14,10 +14,9 @@ var set_min_lv:bool = false
 @onready var path1 = $PathButtons/Path1
 @onready var path2 = $PathButtons/Path2
 @onready var path3 = $PathButtons/Path3
-@onready var next_lv = $NextLv
-@onready var current_lv = $CurrentLv
-@onready var next = $Next
-@onready var current = $Current
+@onready var next_lv_spinbox = $NextLv
+@onready var current_lv_label = $CurrentLv
+@onready var current_and_next_label = $CurrentAndNext
 @onready var cost_icons = $ScrollContainer/Costs
 @onready var upgrade_btn = $Upgrade
 
@@ -29,13 +28,14 @@ func _ready():
 	path3.get_node("Label").text = tr("PATH") + " 3"
 
 func refresh():
+	var building_name:String
 	if not planet.is_empty():
 		path2.visible = Data.path_2.has(planet.bldg.name)
 		path3.visible = Data.path_3.has(planet.bldg.name)
 		_on_Path1_pressed()
 		path1._on_Button_pressed()
-		var name_str:String = Building.names[planet.bldg.name]
-		$Label.text = tr("UPGRADE_X_BLDGS").format({"bldg":tr(name_str.to_upper() + "_NAME_S"), "num":Helper.format_num(planet.tile_num)})
+		building_name = Building.names[planet.bldg.name]
+		$Label.text = tr("UPGRADE_X_BLDGS").format({"bldg":tr(building_name.to_upper() + "_NAME_S"), "num":Helper.format_num(planet.tile_num)})
 	else:
 		p_i = game.planet_data[game.c_p]
 		if game.view.obj.tiles_selected.is_empty():
@@ -43,11 +43,11 @@ func refresh():
 		else:
 			ids = game.view.obj.tiles_selected.duplicate(true)
 		var first_tile_bldg = game.tile_data[ids[0]].bldg
-		var name_str:String = Building.names[first_tile_bldg.name]
+		building_name = Building.names[first_tile_bldg.name]
 		if len(ids) == 1:
-			$Label.text = tr("UPGRADE_X").format({"bldg":tr(name_str.to_upper() + "_NAME")})
+			$Label.text = tr("UPGRADE_X").format({"bldg":tr(building_name.to_upper() + "_NAME")})
 		else:
-			$Label.text = tr("UPGRADE_X_BLDGS").format({"bldg":tr(name_str.to_upper() + "_NAME_S"), "num":len(ids)})
+			$Label.text = tr("UPGRADE_X_BLDGS").format({"bldg":tr(building_name.to_upper() + "_NAME_S"), "num":len(ids)})
 		path2.visible = first_tile_bldg.has("path_2")
 		path3.visible = first_tile_bldg.has("path_3")
 		if first_tile_bldg.has("path_1"):
@@ -56,6 +56,7 @@ func refresh():
 		else:
 			game.popup(tr("NO_UPGRADE"), 1.5)
 			game.toggle_panel(self)
+	$Building.texture = load("res://Graphics/Buildings/%s.png" % building_name)
 	
 func geo_seq(q:float, start_n:int, end_n:int):
 	return max(0, pow(q, start_n) * (1 - pow(q, end_n - start_n)) / (1 - q))
@@ -108,7 +109,7 @@ func calc_costs(tile_bldg:int, lv_curr:int, lv_to:int, cost_div:float, num:int =
 
 func update(changing_paths:bool = false):
 	set_min_lv = true
-	next_lv.min_value = get_min_lv() + 1
+	next_lv_spinbox.min_value = get_min_lv() + 1
 	set_min_lv = false
 	costs = {"money":0, "energy":0, "lead":0, "copper":0, "iron":0, "aluminium":0, "silver":0, "gold":0, "platinum":0}
 	var same_lv = true
@@ -121,13 +122,13 @@ func update(changing_paths:bool = false):
 		first_tile_bldg = game.tile_data[ids[0]].bldg
 		bldg = first_tile_bldg.name
 		if Data[path_str][bldg].has("cap"):
-			next_lv.allow_greater = false
-			next_lv.max_value = Data[path_str][bldg].cap
+			next_lv_spinbox.allow_greater = false
+			next_lv_spinbox.max_value = Data[path_str][bldg].cap
 		else:
-			next_lv.allow_greater = true
+			next_lv_spinbox.allow_greater = true
 		first_tile_bldg_info = Data[path_str][bldg]
-		var lv_to:int = next_lv.value
-		var a:int = next_lv.min_value
+		var lv_to:int = next_lv_spinbox.value
+		var a:int = next_lv_spinbox.min_value
 		var calculated:bool = false
 		while not calculated or lv_to != a:
 			if calculated:
@@ -139,7 +140,7 @@ func update(changing_paths:bool = false):
 				var lv_curr = tile.bldg[path_str]
 				if lv_curr != first_tile_bldg[path_str]:
 					same_lv = false
-				if tile.bldg[path_str] >= next_lv.value or Data[path_str][bldg].has("cap") and tile.bldg[path_str] >= Data[path_str][bldg].cap:
+				if tile.bldg[path_str] >= next_lv_spinbox.value or Data[path_str][bldg].has("cap") and tile.bldg[path_str] >= Data[path_str][bldg].cap:
 					continue
 				calc_costs(tile_bldg, lv_curr, lv_to, tile.cost_div if tile.has("cost_div") else 1.0, 1)
 				cost_div_sum += tile.cost_div if tile.has("cost_div") else 1.0
@@ -151,15 +152,15 @@ func update(changing_paths:bool = false):
 			if not changing_paths:
 				break
 			if game.check_enough(costs):
-				if lv_to == next_lv.value:
+				if lv_to == next_lv_spinbox.value:
 					break
 				a = lv_to
-				lv_to = (lv_to + next_lv.value) / 2
+				lv_to = (lv_to + next_lv_spinbox.value) / 2
 			else:
 				lv_to = (a + lv_to) / 2
 			calculated = true
 		if changing_paths:
-			next_lv.value = lv_to
+			next_lv_spinbox.value = lv_to
 	else:
 		if planet.has("cost_div"):
 			$DivBy.text = tr("DIV_BY") % Helper.clever_round(planet.cost_div)
@@ -170,8 +171,8 @@ func update(changing_paths:bool = false):
 		bldg = first_tile_bldg.name
 		first_tile_bldg_info = Data[path_str][bldg]
 		num = 1 if bldg in [Building.GREENHOUSE, Building.BORING_MACHINE, Building.ATOM_MANIPULATOR, Building.SUBATOMIC_PARTICLE_REACTOR] else planet.tile_num
-		var lv_to:int = next_lv.value
-		var a:int = next_lv.min_value
+		var lv_to:int = next_lv_spinbox.value
+		var a:int = next_lv_spinbox.min_value
 		var calculated:bool = false
 		if changing_paths:
 			while not calculated or lv_to != a:
@@ -179,72 +180,88 @@ func update(changing_paths:bool = false):
 					costs = {"money":0, "energy":0, "lead":0, "copper":0, "iron":0, "aluminium":0, "silver":0, "gold":0, "platinum":0}
 				calc_costs(planet.bldg.name, planet.bldg[path_str], lv_to, planet.cost_div if planet.has("cost_div") else 1.0, planet.tile_num)
 				if game.check_enough(costs):
-					if lv_to == next_lv.value:
+					if lv_to == next_lv_spinbox.value:
 						break
 					a = lv_to
-					lv_to = (lv_to + next_lv.value) / 2
+					lv_to = (lv_to + next_lv_spinbox.value) / 2
 				else:
 					lv_to = (a + lv_to) / 2
 				calculated = true
-			next_lv.value = lv_to
+			next_lv_spinbox.value = lv_to
 		else:
-			calc_costs(planet.bldg.name, planet.bldg[path_str], next_lv.value, planet.cost_div if planet.has("cost_div") else 1.0, planet.tile_num)
+			calc_costs(planet.bldg.name, planet.bldg[path_str], next_lv_spinbox.value, planet.cost_div if planet.has("cost_div") else 1.0, planet.tile_num)
 	if same_lv:
-		current_lv.text = tr("LEVEL") + " %s" % [first_tile_bldg[path_str]]
-		current.text = ""
-		set_bldg_value(first_tile_bldg_info, first_tile, first_tile_bldg[path_str], num, current, false)
+		current_lv_label.text = tr("LEVEL") + " %s" % [first_tile_bldg[path_str]]
+		current_and_next_label.text = ""
+		#set_bldg_value(first_tile_bldg_info, first_tile, first_tile_bldg[path_str], num, current, false)
 	else:
-		current_lv.text = tr("VARYING_LEVELS")
-		current.text = "[center] %s" % tr("VARIES")
-	next.text = ""
-	set_bldg_value(first_tile_bldg_info, first_tile, next_lv.value, num, next, true)
+		current_lv_label.text = tr("VARYING_LEVELS")
+		current_and_next_label.text = "[center] %s" % tr("VARIES")
+	set_bldg_value(first_tile_bldg_info, first_tile, first_tile_bldg[path_str], next_lv_spinbox.value, num)
 	var icons = Helper.put_rsrc(cost_icons, 32, costs, true, true)
 	for icon in icons:
 		if costs[icon.name] == 0:
 			icon.rsrc.visible = false
 
-func set_bldg_value(first_tile_bldg_info:Dictionary, first_tile:Dictionary, lv:int, n:int, text_to_modify:RichTextLabel, next:bool):
+func set_bldg_value(first_tile_bldg_info:Dictionary, first_tile:Dictionary, lv:int, next_lv:int, n:int):
 	var rsrc_icon = Data.desc_icons[bldg][path_selected - 1] if Data.desc_icons.has(bldg) and Data.desc_icons[bldg] else []
 	var curr_value:float
+	var next_value:float
 	var IR_mult:float = Helper.get_IR_mult(bldg)
 	if bldg == Building.SOLAR_PANEL and path_selected == 1:
-		curr_value = bldg_value(Helper.get_SP_production(p_i.temperature, first_tile_bldg_info.value), lv, first_tile_bldg_info.pw)
+		var SP_production = Helper.get_SP_production(p_i.temperature, first_tile_bldg_info.value)
+		curr_value = bldg_value(SP_production, lv, first_tile_bldg_info.pw)
+		next_value = bldg_value(SP_production, next_lv, first_tile_bldg_info.pw)
 	elif bldg == Building.ATMOSPHERE_EXTRACTOR and path_selected == 1:
-		curr_value = bldg_value(Helper.get_AE_production(p_i.pressure if planet.is_empty() else planet.pressure, first_tile_bldg_info.value), lv, first_tile_bldg_info.pw)
+		var AE_production = Helper.get_AE_production(p_i.pressure if planet.is_empty() else planet.pressure, first_tile_bldg_info.value)
+		curr_value = bldg_value(AE_production, lv, first_tile_bldg_info.pw)
+		next_value = bldg_value(AE_production, next_lv, first_tile_bldg_info.pw)
 	elif bldg == Building.MINERAL_EXTRACTOR and path_selected == 1:
-		curr_value = bldg_value(first_tile_bldg_info.value * (planet.resource_production_bonus.get("minerals", 1) if planet.has("resource_production_bonus") else 1.0), lv, first_tile_bldg_info.pw)
+		var ME_production = first_tile_bldg_info.value * (planet.resource_production_bonus.get("minerals", 1) if planet.has("resource_production_bonus") else 1.0)
+		curr_value = bldg_value(ME_production, lv, first_tile_bldg_info.pw)
+		next_value = bldg_value(ME_production, next_lv, first_tile_bldg_info.pw)
 	elif bldg == Building.POWER_PLANT and path_selected == 1:
-		curr_value = bldg_value(first_tile_bldg_info.value * (planet.resource_production_bonus.get("energy", 1) if planet.has("resource_production_bonus") else 1.0), lv, first_tile_bldg_info.pw)
+		var PP_production = first_tile_bldg_info.value * (planet.resource_production_bonus.get("energy", 1) if planet.has("resource_production_bonus") else 1.0)
+		curr_value = bldg_value(PP_production, lv, first_tile_bldg_info.pw)
+		next_value = bldg_value(PP_production, next_lv, first_tile_bldg_info.pw)
 	elif bldg == Building.RESEARCH_LAB and path_selected == 1:
-		curr_value = bldg_value(first_tile_bldg_info.value * (planet.resource_production_bonus.get("SP", 1) if planet.has("resource_production_bonus") else 1.0), lv, first_tile_bldg_info.pw)
+		var RL_production = first_tile_bldg_info.value * (planet.resource_production_bonus.get("SP", 1) if planet.has("resource_production_bonus") else 1.0)
+		curr_value = bldg_value(RL_production, lv, first_tile_bldg_info.pw)
+		next_value = bldg_value(RL_production, next_lv, first_tile_bldg_info.pw)
 	elif bldg in [Building.MINERAL_SILO, Building.BATTERY]:
 		curr_value = bldg_value(first_tile_bldg_info.value, lv, first_tile_bldg_info.pw)
+		next_value = bldg_value(first_tile_bldg_info.value, next_lv, first_tile_bldg_info.pw)
 	else:
 		if first_tile_bldg_info.has("pw"):
 			curr_value = bldg_value(first_tile_bldg_info.value, lv, first_tile_bldg_info.pw)
+			next_value = bldg_value(first_tile_bldg_info.value, next_lv, first_tile_bldg_info.pw)
 		elif first_tile_bldg_info.has("step"):
 			curr_value = first_tile_bldg_info.value + (lv - 1) * first_tile_bldg_info.step
+			next_value = first_tile_bldg_info.value + (next_lv - 1) * first_tile_bldg_info.step
 	if bldg == Building.STEAM_ENGINE and path_selected != 3:
 		IR_mult = 1.0
 	if bldg == Building.BATTERY:
 		curr_value *= game.u_i.charge
+		next_value *= game.u_i.charge
 	curr_value *= IR_mult
+	next_value *= IR_mult
 	if first_tile_bldg_info.has("time_based"):
 		curr_value *= game.u_i.time_speed
+		next_value *= game.u_i.time_speed
 	if first_tile_bldg_info.has("is_value_integer"):
 		curr_value = round(curr_value)
-	if next:
-		if first_tile_bldg_info.has("pw"):
-			new_base_value = bldg_value(first_tile_bldg_info.value, next_lv.value, first_tile_bldg_info.pw)
-		elif first_tile_bldg_info.has("step"):
-			new_base_value = first_tile_bldg_info.value + (next_lv.value - 1) * first_tile_bldg_info.step
-		
+		next_value = round(next_value)
+	if first_tile_bldg_info.has("pw"):
+		new_base_value = bldg_value(first_tile_bldg_info.value, next_lv, first_tile_bldg_info.pw)
+	elif first_tile_bldg_info.has("step"):
+		new_base_value = first_tile_bldg_info.value + (next_lv - 1) * first_tile_bldg_info.step
 	if not planet.is_empty():
 		curr_value *= n
+		next_value *= n
 	if bldg == Building.CENTRAL_BUSINESS_DISTRICT and path_selected == 3:
-		game.add_text_icons(text_to_modify, "[center]" + first_tile_bldg_info.desc.format({"n":Helper.format_num(curr_value, true)}), rsrc_icon, 20)
+		game.add_text_icons(current_and_next_label, ("[center]" + first_tile_bldg_info.desc) % ["{n}x{n} -> {N}->{N}".format({"n":Helper.format_num(curr_value, true), "N":Helper.format_num(next_value, true)})], rsrc_icon, 20)
 	else:
-		game.add_text_icons(text_to_modify, ("[center]" + first_tile_bldg_info.desc) % [Helper.format_num(curr_value, true)], rsrc_icon, 20)
+		game.add_text_icons(current_and_next_label, ("[center]" + first_tile_bldg_info.desc) % [Helper.format_num(curr_value, true) + " -> " + Helper.format_num(next_value, true)], rsrc_icon, 20)
 	
 func bldg_value(base_value, lv:int, pw:float = 1.15):
 	return base_value * pow((lv - 1) / 10 + 1, pw) * pow(pw, lv - 1)
@@ -326,7 +343,7 @@ func _on_Upgrade_pressed():
 		if planet.is_empty():
 			for id in ids:
 				var tile = game.tile_data[id]
-				if tile.bldg[path_str] >= next_lv.value or Data[path_str][bldg].has("cap") and tile.bldg[path_str] >= Data[path_str][bldg].cap:
+				if tile.bldg[path_str] >= next_lv_spinbox.value or Data[path_str][bldg].has("cap") and tile.bldg[path_str] >= Data[path_str][bldg].cap:
 					continue
 				var base_costs = Data.costs[bldg].duplicate(true)
 				var base_pw:float = Data[path_str][bldg].get("cost_pw", BASE_PW)
@@ -381,11 +398,11 @@ func _on_Upgrade_pressed():
 						if tile.auto_GH.has("soil_drain"):
 							game.autocollect.mats.soil -= tile.auto_GH.soil_drain * (prod_mult - 1.0)
 							tile.auto_GH.soil_drain *= prod_mult
-				tile.bldg[path_str] = next_lv.value
+				tile.bldg[path_str] = next_lv_spinbox.value
 				tile.bldg[path_str + "_value"] = new_base_value
 				if tile.bldg.name == Building.CENTRAL_BUSINESS_DISTRICT:
 					Helper.update_CBD_affected_tiles(tile, id, p_i)
-				game.view.obj.hboxes[id].get_node("Path%s" % path_selected).text = str(next_lv.value)
+				game.view.obj.hboxes[id].get_node("Path%s" % path_selected).text = str(next_lv_spinbox.value)
 				var bldg_sprite = game.view.obj.bldgs[id]
 				bldg_sprite.material = ShaderMaterial.new()
 				bldg_sprite.material.shader = preload("res://Shaders/BuildingUpgrade.gdshader")
@@ -437,7 +454,7 @@ func _on_Upgrade_pressed():
 					prod_ratio = 1.0
 				var coll_date = planet.bldg.collect_date
 				planet.bldg.collect_date = curr_time - (curr_time - coll_date) / prod_ratio
-			planet.bldg[path_str] = next_lv.value
+			planet.bldg[path_str] = next_lv_spinbox.value
 			planet.bldg[path_str + "_value"] = new_base_value
 			game.universe_data[game.c_u].xp += cost_money / 100.0
 			game.view.obj.refresh_planets()
