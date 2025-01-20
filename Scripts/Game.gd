@@ -2871,6 +2871,7 @@ func generate_planets(id:int):#local id
 		var num:int = 0
 		var total_num:int = randi() % 12 + 1
 		if not p_i.has("conquered"):
+			var enemy_positions:PackedVector2Array = []
 			while num < total_num:
 				num += 1
 				var lv:int = max(ceil(randf_range(0.5, 0.9) * log(power_left) / log(1.15)), 1)
@@ -2905,7 +2906,36 @@ func generate_planets(id:int):#local id
 				var agility = stats[3]
 				var _money = round(randf_range(1, 2) * pow(1.3, lv - 1) * 50000)
 				var XP = round(pow(1.25, lv - 1) * 5)
-				p_i.HX_data.append({"class":_class, "type":randi() % 4 + 1, "lv":lv, "HP":HP, "total_HP":HP, "attack":attack, "defense":defense, "accuracy":accuracy, "agility":agility, "money":_money, "XP":XP})
+				var colliding = true
+				var initial_position:Vector2
+				while colliding:
+					colliding = false
+					initial_position = Vector2(randf_range(640.0 - num * 10.0, 900.0 + num * 20.0), randf_range(220.0 - num * 15.0, 500.0 + num * 15.0))
+					for pos in enemy_positions:
+						if Geometry2D.is_point_in_circle(initial_position, pos, 30.0):
+							colliding = true
+							break
+				enemy_positions.append(initial_position)
+				var HX_data = {
+					"class":_class,
+					"type":randi() % 4 + 1,
+					"passive_abilities":[randi() % Enemy.PassiveAbility.N],
+					"lv":lv,
+					"HP":HP,
+					"attack":attack,
+					"defense":defense,
+					"accuracy":accuracy,
+					"agility":agility,
+					"initial_position":initial_position,
+					"money":_money,
+					"XP":XP}
+				while randf() < 0.25:
+					var additional_passive_ability = randi() % Enemy.PassiveAbility.N
+					if additional_passive_ability not in HX_data.passive_abilities:
+						HX_data.passive_abilities.append(additional_passive_ability)
+						HX_data.money *= 0.7 * len(HX_data.passive_abilities)
+						HX_data.XP *= 0.7 * len(HX_data.passive_abilities)
+				p_i.HX_data.append(HX_data)
 				power_left -= floor(pow(1.15, lv))
 				if power_left <= 1:
 					break
