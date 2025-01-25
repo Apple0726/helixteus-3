@@ -1498,6 +1498,7 @@ func switch_view(new_view:String, other_params:Dictionary = {}):
 				"battle":
 					$UI.add_child(HUD)
 					battle.queue_free()
+					$BattleBG.hide()
 				"ship_customize_screen":
 					$UI.add_child(HUD)
 					ship_customize_screen.queue_free()
@@ -1617,11 +1618,12 @@ func switch_view(new_view:String, other_params:Dictionary = {}):
 				if is_instance_valid(HUD) and $UI.is_ancestor_of(HUD):
 					$UI.remove_child(HUD)
 				battle = load("res://Scenes/Views/Battle.tscn").instantiate()
-				add_child(battle)
+				view.add_child(battle)
 				if starfield_tween:
 					starfield_tween.kill()
 				starfield_tween = create_tween()
 				starfield_tween.tween_property($Stars/Starfield, "modulate:a", 0.5, 0.5)
+				$BattleBG.show()
 			"ship_customize_screen":
 				ship_customize_screen = load("res://Scenes/ShipCustomizeScreen.tscn").instantiate()
 				ship_customize_screen.ship_id = other_params.ship_id

@@ -237,7 +237,7 @@ func _draw():
 							shapes_data.erase(shape)
 
 func refresh():
-	if game.c_v == "":
+	if game.c_v not in ["universe", "cluster", "galaxy", "system", "planet"]:
 		return
 	var show_ship = false
 	var sh_c:Dictionary = game.ships_travel_data.c_coords

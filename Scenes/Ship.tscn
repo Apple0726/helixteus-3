@@ -1,22 +1,22 @@
 [gd_scene load_steps=34 format=3 uid="uid://cxykmxd6r2wgm"]
 
-[ext_resource type="Texture2D" uid="uid://c67y71rs3ver2" path="res://Graphics/Misc/BarUnder2.png" id="1"]
+[ext_resource type="Texture2D" uid="uid://kr2fdk8dptv1" path="res://Graphics/Misc/BarUnder2.png" id="1"]
 [ext_resource type="Script" path="res://Scripts/Ship.gd" id="2"]
 [ext_resource type="Shader" path="res://Shaders/FloatAnimation.gdshader" id="3"]
 [ext_resource type="PackedScene" uid="uid://dtk1md86gqsln" path="res://Scenes/Fire.tscn" id="4"]
-[ext_resource type="Texture2D" uid="uid://f6vce2wfk8js" path="res://Graphics/Ships/Ship0.png" id="5"]
-[ext_resource type="Texture2D" uid="uid://1h4b4lcm50vf" path="res://Graphics/Misc/Bar2.png" id="6"]
-[ext_resource type="Texture2D" uid="uid://c6dq7glt1v01" path="res://Graphics/Icons/Fire.png" id="7"]
-[ext_resource type="Texture2D" uid="uid://dy2p8vocmg6qx" path="res://Graphics/HX/Status effects/Stun.png" id="8"]
-[ext_resource type="Texture2D" uid="uid://crsi7kdeg3vmm" path="res://Graphics/Icons/acc.png" id="9"]
-[ext_resource type="Texture2D" uid="uid://chkfomyqvhpi6" path="res://Graphics/Effects/spotlight_1.png" id="10"]
-[ext_resource type="Texture2D" uid="uid://cotowibf6idxj" path="res://Graphics/Icons/Stun.png" id="11"]
-[ext_resource type="Texture2D" uid="uid://ch2kvtr3hagxr" path="res://icon.png" id="12"]
+[ext_resource type="Texture2D" uid="uid://koi0aarpqj30" path="res://Graphics/Ships/Ship0.png" id="5"]
+[ext_resource type="Texture2D" uid="uid://bx1hvetixqpwi" path="res://Graphics/Misc/Bar2.png" id="6"]
+[ext_resource type="Texture2D" uid="uid://buvqtd7v5l8m2" path="res://Graphics/Icons/Fire.png" id="7"]
+[ext_resource type="Texture2D" uid="uid://yhdxrw2q1yep" path="res://Graphics/HX/Status effects/Stun.png" id="8"]
+[ext_resource type="Texture2D" uid="uid://bn520d6r5iwik" path="res://Graphics/Icons/accuracy.png" id="9"]
+[ext_resource type="Texture2D" uid="uid://b1dcgxga387up" path="res://Graphics/Effects/spotlight_1.png" id="10"]
+[ext_resource type="Texture2D" uid="uid://b642ran0hp7j4" path="res://Graphics/Icons/Stun.png" id="11"]
+[ext_resource type="Texture2D" uid="uid://cdblvpftr6875" path="res://icon.png" id="12"]
 [ext_resource type="Shader" path="res://Shaders/Fire.gdshader" id="13"]
 [ext_resource type="Shader" path="res://Shaders/Laser.gdshader" id="14"]
 [ext_resource type="Theme" uid="uid://cp2u1kgj60ic" path="res://Resources/default_theme.tres" id="15"]
-[ext_resource type="Texture2D" uid="uid://bj2apqdtbsvvc" path="res://Graphics/Icons/atk.png" id="16"]
-[ext_resource type="Texture2D" uid="uid://s1llcj7ypvrd" path="res://Cursor.png" id="17"]
+[ext_resource type="Texture2D" uid="uid://7ffsf7xuvfw2" path="res://Graphics/Icons/attack.png" id="16"]
+[ext_resource type="Texture2D" uid="uid://ba37pys5xgmhs" path="res://Cursor.png" id="17"]
 
 [sub_resource type="Gradient" id="1"]
 offsets = PackedFloat32Array(0, 0.300469, 0.746479, 0.995305, 1)
@@ -143,7 +143,6 @@ color = Color(1, 0.603922, 0, 1)
 color_ramp = SubResource("27")
 
 [node name="Ship" type="Area2D"]
-position = Vector2(-272, 144)
 collision_layer = 2
 collision_mask = 16
 script = ExtResource("2")
@@ -193,18 +192,6 @@ modulate = Color(0, 1, 0, 1)
 offset_left = -112.0
 offset_top = 32.0
 offset_right = -48.0
-offset_bottom = 40.0
-rotation = -1.5708
-value = 50.0
-nine_patch_stretch = true
-texture_under = ExtResource("1")
-texture_progress = ExtResource("6")
-
-[node name="Rage" type="TextureProgressBar" parent="."]
-modulate = Color(1, 0, 0, 1)
-offset_left = -99.875
-offset_top = 32.0
-offset_right = -35.875
 offset_bottom = 40.0
 rotation = -1.5708
 value = 50.0
@@ -279,22 +266,22 @@ visible = false
 layout_mode = 2
 text = "9"
 
-[node name="Sprite2" type="Sprite2D" parent="."]
+[node name="Effects" type="Sprite2D" parent="."]
 material = SubResource("28")
 position = Vector2(0, 6.29962)
 
-[node name="Fire" type="Sprite2D" parent="Sprite2"]
+[node name="Fire" type="Sprite2D" parent="Effects"]
 visible = false
 material = SubResource("29")
 position = Vector2(32, 31.2004)
 scale = Vector2(12, 12)
 texture = ExtResource("12")
 
-[node name="Stun" type="Node2D" parent="Sprite2"]
+[node name="Stun" type="Node2D" parent="Effects"]
 visible = false
 position = Vector2(0, -6.29962)
 
-[node name="Sprite2D" type="Sprite2D" parent="Sprite2/Stun"]
+[node name="Sprite2D" type="Sprite2D" parent="Effects/Stun"]
 material = SubResource("30")
 position = Vector2(47.1782, 64.5085)
 rotation = 0.496553
@@ -302,7 +289,7 @@ scale = Vector2(2.36037, 2.36037)
 texture = ExtResource("8")
 offset = Vector2(-21.4132, -17.9986)
 
-[node name="Sprite2" type="Sprite2D" parent="Sprite2/Stun"]
+[node name="Sprite2" type="Sprite2D" parent="Effects/Stun"]
 material = SubResource("31")
 position = Vector2(11.3541, 50.4711)
 rotation = -0.583007
@@ -310,7 +297,7 @@ scale = Vector2(1.67193, 1.67193)
 texture = ExtResource("8")
 offset = Vector2(-21.4132, -17.9986)
 
-[node name="GPUParticles2D" type="GPUParticles2D" parent="Sprite2"]
+[node name="GPUParticles2D" type="GPUParticles2D" parent="Effects"]
 visible = false
 modulate = Color(2, 2, 2, 1)
 amount = 24

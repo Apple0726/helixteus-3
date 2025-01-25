@@ -1633,6 +1633,12 @@ func add_items_to_inventory(item_name:String, item_amount:int, item_base_costs:D
 	if game.HUD:
 		game.HUD.update_hotbar()
 
+func set_logarithmic_time_speed(dimensional_power:int, base_time_speed:float):
+	if dimensional_power >= 4:
+		return log(base_time_speed - 1.0 + exp(1.0))
+	else:
+		return base_time_speed
+
 # get_sphere_volume
 func get_sph_V(outer:float, inner:float = 0):
 	outer /= 150.0#I have to reduce the size of planets otherwise it's too OP

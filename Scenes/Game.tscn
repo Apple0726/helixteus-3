@@ -1,4 +1,4 @@
-[gd_scene load_steps=63 format=3 uid="uid://dt6rr51kda1rb"]
+[gd_scene load_steps=65 format=3 uid="uid://dt6rr51kda1rb"]
 
 [ext_resource type="Script" path="res://Scripts/Game.gd" id="2"]
 [ext_resource type="Texture2D" uid="uid://gcp7f61r2ee1" path="res://Graphics/Buttons/settings.png" id="3"]
@@ -12,6 +12,7 @@
 [ext_resource type="Shader" path="res://Shaders/Starfield.gdshader" id="9_0dcpd"]
 [ext_resource type="Texture2D" uid="uid://crjpo3xaanqvb" path="res://Graphics/Title screen/Discord.png" id="11"]
 [ext_resource type="Shader" path="res://Shaders/Cluster.gdshader" id="19_4v34t"]
+[ext_resource type="Texture2D" uid="uid://4btqw773gw21" path="res://Graphics/Planets/BGs/9.png" id="22_cknpf"]
 [ext_resource type="PackedScene" uid="uid://ddf2xjwcht77u" path="res://Scenes/CloseButton.tscn" id="25"]
 [ext_resource type="Texture2D" uid="uid://koi0aarpqj30" path="res://Graphics/Ships/Ship0.png" id="26"]
 [ext_resource type="Shader" path="res://Shaders/Blur.gdshader" id="30"]
@@ -435,6 +436,8 @@ _data = {
 shader = ExtResource("30")
 shader_parameter/amount = 0.0
 
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_repv5"]
+
 [node name="Game" type="Node2D"]
 script = ExtResource("2")
 
@@ -845,6 +848,13 @@ grow_vertical = 2
 mouse_filter = 2
 color = Color(0.364706, 0.968627, 0.968627, 1)
 metadata/_edit_lock_ = true
+
+[node name="BattleBG" type="Sprite2D" parent="."]
+visible = false
+material = SubResource("ShaderMaterial_repv5")
+position = Vector2(658.397, 658.258)
+scale = Vector2(0.952953, 0.952953)
+texture = ExtResource("22_cknpf")
 
 [connection signal="close_button_out" from="UI/BottomInfo/CloseButton" to="." method="_on_CloseButton_close_button_out"]
 [connection signal="close_button_over" from="UI/BottomInfo/CloseButton" to="." method="_on_CloseButton_close_button_over"]

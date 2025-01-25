@@ -78,9 +78,10 @@ func refresh():
 		if ok:
 			for prop in $TP/VBox.get_children():
 				prop.get_node("Unit").text = units[prop.name]
-				if prop.name == "time_speed" and game.subject_levels.dimensional_power >= 4:
-					var cave_battle_time_speed:float = log(prop.get_node("HSlider").value - 1.0 + exp(1.0))
-					prop.get_node("Unit").text = " (%s)" % [tr("TIME_SPEED_IN_BATTLES_CAVES") % cave_battle_time_speed]
+				if prop.name == "time_speed":
+					var cave_battle_time_speed:float = Helper.get_logarithmic_time_speed(game.subject_levels.dimensional_power, prop.get_node("HSlider").value)
+					if cave_battle_time_speed != 1.0:
+						prop.get_node("Unit").text = " (%s)" % [tr("TIME_SPEED_IN_BATTLES_CAVES") % cave_battle_time_speed]
 				if prop.has_node("HSlider"):
 					prop.get_node("HSlider").min_value = game.physics_bonus.MVOUP
 					prop.get_node("HSlider").max_value = ceil(init_PP * PP_multiplier / Data.univ_prop_weights[prop.name] / 2.0)
@@ -240,9 +241,10 @@ func _on_TP_value_changed(value:float, prop:String):
 	if prop == "antimatter":
 		point_distribution.antimatter = value * -game.physics_bonus[prop]
 	else:
-		if prop == "time_speed" and game.subject_levels.dimensional_power >= 4:
-			var cave_battle_time_speed:float = log($TP/VBox/time_speed/HSlider.value - 1.0 + exp(1.0))
-			$TP/VBox/time_speed/Unit.text = " (%.2f in battles/caves)" % [cave_battle_time_speed]
+		if prop == "time_speed":
+			var cave_battle_time_speed:float = Helper.get_logarithmic_time_speed(game.subject_levels.dimensional_power, $TP/VBox/time_speed/HSlider.value)
+			if cave_battle_time_speed != 1.0:
+				$TP/VBox/time_speed/Unit.text = " (%.2f in battles/caves)" % [cave_battle_time_speed]
 		if value >= 1:
 			point_distribution[prop] = (value - 1) * -game.physics_bonus[prop]
 		else:
