@@ -1,6 +1,6 @@
 [gd_scene load_steps=9 format=3 uid="uid://ev7ll8hmf3xe"]
 
-[ext_resource type="Texture2D" uid="uid://ccntlctxytsi2" path="res://Graphics/GUI/Panel.png" id="3_mwsw1"]
+[ext_resource type="Texture2D" uid="uid://dcvnyb0mloli2" path="res://Graphics/GUI/Panel.png" id="3_mwsw1"]
 [ext_resource type="Theme" uid="uid://cp2u1kgj60ic" path="res://Resources/default_theme.tres" id="5"]
 [ext_resource type="Texture2D" uid="uid://baowebna7hgr5" path="res://Graphics/GUI/CloseButtonNormal.png" id="5_q566h"]
 [ext_resource type="Script" path="res://Scripts/MUPanel.gd" id="6"]
@@ -36,8 +36,10 @@ script = ExtResource("6")
 
 [node name="GUI" type="TextureRect" parent="."]
 layout_mode = 1
-offset_right = 1280.0
-offset_bottom = 720.0
+offset_left = 80.0
+offset_top = 52.0
+offset_right = 1204.0
+offset_bottom = 671.0
 mouse_filter = 2
 texture = ExtResource("3_mwsw1")
 
@@ -55,9 +57,9 @@ custom_minimum_size = Vector2(0, 38)
 layout_mode = 1
 anchors_preset = 10
 anchor_right = 1.0
-offset_left = 112.0
+offset_left = 120.0
 offset_top = 72.0
-offset_right = -352.0
+offset_right = -344.0
 offset_bottom = 110.0
 grow_horizontal = 2
 theme_override_font_sizes/font_size = 18
