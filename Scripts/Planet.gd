@@ -1027,6 +1027,7 @@ func remove_selected_white_rects():
 		white_rect.remove_from_group("selected_white_rects")
 	
 func _unhandled_input(event):
+	var action_performed = false
 	var about_to_mine = game.bottom_info_action == "about_to_mine"
 	var mass_build:bool = Input.is_action_pressed("left_click") and Input.is_action_pressed("shift") and game.bottom_info_action == "building" and constructing_unique_building_tier == -1
 	view.move_view = not mass_build
@@ -1049,6 +1050,7 @@ func _unhandled_input(event):
 					add_white_rect(Vector2(tile_over % wid, tile_over / wid) * 200, "selected_white_rects")
 				elif Input.is_action_just_pressed("Q"):
 					duplicate_unique_building_callable()
+					action_performed = true
 			elif tile.has("bldg"):
 				if Input.is_action_just_pressed("right_click"):
 					right_clicked_tile = tile_over
@@ -1086,6 +1088,7 @@ func _unhandled_input(event):
 							load_unload_button_dict.button_text = tr("LOAD_UNLOAD_ALL") + " (G)"
 					right_click_menu = game.add_right_click_menu(right_click_info_list, on_right_click_menu_closed)
 				elif Input.is_action_just_pressed("Q"):
+					action_performed = true
 					duplicate_building_callable()
 				elif Input.is_action_just_pressed("F"):
 					upgrade_building_callable(false)
@@ -1095,9 +1098,6 @@ func _unhandled_input(event):
 					collect_resources_callable()
 			if not is_instance_valid(game.active_panel) and Input.is_action_just_pressed("shift"):
 				select_all_of_same_type_callable(false)
-	if Input.is_action_just_released("cancel"):
-		tiles_selected.clear()
-		remove_selected_white_rects()
 	if Input.is_action_just_released("shift"):
 		tiles_selected.clear()
 		remove_selected_white_rects()
@@ -1316,6 +1316,10 @@ func _unhandled_input(event):
 			game.show_collect_info(items_collected)
 		if game.planet_HUD:
 			game.planet_HUD.refresh()
+	if not action_performed and (Input.is_action_just_pressed("cancel_build") or Input.is_action_just_pressed("cancel")):
+		tiles_selected.clear()
+		remove_selected_white_rects()
+		game._on_BottomInfo_close_button_pressed()
 
 func on_wormhole_click(tile:Dictionary, tile_id:int):
 	if tile.wormhole.active:

@@ -4043,11 +4043,10 @@ func _input(event):
 			settings_panel.get_node("TabContainer/GRAPHICS/Fullscreen").set_pressed_no_signal(Settings.fullscreen)
 
 	if Input.is_action_just_released("cancel"):
-		if bottom_info_action != "":
-			if not c_v in ["STM", ""]:
-				item_to_use.num = 0
-				update_item_cursor()
-		else:
+		if item_cursor.visible and c_v not in ["STM", ""]:
+			item_to_use.num = 0
+			update_item_cursor()
+		if bottom_info_action == "":
 			if is_instance_valid(sub_panel):
 				sub_panel.visible = false
 				sub_panel = null
