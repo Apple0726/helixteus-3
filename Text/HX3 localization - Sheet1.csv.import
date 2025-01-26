@@ -2,14 +2,14 @@
 
 importer="csv_translation"
 type="Translation"
-uid="uid://ca80x8ywtqqmy"
+uid="uid://dkiav36gfsve1"
 
 [deps]
 
-files=["res://Text/HX3 localization - Sheet1.Comments.translation", "res://Text/HX3 localization - Sheet1.en.translation", "res://Text/HX3 localization - Sheet1.fr.translation", "res://Text/HX3 localization - Sheet1.it.translation", "res://Text/HX3 localization - Sheet1.zh.translation", "res://Text/HX3 localization - Sheet1.de.translation", "res://Text/HX3 localization - Sheet1.es.translation", "res://Text/HX3 localization - Sheet1.ko.translation", "res://Text/HX3 localization - Sheet1.sv.translation", "res://Text/HX3 localization - Sheet1.hu.translation", "res://Text/HX3 localization - Sheet1.ja.translation", "res://Text/HX3 localization - Sheet1.nl.translation", "res://Text/HX3 localization - Sheet1.ru.translation"]
+files=["res://Text/HX3 localization - Sheet1.en.translation", "res://Text/HX3 localization - Sheet1.fr.translation", "res://Text/HX3 localization - Sheet1.it.translation", "res://Text/HX3 localization - Sheet1.zh.translation", "res://Text/HX3 localization - Sheet1.de.translation", "res://Text/HX3 localization - Sheet1.es.translation", "res://Text/HX3 localization - Sheet1.ko.translation", "res://Text/HX3 localization - Sheet1.sv.translation", "res://Text/HX3 localization - Sheet1.hu.translation", "res://Text/HX3 localization - Sheet1.ja.translation", "res://Text/HX3 localization - Sheet1.nl.translation", "res://Text/HX3 localization - Sheet1.ru.translation"]
 
 source_file="res://Text/HX3 localization - Sheet1.csv"
-dest_files=["res://Text/HX3 localization - Sheet1.Comments.translation", "res://Text/HX3 localization - Sheet1.en.translation", "res://Text/HX3 localization - Sheet1.fr.translation", "res://Text/HX3 localization - Sheet1.it.translation", "res://Text/HX3 localization - Sheet1.zh.translation", "res://Text/HX3 localization - Sheet1.de.translation", "res://Text/HX3 localization - Sheet1.es.translation", "res://Text/HX3 localization - Sheet1.ko.translation", "res://Text/HX3 localization - Sheet1.sv.translation", "res://Text/HX3 localization - Sheet1.hu.translation", "res://Text/HX3 localization - Sheet1.ja.translation", "res://Text/HX3 localization - Sheet1.nl.translation", "res://Text/HX3 localization - Sheet1.ru.translation"]
+dest_files=["res://Text/HX3 localization - Sheet1.en.translation", "res://Text/HX3 localization - Sheet1.fr.translation", "res://Text/HX3 localization - Sheet1.it.translation", "res://Text/HX3 localization - Sheet1.zh.translation", "res://Text/HX3 localization - Sheet1.de.translation", "res://Text/HX3 localization - Sheet1.es.translation", "res://Text/HX3 localization - Sheet1.ko.translation", "res://Text/HX3 localization - Sheet1.sv.translation", "res://Text/HX3 localization - Sheet1.hu.translation", "res://Text/HX3 localization - Sheet1.ja.translation", "res://Text/HX3 localization - Sheet1.nl.translation", "res://Text/HX3 localization - Sheet1.ru.translation"]
 
 [params]
 
