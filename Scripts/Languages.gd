@@ -36,46 +36,41 @@ func _on_lg_pressed(extra_arg_0):
 
 func _on_lg_mouse_entered(extra_arg_0):
 	var lg:String = ""
-	var lines_translated:int = 0
-	var lines_total:int = 1547 - 2
+	var locale_stats_file = FileAccess.open("res://Text/localeStats.json", FileAccess.READ)
+	var locale_stats_json = JSON.new()
+	locale_stats_json = locale_stats_json.parse_string(locale_stats_file.get_as_text())
+	var lines_translated:int = locale_stats_json[extra_arg_0]["lines"]
+	var words_translated:int = locale_stats_json[extra_arg_0]["words"]
+	var chars_translated:int = locale_stats_json[extra_arg_0]["chars"]
 	match extra_arg_0:
+		"en":
+			lg = "English"
 		"fr":
 			lg = "Français"
-			lines_translated = 558 - 2
 		"it":
 			lg = "Italiano"
-			lines_translated = 381 - 2
 		"zh":
 			lg = "中文"
-			lines_translated = 1555 - 2
 		"de":
 			lg = "Deutsch"
-			lines_translated = 1577 - 2
 		"es":
 			lg = "Español"
-			lines_translated = 1163 - 2
 		"ko":
 			lg = "한국어"
-			lines_translated = 238 - 2
 		"sv":
 			lg = "Svenska"
-			lines_translated = 195 - 2
 		"hu":
 			lg = "Magyar"
-			lines_translated = 1343 - 1
 		"ja":
 			lg = "日本語"
-			lines_translated = 1423 - 2
 		"nl":
 			lg = "Nederlands"
-			lines_translated = 1214 - 2
 		"ru":
 			lg = "Русский"
-			lines_translated = 1028 - 2
-	if extra_arg_0 == "en":
-		game.show_tooltip("English")
+	if extra_arg_0 in ["zh", "ja"]:
+		game.show_tooltip("%s\n%s\n%s" % [lg, tr("LINES") % lines_translated, tr("CHARACTERS") % chars_translated])
 	else:
-		game.show_tooltip("%s (%s)" % [lg, tr("X_LINES") % [lines_translated, lines_total]])
+		game.show_tooltip("%s\n%s\n%s\n%s" % [lg, tr("LINES") % lines_translated, tr("WORDS") % words_translated, tr("CHARACTERS") % chars_translated])
 
 func _on_lg_mouse_exited():
 	game.hide_tooltip()
