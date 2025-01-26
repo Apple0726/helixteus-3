@@ -22,7 +22,7 @@
 [ext_resource type="Texture2D" uid="uid://bm01hxs45q3ga" path="res://Graphics/Icons/energy.png" id="21"]
 [ext_resource type="Texture2D" uid="uid://cmyhmlmoai4wo" path="res://Graphics/Planets/Other/BG.png" id="22"]
 [ext_resource type="Texture2D" uid="uid://bpuwwlxltaow4" path="res://Graphics/Tiles/cave.png" id="23"]
-[ext_resource type="Texture2D" uid="uid://1300penq25d5" path="res://Graphics/Items/Pickaxes/stick.png" id="24"]
+[ext_resource type="Texture2D" uid="uid://1300penq25d5" path="res://Graphics/Pickaxes/stick.png" id="24"]
 [ext_resource type="Texture2D" uid="uid://dvwn4jgt0lyrx" path="res://Graphics/Ships/Probe2.png" id="25"]
 [ext_resource type="Texture2D" uid="uid://bwrgdgrthxh2q" path="res://Graphics/HX/2_4.png" id="26"]
 [ext_resource type="Texture2D" uid="uid://c0gbngpg4gt08" path="res://Graphics/Misc/Physics.png" id="27"]

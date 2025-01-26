@@ -185,7 +185,7 @@ func _on_Standard_pressed():
 		set_notation()
 
 func _on_Standard_mouse_entered():
-	game.show_tooltip("k < M < B < T < q < Q < s < S < O < N")
+	game.show_tooltip(tr("STANDARD_LARGE_NUMBER_NOTATION"))
 
 
 func _on_SI_pressed():

@@ -218,7 +218,10 @@ var univ_prop_weights:Dictionary = {
 	"antimatter":100,
 	}
 
+var standard_large_number_notations = []
+
 func reload():
+	standard_large_number_notations = tr("STANDARD_LARGE_NUMBER_NOTATION").split(" < ")
 	path_1[Building.MINERAL_EXTRACTOR].desc = tr("EXTRACTS_X") % ["@i %s/" + tr("S_SECOND")]
 	path_1[Building.ATMOSPHERE_EXTRACTOR].desc = tr("EXTRACTS_X") % ["%s mol/" + tr("S_SECOND")]
 	path_1[Building.POWER_PLANT].desc = tr("GENERATES_X") % ["@i %s/" + tr("S_SECOND")]

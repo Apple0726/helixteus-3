@@ -225,29 +225,34 @@ func format_num(num:float, clever_round:bool = false, threshold:int = 6):
 			p = ceil(p)
 		else:
 			p = int(p)
-		var div = max(pow(10, snapped(p - 1, 3)), 1)
-		if Settings.notation == "scientific" and p >= 3 or p >= 33:
+		var OOM_gap:int = 3
+		if Settings.notation == "standard":
+			OOM_gap = int(tr("STANDARD_LARGE_NUMBER_NOTATION_OOM_GAP"))
+		if Settings.notation == "scientific" and p >= 3 or p >= OOM_gap * 11:
 			return e_notation(num, 3)
-		if p >= 3 and p < 6:
-			suff = "k"
-		elif p < 9:
-			suff = "M"
-		elif p < 12:
-			suff = "G" if Settings.notation == "SI" else "B"
-		elif p < 15:
-			suff = "T"
-		elif p < 18:
-			suff = "P" if Settings.notation == "SI" else "q"
-		elif p < 21:
-			suff = "E" if Settings.notation == "SI" else "Q"
-		elif p < 24:
-			suff = "Z" if Settings.notation == "SI" else "s"
-		elif p < 27:
-			suff = "Y" if Settings.notation == "SI" else "S"
-		elif p < 30:
-			suff = "R" if Settings.notation == "SI" else "O"
-		elif p < 33:
-			suff = "Q" if Settings.notation == "SI" else "N"
+		if p < OOM_gap:
+			suff = ""
+		elif p < OOM_gap * 2:
+			suff = "k" if Settings.notation == "SI" else Data.standard_large_number_notations[0]
+		elif p < OOM_gap * 3:
+			suff = "M" if Settings.notation == "SI" else Data.standard_large_number_notations[1]
+		elif p < OOM_gap * 4:
+			suff = "G" if Settings.notation == "SI" else Data.standard_large_number_notations[2]
+		elif p < OOM_gap * 5:
+			suff = "T" if Settings.notation == "SI" else Data.standard_large_number_notations[3]
+		elif p < OOM_gap * 6:
+			suff = "P" if Settings.notation == "SI" else Data.standard_large_number_notations[4]
+		elif p < OOM_gap * 7:
+			suff = "E" if Settings.notation == "SI" else Data.standard_large_number_notations[5]
+		elif p < OOM_gap * 8:
+			suff = "Z" if Settings.notation == "SI" else Data.standard_large_number_notations[6]
+		elif p < OOM_gap * 9:
+			suff = "Y" if Settings.notation == "SI" else Data.standard_large_number_notations[7]
+		elif p < OOM_gap * 10:
+			suff = "R" if Settings.notation == "SI" else Data.standard_large_number_notations[8]
+		elif p < OOM_gap * 11:
+			suff = "Q" if Settings.notation == "SI" else Data.standard_large_number_notations[9]
+		var div = max(pow(10, snapped(p - 1 - (OOM_gap - 2) / 2, OOM_gap)), 1)
 		return "%s%s%s" % [sgn, clever_round(num / div, 3), suff]
 
 #Assumes that all values of dict are floats/integers
@@ -1177,7 +1182,7 @@ func get_bldg_tooltip2(bldg:int, path_1_value, path_2_value, path_3_value):
 			return "%s\n%s\n%s" % [
 				Data.path_1[bldg].desc % clever_round(path_1_value),
 				Data.path_2[bldg].desc % path_2_value,
-				Data.path_3[bldg].desc.format({"n":path_3_value})]
+				Data.path_3[bldg].desc % "{n}x{n}".format({"n":path_3_value})]
 		_:
 			return ""
 
