@@ -1,0 +1,16 @@
+[remap]
+
+importer="bitmap"
+type="BitMap"
+uid="uid://bd42ljoior105"
+path="res://.godot/imported/Ship3CM.png-4b35387c84f81b5f1904271151460afb.res"
+
+[deps]
+
+source_file="res://Graphics/Ships/Ship3CM.png"
+dest_files=["res://.godot/imported/Ship3CM.png-4b35387c84f81b5f1904271151460afb.res"]
+
+[params]
+
+create_from=0
+threshold=0.5

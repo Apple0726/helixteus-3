@@ -1,0 +1,16 @@
+[remap]
+
+importer="bitmap"
+type="BitMap"
+uid="uid://da224u7txjekp"
+path="res://.godot/imported/Ship1CM.png-33cfdd8025f563736d46b05155c24611.res"
+
+[deps]
+
+source_file="res://Graphics/Ships/Ship1CM.png"
+dest_files=["res://.godot/imported/Ship1CM.png-33cfdd8025f563736d46b05155c24611.res"]
+
+[params]
+
+create_from=0
+threshold=0.5

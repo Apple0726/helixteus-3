@@ -5,7 +5,6 @@
 export.cfg
 export_presets.cfg
 *.translation
-*.import
 *.png~
 *.kra
 *.kra~
