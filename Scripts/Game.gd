@@ -1276,13 +1276,17 @@ func put_bottom_info(txt:String, action:String, on_close:String = ""):
 	$UI/BottomInfo/CloseButton.on_close = on_close
 	$UI/BottomInfo/MoveAnim.play("MoveLabel")
 
-func fade_in_panel(panel_var_name:String):
+func fade_in_panel(panel_var_name:String, initialize_properties:Dictionary = {}):
 	if is_instance_valid(self[panel_var_name]):
 		self[panel_var_name].show()
 		$Panels/Control.move_child(self[panel_var_name], $Panels/Control.get_child_count())
+		for prop in initialize_properties:
+			self[panel_var_name][prop] = initialize_properties[prop]
 	else:
 		self[panel_var_name] = load("res://Scenes/Panels/%s.tscn" % panel_var_name_to_file_name[panel_var_name]).instantiate()
 		self[panel_var_name].panel_var_name = panel_var_name
+		for prop in initialize_properties:
+			self[panel_var_name][prop] = initialize_properties[prop]
 		$Panels/Control.add_child(self[panel_var_name])
 	active_panel = self[panel_var_name]
 	self[panel_var_name].refresh()
@@ -1624,6 +1628,7 @@ func switch_view(new_view:String, other_params:Dictionary = {}):
 				starfield_tween.tween_property($Stars/Starfield, "modulate:a", 0.5, 0.5)
 				$BattleBG.show()
 			"ship_customize_screen":
+				$Ship.hide()
 				ship_customize_screen = load("res://Scenes/ShipCustomizeScreen.tscn").instantiate()
 				ship_customize_screen.ship_id = other_params.ship_id
 				add_child(ship_customize_screen)
@@ -4600,6 +4605,7 @@ func add_new_ship_data():
 
 func get_1st_ship():
 	add_new_ship_data()
+	switch_view("ship_customize_screen")
 
 func get_2nd_ship():
 	if len(ship_data) == 1:

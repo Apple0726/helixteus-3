@@ -2,12 +2,28 @@
 extends Button
 
 var game
-@export var button_text:String = ""
+@export var button_text:String = "":
+	get:
+		return button_text
+	set(value):
+		button_text = value
+		$Label.text = tr(button_text)
+
+var adv_button_disabled:bool = false:
+	get:
+		return adv_button_disabled
+	set(value):
+		adv_button_disabled = value
+		disabled = value
+		if value:
+			$Label.modulate.a = 0.5
+		else:
+			$Label.modulate.a = 1.0
+			
 @export var icon_texture:Texture2D
 
 func _ready():
 	game = get_node("/root/Game") if not Engine.is_editor_hint() else null
-	$Label.text = tr(button_text)
 	$Icon.texture = icon_texture
 	get_node("Label")["theme_override_colors/font_color"] = Color.WHITE
 

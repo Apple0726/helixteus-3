@@ -35,16 +35,19 @@ layout_mode = 0
 offset_left = 520.0
 offset_top = 76.0
 offset_right = 716.0
-offset_bottom = 452.0
+offset_bottom = 358.0
 theme_override_styles/panel = SubResource("StyleBoxFlat_q0bap")
 
 [node name="VBox" type="VBoxContainer" parent="ShipClass"]
 layout_mode = 2
+size_flags_vertical = 4
 
 [node name="Label" type="Label" parent="ShipClass/VBox"]
+custom_minimum_size = Vector2(0, 40)
 layout_mode = 2
 text = "SHIP_CLASS"
 horizontal_alignment = 1
+vertical_alignment = 1
 
 [node name="VBox" type="VBoxContainer" parent="ShipClass/VBox"]
 layout_mode = 2
@@ -89,6 +92,10 @@ button_text = "IMPENETRABLE"
 layout_mode = 2
 button_text = "UBER"
 
+[node name="Spacer" type="Control" parent="ShipClass/VBox"]
+custom_minimum_size = Vector2(0, 6)
+layout_mode = 2
+
 [node name="Actions" type="HBoxContainer" parent="."]
 layout_mode = 1
 offset_left = 512.0
@@ -107,7 +114,7 @@ text = "CANCEL"
 layout_mode = 2
 size_flags_horizontal = 3
 disabled = true
-text = "DONE"
+text = "CONFIRM"
 
 [node name="Ship0" type="TextureRect" parent="."]
 layout_mode = 0

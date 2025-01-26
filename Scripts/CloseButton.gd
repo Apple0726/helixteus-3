@@ -13,9 +13,6 @@ func _on_TextureButton_pressed():
 
 func _on_TextureButton_mouse_entered():
 	emit_signal("close_button_over")
-	game.help_str = "close_btn%s" % [close_button_type]
-	if not game.help.is_empty() and game.help.has("close_btn%s" % [close_button_type]):
-		game.show_tooltip("%s\n%s" % [tr("CLOSE_BUTTON_DESC%s" % [close_button_type]), tr("HIDE_HELP")])
 
 func _on_TextureButton_mouse_exited():
 	emit_signal("close_button_out")

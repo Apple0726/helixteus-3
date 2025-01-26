@@ -12,6 +12,19 @@ var allocated_accuracy:int = 0
 var allocated_agility:int = 0
 
 func _ready() -> void:
+	if game.subject_levels.dimensional_power < 5:
+		$ShipClass/VBox/VBox/Reckless.adv_button_disabled = true
+		$ShipClass/VBox/VBox/Reckless.button_text = tr("LOCKED")
+		$ShipClass/VBox/VBox/Reckless.mouse_entered.connect(game.show_tooltip.bind("SHIP_CLASS_UNLOCK_INFO"))
+		$ShipClass/VBox/VBox/Reckless.mouse_exited.connect(game.hide_tooltip)
+		$ShipClass/VBox/VBox/Impenetrable.adv_button_disabled = true
+		$ShipClass/VBox/VBox/Impenetrable.button_text = tr("LOCKED")
+		$ShipClass/VBox/VBox/Impenetrable.mouse_entered.connect(game.show_tooltip.bind("SHIP_CLASS_UNLOCK_INFO"))
+		$ShipClass/VBox/VBox/Impenetrable.mouse_exited.connect(game.hide_tooltip)
+		$ShipClass/VBox/VBox/Uber.adv_button_disabled = true
+		$ShipClass/VBox/VBox/Uber.button_text = tr("LOCKED")
+		$ShipClass/VBox/VBox/Uber.mouse_entered.connect(game.show_tooltip.bind("SHIP_CLASS_UNLOCK_INFO"))
+		$ShipClass/VBox/VBox/Uber.mouse_exited.connect(game.hide_tooltip)
 	ship_data = game.ship_data[ship_id].duplicate()
 	if ship_data.ship_class == ShipClass.STANDARD:
 		$ShipClass/VBox/VBox/Standard._on_Button_pressed()
