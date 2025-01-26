@@ -435,7 +435,17 @@ var light_data = [	{"damage":1.5, "accuracy":1.3},
 					{"damage":17.5, "accuracy":2.8},]
 
 #the numbers are the elements' abundance relative to hydrogen
-var elements = {"NH3":0.05, "CO2":0.01, "H":1.0, "He":0.325, "CH4":0.2, "O":0.014, "H2O":0.15, "Ne":0.001813, "Xe":0.0000022}
+var elements = {
+	"NH3":0.05,
+	"CO2":0.01,
+	"H":1.0,
+	"He":0.325,
+	"CH4":0.2,
+	"O":0.014,
+	"H2O":0.15,
+	"Ne":0.001813,
+	"Xe":0.0000022,
+}
 
 var molar_mass = {	"H":1.008,
 						"He":4.0026,
@@ -533,8 +543,6 @@ var lake_SP_bonus = {
 
 var default_help = {
 				"materials":true,
-				"close_btn1":true,
-				"close_btn2":true,
 				"mining":true,
 				"STM":true,
 				"battle":true,
@@ -606,4 +614,12 @@ var unique_building_costs = {
 
 var MS_num_stages:Dictionary = {"DS":4, "MME":3, "CBS":3, "PK":2, "SE":1, "MB":0}
 
-var tier_colors = [Color.WHITE, Color(0, 0.9, 0.0), Color(0.2, 0.2, 1.0), Color(1.0, 0.2, 1.0), Color(1.0, 0.5, 0.0), Color(1.0, 1.0, 0.2), Color.RED]
+var tier_colors = [
+	Color.WHITE,
+	Color(0, 0.9, 0.0),
+	Color(0.2, 0.2, 1.0),
+	Color(1.0, 0.2, 1.0),
+	Color(1.0, 0.5, 0.0),
+	Color(1.0, 1.0, 0.2),
+	Color.RED,
+]
