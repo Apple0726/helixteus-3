@@ -39,15 +39,15 @@ func _unhandled_input(event):
 		hide_panel()
 
 func refresh():
-	$Panel/VBoxContainer/Unique.visible = game.engineering_bonus.max_unique_building_tier > 0
-	$Panel/ScrollContainer/VBoxContainer/HBoxContainer/Tier.max_value = game.engineering_bonus.max_unique_building_tier
+	$Panel/VBoxContainer/Ancient.visible = game.engineering_bonus.max_ancient_building_tier > 0
+	$Panel/ScrollContainer/VBoxContainer/HBoxContainer/Tier.max_value = game.engineering_bonus.max_ancient_building_tier
 	for btn in $Panel/ScrollContainer/VBoxContainer.get_children():
 		if btn is Button and btn.name != "BuildAll":
 			btn.queue_free()
-	$Panel/ScrollContainer/VBoxContainer/HBoxContainer.visible = tab == "unique"
+	$Panel/ScrollContainer/VBoxContainer/HBoxContainer.visible = tab == "ancient"
 	$Panel/VBoxContainer.visible = tab != "megastructures"
 	$Panel/ScrollContainer/VBoxContainer/BuildAll.visible = tab == "megastructures"
-	if tab == "unique":
+	if tab == "ancient":
 		var tier_arr:Array = tr("TIER_X").split(" ")
 		if tier_arr[0] == "%s":
 			$Panel/ScrollContainer/VBoxContainer/HBoxContainer/Label.move_to_front()
@@ -56,17 +56,17 @@ func refresh():
 			$Panel/ScrollContainer/VBoxContainer/HBoxContainer/Tier.move_to_front()
 			$Panel/ScrollContainer/VBoxContainer/HBoxContainer/Label.text = tier_arr[0]
 		var selected_tier:int = $Panel/ScrollContainer/VBoxContainer/HBoxContainer/Tier.value
-		for bldg in len(UniqueBuilding.names):
-			if bldg in game.unique_bldgs_discovered.keys() and selected_tier in game.unique_bldgs_discovered[bldg].keys():
+		for bldg in len(AncientBuilding.names):
+			if bldg in game.ancient_bldgs_discovered.keys() and selected_tier in game.ancient_bldgs_discovered[bldg].keys():
 				var btn = Button.new()
 				btn.icon_alignment = HORIZONTAL_ALIGNMENT_CENTER
 				btn.expand_icon = true
-				btn.icon = load("res://Graphics/Buildings/Unique/%s.png" % UniqueBuilding.names[bldg])
+				btn.icon = load("res://Graphics/Buildings/Ancient/%s.png" % AncientBuilding.names[bldg])
 				btn.custom_minimum_size.y = 100
 				$Panel/ScrollContainer/VBoxContainer.add_child(btn)
-				btn.connect("mouse_entered", Callable(self, "on_unique_bldg_over").bind(bldg))
+				btn.connect("mouse_entered", Callable(self, "on_ancient_bldg_over").bind(bldg))
 				btn.connect("mouse_exited", Callable(game, "hide_tooltip"))
-				btn.connect("pressed", Callable(self, "on_unique_bldg_click").bind(bldg))
+				btn.connect("pressed", Callable(self, "on_ancient_bldg_click").bind(bldg))
 	elif tab == "megastructures":
 		for MS in megastructures:
 			if MS != "MB" or game.science_unlocked.has("MB"):
@@ -258,43 +258,43 @@ func tween_label(label, final_val):
 	tween.tween_property(label, "modulate:a", final_val, 0.1)
 
 
-func _on_unique_mouse_entered():
-	tween_label($Panel/VBoxContainer/Unique/Label, 1.0)
+func _on_ancient_mouse_entered():
+	tween_label($Panel/VBoxContainer/Ancient/Label, 1.0)
 
 
-func _on_unique_mouse_exited():
-	if tab != "unique":
-		tween_label($Panel/VBoxContainer/Unique/Label, 0.0)
+func _on_ancient_mouse_exited():
+	if tab != "ancient":
+		tween_label($Panel/VBoxContainer/Ancient/Label, 0.0)
 
-func on_unique_bldg_over(bldg:int):
+func on_ancient_bldg_over(bldg:int):
 	var icons = []
 	var tier:int = $Panel/ScrollContainer/VBoxContainer/HBoxContainer/Tier.value
 	var tooltip = "[font_size=20][color=#%s]" % Data.tier_colors[tier - 1].to_html(false)
-	var unique_building_name = UniqueBuilding.names[bldg]
-	tooltip += tr(unique_building_name.to_upper())
+	var ancient_building_name = AncientBuilding.names[bldg]
+	tooltip += tr(ancient_building_name.to_upper())
 	if tier > 1:
 		tooltip += " " + Helper.get_roman_num(tier)
 	tooltip += "[/color][/font_size]"
 	tooltip += "\n"
-	var desc = tr("%s_DESC2" % unique_building_name.to_upper())
+	var desc = tr("%s_DESC2" % ancient_building_name.to_upper())
 	match bldg:
-		UniqueBuilding.SPACEPORT:
+		AncientBuilding.SPACEPORT:
 			desc = desc % [	Helper.get_spaceport_exit_cost_reduction(tier) * 100,
 							Helper.get_spaceport_travel_cost_reduction(tier) * 100]
-		UniqueBuilding.MINERAL_REPLICATOR, UniqueBuilding.MINING_OUTPOST, UniqueBuilding.OBSERVATORY:
-			desc = desc.format({"n":Helper.get_unique_bldg_area(tier)}) % Helper.get_MR_Obs_Outpost_prod_mult(tier)
-		UniqueBuilding.SUBSTATION:
-			desc = desc.format({"n":Helper.get_unique_bldg_area(tier), "time":Helper.time_to_str(Helper.get_substation_capacity_bonus(tier))}) % Helper.get_substation_prod_mult(tier)
-		UniqueBuilding.NUCLEAR_FUSION_REACTOR:
+		AncientBuilding.MINERAL_REPLICATOR, AncientBuilding.MINING_OUTPOST, AncientBuilding.OBSERVATORY:
+			desc = desc.format({"n":Helper.get_ancient_bldg_area(tier)}) % Helper.get_MR_Obs_Outpost_prod_mult(tier)
+		AncientBuilding.SUBSTATION:
+			desc = desc.format({"n":Helper.get_ancient_bldg_area(tier), "time":Helper.time_to_str(Helper.get_substation_capacity_bonus(tier))}) % Helper.get_substation_prod_mult(tier)
+		AncientBuilding.NUCLEAR_FUSION_REACTOR:
 			desc = desc % Helper.format_num(Helper.get_NFR_prod_mult(tier))
-		UniqueBuilding.CELLULOSE_SYNTHESIZER:
+		AncientBuilding.CELLULOSE_SYNTHESIZER:
 			desc = desc % Helper.format_num(Helper.get_CS_prod_mult(tier))
 	tooltip += desc
-	icons.append_array(Data.unique_bldg_icons[bldg])
+	icons.append_array(Data.ancient_bldg_icons[bldg])
 	tooltip += "\n\n" + tr("COSTS") + "\n"
-	var costs = Data.unique_building_costs[bldg]
-	var n = game.unique_building_counters[bldg].get(tier, 0) + 1
-	var cost_multiplier = pow(tier, 20) * pow(10, -game.engineering_bonus.unique_building_a_value) * pow(n, tier * game.engineering_bonus.unique_building_b_value)
+	var costs = Data.ancient_building_costs[bldg]
+	var n = game.ancient_building_counters[bldg].get(tier, 0) + 1
+	var cost_multiplier = pow(tier, 20) * pow(10, -game.engineering_bonus.ancient_building_a_value) * pow(n, tier * game.engineering_bonus.ancient_building_b_value)
 	for cost in costs.keys():
 		tooltip += "@i  \t"
 		tooltip += Helper.format_num(costs[cost] * cost_multiplier, true)
@@ -302,17 +302,17 @@ func on_unique_bldg_over(bldg:int):
 		tooltip += "\n"
 	game.show_adv_tooltip(tooltip, icons)
 
-func on_unique_bldg_click(bldg:int):
+func on_ancient_bldg_click(bldg:int):
 	hide_panel()
 	var tier:int = $Panel/ScrollContainer/VBoxContainer/HBoxContainer/Tier.value
 	game.put_bottom_info(tr("CLICK_TILE_TO_CONSTRUCT"), "building", "cancel_building")
-	var base_cost = Data.unique_building_costs[bldg].duplicate(true)
-	var n = game.unique_building_counters[bldg].get(tier, 0) + 1
-	var cost_multiplier = pow(tier, 20) * pow(10, -game.engineering_bonus.unique_building_a_value) * pow(n, tier * game.engineering_bonus.unique_building_b_value)
+	var base_cost = Data.ancient_building_costs[bldg].duplicate(true)
+	var n = game.ancient_building_counters[bldg].get(tier, 0) + 1
+	var cost_multiplier = pow(tier, 20) * pow(10, -game.engineering_bonus.ancient_building_a_value) * pow(n, tier * game.engineering_bonus.ancient_building_b_value)
 	for cost in base_cost:
 		base_cost[cost] *= cost_multiplier
-	game.view.obj.constructing_unique_building_tier = tier
-	game.view.obj.initiate_unique_building_construction(bldg, base_cost)
+	game.view.obj.constructing_ancient_building_tier = tier
+	game.view.obj.initiate_ancient_building_construction(bldg, base_cost)
 
 
 func _on_tier_value_changed(value):

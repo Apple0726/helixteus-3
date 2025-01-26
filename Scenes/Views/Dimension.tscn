@@ -31,7 +31,7 @@
 [ext_resource type="Texture2D" uid="uid://bv5gxhoyaba7e" path="res://Graphics/Atoms/He.png" id="29"]
 [ext_resource type="Texture2D" uid="uid://d0i4bvt6quewi" path="res://Graphics/Atoms/H.png" id="30"]
 [ext_resource type="Texture2D" uid="uid://xolenfgc7711" path="res://Graphics/Icons/NH3.png" id="31"]
-[ext_resource type="Texture2D" uid="uid://dlhewnhi4crpn" path="res://Graphics/Formulas/UniqueBuildingCost.png" id="31_7v8j0"]
+[ext_resource type="Texture2D" uid="uid://dlhewnhi4crpn" path="res://Graphics/Formulas/AncientBuildingCost.png" id="31_7v8j0"]
 [ext_resource type="Texture2D" uid="uid://bxbsgfw7reha5" path="res://Graphics/Atoms/O.png" id="32"]
 [ext_resource type="Texture2D" uid="uid://brrod2d1fgtut" path="res://Graphics/Atoms/Ne.png" id="33"]
 [ext_resource type="Texture2D" uid="uid://gbbvl1ua0wyb" path="res://Graphics/Atoms/Xe.png" id="34"]
@@ -1913,9 +1913,9 @@ offset_left = 32.0
 offset_top = 424.0
 offset_right = 384.0
 offset_bottom = 454.0
-text = "CONSTRUCT_UNIQUE_BUILDINGS [img]Graphics/Icons/help.png[/img]"
-label_text = "CONSTRUCT_UNIQUE_BUILDINGS"
-help_text = "CONSTRUCT_UNIQUE_BUILDINGS_DESC"
+text = "CONSTRUCT_ANCIENT_BUILDINGS [img]Graphics/Icons/help.png[/img]"
+label_text = "CONSTRUCT_ANCIENT_BUILDINGS"
+help_text = "CONSTRUCT_ANCIENT_BUILDINGS_DESC"
 
 [node name="Label4" type="Label" parent="ModifyDimension/Engineering/Control"]
 layout_mode = 0
@@ -1925,7 +1925,7 @@ offset_right = 128.0
 offset_bottom = 501.0
 text = "MAX_TIER"
 
-[node name="max_unique_building_tier" parent="ModifyDimension/Engineering/Control" instance=ExtResource("19")]
+[node name="max_ancient_building_tier" parent="ModifyDimension/Engineering/Control" instance=ExtResource("19")]
 layout_mode = 0
 anchors_preset = 0
 anchor_right = 0.0
@@ -1937,7 +1937,7 @@ offset_bottom = 504.0
 step = 1.0
 is_integer = true
 
-[node name="UniqueBuildingFormula" type="TextureRect" parent="ModifyDimension/Engineering/Control"]
+[node name="AncientBuildingFormula" type="TextureRect" parent="ModifyDimension/Engineering/Control"]
 layout_mode = 0
 offset_left = 36.0
 offset_top = 524.0
@@ -1955,7 +1955,7 @@ offset_right = 128.0
 offset_bottom = 601.0
 text = "a = "
 
-[node name="unique_building_a_value" parent="ModifyDimension/Engineering/Control" instance=ExtResource("19")]
+[node name="ancient_building_a_value" parent="ModifyDimension/Engineering/Control" instance=ExtResource("19")]
 layout_mode = 0
 anchors_preset = 0
 anchor_right = 0.0
@@ -1989,7 +1989,7 @@ offset_right = 132.0
 offset_bottom = 649.0
 text = "b = "
 
-[node name="unique_building_b_value" parent="ModifyDimension/Engineering/Control" instance=ExtResource("19")]
+[node name="ancient_building_b_value" parent="ModifyDimension/Engineering/Control" instance=ExtResource("19")]
 layout_mode = 0
 anchors_preset = 0
 anchor_right = 0.0
@@ -2014,7 +2014,7 @@ anchors_preset = 0
 offset_right = 40.0
 offset_bottom = 40.0
 
-[node name="unique_building_a_value" type="Label" parent="ModifyDimension/Engineering/Control/Defaults"]
+[node name="ancient_building_a_value" type="Label" parent="ModifyDimension/Engineering/Control/Defaults"]
 layout_mode = 0
 offset_left = 244.0
 offset_top = 576.0
@@ -2022,7 +2022,7 @@ offset_right = 284.0
 offset_bottom = 601.0
 text = "(0.0)"
 
-[node name="unique_building_b_value" type="Label" parent="ModifyDimension/Engineering/Control/Defaults"]
+[node name="ancient_building_b_value" type="Label" parent="ModifyDimension/Engineering/Control/Defaults"]
 layout_mode = 0
 offset_left = 244.0
 offset_top = 624.0
@@ -2433,8 +2433,8 @@ horizontal_alignment = 1
 [connection signal="pressed" from="ModifyDimension/Biology/Control/LakeButtons/Xe" to="." method="_on_Lake_pressed" binds= ["Xe"]]
 [connection signal="mouse_entered" from="ModifyDimension/Biology/Control/Lake/LakeDesc" to="." method="_on_LakeDesc_mouse_entered"]
 [connection signal="mouse_exited" from="ModifyDimension/Biology/Control/Lake/LakeDesc" to="." method="_on_LakeDesc_mouse_exited"]
-[connection signal="mouse_entered" from="ModifyDimension/Engineering/Control/UniqueBuildingFormula" to="." method="_on_unique_building_formula_mouse_entered"]
-[connection signal="mouse_exited" from="ModifyDimension/Engineering/Control/UniqueBuildingFormula" to="." method="_on_unique_building_formula_mouse_exited"]
+[connection signal="mouse_entered" from="ModifyDimension/Engineering/Control/AncientBuildingFormula" to="." method="_on_ancient_building_formula_mouse_entered"]
+[connection signal="mouse_exited" from="ModifyDimension/Engineering/Control/AncientBuildingFormula" to="." method="_on_ancient_building_formula_mouse_exited"]
 [connection signal="mouse_entered" from="ModifyDimension/Dimensional_Power/Control/Label1" to="." method="_on_text_mouse_entered" binds= ["QOL_PERKS_DESC"]]
 [connection signal="mouse_exited" from="ModifyDimension/Dimensional_Power/Control/Label1" to="." method="_on_mouse_exited"]
 [connection signal="mouse_exited" from="ModifyDimension/Dimensional_Power/Control/Label2" to="." method="_on_mouse_exited"]

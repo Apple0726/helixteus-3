@@ -355,8 +355,8 @@ func _on_Upgrade_pressed():
 					var energy_prod = (new_base_value - tile.bldg.path_1_value) * tile.resource_production_bonus.get("energy", 1.0)
 					game.autocollect.rsrc.energy += energy_prod * overclock_mult * time_speed_bonus
 					if tile.has("substation_tile"):
-						var cap_upgrade = energy_prod * tile.substation_bonus * Helper.get_substation_capacity_bonus(game.tile_data[tile.substation_tile].unique_bldg.tier)
-						game.tile_data[tile.substation_tile].unique_bldg.capacity_bonus += cap_upgrade
+						var cap_upgrade = energy_prod * tile.substation_bonus * Helper.get_substation_capacity_bonus(game.tile_data[tile.substation_tile].ancient_bldg.tier)
+						game.tile_data[tile.substation_tile].ancient_bldg.capacity_bonus += cap_upgrade
 						game.capacity_bonus_from_substation += cap_upgrade
 				elif tile.bldg.name == Building.RESEARCH_LAB:
 					game.autocollect.rsrc.SP += (new_base_value - tile.bldg.path_1_value) * overclock_mult * tile.resource_production_bonus.get("SP", 1.0) * time_speed_bonus
@@ -364,8 +364,8 @@ func _on_Upgrade_pressed():
 					var energy_prod = Helper.get_SP_production(p_i.temperature, (new_base_value - tile.bldg.path_1_value) * tile.resource_production_bonus.get("energy", 1.0))
 					game.autocollect.rsrc.energy += energy_prod * overclock_mult * time_speed_bonus
 					if tile.has("substation_tile"):
-						var cap_upgrade = energy_prod * tile.substation_bonus * Helper.get_substation_capacity_bonus(game.tile_data[tile.substation_tile].unique_bldg.tier)
-						game.tile_data[tile.substation_tile].unique_bldg.capacity_bonus += cap_upgrade
+						var cap_upgrade = energy_prod * tile.substation_bonus * Helper.get_substation_capacity_bonus(game.tile_data[tile.substation_tile].ancient_bldg.tier)
+						game.tile_data[tile.substation_tile].ancient_bldg.capacity_bonus += cap_upgrade
 						game.capacity_bonus_from_substation += cap_upgrade
 				elif tile.bldg.name == Building.ATMOSPHERE_EXTRACTOR:
 					var base_prod = (new_base_value - tile.bldg.path_1_value) * overclock_mult * p_i.pressure * time_speed_bonus
@@ -434,7 +434,7 @@ func _on_Upgrade_pressed():
 				game.autocollect.rsrc.minerals += diff * planet.resource_production_bonus.get("minerals", 1.0)
 			elif planet.bldg.name == Building.POWER_PLANT:
 				game.autocollect.rsrc.energy += diff * planet.resource_production_bonus.get("energy", 1.0)
-				game.capacity_bonus_from_substation += diff * planet.get("unique_bldg_bonus_cap", 0.0)
+				game.capacity_bonus_from_substation += diff * planet.get("ancient_bldg_bonus_cap", 0.0)
 			elif planet.has("auto_GH"):
 				for p in planet.auto_GH.produce:
 					var upgrade_mult:float = new_base_value / planet.bldg["%s_value" % path_str]

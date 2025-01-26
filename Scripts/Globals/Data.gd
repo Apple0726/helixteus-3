@@ -580,36 +580,36 @@ var default_help = {
 				"hide_dimension_stuff":true,
 		}
 
-var unique_bldg_icons = {
-	UniqueBuilding.SPACEPORT:[energy_icon, energy_icon],
-	UniqueBuilding.MINERAL_REPLICATOR:[minerals_icon],
-	UniqueBuilding.SUBSTATION:[energy_icon, energy_icon, energy_icon],
-#	UniqueBuilding.AURORA_GENERATOR:[],
-	UniqueBuilding.NUCLEAR_FUSION_REACTOR:[energy_icon],
-	UniqueBuilding.MINING_OUTPOST:[],
-	UniqueBuilding.OBSERVATORY:[SP_icon],
-	UniqueBuilding.CELLULOSE_SYNTHESIZER:[cellulose_icon],
+var ancient_bldg_icons = {
+	AncientBuilding.SPACEPORT:[energy_icon, energy_icon],
+	AncientBuilding.MINERAL_REPLICATOR:[minerals_icon],
+	AncientBuilding.SUBSTATION:[energy_icon, energy_icon, energy_icon],
+#	AncientBuilding.AURORA_GENERATOR:[],
+	AncientBuilding.NUCLEAR_FUSION_REACTOR:[energy_icon],
+	AncientBuilding.MINING_OUTPOST:[],
+	AncientBuilding.OBSERVATORY:[SP_icon],
+	AncientBuilding.CELLULOSE_SYNTHESIZER:[cellulose_icon],
 }
 
-var unique_bldg_repair_cost_multipliers = {
-	UniqueBuilding.SPACEPORT:1.2,
-	UniqueBuilding.MINERAL_REPLICATOR:2.4,
-	UniqueBuilding.SUBSTATION:2.5,
-#	UniqueBuilding.AURORA_GENERATOR:3.0,
-	UniqueBuilding.NUCLEAR_FUSION_REACTOR:8.5,
-	UniqueBuilding.MINING_OUTPOST:1.0,
-	UniqueBuilding.OBSERVATORY:2.8,
-	UniqueBuilding.CELLULOSE_SYNTHESIZER:1.5,
+var ancient_bldg_repair_cost_multipliers = {
+	AncientBuilding.SPACEPORT:1.2,
+	AncientBuilding.MINERAL_REPLICATOR:2.4,
+	AncientBuilding.SUBSTATION:2.5,
+#	AncientBuilding.AURORA_GENERATOR:3.0,
+	AncientBuilding.NUCLEAR_FUSION_REACTOR:8.5,
+	AncientBuilding.MINING_OUTPOST:1.0,
+	AncientBuilding.OBSERVATORY:2.8,
+	AncientBuilding.CELLULOSE_SYNTHESIZER:1.5,
 }
 
-var unique_building_costs = {
-	UniqueBuilding.SPACEPORT:{"money":1e5, "energy":2e4, "SP":1e4},
-	UniqueBuilding.MINERAL_REPLICATOR:{"money":1.5e5, "energy":8e4, "SP":3e4},
-	UniqueBuilding.SUBSTATION:{"money":3e5, "energy":2.5e4, "SP":1e4},
-	UniqueBuilding.NUCLEAR_FUSION_REACTOR:{"money":1e6, "energy":3.5e5, "SP":9e4},
-	UniqueBuilding.MINING_OUTPOST:{"money":8e4, "energy":1.2e4, "SP":7e3},
-	UniqueBuilding.OBSERVATORY:{"money":1.2e5, "energy":1.5e4, "SP":1e4},
-	UniqueBuilding.CELLULOSE_SYNTHESIZER:{"money":2e5, "energy":6e4, "SP":2.5e4},
+var ancient_building_costs = {
+	AncientBuilding.SPACEPORT:{"money":1e5, "energy":2e4, "SP":1e4},
+	AncientBuilding.MINERAL_REPLICATOR:{"money":1.5e5, "energy":8e4, "SP":3e4},
+	AncientBuilding.SUBSTATION:{"money":3e5, "energy":2.5e4, "SP":1e4},
+	AncientBuilding.NUCLEAR_FUSION_REACTOR:{"money":1e6, "energy":3.5e5, "SP":9e4},
+	AncientBuilding.MINING_OUTPOST:{"money":8e4, "energy":1.2e4, "SP":7e3},
+	AncientBuilding.OBSERVATORY:{"money":1.2e5, "energy":1.5e4, "SP":1e4},
+	AncientBuilding.CELLULOSE_SYNTHESIZER:{"money":2e5, "energy":6e4, "SP":2.5e4},
 }
 
 var MS_num_stages:Dictionary = {"DS":4, "MME":3, "CBS":3, "PK":2, "SE":1, "MB":0}

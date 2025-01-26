@@ -29,7 +29,7 @@ var lake_params:Dictionary = {
 	"Xe":{"min_value":0, "max_value":3, "value":0, "is_integer":true, "OP_factor":5, "pw":3},
 }
 func _ready():
-	$ModifyDimension/Engineering/Control/unique_building_a_value.min_value = -INF
+	$ModifyDimension/Engineering/Control/ancient_building_a_value.min_value = -INF
 	var prop_text:String = ""
 	$ModifyDimension/Maths/Control/CostGrowthFactors/BUCGF.step = 0.0005
 	$ModifyDimension/Maths/Control/CostGrowthFactors/ULUGF.step = 0.0005
@@ -485,7 +485,7 @@ func calc_OP_points():
 	for upg in ["MVOUP", "BI", "aurora_spawn_probability", "aurora_width_multiplier", "perpendicular_auroras"]:
 		physics_defaults.get_node(upg).visible = not is_equal_approx($ModifyDimension/Physics/Control.get_node(upg).value, float(physics_defaults.get_node(upg).text.substr(1)))
 	
-	for upg in ["unique_building_a_value", "unique_building_b_value"]:
+	for upg in ["ancient_building_a_value", "ancient_building_b_value"]:
 		engineering_defaults.get_node(upg).visible = not is_equal_approx($ModifyDimension/Engineering/Control.get_node(upg).value, float(engineering_defaults.get_node(upg).text.substr(1)))
 	
 	for cost in $ModifyDimension/Physics/Control/VBox.get_children():
@@ -514,9 +514,9 @@ func calc_OP_points():
 	var BCM_node = $ModifyDimension/Engineering/Control/BCM
 	var PS_node = $ModifyDimension/Engineering/Control/PS
 	var RSM_node = $ModifyDimension/Engineering/Control/RSM
-	var max_tier_node = $ModifyDimension/Engineering/Control/max_unique_building_tier
-	var a_value_node = $ModifyDimension/Engineering/Control/unique_building_a_value
-	var b_value_node = $ModifyDimension/Engineering/Control/unique_building_b_value
+	var max_tier_node = $ModifyDimension/Engineering/Control/max_ancient_building_tier
+	var a_value_node = $ModifyDimension/Engineering/Control/ancient_building_a_value
+	var b_value_node = $ModifyDimension/Engineering/Control/ancient_building_b_value
 	calc_engi_points(BCM_node, 7.0 * (1.0 / BCM_node.value - 1.0))
 	calc_engi_points(PS_node, 0.15 * (PS_node.value - 1.0))
 	calc_engi_points(RSM_node, 0.4 * (RSM_node.value - 1.0))
@@ -748,9 +748,9 @@ func _on_black_rect_animation_finished(anim_name):
 	$BlackRect.visible = false
 
 
-func _on_unique_building_formula_mouse_entered():
-	game.show_tooltip(tr("UNIQUE_BLDG_FORMULA_DESC"))
+func _on_ancient_building_formula_mouse_entered() -> void:
+	game.show_tooltip(tr("ANCIENT_BLDG_FORMULA_DESC"))
 
 
-func _on_unique_building_formula_mouse_exited():
+func _on_ancient_building_formula_mouse_exited() -> void:
 	game.hide_tooltip()

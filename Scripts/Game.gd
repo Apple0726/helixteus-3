@@ -4,7 +4,7 @@ const TEST:bool = false
 const DATE:String = ""
 const VERSION:String = "v0.30"
 const COMPATIBLE_SAVES = []
-const UNIQUE_BLDGS = 7
+const ANCIENT_BLDGS = 7
 
 #region Scenes
 #var upgrade_panel_scene = preload("res://Scenes/Panels/UpgradePanel.tscn")
@@ -39,7 +39,7 @@ const UNIQUE_BLDGS = 7
 var planet_textures:Array
 var galaxy_textures:Array
 var bldg_textures:Array
-var unique_bldg_textures:Array
+var ancient_bldg_textures:Array
 
 #region GUI nodes
 #var construct_panel:Control
@@ -178,8 +178,8 @@ var show:Dictionary
 #Used to notify the player with an icon when new buildings are unlocked
 var new_bldgs:Dictionary = {}
 
-#Used to determine the costs of a unique building
-var unique_building_counters:Dictionary
+#Used to determine the costs of an ancient building
+var ancient_building_counters:Dictionary
 
 #Stores information of all objects discovered
 var universe_data:Array
@@ -220,7 +220,7 @@ var stats_global:Dictionary
 var autocollect:Dictionary
 var save_date:int
 var bookmarks:Dictionary
-var unique_bldgs_discovered:Dictionary
+var ancient_bldgs_discovered:Dictionary
 #endregion
 
 enum ClusterType {GROUP, CLUSTER}
@@ -388,11 +388,11 @@ var achievements:Dictionary = {
 		"reach_floor_24":tr("REACH_FLOOR_X_CAVE") % 24,
 		"reach_floor_32":tr("REACH_FLOOR_X_CAVE") % 32,
 		"planet_with_nothing":tr("PLANET_WITH_NOTHING"),
-		"tier_2_unique_bldg":tr("FIND_TIER_X_UNIQUE_BLDG") % 2,
-		"tier_3_unique_bldg":tr("FIND_TIER_X_UNIQUE_BLDG") % 3,
-		"tier_4_unique_bldg":tr("FIND_TIER_X_UNIQUE_BLDG") % 4,
-		"tier_5_unique_bldg":tr("FIND_TIER_X_UNIQUE_BLDG") % 5,
-		"find_all_unique_bldgs":tr("FIND_ALL_UNIQUE_BLDGS") % UNIQUE_BLDGS,
+		"tier_2_ancient_bldg":tr("FIND_TIER_X_ANCIENT_BLDG") % 2,
+		"tier_3_ancient_bldg":tr("FIND_TIER_X_ANCIENT_BLDG") % 3,
+		"tier_4_ancient_bldg":tr("FIND_TIER_X_ANCIENT_BLDG") % 4,
+		"tier_5_ancient_bldg":tr("FIND_TIER_X_ANCIENT_BLDG") % 5,
+		"find_all_ancient_bldgs":tr("FIND_ALL_ANCIENT_BLDGS") % ANCIENT_BLDGS,
 	},
 	"progression":{
 		"build_MS":tr("BUILD_A_MS"),
@@ -540,10 +540,10 @@ func _ready():
 		var dir_str = "res://Graphics/Buildings/%s.png" % bldg
 		if ResourceLoader.exists(dir_str):
 			bldg_textures.append(load(dir_str))
-	for bldg in UniqueBuilding.names:
-		var dir_str = "res://Graphics/Buildings/Unique/%s.png" % bldg
+	for bldg in AncientBuilding.names:
+		var dir_str = "res://Graphics/Buildings/Ancient/%s.png" % bldg
 		if ResourceLoader.exists(dir_str):
-			unique_bldg_textures.append(load(dir_str))
+			ancient_bldg_textures.append(load(dir_str))
 	for metal in met_info.keys():
 		metal_textures[metal] = load("res://Graphics/Metals/%s.png" % metal)
 	if not TranslationServer.get_locale() in ["de", "zh", "es", "ja", "nl", "hu"]:
@@ -825,9 +825,9 @@ func set_default_dim_bonuses():
 		"BCM":1.0,
 		"PS":1.0,
 		"RSM":1.0,
-		"max_unique_building_tier":0,
-		"unique_building_a_value":0.0,
-		"unique_building_b_value":1.5,
+		"max_ancient_building_tier":0,
+		"ancient_building_a_value":0.0,
+		"ancient_building_b_value":1.5,
 	}
 	subject_levels = {
 		"maths":0,
@@ -906,14 +906,14 @@ func new_game(univ:int = 0, new_save:bool = false, DR_advantage = false):
 	}
 	boring_machine_data = {}
 	new_bldgs = {}
-	unique_building_counters = {
-		UniqueBuilding.SPACEPORT:{},
-		UniqueBuilding.MINERAL_REPLICATOR:{},
-		UniqueBuilding.OBSERVATORY:{},
-		UniqueBuilding.MINING_OUTPOST:{},
-		UniqueBuilding.SUBSTATION:{},
-		UniqueBuilding.CELLULOSE_SYNTHESIZER:{},
-		UniqueBuilding.NUCLEAR_FUSION_REACTOR:{},
+	ancient_building_counters = {
+		AncientBuilding.SPACEPORT:{},
+		AncientBuilding.MINERAL_REPLICATOR:{},
+		AncientBuilding.OBSERVATORY:{},
+		AncientBuilding.MINING_OUTPOST:{},
+		AncientBuilding.SUBSTATION:{},
+		AncientBuilding.CELLULOSE_SYNTHESIZER:{},
+		AncientBuilding.NUCLEAR_FUSION_REACTOR:{},
 	}
 
 	#id of the universe/supercluster/etc. you're viewing the object in
@@ -1095,14 +1095,14 @@ func new_game(univ:int = 0, new_save:bool = false, DR_advantage = false):
 				"c_g":0,
 				"c_g_g":0,
 				"c_c":0}}, "system":{}, "galaxy":{}, "cluster":{}}
-	unique_bldgs_discovered = {
-		UniqueBuilding.SPACEPORT:{},
-		UniqueBuilding.MINERAL_REPLICATOR:{},
-		UniqueBuilding.OBSERVATORY:{},
-		UniqueBuilding.MINING_OUTPOST:{},
-		UniqueBuilding.SUBSTATION:{},
-		UniqueBuilding.CELLULOSE_SYNTHESIZER:{},
-		UniqueBuilding.NUCLEAR_FUSION_REACTOR:{},
+	ancient_bldgs_discovered = {
+		AncientBuilding.SPACEPORT:{},
+		AncientBuilding.MINERAL_REPLICATOR:{},
+		AncientBuilding.OBSERVATORY:{},
+		AncientBuilding.MINING_OUTPOST:{},
+		AncientBuilding.SUBSTATION:{},
+		AncientBuilding.CELLULOSE_SYNTHESIZER:{},
+		AncientBuilding.NUCLEAR_FUSION_REACTOR:{},
 	}
 	Helper.save_obj("Systems", 0, planet_data)
 	generate_tiles(2)
@@ -3263,77 +3263,77 @@ func generate_tiles(id:int):
 							earn_achievement("exploration", "mythril_crater")
 				continue
 			empty_tiles.append(t_id)
-	var unique_bldgs_list:Dictionary = {	UniqueBuilding.SPACEPORT:				log(p_i.pressure + 1), 
-											UniqueBuilding.MINERAL_REPLICATOR:		1.0 + total_VEI / 6.0,
-											UniqueBuilding.OBSERVATORY:				max(-log(p_i.pressure / 2.0 + 0.001), 0),
-											UniqueBuilding.MINING_OUTPOST:			1.0 + 15.0 * crater_num / N,
-											#UniqueBuilding.AURORA_GENERATOR:		5.0 if diff == 0 else 1.0,
-											UniqueBuilding.SUBSTATION:				max(-log(p_i.pressure / 10.0 + 0.1), 0),
-											UniqueBuilding.CELLULOSE_SYNTHESIZER:	log(p_i.pressure * (1.0 + p_i.atmosphere.CH4 + p_i.atmosphere.CO2 + p_i.atmosphere.H + p_i.atmosphere.O + p_i.atmosphere.H2O) + 1)
+	var ancient_bldgs_list:Dictionary = {	AncientBuilding.SPACEPORT:				log(p_i.pressure + 1), 
+											AncientBuilding.MINERAL_REPLICATOR:		1.0 + total_VEI / 6.0,
+											AncientBuilding.OBSERVATORY:				max(-log(p_i.pressure / 2.0 + 0.001), 0),
+											AncientBuilding.MINING_OUTPOST:			1.0 + 15.0 * crater_num / N,
+											#AncientBuilding.AURORA_GENERATOR:		5.0 if diff == 0 else 1.0,
+											AncientBuilding.SUBSTATION:				max(-log(p_i.pressure / 10.0 + 0.1), 0),
+											AncientBuilding.CELLULOSE_SYNTHESIZER:	log(p_i.pressure * (1.0 + p_i.atmosphere.CH4 + p_i.atmosphere.CO2 + p_i.atmosphere.H + p_i.atmosphere.O + p_i.atmosphere.H2O) + 1)
 	}
-	var unique_bldgs_list_without_NFR = unique_bldgs_list.duplicate()
+	var ancient_bldgs_list_without_NFR = ancient_bldgs_list.duplicate()
 	if c_s_g != 0:
-		unique_bldgs_list[UniqueBuilding.NUCLEAR_FUSION_REACTOR] = log(p_i.pressure * (1.0 + p_i.atmosphere.CH4 + p_i.atmosphere.H + p_i.atmosphere.H2O) + 1)
+		ancient_bldgs_list[AncientBuilding.NUCLEAR_FUSION_REACTOR] = log(p_i.pressure * (1.0 + p_i.atmosphere.CH4 + p_i.atmosphere.H + p_i.atmosphere.H2O) + 1)
 	var S = 0.0
 	var S2 = 0.0
-	for unique_bldg in unique_bldgs_list.keys():
-		S += unique_bldgs_list[unique_bldg]
-	for unique_bldg in unique_bldgs_list.keys():
-		unique_bldgs_list[unique_bldg] /= S
-	for unique_bldg in unique_bldgs_list_without_NFR.keys():
-		S2 += unique_bldgs_list_without_NFR[unique_bldg]
-	for unique_bldg in unique_bldgs_list_without_NFR.keys():
-		unique_bldgs_list_without_NFR[unique_bldg] /= S2
+	for ancient_bldg in ancient_bldgs_list.keys():
+		S += ancient_bldgs_list[ancient_bldg]
+	for ancient_bldg in ancient_bldgs_list.keys():
+		ancient_bldgs_list[ancient_bldg] /= S
+	for ancient_bldg in ancient_bldgs_list_without_NFR.keys():
+		S2 += ancient_bldgs_list_without_NFR[ancient_bldg]
+	for ancient_bldg in ancient_bldgs_list_without_NFR.keys():
+		ancient_bldgs_list_without_NFR[ancient_bldg] /= S2
 	var nuclear_fusion_reactor_tiles = []
-	var base_unique_bldg_probability = 0.0
+	var base_ancient_bldg_probability = 0.0
 	if randf() < 500.0 / coldest_star_temp:
-		base_unique_bldg_probability = 1 if p_i.temperature < 273 else -pow((p_i.temperature / 273.0 - 1), 2) + 1
-	planet_data[id].unique_bldgs = {}
+		base_ancient_bldg_probability = 1 if p_i.temperature < 273 else -pow((p_i.temperature / 273.0 - 1), 2) + 1
+	planet_data[id].ancient_bldgs = {}
 	if not home_planet:
 		var spaceport_spawned = false
 		for t_id in empty_tiles:
 			if t_id in nuclear_fusion_reactor_tiles:
 				continue
-			if randf() < 0.1 / pow(wid, 0.5) * base_unique_bldg_probability:
+			if randf() < 0.1 / pow(wid, 0.5) * base_ancient_bldg_probability:
 				var i = t_id % wid
 				var j = t_id / wid
-				var unique_bldg
+				var ancient_bldg
 				var rand2 = randf()
 				var k = 0
 				var S3 = 0
 				if i == wid-1 or j == wid-1:
-					for _unique_bldg in unique_bldgs_list_without_NFR.keys():
-						if rand2 < unique_bldgs_list_without_NFR[_unique_bldg] + S3:
-							unique_bldg = _unique_bldg
+					for _ancient_bldg in ancient_bldgs_list_without_NFR.keys():
+						if rand2 < ancient_bldgs_list_without_NFR[_ancient_bldg] + S3:
+							ancient_bldg = _ancient_bldg
 							break
 						else:
 							k += 1
-							S3 += unique_bldgs_list_without_NFR[_unique_bldg]
+							S3 += ancient_bldgs_list_without_NFR[_ancient_bldg]
 				else:
-					for _unique_bldg in unique_bldgs_list.keys():
-						if rand2 < unique_bldgs_list[_unique_bldg] + S3:
-							unique_bldg = _unique_bldg
+					for _ancient_bldg in ancient_bldgs_list.keys():
+						if rand2 < ancient_bldgs_list[_ancient_bldg] + S3:
+							ancient_bldg = _ancient_bldg
 							break
 						else:
 							k += 1
-							S3 += unique_bldgs_list[_unique_bldg]
-					if unique_bldg == UniqueBuilding.NUCLEAR_FUSION_REACTOR:
+							S3 += ancient_bldgs_list[_ancient_bldg]
+					if ancient_bldg == AncientBuilding.NUCLEAR_FUSION_REACTOR:
 						nuclear_fusion_reactor_tiles.append_array([t_id+1, t_id+wid, t_id+wid+1])
 						erase_tile(t_id)
 						erase_tile(t_id+1)
 						erase_tile(t_id+wid)
 						erase_tile(t_id+wid+1)
-				if unique_bldg == UniqueBuilding.SPACEPORT:
+				if ancient_bldg == AncientBuilding.SPACEPORT:
 					if spaceport_spawned:
 						continue
 					spaceport_spawned = true
 				var obj = {"tile":t_id, "tier":max(1, int(-log(randf() / u_i.age / (1.0 + u_i.cluster_data[c_c].pos.length() * u_i.dark_energy / 1000.0)) / 3.0 + 1))}
 				if randf() < 1.0 - 0.5 * exp(-pow(p_i.temperature - 273, 2) / 20000.0) / pow(obj.tier, 2):
-					obj.repair_cost = 250000 * pow(obj.tier, 20) * randf_range(1, 3) * Data.unique_bldg_repair_cost_multipliers[unique_bldg]
-				if p_i.unique_bldgs.has(unique_bldg):
-					p_i.unique_bldgs[unique_bldg].append(obj)
+					obj.repair_cost = 250000 * pow(obj.tier, 20) * randf_range(1, 3) * Data.ancient_bldg_repair_cost_multipliers[ancient_bldg]
+				if p_i.ancient_bldgs.has(ancient_bldg):
+					p_i.ancient_bldgs[ancient_bldg].append(obj)
 				else:
-					p_i.unique_bldgs[unique_bldg] = [obj]
+					p_i.ancient_bldgs[ancient_bldg] = [obj]
 	if p_i.id == 6:#Guaranteed wormhole spawn on furthest planet in solar system
 		var random_tile:int = randi() % len(tile_data)
 		erase_tile(random_tile)
@@ -3355,8 +3355,8 @@ func generate_tiles(id:int):
 		tile_data[42].cave = {"num_floors":5, "floor_size":25, "period":65, "debris":0.3}
 		tile_data[215].cave = {"num_floors":8, "floor_size":30, "period":50, "debris":0.4}
 		tile_data[112].ship = true
-		p_i.unique_bldgs = {UniqueBuilding.SPACEPORT:[{"tile":113, "tier":1, "repair_cost":10000 * Data.unique_bldg_repair_cost_multipliers[UniqueBuilding.SPACEPORT]}],
-							UniqueBuilding.MINERAL_REPLICATOR:[{"tile":55, "tier":1, "repair_cost":10000 * Data.unique_bldg_repair_cost_multipliers[UniqueBuilding.MINERAL_REPLICATOR]}]}
+		p_i.ancient_bldgs = {AncientBuilding.SPACEPORT:[{"tile":113, "tier":1, "repair_cost":10000 * Data.ancient_bldg_repair_cost_multipliers[AncientBuilding.SPACEPORT]}],
+							AncientBuilding.MINERAL_REPLICATOR:[{"tile":55, "tier":1, "repair_cost":10000 * Data.ancient_bldg_repair_cost_multipliers[AncientBuilding.MINERAL_REPLICATOR]}]}
 	elif c_p_g == 2:
 		var random_tile:int = randi() % N
 		erase_tile(random_tile)
@@ -3371,43 +3371,43 @@ func generate_tiles(id:int):
 		tile_data[random_tile].ship = true
 		var mineral_replicator = {"tile":random_tile3, "tier":max(1, int(-log(randf() / u_i.age) / 3.0 + 1))}
 		var spaceport:Dictionary
-		mineral_replicator.repair_cost = 10000 * pow(mineral_replicator.tier, 20) * randf_range(1, 5) * Data.unique_bldg_repair_cost_multipliers[UniqueBuilding.MINERAL_REPLICATOR]
+		mineral_replicator.repair_cost = 10000 * pow(mineral_replicator.tier, 20) * randf_range(1, 5) * Data.ancient_bldg_repair_cost_multipliers[AncientBuilding.MINERAL_REPLICATOR]
 		if random_tile == N-1:
 			spaceport = {"tile":random_tile - 1, "tier":max(1, int(-log(randf() / u_i.age) / 3.0 + 1))}
 			erase_tile(random_tile - 1)
 		else:
 			spaceport = {"tile":random_tile + 1, "tier":max(1, int(-log(randf() / u_i.age) / 3.0 + 1))}
 			erase_tile(random_tile + 1)
-		spaceport.repair_cost = 10000 * pow(spaceport.tier, 20) * randf_range(1, 5) * Data.unique_bldg_repair_cost_multipliers[UniqueBuilding.SPACEPORT]
-		p_i.unique_bldgs = {UniqueBuilding.SPACEPORT:[spaceport], UniqueBuilding.MINERAL_REPLICATOR:[mineral_replicator]}
+		spaceport.repair_cost = 10000 * pow(spaceport.tier, 20) * randf_range(1, 5) * Data.ancient_bldg_repair_cost_multipliers[AncientBuilding.SPACEPORT]
+		p_i.ancient_bldgs = {AncientBuilding.SPACEPORT:[spaceport], AncientBuilding.MINERAL_REPLICATOR:[mineral_replicator]}
 		tile_data[random_tile2].cave = {"num_floors":8, "floor_size":30, "period":50, "debris":0.4}
-	for bldg in p_i.unique_bldgs.keys():
-		for i in len(p_i.unique_bldgs[bldg]):
-			var tier:int = p_i.unique_bldgs[bldg][i].tier
-			var t_id = p_i.unique_bldgs[bldg][i].tile
-			for j in ([t_id, t_id+1, t_id+wid, t_id+1+wid] if bldg == UniqueBuilding.NUCLEAR_FUSION_REACTOR else [t_id]):
-				tile_data[j].unique_bldg = {"name":bldg, "tier":tier, "id":i}
-				if p_i.unique_bldgs[bldg][i].has("repair_cost"):
-					tile_data[j].unique_bldg.repair_cost = p_i.unique_bldgs[bldg][i].repair_cost
-			if not p_i.unique_bldgs[bldg][i].has("repair_cost"):
-				Helper.set_unique_bldg_bonuses(p_i, tile_data[t_id].unique_bldg, t_id, wid)
-			if not achievement_data.exploration.has("tier_2_unique_bldg") and tier >= 2:
-				earn_achievement("exploration", "tier_2_unique_bldg")
-			if not achievement_data.exploration.has("tier_3_unique_bldg") and tier >= 3:
-				earn_achievement("exploration", "tier_3_unique_bldg")
-			if not achievement_data.exploration.has("tier_4_unique_bldg") and tier >= 4:
-				earn_achievement("exploration", "tier_4_unique_bldg")
-			if not achievement_data.exploration.has("tier_5_unique_bldg") and tier >= 5:
-				earn_achievement("exploration", "tier_5_unique_bldg")
-			unique_bldgs_discovered[bldg][tier] = unique_bldgs_discovered[bldg].get(tier, 0) + 1
-			if not achievement_data.exploration.has("find_all_unique_bldgs"):
+	for bldg in p_i.ancient_bldgs.keys():
+		for i in len(p_i.ancient_bldgs[bldg]):
+			var tier:int = p_i.ancient_bldgs[bldg][i].tier
+			var t_id = p_i.ancient_bldgs[bldg][i].tile
+			for j in ([t_id, t_id+1, t_id+wid, t_id+1+wid] if bldg == AncientBuilding.NUCLEAR_FUSION_REACTOR else [t_id]):
+				tile_data[j].ancient_bldg = {"name":bldg, "tier":tier, "id":i}
+				if p_i.ancient_bldgs[bldg][i].has("repair_cost"):
+					tile_data[j].ancient_bldg.repair_cost = p_i.ancient_bldgs[bldg][i].repair_cost
+			if not p_i.ancient_bldgs[bldg][i].has("repair_cost"):
+				Helper.set_ancient_bldg_bonuses(p_i, tile_data[t_id].ancient_bldg, t_id, wid)
+			if not achievement_data.exploration.has("tier_2_ancient_bldg") and tier >= 2:
+				earn_achievement("exploration", "tier_2_ancient_bldg")
+			if not achievement_data.exploration.has("tier_3_ancient_bldg") and tier >= 3:
+				earn_achievement("exploration", "tier_3_ancient_bldg")
+			if not achievement_data.exploration.has("tier_4_ancient_bldg") and tier >= 4:
+				earn_achievement("exploration", "tier_4_ancient_bldg")
+			if not achievement_data.exploration.has("tier_5_ancient_bldg") and tier >= 5:
+				earn_achievement("exploration", "tier_5_ancient_bldg")
+			ancient_bldgs_discovered[bldg][tier] = ancient_bldgs_discovered[bldg].get(tier, 0) + 1
+			if not achievement_data.exploration.has("find_all_ancient_bldgs"):
 				var all_discovered = true
-				for UB in unique_bldgs_discovered.keys():
-					if unique_bldgs_discovered[UB].is_empty():
+				for UB in ancient_bldgs_discovered.keys():
+					if ancient_bldgs_discovered[UB].is_empty():
 						all_discovered = false
 						break
 				if all_discovered:
-					earn_achievement("exploration", "find_all_unique_bldgs")
+					earn_achievement("exploration", "find_all_ancient_bldgs")
 	
 	#Give lake data to adjacent tiles
 	var lake_1_au_int:float = 0.0
@@ -4196,8 +4196,8 @@ func fn_save_game():
 		"autocollect":autocollect,
 		"save_date":save_date,
 		"bookmarks":bookmarks,
-		"unique_bldgs_discovered":unique_bldgs_discovered,
-		"unique_building_counters":unique_building_counters,
+		"ancient_bldgs_discovered":ancient_bldgs_discovered,
+		"ancient_building_counters":ancient_building_counters,
 		"cave_filters":cave_filters,
 		"caves_generated":caves_generated,
 		"boring_machine_data":boring_machine_data,

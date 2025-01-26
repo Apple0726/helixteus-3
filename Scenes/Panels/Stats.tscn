@@ -43,9 +43,9 @@
 [ext_resource type="Texture2D" uid="uid://brrod2d1fgtut" path="res://Graphics/Atoms/Ne.png" id="42"]
 [ext_resource type="Texture2D" uid="uid://gbbvl1ua0wyb" path="res://Graphics/Atoms/Xe.png" id="43"]
 [ext_resource type="Texture2D" uid="uid://cw7v66ruuqgwb" path="res://Graphics/Tiles/3.jpg" id="44"]
-[ext_resource type="Texture2D" uid="uid://da22ie3xwunob" path="res://Graphics/Buildings/Unique/mineral_replicator.png" id="46"]
+[ext_resource type="Texture2D" uid="uid://da22ie3xwunob" path="res://Graphics/Buildings/Ancient/mineral_replicator.png" id="46"]
 [ext_resource type="Texture2D" uid="uid://co7hd2o2d4khw" path="res://Graphics/Buildings/greenhouse.png" id="46_0ykb7"]
-[ext_resource type="Texture2D" uid="uid://bpavp7wy8on3h" path="res://Graphics/Achievements/UniqueBuildings.png" id="47"]
+[ext_resource type="Texture2D" uid="uid://bpavp7wy8on3h" path="res://Graphics/Achievements/AncientBuildings.png" id="47"]
 
 [node name="StatsPanel" type="Panel"]
 anchors_preset = 8
@@ -451,27 +451,27 @@ achievement_icon = ExtResource("43")
 layout_mode = 2
 achievement_icon = ExtResource("44")
 
-[node name="tier_2_unique_bldg" parent="Achievements/ScrollContainer/HBox/Slots/exploration" instance=ExtResource("4")]
+[node name="tier_2_ancient_bldg" parent="Achievements/ScrollContainer/HBox/Slots/exploration" instance=ExtResource("4")]
 layout_mode = 2
 achievement_icon = ExtResource("46")
 number = 2.0
 
-[node name="tier_3_unique_bldg" parent="Achievements/ScrollContainer/HBox/Slots/exploration" instance=ExtResource("4")]
+[node name="tier_3_ancient_bldg" parent="Achievements/ScrollContainer/HBox/Slots/exploration" instance=ExtResource("4")]
 layout_mode = 2
 achievement_icon = ExtResource("46")
 number = 3.0
 
-[node name="tier_4_unique_bldg" parent="Achievements/ScrollContainer/HBox/Slots/exploration" instance=ExtResource("4")]
+[node name="tier_4_ancient_bldg" parent="Achievements/ScrollContainer/HBox/Slots/exploration" instance=ExtResource("4")]
 layout_mode = 2
 achievement_icon = ExtResource("46")
 number = 4.0
 
-[node name="tier_5_unique_bldg" parent="Achievements/ScrollContainer/HBox/Slots/exploration" instance=ExtResource("4")]
+[node name="tier_5_ancient_bldg" parent="Achievements/ScrollContainer/HBox/Slots/exploration" instance=ExtResource("4")]
 layout_mode = 2
 achievement_icon = ExtResource("46")
 number = 5.0
 
-[node name="find_all_unique_bldgs" parent="Achievements/ScrollContainer/HBox/Slots/exploration" instance=ExtResource("4")]
+[node name="find_all_ancient_bldgs" parent="Achievements/ScrollContainer/HBox/Slots/exploration" instance=ExtResource("4")]
 layout_mode = 2
 achievement_icon = ExtResource("47")
 

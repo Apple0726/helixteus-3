@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://cuq1r0xg7pa8u"
-path="res://.godot/imported/substation.png-502e4e9d28d6a05507096e64772f2efe.ctex"
+uid="uid://x2amcpuqhiu7"
+path="res://.godot/imported/aurora_generator.png-5d474ac92f874f872051c99a6f9a7ce0.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Graphics/Buildings/Unique/substation.png"
-dest_files=["res://.godot/imported/substation.png-502e4e9d28d6a05507096e64772f2efe.ctex"]
+source_file="res://Graphics/Buildings/Ancient/aurora_generator.png"
+dest_files=["res://.godot/imported/aurora_generator.png-5d474ac92f874f872051c99a6f9a7ce0.ctex"]
 
 [params]
 

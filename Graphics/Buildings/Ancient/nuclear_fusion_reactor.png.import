@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://s2hslvfrpskc"
-path="res://.godot/imported/mining_outpost.png-b89e3fa7ddf0991099328a2c2ff6a843.ctex"
+uid="uid://ttgxcsuuctak"
+path="res://.godot/imported/nuclear_fusion_reactor.png-392dabaa0fa44c624d94177b2f79ca1a.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Graphics/Buildings/Unique/mining_outpost.png"
-dest_files=["res://.godot/imported/mining_outpost.png-b89e3fa7ddf0991099328a2c2ff6a843.ctex"]
+source_file="res://Graphics/Buildings/Ancient/nuclear_fusion_reactor.png"
+dest_files=["res://.godot/imported/nuclear_fusion_reactor.png-392dabaa0fa44c624d94177b2f79ca1a.ctex"]
 
 [params]
 

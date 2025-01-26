@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://da22ie3xwunob"
-path="res://.godot/imported/mineral_replicator.png-a106b1532387b77935613abb54d08ec6.ctex"
+uid="uid://bpavp7wy8on3h"
+path="res://.godot/imported/AncientBuildings.png-73ec8e5372c5481f8a9fa22b09841bbd.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Graphics/Buildings/Unique/mineral_replicator.png"
-dest_files=["res://.godot/imported/mineral_replicator.png-a106b1532387b77935613abb54d08ec6.ctex"]
+source_file="res://Graphics/Achievements/AncientBuildings.png"
+dest_files=["res://.godot/imported/AncientBuildings.png-73ec8e5372c5481f8a9fa22b09841bbd.ctex"]
 
 [params]
 

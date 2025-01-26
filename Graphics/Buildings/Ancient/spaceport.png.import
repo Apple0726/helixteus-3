@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dlhewnhi4crpn"
-path="res://.godot/imported/UniqueBuildingCost.png-86a3253e6a291d45cf4d91608bf4ab04.ctex"
+uid="uid://ds2e12j1fyms"
+path="res://.godot/imported/spaceport.png-6b4e63371b2de916e7ca96e9c2841a7f.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Graphics/Formulas/UniqueBuildingCost.png"
-dest_files=["res://.godot/imported/UniqueBuildingCost.png-86a3253e6a291d45cf4d91608bf4ab04.ctex"]
+source_file="res://Graphics/Buildings/Ancient/spaceport.png"
+dest_files=["res://.godot/imported/spaceport.png-6b4e63371b2de916e7ca96e9c2841a7f.ctex"]
 
 [params]
 

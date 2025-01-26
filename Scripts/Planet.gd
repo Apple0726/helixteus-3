@@ -92,9 +92,9 @@ func _ready():
 	$Soil.tile_set = ResourceFiles.soil_tile_set
 	$Obstacles.modulate = star_mod
 	var nuclear_fusion_reactor_main_tiles = []
-	if p_i.unique_bldgs.has(UniqueBuilding.NUCLEAR_FUSION_REACTOR):
-		for i in len(p_i.unique_bldgs[UniqueBuilding.NUCLEAR_FUSION_REACTOR]):
-			nuclear_fusion_reactor_main_tiles.append(p_i.unique_bldgs[UniqueBuilding.NUCLEAR_FUSION_REACTOR][i].tile)
+	if p_i.ancient_bldgs.has(AncientBuilding.NUCLEAR_FUSION_REACTOR):
+		for i in len(p_i.ancient_bldgs[AncientBuilding.NUCLEAR_FUSION_REACTOR]):
+			nuclear_fusion_reactor_main_tiles.append(p_i.ancient_bldgs[AncientBuilding.NUCLEAR_FUSION_REACTOR][i].tile)
 	var lake_tiles:Array = [[], []]
 	var ash_tiles:Array = []
 	var soil_tiles:Array = []
@@ -126,9 +126,9 @@ func _ready():
 				$Obstacles.set_cell(Vector2i(i, j), 2, Vector2(0, 0))
 			if tile.has("aurora"):
 				aurora_tiles.append(id2)
-			if tile.has("unique_bldg"):
-				if tile.unique_bldg.name != UniqueBuilding.NUCLEAR_FUSION_REACTOR or id2 in nuclear_fusion_reactor_main_tiles:
-					add_unique_building_sprite(tile, id2, Vector2(i, j) * 200)
+			if tile.has("ancient_bldg"):
+				if tile.ancient_bldg.name != AncientBuilding.NUCLEAR_FUSION_REACTOR or id2 in nuclear_fusion_reactor_main_tiles:
+					add_ancient_building_sprite(tile, id2, Vector2(i, j) * 200)
 			elif tile.has("cave"):
 				if tile.cave.has("id"):
 					var cave_file_path:String = "user://%s/Univ%s/Caves/%s.hx3" % [game.c_sv, game.c_u, tile.cave.id]
@@ -220,31 +220,31 @@ func _ready():
 			if await_counter % int(1000.0 / Engine.get_frames_per_second()) == 0:
 				await get_tree().process_frame
 
-func add_unique_building_sprite(tile:Dictionary, tile_id:int, v:Vector2, building_animation:bool = false):
+func add_ancient_building_sprite(tile:Dictionary, tile_id:int, v:Vector2, building_animation:bool = false):
 	var mod:Color = Color.WHITE
-	if tile.unique_bldg.has("repair_cost"):
+	if tile.ancient_bldg.has("repair_cost"):
 		mod = Color(0.3, 0.3, 0.3)
-	var unique_building_name = tile.unique_bldg.name
-	if tile.unique_bldg.name == UniqueBuilding.NUCLEAR_FUSION_REACTOR:
-		bldgs[tile_id] = add_bldg_sprite(v, unique_building_name, game.unique_bldg_textures[unique_building_name], building_animation, mod, 0.8, Vector2(200, 200))
+	var ancient_building_name = tile.ancient_bldg.name
+	if tile.ancient_bldg.name == AncientBuilding.NUCLEAR_FUSION_REACTOR:
+		bldgs[tile_id] = add_bldg_sprite(v, ancient_building_name, game.ancient_bldg_textures[ancient_building_name], building_animation, mod, 0.8, Vector2(200, 200))
 		add_rsrc(v + Vector2(200, 200), Color(0, 0.8, 0, 1), Data.energy_icon, tile_id)
 	else:
-		bldgs[tile_id] = add_bldg_sprite(v, unique_building_name, game.unique_bldg_textures[unique_building_name], building_animation, mod)
-		if unique_building_name == UniqueBuilding.CELLULOSE_SYNTHESIZER:
+		bldgs[tile_id] = add_bldg_sprite(v, ancient_building_name, game.ancient_bldg_textures[ancient_building_name], building_animation, mod)
+		if ancient_building_name == AncientBuilding.CELLULOSE_SYNTHESIZER:
 			add_rsrc(v + Vector2(100, 100), Color.BROWN, Data.cellulose_icon, tile_id)
-		elif unique_building_name == UniqueBuilding.SUBSTATION:
+		elif ancient_building_name == AncientBuilding.SUBSTATION:
 			add_rsrc(v + Vector2(100, 100), Color(0, 0.8, 0, 1), Data.energy_icon, tile_id)
-	if tile.unique_bldg.tier > 1 and bldgs[tile_id]:
+	if tile.ancient_bldg.tier > 1 and bldgs[tile_id]:
 		var particle_props = [	{"c":Color(1.2, 2.4, 1.2), "amount":50, "lifetime":2.4},
 								{"c":Color(1.2, 1.2, 2.4), "amount":60, "lifetime":2.8},
 								{"c":Color(2.4, 1.2, 2.4), "amount":70, "lifetime":3.2},
 								{"c":Color(2.4, 1.8, 1.2), "amount":80, "lifetime":3.6},
 								{"c":Color(2.4, 2.4, 1.8), "amount":90, "lifetime":4.0},
 								{"c":Color(2.4, 1.2, 1.2), "amount":100, "lifetime":4.4}]
-		var particles = preload("res://Scenes/UniqueBuildingParticles.tscn").instantiate()
-		particles.modulate = particle_props[tile.unique_bldg.tier - 2].c
-		particles.amount = particle_props[tile.unique_bldg.tier - 2].amount
-		particles.lifetime = particle_props[tile.unique_bldg.tier - 2].lifetime
+		var particles = preload("res://Scenes/AncientBuildingParticles.tscn").instantiate()
+		particles.modulate = particle_props[tile.ancient_bldg.tier - 2].c
+		particles.amount = particle_props[tile.ancient_bldg.tier - 2].amount
+		particles.lifetime = particle_props[tile.ancient_bldg.tier - 2].lifetime
 		particles.speed_scale = game.u_i.time_speed * tile.get("time_speed_bonus", 1.0)
 		bldgs[tile_id].add_child(particles)
 
@@ -277,44 +277,44 @@ func show_tooltip(tile, tile_id:int):
 			tooltip += "\n%s: %s m" % [tr("HOLE_DEPTH"), Helper.format_num(tile.depth)]
 		elif tile.bldg.name in [Building.GLASS_FACTORY, Building.STEAM_ENGINE, Building.STONE_CRUSHER]:
 			tooltip += "\n[color=#88CCFF]%s\nG: %s[/color]" % [tr("CLICK_TO_CONFIGURE"), tr("LOAD_UNLOAD")]
-	elif tile.has("unique_bldg"):
-		tooltip += "[color=#%s]" % Data.tier_colors[tile.unique_bldg.tier - 1].to_html(false)
-		var unique_building_name = UniqueBuilding.names[tile.unique_bldg.name]
-		if tile.unique_bldg.has("repair_cost"):
-			tooltip += tr("BROKEN_X").format({"building_name":tr(unique_building_name.to_upper())})
+	elif tile.has("ancient_bldg"):
+		tooltip += "[color=#%s]" % Data.tier_colors[tile.ancient_bldg.tier - 1].to_html(false)
+		var ancient_building_name = AncientBuilding.names[tile.ancient_bldg.name]
+		if tile.ancient_bldg.has("repair_cost"):
+			tooltip += tr("BROKEN_X").format({"building_name":tr(ancient_building_name.to_upper())})
 		else:
-			tooltip += tr(unique_building_name.to_upper())
-		if tile.unique_bldg.tier > 1:
-			tooltip += " " + Helper.get_roman_num(tile.unique_bldg.tier)
+			tooltip += tr(ancient_building_name.to_upper())
+		if tile.ancient_bldg.tier > 1:
+			tooltip += " " + Helper.get_roman_num(tile.ancient_bldg.tier)
 		tooltip += "[/color]"
 		tooltip += "\n"
-		if game.help.has("%s_desc" % unique_building_name):
+		if game.help.has("%s_desc" % ancient_building_name):
 			tooltip += "[color=#BBFFFF]"
-			tooltip += tr("%s_DESC1" % unique_building_name.to_upper())
+			tooltip += tr("%s_DESC1" % ancient_building_name.to_upper())
 			if game.help_str == "":
-				game.help_str = "%s_desc" % unique_building_name
+				game.help_str = "%s_desc" % ancient_building_name
 			tooltip += "\n[/color][color=#77BBBB]" + tr("HIDE_HELP") + "\n[/color]"
-		var desc = tr("%s_DESC2" % unique_building_name.to_upper())
-		match tile.unique_bldg.name:
-			UniqueBuilding.SPACEPORT:
-				desc = desc % [	Helper.get_spaceport_exit_cost_reduction(tile.unique_bldg.tier) * 100,
-								Helper.get_spaceport_travel_cost_reduction(tile.unique_bldg.tier) * 100]
-			UniqueBuilding.MINERAL_REPLICATOR, UniqueBuilding.MINING_OUTPOST, UniqueBuilding.OBSERVATORY:
-				desc = desc.format({"n":Helper.get_unique_bldg_area(tile.unique_bldg.tier)}) % Helper.get_MR_Obs_Outpost_prod_mult(tile.unique_bldg.tier)
-			UniqueBuilding.SUBSTATION:
-				desc = desc.format({"n":Helper.get_unique_bldg_area(tile.unique_bldg.tier), "time":Helper.time_to_str(Helper.get_substation_capacity_bonus(tile.unique_bldg.tier))}) % Helper.get_substation_prod_mult(tile.unique_bldg.tier)
+		var desc = tr("%s_DESC2" % ancient_building_name.to_upper())
+		match tile.ancient_bldg.name:
+			AncientBuilding.SPACEPORT:
+				desc = desc % [	Helper.get_spaceport_exit_cost_reduction(tile.ancient_bldg.tier) * 100,
+								Helper.get_spaceport_travel_cost_reduction(tile.ancient_bldg.tier) * 100]
+			AncientBuilding.MINERAL_REPLICATOR, AncientBuilding.MINING_OUTPOST, AncientBuilding.OBSERVATORY:
+				desc = desc.format({"n":Helper.get_ancient_bldg_area(tile.ancient_bldg.tier)}) % Helper.get_MR_Obs_Outpost_prod_mult(tile.ancient_bldg.tier)
+			AncientBuilding.SUBSTATION:
+				desc = desc.format({"n":Helper.get_ancient_bldg_area(tile.ancient_bldg.tier), "time":Helper.time_to_str(Helper.get_substation_capacity_bonus(tile.ancient_bldg.tier))}) % Helper.get_substation_prod_mult(tile.ancient_bldg.tier)
 #			"AURORA_GENERATOR":
-#				desc = desc.format({"intensity":Helper.get_AG_au_int_mult(tile.unique_bldg.tier), "n":Helper.get_AG_num_auroras(tile.unique_bldg.tier)})
-			UniqueBuilding.NUCLEAR_FUSION_REACTOR:
-				desc = desc % Helper.format_num(Helper.get_NFR_prod_mult(tile.unique_bldg.tier))
-			UniqueBuilding.CELLULOSE_SYNTHESIZER:
-				desc = desc % Helper.format_num(Helper.get_CS_prod_mult(tile.unique_bldg.tier))
+#				desc = desc.format({"intensity":Helper.get_AG_au_int_mult(tile.ancient_bldg.tier), "n":Helper.get_AG_num_auroras(tile.ancient_bldg.tier)})
+			AncientBuilding.NUCLEAR_FUSION_REACTOR:
+				desc = desc % Helper.format_num(Helper.get_NFR_prod_mult(tile.ancient_bldg.tier))
+			AncientBuilding.CELLULOSE_SYNTHESIZER:
+				desc = desc % Helper.format_num(Helper.get_CS_prod_mult(tile.ancient_bldg.tier))
 		tooltip += desc
-		icons.append_array(Data.unique_bldg_icons[tile.unique_bldg.name])
-		if tile.unique_bldg.has("repair_cost"):
+		icons.append_array(Data.ancient_bldg_icons[tile.ancient_bldg.name])
+		if tile.ancient_bldg.has("repair_cost"):
 			tooltip += "\n" + tr("BROKEN_BLDG_DESC1") + "\n"
 			icons.append(Data.money_icon)
-			tooltip += tr("BROKEN_BLDG_DESC2") % Helper.format_num(tile.unique_bldg.repair_cost, true)
+			tooltip += tr("BROKEN_BLDG_DESC2") % Helper.format_num(tile.ancient_bldg.repair_cost, true)
 			icons.append(Data.money_icon)
 	elif tile.has("volcano"):
 		if game.help_str == "":
@@ -457,28 +457,28 @@ func flash_construction_button():
 	game.planet_HUD.get_node("VBoxContainer/Construct").material.set_shader_parameter("color", Color.WHITE)
 	game.planet_HUD.get_node("VBoxContainer/Construct/AnimationPlayer").play("FlashOnce")
 
-func construct_unique_building(tile_id:int, unique_building:int):
-	if unique_building == -1:
+func construct_ancient_building(tile_id:int, ancient_building:int):
+	if ancient_building == -1:
 		return
 	if game.check_enough(constr_costs_total):
 		game.deduct_resources(constr_costs_total)
-		var obj = {"tile":tile_id, "tier":constructing_unique_building_tier}
-		if p_i.unique_bldgs.has(unique_building):
-			p_i.unique_bldgs[unique_building].append(obj)
+		var obj = {"tile":tile_id, "tier":constructing_ancient_building_tier}
+		if p_i.ancient_bldgs.has(ancient_building):
+			p_i.ancient_bldgs[ancient_building].append(obj)
 		else:
-			p_i.unique_bldgs[unique_building] = [obj]
-		for j in ([tile_id, tile_id+1, tile_id+wid, tile_id+1+wid] if unique_building == UniqueBuilding.NUCLEAR_FUSION_REACTOR else [tile_id]):
+			p_i.ancient_bldgs[ancient_building] = [obj]
+		for j in ([tile_id, tile_id+1, tile_id+wid, tile_id+1+wid] if ancient_building == AncientBuilding.NUCLEAR_FUSION_REACTOR else [tile_id]):
 			if game.tile_data[j] == null:
 				game.tile_data[j] = {}
-			game.tile_data[j].unique_bldg = {"name":unique_building, "tier":constructing_unique_building_tier, "id":tile_id}
-		game.unique_building_counters[unique_building][constructing_unique_building_tier] = game.unique_building_counters[unique_building].get(constructing_unique_building_tier, 0) + 1
+			game.tile_data[j].ancient_bldg = {"name":ancient_building, "tier":constructing_ancient_building_tier, "id":tile_id}
+		game.ancient_building_counters[ancient_building][constructing_ancient_building_tier] = game.ancient_building_counters[ancient_building].get(constructing_ancient_building_tier, 0) + 1
 		game.u_i.xp += constr_costs_total.money / 100.0
-		constr_costs_total = Data.unique_building_costs[unique_building].duplicate(true)
-		var n = game.unique_building_counters[unique_building][constructing_unique_building_tier] + 1
+		constr_costs_total = Data.ancient_building_costs[ancient_building].duplicate(true)
+		var n = game.ancient_building_counters[ancient_building][constructing_ancient_building_tier] + 1
 		for cost in constr_costs_total.keys():
-			constr_costs_total[cost] *= pow(constructing_unique_building_tier, 20) * pow(10, -game.engineering_bonus.unique_building_a_value) * pow(n, constructing_unique_building_tier * game.engineering_bonus.unique_building_b_value)
-		add_unique_building_sprite(game.tile_data[tile_id], tile_id, Vector2(tile_id % wid, tile_id / wid) * 200)
-		Helper.set_unique_bldg_bonuses(p_i, game.tile_data[tile_id].unique_bldg, tile_id, wid)
+			constr_costs_total[cost] *= pow(constructing_ancient_building_tier, 20) * pow(10, -game.engineering_bonus.ancient_building_a_value) * pow(n, constructing_ancient_building_tier * game.engineering_bonus.ancient_building_b_value)
+		add_ancient_building_sprite(game.tile_data[tile_id], tile_id, Vector2(tile_id % wid, tile_id / wid) * 200)
+		Helper.set_ancient_bldg_bonuses(p_i, game.tile_data[tile_id].ancient_bldg, tile_id, wid)
 		game.HUD.refresh()
 	else:
 		game.popup(tr("NOT_ENOUGH_RESOURCES"), 1.2)
@@ -553,15 +553,15 @@ func constr_bldg(tile_id:int, curr_time:int, _bldg_to_construct:int, mass_build:
 			var energy_prod = path_1_value * tile.resource_production_bonus.get("energy", 1.0)
 			game.autocollect.rsrc.energy += energy_prod * time_speed_bonus
 			if tile.has("substation_bonus"):
-				var cap_upgrade:float = energy_prod * tile.substation_bonus * Helper.get_substation_capacity_bonus(game.tile_data[tile.substation_tile].unique_bldg.tier)
-				game.tile_data[tile.substation_tile].unique_bldg.capacity_bonus += cap_upgrade
+				var cap_upgrade:float = energy_prod * tile.substation_bonus * Helper.get_substation_capacity_bonus(game.tile_data[tile.substation_tile].ancient_bldg.tier)
+				game.tile_data[tile.substation_tile].ancient_bldg.capacity_bonus += cap_upgrade
 				game.capacity_bonus_from_substation += cap_upgrade
 		elif _bldg_to_construct == Building.SOLAR_PANEL:
 			var energy_prod = Helper.get_SP_production(p_i.temperature, path_1_value * tile.resource_production_bonus.get("energy", 1.0))
 			game.autocollect.rsrc.energy += energy_prod * time_speed_bonus
 			if tile.has("substation_bonus"):
-				var cap_upgrade:float = energy_prod * tile.substation_bonus * Helper.get_substation_capacity_bonus(game.tile_data[tile.substation_tile].unique_bldg.tier)
-				game.tile_data[tile.substation_tile].unique_bldg.capacity_bonus += cap_upgrade
+				var cap_upgrade:float = energy_prod * tile.substation_bonus * Helper.get_substation_capacity_bonus(game.tile_data[tile.substation_tile].ancient_bldg.tier)
+				game.tile_data[tile.substation_tile].ancient_bldg.capacity_bonus += cap_upgrade
 				game.capacity_bonus_from_substation += cap_upgrade
 		elif _bldg_to_construct == Building.BATTERY:
 			game.energy_capacity += path_1_value * game.u_i.charge
@@ -705,8 +705,8 @@ func destroy_bldg(id2:int, mass:bool = false):
 		if game.autocollect.rsrc.energy < 0:
 			game.autocollect.rsrc.energy = 0
 		if tile.has("substation_tile"):
-			var cap_to_remove = tile.bldg.path_1_value * tile.substation_bonus * Helper.get_substation_capacity_bonus(game.tile_data[tile.substation_tile].unique_bldg.tier)
-			game.tile_data[tile.substation_tile].unique_bldg.capacity_bonus -= cap_to_remove
+			var cap_to_remove = tile.bldg.path_1_value * tile.substation_bonus * Helper.get_substation_capacity_bonus(game.tile_data[tile.substation_tile].ancient_bldg.tier)
+			game.tile_data[tile.substation_tile].ancient_bldg.capacity_bonus -= cap_to_remove
 			game.capacity_bonus_from_substation -= cap_to_remove
 			if game.capacity_bonus_from_substation < 0:
 				game.capacity_bonus_from_substation = 0
@@ -716,8 +716,8 @@ func destroy_bldg(id2:int, mass:bool = false):
 		if game.autocollect.rsrc.energy < 0:
 			game.autocollect.rsrc.energy = 0
 		if tile.has("substation_tile"):
-			var cap_to_remove = Helper.get_SP_production(p_i.temperature, tile.bldg.path_1_value * (tile.get("aurora", 0.0) + 1.0)) * Helper.get_substation_capacity_bonus(game.tile_data[tile.substation_tile].unique_bldg.tier)
-			game.tile_data[tile.substation_tile].unique_bldg.capacity_bonus -= cap_to_remove
+			var cap_to_remove = Helper.get_SP_production(p_i.temperature, tile.bldg.path_1_value * (tile.get("aurora", 0.0) + 1.0)) * Helper.get_substation_capacity_bonus(game.tile_data[tile.substation_tile].ancient_bldg.tier)
+			game.tile_data[tile.substation_tile].ancient_bldg.capacity_bonus -= cap_to_remove
 			game.capacity_bonus_from_substation -= cap_to_remove
 			if game.capacity_bonus_from_substation < 0:
 				game.capacity_bonus_from_substation = 0
@@ -906,16 +906,16 @@ func collect_prod_bldgs(tile_id:int):
 			_tile.bldg.erase("start_date")
 			_tile.bldg.erase("expected_rsrc")
 
-func duplicate_unique_building_callable():
-	var unique_bldg = game.tile_data[tile_over].unique_bldg
-	var tier:int = unique_bldg.tier
+func duplicate_ancient_building_callable():
+	var ancient_bldg = game.tile_data[tile_over].ancient_bldg
+	var tier:int = ancient_bldg.tier
 	game.put_bottom_info(tr("CLICK_TILE_TO_CONSTRUCT"), "building", "cancel_building")
-	var base_cost = Data.unique_building_costs[unique_bldg.name].duplicate(true)
-	var n = game.unique_building_counters[unique_bldg.name].get(tier, 0) + 1
+	var base_cost = Data.ancient_building_costs[ancient_bldg.name].duplicate(true)
+	var n = game.ancient_building_counters[ancient_bldg.name].get(tier, 0) + 1
 	for cost in base_cost:
-		base_cost[cost] *= pow(tier, 20) * pow(10, -game.engineering_bonus.unique_building_a_value) * pow(n, tier * game.engineering_bonus.unique_building_b_value)
-	constructing_unique_building_tier = tier
-	initiate_unique_building_construction(unique_bldg.name, base_cost)
+		base_cost[cost] *= pow(tier, 20) * pow(10, -game.engineering_bonus.ancient_building_a_value) * pow(n, tier * game.engineering_bonus.ancient_building_b_value)
+	constructing_ancient_building_tier = tier
+	initiate_ancient_building_construction(ancient_bldg.name, base_cost)
 	
 func duplicate_building_callable():
 	var bldg_name = game.tile_data[tile_over].bldg.name
@@ -1029,27 +1029,27 @@ func remove_selected_white_rects():
 func _unhandled_input(event):
 	var action_performed = false
 	var about_to_mine = game.bottom_info_action == "about_to_mine"
-	var mass_build:bool = Input.is_action_pressed("left_click") and Input.is_action_pressed("shift") and game.bottom_info_action == "building" and constructing_unique_building_tier == -1
+	var mass_build:bool = Input.is_action_pressed("left_click") and Input.is_action_pressed("shift") and game.bottom_info_action == "building" and constructing_ancient_building_tier == -1
 	view.move_view = not mass_build
 	view.scroll_view = not mass_build
 	if tile_over != -1 and game.bottom_info_action != "building" and tile_over < len(game.tile_data):
 		var tile = game.tile_data[tile_over]
 		if tile:
-			if (tile.has("unique_bldg")
-			and tile.unique_bldg.name != UniqueBuilding.SPACEPORT
-			and game.engineering_bonus.max_unique_building_tier >= int(tile.unique_bldg.tier)
-			and tile.unique_bldg.name in game.unique_bldgs_discovered.keys()
-			and int(tile.unique_bldg.tier) in game.unique_bldgs_discovered[tile.unique_bldg.name].keys()):
+			if (tile.has("ancient_bldg")
+			and tile.ancient_bldg.name != AncientBuilding.SPACEPORT
+			and game.engineering_bonus.max_ancient_building_tier >= int(tile.ancient_bldg.tier)
+			and tile.ancient_bldg.name in game.ancient_bldgs_discovered.keys()
+			and int(tile.ancient_bldg.tier) in game.ancient_bldgs_discovered[tile.ancient_bldg.name].keys()):
 				if Input.is_action_just_pressed("right_click"):
 					right_clicked_tile = tile_over
 					var right_click_info_list = [{
 						"button_text":tr("DUPLICATE") + " (Q)",
-						"button_callable":duplicate_unique_building_callable,
+						"button_callable":duplicate_ancient_building_callable,
 						}]
 					right_click_menu = game.add_right_click_menu(right_click_info_list, on_right_click_menu_closed)
 					add_white_rect(Vector2(tile_over % wid, tile_over / wid) * 200, "selected_white_rects")
 				elif Input.is_action_just_pressed("Q"):
-					duplicate_unique_building_callable()
+					duplicate_ancient_building_callable()
 					action_performed = true
 			elif tile.has("bldg"):
 				if Input.is_action_just_pressed("right_click"):
@@ -1127,7 +1127,7 @@ func _unhandled_input(event):
 				mass_build_rect.scale.y = 1
 			check_tile_change(event, "add_shadows")
 		else:
-			if constructing_unique_building_tier == -1:
+			if constructing_ancient_building_tier == -1:
 				for cost in constr_costs.keys():
 					constr_costs_total[cost] = constr_costs[cost] / (game.tile_data[tile_over].cost_div if game.tile_data[tile_over] and game.tile_data[tile_over].has("cost_div") else 1.0)
 		var black_bg = game.get_node("UI/PopupBackground").visible
@@ -1151,8 +1151,8 @@ func _unhandled_input(event):
 				for white_rect in get_tree().get_nodes_in_group("AOE_white_rects"):
 					white_rect.queue_free()
 					white_rect.remove_from_group("AOE_white_rects")
-				if tile and (tile.has("bldg") and tile.bldg.name == Building.CENTRAL_BUSINESS_DISTRICT or tile.has("unique_bldg") and tile.unique_bldg.name in [UniqueBuilding.MINERAL_REPLICATOR, UniqueBuilding.OBSERVATORY, UniqueBuilding.SUBSTATION, UniqueBuilding.MINING_OUTPOST]):
-					var n:int = tile.bldg.path_3_value if tile.has("bldg") else Helper.get_unique_bldg_area(tile.unique_bldg.tier)
+				if tile and (tile.has("bldg") and tile.bldg.name == Building.CENTRAL_BUSINESS_DISTRICT or tile.has("ancient_bldg") and tile.ancient_bldg.name in [AncientBuilding.MINERAL_REPLICATOR, AncientBuilding.OBSERVATORY, AncientBuilding.SUBSTATION, AncientBuilding.MINING_OUTPOST]):
+					var n:int = tile.bldg.path_3_value if tile.has("bldg") else Helper.get_ancient_bldg_area(tile.ancient_bldg.tier)
 					for i in n:
 						var x:int = x_over + i - n / 2
 						if x < 0 or x >= wid:
@@ -1170,7 +1170,7 @@ func _unhandled_input(event):
 				prev_tile_over = -1
 			hide_tooltip()
 		if is_instance_valid(shadow):
-			if constructing_unique_building_tier != -1 and bldg_to_construct == UniqueBuilding.NUCLEAR_FUSION_REACTOR:
+			if constructing_ancient_building_tier != -1 and bldg_to_construct == AncientBuilding.NUCLEAR_FUSION_REACTOR:
 				shadow.position = floor(mouse_pos / 200) * 200 + Vector2.ONE * 200
 			else:
 				shadow.position = floor(mouse_pos / 200) * 200 + Vector2.ONE * 100
@@ -1191,7 +1191,7 @@ func _unhandled_input(event):
 		game.HUD.refresh()
 		return
 	#initiate mass build
-	if Input.is_action_just_pressed("left_click") and not mass_build_rect.visible and Input.is_action_pressed("shift") and game.bottom_info_action == "building" and constructing_unique_building_tier == -1:
+	if Input.is_action_just_pressed("left_click") and not mass_build_rect.visible and Input.is_action_pressed("shift") and game.bottom_info_action == "building" and constructing_ancient_building_tier == -1:
 		mass_build_rect.position = mouse_pos
 		mass_build_rect.size = Vector2.ZERO
 		mass_build_rect.visible = true
@@ -1219,7 +1219,7 @@ func _unhandled_input(event):
 		var tile_id = get_tile_id_from_pos(mouse_pos)
 		var tile = game.tile_data[tile_id]
 		if bldg_to_construct != -1:
-			if constructing_unique_building_tier == -1:
+			if constructing_ancient_building_tier == -1:
 				if available_to_build(tile):
 					constr_bldg(tile_id, curr_time, bldg_to_construct)
 					if bldg_to_construct == Building.GREENHOUSE:
@@ -1227,18 +1227,18 @@ func _unhandled_input(event):
 						soil_tiles.append(Vector2i(tile_id % wid, int(tile_id / wid)))
 						$TileFeatures.set_cells_terrain_connect(2, soil_tiles, 0, 3)
 			else:
-				if bldg_to_construct == UniqueBuilding.NUCLEAR_FUSION_REACTOR:
+				if bldg_to_construct == AncientBuilding.NUCLEAR_FUSION_REACTOR:
 					if x_pos < wid-1 and y_pos < wid-1:
 						for _tile_id in [tile_id, tile_id+1, tile_id+wid, tile_id+1+wid]:
 							if is_obstacle(game.tile_data[_tile_id]):
 								return
-						construct_unique_building(tile_id, bldg_to_construct)
+						construct_ancient_building(tile_id, bldg_to_construct)
 				else:
-					if bldg_to_construct == UniqueBuilding.SPACEPORT and p_i.unique_bldgs.has(UniqueBuilding.SPACEPORT) and not p_i.unique_bldgs[UniqueBuilding.SPACEPORT].is_empty():
+					if bldg_to_construct == AncientBuilding.SPACEPORT and p_i.ancient_bldgs.has(AncientBuilding.SPACEPORT) and not p_i.ancient_bldgs[AncientBuilding.SPACEPORT].is_empty():
 						game.popup(tr("SPACEPORT_ERROR"), 2.0)
 						return
 					if not is_obstacle(tile):
-						construct_unique_building(tile_id, bldg_to_construct)
+						construct_ancient_building(tile_id, bldg_to_construct)
 		if about_to_mine and available_for_mining(tile):
 			game.mine_tile(tile_id)
 			return
@@ -1265,21 +1265,21 @@ func _unhandled_input(event):
 				else:
 					click_tile(tile, tile_id)
 					mouse_pos = Vector2.ZERO
-			elif tile.has("unique_bldg"):
-				if tile.unique_bldg.has("repair_cost"):
-					if game.money >= tile.unique_bldg.repair_cost:
-						game.money -= tile.unique_bldg.repair_cost
-						p_i.unique_bldgs[tile.unique_bldg.name][tile.unique_bldg.id].erase("repair_cost")
-						if tile.unique_bldg.name == UniqueBuilding.NUCLEAR_FUSION_REACTOR:
-							var tile_id2 = p_i.unique_bldgs[tile.unique_bldg.name][tile.unique_bldg.id].tile
+			elif tile.has("ancient_bldg"):
+				if tile.ancient_bldg.has("repair_cost"):
+					if game.money >= tile.ancient_bldg.repair_cost:
+						game.money -= tile.ancient_bldg.repair_cost
+						p_i.ancient_bldgs[tile.ancient_bldg.name][tile.ancient_bldg.id].erase("repair_cost")
+						if tile.ancient_bldg.name == AncientBuilding.NUCLEAR_FUSION_REACTOR:
+							var tile_id2 = p_i.ancient_bldgs[tile.ancient_bldg.name][tile.ancient_bldg.id].tile
 							for j in [tile_id2, tile_id2+1, tile_id2+wid, tile_id2+wid+1]:
-								game.tile_data[j].unique_bldg.erase("repair_cost")
+								game.tile_data[j].ancient_bldg.erase("repair_cost")
 							bldgs[tile_id2].self_modulate = Color.WHITE
-							Helper.set_unique_bldg_bonuses(p_i, tile.unique_bldg, tile_id2, wid)
+							Helper.set_ancient_bldg_bonuses(p_i, tile.ancient_bldg, tile_id2, wid)
 						else:
-							tile.unique_bldg.erase("repair_cost")
+							tile.ancient_bldg.erase("repair_cost")
 							bldgs[tile_id].self_modulate = Color.WHITE
-							Helper.set_unique_bldg_bonuses(p_i, tile.unique_bldg, tile_id, wid)
+							Helper.set_ancient_bldg_bonuses(p_i, tile.ancient_bldg, tile_id, wid)
 						game.popup(tr("BUILDING_REPAIRED"), 1.5)
 						game.hide_adv_tooltip()
 					else:
@@ -1441,10 +1441,10 @@ func hide_tooltip():
 func is_obstacle(tile, bldg_is_obstacle:bool = true):
 	if tile == null:
 		return false
-	return tile.has("rock") or (tile.has("bldg") if bldg_is_obstacle else true) or tile.has("unique_bldg") or tile.has("ship") or tile.has("wormhole") or tile.has("lake") or tile.has("cave") or tile.has("volcano") or ((tile.has("depth") or tile.has("crater")) and not tile.has("bridge"))
+	return tile.has("rock") or (tile.has("bldg") if bldg_is_obstacle else true) or tile.has("ancient_bldg") or tile.has("ship") or tile.has("wormhole") or tile.has("lake") or tile.has("cave") or tile.has("volcano") or ((tile.has("depth") or tile.has("crater")) and not tile.has("bridge"))
 
 func available_for_mining(tile):
-	return tile == null or not tile.has("bldg") and not tile.has("unique_bldg") and not tile.has("rock") and not tile.has("ship") and not tile.has("wormhole") and not tile.has("lake") and not tile.has("cave") and not tile.has("volcano")
+	return tile == null or not tile.has("bldg") and not tile.has("ancient_bldg") and not tile.has("rock") and not tile.has("ship") and not tile.has("wormhole") and not tile.has("lake") and not tile.has("cave") and not tile.has("volcano")
 
 func available_to_build(tile):
 	if bldg_to_construct == Building.BORING_MACHINE:
@@ -1623,15 +1623,15 @@ func on_timeout():
 		return
 	for i in len(rsrcs):
 		var tile = game.tile_data[i]
-		if tile == null or not tile.has("bldg") and not tile.has("unique_bldg"):
+		if tile == null or not tile.has("bldg") and not tile.has("ancient_bldg"):
 			continue
 		Helper.update_rsrc(p_i, tile, rsrcs[i])
 	game.HUD.update_money_energy_SP()
 	game.HUD.update_minerals()
 
-var constructing_unique_building_tier:int = -1
+var constructing_ancient_building_tier:int = -1
 
-func initiate_unique_building_construction(type:int, costs:Dictionary):
+func initiate_ancient_building_construction(type:int, costs:Dictionary):
 	finish_construct()
 	var tween = create_tween()
 	tween.tween_property(game.HUD.get_node("Top/TextureRect"), "modulate", Color(1.5, 1.5, 1.0, 1.0), 0.2)
@@ -1640,10 +1640,10 @@ func initiate_unique_building_construction(type:int, costs:Dictionary):
 	constr_costs_total = costs.duplicate()
 	shadow = Sprite2D.new()
 	shadow.modulate.a = 0.5
-	if type == UniqueBuilding.NUCLEAR_FUSION_REACTOR:
-		put_shadow(shadow, game.unique_bldg_textures[bldg_to_construct], mouse_pos, 0.8, Vector2.ONE * 200)
+	if type == AncientBuilding.NUCLEAR_FUSION_REACTOR:
+		put_shadow(shadow, game.ancient_bldg_textures[bldg_to_construct], mouse_pos, 0.8, Vector2.ONE * 200)
 	else:
-		put_shadow(shadow, game.unique_bldg_textures[bldg_to_construct], mouse_pos)
+		put_shadow(shadow, game.ancient_bldg_textures[bldg_to_construct], mouse_pos)
 	game.HUD.get_node("Top/Resources/Stone").visible = false
 	game.HUD.get_node("Top/Resources/Minerals").visible = false
 	game.HUD.get_node("Top/Resources/Cellulose").visible = false
@@ -1652,7 +1652,7 @@ func initiate_unique_building_construction(type:int, costs:Dictionary):
 		for j in wid:
 			var id2 = i % wid + j * wid
 			var tile = game.tile_data[id2]
-			if tile and is_obstacle(tile) or type == UniqueBuilding.NUCLEAR_FUSION_REACTOR and (i == wid-1 or j == wid-1):
+			if tile and is_obstacle(tile) or type == AncientBuilding.NUCLEAR_FUSION_REACTOR and (i == wid-1 or j == wid-1):
 				grayed_out_tile_positions.append(Vector2(i, j))
 				var gray_tile = preload("res://Scenes/GrayscaleTile.tscn").instantiate()
 				gray_tile.position = Vector2(i, j) * 200.0
@@ -1666,7 +1666,7 @@ func initiate_unique_building_construction(type:int, costs:Dictionary):
 	game.HUD.refresh()
 	
 func construct(type:int, costs:Dictionary):
-	constructing_unique_building_tier = -1
+	constructing_ancient_building_tier = -1
 	finish_construct()
 	var tween = create_tween()
 	tween.tween_property(game.HUD.get_node("Top/TextureRect"), "modulate", Color(1.5, 1.5, 1.0, 1.0), 0.2)

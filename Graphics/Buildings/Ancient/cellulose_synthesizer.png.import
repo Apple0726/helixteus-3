@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://bv68p3x2bchbe"
-path="res://.godot/imported/cellulose_synthesizer.png-b86758813db5db787f0f3cc7f3aff514.ctex"
+path="res://.godot/imported/cellulose_synthesizer.png-f1e7e882ce9eafbe87a61b04b321c308.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Graphics/Buildings/Unique/cellulose_synthesizer.png"
-dest_files=["res://.godot/imported/cellulose_synthesizer.png-b86758813db5db787f0f3cc7f3aff514.ctex"]
+source_file="res://Graphics/Buildings/Ancient/cellulose_synthesizer.png"
+dest_files=["res://.godot/imported/cellulose_synthesizer.png-f1e7e882ce9eafbe87a61b04b321c308.ctex"]
 
 [params]
 

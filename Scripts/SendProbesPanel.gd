@@ -327,7 +327,7 @@ func _on_SendAll_mouse_exited():
 
 
 func _on_TierDistribution_mouse_entered():
-	var st = tr("UNIQUE_BLDG_TIER_DISTRIBUTION")
+	var st = tr("ANCIENT_BLDG_TIER_DISTRIBUTION")
 	for tier in range(1, 7):
 		var age = float($TP/VBox/age/Label2.text)
 		var prob:float

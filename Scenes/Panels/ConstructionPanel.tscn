@@ -8,7 +8,7 @@
 [ext_resource type="Texture2D" uid="uid://bqcnfk18r8y88" path="res://Graphics/Materials/glass.png" id="5_vrfgh"]
 [ext_resource type="Texture2D" uid="uid://cddrdlitvu8q2" path="res://Graphics/Buildings/central_business_district.png" id="6_uh0od"]
 [ext_resource type="Texture2D" uid="uid://crncbjr12yfpx" path="res://Graphics/Cave/Rover.png" id="7_nh4w1"]
-[ext_resource type="Texture2D" uid="uid://da22ie3xwunob" path="res://Graphics/Buildings/Unique/mineral_replicator.png" id="8_2xax1"]
+[ext_resource type="Texture2D" uid="uid://da22ie3xwunob" path="res://Graphics/Buildings/Ancient/mineral_replicator.png" id="8_2xax1"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_seglp"]
 content_margin_left = 20.0
@@ -232,7 +232,7 @@ theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
 text = "VEHICLES"
 vertical_alignment = 1
 
-[node name="Unique" type="Button" parent="Panel/VBoxContainer"]
+[node name="Ancient" type="Button" parent="Panel/VBoxContainer"]
 show_behind_parent = true
 texture_filter = 4
 custom_minimum_size = Vector2(0, 48)
@@ -242,14 +242,14 @@ alignment = 0
 icon_alignment = 2
 expand_icon = true
 
-[node name="Label" type="Label" parent="Panel/VBoxContainer/Unique"]
+[node name="Label" type="Label" parent="Panel/VBoxContainer/Ancient"]
 modulate = Color(1, 1, 1, 0)
 layout_mode = 0
 offset_left = 60.0
 offset_right = 160.0
 offset_bottom = 48.0
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
-text = "UNIQUE"
+text = "ANCIENT"
 vertical_alignment = 1
 
 [node name="ScrollContainer" type="ScrollContainer" parent="Panel"]
@@ -324,9 +324,9 @@ libraries = {
 [connection signal="mouse_entered" from="Panel/VBoxContainer/Vehicles" to="." method="_on_vehicles_mouse_entered"]
 [connection signal="mouse_exited" from="Panel/VBoxContainer/Vehicles" to="." method="_on_vehicles_mouse_exited"]
 [connection signal="pressed" from="Panel/VBoxContainer/Vehicles" to="." method="_on_tab_pressed" binds= ["Vehicles"]]
-[connection signal="mouse_entered" from="Panel/VBoxContainer/Unique" to="." method="_on_unique_mouse_entered"]
-[connection signal="mouse_exited" from="Panel/VBoxContainer/Unique" to="." method="_on_unique_mouse_exited"]
-[connection signal="pressed" from="Panel/VBoxContainer/Unique" to="." method="_on_tab_pressed" binds= ["Unique"]]
+[connection signal="mouse_entered" from="Panel/VBoxContainer/Ancient" to="." method="_on_ancient_mouse_entered"]
+[connection signal="mouse_exited" from="Panel/VBoxContainer/Ancient" to="." method="_on_ancient_mouse_exited"]
+[connection signal="pressed" from="Panel/VBoxContainer/Ancient" to="." method="_on_tab_pressed" binds= ["Ancient"]]
 [connection signal="value_changed" from="Panel/ScrollContainer/VBoxContainer/HBoxContainer/Tier" to="." method="_on_tier_value_changed"]
 [connection signal="mouse_entered" from="Panel/ScrollContainer/VBoxContainer/BuildAll" to="." method="_on_build_all_mouse_entered"]
 [connection signal="mouse_exited" from="Panel/ScrollContainer/VBoxContainer/BuildAll" to="." method="_on_build_all_mouse_exited"]
