@@ -65,10 +65,10 @@ stretch_mode = 5
 
 [node name="CloseButton" type="TextureButton" parent="."]
 layout_mode = 0
-offset_left = 848.0
-offset_top = 172.0
-offset_right = 897.0
-offset_bottom = 221.0
+offset_left = 850.0
+offset_top = 176.0
+offset_right = 899.0
+offset_bottom = 225.0
 texture_normal = ExtResource("4_023v2")
 texture_hover = ExtResource("5_cj333")
 

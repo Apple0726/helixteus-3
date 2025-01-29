@@ -178,3 +178,27 @@ func _on_add_agility_pressed() -> void:
 	allocated_agility += 1
 	$ShipStats/RemoveAgility.disabled = false
 	update_ship_stats_display()
+
+
+func _on_hp_icon_mouse_entered() -> void:
+	game.show_tooltip(tr("SHIP_HIT_POINTS"))
+
+
+func _on_mouse_exited() -> void:
+	game.hide_tooltip()
+
+
+func _on_attack_icon_mouse_entered() -> void:
+	game.show_tooltip(tr("SHIP_ATTACK"))
+
+
+func _on_defense_icon_mouse_entered() -> void:
+	game.show_tooltip(tr("SHIP_DEFENSE"))
+
+
+func _on_accuracy_icon_mouse_entered() -> void:
+	game.show_tooltip(tr("SHIP_ACCURACY"))
+
+
+func _on_agility_icon_mouse_entered() -> void:
+	game.show_tooltip(tr("SHIP_AGILITY"))

@@ -1316,7 +1316,7 @@ func _unhandled_input(event):
 			game.show_collect_info(items_collected)
 		if game.planet_HUD:
 			game.planet_HUD.refresh()
-	if not action_performed and (Input.is_action_just_pressed("cancel_build") or Input.is_action_just_pressed("cancel")):
+	if event is not InputEventMouseMotion and not action_performed and (Input.is_action_just_pressed("cancel_build") or Input.is_action_just_pressed("cancel")):
 		tiles_selected.clear()
 		remove_selected_white_rects()
 		game._on_BottomInfo_close_button_pressed()

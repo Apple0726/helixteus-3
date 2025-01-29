@@ -1527,7 +1527,7 @@ SHIP_HIT_POINTS,"Ship total hit points. If this reaches zero, the ship cannot ta
 SHIP_ATTACK,Ship attack. Determines how much damage it deals to enemies.,,,,Angriff des Schiffs. Dies Entscheidet wie viel Schaden das Schiff Feinen hinzufügt.,,,,,,,
 SHIP_DEFENSE,Ship defense. Determines how much damage is reduced from incoming attacks.,,,,Verteidigung des Schiffes. Dies Entscheidet um wie viel der Schaden von eintreffenden attacken reduziert wird.,,,,,,,
 SHIP_ACCURACY,"Ship accuracy. More accuracy means attacks miss less, deal more critical hits, and status effects are inflicted more often.",,,,"Genauigkeit des Schiffes. Höhere Genauigkeit bedeutet weniger Fehlschüsse, mehr Krititsche Treffer und häufigere Statuseffekte.",,,,,,,
-SHIP_AGILITY,"Ship agility. More agile ships get to go first more often, can move further per turn, and dodge more attacks.",,,,"Agilität des Schiffes. Agilere Schiffe starten häufiger, können sich weiter bewegen und können mehr Angriffen ausweichen.",,,,,,,
+SHIP_AGILITY,"Ship agility. More agile ships go first more often, can move further per turn, and dodge more attacks.",,,,"Agilität des Schiffes. Agilere Schiffe starten häufiger, können sich weiter bewegen und können mehr Angriffen ausweichen.",,,,,,,
 AGILITY,Agility,,,,Agilität,,,,,,,
 PASSIVE_ABILITY,Passive ability,,,,Passive Fähigkeit,,,,Passzív képesség,,,
 STANDARD_PASSIVE_ABILITY,More resistant to status effects.,,,,Restienter zu Statuseffekten.,,,,,,,

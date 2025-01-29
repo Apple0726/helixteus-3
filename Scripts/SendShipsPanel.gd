@@ -100,7 +100,7 @@ func refresh():
 		for HX_data in game.planet_data[dest_p_id].HX_data:
 			var HX_data_node = HX_data_scene.instantiate()
 			HX_data_node.get_node("HX").texture = load("res://Graphics/HX/%s_%s.png" % [HX_data["class"], HX_data.type])
-			HX_data_node.get_node("HP").text = "%s / %s" % [Helper.format_num(HX_data.HP, false, 4), Helper.format_num(HX_data.total_HP, false, 4)]
+			HX_data_node.get_node("HP").text = str(Helper.format_num(HX_data.HP, false, 4))
 			HX_data_node.get_node("Lv").text = "%s %s" % [tr("LV"), HX_data.lv]
 			HX_data_node.get_node("VBoxContainer/Attack/Label").text = Helper.format_num(HX_data.attack, false, 4)
 			HX_data_node.get_node("VBoxContainer/Accuracy/Label").text = Helper.format_num(HX_data.accuracy, false, 4)
@@ -147,7 +147,7 @@ func send_ships():
 						game.HUD.set_ship_btn_shader(false)
 				game.space_HUD.get_node("ConquerAll").visible = (game.u_i.lv >= 32 or game.subject_levels.dimensional_power >= 1) and not game.system_data[game.c_s].has("conquered")
 				game.HUD.refresh()
-				game.toggle_panel(self)
+				game.toggle_panel(panel_var_name)
 			else:
 				game.popup(tr("NOT_ENOUGH_RESOURCES"), 1.5)
 		elif time_cost != 0:
@@ -180,7 +180,7 @@ func send_ships2(_time):
 	game.ships_travel_data.travel_start_date = Time.get_unix_time_from_system()
 	game.ships_travel_data.travel_length = time_cost
 	game.ships_travel_data.travel_cost = travel_energy_cost
-	game.toggle_panel(self)
+	game.toggle_panel(panel_var_name)
 
 func has_SE(p_i:Dictionary):
 	return p_i.get("MS") == "SE" and not p_i.has("repair_cost")
@@ -222,7 +222,7 @@ func get_travel_cost_multiplier(lv:int):
 		return 0.75
 
 func _on_close_button_pressed():
-	game.toggle_panel("send_ships_panel")
+	game.toggle_panel(panel_var_name)
 
 func _on_send_pressed():
 	if game.universe_data[game.c_u].lv < 40:

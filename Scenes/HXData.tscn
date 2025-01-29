@@ -28,7 +28,7 @@ custom_minimum_size = Vector2(30, 0)
 layout_mode = 2
 
 [node name="HPIcon" type="TextureRect" parent="."]
-custom_minimum_size = Vector2(20, 0)
+custom_minimum_size = Vector2(22, 0)
 layout_mode = 2
 texture = ExtResource("5")
 expand_mode = 1
@@ -36,10 +36,10 @@ stretch_mode = 5
 
 [node name="HP" type="Label" parent="."]
 layout_mode = 2
-text = "10 / 10"
+text = "10"
 
 [node name="Control2" type="Control" parent="."]
-custom_minimum_size = Vector2(10, 0)
+custom_minimum_size = Vector2(25, 0)
 layout_mode = 2
 
 [node name="VBoxContainer" type="VBoxContainer" parent="."]

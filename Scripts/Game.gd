@@ -1460,6 +1460,7 @@ func switch_view(new_view:String, other_params:Dictionary = {}):
 		await view_tween.finished
 	if not other_params.has("first_time"):
 		save_views(true)
+		fn_save_game()
 	if viewing_dimension:
 		remove_dimension()
 		if not $UI.is_ancestor_of(HUD):
@@ -1638,8 +1639,8 @@ func switch_view(new_view:String, other_params:Dictionary = {}):
 			HUD.refresh()
 		if c_v == "universe" and is_instance_valid(HUD) and HUD.dimension_btn.visible:
 			HUD.switch_btn.visible = false
-	if not other_params.has("first_time"):
-		fn_save_game()
+	#if not other_params.has("first_time"):
+		#fn_save_game()
 	if not other_params.has("dont_fade_anim"):
 		view_tween = create_tween()
 		view_tween.tween_property(view, "modulate", Color(1.0, 1.0, 1.0, 1.0), 0.25)
@@ -2897,7 +2898,7 @@ func generate_planets(id:int):#local id
 				var x = randf()
 				var HP_power = 7.5 * (2.0 * x + 0.2)
 				var stat_power = 50.0 - HP_power
-				var HP = round(7.5 * (lv + 1.0))
+				var HP = round(HP_power * (lv + 1.0))
 				if _class == 2:
 					HP = round(HP * randf_range(4.0, 6.0))
 				elif _class >= 3:
@@ -4605,7 +4606,7 @@ func add_new_ship_data():
 
 func get_1st_ship():
 	add_new_ship_data()
-	switch_view("ship_customize_screen")
+	switch_view("ship_customize_screen", {"ship_id":0})
 
 func get_2nd_ship():
 	if len(ship_data) == 1:
