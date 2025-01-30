@@ -335,8 +335,6 @@ func save_zooms(obj_str:String):
 var first_zoom:bool = false
 #Executed every tick
 func _physics_process(_delta):
-	if not is_instance_valid(obj):
-		return
 	if move_with_keyboard:
 		#Moving tiles code
 		var input_vector = Vector2.ZERO
@@ -367,6 +365,8 @@ func _physics_process(_delta):
 		first_zoom = false
 		zooming = ""
 		progress = 0
+	if not is_instance_valid(obj):
+		return
 	if game.c_v == "planet":
 		if scale.x < 0.25 and not obj.icons_hidden:
 			for time_bar in obj.time_bars:

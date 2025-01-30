@@ -27,15 +27,19 @@ b = Vector2(-640, -360)
 script = ExtResource("1_ylili")
 
 [node name="Ship1" parent="." instance=ExtResource("12")]
+visible = false
 texture = ExtResource("3")
 
 [node name="Ship2" parent="." instance=ExtResource("12")]
+visible = false
 texture = ExtResource("6")
 
 [node name="Ship3" parent="." instance=ExtResource("12")]
+visible = false
 texture = ExtResource("7")
 
 [node name="Ship4" parent="." instance=ExtResource("12")]
+visible = false
 texture = ExtResource("13")
 
 [node name="Boundary" type="StaticBody2D" parent="."]
@@ -52,23 +56,8 @@ shape = SubResource("SegmentShape2D_b5mio")
 [node name="CollisionShape2D4" type="CollisionShape2D" parent="Boundary"]
 shape = SubResource("SegmentShape2D_fjaob")
 
-[node name="GUI" type="Control" parent="."]
-layout_mode = 3
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_right = 1280.0
-offset_bottom = 720.0
-grow_horizontal = 2
-grow_vertical = 2
-
-[node name="Back" type="Button" parent="GUI"]
-layout_mode = 1
-anchors_preset = 2
-anchor_top = 1.0
-anchor_bottom = 1.0
-offset_top = -40.0
-offset_right = 148.0
-grow_vertical = 0
-
-[connection signal="pressed" from="GUI/Back" to="." method="_on_back_pressed"]
+[node name="Polygon2D" type="Polygon2D" parent="."]
+color = Color(0.533333, 0, 0, 1)
+invert_enabled = true
+invert_border = 8.0
+polygon = PackedVector2Array(-640, -360, -640, 1080, 1920, 1080, 1920, -360)

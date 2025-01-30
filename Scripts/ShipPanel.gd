@@ -20,7 +20,7 @@ func add_ship_node(id: int):
 	ship.get_node("TextureButton").button_up.connect(_on_ship_button_up.bind(id))
 	ship.get_node("TextureButton").texture_normal = load("res://Graphics/Ships/Ship%s.png" % id)
 	ship.get_node("TextureButton").texture_click_mask = load("res://Graphics/Ships/Ship%sCM.png" % id)
-	ship.position = game.ship_data[id].initial_position
+	ship.position = game.ship_data[id].initial_position / 1.8
 	target_ship_positions.append(ship.position)
 	$Ships/Battlefield.add_child(ship)
 	ship_nodes.append(ship)
@@ -159,7 +159,7 @@ func _input(event: InputEvent) -> void:
 		if dragging_ship_id != -1:
 			var target_position = mouse_position - $Ships/Battlefield.global_position
 			target_ship_positions[dragging_ship_id] = target_position - ship_mouse_offset
-			game.ship_data[dragging_ship_id].initial_position = target_ship_positions[dragging_ship_id]
+			game.ship_data[dragging_ship_id].initial_position = target_ship_positions[dragging_ship_id] * 1.8
 
 func _physics_process(delta: float) -> void:
 	for i in len(target_ship_positions):

@@ -1,4 +1,4 @@
-[gd_scene load_steps=48 format=3 uid="uid://cpjo82l86k61"]
+[gd_scene load_steps=44 format=3 uid="uid://cpjo82l86k61"]
 
 [ext_resource type="Texture2D" uid="uid://7ffsf7xuvfw2" path="res://Graphics/Icons/attack.png" id="1"]
 [ext_resource type="Shader" path="res://Shaders/HX.gdshader" id="1_bfi0c"]
@@ -16,12 +16,9 @@
 [ext_resource type="Texture2D" uid="uid://b1dcgxga387up" path="res://Graphics/Effects/spotlight_1.png" id="14"]
 [ext_resource type="Texture2D" uid="uid://bn520d6r5iwik" path="res://Graphics/Icons/accuracy.png" id="15"]
 
-[sub_resource type="CircleShape2D" id="24"]
-radius = 1252.0
-
 [sub_resource type="CapsuleShape2D" id="1"]
-radius = 59.993
-height = 229.932
+radius = 23.9999
+height = 95.9995
 
 [sub_resource type="ShaderMaterial" id="2"]
 resource_local_to_scene = true
@@ -78,22 +75,6 @@ shader_parameter/y_offset = 0.0
 shader_parameter/fixed_edge_size = 0.05
 shader_parameter/noise_scale = Vector2(1, 1)
 
-[sub_resource type="Gradient" id="26"]
-offsets = PackedFloat32Array(0, 0.518692, 1)
-colors = PackedColorArray(1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 0)
-
-[sub_resource type="GradientTexture2D" id="30"]
-gradient = SubResource("26")
-
-[sub_resource type="ParticleProcessMaterial" id="28"]
-emission_shape = 2
-emission_sphere_radius = 1.0
-direction = Vector3(0, -1, 0)
-spread = 75.94
-gravity = Vector3(0, 0, 0)
-color = Color(1, 0.603922, 0, 1)
-color_ramp = SubResource("30")
-
 [sub_resource type="Animation" id="6"]
 length = 0.5
 step = 0.05
@@ -141,8 +122,8 @@ tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
 "handle_modes": PackedInt32Array(2, 2, 2, 0),
-"points": PackedFloat32Array(0, 0, 0, 0.0666667, 0, 385.166, -0.0666667, 0, 0.0666667, 0, 385, -0.101375, 8.81121, 0.1, -8.69168, 0, -0.25, 0, 0.25, 0),
-"times": PackedFloat32Array(0, 0.2, 0.4, 1.3)
+"points": PackedFloat32Array(0, 0, 0, 0.0333333, 98.836, 160.328, -0.0666667, 0, 0.0666667, 0, 131.046, -0.101375, 8.81121, 0.1, -8.69168, 0, -0.25, 0, 0.25, 0),
+"times": PackedFloat32Array(0, 0.2, 0.433333, 1.3)
 }
 tracks/1/type = "bezier"
 tracks/1/imported = false
@@ -151,9 +132,9 @@ tracks/1/path = NodePath("Sprite2D:rotation_degrees")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/keys = {
-"handle_modes": PackedInt32Array(2, 2, 0),
-"points": PackedFloat32Array(0, 0, 0, 0.0666667, 0, 75.1429, -0.0343019, -43.7529, 0.1, 127.552, 360, -0.25, 0, 0.25, 0),
-"times": PackedFloat32Array(0, 0.1, 1.3)
+"handle_modes": PackedInt32Array(2, 2, 0, 0),
+"points": PackedFloat32Array(0, 0, 0, 0.0666667, 0, 64.9324, -0.0166667, -5.28188, 0.0222222, 7.04251, 90.1237, -0.0666667, -1.86603, 0.133333, 10.2632, 360, -0.25, 0, 0.25, 0),
+"times": PackedFloat32Array(0, 0.1, 0.3, 1.3)
 }
 
 [sub_resource type="Animation" id="8"]
@@ -313,7 +294,7 @@ tracks/0/keys = {
 "times": PackedFloat32Array(0, 0.1, 0.2, 0.3),
 "transitions": PackedFloat32Array(1, 1, 1, 1),
 "update": 0,
-"values": [Vector2(0, 6.29962), Vector2(0, -25), Vector2(0, -25), Vector2(0, 6.29962)]
+"values": [Vector2(0, 0), Vector2(0, -15), Vector2(0, -15), Vector2(0, 0)]
 }
 tracks/1/type = "value"
 tracks/1/imported = false
@@ -427,24 +408,13 @@ _data = {
 collision_layer = 4
 collision_mask = 8
 
-[node name="SeekingProjSeekArea" type="Area2D" parent="."]
-rotation = 1.57413
-collision_layer = 0
-collision_mask = 8
-monitoring = false
-monitorable = false
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="SeekingProjSeekArea"]
-shape = SubResource("24")
-
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 rotation = 1.57413
 shape = SubResource("1")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 material = SubResource("2")
-position = Vector2(0, 6.29962)
-rotation = 6.28319
+scale = Vector2(0.4, 0.4)
 texture = ExtResource("1_t5dxa")
 
 [node name="Fire" type="Sprite2D" parent="Sprite2D"]
@@ -474,42 +444,41 @@ scale = Vector2(1.67193, 1.67193)
 texture = ExtResource("12")
 offset = Vector2(-21.4132, -17.9986)
 
-[node name="GPUParticles2D" type="GPUParticles2D" parent="Sprite2D"]
-modulate = Color(2, 2, 2, 1)
-emitting = false
-amount = 24
-process_material = SubResource("28")
-texture = ExtResource("14")
-lifetime = 2.0
-
 [node name="RayCast2D" type="RayCast2D" parent="."]
 collision_mask = 3
 
 [node name="Info" type="Control" parent="."]
 layout_mode = 3
-anchors_preset = 0
-offset_left = -121.549
-offset_top = 92.7492
-offset_right = -19.5491
-offset_bottom = 118.749
-scale = Vector2(2.5, 2.5)
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+grow_horizontal = 2
+grow_vertical = 2
 
 [node name="Icon" type="TextureRect" parent="Info"]
 visible = false
 custom_minimum_size = Vector2(24, 24)
 layout_mode = 0
-offset_right = 24.0
-offset_bottom = 24.0
+offset_left = -48.0
+offset_top = 32.0
+offset_right = -24.0
+offset_bottom = 56.0
 texture = ExtResource("1")
 expand_mode = 1
 stretch_mode = 5
 
 [node name="Label" type="Label" parent="Info"]
-layout_mode = 0
+layout_mode = 1
+anchors_preset = 1
 anchor_left = 1.0
 anchor_right = 1.0
-offset_left = -58.0
-offset_bottom = 24.0
+offset_left = -16.0
+offset_top = 32.0
+offset_right = 42.0
+offset_bottom = 56.0
+grow_horizontal = 0
 theme = ExtResource("2")
 text = "15"
 
@@ -517,10 +486,10 @@ text = "15"
 modulate = Color(0, 1, 0, 1)
 light_mask = 0
 layout_mode = 0
-offset_left = 103.02
-offset_top = -5.09968
-offset_right = 167.02
-offset_bottom = -0.0996799
+offset_left = 68.0
+offset_top = 32.0
+offset_right = 132.0
+offset_bottom = 37.0
 rotation = -1.5708
 value = 50.0
 nine_patch_stretch = true
@@ -529,10 +498,10 @@ texture_progress = ExtResource("6")
 
 [node name="Effects" type="HBoxContainer" parent="Info"]
 layout_mode = 0
-offset_left = -25.5284
-offset_top = -138.064
-offset_right = 123.472
-offset_bottom = -100.064
+offset_left = -72.0
+offset_top = -80.0
+offset_right = 77.0004
+offset_bottom = -42.0
 theme = ExtResource("2")
 alignment = 1
 
@@ -635,6 +604,3 @@ randomness = 1.0
 libraries = {
 "": SubResource("AnimationLibrary_u6u7m")
 }
-
-[node name="RoDTimer" type="Timer" parent="."]
-one_shot = true

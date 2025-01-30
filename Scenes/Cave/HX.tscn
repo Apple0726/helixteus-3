@@ -1,0 +1,299 @@
+[gd_scene load_steps=32 format=3 uid="uid://ckgd3ne8kedgu"]
+
+[ext_resource type="Shader" path="res://Shaders/HX.gdshader" id="1_bfi0c"]
+[ext_resource type="Texture2D" uid="uid://dw4gx6xj2i5g7" path="res://Graphics/HX/1_1.png" id="1_t5dxa"]
+[ext_resource type="Texture2D" uid="uid://kr2fdk8dptv1" path="res://Graphics/Misc/BarUnder2.png" id="3"]
+[ext_resource type="Texture2D" uid="uid://dl452yovfklni" path="res://Graphics/Decoratives/BulletHit.jpg" id="5"]
+[ext_resource type="Texture2D" uid="uid://bx1hvetixqpwi" path="res://Graphics/Misc/Bar2.png" id="6"]
+[ext_resource type="Shader" path="res://Shaders/Fire.gdshader" id="7"]
+[ext_resource type="Texture2D" uid="uid://cdblvpftr6875" path="res://icon.png" id="8"]
+[ext_resource type="Shader" path="res://Shaders/Laser.gdshader" id="11"]
+[ext_resource type="Texture2D" uid="uid://yhdxrw2q1yep" path="res://Graphics/HX/Status effects/Stun.png" id="12"]
+[ext_resource type="Texture2D" uid="uid://b1dcgxga387up" path="res://Graphics/Effects/spotlight_1.png" id="14"]
+
+[sub_resource type="CircleShape2D" id="24"]
+radius = 1252.0
+
+[sub_resource type="CapsuleShape2D" id="1"]
+radius = 59.993
+height = 229.932
+
+[sub_resource type="ShaderMaterial" id="2"]
+resource_local_to_scene = true
+shader = ExtResource("1_bfi0c")
+shader_parameter/amplitude = 6.0
+shader_parameter/frequency = 6.0
+shader_parameter/aurora = false
+shader_parameter/light = 1.0
+shader_parameter/modulate_color = Color(1, 1, 1, 1)
+shader_parameter/flash = 0.0
+
+[sub_resource type="ShaderMaterial" id="3"]
+shader = ExtResource("7")
+shader_parameter/color = Color(1, 0, 0, 1)
+shader_parameter/fog_size = 6.0
+shader_parameter/fog_mvt_spd = 1.0
+shader_parameter/OCTAVES = 4
+
+[sub_resource type="ShaderMaterial" id="4"]
+shader = ExtResource("11")
+shader_parameter/beams = 1
+shader_parameter/energy = 20.0
+shader_parameter/roughness = 3
+shader_parameter/frequency = 10
+shader_parameter/speed = 1.0
+shader_parameter/thickness = 0.021
+shader_parameter/outline_thickness = 0.044
+shader_parameter/beam_difference = 0.0
+shader_parameter/glow = 0.0
+shader_parameter/outline_glow = 0.0
+shader_parameter/color = Color(0.91, 1.5, 1.5, 1)
+shader_parameter/outline_color = Color(0.501961, 1, 0.960784, 1)
+shader_parameter/progress = 1.0
+shader_parameter/y_offset = 0.0
+shader_parameter/fixed_edge_size = 0.05
+shader_parameter/noise_scale = Vector2(1, 1)
+
+[sub_resource type="ShaderMaterial" id="5"]
+shader = ExtResource("11")
+shader_parameter/beams = 1
+shader_parameter/energy = 10.0
+shader_parameter/roughness = 8
+shader_parameter/frequency = 15
+shader_parameter/speed = 1.0
+shader_parameter/thickness = 0.012
+shader_parameter/outline_thickness = 0.043
+shader_parameter/beam_difference = 0.0
+shader_parameter/glow = 0.0
+shader_parameter/outline_glow = 0.0
+shader_parameter/color = Color(0.91, 2, 2, 1)
+shader_parameter/outline_color = Color(0.5, 1, 0.96, 1)
+shader_parameter/progress = 1.0
+shader_parameter/y_offset = 0.0
+shader_parameter/fixed_edge_size = 0.05
+shader_parameter/noise_scale = Vector2(1, 1)
+
+[sub_resource type="Gradient" id="26"]
+offsets = PackedFloat32Array(0, 0.518692, 1)
+colors = PackedColorArray(1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 0)
+
+[sub_resource type="GradientTexture2D" id="30"]
+gradient = SubResource("26")
+
+[sub_resource type="ParticleProcessMaterial" id="28"]
+emission_shape = 2
+emission_sphere_radius = 1.0
+direction = Vector3(0, -1, 0)
+spread = 75.94
+gravity = Vector3(0, 0, 0)
+color = Color(1, 0.603922, 0, 1)
+color_ramp = SubResource("30")
+
+[sub_resource type="Animation" id="6"]
+length = 0.5
+step = 0.05
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:material:shader_parameter/modulate_color")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.05, 0.45),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 1), Color(1, 0, 0, 1), Color(1, 1, 1, 1)]
+}
+
+[sub_resource type="Animation" id="Animation_54dbw"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:material:shader_parameter/modulate_color")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1, 1, 1, 1)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_4bina"]
+_data = {
+"Hurt": SubResource("6"),
+"RESET": SubResource("Animation_54dbw")
+}
+
+[sub_resource type="Gradient" id="Gradient_vwroj"]
+colors = PackedColorArray(1, 1, 1, 1, 1, 1, 1, 0)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_hnbg8"]
+gradient = SubResource("Gradient_vwroj")
+
+[sub_resource type="ParticleProcessMaterial" id="14"]
+particle_flag_align_y = true
+particle_flag_disable_z = true
+angle_max = 360.0
+direction = Vector3(-1, 0, 0)
+spread = 180.0
+initial_velocity_min = 250.0
+initial_velocity_max = 750.0
+gravity = Vector3(0, 0, 0)
+scale_min = 0.5
+color_ramp = SubResource("GradientTexture1D_hnbg8")
+
+[sub_resource type="Gradient" id="Gradient_imv4j"]
+offsets = PackedFloat32Array(0, 0.157895, 0.585526, 1)
+colors = PackedColorArray(1, 1, 1, 1, 1, 1, 0, 1, 1, 0, 0, 1, 0, 0, 0, 0)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_gb66n"]
+gradient = SubResource("Gradient_imv4j")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_x45cj"]
+particle_flag_disable_z = true
+spread = 180.0
+initial_velocity_min = 300.0
+initial_velocity_max = 500.0
+orbit_velocity_max = 0.1
+damping_min = 100.0
+damping_max = 100.0
+scale_max = 4.0
+color_ramp = SubResource("GradientTexture1D_gb66n")
+
+[sub_resource type="Gradient" id="Gradient_ywuum"]
+colors = PackedColorArray(1, 1, 1, 1, 1, 1, 1, 0)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_ihuwx"]
+gradient = SubResource("Gradient_ywuum")
+
+[sub_resource type="ParticleProcessMaterial" id="22"]
+lifetime_randomness = 1.0
+particle_flag_disable_z = true
+direction = Vector3(-1, 0, 0)
+spread = 180.0
+initial_velocity_min = 150.0
+initial_velocity_max = 300.0
+gravity = Vector3(0, 0, 0)
+color_ramp = SubResource("GradientTexture1D_ihuwx")
+
+[node name="HX" type="CharacterBody2D"]
+collision_layer = 4
+collision_mask = 8
+
+[node name="SeekingProjSeekArea" type="Area2D" parent="."]
+rotation = 1.57413
+collision_layer = 0
+collision_mask = 8
+monitoring = false
+monitorable = false
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="SeekingProjSeekArea"]
+shape = SubResource("24")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+rotation = 1.57413
+shape = SubResource("1")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+material = SubResource("2")
+position = Vector2(0, 6.29962)
+texture = ExtResource("1_t5dxa")
+
+[node name="Fire" type="Sprite2D" parent="Sprite2D"]
+visible = false
+material = SubResource("3")
+position = Vector2(48.8168, -97.6652)
+scale = Vector2(12, 12)
+texture = ExtResource("8")
+
+[node name="Stun" type="Node2D" parent="Sprite2D"]
+visible = false
+position = Vector2(0, -6.29962)
+
+[node name="Sprite2D" type="Sprite2D" parent="Sprite2D/Stun"]
+material = SubResource("4")
+position = Vector2(47.1782, 64.5085)
+rotation = 0.496553
+scale = Vector2(2.36037, 2.36037)
+texture = ExtResource("12")
+offset = Vector2(-21.4132, -17.9986)
+
+[node name="Sprite2" type="Sprite2D" parent="Sprite2D/Stun"]
+material = SubResource("5")
+position = Vector2(11.3541, 50.4711)
+rotation = -0.583007
+scale = Vector2(1.67193, 1.67193)
+texture = ExtResource("12")
+offset = Vector2(-21.4132, -17.9986)
+
+[node name="GPUParticles2D" type="GPUParticles2D" parent="Sprite2D"]
+modulate = Color(2, 2, 2, 1)
+emitting = false
+amount = 24
+process_material = SubResource("28")
+texture = ExtResource("14")
+lifetime = 2.0
+
+[node name="RayCast2D" type="RayCast2D" parent="."]
+collision_mask = 3
+
+[node name="Info" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 0
+offset_left = -121.549
+offset_top = 92.7492
+offset_right = -19.5491
+offset_bottom = 118.749
+scale = Vector2(2.5, 2.5)
+
+[node name="HP" type="TextureProgressBar" parent="Info"]
+modulate = Color(0, 1, 0, 1)
+light_mask = 0
+layout_mode = 0
+offset_left = 103.02
+offset_top = -5.09968
+offset_right = 167.02
+offset_bottom = -0.0996799
+rotation = -1.5708
+value = 50.0
+nine_patch_stretch = true
+texture_under = ExtResource("3")
+texture_progress = ExtResource("6")
+
+[node name="HurtAnimation" type="AnimationPlayer" parent="."]
+libraries = {
+"": SubResource("AnimationLibrary_4bina")
+}
+
+[node name="BulletParticles" type="GPUParticles2D" parent="."]
+emitting = false
+amount = 30
+process_material = SubResource("14")
+texture = ExtResource("5")
+lifetime = 0.3
+one_shot = true
+explosiveness = 1.0
+
+[node name="BombParticles" type="GPUParticles2D" parent="."]
+scale = Vector2(2, 2)
+emitting = false
+amount = 150
+process_material = SubResource("ParticleProcessMaterial_x45cj")
+lifetime = 3.0
+one_shot = true
+explosiveness = 0.95
+randomness = 1.0
+
+[node name="LightParticles" type="GPUParticles2D" parent="."]
+emitting = false
+amount = 50
+process_material = SubResource("22")
+texture = ExtResource("14")
+one_shot = true
+explosiveness = 0.95
+randomness = 1.0
+
+[node name="RoDTimer" type="Timer" parent="."]
+one_shot = true

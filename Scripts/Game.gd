@@ -247,6 +247,7 @@ var cave
 var ruins
 var STM
 var battle
+var battle_GUI
 var ship_customize_screen
 var is_conquering_all:bool = false
 
@@ -1502,7 +1503,7 @@ func switch_view(new_view:String, other_params:Dictionary = {}):
 				"battle":
 					$UI.add_child(HUD)
 					battle.queue_free()
-					$BattleBG.hide()
+					battle_GUI.queue_free()
 				"ship_customize_screen":
 					$UI.add_child(HUD)
 					ship_customize_screen.queue_free()
@@ -1622,12 +1623,17 @@ func switch_view(new_view:String, other_params:Dictionary = {}):
 				if is_instance_valid(HUD) and $UI.is_ancestor_of(HUD):
 					$UI.remove_child(HUD)
 				battle = load("res://Scenes/Views/Battle.tscn").instantiate()
+				view.scale = Vector2.ONE
+				view.position = Vector2.ZERO
+				view.move_with_keyboard = false
 				view.add_child(battle)
 				if starfield_tween:
 					starfield_tween.kill()
 				starfield_tween = create_tween()
 				starfield_tween.tween_property($Stars/Starfield, "modulate:a", 0.5, 0.5)
-				$BattleBG.show()
+				battle_GUI = load("res://Scenes/BattleGUI.tscn").instantiate()
+				battle_GUI.battle = battle
+				add_child(battle_GUI)
 			"ship_customize_screen":
 				$Ship.hide()
 				ship_customize_screen = load("res://Scenes/ShipCustomizeScreen.tscn").instantiate()
@@ -4596,13 +4602,13 @@ func add_new_ship_data():
 		"ship_class":ShipClass.STANDARD,
 	})
 	if len(ship_data) == 1:
-		ship_data[-1].initial_position = Vector2(128, 88)
+		ship_data[-1].initial_position = Vector2(230, 158)
 	elif len(ship_data) == 2:
-		ship_data[-1].initial_position = Vector2(320, 88)
+		ship_data[-1].initial_position = Vector2(576, 158)
 	elif len(ship_data) == 3:
-		ship_data[-1].initial_position = Vector2(128, 216)
+		ship_data[-1].initial_position = Vector2(230, 389)
 	elif len(ship_data) == 4:
-		ship_data[-1].initial_position = Vector2(320, 216)
+		ship_data[-1].initial_position = Vector2(576, 389)
 
 func get_1st_ship():
 	add_new_ship_data()
