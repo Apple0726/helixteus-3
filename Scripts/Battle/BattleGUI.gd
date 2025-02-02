@@ -1,6 +1,9 @@
+class_name BattleGUI
 extends Control
 
 @onready var game = get_node("/root/Game")
+@onready var main_panel = get_node("MainPanel")
+@onready var turn_order_hbox = get_node("TurnOrderHBox")
 var battle
 
 # Called when the node enters the scene tree for the first time.

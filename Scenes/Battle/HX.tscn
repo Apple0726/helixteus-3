@@ -1,6 +1,7 @@
-[gd_scene load_steps=44 format=3 uid="uid://cpjo82l86k61"]
+[gd_scene load_steps=45 format=3 uid="uid://cpjo82l86k61"]
 
 [ext_resource type="Texture2D" uid="uid://7ffsf7xuvfw2" path="res://Graphics/Icons/attack.png" id="1"]
+[ext_resource type="Script" path="res://Scripts/Battle/HX.gd" id="1_3h40m"]
 [ext_resource type="Shader" path="res://Shaders/HX.gdshader" id="1_bfi0c"]
 [ext_resource type="Texture2D" uid="uid://dw4gx6xj2i5g7" path="res://Graphics/HX/1_1.png" id="1_t5dxa"]
 [ext_resource type="Theme" uid="uid://cp2u1kgj60ic" path="res://Resources/default_theme.tres" id="2"]
@@ -407,6 +408,7 @@ _data = {
 [node name="HX" type="CharacterBody2D"]
 collision_layer = 4
 collision_mask = 8
+script = ExtResource("1_3h40m")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 rotation = 1.57413

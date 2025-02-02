@@ -1,7 +1,7 @@
 [gd_scene load_steps=3 format=2]
 
-[ext_resource path="res://Scripts/HXs_Cave/Bomb.gd" type="Script" id=1]
-[ext_resource path="res://Graphics/Weapons/bomb1.png" type="Texture2D" id=2]
+[ext_resource type="Script" path="res://Scripts/Cave/Bomb.gd" id="1"]
+[ext_resource type="Texture2D" uid="uid://cyogaq3sj1anp" path="res://Graphics/Weapons/bomb1.png" id="2"]
 
 [node name="Bomb" type="Node2D"]
 script = ExtResource( 1 )

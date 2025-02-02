@@ -1,10 +1,10 @@
 [gd_scene load_steps=11 format=3 uid="uid://dwa665hyuis2m"]
 
-[ext_resource type="Script" path="res://Scripts/Battle.gd" id="1_ylili"]
+[ext_resource type="Script" path="res://Scripts/Battle/Battle.gd" id="1_ylili"]
 [ext_resource type="Texture2D" uid="uid://koi0aarpqj30" path="res://Graphics/Ships/Ship0.png" id="3"]
 [ext_resource type="Texture2D" uid="uid://b8ga5o8bhm1hb" path="res://Graphics/Ships/Ship1.png" id="6"]
 [ext_resource type="Texture2D" uid="uid://dxjlx3yjmlywi" path="res://Graphics/Ships/Ship2.png" id="7"]
-[ext_resource type="PackedScene" uid="uid://cxykmxd6r2wgm" path="res://Scenes/Ship.tscn" id="12"]
+[ext_resource type="PackedScene" uid="uid://cxykmxd6r2wgm" path="res://Scenes/Battle/Ship.tscn" id="12"]
 [ext_resource type="Texture2D" uid="uid://wrc1em7frxle" path="res://Graphics/Ships/Ship3.png" id="13"]
 
 [sub_resource type="SegmentShape2D" id="SegmentShape2D_0g6th"]

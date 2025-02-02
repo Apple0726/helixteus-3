@@ -1633,6 +1633,7 @@ func switch_view(new_view:String, other_params:Dictionary = {}):
 				starfield_tween.tween_property($Stars/Starfield, "modulate:a", 0.5, 0.5)
 				battle_GUI = load("res://Scenes/BattleGUI.tscn").instantiate()
 				battle_GUI.battle = battle
+				battle.battle_GUI = battle_GUI
 				add_child(battle_GUI)
 			"ship_customize_screen":
 				$Ship.hide()

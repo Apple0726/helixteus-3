@@ -1,7 +1,7 @@
 [gd_scene load_steps=5 format=3 uid="uid://cd1ho8d2qufs6"]
 
-[ext_resource type="Script" path="res://Scripts/STMProjectile.gd" id="1_eptwt"]
-[ext_resource type="Texture2D" uid="uid://b23k4vsw47lfd" path="res://Graphics/Weapons/bullet1.png" id="2_be4c6"]
+[ext_resource type="Script" path="res://Scripts/STM/STMProjectile.gd" id="1_eptwt"]
+[ext_resource type="Texture2D" uid="uid://bc6latfcdvj1t" path="res://Graphics/Weapons/bullet1.png" id="2_be4c6"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_in1ri"]
 radius = 3.0

@@ -1,6 +1,6 @@
 [gd_scene load_steps=53 format=3 uid="uid://dkeiijs55u4pd"]
 
-[ext_resource type="Script" path="res://Scripts/BattleLegacy.gd" id="1"]
+[ext_resource type="Script" path="res://Scripts/Battle/BattleLegacy.gd" id="1"]
 [ext_resource type="Theme" uid="uid://cp2u1kgj60ic" path="res://Resources/default_theme.tres" id="2"]
 [ext_resource type="Texture2D" uid="uid://koi0aarpqj30" path="res://Graphics/Ships/Ship0.png" id="3"]
 [ext_resource type="Texture2D" uid="uid://47ckp0wuhpfy" path="res://Graphics/Icons/current.png" id="4"]
@@ -9,7 +9,7 @@
 [ext_resource type="Shader" path="res://Shaders/Laser.gdshader" id="8"]
 [ext_resource type="Texture2D" uid="uid://4btqw773gw21" path="res://Graphics/Planets/BGs/9.png" id="9"]
 [ext_resource type="PackedScene" uid="uid://cy1jwsk8ofoys" path="res://Scenes/Key.tscn" id="11"]
-[ext_resource type="PackedScene" uid="uid://cxykmxd6r2wgm" path="res://Scenes/Ship.tscn" id="12"]
+[ext_resource type="PackedScene" uid="uid://cxykmxd6r2wgm" path="res://Scenes/Battle/Ship.tscn" id="12"]
 [ext_resource type="Texture2D" uid="uid://wrc1em7frxle" path="res://Graphics/Ships/Ship3.png" id="13"]
 [ext_resource type="Texture2D" uid="uid://ck8hhokxiy34p" path="res://Graphics/Icons/HX_icon.png" id="14"]
 [ext_resource type="Shader" path="res://Shaders/FloatAnimation.gdshader" id="15"]

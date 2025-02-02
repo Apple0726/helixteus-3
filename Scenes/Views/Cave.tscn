@@ -1,7 +1,7 @@
 [gd_scene load_steps=98 format=3 uid="uid://biq34iioj6uf8"]
 
 [ext_resource type="Shader" path="res://Shaders/Laser.gdshader" id="1"]
-[ext_resource type="Script" path="res://Scripts/Cave.gd" id="2"]
+[ext_resource type="Script" path="res://Scripts/Cave/Cave.gd" id="2"]
 [ext_resource type="PackedScene" path="res://Scenes/FilterButton.tscn" id="3"]
 [ext_resource type="Texture2D" uid="uid://4tf3teqmkahc" path="res://Graphics/Misc/Bar.png" id="4"]
 [ext_resource type="Texture2D" uid="uid://qbiggp0bodp1" path="res://Graphics/Cave/MiningLaser.png" id="5"]

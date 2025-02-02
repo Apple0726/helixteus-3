@@ -1,7 +1,7 @@
 [gd_scene load_steps=3 format=2]
 
-[ext_resource path="res://Graphics/Icons/money.png" type="Texture2D" id=1]
-[ext_resource path="res://Scripts/FilterButton.gd" type="Script" id=2]
+[ext_resource type="Texture2D" uid="uid://b0brlrg52bjln" path="res://Graphics/Icons/money.png" id="1"]
+[ext_resource type="Script" path="res://Scripts/Cave/FilterButton.gd" id="2"]
 
 [node name="Resource" type="Button"]
 offset_right = 40.0

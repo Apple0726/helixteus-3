@@ -1,10 +1,10 @@
 [gd_scene load_steps=21 format=3 uid="uid://bvs7tmwu2go0"]
 
-[ext_resource type="Texture2D" uid="uid://8gvebpp8rg27" path="res://Graphics/Cave/DebrisCave.png" id="1"]
-[ext_resource type="Script" path="res://Scripts/Debris.gd" id="2"]
-[ext_resource type="Texture2D" uid="uid://dl6nlht3gvmrx" path="res://Graphics/Cave/DebrisLava.png" id="3"]
-[ext_resource type="Texture2D" uid="uid://delruecv81gsh" path="res://Graphics/Effects/spotlight_1.png" id="4"]
-[ext_resource type="Texture2D" uid="uid://di7b1sx1bp7q7" path="res://Graphics/Cave/DebrisAnim.png" id="5"]
+[ext_resource type="Texture2D" uid="uid://dilhlyh5sbfqs" path="res://Graphics/Cave/DebrisCave.png" id="1"]
+[ext_resource type="Script" path="res://Scripts/Cave/Debris.gd" id="2"]
+[ext_resource type="Texture2D" uid="uid://cjmi7f8211uny" path="res://Graphics/Cave/DebrisLava.png" id="3"]
+[ext_resource type="Texture2D" uid="uid://b1dcgxga387up" path="res://Graphics/Effects/spotlight_1.png" id="4"]
+[ext_resource type="Texture2D" uid="uid://doyhcr5ker08v" path="res://Graphics/Cave/DebrisAnim.png" id="5"]
 
 [sub_resource type="Shader" id="7"]
 code = "shader_type canvas_item;
