@@ -1622,19 +1622,19 @@ func switch_view(new_view:String, other_params:Dictionary = {}):
 				$Ship.visible = false
 				if is_instance_valid(HUD) and $UI.is_ancestor_of(HUD):
 					$UI.remove_child(HUD)
-				battle = load("res://Scenes/Views/Battle.tscn").instantiate()
 				view.scale = Vector2.ONE
 				view.position = Vector2.ZERO
 				view.move_with_keyboard = false
-				view.add_child(battle)
 				if starfield_tween:
 					starfield_tween.kill()
 				starfield_tween = create_tween()
 				starfield_tween.tween_property($Stars/Starfield, "modulate:a", 0.5, 0.5)
 				battle_GUI = load("res://Scenes/BattleGUI.tscn").instantiate()
 				battle_GUI.battle = battle
+				battle = load("res://Scenes/Views/Battle.tscn").instantiate()
 				battle.battle_GUI = battle_GUI
 				add_child(battle_GUI)
+				view.add_child(battle)
 			"ship_customize_screen":
 				$Ship.hide()
 				ship_customize_screen = load("res://Scenes/ShipCustomizeScreen.tscn").instantiate()
@@ -2918,6 +2918,12 @@ func generate_planets(id:int):#local id
 				var defense = stats[1]
 				var accuracy = stats[2]
 				var agility = stats[3]
+				if planets_generated == 0 and i == 2:
+					while agility > 7:
+						agility -= 3
+						attack += 1
+						defense += 1
+						accuracy += 1
 				var _money = round(randf_range(1, 2) * pow(1.3, lv - 1) * 50000)
 				var XP = round(pow(1.25, lv - 1) * 5)
 				var colliding = true
