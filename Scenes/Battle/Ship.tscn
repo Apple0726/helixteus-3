@@ -145,6 +145,7 @@ color_ramp = SubResource("27")
 [node name="Ship" type="Area2D"]
 collision_layer = 2
 collision_mask = 16
+monitoring = false
 script = ExtResource("2")
 
 [node name="ThrusterFire" parent="." instance=ExtResource("4")]
@@ -169,7 +170,8 @@ texture = ExtResource("5")
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 rotation = 1.5708
 shape = SubResource("5")
-disabled = true
+
+[node name="Polygon2D" type="Polygon2D" parent="CollisionShape2D"]
 
 [node name="Label" type="Label" parent="."]
 offset_left = -28.0

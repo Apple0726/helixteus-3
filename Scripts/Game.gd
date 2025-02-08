@@ -246,7 +246,7 @@ var science_tree_view = {"pos":Vector2.ZERO, "zoom":1.0}
 var cave
 var ruins
 var STM
-var battle
+var battle_scene
 var battle_GUI
 var ship_customize_screen
 var is_conquering_all:bool = false
@@ -1502,7 +1502,7 @@ func switch_view(new_view:String, other_params:Dictionary = {}):
 					switch_music(load("res://Audio/ambient" + str(Helper.rand_int(1, 3)) + ".ogg"), u_i.time_speed)
 				"battle":
 					$UI.add_child(HUD)
-					battle.queue_free()
+					battle_scene.queue_free()
 					battle_GUI.queue_free()
 				"ship_customize_screen":
 					$UI.add_child(HUD)
@@ -1630,11 +1630,11 @@ func switch_view(new_view:String, other_params:Dictionary = {}):
 				starfield_tween = create_tween()
 				starfield_tween.tween_property($Stars/Starfield, "modulate:a", 0.5, 0.5)
 				battle_GUI = load("res://Scenes/BattleGUI.tscn").instantiate()
-				battle_GUI.battle = battle
-				battle = load("res://Scenes/Views/Battle.tscn").instantiate()
-				battle.battle_GUI = battle_GUI
+				battle_scene = load("res://Scenes/Views/Battle.tscn").instantiate()
+				battle_GUI.battle_scene = battle_scene
+				battle_scene.battle_GUI = battle_GUI
 				add_child(battle_GUI)
-				view.add_child(battle)
+				view.add_child(battle_scene)
 			"ship_customize_screen":
 				$Ship.hide()
 				ship_customize_screen = load("res://Scenes/ShipCustomizeScreen.tscn").instantiate()

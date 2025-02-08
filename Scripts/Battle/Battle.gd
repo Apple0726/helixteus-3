@@ -2,7 +2,8 @@ extends Node
 
 @onready var game = get_node("/root/Game")
 
-const PIXELS_PER_M = 50.0
+const METERS_PER_AGILITY = 10.0
+const PIXELS_PER_METER = 5.0
 
 var battle_GUI:BattleGUI
 var HX_scene = preload("res://Scenes/Battle/HX.tscn")
@@ -32,10 +33,14 @@ func _ready() -> void:
 	for i in range(0, 4):
 		if len(ship_data) > i:
 			var ship_node = get_node("Ship%s" % (i + 1))
+			ship_node.METERS_PER_AGILITY = METERS_PER_AGILITY
+			ship_node.PIXELS_PER_METER = PIXELS_PER_METER
 			ship_node.show()
+			ship_node.monitorable = true
 			ship_node.initialize_stats(ship_data[i])
 			ship_node.roll_initiative()
 			ship_node.position = ship_data[i].initial_position
+			ship_node.battle_scene = self
 			ship_node.battle_GUI = battle_GUI
 			get_node("Ship%s/Sprite2D" % (i + 1)).material.set_shader_parameter("frequency", 6 * time_speed)
 			get_node("Ship%s/HP" % (i + 1)).max_value = ship_data[i].HP
@@ -45,9 +50,11 @@ func _ready() -> void:
 			ship_nodes.append(ship_node)
 	for i in len(HX_data):
 		var HX = HX_scene.instantiate()
+		HX.METERS_PER_AGILITY = METERS_PER_AGILITY
+		HX.PIXELS_PER_METER = PIXELS_PER_METER
 		HX.initialize_stats(HX_data[i])
+		HX.battle_scene = self
 		HX.battle_GUI = battle_GUI
-		HX.PIXELS_PER_M = PIXELS_PER_M
 		HX.HX_nodes = HX_nodes
 		HX.ship_nodes = ship_nodes
 		HX.roll_initiative()
@@ -101,8 +108,10 @@ func initialize_battle():
 				ship_nodes[entity.idx].turn_index = i
 	var move_view_tween = create_tween()
 	if initiative_order[0].type == SHIP:
+		var ship_node = ship_nodes[initiative_order[0].idx]
 		battle_GUI.main_panel.get_node("AnimationPlayer").play("Fade")
-		move_view_tween.tween_property(game.view, "position", Vector2(640, 360) - ship_nodes[initiative_order[0].idx].position, 1.0).set_trans(Tween.TRANS_CUBIC)
+		move_view_tween.tween_property(game.view, "position", Vector2(640, 360) - ship_node.position, 1.0).set_trans(Tween.TRANS_CUBIC)
+		ship_node.take_turn()
 	elif initiative_order[0].type == ENEMY:
 		var HX_node = HX_nodes[initiative_order[0].idx]
 		move_view_tween.tween_property(game.view, "position", Vector2(640, 360) - HX_node.position, 1.0).set_trans(Tween.TRANS_CUBIC)

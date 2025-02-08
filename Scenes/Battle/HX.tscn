@@ -1,4 +1,4 @@
-[gd_scene load_steps=45 format=3 uid="uid://cpjo82l86k61"]
+[gd_scene load_steps=46 format=3 uid="uid://cpjo82l86k61"]
 
 [ext_resource type="Texture2D" uid="uid://7ffsf7xuvfw2" path="res://Graphics/Icons/attack.png" id="1"]
 [ext_resource type="Script" path="res://Scripts/Battle/HX.gd" id="1_3h40m"]
@@ -16,6 +16,10 @@
 [ext_resource type="Texture2D" uid="uid://b642ran0hp7j4" path="res://Graphics/Icons/Stun.png" id="13"]
 [ext_resource type="Texture2D" uid="uid://b1dcgxga387up" path="res://Graphics/Effects/spotlight_1.png" id="14"]
 [ext_resource type="Texture2D" uid="uid://bn520d6r5iwik" path="res://Graphics/Icons/accuracy.png" id="15"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_1s5uh"]
+resource_local_to_scene = true
+radius = 100.0
 
 [sub_resource type="CapsuleShape2D" id="1"]
 radius = 23.9999
@@ -405,14 +409,28 @@ _data = {
 "LabelAnim": SubResource("23")
 }
 
-[node name="HX" type="CharacterBody2D"]
+[node name="HX" type="Area2D"]
 collision_layer = 4
-collision_mask = 8
+collision_mask = 0
+monitoring = false
 script = ExtResource("1_3h40m")
+
+[node name="CollisionShapeFinder" type="Area2D" parent="."]
+collision_layer = 0
+collision_mask = 39
+monitorable = false
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="CollisionShapeFinder"]
+shape = SubResource("CircleShape2D_1s5uh")
+debug_color = Color(0.533333, 0, 0.701961, 0.419608)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 rotation = 1.57413
 shape = SubResource("1")
+
+[node name="Polygon2D" type="Polygon2D" parent="CollisionShape2D"]
+color = Color(1, 1, 1, 0)
+polygon = PackedVector2Array(-23.8932, 32.0798, -24.1065, -31.9198, -12.1466, -43.9598, -0.160019, -47.9997, 15.8532, -44.0531, 23.8932, -32.0798, 24.1065, 31.9198, 16.1466, 43.9464, 0.160019, 47.9997, -15.8532, 44.0531)
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 material = SubResource("2")
@@ -447,7 +465,8 @@ texture = ExtResource("12")
 offset = Vector2(-21.4132, -17.9986)
 
 [node name="RayCast2D" type="RayCast2D" parent="."]
-collision_mask = 3
+enabled = false
+collision_mask = 39
 
 [node name="Info" type="Control" parent="."]
 layout_mode = 3
@@ -606,3 +625,6 @@ randomness = 1.0
 libraries = {
 "": SubResource("AnimationLibrary_u6u7m")
 }
+
+[connection signal="area_entered" from="CollisionShapeFinder" to="." method="_on_collision_shape_finder_area_entered"]
+[connection signal="area_exited" from="CollisionShapeFinder" to="." method="_on_collision_shape_finder_area_exited"]

@@ -28,18 +28,26 @@ script = ExtResource("1_ylili")
 
 [node name="Ship1" parent="." instance=ExtResource("12")]
 visible = false
+monitoring = false
+monitorable = false
 texture = ExtResource("3")
 
 [node name="Ship2" parent="." instance=ExtResource("12")]
 visible = false
+monitoring = false
+monitorable = false
 texture = ExtResource("6")
 
 [node name="Ship3" parent="." instance=ExtResource("12")]
 visible = false
+monitoring = false
+monitorable = false
 texture = ExtResource("7")
 
 [node name="Ship4" parent="." instance=ExtResource("12")]
 visible = false
+monitoring = false
+monitorable = false
 texture = ExtResource("13")
 
 [node name="Boundary" type="StaticBody2D" parent="."]
