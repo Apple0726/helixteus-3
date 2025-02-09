@@ -49,12 +49,16 @@ func take_turn():
 			var pos = position + r * Vector2.from_angle(th)
 			for obstacle in obstacles_in_range:
 				if not inside_obstacle and Geometry2D.is_point_in_polygon(pos, obstacle.get_node("CollisionShape2D/Polygon2D").polygon):
-					inside_obstacle = true
-					movement_left -= 30.0
+					if obstacle.type == 2: # If obstacle is boundary, no more movement is possible
+						movement_left = 0.0
+						continue
+					else:
+						inside_obstacle = true
+						movement_left -= 30.0
 				elif inside_obstacle and not Geometry2D.is_point_in_polygon(pos, obstacle.get_node("CollisionShape2D/Polygon2D").polygon):
 					inside_obstacle = false
 			if movement_left >= 0.0:
-				calculate_position_preferences(target_position + r * Vector2.from_angle(th))
+				calculate_position_preferences(position + r * Vector2.from_angle(th))
 	var target_move_position:Vector2 = position
 	var lowest_weight:float = INF
 	for pos in position_preferences:
@@ -84,7 +88,7 @@ func move(target_pos:Vector2):
 	var view_tween = create_tween()
 	tween.tween_property(self, "position", target_pos, 1.5).set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_CUBIC)
 	tween.tween_callback(attack_target)
-	view_tween.tween_property(game.view, "position", Vector2(640, 360) - target_pos, 1.5).set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_CUBIC)
+	view_tween.tween_property(game.view, "position", Vector2(640, 360) - target_pos * game.view.scale.x, 1.5).set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_CUBIC)
 
 func attack_target():
 	target_angle = atan2(target_position.y - position.y, target_position.x - position.x)
@@ -100,11 +104,18 @@ func attack_target():
 	tween.tween_callback(queue_redraw).set_delay(1.3)
 	await get_tree().create_timer(0.9).timeout
 	var projectile = preload("res://Scenes/Battle/Weapons/RedBullet.tscn").instantiate()
-	projectile.speed = 500.0
+	projectile.speed = 1000.0
 	projectile.rotation = randf_range(target_angle - target_angle_max_deviation, target_angle + target_angle_max_deviation)
 	projectile.damage = attack
+	projectile.projectile_accuracy = 1.0 * accuracy
 	projectile.position = position
 	battle_scene.add_child(projectile)
+	projectile.tree_exited.connect(ending_turn)
+
+
+func ending_turn():
+	create_tween().tween_callback(end_turn).set_delay(1.0)
+
 
 func _on_collision_shape_finder_area_entered(area: Area2D) -> void:
 	if area.get_instance_id() != get_instance_id():

@@ -9,7 +9,7 @@ height = 24.0
 
 [node name="RedBullet" type="Area2D"]
 collision_layer = 16
-collision_mask = 2
+collision_mask = 3
 monitorable = false
 script = ExtResource("1_gkh2o")
 

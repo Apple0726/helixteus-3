@@ -1,8 +1,8 @@
-[gd_scene load_steps=34 format=3 uid="uid://cxykmxd6r2wgm"]
+[gd_scene load_steps=30 format=3 uid="uid://cxykmxd6r2wgm"]
 
 [ext_resource type="Texture2D" uid="uid://kr2fdk8dptv1" path="res://Graphics/Misc/BarUnder2.png" id="1"]
 [ext_resource type="Script" path="res://Scripts/Battle/Ship.gd" id="2"]
-[ext_resource type="Shader" path="res://Shaders/FloatAnimation.gdshader" id="3"]
+[ext_resource type="Shader" path="res://Shaders/Ship.gdshader" id="3_cptad"]
 [ext_resource type="PackedScene" uid="uid://dtk1md86gqsln" path="res://Scenes/Fire.tscn" id="4"]
 [ext_resource type="Texture2D" uid="uid://koi0aarpqj30" path="res://Graphics/Ships/Ship0.png" id="5"]
 [ext_resource type="Texture2D" uid="uid://bx1hvetixqpwi" path="res://Graphics/Misc/Bar2.png" id="6"]
@@ -16,7 +16,6 @@
 [ext_resource type="Shader" path="res://Shaders/Laser.gdshader" id="14"]
 [ext_resource type="Theme" uid="uid://cp2u1kgj60ic" path="res://Resources/default_theme.tres" id="15"]
 [ext_resource type="Texture2D" uid="uid://7ffsf7xuvfw2" path="res://Graphics/Icons/attack.png" id="16"]
-[ext_resource type="Texture2D" uid="uid://ba37pys5xgmhs" path="res://Cursor.png" id="17"]
 
 [sub_resource type="Gradient" id="1"]
 offsets = PackedFloat32Array(0, 0.300469, 0.746479, 0.995305, 1)
@@ -35,25 +34,15 @@ scale_min = 0.04
 scale_max = 0.06
 color_ramp = SubResource("2")
 
-[sub_resource type="Gradient" id="34"]
-colors = PackedColorArray(1, 1, 1, 1, 1, 1, 1, 0)
-
-[sub_resource type="GradientTexture2D" id="35"]
-gradient = SubResource("34")
-
-[sub_resource type="ParticleProcessMaterial" id="36"]
-spread = 180.0
-gravity = Vector3(0, 0, 0)
-color_ramp = SubResource("35")
-
 [sub_resource type="ShaderMaterial" id="4"]
-shader = ExtResource("3")
+shader = ExtResource("3_cptad")
 shader_parameter/amplitude = 20.0
 shader_parameter/frequency = 6.0
+shader_parameter/hurt_flash = 0.0
 
 [sub_resource type="CapsuleShape2D" id="5"]
 radius = 12.0
-height = 96.0
+height = 112.0
 
 [sub_resource type="Shader" id="25"]
 code = "shader_type canvas_item;
@@ -153,15 +142,6 @@ position = Vector2(-60, -4)
 process_material = SubResource("3")
 local_coords = true
 
-[node name="Charge" type="GPUParticles2D" parent="."]
-modulate = Color(1, 1, 0, 1)
-scale = Vector2(0.1, 0.1)
-emitting = false
-amount = 10
-process_material = SubResource("36")
-texture = ExtResource("17")
-lifetime = 1.5
-
 [node name="Sprite2D" type="Sprite2D" parent="."]
 material = SubResource("4")
 scale = Vector2(0.15, 0.15)
@@ -172,6 +152,8 @@ rotation = 1.5708
 shape = SubResource("5")
 
 [node name="Polygon2D" type="Polygon2D" parent="CollisionShape2D"]
+color = Color(1, 1, 1, 0)
+polygon = PackedVector2Array(-11.9998, 48, -12.0002, -48, -0.000202719, -56, 11.9998, -48, 12.0002, 48, 0.000202719, 56)
 
 [node name="Label" type="Label" parent="."]
 offset_left = -28.0

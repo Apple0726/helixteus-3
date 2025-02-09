@@ -1,6 +1,10 @@
 extends Node2D
 
+signal next_turn
+
 @onready var game = get_node("/root/Game")
+
+@export var type:int
 
 var METERS_PER_AGILITY:float
 var PIXELS_PER_METER:float
@@ -8,6 +12,7 @@ var PIXELS_PER_METER:float
 var battle_scene:Node2D
 var battle_GUI:BattleGUI
 
+var lv:int
 var HP:int
 var total_HP:int
 var attack:int
@@ -21,7 +26,6 @@ var agility:int:
 		agility_updated_callback()
 var initiative:int
 var turn_index:int
-var type:int
 
 var attack_buff:int = 0
 var defense_buff:int = 0
@@ -34,6 +38,7 @@ var agility_buff:int = 0:
 		agility_updated_callback()
 
 func initialize_stats(data:Dictionary):
+	lv = data.lv
 	HP = data.HP
 	total_HP = data.HP
 	attack = data.attack
@@ -50,6 +55,7 @@ func take_turn():
 
 func end_turn():
 	battle_GUI.turn_order_hbox.get_child(turn_index).get_node("AnimationPlayer").play_backwards("ChangeSize")
+	emit_signal("next_turn")
 
 func agility_updated_callback():
 	if has_node("CollisionShapeFinder/CollisionShape2D"):

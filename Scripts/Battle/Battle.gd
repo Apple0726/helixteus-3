@@ -13,7 +13,7 @@ var ship_data:Array
 var hard_battle:bool = false
 var time_speed:float = 1.0
 var initiative_order = []
-var whose_turn_is_it_index:int = 0
+var whose_turn_is_it_index:int = -1
 var HX_nodes = []
 var ship_nodes = []
 
@@ -42,6 +42,7 @@ func _ready() -> void:
 			ship_node.position = ship_data[i].initial_position
 			ship_node.battle_scene = self
 			ship_node.battle_GUI = battle_GUI
+			ship_node.next_turn.connect(next_turn)
 			get_node("Ship%s/Sprite2D" % (i + 1)).material.set_shader_parameter("frequency", 6 * time_speed)
 			get_node("Ship%s/HP" % (i + 1)).max_value = ship_data[i].HP
 			get_node("Ship%s/HP" % (i + 1)).value = ship_data[i].HP
@@ -74,6 +75,7 @@ func _ready() -> void:
 		HX.get_node("Info/Effects/Fire").mouse_exited.connect(game.hide_tooltip)
 		HX.get_node("Info/Effects/Stun").mouse_entered.connect(game.show_tooltip.bind(tr("STUN_DESC")))
 		HX.get_node("Info/Effects/Stun").mouse_exited.connect(game.hide_tooltip)
+		HX.next_turn.connect(next_turn)
 		add_child(HX)
 		HX_nodes.append(HX)
 
@@ -106,17 +108,20 @@ func initialize_battle():
 				turn_order_button.set_texture(load("res://Graphics/Ships/Ship%s.png" % entity.idx))
 				turn_order_button.get_node("Panel")["theme_override_styles/panel"].border_color = Color(0.0, 0.8, 1.0, 0.7)
 				ship_nodes[entity.idx].turn_index = i
-	var move_view_tween = create_tween()
-	if initiative_order[0].type == SHIP:
-		var ship_node = ship_nodes[initiative_order[0].idx]
-		battle_GUI.main_panel.get_node("AnimationPlayer").play("Fade")
-		move_view_tween.tween_property(game.view, "position", Vector2(640, 360) - ship_node.position, 1.0).set_trans(Tween.TRANS_CUBIC)
-		ship_node.take_turn()
-	elif initiative_order[0].type == ENEMY:
-		var HX_node = HX_nodes[initiative_order[0].idx]
-		move_view_tween.tween_property(game.view, "position", Vector2(640, 360) - HX_node.position, 1.0).set_trans(Tween.TRANS_CUBIC)
-		HX_node.take_turn()
+	next_turn()
 
+func next_turn():
+	whose_turn_is_it_index += 1
+	var move_view_tween = create_tween()
+	if initiative_order[whose_turn_is_it_index].type == SHIP:
+		var ship_node = ship_nodes[initiative_order[whose_turn_is_it_index].idx]
+		battle_GUI.main_panel.get_node("AnimationPlayer").play("Fade")
+		move_view_tween.tween_property(game.view, "position", Vector2(640, 360) - ship_node.position * game.view.scale.x, 1.0).set_trans(Tween.TRANS_CUBIC)
+		ship_node.take_turn()
+	elif initiative_order[whose_turn_is_it_index].type == ENEMY:
+		var HX_node = HX_nodes[initiative_order[whose_turn_is_it_index].idx]
+		move_view_tween.tween_property(game.view, "position", Vector2(640, 360) - HX_node.position * game.view.scale.x, 1.0).set_trans(Tween.TRANS_CUBIC)
+		HX_node.take_turn()
 
 func sort_initiative(a, b):
 	return a.initiative > b.initiative
@@ -124,3 +129,50 @@ func sort_initiative(a, b):
 
 func _process(delta: float) -> void:
 	pass
+
+
+func add_damage_text(missed: bool, label_position:Vector2, damage: float = 0.0, critical: bool = false, label_initial_velocity:Vector2 = Vector2.ZERO):
+	var damage_text = preload("res://Scenes/Battle/DamageText.tscn").instantiate()
+	damage_text.missed = missed
+	damage_text.damage = damage
+	damage_text.critical = critical
+	damage_text.velocity = label_initial_velocity
+	damage_text.position = label_position
+	add_child(damage_text)
+
+func _input(event: InputEvent) -> void:
+	if Input.is_action_just_pressed("A"):
+		display_stats("attack")
+	if Input.is_action_just_pressed("D"):
+		display_stats("defense")
+	if Input.is_action_just_pressed("C"):
+		display_stats("accuracy")
+	if Input.is_action_just_pressed("G"):
+		display_stats("agility")
+	if Input.is_action_just_pressed("H"):
+		display_stats("HP")
+	if Input.is_action_just_released("A") or Input.is_action_just_released("D") or Input.is_action_just_released("C") or Input.is_action_just_released("G") or Input.is_action_just_released("H"):
+		for HX_node in HX_nodes:
+			HX_node.get_node("Info/Icon").hide()
+			HX_node.get_node("Info/Label").text = "%s %s" % [tr("LV"), HX_node.lv]
+		for ship_node in ship_nodes:
+			ship_node.get_node("Icon").hide()
+			ship_node.get_node("Label").text = "%s %s" % [tr("LV"), ship_node.lv]
+
+
+func display_stats(type:String):
+	for i in len(HX_nodes):
+		var HX = HX_nodes[i]
+		HX.get_node("Info/Icon").show()
+		HX.get_node("Info/Icon").texture = load("res://Graphics/Icons/%s.png" % type)
+		if type == "HP":
+			HX.get_node("Info/Label").text = "%s / %s" % [str(HX.HP), str(HX.total_HP)]
+		else:
+			HX.get_node("Info/Label").text = str(HX[type] + HX[type + "_buff"])
+	for ship_node in ship_nodes:
+		ship_node.get_node("Icon").show()
+		ship_node.get_node("Icon").texture = load("res://Graphics/Icons/%s.png" % type)
+		if type == "HP":
+			ship_node.get_node("Label").text = "%s / %s" % [str(ship_node.HP), str(ship_node.total_HP)]
+		else:
+			ship_node.get_node("Label").text = str(ship_node[type] + ship_node[type + "_buff"])

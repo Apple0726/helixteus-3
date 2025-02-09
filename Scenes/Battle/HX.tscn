@@ -22,14 +22,14 @@ resource_local_to_scene = true
 radius = 100.0
 
 [sub_resource type="CapsuleShape2D" id="1"]
-radius = 23.9999
-height = 95.9995
+radius = 15.9999
+height = 71.9729
 
 [sub_resource type="ShaderMaterial" id="2"]
 resource_local_to_scene = true
 shader = ExtResource("1_bfi0c")
-shader_parameter/amplitude = 6.0
-shader_parameter/frequency = 6.0
+shader_parameter/amplitude = 4.0
+shader_parameter/frequency = 5.0
 shader_parameter/aurora = false
 shader_parameter/light = 1.0
 shader_parameter/modulate_color = Color(1, 1, 1, 1)
@@ -430,11 +430,11 @@ shape = SubResource("1")
 
 [node name="Polygon2D" type="Polygon2D" parent="CollisionShape2D"]
 color = Color(1, 1, 1, 0)
-polygon = PackedVector2Array(-23.8932, 32.0798, -24.1065, -31.9198, -12.1466, -43.9598, -0.160019, -47.9997, 15.8532, -44.0531, 23.8932, -32.0798, 24.1065, 31.9198, 16.1466, 43.9464, 0.160019, 47.9997, -15.8532, 44.0531)
+polygon = PackedVector2Array(-15.9199, 24.0532, -16.0666, -19.9466, -12.1066, -31.9598, -0.120014, -35.9998, 11.8933, -32.0398, 15.9199, -24.0532, 16.0799, 23.9465, 12.1066, 31.9598, 0.120014, 35.9998, -11.8933, 32.0398)
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 material = SubResource("2")
-scale = Vector2(0.4, 0.4)
+scale = Vector2(0.3, 0.3)
 texture = ExtResource("1_t5dxa")
 
 [node name="Fire" type="Sprite2D" parent="Sprite2D"]
@@ -507,9 +507,9 @@ text = "15"
 modulate = Color(0, 1, 0, 1)
 light_mask = 0
 layout_mode = 0
-offset_left = 68.0
+offset_left = 60.0
 offset_top = 32.0
-offset_right = 132.0
+offset_right = 124.0
 offset_bottom = 37.0
 rotation = -1.5708
 value = 50.0
