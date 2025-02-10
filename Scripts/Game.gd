@@ -1573,6 +1573,7 @@ func switch_view(new_view:String, other_params:Dictionary = {}):
 				view_history.resize(view_history_pos + 1)
 			view_history.append(new_dict)
 			view_history_pos += 1
+		$MMTimer.start()
 	else:
 		$MMTimer.stop()
 	if not viewing_dimension:
