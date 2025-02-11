@@ -471,6 +471,7 @@ limits/message_queue/max_size_kb=2048
 [rendering]
 
 renderer/rendering_method="mobile"
+textures/vram_compression/import_etc2_astc=true
 environment/defaults/default_clear_color=Color(0, 0, 0, 1)
 quality/driver/fallback_to_gles2=true
 quality/intended_usage/framebuffer_allocation.mobile=0
