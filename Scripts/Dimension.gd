@@ -155,8 +155,9 @@ func refresh_univs(reset:bool = false):
 			$ModifyDimension/Maths/Control.get_node(maths_bonus).set_value(game.maths_bonus[maths_bonus])
 			$ModifyDimension/Maths/Control.get_node(maths_bonus).editable = reset
 	for engineering_bonus in game.engineering_bonus:
-		$ModifyDimension/Engineering/Control.get_node(engineering_bonus).set_value(game.engineering_bonus[engineering_bonus])
-		$ModifyDimension/Engineering/Control.get_node(engineering_bonus).editable = reset
+		if $ModifyDimension/Engineering/Control.has_node(engineering_bonus):
+			$ModifyDimension/Engineering/Control.get_node(engineering_bonus).set_value(game.engineering_bonus[engineering_bonus])
+			$ModifyDimension/Engineering/Control.get_node(engineering_bonus).editable = reset
 	for biology_bonus in game.biology_bonus:
 		if $ModifyDimension/Biology/Control.has_node(biology_bonus):
 			$ModifyDimension/Biology/Control.get_node(biology_bonus).set_value(game.biology_bonus[biology_bonus])
@@ -171,14 +172,15 @@ func refresh_univs(reset:bool = false):
 			var id = univ_info["id"]
 			univ.get_node("Level").text = tr("LEVEL") + " " + str(univ_info.lv)
 			univ.get_node("DRs").text = str(Helper.clever_round(pow(univ_info.lv, 2.2) / 10000.0 * DR_mult)) + " " + tr("DR")
-			univ.get_node("Props1").text = "%.1fc/%.1fh/%.1fk/%.1fG/%.1fe/%.1f*13.8Gy" % [univ_info.speed_of_light, univ_info.planck, univ_info.boltzmann, univ_info.gravitational, univ_info.charge, univ_info.age]
-			univ.get_node("Props2").text = "%.1f" % univ_info.dark_energy
-			univ.get_node("Props2").add_image(Data.energy_icon, 0, 17, Color.BLACK)
-			univ.get_node("Props2").append_text("/%.1f" % univ_info.difficulty)
-			univ.get_node("Props2").add_image(preload("res://Graphics/Icons/HX3_mc.png"), 0, 17)
-			univ.get_node("Props2").append_text("/%.1f" % univ_info.time_speed)
-			univ.get_node("Props2").add_image(Data.time_icon, 0, 17)
 			$Universes/Scroll/VBox.add_child(univ)
+			univ.get_node("Props1").text = "%.1fc/%.1fh/%.1fk/%.1fG/%.1fe/%.1f*13.8Gy" % [univ_info.speed_of_light, univ_info.planck, univ_info.boltzmann, univ_info.gravitational, univ_info.charge, univ_info.age]
+			univ.get_node("Props2").parse_bbcode("[center]")
+			univ.get_node("Props2").add_image(Data.energy_icon, 0, 17, Color.BLACK)
+			univ.get_node("Props2").add_text("%.1f / " % univ_info.dark_energy)
+			univ.get_node("Props2").add_image(preload("res://Graphics/Icons/HX3_mc.png"), 0, 17)
+			univ.get_node("Props2").add_text("%.1f / " % univ_info.difficulty)
+			univ.get_node("Props2").add_image(Data.time_icon, 0, 17)
+			univ.get_node("Props2").add_text("%.1f" % univ_info.time_speed)
 			univ.connect("mouse_entered",Callable(self,"on_univ_over").bind(id))
 			univ.connect("mouse_exited",Callable(self,"on_univ_out"))
 			univ.connect("pressed",Callable(self,"on_univ_press").bind(id))
@@ -610,7 +612,8 @@ func set_bonuses():
 		elif $ModifyDimension/Biology/Control/LakeButtons.has_node(bonus):
 			game.biology_bonus[bonus] = lake_params[bonus].value
 	for bonus in game.engineering_bonus:
-		game.engineering_bonus[bonus] = $ModifyDimension/Engineering/Control.get_node(bonus).value
+		if $ModifyDimension/Engineering/Control.has_node(bonus):
+			game.engineering_bonus[bonus] = $ModifyDimension/Engineering/Control.get_node(bonus).value
 
 func _on_Generate_pressed():
 	if game.subject_levels.dimensional_power >= 5:

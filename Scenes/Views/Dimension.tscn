@@ -1979,7 +1979,7 @@ offset_left = 212.0
 offset_top = 576.0
 offset_right = 248.0
 offset_bottom = 606.0
-help_text = "UB_A_DESC"
+help_text = "AB_FORMULA_A_DESC"
 
 [node name="Label6" type="Label" parent="ModifyDimension/Engineering/Control"]
 layout_mode = 0
@@ -2007,7 +2007,7 @@ offset_left = 212.0
 offset_top = 624.0
 offset_right = 248.0
 offset_bottom = 654.0
-help_text = "UB_B_DESC"
+help_text = "AB_FORMULA_B_DESC"
 
 [node name="Defaults" type="Control" parent="ModifyDimension/Engineering/Control"]
 anchors_preset = 0

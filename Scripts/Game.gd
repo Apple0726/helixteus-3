@@ -93,6 +93,7 @@ var panel_var_name_to_file_name = {
 	"vehicle_panel":"VehiclePanel",
 	"stats_panel":"Stats",
 	"wiki":"Wiki",
+	"PD_panel":"PDPanel",
 }
 #endregion
 
@@ -572,9 +573,6 @@ func _ready():
 	mods = preload("res://Scenes/Panels/Mods.tscn").instantiate()
 	mods.visible = false
 	$Panels/Control.add_child(mods)
-	#PD_panel = preload("res://Scenes/Panels/PDPanel.tscn").instantiate()
-	#PD_panel.visible = false
-	#$Panels/Control.add_child(PD_panel)
 	animate_title_buttons()
 	for mod in Mods.mod_list:
 		var main = Mods.mod_list[mod]
@@ -764,6 +762,7 @@ func load_game():
 		dim_num += 1
 		switch_music(null)
 		viewing_dimension = true
+		help.erase("hide_dimension_stuff")
 		add_dimension()
 		dimension.refresh_univs(true)
 		dimension.get_node("Subjects/Grid/Maths").visible = not beginner_friendly
@@ -1865,6 +1864,10 @@ func remove_space_HUD():
 	remove_annotator()
 
 func add_dimension():
+	if not is_instance_valid(PD_panel):
+		PD_panel = preload("res://Scenes/Panels/PDPanel.tscn").instantiate()
+		PD_panel.hide()
+		$Panels/Control.add_child(PD_panel)
 	if is_instance_valid(HUD) and $UI.is_ancestor_of(HUD):
 		$UI.remove_child(HUD)
 	if is_instance_valid(dimension):
