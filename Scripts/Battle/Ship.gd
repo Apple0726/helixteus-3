@@ -2,6 +2,17 @@ extends "BattleEntity.gd"
 
 var movement_remaining:float
 var total_movement:float
+var bullet_lv:int
+var laser_lv:int
+var bomb_lv:int
+var light_lv:int
+
+func initialize_stats(data:Dictionary):
+	super(data)
+	bullet_lv = data.bullet.lv
+	laser_lv = data.laser.lv
+	bomb_lv = data.bomb.lv
+	light_lv = data.light.lv
 
 func damage_entity(weapon_data: Dictionary):
 	var dodged = 1.0 / (1.0 + exp((weapon_data.weapon_accuracy - agility - agility_buff + 3.7) / 4.3)) > randf()

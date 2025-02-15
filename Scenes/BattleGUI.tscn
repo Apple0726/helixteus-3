@@ -84,7 +84,7 @@ libraries = {
 "": SubResource("AnimationLibrary_d1bfn")
 }
 
-[node name="Button" type="Button" parent="MainPanel"]
+[node name="Bullet" type="Button" parent="MainPanel"]
 layout_mode = 0
 offset_left = 64.0
 offset_top = 44.0
@@ -94,7 +94,7 @@ icon = ExtResource("4_xdmes")
 icon_alignment = 1
 expand_icon = true
 
-[node name="Button2" type="Button" parent="MainPanel"]
+[node name="Laser" type="Button" parent="MainPanel"]
 layout_mode = 0
 offset_left = 184.0
 offset_top = 44.0
@@ -104,7 +104,7 @@ icon = ExtResource("5_lfxuw")
 icon_alignment = 1
 expand_icon = true
 
-[node name="Button3" type="Button" parent="MainPanel"]
+[node name="Bomb" type="Button" parent="MainPanel"]
 layout_mode = 0
 offset_left = 304.0
 offset_top = 44.0
@@ -114,7 +114,7 @@ icon = ExtResource("6_xd3wr")
 icon_alignment = 1
 expand_icon = true
 
-[node name="Button4" type="Button" parent="MainPanel"]
+[node name="Light" type="Button" parent="MainPanel"]
 layout_mode = 0
 offset_left = 428.0
 offset_top = 44.0
@@ -124,7 +124,7 @@ icon = ExtResource("7_18k07")
 icon_alignment = 1
 expand_icon = true
 
-[node name="Button5" type="Button" parent="MainPanel"]
+[node name="Move" type="Button" parent="MainPanel"]
 layout_mode = 0
 offset_left = 560.0
 offset_top = 44.0
@@ -134,7 +134,7 @@ icon = ExtResource("8_cg768")
 icon_alignment = 1
 expand_icon = true
 
-[node name="Button6" type="Button" parent="MainPanel"]
+[node name="Push" type="Button" parent="MainPanel"]
 layout_mode = 0
 offset_left = 692.0
 offset_top = 44.0
@@ -211,3 +211,7 @@ theme_override_constants/separation = 10
 alignment = 1
 
 [connection signal="pressed" from="Back" to="." method="_on_back_pressed"]
+[connection signal="mouse_entered" from="MainPanel/Bullet" to="." method="_on_bullet_mouse_entered"]
+[connection signal="mouse_entered" from="MainPanel/Laser" to="." method="_on_laser_mouse_entered"]
+[connection signal="mouse_entered" from="MainPanel/Bomb" to="." method="_on_bomb_mouse_entered"]
+[connection signal="mouse_entered" from="MainPanel/Light" to="." method="_on_light_mouse_entered"]

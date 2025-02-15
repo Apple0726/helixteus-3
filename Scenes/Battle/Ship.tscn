@@ -136,6 +136,7 @@ collision_layer = 2
 collision_mask = 16
 monitoring = false
 script = ExtResource("2")
+type = null
 
 [node name="ThrusterFire" parent="." instance=ExtResource("4")]
 position = Vector2(-60, -4)
