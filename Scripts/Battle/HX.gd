@@ -106,8 +106,9 @@ func attack_target():
 	var projectile = preload("res://Scenes/Battle/Weapons/RedBullet.tscn").instantiate()
 	projectile.speed = 1000.0
 	projectile.rotation = randf_range(target_angle - target_angle_max_deviation, target_angle + target_angle_max_deviation)
-	projectile.damage = attack
-	projectile.projectile_accuracy = 1.0 * accuracy
+	projectile.damage = 3.0
+	projectile.shooter_attack = attack + attack_buff
+	projectile.weapon_accuracy = 1.0 * accuracy
 	projectile.position = position
 	battle_scene.add_child(projectile)
 	projectile.tree_exited.connect(ending_turn)

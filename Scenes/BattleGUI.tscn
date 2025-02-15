@@ -1,8 +1,14 @@
-[gd_scene load_steps=7 format=3 uid="uid://dmtuc03fuk5dc"]
+[gd_scene load_steps=13 format=3 uid="uid://dmtuc03fuk5dc"]
 
 [ext_resource type="Theme" uid="uid://cp2u1kgj60ic" path="res://Resources/default_theme.tres" id="1_ousv4"]
 [ext_resource type="Script" path="res://Scripts/Battle/BattleGUI.gd" id="1_phavr"]
 [ext_resource type="Texture2D" uid="uid://blgh1lvsfpiu8" path="res://Graphics/GUI/Border.png" id="3_wyejc"]
+[ext_resource type="Texture2D" uid="uid://bc6latfcdvj1t" path="res://Graphics/Weapons/bullet1.png" id="4_xdmes"]
+[ext_resource type="Texture2D" uid="uid://bblxs0wnkibch" path="res://Graphics/Weapons/laser1.png" id="5_lfxuw"]
+[ext_resource type="Texture2D" uid="uid://cyogaq3sj1anp" path="res://Graphics/Weapons/bomb1.png" id="6_xd3wr"]
+[ext_resource type="Texture2D" uid="uid://c1v73luqy7pi5" path="res://Graphics/Weapons/light1.png" id="7_18k07"]
+[ext_resource type="Texture2D" uid="uid://ds6nct7g63284" path="res://Graphics/Icons/Arrow.png" id="8_cg768"]
+[ext_resource type="Texture2D" uid="uid://bapj1r8e5pwia" path="res://Graphics/Icons/agility.png" id="9_hr53r"]
 
 [sub_resource type="Animation" id="Animation_at1tv"]
 resource_name = "Fade"
@@ -77,6 +83,120 @@ axis_stretch_vertical = 1
 libraries = {
 "": SubResource("AnimationLibrary_d1bfn")
 }
+
+[node name="Button" type="Button" parent="MainPanel"]
+layout_mode = 0
+offset_left = 64.0
+offset_top = 44.0
+offset_right = 120.0
+offset_bottom = 84.0
+icon = ExtResource("4_xdmes")
+icon_alignment = 1
+expand_icon = true
+
+[node name="Button2" type="Button" parent="MainPanel"]
+layout_mode = 0
+offset_left = 184.0
+offset_top = 44.0
+offset_right = 240.0
+offset_bottom = 84.0
+icon = ExtResource("5_lfxuw")
+icon_alignment = 1
+expand_icon = true
+
+[node name="Button3" type="Button" parent="MainPanel"]
+layout_mode = 0
+offset_left = 304.0
+offset_top = 44.0
+offset_right = 360.0
+offset_bottom = 84.0
+icon = ExtResource("6_xd3wr")
+icon_alignment = 1
+expand_icon = true
+
+[node name="Button4" type="Button" parent="MainPanel"]
+layout_mode = 0
+offset_left = 428.0
+offset_top = 44.0
+offset_right = 484.0
+offset_bottom = 84.0
+icon = ExtResource("7_18k07")
+icon_alignment = 1
+expand_icon = true
+
+[node name="Button5" type="Button" parent="MainPanel"]
+layout_mode = 0
+offset_left = 560.0
+offset_top = 44.0
+offset_right = 616.0
+offset_bottom = 84.0
+icon = ExtResource("8_cg768")
+icon_alignment = 1
+expand_icon = true
+
+[node name="Button6" type="Button" parent="MainPanel"]
+layout_mode = 0
+offset_left = 692.0
+offset_top = 44.0
+offset_right = 748.0
+offset_bottom = 84.0
+icon = ExtResource("9_hr53r")
+icon_alignment = 1
+expand_icon = true
+
+[node name="Label" type="Label" parent="MainPanel"]
+layout_mode = 0
+offset_left = 48.0
+offset_top = 12.0
+offset_right = 136.0
+offset_bottom = 35.0
+text = "BULLET"
+horizontal_alignment = 1
+
+[node name="Label2" type="Label" parent="MainPanel"]
+layout_mode = 0
+offset_left = 168.0
+offset_top = 12.0
+offset_right = 256.0
+offset_bottom = 35.0
+text = "LASER"
+horizontal_alignment = 1
+
+[node name="Label3" type="Label" parent="MainPanel"]
+layout_mode = 0
+offset_left = 288.0
+offset_top = 12.0
+offset_right = 376.0
+offset_bottom = 35.0
+text = "BOMB"
+horizontal_alignment = 1
+
+[node name="Label4" type="Label" parent="MainPanel"]
+layout_mode = 0
+offset_left = 412.0
+offset_top = 12.0
+offset_right = 500.0
+offset_bottom = 35.0
+text = "LIGHT"
+horizontal_alignment = 1
+
+[node name="Label5" type="Label" parent="MainPanel"]
+layout_mode = 0
+offset_left = 544.0
+offset_top = 12.0
+offset_right = 632.0
+offset_bottom = 35.0
+text = "MOVE"
+horizontal_alignment = 1
+
+[node name="Label6" type="Label" parent="MainPanel"]
+layout_mode = 0
+offset_left = 676.0
+offset_top = 12.0
+offset_right = 764.0
+offset_bottom = 35.0
+text = "PUSH"
+horizontal_alignment = 1
 
 [node name="TurnOrderHBox" type="HBoxContainer" parent="."]
 layout_mode = 1

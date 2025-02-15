@@ -30,19 +30,19 @@ var atk_icon = preload("res://Graphics/Icons/attack.png")
 var def_icon = preload("res://Graphics/Icons/defense.png")
 var acc_icon = preload("res://Graphics/Icons/accuracy.png")
 var eva_icon = preload("res://Graphics/Icons/agility.png")
-var w_1_1 = preload("res://Scenes/Battle/Weapons/1_1.tscn")
-var w_1_2 = preload("res://Scenes/Battle/Weapons/1_2.tscn")
-var w_1_3 = preload("res://Scenes/Battle/Weapons/1_3.tscn")
-var w_2_1 = preload("res://Scenes/Battle/Weapons/2_1.tscn")
-var w_2_2 = preload("res://Scenes/Battle/Weapons/2_2.tscn")
-var w_2_3 = preload("res://Scenes/Battle/Weapons/2_3.tscn")
-var w_3_1 = preload("res://Scenes/Battle/Weapons/3_1.tscn")
-var w_3_2 = preload("res://Scenes/Battle/Weapons/3_2.tscn")
-var w_3_3_1 = preload("res://Scenes/Battle/Weapons/3_3_1.tscn")
-var w_3_3_2 = preload("res://Scenes/Battle/Weapons/3_3_2.tscn")
-var w_4_1 = preload("res://Scenes/Battle/Weapons/4_1.tscn")
-var w_4_2 = preload("res://Scenes/Battle/Weapons/4_2.tscn")
-var w_4_3 = preload("res://Scenes/Battle/Weapons/4_3.tscn")
+var w_1_1
+var w_1_2
+var w_1_3
+var w_2_1
+var w_2_2
+var w_2_3
+var w_3_1
+var w_3_2
+var w_3_3_1
+var w_3_3_2
+var w_4_1
+var w_4_2
+var w_4_3
 
 var star:Sprite2D#Shown right before HX magic
 
