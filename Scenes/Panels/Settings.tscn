@@ -150,9 +150,9 @@ offset_left = -85.954
 offset_top = 68.367
 offset_right = 134.046
 offset_bottom = 84.367
-min_value = 1.0
+min_value = 8.0
 max_value = 144.0
-value = 1.0
+value = 60.0
 rounded = true
 
 [node name="30FPS" type="Button" parent="TabContainer/GRAPHICS/FPS"]

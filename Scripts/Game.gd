@@ -3947,7 +3947,7 @@ func _process(_delta):
 	if DisplayServer.window_is_focused(0):
 		Engine.max_fps = Settings.max_fps
 	else:
-		Engine.max_fps = 5
+		Engine.max_fps = 8
 	var delta = (Time.get_unix_time_from_system() - last_process_time)
 	last_process_time = Time.get_unix_time_from_system()
 	fps_text.text = "%s FPS" % [Engine.get_frames_per_second()]
