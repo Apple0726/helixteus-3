@@ -578,6 +578,14 @@ visible = false
 layout_mode = 2
 text = "9"
 
+[node name="Initiative" type="Label" parent="."]
+offset_left = -68.0
+offset_top = -44.0
+offset_right = 68.0
+offset_bottom = -21.0
+text = "Initiative: 10"
+horizontal_alignment = 1
+
 [node name="HurtAnimation" type="AnimationPlayer" parent="."]
 libraries = {
 "": SubResource("AnimationLibrary_4bina")

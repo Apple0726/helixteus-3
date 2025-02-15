@@ -1,7 +1,8 @@
-[gd_scene load_steps=8 format=3 uid="uid://deuvxdrynj6i2"]
+[gd_scene load_steps=9 format=3 uid="uid://deuvxdrynj6i2"]
 
 [ext_resource type="Script" path="res://Scripts/Battle/TurnOrderButton.gd" id="1_j6ywd"]
 [ext_resource type="Texture2D" uid="uid://koi0aarpqj30" path="res://Graphics/Ships/Ship0.png" id="1_l4be8"]
+[ext_resource type="Texture2D" uid="uid://bapj1r8e5pwia" path="res://Graphics/Icons/agility.png" id="3_i1ewd"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_sxfwn"]
 resource_local_to_scene = true
@@ -163,3 +164,34 @@ theme_override_styles/panel = SubResource("StyleBoxFlat_sxfwn")
 libraries = {
 "": SubResource("AnimationLibrary_igr82")
 }
+
+[node name="Initiative" type="Control" parent="."]
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -40.0
+offset_top = -32.0
+grow_horizontal = 0
+grow_vertical = 0
+
+[node name="TextureRect" type="TextureRect" parent="Initiative"]
+layout_mode = 0
+offset_left = -12.815
+offset_top = 4.0
+offset_right = 7.185
+offset_bottom = 28.0
+texture = ExtResource("3_i1ewd")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Label" type="Label" parent="Initiative"]
+layout_mode = 0
+offset_left = 7.185
+offset_top = 4.0
+offset_right = 39.185
+offset_bottom = 27.0
+text = "15"
+horizontal_alignment = 1

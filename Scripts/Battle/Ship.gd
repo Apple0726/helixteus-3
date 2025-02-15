@@ -1,12 +1,7 @@
 extends "BattleEntity.gd"
 
-@export var texture:Texture2D
-
 var movement_remaining:float
 var total_movement:float
-
-func _ready():
-	$Sprite2D.texture = texture
 
 func damage_entity(weapon_data: Dictionary):
 	var dodged = 1.0 / (1.0 + exp((weapon_data.weapon_accuracy - agility - agility_buff + 3.7) / 4.3)) > randf()

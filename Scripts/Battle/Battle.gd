@@ -32,22 +32,22 @@ func _ready() -> void:
 	ship_data = game.ship_data
 	for i in range(0, 4):
 		if len(ship_data) > i:
-			var ship_node = get_node("Ship%s" % (i + 1))
+			var ship_node = preload("res://Scenes/Battle/Ship.tscn").instantiate()
 			ship_node.METERS_PER_AGILITY = METERS_PER_AGILITY
 			ship_node.PIXELS_PER_METER = PIXELS_PER_METER
-			ship_node.show()
-			ship_node.monitorable = true
 			ship_node.initialize_stats(ship_data[i])
 			ship_node.roll_initiative()
 			ship_node.position = ship_data[i].initial_position
 			ship_node.battle_scene = self
 			ship_node.battle_GUI = battle_GUI
 			ship_node.next_turn.connect(next_turn)
-			get_node("Ship%s/Sprite2D" % (i + 1)).material.set_shader_parameter("frequency", 6 * time_speed)
-			get_node("Ship%s/HP" % (i + 1)).max_value = ship_data[i].HP
-			get_node("Ship%s/HP" % (i + 1)).value = ship_data[i].HP
-			get_node("Ship%s/Label" % (i + 1)).text = "%s %s" % [tr("LV"), ship_data[i].lv]
-			get_node("Ship%s/ThrusterFire" % (i + 1)).emitting = false
+			ship_node.get_node("Sprite2D").texture = load("res://Graphics/Ships/Ship%s.png" % i)
+			ship_node.get_node("Sprite2D").material.set_shader_parameter("frequency", 6 * time_speed)
+			ship_node.get_node("HP").max_value = ship_data[i].HP
+			ship_node.get_node("HP").value = ship_data[i].HP
+			ship_node.get_node("Label").text = "%s %s" % [tr("LV"), ship_data[i].lv]
+			ship_node.get_node("ThrusterFire").emitting = false
+			add_child(ship_node)
 			ship_nodes.append(ship_node)
 	for i in len(HX_data):
 		var HX = HX_scene.instantiate()
@@ -95,18 +95,22 @@ func initialize_battle():
 		battle_GUI.turn_order_hbox.add_child(turn_order_button)
 		turn_order_button.custom_minimum_size.x = 0.0
 		turn_order_button.get_node("TextureRect").modulate.a = 0.5
-		if i == len(initiative_order):
+		if i == len(initiative_order): # Environment always goes last
+			turn_order_button.show_initiative(0, 0.15 * len(initiative_order) + 3.0)
 			turn_order_button.set_texture(load("res://Graphics/Achievements/BStar.png"))
 			turn_order_button.get_node("Panel")["theme_override_styles/panel"].border_color = Color(1.0, 1.0, 0.0, 0.7)
 		else:
 			var entity = initiative_order[i]
+			turn_order_button.show_initiative(entity.initiative, 0.15 * i + 3.0)
 			if entity.type == ENEMY:
 				turn_order_button.set_texture(load("res://Graphics/HX/%s_%s.png" % [HX_data[entity.idx]["class"], HX_data[entity.idx].type]))
 				turn_order_button.get_node("Panel")["theme_override_styles/panel"].border_color = Color(1.0, 0.0, 0.0, 0.7)
+				HX_nodes[entity.idx].show_initiative(entity.initiative)
 				HX_nodes[entity.idx].turn_index = i
 			elif entity.type == SHIP:
 				turn_order_button.set_texture(load("res://Graphics/Ships/Ship%s.png" % entity.idx))
 				turn_order_button.get_node("Panel")["theme_override_styles/panel"].border_color = Color(0.0, 0.8, 1.0, 0.7)
+				ship_nodes[entity.idx].show_initiative(entity.initiative)
 				ship_nodes[entity.idx].turn_index = i
 	next_turn()
 

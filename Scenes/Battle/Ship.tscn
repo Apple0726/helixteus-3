@@ -183,6 +183,14 @@ nine_patch_stretch = true
 texture_under = ExtResource("1")
 texture_progress = ExtResource("6")
 
+[node name="Initiative" type="Label" parent="."]
+offset_left = -80.0
+offset_top = -60.0
+offset_right = 72.0
+offset_bottom = -37.0
+text = "Initiative: 10"
+horizontal_alignment = 1
+
 [node name="Info" type="Control" parent="."]
 layout_mode = 3
 anchors_preset = 0

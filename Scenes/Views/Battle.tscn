@@ -1,12 +1,7 @@
-[gd_scene load_steps=12 format=3 uid="uid://dwa665hyuis2m"]
+[gd_scene load_steps=7 format=3 uid="uid://dwa665hyuis2m"]
 
 [ext_resource type="Script" path="res://Scripts/Battle/Battle.gd" id="1_ylili"]
-[ext_resource type="Texture2D" uid="uid://koi0aarpqj30" path="res://Graphics/Ships/Ship0.png" id="3"]
-[ext_resource type="Texture2D" uid="uid://b8ga5o8bhm1hb" path="res://Graphics/Ships/Ship1.png" id="6"]
-[ext_resource type="Texture2D" uid="uid://dxjlx3yjmlywi" path="res://Graphics/Ships/Ship2.png" id="7"]
 [ext_resource type="Script" path="res://Scripts/Battle/Boundary.gd" id="7_lc3cj"]
-[ext_resource type="PackedScene" uid="uid://cxykmxd6r2wgm" path="res://Scenes/Battle/Ship.tscn" id="12"]
-[ext_resource type="Texture2D" uid="uid://wrc1em7frxle" path="res://Graphics/Ships/Ship3.png" id="13"]
 
 [sub_resource type="SegmentShape2D" id="SegmentShape2D_0g6th"]
 a = Vector2(-640, -360)
@@ -26,26 +21,6 @@ b = Vector2(-640, -360)
 
 [node name="Battle" type="Node2D"]
 script = ExtResource("1_ylili")
-
-[node name="Ship1" parent="." instance=ExtResource("12")]
-visible = false
-monitorable = false
-texture = ExtResource("3")
-
-[node name="Ship2" parent="." instance=ExtResource("12")]
-visible = false
-monitorable = false
-texture = ExtResource("6")
-
-[node name="Ship3" parent="." instance=ExtResource("12")]
-visible = false
-monitorable = false
-texture = ExtResource("7")
-
-[node name="Ship4" parent="." instance=ExtResource("12")]
-visible = false
-monitorable = false
-texture = ExtResource("13")
 
 [node name="Boundary" type="Area2D" parent="."]
 collision_mask = 0
