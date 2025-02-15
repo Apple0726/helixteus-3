@@ -109,10 +109,6 @@ func time_to_str (time:float): # time is in seconds
 	var hour_str = "" if hours == 0 else ("%s:" % hours)
 	return "%s%s%s%s%s:%s%s" % [year_str, day_str, hour_str, minute_zero, minutes, second_zero, seconds]
 
-#Returns a random integer between low and high inclusive
-func rand_int(low:int, high:int):
-	return randi() % (high - low + 1) + low
-
 func log10(n):
 	return log(n) / log(10)
 
@@ -624,7 +620,7 @@ func generate_rock(tile:Dictionary, p_i:Dictionary):
 			var crater_metal = tile.has("crater") and tile.crater.has("init_depth") and met == tile.crater.metal
 			if game.met_info[met].min_depth < tile.depth - p_i.crust_start_depth and tile.depth - p_i.crust_start_depth < game.met_info[met].max_depth or crater_metal:
 				if randf() < 0.25 * (6 if crater_metal else 1) * aurora_mult / pow(game.met_info[met].rarity, 0.2):
-					tile.current_deposit = {"met":met, "size":rand_int(4, 10), "progress":1}
+					tile.current_deposit = {"met":met, "size":randi_range(4, 10), "progress":1}
 	if tile.has("current_deposit"):
 		var met = tile.current_deposit.met
 		var size = tile.current_deposit.size

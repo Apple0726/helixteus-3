@@ -1799,7 +1799,7 @@ func mine_wall_complete(tile_pos:Vector2, tile_id:int):
 	game.stats_dim.tiles_mined_caves += 1
 	game.stats_global.tiles_mined_caves += 1
 	var map_pos = cave_wall.local_to_map(tile_pos)
-	var rsrc:Dictionary = {"stone":Helper.rand_int(150, 200)}
+	var rsrc:Dictionary = {"stone":randi_range(150, 200)}
 	if volcano_mult > 1.0:
 		rsrc.minerals = round(randf_range(2, 3) * difficulty * exp(cave_floor / 9.0))
 	#var wall_type = cave_wall.get_cellv(map_pos)

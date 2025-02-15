@@ -1075,9 +1075,9 @@ func new_game(univ:int = 0, new_save:bool = false, DR_advantage = false):
 		planet_data[2].erase("lake_2")
 		planet_data[2].liq_seed = 7
 		planet_data[2].liq_period = 0.4
-		planet_data[2].crust_start_depth = Helper.rand_int(25, 30)
-		planet_data[2].mantle_start_depth = Helper.rand_int(25000, 30000)
-		planet_data[2].core_start_depth = Helper.rand_int(4000000, 4200000)
+		planet_data[2].crust_start_depth = randi_range(25, 30)
+		planet_data[2].mantle_start_depth = randi_range(25000, 30000)
+		planet_data[2].core_start_depth = randi_range(4000000, 4200000)
 		planet_data[2].surface.coal.chance = 0.5
 		planet_data[2].surface.coal.amount = 100
 		planet_data[2].surface.soil.chance = 0.6
@@ -1465,7 +1465,7 @@ func switch_view(new_view:String, other_params:Dictionary = {}):
 		remove_dimension()
 		if not $UI.is_ancestor_of(HUD):
 			$UI.add_child(HUD)
-		switch_music(load("res://Audio/ambient" + str(Helper.rand_int(1, 3)) + ".ogg"), u_i.time_speed)
+		switch_music(Data.ambient_music.pick_random(), u_i.time_speed)
 	else:
 		if not other_params.has("first_time"):
 			match c_v:
@@ -1494,11 +1494,11 @@ func switch_view(new_view:String, other_params:Dictionary = {}):
 					$UI.add_child(HUD)
 					if is_instance_valid(cave):
 						cave.queue_free()
-					switch_music(load("res://Audio/ambient" + str(Helper.rand_int(1, 3)) + ".ogg"), u_i.time_speed)
+					switch_music(Data.ambient_music.pick_random(), u_i.time_speed)
 				"STM":
 					$UI.add_child(HUD)
 					STM.queue_free()
-					switch_music(load("res://Audio/ambient" + str(Helper.rand_int(1, 3)) + ".ogg"), u_i.time_speed)
+					switch_music(Data.ambient_music.pick_random(), u_i.time_speed)
 				"battle":
 					$UI.add_child(HUD)
 					battle_scene.queue_free()
@@ -2173,15 +2173,15 @@ func generate_clusters(parent_id:int):
 		c_i["shapes"] = []
 		var c_id = u_i.cluster_data.size()
 		if c_i["class"] == ClusterType.GROUP:
-			c_i["galaxy_num"] = Helper.rand_int(10, 100)
+			c_i["galaxy_num"] = randi_range(10, 100)
 		else:
-			c_i["galaxy_num"] = Helper.rand_int(500, 5000)
+			c_i["galaxy_num"] = randi_range(500, 5000)
 		var pos:Vector2
 		var dist_from_center = pow(randf(), 0.5) * max_dist_from_center + 160
 		if _i == 1:
 			dist_from_center = 200
 			c_i["class"] = ClusterType.GROUP
-			c_i.galaxy_num = Helper.rand_int(80, 100)
+			c_i.galaxy_num = randi_range(80, 100)
 		c_i.rich_elements = {}
 		var _rich_elements = rich_element_list.duplicate()
 		_rich_elements.shuffle()
@@ -2820,7 +2820,7 @@ func generate_planets(id:int):#local id
 		if system_data[id].has("conquered"):
 			p_i["conquered"] = true
 		p_i["ring"] = i
-		p_i["type"] = Helper.rand_int(3, 10)
+		p_i["type"] = randi_range(3, 10)
 		if planets_generated == 0:# Starting solar system has smaller planets
 			p_i["size"] = int((2000 + randf_range(0, 7000) * (i + 1) / 2.0) * pow(u_i.gravitational, 0.5) * dark_matter)
 			p_i.pressure = pow(10, randf_range(-3, log(p_i.size / 5.0) / log(10) - 3)) * u_i.boltzmann
@@ -2856,7 +2856,7 @@ func generate_planets(id:int):#local id
 			p_i.name = "%s %s" % [tr("GAS_GIANT"), p_id]
 		else:
 			p_i["name"] = tr("PLANET") + " " + str(p_id)
-			p_i.crust_start_depth = Helper.rand_int(50, 450)
+			p_i.crust_start_depth = randi_range(50, 450)
 			p_i.mantle_start_depth = round(randf_range(0.005, 0.02) * p_i.size * 1000)
 		var list_of_element_probabilities = Data.elements.duplicate()
 		if u_i.cluster_data[c_c].rich_elements.has("C"):
@@ -3155,7 +3155,7 @@ func generate_tiles(id:int):
 			if wid / 3 == 1:
 				diff = thiccness + 1
 			else:
-				diff = Helper.rand_int(thiccness + 1, wid / 3) * sign(randf_range(-69, 69))
+				diff = randi_range(thiccness + 1, wid / 3) * sign(randf_range(-69, 69))
 			if i == 0 and randf() < physics_bonus.perpendicular_auroras:
 				rand = 1.0 - rand
 	#We assume that the star system's age is inversely proportional to the coldest star's temperature
@@ -3354,7 +3354,7 @@ func generate_tiles(id:int):
 	if p_i.id == 6:#Guaranteed wormhole spawn on furthest planet in solar system
 		var random_tile:int = randi() % len(tile_data)
 		erase_tile(random_tile)
-		var dest_id:int = Helper.rand_int(1, galaxy_data[0].system_num - 1)#		local_destination_system_id		global_dest_s_id
+		var dest_id:int = randi_range(1, galaxy_data[0].system_num - 1)#		local_destination_system_id		global_dest_s_id
 		tile_data[random_tile].wormhole = {"active":false, "new":true, "l_dest_s_id":dest_id, "g_dest_s_id":dest_id}
 		p_i.wormhole = true
 	elif c_s_g != 0 and randf() < 0.1:#10% chance to spawn a wormhole on a planet outside solar system
@@ -4355,12 +4355,12 @@ func fade_out_title(fn:String):
 			dimension.refresh_univs(true)
 		else:
 			new_game(0, true)
-			switch_music(load("res://Audio/ambient" + str(Helper.rand_int(1, 3)) + ".ogg"), u_i.time_speed)
+			switch_music(Data.ambient_music.pick_random(), u_i.time_speed)
 	else:
 		call(fn)
 		#add_panels()
 		$Autosave.start()
-		switch_music(load("res://Audio/ambient" + str(Helper.rand_int(1, 3)) + ".ogg"), u_i.get("time_speed", 1.0))
+		switch_music(Data.ambient_music.pick_random(), u_i.get("time_speed", 1.0))
 	
 func _on_NewGame_pressed():
 	if Settings.op_cursor and Input.is_action_pressed("ctrl"):

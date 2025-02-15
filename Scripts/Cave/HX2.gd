@@ -45,7 +45,7 @@ func teleport():
 		var m = len(target_neighbours)
 		if m == 0:
 			break
-		target_tile = target_neighbours[Helper.rand_int(0, m-1)]
+		target_tile = target_neighbours[randi() % (m-1)]
 		i += 1
 	cave_ref.HX_tiles.erase(curr_tile)
 	cave_ref.HX_tiles.append(target_tile)

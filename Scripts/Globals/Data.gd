@@ -108,6 +108,12 @@ var MUs = {	"MV":{"base_cost":100, "pw":1.9},
 			"SHSR":{"base_cost":2000, "pw":1.9},
 			"CHR":{"base_cost":2000, "pw":1.7},
 }
+
+var ambient_music = [
+	preload("res://Audio/ambient1.ogg"),
+	preload("res://Audio/ambient2.ogg"),
+	preload("res://Audio/ambient3.ogg"),
+]
 var money_icon = preload("res://Graphics/Icons/money.png")
 var minerals_icon = preload("res://Graphics/Icons/minerals.png")
 var energy_icon = preload("res://Graphics/Icons/energy.png")
