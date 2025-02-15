@@ -17,6 +17,8 @@ var white_pixel_num = 0
 var phase = 0
 var BG_alpha = 0.0
 var pixel_color:Color
+var music:AudioStreamOggVorbis
+var spectrum:AudioEffectSpectrumAnalyzerInstance
 
 func _ready():
 	set_process(false)
@@ -69,6 +71,12 @@ func load_data(_LOD):
 	curr_time = start_time
 	video_time = start_time
 	set_process(true)
+	var badapple_music_path = OS.get_executable_path().get_base_dir() + "/badapple.ogg"
+	if FileAccess.file_exists(badapple_music_path):
+		music = AudioStreamOggVorbis.load_from_file(badapple_music_path)
+		if music:
+			spectrum = AudioServer.get_bus_effect_instance(1, 0)
+			game.switch_music(music, game.u_i.time_speed)
 
 func _draw():
 #	if white_pixel_num > W * H / 2:
@@ -99,10 +107,14 @@ func _process(delta):
 		BG_alpha += delta
 		queue_redraw()
 		if BG_alpha >= 1.0:
-			phase = 1
+			if music:
+				if spectrum.get_magnitude_for_frequency_range(200, 250, AudioEffectSpectrumAnalyzerInstance.MAGNITUDE_MAX).x > 0.01:
+					phase = 1
+			else:
+				phase = 1
 	elif phase == 1:
 		if curr_time >= video_time:
-			var frames_to_process = int(ceil(game.u_i.time_speed / Engine.max_fps * 30.0))
+			var frames_to_process = int(ceil(game.u_i.time_speed * delta * 30.0))
 			draw_frame(frames_to_process)
 			video_time += 1/30.0 / game.u_i.time_speed * frames_to_process
 		curr_time += delta
@@ -111,6 +123,8 @@ func _process(delta):
 		queue_redraw()
 		if BG_alpha <= 0.0:
 			phase = 0
+			if music:
+				game.switch_music(Data.ambient_music.pick_random(), game.u_i.time_speed)
 			set_process(false)
 
 
@@ -152,3 +166,8 @@ func draw_frame(frames_to_process:int):
 			frame = 0
 			break
 	queue_redraw()
+
+
+func _on_tree_exiting() -> void:
+	if music:
+		game.switch_music(Data.ambient_music.pick_random(), game.u_i.time_speed)

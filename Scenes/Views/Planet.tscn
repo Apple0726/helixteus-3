@@ -74,4 +74,5 @@ one_shot = true
 [node name="Auroras" type="Node2D" parent="."]
 
 [connection signal="tree_exited" from="." to="." method="_on_Planet_tree_exited"]
+[connection signal="tree_exiting" from="BadApple" to="BadApple" method="_on_tree_exiting"]
 [connection signal="timeout" from="BuildingShortcutTimer" to="." method="_on_building_shortcut_timer_timeout"]
