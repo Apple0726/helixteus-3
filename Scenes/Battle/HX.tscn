@@ -1,10 +1,11 @@
-[gd_scene load_steps=46 format=3 uid="uid://cpjo82l86k61"]
+[gd_scene load_steps=47 format=3 uid="uid://cpjo82l86k61"]
 
 [ext_resource type="Texture2D" uid="uid://7ffsf7xuvfw2" path="res://Graphics/Icons/attack.png" id="1"]
 [ext_resource type="Script" path="res://Scripts/Battle/HX.gd" id="1_3h40m"]
 [ext_resource type="Shader" path="res://Shaders/HX.gdshader" id="1_bfi0c"]
 [ext_resource type="Texture2D" uid="uid://dw4gx6xj2i5g7" path="res://Graphics/HX/1_1.png" id="1_t5dxa"]
 [ext_resource type="Theme" uid="uid://cp2u1kgj60ic" path="res://Resources/default_theme.tres" id="2"]
+[ext_resource type="PackedScene" uid="uid://fo4yl8v4ld8c" path="res://Scenes/Battle/FireWeaponAim.tscn" id="2_uyhlq"]
 [ext_resource type="Texture2D" uid="uid://kr2fdk8dptv1" path="res://Graphics/Misc/BarUnder2.png" id="3"]
 [ext_resource type="Texture2D" uid="uid://dl452yovfklni" path="res://Graphics/Decoratives/BulletHit.jpg" id="5"]
 [ext_resource type="Texture2D" uid="uid://bx1hvetixqpwi" path="res://Graphics/Misc/Bar2.png" id="6"]
@@ -414,6 +415,8 @@ collision_layer = 4
 collision_mask = 0
 monitoring = false
 script = ExtResource("1_3h40m")
+
+[node name="FireWeaponAim" parent="." instance=ExtResource("2_uyhlq")]
 
 [node name="CollisionShapeFinder" type="Area2D" parent="."]
 collision_layer = 0
