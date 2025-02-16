@@ -129,6 +129,12 @@ var atom_icon = preload("res://Graphics/Science/ATM.png")
 var particle_icon = preload("res://Graphics/Science/SAP.png")
 var subatomic_particles_icon = preload("res://Graphics/Particles/subatomic_particles.png")
 
+var HP_icon = preload("res://Graphics/Icons/HP.png")
+var attack_icon = preload("res://Graphics/Icons/attack.png")
+var defense_icon = preload("res://Graphics/Icons/defense.png")
+var accuracy_icon = preload("res://Graphics/Icons/accuracy.png")
+var agility_icon = preload("res://Graphics/Icons/agility.png")
+
 var desc_icons = {	Building.MINERAL_EXTRACTOR:[[minerals_icon]],
 					Building.POWER_PLANT:[[energy_icon]],
 					Building.RESEARCH_LAB:[[SP_icon]],
@@ -424,11 +430,11 @@ var bullet_data = [	{"damage":3.5, "accuracy":1.0},
 					{"damage":9, "accuracy":1.2},
 					{"damage":19, "accuracy":1.3},
 					{"damage":44, "accuracy":1.7},]
-var laser_data = [	{"damage":2.5, "accuracy":2.2},
-					{"damage":3.5, "accuracy":2.5},
-					{"damage":6.5, "accuracy":2.8},
-					{"damage":13, "accuracy":3.3},
-					{"damage":29, "accuracy":5.5},]
+var laser_data = [	{"damage":2.0, "accuracy":1.8},
+					{"damage":2.5, "accuracy":2.0},
+					{"damage":3.5, "accuracy":2.2},
+					{"damage":5.0, "accuracy":2.5},
+					{"damage":10.0, "accuracy":4.5},]
 var bomb_data = [	{"damage":6, "accuracy":0.5},
 					{"damage":8, "accuracy":0.55},
 					{"damage":15, "accuracy":0.6},

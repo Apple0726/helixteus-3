@@ -7,11 +7,7 @@ enum {
 }
 var tab = ROVERS
 
-var HP_icon = preload("res://Graphics/Icons/HP.png")
-var atk_icon = preload("res://Graphics/Icons/atk.png")
-var def_icon = preload("res://Graphics/Icons/def.png")
 var inv_icon = preload("res://Graphics/Icons/Inventory.png")
-var spd_icon = preload("res://Graphics/Icons/eva.png")
 var tile_id:int = -1
 var rover_has_items = false
 var probe_time_bars:Array = []
@@ -110,7 +106,7 @@ func rover_show_details(rover_id:int):
 		Helper.format_num(rover.weight_cap),
 		Helper.clever_round(rover.spd),
 	]
-	game.show_adv_tooltip(tooltip_txt, [HP_icon, atk_icon, def_icon, inv_icon, spd_icon], 19)
+	game.show_adv_tooltip(tooltip_txt, [Data.HP_icon, Data.attack_icon, Data.defense_icon, inv_icon, Data.agility_icon], 19)
 
 
 func rover_take_all(rover_id:int):

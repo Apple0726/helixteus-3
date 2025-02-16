@@ -37,9 +37,12 @@ var agility_buff:int = 0:
 		agility_buff = value
 		agility_updated_callback()
 
+var default_tooltip_text:String
+var override_tooltip_text:String = ""
+
 func _ready() -> void:
-	if has_node("Initiative"):
-		$Initiative.modulate.a = 0.0
+	if has_node("Info/Initiative"):
+		$Info/Initiative.modulate.a = 0.0
 
 func initialize_stats(data:Dictionary):
 	lv = data.lv
@@ -55,11 +58,11 @@ func roll_initiative():
 	initiative = randi_range(agility - range, agility + range)
 
 func show_initiative(_initiative: int):
-	$Initiative.text = tr("INITIATIVE") + ": " + str(_initiative)
+	$Info/Initiative.text = tr("INITIATIVE") + ": " + str(_initiative)
 	var tween = create_tween()
-	tween.tween_property($Initiative, "modulate:a", 1.0, 0.5)
-	tween.tween_property($Initiative, "modulate:a", 0.0, 1.0).set_delay(2.0)
-	create_tween().tween_property($Initiative, "position:y", $Initiative.position.y - 15.0, 1.0).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_CIRC)
+	tween.tween_property($Info/Initiative, "modulate:a", 1.0, 0.5)
+	tween.tween_property($Info/Initiative, "modulate:a", 0.0, 1.0).set_delay(2.0)
+	create_tween().tween_property($Info/Initiative, "position:y", $Info/Initiative.position.y - 15.0, 1.0).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_CIRC)
 
 func take_turn():
 	battle_GUI.turn_order_hbox.get_child(turn_index).get_node("AnimationPlayer").play("ChangeSize")

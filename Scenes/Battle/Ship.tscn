@@ -42,8 +42,8 @@ shader_parameter/frequency = 6.0
 shader_parameter/hurt_flash = 0.0
 
 [sub_resource type="CapsuleShape2D" id="5"]
-radius = 12.0
-height = 112.0
+radius = 16.0
+height = 120.0
 
 [sub_resource type="Shader" id="25"]
 code = "shader_type canvas_item;
@@ -135,7 +135,6 @@ color_ramp = SubResource("27")
 [node name="Ship" type="Area2D"]
 collision_layer = 2
 collision_mask = 16
-monitoring = false
 script = ExtResource("2")
 
 [node name="FireWeaponAim" parent="." instance=ExtResource("2_ogdx2")]
@@ -157,26 +156,36 @@ shape = SubResource("5")
 
 [node name="Polygon2D" type="Polygon2D" parent="CollisionShape2D"]
 color = Color(1, 1, 1, 0)
-polygon = PackedVector2Array(-11.9998, 48, -12.0002, -48, -0.000202719, -56, 11.9998, -48, 12.0002, 48, 0.000202719, 56)
+polygon = PackedVector2Array(-15.9998, 48.0001, -16.0002, -47.9999, -0.000217199, -60, 15.9998, -48.0001, 16.0002, 47.9999, 0.000217199, 60)
 
-[node name="Label" type="Label" parent="."]
+[node name="Info" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+mouse_filter = 2
+
+[node name="Label" type="Label" parent="Info"]
+layout_mode = 0
 offset_left = -28.0
 offset_top = 52.0
 offset_right = 52.0
 offset_bottom = 76.0
 text = "Lv 1"
 
-[node name="Icon" type="TextureRect" parent="."]
+[node name="Icon" type="TextureRect" parent="Info"]
 custom_minimum_size = Vector2(24, 24)
-offset_left = -72.0
+layout_mode = 0
+offset_left = -68.0
 offset_top = 52.0
-offset_right = -48.0
+offset_right = -44.0
 offset_bottom = 76.0
 expand_mode = 1
 stretch_mode = 6
 
-[node name="HP" type="TextureProgressBar" parent="."]
+[node name="HP" type="TextureProgressBar" parent="Info"]
 modulate = Color(0, 1, 0, 1)
+layout_mode = 0
 offset_left = -112.0
 offset_top = 32.0
 offset_right = -48.0
@@ -187,19 +196,14 @@ nine_patch_stretch = true
 texture_under = ExtResource("1")
 texture_progress = ExtResource("6")
 
-[node name="Initiative" type="Label" parent="."]
+[node name="Initiative" type="Label" parent="Info"]
+layout_mode = 0
 offset_left = -80.0
 offset_top = -60.0
 offset_right = 72.0
 offset_bottom = -37.0
 text = "Initiative: 10"
 horizontal_alignment = 1
-
-[node name="Info" type="Control" parent="."]
-layout_mode = 3
-anchors_preset = 0
-offset_right = 40.0
-offset_bottom = 40.0
 
 [node name="Effects" type="HBoxContainer" parent="Info"]
 layout_mode = 0
@@ -301,4 +305,6 @@ process_material = SubResource("33")
 texture = ExtResource("10")
 lifetime = 2.0
 
+[connection signal="mouse_entered" from="." to="." method="_on_mouse_entered"]
+[connection signal="mouse_exited" from="." to="." method="_on_mouse_exited"]
 [connection signal="visibility_changed" from="FireWeaponAim" to="." method="_on_fire_weapon_aim_visibility_changed"]

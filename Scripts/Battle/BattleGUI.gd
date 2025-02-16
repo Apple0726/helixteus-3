@@ -38,8 +38,22 @@ func _input(event: InputEvent) -> void:
 	if Input.is_action_just_pressed("cancel") and action_selected != NONE:
 		$MainPanel/AnimationPlayer.play("Fade")
 		action_selected = NONE
+		ship_node.restore_default_enemy_tooltips()
 		if ship_node.get_node("FireWeaponAim").visible:
 			ship_node.get_node("FireWeaponAim").fade_out()
+	if action_selected == NONE and is_instance_valid(ship_node):
+		if Input.is_action_just_pressed("1"):
+			_on_bullet_pressed()
+		elif Input.is_action_just_pressed("2"):
+			_on_laser_pressed()
+		elif Input.is_action_just_pressed("3"):
+			_on_bomb_pressed()
+		elif Input.is_action_just_pressed("4"):
+			_on_light_pressed()
+		elif Input.is_action_just_pressed("5"):
+			_on_move_pressed()
+		elif Input.is_action_just_pressed("6"):
+			_on_push_pressed()
 
 func _on_back_pressed() -> void:
 	if battle_scene.hard_battle:
@@ -74,31 +88,40 @@ func _on_light_mouse_entered() -> void:
 func _on_bullet_pressed() -> void:
 	$MainPanel/AnimationPlayer.play_backwards("Fade")
 	action_selected = BULLET
+	ship_node.override_enemy_tooltips()
 	ship_node.get_node("FireWeaponAim").show()
+	game.hide_tooltip()
 
 
 func _on_laser_pressed() -> void:
 	$MainPanel/AnimationPlayer.play_backwards("Fade")
 	action_selected = LASER
+	ship_node.override_enemy_tooltips()
 	ship_node.get_node("FireWeaponAim").show()
+	game.hide_tooltip()
 
 
 func _on_bomb_pressed() -> void:
 	$MainPanel/AnimationPlayer.play_backwards("Fade")
 	action_selected = BOMB
+	ship_node.override_enemy_tooltips()
 	ship_node.get_node("FireWeaponAim").show()
+	game.hide_tooltip()
 
 
 func _on_light_pressed() -> void:
 	action_selected = LIGHT
+	ship_node.override_enemy_tooltips()
 	$MainPanel/AnimationPlayer.play_backwards("Fade")
+	game.hide_tooltip()
 
 
 func _on_move_pressed() -> void:
-	$MainPanel/AnimationPlayer.play_backwards("Fade")
 	action_selected = MOVE
+	$MainPanel/AnimationPlayer.play_backwards("Fade")
 
 
 func _on_push_pressed() -> void:
-	$MainPanel/AnimationPlayer.play_backwards("Fade")
 	action_selected = PUSH
+	$MainPanel/AnimationPlayer.play_backwards("Fade")
+	game.hide_tooltip()

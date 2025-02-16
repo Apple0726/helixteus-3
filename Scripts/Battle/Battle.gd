@@ -44,9 +44,9 @@ func _ready() -> void:
 			ship_node.next_turn.connect(next_turn)
 			ship_node.get_node("Sprite2D").texture = load("res://Graphics/Ships/Ship%s.png" % i)
 			ship_node.get_node("Sprite2D").material.set_shader_parameter("frequency", 6 * time_speed)
-			ship_node.get_node("HP").max_value = ship_data[i].HP
-			ship_node.get_node("HP").value = ship_data[i].HP
-			ship_node.get_node("Label").text = "%s %s" % [tr("LV"), ship_data[i].lv]
+			ship_node.get_node("Info/HP").max_value = ship_data[i].HP
+			ship_node.get_node("Info/HP").value = ship_data[i].HP
+			ship_node.get_node("Info/Label").text = "%s %s" % [tr("LV"), ship_data[i].lv]
 			ship_node.get_node("ThrusterFire").emitting = false
 			add_child(ship_node)
 			ship_nodes.append(ship_node)
@@ -118,6 +118,7 @@ func initialize_battle():
 func next_turn():
 	whose_turn_is_it_index += 1
 	var move_view_tween = create_tween()
+	battle_GUI.ship_node = null
 	if initiative_order[whose_turn_is_it_index].type == SHIP:
 		var ship_node = ship_nodes[initiative_order[whose_turn_is_it_index].idx]
 		battle_GUI.main_panel.get_node("AnimationPlayer").play("Fade")
@@ -164,8 +165,8 @@ func _input(event: InputEvent) -> void:
 			HX_node.get_node("Info/Icon").hide()
 			HX_node.get_node("Info/Label").text = "%s %s" % [tr("LV"), HX_node.lv]
 		for ship_node in ship_nodes:
-			ship_node.get_node("Icon").hide()
-			ship_node.get_node("Label").text = "%s %s" % [tr("LV"), ship_node.lv]
+			ship_node.get_node("Info/Icon").hide()
+			ship_node.get_node("Info/Label").text = "%s %s" % [tr("LV"), ship_node.lv]
 
 
 func display_stats(type:String):
@@ -178,9 +179,9 @@ func display_stats(type:String):
 		else:
 			HX.get_node("Info/Label").text = str(HX[type] + HX[type + "_buff"])
 	for ship_node in ship_nodes:
-		ship_node.get_node("Icon").show()
-		ship_node.get_node("Icon").texture = load("res://Graphics/Icons/%s.png" % type)
+		ship_node.get_node("Info/Icon").show()
+		ship_node.get_node("Info/Icon").texture = load("res://Graphics/Icons/%s.png" % type)
 		if type == "HP":
-			ship_node.get_node("Label").text = "%s / %s" % [str(ship_node.HP), str(ship_node.total_HP)]
+			ship_node.get_node("Info/Label").text = "%s / %s" % [str(ship_node.HP), str(ship_node.total_HP)]
 		else:
-			ship_node.get_node("Label").text = str(ship_node[type] + ship_node[type + "_buff"])
+			ship_node.get_node("Info/Label").text = str(ship_node[type] + ship_node[type + "_buff"])

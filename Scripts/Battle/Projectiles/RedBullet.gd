@@ -7,6 +7,8 @@ var weapon_accuracy:float
 
 func _process(delta: float) -> void:
 	position += speed * Vector2.from_angle(rotation) * delta
+	if (position - Vector2(640, 360)).length_squared() > pow(1280, 2) + pow(720, 2):
+		queue_free()
 
 
 func _on_area_entered(area: Area2D) -> void:
