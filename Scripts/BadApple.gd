@@ -77,6 +77,8 @@ func load_data(_LOD):
 		if music:
 			spectrum = AudioServer.get_bus_effect_instance(1, 0)
 			game.switch_music(music, game.u_i.time_speed)
+	else:
+		music = null
 
 func _draw():
 #	if white_pixel_num > W * H / 2:

@@ -88,7 +88,7 @@ func move(target_pos:Vector2):
 func attack_target():
 	target_angle = atan2(target_position.y - position.y, target_position.x - position.x)
 	target_angle_max_deviation = 1.0 / (accuracy + accuracy_buff)
-	$FireWeaponAim.animate(target_angle, target_angle_max_deviation)
+	$FireWeaponAim.show()
 	await get_tree().create_timer(0.9).timeout
 	var projectile = preload("res://Scenes/Battle/Weapons/RedBullet.tscn").instantiate()
 	projectile.speed = 1000.0
@@ -112,3 +112,11 @@ func _on_collision_shape_finder_area_entered(area: Area2D) -> void:
 
 func _on_collision_shape_finder_area_exited(area: Area2D) -> void:
 	obstacles_in_range.erase(area)
+
+
+func _on_fire_weapon_aim_visibility_changed() -> void:
+	if $FireWeaponAim.visible:
+		$FireWeaponAim.length = 200.0
+		$FireWeaponAim.target_angle = target_angle
+		$FireWeaponAim.target_angle_max_deviation = target_angle_max_deviation
+		$FireWeaponAim.animate(true)

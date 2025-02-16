@@ -212,6 +212,12 @@ alignment = 1
 
 [connection signal="pressed" from="Back" to="." method="_on_back_pressed"]
 [connection signal="mouse_entered" from="MainPanel/Bullet" to="." method="_on_bullet_mouse_entered"]
+[connection signal="pressed" from="MainPanel/Bullet" to="." method="_on_bullet_pressed"]
 [connection signal="mouse_entered" from="MainPanel/Laser" to="." method="_on_laser_mouse_entered"]
+[connection signal="pressed" from="MainPanel/Laser" to="." method="_on_laser_pressed"]
 [connection signal="mouse_entered" from="MainPanel/Bomb" to="." method="_on_bomb_mouse_entered"]
+[connection signal="pressed" from="MainPanel/Bomb" to="." method="_on_bomb_pressed"]
 [connection signal="mouse_entered" from="MainPanel/Light" to="." method="_on_light_mouse_entered"]
+[connection signal="pressed" from="MainPanel/Light" to="." method="_on_light_pressed"]
+[connection signal="pressed" from="MainPanel/Move" to="." method="_on_move_pressed"]
+[connection signal="pressed" from="MainPanel/Push" to="." method="_on_push_pressed"]

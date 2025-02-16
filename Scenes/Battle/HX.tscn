@@ -417,6 +417,7 @@ monitoring = false
 script = ExtResource("1_3h40m")
 
 [node name="FireWeaponAim" parent="." instance=ExtResource("2_uyhlq")]
+visible = false
 
 [node name="CollisionShapeFinder" type="Area2D" parent="."]
 collision_layer = 0
@@ -637,5 +638,6 @@ libraries = {
 "": SubResource("AnimationLibrary_u6u7m")
 }
 
+[connection signal="visibility_changed" from="FireWeaponAim" to="." method="_on_fire_weapon_aim_visibility_changed"]
 [connection signal="area_entered" from="CollisionShapeFinder" to="." method="_on_collision_shape_finder_area_entered"]
 [connection signal="area_exited" from="CollisionShapeFinder" to="." method="_on_collision_shape_finder_area_exited"]

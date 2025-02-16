@@ -1,7 +1,8 @@
-[gd_scene load_steps=30 format=3 uid="uid://cxykmxd6r2wgm"]
+[gd_scene load_steps=31 format=3 uid="uid://cxykmxd6r2wgm"]
 
 [ext_resource type="Texture2D" uid="uid://kr2fdk8dptv1" path="res://Graphics/Misc/BarUnder2.png" id="1"]
 [ext_resource type="Script" path="res://Scripts/Battle/Ship.gd" id="2"]
+[ext_resource type="PackedScene" uid="uid://fo4yl8v4ld8c" path="res://Scenes/Battle/FireWeaponAim.tscn" id="2_ogdx2"]
 [ext_resource type="Shader" path="res://Shaders/Ship.gdshader" id="3_cptad"]
 [ext_resource type="PackedScene" uid="uid://dtk1md86gqsln" path="res://Scenes/Fire.tscn" id="4"]
 [ext_resource type="Texture2D" uid="uid://koi0aarpqj30" path="res://Graphics/Ships/Ship0.png" id="5"]
@@ -136,7 +137,9 @@ collision_layer = 2
 collision_mask = 16
 monitoring = false
 script = ExtResource("2")
-type = null
+
+[node name="FireWeaponAim" parent="." instance=ExtResource("2_ogdx2")]
+visible = false
 
 [node name="ThrusterFire" parent="." instance=ExtResource("4")]
 position = Vector2(-60, -4)
@@ -297,3 +300,5 @@ amount = 24
 process_material = SubResource("33")
 texture = ExtResource("10")
 lifetime = 2.0
+
+[connection signal="visibility_changed" from="FireWeaponAim" to="." method="_on_fire_weapon_aim_visibility_changed"]

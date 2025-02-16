@@ -1,4 +1,4 @@
-extends Node
+extends Node2D
 
 @onready var game = get_node("/root/Game")
 
@@ -16,6 +16,7 @@ var initiative_order = []
 var whose_turn_is_it_index:int = -1
 var HX_nodes = []
 var ship_nodes = []
+var mouse_position:Vector2
 
 enum {
 	ENEMY,
@@ -146,6 +147,8 @@ func add_damage_text(missed: bool, label_position:Vector2, damage: float = 0.0, 
 	add_child(damage_text)
 
 func _input(event: InputEvent) -> void:
+	if event is InputEventMouseMotion:
+		mouse_position = to_local(event.position)
 	if Input.is_action_just_pressed("A"):
 		display_stats("attack")
 	if Input.is_action_just_pressed("D"):

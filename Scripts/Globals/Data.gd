@@ -420,23 +420,23 @@ var rover_mining = {	"red_mining_laser":{"speed":1, "rnge":250, "costs":{"money"
 						"ultragammaray_mining_laser":{"speed":16, "rnge":500, "costs":{"money":e(1.0, 12), "silicon":2500, "quartz":1000}},
 }
 var bullet_data = [	{"damage":3.5, "accuracy":1.0},
-					{"damage":5, "accuracy":1.05},
-					{"damage":9, "accuracy":1.1},
+					{"damage":5, "accuracy":1.1},
+					{"damage":9, "accuracy":1.2},
 					{"damage":19, "accuracy":1.3},
 					{"damage":44, "accuracy":1.7},]
 var laser_data = [	{"damage":2.5, "accuracy":2.2},
-					{"damage":3.5, "accuracy":2.4},
-					{"damage":6.5, "accuracy":2.7},
+					{"damage":3.5, "accuracy":2.5},
+					{"damage":6.5, "accuracy":2.8},
 					{"damage":13, "accuracy":3.3},
 					{"damage":29, "accuracy":5.5},]
-var bomb_data = [	{"damage":6, "accuracy":0.7},
-					{"damage":8, "accuracy":0.72},
-					{"damage":15, "accuracy":0.75},
-					{"damage":34, "accuracy":0.8},
+var bomb_data = [	{"damage":6, "accuracy":0.5},
+					{"damage":8, "accuracy":0.55},
+					{"damage":15, "accuracy":0.6},
+					{"damage":34, "accuracy":0.65},
 					{"damage":90, "accuracy":1.0},]
 var light_data = [	{"damage":1.5, "accuracy":1.3},
-					{"damage":2.5, "accuracy":1.35},
-					{"damage":4.0, "accuracy":1.45},
+					{"damage":2.5, "accuracy":1.4},
+					{"damage":4.0, "accuracy":1.5},
 					{"damage":8.0, "accuracy":1.7},
 					{"damage":17.5, "accuracy":2.8},]
 

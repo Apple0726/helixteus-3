@@ -6,6 +6,16 @@ extends Control
 @onready var turn_order_hbox = get_node("TurnOrderHBox")
 var battle_scene
 var ship_node
+enum {
+	BULLET,
+	LASER,
+	BOMB,
+	LIGHT,
+	MOVE,
+	PUSH,
+	NONE,
+}
+var action_selected = NONE
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
@@ -25,6 +35,11 @@ func _process(delta: float) -> void:
 
 func _input(event: InputEvent) -> void:
 	Helper.set_back_btn($Back)
+	if Input.is_action_just_pressed("cancel") and action_selected != NONE:
+		$MainPanel/AnimationPlayer.play("Fade")
+		action_selected = NONE
+		if ship_node.get_node("FireWeaponAim").visible:
+			ship_node.get_node("FireWeaponAim").fade_out()
 
 func _on_back_pressed() -> void:
 	if battle_scene.hard_battle:
@@ -54,3 +69,36 @@ func _on_light_mouse_entered() -> void:
 	var tooltip_txt = tr("BASE_DAMAGE") + ": " + str(Data.light_data[ship_node.light_lv-1].damage)
 	tooltip_txt += "\n" + tr("BASE_ACCURACY") + ": " + str(Data.light_data[ship_node.light_lv-1].accuracy)
 	game.show_tooltip(tooltip_txt)
+
+
+func _on_bullet_pressed() -> void:
+	$MainPanel/AnimationPlayer.play_backwards("Fade")
+	action_selected = BULLET
+	ship_node.get_node("FireWeaponAim").show()
+
+
+func _on_laser_pressed() -> void:
+	$MainPanel/AnimationPlayer.play_backwards("Fade")
+	action_selected = LASER
+	ship_node.get_node("FireWeaponAim").show()
+
+
+func _on_bomb_pressed() -> void:
+	$MainPanel/AnimationPlayer.play_backwards("Fade")
+	action_selected = BOMB
+	ship_node.get_node("FireWeaponAim").show()
+
+
+func _on_light_pressed() -> void:
+	action_selected = LIGHT
+	$MainPanel/AnimationPlayer.play_backwards("Fade")
+
+
+func _on_move_pressed() -> void:
+	$MainPanel/AnimationPlayer.play_backwards("Fade")
+	action_selected = MOVE
+
+
+func _on_push_pressed() -> void:
+	$MainPanel/AnimationPlayer.play_backwards("Fade")
+	action_selected = PUSH
