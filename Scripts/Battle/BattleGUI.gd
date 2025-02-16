@@ -35,12 +35,16 @@ func _process(delta: float) -> void:
 
 func _input(event: InputEvent) -> void:
 	Helper.set_back_btn($Back)
-	if Input.is_action_just_pressed("cancel") and action_selected != NONE:
-		$MainPanel/AnimationPlayer.play("Fade")
-		action_selected = NONE
-		ship_node.restore_default_enemy_tooltips()
-		if ship_node.get_node("FireWeaponAim").visible:
-			ship_node.get_node("FireWeaponAim").fade_out()
+	if action_selected != NONE:
+		if Input.is_action_just_pressed("cancel"):
+			$MainPanel/AnimationPlayer.play("Fade")
+			action_selected = NONE
+			ship_node.restore_default_enemy_tooltips()
+			if ship_node.get_node("FireWeaponAim").visible:
+				ship_node.get_node("FireWeaponAim").fade_out()
+		elif Input.is_action_just_released("left_click") and not game.view.dragged and not $MainPanel/AnimationPlayer.is_playing():
+			ship_node.fire_weapon(action_selected)
+			action_selected = NONE
 	if action_selected == NONE and is_instance_valid(ship_node):
 		if Input.is_action_just_pressed("1"):
 			_on_bullet_pressed()

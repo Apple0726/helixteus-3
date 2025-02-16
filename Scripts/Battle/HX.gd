@@ -160,3 +160,12 @@ func _on_mouse_entered() -> void:
 
 func _on_mouse_exited() -> void:
 	game.hide_tooltip()
+
+
+func damage_entity(weapon_data: Dictionary):
+	var hit = super(weapon_data)
+	if hit:
+		$Sprite2D.material.set_shader_parameter("flash_color", Vector3(1.0, 0.0, 0.0))
+		$Sprite2D.material.set_shader_parameter("flash", 1.0)
+		create_tween().tween_property($Sprite2D.material, "shader_parameter/flash", 0.0, 0.4)
+	return hit

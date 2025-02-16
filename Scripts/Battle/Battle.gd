@@ -119,7 +119,13 @@ func next_turn():
 	whose_turn_is_it_index += 1
 	var move_view_tween = create_tween()
 	battle_GUI.ship_node = null
-	if initiative_order[whose_turn_is_it_index].type == SHIP:
+	if whose_turn_is_it_index == len(initiative_order):
+		move_view_tween.set_parallel()
+		var view_scale:float = 0.4
+		move_view_tween.tween_property(game.view, "scale", Vector2.ONE * view_scale, 1.0).set_trans(Tween.TRANS_CUBIC)
+		move_view_tween.tween_property(game.view, "position", Vector2(640, 360) - Vector2(640, 360) * view_scale, 1.0).set_trans(Tween.TRANS_CUBIC)
+		battle_GUI.turn_order_hbox.get_child(whose_turn_is_it_index).get_node("AnimationPlayer").play("ChangeSize")
+	elif initiative_order[whose_turn_is_it_index].type == SHIP:
 		var ship_node = ship_nodes[initiative_order[whose_turn_is_it_index].idx]
 		battle_GUI.main_panel.get_node("AnimationPlayer").play("Fade")
 		battle_GUI.ship_node = ship_node
