@@ -99,6 +99,7 @@ func fire_weapon(weapon_type: int):
 		projectile.damage = Data.bullet_data[bullet_lv-1].damage
 		projectile.shooter_attack = attack + attack_buff
 		projectile.weapon_accuracy = Data.bullet_data[bullet_lv-1].accuracy * accuracy
+		projectile.deflects_remaining = bullet_lv
 		projectile.position = position
 		battle_scene.add_child(projectile)
 		projectile.tree_exited.connect(ending_turn)

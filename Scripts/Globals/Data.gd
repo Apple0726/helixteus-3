@@ -435,16 +435,16 @@ var laser_data = [	{"damage":2.0, "accuracy":1.8},
 					{"damage":3.5, "accuracy":2.2},
 					{"damage":5.0, "accuracy":2.5},
 					{"damage":10.0, "accuracy":4.5},]
-var bomb_data = [	{"damage":6, "accuracy":0.5},
-					{"damage":8, "accuracy":0.55},
-					{"damage":15, "accuracy":0.6},
-					{"damage":34, "accuracy":0.65},
-					{"damage":90, "accuracy":1.0},]
-var light_data = [	{"damage":1.5, "accuracy":1.3},
-					{"damage":2.5, "accuracy":1.4},
-					{"damage":4.0, "accuracy":1.5},
-					{"damage":8.0, "accuracy":1.7},
-					{"damage":17.5, "accuracy":2.8},]
+var bomb_data = [	{"damage":6, "accuracy":0.65},
+					{"damage":9, "accuracy":0.7},
+					{"damage":19, "accuracy":0.75},
+					{"damage":40, "accuracy":0.8},
+					{"damage":100, "accuracy":1.2},]
+var light_data = [	{"damage":1.5, "accuracy":INF},
+					{"damage":2.5, "accuracy":INF},
+					{"damage":4.0, "accuracy":INF},
+					{"damage":8.0, "accuracy":INF},
+					{"damage":17.5, "accuracy":INF},]
 
 #the numbers are the elements' abundance relative to hydrogen
 var elements = {

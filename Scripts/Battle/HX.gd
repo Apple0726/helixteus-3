@@ -125,6 +125,7 @@ func attack_target():
 	projectile.damage = 3.0
 	projectile.shooter_attack = attack + attack_buff
 	projectile.weapon_accuracy = 1.0 * accuracy
+	projectile.deflects_remaining = 0
 	projectile.position = position
 	battle_scene.add_child(projectile)
 	projectile.tree_exited.connect(ending_turn)

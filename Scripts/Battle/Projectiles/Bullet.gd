@@ -4,6 +4,7 @@ var speed:float
 var damage:float
 var shooter_attack:int
 var weapon_accuracy:float
+var deflects_remaining:int
 
 func _process(delta: float) -> void:
 	position += speed * Vector2.from_angle(rotation) * delta
@@ -19,4 +20,11 @@ func _on_area_entered(area: Area2D) -> void:
 		"damage_label_initial_velocity":0.3 * speed * Vector2.from_angle(rotation),
 	}
 	if area.damage_entity(weapon_data):
-		queue_free()
+		if deflects_remaining == 0:
+			queue_free()
+		else:
+			# The bullet can now hit anything, regardless of the shooter
+			collision_layer = 4 + 8
+			var incidence_angle = atan2(position.y - area.position.y, position.x - area.position.x)
+			rotation = Vector2.from_angle(rotation).bounce(Vector2.from_angle(incidence_angle)).angle()
+			deflects_remaining -= 1
