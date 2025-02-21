@@ -11,6 +11,7 @@ var wid_p2:int
 var hv2:float
 var h_start:float
 var whites_p = []
+var segments_to_draw = []
 var frame = 0
 var frames:Array
 var white_pixel_num = 0
@@ -29,18 +30,18 @@ func load_data(_LOD):
 	LOD = _LOD
 #	var data = FileAccess.open("data100.txt", FileAccess.READ)
 	wid_p2 = wid_p * LOD
-	if OS.get_name() == "Web" and wid_p2 > 120 or wid_p2 > 240:
+	if OS.get_name() == "Web" and wid_p2 > 120 or wid_p2 > 480:
 		game.popup("Too many exclamation marks!", 2.0)
 		return
 	var data
 	if wid_p2 > 120:
-		W = 240
-		H = 180
-		data = FileAccess.open_compressed("res://Easter eggs/Bad apple/badappledata50", FileAccess.READ, FileAccess.COMPRESSION_DEFLATE)
+		W = 480
+		H = 360
+		data = FileAccess.open_compressed("res://Easter eggs/Bad apple/badappledata100", FileAccess.READ, FileAccess.COMPRESSION_ZSTD)
 	else:
 		W = 120
 		H = 90
-		data = FileAccess.open_compressed("res://Easter eggs/Bad apple/badappledata25", FileAccess.READ, FileAccess.COMPRESSION_DEFLATE)
+		data = FileAccess.open_compressed("res://Easter eggs/Bad apple/badappledata25", FileAccess.READ, FileAccess.COMPRESSION_ZSTD)
 	var st = data.get_as_text()
 	frames = st.split("\n")
 #	var data2 = FileAccess.open_compressed("res://badappledata100", FileAccess.WRITE, FileAccess.COMPRESSION_DEFLATE)
@@ -56,12 +57,12 @@ func load_data(_LOD):
 	for i in len(whites):
 		var x = i % W
 		var y = i / W
-		var x_p = int(x / float(W) * wid_p2)
-		var y_p = int(y / float(H) * hv2 + h_start)
+		var x_p = int(x * wid_p2 / float(W))
+		var y_p = int(y * hv2 / float(H) + h_start)
 		var ind_p = x_p + y_p * wid_p2
 		coefficients[ind_p] += 1
 	for i in len(coefficients):
-		if coefficients[i] > 0:
+		if coefficients[i] > 0.0:
 			coefficients[i] = 1.0 / coefficients[i]
 	for i in len(whites):
 		whites[i] = false
@@ -91,13 +92,16 @@ func _draw():
 #		for i in len(whites):
 #			if whites[i]:
 #				draw_rect(Rect2((i%W)*20, i/W*20, 20, 20), Color.WHITE)
-	if phase == 0 or phase == 2:
+	if phase == 0 or phase == 2 or len(segments_to_draw) == 0:
 		draw_rect(Rect2(0, 0, wid_p*200, wid_p*200), Color(pixel_color.r, pixel_color.g, pixel_color.b, BG_alpha))
 	else:
-		for i in len(whites_p):
-			var shade = whites_p[i]
-			var F = 200.0/LOD
-			draw_rect(Rect2((i%wid_p2)*F, i/wid_p2*F, F, F), Color(pixel_color.r, pixel_color.g, pixel_color.b, 1.0 - shade))
+		var pixel_size = 200.0/LOD
+		for row in len(segments_to_draw):
+			for segment in segments_to_draw[row]:
+				var segment_start = segment[0]
+				var segment_length = segment[1] - segment_start + 1
+				var shade = segment[2]
+				draw_rect(Rect2(pixel_size*segment_start, pixel_size*row, pixel_size*segment_length, pixel_size), Color(pixel_color.r, pixel_color.g, pixel_color.b, 1.0 - shade))
 
 
 var start_time:float
@@ -145,8 +149,8 @@ func draw_frame(frames_to_process:int):
 							for j in range(prev_x, x_coord):
 								var ind = j + y_coord * W
 								whites[ind] = not whites[ind]
-								var x_p = int(j / float(W) * wid_p2)
-								var y_p = int(y_coord / float(H) * hv2 + h_start)
+								var x_p = int(j * wid_p2 / float(W))
+								var y_p = int(y_coord * hv2 / float(H) + h_start)
 								var ind_p = x_p + y_p * wid_p2
 								whites_p[ind_p] += coefficients[ind_p] if whites[ind] else -coefficients[ind_p]
 								white_pixel_num += 1 if whites[ind] else -1
@@ -157,8 +161,8 @@ func draw_frame(frames_to_process:int):
 						for j in range(prev_x, W):
 							var ind = j + y_coord * W
 							whites[ind] = not whites[ind]
-							var x_p = int(j / float(W) * wid_p2)
-							var y_p = int(y_coord / float(H) * hv2 + h_start)
+							var x_p = int(j * wid_p2 / float(W))
+							var y_p = int(y_coord * hv2 / float(H) + h_start)
 							var ind_p = x_p + y_p * wid_p2
 							whites_p[ind_p] += coefficients[ind_p] if whites[ind] else -coefficients[ind_p]
 							white_pixel_num += 1 if whites[ind] else -1
@@ -167,6 +171,19 @@ func draw_frame(frames_to_process:int):
 			phase = 2
 			frame = 0
 			break
+	segments_to_draw.clear()
+	for row in wid_p2:
+		segments_to_draw.append([])
+		# 0: start pos, 1: end pos (inclusive), 2: value
+		var segment = [0, 0, whites_p[row * wid_p2]]
+		for col in range(1, wid_p2):
+			var white_value = whites_p[row * wid_p2 + col]
+			if white_value != segment[2]:
+				segment[1] = col-1
+				segments_to_draw[-1].append(segment)
+				segment = [col, col, white_value]
+		segment[1] = wid_p2-1
+		segments_to_draw[-1].append(segment)
 	queue_redraw()
 
 

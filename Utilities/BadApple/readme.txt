@@ -7,9 +7,9 @@ and if successful, a file called data.txt should appear.
 THe Godot game engine is used to compress this file. To do that, open a new project in Godot,
 then write:
 
-var raw_data = FileAccess.open("data.txt")
+var raw_data = FileAccess.open("res://data.txt", FileAccess.READ)
 var st = raw_data.get_as_text()
-var data = FileAccess.open_compressed("res://badappledata", FileAccess.WRITE, FileAccess.COMPRESSION_DEFLATE)
+var data = FileAccess.open_compressed("res://badappledata", FileAccess.WRITE, FileAccess.COMPRESSION_ZSTD)
 data.store_string(st)
 data.close()
 

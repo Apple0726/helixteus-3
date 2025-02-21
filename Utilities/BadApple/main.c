@@ -4,8 +4,9 @@
 #include <string.h>
 
 #define MAX_SIZE (16 * 1024 * 1024)
-#define WIDTH 480
-#define HEIGHT 360
+#define REDUCTION_RATIO 1
+#define WIDTH 480/REDUCTION_RATIO
+#define HEIGHT 360/REDUCTION_RATIO
 
 int main()
 {
@@ -60,28 +61,28 @@ int main()
 		color_type = png_get_color_type(png_ptr, info_ptr);
 		for (j = 0; j < HEIGHT; j++) {
 			int printJ = 0;
-			int firstInd = -1;
+			int printI = 0;
 			int changed = 0;
-			for (i = 0; i < WIDTH * 3; i += 3) {
-				if (prevValues[i/3][j] == 0 && rows[j][i] > 128) {
-					prevValues[i/3][j] = 1;
+			for (i = 0; i < WIDTH; i++) {
+				if (prevValues[i][j] == 0 && rows[j*REDUCTION_RATIO][3*i*REDUCTION_RATIO] > 128) {
+					prevValues[i][j] = 1;
 					changed = 1;
 				}
-				else if (prevValues[i/3][j] == 1 && rows[j][i] < 128) {
-					prevValues[i/3][j] = 0;
+				else if (prevValues[i][j] == 1 && rows[j*REDUCTION_RATIO][3*i*REDUCTION_RATIO] < 128) {
+					prevValues[i][j] = 0;
 					changed = 1;
 				}
 				if (changed) {
-					if (firstInd == -1) {
-						firstInd = i;
-						fprintf(fOutputPtr, "%d,", i/3);
+					if (printI == 0) {
+						printI = 1;
+						fprintf(fOutputPtr, "%d,", i);
 					}
 					changed = 0;
 					printJ = 1;
 				} else {
-					if (firstInd != -1) {
-						firstInd = -1;
-						fprintf(fOutputPtr, "%d,", i/3);
+					if (printI == 1) {
+						printI = 0;
+						fprintf(fOutputPtr, "%d,", i);
 					}
 				}
 			}
