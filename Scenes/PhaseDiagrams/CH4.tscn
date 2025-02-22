@@ -1,40 +1,40 @@
-[gd_scene load_steps=2 format=2]
+[gd_scene load_steps=2 format=3 uid="uid://dnarwb7ydg0br"]
 
-[ext_resource path="res://Scenes/PhaseDiagrams/CH4.gd" type="Script" id=1]
+[ext_resource type="Script" uid="uid://dpi5eer17u4fi" path="res://Scenes/PhaseDiagrams/CH4.gd" id="1"]
 
 [node name="Methane" type="Node2D"]
-script = ExtResource( 1 )
+script = ExtResource("1")
 __meta__ = {
-"_edit_vertical_guides_": [ 1112.0 ]
+"_edit_vertical_guides_": [1112.0]
 }
 
 [node name="Solid" type="Polygon2D" parent="."]
-color = Color( 0.682353, 0.866667, 1, 1 )
-polygon = PackedVector2Array( 0, 0, 800, 0, 800, 400, 0, 400 )
+color = Color(0.682353, 0.866667, 1, 1)
+polygon = PackedVector2Array(0, 0, 800, 0, 800, 400, 0, 400)
 
 [node name="Liquid" type="Polygon2D" parent="."]
-color = Color( 0.776471, 1, 0.8, 1 )
-polygon = PackedVector2Array( 72, 232, 84, 148, 152, 116, 152, 148 )
+color = Color(0.776471, 1, 0.8, 1)
+polygon = PackedVector2Array(72, 232, 84, 148, 152, 116, 152, 148)
 
 [node name="Gas" type="Polygon2D" parent="."]
-color = Color( 1, 0.839216, 0.564706, 1 )
-polygon = PackedVector2Array( 36, 400, 72, 232, 152, 148, 800, 148, 800, 400 )
+color = Color(1, 0.839216, 0.564706, 1)
+polygon = PackedVector2Array(36, 400, 72, 232, 152, 148, 800, 148, 800, 400)
 
 [node name="Superfluid" type="Polygon2D" parent="."]
-polygon = PackedVector2Array( 152, 148, 152, 116, 800, 88, 800, 148 )
+polygon = PackedVector2Array(152, 148, 152, 116, 800, 88, 800, 148)
 
 [node name="TriplePoint" type="Polygon2D" parent="."]
-color = Color( 0.87451, 0, 1, 1 )
-polygon = PackedVector2Array( 0, 0, 3, 0, 3, 3, 0, 3 )
+color = Color(0.87451, 0, 1, 1)
+polygon = PackedVector2Array(0, 0, 3, 0, 3, 3, 0, 3)
 
 [node name="MeltPoint" type="Polygon2D" parent="."]
-color = Color( 0, 0.529412, 1, 1 )
-polygon = PackedVector2Array( 0, 0, 3, 0, 3, 3, 0, 3 )
+color = Color(0, 0.529412, 1, 1)
+polygon = PackedVector2Array(0, 0, 3, 0, 3, 3, 0, 3)
 
 [node name="BoilPoint" type="Polygon2D" parent="."]
-color = Color( 1, 0, 0, 1 )
-polygon = PackedVector2Array( 0, 0, 3, 0, 3, 3, 0, 3 )
+color = Color(1, 0, 0, 1)
+polygon = PackedVector2Array(0, 0, 3, 0, 3, 3, 0, 3)
 
 [node name="SuperPoint" type="Polygon2D" parent="."]
-color = Color( 1, 0.772549, 0, 1 )
-polygon = PackedVector2Array( 0, 0, 3, 0, 3, 3, 0, 3 )
+color = Color(1, 0.772549, 0, 1)
+polygon = PackedVector2Array(0, 0, 3, 0, 3, 3, 0, 3)

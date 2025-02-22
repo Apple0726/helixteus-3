@@ -1,7 +1,7 @@
 [gd_scene load_steps=21 format=3 uid="uid://bvs7tmwu2go0"]
 
 [ext_resource type="Texture2D" uid="uid://dilhlyh5sbfqs" path="res://Graphics/Cave/DebrisCave.png" id="1"]
-[ext_resource type="Script" path="res://Scripts/Cave/Debris.gd" id="2"]
+[ext_resource type="Script" uid="uid://c585sbmudu86y" path="res://Scripts/Cave/Debris.gd" id="2"]
 [ext_resource type="Texture2D" uid="uid://cjmi7f8211uny" path="res://Graphics/Cave/DebrisLava.png" id="3"]
 [ext_resource type="Texture2D" uid="uid://b1dcgxga387up" path="res://Graphics/Effects/spotlight_1.png" id="4"]
 [ext_resource type="Texture2D" uid="uid://doyhcr5ker08v" path="res://Graphics/Cave/DebrisAnim.png" id="5"]
@@ -44,19 +44,19 @@ colors = PackedColorArray(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0)
 gradient = SubResource("Gradient_oisdr")
 
 [sub_resource type="ParticleProcessMaterial" id="3"]
-emission_shape = 1
-emission_sphere_radius = 20.0
 particle_flag_align_y = true
 particle_flag_rotate_y = true
-direction = Vector3(0, 0, 0)
-spread = 180.0
-gravity = Vector3(0, 0, 0)
-initial_velocity_min = 50.0
-initial_velocity_max = 500.0
-damping_min = 800.0
-damping_max = 800.0
+emission_shape = 1
+emission_sphere_radius = 20.0
 angle_min = -180.0
 angle_max = 180.0
+direction = Vector3(0, 0, 0)
+spread = 180.0
+initial_velocity_min = 50.0
+initial_velocity_max = 500.0
+gravity = Vector3(0, 0, 0)
+damping_min = 800.0
+damping_max = 800.0
 scale_min = 0.03
 scale_max = 0.15
 color_ramp = SubResource("GradientTexture1D_avi8t")
@@ -80,11 +80,11 @@ gradient = SubResource("12")
 
 [sub_resource type="ParticleProcessMaterial" id="14"]
 particle_flag_rotate_y = true
-gravity = Vector3(0, 0, 0)
-initial_velocity_min = 20.0
-initial_velocity_max = 100.0
 angle_min = -180.0
 angle_max = 180.0
+initial_velocity_min = 20.0
+initial_velocity_max = 100.0
+gravity = Vector3(0, 0, 0)
 scale_min = 0.2
 color_ramp = SubResource("13")
 
@@ -125,8 +125,8 @@ tracks/0/keys = {
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_evmef"]
 _data = {
-"New Anim": SubResource("16"),
-"RESET": SubResource("17")
+&"New Anim": SubResource("16"),
+&"RESET": SubResource("17")
 }
 
 [node name="Debris" type="Node2D"]

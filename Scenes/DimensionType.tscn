@@ -1,7 +1,7 @@
 [gd_scene load_steps=13 format=3 uid="uid://bx7irdxpbnhbb"]
 
 [ext_resource type="PackedScene" uid="uid://c8jr3e5aiyj1n" path="res://Scenes/HelpText.tscn" id="2"]
-[ext_resource type="Script" path="res://Scripts/DimensionType.gd" id="3"]
+[ext_resource type="Script" uid="uid://bsiyhgj1nwvfw" path="res://Scripts/DimensionType.gd" id="3"]
 [ext_resource type="Texture2D" uid="uid://kr2fdk8dptv1" path="res://Graphics/Misc/BarUnder2.png" id="4"]
 [ext_resource type="Texture2D" uid="uid://bx1hvetixqpwi" path="res://Graphics/Misc/Bar2.png" id="6"]
 [ext_resource type="Texture2D" uid="uid://cxij5pk8nug0r" path="res://Graphics/Misc/BarOver.png" id="7"]
@@ -48,8 +48,8 @@ tracks/0/keys = {
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_t74kk"]
 _data = {
-"New Anim": SubResource("2"),
-"RESET": SubResource("3")
+&"New Anim": SubResource("2"),
+&"RESET": SubResource("3")
 }
 
 [sub_resource type="Animation" id="Animation_7mwrh"]
@@ -108,8 +108,8 @@ tracks/1/keys = {
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_tnhku"]
 _data = {
-"Fade": SubResource("Animation_7mwrh"),
-"RESET": SubResource("Animation_c4k7c")
+&"Fade": SubResource("Animation_7mwrh"),
+&"RESET": SubResource("Animation_c4k7c")
 }
 
 [node name="Mathematics" type="Panel"]

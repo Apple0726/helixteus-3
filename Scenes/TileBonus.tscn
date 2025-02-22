@@ -2,7 +2,7 @@
 
 [ext_resource type="Theme" uid="uid://cp2u1kgj60ic" path="res://Resources/default_theme.tres" id="1_ikvkt"]
 [ext_resource type="Texture2D" uid="uid://dg25fshk35326" path="res://Graphics/Icons/SP.png" id="2_8plqd"]
-[ext_resource type="Script" path="res://Scripts/TileBonus.gd" id="2_t0pjy"]
+[ext_resource type="Script" uid="uid://dgvc3sttcbv0l" path="res://Scripts/TileBonus.gd" id="2_t0pjy"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ewgeq"]
 bg_color = Color(0, 0, 0, 1)

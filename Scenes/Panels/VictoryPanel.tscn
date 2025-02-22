@@ -3,7 +3,7 @@
 [ext_resource type="PackedScene" uid="uid://gy6plqno7n0y" path="res://Scenes/ShipInfo.tscn" id="3"]
 [ext_resource type="Theme" uid="uid://cp2u1kgj60ic" path="res://Resources/default_theme.tres" id="4"]
 [ext_resource type="PackedScene" uid="uid://c8jr3e5aiyj1n" path="res://Scenes/HelpText.tscn" id="5"]
-[ext_resource type="Script" path="res://Scripts/VictoryPanel.gd" id="11"]
+[ext_resource type="Script" uid="uid://cso3e7d4e2gc8" path="res://Scripts/VictoryPanel.gd" id="11"]
 [ext_resource type="PackedScene" uid="uid://ddf2xjwcht77u" path="res://Scenes/CloseButton.tscn" id="13"]
 
 [node name="VictoryPanel" type="Panel"]

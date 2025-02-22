@@ -1,6 +1,6 @@
 [gd_scene load_steps=4 format=3 uid="uid://cun3ekabnch42"]
 
-[ext_resource type="Script" path="res://Scripts/BuildingInfo.gd" id="1"]
+[ext_resource type="Script" uid="uid://ygeucmdry8wj" path="res://Scripts/BuildingInfo.gd" id="1"]
 [ext_resource type="Theme" uid="uid://cp2u1kgj60ic" path="res://Resources/default_theme.tres" id="1_dubjc"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_a82w2"]

@@ -1,6 +1,6 @@
-[gd_scene load_steps=2 format=2]
+[gd_scene load_steps=2 format=3 uid="uid://dmhr0laoikyct"]
 
-[sub_resource type="GDScript" id=1]
+[sub_resource type="GDScript" id="1"]
 script/source = "extends Control
 
 signal button_pressed
@@ -61,7 +61,7 @@ func _on_TextureButton_pressed():
 "
 
 [node name="Button" type="Control"]
-script = SubResource( 1 )
+script = SubResource("1")
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -71,8 +71,8 @@ offset_left = -20.0
 offset_top = -20.0
 offset_right = 20.0
 offset_bottom = 20.0
-pivot_offset = Vector2( 20, 20 )
-color = Color( 1, 1, 1, 0 )
+pivot_offset = Vector2(20, 20)
+color = Color(1, 1, 1, 0)
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -82,10 +82,11 @@ offset_left = -20.0
 offset_top = -20.0
 offset_right = 20.0
 offset_bottom = 20.0
-pivot_offset = Vector2( 20, 20 )
+pivot_offset = Vector2(20, 20)
 __meta__ = {
 "_edit_use_anchors_": false
 }
+
 [connection signal="mouse_entered" from="TextureButton" to="." method="_on_TextureButton_mouse_entered"]
 [connection signal="mouse_exited" from="TextureButton" to="." method="_on_TextureButton_mouse_exited"]
 [connection signal="pressed" from="TextureButton" to="." method="_on_TextureButton_pressed"]

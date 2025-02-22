@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://c8jr3e5aiyj1n"]
 
-[ext_resource type="Script" path="res://Scripts/HelpText.gd" id="1"]
+[ext_resource type="Script" uid="uid://beaqxkvmwnoxd" path="res://Scripts/HelpText.gd" id="1"]
 
 [node name="RichTextLabel" type="RichTextLabel"]
 offset_right = 200.0

@@ -30,7 +30,7 @@
 [ext_resource type="Texture2D" uid="uid://2u1dxtst5rkn" path="res://Graphics/Cave/RE/laser_8.png" id="28"]
 [ext_resource type="Texture2D" uid="uid://b5wibpm8moorm" path="res://Graphics/Cave/RE/laser_7.png" id="29"]
 [ext_resource type="Texture2D" uid="uid://iotrkwihdgfs" path="res://Graphics/Cave/RE/laser_6.png" id="30"]
-[ext_resource type="Script" path="res://Scripts/RoverEnhancements.gd" id="31"]
+[ext_resource type="Script" uid="uid://bwacl8m2x4c2a" path="res://Scripts/RoverEnhancements.gd" id="31"]
 [ext_resource type="Texture2D" uid="uid://bn1r0eiepoqhd" path="res://Graphics/Cave/RE/armor_9.png" id="32"]
 [ext_resource type="Texture2D" uid="uid://dx8cwld6ovr64" path="res://Graphics/Cave/RE/armor_11.png" id="33"]
 [ext_resource type="Texture2D" uid="uid://b0bsaro461i7y" path="res://Graphics/Cave/RE/armor_10.png" id="34"]

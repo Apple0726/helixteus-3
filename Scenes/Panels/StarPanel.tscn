@@ -1,6 +1,6 @@
 [gd_scene load_steps=8 format=3 uid="uid://cobxcj7wuwecq"]
 
-[ext_resource type="Script" path="res://Scripts/StarPanel.gd" id="1_n5bo0"]
+[ext_resource type="Script" uid="uid://bod8haq3bx26s" path="res://Scripts/StarPanel.gd" id="1_n5bo0"]
 [ext_resource type="Theme" uid="uid://cp2u1kgj60ic" path="res://Resources/default_theme.tres" id="2_2262v"]
 [ext_resource type="PackedScene" uid="uid://byh1hjd76sl65" path="res://Scenes/StarButton.tscn" id="3_pw7ua"]
 
@@ -89,8 +89,8 @@ tracks/2/keys = {
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_bp5hg"]
 _data = {
-"Fade": SubResource("Animation_tg7hu"),
-"RESET": SubResource("Animation_h6jf6")
+&"Fade": SubResource("Animation_tg7hu"),
+&"RESET": SubResource("Animation_h6jf6")
 }
 
 [node name="StarPanel" type="Control"]

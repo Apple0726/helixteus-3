@@ -1,22 +1,22 @@
-[gd_scene load_steps=4 format=2]
+[gd_scene load_steps=4 format=3 uid="uid://bd4wqp1dv6oar"]
 
-[ext_resource path="res://Resources/default_theme.tres" type="Theme" id=1]
+[ext_resource type="Theme" uid="uid://cp2u1kgj60ic" path="res://Resources/default_theme.tres" id="1"]
 
-[sub_resource type="StyleBoxFlat" id=1]
+[sub_resource type="StyleBoxFlat" id="1"]
 content_margin_left = 0.0
-content_margin_right = 0.0
 content_margin_top = 0.0
+content_margin_right = 0.0
 content_margin_bottom = 0.0
-bg_color = Color( 0.866667, 0.866667, 0.866667, 1 )
+bg_color = Color(0.866667, 0.866667, 0.866667, 1)
 border_width_left = 2
 border_width_top = 2
 border_width_right = 2
 border_width_bottom = 2
-border_color = Color( 0.611765, 0.611765, 0.611765, 1 )
+border_color = Color(0.611765, 0.611765, 0.611765, 1)
 shadow_size = 2
-shadow_offset = Vector2( 1, 1 )
+shadow_offset = Vector2(1, 1)
 
-[sub_resource type="StyleBoxFlat" id=2]
+[sub_resource type="StyleBoxFlat" id="2"]
 content_margin_left = 6.0
 content_margin_right = 6.0
 draw_center = false
@@ -24,15 +24,15 @@ border_width_left = 1
 border_width_top = 1
 border_width_right = 1
 border_width_bottom = 1
-border_color = Color( 0.611765, 0.611765, 0.611765, 1 )
+border_color = Color(0.611765, 0.611765, 0.611765, 1)
 
 [node name="Control" type="PanelContainer"]
 anchor_right = 1.0
 anchor_bottom = 1.0
 offset_right = -982.0
 offset_bottom = -593.0
-theme = ExtResource( 1 )
-custom_styles/panel = SubResource( 1 )
+theme = ExtResource("1")
+custom_styles/panel = SubResource("1")
 
 [node name="GridContainer" type="GridContainer" parent="."]
 offset_right = 298.0
@@ -44,9 +44,9 @@ columns = 3
 [node name="Level" type="Label" parent="GridContainer"]
 offset_right = 100.0
 offset_bottom = 40.0
-custom_minimum_size = Vector2( 40, 40 )
-custom_colors/font_color = Color( 0, 0, 0, 1 )
-custom_styles/normal = SubResource( 2 )
+custom_minimum_size = Vector2(40, 40)
+custom_colors/font_color = Color(0, 0, 0, 1)
+custom_styles/normal = SubResource("2")
 text = "LEVEL"
 align = 1
 valign = 1
@@ -55,9 +55,9 @@ valign = 1
 offset_left = 99.0
 offset_right = 199.0
 offset_bottom = 40.0
-custom_minimum_size = Vector2( 100, 40 )
-custom_colors/font_color = Color( 0, 0, 0, 1 )
-custom_styles/normal = SubResource( 2 )
+custom_minimum_size = Vector2(100, 40)
+custom_colors/font_color = Color(0, 0, 0, 1)
+custom_styles/normal = SubResource("2")
 text = "VALUE"
 align = 1
 valign = 1
@@ -66,9 +66,9 @@ valign = 1
 offset_left = 198.0
 offset_right = 298.0
 offset_bottom = 40.0
-custom_minimum_size = Vector2( 100, 40 )
-custom_colors/font_color = Color( 0, 0, 0, 1 )
-custom_styles/normal = SubResource( 2 )
+custom_minimum_size = Vector2(100, 40)
+custom_colors/font_color = Color(0, 0, 0, 1)
+custom_styles/normal = SubResource("2")
 text = "DEFAULT"
 align = 1
 valign = 1
@@ -77,9 +77,9 @@ valign = 1
 offset_top = 39.0
 offset_right = 100.0
 offset_bottom = 69.0
-custom_minimum_size = Vector2( 100, 30 )
-custom_colors/font_color = Color( 0, 0, 0, 1 )
-custom_styles/normal = SubResource( 2 )
+custom_minimum_size = Vector2(100, 30)
+custom_colors/font_color = Color(0, 0, 0, 1)
+custom_styles/normal = SubResource("2")
 text = "1"
 align = 1
 
@@ -88,9 +88,9 @@ offset_left = 99.0
 offset_top = 39.0
 offset_right = 199.0
 offset_bottom = 69.0
-custom_minimum_size = Vector2( 100, 30 )
-custom_colors/font_color = Color( 0, 0, 0, 1 )
-custom_styles/normal = SubResource( 2 )
+custom_minimum_size = Vector2(100, 30)
+custom_colors/font_color = Color(0, 0, 0, 1)
+custom_styles/normal = SubResource("2")
 text = "100"
 align = 1
 
@@ -99,9 +99,9 @@ offset_left = 198.0
 offset_top = 39.0
 offset_right = 298.0
 offset_bottom = 69.0
-custom_minimum_size = Vector2( 100, 30 )
-custom_colors/font_color = Color( 0, 0, 0, 1 )
-custom_styles/normal = SubResource( 2 )
+custom_minimum_size = Vector2(100, 30)
+custom_colors/font_color = Color(0, 0, 0, 1)
+custom_styles/normal = SubResource("2")
 text = "100"
 align = 1
 
@@ -109,9 +109,9 @@ align = 1
 offset_top = 68.0
 offset_right = 100.0
 offset_bottom = 98.0
-custom_minimum_size = Vector2( 100, 30 )
-custom_colors/font_color = Color( 0, 0, 0, 1 )
-custom_styles/normal = SubResource( 2 )
+custom_minimum_size = Vector2(100, 30)
+custom_colors/font_color = Color(0, 0, 0, 1)
+custom_styles/normal = SubResource("2")
 text = "10"
 align = 1
 
@@ -120,9 +120,9 @@ offset_left = 99.0
 offset_top = 68.0
 offset_right = 199.0
 offset_bottom = 98.0
-custom_minimum_size = Vector2( 100, 30 )
-custom_colors/font_color = Color( 0, 0, 0, 1 )
-custom_styles/normal = SubResource( 2 )
+custom_minimum_size = Vector2(100, 30)
+custom_colors/font_color = Color(0, 0, 0, 1)
+custom_styles/normal = SubResource("2")
 text = "100"
 align = 1
 
@@ -131,9 +131,9 @@ offset_left = 198.0
 offset_top = 68.0
 offset_right = 298.0
 offset_bottom = 98.0
-custom_minimum_size = Vector2( 100, 30 )
-custom_colors/font_color = Color( 0, 0, 0, 1 )
-custom_styles/normal = SubResource( 2 )
+custom_minimum_size = Vector2(100, 30)
+custom_colors/font_color = Color(0, 0, 0, 1)
+custom_styles/normal = SubResource("2")
 text = "100"
 align = 1
 
@@ -141,9 +141,9 @@ align = 1
 offset_top = 97.0
 offset_right = 100.0
 offset_bottom = 127.0
-custom_minimum_size = Vector2( 100, 30 )
-custom_colors/font_color = Color( 0, 0, 0, 1 )
-custom_styles/normal = SubResource( 2 )
+custom_minimum_size = Vector2(100, 30)
+custom_colors/font_color = Color(0, 0, 0, 1)
+custom_styles/normal = SubResource("2")
 text = "100"
 align = 1
 
@@ -152,9 +152,9 @@ offset_left = 99.0
 offset_top = 97.0
 offset_right = 199.0
 offset_bottom = 127.0
-custom_minimum_size = Vector2( 100, 30 )
-custom_colors/font_color = Color( 0, 0, 0, 1 )
-custom_styles/normal = SubResource( 2 )
+custom_minimum_size = Vector2(100, 30)
+custom_colors/font_color = Color(0, 0, 0, 1)
+custom_styles/normal = SubResource("2")
 text = "100"
 align = 1
 
@@ -163,9 +163,9 @@ offset_left = 198.0
 offset_top = 97.0
 offset_right = 298.0
 offset_bottom = 127.0
-custom_minimum_size = Vector2( 100, 30 )
-custom_colors/font_color = Color( 0, 0, 0, 1 )
-custom_styles/normal = SubResource( 2 )
+custom_minimum_size = Vector2(100, 30)
+custom_colors/font_color = Color(0, 0, 0, 1)
+custom_styles/normal = SubResource("2")
 text = "100"
 align = 1
 
@@ -174,9 +174,9 @@ visible = false
 offset_top = 126.0
 offset_right = 100.0
 offset_bottom = 156.0
-custom_minimum_size = Vector2( 100, 30 )
-custom_colors/font_color = Color( 0, 0, 0, 1 )
-custom_styles/normal = SubResource( 2 )
+custom_minimum_size = Vector2(100, 30)
+custom_colors/font_color = Color(0, 0, 0, 1)
+custom_styles/normal = SubResource("2")
 text = "200"
 align = 1
 
@@ -185,9 +185,9 @@ visible = false
 offset_top = 126.0
 offset_right = 100.0
 offset_bottom = 156.0
-custom_minimum_size = Vector2( 100, 30 )
-custom_colors/font_color = Color( 0, 0, 0, 1 )
-custom_styles/normal = SubResource( 2 )
+custom_minimum_size = Vector2(100, 30)
+custom_colors/font_color = Color(0, 0, 0, 1)
+custom_styles/normal = SubResource("2")
 text = "100"
 align = 1
 
@@ -196,8 +196,8 @@ visible = false
 offset_top = 126.0
 offset_right = 100.0
 offset_bottom = 156.0
-custom_minimum_size = Vector2( 100, 30 )
-custom_colors/font_color = Color( 0, 0, 0, 1 )
-custom_styles/normal = SubResource( 2 )
+custom_minimum_size = Vector2(100, 30)
+custom_colors/font_color = Color(0, 0, 0, 1)
+custom_styles/normal = SubResource("2")
 text = "100"
 align = 1

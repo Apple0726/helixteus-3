@@ -2,7 +2,7 @@
 
 [ext_resource type="Theme" uid="uid://cp2u1kgj60ic" path="res://Resources/default_theme.tres" id="1"]
 [ext_resource type="PackedScene" uid="uid://ddf2xjwcht77u" path="res://Scenes/CloseButton.tscn" id="2"]
-[ext_resource type="Script" path="res://Scripts/PopupInput.gd" id="3"]
+[ext_resource type="Script" uid="uid://cl3m870q8h1u7" path="res://Scripts/PopupInput.gd" id="3"]
 
 [node name="PopopInput" type="ColorRect"]
 anchors_preset = 15

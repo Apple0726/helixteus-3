@@ -1,8 +1,8 @@
-[gd_scene load_steps=20 format=2]
+[gd_scene load_steps=20 format=3 uid="uid://c6q7hd1yqt88b"]
 
-[ext_resource type="Script" path="res://Scripts/UpgradeShips.gd" id="1"]
+[ext_resource type="Script" uid="uid://87tixefh6jkf" path="res://Scripts/UpgradeShips.gd" id="1"]
 [ext_resource type="Texture2D" uid="uid://cvetejccba6ge" path="res://Graphics/Stars/Star.png" id="2"]
-[ext_resource type="Script" path="res://Scripts/EpicUpgrades.gd" id="3"]
+[ext_resource type="Script" uid="uid://b8peaf6wv5pxc" path="res://Scripts/EpicUpgrades.gd" id="3"]
 [ext_resource type="Texture2D" uid="uid://baql2tlnb7ayd" path="res://Graphics/Buttons/Up.png" id="4"]
 [ext_resource type="Texture2D" uid="uid://irnrwmwb2qvs" path="res://Graphics/Buttons/Down.png" id="5"]
 [ext_resource type="Texture2D" uid="uid://bl07f3wef0muv" path="res://Graphics/Icons/HP.png" id="6"]
@@ -18,14 +18,14 @@
 [ext_resource type="Texture2D" uid="uid://dumt2a3xer46o" path="res://Graphics/Buttons/lol.png" id="16"]
 [ext_resource type="Texture2D" uid="uid://ch8htuq4nha0s" path="res://Graphics/Buttons/repair.png" id="17"]
 [ext_resource type="Texture2D" uid="uid://lxwiobldwv6t" path="res://Graphics/Buttons/charge.png" id="18"]
-[ext_resource type="Script" path="res://Scripts/AbilitySuperweapon.gd" id="19"]
+[ext_resource type="Script" uid="uid://dmcj7ywmd5jq6" path="res://Scripts/AbilitySuperweapon.gd" id="19"]
 
 [node name="Upgrade" type="Panel"]
 offset_top = 104.0
 offset_right = 1024.0
 offset_bottom = 600.0
-theme = ExtResource( 7 )
-script = ExtResource( 1 )
+theme = ExtResource("7")
+script = ExtResource("1")
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -59,12 +59,12 @@ __meta__ = {
 }
 
 [node name="TextureRect" type="TextureRect" parent="Ship"]
-modulate = Color( 1, 1, 1, 0.560784 )
+modulate = Color(1, 1, 1, 0.560784)
 offset_left = 8.0
 offset_top = 224.0
 offset_right = 375.0
 offset_bottom = 312.0
-texture = ExtResource( 2 )
+texture = ExtResource("2")
 expand = true
 stretch_mode = 1
 __meta__ = {
@@ -114,7 +114,7 @@ __meta__ = {
 [node name="HP" type="Control" parent="Upgrades"]
 offset_right = 336.0
 offset_bottom = 72.0
-script = ExtResource( 3 )
+script = ExtResource("3")
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -125,7 +125,7 @@ offset_left = 276.0
 offset_top = 8.0
 offset_right = 300.0
 offset_bottom = 32.0
-texture_normal = ExtResource( 4 )
+texture_normal = ExtResource("4")
 expand = true
 __meta__ = {
 "_edit_use_anchors_": false
@@ -136,7 +136,7 @@ offset_left = 276.0
 offset_top = 40.0
 offset_right = 300.0
 offset_bottom = 64.0
-texture_normal = ExtResource( 5 )
+texture_normal = ExtResource("5")
 expand = true
 __meta__ = {
 "_edit_use_anchors_": false
@@ -147,7 +147,7 @@ offset_left = 30.0
 offset_top = 16.0
 offset_right = 70.0
 offset_bottom = 56.0
-texture = ExtResource( 6 )
+texture = ExtResource("6")
 expand = true
 __meta__ = {
 "_edit_use_anchors_": false
@@ -168,7 +168,7 @@ __meta__ = {
 offset_top = 72.0
 offset_right = 336.0
 offset_bottom = 144.0
-script = ExtResource( 3 )
+script = ExtResource("3")
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -179,7 +179,7 @@ offset_left = 276.0
 offset_top = 8.0
 offset_right = 300.0
 offset_bottom = 32.0
-texture_normal = ExtResource( 4 )
+texture_normal = ExtResource("4")
 expand = true
 __meta__ = {
 "_edit_use_anchors_": false
@@ -190,7 +190,7 @@ offset_left = 276.0
 offset_top = 40.0
 offset_right = 300.0
 offset_bottom = 64.0
-texture_normal = ExtResource( 5 )
+texture_normal = ExtResource("5")
 expand = true
 __meta__ = {
 "_edit_use_anchors_": false
@@ -201,7 +201,7 @@ offset_left = 30.0
 offset_top = 16.0
 offset_right = 70.0
 offset_bottom = 56.0
-texture = ExtResource( 11 )
+texture = ExtResource("11")
 expand = true
 __meta__ = {
 "_edit_use_anchors_": false
@@ -222,7 +222,7 @@ __meta__ = {
 offset_top = 144.0
 offset_right = 336.0
 offset_bottom = 216.0
-script = ExtResource( 3 )
+script = ExtResource("3")
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -233,7 +233,7 @@ offset_left = 276.0
 offset_top = 8.0
 offset_right = 300.0
 offset_bottom = 32.0
-texture_normal = ExtResource( 4 )
+texture_normal = ExtResource("4")
 expand = true
 __meta__ = {
 "_edit_use_anchors_": false
@@ -244,7 +244,7 @@ offset_left = 276.0
 offset_top = 40.0
 offset_right = 300.0
 offset_bottom = 64.0
-texture_normal = ExtResource( 5 )
+texture_normal = ExtResource("5")
 expand = true
 __meta__ = {
 "_edit_use_anchors_": false
@@ -255,7 +255,7 @@ offset_left = 30.0
 offset_top = 16.0
 offset_right = 70.0
 offset_bottom = 56.0
-texture = ExtResource( 9 )
+texture = ExtResource("9")
 expand = true
 __meta__ = {
 "_edit_use_anchors_": false
@@ -276,7 +276,7 @@ __meta__ = {
 offset_top = 216.0
 offset_right = 336.0
 offset_bottom = 288.0
-script = ExtResource( 3 )
+script = ExtResource("3")
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -287,7 +287,7 @@ offset_left = 276.0
 offset_top = 8.0
 offset_right = 300.0
 offset_bottom = 32.0
-texture_normal = ExtResource( 4 )
+texture_normal = ExtResource("4")
 expand = true
 __meta__ = {
 "_edit_use_anchors_": false
@@ -298,7 +298,7 @@ offset_left = 276.0
 offset_top = 40.0
 offset_right = 300.0
 offset_bottom = 64.0
-texture_normal = ExtResource( 5 )
+texture_normal = ExtResource("5")
 expand = true
 __meta__ = {
 "_edit_use_anchors_": false
@@ -309,7 +309,7 @@ offset_left = 30.0
 offset_top = 16.0
 offset_right = 70.0
 offset_bottom = 56.0
-texture = ExtResource( 10 )
+texture = ExtResource("10")
 expand = true
 __meta__ = {
 "_edit_use_anchors_": false
@@ -330,7 +330,7 @@ __meta__ = {
 offset_top = 288.0
 offset_right = 336.0
 offset_bottom = 360.0
-script = ExtResource( 3 )
+script = ExtResource("3")
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -341,7 +341,7 @@ offset_left = 276.0
 offset_top = 8.0
 offset_right = 300.0
 offset_bottom = 32.0
-texture_normal = ExtResource( 4 )
+texture_normal = ExtResource("4")
 expand = true
 __meta__ = {
 "_edit_use_anchors_": false
@@ -352,7 +352,7 @@ offset_left = 276.0
 offset_top = 40.0
 offset_right = 300.0
 offset_bottom = 64.0
-texture_normal = ExtResource( 5 )
+texture_normal = ExtResource("5")
 expand = true
 __meta__ = {
 "_edit_use_anchors_": false
@@ -363,7 +363,7 @@ offset_left = 30.0
 offset_top = 16.0
 offset_right = 70.0
 offset_bottom = 56.0
-texture = ExtResource( 12 )
+texture = ExtResource("12")
 expand = true
 __meta__ = {
 "_edit_use_anchors_": false
@@ -385,7 +385,7 @@ offset_left = 721.0
 offset_top = 48.0
 offset_right = 1024.0
 offset_bottom = 496.0
-script = ExtResource( 19 )
+script = ExtResource("19")
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -444,7 +444,7 @@ __meta__ = {
 offset_left = 17.0
 offset_right = 81.0
 offset_bottom = 64.0
-texture_normal = ExtResource( 15 )
+texture_normal = ExtResource("15")
 
 [node name="Buff" type="TextureButton" parent="Specials/Abilities/HBoxContainer"]
 offset_left = 85.0
@@ -453,7 +453,7 @@ offset_bottom = 64.0
 grow_horizontal = 2
 size_flags_horizontal = 0
 size_flags_vertical = 0
-texture_normal = ExtResource( 8 )
+texture_normal = ExtResource("8")
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -465,13 +465,13 @@ offset_bottom = 64.0
 grow_horizontal = 2
 size_flags_horizontal = 0
 size_flags_vertical = 0
-texture_normal = ExtResource( 14 )
+texture_normal = ExtResource("14")
 
 [node name="Repair" type="TextureButton" parent="Specials/Abilities/HBoxContainer"]
 offset_left = 221.0
 offset_right = 285.0
 offset_bottom = 64.0
-texture_normal = ExtResource( 17 )
+texture_normal = ExtResource("17")
 
 [node name="Superweapons" type="Control" parent="Specials"]
 offset_top = 216.0
@@ -531,25 +531,25 @@ __meta__ = {
 offset_left = 17.0
 offset_right = 81.0
 offset_bottom = 64.0
-texture_normal = ExtResource( 15 )
+texture_normal = ExtResource("15")
 
 [node name="LOL" type="TextureButton" parent="Specials/Superweapons/HBoxContainer"]
 offset_left = 85.0
 offset_right = 149.0
 offset_bottom = 64.0
-texture_normal = ExtResource( 16 )
+texture_normal = ExtResource("16")
 
 [node name="Orb" type="TextureButton" parent="Specials/Superweapons/HBoxContainer"]
 offset_left = 153.0
 offset_right = 217.0
 offset_bottom = 64.0
-texture_normal = ExtResource( 13 )
+texture_normal = ExtResource("13")
 
 [node name="Charge" type="TextureButton" parent="Specials/Superweapons/HBoxContainer"]
 offset_left = 221.0
 offset_right = 285.0
 offset_bottom = 64.0
-texture_normal = ExtResource( 18 )
+texture_normal = ExtResource("18")
 
 [connection signal="item_selected" from="OptionButton" to="." method="_on_OptionButton_item_selected"]
 [connection signal="pressed" from="Upgrades/HP/Up" to="Upgrades/HP" method="_on_Up_pressed"]

@@ -4,7 +4,7 @@
 [ext_resource type="Texture2D" uid="uid://ds6nct7g63284" path="res://Graphics/Icons/Arrow.png" id="2"]
 [ext_resource type="Theme" uid="uid://cp2u1kgj60ic" path="res://Resources/default_theme.tres" id="3"]
 [ext_resource type="Texture2D" uid="uid://dcvnyb0mloli2" path="res://Graphics/GUI/Panel.png" id="3_qfq0o"]
-[ext_resource type="Script" path="res://Scripts/UpgradePanel.gd" id="4"]
+[ext_resource type="Script" uid="uid://b4ten4yc40kfq" path="res://Scripts/UpgradePanel.gd" id="4"]
 [ext_resource type="Texture2D" uid="uid://baowebna7hgr5" path="res://Graphics/GUI/CloseButtonNormal.png" id="4_023v2"]
 [ext_resource type="Texture2D" uid="uid://nqbxkpmiwy3c" path="res://Graphics/Buildings/mineral_extractor.png" id="4_kd7jk"]
 [ext_resource type="Texture2D" uid="uid://c1vwn7p5uxu1r" path="res://Graphics/GUI/CloseButtonHover.png" id="5_cj333"]

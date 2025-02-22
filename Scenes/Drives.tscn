@@ -3,7 +3,7 @@
 [ext_resource type="Texture2D" uid="uid://dwjcfkpu40hn8" path="res://Graphics/Buttons/IonDrive.png" id="3"]
 [ext_resource type="Texture2D" uid="uid://bixqswdd7ypgy" path="res://Graphics/Buttons/ChemicalDrive.png" id="4"]
 [ext_resource type="Texture2D" uid="uid://bn8t8jmrkuvdk" path="res://Graphics/Icons/Time.png" id="5"]
-[ext_resource type="Script" path="res://Scripts/DrivePanel.gd" id="6"]
+[ext_resource type="Script" uid="uid://b1qxss1m1isn5" path="res://Scripts/DrivePanel.gd" id="6"]
 [ext_resource type="Theme" uid="uid://cp2u1kgj60ic" path="res://Resources/default_theme.tres" id="7"]
 
 [node name="Drives" type="Panel"]

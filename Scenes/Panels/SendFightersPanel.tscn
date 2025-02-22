@@ -1,12 +1,12 @@
 [gd_scene load_steps=8 format=3 uid="uid://gqfbuekl21pb"]
 
-[ext_resource type="Texture2D" uid="uid://dibh1xlax816t" path="res://Graphics/Icons/help.png" id="1"]
+[ext_resource type="Texture2D" uid="uid://hjl8rhhr18ke" path="res://Graphics/Icons/help.png" id="1"]
 [ext_resource type="Theme" uid="uid://cp2u1kgj60ic" path="res://Resources/default_theme.tres" id="3"]
-[ext_resource type="Texture2D" uid="uid://c6grx15bmtbqm" path="res://Graphics/Icons/energy.png" id="4"]
-[ext_resource type="Script" path="res://Scripts/SendFightersPanel.gd" id="5"]
-[ext_resource type="Texture2D" uid="uid://df8khcuobny1w" path="res://Graphics/Icons/Time.png" id="7"]
+[ext_resource type="Texture2D" uid="uid://bm01hxs45q3ga" path="res://Graphics/Icons/energy.png" id="4"]
+[ext_resource type="Script" uid="uid://clc8nx7qyryp6" path="res://Scripts/SendFightersPanel.gd" id="5"]
+[ext_resource type="Texture2D" uid="uid://bn8t8jmrkuvdk" path="res://Graphics/Icons/Time.png" id="7"]
 [ext_resource type="PackedScene" uid="uid://ddf2xjwcht77u" path="res://Scenes/CloseButton.tscn" id="8"]
-[ext_resource type="Texture2D" uid="uid://dwf3b6bp70ymq" path="res://Graphics/Misc/Bar.png" id="9"]
+[ext_resource type="Texture2D" uid="uid://4tf3teqmkahc" path="res://Graphics/Misc/Bar.png" id="9"]
 
 [node name="SendFightersPanel" type="Panel"]
 anchors_preset = 8

@@ -1,7 +1,7 @@
 [gd_scene load_steps=12 format=3 uid="uid://0kc4gny5p56b"]
 
-[ext_resource type="Texture2D" uid="uid://b8bx703bvgoys" path="res://Graphics/Effects/effect_4.png" id="1"]
-[ext_resource type="Texture2D" uid="uid://delruecv81gsh" path="res://Graphics/Effects/spotlight_1.png" id="2"]
+[ext_resource type="Texture2D" uid="uid://ig3sukbbyuvi" path="res://Graphics/Effects/effect_4.png" id="1"]
+[ext_resource type="Texture2D" uid="uid://b1dcgxga387up" path="res://Graphics/Effects/spotlight_1.png" id="2"]
 
 [sub_resource type="CanvasItemMaterial" id="1"]
 
@@ -21,11 +21,9 @@ curve = SubResource("4")
 
 [sub_resource type="ParticleProcessMaterial" id="6"]
 particle_flag_disable_z = true
-gravity = Vector3(0, 0, 0)
 angular_velocity_min = 45.0
 angular_velocity_max = 90.0
-orbit_velocity_min = 0.0
-orbit_velocity_max = 0.0
+gravity = Vector3(0, 0, 0)
 scale_curve = SubResource("5")
 color_ramp = SubResource("GradientTexture1D_5dq8c")
 
@@ -38,11 +36,9 @@ gradient = SubResource("Gradient_cv0ar")
 
 [sub_resource type="ParticleProcessMaterial" id="8"]
 particle_flag_disable_z = true
-gravity = Vector3(0, 0, 0)
 angular_velocity_min = 20.0
 angular_velocity_max = 20.0
-orbit_velocity_min = 0.0
-orbit_velocity_max = 0.0
+gravity = Vector3(0, 0, 0)
 scale_curve = SubResource("5")
 color_ramp = SubResource("GradientTexture1D_62mel")
 

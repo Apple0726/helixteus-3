@@ -1,9 +1,9 @@
 [gd_scene load_steps=11 format=3 uid="uid://bl3safj1kn3ek"]
 
-[ext_resource type="Script" path="res://Scripts/Projectile.gd" id="1"]
-[ext_resource type="Texture2D" uid="uid://btba1kvg0boo6" path="res://Graphics/Cave/Projectiles/enemy_bullet.png" id="2"]
-[ext_resource type="Texture2D" uid="uid://doaryeaf2372o" path="res://Graphics/Decoratives/BulletHit.jpg" id="3"]
-[ext_resource type="Texture2D" uid="uid://delruecv81gsh" path="res://Graphics/Effects/spotlight_1.png" id="4_n3kqk"]
+[ext_resource type="Script" uid="uid://bok8yur4mafjd" path="res://Scripts/Projectile.gd" id="1"]
+[ext_resource type="Texture2D" uid="uid://bwe1knccfpjy3" path="res://Graphics/Cave/Projectiles/enemy_bullet.png" id="2"]
+[ext_resource type="Texture2D" uid="uid://dl452yovfklni" path="res://Graphics/Decoratives/BulletHit.jpg" id="3"]
+[ext_resource type="Texture2D" uid="uid://b1dcgxga387up" path="res://Graphics/Effects/spotlight_1.png" id="4_n3kqk"]
 
 [sub_resource type="CanvasItemMaterial" id="3"]
 resource_local_to_scene = true
@@ -23,8 +23,8 @@ gradient = SubResource("Gradient_jq3u8")
 [sub_resource type="ParticleProcessMaterial" id="6"]
 particle_flag_align_y = true
 spread = 180.0
-gravity = Vector3(0, 0, 0)
 initial_velocity_max = 800.0
+gravity = Vector3(0, 0, 0)
 scale_min = 0.0
 scale_max = 3.0
 color_ramp = SubResource("GradientTexture1D_xrviq")

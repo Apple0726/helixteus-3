@@ -1,13 +1,13 @@
 [gd_scene load_steps=32 format=3 uid="uid://ckgd3ne8kedgu"]
 
-[ext_resource type="Shader" path="res://Shaders/HX.gdshader" id="1_bfi0c"]
+[ext_resource type="Shader" uid="uid://dldfqqvdqt4h0" path="res://Shaders/HX.gdshader" id="1_bfi0c"]
 [ext_resource type="Texture2D" uid="uid://dw4gx6xj2i5g7" path="res://Graphics/HX/1_1.png" id="1_t5dxa"]
 [ext_resource type="Texture2D" uid="uid://kr2fdk8dptv1" path="res://Graphics/Misc/BarUnder2.png" id="3"]
 [ext_resource type="Texture2D" uid="uid://dl452yovfklni" path="res://Graphics/Decoratives/BulletHit.jpg" id="5"]
 [ext_resource type="Texture2D" uid="uid://bx1hvetixqpwi" path="res://Graphics/Misc/Bar2.png" id="6"]
-[ext_resource type="Shader" path="res://Shaders/Fire.gdshader" id="7"]
+[ext_resource type="Shader" uid="uid://dose2l8hnixm6" path="res://Shaders/Fire.gdshader" id="7"]
 [ext_resource type="Texture2D" uid="uid://cdblvpftr6875" path="res://icon.png" id="8"]
-[ext_resource type="Shader" path="res://Shaders/Laser.gdshader" id="11"]
+[ext_resource type="Shader" uid="uid://gevhgabt3grd" path="res://Shaders/Laser.gdshader" id="11"]
 [ext_resource type="Texture2D" uid="uid://yhdxrw2q1yep" path="res://Graphics/HX/Status effects/Stun.png" id="12"]
 [ext_resource type="Texture2D" uid="uid://b1dcgxga387up" path="res://Graphics/Effects/spotlight_1.png" id="14"]
 
@@ -27,6 +27,7 @@ shader_parameter/aurora = false
 shader_parameter/light = 1.0
 shader_parameter/modulate_color = Color(1, 1, 1, 1)
 shader_parameter/flash = 0.0
+shader_parameter/flash_color = Color(1, 1, 1, 1)
 
 [sub_resource type="ShaderMaterial" id="3"]
 shader = ExtResource("7")
@@ -122,8 +123,8 @@ tracks/0/keys = {
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_4bina"]
 _data = {
-"Hurt": SubResource("6"),
-"RESET": SubResource("Animation_54dbw")
+&"Hurt": SubResource("6"),
+&"RESET": SubResource("Animation_54dbw")
 }
 
 [sub_resource type="Gradient" id="Gradient_vwroj"]

@@ -1,9 +1,9 @@
 [gd_scene load_steps=6 format=3 uid="uid://byh1hjd76sl65"]
 
-[ext_resource type="Script" path="res://Scripts/StarButton.gd" id="1_vfiau"]
-[ext_resource type="Texture2D" uid="uid://dr8l581d8rjhg" path="res://Graphics/Effects/spotlight_4.png" id="1_w4ys2"]
-[ext_resource type="Shader" path="res://Shaders/Star.gdshader" id="2_dveyw"]
-[ext_resource type="Texture2D" uid="uid://cwopqd20uvnkn" path="res://Graphics/Science/MAE.png" id="4_77icn"]
+[ext_resource type="Script" uid="uid://b0v2ktsjl35hf" path="res://Scripts/StarButton.gd" id="1_vfiau"]
+[ext_resource type="Texture2D" uid="uid://t70si4f413j5" path="res://Graphics/Effects/spotlight_4.png" id="1_w4ys2"]
+[ext_resource type="Shader" uid="uid://u62js3345ubk" path="res://Shaders/Star.gdshader" id="2_dveyw"]
+[ext_resource type="Texture2D" uid="uid://dn0b5qn5vtand" path="res://Graphics/Science/MAE.png" id="4_77icn"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_18mo0"]
 resource_local_to_scene = true

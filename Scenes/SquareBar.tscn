@@ -1,7 +1,7 @@
 [gd_scene load_steps=3 format=3 uid="uid://bwon75bhhf24u"]
 
-[ext_resource type="Texture2D" uid="uid://d3y18b21lmrsh" path="res://Graphics/Misc/Bar.png" id="1"]
-[ext_resource type="Script" path="res://Scripts/SquareBar.gd" id="2"]
+[ext_resource type="Texture2D" uid="uid://4tf3teqmkahc" path="res://Graphics/Misc/Bar.png" id="1"]
+[ext_resource type="Script" uid="uid://h1eakri2cafy" path="res://Scripts/SquareBar.gd" id="2"]
 
 [node name="SquareBar" type="Control"]
 light_mask = 0

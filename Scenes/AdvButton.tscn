@@ -2,7 +2,7 @@
 
 [ext_resource type="Theme" uid="uid://cp2u1kgj60ic" path="res://Resources/default_theme.tres" id="1"]
 [ext_resource type="Texture2D" uid="uid://t70si4f413j5" path="res://Graphics/Effects/spotlight_4.png" id="2"]
-[ext_resource type="Script" path="res://Scripts/AdvButton.gd" id="3"]
+[ext_resource type="Script" uid="uid://v75wx3e1g8is" path="res://Scripts/AdvButton.gd" id="3"]
 [ext_resource type="Texture2D" uid="uid://vshnis3gqj4t" path="res://Graphics/Icons/Notification.png" id="4"]
 
 [sub_resource type="Animation" id="2"]
@@ -50,8 +50,8 @@ tracks/1/keys = {
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_j3tc0"]
 _data = {
-"RESET": SubResource("2"),
-"StarAnim": SubResource("1")
+&"RESET": SubResource("2"),
+&"StarAnim": SubResource("1")
 }
 
 [node name="Button" type="Button"]

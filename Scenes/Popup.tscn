@@ -1,6 +1,6 @@
 [gd_scene load_steps=9 format=3 uid="uid://cqief0tl3kt44"]
 
-[ext_resource type="Script" path="res://Scripts/Popup.gd" id="2_dj1qj"]
+[ext_resource type="Script" uid="uid://bo53cafv17xus" path="res://Scripts/Popup.gd" id="2_dj1qj"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_mabe5"]
 content_margin_left = 10.0
@@ -19,9 +19,9 @@ shadow_offset = Vector2(1, 1)
 font_names = PackedStringArray("Sans-Serif")
 
 [sub_resource type="SystemFont" id="SystemFont_4kx0t"]
+fallbacks = Array[Font]([SubResource("SystemFont_xvdaj")])
 font_names = PackedStringArray("Ebrima")
 multichannel_signed_distance_field = true
-fallbacks = Array[Font]([SubResource("SystemFont_xvdaj")])
 
 [sub_resource type="LabelSettings" id="LabelSettings_xulw5"]
 font = SubResource("SystemFont_4kx0t")
@@ -82,8 +82,8 @@ tracks/1/keys = {
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_rtolb"]
 _data = {
-"Fade": SubResource("Animation_yskog"),
-"RESET": SubResource("Animation_x0yr1")
+&"Fade": SubResource("Animation_yskog"),
+&"RESET": SubResource("Animation_x0yr1")
 }
 
 [node name="Popup" type="Label"]

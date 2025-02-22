@@ -1,7 +1,7 @@
 [gd_scene load_steps=9 format=3 uid="uid://duysnevbde4kj"]
 
 [ext_resource type="PackedScene" uid="uid://bhiykvhp7e82u" path="res://Scenes/ScienceButton.tscn" id="1"]
-[ext_resource type="Script" path="res://Scripts/ScienceTree.gd" id="2"]
+[ext_resource type="Script" uid="uid://ww7r2r8gcxw3" path="res://Scripts/ScienceTree.gd" id="2"]
 
 [sub_resource type="Animation" id="1"]
 resource_name = "Fade"
@@ -22,7 +22,7 @@ tracks/0/keys = {
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_puiyp"]
 _data = {
-"Fade": SubResource("1")
+&"Fade": SubResource("1")
 }
 
 [sub_resource type="Animation" id="2"]
@@ -44,7 +44,7 @@ tracks/0/keys = {
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_s0dhf"]
 _data = {
-"Fade": SubResource("2")
+&"Fade": SubResource("2")
 }
 
 [sub_resource type="Animation" id="3"]
@@ -66,7 +66,7 @@ tracks/0/keys = {
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_lttvt"]
 _data = {
-"Fade": SubResource("3")
+&"Fade": SubResource("3")
 }
 
 [node name="ScienceTree" type="Node2D"]

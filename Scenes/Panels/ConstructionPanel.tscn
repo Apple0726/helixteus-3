@@ -2,7 +2,7 @@
 
 [ext_resource type="Theme" uid="uid://cp2u1kgj60ic" path="res://Resources/default_theme.tres" id="1_q53tt"]
 [ext_resource type="Texture2D" uid="uid://nqbxkpmiwy3c" path="res://Graphics/Buildings/mineral_extractor.png" id="2_ktgp8"]
-[ext_resource type="Script" path="res://Scripts/ConstructPanel.gd" id="2_v0xsx"]
+[ext_resource type="Script" uid="uid://b2f8lrwsgj701" path="res://Scripts/ConstructPanel.gd" id="2_v0xsx"]
 [ext_resource type="Texture2D" uid="uid://d3kwtgk0sw40p" path="res://Graphics/Icons/minerals.png" id="3_qlc6f"]
 [ext_resource type="Texture2D" uid="uid://cdqb8dr8jf33" path="res://Graphics/Buildings/mineral_silo.png" id="4_pprlh"]
 [ext_resource type="Texture2D" uid="uid://bqcnfk18r8y88" path="res://Graphics/Materials/glass.png" id="5_vrfgh"]
@@ -95,8 +95,8 @@ tracks/2/keys = {
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_bp5hg"]
 _data = {
-"Fade": SubResource("Animation_tg7hu"),
-"RESET": SubResource("Animation_h6jf6")
+&"Fade": SubResource("Animation_tg7hu"),
+&"RESET": SubResource("Animation_h6jf6")
 }
 
 [node name="Control" type="Control"]

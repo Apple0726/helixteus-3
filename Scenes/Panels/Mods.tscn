@@ -1,6 +1,6 @@
 [gd_scene load_steps=4 format=3 uid="uid://sppciyl2xjey"]
 
-[ext_resource type="Script" path="res://Scripts/ModsPanel.gd" id="1"]
+[ext_resource type="Script" uid="uid://blqkvk7vauc88" path="res://Scripts/ModsPanel.gd" id="1"]
 [ext_resource type="Theme" uid="uid://cp2u1kgj60ic" path="res://Resources/default_theme.tres" id="3"]
 [ext_resource type="PackedScene" uid="uid://ddf2xjwcht77u" path="res://Scenes/CloseButton.tscn" id="5"]
 

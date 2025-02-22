@@ -1,7 +1,7 @@
 [gd_scene load_steps=4 format=3 uid="uid://3ynx67vuxs2o"]
 
 [ext_resource type="Theme" uid="uid://cp2u1kgj60ic" path="res://Resources/default_theme.tres" id="1"]
-[ext_resource type="Script" path="res://Scripts/ElementOverlay.gd" id="2"]
+[ext_resource type="Script" uid="uid://wx70ypg55ywi" path="res://Scripts/ElementOverlay.gd" id="2"]
 [ext_resource type="PackedScene" uid="uid://ddf2xjwcht77u" path="res://Scenes/CloseButton.tscn" id="4"]
 
 [node name="ElementOverlay" type="Panel"]

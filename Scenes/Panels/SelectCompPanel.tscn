@@ -1,6 +1,6 @@
 [gd_scene load_steps=5 format=3 uid="uid://c58wkb8ufo1id"]
 
-[ext_resource type="Script" path="res://Scripts/SelectCompPanel.gd" id="1"]
+[ext_resource type="Script" uid="uid://bw1wmnqsgceks" path="res://Scripts/SelectCompPanel.gd" id="1"]
 [ext_resource type="PackedScene" uid="uid://bdp561gr6s0b8" path="res://Scenes/Resource.tscn" id="2"]
 [ext_resource type="PackedScene" uid="uid://ddf2xjwcht77u" path="res://Scenes/CloseButton.tscn" id="3"]
 [ext_resource type="Theme" uid="uid://cp2u1kgj60ic" path="res://Resources/default_theme.tres" id="4"]

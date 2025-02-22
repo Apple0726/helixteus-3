@@ -1,9 +1,9 @@
 [gd_scene load_steps=5 format=3 uid="uid://bketiqkf5fyk0"]
 
-[ext_resource type="Script" path="res://Scripts/PCPanel.gd" id="1"]
+[ext_resource type="Script" uid="uid://bqu05c7o863jx" path="res://Scripts/PCPanel.gd" id="1"]
 [ext_resource type="PackedScene" uid="uid://ddf2xjwcht77u" path="res://Scenes/CloseButton.tscn" id="3"]
 [ext_resource type="Theme" uid="uid://cp2u1kgj60ic" path="res://Resources/default_theme.tres" id="4"]
-[ext_resource type="Texture2D" uid="uid://b5s3owi38o4tq" path="res://Graphics/Icons/craft.png" id="4_0fkbr"]
+[ext_resource type="Texture2D" uid="uid://if1usn38yajs" path="res://Graphics/Icons/craft.png" id="4_0fkbr"]
 
 [node name="PCPanel" type="Panel"]
 anchors_preset = 8

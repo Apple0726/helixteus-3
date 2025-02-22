@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://bv1fi6vdn3lcm"]
 
-[ext_resource type="Texture2D" uid="uid://c5t2gec4badyf" path="res://Graphics/Misc/Mass build.png" id="1"]
+[ext_resource type="Texture2D" uid="uid://p5lwu5qyi20d" path="res://Graphics/Misc/Mass build.png" id="1"]
 
 [node name="Control" type="NinePatchRect"]
 anchors_preset = 15

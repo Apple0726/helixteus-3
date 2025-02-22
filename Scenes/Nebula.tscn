@@ -1,8 +1,8 @@
 [gd_scene load_steps=8 format=3 uid="uid://c5qfs6oo128dp"]
 
 [ext_resource type="Texture2D" uid="uid://cw7v66ruuqgwb" path="res://Graphics/Tiles/3.jpg" id="1"]
-[ext_resource type="Shader" path="res://Shaders/Nebula.gdshader" id="3"]
-[ext_resource type="Script" path="res://Scripts/Nebula.gd" id="4"]
+[ext_resource type="Shader" uid="uid://bchk7n1pijb6p" path="res://Shaders/Nebula.gdshader" id="3"]
+[ext_resource type="Script" uid="uid://362ulhg8hbg6" path="res://Scripts/Nebula.gd" id="4"]
 
 [sub_resource type="ShaderMaterial" id="1"]
 resource_local_to_scene = true
@@ -48,8 +48,8 @@ tracks/0/keys = {
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_yqdgm"]
 _data = {
-"Fade": SubResource("Animation_mc6ht"),
-"RESET": SubResource("Animation_c2ucc")
+&"Fade": SubResource("Animation_mc6ht"),
+&"RESET": SubResource("Animation_c2ucc")
 }
 
 [node name="Nebula" type="Node2D"]

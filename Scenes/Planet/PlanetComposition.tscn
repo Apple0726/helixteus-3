@@ -1,15 +1,15 @@
-[gd_scene load_steps=4 format=2]
+[gd_scene load_steps=4 format=3 uid="uid://dlyrx1ng8iawb"]
 
-[ext_resource path="res://Graphics/Planets/Other/Shadow.png" type="Texture2D" id=1]
-[ext_resource path="res://Graphics/Planets/Other/BG.png" type="Texture2D" id=2]
-[ext_resource path="res://Graphics/Planets/Other/BG_mask.png" type="BitMap" id=3]
+[ext_resource type="Texture2D" uid="uid://b0sj7mlhw61o" path="res://Graphics/Planets/Other/Shadow.png" id="1"]
+[ext_resource type="Texture2D" uid="uid://cmyhmlmoai4wo" path="res://Graphics/Planets/Other/BG.png" id="2"]
+[ext_resource type="Texture2D" uid="uid://pc4nfyh32yy4" path="res://Graphics/Planets/Other/BG_mask.png" id="3"]
 
 [node name="PlanetComposition" type="Control"]
 mouse_filter = 2
 __meta__ = {
-"_edit_horizontal_guides_": [ 404.108 ],
+"_edit_horizontal_guides_": [404.108],
 "_edit_use_anchors_": false,
-"_edit_vertical_guides_": [ 253.3 ]
+"_edit_vertical_guides_": [253.3]
 }
 
 [node name="Background" type="TextureButton" parent="."]
@@ -17,9 +17,9 @@ offset_left = -247.0
 offset_top = -402.0
 offset_right = 393.0
 offset_bottom = 238.0
-pivot_offset = Vector2( 247, 402 )
-texture_normal = ExtResource( 2 )
-texture_click_mask = ExtResource( 3 )
+pivot_offset = Vector2(247, 402)
+texture_normal = ExtResource("2")
+texture_click_mask = ExtResource("3")
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -29,10 +29,10 @@ offset_left = -241.171
 offset_top = -397.762
 offset_right = 391.829
 offset_bottom = 236.238
-scale = Vector2( 1.005, 1.005 )
-pivot_offset = Vector2( 247, 402 )
+scale = Vector2(1.005, 1.005)
+pivot_offset = Vector2(247, 402)
 mouse_filter = 2
-texture = ExtResource( 1 )
+texture = ExtResource("1")
 __meta__ = {
 "_edit_use_anchors_": false
 }

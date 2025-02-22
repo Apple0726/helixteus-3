@@ -4,7 +4,7 @@
 [ext_resource type="Texture2D" uid="uid://b0brlrg52bjln" path="res://Graphics/Icons/money.png" id="2"]
 [ext_resource type="Texture2D" uid="uid://bm01hxs45q3ga" path="res://Graphics/Icons/energy.png" id="3"]
 [ext_resource type="Texture2D" uid="uid://d3kwtgk0sw40p" path="res://Graphics/Icons/minerals.png" id="4"]
-[ext_resource type="Script" path="res://Scripts/HUD.gd" id="5"]
+[ext_resource type="Script" uid="uid://cxkumkhcmn25n" path="res://Scripts/HUD.gd" id="5"]
 [ext_resource type="Texture2D" uid="uid://dysrilaiutb4j" path="res://Graphics/Buttons/MineralUpgrades.png" id="6"]
 [ext_resource type="Theme" uid="uid://cp2u1kgj60ic" path="res://Resources/default_theme.tres" id="7"]
 [ext_resource type="Texture2D" uid="uid://hvuwdl8ox0yv" path="res://Graphics/Icons/stone.png" id="8"]
@@ -20,7 +20,7 @@
 [ext_resource type="Texture2D" uid="uid://cbg7ol8hmg3w0" path="res://Graphics/Misc/bullet.png" id="18"]
 [ext_resource type="Texture2D" uid="uid://cwuyoxtq8q862" path="res://Graphics/Misc/HUD.png" id="21"]
 [ext_resource type="Texture2D" uid="uid://dfiorea57c2oe" path="res://Graphics/Buttons/Vehicles.png" id="22"]
-[ext_resource type="PackedScene" path="res://Scenes/Dialogue.tscn" id="23"]
+[ext_resource type="PackedScene" uid="uid://di212twja6t76" path="res://Scenes/Dialogue.tscn" id="23"]
 [ext_resource type="Texture2D" uid="uid://8xmbgjeh4gj0" path="res://Graphics/Buttons/Wiki.png" id="25"]
 [ext_resource type="Texture2D" uid="uid://bqcnfk18r8y88" path="res://Graphics/Materials/glass.png" id="26"]
 [ext_resource type="Texture2D" uid="uid://cq01wa1mq6mrr" path="res://Graphics/Planets/3.png" id="27"]
@@ -87,8 +87,8 @@ tracks/1/keys = {
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_noa68"]
 _data = {
-"BookmarkAnim": SubResource("Animation_lrqkk"),
-"RESET": SubResource("Animation_ps4yj")
+&"BookmarkAnim": SubResource("Animation_lrqkk"),
+&"RESET": SubResource("Animation_ps4yj")
 }
 
 [sub_resource type="InputEventKey" id="InputEventKey_f1iy7"]
@@ -186,8 +186,8 @@ tracks/0/keys = {
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_bsw7h"]
 _data = {
-"Flash": SubResource("Animation_o7tw1"),
-"RESET": SubResource("Animation_1ispb")
+&"Flash": SubResource("Animation_o7tw1"),
+&"RESET": SubResource("Animation_1ispb")
 }
 
 [sub_resource type="InputEventKey" id="InputEventKey_817r8"]
@@ -272,8 +272,8 @@ tracks/0/keys = {
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_4yly8"]
 _data = {
-"Flash": SubResource("37"),
-"RESET": SubResource("38")
+&"Flash": SubResource("37"),
+&"RESET": SubResource("38")
 }
 
 [sub_resource type="InputEventKey" id="InputEventKey_owolo"]
@@ -437,8 +437,8 @@ tracks/3/keys = {
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_f72sx"]
 _data = {
-"MoveStuff": SubResource("35"),
-"RESET": SubResource("36")
+&"MoveStuff": SubResource("35"),
+&"RESET": SubResource("36")
 }
 
 [node name="HUD" type="Control"]

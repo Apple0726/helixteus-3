@@ -2,7 +2,7 @@
 
 [ext_resource type="Theme" uid="uid://cp2u1kgj60ic" path="res://Resources/default_theme.tres" id="1"]
 [ext_resource type="Texture2D" uid="uid://cwhonpxb3ml" path="res://Graphics/Buttons/CloseButton.png" id="2"]
-[ext_resource type="Script" path="res://Scripts/CloseButton.gd" id="3"]
+[ext_resource type="Script" uid="uid://brbby2682bgx4" path="res://Scripts/CloseButton.gd" id="3"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_an3vt"]
 bg_color = Color(0.254902, 0.254902, 0.254902, 1)

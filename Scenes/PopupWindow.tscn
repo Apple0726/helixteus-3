@@ -1,7 +1,7 @@
 [gd_scene load_steps=4 format=3 uid="uid://dh16brr2wpqra"]
 
 [ext_resource type="Theme" uid="uid://cp2u1kgj60ic" path="res://Resources/default_theme.tres" id="1_pqsff"]
-[ext_resource type="Script" path="res://Scripts/PopupWindow.gd" id="2_7rwgw"]
+[ext_resource type="Script" uid="uid://cytp52slomkll" path="res://Scripts/PopupWindow.gd" id="2_7rwgw"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_is2bl"]
 content_margin_left = 15.0

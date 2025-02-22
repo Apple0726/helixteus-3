@@ -1,6 +1,6 @@
 [gd_scene load_steps=4 format=3 uid="uid://bn3nha4bg86oq"]
 
-[ext_resource type="Script" path="res://Scripts/Battle/DamageText.gd" id="1_0vxff"]
+[ext_resource type="Script" uid="uid://dvmkis8bcjs5r" path="res://Scripts/Battle/DamageText.gd" id="1_0vxff"]
 
 [sub_resource type="SystemFont" id="SystemFont_qf3pv"]
 font_names = PackedStringArray("Noto Sans")

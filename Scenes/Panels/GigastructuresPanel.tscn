@@ -4,7 +4,7 @@
 [ext_resource type="PackedScene" uid="uid://c8jr3e5aiyj1n" path="res://Scenes/HelpText.tscn" id="2"]
 [ext_resource type="PackedScene" uid="uid://ddf2xjwcht77u" path="res://Scenes/CloseButton.tscn" id="5"]
 [ext_resource type="Theme" uid="uid://cp2u1kgj60ic" path="res://Resources/default_theme.tres" id="6"]
-[ext_resource type="Script" path="res://Scripts/GigastructuresPanel.gd" id="7"]
+[ext_resource type="Script" uid="uid://cfvrj70877b64" path="res://Scripts/GigastructuresPanel.gd" id="7"]
 
 [sub_resource type="Theme" id="1"]
 Button/colors/font_color = Color(0.88, 0.88, 0.88, 1)
@@ -64,8 +64,8 @@ tracks/0/keys = {
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_5a0wr"]
 _data = {
-"Fade": SubResource("4"),
-"RESET": SubResource("5")
+&"Fade": SubResource("4"),
+&"RESET": SubResource("5")
 }
 
 [node name="TerraformPanel" type="Panel"]

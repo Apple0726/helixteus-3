@@ -1,10 +1,10 @@
 [gd_scene load_steps=13 format=3 uid="uid://ceo4hlq5libn3"]
 
-[ext_resource type="Texture2D" uid="uid://dtpm1dy3ljc0y" path="res://Graphics/Icons/Arrow.png" id="1"]
+[ext_resource type="Texture2D" uid="uid://ds6nct7g63284" path="res://Graphics/Icons/Arrow.png" id="1"]
 [ext_resource type="PackedScene" uid="uid://bdp561gr6s0b8" path="res://Scenes/Resource.tscn" id="2"]
-[ext_resource type="Script" path="res://Scripts/BuySellPanel.gd" id="3"]
+[ext_resource type="Script" uid="uid://dd27ovnjjjddh" path="res://Scripts/BuySellPanel.gd" id="3"]
 [ext_resource type="Theme" uid="uid://cp2u1kgj60ic" path="res://Resources/default_theme.tres" id="4"]
-[ext_resource type="Texture2D" uid="uid://b5k11eu0jv2dw" path="res://Graphics/Buttons/Switch.png" id="5"]
+[ext_resource type="Texture2D" uid="uid://bnlcxaqltwepa" path="res://Graphics/Buttons/Switch.png" id="5"]
 [ext_resource type="PackedScene" uid="uid://ddf2xjwcht77u" path="res://Scenes/CloseButton.tscn" id="6"]
 
 [sub_resource type="Animation" id="2"]
@@ -41,8 +41,8 @@ tracks/0/keys = {
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_cm3bf"]
 _data = {
-"Grow": SubResource("2"),
-"Switch": SubResource("1")
+&"Grow": SubResource("2"),
+&"Switch": SubResource("1")
 }
 
 [sub_resource type="Animation" id="3"]
@@ -79,8 +79,8 @@ tracks/0/keys = {
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_jjrlt"]
 _data = {
-"Grow": SubResource("3"),
-"Switch": SubResource("4")
+&"Grow": SubResource("3"),
+&"Switch": SubResource("4")
 }
 
 [node name="BuySellPanel" type="Panel"]

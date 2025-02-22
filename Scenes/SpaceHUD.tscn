@@ -1,14 +1,14 @@
 [gd_scene load_steps=20 format=3 uid="uid://cgbd1tgsqupqm"]
 
-[ext_resource type="Texture2D" uid="uid://c6bssilpelk7t" path="res://Graphics/Buttons/Overlay.png" id="1"]
-[ext_resource type="Script" path="res://Scripts/SpaceHUD.gd" id="2"]
+[ext_resource type="Texture2D" uid="uid://bsienpo47qhrv" path="res://Graphics/Buttons/Overlay.png" id="1"]
+[ext_resource type="Script" uid="uid://b0vcns16qktoy" path="res://Scripts/SpaceHUD.gd" id="2"]
 [ext_resource type="Theme" uid="uid://cp2u1kgj60ic" path="res://Resources/default_theme.tres" id="3"]
-[ext_resource type="Texture2D" uid="uid://bqdtj803gnifh" path="res://Graphics/Buttons/Megastructures.png" id="4"]
-[ext_resource type="Texture2D" uid="uid://dhmes6om6bc4a" path="res://Graphics/Buttons/Annotate.png" id="7"]
-[ext_resource type="Texture2D" uid="uid://dj2l1ch57lnv0" path="res://Graphics/Buttons/Stars.png" id="7_xbfvs"]
-[ext_resource type="Texture2D" uid="uid://cuhfqeeaure2b" path="res://Graphics/Buttons/Gigastructures.png" id="8"]
+[ext_resource type="Texture2D" uid="uid://dq1pkmuftw1qw" path="res://Graphics/Buttons/Megastructures.png" id="4"]
+[ext_resource type="Texture2D" uid="uid://i4ljifnvpt7i" path="res://Graphics/Buttons/Annotate.png" id="7"]
+[ext_resource type="Texture2D" uid="uid://d0w7ey2ry0ero" path="res://Graphics/Buttons/Stars.png" id="7_xbfvs"]
+[ext_resource type="Texture2D" uid="uid://d3okepq2510k0" path="res://Graphics/Buttons/Gigastructures.png" id="8"]
 [ext_resource type="PackedScene" uid="uid://b3nhmyabvl606" path="res://Scenes/Panels/ConstructionPanel.tscn" id="8_4lxnk"]
-[ext_resource type="Texture2D" uid="uid://dpeem5n7o8g3h" path="res://Graphics/Buttons/ElementOverlay.png" id="9"]
+[ext_resource type="Texture2D" uid="uid://b2kysolbkn5q1" path="res://Graphics/Buttons/ElementOverlay.png" id="9"]
 [ext_resource type="PackedScene" uid="uid://cobxcj7wuwecq" path="res://Scenes/Panels/StarPanel.tscn" id="10_cgit7"]
 
 [sub_resource type="InputEventKey" id="InputEventKey_1bc5f"]
@@ -67,8 +67,8 @@ tracks/0/keys = {
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_sslco"]
 _data = {
-"MoveButtons": SubResource("8"),
-"RESET": SubResource("Animation_wvq00")
+&"MoveButtons": SubResource("8"),
+&"RESET": SubResource("Animation_wvq00")
 }
 
 [node name="SpaceHUD" type="Control"]

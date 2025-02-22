@@ -1,6 +1,6 @@
 [gd_scene load_steps=13 format=3 uid="uid://bqwk1plraydm8"]
 
-[ext_resource type="Script" path="res://Scripts/PDPanel.gd" id="1"]
+[ext_resource type="Script" uid="uid://cm0s8uscic672" path="res://Scripts/PDPanel.gd" id="1"]
 [ext_resource type="Texture2D" uid="uid://bqt15nl3bjdw0" path="res://Graphics/Buttons/Reset.png" id="2"]
 [ext_resource type="Texture2D" uid="uid://dfaapbxopm6xx" path="res://Graphics/Tiles/water.png" id="3"]
 [ext_resource type="Texture2D" uid="uid://dl0tbc2d816cj" path="res://Graphics/Misc/noise_combined.png" id="4"]

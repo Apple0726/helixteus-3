@@ -1,7 +1,7 @@
 [gd_scene load_steps=4 format=3 uid="uid://luee38r6k4vl"]
 
 [ext_resource type="Texture2D" uid="uid://koi0aarpqj30" path="res://Graphics/Ships/Ship0.png" id="2_8uj1y"]
-[ext_resource type="Script" path="res://Scripts/Highlightable.gd" id="3_1x1wg"]
+[ext_resource type="Script" uid="uid://ddkbs03pslw6h" path="res://Scripts/Highlightable.gd" id="3_1x1wg"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_358nv"]
 radius = 16.0

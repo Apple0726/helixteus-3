@@ -2,9 +2,9 @@
 
 [ext_resource type="Theme" uid="uid://cp2u1kgj60ic" path="res://Resources/default_theme.tres" id="1"]
 [ext_resource type="PackedScene" uid="uid://bbgrbjt6243ku" path="res://Scenes/AnnotatorShape.tscn" id="2"]
-[ext_resource type="Script" path="res://Scripts/Annotator.gd" id="3"]
+[ext_resource type="Script" uid="uid://codj8x7gpmn66" path="res://Scripts/Annotator.gd" id="3"]
 [ext_resource type="PackedScene" uid="uid://ddf2xjwcht77u" path="res://Scenes/CloseButton.tscn" id="4"]
-[ext_resource type="Texture2D" uid="uid://2ynrr8eb1kbx" path="res://Graphics/Tiles/Highlight.jpg" id="5"]
+[ext_resource type="Texture2D" uid="uid://dxr8x86jdcd2p" path="res://Graphics/Tiles/Highlight.jpg" id="5"]
 
 [sub_resource type="Shortcut" id="2"]
 

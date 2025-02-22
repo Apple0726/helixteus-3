@@ -1,18 +1,18 @@
 [gd_scene load_steps=47 format=3 uid="uid://cpjo82l86k61"]
 
 [ext_resource type="Texture2D" uid="uid://7ffsf7xuvfw2" path="res://Graphics/Icons/attack.png" id="1"]
-[ext_resource type="Script" path="res://Scripts/Battle/HX.gd" id="1_3h40m"]
-[ext_resource type="Shader" path="res://Shaders/HX.gdshader" id="1_bfi0c"]
+[ext_resource type="Script" uid="uid://dhqip0etwjc1x" path="res://Scripts/Battle/HX.gd" id="1_3h40m"]
+[ext_resource type="Shader" uid="uid://dldfqqvdqt4h0" path="res://Shaders/HX.gdshader" id="1_bfi0c"]
 [ext_resource type="Texture2D" uid="uid://dw4gx6xj2i5g7" path="res://Graphics/HX/1_1.png" id="1_t5dxa"]
 [ext_resource type="Theme" uid="uid://cp2u1kgj60ic" path="res://Resources/default_theme.tres" id="2"]
 [ext_resource type="PackedScene" uid="uid://fo4yl8v4ld8c" path="res://Scenes/Battle/FireWeaponAim.tscn" id="2_uyhlq"]
 [ext_resource type="Texture2D" uid="uid://kr2fdk8dptv1" path="res://Graphics/Misc/BarUnder2.png" id="3"]
 [ext_resource type="Texture2D" uid="uid://dl452yovfklni" path="res://Graphics/Decoratives/BulletHit.jpg" id="5"]
 [ext_resource type="Texture2D" uid="uid://bx1hvetixqpwi" path="res://Graphics/Misc/Bar2.png" id="6"]
-[ext_resource type="Shader" path="res://Shaders/Fire.gdshader" id="7"]
+[ext_resource type="Shader" uid="uid://dose2l8hnixm6" path="res://Shaders/Fire.gdshader" id="7"]
 [ext_resource type="Texture2D" uid="uid://cdblvpftr6875" path="res://icon.png" id="8"]
 [ext_resource type="Texture2D" uid="uid://buvqtd7v5l8m2" path="res://Graphics/Icons/Fire.png" id="9"]
-[ext_resource type="Shader" path="res://Shaders/Laser.gdshader" id="11"]
+[ext_resource type="Shader" uid="uid://gevhgabt3grd" path="res://Shaders/Laser.gdshader" id="11"]
 [ext_resource type="Texture2D" uid="uid://yhdxrw2q1yep" path="res://Graphics/HX/Status effects/Stun.png" id="12"]
 [ext_resource type="Texture2D" uid="uid://b642ran0hp7j4" path="res://Graphics/Icons/Stun.png" id="13"]
 [ext_resource type="Texture2D" uid="uid://b1dcgxga387up" path="res://Graphics/Effects/spotlight_1.png" id="14"]
@@ -115,8 +115,8 @@ tracks/0/keys = {
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_4bina"]
 _data = {
-"Hurt": SubResource("6"),
-"RESET": SubResource("Animation_54dbw")
+&"Hurt": SubResource("6"),
+&"RESET": SubResource("Animation_54dbw")
 }
 
 [sub_resource type="Animation" id="7"]
@@ -281,11 +281,11 @@ tracks/2/keys = {
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_rpr20"]
 _data = {
-"Big knockback": SubResource("7"),
-"Dead": SubResource("8"),
-"Knockback": SubResource("9"),
-"RESET": SubResource("Animation_cahjy"),
-"Small knockback": SubResource("10")
+&"Big knockback": SubResource("7"),
+&"Dead": SubResource("8"),
+&"Knockback": SubResource("9"),
+&"RESET": SubResource("Animation_cahjy"),
+&"Small knockback": SubResource("10")
 }
 
 [sub_resource type="Animation" id="11"]
@@ -333,8 +333,8 @@ tracks/0/keys = {
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_ml7on"]
 _data = {
-"Miss": SubResource("11"),
-"RESET": SubResource("Animation_fxxeq")
+&"Miss": SubResource("11"),
+&"RESET": SubResource("Animation_fxxeq")
 }
 
 [sub_resource type="Gradient" id="Gradient_vwroj"]
@@ -408,7 +408,7 @@ tracks/0/keys = {
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_u6u7m"]
 _data = {
-"LabelAnim": SubResource("23")
+&"LabelAnim": SubResource("23")
 }
 
 [node name="HX" type="Area2D"]
@@ -593,50 +593,50 @@ text = "9"
 
 [node name="HurtAnimation" type="AnimationPlayer" parent="."]
 libraries = {
-"": SubResource("AnimationLibrary_4bina")
+&"": SubResource("AnimationLibrary_4bina")
 }
 
 [node name="KnockbackAnimation" type="AnimationPlayer" parent="."]
 libraries = {
-"": SubResource("AnimationLibrary_rpr20")
+&"": SubResource("AnimationLibrary_rpr20")
 }
 
 [node name="MissAnimation" type="AnimationPlayer" parent="."]
 libraries = {
-"": SubResource("AnimationLibrary_ml7on")
+&"": SubResource("AnimationLibrary_ml7on")
 }
 
 [node name="BulletParticles" type="GPUParticles2D" parent="."]
 emitting = false
 amount = 30
-process_material = SubResource("14")
 texture = ExtResource("5")
 lifetime = 0.3
 one_shot = true
 explosiveness = 1.0
+process_material = SubResource("14")
 
 [node name="BombParticles" type="GPUParticles2D" parent="."]
 scale = Vector2(2, 2)
 emitting = false
 amount = 150
-process_material = SubResource("ParticleProcessMaterial_x45cj")
 lifetime = 3.0
 one_shot = true
 explosiveness = 0.95
 randomness = 1.0
+process_material = SubResource("ParticleProcessMaterial_x45cj")
 
 [node name="LightParticles" type="GPUParticles2D" parent="."]
 emitting = false
 amount = 50
-process_material = SubResource("22")
 texture = ExtResource("14")
 one_shot = true
 explosiveness = 0.95
 randomness = 1.0
+process_material = SubResource("22")
 
 [node name="LabelAnimation" type="AnimationPlayer" parent="."]
 libraries = {
-"": SubResource("AnimationLibrary_u6u7m")
+&"": SubResource("AnimationLibrary_u6u7m")
 }
 
 [connection signal="mouse_entered" from="." to="." method="_on_mouse_entered"]

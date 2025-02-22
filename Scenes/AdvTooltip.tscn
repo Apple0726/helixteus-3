@@ -1,7 +1,7 @@
 [gd_scene load_steps=11 format=3 uid="uid://bxfp8oao3bfyl"]
 
-[ext_resource type="Script" path="res://Scripts/TextEffects/AuroraText.gd" id="3"]
-[ext_resource type="Shader" path="res://Shaders/FireTooltip.gdshader" id="4"]
+[ext_resource type="Script" uid="uid://cbdpyvjmvsy64" path="res://Scripts/TextEffects/AuroraText.gd" id="3"]
+[ext_resource type="Shader" uid="uid://bvyh61br1fdx3" path="res://Shaders/FireTooltip.gdshader" id="4"]
 
 [sub_resource type="SystemFont" id="SystemFont_xvdaj"]
 font_names = PackedStringArray("Sans-Serif")
@@ -70,8 +70,8 @@ tracks/0/keys = {
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_x8swl"]
 _data = {
-"Fade": SubResource("5"),
-"RESET": SubResource("6")
+&"Fade": SubResource("5"),
+&"RESET": SubResource("6")
 }
 
 [node name="AdvTooltip" type="RichTextLabel"]

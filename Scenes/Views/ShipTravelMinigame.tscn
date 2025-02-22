@@ -1,8 +1,8 @@
 [gd_scene load_steps=9 format=3 uid="uid://0dmltwoh2b5o"]
 
 [ext_resource type="Theme" uid="uid://cp2u1kgj60ic" path="res://Resources/default_theme.tres" id="1"]
-[ext_resource type="Script" path="res://Scripts/ShipTravelMinigame.gd" id="2"]
-[ext_resource type="Texture2D" uid="uid://b2debnqwjt43r" path="res://Graphics/Ships/Ship0.png" id="3"]
+[ext_resource type="Script" uid="uid://deyl4saso4s8q" path="res://Scripts/ShipTravelMinigame.gd" id="2"]
+[ext_resource type="Texture2D" uid="uid://koi0aarpqj30" path="res://Graphics/Ships/Ship0.png" id="3"]
 
 [sub_resource type="InputEventKey" id="InputEventKey_dtonr"]
 device = -1
@@ -67,8 +67,8 @@ tracks/1/keys = {
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_hb4pr"]
 _data = {
-"Fade": SubResource("Animation_whuii"),
-"RESET": SubResource("Animation_bp777")
+&"Fade": SubResource("Animation_whuii"),
+&"RESET": SubResource("Animation_bp777")
 }
 
 [node name="STM" type="Control"]

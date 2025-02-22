@@ -1,6 +1,6 @@
 [gd_scene load_steps=47 format=3 uid="uid://v1nifipd62vd"]
 
-[ext_resource type="Script" path="res://Scripts/StatsPanel.gd" id="1"]
+[ext_resource type="Script" uid="uid://dlrkm02n2didl" path="res://Scripts/StatsPanel.gd" id="1"]
 [ext_resource type="PackedScene" uid="uid://1hq6qpr1oa3i" path="res://Scenes/AdvButton.tscn" id="2"]
 [ext_resource type="PackedScene" uid="uid://ddf2xjwcht77u" path="res://Scenes/CloseButton.tscn" id="3"]
 [ext_resource type="PackedScene" uid="uid://cfgv3174m6004" path="res://Scenes/Achievement.tscn" id="4"]

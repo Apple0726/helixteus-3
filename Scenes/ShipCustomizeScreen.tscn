@@ -2,7 +2,7 @@
 
 [ext_resource type="Theme" uid="uid://cp2u1kgj60ic" path="res://Resources/default_theme.tres" id="1_fik65"]
 [ext_resource type="Texture2D" uid="uid://koi0aarpqj30" path="res://Graphics/Ships/Ship0.png" id="1_krjc3"]
-[ext_resource type="Script" path="res://Scripts/ShipCustomizeScreen.gd" id="2_2k68d"]
+[ext_resource type="Script" uid="uid://0hos13skvya" path="res://Scripts/ShipCustomizeScreen.gd" id="2_2k68d"]
 [ext_resource type="PackedScene" uid="uid://1hq6qpr1oa3i" path="res://Scenes/AdvButton.tscn" id="3_hi247"]
 [ext_resource type="Texture2D" uid="uid://bl07f3wef0muv" path="res://Graphics/Icons/HP.png" id="5_elefb"]
 [ext_resource type="Texture2D" uid="uid://7ffsf7xuvfw2" path="res://Graphics/Icons/attack.png" id="6_5p6u7"]

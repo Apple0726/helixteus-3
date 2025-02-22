@@ -1,7 +1,7 @@
-[gd_scene load_steps=3 format=2]
+[gd_scene load_steps=3 format=3 uid="uid://7jk118066p12"]
 
-[ext_resource path="res://Graphics/Planets/3.png" type="Texture2D" id=1]
-[ext_resource path="res://Graphics/Misc/Glow.png" type="Texture2D" id=2]
+[ext_resource type="Texture2D" uid="uid://cq01wa1mq6mrr" path="res://Graphics/Planets/3.png" id="1"]
+[ext_resource type="Texture2D" uid="uid://by5owi4dvg1i" path="res://Graphics/Misc/Glow.png" id="2"]
 
 [node name="Control" type="Control"]
 
@@ -14,8 +14,8 @@ offset_left = -284.0
 offset_top = -284.0
 offset_right = 284.0
 offset_bottom = 284.0
-pivot_offset = Vector2( 284, 284 )
-texture_normal = ExtResource( 2 )
+pivot_offset = Vector2(284, 284)
+texture_normal = ExtResource("2")
 expand = true
 stretch_mode = 5
 
@@ -28,7 +28,7 @@ offset_left = -200.0
 offset_top = -208.0
 offset_right = 204.0
 offset_bottom = 208.0
-pivot_offset = Vector2( 200, 208 )
-texture_normal = ExtResource( 1 )
+pivot_offset = Vector2(200, 208)
+texture_normal = ExtResource("1")
 expand = true
 stretch_mode = 5

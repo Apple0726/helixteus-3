@@ -3,7 +3,7 @@
 [ext_resource type="Texture2D" uid="uid://bn8t8jmrkuvdk" path="res://Graphics/Icons/Time.png" id="1"]
 [ext_resource type="Texture2D" uid="uid://hjl8rhhr18ke" path="res://Graphics/Icons/help.png" id="2"]
 [ext_resource type="Theme" uid="uid://cp2u1kgj60ic" path="res://Resources/default_theme.tres" id="3"]
-[ext_resource type="Script" path="res://Scripts/SendProbesPanel.gd" id="5"]
+[ext_resource type="Script" uid="uid://bfkt6ri6r6vye" path="res://Scripts/SendProbesPanel.gd" id="5"]
 [ext_resource type="PackedScene" uid="uid://ddf2xjwcht77u" path="res://Scenes/CloseButton.tscn" id="8"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_cdiax"]

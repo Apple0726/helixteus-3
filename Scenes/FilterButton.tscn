@@ -1,13 +1,13 @@
-[gd_scene load_steps=3 format=2]
+[gd_scene load_steps=3 format=3 uid="uid://bvyftln8m3hgm"]
 
 [ext_resource type="Texture2D" uid="uid://b0brlrg52bjln" path="res://Graphics/Icons/money.png" id="1"]
-[ext_resource type="Script" path="res://Scripts/Cave/FilterButton.gd" id="2"]
+[ext_resource type="Script" uid="uid://b8s1o3ylptl43" path="res://Scripts/Cave/FilterButton.gd" id="2"]
 
 [node name="Resource" type="Button"]
 offset_right = 40.0
 offset_bottom = 40.0
-custom_minimum_size = Vector2( 40, 40 )
-script = ExtResource( 2 )
+custom_minimum_size = Vector2(40, 40)
+script = ExtResource("2")
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -22,7 +22,7 @@ offset_top = -16.0
 offset_right = 16.0
 offset_bottom = 16.0
 mouse_filter = 2
-texture = ExtResource( 1 )
+texture = ExtResource("1")
 expand = true
 stretch_mode = 6
 __meta__ = {

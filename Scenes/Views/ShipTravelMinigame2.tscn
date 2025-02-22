@@ -1,10 +1,10 @@
 [gd_scene load_steps=34 format=3 uid="uid://ck487g2ydj8tn"]
 
-[ext_resource type="Script" path="res://Scripts/ShipTravelMinigame2.gd" id="1_8lr8q"]
-[ext_resource type="Script" path="res://Scripts/STM/STMShip.gd" id="2_dfkgr"]
+[ext_resource type="Script" uid="uid://cyxjri20jsfpj" path="res://Scripts/ShipTravelMinigame2.gd" id="1_8lr8q"]
+[ext_resource type="Script" uid="uid://d4i3qiqt3kxlq" path="res://Scripts/STM/STMShip.gd" id="2_dfkgr"]
 [ext_resource type="Texture2D" uid="uid://koi0aarpqj30" path="res://Graphics/Ships/Ship0.png" id="2_v17i1"]
 [ext_resource type="Theme" uid="uid://cp2u1kgj60ic" path="res://Resources/default_theme.tres" id="3_jfubh"]
-[ext_resource type="Shader" path="res://Shaders/Laser.gdshader" id="5_4dc0n"]
+[ext_resource type="Shader" uid="uid://gevhgabt3grd" path="res://Shaders/Laser.gdshader" id="5_4dc0n"]
 [ext_resource type="Texture2D" uid="uid://kr2fdk8dptv1" path="res://Graphics/Misc/BarUnder2.png" id="5_6lon2"]
 [ext_resource type="Texture2D" uid="uid://cxij5pk8nug0r" path="res://Graphics/Misc/BarOver.png" id="6_8qal3"]
 [ext_resource type="Texture2D" uid="uid://yhdxrw2q1yep" path="res://Graphics/HX/Status effects/Stun.png" id="6_us3u3"]
@@ -12,7 +12,7 @@
 [ext_resource type="Texture2D" uid="uid://bf11oh7v1a2eo" path="res://Graphics/Cave/Weapons/red_laser.png" id="8_rnocu"]
 [ext_resource type="Texture2D" uid="uid://cyogaq3sj1anp" path="res://Graphics/Weapons/bomb1.png" id="10_yqhvw"]
 [ext_resource type="Texture2D" uid="uid://c1v73luqy7pi5" path="res://Graphics/Weapons/light1.png" id="11_1xlo5"]
-[ext_resource type="Shader" path="res://Shaders/Starfield.gdshader" id="13_jjtrq"]
+[ext_resource type="Shader" uid="uid://dyuhjqkup4nnm" path="res://Shaders/Starfield.gdshader" id="13_jjtrq"]
 
 [sub_resource type="Shader" id="Shader_yo3bn"]
 code = "shader_type canvas_item;
@@ -114,8 +114,8 @@ tracks/2/keys = {
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_6uf2k"]
 _data = {
-"Bomb grow": SubResource("Animation_sgxjs"),
-"RESET": SubResource("Animation_nuvb4")
+&"Bomb grow": SubResource("Animation_sgxjs"),
+&"RESET": SubResource("Animation_nuvb4")
 }
 
 [sub_resource type="Gradient" id="Gradient_vho2s"]
@@ -194,7 +194,7 @@ glow_blend_mode = 0
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_sr1i2"]
 shader = ExtResource("13_jjtrq")
-shader_parameter/position = null
+shader_parameter/position = Vector2(0, 0)
 shader_parameter/time = 0.0
 shader_parameter/iterations = 12
 shader_parameter/formuparam2 = 0.79
@@ -265,8 +265,8 @@ tracks/0/keys = {
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_ybdj0"]
 _data = {
-"Laser fade": SubResource("Animation_7ej56"),
-"RESET": SubResource("Animation_dc1j2")
+&"Laser fade": SubResource("Animation_7ej56"),
+&"RESET": SubResource("Animation_dc1j2")
 }
 
 [node name="STM" type="Node2D"]

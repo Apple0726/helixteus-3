@@ -1,8 +1,8 @@
 [gd_scene load_steps=11 format=3 uid="uid://bcwoovqg4ygot"]
 
 [ext_resource type="Theme" uid="uid://cp2u1kgj60ic" path="res://Resources/default_theme.tres" id="1_nvp2m"]
-[ext_resource type="Script" path="res://Scripts/CraftPanel.gd" id="2_mcqm5"]
-[ext_resource type="Texture2D" uid="uid://ccntlctxytsi2" path="res://Graphics/GUI/Panel.png" id="3_kdk5l"]
+[ext_resource type="Script" uid="uid://wo0x1074yc0c" path="res://Scripts/CraftPanel.gd" id="2_mcqm5"]
+[ext_resource type="Texture2D" uid="uid://dcvnyb0mloli2" path="res://Graphics/GUI/Panel.png" id="3_kdk5l"]
 [ext_resource type="Texture2D" uid="uid://baowebna7hgr5" path="res://Graphics/GUI/CloseButtonNormal.png" id="4_c88uc"]
 [ext_resource type="Texture2D" uid="uid://c1vwn7p5uxu1r" path="res://Graphics/GUI/CloseButtonHover.png" id="5_40q1n"]
 [ext_resource type="PackedScene" uid="uid://1hq6qpr1oa3i" path="res://Scenes/AdvButton.tscn" id="5_wuk46"]

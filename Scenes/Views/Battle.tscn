@@ -1,7 +1,7 @@
 [gd_scene load_steps=7 format=3 uid="uid://dwa665hyuis2m"]
 
-[ext_resource type="Script" path="res://Scripts/Battle/Battle.gd" id="1_ylili"]
-[ext_resource type="Script" path="res://Scripts/Battle/Boundary.gd" id="7_lc3cj"]
+[ext_resource type="Script" uid="uid://dpxy6ld61573q" path="res://Scripts/Battle/Battle.gd" id="1_ylili"]
+[ext_resource type="Script" uid="uid://ba4b8qs3erkxr" path="res://Scripts/Battle/Boundary.gd" id="7_lc3cj"]
 
 [sub_resource type="SegmentShape2D" id="SegmentShape2D_0g6th"]
 a = Vector2(-640, -360)

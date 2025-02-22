@@ -1,6 +1,6 @@
 [gd_scene load_steps=4 format=3 uid="uid://chkgs7slws0tk"]
 
-[ext_resource type="Script" path="res://Scripts/View.gd" id="1"]
+[ext_resource type="Script" uid="uid://dwr772cpgfjt0" path="res://Scripts/View.gd" id="1"]
 
 [sub_resource type="Animation" id="1"]
 resource_name = "Fade"
@@ -21,7 +21,7 @@ tracks/0/keys = {
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_1ahkp"]
 _data = {
-"Fade": SubResource("1")
+&"Fade": SubResource("1")
 }
 
 [node name="View" type="CharacterBody2D"]

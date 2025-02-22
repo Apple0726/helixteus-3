@@ -1,6 +1,6 @@
 [gd_scene load_steps=3 format=3 uid="uid://bbykejbtwsdag"]
 
-[ext_resource type="Script" path="res://Scripts/KeyboardShortcuts.gd" id="1"]
+[ext_resource type="Script" uid="uid://dviacdqhkd61t" path="res://Scripts/KeyboardShortcuts.gd" id="1"]
 [ext_resource type="Theme" uid="uid://cp2u1kgj60ic" path="res://Resources/default_theme.tres" id="2"]
 
 [node name="Panel" type="Panel"]

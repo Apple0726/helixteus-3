@@ -1,24 +1,24 @@
 [gd_scene load_steps=63 format=3 uid="uid://dt6rr51kda1rb"]
 
-[ext_resource type="Script" path="res://Scripts/Game.gd" id="2"]
+[ext_resource type="Script" uid="uid://bd5yb7w0y4d8b" path="res://Scripts/Game.gd" id="2"]
 [ext_resource type="Texture2D" uid="uid://gcp7f61r2ee1" path="res://Graphics/Buttons/settings.png" id="3"]
 [ext_resource type="Texture2D" uid="uid://bsvy7yk6ueecc" path="res://Graphics/Title screen/Background.png" id="4"]
 [ext_resource type="Texture2D" uid="uid://wamlqxf857g2" path="res://Graphics/Title screen/Godot.png" id="5"]
 [ext_resource type="Texture2D" uid="uid://cfoqvd83nesv4" path="res://Graphics/Title screen/GitHub.png" id="6"]
 [ext_resource type="Theme" uid="uid://cp2u1kgj60ic" path="res://Resources/default_theme.tres" id="7"]
 [ext_resource type="AudioStream" uid="uid://dhpvp5nnsy2a1" path="res://Audio/SFX/click.ogg" id="8"]
-[ext_resource type="Shader" path="res://Shaders/StarField2.gdshader" id="8_axm3r"]
+[ext_resource type="Shader" uid="uid://bgo11pvuyabnf" path="res://Shaders/StarField2.gdshader" id="8_axm3r"]
 [ext_resource type="PackedScene" uid="uid://bx5co4ssobffh" path="res://Scenes/Languages.tscn" id="9"]
-[ext_resource type="Shader" path="res://Shaders/Starfield.gdshader" id="9_0dcpd"]
+[ext_resource type="Shader" uid="uid://dyuhjqkup4nnm" path="res://Shaders/Starfield.gdshader" id="9_0dcpd"]
 [ext_resource type="Texture2D" uid="uid://crjpo3xaanqvb" path="res://Graphics/Title screen/Discord.png" id="11"]
-[ext_resource type="Shader" path="res://Shaders/Cluster.gdshader" id="19_4v34t"]
+[ext_resource type="Shader" uid="uid://cx4wx23pi5ith" path="res://Shaders/Cluster.gdshader" id="19_4v34t"]
 [ext_resource type="PackedScene" uid="uid://ddf2xjwcht77u" path="res://Scenes/CloseButton.tscn" id="25"]
 [ext_resource type="Texture2D" uid="uid://koi0aarpqj30" path="res://Graphics/Ships/Ship0.png" id="26"]
-[ext_resource type="Shader" path="res://Shaders/Blur.gdshader" id="30"]
-[ext_resource type="Shader" path="res://Shaders/Star.gdshader" id="31"]
+[ext_resource type="Shader" uid="uid://dxhqjhwrfucit" path="res://Shaders/Blur.gdshader" id="30"]
+[ext_resource type="Shader" uid="uid://u62js3345ubk" path="res://Shaders/Star.gdshader" id="31"]
 [ext_resource type="Texture2D" uid="uid://t70si4f413j5" path="res://Graphics/Effects/spotlight_4.png" id="32"]
 [ext_resource type="PackedScene" uid="uid://dtk1md86gqsln" path="res://Scenes/Fire.tscn" id="33"]
-[ext_resource type="Shader" path="res://Shaders/ScienceTree.gdshader" id="34"]
+[ext_resource type="Shader" uid="uid://cp1b7vqtf0wsg" path="res://Shaders/ScienceTree.gdshader" id="34"]
 [ext_resource type="PackedScene" uid="uid://c5qfs6oo128dp" path="res://Scenes/Nebula.tscn" id="35"]
 [ext_resource type="PackedScene" uid="uid://ca730ks6x5s88" path="res://Scenes/Screenshake.tscn" id="36"]
 
@@ -38,7 +38,7 @@ shader_parameter/distfading = 0.73
 shader_parameter/saturation = 0.85
 shader_parameter/rotation = Vector2(0, 0)
 shader_parameter/colorampMix = 0.5
-shader_parameter/isColoramp = null
+shader_parameter/isColoramp = false
 shader_parameter/max_alpha = 1.0
 shader_parameter/red_p = 1.0
 shader_parameter/green_p = 2.0
@@ -100,8 +100,8 @@ tracks/0/keys = {
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_ci5uo"]
 _data = {
-"Flashing": SubResource("3"),
-"RESET": SubResource("Animation_e6054")
+&"Flashing": SubResource("3"),
+&"RESET": SubResource("Animation_e6054")
 }
 
 [sub_resource type="Animation" id="Animation_afeh0"]
@@ -121,8 +121,8 @@ tracks/0/keys = {
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_nyjun"]
 _data = {
-"MoveLabel": SubResource("Animation_afeh0"),
-"RESET": SubResource("Animation_e6054")
+&"MoveLabel": SubResource("Animation_afeh0"),
+&"RESET": SubResource("Animation_e6054")
 }
 
 [sub_resource type="LabelSettings" id="LabelSettings_ycps2"]
@@ -177,9 +177,9 @@ tracks/0/keys = {
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_dnrnq"]
 _data = {
-"Fade": SubResource("21"),
-"FadeOut": SubResource("23"),
-"RESET": SubResource("22")
+&"Fade": SubResource("21"),
+&"FadeOut": SubResource("23"),
+&"RESET": SubResource("22")
 }
 
 [sub_resource type="Gradient" id="7"]
@@ -206,7 +206,7 @@ tracks/0/keys = {
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_ju8om"]
 _data = {
-"Fade": SubResource("9")
+&"Fade": SubResource("9")
 }
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_3xr3d"]
@@ -259,8 +259,8 @@ tracks/0/keys = {
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_g33d0"]
 _data = {
-"FadeMusic": SubResource("Animation_g0rgc"),
-"RESET": SubResource("Animation_bbkxg")
+&"FadeMusic": SubResource("Animation_g0rgc"),
+&"RESET": SubResource("Animation_bbkxg")
 }
 
 [sub_resource type="ShaderMaterial" id="12"]
@@ -353,8 +353,8 @@ tracks/1/keys = {
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_in6cd"]
 _data = {
-"Fade": SubResource("Animation_6hy8q"),
-"RESET": SubResource("Animation_lflfc")
+&"Fade": SubResource("Animation_6hy8q"),
+&"RESET": SubResource("Animation_lflfc")
 }
 
 [sub_resource type="Animation" id="15"]
@@ -374,7 +374,7 @@ tracks/0/keys = {
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_0twxn"]
 _data = {
-"Fade": SubResource("15")
+&"Fade": SubResource("15")
 }
 
 [sub_resource type="InputEventKey" id="InputEventKey_ptddw"]
@@ -427,8 +427,8 @@ tracks/0/keys = {
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_f72sx"]
 _data = {
-"RESET": SubResource("19"),
-"StarFade": SubResource("20")
+&"RESET": SubResource("19"),
+&"StarFade": SubResource("20")
 }
 
 [sub_resource type="ShaderMaterial" id="1"]
@@ -508,13 +508,13 @@ close_button_type = 2
 
 [node name="FlashAnim" type="AnimationPlayer" parent="UI/BottomInfo"]
 libraries = {
-"": SubResource("AnimationLibrary_ci5uo")
+&"": SubResource("AnimationLibrary_ci5uo")
 }
 autoplay = "Flashing"
 
 [node name="MoveAnim" type="AnimationPlayer" parent="UI/BottomInfo"]
 libraries = {
-"": SubResource("AnimationLibrary_nyjun")
+&"": SubResource("AnimationLibrary_nyjun")
 }
 
 [node name="Version" type="Label" parent="UI"]
@@ -548,7 +548,7 @@ layout_mode = 2
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="UI/Panel"]
 libraries = {
-"": SubResource("AnimationLibrary_dnrnq")
+&"": SubResource("AnimationLibrary_dnrnq")
 }
 
 [node name="ClusterBG" parent="." instance=ExtResource("35")]
@@ -568,7 +568,7 @@ metadata/_edit_lock_ = true
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="GrayscaleRect"]
 libraries = {
-"": SubResource("AnimationLibrary_ju8om")
+&"": SubResource("AnimationLibrary_ju8om")
 }
 
 [node name="Tooltips" type="CanvasLayer" parent="."]
@@ -636,7 +636,7 @@ bus = &"Music"
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="MusicPlayer"]
 libraries = {
-"": SubResource("AnimationLibrary_g33d0")
+&"": SubResource("AnimationLibrary_g33d0")
 }
 
 [node name="ScienceTreeBG" type="ColorRect" parent="."]
@@ -711,7 +711,7 @@ text = "MODS"
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="Title/Menu"]
 libraries = {
-"": SubResource("AnimationLibrary_in6cd")
+&"": SubResource("AnimationLibrary_in6cd")
 }
 
 [node name="Discord" type="TextureButton" parent="Title"]
@@ -761,7 +761,7 @@ one_shot = true
 
 [node name="CollectPanelAnim" type="AnimationPlayer" parent="."]
 libraries = {
-"": SubResource("AnimationLibrary_0twxn")
+&"": SubResource("AnimationLibrary_0twxn")
 }
 
 [node name="Ship" type="TextureButton" parent="."]
@@ -818,7 +818,7 @@ visible = false
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="Stars"]
 libraries = {
-"": SubResource("AnimationLibrary_f72sx")
+&"": SubResource("AnimationLibrary_f72sx")
 }
 
 [node name="Stars" type="Node2D" parent="Stars"]

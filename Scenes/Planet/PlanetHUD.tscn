@@ -2,7 +2,7 @@
 
 [ext_resource type="Texture2D" uid="uid://cb5mqqhnxbe26" path="res://Graphics/Buttons/ConstructBuildings.png" id="1"]
 [ext_resource type="Theme" uid="uid://cp2u1kgj60ic" path="res://Resources/default_theme.tres" id="1_ankd5"]
-[ext_resource type="Script" path="res://Scripts/PlanetHUD.gd" id="2"]
+[ext_resource type="Script" uid="uid://vh301c8h7ckx" path="res://Scripts/PlanetHUD.gd" id="2"]
 [ext_resource type="Texture2D" uid="uid://vshnis3gqj4t" path="res://Graphics/Icons/Notification.png" id="4"]
 [ext_resource type="Texture2D" uid="uid://paygstyf1c0p" path="res://Graphics/Buttons/Mine.png" id="5"]
 [ext_resource type="Texture2D" uid="uid://cb4q7wfu4xa2i" path="res://Graphics/Buttons/Terraform.png" id="7"]
@@ -91,9 +91,9 @@ tracks/0/keys = {
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_qi0uf"]
 _data = {
-"FlashOnce": SubResource("Animation_ov68r"),
-"FlashRepeat": SubResource("Animation_8yif4"),
-"RESET": SubResource("Animation_f67xs")
+&"FlashOnce": SubResource("Animation_ov68r"),
+&"FlashRepeat": SubResource("Animation_8yif4"),
+&"RESET": SubResource("Animation_f67xs")
 }
 
 [sub_resource type="Animation" id="7"]
@@ -128,8 +128,8 @@ tracks/0/keys = {
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_qgp35"]
 _data = {
-"MoveButtons": SubResource("7"),
-"RESET": SubResource("8")
+&"MoveButtons": SubResource("7"),
+&"RESET": SubResource("8")
 }
 
 [sub_resource type="LabelSettings" id="LabelSettings_1kyj1"]

@@ -1,9 +1,9 @@
 [gd_scene load_steps=13 format=3 uid="uid://0xkqr6plocaj"]
 
 [ext_resource type="Texture2D" uid="uid://dw4gx6xj2i5g7" path="res://Graphics/HX/1_1.png" id="1_412vd"]
-[ext_resource type="Script" path="res://Scripts/STM/STMHX.gd" id="1_iy65u"]
-[ext_resource type="Shader" path="res://Shaders/HX.gdshader" id="2_upyw0"]
-[ext_resource type="Shader" path="res://Shaders/Laser.gdshader" id="4_khxtp"]
+[ext_resource type="Script" uid="uid://dse8cm5edf34r" path="res://Scripts/STM/STMHX.gd" id="1_iy65u"]
+[ext_resource type="Shader" uid="uid://dldfqqvdqt4h0" path="res://Shaders/HX.gdshader" id="2_upyw0"]
+[ext_resource type="Shader" uid="uid://gevhgabt3grd" path="res://Shaders/Laser.gdshader" id="4_khxtp"]
 [ext_resource type="Texture2D" uid="uid://yhdxrw2q1yep" path="res://Graphics/HX/Status effects/Stun.png" id="5_7hnfy"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_yeviy"]
@@ -15,6 +15,7 @@ shader_parameter/aurora = false
 shader_parameter/light = 1.0
 shader_parameter/modulate_color = Color(1, 1, 1, 1)
 shader_parameter/flash = 0.0
+shader_parameter/flash_color = Color(1, 1, 1, 1)
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_il0bk"]
 shader = ExtResource("4_khxtp")
@@ -135,8 +136,8 @@ tracks/2/keys = {
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_5u3l7"]
 _data = {
-"DeathAnim": SubResource("Animation_v6621"),
-"RESET": SubResource("Animation_71e7h")
+&"DeathAnim": SubResource("Animation_v6621"),
+&"RESET": SubResource("Animation_71e7h")
 }
 
 [node name="Node2D" type="Node2D"]

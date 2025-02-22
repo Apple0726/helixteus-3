@@ -53,8 +53,8 @@ tracks/0/keys = {
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_2eexe"]
 _data = {
-"FadeInOut": SubResource("2"),
-"RESET": SubResource("Animation_h3gig")
+&"FadeInOut": SubResource("2"),
+&"RESET": SubResource("Animation_h3gig")
 }
 
 [node name="AchievementEarned" type="Control"]

@@ -1,7 +1,7 @@
 [gd_scene load_steps=7 format=3 uid="uid://nd0pbk1f0ii2"]
 
 [ext_resource type="PackedScene" uid="uid://ddf2xjwcht77u" path="res://Scenes/CloseButton.tscn" id="3"]
-[ext_resource type="Texture2D" uid="uid://ds7wkl1q870po" path="res://Graphics/GUI/Panel.png" id="3_2altr"]
+[ext_resource type="Texture2D" uid="uid://dcvnyb0mloli2" path="res://Graphics/GUI/Panel.png" id="3_2altr"]
 [ext_resource type="Theme" uid="uid://cp2u1kgj60ic" path="res://Resources/default_theme.tres" id="5"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_cnj7i"]

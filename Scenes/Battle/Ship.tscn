@@ -1,9 +1,9 @@
 [gd_scene load_steps=31 format=3 uid="uid://cxykmxd6r2wgm"]
 
 [ext_resource type="Texture2D" uid="uid://kr2fdk8dptv1" path="res://Graphics/Misc/BarUnder2.png" id="1"]
-[ext_resource type="Script" path="res://Scripts/Battle/Ship.gd" id="2"]
+[ext_resource type="Script" uid="uid://cfrufmr2v8ebl" path="res://Scripts/Battle/Ship.gd" id="2"]
 [ext_resource type="PackedScene" uid="uid://fo4yl8v4ld8c" path="res://Scenes/Battle/FireWeaponAim.tscn" id="2_ogdx2"]
-[ext_resource type="Shader" path="res://Shaders/Ship.gdshader" id="3_cptad"]
+[ext_resource type="Shader" uid="uid://c17je4akgvnni" path="res://Shaders/Ship.gdshader" id="3_cptad"]
 [ext_resource type="PackedScene" uid="uid://dtk1md86gqsln" path="res://Scenes/Fire.tscn" id="4"]
 [ext_resource type="Texture2D" uid="uid://koi0aarpqj30" path="res://Graphics/Ships/Ship0.png" id="5"]
 [ext_resource type="Texture2D" uid="uid://bx1hvetixqpwi" path="res://Graphics/Misc/Bar2.png" id="6"]
@@ -13,8 +13,8 @@
 [ext_resource type="Texture2D" uid="uid://b1dcgxga387up" path="res://Graphics/Effects/spotlight_1.png" id="10"]
 [ext_resource type="Texture2D" uid="uid://b642ran0hp7j4" path="res://Graphics/Icons/Stun.png" id="11"]
 [ext_resource type="Texture2D" uid="uid://cdblvpftr6875" path="res://icon.png" id="12"]
-[ext_resource type="Shader" path="res://Shaders/Fire.gdshader" id="13"]
-[ext_resource type="Shader" path="res://Shaders/Laser.gdshader" id="14"]
+[ext_resource type="Shader" uid="uid://dose2l8hnixm6" path="res://Shaders/Fire.gdshader" id="13"]
+[ext_resource type="Shader" uid="uid://gevhgabt3grd" path="res://Shaders/Laser.gdshader" id="14"]
 [ext_resource type="Theme" uid="uid://cp2u1kgj60ic" path="res://Resources/default_theme.tres" id="15"]
 [ext_resource type="Texture2D" uid="uid://7ffsf7xuvfw2" path="res://Graphics/Icons/attack.png" id="16"]
 
@@ -142,8 +142,8 @@ visible = false
 
 [node name="ThrusterFire" parent="." instance=ExtResource("4")]
 position = Vector2(-60, -4)
-process_material = SubResource("3")
 local_coords = true
+process_material = SubResource("3")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 material = SubResource("4")
@@ -301,9 +301,9 @@ offset = Vector2(-21.4132, -17.9986)
 visible = false
 modulate = Color(2, 2, 2, 1)
 amount = 24
-process_material = SubResource("33")
 texture = ExtResource("10")
 lifetime = 2.0
+process_material = SubResource("33")
 
 [connection signal="mouse_entered" from="." to="." method="_on_mouse_entered"]
 [connection signal="mouse_exited" from="." to="." method="_on_mouse_exited"]

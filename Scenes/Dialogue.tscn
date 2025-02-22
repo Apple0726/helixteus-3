@@ -1,50 +1,50 @@
-[gd_scene load_steps=6 format=2]
+[gd_scene load_steps=6 format=3 uid="uid://di212twja6t76"]
 
-[ext_resource path="res://Resources/default_theme.tres" type="Theme" id=1]
-[ext_resource path="res://Scripts/Dialogue.gd" type="Script" id=2]
+[ext_resource type="Theme" uid="uid://cp2u1kgj60ic" path="res://Resources/default_theme.tres" id="1"]
+[ext_resource type="Script" uid="uid://cdo3l1b7jauja" path="res://Scripts/Dialogue.gd" id="2"]
 
-[sub_resource type="StyleBoxFlat" id=1]
-bg_color = Color( 0.192157, 0.192157, 0.192157, 1 )
+[sub_resource type="StyleBoxFlat" id="1"]
+bg_color = Color(0.192157, 0.192157, 0.192157, 1)
 border_width_left = 2
 border_width_top = 2
 border_width_right = 2
 border_width_bottom = 2
-border_color = Color( 0.4, 0.501961, 1, 1 )
+border_color = Color(0.4, 0.501961, 1, 1)
 expand_margin_left = 10.0
-expand_margin_right = 10.0
 expand_margin_top = 5.0
+expand_margin_right = 10.0
 expand_margin_bottom = 5.0
 
-[sub_resource type="StyleBoxFlat" id=2]
-bg_color = Color( 0.192157, 0.192157, 0.192157, 1 )
+[sub_resource type="StyleBoxFlat" id="2"]
+bg_color = Color(0.192157, 0.192157, 0.192157, 1)
 border_width_left = 2
 border_width_top = 2
 border_width_right = 2
 border_width_bottom = 2
-border_color = Color( 0.4, 0.501961, 1, 1 )
+border_color = Color(0.4, 0.501961, 1, 1)
 expand_margin_left = 20.0
-expand_margin_right = 20.0
 expand_margin_top = 10.0
+expand_margin_right = 20.0
 expand_margin_bottom = 10.0
 
-[sub_resource type="StyleBoxFlat" id=3]
-bg_color = Color( 0.192157, 0.192157, 0.192157, 1 )
+[sub_resource type="StyleBoxFlat" id="3"]
+bg_color = Color(0.192157, 0.192157, 0.192157, 1)
 border_width_left = 2
 border_width_top = 2
 border_width_right = 2
 border_width_bottom = 2
-border_color = Color( 0.4, 0.501961, 1, 1 )
+border_color = Color(0.4, 0.501961, 1, 1)
 expand_margin_left = 10.0
-expand_margin_right = 10.0
 expand_margin_top = 5.0
+expand_margin_right = 10.0
 expand_margin_bottom = 5.0
 
 [node name="Dialogue" type="Control"]
 offset_right = 40.0
 offset_bottom = 40.0
 mouse_filter = 1
-theme = ExtResource( 1 )
-script = ExtResource( 2 )
+theme = ExtResource("1")
+script = ExtResource("2")
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -64,8 +64,8 @@ __meta__ = {
 offset_top = 6.0
 offset_right = 192.0
 offset_bottom = 34.0
-theme = ExtResource( 1 )
-custom_styles/normal = SubResource( 1 )
+theme = ExtResource("1")
+custom_styles/normal = SubResource("1")
 text = "PRESS_F_TO_TALK"
 __meta__ = {
 "_edit_use_anchors_": false
@@ -81,7 +81,7 @@ offset_left = 300.0
 offset_top = 560.0
 offset_right = 944.0
 offset_bottom = 668.0
-custom_styles/normal = SubResource( 2 )
+custom_styles/normal = SubResource("2")
 autowrap = true
 __meta__ = {
 "_edit_use_anchors_": false
@@ -95,7 +95,7 @@ offset_right = 672.0
 offset_bottom = 464.0
 grow_horizontal = 2
 mouse_filter = 1
-custom_styles/panel = SubResource( 3 )
+custom_styles/panel = SubResource("3")
 __meta__ = {
 "_edit_use_anchors_": false
 }

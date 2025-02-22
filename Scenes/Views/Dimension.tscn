@@ -6,7 +6,7 @@
 [ext_resource type="Texture2D" uid="uid://msw2mrevisf1" path="res://Graphics/Misc/Mathematics.png" id="5"]
 [ext_resource type="Texture2D" uid="uid://pvvxdd2l5ygb" path="res://Graphics/Misc/DimensionalPower.png" id="6"]
 [ext_resource type="Texture2D" uid="uid://ecxdst7pxscm" path="res://Graphics/Misc/Chemistry.png" id="7"]
-[ext_resource type="Script" path="res://Scripts/Dimension.gd" id="8"]
+[ext_resource type="Script" uid="uid://c0n8fyqh4jyv6" path="res://Scripts/Dimension.gd" id="8"]
 [ext_resource type="Theme" uid="uid://cp2u1kgj60ic" path="res://Resources/default_theme.tres" id="9"]
 [ext_resource type="Texture2D" uid="uid://3sf8hsnh7wdv" path="res://Graphics/Misc/Engineering.png" id="10"]
 [ext_resource type="Texture2D" uid="uid://d37q4ouoi8g0s" path="res://Graphics/Misc/Biology.png" id="11"]
@@ -17,7 +17,7 @@
 [ext_resource type="Texture2D" uid="uid://4tf3teqmkahc" path="res://Graphics/Misc/Bar.png" id="17"]
 [ext_resource type="Texture2D" uid="uid://dqchg3okkvtsv" path="res://Graphics/Misc/BarUnder.png" id="18"]
 [ext_resource type="Texture2D" uid="uid://dfevqh5sw4lvg" path="res://Graphics/Formulas/AuroraSpawn.png" id="18_drllu"]
-[ext_resource type="Shader" path="res://Shaders/StarGrdient.gdshader" id="18_tqqip"]
+[ext_resource type="Shader" uid="uid://cxlvuojtpdoj2" path="res://Shaders/StarGrdient.gdshader" id="18_tqqip"]
 [ext_resource type="PackedScene" uid="uid://cq2nl2mljdwdf" path="res://Scenes/CustomSpinBox.tscn" id="19"]
 [ext_resource type="Texture2D" uid="uid://bx1hvetixqpwi" path="res://Graphics/Misc/Bar2.png" id="20"]
 [ext_resource type="Texture2D" uid="uid://kr2fdk8dptv1" path="res://Graphics/Misc/BarUnder2.png" id="21"]
@@ -87,8 +87,8 @@ tracks/0/keys = {
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_v6efg"]
 _data = {
-"FlashButton": SubResource("6"),
-"RESET": SubResource("7")
+&"FlashButton": SubResource("6"),
+&"RESET": SubResource("7")
 }
 
 [sub_resource type="Animation" id="Animation_gp2ko"]
@@ -124,8 +124,8 @@ tracks/0/keys = {
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_ak7dn"]
 _data = {
-"Fade": SubResource("Animation_gp2ko"),
-"RESET": SubResource("Animation_q2bul")
+&"Fade": SubResource("Animation_gp2ko"),
+&"RESET": SubResource("Animation_q2bul")
 }
 
 [sub_resource type="Animation" id="Animation_nf555"]
@@ -175,8 +175,8 @@ tracks/0/keys = {
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_a687h"]
 _data = {
-"Fade": SubResource("Animation_nf555"),
-"RESET": SubResource("Animation_2dw8a")
+&"Fade": SubResource("Animation_nf555"),
+&"RESET": SubResource("Animation_2dw8a")
 }
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_mmkh4"]
@@ -247,9 +247,9 @@ tracks/0/keys = {
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_dhvf2"]
 _data = {
-"Fade": SubResource("8"),
-"FadeOut": SubResource("10"),
-"RESET": SubResource("9")
+&"Fade": SubResource("8"),
+&"FadeOut": SubResource("10"),
+&"RESET": SubResource("9")
 }
 
 [node name="Dimension" type="Control"]

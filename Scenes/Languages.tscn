@@ -13,7 +13,7 @@
 [ext_resource type="Texture2D" uid="uid://cbt34k54x4j1p" path="res://Graphics/Buttons/ru.png" id="11"]
 [ext_resource type="Texture2D" uid="uid://2wqq4xxnaf8q" path="res://Graphics/Buttons/hu.png" id="12"]
 [ext_resource type="Texture2D" uid="uid://bctfy3hfwrvif" path="res://Graphics/Icons/languages.png" id="13"]
-[ext_resource type="Script" path="res://Scripts/Languages.gd" id="14"]
+[ext_resource type="Script" uid="uid://biw4e238ccx8t" path="res://Scripts/Languages.gd" id="14"]
 [ext_resource type="Theme" uid="uid://cp2u1kgj60ic" path="res://Resources/default_theme.tres" id="15"]
 
 [sub_resource type="Animation" id="22"]
@@ -71,8 +71,8 @@ tracks/1/keys = {
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_8wbkt"]
 _data = {
-"MoveLanguages": SubResource("22"),
-"RESET": SubResource("23")
+&"MoveLanguages": SubResource("22"),
+&"RESET": SubResource("23")
 }
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_1ffxs"]

@@ -4,7 +4,7 @@
 [ext_resource type="Theme" uid="uid://cp2u1kgj60ic" path="res://Resources/default_theme.tres" id="3"]
 [ext_resource type="Texture2D" uid="uid://bm01hxs45q3ga" path="res://Graphics/Icons/energy.png" id="4"]
 [ext_resource type="Texture2D" uid="uid://bn8t8jmrkuvdk" path="res://Graphics/Icons/Time.png" id="5"]
-[ext_resource type="Script" path="res://Scripts/SendShipsPanel.gd" id="6"]
+[ext_resource type="Script" uid="uid://djfo8mhq1c7vi" path="res://Scripts/SendShipsPanel.gd" id="6"]
 [ext_resource type="PackedScene" uid="uid://ddf2xjwcht77u" path="res://Scenes/CloseButton.tscn" id="8"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_nwrf5"]

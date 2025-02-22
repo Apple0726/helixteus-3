@@ -1,7 +1,7 @@
 [gd_scene load_steps=5 format=3 uid="uid://c8o5lvjlxgrgs"]
 
 [ext_resource type="PackedScene" uid="uid://1hq6qpr1oa3i" path="res://Scenes/AdvButton.tscn" id="1"]
-[ext_resource type="Script" path="res://Scripts/Wiki.gd" id="3"]
+[ext_resource type="Script" uid="uid://cxu1q2e6hdt1n" path="res://Scripts/Wiki.gd" id="3"]
 [ext_resource type="PackedScene" uid="uid://ddf2xjwcht77u" path="res://Scenes/CloseButton.tscn" id="5"]
 [ext_resource type="Theme" uid="uid://cp2u1kgj60ic" path="res://Resources/default_theme.tres" id="6"]
 

@@ -1,7 +1,7 @@
 [gd_scene load_steps=7 format=3 uid="uid://dlqxgji41vl6b"]
 
-[ext_resource type="Script" path="res://Scripts/ItemForSale.gd" id="2"]
-[ext_resource type="Texture2D" uid="uid://cnp4b35umhf44" path="res://Graphics/Icons/Notification.png" id="3"]
+[ext_resource type="Script" uid="uid://btynwymqgvm4k" path="res://Scripts/ItemForSale.gd" id="2"]
+[ext_resource type="Texture2D" uid="uid://vshnis3gqj4t" path="res://Graphics/Icons/Notification.png" id="3"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_lyvr3"]
 content_margin_left = 5.0
@@ -51,8 +51,8 @@ tracks/0/keys = {
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_th1nx"]
 _data = {
-"Flashing": SubResource("17"),
-"RESET": SubResource("18")
+&"Flashing": SubResource("17"),
+&"RESET": SubResource("18")
 }
 
 [node name="ItemForSale" type="Panel"]

@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://bx0a7iwx3qlo1"]
 
-[ext_resource type="Script" path="res://Scripts/PieGraph.gd" id="2"]
+[ext_resource type="Script" uid="uid://bptcbehw617j2" path="res://Scripts/PieGraph.gd" id="2"]
 
 [node name="PieGraph" type="VBoxContainer"]
 custom_minimum_size = Vector2(300, 318)
