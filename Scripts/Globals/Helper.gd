@@ -203,17 +203,17 @@ func format_num(num:float, clever_round:bool = false, threshold:int = 6):
 	if num < pow(10, threshold):
 		var string = str(num)
 		var arr = string.split(".")
-		if len(arr) == 1:
-			arr.append("")
-		else:
-			arr[1] = "." + arr[1]
-		var mod = arr[0].length() % 3
-		var res = ""
-		for i in range(0, arr[0].length()):
-			if i != 0 and i % 3 == mod:
+		var whole_number_length = len(arr[0])
+		var decimals = "." + arr[1]
+		if arr[1] == "0":
+			decimals = ""
+		var mod = whole_number_length % 3
+		var res = string[0]
+		for i in range(1, whole_number_length):
+			if i % 3 == mod:
 				res += ","
 			res += string[i]
-		return sgn + res + arr[1]
+		return sgn + res + decimals
 	else:
 		var suff:String = ""
 		var p:float = log(num) / log(10)
