@@ -52,7 +52,7 @@ func _process(delta: float) -> void:
 
 func _on_fire_weapon_aim_visibility_changed() -> void:
 	if $FireWeaponAim.visible:
-		$FireWeaponAim.target_angle_max_deviation = 1.0 / (accuracy + accuracy_buff) / weapon_accuracy_mult
+		$FireWeaponAim.target_angle_max_deviation = 0.5 / (accuracy + accuracy_buff) / weapon_accuracy_mult
 		$FireWeaponAim.animate(false)
 
 func override_enemy_tooltips():
@@ -72,7 +72,7 @@ func override_enemy_tooltips():
 		else:
 			damage_multiplier = 1.0 / (1.0 - 0.125 * attack_defense_difference)
 		var tooltip_txt = tr("DAMAGE_MULTIPLIER") + ": " + "%.2f" % damage_multiplier
-		tooltip_txt += "\n" + tr("CHANCE_OF_HITTING") + ": " + "%.1f%%" % (100.0 * (1.0 - 1.0 / (1.0 + exp(((accuracy + accuracy_buff) * weapon_accuracy_mult - HX_node.agility - HX_node.agility_buff + 3.7) / 4.3))))
+		tooltip_txt += "\n" + tr("CHANCE_OF_HITTING") + ": " + "%.1f%%" % (100.0 * (1.0 - 1.0 / (1.0 + exp(((accuracy + accuracy_buff) * weapon_accuracy_mult - HX_node.agility - HX_node.agility_buff + 9.2) / 5.8))))
 		HX_node.override_tooltip_text = tooltip_txt
 
 func restore_default_enemy_tooltips():

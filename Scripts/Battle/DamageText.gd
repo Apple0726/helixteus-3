@@ -12,7 +12,7 @@ func _ready() -> void:
 		velocity = Vector2.UP * 80.0
 		label_settings.font_color = Color.YELLOW
 	elif critical:
-		label_settings.font_size = 88
+		label_settings.font_size = 72
 		label_settings.shadow_color = 12
 		text = str(damage) + "!"
 	else:

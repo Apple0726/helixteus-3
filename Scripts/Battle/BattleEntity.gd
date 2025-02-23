@@ -76,7 +76,7 @@ func agility_updated_callback():
 		$CollisionShapeFinder/CollisionShape2D.shape.radius = (agility + agility_buff) * METERS_PER_AGILITY * PIXELS_PER_METER
 
 func damage_entity(weapon_data: Dictionary):
-	var dodged = 1.0 / (1.0 + exp((weapon_data.weapon_accuracy - agility - agility_buff + 3.7) / 4.3)) > randf()
+	var dodged = 1.0 / (1.0 + exp((weapon_data.weapon_accuracy - agility - agility_buff + 9.2) / 5.8)) > randf()
 	if dodged:
 		battle_scene.add_damage_text(true, position)
 	else:
