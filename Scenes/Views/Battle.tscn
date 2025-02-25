@@ -21,8 +21,6 @@ b = Vector2(-640, -360)
 
 [sub_resource type="Environment" id="Environment_bypyr"]
 background_mode = 3
-background_canvas_max_layer = -1
-glow_enabled = true
 glow_levels/2 = 1.0
 glow_levels/4 = 1.0
 glow_blend_mode = 0
@@ -57,6 +55,3 @@ shape = SubResource("SegmentShape2D_fjaob")
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_bypyr")
-
-[node name="GlowObjects" type="CanvasLayer" parent="."]
-layer = -1

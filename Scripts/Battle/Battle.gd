@@ -117,10 +117,9 @@ func initialize_battle():
 
 func next_turn():
 	whose_turn_is_it_index += 1
-	var move_view_tween = create_tween()
+	var move_view_tween = create_tween().set_parallel()
 	battle_GUI.ship_node = null
 	if whose_turn_is_it_index == len(initiative_order):
-		move_view_tween.set_parallel()
 		var view_scale:float = 0.4
 		move_view_tween.tween_property(game.view, "scale", Vector2.ONE * view_scale, 1.0).set_trans(Tween.TRANS_CUBIC)
 		move_view_tween.tween_property(game.view, "position", Vector2(640, 360) - Vector2(640, 360) * view_scale, 1.0).set_trans(Tween.TRANS_CUBIC)

@@ -1,6 +1,7 @@
-[gd_scene load_steps=5 format=3 uid="uid://c85ho5kdv83p8"]
+[gd_scene load_steps=6 format=3 uid="uid://c85ho5kdv83p8"]
 
 [ext_resource type="Texture2D" uid="uid://dxr8x86jdcd2p" path="res://Graphics/Tiles/Highlight.jpg" id="1_11r1q"]
+[ext_resource type="Script" uid="uid://b6bysupl6nmty" path="res://Scripts/Battle/Weapons/ShipLaser.gd" id="1_c45pl"]
 
 [sub_resource type="Animation" id="Animation_11r1q"]
 resource_name = "FadeOut"
@@ -28,6 +29,20 @@ tracks/1/keys = {
 "transitions": PackedFloat32Array(1, 1, 1),
 "update": 0,
 "values": [Color(1, 0, 0, 1), Color(1, 0, 0, 1), Color(1, 0, 0, 0)]
+}
+tracks/2/type = "method"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath(".")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0.5),
+"transitions": PackedFloat32Array(1),
+"values": [{
+"args": [],
+"method": &"queue_free"
+}]
 }
 
 [sub_resource type="Animation" id="Animation_c45pl"]
@@ -64,19 +79,29 @@ _data = {
 }
 
 [node name="ShipLaser" type="Node2D"]
+script = ExtResource("1_c45pl")
 
 [node name="ColorLaser" type="Sprite2D" parent="."]
 modulate = Color(1, 0, 0, 1)
-position = Vector2(239, 0)
-scale = Vector2(2.39, 0.0700001)
+position = Vector2(0, -8)
+scale = Vector2(1, 0.08)
 texture = ExtResource("1_11r1q")
+centered = false
 
 [node name="WhiteLaser" type="Sprite2D" parent="."]
-position = Vector2(239, 2.38419e-07)
-scale = Vector2(2.39, 0.0399997)
+position = Vector2(0, -4)
+scale = Vector2(1, 0.04)
 texture = ExtResource("1_11r1q")
+centered = false
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 libraries = {
 &"": SubResource("AnimationLibrary_2suxr")
 }
+
+[node name="RayCast2D" type="RayCast2D" parent="."]
+target_position = Vector2(50, 0)
+collision_mask = 37
+hit_from_inside = true
+collide_with_areas = true
+collide_with_bodies = false

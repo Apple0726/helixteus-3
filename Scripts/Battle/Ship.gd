@@ -92,10 +92,11 @@ func _on_mouse_exited() -> void:
 
 func fire_weapon(weapon_type: int):
 	$FireWeaponAim.fade_out()
+	var weapon_rotation = randf_range($FireWeaponAim.target_angle - $FireWeaponAim.target_angle_max_deviation, $FireWeaponAim.target_angle + $FireWeaponAim.target_angle_max_deviation)
 	if weapon_type == battle_GUI.BULLET:
 		var projectile = preload("res://Scenes/Battle/Weapons/ShipBullet.tscn").instantiate()
 		projectile.speed = 1000.0
-		projectile.rotation = randf_range($FireWeaponAim.target_angle - $FireWeaponAim.target_angle_max_deviation, $FireWeaponAim.target_angle + $FireWeaponAim.target_angle_max_deviation)
+		projectile.rotation = weapon_rotation
 		projectile.damage = Data.bullet_data[bullet_lv-1].damage
 		projectile.shooter_attack = attack + attack_buff
 		projectile.weapon_accuracy = Data.bullet_data[bullet_lv-1].accuracy * accuracy
@@ -103,6 +104,15 @@ func fire_weapon(weapon_type: int):
 		projectile.position = position
 		battle_scene.add_child(projectile)
 		projectile.tree_exited.connect(ending_turn)
+	elif weapon_type == battle_GUI.LASER:
+		var laser = preload("res://Scenes/Battle/Weapons/ShipLaser.tscn").instantiate()
+		laser.rotation = weapon_rotation
+		laser.damage = Data.laser_data[laser_lv-1].damage
+		laser.shooter_attack = attack + attack_buff
+		laser.weapon_accuracy = Data.laser_data[laser_lv-1].accuracy * accuracy
+		laser.position = position
+		battle_scene.add_child(laser)
+		laser.tree_exited.connect(ending_turn)
 
 
 func ending_turn():

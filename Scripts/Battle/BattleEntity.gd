@@ -1,3 +1,4 @@
+class_name BattleEntity
 extends Node2D
 
 signal next_turn

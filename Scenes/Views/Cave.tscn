@@ -2,7 +2,7 @@
 
 [ext_resource type="Shader" uid="uid://gevhgabt3grd" path="res://Shaders/Laser.gdshader" id="1"]
 [ext_resource type="Script" uid="uid://2ovarm7fdxfj" path="res://Scripts/Cave/Cave.gd" id="2"]
-[ext_resource type="PackedScene" path="res://Scenes/FilterButton.tscn" id="3"]
+[ext_resource type="PackedScene" uid="uid://bvyftln8m3hgm" path="res://Scenes/FilterButton.tscn" id="3"]
 [ext_resource type="Texture2D" uid="uid://4tf3teqmkahc" path="res://Graphics/Misc/Bar.png" id="4"]
 [ext_resource type="Texture2D" uid="uid://qbiggp0bodp1" path="res://Graphics/Cave/MiningLaser.png" id="5"]
 [ext_resource type="TileSet" uid="uid://bmti7h3x1g1xw" path="res://Resources/LakeTileSet.tres" id="5_qgrjc"]
@@ -25,7 +25,7 @@
 [ext_resource type="Texture2D" uid="uid://cbployr7rnqpu" path="res://Graphics/Cave/MMIcons/Exit.png" id="21"]
 [ext_resource type="Texture2D" uid="uid://dxr8x86jdcd2p" path="res://Graphics/Tiles/Highlight.jpg" id="22"]
 [ext_resource type="Texture2D" uid="uid://bl07f3wef0muv" path="res://Graphics/Icons/HP.png" id="23"]
-[ext_resource type="PackedScene" path="res://Scenes/Dialogue.tscn" id="24"]
+[ext_resource type="PackedScene" uid="uid://di212twja6t76" path="res://Scenes/Dialogue.tscn" id="24"]
 [ext_resource type="Texture2D" uid="uid://d03u105amdf1c" path="res://Graphics/Icons/Inventory.png" id="25"]
 [ext_resource type="Texture2D" uid="uid://bxisftoek0j0e" path="res://Graphics/Cave/RelicDetails.png" id="28"]
 [ext_resource type="Theme" uid="uid://cp2u1kgj60ic" path="res://Resources/default_theme.tres" id="29"]
@@ -616,16 +616,16 @@ disabled = true
 
 [node name="GPUParticles2D" type="GPUParticles2D" parent="Exit"]
 emitting = false
-process_material = SubResource("25")
 texture = ExtResource("19")
 lifetime = 2.0
+process_material = SubResource("25")
 
 [node name="Hole" parent="." instance=ExtResource("9")]
 
 [node name="MiningParticles" type="GPUParticles2D" parent="."]
 amount = 25
-process_material = SubResource("4")
 lifetime = 0.2
+process_material = SubResource("4")
 
 [node name="Rover" type="CharacterBody2D" parent="."]
 position = Vector2(220, 228)
@@ -737,7 +737,7 @@ target_position = Vector2(100, 0)
 [node name="AnimationPlayer" type="AnimationPlayer" parent="Rover/RayOfDoom"]
 root_node = NodePath("../Sprite2D")
 libraries = {
-"": SubResource("AnimationLibrary_nn2up")
+&"": SubResource("AnimationLibrary_nn2up")
 }
 
 [node name="Sprite2D" type="Sprite2D" parent="Rover/RayOfDoom"]
@@ -784,7 +784,7 @@ texture = ExtResource("18")
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="Rover"]
 libraries = {
-"": SubResource("AnimationLibrary_qwwb7")
+&"": SubResource("AnimationLibrary_qwwb7")
 }
 
 [node name="EnergyBallTimer" type="Timer" parent="Rover"]
@@ -847,10 +847,10 @@ material = SubResource("92")
 scale = Vector2(3, 3)
 emitting = false
 amount = 200
-process_material = SubResource("90")
 texture = ExtResource("39")
 lifetime = 0.5
 randomness = 1.0
+process_material = SubResource("90")
 
 [node name="TileHighlightLeft" type="Sprite2D" parent="."]
 modulate = Color(1, 0.509804, 0.509804, 0.192157)
@@ -861,7 +861,7 @@ texture = ExtResource("22")
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="TileHighlightLeft"]
 libraries = {
-"": SubResource("AnimationLibrary_0rm4p")
+&"": SubResource("AnimationLibrary_0rm4p")
 }
 autoplay = "Flash"
 
@@ -874,7 +874,7 @@ texture = ExtResource("22")
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="TileHighlightRight"]
 libraries = {
-"": SubResource("AnimationLibrary_ukgm0")
+&"": SubResource("AnimationLibrary_ukgm0")
 }
 autoplay = "Flash"
 
@@ -1257,17 +1257,17 @@ texture = ExtResource("45")
 
 [node name="BurningAnim" type="AnimationPlayer" parent="UI2/Burning"]
 libraries = {
-"": SubResource("AnimationLibrary_468jh")
+&"": SubResource("AnimationLibrary_468jh")
 }
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 libraries = {
-"": SubResource("AnimationLibrary_jgan7")
+&"": SubResource("AnimationLibrary_jgan7")
 }
 
 [node name="AuroraPlayer" type="AnimationPlayer" parent="."]
 libraries = {
-"": SubResource("AnimationLibrary_bdome")
+&"": SubResource("AnimationLibrary_bdome")
 }
 
 [node name="CanvasModulate" type="CanvasModulate" parent="."]
