@@ -66,24 +66,32 @@ func _on_back_pressed() -> void:
 
 
 func _on_bullet_mouse_entered() -> void:
+	if not is_instance_valid(ship_node):
+		return
 	var tooltip_txt = tr("BASE_DAMAGE") + ": " + str(Data.bullet_data[ship_node.bullet_lv-1].damage)
 	tooltip_txt += "\n" + tr("BASE_ACCURACY") + ": " + str(Data.bullet_data[ship_node.bullet_lv-1].accuracy)
 	game.show_tooltip(tooltip_txt)
 
 
 func _on_laser_mouse_entered() -> void:
+	if not is_instance_valid(ship_node):
+		return
 	var tooltip_txt = tr("BASE_DAMAGE") + ": " + str(Data.laser_data[ship_node.laser_lv-1].damage)
 	tooltip_txt += "\n" + tr("BASE_ACCURACY") + ": " + str(Data.laser_data[ship_node.laser_lv-1].accuracy)
 	game.show_tooltip(tooltip_txt)
 
 
 func _on_bomb_mouse_entered() -> void:
+	if not is_instance_valid(ship_node):
+		return
 	var tooltip_txt = tr("BASE_DAMAGE") + ": " + str(Data.bomb_data[ship_node.bomb_lv-1].damage)
 	tooltip_txt += "\n" + tr("BASE_ACCURACY") + ": " + str(Data.bomb_data[ship_node.bomb_lv-1].accuracy)
 	game.show_tooltip(tooltip_txt)
 
 
 func _on_light_mouse_entered() -> void:
+	if not is_instance_valid(ship_node):
+		return
 	var tooltip_txt = tr("BASE_DAMAGE") + ": " + str(Data.light_data[ship_node.light_lv-1].damage)
 	tooltip_txt += "\n" + tr("BASE_ACCURACY") + ": " + str(Data.light_data[ship_node.light_lv-1].accuracy)
 	game.show_tooltip(tooltip_txt)

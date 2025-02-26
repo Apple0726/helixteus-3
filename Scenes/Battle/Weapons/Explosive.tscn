@@ -1,0 +1,31 @@
+[gd_scene load_steps=4 format=3 uid="uid://diwt22234mpvu"]
+
+[ext_resource type="Texture2D" uid="uid://cyogaq3sj1anp" path="res://Graphics/Weapons/bomb1.png" id="1_80p3e"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_6h4qi"]
+radius = 4.0
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_80p3e"]
+radius = 20.0
+
+[node name="Explosive" type="Area2D"]
+collision_layer = 0
+collision_mask = 0
+monitorable = false
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+scale = Vector2(0.25, 0.25)
+texture = ExtResource("1_80p3e")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+rotation = 1.5708
+shape = SubResource("CircleShape2D_6h4qi")
+
+[node name="ExplosionAoE" type="Area2D" parent="."]
+collision_layer = 0
+collision_mask = 38
+monitorable = false
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="ExplosionAoE"]
+shape = SubResource("CircleShape2D_80p3e")
+debug_color = Color(1, 0.70066, 0.970003, 0.0862745)

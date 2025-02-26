@@ -119,7 +119,10 @@ func attack_target():
 	target_angle_max_deviation = 1.0 / (accuracy + accuracy_buff)
 	$FireWeaponAim.show()
 	await get_tree().create_timer(0.9).timeout
-	var projectile = preload("res://Scenes/Battle/Weapons/RedBullet.tscn").instantiate()
+	var projectile = preload("res://Scenes/Battle/Weapons/Projectile.tscn").instantiate()
+	projectile.set_script(load("res://Scripts/Battle/Weapons/Bullet.gd"))
+	projectile.collision_layer = 16
+	projectile.collision_mask = 1 + 2
 	projectile.speed = 1000.0
 	projectile.rotation = randf_range(target_angle - target_angle_max_deviation, target_angle + target_angle_max_deviation)
 	projectile.damage = 3.0

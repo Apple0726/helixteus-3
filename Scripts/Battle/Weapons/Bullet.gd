@@ -6,6 +6,9 @@ var shooter_attack:int
 var weapon_accuracy:float
 var deflects_remaining:int
 
+func _ready() -> void:
+	area_entered.connect(_on_area_entered)
+
 func _process(delta: float) -> void:
 	position += speed * Vector2.from_angle(rotation) * delta
 	if (position - Vector2(640, 360)).length_squared() > pow(1280, 2) + pow(720, 2):

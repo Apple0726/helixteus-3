@@ -94,7 +94,10 @@ func fire_weapon(weapon_type: int):
 	$FireWeaponAim.fade_out()
 	var weapon_rotation = randf_range($FireWeaponAim.target_angle - $FireWeaponAim.target_angle_max_deviation, $FireWeaponAim.target_angle + $FireWeaponAim.target_angle_max_deviation)
 	if weapon_type == battle_GUI.BULLET:
-		var projectile = preload("res://Scenes/Battle/Weapons/ShipBullet.tscn").instantiate()
+		var projectile = preload("res://Scenes/Battle/Weapons/Projectile.tscn").instantiate()
+		projectile.collision_layer = 8
+		projectile.collision_mask = 1 + 3
+		projectile.set_script(load("res://Scripts/Battle/Weapons/Bullet.gd"))
 		projectile.speed = 1000.0
 		projectile.rotation = weapon_rotation
 		projectile.damage = Data.bullet_data[bullet_lv-1].damage
@@ -105,7 +108,7 @@ func fire_weapon(weapon_type: int):
 		battle_scene.add_child(projectile)
 		projectile.tree_exited.connect(ending_turn)
 	elif weapon_type == battle_GUI.LASER:
-		var laser = preload("res://Scenes/Battle/Weapons/ShipLaser.tscn").instantiate()
+		var laser = preload("res://Scenes/Battle/Weapons/Laser.tscn").instantiate()
 		laser.rotation = weapon_rotation
 		laser.damage = Data.laser_data[laser_lv-1].damage
 		laser.shooter_attack = attack + attack_buff
@@ -113,6 +116,20 @@ func fire_weapon(weapon_type: int):
 		laser.position = position
 		battle_scene.add_child(laser)
 		laser.tree_exited.connect(ending_turn)
+	elif weapon_type == battle_GUI.BOMB:
+		var explosive = preload("res://Scenes/Battle/Weapons/Explosive.tscn").instantiate()
+		explosive.collision_layer = 8
+		explosive.collision_mask = 1 + 3
+		explosive.set_script(load("res://Scripts/Battle/Weapons/Explosive.gd"))
+		explosive.speed = 800.0
+		explosive.AoE_radius = 600.0
+		explosive.rotation = weapon_rotation
+		explosive.damage = Data.bomb_data[bomb_lv-1].damage
+		explosive.shooter_attack = attack + attack_buff
+		explosive.weapon_accuracy = Data.bomb_data[bomb_lv-1].accuracy * accuracy
+		explosive.position = position
+		battle_scene.add_child(explosive)
+		explosive.tree_exited.connect(ending_turn)
 
 
 func ending_turn():
