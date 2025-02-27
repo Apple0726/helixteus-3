@@ -466,12 +466,12 @@ BATTLE_HELP,Dodge enemy attacks by moving the ship yourself with your keyboard!,
 BATTLE_HELP2,%s: go up\n%s: go down\nHold %s to move the ship faster,,,%s:向上 \n%s:向下 \n 按住 %s 可使船移动得更快,%s: Hoch\n%s: Runter\nHalte %s um das Schiff schneller zu bewegen,%s: subir\n%s: bajar\nMantén presionado %s para moverte más rápido,,,%s: mozgás felfelé\n%s: Mozgás lefelé\n%s nyomvatartása: gyorsabb mosgás,%s：上昇\n%s：下降\n%s：加速,%s: omhoog\n%s: omlaag\nHoud %s ingedrukt om sneller te gaan,"%s: двигаться вверх\n%s: двигаться вниз\nДержите %s, чтобы корабль двигался быстрее"
 SHOW_WEAPON_XPS,Show weapon XPs,,,展示武器熟练度,Waffen EXP anzeigen,Mostrar la XP del arma,,,Fegyver XP-k mutatása,武器のXPを表示する,Toon wapen XP,Показать опыт оружия
 BULLET,Bullet,,,合金弹头,Kugel,Ojiva,,,Lövés,弾丸,Kogel,Пуля
-BULLET_DESC,"Average damage and accuracy weapon.\nIf it hits an enemy or an object, it deflects.\nDeflected bullets can hit your own ships!",,,,,,,,,,,
-LASER_DESC,Highly accurate but low damage.\nStuns enemies.,,,高精度但是伤害较低。\n用于眩晕敌人,Hohe Genauigkeit aber niedriger Schaden.\nParalysiert Feinde.,Altamente precisa pero con poco daño.\Aturde enemigos.,,,"Pontos, de alacsony sebzés.\nSokkolja az ellenséget.",精度は高いが、ダメージは低い。\n敵を気絶させる。,"Erg precies, maar zwak.\nVerlamt vijanden.","Высокая точность, но низкий урон.\nОглушает врагов."
+BULLET_DESC,"Average damage and accuracy weapon that can fire multiple times in succession.\nIf it hits an enemy or an object, it deflects.\nDeflected bullets can hit your own ships!",,,,,,,,,,,
+LASER_DESC,"Highly accurate single-target weapon, but deals low damage.\nStuns the target.",,,,,,,,,,,
 BOMB,Bomb,,,巨炮,Bombe,Bomba,,,Bomba,爆弾,Bom,Бомба
-BOMB_DESC,"Very powerful, but hard to aim and easy for enemies to dodge.\nIf it hits an enemy or an object, explodes and damages everything (including your ships) within its explosion radius, burns them, and knocks them back.",,,,,,,,,,,
+BOMB_DESC,"Very powerful, but hard to aim and easy for enemies to dodge.\nIf it hits an enemy or an object, explodes and damages everything (including your ships) with 100% accuracy within its explosion radius, burns them, and knocks them back.",,,,,,,,,,,
 LIGHT,Light,,,光束炸弹,Licht,Luz,,,Fény,光,Licht,Свет
-LIGHT_DESC,Very low damage but can hit multiple enemies and cannot miss.\nDecreases affected enemies' accuracy.\nThe light emission cone can be modified to concentrate more light in a smaller area to do more damage.,,,,,,,,,,,
+LIGHT_DESC,"Very low damage but can hit multiple enemies and cannot miss.\nDecreases affected enemies' accuracy.\nOnce light hits something, it stops and does not affect objects behind it.\nThe light emission cone can be modified to concentrate more light in a smaller area to do more damage.",,,,,,,,,,,
 BASE_DAMAGE,Base damage,,,基础伤害,Basis Schaden,Daño base,,,Alapsebzés,ベースダメージ,Basisschade,Основной урон
 BASE_ACCURACY,Base accuracy,,,基础命中,Basis Genauigkeit,Precisión base,,,Alappontosság,ベース精度,Basisprecisie,Основная точность
 BATTLE_LOST,Battle lost,,,战役失败,Kampf Verloren,Derrota,,,Harc elveszítve,バトルロスト,Gevecht verloren,Бой проигран

@@ -43,4 +43,6 @@ func _on_area_entered(area: Area2D) -> void:
 					"damage_label_initial_velocity":200.0 * (area_in_AoE.position - position).normalized(),
 				}
 				area_in_AoE.damage_entity(AoE_weapon_data)
+		if Settings.screen_shake:
+			get_node("/root/Game/Camera2D/Screenshake").start(0.5,15,4)
 		queue_free()

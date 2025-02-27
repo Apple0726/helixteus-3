@@ -40,8 +40,7 @@ func _input(event: InputEvent) -> void:
 			$MainPanel/AnimationPlayer.play("Fade")
 			action_selected = NONE
 			ship_node.restore_default_enemy_tooltips()
-			if ship_node.get_node("FireWeaponAim").visible:
-				ship_node.get_node("FireWeaponAim").fade_out()
+			ship_node.cancel_action()
 		elif Input.is_action_just_released("left_click") and not game.view.dragged and not $MainPanel/AnimationPlayer.is_playing():
 			ship_node.fire_weapon(action_selected)
 			action_selected = NONE
@@ -125,6 +124,7 @@ func _on_light_pressed() -> void:
 	action_selected = LIGHT
 	ship_node.override_enemy_tooltips()
 	$MainPanel/AnimationPlayer.play_backwards("Fade")
+	ship_node.add_light_cone()
 	game.hide_tooltip()
 
 

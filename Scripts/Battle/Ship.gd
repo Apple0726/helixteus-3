@@ -7,6 +7,7 @@ var laser_lv:int
 var bomb_lv:int
 var light_lv:int
 var weapon_accuracy_mult:float
+var light_cone
 
 
 func _ready() -> void:
@@ -46,8 +47,8 @@ func initialize_stats(data:Dictionary):
 
 
 func _process(delta: float) -> void:
-	$FireWeaponAim.target_angle = atan2(battle_scene.mouse_position.y - position.y, battle_scene.mouse_position.x - position.x)
-	$FireWeaponAim.length = (battle_scene.mouse_position - position).length()
+	$FireWeaponAim.target_angle = atan2(battle_scene.mouse_position_local.y - position.y, battle_scene.mouse_position_local.x - position.x)
+	$FireWeaponAim.length = (battle_scene.mouse_position_local - position).length()
 
 
 func _on_fire_weapon_aim_visibility_changed() -> void:
@@ -122,7 +123,7 @@ func fire_weapon(weapon_type: int):
 		explosive.collision_mask = 1 + 3
 		explosive.set_script(load("res://Scripts/Battle/Weapons/Explosive.gd"))
 		explosive.speed = 800.0
-		explosive.AoE_radius = 600.0
+		explosive.AoE_radius = 100.0
 		explosive.rotation = weapon_rotation
 		explosive.damage = Data.bomb_data[bomb_lv-1].damage
 		explosive.shooter_attack = attack + attack_buff
@@ -130,6 +131,18 @@ func fire_weapon(weapon_type: int):
 		explosive.position = position
 		battle_scene.add_child(explosive)
 		explosive.tree_exited.connect(ending_turn)
+	elif weapon_type == battle_GUI.LIGHT:
+		light_cone.tree_exited.connect(ending_turn)
+		light_cone.fire_light()
+
+
+func add_light_cone():
+	light_cone = preload("res://Scenes/Battle/Weapons/LightCone.tscn").instantiate()
+	light_cone.set_script(load("res://Scripts/Battle/Weapons/LightCone.gd"))
+	light_cone.target_angle_deviation = PI / 4.0
+	light_cone.damage = Data.light_data[light_lv-1].damage
+	light_cone.shooter_attack = attack + attack_buff
+	add_child(light_cone)
 
 
 func ending_turn():
@@ -139,6 +152,13 @@ func ending_turn():
 func damage_entity(weapon_data: Dictionary):
 	var hit = super(weapon_data)
 	if hit:
-		$Sprite2D.material.set_shader_parameter("hurt_flash", 1.0)
-		create_tween().tween_property($Sprite2D.material, "shader_parameter/hurt_flash", 0.0, 0.4)
+		$Sprite2D.material.set_shader_parameter("flash_color", Color.RED)
+		$Sprite2D.material.set_shader_parameter("flash", 1.0)
+		create_tween().tween_property($Sprite2D.material, "shader_parameter/flash", 0.0, 0.4)
 	return hit
+
+func cancel_action():
+	if $FireWeaponAim.visible:
+		$FireWeaponAim.fade_out()
+	if is_instance_valid(light_cone):
+		light_cone.queue_free()

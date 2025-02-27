@@ -16,7 +16,8 @@ var initiative_order = []
 var whose_turn_is_it_index:int = -1
 var HX_nodes = []
 var ship_nodes = []
-var mouse_position:Vector2
+var mouse_position_global:Vector2
+var mouse_position_local:Vector2
 
 enum {
 	ENEMY,
@@ -154,7 +155,8 @@ func add_damage_text(missed: bool, label_position:Vector2, damage: float = 0.0, 
 
 func _input(event: InputEvent) -> void:
 	if event is InputEventMouseMotion:
-		mouse_position = to_local(event.position)
+		mouse_position_global = event.position
+		mouse_position_local = to_local(event.position)
 	if Input.is_action_just_pressed("A"):
 		display_stats("attack")
 	if Input.is_action_just_pressed("D"):

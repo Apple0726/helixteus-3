@@ -39,7 +39,8 @@ color_ramp = SubResource("2")
 shader = ExtResource("3_cptad")
 shader_parameter/amplitude = 20.0
 shader_parameter/frequency = 6.0
-shader_parameter/hurt_flash = 0.0
+shader_parameter/flash = 0.0
+shader_parameter/flash_color = Color(1, 1, 1, 1)
 
 [sub_resource type="CapsuleShape2D" id="5"]
 radius = 16.0

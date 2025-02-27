@@ -1,0 +1,11 @@
+[gd_scene format=3 uid="uid://chwe3nxtl12m1"]
+
+[node name="LightCone" type="Node2D"]
+
+[node name="RayCast2D" type="RayCast2D" parent="."]
+collision_mask = 39
+collide_with_areas = true
+collide_with_bodies = false
+
+[node name="Polygon2D" type="Polygon2D" parent="."]
+color = Color(1, 1, 1, 0.231373)
