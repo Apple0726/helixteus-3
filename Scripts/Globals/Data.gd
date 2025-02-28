@@ -440,11 +440,11 @@ var bomb_data = [	{"damage":6, "accuracy":0.65},
 					{"damage":19, "accuracy":0.75},
 					{"damage":40, "accuracy":0.8},
 					{"damage":100, "accuracy":1.2},]
-var light_data = [	{"damage":1.5, "accuracy":INF},
-					{"damage":2.5, "accuracy":INF},
-					{"damage":4.0, "accuracy":INF},
+var light_data = [	{"damage":3.0, "accuracy":INF},
+					{"damage":5.0, "accuracy":INF},
 					{"damage":8.0, "accuracy":INF},
-					{"damage":17.5, "accuracy":INF},]
+					{"damage":16.0, "accuracy":INF},
+					{"damage":35.0, "accuracy":INF},]
 
 #the numbers are the elements' abundance relative to hydrogen
 var elements = {

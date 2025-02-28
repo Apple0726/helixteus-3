@@ -40,8 +40,15 @@ var agility_buff:int = 0:
 
 var default_tooltip_text:String
 var override_tooltip_text:String = ""
+var default_override_tooltip_dict = {
+	"light_intensity_mult": "",
+	"light_intensity_mult_info": "",
+}
+var override_tooltip_dict:Dictionary
+var override_tooltip_icons = [Data.attack_icon, Data.defense_icon, Data.accuracy_icon, Data.agility_icon]
 
 func _ready() -> void:
+	override_tooltip_dict = default_override_tooltip_dict.duplicate()
 	if has_node("Info/Initiative"):
 		$Info/Initiative.modulate.a = 0.0
 

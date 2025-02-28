@@ -3675,10 +3675,10 @@ func show_tooltip(txt:String, hide:bool = true):
 	tooltip.modulate.a = 0.0
 	tooltip.text = txt
 	$Tooltips.add_child(tooltip)
-	if tooltip.size.x > 400:
+	if tooltip.size.x > 500:
 		tooltip.autowrap_mode = TextServer.AUTOWRAP_WORD
 		await get_tree().process_frame
-		tooltip.size.x = 400
+		tooltip.size.x = 500
 		tooltip.custom_minimum_size.y = 30
 		tooltip.size.y = 30
 	if mouse_pos.x > 1250 - tooltip.size.x:

@@ -56,30 +56,6 @@ func _on_fire_weapon_aim_visibility_changed() -> void:
 		$FireWeaponAim.target_angle_max_deviation = 0.5 / (accuracy + accuracy_buff) / weapon_accuracy_mult
 		$FireWeaponAim.animate(false)
 
-func override_enemy_tooltips():
-	if battle_GUI.action_selected == battle_GUI.BULLET:
-		weapon_accuracy_mult = Data.bullet_data[bullet_lv-1].accuracy
-	elif battle_GUI.action_selected == battle_GUI.LASER:
-		weapon_accuracy_mult = Data.laser_data[laser_lv-1].accuracy
-	elif battle_GUI.action_selected == battle_GUI.BOMB:
-		weapon_accuracy_mult = Data.bomb_data[bomb_lv-1].accuracy
-	elif battle_GUI.action_selected == battle_GUI.LIGHT:
-		weapon_accuracy_mult = Data.light_data[light_lv-1].accuracy
-	for HX_node in battle_scene.HX_nodes:
-		var damage_multiplier:float
-		var attack_defense_difference:int = attack + attack_buff - HX_node.defense - HX_node.defense_buff
-		if attack_defense_difference >= 0:
-			damage_multiplier = attack_defense_difference * 0.125 + 1.0
-		else:
-			damage_multiplier = 1.0 / (1.0 - 0.125 * attack_defense_difference)
-		var tooltip_txt = tr("DAMAGE_MULTIPLIER") + ": " + "%.2f" % damage_multiplier
-		tooltip_txt += "\n" + tr("CHANCE_OF_HITTING") + ": " + "%.1f%%" % (100.0 * (1.0 - 1.0 / (1.0 + exp(((accuracy + accuracy_buff) * weapon_accuracy_mult - HX_node.agility - HX_node.agility_buff + 9.2) / 5.8))))
-		HX_node.override_tooltip_text = tooltip_txt
-
-func restore_default_enemy_tooltips():
-	for HX_node in battle_scene.HX_nodes:
-		HX_node.override_tooltip_text = ""
-
 
 func _on_mouse_entered() -> void:
 	if override_tooltip_text:
@@ -95,19 +71,22 @@ func fire_weapon(weapon_type: int):
 	$FireWeaponAim.fade_out()
 	var weapon_rotation = randf_range($FireWeaponAim.target_angle - $FireWeaponAim.target_angle_max_deviation, $FireWeaponAim.target_angle + $FireWeaponAim.target_angle_max_deviation)
 	if weapon_type == battle_GUI.BULLET:
-		var projectile = preload("res://Scenes/Battle/Weapons/Projectile.tscn").instantiate()
-		projectile.collision_layer = 8
-		projectile.collision_mask = 1 + 3
-		projectile.set_script(load("res://Scripts/Battle/Weapons/Bullet.gd"))
-		projectile.speed = 1000.0
-		projectile.rotation = weapon_rotation
-		projectile.damage = Data.bullet_data[bullet_lv-1].damage
-		projectile.shooter_attack = attack + attack_buff
-		projectile.weapon_accuracy = Data.bullet_data[bullet_lv-1].accuracy * accuracy
-		projectile.deflects_remaining = bullet_lv
-		projectile.position = position
-		battle_scene.add_child(projectile)
-		projectile.tree_exited.connect(ending_turn)
+		for i in 2:
+			var projectile = preload("res://Scenes/Battle/Weapons/Projectile.tscn").instantiate()
+			projectile.collision_layer = 8
+			projectile.collision_mask = 1 + 3
+			projectile.set_script(load("res://Scripts/Battle/Weapons/Bullet.gd"))
+			projectile.speed = 1000.0
+			projectile.rotation = weapon_rotation
+			projectile.damage = Data.bullet_data[bullet_lv-1].damage
+			projectile.shooter_attack = attack + attack_buff
+			projectile.weapon_accuracy = Data.bullet_data[bullet_lv-1].accuracy * accuracy
+			projectile.deflects_remaining = bullet_lv
+			projectile.position = position
+			battle_scene.add_child(projectile)
+			if i == 1:
+				projectile.tree_exited.connect(ending_turn)
+			await get_tree().create_timer(0.2).timeout
 	elif weapon_type == battle_GUI.LASER:
 		var laser = preload("res://Scenes/Battle/Weapons/Laser.tscn").instantiate()
 		laser.rotation = weapon_rotation

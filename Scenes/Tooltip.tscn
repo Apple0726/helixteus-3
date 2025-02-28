@@ -76,5 +76,5 @@ label_settings = SubResource("LabelSettings_b8ug1")
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 libraries = {
-"": SubResource("AnimationLibrary_6hqjj")
+&"": SubResource("AnimationLibrary_6hqjj")
 }

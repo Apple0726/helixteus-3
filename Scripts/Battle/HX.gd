@@ -157,7 +157,7 @@ func _on_fire_weapon_aim_visibility_changed() -> void:
 
 func _on_mouse_entered() -> void:
 	if override_tooltip_text:
-		game.show_tooltip(override_tooltip_text)
+		game.show_adv_tooltip(override_tooltip_text.format(override_tooltip_dict), override_tooltip_icons)
 	else:
 		game.show_adv_tooltip(default_tooltip_text, [Data.HP_icon, Data.attack_icon, Data.defense_icon, Data.accuracy_icon, Data.agility_icon])
 

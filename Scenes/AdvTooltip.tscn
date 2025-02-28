@@ -76,7 +76,7 @@ _data = {
 
 [node name="AdvTooltip" type="RichTextLabel"]
 clip_contents = false
-offset_right = 400.0
+offset_right = 500.0
 offset_bottom = 33.0
 mouse_filter = 2
 theme_override_fonts/normal_font = SubResource("SystemFont_bckp1")
@@ -98,5 +98,5 @@ mouse_filter = 2
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 libraries = {
-"": SubResource("AnimationLibrary_x8swl")
+&"": SubResource("AnimationLibrary_x8swl")
 }

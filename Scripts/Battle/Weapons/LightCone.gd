@@ -15,26 +15,38 @@ func update_cone():
 	unhighlight_targets()
 	targets.clear()
 	var light_polygon:PackedVector2Array = [Vector2.ZERO]
-	var raycast_res = int(target_angle_deviation * 100.0)
 	var mouse_pos = to_local(get_parent().battle_scene.mouse_position_global)
-	for i in range(-raycast_res, raycast_res):
-		var angle = atan2(mouse_pos.y, mouse_pos.x) + i / 100.0
+	$Polygon2D.color.a = remap(target_angle_deviation, 0.3 * PI, PI / 64.0, 0.1, 0.7)
+	for i in range(-100, 100):
+		var angle = atan2(mouse_pos.y, mouse_pos.x) + i * target_angle_deviation / 100.0
 		$RayCast2D.target_position = 5000.0 * Vector2.from_angle(angle)
 		$RayCast2D.force_raycast_update()
 		var hit_point = to_local($RayCast2D.get_collision_point())
 		light_polygon.append(hit_point)
 		var hit_target = $RayCast2D.get_collider()
-		if hit_target not in targets and hit_target is BattleEntity:
-			var weapon_data = {
-				"damage":damage,
-				"shooter_attack":shooter_attack,
-				"weapon_accuracy":INF,
-				"damage_label_initial_velocity":50.0 * Vector2.from_angle(angle),
-			}
-			if hit_target.has_node("Sprite2D") and hit_target.get_node("Sprite2D").material:
-				hit_target.get_node("Sprite2D").material.set_shader_parameter("flash_color", Color.WHITE)
-				hit_target.get_node("Sprite2D").material.set_shader_parameter("flash", 0.8)
-			targets[hit_target] = weapon_data
+		if hit_target is BattleEntity:
+			var has_shader = hit_target.has_node("Sprite2D") and hit_target.get_node("Sprite2D").material
+			if hit_target in targets:
+				targets[hit_target].damage += damage / 200.0
+				targets[hit_target].light_rays += 1
+				targets[hit_target].damage_label_initial_velocity += 1.5 * Vector2.from_angle(angle)
+				hit_target.override_tooltip_dict.light_intensity_mult = " * " + str(targets[hit_target].light_rays / 200.0)
+				if has_shader:
+					hit_target.get_node("Sprite2D").material.set_shader_parameter("flash", 0.5 + targets[hit_target].light_rays / 400.0)
+			else:
+				var weapon_data = {
+					"damage":damage / 200.0,
+					"light_rays":1,
+					"shooter_attack":shooter_attack,
+					"weapon_accuracy":INF,
+					"damage_label_initial_velocity":1.5 * Vector2.from_angle(angle),
+				}
+				targets[hit_target] = weapon_data
+				hit_target.override_tooltip_dict.light_intensity_mult = " * " + str(0.005 / 200.0)
+				hit_target.override_tooltip_dict.light_intensity_mult_info = " (" + tr("LIGHT_INTENSITY") + ")"
+				if has_shader:
+					hit_target.get_node("Sprite2D").material.set_shader_parameter("flash_color", Color.WHITE)
+					hit_target.get_node("Sprite2D").material.set_shader_parameter("flash", 0.5)
 	light_polygon.append(Vector2.ZERO)
 	$Polygon2D.polygon = light_polygon
 
