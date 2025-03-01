@@ -27,7 +27,7 @@ func _on_area_entered(area: Area2D) -> void:
 			queue_free()
 		else:
 			# The bullet can now hit anything, regardless of the shooter
-			collision_layer = 4 + 8
+			collision_mask = 1 + 2 + 4
 			var incidence_angle = atan2(position.y - area.position.y, position.x - area.position.x)
 			rotation = Vector2.from_angle(rotation).bounce(Vector2.from_angle(incidence_angle)).angle()
 			deflects_remaining -= 1

@@ -42,7 +42,7 @@ func update_cone():
 					"damage_label_initial_velocity":1.5 * Vector2.from_angle(angle),
 				}
 				targets[hit_target] = weapon_data
-				hit_target.override_tooltip_dict.light_intensity_mult = " * " + str(0.005 / 200.0)
+				hit_target.override_tooltip_dict.light_intensity_mult = " * " + str(1 / 200.0)
 				hit_target.override_tooltip_dict.light_intensity_mult_info = " (" + tr("LIGHT_INTENSITY") + ")"
 				if has_shader:
 					hit_target.get_node("Sprite2D").material.set_shader_parameter("flash_color", Color.WHITE)

@@ -12,6 +12,7 @@ var target_angle_max_deviation:float
 
 func _ready() -> void:
 	super()
+	go_through_movement_cost = 30.0
 	update_default_tooltip_text()
 
 
@@ -73,12 +74,11 @@ func take_turn():
 			var pos = position + r * Vector2.from_angle(th)
 			for obstacle in obstacles_in_range:
 				if not inside_obstacle and Geometry2D.is_point_in_polygon(pos, obstacle.get_node("CollisionShape2D/Polygon2D").polygon):
-					if obstacle.type == 2: # If obstacle is boundary, no more movement is possible
-						movement_left = 0.0
-						continue
-					else:
+					movement_left = max(movement_left - obstacle.go_through_movement_cost, 0.0)
+					if movement_left > 0.0:
 						inside_obstacle = true
-						movement_left -= 30.0
+					else:
+						continue
 				elif inside_obstacle and not Geometry2D.is_point_in_polygon(pos, obstacle.get_node("CollisionShape2D/Polygon2D").polygon):
 					inside_obstacle = false
 			if movement_left >= 0.0:

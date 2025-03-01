@@ -27,6 +27,7 @@ var agility:int:
 		agility_updated_callback()
 var initiative:int
 var turn_index:int
+var go_through_movement_cost:float # in meters
 
 var attack_buff:int = 0
 var defense_buff:int = 0

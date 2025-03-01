@@ -32,25 +32,6 @@ func _ready() -> void:
 	else:
 		HX_data = p_i.HX_data
 	ship_data = game.ship_data
-	for i in range(0, 4):
-		if len(ship_data) > i:
-			var ship_node = preload("res://Scenes/Battle/Ship.tscn").instantiate()
-			ship_node.METERS_PER_AGILITY = METERS_PER_AGILITY
-			ship_node.PIXELS_PER_METER = PIXELS_PER_METER
-			ship_node.initialize_stats(ship_data[i])
-			ship_node.roll_initiative()
-			ship_node.position = ship_data[i].initial_position
-			ship_node.battle_scene = self
-			ship_node.battle_GUI = battle_GUI
-			ship_node.next_turn.connect(next_turn)
-			ship_node.get_node("Sprite2D").texture = load("res://Graphics/Ships/Ship%s.png" % i)
-			ship_node.get_node("Sprite2D").material.set_shader_parameter("frequency", 6 * time_speed)
-			ship_node.get_node("Info/HP").max_value = ship_data[i].HP
-			ship_node.get_node("Info/HP").value = ship_data[i].HP
-			ship_node.get_node("Info/Label").text = "%s %s" % [tr("LV"), ship_data[i].lv]
-			ship_node.get_node("ThrusterFire").emitting = false
-			add_child(ship_node)
-			ship_nodes.append(ship_node)
 	for i in len(HX_data):
 		var HX = HX_scene.instantiate()
 		HX.METERS_PER_AGILITY = METERS_PER_AGILITY
@@ -80,6 +61,25 @@ func _ready() -> void:
 		HX.next_turn.connect(next_turn)
 		add_child(HX)
 		HX_nodes.append(HX)
+	for i in 4:
+		if len(ship_data) > i:
+			var ship_node = preload("res://Scenes/Battle/Ship.tscn").instantiate()
+			ship_node.METERS_PER_AGILITY = METERS_PER_AGILITY
+			ship_node.PIXELS_PER_METER = PIXELS_PER_METER
+			ship_node.initialize_stats(ship_data[i])
+			ship_node.roll_initiative()
+			ship_node.position = ship_data[i].initial_position
+			ship_node.battle_scene = self
+			ship_node.battle_GUI = battle_GUI
+			ship_node.next_turn.connect(next_turn)
+			ship_node.get_node("Sprite2D").texture = load("res://Graphics/Ships/Ship%s.png" % i)
+			ship_node.get_node("Sprite2D").material.set_shader_parameter("frequency", 6 * time_speed)
+			ship_node.get_node("Info/HP").max_value = ship_data[i].HP
+			ship_node.get_node("Info/HP").value = ship_data[i].HP
+			ship_node.get_node("Info/Label").text = "%s %s" % [tr("LV"), ship_data[i].lv]
+			ship_node.get_node("ThrusterFire").emitting = false
+			add_child(ship_node)
+			ship_nodes.append(ship_node)
 
 
 func initialize_battle():

@@ -306,6 +306,12 @@ texture = ExtResource("10")
 lifetime = 2.0
 process_material = SubResource("33")
 
+[node name="RayCast2D" type="RayCast2D" parent="."]
+enabled = false
+collision_mask = 39
+collide_with_areas = true
+collide_with_bodies = false
+
 [connection signal="mouse_entered" from="." to="." method="_on_mouse_entered"]
 [connection signal="mouse_exited" from="." to="." method="_on_mouse_exited"]
 [connection signal="visibility_changed" from="FireWeaponAim" to="." method="_on_fire_weapon_aim_visibility_changed"]

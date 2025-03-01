@@ -38,12 +38,16 @@ func _input(event: InputEvent) -> void:
 	game.block_scroll = false
 	if action_selected != NONE:
 		if Input.is_action_just_pressed("cancel"):
-			$MainPanel/AnimationPlayer.play("Fade")
 			action_selected = NONE
 			restore_default_enemy_tooltips()
 			ship_node.cancel_action()
 		elif Input.is_action_just_released("left_click") and not game.view.dragged and not $MainPanel/AnimationPlayer.is_playing():
-			ship_node.fire_weapon(action_selected)
+			if action_selected in [BULLET, LASER, BOMB, LIGHT]:
+				ship_node.fire_weapon(action_selected)
+			elif action_selected == MOVE:
+				ship_node.move()
+			elif action_selected == PUSH:
+				pass
 			action_selected = NONE
 	if action_selected == NONE and is_instance_valid(ship_node):
 		if Input.is_action_just_pressed("1"):
@@ -69,6 +73,17 @@ func _input(event: InputEvent) -> void:
 				ship_node.light_cone.target_angle_deviation = max(ship_node.light_cone.target_angle_deviation - PI / 64.0, PI / 64.0)
 				ship_node.light_cone.update_cone()
 				override_enemy_tooltips()
+	elif action_selected == MOVE and event is InputEventMouseMotion:
+		ship_node.queue_redraw()
+
+func refresh_GUI():
+	$MainPanel/MoveLabel.text = "%s (%.1f m)" % [tr("MOVE"), ship_node.movement_remaining]
+	if is_zero_approx(ship_node.movement_remaining):
+		$MainPanel/MoveLabel["theme_override_colors/font_color"] = Color.DARK_GRAY
+		$MainPanel/Move.disabled = true
+	else:
+		$MainPanel/MoveLabel["theme_override_colors/font_color"] = Color.WHITE
+		$MainPanel/Move.disabled = false
 
 func _on_back_pressed() -> void:
 	if battle_scene.hard_battle:
@@ -143,6 +158,9 @@ func _on_light_pressed() -> void:
 func _on_move_pressed() -> void:
 	action_selected = MOVE
 	$MainPanel/AnimationPlayer.play_backwards("Fade")
+	ship_node.get_node("RayCast2D").enabled = true
+	ship_node.display_move_path = true
+	game.hide_tooltip()
 
 
 func _on_push_pressed() -> void:
@@ -175,3 +193,8 @@ func restore_default_enemy_tooltips():
 	for HX_node in battle_scene.HX_nodes:
 		HX_node.override_tooltip_text = ""
 		HX_node.override_tooltip_dict = HX_node.default_override_tooltip_dict.duplicate()
+
+
+func _on_main_panel_visibility_changed() -> void:
+	if visible and is_instance_valid(ship_node):
+		refresh_GUI()
