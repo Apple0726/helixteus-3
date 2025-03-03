@@ -28,6 +28,7 @@ func _ready() -> void:
 	$MainPanel/Move.mouse_exited.connect(game.hide_tooltip)
 	$MainPanel/Push.mouse_entered.connect(game.show_tooltip.bind(tr("BATTLE_PUSH_DESC") + "\n" + tr("BATTLE_PUSH_HELP")))
 	$MainPanel/Push.mouse_exited.connect(game.hide_tooltip)
+	$LightEmissionConePanel.hide()
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
@@ -35,13 +36,13 @@ func _process(delta: float) -> void:
 
 func _input(event: InputEvent) -> void:
 	Helper.set_back_btn($Back)
-	game.block_scroll = false
 	if action_selected != NONE:
 		if Input.is_action_just_pressed("cancel"):
 			action_selected = NONE
 			restore_default_enemy_tooltips()
 			ship_node.cancel_action()
-		elif Input.is_action_just_released("left_click") and not game.view.dragged and not $MainPanel/AnimationPlayer.is_playing():
+			reset_GUI()
+		elif Input.is_action_just_released("left_click") and not game.view.dragged and $MainPanel.modulate.a == 0.0:
 			if action_selected in [BULLET, LASER, BOMB, LIGHT]:
 				ship_node.fire_weapon(action_selected)
 			elif action_selected == MOVE:
@@ -49,6 +50,7 @@ func _input(event: InputEvent) -> void:
 			elif action_selected == PUSH:
 				pass
 			action_selected = NONE
+			reset_GUI()
 	if action_selected == NONE and is_instance_valid(ship_node):
 		if Input.is_action_just_pressed("1"):
 			_on_bullet_pressed()
@@ -64,7 +66,6 @@ func _input(event: InputEvent) -> void:
 			_on_push_pressed()
 	elif action_selected == LIGHT:
 		if Input.is_action_pressed("shift"):
-			game.block_scroll = true
 			if Input.is_action_just_pressed("scroll_down"):
 				ship_node.light_cone.target_angle_deviation = min(ship_node.light_cone.target_angle_deviation + PI / 64.0, 0.3 * PI)
 				ship_node.light_cone.update_cone()
@@ -73,9 +74,24 @@ func _input(event: InputEvent) -> void:
 				ship_node.light_cone.target_angle_deviation = max(ship_node.light_cone.target_angle_deviation - PI / 64.0, PI / 64.0)
 				ship_node.light_cone.update_cone()
 				override_enemy_tooltips()
+		if event is InputEventMouseMotion:
+			$LightEmissionConePanel.position = Vector2(1280 - $LightEmissionConePanel.size.x - 10, 720 - $LightEmissionConePanel.size.y - 10).min(battle_scene.mouse_position_global)
+		if Input.is_action_just_pressed("shift"):
+			game.block_scroll = true
+			$LightEmissionConePanel.show()
+		elif Input.is_action_just_released("shift"):
+			game.block_scroll = false
+			$LightEmissionConePanel.hide()
 	elif action_selected == MOVE and event is InputEventMouseMotion:
 		ship_node.queue_redraw()
 
+func reset_GUI():
+	var info_tween = create_tween()
+	info_tween.tween_property($Info, "modulate:a", 0.0, 0.5)
+	info_tween.tween_callback($Info.hide)
+	$LightEmissionConePanel.hide()
+	game.block_scroll = false
+	
 func refresh_GUI():
 	$MainPanel/MoveLabel.text = "%s (%.1f m)" % [tr("MOVE"), ship_node.movement_remaining]
 	if is_zero_approx(ship_node.movement_remaining):
@@ -122,9 +138,20 @@ func _on_light_mouse_entered() -> void:
 	tooltip_txt += "\n" + tr("BASE_ACCURACY") + ": " + str(Data.light_data[ship_node.light_lv-1].accuracy)
 	game.show_tooltip(tooltip_txt)
 
+func fade_in_main_panel():
+	$MainPanel.show()
+	if is_instance_valid(ship_node):
+		refresh_GUI()
+	var fade_tween = create_tween()
+	fade_tween.tween_property($MainPanel, "modulate:a", 1.0, 0.2)
+
+func fade_out_main_panel():
+	var fade_tween = create_tween()
+	fade_tween.tween_property($MainPanel, "modulate:a", 0.0, 0.2)
+	fade_tween.tween_callback($MainPanel.hide)
 
 func _on_bullet_pressed() -> void:
-	$MainPanel/AnimationPlayer.play_backwards("Fade")
+	fade_out_main_panel()
 	action_selected = BULLET
 	override_enemy_tooltips()
 	ship_node.get_node("FireWeaponAim").show()
@@ -132,7 +159,7 @@ func _on_bullet_pressed() -> void:
 
 
 func _on_laser_pressed() -> void:
-	$MainPanel/AnimationPlayer.play_backwards("Fade")
+	fade_out_main_panel()
 	action_selected = LASER
 	override_enemy_tooltips()
 	ship_node.get_node("FireWeaponAim").show()
@@ -140,7 +167,7 @@ func _on_laser_pressed() -> void:
 
 
 func _on_bomb_pressed() -> void:
-	$MainPanel/AnimationPlayer.play_backwards("Fade")
+	fade_out_main_panel()
 	action_selected = BOMB
 	override_enemy_tooltips()
 	ship_node.get_node("FireWeaponAim").show()
@@ -150,14 +177,17 @@ func _on_bomb_pressed() -> void:
 func _on_light_pressed() -> void:
 	action_selected = LIGHT
 	override_enemy_tooltips()
-	$MainPanel/AnimationPlayer.play_backwards("Fade")
+	fade_out_main_panel()
 	ship_node.add_light_cone()
+	$Info.show()
+	$Info.text = tr("CHANGE_EMISSION_CONE")
+	create_tween().tween_property($Info, "modulate:a", 1.0, 0.5)
 	game.hide_tooltip()
 
 
 func _on_move_pressed() -> void:
 	action_selected = MOVE
-	$MainPanel/AnimationPlayer.play_backwards("Fade")
+	fade_out_main_panel()
 	ship_node.get_node("RayCast2D").enabled = true
 	ship_node.display_move_path = true
 	game.hide_tooltip()
@@ -165,7 +195,7 @@ func _on_move_pressed() -> void:
 
 func _on_push_pressed() -> void:
 	action_selected = PUSH
-	$MainPanel/AnimationPlayer.play_backwards("Fade")
+	fade_out_main_panel()
 	game.hide_tooltip()
 
 func override_enemy_tooltips():
@@ -193,8 +223,3 @@ func restore_default_enemy_tooltips():
 	for HX_node in battle_scene.HX_nodes:
 		HX_node.override_tooltip_text = ""
 		HX_node.override_tooltip_dict = HX_node.default_override_tooltip_dict.duplicate()
-
-
-func _on_main_panel_visibility_changed() -> void:
-	if visible and is_instance_valid(ship_node):
-		refresh_GUI()

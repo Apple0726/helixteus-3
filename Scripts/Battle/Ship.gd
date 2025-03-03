@@ -189,4 +189,4 @@ func cancel_action():
 		light_cone.queue_free()
 	display_move_path = false
 	get_node("RayCast2D").enabled = false
-	battle_GUI.get_node("MainPanel/AnimationPlayer").play("Fade")
+	battle_GUI.fade_in_main_panel()
