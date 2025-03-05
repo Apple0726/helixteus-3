@@ -89,7 +89,7 @@ func take_turn():
 		if position_preferences[pos] < lowest_weight:
 			lowest_weight = position_preferences[pos]
 			target_move_position = pos
-	await get_tree().create_timer(1.0).timeout
+	await get_tree().create_timer(0.5).timeout
 	move(target_move_position)
 
 func calculate_position_preferences(pos:Vector2):
@@ -118,7 +118,7 @@ func attack_target():
 	target_angle = atan2(target_position.y - position.y, target_position.x - position.x)
 	target_angle_max_deviation = 1.0 / (accuracy + accuracy_buff)
 	$FireWeaponAim.show()
-	await get_tree().create_timer(0.9).timeout
+	await get_tree().create_timer(0.7).timeout
 	var projectile = preload("res://Scenes/Battle/Weapons/Projectile.tscn").instantiate()
 	projectile.set_script(load("res://Scripts/Battle/Weapons/Bullet.gd"))
 	projectile.collision_layer = 16
@@ -130,12 +130,13 @@ func attack_target():
 	projectile.weapon_accuracy = 1.0 * accuracy
 	projectile.deflects_remaining = 0
 	projectile.position = position
+	projectile.ending_turn_delay = 1.0
 	battle_scene.add_child(projectile)
-	projectile.tree_exited.connect(ending_turn)
+	projectile.tree_exiting.connect(ending_turn.bind(projectile))
 
 
-func ending_turn():
-	create_tween().tween_callback(end_turn).set_delay(1.0)
+func ending_turn(projectile):
+	create_tween().tween_callback(end_turn).set_delay(projectile.ending_turn_delay)
 
 
 func _on_collision_shape_finder_area_entered(area: Area2D) -> void:

@@ -6,6 +6,7 @@ var shooter_attack:int
 var weapon_accuracy:float
 var entities_inside_explosion_AoE:Array = []
 var AoE_radius:float
+var battle_GUI
 
 func _ready() -> void:
 	$ExplosionAoE/CollisionShape2D.shape.radius = AoE_radius
@@ -41,8 +42,12 @@ func _on_area_entered(area: Area2D) -> void:
 					"shooter_attack":shooter_attack,
 					"weapon_accuracy":INF,
 					"damage_label_initial_velocity":200.0 * (area_in_AoE.position - position).normalized(),
+					"crit_hit_chance":0.02,
 				}
 				area_in_AoE.damage_entity(AoE_weapon_data)
 		if Settings.screen_shake:
 			get_node("/root/Game/Camera2D/Screenshake").start(0.5,15,4)
-		queue_free()
+		$AnimationPlayer.play("Explode")
+		battle_GUI.flash_screen(0.3, 0.2)
+		set_process(false)
+		$AnimationPlayer.animation_finished.connect(func(anim_name): queue_free())

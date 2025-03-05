@@ -1,7 +1,23 @@
-[gd_scene load_steps=6 format=3 uid="uid://c85ho5kdv83p8"]
+[gd_scene load_steps=8 format=3 uid="uid://c85ho5kdv83p8"]
 
 [ext_resource type="Texture2D" uid="uid://dxr8x86jdcd2p" path="res://Graphics/Tiles/Highlight.jpg" id="1_11r1q"]
 [ext_resource type="Script" uid="uid://b6bysupl6nmty" path="res://Scripts/Battle/Weapons/ShipLaser.gd" id="1_c45pl"]
+
+[sub_resource type="Shader" id="Shader_cd4p5"]
+code = "shader_type canvas_item;
+
+uniform float modulate: hint_range(0.0, 1.0) = 1.0;
+
+void fragment() {
+	COLOR = texture(TEXTURE, UV);
+	COLOR.rgb = vec3(1.0, 0.0, 0.0);
+	COLOR.gb += vec2(1.0, 1.0) * pow(0.97 - abs(UV.y - 0.5), 10);
+	COLOR.a = pow(1.0 - abs(UV.y - 0.5), 10) * modulate;
+}"
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_cd4p5"]
+shader = SubResource("Shader_cd4p5")
+shader_parameter/modulate = 0.0
 
 [sub_resource type="Animation" id="Animation_11r1q"]
 resource_name = "FadeOut"
@@ -13,36 +29,36 @@ tracks/0/path = NodePath("WhiteLaser:modulate")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
-"times": PackedFloat32Array(0, 0.2),
+"times": PackedFloat32Array(0, 0.5),
 "transitions": PackedFloat32Array(1, 1),
 "update": 0,
 "values": [Color(1, 1, 1, 1), Color(1, 1, 1, 0)]
 }
-tracks/1/type = "value"
+tracks/1/type = "method"
 tracks/1/imported = false
 tracks/1/enabled = true
-tracks/1/path = NodePath("ColorLaser:modulate")
+tracks/1/path = NodePath(".")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/keys = {
-"times": PackedFloat32Array(0, 0.1, 0.5),
-"transitions": PackedFloat32Array(1, 1, 1),
-"update": 0,
-"values": [Color(1, 0, 0, 1), Color(1, 0, 0, 1), Color(1, 0, 0, 0)]
-}
-tracks/2/type = "method"
-tracks/2/imported = false
-tracks/2/enabled = true
-tracks/2/path = NodePath(".")
-tracks/2/interp = 1
-tracks/2/loop_wrap = true
-tracks/2/keys = {
 "times": PackedFloat32Array(0.5),
 "transitions": PackedFloat32Array(1),
 "values": [{
 "args": [],
 "method": &"queue_free"
 }]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("ColorLaser:material:shader_parameter/modulate")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0.1, 0.5),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [1.0, 0.0]
 }
 
 [sub_resource type="Animation" id="Animation_c45pl"]
@@ -62,14 +78,14 @@ tracks/0/keys = {
 tracks/1/type = "value"
 tracks/1/imported = false
 tracks/1/enabled = true
-tracks/1/path = NodePath("ColorLaser:modulate")
+tracks/1/path = NodePath("ColorLaser:material:shader_parameter/modulate")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 0,
-"values": [Color(1, 0, 0, 1)]
+"values": [0.0]
 }
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_2suxr"]
@@ -83,14 +99,15 @@ script = ExtResource("1_c45pl")
 
 [node name="ColorLaser" type="Sprite2D" parent="."]
 modulate = Color(1, 0, 0, 1)
-position = Vector2(0, -8)
-scale = Vector2(1, 0.08)
+material = SubResource("ShaderMaterial_cd4p5")
+position = Vector2(0, -48)
+scale = Vector2(1, 0.48)
 texture = ExtResource("1_11r1q")
 centered = false
 
 [node name="WhiteLaser" type="Sprite2D" parent="."]
-position = Vector2(0, -4)
-scale = Vector2(1, 0.04)
+position = Vector2(0, -1)
+scale = Vector2(1, 0.01)
 texture = ExtResource("1_11r1q")
 centered = false
 

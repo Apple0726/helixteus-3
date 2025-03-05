@@ -182,6 +182,7 @@ offset_bottom = 631.0
 
 [node name="LightEmissionConePanel" type="Panel" parent="."]
 visible = false
+layout_mode = 0
 offset_right = 200.0
 offset_bottom = 100.0
 mouse_filter = 2
@@ -196,6 +197,7 @@ position = Vector2(168, 36)
 texture = ExtResource("10_38hmk")
 
 [node name="ScrollUp" type="Label" parent="LightEmissionConePanel"]
+layout_mode = 0
 offset_left = 24.0
 offset_top = 12.0
 offset_right = 140.0
@@ -204,6 +206,7 @@ text = "SCROLL_UP"
 horizontal_alignment = 2
 
 [node name="ScrollDown" type="Label" parent="LightEmissionConePanel"]
+layout_mode = 0
 offset_left = 12.0
 offset_top = 56.0
 offset_right = 140.0
@@ -220,6 +223,17 @@ uv = PackedVector2Array(403, -75, 410, -43)
 [node name="Polygon2D2" type="Polygon2D" parent="LightEmissionConePanel"]
 antialiased = true
 polygon = PackedVector2Array(164, 8, 168, 40, 172, 8)
+
+[node name="ScreenFlash" type="ColorRect" parent="."]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(1, 1, 1, 0)
 
 [connection signal="pressed" from="Back" to="." method="_on_back_pressed"]
 [connection signal="visibility_changed" from="MainPanel" to="." method="_on_main_panel_visibility_changed"]

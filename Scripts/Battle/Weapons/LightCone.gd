@@ -40,6 +40,7 @@ func update_cone():
 					"shooter_attack":shooter_attack,
 					"weapon_accuracy":INF,
 					"damage_label_initial_velocity":1.5 * Vector2.from_angle(angle),
+					"crit_hit_chance":0.0,
 				}
 				targets[hit_target] = weapon_data
 				hit_target.override_tooltip_dict.light_intensity_mult = " * " + str(1 / 200.0)

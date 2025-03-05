@@ -223,3 +223,11 @@ func restore_default_enemy_tooltips():
 	for HX_node in battle_scene.HX_nodes:
 		HX_node.override_tooltip_text = ""
 		HX_node.override_tooltip_dict = HX_node.default_override_tooltip_dict.duplicate()
+
+
+func flash_screen(intensity: float, duration: float):
+	$ScreenFlash.show()
+	$ScreenFlash.modulate.a = intensity
+	var tween = create_tween()
+	tween.tween_property($ScreenFlash, "modulate:a", 0.0, duration)
+	tween.tween_callback($ScreenFlash.hide)

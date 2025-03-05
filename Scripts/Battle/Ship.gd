@@ -57,9 +57,9 @@ func move():
 	var move_tween = create_tween()
 	movement_remaining -= (move_target_position - position).length() / battle_scene.PIXELS_PER_METER
 	movement_remaining -= move_additional_costs
-	print(move_additional_costs)
 	move_tween.tween_property(self, "position", move_target_position, 1.0).set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_CUBIC)
 	move_tween.tween_callback(cancel_action)
+	create_tween().tween_property(game.view, "position", Vector2(640, 360) - move_target_position * game.view.scale.x, 1.0).set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_CUBIC)
 
 func update_default_tooltip_text():
 	default_tooltip_text = "@i \t%s / %s" % [HP, total_HP]
@@ -154,6 +154,7 @@ func fire_weapon(weapon_type: int):
 		explosive.shooter_attack = attack + attack_buff
 		explosive.weapon_accuracy = Data.bomb_data[bomb_lv-1].accuracy * accuracy
 		explosive.position = position
+		explosive.battle_GUI = battle_GUI
 		battle_scene.add_child(explosive)
 		explosive.tree_exited.connect(ending_turn)
 	elif weapon_type == battle_GUI.LIGHT:

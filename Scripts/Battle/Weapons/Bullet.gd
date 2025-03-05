@@ -5,6 +5,7 @@ var damage:float
 var shooter_attack:int
 var weapon_accuracy:float
 var deflects_remaining:int
+var ending_turn_delay:float
 
 func _ready() -> void:
 	area_entered.connect(_on_area_entered)
@@ -12,6 +13,7 @@ func _ready() -> void:
 func _process(delta: float) -> void:
 	position += speed * Vector2.from_angle(rotation) * delta
 	if (position - Vector2(640, 360)).length_squared() > pow(1280, 2) + pow(720, 2):
+		ending_turn_delay = 0.0
 		queue_free()
 
 
@@ -23,7 +25,9 @@ func _on_area_entered(area: Area2D) -> void:
 		"damage_label_initial_velocity":0.3 * speed * Vector2.from_angle(rotation),
 	}
 	if area.damage_entity(weapon_data):
-		if deflects_remaining == 0:
+		if deflects_remaining == 0 or area.type == 2:
+			if area.type == 2:
+				ending_turn_delay = 0.0
 			queue_free()
 		else:
 			# The bullet can now hit anything, regardless of the shooter

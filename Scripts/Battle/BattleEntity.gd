@@ -96,7 +96,7 @@ func damage_entity(weapon_data: Dictionary):
 		else:
 			damage_multiplier = 1.0 / (1.0 - 0.125 * attack_defense_difference)
 		var actual_damage:int = max(1, weapon_data.damage * damage_multiplier)
-		var critical = randf() < (0.02 if weapon_data.weapon_accuracy == INF else 0.005 * weapon_data.weapon_accuracy)
+		var critical = randf() < (weapon_data.crit_hit_chance if weapon_data.weapon_accuracy == INF else 0.005 * weapon_data.weapon_accuracy)
 		if critical:
 			actual_damage *= 2
 		HP -= actual_damage

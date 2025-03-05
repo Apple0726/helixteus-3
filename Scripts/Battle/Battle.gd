@@ -51,7 +51,7 @@ func _ready() -> void:
 			HX.get_node("LabelAnimation").play("LabelAnim")
 		HX.position = Vector2(1340, randf_range(150, 570))
 		var tween = get_tree().create_tween()
-		tween.tween_property(HX, "position", HX_data[i].initial_position, 1.5).set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_CUBIC).set_delay(i * 0.2)
+		tween.tween_property(HX, "position", HX_data[i].initial_position, 0.8).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_QUAD).set_delay(i * 0.2)
 		if i == len(HX_data) - 1:
 			tween.finished.connect(initialize_battle)
 		HX.get_node("Info/Effects/Fire").mouse_entered.connect(game.show_tooltip.bind(tr("BURN_DESC")))
@@ -129,11 +129,11 @@ func next_turn():
 		var ship_node = ship_nodes[initiative_order[whose_turn_is_it_index].idx]
 		battle_GUI.fade_in_main_panel()
 		battle_GUI.ship_node = ship_node
-		move_view_tween.tween_property(game.view, "position", Vector2(640, 360) - ship_node.position * game.view.scale.x, 1.0).set_trans(Tween.TRANS_CUBIC)
+		move_view_tween.tween_property(game.view, "position", Vector2(640, 360) - ship_node.position * game.view.scale.x, 0.5).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
 		ship_node.take_turn()
 	elif initiative_order[whose_turn_is_it_index].type == ENEMY:
 		var HX_node = HX_nodes[initiative_order[whose_turn_is_it_index].idx]
-		move_view_tween.tween_property(game.view, "position", Vector2(640, 360) - HX_node.position * game.view.scale.x, 1.0).set_trans(Tween.TRANS_CUBIC)
+		move_view_tween.tween_property(game.view, "position", Vector2(640, 360) - HX_node.position * game.view.scale.x, 0.5).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
 		HX_node.take_turn()
 
 func sort_initiative(a, b):
