@@ -1,16 +1,14 @@
-extends Node2D
+extends Control
 
-@onready var btn = $Sprite2D
-var over:bool = false
+var shortcut_str:String = ""
 
-func _process(delta):
-	if over:
-		btn.scale = btn.scale.move_toward(Vector2(0.48, 0.48), btn.scale.distance_to(Vector2(0.48, 0.48)) * delta * 25)
-	else:
-		btn.scale = btn.scale.move_toward(Vector2(0.427, 0.427), btn.scale.distance_to(Vector2(0.427, 0.427)) * delta * 25)
+func _ready() -> void:
+	modulate.a = 0.0
+	create_tween().tween_property(self, "modulate:a", 1.0, 0.2)
+	$Label.text = shortcut_str
 
 func _on_TextureButton_mouse_entered():
-	over = true
+	create_tween().tween_property($TextureButton, "scale", Vector2.ONE * 1.2, 0.1)
 
 func _on_TextureButton_mouse_exited():
-	over = false
+	create_tween().tween_property($TextureButton, "scale", Vector2.ONE, 0.1)

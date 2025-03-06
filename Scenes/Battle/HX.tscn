@@ -33,7 +33,7 @@ shader_parameter/amplitude = 4.0
 shader_parameter/frequency = 5.0
 shader_parameter/aurora = false
 shader_parameter/light = 1.0
-shader_parameter/modulate_color = Color(1, 1, 1, 1)
+shader_parameter/alpha = 1.0
 shader_parameter/flash = 0.0
 shader_parameter/flash_color = Color(1, 1, 1, 1)
 

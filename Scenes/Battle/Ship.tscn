@@ -1,4 +1,4 @@
-[gd_scene load_steps=31 format=3 uid="uid://cxykmxd6r2wgm"]
+[gd_scene load_steps=32 format=3 uid="uid://cxykmxd6r2wgm"]
 
 [ext_resource type="Texture2D" uid="uid://kr2fdk8dptv1" path="res://Graphics/Misc/BarUnder2.png" id="1"]
 [ext_resource type="Script" uid="uid://cfrufmr2v8ebl" path="res://Scripts/Battle/Ship.gd" id="2"]
@@ -39,6 +39,7 @@ color_ramp = SubResource("2")
 shader = ExtResource("3_cptad")
 shader_parameter/amplitude = 20.0
 shader_parameter/frequency = 6.0
+shader_parameter/alpha = 1.0
 shader_parameter/flash = 0.0
 shader_parameter/flash_color = Color(1, 1, 1, 1)
 
@@ -132,6 +133,10 @@ spread = 75.94
 gravity = Vector3(0, 0, 0)
 color = Color(1, 0.603922, 0, 1)
 color_ramp = SubResource("27")
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_53138"]
+radius = 60.0
+height = 232.0
 
 [node name="Ship" type="Area2D"]
 collision_layer = 2
@@ -312,6 +317,18 @@ collision_mask = 39
 collide_with_areas = true
 collide_with_bodies = false
 
+[node name="PushArea" type="Area2D" parent="."]
+collision_layer = 0
+collision_mask = 38
+monitorable = false
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="PushArea"]
+rotation = 1.5708
+shape = SubResource("CapsuleShape2D_53138")
+debug_color = Color(0.556863, 0.560784, 0, 0.0941176)
+
 [connection signal="mouse_entered" from="." to="." method="_on_mouse_entered"]
 [connection signal="mouse_exited" from="." to="." method="_on_mouse_exited"]
 [connection signal="visibility_changed" from="FireWeaponAim" to="." method="_on_fire_weapon_aim_visibility_changed"]
+[connection signal="area_entered" from="PushArea" to="." method="_on_push_area_area_entered"]
+[connection signal="area_exited" from="PushArea" to="." method="_on_push_area_area_exited"]

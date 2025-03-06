@@ -150,7 +150,7 @@ offset_bottom = 35.0
 text = "MOVE"
 horizontal_alignment = 1
 
-[node name="Label6" type="Label" parent="MainPanel"]
+[node name="PushLabel" type="Label" parent="MainPanel"]
 layout_mode = 0
 offset_left = 696.0
 offset_top = 12.0
@@ -246,4 +246,5 @@ color = Color(1, 1, 1, 0)
 [connection signal="mouse_entered" from="MainPanel/Light" to="." method="_on_light_mouse_entered"]
 [connection signal="pressed" from="MainPanel/Light" to="." method="_on_light_pressed"]
 [connection signal="pressed" from="MainPanel/Move" to="." method="_on_move_pressed"]
+[connection signal="mouse_entered" from="MainPanel/Push" to="." method="_on_push_mouse_entered"]
 [connection signal="pressed" from="MainPanel/Push" to="." method="_on_push_pressed"]

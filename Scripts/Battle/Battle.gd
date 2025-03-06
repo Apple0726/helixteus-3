@@ -127,8 +127,8 @@ func next_turn():
 		battle_GUI.turn_order_hbox.get_child(whose_turn_is_it_index).get_node("AnimationPlayer").play("ChangeSize")
 	elif initiative_order[whose_turn_is_it_index].type == SHIP:
 		var ship_node = ship_nodes[initiative_order[whose_turn_is_it_index].idx]
-		battle_GUI.fade_in_main_panel()
 		battle_GUI.ship_node = ship_node
+		battle_GUI.fade_in_main_panel()
 		move_view_tween.tween_property(game.view, "position", Vector2(640, 360) - ship_node.position * game.view.scale.x, 0.5).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
 		ship_node.take_turn()
 	elif initiative_order[whose_turn_is_it_index].type == ENEMY:

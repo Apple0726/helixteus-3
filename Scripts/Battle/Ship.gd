@@ -11,6 +11,8 @@ var light_cone
 var display_move_path = false
 var move_target_position:Vector2
 var move_additional_costs:float
+var pushable_entities = []
+var target_btns = {}
 
 
 func _ready() -> void:
@@ -188,6 +190,40 @@ func cancel_action():
 		$FireWeaponAim.fade_out()
 	if is_instance_valid(light_cone):
 		light_cone.queue_free()
+	for pushable_entity in target_btns:
+		create_tween().tween_property(pushable_entity.get_node("Sprite2D").material, "shader_parameter/alpha", 1.0, 0.2)
+		target_btns[pushable_entity].queue_free()
+	target_btns.clear()
 	display_move_path = false
 	get_node("RayCast2D").enabled = false
 	battle_GUI.fade_in_main_panel()
+
+
+func _on_push_area_area_entered(area: Area2D) -> void:
+	if area.get_instance_id() != get_instance_id():
+		pushable_entities.append(area)
+
+
+func _on_push_area_area_exited(area: Area2D) -> void:
+	pushable_entities.erase(area)
+
+
+func add_target_buttons_for_push():
+	for i in len(pushable_entities):
+		var entity = pushable_entities[i]
+		var target_btn = preload("res://Scenes/TargetButton.tscn").instantiate()
+		if i < 10:
+			var shortcut_key = (i + 1) % 10
+			target_btn.shortcut_str = str(shortcut_key)
+			target_btn.get_node("TextureButton").shortcut = Shortcut.new()
+			target_btn.get_node("TextureButton").shortcut.events.append(InputEventKey.new())
+			target_btn.get_node("TextureButton").shortcut.events[0].physical_keycode = 49 + shortcut_key
+		target_btn.get_node("TextureButton").pressed.connect(push_entity.bind(entity))
+		create_tween().tween_property(entity.get_node("Sprite2D").material, "shader_parameter/alpha", 0.2, 0.2)
+		entity.add_child(target_btn)
+		target_btns[entity] = target_btn
+
+func push_entity(entity: BattleEntity):
+	for pushable_entity in target_btns:
+		create_tween().tween_property(pushable_entity.get_node("Sprite2D").material, "shader_parameter/alpha", 1.0, 0.2)
+		target_btns[pushable_entity].queue_free()

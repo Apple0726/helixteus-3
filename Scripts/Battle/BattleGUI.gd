@@ -17,7 +17,7 @@ enum {
 }
 var action_selected = NONE
 
-# Called when the node enters the scene tree for the first time.
+
 func _ready() -> void:
 	Helper.set_back_btn($Back)
 	$MainPanel/Bullet.mouse_exited.connect(game.hide_tooltip)
@@ -26,13 +26,9 @@ func _ready() -> void:
 	$MainPanel/Light.mouse_exited.connect(game.hide_tooltip)
 	$MainPanel/Move.mouse_entered.connect(game.show_tooltip.bind(tr("BATTLE_MOVE_DESC")))
 	$MainPanel/Move.mouse_exited.connect(game.hide_tooltip)
-	$MainPanel/Push.mouse_entered.connect(game.show_tooltip.bind(tr("BATTLE_PUSH_DESC") + "\n" + tr("BATTLE_PUSH_HELP")))
 	$MainPanel/Push.mouse_exited.connect(game.hide_tooltip)
 	$LightEmissionConePanel.hide()
 
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta: float) -> void:
-	pass
 
 func _input(event: InputEvent) -> void:
 	Helper.set_back_btn($Back)
@@ -100,11 +96,23 @@ func refresh_GUI():
 	else:
 		$MainPanel/MoveLabel["theme_override_colors/font_color"] = Color.WHITE
 		$MainPanel/Move.disabled = false
+	if len(ship_node.pushable_entities) == 0:
+		$MainPanel/PushLabel["theme_override_colors/font_color"] = Color.DARK_GRAY
+		$MainPanel/Push.disabled = true
+	else:
+		$MainPanel/PushLabel["theme_override_colors/font_color"] = Color.WHITE
+		$MainPanel/Push.disabled = false
 
 func _on_back_pressed() -> void:
 	if battle_scene.hard_battle:
 		game.switch_music(load("res://Audio/ambient%s.ogg" % randi_range(1, 3)), game.u_i.time_speed)
 	game.switch_view("system")
+
+
+func show_additional_tooltip(short_tooltip:String, long_tooltip:String):
+	await get_tree().create_timer(1.0).timeout
+	if game.tooltip.visible and game.tooltip.text == short_tooltip:
+		game.show_tooltip(short_tooltip + "\n\n" + long_tooltip)
 
 
 func _on_bullet_mouse_entered() -> void:
@@ -113,6 +121,7 @@ func _on_bullet_mouse_entered() -> void:
 	var tooltip_txt = tr("BASE_DAMAGE") + ": " + str(Data.bullet_data[ship_node.bullet_lv-1].damage)
 	tooltip_txt += "\n" + tr("BASE_ACCURACY") + ": " + str(Data.bullet_data[ship_node.bullet_lv-1].accuracy)
 	game.show_tooltip(tooltip_txt)
+	show_additional_tooltip(tooltip_txt, tr("BULLET_DESC"))
 
 
 func _on_laser_mouse_entered() -> void:
@@ -121,6 +130,7 @@ func _on_laser_mouse_entered() -> void:
 	var tooltip_txt = tr("BASE_DAMAGE") + ": " + str(Data.laser_data[ship_node.laser_lv-1].damage)
 	tooltip_txt += "\n" + tr("BASE_ACCURACY") + ": " + str(Data.laser_data[ship_node.laser_lv-1].accuracy)
 	game.show_tooltip(tooltip_txt)
+	show_additional_tooltip(tooltip_txt, tr("LASER_DESC"))
 
 
 func _on_bomb_mouse_entered() -> void:
@@ -129,6 +139,7 @@ func _on_bomb_mouse_entered() -> void:
 	var tooltip_txt = tr("BASE_DAMAGE") + ": " + str(Data.bomb_data[ship_node.bomb_lv-1].damage)
 	tooltip_txt += "\n" + tr("BASE_ACCURACY") + ": " + str(Data.bomb_data[ship_node.bomb_lv-1].accuracy)
 	game.show_tooltip(tooltip_txt)
+	show_additional_tooltip(tooltip_txt, tr("BOMB_DESC"))
 
 
 func _on_light_mouse_entered() -> void:
@@ -137,6 +148,14 @@ func _on_light_mouse_entered() -> void:
 	var tooltip_txt = tr("BASE_DAMAGE") + ": " + str(Data.light_data[ship_node.light_lv-1].damage)
 	tooltip_txt += "\n" + tr("BASE_ACCURACY") + ": " + str(Data.light_data[ship_node.light_lv-1].accuracy)
 	game.show_tooltip(tooltip_txt)
+	show_additional_tooltip(tooltip_txt, tr("LIGHT_DESC"))
+
+func _on_push_mouse_entered() -> void:
+	if not is_instance_valid(ship_node):
+		return
+	var tooltip_txt = tr("BATTLE_PUSH_DESC")
+	game.show_tooltip(tooltip_txt)
+	show_additional_tooltip(tooltip_txt, tr("BATTLE_PUSH_HELP"))
 
 func fade_in_main_panel():
 	$MainPanel.show()
@@ -196,6 +215,7 @@ func _on_move_pressed() -> void:
 func _on_push_pressed() -> void:
 	action_selected = PUSH
 	fade_out_main_panel()
+	ship_node.add_target_buttons_for_push()
 	game.hide_tooltip()
 
 func override_enemy_tooltips():
