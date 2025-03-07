@@ -26,7 +26,7 @@ func _on_area_entered(area: Area2D) -> void:
 	}
 	if area.damage_entity(weapon_data):
 		if deflects_remaining == 0 or area.type == 2:
-			if area.type == 2:
+			if area.type == 2: # If it is a boundary
 				ending_turn_delay = 0.0
 			queue_free()
 		else:

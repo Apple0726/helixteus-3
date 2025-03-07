@@ -28,6 +28,12 @@ var agility:int:
 var initiative:int
 var turn_index:int
 var go_through_movement_cost:float # in meters
+var velocity:Vector2 = Vector2.ZERO:
+	get:
+		return velocity
+	set(value):
+		velocity = value
+		update_velocity_arrow()
 
 var attack_buff:int = 0
 var defense_buff:int = 0
@@ -103,3 +109,11 @@ func damage_entity(weapon_data: Dictionary):
 		$Info/HP.value = HP
 		battle_scene.add_damage_text(false, position, actual_damage, critical, weapon_data.damage_label_initial_velocity)
 	return not dodged
+
+func update_velocity_arrow():
+	$VelocityArrow.scale = Vector2.ONE * velocity.length_squared() * 0.00001
+	$VelocityArrow.rotation = atan2(velocity.y, velocity.x)
+
+
+func push_entity_attempt(agility_pusher: int, agility_pushee: int):
+	return 1.0 / (1.0 + exp((agility_pusher - agility_pushee + 9.2) / 5.8)) < randf()

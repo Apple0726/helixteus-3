@@ -6,6 +6,8 @@ extends Control
 @onready var turn_order_hbox = get_node("TurnOrderHBox")
 var battle_scene
 var ship_node
+
+# Actions
 enum {
 	BULLET,
 	LASER,
@@ -24,7 +26,6 @@ func _ready() -> void:
 	$MainPanel/Laser.mouse_exited.connect(game.hide_tooltip)
 	$MainPanel/Bomb.mouse_exited.connect(game.hide_tooltip)
 	$MainPanel/Light.mouse_exited.connect(game.hide_tooltip)
-	$MainPanel/Move.mouse_entered.connect(game.show_tooltip.bind(tr("BATTLE_MOVE_DESC")))
 	$MainPanel/Move.mouse_exited.connect(game.hide_tooltip)
 	$MainPanel/Push.mouse_exited.connect(game.hide_tooltip)
 	$LightEmissionConePanel.hide()
@@ -41,12 +42,14 @@ func _input(event: InputEvent) -> void:
 		elif Input.is_action_just_released("left_click") and not game.view.dragged and $MainPanel.modulate.a == 0.0:
 			if action_selected in [BULLET, LASER, BOMB, LIGHT]:
 				ship_node.fire_weapon(action_selected)
+				action_selected = NONE
+				reset_GUI()
 			elif action_selected == MOVE:
 				ship_node.move()
+				action_selected = NONE
+				reset_GUI()
 			elif action_selected == PUSH:
 				pass
-			action_selected = NONE
-			reset_GUI()
 	if action_selected == NONE and is_instance_valid(ship_node):
 		if Input.is_action_just_pressed("1"):
 			_on_bullet_pressed()
@@ -64,11 +67,11 @@ func _input(event: InputEvent) -> void:
 		if Input.is_action_pressed("shift"):
 			if Input.is_action_just_pressed("scroll_down"):
 				ship_node.light_cone.target_angle_deviation = min(ship_node.light_cone.target_angle_deviation + PI / 64.0, 0.3 * PI)
-				ship_node.light_cone.update_cone()
+				ship_node.light_cone.update_cone_animate()
 				override_enemy_tooltips()
 			if Input.is_action_just_pressed("scroll_up"):
 				ship_node.light_cone.target_angle_deviation = max(ship_node.light_cone.target_angle_deviation - PI / 64.0, PI / 64.0)
-				ship_node.light_cone.update_cone()
+				ship_node.light_cone.update_cone_animate()
 				override_enemy_tooltips()
 		if event is InputEventMouseMotion:
 			$LightEmissionConePanel.position = Vector2(1280 - $LightEmissionConePanel.size.x - 10, 720 - $LightEmissionConePanel.size.y - 10).min(battle_scene.mouse_position_global)
@@ -80,12 +83,32 @@ func _input(event: InputEvent) -> void:
 			$LightEmissionConePanel.hide()
 	elif action_selected == MOVE and event is InputEventMouseMotion:
 		ship_node.queue_redraw()
+	elif action_selected == PUSH:
+		if event is InputEventMouseMotion:
+			$PushStrengthPanel.position = Vector2(1280 - $PushStrengthPanel.size.x - 10, 720 - $PushStrengthPanel.size.y - 10).min(battle_scene.mouse_position_global)
+		if Input.is_action_just_pressed("shift"):
+			game.block_scroll = true
+		elif Input.is_action_just_released("shift"):
+			game.block_scroll = false
+		if Input.is_action_pressed("shift"):
+			if Input.is_action_just_pressed("scroll_up"):
+				update_push_strength(0.1)
+			if Input.is_action_just_pressed("scroll_down"):
+				update_push_strength(-0.1)
 
+func update_push_strength(update_by: float):
+	var current_strength = $PushStrengthPanel/Bar.material.get_shader_parameter("strength")
+	create_tween().tween_property($PushStrengthPanel/Bar.material, "shader_parameter/strength", clamp(current_strength + update_by, 0.0, 1.0), 0.2)
+	current_strength = $PushStrengthPanel/Bar.material.get_shader_parameter("strength")
+	ship_node.push_movement_used = remap(current_strength, 0.0, 1.0, 30.0, ship_node.movement_remaining)
+	
 func reset_GUI():
 	var info_tween = create_tween()
 	info_tween.tween_property($Info, "modulate:a", 0.0, 0.5)
 	info_tween.tween_callback($Info.hide)
 	$LightEmissionConePanel.hide()
+	$PushStrengthPanel.hide()
+	print("Reset_GUI")
 	game.block_scroll = false
 	
 func refresh_GUI():
@@ -96,7 +119,7 @@ func refresh_GUI():
 	else:
 		$MainPanel/MoveLabel["theme_override_colors/font_color"] = Color.WHITE
 		$MainPanel/Move.disabled = false
-	if len(ship_node.pushable_entities) == 0:
+	if len(ship_node.pushable_entities) == 0 or ship_node.movement_remaining < 30.0:
 		$MainPanel/PushLabel["theme_override_colors/font_color"] = Color.DARK_GRAY
 		$MainPanel/Push.disabled = true
 	else:
@@ -108,53 +131,55 @@ func _on_back_pressed() -> void:
 		game.switch_music(load("res://Audio/ambient%s.ogg" % randi_range(1, 3)), game.u_i.time_speed)
 	game.switch_view("system")
 
+var tooltip_tween
 
 func show_additional_tooltip(short_tooltip:String, long_tooltip:String):
-	await get_tree().create_timer(1.0).timeout
-	if game.tooltip.visible and game.tooltip.text == short_tooltip:
-		game.show_tooltip(short_tooltip + "\n\n" + long_tooltip)
+	if tooltip_tween and tooltip_tween.is_running():
+		tooltip_tween.kill()
+	tooltip_tween = create_tween()
+	tooltip_tween.tween_interval(1.0)
+	tooltip_tween.tween_callback(func(): if game.tooltip.visible: game.show_adv_tooltip(short_tooltip + "\n\n" + long_tooltip))
 
 
 func _on_bullet_mouse_entered() -> void:
-	if not is_instance_valid(ship_node):
-		return
 	var tooltip_txt = tr("BASE_DAMAGE") + ": " + str(Data.bullet_data[ship_node.bullet_lv-1].damage)
 	tooltip_txt += "\n" + tr("BASE_ACCURACY") + ": " + str(Data.bullet_data[ship_node.bullet_lv-1].accuracy)
-	game.show_tooltip(tooltip_txt)
+	game.show_adv_tooltip(tooltip_txt)
 	show_additional_tooltip(tooltip_txt, tr("BULLET_DESC"))
 
 
 func _on_laser_mouse_entered() -> void:
-	if not is_instance_valid(ship_node):
-		return
 	var tooltip_txt = tr("BASE_DAMAGE") + ": " + str(Data.laser_data[ship_node.laser_lv-1].damage)
 	tooltip_txt += "\n" + tr("BASE_ACCURACY") + ": " + str(Data.laser_data[ship_node.laser_lv-1].accuracy)
-	game.show_tooltip(tooltip_txt)
+	game.show_adv_tooltip(tooltip_txt)
 	show_additional_tooltip(tooltip_txt, tr("LASER_DESC"))
 
 
 func _on_bomb_mouse_entered() -> void:
-	if not is_instance_valid(ship_node):
-		return
 	var tooltip_txt = tr("BASE_DAMAGE") + ": " + str(Data.bomb_data[ship_node.bomb_lv-1].damage)
 	tooltip_txt += "\n" + tr("BASE_ACCURACY") + ": " + str(Data.bomb_data[ship_node.bomb_lv-1].accuracy)
-	game.show_tooltip(tooltip_txt)
+	game.show_adv_tooltip(tooltip_txt)
 	show_additional_tooltip(tooltip_txt, tr("BOMB_DESC"))
 
 
 func _on_light_mouse_entered() -> void:
-	if not is_instance_valid(ship_node):
-		return
 	var tooltip_txt = tr("BASE_DAMAGE") + ": " + str(Data.light_data[ship_node.light_lv-1].damage)
 	tooltip_txt += "\n" + tr("BASE_ACCURACY") + ": " + str(Data.light_data[ship_node.light_lv-1].accuracy)
-	game.show_tooltip(tooltip_txt)
+	game.show_adv_tooltip(tooltip_txt)
 	show_additional_tooltip(tooltip_txt, tr("LIGHT_DESC"))
 
+func _on_move_mouse_entered() -> void:
+	if tooltip_tween and tooltip_tween.is_running():
+		tooltip_tween.kill()
+	game.show_tooltip(tr("BATTLE_MOVE_DESC"))
+
 func _on_push_mouse_entered() -> void:
-	if not is_instance_valid(ship_node):
-		return
 	var tooltip_txt = tr("BATTLE_PUSH_DESC")
-	game.show_tooltip(tooltip_txt)
+	if ship_node.movement_remaining < 30.0:
+		tooltip_txt += "\n[color=#FFAA00]" + tr("REQUIRES_MOVEMENT") + "[/color]"
+	if len(ship_node.pushable_entities) == 0:
+		tooltip_txt += "\n[color=#FFAA00]" + tr("NO_OBJECTS_NEAR_SHIP") + "[/color]"
+	game.show_adv_tooltip(tooltip_txt)
 	show_additional_tooltip(tooltip_txt, tr("BATTLE_PUSH_HELP"))
 
 func fade_in_main_panel():

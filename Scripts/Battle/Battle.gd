@@ -22,6 +22,7 @@ var mouse_position_local:Vector2
 enum {
 	ENEMY,
 	SHIP,
+	BOUNDARY,
 }
 
 func _ready() -> void:

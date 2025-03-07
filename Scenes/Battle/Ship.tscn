@@ -327,6 +327,19 @@ rotation = 1.5708
 shape = SubResource("CapsuleShape2D_53138")
 debug_color = Color(0.556863, 0.560784, 0, 0.0941176)
 
+[node name="VelocityArrow" type="Node2D" parent="."]
+scale = Vector2(1e-05, 1e-05)
+
+[node name="Head" type="Line2D" parent="VelocityArrow"]
+position = Vector2(40, 0)
+points = PackedVector2Array(-12.0949, 12.6482, 0, 0, -12.0949, -12.6482)
+width = 2.0
+
+[node name="Body" type="Line2D" parent="VelocityArrow"]
+position = Vector2(40, 0)
+points = PackedVector2Array(-40, 0, 0, 0)
+width = 2.0
+
 [connection signal="mouse_entered" from="." to="." method="_on_mouse_entered"]
 [connection signal="mouse_exited" from="." to="." method="_on_mouse_exited"]
 [connection signal="visibility_changed" from="FireWeaponAim" to="." method="_on_fire_weapon_aim_visibility_changed"]
