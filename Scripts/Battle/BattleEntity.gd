@@ -110,9 +110,9 @@ func damage_entity(weapon_data: Dictionary):
 		battle_scene.add_damage_text(false, position, actual_damage, critical, weapon_data.damage_label_initial_velocity)
 	return not dodged
 
-func update_velocity_arrow():
-	$VelocityArrow.scale = Vector2.ONE * velocity.length_squared() * 0.00001
-	$VelocityArrow.rotation = atan2(velocity.y, velocity.x)
+func update_velocity_arrow(offset: Vector2 = Vector2.ZERO):
+	$VelocityArrow.scale = Vector2.ONE * (velocity + offset).length() / 100.0
+	$VelocityArrow.rotation = (velocity + offset).angle()
 
 
 func push_entity_attempt(agility_pusher: int, agility_pushee: int):

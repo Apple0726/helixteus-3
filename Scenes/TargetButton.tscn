@@ -17,6 +17,7 @@ offset_top = -24.0
 offset_right = 24.0
 offset_bottom = 24.0
 pivot_offset = Vector2(24, 24)
+shortcut_feedback = false
 shortcut_in_tooltip = false
 texture_normal = ExtResource("2")
 ignore_texture_size = true
@@ -29,7 +30,6 @@ offset_top = 28.0
 offset_right = 64.0
 offset_bottom = 52.0
 theme = ExtResource("1")
-text = "1"
 
 [connection signal="mouse_entered" from="TextureButton" to="." method="_on_TextureButton_mouse_entered"]
 [connection signal="mouse_exited" from="TextureButton" to="." method="_on_TextureButton_mouse_exited"]

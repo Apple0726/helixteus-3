@@ -536,6 +536,7 @@ offset_left = -72.0
 offset_top = -80.0
 offset_right = 77.0004
 offset_bottom = -42.0
+mouse_filter = 2
 theme = ExtResource("2")
 alignment = 1
 
@@ -638,6 +639,17 @@ process_material = SubResource("22")
 libraries = {
 &"": SubResource("AnimationLibrary_u6u7m")
 }
+
+[node name="VelocityArrow" type="Node2D" parent="."]
+scale = Vector2(1e-05, 1e-05)
+
+[node name="Head" type="Line2D" parent="VelocityArrow"]
+points = PackedVector2Array(80, 20, 100, 0, 80, -20)
+width = 2.0
+
+[node name="Body" type="Line2D" parent="VelocityArrow"]
+points = PackedVector2Array(0, 0, 100, 0)
+width = 2.0
 
 [connection signal="mouse_entered" from="." to="." method="_on_mouse_entered"]
 [connection signal="mouse_exited" from="." to="." method="_on_mouse_exited"]

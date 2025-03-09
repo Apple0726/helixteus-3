@@ -217,6 +217,7 @@ offset_left = -80.0
 offset_top = -80.0
 offset_right = 80.0
 offset_bottom = -42.0
+mouse_filter = 2
 theme = ExtResource("15")
 alignment = 1
 
@@ -331,13 +332,11 @@ debug_color = Color(0.556863, 0.560784, 0, 0.0941176)
 scale = Vector2(1e-05, 1e-05)
 
 [node name="Head" type="Line2D" parent="VelocityArrow"]
-position = Vector2(40, 0)
-points = PackedVector2Array(-12.0949, 12.6482, 0, 0, -12.0949, -12.6482)
+points = PackedVector2Array(80, 20, 100, 0, 80, -20)
 width = 2.0
 
 [node name="Body" type="Line2D" parent="VelocityArrow"]
-position = Vector2(40, 0)
-points = PackedVector2Array(-40, 0, 0, 0)
+points = PackedVector2Array(0, 0, 100, 0)
 width = 2.0
 
 [connection signal="mouse_entered" from="." to="." method="_on_mouse_entered"]

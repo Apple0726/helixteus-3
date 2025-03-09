@@ -89,8 +89,13 @@ func take_turn():
 		if position_preferences[pos] < lowest_weight:
 			lowest_weight = position_preferences[pos]
 			target_move_position = pos
-	await get_tree().create_timer(0.5).timeout
-	move(target_move_position)
+	if velocity == Vector2.ZERO:
+		await get_tree().create_timer(0.5).timeout
+		move(target_move_position)
+	else:
+		var move_tween = create_tween()
+		move_tween.tween_property(self, "position", position + velocity, 1.0)
+		move_tween.tween_callback(move.bind(target_move_position))
 
 func calculate_position_preferences(pos:Vector2):
 	if position_preferences.has(pos):

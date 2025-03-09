@@ -16,7 +16,8 @@ var target_btns = {}
 var push_movement_used:float:
 	set(value):
 		push_movement_used = value
-		battle_GUI.get_node("PushStrengthPanel/MovementUsed").text = "%.1f m" % push_movement_used
+		update_push_movement_used()
+var entity_to_push:BattleEntity
 
 
 func _ready() -> void:
@@ -199,10 +200,14 @@ func cancel_action():
 	for pushable_entity in target_btns:
 		create_tween().tween_property(pushable_entity.get_node("Sprite2D").material, "shader_parameter/alpha", 1.0, 0.2)
 		target_btns[pushable_entity].queue_free()
+	game.block_scroll = false
 	target_btns.clear()
 	display_move_path = false
 	get_node("RayCast2D").enabled = false
 	battle_GUI.fade_in_main_panel()
+	if is_instance_valid(entity_to_push):
+		entity_to_push.update_velocity_arrow()
+		entity_to_push = null
 
 
 func _on_push_area_area_entered(area: Area2D) -> void:
@@ -223,27 +228,43 @@ func add_target_buttons_for_push():
 			target_btn.shortcut_str = str(shortcut_key)
 			target_btn.get_node("TextureButton").shortcut = Shortcut.new()
 			target_btn.get_node("TextureButton").shortcut.events.append(InputEventKey.new())
-			target_btn.get_node("TextureButton").shortcut.events[0].physical_keycode = 49 + shortcut_key
+			target_btn.get_node("TextureButton").shortcut.events[0].physical_keycode = 48 + shortcut_key
 		target_btn.get_node("TextureButton").pressed.connect(show_push_strength_panel.bind(entity))
 		create_tween().tween_property(entity.get_node("Sprite2D").material, "shader_parameter/alpha", 0.2, 0.2)
 		entity.add_child(target_btn)
 		target_btns[entity] = target_btn
 
 func show_push_strength_panel(entity: BattleEntity):
+	entity_to_push = entity
 	for pushable_entity in target_btns:
 		create_tween().tween_property(pushable_entity.get_node("Sprite2D").material, "shader_parameter/alpha", 1.0, 0.2)
 		target_btns[pushable_entity].queue_free()
+	target_btns.clear()
 	battle_GUI.get_node("PushStrengthPanel/MovementUsedLower").text = "30.0 m"
 	battle_GUI.get_node("PushStrengthPanel/MovementUsedUpper").text = "%.1f m" % movement_remaining
 	push_movement_used = (movement_remaining + 30.0) / 2.0
 	battle_GUI.get_node("PushStrengthPanel").show()
 	var info_label = battle_GUI.get_node("Info")
 	info_label.show()
+	game.block_scroll = true
 	create_tween().tween_property(info_label, "modulate:a", 1.0, 0.5)
 	info_label.text = tr("CHANGE_PUSH_STRENGTH")
 	
 	
-func push_entity(entity: BattleEntity):
-	if entity.type == battle_scene.ENEMY:
-		var push_success: bool = push_entity_attempt(agility + agility_buff, entity.agility + entity.agility_buff)
-		
+func push_entity():
+	var push_success = true
+	if entity_to_push.type == battle_scene.ENEMY:
+		push_success = push_entity_attempt(agility + agility_buff, entity_to_push.agility + entity_to_push.agility_buff)
+	if push_success:
+		entity_to_push.velocity += calculate_velocity_change()
+	else:
+		entity_to_push.update_velocity_arrow()
+	movement_remaining -= push_movement_used
+	cancel_action()
+
+func calculate_velocity_change():
+	return (entity_to_push.position - position).normalized() * push_movement_used * 2.0 * remap(HP, 0.0, total_HP, HP * 0.66, total_HP) / remap(entity_to_push.HP, 0.0, entity_to_push.total_HP, entity_to_push.HP * 0.66, entity_to_push.total_HP)
+	
+func update_push_movement_used():
+	battle_GUI.get_node("PushStrengthPanel/MovementUsed").text = "%.1f m" % push_movement_used
+	entity_to_push.update_velocity_arrow(calculate_velocity_change())

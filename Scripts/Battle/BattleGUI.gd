@@ -33,10 +33,12 @@ func _ready() -> void:
 
 func _input(event: InputEvent) -> void:
 	Helper.set_back_btn($Back)
+	if event is InputEventMouseMotion:
+		$PushStrengthPanel.position = Vector2(1280 - $PushStrengthPanel.size.x - 10, 720 - $PushStrengthPanel.size.y - 10).min(battle_scene.mouse_position_global)
+		$LightEmissionConePanel.position = Vector2(1280 - $LightEmissionConePanel.size.x - 10, 720 - $LightEmissionConePanel.size.y - 10).min(battle_scene.mouse_position_global)
 	if action_selected != NONE:
 		if Input.is_action_just_pressed("cancel"):
 			action_selected = NONE
-			restore_default_enemy_tooltips()
 			ship_node.cancel_action()
 			reset_GUI()
 		elif Input.is_action_just_released("left_click") and not game.view.dragged and $MainPanel.modulate.a == 0.0:
@@ -73,8 +75,6 @@ func _input(event: InputEvent) -> void:
 				ship_node.light_cone.target_angle_deviation = max(ship_node.light_cone.target_angle_deviation - PI / 64.0, PI / 64.0)
 				ship_node.light_cone.update_cone_animate()
 				override_enemy_tooltips()
-		if event is InputEventMouseMotion:
-			$LightEmissionConePanel.position = Vector2(1280 - $LightEmissionConePanel.size.x - 10, 720 - $LightEmissionConePanel.size.y - 10).min(battle_scene.mouse_position_global)
 		if Input.is_action_just_pressed("shift"):
 			game.block_scroll = true
 			$LightEmissionConePanel.show()
@@ -84,31 +84,36 @@ func _input(event: InputEvent) -> void:
 	elif action_selected == MOVE and event is InputEventMouseMotion:
 		ship_node.queue_redraw()
 	elif action_selected == PUSH:
-		if event is InputEventMouseMotion:
-			$PushStrengthPanel.position = Vector2(1280 - $PushStrengthPanel.size.x - 10, 720 - $PushStrengthPanel.size.y - 10).min(battle_scene.mouse_position_global)
-		if Input.is_action_just_pressed("shift"):
-			game.block_scroll = true
-		elif Input.is_action_just_released("shift"):
-			game.block_scroll = false
-		if Input.is_action_pressed("shift"):
+		if is_instance_valid(ship_node.entity_to_push):
 			if Input.is_action_just_pressed("scroll_up"):
-				update_push_strength(0.1)
+				if Input.is_action_pressed("shift"):
+					update_push_strength(1.0)
+				else:
+					update_push_strength(0.1)
 			if Input.is_action_just_pressed("scroll_down"):
-				update_push_strength(-0.1)
+				if Input.is_action_pressed("shift"):
+					update_push_strength(-1.0)
+				else:
+					update_push_strength(-0.1)
+			if Input.is_action_just_released("left_click"):
+				ship_node.push_entity()
+				action_selected = NONE
+				reset_GUI()
 
 func update_push_strength(update_by: float):
 	var current_strength = $PushStrengthPanel/Bar.material.get_shader_parameter("strength")
-	create_tween().tween_property($PushStrengthPanel/Bar.material, "shader_parameter/strength", clamp(current_strength + update_by, 0.0, 1.0), 0.2)
-	current_strength = $PushStrengthPanel/Bar.material.get_shader_parameter("strength")
-	ship_node.push_movement_used = remap(current_strength, 0.0, 1.0, 30.0, ship_node.movement_remaining)
+	var strength_target = clamp(current_strength + update_by, 0.0, 1.0)
+	create_tween().tween_property($PushStrengthPanel/Bar.material, "shader_parameter/strength", strength_target, 0.15).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_CUBIC)
+	create_tween().tween_property(ship_node, "push_movement_used", remap(strength_target, 0.0, 1.0, 30.0, ship_node.movement_remaining), 0.15).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_CUBIC)
+	create_tween().tween_property($PushStrengthPanel/MovementUsed, "position:y", remap(strength_target, 0.0, 1.0, 288.0, 32.0), 0.15).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_CUBIC)
 	
 func reset_GUI():
+	restore_default_enemy_tooltips()
 	var info_tween = create_tween()
 	info_tween.tween_property($Info, "modulate:a", 0.0, 0.5)
 	info_tween.tween_callback($Info.hide)
 	$LightEmissionConePanel.hide()
 	$PushStrengthPanel.hide()
-	print("Reset_GUI")
 	game.block_scroll = false
 	
 func refresh_GUI():

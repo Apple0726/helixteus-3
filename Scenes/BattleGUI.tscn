@@ -1,4 +1,4 @@
-[gd_scene load_steps=16 format=3 uid="uid://dmtuc03fuk5dc"]
+[gd_scene load_steps=18 format=3 uid="uid://dmtuc03fuk5dc"]
 
 [ext_resource type="Theme" uid="uid://cp2u1kgj60ic" path="res://Resources/default_theme.tres" id="1_ousv4"]
 [ext_resource type="Script" uid="uid://dsplquhp0nmmw" path="res://Scripts/Battle/BattleGUI.gd" id="1_phavr"]
@@ -10,6 +10,16 @@
 [ext_resource type="Texture2D" uid="uid://ds6nct7g63284" path="res://Graphics/Icons/Arrow.png" id="8_cg768"]
 [ext_resource type="Texture2D" uid="uid://bapj1r8e5pwia" path="res://Graphics/Icons/agility.png" id="9_hr53r"]
 [ext_resource type="Texture2D" uid="uid://csfu1k8w75bsv" path="res://Graphics/Effects/spotlight_8_s.png" id="10_38hmk"]
+
+[sub_resource type="InputEventKey" id="InputEventKey_38hmk"]
+device = -1
+physical_keycode = 90
+unicode = 122
+
+[sub_resource type="Shortcut" id="Shortcut_oca3i"]
+events = [SubResource("InputEventKey_38hmk")]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_38hmk"]
 
 [sub_resource type="Shader" id="Shader_38hmk"]
 code = "shader_type canvas_item;
@@ -31,9 +41,6 @@ colors = PackedColorArray(1, 1, 1, 1, 1, 1, 0, 1, 1, 0, 0, 1)
 [sub_resource type="GradientTexture1D" id="GradientTexture1D_oca3i"]
 gradient = SubResource("Gradient_38hmk")
 
-[sub_resource type="LabelSettings" id="LabelSettings_38hmk"]
-shadow_color = Color(0, 0, 0, 1)
-
 [node name="BattleGUI" type="Control"]
 layout_mode = 3
 anchors_preset = 0
@@ -42,6 +49,7 @@ offset_bottom = 720.0
 mouse_filter = 2
 theme = ExtResource("1_ousv4")
 script = ExtResource("1_phavr")
+metadata/_edit_lock_ = true
 
 [node name="Back" type="Button" parent="."]
 layout_mode = 1
@@ -51,6 +59,8 @@ anchor_bottom = 1.0
 offset_top = -40.0
 offset_right = 124.0
 grow_vertical = 0
+shortcut = SubResource("Shortcut_oca3i")
+shortcut_in_tooltip = false
 
 [node name="MainPanel" type="NinePatchRect" parent="."]
 visible = false
@@ -250,78 +260,61 @@ polygon = PackedVector2Array(164, 8, 168, 40, 172, 8)
 [node name="PushStrengthPanel" type="Panel" parent="."]
 visible = false
 layout_mode = 0
-offset_right = 380.0
-offset_bottom = 96.0
+offset_right = 136.0
+offset_bottom = 348.0
 mouse_filter = 2
 theme = ExtResource("1_ousv4")
-
-[node name="ScrollUp" type="Label" parent="PushStrengthPanel"]
-layout_mode = 0
-offset_left = 240.0
-offset_top = 8.0
-offset_right = 356.0
-offset_bottom = 31.0
-text = "SCROLL_UP"
-horizontal_alignment = 2
-
-[node name="ScrollDown" type="Label" parent="PushStrengthPanel"]
-layout_mode = 0
-offset_left = 12.0
-offset_top = 8.0
-offset_right = 140.0
-offset_bottom = 31.0
-text = "SCROLL_DOWN"
+theme_override_styles/panel = SubResource("StyleBoxEmpty_38hmk")
 
 [node name="BarShadow" type="Panel" parent="PushStrengthPanel"]
 layout_mode = 0
-offset_left = 48.0
-offset_top = 40.0
-offset_right = 336.0
-offset_bottom = 56.0
+offset_left = 56.0
+offset_top = 44.0
+offset_right = 72.0
+offset_bottom = 300.0
 
 [node name="Bar" type="TextureRect" parent="PushStrengthPanel"]
 material = SubResource("ShaderMaterial_oca3i")
 layout_mode = 0
-offset_left = 48.0
-offset_top = 40.0
-offset_right = 336.0
-offset_bottom = 56.0
+offset_left = 56.0
+offset_top = 300.0
+offset_right = 312.0
+offset_bottom = 316.0
+rotation = -1.5708
 texture = SubResource("GradientTexture1D_oca3i")
 
 [node name="Label" type="Label" parent="PushStrengthPanel"]
 layout_mode = 0
-offset_left = 104.0
-offset_top = 64.0
-offset_right = 280.0
-offset_bottom = 87.0
+offset_left = -8.0
+offset_top = -28.0
+offset_right = 144.0
+offset_bottom = -5.0
 text = "MOVEMENT_USED"
 horizontal_alignment = 1
 
 [node name="MovementUsedLower" type="Label" parent="PushStrengthPanel"]
 layout_mode = 0
-offset_left = 20.0
-offset_top = 64.0
-offset_right = 76.0
-offset_bottom = 87.0
+offset_left = 36.0
+offset_top = 312.0
+offset_right = 92.0
+offset_bottom = 335.0
 text = "30.0 m"
 horizontal_alignment = 1
 
 [node name="MovementUsed" type="Label" parent="PushStrengthPanel"]
 layout_mode = 0
-offset_left = 152.0
-offset_top = 36.0
-offset_right = 232.0
-offset_bottom = 59.0
+offset_left = 84.0
+offset_top = 160.0
+offset_right = 156.0
+offset_bottom = 183.0
 text = "30.0 m"
-label_settings = SubResource("LabelSettings_38hmk")
-horizontal_alignment = 1
 
 [node name="MovementUsedUpper" type="Label" parent="PushStrengthPanel"]
 layout_mode = 0
-offset_left = 304.0
-offset_top = 64.0
-offset_right = 369.0
-offset_bottom = 87.0
+offset_left = 32.0
+offset_top = 8.0
+offset_right = 105.0
+offset_bottom = 31.0
 text = "100.0 m"
 horizontal_alignment = 1
 
