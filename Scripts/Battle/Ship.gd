@@ -32,7 +32,7 @@ func _draw() -> void:
 		$RayCast2D.clear_exceptions()
 		move_additional_costs = 0.0
 		var target_line_vector = battle_scene.mouse_position_local - position
-		$RayCast2D.target_position = movement_remaining * battle_scene.PIXELS_PER_METER * target_line_vector.normalized()
+		$RayCast2D.target_position = min(movement_remaining * battle_scene.PIXELS_PER_METER, target_line_vector.length()) * target_line_vector.normalized()
 		var ray_movement_remaining = movement_remaining
 		while true:
 			$RayCast2D.force_raycast_update()
@@ -40,12 +40,8 @@ func _draw() -> void:
 			if hit_target is BattleEntity:
 				var hit_point = to_local($RayCast2D.get_collision_point())
 				var diff_length = ($RayCast2D.target_position - hit_point).length() / battle_scene.PIXELS_PER_METER
-				if diff_length > hit_target.go_through_movement_cost:
-					move_additional_costs += hit_target.go_through_movement_cost
-					ray_movement_remaining = max(ray_movement_remaining - hit_target.go_through_movement_cost, 0.0)
-				else:
-					move_additional_costs += diff_length
-					ray_movement_remaining = max(ray_movement_remaining - diff_length, 0.0)
+				move_additional_costs += hit_target.go_through_movement_cost
+				ray_movement_remaining = max(ray_movement_remaining - hit_target.go_through_movement_cost, 0.0)
 				if ray_movement_remaining > 0.0:
 					$RayCast2D.add_exception(hit_target)
 				else:
@@ -56,7 +52,7 @@ func _draw() -> void:
 		var line_vector = move_distance_px * target_line_vector.normalized()
 		move_target_position = line_vector + position
 		draw_line(Vector2.ZERO, line_vector, Color.WHITE)
-		draw_string(SystemFont.new(), line_vector + 20.0 * Vector2.ONE, "%.1f m" % (move_distance_px / battle_scene.PIXELS_PER_METER))
+		draw_string(SystemFont.new(), line_vector + 20.0 * Vector2.ONE, "%.1f m" % (move_distance_px / battle_scene.PIXELS_PER_METER + move_additional_costs))
 
 func move():
 	display_move_path = false
@@ -258,8 +254,17 @@ func push_entity():
 	if push_success:
 		entity_to_push.velocity += calculate_velocity_change()
 	else:
+		battle_scene.add_damage_text(true, entity_to_push.position)
 		entity_to_push.update_velocity_arrow()
 	movement_remaining -= push_movement_used
+	var push_tween = create_tween()
+	var orig_pos = position
+	push_tween.tween_property(self, "position", entity_to_push.position, 0.05).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
+	push_tween.tween_property(self, "position", orig_pos, 0.2).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_IN_OUT)
+	$PushEffect.scale = Vector2.ONE * remap(push_movement_used, 30.0, 100.0, 0.2, 0.5)
+	$PushEffect.rotation = atan2(entity_to_push.position.y - position.y, entity_to_push.position.x - position.x)
+	$PushEffect.position = 50.0 * Vector2.from_angle($PushEffect.rotation)
+	$PushEffect.show()
 	cancel_action()
 
 func calculate_velocity_change():
@@ -268,3 +273,7 @@ func calculate_velocity_change():
 func update_push_movement_used():
 	battle_GUI.get_node("PushStrengthPanel/MovementUsed").text = "%.1f m" % push_movement_used
 	entity_to_push.update_velocity_arrow(calculate_velocity_change())
+
+
+func _on_push_effect_visibility_changed() -> void:
+	$PushEffect.play("default")

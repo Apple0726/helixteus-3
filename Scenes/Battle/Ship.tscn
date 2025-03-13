@@ -1,4 +1,4 @@
-[gd_scene load_steps=32 format=3 uid="uid://cxykmxd6r2wgm"]
+[gd_scene load_steps=37 format=3 uid="uid://cxykmxd6r2wgm"]
 
 [ext_resource type="Texture2D" uid="uid://kr2fdk8dptv1" path="res://Graphics/Misc/BarUnder2.png" id="1"]
 [ext_resource type="Script" uid="uid://cfrufmr2v8ebl" path="res://Scripts/Battle/Ship.gd" id="2"]
@@ -17,6 +17,10 @@
 [ext_resource type="Shader" uid="uid://gevhgabt3grd" path="res://Shaders/Laser.gdshader" id="14"]
 [ext_resource type="Theme" uid="uid://cp2u1kgj60ic" path="res://Resources/default_theme.tres" id="15"]
 [ext_resource type="Texture2D" uid="uid://7ffsf7xuvfw2" path="res://Graphics/Icons/attack.png" id="16"]
+[ext_resource type="Texture2D" uid="uid://cyas017smhbpo" path="res://Graphics/Effects/push_1.png" id="18_4hicg"]
+[ext_resource type="Texture2D" uid="uid://3ljlm33mxoww" path="res://Graphics/Effects/push_2.png" id="19_fh3h1"]
+[ext_resource type="Texture2D" uid="uid://c6i4l2f2jqrh" path="res://Graphics/Effects/push_3.png" id="20_mql8i"]
+[ext_resource type="Texture2D" uid="uid://baalec05xgilm" path="res://Graphics/Effects/push_4.png" id="21_p0q1a"]
 
 [sub_resource type="Gradient" id="1"]
 offsets = PackedFloat32Array(0, 0.300469, 0.746479, 0.995305, 1)
@@ -137,6 +141,29 @@ color_ramp = SubResource("27")
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_53138"]
 radius = 60.0
 height = 232.0
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_p3fke"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("18_4hicg")
+}, {
+"duration": 1.0,
+"texture": ExtResource("19_fh3h1")
+}, {
+"duration": 1.0,
+"texture": ExtResource("20_mql8i")
+}, {
+"duration": 1.0,
+"texture": ExtResource("21_p0q1a")
+}, {
+"duration": 1.0,
+"texture": null
+}],
+"loop": false,
+"name": &"default",
+"speed": 20.0
+}]
 
 [node name="Ship" type="Area2D"]
 collision_layer = 2
@@ -339,8 +366,16 @@ width = 2.0
 points = PackedVector2Array(0, 0, 100, 0)
 width = 2.0
 
+[node name="PushEffect" type="AnimatedSprite2D" parent="."]
+visible = false
+position = Vector2(52, 0)
+scale = Vector2(0.5, 0.5)
+sprite_frames = SubResource("SpriteFrames_p3fke")
+offset = Vector2(-130, 0)
+
 [connection signal="mouse_entered" from="." to="." method="_on_mouse_entered"]
 [connection signal="mouse_exited" from="." to="." method="_on_mouse_exited"]
 [connection signal="visibility_changed" from="FireWeaponAim" to="." method="_on_fire_weapon_aim_visibility_changed"]
 [connection signal="area_entered" from="PushArea" to="." method="_on_push_area_area_entered"]
 [connection signal="area_exited" from="PushArea" to="." method="_on_push_area_area_exited"]
+[connection signal="visibility_changed" from="PushEffect" to="." method="_on_push_effect_visibility_changed"]
