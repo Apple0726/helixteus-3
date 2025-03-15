@@ -1,0 +1,78 @@
+[gd_scene load_steps=6 format=3 uid="uid://decmehu30cj8j"]
+
+[ext_resource type="Texture2D" uid="uid://cir1kafv55mq" path="res://Graphics/Battle/Obstacles/asteroid.png" id="1_8rmj3"]
+[ext_resource type="Script" uid="uid://n327fjh85gr3" path="res://Scripts/Battle/Asteroid.gd" id="1_gcgyw"]
+[ext_resource type="Texture2D" uid="uid://kr2fdk8dptv1" path="res://Graphics/Misc/BarUnder2.png" id="3_ey2x8"]
+[ext_resource type="Texture2D" uid="uid://bx1hvetixqpwi" path="res://Graphics/Misc/Bar2.png" id="4_fg6fk"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_gcgyw"]
+radius = 82.3893
+
+[node name="Node2D" type="Area2D"]
+collision_layer = 32
+collision_mask = 62
+monitoring = false
+script = ExtResource("1_gcgyw")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("1_8rmj3")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_gcgyw")
+
+[node name="Polygon2D" type="Polygon2D" parent="CollisionShape2D"]
+color = Color(1, 1, 1, 0)
+polygon = PackedVector2Array(-163, -91)
+uv = PackedVector2Array(-163, -91)
+
+[node name="VelocityArrow" type="Node2D" parent="."]
+scale = Vector2(1e-05, 1e-05)
+
+[node name="Head" type="Line2D" parent="VelocityArrow"]
+points = PackedVector2Array(80, 20, 100, 0, 80, -20)
+width = 2.0
+
+[node name="Body" type="Line2D" parent="VelocityArrow"]
+points = PackedVector2Array(0, 0, 100, 0)
+width = 2.0
+
+[node name="Info" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+mouse_filter = 2
+
+[node name="HP" type="TextureProgressBar" parent="Info"]
+modulate = Color(0, 1, 0, 1)
+layout_mode = 0
+offset_left = -130.0
+offset_top = 48.0
+offset_right = -34.0
+offset_bottom = 56.0
+rotation = -1.5708
+value = 50.0
+nine_patch_stretch = true
+texture_under = ExtResource("3_ey2x8")
+texture_progress = ExtResource("4_fg6fk")
+
+[node name="Label" type="Label" parent="Info"]
+layout_mode = 0
+offset_left = -28.0
+offset_top = 90.0
+offset_right = 52.0
+offset_bottom = 114.0
+
+[node name="Icon" type="TextureRect" parent="Info"]
+custom_minimum_size = Vector2(24, 24)
+layout_mode = 0
+offset_left = -68.0
+offset_top = 90.0
+offset_right = -44.0
+offset_bottom = 114.0
+expand_mode = 1
+stretch_mode = 6
+
+[connection signal="area_entered" from="." to="." method="_on_area_entered"]
+[connection signal="mouse_entered" from="." to="." method="_on_mouse_entered"]
+[connection signal="mouse_exited" from="." to="." method="_on_mouse_exited"]

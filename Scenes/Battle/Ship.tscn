@@ -1,4 +1,4 @@
-[gd_scene load_steps=37 format=3 uid="uid://cxykmxd6r2wgm"]
+[gd_scene load_steps=38 format=3 uid="uid://cxykmxd6r2wgm"]
 
 [ext_resource type="Texture2D" uid="uid://kr2fdk8dptv1" path="res://Graphics/Misc/BarUnder2.png" id="1"]
 [ext_resource type="Script" uid="uid://cfrufmr2v8ebl" path="res://Scripts/Battle/Ship.gd" id="2"]
@@ -19,8 +19,9 @@
 [ext_resource type="Texture2D" uid="uid://7ffsf7xuvfw2" path="res://Graphics/Icons/attack.png" id="16"]
 [ext_resource type="Texture2D" uid="uid://cyas017smhbpo" path="res://Graphics/Effects/push_1.png" id="18_4hicg"]
 [ext_resource type="Texture2D" uid="uid://3ljlm33mxoww" path="res://Graphics/Effects/push_2.png" id="19_fh3h1"]
-[ext_resource type="Texture2D" uid="uid://c6i4l2f2jqrh" path="res://Graphics/Effects/push_3.png" id="20_mql8i"]
-[ext_resource type="Texture2D" uid="uid://baalec05xgilm" path="res://Graphics/Effects/push_4.png" id="21_p0q1a"]
+[ext_resource type="Texture2D" uid="uid://dncbqa6a2j6e8" path="res://Graphics/Effects/push_3.png" id="20_mql8i"]
+[ext_resource type="Texture2D" uid="uid://do2jj66kerck5" path="res://Graphics/Effects/push_4.png" id="21_p0q1a"]
+[ext_resource type="Texture2D" uid="uid://dtler6yb7gbmd" path="res://Graphics/Effects/push_5.png" id="22_fh3h1"]
 
 [sub_resource type="Gradient" id="1"]
 offsets = PackedFloat32Array(0, 0.300469, 0.746479, 0.995305, 1)
@@ -156,6 +157,9 @@ animations = [{
 }, {
 "duration": 1.0,
 "texture": ExtResource("21_p0q1a")
+}, {
+"duration": 1.0,
+"texture": ExtResource("22_fh3h1")
 }, {
 "duration": 1.0,
 "texture": null

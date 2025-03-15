@@ -1,5 +1,8 @@
 extends Area2D
 
+signal end_turn
+
+static var amount:int = 0
 var speed:float
 var damage:float
 var shooter_attack:int
@@ -9,6 +12,13 @@ var ending_turn_delay:float
 
 func _ready() -> void:
 	area_entered.connect(_on_area_entered)
+	tree_exiting.connect(decrement_amount)
+	amount += 1
+
+func decrement_amount():
+	amount -= 1
+	if amount <= 0:
+		emit_signal("end_turn", ending_turn_delay)
 
 func _process(delta: float) -> void:
 	position += speed * Vector2.from_angle(rotation) * delta
@@ -31,7 +41,7 @@ func _on_area_entered(area: Area2D) -> void:
 			queue_free()
 		else:
 			# The bullet can now hit anything, regardless of the shooter
-			collision_mask = 1 + 2 + 4
+			collision_mask = 1 + 2 + 4 + 32
 			var incidence_angle = atan2(position.y - area.position.y, position.x - area.position.x)
 			rotation = Vector2.from_angle(rotation).bounce(Vector2.from_angle(incidence_angle)).angle()
 			deflects_remaining -= 1

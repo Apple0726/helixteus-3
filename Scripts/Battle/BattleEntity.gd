@@ -26,7 +26,7 @@ var agility:int:
 		agility = value
 		agility_updated_callback()
 var initiative:int
-var turn_index:int
+var turn_index:int = -1
 var go_through_movement_cost:float # in meters
 var velocity:Vector2 = Vector2.ZERO:
 	get:
@@ -80,7 +80,12 @@ func show_initiative(_initiative: int):
 	create_tween().tween_property($Info/Initiative, "position:y", $Info/Initiative.position.y - 15.0, 1.0).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_CIRC)
 
 func take_turn():
-	battle_GUI.turn_order_hbox.get_child(turn_index).get_node("AnimationPlayer").play("ChangeSize")
+	if turn_index != -1:
+		battle_GUI.turn_order_hbox.get_child(turn_index).get_node("AnimationPlayer").play("ChangeSize")
+	if velocity != Vector2.ZERO:
+		var move_tween = create_tween()
+		move_tween.tween_property(self, "position", position + velocity, 1.0)
+		await move_tween.finished
 
 func end_turn():
 	battle_GUI.turn_order_hbox.get_child(turn_index).get_node("AnimationPlayer").play_backwards("ChangeSize")
@@ -111,7 +116,7 @@ func damage_entity(weapon_data: Dictionary):
 	return not dodged
 
 func update_velocity_arrow(offset: Vector2 = Vector2.ZERO):
-	$VelocityArrow.scale = Vector2.ONE * (velocity + offset).length() / 100.0
+	$VelocityArrow.scale = Vector2.ONE * (velocity + offset).length() / 100.0 / scale
 	$VelocityArrow.rotation = (velocity + offset).angle()
 
 

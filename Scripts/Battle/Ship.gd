@@ -125,7 +125,7 @@ func fire_weapon(weapon_type: int):
 		for i in 2:
 			var projectile = preload("res://Scenes/Battle/Weapons/Projectile.tscn").instantiate()
 			projectile.collision_layer = 8
-			projectile.collision_mask = 1 + 4
+			projectile.collision_mask = 1 + 4 + 32
 			projectile.set_script(load("res://Scripts/Battle/Weapons/Bullet.gd"))
 			projectile.speed = 1000.0
 			projectile.rotation = weapon_rotation
@@ -134,9 +134,9 @@ func fire_weapon(weapon_type: int):
 			projectile.weapon_accuracy = Data.bullet_data[bullet_lv-1].accuracy * accuracy
 			projectile.deflects_remaining = bullet_lv
 			projectile.position = position
+			projectile.ending_turn_delay = 1.0
+			projectile.end_turn.connect(ending_turn)
 			battle_scene.add_child(projectile)
-			if i == 1:
-				projectile.tree_exited.connect(ending_turn)
 			await get_tree().create_timer(0.2).timeout
 	elif weapon_type == battle_GUI.LASER:
 		var laser = preload("res://Scenes/Battle/Weapons/Laser.tscn").instantiate()
@@ -150,7 +150,7 @@ func fire_weapon(weapon_type: int):
 	elif weapon_type == battle_GUI.BOMB:
 		var explosive = preload("res://Scenes/Battle/Weapons/Explosive.tscn").instantiate()
 		explosive.collision_layer = 8
-		explosive.collision_mask = 1 + 3
+		explosive.collision_mask = 1 + 4 + 32
 		explosive.set_script(load("res://Scripts/Battle/Weapons/Explosive.gd"))
 		explosive.speed = 800.0
 		explosive.AoE_radius = 100.0
@@ -160,8 +160,9 @@ func fire_weapon(weapon_type: int):
 		explosive.weapon_accuracy = Data.bomb_data[bomb_lv-1].accuracy * accuracy
 		explosive.position = position
 		explosive.battle_GUI = battle_GUI
+		explosive.ending_turn_delay = 1.0
 		battle_scene.add_child(explosive)
-		explosive.tree_exited.connect(ending_turn)
+		explosive.end_turn.connect(ending_turn)
 	elif weapon_type == battle_GUI.LIGHT:
 		light_cone.tree_exited.connect(ending_turn)
 		light_cone.fire_light()
@@ -176,8 +177,8 @@ func add_light_cone():
 	add_child(light_cone)
 
 
-func ending_turn():
-	create_tween().tween_callback(end_turn).set_delay(1.0)
+func ending_turn(delay: float = 0.0):
+	create_tween().tween_callback(end_turn).set_delay(delay)
 
 
 func damage_entity(weapon_data: Dictionary):
@@ -199,6 +200,7 @@ func cancel_action():
 	game.block_scroll = false
 	target_btns.clear()
 	display_move_path = false
+	queue_redraw()
 	get_node("RayCast2D").enabled = false
 	battle_GUI.fade_in_main_panel()
 	if is_instance_valid(entity_to_push):
@@ -239,6 +241,7 @@ func show_push_strength_panel(entity: BattleEntity):
 	battle_GUI.get_node("PushStrengthPanel/MovementUsedLower").text = "30.0 m"
 	battle_GUI.get_node("PushStrengthPanel/MovementUsedUpper").text = "%.1f m" % movement_remaining
 	push_movement_used = (movement_remaining + 30.0) / 2.0
+	entity_to_push.get_node("VelocityArrow/AnimationPlayer").play("Blink")
 	battle_GUI.get_node("PushStrengthPanel").show()
 	var info_label = battle_GUI.get_node("Info")
 	info_label.show()
@@ -251,12 +254,13 @@ func push_entity():
 	var push_success = true
 	if entity_to_push.type == battle_scene.ENEMY:
 		push_success = push_entity_attempt(agility + agility_buff, entity_to_push.agility + entity_to_push.agility_buff)
+	entity_to_push.update_velocity_arrow()
 	if push_success:
-		entity_to_push.velocity += calculate_velocity_change()
+		create_tween().tween_property(entity_to_push, "velocity", entity_to_push.velocity + calculate_velocity_change(), 0.4).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
 	else:
 		battle_scene.add_damage_text(true, entity_to_push.position)
-		entity_to_push.update_velocity_arrow()
 	movement_remaining -= push_movement_used
+	entity_to_push.get_node("VelocityArrow/AnimationPlayer").stop()
 	var push_tween = create_tween()
 	var orig_pos = position
 	push_tween.tween_property(self, "position", entity_to_push.position, 0.05).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)

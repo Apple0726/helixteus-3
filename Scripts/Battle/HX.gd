@@ -59,7 +59,7 @@ func determine_target():
 	return priorities.find(max_priority)
 
 func take_turn():
-	super()
+	await super()
 	var ship_target_id = determine_target()
 	target_position = ship_nodes[ship_target_id].position
 	position_preferences = {}
@@ -91,11 +91,7 @@ func take_turn():
 			target_move_position = pos
 	if velocity == Vector2.ZERO:
 		await get_tree().create_timer(0.5).timeout
-		move(target_move_position)
-	else:
-		var move_tween = create_tween()
-		move_tween.tween_property(self, "position", position + velocity, 1.0)
-		move_tween.tween_callback(move.bind(target_move_position))
+	move(target_move_position)
 
 func calculate_position_preferences(pos:Vector2):
 	if position_preferences.has(pos):
@@ -127,7 +123,7 @@ func attack_target():
 	var projectile = preload("res://Scenes/Battle/Weapons/Projectile.tscn").instantiate()
 	projectile.set_script(load("res://Scripts/Battle/Weapons/Bullet.gd"))
 	projectile.collision_layer = 16
-	projectile.collision_mask = 1 + 2
+	projectile.collision_mask = 1 + 2 + 32
 	projectile.speed = 1000.0
 	projectile.rotation = randf_range(target_angle - target_angle_max_deviation, target_angle + target_angle_max_deviation)
 	projectile.damage = 3.0
@@ -137,11 +133,11 @@ func attack_target():
 	projectile.position = position
 	projectile.ending_turn_delay = 1.0
 	battle_scene.add_child(projectile)
-	projectile.tree_exiting.connect(ending_turn.bind(projectile))
+	projectile.end_turn.connect(ending_turn)
 
 
-func ending_turn(projectile):
-	create_tween().tween_callback(end_turn).set_delay(projectile.ending_turn_delay)
+func ending_turn(delay: float = 0.0):
+	create_tween().tween_callback(end_turn).set_delay(delay)
 
 
 func _on_collision_shape_finder_area_entered(area: Area2D) -> void:
