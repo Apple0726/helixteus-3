@@ -483,7 +483,7 @@ func show_planet_info(id:int, l_id:int):
 					tooltip += "\n%s" % tr("PRESS_F_TO_UPGRADE")
 			if game.help.has("planet_details"):
 				tooltip += "\n%s\n%s" % [tr("MORE_DETAILS"), tr("HIDE_SHORTCUTS")]
-		game.show_adv_tooltip(tooltip, Helper.flatten(icons))
+		game.show_adv_tooltip(tooltip, {"imgs": Helper.flatten(icons)})
 
 var MS_constr_data:Dictionary = {}
 var current_MS_action = ""

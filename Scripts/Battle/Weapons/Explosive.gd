@@ -43,6 +43,7 @@ func _on_area_entered(area: Area2D) -> void:
 		"damage":damage,
 		"shooter_attack":shooter_attack,
 		"weapon_accuracy":weapon_accuracy,
+		"orientation":Vector2.from_angle(rotation),
 		"damage_label_initial_velocity":0.5 * speed * Vector2.from_angle(rotation),
 	}
 	if area.damage_entity(weapon_data):

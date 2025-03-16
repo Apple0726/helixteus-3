@@ -29,7 +29,7 @@ func _on_RichTextLabel_mouse_entered():
 	if translate_help:
 		_help_text = tr(help_text)
 	if adv_help:
-		game.show_adv_tooltip(_help_text, adv_icons, icon_size)
+		game.show_adv_tooltip(_help_text, {"imgs": adv_icons, "size": icon_size})
 	else:
 		game.show_tooltip(_help_text)
 

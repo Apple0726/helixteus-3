@@ -1640,6 +1640,33 @@ func set_logarithmic_time_speed(dimensional_power:int, base_time_speed:float):
 	else:
 		return base_time_speed
 
+func add_text_icons(RTL:RichTextLabel, txt:String, imgs:Array, size:int = 17, resize_RTL:bool = false):
+	RTL.text = ""
+	var arr = txt.split("@i")#@i: where images are placed
+	var i = 0
+	for st in arr:
+		RTL.append_text(st)
+		if i < len(imgs) and imgs[i]:
+			RTL.add_image(imgs[i], 0, size)
+		i += 1
+	var font:Font = preload("res://Resources/default_theme.tres").default_font
+	if resize_RTL:
+		var arr2 = txt.split("\n")
+		var max_width = 0
+		for st in arr2:
+			var bb_start:int = st.find("[")
+			var bb_end:int = st.find("]")
+			while bb_start != -1 and bb_end != -1:
+				st = st.replace(st.substr(bb_start, bb_end - bb_start + 1), "")
+				bb_start = st.find("[")
+				bb_end = st.find("]")
+			var width = min(font.get_string_size(st).x + 40, 400)
+			max_width = max(width, max_width)
+		#await get_tree().process_frame
+		if is_instance_valid(RTL):
+			RTL.size.x = RTL.get_content_width() + 30
+			RTL.size.y = RTL.get_content_height() + 20
+
 # get_sphere_volume
 func get_sph_V(outer:float, inner:float = 0):
 	outer /= 150.0#I have to reduce the size of planets otherwise it's too OP

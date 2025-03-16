@@ -267,7 +267,7 @@ func get_lv_sum():
 	return lv
 
 func _on_Points_mouse_entered():
-	game.show_adv_tooltip(tr("TP_POINTS_INFO"), [preload("res://Graphics/Formulas/PPs.png")], 80)
+	game.show_adv_tooltip(tr("TP_POINTS_INFO"), {"imgs": [preload("res://Graphics/Formulas/PPs.png")], "size": 80})
 
 func _on_mouse_exited():
 	game.hide_tooltip()

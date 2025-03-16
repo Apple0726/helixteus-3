@@ -3645,53 +3645,44 @@ func add_surface_materials(temp:float, crust_comp:Dictionary):#Amount in kg
 		surface_mat_info[mat].amount = Helper.clever_round(surface_mat_info[mat].amount)
 	return surface_mat_info
 
-var tooltip_display_position_x = 0
-var tooltip_display_position_y = 0
-
-func show_adv_tooltip(txt:String, imgs:Array = [], size:int = 17):
+func show_adv_tooltip(txt:String, params:Dictionary = {}):
 	if is_instance_valid(tooltip):
 		tooltip.queue_free()
 	tooltip = preload("res://Scenes/AdvTooltip.tscn").instantiate()
 	tooltip.modulate.a = 0.0
 	$Tooltips.add_child(tooltip)
-	add_text_icons(tooltip, txt, imgs, size, true)
-	await get_tree().create_timer(0.01).timeout
-	if mouse_pos.x > 1250 - tooltip.size.x:
-		tooltip_display_position_x = 1
-	else:
-		tooltip_display_position_x = 0
-	if mouse_pos.y > 690 - tooltip.size.y:
-		tooltip_display_position_y = 1
-	else:
-		tooltip_display_position_y = 0
-	set_tooltip_position()
-	var tween = create_tween()
-	tween.tween_property(tooltip, "modulate", Color.WHITE, 0.0).set_delay(0.05)
+	tooltip.orig_text = txt
+	tooltip.imgs = params.get("imgs", [])
+	tooltip.imgs_size = params.get("size", 17)
+	Helper.add_text_icons(tooltip, txt, tooltip.imgs, tooltip.imgs_size, true)
+	if params.has("additional_text"):
+		tooltip.show_additional_text(params.additional_text)
 
-func show_tooltip(txt:String, hide:bool = true):
+func show_tooltip(txt:String):
 	if is_instance_valid(tooltip):
 		tooltip.free()
-	tooltip = preload("res://Scenes/Tooltip.tscn").instantiate()
-	tooltip.modulate.a = 0.0
-	tooltip.text = txt
-	$Tooltips.add_child(tooltip)
-	if tooltip.size.x > 500:
-		tooltip.autowrap_mode = TextServer.AUTOWRAP_WORD
-		await get_tree().process_frame
-		tooltip.size.x = 500
-		tooltip.custom_minimum_size.y = 30
-		tooltip.size.y = 30
-	if mouse_pos.x > 1250 - tooltip.size.x:
-		tooltip_display_position_x = 1
-	else:
-		tooltip_display_position_x = 0
-	if mouse_pos.y > 690 - tooltip.size.y:
-		tooltip_display_position_y = 1
-	else:
-		tooltip_display_position_y = 0
-	set_tooltip_position()
-	var tween = create_tween()
-	tween.tween_property(tooltip, "modulate", Color.WHITE, 0.0).set_delay(0.05)
+	show_adv_tooltip(txt)
+	#tooltip = preload("res://Scenes/Tooltip.tscn").instantiate()
+	#tooltip.modulate.a = 0.0
+	#tooltip.text = txt
+	#$Tooltips.add_child(tooltip)
+	#if tooltip.size.x > 500:
+		#tooltip.autowrap_mode = TextServer.AUTOWRAP_WORD
+		#await get_tree().process_frame
+		#tooltip.size.x = 500
+		#tooltip.custom_minimum_size.y = 30
+		#tooltip.size.y = 30
+	#if mouse_pos.x > 1250 - tooltip.size.x:
+		#tooltip_display_position_x = 1
+	#else:
+		#tooltip_display_position_x = 0
+	#if mouse_pos.y > 690 - tooltip.size.y:
+		#tooltip_display_position_y = 1
+	#else:
+		#tooltip_display_position_y = 0
+	#set_tooltip_position()
+	#var tween = create_tween()
+	#tween.tween_property(tooltip, "modulate", Color.WHITE, 0.0).set_delay(0.05)
 
 func hide_tooltip():
 	if is_instance_valid(tooltip):
@@ -3699,33 +3690,6 @@ func hide_tooltip():
 
 func hide_adv_tooltip():
 	hide_tooltip()
-
-func add_text_icons(RTL:RichTextLabel, txt:String, imgs:Array, size:int = 17, _tooltip:bool = false):
-	RTL.clear()
-	var arr = txt.split("@i")#@i: where images are placed
-	var i = 0
-	for st in arr:
-		RTL.append_text(st)
-		if i < len(imgs) and imgs[i]:
-			RTL.add_image(imgs[i], 0, size)
-		i += 1
-	var font:Font = preload("res://Resources/default_theme.tres").default_font
-	if _tooltip:
-		var arr2 = txt.split("\n")
-		var max_width = 0
-		for st in arr2:
-			var bb_start:int = st.find("[")
-			var bb_end:int = st.find("]")
-			while bb_start != -1 and bb_end != -1:
-				st = st.replace(st.substr(bb_start, bb_end - bb_start + 1), "")
-				bb_start = st.find("[")
-				bb_end = st.find("]")
-			var width = min(font.get_string_size(st).x + 40, 400)
-			max_width = max(width, max_width)
-		await get_tree().process_frame
-		if is_instance_valid(RTL):
-			RTL.size.x = RTL.get_content_width() + 30
-			RTL.size.y = RTL.get_content_height() + 20
 
 func add_items(item_id:int, num:int = 1):
 	var cycles = 0
@@ -3996,20 +3960,6 @@ var cmd_history:Array = []
 var cmd_history_index:int = -1
 var sub_panel
 
-func set_tooltip_position():
-	if Settings.op_cursor:
-		tooltip.position.x = max(mouse_pos.x - tooltip.size.x - 5, 0)
-		tooltip.position.y = max(mouse_pos.y - tooltip.size.y - 5, 0)
-	else:
-		if tooltip_display_position_x == 0:
-			tooltip.position.x = min(mouse_pos.x + 9, (1278 if $UI/Panel.modulate.a == 0.0 else 900) - tooltip.size.x)
-		elif tooltip_display_position_x == 1:
-			tooltip.position.x = max(mouse_pos.x - tooltip.size.x - 9, 0)
-		if tooltip_display_position_y == 0:
-			tooltip.position.y = min(mouse_pos.y + 9, 720 - tooltip.size.y)
-		elif tooltip_display_position_y == 1:
-			tooltip.position.y = max(mouse_pos.y - tooltip.size.y - 9, 0)
-
 func _input(event):
 	if event is InputEventMouseMotion:
 		mouse_pos = event.position
@@ -4047,7 +3997,7 @@ func _input(event):
 	if is_instance_valid(stats_panel) and stats_panel.visible and stats_panel.get_node("Statistics").visible and stats_panel.curr_stat_tab == "_on_UserInput_pressed":
 		stats_panel._on_UserInput_pressed()
 	if is_instance_valid(tooltip):
-		set_tooltip_position()
+		tooltip.set_tooltip_position()
 	if item_cursor.visible:
 		item_cursor.position = mouse_pos
 

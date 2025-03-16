@@ -441,7 +441,7 @@ func show_tooltip(tile, tile_id:int):
 			real_time_speed_bonus = Helper.clever_round(log(game.u_i.time_speed * tile.time_speed_bonus - 1.0 + exp(1.0)) / log(game.u_i.time_speed - 1.0 + exp(1.0)))
 		tooltip += ("\n" if tooltip != "" else "") + "[color=#FFBBBB]" + tr("TIME_FLOWS_X_FASTER_HERE") % real_time_speed_bonus + "[/color]"
 	if tooltip != "":
-		game.show_adv_tooltip(tooltip, icons)
+		game.show_adv_tooltip(tooltip, {"imgs": icons})
 	if fiery_tooltip != -1 and is_instance_valid(game.tooltip):
 		game.tooltip.get_node("ColorRect").visible = true
 		game.tooltip.get_node("ColorRect").material.set_shader_parameter("seed", fiery_tooltip)
@@ -1013,7 +1013,7 @@ func select_all_of_same_type_callable(called_from_right_click = true):
 			tooltip += Helper.get_bldg_tooltip2(tile.bldg.name, path_1_value_sum, path_2_value_sum, path_3_value_sum)
 			if tile.bldg.name in [Building.GLASS_FACTORY, Building.STEAM_ENGINE, Building.STONE_CRUSHER]:
 				tooltip += "\n[color=#88CCFF]G: %s[/color]" % tr("LOAD_UNLOAD_ALL")
-			game.show_adv_tooltip(tooltip, Helper.flatten(Data.desc_icons[tile.bldg.name]))
+			game.show_adv_tooltip(tooltip, {"imgs": Helper.flatten(Data.desc_icons[tile.bldg.name])})
 		else:
 			game.show_adv_tooltip(Helper.get_bldg_tooltip2(tile.bldg.name, path_1_value_sum, path_2_value_sum, path_3_value_sum) + "\n" + tr("SELECTED_X_BLDGS") % len(tiles_selected))
 

@@ -51,6 +51,7 @@ var default_override_tooltip_dict = {
 	"light_intensity_mult": "",
 	"light_intensity_mult_info": "",
 }
+var default_tooltip_icons = [Data.HP_icon, Data.attack_icon, Data.defense_icon, Data.accuracy_icon, Data.agility_icon]
 var override_tooltip_dict:Dictionary
 var override_tooltip_icons = [Data.attack_icon, Data.defense_icon, Data.accuracy_icon, Data.agility_icon]
 
@@ -58,6 +59,27 @@ func _ready() -> void:
 	override_tooltip_dict = default_override_tooltip_dict.duplicate()
 	if has_node("Info/Initiative"):
 		$Info/Initiative.modulate.a = 0.0
+	default_tooltip_text = "@i \t%s / %s" % [HP, total_HP]
+	default_tooltip_text += "\n@i \t%s" % attack
+	if attack_buff > 0:
+		default_tooltip_text += " + " + str(attack_buff) + " = " + str(attack + attack_buff)
+	elif attack_buff < 0:
+		default_tooltip_text += " - " + str(abs(attack_buff)) + " = " + str(attack + attack_buff)
+	default_tooltip_text += "\n@i \t%s" % defense
+	if defense_buff > 0:
+		default_tooltip_text += " + " + str(defense_buff) + " = " + str(defense + defense_buff)
+	elif defense_buff < 0:
+		default_tooltip_text += " - " + str(abs(defense_buff)) + " = " + str(defense + defense_buff)
+	default_tooltip_text += "\n@i \t%s" % accuracy
+	if accuracy_buff > 0:
+		default_tooltip_text += " + " + str(accuracy_buff) + " = " + str(accuracy + accuracy_buff)
+	elif accuracy_buff < 0:
+		default_tooltip_text += " - " + str(abs(accuracy_buff)) + " = " + str(accuracy + accuracy_buff)
+	default_tooltip_text += "\n@i \t%s" % agility
+	if agility_buff > 0:
+		default_tooltip_text += " + " + str(agility_buff) + " = " + str(agility + agility_buff)
+	elif agility_buff < 0:
+		default_tooltip_text += " - " + str(abs(agility_buff)) + " = " + str(agility + agility_buff)
 
 func initialize_stats(data:Dictionary):
 	lv = data.lv
@@ -96,7 +118,7 @@ func agility_updated_callback():
 		$CollisionShapeFinder/CollisionShape2D.shape.radius = (agility + agility_buff) * METERS_PER_AGILITY * PIXELS_PER_METER
 
 func damage_entity(weapon_data: Dictionary):
-	var dodged = 1.0 / (1.0 + exp((weapon_data.weapon_accuracy - agility - agility_buff + 9.2) / 5.8)) > randf()
+	var dodged = 1.0 / (1.0 + exp((weapon_data.weapon_accuracy - agility - agility_buff - abs(0.1 * velocity.rotated(PI / 2.0).dot(weapon_data.get("orientation", Vector2.ZERO))) + 9.2) / 5.8)) > randf()
 	if dodged:
 		battle_scene.add_damage_text(true, position)
 	else:
@@ -120,5 +142,5 @@ func update_velocity_arrow(offset: Vector2 = Vector2.ZERO):
 	$VelocityArrow.rotation = (velocity + offset).angle()
 
 
-func push_entity_attempt(agility_pusher: int, agility_pushee: int):
-	return 1.0 / (1.0 + exp((agility_pusher - agility_pushee + 9.2) / 5.8)) < randf()
+func push_entity_attempt(agility_pusher: int, agility_pushee: int, position_difference: Vector2, velocity_difference: Vector2):
+	return 1.0 / (1.0 + exp((agility_pusher - agility_pushee - abs(0.1 * position_difference.rotated(PI / 2.0).dot(velocity_difference)) + 9.2) / 5.8)) > randf()

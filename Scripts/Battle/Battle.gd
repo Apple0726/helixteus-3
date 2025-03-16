@@ -220,7 +220,10 @@ func environment_take_turn():
 		asteroid.HP = asteroid.total_HP
 		asteroid.get_node("Info/HP").max_value = asteroid.total_HP
 		asteroid.get_node("Info/HP").value = asteroid.HP
+		asteroid.attack = 10
 		asteroid.defense = 10
+		asteroid.accuracy = pow(asteroid.scale.x * 20.0, 1.5) + 1
+		asteroid.agility = pow(2.0 / asteroid.scale.x, 1.5) + 1
 		asteroid.get_node("Sprite2D").modulate.a = 0.0
 		create_tween().tween_property(asteroid.get_node("Sprite2D"), "modulate:a", 1.0, 0.5)
 		asteroid.get_node("Sprite2D").rotation = randf_range(0.0, 2.0 * PI)

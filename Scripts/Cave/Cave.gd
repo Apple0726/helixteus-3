@@ -2178,7 +2178,7 @@ func _on_Modifiers_mouse_entered():
 	var tooltip:String = Helper.get_modifier_string(modifiers, "", icons)
 	tooltip = tooltip.substr(1)
 	tooltip += "\n%s: %s" % [tr("TOTAL_TREASURE_MULT"), Helper.clever_round(treasure_mult)]
-	game.show_adv_tooltip(tooltip, icons)
+	game.show_adv_tooltip(tooltip, {"imgs": icons})
 
 func _on_FloorCollisionDetector_body_entered(body):
 	if body.name == "Ash":

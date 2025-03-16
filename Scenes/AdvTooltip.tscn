@@ -1,5 +1,6 @@
-[gd_scene load_steps=11 format=3 uid="uid://bxfp8oao3bfyl"]
+[gd_scene load_steps=12 format=3 uid="uid://bxfp8oao3bfyl"]
 
+[ext_resource type="Script" uid="uid://bodqt50xuqhrq" path="res://Scripts/AdvTooltip.gd" id="2_6b51o"]
 [ext_resource type="Script" uid="uid://cbdpyvjmvsy64" path="res://Scripts/TextEffects/AuroraText.gd" id="3"]
 [ext_resource type="Shader" uid="uid://bvyh61br1fdx3" path="res://Shaders/FireTooltip.gdshader" id="4"]
 
@@ -84,6 +85,7 @@ theme_override_styles/normal = SubResource("StyleBoxFlat_sjq4l")
 text = "a"
 scroll_active = false
 custom_effects = [SubResource("3")]
+script = ExtResource("2_6b51o")
 
 [node name="ColorRect" type="ColorRect" parent="."]
 visible = false

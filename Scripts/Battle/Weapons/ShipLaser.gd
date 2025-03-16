@@ -15,6 +15,7 @@ func _ready() -> void:
 			"damage":damage,
 			"shooter_attack":shooter_attack,
 			"weapon_accuracy":weapon_accuracy,
+			"orientation":Vector2.from_angle(rotation),
 			"damage_label_initial_velocity":100.0 * Vector2.from_angle(rotation),
 		}
 		hit_target.damage_entity(weapon_data)

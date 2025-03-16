@@ -25,7 +25,6 @@ func _ready() -> void:
 	movement_remaining = (agility + agility_buff) * METERS_PER_AGILITY
 	total_movement = (agility + agility_buff) * METERS_PER_AGILITY
 	go_through_movement_cost = 30.0
-	update_default_tooltip_text()
 
 func _draw() -> void:
 	if display_move_path:
@@ -64,28 +63,6 @@ func move():
 	move_tween.tween_callback(cancel_action)
 	create_tween().tween_property(game.view, "position", Vector2(640, 360) - move_target_position * game.view.scale.x, 1.0).set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_CUBIC)
 
-func update_default_tooltip_text():
-	default_tooltip_text = "@i \t%s / %s" % [HP, total_HP]
-	default_tooltip_text += "\n@i \t%s" % attack
-	if attack_buff > 0:
-		default_tooltip_text += " + " + str(attack_buff) + " = " + str(attack + attack_buff)
-	elif attack_buff < 0:
-		default_tooltip_text += " - " + str(abs(attack_buff)) + " = " + str(attack + attack_buff)
-	default_tooltip_text += "\n@i \t%s" % defense
-	if defense_buff > 0:
-		default_tooltip_text += " + " + str(defense_buff) + " = " + str(defense + defense_buff)
-	elif defense_buff < 0:
-		default_tooltip_text += " - " + str(abs(defense_buff)) + " = " + str(defense + defense_buff)
-	default_tooltip_text += "\n@i \t%s" % accuracy
-	if accuracy_buff > 0:
-		default_tooltip_text += " + " + str(accuracy_buff) + " = " + str(accuracy + accuracy_buff)
-	elif accuracy_buff < 0:
-		default_tooltip_text += " - " + str(abs(accuracy_buff)) + " = " + str(accuracy + accuracy_buff)
-	default_tooltip_text += "\n@i \t%s" % agility
-	if agility_buff > 0:
-		default_tooltip_text += " + " + str(agility_buff) + " = " + str(agility + agility_buff)
-	elif agility_buff < 0:
-		default_tooltip_text += " - " + str(abs(agility_buff)) + " = " + str(agility + agility_buff)
 
 func initialize_stats(data:Dictionary):
 	super(data)
@@ -112,7 +89,7 @@ func _on_mouse_entered() -> void:
 	if override_tooltip_text:
 		game.show_tooltip(override_tooltip_text)
 	else:
-		game.show_adv_tooltip(default_tooltip_text, [Data.HP_icon, Data.attack_icon, Data.defense_icon, Data.accuracy_icon, Data.agility_icon])
+		game.show_adv_tooltip(default_tooltip_text, {"imgs": default_tooltip_icons})
 
 
 func _on_mouse_exited() -> void:
@@ -228,6 +205,12 @@ func add_target_buttons_for_push():
 			target_btn.get_node("TextureButton").shortcut.events.append(InputEventKey.new())
 			target_btn.get_node("TextureButton").shortcut.events[0].physical_keycode = 48 + shortcut_key
 		target_btn.get_node("TextureButton").pressed.connect(show_push_strength_panel.bind(entity))
+		var position_difference = position - entity.position
+		var velocity_difference = velocity - entity.velocity
+		var push_difficulty_from_velocity = abs(0.1 * position_difference.rotated(PI / 2.0).dot(velocity_difference))
+		var push_success_chance = 100.0 * (1.0 - 1.0 / (1.0 + exp((agility + agility_buff - entity.agility - entity.agility_buff - push_difficulty_from_velocity + 9.2) / 5.8)))
+		target_btn.get_node("TextureButton").mouse_entered.connect(game.show_adv_tooltip.bind(tr("PUSH_SUCCESS_CHANCE") + ": %.1f%%" % push_success_chance, {"additional_text":tr("PUSH_SUCCESS_CHANCE_HELP")}))
+		target_btn.get_node("TextureButton").mouse_exited.connect(game.hide_tooltip)
 		create_tween().tween_property(entity.get_node("Sprite2D").material, "shader_parameter/alpha", 0.2, 0.2)
 		entity.add_child(target_btn)
 		target_btns[entity] = target_btn
@@ -253,7 +236,7 @@ func show_push_strength_panel(entity: BattleEntity):
 func push_entity():
 	var push_success = true
 	if entity_to_push.type == battle_scene.ENEMY:
-		push_success = push_entity_attempt(agility + agility_buff, entity_to_push.agility + entity_to_push.agility_buff)
+		push_success = push_entity_attempt(agility + agility_buff, entity_to_push.agility + entity_to_push.agility_buff, position - entity_to_push.position,  - entity_to_push.velocity)
 	entity_to_push.update_velocity_arrow()
 	if push_success:
 		create_tween().tween_property(entity_to_push, "velocity", entity_to_push.velocity + calculate_velocity_change(), 0.4).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)

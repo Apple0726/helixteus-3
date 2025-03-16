@@ -26,6 +26,7 @@ func _ready() -> void:
 	$MainPanel/Laser.mouse_exited.connect(game.hide_tooltip)
 	$MainPanel/Bomb.mouse_exited.connect(game.hide_tooltip)
 	$MainPanel/Light.mouse_exited.connect(game.hide_tooltip)
+	$MainPanel/Move.mouse_entered.connect(game.show_tooltip.bind(tr("BATTLE_MOVE_DESC")))
 	$MainPanel/Move.mouse_exited.connect(game.hide_tooltip)
 	$MainPanel/Push.mouse_exited.connect(game.hide_tooltip)
 	$LightEmissionConePanel.hide()
@@ -136,47 +137,30 @@ func _on_back_pressed() -> void:
 		game.switch_music(load("res://Audio/ambient%s.ogg" % randi_range(1, 3)), game.u_i.time_speed)
 	game.switch_view("system")
 
-var tooltip_tween
-
-func show_additional_tooltip(short_tooltip:String, long_tooltip:String):
-	if tooltip_tween and tooltip_tween.is_running():
-		tooltip_tween.kill()
-	tooltip_tween = create_tween()
-	tooltip_tween.tween_interval(1.0)
-	tooltip_tween.tween_callback(func(): if game.tooltip.visible: game.show_adv_tooltip(short_tooltip + "\n\n" + long_tooltip))
-
 
 func _on_bullet_mouse_entered() -> void:
 	var tooltip_txt = tr("BASE_DAMAGE") + ": " + str(Data.bullet_data[ship_node.bullet_lv-1].damage)
 	tooltip_txt += "\n" + tr("BASE_ACCURACY") + ": " + str(Data.bullet_data[ship_node.bullet_lv-1].accuracy)
-	game.show_adv_tooltip(tooltip_txt)
-	show_additional_tooltip(tooltip_txt, tr("BULLET_DESC"))
+	game.show_adv_tooltip(tooltip_txt, {"additional_text": tr("BULLET_DESC")})
 
 
 func _on_laser_mouse_entered() -> void:
 	var tooltip_txt = tr("BASE_DAMAGE") + ": " + str(Data.laser_data[ship_node.laser_lv-1].damage)
 	tooltip_txt += "\n" + tr("BASE_ACCURACY") + ": " + str(Data.laser_data[ship_node.laser_lv-1].accuracy)
-	game.show_adv_tooltip(tooltip_txt)
-	show_additional_tooltip(tooltip_txt, tr("LASER_DESC"))
+	game.show_adv_tooltip(tooltip_txt, {"additional_text": tr("LASER_DESC")})
 
 
 func _on_bomb_mouse_entered() -> void:
 	var tooltip_txt = tr("BASE_DAMAGE") + ": " + str(Data.bomb_data[ship_node.bomb_lv-1].damage)
 	tooltip_txt += "\n" + tr("BASE_ACCURACY") + ": " + str(Data.bomb_data[ship_node.bomb_lv-1].accuracy)
-	game.show_adv_tooltip(tooltip_txt)
-	show_additional_tooltip(tooltip_txt, tr("BOMB_DESC"))
+	game.show_adv_tooltip(tooltip_txt, {"additional_text": tr("BOMB_DESC")})
 
 
 func _on_light_mouse_entered() -> void:
 	var tooltip_txt = tr("BASE_DAMAGE") + ": " + str(Data.light_data[ship_node.light_lv-1].damage)
 	tooltip_txt += "\n" + tr("BASE_ACCURACY") + ": " + str(Data.light_data[ship_node.light_lv-1].accuracy)
-	game.show_adv_tooltip(tooltip_txt)
-	show_additional_tooltip(tooltip_txt, tr("LIGHT_DESC"))
+	game.show_adv_tooltip(tooltip_txt, {"additional_text": tr("LIGHT_DESC")})
 
-func _on_move_mouse_entered() -> void:
-	if tooltip_tween and tooltip_tween.is_running():
-		tooltip_tween.kill()
-	game.show_tooltip(tr("BATTLE_MOVE_DESC"))
 
 func _on_push_mouse_entered() -> void:
 	var tooltip_txt = tr("BATTLE_PUSH_DESC")
@@ -184,8 +168,8 @@ func _on_push_mouse_entered() -> void:
 		tooltip_txt += "\n[color=#FFAA00]" + tr("REQUIRES_MOVEMENT") + "[/color]"
 	if len(ship_node.pushable_entities) == 0:
 		tooltip_txt += "\n[color=#FFAA00]" + tr("NO_OBJECTS_NEAR_SHIP") + "[/color]"
-	game.show_adv_tooltip(tooltip_txt)
-	show_additional_tooltip(tooltip_txt, tr("BATTLE_PUSH_HELP"))
+	game.show_adv_tooltip(tooltip_txt, {"additional_text": tr("BATTLE_PUSH_HELP")})
+
 
 func fade_in_main_panel():
 	$MainPanel.show()

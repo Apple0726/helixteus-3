@@ -42,7 +42,7 @@ func _on_btn_pressed(_tab:int):
 					tooltip_icons.append(null)
 			var item = preload("res://Scenes/ShopItem.tscn").instantiate()
 			item.get_node("TextureRect").texture = item_texture
-			item.get_node("TextureButton").mouse_entered.connect(Callable(game, "show_adv_tooltip").bind(tooltip_txt, tooltip_icons))
+			item.get_node("TextureButton").mouse_entered.connect(Callable(game, "show_adv_tooltip").bind(tooltip_txt, {"imgs": tooltip_icons}))
 			item.get_node("TextureButton").mouse_exited.connect(Callable(game, "hide_tooltip"))
 			item.get_node("TextureButton").pressed.connect(Callable(self, "set_item_info").bind(item_name, costs, item_texture, item, item_id))
 			$Items/Grid.add_child(item)
@@ -62,7 +62,7 @@ func _on_btn_pressed(_tab:int):
 					tooltip_icons.append(null)
 			var item = preload("res://Scenes/ShopItem.tscn").instantiate()
 			item.get_node("TextureRect").texture = item_texture
-			item.get_node("TextureButton").mouse_entered.connect(Callable(game, "show_adv_tooltip").bind(tooltip_txt, tooltip_icons))
+			item.get_node("TextureButton").mouse_entered.connect(Callable(game, "show_adv_tooltip").bind(tooltip_txt, {"imgs": tooltip_icons}))
 			item.get_node("TextureButton").mouse_exited.connect(Callable(game, "hide_tooltip"))
 			item.get_node("TextureButton").pressed.connect(Callable(self, "set_item_info").bind(item_name, costs, item_texture, item, pickaxe_name))
 			$Items/Grid.add_child(item)

@@ -13,31 +13,6 @@ var target_angle_max_deviation:float
 func _ready() -> void:
 	super()
 	go_through_movement_cost = 30.0
-	update_default_tooltip_text()
-
-
-func update_default_tooltip_text():
-	default_tooltip_text = "@i \t%s / %s" % [HP, total_HP]
-	default_tooltip_text += "\n@i \t%s" % attack
-	if attack_buff > 0:
-		default_tooltip_text += " + " + str(attack_buff) + " = " + str(attack + attack_buff)
-	elif attack_buff < 0:
-		default_tooltip_text += " - " + str(abs(attack_buff)) + " = " + str(attack + attack_buff)
-	default_tooltip_text += "\n@i \t%s" % defense
-	if defense_buff > 0:
-		default_tooltip_text += " + " + str(defense_buff) + " = " + str(defense + defense_buff)
-	elif defense_buff < 0:
-		default_tooltip_text += " - " + str(abs(defense_buff)) + " = " + str(defense + defense_buff)
-	default_tooltip_text += "\n@i \t%s" % accuracy
-	if accuracy_buff > 0:
-		default_tooltip_text += " + " + str(accuracy_buff) + " = " + str(accuracy + accuracy_buff)
-	elif accuracy_buff < 0:
-		default_tooltip_text += " - " + str(abs(accuracy_buff)) + " = " + str(accuracy + accuracy_buff)
-	default_tooltip_text += "\n@i \t%s" % agility
-	if agility_buff > 0:
-		default_tooltip_text += " + " + str(agility_buff) + " = " + str(agility + agility_buff)
-	elif agility_buff < 0:
-		default_tooltip_text += " - " + str(abs(agility_buff)) + " = " + str(agility + agility_buff)
 
 
 func determine_target():
@@ -161,9 +136,9 @@ func _on_mouse_entered() -> void:
 	if battle_GUI.action_selected in [battle_GUI.MOVE, battle_GUI.PUSH]:
 		return
 	if override_tooltip_text:
-		game.show_adv_tooltip(override_tooltip_text.format(override_tooltip_dict), override_tooltip_icons)
+		game.show_adv_tooltip(override_tooltip_text.format(override_tooltip_dict), {"imgs": override_tooltip_icons})
 	else:
-		game.show_adv_tooltip(default_tooltip_text, [Data.HP_icon, Data.attack_icon, Data.defense_icon, Data.accuracy_icon, Data.agility_icon])
+		game.show_adv_tooltip(default_tooltip_text, {"imgs": default_tooltip_icons})
 
 
 func _on_mouse_exited() -> void:
