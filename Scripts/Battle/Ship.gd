@@ -53,6 +53,10 @@ func _draw() -> void:
 		draw_line(Vector2.ZERO, line_vector, Color.WHITE)
 		draw_string(SystemFont.new(), line_vector + 20.0 * Vector2.ONE, "%.1f m" % (move_distance_px / battle_scene.PIXELS_PER_METER + move_additional_costs))
 
+func take_turn():
+	movement_remaining = total_movement
+	super()
+
 func move():
 	display_move_path = false
 	queue_redraw()

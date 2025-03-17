@@ -130,9 +130,9 @@ func next_turn():
 	elif initiative_order[whose_turn_is_it_index].type == SHIP:
 		var ship_node = ship_nodes[initiative_order[whose_turn_is_it_index].idx]
 		battle_GUI.ship_node = ship_node
+		ship_node.take_turn()
 		battle_GUI.fade_in_main_panel()
 		move_view_tween.tween_property(game.view, "position", Vector2(640, 360) - ship_node.position * game.view.scale.x, 0.5).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
-		ship_node.take_turn()
 	elif initiative_order[whose_turn_is_it_index].type == ENEMY:
 		var HX_node = HX_nodes[initiative_order[whose_turn_is_it_index].idx]
 		move_view_tween.tween_property(game.view, "position", Vector2(640, 360) - HX_node.position * game.view.scale.x, 0.5).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
@@ -199,7 +199,7 @@ func environment_take_turn():
 		var asteroid_position = Vector2.ZERO
 		var asteroid_scale:Vector2
 		var scale_rand = randf()
-		asteroid_scale = Vector2.ONE * max(2.0 * pow(0.5 / (1.0 - scale_rand), 1.0 / 3.0) * scale_rand, 0.1)
+		asteroid_scale = Vector2.ONE * max(0.5 * scale_rand * pow(1.0 / (1.0 - scale_rand), 1.0 / 3.0), 0.1)
 		var colliding = true
 		while asteroid_position == Vector2.ZERO or colliding:
 			colliding = false
@@ -216,7 +216,7 @@ func environment_take_turn():
 		var asteroid = preload("res://Scenes/Battle/Asteroid.tscn").instantiate()
 		asteroid.position = asteroid_position
 		asteroid.scale = asteroid_scale
-		asteroid.total_HP = pow(asteroid_scale.x, 3) * 1000
+		asteroid.total_HP = pow(asteroid_scale.x, 3) * 10000
 		asteroid.HP = asteroid.total_HP
 		asteroid.get_node("Info/HP").max_value = asteroid.total_HP
 		asteroid.get_node("Info/HP").value = asteroid.HP

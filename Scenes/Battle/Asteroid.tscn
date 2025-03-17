@@ -11,8 +11,8 @@ radius = 82.3893
 [node name="Node2D" type="Area2D"]
 collision_layer = 32
 collision_mask = 62
-monitoring = false
 script = ExtResource("1_gcgyw")
+type = null
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 texture = ExtResource("1_8rmj3")
@@ -73,6 +73,5 @@ offset_bottom = 114.0
 expand_mode = 1
 stretch_mode = 6
 
-[connection signal="area_entered" from="." to="." method="_on_area_entered"]
 [connection signal="mouse_entered" from="." to="." method="_on_mouse_entered"]
 [connection signal="mouse_exited" from="." to="." method="_on_mouse_exited"]

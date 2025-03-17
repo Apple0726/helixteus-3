@@ -59,7 +59,6 @@ func _on_area_entered(area: Area2D) -> void:
 					"shooter_attack":shooter_attack,
 					"weapon_accuracy":INF,
 					"damage_label_initial_velocity":200.0 * (area_in_AoE.position - position).normalized(),
-					"crit_hit_chance":0.02,
 				}
 				area_in_AoE.damage_entity(AoE_weapon_data)
 		if Settings.screen_shake:
