@@ -20,7 +20,7 @@ func decrement_amount():
 	if amount <= 0:
 		emit_signal("end_turn", ending_turn_delay)
 
-func _process(delta: float) -> void:
+func _physics_process(delta: float) -> void:
 	position += speed * Vector2.from_angle(rotation) * delta
 	if (position - Vector2(640, 360)).length_squared() > pow(1280, 2) + pow(720, 2):
 		ending_turn_delay = 0.0

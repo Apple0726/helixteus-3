@@ -19,6 +19,7 @@ var ship_nodes = []
 var mouse_position_global:Vector2
 var mouse_position_local:Vector2
 var obstacle_nodes = []
+var view_tween
 
 enum {
 	ENEMY,
@@ -45,7 +46,7 @@ func _ready() -> void:
 		HX.ship_nodes = ship_nodes
 		HX.roll_initiative()
 		HX.get_node("Sprite2D").texture = load("res://Graphics/HX/%s_%s.png" % [HX_data[i]["class"], HX_data[i].type])
-		HX.get_node("Sprite2D").material.set_shader_parameter("frequency", 6 * time_speed)
+		HX.get_node("Sprite2D").material.set_shader_parameter("amplitude", 0.0)
 		HX.get_node("Info/HP").max_value = HX_data[i].HP
 		HX.get_node("Info/HP").value = HX_data[i].HP
 		HX.get_node("Info/Label").text = "%s %s" % [tr("LV"), HX_data[i].lv]
@@ -75,7 +76,7 @@ func _ready() -> void:
 			ship_node.battle_GUI = battle_GUI
 			ship_node.next_turn.connect(next_turn)
 			ship_node.get_node("Sprite2D").texture = load("res://Graphics/Ships/Ship%s.png" % i)
-			ship_node.get_node("Sprite2D").material.set_shader_parameter("frequency", 6 * time_speed)
+			ship_node.get_node("Sprite2D").material.set_shader_parameter("amplitude", 0.0)
 			ship_node.get_node("Info/HP").max_value = ship_data[i].HP
 			ship_node.get_node("Info/HP").value = ship_data[i].HP
 			ship_node.get_node("Info/Label").text = "%s %s" % [tr("LV"), ship_data[i].lv]
@@ -119,23 +120,23 @@ func initialize_battle():
 	next_turn()
 
 func next_turn():
-	var move_view_tween = create_tween().set_parallel()
+	view_tween = create_tween().set_parallel()
 	battle_GUI.ship_node = null
 	if whose_turn_is_it_index == len(initiative_order):
 		var view_scale:float = 0.4
-		move_view_tween.tween_property(game.view, "scale", Vector2.ONE * view_scale, 1.0).set_trans(Tween.TRANS_CUBIC)
-		move_view_tween.tween_property(game.view, "position", Vector2(640, 360) - Vector2(640, 360) * view_scale, 1.0).set_trans(Tween.TRANS_CUBIC)
-		move_view_tween.tween_callback(environment_take_turn).set_delay(1.0)
+		view_tween.tween_property(game.view, "scale", Vector2.ONE * view_scale, 1.0).set_trans(Tween.TRANS_CUBIC)
+		view_tween.tween_property(game.view, "position", Vector2(640, 360) - Vector2(640, 360) * view_scale, 1.0).set_trans(Tween.TRANS_CUBIC)
+		create_tween().tween_callback(environment_take_turn).set_delay(1.0)
 		battle_GUI.turn_order_hbox.get_child(whose_turn_is_it_index).get_node("AnimationPlayer").play("ChangeSize")
 	elif initiative_order[whose_turn_is_it_index].type == SHIP:
 		var ship_node = ship_nodes[initiative_order[whose_turn_is_it_index].idx]
 		battle_GUI.ship_node = ship_node
-		ship_node.take_turn()
+		await ship_node.take_turn()
 		battle_GUI.fade_in_main_panel()
-		move_view_tween.tween_property(game.view, "position", Vector2(640, 360) - ship_node.position * game.view.scale.x, 0.5).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+		view_tween.tween_property(game.view, "position", Vector2(640, 360) - ship_node.position * game.view.scale.x, 0.5).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
 	elif initiative_order[whose_turn_is_it_index].type == ENEMY:
 		var HX_node = HX_nodes[initiative_order[whose_turn_is_it_index].idx]
-		move_view_tween.tween_property(game.view, "position", Vector2(640, 360) - HX_node.position * game.view.scale.x, 0.5).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+		view_tween.tween_property(game.view, "position", Vector2(640, 360) - HX_node.position * game.view.scale.x, 0.5).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
 		HX_node.take_turn()
 	whose_turn_is_it_index += 1
 
@@ -160,6 +161,9 @@ func _input(event: InputEvent) -> void:
 	if event is InputEventMouseMotion:
 		mouse_position_global = event.position
 		mouse_position_local = to_local(event.position)
+	if Input.is_action_just_pressed("left_click") or Input.is_action_just_pressed("scroll_up") or Input.is_action_just_pressed("scroll_down"):
+		if view_tween and view_tween.is_running():
+			view_tween.kill()
 	if Input.is_action_just_pressed("A"):
 		display_stats("attack")
 	if Input.is_action_just_pressed("D"):
@@ -197,9 +201,8 @@ func display_stats(type:String):
 func environment_take_turn():
 	while randf() < 2.0 / (len(obstacle_nodes) + 1):
 		var asteroid_position = Vector2.ZERO
-		var asteroid_scale:Vector2
 		var scale_rand = randf()
-		asteroid_scale = Vector2.ONE * max(0.5 * scale_rand * pow(1.0 / (1.0 - scale_rand), 1.0 / 3.0), 0.1)
+		var asteroid_scale:float = max(0.5 * scale_rand * pow(1.0 / (1.0 - scale_rand), 1.0 / 3.0), 0.1)
 		var colliding = true
 		while asteroid_position == Vector2.ZERO or colliding:
 			colliding = false
@@ -210,26 +213,30 @@ func environment_take_turn():
 				asteroid_position.x = -640.0 if randf() < 0.5 else 1920.0
 				asteroid_position.y = randf_range(-1.0, 1.0) * 720.0 + 360.0
 			for obstacle in obstacle_nodes:
-				if Geometry2D.is_point_in_circle(asteroid_position, obstacle.position, (obstacle.scale.x + asteroid_scale.x) * 90.0):
+				if Geometry2D.is_point_in_circle(asteroid_position, obstacle.position, (obstacle.scale.x + asteroid_scale) * 90.0):
 					colliding = true
 					break
 		var asteroid = preload("res://Scenes/Battle/Asteroid.tscn").instantiate()
 		asteroid.position = asteroid_position
-		asteroid.scale = asteroid_scale
-		asteroid.total_HP = pow(asteroid_scale.x, 3) * 10000
+		asteroid.get_node("Sprite2D").scale = Vector2.ONE * asteroid_scale
+		asteroid.get_node("CollisionShape2D").scale = Vector2.ONE * asteroid_scale
+		asteroid.total_HP = pow(asteroid_scale, 3) * 10000
 		asteroid.HP = asteroid.total_HP
 		asteroid.get_node("Info/HP").max_value = asteroid.total_HP
 		asteroid.get_node("Info/HP").value = asteroid.HP
 		asteroid.attack = 10
 		asteroid.defense = 10
-		asteroid.accuracy = pow(asteroid.scale.x * 20.0, 1.5) + 1
-		asteroid.agility = pow(2.0 / asteroid.scale.x, 1.5) + 1
+		asteroid.accuracy = pow(asteroid_scale * 20.0, 1.5) + 1
+		asteroid.agility = pow(2.0 / asteroid_scale, 1.5) + 1
+		asteroid.go_through_movement_cost = asteroid_scale * 60.0
+		asteroid.collision_shape_radius = asteroid_scale * 84.0
 		asteroid.get_node("Sprite2D").modulate.a = 0.0
 		create_tween().tween_property(asteroid.get_node("Sprite2D"), "modulate:a", 1.0, 0.5)
 		asteroid.get_node("Sprite2D").rotation = randf_range(0.0, 2.0 * PI)
 		asteroid.battle_scene = self
 		asteroid.battle_GUI = battle_GUI
 		add_child(asteroid)
+		move_child(asteroid, 0)
 		asteroid.velocity = -30.0 / asteroid.scale.x * Vector2(randf(), randf()) * sign(asteroid.position - Vector2(640.0, 360.0))
 		obstacle_nodes.append(asteroid)
 	await get_tree().create_timer(0.5).timeout
@@ -239,3 +246,23 @@ func environment_take_turn():
 	battle_GUI.turn_order_hbox.get_child(whose_turn_is_it_index-1).get_node("AnimationPlayer").play_backwards("ChangeSize")
 	whose_turn_is_it_index = 0
 	next_turn()
+
+func enlarge_collision_shapes():
+	for HX in HX_nodes:
+		HX.get_node("CollisionShape2D").shape.radius += 36.0
+	for ship in ship_nodes:
+		if ship.get_instance_id() == battle_GUI.ship_node.get_instance_id():
+			continue
+		ship.get_node("CollisionShape2D").shape.radius += 36.0
+	for obstacle in obstacle_nodes:
+		obstacle.get_node("CollisionShape2D").shape.radius += 36.0
+
+func restore_collision_shapes():
+	for HX in HX_nodes:
+		HX.get_node("CollisionShape2D").shape.radius = HX.collision_shape_radius
+	for ship in ship_nodes:
+		if ship.get_instance_id() == battle_GUI.ship_node.get_instance_id():
+			continue
+		ship.get_node("CollisionShape2D").shape.radius = ship.collision_shape_radius
+	for obstacle in obstacle_nodes:
+		obstacle.get_node("CollisionShape2D").shape.radius = obstacle.collision_shape_radius

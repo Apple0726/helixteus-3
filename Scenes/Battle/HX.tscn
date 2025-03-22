@@ -22,15 +22,15 @@
 resource_local_to_scene = true
 radius = 100.0
 
-[sub_resource type="CapsuleShape2D" id="1"]
-radius = 15.9999
-height = 71.9729
+[sub_resource type="CircleShape2D" id="CircleShape2D_f8wif"]
+resource_local_to_scene = true
+radius = 24.0
 
 [sub_resource type="ShaderMaterial" id="2"]
 resource_local_to_scene = true
 shader = ExtResource("1_bfi0c")
-shader_parameter/amplitude = 4.0
-shader_parameter/frequency = 5.0
+shader_parameter/amplitude = 0.0
+shader_parameter/frequency = 3.0
 shader_parameter/aurora = false
 shader_parameter/light = 1.0
 shader_parameter/alpha = 1.0
@@ -451,7 +451,7 @@ _data = {
 
 [node name="HX" type="Area2D"]
 collision_layer = 4
-collision_mask = 0
+collision_mask = 39
 script = ExtResource("1_3h40m")
 
 [node name="FireWeaponAim" parent="." instance=ExtResource("2_uyhlq")]
@@ -468,7 +468,7 @@ debug_color = Color(0.533333, 0, 0.701961, 0)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 rotation = 1.57413
-shape = SubResource("1")
+shape = SubResource("CircleShape2D_f8wif")
 
 [node name="Polygon2D" type="Polygon2D" parent="CollisionShape2D"]
 color = Color(1, 1, 1, 0)

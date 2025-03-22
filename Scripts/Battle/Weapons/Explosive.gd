@@ -31,7 +31,7 @@ func _on_explosionAoE_entered(area: Area2D):
 func _on_explosionAoE_exited(area: Area2D):
 	entities_inside_explosion_AoE.erase(area)
 
-func _process(delta: float) -> void:
+func _physics_process(delta: float) -> void:
 	position += speed * Vector2.from_angle(rotation) * delta
 	if (position - Vector2(640, 360)).length_squared() > pow(1280, 2) + pow(720, 2):
 		ending_turn_delay = 0.0

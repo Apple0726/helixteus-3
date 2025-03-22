@@ -12,6 +12,7 @@ var target_angle_max_deviation:float
 
 func _ready() -> void:
 	super()
+	collision_shape_radius = 24.0
 	go_through_movement_cost = 30.0
 
 
@@ -85,10 +86,10 @@ func calculate_position_preferences(pos:Vector2):
 	
 func move(target_pos:Vector2):
 	var tween = create_tween()
-	var view_tween = create_tween()
+	battle_scene.view_tween = create_tween()
 	tween.tween_property(self, "position", target_pos, 1.5).set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_CUBIC)
 	tween.tween_callback(attack_target)
-	view_tween.tween_property(game.view, "position", Vector2(640, 360) - target_pos * game.view.scale.x, 1.5).set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_CUBIC)
+	battle_scene.view_tween.tween_property(game.view, "position", Vector2(640, 360) - target_pos * game.view.scale.x, 1.5).set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_CUBIC)
 
 func attack_target():
 	target_angle = atan2(target_position.y - position.y, target_position.x - position.x)
@@ -138,6 +139,7 @@ func _on_mouse_entered() -> void:
 	if override_tooltip_text:
 		game.show_adv_tooltip(override_tooltip_text.format(override_tooltip_dict), {"imgs": override_tooltip_icons})
 	else:
+		refresh_default_tooltip_text()
 		game.show_adv_tooltip(default_tooltip_text, {"imgs": default_tooltip_icons})
 
 

@@ -1,4 +1,4 @@
-[gd_scene load_steps=38 format=3 uid="uid://cxykmxd6r2wgm"]
+[gd_scene load_steps=41 format=3 uid="uid://cxykmxd6r2wgm"]
 
 [ext_resource type="Texture2D" uid="uid://kr2fdk8dptv1" path="res://Graphics/Misc/BarUnder2.png" id="1"]
 [ext_resource type="Script" uid="uid://cfrufmr2v8ebl" path="res://Scripts/Battle/Ship.gd" id="2"]
@@ -42,15 +42,15 @@ color_ramp = SubResource("2")
 
 [sub_resource type="ShaderMaterial" id="4"]
 shader = ExtResource("3_cptad")
-shader_parameter/amplitude = 20.0
+shader_parameter/amplitude = 0.0
 shader_parameter/frequency = 6.0
 shader_parameter/alpha = 1.0
 shader_parameter/flash = 0.0
 shader_parameter/flash_color = Color(1, 1, 1, 1)
 
-[sub_resource type="CapsuleShape2D" id="5"]
-radius = 16.0
-height = 120.0
+[sub_resource type="CircleShape2D" id="CircleShape2D_fh3h1"]
+resource_local_to_scene = true
+radius = 36.0
 
 [sub_resource type="Shader" id="25"]
 code = "shader_type canvas_item;
@@ -139,9 +139,46 @@ gravity = Vector3(0, 0, 0)
 color = Color(1, 0.603922, 0, 1)
 color_ramp = SubResource("27")
 
-[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_53138"]
-radius = 60.0
-height = 232.0
+[sub_resource type="CircleShape2D" id="CircleShape2D_mql8i"]
+radius = 120.0
+
+[sub_resource type="Animation" id="Animation_f8wif"]
+resource_name = "Blink"
+length = 0.5
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.266667, 0.5),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 1), Color(1, 1, 1, 0.545098), Color(1, 1, 1, 1)]
+}
+
+[sub_resource type="Animation" id="Animation_vw23x"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1, 1, 1, 1)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_makbt"]
+_data = {
+&"Blink": SubResource("Animation_f8wif"),
+&"RESET": SubResource("Animation_vw23x")
+}
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_p3fke"]
 animations = [{
@@ -171,7 +208,7 @@ animations = [{
 
 [node name="Ship" type="Area2D"]
 collision_layer = 2
-collision_mask = 16
+collision_mask = 55
 script = ExtResource("2")
 
 [node name="FireWeaponAim" parent="." instance=ExtResource("2_ogdx2")]
@@ -189,11 +226,11 @@ texture = ExtResource("5")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 rotation = 1.5708
-shape = SubResource("5")
+shape = SubResource("CircleShape2D_fh3h1")
 
 [node name="Polygon2D" type="Polygon2D" parent="CollisionShape2D"]
 color = Color(1, 1, 1, 0)
-polygon = PackedVector2Array(-15.9998, 48.0001, -16.0002, -47.9999, -0.000217199, -60, 15.9998, -48.0001, 16.0002, 47.9999, 0.000217199, 60)
+polygon = PackedVector2Array(-36, 0.00013032, -0.00013032, -36, 36, -0.00013032, 0.00013032, 36)
 
 [node name="Info" type="Control" parent="."]
 layout_mode = 3
@@ -356,7 +393,7 @@ monitorable = false
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="PushArea"]
 rotation = 1.5708
-shape = SubResource("CapsuleShape2D_53138")
+shape = SubResource("CircleShape2D_mql8i")
 debug_color = Color(0.556863, 0.560784, 0, 0.0941176)
 
 [node name="VelocityArrow" type="Node2D" parent="."]
@@ -369,6 +406,11 @@ width = 2.0
 [node name="Body" type="Line2D" parent="VelocityArrow"]
 points = PackedVector2Array(0, 0, 100, 0)
 width = 2.0
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="VelocityArrow"]
+libraries = {
+&"": SubResource("AnimationLibrary_makbt")
+}
 
 [node name="PushEffect" type="AnimatedSprite2D" parent="."]
 visible = false

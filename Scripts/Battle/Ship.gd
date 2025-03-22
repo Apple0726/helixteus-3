@@ -22,6 +22,7 @@ var entity_to_push:BattleEntity
 
 func _ready() -> void:
 	super()
+	collision_shape_radius = 36.0
 	movement_remaining = (agility + agility_buff) * METERS_PER_AGILITY
 	total_movement = (agility + agility_buff) * METERS_PER_AGILITY
 	go_through_movement_cost = 30.0
@@ -32,26 +33,31 @@ func _draw() -> void:
 		move_additional_costs = 0.0
 		var target_line_vector = battle_scene.mouse_position_local - position
 		$RayCast2D.target_position = min(movement_remaining * battle_scene.PIXELS_PER_METER, target_line_vector.length()) * target_line_vector.normalized()
-		var ray_movement_remaining = movement_remaining
+		var ray_movement_remaining = movement_remaining * battle_scene.PIXELS_PER_METER # px
+		var ray_travel_length = 0.0 # px
+		var last_hit_point = Vector2.ZERO
 		while true:
 			$RayCast2D.force_raycast_update()
 			var hit_target = $RayCast2D.get_collider()
 			if hit_target is BattleEntity:
 				var hit_point = to_local($RayCast2D.get_collision_point())
-				var diff_length = ($RayCast2D.target_position - hit_point).length() / battle_scene.PIXELS_PER_METER
-				move_additional_costs += hit_target.go_through_movement_cost
-				ray_movement_remaining = max(ray_movement_remaining - hit_target.go_through_movement_cost, 0.0)
-				if ray_movement_remaining > 0.0:
-					$RayCast2D.add_exception(hit_target)
-				else:
+				ray_travel_length += (hit_point - last_hit_point).length()
+				ray_movement_remaining -= (hit_point - last_hit_point).length() + hit_target.go_through_movement_cost * battle_scene.PIXELS_PER_METER
+				$RayCast2D.add_exception(hit_target)
+				if ray_movement_remaining <= 0.0:
 					break
+				$RayCast2D.target_position = min(ray_movement_remaining, target_line_vector.length()) * target_line_vector.normalized()
+				move_additional_costs += hit_target.go_through_movement_cost
+				last_hit_point = hit_point
 			else:
+				ray_travel_length += ray_movement_remaining
 				break
-		var move_distance_px = min(target_line_vector.length(), ray_movement_remaining * battle_scene.PIXELS_PER_METER)
-		var line_vector = move_distance_px * target_line_vector.normalized()
+		var move_euclidean_distance = min(target_line_vector.length(), ray_travel_length) # px
+		var move_actual_distance = move_euclidean_distance / battle_scene.PIXELS_PER_METER + move_additional_costs # m
+		var line_vector = move_euclidean_distance * target_line_vector.normalized()
 		move_target_position = line_vector + position
 		draw_line(Vector2.ZERO, line_vector, Color.WHITE)
-		draw_string(SystemFont.new(), line_vector + 20.0 * Vector2.ONE, "%.1f m" % (move_distance_px / battle_scene.PIXELS_PER_METER + move_additional_costs))
+		draw_string(SystemFont.new(), line_vector + 20.0 * Vector2.ONE, "%.1f m" % move_actual_distance)
 
 func take_turn():
 	movement_remaining = total_movement
@@ -59,6 +65,7 @@ func take_turn():
 
 func move():
 	display_move_path = false
+	battle_scene.restore_collision_shapes()
 	queue_redraw()
 	var move_tween = create_tween()
 	movement_remaining -= (move_target_position - position).length() / battle_scene.PIXELS_PER_METER
@@ -93,6 +100,7 @@ func _on_mouse_entered() -> void:
 	if override_tooltip_text:
 		game.show_tooltip(override_tooltip_text)
 	else:
+		refresh_default_tooltip_text()
 		game.show_adv_tooltip(default_tooltip_text, {"imgs": default_tooltip_icons})
 
 
@@ -108,6 +116,7 @@ func fire_weapon(weapon_type: int):
 			projectile.collision_layer = 8
 			projectile.collision_mask = 1 + 4 + 32
 			projectile.set_script(load("res://Scripts/Battle/Weapons/Bullet.gd"))
+			projectile.get_node("Sprite2D").texture = preload("res://Graphics/Weapons/bullet1.png")
 			projectile.speed = 1000.0
 			projectile.rotation = weapon_rotation
 			projectile.damage = Data.bullet_data[bullet_lv-1].damage
@@ -181,6 +190,7 @@ func cancel_action():
 	game.block_scroll = false
 	target_btns.clear()
 	display_move_path = false
+	battle_scene.restore_collision_shapes()
 	queue_redraw()
 	get_node("RayCast2D").enabled = false
 	battle_GUI.fade_in_main_panel()

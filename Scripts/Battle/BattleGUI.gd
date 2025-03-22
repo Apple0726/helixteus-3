@@ -221,6 +221,7 @@ func _on_light_pressed() -> void:
 func _on_move_pressed() -> void:
 	action_selected = MOVE
 	fade_out_main_panel()
+	battle_scene.enlarge_collision_shapes()
 	ship_node.get_node("RayCast2D").enabled = true
 	ship_node.display_move_path = true
 	game.hide_tooltip()
