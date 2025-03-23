@@ -2,8 +2,10 @@ extends "BattleEntity.gd"
 
 
 func _ready() -> void:
-	collision_shape_radius = 84.0
-	$Info.position.x = -$Sprite2D.scale.x * 90.0 + 90.0
+	$CollisionShape2D.shape.radius = collision_shape_radius
+	$Info/HP.position.x = -$Sprite2D.scale.x * 90.0 + 90.0
+	$Info/Label.position.y = $Sprite2D.scale.x * 90.0 + 90.0
+	$Info/Icon.position.y = $Sprite2D.scale.x * 90.0 + 90.0
 
 
 func take_turn():

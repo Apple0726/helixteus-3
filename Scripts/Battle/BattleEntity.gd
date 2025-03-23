@@ -36,6 +36,10 @@ var velocity:Vector2 = Vector2.ZERO:
 		update_velocity_arrow()
 var moving_from_velocity = false # Used to determine whether to deal damage to an entity when this entity collides with it
 var collision_shape_radius:float
+var draw_collision_shape = 0: # 0 = false, 1 = draw but no highlight, 2 = draw & highlight
+	set(value):
+		draw_collision_shape = value
+		queue_redraw()
 
 var attack_buff:int = 0
 var defense_buff:int = 0
@@ -64,6 +68,13 @@ func _ready() -> void:
 	refresh_default_tooltip_text()
 	if type != 2:
 		self.area_entered.connect(on_collide)
+
+func _draw() -> void:
+	if type != 2:
+		if draw_collision_shape == 1:
+			draw_circle(Vector2.ZERO, collision_shape_radius + battle_GUI.ship_node.collision_shape_radius + 2.0, Color(1.0, 0.6, 0.0, 0.2), true, -1.0)
+		elif draw_collision_shape == 2:
+			draw_circle(Vector2.ZERO, collision_shape_radius + battle_GUI.ship_node.collision_shape_radius + 2.0, Color(1.0, 0.6, 0.0, 0.8), true, -1.0)
 
 func refresh_default_tooltip_text():
 	default_tooltip_text = "@i \t%s / %s" % [HP, total_HP]
@@ -112,9 +123,9 @@ func take_turn():
 	if turn_index != -1:
 		battle_GUI.turn_order_hbox.get_child(turn_index).get_node("AnimationPlayer").play("ChangeSize")
 	if velocity != Vector2.ZERO:
-		moving_from_velocity = true
-		await get_tree().create_timer(1.0).timeout
-		moving_from_velocity = false
+		create_tween().tween_property(self, "moving_from_velocity", true, 0.0)
+		create_tween().tween_property(self, "moving_from_velocity", false, 0.0).set_delay(1.0)
+
 
 func _physics_process(delta: float) -> void:
 	if moving_from_velocity:
@@ -150,6 +161,7 @@ func damage_entity(weapon_data: Dictionary):
 	return not dodged
 
 func update_velocity_arrow(offset: Vector2 = Vector2.ZERO):
+	#print(velocity, offset)
 	$VelocityArrow.scale = Vector2.ONE * (velocity + offset).length() / 100.0
 	$VelocityArrow.rotation = (velocity + offset).angle()
 
@@ -157,36 +169,41 @@ func update_velocity_arrow(offset: Vector2 = Vector2.ZERO):
 func push_entity_attempt(agility_pusher: int, agility_pushee: int, position_difference: Vector2, velocity_difference: Vector2):
 	return 1.0 / (1.0 + exp((agility_pusher - agility_pushee - abs(0.1 * position_difference.rotated(PI / 2.0).dot(velocity_difference)) + 9.2) / 5.8)) > randf()
 
-func on_collide(area: Area2D):
-	if moving_from_velocity:
-		var damage: float = 0.0
-		var collider_mass = remap(HP, 0.0, total_HP, HP * 0.66, total_HP)
-		var collider_weapon_data = {
-			"damage": collider_mass * velocity.length_squared() * 0.00001,
-			"shooter_attack":attack,
-			"weapon_accuracy":accuracy,
-			"orientation":velocity.normalized(),
-			"damage_label_initial_velocity":0.3 * velocity,
-		}
-		var collidee_mass = remap(area.HP, 0.0, area.total_HP, area.HP * 0.66, area.total_HP)
-		if area.damage_entity(collider_weapon_data):
-			var collider_kinetic_energy = collider_mass * velocity.length_squared()
-			var collidee_velocity_gain = min(sqrt(collider_kinetic_energy / collidee_mass), velocity.length())
-			if not area.moving_from_velocity:
-				var collidee_weapon_data = {
-					"damage": collidee_mass * velocity.length_squared() * 0.00001,
-					"shooter_attack":area.attack,
-					"weapon_accuracy":INF,
-					"orientation":area.velocity.normalized(),
-					"damage_label_initial_velocity":Vector2.ZERO,
-				}
-				damage_entity(collidee_weapon_data)
-				if area.velocity == Vector2.ZERO:
-					area.velocity = velocity.normalized() * collidee_velocity_gain
-				else:
-					area.velocity += area.velocity.normalized() * collidee_velocity_gain
-			var velocity_loss = sqrt(collidee_mass * pow(collidee_velocity_gain, 2) / collider_mass)
-			if velocity_loss > velocity.length():
-				velocity = Vector2.ZERO
+func collide_with_entity(collider: BattleEntity, collidee: BattleEntity):
+	var damage: float = 0.0
+	var collider_mass = remap(collider.HP, 0.0, collider.total_HP, collider.HP * 0.66, collider.total_HP)
+	var collider_weapon_data = {
+		"damage": collider_mass * collider.velocity.length_squared() * 0.00001,
+		"shooter_attack":collider.attack,
+		"weapon_accuracy":collider.accuracy,
+		"orientation":collider.velocity.normalized(),
+		"damage_label_initial_velocity":0.3 * collider.velocity,
+	}
+	var collidee_mass = remap(collidee.HP, 0.0, collidee.total_HP, collidee.HP * 0.66, collidee.total_HP)
+	if collidee.damage_entity(collider_weapon_data):
+		var collider_kinetic_energy = collider_mass * collider.velocity.length_squared()
+		var collidee_velocity_gain = min(sqrt(collider_kinetic_energy / collidee_mass), collider.velocity.length())
+		if not collidee.moving_from_velocity:
+			var collidee_weapon_data = {
+				"damage": collidee_mass * collider.velocity.length_squared() * 0.00001,
+				"shooter_attack":collidee.attack,
+				"weapon_accuracy":INF,
+				"orientation":collidee.velocity.normalized(),
+				"damage_label_initial_velocity":Vector2.ZERO,
+			}
+			collider.damage_entity(collidee_weapon_data)
+			if collidee.velocity == Vector2.ZERO:
+				collidee.velocity = collider.velocity.normalized() * collidee_velocity_gain
 			else:
-				velocity -= velocity.normalized() * velocity_loss
+				collidee.velocity += collidee.velocity.normalized() * collidee_velocity_gain
+		var velocity_loss = sqrt(collidee_mass * pow(collidee_velocity_gain, 2) / collider_mass)
+		if velocity_loss > collider.velocity.length():
+			collider.velocity = Vector2.ZERO
+		else:
+			collider.velocity -= collider.velocity.normalized() * velocity_loss
+	
+func on_collide(area):
+	if moving_from_velocity:
+		collide_with_entity(self, area)
+	elif area.moving_from_velocity:
+		collide_with_entity(area, self)

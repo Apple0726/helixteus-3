@@ -18,6 +18,7 @@ void fragment() {
 }"
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_fg6fk"]
+resource_local_to_scene = true
 shader = SubResource("Shader_ey2x8")
 shader_parameter/alpha = 1.0
 shader_parameter/flash = 0.0

@@ -27,9 +27,14 @@ func _ready() -> void:
 	total_movement = (agility + agility_buff) * METERS_PER_AGILITY
 	go_through_movement_cost = 30.0
 
+var highlighted_targets = []
+
 func _draw() -> void:
 	if display_move_path:
 		$RayCast2D.clear_exceptions()
+		for target in highlighted_targets:
+			target.draw_collision_shape = 1
+		highlighted_targets.clear()
 		move_additional_costs = 0.0
 		var target_line_vector = battle_scene.mouse_position_local - position
 		$RayCast2D.target_position = min(movement_remaining * battle_scene.PIXELS_PER_METER, target_line_vector.length()) * target_line_vector.normalized()
@@ -44,20 +49,25 @@ func _draw() -> void:
 				ray_travel_length += (hit_point - last_hit_point).length()
 				ray_movement_remaining -= (hit_point - last_hit_point).length() + hit_target.go_through_movement_cost * battle_scene.PIXELS_PER_METER
 				$RayCast2D.add_exception(hit_target)
+				hit_target.draw_collision_shape = 2
+				highlighted_targets.append(hit_target)
 				if ray_movement_remaining <= 0.0:
 					break
-				$RayCast2D.target_position = min(ray_movement_remaining, target_line_vector.length()) * target_line_vector.normalized()
+				$RayCast2D.target_position = min(ray_travel_length + ray_movement_remaining, target_line_vector.length()) * target_line_vector.normalized()
 				move_additional_costs += hit_target.go_through_movement_cost
 				last_hit_point = hit_point
 			else:
 				ray_travel_length += ray_movement_remaining
 				break
 		var move_euclidean_distance = min(target_line_vector.length(), ray_travel_length) # px
-		var move_actual_distance = move_euclidean_distance / battle_scene.PIXELS_PER_METER + move_additional_costs # m
+		#var move_actual_distance = move_euclidean_distance / battle_scene.PIXELS_PER_METER + move_additional_costs # m
 		var line_vector = move_euclidean_distance * target_line_vector.normalized()
 		move_target_position = line_vector + position
 		draw_line(Vector2.ZERO, line_vector, Color.WHITE)
-		draw_string(SystemFont.new(), line_vector + 20.0 * Vector2.ONE, "%.1f m" % move_actual_distance)
+		var dist_str = "%.1f m" % (move_euclidean_distance / battle_scene.PIXELS_PER_METER)
+		if move_additional_costs > 0.0:
+			dist_str += " (+ %.1f m)" % move_additional_costs
+		draw_string(SystemFont.new(), line_vector + 20.0 * Vector2.ONE, dist_str)
 
 func take_turn():
 	movement_remaining = total_movement
@@ -65,7 +75,7 @@ func take_turn():
 
 func move():
 	display_move_path = false
-	battle_scene.restore_collision_shapes()
+	battle_scene.hide_and_restore_collision_shapes()
 	queue_redraw()
 	var move_tween = create_tween()
 	movement_remaining -= (move_target_position - position).length() / battle_scene.PIXELS_PER_METER
@@ -190,12 +200,13 @@ func cancel_action():
 	game.block_scroll = false
 	target_btns.clear()
 	display_move_path = false
-	battle_scene.restore_collision_shapes()
+	battle_scene.hide_and_restore_collision_shapes()
 	queue_redraw()
 	get_node("RayCast2D").enabled = false
 	battle_GUI.fade_in_main_panel()
 	if is_instance_valid(entity_to_push):
 		entity_to_push.update_velocity_arrow()
+		entity_to_push.get_node("VelocityArrow/AnimationPlayer").stop()
 		entity_to_push = null
 
 
@@ -272,8 +283,9 @@ func calculate_velocity_change():
 	return (entity_to_push.position - position).normalized() * push_movement_used * 2.0 * remap(HP, 0.0, total_HP, HP * 0.66, total_HP) / remap(entity_to_push.HP, 0.0, entity_to_push.total_HP, entity_to_push.HP * 0.66, entity_to_push.total_HP)
 	
 func update_push_movement_used():
-	battle_GUI.get_node("PushStrengthPanel/MovementUsed").text = "%.1f m" % push_movement_used
-	entity_to_push.update_velocity_arrow(calculate_velocity_change())
+	if is_instance_valid(entity_to_push):
+		battle_GUI.get_node("PushStrengthPanel/MovementUsed").text = "%.1f m" % push_movement_used
+		entity_to_push.update_velocity_arrow(calculate_velocity_change())
 
 
 func _on_push_effect_visibility_changed() -> void:

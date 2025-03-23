@@ -472,7 +472,7 @@ shape = SubResource("CircleShape2D_f8wif")
 
 [node name="Polygon2D" type="Polygon2D" parent="CollisionShape2D"]
 color = Color(1, 1, 1, 0)
-polygon = PackedVector2Array(-15.9199, 24.0532, -16.0666, -19.9466, -12.1066, -31.9598, -0.120014, -35.9998, 11.8933, -32.0398, 15.9199, -24.0532, 16.0799, 23.9465, 12.1066, 31.9598, 0.120014, 35.9998, -11.8933, 32.0398)
+polygon = PackedVector2Array(-23.9999, 0.0800094, -0.0800094, -23.9999, 23.9999, -0.0800094, 0.0800094, 23.9999)
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 material = SubResource("2")

@@ -219,7 +219,6 @@ func environment_take_turn():
 		var asteroid = preload("res://Scenes/Battle/Asteroid.tscn").instantiate()
 		asteroid.position = asteroid_position
 		asteroid.get_node("Sprite2D").scale = Vector2.ONE * asteroid_scale
-		asteroid.get_node("CollisionShape2D").scale = Vector2.ONE * asteroid_scale
 		asteroid.total_HP = pow(asteroid_scale, 3) * 10000
 		asteroid.HP = asteroid.total_HP
 		asteroid.get_node("Info/HP").max_value = asteroid.total_HP
@@ -228,16 +227,17 @@ func environment_take_turn():
 		asteroid.defense = 10
 		asteroid.accuracy = pow(asteroid_scale * 20.0, 1.5) + 1
 		asteroid.agility = pow(2.0 / asteroid_scale, 1.5) + 1
-		asteroid.go_through_movement_cost = asteroid_scale * 60.0
+		asteroid.go_through_movement_cost = asteroid_scale * 100.0
 		asteroid.collision_shape_radius = asteroid_scale * 84.0
-		asteroid.get_node("Sprite2D").modulate.a = 0.0
-		create_tween().tween_property(asteroid.get_node("Sprite2D"), "modulate:a", 1.0, 0.5)
+		asteroid.battle_GUI = battle_GUI
+		asteroid.get_node("Sprite2D").material.set_shader_parameter("alpha", 0.0)
+		create_tween().tween_property(asteroid.get_node("Sprite2D").material, "shader_parameter/alpha", 1.0, 0.5)
 		asteroid.get_node("Sprite2D").rotation = randf_range(0.0, 2.0 * PI)
 		asteroid.battle_scene = self
 		asteroid.battle_GUI = battle_GUI
 		add_child(asteroid)
 		move_child(asteroid, 0)
-		asteroid.velocity = -30.0 / asteroid.scale.x * Vector2(randf(), randf()) * sign(asteroid.position - Vector2(640.0, 360.0))
+		asteroid.velocity = -30.0 / asteroid_scale * Vector2(randf(), randf()) * sign(asteroid.position - Vector2(640.0, 360.0))
 		obstacle_nodes.append(asteroid)
 	await get_tree().create_timer(0.5).timeout
 	for obstacle in obstacle_nodes:
@@ -247,22 +247,28 @@ func environment_take_turn():
 	whose_turn_is_it_index = 0
 	next_turn()
 
-func enlarge_collision_shapes():
+func show_and_enlarge_collision_shapes():
 	for HX in HX_nodes:
-		HX.get_node("CollisionShape2D").shape.radius += 36.0
+		HX.get_node("CollisionShape2D").shape.radius = HX.collision_shape_radius + battle_GUI.ship_node.collision_shape_radius + 2.0
+		HX.draw_collision_shape = 1
 	for ship in ship_nodes:
 		if ship.get_instance_id() == battle_GUI.ship_node.get_instance_id():
 			continue
-		ship.get_node("CollisionShape2D").shape.radius += 36.0
+		ship.get_node("CollisionShape2D").shape.radius = ship.collision_shape_radius + battle_GUI.ship_node.collision_shape_radius + 2.0
+		ship.draw_collision_shape = 1
 	for obstacle in obstacle_nodes:
-		obstacle.get_node("CollisionShape2D").shape.radius += 36.0
+		obstacle.get_node("CollisionShape2D").shape.radius = obstacle.collision_shape_radius + battle_GUI.ship_node.collision_shape_radius + 2.0
+		obstacle.draw_collision_shape = 1
 
-func restore_collision_shapes():
+func hide_and_restore_collision_shapes():
 	for HX in HX_nodes:
 		HX.get_node("CollisionShape2D").shape.radius = HX.collision_shape_radius
+		HX.draw_collision_shape = 0
 	for ship in ship_nodes:
 		if ship.get_instance_id() == battle_GUI.ship_node.get_instance_id():
 			continue
 		ship.get_node("CollisionShape2D").shape.radius = ship.collision_shape_radius
+		ship.draw_collision_shape = 0
 	for obstacle in obstacle_nodes:
 		obstacle.get_node("CollisionShape2D").shape.radius = obstacle.collision_shape_radius
+		obstacle.draw_collision_shape = 0
