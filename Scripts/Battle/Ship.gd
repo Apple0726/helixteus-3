@@ -280,7 +280,7 @@ func push_entity():
 	cancel_action()
 
 func calculate_velocity_change():
-	return (entity_to_push.position - position).normalized() * push_movement_used * 2.0 * remap(HP, 0.0, total_HP, HP * 0.66, total_HP) / remap(entity_to_push.HP, 0.0, entity_to_push.total_HP, entity_to_push.HP * 0.66, entity_to_push.total_HP)
+	return (entity_to_push.position - position).normalized() * push_movement_used * 2.0 * remap(HP, 0.0, total_HP, total_HP * 0.66, total_HP) / remap(entity_to_push.HP, 0.0, entity_to_push.total_HP, entity_to_push.total_HP * 0.66, entity_to_push.total_HP)
 	
 func update_push_movement_used():
 	if is_instance_valid(entity_to_push):

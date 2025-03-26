@@ -199,7 +199,7 @@ func display_stats(type:String):
 			entity.get_node("Info/Label").text = str(entity[type] + entity[type + "_buff"])
 
 func environment_take_turn():
-	while randf() < 2.0 / (len(obstacle_nodes) + 1):
+	while randf() < 20.0 / (len(obstacle_nodes) + 1):
 		var asteroid_position = Vector2.ZERO
 		var scale_rand = randf()
 		var asteroid_scale:float = max(0.5 * scale_rand * pow(1.0 / (1.0 - scale_rand), 1.0 / 3.0), 0.1)
@@ -231,7 +231,10 @@ func environment_take_turn():
 		asteroid.collision_shape_radius = asteroid_scale * 84.0
 		asteroid.battle_GUI = battle_GUI
 		asteroid.get_node("Sprite2D").material.set_shader_parameter("alpha", 0.0)
-		create_tween().tween_property(asteroid.get_node("Sprite2D").material, "shader_parameter/alpha", 1.0, 0.5)
+		asteroid.get_node("VelocityArrow").modulate.a = 0.0
+		var fade_in_tween = create_tween().set_parallel()
+		fade_in_tween.tween_property(asteroid.get_node("Sprite2D").material, "shader_parameter/alpha", 1.0, 0.5)
+		fade_in_tween.tween_property(asteroid.get_node("VelocityArrow"), "modulate:a", 1.0, 0.5)
 		asteroid.get_node("Sprite2D").rotation = randf_range(0.0, 2.0 * PI)
 		asteroid.battle_scene = self
 		asteroid.battle_GUI = battle_GUI

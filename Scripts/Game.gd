@@ -570,9 +570,6 @@ func _ready():
 		OS_name = OS_name.replace("ws", "ge")
 	$UI/Version.text = "Alpha %s (%s): %s" % [VERSION, OS_name, DATE]
 	refresh_continue_button()
-	mods = preload("res://Scenes/Panels/Mods.tscn").instantiate()
-	mods.visible = false
-	$Panels/Control.add_child(mods)
 	animate_title_buttons()
 	for mod in Mods.mod_list:
 		var main = Mods.mod_list[mod]
@@ -4657,7 +4654,7 @@ func _on_StarFade_animation_finished(anim_name):
 
 func _on_Mods_pressed():
 	$click.play()
-	toggle_panel("mods")
+	fade_in_panel("mods")
 
 
 func _on_Discord_pressed():
@@ -4673,15 +4670,15 @@ func _on_Godot_pressed():
 
 
 func _on_Discord_mouse_entered():
-	show_tooltip("DISCORD_BUTTON")
+	show_tooltip(tr("DISCORD_BUTTON"))
 
 
 func _on_GitHub_mouse_entered():
-	show_tooltip("GITHUB_BUTTON")
+	show_tooltip(tr("GITHUB_BUTTON"))
 
 
 func _on_Godot_mouse_entered():
-	show_tooltip("GODOT_BUTTON")
+	show_tooltip(tr("GODOT_BUTTON"))
 
 var curr_MM_p = 0
 

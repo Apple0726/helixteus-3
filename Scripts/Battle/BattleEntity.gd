@@ -123,8 +123,9 @@ func take_turn():
 	if turn_index != -1:
 		battle_GUI.turn_order_hbox.get_child(turn_index).get_node("AnimationPlayer").play("ChangeSize")
 	if velocity != Vector2.ZERO:
-		create_tween().tween_property(self, "moving_from_velocity", true, 0.0)
-		create_tween().tween_property(self, "moving_from_velocity", false, 0.0).set_delay(1.0)
+		moving_from_velocity = true
+		await get_tree().create_timer(1.0).timeout
+		moving_from_velocity = false
 
 
 func _physics_process(delta: float) -> void:
@@ -155,7 +156,7 @@ func damage_entity(weapon_data: Dictionary):
 		var critical = randf() < weapon_data.get("crit_hit_chance", 0.02)
 		if critical:
 			actual_damage *= 2
-		HP -= actual_damage
+		HP = max(HP - actual_damage, 0)
 		$Info/HP.value = HP
 		battle_scene.add_damage_text(false, position, actual_damage, critical, weapon_data.damage_label_initial_velocity)
 	return not dodged
@@ -171,7 +172,7 @@ func push_entity_attempt(agility_pusher: int, agility_pushee: int, position_diff
 
 func collide_with_entity(collider: BattleEntity, collidee: BattleEntity):
 	var damage: float = 0.0
-	var collider_mass = remap(collider.HP, 0.0, collider.total_HP, collider.HP * 0.66, collider.total_HP)
+	var collider_mass = remap(collider.HP, 0.0, collider.total_HP, collider.total_HP * 0.66, collider.total_HP)
 	var collider_weapon_data = {
 		"damage": collider_mass * collider.velocity.length_squared() * 0.00001,
 		"shooter_attack":collider.attack,
@@ -179,7 +180,7 @@ func collide_with_entity(collider: BattleEntity, collidee: BattleEntity):
 		"orientation":collider.velocity.normalized(),
 		"damage_label_initial_velocity":0.3 * collider.velocity,
 	}
-	var collidee_mass = remap(collidee.HP, 0.0, collidee.total_HP, collidee.HP * 0.66, collidee.total_HP)
+	var collidee_mass = remap(collidee.HP, 0.0, collidee.total_HP, collidee.total_HP * 0.66, collidee.total_HP)
 	if collidee.damage_entity(collider_weapon_data):
 		var collider_kinetic_energy = collider_mass * collider.velocity.length_squared()
 		var collidee_velocity_gain = min(sqrt(collider_kinetic_energy / collidee_mass), collider.velocity.length())

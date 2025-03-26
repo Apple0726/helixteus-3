@@ -3,21 +3,20 @@
 [ext_resource type="Script" uid="uid://dpxy6ld61573q" path="res://Scripts/Battle/Battle.gd" id="1_ylili"]
 [ext_resource type="Script" uid="uid://ba4b8qs3erkxr" path="res://Scripts/Battle/Boundary.gd" id="7_lc3cj"]
 
-[sub_resource type="SegmentShape2D" id="SegmentShape2D_0g6th"]
-a = Vector2(-640, -360)
-b = Vector2(-640, 1080)
+[sub_resource type="WorldBoundaryShape2D" id="WorldBoundaryShape2D_gv2s2"]
+normal = Vector2(1, 0)
+distance = -640.0
 
-[sub_resource type="SegmentShape2D" id="SegmentShape2D_gmfvn"]
-a = Vector2(-640, 1080)
-b = Vector2(1920, 1080)
+[sub_resource type="WorldBoundaryShape2D" id="WorldBoundaryShape2D_jew2s"]
+distance = -1080.0
 
-[sub_resource type="SegmentShape2D" id="SegmentShape2D_b5mio"]
-a = Vector2(1920, 1080)
-b = Vector2(1920, -360)
+[sub_resource type="WorldBoundaryShape2D" id="WorldBoundaryShape2D_bypyr"]
+normal = Vector2(-1, 0)
+distance = -1920.0
 
-[sub_resource type="SegmentShape2D" id="SegmentShape2D_fjaob"]
-a = Vector2(1920, -360)
-b = Vector2(-640, -360)
+[sub_resource type="WorldBoundaryShape2D" id="WorldBoundaryShape2D_n5aww"]
+normal = Vector2(0, 1)
+distance = -360.0
 
 [sub_resource type="Environment" id="Environment_bypyr"]
 background_mode = 3
@@ -37,7 +36,7 @@ script = ExtResource("7_lc3cj")
 type = 2
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Boundary"]
-shape = SubResource("SegmentShape2D_0g6th")
+shape = SubResource("WorldBoundaryShape2D_gv2s2")
 
 [node name="Polygon2D" type="Polygon2D" parent="Boundary/CollisionShape2D"]
 color = Color(0.533333, 0, 0, 1)
@@ -45,13 +44,13 @@ invert_border = 12.0
 polygon = PackedVector2Array(-640, -360, -640, -348, 1908, -348, 1908, 1068, -628, 1068, -628, -348, -640, -348, -640, 1080, 1920, 1080, 1920, -360)
 
 [node name="CollisionShape2D2" type="CollisionShape2D" parent="Boundary"]
-shape = SubResource("SegmentShape2D_gmfvn")
+shape = SubResource("WorldBoundaryShape2D_jew2s")
 
 [node name="CollisionShape2D3" type="CollisionShape2D" parent="Boundary"]
-shape = SubResource("SegmentShape2D_b5mio")
+shape = SubResource("WorldBoundaryShape2D_bypyr")
 
 [node name="CollisionShape2D4" type="CollisionShape2D" parent="Boundary"]
-shape = SubResource("SegmentShape2D_fjaob")
+shape = SubResource("WorldBoundaryShape2D_n5aww")
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_bypyr")

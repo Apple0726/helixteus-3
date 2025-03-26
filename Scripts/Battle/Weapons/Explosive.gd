@@ -65,5 +65,5 @@ func _on_area_entered(area: Area2D) -> void:
 			get_node("/root/Game/Camera2D/Screenshake").start(0.5,15,4)
 		$AnimationPlayer.play("Explode")
 		battle_GUI.flash_screen(0.3, 0.2)
-		set_process(false)
+		set_physics_process(false)
 		$AnimationPlayer.animation_finished.connect(func(anim_name): queue_free())
