@@ -30,6 +30,8 @@ func _ready() -> void:
 	$MainPanel/Move.mouse_exited.connect(game.hide_tooltip)
 	$MainPanel/Push.mouse_exited.connect(game.hide_tooltip)
 	$LightEmissionConePanel.hide()
+	$Speedup.mouse_entered.connect(game.show_tooltip.bind(tr("SPEED_UP_ANIMATIONS") + " (%s)" % OS.get_keycode_string(DisplayServer.keyboard_get_keycode_from_physical(KEY_SPACE))))
+	$Speedup.mouse_exited.connect(game.hide_tooltip)
 
 
 func _input(event: InputEvent) -> void:
@@ -266,3 +268,13 @@ func flash_screen(intensity: float, duration: float):
 	var tween = create_tween()
 	tween.tween_property($ScreenFlash, "modulate:a", 0.0, duration)
 	tween.tween_callback($ScreenFlash.hide)
+
+
+func _on_speedup_pressed() -> void:
+	battle_scene.animations_sped_up = not battle_scene.animations_sped_up
+	if battle_scene.animations_sped_up:
+		$Speedup/Polygon2D.material.set_shader_parameter("amplitude", 3.0)
+		$Speedup/Polygon2D.color.a = 1.0
+	else:
+		$Speedup/Polygon2D.material.set_shader_parameter("amplitude", 0.0)
+		$Speedup/Polygon2D.color.a = 0.5

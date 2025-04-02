@@ -64,12 +64,12 @@ func _input(event: InputEvent) -> void:
 	if not light_anim and event is InputEventMouseMotion:
 		update_cone(target_angle_deviation)
 
-func fire_light():
+func fire_light(fade_delay: float):
 	for target in targets:
 		target.damage_entity(targets[target])
 	light_anim = create_tween()
 	$Polygon2D.color.a = 1.0
-	light_anim.tween_property($Polygon2D, "modulate:a", 0.0, 1.0)
+	light_anim.tween_property($Polygon2D, "modulate:a", 0.0, fade_delay)
 	light_anim.tween_callback(queue_free)
 
 func unhighlight_targets():

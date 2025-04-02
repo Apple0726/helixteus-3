@@ -3,6 +3,7 @@ extends Node2D
 var damage:float
 var shooter_attack:int
 var weapon_accuracy:int
+var fade_delay:float
 
 func _ready() -> void:
 	$RayCast2D.target_position.x = 5000.0
@@ -28,4 +29,7 @@ func _ready() -> void:
 			laser_absorbed = true
 	$ColorLaser.scale.x = laser_length / 200.0
 	$WhiteLaser.scale.x = laser_length / 200.0
-	$AnimationPlayer.play("FadeOut")
+	var tween = create_tween().set_parallel()
+	tween.tween_property($WhiteLaser, "modulate:a", 0.0, fade_delay)
+	tween.tween_property($ColorLaser.material, "shader_parameter/modulate", 0.0, fade_delay)
+	tween.tween_callback(queue_free).set_delay(fade_delay)

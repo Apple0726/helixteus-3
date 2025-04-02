@@ -454,7 +454,7 @@ script = ExtResource("5")
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 libraries = {
-"": SubResource("AnimationLibrary_noa68")
+&"": SubResource("AnimationLibrary_noa68")
 }
 
 [node name="MouseIn" type="Polygon2D" parent="."]
@@ -617,9 +617,9 @@ theme_override_constants/separation = 0
 
 [node name="Buttons" type="VBoxContainer" parent="."]
 layout_mode = 0
-offset_left = 1280.0
+offset_left = 1232.0
 offset_top = 48.0
-offset_right = 1328.0
+offset_right = 1280.0
 offset_bottom = 720.0
 mouse_filter = 2
 theme_override_constants/separation = 0
@@ -649,7 +649,7 @@ stretch_mode = 5
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="Buttons/Vehicles"]
 libraries = {
-"": SubResource("AnimationLibrary_bsw7h")
+&"": SubResource("AnimationLibrary_bsw7h")
 }
 
 [node name="Craft" type="TextureButton" parent="Buttons"]
@@ -708,9 +708,8 @@ stretch_mode = 5
 
 [node name="Bottom" type="Control" parent="."]
 anchors_preset = 0
-offset_top = 84.0
 offset_right = 40.0
-offset_bottom = 124.0
+offset_bottom = 40.0
 
 [node name="Panel" type="Panel" parent="Bottom"]
 layout_mode = 0
@@ -743,7 +742,7 @@ stretch_mode = 5
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="Bottom/Panel"]
 libraries = {
-"": SubResource("AnimationLibrary_4yly8")
+&"": SubResource("AnimationLibrary_4yly8")
 }
 
 [node name="DimensionBtn" type="TextureButton" parent="Bottom"]
@@ -812,9 +811,8 @@ layout_mode = 2
 
 [node name="Top" type="Control" parent="."]
 anchors_preset = 0
-offset_top = -76.0
 offset_right = 40.0
-offset_bottom = -36.0
+offset_bottom = 40.0
 
 [node name="Objectives" type="Control" parent="Top"]
 anchors_preset = 0
@@ -1126,7 +1124,7 @@ stretch_mode = 5
 
 [node name="AnimationPlayer2" type="AnimationPlayer" parent="."]
 libraries = {
-"": SubResource("AnimationLibrary_f72sx")
+&"": SubResource("AnimationLibrary_f72sx")
 }
 
 [node name="Dialogue" parent="." instance=ExtResource("23")]

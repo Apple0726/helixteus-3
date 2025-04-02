@@ -20,6 +20,7 @@ var mouse_position_global:Vector2
 var mouse_position_local:Vector2
 var obstacle_nodes = []
 var view_tween
+var animations_sped_up = false
 
 enum {
 	ENEMY,
@@ -120,23 +121,31 @@ func initialize_battle():
 	next_turn()
 
 func next_turn():
-	view_tween = create_tween().set_parallel()
+	if animations_sped_up:
+		view_tween = null
+	else:
+		view_tween = create_tween().set_parallel()
 	battle_GUI.ship_node = null
 	if whose_turn_is_it_index == len(initiative_order):
 		var view_scale:float = 0.4
-		view_tween.tween_property(game.view, "scale", Vector2.ONE * view_scale, 1.0).set_trans(Tween.TRANS_CUBIC)
-		view_tween.tween_property(game.view, "position", Vector2(640, 360) - Vector2(640, 360) * view_scale, 1.0).set_trans(Tween.TRANS_CUBIC)
-		create_tween().tween_callback(environment_take_turn).set_delay(1.0)
+		if view_tween:
+			view_tween.tween_property(game.view, "scale", Vector2.ONE * view_scale, 1.0).set_trans(Tween.TRANS_CUBIC)
+			view_tween.tween_property(game.view, "position", Vector2(640, 360) - Vector2(640, 360) * view_scale, 1.0).set_trans(Tween.TRANS_CUBIC)
+			create_tween().tween_callback(environment_take_turn).set_delay(1.0)
+		else:
+			create_tween().tween_callback(environment_take_turn).set_delay(0.1)
 		battle_GUI.turn_order_hbox.get_child(whose_turn_is_it_index).get_node("AnimationPlayer").play("ChangeSize")
 	elif initiative_order[whose_turn_is_it_index].type == SHIP:
 		var ship_node = ship_nodes[initiative_order[whose_turn_is_it_index].idx]
 		battle_GUI.ship_node = ship_node
 		await ship_node.take_turn()
 		battle_GUI.fade_in_main_panel()
-		view_tween.tween_property(game.view, "position", Vector2(640, 360) - ship_node.position * game.view.scale.x, 0.5).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+		if view_tween:
+			view_tween.tween_property(game.view, "position", Vector2(640, 360) - ship_node.position * game.view.scale.x, 0.5).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
 	elif initiative_order[whose_turn_is_it_index].type == ENEMY:
 		var HX_node = HX_nodes[initiative_order[whose_turn_is_it_index].idx]
-		view_tween.tween_property(game.view, "position", Vector2(640, 360) - HX_node.position * game.view.scale.x, 0.5).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+		if view_tween:
+			view_tween.tween_property(game.view, "position", Vector2(640, 360) - HX_node.position * game.view.scale.x, 0.5).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
 		HX_node.take_turn()
 	whose_turn_is_it_index += 1
 
@@ -199,7 +208,7 @@ func display_stats(type:String):
 			entity.get_node("Info/Label").text = str(entity[type] + entity[type + "_buff"])
 
 func environment_take_turn():
-	while randf() < 20.0 / (len(obstacle_nodes) + 1):
+	while randf() < 2.0 / (len(obstacle_nodes) + 1):
 		var asteroid_position = Vector2.ZERO
 		var scale_rand = randf()
 		var asteroid_scale:float = max(0.5 * scale_rand * pow(1.0 / (1.0 - scale_rand), 1.0 / 3.0), 0.1)
@@ -230,11 +239,12 @@ func environment_take_turn():
 		asteroid.go_through_movement_cost = asteroid_scale * 100.0
 		asteroid.collision_shape_radius = asteroid_scale * 84.0
 		asteroid.battle_GUI = battle_GUI
-		asteroid.get_node("Sprite2D").material.set_shader_parameter("alpha", 0.0)
-		asteroid.get_node("VelocityArrow").modulate.a = 0.0
-		var fade_in_tween = create_tween().set_parallel()
-		fade_in_tween.tween_property(asteroid.get_node("Sprite2D").material, "shader_parameter/alpha", 1.0, 0.5)
-		fade_in_tween.tween_property(asteroid.get_node("VelocityArrow"), "modulate:a", 1.0, 0.5)
+		if not animations_sped_up:
+			asteroid.get_node("Sprite2D").material.set_shader_parameter("alpha", 0.0)
+			asteroid.get_node("VelocityArrow").modulate.a = 0.0
+			var fade_in_tween = create_tween().set_parallel()
+			fade_in_tween.tween_property(asteroid.get_node("Sprite2D").material, "shader_parameter/alpha", 1.0, 0.5)
+			fade_in_tween.tween_property(asteroid.get_node("VelocityArrow"), "modulate:a", 1.0, 0.5)
 		asteroid.get_node("Sprite2D").rotation = randf_range(0.0, 2.0 * PI)
 		asteroid.battle_scene = self
 		asteroid.battle_GUI = battle_GUI
@@ -242,11 +252,15 @@ func environment_take_turn():
 		move_child(asteroid, 0)
 		asteroid.velocity = -30.0 / asteroid_scale * Vector2(randf(), randf()) * sign(asteroid.position - Vector2(640.0, 360.0))
 		obstacle_nodes.append(asteroid)
-	await get_tree().create_timer(0.5).timeout
+	if animations_sped_up:
+		await get_tree().create_timer(0.1).timeout
+	else:
+		await get_tree().create_timer(0.5).timeout
 	for obstacle in obstacle_nodes:
 		obstacle.take_turn()
-	await get_tree().create_timer(1.5).timeout
 	battle_GUI.turn_order_hbox.get_child(whose_turn_is_it_index-1).get_node("AnimationPlayer").play_backwards("ChangeSize")
+	if not animations_sped_up:
+		await get_tree().create_timer(1.5).timeout
 	whose_turn_is_it_index = 0
 	next_turn()
 

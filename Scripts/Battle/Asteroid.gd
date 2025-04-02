@@ -11,10 +11,13 @@ func _ready() -> void:
 func _physics_process(delta: float) -> void:
 	super(delta)
 	if position.x < -640.0 or position.x > 1920.0 or position.y < -360.0 or position.y > 1080.0:
-		var disappear_tween = create_tween().set_parallel(true)
-		disappear_tween.tween_property($Sprite2D.material, "shader_parameter/alpha", 0.0, 0.5)
-		disappear_tween.tween_property($VelocityArrow, "modulate:a", 0.0, 0.5)
-		disappear_tween.tween_callback(remove_from_obstacles).set_delay(0.5)
+		if battle_scene.animations_sped_up:
+			remove_from_obstacles()
+		else:
+			var disappear_tween = create_tween().set_parallel(true)
+			disappear_tween.tween_property($Sprite2D.material, "shader_parameter/alpha", 0.0, 0.5)
+			disappear_tween.tween_property($VelocityArrow, "modulate:a", 0.0, 0.5)
+			disappear_tween.tween_callback(remove_from_obstacles).set_delay(0.5)
 
 func take_turn():
 	super()

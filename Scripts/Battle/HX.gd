@@ -66,7 +66,10 @@ func take_turn():
 			lowest_weight = position_preferences[pos]
 			target_move_position = pos
 	if velocity == Vector2.ZERO:
-		await get_tree().create_timer(0.5).timeout
+		if battle_scene.animations_sped_up:
+			await get_tree().create_timer(0.1).timeout
+		else:
+			await get_tree().create_timer(0.5).timeout
 	move(target_move_position)
 
 func calculate_position_preferences(pos:Vector2):
@@ -85,22 +88,31 @@ func calculate_position_preferences(pos:Vector2):
 	position_preferences[pos] = HX_proximity_weight + ship_proximity_weight + distance_from_current_position_weight
 	
 func move(target_pos:Vector2):
-	var tween = create_tween()
-	battle_scene.view_tween = create_tween()
-	tween.tween_property(self, "position", target_pos, 1.5).set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_CUBIC)
-	tween.tween_callback(attack_target)
-	battle_scene.view_tween.tween_property(game.view, "position", Vector2(640, 360) - target_pos * game.view.scale.x, 1.5).set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_CUBIC)
+	if battle_scene.animations_sped_up:
+		var tween = create_tween()
+		tween.tween_property(self, "position", target_pos, 0.2)
+		tween.tween_callback(attack_target)
+	else:
+		var tween = create_tween()
+		battle_scene.view_tween = create_tween()
+		tween.tween_property(self, "position", target_pos, 1.5).set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_CUBIC)
+		tween.tween_callback(attack_target)
+		battle_scene.view_tween.tween_property(game.view, "position", Vector2(640, 360) - target_pos * game.view.scale.x, 1.5).set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_CUBIC)
 
 func attack_target():
 	target_angle = atan2(target_position.y - position.y, target_position.x - position.x)
 	target_angle_max_deviation = 1.0 / (accuracy + accuracy_buff)
-	$FireWeaponAim.show()
-	await get_tree().create_timer(0.7).timeout
+	if battle_scene.animations_sped_up:
+		await get_tree().create_timer(0.1).timeout
+	else:
+		$FireWeaponAim.show()
+		await get_tree().create_timer(0.7).timeout
 	var projectile = preload("res://Scenes/Battle/Weapons/Projectile.tscn").instantiate()
 	projectile.set_script(load("res://Scripts/Battle/Weapons/Bullet.gd"))
 	projectile.collision_layer = 16
 	projectile.collision_mask = 1 + 2 + 32
 	projectile.speed = 1000.0
+	projectile.velocity_process_modifier = 5.0 if battle_scene.animations_sped_up else 1.0
 	projectile.rotation = randf_range(target_angle - target_angle_max_deviation, target_angle + target_angle_max_deviation)
 	projectile.damage = 3.0
 	projectile.shooter_attack = attack + attack_buff
@@ -113,7 +125,10 @@ func attack_target():
 
 
 func ending_turn(delay: float = 0.0):
-	create_tween().tween_callback(end_turn).set_delay(delay)
+	if battle_scene.animations_sped_up:
+		end_turn()
+	else:
+		create_tween().tween_callback(end_turn).set_delay(delay)
 
 
 func _on_collision_shape_finder_area_entered(area: Area2D) -> void:

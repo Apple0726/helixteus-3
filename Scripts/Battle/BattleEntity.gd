@@ -35,6 +35,7 @@ var velocity:Vector2 = Vector2.ZERO:
 		velocity = value
 		update_velocity_arrow()
 var moving_from_velocity = false # Used to determine whether to deal damage to an entity when this entity collides with it
+var velocity_process_mult = 1.0
 var collision_shape_radius:float
 var draw_collision_shape = 0: # 0 = false, 1 = draw but no highlight, 2 = draw & highlight
 	set(value):
@@ -122,15 +123,21 @@ func show_initiative(_initiative: int):
 func take_turn():
 	if turn_index != -1:
 		battle_GUI.turn_order_hbox.get_child(turn_index).get_node("AnimationPlayer").play("ChangeSize")
+		battle_GUI.turn_order_hbox.get_child(turn_index).modulate.a = 1.0
 	if velocity != Vector2.ZERO:
 		moving_from_velocity = true
-		await get_tree().create_timer(1.0).timeout
+		if battle_scene.animations_sped_up:
+			velocity_process_mult = 5.0
+			await get_tree().create_timer(0.2).timeout
+		else:
+			velocity_process_mult = 1.0
+			await get_tree().create_timer(1.0).timeout
 		moving_from_velocity = false
 
 
 func _physics_process(delta: float) -> void:
 	if moving_from_velocity:
-		position += velocity * delta
+		position += velocity * delta * velocity_process_mult
 
 
 func end_turn():

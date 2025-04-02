@@ -77,12 +77,17 @@ func move():
 	display_move_path = false
 	battle_scene.hide_and_restore_collision_shapes()
 	queue_redraw()
-	var move_tween = create_tween()
 	movement_remaining -= (move_target_position - position).length() / battle_scene.PIXELS_PER_METER
 	movement_remaining -= move_additional_costs
-	move_tween.tween_property(self, "position", move_target_position, 1.0).set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_CUBIC)
-	move_tween.tween_callback(cancel_action)
-	create_tween().tween_property(game.view, "position", Vector2(640, 360) - move_target_position * game.view.scale.x, 1.0).set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_CUBIC)
+	if battle_scene.animations_sped_up:
+		var move_tween = create_tween()
+		move_tween.tween_property(self, "position", move_target_position, 0.2)
+		move_tween.tween_callback(cancel_action)
+	else:
+		var move_tween = create_tween()
+		move_tween.tween_property(self, "position", move_target_position, 1.0).set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_CUBIC)
+		move_tween.tween_callback(cancel_action)
+		create_tween().tween_property(game.view, "position", Vector2(640, 360) - move_target_position * game.view.scale.x, 1.0).set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_CUBIC)
 
 
 func initialize_stats(data:Dictionary):
@@ -128,6 +133,7 @@ func fire_weapon(weapon_type: int):
 			projectile.set_script(load("res://Scripts/Battle/Weapons/Bullet.gd"))
 			projectile.get_node("Sprite2D").texture = preload("res://Graphics/Weapons/bullet1.png")
 			projectile.speed = 1000.0
+			projectile.velocity_process_modifier = 5.0 if battle_scene.animations_sped_up else 1.0
 			projectile.rotation = weapon_rotation
 			projectile.damage = Data.bullet_data[bullet_lv-1].damage
 			projectile.shooter_attack = attack + attack_buff
@@ -145,6 +151,7 @@ func fire_weapon(weapon_type: int):
 		laser.shooter_attack = attack + attack_buff
 		laser.weapon_accuracy = Data.laser_data[laser_lv-1].accuracy * accuracy
 		laser.position = position
+		laser.fade_delay = 0.2 if battle_scene.animations_sped_up else 0.5
 		battle_scene.add_child(laser)
 		laser.tree_exited.connect(ending_turn)
 	elif weapon_type == battle_GUI.BOMB:
@@ -153,6 +160,7 @@ func fire_weapon(weapon_type: int):
 		explosive.collision_mask = 1 + 4 + 32
 		explosive.set_script(load("res://Scripts/Battle/Weapons/Explosive.gd"))
 		explosive.speed = 800.0
+		explosive.velocity_process_modifier = 5.0 if battle_scene.animations_sped_up else 1.0
 		explosive.AoE_radius = 100.0
 		explosive.rotation = weapon_rotation
 		explosive.damage = Data.bomb_data[bomb_lv-1].damage
@@ -165,7 +173,7 @@ func fire_weapon(weapon_type: int):
 		explosive.end_turn.connect(ending_turn)
 	elif weapon_type == battle_GUI.LIGHT:
 		light_cone.tree_exited.connect(ending_turn)
-		light_cone.fire_light()
+		light_cone.fire_light(0.2 if battle_scene.animations_sped_up else 1.0)
 
 
 func add_light_cone():
@@ -178,7 +186,10 @@ func add_light_cone():
 
 
 func ending_turn(delay: float = 0.0):
-	create_tween().tween_callback(end_turn).set_delay(delay)
+	if battle_scene.animations_sped_up:
+		end_turn()
+	else:
+		create_tween().tween_callback(end_turn).set_delay(delay)
 
 
 func damage_entity(weapon_data: Dictionary):
