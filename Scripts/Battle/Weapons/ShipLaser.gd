@@ -19,7 +19,7 @@ func _ready() -> void:
 				"shooter_attack":shooter_attack,
 				"weapon_accuracy":weapon_accuracy,
 				"orientation":Vector2.from_angle(rotation),
-				"damage_label_initial_velocity":100.0 * Vector2.from_angle(rotation),
+				"velocity":100.0 * Vector2.from_angle(rotation),
 			}
 			if hit_target.damage_entity(weapon_data):
 				laser_absorbed = true

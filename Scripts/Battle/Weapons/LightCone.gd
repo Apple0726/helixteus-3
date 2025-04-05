@@ -38,7 +38,7 @@ func update_cone(_target_angle_deviation_visual: float):
 			if hit_target in targets:
 				targets[hit_target].damage += damage / 200.0
 				targets[hit_target].light_rays += 1
-				targets[hit_target].damage_label_initial_velocity += 1.5 * Vector2.from_angle(angle)
+				targets[hit_target].velocity += 1.5 * Vector2.from_angle(angle)
 				hit_target.override_tooltip_dict.light_intensity_mult = " * " + str(targets[hit_target].light_rays / 200.0)
 				if has_shader:
 					hit_target.get_node("Sprite2D").material.set_shader_parameter("flash", 0.5 + targets[hit_target].light_rays / 400.0)
@@ -48,7 +48,7 @@ func update_cone(_target_angle_deviation_visual: float):
 					"light_rays":1,
 					"shooter_attack":shooter_attack,
 					"weapon_accuracy":INF,
-					"damage_label_initial_velocity":1.5 * Vector2.from_angle(angle),
+					"velocity":1.5 * Vector2.from_angle(angle),
 					"crit_hit_chance":0.0,
 				}
 				targets[hit_target] = weapon_data

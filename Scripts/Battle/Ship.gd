@@ -133,6 +133,7 @@ func fire_weapon(weapon_type: int):
 			projectile.set_script(load("res://Scripts/Battle/Weapons/Bullet.gd"))
 			projectile.get_node("Sprite2D").texture = preload("res://Graphics/Weapons/bullet1.png")
 			projectile.speed = 1000.0
+			projectile.mass = 1.0
 			projectile.velocity_process_modifier = 5.0 if battle_scene.animations_sped_up else 1.0
 			projectile.rotation = weapon_rotation
 			projectile.damage = Data.bullet_data[bullet_lv-1].damage
@@ -160,6 +161,7 @@ func fire_weapon(weapon_type: int):
 		explosive.collision_mask = 1 + 4 + 32
 		explosive.set_script(load("res://Scripts/Battle/Weapons/Explosive.gd"))
 		explosive.speed = 800.0
+		explosive.mass = 10.0
 		explosive.velocity_process_modifier = 5.0 if battle_scene.animations_sped_up else 1.0
 		explosive.AoE_radius = 100.0
 		explosive.rotation = weapon_rotation
@@ -191,14 +193,6 @@ func ending_turn(delay: float = 0.0):
 	else:
 		create_tween().tween_callback(end_turn).set_delay(delay)
 
-
-func damage_entity(weapon_data: Dictionary):
-	var hit = super(weapon_data)
-	if hit:
-		$Sprite2D.material.set_shader_parameter("flash_color", Color.RED)
-		$Sprite2D.material.set_shader_parameter("flash", 1.0)
-		create_tween().tween_property($Sprite2D.material, "shader_parameter/flash", 0.0, 0.4)
-	return hit
 
 func cancel_action():
 	if $FireWeaponAim.visible:

@@ -67,11 +67,11 @@ func _ready() -> void:
 	if has_node("Info/Initiative"):
 		$Info/Initiative.modulate.a = 0.0
 	refresh_default_tooltip_text()
-	if type != 2:
+	if type != battle_scene.BOUNDARY:
 		self.area_entered.connect(on_collide)
 
 func _draw() -> void:
-	if type != 2:
+	if is_instance_valid(battle_scene) and type != battle_scene.BOUNDARY:
 		if draw_collision_shape == 1:
 			draw_circle(Vector2.ZERO, collision_shape_radius + battle_GUI.ship_node.collision_shape_radius + 2.0, Color(1.0, 0.6, 0.0, 0.2), true, -1.0)
 		elif draw_collision_shape == 2:
@@ -163,10 +163,39 @@ func damage_entity(weapon_data: Dictionary):
 		var critical = randf() < weapon_data.get("crit_hit_chance", 0.02)
 		if critical:
 			actual_damage *= 2
+		battle_scene.add_damage_text(false, position, actual_damage, critical, 0.3 * weapon_data.velocity * sqrt(weapon_data.get("mass", 0.0)))
 		HP = max(HP - actual_damage, 0)
 		$Info/HP.value = HP
-		battle_scene.add_damage_text(false, position, actual_damage, critical, weapon_data.damage_label_initial_velocity)
+		if has_node("Sprite2D"):
+			$Sprite2D.material.set_shader_parameter("flash_color", Color.RED)
+			$Sprite2D.material.set_shader_parameter("flash", 1.0)
+		if HP <= 0:
+			self.call_deferred("set_monitoring", false)
+			self.call_deferred("set_monitorable", false)
+			var knockback_tween = create_tween().set_parallel()
+			var knockback = weapon_data.velocity.normalized() * weapon_data.get("mass", 0.0) * 5.0 / total_HP
+			if knockback.length() > weapon_data.velocity.length():
+				knockback = knockback.normalized() * weapon_data.velocity.length()
+			knockback_tween.tween_property($Info, "modulate:a", 0.0, 1.0)
+			knockback_tween.tween_property(self, "position", position + knockback, 2.0)
+			knockback_tween.tween_property($Sprite2D.material, "shader_parameter/alpha", 0.0, 1.0).set_delay(1.0)
+			knockback_tween.tween_callback(entity_defeated_callback)
+		else:
+			if has_node("Sprite2D"):
+				create_tween().tween_property($Sprite2D.material, "shader_parameter/flash", 0.0, 0.4)
 	return not dodged
+
+func entity_defeated_callback():
+	if type == battle_scene.ENEMY:
+		battle_GUI.turn_order_hbox.get_child(turn_index).get_node("AnimationPlayer").play("FadeOutAnim")
+		battle_scene.initiative_order.remove_at(turn_index)
+		battle_scene.HX_nodes.erase(self)
+	elif type == battle_scene.SHIP:
+		battle_GUI.turn_order_hbox.get_child(turn_index).get_node("AnimationPlayer").play("FadeOutAnim")
+		battle_scene.initiative_order.remove_at(turn_index)
+		battle_scene.ship_nodes.erase(self)
+	await get_tree().create_timer(2.0).timeout
+	queue_free()
 
 func update_velocity_arrow(offset: Vector2 = Vector2.ZERO):
 	#print(velocity, offset)
@@ -211,6 +240,8 @@ func collide_with_entity(collider: BattleEntity, collidee: BattleEntity):
 			collider.velocity -= collider.velocity.normalized() * velocity_loss
 	
 func on_collide(area):
+	if type == battle_scene.BOUNDARY or area.type == battle_scene.BOUNDARY:
+		return
 	if moving_from_velocity:
 		collide_with_entity(self, area)
 	elif area.moving_from_velocity:

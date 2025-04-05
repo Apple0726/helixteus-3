@@ -112,6 +112,7 @@ func attack_target():
 	projectile.collision_layer = 16
 	projectile.collision_mask = 1 + 2 + 32
 	projectile.speed = 1000.0
+	projectile.mass = 1.0
 	projectile.velocity_process_modifier = 5.0 if battle_scene.animations_sped_up else 1.0
 	projectile.rotation = randf_range(target_angle - target_angle_max_deviation, target_angle + target_angle_max_deviation)
 	projectile.damage = 3.0
@@ -160,12 +161,3 @@ func _on_mouse_entered() -> void:
 
 func _on_mouse_exited() -> void:
 	game.hide_tooltip()
-
-
-func damage_entity(weapon_data: Dictionary):
-	var hit = super(weapon_data)
-	if hit:
-		$Sprite2D.material.set_shader_parameter("flash_color", Vector3(1.0, 0.0, 0.0))
-		$Sprite2D.material.set_shader_parameter("flash", 1.0)
-		create_tween().tween_property($Sprite2D.material, "shader_parameter/flash", 0.0, 0.4)
-	return hit

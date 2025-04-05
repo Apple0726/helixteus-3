@@ -12,6 +12,7 @@ var shooter_attack:int
 var weapon_accuracy:float
 var deflects_remaining:int
 var ending_turn_delay:float
+var mass:float # For now only used to determine knockback when something is defeated by this projectile (so purely aesthetic)
 
 func _ready() -> void:
 	area_entered.connect(_on_area_entered)
@@ -36,7 +37,8 @@ func _on_area_entered(area: Area2D) -> void:
 		"shooter_attack":shooter_attack,
 		"weapon_accuracy":weapon_accuracy,
 		"orientation":Vector2.from_angle(rotation),
-		"damage_label_initial_velocity":0.3 * speed * Vector2.from_angle(rotation),
+		"velocity":speed * Vector2.from_angle(rotation),
+		"mass":mass,
 	}
 	if area.damage_entity(weapon_data):
 		if deflects_remaining == 0 or area.type == 2:

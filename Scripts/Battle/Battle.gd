@@ -26,6 +26,7 @@ enum {
 	ENEMY,
 	SHIP,
 	BOUNDARY,
+	OBSTACLE,
 }
 
 func _ready() -> void:
@@ -239,6 +240,7 @@ func environment_take_turn():
 		asteroid.go_through_movement_cost = asteroid_scale * 100.0
 		asteroid.collision_shape_radius = asteroid_scale * 84.0
 		asteroid.battle_GUI = battle_GUI
+		asteroid.type = OBSTACLE
 		if not animations_sped_up:
 			asteroid.get_node("Sprite2D").material.set_shader_parameter("alpha", 0.0)
 			asteroid.get_node("VelocityArrow").modulate.a = 0.0
