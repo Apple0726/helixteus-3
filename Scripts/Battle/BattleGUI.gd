@@ -141,26 +141,26 @@ func _on_back_pressed() -> void:
 
 
 func _on_bullet_mouse_entered() -> void:
-	var tooltip_txt = tr("BASE_DAMAGE") + ": " + str(Data.bullet_data[ship_node.bullet_lv-1].damage)
-	tooltip_txt += "\n" + tr("BASE_ACCURACY") + ": " + str(Data.bullet_data[ship_node.bullet_lv-1].accuracy)
+	var tooltip_txt = tr("BASE_DAMAGE") + ": " + str(Data.battle_weapon_stats.bullet.damage)
+	tooltip_txt += "\n" + tr("BASE_ACCURACY") + ": " + str(Data.battle_weapon_stats.bullet.accuracy)
 	game.show_adv_tooltip(tooltip_txt, {"additional_text": tr("BULLET_DESC")})
 
 
 func _on_laser_mouse_entered() -> void:
-	var tooltip_txt = tr("BASE_DAMAGE") + ": " + str(Data.laser_data[ship_node.laser_lv-1].damage)
-	tooltip_txt += "\n" + tr("BASE_ACCURACY") + ": " + str(Data.laser_data[ship_node.laser_lv-1].accuracy)
+	var tooltip_txt = tr("BASE_DAMAGE") + ": " + str(Data.battle_weapon_stats.laser.damage)
+	tooltip_txt += "\n" + tr("BASE_ACCURACY") + ": " + str(Data.battle_weapon_stats.laser.accuracy)
 	game.show_adv_tooltip(tooltip_txt, {"additional_text": tr("LASER_DESC")})
 
 
 func _on_bomb_mouse_entered() -> void:
-	var tooltip_txt = tr("BASE_DAMAGE") + ": " + str(Data.bomb_data[ship_node.bomb_lv-1].damage)
-	tooltip_txt += "\n" + tr("BASE_ACCURACY") + ": " + str(Data.bomb_data[ship_node.bomb_lv-1].accuracy)
+	var tooltip_txt = tr("BASE_DAMAGE") + ": " + str(Data.battle_weapon_stats.bomb.damage)
+	tooltip_txt += "\n" + tr("BASE_ACCURACY") + ": " + str(Data.battle_weapon_stats.bomb.accuracy)
 	game.show_adv_tooltip(tooltip_txt, {"additional_text": tr("BOMB_DESC")})
 
 
 func _on_light_mouse_entered() -> void:
-	var tooltip_txt = tr("BASE_DAMAGE") + ": " + str(Data.light_data[ship_node.light_lv-1].damage)
-	tooltip_txt += "\n" + tr("BASE_ACCURACY") + ": " + str(Data.light_data[ship_node.light_lv-1].accuracy)
+	var tooltip_txt = tr("BASE_DAMAGE") + ": " + str(Data.battle_weapon_stats.light.damage)
+	tooltip_txt += "\n" + tr("BASE_ACCURACY") + ": " + str(Data.battle_weapon_stats.light.accuracy)
 	game.show_adv_tooltip(tooltip_txt, {"additional_text": tr("LIGHT_DESC")})
 
 
@@ -237,13 +237,13 @@ func _on_push_pressed() -> void:
 
 func override_enemy_tooltips():
 	if action_selected == BULLET:
-		ship_node.weapon_accuracy_mult = Data.bullet_data[ship_node.bullet_lv-1].accuracy
+		ship_node.weapon_accuracy_mult = Data.battle_weapon_stats.bullet.accuracy
 	elif action_selected == LASER:
-		ship_node.weapon_accuracy_mult = Data.laser_data[ship_node.laser_lv-1].accuracy
+		ship_node.weapon_accuracy_mult = Data.battle_weapon_stats.laser.accuracy
 	elif action_selected == BOMB:
-		ship_node.weapon_accuracy_mult = Data.bomb_data[ship_node.bomb_lv-1].accuracy
+		ship_node.weapon_accuracy_mult = Data.battle_weapon_stats.bomb.accuracy
 	elif action_selected == LIGHT:
-		ship_node.weapon_accuracy_mult = Data.light_data[ship_node.light_lv-1].accuracy
+		ship_node.weapon_accuracy_mult = Data.battle_weapon_stats.light.accuracy
 	for HX_node in battle_scene.HX_nodes:
 		var damage_multiplier:float
 		var attack_defense_difference:int = ship_node.attack + ship_node.attack_buff - HX_node.defense - HX_node.defense_buff

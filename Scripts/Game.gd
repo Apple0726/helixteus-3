@@ -654,8 +654,6 @@ func load_univ():
 			var xp_mult = Helper.get_spaceport_xp_mult(autocollect.ship_XP)
 			for i in len(ship_data):
 				Helper.add_ship_XP(i, xp_mult * pow(1.15, u_i.lv) * time_elapsed / (4.0 / autocollect.ship_XP) * u_i.time_speed)
-				for weapon in ["Bullet", "Laser", "Bomb", "Light"]:
-					Helper.add_weapon_XP(i, weapon.to_lower(), xp_mult * pow(1.07, u_i.lv) / 64.0 * time_elapsed / (4.0 / autocollect.ship_XP) * u_i.time_speed)
 		var min_mult:float = pow(maths_bonus.IRM, infinite_research.MEE)
 		var energy_mult:float = pow(maths_bonus.IRM, infinite_research.EPE)
 		var SP_mult:float = pow(maths_bonus.IRM, infinite_research.RLE)
@@ -4551,10 +4549,10 @@ func add_new_ship_data():
 		"agility": 11,
 		"XP": 0,
 		"XP_to_lv": Constants.base_ship_XP_to_lv,
-		"bullet": {"lv":1, "XP":0, "XP_to_lv":10},
-		"laser": {"lv":1, "XP":0, "XP_to_lv":10},
-		"bomb": {"lv":1, "XP":0, "XP_to_lv":10},
-		"light": {"lv":1, "XP":0, "XP_to_lv":20},
+		"bullet": [1, 1, 1],
+		"laser": [1, 1, 1],
+		"bomb": [1, 1, 1],
+		"light": [1, 1, 1],
 		"respec_count": 0,
 		"ship_class":ShipClass.STANDARD,
 	})
@@ -4575,10 +4573,6 @@ func get_2nd_ship():
 	if len(ship_data) == 1:
 		add_new_ship_data()
 		Helper.add_ship_XP(1, 2000)
-		Helper.add_weapon_XP(1, "bullet", 50)
-		Helper.add_weapon_XP(1, "laser", 50)
-		Helper.add_weapon_XP(1, "bomb", 50)
-		Helper.add_weapon_XP(1, "light", 60)
 		if not achievement_data.progression.has("2nd_ship"):
 			earn_achievement("progression", "2nd_ship")
 
@@ -4586,10 +4580,6 @@ func get_3rd_ship():
 	if len(ship_data) == 2:
 		add_new_ship_data()
 		Helper.add_ship_XP(2, 60000)
-		Helper.add_weapon_XP(2, "bullet", 140)
-		Helper.add_weapon_XP(2, "laser", 140)
-		Helper.add_weapon_XP(2, "bomb", 140)
-		Helper.add_weapon_XP(2, "light", 180)
 		if not achievement_data.progression.has("3rd_ship"):
 			earn_achievement("progression", "3rd_ship")
 
@@ -4598,10 +4588,6 @@ func get_4th_ship():
 		popup(tr("SHIP_CONTROL_SUCCESS"), 1.5)
 		add_new_ship_data()
 		Helper.add_ship_XP(3, 1000000)
-		Helper.add_weapon_XP(3, "bullet", 400)
-		Helper.add_weapon_XP(3, "laser", 400)
-		Helper.add_weapon_XP(3, "bomb", 400)
-		Helper.add_weapon_XP(3, "light", 450)
 		if not achievement_data.progression.has("4th_ship"):
 			earn_achievement("progression", "4th_ship")
 
@@ -4837,16 +4823,7 @@ func _on_command_text_submitted(new_text):
 		"get4thship":
 			get_4th_ship()
 		"addshipxp":#addshipxp 0 lv 10
-			if arr[2] == "xp":
-				Helper.add_ship_XP(int(arr[1]), float(arr[3]))
-			elif arr[2] in ["bullet", "laser", "bomb", "light"]:
-				Helper.add_weapon_XP(int(arr[1]), arr[2], float(arr[3]))
-			else:
-				popup("\"%s\" isn't a valid XP type" % arr[2], 2.0)
-				return
-		"fixshipdata":
-			for sh in ship_data:
-				sh.rage = 0
+			Helper.add_ship_XP(int(arr[1]), float(arr[2]))
 		"unlockbldgs":
 			for i in len(Building.names):
 				new_bldgs[i] = true

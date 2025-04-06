@@ -87,6 +87,7 @@ offset_right = 1204.0
 offset_bottom = 671.0
 mouse_filter = 2
 texture = ExtResource("3_xp52f")
+metadata/_edit_lock_ = true
 
 [node name="CloseButton" type="TextureButton" parent="."]
 layout_mode = 0
@@ -249,75 +250,22 @@ anchors_preset = 0
 offset_right = 40.0
 offset_bottom = 40.0
 
-[node name="ColorRect" type="ColorRect" parent="Panel/ShipDetails/Bullet"]
-layout_mode = 0
-offset_left = 76.0
-offset_top = 293.0
-offset_right = 308.0
-offset_bottom = 313.0
-color = Color(0, 0.235294, 0.411765, 1)
-
-[node name="TextureProgressGained" type="TextureProgressBar" parent="Panel/ShipDetails/Bullet"]
-modulate = Color(0.34902, 0.682353, 0.941176, 1)
-layout_mode = 0
-offset_left = 76.0
-offset_top = 293.0
-offset_right = 308.0
-offset_bottom = 313.0
-step = 0.0
-value = 60.0
-nine_patch_stretch = true
-texture_under = ExtResource("11_s3b4g")
-texture_progress = ExtResource("12_3x4ks")
-
-[node name="TextureProgressBar" type="TextureProgressBar" parent="Panel/ShipDetails/Bullet"]
-modulate = Color(0, 0.462745, 0.811765, 1)
-layout_mode = 0
-offset_left = 76.0
-offset_top = 293.0
-offset_right = 308.0
-offset_bottom = 313.0
-step = 0.0
-value = 50.0
-nine_patch_stretch = true
-stretch_margin_left = 3
-stretch_margin_top = 1
-stretch_margin_right = 3
-stretch_margin_bottom = 1
-texture_over = ExtResource("13_y4ybd")
-texture_progress = ExtResource("12_3x4ks")
-
-[node name="Label" type="Label" parent="Panel/ShipDetails/Bullet"]
-visible = false
-layout_mode = 0
-offset_left = 324.0
-offset_top = 64.0
-offset_right = 364.0
-offset_bottom = 95.0
-scale = Vector2(0.9, 0.9)
-text = "+ 5"
-vertical_alignment = 1
-
-[node name="Label2" type="Label" parent="Panel/ShipDetails/Bullet"]
-layout_mode = 0
-offset_left = 76.0
-offset_top = 292.0
-offset_right = 308.0
-offset_bottom = 315.0
-theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
-theme_override_font_sizes/font_size = 14
-text = "0 / 20"
-horizontal_alignment = 1
-vertical_alignment = 1
-
 [node name="Icon" type="TextureRect" parent="Panel/ShipDetails/Bullet"]
 layout_mode = 0
-offset_left = 40.0
-offset_top = 297.0
-offset_right = 68.0
-offset_bottom = 309.0
+offset_left = 132.0
+offset_top = 292.0
+offset_right = 160.0
+offset_bottom = 304.0
 expand_mode = 1
 stretch_mode = 5
+
+[node name="Label" type="Label" parent="Panel/ShipDetails/Bullet"]
+layout_mode = 0
+offset_left = 184.0
+offset_top = 284.0
+offset_right = 262.0
+offset_bottom = 307.0
+text = "Lv 1 / 1 / 1"
 
 [node name="Laser" type="Control" parent="Panel/ShipDetails"]
 layout_mode = 3
@@ -325,75 +273,21 @@ anchors_preset = 0
 offset_right = 40.0
 offset_bottom = 40.0
 
-[node name="ColorRect" type="ColorRect" parent="Panel/ShipDetails/Laser"]
-layout_mode = 0
-offset_left = 76.0
-offset_top = 321.0
-offset_right = 308.0
-offset_bottom = 341.0
-color = Color(0.55, 0.2475, 0.2475, 1)
-
-[node name="TextureProgressGained" type="TextureProgressBar" parent="Panel/ShipDetails/Laser"]
-modulate = Color(0.94, 0.5546, 0.5546, 1)
-layout_mode = 0
-offset_left = 76.0
-offset_top = 321.0
-offset_right = 308.0
-offset_bottom = 341.0
-step = 0.0
-value = 60.0
-nine_patch_stretch = true
-texture_under = ExtResource("11_s3b4g")
-texture_progress = ExtResource("12_3x4ks")
-
-[node name="TextureProgressBar" type="TextureProgressBar" parent="Panel/ShipDetails/Laser"]
-modulate = Color(1, 0.28, 0.28, 1)
-layout_mode = 0
-offset_left = 76.0
-offset_top = 321.0
-offset_right = 308.0
-offset_bottom = 341.0
-step = 0.0
-value = 50.0
-nine_patch_stretch = true
-stretch_margin_left = 3
-stretch_margin_top = 1
-stretch_margin_right = 3
-stretch_margin_bottom = 1
-texture_over = ExtResource("13_y4ybd")
-texture_progress = ExtResource("12_3x4ks")
-
-[node name="Label" type="Label" parent="Panel/ShipDetails/Laser"]
-visible = false
-layout_mode = 0
-offset_left = 324.0
-offset_top = 92.0
-offset_right = 364.0
-offset_bottom = 123.0
-scale = Vector2(0.9, 0.9)
-text = "+ 5"
-vertical_alignment = 1
-
-[node name="Label2" type="Label" parent="Panel/ShipDetails/Laser"]
-layout_mode = 0
-offset_left = 76.0
-offset_top = 320.0
-offset_right = 308.0
-offset_bottom = 343.0
-theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
-theme_override_font_sizes/font_size = 14
-text = "0 / 20"
-horizontal_alignment = 1
-vertical_alignment = 1
-
 [node name="Icon" type="TextureRect" parent="Panel/ShipDetails/Laser"]
 layout_mode = 0
-offset_left = 40.0
-offset_top = 321.0
-offset_right = 68.0
-offset_bottom = 341.0
+offset_left = 132.0
+offset_top = 316.0
+offset_right = 160.0
+offset_bottom = 336.0
 expand_mode = 1
 stretch_mode = 5
+
+[node name="Label" type="Label" parent="Panel/ShipDetails/Laser"]
+offset_left = 184.0
+offset_top = 316.0
+offset_right = 262.0
+offset_bottom = 339.0
+text = "Lv 1 / 1 / 1"
 
 [node name="Bomb" type="Control" parent="Panel/ShipDetails"]
 layout_mode = 3
@@ -401,75 +295,21 @@ anchors_preset = 0
 offset_right = 40.0
 offset_bottom = 40.0
 
-[node name="ColorRect" type="ColorRect" parent="Panel/ShipDetails/Bomb"]
-layout_mode = 0
-offset_left = 76.0
-offset_top = 349.0
-offset_right = 308.0
-offset_bottom = 369.0
-color = Color(0.137255, 0.137255, 0.137255, 1)
-
-[node name="TextureProgressGained" type="TextureProgressBar" parent="Panel/ShipDetails/Bomb"]
-modulate = Color(0.454902, 0.454902, 0.454902, 1)
-layout_mode = 0
-offset_left = 76.0
-offset_top = 349.0
-offset_right = 308.0
-offset_bottom = 369.0
-step = 0.0
-value = 60.0
-nine_patch_stretch = true
-texture_under = ExtResource("11_s3b4g")
-texture_progress = ExtResource("12_3x4ks")
-
-[node name="TextureProgressBar" type="TextureProgressBar" parent="Panel/ShipDetails/Bomb"]
-modulate = Color(0.286275, 0.286275, 0.286275, 1)
-layout_mode = 0
-offset_left = 76.0
-offset_top = 349.0
-offset_right = 308.0
-offset_bottom = 369.0
-step = 0.0
-value = 50.0
-nine_patch_stretch = true
-stretch_margin_left = 3
-stretch_margin_top = 1
-stretch_margin_right = 3
-stretch_margin_bottom = 1
-texture_over = ExtResource("13_y4ybd")
-texture_progress = ExtResource("12_3x4ks")
-
-[node name="Label" type="Label" parent="Panel/ShipDetails/Bomb"]
-visible = false
-layout_mode = 0
-offset_left = 324.0
-offset_top = 120.0
-offset_right = 364.0
-offset_bottom = 151.0
-scale = Vector2(0.9, 0.9)
-text = "+ 5"
-vertical_alignment = 1
-
-[node name="Label2" type="Label" parent="Panel/ShipDetails/Bomb"]
-layout_mode = 0
-offset_left = 76.0
-offset_top = 348.0
-offset_right = 308.0
-offset_bottom = 371.0
-theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
-theme_override_font_sizes/font_size = 14
-text = "0 / 20"
-horizontal_alignment = 1
-vertical_alignment = 1
-
 [node name="Icon" type="TextureRect" parent="Panel/ShipDetails/Bomb"]
 layout_mode = 0
-offset_left = 40.0
-offset_top = 349.0
-offset_right = 68.0
-offset_bottom = 369.0
+offset_left = 132.0
+offset_top = 352.0
+offset_right = 160.0
+offset_bottom = 372.0
 expand_mode = 1
 stretch_mode = 5
+
+[node name="Label" type="Label" parent="Panel/ShipDetails/Bomb"]
+offset_left = 184.0
+offset_top = 348.0
+offset_right = 262.0
+offset_bottom = 371.0
+text = "Lv 1 / 1 / 1"
 
 [node name="Light" type="Control" parent="Panel/ShipDetails"]
 layout_mode = 3
@@ -477,75 +317,21 @@ anchors_preset = 0
 offset_right = 40.0
 offset_bottom = 40.0
 
-[node name="ColorRect" type="ColorRect" parent="Panel/ShipDetails/Light"]
-layout_mode = 0
-offset_left = 76.0
-offset_top = 377.0
-offset_right = 308.0
-offset_bottom = 397.0
-color = Color(0.51, 0.50796, 0.3876, 1)
-
-[node name="TextureProgressGained" type="TextureProgressBar" parent="Panel/ShipDetails/Light"]
-modulate = Color(1, 1, 0.61, 1)
-layout_mode = 0
-offset_left = 76.0
-offset_top = 377.0
-offset_right = 308.0
-offset_bottom = 397.0
-step = 0.0
-value = 60.0
-nine_patch_stretch = true
-texture_under = ExtResource("11_s3b4g")
-texture_progress = ExtResource("12_3x4ks")
-
-[node name="TextureProgressBar" type="TextureProgressBar" parent="Panel/ShipDetails/Light"]
-modulate = Color(0.811765, 0.811765, 0.364706, 1)
-layout_mode = 0
-offset_left = 76.0
-offset_top = 377.0
-offset_right = 308.0
-offset_bottom = 397.0
-step = 0.0
-value = 50.0
-nine_patch_stretch = true
-stretch_margin_left = 3
-stretch_margin_top = 1
-stretch_margin_right = 3
-stretch_margin_bottom = 1
-texture_over = ExtResource("13_y4ybd")
-texture_progress = ExtResource("12_3x4ks")
-
-[node name="Label" type="Label" parent="Panel/ShipDetails/Light"]
-visible = false
-layout_mode = 0
-offset_left = 324.0
-offset_top = 148.0
-offset_right = 364.0
-offset_bottom = 179.0
-scale = Vector2(0.9, 0.9)
-text = "+ 5"
-vertical_alignment = 1
-
-[node name="Label2" type="Label" parent="Panel/ShipDetails/Light"]
-layout_mode = 0
-offset_left = 76.0
-offset_top = 376.0
-offset_right = 308.0
-offset_bottom = 399.0
-theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
-theme_override_font_sizes/font_size = 14
-text = "0 / 20"
-horizontal_alignment = 1
-vertical_alignment = 1
-
 [node name="Icon" type="TextureRect" parent="Panel/ShipDetails/Light"]
 layout_mode = 0
-offset_left = 40.0
-offset_top = 377.0
-offset_right = 68.0
-offset_bottom = 397.0
+offset_left = 132.0
+offset_top = 384.0
+offset_right = 160.0
+offset_bottom = 404.0
 expand_mode = 1
 stretch_mode = 5
+
+[node name="Label" type="Label" parent="Panel/ShipDetails/Light"]
+offset_left = 184.0
+offset_top = 380.0
+offset_right = 262.0
+offset_bottom = 403.0
+text = "Lv 1 / 1 / 1"
 
 [node name="XP" type="Control" parent="Panel/ShipDetails"]
 layout_mode = 3
@@ -557,7 +343,7 @@ offset_bottom = 40.0
 layout_mode = 0
 offset_left = 76.0
 offset_top = 433.0
-offset_right = 308.0
+offset_right = 328.0
 offset_bottom = 453.0
 color = Color(0.59, 0.46669, 0.2537, 1)
 
@@ -566,7 +352,7 @@ modulate = Color(1, 0.819608, 0.611765, 1)
 layout_mode = 0
 offset_left = 76.0
 offset_top = 433.0
-offset_right = 308.0
+offset_right = 328.0
 offset_bottom = 453.0
 step = 0.0
 value = 60.0
@@ -579,7 +365,7 @@ modulate = Color(0.921569, 0.631373, 0.203922, 1)
 layout_mode = 0
 offset_left = 76.0
 offset_top = 433.0
-offset_right = 308.0
+offset_right = 328.0
 offset_bottom = 453.0
 step = 0.0
 value = 50.0
@@ -594,10 +380,10 @@ texture_progress = ExtResource("12_3x4ks")
 [node name="Label" type="Label" parent="Panel/ShipDetails/XP"]
 visible = false
 layout_mode = 0
-offset_left = 324.0
-offset_top = 204.0
-offset_right = 364.0
-offset_bottom = 235.0
+offset_left = 340.0
+offset_top = 428.0
+offset_right = 380.0
+offset_bottom = 459.0
 scale = Vector2(0.9, 0.9)
 text = "+ 5"
 vertical_alignment = 1
@@ -606,7 +392,7 @@ vertical_alignment = 1
 layout_mode = 0
 offset_left = 76.0
 offset_top = 432.0
-offset_right = 308.0
+offset_right = 328.0
 offset_bottom = 455.0
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
 theme_override_font_sizes/font_size = 14

@@ -189,10 +189,14 @@ func entity_defeated_callback():
 	if type == battle_scene.ENEMY:
 		battle_GUI.turn_order_hbox.get_child(turn_index).get_node("AnimationPlayer").play("FadeOutAnim")
 		battle_scene.initiative_order.remove_at(turn_index)
+		if turn_index < battle_scene.whose_turn_is_it_index:
+			battle_scene.whose_turn_is_it_index -= 1
 		battle_scene.HX_nodes.erase(self)
 	elif type == battle_scene.SHIP:
 		battle_GUI.turn_order_hbox.get_child(turn_index).get_node("AnimationPlayer").play("FadeOutAnim")
 		battle_scene.initiative_order.remove_at(turn_index)
+		if turn_index < battle_scene.whose_turn_is_it_index:
+			battle_scene.whose_turn_is_it_index -= 1
 		battle_scene.ship_nodes.erase(self)
 	await get_tree().create_timer(2.0).timeout
 	queue_free()

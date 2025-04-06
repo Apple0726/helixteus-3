@@ -671,14 +671,6 @@ func calculate_total_ship_XP(id:int):
 	var q = game.maths_bonus.SLUGF_XP
 	return Constants.base_ship_XP_to_lv * max(0, q * (1 - pow(q, game.ship_data[id].lv - 1)) / (1 - q)) + game.ship_data[id].XP
 
-func add_weapon_XP(id:int, weapon:String, XP:float):
-	var ship_data = game.ship_data
-	ship_data[id][weapon].XP += XP
-	while ship_data[id][weapon].XP >= ship_data[id][weapon].XP_to_lv and ship_data[id][weapon].lv < 5:
-		ship_data[id][weapon].XP -= ship_data[id][weapon].XP_to_lv
-		ship_data[id][weapon].XP_to_lv = [100, 800, 4000, 0][ship_data[id][weapon].lv - 1]
-		ship_data[id][weapon].lv += 1
-
 func add_label(txt:String, idx:int = -1, center:bool = true, autowrap:bool = false):
 	var vbox = game.get_node("UI/Panel/VBox")
 	var label = Label.new()

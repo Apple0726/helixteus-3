@@ -49,8 +49,6 @@ func _on_close_button_pressed():
 	game.add_resources({"money":money})
 	for i in len(ship_data):
 		Helper.add_ship_XP(i, XP)
-		for weapon in ["bullet", "laser", "bomb", "light"]:
-			Helper.add_weapon_XP(i, weapon, round(weapon_XPs[i][weapon] * mult * diff_mult))
 	var all_conquered = true
 	if not game.is_conquering_all and not game.planet_data[p_id].has("conquered"):
 		game.stats_univ.enemies_rekt_in_battle += len(game.planet_data[p_id].HX_data)

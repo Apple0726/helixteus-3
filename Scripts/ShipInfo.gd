@@ -7,10 +7,6 @@ var show_weapon_XPs:bool
 var tween
 
 func _ready():
-	$Bullet/Label.visible = victory_screen
-	$Laser/Label.visible = victory_screen
-	$Bomb/Label.visible = victory_screen
-	$Light/Label.visible = victory_screen
 	$XP/Label.visible = victory_screen
 	$Ship.texture_normal = load("res://Graphics/Ships/Ship%s.png" % id)
 	$Ship.texture_click_mask = load("res://Graphics/Ships/Ship%sCM.png" % id)
@@ -55,14 +51,6 @@ func refresh():
 	$XP/TextureProgressBar.value = game.ship_data[id].XP
 	$XP/TextureProgressGained.value = game.ship_data[id].XP
 	$Lv.text = "%s %s" % [tr("LV"), game.ship_data[id].lv]
-	for weapon in ["Bullet", "Laser", "Bomb", "Light"]:
-		var weapon_data = game.ship_data[id][weapon.to_lower()]
-		get_node("%s/TextureProgressBar" % [weapon]).max_value = INF if weapon_data.lv == 5 else weapon_data.XP_to_lv
-		get_node("%s/TextureProgressGained" % [weapon]).max_value = INF if weapon_data.lv == 5 else weapon_data.XP_to_lv
-		get_node("%s/TextureProgressBar" % [weapon]).value = weapon_data.XP
-		get_node("%s/TextureProgressGained" % [weapon]).value = weapon_data.XP
-		get_node("%s/Icon" % [weapon]).texture = load("res://Graphics/Weapons/%s%s.png" % [weapon.to_lower(), weapon_data.lv])
-		get_node("%s/Label2" % [weapon]).text = "%s / %s" % [round(weapon_data.XP), weapon_data.XP_to_lv]
 	$XP/Label2.text = "%s / %s" % [Helper.format_num(round(game.ship_data[id].XP)), Helper.format_num(game.ship_data[id].XP_to_lv)]
 	set_visibility()
 	$Stats/HP.text = Helper.format_num(game.ship_data[id].HP)

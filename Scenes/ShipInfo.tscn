@@ -46,74 +46,22 @@ anchors_preset = 0
 offset_right = 40.0
 offset_bottom = 40.0
 
-[node name="ColorRect" type="ColorRect" parent="Bullet"]
-layout_mode = 0
-offset_left = 228.0
-offset_top = 48.0
-offset_right = 460.0
-offset_bottom = 68.0
-color = Color(0, 0.235294, 0.411765, 1)
-
-[node name="TextureProgressGained" type="TextureProgressBar" parent="Bullet"]
-modulate = Color(0.34902, 0.682353, 0.941176, 1)
-layout_mode = 0
-offset_left = 228.0
-offset_top = 48.0
-offset_right = 460.0
-offset_bottom = 68.0
-step = 0.0
-value = 60.0
-nine_patch_stretch = true
-texture_under = ExtResource("5")
-texture_progress = ExtResource("6")
-
-[node name="TextureProgressBar" type="TextureProgressBar" parent="Bullet"]
-modulate = Color(0, 0.462745, 0.811765, 1)
-layout_mode = 0
-offset_left = 228.0
-offset_top = 48.0
-offset_right = 460.0
-offset_bottom = 68.0
-step = 0.0
-value = 50.0
-nine_patch_stretch = true
-stretch_margin_left = 3
-stretch_margin_top = 1
-stretch_margin_right = 3
-stretch_margin_bottom = 1
-texture_over = ExtResource("7")
-texture_progress = ExtResource("6")
-
-[node name="Label" type="Label" parent="Bullet"]
-layout_mode = 0
-offset_left = 476.0
-offset_top = 44.0
-offset_right = 516.0
-offset_bottom = 75.0
-scale = Vector2(0.9, 0.9)
-text = "+ 5"
-vertical_alignment = 1
-
-[node name="Label2" type="Label" parent="Bullet"]
-layout_mode = 0
-offset_left = 228.0
-offset_top = 47.0
-offset_right = 460.0
-offset_bottom = 70.0
-theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
-theme_override_font_sizes/font_size = 14
-text = "0 / 20"
-horizontal_alignment = 1
-vertical_alignment = 1
-
 [node name="Icon" type="TextureRect" parent="Bullet"]
 layout_mode = 0
-offset_left = 192.0
+offset_left = 204.0
 offset_top = 52.0
-offset_right = 220.0
+offset_right = 232.0
 offset_bottom = 64.0
 expand_mode = 1
 stretch_mode = 5
+
+[node name="Label" type="Label" parent="Bullet"]
+layout_mode = 0
+offset_left = 244.0
+offset_top = 44.0
+offset_right = 322.0
+offset_bottom = 67.0
+text = "Lv 1 / 1 / 1"
 
 [node name="Laser" type="Control" parent="."]
 layout_mode = 1
@@ -121,74 +69,21 @@ anchors_preset = 0
 offset_right = 40.0
 offset_bottom = 40.0
 
-[node name="ColorRect" type="ColorRect" parent="Laser"]
-layout_mode = 0
-offset_left = 228.0
-offset_top = 76.0
-offset_right = 460.0
-offset_bottom = 96.0
-color = Color(0.55, 0.2475, 0.2475, 1)
-
-[node name="TextureProgressGained" type="TextureProgressBar" parent="Laser"]
-modulate = Color(0.94, 0.5546, 0.5546, 1)
-layout_mode = 0
-offset_left = 228.0
-offset_top = 76.0
-offset_right = 460.0
-offset_bottom = 96.0
-step = 0.0
-value = 60.0
-nine_patch_stretch = true
-texture_under = ExtResource("5")
-texture_progress = ExtResource("6")
-
-[node name="TextureProgressBar" type="TextureProgressBar" parent="Laser"]
-modulate = Color(1, 0.28, 0.28, 1)
-layout_mode = 0
-offset_left = 228.0
-offset_top = 76.0
-offset_right = 460.0
-offset_bottom = 96.0
-step = 0.0
-value = 50.0
-nine_patch_stretch = true
-stretch_margin_left = 3
-stretch_margin_top = 1
-stretch_margin_right = 3
-stretch_margin_bottom = 1
-texture_over = ExtResource("7")
-texture_progress = ExtResource("6")
-
-[node name="Label" type="Label" parent="Laser"]
-layout_mode = 0
-offset_left = 476.0
-offset_top = 72.0
-offset_right = 516.0
-offset_bottom = 103.0
-scale = Vector2(0.9, 0.9)
-text = "+ 5"
-vertical_alignment = 1
-
-[node name="Label2" type="Label" parent="Laser"]
-layout_mode = 0
-offset_left = 228.0
-offset_top = 75.0
-offset_right = 460.0
-offset_bottom = 98.0
-theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
-theme_override_font_sizes/font_size = 14
-text = "0 / 20"
-horizontal_alignment = 1
-vertical_alignment = 1
-
 [node name="Icon" type="TextureRect" parent="Laser"]
 layout_mode = 0
-offset_left = 192.0
-offset_top = 76.0
-offset_right = 220.0
-offset_bottom = 96.0
+offset_left = 356.0
+offset_top = 44.0
+offset_right = 384.0
+offset_bottom = 64.0
 expand_mode = 1
 stretch_mode = 5
+
+[node name="Label" type="Label" parent="Laser"]
+offset_left = 400.0
+offset_top = 44.0
+offset_right = 478.0
+offset_bottom = 67.0
+text = "Lv 1 / 1 / 1"
 
 [node name="Bomb" type="Control" parent="."]
 layout_mode = 1
@@ -196,74 +91,21 @@ anchors_preset = 0
 offset_right = 40.0
 offset_bottom = 40.0
 
-[node name="ColorRect" type="ColorRect" parent="Bomb"]
-layout_mode = 0
-offset_left = 228.0
-offset_top = 104.0
-offset_right = 460.0
-offset_bottom = 124.0
-color = Color(0.137255, 0.137255, 0.137255, 1)
-
-[node name="TextureProgressGained" type="TextureProgressBar" parent="Bomb"]
-modulate = Color(0.454902, 0.454902, 0.454902, 1)
-layout_mode = 0
-offset_left = 228.0
-offset_top = 104.0
-offset_right = 460.0
-offset_bottom = 124.0
-step = 0.0
-value = 60.0
-nine_patch_stretch = true
-texture_under = ExtResource("5")
-texture_progress = ExtResource("6")
-
-[node name="TextureProgressBar" type="TextureProgressBar" parent="Bomb"]
-modulate = Color(0.286275, 0.286275, 0.286275, 1)
-layout_mode = 0
-offset_left = 228.0
-offset_top = 104.0
-offset_right = 460.0
-offset_bottom = 124.0
-step = 0.0
-value = 50.0
-nine_patch_stretch = true
-stretch_margin_left = 3
-stretch_margin_top = 1
-stretch_margin_right = 3
-stretch_margin_bottom = 1
-texture_over = ExtResource("7")
-texture_progress = ExtResource("6")
-
-[node name="Label" type="Label" parent="Bomb"]
-layout_mode = 0
-offset_left = 476.0
-offset_top = 100.0
-offset_right = 516.0
-offset_bottom = 131.0
-scale = Vector2(0.9, 0.9)
-text = "+ 5"
-vertical_alignment = 1
-
-[node name="Label2" type="Label" parent="Bomb"]
-layout_mode = 0
-offset_left = 228.0
-offset_top = 103.0
-offset_right = 460.0
-offset_bottom = 126.0
-theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
-theme_override_font_sizes/font_size = 14
-text = "0 / 20"
-horizontal_alignment = 1
-vertical_alignment = 1
-
 [node name="Icon" type="TextureRect" parent="Bomb"]
 layout_mode = 0
-offset_left = 192.0
-offset_top = 104.0
-offset_right = 220.0
-offset_bottom = 124.0
+offset_left = 204.0
+offset_top = 96.0
+offset_right = 232.0
+offset_bottom = 116.0
 expand_mode = 1
 stretch_mode = 5
+
+[node name="Label" type="Label" parent="Bomb"]
+offset_left = 244.0
+offset_top = 96.0
+offset_right = 322.0
+offset_bottom = 119.0
+text = "Lv 1 / 1 / 1"
 
 [node name="Light" type="Control" parent="."]
 layout_mode = 1
@@ -271,74 +113,21 @@ anchors_preset = 0
 offset_right = 40.0
 offset_bottom = 40.0
 
-[node name="ColorRect" type="ColorRect" parent="Light"]
-layout_mode = 0
-offset_left = 228.0
-offset_top = 132.0
-offset_right = 460.0
-offset_bottom = 152.0
-color = Color(0.51, 0.50796, 0.3876, 1)
-
-[node name="TextureProgressGained" type="TextureProgressBar" parent="Light"]
-modulate = Color(1, 1, 0.61, 1)
-layout_mode = 0
-offset_left = 228.0
-offset_top = 132.0
-offset_right = 460.0
-offset_bottom = 152.0
-step = 0.0
-value = 60.0
-nine_patch_stretch = true
-texture_under = ExtResource("5")
-texture_progress = ExtResource("6")
-
-[node name="TextureProgressBar" type="TextureProgressBar" parent="Light"]
-modulate = Color(0.811765, 0.811765, 0.364706, 1)
-layout_mode = 0
-offset_left = 228.0
-offset_top = 132.0
-offset_right = 460.0
-offset_bottom = 152.0
-step = 0.0
-value = 50.0
-nine_patch_stretch = true
-stretch_margin_left = 3
-stretch_margin_top = 1
-stretch_margin_right = 3
-stretch_margin_bottom = 1
-texture_over = ExtResource("7")
-texture_progress = ExtResource("6")
-
-[node name="Label" type="Label" parent="Light"]
-layout_mode = 0
-offset_left = 476.0
-offset_top = 128.0
-offset_right = 516.0
-offset_bottom = 159.0
-scale = Vector2(0.9, 0.9)
-text = "+ 5"
-vertical_alignment = 1
-
-[node name="Label2" type="Label" parent="Light"]
-layout_mode = 0
-offset_left = 228.0
-offset_top = 131.0
-offset_right = 460.0
-offset_bottom = 154.0
-theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
-theme_override_font_sizes/font_size = 14
-text = "0 / 20"
-horizontal_alignment = 1
-vertical_alignment = 1
-
 [node name="Icon" type="TextureRect" parent="Light"]
 layout_mode = 0
-offset_left = 192.0
-offset_top = 132.0
-offset_right = 220.0
-offset_bottom = 152.0
+offset_left = 356.0
+offset_top = 96.0
+offset_right = 384.0
+offset_bottom = 116.0
 expand_mode = 1
 stretch_mode = 5
+
+[node name="Label" type="Label" parent="Light"]
+offset_left = 400.0
+offset_top = 96.0
+offset_right = 478.0
+offset_bottom = 119.0
+text = "Lv 1 / 1 / 1"
 
 [node name="XP" type="Control" parent="."]
 layout_mode = 1

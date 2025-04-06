@@ -2,10 +2,6 @@ extends "BattleEntity.gd"
 
 var movement_remaining:float # in meters
 var total_movement:float # in meters
-var bullet_lv:int
-var laser_lv:int
-var bomb_lv:int
-var light_lv:int
 var weapon_accuracy_mult:float
 var light_cone
 var display_move_path = false
@@ -90,14 +86,6 @@ func move():
 		create_tween().tween_property(game.view, "position", Vector2(640, 360) - move_target_position * game.view.scale.x, 1.0).set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_CUBIC)
 
 
-func initialize_stats(data:Dictionary):
-	super(data)
-	bullet_lv = data.bullet.lv
-	laser_lv = data.laser.lv
-	bomb_lv = data.bomb.lv
-	light_lv = data.light.lv
-
-
 func _process(delta: float) -> void:
 	$FireWeaponAim.target_angle = atan2(battle_scene.mouse_position_local.y - position.y, battle_scene.mouse_position_local.x - position.x)
 	$FireWeaponAim.length = (battle_scene.mouse_position_local - position).length()
@@ -136,10 +124,10 @@ func fire_weapon(weapon_type: int):
 			projectile.mass = 1.0
 			projectile.velocity_process_modifier = 5.0 if battle_scene.animations_sped_up else 1.0
 			projectile.rotation = weapon_rotation
-			projectile.damage = Data.bullet_data[bullet_lv-1].damage
+			projectile.damage = Data.battle_weapon_stats.bullet.damage
 			projectile.shooter_attack = attack + attack_buff
-			projectile.weapon_accuracy = Data.bullet_data[bullet_lv-1].accuracy * accuracy
-			projectile.deflects_remaining = bullet_lv
+			projectile.weapon_accuracy = Data.battle_weapon_stats.bullet.accuracy * accuracy
+			projectile.deflects_remaining = 2
 			projectile.position = position
 			projectile.ending_turn_delay = 1.0
 			projectile.end_turn.connect(ending_turn)
@@ -148,9 +136,9 @@ func fire_weapon(weapon_type: int):
 	elif weapon_type == battle_GUI.LASER:
 		var laser = preload("res://Scenes/Battle/Weapons/Laser.tscn").instantiate()
 		laser.rotation = weapon_rotation
-		laser.damage = Data.laser_data[laser_lv-1].damage
+		laser.damage = Data.battle_weapon_stats.laser.damage
 		laser.shooter_attack = attack + attack_buff
-		laser.weapon_accuracy = Data.laser_data[laser_lv-1].accuracy * accuracy
+		laser.weapon_accuracy = Data.battle_weapon_stats.laser.accuracy * accuracy
 		laser.position = position
 		laser.fade_delay = 0.2 if battle_scene.animations_sped_up else 0.5
 		battle_scene.add_child(laser)
@@ -161,13 +149,13 @@ func fire_weapon(weapon_type: int):
 		explosive.collision_mask = 1 + 4 + 32
 		explosive.set_script(load("res://Scripts/Battle/Weapons/Explosive.gd"))
 		explosive.speed = 800.0
-		explosive.mass = 10.0
+		explosive.mass = 4.0
 		explosive.velocity_process_modifier = 5.0 if battle_scene.animations_sped_up else 1.0
 		explosive.AoE_radius = 100.0
 		explosive.rotation = weapon_rotation
-		explosive.damage = Data.bomb_data[bomb_lv-1].damage
+		explosive.damage = Data.battle_weapon_stats.bomb.damage
 		explosive.shooter_attack = attack + attack_buff
-		explosive.weapon_accuracy = Data.bomb_data[bomb_lv-1].accuracy * accuracy
+		explosive.weapon_accuracy = Data.battle_weapon_stats.bomb.accuracy * accuracy
 		explosive.position = position
 		explosive.battle_GUI = battle_GUI
 		explosive.ending_turn_delay = 1.0
@@ -182,7 +170,7 @@ func add_light_cone():
 	light_cone = preload("res://Scenes/Battle/Weapons/LightCone.tscn").instantiate()
 	light_cone.set_script(load("res://Scripts/Battle/Weapons/LightCone.gd"))
 	light_cone.target_angle_deviation = PI / 4.0
-	light_cone.damage = Data.light_data[light_lv-1].damage
+	light_cone.damage = Data.battle_weapon_stats.light.damage
 	light_cone.shooter_attack = attack + attack_buff
 	add_child(light_cone)
 

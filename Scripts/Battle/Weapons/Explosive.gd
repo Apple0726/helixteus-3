@@ -1,28 +1,14 @@
-extends Area2D
+extends "Projectile.gd"
 
-signal end_turn
-
-static var amount:int = 0
-var speed:float
-# Contrary to `speed`, `velocity_process_modifier` does not affect the initial velocity of damage labels
-# Only used for `animations_sped_up` variable in Battle.gd
-var velocity_process_modifier:float = 1.0
-var damage:float
-var shooter_attack:int
-var weapon_accuracy:float
 var entities_inside_explosion_AoE:Array = []
 var AoE_radius:float
-var battle_GUI
-var ending_turn_delay:float
-var mass:float # For now only used to determine knockback when something is defeated by this projectile (so purely aesthetic)
 
 func _ready() -> void:
+	super()
 	$ExplosionAoE/CollisionShape2D.shape.radius = AoE_radius
 	area_entered.connect(_on_area_entered)
-	tree_exiting.connect(decrement_amount)
 	$ExplosionAoE.area_entered.connect(_on_explosionAoE_entered)
 	$ExplosionAoE.area_exited.connect(_on_explosionAoE_exited)
-	amount += 1
 
 func decrement_amount():
 	amount -= 1
@@ -35,12 +21,6 @@ func _on_explosionAoE_entered(area: Area2D):
 func _on_explosionAoE_exited(area: Area2D):
 	entities_inside_explosion_AoE.erase(area)
 
-func _physics_process(delta: float) -> void:
-	position += speed * Vector2.from_angle(rotation) * delta * velocity_process_modifier
-	if (position - Vector2(640, 360)).length_squared() > pow(1280, 2) + pow(720, 2):
-		ending_turn_delay = 0.0
-		queue_free()
-
 
 func _on_area_entered(area: Area2D) -> void:
 	var weapon_data = {
@@ -49,7 +29,7 @@ func _on_area_entered(area: Area2D) -> void:
 		"weapon_accuracy":weapon_accuracy,
 		"orientation":Vector2.from_angle(rotation),
 		"velocity":speed * Vector2.from_angle(rotation),
-		"mass":2.0,
+		"mass":mass,
 	}
 	if area.damage_entity(weapon_data):
 		if area.type == 2:
