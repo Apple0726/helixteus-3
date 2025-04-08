@@ -30,9 +30,11 @@ func _on_area_entered(area: Area2D) -> void:
 		"orientation":Vector2.from_angle(rotation),
 		"velocity":speed * Vector2.from_angle(rotation),
 		"mass":mass,
+		"status_effects":{Battle.StatusEffect.BURN: 1},
+		"knockback":50.0 * Vector2.from_angle(rotation),
 	}
 	if area.damage_entity(weapon_data):
-		if area.type == 2:
+		if area.type == Battle.EntityType.BOUNDARY:
 			ending_turn_delay = 0.0
 			queue_free()
 			return
@@ -44,6 +46,7 @@ func _on_area_entered(area: Area2D) -> void:
 					"shooter_attack":shooter_attack,
 					"weapon_accuracy":INF,
 					"velocity":200.0 * (area_in_AoE.position - position).normalized(),
+					"knockback":30.0 * (area_in_AoE.position - position).normalized(),
 				}
 				area_in_AoE.damage_entity(AoE_weapon_data)
 		if Settings.screen_shake:

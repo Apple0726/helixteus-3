@@ -36,6 +36,7 @@ Item="*res://Scripts/Globals/Item.gd"
 ShipClass="*res://Scripts/Globals/ShipClass.gd"
 Constants="*res://Scripts/Globals/Constants.gd"
 Enemy="*res://Scripts/Globals/Enemy.gd"
+Battle="*res://Scripts/Globals/Battle.gd"
 
 [debug]
 

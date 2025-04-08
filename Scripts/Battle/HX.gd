@@ -36,6 +36,10 @@ func determine_target():
 
 func take_turn():
 	await super()
+	if status_effects[Battle.StatusEffect.STUN] > 0:
+		decrement_status_effects()
+		ending_turn()
+		return
 	var ship_target_id = determine_target()
 	target_position = ship_nodes[ship_target_id].position
 	position_preferences = {}
@@ -71,6 +75,7 @@ func take_turn():
 		else:
 			await get_tree().create_timer(0.5).timeout
 	move(target_move_position)
+	decrement_status_effects()
 
 func calculate_position_preferences(pos:Vector2):
 	if position_preferences.has(pos):
@@ -126,10 +131,7 @@ func attack_target():
 
 
 func ending_turn(delay: float = 0.0):
-	if battle_scene.animations_sped_up:
-		end_turn()
-	else:
-		create_tween().tween_callback(end_turn).set_delay(delay)
+	create_tween().tween_callback(end_turn).set_delay(0.0 if battle_scene.animations_sped_up else delay)
 
 
 func _on_collision_shape_finder_area_entered(area: Area2D) -> void:

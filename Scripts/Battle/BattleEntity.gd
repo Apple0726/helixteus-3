@@ -51,6 +51,8 @@ var agility_buff:int = 0:
 	set(value):
 		agility_buff = value
 		agility_updated_callback()
+var status_effects = {}
+var status_effect_resistances = {}
 
 var default_tooltip_text:String
 var override_tooltip_text:String = ""
@@ -67,11 +69,22 @@ func _ready() -> void:
 	if has_node("Info/Initiative"):
 		$Info/Initiative.modulate.a = 0.0
 	refresh_default_tooltip_text()
-	if type != battle_scene.BOUNDARY:
+	if type != Battle.EntityType.BOUNDARY:
 		self.area_entered.connect(on_collide)
+		$Info/StatusEffects/Burn.mouse_entered.connect(game.show_tooltip.bind(tr("BURN_DESC")))
+		$Info/StatusEffects/Burn.mouse_exited.connect(game.hide_tooltip)
+		$Info/StatusEffects/Stun.mouse_entered.connect(game.show_tooltip.bind(tr("STUN_DESC")))
+		$Info/StatusEffects/Stun.mouse_exited.connect(game.hide_tooltip)
+		$Info/StatusEffects/Exposed.mouse_entered.connect(game.show_tooltip.bind(tr("EXPOSED_DESC")))
+		$Info/StatusEffects/Exposed.mouse_exited.connect(game.hide_tooltip)
+		$Info/StatusEffects/Radioactive.mouse_entered.connect(game.show_tooltip.bind(tr("RADIOACTIVE_DESC")))
+		$Info/StatusEffects/Radioactive.mouse_exited.connect(game.hide_tooltip)
+		for effect in Battle.StatusEffect.N:
+			status_effects[effect] = 0
+			status_effect_resistances[effect] = 0.0
 
 func _draw() -> void:
-	if is_instance_valid(battle_scene) and type != battle_scene.BOUNDARY:
+	if is_instance_valid(battle_scene) and type != Battle.EntityType.BOUNDARY:
 		if draw_collision_shape == 1:
 			draw_circle(Vector2.ZERO, collision_shape_radius + battle_GUI.ship_node.collision_shape_radius + 2.0, Color(1.0, 0.6, 0.0, 0.2), true, -1.0)
 		elif draw_collision_shape == 2:
@@ -99,6 +112,8 @@ func refresh_default_tooltip_text():
 		default_tooltip_text += " + " + str(agility_buff) + " = " + str(agility + agility_buff)
 	elif agility_buff < 0:
 		default_tooltip_text += " - " + str(abs(agility_buff)) + " = " + str(agility + agility_buff)
+	if velocity != Vector2.ZERO:
+		default_tooltip_text += "\nv = " + ("(%.1f, %.1f) m/s\n|v| = %.1f m/s" % [velocity.x, velocity.y, velocity.length()])
 	
 func initialize_stats(data:Dictionary):
 	lv = data.lv
@@ -124,6 +139,9 @@ func take_turn():
 	if turn_index != -1:
 		battle_GUI.turn_order_hbox.get_child(turn_index).get_node("AnimationPlayer").play("ChangeSize")
 		battle_GUI.turn_order_hbox.get_child(turn_index).modulate.a = 1.0
+	var burn_turns = status_effects[Battle.StatusEffect.BURN]
+	if burn_turns > 0:
+		damage_entity_status_effect(int(ceil(burn_turns * 0.05 * total_HP)))
 	if velocity != Vector2.ZERO:
 		moving_from_velocity = true
 		if battle_scene.animations_sped_up:
@@ -134,6 +152,10 @@ func take_turn():
 			await get_tree().create_timer(1.0).timeout
 		moving_from_velocity = false
 
+func decrement_status_effects():
+	for effect in status_effects:
+		status_effects[effect] = max(0, status_effects[effect] - 1)
+	update_status_effects_labels()
 
 func _physics_process(delta: float) -> void:
 	if moving_from_velocity:
@@ -148,6 +170,11 @@ func agility_updated_callback():
 	if has_node("CollisionShapeFinder/CollisionShape2D"):
 		$CollisionShapeFinder/CollisionShape2D.shape.radius = (agility + agility_buff) * METERS_PER_AGILITY * PIXELS_PER_METER
 
+func damage_entity_status_effect(damage: int):
+	battle_scene.add_damage_text(false, position + Vector2.UP * 80.0, damage, false, Vector2.UP * 150.0)
+	HP = max(HP - damage, 0)
+	update_entity_HP()
+	
 func damage_entity(weapon_data: Dictionary):
 	var dodged = 1.0 / (1.0 + exp((weapon_data.weapon_accuracy - agility - agility_buff - abs(0.1 * velocity.rotated(PI / 2.0).dot(weapon_data.get("orientation", Vector2.ZERO))) + 9.2) / 5.8)) > randf()
 	if dodged:
@@ -163,43 +190,75 @@ func damage_entity(weapon_data: Dictionary):
 		var critical = randf() < weapon_data.get("crit_hit_chance", 0.02)
 		if critical:
 			actual_damage *= 2
-		battle_scene.add_damage_text(false, position, actual_damage, critical, 0.3 * weapon_data.velocity * sqrt(weapon_data.get("mass", 0.0)))
+		battle_scene.add_damage_text(false, position, actual_damage, critical, 0.3 * weapon_data.get("velocity", Vector2.ZERO) * sqrt(weapon_data.get("mass", 0.0)))
 		HP = max(HP - actual_damage, 0)
-		$Info/HP.value = HP
-		if has_node("Sprite2D"):
-			$Sprite2D.material.set_shader_parameter("flash_color", Color.RED)
-			$Sprite2D.material.set_shader_parameter("flash", 1.0)
-		if HP <= 0:
-			self.call_deferred("set_monitoring", false)
-			self.call_deferred("set_monitorable", false)
-			var knockback_tween = create_tween().set_parallel()
-			var knockback = weapon_data.velocity.normalized() * weapon_data.get("mass", 0.0) * 5.0 / total_HP
-			if knockback.length() > weapon_data.velocity.length():
-				knockback = knockback.normalized() * weapon_data.velocity.length()
-			knockback_tween.tween_property($Info, "modulate:a", 0.0, 1.0)
-			knockback_tween.tween_property(self, "position", position + knockback, 2.0)
-			knockback_tween.tween_property($Sprite2D.material, "shader_parameter/alpha", 0.0, 1.0).set_delay(1.0)
-			knockback_tween.tween_callback(entity_defeated_callback)
-		else:
-			if has_node("Sprite2D"):
-				create_tween().tween_property($Sprite2D.material, "shader_parameter/flash", 0.0, 0.4)
+		var knockback = weapon_data.get("knockback", Vector2.ZERO)
+		if knockback != Vector2.ZERO:
+			if critical:
+				velocity *= 2.0
+			velocity += knockback
+		var label_knockback = weapon_data.velocity.normalized() * weapon_data.get("mass", 0.0) * 5.0 / total_HP
+		if label_knockback.length() > weapon_data.velocity.length():
+			label_knockback = label_knockback.normalized() * weapon_data.velocity.length()
+		update_entity_HP(label_knockback)
+		if HP > 0 and weapon_data.has("status_effects"):
+			for effect in weapon_data.status_effects:
+				if randf() > status_effect_resistances[effect]:
+					status_effects[effect] += weapon_data.status_effects[effect]
+			update_status_effects_labels()
 	return not dodged
 
+func update_entity_HP(label_knockback: Vector2 = Vector2.ZERO):
+	$Info/HP.value = HP
+	if has_node("Sprite2D"):
+		$Sprite2D.material.set_shader_parameter("flash_color", Color.RED)
+		$Sprite2D.material.set_shader_parameter("flash", 1.0)
+	if HP <= 0:
+		self.call_deferred("set_monitoring", false)
+		self.call_deferred("set_monitorable", false)
+		var label_knockback_tween = create_tween().set_parallel()
+		label_knockback_tween.tween_property($Info, "modulate:a", 0.0, 1.0)
+		label_knockback_tween.tween_property(self, "position", position + label_knockback, 2.0)
+		label_knockback_tween.tween_property($Sprite2D.material, "shader_parameter/alpha", 0.0, 1.0).set_delay(1.0)
+		label_knockback_tween.tween_callback(queue_free).set_delay(2.0)
+		label_knockback_tween.set_speed_scale(5.0 if battle_scene.animations_sped_up else 1.0)
+		entity_defeated_callback()
+	else:
+		if has_node("Sprite2D"):
+			create_tween().tween_property($Sprite2D.material, "shader_parameter/flash", 0.0, 0.4)
+
+func update_status_effects_labels():
+	$Info/StatusEffects/Burn.visible = status_effects[Battle.StatusEffect.BURN] > 0
+	$Info/StatusEffects/BurnLabel.visible = status_effects[Battle.StatusEffect.BURN] > 0
+	$Info/StatusEffects/Stun.visible = status_effects[Battle.StatusEffect.STUN] > 0
+	$Info/StatusEffects/StunLabel.visible = status_effects[Battle.StatusEffect.STUN] > 0
+	$Info/StatusEffects/Exposed.visible = status_effects[Battle.StatusEffect.EXPOSED] > 0
+	$Info/StatusEffects/ExposedLabel.visible = status_effects[Battle.StatusEffect.EXPOSED] > 0
+	$Info/StatusEffects/Radioactive.visible = status_effects[Battle.StatusEffect.RADIOACTIVE] > 0
+	$Info/StatusEffects/RadioactiveLabel.visible = status_effects[Battle.StatusEffect.RADIOACTIVE] > 0
+	for effect in status_effects:
+		if effect == Battle.StatusEffect.BURN:
+			$Info/StatusEffects/BurnLabel.text = str(status_effects[effect])
+		elif effect == Battle.StatusEffect.STUN:
+			$Info/StatusEffects/StunLabel.text = str(status_effects[effect])
+		elif effect == Battle.StatusEffect.EXPOSED:
+			$Info/StatusEffects/ExposedLabel.text = str(status_effects[effect])
+		elif effect == Battle.StatusEffect.RADIOACTIVE:
+			$Info/StatusEffects/RadioactiveLabel.text = str(status_effects[effect])
+
 func entity_defeated_callback():
-	if type == battle_scene.ENEMY:
+	if type == Battle.EntityType.ENEMY:
 		battle_GUI.turn_order_hbox.get_child(turn_index).get_node("AnimationPlayer").play("FadeOutAnim")
 		battle_scene.initiative_order.remove_at(turn_index)
 		if turn_index < battle_scene.whose_turn_is_it_index:
 			battle_scene.whose_turn_is_it_index -= 1
 		battle_scene.HX_nodes.erase(self)
-	elif type == battle_scene.SHIP:
+	elif type == Battle.EntityType.SHIP:
 		battle_GUI.turn_order_hbox.get_child(turn_index).get_node("AnimationPlayer").play("FadeOutAnim")
 		battle_scene.initiative_order.remove_at(turn_index)
 		if turn_index < battle_scene.whose_turn_is_it_index:
 			battle_scene.whose_turn_is_it_index -= 1
 		battle_scene.ship_nodes.erase(self)
-	await get_tree().create_timer(2.0).timeout
-	queue_free()
 
 func update_velocity_arrow(offset: Vector2 = Vector2.ZERO):
 	#print(velocity, offset)
@@ -218,7 +277,7 @@ func collide_with_entity(collider: BattleEntity, collidee: BattleEntity):
 		"shooter_attack":collider.attack,
 		"weapon_accuracy":collider.accuracy,
 		"orientation":collider.velocity.normalized(),
-		"damage_label_initial_velocity":0.3 * collider.velocity,
+		"velocity":0.3 * collider.velocity,
 	}
 	var collidee_mass = remap(collidee.HP, 0.0, collidee.total_HP, collidee.total_HP * 0.66, collidee.total_HP)
 	if collidee.damage_entity(collider_weapon_data):
@@ -230,7 +289,7 @@ func collide_with_entity(collider: BattleEntity, collidee: BattleEntity):
 				"shooter_attack":collidee.attack,
 				"weapon_accuracy":INF,
 				"orientation":collidee.velocity.normalized(),
-				"damage_label_initial_velocity":Vector2.ZERO,
+				"velocity":Vector2.ZERO,
 			}
 			collider.damage_entity(collidee_weapon_data)
 			if collidee.velocity == Vector2.ZERO:
@@ -244,7 +303,7 @@ func collide_with_entity(collider: BattleEntity, collidee: BattleEntity):
 			collider.velocity -= collider.velocity.normalized() * velocity_loss
 	
 func on_collide(area):
-	if type == battle_scene.BOUNDARY or area.type == battle_scene.BOUNDARY:
+	if type == Battle.EntityType.BOUNDARY or area.type == Battle.EntityType.BOUNDARY:
 		return
 	if moving_from_velocity:
 		collide_with_entity(self, area)

@@ -283,6 +283,7 @@ expand_mode = 1
 stretch_mode = 5
 
 [node name="Label" type="Label" parent="Panel/ShipDetails/Laser"]
+layout_mode = 0
 offset_left = 184.0
 offset_top = 316.0
 offset_right = 262.0
@@ -305,6 +306,7 @@ expand_mode = 1
 stretch_mode = 5
 
 [node name="Label" type="Label" parent="Panel/ShipDetails/Bomb"]
+layout_mode = 0
 offset_left = 184.0
 offset_top = 348.0
 offset_right = 262.0
@@ -327,6 +329,7 @@ expand_mode = 1
 stretch_mode = 5
 
 [node name="Label" type="Label" parent="Panel/ShipDetails/Light"]
+layout_mode = 0
 offset_left = 184.0
 offset_top = 380.0
 offset_right = 262.0

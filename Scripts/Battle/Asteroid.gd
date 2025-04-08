@@ -6,7 +6,10 @@ func _ready() -> void:
 	$CollisionShape2D.shape.radius = collision_shape_radius
 	$Info/HP.position.x = -$Sprite2D.scale.x * 90.0 + 90.0
 	$Info/Label.position.y = $Sprite2D.scale.x * 90.0 + 30.0
+	$Info/StatusEffects.position.y = -$Sprite2D.scale.x * 90.0 - 60.0
+	$Info/Buffs.position.y = $Sprite2D.scale.x * 90.0 + 60.0
 	$Info/Icon.position.y = $Sprite2D.scale.x * 90.0 + 30.0
+	status_effect_resistances[Battle.StatusEffect.BURN] = 1.0
 
 func _physics_process(delta: float) -> void:
 	super(delta)
@@ -21,6 +24,7 @@ func _physics_process(delta: float) -> void:
 
 func take_turn():
 	super()
+	decrement_status_effects()
 
 func remove_from_obstacles():
 	battle_scene.obstacle_nodes.erase(self)

@@ -68,6 +68,7 @@ func _draw() -> void:
 func take_turn():
 	movement_remaining = total_movement
 	super()
+	decrement_status_effects()
 
 func move():
 	display_move_path = false
@@ -176,10 +177,7 @@ func add_light_cone():
 
 
 func ending_turn(delay: float = 0.0):
-	if battle_scene.animations_sped_up:
-		end_turn()
-	else:
-		create_tween().tween_callback(end_turn).set_delay(delay)
+	create_tween().tween_callback(end_turn).set_delay(0.0 if battle_scene.animations_sped_up else delay)
 
 
 func cancel_action():

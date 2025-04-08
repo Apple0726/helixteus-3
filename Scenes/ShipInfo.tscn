@@ -79,6 +79,7 @@ expand_mode = 1
 stretch_mode = 5
 
 [node name="Label" type="Label" parent="Laser"]
+layout_mode = 0
 offset_left = 400.0
 offset_top = 44.0
 offset_right = 478.0
@@ -101,6 +102,7 @@ expand_mode = 1
 stretch_mode = 5
 
 [node name="Label" type="Label" parent="Bomb"]
+layout_mode = 0
 offset_left = 244.0
 offset_top = 96.0
 offset_right = 322.0
@@ -123,6 +125,7 @@ expand_mode = 1
 stretch_mode = 5
 
 [node name="Label" type="Label" parent="Light"]
+layout_mode = 0
 offset_left = 400.0
 offset_top = 96.0
 offset_right = 478.0

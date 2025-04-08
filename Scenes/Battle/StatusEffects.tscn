@@ -1,0 +1,60 @@
+[gd_scene load_steps=4 format=3 uid="uid://m8wrm55x0xbe"]
+
+[ext_resource type="Theme" uid="uid://cp2u1kgj60ic" path="res://Resources/default_theme.tres" id="1_bn3ag"]
+[ext_resource type="Texture2D" uid="uid://buvqtd7v5l8m2" path="res://Graphics/Icons/Fire.png" id="2_jvqvk"]
+[ext_resource type="Texture2D" uid="uid://b642ran0hp7j4" path="res://Graphics/Icons/Stun.png" id="3_lr2cs"]
+
+[node name="StatusEffects" type="HBoxContainer"]
+mouse_filter = 2
+theme = ExtResource("1_bn3ag")
+alignment = 1
+
+[node name="Burn" type="TextureRect" parent="."]
+visible = false
+custom_minimum_size = Vector2(30, 0)
+layout_mode = 2
+texture = ExtResource("2_jvqvk")
+expand_mode = 1
+stretch_mode = 6
+
+[node name="BurnLabel" type="Label" parent="."]
+visible = false
+layout_mode = 2
+text = "9"
+
+[node name="Stun" type="TextureRect" parent="."]
+visible = false
+custom_minimum_size = Vector2(30, 0)
+layout_mode = 2
+texture = ExtResource("3_lr2cs")
+expand_mode = 1
+stretch_mode = 6
+
+[node name="StunLabel" type="Label" parent="."]
+visible = false
+layout_mode = 2
+text = "9"
+
+[node name="Exposed" type="TextureRect" parent="."]
+visible = false
+custom_minimum_size = Vector2(30, 0)
+layout_mode = 2
+expand_mode = 1
+stretch_mode = 6
+
+[node name="ExposedLabel" type="Label" parent="."]
+visible = false
+layout_mode = 2
+text = "9"
+
+[node name="Radioactive" type="TextureRect" parent="."]
+visible = false
+custom_minimum_size = Vector2(30, 0)
+layout_mode = 2
+expand_mode = 1
+stretch_mode = 6
+
+[node name="RadioactiveLabel" type="Label" parent="."]
+visible = false
+layout_mode = 2
+text = "9"

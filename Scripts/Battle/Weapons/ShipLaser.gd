@@ -20,6 +20,7 @@ func _ready() -> void:
 				"weapon_accuracy":weapon_accuracy,
 				"orientation":Vector2.from_angle(rotation),
 				"velocity":100.0 * Vector2.from_angle(rotation),
+				"status_effects":{Battle.StatusEffect.STUN: 1},
 			}
 			if hit_target.damage_entity(weapon_data):
 				laser_absorbed = true

@@ -1,4 +1,4 @@
-[gd_scene load_steps=50 format=3 uid="uid://cpjo82l86k61"]
+[gd_scene load_steps=49 format=3 uid="uid://cpjo82l86k61"]
 
 [ext_resource type="Texture2D" uid="uid://7ffsf7xuvfw2" path="res://Graphics/Icons/attack.png" id="1"]
 [ext_resource type="Script" uid="uid://dhqip0etwjc1x" path="res://Scripts/Battle/HX.gd" id="1_3h40m"]
@@ -11,12 +11,11 @@
 [ext_resource type="Texture2D" uid="uid://bx1hvetixqpwi" path="res://Graphics/Misc/Bar2.png" id="6"]
 [ext_resource type="Shader" uid="uid://dose2l8hnixm6" path="res://Shaders/Fire.gdshader" id="7"]
 [ext_resource type="Texture2D" uid="uid://cdblvpftr6875" path="res://icon.png" id="8"]
-[ext_resource type="Texture2D" uid="uid://buvqtd7v5l8m2" path="res://Graphics/Icons/Fire.png" id="9"]
 [ext_resource type="Shader" uid="uid://gevhgabt3grd" path="res://Shaders/Laser.gdshader" id="11"]
 [ext_resource type="Texture2D" uid="uid://yhdxrw2q1yep" path="res://Graphics/HX/Status effects/Stun.png" id="12"]
-[ext_resource type="Texture2D" uid="uid://b642ran0hp7j4" path="res://Graphics/Icons/Stun.png" id="13"]
+[ext_resource type="PackedScene" uid="uid://m8wrm55x0xbe" path="res://Scenes/Battle/StatusEffects.tscn" id="13_lq603"]
 [ext_resource type="Texture2D" uid="uid://b1dcgxga387up" path="res://Graphics/Effects/spotlight_1.png" id="14"]
-[ext_resource type="Texture2D" uid="uid://bn520d6r5iwik" path="res://Graphics/Icons/accuracy.png" id="15"]
+[ext_resource type="PackedScene" uid="uid://ni58sxlrjgg4" path="res://Scenes/Battle/Buffs.tscn" id="14_f8wif"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_1s5uh"]
 resource_local_to_scene = true
@@ -568,67 +567,19 @@ nine_patch_stretch = true
 texture_under = ExtResource("3")
 texture_progress = ExtResource("6")
 
-[node name="Effects" type="HBoxContainer" parent="Info"]
+[node name="StatusEffects" parent="Info" instance=ExtResource("13_lq603")]
 layout_mode = 0
-offset_left = -72.0
+offset_left = -76.0
 offset_top = -80.0
-offset_right = 77.0004
-offset_bottom = -42.0
-mouse_filter = 2
-theme = ExtResource("2")
-alignment = 1
+offset_right = 76.0
+offset_bottom = -48.0
 
-[node name="Fire" type="TextureRect" parent="Info/Effects"]
-visible = false
-custom_minimum_size = Vector2(30, 0)
-layout_mode = 2
-texture = ExtResource("9")
-expand_mode = 1
-stretch_mode = 5
-
-[node name="FireLabel" type="Label" parent="Info/Effects"]
-visible = false
-layout_mode = 2
-text = "9"
-
-[node name="Stun" type="TextureRect" parent="Info/Effects"]
-visible = false
-custom_minimum_size = Vector2(30, 0)
-layout_mode = 2
-texture = ExtResource("13")
-expand_mode = 1
-stretch_mode = 5
-
-[node name="StunLabel" type="Label" parent="Info/Effects"]
-visible = false
-layout_mode = 2
-text = "9"
-
-[node name="Acc" type="TextureRect" parent="Info/Effects"]
-visible = false
-custom_minimum_size = Vector2(30, 0)
-layout_mode = 2
-texture = ExtResource("15")
-expand_mode = 1
-stretch_mode = 5
-
-[node name="AccLabel" type="Label" parent="Info/Effects"]
-visible = false
-layout_mode = 2
-text = "9"
-
-[node name="Atk" type="TextureRect" parent="Info/Effects"]
-visible = false
-custom_minimum_size = Vector2(30, 0)
-layout_mode = 2
-texture = ExtResource("1")
-expand_mode = 1
-stretch_mode = 5
-
-[node name="AtkLabel" type="Label" parent="Info/Effects"]
-visible = false
-layout_mode = 2
-text = "9"
+[node name="Buffs" parent="Info" instance=ExtResource("14_f8wif")]
+layout_mode = 0
+offset_left = -56.0
+offset_top = 52.0
+offset_right = 56.0
+offset_bottom = 92.0
 
 [node name="HurtAnimation" type="AnimationPlayer" parent="."]
 libraries = {

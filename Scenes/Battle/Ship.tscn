@@ -1,4 +1,4 @@
-[gd_scene load_steps=41 format=3 uid="uid://cxykmxd6r2wgm"]
+[gd_scene load_steps=38 format=3 uid="uid://cxykmxd6r2wgm"]
 
 [ext_resource type="Texture2D" uid="uid://kr2fdk8dptv1" path="res://Graphics/Misc/BarUnder2.png" id="1"]
 [ext_resource type="Script" uid="uid://cfrufmr2v8ebl" path="res://Scripts/Battle/Ship.gd" id="2"]
@@ -7,16 +7,13 @@
 [ext_resource type="PackedScene" uid="uid://dtk1md86gqsln" path="res://Scenes/Fire.tscn" id="4"]
 [ext_resource type="Texture2D" uid="uid://koi0aarpqj30" path="res://Graphics/Ships/Ship0.png" id="5"]
 [ext_resource type="Texture2D" uid="uid://bx1hvetixqpwi" path="res://Graphics/Misc/Bar2.png" id="6"]
-[ext_resource type="Texture2D" uid="uid://buvqtd7v5l8m2" path="res://Graphics/Icons/Fire.png" id="7"]
 [ext_resource type="Texture2D" uid="uid://yhdxrw2q1yep" path="res://Graphics/HX/Status effects/Stun.png" id="8"]
-[ext_resource type="Texture2D" uid="uid://bn520d6r5iwik" path="res://Graphics/Icons/accuracy.png" id="9"]
+[ext_resource type="PackedScene" uid="uid://m8wrm55x0xbe" path="res://Scenes/Battle/StatusEffects.tscn" id="8_ymlex"]
+[ext_resource type="PackedScene" uid="uid://ni58sxlrjgg4" path="res://Scenes/Battle/Buffs.tscn" id="9_0r8nl"]
 [ext_resource type="Texture2D" uid="uid://b1dcgxga387up" path="res://Graphics/Effects/spotlight_1.png" id="10"]
-[ext_resource type="Texture2D" uid="uid://b642ran0hp7j4" path="res://Graphics/Icons/Stun.png" id="11"]
 [ext_resource type="Texture2D" uid="uid://cdblvpftr6875" path="res://icon.png" id="12"]
 [ext_resource type="Shader" uid="uid://dose2l8hnixm6" path="res://Shaders/Fire.gdshader" id="13"]
 [ext_resource type="Shader" uid="uid://gevhgabt3grd" path="res://Shaders/Laser.gdshader" id="14"]
-[ext_resource type="Theme" uid="uid://cp2u1kgj60ic" path="res://Resources/default_theme.tres" id="15"]
-[ext_resource type="Texture2D" uid="uid://7ffsf7xuvfw2" path="res://Graphics/Icons/attack.png" id="16"]
 [ext_resource type="Texture2D" uid="uid://cyas017smhbpo" path="res://Graphics/Effects/push_1.png" id="18_4hicg"]
 [ext_resource type="Texture2D" uid="uid://3ljlm33mxoww" path="res://Graphics/Effects/push_2.png" id="19_fh3h1"]
 [ext_resource type="Texture2D" uid="uid://dncbqa6a2j6e8" path="res://Graphics/Effects/push_3.png" id="20_mql8i"]
@@ -279,67 +276,19 @@ offset_bottom = -37.0
 text = "Initiative: 10"
 horizontal_alignment = 1
 
-[node name="Effects" type="HBoxContainer" parent="Info"]
+[node name="StatusEffects" parent="Info" instance=ExtResource("8_ymlex")]
 layout_mode = 0
-offset_left = -80.0
-offset_top = -80.0
-offset_right = 80.0
-offset_bottom = -42.0
-mouse_filter = 2
-theme = ExtResource("15")
-alignment = 1
+offset_left = -60.0
+offset_top = -92.0
+offset_right = 60.0
+offset_bottom = -64.0
 
-[node name="Fire" type="TextureRect" parent="Info/Effects"]
-visible = false
-custom_minimum_size = Vector2(30, 0)
-layout_mode = 2
-texture = ExtResource("7")
-expand_mode = 1
-stretch_mode = 6
-
-[node name="FireLabel" type="Label" parent="Info/Effects"]
-visible = false
-layout_mode = 2
-text = "9"
-
-[node name="Stun" type="TextureRect" parent="Info/Effects"]
-visible = false
-custom_minimum_size = Vector2(30, 0)
-layout_mode = 2
-texture = ExtResource("11")
-expand_mode = 1
-stretch_mode = 6
-
-[node name="StunLabel" type="Label" parent="Info/Effects"]
-visible = false
-layout_mode = 2
-text = "9"
-
-[node name="Acc" type="TextureRect" parent="Info/Effects"]
-visible = false
-custom_minimum_size = Vector2(30, 0)
-layout_mode = 2
-texture = ExtResource("9")
-expand_mode = 1
-stretch_mode = 6
-
-[node name="AccLabel" type="Label" parent="Info/Effects"]
-visible = false
-layout_mode = 2
-text = "9"
-
-[node name="Atk" type="TextureRect" parent="Info/Effects"]
-visible = false
-custom_minimum_size = Vector2(30, 0)
-layout_mode = 2
-texture = ExtResource("16")
-expand_mode = 1
-stretch_mode = 6
-
-[node name="AtkLabel" type="Label" parent="Info/Effects"]
-visible = false
-layout_mode = 2
-text = "9"
+[node name="Buffs" parent="Info" instance=ExtResource("9_0r8nl")]
+layout_mode = 0
+offset_left = -52.0
+offset_top = 84.0
+offset_right = 52.0
+offset_bottom = 124.0
 
 [node name="Effects" type="Sprite2D" parent="."]
 material = SubResource("28")

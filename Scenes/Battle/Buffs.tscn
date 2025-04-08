@@ -1,0 +1,35 @@
+[gd_scene load_steps=3 format=3 uid="uid://ni58sxlrjgg4"]
+
+[ext_resource type="Texture2D" uid="uid://7ffsf7xuvfw2" path="res://Graphics/Icons/attack.png" id="1_tid64"]
+[ext_resource type="Texture2D" uid="uid://bn520d6r5iwik" path="res://Graphics/Icons/accuracy.png" id="2_6s765"]
+
+[node name="Buffs" type="HBoxContainer"]
+offset_right = 40.0
+offset_bottom = 40.0
+alignment = 1
+
+[node name="Atk" type="TextureRect" parent="."]
+visible = false
+custom_minimum_size = Vector2(30, 0)
+layout_mode = 2
+texture = ExtResource("1_tid64")
+expand_mode = 1
+stretch_mode = 6
+
+[node name="AtkLabel" type="Label" parent="."]
+visible = false
+layout_mode = 2
+text = "9"
+
+[node name="Acc" type="TextureRect" parent="."]
+visible = false
+custom_minimum_size = Vector2(30, 0)
+layout_mode = 2
+texture = ExtResource("2_6s765")
+expand_mode = 1
+stretch_mode = 6
+
+[node name="AccLabel" type="Label" parent="."]
+visible = false
+layout_mode = 2
+text = "9"
