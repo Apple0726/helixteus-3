@@ -4,6 +4,7 @@ var movement_remaining:float # in meters
 var total_movement:float # in meters
 var weapon_accuracy_mult:float
 var light_cone
+var light_emission_cone_angle = PI / 4.0
 var display_move_path = false
 var move_target_position:Vector2
 var move_additional_costs:float
@@ -68,7 +69,7 @@ func _draw() -> void:
 func take_turn():
 	movement_remaining = total_movement
 	super()
-	decrement_status_effects()
+	decrement_status_effects_buffs()
 
 func move():
 	display_move_path = false
@@ -170,7 +171,7 @@ func fire_weapon(weapon_type: int):
 func add_light_cone():
 	light_cone = preload("res://Scenes/Battle/Weapons/LightCone.tscn").instantiate()
 	light_cone.set_script(load("res://Scripts/Battle/Weapons/LightCone.gd"))
-	light_cone.target_angle_deviation = PI / 4.0
+	light_cone.emission_cone_angle = light_emission_cone_angle
 	light_cone.damage = Data.battle_weapon_stats.light.damage
 	light_cone.shooter_attack = attack + attack_buff
 	add_child(light_cone)

@@ -15,7 +15,7 @@ custom_minimum_size = Vector2(30, 0)
 layout_mode = 2
 texture = ExtResource("2_jvqvk")
 expand_mode = 1
-stretch_mode = 6
+stretch_mode = 5
 
 [node name="BurnLabel" type="Label" parent="."]
 visible = false
@@ -28,7 +28,7 @@ custom_minimum_size = Vector2(30, 0)
 layout_mode = 2
 texture = ExtResource("3_lr2cs")
 expand_mode = 1
-stretch_mode = 6
+stretch_mode = 5
 
 [node name="StunLabel" type="Label" parent="."]
 visible = false
@@ -40,7 +40,7 @@ visible = false
 custom_minimum_size = Vector2(30, 0)
 layout_mode = 2
 expand_mode = 1
-stretch_mode = 6
+stretch_mode = 5
 
 [node name="ExposedLabel" type="Label" parent="."]
 visible = false
@@ -52,7 +52,7 @@ visible = false
 custom_minimum_size = Vector2(30, 0)
 layout_mode = 2
 expand_mode = 1
-stretch_mode = 6
+stretch_mode = 5
 
 [node name="RadioactiveLabel" type="Label" parent="."]
 visible = false

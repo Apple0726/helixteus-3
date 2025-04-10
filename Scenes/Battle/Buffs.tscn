@@ -1,35 +1,63 @@
-[gd_scene load_steps=3 format=3 uid="uid://ni58sxlrjgg4"]
+[gd_scene load_steps=5 format=3 uid="uid://ni58sxlrjgg4"]
 
 [ext_resource type="Texture2D" uid="uid://7ffsf7xuvfw2" path="res://Graphics/Icons/attack.png" id="1_tid64"]
 [ext_resource type="Texture2D" uid="uid://bn520d6r5iwik" path="res://Graphics/Icons/accuracy.png" id="2_6s765"]
+[ext_resource type="Texture2D" uid="uid://cqiyti2xdxtcw" path="res://Graphics/Icons/defense.png" id="2_8eqwi"]
+[ext_resource type="Texture2D" uid="uid://bapj1r8e5pwia" path="res://Graphics/Icons/agility.png" id="4_7ashw"]
 
 [node name="Buffs" type="HBoxContainer"]
 offset_right = 40.0
 offset_bottom = 40.0
 alignment = 1
 
-[node name="Atk" type="TextureRect" parent="."]
+[node name="Attack" type="TextureRect" parent="."]
 visible = false
 custom_minimum_size = Vector2(30, 0)
 layout_mode = 2
 texture = ExtResource("1_tid64")
 expand_mode = 1
-stretch_mode = 6
+stretch_mode = 5
 
-[node name="AtkLabel" type="Label" parent="."]
+[node name="AttackLabel" type="Label" parent="."]
 visible = false
 layout_mode = 2
 text = "9"
 
-[node name="Acc" type="TextureRect" parent="."]
+[node name="Defense" type="TextureRect" parent="."]
+visible = false
+custom_minimum_size = Vector2(30, 0)
+layout_mode = 2
+texture = ExtResource("2_8eqwi")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="DefenseLabel" type="Label" parent="."]
+visible = false
+layout_mode = 2
+text = "9"
+
+[node name="Accuracy" type="TextureRect" parent="."]
 visible = false
 custom_minimum_size = Vector2(30, 0)
 layout_mode = 2
 texture = ExtResource("2_6s765")
 expand_mode = 1
-stretch_mode = 6
+stretch_mode = 5
 
-[node name="AccLabel" type="Label" parent="."]
+[node name="AccuracyLabel" type="Label" parent="."]
+visible = false
+layout_mode = 2
+text = "9"
+
+[node name="Agility" type="TextureRect" parent="."]
+visible = false
+custom_minimum_size = Vector2(30, 0)
+layout_mode = 2
+texture = ExtResource("4_7ashw")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="AgilityLabel" type="Label" parent="."]
 visible = false
 layout_mode = 2
 text = "9"

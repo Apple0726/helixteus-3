@@ -37,7 +37,7 @@ func determine_target():
 func take_turn():
 	await super()
 	if status_effects[Battle.StatusEffect.STUN] > 0:
-		decrement_status_effects()
+		decrement_status_effects_buffs()
 		ending_turn()
 		return
 	var ship_target_id = determine_target()
@@ -75,7 +75,7 @@ func take_turn():
 		else:
 			await get_tree().create_timer(0.5).timeout
 	move(target_move_position)
-	decrement_status_effects()
+	decrement_status_effects_buffs()
 
 func calculate_position_preferences(pos:Vector2):
 	if position_preferences.has(pos):

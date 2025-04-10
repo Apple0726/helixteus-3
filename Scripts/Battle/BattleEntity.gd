@@ -152,10 +152,14 @@ func take_turn():
 			await get_tree().create_timer(1.0).timeout
 		moving_from_velocity = false
 
-func decrement_status_effects():
+func decrement_status_effects_buffs():
 	for effect in status_effects:
 		status_effects[effect] = max(0, status_effects[effect] - 1)
-	update_status_effects_labels()
+	attack_buff += -signi(attack_buff)
+	defense_buff += -signi(defense_buff)
+	accuracy_buff += -signi(accuracy_buff)
+	agility_buff += -signi(agility_buff)
+	update_info_labels()
 
 func _physics_process(delta: float) -> void:
 	if moving_from_velocity:
@@ -201,11 +205,15 @@ func damage_entity(weapon_data: Dictionary):
 		if label_knockback.length() > weapon_data.velocity.length():
 			label_knockback = label_knockback.normalized() * weapon_data.velocity.length()
 		update_entity_HP(label_knockback)
-		if HP > 0 and weapon_data.has("status_effects"):
-			for effect in weapon_data.status_effects:
-				if randf() > status_effect_resistances[effect]:
-					status_effects[effect] += weapon_data.status_effects[effect]
-			update_status_effects_labels()
+		if HP > 0:
+			if weapon_data.has("status_effects"):
+				for effect in weapon_data.status_effects:
+					if randf() > status_effect_resistances[effect]:
+						status_effects[effect] += weapon_data.status_effects[effect]
+			if weapon_data.has("buffs"):
+				for buff in weapon_data.buffs:
+					self["%s_buff" % buff] += weapon_data.buffs[buff]
+			update_info_labels()
 	return not dodged
 
 func update_entity_HP(label_knockback: Vector2 = Vector2.ZERO):
@@ -227,7 +235,7 @@ func update_entity_HP(label_knockback: Vector2 = Vector2.ZERO):
 		if has_node("Sprite2D"):
 			create_tween().tween_property($Sprite2D.material, "shader_parameter/flash", 0.0, 0.4)
 
-func update_status_effects_labels():
+func update_info_labels():
 	$Info/StatusEffects/Burn.visible = status_effects[Battle.StatusEffect.BURN] > 0
 	$Info/StatusEffects/BurnLabel.visible = status_effects[Battle.StatusEffect.BURN] > 0
 	$Info/StatusEffects/Stun.visible = status_effects[Battle.StatusEffect.STUN] > 0
@@ -236,6 +244,22 @@ func update_status_effects_labels():
 	$Info/StatusEffects/ExposedLabel.visible = status_effects[Battle.StatusEffect.EXPOSED] > 0
 	$Info/StatusEffects/Radioactive.visible = status_effects[Battle.StatusEffect.RADIOACTIVE] > 0
 	$Info/StatusEffects/RadioactiveLabel.visible = status_effects[Battle.StatusEffect.RADIOACTIVE] > 0
+	$Info/Buffs/Attack.visible = attack_buff != 0
+	$Info/Buffs/AttackLabel.visible = attack_buff != 0
+	$Info/Buffs/AttackLabel.text = ("+%s" % attack_buff) if attack_buff > 0 else str(attack_buff)
+	$Info/Buffs/AttackLabel["theme_override_colors/font_color"] = Color.GREEN if attack_buff > 0 else Color.RED
+	$Info/Buffs/Defense.visible = defense_buff != 0
+	$Info/Buffs/DefenseLabel.visible = defense_buff != 0
+	$Info/Buffs/DefenseLabel.text = ("+%s" % defense_buff) if defense_buff > 0 else str(defense_buff)
+	$Info/Buffs/DefenseLabel["theme_override_colors/font_color"] = Color.GREEN if defense_buff > 0 else Color.RED
+	$Info/Buffs/Accuracy.visible = accuracy_buff != 0
+	$Info/Buffs/AccuracyLabel.visible = accuracy_buff != 0
+	$Info/Buffs/AccuracyLabel.text = ("+%s" % accuracy_buff) if accuracy_buff > 0 else str(accuracy_buff)
+	$Info/Buffs/AccuracyLabel["theme_override_colors/font_color"] = Color.GREEN if accuracy_buff > 0 else Color.RED
+	$Info/Buffs/Agility.visible = agility_buff != 0
+	$Info/Buffs/AgilityLabel.visible = agility_buff != 0
+	$Info/Buffs/AgilityLabel.text = ("+%s" % agility_buff) if agility_buff > 0 else str(agility_buff)
+	$Info/Buffs/AgilityLabel["theme_override_colors/font_color"] = Color.GREEN if agility_buff > 0 else Color.RED
 	for effect in status_effects:
 		if effect == Battle.StatusEffect.BURN:
 			$Info/StatusEffects/BurnLabel.text = str(status_effects[effect])

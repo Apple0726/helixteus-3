@@ -24,7 +24,7 @@ func _physics_process(delta: float) -> void:
 
 func take_turn():
 	super()
-	decrement_status_effects()
+	decrement_status_effects_buffs()
 
 func remove_from_obstacles():
 	battle_scene.obstacle_nodes.erase(self)

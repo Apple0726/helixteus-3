@@ -71,11 +71,13 @@ func _input(event: InputEvent) -> void:
 	elif action_selected == LIGHT:
 		if Input.is_action_pressed("shift"):
 			if Input.is_action_just_pressed("scroll_down"):
-				ship_node.light_cone.target_angle_deviation = min(ship_node.light_cone.target_angle_deviation + PI / 64.0, 0.3 * PI)
+				ship_node.light_cone.emission_cone_angle = min(ship_node.light_cone.emission_cone_angle + PI / 64.0, 0.3 * PI)
+				ship_node.light_emission_cone_angle = ship_node.light_cone.emission_cone_angle
 				ship_node.light_cone.update_cone_animate()
 				override_enemy_tooltips()
 			if Input.is_action_just_pressed("scroll_up"):
-				ship_node.light_cone.target_angle_deviation = max(ship_node.light_cone.target_angle_deviation - PI / 64.0, PI / 64.0)
+				ship_node.light_cone.emission_cone_angle = max(ship_node.light_cone.emission_cone_angle - PI / 64.0, PI / 64.0)
+				ship_node.light_emission_cone_angle = ship_node.light_cone.emission_cone_angle
 				ship_node.light_cone.update_cone_animate()
 				override_enemy_tooltips()
 		if Input.is_action_just_pressed("shift"):
