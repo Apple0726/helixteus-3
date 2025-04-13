@@ -10,6 +10,9 @@ enum EntityType {
 enum StatusEffect {
 	STUN,
 	BURN,
+	CORRODING,
+	WET,
+	FREEZE,
 	EXPOSED,
 	RADIOACTIVE,
 	N,

@@ -8,6 +8,7 @@ var obstacles_in_range:Array = []
 var target_position:Vector2
 var target_angle:float
 var target_angle_max_deviation:float
+var passive_abilities = []
 
 
 func _ready() -> void:
@@ -15,6 +16,10 @@ func _ready() -> void:
 	collision_shape_radius = 24.0
 	go_through_movement_cost = 30.0
 
+func initialize_stats(data: Dictionary):
+	super(data)
+	passive_abilities = data.passive_abilities
+	
 
 func determine_target():
 	var distances = []
@@ -158,6 +163,9 @@ func _on_mouse_entered() -> void:
 		game.show_adv_tooltip(override_tooltip_text.format(override_tooltip_dict), {"imgs": override_tooltip_icons})
 	else:
 		refresh_default_tooltip_text()
+		default_tooltip_text += "\n" + tr("PASSIVE_ABILITY") + ":"
+		for PA in passive_abilities:
+			default_tooltip_text += "\n" + tr("PASSIVE_%s" % PA)
 		game.show_adv_tooltip(default_tooltip_text, {"imgs": default_tooltip_icons})
 
 

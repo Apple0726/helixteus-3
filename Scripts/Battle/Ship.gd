@@ -1,5 +1,7 @@
 extends "BattleEntity.gd"
 
+var ship_class:int
+
 var movement_remaining:float # in meters
 var total_movement:float # in meters
 var weapon_accuracy_mult:float
@@ -23,6 +25,10 @@ func _ready() -> void:
 	movement_remaining = (agility + agility_buff) * METERS_PER_AGILITY
 	total_movement = (agility + agility_buff) * METERS_PER_AGILITY
 	go_through_movement_cost = 30.0
+
+func initialize_stats(data: Dictionary):
+	super(data)
+	ship_class = data.ship_class
 
 var highlighted_targets = []
 
@@ -106,6 +112,8 @@ func _on_mouse_entered() -> void:
 		game.show_tooltip(override_tooltip_text)
 	else:
 		refresh_default_tooltip_text()
+		default_tooltip_text += "\n" + tr("PASSIVE_ABILITY") + ":"
+		default_tooltip_text += "\n" + tr("%s_PASSIVE_ABILITY" % ShipClass.names[ship_class].to_upper())
 		game.show_adv_tooltip(default_tooltip_text, {"imgs": default_tooltip_icons})
 
 
