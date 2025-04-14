@@ -39,6 +39,7 @@ func _ready() -> void:
 		HX.battle_GUI = battle_GUI
 		HX.HX_nodes = HX_nodes
 		HX.ship_nodes = ship_nodes
+		HX.type = Battle.EntityType.ENEMY
 		HX.roll_initiative()
 		HX.get_node("Sprite2D").texture = load("res://Graphics/HX/%s_%s.png" % [HX_data[i]["class"], HX_data[i].type])
 		HX.get_node("Sprite2D").material.set_shader_parameter("amplitude", 0.0)
@@ -66,6 +67,8 @@ func _ready() -> void:
 			ship_node.battle_scene = self
 			ship_node.battle_GUI = battle_GUI
 			ship_node.next_turn.connect(next_turn)
+			ship_node.type = Battle.EntityType.SHIP
+			ship_node.ship_type = i
 			ship_node.get_node("Sprite2D").texture = load("res://Graphics/Ships/Ship%s.png" % i)
 			ship_node.get_node("Sprite2D").material.set_shader_parameter("amplitude", 0.0)
 			ship_node.get_node("Info/HP").max_value = ship_data[i].HP
@@ -77,12 +80,13 @@ func _ready() -> void:
 
 
 func initialize_battle():
-	for i in len(HX_nodes):
-		initiative_order.append({"type":Battle.EntityType.ENEMY, "idx":i, "initiative":HX_nodes[i].initiative})
-	for i in len(ship_nodes):
-		initiative_order.append({"type":Battle.EntityType.SHIP, "idx":i, "initiative":ship_nodes[i].initiative})
+	for HX_node in HX_nodes:
+		initiative_order.append({"node": HX_node})
+	for ship_node in ship_nodes:
+		initiative_order.append({"node": ship_node})
 	initiative_order.sort_custom(sort_initiative)
-	for i in len(initiative_order) + 1:
+	initiative_order.append({"node": $Boundary})
+	for i in len(initiative_order):
 		var turn_order_button = preload("res://Scenes/Battle/TurnOrderButton.tscn").instantiate()
 		if i > 0:
 			var delay = create_tween()
@@ -91,23 +95,21 @@ func initialize_battle():
 		battle_GUI.turn_order_hbox.add_child(turn_order_button)
 		turn_order_button.custom_minimum_size.x = 0.0
 		turn_order_button.get_node("TextureRect").modulate.a = 0.5
-		if i == len(initiative_order): # Environment always goes last
+		var entity = initiative_order[i].node
+		if entity.type == Battle.EntityType.BOUNDARY: # Environment always goes last
 			turn_order_button.show_initiative(0, 0.15 * len(initiative_order) + 3.0)
 			turn_order_button.set_texture(load("res://Graphics/Achievements/BStar.png"))
 			turn_order_button.get_node("Panel")["theme_override_styles/panel"].border_color = Color(1.0, 1.0, 0.0, 0.7)
 		else:
-			var entity = initiative_order[i]
 			turn_order_button.show_initiative(entity.initiative, 0.15 * i + 3.0)
 			if entity.type == Battle.EntityType.ENEMY:
-				turn_order_button.set_texture(load("res://Graphics/HX/%s_%s.png" % [HX_data[entity.idx]["class"], HX_data[entity.idx].type]))
+				turn_order_button.set_texture(load("res://Graphics/HX/%s_%s.png" % [entity.enemy_class, entity.enemy_type]))
 				turn_order_button.get_node("Panel")["theme_override_styles/panel"].border_color = Color(1.0, 0.0, 0.0, 0.7)
-				HX_nodes[entity.idx].show_initiative(entity.initiative)
-				HX_nodes[entity.idx].turn_index = i
 			elif entity.type == Battle.EntityType.SHIP:
-				turn_order_button.set_texture(load("res://Graphics/Ships/Ship%s.png" % entity.idx))
+				turn_order_button.set_texture(load("res://Graphics/Ships/Ship%s.png" % entity.ship_type))
 				turn_order_button.get_node("Panel")["theme_override_styles/panel"].border_color = Color(0.0, 0.8, 1.0, 0.7)
-				ship_nodes[entity.idx].show_initiative(entity.initiative)
-				ship_nodes[entity.idx].turn_index = i
+			entity.show_initiative(entity.initiative)
+		entity.turn_order_box = turn_order_button
 	next_turn()
 
 func next_turn():
@@ -116,7 +118,15 @@ func next_turn():
 	else:
 		view_tween = create_tween().set_parallel()
 	battle_GUI.ship_node = null
-	if whose_turn_is_it_index == len(initiative_order):
+	for i in len(initiative_order):
+		if i >= len(initiative_order):
+			break
+		if not is_instance_valid(initiative_order[i].node) or initiative_order[i].node.type != Battle.EntityType.BOUNDARY and initiative_order[i].node.HP <= 0:
+			initiative_order.remove_at(i)
+			if i < whose_turn_is_it_index:
+				whose_turn_is_it_index -= 1
+			i -= 1
+	if initiative_order[whose_turn_is_it_index].node.type == Battle.EntityType.BOUNDARY:
 		var view_scale:float = 0.4
 		if view_tween:
 			view_tween.tween_property(game.view, "scale", Vector2.ONE * view_scale, 1.0).set_trans(Tween.TRANS_CUBIC)
@@ -124,23 +134,23 @@ func next_turn():
 			create_tween().tween_callback(environment_take_turn).set_delay(1.0)
 		else:
 			create_tween().tween_callback(environment_take_turn).set_delay(0.1)
-		battle_GUI.turn_order_hbox.get_child(whose_turn_is_it_index).get_node("AnimationPlayer").play("ChangeSize")
-	elif initiative_order[whose_turn_is_it_index].type == Battle.EntityType.SHIP:
-		var ship_node = ship_nodes[initiative_order[whose_turn_is_it_index].idx]
+		initiative_order[whose_turn_is_it_index].node.turn_order_box.get_node("AnimationPlayer").play("ChangeSize")
+	elif initiative_order[whose_turn_is_it_index].node.type == Battle.EntityType.SHIP:
+		var ship_node = initiative_order[whose_turn_is_it_index].node
 		battle_GUI.ship_node = ship_node
 		await ship_node.take_turn()
 		battle_GUI.fade_in_main_panel()
 		if view_tween:
 			view_tween.tween_property(game.view, "position", Vector2(640, 360) - ship_node.position * game.view.scale.x, 0.5).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
-	elif initiative_order[whose_turn_is_it_index].type == Battle.EntityType.ENEMY:
-		var HX_node = HX_nodes[initiative_order[whose_turn_is_it_index].idx]
+	elif initiative_order[whose_turn_is_it_index].node.type == Battle.EntityType.ENEMY:
+		var HX_node = initiative_order[whose_turn_is_it_index].node
 		if view_tween:
 			view_tween.tween_property(game.view, "position", Vector2(640, 360) - HX_node.position * game.view.scale.x, 0.5).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
 		HX_node.take_turn()
 	whose_turn_is_it_index += 1
 
 func sort_initiative(a, b):
-	return a.initiative > b.initiative
+	return a.node.initiative > b.node.initiative
 
 
 func _process(delta: float) -> void:

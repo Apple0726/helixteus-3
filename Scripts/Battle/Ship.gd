@@ -1,9 +1,8 @@
 extends "BattleEntity.gd"
 
 var ship_class:int
+var ship_type:int
 
-var movement_remaining:float # in meters
-var total_movement:float # in meters
 var weapon_accuracy_mult:float
 var light_cone
 var light_emission_cone_angle = PI / 4.0
@@ -124,6 +123,7 @@ func fire_weapon(weapon_type: int):
 	$FireWeaponAim.fade_out()
 	var weapon_rotation = randf_range($FireWeaponAim.target_angle - $FireWeaponAim.target_angle_max_deviation, $FireWeaponAim.target_angle + $FireWeaponAim.target_angle_max_deviation)
 	if weapon_type == battle_GUI.BULLET:
+		var projectiles = []
 		for i in 2:
 			var projectile = preload("res://Scenes/Battle/Weapons/Projectile.tscn").instantiate()
 			projectile.collision_layer = 8
@@ -142,7 +142,12 @@ func fire_weapon(weapon_type: int):
 			projectile.ending_turn_delay = 1.0
 			projectile.end_turn.connect(ending_turn)
 			battle_scene.add_child(projectile)
-			await get_tree().create_timer(0.2).timeout
+			projectiles.append(projectile)
+			if i < 1:
+				await get_tree().create_timer(0.2).timeout
+		for projectile in projectiles:
+			if is_instance_valid(projectile):
+				projectile.end_turn_ready = true
 	elif weapon_type == battle_GUI.LASER:
 		var laser = preload("res://Scenes/Battle/Weapons/Laser.tscn").instantiate()
 		laser.rotation = weapon_rotation
@@ -260,7 +265,7 @@ func show_push_strength_panel(entity: BattleEntity):
 	
 func push_entity():
 	var push_success = true
-	if entity_to_push.type == battle_scene.ENEMY:
+	if entity_to_push.type == Battle.EntityType.ENEMY:
 		push_success = push_entity_attempt(agility + agility_buff, entity_to_push.agility + entity_to_push.agility_buff, position - entity_to_push.position,  - entity_to_push.velocity)
 	entity_to_push.update_velocity_arrow()
 	if push_success:
@@ -280,7 +285,7 @@ func push_entity():
 	cancel_action()
 
 func calculate_velocity_change():
-	return (entity_to_push.position - position).normalized() * push_movement_used * 2.0 * remap(HP, 0.0, total_HP, total_HP * 0.66, total_HP) / remap(entity_to_push.HP, 0.0, entity_to_push.total_HP, entity_to_push.total_HP * 0.66, entity_to_push.total_HP)
+	return (entity_to_push.position - position).normalized() * push_movement_used * 2.0 * get_mass() / entity_to_push.get_mass()
 	
 func update_push_movement_used():
 	if is_instance_valid(entity_to_push):

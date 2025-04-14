@@ -24,6 +24,7 @@ func _on_explosionAoE_exited(area: Area2D):
 
 func _on_area_entered(area: Area2D) -> void:
 	var weapon_data = {
+		"type":Battle.DamageType.PHYSICAL,
 		"damage":damage,
 		"shooter_attack":shooter_attack,
 		"weapon_accuracy":weapon_accuracy,

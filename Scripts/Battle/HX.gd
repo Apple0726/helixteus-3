@@ -1,5 +1,7 @@
 extends "BattleEntity.gd"
 
+var enemy_class:int
+var enemy_type:int
 var HX_nodes:Array
 var ship_nodes:Array
 var position_preferences:Dictionary
@@ -8,18 +10,20 @@ var obstacles_in_range:Array = []
 var target_position:Vector2
 var target_angle:float
 var target_angle_max_deviation:float
-var passive_abilities = []
 
 
 func _ready() -> void:
 	super()
 	collision_shape_radius = 24.0
+	movement_remaining = (agility + agility_buff) * METERS_PER_AGILITY
+	total_movement = (agility + agility_buff) * METERS_PER_AGILITY
 	go_through_movement_cost = 30.0
 
 func initialize_stats(data: Dictionary):
-	super(data)
 	passive_abilities = data.passive_abilities
-	
+	enemy_class = data["class"]
+	enemy_type = data.type
+	super(data)
 
 func determine_target():
 	var distances = []
@@ -51,22 +55,22 @@ func take_turn():
 	for j in range(64):
 		var th = lerp(0.0, 2.0 * PI, j / 64.0)
 		var inside_obstacle = false
-		var movement_left = (agility + agility_buff) * METERS_PER_AGILITY # in meters
+		movement_remaining = total_movement # in meters
 		var r = 0.0 # in pixels
-		while movement_left > 0.0:
+		while movement_remaining > 0.0:
 			r += 2.0 * PIXELS_PER_METER
-			movement_left -= 2.0
+			movement_remaining -= 2.0
 			var pos = position + r * Vector2.from_angle(th)
 			for obstacle in obstacles_in_range:
 				if not inside_obstacle and Geometry2D.is_point_in_polygon(pos, obstacle.get_node("CollisionShape2D/Polygon2D").polygon):
-					movement_left = max(movement_left - obstacle.go_through_movement_cost, 0.0)
-					if movement_left > 0.0:
+					movement_remaining = max(movement_remaining - obstacle.go_through_movement_cost, 0.0)
+					if movement_remaining > 0.0:
 						inside_obstacle = true
 					else:
 						continue
 				elif inside_obstacle and not Geometry2D.is_point_in_polygon(pos, obstacle.get_node("CollisionShape2D/Polygon2D").polygon):
 					inside_obstacle = false
-			if movement_left >= 0.0:
+			if movement_remaining >= 0.0:
 				calculate_position_preferences(position + r * Vector2.from_angle(th))
 	var target_move_position:Vector2 = position
 	var lowest_weight:float = INF
@@ -111,7 +115,7 @@ func move(target_pos:Vector2):
 
 func attack_target():
 	target_angle = atan2(target_position.y - position.y, target_position.x - position.x)
-	target_angle_max_deviation = 1.0 / (accuracy + accuracy_buff)
+	target_angle_max_deviation = 1.0 / (accuracy + accuracy_buff) / aim_mult
 	if battle_scene.animations_sped_up:
 		await get_tree().create_timer(0.1).timeout
 	else:
@@ -131,6 +135,7 @@ func attack_target():
 	projectile.deflects_remaining = 0
 	projectile.position = position
 	projectile.ending_turn_delay = 1.0
+	projectile.end_turn_ready = true
 	battle_scene.add_child(projectile)
 	projectile.end_turn.connect(ending_turn)
 

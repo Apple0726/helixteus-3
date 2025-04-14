@@ -15,6 +15,7 @@ func _ready() -> void:
 		var hit_point = to_local($RayCast2D.get_collision_point())
 		if hit_target is BattleEntity:
 			var weapon_data = {
+				"type":Battle.DamageType.EMG,
 				"damage":damage,
 				"shooter_attack":shooter_attack,
 				"weapon_accuracy":weapon_accuracy,

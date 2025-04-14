@@ -12,21 +12,21 @@ var PIXELS_PER_METER:float
 
 var battle_scene:Node2D
 var battle_GUI:BattleGUI
+var turn_order_box:Button
 
 var lv:int
 var HP:int
 var total_HP:int
-var attack:int
-var defense:int
-var accuracy:int
-var agility:int:
+var attack:float
+var defense:float
+var accuracy:float
+var agility:float:
 	get:
 		return agility
 	set(value):
 		agility = value
 		agility_updated_callback()
 var initiative:int
-var turn_index:int = -1
 var go_through_movement_cost:float # in meters
 var velocity:Vector2 = Vector2.ZERO:
 	get:
@@ -34,6 +34,9 @@ var velocity:Vector2 = Vector2.ZERO:
 	set(value):
 		velocity = value
 		update_velocity_arrow()
+var movement_remaining:float # in meters
+var total_movement:float # in meters
+
 var moving_from_velocity = false # Used to determine whether to deal damage to an entity when this entity collides with it
 var velocity_process_mult = 1.0
 var collision_shape_radius:float
@@ -42,10 +45,10 @@ var draw_collision_shape = 0: # 0 = false, 1 = draw but no highlight, 2 = draw &
 		draw_collision_shape = value
 		queue_redraw()
 
-var attack_buff:int = 0
-var defense_buff:int = 0
-var accuracy_buff:int = 0
-var agility_buff:int = 0:
+var attack_buff:float = 0.0
+var defense_buff:float = 0.0
+var accuracy_buff:float = 0.0
+var agility_buff:float = 0.0:
 	get:
 		return agility_buff
 	set(value):
@@ -53,6 +56,16 @@ var agility_buff:int = 0:
 		agility_updated_callback()
 var status_effects = {}
 var status_effect_resistances = {}
+var passive_abilities = []
+var mass_mult:float = 1.0
+var regen_per_turn = 0
+var buff_decay_rate = 1.0
+var debuff_decay_rate = 1.0
+var status_effects_decay_rate = 1.0
+var random_buff_timer_initial = INF
+var random_buff_timer = INF
+var aim_mult = 1.0
+var physical_damage_mult = 1.0
 
 var default_tooltip_text:String
 var override_tooltip_text:String = ""
@@ -92,26 +105,26 @@ func _draw() -> void:
 
 func refresh_default_tooltip_text():
 	default_tooltip_text = "@i \t%s / %s" % [HP, total_HP]
-	default_tooltip_text += "\n@i \t%s" % attack
+	default_tooltip_text += "\n@i \t%s" % Helper.format_num(attack)
 	if attack_buff > 0:
-		default_tooltip_text += " + " + str(attack_buff) + " = " + str(attack + attack_buff)
+		default_tooltip_text += " + " + Helper.format_num(attack_buff) + " = " + Helper.format_num(attack + attack_buff)
 	elif attack_buff < 0:
-		default_tooltip_text += " - " + str(abs(attack_buff)) + " = " + str(attack + attack_buff)
-	default_tooltip_text += "\n@i \t%s" % defense
+		default_tooltip_text += " - " + Helper.format_num(abs(attack_buff)) + " = " + Helper.format_num(attack + attack_buff)
+	default_tooltip_text += "\n@i \t%s" % Helper.format_num(defense)
 	if defense_buff > 0:
-		default_tooltip_text += " + " + str(defense_buff) + " = " + str(defense + defense_buff)
+		default_tooltip_text += " + " + Helper.format_num(defense_buff) + " = " + Helper.format_num(defense + defense_buff)
 	elif defense_buff < 0:
-		default_tooltip_text += " - " + str(abs(defense_buff)) + " = " + str(defense + defense_buff)
-	default_tooltip_text += "\n@i \t%s" % accuracy
+		default_tooltip_text += " - " + Helper.format_num(abs(defense_buff)) + " = " + Helper.format_num(defense + defense_buff)
+	default_tooltip_text += "\n@i \t%s" % Helper.format_num(accuracy)
 	if accuracy_buff > 0:
-		default_tooltip_text += " + " + str(accuracy_buff) + " = " + str(accuracy + accuracy_buff)
+		default_tooltip_text += " + " + Helper.format_num(accuracy_buff) + " = " + Helper.format_num(accuracy + accuracy_buff)
 	elif accuracy_buff < 0:
-		default_tooltip_text += " - " + str(abs(accuracy_buff)) + " = " + str(accuracy + accuracy_buff)
-	default_tooltip_text += "\n@i \t%s" % agility
+		default_tooltip_text += " - " + Helper.format_num(abs(accuracy_buff)) + " = " + Helper.format_num(accuracy + accuracy_buff)
+	default_tooltip_text += "\n@i \t%s" % Helper.format_num(agility)
 	if agility_buff > 0:
-		default_tooltip_text += " + " + str(agility_buff) + " = " + str(agility + agility_buff)
+		default_tooltip_text += " + " + Helper.format_num(agility_buff) + " = " + Helper.format_num(agility + agility_buff)
 	elif agility_buff < 0:
-		default_tooltip_text += " - " + str(abs(agility_buff)) + " = " + str(agility + agility_buff)
+		default_tooltip_text += " - " + Helper.format_num(abs(agility_buff)) + " = " + Helper.format_num(agility + agility_buff)
 	if velocity != Vector2.ZERO:
 		default_tooltip_text += "\nv = " + ("(%.1f, %.1f) m/s\n|v| = %.1f m/s" % [velocity.x, velocity.y, velocity.length()])
 	
@@ -123,6 +136,36 @@ func initialize_stats(data:Dictionary):
 	defense = data.defense
 	accuracy = data.accuracy
 	agility = data.agility
+	if Battle.PassiveAbility.MORE_MASS in passive_abilities:
+		mass_mult *= 2.0
+	if Battle.PassiveAbility.FASTER_DEBUFF_STATUS_DISAPPEAR in passive_abilities:
+		debuff_decay_rate = 2.0
+		status_effects_decay_rate = 2.0
+	if Battle.PassiveAbility.SLOWER_BUFF_DISAPPEAR in passive_abilities:
+		buff_decay_rate = 0.5
+	if Battle.PassiveAbility.HEAL_EVERY_TURN in passive_abilities:
+		regen_per_turn = ceil(total_HP * 0.15)
+	if Battle.PassiveAbility.EXTRA_MOVEMENT in passive_abilities:
+		total_movement *= 1.5
+		movement_remaining *= 1.5
+	if Battle.PassiveAbility.RANDOM_3_BUFF in passive_abilities:
+		random_buff_timer = 3
+		random_buff_timer_initial = 3
+	if Battle.PassiveAbility.INCREASED_AIM in passive_abilities:
+		aim_mult *= 2.0
+	if Battle.PassiveAbility.PHYSICAL_DAMAGE_RESISTANT in passive_abilities:
+		physical_damage_mult = 0.75
+	if Battle.PassiveAbility.STUN_FREEZE_IMMUNE:
+		status_effect_resistances[Battle.StatusEffect.STUN] = 1.0
+		status_effect_resistances[Battle.StatusEffect.FREEZE] = 1.0
+	if Battle.PassiveAbility.BURN_CORRODING_IMMUNE:
+		status_effect_resistances[Battle.StatusEffect.BURN] = 1.0
+		status_effect_resistances[Battle.StatusEffect.CORRODING] = 1.0
+	if Battle.PassiveAbility.WET_EXPOSED_IMMUNE:
+		status_effect_resistances[Battle.StatusEffect.WET] = 1.0
+		status_effect_resistances[Battle.StatusEffect.EXPOSED] = 1.0
+	if Battle.PassiveAbility.RADIOACTIVE_IMMUNE:
+		status_effect_resistances[Battle.StatusEffect.RADIOACTIVE] = 1.0
 
 func roll_initiative():
 	var range:int = 2 + log(randf()) / log(0.2)
@@ -136,12 +179,25 @@ func show_initiative(_initiative: int):
 	create_tween().tween_property($Info/Initiative, "position:y", $Info/Initiative.position.y - 15.0, 1.0).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_CIRC)
 
 func take_turn():
-	if turn_index != -1:
-		battle_GUI.turn_order_hbox.get_child(turn_index).get_node("AnimationPlayer").play("ChangeSize")
-		battle_GUI.turn_order_hbox.get_child(turn_index).modulate.a = 1.0
+	if is_instance_valid(turn_order_box):
+		turn_order_box.get_node("AnimationPlayer").play("ChangeSize")
+		turn_order_box.modulate.a = 1.0
 	var burn_turns = status_effects[Battle.StatusEffect.BURN]
 	if burn_turns > 0:
 		damage_entity_status_effect(int(ceil(burn_turns * 0.05 * total_HP)))
+	random_buff_timer -= 1
+	if random_buff_timer <= 0:
+		match randi() % 4:
+			0:
+				attack_buff += random_buff_timer_initial
+			1:
+				defense_buff += random_buff_timer_initial
+			2:
+				accuracy_buff += random_buff_timer_initial
+			3:
+				agility_buff += random_buff_timer_initial
+		random_buff_timer = random_buff_timer_initial
+		update_info_labels()
 	if velocity != Vector2.ZERO:
 		moving_from_velocity = true
 		if battle_scene.animations_sped_up:
@@ -154,11 +210,23 @@ func take_turn():
 
 func decrement_status_effects_buffs():
 	for effect in status_effects:
-		status_effects[effect] = max(0, status_effects[effect] - 1)
-	attack_buff += -signi(attack_buff)
-	defense_buff += -signi(defense_buff)
-	accuracy_buff += -signi(accuracy_buff)
-	agility_buff += -signi(agility_buff)
+		status_effects[effect] = max(0, status_effects[effect] - status_effects_decay_rate)
+	if attack_buff > 0:
+		attack_buff = max(attack_buff - buff_decay_rate, 0.0)
+	elif attack_buff < 0:
+		attack_buff = min(attack_buff + debuff_decay_rate, 0.0)
+	if defense_buff > 0:
+		defense_buff = max(defense_buff - buff_decay_rate, 0.0)
+	elif defense_buff < 0:
+		defense_buff = min(defense_buff + debuff_decay_rate, 0.0)
+	if accuracy_buff > 0:
+		accuracy_buff = max(accuracy_buff - buff_decay_rate, 0.0)
+	elif accuracy_buff < 0:
+		accuracy_buff = min(accuracy_buff + debuff_decay_rate, 0.0)
+	if agility_buff > 0:
+		agility_buff = max(agility_buff - buff_decay_rate, 0.0)
+	elif agility_buff < 0:
+		agility_buff = min(agility_buff + debuff_decay_rate, 0.0)
 	update_info_labels()
 
 func _physics_process(delta: float) -> void:
@@ -167,7 +235,7 @@ func _physics_process(delta: float) -> void:
 
 
 func end_turn():
-	battle_GUI.turn_order_hbox.get_child(turn_index).get_node("AnimationPlayer").play_backwards("ChangeSize")
+	turn_order_box.get_node("AnimationPlayer").play_backwards("ChangeSize")
 	emit_signal("next_turn")
 
 func agility_updated_callback():
@@ -194,6 +262,8 @@ func damage_entity(weapon_data: Dictionary):
 		var critical = randf() < weapon_data.get("crit_hit_chance", 0.02)
 		if critical:
 			actual_damage *= 2
+		if Battle.PassiveAbility.PHYSICAL_DAMAGE_RESISTANT in passive_abilities and weapon_data.type == Battle.DamageType.PHYSICAL:
+			actual_damage = ceil(actual_damage * 0.75)
 		battle_scene.add_damage_text(false, position, actual_damage, critical, 0.3 * weapon_data.get("velocity", Vector2.ZERO) * sqrt(weapon_data.get("mass", 0.0)))
 		HP = max(HP - actual_damage, 0)
 		var knockback = weapon_data.get("knockback", Vector2.ZERO)
@@ -213,6 +283,12 @@ func damage_entity(weapon_data: Dictionary):
 			if weapon_data.has("buffs"):
 				for buff in weapon_data.buffs:
 					self["%s_buff" % buff] += weapon_data.buffs[buff]
+			if Battle.PassiveAbility.BUFFS_AT_LOW_HP in passive_abilities:
+				var buff_amount:int = remap(float(HP) / total_HP, 0.0, 1.0, 9.8 + lv / 5.0, 0)
+				attack_buff = min(attack_buff + buff_amount, max(attack_buff, buff_amount))
+				defense_buff = min(defense_buff + buff_amount, max(defense_buff, buff_amount))
+				accuracy_buff = min(accuracy_buff + buff_amount, max(accuracy_buff, buff_amount))
+				agility_buff = min(agility_buff + buff_amount, max(agility_buff, buff_amount))
 			update_info_labels()
 	return not dodged
 
@@ -246,42 +322,36 @@ func update_info_labels():
 	$Info/StatusEffects/RadioactiveLabel.visible = status_effects[Battle.StatusEffect.RADIOACTIVE] > 0
 	$Info/Buffs/Attack.visible = attack_buff != 0
 	$Info/Buffs/AttackLabel.visible = attack_buff != 0
-	$Info/Buffs/AttackLabel.text = ("+%s" % attack_buff) if attack_buff > 0 else str(attack_buff)
+	$Info/Buffs/AttackLabel.text = ("+%s" % Helper.format_num(attack_buff)) if attack_buff > 0 else Helper.format_num(attack_buff)
 	$Info/Buffs/AttackLabel["theme_override_colors/font_color"] = Color.GREEN if attack_buff > 0 else Color.RED
 	$Info/Buffs/Defense.visible = defense_buff != 0
 	$Info/Buffs/DefenseLabel.visible = defense_buff != 0
-	$Info/Buffs/DefenseLabel.text = ("+%s" % defense_buff) if defense_buff > 0 else str(defense_buff)
+	$Info/Buffs/DefenseLabel.text = ("+%s" % Helper.format_num(defense_buff)) if defense_buff > 0 else Helper.format_num(defense_buff)
 	$Info/Buffs/DefenseLabel["theme_override_colors/font_color"] = Color.GREEN if defense_buff > 0 else Color.RED
 	$Info/Buffs/Accuracy.visible = accuracy_buff != 0
 	$Info/Buffs/AccuracyLabel.visible = accuracy_buff != 0
-	$Info/Buffs/AccuracyLabel.text = ("+%s" % accuracy_buff) if accuracy_buff > 0 else str(accuracy_buff)
+	$Info/Buffs/AccuracyLabel.text = ("+%s" % Helper.format_num(accuracy_buff)) if accuracy_buff > 0 else Helper.format_num(accuracy_buff)
 	$Info/Buffs/AccuracyLabel["theme_override_colors/font_color"] = Color.GREEN if accuracy_buff > 0 else Color.RED
 	$Info/Buffs/Agility.visible = agility_buff != 0
 	$Info/Buffs/AgilityLabel.visible = agility_buff != 0
-	$Info/Buffs/AgilityLabel.text = ("+%s" % agility_buff) if agility_buff > 0 else str(agility_buff)
+	$Info/Buffs/AgilityLabel.text = ("+%s" % Helper.format_num(agility_buff)) if agility_buff > 0 else Helper.format_num(agility_buff)
 	$Info/Buffs/AgilityLabel["theme_override_colors/font_color"] = Color.GREEN if agility_buff > 0 else Color.RED
 	for effect in status_effects:
 		if effect == Battle.StatusEffect.BURN:
-			$Info/StatusEffects/BurnLabel.text = str(status_effects[effect])
+			$Info/StatusEffects/BurnLabel.text = Helper.format_num(status_effects[effect])
 		elif effect == Battle.StatusEffect.STUN:
-			$Info/StatusEffects/StunLabel.text = str(status_effects[effect])
+			$Info/StatusEffects/StunLabel.text = Helper.format_num(status_effects[effect])
 		elif effect == Battle.StatusEffect.EXPOSED:
-			$Info/StatusEffects/ExposedLabel.text = str(status_effects[effect])
+			$Info/StatusEffects/ExposedLabel.text = Helper.format_num(status_effects[effect])
 		elif effect == Battle.StatusEffect.RADIOACTIVE:
-			$Info/StatusEffects/RadioactiveLabel.text = str(status_effects[effect])
+			$Info/StatusEffects/RadioactiveLabel.text = Helper.format_num(status_effects[effect])
 
 func entity_defeated_callback():
 	if type == Battle.EntityType.ENEMY:
-		battle_GUI.turn_order_hbox.get_child(turn_index).get_node("AnimationPlayer").play("FadeOutAnim")
-		battle_scene.initiative_order.remove_at(turn_index)
-		if turn_index < battle_scene.whose_turn_is_it_index:
-			battle_scene.whose_turn_is_it_index -= 1
+		turn_order_box.get_node("AnimationPlayer").play("FadeOutAnim")
 		battle_scene.HX_nodes.erase(self)
 	elif type == Battle.EntityType.SHIP:
-		battle_GUI.turn_order_hbox.get_child(turn_index).get_node("AnimationPlayer").play("FadeOutAnim")
-		battle_scene.initiative_order.remove_at(turn_index)
-		if turn_index < battle_scene.whose_turn_is_it_index:
-			battle_scene.whose_turn_is_it_index -= 1
+		turn_order_box.get_node("AnimationPlayer").play("FadeOutAnim")
 		battle_scene.ship_nodes.erase(self)
 
 func update_velocity_arrow(offset: Vector2 = Vector2.ZERO):
@@ -295,20 +365,22 @@ func push_entity_attempt(agility_pusher: int, agility_pushee: int, position_diff
 
 func collide_with_entity(collider: BattleEntity, collidee: BattleEntity):
 	var damage: float = 0.0
-	var collider_mass = remap(collider.HP, 0.0, collider.total_HP, collider.total_HP * 0.66, collider.total_HP)
+	var collider_mass = collider.get_mass()
 	var collider_weapon_data = {
+		"type":Battle.DamageType.PHYSICAL,
 		"damage": collider_mass * collider.velocity.length_squared() * 0.00001,
 		"shooter_attack":collider.attack,
 		"weapon_accuracy":collider.accuracy,
 		"orientation":collider.velocity.normalized(),
 		"velocity":0.3 * collider.velocity,
 	}
-	var collidee_mass = remap(collidee.HP, 0.0, collidee.total_HP, collidee.total_HP * 0.66, collidee.total_HP)
+	var collidee_mass = collidee.get_mass()
 	if collidee.damage_entity(collider_weapon_data):
 		var collider_kinetic_energy = collider_mass * collider.velocity.length_squared()
 		var collidee_velocity_gain = min(sqrt(collider_kinetic_energy / collidee_mass), collider.velocity.length())
 		if not collidee.moving_from_velocity:
 			var collidee_weapon_data = {
+				"type":Battle.DamageType.PHYSICAL,
 				"damage": collidee_mass * collider.velocity.length_squared() * 0.00001,
 				"shooter_attack":collidee.attack,
 				"weapon_accuracy":INF,
@@ -333,3 +405,6 @@ func on_collide(area):
 		collide_with_entity(self, area)
 	elif area.moving_from_velocity:
 		collide_with_entity(area, self)
+
+func get_mass():
+	return remap(HP, 0.0, total_HP, total_HP * 0.66, total_HP) * mass_mult

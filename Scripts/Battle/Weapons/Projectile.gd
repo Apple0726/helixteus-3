@@ -12,6 +12,7 @@ var damage:float
 var shooter_attack:int
 var weapon_accuracy:float
 var ending_turn_delay:float
+var end_turn_ready = false
 var mass:float # For now only used to determine knockback when something is defeated by this projectile (so purely aesthetic)
 
 func _ready() -> void:
@@ -20,7 +21,7 @@ func _ready() -> void:
 
 func decrement_amount():
 	amount -= 1
-	if amount <= 0:
+	if amount <= 0 and end_turn_ready:
 		emit_signal("end_turn", ending_turn_delay)
 
 func _physics_process(delta: float) -> void:

@@ -8,6 +8,7 @@ func _ready() -> void:
 
 func _on_area_entered(area: Area2D) -> void:
 	var weapon_data = {
+		"type":Battle.DamageType.PHYSICAL,
 		"damage":damage,
 		"shooter_attack":shooter_attack,
 		"weapon_accuracy":weapon_accuracy,

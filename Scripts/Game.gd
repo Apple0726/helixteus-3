@@ -2937,7 +2937,7 @@ func generate_planets(id:int):#local id
 				var HX_data = {
 					"class":_class,
 					"type":randi() % 4 + 1,
-					"passive_abilities":[randi() % Enemy.PassiveAbility.N],
+					"passive_abilities":[randi() % Battle.PassiveAbility.N],
 					"lv":lv,
 					"HP":HP,
 					"attack":attack,
@@ -2948,7 +2948,7 @@ func generate_planets(id:int):#local id
 					"money":_money,
 					"XP":XP}
 				while randf() < 0.25:
-					var additional_passive_ability = randi() % Enemy.PassiveAbility.N
+					var additional_passive_ability = randi() % Battle.PassiveAbility.N
 					if additional_passive_ability not in HX_data.passive_abilities:
 						HX_data.passive_abilities.append(additional_passive_ability)
 						HX_data.money *= 0.7 * len(HX_data.passive_abilities)

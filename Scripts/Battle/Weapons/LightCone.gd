@@ -46,6 +46,7 @@ func update_cone(_emission_cone_angle_visual: float):
 					hit_target.get_node("Sprite2D").material.set_shader_parameter("flash", 0.5 + weapon_datas[hit_target].light_rays / 400.0)
 			else:
 				var weapon_data = {
+					"type":Battle.DamageType.EMG,
 					"damage":damage / 200.0,
 					"light_rays":1,
 					"shooter_attack":shooter_attack,
