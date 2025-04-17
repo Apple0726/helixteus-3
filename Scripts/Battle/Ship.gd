@@ -20,14 +20,20 @@ var entity_to_push:BattleEntity
 
 func _ready() -> void:
 	super()
+	if ship_class == ShipClass.SUPPORT:
+		regen_per_turn = ceil(total_HP * 0.15)
 	collision_shape_radius = 36.0
 	movement_remaining = (agility + agility_buff) * METERS_PER_AGILITY
-	total_movement = (agility + agility_buff) * METERS_PER_AGILITY
+	total_movement_base = (agility + agility_buff) * METERS_PER_AGILITY
 	go_through_movement_cost = 30.0
 
 func initialize_stats(data: Dictionary):
 	super(data)
 	ship_class = data.ship_class
+	if ship_class == ShipClass.STANDARD:
+		for effect in Battle.StatusEffect.N:
+			status_effect_resistances[effect] = 0.2
+	
 
 var highlighted_targets = []
 
@@ -73,7 +79,23 @@ func _draw() -> void:
 
 func take_turn():
 	movement_remaining = total_movement
+	buffed_from_class_passive_ability = false
+	if ship_class == ShipClass.ENERGETIC and randf() < 0.3:
+		status_effects[Battle.StatusEffect.ENERGETIC] = 1
 	super()
+	if ship_class == ShipClass.RECKLESS:
+		if turn_number == 1:
+			extra_attacks = 2
+		elif turn_number % 3 != 0: # Turn 2, 4, 5, 7, 8...
+			extra_attacks = 1
+		else:
+			extra_attacks = 0
+			status_effects[Battle.StatusEffect.STUN] += 2
+	elif ship_class == ShipClass.UBER:
+		if turn_number % 2 == 1:
+			extra_attacks = 1
+		else:
+			extra_attacks = 0
 	decrement_status_effects_buffs()
 
 func move():
@@ -135,7 +157,7 @@ func fire_weapon(weapon_type: int):
 			projectile.velocity_process_modifier = 5.0 if battle_scene.animations_sped_up else 1.0
 			projectile.rotation = weapon_rotation
 			projectile.damage = Data.battle_weapon_stats.bullet.damage
-			projectile.shooter_attack = attack + attack_buff
+			projectile.shooter = self
 			projectile.weapon_accuracy = Data.battle_weapon_stats.bullet.accuracy * accuracy
 			projectile.deflects_remaining = 2
 			projectile.position = position
@@ -169,7 +191,7 @@ func fire_weapon(weapon_type: int):
 		explosive.AoE_radius = 100.0
 		explosive.rotation = weapon_rotation
 		explosive.damage = Data.battle_weapon_stats.bomb.damage
-		explosive.shooter_attack = attack + attack_buff
+		explosive.shooter = self
 		explosive.weapon_accuracy = Data.battle_weapon_stats.bomb.accuracy * accuracy
 		explosive.position = position
 		explosive.battle_GUI = battle_GUI
@@ -295,3 +317,24 @@ func update_push_movement_used():
 
 func _on_push_effect_visibility_changed() -> void:
 	$PushEffect.play("default")
+
+
+var buffed_from_class_passive_ability = false
+func buff_from_class_passive_ability(stat: String, amount: int):
+	if buffed_from_class_passive_ability:
+		return
+	self[stat + "_buff"] += amount
+	buffed_from_class_passive_ability = true
+
+
+func damage_entity(weapon_data: Dictionary):
+	if ship_class == ShipClass.IMPENETRABLE:
+		weapon_data.nullify_damage_chance = 0.3
+	var hit = super(weapon_data)
+	if hit:
+		if ship_class == ShipClass.DEFENSIVE:
+			buff_from_class_passive_ability("defense", 3)
+	else:
+		if ship_class == ShipClass.AGILE:
+			buff_from_class_passive_ability("agility", 3)
+	return hit

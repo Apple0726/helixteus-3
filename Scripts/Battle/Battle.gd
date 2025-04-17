@@ -139,7 +139,10 @@ func next_turn():
 		var ship_node = initiative_order[whose_turn_is_it_index].node
 		battle_GUI.ship_node = ship_node
 		await ship_node.take_turn()
-		battle_GUI.fade_in_main_panel()
+		if ship_node.status_effects[Battle.StatusEffect.STUN] <= 0 and ship_node.status_effects[Battle.StatusEffect.FREEZE] <= 0:
+			battle_GUI.fade_in_main_panel()
+		else:
+			ship_node.ending_turn(1.0)
 		if view_tween:
 			view_tween.tween_property(game.view, "position", Vector2(640, 360) - ship_node.position * game.view.scale.x, 0.5).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
 	elif initiative_order[whose_turn_is_it_index].node.type == Battle.EntityType.ENEMY:
@@ -157,13 +160,23 @@ func _process(delta: float) -> void:
 	pass
 
 
-func add_damage_text(missed: bool, label_position:Vector2, damage: float = 0.0, critical: bool = false, label_initial_velocity:Vector2 = Vector2.ZERO):
+func add_damage_text(missed: bool, label_position:Vector2, damage: int = 0, critical: bool = false, label_initial_velocity:Vector2 = Vector2.ZERO):
 	var damage_text = preload("res://Scenes/Battle/DamageText.tscn").instantiate()
 	damage_text.missed = missed
 	damage_text.damage = damage
 	damage_text.critical = critical
 	damage_text.velocity = label_initial_velocity
 	damage_text.position = label_position
+	add_child(damage_text)
+
+func add_heal_text(label_position:Vector2, amount: int = 0):
+	var damage_text = preload("res://Scenes/Battle/DamageText.tscn").instantiate()
+	damage_text.missed = false
+	damage_text.damage = -amount
+	damage_text.critical = false
+	damage_text.velocity = Vector2.ZERO
+	damage_text.position = label_position
+	damage_text.label_settings.font_color = Color.WEB_GREEN
 	add_child(damage_text)
 
 func _input(event: InputEvent) -> void:

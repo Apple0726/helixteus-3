@@ -16,7 +16,10 @@ func _ready() -> void:
 		label_settings.shadow_color = 12
 		text = str(damage) + "!"
 	else:
-		text = str(damage)
+		if damage < 0:
+			text = "+" + str(abs(damage))
+		else:
+			text = str(damage)
 	var tween = create_tween()
 	tween.tween_property(self, "modulate:a", 1.0, 0.2)
 

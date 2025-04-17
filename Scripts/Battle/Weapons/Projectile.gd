@@ -9,7 +9,7 @@ var speed:float
 # Only used for `animations_sped_up` variable in Battle.gd
 var velocity_process_modifier:float = 1.0
 var damage:float
-var shooter_attack:int
+var shooter:BattleEntity
 var weapon_accuracy:float
 var ending_turn_delay:float
 var end_turn_ready = false

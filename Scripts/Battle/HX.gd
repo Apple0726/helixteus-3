@@ -16,7 +16,7 @@ func _ready() -> void:
 	super()
 	collision_shape_radius = 24.0
 	movement_remaining = (agility + agility_buff) * METERS_PER_AGILITY
-	total_movement = (agility + agility_buff) * METERS_PER_AGILITY
+	total_movement_base = (agility + agility_buff) * METERS_PER_AGILITY
 	go_through_movement_cost = 30.0
 
 func initialize_stats(data: Dictionary):
@@ -130,7 +130,7 @@ func attack_target():
 	projectile.velocity_process_modifier = 5.0 if battle_scene.animations_sped_up else 1.0
 	projectile.rotation = randf_range(target_angle - target_angle_max_deviation, target_angle + target_angle_max_deviation)
 	projectile.damage = 3.0
-	projectile.shooter_attack = attack + attack_buff
+	projectile.shooter = self
 	projectile.weapon_accuracy = 1.0 * accuracy
 	projectile.deflects_remaining = 0
 	projectile.position = position

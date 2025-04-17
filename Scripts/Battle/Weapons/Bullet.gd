@@ -10,15 +10,15 @@ func _on_area_entered(area: Area2D) -> void:
 	var weapon_data = {
 		"type":Battle.DamageType.PHYSICAL,
 		"damage":damage,
-		"shooter_attack":shooter_attack,
+		"shooter_attack":shooter.attack + shooter.attack_buff,
 		"weapon_accuracy":weapon_accuracy,
 		"orientation":Vector2.from_angle(rotation),
 		"velocity":speed * Vector2.from_angle(rotation),
 		"mass":mass,
 	}
 	if area.damage_entity(weapon_data):
-		if deflects_remaining == 0 or area.type == 2:
-			if area.type == 2: # If it is a boundary
+		if deflects_remaining == 0 or area.type == Battle.EntityType.BOUNDARY:
+			if area.type == Battle.EntityType.BOUNDARY:
 				ending_turn_delay = 0.0
 			queue_free()
 		else:
@@ -27,3 +27,8 @@ func _on_area_entered(area: Area2D) -> void:
 			var incidence_angle = atan2(position.y - area.position.y, position.x - area.position.x)
 			rotation = Vector2.from_angle(rotation).bounce(Vector2.from_angle(incidence_angle)).angle()
 			deflects_remaining -= 1
+		if shooter.type == Battle.EntityType.SHIP and shooter.ship_class == ShipClass.OFFENSIVE:
+			shooter.buff_from_class_passive_ability("attack", 3)
+	else:
+		if shooter.type == Battle.EntityType.SHIP and shooter.ship_class == ShipClass.ACCURATE:
+			shooter.buff_from_class_passive_ability("accuracy", 3)
