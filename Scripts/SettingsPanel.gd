@@ -70,6 +70,9 @@ func refresh():
 		Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
 		game.STM.show_help("")
 		game.STM.set_process(false)
+	$TabContainer/GAME/HBoxContainer/Easy.disabled = game.c_v == "battle"
+	$TabContainer/GAME/HBoxContainer/Normal.disabled = game.c_v == "battle"
+	$TabContainer/GAME/HBoxContainer/Hard.disabled = game.c_v == "battle"
 	if game.c_v != "" and game.science_unlocked.has("ASM"):
 		$TabContainer/GAME/AutosellMinerals.disabled = false
 		$TabContainer/GAME/AutosellMineralsLabel.modulate = Color.WHITE
@@ -136,40 +139,40 @@ func _on_AutosellMinerals_toggled(button_pressed):
 		config.save("user://settings.cfg")
 
 func _on_Easy_mouse_entered():
-	game.show_tooltip("%s: x %s" % [tr("LOOT_XP_BONUS"), 1])
+	game.show_tooltip("%s: x %s" % [tr("LOOT_XP_BONUS"), 0.8])
 
 
 func _on_Normal_mouse_entered():
-	game.show_tooltip("%s: x %s" % [tr("LOOT_XP_BONUS"), 1.25])
+	game.show_tooltip("%s: x %s" % [tr("LOOT_XP_BONUS"), 1.0])
 
 
 func _on_Hard_mouse_entered():
-	game.show_tooltip("%s: x %s" % [tr("LOOT_XP_BONUS"), 1.5])
+	game.show_tooltip("%s: x %s" % [tr("LOOT_XP_BONUS"), 1.7])
 
 
 func set_enemy_difficulty():
-	$TabContainer/GAME/HBoxContainer/Easy.button_pressed = Settings.enemy_difficulty == 0
-	$TabContainer/GAME/HBoxContainer/Normal.button_pressed = Settings.enemy_difficulty == 1
-	$TabContainer/GAME/HBoxContainer/Hard.button_pressed = Settings.enemy_difficulty == 2
+	$TabContainer/GAME/HBoxContainer/Easy.button_pressed = Settings.enemy_AI_difficulty == Settings.ENEMY_AI_DIFFICULTY_EASY
+	$TabContainer/GAME/HBoxContainer/Normal.button_pressed = Settings.enemy_AI_difficulty == Settings.ENEMY_AI_DIFFICULTY_NORMAL
+	$TabContainer/GAME/HBoxContainer/Hard.button_pressed = Settings.enemy_AI_difficulty == Settings.ENEMY_AI_DIFFICULTY_HARD
 
 func _on_Easy_pressed():
 	if err == OK:
-		config.set_value("game", "enemy_difficulty", 0)
-		Settings.enemy_difficulty = 0
+		config.set_value("game", "enemy_AI_difficulty", Settings.ENEMY_AI_DIFFICULTY_EASY)
+		Settings.enemy_AI_difficulty = 0
 		config.save("user://settings.cfg")
 		set_enemy_difficulty()
 
 func _on_Normal_pressed():
 	if err == OK:
-		config.set_value("game", "enemy_difficulty", 1)
-		Settings.enemy_difficulty = 1
+		config.set_value("game", "enemy_AI_difficulty", Settings.ENEMY_AI_DIFFICULTY_NORMAL)
+		Settings.enemy_AI_difficulty = 1
 		config.save("user://settings.cfg")
 		set_enemy_difficulty()
 
 func _on_Hard_pressed():
 	if err == OK:
-		config.set_value("game", "enemy_difficulty", 2)
-		Settings.enemy_difficulty = 2
+		config.set_value("game", "enemy_AI_difficulty", Settings.ENEMY_AI_DIFFICULTY_HARD)
+		Settings.enemy_AI_difficulty = 2
 		config.save("user://settings.cfg")
 		set_enemy_difficulty()
 

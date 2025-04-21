@@ -38,6 +38,7 @@ scale_max = 0.06
 color_ramp = SubResource("2")
 
 [sub_resource type="ShaderMaterial" id="4"]
+resource_local_to_scene = true
 shader = ExtResource("3_cptad")
 shader_parameter/amplitude = 0.0
 shader_parameter/frequency = 6.0

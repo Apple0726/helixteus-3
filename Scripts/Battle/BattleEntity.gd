@@ -377,11 +377,11 @@ func update_info_labels():
 			$Info/StatusEffects/RadioactiveLabel.text = Helper.format_num(status_effects[effect])
 
 func entity_defeated_callback():
-	if type == Battle.EntityType.ENEMY:
+	if is_instance_valid(turn_order_box):
 		turn_order_box.get_node("AnimationPlayer").play("FadeOutAnim")
+	if type == Battle.EntityType.ENEMY:
 		battle_scene.HX_nodes.erase(self)
 	elif type == Battle.EntityType.SHIP:
-		turn_order_box.get_node("AnimationPlayer").play("FadeOutAnim")
 		battle_scene.ship_nodes.erase(self)
 
 func update_velocity_arrow(offset: Vector2 = Vector2.ZERO):

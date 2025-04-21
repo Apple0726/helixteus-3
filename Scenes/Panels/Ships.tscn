@@ -20,13 +20,13 @@
 [ext_resource type="Texture2D" uid="uid://bn520d6r5iwik" path="res://Graphics/Icons/accuracy.png" id="18_befyh"]
 [ext_resource type="Texture2D" uid="uid://bapj1r8e5pwia" path="res://Graphics/Icons/agility.png" id="19_d6hw1"]
 
-[sub_resource type="SystemFont" id="SystemFont_sxpbd"]
+[sub_resource type="SystemFont" id="SystemFont_l1il0"]
 font_names = PackedStringArray("Arial")
 subpixel_positioning = 0
 multichannel_signed_distance_field = true
 
 [sub_resource type="LabelSettings" id="LabelSettings_wweft"]
-font = SubResource("SystemFont_sxpbd")
+font = SubResource("SystemFont_l1il0")
 font_size = 24
 shadow_size = 2
 shadow_color = Color(0, 0, 0, 0.372549)

@@ -21,6 +21,9 @@ var mouse_position_local:Vector2
 var obstacle_nodes = []
 var view_tween
 var animations_sped_up = false
+var enemy_AI_diff_mult:float = 1.0
+var money_earned:float = 0.0
+var XP_earned:float = 0.0
 
 func _ready() -> void:
 	time_speed = Helper.set_logarithmic_time_speed(game.subject_levels.dimensional_power, game.u_i.time_speed)
@@ -30,6 +33,10 @@ func _ready() -> void:
 	else:
 		HX_data = p_i.HX_data
 	ship_data = game.ship_data
+	if Settings.enemy_AI_difficulty == Settings.ENEMY_AI_DIFFICULTY_EASY:
+		enemy_AI_diff_mult = 0.8
+	elif Settings.enemy_AI_difficulty == Settings.ENEMY_AI_DIFFICULTY_HARD:
+		enemy_AI_diff_mult = 1.7
 	for i in len(HX_data):
 		var HX = HX_scene.instantiate()
 		HX.METERS_PER_AGILITY = METERS_PER_AGILITY
@@ -40,6 +47,8 @@ func _ready() -> void:
 		HX.HX_nodes = HX_nodes
 		HX.ship_nodes = ship_nodes
 		HX.type = Battle.EntityType.ENEMY
+		money_earned += round(HX_data[i].money * enemy_AI_diff_mult)
+		XP_earned += round(HX_data[i].XP * enemy_AI_diff_mult)
 		HX.roll_initiative()
 		HX.get_node("Sprite2D").texture = load("res://Graphics/HX/%s_%s.png" % [HX_data[i]["class"], HX_data[i].type])
 		HX.get_node("Sprite2D").material.set_shader_parameter("amplitude", 0.0)
@@ -112,12 +121,70 @@ func initialize_battle():
 		entity.turn_order_box = turn_order_button
 	next_turn()
 
+func battle_victory_callback():
+	var victory_panel = preload("res://Scenes/Panels/VictoryPanel.tscn").instantiate()
+	victory_panel.battle_scene = self
+	battle_GUI.add_child(victory_panel)
+	game.add_resources({"money":money_earned})
+	for i in len(ship_data):
+		Helper.add_ship_XP(i, XP_earned)
+	var all_conquered = true
+	if not game.is_conquering_all and not game.planet_data[game.c_p].has("conquered"):
+		game.stats_univ.enemies_rekt_in_battle += len(HX_data)
+		game.stats_dim.enemies_rekt_in_battle += len(HX_data)
+		game.stats_global.enemies_rekt_in_battle += len(HX_data)
+		game.planet_data[game.c_p].conquered = true
+		game.planet_data[game.c_p].erase("HX_data")
+		for planet in game.planet_data:
+			if not planet.has("conquered"):
+				all_conquered = false
+		game.stats_univ.planets_conquered += 1
+		game.stats_dim.planets_conquered += 1
+		game.stats_global.planets_conquered += 1
+	else:
+		for planet in game.planet_data:
+			if not planet.has("conquered") and planet.has("HX_data"):
+				planet.conquered = true
+				game.stats_univ.enemies_rekt_in_battle += len(planet.HX_data)
+				game.stats_dim.enemies_rekt_in_battle += len(planet.HX_data)
+				game.stats_global.enemies_rekt_in_battle += len(planet.HX_data)
+				planet.erase("HX_data")
+				game.stats_univ.planets_conquered += 1
+				game.stats_dim.planets_conquered += 1
+				game.stats_global.planets_conquered += 1
+	if all_conquered:
+		game.system_data[game.c_s].conquered = true
+		game.stats_univ.systems_conquered += 1
+		game.stats_dim.systems_conquered += 1
+		game.stats_global.systems_conquered += 1
+	if not game.new_bldgs.has(Building.SOLAR_PANEL) and game.stats_univ.planets_conquered > 1:
+		game.new_bldgs[Building.SOLAR_PANEL] = true
+	Helper.save_obj("Systems", game.c_s_g, game.planet_data)
+	if all_conquered:
+		Helper.save_obj("Galaxies", game.c_g_g, game.system_data)
+	if not game.help.has("SP"):
+		game.popup_window(tr("NEW_BLDGS_UNLOCKED_DESC"), tr("NEW_BLDGS_UNLOCKED"))
+		game.help.SP = true
+
 func next_turn():
+	if ship_nodes.is_empty():
+		battle_GUI.get_node("Defeat").show()
+		create_tween().tween_property(battle_GUI.get_node("Defeat"), "modulate:a", 1.0, 1.0)
+		return
+	var all_enemies_defeated = true
+	for HX in HX_nodes:
+		if HX.HP > 0:
+			all_enemies_defeated = false
+			break
+	if all_enemies_defeated:
+		battle_victory_callback()
+		return
 	if animations_sped_up:
 		view_tween = null
 	else:
 		view_tween = create_tween().set_parallel()
 	battle_GUI.ship_node = null
+	# Update initiative_order and whose_turn_is_it_index if a ship or enemy has been defeated
 	for i in len(initiative_order):
 		if i >= len(initiative_order):
 			break
@@ -197,7 +264,7 @@ func _input(event: InputEvent) -> void:
 	if Input.is_action_just_pressed("H"):
 		display_stats("HP")
 	if Input.is_action_just_released("A") or Input.is_action_just_released("D") or Input.is_action_just_released("C") or Input.is_action_just_released("G") or Input.is_action_just_released("H"):
-		var entities = HX_nodes
+		var entities = HX_nodes.duplicate()
 		entities.append_array(ship_nodes)
 		entities.append_array(obstacle_nodes)
 		for entity in entities:
@@ -209,7 +276,7 @@ func _input(event: InputEvent) -> void:
 
 
 func display_stats(type:String):
-	var entities = HX_nodes
+	var entities = HX_nodes.duplicate()
 	entities.append_array(ship_nodes)
 	entities.append_array(obstacle_nodes)
 	for entity in entities:
@@ -235,7 +302,7 @@ func environment_take_turn():
 				asteroid_position.x = -640.0 if randf() < 0.5 else 1920.0
 				asteroid_position.y = randf_range(-1.0, 1.0) * 720.0 + 360.0
 			for obstacle in obstacle_nodes:
-				if Geometry2D.is_point_in_circle(asteroid_position, obstacle.position, (obstacle.scale.x + asteroid_scale) * 90.0):
+				if is_instance_valid(obstacle) and Geometry2D.is_point_in_circle(asteroid_position, obstacle.position, (obstacle.scale.x + asteroid_scale) * 90.0):
 					colliding = true
 					break
 		var asteroid = preload("res://Scenes/Battle/Asteroid.tscn").instantiate()
@@ -272,9 +339,11 @@ func environment_take_turn():
 		await get_tree().create_timer(0.5).timeout
 	for obstacle in obstacle_nodes:
 		obstacle.take_turn()
-	if not animations_sped_up:
-		await get_tree().create_timer(1.5).timeout
-	battle_GUI.turn_order_hbox.get_child(whose_turn_is_it_index-1).get_node("AnimationPlayer").play_backwards("ChangeSize")
+	if animations_sped_up:
+		await get_tree().create_timer(0.3).timeout
+	else:
+		await get_tree().create_timer(1.2).timeout
+	initiative_order[whose_turn_is_it_index-1].node.turn_order_box.get_node("AnimationPlayer").play_backwards("ChangeSize")
 	whose_turn_is_it_index = 0
 	next_turn()
 

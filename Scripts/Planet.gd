@@ -175,7 +175,7 @@ func _ready():
 			var tile = game.tile_data[id]
 			var i:int = id % wid
 			var j:int = id / wid
-			var aurora = game.aurora_scene.instantiate()
+			var aurora = preload("res://Scenes/Aurora.tscn").instantiate()
 			aurora.position = Vector2(i, j) * 200 + Vector2(100, 100)
 			aurora.amount = min(5 + int(tile.aurora * 10), 50)
 			aurora.lifetime = 3.0 / game.u_i.time_speed / tile.get("time_speed_bonus", 1.0)

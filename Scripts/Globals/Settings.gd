@@ -21,7 +21,12 @@ var autosave_light:bool = true
 var autosave_interval:int = 10
 var autosell:bool = true
 var auto_switch_buy_sell:bool = false
-var enemy_difficulty:int = 1
+enum {
+	ENEMY_AI_DIFFICULTY_EASY,
+	ENEMY_AI_DIFFICULTY_NORMAL,
+	ENEMY_AI_DIFFICULTY_HARD,
+}
+var enemy_AI_difficulty:int = ENEMY_AI_DIFFICULTY_NORMAL
 
 # interface
 var language:String = "en"

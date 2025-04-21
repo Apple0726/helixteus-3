@@ -1,4 +1,4 @@
-[gd_scene load_steps=20 format=3 uid="uid://dmtuc03fuk5dc"]
+[gd_scene load_steps=21 format=3 uid="uid://dmtuc03fuk5dc"]
 
 [ext_resource type="Theme" uid="uid://cp2u1kgj60ic" path="res://Resources/default_theme.tres" id="1_ousv4"]
 [ext_resource type="Script" uid="uid://dsplquhp0nmmw" path="res://Scripts/Battle/BattleGUI.gd" id="1_phavr"]
@@ -56,6 +56,13 @@ colors = PackedColorArray(1, 1, 1, 1, 1, 1, 0, 1, 1, 0, 0, 1)
 
 [sub_resource type="GradientTexture1D" id="GradientTexture1D_oca3i"]
 gradient = SubResource("Gradient_38hmk")
+
+[sub_resource type="LabelSettings" id="LabelSettings_38hmk"]
+font_size = 28
+font_color = Color(1, 0, 0, 1)
+shadow_size = 16
+shadow_color = Color(0.403922, 0, 0, 0.552941)
+shadow_offset = Vector2(0, 0)
 
 [node name="BattleGUI" type="Control"]
 layout_mode = 3
@@ -365,6 +372,22 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 color = Color(1, 1, 1, 0)
+
+[node name="Defeat" type="Label" parent="."]
+visible = false
+modulate = Color(1, 1, 1, 0)
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -96.0
+offset_top = 116.0
+offset_right = 96.0
+offset_bottom = 155.0
+grow_horizontal = 2
+text = "Defeat"
+label_settings = SubResource("LabelSettings_38hmk")
+horizontal_alignment = 1
 
 [connection signal="pressed" from="Back" to="." method="_on_back_pressed"]
 [connection signal="pressed" from="Speedup" to="." method="_on_speedup_pressed"]

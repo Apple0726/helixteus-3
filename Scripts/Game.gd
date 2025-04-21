@@ -479,7 +479,7 @@ func load_settings(config:ConfigFile):
 	Settings.auto_switch_buy_sell = config.get_value("game", "auto_switch_buy_sell", false)
 	Settings.autosave_light = config.get_value("game", "autosave_light", true)
 	Settings.autosave_interval = 10
-	Settings.enemy_difficulty = config.get_value("game", "enemy_difficulty", 1)
+	Settings.enemy_AI_difficulty = config.get_value("game", "enemy_AI_difficulty", Settings.ENEMY_AI_DIFFICULTY_NORMAL)
 	$Autosave.wait_time = Settings.autosave_interval
 	
 	# misc
