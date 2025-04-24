@@ -1,4 +1,4 @@
-extends "res://Scripts/HX_Cave.gd"
+extends "HXBase.gd"
 
 var rand_rot:float = 0.0
 

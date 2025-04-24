@@ -80,8 +80,9 @@ func set_item_info(_item_name:String, _item_costs:Dictionary, _item_texture, _it
 
 func update_and_check_costs():
 	var item_total_costs = item_selected.costs.duplicate(true)
-	for cost in item_total_costs.keys():
-		item_total_costs[cost] *= $ItemInfo/BuyAmount.value
+	if tab != PICKAXE:
+		for cost in item_total_costs.keys():
+			item_total_costs[cost] *= $ItemInfo/BuyAmount.value
 	Helper.put_rsrc($ItemInfo/ScrollContainer/Costs, 28, item_total_costs, true, true)
 	$ItemInfo/Buy.disabled = not game.check_enough(item_total_costs)
 	
@@ -113,8 +114,9 @@ func _on_buy_pressed():
 	if item_selected.costs.is_empty():
 		return
 	var item_total_costs = item_selected.costs.duplicate(true)
-	for cost in item_total_costs.keys():
-		item_total_costs[cost] *= $ItemInfo/BuyAmount.value
+	if tab != PICKAXE:
+		for cost in item_total_costs.keys():
+			item_total_costs[cost] *= $ItemInfo/BuyAmount.value
 	if game.check_enough(item_total_costs):
 		if tab == PICKAXE:
 			if game.pickaxe.has("name"):

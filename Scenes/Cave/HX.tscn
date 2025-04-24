@@ -25,7 +25,7 @@ shader_parameter/amplitude = 6.0
 shader_parameter/frequency = 6.0
 shader_parameter/aurora = false
 shader_parameter/light = 1.0
-shader_parameter/modulate_color = Color(1, 1, 1, 1)
+shader_parameter/alpha = 1.0
 shader_parameter/flash = 0.0
 shader_parameter/flash_color = Color(1, 1, 1, 1)
 
@@ -233,9 +233,9 @@ offset = Vector2(-21.4132, -17.9986)
 modulate = Color(2, 2, 2, 1)
 emitting = false
 amount = 24
-process_material = SubResource("28")
 texture = ExtResource("14")
 lifetime = 2.0
+process_material = SubResource("28")
 
 [node name="RayCast2D" type="RayCast2D" parent="."]
 collision_mask = 3
@@ -265,36 +265,36 @@ texture_progress = ExtResource("6")
 
 [node name="HurtAnimation" type="AnimationPlayer" parent="."]
 libraries = {
-"": SubResource("AnimationLibrary_4bina")
+&"": SubResource("AnimationLibrary_4bina")
 }
 
 [node name="BulletParticles" type="GPUParticles2D" parent="."]
 emitting = false
 amount = 30
-process_material = SubResource("14")
 texture = ExtResource("5")
 lifetime = 0.3
 one_shot = true
 explosiveness = 1.0
+process_material = SubResource("14")
 
 [node name="BombParticles" type="GPUParticles2D" parent="."]
 scale = Vector2(2, 2)
 emitting = false
 amount = 150
-process_material = SubResource("ParticleProcessMaterial_x45cj")
 lifetime = 3.0
 one_shot = true
 explosiveness = 0.95
 randomness = 1.0
+process_material = SubResource("ParticleProcessMaterial_x45cj")
 
 [node name="LightParticles" type="GPUParticles2D" parent="."]
 emitting = false
 amount = 50
-process_material = SubResource("22")
 texture = ExtResource("14")
 one_shot = true
 explosiveness = 0.95
 randomness = 1.0
+process_material = SubResource("22")
 
 [node name="RoDTimer" type="Timer" parent="."]
 one_shot = true

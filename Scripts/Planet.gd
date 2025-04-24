@@ -938,13 +938,13 @@ func upgrade_building_callable(called_from_right_click = true):
 func destroy_building_callable():
 	hide_tooltip()
 	if tiles_selected.is_empty():
-		destroy_bldg(tile_over)
-		game.HUD.refresh()
 		if game.tile_data[tile_over].bldg.name == Building.GREENHOUSE:
 			#var soil_tiles = $TileFeatures.get_used_cells(2)
 			#soil_tiles.erase(Vector2i(tile_over % wid, tile_over / wid))
 			$TileFeatures.erase_cell(2, Vector2i(tile_over % wid, tile_over / wid))
 			#$TileFeatures.set_cells_terrain_connect(2, soil_tiles, 0, 3)
+		destroy_bldg(tile_over)
+		game.HUD.refresh()
 	else:
 		game.show_YN_panel("destroy_buildings", tr("DESTROY_X_BUILDINGS") % [len(tiles_selected)], [tiles_selected.duplicate(true)])
 

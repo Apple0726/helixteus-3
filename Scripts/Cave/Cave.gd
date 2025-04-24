@@ -390,7 +390,7 @@ func set_slot_info(slot, _inv:Dictionary):
 		mining_p.lifetime = 0.2 / time_speed
 		slot.get_node("TextureRect").texture = load("res://Graphics/Cave/Mining/" + _inv.id + ".png")
 	else:
-		slot.get_node("TextureRect").texture = load("res://Graphics/%s/%s.png" % [Helper.get_dir_from_name(_inv.id), _inv.id])
+		slot.get_node("TextureRect").texture = load("res://Graphics/Items/%s.png" % [Item.icon_directory(_inv.id)])
 		if _inv.has("num"):
 			slot.get_node("Label").text = Helper.format_num(_inv.num, false, 3)
 	
@@ -593,7 +593,7 @@ func generate_cave(first_floor:bool, going_up:bool):
 				if rng.randf() < 0.006 * min(5, cave_floor) * (modifiers.enemy_number if modifiers.has("enemy_number") else 1.0):
 					var HX_node = HX1_scene.instantiate()
 					var type:int = rng.randi_range(1, 4)
-					HX_node.set_script(load("res://Scripts/HXs_Cave/HX%s.gd" % [type]))
+					HX_node.set_script(load("res://Scripts/Cave/HX%s.gd" % [type]))
 					var _class:int = 1
 					if rng.randf() < log(difficulty) / log(100) - 1.0:
 						_class += 1
@@ -619,9 +619,6 @@ func generate_cave(first_floor:bool, going_up:bool):
 					HX_node.get_node("Sprite2D").material.set_shader_parameter("aurora", is_aurora_cave)
 					if volcano_mult == 1:
 						HX_node.get_node("Sprite2D").material.set_shader_parameter("light", 1.0 - cave_darkness)
-					HX_node.get_node("Info/Label").visible = false
-					HX_node.get_node("Info/Effects").visible = false
-					HX_node.get_node("Info/Icon").visible = false
 					HX_node.total_HP = HX_node.HP
 					HX_node.cave_ref = self
 					HX_node.a_n = astar_node
@@ -1380,13 +1377,18 @@ func go_down_cave():
 	if not game.achievement_data.exploration.has("reach_floor_32") and cave_floor == 32:
 		game.earn_achievement("exploration", "reach_floor_32")
 
-func add_to_inventory(rsrc:String, content:float, remainders:Dictionary):
+func add_to_inventory(rsrc, content:float, remainders:Dictionary):
 	for i in len(inventory):
 		var slot = slots[i]
 		if inventory[i].is_empty():
 			inventory[i].type = "item"
 			inventory[i].id = rsrc
-			slot.get_node("TextureRect").texture = load("res://Graphics/%s/%s.png" % [Helper.get_dir_from_name(rsrc), rsrc])
+			if rsrc == "money":
+				slot.get_node("TextureRect").texture = Data.money_icon
+			elif rsrc == "minerals":
+				slot.get_node("TextureRect").texture = Data.minerals_icon
+			else:
+				slot.get_node("TextureRect").texture = load("res://Graphics/Items/%s.png" % Item.icon_directory(rsrc))
 			slot.get_node("Label").text = Helper.format_num(content, false, 3)
 			inventory[i].num = content
 			game.show[rsrc] = true

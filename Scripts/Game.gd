@@ -641,6 +641,10 @@ func load_univ():
 				stats_univ[stat] = val.duplicate(true)
 			else:
 				stats_univ[stat] = val
+	ship_data[0].bullet = [1, 1, 1]
+	ship_data[0].laser = [1, 1, 1]
+	ship_data[0].bomb = [1, 1, 1]
+	ship_data[0].light = [1, 1, 1]
 	u_i = universe_data[c_u]
 	if science_unlocked.has("CI"):
 		stack_size = 32
@@ -2886,7 +2890,7 @@ func generate_planets(id:int):#local id
 			var enemy_positions:PackedVector2Array = []
 			while num < total_num:
 				num += 1
-				var lv:int = max(ceil(randf_range(0.5, 0.9) * log(power_left) / log(1.15)), 1)
+				var lv:int = max(ceil(randf_range(0.1, 0.2) * log(power_left) / log(1.15)), 1)
 				var _class:int = 1
 				if randf() < log(diff) / log(100) - 1.0:#difficulty < 100 = no green enemies, difficulty = 1000 = 50% chance of green enemies, difficulty > 10000 = no more red enemies, always green or higher
 					_class += 1
@@ -2923,7 +2927,7 @@ func generate_planets(id:int):#local id
 						defense += 1
 						accuracy += 1
 				var _money = round(randf_range(1, 2) * pow(1.3, lv - 1) * 50000)
-				var XP = round(pow(1.25, lv - 1) * 5)
+				var XP = round(pow(1.25, lv - 1) * 15)
 				var colliding = true
 				var initial_position:Vector2
 				while colliding:
@@ -4348,6 +4352,9 @@ func show_YN_panel(type:String, text:String, args:Array = [], title:String = "Pl
 		YN_panel.add_button(tr("YES"), Callable(self,"%s_confirm" % type).bindv(args))
 	$Panels.add_child(YN_panel)
 	#if type in ["buy_pickaxe", "destroy_building", "destroy_buildings", "op_galaxy", "conquer_all", "destroy_tri_probe", "reset_dimension"]:
+
+func destroy_rover_confirm(rover_destroy_callable: Callable):
+	rover_destroy_callable.call()
 
 func terraform_planet_confirm():
 	terraform_panel.terraform_planet()

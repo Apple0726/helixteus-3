@@ -95,7 +95,7 @@ func _on_rovers_pressed():
 			rover_info.get_node("RoverIcon").mouse_entered.connect(rover_show_details.bind(i))
 			rover_info.get_node("RoverIcon").mouse_exited.connect(game.hide_tooltip)
 			rover_info.get_node("HBox/Explore").pressed.connect(rover_explore.bind(i))
-			rover_info.get_node("HBox/Destroy").pressed.connect(rover_destroy.bind(i, rover_info))
+			rover_info.get_node("HBox/Destroy").pressed.connect(game.show_YN_panel.bind("destroy_rover", tr("ARE_YOU_SURE"), [rover_destroy.bind(i, rover_info)]))
 
 func rover_show_details(rover_id:int):
 	var rover = game.rover_data[rover_id]

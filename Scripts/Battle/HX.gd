@@ -170,7 +170,7 @@ func _on_mouse_entered() -> void:
 		refresh_default_tooltip_text()
 		default_tooltip_text += "\n" + tr("PASSIVE_ABILITY") + ":"
 		for PA in passive_abilities:
-			default_tooltip_text += "\n" + tr("PASSIVE_%s" % PA)
+			default_tooltip_text += "\n - " + tr("PASSIVE_%s" % PA)
 		game.show_adv_tooltip(default_tooltip_text, {"imgs": default_tooltip_icons})
 
 

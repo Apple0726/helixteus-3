@@ -110,19 +110,6 @@ text = "SHIPS"
 label_settings = SubResource("LabelSettings_wweft")
 vertical_alignment = 1
 
-[node name="Drives" parent="." instance=ExtResource("8")]
-visible = false
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = 120.0
-offset_top = 152.0
-offset_right = 104.0
-offset_bottom = 48.0
-grow_horizontal = 2
-grow_vertical = 2
-
 [node name="SpaceportTimer" type="Timer" parent="."]
 
 [node name="Ships" type="Panel" parent="."]
@@ -192,14 +179,14 @@ position = Vector2(68, 40)
 scale = Vector2(0.295, 0.295)
 texture = ExtResource("10_800g5")
 
-[node name="Panel" type="Panel" parent="."]
+[node name="ShipStats" type="Panel" parent="."]
 layout_mode = 0
 offset_left = 152.0
 offset_top = 148.0
 offset_right = 556.0
 offset_bottom = 620.0
 
-[node name="Label" type="Label" parent="Panel"]
+[node name="Label" type="Label" parent="ShipStats"]
 visible = false
 layout_mode = 1
 anchors_preset = 10
@@ -211,7 +198,7 @@ label_settings = SubResource("LabelSettings_sx08b")
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="ShipDetails" type="Control" parent="Panel"]
+[node name="ShipDetails" type="Control" parent="ShipStats"]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -219,7 +206,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="Label" type="Label" parent="Panel/ShipDetails"]
+[node name="Label" type="Label" parent="ShipStats/ShipDetails"]
 layout_mode = 1
 anchors_preset = 5
 anchor_left = 0.5
@@ -232,7 +219,7 @@ grow_horizontal = 2
 text = "Level 1 Standard Ship"
 horizontal_alignment = 1
 
-[node name="Respec" type="Button" parent="Panel/ShipDetails"]
+[node name="Respec" type="Button" parent="ShipStats/ShipDetails"]
 layout_mode = 1
 anchors_preset = 5
 anchor_left = 0.5
@@ -244,13 +231,13 @@ offset_bottom = 85.0
 grow_horizontal = 2
 text = "Respec (free)"
 
-[node name="Bullet" type="Control" parent="Panel/ShipDetails"]
+[node name="Bullet" type="Control" parent="ShipStats/ShipDetails"]
 layout_mode = 3
 anchors_preset = 0
 offset_right = 40.0
 offset_bottom = 40.0
 
-[node name="Icon" type="TextureRect" parent="Panel/ShipDetails/Bullet"]
+[node name="Icon" type="TextureRect" parent="ShipStats/ShipDetails/Bullet"]
 layout_mode = 0
 offset_left = 132.0
 offset_top = 292.0
@@ -259,7 +246,7 @@ offset_bottom = 304.0
 expand_mode = 1
 stretch_mode = 5
 
-[node name="Label" type="Label" parent="Panel/ShipDetails/Bullet"]
+[node name="Label" type="Label" parent="ShipStats/ShipDetails/Bullet"]
 layout_mode = 0
 offset_left = 184.0
 offset_top = 284.0
@@ -267,13 +254,13 @@ offset_right = 262.0
 offset_bottom = 307.0
 text = "Lv 1 / 1 / 1"
 
-[node name="Laser" type="Control" parent="Panel/ShipDetails"]
+[node name="Laser" type="Control" parent="ShipStats/ShipDetails"]
 layout_mode = 3
 anchors_preset = 0
 offset_right = 40.0
 offset_bottom = 40.0
 
-[node name="Icon" type="TextureRect" parent="Panel/ShipDetails/Laser"]
+[node name="Icon" type="TextureRect" parent="ShipStats/ShipDetails/Laser"]
 layout_mode = 0
 offset_left = 132.0
 offset_top = 316.0
@@ -282,7 +269,7 @@ offset_bottom = 336.0
 expand_mode = 1
 stretch_mode = 5
 
-[node name="Label" type="Label" parent="Panel/ShipDetails/Laser"]
+[node name="Label" type="Label" parent="ShipStats/ShipDetails/Laser"]
 layout_mode = 0
 offset_left = 184.0
 offset_top = 316.0
@@ -290,13 +277,13 @@ offset_right = 262.0
 offset_bottom = 339.0
 text = "Lv 1 / 1 / 1"
 
-[node name="Bomb" type="Control" parent="Panel/ShipDetails"]
+[node name="Bomb" type="Control" parent="ShipStats/ShipDetails"]
 layout_mode = 3
 anchors_preset = 0
 offset_right = 40.0
 offset_bottom = 40.0
 
-[node name="Icon" type="TextureRect" parent="Panel/ShipDetails/Bomb"]
+[node name="Icon" type="TextureRect" parent="ShipStats/ShipDetails/Bomb"]
 layout_mode = 0
 offset_left = 132.0
 offset_top = 352.0
@@ -305,7 +292,7 @@ offset_bottom = 372.0
 expand_mode = 1
 stretch_mode = 5
 
-[node name="Label" type="Label" parent="Panel/ShipDetails/Bomb"]
+[node name="Label" type="Label" parent="ShipStats/ShipDetails/Bomb"]
 layout_mode = 0
 offset_left = 184.0
 offset_top = 348.0
@@ -313,13 +300,13 @@ offset_right = 262.0
 offset_bottom = 371.0
 text = "Lv 1 / 1 / 1"
 
-[node name="Light" type="Control" parent="Panel/ShipDetails"]
+[node name="Light" type="Control" parent="ShipStats/ShipDetails"]
 layout_mode = 3
 anchors_preset = 0
 offset_right = 40.0
 offset_bottom = 40.0
 
-[node name="Icon" type="TextureRect" parent="Panel/ShipDetails/Light"]
+[node name="Icon" type="TextureRect" parent="ShipStats/ShipDetails/Light"]
 layout_mode = 0
 offset_left = 132.0
 offset_top = 384.0
@@ -328,7 +315,7 @@ offset_bottom = 404.0
 expand_mode = 1
 stretch_mode = 5
 
-[node name="Label" type="Label" parent="Panel/ShipDetails/Light"]
+[node name="Label" type="Label" parent="ShipStats/ShipDetails/Light"]
 layout_mode = 0
 offset_left = 184.0
 offset_top = 380.0
@@ -336,13 +323,13 @@ offset_right = 262.0
 offset_bottom = 403.0
 text = "Lv 1 / 1 / 1"
 
-[node name="XP" type="Control" parent="Panel/ShipDetails"]
+[node name="XP" type="Control" parent="ShipStats/ShipDetails"]
 layout_mode = 3
 anchors_preset = 0
 offset_right = 40.0
 offset_bottom = 40.0
 
-[node name="ColorRect" type="ColorRect" parent="Panel/ShipDetails/XP"]
+[node name="ColorRect" type="ColorRect" parent="ShipStats/ShipDetails/XP"]
 layout_mode = 0
 offset_left = 76.0
 offset_top = 433.0
@@ -350,7 +337,7 @@ offset_right = 328.0
 offset_bottom = 453.0
 color = Color(0.59, 0.46669, 0.2537, 1)
 
-[node name="TextureProgressGained" type="TextureProgressBar" parent="Panel/ShipDetails/XP"]
+[node name="TextureProgressGained" type="TextureProgressBar" parent="ShipStats/ShipDetails/XP"]
 modulate = Color(1, 0.819608, 0.611765, 1)
 layout_mode = 0
 offset_left = 76.0
@@ -363,7 +350,7 @@ nine_patch_stretch = true
 texture_under = ExtResource("11_s3b4g")
 texture_progress = ExtResource("12_3x4ks")
 
-[node name="TextureProgressBar" type="TextureProgressBar" parent="Panel/ShipDetails/XP"]
+[node name="TextureProgressBar" type="TextureProgressBar" parent="ShipStats/ShipDetails/XP"]
 modulate = Color(0.921569, 0.631373, 0.203922, 1)
 layout_mode = 0
 offset_left = 76.0
@@ -380,7 +367,7 @@ stretch_margin_bottom = 1
 texture_over = ExtResource("13_y4ybd")
 texture_progress = ExtResource("12_3x4ks")
 
-[node name="Label" type="Label" parent="Panel/ShipDetails/XP"]
+[node name="Label" type="Label" parent="ShipStats/ShipDetails/XP"]
 visible = false
 layout_mode = 0
 offset_left = 340.0
@@ -391,7 +378,7 @@ scale = Vector2(0.9, 0.9)
 text = "+ 5"
 vertical_alignment = 1
 
-[node name="Label2" type="Label" parent="Panel/ShipDetails/XP"]
+[node name="Label2" type="Label" parent="ShipStats/ShipDetails/XP"]
 layout_mode = 0
 offset_left = 76.0
 offset_top = 432.0
@@ -403,7 +390,7 @@ text = "0 / 20"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="Icon" type="TextureRect" parent="Panel/ShipDetails/XP"]
+[node name="Icon" type="TextureRect" parent="ShipStats/ShipDetails/XP"]
 layout_mode = 0
 offset_left = 36.0
 offset_top = 428.0
@@ -413,7 +400,7 @@ texture = ExtResource("14_gqpul")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="Stats" type="Control" parent="Panel/ShipDetails"]
+[node name="Stats" type="Control" parent="ShipStats/ShipDetails"]
 layout_mode = 3
 anchors_preset = 0
 offset_left = 56.0
@@ -422,7 +409,7 @@ offset_right = 96.0
 offset_bottom = 128.0
 metadata/_edit_lock_ = true
 
-[node name="HPIcon" type="TextureRect" parent="Panel/ShipDetails/Stats"]
+[node name="HPIcon" type="TextureRect" parent="ShipStats/ShipDetails/Stats"]
 layout_mode = 0
 offset_left = -24.0
 offset_top = 24.0
@@ -431,7 +418,7 @@ texture = ExtResource("15_0livu")
 expand_mode = 1
 stretch_mode = 6
 
-[node name="AttackIcon" type="TextureRect" parent="Panel/ShipDetails/Stats"]
+[node name="AttackIcon" type="TextureRect" parent="ShipStats/ShipDetails/Stats"]
 layout_mode = 0
 offset_left = -24.0
 offset_top = 56.0
@@ -440,7 +427,7 @@ texture = ExtResource("16_grg2r")
 expand_mode = 1
 stretch_mode = 6
 
-[node name="DefenseIcon" type="TextureRect" parent="Panel/ShipDetails/Stats"]
+[node name="DefenseIcon" type="TextureRect" parent="ShipStats/ShipDetails/Stats"]
 layout_mode = 0
 offset_left = -24.0
 offset_top = 88.0
@@ -449,7 +436,7 @@ texture = ExtResource("17_uo1ep")
 expand_mode = 1
 stretch_mode = 6
 
-[node name="AccuracyIcon" type="TextureRect" parent="Panel/ShipDetails/Stats"]
+[node name="AccuracyIcon" type="TextureRect" parent="ShipStats/ShipDetails/Stats"]
 layout_mode = 0
 offset_left = -24.0
 offset_top = 120.0
@@ -458,7 +445,7 @@ texture = ExtResource("18_befyh")
 expand_mode = 1
 stretch_mode = 6
 
-[node name="AgilityIcon" type="TextureRect" parent="Panel/ShipDetails/Stats"]
+[node name="AgilityIcon" type="TextureRect" parent="ShipStats/ShipDetails/Stats"]
 layout_mode = 0
 offset_left = -24.0
 offset_top = 152.0
@@ -467,7 +454,7 @@ texture = ExtResource("19_d6hw1")
 expand_mode = 1
 stretch_mode = 6
 
-[node name="HP" type="Label" parent="Panel/ShipDetails/Stats"]
+[node name="HP" type="Label" parent="ShipStats/ShipDetails/Stats"]
 layout_mode = 0
 offset_left = 188.0
 offset_top = 24.0
@@ -476,7 +463,7 @@ offset_bottom = 47.0
 text = "0"
 vertical_alignment = 1
 
-[node name="HPLabel" type="Label" parent="Panel/ShipDetails/Stats"]
+[node name="HPLabel" type="Label" parent="ShipStats/ShipDetails/Stats"]
 layout_mode = 0
 offset_left = 16.0
 offset_top = 24.0
@@ -485,7 +472,7 @@ offset_bottom = 47.0
 text = "HEALTH_POINTS"
 vertical_alignment = 1
 
-[node name="AttackLabel" type="Label" parent="Panel/ShipDetails/Stats"]
+[node name="AttackLabel" type="Label" parent="ShipStats/ShipDetails/Stats"]
 layout_mode = 0
 offset_left = 16.0
 offset_top = 56.0
@@ -494,7 +481,7 @@ offset_bottom = 79.0
 text = "ATTACK"
 vertical_alignment = 1
 
-[node name="DefenseLabel" type="Label" parent="Panel/ShipDetails/Stats"]
+[node name="DefenseLabel" type="Label" parent="ShipStats/ShipDetails/Stats"]
 layout_mode = 0
 offset_left = 16.0
 offset_top = 88.0
@@ -503,7 +490,7 @@ offset_bottom = 111.0
 text = "DEFENSE"
 vertical_alignment = 1
 
-[node name="AccuracyLabel" type="Label" parent="Panel/ShipDetails/Stats"]
+[node name="AccuracyLabel" type="Label" parent="ShipStats/ShipDetails/Stats"]
 layout_mode = 0
 offset_left = 16.0
 offset_top = 120.0
@@ -512,7 +499,7 @@ offset_bottom = 143.0
 text = "ACCURACY"
 vertical_alignment = 1
 
-[node name="AgilityLabel" type="Label" parent="Panel/ShipDetails/Stats"]
+[node name="AgilityLabel" type="Label" parent="ShipStats/ShipDetails/Stats"]
 layout_mode = 0
 offset_left = 16.0
 offset_top = 152.0
@@ -521,7 +508,7 @@ offset_bottom = 175.0
 text = "AGILITY"
 vertical_alignment = 1
 
-[node name="Attack" type="Label" parent="Panel/ShipDetails/Stats"]
+[node name="Attack" type="Label" parent="ShipStats/ShipDetails/Stats"]
 layout_mode = 0
 offset_left = 188.0
 offset_top = 56.0
@@ -530,7 +517,7 @@ offset_bottom = 79.0
 text = "0"
 vertical_alignment = 1
 
-[node name="Defense" type="Label" parent="Panel/ShipDetails/Stats"]
+[node name="Defense" type="Label" parent="ShipStats/ShipDetails/Stats"]
 layout_mode = 0
 offset_left = 188.0
 offset_top = 88.0
@@ -539,7 +526,7 @@ offset_bottom = 111.0
 text = "0"
 vertical_alignment = 1
 
-[node name="Accuracy" type="Label" parent="Panel/ShipDetails/Stats"]
+[node name="Accuracy" type="Label" parent="ShipStats/ShipDetails/Stats"]
 layout_mode = 0
 offset_left = 188.0
 offset_top = 120.0
@@ -548,7 +535,7 @@ offset_bottom = 143.0
 text = "0"
 vertical_alignment = 1
 
-[node name="Agility" type="Label" parent="Panel/ShipDetails/Stats"]
+[node name="Agility" type="Label" parent="ShipStats/ShipDetails/Stats"]
 layout_mode = 0
 offset_left = 188.0
 offset_top = 152.0
@@ -556,6 +543,14 @@ offset_right = 344.0
 offset_bottom = 175.0
 text = "0"
 vertical_alignment = 1
+
+[node name="Drives" parent="." instance=ExtResource("8")]
+visible = false
+layout_mode = 0
+offset_left = 332.0
+offset_top = 136.0
+offset_right = 956.0
+offset_bottom = 624.0
 
 [connection signal="pressed" from="CloseButton" to="." method="_on_close_button_pressed"]
 [connection signal="timeout" from="SpaceportTimer" to="." method="_on_SpaceportTimer_timeout"]
@@ -565,12 +560,12 @@ vertical_alignment = 1
 [connection signal="mouse_entered" from="Ships/GoToShips" to="." method="_on_GoToShips_mouse_entered"]
 [connection signal="mouse_exited" from="Ships/GoToShips" to="." method="_on_mouse_exited"]
 [connection signal="pressed" from="Ships/GoToShips" to="." method="_on_GoToShips_pressed"]
-[connection signal="pressed" from="Panel/ShipDetails/Respec" to="." method="_on_respec_pressed"]
-[connection signal="mouse_entered" from="Panel/ShipDetails/Bullet/Icon" to="." method="_on_weaponIcon_mouse_entered" binds= ["bullet"]]
-[connection signal="mouse_exited" from="Panel/ShipDetails/Bullet/Icon" to="." method="_on_weaponIcon_mouse_exited"]
-[connection signal="mouse_entered" from="Panel/ShipDetails/Laser/Icon" to="." method="_on_weaponIcon_mouse_entered" binds= ["laser"]]
-[connection signal="mouse_exited" from="Panel/ShipDetails/Laser/Icon" to="." method="_on_weaponIcon_mouse_exited"]
-[connection signal="mouse_entered" from="Panel/ShipDetails/Bomb/Icon" to="." method="_on_weaponIcon_mouse_entered" binds= ["bomb"]]
-[connection signal="mouse_exited" from="Panel/ShipDetails/Bomb/Icon" to="." method="_on_weaponIcon_mouse_exited"]
-[connection signal="mouse_entered" from="Panel/ShipDetails/Light/Icon" to="." method="_on_weaponIcon_mouse_entered" binds= ["light"]]
-[connection signal="mouse_exited" from="Panel/ShipDetails/Light/Icon" to="." method="_on_weaponIcon_mouse_exited"]
+[connection signal="pressed" from="ShipStats/ShipDetails/Respec" to="." method="_on_respec_pressed"]
+[connection signal="mouse_entered" from="ShipStats/ShipDetails/Bullet/Icon" to="." method="_on_weaponIcon_mouse_entered" binds= ["bullet"]]
+[connection signal="mouse_exited" from="ShipStats/ShipDetails/Bullet/Icon" to="." method="_on_weaponIcon_mouse_exited"]
+[connection signal="mouse_entered" from="ShipStats/ShipDetails/Laser/Icon" to="." method="_on_weaponIcon_mouse_entered" binds= ["laser"]]
+[connection signal="mouse_exited" from="ShipStats/ShipDetails/Laser/Icon" to="." method="_on_weaponIcon_mouse_exited"]
+[connection signal="mouse_entered" from="ShipStats/ShipDetails/Bomb/Icon" to="." method="_on_weaponIcon_mouse_entered" binds= ["bomb"]]
+[connection signal="mouse_exited" from="ShipStats/ShipDetails/Bomb/Icon" to="." method="_on_weaponIcon_mouse_exited"]
+[connection signal="mouse_entered" from="ShipStats/ShipDetails/Light/Icon" to="." method="_on_weaponIcon_mouse_entered" binds= ["light"]]
+[connection signal="mouse_exited" from="ShipStats/ShipDetails/Light/Icon" to="." method="_on_weaponIcon_mouse_exited"]

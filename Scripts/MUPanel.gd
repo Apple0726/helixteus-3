@@ -80,7 +80,7 @@ func refresh():
 func set_upg_text(MU:String, next_lv:int = 0):
 	match MU:
 		"MV":
-			game.add_text_icons($PanelContainer/VBox/MV/Effects, "@i 1 = @i %s" % [game.MUs.MV + next_lv + 4], [Data.minerals_icon, Data.money_icon], 15)
+			Helper.add_text_icons($PanelContainer/VBox/MV/Effects, "@i 1 = @i %s" % [game.MUs.MV + next_lv + 4], [Data.minerals_icon, Data.money_icon], 15)
 		"MSMB":
 			$PanelContainer/VBox/MSMB/Effects.text = "+ %s %%" % ((game.MUs.MSMB + next_lv - 1) * 10)
 		"IS":

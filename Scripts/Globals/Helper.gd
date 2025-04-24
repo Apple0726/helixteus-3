@@ -129,8 +129,6 @@ func set_visibility(node):
 	node.visible = true
 
 func get_item_name (_name:String):
-	if _name.substr(0, 7) == "speedup":
-		return tr(game.speedups_info[_name].name) % game.speedups_info[_name].name_param
 	if _name.substr(0, 9) == "overclock":
 		return tr("OVERCLOCK") + " " + get_roman_num(int(_name[9]))
 	if _name.substr(0, 5) == "drill":
@@ -158,40 +156,6 @@ func e_notation(num:float, sd:int = 4):#e notation
 		e += 1
 	return "%se%s" %  [n2, e]
 
-func get_dir_from_name(_name:String):
-	if get_type_from_name(_name) == "speedups_info":
-		return "Items/Speedups"
-	if get_type_from_name(_name) == "overclocks_info":
-		return "Items/Overclocks"
-	if get_type_from_name(_name) == "other_items_info":
-		return "Items/Others"
-	if get_type_from_name(_name) == "seeds_produce":
-		return "Agriculture"
-	if get_type_from_name(_name) == "craft_mining_info":
-		return "Mining"
-	if get_type_from_name(_name) == "craft_cave_info":
-		return "Cave"
-	match _name:
-		"money":
-			return "Icons"
-		"minerals":
-			return "Icons"
-	return ""
-
-func get_type_from_name(_name:String):
-	if game.speedups_info.keys().has(_name):
-		return "speedups_info"
-	if game.overclocks_info.keys().has(_name):
-		return "overclocks_info"
-	if game.other_items_info.keys().has(_name):
-		return "other_items_info"
-	if game.seeds_produce.keys().has(_name):
-		return "seeds_produce"
-	if game.craft_mining_info.keys().has(_name):
-		return "craft_mining_info"
-	if game.craft_cave_info.keys().has(_name):
-		return "craft_cave_info"
-	return ""
 
 func format_num(num:float, clever_round:bool = false, threshold:int = 6):
 	if clever_round:
@@ -1006,7 +970,7 @@ func add_lv_boxes(obj:Dictionary, v:Vector2, sc:float = 1.0):
 	if obj.bldg.has("path_1"):
 		var path_1 = Label.new()
 		path_1.name = "Path1"
-		path_1.text = str(obj.bldg.path_1)
+		path_1.text = str(int(obj.bldg.path_1))
 		path_1.connect("mouse_entered",Callable(self,"on_path_enter").bind("1", obj))
 		path_1.connect("mouse_exited",Callable(self,"on_path_exit"))
 		path_1["theme_override_styles/normal"] = text_border_theme
@@ -1016,7 +980,7 @@ func add_lv_boxes(obj:Dictionary, v:Vector2, sc:float = 1.0):
 	if obj.bldg.has("path_2"):
 		var path_2 = Label.new()
 		path_2.name = "Path2"
-		path_2.text = str(obj.bldg.path_2)
+		path_2.text = str(int(obj.bldg.path_2))
 		path_2.connect("mouse_entered",Callable(self,"on_path_enter").bind("2", obj))
 		path_2.connect("mouse_exited",Callable(self,"on_path_exit"))
 		path_2["theme_override_styles/normal"] = text_border_theme
@@ -1025,7 +989,7 @@ func add_lv_boxes(obj:Dictionary, v:Vector2, sc:float = 1.0):
 	if obj.bldg.has("path_3"):
 		var path_3 = Label.new()
 		path_3.name = "Path3"
-		path_3.text = str(obj.bldg.path_3)
+		path_3.text = str(int(obj.bldg.path_3))
 		path_3.connect("mouse_entered",Callable(self,"on_path_enter").bind("3", obj))
 		path_3.connect("mouse_exited",Callable(self,"on_path_exit"))
 		path_3["theme_override_styles/normal"] = text_border_theme

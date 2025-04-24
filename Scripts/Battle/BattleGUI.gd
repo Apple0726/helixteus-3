@@ -275,8 +275,10 @@ func flash_screen(intensity: float, duration: float):
 func _on_speedup_pressed() -> void:
 	battle_scene.animations_sped_up = not battle_scene.animations_sped_up
 	if battle_scene.animations_sped_up:
+		Engine.physics_ticks_per_second = 500
 		$Speedup/Polygon2D.material.set_shader_parameter("amplitude", 3.0)
 		$Speedup/Polygon2D.color.a = 1.0
 	else:
+		Engine.physics_ticks_per_second = 60
 		$Speedup/Polygon2D.material.set_shader_parameter("amplitude", 0.0)
 		$Speedup/Polygon2D.color.a = 0.5

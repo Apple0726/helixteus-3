@@ -134,7 +134,7 @@ func _on_mouse_entered() -> void:
 	else:
 		refresh_default_tooltip_text()
 		default_tooltip_text += "\n" + tr("PASSIVE_ABILITY") + ":"
-		default_tooltip_text += "\n" + tr("%s_PASSIVE_ABILITY" % ShipClass.names[ship_class].to_upper())
+		default_tooltip_text += "\n - " + tr("%s_PASSIVE_ABILITY" % ShipClass.names[ship_class].to_upper())
 		game.show_adv_tooltip(default_tooltip_text, {"imgs": default_tooltip_icons})
 
 

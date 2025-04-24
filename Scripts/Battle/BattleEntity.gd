@@ -112,22 +112,22 @@ func refresh_default_tooltip_text():
 	if attack_buff > 0:
 		default_tooltip_text += " + %.1f = %.1f" % [attack_buff, attack + attack_buff]
 	elif attack_buff < 0:
-		default_tooltip_text += " - %.1f = %.1f" % [attack_buff, attack + attack_buff]
+		default_tooltip_text += " - %.1f = %.1f" % [abs(attack_buff), attack + attack_buff]
 	default_tooltip_text += "\n@i \t%.1f" % (defense)
 	if defense_buff > 0:
 		default_tooltip_text += " + %.1f = %.1f" % [defense_buff, defense + defense_buff]
 	elif defense_buff < 0:
-		default_tooltip_text += " - %.1f = %.1f" % [defense_buff, defense + defense_buff]
+		default_tooltip_text += " - %.1f = %.1f" % [abs(defense_buff), defense + defense_buff]
 	default_tooltip_text += "\n@i \t%.1f" % (accuracy)
 	if accuracy_buff > 0:
 		default_tooltip_text += " + %.1f = %.1f" % [accuracy_buff, accuracy + accuracy_buff]
 	elif accuracy_buff < 0:
-		default_tooltip_text += " - %.1f = %.1f" % [accuracy_buff, accuracy + accuracy_buff]
+		default_tooltip_text += " - %.1f = %.1f" % [abs(accuracy_buff), accuracy + accuracy_buff]
 	default_tooltip_text += "\n@i \t%.1f" % (agility)
 	if agility_buff > 0:
 		default_tooltip_text += " + %.1f = %.1f" % [agility_buff, agility + agility_buff]
 	elif agility_buff < 0:
-		default_tooltip_text += " - %.1f = %.1f" % [agility_buff, agility + agility_buff]
+		default_tooltip_text += " - %.1f = %.1f" % [abs(agility_buff), agility + agility_buff]
 	if velocity != Vector2.ZERO:
 		default_tooltip_text += "\nv = " + ("(%.1f, %.1f) m/s\n|v| = %.1f m/s" % [velocity.x, velocity.y, velocity.length()])
 	

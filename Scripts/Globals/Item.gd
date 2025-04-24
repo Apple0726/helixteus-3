@@ -24,11 +24,11 @@ enum {
 }
 
 enum Type {
-	DRILL,
-	HELIX_CORE,
-	MINING_LIQUID,
 	OVERCLOCK,
+	MINING_LIQUID,
+	DRILL,
 	PORTABLE_WORMHOLE,
+	HELIX_CORE,
 }
 
 var data:Dictionary = {

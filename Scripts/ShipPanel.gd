@@ -7,12 +7,13 @@ var ship_nodes = []
 var selected_ship_id:int = -1
 
 func _ready():
-	$Panel/ShipDetails.hide()
-	$Panel/Label.show()
+	$ShipStats/ShipDetails.hide()
+	$ShipStats/Label.show()
 	for i in len(game.ship_data):
 		add_ship_node(i)
 	set_polygon(size)
 	refresh()
+	$Drives.panel_closed.connect(hide_drive_panel)
 
 func add_ship_node(id: int):
 	var ship = preload("res://Scenes/ShipsPanelShip.tscn").instantiate()
@@ -78,21 +79,27 @@ func _on_CheckBox_toggled(button_pressed):
 
 func _on_DriveButton_pressed():
 	if game.science_unlocked.has("CD"):
-		$Grid.visible = false
-		$Drives.visible = true
-		$Panel/CheckBox.visible = false
-		$Ships/DriveButton.visible = false
-		$Panel/BackButton.visible = true
-		$Panel/UpgradeButton.visible = false
+		if game.ships_travel_data.travel_view == "-":
+			game.popup(tr("SHIPS_NEED_TO_BE_TRAVELLING"), 1.5)
+		else:
+			var fade_out_tween = create_tween().set_parallel()
+			fade_out_tween.tween_property($Ships, "modulate:a", 0.5, 0.2)
+			fade_out_tween.tween_property($ShipStats, "modulate:a", 0.5, 0.2)
+			$Drives.visible = true
+			$ShipStats.visible = true
+			$Ships/DriveButton.visible = false
 	else:
 		game.popup(tr("DRIVE_TECHNOLOGY_REQUIRED"), 1.5)
 
-func _on_BackButton_pressed():
-	$Grid.visible = true
+func hide_drive_panel():
+	var fade_out_tween = create_tween().set_parallel()
+	fade_out_tween.tween_property($Ships, "modulate:a", 1.0, 0.2)
+	fade_out_tween.tween_property($ShipStats, "modulate:a", 1.0, 0.2)
+	$Ships.visible = true
 	$Drives.visible = false
-	$Panel/CheckBox.visible = true
+	$ShipStats.visible = true
+	$Drives.visible = false
 	$Ships/DriveButton.visible = true
-	$Panel/BackButton.visible = false
 	refresh()
 
 func _on_GoToShips_mouse_entered():
@@ -111,7 +118,7 @@ func _on_GoToShips_pressed():
 
 func _on_DriveButton_mouse_entered():
 	if not $Ships/DriveButton.disabled:
-		game.show_tooltip(tr("OPEN_DRIVE_MENU"))
+		game.show_tooltip(tr("ACCELERATE_SHIP_TRAVEL"))
 
 func _on_BackButton_mouse_entered():
 	game.show_tooltip(tr("BACK"))
@@ -178,37 +185,33 @@ func _on_ship_button_up(ship_id: int) -> void:
 	selected_ship_id = ship_id
 	$Ships/Battlefield/Selected.show()
 	$Ships/Battlefield/Selected.position = ship_nodes[ship_id].position - Vector2(0, 40)
-	$Panel/ShipDetails.show()
-	$Panel/Label.hide()
+	$ShipStats/ShipDetails.show()
+	$ShipStats/Label.hide()
 	var ship_info = game.ship_data[ship_id]
-	$Panel/ShipDetails/Label.text = "%s %s %s" % [tr("LEVEL"), ship_info.lv, tr("%s_SHIP" % ShipClass.names[ship_info.ship_class].to_upper())]
+	$ShipStats/ShipDetails/Label.text = "%s %s %s" % [tr("LEVEL"), ship_info.lv, tr("%s_SHIP" % ShipClass.names[ship_info.ship_class].to_upper())]
 	if ship_info.respec_count == 0:
-		$Panel/ShipDetails/Respec.text = "%s (%s)" % [tr("RESPEC"), tr("FREE")]
+		$ShipStats/ShipDetails/Respec.text = "%s (%s)" % [tr("RESPEC"), tr("FREE")]
 	else:
-		$Panel/ShipDetails/Respec.text = "%s (%s)" % [tr("RESPEC"), "-0.5 %s" % tr("LEVEL")]
-	$Panel/ShipDetails/Stats/HP.text = str(ship_info.HP)
-	$Panel/ShipDetails/Stats/Attack.text = str(ship_info.attack)
-	$Panel/ShipDetails/Stats/Defense.text = str(ship_info.defense)
-	$Panel/ShipDetails/Stats/Accuracy.text = str(ship_info.accuracy)
-	$Panel/ShipDetails/Stats/Agility.text = str(ship_info.agility)
+		$ShipStats/ShipDetails/Respec.text = "%s (%s)" % [tr("RESPEC"), "-0.5 %s" % tr("LEVEL")]
+	$ShipStats/ShipDetails/Stats/HP.text = str(ship_info.HP)
+	$ShipStats/ShipDetails/Stats/Attack.text = str(ship_info.attack)
+	$ShipStats/ShipDetails/Stats/Defense.text = str(ship_info.defense)
+	$ShipStats/ShipDetails/Stats/Accuracy.text = str(ship_info.accuracy)
+	$ShipStats/ShipDetails/Stats/Agility.text = str(ship_info.agility)
 	for weapon in ["Bullet", "Laser", "Bomb", "Light"]:
 		var weapon_data = ship_info[weapon.to_lower()]
-		get_node("Panel/ShipDetails/%s/TextureProgressBar" % [weapon]).max_value = INF if weapon_data.lv == 5 else weapon_data.XP_to_lv
-		get_node("Panel/ShipDetails/%s/TextureProgressGained" % [weapon]).max_value = INF if weapon_data.lv == 5 else weapon_data.XP_to_lv
-		get_node("Panel/ShipDetails/%s/TextureProgressBar" % [weapon]).value = weapon_data.XP
-		get_node("Panel/ShipDetails/%s/TextureProgressGained" % [weapon]).value = weapon_data.XP
-		get_node("Panel/ShipDetails/%s/Icon" % [weapon]).texture = load("res://Graphics/Weapons/%s%s.png" % [weapon.to_lower(), weapon_data.lv])
-		get_node("Panel/ShipDetails/%s/Label2" % [weapon]).text = "%s / %s" % [round(weapon_data.XP), weapon_data.XP_to_lv]
-	$Panel/ShipDetails/XP/Label2.text = "%s / %s" % [Helper.format_num(round(ship_info.XP)), Helper.format_num(ship_info.XP_to_lv)]
-	$Panel/ShipDetails/XP/TextureProgressBar.max_value = ship_info.XP_to_lv
-	$Panel/ShipDetails/XP/TextureProgressGained.max_value = ship_info.XP_to_lv
-	$Panel/ShipDetails/XP/TextureProgressBar.value = ship_info.XP
-	$Panel/ShipDetails/XP/TextureProgressGained.value = ship_info.XP
+		get_node("ShipStats/ShipDetails/%s/Icon" % [weapon]).texture = load("res://Graphics/Weapons/%s%s.png" % [weapon.to_lower(), 1])
+		get_node("ShipStats/ShipDetails/%s/Label" % [weapon]).text = "%d / %d / %d" % [weapon_data[0], weapon_data[1], weapon_data[2]]
+	$ShipStats/ShipDetails/XP/Label2.text = "%s / %s" % [Helper.format_num(round(ship_info.XP)), Helper.format_num(ship_info.XP_to_lv)]
+	$ShipStats/ShipDetails/XP/TextureProgressBar.max_value = ship_info.XP_to_lv
+	$ShipStats/ShipDetails/XP/TextureProgressGained.max_value = ship_info.XP_to_lv
+	$ShipStats/ShipDetails/XP/TextureProgressBar.value = ship_info.XP
+	$ShipStats/ShipDetails/XP/TextureProgressGained.value = ship_info.XP
 
 
 func _on_weaponIcon_mouse_entered(weapon: String) -> void:
 	if selected_ship_id != -1:
-		game.show_tooltip("%s %s %s\n%s" % [tr("LV"), game.ship_data[selected_ship_id][weapon].lv, tr(weapon.to_upper()), tr(weapon.to_upper() + "_DESC")])
+		game.show_tooltip(tr(weapon.to_upper() + "_DESC"))
 
 
 func _on_weaponIcon_mouse_exited() -> void:

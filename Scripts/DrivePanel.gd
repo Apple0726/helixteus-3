@@ -1,9 +1,10 @@
 extends Panel
 
-@onready var op = $Control/OptionButton
+signal panel_closed
+
 @onready var game = get_node("/root/Game")
 
-var coal_texture = preload("res://Graphics/Materials/coal.png")
+var coal_texture = Data.coal_icon
 var cellulose_texture = Data.cellulose_icon
 var helium_texture = preload("res://Graphics/Atoms/He.png")
 var neon_texture = preload("res://Graphics/Atoms/Ne.png")
@@ -12,51 +13,30 @@ var hydrogen_texture = preload("res://Graphics/Atoms/H.png")
 
 var ships_time_remaining:float = 0
 var ships_time_reduction:float = 0
-var cost = float(0)
-var meta = ""
-var energy = 0
+var fuel_selected = ""
+var selected_fuel_type = "mats"
+var cost = 0.0
+var energy_per_quantity_of_fuel = 0
 var unit:String = "kg"
-var type:String = "mats"
 
 func _ready():
 	$Control.visible = false
+	refresh()
 
-func refresh_drive_modulate():
+func reset_selected_drive_fuel():
 	for drive in $Panel/Drives.get_children():
 		drive.modulate.a = 0.5
+	for fuel in $Fuels.get_children():
+		fuel.queue_free()
 	
 func refresh():
 	for drive in $Panel/Drives.get_children():
 		drive.visible = game.science_unlocked.has(drive.name)
-	
-	meta = op.get_selected_metadata()
-	if meta != null:
-		match meta:
-			"cellulose":
-				$Control/TextureRect.texture = cellulose_texture
-				$Control/TextureRect3.texture = cellulose_texture
-				energy = 2500
-				unit = "kg"
-				type = "mats"
-			"coal":
-				$Control/TextureRect.texture = coal_texture
-				$Control/TextureRect3.texture = coal_texture
-				energy = 400
-				unit = "kg"
-				type = "mats"
-			"Ne":
-				$Control/TextureRect.texture = neon_texture
-				$Control/TextureRect3.texture = neon_texture
-				energy = 60000
-				unit = "mol"
-				type = "atoms"
-			"Xe":
-				$Control/TextureRect.texture = xenon_texture
-				$Control/TextureRect3.texture = xenon_texture
-				energy = 10000000
-				unit = "mol"
-				type = "atoms"
-		$Control/HSlider.max_value = game[type][meta]
+	if selected_fuel_type == "mats":
+		unit = "kg"
+	elif selected_fuel_type == "atoms":
+		unit = "mol"
+		$Control/HSlider.max_value = game[selected_fuel_type][fuel_selected]
 		$Control/HSlider.value = 0
 		_on_h_slider_value_changed($Control/HSlider.value)
 
@@ -65,43 +45,56 @@ func use_drive():
 		game.popup(tr("SHIPS_NEED_TO_BE_TRAVELLING"), 1.5)
 	else:
 		game.ships_travel_data.travel_length -= ships_time_reduction
-		game.ships_travel_data.travel_cost += cost * energy
-		game[type][meta] -= cost
+		game.ships_travel_data.travel_cost += cost * energy_per_quantity_of_fuel
+		game[selected_fuel_type][fuel_selected] -= cost
 		set_process(true)
 		game.ships_travel_data.drive_available_time = Time.get_unix_time_from_system() + 60 * pow(2, game.ships_travel_data.drives_used)
 		game.ships_travel_data.drives_used += 1
 		game.popup(tr("DRIVE_SUCCESSFULLY_ACTIVATED"), 1.5)
 	#refresh_h_slider()
 	_on_h_slider_value_changed($Control/HSlider.value)
-	$Control/HSlider.max_value = game[type][meta]
+	$Control/HSlider.max_value = game[selected_fuel_type][fuel_selected]
 	#$Control/HSlider.set_value_no_signal(0)
 
+func add_fuel(type: String, fuel: String, texture):
+	var item = preload("res://Scenes/ShopItem.tscn").instantiate()
+	item.get_node("TextureRect").texture = texture
+	item.get_node("TextureButton").mouse_entered.connect(game.show_adv_tooltip.bind(tr(fuel.to_upper())))
+	item.get_node("TextureButton").mouse_exited.connect(game.hide_tooltip)
+	item.get_node("TextureButton").pressed.connect(select_fuel.bind(type, fuel, texture))
+
+func select_fuel(type: String, fuel: String, texture):
+	$Control/TextureRect.texture = texture
+	$Control/TextureRect3.texture = texture
+	selected_fuel_type = type
+	fuel_selected = fuel
+	if fuel == "coal":
+		energy_per_quantity_of_fuel = 400
+	elif fuel == "cellulose":
+		energy_per_quantity_of_fuel = 2500
+	elif fuel == "Ne":
+		energy_per_quantity_of_fuel = 60000
+	elif fuel == "Xe":
+		energy_per_quantity_of_fuel = 10000000
+
+
 func _on_ChemicalDrive_pressed():
-	op.clear()
-	op.add_item(tr("COAL"))
-	op.add_item(tr("CELLULOSE"))
-	op.set_item_metadata(0, "coal")
-	op.set_item_metadata(1, "cellulose")
-	op.selected = 0
+	reset_selected_drive_fuel()
+	add_fuel("mats", "coal", preload("res://Graphics/Materials/coal.png"))
+	add_fuel("mats", "cellulose", preload("res://Graphics/Materials/cellulose.png"))
 	$Control.visible = true
 	refresh()
-	refresh_drive_modulate()
 	$Panel/Drives/CD.modulate.a = 1
 
 func _on_IonDrive_pressed():
-	op.clear()
-	op.add_item(tr("NE_NAME"))
-	op.add_item(tr("XE_NAME"))
-	op.set_item_metadata(0, "Ne")
-	op.set_item_metadata(1, "Xe")
-	op.selected = 0
+	reset_selected_drive_fuel()
+	add_fuel("atoms", "Ne", preload("res://Graphics/Atoms/Ne.png"))
+	add_fuel("atoms", "Xe", preload("res://Graphics/Atoms/Xe.png"))
 	$Control.visible = true
 	refresh()
-	refresh_drive_modulate()
+	reset_selected_drive_fuel()
 	$Panel/Drives/ID.modulate.a = 1
 
-func _on_OptionButton_item_selected(index):
-	refresh()
 
 func _on_h_slider_value_changed(value):
 	refresh_h_slider()
@@ -112,9 +105,9 @@ func _on_h_slider_value_changed(value):
 	if not is_processing():
 		$Control/Cooldown.text = Helper.time_to_str(60 * pow(2, game.ships_travel_data.drives_used))
 	cost = $Control/HSlider.value
-	ships_time_reduction = ships_time_remaining - ships_time_remaining * (game.ships_travel_data.travel_cost / (game.ships_travel_data.travel_cost + cost * energy))
+	ships_time_reduction = ships_time_remaining - ships_time_remaining * (game.ships_travel_data.travel_cost / (game.ships_travel_data.travel_cost + cost * energy_per_quantity_of_fuel))
 	$Control/Label.text = "%s %s" % [Helper.format_num(cost, true), unit]
-	$Control/RsrcOwned.text = "%s %s" % [Helper.format_num(game[type][meta], true), unit]
+	$Control/RsrcOwned.text = "%s %s" % [Helper.format_num(game[selected_fuel_type][fuel_selected], true), unit]
 	$Control/Label2.text = Helper.time_to_str(ships_time_reduction)
 
 func _process(delta):
@@ -125,9 +118,13 @@ func _process(delta):
 		$Control/Cooldown.text = Helper.time_to_str(60 * pow(2, game.ships_travel_data.drives_used))
 
 func refresh_h_slider():
-	if meta:
-		if is_zero_approx(game[type][meta]):
+	if fuel_selected != "":
+		if is_zero_approx(game[selected_fuel_type][fuel_selected]):
 			$Control/HSlider.visible = false
 			$Control/HSlider.set_value_no_signal(0)
 		else:
 			$Control/HSlider.visible = true
+
+
+func _on_back_button_pressed() -> void:
+	emit_signal("panel_closed")

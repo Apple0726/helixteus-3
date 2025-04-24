@@ -13,7 +13,7 @@
 [ext_resource type="Texture2D" uid="uid://bl07f3wef0muv" path="res://Graphics/Icons/HP.png" id="8"]
 [ext_resource type="Texture2D" uid="uid://crncbjr12yfpx" path="res://Graphics/Cave/Rover.png" id="9"]
 [ext_resource type="Script" uid="uid://bx8u5sng6cvqk" path="res://Scripts/RCPanel.gd" id="10"]
-[ext_resource type="PackedScene" path="res://Scenes/RESlot.tscn" id="11"]
+[ext_resource type="PackedScene" uid="uid://bv51d6mfcjqfn" path="res://Scenes/RESlot.tscn" id="11"]
 [ext_resource type="Texture2D" uid="uid://bapj1r8e5pwia" path="res://Graphics/Icons/agility.png" id="12"]
 [ext_resource type="Texture2D" uid="uid://hjl8rhhr18ke" path="res://Graphics/Icons/help.png" id="14"]
 [ext_resource type="Texture2D" uid="uid://if1usn38yajs" path="res://Graphics/Icons/craft.png" id="15_ku4oa"]
@@ -53,9 +53,10 @@ theme = ExtResource("5")
 script = ExtResource("10")
 
 [node name="GUI" type="TextureRect" parent="."]
-layout_mode = 0
-offset_right = 1280.0
-offset_bottom = 720.0
+offset_left = 80.0
+offset_top = 52.0
+offset_right = 1204.0
+offset_bottom = 671.0
 mouse_filter = 2
 texture = ExtResource("3_rrp1r")
 

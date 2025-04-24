@@ -1,4 +1,4 @@
-extends "res://Scripts/HX_Cave.gd"
+extends "HXBase.gd"
 
 func _ready():
 	super()

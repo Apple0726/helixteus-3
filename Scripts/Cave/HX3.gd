@@ -1,4 +1,4 @@
-extends "res://Scripts/HX_Cave.gd"
+extends "HXBase.gd"
 
 var rot:float
 var counter:int = 0
