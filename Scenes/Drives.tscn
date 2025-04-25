@@ -1,9 +1,8 @@
-[gd_scene load_steps=8 format=3 uid="uid://rkeuei54m30i"]
+[gd_scene load_steps=7 format=3 uid="uid://rkeuei54m30i"]
 
 [ext_resource type="Texture2D" uid="uid://dwjcfkpu40hn8" path="res://Graphics/Buttons/IonDrive.png" id="3"]
 [ext_resource type="Texture2D" uid="uid://bixqswdd7ypgy" path="res://Graphics/Buttons/ChemicalDrive.png" id="4"]
 [ext_resource type="Texture2D" uid="uid://bn8t8jmrkuvdk" path="res://Graphics/Icons/Time.png" id="5"]
-[ext_resource type="PackedScene" uid="uid://chlumfyc825yv" path="res://Scenes/ShopItem.tscn" id="5_4m7jy"]
 [ext_resource type="Script" uid="uid://b1qxss1m1isn5" path="res://Scripts/DrivePanel.gd" id="6"]
 [ext_resource type="Texture2D" uid="uid://c2gvy8266bgkb" path="res://Graphics/Materials/coal.png" id="6_s6hk7"]
 [ext_resource type="Theme" uid="uid://cp2u1kgj60ic" path="res://Resources/default_theme.tres" id="7"]
@@ -80,28 +79,25 @@ metadata/_edit_lock_ = true
 
 [node name="Fuels" type="HBoxContainer" parent="Control"]
 layout_mode = 0
-offset_left = 300.0
-offset_top = 168.0
-offset_right = 444.0
-offset_bottom = 244.0
-
-[node name="Panel" parent="Control/Fuels" instance=ExtResource("5_4m7jy")]
-layout_mode = 2
+offset_left = 296.0
+offset_top = 172.0
+offset_right = 440.0
+offset_bottom = 220.0
 
 [node name="HSlider" type="HSlider" parent="Control"]
 layout_mode = 0
 offset_left = 184.0
-offset_top = 228.0
+offset_top = 236.0
 offset_right = 340.0
-offset_bottom = 244.0
+offset_bottom = 252.0
 step = 0.0
 
 [node name="TextureRect" type="TextureRect" parent="Control"]
 layout_mode = 0
 offset_left = 356.0
-offset_top = 224.0
+offset_top = 232.0
 offset_right = 388.0
-offset_bottom = 248.0
+offset_bottom = 256.0
 texture = ExtResource("6_s6hk7")
 expand_mode = 1
 stretch_mode = 6
@@ -109,75 +105,47 @@ stretch_mode = 6
 [node name="TimeIcon1" type="TextureRect" parent="Control"]
 layout_mode = 0
 offset_left = 368.0
-offset_top = 308.0
+offset_top = 284.0
 offset_right = 396.0
-offset_bottom = 340.0
+offset_bottom = 316.0
 texture = ExtResource("5")
 expand_mode = 1
 stretch_mode = 6
 
-[node name="TextureRect3" type="TextureRect" parent="Control"]
-layout_mode = 0
-offset_left = 356.0
-offset_top = 264.0
-offset_right = 388.0
-offset_bottom = 288.0
-texture = ExtResource("6_s6hk7")
-expand_mode = 1
-stretch_mode = 6
-
-[node name="RsrcOwned" type="Label" parent="Control"]
-layout_mode = 0
-offset_left = 400.0
-offset_top = 260.0
-offset_right = 520.0
-offset_bottom = 292.0
-text = "0"
-vertical_alignment = 1
-
-[node name="YouHave" type="Label" parent="Control"]
-layout_mode = 0
-offset_left = 204.0
-offset_top = 260.0
-offset_right = 324.0
-offset_bottom = 292.0
-text = "YOU_HAVE"
-vertical_alignment = 1
-
 [node name="CooldownLabel" type="Label" parent="Control"]
 layout_mode = 0
 offset_left = 184.0
-offset_top = 420.0
+offset_top = 400.0
 offset_right = 304.0
-offset_bottom = 452.0
+offset_bottom = 432.0
 text = "COOLDOWN"
 horizontal_alignment = 2
 vertical_alignment = 1
 
-[node name="Label" type="Label" parent="Control"]
+[node name="FuelAmount" type="Label" parent="Control"]
 layout_mode = 0
 offset_left = 400.0
-offset_top = 220.0
+offset_top = 228.0
 offset_right = 496.0
-offset_bottom = 252.0
+offset_bottom = 260.0
 text = "0"
 vertical_alignment = 1
 
 [node name="Label2" type="Label" parent="Control"]
 layout_mode = 0
 offset_left = 408.0
-offset_top = 308.0
+offset_top = 284.0
 offset_right = 528.0
-offset_bottom = 340.0
+offset_bottom = 316.0
 text = "0"
 vertical_alignment = 1
 
 [node name="TimeIcon2" type="TextureRect" parent="Control"]
 layout_mode = 0
 offset_left = 320.0
-offset_top = 420.0
+offset_top = 400.0
 offset_right = 348.0
-offset_bottom = 452.0
+offset_bottom = 432.0
 texture = ExtResource("5")
 expand_mode = 1
 stretch_mode = 6
@@ -185,28 +153,28 @@ stretch_mode = 6
 [node name="Cooldown" type="Label" parent="Control"]
 layout_mode = 0
 offset_left = 360.0
-offset_top = 420.0
+offset_top = 400.0
 offset_right = 480.0
-offset_bottom = 452.0
+offset_bottom = 432.0
 text = "0"
 vertical_alignment = 1
 
 [node name="Label3" type="Label" parent="Control"]
 layout_mode = 0
 offset_left = 108.0
-offset_top = 308.0
+offset_top = 284.0
 offset_right = 328.0
-offset_bottom = 340.0
+offset_bottom = 316.0
 text = "TIME_REDUCTION"
 horizontal_alignment = 2
 vertical_alignment = 1
 
 [node name="FuelsLabel" type="Label" parent="Control"]
 layout_mode = 0
-offset_left = 172.0
-offset_top = 172.0
-offset_right = 276.0
-offset_bottom = 204.0
+offset_left = 164.0
+offset_top = 180.0
+offset_right = 268.0
+offset_bottom = 212.0
 text = "FUEL"
 horizontal_alignment = 2
 vertical_alignment = 1
@@ -214,9 +182,9 @@ vertical_alignment = 1
 [node name="UseDrive" type="Button" parent="Control"]
 layout_mode = 0
 offset_left = 188.0
-offset_top = 372.0
+offset_top = 352.0
 offset_right = 440.0
-offset_bottom = 408.0
+offset_bottom = 388.0
 text = "SPEED_UP_SHIPS"
 
 [node name="BackButton" type="Button" parent="."]

@@ -17,8 +17,10 @@ func _ready() -> void:
 		text = str(damage) + "!"
 	else:
 		if damage < 0:
+			label_settings.font_color = Color.LIME_GREEN
 			text = "+" + str(abs(damage))
 		else:
+			label_settings.font_color = Color.RED
 			text = str(damage)
 	var tween = create_tween()
 	tween.tween_property(self, "modulate:a", 1.0, 0.2)

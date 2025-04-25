@@ -251,7 +251,8 @@ func end_turn():
 	if extra_attacks > 0:
 		extra_attacks -= 1
 	else:
-		turn_order_box.get_node("AnimationPlayer").play_backwards("ChangeSize")
+		if is_instance_valid(turn_order_box):
+			turn_order_box.get_node("AnimationPlayer").play_backwards("ChangeSize")
 		emit_signal("next_turn")
 
 func agility_updated_callback():
@@ -264,9 +265,9 @@ func damage_entity_status_effect(damage: int):
 	update_entity_HP()
 	
 func heal_entity(amount: int):
-	battle_scene.add_damage_text(position + Vector2.UP * 80.0, amount)
+	battle_scene.add_damage_text(false, position + Vector2.UP * 80.0, -amount)
 	HP = min(HP + amount, total_HP)
-	update_entity_HP()
+	update_entity_HP(Vector2.ZERO, true)
 	
 func damage_entity(weapon_data: Dictionary):
 	var dodged = 1.0 / (1.0 + exp((weapon_data.weapon_accuracy - agility - agility_buff - abs(0.1 * velocity.rotated(PI / 2.0).dot(weapon_data.get("orientation", Vector2.ZERO))) + 9.2) / 5.8)) > randf()
@@ -322,10 +323,13 @@ func damage_entity(weapon_data: Dictionary):
 			update_info_labels()
 	return not dodged
 
-func update_entity_HP(label_knockback: Vector2 = Vector2.ZERO):
+func update_entity_HP(label_knockback: Vector2 = Vector2.ZERO, healed: bool = false):
 	$Info/HP.value = HP
 	if has_node("Sprite2D"):
-		$Sprite2D.material.set_shader_parameter("flash_color", Color.RED)
+		if healed:
+			$Sprite2D.material.set_shader_parameter("flash_color", Color(0.7, 1.0, 0.7))
+		else:
+			$Sprite2D.material.set_shader_parameter("flash_color", Color.RED)
 		$Sprite2D.material.set_shader_parameter("flash", 1.0)
 	if HP <= 0:
 		self.call_deferred("set_monitoring", false)

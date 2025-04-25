@@ -16,7 +16,7 @@ var ships_time_reduction:float = 0
 var fuel_selected = ""
 var selected_fuel_type = "mats"
 var cost = 0.0
-var energy_per_quantity_of_fuel = 0
+var energy_per_quantity_of_fuel = 0.0
 var unit:String = "kg"
 
 func _ready():
@@ -26,19 +26,17 @@ func _ready():
 func reset_selected_drive_fuel():
 	for drive in $Panel/Drives.get_children():
 		drive.modulate.a = 0.5
-	for fuel in $Fuels.get_children():
+	for fuel in $Control/Fuels.get_children():
 		fuel.queue_free()
 	
 func refresh():
 	for drive in $Panel/Drives.get_children():
 		drive.visible = game.science_unlocked.has(drive.name)
-	if selected_fuel_type == "mats":
-		unit = "kg"
-	elif selected_fuel_type == "atoms":
-		unit = "mol"
-		$Control/HSlider.max_value = game[selected_fuel_type][fuel_selected]
-		$Control/HSlider.value = 0
-		_on_h_slider_value_changed($Control/HSlider.value)
+	if fuel_selected != "":
+		if selected_fuel_type == "mats":
+			unit = "kg"
+		elif selected_fuel_type == "atoms":
+			unit = "mol"
 
 func use_drive():
 	if game.ships_travel_data.travel_view == "-":
@@ -56,16 +54,22 @@ func use_drive():
 	$Control/HSlider.max_value = game[selected_fuel_type][fuel_selected]
 	#$Control/HSlider.set_value_no_signal(0)
 
-func add_fuel(type: String, fuel: String, texture):
-	var item = preload("res://Scenes/ShopItem.tscn").instantiate()
-	item.get_node("TextureRect").texture = texture
-	item.get_node("TextureButton").mouse_entered.connect(game.show_adv_tooltip.bind(tr(fuel.to_upper())))
-	item.get_node("TextureButton").mouse_exited.connect(game.hide_tooltip)
-	item.get_node("TextureButton").pressed.connect(select_fuel.bind(type, fuel, texture))
+func add_fuel(type: String, fuel: String, texture, also_select_this_fuel = false):
+	var fuel_btn_node = preload("res://Scenes/ShopItem.tscn").instantiate()
+	fuel_btn_node.custom_minimum_size = Vector2.ONE * 48.0
+	fuel_btn_node.get_node("TextureRect").texture = texture
+	fuel_btn_node.get_node("TextureButton").mouse_entered.connect(game.show_adv_tooltip.bind(tr(fuel.to_upper())))
+	fuel_btn_node.get_node("TextureButton").mouse_exited.connect(game.hide_tooltip)
+	fuel_btn_node.get_node("TextureButton").pressed.connect(select_fuel.bind(type, fuel, texture, fuel_btn_node))
+	$Control/Fuels.add_child(fuel_btn_node)
+	if also_select_this_fuel:
+		select_fuel(type, fuel, texture, fuel_btn_node)
 
-func select_fuel(type: String, fuel: String, texture):
+func select_fuel(type: String, fuel: String, texture, fuel_btn_node):
 	$Control/TextureRect.texture = texture
-	$Control/TextureRect3.texture = texture
+	for fuel_btn in $Control/Fuels.get_children():
+		fuel_btn.get_node("Highlight").hide()
+	fuel_btn_node.get_node("Highlight").show()
 	selected_fuel_type = type
 	fuel_selected = fuel
 	if fuel == "coal":
@@ -76,11 +80,14 @@ func select_fuel(type: String, fuel: String, texture):
 		energy_per_quantity_of_fuel = 60000
 	elif fuel == "Xe":
 		energy_per_quantity_of_fuel = 10000000
+	$Control/HSlider.max_value = game[selected_fuel_type][fuel_selected]
+	$Control/HSlider.value = 0
+	_on_h_slider_value_changed($Control/HSlider.value)
 
 
 func _on_ChemicalDrive_pressed():
 	reset_selected_drive_fuel()
-	add_fuel("mats", "coal", preload("res://Graphics/Materials/coal.png"))
+	add_fuel("mats", "coal", preload("res://Graphics/Materials/coal.png"), true)
 	add_fuel("mats", "cellulose", preload("res://Graphics/Materials/cellulose.png"))
 	$Control.visible = true
 	refresh()
@@ -88,7 +95,7 @@ func _on_ChemicalDrive_pressed():
 
 func _on_IonDrive_pressed():
 	reset_selected_drive_fuel()
-	add_fuel("atoms", "Ne", preload("res://Graphics/Atoms/Ne.png"))
+	add_fuel("atoms", "Ne", preload("res://Graphics/Atoms/Ne.png"), true)
 	add_fuel("atoms", "Xe", preload("res://Graphics/Atoms/Xe.png"))
 	$Control.visible = true
 	refresh()
@@ -106,8 +113,7 @@ func _on_h_slider_value_changed(value):
 		$Control/Cooldown.text = Helper.time_to_str(60 * pow(2, game.ships_travel_data.drives_used))
 	cost = $Control/HSlider.value
 	ships_time_reduction = ships_time_remaining - ships_time_remaining * (game.ships_travel_data.travel_cost / (game.ships_travel_data.travel_cost + cost * energy_per_quantity_of_fuel))
-	$Control/Label.text = "%s %s" % [Helper.format_num(cost, true), unit]
-	$Control/RsrcOwned.text = "%s %s" % [Helper.format_num(game[selected_fuel_type][fuel_selected], true), unit]
+	$Control/FuelAmount.text = "%s / %s %s" % [Helper.format_num(cost, true), Helper.format_num(game[selected_fuel_type][fuel_selected], true), unit]
 	$Control/Label2.text = Helper.time_to_str(ships_time_reduction)
 
 func _process(delta):

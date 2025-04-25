@@ -149,7 +149,7 @@ func _on_SpaceportTimer_timeout():
 			tween2.tween_property(get_node("ShipDetails/%s/TextureProgressBar" % [i+1, weapon]), "modulate", bar_colors[weapon.to_lower()], 1.0)
 			get_node("ShipDetails/%s/TextureRect" % [i+1, weapon]).texture = load("res://Graphics/Weapons/%s%s.png" % [weapon.to_lower(), weapon_data.lv])
 			get_node("ShipDetails/%s/TextureProgressBar" % [i+1, weapon]).max_value = INF if weapon_data.lv == 5 else weapon_data.XP_to_lv
-			get_node("ShipDetails/Stats/HP" % (i+1)).text = Helper.format_num(game.ship_data[i].total_HP * game.ship_data[i].HP_mult)
+			get_node("ShipDetails/Stats/HP" % (i+1)).text = Helper.format_num(game.ship_data[i].HP * game.ship_data[i].HP_mult)
 			get_node("ShipDetails/Stats/Atk" % (i+1)).text = Helper.format_num(game.ship_data[i].atk * game.ship_data[i].atk_mult)
 			get_node("ShipDetails/Stats/Def" % (i+1)).text = Helper.format_num(game.ship_data[i].def * game.ship_data[i].def_mult)
 			get_node("ShipDetails/Stats/Acc" % (i+1)).text = Helper.format_num(game.ship_data[i].acc * game.ship_data[i].acc_mult)

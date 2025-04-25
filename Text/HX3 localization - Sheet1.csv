@@ -429,7 +429,7 @@ SHIP_CONTROL_HELP,Construct a research lab to start producing science points.,Co
 RESEARCH_NEEDED,Research needed,,,科技尚未研究,Wissenschaft benötigt,Investigación requerida,,,Kutatás kell,要研究,Nodige onderzoekspunten,Необходимые исследования
 CLICK_TO_CONTROL_SHIP,Click to take control of this ship,Cliquez pour prendre le contrôle de ce vaisseau,,左键单击掌舵这艘船,Klicke um Kontrolle zu nehmen,Haz clic para tomar el control de esta nave,,,Kattints az űrhajó irányításához,クリックすると、この艦船を操縦することができます。,Klik om controle te nemen van dit schip,Нажмите чтобы взять под контроль этот корабль
 SEND_SHIPS,Send ships,Envoyer des vaisseaux,,派遣飞船,Schiffe senden,Enviar naves,,,Hajók küldése,艦船を送る,Stuur schepen,Отправить корабли
-SEND_SHIPS_DESC,Send ships to this planet to attack the enemies and conquer the planet!,Envoyez vos vaisseaux à cette planète pour attaquer les ennemis et conquérir la planète!,,派飞船到此星球去攻击敌人，统治这个星球！,Sende Schiffe zu dem Planeten um die Feinde anzugreifen und den Planeten einzunehmen!,¡Envía naves a este planeta para atacar a los enemigos y conquistarlo!,,,"Küldj űrhajókat erre a bolygóra, hogy megtámadd az ellenségeket, és foglald el a bolygót!",この星に艦船を送って敵を攻撃し、星を征服するのだ!,Stuur schepen naar deze planeet om de vijanden aan te vallen en de planeet te veroveren!,"Отправьте корабли на эту планету, чтобы атаковать врагов и завоевать планету!"
+CLICK_TO_SEND_SHIPS,Click to send ships to this planet to attack enemies and conquer the planet,,,,,,,,,,,
 ENEMIES,Enemies,Ennemis,,敌人,Gegner,Enemigos,,,Ellenségek,エネミー,Vijanden,Враги
 LESS_ENERGY,Less energy,Moins d'énergie,,更少的能源,Weniger Energie,Menos energía,,,Kevesebb energia,少ないエネルギー,Minder energie,Меньше энергии
 FASTER_TRAVEL,Faster travel,Voyage plus rapide,,更快的航行,Schneller reisen,Viaje más rápido,,,Gyorsabb út,移動時間の短縮,Snellere reis,Больше скорости
@@ -1505,7 +1505,7 @@ ACCURATE_SHIP,Accurate ship,,,精准打击飞船,Akkurates Schiff,,,,Pontos haj�
 AGILE,Agile,,,灵活,Agil,,,,Fürge,,,
 AGILE_SHIP,Agile ship,,,灵活性飞船,Agiles Schiff,,,,Fürge hajó,,,
 ENERGETIC,Energetic,,,能量型,Energetisch,,,,Energetikus,,,
-ENERGETIC_SHIP,Energic ship,,,能量型飞船,Energetisches Schiff,,,,Energetikus hajó,,,
+ENERGETIC_SHIP,Energetic ship,,,能量型飞船,Energetisches Schiff,,,,Energetikus hajó,,,
 SUPPORT,Support,,,,Unterstützung,,,,Támogató,,,
 SUPPORT_SHIP,Support ship,,,,Unterstüzungs Schiff,,,,Támogatóhajó,,,
 RECKLESS,Reckless,,,,Waghalsig,,,,Vakmerő,,,

@@ -13,7 +13,7 @@ var rover_has_items = false
 var probe_time_bars:Array = []
 
 func _ready():
-	set_polygon(size)
+	set_polygon($GUI.size, $GUI.position)
 	$HBoxContainer/Rovers._on_Button_pressed()
 	_on_rovers_pressed()
 

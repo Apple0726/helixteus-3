@@ -463,6 +463,7 @@ func show_planet_info(id:int, l_id:int):
 	else:
 		var tooltip:String = ""
 		var icons:Array = Data.desc_icons[p_i.bldg.name] if p_i.has("tile_num") and Data.desc_icons.has(p_i.bldg.name) else []
+		var additional_tooltip = ""
 		if p_i.has("tile_num"):
 			if p_i.bldg.name in [Building.BORING_MACHINE, Building.GREENHOUSE, Building.ATOM_MANIPULATOR, Building.SUBATOMIC_PARTICLE_REACTOR]:
 				tooltip += "%s (%s %s)\n%s" %  [p_i.name, Helper.format_num(p_i.tile_num), tr("%s_NAME_S" % Building.names[p_i.bldg.name].to_upper()).to_lower(), Helper.get_bldg_tooltip(p_i, p_i, 1)]
@@ -471,19 +472,19 @@ func show_planet_info(id:int, l_id:int):
 			else:
 				tooltip += "%s (%s %s)\n%s" %  [p_i.name, Helper.format_num(p_i.tile_num), tr("%s_NAME_S" % Building.names[p_i.bldg.name].to_upper()).to_lower(), Helper.get_bldg_tooltip(p_i, p_i, p_i.tile_num)]
 		else:
-			game.help_str = "planet_details"
 			var T_gradient:Gradient = preload("res://Resources/TemperatureGradient.tres")
 			var temp_color:String = T_gradient.sample(inverse_lerp(0, 500, p_i.temperature)).to_html(false)
 			var P_gradient:Gradient = preload("res://Resources/IntensityGradient.tres")
 			var pressure_color:String = P_gradient.sample(inverse_lerp(1, 150, p_i.pressure)).to_html(false)
 			tooltip = "%s\n%s: %s km (%sx%s)\n%s: %s AU\n%s: [color=#%s]%s °C (%s K)[/color]\n%s: [color=#%s]%s bar[/color]" % [p_i.name, tr("DIAMETER"), Helper.format_num(round(p_i.size), false, 9), wid, wid, tr("DISTANCE_FROM_STAR"), Helper.format_num(p_i.distance / 569.25, true), tr("SURFACE_TEMPERATURE"), temp_color, Helper.clever_round(p_i.temperature - 273, 4), Helper.clever_round(p_i.temperature, 4), tr("ATMOSPHERE_PRESSURE"), pressure_color, Helper.clever_round(p_i.pressure, 4)]
+			additional_tooltip = tr("CLICK_TO_SEND_SHIPS")
 			if p_i.has("conquered"):
-				tooltip += "\n%s" % tr("CTRL_CLICK_TO_SEND_SHIPS")
+				additional_tooltip = tr("CTRL_CLICK_TO_SEND_SHIPS")
 				if p_i.has("tile_num"):
-					tooltip += "\n%s" % tr("PRESS_F_TO_UPGRADE")
+					additional_tooltip += tr("PRESS_F_TO_UPGRADE")
 			if game.help.has("planet_details"):
-				tooltip += "\n%s\n%s" % [tr("MORE_DETAILS"), tr("HIDE_SHORTCUTS")]
-		game.show_adv_tooltip(tooltip, {"imgs": Helper.flatten(icons)})
+				additional_tooltip += "\n%s" % [tr("MORE_DETAILS")]
+		game.show_adv_tooltip(tooltip, {"additional_text":additional_tooltip, "additional_text_delay":1.5, "imgs": Helper.flatten(icons)})
 
 var MS_constr_data:Dictionary = {}
 var current_MS_action = ""

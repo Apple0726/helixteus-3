@@ -78,6 +78,7 @@ func _draw() -> void:
 		draw_string(SystemFont.new(), line_vector + 20.0 * Vector2.ONE, dist_str)
 
 func take_turn():
+	$Selected.show()
 	movement_remaining = total_movement
 	buffed_from_class_passive_ability = false
 	if ship_class == ShipClass.ENERGETIC and randf() < 0.3:
@@ -170,6 +171,7 @@ func fire_weapon(weapon_type: int):
 		for projectile in projectiles:
 			if is_instance_valid(projectile):
 				projectile.end_turn_ready = true
+				break
 	elif weapon_type == battle_GUI.LASER:
 		var laser = preload("res://Scenes/Battle/Weapons/Laser.tscn").instantiate()
 		laser.rotation = weapon_rotation
@@ -196,6 +198,7 @@ func fire_weapon(weapon_type: int):
 		explosive.position = position
 		explosive.battle_GUI = battle_GUI
 		explosive.ending_turn_delay = 1.0
+		explosive.end_turn_ready = true
 		battle_scene.add_child(explosive)
 		explosive.end_turn.connect(ending_turn)
 	elif weapon_type == battle_GUI.LIGHT:
@@ -215,6 +218,12 @@ func add_light_cone():
 func ending_turn(delay: float = 0.0):
 	create_tween().tween_callback(end_turn).set_delay(0.0 if battle_scene.animations_sped_up else delay)
 
+func end_turn():
+	if extra_attacks > 0:
+		battle_GUI.fade_in_main_panel()
+	else:
+		$Selected.hide()
+	super()
 
 func cancel_action():
 	if $FireWeaponAim.visible:

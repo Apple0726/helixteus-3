@@ -1,80 +1,93 @@
-[gd_scene load_steps=9 format=3 uid="uid://cvpplfu35gnas"]
+[gd_scene load_steps=13 format=3 uid="uid://cvpplfu35gnas"]
 
 [ext_resource type="PackedScene" uid="uid://c8jr3e5aiyj1n" path="res://Scenes/HelpText.tscn" id="1"]
 [ext_resource type="Theme" uid="uid://cp2u1kgj60ic" path="res://Resources/default_theme.tres" id="3"]
+[ext_resource type="Texture2D" uid="uid://dcvnyb0mloli2" path="res://Graphics/GUI/Panel.png" id="3_46286"]
 [ext_resource type="Texture2D" uid="uid://bm01hxs45q3ga" path="res://Graphics/Icons/energy.png" id="4"]
 [ext_resource type="Texture2D" uid="uid://bn8t8jmrkuvdk" path="res://Graphics/Icons/Time.png" id="5"]
 [ext_resource type="Script" uid="uid://djfo8mhq1c7vi" path="res://Scripts/SendShipsPanel.gd" id="6"]
-[ext_resource type="PackedScene" uid="uid://ddf2xjwcht77u" path="res://Scenes/CloseButton.tscn" id="8"]
+[ext_resource type="Texture2D" uid="uid://baowebna7hgr5" path="res://Graphics/GUI/CloseButtonNormal.png" id="7_5nkn3"]
+[ext_resource type="Texture2D" uid="uid://c1vwn7p5uxu1r" path="res://Graphics/GUI/CloseButtonHover.png" id="8_vqg11"]
+
+[sub_resource type="SystemFont" id="SystemFont_l1il0"]
+font_names = PackedStringArray("Arial")
+subpixel_positioning = 0
+multichannel_signed_distance_field = true
+
+[sub_resource type="LabelSettings" id="LabelSettings_avvnr"]
+font = SubResource("SystemFont_l1il0")
+font_size = 24
+shadow_size = 2
+shadow_color = Color(0, 0, 0, 0.372549)
+shadow_offset = Vector2(2, 2)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_nwrf5"]
 bg_color = Color(0.172549, 0.172549, 0.172549, 1)
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_w728i"]
 
-[node name="SendShipsPanel" type="Panel"]
+[node name="SendShipsPanel" type="Control"]
+layout_mode = 3
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -532.0
-offset_top = -300.0
-offset_right = 532.0
-offset_bottom = 300.0
+offset_left = -640.0
+offset_top = -360.0
+offset_right = -608.0
+offset_bottom = -328.0
 grow_horizontal = 2
 grow_vertical = 2
 theme = ExtResource("3")
 script = ExtResource("6")
 
+[node name="GUI" type="TextureRect" parent="."]
+offset_left = 80.0
+offset_top = 52.0
+offset_right = 1204.0
+offset_bottom = 671.0
+mouse_filter = 2
+texture = ExtResource("3_46286")
+metadata/_edit_lock_ = true
+
+[node name="CloseButton" type="TextureButton" parent="."]
+offset_left = 1138.0
+offset_top = 68.0
+offset_right = 1187.0
+offset_bottom = 117.0
+texture_normal = ExtResource("7_5nkn3")
+texture_hover = ExtResource("8_vqg11")
+
 [node name="Title" type="Label" parent="."]
 custom_minimum_size = Vector2(0, 38)
 layout_mode = 1
-anchors_preset = 10
-anchor_right = 1.0
-offset_bottom = 38.0
-grow_horizontal = 2
+offset_left = 128.0
+offset_top = 72.0
+offset_right = 268.0
+offset_bottom = 110.0
 theme_override_font_sizes/font_size = 18
 text = "SEND_SHIPS"
-horizontal_alignment = 1
-vertical_alignment = 1
-
-[node name="CloseButton" parent="." instance=ExtResource("8")]
-layout_mode = 0
-anchors_preset = 0
-anchor_left = 0.0
-anchor_right = 0.0
-offset_left = 1032.0
-offset_top = 8.0
-offset_right = 1056.0
-offset_bottom = 32.0
-grow_horizontal = 1
-
-[node name="Desc" type="Label" parent="."]
-layout_mode = 0
-offset_top = 48.0
-offset_right = 1064.0
-offset_bottom = 85.0
-text = "SEND_SHIPS_DESC"
+label_settings = SubResource("LabelSettings_avvnr")
 horizontal_alignment = 1
 vertical_alignment = 1
 
 [node name="Enemies" type="Label" parent="."]
 layout_mode = 0
-offset_left = 24.0
-offset_top = 104.0
-offset_right = 450.0
-offset_bottom = 141.0
+offset_left = 128.0
+offset_top = 140.0
+offset_right = 554.0
+offset_bottom = 177.0
 text = "ENEMIES"
 horizontal_alignment = 1
 vertical_alignment = 1
 
 [node name="Scroll" type="ScrollContainer" parent="."]
 layout_mode = 0
-offset_left = 24.0
-offset_top = 144.0
-offset_right = 450.0
-offset_bottom = 576.0
+offset_left = 128.0
+offset_top = 180.0
+offset_right = 554.0
+offset_bottom = 620.0
 size_flags_vertical = 3
 theme_override_styles/panel = SubResource("StyleBoxFlat_nwrf5")
 
@@ -85,46 +98,46 @@ size_flags_vertical = 3
 
 [node name="TotalEnergyCost" type="Label" parent="."]
 layout_mode = 0
-offset_left = 460.0
-offset_top = 456.0
-offset_right = 736.0
-offset_bottom = 482.0
+offset_left = 580.0
+offset_top = 512.0
+offset_right = 856.0
+offset_bottom = 538.0
 text = "TOTAL_COST"
 horizontal_alignment = 2
 
 [node name="Send" type="Button" parent="."]
 layout_mode = 0
-offset_left = 936.0
-offset_top = 552.0
-offset_right = 1060.0
-offset_bottom = 592.0
+offset_left = 1056.0
+offset_top = 608.0
+offset_right = 1180.0
+offset_bottom = 648.0
 text = "SEND"
 
 [node name="TotalEnergyCost2" type="Label" parent="."]
 layout_mode = 0
-offset_left = 816.0
-offset_top = 456.0
-offset_right = 1000.0
-offset_bottom = 482.0
+offset_left = 936.0
+offset_top = 512.0
+offset_right = 1120.0
+offset_bottom = 538.0
 text = "100"
 vertical_alignment = 1
 
 [node name="EnergyIcon3" type="TextureRect" parent="."]
 layout_mode = 0
-offset_left = 764.0
-offset_top = 452.0
-offset_right = 796.0
-offset_bottom = 484.0
+offset_left = 884.0
+offset_top = 508.0
+offset_right = 916.0
+offset_bottom = 540.0
 texture = ExtResource("4")
 expand_mode = 1
 stretch_mode = 5
 
 [node name="EnergyIcon2" type="TextureRect" parent="."]
 layout_mode = 0
-offset_left = 764.0
-offset_top = 364.0
-offset_right = 796.0
-offset_bottom = 396.0
+offset_left = 884.0
+offset_top = 420.0
+offset_right = 916.0
+offset_bottom = 452.0
 texture = ExtResource("4")
 expand_mode = 1
 stretch_mode = 5
@@ -134,19 +147,19 @@ layout_mode = 1
 anchors_preset = -1
 anchor_top = 0.00333333
 anchor_bottom = 0.00333333
-offset_left = 816.0
-offset_top = 366.0
-offset_right = 988.0
-offset_bottom = 396.0
+offset_left = 936.0
+offset_top = 422.0
+offset_right = 1108.0
+offset_bottom = 452.0
 adv_help = true
 translate_help = false
 
 [node name="PlanetEECost" parent="." instance=ExtResource("1")]
 layout_mode = 0
-offset_left = 464.0
-offset_top = 368.0
-offset_right = 736.0
-offset_bottom = 398.0
+offset_left = 584.0
+offset_top = 424.0
+offset_right = 856.0
+offset_bottom = 454.0
 text = "[right]PLANET_EE_COST [img]Graphics/Icons/help.png[/img][/right]"
 label_text = "PLANET_EE_COST"
 help_text = "PLANET_EE_COST_DESC"
@@ -154,10 +167,10 @@ align = 2
 
 [node name="Panel" type="Panel" parent="."]
 layout_mode = 0
-offset_left = 472.0
-offset_top = 144.0
-offset_right = 1040.0
-offset_bottom = 348.0
+offset_left = 592.0
+offset_top = 200.0
+offset_right = 1160.0
+offset_bottom = 404.0
 theme_override_styles/panel = SubResource("StyleBoxEmpty_w728i")
 
 [node name="HSlider" type="HSlider" parent="Panel"]
@@ -244,13 +257,13 @@ stretch_mode = 5
 
 [node name="Drive" type="OptionButton" parent="."]
 layout_mode = 0
-offset_left = 636.0
-offset_top = 100.0
-offset_right = 895.0
-offset_bottom = 134.0
+offset_left = 756.0
+offset_top = 156.0
+offset_right = 1015.0
+offset_bottom = 190.0
 alignment = 1
 
-[connection signal="close_button_pressed" from="CloseButton" to="." method="_on_close_button_pressed"]
+[connection signal="pressed" from="CloseButton" to="." method="_on_close_button_pressed"]
 [connection signal="pressed" from="Send" to="." method="_on_send_pressed"]
 [connection signal="value_changed" from="Panel/HSlider" to="." method="_on_h_slider_value_changed"]
 [connection signal="item_selected" from="Drive" to="." method="_on_drive_item_selected"]

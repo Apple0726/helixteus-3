@@ -116,7 +116,7 @@ size_flags_horizontal = 3
 disabled = true
 text = "CONFIRM"
 
-[node name="Ship0" type="TextureRect" parent="."]
+[node name="Ship" type="TextureRect" parent="."]
 layout_mode = 0
 offset_left = 172.0
 offset_top = 84.0
@@ -125,6 +125,15 @@ offset_bottom = 212.0
 texture = ExtResource("1_krjc3")
 expand_mode = 1
 stretch_mode = 5
+
+[node name="Level" type="Label" parent="Ship"]
+layout_mode = 0
+offset_left = 32.0
+offset_top = -32.0
+offset_right = 236.0
+offset_bottom = -9.0
+text = "Lv 1"
+horizontal_alignment = 1
 
 [node name="ShipStats" type="Panel" parent="."]
 layout_mode = 0

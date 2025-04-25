@@ -29,7 +29,6 @@ const ANCIENT_BLDGS = 7
 #var slot_scene = preload("res://Scenes/InventorySlot.tscn")
 #var white_rect_scene = preload("res://Scenes/WhiteRect.tscn")
 #var mass_build_rect = preload("res://Scenes/MassBuildRect.tscn")
-#var wormhole_scene = preload("res://Scenes/Wormhole.tscn")
 #endregion
 
 #var surface_BG = preload("res://Graphics/Decoratives/Surface.jpg")
@@ -3654,8 +3653,8 @@ func show_adv_tooltip(txt:String, params:Dictionary = {}):
 	tooltip.imgs = params.get("imgs", [])
 	tooltip.imgs_size = params.get("size", 17)
 	Helper.add_text_icons(tooltip, txt, tooltip.imgs, tooltip.imgs_size, true)
-	if params.has("additional_text"):
-		tooltip.show_additional_text(params.additional_text)
+	if params.get("additional_text", "") != "":
+		tooltip.show_additional_text(params.additional_text, params.get("additional_text_delay", 1.0))
 
 func show_tooltip(txt:String):
 	if is_instance_valid(tooltip):
@@ -4579,14 +4578,14 @@ func get_1st_ship():
 func get_2nd_ship():
 	if len(ship_data) == 1:
 		add_new_ship_data()
-		Helper.add_ship_XP(1, 2000)
+		Helper.add_ship_XP(1, 300)
 		if not achievement_data.progression.has("2nd_ship"):
 			earn_achievement("progression", "2nd_ship")
 
 func get_3rd_ship():
 	if len(ship_data) == 2:
 		add_new_ship_data()
-		Helper.add_ship_XP(2, 60000)
+		Helper.add_ship_XP(2, 15000)
 		if not achievement_data.progression.has("3rd_ship"):
 			earn_achievement("progression", "3rd_ship")
 
@@ -4594,7 +4593,7 @@ func get_4th_ship():
 	if len(ship_data) == 3:
 		popup(tr("SHIP_CONTROL_SUCCESS"), 1.5)
 		add_new_ship_data()
-		Helper.add_ship_XP(3, 1000000)
+		Helper.add_ship_XP(3, 250000)
 		if not achievement_data.progression.has("4th_ship"):
 			earn_achievement("progression", "4th_ship")
 

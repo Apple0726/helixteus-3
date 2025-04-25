@@ -144,7 +144,7 @@ func _ready():
 				if len(game.ship_data) == 0:
 					$Obstacles.set_cell(Vector2i(i, j), 1, Vector2(0, 0))
 			elif tile.has("wormhole"):
-				wormhole = game.wormhole_scene.instantiate()
+				wormhole = preload("res://Scenes/Wormhole.tscn").instantiate()
 				wormhole.get_node("Active").visible = tile.wormhole.active
 				wormhole.get_node("Inactive").visible = not tile.wormhole.active
 				wormhole.position = Vector2(i, j) * 200 + Vector2(100, 100)
@@ -261,6 +261,7 @@ func show_tooltip(tile, tile_id:int):
 	var icons = []
 	var fiery_tooltip:int = -1
 	var fire_strength:float = 0.0
+	var additional_tooltip = ""
 	if tile.has("bldg"):
 		tooltip = tr(Building.names[tile.bldg.name].to_upper() + "_NAME") + "\n"
 		tooltip += Helper.get_bldg_tooltip(p_i, tile, 1)
@@ -326,12 +327,9 @@ func show_tooltip(tile, tile_id:int):
 	elif tile.has("crater") and tile.crater.has("init_depth"):
 		if tile.has("aurora"):
 			tooltip = "[aurora au_int=%s]" % tile.aurora
-		if game.help_str == "":
-			game.help_str = "crater_desc"
-		if game.help.has("crater_desc"):
-			tooltip += tr("METAL_CRATER").format({"metal":tr(tile.crater.metal.to_upper()), "crater":tr("CRATER")}) + "[color=#BBFFFF]\n%s\n[/color][color=#77BBBB]%s[/color]\n%s" % [tr("CRATER_DESC"), tr("HIDE_HELP"), tr("HOLE_DEPTH") + ": %s m"  % Helper.format_num(tile.depth)]
-		else:
-			tooltip += tr("METAL_CRATER").format({"metal":tr(tile.crater.metal.to_upper()), "crater":tr("CRATER")}) + "\n%s" % [tr("HOLE_DEPTH") + ": %s m"  % Helper.format_num(tile.depth)]
+		tooltip += tr("METAL_CRATER").format({"metal":tr(tile.crater.metal.to_upper()), "crater":tr("CRATER")})
+		tooltip += "\n%s: %s m" % [tr("HOLE_DEPTH"), Helper.format_num(tile.depth)]
+		additional_tooltip = tr("CRATER_DESC")
 	elif tile.has("cave"):
 		var au_str:String = ""
 		if tile.has("aurora"):
@@ -393,19 +391,11 @@ func show_tooltip(tile, tile_id:int):
 				tooltip += "[color=#BBFFFF]" + tr("ABANDONED_SHIP") + "\n[/color][color=#77BBBB]" + tr("HIDE_HELP") + "[/color]"
 	elif tile.has("wormhole"):
 		if tile.wormhole.active:
-			if game.help_str == "":
-				game.help_str = "active_wormhole"
-			if game.help.has("active_wormhole"):
-				tooltip = "%s[color=#BBFFFF]\n%s[/color][color=#77BBBB]\n%s[/color]" % [tr("ACTIVE_WORMHOLE"), tr("ACTIVE_WORMHOLE_DESC"), tr("HIDE_HELP")]
-			else:
-				tooltip = tr("ACTIVE_WORMHOLE")
+			additional_tooltip = tr("ACTIVE_WORMHOLE_DESC")
+			tooltip = tr("ACTIVE_WORMHOLE")
 		else:
-			if game.help_str == "":
-				game.help_str = "inactive_wormhole"
-			if game.help.has("inactive_wormhole"):
-				tooltip = "%s[color=#BBFFFF]\n%s[/color][color=#77BBBB]\n%s[/color]" % [tr("INACTIVE_WORMHOLE"), tr("INACTIVE_WORMHOLE_DESC"), tr("HIDE_HELP")]
-			else:
-				tooltip = tr("INACTIVE_WORMHOLE")
+			additional_tooltip = tr("INACTIVE_WORMHOLE_DESC")
+			tooltip = tr("INACTIVE_WORMHOLE")
 			var wh_costs:Dictionary = get_wh_costs()
 			if not tile.wormhole.has("investigation_length"):
 				tooltip += "\n%s: @i %s  @i %s" % [tr("INVESTIGATION_COSTS"), Helper.format_num(wh_costs.SP), Helper.time_to_str(wh_costs.time)]
@@ -441,7 +431,7 @@ func show_tooltip(tile, tile_id:int):
 			real_time_speed_bonus = Helper.clever_round(log(game.u_i.time_speed * tile.time_speed_bonus - 1.0 + exp(1.0)) / log(game.u_i.time_speed - 1.0 + exp(1.0)))
 		tooltip += ("\n" if tooltip != "" else "") + "[color=#FFBBBB]" + tr("TIME_FLOWS_X_FASTER_HERE") % real_time_speed_bonus + "[/color]"
 	if tooltip != "":
-		game.show_adv_tooltip(tooltip, {"imgs": icons})
+		game.show_adv_tooltip(tooltip, {"imgs": icons, "additional_text": additional_tooltip, "additional_text_delay": 1.5})
 	if fiery_tooltip != -1 and is_instance_valid(game.tooltip):
 		game.tooltip.get_node("ColorRect").visible = true
 		game.tooltip.get_node("ColorRect").material.set_shader_parameter("seed", fiery_tooltip)
