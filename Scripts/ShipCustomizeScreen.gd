@@ -2,6 +2,7 @@ extends Control
 
 @onready var game = get_node("/root/Game")
 
+var respeccing = false
 var ship_id:int
 var ship_data:Dictionary
 var allocatable_points:int
@@ -29,29 +30,20 @@ func _ready() -> void:
 	ship_data = game.ship_data[ship_id].duplicate()
 	$Ship/Level.text = "%s %s" % [tr("LEVEL"), ship_data.lv]
 	allocatable_points = (ship_data.lv - 1) / 2 + 2
-	if ship_data.ship_class == ShipClass.STANDARD:
-		$ShipClass/VBox/VBox/Standard._on_Button_pressed()
-	elif ship_data.ship_class == ShipClass.OFFENSIVE:
-		$ShipClass/VBox/VBox/Offensive._on_Button_pressed()
-	elif ship_data.ship_class == ShipClass.DEFENSIVE:
-		$ShipClass/VBox/VBox/Defensive._on_Button_pressed()
-	elif ship_data.ship_class == ShipClass.ACCURATE:
-		$ShipClass/VBox/VBox/Accurate._on_Button_pressed()
-	elif ship_data.ship_class == ShipClass.AGILE:
-		$ShipClass/VBox/VBox/Agile._on_Button_pressed()
-	elif ship_data.ship_class == ShipClass.ENERGETIC:
-		$ShipClass/VBox/VBox/Energetic._on_Button_pressed()
-	elif ship_data.ship_class == ShipClass.SUPPORT:
-		$ShipClass/VBox/VBox/Support._on_Button_pressed()
-	elif ship_data.ship_class == ShipClass.RECKLESS:
-		$ShipClass/VBox/VBox/Reckless._on_Button_pressed()
-	elif ship_data.ship_class == ShipClass.IMPENETRABLE:
-		$ShipClass/VBox/VBox/Impenetrable._on_Button_pressed()
-	elif ship_data.ship_class == ShipClass.UBER:
-		$ShipClass/VBox/VBox/Uber._on_Button_pressed()
+	$ShipClass/Vbox/VBox.get_child(ship_data.ship_class)._on_Button_pressed()
+	for i in ShipClass.N:
+		$ShipClass/VBox/VBox.get_child(i).pressed.connect(update_ship_stats_after_class_change.bind(i))
+	if not respeccing:
+		allocated_HP = ship_data.allocated_HP
+		allocated_attack = ship_data.allocated_attack
+		allocated_defense = ship_data.allocated_defense
+		allocated_accuracy = ship_data.allocated_accuracy
+		allocated_agility = ship_data.allocated_agility
+		for class_btn in $ShipClass/VBox/VBox.get_children():
+			class_btn.disabled = true
 	update_ship_stats_display()
 
-func update_ship_stats(ship_class: int):
+func update_ship_stats_after_class_change(ship_class: int):
 	ship_data.ship_class = ship_class
 	allocated_HP = 0
 	allocated_attack = 0
@@ -67,6 +59,11 @@ func update_ship_stats_display():
 	ship_data.defense = 10 + ShipClass.class_modifiers[ship_class].defense + allocated_defense
 	ship_data.accuracy = 10 + ShipClass.class_modifiers[ship_class].accuracy + allocated_accuracy
 	ship_data.agility = 10 + ShipClass.class_modifiers[ship_class].agility + allocated_agility
+	ship_data.allocated_HP = allocated_HP
+	ship_data.allocated_attack = allocated_attack
+	ship_data.allocated_defense = allocated_defense
+	ship_data.allocated_accuracy = allocated_accuracy
+	ship_data.allocated_agility = allocated_agility
 	$ShipStats/HPLabel.text = str(ship_data.HP)
 	$ShipStats/AttackLabel.text = str(ship_data.attack)
 	$ShipStats/DefenseLabel.text = str(ship_data.defense)
@@ -107,15 +104,26 @@ func update_ship_stats_display():
 	$ShipStats/AddAccuracy.disabled = no_more_allocatable_points
 	$ShipStats/AddAgility.disabled = no_more_allocatable_points
 
+func customize_next_ship():
+	for i in len(game.ship_data):
+		if ship_id == i:
+			continue
+		if game.ship_data[i].has("show_ship_customize_screen"):
+			game.switch_view("ship_customize_screen", {"ship_id":i})
+			return
+	game.switch_view(game.l_v)
 
 func _on_done_pressed() -> void:
 	game.ship_data[ship_id] = ship_data.duplicate()
-	game.ship_data[ship_id].respec_count += 1
-	game.switch_view(game.l_v)
+	if respeccing:
+		game.ship_data[ship_id].respec_count += 1
+	else:
+		game.ship_data[ship_id].erase("show_ship_customize_screen")
+	customize_next_ship()
 
 
 func _on_cancel_pressed() -> void:
-	game.switch_view(game.l_v)
+	customize_next_ship()
 
 
 func _on_add_hp_pressed() -> void:

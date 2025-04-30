@@ -1,6 +1,6 @@
 [gd_scene load_steps=8 format=4 uid="uid://bmmss4usqtscn"]
 
-[ext_resource type="PackedScene" path="res://Scenes/WhiteRect.tscn" id="1"]
+[ext_resource type="PackedScene" uid="uid://dixixiv5ynvkf" path="res://Scenes/WhiteRect.tscn" id="1"]
 [ext_resource type="Script" uid="uid://djr5eelx8hx0" path="res://Scripts/Planet.gd" id="3"]
 [ext_resource type="Script" uid="uid://y0df6t08tenm" path="res://Scripts/BadApple.gd" id="7_yxni4"]
 [ext_resource type="Texture2D" uid="uid://cdblvpftr6875" path="res://icon.png" id="12"]
@@ -35,7 +35,6 @@ mouse_filter = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_g1ur1")
 
 [node name="PlanetTiles" type="TileMapLayer" parent="."]
-use_parent_material = true
 tile_map_data = PackedByteArray("AAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAACAAAAAAAAAAAAAAADAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAABAAEAAAAAAAAAAAACAAEAAAAAAAAAAAADAAEAAAAAAAAAAAA=")
 
 [node name="Lakes1" type="TileMapLayer" parent="."]

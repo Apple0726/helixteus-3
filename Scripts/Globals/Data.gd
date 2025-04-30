@@ -564,7 +564,6 @@ var default_help = {
 				"rover_shortcuts":true,
 				"mass_buy":true,
 				"rover_inventory_shortcuts":true,
-				"abandoned_ship":true,
 				"science_tree":true,
 				"sprint_mode":true,
 				"cave_controls":true,

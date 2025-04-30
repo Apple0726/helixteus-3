@@ -1,58 +1,86 @@
-[gd_scene load_steps=4 format=3 uid="uid://b8i2nx6456f0t"]
+[gd_scene load_steps=8 format=3 uid="uid://b8i2nx6456f0t"]
 
 [ext_resource type="Script" uid="uid://dh30edm5xmv1l" path="res://Scripts/LoadPanel.gd" id="1"]
 [ext_resource type="Theme" uid="uid://cp2u1kgj60ic" path="res://Resources/default_theme.tres" id="3"]
-[ext_resource type="PackedScene" uid="uid://ddf2xjwcht77u" path="res://Scenes/CloseButton.tscn" id="5"]
+[ext_resource type="Texture2D" uid="uid://dcvnyb0mloli2" path="res://Graphics/GUI/Panel.png" id="3_cla8g"]
+[ext_resource type="Texture2D" uid="uid://baowebna7hgr5" path="res://Graphics/GUI/CloseButtonNormal.png" id="4_b4wxd"]
+[ext_resource type="Texture2D" uid="uid://c1vwn7p5uxu1r" path="res://Graphics/GUI/CloseButtonHover.png" id="5_jfijo"]
 
-[node name="LoadPanel" type="Panel"]
-custom_minimum_size = Vector2(576, 0)
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -448.0
-offset_top = -120.0
-offset_right = 448.0
-offset_bottom = 152.0
-grow_horizontal = 0
+[sub_resource type="SystemFont" id="SystemFont_l1il0"]
+font_names = PackedStringArray("Arial")
+subpixel_positioning = 0
+multichannel_signed_distance_field = true
+
+[sub_resource type="LabelSettings" id="LabelSettings_cla8g"]
+font = SubResource("SystemFont_l1il0")
+font_size = 24
+shadow_size = 2
+shadow_color = Color(0, 0, 0, 0.372549)
+shadow_offset = Vector2(2, 2)
+
+[node name="LoadPanel" type="Control"]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 32.0
+offset_bottom = 32.0
 mouse_filter = 1
 theme = ExtResource("3")
 script = ExtResource("1")
+metadata/_edit_horizontal_guides_ = [360.0]
 
-[node name="Label" type="Label" parent="."]
-custom_minimum_size = Vector2(0, 38)
-layout_mode = 0
-anchor_right = 1.0
-offset_bottom = 24.0
-size_flags_vertical = 3
-text = "LOAD_GAME"
-horizontal_alignment = 1
-vertical_alignment = 1
+[node name="GUI" type="NinePatchRect" parent="."]
+offset_left = 192.0
+offset_top = 192.0
+offset_right = 1088.0
+offset_bottom = 544.0
+texture = ExtResource("3_cla8g")
+patch_margin_left = 408
+patch_margin_top = 80
+patch_margin_right = 80
+patch_margin_bottom = 64
+axis_stretch_horizontal = 1
+metadata/_edit_horizontal_guides_ = [596.0]
+
+[node name="CloseButton" type="TextureButton" parent="."]
+offset_left = 1022.0
+offset_top = 208.0
+offset_right = 1071.0
+offset_bottom = 257.0
+texture_normal = ExtResource("4_b4wxd")
+texture_hover = ExtResource("5_jfijo")
 
 [node name="ScrollContainer" type="ScrollContainer" parent="."]
-layout_mode = 0
+layout_mode = 1
+anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = 24.0
-offset_top = 40.0
-offset_right = -24.0
-offset_bottom = -64.0
+offset_left = 236.0
+offset_top = 288.0
+offset_right = 1012.0
+offset_bottom = 416.0
+grow_horizontal = 2
+grow_vertical = 2
 
 [node name="VBox" type="VBoxContainer" parent="ScrollContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="TextureButton" parent="." instance=ExtResource("5")]
+[node name="Label" type="Label" parent="."]
+custom_minimum_size = Vector2(0, 38)
 layout_mode = 1
-offset_left = -32.0
-offset_top = 8.0
-offset_right = -8.0
-offset_bottom = 32.0
+offset_left = 236.0
+offset_top = 212.0
+offset_right = 381.0
+offset_bottom = 250.0
+size_flags_vertical = 3
+text = "LOAD_GAME"
+label_settings = SubResource("LabelSettings_cla8g")
+horizontal_alignment = 1
+vertical_alignment = 1
 
 [node name="Import" type="FileDialog" parent="."]
 title = "Import save"
-size = Vector2i(898, 400)
+size = Vector2i(963, 400)
 ok_button_text = "Open"
 mode_overrides_title = false
 file_mode = 0
@@ -71,20 +99,18 @@ layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = -192.0
-offset_top = -216.0
-offset_right = 192.0
-offset_bottom = 232.0
+offset_right = 1248.0
+offset_bottom = 688.0
 grow_horizontal = 2
 grow_vertical = 2
 color = Color(0, 0, 0, 0.564706)
 
 [node name="HBoxContainer" type="HBoxContainer" parent="."]
 layout_mode = 0
-offset_left = 220.0
-offset_top = 212.0
-offset_right = 708.0
-offset_bottom = 252.0
+offset_left = 404.0
+offset_top = 476.0
+offset_right = 892.0
+offset_bottom = 516.0
 theme_override_constants/separation = 20
 alignment = 1
 
@@ -96,7 +122,7 @@ text = "IMPORT_SAVE"
 layout_mode = 2
 text = "SHOW_IN_FILE_MANAGER"
 
-[connection signal="close_button_pressed" from="TextureButton" to="." method="_on_close_button_pressed"]
+[connection signal="pressed" from="CloseButton" to="." method="_on_close_button_pressed"]
 [connection signal="file_selected" from="Import" to="." method="_on_Import_file_selected"]
 [connection signal="visibility_changed" from="Import" to="." method="_on_import_visibility_changed"]
 [connection signal="file_selected" from="Export" to="." method="_on_Export_file_selected"]

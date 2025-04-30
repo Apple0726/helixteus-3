@@ -74,7 +74,7 @@ var annotator:Control
 var mods:Control
 var wiki:Panel
 var stats_panel:Panel
-var load_save_panel:Panel
+var load_save_panel:Control
 var tooltip
 var panel_var_name_to_file_name = {
 	"upgrade_panel":"Upgrade",
@@ -640,10 +640,6 @@ func load_univ():
 				stats_univ[stat] = val.duplicate(true)
 			else:
 				stats_univ[stat] = val
-	ship_data[0].bullet = [1, 1, 1]
-	ship_data[0].laser = [1, 1, 1]
-	ship_data[0].bomb = [1, 1, 1]
-	ship_data[0].light = [1, 1, 1]
 	u_i = universe_data[c_u]
 	if science_unlocked.has("CI"):
 		stack_size = 32
@@ -1117,11 +1113,6 @@ func new_game(univ:int = 0, new_save:bool = false, DR_advantage = false):
 	$Autosave.start()
 	var init_time = Time.get_unix_time_from_system()
 	add_panels()
-	view.modulate.a = 0
-	view.first_zoom = true
-	view.progress = 0
-	view.zoom_factor = 1.03
-	view.zooming = "in"
 	view.set_process(true)
 	set_c_sv(c_sv)
 
@@ -2079,6 +2070,11 @@ func add_planet(new_game:bool = false):
 		view.scale = Vector2.ONE * 0.1
 		var wid = Helper.get_wid(planet_data[c_p].size)
 		view.position = Vector2(640-wid*100*0.1, 360-wid*100*0.1)
+		view.zoom_tween = create_tween().set_parallel()
+		view.zoom_tween.tween_property(view, "scale", Vector2.ONE * 0.5, 5.0).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_CIRC).set_delay(0.5)
+		view.zoom_tween.tween_property(view, "position", view.position - Vector2.ONE * 200.0 * 8.0 * view.scale.x * (5.0 - 1.0), 5.0).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_CIRC).set_delay(0.5)
+		view.modulate.a = 0.0
+		create_tween().tween_property(view, "modulate:a", 1.0, 3.0).set_delay(0.5)
 	view.obj.icons_hidden = view.scale.x >= 0.25
 
 func remove_dimension():
@@ -3654,7 +3650,7 @@ func show_adv_tooltip(txt:String, params:Dictionary = {}):
 	tooltip.imgs_size = params.get("size", 17)
 	Helper.add_text_icons(tooltip, txt, tooltip.imgs, tooltip.imgs_size, true)
 	if params.get("additional_text", "") != "":
-		tooltip.show_additional_text(params.additional_text, params.get("additional_text_delay", 1.0))
+		tooltip.show_additional_text(params.additional_text, params.get("additional_text_delay", 1.0), params.get("different_orig_text", ""))
 
 func show_tooltip(txt:String):
 	if is_instance_valid(tooltip):
@@ -4560,6 +4556,12 @@ func add_new_ship_data():
 		"bomb": [1, 1, 1],
 		"light": [1, 1, 1],
 		"respec_count": 0,
+		"allocated_HP":0,
+		"allocated_attack":0,
+		"allocated_defense":0,
+		"allocated_accuracy":0,
+		"allocated_agility":0,
+		"show_ship_customize_screen": true,
 		"ship_class":ShipClass.STANDARD,
 	})
 	if len(ship_data) == 1:

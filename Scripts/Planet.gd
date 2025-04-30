@@ -258,6 +258,7 @@ func show_tooltip(tile, tile_id:int):
 	if tile == null:
 		return
 	var tooltip:String = ""
+	var different_orig_tooltip:String = ""
 	var icons = []
 	var fiery_tooltip:int = -1
 	var fire_strength:float = 0.0
@@ -318,12 +319,9 @@ func show_tooltip(tile, tile_id:int):
 			tooltip += tr("BROKEN_BLDG_DESC2") % Helper.format_num(tile.ancient_bldg.repair_cost, true)
 			icons.append(Data.money_icon)
 	elif tile.has("volcano"):
-		if game.help_str == "":
-			game.help_str = "volcano_desc"
-		if not game.help.has("volcano_desc"):
-			tooltip = "%s\n[color=#BBFFFF]%s\n[/color][color=#77BBBB]%s[/color]\n%s: %s" % [tr("VOLCANO"), tr("VOLCANO_DESC"), tr("HIDE_HELP"), tr("LARGEST_VEI") % ("(" + tr("VEI") + ") "), Helper.clever_round(tile.volcano.VEI)]
-		else:
-			tooltip = "%s\n%s: %s" % [tr("VOLCANO"), tr("LARGEST_VEI") % "", Helper.clever_round(tile.volcano.VEI)]
+		tooltip = "%s\n%s: %s" % [tr("VOLCANO"), tr("LARGEST_VEI") % "", Helper.clever_round(tile.volcano.VEI)]
+		different_orig_tooltip = "%s\n%s: %s" % [tr("VOLCANO"), tr("LARGEST_VEI") % ("(" + tr("VEI") + ") "), Helper.clever_round(tile.volcano.VEI)]
+		additional_tooltip = tr("VOLCANO_DESC")
 	elif tile.has("crater") and tile.crater.has("init_depth"):
 		if tile.has("aurora"):
 			tooltip = "[aurora au_int=%s]" % tile.aurora
@@ -350,14 +348,13 @@ func show_tooltip(tile, tile_id:int):
 				else:
 					tooltip += " [color=#FFFF00](%s)[/color]" % (tr("EXPLORED_X") % caves_data[tile_id])
 			tooltip += "\n%s" % floor_size
-			if game.help.has("cave_controls"):
-				tooltip += "\n[color=#88CCFF]%s[/color]" % [tr("CLICK_CAVE_TO_EXPLORE")]
+			additional_tooltip = tr("CLICK_CAVE_TO_EXPLORE")
 		if tile.cave.has("modifiers"):
 			tooltip += Helper.get_modifier_string(tile.cave.modifiers, au_str, icons)
 		if Settings.cave_gen_info:
 			tooltip += "\n%s: %s\n%s: %.2f" % [tr("PERIOD"), tile.cave.get("period", 0), tr("AMOUNT_OF_DEBRIS"), tile.cave.get("debris", 0)]
 	elif tile.has("ash"):
-			tooltip = "%s\n%s: %s" % [tr("VOLCANIC_ASH"), tr("MINERAL_RICHNESS"), Helper.clever_round(tile.ash.richness)]
+		tooltip = "%s\n%s: %s" % [tr("VOLCANIC_ASH"), tr("MINERAL_RICHNESS"), Helper.clever_round(tile.ash.richness)]
 	elif tile.has("lake"):
 		var lake_info = p_i["lake_%s" % tile.lake]
 		if lake_info.state == "s" and lake_info.element == "H2O":
@@ -385,10 +382,7 @@ func show_tooltip(tile, tile_id:int):
 		if game.science_unlocked.has("SCT"):
 			tooltip += tr("CLICK_TO_CONTROL_SHIP")
 		else:
-			if game.help_str == "":
-				game.help_str = "abandoned_ship"
-			if game.help.has("abandoned_ship"):
-				tooltip += "[color=#BBFFFF]" + tr("ABANDONED_SHIP") + "\n[/color][color=#77BBBB]" + tr("HIDE_HELP") + "[/color]"
+			tooltip += "[color=#BBFFFF]" + tr("ABANDONED_SHIP") + "\n[/color][color=#77BBBB]" + tr("HIDE_HELP") + "[/color]"
 	elif tile.has("wormhole"):
 		if tile.wormhole.active:
 			additional_tooltip = tr("ACTIVE_WORMHOLE_DESC")
@@ -419,19 +413,15 @@ func show_tooltip(tile, tile_id:int):
 		else:
 			tooltip = ""
 	elif tile.has("aurora") and tooltip == "":
-		if game.help_str == "":
-			game.help_str = "aurora_desc"
-		if game.help.has("aurora_desc"):
-			tooltip = "%s\n[color=#BBFFFF]%s\n[/color][color=#77BBBB]%s[/color]\n%s" % [tr("AURORA"), tr("AURORA_DESC"), tr("HIDE_HELP"), tr("AURORA_INTENSITY") + ": %s" % [tile.aurora]]
-		else:
-			tooltip = tr("AURORA_INTENSITY") + ": %s" % [tile.aurora]
+		tooltip = tr("AURORA_INTENSITY") + ": %s" % [tile.aurora]
+		additional_tooltip = tr("AURORA_DESC")
 	if tile.has("time_speed_bonus"):
 		var real_time_speed_bonus = tile.time_speed_bonus
 		if tile.has("cave") and game.subject_levels.dimensional_power >= 4:
 			real_time_speed_bonus = Helper.clever_round(log(game.u_i.time_speed * tile.time_speed_bonus - 1.0 + exp(1.0)) / log(game.u_i.time_speed - 1.0 + exp(1.0)))
 		tooltip += ("\n" if tooltip != "" else "") + "[color=#FFBBBB]" + tr("TIME_FLOWS_X_FASTER_HERE") % real_time_speed_bonus + "[/color]"
 	if tooltip != "":
-		game.show_adv_tooltip(tooltip, {"imgs": icons, "additional_text": additional_tooltip, "additional_text_delay": 1.5})
+		game.show_adv_tooltip(tooltip, {"imgs": icons, "additional_text": additional_tooltip, "additional_text_delay": 1.5, "different_orig_text": different_orig_tooltip})
 	if fiery_tooltip != -1 and is_instance_valid(game.tooltip):
 		game.tooltip.get_node("ColorRect").visible = true
 		game.tooltip.get_node("ColorRect").material.set_shader_parameter("seed", fiery_tooltip)

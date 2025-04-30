@@ -423,16 +423,6 @@ grow_horizontal = 2
 grow_vertical = 2
 autowrap_mode = 3
 
-[connection signal="pressed" from="ShipClass/VBox/VBox/Standard" to="." method="update_ship_stats" binds= [0]]
-[connection signal="pressed" from="ShipClass/VBox/VBox/Offensive" to="." method="update_ship_stats" binds= [1]]
-[connection signal="pressed" from="ShipClass/VBox/VBox/Defensive" to="." method="update_ship_stats" binds= [2]]
-[connection signal="pressed" from="ShipClass/VBox/VBox/Accurate" to="." method="update_ship_stats" binds= [3]]
-[connection signal="pressed" from="ShipClass/VBox/VBox/Agile" to="." method="update_ship_stats" binds= [4]]
-[connection signal="pressed" from="ShipClass/VBox/VBox/Energetic" to="." method="update_ship_stats" binds= [5]]
-[connection signal="pressed" from="ShipClass/VBox/VBox/Support" to="." method="update_ship_stats" binds= [6]]
-[connection signal="pressed" from="ShipClass/VBox/VBox/Reckless" to="." method="update_ship_stats" binds= [7]]
-[connection signal="pressed" from="ShipClass/VBox/VBox/Impenetrable" to="." method="update_ship_stats" binds= [8]]
-[connection signal="pressed" from="ShipClass/VBox/VBox/Uber" to="." method="update_ship_stats" binds= [9]]
 [connection signal="pressed" from="Actions/Cancel" to="." method="_on_cancel_pressed"]
 [connection signal="pressed" from="Actions/Done" to="." method="_on_done_pressed"]
 [connection signal="mouse_entered" from="ShipStats/HPIcon" to="." method="_on_hp_icon_mouse_entered"]

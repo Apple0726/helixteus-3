@@ -33,10 +33,6 @@ var max_speed = 1000
 var friction = 150
 var move_speed = Vector2.ZERO
 
-#Variables for zooming smoothly
-var zoom_factor = 1.1
-var zooming = ""
-var progress = 0
 var mouse_position = Vector2.ZERO
 
 var dep_pos = null
@@ -332,9 +328,8 @@ func save_zooms(obj_str:String):
 			game.science_tree_view.pos = position# / scale.x
 			game.science_tree_view.zoom = scale.x
 
-var first_zoom:bool = false
 #Executed every tick
-func _physics_process(_delta):
+func _physics_process(delta):
 	if move_with_keyboard:
 		#Moving tiles code
 		var input_vector = Vector2.ZERO
@@ -349,22 +344,6 @@ func _physics_process(_delta):
 		move_and_slide()
 		move_speed = move_speed
 
-	#Zooming animation
-	if zooming == "in":
-		if first_zoom:
-			_zoom_at_point(-ease(progress, 0.1) * (zoom_factor - 1) + zoom_factor, Vector2(640, 320))
-			progress += 0.002
-			modulate.a = min(1, modulate.a + 0.01)
-		else:
-			_zoom_at_point(-ease(progress, 0.1) * (zoom_factor - 1) + zoom_factor)
-			progress += 0.03
-	if zooming == "out":
-		_zoom_at_point(ease(progress, 0.1) * (1 - 1 / zoom_factor) + 1 / zoom_factor)
-		progress += 0.03
-	if progress >= 1.0:
-		first_zoom = false
-		zooming = ""
-		progress = 0
 	if not is_instance_valid(obj):
 		return
 	if game.c_v == "planet":
@@ -431,30 +410,18 @@ func _unhandled_input(event):
 			var touch_center = (touch_events[0].position + touch_events[1].position) / 2.0
 			if abs(drag_distance - last_drag_distance) > zoom_sensitivity:
 				if drag_distance > last_drag_distance:
-					zooming = "in"
-					progress = 0
+					_zoom_at_point_animate(1.3)
 				else:
-					zooming = "out"
-					progress = 0
+					_zoom_at_point_animate(0.7)
 				last_drag_distance = drag_distance
 
 #Executed once the receives any kind of input
 func _input(event):
-	if not event is InputEventMouseMotion:
-		if first_zoom and modulate.a == 1:
-			first_zoom = false
-			zooming = ""
 	if scroll_view and not game.block_scroll:
 		if event.is_action_released("scroll_down"):
-			zoom_factor = 1.1
-			zooming = "out"
-			progress = 0
-			#check_change_scale()
+			_zoom_at_point_animate(0.7)
 		elif event.is_action_released("scroll_up"):
-			zoom_factor = 1.1
-			zooming = "in"
-			progress = 0
-			#check_change_scale()
+			_zoom_at_point_animate(1.3)
 	if (event is InputEventMouse or event is InputEventScreenTouch):
 		if Input.is_action_just_pressed("left_click") and not game.block_scroll:
 			drag_initial_position = event.position
@@ -493,8 +460,9 @@ func _input(event):
 	if Input.is_action_just_pressed("2"):
 		annotate_icon.rotation = 0
 
-#Zooming code
-func _zoom_at_point(zoom_change, center:Vector2 = mouse_position):
+var zoom_tween
+
+func _zoom_at_point_animate(zoom_change: float):
 	if limit_to_viewport and is_instance_valid(obj) and obj.dimensions and scale.x < 250 / obj.dimensions and zoom_change < 1: #max zoom out
 		return
 	if game.c_v == "planet":
@@ -503,11 +471,11 @@ func _zoom_at_point(zoom_change, center:Vector2 = mouse_position):
 	elif game.c_v == "universe":
 		if scale.x >= 25.0 and zoom_change > 1: #max zoom in
 			return
-	scale = scale * zoom_change
-	var delta_x = (center.x - global_position.x) * (zoom_change - 1)
-	var delta_y = (center.y - global_position.y) * (zoom_change - 1)
-	global_position.x -= delta_x
-	global_position.y -= delta_y
+	if zoom_tween and zoom_tween.is_running():
+		zoom_tween.kill()
+	zoom_tween = create_tween().set_parallel(true)
+	zoom_tween.tween_property(self, "scale", scale * zoom_change, 0.2).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_CIRC)
+	zoom_tween.tween_property(self, "position", position - to_local(mouse_position) * scale.x * (zoom_change - 1.0), 0.2).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_CIRC)
 
 func _on_AnimationPlayer_animation_finished(anim_name):
 	if not changed:

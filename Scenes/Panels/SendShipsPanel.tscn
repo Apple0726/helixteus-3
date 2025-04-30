@@ -43,6 +43,7 @@ theme = ExtResource("3")
 script = ExtResource("6")
 
 [node name="GUI" type="TextureRect" parent="."]
+layout_mode = 0
 offset_left = 80.0
 offset_top = 52.0
 offset_right = 1204.0
@@ -52,6 +53,7 @@ texture = ExtResource("3_46286")
 metadata/_edit_lock_ = true
 
 [node name="CloseButton" type="TextureButton" parent="."]
+layout_mode = 0
 offset_left = 1138.0
 offset_top = 68.0
 offset_right = 1187.0

@@ -38,8 +38,11 @@ func set_tooltip_position():
 			position.y = max(game.mouse_pos.y - size.y - 9, 0)
 
 
-func show_additional_text(txt: String, delay: float = 1.0):
+func show_additional_text(txt: String, delay: float = 1.0, different_orig_text: String = ""):
 	await get_tree().create_timer(delay).timeout
 	size.x = 500.0
-	Helper.add_text_icons(self, orig_text + "\n\n" + txt, imgs, imgs_size, true)
+	if different_orig_text == "":
+		Helper.add_text_icons(self, orig_text + "\n\n" + txt, imgs, imgs_size, true)
+	else:
+		Helper.add_text_icons(self, different_orig_text + "\n\n" + txt, imgs, imgs_size, true)
 	set_tooltip_position()

@@ -10,7 +10,8 @@ enum {
 	SUPPORT,
 	RECKLESS,
 	IMPENETRABLE,
-	UBER
+	UBER,
+	N,
 }
 
 var names = [
