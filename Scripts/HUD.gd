@@ -759,8 +759,9 @@ func set_ship_btn_shader(active:bool, tier:int = -1):
 	if tier != -1:
 		ships_btn.material.set_shader_parameter("color", Data.tier_colors[tier - 1])
 		ships_btn.material.set_shader_parameter("speed", tier * game.u_i.time_speed)
-		await get_tree().process_frame
-		game.ship_panel.get_node("SpaceportTimer").start(4.0 / tier)
+		if game.science_unlocked.has("ISC"):
+			await get_tree().process_frame
+			game.ship_panel.get_node("SpaceportTimer").start(4.0 / tier)
 
 func _on_level_mouse_entered():
 	game.show_tooltip((tr("LEVEL") + " %s\nXP: %s / %s\n%s") % [game.u_i.lv, Helper.format_num(round(game.u_i.xp), 4), Helper.format_num(game.u_i.xp_to_lv, 4), tr("XP_HELP")])

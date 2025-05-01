@@ -54,23 +54,10 @@ func refresh():
 func _process(delta):
 	if selected_ship_id != -1:
 		$Ships/Battlefield/Selected.position = ship_nodes[selected_ship_id].position - Vector2(0, 40)
-	#if spaceport_tier != -1 and $ShipDetails.visible:
-		#for i in len(game.ship_data):
-			#for weapon in ["Bullet", "Laser", "Bomb", "Light"]:
-				#var node = get_node("ShipDetails/%s/TextureProgressBar" % [i + 1, weapon])
-				#var text_node = get_node("ShipDetails/%s/Label2" % [i + 1, weapon])
-				#var curr_weapon_XP = game.ship_data[i][weapon.to_lower()].XP
-				#node.value = move_toward(node.value, curr_weapon_XP, abs(curr_weapon_XP - node.value) * delta * 0.5)
-				#text_node.text = "%s / %s" % [round(node.value), game.ship_data[i][weapon.to_lower()].XP_to_lv]
-			#var XP_node = get_node("ShipDetails/XP/TextureProgressBar" % (i + 1))
-			#var XP_text_node = get_node("ShipDetails/XP/Label2" % (i + 1))
-			#var curr_XP = game.ship_data[i].XP
-			#XP_node.value = move_toward(XP_node.value, curr_XP, abs(curr_XP - XP_node.value) * delta * 2)
-			#XP_text_node.text = "%s / %s" % [Helper.format_num(round(XP_node.value)), Helper.format_num(game.ship_data[i].XP_to_lv)]
-	#elif game.ships_travel_data.travel_view != "-":
-		#travel_ETA.text = "%s: %s" % [tr("TRAVEL_ETA"), Helper.time_to_str(game.ships_travel_data.travel_length - Time.get_unix_time_from_system() + game.ships_travel_data.travel_start_date)]
-	#if not visible:
-		#set_process(false)
+	if game.ships_travel_data.travel_view != "-":
+		$Ships/TravelTimeRemaining.text = "%s: %s" % [tr("TRAVEL_TIME_REMAINING"), Helper.time_to_str(game.ships_travel_data.travel_length - Time.get_unix_time_from_system() + game.ships_travel_data.travel_start_date)]
+	if not visible:
+		set_process(false)
 
 func _on_CheckBox_toggled(button_pressed):
 	for panel in $Grid.get_children():
@@ -133,22 +120,14 @@ var bar_colors = {
 func _on_SpaceportTimer_timeout():
 	var xp_mult = Helper.get_spaceport_xp_mult(spaceport_tier)
 	for i in len(game.ship_data):
-		var weapon = ["Bullet", "Laser", "Bomb", "Light"][randi() % 4]
 		Helper.add_ship_XP(i, xp_mult * pow(1.15, game.u_i.lv) * game.u_i.time_speed)
 		if visible:
 			get_node("ShipDetails/XP/TextureProgress2" % (i+1)).value = 0
-			get_node("ShipDetails/%s/TextureProgress2" % [i+1, weapon]).value = 0
 			get_node("ShipDetails/Lv" % (i+1)).text = "%s %s" % [tr("LV"), game.ship_data[i].lv]
 			get_node("ShipDetails/XP/TextureProgressBar" % (i+1)).max_value = game.ship_data[i].XP_to_lv
 			get_node("ShipDetails/XP/TextureProgressBar" % (i+1)).modulate = Color.WHITE
-			get_node("ShipDetails/%s/TextureProgressBar" % [i+1, weapon]).modulate = Color.WHITE
-			var weapon_data = game.ship_data[i][weapon.to_lower()]
 			var tween = create_tween()
 			tween.tween_property(get_node("ShipDetails/XP/TextureProgressBar" % (i+1)), "modulate", Color(0.92, 0.63, 0.2), 1.0)
-			var tween2 = create_tween()
-			tween2.tween_property(get_node("ShipDetails/%s/TextureProgressBar" % [i+1, weapon]), "modulate", bar_colors[weapon.to_lower()], 1.0)
-			get_node("ShipDetails/%s/TextureRect" % [i+1, weapon]).texture = load("res://Graphics/Weapons/%s%s.png" % [weapon.to_lower(), weapon_data.lv])
-			get_node("ShipDetails/%s/TextureProgressBar" % [i+1, weapon]).max_value = INF if weapon_data.lv == 5 else weapon_data.XP_to_lv
 			get_node("ShipDetails/Stats/HP" % (i+1)).text = Helper.format_num(game.ship_data[i].HP * game.ship_data[i].HP_mult)
 			get_node("ShipDetails/Stats/Atk" % (i+1)).text = Helper.format_num(game.ship_data[i].atk * game.ship_data[i].atk_mult)
 			get_node("ShipDetails/Stats/Def" % (i+1)).text = Helper.format_num(game.ship_data[i].def * game.ship_data[i].def_mult)

@@ -154,6 +154,7 @@ offset_bottom = 624.0
 infinite_research = true
 
 [node name="Main" type="Control" parent="."]
+modulate = Color(1, 1, 1, 0)
 layout_mode = 3
 anchors_preset = 0
 offset_right = 40.0
@@ -909,15 +910,25 @@ anchors_preset = 0
 offset_right = 40.0
 offset_bottom = 40.0
 
+[node name="ISP" parent="Other" instance=ExtResource("1")]
+layout_mode = 0
+anchors_preset = 0
+anchor_top = 0.0
+anchor_bottom = 0.0
+offset_left = 288.0
+offset_top = 640.0
+offset_right = 544.0
+offset_bottom = 704.0
+
 [node name="AM" parent="Other" instance=ExtResource("1")]
 layout_mode = 0
 anchors_preset = 0
 anchor_top = 0.0
 anchor_bottom = 0.0
 offset_left = 288.0
-offset_top = 588.0
+offset_top = 528.0
 offset_right = 544.0
-offset_bottom = 652.0
+offset_bottom = 592.0
 
 [node name="CI" parent="Other" instance=ExtResource("1")]
 layout_mode = 0
@@ -925,12 +936,12 @@ anchors_preset = 0
 anchor_top = 0.0
 anchor_bottom = 0.0
 offset_left = 288.0
-offset_top = 76.0
+offset_top = 80.0
 offset_right = 544.0
-offset_bottom = 140.0
+offset_bottom = 144.0
 
 [node name="L_CI" type="Line2D" parent="Other"]
-position = Vector2(576, 108)
+position = Vector2(576, 92)
 points = PackedVector2Array(0, 20, 96, 20)
 width = 2.0
 default_color = Color(0.4, 1, 0.465625, 1)
@@ -942,12 +953,12 @@ anchors_preset = 0
 anchor_top = 0.0
 anchor_bottom = 0.0
 offset_left = 704.0
-offset_top = 76.0
+offset_top = 80.0
 offset_right = 960.0
-offset_bottom = 140.0
+offset_bottom = 144.0
 
 [node name="L_CI2" type="Line2D" parent="Other"]
-position = Vector2(992, 108)
+position = Vector2(992, 92)
 points = PackedVector2Array(0, 20, 96, 20)
 width = 2.0
 default_color = Color(0.4, 1, 0.465625, 1)
@@ -959,9 +970,9 @@ anchors_preset = 0
 anchor_top = 0.0
 anchor_bottom = 0.0
 offset_left = 1120.0
-offset_top = 76.0
+offset_top = 80.0
 offset_right = 1376.0
-offset_bottom = 140.0
+offset_bottom = 144.0
 
 [node name="ISC" parent="Other" instance=ExtResource("1")]
 layout_mode = 0
@@ -969,9 +980,9 @@ anchors_preset = 0
 anchor_top = 0.0
 anchor_bottom = 0.0
 offset_left = 288.0
-offset_top = 460.0
+offset_top = 416.0
 offset_right = 544.0
-offset_bottom = 524.0
+offset_bottom = 480.0
 
 [node name="SA" parent="Other" instance=ExtResource("1")]
 layout_mode = 0
@@ -979,9 +990,9 @@ anchors_preset = 0
 anchor_top = 0.0
 anchor_bottom = 0.0
 offset_left = 288.0
-offset_top = 204.0
+offset_top = 192.0
 offset_right = 544.0
-offset_bottom = 268.0
+offset_bottom = 256.0
 
 [node name="ASM" parent="Other" instance=ExtResource("1")]
 layout_mode = 0
@@ -989,9 +1000,9 @@ anchors_preset = 0
 anchor_top = 0.0
 anchor_bottom = 0.0
 offset_left = 288.0
-offset_top = 332.0
+offset_top = 304.0
 offset_right = 544.0
-offset_bottom = 396.0
+offset_bottom = 368.0
 
 [node name="ASM2" parent="Other" instance=ExtResource("1")]
 layout_mode = 0
@@ -999,19 +1010,19 @@ anchors_preset = 0
 anchor_top = 0.0
 anchor_bottom = 0.0
 offset_left = 704.0
-offset_top = 332.0
+offset_top = 304.0
 offset_right = 960.0
-offset_bottom = 396.0
+offset_bottom = 368.0
 
 [node name="L_SA" type="Line2D" parent="Other"]
-position = Vector2(576, 236)
+position = Vector2(576, 204)
 points = PackedVector2Array(0, 20, 96, 20)
 width = 2.0
 default_color = Color(0.4, 1, 0.465625, 1)
 antialiased = true
 
 [node name="L_ASM" type="Line2D" parent="Other"]
-position = Vector2(576, 364)
+position = Vector2(576, 316)
 points = PackedVector2Array(0, 20, 96, 20)
 width = 2.0
 default_color = Color(0.4, 1, 0.465625, 1)
@@ -1023,23 +1034,23 @@ anchors_preset = 0
 anchor_top = 0.0
 anchor_bottom = 0.0
 offset_left = 704.0
-offset_top = 204.0
+offset_top = 192.0
 offset_right = 960.0
-offset_bottom = 268.0
+offset_bottom = 256.0
 
 [node name="IRAnim" type="AnimationPlayer" parent="."]
 libraries = {
-"": SubResource("AnimationLibrary_puiyp")
+&"": SubResource("AnimationLibrary_puiyp")
 }
 
 [node name="MainAnim" type="AnimationPlayer" parent="."]
 libraries = {
-"": SubResource("AnimationLibrary_s0dhf")
+&"": SubResource("AnimationLibrary_s0dhf")
 }
 
 [node name="OtherAnim" type="AnimationPlayer" parent="."]
 libraries = {
-"": SubResource("AnimationLibrary_lttvt")
+&"": SubResource("AnimationLibrary_lttvt")
 }
 
 [connection signal="tree_exited" from="." to="." method="_on_ScienceTree_tree_exited"]

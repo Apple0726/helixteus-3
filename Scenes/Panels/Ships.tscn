@@ -179,6 +179,14 @@ position = Vector2(68, 40)
 scale = Vector2(0.295, 0.295)
 texture = ExtResource("10_800g5")
 
+[node name="TravelTimeRemaining" type="Label" parent="Ships"]
+layout_mode = 0
+offset_left = 32.0
+offset_top = 8.0
+offset_right = 480.0
+offset_bottom = 31.0
+horizontal_alignment = 1
+
 [node name="ShipStats" type="Panel" parent="."]
 layout_mode = 0
 offset_left = 152.0

@@ -49,36 +49,40 @@ func put_rsrc(container, min_size, objs, remove:bool = true, show_available:bool
 		var rsrc = load("res://Scenes/Resource.tscn").instantiate()
 		var texture = rsrc.get_node("Texture2D")
 		var atom:bool = false
-		var tooltip:String = tr(obj.to_upper())
-		if obj == "money":
-			format_text(rsrc.get_node("Text"), texture, "Icons/money", show_available, objs[obj], game.money)
-		elif obj == "stone":
-			if tooltip == "Stone" and Settings.op_cursor:
-				tooltip = "Rok"
-			if not game.show.has("mining"):
-				tooltip += "\n%s" % [tr("STONE_HELP")]
-			format_text(rsrc.get_node("Text"), texture, "Icons/stone", show_available, objs[obj], game.stone, " kg")
-		elif obj == "minerals":
-			format_text(rsrc.get_node("Text"), texture, "Icons/minerals", show_available, objs[obj], game.minerals)
-		elif obj == "energy":
-			format_text(rsrc.get_node("Text"), texture, "Icons/energy", show_available, objs[obj], game.energy)
-		elif obj == "SP":
-			format_text(rsrc.get_node("Text"), texture, "Icons/SP", show_available, objs[obj], game.SP)
-		elif obj == "time":
-			texture.texture_normal = Data.time_icon
-			rsrc.get_node("Text").text = time_to_str(objs[obj])
-		elif game.mats.has(obj):
-			if obj == "silicon" and not game.show.has("silicon"):
-				tooltip += "\n%s" % [tr("HOW2SILICON")]
-			format_text(rsrc.get_node("Text"), texture, "Materials/" + obj, show_available, objs[obj], game.mats[obj], " kg")
-		elif game.mets.has(obj):
-			format_text(rsrc.get_node("Text"), texture, "Metals/" + obj, show_available, objs[obj], game.mets[obj], " kg")
-		elif game.atoms.has(obj):
-			atom = true
-			tooltip = tr(("%s_NAME" % obj).to_upper())
-			format_text(rsrc.get_node("Text"), texture, "Atoms/" + obj, show_available, objs[obj], game.atoms[obj], " mol")
-		elif game.particles.has(obj):
-			format_text(rsrc.get_node("Text"), texture, "Particles/" + obj, show_available, objs[obj], game.particles[obj], " mol")
+		var tooltip = ""
+		if obj is int:
+			tooltip = Item.name(obj)
+		else:
+			tooltip = tr(obj.to_upper())
+			if obj == "money":
+				format_text(rsrc.get_node("Text"), texture, "Icons/money", show_available, objs[obj], game.money)
+			elif obj == "stone":
+				if tooltip == "Stone" and Settings.op_cursor:
+					tooltip = "Rok"
+				if not game.show.has("mining"):
+					tooltip += "\n%s" % [tr("STONE_HELP")]
+				format_text(rsrc.get_node("Text"), texture, "Icons/stone", show_available, objs[obj], game.stone, " kg")
+			elif obj == "minerals":
+				format_text(rsrc.get_node("Text"), texture, "Icons/minerals", show_available, objs[obj], game.minerals)
+			elif obj == "energy":
+				format_text(rsrc.get_node("Text"), texture, "Icons/energy", show_available, objs[obj], game.energy)
+			elif obj == "SP":
+				format_text(rsrc.get_node("Text"), texture, "Icons/SP", show_available, objs[obj], game.SP)
+			elif obj == "time":
+				texture.texture_normal = Data.time_icon
+				rsrc.get_node("Text").text = time_to_str(objs[obj])
+			elif game.mats.has(obj):
+				if obj == "silicon" and not game.show.has("silicon"):
+					tooltip += "\n%s" % [tr("HOW2SILICON")]
+				format_text(rsrc.get_node("Text"), texture, "Materials/" + obj, show_available, objs[obj], game.mats[obj], " kg")
+			elif game.mets.has(obj):
+				format_text(rsrc.get_node("Text"), texture, "Metals/" + obj, show_available, objs[obj], game.mets[obj], " kg")
+			elif game.atoms.has(obj):
+				atom = true
+				tooltip = tr(("%s_NAME" % obj).to_upper())
+				format_text(rsrc.get_node("Text"), texture, "Atoms/" + obj, show_available, objs[obj], game.atoms[obj], " mol")
+			elif game.particles.has(obj):
+				format_text(rsrc.get_node("Text"), texture, "Particles/" + obj, show_available, objs[obj], game.particles[obj], " mol")
 		if mouse_events:
 			rsrc.get_node("Texture2D").connect("mouse_entered",Callable(self,"on_rsrc_over").bind(tooltip))
 			rsrc.get_node("Texture2D").connect("mouse_exited",Callable(self,"on_rsrc_out"))
@@ -1528,7 +1532,7 @@ func set_ancient_bldg_bonuses(p_i:Dictionary, ancient_bldg:Dictionary, tile_id:i
 					base = tile.bldg.path_1_value * overclock_mult * mult
 					Helper.add_energy_from_CS(p_i, base)
 	elif ancient_bldg.name == AncientBuilding.SPACEPORT:
-		if game.c_s_g == game.ships_travel_data.c_g_coords.s and game.c_p == game.ships_travel_data.c_coords.p:
+		if game.science_unlocked.has("ISP") and game.c_s_g == game.ships_travel_data.c_g_coords.s and game.c_p == game.ships_travel_data.c_coords.p:
 			game.autocollect.ship_XP = ancient_bldg.tier
 			game.HUD.set_ship_btn_shader(true, ancient_bldg.tier)
 			game.ship_panel.get_node("SpaceportTimer").start(4.0 / ancient_bldg.tier)

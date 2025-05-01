@@ -284,6 +284,9 @@ var science_unlocks = {
 						#Improved stone crusher
 						"ISC":{"cost":250, "parents":[]},
 						
+						#Improved spaceport
+						"ISP":{"cost":50000, "parents":[]},
+						
 						#Compact items
 						"CI":{"cost":4800, "parents":[]},
 						"CI2":{"cost":4.8e6, "parents":["CI"]},
@@ -549,14 +552,6 @@ var default_help = {
 				"plant_something_here":true,
 				"boulder_desc":true,
 				"aurora_desc":true,
-				"mineral_replicator_desc":true,
-				"substation_desc":true,
-				"observatory_desc":true,
-				"nuclear_fusion_reactor_desc":true,
-				"mining_outpost_desc":true,
-				"cellulose_synthesizer_desc":true,
-				"aurora_generator_desc":true,
-				"spaceport_desc":true,
 				"crater_desc":true,
 				"autosave_light_desc":true,
 				"inventory_shortcuts":true,

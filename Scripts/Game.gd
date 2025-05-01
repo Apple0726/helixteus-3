@@ -1244,8 +1244,8 @@ func popup_window(txt:String, title:String, other_buttons:Array = [], other_func
 func open_shop_pickaxe():
 	if not is_instance_valid(shop_panel) or not shop_panel.visible:
 		fade_in_panel("shop_panel")
-	shop_panel._on_btn_pressed("Pickaxes")
-	shop_panel.get_node("VBox/TabBar/Pickaxes")._on_Button_pressed()
+	shop_panel._on_btn_pressed(shop_panel.PICKAXE)
+	shop_panel.get_node("Tabs/PickaxesButton")._on_Button_pressed()
 
 var bottom_info_shown:bool = false
 func put_bottom_info(txt:String, action:String, on_close:String = ""):
@@ -1499,7 +1499,8 @@ func switch_view(new_view:String, other_params:Dictionary = {}):
 			if c_v in ["science_tree", "STM", "planet_details"]:
 				c_v = l_v
 			elif new_view != "":
-				l_v = c_v
+				if not (c_v == "battle" and new_view == "ship_customize_screen"):
+					l_v = c_v
 				if new_view != "dimension":
 					c_v = new_view
 				else:
@@ -4563,7 +4564,6 @@ func add_new_ship_data():
 		"allocated_defense":0,
 		"allocated_accuracy":0,
 		"allocated_agility":0,
-		"show_ship_customize_screen": true,
 		"ship_class":ShipClass.STANDARD,
 	})
 	if len(ship_data) == 1:

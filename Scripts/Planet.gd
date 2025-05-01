@@ -290,12 +290,7 @@ func show_tooltip(tile, tile_id:int):
 			tooltip += " " + Helper.get_roman_num(tile.ancient_bldg.tier)
 		tooltip += "[/color]"
 		tooltip += "\n"
-		if game.help.has("%s_desc" % ancient_building_name):
-			tooltip += "[color=#BBFFFF]"
-			tooltip += tr("%s_DESC1" % ancient_building_name.to_upper())
-			if game.help_str == "":
-				game.help_str = "%s_desc" % ancient_building_name
-			tooltip += "\n[/color][color=#77BBBB]" + tr("HIDE_HELP") + "\n[/color]"
+		additional_tooltip = tr("%s_DESC1" % ancient_building_name.to_upper())
 		var desc = tr("%s_DESC2" % ancient_building_name.to_upper())
 		match tile.ancient_bldg.name:
 			AncientBuilding.SPACEPORT:
@@ -382,7 +377,7 @@ func show_tooltip(tile, tile_id:int):
 		if game.science_unlocked.has("SCT"):
 			tooltip += tr("CLICK_TO_CONTROL_SHIP")
 		else:
-			tooltip += "[color=#BBFFFF]" + tr("ABANDONED_SHIP") + "\n[/color][color=#77BBBB]" + tr("HIDE_HELP") + "[/color]"
+			tooltip += "[color=#BBFFFF]" + tr("ABANDONED_SHIP")
 	elif tile.has("wormhole"):
 		if tile.wormhole.active:
 			additional_tooltip = tr("ACTIVE_WORMHOLE_DESC")

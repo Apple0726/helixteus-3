@@ -390,7 +390,12 @@ func set_slot_info(slot, _inv:Dictionary):
 		mining_p.lifetime = 0.2 / time_speed
 		slot.get_node("TextureRect").texture = load("res://Graphics/Cave/Mining/" + _inv.id + ".png")
 	else:
-		slot.get_node("TextureRect").texture = load("res://Graphics/Items/%s.png" % [Item.icon_directory(_inv.id)])
+		if _inv.id == "money":
+			slot.get_node("TextureRect").texture = Data.money_icon
+		elif _inv.id == "minerals":
+			slot.get_node("TextureRect").texture = Data.minerals_icon
+		else:
+			slot.get_node("TextureRect").texture = load("res://Graphics/Items/%s.png" % [Item.icon_directory(_inv.id)])
 		if _inv.has("num"):
 			slot.get_node("Label").text = Helper.format_num(_inv.num, false, 3)
 	
@@ -2140,11 +2145,7 @@ func _on_Difficulty_mouse_entered():
 		tooltip += "\n%s: %s" % [tr("AURORA_MULTIPLIER"), Helper.format_num(aurora_mult)]
 	if volcano_mult > 1 and not artificial_volcano:
 		tooltip += "\n%s: %s" % [tr("PROXIMITY_TO_VOLCANO_MULT"), Helper.clever_round(pow(volcano_mult, 2.5))]
-	game.help_str = "cave_diff_info"
-	if game.help.has("cave_diff_info"):
-		game.show_adv_tooltip("[color=#BBFFFF]%s[/color]\n[color=#77BBBB]%s[/color]\n%s" % [tr("CAVE_DIFF_INFO"), tr("HIDE_HELP"), tooltip])
-	else:
-		game.show_tooltip(tooltip)
+	game.show_adv_tooltip(tooltip, {"additional_text": tr("CAVE_DIFF_INFO"), "additional_text_delay": 1.5})
 
 func _on_Filter_pressed():
 	if $UI2/Filters.visible:
