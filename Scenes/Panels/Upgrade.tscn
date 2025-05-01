@@ -26,7 +26,7 @@ multichannel_signed_distance_field = true
 
 [sub_resource type="LabelSettings" id="LabelSettings_qcyvx"]
 font = SubResource("SystemFont_l1il0")
-font_size = 24
+font_size = 20
 shadow_size = 2
 shadow_color = Color(0, 0, 0, 0.372549)
 shadow_offset = Vector2(2, 2)

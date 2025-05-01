@@ -21,9 +21,7 @@ func set_input():
 		game.block_scroll = false
 
 func set_polygon(v:Vector2, offset:Vector2 = Vector2.ZERO):
-	var w = v.x
-	var h = v.y
-	polygon = [C - Vector2(w, h) / 2 + offset, C + Vector2(w, -h) / 2 + offset, C + Vector2(w, h) / 2 + offset, C + Vector2(-w, h) / 2 + offset]
+	polygon = [offset, offset + Vector2.RIGHT * v.x, offset + v, offset + Vector2.DOWN * v.y]
 
 func _on_close_button_pressed():
 	game.toggle_panel(panel_var_name)

@@ -12,7 +12,7 @@ var item_selected = {
 }
 
 func _ready():
-	set_polygon(size)
+	set_polygon($GUI.size, $GUI.position)
 	$Title.text = tr("SHOP")
 	_on_overclocks_button_pressed()
 	$Tabs/OverclocksButton._on_Button_pressed()

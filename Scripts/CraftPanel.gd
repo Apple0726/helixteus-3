@@ -12,7 +12,7 @@ var item_selected = {
 }
 
 func _ready():
-	set_polygon(size)
+	set_polygon($GUI.size, $GUI.position)
 	$Title.text = tr("CRAFT")
 	_on_mining_button_pressed()
 	$Tabs/MiningButton._on_Button_pressed()

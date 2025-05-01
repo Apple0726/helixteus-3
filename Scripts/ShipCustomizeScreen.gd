@@ -30,17 +30,18 @@ func _ready() -> void:
 	ship_data = game.ship_data[ship_id].duplicate()
 	$Ship/Level.text = "%s %s" % [tr("LEVEL"), ship_data.lv]
 	allocatable_points = (ship_data.lv - 1) / 2 + 2
-	$ShipClass/Vbox/VBox.get_child(ship_data.ship_class)._on_Button_pressed()
+	$ShipClass/VBox/VBox.get_child(ship_data.ship_class)._on_Button_pressed()
 	for i in ShipClass.N:
 		$ShipClass/VBox/VBox.get_child(i).pressed.connect(update_ship_stats_after_class_change.bind(i))
 	if not respeccing:
+		$Actions/Cancel.hide()
 		allocated_HP = ship_data.allocated_HP
 		allocated_attack = ship_data.allocated_attack
 		allocated_defense = ship_data.allocated_defense
 		allocated_accuracy = ship_data.allocated_accuracy
 		allocated_agility = ship_data.allocated_agility
 		for class_btn in $ShipClass/VBox/VBox.get_children():
-			class_btn.disabled = true
+			class_btn.adv_button_disabled = true
 	update_ship_stats_display()
 
 func update_ship_stats_after_class_change(ship_class: int):

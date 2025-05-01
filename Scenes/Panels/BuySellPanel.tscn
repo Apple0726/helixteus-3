@@ -1,11 +1,25 @@
-[gd_scene load_steps=13 format=3 uid="uid://ceo4hlq5libn3"]
+[gd_scene load_steps=17 format=3 uid="uid://ceo4hlq5libn3"]
 
 [ext_resource type="Texture2D" uid="uid://ds6nct7g63284" path="res://Graphics/Icons/Arrow.png" id="1"]
 [ext_resource type="PackedScene" uid="uid://bdp561gr6s0b8" path="res://Scenes/Resource.tscn" id="2"]
 [ext_resource type="Script" uid="uid://dd27ovnjjjddh" path="res://Scripts/BuySellPanel.gd" id="3"]
 [ext_resource type="Theme" uid="uid://cp2u1kgj60ic" path="res://Resources/default_theme.tres" id="4"]
 [ext_resource type="Texture2D" uid="uid://bnlcxaqltwepa" path="res://Graphics/Buttons/Switch.png" id="5"]
-[ext_resource type="PackedScene" uid="uid://ddf2xjwcht77u" path="res://Scenes/CloseButton.tscn" id="6"]
+[ext_resource type="Texture2D" uid="uid://dcvnyb0mloli2" path="res://Graphics/GUI/Panel.png" id="6_i8c0q"]
+[ext_resource type="Texture2D" uid="uid://baowebna7hgr5" path="res://Graphics/GUI/CloseButtonNormal.png" id="7_myvxs"]
+[ext_resource type="Texture2D" uid="uid://c1vwn7p5uxu1r" path="res://Graphics/GUI/CloseButtonHover.png" id="8_j4nfo"]
+
+[sub_resource type="SystemFont" id="SystemFont_l1il0"]
+font_names = PackedStringArray("Arial")
+subpixel_positioning = 0
+multichannel_signed_distance_field = true
+
+[sub_resource type="LabelSettings" id="LabelSettings_myvxs"]
+font = SubResource("SystemFont_l1il0")
+font_size = 20
+shadow_size = 2
+shadow_color = Color(0, 0, 0, 0.372549)
+shadow_offset = Vector2(2, 2)
 
 [sub_resource type="Animation" id="2"]
 resource_name = "Grow"
@@ -83,51 +97,68 @@ _data = {
 &"Switch": SubResource("4")
 }
 
-[node name="BuySellPanel" type="Panel"]
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -320.0
-offset_top = -104.0
-offset_right = 320.0
-offset_bottom = 88.0
+[node name="BuySellPanel" type="Control"]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 32.0
+offset_bottom = 32.0
 theme = ExtResource("4")
 script = ExtResource("3")
+metadata/_edit_vertical_guides_ = [640.0]
+metadata/_edit_horizontal_guides_ = [360.0]
 
 [node name="BlackBG" type="ColorRect" parent="."]
 show_behind_parent = true
 layout_mode = 0
-offset_left = -320.0
-offset_top = -256.0
-offset_right = 960.0
-offset_bottom = 464.0
+offset_right = 1280.0
+offset_bottom = 720.0
 mouse_filter = 2
 color = Color(0, 0, 0, 0.564706)
+metadata/_edit_lock_ = true
+
+[node name="GUI" type="NinePatchRect" parent="."]
+layout_mode = 0
+offset_left = 384.0
+offset_top = 224.0
+offset_right = 896.0
+offset_bottom = 496.0
+texture = ExtResource("6_i8c0q")
+patch_margin_left = 408
+patch_margin_top = 80
+patch_margin_right = 80
+patch_margin_bottom = 64
+axis_stretch_horizontal = 1
+metadata/_edit_horizontal_guides_ = [596.0]
+
+[node name="CloseButton" type="TextureButton" parent="."]
+layout_mode = 0
+offset_left = 830.0
+offset_top = 240.0
+offset_right = 879.0
+offset_bottom = 289.0
+texture_normal = ExtResource("7_myvxs")
+texture_hover = ExtResource("8_j4nfo")
 
 [node name="Label" type="Label" parent="."]
-layout_mode = 0
-anchor_left = 0.5
-anchor_right = 0.5
-offset_left = -320.0
-offset_top = 16.0
-offset_right = 320.0
-offset_bottom = 40.0
+layout_mode = 1
+offset_left = 424.0
+offset_top = 248.0
+offset_right = 740.0
+offset_bottom = 282.0
 text = "Buy or sell"
-horizontal_alignment = 1
+label_settings = SubResource("LabelSettings_myvxs")
 
 [node name="Arrow" type="Sprite2D" parent="."]
-position = Vector2(320, 112)
+position = Vector2(640, 380)
 scale = Vector2(0.8, 0.8)
 texture = ExtResource("1")
 
 [node name="HSlider" type="HSlider" parent="."]
 layout_mode = 0
-offset_left = 64.0
-offset_top = 48.0
-offset_right = 576.0
-offset_bottom = 96.0
+offset_left = 480.0
+offset_top = 312.0
+offset_right = 800.0
+offset_bottom = 360.0
 ticks_on_borders = true
 
 [node name="Resource" parent="." instance=ExtResource("2")]
@@ -135,58 +166,52 @@ layout_mode = 0
 anchors_preset = 0
 anchor_right = 0.0
 anchor_bottom = 0.0
-offset_left = 72.0
-offset_top = 88.0
-offset_right = -494.0
-offset_bottom = -56.0
+offset_left = 468.0
+offset_top = 364.0
+offset_right = 512.0
+offset_bottom = 388.0
 
 [node name="Resource2" parent="." instance=ExtResource("2")]
 layout_mode = 0
 anchors_preset = 0
 anchor_right = 0.0
 anchor_bottom = 0.0
-offset_left = 496.0
-offset_top = 88.0
-offset_right = -70.0
-offset_bottom = -56.0
+offset_left = 720.0
+offset_top = 364.0
+offset_right = 764.0
+offset_bottom = 388.0
 
 [node name="Buy" type="Button" parent="."]
 layout_mode = 0
-offset_left = 536.0
-offset_top = 152.0
-offset_right = 640.0
-offset_bottom = 192.0
+offset_left = 768.0
+offset_top = 432.0
+offset_right = 872.0
+offset_bottom = 472.0
 text = "BUY"
 
 [node name="TextureButton" type="TextureButton" parent="."]
 layout_mode = 0
-offset_left = 304.0
-offset_top = 144.0
-offset_right = 336.0
-offset_bottom = 176.0
+offset_left = 624.0
+offset_top = 416.0
+offset_right = 656.0
+offset_bottom = 448.0
 rotation = 3.14159
 pivot_offset = Vector2(16, 16)
 texture_normal = ExtResource("5")
 ignore_texture_size = true
 stretch_mode = 5
 
-[node name="CloseButton" parent="." instance=ExtResource("6")]
-layout_mode = 1
-offset_left = -32.0
-offset_top = 8.0
-offset_right = -8.0
-offset_bottom = 32.0
-
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 libraries = {
-"": SubResource("AnimationLibrary_cm3bf")
+&"": SubResource("AnimationLibrary_cm3bf")
 }
 
 [node name="AnimationPlayer2" type="AnimationPlayer" parent="."]
 libraries = {
-"": SubResource("AnimationLibrary_jjrlt")
+&"": SubResource("AnimationLibrary_jjrlt")
 }
 
+[connection signal="pressed" from="CloseButton" to="." method="_on_close_button_pressed"]
 [connection signal="mouse_entered" from="HSlider" to="." method="_on_h_slider_mouse_entered"]
 [connection signal="mouse_exited" from="HSlider" to="." method="_on_h_slider_mouse_exited"]
 [connection signal="value_changed" from="HSlider" to="." method="_on_HSlider_value_changed"]
@@ -194,4 +219,3 @@ libraries = {
 [connection signal="mouse_entered" from="TextureButton" to="." method="_on_TextureButton_mouse_entered"]
 [connection signal="mouse_exited" from="TextureButton" to="." method="_on_TextureButton_mouse_exited"]
 [connection signal="pressed" from="TextureButton" to="." method="_on_TextureButton_pressed"]
-[connection signal="close_button_pressed" from="CloseButton" to="." method="_on_close_button_pressed"]

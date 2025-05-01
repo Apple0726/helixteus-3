@@ -221,4 +221,4 @@ func _on_weaponIcon_mouse_exited() -> void:
 func _on_respec_pressed() -> void:
 	_on_close_button_pressed()
 	if selected_ship_id != -1:
-		game.switch_view("ship_customize_screen", {"ship_id":selected_ship_id})
+		game.switch_view("ship_customize_screen", {"ship_id":selected_ship_id, "respeccing":true})

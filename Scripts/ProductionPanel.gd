@@ -14,7 +14,7 @@ var input_unit:String
 var output_unit:String
 
 func _ready():
-	set_polygon(size)
+	set_polygon($GUI.size, $GUI.position)
 	set_process(false)
 
 func refresh_values():
@@ -105,10 +105,6 @@ func _process(delta):
 		amount_produced_txt.text = "%s %s" % [Helper.format_num(prod_i.qty_made, true), output_unit]
 	else:
 		amount_produced_txt.text = "%s %s" % [Helper.format_num(round(prod_i.qty_made)), output_unit]
-
-
-func _on_close_button_pressed():
-	game.toggle_panel(self)
 
 
 func _on_start_pressed():

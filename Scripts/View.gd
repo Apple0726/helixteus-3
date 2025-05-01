@@ -412,14 +412,14 @@ func _unhandled_input(event):
 				if drag_distance > last_drag_distance:
 					_zoom_at_point_animate(1.3)
 				else:
-					_zoom_at_point_animate(0.7)
+					_zoom_at_point_animate(1.0 / 1.3)
 				last_drag_distance = drag_distance
 
 #Executed once the receives any kind of input
 func _input(event):
 	if scroll_view and not game.block_scroll:
 		if event.is_action_released("scroll_down"):
-			_zoom_at_point_animate(0.7)
+			_zoom_at_point_animate(1.0 / 1.3)
 		elif event.is_action_released("scroll_up"):
 			_zoom_at_point_animate(1.3)
 	if (event is InputEventMouse or event is InputEventScreenTouch):

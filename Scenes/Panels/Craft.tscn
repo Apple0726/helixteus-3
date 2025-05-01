@@ -45,8 +45,10 @@ script = ExtResource("2_mcqm5")
 
 [node name="GUI" type="TextureRect" parent="."]
 layout_mode = 0
-offset_right = 1280.0
-offset_bottom = 720.0
+offset_left = 80.0
+offset_top = 52.0
+offset_right = 1204.0
+offset_bottom = 671.0
 mouse_filter = 2
 texture = ExtResource("3_kdk5l")
 

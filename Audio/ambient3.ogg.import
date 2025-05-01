@@ -12,7 +12,7 @@ dest_files=["res://.godot/imported/ambient3.ogg-00c95b54b0bb914649e1037bdf9d3497
 
 [params]
 
-loop=false
+loop=true
 loop_offset=0
 bpm=0
 beat_count=0

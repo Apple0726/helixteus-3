@@ -12,7 +12,7 @@ var hbox_data:Array = []
 var send_to_rover:int = -1 # Used when the player sends items to rover and the inventory panel opens
 
 func _ready():
-	set_polygon(size)
+	set_polygon($GUI.size, $GUI.position)
 	buy_sell = buy_sell_scene.instantiate()
 	buy_sell.visible = false
 	add_child(buy_sell)

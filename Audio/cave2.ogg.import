@@ -12,7 +12,7 @@ dest_files=["res://.godot/imported/cave2.ogg-c67dae1acd3479b4b07fc932cd4a48a1.og
 
 [params]
 
-loop=false
+loop=true
 loop_offset=0
 bpm=0
 beat_count=0

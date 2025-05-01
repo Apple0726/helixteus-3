@@ -1,10 +1,12 @@
-[gd_scene load_steps=47 format=3 uid="uid://v1nifipd62vd"]
+[gd_scene load_steps=51 format=3 uid="uid://v1nifipd62vd"]
 
 [ext_resource type="Script" uid="uid://dlrkm02n2didl" path="res://Scripts/StatsPanel.gd" id="1"]
 [ext_resource type="PackedScene" uid="uid://1hq6qpr1oa3i" path="res://Scenes/AdvButton.tscn" id="2"]
-[ext_resource type="PackedScene" uid="uid://ddf2xjwcht77u" path="res://Scenes/CloseButton.tscn" id="3"]
+[ext_resource type="Texture2D" uid="uid://dcvnyb0mloli2" path="res://Graphics/GUI/Panel.png" id="3_0kyuu"]
 [ext_resource type="PackedScene" uid="uid://cfgv3174m6004" path="res://Scenes/Achievement.tscn" id="4"]
+[ext_resource type="Texture2D" uid="uid://baowebna7hgr5" path="res://Graphics/GUI/CloseButtonNormal.png" id="4_jvqxs"]
 [ext_resource type="Theme" uid="uid://cp2u1kgj60ic" path="res://Resources/default_theme.tres" id="5"]
+[ext_resource type="Texture2D" uid="uid://c1vwn7p5uxu1r" path="res://Graphics/GUI/CloseButtonHover.png" id="5_878hh"]
 [ext_resource type="Texture2D" uid="uid://b0brlrg52bjln" path="res://Graphics/Icons/money.png" id="6"]
 [ext_resource type="Texture2D" uid="uid://cq01wa1mq6mrr" path="res://Graphics/Planets/3.png" id="7"]
 [ext_resource type="Texture2D" uid="uid://b26c0halfcvvr" path="res://Graphics/Achievements/Construct.png" id="8"]
@@ -47,46 +49,69 @@
 [ext_resource type="Texture2D" uid="uid://co7hd2o2d4khw" path="res://Graphics/Buildings/greenhouse.png" id="46_0ykb7"]
 [ext_resource type="Texture2D" uid="uid://bpavp7wy8on3h" path="res://Graphics/Achievements/AncientBuildings.png" id="47"]
 
-[node name="StatsPanel" type="Panel"]
+[sub_resource type="SystemFont" id="SystemFont_sxpbd"]
+font_names = PackedStringArray("Arial")
+multichannel_signed_distance_field = true
+
+[sub_resource type="LabelSettings" id="LabelSettings_vi1vb"]
+font = SubResource("SystemFont_sxpbd")
+font_size = 24
+shadow_size = 2
+shadow_color = Color(0, 0, 0, 0.372549)
+shadow_offset = Vector2(2, 2)
+
+[node name="StatsPanel" type="Control"]
+layout_mode = 3
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -512.0
-offset_top = -296.0
-offset_right = 512.0
-offset_bottom = 296.0
+offset_left = -640.0
+offset_top = -360.0
+offset_right = -576.0
+offset_bottom = -296.0
+grow_horizontal = 2
+grow_vertical = 2
 theme = ExtResource("5")
 script = ExtResource("1")
 
-[node name="CloseButton" parent="." instance=ExtResource("3")]
-layout_mode = 0
-anchors_preset = 0
-anchor_left = 0.0
-anchor_right = 0.0
-offset_left = 992.0
-offset_top = 8.0
-offset_right = 1016.0
-offset_bottom = 32.0
-grow_horizontal = 1
+[node name="GUI" type="TextureRect" parent="."]
+offset_left = 80.0
+offset_top = 52.0
+offset_right = 1204.0
+offset_bottom = 671.0
+mouse_filter = 2
+texture = ExtResource("3_0kyuu")
+
+[node name="CloseButton" type="TextureButton" parent="."]
+offset_left = 1136.0
+offset_top = 67.0
+offset_right = 1185.0
+offset_bottom = 116.0
+texture_normal = ExtResource("4_jvqxs")
+texture_hover = ExtResource("5_878hh")
 
 [node name="Title" type="Label" parent="."]
 custom_minimum_size = Vector2(0, 38)
-layout_mode = 0
+layout_mode = 1
+anchors_preset = 10
 anchor_right = 1.0
-offset_bottom = 38.0
+offset_left = 136.0
+offset_top = 72.0
+offset_right = 432.0
+offset_bottom = 110.0
+grow_horizontal = 2
 theme_override_font_sizes/font_size = 18
 text = "Achievements & statistics"
-horizontal_alignment = 1
-vertical_alignment = 1
+label_settings = SubResource("LabelSettings_vi1vb")
 
 [node name="TabBar" type="HBoxContainer" parent="."]
 layout_mode = 0
-offset_left = 24.0
-offset_top = 48.0
-offset_right = 1000.0
-offset_bottom = 82.0
+offset_left = 152.0
+offset_top = 160.0
+offset_right = 1128.0
+offset_bottom = 194.0
 theme_override_constants/separation = 0
 alignment = 1
 
@@ -108,19 +133,20 @@ offset_bottom = 40.0
 [node name="Progress" type="Label" parent="Achievements"]
 custom_minimum_size = Vector2(0, 38)
 layout_mode = 0
-offset_left = 48.0
-offset_top = 80.0
-offset_right = 303.0
-offset_bottom = 128.0
+offset_left = 488.0
+offset_top = 88.0
+offset_right = 1120.0
+offset_bottom = 144.0
 text = "Achievements earned: 31/47"
+horizontal_alignment = 1
 vertical_alignment = 1
 
 [node name="ScrollContainer" type="ScrollContainer" parent="Achievements"]
 layout_mode = 0
-offset_left = 24.0
-offset_top = 128.0
-offset_right = 1000.0
-offset_bottom = 568.0
+offset_left = 152.0
+offset_top = 200.0
+offset_right = 1128.0
+offset_bottom = 640.0
 
 [node name="HBox" type="HBoxContainer" parent="Achievements/ScrollContainer"]
 layout_mode = 2
@@ -718,7 +744,6 @@ max_value = 25.0
 value = 20.0
 scrollable = false
 
-[connection signal="close_button_pressed" from="CloseButton" to="." method="_on_close_button_pressed"]
 [connection signal="pressed" from="TabBar/Achievements" to="." method="_on_Achievements_pressed"]
 [connection signal="pressed" from="TabBar/Statistics" to="." method="_on_Statistics_pressed"]
 [connection signal="item_selected" from="Statistics/HBox/OptionButton" to="." method="_on_OptionButton_item_selected"]

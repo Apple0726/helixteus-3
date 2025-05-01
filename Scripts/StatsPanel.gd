@@ -6,7 +6,7 @@ var star_class_bar_width:float = 20.0
 var ach_num:int = 0
 
 func _ready():
-	set_polygon(size)
+	set_polygon($GUI.size, $GUI.position)
 	var show_stats_for:Array = tr("SHOW_STATS_FOR").split("%s")
 	$Statistics/HBox/Prefix.text = show_stats_for[0]
 	$Statistics/HBox/Suffix.text = show_stats_for[1]

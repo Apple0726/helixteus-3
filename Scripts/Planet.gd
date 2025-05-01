@@ -633,10 +633,10 @@ func click_tile(tile, tile_id:int):
 			game.toggle_panel("SC_panel")
 			game.SC_panel.hslider.value = game.SC_panel.hslider.max_value
 		Building.GLASS_FACTORY:
-			game.toggle_panel(game.production_panel)
+			game.toggle_panel("production_panel")
 			game.production_panel.refresh2(bldg, "sand", "glass", "mats", "mats")
 		Building.STEAM_ENGINE:
-			game.toggle_panel(game.production_panel)
+			game.toggle_panel("production_panel")
 			game.production_panel.refresh2(bldg, "coal", "energy", "mats", "")
 		Building.ATOM_MANIPULATOR:
 			game.AMN_panel.tf = false

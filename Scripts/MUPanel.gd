@@ -1,7 +1,7 @@
 extends "Panel.gd"
 
 func _ready():
-	set_polygon(size)
+	set_polygon($GUI.size, $GUI.position)
 	for MU in game.MUs:
 		var hbox = HBoxContainer.new()
 		var title = preload("res://Scenes/HelpText.tscn").instantiate()

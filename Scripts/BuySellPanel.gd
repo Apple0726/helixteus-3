@@ -1,4 +1,4 @@
-extends Panel
+extends Control
 
 @onready var game = get_node("/root/Game")
 var type:String
