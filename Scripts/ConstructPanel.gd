@@ -3,8 +3,8 @@ extends Control
 @onready var game = get_node("/root/Game")
 var basic_bldgs:Array = [Building.MINERAL_EXTRACTOR, Building.POWER_PLANT, Building.RESEARCH_LAB, Building.BORING_MACHINE, Building.SOLAR_PANEL, Building.ATMOSPHERE_EXTRACTOR]
 var storage_bldgs:Array = [Building.MINERAL_SILO, Building.BATTERY]
-var production_bldgs:Array = [Building.STONE_CRUSHER, Building.GLASS_FACTORY, Building.STEAM_ENGINE, Building.ATOM_MANIPULATOR, Building.SUBATOMIC_PARTICLE_REACTOR]
-var support_bldgs:Array = [Building.GREENHOUSE, Building.CENTRAL_BUSINESS_DISTRICT]
+var production_bldgs:Array = [Building.STONE_CRUSHER, Building.GLASS_FACTORY, Building.STEAM_ENGINE, Building.ATOM_MANIPULATOR, Building.SUBATOMIC_PARTICLE_REACTOR, Building.GREENHOUSE]
+var support_bldgs:Array = [Building.CENTRAL_BUSINESS_DISTRICT]
 var vehicles_bldgs:Array = [Building.ROVER_CONSTRUCTION_CENTER, Building.SHIPYARD, Building.PROBE_CONSTRUCTION_CENTER]
 var megastructures:Array = ["DS", "SE", "MME", "CBS", "MB", "PK"]
 var build_all:bool = false

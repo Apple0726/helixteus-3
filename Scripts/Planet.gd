@@ -1197,10 +1197,13 @@ func _unhandled_input(event):
 			if constructing_ancient_building_tier == -1:
 				if available_to_build(tile):
 					constr_bldg(tile_id, curr_time, bldg_to_construct)
-					if bldg_to_construct == Building.GREENHOUSE:
-						var soil_tiles = $TileFeatures.get_used_cells(2)
+					if (bldg_to_construct == Building.GREENHOUSE
+					and game.tile_data[tile_id]
+					and game.tile_data[tile_id].has("bldg")
+					and game.tile_data[tile_id].bldg.name == Building.GREENHOUSE):
+						var soil_tiles = $Soil.get_used_cells(0)
 						soil_tiles.append(Vector2i(tile_id % wid, int(tile_id / wid)))
-						$TileFeatures.set_cells_terrain_connect(2, soil_tiles, 0, 3)
+						$Soil.set_cells_terrain_connect(0, soil_tiles, 0, 3)
 			else:
 				if bldg_to_construct == AncientBuilding.NUCLEAR_FUSION_REACTOR:
 					if x_pos < wid-1 and y_pos < wid-1:

@@ -196,12 +196,12 @@ stretch_mode = 6
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="VBoxContainer/Construct"]
 libraries = {
-"": SubResource("AnimationLibrary_qi0uf")
+&"": SubResource("AnimationLibrary_qi0uf")
 }
 
 [node name="ButtonsAnimation" type="AnimationPlayer" parent="."]
 libraries = {
-"": SubResource("AnimationLibrary_qgp35")
+&"": SubResource("AnimationLibrary_qgp35")
 }
 autoplay = "MoveButtons"
 

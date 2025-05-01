@@ -23,10 +23,10 @@ func _ready():
 	$Control/BombActivateLabel.modulate.a = 0.0
 	$Control/LightActivateLabel.modulate.a = 0.0
 	BG_material.set_shader_parameter("position", Vector2.ZERO)
-	bullet_lv = game.ship_data[0].bullet.lv
-	laser_lv = game.ship_data[0].laser.lv
-	bomb_lv = game.ship_data[0].bomb.lv
-	light_lv = game.ship_data[0].light.lv
+	bullet_lv = game.ship_data[0].bullet[0]
+	laser_lv = game.ship_data[0].laser[0]
+	bomb_lv = game.ship_data[0].bomb[0]
+	light_lv = game.ship_data[0].light[0]
 	universe_time_speed = game.u_i.time_speed
 	laser_range = 200.0 * (1.0 + laser_lv / 5.0)
 	$Ship/LaserArea/CollisionShape2D.shape.radius = laser_range

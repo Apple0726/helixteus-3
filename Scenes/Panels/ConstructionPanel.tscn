@@ -305,7 +305,7 @@ horizontal_alignment = 1
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 libraries = {
-"": SubResource("AnimationLibrary_bp5hg")
+&"": SubResource("AnimationLibrary_bp5hg")
 }
 
 [connection signal="tree_exited" from="." to="." method="_on_tree_exited"]

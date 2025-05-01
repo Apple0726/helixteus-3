@@ -154,7 +154,6 @@ offset_bottom = 624.0
 infinite_research = true
 
 [node name="Main" type="Control" parent="."]
-modulate = Color(1, 1, 1, 0)
 layout_mode = 3
 anchors_preset = 0
 offset_right = 40.0

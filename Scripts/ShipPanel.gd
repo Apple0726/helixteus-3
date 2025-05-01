@@ -27,7 +27,7 @@ func add_ship_node(id: int):
 	ship_nodes.append(ship)
 
 func refresh():
-	pass
+	set_process(true)
 	#$Drives.refresh()
 	#if game.ships_travel_data.travel_view != "-":
 		#$SpaceportTimer.stop()
@@ -49,7 +49,6 @@ func refresh():
 			#spaceport_tier = -1
 			#$Panel/TravelETA["theme_override_colors/font_color"] = Color.WHITE
 			#$Panel/TravelETA.text = ""
-	#set_process(true)
 
 func _process(delta):
 	if selected_ship_id != -1:
