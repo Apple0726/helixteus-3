@@ -1596,7 +1596,14 @@ func switch_view(new_view:String, other_params:Dictionary = {}):
 				cave = load("res://Scenes/Views/Cave.tscn").instantiate()
 				cave.rover_data = rover_data[rover_id]
 				cave.start_at_floor = other_params.get("start_floor", 1)
-				switch_music(preload("res://Audio/cave1.ogg"), u_i.time_speed * tile_data[c_t].get("time_speed_bonus", 1.0), 0.95 if tile_data[c_t].has("aurora") else 1.0)
+				var music_time_speed = u_i.time_speed * tile_data[c_t].get("time_speed_bonus", 1.0)
+				var music_pitch = 0.95 if tile_data[c_t].has("aurora") else 1.0
+				var music
+				if tile_data[c_t].has("ash"):
+					music = preload("res://Audio/lava_cave.ogg")
+				else:
+					music = preload("res://Audio/cave1.ogg")
+				switch_music(music, music_time_speed, music_pitch)
 				add_child(cave)
 			"STM":
 				$Ship.visible = false
