@@ -129,7 +129,7 @@ func attack_target():
 	projectile.mass = 1.0
 	projectile.velocity_process_modifier = 5.0 if battle_scene.animations_sped_up else 1.0
 	projectile.rotation = randf_range(target_angle - target_angle_max_deviation, target_angle + target_angle_max_deviation)
-	projectile.damage = 3.0
+	projectile.damage = 2.0
 	projectile.shooter = self
 	projectile.weapon_accuracy = 1.0 * accuracy
 	projectile.deflects_remaining = 0

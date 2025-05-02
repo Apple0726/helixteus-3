@@ -30,7 +30,7 @@ var names = [
 
 var class_modifiers = {
 	STANDARD: {
-		"HP": 1,
+		"HP": 2,
 		"HP_increase_on_levelup": 5,
 		"attack": 1,
 		"defense": 1,
@@ -46,7 +46,7 @@ var class_modifiers = {
 		"agility": 1,
 	},
 	DEFENSIVE: {
-		"HP": 1,
+		"HP": 2,
 		"HP_increase_on_levelup": 5,
 		"attack": 0,
 		"defense": 3,
@@ -70,7 +70,7 @@ var class_modifiers = {
 		"agility": 4,
 	},
 	ENERGETIC: {
-		"HP": -1,
+		"HP": -2,
 		"HP_increase_on_levelup": 3,
 		"attack": 1,
 		"defense": -1,
@@ -78,7 +78,7 @@ var class_modifiers = {
 		"agility": 3,
 	},
 	SUPPORT: {
-		"HP": 2,
+		"HP": 4,
 		"HP_increase_on_levelup": 6,
 		"attack": -2,
 		"defense": 0,
@@ -86,7 +86,7 @@ var class_modifiers = {
 		"agility": 0,
 	},
 	RECKLESS: {
-		"HP": -1,
+		"HP": -2,
 		"HP_increase_on_levelup": 3,
 		"attack": 8,
 		"defense": -1,
@@ -94,7 +94,7 @@ var class_modifiers = {
 		"agility": 3,
 	},
 	IMPENETRABLE: {
-		"HP": 5,
+		"HP": 8,
 		"HP_increase_on_levelup": 10,
 		"attack": -1,
 		"defense": 5,
@@ -102,7 +102,7 @@ var class_modifiers = {
 		"agility": -4,
 	},
 	UBER: {
-		"HP": -6,
+		"HP": -9,
 		"HP_increase_on_levelup": 1,
 		"attack": 3,
 		"defense": 3,

@@ -28,7 +28,7 @@ func _process(delta):
 	for i in len(battle_scene.ship_data):
 		var XP_node = get_node("Ship%s/XP/TextureProgressGained" % (i + 1))
 		var XP_text_node = get_node("Ship%s/XP/Label2" % (i + 1))
-		XP_text_node.text = "%s / %s" % [Helper.format_num(round(XP_node.value)), Helper.format_num(round(battle_scene.ship_data[i].XP_to_lv))]
+		XP_text_node.text = "%s / %s" % [Helper.format_num(round(XP_node.value)), Helper.format_num(round(XP_node.max_value))]
 
 
 func _on_close_button_pressed() -> void:

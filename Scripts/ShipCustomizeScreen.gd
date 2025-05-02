@@ -55,7 +55,7 @@ func update_ship_stats_after_class_change(ship_class: int):
 
 func update_ship_stats_display():
 	var ship_class:int = ship_data.ship_class
-	ship_data.HP = 10 + ShipClass.class_modifiers[ship_class].HP + ShipClass.class_modifiers[ship_class].HP_increase_on_levelup * (allocated_HP + ship_data.lv - 1)
+	ship_data.HP = 15 + ShipClass.class_modifiers[ship_class].HP + ShipClass.class_modifiers[ship_class].HP_increase_on_levelup * (allocated_HP + ship_data.lv - 1)
 	ship_data.attack = 10 + ShipClass.class_modifiers[ship_class].attack + allocated_attack
 	ship_data.defense = 10 + ShipClass.class_modifiers[ship_class].defense + allocated_defense
 	ship_data.accuracy = 10 + ShipClass.class_modifiers[ship_class].accuracy + allocated_accuracy

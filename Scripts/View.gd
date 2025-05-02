@@ -233,6 +233,8 @@ func _draw():
 							shapes_data.erase(shape)
 
 func refresh():
+	if game.c_v == "":
+		return
 	#if game.c_v not in ["universe", "cluster", "galaxy", "system", "planet"]:
 		#return
 	var show_ship = false

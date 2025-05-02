@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=3 uid="uid://d25bie4radplj"]
+[gd_scene load_steps=12 format=3 uid="uid://d25bie4radplj"]
 
 [ext_resource type="Theme" uid="uid://cp2u1kgj60ic" path="res://Resources/default_theme.tres" id="1_fik65"]
 [ext_resource type="Texture2D" uid="uid://koi0aarpqj30" path="res://Graphics/Ships/Ship0.png" id="1_krjc3"]
@@ -9,6 +9,7 @@
 [ext_resource type="Texture2D" uid="uid://cqiyti2xdxtcw" path="res://Graphics/Icons/defense.png" id="7_sfcj0"]
 [ext_resource type="Texture2D" uid="uid://bn520d6r5iwik" path="res://Graphics/Icons/accuracy.png" id="8_72tah"]
 [ext_resource type="Texture2D" uid="uid://bapj1r8e5pwia" path="res://Graphics/Icons/agility.png" id="9_cosga"]
+[ext_resource type="PackedScene" uid="uid://bv51d6mfcjqfn" path="res://Scenes/RESlot.tscn" id="10_tyega"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_q0bap"]
 content_margin_left = 10.0
@@ -32,10 +33,10 @@ metadata/_edit_lock_ = true
 
 [node name="ShipClass" type="PanelContainer" parent="."]
 layout_mode = 0
-offset_left = 520.0
+offset_left = 496.0
 offset_top = 76.0
-offset_right = 716.0
-offset_bottom = 358.0
+offset_right = 692.0
+offset_bottom = 470.0
 theme_override_styles/panel = SubResource("StyleBoxFlat_q0bap")
 
 [node name="VBox" type="VBoxContainer" parent="ShipClass"]
@@ -98,9 +99,9 @@ layout_mode = 2
 
 [node name="Actions" type="HBoxContainer" parent="."]
 layout_mode = 1
-offset_left = 512.0
+offset_left = 968.0
 offset_top = 624.0
-offset_right = 768.0
+offset_right = 1224.0
 offset_bottom = 665.0
 theme_override_constants/separation = 25
 alignment = 2
@@ -118,9 +119,9 @@ text = "CONFIRM"
 
 [node name="Ship" type="TextureRect" parent="."]
 layout_mode = 0
-offset_left = 172.0
+offset_left = 124.0
 offset_top = 84.0
-offset_right = 428.0
+offset_right = 380.0
 offset_bottom = 212.0
 texture = ExtResource("1_krjc3")
 expand_mode = 1
@@ -395,9 +396,9 @@ text = "+"
 
 [node name="PassiveAbility" type="Panel" parent="."]
 layout_mode = 0
-offset_left = 112.0
+offset_left = 64.0
 offset_top = 248.0
-offset_right = 480.0
+offset_right = 432.0
 offset_bottom = 452.0
 theme_override_styles/panel = SubResource("StyleBoxFlat_q0bap")
 
@@ -422,6 +423,167 @@ offset_right = -16.0
 grow_horizontal = 2
 grow_vertical = 2
 autowrap_mode = 3
+
+[node name="Weapons" type="Panel" parent="."]
+layout_mode = 0
+offset_left = 64.0
+offset_top = 480.0
+offset_right = 552.0
+offset_bottom = 700.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_q0bap")
+
+[node name="Next" type="Button" parent="Weapons"]
+layout_mode = 1
+offset_left = 156.0
+offset_top = 12.0
+offset_right = 188.0
+offset_bottom = 45.0
+text = ">"
+
+[node name="Previous" type="Button" parent="Weapons"]
+layout_mode = 1
+offset_left = 12.0
+offset_top = 12.0
+offset_right = 44.0
+offset_bottom = 45.0
+text = "<"
+
+[node name="CurrentWeapon" type="Label" parent="Weapons"]
+layout_mode = 1
+offset_left = 40.0
+offset_top = 16.0
+offset_right = 160.0
+offset_bottom = 39.0
+text = "BULLET"
+horizontal_alignment = 1
+
+[node name="LvRemaining" type="Label" parent="Weapons"]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -292.0
+offset_top = 12.0
+offset_right = -14.0
+offset_bottom = 44.0
+grow_horizontal = 0
+text = "Weapon level-ups remaining: 1"
+horizontal_alignment = 2
+vertical_alignment = 1
+
+[node name="ScrollContainer" type="ScrollContainer" parent="Weapons"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 4.0
+offset_top = 52.0
+offset_right = -4.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Control" type="Control" parent="Weapons/ScrollContainer"]
+custom_minimum_size = Vector2(456, 350)
+layout_mode = 2
+
+[node name="11" parent="Weapons/ScrollContainer/Control" instance=ExtResource("10_tyega")]
+layout_mode = 0
+offset_left = 28.0
+offset_top = 12.0
+offset_right = 88.0
+offset_bottom = 72.0
+
+[node name="12" parent="Weapons/ScrollContainer/Control" instance=ExtResource("10_tyega")]
+layout_mode = 0
+offset_left = 180.0
+offset_top = 12.0
+offset_right = 240.0
+offset_bottom = 72.0
+
+[node name="13" parent="Weapons/ScrollContainer/Control" instance=ExtResource("10_tyega")]
+layout_mode = 0
+offset_left = 340.0
+offset_top = 12.0
+offset_right = 400.0
+offset_bottom = 72.0
+
+[node name="21" parent="Weapons/ScrollContainer/Control" instance=ExtResource("10_tyega")]
+layout_mode = 0
+offset_left = 28.0
+offset_top = 112.0
+offset_right = 88.0
+offset_bottom = 172.0
+
+[node name="22" parent="Weapons/ScrollContainer/Control" instance=ExtResource("10_tyega")]
+layout_mode = 0
+offset_left = 180.0
+offset_top = 112.0
+offset_right = 240.0
+offset_bottom = 172.0
+
+[node name="23" parent="Weapons/ScrollContainer/Control" instance=ExtResource("10_tyega")]
+layout_mode = 0
+offset_left = 340.0
+offset_top = 112.0
+offset_right = 400.0
+offset_bottom = 172.0
+
+[node name="31" parent="Weapons/ScrollContainer/Control" instance=ExtResource("10_tyega")]
+layout_mode = 0
+offset_left = 28.0
+offset_top = 212.0
+offset_right = 88.0
+offset_bottom = 272.0
+
+[node name="32" parent="Weapons/ScrollContainer/Control" instance=ExtResource("10_tyega")]
+layout_mode = 0
+offset_left = 180.0
+offset_top = 212.0
+offset_right = 240.0
+offset_bottom = 272.0
+
+[node name="33" parent="Weapons/ScrollContainer/Control" instance=ExtResource("10_tyega")]
+layout_mode = 0
+offset_left = 340.0
+offset_top = 212.0
+offset_right = 400.0
+offset_bottom = 272.0
+
+[node name="Line2D3" type="Line2D" parent="Weapons/ScrollContainer/Control"]
+position = Vector2(10, 14)
+points = PackedVector2Array(94, 30, 154, 30)
+width = 2.0
+default_color = Color(0.4, 0.886275, 1, 1)
+
+[node name="Line2D4" type="Line2D" parent="Weapons/ScrollContainer/Control"]
+position = Vector2(168, 14)
+points = PackedVector2Array(94, 30, 154, 30)
+width = 2.0
+default_color = Color(0.4, 0.886275, 1, 1)
+
+[node name="Line2D5" type="Line2D" parent="Weapons/ScrollContainer/Control"]
+position = Vector2(10, 112)
+points = PackedVector2Array(94, 30, 154, 30)
+width = 2.0
+default_color = Color(0.4, 0.886275, 1, 1)
+
+[node name="Line2D6" type="Line2D" parent="Weapons/ScrollContainer/Control"]
+position = Vector2(168, 112)
+points = PackedVector2Array(94, 30, 154, 30)
+width = 2.0
+default_color = Color(0.4, 0.886275, 1, 1)
+
+[node name="Line2D7" type="Line2D" parent="Weapons/ScrollContainer/Control"]
+position = Vector2(10, 212)
+points = PackedVector2Array(94, 30, 154, 30)
+width = 2.0
+default_color = Color(0.4, 0.886275, 1, 1)
+
+[node name="Line2D8" type="Line2D" parent="Weapons/ScrollContainer/Control"]
+position = Vector2(168, 212)
+points = PackedVector2Array(94, 30, 154, 30)
+width = 2.0
+default_color = Color(0.4, 0.886275, 1, 1)
 
 [connection signal="pressed" from="Actions/Cancel" to="." method="_on_cancel_pressed"]
 [connection signal="pressed" from="Actions/Done" to="." method="_on_done_pressed"]

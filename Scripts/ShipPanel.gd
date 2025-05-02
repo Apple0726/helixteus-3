@@ -11,7 +11,7 @@ func _ready():
 	$ShipStats/Label.show()
 	for i in len(game.ship_data):
 		add_ship_node(i)
-	set_polygon(size)
+	set_polygon($GUI.size, $GUI.position)
 	refresh()
 	$Drives.panel_closed.connect(hide_drive_panel)
 

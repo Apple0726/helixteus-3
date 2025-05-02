@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=3 uid="uid://cvlkphcaskboq"]
+[gd_scene load_steps=13 format=3 uid="uid://cvlkphcaskboq"]
 
 [ext_resource type="Theme" uid="uid://cp2u1kgj60ic" path="res://Resources/default_theme.tres" id="4"]
 [ext_resource type="Texture2D" uid="uid://baowebna7hgr5" path="res://Graphics/GUI/CloseButtonNormal.png" id="4_mojm2"]
@@ -7,6 +7,7 @@
 [ext_resource type="Texture2D" uid="uid://dcvnyb0mloli2" path="res://Graphics/GUI/Panel.png" id="5_lcldk"]
 [ext_resource type="PackedScene" uid="uid://n8w5ffyg17o1" path="res://Scenes/Battle/VictoryShipStats.tscn" id="7_go02j"]
 [ext_resource type="Texture2D" uid="uid://dxjlx3yjmlywi" path="res://Graphics/Ships/Ship2.png" id="8_3r33v"]
+[ext_resource type="Texture2D" uid="uid://b8ga5o8bhm1hb" path="res://Graphics/Ships/Ship1.png" id="8_8c7g3"]
 [ext_resource type="Texture2D" uid="uid://wrc1em7frxle" path="res://Graphics/Ships/Ship3.png" id="10_pobcv"]
 [ext_resource type="Script" uid="uid://cso3e7d4e2gc8" path="res://Scripts/VictoryPanel.gd" id="11"]
 
@@ -89,7 +90,7 @@ offset_left = 680.0
 offset_top = 232.0
 offset_right = 800.0
 offset_bottom = 352.0
-texture = ExtResource("8_3r33v")
+texture = ExtResource("8_8c7g3")
 
 [node name="Ship3" parent="." instance=ExtResource("7_go02j")]
 layout_mode = 0
