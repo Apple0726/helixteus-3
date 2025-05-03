@@ -8,6 +8,7 @@
 [node name="Buffs" type="HBoxContainer"]
 offset_right = 40.0
 offset_bottom = 40.0
+mouse_filter = 2
 alignment = 1
 
 [node name="Attack" type="TextureRect" parent="."]

@@ -2,6 +2,10 @@ extends "BattleEntity.gd"
 
 var ship_class:int
 var ship_type:int
+var bullet_levels:Array
+var laser_levels:Array
+var bomb_levels:Array
+var light_levels:Array
 
 var weapon_accuracy_mult:float
 var light_cone
@@ -30,6 +34,10 @@ func _ready() -> void:
 func initialize_stats(data: Dictionary):
 	super(data)
 	ship_class = data.ship_class
+	bullet_levels = data.bullet
+	laser_levels = data.laser
+	bomb_levels = data.bomb
+	light_levels = data.light
 	if ship_class == ShipClass.STANDARD:
 		for effect in Battle.StatusEffect.N:
 			status_effect_resistances[effect] = 0.2
@@ -266,9 +274,9 @@ func add_target_buttons_for_push():
 			target_btn.get_node("TextureButton").shortcut.events.append(InputEventKey.new())
 			target_btn.get_node("TextureButton").shortcut.events[0].physical_keycode = 48 + shortcut_key
 		target_btn.get_node("TextureButton").pressed.connect(show_push_strength_panel.bind(entity))
-		var position_difference = position - entity.position
+		var position_difference_normalized = (position - entity.position).normalized()
 		var velocity_difference = velocity - entity.velocity
-		var push_difficulty_from_velocity = abs(0.1 * position_difference.rotated(PI / 2.0).dot(velocity_difference))
+		var push_difficulty_from_velocity = abs(0.05 * position_difference_normalized.rotated(PI / 2.0).dot(velocity_difference))
 		var push_success_chance = 100.0 * (1.0 - 1.0 / (1.0 + exp((agility + agility_buff - entity.agility - entity.agility_buff - push_difficulty_from_velocity + 9.2) / 5.8)))
 		target_btn.get_node("TextureButton").mouse_entered.connect(game.show_adv_tooltip.bind(tr("PUSH_SUCCESS_CHANCE") + ": %.1f%%" % push_success_chance, {"additional_text":tr("PUSH_SUCCESS_CHANCE_HELP")}))
 		target_btn.get_node("TextureButton").mouse_exited.connect(game.hide_tooltip)
@@ -297,7 +305,7 @@ func show_push_strength_panel(entity: BattleEntity):
 func push_entity():
 	var push_success = true
 	if entity_to_push.type == Battle.EntityType.ENEMY:
-		push_success = push_entity_attempt(agility + agility_buff, entity_to_push.agility + entity_to_push.agility_buff, position - entity_to_push.position,  - entity_to_push.velocity)
+		push_success = push_entity_attempt(agility + agility_buff, entity_to_push.agility + entity_to_push.agility_buff, (position - entity_to_push.position).normalized(), velocity - entity_to_push.velocity)
 	entity_to_push.update_velocity_arrow()
 	if push_success:
 		create_tween().tween_property(entity_to_push, "velocity", entity_to_push.velocity + calculate_velocity_change(), 0.4).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)

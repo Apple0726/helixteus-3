@@ -1,4 +1,4 @@
-[gd_scene load_steps=23 format=3 uid="uid://dmtuc03fuk5dc"]
+[gd_scene load_steps=24 format=3 uid="uid://dmtuc03fuk5dc"]
 
 [ext_resource type="Theme" uid="uid://cp2u1kgj60ic" path="res://Resources/default_theme.tres" id="1_ousv4"]
 [ext_resource type="Script" uid="uid://dsplquhp0nmmw" path="res://Scripts/Battle/BattleGUI.gd" id="1_phavr"]
@@ -10,6 +10,7 @@
 [ext_resource type="Texture2D" uid="uid://ds6nct7g63284" path="res://Graphics/Icons/Arrow.png" id="8_cg768"]
 [ext_resource type="Texture2D" uid="uid://bapj1r8e5pwia" path="res://Graphics/Icons/agility.png" id="9_hr53r"]
 [ext_resource type="Texture2D" uid="uid://csfu1k8w75bsv" path="res://Graphics/Effects/spotlight_8_s.png" id="10_38hmk"]
+[ext_resource type="Texture2D" uid="uid://cbg7ol8hmg3w0" path="res://Graphics/Misc/bullet.png" id="10_oca3i"]
 
 [sub_resource type="InputEventKey" id="InputEventKey_oca3i"]
 device = -1
@@ -115,8 +116,6 @@ color = Color(1, 1, 1, 0.505882)
 polygon = PackedVector2Array(0, 0, 0, 32, 20, 16)
 
 [node name="MainPanel" type="NinePatchRect" parent="."]
-visible = false
-modulate = Color(1, 1, 1, 0)
 layout_mode = 0
 offset_left = 216.0
 offset_top = 616.0
@@ -190,7 +189,7 @@ icon = ExtResource("9_hr53r")
 icon_alignment = 1
 expand_icon = true
 
-[node name="Label" type="Label" parent="MainPanel"]
+[node name="BulletLabel" type="Label" parent="MainPanel"]
 layout_mode = 0
 offset_left = 68.0
 offset_top = 12.0
@@ -199,7 +198,94 @@ offset_bottom = 35.0
 text = "BULLET"
 horizontal_alignment = 1
 
-[node name="Label2" type="Label" parent="MainPanel"]
+[node name="BulletPath1" type="HBoxContainer" parent="MainPanel"]
+layout_mode = 0
+offset_left = 144.0
+offset_top = 44.0
+offset_right = 184.0
+offset_bottom = 56.0
+theme_override_constants/separation = -2
+
+[node name="Level1" type="TextureRect" parent="MainPanel/BulletPath1"]
+custom_minimum_size = Vector2(12, 0)
+layout_mode = 2
+texture = ExtResource("10_oca3i")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Level2" type="TextureRect" parent="MainPanel/BulletPath1"]
+custom_minimum_size = Vector2(12, 0)
+layout_mode = 2
+texture = ExtResource("10_oca3i")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Level3" type="TextureRect" parent="MainPanel/BulletPath1"]
+custom_minimum_size = Vector2(12, 0)
+layout_mode = 2
+texture = ExtResource("10_oca3i")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="BulletPath2" type="HBoxContainer" parent="MainPanel"]
+layout_mode = 0
+offset_left = 144.0
+offset_top = 58.0
+offset_right = 184.0
+offset_bottom = 70.0
+theme_override_constants/separation = -2
+
+[node name="Level1" type="TextureRect" parent="MainPanel/BulletPath2"]
+custom_minimum_size = Vector2(12, 0)
+layout_mode = 2
+texture = ExtResource("10_oca3i")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Level2" type="TextureRect" parent="MainPanel/BulletPath2"]
+custom_minimum_size = Vector2(12, 0)
+layout_mode = 2
+texture = ExtResource("10_oca3i")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Level3" type="TextureRect" parent="MainPanel/BulletPath2"]
+custom_minimum_size = Vector2(12, 0)
+layout_mode = 2
+texture = ExtResource("10_oca3i")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="BulletPath3" type="HBoxContainer" parent="MainPanel"]
+layout_mode = 0
+offset_left = 144.0
+offset_top = 72.0
+offset_right = 184.0
+offset_bottom = 84.0
+theme_override_constants/separation = -2
+
+[node name="Level1" type="TextureRect" parent="MainPanel/BulletPath3"]
+custom_minimum_size = Vector2(12, 0)
+layout_mode = 2
+texture = ExtResource("10_oca3i")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Level2" type="TextureRect" parent="MainPanel/BulletPath3"]
+custom_minimum_size = Vector2(12, 0)
+layout_mode = 2
+texture = ExtResource("10_oca3i")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Level3" type="TextureRect" parent="MainPanel/BulletPath3"]
+custom_minimum_size = Vector2(12, 0)
+layout_mode = 2
+texture = ExtResource("10_oca3i")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="LaserLabel" type="Label" parent="MainPanel"]
 layout_mode = 0
 offset_left = 188.0
 offset_top = 12.0
@@ -208,7 +294,94 @@ offset_bottom = 35.0
 text = "LASER"
 horizontal_alignment = 1
 
-[node name="Label3" type="Label" parent="MainPanel"]
+[node name="LaserPath1" type="HBoxContainer" parent="MainPanel"]
+layout_mode = 0
+offset_left = 268.0
+offset_top = 44.0
+offset_right = 308.0
+offset_bottom = 56.0
+theme_override_constants/separation = -2
+
+[node name="Level1" type="TextureRect" parent="MainPanel/LaserPath1"]
+custom_minimum_size = Vector2(12, 0)
+layout_mode = 2
+texture = ExtResource("10_oca3i")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Level2" type="TextureRect" parent="MainPanel/LaserPath1"]
+custom_minimum_size = Vector2(12, 0)
+layout_mode = 2
+texture = ExtResource("10_oca3i")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Level3" type="TextureRect" parent="MainPanel/LaserPath1"]
+custom_minimum_size = Vector2(12, 0)
+layout_mode = 2
+texture = ExtResource("10_oca3i")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="LaserPath2" type="HBoxContainer" parent="MainPanel"]
+layout_mode = 0
+offset_left = 268.0
+offset_top = 58.0
+offset_right = 308.0
+offset_bottom = 70.0
+theme_override_constants/separation = -2
+
+[node name="Level1" type="TextureRect" parent="MainPanel/LaserPath2"]
+custom_minimum_size = Vector2(12, 0)
+layout_mode = 2
+texture = ExtResource("10_oca3i")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Level2" type="TextureRect" parent="MainPanel/LaserPath2"]
+custom_minimum_size = Vector2(12, 0)
+layout_mode = 2
+texture = ExtResource("10_oca3i")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Level3" type="TextureRect" parent="MainPanel/LaserPath2"]
+custom_minimum_size = Vector2(12, 0)
+layout_mode = 2
+texture = ExtResource("10_oca3i")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="LaserPath3" type="HBoxContainer" parent="MainPanel"]
+layout_mode = 0
+offset_left = 268.0
+offset_top = 72.0
+offset_right = 308.0
+offset_bottom = 84.0
+theme_override_constants/separation = -2
+
+[node name="Level1" type="TextureRect" parent="MainPanel/LaserPath3"]
+custom_minimum_size = Vector2(12, 0)
+layout_mode = 2
+texture = ExtResource("10_oca3i")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Level2" type="TextureRect" parent="MainPanel/LaserPath3"]
+custom_minimum_size = Vector2(12, 0)
+layout_mode = 2
+texture = ExtResource("10_oca3i")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Level3" type="TextureRect" parent="MainPanel/LaserPath3"]
+custom_minimum_size = Vector2(12, 0)
+layout_mode = 2
+texture = ExtResource("10_oca3i")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="BombLabel" type="Label" parent="MainPanel"]
 layout_mode = 0
 offset_left = 308.0
 offset_top = 12.0
@@ -217,7 +390,94 @@ offset_bottom = 35.0
 text = "BOMB"
 horizontal_alignment = 1
 
-[node name="Label4" type="Label" parent="MainPanel"]
+[node name="BombPath1" type="HBoxContainer" parent="MainPanel"]
+layout_mode = 0
+offset_left = 388.0
+offset_top = 44.0
+offset_right = 428.0
+offset_bottom = 56.0
+theme_override_constants/separation = -2
+
+[node name="Level1" type="TextureRect" parent="MainPanel/BombPath1"]
+custom_minimum_size = Vector2(12, 0)
+layout_mode = 2
+texture = ExtResource("10_oca3i")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Level2" type="TextureRect" parent="MainPanel/BombPath1"]
+custom_minimum_size = Vector2(12, 0)
+layout_mode = 2
+texture = ExtResource("10_oca3i")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Level3" type="TextureRect" parent="MainPanel/BombPath1"]
+custom_minimum_size = Vector2(12, 0)
+layout_mode = 2
+texture = ExtResource("10_oca3i")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="BombPath2" type="HBoxContainer" parent="MainPanel"]
+layout_mode = 0
+offset_left = 388.0
+offset_top = 58.0
+offset_right = 428.0
+offset_bottom = 70.0
+theme_override_constants/separation = -2
+
+[node name="Level1" type="TextureRect" parent="MainPanel/BombPath2"]
+custom_minimum_size = Vector2(12, 0)
+layout_mode = 2
+texture = ExtResource("10_oca3i")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Level2" type="TextureRect" parent="MainPanel/BombPath2"]
+custom_minimum_size = Vector2(12, 0)
+layout_mode = 2
+texture = ExtResource("10_oca3i")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Level3" type="TextureRect" parent="MainPanel/BombPath2"]
+custom_minimum_size = Vector2(12, 0)
+layout_mode = 2
+texture = ExtResource("10_oca3i")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="BombPath3" type="HBoxContainer" parent="MainPanel"]
+layout_mode = 0
+offset_left = 388.0
+offset_top = 72.0
+offset_right = 428.0
+offset_bottom = 84.0
+theme_override_constants/separation = -2
+
+[node name="Level1" type="TextureRect" parent="MainPanel/BombPath3"]
+custom_minimum_size = Vector2(12, 0)
+layout_mode = 2
+texture = ExtResource("10_oca3i")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Level2" type="TextureRect" parent="MainPanel/BombPath3"]
+custom_minimum_size = Vector2(12, 0)
+layout_mode = 2
+texture = ExtResource("10_oca3i")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Level3" type="TextureRect" parent="MainPanel/BombPath3"]
+custom_minimum_size = Vector2(12, 0)
+layout_mode = 2
+texture = ExtResource("10_oca3i")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="LightLabel" type="Label" parent="MainPanel"]
 layout_mode = 0
 offset_left = 432.0
 offset_top = 12.0
@@ -225,6 +485,93 @@ offset_right = 520.0
 offset_bottom = 35.0
 text = "LIGHT"
 horizontal_alignment = 1
+
+[node name="LightPath1" type="HBoxContainer" parent="MainPanel"]
+layout_mode = 0
+offset_left = 512.0
+offset_top = 44.0
+offset_right = 552.0
+offset_bottom = 56.0
+theme_override_constants/separation = -2
+
+[node name="Level1" type="TextureRect" parent="MainPanel/LightPath1"]
+custom_minimum_size = Vector2(12, 0)
+layout_mode = 2
+texture = ExtResource("10_oca3i")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Level2" type="TextureRect" parent="MainPanel/LightPath1"]
+custom_minimum_size = Vector2(12, 0)
+layout_mode = 2
+texture = ExtResource("10_oca3i")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Level3" type="TextureRect" parent="MainPanel/LightPath1"]
+custom_minimum_size = Vector2(12, 0)
+layout_mode = 2
+texture = ExtResource("10_oca3i")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="LightPath2" type="HBoxContainer" parent="MainPanel"]
+layout_mode = 0
+offset_left = 512.0
+offset_top = 58.0
+offset_right = 552.0
+offset_bottom = 70.0
+theme_override_constants/separation = -2
+
+[node name="Level1" type="TextureRect" parent="MainPanel/LightPath2"]
+custom_minimum_size = Vector2(12, 0)
+layout_mode = 2
+texture = ExtResource("10_oca3i")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Level2" type="TextureRect" parent="MainPanel/LightPath2"]
+custom_minimum_size = Vector2(12, 0)
+layout_mode = 2
+texture = ExtResource("10_oca3i")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Level3" type="TextureRect" parent="MainPanel/LightPath2"]
+custom_minimum_size = Vector2(12, 0)
+layout_mode = 2
+texture = ExtResource("10_oca3i")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="LightPath3" type="HBoxContainer" parent="MainPanel"]
+layout_mode = 0
+offset_left = 512.0
+offset_top = 72.0
+offset_right = 552.0
+offset_bottom = 84.0
+theme_override_constants/separation = -2
+
+[node name="Level1" type="TextureRect" parent="MainPanel/LightPath3"]
+custom_minimum_size = Vector2(12, 0)
+layout_mode = 2
+texture = ExtResource("10_oca3i")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Level2" type="TextureRect" parent="MainPanel/LightPath3"]
+custom_minimum_size = Vector2(12, 0)
+layout_mode = 2
+texture = ExtResource("10_oca3i")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Level3" type="TextureRect" parent="MainPanel/LightPath3"]
+custom_minimum_size = Vector2(12, 0)
+layout_mode = 2
+texture = ExtResource("10_oca3i")
+expand_mode = 1
+stretch_mode = 5
 
 [node name="MoveLabel" type="Label" parent="MainPanel"]
 layout_mode = 0

@@ -85,7 +85,6 @@ offset_left = 80.0
 offset_top = 52.0
 offset_right = 1204.0
 offset_bottom = 671.0
-mouse_filter = 2
 texture = ExtResource("3_xp52f")
 metadata/_edit_lock_ = true
 

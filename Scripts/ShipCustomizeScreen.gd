@@ -50,7 +50,7 @@ func _ready() -> void:
 	else:
 		for i in 3:
 			for j in 3:
-				$Weapons/ScrollContainer/Control.get_node("%s%s/Button" % [i+1, j+1]).mouse_entered.connect(game.show_tooltip.bind("%s%s" % [i, j]))
+				$Weapons/ScrollContainer/Control.get_node("%s%s/Button" % [i+1, j+1]).mouse_entered.connect(show_weapon_tooltip.bind(i+1, j+1))
 				$Weapons/ScrollContainer/Control.get_node("%s%s/Button" % [i+1, j+1]).mouse_exited.connect(game.hide_tooltip)
 				$Weapons/ScrollContainer/Control.get_node("%s%s/Button" % [i+1, j+1]).pressed.connect(game.show_YN_panel.bind("upgrade_ship_weapon", tr("ARE_YOU_SURE"), [i]))
 		update_weapons_panel()
@@ -239,7 +239,7 @@ enum {
 	LIGHT,
 }
 var weapon_selected = BULLET
-var weapon_selected_str = ""
+var weapon_selected_str = "bullet"
 
 func _on_weapons_next_pressed() -> void:
 	weapon_selected += 1
@@ -302,3 +302,6 @@ func upgrade_ship_weapon(path: int):
 		ship_data[weapon_selected_str][path] += 1
 		unallocated_weapon_levels -= 1
 	update_weapons_panel()
+
+func show_weapon_tooltip(path: int, lv: int):
+	game.show_tooltip(tr("%s_%s_%s_DESC" % [weapon_selected_str.to_upper(), path, lv]))

@@ -7,18 +7,8 @@ var polygon:PackedVector2Array# = [Vector2(106.5, 70), Vector2(106.5 + 1067, 70)
 var tween
 var panel_var_name:String
 
-func _ready():
-	set_process_input(false)
-	set_process(false)
-	connect("visibility_changed",Callable(self,"set_input"))
-
 func refresh():
 	pass
-
-func set_input():
-	set_process_input(visible)
-	if not visible:
-		game.block_scroll = false
 
 func set_polygon(v:Vector2, offset:Vector2 = Vector2.ZERO):
 	polygon = [offset, offset + Vector2.RIGHT * v.x, offset + v, offset + Vector2.DOWN * v.y]

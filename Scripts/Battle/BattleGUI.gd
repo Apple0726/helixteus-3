@@ -22,6 +22,8 @@ var action_selected = NONE
 
 func _ready() -> void:
 	Helper.set_back_btn($Back)
+	$MainPanel.hide()
+	$MainPanel.modulate.a = 0.0
 	$MainPanel/Bullet.mouse_exited.connect(game.hide_tooltip)
 	$MainPanel/Laser.mouse_exited.connect(game.hide_tooltip)
 	$MainPanel/Bomb.mouse_exited.connect(game.hide_tooltip)
@@ -32,6 +34,11 @@ func _ready() -> void:
 	$LightEmissionConePanel.hide()
 	$Speedup.mouse_entered.connect(game.show_tooltip.bind(tr("SPEED_UP_ANIMATIONS") + " (%s)" % OS.get_keycode_string(DisplayServer.keyboard_get_keycode_from_physical(KEY_SPACE))))
 	$Speedup.mouse_exited.connect(game.hide_tooltip)
+	for weapon in ["Bullet", "Laser", "Bomb", "Light"]:
+		for path in 3:
+			for lv in 3:
+				$MainPanel.get_node("%sPath%s/Level%s" % [weapon, path+1, lv+1]).mouse_entered.connect(game.show_tooltip.bind(tr("%s_%s_%s_DESC" % [weapon.to_upper(), path+1, lv+1])))
+				$MainPanel.get_node("%sPath%s/Level%s" % [weapon, path+1, lv+1]).mouse_exited.connect(game.hide_tooltip)
 
 
 func _input(event: InputEvent) -> void:
@@ -122,6 +129,18 @@ func reset_GUI():
 	game.block_scroll = false
 	
 func refresh_GUI():
+	for weapon in ["Bullet", "Laser", "Bomb", "Light"]:
+		var hide_levels = true
+		for path in 3:
+			if ship_node[weapon.to_lower() + "_levels"][path] > 1:
+				hide_levels = false
+				break
+		for path in 3:
+			if hide_levels:
+				$MainPanel.get_node("%sPath%s" % [weapon, path+1]).hide()
+			else:
+				for lv in 3:
+					$MainPanel.get_node("%sPath%s/Level%s" % [weapon, path+1, lv+1]).modulate = Color.WHITE if ship_node[weapon.to_lower() + "_levels"][path] > lv+1 else Color(0.3, 0.3, 0.3)
 	$MainPanel/MoveLabel.text = "%s (%.1f m)" % [tr("MOVE"), ship_node.movement_remaining]
 	if is_zero_approx(ship_node.movement_remaining):
 		$MainPanel/MoveLabel["theme_override_colors/font_color"] = Color.DARK_GRAY

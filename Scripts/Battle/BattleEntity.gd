@@ -394,8 +394,8 @@ func update_velocity_arrow(offset: Vector2 = Vector2.ZERO):
 	$VelocityArrow.rotation = (velocity + offset).angle()
 
 
-func push_entity_attempt(agility_pusher: int, agility_pushee: int, position_difference: Vector2, velocity_difference: Vector2):
-	return 1.0 / (1.0 + exp((agility_pusher - agility_pushee - abs(0.1 * position_difference.rotated(PI / 2.0).dot(velocity_difference)) + 9.2) / 5.8)) > randf()
+func push_entity_attempt(agility_pusher: int, agility_pushee: int, position_difference_normalized: Vector2, velocity_difference: Vector2):
+	return 1.0 / (1.0 + exp((agility_pusher - agility_pushee - abs(0.05 * position_difference_normalized.rotated(PI / 2.0).dot(velocity_difference)) + 9.2) / 5.8)) < randf()
 
 func collide_with_entity(collider: BattleEntity, collidee: BattleEntity):
 	var damage: float = 0.0

@@ -140,6 +140,7 @@ var ship_mouse_offset:Vector2
 var mouse_position:Vector2
 
 func _input(event: InputEvent) -> void:
+	super(event)
 	if event is InputEventMouseMotion:
 		mouse_position = event.position
 		if dragging_ship_id != -1:
