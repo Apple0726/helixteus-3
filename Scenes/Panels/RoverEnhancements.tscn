@@ -2,7 +2,7 @@
 
 [ext_resource type="Theme" uid="uid://cp2u1kgj60ic" path="res://Resources/default_theme.tres" id="1"]
 [ext_resource type="PackedScene" uid="uid://ddf2xjwcht77u" path="res://Scenes/CloseButton.tscn" id="2"]
-[ext_resource type="PackedScene" path="res://Scenes/RESlot.tscn" id="3"]
+[ext_resource type="PackedScene" uid="uid://bv51d6mfcjqfn" path="res://Scenes/RESlot.tscn" id="3"]
 [ext_resource type="Texture2D" uid="uid://etptg1hw7k6l" path="res://Graphics/Cave/RE/armor_0.png" id="4"]
 [ext_resource type="Texture2D" uid="uid://t47m4j5cowx1" path="res://Graphics/Cave/RE/armor_3.png" id="5"]
 [ext_resource type="Texture2D" uid="uid://b4l13nnalemmx" path="res://Graphics/Cave/RE/armor_2.png" id="6"]

@@ -99,10 +99,10 @@ layout_mode = 2
 
 [node name="Actions" type="HBoxContainer" parent="."]
 layout_mode = 1
-offset_left = 968.0
-offset_top = 624.0
-offset_right = 1224.0
-offset_bottom = 665.0
+offset_left = 752.0
+offset_top = 644.0
+offset_right = 1008.0
+offset_bottom = 685.0
 theme_override_constants/separation = 25
 alignment = 2
 
@@ -446,6 +446,7 @@ offset_left = 12.0
 offset_top = 12.0
 offset_right = 44.0
 offset_bottom = 45.0
+disabled = true
 text = "<"
 
 [node name="CurrentWeapon" type="Label" parent="Weapons"]
@@ -483,7 +484,7 @@ grow_horizontal = 2
 grow_vertical = 2
 
 [node name="Control" type="Control" parent="Weapons/ScrollContainer"]
-custom_minimum_size = Vector2(456, 350)
+custom_minimum_size = Vector2(456, 300)
 layout_mode = 2
 
 [node name="11" parent="Weapons/ScrollContainer/Control" instance=ExtResource("10_tyega")]
@@ -549,41 +550,41 @@ offset_top = 212.0
 offset_right = 400.0
 offset_bottom = 272.0
 
-[node name="Line2D3" type="Line2D" parent="Weapons/ScrollContainer/Control"]
+[node name="Line2D11" type="Line2D" parent="Weapons/ScrollContainer/Control"]
 position = Vector2(10, 14)
 points = PackedVector2Array(94, 30, 154, 30)
 width = 2.0
 default_color = Color(0.4, 0.886275, 1, 1)
 
-[node name="Line2D4" type="Line2D" parent="Weapons/ScrollContainer/Control"]
+[node name="Line2D12" type="Line2D" parent="Weapons/ScrollContainer/Control"]
 position = Vector2(168, 14)
 points = PackedVector2Array(94, 30, 154, 30)
 width = 2.0
 default_color = Color(0.4, 0.886275, 1, 1)
 
-[node name="Line2D5" type="Line2D" parent="Weapons/ScrollContainer/Control"]
+[node name="Line2D21" type="Line2D" parent="Weapons/ScrollContainer/Control"]
 position = Vector2(10, 112)
 points = PackedVector2Array(94, 30, 154, 30)
 width = 2.0
 default_color = Color(0.4, 0.886275, 1, 1)
 
-[node name="Line2D6" type="Line2D" parent="Weapons/ScrollContainer/Control"]
+[node name="Line2D22" type="Line2D" parent="Weapons/ScrollContainer/Control"]
 position = Vector2(168, 112)
 points = PackedVector2Array(94, 30, 154, 30)
 width = 2.0
 default_color = Color(0.4, 0.886275, 1, 1)
 
-[node name="Line2D7" type="Line2D" parent="Weapons/ScrollContainer/Control"]
+[node name="Line2D31" type="Line2D" parent="Weapons/ScrollContainer/Control"]
 position = Vector2(10, 212)
 points = PackedVector2Array(94, 30, 154, 30)
 width = 2.0
 default_color = Color(0.4, 0.886275, 1, 1)
 
-[node name="Line2D8" type="Line2D" parent="Weapons/ScrollContainer/Control"]
+[node name="Line2D32" type="Line2D" parent="Weapons/ScrollContainer/Control"]
 position = Vector2(168, 212)
 points = PackedVector2Array(94, 30, 154, 30)
 width = 2.0
-default_color = Color(0.4, 0.886275, 1, 1)
+default_color = Color(0, 0.433304, 0.509943, 1)
 
 [connection signal="pressed" from="Actions/Cancel" to="." method="_on_cancel_pressed"]
 [connection signal="pressed" from="Actions/Done" to="." method="_on_done_pressed"]
@@ -607,3 +608,5 @@ default_color = Color(0.4, 0.886275, 1, 1)
 [connection signal="mouse_exited" from="ShipStats/AgilityIcon" to="." method="_on_mouse_exited"]
 [connection signal="pressed" from="ShipStats/RemoveAgility" to="." method="_on_remove_agility_pressed"]
 [connection signal="pressed" from="ShipStats/AddAgility" to="." method="_on_add_agility_pressed"]
+[connection signal="pressed" from="Weapons/Next" to="." method="_on_weapons_next_pressed"]
+[connection signal="pressed" from="Weapons/Previous" to="." method="_on_weapons_previous_pressed"]

@@ -11,6 +11,7 @@ var allocated_attack:int = 0
 var allocated_defense:int = 0
 var allocated_accuracy:int = 0
 var allocated_agility:int = 0
+var unallocated_weapon_levels:int
 
 func _ready() -> void:
 	$Ship.texture = load("res://Graphics/Ships/Ship%s.png" % ship_id)
@@ -27,13 +28,14 @@ func _ready() -> void:
 		$ShipClass/VBox/VBox/Uber.button_text = tr("LOCKED")
 		$ShipClass/VBox/VBox/Uber.mouse_entered.connect(game.show_tooltip.bind(tr("SHIP_CLASS_UNLOCK_INFO")))
 		$ShipClass/VBox/VBox/Uber.mouse_exited.connect(game.hide_tooltip)
-	ship_data = game.ship_data[ship_id].duplicate()
-	$Ship/Level.text = "%s %s" % [tr("LEVEL"), ship_data.lv]
-	allocatable_points = (ship_data.lv - 1) / 2 + 2
-	$ShipClass/VBox/VBox.get_child(ship_data.ship_class)._on_Button_pressed()
-	for i in ShipClass.N:
-		$ShipClass/VBox/VBox.get_child(i).pressed.connect(update_ship_stats_after_class_change.bind(i))
-	if not respeccing:
+	ship_data = game.ship_data[ship_id].duplicate(true)
+	if respeccing:
+		unallocated_weapon_levels = ship_data.lv - 1
+		ship_data.bullet = [1, 1, 1]
+		ship_data.laser = [1, 1, 1]
+		ship_data.bomb = [1, 1, 1]
+		ship_data.light = [1, 1, 1]
+	else:
 		$Actions/Cancel.hide()
 		allocated_HP = ship_data.allocated_HP
 		allocated_attack = ship_data.allocated_attack
@@ -42,6 +44,21 @@ func _ready() -> void:
 		allocated_agility = ship_data.allocated_agility
 		for class_btn in $ShipClass/VBox/VBox.get_children():
 			class_btn.adv_button_disabled = true
+		unallocated_weapon_levels = ship_data.unallocated_weapon_levels
+	if ship_data.lv == 1:
+		$Weapons.hide()
+	else:
+		for i in 3:
+			for j in 3:
+				$Weapons/ScrollContainer/Control.get_node("%s%s/Button" % [i+1, j+1]).mouse_entered.connect(game.show_tooltip.bind("%s%s" % [i, j]))
+				$Weapons/ScrollContainer/Control.get_node("%s%s/Button" % [i+1, j+1]).mouse_exited.connect(game.hide_tooltip)
+				$Weapons/ScrollContainer/Control.get_node("%s%s/Button" % [i+1, j+1]).pressed.connect(game.show_YN_panel.bind("upgrade_ship_weapon", tr("ARE_YOU_SURE"), [i]))
+		update_weapons_panel()
+	$Ship/Level.text = "%s %s" % [tr("LEVEL"), ship_data.lv]
+	allocatable_points = (ship_data.lv - 1) / 2 + 2
+	$ShipClass/VBox/VBox.get_child(ship_data.ship_class)._on_Button_pressed()
+	for i in ShipClass.N:
+		$ShipClass/VBox/VBox.get_child(i).pressed.connect(update_ship_stats_after_class_change.bind(i))
 	update_ship_stats_display()
 
 func update_ship_stats_after_class_change(ship_class: int):
@@ -109,7 +126,7 @@ func customize_next_ship():
 	for i in len(game.ship_data):
 		if ship_id == i:
 			continue
-		if game.ship_data[i].has("show_ship_customize_screen"):
+		if game.ship_data[i].has("unallocated_weapon_levels"):
 			game.switch_view("ship_customize_screen", {"ship_id":i})
 			return
 	game.switch_view(game.l_v)
@@ -119,7 +136,7 @@ func _on_done_pressed() -> void:
 	if respeccing:
 		game.ship_data[ship_id].respec_count += 1
 	else:
-		game.ship_data[ship_id].erase("show_ship_customize_screen")
+		game.ship_data[ship_id].erase("unallocated_weapon_levels")
 	customize_next_ship()
 
 
@@ -214,3 +231,74 @@ func _on_accuracy_icon_mouse_entered() -> void:
 
 func _on_agility_icon_mouse_entered() -> void:
 	game.show_tooltip(tr("SHIP_AGILITY"))
+
+enum {
+	BULLET,
+	LASER,
+	BOMB,
+	LIGHT,
+}
+var weapon_selected = BULLET
+var weapon_selected_str = ""
+
+func _on_weapons_next_pressed() -> void:
+	weapon_selected += 1
+	$Weapons/Previous.disabled = false
+	if weapon_selected == LIGHT:
+		$Weapons/Next.disabled = true
+	update_weapons_panel()
+
+
+func _on_weapons_previous_pressed() -> void:
+	weapon_selected -= 1
+	$Weapons/Next.disabled = false
+	if weapon_selected == BULLET:
+		$Weapons/Previous.disabled = true
+	update_weapons_panel()
+
+func update_weapons_panel():
+	$Weapons/LvRemaining.text = tr("WEAPON_LV_UP_REMAINING") + " " + str(unallocated_weapon_levels)
+	if weapon_selected == BULLET:
+		# Placeholder textures
+		for node_name in ["11", "12", "13", "21", "22", "23", "31", "32", "33"]:
+			$Weapons/ScrollContainer/Control.get_node(node_name + "/TextureRect").texture = preload("res://Graphics/Weapons/bullet1.png")
+		$Weapons/CurrentWeapon.text = tr("BULLET")
+		weapon_selected_str = "bullet"
+	elif weapon_selected == LASER:
+		# Placeholder textures
+		for node_name in ["11", "12", "13", "21", "22", "23", "31", "32", "33"]:
+			$Weapons/ScrollContainer/Control.get_node(node_name + "/TextureRect").texture = preload("res://Graphics/Weapons/laser1.png")
+		$Weapons/CurrentWeapon.text = tr("LASER")
+		weapon_selected_str = "laser"
+	elif weapon_selected == BOMB:
+		# Placeholder textures
+		for node_name in ["11", "12", "13", "21", "22", "23", "31", "32", "33"]:
+			$Weapons/ScrollContainer/Control.get_node(node_name + "/TextureRect").texture = preload("res://Graphics/Weapons/bomb1.png")
+		$Weapons/CurrentWeapon.text = tr("BOMB")
+		weapon_selected_str = "bomb"
+	elif weapon_selected == LIGHT:
+		# Placeholder textures
+		for node_name in ["11", "12", "13", "21", "22", "23", "31", "32", "33"]:
+			$Weapons/ScrollContainer/Control.get_node(node_name + "/TextureRect").texture = preload("res://Graphics/Weapons/light1.png")
+		$Weapons/CurrentWeapon.text = tr("LIGHT")
+		weapon_selected_str = "light"
+	for i in 3:
+		for j in 3:
+			if ship_data[weapon_selected_str][i] > j+1:
+				$Weapons/ScrollContainer/Control.get_node("%s%s/Button" % [i+1, j+1]).modulate = Color.GREEN_YELLOW
+			else:
+				$Weapons/ScrollContainer/Control.get_node("%s%s/Button" % [i+1, j+1]).modulate = Color.WHITE
+			if ship_data[weapon_selected_str][i] >= j+1:
+				$Weapons/ScrollContainer/Control.get_node("%s%s" % [i+1, j+1]).modulate = Color.WHITE
+			else:
+				$Weapons/ScrollContainer/Control.get_node("%s%s" % [i+1, j+1]).modulate = Color(0.4, 0.4, 0.4)
+			$Weapons/ScrollContainer/Control.get_node("%s%s/Button" % [i+1, j+1]).disabled = ship_data[weapon_selected_str][i] != j+1
+		for j in 2:
+			$Weapons/ScrollContainer/Control.get_node("Line2D%s%s" % [i+1, j+1]).default_color = Color(0.4, 0.886, 1.0) if ship_data[weapon_selected_str][i] > j+1 else Color(0.0, 0.433, 0.51)
+
+
+func upgrade_ship_weapon(path: int):
+	if unallocated_weapon_levels > 0:
+		ship_data[weapon_selected_str][path] += 1
+		unallocated_weapon_levels -= 1
+	update_weapons_panel()

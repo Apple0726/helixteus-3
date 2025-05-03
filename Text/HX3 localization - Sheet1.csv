@@ -1586,3 +1586,4 @@ PASSIVE_12,"Takes 25% less damage from physical attacks (bullet, bomb etc., but 
 DEFEAT,Defeat,,,,,,,,,,,
 ISP_SC,Improved spaceport,,,,,,,,,,,
 ISP_DESC,Spaceports also give passive XP to ships on the planet.,,,,,,,,,,,
+WEAPON_LV_UP_REMAINING,Weapon level-ups remaining:,,,,,,,,,,,

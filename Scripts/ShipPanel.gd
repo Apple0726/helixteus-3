@@ -28,6 +28,8 @@ func add_ship_node(id: int):
 
 func refresh():
 	set_process(true)
+	if selected_ship_id != -1:
+		_on_ship_button_up(selected_ship_id)
 	#$Drives.refresh()
 	#if game.ships_travel_data.travel_view != "-":
 		#$SpaceportTimer.stop()

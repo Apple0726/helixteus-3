@@ -4344,8 +4344,7 @@ func _on_Autosave_timeout():
 		if not viewing_dimension:
 			save_views(true)
 
-func show_YN_panel(type:String, text:String, args:Array = [], title:String = "Please Confirm..."):
-	#var width = min(800, default_font.get_string_size(text).x) + 40
+func show_YN_panel(type:String, text:String = tr("ARE_YOU_SURE"), args:Array = []):
 	if $Panels.has_node("YN_panel"):
 		$Panels.get_node("YN_panel").free()
 	var YN_panel = preload("res://Scenes/PopupWindow.tscn").instantiate()
@@ -4358,6 +4357,9 @@ func show_YN_panel(type:String, text:String, args:Array = [], title:String = "Pl
 		YN_panel.add_button(tr("YES"), Callable(self,"%s_confirm" % type).bindv(args))
 	$Panels.add_child(YN_panel)
 	#if type in ["buy_pickaxe", "destroy_building", "destroy_buildings", "op_galaxy", "conquer_all", "destroy_tri_probe", "reset_dimension"]:
+
+func upgrade_ship_weapon_confirm(path: int):
+	ship_customize_screen.upgrade_ship_weapon(path)
 
 func destroy_rover_confirm(rover_destroy_callable: Callable):
 	rover_destroy_callable.call()

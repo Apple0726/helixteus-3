@@ -140,7 +140,7 @@ func _on_back_pressed() -> void:
 	if battle_scene.hard_battle:
 		game.switch_music(load("res://Audio/ambient%s.ogg" % randi_range(1, 3)), game.u_i.time_speed)
 	for i in len(game.ship_data):
-		if game.ship_data[i].has("show_ship_customize_screen"):
+		if game.ship_data[i].has("unallocated_weapon_levels"):
 			game.switch_view("ship_customize_screen", {"ship_id":i})
 			return
 	game.switch_view("system")
