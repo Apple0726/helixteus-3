@@ -281,7 +281,7 @@ func damage_entity(weapon_data: Dictionary):
 		else:
 			damage_multiplier = 1.0 / (1.0 - 0.125 * attack_defense_difference)
 		var actual_damage:int = max(1, weapon_data.damage * damage_multiplier)
-		var critical = randf() < weapon_data.get("crit_hit_chance", 0.02)
+		var critical = randf() < weapon_data.get("crit_hit_chance", 0.02) * (10.0 if weapon_data.has("status_effects") and weapon_data.status_effects.has(Battle.StatusEffect.EXPOSED) else 1.0)
 		if critical:
 			actual_damage *= 2
 		if Battle.PassiveAbility.PHYSICAL_DAMAGE_RESISTANT in passive_abilities and weapon_data.type == Battle.DamageType.PHYSICAL:

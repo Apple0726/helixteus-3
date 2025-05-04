@@ -8,6 +8,7 @@ var bomb_levels:Array
 var light_levels:Array
 
 var weapon_accuracy_mult:float
+var fires_remaining:int = 1
 var light_cone
 var light_emission_cone_angle = PI / 4.0
 var display_move_path = false
@@ -20,6 +21,7 @@ var push_movement_used:float:
 		push_movement_used = value
 		update_push_movement_used()
 var entity_to_push:BattleEntity
+var block_cancelling_action = false
 
 
 func _ready() -> void:
@@ -131,7 +133,14 @@ func _process(delta: float) -> void:
 
 func _on_fire_weapon_aim_visibility_changed() -> void:
 	if $FireWeaponAim.visible:
+		$FireWeaponAim.fires_remaining = fires_remaining
 		$FireWeaponAim.target_angle_max_deviation = 0.5 / (accuracy + accuracy_buff) / weapon_accuracy_mult
+		if $FireWeaponAim.weapon_type == battle_GUI.BULLET:
+			if bullet_levels[2] >= 2:
+				$FireWeaponAim.target_angle_max_deviation *= 0.33
+		elif $FireWeaponAim.weapon_type == battle_GUI.LASER:
+			if bullet_levels[2] >= 2:
+				$FireWeaponAim.target_angle_max_deviation = 0.0
 		$FireWeaponAim.animate(false)
 
 
@@ -151,11 +160,22 @@ func _on_mouse_exited() -> void:
 	game.hide_tooltip()
 
 func fire_weapon(weapon_type: int):
-	$FireWeaponAim.fade_out()
+	if fires_remaining <= 1:
+		$FireWeaponAim.fade_out()
+		block_cancelling_action = false
+	else:
+		block_cancelling_action = true
 	var weapon_rotation = randf_range($FireWeaponAim.target_angle - $FireWeaponAim.target_angle_max_deviation, $FireWeaponAim.target_angle + $FireWeaponAim.target_angle_max_deviation)
 	if weapon_type == battle_GUI.BULLET:
 		var projectiles = []
-		for i in 2:
+		var projectile_num = 2
+		if bullet_levels[0] == 2:
+			projectile_num = 3
+		elif bullet_levels[0] == 3:
+			projectile_num = 6
+		elif bullet_levels[0] == 4:
+			projectile_num = 15
+		for i in projectile_num:
 			var projectile = preload("res://Scenes/Battle/Weapons/Projectile.tscn").instantiate()
 			projectile.collision_layer = 8
 			projectile.collision_mask = 1 + 4 + 32
@@ -184,23 +204,32 @@ func fire_weapon(weapon_type: int):
 		var laser = preload("res://Scenes/Battle/Weapons/Laser.tscn").instantiate()
 		laser.rotation = weapon_rotation
 		laser.damage = Data.battle_weapon_stats.laser.damage
-		laser.shooter_attack = attack + attack_buff
+		laser.shooter = self
 		laser.weapon_accuracy = Data.battle_weapon_stats.laser.accuracy * accuracy
 		laser.position = position
 		laser.fade_delay = 0.2 if battle_scene.animations_sped_up else 0.5
 		battle_scene.add_child(laser)
-		laser.tree_exited.connect(ending_turn)
+		if fires_remaining <= 1:
+			laser.tree_exited.connect(ending_turn)
 	elif weapon_type == battle_GUI.BOMB:
 		var explosive = preload("res://Scenes/Battle/Weapons/Explosive.tscn").instantiate()
 		explosive.collision_layer = 8
 		explosive.collision_mask = 1 + 4 + 32
 		explosive.set_script(load("res://Scripts/Battle/Weapons/Explosive.gd"))
 		explosive.speed = 800.0
-		explosive.mass = 4.0
 		explosive.velocity_process_modifier = 5.0 if battle_scene.animations_sped_up else 1.0
-		explosive.AoE_radius = 100.0
-		explosive.rotation = weapon_rotation
 		explosive.damage = Data.battle_weapon_stats.bomb.damage
+		if bomb_levels[0] >= 3:
+			explosive.mass = 9.0
+			explosive.AoE_radius = 300.0
+			explosive.damage *= 1.5
+		elif bomb_levels[0] >= 2:
+			explosive.mass = 6.0
+			explosive.AoE_radius = 180.0
+		else:
+			explosive.mass = 4.0
+			explosive.AoE_radius = 100.0
+		explosive.rotation = weapon_rotation
 		explosive.shooter = self
 		explosive.weapon_accuracy = Data.battle_weapon_stats.bomb.accuracy * accuracy
 		explosive.position = position
@@ -208,10 +237,13 @@ func fire_weapon(weapon_type: int):
 		explosive.ending_turn_delay = 1.0
 		explosive.end_turn_ready = true
 		battle_scene.add_child(explosive)
-		explosive.end_turn.connect(ending_turn)
+		if fires_remaining <= 1:
+			explosive.end_turn.connect(ending_turn)
 	elif weapon_type == battle_GUI.LIGHT:
-		light_cone.tree_exited.connect(ending_turn)
+		if fires_remaining <= 1:
+			light_cone.tree_exited.connect(ending_turn)
 		light_cone.fire_light(0.2 if battle_scene.animations_sped_up else 1.0)
+	fires_remaining -= 1
 
 
 func add_light_cone():
@@ -219,7 +251,9 @@ func add_light_cone():
 	light_cone.set_script(load("res://Scripts/Battle/Weapons/LightCone.gd"))
 	light_cone.emission_cone_angle = light_emission_cone_angle
 	light_cone.damage = Data.battle_weapon_stats.light.damage
-	light_cone.shooter_attack = attack + attack_buff
+	if light_levels[1] >= 3:
+		light_cone.damage *= 1.4
+	light_cone.shooter = self
 	add_child(light_cone)
 
 

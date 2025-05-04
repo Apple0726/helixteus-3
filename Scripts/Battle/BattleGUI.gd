@@ -47,15 +47,16 @@ func _input(event: InputEvent) -> void:
 		$PushStrengthPanel.position = Vector2(1280 - $PushStrengthPanel.size.x - 10, 720 - $PushStrengthPanel.size.y - 10).min(battle_scene.mouse_position_global)
 		$LightEmissionConePanel.position = Vector2(1280 - $LightEmissionConePanel.size.x - 10, 720 - $LightEmissionConePanel.size.y - 10).min(battle_scene.mouse_position_global)
 	if action_selected != NONE:
-		if Input.is_action_just_pressed("cancel"):
+		if Input.is_action_just_pressed("cancel") and not ship_node.block_cancelling_action:
 			action_selected = NONE
 			ship_node.cancel_action()
 			reset_GUI()
 		elif Input.is_action_just_released("left_click") and not game.view.dragged and $MainPanel.modulate.a == 0.0:
 			if action_selected in [BULLET, LASER, BOMB, LIGHT]:
 				ship_node.fire_weapon(action_selected)
-				action_selected = NONE
-				reset_GUI()
+				if ship_node.fires_remaining <= 0:
+					action_selected = NONE
+					reset_GUI()
 			elif action_selected == MOVE:
 				ship_node.move()
 				action_selected = NONE
@@ -78,7 +79,10 @@ func _input(event: InputEvent) -> void:
 	elif action_selected == LIGHT:
 		if Input.is_action_pressed("shift"):
 			if Input.is_action_just_pressed("scroll_down"):
-				ship_node.light_cone.emission_cone_angle = min(ship_node.light_cone.emission_cone_angle + PI / 64.0, 0.3 * PI)
+				if ship_node.light_levels[1] >= 2:
+					ship_node.light_cone.emission_cone_angle = min(ship_node.light_cone.emission_cone_angle + PI / 64.0, 1.8 * PI)
+				else:
+					ship_node.light_cone.emission_cone_angle = min(ship_node.light_cone.emission_cone_angle + PI / 64.0, 0.3 * PI)
 				ship_node.light_emission_cone_angle = ship_node.light_cone.emission_cone_angle
 				ship_node.light_cone.update_cone_animate()
 				override_enemy_tooltips()
@@ -213,7 +217,10 @@ func fade_out_main_panel():
 func _on_bullet_pressed() -> void:
 	fade_out_main_panel()
 	action_selected = BULLET
+	ship_node.weapon_accuracy_mult = Data.battle_weapon_stats.bullet.accuracy
 	override_enemy_tooltips()
+	ship_node.fires_remaining = 1
+	ship_node.get_node("FireWeaponAim").weapon_type = BULLET
 	ship_node.get_node("FireWeaponAim").show()
 	game.hide_tooltip()
 
@@ -221,7 +228,15 @@ func _on_bullet_pressed() -> void:
 func _on_laser_pressed() -> void:
 	fade_out_main_panel()
 	action_selected = LASER
+	ship_node.weapon_accuracy_mult = Data.battle_weapon_stats.laser.accuracy
 	override_enemy_tooltips()
+	if ship_node.laser_levels[0] >= 4:
+		ship_node.fires_remaining = 3
+	elif ship_node.laser_levels[0] >= 2:
+		ship_node.fires_remaining = 2
+	else:
+		ship_node.fires_remaining = 1
+	ship_node.get_node("FireWeaponAim").weapon_type = LASER
 	ship_node.get_node("FireWeaponAim").show()
 	game.hide_tooltip()
 
@@ -229,14 +244,21 @@ func _on_laser_pressed() -> void:
 func _on_bomb_pressed() -> void:
 	fade_out_main_panel()
 	action_selected = BOMB
+	ship_node.weapon_accuracy_mult = Data.battle_weapon_stats.bomb.accuracy
+	if ship_node.bomb_levels[2] >= 2:
+		ship_node.weapon_accuracy_mult *= 1.7
 	override_enemy_tooltips()
+	ship_node.fires_remaining = 1
+	ship_node.get_node("FireWeaponAim").weapon_type = BOMB
 	ship_node.get_node("FireWeaponAim").show()
 	game.hide_tooltip()
 
 
 func _on_light_pressed() -> void:
 	action_selected = LIGHT
+	ship_node.weapon_accuracy_mult = Data.battle_weapon_stats.light.accuracy
 	override_enemy_tooltips()
+	ship_node.fires_remaining = 1
 	fade_out_main_panel()
 	ship_node.add_light_cone()
 	$Info.show()
@@ -261,14 +283,6 @@ func _on_push_pressed() -> void:
 	game.hide_tooltip()
 
 func override_enemy_tooltips():
-	if action_selected == BULLET:
-		ship_node.weapon_accuracy_mult = Data.battle_weapon_stats.bullet.accuracy
-	elif action_selected == LASER:
-		ship_node.weapon_accuracy_mult = Data.battle_weapon_stats.laser.accuracy
-	elif action_selected == BOMB:
-		ship_node.weapon_accuracy_mult = Data.battle_weapon_stats.bomb.accuracy
-	elif action_selected == LIGHT:
-		ship_node.weapon_accuracy_mult = Data.battle_weapon_stats.light.accuracy
 	for HX_node in battle_scene.HX_nodes:
 		var damage_multiplier:float
 		var attack_defense_difference:int = ship_node.attack + ship_node.attack_buff - HX_node.defense - HX_node.defense_buff

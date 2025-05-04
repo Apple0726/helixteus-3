@@ -24,6 +24,9 @@ func _on_area_entered(area: Area2D) -> void:
 		else:
 			# The bullet can now hit anything, regardless of the shooter
 			collision_mask = 1 + 2 + 4 + 32
+			# Unless the shooter is a ship and has the necessary upgrade
+			if shooter.type == Battle.EntityType.SHIP and shooter.bullet_levels[2] >= 3:
+				collision_mask = 1 + 4 + 32
 			var incidence_angle = atan2(position.y - area.position.y, position.x - area.position.x)
 			rotation = Vector2.from_angle(rotation).bounce(Vector2.from_angle(incidence_angle)).angle()
 			deflects_remaining -= 1

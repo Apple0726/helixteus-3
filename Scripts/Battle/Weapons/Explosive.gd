@@ -34,6 +34,9 @@ func _on_area_entered(area: Area2D) -> void:
 		"status_effects":{Battle.StatusEffect.BURN: 1},
 		"knockback":50.0 * Vector2.from_angle(rotation),
 	}
+	if shooter.type == Battle.EntityType.SHIP:
+		if shooter.bomb_levels[1] >= 2:
+			weapon_data.status_effects[Battle.StatusEffect.BURN] = 2
 	if area.damage_entity(weapon_data):
 		if area.type == Battle.EntityType.BOUNDARY:
 			ending_turn_delay = 0.0
@@ -43,12 +46,19 @@ func _on_area_entered(area: Area2D) -> void:
 			if area_in_AoE is BattleEntity and area_in_AoE != area:
 				var dist_from_point_blank = (area_in_AoE.position - position).length()
 				var AoE_weapon_data = {
+					"type":Battle.DamageType.PHYSICAL,
 					"damage":damage * remap(dist_from_point_blank, 0.0, AoE_radius, 1.0, 0.2),
 					"shooter_attack":shooter.attack + shooter.attack_buff,
 					"weapon_accuracy":INF,
 					"velocity":200.0 * (area_in_AoE.position - position).normalized(),
 					"knockback":30.0 * (area_in_AoE.position - position).normalized(),
+					"status_effects":{},
 				}
+				if shooter.type == Battle.EntityType.SHIP:
+					if shooter.bomb_levels[0] >= 4:
+						AoE_weapon_data.status_effects[Battle.StatusEffect.STUN] = 1
+					if shooter.bomb_levels[1] >= 2:
+						AoE_weapon_data.status_effects[Battle.StatusEffect.BURN] = 2
 				area_in_AoE.damage_entity(AoE_weapon_data)
 		if Settings.screen_shake:
 			get_node("/root/Game/Camera2D/Screenshake").start(0.5,15,4)
