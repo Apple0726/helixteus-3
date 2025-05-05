@@ -87,7 +87,7 @@ func _ready():
 	$Ash.tile_set = ResourceFiles.ash_tile_set
 	$Lakes1.tile_set = ResourceFiles.lake_tile_set
 	$Lakes2.tile_set = ResourceFiles.lake_tile_set
-	$PlanetTiles.tile_set = ResourceFiles.planet_tile_set
+	#$PlanetTiles.tile_set = ResourceFiles.planet_tile_set
 	$Obstacles.tile_set = ResourceFiles.obstacles_tile_set
 	$Soil.tile_set = ResourceFiles.soil_tile_set
 	$Obstacles.modulate = star_mod
@@ -95,17 +95,22 @@ func _ready():
 	if p_i.ancient_bldgs.has(AncientBuilding.NUCLEAR_FUSION_REACTOR):
 		for i in len(p_i.ancient_bldgs[AncientBuilding.NUCLEAR_FUSION_REACTOR]):
 			nuclear_fusion_reactor_main_tiles.append(p_i.ancient_bldgs[AncientBuilding.NUCLEAR_FUSION_REACTOR][i].tile)
-	var lake_tiles:Array = [[], []]
+	#var lake_tiles:Array = [[], []]
 	var ash_tiles:Array = []
 	var soil_tiles:Array = []
 	var aurora_tiles:Array = []
+	var planet_tiles:Array = []
 	for i in wid:
 		for j in wid:
 			var id2 = i % wid + j * wid
 			var tile = game.tile_data[id2]
-			$PlanetTiles.set_cell(Vector2i(i, j), p_i.type - 3, Vector2(0, 0))
+			#$PlanetTiles.set_cell(Vector2i(i, j), p_i.type - 3, Vector2(0, 0))
+			$Lakes1.set_cell(Vector2i(i, j), 0, Vector2.ZERO)
 			if tile == null:
+				planet_tiles.append(Vector2i(i, j))
 				continue
+			if not tile.has("lake"):
+				planet_tiles.append(Vector2i(i, j))
 			if tile.has("crater"):
 				var metal = Sprite2D.new()
 				metal.texture = game.metal_textures[tile.crater.metal]
@@ -152,8 +157,6 @@ func _ready():
 				if tile.wormhole.has("investigation_length"):
 					add_time_bar(id2, "wormhole")
 				p_i.wormhole = true
-			elif tile.has("lake"):
-				lake_tiles[tile.lake-1].append(Vector2i(i, j))
 			elif tile.has("bldg") and tile.bldg.name == Building.GREENHOUSE:
 				soil_tiles.append(Vector2i(i, j))
 			if tile.has("ash"):
@@ -194,12 +197,13 @@ func _ready():
 	}
 	$Soil.set_cells_terrain_connect(soil_tiles, 0, 0)
 	$Ash.set_cells_terrain_connect(ash_tiles, 0, 0)
+	$PlanetTiles.set_cells_terrain_connect(planet_tiles, 0, 0)
 	if p_i.has("lake_1"):
 		$Lakes1.modulate = Data.lake_colors[p_i.lake_1.element][p_i.lake_1.state]
-		$Lakes1.set_cells_terrain_connect(lake_tiles[0], 0, lake_state_id[p_i.lake_1.state])
+		#$Lakes1.set_cells_terrain_connect(lake_tiles[0], 0, lake_state_id[p_i.lake_1.state])
 	if p_i.has("lake_2"):
 		$Lakes2.modulate = Data.lake_colors[p_i.lake_2.element][p_i.lake_2.state]
-		$Lakes2.set_cells_terrain_connect(lake_tiles[1], 0, lake_state_id[p_i.lake_2.state])
+		#$Lakes2.set_cells_terrain_connect(lake_tiles[1], 0, lake_state_id[p_i.lake_2.state])
 	$BadApple.wid_p = wid
 	$BadApple.pixel_color = Color.BLACK if star_mod.get_luminance() > 0.3 else Color(0.5, 0.5, 0.5, 1.0)
 	var await_counter:int = 0
@@ -1458,8 +1462,8 @@ func add_time_bar(id2:int, type:String):
 func add_bldg_sprite(pos:Vector2, _name:int, texture, building_animation:bool = false, mod:Color = Color.WHITE, sc:float = 0.4, offset:Vector2 = Vector2(100, 100)):
 	var bldg = Sprite2D.new()
 	bldg.texture = texture
-	bldg.scale *= sc
-	bldg.position = pos + offset
+	bldg.scale *= sc * 0.8
+	bldg.position = pos + offset + Vector2.UP * 40.0
 	bldg.self_modulate = mod
 	if building_animation:
 		bldg.material = ShaderMaterial.new()
@@ -1537,7 +1541,7 @@ func add_rsrc(v:Vector2, mod:Color, icon, id2:int, current_bar_visible = false):
 	rsrc.visible = get_parent().scale.x >= 0.25
 	add_child(rsrc)
 	rsrc.set_icon_texture(icon)
-	rsrc.position = v + Vector2(0, 70)
+	rsrc.position = v + Vector2.DOWN * 40.0
 	rsrc.set_panel_modulate(mod)
 	rsrc.set_current_bar_visibility(current_bar_visible)
 	rsrcs[id2] = rsrc

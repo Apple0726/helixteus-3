@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://cjwjpsq1yylug"
-path="res://.godot/imported/WaterSpritesheet.png-adb3a154abeb35ba0a13e9add44c0165.ctex"
+uid="uid://ddj3xql436doc"
+path="res://.godot/imported/Planet3Atlas.png-0d588846f084fd4fd7586bf196d7e5fd.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Graphics/Tiles/WaterSpritesheet.png"
-dest_files=["res://.godot/imported/WaterSpritesheet.png-adb3a154abeb35ba0a13e9add44c0165.ctex"]
+source_file="res://Graphics/Tiles/Planet3Atlas.png"
+dest_files=["res://.godot/imported/Planet3Atlas.png-0d588846f084fd4fd7586bf196d7e5fd.ctex"]
 
 [params]
 

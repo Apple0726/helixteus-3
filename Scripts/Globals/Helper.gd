@@ -1003,7 +1003,7 @@ func add_lv_boxes(obj:Dictionary, v:Vector2, sc:float = 1.0):
 		hbox.add_child(path_3)
 	hbox.size.x = 200
 	hbox.scale *= sc
-	hbox.position = v - Vector2(100, 90) * sc
+	hbox.position = v - Vector2(100, 100) * sc
 	#hbox.visible = get_parent().scale.x >= 0.25
 	return hbox
 
