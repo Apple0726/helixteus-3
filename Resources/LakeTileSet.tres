@@ -6,19 +6,7 @@
 texture = ExtResource("1_es5vg")
 texture_region_size = Vector2i(200, 200)
 0:0/0 = 0
-0:0/0/terrain_set = 0
-0:0/0/terrain = 2
-0:0/0/terrains_peering_bit/right_side = 2
-0:0/0/terrains_peering_bit/bottom_right_corner = 2
-0:0/0/terrains_peering_bit/bottom_side = 2
 
 [resource]
 tile_size = Vector2i(200, 200)
-terrain_set_0/mode = 0
-terrain_set_0/terrain_0/name = "Terrain 0"
-terrain_set_0/terrain_0/color = Color(0.5, 0.34375, 0.25, 1)
-terrain_set_0/terrain_1/name = "Terrain 1"
-terrain_set_0/terrain_1/color = Color(0.5, 0.4375, 0.25, 1)
-terrain_set_0/terrain_2/name = "Terrain 2"
-terrain_set_0/terrain_2/color = Color(0.46875, 0.5, 0.25, 1)
 sources/0 = SubResource("TileSetAtlasSource_jb4xv")

@@ -1066,8 +1066,7 @@ func new_game(univ:int = 0, new_save:bool = false, DR_advantage = false):
 		planet_data[2]["angle"] = PI / 2
 		planet_data[2]["tiles"] = []
 		planet_data[2].pressure = 1
-		planet_data[2].lake_1 = {"element":"H2O"}
-		planet_data[2].erase("lake_2")
+		planet_data[2].lake = {"element":"H2O"}
 		planet_data[2].liq_seed = 7
 		planet_data[2].liq_period = 0.4
 		planet_data[2].crust_start_depth = randi_range(25, 30)
@@ -2881,12 +2880,9 @@ func generate_planets(id:int):#local id
 		p_i.liq_period = randf_range(0.1, 1)
 		if id + systems_generated == 0 and c_u == 0:#Only water in solar system
 			if randf() < 0.2:
-				p_i.lake_1 = {"element":"H2O"}
-			if randf() < 0.2:
-				p_i.lake_2 = {"element":"H2O"}
+				p_i.lake = {"element":"H2O"}
 		elif p_i.temperature <= 1000:
-			p_i.lake_1 = {"element":get_random_element(list_of_element_probabilities)}
-			p_i.lake_2 = {"element":get_random_element(list_of_element_probabilities)}
+			p_i.lake = {"element":get_random_element(list_of_element_probabilities)}
 		p_i.HX_data = []
 		var diff:float = system_data[id].diff
 		var power_left:float = diff * pow(p_i.size / 2500.0, 0.5)
@@ -3170,20 +3166,13 @@ func generate_tiles(id:int):
 	noise.seed = p_i.liq_seed
 	noise.fractal_octaves = 1
 	noise.frequency = 1.0 / p_i.liq_period#Higher period = bigger lakes
-	if p_i.has("lake_1"):
-		var phase_1_scene = load("res://Scenes/PhaseDiagrams/" + p_i.lake_1.element + ".tscn")
-		var phase_1 = phase_1_scene.instantiate()
-		if chemistry_bonus.has(p_i.lake_1.element):
-			phase_1.modify_PD(chemistry_bonus[p_i.lake_1.element])
-		p_i.lake_1.state = Helper.get_state(p_i.temperature, p_i.pressure, phase_1)
-		phase_1.free()
-	if p_i.has("lake_2"):
-		var phase_2_scene = load("res://Scenes/PhaseDiagrams/" + p_i.lake_2.element + ".tscn")
-		var phase_2 = phase_2_scene.instantiate()
-		if chemistry_bonus.has(p_i.lake_2.element):
-			phase_2.modify_PD(chemistry_bonus[p_i.lake_2.element])
-		p_i.lake_2.state = Helper.get_state(p_i.temperature, p_i.pressure, phase_2)
-		phase_2.free()
+	if p_i.has("lake"):
+		var phase_scene = load("res://Scenes/PhaseDiagrams/" + p_i.lake.element + ".tscn")
+		var phase = phase_scene.instantiate()
+		if chemistry_bonus.has(p_i.lake.element):
+			phase.modify_PD(chemistry_bonus[p_i.lake.element])
+		p_i.lake.state = Helper.get_state(p_i.temperature, p_i.pressure, phase)
+		phase.free()
 	var volcano_probability:float = 0.0
 	if randf() < log(20.0 / sqrt(coldest_star_temp/u_i.gravitational) + 1.0):
 		volcano_probability = min(sqrt(u_i.gravitational) / sqrt(randf()) / N, 0.15)
@@ -3194,16 +3183,10 @@ func generate_tiles(id:int):
 		for j in wid:
 			var level:float = noise.get_noise_2d(i / float(wid), j / float(wid))
 			var t_id = i % wid + j * wid
-			if level > 0.5 and p_i.has("lake_1"):
-				if p_i.lake_1.state != "g":
+			if level > 0.5 and p_i.has("lake"):
+				if p_i.lake.state != "g":
 					if not tile_data[t_id].has("ash"):
-						tile_data[t_id].lake = 1
-						tile_data[t_id].resource_production_bonus.clear()
-					continue
-			if level < -0.5 and p_i.has("lake_2"):
-				if p_i.lake_2.state != "g":
-					if not tile_data[t_id].has("ash"):
-						tile_data[t_id].lake = 2
+						tile_data[t_id].lake = true
 						tile_data[t_id].resource_production_bonus.clear()
 					continue
 			if home_planet:
@@ -3368,13 +3351,11 @@ func generate_tiles(id:int):
 		var dest_id:int = randi() % len(system_data)
 		tile_data[random_tile].wormhole = {"active":false, "new":true, "l_dest_s_id":dest_id, "g_dest_s_id":dest_id + system_data[0].id}
 		p_i.wormhole = true#								new: whether the wormhole should generate a new wormhole on another planet
-	if p_i.has("lake_1") and p_i.lake_1.state == "g":
-		p_i.erase("lake_1")
-	if p_i.has("lake_2") and p_i.lake_2.state == "g":
-		p_i.erase("lake_2")
+	if p_i.has("lake") and p_i.lake.state == "g":
+		p_i.erase("lake")
 	planet_data[id]["discovered"] = true
 	if home_planet:
-		tile_data[42].cave = {"num_floors":5, "floor_size":25, "period":65, "debris":0.3}
+		tile_data[41].cave = {"num_floors":5, "floor_size":25, "period":65, "debris":0.3}
 		tile_data[215].cave = {"num_floors":8, "floor_size":30, "period":50, "debris":0.4}
 		tile_data[112].ship = true
 		p_i.ancient_bldgs = {AncientBuilding.SPACEPORT:[{"tile":113, "tier":1, "repair_cost":10000 * Data.ancient_bldg_repair_cost_multipliers[AncientBuilding.SPACEPORT]}],
@@ -3432,30 +3413,24 @@ func generate_tiles(id:int):
 					earn_achievement("exploration", "find_all_ancient_bldgs")
 	
 	#Give lake data to adjacent tiles
-	var lake_1_au_int:float = 0.0
-	var lake_2_au_int:float = 0.0
+	var lake_au_int:float = 0.0
 	if not achievement_data.exploration.has("find_neon_lake"):
-		if p_i.has("lake_1") and p_i.lake_1.element == "Ne" or p_i.has("lake_2") and p_i.lake_2.element == "Ne":
+		if p_i.has("lake") and p_i.lake.element == "Ne":
 			earn_achievement("exploration", "find_neon_lake")
 	if not achievement_data.exploration.has("find_xenon_lake"):
-		if p_i.has("lake_1") and p_i.lake_1.element == "Xe" or p_i.has("lake_2") and p_i.lake_2.element == "Xe":
+		if p_i.has("lake") and p_i.lake.element == "Xe":
 			earn_achievement("exploration", "find_xenon_lake")
-	if p_i.has("lake_1"):
-		if p_i.lake_1.element == "Ne":
-			lake_1_au_int = Helper.clever_round(1.2e6 * (randf_range(1, 2)) * B_strength * max_star_temp)
-		elif p_i.lake_1.element == "Xe":
-			lake_1_au_int = Helper.clever_round(9.5e7 * (randf_range(1, 2)) * B_strength * max_star_temp)
-	if p_i.has("lake_2"):
-		if p_i.lake_2.element == "Ne":
-			lake_2_au_int = Helper.clever_round(1.2e6 * (randf_range(1, 2)) * B_strength * max_star_temp)
-		elif p_i.lake_2.element == "Xe":
-			lake_2_au_int = Helper.clever_round(9.5e7 * (randf_range(1, 2)) * B_strength * max_star_temp)
+	if p_i.has("lake"):
+		if p_i.lake.element == "Ne":
+			lake_au_int = Helper.clever_round(1.2e6 * (randf_range(1, 2)) * B_strength * max_star_temp)
+		elif p_i.lake.element == "Xe":
+			lake_au_int = Helper.clever_round(9.5e7 * (randf_range(1, 2)) * B_strength * max_star_temp)
 	for i in wid:
 		for j in wid:
 			var t_id = i % wid + j * wid
 			var tile = tile_data[t_id]
 			if tile.has("lake"):
-				var lake_info = p_i["lake_%s" % tile.lake]
+				var lake_info = p_i.lake
 				var distance_from_lake:int = 1
 				if lake_info.element in ["H", "Xe"]:
 					distance_from_lake += Data.lake_bonus_values[lake_info.element][lake_info.state] + biology_bonus[lake_info.element]
@@ -3465,28 +3440,17 @@ func generate_tiles(id:int):
 						var _tile = tile_data[id2]
 						if Vector2(k, l) == Vector2(i, j):
 							continue
-						if tile.lake == 1 and lake_1_au_int > 0.0 and not _tile.has("lake"):
+						if lake_au_int > 0.0 and not _tile.has("lake"):
 							if _tile.has("aurora"):
 								if not _tile.has("lake_elements"):
-									_tile.aurora += lake_1_au_int
-									_tile.resource_production_bonus.SP = _tile.resource_production_bonus.get("SP", 1.0) + lake_1_au_int
+									_tile.aurora += lake_au_int
+									_tile.resource_production_bonus.SP = _tile.resource_production_bonus.get("SP", 1.0) + lake_au_int
 								else:
-									_tile.resource_production_bonus.SP = _tile.resource_production_bonus.get("SP", 1.0) + max(0, lake_1_au_int - _tile.aurora)
-									_tile.aurora = max(lake_1_au_int, _tile.aurora)
+									_tile.resource_production_bonus.SP = _tile.resource_production_bonus.get("SP", 1.0) + max(0, lake_au_int - _tile.aurora)
+									_tile.aurora = max(lake_au_int, _tile.aurora)
 							else:
-								_tile.resource_production_bonus.SP = _tile.resource_production_bonus.get("SP", 1.0) + lake_1_au_int
-								_tile.aurora = lake_1_au_int
-						elif tile.lake == 2 and lake_2_au_int > 0.0 and not _tile.has("lake"):
-							if _tile.has("aurora"):
-								if not _tile.has("lake_elements"):
-									_tile.aurora += lake_2_au_int
-									_tile.resource_production_bonus.SP = _tile.resource_production_bonus.get("SP", 1.0) + lake_2_au_int
-								else:
-									_tile.resource_production_bonus.SP = _tile.resource_production_bonus.get("SP", 1.0) + max(0, lake_2_au_int - _tile.aurora)
-									_tile.aurora = max(lake_2_au_int, _tile.aurora)
-							else:
-								_tile.resource_production_bonus.SP = _tile.resource_production_bonus.get("SP", 1.0) + lake_2_au_int
-								_tile.aurora = lake_2_au_int
+								_tile.resource_production_bonus.SP = _tile.resource_production_bonus.get("SP", 1.0) + lake_au_int
+								_tile.aurora = lake_au_int
 						if _tile.has("lake_elements"):
 							_tile.lake_elements[lake_info.element] = lake_info.state
 						else:

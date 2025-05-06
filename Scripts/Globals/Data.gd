@@ -491,7 +491,7 @@ var cave_modifiers:Dictionary = {#tier 1 modifiers can apply to any cave (outsid
 }
 var lake_colors = {
 	"H2O":	{	"s":Color(0.78, 0.86, 1.0, 1.0),
-				"l":Color(0.34, 0.84, 1.0, 1.0),
+				"l":Color(0.34, 0.53, 0.88, 1.0),
 				"sc":Color(0.68, 0.86, 1.0, 0.4)},
 	"CO2":{ 	"s":Color(0.66, 0.66, 0.66, 0.7),
 				"l":Color(0.66, 0.66, 0.66, 1.0),

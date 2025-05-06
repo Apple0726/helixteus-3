@@ -85,8 +85,7 @@ func _ready():
 	rsrcs.resize(wid * wid)
 	dimensions = wid * 200
 	$Ash.tile_set = ResourceFiles.ash_tile_set
-	$Lakes1.tile_set = ResourceFiles.lake_tile_set
-	$Lakes2.tile_set = ResourceFiles.lake_tile_set
+	$Lakes.tile_set = ResourceFiles.lake_tile_set
 	#$PlanetTiles.tile_set = ResourceFiles.planet_tile_set
 	$Obstacles.tile_set = ResourceFiles.obstacles_tile_set
 	$Soil.tile_set = ResourceFiles.soil_tile_set
@@ -105,7 +104,7 @@ func _ready():
 			var id2 = i % wid + j * wid
 			var tile = game.tile_data[id2]
 			#$PlanetTiles.set_cell(Vector2i(i, j), p_i.type - 3, Vector2(0, 0))
-			$Lakes1.set_cell(Vector2i(i, j), 0, Vector2.ZERO)
+			$Lakes.set_cell(Vector2i(i, j), 0, Vector2.ZERO)
 			if tile == null:
 				planet_tiles.append(Vector2i(i, j))
 				continue
@@ -198,12 +197,8 @@ func _ready():
 	$Soil.set_cells_terrain_connect(soil_tiles, 0, 0)
 	$Ash.set_cells_terrain_connect(ash_tiles, 0, 0)
 	$PlanetTiles.set_cells_terrain_connect(planet_tiles, 0, 0)
-	if p_i.has("lake_1"):
-		$Lakes1.modulate = Data.lake_colors[p_i.lake_1.element][p_i.lake_1.state]
-		#$Lakes1.set_cells_terrain_connect(lake_tiles[0], 0, lake_state_id[p_i.lake_1.state])
-	if p_i.has("lake_2"):
-		$Lakes2.modulate = Data.lake_colors[p_i.lake_2.element][p_i.lake_2.state]
-		#$Lakes2.set_cells_terrain_connect(lake_tiles[1], 0, lake_state_id[p_i.lake_2.state])
+	if p_i.has("lake"):
+		$Lakes.modulate = Data.lake_colors[p_i.lake.element][p_i.lake.state]
 	$BadApple.wid_p = wid
 	$BadApple.pixel_color = Color.BLACK if star_mod.get_luminance() > 0.3 else Color(0.5, 0.5, 0.5, 1.0)
 	var await_counter:int = 0
@@ -223,6 +218,7 @@ func _ready():
 			await_counter += 1
 			if await_counter % int(1000.0 / Engine.get_frames_per_second()) == 0:
 				await get_tree().process_frame
+
 
 func add_ancient_building_sprite(tile:Dictionary, tile_id:int, v:Vector2, building_animation:bool = false):
 	var mod:Color = Color.WHITE
@@ -355,7 +351,7 @@ func show_tooltip(tile, tile_id:int):
 	elif tile.has("ash"):
 		tooltip = "%s\n%s: %s" % [tr("VOLCANIC_ASH"), tr("MINERAL_RICHNESS"), Helper.clever_round(tile.ash.richness)]
 	elif tile.has("lake"):
-		var lake_info = p_i["lake_%s" % tile.lake]
+		var lake_info = p_i.lake
 		if lake_info.state == "s" and lake_info.element == "H2O":
 			tooltip = tr("ICE")
 		elif lake_info.state == "l" and lake_info.element == "H2O":
