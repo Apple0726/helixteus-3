@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://ddj3xql436doc"
-path="res://.godot/imported/Planet3Atlas.png-0d588846f084fd4fd7586bf196d7e5fd.ctex"
+uid="uid://4e7bahmd3w14"
+path="res://.godot/imported/PlanetAtlas.png-f9d9db1ea5125b5be31619f88ba07b60.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Graphics/Tiles/Planet3Atlas.png"
-dest_files=["res://.godot/imported/Planet3Atlas.png-0d588846f084fd4fd7586bf196d7e5fd.ctex"]
+source_file="res://Graphics/Tiles/PlanetAtlas.png"
+dest_files=["res://.godot/imported/PlanetAtlas.png-f9d9db1ea5125b5be31619f88ba07b60.ctex"]
 
 [params]
 

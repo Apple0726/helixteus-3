@@ -1,74 +1,97 @@
-[gd_scene load_steps=5 format=3 uid="uid://c58wkb8ufo1id"]
+[gd_scene load_steps=9 format=3 uid="uid://c58wkb8ufo1id"]
 
 [ext_resource type="Script" uid="uid://bw1wmnqsgceks" path="res://Scripts/SelectCompPanel.gd" id="1"]
 [ext_resource type="PackedScene" uid="uid://bdp561gr6s0b8" path="res://Scenes/Resource.tscn" id="2"]
-[ext_resource type="PackedScene" uid="uid://ddf2xjwcht77u" path="res://Scenes/CloseButton.tscn" id="3"]
+[ext_resource type="Texture2D" uid="uid://dcvnyb0mloli2" path="res://Graphics/GUI/Panel.png" id="3_sjy7c"]
 [ext_resource type="Theme" uid="uid://cp2u1kgj60ic" path="res://Resources/default_theme.tres" id="4"]
+[ext_resource type="Texture2D" uid="uid://baowebna7hgr5" path="res://Graphics/GUI/CloseButtonNormal.png" id="4_f0pvq"]
+[ext_resource type="Texture2D" uid="uid://c1vwn7p5uxu1r" path="res://Graphics/GUI/CloseButtonHover.png" id="5_grrwq"]
 
-[node name="SelectCompPanel" type="Panel"]
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -320.0
-offset_top = -136.0
-offset_right = 320.0
-offset_bottom = 120.0
+[sub_resource type="SystemFont" id="SystemFont_l1il0"]
+font_names = PackedStringArray("Arial")
+subpixel_positioning = 0
+multichannel_signed_distance_field = true
+
+[sub_resource type="LabelSettings" id="LabelSettings_f0pvq"]
+font = SubResource("SystemFont_l1il0")
+font_size = 20
+shadow_size = 2
+shadow_color = Color(0, 0, 0, 0.372549)
+shadow_offset = Vector2(2, 2)
+
+[node name="SelectCompPanel" type="Control"]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 32.0
+offset_bottom = 32.0
 theme = ExtResource("4")
 script = ExtResource("1")
+metadata/_edit_horizontal_guides_ = [360.0]
+metadata/_edit_vertical_guides_ = [640.0]
+
+[node name="GUI" type="NinePatchRect" parent="."]
+layout_mode = 1
+offset_left = 288.0
+offset_top = 184.0
+offset_right = 992.0
+offset_bottom = 528.0
+texture = ExtResource("3_sjy7c")
+patch_margin_left = 408
+patch_margin_top = 80
+patch_margin_right = 80
+patch_margin_bottom = 64
+axis_stretch_horizontal = 1
+metadata/_edit_horizontal_guides_ = [596.0]
 
 [node name="BlackBG" type="ColorRect" parent="."]
 show_behind_parent = true
 layout_mode = 0
-offset_left = -320.0
-offset_top = -224.0
-offset_right = 960.0
-offset_bottom = 496.0
+offset_right = 1280.0
+offset_bottom = 720.0
 color = Color(0, 0, 0, 0.564706)
+metadata/_edit_lock_ = true
+
+[node name="CloseButton" type="TextureButton" parent="."]
+offset_left = 926.0
+offset_top = 200.0
+offset_right = 975.0
+offset_bottom = 249.0
+texture_normal = ExtResource("4_f0pvq")
+texture_hover = ExtResource("5_grrwq")
 
 [node name="Label" type="Label" parent="."]
 layout_mode = 1
-anchors_preset = 5
-anchor_left = 0.5
-anchor_right = 0.5
-offset_left = -320.0
-offset_top = 8.0
-offset_right = 320.0
-offset_bottom = 32.0
-grow_horizontal = 2
+offset_left = 336.0
+offset_top = 208.0
+offset_right = 636.0
+offset_bottom = 236.0
 text = "Select"
-horizontal_alignment = 1
+label_settings = SubResource("LabelSettings_f0pvq")
 
 [node name="OptionButton" type="OptionButton" parent="."]
 layout_mode = 0
-offset_left = 276.0
-offset_top = 12.0
-offset_right = 364.0
-offset_bottom = 44.0
+offset_left = 712.0
+offset_top = 216.0
+offset_right = 892.0
+offset_bottom = 248.0
 shortcut_in_tooltip = false
 alignment = 1
 
 [node name="Desc" type="Label" parent="."]
-layout_mode = 0
-anchor_left = 0.5
-anchor_right = 0.5
-offset_left = -320.0
-offset_top = 52.0
-offset_right = 320.0
-offset_bottom = 76.0
-text = "Select"
+layout_mode = 1
+offset_left = 320.0
+offset_top = 292.0
+offset_right = 960.0
+offset_bottom = 316.0
+text = "Description"
 horizontal_alignment = 1
 
 [node name="ScrollContainer" type="ScrollContainer" parent="."]
 layout_mode = 1
-anchors_preset = 2
-anchor_top = 1.0
-anchor_bottom = 1.0
-offset_left = 37.0
-offset_top = -48.0
-offset_right = 468.0
-grow_vertical = 0
+offset_left = 332.0
+offset_top = 456.0
+offset_right = 812.0
+offset_bottom = 504.0
 vertical_scroll_mode = 0
 
 [node name="Cost" parent="ScrollContainer" instance=ExtResource("2")]
@@ -76,21 +99,19 @@ layout_mode = 2
 size_flags_vertical = 3
 
 [node name="Select" type="Button" parent="."]
-layout_mode = 0
-anchor_left = 1.0
-anchor_top = 1.0
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = -144.0
-offset_top = -48.0
+layout_mode = 1
+offset_left = 824.0
+offset_top = 456.0
+offset_right = 968.0
+offset_bottom = 504.0
 text = "SELECT"
 
 [node name="ScrollContainer2" type="ScrollContainer" parent="."]
 layout_mode = 0
-offset_left = 40.0
-offset_top = 104.0
-offset_right = 600.0
-offset_bottom = 176.0
+offset_left = 360.0
+offset_top = 352.0
+offset_right = 920.0
+offset_bottom = 424.0
 vertical_scroll_mode = 0
 
 [node name="HBox" type="HBoxContainer" parent="ScrollContainer2"]
@@ -98,13 +119,6 @@ layout_mode = 2
 size_flags_horizontal = 3
 theme_override_constants/separation = 0
 
-[node name="CloseButton" parent="." instance=ExtResource("3")]
-layout_mode = 1
-offset_left = -32.0
-offset_top = 8.0
-offset_right = -8.0
-offset_bottom = 32.0
-
+[connection signal="pressed" from="CloseButton" to="." method="_on_close_button_pressed"]
 [connection signal="item_selected" from="OptionButton" to="." method="_on_OptionButton_item_selected"]
 [connection signal="pressed" from="Select" to="." method="_on_Select_pressed"]
-[connection signal="close_button_pressed" from="CloseButton" to="." method="_on_close_button_pressed"]

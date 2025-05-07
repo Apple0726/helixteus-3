@@ -1,7 +1,7 @@
-[gd_scene load_steps=11 format=3 uid="uid://bmmss4usqtscn"]
+[gd_scene load_steps=13 format=3 uid="uid://bmmss4usqtscn"]
 
 [ext_resource type="PackedScene" uid="uid://dixixiv5ynvkf" path="res://Scenes/WhiteRect.tscn" id="1"]
-[ext_resource type="Texture2D" uid="uid://ddj3xql436doc" path="res://Graphics/Tiles/Planet3Atlas.png" id="2_xv77e"]
+[ext_resource type="Texture2D" uid="uid://4e7bahmd3w14" path="res://Graphics/Tiles/PlanetAtlas.png" id="2_xv77e"]
 [ext_resource type="Script" uid="uid://djr5eelx8hx0" path="res://Scripts/Planet.gd" id="3"]
 [ext_resource type="Script" uid="uid://y0df6t08tenm" path="res://Scripts/BadApple.gd" id="7_yxni4"]
 [ext_resource type="Texture2D" uid="uid://cdblvpftr6875" path="res://icon.png" id="12"]
@@ -10,6 +10,21 @@
 draw_center = false
 shadow_color = Color(0, 0, 0, 1)
 shadow_size = 40
+
+[sub_resource type="Shader" id="Shader_ajm7q"]
+code = "shader_type canvas_item;
+
+uniform sampler2D planet_texture: repeat_enable;
+
+void fragment() {
+	vec3 planet_texture_rgb = texture(planet_texture, vec2(UV.x*11.0, UV.y*5.0)).rgb;
+	vec3 mask_texture_rgb = texture(TEXTURE, UV).rgb;
+	COLOR.rgb = mix(mask_texture_rgb, planet_texture_rgb, mask_texture_rgb.g);
+}
+"
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_2ub2g"]
+shader = SubResource("Shader_ajm7q")
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_fk4u5"]
 texture = ExtResource("2_xv77e")
@@ -381,6 +396,7 @@ theme_override_styles/panel = SubResource("StyleBoxFlat_g1ur1")
 tile_map_data = PackedByteArray(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0)
 
 [node name="PlanetTiles" type="TileMapLayer" parent="."]
+material = SubResource("ShaderMaterial_2ub2g")
 tile_set = SubResource("TileSet_75ca2")
 
 [node name="Soil" type="TileMapLayer" parent="."]

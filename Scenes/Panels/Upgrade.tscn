@@ -174,7 +174,7 @@ offset_top = 480.0
 offset_right = 752.0
 offset_bottom = 520.0
 theme_override_styles/panel = SubResource("StyleBoxFlat_xcyis")
-vertical_scroll_mode = 3
+vertical_scroll_mode = 0
 
 [node name="Costs" type="HBoxContainer" parent="ScrollContainer"]
 layout_mode = 2

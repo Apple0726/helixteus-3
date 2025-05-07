@@ -1,4 +1,4 @@
-extends Panel
+extends Control
 @onready var game = get_node("/root/Game")
 @onready var REs:Array = $Armor/Control.get_children()
 var enhancements:Dictionary
@@ -78,11 +78,6 @@ func remove_recursive(RE_name):
 			if enhancements.has(child):
 				remove_recursive(child)
 
-func _on_TextureButton_close_button_pressed():
-	visible = false
-	game.sub_panel = null
-
-
 func _on_Control_visibility_changed():
 	if visible:
 		refresh()
@@ -108,3 +103,8 @@ func refresh():
 			elif RE is Node2D:
 				for line in RE.get_children():
 					line.default_color = color
+
+
+func _on_close_button_pressed() -> void:
+	visible = false
+	game.sub_panel = null

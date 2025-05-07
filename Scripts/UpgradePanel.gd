@@ -22,7 +22,7 @@ var set_min_lv:bool = false
 
 func _ready():
 	BASE_PW = game.maths_bonus.BUCGF
-	set_polygon(size)
+	set_polygon($GUI.size, $GUI.position)
 	path1.get_node("Label").text = tr("PATH") + " 1"
 	path2.get_node("Label").text = tr("PATH") + " 2"
 	path3.get_node("Label").text = tr("PATH") + " 3"

@@ -2906,9 +2906,8 @@ func generate_planets(id:int):#local id
 						lv = 1
 				if num == total_num:
 					lv = max(0.15 * ceil(log(power_left) / log(1.15)), 1)
-				var x = randf()
-				var HP_power = 7.5 * (2.0 * x + 0.2)
-				var stat_power = 48.0 - HP_power + lv / 2
+				var HP_power = 7.0 * (2.0 * randf() + 0.2)
+				var stat_power = 48.0 - 1.5 * HP_power + lv / 2
 				var HP = round(HP_power * (lv + 1.0))
 				if _class == 2:
 					HP = round(HP * randf_range(4.0, 6.0))
@@ -3666,10 +3665,9 @@ func add_items(item_id:int, num:int = 1):
 		for i in len(items):
 			if num <= 0:
 				break
-			var item_slot = items[i]
-			if item_slot == null:
+			if items[i] == null:
 				items[i] = {"id":item_id, "num":0}
-			if item_slot.id == item_id and item_slot.num < stack_size:
+			if items[i].id == item_id and items[i].num < stack_size:
 				var sum = items[i].num + num
 				var diff = stack_size - items[i].num
 				items[i].num = min(stack_size, sum)

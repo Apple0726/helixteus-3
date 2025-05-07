@@ -1,7 +1,6 @@
 extends "Panel.gd"
 
 var slot_scene = preload("res://Scenes/RoverSlot.tscn")
-var select_comp_scene = preload("res://Scenes/Panels/SelectCompPanel.tscn")
 var RE_scene = preload("res://Scenes/Panels/RoverEnhancements.tscn")
 var select_comp
 var RE_panel
@@ -40,8 +39,8 @@ var CC:String = "stone_CC"
 var cargo_bonus:int
 
 func _ready():
-	set_polygon(size)
-	select_comp = select_comp_scene.instantiate()
+	set_polygon($GUI.size, $GUI.position)
+	select_comp = preload("res://Scenes/Panels/SelectCompPanel.tscn").instantiate()
 	select_comp.visible = false
 	add_child(select_comp)
 	RE_panel = RE_scene.instantiate()

@@ -52,6 +52,8 @@ func put_rsrc(container, min_size, objs, remove:bool = true, show_available:bool
 		var tooltip = ""
 		if obj is int:
 			tooltip = Item.name(obj)
+			texture.texture_normal = load("res://Graphics/Items/%s/%s.png" % [Item.icon_directory(Item.data[obj].type), Item.data[obj].icon_name])
+			rsrc.get_node("Text").text = str(objs[obj])
 		else:
 			tooltip = tr(obj.to_upper())
 			if obj == "money":
@@ -1582,7 +1584,7 @@ func update_CBD_affected_tiles(tile:Dictionary, tile_id:int, p_i:Dictionary):
 				_tile["%s_bonus" % second_path_str] = new_bonus
 			_tile["%s_dict" % second_path_str][id2] = tile.bldg.path_2_value
 
-func add_items_to_inventory(item_name:String, item_amount:int, item_base_costs:Dictionary, no_space_in_inventory_string:String, add_item_success_string:String):
+func add_items_to_inventory(item_name, item_amount:int, item_base_costs:Dictionary, no_space_in_inventory_string:String, add_item_success_string:String):
 	var items_left = game.add_items(item_name, item_amount)
 	if items_left > 0:
 		var refund = item_base_costs.duplicate(true)

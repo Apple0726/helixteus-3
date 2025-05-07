@@ -334,7 +334,7 @@ func _ready():
 		game.popup_window(tr("PRESS_E_TO_SPRINT"), tr("SPRINT_MODE"))
 		game.help.erase("sprint_mode")
 
-func add_filter(rsrc:String):
+func add_filter(rsrc):
 	if rsrc in game.mat_info.keys():
 		add_filter_slot("Materials", rsrc)
 	elif rsrc in game.met_info.keys():
@@ -1036,7 +1036,7 @@ func on_map_exited(_body):
 func generate_treasure(tier:int, rng:RandomNumberGenerator):
 	var contents = {	"money":round(rng.randf_range(1500, 1800) * pow(tier, 3.0) * difficulty * exp(cave_floor / 6.0)),
 						"minerals":round(rng.randf_range(100, 150) * pow(tier, 3.0) * difficulty * exp(cave_floor / 9.0)),
-						Item.HELIX_CORE1:int(rng.randf_range(0, 2) * pow(tier, 1.5) * pow(difficulty, 0.9))}
+						Item.HELIX_CORE1:int(ceil(rng.randf_range(1, 3) * pow(tier, 1.5) * pow(difficulty, 0.9)))}
 	if contents[Item.HELIX_CORE1] > 128:
 		contents[Item.HELIX_CORE2] = int(contents.hx_core / 128.0)
 		contents[Item.HELIX_CORE1] %= 128
@@ -1298,7 +1298,7 @@ func _input(event):
 						game.show[rsrc] = true
 						add_filter(rsrc)
 					var has_weight = true
-					if rsrc == "money" or rsrc == "minerals":
+					if rsrc is int or rsrc == "money" or rsrc == "minerals":
 						has_weight = false
 					if has_weight:
 						var remainder:float = round(add_weight_rsrc(rsrc, contents[rsrc]) * 100) / 100.0
@@ -1390,17 +1390,17 @@ func add_to_inventory(rsrc, content:float, remainders:Dictionary):
 		if inventory[i].is_empty():
 			inventory[i].type = "item"
 			inventory[i].id = rsrc
-			if rsrc == "money":
+			if rsrc is int:
+				slot.get_node("TextureRect").texture = load("res://Graphics/Items/%s/%s.png" % [Item.icon_directory(Item.data[rsrc].type), Item.data[rsrc].icon_name])
+			elif rsrc == "money":
 				slot.get_node("TextureRect").texture = Data.money_icon
 			elif rsrc == "minerals":
 				slot.get_node("TextureRect").texture = Data.minerals_icon
-			else:
-				slot.get_node("TextureRect").texture = load("res://Graphics/Items/%s.png" % Item.icon_directory(rsrc))
 			slot.get_node("Label").text = Helper.format_num(content, false, 3)
 			inventory[i].num = content
 			game.show[rsrc] = true
 			break
-		if inventory[i].has("name") and rsrc == inventory[i].name:
+		if inventory[i].has("id") and str(rsrc) == str(inventory[i].id):
 			inventory[i].num += content
 			slot.get_node("Label").text = Helper.format_num(inventory[i].num, false, 3)
 			break
@@ -1428,18 +1428,18 @@ func exit_cave():
 	for i in len(inventory):
 		if inventory[i].is_empty() or inventory[i].type == "consumable":
 			continue
-		if inventory[i].id == "money":
+		if inventory[i].id is int:
+			var remaining:int = game.add_items(inventory[i].id, inventory[i].num)
+			if remaining > 0:
+				inventory[i].num = remaining
+			else:
+				inventory[i].clear()
+		elif inventory[i].id == "money":
 			game.add_resources({"money":inventory[i].num}) 
 			inventory[i].clear()
 		elif inventory[i].id == "minerals":
 			inventory[i].num = Helper.add_minerals(inventory[i].num).remainder
 			if inventory[i].num <= 0:
-				inventory[i].clear()
-		elif inventory[i].id is int:
-			var remaining:int = game.add_items(inventory[i].id, inventory[i].num)
-			if remaining > 0:
-				inventory[i].num = remaining
-			else:
 				inventory[i].clear()
 	var i_w_w2 = i_w_w.duplicate(true)
 	if i_w_w.has("stone"):
@@ -1489,10 +1489,10 @@ func _process(delta):
 			elif effect == "invincible":
 				rover.collision_mask = 37
 				$Rover/AnimationPlayer.stop()
-	if inventory[curr_slot].has("name") and inventory[curr_slot].name == "drill":
+	if inventory[curr_slot].has("id") and inventory[curr_slot].id is int and Item.data[inventory[curr_slot].id].type == Item.Type.DRILL:
 		tile_highlight_left.position.x = floor(rover.position.x / 200) * 200 + 100
 		tile_highlight_left.position.y = floor(rover.position.y / 200) * 200 + 100
-	elif right_inventory[0].has("name") and right_inventory[0].name == "drill":
+	elif right_inventory[0].has("id") and right_inventory[0].id is int and Item.data[right_inventory[0].id].type == Item.Type.DRILL:
 		tile_highlight_right.position.x = floor(rover.position.x / 200) * 200 + 100
 		tile_highlight_right.position.y = floor(rover.position.y / 200) * 200 + 100
 	if not status_effects.has("stun") and use_item_node.button_pressed and inventory_ready[curr_slot] and not inventory[curr_slot].is_empty():
@@ -1566,7 +1566,7 @@ func use_item(item:Dictionary, _tile_highlight, delta):
 					ok = true
 			if ok:
 				remove_item(item, 1)
-				if not item.has("name"):
+				if not item.has("id"):
 					_tile_highlight.visible = false
 				add_hole(tile_id)
 			cooldown(0.5)
@@ -1997,7 +1997,7 @@ func set_border(i:int):
 	elif inventory[i].type == "rover_weapons":
 		active_item.text = Helper.get_rover_weapon_name(inventory[i].id)
 	elif inventory[i].has("id") and inventory[i].id is int:
-		active_item.text = Item.name(inventory[id].id)
+		active_item.text = Item.name(inventory[i].id)
 	else:
 		active_item.text = ""
 	if inventory[i].has("id") and inventory[i].id is int and Item.data[inventory[i].id].type == Item.Type.DRILL:

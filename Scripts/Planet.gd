@@ -103,7 +103,6 @@ func _ready():
 		for j in wid:
 			var id2 = i % wid + j * wid
 			var tile = game.tile_data[id2]
-			#$PlanetTiles.set_cell(Vector2i(i, j), p_i.type - 3, Vector2(0, 0))
 			$Lakes.set_cell(Vector2i(i, j), 0, Vector2.ZERO)
 			if tile == null:
 				planet_tiles.append(Vector2i(i, j))
@@ -196,6 +195,7 @@ func _ready():
 	}
 	$Soil.set_cells_terrain_connect(soil_tiles, 0, 0)
 	$Ash.set_cells_terrain_connect(ash_tiles, 0, 0)
+	$PlanetTiles.material.set_shader_parameter("planet_texture", load("res://Graphics/Tiles/%s.jpg" % p_i.type))
 	$PlanetTiles.set_cells_terrain_connect(planet_tiles, 0, 0)
 	if p_i.has("lake"):
 		$Lakes.modulate = Data.lake_colors[p_i.lake.element][p_i.lake.state]
@@ -901,7 +901,7 @@ func duplicate_building_callable():
 	if bldg_name == Building.GREENHOUSE:
 		base_cost.energy = round(base_cost.energy * (1 + abs(p_i.temperature - 273) / 10.0))
 	construct(bldg_name, base_cost)
-	shadow.position = floor(mouse_pos / 200) * 200 + Vector2.ONE * 100
+	shadow.position = floor(mouse_pos / 200) * 200 + Vector2.ONE * 100 + Vector2.UP * 50.0
 
 func upgrade_building_callable(called_from_right_click = true):
 	if is_instance_valid(game.upgrade_panel):
@@ -1146,9 +1146,9 @@ func _unhandled_input(event):
 			hide_tooltip()
 		if is_instance_valid(shadow):
 			if constructing_ancient_building_tier != -1 and bldg_to_construct == AncientBuilding.NUCLEAR_FUSION_REACTOR:
-				shadow.position = floor(mouse_pos / 200) * 200 + Vector2.ONE * 200
+				shadow.position = floor(mouse_pos / 200) * 200 + Vector2.ONE * 200 + Vector2.UP * 50.0
 			else:
-				shadow.position = floor(mouse_pos / 200) * 200 + Vector2.ONE * 100
+				shadow.position = floor(mouse_pos / 200) * 200 + Vector2.ONE * 100 + Vector2.UP * 50.0
 	#finish mass build
 	if Input.is_action_just_released("left_click") and mass_build_rect.visible:
 		mass_build_rect.visible = false
@@ -1185,7 +1185,7 @@ func _unhandled_input(event):
 		#var tile_id = get_tile_id_from_pos(mouse_pos)
 		#var tile = game.tile_data[tile_id]
 	if (Input.is_action_just_released("left_click") or event is InputEventScreenTouch) and not view.dragged and not_on_button and Geometry2D.is_point_in_polygon(mouse_pos, planet_bounds):
-		if not is_instance_valid(right_click_menu):
+		if not is_instance_valid(right_click_menu) and game.item_to_use.id == -1:
 			tiles_selected.clear()
 			remove_selected_white_rects()
 		var curr_time = Time.get_unix_time_from_system()
@@ -1459,7 +1459,7 @@ func add_bldg_sprite(pos:Vector2, _name:int, texture, building_animation:bool = 
 	var bldg = Sprite2D.new()
 	bldg.texture = texture
 	bldg.scale *= sc * 0.8
-	bldg.position = pos + offset + Vector2.UP * 40.0
+	bldg.position = pos + offset + Vector2.UP * 50.0
 	bldg.self_modulate = mod
 	if building_animation:
 		bldg.material = ShaderMaterial.new()
@@ -1733,9 +1733,9 @@ func place_gray_tiles_mining():
 	
 func put_shadow(spr:Sprite2D, texture, pos:Vector2 = Vector2.ZERO, sc:float = 0.4, offset:Vector2 = Vector2.ONE * 100):
 	spr.texture = texture
-	spr.scale *= sc
+	spr.scale *= sc * 0.8
 	spr.modulate.a = 0.5
-	spr.position = (floor(pos / 200) * 200).clamp(Vector2.ZERO, Vector2.ONE * wid * 200) + offset
+	spr.position = (floor(pos / 200) * 200).clamp(Vector2.ZERO, Vector2.ONE * wid * 200) + offset + Vector2.UP * 50.0
 	add_child(spr)
 	return spr
 	

@@ -1,10 +1,12 @@
-[gd_scene load_steps=43 format=3 uid="uid://cpfr5s4frfko3"]
+[gd_scene load_steps=47 format=3 uid="uid://cpfr5s4frfko3"]
 
 [ext_resource type="Theme" uid="uid://cp2u1kgj60ic" path="res://Resources/default_theme.tres" id="1"]
-[ext_resource type="PackedScene" uid="uid://ddf2xjwcht77u" path="res://Scenes/CloseButton.tscn" id="2"]
 [ext_resource type="PackedScene" uid="uid://bv51d6mfcjqfn" path="res://Scenes/RESlot.tscn" id="3"]
+[ext_resource type="Texture2D" uid="uid://dcvnyb0mloli2" path="res://Graphics/GUI/Panel.png" id="3_oicgl"]
 [ext_resource type="Texture2D" uid="uid://etptg1hw7k6l" path="res://Graphics/Cave/RE/armor_0.png" id="4"]
+[ext_resource type="Texture2D" uid="uid://baowebna7hgr5" path="res://Graphics/GUI/CloseButtonNormal.png" id="4_fuhnu"]
 [ext_resource type="Texture2D" uid="uid://t47m4j5cowx1" path="res://Graphics/Cave/RE/armor_3.png" id="5"]
+[ext_resource type="Texture2D" uid="uid://c1vwn7p5uxu1r" path="res://Graphics/GUI/CloseButtonHover.png" id="5_rhkcu"]
 [ext_resource type="Texture2D" uid="uid://b4l13nnalemmx" path="res://Graphics/Cave/RE/armor_2.png" id="6"]
 [ext_resource type="Texture2D" uid="uid://spt5jva3ff7w" path="res://Graphics/Cave/RE/armor_1.png" id="7"]
 [ext_resource type="Texture2D" uid="uid://dsgx7bjsq32o5" path="res://Graphics/Cave/RE/armor_6.png" id="8"]
@@ -38,6 +40,18 @@
 [ext_resource type="Texture2D" uid="uid://ce2fp81whjuks" path="res://Graphics/Cave/RE/wheels_7.png" id="36"]
 [ext_resource type="Texture2D" uid="uid://cf7m4dfxo8bci" path="res://Graphics/Cave/RE/wheels_6.png" id="37"]
 [ext_resource type="Texture2D" uid="uid://sgwi28lll5r3" path="res://Graphics/Cave/RE/wheels_8.png" id="38"]
+
+[sub_resource type="SystemFont" id="SystemFont_l1il0"]
+font_names = PackedStringArray("Arial")
+subpixel_positioning = 0
+multichannel_signed_distance_field = true
+
+[sub_resource type="LabelSettings" id="LabelSettings_fuhnu"]
+font = SubResource("SystemFont_l1il0")
+font_size = 20
+shadow_size = 2
+shadow_color = Color(0, 0, 0, 0.372549)
+shadow_offset = Vector2(2, 2)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_mcplm"]
 draw_center = false
@@ -75,58 +89,75 @@ border_width_bottom = 2
 border_color = Color(0.313726, 0.313726, 0.313726, 1)
 border_blend = true
 
-[node name="Control" type="Panel"]
+[node name="Control" type="Control"]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 64.0
+offset_bottom = 64.0
+theme = ExtResource("1")
+script = ExtResource("31")
+metadata/_edit_horizontal_guides_ = [360.0]
+
+[node name="GUI" type="NinePatchRect" parent="."]
+offset_left = 320.0
+offset_top = 160.0
+offset_right = 960.0
+offset_bottom = 560.0
+texture = ExtResource("3_oicgl")
+patch_margin_left = 408
+patch_margin_top = 80
+patch_margin_right = 80
+patch_margin_bottom = 64
+axis_stretch_horizontal = 1
+metadata/_edit_horizontal_guides_ = [596.0]
+
+[node name="BlackBG" type="ColorRect" parent="."]
+show_behind_parent = true
+layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -281.0
-offset_top = -159.0
-offset_right = 281.0
-offset_bottom = 159.0
-theme = ExtResource("1")
-script = ExtResource("31")
-
-[node name="BlackBG" type="ColorRect" parent="."]
-show_behind_parent = true
-layout_mode = 0
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -640.0
-offset_top = -360.0
-offset_right = 640.0
-offset_bottom = 360.0
+offset_left = -32.0
+offset_top = -32.0
+offset_right = 1248.0
+offset_bottom = 688.0
+grow_horizontal = 2
+grow_vertical = 2
 color = Color(0, 0, 0, 0.564706)
+
+[node name="CloseButton" type="TextureButton" parent="."]
+offset_left = 894.0
+offset_top = 176.0
+offset_right = 943.0
+offset_bottom = 225.0
+texture_normal = ExtResource("4_fuhnu")
+texture_hover = ExtResource("5_rhkcu")
 
 [node name="Label" type="Label" parent="."]
 custom_minimum_size = Vector2(0, 38)
-layout_mode = 0
-anchor_right = 1.0
-offset_bottom = 38.0
-horizontal_alignment = 1
+layout_mode = 1
+offset_left = 368.0
+offset_top = 176.0
+offset_right = 680.0
+offset_bottom = 224.0
+label_settings = SubResource("LabelSettings_fuhnu")
 vertical_alignment = 1
 
-[node name="TextureButton" parent="." instance=ExtResource("2")]
-layout_mode = 1
-offset_left = -33.0
-offset_top = 7.0
-offset_right = -9.0
-offset_bottom = 31.0
-
 [node name="Armor" type="ScrollContainer" parent="."]
-visible = false
-layout_mode = 0
+layout_mode = 1
+anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -256.0
-offset_top = -104.0
-offset_right = 256.0
-offset_bottom = 120.0
+offset_left = 352.0
+offset_top = 232.0
+offset_right = 864.0
+offset_bottom = 488.0
+grow_horizontal = 2
+grow_vertical = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_mcplm")
 
 [node name="Control" type="Control" parent="Armor"]
@@ -300,15 +331,19 @@ width = 2.0
 default_color = Color(0.4, 0.886275, 1, 1)
 
 [node name="Wheels" type="ScrollContainer" parent="."]
-layout_mode = 0
+visible = false
+layout_mode = 1
+anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -256.0
-offset_top = -104.0
-offset_right = 256.0
-offset_bottom = 120.0
+offset_left = 352.0
+offset_top = 232.0
+offset_right = 864.0
+offset_bottom = 488.0
+grow_horizontal = 2
+grow_vertical = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_8qmu0")
 
 [node name="Control" type="Control" parent="Wheels"]
@@ -427,15 +462,18 @@ default_color = Color(0.4, 0.886275, 1, 1)
 
 [node name="CC" type="ScrollContainer" parent="."]
 visible = false
-layout_mode = 0
+layout_mode = 1
+anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -256.0
-offset_top = -104.0
-offset_right = 256.0
-offset_bottom = 120.0
+offset_left = 352.0
+offset_top = 232.0
+offset_right = 864.0
+offset_bottom = 488.0
+grow_horizontal = 2
+grow_vertical = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_xkl76")
 
 [node name="Control" type="Control" parent="CC"]
@@ -480,15 +518,18 @@ default_color = Color(0.4, 0.886275, 1, 1)
 
 [node name="Laser" type="ScrollContainer" parent="."]
 visible = false
-layout_mode = 0
+layout_mode = 1
+anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -256.0
-offset_top = -104.0
-offset_right = 256.0
-offset_bottom = 120.0
+offset_left = 352.0
+offset_top = 232.0
+offset_right = 864.0
+offset_bottom = 488.0
+grow_horizontal = 2
+grow_vertical = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_nu83c")
 
 [node name="Control" type="Control" parent="Laser"]
@@ -604,4 +645,4 @@ width = 2.0
 default_color = Color(0.4, 0.886275, 1, 1)
 
 [connection signal="visibility_changed" from="." to="." method="_on_Control_visibility_changed"]
-[connection signal="close_button_pressed" from="TextureButton" to="." method="_on_TextureButton_close_button_pressed"]
+[connection signal="pressed" from="CloseButton" to="." method="_on_close_button_pressed"]
