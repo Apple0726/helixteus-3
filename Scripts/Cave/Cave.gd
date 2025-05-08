@@ -1036,7 +1036,7 @@ func on_map_exited(_body):
 func generate_treasure(tier:int, rng:RandomNumberGenerator):
 	var contents = {	"money":round(rng.randf_range(1500, 1800) * pow(tier, 3.0) * difficulty * exp(cave_floor / 6.0)),
 						"minerals":round(rng.randf_range(100, 150) * pow(tier, 3.0) * difficulty * exp(cave_floor / 9.0)),
-						Item.HELIX_CORE1:int(ceil(rng.randf_range(1, 3) * pow(tier, 1.5) * pow(difficulty, 0.9)))}
+						Item.HELIX_CORE1:int(rng.randf_range(0.2, 0.6) * pow(tier, 1.8) * pow(difficulty, 0.7))}
 	if contents[Item.HELIX_CORE1] > 128:
 		contents[Item.HELIX_CORE2] = int(contents.hx_core / 128.0)
 		contents[Item.HELIX_CORE1] %= 128

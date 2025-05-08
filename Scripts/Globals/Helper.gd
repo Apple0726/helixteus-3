@@ -637,6 +637,7 @@ func add_ship_XP(id:int, XP:float):
 		ship_data[id].lv += 1
 		if ship_data[id].lv % 2 == 0:
 			ship_data[id].unallocated_weapon_levels = ship_data[id].get("unallocated_weapon_levels", 0) + 1
+		ship_data[id].leveled_up = true
 		ship_data[id].HP += ShipClass.class_modifiers[ship_data[id].ship_class].HP_increase_on_levelup
 
 func calculate_total_ship_XP(id:int):

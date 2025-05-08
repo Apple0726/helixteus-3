@@ -37,9 +37,14 @@ func _ready() -> void:
 	for weapon in ["Bullet", "Laser", "Bomb", "Light"]:
 		for path in 3:
 			for lv in 3:
-				$MainPanel.get_node("%sPath%s/Level%s" % [weapon, path+1, lv+1]).mouse_entered.connect(game.show_tooltip.bind(tr("%s_%s_%s_DESC" % [weapon.to_upper(), path+1, lv+1])))
-				$MainPanel.get_node("%sPath%s/Level%s" % [weapon, path+1, lv+1]).mouse_exited.connect(game.hide_tooltip)
+				$MainPanel.get_node("%sLevels/Path%s/Level%s" % [weapon, path+1, lv+1]).mouse_entered.connect(show_weapon_tooltip.bind(weapon.to_lower(), path, lv))
+				$MainPanel.get_node("%sLevels/Path%s/Level%s" % [weapon, path+1, lv+1]).mouse_exited.connect(game.hide_tooltip)
 
+func show_weapon_tooltip(weapon: String, path: int, lv: int):
+	var tooltip = tr("%s_%s_%s_DESC" % [weapon.to_upper(), path+1, lv+1])
+	if ship_node[weapon + "_levels"][path] <= lv+1:
+		tooltip = "[color=#888888]" + tooltip
+	game.show_tooltip(tooltip)
 
 func _input(event: InputEvent) -> void:
 	Helper.set_back_btn($Back)
@@ -141,10 +146,10 @@ func refresh_GUI():
 				break
 		for path in 3:
 			if hide_levels:
-				$MainPanel.get_node("%sPath%s" % [weapon, path+1]).hide()
+				$MainPanel.get_node("%sLevels/Path%s" % [weapon, path+1]).hide()
 			else:
 				for lv in 3:
-					$MainPanel.get_node("%sPath%s/Level%s" % [weapon, path+1, lv+1]).modulate = Color.WHITE if ship_node[weapon.to_lower() + "_levels"][path] > lv+1 else Color(0.3, 0.3, 0.3)
+					$MainPanel.get_node("%sLevels/Path%s/Level%s" % [weapon, path+1, lv+1]).modulate = Color.WHITE if ship_node[weapon.to_lower() + "_levels"][path] > lv+1 else Color(0.3, 0.3, 0.3)
 	$MainPanel/MoveLabel.text = "%s (%.1f m)" % [tr("MOVE"), ship_node.movement_remaining]
 	if is_zero_approx(ship_node.movement_remaining):
 		$MainPanel/MoveLabel["theme_override_colors/font_color"] = Color.DARK_GRAY
@@ -163,7 +168,7 @@ func _on_back_pressed() -> void:
 	if battle_scene.hard_battle:
 		game.switch_music(load("res://Audio/ambient%s.ogg" % randi_range(1, 3)), game.u_i.time_speed)
 	for i in len(game.ship_data):
-		if game.ship_data[i].has("unallocated_weapon_levels"):
+		if game.ship_data[i].has("leveled_up"):
 			game.switch_view("ship_customize_screen", {"ship_id":i})
 			return
 	game.switch_view("system")

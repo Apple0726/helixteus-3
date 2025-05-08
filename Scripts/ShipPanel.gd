@@ -12,11 +12,24 @@ func _ready():
 	for i in len(game.ship_data):
 		add_ship_node(i)
 	set_polygon($GUI.size, $GUI.position)
+	for weapon in ["Bullet", "Laser", "Bomb", "Light"]:
+		for path in 3:
+			for lv in 3:
+				$ShipStats/ShipDetails.get_node("%s/WeaponLevels/Path%s/Level%s" % [weapon, path+1, lv+1]).mouse_entered.connect(show_weapon_tooltip.bind(weapon.to_lower(), path, lv))
+				$ShipStats/ShipDetails.get_node("%s/WeaponLevels/Path%s/Level%s" % [weapon, path+1, lv+1]).mouse_exited.connect(game.hide_tooltip)
 	refresh()
 	$Drives.panel_closed.connect(hide_drive_panel)
 
+func show_weapon_tooltip(weapon: String, path: int, lv: int):
+	var tooltip = tr("%s_%s_%s_DESC" % [weapon.to_upper(), path+1, lv+1])
+	if game.ship_data[selected_ship_id][weapon][path] <= lv+1:
+		tooltip = "[color=#888888]" + tooltip
+	game.show_tooltip(tooltip)
+
 func add_ship_node(id: int):
 	var ship = preload("res://Scenes/ShipsPanelShip.tscn").instantiate()
+	ship.get_node("TextureButton").mouse_entered.connect(_on_ship_mouse_entered.bind(id))
+	ship.get_node("TextureButton").mouse_exited.connect(_on_ship_mouse_exited)
 	ship.get_node("TextureButton").button_down.connect(_on_ship_button_down.bind(id))
 	ship.get_node("TextureButton").button_up.connect(_on_ship_button_up.bind(id))
 	ship.get_node("TextureButton").texture_normal = load("res://Graphics/Ships/Ship%s.png" % id)
@@ -28,8 +41,9 @@ func add_ship_node(id: int):
 
 func refresh():
 	set_process(true)
+	$ShipStats/Label.text = tr("CLICK_SHIP_TO_VIEW_DETAILS")
 	if selected_ship_id != -1:
-		_on_ship_button_up(selected_ship_id)
+		show_ship_stats(selected_ship_id)
 	#$Drives.refresh()
 	#if game.ships_travel_data.travel_view != "-":
 		#$SpaceportTimer.stop()
@@ -154,6 +168,19 @@ func _physics_process(delta: float) -> void:
 		F = F.clamp(-50000 * Vector2.ONE, 50000 * Vector2.ONE)
 		ship_nodes[i].apply_force(F)
 
+func _on_ship_mouse_entered(ship_id: int):
+	if game.item_to_use.id != -1 and Item.data[game.item_to_use.id].type == Item.Type.HELIX_CORE:
+		show_ship_stats(ship_id)
+		$ShipStats/ShipDetails/XP/TextureProgressGained.value = $ShipStats/ShipDetails/XP/TextureProgressBar.value + Item.data[game.item_to_use.id].XP * game.item_to_use.num
+		$ShipStats/ShipDetails/XP/XPGained.text = "+ " + str(Item.data[game.item_to_use.id].XP * game.item_to_use.num)
+		$ShipStats/ShipDetails/Respec.hide()
+
+func _on_ship_mouse_exited():
+	if game.item_to_use.id != -1 and Item.data[game.item_to_use.id].type == Item.Type.HELIX_CORE:
+		$ShipStats/ShipDetails.hide()
+		$ShipStats/Label.show()
+	
+
 func _on_ship_button_down(ship_id: int) -> void:
 	game.view.move_view = false
 	dragging_ship_id = ship_id
@@ -164,12 +191,26 @@ func _on_ship_button_up(ship_id: int) -> void:
 	game.view.move_view = true
 	dragging_ship_id = -1
 	selected_ship_id = ship_id
-	$Ships/Battlefield/Selected.show()
-	$Ships/Battlefield/Selected.position = ship_nodes[ship_id].position - Vector2(0, 40)
+	if game.item_to_use.id == -1 or Item.data[game.item_to_use.id].type != Item.Type.HELIX_CORE:
+		$Ships/Battlefield/Selected.show()
+		$Ships/Battlefield/Selected.position = ship_nodes[ship_id].position - Vector2(0, 40)
+		show_ship_stats(ship_id)
+	else:
+		Helper.add_ship_XP(ship_id, Item.data[game.item_to_use.id].XP * game.item_to_use.num)
+		game.remove_items(game.item_to_use.id, game.item_to_use.num)
+		game.update_item_cursor()
+		show_ship_stats(ship_id)
+		if game.item_to_use.id != -1 and Item.data[game.item_to_use.id].type == Item.Type.HELIX_CORE:
+			$ShipStats/ShipDetails/XP/TextureProgressGained.value = $ShipStats/ShipDetails/XP/TextureProgressBar.value + Item.data[game.item_to_use.id].XP * game.item_to_use.num
+		if game.ship_data[ship_id].has("leveled_up"):
+			game.switch_view("ship_customize_screen", {"ship_id":ship_id, "label_text":tr("SHIP_LEVELED_UP")})
+
+func show_ship_stats(ship_id: int):
 	$ShipStats/ShipDetails.show()
 	$ShipStats/Label.hide()
 	var ship_info = game.ship_data[ship_id]
 	$ShipStats/ShipDetails/Label.text = "%s %s %s" % [tr("LEVEL"), ship_info.lv, tr("%s_SHIP" % ShipClass.names[ship_info.ship_class].to_upper())]
+	$ShipStats/ShipDetails/Respec.show()
 	if ship_info.respec_count == 0:
 		$ShipStats/ShipDetails/Respec.text = "%s (%s)" % [tr("RESPEC"), tr("FREE")]
 	else:
@@ -180,9 +221,15 @@ func _on_ship_button_up(ship_id: int) -> void:
 	$ShipStats/ShipDetails/Stats/Accuracy.text = str(ship_info.accuracy)
 	$ShipStats/ShipDetails/Stats/Agility.text = str(ship_info.agility)
 	for weapon in ["Bullet", "Laser", "Bomb", "Light"]:
-		var weapon_data = ship_info[weapon.to_lower()]
-		get_node("ShipStats/ShipDetails/%s/Icon" % [weapon]).texture = load("res://Graphics/Weapons/%s%s.png" % [weapon.to_lower(), 1])
-		get_node("ShipStats/ShipDetails/%s/Label" % [weapon]).text = "%d / %d / %d" % [weapon_data[0], weapon_data[1], weapon_data[2]]
+		if ship_info.lv == 1:
+			$ShipStats/ShipDetails.get_node(weapon).hide()
+		else:
+			$ShipStats/ShipDetails.get_node(weapon).show()
+			var weapon_data = ship_info[weapon.to_lower()]
+			$ShipStats/ShipDetails.get_node("%s/Icon" % [weapon]).texture = load("res://Graphics/Weapons/%s%s.png" % [weapon.to_lower(), 1])
+			for path in 3:
+				for lv in 3:
+					$ShipStats/ShipDetails.get_node("%s/WeaponLevels/Path%s/Level%s" % [weapon, path+1, lv+1]).modulate = Color.WHITE if ship_info[weapon.to_lower()][path] > lv+1 else Color(0.3, 0.3, 0.3)
 	$ShipStats/ShipDetails/XP/Label2.text = "%s / %s" % [Helper.format_num(round(ship_info.XP)), Helper.format_num(ship_info.XP_to_lv)]
 	$ShipStats/ShipDetails/XP/TextureProgressBar.max_value = ship_info.XP_to_lv
 	$ShipStats/ShipDetails/XP/TextureProgressGained.max_value = ship_info.XP_to_lv

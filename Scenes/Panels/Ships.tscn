@@ -1,4 +1,4 @@
-[gd_scene load_steps=31 format=3 uid="uid://csljwgggftgxb"]
+[gd_scene load_steps=36 format=3 uid="uid://csljwgggftgxb"]
 
 [ext_resource type="Script" uid="uid://chr84rkr56yr2" path="res://Scripts/ShipPanel.gd" id="3"]
 [ext_resource type="Texture2D" uid="uid://dcvnyb0mloli2" path="res://Graphics/GUI/Panel.png" id="3_xp52f"]
@@ -9,11 +9,16 @@
 [ext_resource type="Shader" uid="uid://hfa3ri2g3507" path="res://Shaders/FloatAnimation.gdshader" id="9_aivc5"]
 [ext_resource type="Texture2D" uid="uid://ccwp7j6mkde7u" path="res://Graphics/Buttons/SystemView.png" id="9_dhoc8"]
 [ext_resource type="Texture2D" uid="uid://47ckp0wuhpfy" path="res://Graphics/Icons/current.png" id="10_800g5"]
+[ext_resource type="Texture2D" uid="uid://bc6latfcdvj1t" path="res://Graphics/Weapons/bullet1.png" id="10_w02ne"]
 [ext_resource type="Texture2D" uid="uid://di3sx4ynm6kot" path="res://Graphics/Science/CD.png" id="11"]
 [ext_resource type="Texture2D" uid="uid://kr2fdk8dptv1" path="res://Graphics/Misc/BarUnder2.png" id="11_s3b4g"]
+[ext_resource type="PackedScene" uid="uid://bgrr0ylbsnodx" path="res://Scenes/WeaponLevels.tscn" id="11_xmdl6"]
 [ext_resource type="Texture2D" uid="uid://bx1hvetixqpwi" path="res://Graphics/Misc/Bar2.png" id="12_3x4ks"]
+[ext_resource type="Texture2D" uid="uid://bblxs0wnkibch" path="res://Graphics/Weapons/laser1.png" id="12_xmdl6"]
+[ext_resource type="Texture2D" uid="uid://cyogaq3sj1anp" path="res://Graphics/Weapons/bomb1.png" id="13_k28a8"]
 [ext_resource type="Texture2D" uid="uid://cxij5pk8nug0r" path="res://Graphics/Misc/BarOver.png" id="13_y4ybd"]
 [ext_resource type="Texture2D" uid="uid://csmhsuosfqrec" path="res://Graphics/Icons/XP.png" id="14_gqpul"]
+[ext_resource type="Texture2D" uid="uid://c1v73luqy7pi5" path="res://Graphics/Weapons/light1.png" id="14_qvlxj"]
 [ext_resource type="Texture2D" uid="uid://bl07f3wef0muv" path="res://Graphics/Icons/HP.png" id="15_0livu"]
 [ext_resource type="Texture2D" uid="uid://7ffsf7xuvfw2" path="res://Graphics/Icons/attack.png" id="16_grg2r"]
 [ext_resource type="Texture2D" uid="uid://cqiyti2xdxtcw" path="res://Graphics/Icons/defense.png" id="17_uo1ep"]
@@ -198,9 +203,11 @@ visible = false
 layout_mode = 1
 anchors_preset = 10
 anchor_right = 1.0
-offset_bottom = 140.0
+offset_left = 16.0
+offset_top = 8.0
+offset_right = -16.0
+offset_bottom = 148.0
 grow_horizontal = 2
-text = "Select a ship on the right to view its details."
 label_settings = SubResource("LabelSettings_sx08b")
 horizontal_alignment = 1
 vertical_alignment = 1
@@ -241,100 +248,98 @@ text = "Respec (free)"
 [node name="Bullet" type="Control" parent="ShipStats/ShipDetails"]
 layout_mode = 3
 anchors_preset = 0
-offset_right = 40.0
-offset_bottom = 40.0
+offset_left = 32.0
+offset_top = 324.0
+offset_right = 72.0
+offset_bottom = 364.0
 
 [node name="Icon" type="TextureRect" parent="ShipStats/ShipDetails/Bullet"]
 layout_mode = 0
-offset_left = 132.0
-offset_top = 292.0
-offset_right = 160.0
-offset_bottom = 304.0
+offset_top = 4.0
+offset_right = 28.0
+offset_bottom = 16.0
+texture = ExtResource("10_w02ne")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="Label" type="Label" parent="ShipStats/ShipDetails/Bullet"]
-layout_mode = 0
-offset_left = 184.0
-offset_top = 284.0
-offset_right = 262.0
-offset_bottom = 307.0
-text = "Lv 1 / 1 / 1"
+[node name="WeaponLevels" parent="ShipStats/ShipDetails/Bullet" instance=ExtResource("11_xmdl6")]
+offset_left = 32.0
+offset_top = -8.0
+offset_right = 72.0
+offset_bottom = 32.0
 
 [node name="Laser" type="Control" parent="ShipStats/ShipDetails"]
 layout_mode = 3
 anchors_preset = 0
-offset_right = 40.0
-offset_bottom = 40.0
+offset_left = 124.0
+offset_top = 324.0
+offset_right = 164.0
+offset_bottom = 364.0
 
 [node name="Icon" type="TextureRect" parent="ShipStats/ShipDetails/Laser"]
 layout_mode = 0
-offset_left = 132.0
-offset_top = 316.0
-offset_right = 160.0
-offset_bottom = 336.0
+offset_right = 28.0
+offset_bottom = 20.0
+texture = ExtResource("12_xmdl6")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="Label" type="Label" parent="ShipStats/ShipDetails/Laser"]
-layout_mode = 0
-offset_left = 184.0
-offset_top = 316.0
-offset_right = 262.0
-offset_bottom = 339.0
-text = "Lv 1 / 1 / 1"
+[node name="WeaponLevels" parent="ShipStats/ShipDetails/Laser" instance=ExtResource("11_xmdl6")]
+offset_left = 32.0
+offset_top = -8.0
+offset_right = 72.0
+offset_bottom = 32.0
 
 [node name="Bomb" type="Control" parent="ShipStats/ShipDetails"]
 layout_mode = 3
 anchors_preset = 0
-offset_right = 40.0
-offset_bottom = 40.0
+offset_left = 216.0
+offset_top = 324.0
+offset_right = 256.0
+offset_bottom = 364.0
 
 [node name="Icon" type="TextureRect" parent="ShipStats/ShipDetails/Bomb"]
 layout_mode = 0
-offset_left = 132.0
-offset_top = 352.0
-offset_right = 160.0
-offset_bottom = 372.0
+offset_right = 28.0
+offset_bottom = 20.0
+texture = ExtResource("13_k28a8")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="Label" type="Label" parent="ShipStats/ShipDetails/Bomb"]
-layout_mode = 0
-offset_left = 184.0
-offset_top = 348.0
-offset_right = 262.0
-offset_bottom = 371.0
-text = "Lv 1 / 1 / 1"
+[node name="WeaponLevels" parent="ShipStats/ShipDetails/Bomb" instance=ExtResource("11_xmdl6")]
+offset_left = 32.0
+offset_top = -8.0
+offset_right = 72.0
+offset_bottom = 32.0
 
 [node name="Light" type="Control" parent="ShipStats/ShipDetails"]
 layout_mode = 3
 anchors_preset = 0
-offset_right = 40.0
-offset_bottom = 40.0
+offset_left = 304.0
+offset_top = 324.0
+offset_right = 344.0
+offset_bottom = 364.0
 
 [node name="Icon" type="TextureRect" parent="ShipStats/ShipDetails/Light"]
 layout_mode = 0
-offset_left = 132.0
-offset_top = 384.0
-offset_right = 160.0
-offset_bottom = 404.0
+offset_right = 28.0
+offset_bottom = 20.0
+texture = ExtResource("14_qvlxj")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="Label" type="Label" parent="ShipStats/ShipDetails/Light"]
-layout_mode = 0
-offset_left = 184.0
-offset_top = 380.0
-offset_right = 262.0
-offset_bottom = 403.0
-text = "Lv 1 / 1 / 1"
+[node name="WeaponLevels" parent="ShipStats/ShipDetails/Light" instance=ExtResource("11_xmdl6")]
+offset_left = 32.0
+offset_top = -8.0
+offset_right = 72.0
+offset_bottom = 32.0
 
 [node name="XP" type="Control" parent="ShipStats/ShipDetails"]
 layout_mode = 3
 anchors_preset = 0
+offset_top = -16.0
 offset_right = 40.0
-offset_bottom = 40.0
+offset_bottom = 24.0
 
 [node name="ColorRect" type="ColorRect" parent="ShipStats/ShipDetails/XP"]
 layout_mode = 0
@@ -374,15 +379,13 @@ stretch_margin_bottom = 1
 texture_over = ExtResource("13_y4ybd")
 texture_progress = ExtResource("12_3x4ks")
 
-[node name="Label" type="Label" parent="ShipStats/ShipDetails/XP"]
-visible = false
+[node name="XPGained" type="Label" parent="ShipStats/ShipDetails/XP"]
 layout_mode = 0
 offset_left = 340.0
 offset_top = 428.0
-offset_right = 380.0
+offset_right = 402.0
 offset_bottom = 459.0
 scale = Vector2(0.9, 0.9)
-text = "+ 5"
 vertical_alignment = 1
 
 [node name="Label2" type="Label" parent="ShipStats/ShipDetails/XP"]

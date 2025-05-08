@@ -1635,3 +1635,7 @@ LIGHT_3_3_DESC,"Emission maintained permanently. Turning it on consumes an actio
 CUSTOMIZE_NEW_SHIP,Customize your new ship!,,,,,,,,,,,
 MOLTEN_CAVE,Molten cave,,,,,,,,,,,
 FROZEN_CAVE,Frozen cave,,,,,,,,,,,
+CLICK_SHIP_TO_GIVE_XP,Click on a ship to give it XP,,,,,,,,,,,
+CLICK_SHIP_TO_VIEW_DETAILS,"Click on a ship on the right to view details.
+Drag & drop a ship to change its initial position in battle.",,,,,,,,,,,
+SHIP_LEVELED_UP,This ship leveled up! Allocate points to weapons or stats to make it more powerful to your liking.,,,,,,,,,,,

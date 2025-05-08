@@ -393,7 +393,6 @@ mouse_filter = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_g1ur1")
 
 [node name="Lakes" type="TileMapLayer" parent="."]
-tile_map_data = PackedByteArray(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0)
 
 [node name="PlanetTiles" type="TileMapLayer" parent="."]
 material = SubResource("ShaderMaterial_2ub2g")

@@ -94,7 +94,6 @@ func _ready():
 	if p_i.ancient_bldgs.has(AncientBuilding.NUCLEAR_FUSION_REACTOR):
 		for i in len(p_i.ancient_bldgs[AncientBuilding.NUCLEAR_FUSION_REACTOR]):
 			nuclear_fusion_reactor_main_tiles.append(p_i.ancient_bldgs[AncientBuilding.NUCLEAR_FUSION_REACTOR][i].tile)
-	#var lake_tiles:Array = [[], []]
 	var ash_tiles:Array = []
 	var soil_tiles:Array = []
 	var aurora_tiles:Array = []
@@ -103,7 +102,8 @@ func _ready():
 		for j in wid:
 			var id2 = i % wid + j * wid
 			var tile = game.tile_data[id2]
-			$Lakes.set_cell(Vector2i(i, j), 0, Vector2.ZERO)
+			if p_i.has("lake"):
+				$Lakes.set_cell(Vector2i(i, j), 0, Vector2.ZERO)
 			if tile == null:
 				planet_tiles.append(Vector2i(i, j))
 				continue

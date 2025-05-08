@@ -1635,6 +1635,7 @@ func switch_view(new_view:String, other_params:Dictionary = {}):
 				ship_customize_screen.ship_id = other_params.ship_id
 				ship_customize_screen.respeccing = other_params.get("respeccing", false)
 				add_child(ship_customize_screen)
+				ship_customize_screen.get_node("Label").text = other_params.get("label_text", "")
 				if is_instance_valid(HUD) and $UI.is_ancestor_of(HUD):
 					$UI.remove_child(HUD)
 		if c_v in ["planet", "system", "galaxy", "cluster", "universe", "mining", "science_tree"] and is_instance_valid(HUD) and is_ancestor_of(HUD):
@@ -2924,7 +2925,7 @@ func generate_planets(id:int):#local id
 						defense += 1
 						accuracy += 1
 				var _money = round(randf_range(1, 2) * pow(1.3, lv - 1) * 50000)
-				var XP = round(pow(1.25, lv - 1) * 15)
+				var XP = round(pow(1.25, lv - 1) * 40)
 				var colliding = true
 				var initial_position:Vector2
 				while colliding:
@@ -3716,7 +3717,10 @@ func use_item(item_id:int, send_to_rover:int = -1):
 		if len(ship_data) > 0:
 			put_bottom_info(tr("CLICK_SHIP_TO_GIVE_XP"), "use_hx_core", "hide_item_cursor")
 			toggle_panel("ships_panel")
-			ships_panel._on_BackButton_pressed()
+			ships_panel.get_node("Ships/Battlefield/Selected").hide()
+			ships_panel.get_node("ShipStats/ShipDetails").hide()
+			ships_panel.get_node("ShipStats/Label").show()
+			ships_panel.get_node("ShipStats/Label").text = tr("CLICK_SHIP_TO_GIVE_XP")
 		else:
 			popup(tr("NO_SHIPS_2"), 1.5)
 			return
@@ -4515,7 +4519,7 @@ func add_new_ship_data():
 
 func get_1st_ship():
 	add_new_ship_data()
-	switch_view("ship_customize_screen", {"ship_id":0, "respeccing":true})
+	switch_view("ship_customize_screen", {"ship_id":0, "respeccing":true, "label_text":tr("CUSTOMIZE_NEW_SHIP")})
 
 func get_2nd_ship():
 	if len(ship_data) == 1:
@@ -4523,7 +4527,7 @@ func get_2nd_ship():
 		Helper.add_ship_XP(1, 300)
 		if not achievement_data.progression.has("2nd_ship"):
 			earn_achievement("progression", "2nd_ship")
-		switch_view("ship_customize_screen", {"ship_id":1, "respeccing":true})
+		switch_view("ship_customize_screen", {"ship_id":1, "respeccing":true, "label_text":tr("CUSTOMIZE_NEW_SHIP")})
 
 func get_3rd_ship():
 	if len(ship_data) == 2:
@@ -4531,7 +4535,7 @@ func get_3rd_ship():
 		Helper.add_ship_XP(2, 15000)
 		if not achievement_data.progression.has("3rd_ship"):
 			earn_achievement("progression", "3rd_ship")
-		switch_view("ship_customize_screen", {"ship_id":2, "respeccing":true})
+		switch_view("ship_customize_screen", {"ship_id":2, "respeccing":true, "label_text":tr("CUSTOMIZE_NEW_SHIP")})
 
 func get_4th_ship():
 	if len(ship_data) == 3:
@@ -4540,7 +4544,7 @@ func get_4th_ship():
 		Helper.add_ship_XP(3, 250000)
 		if not achievement_data.progression.has("4th_ship"):
 			earn_achievement("progression", "4th_ship")
-		switch_view("ship_customize_screen", {"ship_id":3, "respeccing":true})
+		switch_view("ship_customize_screen", {"ship_id":3, "respeccing":true, "label_text":tr("CUSTOMIZE_NEW_SHIP")})
 
 func earn_achievement(type:String, ach_id:String):
 	var ach = preload("res://Scenes/AchievementEarned.tscn").instantiate()
