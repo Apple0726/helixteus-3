@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://c7457jqcr05a"
-path="res://.godot/imported/IceSpritesheet.png-c791c26c5a106a23c8c439b3050f2bf3.ctex"
+uid="uid://u0ivbg4rp55y"
+path="res://.godot/imported/Ice.jpg-3f114999ef32c14f03b60e11fb8e97e1.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Graphics/Tiles/IceSpritesheet.png"
-dest_files=["res://.godot/imported/IceSpritesheet.png-c791c26c5a106a23c8c439b3050f2bf3.ctex"]
+source_file="res://Graphics/Tiles/Ice.jpg"
+dest_files=["res://.godot/imported/Ice.jpg-3f114999ef32c14f03b60e11fb8e97e1.ctex"]
 
 [params]
 

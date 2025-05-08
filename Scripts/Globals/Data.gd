@@ -490,7 +490,7 @@ var cave_modifiers:Dictionary = {#tier 1 modifiers can apply to any cave (outsid
 	"minimap_disabled":{"treasure_if_true":3.0, "tier":2},
 }
 var lake_colors = {
-	"H2O":	{	"s":Color(0.78, 0.86, 1.0, 1.0),
+	"H2O":	{	"s":Color(0.608, 0.671, 0.78),
 				"l":Color(0.34, 0.53, 0.88, 1.0),
 				"sc":Color(0.68, 0.86, 1.0, 0.4)},
 	"CO2":{ 	"s":Color(0.66, 0.66, 0.66, 0.7),

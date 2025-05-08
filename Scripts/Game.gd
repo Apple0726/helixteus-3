@@ -3178,15 +3178,17 @@ func generate_tiles(id:int):
 		for j in wid:
 			var level:float = noise.get_noise_2d(i / float(wid), j / float(wid))
 			var t_id = i % wid + j * wid
+			var cave_can_spawn = true
 			if level > 0.5 and p_i.has("lake"):
 				if p_i.lake.state != "g":
 					if not tile_data[t_id].has("ash"):
 						tile_data[t_id].lake = true
 						tile_data[t_id].resource_production_bonus.clear()
-					continue
+						if p_i.lake.state != "s":
+							cave_can_spawn = false
 			if home_planet:
 				continue
-			if randf() < 0.1 / pow(wid, 0.9):
+			if cave_can_spawn and randf() < 0.1 / pow(wid, 0.9):
 				var floor_size:int = randf_range(25 * min(wid / 8.0, 1), 40 * randf_range(1, 1 + wid / 100.0))
 				var num_floors:int = randi() % (int(wid / 2.5) + 1) + 3
 				var modifiers:Dictionary = {}

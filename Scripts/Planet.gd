@@ -331,7 +331,13 @@ func show_tooltip(tile, tile_id:int):
 		if tile.has("ash"):
 			fiery_tooltip = tile_over
 			fire_strength = tile.ash.richness
-		tooltip += tr("CAVE")
+			tooltip += tr("MOLTEN_CAVE")
+		elif tile.has("lake"):
+			fiery_tooltip = tile_over
+			fire_strength = tile.ash.richness
+			tooltip += tr("FROZEN_CAVE")
+		else:
+			tooltip += tr("CAVE")
 		var floor_size:String = tr("FLOOR_SIZE").format({"size":tile.cave.floor_size})
 		if not game.science_unlocked.has("RC"):
 			tooltip += "\n%s\n%s\n%s" % [tr("CAVE_DESC"), tr("NUM_FLOORS") % tile.cave.num_floors, floor_size]
