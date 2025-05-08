@@ -2147,7 +2147,7 @@ func _on_Difficulty_mouse_entered():
 		tooltip += "\n%s: %s" % [tr("AURORA_MULTIPLIER"), Helper.format_num(aurora_mult)]
 	if volcano_mult > 1 and not artificial_volcano:
 		tooltip += "\n%s: %s" % [tr("PROXIMITY_TO_VOLCANO_MULT"), Helper.clever_round(pow(volcano_mult, 2.5))]
-	game.show_adv_tooltip(tooltip, {"additional_text": tr("CAVE_DIFF_INFO"), "additional_text_delay": 1.5})
+	game.show_tooltip(tooltip, {"additional_text": tr("CAVE_DIFF_INFO"), "additional_text_delay": 1.5})
 
 func _on_Filter_pressed():
 	if $UI2/Filters.visible:
@@ -2183,7 +2183,7 @@ func _on_Modifiers_mouse_entered():
 	var tooltip:String = Helper.get_modifier_string(modifiers, "", icons)
 	tooltip = tooltip.substr(1)
 	tooltip += "\n%s: %s" % [tr("TOTAL_TREASURE_MULT"), Helper.clever_round(treasure_mult)]
-	game.show_adv_tooltip(tooltip, {"imgs": icons})
+	game.show_tooltip(tooltip, {"imgs": icons})
 
 func _on_FloorCollisionDetector_body_entered(body):
 	if body.name == "Ash":

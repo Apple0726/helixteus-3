@@ -29,16 +29,13 @@ func _on_RichTextLabel_mouse_entered():
 	if translate_help:
 		_help_text = tr(help_text)
 	if adv_help:
-		game.show_adv_tooltip(_help_text, {"imgs": adv_icons, "size": icon_size})
+		game.show_tooltip(_help_text, {"imgs": adv_icons, "size": icon_size})
 	else:
 		game.show_tooltip(_help_text)
 
 
 func _on_RichTextLabel_mouse_exited():
-	if adv_help:
-		game.hide_adv_tooltip()
-	else:
-		game.hide_tooltip()
+	game.hide_tooltip()
 
 
 func _on_visibility_changed():

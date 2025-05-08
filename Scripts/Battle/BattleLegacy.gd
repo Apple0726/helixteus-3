@@ -252,7 +252,7 @@ func on_effect_out():
 
 func on_HX_over(id:int):
 	if game:
-		game.show_adv_tooltip("@i %s / %s\n@i %s   @i %s\n@i %s   @i %s" % [
+		game.show_tooltip("@i %s / %s\n@i %s   @i %s\n@i %s   @i %s" % [
 			ceil(HX_data[id].HP),
 			HX_data[id].total_HP,
 			round(HX_data[id].atk * (1.0 + HX_c_d[HXs[id].name].atk if HX_c_d[HXs[id].name].has("atk") else 1.0)),
@@ -264,7 +264,7 @@ func on_HX_over(id:int):
 
 func on_HX_out():
 	if game:
-		game.hide_adv_tooltip()
+		game.hide_tooltip()
 
 var mouse_pos:Vector2 = Vector2.ZERO
 func _input(event):

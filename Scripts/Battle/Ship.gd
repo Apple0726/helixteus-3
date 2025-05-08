@@ -153,7 +153,7 @@ func _on_mouse_entered() -> void:
 		refresh_default_tooltip_text()
 		default_tooltip_text += "\n" + tr("PASSIVE_ABILITY") + ":"
 		default_tooltip_text += "\n - " + tr("%s_PASSIVE_ABILITY" % ShipClass.names[ship_class].to_upper())
-		game.show_adv_tooltip(default_tooltip_text, {"imgs": default_tooltip_icons})
+		game.show_tooltip(default_tooltip_text, {"imgs": default_tooltip_icons})
 
 
 func _on_mouse_exited() -> void:
@@ -312,7 +312,7 @@ func add_target_buttons_for_push():
 		var velocity_difference = velocity - entity.velocity
 		var push_difficulty_from_velocity = abs(0.05 * position_difference_normalized.rotated(PI / 2.0).dot(velocity_difference))
 		var push_success_chance = 100.0 * (1.0 - 1.0 / (1.0 + exp((agility + agility_buff - entity.agility - entity.agility_buff - push_difficulty_from_velocity + 9.2) / 5.8)))
-		target_btn.get_node("TextureButton").mouse_entered.connect(game.show_adv_tooltip.bind(tr("PUSH_SUCCESS_CHANCE") + ": %.1f%%" % push_success_chance, {"additional_text":tr("PUSH_SUCCESS_CHANCE_HELP")}))
+		target_btn.get_node("TextureButton").mouse_entered.connect(game.show_tooltip.bind(tr("PUSH_SUCCESS_CHANCE") + ": %.1f%%" % push_success_chance, {"additional_text":tr("PUSH_SUCCESS_CHANCE_HELP")}))
 		target_btn.get_node("TextureButton").mouse_exited.connect(game.hide_tooltip)
 		create_tween().tween_property(entity.get_node("Sprite2D").material, "shader_parameter/alpha", 0.2, 0.2)
 		entity.add_child(target_btn)

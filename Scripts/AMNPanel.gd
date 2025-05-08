@@ -470,7 +470,7 @@ func get_reaction_info(obj):
 
 func _on_EnergyCostText_mouse_entered():
 	if au_mult > 1:
-		game.show_adv_tooltip(("[aurora au_int=%s]" % au_int) + tr("MORE_ENERGY_EFFICIENT") % Helper.clever_round(au_mult))
+		game.show_tooltip(("[aurora au_int=%s]" % au_int) + tr("MORE_ENERGY_EFFICIENT") % Helper.clever_round(au_mult))
 
 
 func _on_EnergyCostText_mouse_exited():

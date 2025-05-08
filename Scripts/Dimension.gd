@@ -725,11 +725,11 @@ func _on_LakePD_pressed(el:String):
 
 
 func _on_LakeDesc_mouse_entered():
-	game.show_adv_tooltip("[color=#aeddff]" + tr("SOLID") + "[/color]/[color=#c6ffcc]" + tr("LIQUID") + "[/color]/" + tr("SUPERCRITICAL"))
+	game.show_tooltip("[color=#aeddff]" + tr("SOLID") + "[/color]/[color=#c6ffcc]" + tr("LIQUID") + "[/color]/" + tr("SUPERCRITICAL"))
 
 
 func _on_LakeDesc_mouse_exited():
-	game.hide_adv_tooltip()
+	game.hide_tooltip()
 
 
 func _on_BSlider_value_changed(value):

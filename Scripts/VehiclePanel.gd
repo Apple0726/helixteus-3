@@ -106,7 +106,7 @@ func rover_show_details(rover_id:int):
 		Helper.format_num(rover.weight_cap),
 		Helper.clever_round(rover.spd),
 	]
-	game.show_adv_tooltip(tooltip_txt, {"imgs": [Data.HP_icon, Data.attack_icon, Data.defense_icon, inv_icon, Data.agility_icon], "size": 19})
+	game.show_tooltip(tooltip_txt, {"imgs": [Data.HP_icon, Data.attack_icon, Data.defense_icon, inv_icon, Data.agility_icon], "size": 19})
 
 
 func rover_take_all(rover_id:int):

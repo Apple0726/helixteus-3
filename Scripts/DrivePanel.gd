@@ -58,7 +58,7 @@ func add_fuel(type: String, fuel: String, texture, also_select_this_fuel = false
 	var fuel_btn_node = preload("res://Scenes/ShopItem.tscn").instantiate()
 	fuel_btn_node.custom_minimum_size = Vector2.ONE * 48.0
 	fuel_btn_node.get_node("TextureRect").texture = texture
-	fuel_btn_node.get_node("TextureButton").mouse_entered.connect(game.show_adv_tooltip.bind(tr(fuel.to_upper())))
+	fuel_btn_node.get_node("TextureButton").mouse_entered.connect(game.show_tooltip.bind(tr(fuel.to_upper())))
 	fuel_btn_node.get_node("TextureButton").mouse_exited.connect(game.hide_tooltip)
 	fuel_btn_node.get_node("TextureButton").pressed.connect(select_fuel.bind(type, fuel, texture, fuel_btn_node))
 	$Control/Fuels.add_child(fuel_btn_node)

@@ -1,8 +1,20 @@
-[gd_scene load_steps=9 format=3 uid="uid://r015wxpe82b3"]
+[gd_scene load_steps=12 format=3 uid="uid://bxfp8oao3bfyl"]
 
-[sub_resource type="ShaderMaterial" id="4"]
+[ext_resource type="Script" uid="uid://cbdpyvjmvsy64" path="res://Scripts/TextEffects/AuroraText.gd" id="1_8m1ae"]
+[ext_resource type="Script" uid="uid://bodqt50xuqhrq" path="res://Scripts/AdvTooltip.gd" id="2_1sw2a"]
+[ext_resource type="Shader" uid="uid://bvyh61br1fdx3" path="res://Shaders/FireTooltip.gdshader" id="3_x2qk6"]
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_naegc"]
+[sub_resource type="SystemFont" id="SystemFont_xvdaj"]
+font_names = PackedStringArray("Sans-Serif")
+subpixel_positioning = 0
+
+[sub_resource type="SystemFont" id="SystemFont_bckp1"]
+fallbacks = Array[Font]([SubResource("SystemFont_xvdaj")])
+font_names = PackedStringArray("Ebrima")
+subpixel_positioning = 0
+multichannel_signed_distance_field = true
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_sjq4l"]
 content_margin_left = 15.0
 content_margin_top = 10.0
 content_margin_right = 15.0
@@ -14,19 +26,16 @@ border_color = Color(0.419608, 0.584314, 1, 0.32549)
 shadow_size = 1
 shadow_offset = Vector2(1, 1)
 
-[sub_resource type="SystemFont" id="SystemFont_xvdaj"]
-font_names = PackedStringArray("Sans-Serif")
-subpixel_positioning = 0
+[sub_resource type="RichTextEffect" id="3"]
+script = ExtResource("1_8m1ae")
 
-[sub_resource type="SystemFont" id="SystemFont_sb8iq"]
-fallbacks = Array[Font]([SubResource("SystemFont_xvdaj")])
-font_names = PackedStringArray("Ebrima")
-subpixel_positioning = 0
-multichannel_signed_distance_field = true
-
-[sub_resource type="LabelSettings" id="LabelSettings_b8ug1"]
-line_spacing = 0.0
-font = SubResource("SystemFont_sb8iq")
+[sub_resource type="ShaderMaterial" id="4"]
+shader = ExtResource("3_x2qk6")
+shader_parameter/color = Color(1, 0.513726, 0, 1)
+shader_parameter/fog_size = 4.408
+shader_parameter/fog_mvt_spd = 1.0
+shader_parameter/OCTAVES = 6
+shader_parameter/seed = 3
 
 [sub_resource type="Animation" id="5"]
 resource_name = "Fade"
@@ -60,21 +69,36 @@ tracks/0/keys = {
 "values": [Color(1, 1, 1, 1)]
 }
 
-[sub_resource type="AnimationLibrary" id="AnimationLibrary_6hqjj"]
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_x8swl"]
 _data = {
 &"Fade": SubResource("5"),
 &"RESET": SubResource("6")
 }
 
-[node name="Tooltip" type="Label"]
-material = SubResource("4")
-offset_right = 32.0
-offset_bottom = 32.0
-theme_override_styles/normal = SubResource("StyleBoxFlat_naegc")
+[node name="Tooltip" type="RichTextLabel"]
+clip_contents = false
+offset_right = 500.0
+offset_bottom = 33.0
+mouse_filter = 2
+theme_override_fonts/normal_font = SubResource("SystemFont_bckp1")
+theme_override_styles/normal = SubResource("StyleBoxFlat_sjq4l")
 text = "a"
-label_settings = SubResource("LabelSettings_b8ug1")
+scroll_active = false
+custom_effects = [SubResource("3")]
+script = ExtResource("2_1sw2a")
+
+[node name="ColorRect" type="ColorRect" parent="."]
+visible = false
+material = SubResource("4")
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 libraries = {
-&"": SubResource("AnimationLibrary_6hqjj")
+&"": SubResource("AnimationLibrary_x8swl")
 }

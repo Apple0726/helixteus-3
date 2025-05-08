@@ -183,7 +183,7 @@ func on_galaxy_over (id:int):
 			var tween = create_tween()
 			tween.tween_property(grid, "modulate", Color(1, 1, 1, 0), 0.1)
 			#grid.visible = false
-	game.show_adv_tooltip(tooltip, {"imgs": icons})
+	game.show_tooltip(tooltip, {"imgs": icons})
 
 func on_galaxy_out ():
 	for grid in get_tree().get_nodes_in_group("Grids"):

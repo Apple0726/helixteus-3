@@ -165,13 +165,13 @@ func _on_mouse_entered() -> void:
 	if battle_GUI.action_selected in [battle_GUI.MOVE, battle_GUI.PUSH]:
 		return
 	if override_tooltip_text:
-		game.show_adv_tooltip(override_tooltip_text.format(override_tooltip_dict), {"imgs": override_tooltip_icons})
+		game.show_tooltip(override_tooltip_text.format(override_tooltip_dict), {"imgs": override_tooltip_icons})
 	else:
 		refresh_default_tooltip_text()
 		default_tooltip_text += "\n" + tr("PASSIVE_ABILITY") + ":"
 		for PA in passive_abilities:
 			default_tooltip_text += "\n - " + tr("PASSIVE_%s" % PA)
-		game.show_adv_tooltip(default_tooltip_text, {"imgs": default_tooltip_icons})
+		game.show_tooltip(default_tooltip_text, {"imgs": default_tooltip_icons})
 
 
 func _on_mouse_exited() -> void:

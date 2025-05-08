@@ -1010,7 +1010,7 @@ func add_lv_boxes(obj:Dictionary, v:Vector2, sc:float = 1.0):
 	return hbox
 
 func on_path_enter(path:String, obj:Dictionary):
-	game.hide_adv_tooltip()
+	game.hide_tooltip()
 	if not obj.is_empty() and obj.has("bldg"):
 		game.show_tooltip("%s %s %s %s" % [tr("PATH"), path, tr("LEVEL"), obj.bldg["path_" + path]])
 

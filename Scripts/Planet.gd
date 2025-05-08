@@ -416,7 +416,7 @@ func show_tooltip(tile, tile_id:int):
 			real_time_speed_bonus = Helper.clever_round(log(game.u_i.time_speed * tile.time_speed_bonus - 1.0 + exp(1.0)) / log(game.u_i.time_speed - 1.0 + exp(1.0)))
 		tooltip += ("\n" if tooltip != "" else "") + "[color=#FFBBBB]" + tr("TIME_FLOWS_X_FASTER_HERE") % real_time_speed_bonus + "[/color]"
 	if tooltip != "":
-		game.show_adv_tooltip(tooltip, {"imgs": icons, "additional_text": additional_tooltip, "additional_text_delay": 1.5, "different_orig_text": different_orig_tooltip})
+		game.show_tooltip(tooltip, {"imgs": icons, "additional_text": additional_tooltip, "additional_text_delay": 1.5, "different_orig_text": different_orig_tooltip})
 	if fiery_tooltip != -1 and is_instance_valid(game.tooltip):
 		game.tooltip.get_node("ColorRect").visible = true
 		game.tooltip.get_node("ColorRect").material.set_shader_parameter("seed", fiery_tooltip)
@@ -988,9 +988,9 @@ func select_all_of_same_type_callable(called_from_right_click = true):
 			tooltip += Helper.get_bldg_tooltip2(tile.bldg.name, path_1_value_sum, path_2_value_sum, path_3_value_sum)
 			if tile.bldg.name in [Building.GLASS_FACTORY, Building.STEAM_ENGINE, Building.STONE_CRUSHER]:
 				tooltip += "\n[color=#88CCFF]G: %s[/color]" % tr("LOAD_UNLOAD_ALL")
-			game.show_adv_tooltip(tooltip, {"imgs": Helper.flatten(Data.desc_icons[tile.bldg.name])})
+			game.show_tooltip(tooltip, {"imgs": Helper.flatten(Data.desc_icons[tile.bldg.name])})
 		else:
-			game.show_adv_tooltip(Helper.get_bldg_tooltip2(tile.bldg.name, path_1_value_sum, path_2_value_sum, path_3_value_sum) + "\n" + tr("SELECTED_X_BLDGS") % len(tiles_selected))
+			game.show_tooltip(Helper.get_bldg_tooltip2(tile.bldg.name, path_1_value_sum, path_2_value_sum, path_3_value_sum) + "\n" + tr("SELECTED_X_BLDGS") % len(tiles_selected))
 
 func on_right_click_menu_closed():
 	# Only called if no button in right click menu was clicked
@@ -1259,7 +1259,7 @@ func _unhandled_input(event):
 							bldgs[tile_id].self_modulate = Color.WHITE
 							Helper.set_ancient_bldg_bonuses(p_i, tile.ancient_bldg, tile_id, wid)
 						game.popup(tr("BUILDING_REPAIRED"), 1.5)
-						game.hide_adv_tooltip()
+						game.hide_tooltip()
 					else:
 						game.popup(tr("NOT_ENOUGH_MONEY"), 1.5)
 			elif tile.has("cave"):
@@ -1412,7 +1412,6 @@ func on_wormhole_click(tile:Dictionary, tile_id:int):
 
 func hide_tooltip():
 	game.hide_tooltip()
-	game.hide_adv_tooltip()
 	if game.help_str != "mass_build":
 		game.help_str = ""
 

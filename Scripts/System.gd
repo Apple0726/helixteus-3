@@ -484,7 +484,7 @@ func show_planet_info(id:int, l_id:int):
 					additional_tooltip += tr("PRESS_F_TO_UPGRADE")
 			if game.help.has("planet_details"):
 				additional_tooltip += "\n%s" % [tr("MORE_DETAILS")]
-		game.show_adv_tooltip(tooltip, {"additional_text":additional_tooltip, "additional_text_delay":1.5, "imgs": Helper.flatten(icons)})
+		game.show_tooltip(tooltip, {"additional_text":additional_tooltip, "additional_text_delay":1.5, "imgs": Helper.flatten(icons)})
 
 var MS_constr_data:Dictionary = {}
 var current_MS_action = ""
@@ -916,7 +916,6 @@ func on_btn_out ():
 	glow_over = null
 	game.get_node("UI/Panel/AnimationPlayer").play("FadeOut")
 	game.hide_tooltip()
-	game.hide_adv_tooltip()
 	MS_constr_data.clear()
 
 func _process(_delta):

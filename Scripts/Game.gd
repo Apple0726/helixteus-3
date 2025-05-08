@@ -1230,7 +1230,6 @@ func popup(txt, delay):
 
 
 func popup_window(txt:String, title:String, other_buttons:Array = [], other_functions:Array = [], ok_txt:String = "OK", align:int = 1):
-	hide_adv_tooltip()
 	hide_tooltip()
 	var popup = preload("res://Scenes/PopupWindow.tscn").instantiate()
 	$UI.add_child(popup)
@@ -1290,14 +1289,12 @@ func fade_in_panel(panel_var_name:String, initialize_properties:Dictionary = {})
 		self[panel_var_name].tween.tween_property($Blur/BlurRect.material, "shader_parameter/amount", 1.0, 0.2)
 	self[panel_var_name].tween.tween_property(self[panel_var_name], "modulate", Color(1, 1, 1, 1), 0.07)
 	hide_tooltip()
-	hide_adv_tooltip()
 
 func fade_out_panel(panel:Control):
 	#$ShaderExport/SubViewport.get_texture().get_image().save_png("user://universe.png")
 	panel.hide()
 	block_scroll = false
 	hide_tooltip()
-	hide_adv_tooltip()
 	if panel != settings_panel:
 		panel.tween = create_tween()
 		panel.tween.tween_property($Blur/BlurRect.material, "shader_parameter/amount", 0.0, 0.2)
@@ -1670,7 +1667,6 @@ func switch_view(new_view:String, other_params:Dictionary = {}):
 		Helper.refresh_discord("", state, c_v, small_image_text)
 	await get_tree().process_frame
 	hide_tooltip()
-	hide_adv_tooltip()
 
 func add_science_tree():
 	$ScienceTreeBG.visible = Settings.enable_shaders
@@ -3613,10 +3609,10 @@ func add_surface_materials(temp:float, crust_comp:Dictionary):#Amount in kg
 		surface_mat_info[mat].amount = Helper.clever_round(surface_mat_info[mat].amount)
 	return surface_mat_info
 
-func show_adv_tooltip(txt:String, params:Dictionary = {}):
+func show_tooltip(txt:String, params:Dictionary = {}):
 	if is_instance_valid(tooltip):
 		tooltip.queue_free()
-	tooltip = preload("res://Scenes/AdvTooltip.tscn").instantiate()
+	tooltip = preload("res://Scenes/Tooltip.tscn").instantiate()
 	tooltip.modulate.a = 0.0
 	$Tooltips.add_child(tooltip)
 	tooltip.orig_text = txt
@@ -3626,38 +3622,9 @@ func show_adv_tooltip(txt:String, params:Dictionary = {}):
 	if params.get("additional_text", "") != "":
 		tooltip.show_additional_text(params.additional_text, params.get("additional_text_delay", 1.0), params.get("different_orig_text", ""))
 
-func show_tooltip(txt:String):
-	if is_instance_valid(tooltip):
-		tooltip.free()
-	show_adv_tooltip(txt)
-	#tooltip = preload("res://Scenes/Tooltip.tscn").instantiate()
-	#tooltip.modulate.a = 0.0
-	#tooltip.text = txt
-	#$Tooltips.add_child(tooltip)
-	#if tooltip.size.x > 500:
-		#tooltip.autowrap_mode = TextServer.AUTOWRAP_WORD
-		#await get_tree().process_frame
-		#tooltip.size.x = 500
-		#tooltip.custom_minimum_size.y = 30
-		#tooltip.size.y = 30
-	#if mouse_pos.x > 1250 - tooltip.size.x:
-		#tooltip_display_position_x = 1
-	#else:
-		#tooltip_display_position_x = 0
-	#if mouse_pos.y > 690 - tooltip.size.y:
-		#tooltip_display_position_y = 1
-	#else:
-		#tooltip_display_position_y = 0
-	#set_tooltip_position()
-	#var tween = create_tween()
-	#tween.tween_property(tooltip, "modulate", Color.WHITE, 0.0).set_delay(0.05)
-
 func hide_tooltip():
 	if is_instance_valid(tooltip):
 		tooltip.visible = false
-
-func hide_adv_tooltip():
-	hide_tooltip()
 
 func add_items(item_id:int, num:int = 1):
 	var cycles = 0
@@ -3994,7 +3961,6 @@ func _input(event):
 				fade_out_panel(active_panel)
 			active_panel = null
 		hide_tooltip()
-		hide_adv_tooltip()
 	
 	#F3 to toggle overlay
 	if Input.is_action_just_pressed("toggle"):
@@ -4010,7 +3976,6 @@ func _input(event):
 		else:
 			help[help_str] = true
 		hide_tooltip()
-		hide_adv_tooltip()
 		$UI/Panel/AnimationPlayer.play("FadeOut")
 		if $UI.has_node("BuildingShortcuts"):
 			$UI.get_node("BuildingShortcuts").queue_free()
@@ -4023,7 +3988,6 @@ func _input(event):
 		cmd_node.caret_column = 1
 	
 	if Input.is_action_just_released("cancel"):
-		hide_adv_tooltip()
 		hide_tooltip()
 		cmd_node.visible = false
 	

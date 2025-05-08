@@ -172,25 +172,25 @@ func _on_back_pressed() -> void:
 func _on_bullet_mouse_entered() -> void:
 	var tooltip_txt = tr("BASE_DAMAGE") + ": " + str(Data.battle_weapon_stats.bullet.damage)
 	tooltip_txt += "\n" + tr("BASE_ACCURACY") + ": " + str(Data.battle_weapon_stats.bullet.accuracy)
-	game.show_adv_tooltip(tooltip_txt, {"additional_text": tr("BULLET_DESC")})
+	game.show_tooltip(tooltip_txt, {"additional_text": tr("BULLET_DESC")})
 
 
 func _on_laser_mouse_entered() -> void:
 	var tooltip_txt = tr("BASE_DAMAGE") + ": " + str(Data.battle_weapon_stats.laser.damage)
 	tooltip_txt += "\n" + tr("BASE_ACCURACY") + ": " + str(Data.battle_weapon_stats.laser.accuracy)
-	game.show_adv_tooltip(tooltip_txt, {"additional_text": tr("LASER_DESC")})
+	game.show_tooltip(tooltip_txt, {"additional_text": tr("LASER_DESC")})
 
 
 func _on_bomb_mouse_entered() -> void:
 	var tooltip_txt = tr("BASE_DAMAGE") + ": " + str(Data.battle_weapon_stats.bomb.damage)
 	tooltip_txt += "\n" + tr("BASE_ACCURACY") + ": " + str(Data.battle_weapon_stats.bomb.accuracy)
-	game.show_adv_tooltip(tooltip_txt, {"additional_text": tr("BOMB_DESC")})
+	game.show_tooltip(tooltip_txt, {"additional_text": tr("BOMB_DESC")})
 
 
 func _on_light_mouse_entered() -> void:
 	var tooltip_txt = tr("BASE_DAMAGE") + ": " + str(Data.battle_weapon_stats.light.damage)
 	tooltip_txt += "\n" + tr("BASE_ACCURACY") + ": " + str(Data.battle_weapon_stats.light.accuracy)
-	game.show_adv_tooltip(tooltip_txt, {"additional_text": tr("LIGHT_DESC")})
+	game.show_tooltip(tooltip_txt, {"additional_text": tr("LIGHT_DESC")})
 
 
 func _on_push_mouse_entered() -> void:
@@ -199,7 +199,7 @@ func _on_push_mouse_entered() -> void:
 		tooltip_txt += "\n[color=#FFAA00]" + tr("REQUIRES_MOVEMENT") + "[/color]"
 	if len(ship_node.pushable_entities) == 0:
 		tooltip_txt += "\n[color=#FFAA00]" + tr("NO_OBJECTS_NEAR_SHIP") + "[/color]"
-	game.show_adv_tooltip(tooltip_txt, {"additional_text": tr("BATTLE_PUSH_HELP")})
+	game.show_tooltip(tooltip_txt, {"additional_text": tr("BATTLE_PUSH_HELP")})
 
 
 func fade_in_main_panel():

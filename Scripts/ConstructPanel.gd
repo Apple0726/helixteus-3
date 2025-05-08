@@ -198,7 +198,7 @@ func on_bldg_over(bldg:int):
 			txt += (Data.path_3[bldg].desc + "\n") % [Data.path_3[bldg].value]
 	if Data.desc_icons.has(bldg):
 		icons.append_array(Helper.flatten(Data.desc_icons[bldg]))
-	game.show_adv_tooltip(txt, {"imgs": icons})
+	game.show_tooltip(txt, {"imgs": icons})
 
 
 func _on_basic_mouse_entered():
@@ -300,7 +300,7 @@ func on_ancient_bldg_over(bldg:int):
 		tooltip += Helper.format_num(costs[cost] * cost_multiplier, true)
 		icons.append(Data["%s_icon" % cost])
 		tooltip += "\n"
-	game.show_adv_tooltip(tooltip, {"imgs": icons})
+	game.show_tooltip(tooltip, {"imgs": icons})
 
 func on_ancient_bldg_click(bldg:int):
 	hide_panel()
