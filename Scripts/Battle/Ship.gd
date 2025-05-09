@@ -48,10 +48,12 @@ func initialize_stats(data: Dictionary):
 var highlighted_targets = []
 
 func _draw() -> void:
+	super()
 	if display_move_path:
 		$RayCast2D.clear_exceptions()
 		for target in highlighted_targets:
-			target.draw_collision_shape = 1
+			if is_instance_valid(target):
+				target.draw_collision_shape = 1
 		highlighted_targets.clear()
 		move_additional_costs = 0.0
 		var target_line_vector = battle_scene.mouse_position_local - position
@@ -165,7 +167,9 @@ func fire_weapon(weapon_type: int):
 		block_cancelling_action = false
 	else:
 		block_cancelling_action = true
-	var weapon_rotation = randf_range($FireWeaponAim.target_angle - $FireWeaponAim.target_angle_max_deviation, $FireWeaponAim.target_angle + $FireWeaponAim.target_angle_max_deviation)
+	var weapon_rotation_min = $FireWeaponAim.target_angle - $FireWeaponAim.target_angle_max_deviation
+	var weapon_rotation_max = $FireWeaponAim.target_angle + $FireWeaponAim.target_angle_max_deviation
+	var weapon_rotation = randf_range(weapon_rotation_min, weapon_rotation_max)
 	if weapon_type == battle_GUI.BULLET:
 		fires_remaining = 0
 		var projectiles = []
@@ -185,7 +189,7 @@ func fire_weapon(weapon_type: int):
 			projectile.speed = 1000.0
 			projectile.mass = 1.0
 			projectile.velocity_process_modifier = 5.0 if battle_scene.animations_sped_up else 1.0
-			projectile.rotation = randf_range($FireWeaponAim.target_angle - $FireWeaponAim.target_angle_max_deviation, $FireWeaponAim.target_angle + $FireWeaponAim.target_angle_max_deviation)
+			projectile.rotation = randf_range(weapon_rotation_min, weapon_rotation_max)
 			projectile.damage = Data.battle_weapon_stats.bullet.damage
 			projectile.shooter = self
 			projectile.weapon_accuracy = Data.battle_weapon_stats.bullet.accuracy * accuracy
@@ -376,6 +380,7 @@ func buff_from_class_passive_ability(stat: String, amount: int):
 	if buffed_from_class_passive_ability:
 		return
 	self[stat + "_buff"] += amount
+	update_info_labels()
 	buffed_from_class_passive_ability = true
 
 

@@ -190,6 +190,10 @@ func take_turn():
 	var burn_turns = status_effects[Battle.StatusEffect.BURN]
 	if burn_turns > 0:
 		damage_entity_status_effect(int(ceil(burn_turns * 0.05 * total_HP)))
+		if HP <= 0:
+			await get_tree().create_timer(0.5).timeout
+			emit_signal("next_turn")
+			return
 	var energetic_turns = status_effects[Battle.StatusEffect.ENERGETIC]
 	if energetic_turns > 0:
 		extra_attacks = 1
@@ -389,7 +393,6 @@ func entity_defeated_callback():
 		battle_scene.ship_nodes.erase(self)
 
 func update_velocity_arrow(offset: Vector2 = Vector2.ZERO):
-	#print(velocity, offset)
 	$VelocityArrow.scale = Vector2.ONE * (velocity + offset).length() / 100.0
 	$VelocityArrow.rotation = (velocity + offset).angle()
 

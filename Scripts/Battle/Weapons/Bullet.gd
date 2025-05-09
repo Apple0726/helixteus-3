@@ -30,7 +30,7 @@ func _on_area_entered(area: Area2D) -> void:
 			var incidence_angle = atan2(position.y - area.position.y, position.x - area.position.x)
 			rotation = Vector2.from_angle(rotation).bounce(Vector2.from_angle(incidence_angle)).angle()
 			deflects_remaining -= 1
-		if shooter.type == Battle.EntityType.SHIP and shooter.ship_class == ShipClass.OFFENSIVE:
+		if area.type != Battle.EntityType.BOUNDARY and area.HP <= 0 and shooter.type == Battle.EntityType.SHIP and shooter.ship_class == ShipClass.OFFENSIVE:
 			shooter.buff_from_class_passive_ability("attack", 3)
 	else:
 		if shooter.type == Battle.EntityType.SHIP and shooter.ship_class == ShipClass.ACCURATE:

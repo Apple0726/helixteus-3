@@ -52,10 +52,16 @@ func take_turn():
 	var ship_target_id = determine_target()
 	target_position = ship_nodes[ship_target_id].position
 	position_preferences = {}
+	var movement_remaining_base = total_movement
+	var speed = velocity.length()
+	if speed > 0.0:
+		create_tween().tween_property(self, "velocity", velocity.normalized() * max(speed - movement_remaining_base, 0.0), 0.4).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+		movement_remaining_base = max(movement_remaining_base - speed, 0.0)
+		await get_tree().create_timer(0.4).timeout
 	for j in range(64):
 		var th = lerp(0.0, 2.0 * PI, j / 64.0)
 		var inside_obstacle = false
-		movement_remaining = total_movement # in meters
+		movement_remaining = movement_remaining_base # in meters
 		var r = 0.0 # in pixels
 		while movement_remaining > 0.0:
 			r += 2.0 * PIXELS_PER_METER

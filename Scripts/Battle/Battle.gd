@@ -338,7 +338,8 @@ func environment_take_turn():
 	else:
 		await get_tree().create_timer(0.5).timeout
 	for obstacle in obstacle_nodes:
-		obstacle.take_turn()
+		if is_instance_valid(obstacle):
+			obstacle.take_turn()
 	if animations_sped_up:
 		await get_tree().create_timer(0.3).timeout
 	else:
@@ -357,8 +358,9 @@ func show_and_enlarge_collision_shapes():
 		ship.get_node("CollisionShape2D").shape.radius = ship.collision_shape_radius + battle_GUI.ship_node.collision_shape_radius + 2.0
 		ship.draw_collision_shape = 1
 	for obstacle in obstacle_nodes:
-		obstacle.get_node("CollisionShape2D").shape.radius = obstacle.collision_shape_radius + battle_GUI.ship_node.collision_shape_radius + 2.0
-		obstacle.draw_collision_shape = 1
+		if is_instance_valid(obstacle):
+			obstacle.get_node("CollisionShape2D").shape.radius = obstacle.collision_shape_radius + battle_GUI.ship_node.collision_shape_radius + 2.0
+			obstacle.draw_collision_shape = 1
 
 func hide_and_restore_collision_shapes():
 	for HX in HX_nodes:
@@ -370,5 +372,6 @@ func hide_and_restore_collision_shapes():
 		ship.get_node("CollisionShape2D").shape.radius = ship.collision_shape_radius
 		ship.draw_collision_shape = 0
 	for obstacle in obstacle_nodes:
-		obstacle.get_node("CollisionShape2D").shape.radius = obstacle.collision_shape_radius
-		obstacle.draw_collision_shape = 0
+		if is_instance_valid(obstacle):
+			obstacle.get_node("CollisionShape2D").shape.radius = obstacle.collision_shape_radius
+			obstacle.draw_collision_shape = 0
