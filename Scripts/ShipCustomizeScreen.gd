@@ -11,7 +11,6 @@ var allocated_attack:int = 0
 var allocated_defense:int = 0
 var allocated_accuracy:int = 0
 var allocated_agility:int = 0
-var unallocated_weapon_levels:int
 
 func _ready() -> void:
 	$Ship.texture = load("res://Graphics/Ships/Ship%s.png" % ship_id)
@@ -30,7 +29,7 @@ func _ready() -> void:
 		$ShipClass/VBox/VBox/Uber.mouse_exited.connect(game.hide_tooltip)
 	ship_data = game.ship_data[ship_id].duplicate(true)
 	if respeccing:
-		unallocated_weapon_levels = ship_data.lv / 2
+		ship_data.unallocated_weapon_levels = ship_data.lv / 2
 		ship_data.bullet = [1, 1, 1]
 		ship_data.laser = [1, 1, 1]
 		ship_data.bomb = [1, 1, 1]
@@ -44,7 +43,6 @@ func _ready() -> void:
 		allocated_agility = ship_data.allocated_agility
 		for class_btn in $ShipClass/VBox/VBox.get_children():
 			class_btn.adv_button_disabled = true
-		unallocated_weapon_levels = ship_data.unallocated_weapon_levels
 	if ship_data.lv == 1:
 		$Weapons.hide()
 	else:
@@ -257,7 +255,7 @@ func _on_weapons_previous_pressed() -> void:
 	update_weapons_panel()
 
 func update_weapons_panel():
-	$Weapons/LvRemaining.text = tr("WEAPON_LV_UP_REMAINING") + " " + str(unallocated_weapon_levels)
+	$Weapons/LvRemaining.text = tr("WEAPON_LV_UP_REMAINING") + " " + str(ship_data.unallocated_weapon_levels)
 	if weapon_selected == BULLET:
 		# Placeholder textures
 		for node_name in ["11", "12", "13", "21", "22", "23", "31", "32", "33"]:
@@ -298,9 +296,9 @@ func update_weapons_panel():
 
 
 func upgrade_ship_weapon(path: int):
-	if unallocated_weapon_levels > 0:
+	if ship_data.unallocated_weapon_levels > 0:
 		ship_data[weapon_selected_str][path] += 1
-		unallocated_weapon_levels -= 1
+		ship_data.unallocated_weapon_levels -= 1
 	update_weapons_panel()
 
 func show_weapon_tooltip(path: int, lv: int):

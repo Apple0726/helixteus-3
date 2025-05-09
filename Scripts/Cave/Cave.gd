@@ -676,8 +676,8 @@ func generate_cave(first_floor:bool, going_up:bool):
 				if lava_level > max(remap(cave_floor, 12, 24, 0.8, 0.0), 0.0):
 					lava_tiles.append(Vector2i(i, j))
 	
-	$Ash.set_cells_terrain_connect(ash_tiles, 0, 4)
-	$Lava.set_cells_terrain_connect(lava_tiles, 0, 5)
+	$Ash.set_cells_terrain_connect(ash_tiles, 0, 0)
+	$Lava.set_cells_terrain_connect(lava_tiles, 0, 0)
 	$Ash.modulate = Color.WHITE
 	#$Lava.set_layer_modulate(0, star_mod * (1.0 - cave_darkness))
 	#Add unpassable tiles at the cave borders

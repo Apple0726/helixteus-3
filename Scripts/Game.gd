@@ -16,7 +16,6 @@ const ANCIENT_BLDGS = 7
 #var element_overlay_scene = preload("res://Scenes/ElementOverlay.tscn")
 #var annotator_scene = preload("res://Scenes/Annotator.tscn")
 #var rsrc_scene = preload("res://Scenes/Resource.tscn")
-#var rsrc_stored_scene = preload("res://Scenes/ResourceStored.tscn")
 #var cave_scene = preload("res://Scenes/Views/Cave.tscn")
 #var STM_scene = preload("res://Scenes/Views/ShipTravelMinigame2.tscn")
 #var battle_scene = preload("res://Scenes/Views/Battle.tscn")
@@ -1487,6 +1486,7 @@ func switch_view(new_view:String, other_params:Dictionary = {}):
 					switch_music(Data.ambient_music.pick_random(), u_i.time_speed)
 				"battle":
 					$UI.add_child(HUD)
+					Engine.physics_ticks_per_second = 60
 					battle_scene.queue_free()
 					battle_GUI.queue_free()
 				"ship_customize_screen":
@@ -1495,7 +1495,7 @@ func switch_view(new_view:String, other_params:Dictionary = {}):
 			if c_v in ["science_tree", "STM", "planet_details"]:
 				c_v = l_v
 			elif new_view != "":
-				if not (c_v == "battle" and new_view == "ship_customize_screen"):
+				if not (c_v == "battle" and new_view == "ship_customize_screen") and c_v != "ship_customize_screen":
 					l_v = c_v
 				if new_view != "dimension":
 					c_v = new_view
@@ -3731,31 +3731,31 @@ func use_item(item_id:int, send_to_rover:int = -1):
 func get_star_class (temp):
 	var cl = ""
 	if temp < 600:
-		cl = "Y" + str(floor(10 - (temp - 250) / 350 * 10))
+		cl = "Y" + str(int(10 - (temp - 250) / 350 * 10))
 	elif temp < 1400:
-		cl = "T" + str(floor(10 - (temp - 600) / 800 * 10))
+		cl = "T" + str(int(10 - (temp - 600) / 800 * 10))
 	elif temp < 2400:
-		cl = "L" + str(floor(10 - (temp - 1400) / 1000 * 10))
+		cl = "L" + str(int(10 - (temp - 1400) / 1000 * 10))
 	elif temp < 3700:
-		cl = "M" + str(floor(10 - (temp - 2400) / 1300 * 10))
+		cl = "M" + str(int(10 - (temp - 2400) / 1300 * 10))
 	elif temp < 5200:
-		cl = "K" + str(floor(10 - (temp - 3700) / 1500 * 10))
+		cl = "K" + str(int(10 - (temp - 3700) / 1500 * 10))
 	elif temp < 6000:
-		cl = "G" + str(floor(10 - (temp - 5200) / 800 * 10))
+		cl = "G" + str(int(10 - (temp - 5200) / 800 * 10))
 	elif temp < 7500:
-		cl = "F" + str(floor(10 - (temp - 6000) / 1500 * 10))
+		cl = "F" + str(int(10 - (temp - 6000) / 1500 * 10))
 	elif temp < 10000:
-		cl = "A" + str(floor(10 - (temp - 7500) / 2500 * 10))
+		cl = "A" + str(int(10 - (temp - 7500) / 2500 * 10))
 	elif temp < 30000:
-		cl = "B" + str(floor(10 - (temp - 10000) / 20000 * 10))
+		cl = "B" + str(int(10 - (temp - 10000) / 20000 * 10))
 	elif temp < 70000:
-		cl = "O" + str(floor(10 - (temp - 30000) / 40000 * 10))
+		cl = "O" + str(int(10 - (temp - 30000) / 40000 * 10))
 	elif temp < 120000:
-		cl = "Q" + str(floor(10 - (temp - 70000) / 50000 * 10))
+		cl = "Q" + str(int(10 - (temp - 70000) / 50000 * 10))
 	elif temp < 210000:
-		cl = "R" + str(floor(10 - (temp - 120000) / 90000 * 10))
+		cl = "R" + str(int(10 - (temp - 120000) / 90000 * 10))
 	elif temp < 1000000:
-		cl = "Z" + str(max(floor(10 - (temp - 210000) / 790000 * 10), 0))
+		cl = "Z" + str(max(int(10 - (temp - 210000) / 790000 * 10), 0))
 	else:
 		cl = "Z0"
 	return cl

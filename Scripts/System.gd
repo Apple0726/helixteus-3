@@ -960,7 +960,7 @@ func finish_construct():
 	pass
 
 func add_rsrc(v:Vector2, mod:Color, icon, id:int, is_star:bool, sc:float = 1, current_bar_visible = false):
-	var rsrc:ResourceStored = game.rsrc_stored_scene.instantiate()
+	var rsrc:ResourceStored = preload("res://Scenes/ResourceStored.tscn").instantiate()
 	add_child(rsrc)
 	rsrc.set_icon_texture(icon)
 	rsrc.scale *= sc

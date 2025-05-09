@@ -1,11 +1,10 @@
-[gd_scene load_steps=98 format=3 uid="uid://biq34iioj6uf8"]
+[gd_scene load_steps=97 format=3 uid="uid://biq34iioj6uf8"]
 
 [ext_resource type="Shader" uid="uid://gevhgabt3grd" path="res://Shaders/Laser.gdshader" id="1"]
 [ext_resource type="Script" uid="uid://2ovarm7fdxfj" path="res://Scripts/Cave/Cave.gd" id="2"]
 [ext_resource type="PackedScene" uid="uid://bvyftln8m3hgm" path="res://Scenes/FilterButton.tscn" id="3"]
 [ext_resource type="Texture2D" uid="uid://4tf3teqmkahc" path="res://Graphics/Misc/Bar.png" id="4"]
 [ext_resource type="Texture2D" uid="uid://qbiggp0bodp1" path="res://Graphics/Cave/MiningLaser.png" id="5"]
-[ext_resource type="TileSet" uid="uid://bmti7h3x1g1xw" path="res://Resources/LakeTileSet.tres" id="5_qgrjc"]
 [ext_resource type="Texture2D" uid="uid://d3kwtgk0sw40p" path="res://Graphics/Icons/minerals.png" id="6"]
 [ext_resource type="Texture2D" uid="uid://b0brlrg52bjln" path="res://Graphics/Icons/money.png" id="7"]
 [ext_resource type="Texture2D" uid="uid://hvuwdl8ox0yv" path="res://Graphics/Icons/stone.png" id="8"]
@@ -579,7 +578,6 @@ rendering_quadrant_size = 100
 
 [node name="Lava" type="TileMapLayer" parent="."]
 z_index = -1022
-tile_set = ExtResource("5_qgrjc")
 rendering_quadrant_size = 100
 
 [node name="Ash" type="TileMapLayer" parent="."]

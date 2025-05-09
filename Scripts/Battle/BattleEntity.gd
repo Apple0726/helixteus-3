@@ -147,7 +147,7 @@ func initialize_stats(data:Dictionary):
 	if Battle.PassiveAbility.SLOWER_BUFF_DISAPPEAR in passive_abilities:
 		buff_decay_rate = 0.5
 	if Battle.PassiveAbility.HEAL_EVERY_TURN in passive_abilities:
-		regen_per_turn = ceil(total_HP * 0.15)
+		regen_per_turn = ceil(total_HP * 0.1)
 	if Battle.PassiveAbility.EXTRA_MOVEMENT in passive_abilities:
 		total_movement_base *= 1.5
 	if Battle.PassiveAbility.RANDOM_3_BUFF in passive_abilities:

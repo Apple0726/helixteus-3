@@ -256,7 +256,6 @@ func _on_BuildingOverlayTimer_timeout():
 		var grid_panel = preload("res://Scenes/BuildingInfo.tscn").instantiate()
 		grid_panel.get_node("Top").visible = false
 		var grid = grid_panel.get_node("PanelContainer/GridContainer")
-		grid_panel.scale *= 5.0
 		for bldg in bldgs:
 			var bldg_count = preload("res://Scenes/EntityCount.tscn").instantiate()
 			grid.add_child(bldg_count)

@@ -14,7 +14,7 @@ var expected_rsrc:Dictionary
 var rsrc_nodes:Array
 
 func _ready():
-	set_polygon(size)
+	set_polygon($GUI.size, $GUI.position)
 
 func refresh():
 	tile = game.tile_data[game.c_t]

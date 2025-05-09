@@ -42,6 +42,7 @@ func add_ship_node(id: int):
 func refresh():
 	set_process(true)
 	$ShipStats/Label.text = tr("CLICK_SHIP_TO_VIEW_DETAILS")
+	$ShipStats/ShipDetails/XP/XPGained.text = ""
 	if selected_ship_id != -1:
 		show_ship_stats(selected_ship_id)
 	#$Drives.refresh()

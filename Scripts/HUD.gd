@@ -451,9 +451,7 @@ func _on_Ships_mouse_entered():
 
 
 func _on_AutosaveLight_mouse_entered():
-	game.help_str = "autosave_light_desc"
-	if game.help.has("autosave_light_desc"):
-		game.show_tooltip("%s\n%s" % [tr("AUTOSAVE_LIGHT_DESC"), tr("HIDE_HELP")])
+	game.show_tooltip(tr("AUTOSAVE_LIGHT_DESC"))
 
 func _on_ShipLocator_pressed():
 	if game.c_v == "galaxy":

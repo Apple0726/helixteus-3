@@ -148,6 +148,7 @@ func refresh_GUI():
 			if hide_levels:
 				$MainPanel.get_node("%sLevels/Path%s" % [weapon, path+1]).hide()
 			else:
+				$MainPanel.get_node("%sLevels/Path%s" % [weapon, path+1]).show()
 				for lv in 3:
 					$MainPanel.get_node("%sLevels/Path%s/Level%s" % [weapon, path+1, lv+1]).modulate = Color.WHITE if ship_node[weapon.to_lower() + "_levels"][path] > lv+1 else Color(0.3, 0.3, 0.3)
 	$MainPanel/MoveLabel.text = "%s (%.1f m)" % [tr("MOVE"), ship_node.movement_remaining]

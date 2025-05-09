@@ -167,6 +167,7 @@ func fire_weapon(weapon_type: int):
 		block_cancelling_action = true
 	var weapon_rotation = randf_range($FireWeaponAim.target_angle - $FireWeaponAim.target_angle_max_deviation, $FireWeaponAim.target_angle + $FireWeaponAim.target_angle_max_deviation)
 	if weapon_type == battle_GUI.BULLET:
+		fires_remaining = 0
 		var projectiles = []
 		var projectile_num = 2
 		if bullet_levels[0] == 2:
@@ -184,7 +185,7 @@ func fire_weapon(weapon_type: int):
 			projectile.speed = 1000.0
 			projectile.mass = 1.0
 			projectile.velocity_process_modifier = 5.0 if battle_scene.animations_sped_up else 1.0
-			projectile.rotation = weapon_rotation
+			projectile.rotation = randf_range($FireWeaponAim.target_angle - $FireWeaponAim.target_angle_max_deviation, $FireWeaponAim.target_angle + $FireWeaponAim.target_angle_max_deviation)
 			projectile.damage = Data.battle_weapon_stats.bullet.damage
 			projectile.shooter = self
 			projectile.weapon_accuracy = Data.battle_weapon_stats.bullet.accuracy * accuracy
@@ -194,7 +195,7 @@ func fire_weapon(weapon_type: int):
 			projectile.end_turn.connect(ending_turn)
 			battle_scene.add_child(projectile)
 			projectiles.append(projectile)
-			if i < 1:
+			if i < projectile_num-1:
 				await get_tree().create_timer(0.2).timeout
 		for projectile in projectiles:
 			if is_instance_valid(projectile):

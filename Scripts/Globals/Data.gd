@@ -553,7 +553,6 @@ var default_help = {
 				"boulder_desc":true,
 				"aurora_desc":true,
 				"crater_desc":true,
-				"autosave_light_desc":true,
 				"inventory_shortcuts":true,
 				"hotbar_shortcuts":true,
 				"rover_shortcuts":true,

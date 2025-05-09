@@ -137,7 +137,7 @@ func on_bldg_overlay_timeout():
 		bldg_overlay_timer.stop()
 
 func add_rsrc(v:Vector2, mod:Color, icon, id:int, sc:float = 1):
-	var rsrc:ResourceStored = game.rsrc_stored_scene.instantiate()
+	var rsrc:ResourceStored = preload("res://Scenes/ResourceStored.tscn").instantiate()
 	add_child(rsrc)
 	rsrc.set_current_bar_visibility(false)
 	rsrc.set_icon_texture(icon)
