@@ -103,7 +103,12 @@ func _ready():
 			var id2 = i % wid + j * wid
 			var tile = game.tile_data[id2]
 			if p_i.has("lake"):
-				$Lakes.set_cell(Vector2i(i, j), 0, Vector2.ZERO)
+				if p_i.lake.state == "s":
+					$Lakes.set_cell(Vector2i(i, j), 0, Vector2.ZERO)
+				elif p_i.lake.state == "l":
+					$Lakes.set_cell(Vector2i(i, j), 1, Vector2.ZERO)
+				elif p_i.lake.state == "sc":
+					$Lakes.set_cell(Vector2i(i, j), 2, Vector2.ZERO)
 			if tile == null:
 				planet_tiles.append(Vector2i(i, j))
 				continue
@@ -614,6 +619,7 @@ func click_tile(tile, tile_id:int):
 	game.c_t = tile_id
 	match bldg:
 		Building.GREENHOUSE:
+			game.toggle_panel("greenhouse_panel")
 			game.greenhouse_panel.c_v = "planet"
 			if tiles_selected.is_empty():
 				game.greenhouse_panel.tiles_selected = [tile_id]
@@ -622,7 +628,7 @@ func click_tile(tile, tile_id:int):
 				game.greenhouse_panel.tiles_selected = tiles_selected.duplicate(true)
 				game.greenhouse_panel.tile_num = len(tiles_selected)
 			game.greenhouse_panel.p_i = p_i
-			game.toggle_panel(game.greenhouse_panel)
+			game.greenhouse_panel.refresh()
 		Building.ROVER_CONSTRUCTION_CENTER:
 			game.toggle_panel("RC_panel")
 		Building.SHIPYARD:
@@ -1191,9 +1197,6 @@ func _unhandled_input(event):
 		#var tile_id = get_tile_id_from_pos(mouse_pos)
 		#var tile = game.tile_data[tile_id]
 	if (Input.is_action_just_released("left_click") or event is InputEventScreenTouch) and not view.dragged and not_on_button and Geometry2D.is_point_in_polygon(mouse_pos, planet_bounds):
-		if not is_instance_valid(right_click_menu) and game.item_to_use.id == -1:
-			tiles_selected.clear()
-			remove_selected_white_rects()
 		var curr_time = Time.get_unix_time_from_system()
 		var x_pos = int(mouse_pos.x / 200)
 		var y_pos = int(mouse_pos.y / 200)
@@ -1207,9 +1210,9 @@ func _unhandled_input(event):
 					and game.tile_data[tile_id]
 					and game.tile_data[tile_id].has("bldg")
 					and game.tile_data[tile_id].bldg.name == Building.GREENHOUSE):
-						var soil_tiles = $Soil.get_used_cells(0)
-						soil_tiles.append(Vector2i(tile_id % wid, int(tile_id / wid)))
-						$Soil.set_cells_terrain_connect(0, soil_tiles, 0, 3)
+						#var soil_tiles = $Soil.get_used_cells()
+						#soil_tiles.append(Vector2i(tile_id % wid, int(tile_id / wid)))
+						$Soil.set_cells_terrain_connect([Vector2i(tile_id % wid, int(tile_id / wid))], 0, 0)
 			else:
 				if bldg_to_construct == AncientBuilding.NUCLEAR_FUSION_REACTOR:
 					if x_pos < wid-1 and y_pos < wid-1:
@@ -1300,6 +1303,9 @@ func _unhandled_input(event):
 			game.show_collect_info(items_collected)
 		if game.planet_HUD:
 			game.planet_HUD.refresh()
+		if not is_instance_valid(right_click_menu) and game.item_to_use.id == -1:
+			tiles_selected.clear()
+			remove_selected_white_rects()
 	if event is not InputEventMouseMotion and not action_performed and (Input.is_action_just_pressed("cancel_build") or Input.is_action_just_pressed("cancel")):
 		tiles_selected.clear()
 		remove_selected_white_rects()
@@ -1397,8 +1403,13 @@ func on_wormhole_click(tile:Dictionary, tile_id:int):
 			game.ships_travel_data.dest_g_coords.s = game.c_s_g
 			game.switch_view("planet", {"dont_save_zooms":true})
 		else:
-			game.send_ships_panel.dest_p_id = p_id
-			game.toggle_panel(game.send_ships_panel)
+			if is_instance_valid(game.send_ships_panel):
+				game.send_ships_panel.dest_p_id = p_id
+				game.toggle_panel("send_ships_panel")
+			else:
+				game.toggle_panel("send_ships_panel")
+				game.send_ships_panel.dest_p_id = p_id
+				game.send_ships_panel.refresh()
 	else:
 		if not tile.wormhole.has("investigation_length"):
 			var costs:Dictionary = get_wh_costs()

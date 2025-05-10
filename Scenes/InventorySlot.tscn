@@ -1,7 +1,5 @@
 [gd_scene load_steps=4 format=3 uid="uid://2s0chovxmhln"]
 
-[ext_resource type="Texture2D" uid="uid://ckolepkruyseb" path="res://Graphics/Cave/SlotBorder.png" id="3"]
-
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_xippp"]
 bg_color = Color(7.52043e-10, 1.50409e-09, 0.0381053, 1)
 border_width_left = 1
@@ -14,6 +12,15 @@ border_blend = true
 [sub_resource type="LabelSettings" id="LabelSettings_xue0l"]
 outline_size = 3
 outline_color = Color(0, 0, 0, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_bacu1"]
+draw_center = false
+border_width_left = 8
+border_width_top = 8
+border_width_right = 8
+border_width_bottom = 8
+border_color = Color(1, 0.74902, 0, 1)
+border_blend = true
 
 [node name="Slot" type="Panel"]
 custom_minimum_size = Vector2(60, 60)
@@ -55,12 +62,9 @@ label_settings = SubResource("LabelSettings_xue0l")
 horizontal_alignment = 2
 vertical_alignment = 1
 
-[node name="Border" type="TextureRect" parent="."]
+[node name="Border" type="Panel" parent="."]
 visible = false
 layout_mode = 0
-anchor_right = 1.0
-anchor_bottom = 1.0
-mouse_filter = 2
-texture = ExtResource("3")
-expand_mode = 1
-stretch_mode = 6
+offset_right = 60.0
+offset_bottom = 60.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_bacu1")

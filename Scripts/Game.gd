@@ -25,7 +25,6 @@ const ANCIENT_BLDGS = 7
 #var lake_TS = preload("res://Resources/LakeTileSet.tres")
 #var obstacles_TS = preload("res://Resources/ObstaclesTileSet.tres")
 #var aurora_scene = preload("res://Scenes/Aurora.tscn")
-#var slot_scene = preload("res://Scenes/InventorySlot.tscn")
 #var white_rect_scene = preload("res://Scenes/WhiteRect.tscn")
 #var mass_build_rect = preload("res://Scenes/MassBuildRect.tscn")
 #endregion
@@ -57,7 +56,7 @@ var send_ships_panel:Control
 var send_fighters_panel:Control
 var send_probes_panel:Control
 var terraform_panel:Control
-var greenhouse_panel:Panel
+var greenhouse_panel:Control
 var shipyard_panel:Panel
 var PC_panel:Panel
 var AMN_panel:Control
@@ -93,6 +92,7 @@ var panel_var_name_to_file_name = {
 	"wiki":"Wiki",
 	"PD_panel":"PDPanel",
 	"production_panel":"ProductionPanel",
+	"greenhouse_panel":"GreenhousePanel",
 }
 #endregion
 
@@ -809,11 +809,11 @@ func set_default_dim_bonuses():
 		"CH4":1.0,
 		"CO2":1.0,
 		"NH3":1.0,
-		"H":0.0,
+		"H":0,
 		"He":1.0,
 		"O":1.0,
 		"Ne":1.0,
-		"Xe":0.0,
+		"Xe":0,
 	}
 	engineering_bonus = {
 		"BCM":1.0,
@@ -3180,13 +3180,12 @@ func generate_tiles(id:int):
 			var level:float = noise.get_noise_2d(i / float(wid), j / float(wid))
 			var t_id = i % wid + j * wid
 			var cave_can_spawn = true
-			if level > 0.5 and p_i.has("lake"):
-				if p_i.lake.state != "g":
-					if not tile_data[t_id].has("ash"):
-						tile_data[t_id].lake = true
-						tile_data[t_id].resource_production_bonus.clear()
-						if p_i.lake.state != "s":
-							cave_can_spawn = false
+			var is_lake = level > 0.5 and p_i.has("lake") and p_i.lake.state != "g"
+			if is_lake and not tile_data[t_id].has("ash"):
+				tile_data[t_id].lake = true
+				tile_data[t_id].resource_production_bonus.clear()
+				if p_i.lake.state != "s":
+					cave_can_spawn = false
 			if home_planet:
 				continue
 			if cave_can_spawn and randf() < 0.1 / pow(wid, 0.9):
@@ -3232,6 +3231,8 @@ func generate_tiles(id:int):
 					earn_achievement("exploration", "aurora_cave")
 				if not achievement_data.exploration.has("volcano_aurora_cave") and tile_data[t_id].has("ash") and tile_data[t_id].has("aurora"):
 					earn_achievement("exploration", "volcano_aurora_cave")
+				continue
+			if is_lake:
 				continue
 			if c_s_g != 0 and randf() < volcano_probability:
 				var VEI:float = log(1e6/(coldest_star_temp * u_i.gravitational * randf()) + exp(3.0))

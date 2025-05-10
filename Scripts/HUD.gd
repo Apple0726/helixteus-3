@@ -30,7 +30,6 @@ extends Control
 @onready var prev_btn = $Bottom/PrevView
 @onready var next_btn = $Bottom/NextView
 @onready var ships_btn = $Buttons/Ships
-var slot_scene = preload("res://Scenes/InventorySlot.tscn")
 var on_button = false
 var config = ConfigFile.new()
 var ship2map
@@ -385,7 +384,7 @@ func update_hotbar():
 		child.queue_free()
 	var i:int = 0
 	for item in game.hotbar:
-		var slot = slot_scene.instantiate()
+		var slot = preload("res://Scenes/InventorySlot.tscn").instantiate()
 		var num = game.get_item_num(item)
 		slot.get_node("Label").text = str(num)
 		slot.get_node("TextureRect").texture = load("res://Graphics/" + Helper.get_dir_from_name(item)  + "/" + item + ".png")

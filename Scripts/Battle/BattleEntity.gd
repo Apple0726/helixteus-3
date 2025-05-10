@@ -203,6 +203,13 @@ func take_turn():
 		total_movement = total_movement_base
 	movement_remaining = total_movement
 	random_buff_timer -= 1
+	if Battle.PassiveAbility.BUFFS_AT_LOW_HP in passive_abilities and HP < 0.4:
+		var buff_amount:int = remap(float(HP) / total_HP, 0.0, 0.4, 4.8 + lv / 5.0, 0)
+		attack_buff = min(attack_buff + buff_amount, max(attack_buff, buff_amount))
+		defense_buff = min(defense_buff + buff_amount, max(defense_buff, buff_amount))
+		accuracy_buff = min(accuracy_buff + buff_amount, max(accuracy_buff, buff_amount))
+		agility_buff = min(agility_buff + buff_amount, max(agility_buff, buff_amount))
+		update_info_labels()
 	if random_buff_timer <= 0:
 		match randi() % 4:
 			0:
@@ -318,12 +325,6 @@ func damage_entity(weapon_data: Dictionary):
 			if weapon_data.has("buffs"):
 				for buff in weapon_data.buffs:
 					self["%s_buff" % buff] += weapon_data.buffs[buff]
-			if Battle.PassiveAbility.BUFFS_AT_LOW_HP in passive_abilities:
-				var buff_amount:int = remap(float(HP) / total_HP, 0.0, 1.0, 9.8 + lv / 5.0, 0)
-				attack_buff = min(attack_buff + buff_amount, max(attack_buff, buff_amount))
-				defense_buff = min(defense_buff + buff_amount, max(defense_buff, buff_amount))
-				accuracy_buff = min(accuracy_buff + buff_amount, max(accuracy_buff, buff_amount))
-				agility_buff = min(agility_buff + buff_amount, max(agility_buff, buff_amount))
 			update_info_labels()
 	return not dodged
 

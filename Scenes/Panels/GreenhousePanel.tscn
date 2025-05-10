@@ -1,89 +1,110 @@
-[gd_scene load_steps=5 format=3 uid="uid://byfud1h1esrca"]
+[gd_scene load_steps=9 format=3 uid="uid://byfud1h1esrca"]
 
 [ext_resource type="Script" uid="uid://b804ehub2ltoa" path="res://Scripts/GreenhousePanel.gd" id="1"]
-[ext_resource type="PackedScene" uid="uid://ddf2xjwcht77u" path="res://Scenes/CloseButton.tscn" id="3"]
+[ext_resource type="Texture2D" uid="uid://dcvnyb0mloli2" path="res://Graphics/GUI/Panel.png" id="3_btujq"]
 [ext_resource type="Theme" uid="uid://cp2u1kgj60ic" path="res://Resources/default_theme.tres" id="4"]
+[ext_resource type="Texture2D" uid="uid://baowebna7hgr5" path="res://Graphics/GUI/CloseButtonNormal.png" id="4_5drab"]
+[ext_resource type="Texture2D" uid="uid://c1vwn7p5uxu1r" path="res://Graphics/GUI/CloseButtonHover.png" id="5_trt1m"]
 [ext_resource type="Texture2D" uid="uid://b6ovjg6n5wgdw" path="res://Graphics/Agriculture/fertilizer.png" id="6"]
 
-[node name="GreenhousePanel" type="Panel"]
+[sub_resource type="SystemFont" id="SystemFont_l1il0"]
+font_names = PackedStringArray("Arial")
+subpixel_positioning = 0
+multichannel_signed_distance_field = true
+
+[sub_resource type="LabelSettings" id="LabelSettings_oro1x"]
+font = SubResource("SystemFont_l1il0")
+font_size = 20
+shadow_size = 2
+shadow_color = Color(0, 0, 0, 0.372549)
+shadow_offset = Vector2(2, 2)
+
+[node name="GreenhousePanel" type="Control"]
+layout_mode = 3
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -320.0
-offset_top = -136.0
-offset_right = 320.0
-offset_bottom = 120.0
+offset_left = -640.0
+offset_top = -360.0
+offset_right = -608.0
+offset_bottom = -328.0
+grow_horizontal = 2
+grow_vertical = 2
 theme = ExtResource("4")
 script = ExtResource("1")
+metadata/_edit_horizontal_guides_ = [360.0]
+
+[node name="GUI" type="NinePatchRect" parent="."]
+offset_left = 320.0
+offset_top = 196.0
+offset_right = 960.0
+offset_bottom = 524.0
+texture = ExtResource("3_btujq")
+patch_margin_left = 408
+patch_margin_top = 80
+patch_margin_right = 80
+patch_margin_bottom = 64
+axis_stretch_horizontal = 1
+metadata/_edit_horizontal_guides_ = [596.0]
+
+[node name="CloseButton" type="TextureButton" parent="."]
+offset_left = 894.0
+offset_top = 212.0
+offset_right = 943.0
+offset_bottom = 261.0
+texture_normal = ExtResource("4_5drab")
+texture_hover = ExtResource("5_trt1m")
 
 [node name="Label" type="Label" parent="."]
 custom_minimum_size = Vector2(0, 38)
-layout_mode = 0
-anchor_right = 1.0
-offset_bottom = 24.0
+layout_mode = 1
+offset_left = 364.0
+offset_top = 220.0
+offset_right = 648.0
+offset_bottom = 258.0
 text = "Select"
-horizontal_alignment = 1
-vertical_alignment = 1
-
-[node name="Plant" type="Button" parent="."]
-visible = false
-layout_mode = 0
-anchor_left = 1.0
-anchor_top = 1.0
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = -144.0
-offset_top = -40.0
-text = "PLANT_V"
+label_settings = SubResource("LabelSettings_oro1x")
 
 [node name="Seeds" type="ScrollContainer" parent="."]
 layout_mode = 0
-offset_left = 48.0
-offset_top = 64.0
-offset_right = 600.0
-offset_bottom = 132.0
+offset_left = 364.0
+offset_top = 300.0
+offset_right = 916.0
+offset_bottom = 360.0
 
 [node name="HBox" type="HBoxContainer" parent="Seeds"]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="CloseButton" parent="." instance=ExtResource("3")]
-layout_mode = 1
-offset_left = -32.0
-offset_top = 8.0
-offset_right = -8.0
-offset_bottom = 32.0
-
 [node name="ProductionPerSec" type="Label" parent="."]
 layout_mode = 0
-offset_left = 48.0
-offset_top = 160.0
-offset_right = 352.0
-offset_bottom = 184.0
+offset_left = 380.0
+offset_top = 400.0
+offset_right = 684.0
+offset_bottom = 424.0
 text = "PRODUCTION_PER_SECOND"
 
 [node name="HBoxContainer" type="HBoxContainer" parent="."]
 layout_mode = 0
-offset_left = 36.0
-offset_top = 192.0
-offset_right = 408.0
-offset_bottom = 232.0
+offset_left = 380.0
+offset_top = 432.0
+offset_right = 752.0
+offset_bottom = 472.0
 
 [node name="UseFertilizer" type="CheckBox" parent="."]
 layout_mode = 0
-offset_left = 392.0
-offset_top = 164.0
-offset_right = 636.0
-offset_bottom = 192.0
+offset_left = 720.0
+offset_top = 400.0
+offset_right = 932.0
+offset_bottom = 428.0
 text = "USE_FERTILIZER"
 icon = ExtResource("6")
 expand_icon = true
 
-[connection signal="pressed" from="Plant" to="." method="_on_Plant_pressed"]
-[connection signal="close_button_pressed" from="CloseButton" to="." method="_on_close_button_pressed"]
+[connection signal="pressed" from="CloseButton" to="." method="_on_close_button_pressed"]
 [connection signal="mouse_entered" from="UseFertilizer" to="." method="_on_UseFertilizer_mouse_entered"]
 [connection signal="mouse_exited" from="UseFertilizer" to="." method="_on_mouse_exited"]
 [connection signal="toggled" from="UseFertilizer" to="." method="_on_UseFertilizer_toggled"]

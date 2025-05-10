@@ -1,35 +1,37 @@
 extends "Panel.gd"
 
 @onready var hbox = $Seeds/HBox
-var p_i:Dictionary
+var p_i:Dictionary = {}
 var tile_num:int
 var seeds_to_plant:String = ""
 var fertilizer:bool
 var craft_costs:Dictionary
 var c_v:String
 var tiles_selected:Array
+var seed_to_index = {
+	"lead_seeds":0,
+	"copper_seeds":1,
+	"iron_seeds":2,
+	"aluminium_seeds":3,
+	"silver_seeds":4,
+	"gold_seeds":5,
+}
 
 func _ready():
-	for f in game.seeds_produce:
-		var slot = game.slot_scene.instantiate()
-		slot.get_node("TextureRect").texture = load("res://Graphics/Agriculture/" + f + ".png")
-		slot.get_node("Button").connect("mouse_entered",Callable(self,"on_slot_over").bind(f))
-		slot.get_node("Button").connect("mouse_exited",Callable(self,"on_slot_out"))
-		slot.get_node("Button").connect("pressed",Callable(self,"on_slot_press").bind(f))
-		hbox.add_child(slot)
+	set_polygon($GUI.size, $GUI.position)
 	
 func refresh():
+	if p_i.is_empty():
+		return
 	$UseFertilizer.visible = game.science_unlocked.has("PF")
-	$Plant.visible = false
-	set_polygon(size)
 	if tile_num == 1:
 		$Label.text = tr("GREENHOUSE_NAME")
 	else:
 		$Label.text = "%s %s" % [Helper.format_num(tile_num), tr("GREENHOUSES").to_lower()]
 	for slot in hbox.get_children():
-		slot.queue_free()
+		slot.free()
 	for _seed in game.seeds_produce:
-		var slot = game.slot_scene.instantiate()
+		var slot = preload("res://Scenes/InventorySlot.tscn").instantiate()
 		slot.get_node("TextureRect").texture = load("res://Graphics/Agriculture/" + _seed + ".png")
 		slot.get_node("Button").connect("mouse_entered",Callable(self,"on_slot_over").bind(_seed))
 		slot.get_node("Button").connect("mouse_exited",Callable(self,"on_slot_out"))
@@ -48,6 +50,9 @@ func on_slot_out():
 var calculating = false# Used to prevent _on_UseFertilizer_toggled from firing when setting button state manually
 
 func calc_prod_per_sec():
+	print("B")
+	for slot in hbox.get_children():
+		slot.get_node("Border").hide()
 	calculating = true
 	var production:Dictionary = {}
 	if c_v == "system" and p_i.has("auto_GH"):
@@ -67,6 +72,8 @@ func calc_prod_per_sec():
 					production.soil = production.get("soil", 0.0) - tile_p.soil_drain
 				for p in tile_p.produce:
 					production[p] = tile_p.produce[p] * ((game.tile_data[tile].get("aurora", 0.0) + 1.0) if p in game.met_info.keys() else 1.0) + production.get(p, 0.0)
+				hbox.get_child(seed_to_index[tile_p.seed]).get_node("Border").show()
+				print("A")
 	Helper.put_rsrc($HBoxContainer, 32, production)
 	$ProductionPerSec.visible = $HBoxContainer.get_child_count() != 0
 	calculating = false
@@ -209,7 +216,7 @@ func _on_UseFertilizer_toggled(button_pressed):
 
 
 func _on_UseFertilizer_mouse_entered():
-	game.show_tooltip("FERTILIZER_DESC")
+	game.show_tooltip(tr("FERTILIZER_DESC"))
 
 
 func _on_mouse_exited():
