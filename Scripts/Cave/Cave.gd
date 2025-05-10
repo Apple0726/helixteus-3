@@ -147,6 +147,8 @@ var treasure_mult:float = 1.0
 var debris_amount:float
 
 func _ready():
+	if p_i.has("lake"):
+		cave_wall.tile_set.get_source(0).texture = preload("res://Graphics/Tiles/frozen_cave_wall_atlas.png")
 	$Ash.tile_set = ResourceFiles.ash_tile_set
 	camera.make_current()
 	$Exit/GPUParticles2D.emitting = true
@@ -345,7 +347,7 @@ func add_filter(rsrc):
 func add_filter_slot(type:String, rsrc):
 	var filter_slot = filter_btn_scene.instantiate()
 	if rsrc is int:
-		filter_slot.texture = load("res://Graphics/%s/%s.png" % [type, Item.data[rsrc].icon_name])
+		filter_slot.texture = load("res://Graphics/%s/%s/%s.png" % ["Items", Item.icon_directory(Item.data[rsrc].type), Item.data[rsrc].icon_name])
 	else:
 		filter_slot.texture = load("res://Graphics/%s/%s.png" % [type, rsrc])
 	$UI2/Filters/Grid.add_child(filter_slot)
@@ -473,19 +475,23 @@ func generate_cave(first_floor:bool, going_up:bool):
 	cave_darkness = clamp(cave_darkness, 0.0, 1.0 - ((0.2 / darkness_mod) if darkness_mod > 1.0 else 0.2))
 	#if not game.objective.is_empty() and game.objective.type == game.ObjectiveType.CAVE:
 		#game.objective.current += 1
-	var BG_mod = star_mod * (1.0 - cave_darkness)
-	BG_mod.a = 1.0
-	cave_BG.material.set_shader_parameter("modulate_color", BG_mod)
 	rover.get_node("AshParticles").modulate = Color.WHITE * (1.0 - cave_darkness)
 	rover.get_node("AshParticles").modulate.a = 1.0
 	mining_laser.get_node("PointLight2D2").energy = (0.5 + pow(cave_darkness, 2) * 6) / pow(light_strength_mult, 2) * 1.0
+	var depth_modulate = Color.WHITE
 	if cave_floor >= 16:
-		cave_wall.modulate = Color.PURPLE
+		depth_modulate = Color.PURPLE
 	elif cave_floor >= 8:
-		cave_wall.modulate = Color.BLUE
-	else:
-		cave_wall.modulate = star_mod * (1.0 - cave_darkness) * (Color(0.5, 0.5, 1.0) if cave_floor >= 8 else Color.WHITE)
-		cave_wall.modulate.a = 1.0
+		depth_modulate = Color.BLUE
+	cave_wall.modulate = star_mod * depth_modulate * (1.0 - cave_darkness) * (Color(0.5, 0.5, 1.0) if cave_floor >= 8 else Color.WHITE)
+	var BG_mod = star_mod * (1.0 - cave_darkness)
+	BG_mod.a = 1.0
+	if p_i.has("lake"):
+		BG_mod = Data.lake_colors[p_i.lake.element][p_i.lake.state]
+		cave_wall.modulate *= Data.lake_colors[p_i.lake.element][p_i.lake.state]
+		cave_BG.material.set_shader_parameter("brightness", 1.1)
+		cave_BG.material.set_shader_parameter("contrast", 1.1)
+	cave_BG.material.set_shader_parameter("modulate_color", BG_mod)
 	hole.modulate = star_mod * (1.0 - cave_darkness)
 	hole.modulate.a = 1.0
 	$WorldEnvironment.environment.adjustment_saturation = (1.0 - cave_darkness)
@@ -533,32 +539,35 @@ func generate_cave(first_floor:bool, going_up:bool):
 		for j in cave_size:
 			var level = noise.get_noise_2d(i * 10.0, j * 10.0)
 			var tile_id:int = get_tile_index(Vector2(i, j))
-			cave_BG.set_cell(Vector2i(i, j), tile_type, Vector2i.ZERO)
-			# Decorative pebbles
-#			for k in rng.randi_range(0, 2):
-#				var debris = Sprite2D.new()
-#				debris.texture = preload("res://Graphics/Cave/DebrisCave.png")
-#				debris.hframes = 6
-#				debris.frame = rng.randi_range(0, 5)
-#				add_sibling($Ash, debris)
-#				debris.modulate = tile_mod
-#				debris.rotation_degrees = rng.randf_range(0, 360)
-#				debris.position = Vector2(i, j) * 200 + Vector2(rng.randf_range(-100, 100), rng.randf_range(-100, 100))
-#				debris.scale = Vector2.ONE * (pow(rng.randf(), 4) / 2.0 + 0.2)
-			if rng.randf() < debris_amount / 2.0:
-				var debris = Sprite2D.new()
-				debris.texture = load("res://Graphics/Cave/DebrisCaveDecoration%s.png" % rng.randi_range(1, 3))
-				add_child(debris)
-				debris.z_index = -1021
-				debris.modulate = (star_mod * tile_avg_mod + Color(0.2, 0.2, 0.2, 1.0) * rng.randf_range(0.9, 1.1)) * (1.0 - cave_darkness)
-				debris.modulate.a = 1.0
-				debris.rotation_degrees = rng.randf_range(0, 360)
-				debris.position = Vector2(i, j) * 200 + Vector2(rng.randf_range(-100, 100), rng.randf_range(-100, 100))
-				debris.scale = Vector2.ONE * rng.randf_range(1.0, 1.4)
-				debris.add_to_group("debris")
+			if p_i.has("lake"):
+				cave_BG.set_cell(Vector2i(i, j), 9, Vector2i.ZERO)
+			else:
+				cave_BG.set_cell(Vector2i(i, j), tile_type, Vector2i.ZERO)
+				# Decorative pebbles
+	#			for k in rng.randi_range(0, 2):
+	#				var debris = Sprite2D.new()
+	#				debris.texture = preload("res://Graphics/Cave/DebrisCave.png")
+	#				debris.hframes = 6
+	#				debris.frame = rng.randi_range(0, 5)
+	#				add_sibling($Ash, debris)
+	#				debris.modulate = tile_mod
+	#				debris.rotation_degrees = rng.randf_range(0, 360)
+	#				debris.position = Vector2(i, j) * 200 + Vector2(rng.randf_range(-100, 100), rng.randf_range(-100, 100))
+	#				debris.scale = Vector2.ONE * (pow(rng.randf(), 4) / 2.0 + 0.2)
+				if rng.randf() < debris_amount / 2.0:
+					var debris = Sprite2D.new()
+					debris.texture = load("res://Graphics/Cave/DebrisCaveDecoration%s.png" % rng.randi_range(1, 3))
+					add_child(debris)
+					debris.z_index = -1021
+					debris.modulate = (star_mod * tile_avg_mod + Color(0.2, 0.2, 0.2, 1.0) * rng.randf_range(0.9, 1.1)) * (1.0 - cave_darkness)
+					debris.modulate.a = 1.0
+					debris.rotation_degrees = rng.randf_range(0, 360)
+					debris.position = Vector2(i, j) * 200 + Vector2(rng.randf_range(-100, 100), rng.randf_range(-100, 100))
+					debris.scale = Vector2.ONE * rng.randf_range(1.0, 1.4)
+					debris.add_to_group("debris")
 			if level > 0:
 				# Big boi rocks with collision detection
-				if rng.randf() < debris_amount / 12.0:
+				if not p_i.has("lake") and rng.randf() < debris_amount / 12.0:
 					var debris = preload("res://Scenes/Debris.tscn").instantiate()
 					debris.sprite_frame = rng.randi_range(0, 5)
 					debris.time_speed = time_speed
@@ -742,7 +751,6 @@ func generate_cave(first_floor:bool, going_up:bool):
 		for j in cave_size:
 			var tile_id:int = get_tile_index(Vector2(i, j))
 			if tiles_mined[cave_floor - 1].has(tile_id):
-				cave_BG.set_cell(Vector2i(i, j), tile_type, Vector2i.ZERO)
 				minimap_cave.set_cell(Vector2i(i, j), tile_type, Vector2i.ZERO)
 				astar_node.add_point(tile_id, Vector2(i, j))
 				connect_points(Vector2(i, j), true)
@@ -1835,7 +1843,6 @@ func mine_wall_complete(tile_pos:Vector2, tile_id:int):
 	if tiles_touched_by_laser.has(st):
 		tiles_touched_by_laser[st].bar.queue_free()
 		tiles_touched_by_laser.erase(st)
-	cave_BG.set_cell(map_pos, tile_type, Vector2i.ZERO)
 	tiles_mined[cave_floor - 1].append(tile_id)
 
 var inv_bar_tween

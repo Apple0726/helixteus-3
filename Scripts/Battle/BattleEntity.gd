@@ -256,7 +256,14 @@ func decrement_status_effects_buffs():
 func _physics_process(delta: float) -> void:
 	if moving_from_velocity:
 		position += velocity * delta * velocity_process_mult
-
+		if position.x < -640.0 or position.x > 1920.0 or position.y < -360.0 or position.y > 1080.0:
+			if battle_scene.animations_sped_up:
+				entity_defeated_callback()
+			else:
+				var disappear_tween = create_tween().set_parallel(true)
+				disappear_tween.tween_property($Sprite2D.material, "shader_parameter/alpha", 0.0, 0.5)
+				disappear_tween.tween_property($VelocityArrow, "modulate:a", 0.0, 0.5)
+				disappear_tween.tween_callback(entity_defeated_callback).set_delay(0.5)
 
 func end_turn():
 	if extra_attacks > 0:
@@ -392,6 +399,9 @@ func entity_defeated_callback():
 		battle_scene.HX_nodes.erase(self)
 	elif type == Battle.EntityType.SHIP:
 		battle_scene.ship_nodes.erase(self)
+	elif type == Battle.EntityType.OBSTACLE:
+		battle_scene.obstacle_nodes.erase(self)
+	queue_free()
 
 func update_velocity_arrow(offset: Vector2 = Vector2.ZERO):
 	$VelocityArrow.scale = Vector2.ONE * (velocity + offset).length() / 100.0

@@ -44,6 +44,7 @@ var timer:Timer
 var interval:float = 0.1
 var star_mod:Color
 var caves_data:Dictionary = {}
+var obstacle_nodes = {}
 
 func _ready():
 	shadows.resize(wid * wid)
@@ -87,9 +88,7 @@ func _ready():
 	$Ash.tile_set = ResourceFiles.ash_tile_set
 	$Lakes.tile_set = ResourceFiles.lake_tile_set
 	#$PlanetTiles.tile_set = ResourceFiles.planet_tile_set
-	$Obstacles.tile_set = ResourceFiles.obstacles_tile_set
 	$Soil.tile_set = ResourceFiles.soil_tile_set
-	$Obstacles.modulate = star_mod
 	var nuclear_fusion_reactor_main_tiles = []
 	if p_i.ancient_bldgs.has(AncientBuilding.NUCLEAR_FUSION_REACTOR):
 		for i in len(p_i.ancient_bldgs[AncientBuilding.NUCLEAR_FUSION_REACTOR]):
@@ -131,7 +130,11 @@ func _ready():
 				add_child(crater)
 				crater.position = Vector2(i, j) * 200 + Vector2(100, 100)
 			if tile.has("depth") and not tile.has("bridge") and not tile.has("crater"):
-				$Obstacles.set_cell(Vector2i(i, j), 2, Vector2(0, 0))
+				var hole_sprite = Sprite2D.new()
+				hole_sprite.texture = preload("res://Graphics/Tiles/Hole.png")
+				hole_sprite.position = Vector2(i, j) * 200 + Vector2.ONE * 100
+				add_child(hole_sprite)
+				obstacle_nodes[Vector2i(i, j)] = hole_sprite
 			if tile.has("aurora"):
 				aurora_tiles.append(id2)
 			if tile.has("ancient_bldg"):
@@ -145,12 +148,30 @@ func _ready():
 						var cave_data = cave_data_file.get_var()
 						cave_data_file.close()
 						caves_data[id2] = len(cave_data.seeds)
-				$Obstacles.set_cell(Vector2i(i, j), 0, Vector2(0, 0))
+				var cave_sprite = Sprite2D.new()
+				cave_sprite.position = Vector2(i, j) * 200 + Vector2.ONE * 100
+				if tile.has("lake"):
+					cave_sprite.modulate = star_mod * Data.lake_colors[p_i.lake.element][p_i.lake.state]
+					cave_sprite.texture = preload("res://Graphics/Tiles/frozen_cave.png")
+				else:
+					cave_sprite.modulate = star_mod
+					cave_sprite.texture = preload("res://Graphics/Tiles/cave.png")
+				add_child(cave_sprite)
+				obstacle_nodes[Vector2i(i, j)] = cave_sprite
 			elif tile.has("volcano"):
-				$Obstacles.set_cell(Vector2i(i, j), 4, Vector2(0, 0))
+				var volcano_sprite = Sprite2D.new()
+				volcano_sprite.texture = preload("res://Graphics/Tiles/Volcano.png")
+				volcano_sprite.position = Vector2(i, j) * 200 + Vector2.ONE * 100
+				volcano_sprite.modulate = star_mod
+				add_child(volcano_sprite)
+				obstacle_nodes[Vector2i(i, j)] = volcano_sprite
 			elif tile.has("ship"):
 				if len(game.ship_data) == 0:
-					$Obstacles.set_cell(Vector2i(i, j), 1, Vector2(0, 0))
+					var abandoned_ship_sprite = Sprite2D.new()
+					abandoned_ship_sprite.texture = preload("res://Graphics/Tiles/abandoned_ship.png")
+					abandoned_ship_sprite.position = Vector2(i, j) * 200 + Vector2.ONE * 100
+					add_child(abandoned_ship_sprite)
+					obstacle_nodes[Vector2i(i, j)] = abandoned_ship_sprite
 			elif tile.has("wormhole"):
 				wormhole = preload("res://Scenes/Wormhole.tscn").instantiate()
 				wormhole.get_node("Active").visible = tile.wormhole.active
@@ -338,8 +359,6 @@ func show_tooltip(tile, tile_id:int):
 			fire_strength = tile.ash.richness
 			tooltip += tr("MOLTEN_CAVE")
 		elif tile.has("lake"):
-			fiery_tooltip = tile_over
-			fire_strength = tile.ash.richness
 			tooltip += tr("FROZEN_CAVE")
 		else:
 			tooltip += tr("CAVE")
@@ -1232,7 +1251,8 @@ func _unhandled_input(event):
 		if tile and tile.has("depth") and not tile.has("bldg") and bldg_to_construct == -1 and not tile.has("bridge"):
 			if Input.is_action_pressed("shift"):
 				game.tile_data[tile_id].bridge = true
-				$Obstacles.set_cell(Vector2i(x_pos, y_pos))
+				obstacle_nodes[Vector2i(x_pos, y_pos)].queue_free()
+				obstacle_nodes.erase(Vector2i(x_pos, y_pos))
 			else:
 				game.mine_tile(tile_id)
 		if tile and bldg_to_construct == -1:
@@ -1289,7 +1309,8 @@ func _unhandled_input(event):
 				if game.science_unlocked.has("SCT"):
 					if len(game.ship_data) == 0:
 						game.tile_data[tile_id].erase("ship")
-						$Obstacles.set_cell(Vector2i(x_pos, y_pos))
+						obstacle_nodes[Vector2i(x_pos, y_pos)].queue_free()
+						obstacle_nodes.erase(Vector2i(x_pos, y_pos))
 						game.popup(tr("SHIP_CONTROL_SUCCESS"), 1.5)
 						game.HUD.ships.visible = true
 						game.get_1st_ship()

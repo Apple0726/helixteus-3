@@ -404,9 +404,6 @@ use_parent_material = true
 [node name="Ash" type="TileMapLayer" parent="."]
 use_parent_material = true
 
-[node name="Obstacles" type="TileMapLayer" parent="."]
-use_parent_material = true
-
 [node name="BadApple" type="Node2D" parent="."]
 script = ExtResource("7_yxni4")
 

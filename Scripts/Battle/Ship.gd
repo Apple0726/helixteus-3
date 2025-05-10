@@ -162,6 +162,7 @@ func _on_mouse_exited() -> void:
 	game.hide_tooltip()
 
 func fire_weapon(weapon_type: int):
+	game.hide_tooltip()
 	if fires_remaining <= 1:
 		$FireWeaponAim.fade_out()
 		block_cancelling_action = false

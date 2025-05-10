@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://u0ivbg4rp55y"
-path="res://.godot/imported/Ice.jpg-3f114999ef32c14f03b60e11fb8e97e1.ctex"
+uid="uid://danak4scqeenq"
+path="res://.godot/imported/frozen_cave_wall_atlas.png-eda894bcf904f2642f0a5f123958075f.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Graphics/Tiles/Ice.jpg"
-dest_files=["res://.godot/imported/Ice.jpg-3f114999ef32c14f03b60e11fb8e97e1.ctex"]
+source_file="res://Graphics/Tiles/frozen_cave_wall_atlas.png"
+dest_files=["res://.godot/imported/frozen_cave_wall_atlas.png-eda894bcf904f2642f0a5f123958075f.ctex"]
 
 [params]
 
