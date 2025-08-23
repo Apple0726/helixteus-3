@@ -94,8 +94,10 @@ func take_turn():
 	movement_remaining = total_movement
 	buffed_from_class_passive_ability = false
 	if ship_class == ShipClass.ENERGETIC and randf() < 0.3:
-		status_effects[Battle.StatusEffect.ENERGETIC] = 1
+		status_effects[Battle.StatusEffect.EXTRA_TURNS] = 2
 	super()
+	if HP <= 0: # For example, if burned to death during super() call
+		return
 	if ship_class == ShipClass.RECKLESS:
 		if turn_number == 1:
 			extra_attacks = 2

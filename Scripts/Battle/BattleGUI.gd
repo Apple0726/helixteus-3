@@ -18,7 +18,8 @@ enum {
 	NONE,
 }
 var action_selected = NONE
-
+var main_panel_tween
+var turn_order_hbox_tween
 
 func _ready() -> void:
 	Helper.set_back_btn($Back)
@@ -51,7 +52,7 @@ func _input(event: InputEvent) -> void:
 	if event is InputEventMouseMotion:
 		$PushStrengthPanel.position = Vector2(1280 - $PushStrengthPanel.size.x - 10, 720 - $PushStrengthPanel.size.y - 10).min(battle_scene.mouse_position_global)
 		$LightEmissionConePanel.position = Vector2(1280 - $LightEmissionConePanel.size.x - 10, 720 - $LightEmissionConePanel.size.y - 10).min(battle_scene.mouse_position_global)
-	if action_selected != NONE:
+	if action_selected != NONE and is_instance_valid(ship_node):
 		if Input.is_action_just_pressed("cancel") and not ship_node.block_cancelling_action:
 			action_selected = NONE
 			ship_node.cancel_action()
@@ -136,7 +137,16 @@ func reset_GUI():
 	$LightEmissionConePanel.hide()
 	$PushStrengthPanel.hide()
 	game.block_scroll = false
-	
+	if $TurnOrderHBox.visible:
+		if turn_order_hbox_tween and turn_order_hbox_tween.is_running():
+			turn_order_hbox_tween.kill()
+			turn_order_hbox_tween = create_tween()
+			turn_order_hbox_tween.tween_property($TurnOrderHBox, "modulate:a", 1.0, 0.2)
+	else:
+		$TurnOrderHBox.show()
+		turn_order_hbox_tween = create_tween()
+		turn_order_hbox_tween.tween_property($TurnOrderHBox, "modulate:a", 1.0, 0.2)
+
 func refresh_GUI():
 	for weapon in ["Bullet", "Laser", "Bomb", "Light"]:
 		var hide_levels = true
@@ -212,16 +222,22 @@ func fade_in_main_panel():
 	$MainPanel.show()
 	if is_instance_valid(ship_node):
 		refresh_GUI()
-	var fade_tween = create_tween()
-	fade_tween.tween_property($MainPanel, "modulate:a", 1.0, 0.2)
+	main_panel_tween
+	if main_panel_tween and main_panel_tween.is_running():
+		main_panel_tween.kill()
+	main_panel_tween = create_tween()
+	main_panel_tween.tween_property($MainPanel, "modulate:a", 1.0, 0.2)
 
 func fade_out_main_panel():
-	var fade_tween = create_tween()
-	fade_tween.tween_property($MainPanel, "modulate:a", 0.0, 0.2)
-	fade_tween.tween_callback($MainPanel.hide)
+	if main_panel_tween and main_panel_tween.is_running():
+		main_panel_tween.kill()
+	main_panel_tween = create_tween()
+	main_panel_tween.tween_property($MainPanel, "modulate:a", 0.0, 0.2)
+	main_panel_tween.tween_callback($MainPanel.hide)
 
 func _on_bullet_pressed() -> void:
 	fade_out_main_panel()
+	fade_out_turn_order_box()
 	action_selected = BULLET
 	ship_node.weapon_accuracy_mult = Data.battle_weapon_stats.bullet.accuracy
 	override_enemy_tooltips()
@@ -233,6 +249,7 @@ func _on_bullet_pressed() -> void:
 
 func _on_laser_pressed() -> void:
 	fade_out_main_panel()
+	fade_out_turn_order_box()
 	action_selected = LASER
 	ship_node.weapon_accuracy_mult = Data.battle_weapon_stats.laser.accuracy
 	override_enemy_tooltips()
@@ -249,6 +266,7 @@ func _on_laser_pressed() -> void:
 
 func _on_bomb_pressed() -> void:
 	fade_out_main_panel()
+	fade_out_turn_order_box()
 	action_selected = BOMB
 	ship_node.weapon_accuracy_mult = Data.battle_weapon_stats.bomb.accuracy
 	if ship_node.bomb_levels[2] >= 2:
@@ -266,6 +284,7 @@ func _on_light_pressed() -> void:
 	override_enemy_tooltips()
 	ship_node.fires_remaining = 1
 	fade_out_main_panel()
+	fade_out_turn_order_box()
 	ship_node.add_light_cone()
 	$Info.show()
 	$Info.text = tr("CHANGE_EMISSION_CONE")
@@ -276,15 +295,23 @@ func _on_light_pressed() -> void:
 func _on_move_pressed() -> void:
 	action_selected = MOVE
 	fade_out_main_panel()
+	fade_out_turn_order_box()
 	battle_scene.show_and_enlarge_collision_shapes()
 	ship_node.get_node("RayCast2D").enabled = true
 	ship_node.display_move_path = true
 	game.hide_tooltip()
 
+func fade_out_turn_order_box():
+	if turn_order_hbox_tween and turn_order_hbox_tween.is_running():
+		turn_order_hbox_tween.kill()
+	turn_order_hbox_tween = create_tween()
+	turn_order_hbox_tween.tween_property($TurnOrderHBox, "modulate:a", 0.0, 0.2)
+	turn_order_hbox_tween.tween_callback($TurnOrderHBox.hide)
 
 func _on_push_pressed() -> void:
 	action_selected = PUSH
 	fade_out_main_panel()
+	fade_out_turn_order_box()
 	ship_node.add_target_buttons_for_push()
 	game.hide_tooltip()
 

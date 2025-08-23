@@ -15,7 +15,7 @@ enum StatusEffect {
 	FREEZE,
 	EXPOSED,
 	RADIOACTIVE,
-	ENERGETIC,
+	EXTRA_TURNS,
 	N,
 }
 

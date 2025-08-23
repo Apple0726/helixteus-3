@@ -167,6 +167,7 @@ func battle_victory_callback():
 		game.help.SP = true
 
 func next_turn():
+	print("next_turn")
 	if ship_nodes.is_empty():
 		battle_GUI.get_node("Defeat").show()
 		create_tween().tween_property(battle_GUI.get_node("Defeat"), "modulate:a", 1.0, 1.0)

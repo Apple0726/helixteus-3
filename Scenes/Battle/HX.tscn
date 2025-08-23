@@ -569,10 +569,10 @@ texture_progress = ExtResource("6")
 
 [node name="StatusEffects" parent="Info" instance=ExtResource("13_lq603")]
 layout_mode = 0
-offset_left = -76.0
-offset_top = -80.0
-offset_right = 76.0
-offset_bottom = -48.0
+offset_left = 68.0
+offset_top = -72.0
+offset_right = 112.0
+offset_bottom = 68.0
 
 [node name="Buffs" parent="Info" instance=ExtResource("14_f8wif")]
 layout_mode = 0

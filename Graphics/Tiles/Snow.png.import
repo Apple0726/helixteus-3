@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://rha5rolj5xww"
-path="res://.godot/imported/it.png-ae6d8a05bec64985cfbe33ff7b88c0a8.ctex"
+uid="uid://7y82o3dkno4t"
+path="res://.godot/imported/Snow.png-d8c71426cb9ecb99c2fdb8190c615b7b.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Graphics/Buttons/it.png"
-dest_files=["res://.godot/imported/it.png-ae6d8a05bec64985cfbe33ff7b88c0a8.ctex"]
+source_file="res://Graphics/Tiles/Snow.png"
+dest_files=["res://.godot/imported/Snow.png-d8c71426cb9ecb99c2fdb8190c615b7b.ctex"]
 
 [params]
 

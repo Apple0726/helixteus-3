@@ -286,10 +286,10 @@ horizontal_alignment = 1
 
 [node name="StatusEffects" parent="Info" instance=ExtResource("8_ymlex")]
 layout_mode = 0
-offset_left = -60.0
-offset_top = -92.0
-offset_right = 60.0
-offset_bottom = -64.0
+offset_left = -168.0
+offset_top = -64.0
+offset_right = -124.0
+offset_bottom = 67.0
 
 [node name="Buffs" parent="Info" instance=ExtResource("9_0r8nl")]
 layout_mode = 0

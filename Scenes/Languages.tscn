@@ -1,20 +1,21 @@
-[gd_scene load_steps=21 format=3 uid="uid://bx5co4ssobffh"]
+[gd_scene load_steps=24 format=3 uid="uid://bx5co4ssobffh"]
 
-[ext_resource type="Texture2D" uid="uid://bwa11fyv3aesk" path="res://Graphics/Buttons/nl.png" id="1"]
-[ext_resource type="Texture2D" uid="uid://b2ai640qkt2wc" path="res://Graphics/Buttons/ko.png" id="2"]
-[ext_resource type="Texture2D" uid="uid://8wtp0nuj3c4t" path="res://Graphics/Buttons/en.png" id="3"]
-[ext_resource type="Texture2D" uid="uid://cgbum858n4dhv" path="res://Graphics/Buttons/es.png" id="4"]
-[ext_resource type="Texture2D" uid="uid://c7q8uvrpgg6pb" path="res://Graphics/Buttons/sv.png" id="5"]
-[ext_resource type="Texture2D" uid="uid://dhfmxa0kpnurv" path="res://Graphics/Buttons/zh.png" id="6"]
-[ext_resource type="Texture2D" uid="uid://c2r8hjc7srqhs" path="res://Graphics/Buttons/ja.png" id="7"]
-[ext_resource type="Texture2D" uid="uid://rha5rolj5xww" path="res://Graphics/Buttons/it.png" id="8"]
-[ext_resource type="Texture2D" uid="uid://dylyrx6fkg3y" path="res://Graphics/Buttons/fr.png" id="9"]
-[ext_resource type="Texture2D" uid="uid://cusqtj48h3571" path="res://Graphics/Buttons/de.png" id="10"]
-[ext_resource type="Texture2D" uid="uid://cbt34k54x4j1p" path="res://Graphics/Buttons/ru.png" id="11"]
-[ext_resource type="Texture2D" uid="uid://2wqq4xxnaf8q" path="res://Graphics/Buttons/hu.png" id="12"]
+[ext_resource type="Texture2D" uid="uid://bwa11fyv3aesk" path="res://Graphics/Icons/Flags/nl.png" id="1"]
+[ext_resource type="Texture2D" uid="uid://b2ai640qkt2wc" path="res://Graphics/Icons/Flags/ko.png" id="2"]
+[ext_resource type="Texture2D" uid="uid://8wtp0nuj3c4t" path="res://Graphics/Icons/Flags/en.png" id="3"]
+[ext_resource type="Texture2D" uid="uid://cgbum858n4dhv" path="res://Graphics/Icons/Flags/es.png" id="4"]
+[ext_resource type="Texture2D" uid="uid://c7q8uvrpgg6pb" path="res://Graphics/Icons/Flags/sv.png" id="5"]
+[ext_resource type="Texture2D" uid="uid://dhfmxa0kpnurv" path="res://Graphics/Icons/Flags/zh.png" id="6"]
+[ext_resource type="Texture2D" uid="uid://c2r8hjc7srqhs" path="res://Graphics/Icons/Flags/ja.png" id="7"]
+[ext_resource type="Texture2D" uid="uid://rha5rolj5xww" path="res://Graphics/Icons/Flags/it.png" id="8"]
+[ext_resource type="Texture2D" uid="uid://dylyrx6fkg3y" path="res://Graphics/Icons/Flags/fr.png" id="9"]
+[ext_resource type="Texture2D" uid="uid://cusqtj48h3571" path="res://Graphics/Icons/Flags/de.png" id="10"]
+[ext_resource type="Texture2D" uid="uid://cbt34k54x4j1p" path="res://Graphics/Icons/Flags/ru.png" id="11"]
+[ext_resource type="Texture2D" uid="uid://2wqq4xxnaf8q" path="res://Graphics/Icons/Flags/hu.png" id="12"]
 [ext_resource type="Texture2D" uid="uid://bctfy3hfwrvif" path="res://Graphics/Icons/languages.png" id="13"]
 [ext_resource type="Script" uid="uid://biw4e238ccx8t" path="res://Scripts/Languages.gd" id="14"]
 [ext_resource type="Theme" uid="uid://cp2u1kgj60ic" path="res://Resources/default_theme.tres" id="15"]
+[ext_resource type="Texture2D" uid="uid://bn4ytwbpposmt" path="res://Graphics/Icons/Flags/pl.png" id="16_2t816"]
 
 [sub_resource type="Animation" id="22"]
 resource_name = "MoveLanguages"
@@ -39,7 +40,7 @@ tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/keys = {
 "handle_modes": PackedInt32Array(0, 0),
-"points": PackedFloat32Array(675, -0.25, 0, 0.145934, -53.9133, 621.65, -0.2, -2.31616, 0.25, 0),
+"points": PackedFloat32Array(675, -0.25, 0, 0.145934, -53.9133, 577.252, -0.2, -2.31616, 0.25, 0),
 "times": PackedFloat32Array(0, 0.4)
 }
 
@@ -90,8 +91,9 @@ shadow_offset = Vector2(1, 1)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_1h58w"]
 bg_color = Color(0.176471, 0.176471, 0.176471, 1)
-border_width_left = 2
-border_width_top = 2
+border_width_left = 5
+border_width_top = 10
+border_width_bottom = 10
 border_color = Color(0.341176, 0.341176, 0.341176, 1)
 border_blend = true
 expand_margin_left = 2.0
@@ -100,6 +102,25 @@ expand_margin_right = 2.0
 expand_margin_bottom = 2.0
 shadow_size = 2
 shadow_offset = Vector2(1, 1)
+
+[sub_resource type="Shader" id="Shader_2t816"]
+code = "shader_type canvas_item;
+
+instance uniform float progress:hint_range(0.0, 1.0, 0.01) = 1.0;
+
+void fragment() {
+	COLOR = texture(TEXTURE, UV);
+	COLOR.rgb *= vec3(1.0 - 0.7 * step(progress, UV.x));
+}
+
+//void light() {
+//	// Called for every pixel for every light affecting the CanvasItem.
+//	// Uncomment to replace the default light processing function with this one.
+//}
+"
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_pd2cd"]
+shader = SubResource("Shader_2t816")
 
 [node name="Languages" type="Control"]
 layout_mode = 3
@@ -121,12 +142,12 @@ color = Color(0, 0, 0, 0)
 
 [node name="MouseOut" type="Polygon2D" parent="."]
 color = Color(1, 1, 1, 0)
-polygon = PackedVector2Array(0, 656, 0, 720, 904, 720, 904, 656)
+polygon = PackedVector2Array(0, 608, 0, 720, 920, 720, 920, 608)
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 root_node = NodePath("../Control")
 libraries = {
-"": SubResource("AnimationLibrary_8wbkt")
+&"": SubResource("AnimationLibrary_8wbkt")
 }
 
 [node name="MouseOver" type="Polygon2D" parent="."]
@@ -167,129 +188,145 @@ stretch_mode = 6
 
 [node name="PanelContainer" type="PanelContainer" parent="Control"]
 layout_mode = 1
-anchors_preset = 12
-anchor_top = 1.0
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = 2.0
-offset_top = -47.0
-offset_right = 2.0
-offset_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 0
+offset_top = 45.0
+offset_right = 672.0
+offset_bottom = 141.0
 theme_override_styles/panel = SubResource("StyleBoxFlat_1h58w")
 
-[node name="Languages" type="HBoxContainer" parent="Control/PanelContainer"]
-custom_minimum_size = Vector2(0, 30)
+[node name="Languages" type="GridContainer" parent="Control/PanelContainer"]
 layout_mode = 2
-size_flags_vertical = 4
-theme_override_constants/separation = 15
+theme_override_constants/h_separation = 40
+theme_override_constants/v_separation = 20
+columns = 7
 
 [node name="en" type="TextureButton" parent="Control/PanelContainer/Languages"]
+material = SubResource("ShaderMaterial_pd2cd")
+instance_shader_parameters/progress = 1.0
 custom_minimum_size = Vector2(60, 0)
 layout_mode = 2
-size_flags_horizontal = 2
+size_flags_vertical = 3
 mouse_filter = 1
 texture_normal = ExtResource("3")
 ignore_texture_size = true
 stretch_mode = 5
 
 [node name="de" type="TextureButton" parent="Control/PanelContainer/Languages"]
+material = SubResource("ShaderMaterial_pd2cd")
 custom_minimum_size = Vector2(60, 0)
 layout_mode = 2
-size_flags_horizontal = 2
+size_flags_vertical = 3
 mouse_filter = 1
 texture_normal = ExtResource("10")
 ignore_texture_size = true
 stretch_mode = 5
 
 [node name="zh" type="TextureButton" parent="Control/PanelContainer/Languages"]
+material = SubResource("ShaderMaterial_pd2cd")
 custom_minimum_size = Vector2(60, 0)
 layout_mode = 2
-size_flags_horizontal = 2
+size_flags_vertical = 3
 mouse_filter = 1
 texture_normal = ExtResource("6")
 ignore_texture_size = true
 stretch_mode = 5
 
 [node name="hu" type="TextureButton" parent="Control/PanelContainer/Languages"]
+material = SubResource("ShaderMaterial_pd2cd")
 custom_minimum_size = Vector2(60, 0)
 layout_mode = 2
-size_flags_horizontal = 2
+size_flags_vertical = 3
 mouse_filter = 1
 texture_normal = ExtResource("12")
 ignore_texture_size = true
 stretch_mode = 5
 
 [node name="es" type="TextureButton" parent="Control/PanelContainer/Languages"]
+material = SubResource("ShaderMaterial_pd2cd")
 custom_minimum_size = Vector2(60, 0)
 layout_mode = 2
-size_flags_horizontal = 2
+size_flags_vertical = 3
 mouse_filter = 1
 texture_normal = ExtResource("4")
 ignore_texture_size = true
 stretch_mode = 5
 
 [node name="ja" type="TextureButton" parent="Control/PanelContainer/Languages"]
+material = SubResource("ShaderMaterial_pd2cd")
 custom_minimum_size = Vector2(60, 0)
 layout_mode = 2
-size_flags_horizontal = 2
+size_flags_vertical = 3
 mouse_filter = 1
 texture_normal = ExtResource("7")
 ignore_texture_size = true
 stretch_mode = 5
 
 [node name="nl" type="TextureButton" parent="Control/PanelContainer/Languages"]
+material = SubResource("ShaderMaterial_pd2cd")
 custom_minimum_size = Vector2(60, 0)
 layout_mode = 2
-size_flags_horizontal = 2
+size_flags_vertical = 3
 mouse_filter = 1
 texture_normal = ExtResource("1")
 ignore_texture_size = true
 stretch_mode = 5
 
 [node name="ru" type="TextureButton" parent="Control/PanelContainer/Languages"]
+material = SubResource("ShaderMaterial_pd2cd")
 custom_minimum_size = Vector2(60, 0)
 layout_mode = 2
-size_flags_horizontal = 2
+size_flags_vertical = 3
 mouse_filter = 1
 texture_normal = ExtResource("11")
 ignore_texture_size = true
 stretch_mode = 5
 
 [node name="fr" type="TextureButton" parent="Control/PanelContainer/Languages"]
+material = SubResource("ShaderMaterial_pd2cd")
 custom_minimum_size = Vector2(60, 0)
 layout_mode = 2
-size_flags_horizontal = 2
+size_flags_vertical = 3
 mouse_filter = 1
 texture_normal = ExtResource("9")
 ignore_texture_size = true
 stretch_mode = 5
 
 [node name="it" type="TextureButton" parent="Control/PanelContainer/Languages"]
+material = SubResource("ShaderMaterial_pd2cd")
 custom_minimum_size = Vector2(60, 0)
 layout_mode = 2
-size_flags_horizontal = 2
+size_flags_vertical = 3
 mouse_filter = 1
 texture_normal = ExtResource("8")
 ignore_texture_size = true
 stretch_mode = 5
 
 [node name="ko" type="TextureButton" parent="Control/PanelContainer/Languages"]
+material = SubResource("ShaderMaterial_pd2cd")
 custom_minimum_size = Vector2(60, 0)
 layout_mode = 2
-size_flags_horizontal = 2
+size_flags_vertical = 3
 mouse_filter = 1
 texture_normal = ExtResource("2")
 ignore_texture_size = true
 stretch_mode = 5
 
 [node name="sv" type="TextureButton" parent="Control/PanelContainer/Languages"]
+material = SubResource("ShaderMaterial_pd2cd")
 custom_minimum_size = Vector2(60, 0)
 layout_mode = 2
-size_flags_horizontal = 2
+size_flags_vertical = 3
 mouse_filter = 1
 texture_normal = ExtResource("5")
+ignore_texture_size = true
+stretch_mode = 5
+
+[node name="pl" type="TextureButton" parent="Control/PanelContainer/Languages"]
+material = SubResource("ShaderMaterial_pd2cd")
+custom_minimum_size = Vector2(60, 0)
+layout_mode = 2
+size_flags_vertical = 3
+mouse_filter = 1
+texture_normal = ExtResource("16_2t816")
 ignore_texture_size = true
 stretch_mode = 5
 
@@ -329,3 +366,6 @@ stretch_mode = 5
 [connection signal="mouse_entered" from="Control/PanelContainer/Languages/sv" to="." method="_on_lg_mouse_entered" binds= ["sv"]]
 [connection signal="mouse_exited" from="Control/PanelContainer/Languages/sv" to="." method="_on_lg_mouse_exited"]
 [connection signal="pressed" from="Control/PanelContainer/Languages/sv" to="." method="_on_lg_pressed" binds= ["sv"]]
+[connection signal="mouse_entered" from="Control/PanelContainer/Languages/pl" to="." method="_on_lg_mouse_entered" binds= ["pl"]]
+[connection signal="mouse_exited" from="Control/PanelContainer/Languages/pl" to="." method="_on_lg_mouse_exited"]
+[connection signal="pressed" from="Control/PanelContainer/Languages/pl" to="." method="_on_lg_pressed" binds= ["pl"]]

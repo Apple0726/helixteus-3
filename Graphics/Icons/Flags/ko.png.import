@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://2wqq4xxnaf8q"
-path="res://.godot/imported/hu.png-283aefa2c88c281e4e5a041cad0c70b8.ctex"
+uid="uid://b2ai640qkt2wc"
+path="res://.godot/imported/ko.png-9ee373856d773bf2e1750995012b945a.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Graphics/Buttons/hu.png"
-dest_files=["res://.godot/imported/hu.png-283aefa2c88c281e4e5a041cad0c70b8.ctex"]
+source_file="res://Graphics/Icons/Flags/ko.png"
+dest_files=["res://.godot/imported/ko.png-9ee373856d773bf2e1750995012b945a.ctex"]
 
 [params]
 

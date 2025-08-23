@@ -45,10 +45,13 @@ func determine_target():
 
 func take_turn():
 	await super()
+	if HP <= 0: # For example, if burned to death during super() call
+		return
 	if status_effects[Battle.StatusEffect.STUN] > 0:
 		decrement_status_effects_buffs()
 		ending_turn()
 		return
+	decrement_status_effects_buffs()
 	var ship_target_id = determine_target()
 	target_position = ship_nodes[ship_target_id].position
 	position_preferences = {}
@@ -57,40 +60,41 @@ func take_turn():
 	if speed > 0.0:
 		create_tween().tween_property(self, "velocity", velocity.normalized() * max(speed - movement_remaining_base, 0.0), 0.4).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
 		movement_remaining_base = max(movement_remaining_base - speed, 0.0)
-		await get_tree().create_timer(0.4).timeout
-	for j in range(64):
-		var th = lerp(0.0, 2.0 * PI, j / 64.0)
-		var inside_obstacle = false
-		movement_remaining = movement_remaining_base # in meters
-		var r = 0.0 # in pixels
-		while movement_remaining > 0.0:
-			r += 2.0 * PIXELS_PER_METER
-			movement_remaining -= 2.0
-			var pos = position + r * Vector2.from_angle(th)
-			for obstacle in obstacles_in_range:
-				if not inside_obstacle and Geometry2D.is_point_in_polygon(pos, obstacle.get_node("CollisionShape2D/Polygon2D").polygon):
-					movement_remaining = max(movement_remaining - obstacle.go_through_movement_cost, 0.0)
-					if movement_remaining > 0.0:
-						inside_obstacle = true
-					else:
-						continue
-				elif inside_obstacle and not Geometry2D.is_point_in_polygon(pos, obstacle.get_node("CollisionShape2D/Polygon2D").polygon):
-					inside_obstacle = false
-			if movement_remaining >= 0.0:
-				calculate_position_preferences(position + r * Vector2.from_angle(th))
-	var target_move_position:Vector2 = position
-	var lowest_weight:float = INF
-	for pos in position_preferences:
-		if position_preferences[pos] < lowest_weight:
-			lowest_weight = position_preferences[pos]
-			target_move_position = pos
-	if velocity == Vector2.ZERO:
-		if battle_scene.animations_sped_up:
-			await get_tree().create_timer(0.1).timeout
-		else:
-			await get_tree().create_timer(0.5).timeout
-	move(target_move_position)
-	decrement_status_effects_buffs()
+		await get_tree().create_timer(0.1).timeout
+	if movement_remaining_base > 0.0:
+		for j in range(64):
+			var th = lerp(0.0, 2.0 * PI, j / 64.0)
+			var inside_obstacle = false
+			movement_remaining = movement_remaining_base # in meters
+			var r = 0.0 # in pixels
+			while movement_remaining > 0.0:
+				r += 2.0 * PIXELS_PER_METER
+				movement_remaining -= 2.0
+				var pos = position + r * Vector2.from_angle(th)
+				for obstacle in obstacles_in_range:
+					if not inside_obstacle and Geometry2D.is_point_in_polygon(pos, obstacle.get_node("CollisionShape2D/Polygon2D").polygon):
+						movement_remaining = max(movement_remaining - obstacle.go_through_movement_cost, 0.0)
+						if movement_remaining > 0.0:
+							inside_obstacle = true
+						else:
+							continue
+					elif inside_obstacle and not Geometry2D.is_point_in_polygon(pos, obstacle.get_node("CollisionShape2D/Polygon2D").polygon):
+						inside_obstacle = false
+				if movement_remaining >= 0.0:
+					calculate_position_preferences(position + r * Vector2.from_angle(th))
+		var target_move_position:Vector2 = position
+		var lowest_weight:float = INF
+		for pos in position_preferences:
+			if position_preferences[pos] < lowest_weight:
+				lowest_weight = position_preferences[pos]
+				target_move_position = pos
+		if velocity == Vector2.ZERO:
+			if battle_scene.animations_sped_up:
+				await get_tree().create_timer(0.1).timeout
+			else:
+				await get_tree().create_timer(0.5).timeout
+		await move(target_move_position)
+	attack_target()
 
 func calculate_position_preferences(pos:Vector2):
 	if position_preferences.has(pos):
@@ -111,13 +115,13 @@ func move(target_pos:Vector2):
 	if battle_scene.animations_sped_up:
 		var tween = create_tween()
 		tween.tween_property(self, "position", target_pos, 0.2)
-		tween.tween_callback(attack_target)
+		await tween.finished
 	else:
 		var tween = create_tween()
 		battle_scene.view_tween = create_tween()
 		tween.tween_property(self, "position", target_pos, 1.5).set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_CUBIC)
-		tween.tween_callback(attack_target)
 		battle_scene.view_tween.tween_property(game.view, "position", Vector2(640, 360) - target_pos * game.view.scale.x, 1.5).set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_CUBIC)
+		await tween.finished
 
 func attack_target():
 	target_angle = atan2(target_position.y - position.y, target_position.x - position.x)

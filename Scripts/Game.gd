@@ -686,12 +686,12 @@ func load_univ():
 func load_game():
 	# Instantiate necessary panels on game load
 	if not is_instance_valid(stats_panel):
-		stats_panel = load("res://Scenes/Panels/Stats.tscn").instantiate()
+		stats_panel = preload("res://Scenes/Panels/Stats.tscn").instantiate()
 		stats_panel.panel_var_name = "stats_panel"
 		stats_panel.hide()
 		$Panels/Control.add_child(stats_panel)
 	if not is_instance_valid(shop_panel):
-		shop_panel = load("res://Scenes/Panels/Shop.tscn").instantiate()
+		shop_panel = preload("res://Scenes/Panels/Shop.tscn").instantiate()
 		shop_panel.panel_var_name = "shop_panel"
 		shop_panel.hide()
 		$Panels/Control.add_child(shop_panel)
@@ -2883,13 +2883,14 @@ func generate_planets(id:int):#local id
 		p_i.HX_data = []
 		var diff:float = system_data[id].diff
 		var power_left:float = diff * pow(p_i.size / 2500.0, 0.5)
+		var max_lv:int = max(1, 1 + log(2.0 * power_left) / log(1.3))
 		var num:int = 0
 		var total_num:int = randi() % 12 + 1
 		if not p_i.has("conquered"):
 			var enemy_positions:PackedVector2Array = []
 			while num < total_num:
 				num += 1
-				var lv:int = max(ceil(randf_range(0.1, 0.2) * log(power_left) / log(1.15)), 1)
+				var lv:int = randi_range(max(1, max_lv - 8), max_lv)
 				var _class:int = 1
 				if randf() < log(diff) / log(100) - 1.0:#difficulty < 100 = no green enemies, difficulty = 1000 = 50% chance of green enemies, difficulty > 10000 = no more red enemies, always green or higher
 					_class += 1
@@ -2902,7 +2903,7 @@ func generate_planets(id:int):#local id
 					if i == 2:
 						lv = 1
 				if num == total_num:
-					lv = max(0.15 * ceil(log(power_left) / log(1.15)), 1)
+					lv = max(1, 1 + log(2.0 * power_left) / log(1.3))
 				var HP_power = 7.0 * (2.0 * randf() + 0.2)
 				var stat_power = 48.0 - 1.5 * HP_power + lv / 2
 				var HP = round(HP_power * (lv + 1.0))
@@ -2956,8 +2957,8 @@ func generate_planets(id:int):#local id
 						HX_data.money *= 0.7 * len(HX_data.passive_abilities)
 						HX_data.XP *= 0.7 * len(HX_data.passive_abilities)
 				p_i.HX_data.append(HX_data)
-				power_left -= floor(pow(1.15, lv))
-				if power_left <= 1:
+				power_left -= 0.5 * pow(1.3, lv - 1)
+				if power_left <= 0.0:
 					break
 			p_i.HX_data.shuffle()
 		var wid:int = Helper.get_wid(p_i.size)
@@ -3624,7 +3625,7 @@ func show_tooltip(txt:String, params:Dictionary = {}):
 	tooltip.imgs_size = params.get("size", 17)
 	Helper.add_text_icons(tooltip, txt, tooltip.imgs, tooltip.imgs_size, true)
 	if params.get("additional_text", "") != "":
-		tooltip.show_additional_text(params.additional_text, params.get("additional_text_delay", 1.0), params.get("different_orig_text", ""))
+		tooltip.show_additional_text(params.additional_text, params.get("additional_text_delay", 1.5), params.get("different_orig_text", ""))
 
 func hide_tooltip():
 	if is_instance_valid(tooltip):

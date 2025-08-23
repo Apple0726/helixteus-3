@@ -87,17 +87,10 @@ func _ready() -> void:
 	refresh_default_tooltip_text()
 	if type != Battle.EntityType.BOUNDARY:
 		self.area_entered.connect(on_collide)
-		$Info/StatusEffects/Burn.mouse_entered.connect(game.show_tooltip.bind(tr("BURN_DESC")))
-		$Info/StatusEffects/Burn.mouse_exited.connect(game.hide_tooltip)
-		$Info/StatusEffects/Stun.mouse_entered.connect(game.show_tooltip.bind(tr("STUN_DESC")))
-		$Info/StatusEffects/Stun.mouse_exited.connect(game.hide_tooltip)
-		$Info/StatusEffects/Exposed.mouse_entered.connect(game.show_tooltip.bind(tr("EXPOSED_DESC")))
-		$Info/StatusEffects/Exposed.mouse_exited.connect(game.hide_tooltip)
-		$Info/StatusEffects/Radioactive.mouse_entered.connect(game.show_tooltip.bind(tr("RADIOACTIVE_DESC")))
-		$Info/StatusEffects/Radioactive.mouse_exited.connect(game.hide_tooltip)
 		for effect in Battle.StatusEffect.N:
 			status_effects[effect] = 0
 			status_effect_resistances[effect] = 0.0
+	$Info/StatusEffects.entity = self
 
 func _draw() -> void:
 	if is_instance_valid(battle_scene) and type != Battle.EntityType.BOUNDARY:
@@ -191,11 +184,8 @@ func take_turn():
 	if burn_turns > 0:
 		damage_entity_status_effect(int(ceil(burn_turns * 0.05 * total_HP)))
 		if HP <= 0:
-			await get_tree().create_timer(0.5).timeout
-			emit_signal("next_turn")
 			return
-	var energetic_turns = status_effects[Battle.StatusEffect.ENERGETIC]
-	if energetic_turns > 0:
+	if status_effects[Battle.StatusEffect.EXTRA_TURNS] > 0:
 		extra_attacks = 1
 		total_movement = total_movement_base * 1.25
 	else:
@@ -209,7 +199,6 @@ func take_turn():
 		defense_buff = min(defense_buff + buff_amount, max(defense_buff, buff_amount))
 		accuracy_buff = min(accuracy_buff + buff_amount, max(accuracy_buff, buff_amount))
 		agility_buff = min(agility_buff + buff_amount, max(agility_buff, buff_amount))
-		update_info_labels()
 	if random_buff_timer <= 0:
 		match randi() % 4:
 			0:
@@ -221,7 +210,6 @@ func take_turn():
 			3:
 				agility_buff += random_buff_timer_initial
 		random_buff_timer = random_buff_timer_initial
-		update_info_labels()
 	if velocity != Vector2.ZERO:
 		moving_from_velocity = true
 		if battle_scene.animations_sped_up:
@@ -257,17 +245,14 @@ func _physics_process(delta: float) -> void:
 	if moving_from_velocity:
 		position += velocity * delta * velocity_process_mult
 		if position.x < -640.0 or position.x > 1920.0 or position.y < -360.0 or position.y > 1080.0:
-			if battle_scene.animations_sped_up:
-				entity_defeated_callback()
-			else:
-				var disappear_tween = create_tween().set_parallel(true)
-				disappear_tween.tween_property($Sprite2D.material, "shader_parameter/alpha", 0.0, 0.5)
-				disappear_tween.tween_property($VelocityArrow, "modulate:a", 0.0, 0.5)
-				disappear_tween.tween_callback(entity_defeated_callback).set_delay(0.5)
+			entity_defeated_callback()
 
 func end_turn():
 	if extra_attacks > 0:
 		extra_attacks -= 1
+		if extra_attacks <= 0:
+			status_effects[Battle.StatusEffect.EXTRA_TURNS] = 0
+			$Info/StatusEffects/ExtraTurns.hide()
 	else:
 		if is_instance_valid(turn_order_box):
 			turn_order_box.get_node("AnimationPlayer").play_backwards("ChangeSize")
@@ -346,26 +331,13 @@ func update_entity_HP(label_knockback: Vector2 = Vector2.ZERO, healed: bool = fa
 	if HP <= 0:
 		self.call_deferred("set_monitoring", false)
 		self.call_deferred("set_monitorable", false)
-		var label_knockback_tween = create_tween().set_parallel()
-		label_knockback_tween.tween_property($Info, "modulate:a", 0.0, 1.0)
-		label_knockback_tween.tween_property(self, "position", position + label_knockback, 2.0)
-		label_knockback_tween.tween_property($Sprite2D.material, "shader_parameter/alpha", 0.0, 1.0).set_delay(1.0)
-		label_knockback_tween.tween_callback(queue_free).set_delay(2.0)
-		label_knockback_tween.set_speed_scale(5.0 if battle_scene.animations_sped_up else 1.0)
-		entity_defeated_callback()
+		entity_defeated_callback(label_knockback)
 	else:
 		if has_node("Sprite2D"):
 			create_tween().tween_property($Sprite2D.material, "shader_parameter/flash", 0.0, 0.4)
 
 func update_info_labels():
-	$Info/StatusEffects/Burn.visible = status_effects[Battle.StatusEffect.BURN] > 0
-	$Info/StatusEffects/BurnLabel.visible = status_effects[Battle.StatusEffect.BURN] > 0
-	$Info/StatusEffects/Stun.visible = status_effects[Battle.StatusEffect.STUN] > 0
-	$Info/StatusEffects/StunLabel.visible = status_effects[Battle.StatusEffect.STUN] > 0
-	$Info/StatusEffects/Exposed.visible = status_effects[Battle.StatusEffect.EXPOSED] > 0
-	$Info/StatusEffects/ExposedLabel.visible = status_effects[Battle.StatusEffect.EXPOSED] > 0
-	$Info/StatusEffects/Radioactive.visible = status_effects[Battle.StatusEffect.RADIOACTIVE] > 0
-	$Info/StatusEffects/RadioactiveLabel.visible = status_effects[Battle.StatusEffect.RADIOACTIVE] > 0
+	$Info/StatusEffects.update()
 	$Info/Buffs/Attack.visible = attack_buff != 0
 	$Info/Buffs/AttackLabel.visible = attack_buff != 0
 	$Info/Buffs/AttackLabel.text = ("+%s" % Helper.format_num(attack_buff)) if attack_buff > 0 else Helper.format_num(attack_buff)
@@ -382,17 +354,16 @@ func update_info_labels():
 	$Info/Buffs/AgilityLabel.visible = agility_buff != 0
 	$Info/Buffs/AgilityLabel.text = ("+%s" % Helper.format_num(agility_buff)) if agility_buff > 0 else Helper.format_num(agility_buff)
 	$Info/Buffs/AgilityLabel["theme_override_colors/font_color"] = Color.GREEN if agility_buff > 0 else Color.RED
-	for effect in status_effects:
-		if effect == Battle.StatusEffect.BURN:
-			$Info/StatusEffects/BurnLabel.text = Helper.format_num(status_effects[effect])
-		elif effect == Battle.StatusEffect.STUN:
-			$Info/StatusEffects/StunLabel.text = Helper.format_num(status_effects[effect])
-		elif effect == Battle.StatusEffect.EXPOSED:
-			$Info/StatusEffects/ExposedLabel.text = Helper.format_num(status_effects[effect])
-		elif effect == Battle.StatusEffect.RADIOACTIVE:
-			$Info/StatusEffects/RadioactiveLabel.text = Helper.format_num(status_effects[effect])
 
-func entity_defeated_callback():
+func entity_defeated_callback(knockback:Vector2 = Vector2.ZERO):
+	var entity_dying_tween = create_tween().set_parallel()
+	entity_dying_tween.tween_property($Info, "modulate:a", 0.0, 1.0)
+	entity_dying_tween.tween_property(self, "position", position + knockback, 2.0)
+	entity_dying_tween.tween_property($Sprite2D.material, "shader_parameter/alpha", 0.0, 1.0).set_delay(1.0)
+	entity_dying_tween.tween_callback(queue_free).set_delay(2.0)
+	if battle_scene.initiative_order[battle_scene.whose_turn_is_it_index].node == self:
+		entity_dying_tween.tween_callback(emit_signal.bind("next_turn")).set_delay(2.0)
+	entity_dying_tween.set_speed_scale(5.0 if battle_scene.animations_sped_up else 1.0)
 	if is_instance_valid(turn_order_box):
 		turn_order_box.get_node("AnimationPlayer").play("FadeOutAnim")
 	if type == Battle.EntityType.ENEMY:
@@ -401,7 +372,6 @@ func entity_defeated_callback():
 		battle_scene.ship_nodes.erase(self)
 	elif type == Battle.EntityType.OBSTACLE:
 		battle_scene.obstacle_nodes.erase(self)
-	queue_free()
 
 func update_velocity_arrow(offset: Vector2 = Vector2.ZERO):
 	$VelocityArrow.scale = Vector2.ONE * (velocity + offset).length() / 100.0

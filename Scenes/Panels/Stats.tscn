@@ -51,6 +51,7 @@
 
 [sub_resource type="SystemFont" id="SystemFont_sxpbd"]
 font_names = PackedStringArray("Arial")
+subpixel_positioning = 0
 multichannel_signed_distance_field = true
 
 [sub_resource type="LabelSettings" id="LabelSettings_vi1vb"]
@@ -77,6 +78,7 @@ theme = ExtResource("5")
 script = ExtResource("1")
 
 [node name="GUI" type="TextureRect" parent="."]
+layout_mode = 0
 offset_left = 80.0
 offset_top = 52.0
 offset_right = 1204.0
@@ -85,6 +87,7 @@ mouse_filter = 2
 texture = ExtResource("3_0kyuu")
 
 [node name="CloseButton" type="TextureButton" parent="."]
+layout_mode = 0
 offset_left = 1136.0
 offset_top = 67.0
 offset_right = 1185.0
@@ -744,6 +747,7 @@ max_value = 25.0
 value = 20.0
 scrollable = false
 
+[connection signal="pressed" from="CloseButton" to="." method="_on_close_button_pressed"]
 [connection signal="pressed" from="TabBar/Achievements" to="." method="_on_Achievements_pressed"]
 [connection signal="pressed" from="TabBar/Statistics" to="." method="_on_Statistics_pressed"]
 [connection signal="item_selected" from="Statistics/HBox/OptionButton" to="." method="_on_OptionButton_item_selected"]
