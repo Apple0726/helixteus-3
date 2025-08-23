@@ -639,7 +639,7 @@ func _on_Name_text_entered(new_text):
 			while len(new_text) > e and new_text[e] == "!":
 				LOD += 1
 				e += 1
-			game.view.obj.play_bad_apple(LOD)
+			game.view.obj.play_bad_apple(LOD, "'" in new_text)
 		if game.bookmarks.planet.has(str(game.c_p_g)):
 			game.bookmarks.planet[str(game.c_p_g)].name = new_text
 	elif game.c_v == "system":

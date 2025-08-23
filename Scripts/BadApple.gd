@@ -14,25 +14,29 @@ var whites_p = []
 var segments_to_draw = []
 var frame = 0
 var frames:Array
-var white_pixel_num = 0
 var phase = 0
 var BG_alpha = 0.0
 var pixel_color:Color
 var music:AudioStreamOggVorbis
 var spectrum:AudioEffectSpectrumAnalyzerInstance
+var show_delta = false
 
 func _ready():
 	set_process(false)
 	
-func load_data(_LOD):
+func load_data(_LOD, _show_delta):
 	if is_processing():
 		return
 	LOD = _LOD
+	show_delta = _show_delta
 #	var data = FileAccess.open("data100.txt", FileAccess.READ)
+	if OS.get_name() == "Web":
+		while wid_p * LOD > 120:
+			LOD -= 1
+	else:
+		while wid_p * LOD > 480:
+			LOD -= 1
 	wid_p2 = wid_p * LOD
-	if OS.get_name() == "Web" and wid_p2 > 120 or wid_p2 > 480:
-		game.popup("Too many exclamation marks!", 2.0)
-		return
 	var data
 	if wid_p2 > 120:
 		W = 480
@@ -52,8 +56,7 @@ func load_data(_LOD):
 	whites.resize(W * H)
 	whites_p.resize(wid_p2 * wid_p2)
 	coefficients.resize(wid_p2 * wid_p2)
-	for i in range(wid_p2 * wid_p2):
-		coefficients[i] = 0
+	coefficients.fill(0.0)
 	for i in len(whites):
 		var x = i % W
 		var y = i / W
@@ -64,10 +67,8 @@ func load_data(_LOD):
 	for i in len(coefficients):
 		if coefficients[i] > 0.0:
 			coefficients[i] = 1.0 / coefficients[i]
-	for i in len(whites):
-		whites[i] = false
-	for i in len(whites_p):
-		whites_p[i] = 0.0
+	whites.fill(false)
+	whites_p.fill(0.0)
 	start_time = Time.get_unix_time_from_system()
 	curr_time = start_time
 	video_time = start_time
@@ -82,16 +83,6 @@ func load_data(_LOD):
 		music = null
 
 func _draw():
-#	if white_pixel_num > W * H / 2:
-#		draw_rect(Rect2(0, 0, W*20, H*20), Color.WHITE)
-#		for i in len(whites):
-#			if not whites[i]:
-#				draw_rect(Rect2((i%W)*20, i/W*20, 20, 20), Color.BLACK)
-#	else:
-#		draw_rect(Rect2(0, 0, W*20, H*20), Color.BLACK)
-#		for i in len(whites):
-#			if whites[i]:
-#				draw_rect(Rect2((i%W)*20, i/W*20, 20, 20), Color.WHITE)
 	if phase == 0 or phase == 2 or len(segments_to_draw) == 0:
 		draw_rect(Rect2(0, 0, wid_p*200, wid_p*200), Color(pixel_color.r, pixel_color.g, pixel_color.b, BG_alpha))
 	else:
@@ -135,6 +126,9 @@ func _process(delta):
 
 
 func draw_frame(frames_to_process:int):
+	if show_delta:
+		whites.fill(false)
+		whites_p.fill(0.0)
 	for h in frames_to_process:
 		var pixelsStr = frames[frame].split(";")#pixelsStr = ["119,41", "119,42", ...]
 		if len(pixelsStr) > 1:
@@ -148,24 +142,28 @@ func draw_frame(frames_to_process:int):
 						if i%2 == 1:
 							for j in range(prev_x, x_coord):
 								var ind = j + y_coord * W
-								whites[ind] = not whites[ind]
+								if show_delta:
+									whites[ind] = true
+								else:
+									whites[ind] = not whites[ind]
 								var x_p = int(j * wid_p2 / float(W))
 								var y_p = int(y_coord * hv2 / float(H) + h_start)
 								var ind_p = x_p + y_p * wid_p2
 								whites_p[ind_p] += coefficients[ind_p] if whites[ind] else -coefficients[ind_p]
-								white_pixel_num += 1 if whites[ind] else -1
 							prev_x = -1
 						else:
 							prev_x = x_coord
 					if prev_x != -1:
 						for j in range(prev_x, W):
 							var ind = j + y_coord * W
-							whites[ind] = not whites[ind]
+							if show_delta:
+								whites[ind] = true
+							else:
+								whites[ind] = not whites[ind]
 							var x_p = int(j * wid_p2 / float(W))
 							var y_p = int(y_coord * hv2 / float(H) + h_start)
 							var ind_p = x_p + y_p * wid_p2
 							whites_p[ind_p] += coefficients[ind_p] if whites[ind] else -coefficients[ind_p]
-							white_pixel_num += 1 if whites[ind] else -1
 		frame += 1
 		if frame >= len(frames):
 			phase = 2

@@ -1807,5 +1807,5 @@ func get_tile_id_from_pos(pos:Vector2):
 	var y_pos = int(pos.y / 200)
 	return x_pos % wid + y_pos * wid
 
-func play_bad_apple(LOD):
-	$BadApple.load_data(LOD)
+func play_bad_apple(LOD, show_delta):
+	$BadApple.load_data(LOD, show_delta)
