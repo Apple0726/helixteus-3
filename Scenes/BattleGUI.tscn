@@ -116,6 +116,7 @@ color = Color(1, 1, 1, 0.505882)
 polygon = PackedVector2Array(0, 0, 0, 32, 20, 16)
 
 [node name="MainPanel" type="NinePatchRect" parent="."]
+visible = false
 layout_mode = 0
 offset_left = 216.0
 offset_top = 616.0
@@ -280,13 +281,22 @@ theme_override_constants/separation = 10
 alignment = 1
 
 [node name="Info" type="Label" parent="."]
-modulate = Color(1, 1, 1, 0)
 layout_mode = 0
 offset_left = 232.0
 offset_top = 608.0
 offset_right = 1044.0
 offset_bottom = 631.0
 horizontal_alignment = 1
+
+[node name="TextureRect" type="TextureRect" parent="Info"]
+layout_mode = 0
+offset_left = 380.0
+offset_top = -44.0
+offset_right = 436.0
+offset_bottom = -4.0
+mouse_filter = 2
+expand_mode = 1
+stretch_mode = 5
 
 [node name="LightEmissionConePanel" type="Panel" parent="."]
 visible = false

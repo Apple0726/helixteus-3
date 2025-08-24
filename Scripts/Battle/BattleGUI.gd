@@ -18,6 +18,14 @@ enum {
 	NONE,
 }
 var action_selected = NONE
+
+enum {
+	BIG_BULLET,
+	CORROSIVE_BULLET,
+	AQUA_BULLET
+}
+var bullet_2_selected_type = BIG_BULLET
+
 var main_panel_tween
 var turn_order_hbox_tween
 
@@ -82,6 +90,18 @@ func _input(event: InputEvent) -> void:
 			_on_move_pressed()
 		elif Input.is_action_just_pressed("6"):
 			_on_push_pressed()
+	elif action_selected == BULLET:
+		if ship_node.bullet_levels[1] >= 2 and Input.is_action_pressed("shift"):
+			if Input.is_action_just_pressed("scroll_down"):
+				bullet_2_selected_type = [BIG_BULLET, CORROSIVE_BULLET, AQUA_BULLET][(bullet_2_selected_type + 1) % 3]
+				refresh_info_label("bullet_2")
+			if Input.is_action_just_pressed("scroll_up"):
+				bullet_2_selected_type = [BIG_BULLET, CORROSIVE_BULLET, AQUA_BULLET][(bullet_2_selected_type - 1) % 3]
+				$Info.text = tr("BULLET_2_TYPE_%s" % (bullet_2_selected_type + 1)) + "\n" + tr("SCROLL_TO_SWITCH_BULLET")
+		if Input.is_action_just_pressed("shift"):
+			game.block_scroll = true
+		elif Input.is_action_just_released("shift"):
+			game.block_scroll = false
 	elif action_selected == LIGHT:
 		if Input.is_action_pressed("shift"):
 			if Input.is_action_just_pressed("scroll_down"):
@@ -122,6 +142,16 @@ func _input(event: InputEvent) -> void:
 				action_selected = NONE
 				reset_GUI()
 
+func refresh_info_label(type: String):
+	if type == "bullet_2":
+		$Info.text = tr("BULLET_2_TYPE_%s" % (bullet_2_selected_type + 1)) + "\n" + tr("SCROLL_TO_SWITCH_BULLET")
+		if bullet_2_selected_type == BIG_BULLET:
+			$Info/TextureRect.texture = preload("res://Graphics/Weapons/bullet1.png")
+		elif bullet_2_selected_type == CORROSIVE_BULLET:
+			$Info/TextureRect.texture = preload("res://Graphics/Weapons/bullet1.png")
+		elif bullet_2_selected_type == AQUA_BULLET:
+			$Info/TextureRect.texture = preload("res://Graphics/Weapons/bullet1.png")
+
 func update_push_strength(update_by: float):
 	var current_strength = $PushStrengthPanel/Bar.material.get_shader_parameter("strength")
 	var strength_target = clamp(current_strength + update_by, 0.0, 1.0)
@@ -131,9 +161,7 @@ func update_push_strength(update_by: float):
 	
 func reset_GUI():
 	restore_default_enemy_tooltips()
-	var info_tween = create_tween()
-	info_tween.tween_property($Info, "modulate:a", 0.0, 0.5)
-	info_tween.tween_callback($Info.hide)
+	$Info.hide()
 	$LightEmissionConePanel.hide()
 	$PushStrengthPanel.hide()
 	game.block_scroll = false
@@ -244,6 +272,9 @@ func _on_bullet_pressed() -> void:
 	ship_node.fires_remaining = 1
 	ship_node.get_node("FireWeaponAim").weapon_type = BULLET
 	ship_node.get_node("FireWeaponAim").show()
+	if ship_node.bullet_levels[1] >= 2:
+		$Info.show()
+		refresh_info_label("bullet_2")
 	game.hide_tooltip()
 
 
@@ -288,7 +319,6 @@ func _on_light_pressed() -> void:
 	ship_node.add_light_cone()
 	$Info.show()
 	$Info.text = tr("CHANGE_EMISSION_CONE")
-	create_tween().tween_property($Info, "modulate:a", 1.0, 0.5)
 	game.hide_tooltip()
 
 

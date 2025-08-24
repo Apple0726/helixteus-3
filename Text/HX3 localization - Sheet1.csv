@@ -1597,6 +1597,9 @@ BULLET_2_1_DESC,"Choose between 3 types of bullets:
 1) Große Kugeln mit Rückstoß und erhöhter kritischen Trefferchance
 2) Korrosive Kugeln (korrodiert Verteidigung und Agilität des Ziels für 3 Runden)
 3) Wasser Kugeln ( durchnässt Ziele. In der nächsten Runde entwickelt sich der Status zu Frieren, Brennen oder nichts je nach Temperatur des Schlachtfeldes)",,,,,,,,
+BULLET_2_TYPE_1,Big bullet with knockback and increased critical hit chance,,,,,,,,,,,,
+BULLET_2_TYPE_2,Corrosive bullet (reduces defense and agility of target),,,,,,,,,,,,
+BULLET_2_TYPE_3,Aqua bullet (wets targets),,,,,,,,,,,,
 BULLET_2_2_DESC,"The 3 types of bullets become more powerful as follows:
 1) Deals more damage, and also ignores defense buffs of target
 2) Corrodes defense and agility for 5 turns, instead of 3
@@ -1651,3 +1654,4 @@ SHIP_LEVELED_UP,This ship leveled up! Allocate points to weapons or stats to mak
 EXTRA_TURNS_LEFT,Extra turns left,,,,,,,,,,,,
 CLASS_AND_STATS,Class and stats,,,,,,,,,,,,
 WEAPON_LEVELS,Weapon levels,,,,,,,,,,,,
+SCROLL_TO_SWITCH_BULLET,Shift + scroll to switch bullet type,,,,,,,,,,,,
