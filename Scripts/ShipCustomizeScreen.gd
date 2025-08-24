@@ -13,21 +13,24 @@ var allocated_accuracy:int = 0
 var allocated_agility:int = 0
 
 func _ready() -> void:
-	$Ship.texture = load("res://Graphics/Ships/Ship%s.png" % ship_id)
+	$Navigation/Ship.texture = load("res://Graphics/Ships/Ship%s.png" % ship_id)
 	if game.subject_levels.dimensional_power < 5:
-		$ShipClass/VBox/VBox/Reckless.adv_button_disabled = true
-		$ShipClass/VBox/VBox/Reckless.button_text = tr("LOCKED")
-		$ShipClass/VBox/VBox/Reckless.mouse_entered.connect(game.show_tooltip.bind(tr("SHIP_CLASS_UNLOCK_INFO")))
-		$ShipClass/VBox/VBox/Reckless.mouse_exited.connect(game.hide_tooltip)
-		$ShipClass/VBox/VBox/Impenetrable.adv_button_disabled = true
-		$ShipClass/VBox/VBox/Impenetrable.button_text = tr("LOCKED")
-		$ShipClass/VBox/VBox/Impenetrable.mouse_entered.connect(game.show_tooltip.bind(tr("SHIP_CLASS_UNLOCK_INFO")))
-		$ShipClass/VBox/VBox/Impenetrable.mouse_exited.connect(game.hide_tooltip)
-		$ShipClass/VBox/VBox/Uber.adv_button_disabled = true
-		$ShipClass/VBox/VBox/Uber.button_text = tr("LOCKED")
-		$ShipClass/VBox/VBox/Uber.mouse_entered.connect(game.show_tooltip.bind(tr("SHIP_CLASS_UNLOCK_INFO")))
-		$ShipClass/VBox/VBox/Uber.mouse_exited.connect(game.hide_tooltip)
+		$ClassAndStats/ShipClass/VBox/VBox/Reckless.adv_button_disabled = true
+		$ClassAndStats/ShipClass/VBox/VBox/Reckless.button_text = tr("LOCKED")
+		$ClassAndStats/ShipClass/VBox/VBox/Reckless.mouse_entered.connect(game.show_tooltip.bind(tr("SHIP_CLASS_UNLOCK_INFO")))
+		$ClassAndStats/ShipClass/VBox/VBox/Reckless.mouse_exited.connect(game.hide_tooltip)
+		$ClassAndStats/ShipClass/VBox/VBox/Impenetrable.adv_button_disabled = true
+		$ClassAndStats/ShipClass/VBox/VBox/Impenetrable.button_text = tr("LOCKED")
+		$ClassAndStats/ShipClass/VBox/VBox/Impenetrable.mouse_entered.connect(game.show_tooltip.bind(tr("SHIP_CLASS_UNLOCK_INFO")))
+		$ClassAndStats/ShipClass/VBox/VBox/Impenetrable.mouse_exited.connect(game.hide_tooltip)
+		$ClassAndStats/ShipClass/VBox/VBox/Uber.adv_button_disabled = true
+		$ClassAndStats/ShipClass/VBox/VBox/Uber.button_text = tr("LOCKED")
+		$ClassAndStats/ShipClass/VBox/VBox/Uber.mouse_entered.connect(game.show_tooltip.bind(tr("SHIP_CLASS_UNLOCK_INFO")))
+		$ClassAndStats/ShipClass/VBox/VBox/Uber.mouse_exited.connect(game.hide_tooltip)
 	ship_data = game.ship_data[ship_id].duplicate(true)
+	if ship_data.lv == 1:
+		$Navigation/VBoxContainer/WeaponLevels.adv_button_disabled = true
+		$Navigation/VBoxContainer/WeaponLevels.button_text = "-"
 	if respeccing:
 		ship_data.unallocated_weapon_levels = ship_data.lv / 2
 		ship_data.bullet = [1, 1, 1]
@@ -52,11 +55,36 @@ func _ready() -> void:
 				$Weapons/ScrollContainer/Control.get_node("%s%s/Button" % [i+1, j+1]).mouse_exited.connect(game.hide_tooltip)
 				$Weapons/ScrollContainer/Control.get_node("%s%s/Button" % [i+1, j+1]).pressed.connect(game.show_YN_panel.bind("upgrade_ship_weapon", tr("ARE_YOU_SURE"), [i]))
 		update_weapons_panel()
-	$Ship/Level.text = "%s %s" % [tr("LEVEL"), ship_data.lv]
+	$Navigation/Ship/Level.text = "%s %s" % [tr("LEVEL"), ship_data.lv]
 	allocatable_points = (ship_data.lv - 1) / 2 + 2
-	$ShipClass/VBox/VBox.get_child(ship_data.ship_class)._on_Button_pressed()
+	$ClassAndStats/ShipClass/VBox/VBox.get_child(ship_data.ship_class)._on_Button_pressed()
+	$Navigation/VBoxContainer/ClassAndStats._on_Button_pressed()
 	for i in ShipClass.N:
-		$ShipClass/VBox/VBox.get_child(i).pressed.connect(update_ship_stats_after_class_change.bind(i))
+		var passive_ability_text = ""
+		if i == ShipClass.STANDARD:
+			passive_ability_text = tr("STANDARD_PASSIVE_ABILITY")
+		elif i == ShipClass.OFFENSIVE:
+			passive_ability_text = tr("OFFENSIVE_PASSIVE_ABILITY") % [3]
+		elif i == ShipClass.DEFENSIVE:
+			passive_ability_text = tr("DEFENSIVE_PASSIVE_ABILITY") % [2]
+		elif i == ShipClass.ACCURATE:
+			passive_ability_text = tr("ACCURATE_PASSIVE_ABILITY") % [2]
+		elif i == ShipClass.AGILE:
+			passive_ability_text = tr("AGILE_PASSIVE_ABILITY") % [2]
+		elif i == ShipClass.ENERGETIC:
+			passive_ability_text = tr("ENERGETIC_PASSIVE_ABILITY") % [30, 25]
+		elif i == ShipClass.SUPPORT:
+			passive_ability_text = tr("SUPPORT_PASSIVE_ABILITY")
+		elif i == ShipClass.RECKLESS:
+			passive_ability_text = tr("RECKLESS_PASSIVE_ABILITY")
+		elif i == ShipClass.IMPENETRABLE:
+			passive_ability_text = tr("IMPENETRABLE_PASSIVE_ABILITY") % [15, 25, 50]
+		elif i == ShipClass.UBER:
+			passive_ability_text = tr("UBER_PASSIVE_ABILITY")
+		if not $ClassAndStats/ShipClass/VBox/VBox.get_child(i).adv_button_disabled:
+			$ClassAndStats/ShipClass/VBox/VBox.get_child(i).mouse_entered.connect(game.show_tooltip.bind(tr("PASSIVE_ABILITY") + ": " + passive_ability_text))
+			$ClassAndStats/ShipClass/VBox/VBox.get_child(i).mouse_exited.connect(game.hide_tooltip)
+			$ClassAndStats/ShipClass/VBox/VBox.get_child(i).pressed.connect(update_ship_stats_after_class_change.bind(i))
 	update_ship_stats_display()
 
 func update_ship_stats_after_class_change(ship_class: int):
@@ -80,45 +108,25 @@ func update_ship_stats_display():
 	ship_data.allocated_defense = allocated_defense
 	ship_data.allocated_accuracy = allocated_accuracy
 	ship_data.allocated_agility = allocated_agility
-	$ShipStats/HPLabel.text = str(ship_data.HP)
-	$ShipStats/AttackLabel.text = str(ship_data.attack)
-	$ShipStats/DefenseLabel.text = str(ship_data.defense)
-	$ShipStats/AccuracyLabel.text = str(ship_data.accuracy)
-	$ShipStats/AgilityLabel.text = str(ship_data.agility)
-	if ship_class == ShipClass.STANDARD:
-		$PassiveAbility/Label2.text = tr("STANDARD_PASSIVE_ABILITY")
-	elif ship_class == ShipClass.OFFENSIVE:
-		$PassiveAbility/Label2.text = tr("OFFENSIVE_PASSIVE_ABILITY") % [3]
-	elif ship_class == ShipClass.DEFENSIVE:
-		$PassiveAbility/Label2.text = tr("DEFENSIVE_PASSIVE_ABILITY") % [2]
-	elif ship_class == ShipClass.ACCURATE:
-		$PassiveAbility/Label2.text = tr("ACCURATE_PASSIVE_ABILITY") % [2]
-	elif ship_class == ShipClass.AGILE:
-		$PassiveAbility/Label2.text = tr("AGILE_PASSIVE_ABILITY") % [2]
-	elif ship_class == ShipClass.ENERGETIC:
-		$PassiveAbility/Label2.text = tr("ENERGETIC_PASSIVE_ABILITY") % [30, 25]
-	elif ship_class == ShipClass.SUPPORT:
-		$PassiveAbility/Label2.text = tr("SUPPORT_PASSIVE_ABILITY")
-	elif ship_class == ShipClass.RECKLESS:
-		$PassiveAbility/Label2.text = tr("RECKLESS_PASSIVE_ABILITY")
-	elif ship_class == ShipClass.IMPENETRABLE:
-		$PassiveAbility/Label2.text = tr("IMPENETRABLE_PASSIVE_ABILITY") % [15, 25, 50]
-	elif ship_class == ShipClass.UBER:
-		$PassiveAbility/Label2.text = tr("UBER_PASSIVE_ABILITY")
+	$ClassAndStats/ShipStats/HPLabel.text = str(ship_data.HP)
+	$ClassAndStats/ShipStats/AttackLabel.text = str(ship_data.attack)
+	$ClassAndStats/ShipStats/DefenseLabel.text = str(ship_data.defense)
+	$ClassAndStats/ShipStats/AccuracyLabel.text = str(ship_data.accuracy)
+	$ClassAndStats/ShipStats/AgilityLabel.text = str(ship_data.agility)
 	var points_allocated = allocated_HP + allocated_attack + allocated_defense + allocated_accuracy + allocated_agility
-	$ShipStats/PointsAllocated.text = "%s: %s / %s" % [tr("POINTS_ALLOCATED"), points_allocated, allocatable_points]
+	$ClassAndStats/ShipStats/PointsAllocated.text = "%s: %s / %s" % [tr("POINTS_ALLOCATED"), points_allocated, allocatable_points]
 	var no_more_allocatable_points = points_allocated >= allocatable_points
 	if no_more_allocatable_points:
-		$ShipStats/PointsAllocated["theme_override_colors/font_color"] = Color.WHITE
+		$ClassAndStats/ShipStats/PointsAllocated["theme_override_colors/font_color"] = Color.WHITE
 		$Actions/Done.disabled = false
 	else:
-		$ShipStats/PointsAllocated["theme_override_colors/font_color"] = Color.YELLOW
+		$ClassAndStats/ShipStats/PointsAllocated["theme_override_colors/font_color"] = Color.YELLOW
 		$Actions/Done.disabled = true
-	$ShipStats/AddHP.disabled = no_more_allocatable_points
-	$ShipStats/AddAttack.disabled = no_more_allocatable_points
-	$ShipStats/AddDefense.disabled = no_more_allocatable_points
-	$ShipStats/AddAccuracy.disabled = no_more_allocatable_points
-	$ShipStats/AddAgility.disabled = no_more_allocatable_points
+	$ClassAndStats/ShipStats/AddHP.disabled = no_more_allocatable_points
+	$ClassAndStats/ShipStats/AddAttack.disabled = no_more_allocatable_points
+	$ClassAndStats/ShipStats/AddDefense.disabled = no_more_allocatable_points
+	$ClassAndStats/ShipStats/AddAccuracy.disabled = no_more_allocatable_points
+	$ClassAndStats/ShipStats/AddAgility.disabled = no_more_allocatable_points
 
 func customize_next_ship():
 	for i in len(game.ship_data):
@@ -144,66 +152,66 @@ func _on_cancel_pressed() -> void:
 
 func _on_add_hp_pressed() -> void:
 	allocated_HP += 1
-	$ShipStats/RemoveHP.disabled = false
+	$ClassAndStats/ShipStats/RemoveHP.disabled = false
 	update_ship_stats_display()
 
 
 func _on_remove_hp_pressed() -> void:
 	allocated_HP -= 1
 	if allocated_HP <= 0:
-		$ShipStats/RemoveHP.disabled = true
+		$ClassAndStats/ShipStats/RemoveHP.disabled = true
 	update_ship_stats_display()
 
 
 func _on_remove_attack_pressed() -> void:
 	allocated_attack -= 1
 	if allocated_attack <= 0:
-		$ShipStats/RemoveAttack.disabled = true
+		$ClassAndStats/ShipStats/RemoveAttack.disabled = true
 	update_ship_stats_display()
 
 
 func _on_add_attack_pressed() -> void:
 	allocated_attack += 1
-	$ShipStats/RemoveAttack.disabled = false
+	$ClassAndStats/ShipStats/RemoveAttack.disabled = false
 	update_ship_stats_display()
 
 
 func _on_remove_defense_pressed() -> void:
 	allocated_defense -= 1
 	if allocated_defense <= 0:
-		$ShipStats/RemoveDefense.disabled = true
+		$ClassAndStats/ShipStats/RemoveDefense.disabled = true
 	update_ship_stats_display()
 
 
 func _on_add_defense_pressed() -> void:
 	allocated_defense += 1
-	$ShipStats/RemoveDefense.disabled = false
+	$ClassAndStats/ShipStats/RemoveDefense.disabled = false
 	update_ship_stats_display()
 
 
 func _on_remove_accuracy_pressed() -> void:
 	allocated_accuracy -= 1
 	if allocated_accuracy <= 0:
-		$ShipStats/RemoveAccuracy.disabled = true
+		$ClassAndStats/ShipStats/RemoveAccuracy.disabled = true
 	update_ship_stats_display()
 
 
 func _on_add_accuracy_pressed() -> void:
 	allocated_accuracy += 1
-	$ShipStats/RemoveAccuracy.disabled = false
+	$ClassAndStats/ShipStats/RemoveAccuracy.disabled = false
 	update_ship_stats_display()
 
 
 func _on_remove_agility_pressed() -> void:
 	allocated_agility -= 1
 	if allocated_agility <= 0:
-		$ShipStats/RemoveAgility.disabled = true
+		$ClassAndStats/ShipStats/RemoveAgility.disabled = true
 	update_ship_stats_display()
 
 
 func _on_add_agility_pressed() -> void:
 	allocated_agility += 1
-	$ShipStats/RemoveAgility.disabled = false
+	$ClassAndStats/ShipStats/RemoveAgility.disabled = false
 	update_ship_stats_display()
 
 
@@ -282,8 +290,10 @@ func update_weapons_panel():
 		weapon_selected_str = "light"
 	for i in 3:
 		for j in 3:
+			$Weapons/ScrollContainer/Control.get_node("%s%s/Flicker" % [i+1, j+1]).visible = ship_data[weapon_selected_str][i] == j+1
 			if ship_data[weapon_selected_str][i] > j+1:
 				$Weapons/ScrollContainer/Control.get_node("%s%s/Button" % [i+1, j+1]).modulate = Color.GREEN_YELLOW
+				$Weapons/ScrollContainer/Control.get_node("%s%s/Flicker" % [i+1, j+1]).hide()
 			else:
 				$Weapons/ScrollContainer/Control.get_node("%s%s/Button" % [i+1, j+1]).modulate = Color.WHITE
 			if ship_data[weapon_selected_str][i] >= j+1:
@@ -303,3 +313,13 @@ func upgrade_ship_weapon(path: int):
 
 func show_weapon_tooltip(path: int, lv: int):
 	game.show_tooltip(tr("%s_%s_%s_DESC" % [weapon_selected_str.to_upper(), path, lv]))
+
+
+func _on_class_and_stats_pressed() -> void:
+	$Weapons.hide()
+	$ClassAndStats.show()
+
+
+func _on_weapon_levels_pressed() -> void:
+	$ClassAndStats.hide()
+	$Weapons.show()

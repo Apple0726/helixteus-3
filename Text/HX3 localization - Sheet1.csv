@@ -1649,3 +1649,5 @@ CLICK_SHIP_TO_VIEW_DETAILS,"Click on a ship on the right to view details.
 Drag & drop a ship to change its initial position in battle.",,,,Klicke auf ein Schiff rechts für Details. Verschiebe Schiffe um die Anfangsposition in der Schlacht anzupassen.,,,,,,,,
 SHIP_LEVELED_UP,This ship leveled up! Allocate points to weapons or stats to make it more powerful to your liking.,,,,Das Schiff ist aufgestiegen! Verteile Punkte zu Waffen oder Eigenschaften um es stärker zu machen.,,,,,,,,
 EXTRA_TURNS_LEFT,Extra turns left,,,,,,,,,,,,
+CLASS_AND_STATS,Class and stats,,,,,,,,,,,,
+WEAPON_LEVELS,Weapon levels,,,,,,,,,,,,
