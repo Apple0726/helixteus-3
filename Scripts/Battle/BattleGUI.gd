@@ -97,7 +97,7 @@ func _input(event: InputEvent) -> void:
 				refresh_info_label("bullet_2")
 			if Input.is_action_just_pressed("scroll_up"):
 				bullet_2_selected_type = [BIG_BULLET, CORROSIVE_BULLET, AQUA_BULLET][(bullet_2_selected_type - 1) % 3]
-				$Info.text = tr("BULLET_2_TYPE_%s" % (bullet_2_selected_type + 1)) + "\n" + tr("SCROLL_TO_SWITCH_BULLET")
+				refresh_info_label("bullet_2")
 		if Input.is_action_just_pressed("shift"):
 			game.block_scroll = true
 		elif Input.is_action_just_released("shift"):
@@ -162,6 +162,7 @@ func update_push_strength(update_by: float):
 func reset_GUI():
 	restore_default_enemy_tooltips()
 	$Info.hide()
+	$Info/TextureRect.texture = null
 	$LightEmissionConePanel.hide()
 	$PushStrengthPanel.hide()
 	game.block_scroll = false
@@ -233,7 +234,7 @@ func _on_bomb_mouse_entered() -> void:
 
 func _on_light_mouse_entered() -> void:
 	var tooltip_txt = tr("BASE_DAMAGE") + ": " + str(Data.battle_weapon_stats.light.damage)
-	tooltip_txt += "\n" + tr("BASE_ACCURACY") + ": " + str(Data.battle_weapon_stats.light.accuracy)
+	tooltip_txt += "\n" + tr("BASE_ACCURACY") + ": " + tr("PERFECT")
 	game.show_tooltip(tooltip_txt, {"additional_text": tr("LIGHT_DESC")})
 
 

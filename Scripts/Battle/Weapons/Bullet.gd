@@ -1,6 +1,7 @@
 extends "Projectile.gd"
 
 var deflects_remaining:int
+var ignore_defense_buffs = false
 
 func _ready() -> void:
 	super()
@@ -16,6 +17,14 @@ func _on_area_entered(area: Area2D) -> void:
 		"velocity":speed * Vector2.from_angle(rotation),
 		"mass":mass,
 	}
+	if crit_hit_mult != 1.0:
+		weapon_data.crit_hit_mult = crit_hit_mult
+	if knockback > 0.0:
+		weapon_data.knockback = knockback * Vector2.from_angle(rotation)
+	if ignore_defense_buffs:
+		weapon_data.ignore_defense_buffs = true
+	if not status_effects.is_empty():
+		weapon_data.status_effects = status_effects
 	if area.damage_entity(weapon_data):
 		if deflects_remaining == 0 or area.type == Battle.EntityType.BOUNDARY:
 			if area.type == Battle.EntityType.BOUNDARY:

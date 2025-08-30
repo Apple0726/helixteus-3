@@ -463,8 +463,13 @@ BATTLE_HELP,Dodge enemy attacks by moving the ship yourself with your keyboard!,
 BATTLE_HELP2,%s: go up\n%s: go down\nHold %s to move the ship faster,,,%s:向上 \n%s:向下 \n 按住 %s 可使船移动得更快,%s: Hoch\n%s: Runter\nHalte %s um das Schiff schneller zu bewegen,%s: subir\n%s: bajar\nMantén presionado %s para moverte más rápido,,,%s: mozgás felfelé\n%s: Mozgás lefelé\n%s nyomvatartása: gyorsabb mosgás,%s：上昇\n%s：下降\n%s：加速,%s: omhoog\n%s: omlaag\nHoud %s ingedrukt om sneller te gaan,"%s: двигаться вверх\n%s: двигаться вниз\nДержите %s, чтобы корабль двигался быстрее",
 SHOW_WEAPON_XPS,Show weapon XPs,,,展示武器熟练度,Waffen EXP anzeigen,Mostrar la XP del arma,,,Fegyver XP-k mutatása,武器のXPを表示する,Toon wapen XP,Показать опыт оружия,
 BULLET,Bullet,,,合金弹头,Kugel,Ojiva,,,Lövés,弾丸,Kogel,Пуля,
-BULLET_DESC,"Average damage and accuracy weapon that can fire multiple times in succession.\n - If it hits an enemy or an object, it deflects. Deflected bullets can hit your own ships!",,,,Durchschnittliche Schadens- und Genauigkeitswaffe.\n - Wenn es einen Gegner oder ein Objekt trifft prallt es ab. Abgeprallte Kugeln können deine Schiffe treffen.,,,,"Átlagos sebzés és pontosság.\n - Találat után lepattan, és megüthet más trgyakat is (a hajóidat is!)",,,,
-LASER_DESC,"Highly accurate single-target weapon, but deals low damage.\n - Stuns the target for a turn.",,,,Hohe Genauigkeit aber niedriger Schaden.\n - Paralysiert Feinde für eine Runde.,,,,"Pontos, de alacsony sebzés.\n - Sokkolja az ellenséget egy lépésre.",,,,
+BULLET_DESC,"Average damage and accuracy weapon that can fire multiple times in succession.
+ - If it hits an enemy or an object, it deflects.
+ - Deflected bullets can hit your own ships!",,,,"Durchschnittliche Schadens- und Genauigkeitswaffe.
+ - Wenn es einen Gegner oder ein Objekt trifft prallt es ab.
+ - Abgeprallte Kugeln können deine Schiffe treffen.",,,,"Átlagos sebzés és pontosság.\n - Találat után lepattan, és megüthet más trgyakat is (a hajóidat is!)",,,,
+LASER_DESC,"Highly accurate single-target weapon, but deals low damage.
+ - Stuns the target for a turn.",,,,Hohe Genauigkeit aber niedriger Schaden.\n - Paralysiert Feinde für eine Runde.,,,,"Pontos, de alacsony sebzés.\n - Sokkolja az ellenséget egy lépésre.",,,,
 BOMB,Bomb,,,巨炮,Bombe,Bomba,,,Bomba,爆弾,Bom,Бомба,
 BOMB_DESC,"Very powerful, but hard to aim and easy for enemies to dodge.\n - If it hits an enemy or an object, explodes and damages everything (including your ships) with 100% accuracy within its explosion radius, and knocks them back.",,,,"Sehr stark aber einfach auszuweichen.\n - Wenn es einen Feind oder Objekt trifft explodiert es und fügt allem im Explosionsradius im 100% genauigkeit schaden zu, und erzeugt Rückstoß.",,,,"Nagyon erős, de alacsony pontosságú.\n - Ha eltalál valamit, akkor felrobban, és garantáltan megsebez és ellök mindent a robbanása területén.",,,,
 LIGHT,Light,,,光束炸弹,Licht,Luz,,,Fény,光,Licht,Свет,
@@ -1609,10 +1614,10 @@ BULLET_2_2_DESC,"The 3 types of bullets become more powerful as follows:
 3) Nässt das Ziel stärker ein für mehr frost/brand Schaden",,,,,,,,
 BULLET_2_3_DESC,"The 3 types of bullets become even more powerful as follows:
 1) Deals even more damage, and if it inflicts a critical hit, also gives a major defense debuff to target
-2) The bullets become radioactive, debuffing all stats for 3 turns
+2) The bullets become radioactive, debuffing all stats for 5 turns
 3) The bullets instantly burn or freeze targets. If the temperature is ""just right"", they still freeze the target.",,,,"Die 3 Arten von Munition werden noch stärker:
 1) Noch mehr Schaden bei kritischen Treffern, das Ziel erhält auch einen großen verteidigung Malus
-2) Die Kugeln werden Radioaktiv, verringern alle Eigenschaften für 3 Runden
+2) Die Kugeln werden Radioaktiv, verringern alle Eigenschaften für 5 Runden
 3) Die Kugeln Entflammen oder Erfrieren sofort. Auch in Optimalen Temperaturen frieren sie das Ziel ein",,,,,,,,
 BULLET_3_1_DESC,Greatly increased aim accuracy.,,,,Deutlich erhöhte Zielgenauigkeit.,,,,,,,,
 BULLET_3_2_DESC,"Bullets follow enemies, and deflected bullets no longer hit ships.",,,,"Kugeln sind Zielsuchend, und Abpraller treffen keine Schiffe mehr.",,,,,,,,
@@ -1655,3 +1660,4 @@ EXTRA_TURNS_LEFT,Extra turns left,,,,,,,,,,,,
 CLASS_AND_STATS,Class and stats,,,,,,,,,,,,
 WEAPON_LEVELS,Weapon levels,,,,,,,,,,,,
 SCROLL_TO_SWITCH_BULLET,Shift + scroll to switch bullet type,,,,,,,,,,,,
+PERFECT,Perfect,,,,,,,,,,,,

@@ -53,6 +53,19 @@ stretch_mode = 5
 layout_mode = 2
 text = "9"
 
+[node name="Corroding" type="HBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="Icon" type="TextureRect" parent="Corroding"]
+custom_minimum_size = Vector2(30, 0)
+layout_mode = 2
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Label" type="Label" parent="Corroding"]
+layout_mode = 2
+text = "9"
+
 [node name="Radioactive" type="HBoxContainer" parent="."]
 layout_mode = 2
 
@@ -63,6 +76,19 @@ expand_mode = 1
 stretch_mode = 5
 
 [node name="Label" type="Label" parent="Radioactive"]
+layout_mode = 2
+text = "9"
+
+[node name="Wet" type="HBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="Icon" type="TextureRect" parent="Wet"]
+custom_minimum_size = Vector2(30, 0)
+layout_mode = 2
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Label" type="Label" parent="Wet"]
 layout_mode = 2
 text = "9"
 

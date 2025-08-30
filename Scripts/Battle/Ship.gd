@@ -2,6 +2,12 @@ extends "BattleEntity.gd"
 
 var ship_class:int
 var ship_type:int
+
+enum {
+	PATH_1,
+	PATH_2,
+	PATH_3
+}
 var bullet_levels:Array
 var laser_levels:Array
 var bomb_levels:Array
@@ -23,7 +29,6 @@ var push_movement_used:float:
 var entity_to_push:BattleEntity
 var block_cancelling_action = false
 
-
 func _ready() -> void:
 	super()
 	if ship_class == ShipClass.SUPPORT:
@@ -43,7 +48,6 @@ func initialize_stats(data: Dictionary):
 	if ship_class == ShipClass.STANDARD:
 		for effect in Battle.StatusEffect.N:
 			status_effect_resistances[effect] = 0.2
-	
 
 var highlighted_targets = []
 
@@ -140,10 +144,10 @@ func _on_fire_weapon_aim_visibility_changed() -> void:
 		$FireWeaponAim.fires_remaining = fires_remaining
 		$FireWeaponAim.target_angle_max_deviation = 0.5 / (accuracy + accuracy_buff) / weapon_accuracy_mult
 		if $FireWeaponAim.weapon_type == battle_GUI.BULLET:
-			if bullet_levels[2] >= 2:
+			if bullet_levels[PATH_3] >= 2:
 				$FireWeaponAim.target_angle_max_deviation *= 0.33
 		elif $FireWeaponAim.weapon_type == battle_GUI.LASER:
-			if bullet_levels[2] >= 2:
+			if bullet_levels[PATH_3] >= 2:
 				$FireWeaponAim.target_angle_max_deviation = 0.0
 		$FireWeaponAim.animate(false)
 
@@ -177,12 +181,52 @@ func fire_weapon(weapon_type: int):
 		fires_remaining = 0
 		var projectiles = []
 		var projectile_num = 2
-		if bullet_levels[0] == 2:
+		if bullet_levels[PATH_1] == 2:
 			projectile_num = 3
-		elif bullet_levels[0] == 3:
+		elif bullet_levels[PATH_1] == 3:
 			projectile_num = 6
-		elif bullet_levels[0] == 4:
+		elif bullet_levels[PATH_1] == 4:
 			projectile_num = 15
+		var damage_multiplier = 1.0
+		var bullet_mass = 1.0
+		var knockback = 0.0
+		var crit_hit_mult = 1.0
+		var deflects_remaining = 2
+		var ignore_defense_buffs = false
+		var status_effects = {}
+		if battle_GUI.bullet_2_selected_type == battle_GUI.BIG_BULLET:
+			if bullet_levels[PATH_2] == 2:
+				bullet_mass = 1.3
+				knockback = 10.0
+				crit_hit_mult = 1.5
+			elif bullet_levels[PATH_2] == 3:
+				bullet_mass = 1.8
+				knockback = 15.0
+				damage_multiplier = 1.4
+				crit_hit_mult = 2.3
+				deflects_remaining = 3
+				ignore_defense_buffs = true
+			elif bullet_levels[PATH_2] == 4:
+				bullet_mass = 3.2
+				knockback = 24.0
+				damage_multiplier = 2.1
+				crit_hit_mult = 3.4
+				deflects_remaining = 4
+				ignore_defense_buffs = true
+		elif battle_GUI.bullet_2_selected_type == battle_GUI.CORROSIVE_BULLET:
+			if bullet_levels[PATH_2] == 2:
+				status_effects[Battle.StatusEffect.CORRODING] = 3
+			elif bullet_levels[PATH_2] == 3:
+				status_effects[Battle.StatusEffect.CORRODING] = 5
+			elif bullet_levels[PATH_2] == 4:
+				status_effects[Battle.StatusEffect.RADIOACTIVE] = 5
+		elif battle_GUI.bullet_2_selected_type == battle_GUI.AQUA_BULLET:
+			if bullet_levels[PATH_2] == 2:
+				status_effects[Battle.StatusEffect.WET] = 2
+			elif bullet_levels[PATH_2] == 3:
+				status_effects[Battle.StatusEffect.WET] = 4
+			elif bullet_levels[PATH_2] == 4:
+				status_effects[Battle.StatusEffect.FREEZE] = 4
 		for i in projectile_num:
 			var projectile = preload("res://Scenes/Battle/Weapons/Projectile.tscn").instantiate()
 			projectile.collision_layer = 8
@@ -190,13 +234,17 @@ func fire_weapon(weapon_type: int):
 			projectile.set_script(load("res://Scripts/Battle/Weapons/Bullet.gd"))
 			projectile.get_node("Sprite2D").texture = preload("res://Graphics/Weapons/bullet1.png")
 			projectile.speed = 1000.0
-			projectile.mass = 1.0
+			projectile.mass = bullet_mass
 			projectile.velocity_process_modifier = 5.0 if battle_scene.animations_sped_up else 1.0
 			projectile.rotation = randf_range(weapon_rotation_min, weapon_rotation_max)
-			projectile.damage = Data.battle_weapon_stats.bullet.damage
+			projectile.damage = Data.battle_weapon_stats.bullet.damage * damage_multiplier
+			projectile.crit_hit_mult = crit_hit_mult
 			projectile.shooter = self
 			projectile.weapon_accuracy = Data.battle_weapon_stats.bullet.accuracy * accuracy
-			projectile.deflects_remaining = 2
+			projectile.deflects_remaining = deflects_remaining
+			projectile.knockback = knockback
+			projectile.ignore_defense_buffs = ignore_defense_buffs
+			projectile.status_effects = status_effects
 			projectile.position = position
 			projectile.ending_turn_delay = 1.0
 			projectile.end_turn.connect(ending_turn)
@@ -227,16 +275,19 @@ func fire_weapon(weapon_type: int):
 		explosive.speed = 800.0
 		explosive.velocity_process_modifier = 5.0 if battle_scene.animations_sped_up else 1.0
 		explosive.damage = Data.battle_weapon_stats.bomb.damage
-		if bomb_levels[0] >= 3:
+		if bomb_levels[PATH_1] >= 3:
 			explosive.mass = 9.0
 			explosive.AoE_radius = 300.0
 			explosive.damage *= 1.5
-		elif bomb_levels[0] >= 2:
+			explosive.knockback = 100.0
+		elif bomb_levels[PATH_1] >= 2:
 			explosive.mass = 6.0
 			explosive.AoE_radius = 180.0
+			explosive.knockback = 60.0
 		else:
 			explosive.mass = 4.0
 			explosive.AoE_radius = 100.0
+			explosive.knockback = 50.0
 		explosive.rotation = weapon_rotation
 		explosive.shooter = self
 		explosive.weapon_accuracy = Data.battle_weapon_stats.bomb.accuracy * accuracy
@@ -259,7 +310,7 @@ func add_light_cone():
 	light_cone.set_script(load("res://Scripts/Battle/Weapons/LightCone.gd"))
 	light_cone.emission_cone_angle = light_emission_cone_angle
 	light_cone.damage = Data.battle_weapon_stats.light.damage
-	if light_levels[1] >= 3:
+	if light_levels[PATH_2] >= 3:
 		light_cone.damage *= 1.4
 	light_cone.shooter = self
 	add_child(light_cone)

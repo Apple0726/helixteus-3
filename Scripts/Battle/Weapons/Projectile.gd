@@ -14,6 +14,9 @@ var shooter:BattleEntity
 var weapon_accuracy:float
 var ending_turn_delay:float
 var mass:float # For now only used to determine entity knockback when something is defeated by this projectile (so purely aesthetic)
+var crit_hit_mult:float = 1.0
+var knockback:float = 0.0
+var status_effects = {}
 
 func _ready() -> void:
 	tree_exiting.connect(decrement_amount)

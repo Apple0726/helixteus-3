@@ -278,13 +278,15 @@ func damage_entity(weapon_data: Dictionary):
 		battle_scene.add_damage_text(true, position)
 	else:
 		var damage_multiplier:float
-		var attack_defense_difference:int = weapon_data.shooter_attack - defense - defense_buff
+		var attack_defense_difference:int = weapon_data.shooter_attack - defense
+		if not weapon_data.has("ignore_defense_buffs") or defense_buff < 0:
+			attack_defense_difference -= defense_buff
 		if attack_defense_difference >= 0:
 			damage_multiplier = attack_defense_difference * 0.125 + 1.0
 		else:
 			damage_multiplier = 1.0 / (1.0 - 0.125 * attack_defense_difference)
 		var actual_damage:int = max(1, weapon_data.damage * damage_multiplier)
-		var critical = randf() < weapon_data.get("crit_hit_chance", 0.02) * (10.0 if weapon_data.has("status_effects") and weapon_data.status_effects.has(Battle.StatusEffect.EXPOSED) else 1.0)
+		var critical = randf() < weapon_data.get("crit_hit_chance", 0.02) * weapon_data.get("crit_hit_mult", 1.0) * (10.0 if weapon_data.has("status_effects") and weapon_data.status_effects.has(Battle.StatusEffect.EXPOSED) else 1.0)
 		if critical:
 			actual_damage *= 2
 		if Battle.PassiveAbility.PHYSICAL_DAMAGE_RESISTANT in passive_abilities and weapon_data.type == Battle.DamageType.PHYSICAL:

@@ -32,7 +32,7 @@ func _on_area_entered(area: Area2D) -> void:
 		"velocity":speed * Vector2.from_angle(rotation),
 		"mass":mass,
 		"status_effects":{Battle.StatusEffect.BURN: 1},
-		"knockback":50.0 * Vector2.from_angle(rotation),
+		"knockback":knockback * Vector2.from_angle(rotation),
 	}
 	if shooter.type == Battle.EntityType.SHIP:
 		if shooter.bomb_levels[1] >= 2:
