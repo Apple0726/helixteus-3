@@ -1487,6 +1487,7 @@ func switch_view(new_view:String, other_params:Dictionary = {}):
 				"battle":
 					$UI.add_child(HUD)
 					Engine.physics_ticks_per_second = 60
+					view.move_with_keyboard = true
 					battle_scene.queue_free()
 					battle_GUI.queue_free()
 				"ship_customize_screen":

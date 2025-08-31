@@ -205,13 +205,20 @@ func next_turn():
 	elif initiative_order[whose_turn_is_it_index].node.type == Battle.EntityType.SHIP:
 		var ship_node = initiative_order[whose_turn_is_it_index].node
 		battle_GUI.ship_node = ship_node
-		await ship_node.take_turn()
-		if ship_node.status_effects[Battle.StatusEffect.STUN] <= 0 and ship_node.status_effects[Battle.StatusEffect.FREEZE] <= 0:
-			battle_GUI.fade_in_main_panel()
-		else:
-			ship_node.ending_turn(1.0)
+		var ship_pos_before_moving:Vector2 = ship_node.position
 		if view_tween:
 			view_tween.tween_property(game.view, "position", Vector2(640, 360) - ship_node.position * game.view.scale.x, 0.5).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+		await ship_node.take_turn()
+		if ship_node.HP >= 0:
+			if not animations_sped_up and not ship_pos_before_moving.is_equal_approx(ship_node.position):
+				view_tween = create_tween()
+				view_tween.tween_property(game.view, "position", Vector2(640, 360) - ship_node.position * game.view.scale.x, 0.5).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+			if ship_node.status_effects[Battle.StatusEffect.STUN] <= 0 and ship_node.status_effects[Battle.StatusEffect.FREEZE] <= 0:
+				battle_GUI.fade_in_main_panel()
+			else:
+				ship_node.ending_turn(1.0)
+		else:
+			return
 	elif initiative_order[whose_turn_is_it_index].node.type == Battle.EntityType.ENEMY:
 		var HX_node = initiative_order[whose_turn_is_it_index].node
 		if view_tween:

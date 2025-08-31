@@ -1,4 +1,4 @@
-extends CharacterBody2D
+extends Node2D
 
 @onready var game = get_node("/root/Game")
 @onready var ship:TextureButton = game.get_node("Ship")
@@ -58,6 +58,12 @@ func _process(delta):
 		dragged = false
 	if not limit_to_viewport:
 		return
+	if move_with_keyboard:
+		var input_vector = Vector2.ZERO
+		input_vector.x = Input.get_action_strength("A") - Input.get_action_strength("D")
+		input_vector.y = Input.get_action_strength("W") - Input.get_action_strength("S")
+		input_vector = input_vector.normalized()
+		position += input_vector * delta * 1000.0
 	var travel_view = game.ships_travel_data.travel_view
 	ship.get_node("Fire").visible = travel_view != "-"
 	if travel_view == game.c_v:
@@ -119,30 +125,68 @@ func _process(delta):
 						break
 	if drawing_shape:
 		queue_redraw()
-	if is_instance_valid(obj) and obj.dimensions:
-		var margin = obj.dimensions * scale.x
-		var right_margin = global_position.x + margin
-		var bottom_margin = global_position.y + margin
+	if is_instance_valid(obj):
 		if game.c_v == "planet":
-			if global_position.x > 1180:
-				global_position.x = 1180
-			elif right_margin < 100:
-				global_position.x = 100 - margin
-			if global_position.y > 620:
-				global_position.y = 620
-			elif bottom_margin < 100:
-				global_position.y = 100 - margin
-		else:
-			var left_margin = global_position.x - margin
-			var top_margin = global_position.y - margin
-			if left_margin > 1180:
-				global_position.x = 1180 + margin
-			elif right_margin < 100:
-				global_position.x = 100 - margin
-			if top_margin > 620:
-				global_position.y = 620 + margin
-			elif bottom_margin < 100:
-				global_position.y = 100 - margin
+			if scale.x < 0.25 and not obj.icons_hidden:
+				for time_bar in obj.time_bars:
+					time_bar.node.visible = false
+				for rsrc in obj.rsrcs:
+					if is_instance_valid(rsrc):
+						rsrc.visible = false
+				for hbox in obj.hboxes:
+					if not hbox or not is_instance_valid(hbox):
+						continue
+					hbox.visible = false
+				obj.icons_hidden = true
+				obj.timer.wait_time = 1.0
+				if not get_tree().get_nodes_in_group("tile_bonus_nodes").is_empty():
+					for tile_bonus_node in get_tree().get_nodes_in_group("tile_bonus_nodes"):
+						var tween = create_tween()
+						tween.set_parallel(true)
+						tween.tween_property(tile_bonus_node, "color:a", 0.6, 0.1)
+						tween.tween_property(tile_bonus_node.get_node("TileBonus"), "modulate:a", 0.0, 0.1)
+			elif scale.x >= 0.25 and obj.icons_hidden:
+				for time_bar in obj.time_bars:
+					time_bar.node.visible = true
+				for rsrc in obj.rsrcs:
+					if is_instance_valid(rsrc):
+						rsrc.visible = true
+				for hbox in obj.hboxes:
+					if not hbox or not is_instance_valid(hbox):
+						continue
+					hbox.visible = true
+				obj.icons_hidden = false
+				obj.timer.wait_time = 0.1
+				if not get_tree().get_nodes_in_group("tile_bonus_nodes").is_empty():
+					for tile_bonus_node in get_tree().get_nodes_in_group("tile_bonus_nodes"):
+						var tween = create_tween()
+						tween.set_parallel(true)
+						tween.tween_property(tile_bonus_node, "color:a", 0.0, 0.1)
+						tween.tween_property(tile_bonus_node.get_node("TileBonus"), "modulate:a", 1.0, 0.1)
+		if obj.dimensions:
+			var margin = obj.dimensions * scale.x
+			var right_margin = global_position.x + margin
+			var bottom_margin = global_position.y + margin
+			if game.c_v == "planet":
+				if global_position.x > 1180:
+					global_position.x = 1180
+				elif right_margin < 100:
+					global_position.x = 100 - margin
+				if global_position.y > 620:
+					global_position.y = 620
+				elif bottom_margin < 100:
+					global_position.y = 100 - margin
+			else:
+				var left_margin = global_position.x - margin
+				var top_margin = global_position.y - margin
+				if left_margin > 1180:
+					global_position.x = 1180 + margin
+				elif right_margin < 100:
+					global_position.x = 100 - margin
+				if top_margin > 620:
+					global_position.y = 620 + margin
+				elif bottom_margin < 100:
+					global_position.y = 100 - margin
 	if game.c_v == "universe":
 		game.get_node("StarfieldUniverse").material.set_shader_parameter("position", (-position + Vector2(640, 360)) / 20000.0 / sqrt(scale.x))
 		if not changed and not $AnimationPlayer.is_playing():
@@ -330,62 +374,6 @@ func save_zooms(obj_str:String):
 			game.science_tree_view.pos = position# / scale.x
 			game.science_tree_view.zoom = scale.x
 
-#Executed every tick
-func _physics_process(delta):
-	if move_with_keyboard:
-		#Moving tiles code
-		var input_vector = Vector2.ZERO
-		input_vector.x = Input.get_action_strength("A") - Input.get_action_strength("D")
-		input_vector.y = Input.get_action_strength("W") - Input.get_action_strength("S")
-		input_vector = input_vector.normalized()
-		if input_vector != Vector2.ZERO:
-			move_speed = move_speed.move_toward(input_vector * max_speed, acceleration)
-		else:
-			move_speed = move_speed.move_toward(Vector2.ZERO, friction)
-		set_velocity(move_speed)
-		move_and_slide()
-		move_speed = move_speed
-
-	if not is_instance_valid(obj):
-		return
-	if game.c_v == "planet":
-		if scale.x < 0.25 and not obj.icons_hidden:
-			for time_bar in obj.time_bars:
-				time_bar.node.visible = false
-			for rsrc in obj.rsrcs:
-				if is_instance_valid(rsrc):
-					rsrc.visible = false
-			for hbox in obj.hboxes:
-				if not hbox or not is_instance_valid(hbox):
-					continue
-				hbox.visible = false
-			obj.icons_hidden = true
-			obj.timer.wait_time = 1.0
-			if not get_tree().get_nodes_in_group("tile_bonus_nodes").is_empty():
-				for tile_bonus_node in get_tree().get_nodes_in_group("tile_bonus_nodes"):
-					var tween = create_tween()
-					tween.set_parallel(true)
-					tween.tween_property(tile_bonus_node, "color:a", 0.6, 0.1)
-					tween.tween_property(tile_bonus_node.get_node("TileBonus"), "modulate:a", 0.0, 0.1)
-		elif scale.x >= 0.25 and obj.icons_hidden:
-			for time_bar in obj.time_bars:
-				time_bar.node.visible = true
-			for rsrc in obj.rsrcs:
-				if is_instance_valid(rsrc):
-					rsrc.visible = true
-			for hbox in obj.hboxes:
-				if not hbox or not is_instance_valid(hbox):
-					continue
-				hbox.visible = true
-			obj.icons_hidden = false
-			obj.timer.wait_time = 0.1
-			if not get_tree().get_nodes_in_group("tile_bonus_nodes").is_empty():
-				for tile_bonus_node in get_tree().get_nodes_in_group("tile_bonus_nodes"):
-					var tween = create_tween()
-					tween.set_parallel(true)
-					tween.tween_property(tile_bonus_node, "color:a", 0.0, 0.1)
-					tween.tween_property(tile_bonus_node.get_node("TileBonus"), "modulate:a", 1.0, 0.1)
-
 var dragging:bool = false
 var touch_events = {}
 var target_return_enabled = true
@@ -436,8 +424,7 @@ func _input(event):
 			drag_delta = event.position - drag_position
 			if (event.position - drag_initial_position).length() > 3:
 				dragged = true
-# warning-ignore:return_value_discarded
-			move_and_collide(drag_delta)
+			position += drag_delta
 			drag_position = event.position
 		mouse_position = event.position
 		if Input.is_action_just_released("left_click"):
