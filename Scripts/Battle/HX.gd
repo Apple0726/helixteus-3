@@ -133,6 +133,8 @@ func attack_target():
 		await get_tree().create_timer(0.7).timeout
 	var projectile = preload("res://Scenes/Battle/Weapons/Projectile.tscn").instantiate()
 	projectile.set_script(load("res://Scripts/Battle/Weapons/Bullet.gd"))
+	projectile.get_node("Sprite2D").texture = preload("res://Graphics/Battle/Projectiles/enemy_bullet.png")
+	projectile.trail_color = Color.RED
 	projectile.collision_layer = 16
 	projectile.collision_mask = 1 + 2 + 32
 	projectile.speed = 1000.0

@@ -6,6 +6,8 @@ var ignore_defense_buffs = false
 func _ready() -> void:
 	super()
 	area_entered.connect(_on_area_entered)
+	$Trail.default_color = trail_color
+	$Trail.show()
 
 func _on_area_entered(area: Area2D) -> void:
 	var weapon_data = {

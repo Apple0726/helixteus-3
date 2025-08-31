@@ -194,6 +194,8 @@ func fire_weapon(weapon_type: int):
 		var deflects_remaining = 2
 		var ignore_defense_buffs = false
 		var status_effects = {}
+		var bullet_texture = preload("res://Graphics/Battle/Projectiles/bullet.png")
+		var trail_color = Color.WHITE
 		if battle_GUI.bullet_2_selected_type == battle_GUI.BIG_BULLET:
 			if bullet_levels[PATH_2] == 2:
 				bullet_mass = 1.3
@@ -214,6 +216,8 @@ func fire_weapon(weapon_type: int):
 				deflects_remaining = 4
 				ignore_defense_buffs = true
 		elif battle_GUI.bullet_2_selected_type == battle_GUI.CORROSIVE_BULLET:
+			bullet_texture = preload("res://Graphics/Battle/Projectiles/corrosive_bullet.png")
+			trail_color = Color.YELLOW_GREEN
 			if bullet_levels[PATH_2] == 2:
 				status_effects[Battle.StatusEffect.CORRODING] = 3
 			elif bullet_levels[PATH_2] == 3:
@@ -221,6 +225,8 @@ func fire_weapon(weapon_type: int):
 			elif bullet_levels[PATH_2] == 4:
 				status_effects[Battle.StatusEffect.RADIOACTIVE] = 5
 		elif battle_GUI.bullet_2_selected_type == battle_GUI.AQUA_BULLET:
+			bullet_texture = preload("res://Graphics/Battle/Projectiles/aqua_bullet.png")
+			trail_color = Color.LIGHT_BLUE
 			if bullet_levels[PATH_2] == 2:
 				status_effects[Battle.StatusEffect.WET] = 2
 			elif bullet_levels[PATH_2] == 3:
@@ -232,7 +238,8 @@ func fire_weapon(weapon_type: int):
 			projectile.collision_layer = 8
 			projectile.collision_mask = 1 + 4 + 32
 			projectile.set_script(load("res://Scripts/Battle/Weapons/Bullet.gd"))
-			projectile.get_node("Sprite2D").texture = preload("res://Graphics/Weapons/bullet1.png")
+			projectile.get_node("Sprite2D").texture = bullet_texture
+			projectile.trail_color = trail_color
 			projectile.speed = 1000.0
 			projectile.mass = bullet_mass
 			projectile.velocity_process_modifier = 5.0 if battle_scene.animations_sped_up else 1.0
@@ -250,6 +257,8 @@ func fire_weapon(weapon_type: int):
 			projectile.end_turn.connect(ending_turn)
 			battle_scene.add_child(projectile)
 			projectiles.append(projectile)
+			$FireProjectileFlash/AnimationPlayer.stop()
+			$FireProjectileFlash/AnimationPlayer.play("Flash")
 			if i < projectile_num-1:
 				await get_tree().create_timer(0.2).timeout
 		for projectile in projectiles:

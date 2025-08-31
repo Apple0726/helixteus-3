@@ -276,6 +276,8 @@ func _on_bullet_pressed() -> void:
 	if ship_node.bullet_levels[1] >= 2:
 		$Info.show()
 		refresh_info_label("bullet_2")
+	else:
+		bullet_2_selected_type = BIG_BULLET
 	game.hide_tooltip()
 
 

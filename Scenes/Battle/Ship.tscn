@@ -1,4 +1,4 @@
-[gd_scene load_steps=41 format=3 uid="uid://cxykmxd6r2wgm"]
+[gd_scene load_steps=44 format=3 uid="uid://cxykmxd6r2wgm"]
 
 [ext_resource type="Texture2D" uid="uid://kr2fdk8dptv1" path="res://Graphics/Misc/BarUnder2.png" id="1"]
 [ext_resource type="Script" uid="uid://cfrufmr2v8ebl" path="res://Scripts/Battle/Ship.gd" id="2"]
@@ -211,6 +211,43 @@ shader = ExtResource("20_4hicg")
 shader_parameter/amplitude = 10.0
 shader_parameter/frequency = 6.0
 
+[sub_resource type="Animation" id="Animation_4hicg"]
+resource_name = "Flash"
+length = 0.3
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.3),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 1), Color(1, 1, 1, 0)]
+}
+
+[sub_resource type="Animation" id="Animation_fh3h1"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1, 1, 1, 0)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_mql8i"]
+_data = {
+&"Flash": SubResource("Animation_4hicg"),
+&"RESET": SubResource("Animation_fh3h1")
+}
+
 [node name="Ship" type="Area2D"]
 collision_layer = 2
 collision_mask = 55
@@ -382,6 +419,22 @@ material = SubResource("ShaderMaterial_mql8i")
 position = Vector2(0, -84)
 scale = Vector2(0.295, 0.295)
 texture = ExtResource("21_fh3h1")
+
+[node name="FireProjectileFlash" type="TextureRect" parent="."]
+modulate = Color(1, 1, 1, 0)
+offset_left = -52.0
+offset_top = -52.0
+offset_right = 52.0
+offset_bottom = 52.0
+mouse_filter = 2
+texture = ExtResource("10")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="FireProjectileFlash"]
+libraries = {
+&"": SubResource("AnimationLibrary_mql8i")
+}
 
 [connection signal="mouse_entered" from="." to="." method="_on_mouse_entered"]
 [connection signal="mouse_exited" from="." to="." method="_on_mouse_exited"]

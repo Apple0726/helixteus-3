@@ -1,9 +1,14 @@
-[gd_scene load_steps=3 format=3 uid="uid://dh7jnes2ghc7n"]
+[gd_scene load_steps=4 format=3 uid="uid://dh7jnes2ghc7n"]
 
-[ext_resource type="Texture2D" uid="uid://5c2g6408h1kx" path="res://Graphics/HX/Weapons/1_3.png" id="2_mskaq"]
+[ext_resource type="Texture2D" uid="uid://xhuhh01nnaq3" path="res://Graphics/Battle/Projectiles/bullet.png" id="1_8sfff"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_6h4qi"]
 radius = 4.0
+
+[sub_resource type="Curve" id="Curve_8sfff"]
+_data = [Vector2(0, 0), 0.0, 0.0, 0, 0, Vector2(1, 1), 0.0, 0.0, 0, 0]
+point_count = 2
+metadata/_snap_enabled = true
 
 [node name="Projectile" type="Area2D"]
 collision_layer = 0
@@ -12,9 +17,15 @@ monitorable = false
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 scale = Vector2(0.25, 0.25)
-texture = ExtResource("2_mskaq")
+texture = ExtResource("1_8sfff")
 flip_h = true
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 rotation = 1.5708
 shape = SubResource("CircleShape2D_6h4qi")
+
+[node name="Trail" type="Line2D" parent="."]
+visible = false
+points = PackedVector2Array(-32, 0, 0, 0)
+width = 3.0
+width_curve = SubResource("Curve_8sfff")

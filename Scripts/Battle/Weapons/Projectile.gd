@@ -17,6 +17,7 @@ var mass:float # For now only used to determine entity knockback when something 
 var crit_hit_mult:float = 1.0
 var knockback:float = 0.0
 var status_effects = {}
+var trail_color:Color = Color.WHITE
 
 func _ready() -> void:
 	tree_exiting.connect(decrement_amount)

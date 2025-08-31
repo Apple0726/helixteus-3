@@ -322,6 +322,8 @@ func damage_entity(weapon_data: Dictionary):
 			update_info_labels()
 	return not dodged
 
+var flash_tween
+
 func update_entity_HP(label_knockback: Vector2 = Vector2.ZERO, healed: bool = false):
 	$Info/HP.value = HP
 	if has_node("Sprite2D"):
@@ -336,7 +338,10 @@ func update_entity_HP(label_knockback: Vector2 = Vector2.ZERO, healed: bool = fa
 		entity_defeated_callback(label_knockback)
 	else:
 		if has_node("Sprite2D"):
-			create_tween().tween_property($Sprite2D.material, "shader_parameter/flash", 0.0, 0.4)
+			if flash_tween and flash_tween.is_running():
+				flash_tween.kill()
+			flash_tween = create_tween()
+			flash_tween.tween_property($Sprite2D.material, "shader_parameter/flash", 0.0, 0.4)
 
 func update_info_labels():
 	$Info/StatusEffects.update()
