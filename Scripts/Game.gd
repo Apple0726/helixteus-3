@@ -550,8 +550,6 @@ func _ready():
 	if not TranslationServer.get_locale() in ["de", "zh", "es", "ja", "nl", "hu"]:
 		TranslationServer.set_locale("en")
 	AudioServer.set_bus_volume_db(0, -40)
-	view = preload("res://Scenes/Views/View.tscn").instantiate()
-	add_child(view)
 	#noob
 	#AudioServer.set_bus_mute(1,true)
 	
@@ -677,6 +675,8 @@ func load_univ():
 		c_v = l_v
 	elif c_v == "battle":
 		c_v = "system"
+	view = preload("res://Scenes/Views/View.tscn").instantiate()
+	add_child(view)
 	view.set_process(true)
 	tile_data = open_obj("Planets", c_p_g)
 	planet_data = open_obj("Systems", c_s_g)
@@ -1628,7 +1628,7 @@ func switch_view(new_view:String, other_params:Dictionary = {}):
 				battle_GUI.battle_scene = battle_scene
 				battle_scene.battle_GUI = battle_GUI
 				add_child(battle_GUI)
-				view.add_child(battle_scene)
+				add_child(battle_scene)
 			"ship_customize_screen":
 				$Ship.hide()
 				ship_customize_screen = load("res://Scenes/ShipCustomizeScreen.tscn").instantiate()

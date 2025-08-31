@@ -1,4 +1,4 @@
-[gd_scene load_steps=63 format=3 uid="uid://dt6rr51kda1rb"]
+[gd_scene load_steps=62 format=3 uid="uid://dt6rr51kda1rb"]
 
 [ext_resource type="Script" uid="uid://bd5yb7w0y4d8b" path="res://Scripts/Game.gd" id="2"]
 [ext_resource type="Texture2D" uid="uid://gcp7f61r2ee1" path="res://Graphics/Buttons/settings.png" id="3"]
@@ -20,7 +20,6 @@
 [ext_resource type="PackedScene" uid="uid://dtk1md86gqsln" path="res://Scenes/Fire.tscn" id="33"]
 [ext_resource type="Shader" uid="uid://cp1b7vqtf0wsg" path="res://Shaders/ScienceTree.gdshader" id="34"]
 [ext_resource type="PackedScene" uid="uid://c5qfs6oo128dp" path="res://Scenes/Nebula.tscn" id="35"]
-[ext_resource type="PackedScene" uid="uid://ca730ks6x5s88" path="res://Scenes/Screenshake.tscn" id="36"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_fsurd"]
 shader = ExtResource("8_axm3r")
@@ -822,11 +821,6 @@ libraries = {
 }
 
 [node name="Stars" type="Node2D" parent="Stars"]
-
-[node name="Camera2D" type="Camera2D" parent="."]
-position = Vector2(640, 360)
-
-[node name="Screenshake" parent="Camera2D" instance=ExtResource("36")]
 
 [node name="MMTimer" type="Timer" parent="."]
 wait_time = 0.1

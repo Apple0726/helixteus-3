@@ -1116,7 +1116,7 @@ func _unhandled_input(event):
 		return
 	var not_on_button:bool = not game.planet_HUD.on_button and not game.HUD.on_button and not game.close_button_over
 	if event is InputEventMouse or event is InputEventScreenDrag:
-		mouse_pos = to_local(event.position)
+		mouse_pos = (event.position - Vector2(640, 360)) / view.get_node("SubViewport/Camera2D").zoom.x + view.get_node("SubViewport/Camera2D").position
 		var mouse_on_tiles = Geometry2D.is_point_in_polygon(mouse_pos, planet_bounds)
 		var N:int = mass_build_rect_size.x
 		var M:int = mass_build_rect_size.y
@@ -1480,7 +1480,7 @@ func add_time_bar(id2:int, type:String):
 	v.y = floor(local_id / wid) * 200
 	v += Vector2(100, 15)
 	var time_bar = preload("res://Scenes/TimeLeft.tscn").instantiate()
-	time_bar.visible = get_parent().scale.x >= 0.25
+	#time_bar.visible = get_parent().scale.x >= 0.25
 	time_bar.position = v
 	add_child(time_bar)
 	match type:
@@ -1571,7 +1571,7 @@ func overclockable(bldg:int):
 
 func add_rsrc(v:Vector2, mod:Color, icon, id2:int, current_bar_visible = false):
 	var rsrc:ResourceStored = preload("res://Scenes/ResourceStored.tscn").instantiate()
-	rsrc.visible = get_parent().scale.x >= 0.25
+	#rsrc.visible = get_parent().scale.x >= 0.25
 	add_child(rsrc)
 	rsrc.set_icon_texture(icon)
 	rsrc.position = v + Vector2.DOWN * 40.0

@@ -49,4 +49,3 @@ func _on_Frequency_timeout():
 func _on_Duration_timeout():
 	_reset()
 	$Frequency.stop()
-

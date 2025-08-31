@@ -2,7 +2,7 @@ extends Node2D
 
 @onready var game = get_node("/root/Game")
 @onready var stars_info = game.system_data[game.c_s].stars
-@onready var view = get_parent()
+@onready var view = game.view
 
 #Used to prevent view from moving outside viewport
 var dimensions:float
@@ -919,8 +919,9 @@ func on_btn_out ():
 	MS_constr_data.clear()
 
 func _process(_delta):
+	var view_scale = view.get_node("SubViewport/Camera2D").zoom.x
 	for glow in glows:
-		glow.modulate.a = clamp(0.6 / (view.scale.x * glow.scale.x) - 0.1, 0, 1)
+		glow.modulate.a = clamp(0.6 / (view_scale * glow.scale.x) - 0.1, 0, 1)
 		if glow.modulate.a == 0 and glow.visible:
 			if glow == glow_over:
 				game.hide_tooltip()
@@ -928,7 +929,7 @@ func _process(_delta):
 		if glow.modulate.a != 0:
 			glow.visible = true
 	for orbit in get_tree().get_nodes_in_group("orbits"):
-		orbit.alpha = clamp(view.scale.x * orbit.radius / 300.0, 0.05, 0.6)
+		orbit.alpha = clamp(view_scale * orbit.radius / 300.0, 0.05, 0.6)
 		orbit.queue_redraw()
 	var curr_time = Time.get_unix_time_from_system()
 	for rsrc_obj in star_rsrcs:

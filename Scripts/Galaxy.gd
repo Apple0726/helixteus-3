@@ -118,10 +118,9 @@ func on_system_out ():
 	game.hide_tooltip()
 
 func on_system_click (id:int, l_id:int):
-	var view = self.get_parent()
-	if not view.dragged:
+	if not game.view.dragged:
 		game.switch_view("system", {"fn":"set_custom_coords", "fn_args":[["c_s", "c_s_g"], [l_id, id]]})
-	view.dragged = false
+	game.view.dragged = false
 
 func change_overlay(overlay_id:int, gradient:Gradient, object:Dictionary = {}):
 	var _overlays = overlays
