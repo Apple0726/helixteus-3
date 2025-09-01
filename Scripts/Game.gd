@@ -1810,6 +1810,7 @@ func add_obj(view_str):
 			tween.set_parallel(true)
 			tween.tween_property(sc_UI, "modulate", Color.WHITE, 0.2).set_delay(0.1)
 			tween.tween_property(view.obj, "modulate", Color.WHITE, 0.2).set_delay(0.1)
+	view.grab_focus()
 	view.queue_redraw()
 
 func add_space_HUD():

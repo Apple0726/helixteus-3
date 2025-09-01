@@ -452,12 +452,7 @@ func _zoom_at_point_animate(zoom_change: float):
 	elif game.c_v == "universe":
 		if $SubViewport/Camera2D.zoom.x >= 25.0 and zoom_change > 1: #max zoom in
 			return
-	var d = (Vector2(640, 360) - mouse_position) / $SubViewport/Camera2D.zoom
-	$SubViewport/Camera2D.zoom *= zoom_change
-	$SubViewport/Camera2D.position -= d * (1.0 - 1.0 / zoom_change)
-	#zoom_tween = create_tween().set_parallel(true)
-	#zoom_tween.tween_property($SubViewport/Camera2D, "zoom", $SubViewport/Camera2D.zoom * zoom_change, 0.15).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_CIRC)
-	#zoom_tween.tween_property($SubViewport/Camera2D, "position", $SubViewport/Camera2D.position - d * (1.0 - 1.0 / zoom_change), 0.15).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_CIRC)
+	$SubViewport/Camera2D.zoom_towards($SubViewport/Camera2D.zoom.x * zoom_change, mouse_position)
 
 func _on_AnimationPlayer_animation_finished(anim_name):
 	if not changed:
