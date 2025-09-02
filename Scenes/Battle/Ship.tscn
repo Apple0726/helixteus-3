@@ -5,7 +5,7 @@
 [ext_resource type="PackedScene" uid="uid://fo4yl8v4ld8c" path="res://Scenes/Battle/FireWeaponAim.tscn" id="2_ogdx2"]
 [ext_resource type="Shader" uid="uid://c17je4akgvnni" path="res://Shaders/Ship.gdshader" id="3_cptad"]
 [ext_resource type="PackedScene" uid="uid://dtk1md86gqsln" path="res://Scenes/Fire.tscn" id="4"]
-[ext_resource type="Texture2D" uid="uid://koi0aarpqj30" path="res://Graphics/Ships/Ship0.png" id="5"]
+[ext_resource type="Texture2D" uid="uid://d3hf7xbxhtuco" path="res://Graphics/Ships/Ship0 top down.png" id="5_4hicg"]
 [ext_resource type="Texture2D" uid="uid://bx1hvetixqpwi" path="res://Graphics/Misc/Bar2.png" id="6"]
 [ext_resource type="Texture2D" uid="uid://yhdxrw2q1yep" path="res://Graphics/HX/Status effects/Stun.png" id="8"]
 [ext_resource type="PackedScene" uid="uid://m8wrm55x0xbe" path="res://Scenes/Battle/StatusEffects.tscn" id="8_ymlex"]
@@ -263,8 +263,8 @@ process_material = SubResource("3")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 material = SubResource("4")
-scale = Vector2(0.15, 0.15)
-texture = ExtResource("5")
+scale = Vector2(0.1875, 0.1875)
+texture = ExtResource("5_4hicg")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 rotation = 1.5708

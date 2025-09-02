@@ -78,7 +78,7 @@ func _ready() -> void:
 			ship_node.next_turn.connect(next_turn)
 			ship_node.type = Battle.EntityType.SHIP
 			ship_node.ship_type = i
-			ship_node.get_node("Sprite2D").texture = load("res://Graphics/Ships/Ship%s.png" % i)
+			ship_node.get_node("Sprite2D").texture = load("res://Graphics/Ships/Ship%s top down.png" % i)
 			ship_node.get_node("Sprite2D").material.set_shader_parameter("amplitude", 0.0)
 			ship_node.get_node("Info/HP").max_value = ship_data[i].HP
 			ship_node.get_node("Info/HP").value = ship_data[i].HP
@@ -213,7 +213,7 @@ func next_turn():
 			if not animations_sped_up and not ship_pos_before_moving.is_equal_approx(ship_node.position):
 				view_tween = create_tween()
 				view_tween.tween_property(game.view, "position", Vector2(640, 360) - ship_node.position * game.view.scale.x, 0.5).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
-			if ship_node.status_effects[Battle.StatusEffect.STUN] <= 0 and ship_node.status_effects[Battle.StatusEffect.FREEZE] <= 0:
+			if ship_node.status_effects[Battle.StatusEffect.STUN] <= 0 and ship_node.status_effects[Battle.StatusEffect.FROZEN] <= 0:
 				battle_GUI.fade_in_main_panel()
 			else:
 				ship_node.ending_turn(1.0)
@@ -315,6 +315,11 @@ func environment_take_turn():
 		var asteroid = preload("res://Scenes/Battle/Asteroid.tscn").instantiate()
 		asteroid.position = asteroid_position
 		asteroid.get_node("Sprite2D").scale = Vector2.ONE * asteroid_scale
+		print(asteroid_scale)
+		if asteroid_scale > 1.0:
+			asteroid.get_node("Sprite2D").texture = preload("res://Graphics/Battle/Obstacles/asteroid_big.png")
+		else:
+			asteroid.get_node("Sprite2D").texture = preload("res://Graphics/Battle/Obstacles/asteroid.png")
 		asteroid.total_HP = pow(asteroid_scale, 3) * 10000
 		asteroid.HP = asteroid.total_HP
 		asteroid.get_node("Info/HP").max_value = asteroid.total_HP

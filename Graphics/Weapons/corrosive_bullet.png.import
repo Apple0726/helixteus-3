@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://43tk0leq150l"
-path="res://.godot/imported/asteroid.png-a6023038ff5754f86c811a54b17735d0.ctex"
+uid="uid://buq1acvyf4vt8"
+path="res://.godot/imported/corrosive_bullet.png-fd377e99e77279e144f164ed379f92ef.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Graphics/Battle/Obstacles/asteroid.png"
-dest_files=["res://.godot/imported/asteroid.png-a6023038ff5754f86c811a54b17735d0.ctex"]
+source_file="res://Graphics/Weapons/corrosive_bullet.png"
+dest_files=["res://.godot/imported/corrosive_bullet.png-fd377e99e77279e144f164ed379f92ef.ctex"]
 
 [params]
 

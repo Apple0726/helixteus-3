@@ -152,7 +152,7 @@ func initialize_stats(data:Dictionary):
 		physical_damage_mult = 0.75
 	if Battle.PassiveAbility.STUN_FREEZE_IMMUNE:
 		status_effect_resistances[Battle.StatusEffect.STUN] = 1.0
-		status_effect_resistances[Battle.StatusEffect.FREEZE] = 1.0
+		status_effect_resistances[Battle.StatusEffect.FROZEN] = 1.0
 	if Battle.PassiveAbility.BURN_CORRODING_IMMUNE:
 		status_effect_resistances[Battle.StatusEffect.BURN] = 1.0
 		status_effect_resistances[Battle.StatusEffect.CORRODING] = 1.0

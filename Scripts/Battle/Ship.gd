@@ -232,7 +232,7 @@ func fire_weapon(weapon_type: int):
 			elif bullet_levels[PATH_2] == 3:
 				status_effects[Battle.StatusEffect.WET] = 4
 			elif bullet_levels[PATH_2] == 4:
-				status_effects[Battle.StatusEffect.FREEZE] = 4
+				status_effects[Battle.StatusEffect.FROZEN] = 4
 		for i in projectile_num:
 			var projectile = preload("res://Scenes/Battle/Weapons/Projectile.tscn").instantiate()
 			projectile.collision_layer = 8

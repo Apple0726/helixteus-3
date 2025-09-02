@@ -148,9 +148,9 @@ func refresh_info_label(type: String):
 		if bullet_2_selected_type == BIG_BULLET:
 			$Info/TextureRect.texture = preload("res://Graphics/Weapons/bullet1.png")
 		elif bullet_2_selected_type == CORROSIVE_BULLET:
-			$Info/TextureRect.texture = preload("res://Graphics/Weapons/bullet1.png")
+			$Info/TextureRect.texture = preload("res://Graphics/Weapons/corrosive_bullet.png")
 		elif bullet_2_selected_type == AQUA_BULLET:
-			$Info/TextureRect.texture = preload("res://Graphics/Weapons/bullet1.png")
+			$Info/TextureRect.texture = preload("res://Graphics/Weapons/aqua_bullet.png")
 
 func update_push_strength(update_by: float):
 	var current_strength = $PushStrengthPanel/Bar.material.get_shader_parameter("strength")

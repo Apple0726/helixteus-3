@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://43tk0leq150l"
-path="res://.godot/imported/asteroid.png-a6023038ff5754f86c811a54b17735d0.ctex"
+uid="uid://7hkor7taf3iw"
+path="res://.godot/imported/Ship1 top down.png-e126b284b3291e91b20f286f1d92ffa5.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Graphics/Battle/Obstacles/asteroid.png"
-dest_files=["res://.godot/imported/asteroid.png-a6023038ff5754f86c811a54b17735d0.ctex"]
+source_file="res://Graphics/Ships/Ship1 top down.png"
+dest_files=["res://.godot/imported/Ship1 top down.png-e126b284b3291e91b20f286f1d92ffa5.ctex"]
 
 [params]
 

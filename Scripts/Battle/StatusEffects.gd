@@ -10,6 +10,8 @@ func _ready() -> void:
 	$Burn/Icon.mouse_exited.connect(game.hide_tooltip)
 	$Stun/Icon.mouse_entered.connect(game.show_tooltip.bind(tr("STUN_DESC")))
 	$Stun/Icon.mouse_exited.connect(game.hide_tooltip)
+	$Frozen/Icon.mouse_entered.connect(game.show_tooltip.bind(tr("FROZEN_DESC")))
+	$Frozen/Icon.mouse_exited.connect(game.hide_tooltip)
 	$Exposed/Icon.mouse_entered.connect(game.show_tooltip.bind(tr("EXPOSED_DESC")))
 	$Exposed/Icon.mouse_exited.connect(game.hide_tooltip)
 	$Corroding/Icon.mouse_entered.connect(game.show_tooltip.bind(tr("CORRODING_DESC")))
@@ -24,6 +26,7 @@ func _ready() -> void:
 func update():
 	$Burn.visible = entity.status_effects[Battle.StatusEffect.BURN] > 0
 	$Stun.visible = entity.status_effects[Battle.StatusEffect.STUN] > 0
+	$Frozen.visible = entity.status_effects[Battle.StatusEffect.FROZEN] > 0
 	$Exposed.visible = entity.status_effects[Battle.StatusEffect.EXPOSED] > 0
 	$Corroding.visible = entity.status_effects[Battle.StatusEffect.CORRODING] > 0
 	$Radioactive.visible = entity.status_effects[Battle.StatusEffect.RADIOACTIVE] > 0
@@ -34,6 +37,8 @@ func update():
 			$Burn/Label.text = Helper.format_num(entity.status_effects[effect])
 		elif effect == Battle.StatusEffect.STUN:
 			$Stun/Label.text = Helper.format_num(entity.status_effects[effect])
+		elif effect == Battle.StatusEffect.FROZEN:
+			$Frozen/Label.text = Helper.format_num(entity.status_effects[effect])
 		elif effect == Battle.StatusEffect.EXPOSED:
 			$Exposed/Label.text = Helper.format_num(entity.status_effects[effect])
 		elif effect == Battle.StatusEffect.CORRODING:
