@@ -4,11 +4,11 @@ extends "BattleEntity.gd"
 func _ready() -> void:
 	super()
 	$CollisionShape2D.shape.radius = collision_shape_radius
-	$Info/HP.position.x = -$Sprite2D.scale.x * 90.0 + 90.0
-	$Info/Label.position.y = $Sprite2D.scale.x * 90.0 + 30.0
-	$Info/StatusEffects.position.y = -$Sprite2D.scale.x * 90.0 - 60.0
-	$Info/Buffs.position.y = $Sprite2D.scale.x * 90.0 + 60.0
-	$Info/Icon.position.y = $Sprite2D.scale.x * 90.0 + 30.0
+	$Info/HP.position.x = -$TextureRect.scale.x * 90.0 + 90.0
+	$Info/Label.position.y = $TextureRect.scale.x * 90.0 + 30.0
+	$Info/StatusEffects.position.y = -$TextureRect.scale.x * 90.0 - 60.0
+	$Info/Buffs.position.y = $TextureRect.scale.x * 90.0 + 60.0
+	$Info/Icon.position.y = $TextureRect.scale.x * 90.0 + 30.0
 	status_effect_resistances[Battle.StatusEffect.BURN] = 1.0
 
 

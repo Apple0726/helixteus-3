@@ -50,8 +50,8 @@ func _ready() -> void:
 		money_earned += round(HX_data[i].money * enemy_AI_diff_mult)
 		XP_earned += round(HX_data[i].XP * enemy_AI_diff_mult)
 		HX.roll_initiative()
-		HX.get_node("Sprite2D").texture = load("res://Graphics/HX/%s_%s.png" % [HX_data[i]["class"], HX_data[i].type])
-		HX.get_node("Sprite2D").material.set_shader_parameter("amplitude", 0.0)
+		HX.get_node("TextureRect").texture = load("res://Graphics/HX/%s_%s.png" % [HX_data[i]["class"], HX_data[i].type])
+		HX.get_node("TextureRect").material.set_shader_parameter("amplitude", 0.0)
 		HX.get_node("Info/HP").max_value = HX_data[i].HP
 		HX.get_node("Info/HP").value = HX_data[i].HP
 		HX.get_node("Info/Label").text = "%s %s" % [tr("LV"), HX_data[i].lv]
@@ -65,27 +65,30 @@ func _ready() -> void:
 		HX.next_turn.connect(next_turn)
 		add_child(HX)
 		HX_nodes.append(HX)
-	for i in 4:
-		if len(ship_data) > i:
-			var ship_node = preload("res://Scenes/Battle/Ship.tscn").instantiate()
-			ship_node.METERS_PER_AGILITY = METERS_PER_AGILITY
-			ship_node.PIXELS_PER_METER = PIXELS_PER_METER
-			ship_node.initialize_stats(ship_data[i])
-			ship_node.roll_initiative()
-			ship_node.position = ship_data[i].initial_position
-			ship_node.battle_scene = self
-			ship_node.battle_GUI = battle_GUI
-			ship_node.next_turn.connect(next_turn)
-			ship_node.type = Battle.EntityType.SHIP
-			ship_node.ship_type = i
-			ship_node.get_node("Sprite2D").texture = load("res://Graphics/Ships/Ship%s top down.png" % i)
-			ship_node.get_node("Sprite2D").material.set_shader_parameter("amplitude", 0.0)
-			ship_node.get_node("Info/HP").max_value = ship_data[i].HP
-			ship_node.get_node("Info/HP").value = ship_data[i].HP
-			ship_node.get_node("Info/Label").text = "%s %s" % [tr("LV"), ship_data[i].lv]
-			ship_node.get_node("ThrusterFire").emitting = false
-			add_child(ship_node)
-			ship_nodes.append(ship_node)
+	for i in len(ship_data):
+		var ship_node = preload("res://Scenes/Battle/Ship.tscn").instantiate()
+		ship_node.METERS_PER_AGILITY = METERS_PER_AGILITY
+		ship_node.PIXELS_PER_METER = PIXELS_PER_METER
+		ship_node.initialize_stats(ship_data[i])
+		ship_node.turn_on_lights(i)
+		ship_node.roll_initiative()
+		ship_node.position = ship_data[i].initial_position
+		ship_node.battle_scene = self
+		ship_node.battle_GUI = battle_GUI
+		ship_node.next_turn.connect(next_turn)
+		ship_node.type = Battle.EntityType.SHIP
+		ship_node.ship_type = i
+		if Settings.op_cursor and i == 3:
+			ship_node.get_node("TextureRect").texture = preload("res://Graphics/Ships/Ship3_op.png")
+		else:
+			ship_node.get_node("TextureRect").texture = load("res://Graphics/Ships/Ship%s top down.png" % i)
+		ship_node.get_node("TextureRect").material.set_shader_parameter("amplitude", 0.0)
+		ship_node.get_node("Info/HP").max_value = ship_data[i].HP
+		ship_node.get_node("Info/HP").value = ship_data[i].HP
+		ship_node.get_node("Info/Label").text = "%s %s" % [tr("LV"), ship_data[i].lv]
+		ship_node.get_node("ThrusterFire").emitting = false
+		add_child(ship_node)
+		ship_nodes.append(ship_node)
 
 
 func initialize_battle():
@@ -314,12 +317,11 @@ func environment_take_turn():
 					break
 		var asteroid = preload("res://Scenes/Battle/Asteroid.tscn").instantiate()
 		asteroid.position = asteroid_position
-		asteroid.get_node("Sprite2D").scale = Vector2.ONE * asteroid_scale
-		print(asteroid_scale)
+		asteroid.get_node("TextureRect").scale = Vector2.ONE * asteroid_scale
 		if asteroid_scale > 1.0:
-			asteroid.get_node("Sprite2D").texture = preload("res://Graphics/Battle/Obstacles/asteroid_big.png")
+			asteroid.get_node("TextureRect").texture = preload("res://Graphics/Battle/Obstacles/asteroid_big.png")
 		else:
-			asteroid.get_node("Sprite2D").texture = preload("res://Graphics/Battle/Obstacles/asteroid.png")
+			asteroid.get_node("TextureRect").texture = preload("res://Graphics/Battle/Obstacles/asteroid.png")
 		asteroid.total_HP = pow(asteroid_scale, 3) * 10000
 		asteroid.HP = asteroid.total_HP
 		asteroid.get_node("Info/HP").max_value = asteroid.total_HP
@@ -332,18 +334,18 @@ func environment_take_turn():
 		asteroid.collision_shape_radius = asteroid_scale * 84.0
 		asteroid.battle_GUI = battle_GUI
 		asteroid.type = Battle.EntityType.OBSTACLE
+		asteroid.velocity = -30.0 / asteroid_scale * Vector2(randf(), randf()) * sign(asteroid.position - Vector2(640.0, 360.0))
 		if not animations_sped_up:
-			asteroid.get_node("Sprite2D").material.set_shader_parameter("alpha", 0.0)
+			asteroid.get_node("TextureRect").material.set_shader_parameter("alpha", 0.0)
 			asteroid.get_node("VelocityArrow").modulate.a = 0.0
 			var fade_in_tween = create_tween().set_parallel()
-			fade_in_tween.tween_property(asteroid.get_node("Sprite2D").material, "shader_parameter/alpha", 1.0, 0.5)
+			fade_in_tween.tween_property(asteroid.get_node("TextureRect").material, "shader_parameter/alpha", 1.0, 0.5)
 			fade_in_tween.tween_property(asteroid.get_node("VelocityArrow"), "modulate:a", 1.0, 0.5)
-		asteroid.get_node("Sprite2D").rotation = randf_range(0.0, 2.0 * PI)
+		asteroid.get_node("TextureRect").rotation = randf_range(0.0, 2.0 * PI)
 		asteroid.battle_scene = self
 		asteroid.battle_GUI = battle_GUI
 		add_child(asteroid)
 		move_child(asteroid, 0)
-		asteroid.velocity = -30.0 / asteroid_scale * Vector2(randf(), randf()) * sign(asteroid.position - Vector2(640.0, 360.0))
 		obstacle_nodes.append(asteroid)
 	if animations_sped_up:
 		await get_tree().create_timer(0.1).timeout

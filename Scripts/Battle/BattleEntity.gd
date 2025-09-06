@@ -91,6 +91,7 @@ func _ready() -> void:
 			status_effects[effect] = 0
 			status_effect_resistances[effect] = 0.0
 	$Info/StatusEffects.entity = self
+	update_velocity_arrow()
 
 func _draw() -> void:
 	if is_instance_valid(battle_scene) and type != Battle.EntityType.BOUNDARY:
@@ -326,22 +327,22 @@ var flash_tween
 
 func update_entity_HP(label_knockback: Vector2 = Vector2.ZERO, healed: bool = false):
 	$Info/HP.value = HP
-	if has_node("Sprite2D"):
+	if has_node("TextureRect"):
 		if healed:
-			$Sprite2D.material.set_shader_parameter("flash_color", Color(0.7, 1.0, 0.7))
+			$TextureRect.material.set_shader_parameter("flash_color", Color(0.7, 1.0, 0.7))
 		else:
-			$Sprite2D.material.set_shader_parameter("flash_color", Color.RED)
-		$Sprite2D.material.set_shader_parameter("flash", 1.0)
+			$TextureRect.material.set_shader_parameter("flash_color", Color.RED)
+		$TextureRect.material.set_shader_parameter("flash", 1.0)
 	if HP <= 0:
 		self.call_deferred("set_monitoring", false)
 		self.call_deferred("set_monitorable", false)
 		entity_defeated_callback(label_knockback)
 	else:
-		if has_node("Sprite2D"):
+		if has_node("TextureRect"):
 			if flash_tween and flash_tween.is_running():
 				flash_tween.kill()
 			flash_tween = create_tween()
-			flash_tween.tween_property($Sprite2D.material, "shader_parameter/flash", 0.0, 0.4)
+			flash_tween.tween_property($TextureRect.material, "shader_parameter/flash", 0.0, 0.4)
 
 func update_info_labels():
 	$Info/StatusEffects.update()
@@ -366,7 +367,7 @@ func entity_defeated_callback(knockback:Vector2 = Vector2.ZERO):
 	var entity_dying_tween = create_tween().set_parallel()
 	entity_dying_tween.tween_property($Info, "modulate:a", 0.0, 1.0)
 	entity_dying_tween.tween_property(self, "position", position + knockback, 2.0)
-	entity_dying_tween.tween_property($Sprite2D.material, "shader_parameter/alpha", 0.0, 1.0).set_delay(1.0)
+	entity_dying_tween.tween_property($TextureRect.material, "shader_parameter/alpha", 0.0, 1.0).set_delay(1.0)
 	entity_dying_tween.tween_callback(queue_free).set_delay(2.0)
 	if battle_scene.initiative_order[battle_scene.whose_turn_is_it_index].node == self:
 		entity_dying_tween.tween_callback(emit_signal.bind("next_turn")).set_delay(2.0)
@@ -381,7 +382,12 @@ func entity_defeated_callback(knockback:Vector2 = Vector2.ZERO):
 		battle_scene.obstacle_nodes.erase(self)
 
 func update_velocity_arrow(offset: Vector2 = Vector2.ZERO):
-	$VelocityArrow.scale = Vector2.ONE * (velocity + offset).length() / 100.0
+	var magnitude = (velocity + offset).length()
+	$VelocityArrow.resize_arrow(magnitude)
+	if magnitude > 100.0:
+		$VelocityArrow/Polygon2D.modulate.a = max(remap(magnitude, 100.0, 300.0, 1.0, 0.3), 0.3)
+	else:
+		$VelocityArrow/Polygon2D.modulate.a = 1.0
 	$VelocityArrow.rotation = (velocity + offset).angle()
 
 

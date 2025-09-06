@@ -49,6 +49,13 @@ func initialize_stats(data: Dictionary):
 		for effect in Battle.StatusEffect.N:
 			status_effect_resistances[effect] = 0.2
 
+func turn_on_lights(index: int):
+	for i in 4:
+		if i == index:
+			get_node("Ship%sLights" % (i+1)).show()
+		else:
+			get_node("Ship%sLights" % (i+1)).hide()
+
 var highlighted_targets = []
 
 func _draw() -> void:
@@ -147,7 +154,7 @@ func _on_fire_weapon_aim_visibility_changed() -> void:
 			if bullet_levels[PATH_3] >= 2:
 				$FireWeaponAim.target_angle_max_deviation *= 0.33
 		elif $FireWeaponAim.weapon_type == battle_GUI.LASER:
-			if bullet_levels[PATH_3] >= 2:
+			if laser_levels[PATH_3] >= 2:
 				$FireWeaponAim.target_angle_max_deviation = 0.0
 		$FireWeaponAim.animate(false)
 

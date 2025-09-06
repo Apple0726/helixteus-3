@@ -283,9 +283,9 @@ alignment = 1
 [node name="Info" type="Label" parent="."]
 layout_mode = 0
 offset_left = 232.0
-offset_top = 608.0
+offset_top = 648.0
 offset_right = 1044.0
-offset_bottom = 631.0
+offset_bottom = 671.0
 horizontal_alignment = 1
 
 [node name="TextureRect" type="TextureRect" parent="Info"]

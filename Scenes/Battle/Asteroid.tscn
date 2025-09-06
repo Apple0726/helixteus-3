@@ -1,8 +1,9 @@
-[gd_scene load_steps=13 format=3 uid="uid://decmehu30cj8j"]
+[gd_scene load_steps=11 format=3 uid="uid://decmehu30cj8j"]
 
 [ext_resource type="Texture2D" uid="uid://43tk0leq150l" path="res://Graphics/Battle/Obstacles/asteroid.png" id="1_8rmj3"]
 [ext_resource type="Script" uid="uid://n327fjh85gr3" path="res://Scripts/Battle/Asteroid.gd" id="1_gcgyw"]
 [ext_resource type="Texture2D" uid="uid://kr2fdk8dptv1" path="res://Graphics/Misc/BarUnder2.png" id="3_ey2x8"]
+[ext_resource type="PackedScene" uid="uid://b3b68o5fd52pr" path="res://Scenes/Battle/VelocityArrow.tscn" id="3_wikyw"]
 [ext_resource type="Texture2D" uid="uid://bx1hvetixqpwi" path="res://Graphics/Misc/Bar2.png" id="4_fg6fk"]
 [ext_resource type="PackedScene" uid="uid://m8wrm55x0xbe" path="res://Scenes/Battle/StatusEffects.tscn" id="5_c5aoj"]
 [ext_resource type="PackedScene" uid="uid://ni58sxlrjgg4" path="res://Scenes/Battle/Buffs.tscn" id="5_fg6fk"]
@@ -30,50 +31,12 @@ shader_parameter/flash_color = Color(1, 1, 1, 1)
 resource_local_to_scene = true
 radius = 84.0
 
-[sub_resource type="Animation" id="Animation_f8wif"]
-resource_name = "Blink"
-length = 0.5
-loop_mode = 1
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath(".:modulate")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0, 0.266667, 0.5),
-"transitions": PackedFloat32Array(1, 1, 1),
-"update": 0,
-"values": [Color(1, 1, 1, 1), Color(1, 1, 1, 0.545098), Color(1, 1, 1, 1)]
-}
-
-[sub_resource type="Animation" id="Animation_vw23x"]
-length = 0.001
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath(".:modulate")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [Color(1, 1, 1, 1)]
-}
-
-[sub_resource type="AnimationLibrary" id="AnimationLibrary_makbt"]
-_data = {
-&"Blink": SubResource("Animation_f8wif"),
-&"RESET": SubResource("Animation_vw23x")
-}
-
 [node name="Node2D" type="Area2D"]
 collision_layer = 32
 collision_mask = 63
 script = ExtResource("1_gcgyw")
 
-[node name="Sprite2D" type="TextureRect" parent="."]
+[node name="TextureRect" type="TextureRect" parent="."]
 material = SubResource("ShaderMaterial_fg6fk")
 offset_left = -96.0
 offset_top = -96.0
@@ -92,21 +55,7 @@ color = Color(1, 1, 1, 0)
 polygon = PackedVector2Array(-163, -91)
 uv = PackedVector2Array(-163, -91)
 
-[node name="VelocityArrow" type="Node2D" parent="."]
-scale = Vector2(1e-05, 1e-05)
-
-[node name="Head" type="Line2D" parent="VelocityArrow"]
-points = PackedVector2Array(80, 20, 100, 0, 80, -20)
-width = 2.0
-
-[node name="Body" type="Line2D" parent="VelocityArrow"]
-points = PackedVector2Array(0, 0, 100, 0)
-width = 2.0
-
-[node name="AnimationPlayer" type="AnimationPlayer" parent="VelocityArrow"]
-libraries = {
-&"": SubResource("AnimationLibrary_makbt")
-}
+[node name="VelocityArrow" parent="." instance=ExtResource("3_wikyw")]
 
 [node name="Info" type="Control" parent="."]
 layout_mode = 3
