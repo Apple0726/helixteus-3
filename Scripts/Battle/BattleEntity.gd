@@ -88,7 +88,7 @@ func _ready() -> void:
 	if type != Battle.EntityType.BOUNDARY:
 		self.area_entered.connect(on_collide)
 		for effect in Battle.StatusEffect.N:
-			status_effects[effect] = 0
+			status_effects[effect] = 0.0
 			status_effect_resistances[effect] = 0.0
 	$Info/StatusEffects.entity = self
 	update_velocity_arrow()
@@ -182,11 +182,14 @@ func take_turn():
 	if regen_per_turn > 0:
 		heal_entity(regen_per_turn)
 	var burn_turns = status_effects[Battle.StatusEffect.BURN]
-	if burn_turns > 0:
+	if burn_turns > 0.0:
 		damage_entity_status_effect(int(ceil(burn_turns * 0.05 * total_HP)))
 		if HP <= 0:
 			return
-	if status_effects[Battle.StatusEffect.EXTRA_TURNS] > 0:
+	if status_effects[Battle.StatusEffect.CORRODING] > 0.0:
+		defense_buff -= 2
+		agility_buff -= 2
+	if status_effects[Battle.StatusEffect.EXTRA_TURNS] > 0.0:
 		extra_attacks = 1
 		total_movement = total_movement_base * 1.25
 	else:
@@ -223,7 +226,7 @@ func take_turn():
 
 func decrement_status_effects_buffs():
 	for effect in status_effects:
-		status_effects[effect] = max(0, status_effects[effect] - status_effects_decay_rate)
+		status_effects[effect] = max(0.0, status_effects[effect] - status_effects_decay_rate)
 	if attack_buff > 0:
 		attack_buff = max(attack_buff - buff_decay_rate, 0.0)
 	elif attack_buff < 0:
@@ -248,11 +251,12 @@ func _physics_process(delta: float) -> void:
 		if position.x < -640.0 or position.x > 1920.0 or position.y < -360.0 or position.y > 1080.0:
 			entity_defeated_callback()
 
+
 func end_turn():
 	if extra_attacks > 0:
 		extra_attacks -= 1
 		if extra_attacks <= 0:
-			status_effects[Battle.StatusEffect.EXTRA_TURNS] = 0
+			status_effects[Battle.StatusEffect.EXTRA_TURNS] = 0.0
 			$Info/StatusEffects/ExtraTurns.hide()
 	else:
 		if is_instance_valid(turn_order_box):
@@ -290,17 +294,19 @@ func damage_entity(weapon_data: Dictionary):
 		var critical = randf() < weapon_data.get("crit_hit_chance", 0.02) * weapon_data.get("crit_hit_mult", 1.0) * (10.0 if weapon_data.has("status_effects") and weapon_data.status_effects.has(Battle.StatusEffect.EXPOSED) else 1.0)
 		if critical:
 			actual_damage *= 2
-		if Battle.PassiveAbility.PHYSICAL_DAMAGE_RESISTANT in passive_abilities and weapon_data.type == Battle.DamageType.PHYSICAL:
-			actual_damage = ceil(actual_damage * 0.75)
-		if weapon_data.has("nullify_damage_chance") and randf() < weapon_data.nullify_damage_chance:
+		var damage_nullified = weapon_data.has("nullify_damage_chance") and randf() < weapon_data.nullify_damage_chance
+		if damage_nullified:
+			actual_damage = 0
+			critical = false
 			if float(actual_damage) / total_HP > 0.5:
 				agility_buff -= 4
-				status_effects[Battle.StatusEffect.STUN] += 2
+				status_effects[Battle.StatusEffect.STUN] += 2.0
 			elif float(actual_damage) / total_HP > 0.35:
 				agility_buff -= 3
 			elif float(actual_damage) / total_HP > 0.2:
 				agility_buff -= 2
-			actual_damage = 0
+		if Battle.PassiveAbility.PHYSICAL_DAMAGE_RESISTANT in passive_abilities and weapon_data.type == Battle.DamageType.PHYSICAL:
+			actual_damage = ceil(actual_damage * 0.75)
 		battle_scene.add_damage_text(false, position, actual_damage, critical, 0.3 * weapon_data.get("velocity", Vector2.ZERO) * sqrt(weapon_data.get("mass", 0.0)))
 		HP = max(HP - actual_damage, 0)
 		var knockback = weapon_data.get("knockback", Vector2.ZERO)
@@ -316,7 +322,8 @@ func damage_entity(weapon_data: Dictionary):
 			if weapon_data.has("status_effects"):
 				for effect in weapon_data.status_effects:
 					if randf() > status_effect_resistances[effect]:
-						status_effects[effect] += weapon_data.status_effects[effect]
+						var st = weapon_data.status_effects[effect]
+						status_effects[effect] = st * pow(status_effects[effect] + st, 0.8) / pow(st, 0.8)
 			if weapon_data.has("buffs"):
 				for buff in weapon_data.buffs:
 					self["%s_buff" % buff] += weapon_data.buffs[buff]
@@ -369,8 +376,8 @@ func entity_defeated_callback(knockback:Vector2 = Vector2.ZERO):
 	entity_dying_tween.tween_property(self, "position", position + knockback, 2.0)
 	entity_dying_tween.tween_property($TextureRect.material, "shader_parameter/alpha", 0.0, 1.0).set_delay(1.0)
 	entity_dying_tween.tween_callback(queue_free).set_delay(2.0)
-	if battle_scene.initiative_order[battle_scene.whose_turn_is_it_index].node == self:
-		entity_dying_tween.tween_callback(emit_signal.bind("next_turn")).set_delay(2.0)
+	if battle_scene.initiative_order[battle_scene.whose_turn_is_it_index-1].node == self:
+		entity_dying_tween.tween_callback(end_turn).set_delay(2.0)
 	entity_dying_tween.set_speed_scale(5.0 if battle_scene.animations_sped_up else 1.0)
 	if is_instance_valid(turn_order_box):
 		turn_order_box.get_node("AnimationPlayer").play("FadeOutAnim")

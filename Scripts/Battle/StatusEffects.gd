@@ -34,18 +34,18 @@ func update():
 	$ExtraTurns.visible = entity.status_effects[Battle.StatusEffect.EXTRA_TURNS] > 0
 	for effect in entity.status_effects:
 		if effect == Battle.StatusEffect.BURN:
-			$Burn/Label.text = Helper.format_num(entity.status_effects[effect])
+			$Burn/Label.text = str(int(entity.status_effects[effect]))
 		elif effect == Battle.StatusEffect.STUN:
-			$Stun/Label.text = Helper.format_num(entity.status_effects[effect])
+			$Stun/Label.text = str(int(entity.status_effects[effect]))
 		elif effect == Battle.StatusEffect.FROZEN:
-			$Frozen/Label.text = Helper.format_num(entity.status_effects[effect])
+			$Frozen/Label.text = str(int(entity.status_effects[effect]))
 		elif effect == Battle.StatusEffect.EXPOSED:
-			$Exposed/Label.text = Helper.format_num(entity.status_effects[effect])
+			$Exposed/Label.text = str(int(entity.status_effects[effect]))
 		elif effect == Battle.StatusEffect.CORRODING:
-			$Corroding/Label.text = Helper.format_num(entity.status_effects[effect])
+			$Corroding/Label.text = str(int(entity.status_effects[effect]))
 		elif effect == Battle.StatusEffect.RADIOACTIVE:
-			$Radioactive/Label.text = Helper.format_num(entity.status_effects[effect])
+			$Radioactive/Label.text = str(int(entity.status_effects[effect]))
 		elif effect == Battle.StatusEffect.WET:
-			$Wet/Label.text = Helper.format_num(entity.status_effects[effect])
+			$Wet/Label.text = str(int(entity.status_effects[effect]))
 		elif effect == Battle.StatusEffect.EXTRA_TURNS:
-			$ExtraTurns/Label.text = Helper.format_num(entity.status_effects[effect])
+			$ExtraTurns/Label.text = str(int(entity.status_effects[effect]))

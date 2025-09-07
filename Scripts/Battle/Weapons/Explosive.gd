@@ -62,6 +62,10 @@ func _on_area_entered(area: Area2D) -> void:
 				area_in_AoE.damage_entity(AoE_weapon_data)
 		if Settings.screen_shake:
 			get_node("/root/Game/Camera2D/Screenshake").start(0.5,15,4)
+		var explosion = preload("res://Scenes/Battle/Explosion.tscn").instantiate()
+		add_child(explosion)
+		explosion.rotation = randf_range(0.0, 2.0 * PI)
+		explosion.scale = Vector2.ONE * AoE_radius / 128.0
 		$AnimationPlayer.play("Explode")
 		battle_GUI.flash_screen(0.3, 0.2)
 		set_physics_process(false)

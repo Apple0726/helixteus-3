@@ -28,6 +28,14 @@ func _on_area_entered(area: Area2D) -> void:
 	if not status_effects.is_empty():
 		weapon_data.status_effects = status_effects
 	if area.damage_entity(weapon_data):
+		if status_effects.has(Battle.StatusEffect.WET):
+			var water_explosion = preload("res://Scenes/Battle/Explosion.tscn").instantiate()
+			battle_GUI.battle_scene.add_child(water_explosion)
+			water_explosion.position = position
+			water_explosion.rotation = randf_range(0.0, 2.0 * PI)
+			water_explosion.scale = Vector2.ONE * 0.5
+			water_explosion.play("water_explosion")
+			water_explosion.animation_finished.connect(water_explosion.queue_free)
 		if deflects_remaining == 0 or area.type == Battle.EntityType.BOUNDARY:
 			if area.type == Battle.EntityType.BOUNDARY:
 				ending_turn_delay = 0.0

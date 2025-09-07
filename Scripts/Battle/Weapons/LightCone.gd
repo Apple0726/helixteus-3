@@ -57,7 +57,7 @@ func add_weapon_data(hit_target, angle):
 			if weapon_datas[hit_target].buffs.has("attack"):
 				weapon_datas[hit_target].buffs.attack = -3
 			if weapon_datas[hit_target].status_effects.has(Battle.StatusEffect.EXPOSED):
-				weapon_datas[hit_target].status_effects[Battle.StatusEffect.EXPOSED] = 2
+				weapon_datas[hit_target].status_effects[Battle.StatusEffect.EXPOSED] = 3.0
 		weapon_datas[hit_target].velocity += 1.5 * Vector2.from_angle(angle)
 		hit_target.override_tooltip_dict.light_intensity_mult = " * " + str(weapon_datas[hit_target].light_rays / 200.0)
 		if has_shader:
@@ -72,13 +72,13 @@ func add_weapon_data(hit_target, angle):
 			"velocity":1.5 * Vector2.from_angle(angle),
 			"crit_hit_chance":0.0,
 			"status_effects":{},
-			"buffs":{"accuracy":-2},
+			"buffs":{"accuracy":-1},
 		}
 		if shooter.type == Battle.EntityType.SHIP:
 			if shooter.light_levels[0] >= 4:
-				weapon_data.status_effects[Battle.StatusEffect.EXPOSED] = 1
+				weapon_data.status_effects[Battle.StatusEffect.EXPOSED] = 1.0
 			if shooter.light_levels[0] >= 2:
-				weapon_data.buffs.attack = -2
+				weapon_data.buffs.attack = -1
 		weapon_datas[hit_target] = weapon_data
 		hit_target.override_tooltip_dict.light_intensity_mult = " * " + str(1 / 200.0)
 		hit_target.override_tooltip_dict.light_intensity_mult_info = " (" + tr("LIGHT_INTENSITY") + ")"

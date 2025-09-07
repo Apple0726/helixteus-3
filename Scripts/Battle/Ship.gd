@@ -262,6 +262,7 @@ func fire_weapon(weapon_type: int):
 			projectile.position = position
 			projectile.ending_turn_delay = 1.0
 			projectile.end_turn.connect(ending_turn)
+			projectile.battle_GUI = battle_GUI
 			battle_scene.add_child(projectile)
 			projectiles.append(projectile)
 			$FireProjectileFlash/AnimationPlayer.stop()
