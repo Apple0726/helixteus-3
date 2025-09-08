@@ -1,4 +1,4 @@
-[gd_resource type="Theme" load_steps=45 format=3 uid="uid://cp2u1kgj60ic"]
+[gd_resource type="Theme" load_steps=46 format=3 uid="uid://cp2u1kgj60ic"]
 
 [sub_resource type="SystemFont" id="SystemFont_xvdaj"]
 font_names = PackedStringArray("Sans-Serif")
@@ -88,8 +88,10 @@ multichannel_signed_distance_field = true
 
 [sub_resource type="StyleBoxEmpty" id="9"]
 
-[sub_resource type="SystemFont" id="SystemFont_ew3ep"]
+[sub_resource type="SystemFont" id="SystemFont_wrwbd"]
 fallbacks = Array[Font]([SubResource("SystemFont_xvdaj")])
+font_names = PackedStringArray("Ebrima")
+multichannel_signed_distance_field = true
 
 [sub_resource type="StyleBoxFlat" id="10"]
 content_margin_left = 8.0
@@ -102,6 +104,9 @@ bg_color = Color(1, 1, 1, 0.227451)
 [sub_resource type="StyleBoxFlat" id="12"]
 content_margin_left = 8.0
 bg_color = Color(1, 1, 1, 0)
+
+[sub_resource type="SystemFont" id="SystemFont_ew3ep"]
+fallbacks = Array[Font]([SubResource("SystemFont_xvdaj")])
 
 [sub_resource type="SystemFont" id="SystemFont_01v61"]
 fallbacks = Array[Font]([SubResource("SystemFont_xvdaj")])
@@ -331,7 +336,7 @@ CheckButton/colors/font_color_hover_pressed = Color(1, 1, 1, 1)
 CheckButton/colors/font_color_pressed = Color(1, 1, 1, 1)
 CheckButton/constants/check_vadjust = 0
 CheckButton/constants/hseparation = 4
-CheckButton/fonts/font = SubResource("SystemFont_ew3ep")
+CheckButton/fonts/font = SubResource("SystemFont_wrwbd")
 CheckButton/icons/off = null
 CheckButton/icons/off_disabled = null
 CheckButton/icons/on = null

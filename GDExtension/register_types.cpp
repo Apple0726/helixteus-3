@@ -1,5 +1,6 @@
 #include "register_types.h"
 
+#include "bad_apple_PID_calculator.h"
 #include "galaxy_generator.h"
 
 #include <gdextension_interface.h>
@@ -14,6 +15,7 @@ void initialize_cpp_module(ModuleInitializationLevel p_level) {
         return;
     }
 
+    ClassDB::register_class<BadApplePIDCalculator>();
     ClassDB::register_class<GalaxyGenerator>();
 }
 

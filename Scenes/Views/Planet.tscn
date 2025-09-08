@@ -1,4 +1,4 @@
-[gd_scene load_steps=13 format=3 uid="uid://bmmss4usqtscn"]
+[gd_scene load_steps=16 format=3 uid="uid://bmmss4usqtscn"]
 
 [ext_resource type="PackedScene" uid="uid://dixixiv5ynvkf" path="res://Scenes/WhiteRect.tscn" id="1"]
 [ext_resource type="Texture2D" uid="uid://4e7bahmd3w14" path="res://Graphics/Tiles/PlanetAtlas.png" id="2_xv77e"]
@@ -367,6 +367,15 @@ terrain_set_0/terrain_0/name = "Terrain 0"
 terrain_set_0/terrain_0/color = Color(0.5, 0.34375, 0.25, 1)
 sources/0 = SubResource("TileSetAtlasSource_fk4u5")
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_xv77e"]
+bg_color = Color(0.241156, 0.241156, 0.241156, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_xv77e"]
+font_size = 60
+
+[sub_resource type="LabelSettings" id="LabelSettings_fk4u5"]
+font_size = 60
+
 [sub_resource type="Shader" id="3"]
 code = "shader_type canvas_item;
 
@@ -407,6 +416,255 @@ use_parent_material = true
 [node name="BadApple" type="Node2D" parent="."]
 script = ExtResource("7_yxni4")
 
+[node name="Panel" type="Panel" parent="BadApple"]
+offset_top = -928.0
+offset_right = 2888.0
+offset_bottom = -56.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_xv77e")
+
+[node name="Label" type="Label" parent="BadApple/Panel"]
+layout_mode = 0
+offset_left = 64.0
+offset_top = 48.0
+offset_right = 2927.0
+offset_bottom = 561.0
+label_settings = SubResource("LabelSettings_xv77e")
+
+[node name="HSliderP" type="HSlider" parent="BadApple/Panel"]
+layout_mode = 0
+offset_left = 104.0
+offset_top = 520.0
+offset_right = 1304.0
+offset_bottom = 608.0
+max_value = 2.0
+step = 0.02
+value = 1.0
+
+[node name="Label" type="Label" parent="BadApple/Panel/HSliderP"]
+layout_mode = 0
+offset_left = 1264.0
+offset_right = 1349.0
+offset_bottom = 83.0
+text = "1.0"
+label_settings = SubResource("LabelSettings_fk4u5")
+
+[node name="Label2" type="Label" parent="BadApple/Panel/HSliderP"]
+visible = false
+layout_mode = 0
+offset_left = -80.0
+offset_right = -40.0
+offset_bottom = 83.0
+theme_override_font_sizes/font_size = 60
+text = "P"
+
+[node name="OptionButton" type="OptionButton" parent="BadApple/Panel/HSliderP"]
+visible = false
+layout_mode = 0
+offset_left = 1416.0
+offset_right = 1608.0
+offset_bottom = 91.0
+theme_override_font_sizes/font_size = 48
+alignment = 1
+selected = 0
+item_count = 4
+popup/item_0/text = " -"
+popup/item_0/id = 0
+popup/item_1/text = "LFO1"
+popup/item_1/id = 1
+popup/item_2/text = "LFO2"
+popup/item_2/id = 2
+popup/item_3/text = "LFO3"
+popup/item_3/id = 3
+
+[node name="HSliderI" type="HSlider" parent="BadApple/Panel"]
+visible = false
+layout_mode = 0
+offset_left = 104.0
+offset_top = 632.0
+offset_right = 1304.0
+offset_bottom = 720.0
+max_value = 1.0
+step = 0.01
+
+[node name="Label" type="Label" parent="BadApple/Panel/HSliderI"]
+layout_mode = 0
+offset_left = 1264.0
+offset_right = 1349.0
+offset_bottom = 83.0
+text = "0.0"
+label_settings = SubResource("LabelSettings_fk4u5")
+
+[node name="Label2" type="Label" parent="BadApple/Panel/HSliderI"]
+layout_mode = 0
+offset_left = -72.0
+offset_right = -24.0
+offset_bottom = 83.0
+theme_override_font_sizes/font_size = 60
+text = "I"
+
+[node name="OptionButton" type="OptionButton" parent="BadApple/Panel/HSliderI"]
+visible = false
+offset_left = 1416.0
+offset_right = 1608.0
+offset_bottom = 91.0
+theme_override_font_sizes/font_size = 48
+alignment = 1
+selected = 0
+item_count = 4
+popup/item_0/text = " -"
+popup/item_0/id = 0
+popup/item_1/text = "LFO1"
+popup/item_1/id = 1
+popup/item_2/text = "LFO2"
+popup/item_2/id = 2
+popup/item_3/text = "LFO3"
+popup/item_3/id = 3
+
+[node name="HSliderD" type="HSlider" parent="BadApple/Panel"]
+visible = false
+layout_mode = 0
+offset_left = 104.0
+offset_top = 752.0
+offset_right = 1304.0
+offset_bottom = 840.0
+max_value = 1.0
+step = 0.01
+
+[node name="Label" type="Label" parent="BadApple/Panel/HSliderD"]
+layout_mode = 0
+offset_left = 1264.0
+offset_right = 1349.0
+offset_bottom = 83.0
+text = "0.0"
+label_settings = SubResource("LabelSettings_fk4u5")
+
+[node name="Label2" type="Label" parent="BadApple/Panel/HSliderD"]
+layout_mode = 0
+offset_left = -80.0
+offset_right = -24.0
+offset_bottom = 83.0
+theme_override_font_sizes/font_size = 60
+text = "D"
+
+[node name="OptionButton" type="OptionButton" parent="BadApple/Panel/HSliderD"]
+visible = false
+offset_left = 1416.0
+offset_right = 1608.0
+offset_bottom = 91.0
+theme_override_font_sizes/font_size = 48
+alignment = 1
+selected = 0
+item_count = 4
+popup/item_0/text = " -"
+popup/item_0/id = 0
+popup/item_1/text = "LFO1"
+popup/item_1/id = 1
+popup/item_2/text = "LFO2"
+popup/item_2/id = 2
+popup/item_3/text = "LFO3"
+popup/item_3/id = 3
+
+[node name="OPButton" type="Button" parent="BadApple/Panel"]
+layout_mode = 0
+offset_left = 112.0
+offset_top = 664.0
+offset_right = 1345.0
+offset_bottom = 779.0
+theme_override_font_sizes/font_size = 60
+text = "Are you an OP control systems engineer?"
+
+[node name="OPButton2" type="Button" parent="BadApple/Panel"]
+visible = false
+layout_mode = 0
+offset_left = 1816.0
+offset_top = 616.0
+offset_right = 2697.0
+offset_bottom = 731.0
+theme_override_font_sizes/font_size = 60
+text = "Also an OP sound engineer?"
+
+[node name="LFO" type="Control" parent="BadApple/Panel"]
+visible = false
+anchors_preset = 0
+offset_left = 192.0
+offset_top = 32.0
+offset_right = 232.0
+offset_bottom = 72.0
+
+[node name="OptionButton" type="OptionButton" parent="BadApple/Panel/LFO"]
+layout_mode = 0
+offset_left = 1904.0
+offset_top = 400.0
+offset_right = 2152.0
+offset_bottom = 496.0
+theme_override_font_sizes/font_size = 60
+alignment = 1
+selected = 0
+item_count = 3
+popup/item_0/text = "LFO 1"
+popup/item_0/id = 0
+popup/item_1/text = "LFO 2"
+popup/item_1/id = 1
+popup/item_2/text = "LFO 3"
+popup/item_2/id = 2
+
+[node name="LabelF" type="Label" parent="BadApple/Panel/LFO"]
+layout_mode = 0
+offset_left = 2208.0
+offset_top = 520.0
+offset_right = 2382.0
+offset_bottom = 603.0
+text = "1.0 Hz"
+label_settings = SubResource("LabelSettings_fk4u5")
+
+[node name="LabelA" type="Label" parent="BadApple/Panel/LFO"]
+layout_mode = 0
+offset_left = 2208.0
+offset_top = 616.0
+offset_right = 2605.0
+offset_bottom = 699.0
+text = "0.5 amplitude"
+label_settings = SubResource("LabelSettings_fk4u5")
+
+[node name="LabelO" type="Label" parent="BadApple/Panel/LFO"]
+layout_mode = 0
+offset_left = 2208.0
+offset_top = 712.0
+offset_right = 2605.0
+offset_bottom = 795.0
+text = "0.5 offset"
+label_settings = SubResource("LabelSettings_fk4u5")
+
+[node name="HSliderF" type="HSlider" parent="BadApple/Panel/LFO"]
+layout_mode = 0
+offset_left = 1704.0
+offset_top = 520.0
+offset_right = 2176.0
+offset_bottom = 608.0
+max_value = 10.0
+step = 0.1
+value = 1.0
+
+[node name="HSliderA" type="HSlider" parent="BadApple/Panel/LFO"]
+layout_mode = 0
+offset_left = 1704.0
+offset_top = 616.0
+offset_right = 2176.0
+offset_bottom = 704.0
+max_value = 2.0
+step = 0.05
+value = 0.5
+
+[node name="HSliderO" type="HSlider" parent="BadApple/Panel/LFO"]
+layout_mode = 0
+offset_left = 1704.0
+offset_top = 712.0
+offset_right = 2176.0
+offset_bottom = 800.0
+max_value = 2.0
+step = 0.05
+value = 0.5
+
 [node name="icon" type="Sprite2D" parent="."]
 visible = false
 material = SubResource("4")
@@ -426,4 +684,13 @@ one_shot = true
 
 [connection signal="tree_exited" from="." to="." method="_on_Planet_tree_exited"]
 [connection signal="tree_exiting" from="BadApple" to="BadApple" method="_on_tree_exiting"]
+[connection signal="value_changed" from="BadApple/Panel/HSliderP" to="BadApple" method="_on_h_slider_p_value_changed"]
+[connection signal="value_changed" from="BadApple/Panel/HSliderI" to="BadApple" method="_on_h_slider_i_value_changed"]
+[connection signal="value_changed" from="BadApple/Panel/HSliderD" to="BadApple" method="_on_h_slider_d_value_changed"]
+[connection signal="pressed" from="BadApple/Panel/OPButton" to="BadApple" method="_on_op_button_pressed"]
+[connection signal="pressed" from="BadApple/Panel/OPButton2" to="BadApple" method="_on_op_button_2_pressed"]
+[connection signal="item_selected" from="BadApple/Panel/LFO/OptionButton" to="BadApple" method="_on_option_button_item_selected"]
+[connection signal="value_changed" from="BadApple/Panel/LFO/HSliderF" to="BadApple" method="_on_h_slider_f_value_changed"]
+[connection signal="value_changed" from="BadApple/Panel/LFO/HSliderA" to="BadApple" method="_on_h_slider_a_value_changed"]
+[connection signal="value_changed" from="BadApple/Panel/LFO/HSliderO" to="BadApple" method="_on_h_slider_o_value_changed"]
 [connection signal="timeout" from="BuildingShortcutTimer" to="." method="_on_building_shortcut_timer_timeout"]
