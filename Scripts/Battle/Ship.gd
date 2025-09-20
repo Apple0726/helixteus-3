@@ -52,9 +52,9 @@ func initialize_stats(data: Dictionary):
 func turn_on_lights(index: int):
 	for i in 4:
 		if i == index:
-			get_node("Ship%sLights" % (i+1)).show()
+			get_node("TextureRect/Ship%sLights" % (i+1)).show()
 		else:
-			get_node("Ship%sLights" % (i+1)).hide()
+			get_node("TextureRect/Ship%sLights" % (i+1)).hide()
 
 var highlighted_targets = []
 
@@ -128,17 +128,33 @@ func move():
 	display_move_path = false
 	battle_scene.hide_and_restore_collision_shapes()
 	queue_redraw()
-	movement_remaining -= (move_target_position - position).length() / battle_scene.PIXELS_PER_METER
+	var move_vector = (move_target_position - position)
+	var move_angle_target = atan2(move_vector.y, move_vector.x)
+	# Modify move_angle_target so the ship does not rotate 358 degrees when going from
+	# 179° to -179° (only needs to rotate 2°)
+	#
+	#		x <- move_angle_target
+	# (-PI) -------------O------------> (0.0)
+	#		x <- $TextureRect.rotation
+	#
+	if move_angle_target < $TextureRect.rotation - PI:
+		move_angle_target -= snappedf(move_angle_target - $TextureRect.rotation, 2.0 * PI)
+	elif move_angle_target > $TextureRect.rotation + PI:
+		move_angle_target += snappedf(move_angle_target - $TextureRect.rotation, 2.0 * PI)
+	movement_remaining -= move_vector.length() / battle_scene.PIXELS_PER_METER
 	movement_remaining -= move_additional_costs
 	if battle_scene.animations_sped_up:
-		var move_tween = create_tween()
+		var move_tween = create_tween().set_parallel()
+		move_tween.tween_property($TextureRect, "rotation", move_angle_target, 0.2)
 		move_tween.tween_property(self, "position", move_target_position, 0.2)
-		move_tween.tween_callback(cancel_action)
+		move_tween.tween_callback(cancel_action).set_delay(0.2)
 	else:
+		var rotate_duration = max(0.4, abs((move_angle_target - $TextureRect.rotation) / PI))
 		var move_tween = create_tween()
+		move_tween.tween_property($TextureRect, "rotation", move_angle_target, rotate_duration).set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_CUBIC)
 		move_tween.tween_property(self, "position", move_target_position, 1.0).set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_CUBIC)
 		move_tween.tween_callback(cancel_action)
-		create_tween().tween_property(game.view, "position", Vector2(640, 360) - move_target_position * game.view.scale.x, 1.0).set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_CUBIC)
+		create_tween().tween_property(game.view, "position", Vector2(640, 360) - move_target_position * game.view.scale.x, 1.0).set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_CUBIC).set_delay(rotate_duration)
 
 
 func _process(delta: float) -> void:

@@ -504,6 +504,7 @@ text = "I"
 
 [node name="OptionButton" type="OptionButton" parent="BadApple/Panel/HSliderI"]
 visible = false
+layout_mode = 0
 offset_left = 1416.0
 offset_right = 1608.0
 offset_bottom = 91.0
@@ -548,6 +549,7 @@ text = "D"
 
 [node name="OptionButton" type="OptionButton" parent="BadApple/Panel/HSliderD"]
 visible = false
+layout_mode = 0
 offset_left = 1416.0
 offset_right = 1608.0
 offset_bottom = 91.0

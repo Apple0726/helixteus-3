@@ -63,9 +63,12 @@ func _on_area_entered(area: Area2D) -> void:
 		if Settings.screen_shake:
 			get_node("/root/Game/Camera2D/Screenshake").start(0.5,15,4)
 		var explosion = preload("res://Scenes/Battle/Explosion.tscn").instantiate()
-		add_child(explosion)
+		battle_GUI.battle_scene.add_child(explosion)
+		explosion.position = position
 		explosion.rotation = randf_range(0.0, 2.0 * PI)
 		explosion.scale = Vector2.ONE * AoE_radius / 128.0
+		explosion.play("explosion")
+		explosion.animation_finished.connect(explosion.queue_free)
 		$AnimationPlayer.play("Explode")
 		battle_GUI.flash_screen(0.3, 0.2)
 		set_physics_process(false)

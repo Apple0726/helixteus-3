@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=3 uid="uid://m8wrm55x0xbe"]
+[gd_scene load_steps=9 format=3 uid="uid://m8wrm55x0xbe"]
 
 [ext_resource type="Theme" uid="uid://cp2u1kgj60ic" path="res://Resources/default_theme.tres" id="1_bn3ag"]
 [ext_resource type="Texture2D" uid="uid://buvqtd7v5l8m2" path="res://Graphics/Icons/Fire.png" id="2_jvqvk"]
@@ -7,6 +7,7 @@
 [ext_resource type="Texture2D" uid="uid://pvvxdd2l5ygb" path="res://Graphics/Misc/DimensionalPower.png" id="4_jvqvk"]
 [ext_resource type="Texture2D" uid="uid://bshcbtjw6w01j" path="res://Graphics/Icons/frozen.png" id="5_a6ky5"]
 [ext_resource type="Texture2D" uid="uid://ddk4tb7t6a6my" path="res://Graphics/Icons/corroding.png" id="6_4ih1o"]
+[ext_resource type="Texture2D" uid="uid://dtt8s3bhk46u6" path="res://Graphics/Icons/water.png" id="7_4ih1o"]
 
 [node name="StatusEffects" type="VBoxContainer"]
 mouse_filter = 2
@@ -56,6 +57,20 @@ stretch_mode = 5
 layout_mode = 2
 text = "9"
 
+[node name="Wet" type="HBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="Icon" type="TextureRect" parent="Wet"]
+custom_minimum_size = Vector2(30, 0)
+layout_mode = 2
+texture = ExtResource("7_4ih1o")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Label" type="Label" parent="Wet"]
+layout_mode = 2
+text = "9"
+
 [node name="Exposed" type="HBoxContainer" parent="."]
 layout_mode = 2
 
@@ -93,19 +108,6 @@ expand_mode = 1
 stretch_mode = 5
 
 [node name="Label" type="Label" parent="Radioactive"]
-layout_mode = 2
-text = "9"
-
-[node name="Wet" type="HBoxContainer" parent="."]
-layout_mode = 2
-
-[node name="Icon" type="TextureRect" parent="Wet"]
-custom_minimum_size = Vector2(30, 0)
-layout_mode = 2
-expand_mode = 1
-stretch_mode = 5
-
-[node name="Label" type="Label" parent="Wet"]
 layout_mode = 2
 text = "9"
 

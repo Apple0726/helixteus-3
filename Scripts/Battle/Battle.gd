@@ -86,7 +86,6 @@ func _ready() -> void:
 		ship_node.get_node("Info/HP").max_value = ship_data[i].HP
 		ship_node.get_node("Info/HP").value = ship_data[i].HP
 		ship_node.get_node("Info/Label").text = "%s %s" % [tr("LV"), ship_data[i].lv]
-		ship_node.get_node("ThrusterFire").emitting = false
 		add_child(ship_node)
 		ship_nodes.append(ship_node)
 

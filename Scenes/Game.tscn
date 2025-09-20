@@ -745,6 +745,7 @@ ignore_texture_size = true
 stretch_mode = 5
 
 [node name="Languages" parent="Title" instance=ExtResource("9")]
+layout_mode = 0
 anchors_preset = 0
 anchor_right = 0.0
 anchor_bottom = 0.0

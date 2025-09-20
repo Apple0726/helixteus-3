@@ -89,7 +89,7 @@ animations = [{
 }],
 "loop": false,
 "name": &"water_explosion",
-"speed": 15.0
+"speed": 20.0
 }]
 
 [node name="Node2D" type="AnimatedSprite2D"]
