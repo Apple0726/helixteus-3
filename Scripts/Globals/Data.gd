@@ -429,10 +429,42 @@ var rover_mining = {	"red_mining_laser":{"speed":1, "rnge":250, "costs":{"money"
 						"ultragammaray_mining_laser":{"speed":16, "rnge":500, "costs":{"money":e(1.0, 12), "silicon":2500, "quartz":1000}},
 }
 var battle_weapon_stats = {
-	"bullet": {"damage":3.5, "accuracy":1.0},
-	"laser": {"damage":2.0, "accuracy":1.8},
-	"bomb": {"damage":6.0, "accuracy":0.65},
-	"light": {"damage":3.0, "accuracy":INF},
+	"bullet": {	"damage":3.5,
+				"accuracy":1.0,
+				"shots_fired":[2, 3, 6, 15],
+				"mass":[1.0, 1.3, 1.8, 3.2],
+				"knockback":[0.0, 10.0, 15.0, 24.0],
+				"damage_multiplier":[1.0, 1.0, 1.4, 2.1],
+				"crit_hit_mult":[1.0, 1.5, 2.3, 3.4],
+				"deflects":[2, 2, 3, 4],
+				"ignore_defense_buffs":[false, false, true, true],
+				"status_effects":{
+					Battle.StatusEffect.CORRODING:[0, 3, 5, 0],
+					Battle.StatusEffect.RADIOACTIVE:[0, 3, 5, 0],
+					Battle.StatusEffect.WET:[0, 2, 4, 0],
+					Battle.StatusEffect.FROZEN:[0, 0, 0, 4],
+				},
+			},
+	"laser": {	"damage":2.0,
+				"accuracy":1.8,
+				"status_effects":{
+					Battle.StatusEffect.STUN:[1, 1, 2, 2],
+				}
+			},
+	"bomb": {	"damage":6.0,
+				"accuracy":0.65,
+				"AoE_radius":[100.0, 130.0, 180.0, 300.0],
+				"mass":[4.0, 6.0, 9.0, 15.0],
+				"knockback":[50.0, 60.0, 70.0, 100.0],
+				"damage_multiplier":[1.0, 1.0, 1.5, 2.0],
+				"status_effects":{
+					Battle.StatusEffect.BURN:[1, 2, 2, 2],
+					Battle.StatusEffect.STUN:[0, 0, 1, 1],
+				},
+			},
+	"light": {	"damage":3.0,
+				"accuracy":INF,
+				"damage_multiplier":[1.0, 1.0, 1.4, 1.6]},
 }
 
 #the numbers are the elements' abundance relative to hydrogen
@@ -604,7 +636,7 @@ var ancient_building_costs = {
 
 var MS_num_stages:Dictionary = {"DS":4, "MME":3, "CBS":3, "PK":2, "SE":1, "MB":0}
 
-var tier_colors = [
+var ancient_bldg_tier_colors = [
 	Color.WHITE,
 	Color(0, 0.9, 0.0),
 	Color(0.2, 0.2, 1.0),

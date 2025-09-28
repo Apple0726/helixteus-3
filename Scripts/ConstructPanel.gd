@@ -269,7 +269,7 @@ func _on_ancient_mouse_exited():
 func on_ancient_bldg_over(bldg:int):
 	var icons = []
 	var tier:int = $Panel/ScrollContainer/VBoxContainer/HBoxContainer/Tier.value
-	var tooltip = "[font_size=20][color=#%s]" % Data.tier_colors[tier - 1].to_html(false)
+	var tooltip = "[font_size=20][color=#%s]" % Data.ancient_bldg_tier_colors[tier - 1].to_html(false)
 	var ancient_building_name = AncientBuilding.names[bldg]
 	tooltip += tr(ancient_building_name.to_upper())
 	if tier > 1:

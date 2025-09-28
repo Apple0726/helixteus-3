@@ -754,7 +754,7 @@ func _on_MainMenu_pressed():
 func set_ship_btn_shader(active:bool, tier:int = -1):
 	ships_btn.material.set_shader_parameter("active", active)
 	if tier != -1:
-		ships_btn.material.set_shader_parameter("color", Data.tier_colors[tier - 1])
+		ships_btn.material.set_shader_parameter("color", Data.ancient_bldg_tier_colors[tier - 1])
 		ships_btn.material.set_shader_parameter("speed", tier * game.u_i.time_speed)
 		if game.science_unlocked.has("ISC"):
 			await get_tree().process_frame

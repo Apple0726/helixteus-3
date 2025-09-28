@@ -4,6 +4,7 @@ var shooter:BattleEntity
 var damage:float
 var weapon_accuracy:int
 var fade_delay:float
+var status_effects = {}
 
 func _ready() -> void:
 	$RayCast2D.target_position.x = 5000.0
@@ -21,7 +22,7 @@ func _ready() -> void:
 				"weapon_accuracy":weapon_accuracy,
 				"orientation":Vector2.from_angle(rotation),
 				"velocity":100.0 * Vector2.from_angle(rotation),
-				"status_effects":{Battle.StatusEffect.STUN: 2 if shooter.laser_levels[1] >= 3 else 1},
+				"status_effects":status_effects,
 			}
 			if hit_target.damage_entity(weapon_data):
 				laser_absorbed = true

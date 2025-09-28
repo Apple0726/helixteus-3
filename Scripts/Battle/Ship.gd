@@ -18,6 +18,7 @@ var fires_remaining:int = 1
 var light_cone
 var light_emission_cone_angle = PI / 4.0
 var display_move_path = false
+var display_explosive_AoE = false
 var move_target_position:Vector2
 var move_additional_costs:float
 var pushable_entities = []
@@ -99,6 +100,10 @@ func _draw() -> void:
 		if move_additional_costs > 0.0:
 			dist_str += " (+ %.1f m)" % move_additional_costs
 		draw_string(SystemFont.new(), line_vector + 20.0 * Vector2.ONE, dist_str)
+	if display_explosive_AoE:
+		draw_circle(battle_scene.mouse_position_local - position, Data.battle_weapon_stats.bomb.AoE_radius[bomb_levels[PATH_1]], Color(1.0, 0.0, 0.0, 0.2))
+		for i in range(0, 32, 2):
+			draw_arc(battle_scene.mouse_position_local - position, Data.battle_weapon_stats.bomb.AoE_radius[bomb_levels[PATH_1]], 2.0 * PI / 32.0 * i, 2.0 * PI / 32.0 * (i+1), 100, Color.RED)
 
 func take_turn():
 	$Selected.show()
@@ -192,6 +197,8 @@ func _on_mouse_exited() -> void:
 
 func fire_weapon(weapon_type: int):
 	game.hide_tooltip()
+	display_explosive_AoE = false
+	queue_redraw()
 	if fires_remaining <= 1:
 		$FireWeaponAim.fade_out()
 		block_cancelling_action = false
@@ -203,59 +210,28 @@ func fire_weapon(weapon_type: int):
 	if weapon_type == battle_GUI.BULLET:
 		fires_remaining = 0
 		var projectiles = []
-		var projectile_num = 2
-		if bullet_levels[PATH_1] == 2:
-			projectile_num = 3
-		elif bullet_levels[PATH_1] == 3:
-			projectile_num = 6
-		elif bullet_levels[PATH_1] == 4:
-			projectile_num = 15
-		var damage_multiplier = 1.0
-		var bullet_mass = 1.0
-		var knockback = 0.0
-		var crit_hit_mult = 1.0
-		var deflects_remaining = 2
-		var ignore_defense_buffs = false
+		var projectile_num = Data.battle_weapon_stats.bullet.shots_fired[bullet_levels[PATH_1] - 1]
 		var status_effects = {}
 		var bullet_texture = preload("res://Graphics/Battle/Projectiles/bullet.png")
 		var trail_color = Color.WHITE
-		if battle_GUI.bullet_2_selected_type == battle_GUI.BIG_BULLET:
-			if bullet_levels[PATH_2] == 2:
-				bullet_mass = 1.3
-				knockback = 10.0
-				crit_hit_mult = 1.5
-			elif bullet_levels[PATH_2] == 3:
-				bullet_mass = 1.8
-				knockback = 15.0
-				damage_multiplier = 1.4
-				crit_hit_mult = 2.3
-				deflects_remaining = 3
-				ignore_defense_buffs = true
-			elif bullet_levels[PATH_2] == 4:
-				bullet_mass = 3.2
-				knockback = 24.0
-				damage_multiplier = 2.1
-				crit_hit_mult = 3.4
-				deflects_remaining = 4
-				ignore_defense_buffs = true
-		elif battle_GUI.bullet_2_selected_type == battle_GUI.CORROSIVE_BULLET:
+		if battle_GUI.bullet_2_selected_type == battle_GUI.CORROSIVE_BULLET:
 			bullet_texture = preload("res://Graphics/Battle/Projectiles/corrosive_bullet.png")
 			trail_color = Color.YELLOW_GREEN
-			if bullet_levels[PATH_2] == 2:
-				status_effects[Battle.StatusEffect.CORRODING] = 3
-			elif bullet_levels[PATH_2] == 3:
-				status_effects[Battle.StatusEffect.CORRODING] = 5
-			elif bullet_levels[PATH_2] == 4:
-				status_effects[Battle.StatusEffect.RADIOACTIVE] = 5
+			var corroding_turns = Data.battle_weapon_stats.bullet.status_effects[Battle.StatusEffect.CORRODING][bullet_levels[PATH_2] - 1]
+			if corroding_turns > 0:
+				status_effects[Battle.StatusEffect.CORRODING] = corroding_turns
+			var radioactive_turns = Data.battle_weapon_stats.bullet.status_effects[Battle.StatusEffect.RADIOACTIVE][bullet_levels[PATH_2] - 1]
+			if radioactive_turns > 0:
+				status_effects[Battle.StatusEffect.RADIOACTIVE] = radioactive_turns
 		elif battle_GUI.bullet_2_selected_type == battle_GUI.AQUA_BULLET:
 			bullet_texture = preload("res://Graphics/Battle/Projectiles/aqua_bullet.png")
 			trail_color = Color.LIGHT_BLUE
-			if bullet_levels[PATH_2] == 2:
-				status_effects[Battle.StatusEffect.WET] = 2
-			elif bullet_levels[PATH_2] == 3:
-				status_effects[Battle.StatusEffect.WET] = 4
-			elif bullet_levels[PATH_2] == 4:
-				status_effects[Battle.StatusEffect.FROZEN] = 4
+			var wet_turns = Data.battle_weapon_stats.bullet.status_effects[Battle.StatusEffect.WET][bullet_levels[PATH_2] - 1]
+			if wet_turns > 0:
+				status_effects[Battle.StatusEffect.WET] = wet_turns
+			var frozen_turns = Data.battle_weapon_stats.bullet.status_effects[Battle.StatusEffect.FROZEN][bullet_levels[PATH_2] - 1]
+			if frozen_turns > 0:
+				status_effects[Battle.StatusEffect.RADIOACTIVE] = frozen_turns
 		for i in projectile_num:
 			var projectile = preload("res://Scenes/Battle/Weapons/Projectile.tscn").instantiate()
 			projectile.collision_layer = 8
@@ -264,16 +240,16 @@ func fire_weapon(weapon_type: int):
 			projectile.get_node("Sprite2D").texture = bullet_texture
 			projectile.trail_color = trail_color
 			projectile.speed = 1000.0
-			projectile.mass = bullet_mass
+			projectile.mass = Data.battle_weapon_stats.bullet.mass[bullet_levels[PATH_2] - 1]
 			projectile.velocity_process_modifier = 5.0 if battle_scene.animations_sped_up else 1.0
 			projectile.rotation = randf_range(weapon_rotation_min, weapon_rotation_max)
-			projectile.damage = Data.battle_weapon_stats.bullet.damage * damage_multiplier
-			projectile.crit_hit_mult = crit_hit_mult
+			projectile.damage = Data.battle_weapon_stats.bullet.damage * Data.battle_weapon_stats.bullet.damage_multiplier[bullet_levels[PATH_2] - 1]
+			projectile.crit_hit_mult = Data.battle_weapon_stats.bullet.crit_hit_mult[bullet_levels[PATH_2] - 1]
 			projectile.shooter = self
 			projectile.weapon_accuracy = Data.battle_weapon_stats.bullet.accuracy * accuracy
-			projectile.deflects_remaining = deflects_remaining
-			projectile.knockback = knockback
-			projectile.ignore_defense_buffs = ignore_defense_buffs
+			projectile.deflects_remaining = Data.battle_weapon_stats.bullet.deflects[bullet_levels[PATH_2] - 1]
+			projectile.knockback = Data.battle_weapon_stats.bullet.knockback[bullet_levels[PATH_2] - 1]
+			projectile.ignore_defense_buffs = Data.battle_weapon_stats.bullet.ignore_defense_buffs[bullet_levels[PATH_2] - 1]
 			projectile.status_effects = status_effects
 			projectile.position = position
 			projectile.ending_turn_delay = 1.0
@@ -297,6 +273,7 @@ func fire_weapon(weapon_type: int):
 		laser.weapon_accuracy = Data.battle_weapon_stats.laser.accuracy * accuracy
 		laser.position = position
 		laser.fade_delay = 0.2 if battle_scene.animations_sped_up else 0.5
+		laser.status_effects = {Battle.StatusEffect.STUN: Data.battle_weapon_stats.laser.status_effects[Battle.StatusEffect.STUN][laser_levels[PATH_2] - 1]}
 		battle_scene.add_child(laser)
 		if fires_remaining <= 1:
 			laser.tree_exited.connect(ending_turn)
@@ -307,23 +284,17 @@ func fire_weapon(weapon_type: int):
 		explosive.set_script(load("res://Scripts/Battle/Weapons/Explosive.gd"))
 		explosive.speed = 800.0
 		explosive.velocity_process_modifier = 5.0 if battle_scene.animations_sped_up else 1.0
-		explosive.damage = Data.battle_weapon_stats.bomb.damage
-		if bomb_levels[PATH_1] >= 3:
-			explosive.mass = 9.0
-			explosive.AoE_radius = 300.0
-			explosive.damage *= 1.5
-			explosive.knockback = 100.0
-		elif bomb_levels[PATH_1] >= 2:
-			explosive.mass = 6.0
-			explosive.AoE_radius = 180.0
-			explosive.knockback = 60.0
-		else:
-			explosive.mass = 4.0
-			explosive.AoE_radius = 100.0
-			explosive.knockback = 50.0
+		explosive.damage = Data.battle_weapon_stats.bomb.damage * Data.battle_weapon_stats.bomb.damage_multiplier[bomb_levels[PATH_1] - 1]
+		explosive.AoE_radius = Data.battle_weapon_stats.bomb.AoE_radius[bomb_levels[PATH_1] - 1]
+		explosive.mass = Data.battle_weapon_stats.bomb.mass[bomb_levels[PATH_1] - 1]
+		explosive.knockback = Data.battle_weapon_stats.bomb.knockback[bomb_levels[PATH_1] - 1]
 		explosive.rotation = weapon_rotation
 		explosive.shooter = self
 		explosive.weapon_accuracy = Data.battle_weapon_stats.bomb.accuracy * accuracy
+		explosive.status_effects = {Battle.StatusEffect.BURN: Data.battle_weapon_stats.bomb.status_effects[Battle.StatusEffect.BURN][bomb_levels[PATH_2] - 1]}
+		var stun_turns = Data.battle_weapon_stats.bomb.status_effects[Battle.StatusEffect.STUN][bomb_levels[PATH_1] - 1]
+		if stun_turns > 0:
+			explosive.status_effects[Battle.StatusEffect.STUN] = stun_turns
 		explosive.position = position
 		explosive.battle_GUI = battle_GUI
 		explosive.ending_turn_delay = 1.0
@@ -342,9 +313,7 @@ func add_light_cone():
 	light_cone = preload("res://Scenes/Battle/Weapons/LightCone.tscn").instantiate()
 	light_cone.set_script(load("res://Scripts/Battle/Weapons/LightCone.gd"))
 	light_cone.emission_cone_angle = light_emission_cone_angle
-	light_cone.damage = Data.battle_weapon_stats.light.damage
-	if light_levels[PATH_2] >= 3:
-		light_cone.damage *= 1.4
+	light_cone.damage = Data.battle_weapon_stats.light.damage * Data.battle_weapon_stats.light.damage_multiplier[light_levels[PATH_2] - 1]
 	light_cone.shooter = self
 	add_child(light_cone)
 
@@ -365,11 +334,12 @@ func cancel_action():
 	if is_instance_valid(light_cone):
 		light_cone.queue_free()
 	for pushable_entity in target_btns:
-		create_tween().tween_property(pushable_entity.get_node("Sprite2D").material, "shader_parameter/alpha", 1.0, 0.2)
+		create_tween().tween_property(pushable_entity.get_node("TextureRect").material, "shader_parameter/alpha", 1.0, 0.2)
 		target_btns[pushable_entity].queue_free()
 	game.block_scroll = false
 	target_btns.clear()
 	display_move_path = false
+	display_explosive_AoE = false
 	battle_scene.hide_and_restore_collision_shapes()
 	queue_redraw()
 	get_node("RayCast2D").enabled = false
@@ -406,14 +376,14 @@ func add_target_buttons_for_push():
 		var push_success_chance = 100.0 * (1.0 - 1.0 / (1.0 + exp((agility + agility_buff - entity.agility - entity.agility_buff - push_difficulty_from_velocity + 9.2) / 5.8)))
 		target_btn.get_node("TextureButton").mouse_entered.connect(game.show_tooltip.bind(tr("PUSH_SUCCESS_CHANCE") + ": %.1f%%" % push_success_chance, {"additional_text":tr("PUSH_SUCCESS_CHANCE_HELP")}))
 		target_btn.get_node("TextureButton").mouse_exited.connect(game.hide_tooltip)
-		create_tween().tween_property(entity.get_node("Sprite2D").material, "shader_parameter/alpha", 0.2, 0.2)
+		create_tween().tween_property(entity.get_node("TextureRect").material, "shader_parameter/alpha", 0.2, 0.2)
 		entity.add_child(target_btn)
 		target_btns[entity] = target_btn
 
 func show_push_strength_panel(entity: BattleEntity):
 	entity_to_push = entity
 	for pushable_entity in target_btns:
-		create_tween().tween_property(pushable_entity.get_node("Sprite2D").material, "shader_parameter/alpha", 1.0, 0.2)
+		create_tween().tween_property(pushable_entity.get_node("TextureRect").material, "shader_parameter/alpha", 1.0, 0.2)
 		target_btns[pushable_entity].queue_free()
 	target_btns.clear()
 	battle_GUI.get_node("PushStrengthPanel/MovementUsedLower").text = "30.0 m"

@@ -123,7 +123,7 @@ func _input(event: InputEvent) -> void:
 		elif Input.is_action_just_released("shift"):
 			game.block_scroll = false
 			$LightEmissionConePanel.hide()
-	elif action_selected == MOVE and event is InputEventMouseMotion:
+	elif action_selected != NONE and event is InputEventMouseMotion:
 		ship_node.queue_redraw()
 	elif action_selected == PUSH:
 		if is_instance_valid(ship_node.entity_to_push):
@@ -307,6 +307,8 @@ func _on_bomb_pressed() -> void:
 		ship_node.weapon_accuracy_mult *= 1.7
 	override_enemy_tooltips()
 	ship_node.fires_remaining = 1
+	ship_node.display_explosive_AoE = true
+	ship_node.queue_redraw()
 	ship_node.get_node("FireWeaponAim").weapon_type = BOMB
 	ship_node.get_node("FireWeaponAim").show()
 	game.hide_tooltip()

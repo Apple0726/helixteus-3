@@ -7,8 +7,8 @@
 [ext_resource type="Texture2D" uid="uid://bblxs0wnkibch" path="res://Graphics/Weapons/laser1.png" id="5_lfxuw"]
 [ext_resource type="Texture2D" uid="uid://cyogaq3sj1anp" path="res://Graphics/Weapons/bomb1.png" id="6_xd3wr"]
 [ext_resource type="Texture2D" uid="uid://c1v73luqy7pi5" path="res://Graphics/Weapons/light1.png" id="7_18k07"]
-[ext_resource type="Texture2D" uid="uid://ds6nct7g63284" path="res://Graphics/Icons/Arrow.png" id="8_cg768"]
-[ext_resource type="Texture2D" uid="uid://bapj1r8e5pwia" path="res://Graphics/Icons/agility.png" id="9_hr53r"]
+[ext_resource type="Texture2D" uid="uid://b8xut3yn8djrb" path="res://Graphics/Buttons/target.png" id="8_oca3i"]
+[ext_resource type="Texture2D" uid="uid://do2jj66kerck5" path="res://Graphics/Effects/push_4.png" id="9_oca3i"]
 [ext_resource type="Texture2D" uid="uid://csfu1k8w75bsv" path="res://Graphics/Effects/spotlight_8_s.png" id="10_38hmk"]
 [ext_resource type="PackedScene" uid="uid://bgrr0ylbsnodx" path="res://Scenes/WeaponLevels.tscn" id="10_hjvsu"]
 
@@ -116,7 +116,6 @@ color = Color(1, 1, 1, 0.505882)
 polygon = PackedVector2Array(0, 0, 0, 32, 20, 16)
 
 [node name="MainPanel" type="NinePatchRect" parent="."]
-visible = false
 layout_mode = 0
 offset_left = 216.0
 offset_top = 616.0
@@ -176,7 +175,7 @@ offset_left = 580.0
 offset_top = 44.0
 offset_right = 636.0
 offset_bottom = 84.0
-icon = ExtResource("8_cg768")
+icon = ExtResource("8_oca3i")
 icon_alignment = 1
 expand_icon = true
 
@@ -186,7 +185,7 @@ offset_left = 712.0
 offset_top = 44.0
 offset_right = 768.0
 offset_bottom = 84.0
-icon = ExtResource("9_hr53r")
+icon = ExtResource("9_oca3i")
 icon_alignment = 1
 expand_icon = true
 
@@ -200,6 +199,7 @@ text = "BULLET"
 horizontal_alignment = 1
 
 [node name="BulletLevels" parent="MainPanel" instance=ExtResource("10_hjvsu")]
+layout_mode = 0
 offset_left = 148.0
 offset_top = 44.0
 offset_right = 188.0
@@ -215,6 +215,7 @@ text = "LASER"
 horizontal_alignment = 1
 
 [node name="LaserLevels" parent="MainPanel" instance=ExtResource("10_hjvsu")]
+layout_mode = 0
 offset_left = 268.0
 offset_top = 44.0
 offset_right = 308.0
@@ -230,6 +231,7 @@ text = "BOMB"
 horizontal_alignment = 1
 
 [node name="BombLevels" parent="MainPanel" instance=ExtResource("10_hjvsu")]
+layout_mode = 0
 offset_left = 388.0
 offset_top = 44.0
 offset_right = 428.0
@@ -245,6 +247,7 @@ text = "LIGHT"
 horizontal_alignment = 1
 
 [node name="LightLevels" parent="MainPanel" instance=ExtResource("10_hjvsu")]
+layout_mode = 0
 offset_left = 512.0
 offset_top = 44.0
 offset_right = 552.0

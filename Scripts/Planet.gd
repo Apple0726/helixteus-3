@@ -306,7 +306,7 @@ func show_tooltip(tile, tile_id:int):
 		elif tile.bldg.name in [Building.GLASS_FACTORY, Building.STEAM_ENGINE, Building.STONE_CRUSHER]:
 			tooltip += "\n[color=#88CCFF]%s\nG: %s[/color]" % [tr("CLICK_TO_CONFIGURE"), tr("LOAD_UNLOAD")]
 	elif tile.has("ancient_bldg"):
-		tooltip += "[color=#%s]" % Data.tier_colors[tile.ancient_bldg.tier - 1].to_html(false)
+		tooltip += "[color=#%s]" % Data.ancient_bldg_tier_colors[tile.ancient_bldg.tier - 1].to_html(false)
 		var ancient_building_name = AncientBuilding.names[tile.ancient_bldg.name]
 		if tile.ancient_bldg.has("repair_cost"):
 			tooltip += tr("BROKEN_X").format({"building_name":tr(ancient_building_name.to_upper())})
