@@ -99,9 +99,8 @@ func initialize_battle():
 	initiative_order.append({"node": $Boundary})
 	for i in len(initiative_order):
 		var turn_order_button = preload("res://Scenes/Battle/TurnOrderButton.tscn").instantiate()
-		if i > 0:
-			var delay = create_tween()
-			delay.tween_callback(turn_order_button.get_node("AnimationPlayer").play.bind("InitialAnim")).set_delay(0.15 * i)
+		if i > 0: # Animation delay
+			create_tween().tween_callback(turn_order_button.get_node("AnimationPlayer").play.bind("InitialAnim")).set_delay(0.15 * i)
 			turn_order_button.modulate.a = 0.0
 		battle_GUI.turn_order_hbox.add_child(turn_order_button)
 		turn_order_button.custom_minimum_size.x = 0.0
@@ -121,7 +120,23 @@ func initialize_battle():
 				turn_order_button.get_node("Panel")["theme_override_styles/panel"].border_color = Color(0.0, 0.8, 1.0, 0.7)
 			entity.show_initiative(entity.initiative)
 		entity.turn_order_box = turn_order_button
+		turn_order_button.pressed.connect(move_view_to_target.bind(entity))
+		turn_order_button.mouse_entered.connect(show_target_icon.bind(entity))
+		turn_order_button.mouse_exited.connect($Target.hide)
 	next_turn()
+
+func move_view_to_target(entity: BattleEntity):
+	if entity.type == Battle.EntityType.BOUNDARY:
+		view_battlefield(2.0)
+	else:
+		view_entity(entity, 2.0)
+
+func show_target_icon(entity: BattleEntity):
+	if entity.type != Battle.EntityType.BOUNDARY:
+		move_child($Target, get_child_count())
+		$Target.show()
+		$Target.position = entity.position
+
 
 func battle_victory_callback():
 	var victory_panel = preload("res://Scenes/Panels/VictoryPanel.tscn").instantiate()
@@ -168,6 +183,26 @@ func battle_victory_callback():
 		game.popup_window(tr("NEW_BLDGS_UNLOCKED_DESC"), tr("NEW_BLDGS_UNLOCKED"))
 		game.help.SP = true
 
+func view_battlefield(tween_speed: float = 1.0):
+	if game.view.is_view_changing():
+		return
+	if animations_sped_up:
+		game.view.scale = Vector2.ONE * 0.4
+		game.view.position = Vector2(640, 360) * 0.6
+	else:
+		var view_tween = create_tween().set_parallel().set_speed_scale(tween_speed)
+		view_tween.tween_property(game.view, "scale", Vector2.ONE * 0.4, 1.0).set_trans(Tween.TRANS_CUBIC)
+		view_tween.tween_property(game.view, "position", Vector2(640, 360) * 0.6, 1.0).set_trans(Tween.TRANS_CUBIC)
+
+func view_entity(entity: BattleEntity, tween_speed: float = 1.0):
+	if game.view.is_view_changing():
+		return
+	if animations_sped_up:
+		game.view.position = Vector2(640, 360) - entity.position * game.view.scale.x
+	else:
+		var view_tween = create_tween().set_speed_scale(tween_speed)
+		view_tween.tween_property(game.view, "position", Vector2(640, 360) - entity.position * game.view.scale.x, 0.5).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+
 func next_turn():
 	if ship_nodes.is_empty():
 		battle_GUI.get_node("Defeat").show()
@@ -181,10 +216,6 @@ func next_turn():
 	if all_enemies_defeated:
 		battle_victory_callback()
 		return
-	if animations_sped_up:
-		view_tween = null
-	else:
-		view_tween = create_tween().set_parallel()
 	battle_GUI.ship_node = null
 	# Update initiative_order and whose_turn_is_it_index if a ship or enemy has been defeated
 	for i in len(initiative_order):
@@ -196,25 +227,22 @@ func next_turn():
 				whose_turn_is_it_index -= 1
 			i -= 1
 	if initiative_order[whose_turn_is_it_index].node.type == Battle.EntityType.BOUNDARY:
-		var view_scale:float = 0.4
-		if view_tween:
-			view_tween.tween_property(game.view, "scale", Vector2.ONE * view_scale, 1.0).set_trans(Tween.TRANS_CUBIC)
-			view_tween.tween_property(game.view, "position", Vector2(640, 360) - Vector2(640, 360) * view_scale, 1.0).set_trans(Tween.TRANS_CUBIC)
-			create_tween().tween_callback(environment_take_turn).set_delay(1.0)
-		else:
+		view_battlefield()
+		if animations_sped_up:
 			create_tween().tween_callback(environment_take_turn).set_delay(0.1)
+		else:
+			create_tween().tween_callback(environment_take_turn).set_delay(1.0)
 		initiative_order[whose_turn_is_it_index].node.turn_order_box.get_node("AnimationPlayer").play("ChangeSize")
 	elif initiative_order[whose_turn_is_it_index].node.type == Battle.EntityType.SHIP:
 		var ship_node = initiative_order[whose_turn_is_it_index].node
 		battle_GUI.ship_node = ship_node
 		var ship_pos_before_moving:Vector2 = ship_node.position
-		if view_tween:
-			view_tween.tween_property(game.view, "position", Vector2(640, 360) - ship_node.position * game.view.scale.x, 0.5).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+		if not animations_sped_up:
+			view_entity(ship_node)
 		await ship_node.take_turn()
 		if ship_node.HP >= 0:
 			if not animations_sped_up and not ship_pos_before_moving.is_equal_approx(ship_node.position):
-				view_tween = create_tween()
-				view_tween.tween_property(game.view, "position", Vector2(640, 360) - ship_node.position * game.view.scale.x, 0.5).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+				view_entity(ship_node)
 			if ship_node.status_effects[Battle.StatusEffect.STUN] <= 0 and ship_node.status_effects[Battle.StatusEffect.FROZEN] <= 0:
 				battle_GUI.fade_in_main_panel()
 			else:
@@ -223,8 +251,8 @@ func next_turn():
 			return
 	elif initiative_order[whose_turn_is_it_index].node.type == Battle.EntityType.ENEMY:
 		var HX_node = initiative_order[whose_turn_is_it_index].node
-		if view_tween:
-			view_tween.tween_property(game.view, "position", Vector2(640, 360) - HX_node.position * game.view.scale.x, 0.5).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+		if not animations_sped_up:
+			view_entity(HX_node)
 		HX_node.take_turn()
 	whose_turn_is_it_index += 1
 

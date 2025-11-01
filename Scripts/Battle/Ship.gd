@@ -159,7 +159,6 @@ func move():
 		move_tween.tween_property($TextureRect, "rotation", move_angle_target, rotate_duration).set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_CUBIC)
 		move_tween.tween_property(self, "position", move_target_position, 1.0).set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_CUBIC)
 		move_tween.tween_callback(cancel_action)
-		create_tween().tween_property(game.view, "position", Vector2(640, 360) - move_target_position * game.view.scale.x, 1.0).set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_CUBIC).set_delay(rotate_duration)
 
 
 func _process(delta: float) -> void:

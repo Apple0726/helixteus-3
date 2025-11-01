@@ -44,7 +44,7 @@ func _ready() -> void:
 		allocated_defense = ship_data.allocated_defense
 		allocated_accuracy = ship_data.allocated_accuracy
 		allocated_agility = ship_data.allocated_agility
-		for class_btn in $ShipClass/VBox/VBox.get_children():
+		for class_btn in $ClassAndStats/ShipClass/VBox/VBox.get_children():
 			class_btn.adv_button_disabled = true
 	if ship_data.lv == 1:
 		$Weapons.hide()

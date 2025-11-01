@@ -466,6 +466,9 @@ func _zoom_at_point_animate(zoom_change: float):
 	zoom_tween.tween_property(self, "scale", scale * zoom_change, 0.2).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_CIRC)
 	zoom_tween.tween_property(self, "position", position - to_local(mouse_position) * scale.x * (zoom_change - 1.0), 0.2).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_CIRC)
 
+func is_view_changing():
+	return zoom_tween and zoom_tween.is_running() or dragging
+
 func _on_AnimationPlayer_animation_finished(anim_name):
 	if not changed:
 		if scale.x < CLUSTER_SCALE_THRESHOLD:

@@ -13,3 +13,11 @@ func show_initiative(initiative: int, animation_delay: float):
 
 func set_texture(texture):
 	$TextureRect.texture = texture
+
+
+func _on_mouse_entered() -> void:
+	$Highlight.modulate.a = 0.15
+
+
+func _on_mouse_exited() -> void:
+	$Highlight.modulate.a = 0.0
