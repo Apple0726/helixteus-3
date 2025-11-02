@@ -2,10 +2,8 @@ class_name BattleGUI
 extends Control
 
 @onready var game = get_node("/root/Game")
-@onready var main_panel = get_node("MainPanel")
-@onready var turn_order_hbox = get_node("TurnOrderHBox")
+@onready var turn_order_hbox = $TurnOrderHBox
 var battle_scene
-var ship_node
 
 # Actions
 enum {
@@ -50,6 +48,9 @@ func _ready() -> void:
 				$MainPanel.get_node("%sLevels/Path%s/Level%s" % [weapon, path+1, lv+1]).mouse_exited.connect(game.hide_tooltip)
 
 func show_weapon_tooltip(weapon: String, path: int, lv: int):
+	var ship_node = battle_scene.get_selected_ship()
+	if not ship_node:
+		return
 	var tooltip = tr("%s_%s_%s_DESC" % [weapon.to_upper(), path+1, lv+1])
 	if ship_node[weapon + "_levels"][path] <= lv+1:
 		tooltip = "[color=#888888]" + tooltip
@@ -60,6 +61,7 @@ func _input(event: InputEvent) -> void:
 	if event is InputEventMouseMotion:
 		$PushStrengthPanel.position = Vector2(1280 - $PushStrengthPanel.size.x - 10, 720 - $PushStrengthPanel.size.y - 10).min(battle_scene.mouse_position_global)
 		$LightEmissionConePanel.position = Vector2(1280 - $LightEmissionConePanel.size.x - 10, 720 - $LightEmissionConePanel.size.y - 10).min(battle_scene.mouse_position_global)
+	var ship_node = battle_scene.get_selected_ship()
 	if action_selected != NONE and is_instance_valid(ship_node):
 		if Input.is_action_just_pressed("cancel") and not ship_node.block_cancelling_action:
 			action_selected = NONE
@@ -90,7 +92,7 @@ func _input(event: InputEvent) -> void:
 			_on_move_pressed()
 		elif Input.is_action_just_pressed("6"):
 			_on_push_pressed()
-	elif action_selected == BULLET:
+	elif action_selected == BULLET and is_instance_valid(ship_node):
 		if ship_node.bullet_levels[1] >= 2 and Input.is_action_pressed("shift"):
 			if Input.is_action_just_pressed("scroll_down"):
 				bullet_2_selected_type = [BIG_BULLET, CORROSIVE_BULLET, AQUA_BULLET][(bullet_2_selected_type + 1) % 3]
@@ -102,7 +104,7 @@ func _input(event: InputEvent) -> void:
 			game.block_scroll = true
 		elif Input.is_action_just_released("shift"):
 			game.block_scroll = false
-	elif action_selected == LIGHT:
+	elif action_selected == LIGHT and is_instance_valid(ship_node):
 		if Input.is_action_pressed("shift"):
 			if Input.is_action_just_pressed("scroll_down"):
 				if ship_node.light_levels[1] >= 2:
@@ -123,24 +125,23 @@ func _input(event: InputEvent) -> void:
 		elif Input.is_action_just_released("shift"):
 			game.block_scroll = false
 			$LightEmissionConePanel.hide()
-	elif action_selected != NONE and event is InputEventMouseMotion:
+	elif action_selected != NONE and event is InputEventMouseMotion and is_instance_valid(ship_node):
 		ship_node.queue_redraw()
-	elif action_selected == PUSH:
-		if is_instance_valid(ship_node.entity_to_push):
-			if Input.is_action_just_pressed("scroll_up"):
-				if Input.is_action_pressed("shift"):
-					update_push_strength(1.0)
-				else:
-					update_push_strength(0.1)
-			if Input.is_action_just_pressed("scroll_down"):
-				if Input.is_action_pressed("shift"):
-					update_push_strength(-1.0)
-				else:
-					update_push_strength(-0.1)
-			if Input.is_action_just_released("left_click"):
-				ship_node.push_entity()
-				action_selected = NONE
-				reset_GUI()
+	elif action_selected == PUSH and is_instance_valid(ship_node.entity_to_push):
+		if Input.is_action_just_pressed("scroll_up"):
+			if Input.is_action_pressed("shift"):
+				update_push_strength(1.0)
+			else:
+				update_push_strength(0.1)
+		if Input.is_action_just_pressed("scroll_down"):
+			if Input.is_action_pressed("shift"):
+				update_push_strength(-1.0)
+			else:
+				update_push_strength(-0.1)
+		if Input.is_action_just_released("left_click"):
+			ship_node.push_entity()
+			action_selected = NONE
+			reset_GUI()
 
 func refresh_info_label(type: String):
 	if type == "bullet_2":
@@ -153,6 +154,9 @@ func refresh_info_label(type: String):
 			$Info/TextureRect.texture = preload("res://Graphics/Weapons/aqua_bullet.png")
 
 func update_push_strength(update_by: float):
+	var ship_node = battle_scene.get_selected_ship()
+	if not ship_node:
+		return
 	var current_strength = $PushStrengthPanel/Bar.material.get_shader_parameter("strength")
 	var strength_target = clamp(current_strength + update_by, 0.0, 1.0)
 	create_tween().tween_property($PushStrengthPanel/Bar.material, "shader_parameter/strength", strength_target, 0.15).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_CUBIC)
@@ -166,17 +170,20 @@ func reset_GUI():
 	$LightEmissionConePanel.hide()
 	$PushStrengthPanel.hide()
 	game.block_scroll = false
-	if $TurnOrderHBox.visible:
+	if turn_order_hbox.visible:
 		if turn_order_hbox_tween and turn_order_hbox_tween.is_running():
 			turn_order_hbox_tween.kill()
 			turn_order_hbox_tween = create_tween()
-			turn_order_hbox_tween.tween_property($TurnOrderHBox, "modulate:a", 1.0, 0.2)
+			turn_order_hbox_tween.tween_property(turn_order_hbox, "modulate:a", 1.0, 0.2)
 	else:
-		$TurnOrderHBox.show()
+		turn_order_hbox.show()
 		turn_order_hbox_tween = create_tween()
-		turn_order_hbox_tween.tween_property($TurnOrderHBox, "modulate:a", 1.0, 0.2)
+		turn_order_hbox_tween.tween_property(turn_order_hbox, "modulate:a", 1.0, 0.2)
 
 func refresh_GUI():
+	var ship_node = battle_scene.get_selected_ship()
+	if not ship_node:
+		return
 	for weapon in ["Bullet", "Laser", "Bomb", "Light"]:
 		var hide_levels = true
 		for path in 3:
@@ -190,6 +197,10 @@ func refresh_GUI():
 				$MainPanel.get_node("%sLevels/Path%s" % [weapon, path+1]).show()
 				for lv in 3:
 					$MainPanel.get_node("%sLevels/Path%s/Level%s" % [weapon, path+1, lv+1]).modulate = Color.WHITE if ship_node[weapon.to_lower() + "_levels"][path] > lv+1 else Color(0.3, 0.3, 0.3)
+	if ship_node.bomb_levels[2] >= 3:
+		$MainPanel/Bomb.icon = preload("res://Graphics/Battle/Projectiles/missile.png")
+	else:
+		$MainPanel/Bomb.icon = preload("res://Graphics/Weapons/bomb1.png")
 	$MainPanel/MoveLabel.text = "%s (%.1f m)" % [tr("MOVE"), ship_node.movement_remaining]
 	if is_zero_approx(ship_node.movement_remaining):
 		$MainPanel/MoveLabel["theme_override_colors/font_color"] = Color.DARK_GRAY
@@ -239,6 +250,9 @@ func _on_light_mouse_entered() -> void:
 
 
 func _on_push_mouse_entered() -> void:
+	var ship_node = battle_scene.get_selected_ship()
+	if not ship_node:
+		return
 	var tooltip_txt = tr("BATTLE_PUSH_DESC")
 	if ship_node.movement_remaining < 30.0:
 		tooltip_txt += "\n[color=#FFAA00]" + tr("REQUIRES_MOVEMENT") + "[/color]"
@@ -249,9 +263,9 @@ func _on_push_mouse_entered() -> void:
 
 func fade_in_main_panel():
 	$MainPanel.show()
+	var ship_node = battle_scene.get_selected_ship()
 	if is_instance_valid(ship_node):
 		refresh_GUI()
-	main_panel_tween
 	if main_panel_tween and main_panel_tween.is_running():
 		main_panel_tween.kill()
 	main_panel_tween = create_tween()
@@ -265,6 +279,9 @@ func fade_out_main_panel():
 	main_panel_tween.tween_callback($MainPanel.hide)
 
 func _on_bullet_pressed() -> void:
+	var ship_node = battle_scene.get_selected_ship()
+	if not ship_node:
+		return
 	fade_out_main_panel()
 	fade_out_turn_order_box()
 	action_selected = BULLET
@@ -282,6 +299,9 @@ func _on_bullet_pressed() -> void:
 
 
 func _on_laser_pressed() -> void:
+	var ship_node = battle_scene.get_selected_ship()
+	if not ship_node:
+		return
 	fade_out_main_panel()
 	fade_out_turn_order_box()
 	action_selected = LASER
@@ -299,6 +319,9 @@ func _on_laser_pressed() -> void:
 
 
 func _on_bomb_pressed() -> void:
+	var ship_node = battle_scene.get_selected_ship()
+	if not ship_node:
+		return
 	fade_out_main_panel()
 	fade_out_turn_order_box()
 	action_selected = BOMB
@@ -315,6 +338,9 @@ func _on_bomb_pressed() -> void:
 
 
 func _on_light_pressed() -> void:
+	var ship_node = battle_scene.get_selected_ship()
+	if not ship_node:
+		return
 	action_selected = LIGHT
 	ship_node.weapon_accuracy_mult = Data.battle_weapon_stats.light.accuracy
 	override_enemy_tooltips()
@@ -328,6 +354,9 @@ func _on_light_pressed() -> void:
 
 
 func _on_move_pressed() -> void:
+	var ship_node = battle_scene.get_selected_ship()
+	if not ship_node:
+		return
 	action_selected = MOVE
 	fade_out_main_panel()
 	fade_out_turn_order_box()
@@ -340,10 +369,13 @@ func fade_out_turn_order_box():
 	if turn_order_hbox_tween and turn_order_hbox_tween.is_running():
 		turn_order_hbox_tween.kill()
 	turn_order_hbox_tween = create_tween()
-	turn_order_hbox_tween.tween_property($TurnOrderHBox, "modulate:a", 0.0, 0.2)
-	turn_order_hbox_tween.tween_callback($TurnOrderHBox.hide)
+	turn_order_hbox_tween.tween_property(turn_order_hbox, "modulate:a", 0.0, 0.2)
+	turn_order_hbox_tween.tween_callback(turn_order_hbox.hide)
 
 func _on_push_pressed() -> void:
+	var ship_node = battle_scene.get_selected_ship()
+	if not ship_node:
+		return
 	action_selected = PUSH
 	fade_out_main_panel()
 	fade_out_turn_order_box()
@@ -351,6 +383,9 @@ func _on_push_pressed() -> void:
 	game.hide_tooltip()
 
 func override_enemy_tooltips():
+	var ship_node = battle_scene.get_selected_ship()
+	if not ship_node:
+		return
 	for HX_node in battle_scene.HX_nodes:
 		var damage_multiplier:float
 		var attack_defense_difference:int = ship_node.attack + ship_node.attack_buff - HX_node.defense - HX_node.defense_buff

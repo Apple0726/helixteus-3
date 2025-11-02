@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=3 uid="uid://deuvxdrynj6i2"]
+[gd_scene load_steps=12 format=3 uid="uid://deuvxdrynj6i2"]
 
 [ext_resource type="Script" uid="uid://bdprke525ks2n" path="res://Scripts/Battle/TurnOrderButton.gd" id="1_j6ywd"]
 [ext_resource type="Texture2D" uid="uid://koi0aarpqj30" path="res://Graphics/Ships/Ship0.png" id="1_l4be8"]
@@ -14,34 +14,6 @@ border_width_right = 5
 border_width_bottom = 5
 border_color = Color(0, 0.756863, 1, 0.788235)
 border_blend = true
-
-[sub_resource type="Animation" id="Animation_3mbd0"]
-resource_name = "ChangeSize"
-length = 0.3
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath(".:custom_minimum_size")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0, 0.3),
-"transitions": PackedFloat32Array(0.258816, 1),
-"update": 0,
-"values": [Vector2(65.63, 80), Vector2(80, 100)]
-}
-tracks/1/type = "value"
-tracks/1/imported = false
-tracks/1/enabled = true
-tracks/1/path = NodePath("TextureRect:modulate")
-tracks/1/interp = 1
-tracks/1/loop_wrap = true
-tracks/1/keys = {
-"times": PackedFloat32Array(0, 0.3),
-"transitions": PackedFloat32Array(1, 1),
-"update": 0,
-"values": [Color(1, 1, 1, 0.478431), Color(1, 1, 1, 1)]
-}
 
 [sub_resource type="Animation" id="Animation_rmbrk"]
 resource_name = "FadeOutAnim"
@@ -126,7 +98,7 @@ tracks/0/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 0,
-"values": [Vector2(65.63, 80)]
+"values": [Vector2(0, 80)]
 }
 tracks/1/type = "value"
 tracks/1/imported = false
@@ -138,7 +110,7 @@ tracks/1/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 0,
-"values": [Color(1, 1, 1, 1)]
+"values": [Color(1, 1, 1, 0.49803922)]
 }
 tracks/2/type = "value"
 tracks/2/imported = false
@@ -150,20 +122,53 @@ tracks/2/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 0,
-"values": [Color(1, 1, 1, 1)]
+"values": [Color(1, 1, 1, 0)]
 }
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_igr82"]
 _data = {
-&"ChangeSize": SubResource("Animation_3mbd0"),
 &"FadeOutAnim": SubResource("Animation_rmbrk"),
 &"InitialAnim": SubResource("Animation_aydge"),
 &"RESET": SubResource("Animation_qdt4f")
 }
 
+[sub_resource type="Animation" id="Animation_idhyw"]
+resource_name = "ChangeSize"
+length = 0.3
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:custom_minimum_size")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.3),
+"transitions": PackedFloat32Array(0.258816, 1),
+"update": 0,
+"values": [Vector2(65.63, 80), Vector2(80, 100)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("TextureRect:modulate")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.3),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 0.478431), Color(1, 1, 1, 1)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_oqdxe"]
+_data = {
+&"ChangeSize": SubResource("Animation_idhyw")
+}
+
 [node name="Button" type="Button"]
+modulate = Color(1, 1, 1, 0)
 clip_contents = true
-custom_minimum_size = Vector2(65.63, 80)
+custom_minimum_size = Vector2(0, 80)
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
@@ -179,6 +184,7 @@ size_flags_vertical = 4
 script = ExtResource("1_j6ywd")
 
 [node name="TextureRect" type="TextureRect" parent="."]
+modulate = Color(1, 1, 1, 0.49803922)
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -207,9 +213,14 @@ grow_vertical = 2
 mouse_filter = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_sxfwn")
 
-[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+[node name="FadeAnim" type="AnimationPlayer" parent="."]
 libraries = {
 &"": SubResource("AnimationLibrary_igr82")
+}
+
+[node name="ChangeSizeAnim" type="AnimationPlayer" parent="."]
+libraries = {
+&"": SubResource("AnimationLibrary_oqdxe")
 }
 
 [node name="Initiative" type="Control" parent="."]

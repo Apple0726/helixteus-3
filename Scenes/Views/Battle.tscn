@@ -1,7 +1,9 @@
-[gd_scene load_steps=9 format=3 uid="uid://dwa665hyuis2m"]
+[gd_scene load_steps=12 format=3 uid="uid://dwa665hyuis2m"]
 
 [ext_resource type="Script" uid="uid://dpxy6ld61573q" path="res://Scripts/Battle/Battle.gd" id="1_ylili"]
 [ext_resource type="Texture2D" uid="uid://b8xut3yn8djrb" path="res://Graphics/Buttons/target.png" id="3_jew2s"]
+[ext_resource type="Shader" uid="uid://hfa3ri2g3507" path="res://Shaders/FloatAnimation.gdshader" id="4_n5aww"]
+[ext_resource type="Texture2D" uid="uid://47ckp0wuhpfy" path="res://Graphics/Icons/current.png" id="5_jb0nx"]
 [ext_resource type="Script" uid="uid://ba4b8qs3erkxr" path="res://Scripts/Battle/Boundary.gd" id="7_lc3cj"]
 
 [sub_resource type="WorldBoundaryShape2D" id="WorldBoundaryShape2D_gv2s2"]
@@ -26,6 +28,11 @@ glow_levels/4 = 1.0
 glow_blend_mode = 0
 glow_hdr_threshold = 0.7
 glow_hdr_scale = 0.39
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_2b7va"]
+shader = ExtResource("4_n5aww")
+shader_parameter/amplitude = 10.0
+shader_parameter/frequency = 6.0
 
 [node name="Battle" type="Node2D"]
 script = ExtResource("1_ylili")
@@ -60,3 +67,9 @@ environment = SubResource("Environment_bypyr")
 visible = false
 scale = Vector2(0.42, 0.42)
 texture = ExtResource("3_jew2s")
+
+[node name="Selected" type="Sprite2D" parent="."]
+visible = false
+material = SubResource("ShaderMaterial_2b7va")
+scale = Vector2(0.295, 0.295)
+texture = ExtResource("5_jb0nx")

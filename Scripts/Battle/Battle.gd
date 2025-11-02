@@ -13,7 +13,7 @@ var ship_data:Array
 var hard_battle:bool = false
 var time_speed:float = 1.0
 var initiative_order = []
-var whose_turn_is_it_index:int = 0
+var whose_turn_is_it_index:int = -1
 var HX_nodes = []
 var ship_nodes = []
 var mouse_position_global:Vector2
@@ -92,20 +92,16 @@ func _ready() -> void:
 
 func initialize_battle():
 	for HX_node in HX_nodes:
-		initiative_order.append({"node": HX_node})
+		initiative_order.append(HX_node)
 	for ship_node in ship_nodes:
-		initiative_order.append({"node": ship_node})
+		initiative_order.append(ship_node)
 	initiative_order.sort_custom(sort_initiative)
-	initiative_order.append({"node": $Boundary})
+	initiative_order.append($Boundary)
 	for i in len(initiative_order):
 		var turn_order_button = preload("res://Scenes/Battle/TurnOrderButton.tscn").instantiate()
-		if i > 0: # Animation delay
-			create_tween().tween_callback(turn_order_button.get_node("AnimationPlayer").play.bind("InitialAnim")).set_delay(0.15 * i)
-			turn_order_button.modulate.a = 0.0
+		create_tween().tween_callback(turn_order_button.get_node("FadeAnim").play.bind("InitialAnim")).set_delay(0.15 * i)
 		battle_GUI.turn_order_hbox.add_child(turn_order_button)
-		turn_order_button.custom_minimum_size.x = 0.0
-		turn_order_button.get_node("TextureRect").modulate.a = 0.5
-		var entity = initiative_order[i].node
+		var entity = initiative_order[i]
 		if entity.type == Battle.EntityType.BOUNDARY: # Environment always goes last
 			turn_order_button.show_initiative(0, 0.15 * len(initiative_order) + 3.0)
 			turn_order_button.set_texture(load("res://Graphics/Achievements/BStar.png"))
@@ -120,16 +116,25 @@ func initialize_battle():
 				turn_order_button.get_node("Panel")["theme_override_styles/panel"].border_color = Color(0.0, 0.8, 1.0, 0.7)
 			entity.show_initiative(entity.initiative)
 		entity.turn_order_box = turn_order_button
-		turn_order_button.pressed.connect(move_view_to_target.bind(entity))
+		entity.turn_order = i
+		turn_order_button.pressed.connect(move_view_to_target.bind(entity, i))
 		turn_order_button.mouse_entered.connect(show_target_icon.bind(entity))
 		turn_order_button.mouse_exited.connect($Target.hide)
+	await get_tree().create_timer(min(0.6, 0.15 * len(initiative_order))).timeout
 	next_turn()
 
-func move_view_to_target(entity: BattleEntity):
+func move_view_to_target(entity: BattleEntity, turn_order: int):
 	if entity.type == Battle.EntityType.BOUNDARY:
 		view_battlefield(2.0)
 	else:
 		view_entity(entity, 2.0)
+		if not ships_taking_turn.is_empty():
+			for ship_node in ships_taking_turn:
+				if ship_node.turn_order == turn_order:
+					whose_turn_is_it_index = turn_order
+					$Selected.position = ship_node.position + Vector2.UP * 80.0
+					battle_GUI.refresh_GUI()
+					return
 
 func show_target_icon(entity: BattleEntity):
 	if entity.type != Battle.EntityType.BOUNDARY:
@@ -203,6 +208,8 @@ func view_entity(entity: BattleEntity, tween_speed: float = 1.0):
 		var view_tween = create_tween().set_speed_scale(tween_speed)
 		view_tween.tween_property(game.view, "position", Vector2(640, 360) - entity.position * game.view.scale.x, 0.5).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
 
+var ships_taking_turn = [] # Stores ship nodes that can take actions interchangeably
+
 func next_turn():
 	if ship_nodes.is_empty():
 		battle_GUI.get_node("Defeat").show()
@@ -216,48 +223,69 @@ func next_turn():
 	if all_enemies_defeated:
 		battle_victory_callback()
 		return
-	battle_GUI.ship_node = null
+	if not ships_taking_turn.is_empty():
+		for ship_node in ships_taking_turn:
+			if not ship_node.turn_taken:
+				whose_turn_is_it_index = ship_node.turn_order
+				$Selected.position = ship_node.position + Vector2.UP * 80.0
+				return
+	ships_taking_turn.clear()
+	$Selected.hide()
+	whose_turn_is_it_index += 1
 	# Update initiative_order and whose_turn_is_it_index if a ship or enemy has been defeated
 	for i in len(initiative_order):
 		if i >= len(initiative_order):
 			break
-		if not is_instance_valid(initiative_order[i].node) or initiative_order[i].node.type != Battle.EntityType.BOUNDARY and initiative_order[i].node.HP <= 0:
+		if not is_instance_valid(initiative_order[i]) or initiative_order[i].type != Battle.EntityType.BOUNDARY and initiative_order[i].HP <= 0:
 			initiative_order.remove_at(i)
-			if i < whose_turn_is_it_index:
+			if i < whose_turn_is_it_index - 1:
 				whose_turn_is_it_index -= 1
 			i -= 1
-	if initiative_order[whose_turn_is_it_index].node.type == Battle.EntityType.BOUNDARY:
+	if initiative_order[whose_turn_is_it_index].type == Battle.EntityType.BOUNDARY:
 		view_battlefield()
 		if animations_sped_up:
 			create_tween().tween_callback(environment_take_turn).set_delay(0.1)
 		else:
 			create_tween().tween_callback(environment_take_turn).set_delay(1.0)
-		initiative_order[whose_turn_is_it_index].node.turn_order_box.get_node("AnimationPlayer").play("ChangeSize")
-	elif initiative_order[whose_turn_is_it_index].node.type == Battle.EntityType.SHIP:
-		var ship_node = initiative_order[whose_turn_is_it_index].node
-		battle_GUI.ship_node = ship_node
-		var ship_pos_before_moving:Vector2 = ship_node.position
-		if not animations_sped_up:
-			view_entity(ship_node)
-		await ship_node.take_turn()
-		if ship_node.HP >= 0:
-			if not animations_sped_up and not ship_pos_before_moving.is_equal_approx(ship_node.position):
+		initiative_order[whose_turn_is_it_index].turn_order_box.get_node("ChangeSizeAnim").play("ChangeSize")
+	elif initiative_order[whose_turn_is_it_index].type == Battle.EntityType.SHIP:
+		var ship_turn = whose_turn_is_it_index
+		var view_moved = false
+		while initiative_order[ship_turn].type == Battle.EntityType.SHIP:
+			var ship_node = initiative_order[ship_turn]
+			var ship_pos_before_moving:Vector2 = ship_node.position
+			if not animations_sped_up and not view_moved:
 				view_entity(ship_node)
-			if ship_node.status_effects[Battle.StatusEffect.STUN] <= 0 and ship_node.status_effects[Battle.StatusEffect.FROZEN] <= 0:
-				battle_GUI.fade_in_main_panel()
-			else:
-				ship_node.ending_turn(1.0)
+				view_moved = true
+			await ship_node.take_turn()
+			if ship_node.HP >= 0:
+				if not animations_sped_up and not ship_pos_before_moving.is_equal_approx(ship_node.position):
+					view_entity(ship_node)
+				if ship_node.status_effects[Battle.StatusEffect.STUN] <= 0 and ship_node.status_effects[Battle.StatusEffect.FROZEN] <= 0:
+					ships_taking_turn.append(ship_node)
+				else:
+					ship_node.turn_order_box.get_node("ChangeSizeAnim").play_backwards("ChangeSize")
+					ship_node.turn_taken = true
+			ship_turn += 1
+		if len(ships_taking_turn) > 0:
+			$Selected.show()
+			$Selected.position = ships_taking_turn[0].position + Vector2.UP * 80.0
+			battle_GUI.fade_in_main_panel()
 		else:
-			return
-	elif initiative_order[whose_turn_is_it_index].node.type == Battle.EntityType.ENEMY:
-		var HX_node = initiative_order[whose_turn_is_it_index].node
+			whose_turn_is_it_index = ship_turn - 1
+	elif initiative_order[whose_turn_is_it_index].type == Battle.EntityType.ENEMY:
+		var HX_node = initiative_order[whose_turn_is_it_index]
 		if not animations_sped_up:
 			view_entity(HX_node)
 		HX_node.take_turn()
-	whose_turn_is_it_index += 1
+
+func get_selected_ship():
+	if whose_turn_is_it_index == -1 or initiative_order[whose_turn_is_it_index].type != Battle.EntityType.SHIP:
+		return null
+	return initiative_order[whose_turn_is_it_index]
 
 func sort_initiative(a, b):
-	return a.node.initiative > b.node.initiative
+	return a.initiative > b.initiative
 
 
 func _process(delta: float) -> void:
@@ -385,30 +413,36 @@ func environment_take_turn():
 		await get_tree().create_timer(0.3).timeout
 	else:
 		await get_tree().create_timer(1.2).timeout
-	initiative_order[whose_turn_is_it_index-1].node.turn_order_box.get_node("AnimationPlayer").play_backwards("ChangeSize")
+	initiative_order[whose_turn_is_it_index-1].turn_order_box.get_node("ChangeSizeAnim").play_backwards("ChangeSize")
 	whose_turn_is_it_index = 0
 	next_turn()
 
 func show_and_enlarge_collision_shapes():
+	var ship_node = get_selected_ship()
+	if not ship_node:
+		return
 	for HX in HX_nodes:
-		HX.get_node("CollisionShape2D").shape.radius = HX.collision_shape_radius + battle_GUI.ship_node.collision_shape_radius + 2.0
+		HX.get_node("CollisionShape2D").shape.radius = HX.collision_shape_radius + ship_node.collision_shape_radius + 2.0
 		HX.draw_collision_shape = 1
 	for ship in ship_nodes:
-		if ship.get_instance_id() == battle_GUI.ship_node.get_instance_id():
+		if ship.get_instance_id() == ship_node.get_instance_id():
 			continue
-		ship.get_node("CollisionShape2D").shape.radius = ship.collision_shape_radius + battle_GUI.ship_node.collision_shape_radius + 2.0
+		ship.get_node("CollisionShape2D").shape.radius = ship.collision_shape_radius + ship_node.collision_shape_radius + 2.0
 		ship.draw_collision_shape = 1
 	for obstacle in obstacle_nodes:
 		if is_instance_valid(obstacle):
-			obstacle.get_node("CollisionShape2D").shape.radius = obstacle.collision_shape_radius + battle_GUI.ship_node.collision_shape_radius + 2.0
+			obstacle.get_node("CollisionShape2D").shape.radius = obstacle.collision_shape_radius + ship_node.collision_shape_radius + 2.0
 			obstacle.draw_collision_shape = 1
 
 func hide_and_restore_collision_shapes():
+	var ship_node = get_selected_ship()
+	if not ship_node:
+		return
 	for HX in HX_nodes:
 		HX.get_node("CollisionShape2D").shape.radius = HX.collision_shape_radius
 		HX.draw_collision_shape = 0
 	for ship in ship_nodes:
-		if ship.get_instance_id() == battle_GUI.ship_node.get_instance_id():
+		if ship.get_instance_id() == ship_node.get_instance_id():
 			continue
 		ship.get_node("CollisionShape2D").shape.radius = ship.collision_shape_radius
 		ship.draw_collision_shape = 0

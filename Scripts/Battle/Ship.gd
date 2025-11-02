@@ -106,7 +106,6 @@ func _draw() -> void:
 			draw_arc(battle_scene.mouse_position_local - position, Data.battle_weapon_stats.bomb.AoE_radius[bomb_levels[PATH_1]], 2.0 * PI / 32.0 * i, 2.0 * PI / 32.0 * (i+1), 100, Color.RED)
 
 func take_turn():
-	$Selected.show()
 	movement_remaining = total_movement
 	buffed_from_class_passive_ability = false
 	if ship_class == ShipClass.ENERGETIC and randf() < 0.3:
@@ -152,13 +151,15 @@ func move():
 		var move_tween = create_tween().set_parallel()
 		move_tween.tween_property($TextureRect, "rotation", move_angle_target, 0.2)
 		move_tween.tween_property(self, "position", move_target_position, 0.2)
+		move_tween.tween_property(battle_scene.get_node("Selected"), "position", move_target_position + Vector2.UP * 80.0, 0.2)
 		move_tween.tween_callback(cancel_action).set_delay(0.2)
 	else:
 		var rotate_duration = max(0.4, abs((move_angle_target - $TextureRect.rotation) / PI))
-		var move_tween = create_tween()
+		var move_tween = create_tween().set_parallel()
 		move_tween.tween_property($TextureRect, "rotation", move_angle_target, rotate_duration).set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_CUBIC)
-		move_tween.tween_property(self, "position", move_target_position, 1.0).set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_CUBIC)
-		move_tween.tween_callback(cancel_action)
+		move_tween.tween_property(self, "position", move_target_position, 1.0).set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_CUBIC).set_delay(rotate_duration)
+		move_tween.tween_property(battle_scene.get_node("Selected"), "position", move_target_position + Vector2.UP * 80.0, 1.0).set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_CUBIC).set_delay(rotate_duration)
+		move_tween.tween_callback(cancel_action).set_delay(rotate_duration + 1.0)
 
 
 func _process(delta: float) -> void:
@@ -323,8 +324,6 @@ func ending_turn(delay: float = 0.0):
 func end_turn():
 	if extra_attacks > 0:
 		battle_GUI.fade_in_main_panel()
-	else:
-		$Selected.hide()
 	super()
 
 func cancel_action():

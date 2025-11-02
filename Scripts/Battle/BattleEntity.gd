@@ -29,6 +29,7 @@ var agility:float:
 		agility = value
 		agility_updated_callback()
 var initiative:int
+var turn_order:int
 var go_through_movement_cost:float # in meters
 var velocity:Vector2 = Vector2.ZERO:
 	get:
@@ -70,6 +71,7 @@ var random_buff_timer = INF
 var aim_mult = 1.0
 var physical_damage_mult = 1.0
 var extra_attacks = 0
+var turn_taken = false
 
 var default_tooltip_text:String
 var override_tooltip_text:String = ""
@@ -96,10 +98,12 @@ func _ready() -> void:
 
 func _draw() -> void:
 	if is_instance_valid(battle_scene) and type != Battle.EntityType.BOUNDARY:
-		if draw_collision_shape == 1:
-			draw_circle(Vector2.ZERO, collision_shape_radius + battle_GUI.ship_node.collision_shape_radius + 2.0, Color(1.0, 0.6, 0.0, 0.2), true, -1.0)
-		elif draw_collision_shape == 2:
-			draw_circle(Vector2.ZERO, collision_shape_radius + battle_GUI.ship_node.collision_shape_radius + 2.0, Color(1.0, 0.6, 0.0, 0.8), true, -1.0)
+		var ship_node = battle_scene.get_selected_ship()
+		if is_instance_valid(ship_node):
+			if draw_collision_shape == 1:
+				draw_circle(Vector2.ZERO, collision_shape_radius + ship_node.collision_shape_radius + 2.0, Color(1.0, 0.6, 0.0, 0.2), true, -1.0)
+			elif draw_collision_shape == 2:
+				draw_circle(Vector2.ZERO, collision_shape_radius + ship_node.collision_shape_radius + 2.0, Color(1.0, 0.6, 0.0, 0.8), true, -1.0)
 
 func refresh_default_tooltip_text():
 	default_tooltip_text = "@i \t%s / %s" % [HP, total_HP]
@@ -177,9 +181,10 @@ func show_initiative(_initiative: int):
 
 func take_turn():
 	turn_number += 1
+	turn_taken = false
 	if is_instance_valid(turn_order_box):
-		turn_order_box.get_node("AnimationPlayer").play("ChangeSize")
-		turn_order_box.modulate.a = 1.0
+		turn_order_box.get_node("ChangeSizeAnim").play("ChangeSize")
+		#turn_order_box.modulate.a = 1.0
 	if regen_per_turn > 0:
 		heal_entity(regen_per_turn)
 	var burn_turns = status_effects[Battle.StatusEffect.BURN]
@@ -261,7 +266,8 @@ func end_turn():
 			$Info/StatusEffects/ExtraTurns.hide()
 	else:
 		if is_instance_valid(turn_order_box):
-			turn_order_box.get_node("AnimationPlayer").play_backwards("ChangeSize")
+			turn_order_box.get_node("ChangeSizeAnim").play_backwards("ChangeSize")
+		turn_taken = true
 		emit_signal("next_turn")
 
 func agility_updated_callback():
@@ -377,11 +383,11 @@ func entity_defeated_callback(knockback:Vector2 = Vector2.ZERO):
 	entity_dying_tween.tween_property(self, "position", position + knockback, 2.0)
 	entity_dying_tween.tween_property($TextureRect.material, "shader_parameter/alpha", 0.0, 1.0).set_delay(1.0)
 	entity_dying_tween.tween_callback(queue_free).set_delay(2.0)
-	if battle_scene.initiative_order[battle_scene.whose_turn_is_it_index-1].node == self:
+	if battle_scene.initiative_order[battle_scene.whose_turn_is_it_index-1] == self:
 		entity_dying_tween.tween_callback(end_turn).set_delay(2.0)
 	entity_dying_tween.set_speed_scale(5.0 if battle_scene.animations_sped_up else 1.0)
 	if is_instance_valid(turn_order_box):
-		turn_order_box.get_node("AnimationPlayer").play("FadeOutAnim")
+		turn_order_box.get_node("FadeAnim").play("FadeOutAnim")
 	if type == Battle.EntityType.ENEMY:
 		battle_scene.HX_nodes.erase(self)
 	elif type == Battle.EntityType.SHIP:
