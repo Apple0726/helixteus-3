@@ -519,12 +519,13 @@ func constr_bldg(tile_id:int, curr_time:int, _bldg_to_construct:int, mass_build:
 		if tile == null:
 			tile = {}
 		if not tile.has("resource_production_bonus"):
-			tile.resource_production_bonus = {}
-		tile.bldg = {}
-		tile.bldg.name = _bldg_to_construct
+			tile["resource_production_bonus"] = {}
+		tile.bldg = {
+			"name": _bldg_to_construct,
+		}
 		if not game.show.has("minerals") and _bldg_to_construct == Building.MINERAL_EXTRACTOR:
-			game.show.minerals = true
-			game.show.shop = true
+			game.show["minerals"] = true
+			game.show["shop"] = true
 			game.HUD.minerals.visible = true
 			game.HUD.shop.visible = true
 			game.HUD.MU.visible = true
@@ -533,23 +534,23 @@ func constr_bldg(tile_id:int, curr_time:int, _bldg_to_construct:int, mass_build:
 		var path_1_value
 		if _bldg_to_construct != Building.PROBE_CONSTRUCTION_CENTER:
 			path_1_value = Data.path_1[_bldg_to_construct].value
-			tile.bldg.path_1 = 1
-			tile.bldg.path_1_value = path_1_value
+			tile.bldg["path_1"] = 1
+			tile.bldg["path_1_value"] = path_1_value
 		if _bldg_to_construct in [Building.STONE_CRUSHER, Building.GLASS_FACTORY, Building.STEAM_ENGINE, Building.GREENHOUSE, Building.CENTRAL_BUSINESS_DISTRICT, Building.ATOM_MANIPULATOR, Building.SUBATOMIC_PARTICLE_REACTOR]:
-			tile.bldg.path_2 = 1
-			tile.bldg.path_2_value = Data.path_2[_bldg_to_construct].value
+			tile.bldg["path_2"] = 1
+			tile.bldg["path_2_value"] = Data.path_2[_bldg_to_construct].value
 		if _bldg_to_construct in [Building.STONE_CRUSHER, Building.GLASS_FACTORY, Building.STEAM_ENGINE]:
-			tile.bldg.collect_date = current_time
-			tile.bldg.stored = 0
+			tile.bldg["collect_date"] = current_time
+			tile.bldg["stored"] = 0
 		if _bldg_to_construct in [Building.STONE_CRUSHER, Building.GLASS_FACTORY, Building.STEAM_ENGINE, Building.CENTRAL_BUSINESS_DISTRICT]:
-			tile.bldg.path_3 = 1
-			tile.bldg.path_3_value = Data.path_3[_bldg_to_construct].value
+			tile.bldg["path_3"] = 1
+			tile.bldg["path_3_value"] = Data.path_3[_bldg_to_construct].value
 		var time_speed_bonus:float = tile.get("time_speed_bonus", 1.0)
 		if _bldg_to_construct == Building.MINERAL_EXTRACTOR:
 			game.autocollect.rsrc.minerals += path_1_value * tile.resource_production_bonus.get("minerals", 1.0) * time_speed_bonus
 		elif _bldg_to_construct == Building.RESEARCH_LAB:
 			game.autocollect.rsrc.SP += path_1_value * tile.resource_production_bonus.get("SP", 1.0) * time_speed_bonus
-			game.show.SP = true
+			game.show["SP"] = true
 			game.HUD.SP.visible = true
 			game.HUD.sc_tree.visible = true
 		elif _bldg_to_construct == Building.MINERAL_SILO:
@@ -574,12 +575,12 @@ func constr_bldg(tile_id:int, curr_time:int, _bldg_to_construct:int, mass_build:
 			Helper.update_CBD_affected_tiles(tile, tile_id, p_i)
 		elif _bldg_to_construct == Building.BORING_MACHINE:
 			if not tile.has("depth"):
-				tile.depth = 0
+				tile["depth"] = 0
 			if not game.boring_machine_data.has(game.c_p_g):
 				game.boring_machine_data[game.c_p_g] = {"tiles":[tile_id], "c_s_g":game.c_s_g, "c_p":game.c_p}
 			else:
 				game.boring_machine_data[game.c_p_g].tiles.append(tile_id)
-			tile.bldg.collect_date = current_time
+			tile.bldg["collect_date"] = current_time
 		elif _bldg_to_construct == Building.ATMOSPHERE_EXTRACTOR:
 			var base = tile.bldg.path_1_value * p_i.pressure * time_speed_bonus
 			for el in p_i.atmosphere:
@@ -588,7 +589,7 @@ func constr_bldg(tile_id:int, curr_time:int, _bldg_to_construct:int, mass_build:
 				Helper.add_atom_production(el, base_prod)
 			Helper.add_energy_from_NFR(p_i, base)
 			Helper.add_energy_from_CS(p_i, base)
-		tile.bldg.c_p_g = game.c_p_g
+		tile.bldg["c_p_g"] = game.c_p_g
 		game.tile_data[tile_id] = tile
 		add_bldg(tile_id, _bldg_to_construct, true)
 		shadow.visible = false
@@ -604,9 +605,9 @@ func overclock_bldg(tile, tile_id:int, curr_time):
 			mult_diff = mult - 1
 		else:
 			mult_diff = mult - tile.bldg.overclock_mult
-		tile.bldg.overclock_date = curr_time
-		tile.bldg.overclock_length = Item.data[game.item_to_use.id].duration / game.u_i.time_speed / tile.get("time_speed_bonus", 1.0)
-		tile.bldg.overclock_mult = mult
+		tile.bldg["overclock_date"] = curr_time
+		tile.bldg["overclock_length"] = Item.data[game.item_to_use.id].duration / game.u_i.time_speed / tile.get("time_speed_bonus", 1.0)
+		tile.bldg["overclock_mult"] = mult
 		if tile.bldg.name == Building.RESEARCH_LAB:
 			game.autocollect.rsrc.SP += tile.bldg.path_1_value * mult_diff * tile.resource_production_bonus.get("SP", 1.0) * tile.get("time_speed_bonus", 1.0)
 		elif tile.bldg.name == Building.MINERAL_EXTRACTOR:
@@ -627,7 +628,7 @@ func overclock_bldg(tile, tile_id:int, curr_time):
 			var tiles_mined = (curr_time - tile.bldg.collect_date) * tile.bldg.path_1_value * Helper.get_prod_mult(tile) * tile.get("mining_outpost_bonus", 1.0)
 			if tiles_mined >= 1:
 				game.add_resources(Helper.mass_generate_rock(tile, p_i, int(tiles_mined)))
-				tile.bldg.collect_date = curr_time
+				tile.bldg["collect_date"] = curr_time
 				tile.depth += int(tiles_mined)
 		game.item_to_use.num -= 1
 
@@ -697,40 +698,40 @@ func destroy_bldg(id2:int, mass:bool = false):
 	if bldg == Building.MINERAL_SILO:
 		game.mineral_capacity -= tile.bldg.path_1_value
 		if game.mineral_capacity < 200:
-			game.mineral_capacity = 200
+			game["mineral_capacity"] = 200
 	elif bldg == Building.BATTERY:
 		game.energy_capacity -= tile.bldg.path_1_value * game.u_i.charge
 		if game.energy_capacity < 7500:
-			game.energy_capacity = 7500
+			game["energy_capacity"] = 7500
 	elif bldg == Building.MINERAL_EXTRACTOR:
 		game.autocollect.rsrc.minerals -= tile.bldg.path_1_value * overclock_mult * tile.resource_production_bonus.get("minerals", 1.0)
 		if game.autocollect.rsrc.minerals < 0:
-			game.autocollect.rsrc.minerals = 0
+			game.autocollect.rsrc["minerals"] = 0
 	elif bldg == Building.POWER_PLANT:
 		game.autocollect.rsrc.energy -= tile.bldg.path_1_value * overclock_mult * tile.resource_production_bonus.get("energy", 1.0)
 		if game.autocollect.rsrc.energy < 0:
-			game.autocollect.rsrc.energy = 0
+			game.autocollect.rsrc["energy"] = 0
 		if tile.has("substation_tile"):
 			var cap_to_remove = tile.bldg.path_1_value * tile.substation_bonus * Helper.get_substation_capacity_bonus(game.tile_data[tile.substation_tile].ancient_bldg.tier)
 			game.tile_data[tile.substation_tile].ancient_bldg.capacity_bonus -= cap_to_remove
 			game.capacity_bonus_from_substation -= cap_to_remove
 			if game.capacity_bonus_from_substation < 0:
-				game.capacity_bonus_from_substation = 0
+				game["capacity_bonus_from_substation"] = 0
 	elif bldg == Building.SOLAR_PANEL:
 		var SP_prod = Helper.get_SP_production(p_i.temperature, tile.bldg.path_1_value * overclock_mult * (tile.get("aurora", 0.0) + 1.0))
 		game.autocollect.rsrc.energy -= SP_prod
 		if game.autocollect.rsrc.energy < 0:
-			game.autocollect.rsrc.energy = 0
+			game.autocollect.rsrc["energy"] = 0
 		if tile.has("substation_tile"):
 			var cap_to_remove = Helper.get_SP_production(p_i.temperature, tile.bldg.path_1_value * (tile.get("aurora", 0.0) + 1.0)) * Helper.get_substation_capacity_bonus(game.tile_data[tile.substation_tile].ancient_bldg.tier)
 			game.tile_data[tile.substation_tile].ancient_bldg.capacity_bonus -= cap_to_remove
 			game.capacity_bonus_from_substation -= cap_to_remove
 			if game.capacity_bonus_from_substation < 0:
-				game.capacity_bonus_from_substation = 0
+				game["capacity_bonus_from_substation"] = 0
 	elif bldg == Building.RESEARCH_LAB:
 		game.autocollect.rsrc.SP -= tile.bldg.path_1_value * overclock_mult * tile.resource_production_bonus.get("SP", 1.0)
 		if game.autocollect.rsrc.SP < 0:
-			game.autocollect.rsrc.SP = 0
+			game.autocollect.rsrc["SP"] = 0
 	elif bldg == Building.ATMOSPHERE_EXTRACTOR:
 		var base = -tile.bldg.path_1_value * overclock_mult * p_i.pressure
 		for el in p_i.atmosphere:
@@ -866,15 +867,15 @@ func collect_prod_bldgs(tile_id:int):
 				rsrc_to_deduct = {"coal":_tile.bldg.path_2_value}
 			if game.check_enough(rsrc_to_deduct):
 				game.deduct_resources(rsrc_to_deduct)
-				_tile.bldg.qty1 = _tile.bldg.path_2_value
-				_tile.bldg.start_date = curr_time
+				_tile.bldg["qty1"] = _tile.bldg.path_2_value
+				_tile.bldg["start_date"] = curr_time
 				var ratio:float = _tile.bldg.path_3_value
 				if _tile.bldg.name == Building.GLASS_FACTORY:
 					ratio /= 15.0
 				elif _tile.bldg.name == Building.STEAM_ENGINE:
 					ratio *= 40.0
-				_tile.bldg.ratio = ratio
-				_tile.bldg.qty2 = _tile.bldg.path_2_value * ratio
+				_tile.bldg["ratio"] = ratio
+				_tile.bldg["qty2"] = _tile.bldg.path_2_value * ratio
 	elif _tile.bldg.name == Building.STONE_CRUSHER:
 		if not _tile.bldg.has("stone"):
 			var stone_max_qty = _tile.bldg.path_2_value
@@ -885,12 +886,12 @@ func collect_prod_bldgs(tile_id:int):
 				for el in game.stone:
 					stone_to_crush[el] = qty_to_crush / stone_total * game.stone[el]
 					game.stone[el] *= (1.0 - qty_to_crush / stone_total)
-				_tile.bldg.stone = stone_to_crush
-				_tile.bldg.stone_qty = qty_to_crush
-				_tile.bldg.start_date = curr_time
+				_tile.bldg["stone"] = stone_to_crush
+				_tile.bldg["stone_qty"] = qty_to_crush
+				_tile.bldg["start_date"] = curr_time
 				var expected_rsrc:Dictionary = {}
 				Helper.get_SC_output(expected_rsrc, qty_to_crush, _tile.bldg.path_3_value, stone_total)
-				_tile.bldg.expected_rsrc = expected_rsrc
+				_tile.bldg["expected_rsrc"] = expected_rsrc
 		else:
 			var crush_spd = _tile.bldg.path_1_value * game.u_i.time_speed * _tile.get("time_speed_bonus", 1.0)
 			var qty_left = max(0, round(_tile.bldg.stone_qty - (curr_time - _tile.bldg.start_date) * crush_spd))
@@ -930,7 +931,7 @@ func duplicate_building_callable():
 	for cost in base_cost:
 		base_cost[cost] *= game.engineering_bonus.BCM
 	if bldg_name == Building.GREENHOUSE:
-		base_cost.energy = round(base_cost.energy * (1 + abs(p_i.temperature - 273) / 10.0))
+		base_cost["energy"] = round(base_cost.energy * (1 + abs(p_i.temperature - 273) / 10.0))
 	construct(bldg_name, base_cost)
 	shadow.position = floor(mouse_pos / 200) * 200 + Vector2.ONE * 100 + Vector2.UP * 50.0
 
@@ -1250,7 +1251,7 @@ func _unhandled_input(event):
 			return
 		if tile and tile.has("depth") and not tile.has("bldg") and bldg_to_construct == -1 and not tile.has("bridge"):
 			if Input.is_action_pressed("shift"):
-				game.tile_data[tile_id].bridge = true
+				game.tile_data[tile_id]["bridge"] = true
 				obstacle_nodes[Vector2i(x_pos, y_pos)].queue_free()
 				obstacle_nodes.erase(Vector2i(x_pos, y_pos))
 			else:
@@ -1293,8 +1294,8 @@ func _unhandled_input(event):
 						game.popup(tr("NOT_ENOUGH_MONEY"), 1.5)
 			elif tile.has("cave"):
 				if game.bottom_info_action == "enter_cave":
-					game.c_t = tile_id
-					game.rover_id = rover_selected
+					game["c_t"] = tile_id
+					game["rover_id"] = rover_selected
 					if game.rover_data[rover_selected].MK == 3:
 						game.popup_window("", "", [tr("GO_TO_FLOOR_X") % 16, tr("GO_TO_FLOOR_X") % 8, tr("START_AT_FLOOR_1")], [Callable(game, "switch_view").bind("cave", {"start_floor":16}), Callable(game, "switch_view").bind("cave", {"start_floor":8}), Callable(game, "switch_view").bind("cave")], tr("CANCEL"))
 					elif game.rover_data[rover_selected].MK == 2:
@@ -1357,7 +1358,7 @@ func on_wormhole_click(tile:Dictionary, tile_id:int):
 				if game.galaxy_data[game.c_g].has("wormholes"):
 					game.galaxy_data[game.c_g].wormholes.append({"from":game.c_s, "to":l_dest_s_id})
 				else:
-					game.galaxy_data[game.c_g].wormholes = [{"from":game.c_s, "to":l_dest_s_id}]
+					game.galaxy_data[game.c_g]["wormholes"] = [{"from":game.c_s, "to":l_dest_s_id}]
 				if not game.galaxy_data[game.c_g].has("discovered"):#if galaxy generated systems
 					await game.start_system_generation()
 				else:
@@ -1369,22 +1370,22 @@ func on_wormhole_click(tile:Dictionary, tile_id:int):
 				var orig_p_g:int = game.c_p_g
 				view.save_zooms("planet")
 				Helper.save_obj("Systems", game.c_s_g, game.planet_data)
-				game.c_s = l_dest_s_id
-				game.c_s_g = g_dest_s_id
+				game["c_s"] = l_dest_s_id
+				game["c_s_g"] = g_dest_s_id
 				if wh_system.has("discovered"):#if system generated planets
-					game.planet_data = game.open_obj("Systems", g_dest_s_id)
+					game["planet_data"] = game.open_obj("Systems", g_dest_s_id)
 				else:
 					game.planet_data.clear()
 					game.generate_planets(l_dest_s_id)
 				var wh_planet = game.planet_data[randi() % wh_system.planet_num]
 				while wh_planet.type in [11, 12]:
 					wh_planet = game.planet_data[randi() % wh_system.planet_num]
-				game.planet_data[wh_planet.l_id].conquered = true
-				game.tile_data[tile_id].wormhole.l_dest_p_id = wh_planet.l_id
-				game.tile_data[tile_id].wormhole.g_dest_p_id = wh_planet.id
-				game.tile_data[tile_id].wormhole.l_dest_s_id = l_dest_s_id
-				game.tile_data[tile_id].wormhole.g_dest_s_id = g_dest_s_id
-				game.tile_data[tile_id].wormhole.new = false
+				game.planet_data[wh_planet.l_id]["conquered"] = true
+				game.tile_data[tile_id].wormhole["l_dest_p_id"] = wh_planet.l_id
+				game.tile_data[tile_id].wormhole["g_dest_p_id"] = wh_planet.id
+				game.tile_data[tile_id].wormhole["l_dest_s_id"] = l_dest_s_id
+				game.tile_data[tile_id].wormhole["g_dest_s_id"] = g_dest_s_id
+				game.tile_data[tile_id].wormhole["new"] = false
 				var _wid:int = sqrt(len(game.tile_data))
 				var tile_x:int = tile_id % _wid
 				var tile_y:int = tile_id / _wid
@@ -1394,34 +1395,34 @@ func on_wormhole_click(tile:Dictionary, tile_id:int):
 						var _tile = game.tile_data[id2]
 						if Vector2(k, l) == Vector2(tile_x, tile_y) or _tile.has("cave") or _tile.has("volcano") or _tile.has("lake") or _tile.has("wormhole"):
 							continue
-						_tile.resource_production_bonus.SP = _tile.resource_production_bonus.get("SP", 1.0) + 7.0
+						_tile.resource_production_bonus["SP"] = _tile.resource_production_bonus.get("SP", 1.0) + 7.0
 				Helper.save_obj("Planets", game.c_p_g, game.tile_data)#update current tile info (original wormhole)
-				game.c_p = wh_planet.l_id
-				game.c_p_g = wh_planet.id
+				game["c_p"] = wh_planet.l_id
+				game["c_p_g"] = wh_planet.id
 				if not wh_planet.has("discovered"):
 					game.generate_tiles(wh_planet.l_id)
-				game.tile_data = game.open_obj("Planets", wh_planet.id)
+				game["tile_data"] = game.open_obj("Planets", wh_planet.id)
 				var wh_tile:int = randi() % len(game.tile_data)
 				while game.tile_data[wh_tile] and game.tile_data[wh_tile].has("cave"):
 					wh_tile = randi() % len(game.tile_data)
 				game.erase_tile(wh_tile)
-				game.tile_data[wh_tile].wormhole = {"active":true, "new":false, "l_dest_s_id":orig_s_l, "g_dest_s_id":orig_s_g, "l_dest_p_id":orig_p_l, "g_dest_p_id":orig_p_g}
+				game.tile_data[wh_tile]["wormhole"] = {"active":true, "new":false, "l_dest_s_id":orig_s_l, "g_dest_s_id":orig_s_g, "l_dest_p_id":orig_p_l, "g_dest_p_id":orig_p_g}
 				Helper.save_obj("Planets", wh_planet.id, game.tile_data)#update new tile info (destination wormhole)
 			else:
 				game.remove_planet()
-				game.c_v = ""
-				game.c_p = l_dest_p_id
-				game.c_p_g = g_dest_p_id
-				game.c_s = l_dest_s_id
-				game.c_s_g = g_dest_s_id
-				game.tile_data = game.open_obj("Planets", game.c_p_g)
-				game.planet_data = game.open_obj("Systems", game.c_s_g)
-			game.ships_travel_data.c_coords.p = game.c_p
-			game.ships_travel_data.dest_coords.p = game.c_p
-			game.ships_travel_data.c_coords.s = game.c_s
-			game.ships_travel_data.dest_coords.s = game.c_s
-			game.ships_travel_data.c_g_coords.s = game.c_s_g
-			game.ships_travel_data.dest_g_coords.s = game.c_s_g
+				game["c_v"] = ""
+				game["c_p"] = l_dest_p_id
+				game["c_p_g"] = g_dest_p_id
+				game["c_s"] = l_dest_s_id
+				game["c_s_g"] = g_dest_s_id
+				game["tile_data"] = game.open_obj("Planets", game.c_p_g)
+				game["planet_data"] = game.open_obj("Systems", game.c_s_g)
+			game.ships_travel_data.c_coords["p"] = game.c_p
+			game.ships_travel_data.dest_coords["p"] = game.c_p
+			game.ships_travel_data.c_coords["s"] = game.c_s
+			game.ships_travel_data.dest_coords["s"] = game.c_s
+			game.ships_travel_data.c_g_coords["s"] = game.c_s_g
+			game.ships_travel_data.dest_g_coords["s"] = game.c_s_g
 			game.switch_view("planet", {"dont_save_zooms":true})
 		else:
 			if is_instance_valid(game.send_ships_panel):
@@ -1441,8 +1442,8 @@ func on_wormhole_click(tile:Dictionary, tile_id:int):
 				game.stats_univ.wormholes_activated += 1
 				game.stats_dim.wormholes_activated += 1
 				game.stats_global.wormholes_activated += 1
-				tile.wormhole.investigation_length = costs.time
-				tile.wormhole.investigation_date = Time.get_unix_time_from_system()
+				tile.wormhole["investigation_length"] = costs.time
+				tile.wormhole["investigation_date"] = Time.get_unix_time_from_system()
 				game.popup(tr("INVESTIGATION_STARTED"), 2.0)
 				add_time_bar(tile_id, "wormhole")
 			else:
@@ -1631,7 +1632,7 @@ func on_timeout():
 			length = tile.wormhole.investigation_length
 			progress = (curr_time - start_date) / float(length)
 			if progress > 1:
-				tile.wormhole.active = true
+				tile.wormhole["active"] = true
 		time_bar.get_node("TimeString").text = Helper.time_to_str(length - curr_time + start_date)
 		time_bar.get_node("Bar").value = progress
 	if icons_hidden:

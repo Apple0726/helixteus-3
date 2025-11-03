@@ -151,22 +151,10 @@ func battle_victory_callback():
 	for i in len(ship_data):
 		Helper.add_ship_XP(i, XP_earned)
 	var all_conquered = true
-	if not game.is_conquering_all and not game.planet_data[game.c_p].has("conquered"):
-		game.stats_univ.enemies_rekt_in_battle += len(HX_data)
-		game.stats_dim.enemies_rekt_in_battle += len(HX_data)
-		game.stats_global.enemies_rekt_in_battle += len(HX_data)
-		game.planet_data[game.c_p].conquered = true
-		game.planet_data[game.c_p].erase("HX_data")
-		for planet in game.planet_data:
-			if not planet.has("conquered"):
-				all_conquered = false
-		game.stats_univ.planets_conquered += 1
-		game.stats_dim.planets_conquered += 1
-		game.stats_global.planets_conquered += 1
-	else:
+	if game.is_conquering_all:
 		for planet in game.planet_data:
 			if not planet.has("conquered") and planet.has("HX_data"):
-				planet.conquered = true
+				planet["conquered"] = true
 				game.stats_univ.enemies_rekt_in_battle += len(planet.HX_data)
 				game.stats_dim.enemies_rekt_in_battle += len(planet.HX_data)
 				game.stats_global.enemies_rekt_in_battle += len(planet.HX_data)
@@ -174,8 +162,21 @@ func battle_victory_callback():
 				game.stats_univ.planets_conquered += 1
 				game.stats_dim.planets_conquered += 1
 				game.stats_global.planets_conquered += 1
+	else:
+		if not game.planet_data[game.c_p].has("conquered"):
+			game.stats_univ.enemies_rekt_in_battle += len(HX_data)
+			game.stats_dim.enemies_rekt_in_battle += len(HX_data)
+			game.stats_global.enemies_rekt_in_battle += len(HX_data)
+			game.planet_data[game.c_p]["conquered"] = true
+			game.planet_data[game.c_p].erase("HX_data")
+			for planet in game.planet_data:
+				if not planet.has("conquered"):
+					all_conquered = false
+			game.stats_univ.planets_conquered += 1
+			game.stats_dim.planets_conquered += 1
+			game.stats_global.planets_conquered += 1
 	if all_conquered:
-		game.system_data[game.c_s].conquered = true
+		game.system_data[game.c_s]["conquered"] = true
 		game.stats_univ.systems_conquered += 1
 		game.stats_dim.systems_conquered += 1
 		game.stats_global.systems_conquered += 1
@@ -186,7 +187,7 @@ func battle_victory_callback():
 		Helper.save_obj("Galaxies", game.c_g_g, game.system_data)
 	if not game.help.has("SP"):
 		game.popup_window(tr("NEW_BLDGS_UNLOCKED_DESC"), tr("NEW_BLDGS_UNLOCKED"))
-		game.help.SP = true
+		game.help["SP"] = true
 
 func view_battlefield(tween_speed: float = 1.0):
 	if game.view.is_view_changing():
