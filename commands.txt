@@ -83,3 +83,10 @@ Commands list:
 - Possible values of [ship ID]: 0, 1, 2, 3
 - Possible values of [XP type]: xp, bullet, laser, bomb, light
 - Example: `/addshipxp 1 laser 300
+
+/zerocosts
+- Sets all building, ancient building, megastructure, and rover part costs to zero
+
+/costs
+- Restores all costs to their original values from backup
+- Must be used after /zerocosts to restore costs

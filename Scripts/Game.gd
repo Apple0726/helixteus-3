@@ -4699,6 +4699,103 @@ func _on_PanelAnimationPlayer_animation_finished(anim_name):
 		$UI/Panel.visible = false
 
 
+func set_all_costs_to_zero():
+	# Backup original costs (only on first call)
+	if not Data.costs_backed_up:
+		Data.original_costs_backup = deep_copy_dict(Data.costs)
+		Data.original_ancient_building_costs_backup = deep_copy_dict(Data.ancient_building_costs)
+		Data.original_path_1_backup = deep_copy_dict(Data.path_1)
+		Data.original_path_2_backup = deep_copy_dict(Data.path_2)
+		Data.original_path_3_backup = deep_copy_dict(Data.path_3)
+		Data.original_MS_costs_backup = deep_copy_dict(Data.MS_costs)
+		Data.original_rover_armor_backup = deep_copy_dict(Data.rover_armor)
+		Data.original_rover_wheels_backup = deep_copy_dict(Data.rover_wheels)
+		Data.original_rover_CC_backup = deep_copy_dict(Data.rover_CC)
+		Data.original_rover_weapons_backup = deep_copy_dict(Data.rover_weapons)
+		Data.original_rover_mining_backup = deep_copy_dict(Data.rover_mining)
+		Data.costs_backed_up = true
+	
+	# Set all costs to 0
+	for key in Data.costs:
+		for cost_key in Data.costs[key]:
+			Data.costs[key][cost_key] = 0
+	
+	for key in Data.ancient_building_costs:
+		for cost_key in Data.ancient_building_costs[key]:
+			Data.ancient_building_costs[key][cost_key] = 0
+	
+	for key in Data.path_1:
+		if Data.path_1[key].has("metal_costs"):
+			for metal_key in Data.path_1[key].metal_costs:
+				Data.path_1[key].metal_costs[metal_key] = 0
+	
+	for key in Data.path_2:
+		if Data.path_2[key].has("metal_costs"):
+			for metal_key in Data.path_2[key].metal_costs:
+				Data.path_2[key].metal_costs[metal_key] = 0
+	
+	for key in Data.path_3:
+		if Data.path_3[key].has("metal_costs"):
+			for metal_key in Data.path_3[key].metal_costs:
+				Data.path_3[key].metal_costs[metal_key] = 0
+	
+	for key in Data.MS_costs:
+		for cost_key in Data.MS_costs[key]:
+			Data.MS_costs[key][cost_key] = 0
+	
+	# Set rover-related costs to 0
+	for key in Data.rover_armor:
+		if Data.rover_armor[key].has("costs"):
+			for cost_key in Data.rover_armor[key].costs:
+				Data.rover_armor[key].costs[cost_key] = 0
+	
+	for key in Data.rover_wheels:
+		if Data.rover_wheels[key].has("costs"):
+			for cost_key in Data.rover_wheels[key].costs:
+				Data.rover_wheels[key].costs[cost_key] = 0
+	
+	for key in Data.rover_CC:
+		if Data.rover_CC[key].has("costs"):
+			for cost_key in Data.rover_CC[key].costs:
+				Data.rover_CC[key].costs[cost_key] = 0
+	
+	for key in Data.rover_weapons:
+		if Data.rover_weapons[key].has("costs"):
+			for cost_key in Data.rover_weapons[key].costs:
+				Data.rover_weapons[key].costs[cost_key] = 0
+	
+	for key in Data.rover_mining:
+		if Data.rover_mining[key].has("costs"):
+			for cost_key in Data.rover_mining[key].costs:
+				Data.rover_mining[key].costs[cost_key] = 0
+
+func restore_all_costs():
+	if not Data.costs_backed_up:
+		popup("No costs backup found", 1.5)
+		return
+	
+	# Restore all costs
+	Data.costs = deep_copy_dict(Data.original_costs_backup)
+	Data.ancient_building_costs = deep_copy_dict(Data.original_ancient_building_costs_backup)
+	Data.path_1 = deep_copy_dict(Data.original_path_1_backup)
+	Data.path_2 = deep_copy_dict(Data.original_path_2_backup)
+	Data.path_3 = deep_copy_dict(Data.original_path_3_backup)
+	Data.MS_costs = deep_copy_dict(Data.original_MS_costs_backup)
+	Data.rover_armor = deep_copy_dict(Data.original_rover_armor_backup)
+	Data.rover_wheels = deep_copy_dict(Data.original_rover_wheels_backup)
+	Data.rover_CC = deep_copy_dict(Data.original_rover_CC_backup)
+	Data.rover_weapons = deep_copy_dict(Data.original_rover_weapons_backup)
+	Data.rover_mining = deep_copy_dict(Data.original_rover_mining_backup)
+
+func deep_copy_dict(dict_to_copy:Dictionary) -> Dictionary:
+	var result:Dictionary = {}
+	for key in dict_to_copy:
+		if dict_to_copy[key] is Dictionary:
+			result[key] = deep_copy_dict(dict_to_copy[key])
+		else:
+			result[key] = dict_to_copy[key]
+	return result
+
 func _on_command_text_submitted(new_text):
 	cmd_node.visible = false
 	cmd_history_index = -1
@@ -4780,6 +4877,10 @@ func _on_command_text_submitted(new_text):
 		"unlockbldgs":
 			for i in len(Building.names):
 				new_bldgs[i] = true
+		"zerocosts":
+			set_all_costs_to_zero()
+		"costs":
+			restore_all_costs()
 		_:
 			fail = true
 	if not fail:
