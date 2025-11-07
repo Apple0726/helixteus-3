@@ -83,3 +83,10 @@ Commands list:
 - Possible values of [ship ID]: 0, 1, 2, 3
 - Possible values of [XP type]: xp, bullet, laser, bomb, light
 - Example: `/addshipxp 1 laser 300
+
+/zerocosts [true/false/1/0]
+- Toggles or sets whether all resource costs are ignored
+- Without arguments, toggles the state on/off
+- With arguments, sets to true/1 (ignore costs) or false/0 (restore costs)
+- When enabled, all purchases (buildings, ancient buildings, megastructures, rover parts, upgrades, science, etc.) will not check or deduct resources
+- Example: /zerocosts true or /zerocosts 1 (enable), /zerocosts false or /zerocosts 0 (disable)

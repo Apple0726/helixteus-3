@@ -257,6 +257,8 @@ var cave_filters = {
 	"stone":false,
 }
 
+var are_costs_zero:bool = false
+
 # Stores the locations of all boring machines the player has built
 # to make autocollecting metals possible while minimizing lag
 var boring_machine_data = {
@@ -3760,6 +3762,8 @@ func get_star_class (temp):
 
 #Checks if player has enough resources to buy/craft/build something
 func check_enough(costs):
+	if are_costs_zero:
+		return true
 	var enough = true
 	for cost in costs:
 		if cost == "money" and money < costs[cost]:
@@ -3779,6 +3783,8 @@ func check_enough(costs):
 	return true
 
 func deduct_resources(costs):
+	if are_costs_zero:
+		return
 	for cost in costs:
 		if cost == "money":
 			money -= costs.money
@@ -4699,6 +4705,7 @@ func _on_PanelAnimationPlayer_animation_finished(anim_name):
 		$UI/Panel.visible = false
 
 
+
 func _on_command_text_submitted(new_text):
 	cmd_node.visible = false
 	cmd_history_index = -1
@@ -4780,6 +4787,17 @@ func _on_command_text_submitted(new_text):
 		"unlockbldgs":
 			for i in len(Building.names):
 				new_bldgs[i] = true
+		"zerocosts":
+			if len(arr) > 1:
+				if arr[1] == "true" or arr[1] == "1":
+					are_costs_zero = true
+				elif arr[1] == "false" or arr[1] == "0":
+					are_costs_zero = false
+				else:
+					popup("Invalid argument. Use 'true' or 'false'", 2)
+					return
+			else:
+				are_costs_zero = not are_costs_zero
 		_:
 			fail = true
 	if not fail:
