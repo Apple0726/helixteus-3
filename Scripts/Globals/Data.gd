@@ -634,6 +634,20 @@ var ancient_building_costs = {
 	AncientBuilding.CELLULOSE_SYNTHESIZER:{"money":2e5, "energy":6e4, "SP":2.5e4},
 }
 
+# Backup of original costs for /zerocosts and /costs commands
+var original_costs_backup:Dictionary = {}
+var original_ancient_building_costs_backup:Dictionary = {}
+var original_path_1_backup:Dictionary = {}
+var original_path_2_backup:Dictionary = {}
+var original_path_3_backup:Dictionary = {}
+var original_MS_costs_backup:Dictionary = {}
+var original_rover_armor_backup:Dictionary = {}
+var original_rover_wheels_backup:Dictionary = {}
+var original_rover_CC_backup:Dictionary = {}
+var original_rover_weapons_backup:Dictionary = {}
+var original_rover_mining_backup:Dictionary = {}
+var costs_backed_up:bool = false
+
 var MS_num_stages:Dictionary = {"DS":4, "MME":3, "CBS":3, "PK":2, "SE":1, "MB":0}
 
 var ancient_bldg_tier_colors = [
