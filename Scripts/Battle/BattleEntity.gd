@@ -92,7 +92,6 @@ func _ready() -> void:
 		self.area_entered.connect(on_collide)
 		for effect in Battle.StatusEffect.N:
 			status_effects[effect] = 0.0
-			status_effect_resistances[effect] = 0.0
 	$Info/StatusEffects.entity = self
 	update_velocity_arrow()
 
@@ -156,17 +155,20 @@ func initialize_stats(data:Dictionary):
 		aim_mult *= 2.0
 	if Battle.PassiveAbility.PHYSICAL_DAMAGE_RESISTANT in passive_abilities:
 		physical_damage_mult = 0.75
-	if Battle.PassiveAbility.STUN_FREEZE_IMMUNE:
+	if Battle.PassiveAbility.STUN_FREEZE_IMMUNE in passive_abilities:
 		status_effect_resistances[Battle.StatusEffect.STUN] = 1.0
 		status_effect_resistances[Battle.StatusEffect.FROZEN] = 1.0
-	if Battle.PassiveAbility.BURN_CORRODING_IMMUNE:
+	if Battle.PassiveAbility.BURN_CORRODING_IMMUNE in passive_abilities:
 		status_effect_resistances[Battle.StatusEffect.BURN] = 1.0
 		status_effect_resistances[Battle.StatusEffect.CORRODING] = 1.0
-	if Battle.PassiveAbility.WET_EXPOSED_IMMUNE:
+	if Battle.PassiveAbility.WET_EXPOSED_IMMUNE in passive_abilities:
 		status_effect_resistances[Battle.StatusEffect.WET] = 1.0
 		status_effect_resistances[Battle.StatusEffect.EXPOSED] = 1.0
-	if Battle.PassiveAbility.RADIOACTIVE_IMMUNE:
+	if Battle.PassiveAbility.RADIOACTIVE_IMMUNE in passive_abilities:
 		status_effect_resistances[Battle.StatusEffect.RADIOACTIVE] = 1.0
+	for effect in Battle.StatusEffect.N:
+		if not effect in status_effect_resistances:
+			status_effect_resistances[effect] = 0.0
 
 func roll_initiative():
 	var range:int = 2 + log(randf()) / log(0.2)
@@ -255,6 +257,7 @@ func _physics_process(delta: float) -> void:
 	if moving_from_velocity:
 		position += velocity * delta * velocity_process_mult
 		if position.x < -640.0 or position.x > 1920.0 or position.y < -360.0 or position.y > 1080.0:
+			HP = 0
 			entity_defeated_callback()
 
 
@@ -267,8 +270,9 @@ func end_turn():
 	else:
 		if is_instance_valid(turn_order_box):
 			turn_order_box.get_node("ChangeSizeAnim").play_backwards("ChangeSize")
-		turn_taken = true
-		emit_signal("next_turn")
+		if not turn_taken:
+			turn_taken = true
+			emit_signal("next_turn")
 
 func agility_updated_callback():
 	if has_node("CollisionShapeFinder/CollisionShape2D"):
@@ -327,6 +331,7 @@ func damage_entity(weapon_data: Dictionary):
 		update_entity_HP(label_knockback)
 		if HP > 0:
 			if weapon_data.has("status_effects"):
+				print(status_effect_resistances)
 				for effect in weapon_data.status_effects:
 					if randf() > status_effect_resistances[effect]:
 						var st = weapon_data.status_effects[effect]

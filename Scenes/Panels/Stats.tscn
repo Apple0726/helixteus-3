@@ -1,4 +1,4 @@
-[gd_scene load_steps=51 format=3 uid="uid://v1nifipd62vd"]
+[gd_scene load_steps=50 format=3 uid="uid://v1nifipd62vd"]
 
 [ext_resource type="Script" uid="uid://dlrkm02n2didl" path="res://Scripts/StatsPanel.gd" id="1"]
 [ext_resource type="PackedScene" uid="uid://1hq6qpr1oa3i" path="res://Scenes/AdvButton.tscn" id="2"]
@@ -44,7 +44,6 @@
 [ext_resource type="Texture2D" uid="uid://u5s0w6lhuxhs" path="res://Graphics/Icons/BBB.png" id="41"]
 [ext_resource type="Texture2D" uid="uid://brrod2d1fgtut" path="res://Graphics/Atoms/Ne.png" id="42"]
 [ext_resource type="Texture2D" uid="uid://gbbvl1ua0wyb" path="res://Graphics/Atoms/Xe.png" id="43"]
-[ext_resource type="Texture2D" uid="uid://cw7v66ruuqgwb" path="res://Graphics/Tiles/3.jpg" id="44"]
 [ext_resource type="Texture2D" uid="uid://da22ie3xwunob" path="res://Graphics/Buildings/Ancient/mineral_replicator.png" id="46"]
 [ext_resource type="Texture2D" uid="uid://co7hd2o2d4khw" path="res://Graphics/Buildings/greenhouse.png" id="46_0ykb7"]
 [ext_resource type="Texture2D" uid="uid://bpavp7wy8on3h" path="res://Graphics/Achievements/AncientBuildings.png" id="47"]
@@ -218,17 +217,17 @@ number = 1000.0
 [node name="1" parent="Achievements/ScrollContainer/HBox/Slots/money" instance=ExtResource("4")]
 layout_mode = 2
 achievement_icon = ExtResource("6")
-number = 1e+06
+number = 1000000.0
 
 [node name="2" parent="Achievements/ScrollContainer/HBox/Slots/money" instance=ExtResource("4")]
 layout_mode = 2
 achievement_icon = ExtResource("6")
-number = 1e+09
+number = 1000000000.0
 
 [node name="3" parent="Achievements/ScrollContainer/HBox/Slots/money" instance=ExtResource("4")]
 layout_mode = 2
 achievement_icon = ExtResource("6")
-number = 1e+12
+number = 1000000000000.0
 
 [node name="4" parent="Achievements/ScrollContainer/HBox/Slots/money" instance=ExtResource("4")]
 layout_mode = 2
@@ -297,7 +296,7 @@ number = 100000.0
 [node name="6" parent="Achievements/ScrollContainer/HBox/Slots/conquest" instance=ExtResource("4")]
 layout_mode = 2
 achievement_icon = ExtResource("7")
-number = 1e+06
+number = 1000000.0
 
 [node name="fully_conquer_system" parent="Achievements/ScrollContainer/HBox/Slots/conquest" instance=ExtResource("4")]
 layout_mode = 2
@@ -328,22 +327,22 @@ number = 10000.0
 [node name="2" parent="Achievements/ScrollContainer/HBox/Slots/construct" instance=ExtResource("4")]
 layout_mode = 2
 achievement_icon = ExtResource("8")
-number = 1e+06
+number = 1000000.0
 
 [node name="3" parent="Achievements/ScrollContainer/HBox/Slots/construct" instance=ExtResource("4")]
 layout_mode = 2
 achievement_icon = ExtResource("8")
-number = 1e+08
+number = 100000000.0
 
 [node name="4" parent="Achievements/ScrollContainer/HBox/Slots/construct" instance=ExtResource("4")]
 layout_mode = 2
 achievement_icon = ExtResource("8")
-number = 1e+10
+number = 10000000000.0
 
 [node name="5" parent="Achievements/ScrollContainer/HBox/Slots/construct" instance=ExtResource("4")]
 layout_mode = 2
 achievement_icon = ExtResource("8")
-number = 1e+12
+number = 1000000000000.0
 
 [node name="exploration" type="GridContainer" parent="Achievements/ScrollContainer/HBox/Slots"]
 layout_mode = 2
@@ -478,7 +477,6 @@ achievement_icon = ExtResource("43")
 
 [node name="planet_with_nothing" parent="Achievements/ScrollContainer/HBox/Slots/exploration" instance=ExtResource("4")]
 layout_mode = 2
-achievement_icon = ExtResource("44")
 
 [node name="tier_2_ancient_bldg" parent="Achievements/ScrollContainer/HBox/Slots/exploration" instance=ExtResource("4")]
 layout_mode = 2

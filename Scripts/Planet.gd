@@ -46,6 +46,8 @@ var star_mod:Color
 var caves_data:Dictionary = {}
 var obstacle_nodes = {}
 
+var thread: Thread
+
 func _ready():
 	shadows.resize(wid * wid)
 	var tile_brightness:float = game.tile_brightness[p_i.type - 3]
@@ -86,8 +88,7 @@ func _ready():
 	rsrcs.resize(wid * wid)
 	dimensions = wid * 200
 	$Ash.tile_set = ResourceFiles.ash_tile_set
-	$Lakes.tile_set = ResourceFiles.lake_tile_set
-	#$PlanetTiles.tile_set = ResourceFiles.planet_tile_set
+	$PlanetTiles.tile_set = ResourceFiles.planet_tile_set
 	$Soil.tile_set = ResourceFiles.soil_tile_set
 	var nuclear_fusion_reactor_main_tiles = []
 	if p_i.ancient_bldgs.has(AncientBuilding.NUCLEAR_FUSION_REACTOR):
@@ -101,13 +102,6 @@ func _ready():
 		for j in wid:
 			var id2 = i % wid + j * wid
 			var tile = game.tile_data[id2]
-			if p_i.has("lake"):
-				if p_i.lake.state == "s":
-					$Lakes.set_cell(Vector2i(i, j), 0, Vector2.ZERO)
-				elif p_i.lake.state == "l":
-					$Lakes.set_cell(Vector2i(i, j), 1, Vector2.ZERO)
-				elif p_i.lake.state == "sc":
-					$Lakes.set_cell(Vector2i(i, j), 2, Vector2.ZERO)
 			if tile == null:
 				planet_tiles.append(Vector2i(i, j))
 				continue
@@ -221,10 +215,16 @@ func _ready():
 	}
 	$Soil.set_cells_terrain_connect(soil_tiles, 0, 0)
 	$Ash.set_cells_terrain_connect(ash_tiles, 0, 0)
-	$PlanetTiles.material.set_shader_parameter("planet_texture", load("res://Graphics/Tiles/%s.jpg" % p_i.type))
+	seed(p_i.seed)
+	var mosaic = randi_range(1, 7)
+	$PlanetTiles.material.set_shader_parameter("planet_texture", load("res://Graphics/Tiles/Mosaics/%sr.jpg" % mosaic))
 	$PlanetTiles.set_cells_terrain_connect(planet_tiles, 0, 0)
+	$Lake.size = Vector2.ONE * 200.0 * wid
 	if p_i.has("lake"):
-		$Lakes.modulate = Data.lake_colors[p_i.lake.element][p_i.lake.state]
+		$Lake.show()
+		$Lake.modulate = Data.lake_colors[p_i.lake.element][p_i.lake.state]
+		if p_i.lake.state != "s":
+			$Lake.material.set_shader_parameter("should_render", true)
 	$BadApple.wid_p = wid
 	$BadApple.pixel_color = Color.BLACK if star_mod.get_luminance() > 0.3 else Color(0.5, 0.5, 0.5, 1.0)
 	var await_counter:int = 0
@@ -244,7 +244,6 @@ func _ready():
 			await_counter += 1
 			if await_counter % int(1000.0 / Engine.get_frames_per_second()) == 0:
 				await get_tree().process_frame
-
 
 func add_ancient_building_sprite(tile:Dictionary, tile_id:int, v:Vector2, building_animation:bool = false):
 	var mod:Color = Color.WHITE
@@ -933,7 +932,6 @@ func duplicate_building_callable():
 	if bldg_name == Building.GREENHOUSE:
 		base_cost["energy"] = round(base_cost.energy * (1 + abs(p_i.temperature - 273) / 10.0))
 	construct(bldg_name, base_cost)
-	shadow.position = floor(mouse_pos / 200) * 200 + Vector2.ONE * 100 + Vector2.UP * 50.0
 
 func upgrade_building_callable(called_from_right_click = true):
 	if is_instance_valid(game.upgrade_panel):
@@ -1178,9 +1176,9 @@ func _unhandled_input(event):
 			hide_tooltip()
 		if is_instance_valid(shadow):
 			if constructing_ancient_building_tier != -1 and bldg_to_construct == AncientBuilding.NUCLEAR_FUSION_REACTOR:
-				shadow.position = floor(mouse_pos / 200) * 200 + Vector2.ONE * 200 + Vector2.UP * 50.0
+				shadow.position = floor(mouse_pos / 200) * 200 + Vector2.ONE * 200 + Vector2.UP * 30.0
 			else:
-				shadow.position = floor(mouse_pos / 200) * 200 + Vector2.ONE * 100 + Vector2.UP * 50.0
+				shadow.position = floor(mouse_pos / 200) * 200 + Vector2.ONE * 100 + Vector2.UP * 30.0
 	#finish mass build
 	if Input.is_action_just_released("left_click") and mass_build_rect.visible:
 		mass_build_rect.visible = false
@@ -1370,8 +1368,8 @@ func on_wormhole_click(tile:Dictionary, tile_id:int):
 				var orig_p_g:int = game.c_p_g
 				view.save_zooms("planet")
 				Helper.save_obj("Systems", game.c_s_g, game.planet_data)
-				game["c_s"] = l_dest_s_id
-				game["c_s_g"] = g_dest_s_id
+				game.c_s = l_dest_s_id
+				game.c_s_g = g_dest_s_id
 				if wh_system.has("discovered"):#if system generated planets
 					game["planet_data"] = game.open_obj("Systems", g_dest_s_id)
 				else:
@@ -1397,11 +1395,11 @@ func on_wormhole_click(tile:Dictionary, tile_id:int):
 							continue
 						_tile.resource_production_bonus["SP"] = _tile.resource_production_bonus.get("SP", 1.0) + 7.0
 				Helper.save_obj("Planets", game.c_p_g, game.tile_data)#update current tile info (original wormhole)
-				game["c_p"] = wh_planet.l_id
-				game["c_p_g"] = wh_planet.id
+				game.c_p = wh_planet.l_id
+				game.c_p_g = wh_planet.id
 				if not wh_planet.has("discovered"):
 					game.generate_tiles(wh_planet.l_id)
-				game["tile_data"] = game.open_obj("Planets", wh_planet.id)
+				game.tile_data = game.open_obj("Planets", wh_planet.id)
 				var wh_tile:int = randi() % len(game.tile_data)
 				while game.tile_data[wh_tile] and game.tile_data[wh_tile].has("cave"):
 					wh_tile = randi() % len(game.tile_data)
@@ -1410,13 +1408,13 @@ func on_wormhole_click(tile:Dictionary, tile_id:int):
 				Helper.save_obj("Planets", wh_planet.id, game.tile_data)#update new tile info (destination wormhole)
 			else:
 				game.remove_planet()
-				game["c_v"] = ""
-				game["c_p"] = l_dest_p_id
-				game["c_p_g"] = g_dest_p_id
-				game["c_s"] = l_dest_s_id
-				game["c_s_g"] = g_dest_s_id
-				game["tile_data"] = game.open_obj("Planets", game.c_p_g)
-				game["planet_data"] = game.open_obj("Systems", game.c_s_g)
+				game.c_v = ""
+				game.c_p = l_dest_p_id
+				game.c_p_g = g_dest_p_id
+				game.c_s = l_dest_s_id
+				game.c_s_g = g_dest_s_id
+				game.tile_data = game.open_obj("Planets", game.c_p_g)
+				game.planet_data = game.open_obj("Systems", game.c_s_g)
 			game.ships_travel_data.c_coords["p"] = game.c_p
 			game.ships_travel_data.dest_coords["p"] = game.c_p
 			game.ships_travel_data.c_coords["s"] = game.c_s
@@ -1497,7 +1495,7 @@ func add_bldg_sprite(pos:Vector2, _name:int, texture, building_animation:bool = 
 	var bldg = Sprite2D.new()
 	bldg.texture = texture
 	bldg.scale *= sc * 0.8
-	bldg.position = pos + offset + Vector2.UP * 50.0
+	bldg.position = pos + offset + Vector2.UP * 30.0
 	bldg.self_modulate = mod
 	if building_animation:
 		bldg.material = ShaderMaterial.new()
@@ -1751,6 +1749,7 @@ func construct(type:int, costs:Dictionary):
 				if await_counter % int(1000.0 / Engine.get_frames_per_second()) == 0:
 					await get_tree().process_frame
 				await_counter += 1
+	shadow.position = floor(mouse_pos / 200) * 200 + Vector2.ONE * 100 + Vector2.UP * 30.0
 
 func place_gray_tiles_mining():
 	var grayed_out_tile_positions:PackedVector2Array
@@ -1773,7 +1772,7 @@ func put_shadow(spr:Sprite2D, texture, pos:Vector2 = Vector2.ZERO, sc:float = 0.
 	spr.texture = texture
 	spr.scale *= sc * 0.8
 	spr.modulate.a = 0.5
-	spr.position = (floor(pos / 200) * 200).clamp(Vector2.ZERO, Vector2.ONE * wid * 200) + offset + Vector2.UP * 50.0
+	spr.position = (floor(pos / 200) * 200).clamp(Vector2.ZERO, Vector2.ONE * wid * 200) + offset + Vector2.UP * 30.0
 	add_child(spr)
 	return spr
 	

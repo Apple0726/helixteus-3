@@ -1605,7 +1605,7 @@ func set_logarithmic_time_speed(dimensional_power:int, base_time_speed:float):
 	else:
 		return base_time_speed
 
-func add_text_icons(RTL:RichTextLabel, txt:String, imgs:Array, size:int = 17, resize_RTL:bool = false):
+func add_text_to_RTL(RTL:RichTextLabel, txt:String, imgs:Array, size:int = 17, resize_RTL:bool = false):
 	RTL.text = ""
 	var arr = txt.split("@i")#@i: where images are placed
 	var i = 0
@@ -1629,7 +1629,7 @@ func add_text_icons(RTL:RichTextLabel, txt:String, imgs:Array, size:int = 17, re
 			max_width = max(width, max_width)
 		#await get_tree().process_frame
 		if is_instance_valid(RTL):
-			RTL.size.x = RTL.get_content_width() + 30
+			RTL.size.x = RTL.get_content_width() + 35
 			RTL.size.y = RTL.get_content_height() + 20
 
 # get_sphere_volume

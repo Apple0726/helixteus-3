@@ -518,23 +518,27 @@ func _ready():
 	for i in range(3, 13):
 		planet_textures.append(load("res://Graphics/Planets/%s.png" % i))
 		if i <= 10:
-			var tile_texture = load("res://Graphics/Tiles/%s.jpg" % i)
-			var tile_img = tile_texture.get_image()
-			var brightness:float = 0.0
-			var rgb = {"r":0, "g":0, "b":0}
-			for x in tile_img.get_width():
-				for y in tile_img.get_height():
-					var color:Color = tile_img.get_pixel(x, y)
-					brightness += color.r + color.g + color.b
-					rgb.r += color.r
-					rgb.g += color.g
-					rgb.b += color.b
-			var num_pixels = tile_img.get_width() * tile_img.get_height()
-			rgb.r /= num_pixels
-			rgb.g /= num_pixels
-			rgb.b /= num_pixels
-			tile_brightness.append(brightness)
-			tile_avg_mod.append(Color(rgb.r, rgb.g, rgb.b, 1.0))
+			if false:
+				var tile_texture = load("res://Graphics/Tiles/Mosaics/%sr.jpg" % i)
+				var tile_img = tile_texture.get_image()
+				var brightness:float = 0.0
+				var rgb = {"r":0, "g":0, "b":0}
+				for x in tile_img.get_width():
+					for y in tile_img.get_height():
+						var color:Color = tile_img.get_pixel(x, y)
+						brightness += color.r + color.g + color.b
+						rgb.r += color.r
+						rgb.g += color.g
+						rgb.b += color.b
+				var num_pixels = tile_img.get_width() * tile_img.get_height()
+				rgb.r /= num_pixels
+				rgb.g /= num_pixels
+				rgb.b /= num_pixels
+				tile_brightness.append(brightness)
+				tile_avg_mod.append(Color(rgb.r, rgb.g, rgb.b, 1.0))
+			else:
+				tile_brightness.append(1.0)
+				tile_avg_mod.append(Color.WHITE)
 	for i in range(0, 7):
 		galaxy_textures.append(load("res://Graphics/Galaxies/%s.png" % i))
 	for bldg in Building.names:
@@ -1057,27 +1061,26 @@ func new_game(univ:int = 0, new_save:bool = false, DR_advantage = false):
 	if univ == 0:
 		#Home planet information
 		planet_data[2]["name"] = tr("HOME_PLANET")
-		planet_data[2].type = 5
+		planet_data[2]["type"] = 3
 		planet_data[2]["conquered"] = true
 		planet_data[2]["size"] = round(randf_range(12000, 12100))
-		planet_data[2].view = {"pos":Vector2(340, 80), "zoom":3.0 / Helper.get_wid(planet_data[2].size)}
-		stats_univ.biggest_planet = planet_data[2].size
+		planet_data[2]["view"] = {"pos":Vector2(340, 80), "zoom":3.0 / Helper.get_wid(planet_data[2].size)}
 		planet_data[2]["angle"] = PI / 2
 		planet_data[2]["tiles"] = []
-		planet_data[2].pressure = 1
-		planet_data[2].lake = {"element":"H2O"}
-		planet_data[2].liq_seed = 7
-		planet_data[2].liq_period = 0.4
-		planet_data[2].crust_start_depth = randi_range(25, 30)
-		planet_data[2].mantle_start_depth = randi_range(25000, 30000)
-		planet_data[2].core_start_depth = randi_range(4000000, 4200000)
-		planet_data[2].surface.coal.chance = 0.5
-		planet_data[2].surface.coal.amount = 100
-		planet_data[2].surface.soil.chance = 0.6
-		planet_data[2].surface.soil.amount = 60
-		planet_data[2].surface.cellulose.chance = 0.4
-		planet_data[2].surface.cellulose.amount = 50
-		planet_data[2].bookmarked = true
+		planet_data[2]["pressure"] = 1
+		planet_data[2]["lake"] = {"element":"H2O"}
+		planet_data[2]["seed"] = 7
+		planet_data[2]["crust_start_depth"] = randi_range(25, 30)
+		planet_data[2]["mantle_start_depth"] = randi_range(25000, 30000)
+		planet_data[2]["core_start_depth"] = randi_range(4000000, 4200000)
+		planet_data[2].surface.coal["chance"] = 0.5
+		planet_data[2].surface.coal["amount"] = 100
+		planet_data[2].surface.soil["chance"] = 0.6
+		planet_data[2].surface.soil["amount"] = 60
+		planet_data[2].surface.cellulose["chance"] = 0.4
+		planet_data[2].surface.cellulose["amount"] = 50
+		planet_data[2]["bookmarked"] = true
+		stats_univ.biggest_planet = planet_data[2].size
 	bookmarks = {"planet":{"2":{
 				"type":planet_data[2].type,
 				"name":planet_data[2].name,
@@ -2746,7 +2749,7 @@ func star_size_in_pixels(size:float):
 	return 5.0 * size * 600.0 / STAR_SCALE_DIV
 
 func generate_planets(id:int):#local id
-	randomize()
+	var random_seed = randi()
 	if not system_data[id].has("name"):
 		var _name:String = "%s %s" % [tr("SYSTEM"), id]
 		match len(system_data[id].stars):
@@ -2812,6 +2815,7 @@ func generate_planets(id:int):#local id
 		var p_id = planet_data.size()
 		# p_i = planet_info
 		var p_i = {
+			"seed": random_seed,
 			"ring": i,
 			"type": randi_range(3, 10),
 			"angle": randf_range(0.0, 2.0 * PI),
@@ -2875,7 +2879,7 @@ func generate_planets(id:int):#local id
 			p_i["liq_period"] = randf_range(0.1, 1)
 		p_i["HX_data"] = []
 		var diff:float = system_data[id].diff
-		var power_left:float = diff * pow(p_i.size / 2500.0, 0.5)
+		var power_left:float = diff * pow(p_i.size / 2500.0, 0.5) / 3.0
 		var max_lv:int = max(1, 1 + log(2.0 * power_left) / log(1.3))
 		var num:int = 0
 		var total_num:int = randi() % 12 + 1
@@ -3152,10 +3156,11 @@ func generate_tiles(id:int):
 	#We assume that the star system's age is inversely proportional to the coldest star's temperature
 	#Age is a factor in crater rarity. Older systems have more craters
 	var coldest_star_temp = get_min_star_prop(c_s, "temperature")
+	seed(p_i.seed)
 	var noise = FastNoiseLite.new()
-	noise.seed = p_i.liq_seed
+	noise.seed = p_i.seed
 	noise.fractal_octaves = 1
-	noise.frequency = 1.0 / p_i.liq_period#Higher period = bigger lakes
+	noise.frequency = 1.0 / randf_range(0.1, 1) #Higher period = bigger lakes
 	if p_i.has("lake"):
 		var phase_scene = load("res://Scenes/PhaseDiagrams/" + p_i.lake.element + ".tscn")
 		var phase = phase_scene.instantiate()
@@ -3243,6 +3248,7 @@ func generate_tiles(id:int):
 					"metal": "lead",
 				}
 				tile_data[t_id]["crater"]["depth"] = tile_data[t_id].crater.init_depth
+				tile_data[t_id]["depth"] = tile_data[t_id].crater.init_depth
 				crater_num += 1
 				for met in met_info:
 					if met == "lead":
@@ -3270,7 +3276,7 @@ func generate_tiles(id:int):
 											AncientBuilding.CELLULOSE_SYNTHESIZER:	log(p_i.pressure * (1.0 + p_i.atmosphere.CH4 + p_i.atmosphere.CO2 + p_i.atmosphere.H + p_i.atmosphere.O + p_i.atmosphere.H2O) + 1)
 	}
 	var ancient_bldgs_list_without_NFR = ancient_bldgs_list.duplicate()
-	if c_s_g != 0:
+	if c_g_g != 0:
 		ancient_bldgs_list[AncientBuilding.NUCLEAR_FUSION_REACTOR] = log(p_i.pressure * (1.0 + p_i.atmosphere.CH4 + p_i.atmosphere.H + p_i.atmosphere.H2O) + 1)
 	var S = 0.0
 	var S2 = 0.0
@@ -3287,7 +3293,7 @@ func generate_tiles(id:int):
 	if randf() < 500.0 / coldest_star_temp:
 		base_ancient_bldg_probability = 1 if p_i.temperature < 273 else -pow((p_i.temperature / 273.0 - 1), 2) + 1
 	planet_data[id].ancient_bldgs = {}
-	if not home_planet:
+	if c_s_g != 0:
 		var spaceport_spawned = false
 		for t_id in empty_tiles:
 			if t_id in nuclear_fusion_reactor_tiles:
@@ -3619,7 +3625,7 @@ func show_tooltip(txt:String, params:Dictionary = {}):
 	tooltip.orig_text = txt
 	tooltip.imgs = params.get("imgs", [])
 	tooltip.imgs_size = params.get("size", 17)
-	Helper.add_text_icons(tooltip, txt, tooltip.imgs, tooltip.imgs_size, true)
+	Helper.add_text_to_RTL(tooltip, txt, tooltip.imgs, tooltip.imgs_size, true)
 	if params.get("additional_text", "") != "":
 		tooltip.show_additional_text(params.additional_text, params.get("additional_text_delay", 1.5), params.get("different_orig_text", ""))
 

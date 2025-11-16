@@ -42,7 +42,7 @@ func show_additional_text(txt: String, delay: float = 1.0, different_orig_text: 
 	await get_tree().create_timer(delay).timeout
 	size.x = 500.0
 	if different_orig_text == "":
-		Helper.add_text_icons(self, orig_text + "\n\n" + txt, imgs, imgs_size, true)
+		Helper.add_text_to_RTL(self, orig_text + "\n\n" + txt, imgs, imgs_size, true)
 	else:
-		Helper.add_text_icons(self, different_orig_text + "\n\n" + txt, imgs, imgs_size, true)
+		Helper.add_text_to_RTL(self, different_orig_text + "\n\n" + txt, imgs, imgs_size, true)
 	set_tooltip_position()

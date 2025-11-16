@@ -2,22 +2,24 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://wlw1do0hj3wv"
-path="res://.godot/imported/4.jpg-def1fb146db5832093462ec81424cfbb.ctex"
+uid="uid://dpv3p5kphbej4"
+path="res://.godot/imported/3r.jpg-8d4ea847c8447aef6f756167515f1a2e.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Graphics/Tiles/4.jpg"
-dest_files=["res://.godot/imported/4.jpg-def1fb146db5832093462ec81424cfbb.ctex"]
+source_file="res://Graphics/Tiles/Mosaics/3r.jpg"
+dest_files=["res://.godot/imported/3r.jpg-8d4ea847c8447aef6f756167515f1a2e.ctex"]
 
 [params]
 
 compress/mode=0
 compress/high_quality=false
 compress/lossy_quality=0.7
+compress/uastc_level=0
+compress/rdo_quality_loss=0.0
 compress/hdr_compression=1
 compress/normal_map=0
 compress/channel_pack=0
@@ -25,6 +27,10 @@ mipmaps/generate=false
 mipmaps/limit=-1
 roughness/mode=0
 roughness/src_normal=""
+process/channel_remap/red=0
+process/channel_remap/green=1
+process/channel_remap/blue=2
+process/channel_remap/alpha=3
 process/fix_alpha_border=true
 process/premult_alpha=false
 process/normal_map_invert_y=false

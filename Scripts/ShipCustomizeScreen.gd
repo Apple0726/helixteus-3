@@ -29,8 +29,8 @@ func _ready() -> void:
 		$ClassAndStats/ShipClass/VBox/VBox/Uber.mouse_exited.connect(game.hide_tooltip)
 	ship_data = game.ship_data[ship_id].duplicate(true)
 	if ship_data.lv == 1:
-		$Navigation/VBoxContainer/WeaponLevels.adv_button_disabled = true
-		$Navigation/VBoxContainer/WeaponLevels.button_text = "-"
+		$Navigation/VBoxContainer.visible = false
+		$Navigation/Ship.position.y += 30.0
 	if respeccing:
 		ship_data.unallocated_weapon_levels = ship_data.lv / 2
 		ship_data.bullet = [1, 1, 1]
@@ -38,6 +38,8 @@ func _ready() -> void:
 		ship_data.bomb = [1, 1, 1]
 		ship_data.light = [1, 1, 1]
 	else:
+		if ship_data.unallocated_weapon_levels > 0:
+			$Navigation/Notification.show()
 		$Actions/Cancel.hide()
 		allocated_HP = ship_data.allocated_HP
 		allocated_attack = ship_data.allocated_attack
@@ -55,7 +57,7 @@ func _ready() -> void:
 				$Weapons/ScrollContainer/Control.get_node("%s%s/Button" % [i+1, j+1]).mouse_exited.connect(game.hide_tooltip)
 				$Weapons/ScrollContainer/Control.get_node("%s%s/Button" % [i+1, j+1]).pressed.connect(game.show_YN_panel.bind("upgrade_ship_weapon", tr("ARE_YOU_SURE"), [i]))
 		update_weapons_panel()
-	$Navigation/Ship/Level.text = "%s %s" % [tr("LEVEL"), ship_data.lv]
+	$Navigation/Level.text = "%s %s" % [tr("LEVEL"), ship_data.lv]
 	allocatable_points = (ship_data.lv - 1) / 2 + 2
 	$ClassAndStats/ShipClass/VBox/VBox.get_child(ship_data.ship_class)._on_Button_pressed()
 	$Navigation/VBoxContainer/ClassAndStats._on_Button_pressed()
@@ -321,5 +323,6 @@ func _on_class_and_stats_pressed() -> void:
 
 
 func _on_weapon_levels_pressed() -> void:
+	$Navigation/Notification.hide()
 	$ClassAndStats.hide()
 	$Weapons.show()

@@ -140,9 +140,9 @@ func update_money_energy_SP():
 		var SP_cost = game.view.obj.constr_costs_total.get("SP", 0.0)
 		var glass_cost = game.view.obj.constr_costs_total.get("glass", 0.0)
 		var soil_cost = game.view.obj.constr_costs_total.get("soil", 0.0)
-		money_text.text = "%s / %s" % [Helper.format_num(round(game.money)), Helper.format_num(round(money_cost))]
-		energy_text.text = "%s / %s" % [Helper.format_num(round(game.energy)), Helper.format_num(round(energy_cost))]
-		SP_text.text = "%s / %s" % [Helper.format_num(round(game.SP)), Helper.format_num(round(SP_cost))]
+		money_text.text = "%s / %s" % [Helper.format_num(floor(game.money)), Helper.format_num(round(money_cost))]
+		energy_text.text = "%s / %s" % [Helper.format_num(floor(game.energy)), Helper.format_num(round(energy_cost))]
+		SP_text.text = "%s / %s" % [Helper.format_num(floor(game.SP)), Helper.format_num(round(SP_cost))]
 		glass_text.text = "%s / %s kg" % [Helper.format_num(round(game.mats.glass)), Helper.format_num(round(glass_cost))]
 		soil_text.text = "%s / %s kg" % [Helper.format_num(round(game.mats.soil)), Helper.format_num(round(soil_cost))]
 		money_text["theme_override_colors/font_color"] = Color.GREEN if game.money >= money_cost else Color.RED
@@ -154,9 +154,9 @@ func update_money_energy_SP():
 		money_text["theme_override_colors/font_color"] = Color.WHITE
 		energy_text["theme_override_colors/font_color"] = Color.WHITE
 		SP_text["theme_override_colors/font_color"] = Color.WHITE
-		money_text.text = Helper.format_num(round(game.money))
-		energy_text.text = "%s / %s" % [Helper.format_num(round(game.energy)), Helper.format_num(round(Helper.get_total_energy_cap()))]
-		SP_text.text = Helper.format_num(round(game.SP))
+		money_text.text = Helper.format_num(floor(game.money))
+		energy_text.text = "%s / %s" % [Helper.format_num(floor(game.energy)), Helper.format_num(round(Helper.get_total_energy_cap()))]
+		SP_text.text = Helper.format_num(floor(game.SP))
 		$Top/Resources/Soil.visible = game.autocollect.mats.has("soil")
 		soil_text.text = "%s kg" % Helper.format_num(game.mats.soil, true)
 		soil_text["theme_override_colors/font_color"] = Color.WHITE if game.mats.soil > 0 else Color.RED

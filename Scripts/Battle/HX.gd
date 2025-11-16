@@ -5,7 +5,6 @@ var enemy_type:int
 var HX_nodes:Array
 var ship_nodes:Array
 var position_preferences:Dictionary
-var ship_target_distance = 50.0
 var obstacles_in_range:Array = []
 var target_position:Vector2
 var target_angle:float
@@ -105,10 +104,11 @@ func calculate_position_preferences(pos:Vector2):
 	for HX in HX_nodes:
 		# Enemies try to move far from each other
 		HX_proximity_weight += 1.0e6 / max(pow(10.0 * PIXELS_PER_METER, 2), pos.distance_squared_to(HX.position))
+	var ship_target_distance = 40.0 + accuracy + accuracy_buff + 2.0 * max(0.0, accuracy + accuracy_buff - 12.0)
 	for ship in ship_nodes:
-		# Try to get close to ships, but not too close (ideal distance of ship_target_distance meters)
+		# Try to get close to ships, but not too close or too far (ideal distance of ship_target_distance meters)
 		var r = pos.distance_squared_to(ship.position)
-		ship_proximity_weight += 1000.0 * (1.0 - exp(-pow(r - pow(ship_target_distance * PIXELS_PER_METER, 2), 2) / 4.0e9))
+		ship_proximity_weight += 1000.0 * (1.0 - exp(-pow(r - pow(ship_target_distance * PIXELS_PER_METER, 2), 2) / 4.0e9)) + 0.001 * abs(r - pow(ship_target_distance * PIXELS_PER_METER, 2))
 	position_preferences[pos] = HX_proximity_weight + ship_proximity_weight + distance_from_current_position_weight
 	
 func move(target_pos:Vector2):

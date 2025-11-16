@@ -259,9 +259,9 @@ func set_bldg_value(first_tile_bldg_info:Dictionary, first_tile:Dictionary, lv:i
 		curr_value *= n
 		next_value *= n
 	if bldg == Building.CENTRAL_BUSINESS_DISTRICT and path_selected == 3:
-		Helper.add_text_icons(current_and_next_label, ("[center]" + first_tile_bldg_info.desc) % ["{n}x{n} -> {N}x{N}".format({"n":Helper.format_num(curr_value, true), "N":Helper.format_num(next_value, true)})], rsrc_icon, 20)
+		Helper.add_text_to_RTL(current_and_next_label, ("[center]" + first_tile_bldg_info.desc) % ["{n}x{n} -> {N}x{N}".format({"n":Helper.format_num(curr_value, true), "N":Helper.format_num(next_value, true)})], rsrc_icon, 20)
 	else:
-		Helper.add_text_icons(current_and_next_label, ("[center]" + first_tile_bldg_info.desc) % [Helper.format_num(curr_value, true) + " -> " + Helper.format_num(next_value, true)], rsrc_icon, 20)
+		Helper.add_text_to_RTL(current_and_next_label, ("[center]" + first_tile_bldg_info.desc) % [Helper.format_num(curr_value, true) + " -> " + Helper.format_num(next_value, true)], rsrc_icon, 20)
 	
 func bldg_value(base_value, lv:int, pw:float = 1.15):
 	return base_value * pow((lv - 1) / 10 + 1, pw) * pow(pw, lv - 1)

@@ -163,18 +163,17 @@ func battle_victory_callback():
 				game.stats_dim.planets_conquered += 1
 				game.stats_global.planets_conquered += 1
 	else:
-		if not game.planet_data[game.c_p].has("conquered"):
-			game.stats_univ.enemies_rekt_in_battle += len(HX_data)
-			game.stats_dim.enemies_rekt_in_battle += len(HX_data)
-			game.stats_global.enemies_rekt_in_battle += len(HX_data)
-			game.planet_data[game.c_p]["conquered"] = true
-			game.planet_data[game.c_p].erase("HX_data")
-			for planet in game.planet_data:
-				if not planet.has("conquered"):
-					all_conquered = false
-			game.stats_univ.planets_conquered += 1
-			game.stats_dim.planets_conquered += 1
-			game.stats_global.planets_conquered += 1
+		game.stats_univ.enemies_rekt_in_battle += len(HX_data)
+		game.stats_dim.enemies_rekt_in_battle += len(HX_data)
+		game.stats_global.enemies_rekt_in_battle += len(HX_data)
+		game.planet_data[game.c_p]["conquered"] = true
+		game.planet_data[game.c_p].erase("HX_data")
+		for planet in game.planet_data:
+			if not planet.has("conquered"):
+				all_conquered = false
+		game.stats_univ.planets_conquered += 1
+		game.stats_dim.planets_conquered += 1
+		game.stats_global.planets_conquered += 1
 	if all_conquered:
 		game.system_data[game.c_s]["conquered"] = true
 		game.stats_univ.systems_conquered += 1
@@ -414,8 +413,8 @@ func environment_take_turn():
 		await get_tree().create_timer(0.3).timeout
 	else:
 		await get_tree().create_timer(1.2).timeout
-	initiative_order[whose_turn_is_it_index-1].turn_order_box.get_node("ChangeSizeAnim").play_backwards("ChangeSize")
-	whose_turn_is_it_index = 0
+	initiative_order[whose_turn_is_it_index].turn_order_box.get_node("ChangeSizeAnim").play_backwards("ChangeSize")
+	whose_turn_is_it_index = -1
 	next_turn()
 
 func show_and_enlarge_collision_shapes():

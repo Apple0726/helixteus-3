@@ -314,10 +314,10 @@ horizontal_alignment = 1
 
 [node name="Button" type="Button" parent="."]
 layout_mode = 1
-offset_left = 1104.0
-offset_top = 600.0
-offset_right = 1183.0
-offset_bottom = 648.0
+offset_left = 1096.0
+offset_top = 592.0
+offset_right = 1175.0
+offset_bottom = 640.0
 theme = ExtResource("5")
 
 [node name="TextureRect" type="TextureRect" parent="Button"]

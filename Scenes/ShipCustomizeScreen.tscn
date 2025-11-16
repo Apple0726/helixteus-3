@@ -1,9 +1,10 @@
-[gd_scene load_steps=13 format=3 uid="uid://d25bie4radplj"]
+[gd_scene load_steps=14 format=3 uid="uid://d25bie4radplj"]
 
 [ext_resource type="Theme" uid="uid://cp2u1kgj60ic" path="res://Resources/default_theme.tres" id="1_fik65"]
 [ext_resource type="Texture2D" uid="uid://koi0aarpqj30" path="res://Graphics/Ships/Ship0.png" id="1_krjc3"]
 [ext_resource type="Script" uid="uid://0hos13skvya" path="res://Scripts/ShipCustomizeScreen.gd" id="2_2k68d"]
 [ext_resource type="PackedScene" uid="uid://1hq6qpr1oa3i" path="res://Scenes/AdvButton.tscn" id="3_hi247"]
+[ext_resource type="Texture2D" uid="uid://vshnis3gqj4t" path="res://Graphics/Icons/Notification.png" id="5_djvhe"]
 [ext_resource type="Texture2D" uid="uid://bl07f3wef0muv" path="res://Graphics/Icons/HP.png" id="5_elefb"]
 [ext_resource type="Texture2D" uid="uid://7ffsf7xuvfw2" path="res://Graphics/Icons/attack.png" id="6_5p6u7"]
 [ext_resource type="Texture2D" uid="uid://cqiyti2xdxtcw" path="res://Graphics/Icons/defense.png" id="7_sfcj0"]
@@ -43,6 +44,16 @@ offset_top = 64.0
 offset_right = 416.0
 offset_bottom = 360.0
 
+[node name="Level" type="Label" parent="Navigation"]
+layout_mode = 0
+offset_left = 56.0
+offset_top = 16.0
+offset_right = 260.0
+offset_bottom = 47.0
+text = "Lv 1"
+label_settings = SubResource("LabelSettings_tyega")
+horizontal_alignment = 1
+
 [node name="Ship" type="TextureRect" parent="Navigation"]
 layout_mode = 1
 anchors_preset = 5
@@ -56,16 +67,6 @@ grow_horizontal = 2
 texture = ExtResource("1_krjc3")
 expand_mode = 1
 stretch_mode = 5
-
-[node name="Level" type="Label" parent="Navigation/Ship"]
-layout_mode = 0
-offset_left = 32.0
-offset_top = -32.0
-offset_right = 236.0
-offset_bottom = -9.0
-text = "Lv 1"
-label_settings = SubResource("LabelSettings_tyega")
-horizontal_alignment = 1
 
 [node name="VBoxContainer" type="VBoxContainer" parent="Navigation"]
 layout_mode = 1
@@ -89,6 +90,15 @@ button_text = "CLASS_AND_STATS"
 custom_minimum_size = Vector2(0, 40)
 layout_mode = 2
 button_text = "WEAPON_LEVELS"
+
+[node name="Notification" type="TextureRect" parent="Navigation"]
+visible = false
+layout_mode = 0
+offset_left = 32.0
+offset_top = 244.0
+offset_right = 64.0
+offset_bottom = 276.0
+texture = ExtResource("5_djvhe")
 
 [node name="Actions" type="HBoxContainer" parent="."]
 layout_mode = 1

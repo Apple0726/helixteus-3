@@ -4,7 +4,7 @@ extends Control
 @onready var p_i = game.planet_data[game.c_p]
 @onready var id:int = game.c_t
 @onready var tile = game.tile_data[id]
-@onready var tile_texture = load("res://Graphics/Tiles/" + str(p_i["type"]) + ".jpg")
+@onready var tile_texture = load("res://Graphics/Tiles/Mosaics/" + str(p_i["type"]) + "r.jpg")
 var progress = 0#Mining tile progress
 var contents:Dictionary
 var tile_tween
