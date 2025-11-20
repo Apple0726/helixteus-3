@@ -2,9 +2,10 @@ extends Control
 
 @onready var game = get_node("/root/Game")
 @onready var p_i = game.planet_data[game.c_p]
+@onready var wid:int = round(Helper.get_wid(p_i.size))
 @onready var id:int = game.c_t
 @onready var tile = game.tile_data[id]
-@onready var tile_texture = load("res://Graphics/Tiles/Mosaics/" + str(p_i["type"]) + "r.jpg")
+var tile_texture
 var progress = 0#Mining tile progress
 var contents:Dictionary
 var tile_tween
@@ -24,14 +25,17 @@ var rsrc_mined:Dictionary = {}
 
 func _ready():
 	Helper.set_back_btn($Back)
-	$Tile/TextureRect.texture = tile_texture
 	if tile == null:
 		game.tile_data[id] = {}
 		tile = game.tile_data[id]
 	if not tile.has("mining_progress"):
-		tile.mining_progress = 0.0
+		tile["mining_progress"] = 0.0
 	if not tile.has("depth"):
-		tile.depth = 0
+		tile["depth"] = 0
+	seed(p_i.seed)
+	tile_texture = load("res://Graphics/Tiles/Mosaics/%sr.jpg" % randi_range(1, 7))
+	$Tile/TextureRect.texture = tile_texture
+	$Tile/TextureRect.material.set_shader_parameter("texture_zoom", randf_range(0.5, 2.0))
 	if tile.has("bridge"):
 		tile.erase("bridge")
 	if tile.has("aurora"):
@@ -138,6 +142,11 @@ func update_pickaxe():
 	$HBox/Durability/Bar.value = game.pickaxe.durability / float(game.pickaxes_info[game.pickaxe.name].durability) * 100
 
 func generate_rock(new:bool):
+	if tile.depth == 0:
+		$Tile/TextureRect.material.set_shader_parameter("texture_offset", Vector2(id % wid, id / wid) * 200.0 + Vector2(randf_range(0.0, 4000.0), randf_range(0.0, 4000.0)))
+	else:
+		seed(p_i.seed + int(tile.depth))
+		$Tile/TextureRect.material.set_shader_parameter("texture_offset", Vector2(id % wid, id / wid) * 200.0 + Vector2(randf_range(0.0, 4000.0), randf_range(0.0, 4000.0)))
 	var tile_sprite = $Tile
 	contents = {}
 	tile_sprite.scale = Vector2.ONE * 0.3
@@ -186,7 +195,7 @@ func place_crumbles(num:int, sc:float, v:float):
 	for i in num:
 		var crumble = Sprite2D.new()
 		crumble.texture = tile_texture
-		crumble.scale *= sc
+		crumble.scale *= sc * 0.2
 		crumble.centered = true
 		add_child(crumble)
 		move_child($Circle, get_child_count())

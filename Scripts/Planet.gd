@@ -216,8 +216,9 @@ func _ready():
 	$Soil.set_cells_terrain_connect(soil_tiles, 0, 0)
 	$Ash.set_cells_terrain_connect(ash_tiles, 0, 0)
 	seed(p_i.seed)
-	var mosaic = randi_range(1, 7)
-	$PlanetTiles.material.set_shader_parameter("planet_texture", load("res://Graphics/Tiles/Mosaics/%sr.jpg" % mosaic))
+	$PlanetTiles.material.set_shader_parameter("planet_texture", load("res://Graphics/Tiles/Mosaics/%sr.jpg" % randi_range(1, 7)))
+	$PlanetTiles.material.set_shader_parameter("texture_zoom", randf_range(0.5, 2.0))
+	$PlanetTiles.material.set_shader_parameter("texture_offset", Vector2(randf_range(0.0, 4000.0), randf_range(0.0, 4000.0)))
 	$PlanetTiles.set_cells_terrain_connect(planet_tiles, 0, 0)
 	$Lake.size = Vector2.ONE * 200.0 * wid
 	if p_i.has("lake"):

@@ -1,4 +1,4 @@
-[gd_scene load_steps=40 format=3 uid="uid://jyuxsqn6smkw"]
+[gd_scene load_steps=43 format=3 uid="uid://jyuxsqn6smkw"]
 
 [ext_resource type="Texture2D" uid="uid://ds6nct7g63284" path="res://Graphics/Icons/Arrow.png" id="1"]
 [ext_resource type="Theme" uid="uid://cp2u1kgj60ic" path="res://Resources/default_theme.tres" id="2"]
@@ -8,6 +8,7 @@
 [ext_resource type="Texture2D" uid="uid://dj4mh887jy68d" path="res://Graphics/Spritesheets/cracks.png" id="6"]
 [ext_resource type="AudioStream" uid="uid://c8utjcp7ne3dn" path="res://Audio/SFX/mining_stone.ogg" id="7"]
 [ext_resource type="Texture2D" uid="uid://c2gvy8266bgkb" path="res://Graphics/Materials/coal.png" id="8"]
+[ext_resource type="Texture2D" uid="uid://djbue1itojqqn" path="res://Graphics/Tiles/Mosaics/5r.jpg" id="8_8uao7"]
 [ext_resource type="AudioStream" uid="uid://dvok0oof7xxj5" path="res://Audio/SFX/mining_metal.ogg" id="9"]
 [ext_resource type="PackedScene" uid="uid://bwon75bhhf24u" path="res://Scenes/SquareBar.tscn" id="10"]
 [ext_resource type="Texture2D" uid="uid://dwstl3xmwv5vh" path="res://Graphics/Icons/Circle.png" id="11"]
@@ -25,16 +26,39 @@ shader_parameter/color = Color(0.94902, 0.47451, 0, 1)
 shader_parameter/speed = 0.03
 shader_parameter/alpha = 0.25
 
-[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_rnukk"]
+[sub_resource type="Shader" id="Shader_mi8i0"]
+code = "shader_type canvas_item;
 
-[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_gcimq"]
+const float planet_texture_size = 4000.0;
+uniform float texture_zoom = 1.0;
+uniform vec2 texture_offset = vec2(0.0);
+
+varying vec2 WorldSpace;
+
+void vertex() {
+	WorldSpace = vec4(VERTEX, 0.0, 1.0).xy + texture_offset;
+}
+
+void fragment() {
+	vec3 color = texture(TEXTURE, WorldSpace / planet_texture_size * texture_zoom).rgb;
+	COLOR.rgb = color.rgb;
+}"
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_8f0rj"]
+shader = SubResource("Shader_mi8i0")
+shader_parameter/texture_zoom = 1.0
+shader_parameter/texture_offset = Vector2(0, 0)
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_myhhw"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_7ahnm"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_lg265"]
 bg_color = Color(1, 1, 1, 0.164706)
 
-[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_7ahnm"]
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_gcimq"]
 
-[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_myhhw"]
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_rnukk"]
 
 [sub_resource type="AtlasTexture" id="6"]
 atlas = ExtResource("6")
@@ -282,25 +306,32 @@ offset_bottom = 484.0
 pivot_offset = Vector2(100, 100)
 
 [node name="TextureRect" type="TextureRect" parent="Tile"]
+texture_repeat = 2
+material = SubResource("ShaderMaterial_8f0rj")
+clip_contents = true
 layout_mode = 0
 offset_right = 200.0
 offset_bottom = 200.0
+texture = ExtResource("8_8uao7")
+expand_mode = 1
+stretch_mode = 2
 
 [node name="Button" type="Button" parent="Tile"]
 layout_mode = 0
 offset_right = 200.0
 offset_bottom = 200.0
-theme_override_styles/focus = SubResource("StyleBoxEmpty_rnukk")
-theme_override_styles/disabled = SubResource("StyleBoxEmpty_gcimq")
-theme_override_styles/hover = SubResource("StyleBoxFlat_lg265")
-theme_override_styles/pressed = SubResource("StyleBoxEmpty_7ahnm")
 theme_override_styles/normal = SubResource("StyleBoxEmpty_myhhw")
+theme_override_styles/pressed = SubResource("StyleBoxEmpty_7ahnm")
+theme_override_styles/hover = SubResource("StyleBoxFlat_lg265")
+theme_override_styles/disabled = SubResource("StyleBoxEmpty_gcimq")
+theme_override_styles/focus = SubResource("StyleBoxEmpty_rnukk")
 
 [node name="Cracks" type="AnimatedSprite2D" parent="Tile"]
 position = Vector2(100, 100)
 sprite_frames = SubResource("10")
 
 [node name="SquareBar" parent="Tile" instance=ExtResource("10")]
+layout_mode = 0
 offset_right = 196.0
 offset_bottom = 196.0
 mouse_filter = 2
@@ -341,17 +372,17 @@ shortcut_in_tooltip = false
 
 [node name="PickaxeAnim" type="AnimationPlayer" parent="."]
 libraries = {
-"": SubResource("AnimationLibrary_ryu2u")
+&"": SubResource("AnimationLibrary_ryu2u")
 }
 
 [node name="HelpAnim" type="AnimationPlayer" parent="."]
 libraries = {
-"": SubResource("AnimationLibrary_iottv")
+&"": SubResource("AnimationLibrary_iottv")
 }
 
 [node name="LayerAnim" type="AnimationPlayer" parent="."]
 libraries = {
-"": SubResource("AnimationLibrary_nby3l")
+&"": SubResource("AnimationLibrary_nby3l")
 }
 
 [node name="Pickaxe" type="Node2D" parent="."]
