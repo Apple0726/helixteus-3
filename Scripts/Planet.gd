@@ -1038,6 +1038,10 @@ func _unhandled_input(event):
 	var mass_build:bool = Input.is_action_pressed("left_click") and Input.is_action_pressed("shift") and game.bottom_info_action == "building" and constructing_ancient_building_tier == -1
 	view.move_view = not mass_build
 	view.scroll_view = not mass_build
+	# Right-click to exit build mode
+	if game.bottom_info_action == "building" and Input.is_action_just_pressed("right_click"):
+		game._on_BottomInfo_close_button_pressed()
+		return
 	if tile_over != -1 and game.bottom_info_action != "building" and tile_over < len(game.tile_data):
 		var tile = game.tile_data[tile_over]
 		if tile:
