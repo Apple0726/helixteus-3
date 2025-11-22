@@ -33,7 +33,7 @@ func _ready():
 	if not tile.has("depth"):
 		tile["depth"] = 0
 	seed(p_i.seed)
-	tile_texture = load("res://Graphics/Tiles/Mosaics/%sr.jpg" % randi_range(1, 7))
+	tile_texture = load("res://Graphics/Tiles/Mosaics/%sr.jpg" % randi_range(1, 8))
 	$Tile/TextureRect.texture = tile_texture
 	$Tile/TextureRect.material.set_shader_parameter("texture_zoom", randf_range(0.5, 2.0))
 	if tile.has("bridge"):

@@ -1630,7 +1630,7 @@ func add_text_to_RTL(RTL:RichTextLabel, txt:String, imgs:Array, size:int = 17, r
 		#await get_tree().process_frame
 		if is_instance_valid(RTL):
 			RTL.size.x = RTL.get_content_width() + 35
-			RTL.size.y = RTL.get_content_height() + 20
+			RTL.size.y = RTL.get_content_height() + 30
 
 # get_sphere_volume
 func get_sph_V(outer:float, inner:float = 0):

@@ -144,6 +144,7 @@ func _ready():
 						caves_data[id2] = len(cave_data.seeds)
 				var cave_sprite = Sprite2D.new()
 				cave_sprite.position = Vector2(i, j) * 200 + Vector2.ONE * 100
+				cave_sprite.scale *= 180.0/278.0
 				if tile.has("lake"):
 					cave_sprite.modulate = star_mod * Data.lake_colors[p_i.lake.element][p_i.lake.state]
 					cave_sprite.texture = preload("res://Graphics/Tiles/frozen_cave.png")
@@ -156,6 +157,7 @@ func _ready():
 				var volcano_sprite = Sprite2D.new()
 				volcano_sprite.texture = preload("res://Graphics/Tiles/Volcano.png")
 				volcano_sprite.position = Vector2(i, j) * 200 + Vector2.ONE * 100
+				volcano_sprite.scale *= 180.0/278.0
 				volcano_sprite.modulate = star_mod
 				add_child(volcano_sprite)
 				obstacle_nodes[Vector2i(i, j)] = volcano_sprite
@@ -216,7 +218,7 @@ func _ready():
 	$Soil.set_cells_terrain_connect(soil_tiles, 0, 0)
 	$Ash.set_cells_terrain_connect(ash_tiles, 0, 0)
 	seed(p_i.seed)
-	$PlanetTiles.material.set_shader_parameter("planet_texture", load("res://Graphics/Tiles/Mosaics/%sr.jpg" % randi_range(1, 7)))
+	$PlanetTiles.material.set_shader_parameter("planet_texture", load("res://Graphics/Tiles/Mosaics/%sr.jpg" % randi_range(1, 8)))
 	$PlanetTiles.material.set_shader_parameter("texture_zoom", randf_range(0.5, 2.0))
 	$PlanetTiles.material.set_shader_parameter("texture_offset", Vector2(randf_range(0.0, 4000.0), randf_range(0.0, 4000.0)))
 	$PlanetTiles.set_cells_terrain_connect(planet_tiles, 0, 0)

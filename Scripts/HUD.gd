@@ -170,10 +170,10 @@ func refresh():
 	if not game or not is_inside_tree():
 		return
 	$Top/Name/Name.caret_blink_interval = 0.5 / game.u_i.time_speed
-	prev_btn.visible = game.view_history_pos > 0 and game.c_v in ["universe", "supercluster", "cluster", "galaxy", "system", "planet"]
-	next_btn.visible = game.view_history_pos != len(game.view_history) - 1 and game.c_v in ["universe", "supercluster", "cluster", "galaxy", "system", "planet"]
-	dimension_btn.visible = (len(game.universe_data) > 1 or not game.help.has("hide_dimension_stuff")) and game.c_v in ["supercluster", "cluster", "galaxy", "system", "planet"]
-	switch_btn.visible = game.c_v in ["planet", "system", "galaxy", "cluster", "supercluster", "universe"]
+	prev_btn.visible = game.view_history_pos > 0 and game.c_v in ["universe", "cluster", "galaxy", "system", "planet"]
+	next_btn.visible = game.view_history_pos != len(game.view_history) - 1 and game.c_v in ["universe", "cluster", "galaxy", "system", "planet"]
+	dimension_btn.visible = (len(game.universe_data) > 1 or not game.help.has("hide_dimension_stuff")) and game.c_v in ["cluster", "galaxy", "system", "planet"]
+	switch_btn.visible = game.c_v in ["planet", "system", "galaxy", "cluster", "universe"]
 	if config.load("user://settings.cfg") == OK:
 		var autosave_light = config.get_value("saving", "autosave_light", false)
 		if config.get_value("saving", "enable_autosave", true):

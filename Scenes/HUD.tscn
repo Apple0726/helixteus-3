@@ -315,8 +315,8 @@ border_color = Color(0.341176, 0.341176, 0.341176, 1)
 [sub_resource type="LabelSettings" id="LabelSettings_uu53f"]
 font_size = 18
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_y5ks2"]
-bg_color = Color(0.14902, 0.14902, 0.14902, 1)
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_aubol"]
+bg_color = Color(0, 0, 0, 1)
 border_width_left = 2
 border_width_top = 2
 border_width_right = 2
@@ -326,8 +326,8 @@ border_blend = true
 expand_margin_left = 10.0
 expand_margin_right = 8.0
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_aubol"]
-bg_color = Color(0, 0, 0, 1)
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_y5ks2"]
+bg_color = Color(0.14902, 0.14902, 0.14902, 1)
 border_width_left = 2
 border_width_top = 2
 border_width_right = 2
@@ -875,13 +875,13 @@ offset_bottom = 72.0
 
 [node name="Name" type="LineEdit" parent="Top/Name"]
 layout_mode = 2
-theme_override_colors/selection_color = Color(1, 1, 1, 1)
-theme_override_colors/caret_color = Color(1, 1, 1, 1)
-theme_override_colors/font_selected_color = Color(0, 0, 0, 1)
 theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_selected_color = Color(0, 0, 0, 1)
+theme_override_colors/caret_color = Color(1, 1, 1, 1)
+theme_override_colors/selection_color = Color(1, 1, 1, 1)
 theme_override_constants/minimum_character_width = 0
-theme_override_styles/focus = SubResource("StyleBoxFlat_y5ks2")
 theme_override_styles/normal = SubResource("StyleBoxFlat_aubol")
+theme_override_styles/focus = SubResource("StyleBoxFlat_y5ks2")
 expand_to_text_length = true
 shortcut_keys_enabled = false
 select_all_on_focus = true
