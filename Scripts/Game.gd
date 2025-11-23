@@ -3245,7 +3245,7 @@ func generate_tiles(id:int):
 				if tile_data[t_id].has("ash"):
 					continue
 				tile_data[t_id]["crater"] = {
-					"variant": randi() % 2 + 1,
+					"variant": randi_range(1, 3),
 					"init_depth": ceil(pow(10, randf_range(2, 3)) * pow(crater_size, 0.8)),
 					"metal": "lead",
 				}

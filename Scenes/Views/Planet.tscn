@@ -92,22 +92,22 @@ const float planet_texture_size = 4000.0;
 uniform float texture_zoom = 1.0;
 uniform vec2 texture_offset = vec2(0.0);
 
-varying vec2 WorldSpace;
+varying vec2 tilemap_space;
 
 void vertex() {
-	WorldSpace = vec4(VERTEX, 0.0, 1.0).xy + texture_offset + vec2(100.0);
+	tilemap_space = VERTEX.xy + texture_offset + vec2(100.0);
 }
 
 void fragment() {
 	vec3 mask_texture_rgb = texture(TEXTURE, UV).rgb;
-	vec3 color = texture(planet_texture, WorldSpace / planet_texture_size * texture_zoom).rgb;
+	vec3 color = texture(planet_texture, tilemap_space / planet_texture_size * texture_zoom).rgb;
 	COLOR.rgb = mix(mask_texture_rgb, color, mask_texture_rgb.g);
 }"
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_2ub2g"]
 shader = SubResource("Shader_75ca2")
-shader_parameter/texture_zoom = 1.0
-shader_parameter/texture_offset = Vector2(0, 0)
+shader_parameter/texture_zoom = 1.2650000000000001
+shader_parameter/texture_offset = Vector2(100, 0)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_xv77e"]
 bg_color = Color(0.241156, 0.241156, 0.241156, 1)

@@ -89,6 +89,7 @@ func _ready():
 	dimensions = wid * 200
 	$Ash.tile_set = ResourceFiles.ash_tile_set
 	$PlanetTiles.tile_set = ResourceFiles.planet_tile_set
+	$PlanetTiles.rendering_quadrant_size = wid
 	$Soil.tile_set = ResourceFiles.soil_tile_set
 	var nuclear_fusion_reactor_main_tiles = []
 	if p_i.ancient_bldgs.has(AncientBuilding.NUCLEAR_FUSION_REACTOR):

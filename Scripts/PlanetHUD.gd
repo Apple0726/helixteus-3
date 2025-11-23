@@ -17,7 +17,9 @@ func is_one_element_true(dict:Dictionary):
 func refresh():
 	#$VBoxContainer/Construct/New.visible = not game.new_bldgs.is_empty() and is_one_element_true(game.new_bldgs)
 	$VBoxContainer/Terraform.visible = game.science_unlocked.has("TF")
-	$VBoxContainer/Mine.visible = game.show.has("mining")
+	$VBoxContainer/Mine.visible = game.show.has("mining") and game.pickaxe.has("name")
+	if $VBoxContainer/Mine.visible:
+		$VBoxContainer/Mine/TextureRect.texture = load("res://Graphics/Pickaxes/" + game.pickaxe.name + ".png")
 
 func _input(event):
 	refresh()

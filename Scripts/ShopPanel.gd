@@ -90,15 +90,19 @@ func buy_pickaxe(_costs:Dictionary):
 	if not game.check_enough(_costs):
 		return
 	game.deduct_resources(_costs)
-	game.show.mining = true
+	game.show["mining"] = true
+	var pickaxe_texture = load("res://Graphics/Pickaxes/" + item_selected.id + ".png")
 	if is_instance_valid(game.planet_HUD):
+		game.planet_HUD.get_node("VBoxContainer/Mine/TextureRect").texture = pickaxe_texture
 		game.planet_HUD.refresh()
 	if game.c_v == "mining":
 		game.mining_HUD.get_node("Pickaxe").visible = true
-		game.mining_HUD.get_node("Pickaxe/Sprite2D").texture = load("res://Graphics/Pickaxes/" + item_selected.id + ".png")
-	game.pickaxe.name = item_selected.id
-	game.pickaxe.speed = game.pickaxes_info[item_selected.id].speed * game.engineering_bonus.PS
-	game.pickaxe.durability = game.pickaxes_info[item_selected.id].durability
+		game.mining_HUD.get_node("Pickaxe/Sprite2D").texture = pickaxe_texture
+	game.pickaxe = {
+		"name": item_selected.id,
+		"speed": game.pickaxes_info[item_selected.id].speed * game.engineering_bonus.PS,
+		"durability": game.pickaxes_info[item_selected.id].durability,
+		}
 	game.popup(tr("BUY_PICKAXE") % [tr(item_selected.id.to_upper())], 1.0)
 
 func _on_overclocks_button_pressed():

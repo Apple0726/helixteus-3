@@ -228,6 +228,7 @@ func next_turn():
 			if not ship_node.turn_taken:
 				whose_turn_is_it_index = ship_node.turn_order
 				$Selected.position = ship_node.position + Vector2.UP * 80.0
+				battle_GUI.refresh_GUI()
 				return
 	ships_taking_turn.clear()
 	$Selected.hide()

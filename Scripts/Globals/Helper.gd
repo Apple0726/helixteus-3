@@ -1627,9 +1627,9 @@ func add_text_to_RTL(RTL:RichTextLabel, txt:String, imgs:Array, size:int = 17, r
 				bb_end = st.find("]")
 			var width = min(font.get_string_size(st).x + 40, 400)
 			max_width = max(width, max_width)
-		#await get_tree().process_frame
+		await get_tree().process_frame
 		if is_instance_valid(RTL):
-			RTL.size.x = RTL.get_content_width() + 35
+			RTL.size.x = RTL.get_content_width() + 40
 			RTL.size.y = RTL.get_content_height() + 30
 
 # get_sphere_volume

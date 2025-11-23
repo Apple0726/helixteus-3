@@ -1,15 +1,17 @@
-[gd_scene load_steps=20 format=3 uid="uid://cgbd1tgsqupqm"]
+[gd_scene load_steps=22 format=3 uid="uid://cgbd1tgsqupqm"]
 
 [ext_resource type="Texture2D" uid="uid://bsienpo47qhrv" path="res://Graphics/Buttons/Overlay.png" id="1"]
 [ext_resource type="Script" uid="uid://b0vcns16qktoy" path="res://Scripts/SpaceHUD.gd" id="2"]
 [ext_resource type="Theme" uid="uid://cp2u1kgj60ic" path="res://Resources/default_theme.tres" id="3"]
-[ext_resource type="Texture2D" uid="uid://dq1pkmuftw1qw" path="res://Graphics/Buttons/Megastructures.png" id="4"]
+[ext_resource type="Texture2D" uid="uid://chpst12uvadli" path="res://Graphics/Buttons/HUDButton.png" id="3_xv04q"]
+[ext_resource type="Texture2D" uid="uid://t70si4f413j5" path="res://Graphics/Effects/spotlight_4.png" id="4_xvq6k"]
+[ext_resource type="Texture2D" uid="uid://bxbsgfw7reha5" path="res://Graphics/Atoms/O.png" id="5_e5li8"]
+[ext_resource type="Texture2D" uid="uid://d0i4bvt6quewi" path="res://Graphics/Atoms/H.png" id="6_jdctn"]
 [ext_resource type="Texture2D" uid="uid://i4ljifnvpt7i" path="res://Graphics/Buttons/Annotate.png" id="7"]
-[ext_resource type="Texture2D" uid="uid://d0w7ey2ry0ero" path="res://Graphics/Buttons/Stars.png" id="7_xbfvs"]
-[ext_resource type="Texture2D" uid="uid://d3okepq2510k0" path="res://Graphics/Buttons/Gigastructures.png" id="8"]
 [ext_resource type="PackedScene" uid="uid://b3nhmyabvl606" path="res://Scenes/Panels/ConstructionPanel.tscn" id="8_4lxnk"]
-[ext_resource type="Texture2D" uid="uid://b2kysolbkn5q1" path="res://Graphics/Buttons/ElementOverlay.png" id="9"]
+[ext_resource type="Texture2D" uid="uid://fdvjy2q5bco" path="res://Graphics/Megastructures/DS_2.png" id="9_42r2j"]
 [ext_resource type="PackedScene" uid="uid://cobxcj7wuwecq" path="res://Scenes/Panels/StarPanel.tscn" id="10_cgit7"]
+[ext_resource type="Texture2D" uid="uid://ddomkxb4yqaya" path="res://Graphics/Galaxies/6.png" id="10_rxdnk"]
 
 [sub_resource type="InputEventKey" id="InputEventKey_1bc5f"]
 device = -1
@@ -86,70 +88,150 @@ metadata/_edit_vertical_guides_ = [280.0]
 [node name="VBoxContainer" type="VBoxContainer" parent="."]
 layout_mode = 0
 offset_left = -51.8981
-offset_right = -3.89812
+offset_right = -3.8981209
 offset_bottom = 720.0
 mouse_filter = 2
 theme_override_constants/separation = 0
 alignment = 1
 
 [node name="Stars" type="TextureButton" parent="VBoxContainer"]
-visible = false
 custom_minimum_size = Vector2(0, 48)
 layout_mode = 2
 shortcut = SubResource("6")
 shortcut_in_tooltip = false
-texture_normal = ExtResource("7_xbfvs")
+texture_normal = ExtResource("3_xv04q")
 ignore_texture_size = true
+stretch_mode = 5
+flip_h = true
+
+[node name="TextureRect" type="TextureRect" parent="VBoxContainer/Stars"]
+layout_mode = 0
+offset_left = 4.0
+offset_top = 4.0
+offset_right = 44.0
+offset_bottom = 44.0
+texture = ExtResource("4_xvq6k")
+expand_mode = 1
 stretch_mode = 5
 
 [node name="ElementOverlay" type="TextureButton" parent="VBoxContainer"]
-visible = false
 custom_minimum_size = Vector2(0, 48)
 layout_mode = 2
 shortcut = SubResource("2")
 shortcut_in_tooltip = false
-texture_normal = ExtResource("9")
+texture_normal = ExtResource("3_xv04q")
 ignore_texture_size = true
+stretch_mode = 5
+flip_h = true
+
+[node name="TextureRect2" type="TextureRect" parent="VBoxContainer/ElementOverlay"]
+layout_mode = 0
+offset_left = 19.898102
+offset_top = 10.0
+offset_right = 39.796204
+offset_bottom = 29.898102
+texture = ExtResource("5_e5li8")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="TextureRect" type="TextureRect" parent="VBoxContainer/ElementOverlay"]
+layout_mode = 0
+offset_left = 7.898102
+offset_top = 18.0
+offset_right = 27.796204
+offset_bottom = 37.8981
+texture = ExtResource("6_jdctn")
+expand_mode = 1
 stretch_mode = 5
 
 [node name="Overlay" type="TextureButton" parent="VBoxContainer"]
-visible = false
 custom_minimum_size = Vector2(0, 48)
 layout_mode = 2
 shortcut = SubResource("2")
 shortcut_in_tooltip = false
-texture_normal = ExtResource("1")
+texture_normal = ExtResource("3_xv04q")
 ignore_texture_size = true
+stretch_mode = 5
+flip_h = true
+
+[node name="TextureRect" type="TextureRect" parent="VBoxContainer/Overlay"]
+layout_mode = 0
+offset_left = -0.10189819
+offset_top = 4.0
+offset_right = 47.8981
+offset_bottom = 44.0
+texture = ExtResource("1")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="TextureRect2" type="TextureRect" parent="VBoxContainer/Overlay"]
+layout_mode = 0
+offset_left = -0.10189819
+offset_top = 4.0
+offset_right = 47.8981
+offset_bottom = 44.0
+texture = ExtResource("1")
+expand_mode = 1
 stretch_mode = 5
 
 [node name="Annotate" type="TextureButton" parent="VBoxContainer"]
-visible = false
 custom_minimum_size = Vector2(0, 48)
 layout_mode = 2
 shortcut = SubResource("4")
 shortcut_in_tooltip = false
-texture_normal = ExtResource("7")
+texture_normal = ExtResource("3_xv04q")
 ignore_texture_size = true
+stretch_mode = 5
+flip_h = true
+
+[node name="TextureRect" type="TextureRect" parent="VBoxContainer/Annotate"]
+layout_mode = 0
+offset_left = 2.8981018
+offset_top = 4.0
+offset_right = 42.8981
+offset_bottom = 44.0
+texture = ExtResource("7")
+expand_mode = 1
 stretch_mode = 5
 
 [node name="Megastructures" type="TextureButton" parent="VBoxContainer"]
-visible = false
 custom_minimum_size = Vector2(0, 48)
 layout_mode = 2
 shortcut = SubResource("6")
 shortcut_in_tooltip = false
-texture_normal = ExtResource("4")
+texture_normal = ExtResource("3_xv04q")
 ignore_texture_size = true
+stretch_mode = 5
+flip_h = true
+
+[node name="TextureRect" type="TextureRect" parent="VBoxContainer/Megastructures"]
+layout_mode = 0
+offset_left = 2.8981018
+offset_top = 4.0
+offset_right = 42.8981
+offset_bottom = 44.0
+texture = ExtResource("9_42r2j")
+expand_mode = 1
 stretch_mode = 5
 
 [node name="Gigastructures" type="TextureButton" parent="VBoxContainer"]
-visible = false
 custom_minimum_size = Vector2(0, 48)
 layout_mode = 2
 shortcut = SubResource("6")
 shortcut_in_tooltip = false
-texture_normal = ExtResource("8")
+texture_normal = ExtResource("3_xv04q")
 ignore_texture_size = true
+stretch_mode = 5
+flip_h = true
+
+[node name="TextureRect" type="TextureRect" parent="VBoxContainer/Gigastructures"]
+layout_mode = 0
+offset_left = 2.8981018
+offset_top = 4.0
+offset_right = 42.8981
+offset_bottom = 44.0
+texture = ExtResource("10_rxdnk")
+expand_mode = 1
 stretch_mode = 5
 
 [node name="SendFighters" type="Button" parent="."]
@@ -178,7 +260,7 @@ text = "SEND_PROBES"
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 libraries = {
-"": SubResource("AnimationLibrary_sslco")
+&"": SubResource("AnimationLibrary_sslco")
 }
 
 [node name="ConstructPanel" parent="." instance=ExtResource("8_4lxnk")]
