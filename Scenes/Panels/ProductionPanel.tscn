@@ -66,9 +66,10 @@ layout_mode = 1
 offset_left = 360.0
 offset_top = 244.0
 offset_right = 668.0
-offset_bottom = 282.0
+offset_bottom = 284.0
 theme_override_font_sizes/font_size = 18
 label_settings = SubResource("LabelSettings_55eq0")
+vertical_alignment = 1
 
 [node name="NoRsrc" type="Label" parent="."]
 visible = false

@@ -10,7 +10,7 @@ var config = ConfigFile.new()
 var err = config.load("user://settings.cfg")
 
 func _ready():
-	set_polygon(size, Vector2(0, 308))
+	set_polygon($GUI.size, $GUI.position)
 	toggle_btn.text = tr("TOGGLE") + " (F3)"
 	$ClickToEdit.visible = not game.help.has("overlay")
 
