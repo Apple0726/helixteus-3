@@ -88,30 +88,30 @@ func calc_costs(tile_bldg:int, lv_curr:int, lv_to:int, cost_div:float, num:int =
 		for cost in base_metal_costs:
 			base_metal_costs[cost] /= cost_div
 			base_metal_costs[cost] *= game.engineering_bonus.BCM
-	costs.money += round(base_costs.money * geo_seq(base_pw + 0.05, lv_curr, lv_to) * num)
+	costs["money"] = costs.get("money", 0.0) + round(base_costs.money * geo_seq(base_pw + 0.05, lv_curr, lv_to) * num)
 	if base_costs.has("energy"):
-		costs.energy += round(base_costs.energy * geo_seq(base_pw, lv_curr, lv_to) * num)
+		costs["energy"] = costs.get("energy", 0.0) + round(base_costs.energy * geo_seq(base_pw, lv_curr, lv_to) * num)
 	if not base_metal_costs.is_empty():
 		if lv_curr <= 10 and lv_to >= 11:
-			costs.lead += base_metal_costs.lead * num
+			costs["lead"] = costs.get("lead", 0.0) + base_metal_costs.lead * num
 		if lv_curr <= 20 and lv_to >= 21:
-			costs.copper += base_metal_costs.copper * num
+			costs["copper"] = costs.get("copper", 0.0) + base_metal_costs.copper * num
 		if lv_curr <= 30 and lv_to >= 31:
-			costs.iron += base_metal_costs.iron * num
+			costs["iron"] = costs.get("iron", 0.0) + base_metal_costs.iron * num
 		if lv_curr <= 40 and lv_to >= 41:
-			costs.aluminium += base_metal_costs.aluminium * num
+			costs["aluminium"] = costs.get("aluminium", 0.0) + base_metal_costs.aluminium * num
 		if lv_curr <= 50 and lv_to >= 51:
-			costs.silver += base_metal_costs.silver * num
+			costs["silver"] = costs.get("silver", 0.0) + base_metal_costs.silver * num
 		if lv_curr <= 60 and lv_to >= 61:
-			costs.gold += base_metal_costs.gold * num
+			costs["gold"] = costs.get("gold", 0.0) + base_metal_costs.gold * num
 		if lv_curr <= 71 and lv_to >= 71 and base_metal_costs.has("platinum"):
-			costs.platinum += base_metal_costs.platinum * num
+			costs["platinum"] = costs.get("platinum", 0.0) + base_metal_costs.platinum * num
 
 func update(changing_paths:bool = false):
 	set_min_lv = true
 	next_lv_spinbox.min_value = get_min_lv() + 1
 	set_min_lv = false
-	costs = {"money":0, "energy":0, "lead":0, "copper":0, "iron":0, "aluminium":0, "silver":0, "gold":0, "platinum":0}
+	costs = {}
 	var same_lv = true
 	var first_tile:Dictionary
 	var first_tile_bldg:Dictionary
@@ -132,7 +132,7 @@ func update(changing_paths:bool = false):
 		var calculated:bool = false
 		while not calculated or lv_to != a:
 			if calculated:
-				costs = {"money":0, "energy":0, "lead":0, "copper":0, "iron":0, "aluminium":0, "silver":0, "gold":0, "platinum":0}
+				costs = {}
 			var cost_div_sum:float = 0.0
 			for id in ids:
 				var tile = game.tile_data[id]
@@ -177,7 +177,7 @@ func update(changing_paths:bool = false):
 		if changing_paths:
 			while not calculated or lv_to != a:
 				if calculated:
-					costs = {"money":0, "energy":0, "lead":0, "copper":0, "iron":0, "aluminium":0, "silver":0, "gold":0, "platinum":0}
+					costs = {}
 				calc_costs(planet.bldg.name, planet.bldg[path_str], lv_to, planet.cost_div if planet.has("cost_div") else 1.0, planet.tile_num)
 				if game.check_enough(costs):
 					if lv_to == next_lv_spinbox.value:
@@ -198,10 +198,7 @@ func update(changing_paths:bool = false):
 		current_lv_label.text = tr("VARYING_LEVELS")
 		current_and_next_label.text = "[center] %s" % tr("VARIES")
 	set_bldg_value(first_tile_bldg_info, first_tile, first_tile_bldg[path_str], next_lv_spinbox.value, num)
-	var icons = Helper.put_rsrc(cost_icons, 32, costs, true, true)
-	for icon in icons:
-		if costs[icon.name] == 0:
-			icon.rsrc.visible = false
+	var icons = Helper.put_rsrc(cost_icons, 32, costs, true, true, true, 2)
 
 func set_bldg_value(first_tile_bldg_info:Dictionary, first_tile:Dictionary, lv:int, next_lv:int, n:int):
 	var rsrc_icon = Data.desc_icons[bldg][path_selected - 1] if Data.desc_icons.has(bldg) and Data.desc_icons[bldg] else []

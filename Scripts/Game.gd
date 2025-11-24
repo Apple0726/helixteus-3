@@ -2751,7 +2751,6 @@ func star_size_in_pixels(size:float):
 	return 5.0 * size * 600.0 / STAR_SCALE_DIV
 
 func generate_planets(id:int):#local id
-	var random_seed = randi()
 	if not system_data[id].has("name"):
 		var _name:String = "%s %s" % [tr("SYSTEM"), id]
 		match len(system_data[id].stars):
@@ -2814,6 +2813,7 @@ func generate_planets(id:int):#local id
 	if not achievement_data.exploration.has("50_planet_system") and planet_num >= 50:
 		earn_achievement("exploration", "50_planet_system")
 	for i in range(1, planet_num + 1):
+		var random_seed = randi()
 		var p_id = planet_data.size()
 		# p_i = planet_info
 		var p_i = {
