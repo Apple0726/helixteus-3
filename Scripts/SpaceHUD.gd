@@ -3,6 +3,8 @@ extends Control
 @onready var click_sound = game.get_node("click")
 
 func _ready():
+	for btn in $VBoxContainer.get_children():
+		btn.hide()
 	$AnimationPlayer.play("MoveButtons")
 
 func _on_Overlay_mouse_entered():

@@ -1,9 +1,10 @@
-[gd_scene load_steps=22 format=3 uid="uid://cgbd1tgsqupqm"]
+[gd_scene load_steps=23 format=3 uid="uid://cgbd1tgsqupqm"]
 
 [ext_resource type="Texture2D" uid="uid://bsienpo47qhrv" path="res://Graphics/Buttons/Overlay.png" id="1"]
 [ext_resource type="Script" uid="uid://b0vcns16qktoy" path="res://Scripts/SpaceHUD.gd" id="2"]
 [ext_resource type="Theme" uid="uid://cp2u1kgj60ic" path="res://Resources/default_theme.tres" id="3"]
 [ext_resource type="Texture2D" uid="uid://chpst12uvadli" path="res://Graphics/Buttons/HUDButton.png" id="3_xv04q"]
+[ext_resource type="Texture2D" uid="uid://dnh44vtb4f2xe" path="res://Graphics/Buttons/HUDButtonOver.png" id="4_rxdnk"]
 [ext_resource type="Texture2D" uid="uid://t70si4f413j5" path="res://Graphics/Effects/spotlight_4.png" id="4_xvq6k"]
 [ext_resource type="Texture2D" uid="uid://bxbsgfw7reha5" path="res://Graphics/Atoms/O.png" id="5_e5li8"]
 [ext_resource type="Texture2D" uid="uid://d0i4bvt6quewi" path="res://Graphics/Atoms/H.png" id="6_jdctn"]
@@ -100,6 +101,7 @@ layout_mode = 2
 shortcut = SubResource("6")
 shortcut_in_tooltip = false
 texture_normal = ExtResource("3_xv04q")
+texture_hover = ExtResource("4_rxdnk")
 ignore_texture_size = true
 stretch_mode = 5
 flip_h = true
@@ -120,6 +122,7 @@ layout_mode = 2
 shortcut = SubResource("2")
 shortcut_in_tooltip = false
 texture_normal = ExtResource("3_xv04q")
+texture_hover = ExtResource("4_rxdnk")
 ignore_texture_size = true
 stretch_mode = 5
 flip_h = true
@@ -150,6 +153,7 @@ layout_mode = 2
 shortcut = SubResource("2")
 shortcut_in_tooltip = false
 texture_normal = ExtResource("3_xv04q")
+texture_hover = ExtResource("4_rxdnk")
 ignore_texture_size = true
 stretch_mode = 5
 flip_h = true
@@ -180,6 +184,7 @@ layout_mode = 2
 shortcut = SubResource("4")
 shortcut_in_tooltip = false
 texture_normal = ExtResource("3_xv04q")
+texture_hover = ExtResource("4_rxdnk")
 ignore_texture_size = true
 stretch_mode = 5
 flip_h = true
@@ -200,6 +205,7 @@ layout_mode = 2
 shortcut = SubResource("6")
 shortcut_in_tooltip = false
 texture_normal = ExtResource("3_xv04q")
+texture_hover = ExtResource("4_rxdnk")
 ignore_texture_size = true
 stretch_mode = 5
 flip_h = true
@@ -220,6 +226,7 @@ layout_mode = 2
 shortcut = SubResource("6")
 shortcut_in_tooltip = false
 texture_normal = ExtResource("3_xv04q")
+texture_hover = ExtResource("4_rxdnk")
 ignore_texture_size = true
 stretch_mode = 5
 flip_h = true

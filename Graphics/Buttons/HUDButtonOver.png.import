@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://cx5qgia5aurdx"
-path="res://.godot/imported/abandoned_ship.png-41258125fc7d42a6fe9b4ba2d8fa6359.ctex"
+uid="uid://dnh44vtb4f2xe"
+path="res://.godot/imported/HUDButtonOver.png-fb597cc235a982c7db81e85e584ca370.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Graphics/Tiles/abandoned_ship.png"
-dest_files=["res://.godot/imported/abandoned_ship.png-41258125fc7d42a6fe9b4ba2d8fa6359.ctex"]
+source_file="res://Graphics/Buttons/HUDButtonOver.png"
+dest_files=["res://.godot/imported/HUDButtonOver.png-fb597cc235a982c7db81e85e584ca370.ctex"]
 
 [params]
 
@@ -23,7 +23,7 @@ compress/rdo_quality_loss=0.0
 compress/hdr_compression=1
 compress/normal_map=0
 compress/channel_pack=0
-mipmaps/generate=true
+mipmaps/generate=false
 mipmaps/limit=-1
 roughness/mode=0
 roughness/src_normal=""

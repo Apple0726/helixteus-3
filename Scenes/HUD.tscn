@@ -1,4 +1,4 @@
-[gd_scene load_steps=77 format=3 uid="uid://cahlkepfiewe4"]
+[gd_scene load_steps=78 format=3 uid="uid://cahlkepfiewe4"]
 
 [ext_resource type="Texture2D" uid="uid://b0brlrg52bjln" path="res://Graphics/Icons/money.png" id="2"]
 [ext_resource type="Texture2D" uid="uid://bm01hxs45q3ga" path="res://Graphics/Icons/energy.png" id="3"]
@@ -6,6 +6,7 @@
 [ext_resource type="Script" uid="uid://cxkumkhcmn25n" path="res://Scripts/HUD.gd" id="5"]
 [ext_resource type="Theme" uid="uid://cp2u1kgj60ic" path="res://Resources/default_theme.tres" id="7"]
 [ext_resource type="Texture2D" uid="uid://hvuwdl8ox0yv" path="res://Graphics/Icons/stone.png" id="8"]
+[ext_resource type="Texture2D" uid="uid://dnh44vtb4f2xe" path="res://Graphics/Buttons/HUDButtonOver.png" id="10_esw7j"]
 [ext_resource type="Texture2D" uid="uid://0tkum5k543lo" path="res://Graphics/Ships/Probe0.png" id="10_eukkl"]
 [ext_resource type="Texture2D" uid="uid://koi0aarpqj30" path="res://Graphics/Ships/Ship0.png" id="10_tvuu7"]
 [ext_resource type="Texture2D" uid="uid://bsulvp4xkwrwj" path="res://Graphics/Materials/soil.png" id="11"]
@@ -631,6 +632,7 @@ keep_pressed_outside = true
 shortcut = SubResource("12")
 shortcut_in_tooltip = false
 texture_normal = ExtResource("16_ij8d5")
+texture_hover = ExtResource("10_esw7j")
 ignore_texture_size = true
 stretch_mode = 5
 
@@ -653,6 +655,7 @@ keep_pressed_outside = true
 shortcut = SubResource("14")
 shortcut_in_tooltip = false
 texture_normal = ExtResource("16_ij8d5")
+texture_hover = ExtResource("10_esw7j")
 ignore_texture_size = true
 stretch_mode = 5
 
@@ -678,6 +681,7 @@ keep_pressed_outside = true
 shortcut = SubResource("16")
 shortcut_in_tooltip = false
 texture_normal = ExtResource("16_ij8d5")
+texture_hover = ExtResource("10_esw7j")
 ignore_texture_size = true
 stretch_mode = 5
 
@@ -697,6 +701,7 @@ layout_mode = 2
 shortcut = SubResource("18")
 shortcut_in_tooltip = false
 texture_normal = ExtResource("16_ij8d5")
+texture_hover = ExtResource("10_esw7j")
 ignore_texture_size = true
 stretch_mode = 5
 
@@ -716,6 +721,7 @@ layout_mode = 2
 shortcut = SubResource("20")
 shortcut_in_tooltip = false
 texture_normal = ExtResource("16_ij8d5")
+texture_hover = ExtResource("10_esw7j")
 ignore_texture_size = true
 stretch_mode = 5
 
@@ -735,6 +741,7 @@ layout_mode = 2
 shortcut = SubResource("22")
 shortcut_in_tooltip = false
 texture_normal = ExtResource("16_ij8d5")
+texture_hover = ExtResource("10_esw7j")
 ignore_texture_size = true
 stretch_mode = 5
 
@@ -754,6 +761,7 @@ layout_mode = 2
 shortcut = SubResource("24")
 shortcut_in_tooltip = false
 texture_normal = ExtResource("16_ij8d5")
+texture_hover = ExtResource("10_esw7j")
 ignore_texture_size = true
 stretch_mode = 5
 
@@ -772,6 +780,7 @@ custom_minimum_size = Vector2(0, 48)
 layout_mode = 2
 shortcut_in_tooltip = false
 texture_normal = ExtResource("16_ij8d5")
+texture_hover = ExtResource("10_esw7j")
 ignore_texture_size = true
 stretch_mode = 5
 

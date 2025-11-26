@@ -1,9 +1,10 @@
-[gd_scene load_steps=23 format=3 uid="uid://b4u80l6nm3dei"]
+[gd_scene load_steps=24 format=3 uid="uid://b4u80l6nm3dei"]
 
 [ext_resource type="Theme" uid="uid://cp2u1kgj60ic" path="res://Resources/default_theme.tres" id="1_ankd5"]
 [ext_resource type="Script" uid="uid://vh301c8h7ckx" path="res://Scripts/PlanetHUD.gd" id="2"]
 [ext_resource type="Texture2D" uid="uid://chpst12uvadli" path="res://Graphics/Buttons/HUDButton.png" id="3_po853"]
 [ext_resource type="Texture2D" uid="uid://vshnis3gqj4t" path="res://Graphics/Icons/Notification.png" id="4"]
+[ext_resource type="Texture2D" uid="uid://dnh44vtb4f2xe" path="res://Graphics/Buttons/HUDButtonOver.png" id="4_8lsmy"]
 [ext_resource type="Texture2D" uid="uid://b26c0halfcvvr" path="res://Graphics/Achievements/Construct.png" id="5_l6l0m"]
 [ext_resource type="Texture2D" uid="uid://1300penq25d5" path="res://Graphics/Pickaxes/stick.png" id="5_xysya"]
 [ext_resource type="Texture2D" uid="uid://cb4q7wfu4xa2i" path="res://Graphics/Buttons/Terraform.png" id="7"]
@@ -161,6 +162,7 @@ custom_minimum_size = Vector2(0, 48)
 layout_mode = 2
 shortcut_in_tooltip = false
 texture_normal = ExtResource("3_po853")
+texture_hover = ExtResource("4_8lsmy")
 ignore_texture_size = true
 stretch_mode = 5
 flip_h = true
@@ -181,6 +183,7 @@ layout_mode = 2
 shortcut = SubResource("4")
 shortcut_in_tooltip = false
 texture_normal = ExtResource("3_po853")
+texture_hover = ExtResource("4_8lsmy")
 ignore_texture_size = true
 stretch_mode = 5
 flip_h = true
@@ -202,6 +205,7 @@ layout_mode = 2
 shortcut = SubResource("6")
 shortcut_in_tooltip = false
 texture_normal = ExtResource("3_po853")
+texture_hover = ExtResource("4_8lsmy")
 ignore_texture_size = true
 stretch_mode = 5
 flip_h = true

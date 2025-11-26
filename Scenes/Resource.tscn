@@ -14,14 +14,23 @@ theme_override_constants/separation = 10
 [node name="Texture2D" type="TextureButton" parent="."]
 custom_minimum_size = Vector2(24, 24)
 layout_mode = 2
+size_flags_vertical = 4
 texture_normal = ExtResource("2_gt285")
 ignore_texture_size = true
 stretch_mode = 5
 
-[node name="IsEnough" type="TextureRect" parent="."]
+[node name="IsEnough" type="TextureRect" parent="Texture2D"]
 visible = false
-custom_minimum_size = Vector2(24, 24)
-layout_mode = 2
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -12.0
+offset_top = -4.0
+offset_right = 4.0
+offset_bottom = 12.0
+grow_horizontal = 0
+mouse_filter = 2
 texture = ExtResource("2_1iyfg")
 expand_mode = 1
 stretch_mode = 5

@@ -18,11 +18,11 @@ func set_btn_color(btn):
 func get_rsrc_available_text(rsrc_available:float, rsrc_cost:float, mass_str:String = "", html:bool = false):
 	if html:
 		if rsrc_available >= rsrc_cost:
-			return "[color=#00ff00]%s/%s %s[/color]" % [format_num(clever_round(rsrc_available, 3, false, true), 3), format_num(clever_round(rsrc_cost, 3, false, true), 3), mass_str]
+			return "[color=#00ff00]{cost} ({available})[/color]".format({"available": format_num(clever_round(rsrc_available, 3, false, true), 3), "cost": format_num(clever_round(rsrc_cost, 3, false, true), 3)}) + " " + mass_str
 		else:
-			return "[color=#ff0000]%s/%s %s[/color]" % [format_num(clever_round(rsrc_available, 3, false, true), 3), format_num(clever_round(rsrc_cost, 3, false, true), 3), mass_str]
+			return "[color=#ff0000]{cost} ({available})[/color]".format({"available": format_num(clever_round(rsrc_available, 3, false, true), 3), "cost": format_num(clever_round(rsrc_cost, 3, false, true), 3)}) + " " + mass_str
 	else:
-		return "%s/%s %s" % [format_num(clever_round(rsrc_available, 3, false, true), 3), format_num(clever_round(rsrc_cost, 3, false, true), 3), mass_str]
+		return "{cost} ({available})".format({"available": format_num(clever_round(rsrc_available, 3, false, true), 3), "cost": format_num(clever_round(rsrc_cost, 3, false, true), 3)}) + " " + mass_str
 
 #put_rsrc helper function
 func format_text(text_node, texture, path:String, show_available:bool, rsrc_cost:float, rsrc_available:float, mass_str:String = ""):
@@ -57,7 +57,7 @@ func put_rsrc(container, min_size, objs, remove:bool = true, show_available:bool
 		var atom:bool = false
 		var tooltip = ""
 		var text_node = rsrc.get_node("Text")
-		var is_enough_node = rsrc.get_node("IsEnough")
+		var is_enough_node = rsrc.get_node("Texture2D/IsEnough")
 		text_node.visible = collapse_threshold == -1 or len(objs.keys()) <= collapse_threshold
 		is_enough_node.visible = not text_node.visible
 		var current_rsrc:float
@@ -78,7 +78,7 @@ func put_rsrc(container, min_size, objs, remove:bool = true, show_available:bool
 				if not game.show.has("mining"):
 					tooltip += "\n%s" % [tr("STONE_HELP")]
 				mass_str = "kg"
-				format_text(text_node, texture, "Icons/stone", show_available, get_sum_of_dict(objs[obj]), current_rsrc, mass_str)
+				format_text(text_node, texture, "Icons/stone", show_available, objs[obj], current_rsrc, mass_str)
 			elif obj == "time":
 				texture.texture_normal = Data.time_icon
 				text_node.text = time_to_str(objs[obj])
@@ -102,28 +102,21 @@ func put_rsrc(container, min_size, objs, remove:bool = true, show_available:bool
 				current_rsrc = game.particles[obj]
 				mass_str = "mol"
 				format_text(text_node, texture, "Particles/" + obj, show_available, objs[obj], current_rsrc, mass_str)
-		if is_enough_node.visible:
-			is_enough_node.mouse_entered.connect(game.show_tooltip.bind(get_rsrc_available_text(current_rsrc, objs[obj], mass_str, true)))
-			is_enough_node.mouse_exited.connect(game.hide_tooltip)
 		if show_available and obj != "time":
 			texture.material = ShaderMaterial.new()
 			texture.material.shader = preload("res://Shaders/Resource.gdshader")
 			texture.material.set_shader_parameter("fill", current_rsrc / objs[obj])
 			if current_rsrc < objs[obj]:
-				rsrc.get_node("IsEnough").texture = preload("res://Graphics/Icons/Annotator/cross.png")
+				is_enough_node.texture = preload("res://Graphics/Icons/Annotator/cross.png")
 		if mouse_events:
-			rsrc.get_node("Texture2D").connect("mouse_entered", on_rsrc_over.bind(tooltip))
-			rsrc.get_node("Texture2D").connect("mouse_exited", on_rsrc_out)
+			if is_enough_node.visible:
+				tooltip += ": " + get_rsrc_available_text(current_rsrc, objs[obj], mass_str, true)
+			rsrc.get_node("Texture2D").connect("mouse_entered", game.show_tooltip.bind(tooltip))
+			rsrc.get_node("Texture2D").connect("mouse_exited", game.hide_tooltip)
 		texture.custom_minimum_size = Vector2(1, 1) * min_size
 		container.add_child(rsrc)
 		data.append({"rsrc":rsrc, "name":obj})
 	return data
-
-func on_rsrc_over(st:String):
-	game.show_tooltip(st)
-
-func on_rsrc_out():
-	game.hide_tooltip()
 
 #Converts time in seconds to string format
 func time_to_str (time:float): # time is in seconds
