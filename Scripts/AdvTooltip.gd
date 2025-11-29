@@ -40,9 +40,12 @@ func set_tooltip_position():
 
 func show_additional_text(txt: String, delay: float = 1.0, different_orig_text: String = ""):
 	await get_tree().create_timer(delay).timeout
+	hide()
 	size.x = 500.0
 	if different_orig_text == "":
 		Helper.add_text_to_RTL(self, orig_text + "\n\n" + txt, imgs, imgs_size, true)
 	else:
 		Helper.add_text_to_RTL(self, different_orig_text + "\n\n" + txt, imgs, imgs_size, true)
+	await get_tree().process_frame
 	set_tooltip_position()
+	show()

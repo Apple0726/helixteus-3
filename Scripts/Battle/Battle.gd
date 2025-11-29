@@ -133,7 +133,7 @@ func move_view_to_target(entity: BattleEntity, turn_order: int):
 				if ship_node.turn_order == turn_order:
 					whose_turn_is_it_index = turn_order
 					$Selected.position = ship_node.position + Vector2.UP * 80.0
-					battle_GUI.refresh_GUI()
+					battle_GUI.fade_in_main_panel()
 					return
 
 func show_target_icon(entity: BattleEntity):
@@ -188,6 +188,9 @@ func battle_victory_callback():
 		game.popup_window(tr("NEW_BLDGS_UNLOCKED_DESC"), tr("NEW_BLDGS_UNLOCKED"))
 		game.help["SP"] = true
 
+var scale_before_view_battlefield = 1.0
+var position_before_view_battlefield = Vector2.ZERO
+
 func view_battlefield(tween_speed: float = 1.0):
 	if game.view.is_view_changing():
 		return
@@ -205,8 +208,14 @@ func view_entity(entity: BattleEntity, tween_speed: float = 1.0):
 	if animations_sped_up:
 		game.view.position = Vector2(640, 360) - entity.position * game.view.scale.x
 	else:
-		var view_tween = create_tween().set_speed_scale(tween_speed)
-		view_tween.tween_property(game.view, "position", Vector2(640, 360) - entity.position * game.view.scale.x, 0.5).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+		if scale_before_view_battlefield == 1.0:
+			var view_tween = create_tween().set_speed_scale(tween_speed)
+			view_tween.tween_property(game.view, "position", Vector2(640, 360) - entity.position * game.view.scale.x, 0.5).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+		else:
+			var view_tween = create_tween().set_parallel().set_speed_scale(tween_speed)
+			view_tween.tween_property(game.view, "scale", Vector2.ONE * scale_before_view_battlefield, 0.5).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+			view_tween.tween_property(game.view, "position", position_before_view_battlefield, 0.5).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+			scale_before_view_battlefield = 1.0
 
 var ships_taking_turn = [] # Stores ship nodes that can take actions interchangeably
 
@@ -228,7 +237,7 @@ func next_turn():
 			if not ship_node.turn_taken:
 				whose_turn_is_it_index = ship_node.turn_order
 				$Selected.position = ship_node.position + Vector2.UP * 80.0
-				battle_GUI.refresh_GUI()
+				battle_GUI.fade_in_main_panel()
 				return
 	ships_taking_turn.clear()
 	$Selected.hide()
@@ -243,6 +252,8 @@ func next_turn():
 				whose_turn_is_it_index -= 1
 			i -= 1
 	if initiative_order[whose_turn_is_it_index].type == Battle.EntityType.BOUNDARY:
+		scale_before_view_battlefield = game.view.scale.x
+		position_before_view_battlefield = game.view.position
 		view_battlefield()
 		if animations_sped_up:
 			create_tween().tween_callback(environment_take_turn).set_delay(0.1)

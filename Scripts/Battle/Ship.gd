@@ -101,9 +101,9 @@ func _draw() -> void:
 			dist_str += " (+ %.1f m)" % move_additional_costs
 		draw_string(SystemFont.new(), line_vector + 20.0 * Vector2.ONE, dist_str)
 	if display_explosive_AoE:
-		draw_circle(battle_scene.mouse_position_local - position, Data.battle_weapon_stats.bomb.AoE_radius[bomb_levels[PATH_1]], Color(1.0, 0.0, 0.0, 0.2))
+		draw_circle(battle_scene.mouse_position_local - position, Data.battle_weapon_stats.bomb.AoE_radius[bomb_levels[PATH_1] - 1], Color(1.0, 0.0, 0.0, 0.2))
 		for i in range(0, 32, 2):
-			draw_arc(battle_scene.mouse_position_local - position, Data.battle_weapon_stats.bomb.AoE_radius[bomb_levels[PATH_1]], 2.0 * PI / 32.0 * i, 2.0 * PI / 32.0 * (i+1), 100, Color.RED)
+			draw_arc(battle_scene.mouse_position_local - position, Data.battle_weapon_stats.bomb.AoE_radius[bomb_levels[PATH_1] - 1], 2.0 * PI / 32.0 * i, 2.0 * PI / 32.0 * (i+1), 100, Color.RED)
 
 func take_turn():
 	movement_remaining = total_movement
@@ -169,7 +169,6 @@ func _process(delta: float) -> void:
 
 func _on_fire_weapon_aim_visibility_changed() -> void:
 	if $FireWeaponAim.visible:
-		$FireWeaponAim.fires_remaining = fires_remaining
 		$FireWeaponAim.target_angle_max_deviation = 0.5 / (accuracy + accuracy_buff) / weapon_accuracy_mult
 		if $FireWeaponAim.weapon_type == battle_GUI.BULLET:
 			if bullet_levels[PATH_3] >= 2:
@@ -199,7 +198,8 @@ func fire_weapon(weapon_type: int):
 	game.hide_tooltip()
 	display_explosive_AoE = false
 	queue_redraw()
-	if fires_remaining <= 1:
+	fires_remaining -= 1
+	if fires_remaining <= 0:
 		$FireWeaponAim.fade_out()
 		block_cancelling_action = false
 	else:
@@ -248,7 +248,8 @@ func fire_weapon(weapon_type: int):
 			projectile.shooter = self
 			projectile.weapon_accuracy = Data.battle_weapon_stats.bullet.accuracy * accuracy
 			projectile.deflects_remaining = Data.battle_weapon_stats.bullet.deflects[bullet_levels[PATH_2] - 1]
-			projectile.knockback = Data.battle_weapon_stats.bullet.knockback[bullet_levels[PATH_2] - 1]
+			if battle_GUI.bullet_2_selected_type == battle_GUI.BIG_BULLET:
+				projectile.knockback = Data.battle_weapon_stats.bullet.knockback[bullet_levels[PATH_2] - 1]
 			projectile.ignore_defense_buffs = Data.battle_weapon_stats.bullet.ignore_defense_buffs[bullet_levels[PATH_2] - 1]
 			projectile.status_effects = status_effects
 			projectile.position = position
@@ -275,7 +276,7 @@ func fire_weapon(weapon_type: int):
 		laser.fade_delay = 0.2 if battle_scene.animations_sped_up else 0.5
 		laser.status_effects = {Battle.StatusEffect.STUN: Data.battle_weapon_stats.laser.status_effects[Battle.StatusEffect.STUN][laser_levels[PATH_2] - 1]}
 		battle_scene.add_child(laser)
-		if fires_remaining <= 1:
+		if fires_remaining <= 0:
 			laser.tree_exited.connect(ending_turn)
 	elif weapon_type == battle_GUI.BOMB:
 		var explosive = preload("res://Scenes/Battle/Weapons/Explosive.tscn").instantiate()
@@ -300,13 +301,12 @@ func fire_weapon(weapon_type: int):
 		explosive.ending_turn_delay = 1.0
 		explosive.end_turn_ready = true
 		battle_scene.add_child(explosive)
-		if fires_remaining <= 1:
+		if fires_remaining <= 0:
 			explosive.end_turn.connect(ending_turn)
 	elif weapon_type == battle_GUI.LIGHT:
-		if fires_remaining <= 1:
+		if fires_remaining <= 0:
 			light_cone.tree_exited.connect(ending_turn)
 		light_cone.fire_light(0.2 if battle_scene.animations_sped_up else 1.0)
-	fires_remaining -= 1
 
 
 func add_light_cone():
@@ -371,7 +371,13 @@ func add_target_buttons_for_push():
 		var position_difference_normalized = (position - entity.position).normalized()
 		var velocity_difference = velocity - entity.velocity
 		var push_difficulty_from_velocity = abs(0.05 * position_difference_normalized.rotated(PI / 2.0).dot(velocity_difference))
-		var push_success_chance = 100.0 * (1.0 - 1.0 / (1.0 + exp((agility + agility_buff - entity.agility - entity.agility_buff - push_difficulty_from_velocity + 9.2) / 5.8)))
+		print(push_difficulty_from_velocity)
+		var agility_diff = 0.0
+		if entity.type == Battle.EntityType.ENEMY:
+			agility_diff = agility + agility_buff - entity.agility - entity.agility_buff
+		elif entity.type == Battle.EntityType.SHIP:
+			agility_diff = min(agility + agility_buff, entity.agility + entity.agility_buff)
+		var push_success_chance = 100.0 * (1.0 - 1.0 / (1.0 + exp((agility_diff - push_difficulty_from_velocity + 9.2) / 5.8)))
 		target_btn.get_node("TextureButton").mouse_entered.connect(game.show_tooltip.bind(tr("PUSH_SUCCESS_CHANCE") + ": %.1f%%" % push_success_chance, {"additional_text":tr("PUSH_SUCCESS_CHANCE_HELP")}))
 		target_btn.get_node("TextureButton").mouse_exited.connect(game.hide_tooltip)
 		create_tween().tween_property(entity.get_node("TextureRect").material, "shader_parameter/alpha", 0.2, 0.2)

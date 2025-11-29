@@ -3633,7 +3633,7 @@ func show_tooltip(txt:String, params:Dictionary = {}):
 
 func hide_tooltip():
 	if is_instance_valid(tooltip):
-		tooltip.visible = false
+		tooltip.queue_free()
 
 func add_items(item_id:int, num:int = 1):
 	var cycles = 0

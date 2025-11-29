@@ -440,7 +440,7 @@ var battle_weapon_stats = {
 				"ignore_defense_buffs":[false, false, true, true],
 				"status_effects":{
 					Battle.StatusEffect.CORRODING:[0, 3, 5, 0],
-					Battle.StatusEffect.RADIOACTIVE:[0, 3, 5, 0],
+					Battle.StatusEffect.RADIOACTIVE:[0, 0, 0, 5],
 					Battle.StatusEffect.WET:[0, 2, 4, 0],
 					Battle.StatusEffect.FROZEN:[0, 0, 0, 4],
 				},
@@ -448,8 +448,9 @@ var battle_weapon_stats = {
 	"laser": {	"damage":2.0,
 				"accuracy":1.8,
 				"status_effects":{
-					Battle.StatusEffect.STUN:[1, 1, 2, 2],
-				}
+					Battle.StatusEffect.STUN:[[0.8, 1], [0.8, 1], [0.8, 2], [0.8, 2]],
+				},
+				"consecutive_fires":[1, 2, 2, 3],
 			},
 	"bomb": {	"damage":6.0,
 				"accuracy":0.65,

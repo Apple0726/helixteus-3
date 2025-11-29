@@ -45,6 +45,7 @@ func determine_target():
 func take_turn():
 	await super()
 	if HP <= 0: # For example, if burned to death during super() call
+		end_turn()
 		return
 	if status_effects[Battle.StatusEffect.STUN] > 0:
 		decrement_status_effects_buffs()

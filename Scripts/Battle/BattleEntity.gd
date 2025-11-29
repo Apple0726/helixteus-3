@@ -331,11 +331,17 @@ func damage_entity(weapon_data: Dictionary):
 		update_entity_HP(label_knockback)
 		if HP > 0:
 			if weapon_data.has("status_effects"):
-				print(status_effect_resistances)
 				for effect in weapon_data.status_effects:
-					if randf() > status_effect_resistances[effect]:
-						var st = weapon_data.status_effects[effect]
-						status_effects[effect] = st * pow(status_effects[effect] + st, 0.8) / pow(st, 0.8)
+					var st = weapon_data.status_effects[effect]
+					var base_probability = 1.0
+					var base_turns
+					if st is Array:
+						base_probability = st[0]
+						base_turns = st[1]
+					else:
+						base_turns = st
+					if randf() < base_probability * (1.0 - status_effect_resistances[effect]):
+						status_effects[effect] = base_turns * pow(status_effects[effect] + base_turns, 0.8) / pow(base_turns, 0.8)
 			if weapon_data.has("buffs"):
 				for buff in weapon_data.buffs:
 					self["%s_buff" % buff] += weapon_data.buffs[buff]
