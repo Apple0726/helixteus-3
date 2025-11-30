@@ -7,7 +7,6 @@ var astar_node = AStar2D.new()
 @onready var p_i = game.planet_data[game.c_p]
 @onready var tile = game.tile_data[game.c_t]
 @onready var is_aurora_cave:bool = tile.has("aurora")
-@onready var tile_type = p_i.type - 3
 var time_speed:float = 1.0
 #Aurora intensity
 @onready var au_int:float = tile.get("aurora", 0.0)
@@ -239,9 +238,9 @@ func _ready():
 		cave_type = "diamond_tower"
 	num_floors = tile[cave_type].num_floors
 	cave_size = tile[cave_type].floor_size
-	cave_BG.size = Vector2.ONE * cave_size * 200.0
 	seed(p_i.seed)
 	cave_BG.texture = load("res://Graphics/Tiles/Mosaics/%sr.jpg" % randi_range(1, 8))
+	cave_BG.scale = Vector2.ONE * cave_size / cave_BG.texture.get_size() * 200.0
 	cave_BG.material.set_shader_parameter("texture_zoom", randf_range(0.5, 2.0))
 	if not tile[cave_type].has("debris"):
 		tile[cave_type].debris = randf() + 0.2
@@ -286,7 +285,7 @@ func _ready():
 		hole_exits = cave_data.hole_exits
 	else:
 		id = game.caves_generated
-		tile[cave_type].id = id
+		tile[cave_type]["id"] = id
 		game.caves_generated += 1
 	minimap_rover.position = minimap_center
 	minimap_cave.scale *= minimap_zoom
@@ -351,7 +350,7 @@ func add_filter(rsrc):
 func add_filter_slot(type:String, rsrc):
 	var filter_slot = filter_btn_scene.instantiate()
 	if rsrc is int:
-		filter_slot.texture = load("res://Graphics/%s/%s/%s.png" % ["Items", Item.icon_directory(Item.data[rsrc].type), Item.data[rsrc].icon_name])
+		filter_slot.texture = load("res://Graphics/%s/%s/%s.png" % ["Items", Item.icon_directory(Item.data[rsrc].type), Item.data[rsrc].item_name])
 	else:
 		filter_slot.texture = load("res://Graphics/%s/%s.png" % [type, rsrc])
 	$UI2/Filters/Grid.add_child(filter_slot)
@@ -396,12 +395,13 @@ func set_slot_info(slot, _inv:Dictionary):
 		mining_p.lifetime = 0.2 / time_speed
 		slot.get_node("TextureRect").texture = load("res://Graphics/Cave/Mining/" + _inv.id + ".png")
 	else:
-		if _inv.id == "money":
+		if _inv.id is int:
+			print(_inv)
+			slot.get_node("TextureRect").texture = load("res://Graphics/Items/%s/%s.png" % [Item.icon_directory(_inv.type), Item.data[_inv.id].item_name])
+		elif _inv.id == "money":
 			slot.get_node("TextureRect").texture = Data.money_icon
 		elif _inv.id == "minerals":
 			slot.get_node("TextureRect").texture = Data.minerals_icon
-		else:
-			slot.get_node("TextureRect").texture = load("res://Graphics/Items/%s.png" % [Item.icon_directory(_inv.id)])
 		if _inv.has("num"):
 			slot.get_node("Label").text = Helper.format_num(_inv.num, false, 3)
 	
@@ -487,6 +487,7 @@ func generate_cave(first_floor:bool, going_up:bool):
 	elif cave_floor >= 8:
 		depth_modulate = Color.BLUE
 	cave_wall.modulate = star_mod * depth_modulate * (1.0 - cave_darkness) * (Color(0.5, 0.5, 1.0) if cave_floor >= 8 else Color.WHITE)
+	cave_wall.modulate.a = 1.0
 	var BG_mod = star_mod * (1.0 - cave_darkness)
 	BG_mod.a = 1.0
 	if p_i.has("lake"):
@@ -494,14 +495,14 @@ func generate_cave(first_floor:bool, going_up:bool):
 		cave_wall.modulate *= Data.lake_colors[p_i.lake.element][p_i.lake.state]
 		#cave_BG.material.set_shader_parameter("brightness", 1.1)
 		#cave_BG.material.set_shader_parameter("contrast", 1.1)
-	#cave_BG.material.set_shader_parameter("modulate_color", BG_mod)
+	cave_BG.material.set_shader_parameter("modulate_color", BG_mod)
 	hole.modulate = star_mod * (1.0 - cave_darkness)
 	hole.modulate.a = 1.0
 	$WorldEnvironment.environment.adjustment_saturation = (1.0 - cave_darkness)
 	if Settings.enable_shaders:
 		$Floor.material.set_shader_parameter("star_mod", lerp(star_mod, Color.WHITE, clamp(cave_floor * 0.125, 0, 1)))
 		$Floor.material.set_shader_parameter("strength", max(1.0, brightness_mult - 0.1 * (cave_floor - 1)))
-	rover_light.energy = cave_darkness * 0.3
+	rover_light.energy = cave_darkness * 0.6
 	$UI2/CaveInfo/Difficulty.text = "%s: %s" % [tr("DIFFICULTY"), Helper.format_num(difficulty, true)]
 	var rng = RandomNumberGenerator.new()
 	$UI2/CaveInfo/Floor.text = "B%sF" % [cave_floor]
@@ -533,7 +534,6 @@ func generate_cave(first_floor:bool, going_up:bool):
 	camera.zoom = Vector2.ONE * rover_size / 2.5
 	$Rover.scale = Vector2.ONE * rover_size
 	var seeking_proj = enhancements.has("laser_3")
-	var debris_height:int = -1020
 	var ash_tiles = []
 	var lava_tiles = []
 	var walls = []
@@ -557,12 +557,8 @@ func generate_cave(first_floor:bool, going_up:bool):
 						rand_scale_x = -log(rng.randf()) + 0.5
 						debris.lava_intensity = 1.0 + log(rng.randf_range(1.0, volcano_mult))
 						debris_mod = Color.WHITE * (0.9 + debris.lava_intensity / 10.0)
-						debris.get_node("Lava").range_z_min = debris_height
-						debris.get_node("Lava").range_z_max = debris_height
 					else:
 						rand_scale_x = -log(rng.randf()) / 1.2 + 0.5
-					debris.get_node("Sprite2D").z_index = debris_height
-					debris_height += 1
 					debris.scale = Vector2.ONE * rand_scale_x
 					debris.position = Vector2(i, j) * 200 + Vector2(100, 100) + Vector2(rng.randf_range(-80, 80), rng.randf_range(-80, 80)) / debris.scale / 2.0
 					if is_aurora_cave and rng.randf() < 0.05:
@@ -579,7 +575,7 @@ func generate_cave(first_floor:bool, going_up:bool):
 				if volcano_mult > 1.0:
 					if cave_floor <= 8 and level < remap(cave_floor, 1, 8, 0.6, 0.0):
 						ash_tiles.append(Vector2(i, j))
-				minimap_cave.set_cell(Vector2i(i, j), tile_type, Vector2i.ZERO)
+				minimap_cave.set_cell(Vector2i(i, j), 0, Vector2i.ZERO)
 				tiles.append(Vector2(i, j))
 				astar_node.add_point(tile_id, Vector2(i, j))
 				if rng.randf() < 0.006 * min(5, cave_floor) * (modifiers.enemy_number if modifiers.has("enemy_number") else 1.0):
@@ -729,7 +725,7 @@ func generate_cave(first_floor:bool, going_up:bool):
 		for j in cave_size:
 			var tile_id:int = get_tile_index(Vector2(i, j))
 			if tiles_mined[cave_floor - 1].has(tile_id):
-				minimap_cave.set_cell(Vector2i(i, j), tile_type, Vector2i.ZERO)
+				minimap_cave.set_cell(Vector2i(i, j))
 				astar_node.add_point(tile_id, Vector2(i, j))
 				connect_points(Vector2(i, j), true)
 				walls.erase(Vector2i(i, j))
@@ -932,19 +928,19 @@ func generate_treasure(tier:int, rng:RandomNumberGenerator):
 	var contents = {	"money":round(rng.randf_range(1500, 1800) * pow(tier, 3.0) * difficulty * exp(cave_floor / 6.0)),
 						"minerals":round(rng.randf_range(100, 150) * pow(tier, 3.0) * difficulty * exp(cave_floor / 9.0)),
 						Item.HELIX_CORE1:int(rng.randf_range(0.2, 0.6) * pow(tier, 1.8) * pow(difficulty, 0.7))}
-	if contents[Item.HELIX_CORE1] > 128:
-		contents[Item.HELIX_CORE2] = int(contents.hx_core / 128.0)
-		contents[Item.HELIX_CORE1] %= 128
+	if contents[Item.HELIX_CORE1] > 64:
+		contents[Item.HELIX_CORE2] = int(contents[Item.HELIX_CORE1] / 64.0)
+		contents[Item.HELIX_CORE1] %= 64
 		if contents[Item.HELIX_CORE1] == 0:
 			contents.erase(Item.HELIX_CORE1)
-		if contents[Item.HELIX_CORE2] > 128:
-			contents[Item.HELIX_CORE3] = int(contents[Item.HELIX_CORE2] / 128.0)
-			contents[Item.HELIX_CORE2] %= 128
+		if contents[Item.HELIX_CORE2] > 64:
+			contents[Item.HELIX_CORE3] = int(contents[Item.HELIX_CORE2] / 64.0)
+			contents[Item.HELIX_CORE2] %= 64
 			if contents[Item.HELIX_CORE2] == 0:
 				contents.erase("hx_core2")
-			if contents[Item.HELIX_CORE3] > 128:
-				contents[Item.HELIX_CORE4] = int(contents[Item.HELIX_CORE3] / 128.0)
-				contents[Item.HELIX_CORE3] %= 128
+			if contents[Item.HELIX_CORE3] > 64:
+				contents[Item.HELIX_CORE4] = int(contents[Item.HELIX_CORE3] / 64.0)
+				contents[Item.HELIX_CORE3] %= 64
 				if contents[Item.HELIX_CORE3] == 0:
 					contents.erase("hx_core3")
 	if contents.has(Item.HELIX_CORE1) and contents[Item.HELIX_CORE1] == 0:
@@ -1284,10 +1280,10 @@ func add_to_inventory(rsrc, content:float, remainders:Dictionary):
 	for i in len(inventory):
 		var slot = slots[i]
 		if inventory[i].is_empty():
-			inventory[i].type = "item"
-			inventory[i].id = rsrc
+			inventory[i]["id"] = rsrc
 			if rsrc is int:
-				slot.get_node("TextureRect").texture = load("res://Graphics/Items/%s/%s.png" % [Item.icon_directory(Item.data[rsrc].type), Item.data[rsrc].icon_name])
+				inventory[i]["type"] = Item.data[rsrc].type
+				slot.get_node("TextureRect").texture = load("res://Graphics/Items/%s/%s.png" % [Item.icon_directory(Item.data[rsrc].type), Item.data[rsrc].item_name])
 			elif rsrc == "money":
 				slot.get_node("TextureRect").texture = Data.money_icon
 			elif rsrc == "minerals":
@@ -1725,7 +1721,7 @@ func mine_wall_complete(tile_pos:Vector2, tile_id:int):
 	
 	cave_wall.set_cells_terrain_connect([map_pos], 0, -1)
 	cave_wall.set_cell(map_pos)
-	minimap_cave.set_cell(map_pos, tile_type, Vector2i.ZERO)
+	minimap_cave.set_cell(map_pos)
 	astar_node.add_point(tile_id, Vector2(map_pos.x, map_pos.y))
 	connect_points(map_pos, true)
 	if tiles_touched_by_laser.has(st):

@@ -211,7 +211,8 @@ func show_ship_stats(ship_id: int):
 	$ShipStats/Label.hide()
 	var ship_info = game.ship_data[ship_id]
 	$ShipStats/ShipDetails/Label.text = "%s %s %s" % [tr("LEVEL"), ship_info.lv, tr("%s_SHIP" % ShipClass.names[ship_info.ship_class].to_upper())]
-	$ShipStats/ShipDetails/Respec.show()
+	if game.item_to_use.id == -1:
+		$ShipStats/ShipDetails/Respec.show()
 	if ship_info.respec_count == 0:
 		$ShipStats/ShipDetails/Respec.text = "%s (%s)" % [tr("RESPEC"), tr("FREE")]
 	else:

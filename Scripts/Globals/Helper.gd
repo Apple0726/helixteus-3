@@ -64,7 +64,7 @@ func put_rsrc(container, min_size, objs, remove:bool = true, show_available:bool
 		var mass_str = ""
 		if obj is int:
 			tooltip = Item.name(obj)
-			texture.texture_normal = load("res://Graphics/Items/%s/%s.png" % [Item.icon_directory(Item.data[obj].type), Item.data[obj].icon_name])
+			texture.texture_normal = load("res://Graphics/Items/%s/%s.png" % [Item.icon_directory(Item.data[obj].type), Item.data[obj].item_name])
 			text_node.text = str(objs[obj])
 		else:
 			tooltip = tr(obj.to_upper())

@@ -29,7 +29,7 @@ func _on_btn_pressed(_tab:int):
 	if tab == OVERCLOCK:
 		for item_id in [Item.OVERCLOCK1, Item.OVERCLOCK2, Item.OVERCLOCK3, Item.OVERCLOCK4, Item.OVERCLOCK5, Item.OVERCLOCK6]:
 			var item_name = Item.name(item_id)
-			var item_texture = load("res://Graphics/Items/Overclocks/%s.png" % Item.data[item_id].icon_name)
+			var item_texture = load("res://Graphics/Items/Overclocks/%s.png" % Item.data[item_id].item_name)
 			var description = Item.description(item_id)
 			var tooltip_txt:String = "%s\n%s\n" % [item_name, description]
 			var tooltip_icons:Array = []

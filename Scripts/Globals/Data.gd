@@ -439,8 +439,8 @@ var battle_weapon_stats = {
 				"deflects":[2, 2, 3, 4],
 				"ignore_defense_buffs":[false, false, true, true],
 				"status_effects":{
-					Battle.StatusEffect.CORRODING:[0, 3, 5, 0],
-					Battle.StatusEffect.RADIOACTIVE:[0, 0, 0, 5],
+					Battle.StatusEffect.CORRODING:[0, 2, 3, 0],
+					Battle.StatusEffect.RADIOACTIVE:[0, 0, 0, 3],
 					Battle.StatusEffect.WET:[0, 2, 4, 0],
 					Battle.StatusEffect.FROZEN:[0, 0, 0, 4],
 				},

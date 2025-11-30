@@ -49,7 +49,7 @@ func _on_Items_pressed():
 		var item_slot = game.items[i]
 		if item_slot != null:
 			slot.get_node("Label").text = str(item_slot.num)
-			slot.get_node("TextureRect").texture = load("res://Graphics/Items/%s/%s.png" % [Item.icon_directory(Item.data[item_slot.id].type), Item.data[item_slot.id].icon_name])
+			slot.get_node("TextureRect").texture = load("res://Graphics/Items/%s/%s.png" % [Item.icon_directory(Item.data[item_slot.id].type), Item.data[item_slot.id].item_name])
 			slot.get_node("Button").mouse_entered.connect(on_slot_over.bind(i))
 			slot.get_node("Button").mouse_exited.connect(on_slot_out)
 			slot.get_node("Button").pressed.connect(on_slot_pressed)

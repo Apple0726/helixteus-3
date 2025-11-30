@@ -227,8 +227,15 @@ func _ready():
 	if p_i.has("lake"):
 		$Lake.show()
 		$Lake.modulate = Data.lake_colors[p_i.lake.element][p_i.lake.state]
-		if p_i.lake.state != "s":
+		if p_i.lake.state == "l":
 			$Lake.material.set_shader_parameter("should_render", true)
+			$Lake.material.set_shader_parameter("time_factor", 0.1)
+			$Lake.material.set_shader_parameter("shallow_color", Data.lake_colors[p_i.lake.element][p_i.lake.state])
+		elif p_i.lake.state == "sc":
+			$Lake.texture = preload("res://Graphics/Misc/noise_combined.png")
+			$Lake.material.shader = preload("res://Shaders/Supercritical.gdshader")
+			$Lake.material.set_shader_parameter("color", Data.lake_colors[p_i.lake.element][p_i.lake.state].darkened(0.3))
+			$Lake.material.set_shader_parameter("speed", game.u_i.time_speed * 0.2)
 	$BadApple.wid_p = wid
 	$BadApple.pixel_color = Color.BLACK if star_mod.get_luminance() > 0.3 else Color(0.5, 0.5, 0.5, 1.0)
 	var await_counter:int = 0

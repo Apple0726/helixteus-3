@@ -117,21 +117,21 @@ func initialize_battle():
 			entity.show_initiative(entity.initiative)
 		entity.turn_order_box = turn_order_button
 		entity.turn_order = i
-		turn_order_button.pressed.connect(move_view_to_target.bind(entity, i))
+		turn_order_button.pressed.connect(move_view_to_target.bind(entity))
 		turn_order_button.mouse_entered.connect(show_target_icon.bind(entity))
 		turn_order_button.mouse_exited.connect($Target.hide)
 	await get_tree().create_timer(min(0.6, 0.15 * len(initiative_order))).timeout
 	next_turn()
 
-func move_view_to_target(entity: BattleEntity, turn_order: int):
+func move_view_to_target(entity: BattleEntity):
 	if entity.type == Battle.EntityType.BOUNDARY:
 		view_battlefield(2.0)
 	else:
 		view_entity(entity, 2.0)
 		if not ships_taking_turn.is_empty():
 			for ship_node in ships_taking_turn:
-				if ship_node.turn_order == turn_order:
-					whose_turn_is_it_index = turn_order
+				if ship_node == entity and not ship_node.turn_taken:
+					whose_turn_is_it_index = ship_node.turn_order
 					$Selected.position = ship_node.position + Vector2.UP * 80.0
 					battle_GUI.fade_in_main_panel()
 					return
@@ -250,6 +250,8 @@ func next_turn():
 			initiative_order.remove_at(i)
 			if i < whose_turn_is_it_index - 1:
 				whose_turn_is_it_index -= 1
+			for j in range(i, len(initiative_order) - 1):
+				initiative_order[j].turn_order -= 1
 			i -= 1
 	if initiative_order[whose_turn_is_it_index].type == Battle.EntityType.BOUNDARY:
 		scale_before_view_battlefield = game.view.scale.x
@@ -292,7 +294,7 @@ func next_turn():
 		HX_node.take_turn()
 
 func get_selected_ship():
-	if whose_turn_is_it_index == -1 or initiative_order[whose_turn_is_it_index].type != Battle.EntityType.SHIP:
+	if whose_turn_is_it_index == -1 or initiative_order.is_empty() or initiative_order[whose_turn_is_it_index].type != Battle.EntityType.SHIP:
 		return null
 	return initiative_order[whose_turn_is_it_index]
 

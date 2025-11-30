@@ -80,7 +80,9 @@ func _on_rovers_pressed():
 			var rover_has_items = false
 			var rover_has_space_for_items = false
 			for inv in rover.inventory:
-				if not inv.is_empty() and inv.type not in ["rover_weapons", "rover_mining", ""]:
+				#if not inv.is_empty() and not inv.has("type"):
+					#inv.clear()
+				if not inv.is_empty() and inv["type"] not in ["rover_weapons", "rover_mining", ""]:
 					rover_has_items = true
 				if inv.is_empty():
 					rover_has_space_for_items = true

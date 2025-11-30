@@ -5,6 +5,7 @@
 [ext_resource type="Texture2D" uid="uid://dfaapbxopm6xx" path="res://Graphics/Tiles/water.png" id="3"]
 [ext_resource type="Texture2D" uid="uid://dl0tbc2d816cj" path="res://Graphics/Misc/noise_combined.png" id="4"]
 [ext_resource type="Theme" uid="uid://cp2u1kgj60ic" path="res://Resources/default_theme.tres" id="5"]
+[ext_resource type="Shader" uid="uid://b17p2vpnac6xs" path="res://Shaders/Supercritical.gdshader" id="6_dchss"]
 [ext_resource type="PackedScene" uid="uid://ddf2xjwcht77u" path="res://Scenes/CloseButton.tscn" id="7"]
 
 [sub_resource type="Shader" id="7"]
@@ -55,31 +56,8 @@ shader_parameter/color = Color(1, 1, 1, 1)
 shader_parameter/speed = 0.03
 shader_parameter/modul = Color(1, 1, 1, 1)
 
-[sub_resource type="Shader" id="5"]
-code = "shader_type canvas_item;
-
-uniform vec4 color:source_color = vec4(1.1, 1.1, 1.1, 1.0);
-uniform float speed = 0.2;
-
-void fragment() {
-	vec2 uv = vec2(UV.x * 1.4, UV.y * 1.406);
-	vec2 uv1 = vec2(uv.x + TIME * speed, uv.y);
-	vec2 uv2 = vec2(uv.x - TIME * speed, uv.y);
-	vec2 uv3 = vec2(uv.x, uv.y + TIME * speed);
-	
-	float noise_r = texture(TEXTURE, uv1).r;
-	float noise_g = texture(TEXTURE, uv2).g;
-	float noise_b = texture(TEXTURE, uv3).b;
-	
-	float new_alpha = noise_r * noise_g * noise_b;
-	
-	vec3 new_color = vec3(noise_r, noise_g, noise_b);
-	COLOR.rgb = color.rgb;
-	COLOR.a = new_alpha * 5.0;
-}"
-
 [sub_resource type="ShaderMaterial" id="6"]
-shader = SubResource("5")
+shader = ExtResource("6_dchss")
 shader_parameter/color = Color(1.1, 1.1, 1.1, 1)
 shader_parameter/speed = 0.2
 

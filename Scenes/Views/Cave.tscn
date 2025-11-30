@@ -1,7 +1,8 @@
-[gd_scene load_steps=98 format=3 uid="uid://biq34iioj6uf8"]
+[gd_scene load_steps=99 format=3 uid="uid://biq34iioj6uf8"]
 
 [ext_resource type="Shader" uid="uid://gevhgabt3grd" path="res://Shaders/Laser.gdshader" id="1"]
 [ext_resource type="Script" uid="uid://2ovarm7fdxfj" path="res://Scripts/Cave/Cave.gd" id="2"]
+[ext_resource type="Texture2D" uid="uid://dxm42o1tfpvo1" path="res://Graphics/Tiles/Mosaics/1r.jpg" id="2_yvdt3"]
 [ext_resource type="PackedScene" uid="uid://bvyftln8m3hgm" path="res://Scenes/FilterButton.tscn" id="3"]
 [ext_resource type="Texture2D" uid="uid://4tf3teqmkahc" path="res://Graphics/Misc/Bar.png" id="4"]
 [ext_resource type="Texture2D" uid="uid://qbiggp0bodp1" path="res://Graphics/Cave/MiningLaser.png" id="5"]
@@ -48,6 +49,7 @@ code = "shader_type canvas_item;
 const float planet_texture_size = 4000.0;
 uniform float texture_zoom = 1.0;
 uniform vec2 texture_offset = vec2(0.0);
+uniform vec4 modulate_color = vec4(1.0);
 
 varying vec2 WorldSpace;
 
@@ -56,14 +58,15 @@ void vertex() {
 }
 
 void fragment() {
-	vec3 color = texture(TEXTURE, WorldSpace / planet_texture_size * texture_zoom).rgb;
-	COLOR.rgb = color.rgb;
+	COLOR.rgb = texture(TEXTURE, WorldSpace / planet_texture_size * texture_zoom).rgb;
+	COLOR *= modulate_color;
 }"
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_0yyna"]
 shader = SubResource("Shader_yslmc")
 shader_parameter/texture_zoom = 1.0
 shader_parameter/texture_offset = Vector2(0, 0)
+shader_parameter/modulate_color = Vector4(1, 1, 1, 1)
 
 [sub_resource type="CapsuleShape2D" id="27"]
 radius = 23.3054
@@ -593,20 +596,16 @@ adjustment_enabled = true
 [node name="Cave" type="Node2D"]
 script = ExtResource("2")
 
-[node name="Floor" type="TextureRect" parent="."]
+[node name="Floor" type="Sprite2D" parent="."]
+z_index = -1
 material = SubResource("ShaderMaterial_0yyna")
-clip_contents = true
-offset_right = 1136.0
-offset_bottom = 1048.0
-expand_mode = 1
-stretch_mode = 1
+texture = ExtResource("2_yvdt3")
+centered = false
 
 [node name="Lava" type="TileMapLayer" parent="."]
-z_index = -1022
 rendering_quadrant_size = 100
 
 [node name="Ash" type="TileMapLayer" parent="."]
-z_index = -1022
 rendering_quadrant_size = 100
 
 [node name="Walls" type="TileMapLayer" parent="."]
@@ -921,7 +920,6 @@ centered = false
 modulate = Color(0.46, 0.46, 0.46, 1)
 light_mask = -2147483647
 tile_set = SubResource("TileSet_yvdt3")
-rendering_quadrant_size = 100
 
 [node name="Hole" type="Sprite2D" parent="UI/Minimap"]
 light_mask = -2147483647

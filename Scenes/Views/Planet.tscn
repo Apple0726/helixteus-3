@@ -1,6 +1,7 @@
 [gd_scene load_steps=17 format=3 uid="uid://bmmss4usqtscn"]
 
 [ext_resource type="PackedScene" uid="uid://dixixiv5ynvkf" path="res://Scenes/WhiteRect.tscn" id="1"]
+[ext_resource type="Shader" uid="uid://b587s4ws25jcn" path="res://Shaders/LiquidLake.gdshader" id="2_75ca2"]
 [ext_resource type="Texture2D" uid="uid://o0artlh6qd48" path="res://Graphics/Tiles/Mosaics/icer.jpg" id="2_fk4u5"]
 [ext_resource type="Script" uid="uid://djr5eelx8hx0" path="res://Scripts/Planet.gd" id="3"]
 [ext_resource type="TileSet" uid="uid://caaofgr7bjd7d" path="res://Resources/PlanetTileSet.tres" id="3_fk4u5"]
@@ -12,77 +13,15 @@ draw_center = false
 shadow_color = Color(0, 0, 0, 1)
 shadow_size = 40
 
-[sub_resource type="Shader" id="Shader_844bs"]
-code = "shader_type canvas_item;
-uniform float u_time;
-uniform vec3 shallow_color:source_color = vec3(0.8, 0.85, 0.9);
-uniform vec3 deep_color:source_color = vec3(0.2, 0.5, 0.8);
-uniform vec3 reflection_color:source_color = vec3(0.1, 0.3, 0.5);
-uniform float UV_scale = 20.0;
-uniform bool should_render = false;
-
-float rand(vec2 coord) {
-	return fract(sin(dot(coord, vec2(12.9898, 78.233)))* 43758.5453123);
-}
-
-float noise(vec2 coord) {
-	vec2 i = floor(coord);
-	vec2 f = fract(coord);
-
-	// 4 corners of a rectangle surrounding our point
-	float a = rand(i);
-	float b = rand(i + vec2(1.0, 0.0));
-	float c = rand(i + vec2(0.0, 1.0));
-	float d = rand(i + vec2(1.0, 1.0));
-
-	vec2 cubic = f * f * (3.0 - 2.0 * f);
-
-	return mix(a, b, cubic.x) + (c - a) * cubic.y * (1.0 - cubic.x) + (d - b) * cubic.x * cubic.y;
-}
-
-float fbm(vec2 coord) {
-	float value = 0.0;
-	float scale = 0.5;
-
-	for (int i = 0; i < 5; i++) {
-		value += noise(coord) * scale;
-		coord *= 2.0;
-		scale *= 0.5;
-	}
-	return value;
-}
-
-void fragment() {
-	float offset = TIME * 0.1;
-	vec2 waveUV = UV * UV_scale;
-	waveUV.x += fbm(vec2(waveUV.y * 0.5, offset)) * 0.3;
-	waveUV.y += fbm(vec2(waveUV.x * 0.5, offset + 10.0)) * 0.3;
-
-	float wave = fbm(waveUV * 2.0 + vec2(offset, 0.0));
-
-	// Base water color
-	//vec3 deep = vec3(0.0, 0.05, 0.15);
-	//vec3 shallow = vec3(0.0, 0.2, 0.4);
-	//vec3 color = mix(deep, shallow, wave * 0.8 + 0.2);
-	vec3 color = mix(shallow_color, deep_color, wave * 0.8 + 0.2);
-
-	// Fake light reflection (from \"sky\")
-	float reflection = smoothstep(0.4, 1.0, wave + sin(u_time * 0.3) * 0.1);
-	color += reflection_color * reflection * 0.5;
-
-	if (should_render) {
-		COLOR = vec4(color, 1.0);
-	}
-}"
-
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_3y52m"]
-shader = SubResource("Shader_844bs")
+shader = ExtResource("2_75ca2")
 shader_parameter/u_time = -7.61
 shader_parameter/shallow_color = Color(0.3007891, 0.7696665, 0.99999994, 1)
 shader_parameter/deep_color = Color(0.10370001, 0.36528835, 0.61, 1)
 shader_parameter/reflection_color = Color(0.1, 0.3, 0.5, 1)
 shader_parameter/UV_scale = 15.0
 shader_parameter/should_render = false
+shader_parameter/time_factor = 0.1
 
 [sub_resource type="Shader" id="Shader_75ca2"]
 code = "shader_type canvas_item;
@@ -106,7 +45,7 @@ void fragment() {
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_2ub2g"]
 shader = SubResource("Shader_75ca2")
-shader_parameter/texture_zoom = 1.2650000000000001
+shader_parameter/texture_zoom = 1.265
 shader_parameter/texture_offset = Vector2(100, 0)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_xv77e"]

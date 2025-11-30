@@ -38,7 +38,7 @@ func _on_btn_pressed(_tab:int):
 func add_items_to_panel(items:Array, items_directory:String):
 	for item_id in items:
 		var item_name = Item.name(item_id)
-		var item_texture = load("res://Graphics/Items/%s/%s.png" % [items_directory, Item.data[item_id].icon_name])
+		var item_texture = load("res://Graphics/Items/%s/%s.png" % [items_directory, Item.data[item_id].item_name])
 		var description = Item.description(item_id)
 		var tooltip_txt:String = "%s\n%s\n" % [item_name, description]
 		var costs:Dictionary = Item.data[item_id].costs

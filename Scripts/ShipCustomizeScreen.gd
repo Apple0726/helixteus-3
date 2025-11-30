@@ -55,7 +55,7 @@ func _ready() -> void:
 			for j in 3:
 				$Weapons/ScrollContainer/Control.get_node("%s%s/Button" % [i+1, j+1]).mouse_entered.connect(show_weapon_tooltip.bind(i+1, j+1))
 				$Weapons/ScrollContainer/Control.get_node("%s%s/Button" % [i+1, j+1]).mouse_exited.connect(game.hide_tooltip)
-				$Weapons/ScrollContainer/Control.get_node("%s%s/Button" % [i+1, j+1]).pressed.connect(game.show_YN_panel.bind("upgrade_ship_weapon", tr("ARE_YOU_SURE"), [i]))
+				$Weapons/ScrollContainer/Control.get_node("%s%s/Button" % [i+1, j+1]).pressed.connect(check_weapon_points.bind(i))
 		update_weapons_panel()
 	$Navigation/Level.text = "%s %s" % [tr("LEVEL"), ship_data.lv]
 	allocatable_points = (ship_data.lv - 1) / 2 + 2
@@ -88,6 +88,10 @@ func _ready() -> void:
 			$ClassAndStats/ShipClass/VBox/VBox.get_child(i).mouse_exited.connect(game.hide_tooltip)
 			$ClassAndStats/ShipClass/VBox/VBox.get_child(i).pressed.connect(update_ship_stats_after_class_change.bind(i))
 	update_ship_stats_display()
+
+func check_weapon_points(path: int):
+	if ship_data.unallocated_weapon_levels > 0:
+		game.show_YN_panel("upgrade_ship_weapon", tr("ARE_YOU_SURE"), [path])
 
 func update_ship_stats_after_class_change(ship_class: int):
 	ship_data.ship_class = ship_class
@@ -292,7 +296,7 @@ func update_weapons_panel():
 		weapon_selected_str = "light"
 	for i in 3:
 		for j in 3:
-			$Weapons/ScrollContainer/Control.get_node("%s%s/Flicker" % [i+1, j+1]).visible = ship_data[weapon_selected_str][i] == j+1
+			$Weapons/ScrollContainer/Control.get_node("%s%s/Flicker" % [i+1, j+1]).visible = ship_data[weapon_selected_str][i] == j+1 and ship_data.unallocated_weapon_levels > 0
 			if ship_data[weapon_selected_str][i] > j+1:
 				$Weapons/ScrollContainer/Control.get_node("%s%s/Button" % [i+1, j+1]).modulate = Color.GREEN_YELLOW
 				$Weapons/ScrollContainer/Control.get_node("%s%s/Flicker" % [i+1, j+1]).hide()
