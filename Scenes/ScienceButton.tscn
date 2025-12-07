@@ -57,3 +57,6 @@ offset_right = 220.0
 offset_bottom = 56.0
 text = "0"
 vertical_alignment = 1
+
+[connection signal="mouse_entered" from="." to="." method="_on_mouse_entered"]
+[connection signal="mouse_exited" from="." to="." method="_on_mouse_exited"]

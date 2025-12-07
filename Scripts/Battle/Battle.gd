@@ -248,7 +248,7 @@ func next_turn():
 			break
 		if not is_instance_valid(initiative_order[i]) or initiative_order[i].type != Battle.EntityType.BOUNDARY and initiative_order[i].HP <= 0:
 			initiative_order.remove_at(i)
-			if i < whose_turn_is_it_index - 1:
+			if i < whose_turn_is_it_index:
 				whose_turn_is_it_index -= 1
 			for j in range(i, len(initiative_order) - 1):
 				initiative_order[j].turn_order -= 1

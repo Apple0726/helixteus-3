@@ -151,7 +151,7 @@ func refresh_planets():
 			if p_i.MS == "SE":
 				MS.position.x = -50 * cos(p_i.angle) * scale_mult
 				MS.position.y = -50 * sin(p_i.angle) * scale_mult
-				MS.rotation = p_i.angle + PI / 2
+				MS.rotation = p_i.angle - PI / 2
 			elif p_i.MS == "MME":
 				MS.scale *= 0.25
 				add_rsrc(v, Color(0, 0.5, 0.9, 1), Data.minerals_icon, p_i.l_id, false, sc)

@@ -2903,7 +2903,7 @@ func generate_planets(id:int):#local id
 						lv = 1
 				if num == total_num:
 					lv = max(1, 1 + log(2.0 * power_left) / log(1.3))
-				var HP_power = 7.0 * (2.0 * randf() + 0.2)
+				var HP_power = 7.0 * (1.8 * randf() + 0.2)
 				var stat_power = 48.0 - 1.5 * HP_power + lv / 2
 				var HP = round(HP_power * (lv + 1.0))
 				if _class == 2:

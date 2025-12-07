@@ -3,14 +3,13 @@ extends Panel
 var main_tree
 var is_over:bool = false
 @export var infinite_research:bool = false
+@export var icon_texture:Texture2D
 var game
 
 func _ready():
 	game = get_node("/root/Game") if not Engine.is_editor_hint() else null
 	var font = theme.default_font
-	connect("mouse_entered",Callable(self,"on_mouse_entered"))
-	connect("mouse_exited",Callable(self,"on_mouse_exited"))
-	$Texture2D.texture = load("res://Graphics/Science/" + name + ".png")
+	$Texture2D.texture = icon_texture
 	refresh()
 	if game and not infinite_research:
 		if game.science_unlocked.has(name):
@@ -78,7 +77,7 @@ func get_science_name(sc:String):
 		return tr("M_MB_NAME")
 	return tr("%s_SC" % sc)
 
-func on_mouse_entered():
+func _on_mouse_entered():
 	is_over = true
 	var tooltip:String = ""
 	if infinite_research:
@@ -87,7 +86,7 @@ func on_mouse_entered():
 		tooltip = tr(name.to_upper() + "_DESC")
 	game.show_tooltip(tooltip)
 
-func on_mouse_exited():
+func _on_mouse_exited():
 	is_over = false
 	game.hide_tooltip()
 

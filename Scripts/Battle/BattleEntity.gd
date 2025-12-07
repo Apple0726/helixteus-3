@@ -184,6 +184,7 @@ func show_initiative(_initiative: int):
 func take_turn():
 	turn_number += 1
 	turn_taken = false
+	entities_already_collided.clear()
 	if is_instance_valid(turn_order_box):
 		turn_order_box.get_node("ChangeSizeAnim").play("ChangeSize")
 		#turn_order_box.modulate.a = 1.0
@@ -424,7 +425,7 @@ func collide_with_entity(collider: BattleEntity, collidee: BattleEntity):
 	var collider_mass = collider.get_mass()
 	var collider_weapon_data = {
 		"type":Battle.DamageType.PHYSICAL,
-		"damage": collider_mass * collider.velocity.length_squared() * 0.00001,
+		"damage": collider_mass * collider.velocity.length_squared() * 0.00003,
 		"shooter_attack":collider.attack,
 		"weapon_accuracy":collider.accuracy,
 		"orientation":collider.velocity.normalized(),
@@ -437,7 +438,7 @@ func collide_with_entity(collider: BattleEntity, collidee: BattleEntity):
 		if not collidee.moving_from_velocity:
 			var collidee_weapon_data = {
 				"type":Battle.DamageType.PHYSICAL,
-				"damage": collidee_mass * collider.velocity.length_squared() * 0.00001,
+				"damage": collidee_mass * collider.velocity.length_squared() * 0.00003,
 				"shooter_attack":collidee.attack,
 				"weapon_accuracy":INF,
 				"orientation":collidee.velocity.normalized(),
@@ -453,14 +454,16 @@ func collide_with_entity(collider: BattleEntity, collidee: BattleEntity):
 			collider.velocity = Vector2.ZERO
 		else:
 			collider.velocity -= collider.velocity.normalized() * velocity_loss
-	
+
+# Needed for when 2 asteroids collide with each other and not deal double damage
+var entities_already_collided = []
+
 func on_collide(area):
 	if type == Battle.EntityType.BOUNDARY or area.type == Battle.EntityType.BOUNDARY:
 		return
-	if moving_from_velocity:
+	if moving_from_velocity and area not in entities_already_collided:
 		collide_with_entity(self, area)
-	elif area.moving_from_velocity:
-		collide_with_entity(area, self)
+		area.entities_already_collided.append(self)
 
 func get_mass():
 	return remap(HP, 0.0, total_HP, total_HP * 0.66, total_HP) * mass_mult

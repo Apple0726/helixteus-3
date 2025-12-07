@@ -1,7 +1,62 @@
-[gd_scene load_steps=9 format=3 uid="uid://duysnevbde4kj"]
+[gd_scene load_steps=64 format=3 uid="uid://duysnevbde4kj"]
 
 [ext_resource type="PackedScene" uid="uid://bhiykvhp7e82u" path="res://Scenes/ScienceButton.tscn" id="1"]
 [ext_resource type="Script" uid="uid://ww7r2r8gcxw3" path="res://Scripts/ScienceTree.gd" id="2"]
+[ext_resource type="Texture2D" uid="uid://d3kwtgk0sw40p" path="res://Graphics/Icons/minerals.png" id="3_eu0ii"]
+[ext_resource type="Texture2D" uid="uid://bm01hxs45q3ga" path="res://Graphics/Icons/energy.png" id="4_rgsly"]
+[ext_resource type="Texture2D" uid="uid://dg25fshk35326" path="res://Graphics/Icons/SP.png" id="5_uvhfr"]
+[ext_resource type="Texture2D" uid="uid://cdqb8dr8jf33" path="res://Graphics/Buildings/mineral_silo.png" id="6_sbmbi"]
+[ext_resource type="Texture2D" uid="uid://dq0i6jjxj5nxl" path="res://Graphics/Pickaxes/iron_pickaxe.png" id="7_hknxr"]
+[ext_resource type="Texture2D" uid="uid://c62n083vgi7mw" path="res://Graphics/Science/PME.png" id="8_fvdk8"]
+[ext_resource type="Texture2D" uid="uid://dwr1aw0b05sht" path="res://Graphics/Science/RC.png" id="9_evco7"]
+[ext_resource type="Texture2D" uid="uid://koi0aarpqj30" path="res://Graphics/Ships/Ship0.png" id="10_yvcl0"]
+[ext_resource type="Texture2D" uid="uid://di3sx4ynm6kot" path="res://Graphics/Science/CD.png" id="11_4oae0"]
+[ext_resource type="Texture2D" uid="uid://bhhg3xgcypi3t" path="res://Graphics/Science/ATM.png" id="12_vuk7d"]
+[ext_resource type="Texture2D" uid="uid://cv8g560m8rjmk" path="res://Graphics/Science/SAP.png" id="13_pdb81"]
+[ext_resource type="Texture2D" uid="uid://b8oy6e548ukc5" path="res://Graphics/Science/AMM.png" id="14_7q2bc"]
+[ext_resource type="Texture2D" uid="uid://h7n6peyduph2" path="res://Graphics/Science/ID.png" id="15_ej63c"]
+[ext_resource type="Texture2D" uid="uid://dtnykhifc2erl" path="res://Graphics/Science/PD.png" id="16_4k12i"]
+[ext_resource type="Texture2D" uid="uid://vpc6k7xdnx6d" path="res://Graphics/Cave/Weapons/orange_laser.png" id="17_ibd5u"]
+[ext_resource type="Texture2D" uid="uid://bpscttnkws6m0" path="res://Graphics/Cave/Weapons/yellow_laser.png" id="18_grmlu"]
+[ext_resource type="Texture2D" uid="uid://p40d5ublgk66" path="res://Graphics/Science/FTL.png" id="19_1f7c5"]
+[ext_resource type="Texture2D" uid="uid://5wj20pa6uu11" path="res://Graphics/Science/IGD.png" id="20_uh24r"]
+[ext_resource type="Texture2D" uid="uid://cgqlv44bxqv66" path="res://Graphics/Science/FG.png" id="21_d11gw"]
+[ext_resource type="Texture2D" uid="uid://bishtjkknp4dj" path="res://Graphics/Science/FG2.png" id="22_e40yg"]
+[ext_resource type="Texture2D" uid="uid://2xe11vc7fxvi" path="res://Graphics/Cave/Weapons/green_laser.png" id="23_d8iuo"]
+[ext_resource type="Texture2D" uid="uid://dnvaxehoe8ad1" path="res://Graphics/Cave/Weapons/blue_laser.png" id="24_6xxvc"]
+[ext_resource type="Texture2D" uid="uid://c72ootsu33568" path="res://Graphics/Cave/Weapons/purple_laser.png" id="25_vyf1n"]
+[ext_resource type="Texture2D" uid="uid://dfrdnajjexudt" path="res://Graphics/Cave/Weapons/UV_laser.png" id="26_gek8g"]
+[ext_resource type="Texture2D" uid="uid://blt05u4iahjtq" path="res://Graphics/Cave/Weapons/xray_laser.png" id="27_c4i7v"]
+[ext_resource type="Texture2D" uid="uid://5itkc4g8oqld" path="res://Graphics/Cave/Weapons/gammaray_laser.png" id="28_xxlf2"]
+[ext_resource type="Texture2D" uid="uid://ukxbwilyyqf" path="res://Graphics/Cave/Weapons/ultragammaray_laser.png" id="29_yb5u7"]
+[ext_resource type="Texture2D" uid="uid://cdoj3dire5a8r" path="res://Graphics/Science/RMK2.png" id="30_i85as"]
+[ext_resource type="Texture2D" uid="uid://dh02p2y7kurtm" path="res://Graphics/Science/RMK3.png" id="31_jmdj3"]
+[ext_resource type="Texture2D" uid="uid://dn0b5qn5vtand" path="res://Graphics/Science/MAE.png" id="32_rvgjl"]
+[ext_resource type="Texture2D" uid="uid://cb4q7wfu4xa2i" path="res://Graphics/Buttons/Terraform.png" id="33_2cva5"]
+[ext_resource type="Texture2D" uid="uid://mo7vhwa2nmm2" path="res://Graphics/Megastructures/DS_1.png" id="34_tu4u0"]
+[ext_resource type="Texture2D" uid="uid://fdvjy2q5bco" path="res://Graphics/Megastructures/DS_2.png" id="35_lcsn0"]
+[ext_resource type="Texture2D" uid="uid://cus80pa3eni7h" path="res://Graphics/Megastructures/DS_3.png" id="36_x7igl"]
+[ext_resource type="Texture2D" uid="uid://machgj4crh3r" path="res://Graphics/Megastructures/DS_4.png" id="37_yfy5b"]
+[ext_resource type="Texture2D" uid="uid://csw4x1aph33i6" path="res://Graphics/Megastructures/MB_0.png" id="38_f81mp"]
+[ext_resource type="Texture2D" uid="uid://b88a0f6tg5kqi" path="res://Graphics/Science/GS.png" id="39_bhtpw"]
+[ext_resource type="Texture2D" uid="uid://dvwn4jgt0lyrx" path="res://Graphics/Ships/Probe2.png" id="40_iwr5q"]
+[ext_resource type="Texture2D" uid="uid://dssenrufeeg7r" path="res://Graphics/Megastructures/SE_1.png" id="41_pukgx"]
+[ext_resource type="Texture2D" uid="uid://cd5282s0qh7hu" path="res://Graphics/Megastructures/PK_1.png" id="42_uyib1"]
+[ext_resource type="Texture2D" uid="uid://c7wxqmtvvd3fv" path="res://Graphics/Megastructures/CBS_1.png" id="43_vfjdo"]
+[ext_resource type="Texture2D" uid="uid://drktq73a3qpbr" path="res://Graphics/Megastructures/CBS_2.png" id="44_pt0b8"]
+[ext_resource type="Texture2D" uid="uid://d03fxp2teaqwl" path="res://Graphics/Megastructures/CBS_3.png" id="45_lwlsd"]
+[ext_resource type="Texture2D" uid="uid://d2w30yu2kfaxc" path="res://Graphics/Megastructures/PK_2.png" id="46_eu0ii"]
+[ext_resource type="Texture2D" uid="uid://brh62mf2er5l2" path="res://Graphics/Megastructures/MME_1.png" id="47_polbn"]
+[ext_resource type="Texture2D" uid="uid://djp8nl7cg3esd" path="res://Graphics/Megastructures/MME_2.png" id="48_dr8cm"]
+[ext_resource type="Texture2D" uid="uid://g0e2q42nr53n" path="res://Graphics/Megastructures/MME_3.png" id="49_ic180"]
+[ext_resource type="Texture2D" uid="uid://ds2e12j1fyms" path="res://Graphics/Buildings/Ancient/spaceport.png" id="50_e0c5v"]
+[ext_resource type="Texture2D" uid="uid://wdh68frv3sit" path="res://Graphics/Buildings/boring_machine.png" id="51_tnx5p"]
+[ext_resource type="Texture2D" uid="uid://cog040al44t0f" path="res://Graphics/Science/CI.png" id="52_i5qg8"]
+[ext_resource type="Texture2D" uid="uid://bimbq6efki411" path="res://Graphics/Science/CI2.png" id="53_g6ehj"]
+[ext_resource type="Texture2D" uid="uid://7cg0ngsxvdaw" path="res://Graphics/Science/CI3.png" id="54_kxk33"]
+[ext_resource type="Texture2D" uid="uid://cdcw63aj0ge0q" path="res://Graphics/Buildings/stone_crusher.png" id="55_5nrgx"]
+[ext_resource type="Texture2D" uid="uid://co7hd2o2d4khw" path="res://Graphics/Buildings/greenhouse.png" id="56_mlle1"]
+[ext_resource type="Texture2D" uid="uid://b6ovjg6n5wgdw" path="res://Graphics/Agriculture/fertilizer.png" id="57_2igf4"]
 
 [sub_resource type="Animation" id="1"]
 resource_name = "Fade"
@@ -92,6 +147,7 @@ offset_top = 80.0
 offset_right = 624.0
 offset_bottom = 144.0
 infinite_research = true
+icon_texture = ExtResource("3_eu0ii")
 
 [node name="EPE" parent="IR" instance=ExtResource("1")]
 custom_minimum_size = Vector2(336, 0)
@@ -104,6 +160,7 @@ offset_top = 176.0
 offset_right = 624.0
 offset_bottom = 240.0
 infinite_research = true
+icon_texture = ExtResource("4_rgsly")
 
 [node name="RLE" parent="IR" instance=ExtResource("1")]
 custom_minimum_size = Vector2(336, 0)
@@ -116,6 +173,7 @@ offset_top = 272.0
 offset_right = 624.0
 offset_bottom = 336.0
 infinite_research = true
+icon_texture = ExtResource("5_uvhfr")
 
 [node name="STE" parent="IR" instance=ExtResource("1")]
 custom_minimum_size = Vector2(336, 0)
@@ -128,6 +186,7 @@ offset_top = 368.0
 offset_right = 624.0
 offset_bottom = 432.0
 infinite_research = true
+icon_texture = ExtResource("6_sbmbi")
 
 [node name="MMS" parent="IR" instance=ExtResource("1")]
 custom_minimum_size = Vector2(336, 0)
@@ -140,6 +199,7 @@ offset_top = 464.0
 offset_right = 624.0
 offset_bottom = 528.0
 infinite_research = true
+icon_texture = ExtResource("7_hknxr")
 
 [node name="PME" parent="IR" instance=ExtResource("1")]
 custom_minimum_size = Vector2(336, 0)
@@ -152,6 +212,7 @@ offset_top = 560.0
 offset_right = 624.0
 offset_bottom = 624.0
 infinite_research = true
+icon_texture = ExtResource("8_fvdk8")
 
 [node name="Main" type="Control" parent="."]
 layout_mode = 3
@@ -169,6 +230,7 @@ offset_top = 336.0
 offset_right = 480.0
 offset_bottom = 400.0
 size_flags_horizontal = 13
+icon_texture = ExtResource("9_evco7")
 
 [node name="SCT" parent="Main" instance=ExtResource("1")]
 layout_mode = 0
@@ -179,6 +241,7 @@ offset_left = 704.0
 offset_top = 336.0
 offset_right = 960.0
 offset_bottom = 400.0
+icon_texture = ExtResource("10_yvcl0")
 
 [node name="CD" parent="Main" instance=ExtResource("1")]
 layout_mode = 0
@@ -189,6 +252,7 @@ offset_left = 1184.0
 offset_top = -272.0
 offset_right = 1440.0
 offset_bottom = -208.0
+icon_texture = ExtResource("11_4oae0")
 
 [node name="ATM" parent="Main" instance=ExtResource("1")]
 layout_mode = 0
@@ -199,6 +263,7 @@ offset_left = 1184.0
 offset_top = -368.0
 offset_right = 1440.0
 offset_bottom = -304.0
+icon_texture = ExtResource("12_vuk7d")
 
 [node name="SAP" parent="Main" instance=ExtResource("1")]
 layout_mode = 0
@@ -209,6 +274,7 @@ offset_left = 1600.0
 offset_top = -368.0
 offset_right = 1856.0
 offset_bottom = -304.0
+icon_texture = ExtResource("13_pdb81")
 
 [node name="AMM" parent="Main" instance=ExtResource("1")]
 layout_mode = 0
@@ -219,6 +285,7 @@ offset_left = 1600.0
 offset_top = -464.0
 offset_right = 1856.0
 offset_bottom = -400.0
+icon_texture = ExtResource("14_7q2bc")
 
 [node name="ID" parent="Main" instance=ExtResource("1")]
 layout_mode = 0
@@ -229,6 +296,7 @@ offset_left = 1600.0
 offset_top = -272.0
 offset_right = 1856.0
 offset_bottom = -208.0
+icon_texture = ExtResource("15_ej63c")
 
 [node name="L_ID" type="Line2D" parent="Main"]
 position = Vector2(1888, -240)
@@ -246,6 +314,7 @@ offset_left = 2016.0
 offset_top = -272.0
 offset_right = 2272.0
 offset_bottom = -208.0
+icon_texture = ExtResource("16_4k12i")
 
 [node name="OL" parent="Main" instance=ExtResource("1")]
 layout_mode = 0
@@ -256,6 +325,7 @@ offset_left = 704.0
 offset_top = 692.0
 offset_right = 960.0
 offset_bottom = 756.0
+icon_texture = ExtResource("17_ibd5u")
 
 [node name="YL" parent="Main" instance=ExtResource("1")]
 layout_mode = 0
@@ -266,6 +336,7 @@ offset_left = 1120.0
 offset_top = 692.0
 offset_right = 1376.0
 offset_bottom = 756.0
+icon_texture = ExtResource("18_grmlu")
 
 [node name="L_OL" type="Line2D" parent="Main"]
 position = Vector2(992, 724)
@@ -283,6 +354,7 @@ offset_left = 1184.0
 offset_top = -20.0
 offset_right = 1440.0
 offset_bottom = 44.0
+icon_texture = ExtResource("19_1f7c5")
 
 [node name="L_FTL" type="Line2D" parent="Main"]
 position = Vector2(1472, 16)
@@ -300,6 +372,7 @@ offset_left = 1600.0
 offset_top = -20.0
 offset_right = 1856.0
 offset_bottom = 44.0
+icon_texture = ExtResource("20_uh24r")
 
 [node name="L_IGD" type="Line2D" parent="Main"]
 position = Vector2(1888, 16)
@@ -317,6 +390,7 @@ offset_left = 2016.0
 offset_top = -20.0
 offset_right = 2272.0
 offset_bottom = 44.0
+icon_texture = ExtResource("21_d11gw")
 
 [node name="L_FG" type="Line2D" parent="Main"]
 position = Vector2(2304, 16)
@@ -334,6 +408,7 @@ offset_left = 2432.0
 offset_top = -20.0
 offset_right = 2688.0
 offset_bottom = 44.0
+icon_texture = ExtResource("22_e40yg")
 
 [node name="L_YL" type="Line2D" parent="Main"]
 position = Vector2(1408, 724)
@@ -351,6 +426,7 @@ offset_left = 1536.0
 offset_top = 692.0
 offset_right = 1792.0
 offset_bottom = 756.0
+icon_texture = ExtResource("23_d8iuo")
 
 [node name="L_GL" type="Line2D" parent="Main"]
 position = Vector2(1824, 724)
@@ -368,6 +444,7 @@ offset_left = 1952.0
 offset_top = 692.0
 offset_right = 2208.0
 offset_bottom = 756.0
+icon_texture = ExtResource("24_6xxvc")
 
 [node name="L_BL" type="Line2D" parent="Main"]
 position = Vector2(2240, 724)
@@ -385,6 +462,7 @@ offset_left = 2368.0
 offset_top = 692.0
 offset_right = 2624.0
 offset_bottom = 756.0
+icon_texture = ExtResource("25_vyf1n")
 
 [node name="L_PL" type="Line2D" parent="Main"]
 position = Vector2(2656, 724)
@@ -402,6 +480,7 @@ offset_left = 2792.0
 offset_top = 692.0
 offset_right = 3048.0
 offset_bottom = 756.0
+icon_texture = ExtResource("26_gek8g")
 
 [node name="L_UVL" type="Line2D" parent="Main"]
 position = Vector2(3072, 724)
@@ -419,6 +498,7 @@ offset_left = 3200.0
 offset_top = 692.0
 offset_right = 3456.0
 offset_bottom = 756.0
+icon_texture = ExtResource("27_c4i7v")
 
 [node name="L_XRL" type="Line2D" parent="Main"]
 position = Vector2(3488, 724)
@@ -436,6 +516,7 @@ offset_left = 3616.0
 offset_top = 692.0
 offset_right = 3872.0
 offset_bottom = 756.0
+icon_texture = ExtResource("28_xxlf2")
 
 [node name="L_GRL" type="Line2D" parent="Main"]
 position = Vector2(3904, 724)
@@ -453,6 +534,7 @@ offset_left = 4032.0
 offset_top = 692.0
 offset_right = 4288.0
 offset_bottom = 756.0
+icon_texture = ExtResource("29_yb5u7")
 
 [node name="RMK2" parent="Main" instance=ExtResource("1")]
 layout_mode = 0
@@ -463,6 +545,7 @@ offset_left = 704.0
 offset_top = 804.0
 offset_right = 960.0
 offset_bottom = 868.0
+icon_texture = ExtResource("30_i85as")
 
 [node name="L_RMK2" type="Line2D" parent="Main"]
 position = Vector2(992, 836)
@@ -480,6 +563,7 @@ offset_left = 1120.0
 offset_top = 804.0
 offset_right = 1376.0
 offset_bottom = 868.0
+icon_texture = ExtResource("31_jmdj3")
 
 [node name="MAE" parent="Main" instance=ExtResource("1")]
 layout_mode = 0
@@ -491,6 +575,7 @@ offset_top = 336.0
 offset_right = 1440.0
 offset_bottom = 400.0
 size_flags_horizontal = 13
+icon_texture = ExtResource("32_rvgjl")
 
 [node name="TF" parent="Main" instance=ExtResource("1")]
 layout_mode = 0
@@ -502,6 +587,7 @@ offset_top = 212.0
 offset_right = 1856.0
 offset_bottom = 276.0
 size_flags_horizontal = 13
+icon_texture = ExtResource("33_2cva5")
 
 [node name="DS1" parent="Main" instance=ExtResource("1")]
 layout_mode = 0
@@ -513,6 +599,7 @@ offset_top = 372.0
 offset_right = 1856.0
 offset_bottom = 436.0
 size_flags_horizontal = 13
+icon_texture = ExtResource("34_tu4u0")
 
 [node name="L_DS1" type="Line2D" parent="Main"]
 position = Vector2(1888, 404)
@@ -538,6 +625,7 @@ offset_top = 372.0
 offset_right = 2272.0
 offset_bottom = 436.0
 size_flags_horizontal = 13
+icon_texture = ExtResource("35_lcsn0")
 
 [node name="L_DS2" type="Line2D" parent="Main"]
 position = Vector2(2304, 404)
@@ -563,6 +651,7 @@ offset_top = 372.0
 offset_right = 2688.0
 offset_bottom = 436.0
 size_flags_horizontal = 13
+icon_texture = ExtResource("36_x7igl")
 
 [node name="L_DS3" type="Line2D" parent="Main"]
 position = Vector2(2720, 404)
@@ -581,6 +670,7 @@ offset_top = 372.0
 offset_right = 3104.0
 offset_bottom = 436.0
 size_flags_horizontal = 13
+icon_texture = ExtResource("37_yfy5b")
 
 [node name="L_DS4" type="Line2D" parent="Main"]
 position = Vector2(3138, 404)
@@ -599,6 +689,7 @@ offset_top = 372.0
 offset_right = 3522.0
 offset_bottom = 436.0
 size_flags_horizontal = 13
+icon_texture = ExtResource("38_f81mp")
 
 [node name="L_MB" type="Line2D" parent="Main"]
 position = Vector2(3568, 404)
@@ -617,6 +708,7 @@ offset_top = 372.0
 offset_right = 3952.0
 offset_bottom = 436.0
 size_flags_horizontal = 13
+icon_texture = ExtResource("39_bhtpw")
 
 [node name="L_GS" type="Line2D" parent="Main"]
 position = Vector2(3984, 404)
@@ -635,6 +727,7 @@ offset_top = 372.0
 offset_right = 4368.0
 offset_bottom = 436.0
 size_flags_horizontal = 13
+icon_texture = ExtResource("40_iwr5q")
 
 [node name="SE1" parent="Main" instance=ExtResource("1")]
 layout_mode = 0
@@ -646,6 +739,7 @@ offset_top = 132.0
 offset_right = 1856.0
 offset_bottom = 196.0
 size_flags_horizontal = 13
+icon_texture = ExtResource("41_pukgx")
 
 [node name="PK1" parent="Main" instance=ExtResource("1")]
 layout_mode = 0
@@ -657,6 +751,7 @@ offset_top = 532.0
 offset_right = 1856.0
 offset_bottom = 596.0
 size_flags_horizontal = 13
+icon_texture = ExtResource("42_uyib1")
 
 [node name="CBS1" parent="Main" instance=ExtResource("1")]
 layout_mode = 0
@@ -668,6 +763,7 @@ offset_top = 452.0
 offset_right = 1856.0
 offset_bottom = 516.0
 size_flags_horizontal = 13
+icon_texture = ExtResource("43_vfjdo")
 
 [node name="CBS2" parent="Main" instance=ExtResource("1")]
 layout_mode = 0
@@ -679,6 +775,7 @@ offset_top = 452.0
 offset_right = 2272.0
 offset_bottom = 516.0
 size_flags_horizontal = 13
+icon_texture = ExtResource("44_pt0b8")
 
 [node name="CBS3" parent="Main" instance=ExtResource("1")]
 layout_mode = 0
@@ -690,6 +787,7 @@ offset_top = 452.0
 offset_right = 2688.0
 offset_bottom = 516.0
 size_flags_horizontal = 13
+icon_texture = ExtResource("45_lwlsd")
 
 [node name="L_PK1" type="Line2D" parent="Main"]
 position = Vector2(1888, 556)
@@ -708,6 +806,7 @@ offset_top = 532.0
 offset_right = 2272.0
 offset_bottom = 596.0
 size_flags_horizontal = 13
+icon_texture = ExtResource("46_eu0ii")
 
 [node name="MME1" parent="Main" instance=ExtResource("1")]
 layout_mode = 0
@@ -719,6 +818,7 @@ offset_top = 292.0
 offset_right = 1856.0
 offset_bottom = 356.0
 size_flags_horizontal = 13
+icon_texture = ExtResource("47_polbn")
 
 [node name="L_MME2" type="Line2D" parent="Main"]
 position = Vector2(1888, 324)
@@ -737,6 +837,7 @@ offset_top = 292.0
 offset_right = 2272.0
 offset_bottom = 356.0
 size_flags_horizontal = 13
+icon_texture = ExtResource("48_dr8cm")
 
 [node name="L_MME3" type="Line2D" parent="Main"]
 position = Vector2(2304, 324)
@@ -755,6 +856,7 @@ offset_top = 292.0
 offset_right = 2688.0
 offset_bottom = 356.0
 size_flags_horizontal = 13
+icon_texture = ExtResource("49_ic180")
 
 [node name="L_CD" type="Line2D" parent="Main"]
 position = Vector2(1484.25, -288)
@@ -918,6 +1020,7 @@ offset_left = 288.0
 offset_top = 640.0
 offset_right = 544.0
 offset_bottom = 704.0
+icon_texture = ExtResource("50_e0c5v")
 
 [node name="AM" parent="Other" instance=ExtResource("1")]
 layout_mode = 0
@@ -928,6 +1031,7 @@ offset_left = 288.0
 offset_top = 528.0
 offset_right = 544.0
 offset_bottom = 592.0
+icon_texture = ExtResource("51_tnx5p")
 
 [node name="CI" parent="Other" instance=ExtResource("1")]
 layout_mode = 0
@@ -938,6 +1042,7 @@ offset_left = 288.0
 offset_top = 80.0
 offset_right = 544.0
 offset_bottom = 144.0
+icon_texture = ExtResource("52_i5qg8")
 
 [node name="L_CI" type="Line2D" parent="Other"]
 position = Vector2(576, 92)
@@ -955,6 +1060,7 @@ offset_left = 704.0
 offset_top = 80.0
 offset_right = 960.0
 offset_bottom = 144.0
+icon_texture = ExtResource("53_g6ehj")
 
 [node name="L_CI2" type="Line2D" parent="Other"]
 position = Vector2(992, 92)
@@ -972,6 +1078,7 @@ offset_left = 1120.0
 offset_top = 80.0
 offset_right = 1376.0
 offset_bottom = 144.0
+icon_texture = ExtResource("54_kxk33")
 
 [node name="ISC" parent="Other" instance=ExtResource("1")]
 layout_mode = 0
@@ -982,6 +1089,7 @@ offset_left = 288.0
 offset_top = 416.0
 offset_right = 544.0
 offset_bottom = 480.0
+icon_texture = ExtResource("55_5nrgx")
 
 [node name="SA" parent="Other" instance=ExtResource("1")]
 layout_mode = 0
@@ -992,6 +1100,7 @@ offset_left = 288.0
 offset_top = 192.0
 offset_right = 544.0
 offset_bottom = 256.0
+icon_texture = ExtResource("56_mlle1")
 
 [node name="ASM" parent="Other" instance=ExtResource("1")]
 layout_mode = 0
@@ -1002,6 +1111,7 @@ offset_left = 288.0
 offset_top = 304.0
 offset_right = 544.0
 offset_bottom = 368.0
+icon_texture = ExtResource("3_eu0ii")
 
 [node name="ASM2" parent="Other" instance=ExtResource("1")]
 layout_mode = 0
@@ -1012,6 +1122,7 @@ offset_left = 704.0
 offset_top = 304.0
 offset_right = 960.0
 offset_bottom = 368.0
+icon_texture = ExtResource("3_eu0ii")
 
 [node name="L_SA" type="Line2D" parent="Other"]
 position = Vector2(576, 204)
@@ -1036,6 +1147,7 @@ offset_left = 704.0
 offset_top = 192.0
 offset_right = 960.0
 offset_bottom = 256.0
+icon_texture = ExtResource("57_2igf4")
 
 [node name="IRAnim" type="AnimationPlayer" parent="."]
 libraries = {

@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=3 uid="uid://m8wrm55x0xbe"]
+[gd_scene load_steps=10 format=3 uid="uid://m8wrm55x0xbe"]
 
 [ext_resource type="Theme" uid="uid://cp2u1kgj60ic" path="res://Resources/default_theme.tres" id="1_bn3ag"]
 [ext_resource type="Texture2D" uid="uid://buvqtd7v5l8m2" path="res://Graphics/Icons/Fire.png" id="2_jvqvk"]
@@ -8,6 +8,7 @@
 [ext_resource type="Texture2D" uid="uid://bshcbtjw6w01j" path="res://Graphics/Icons/frozen.png" id="5_a6ky5"]
 [ext_resource type="Texture2D" uid="uid://ddk4tb7t6a6my" path="res://Graphics/Icons/corroding.png" id="6_4ih1o"]
 [ext_resource type="Texture2D" uid="uid://dtt8s3bhk46u6" path="res://Graphics/Icons/water.png" id="7_4ih1o"]
+[ext_resource type="Texture2D" uid="uid://brchrwf8vbxe3" path="res://Graphics/Icons/radioactive.png" id="8_pri0e"]
 
 [node name="StatusEffects" type="VBoxContainer"]
 mouse_filter = 2
@@ -104,6 +105,7 @@ layout_mode = 2
 [node name="Icon" type="TextureRect" parent="Radioactive"]
 custom_minimum_size = Vector2(30, 0)
 layout_mode = 2
+texture = ExtResource("8_pri0e")
 expand_mode = 1
 stretch_mode = 5
 

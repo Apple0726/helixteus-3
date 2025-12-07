@@ -10,7 +10,10 @@ func _ready() -> void:
 	$Info/Buffs.position.y = $TextureRect.scale.x * 90.0 + 60.0
 	$Info/Icon.position.y = $TextureRect.scale.x * 90.0 + 30.0
 	status_effect_resistances[Battle.StatusEffect.BURN] = 1.0
-
+	status_effect_resistances[Battle.StatusEffect.STUN] = 1.0
+	for effect in Battle.StatusEffect.N:
+		if not effect in status_effect_resistances:
+			status_effect_resistances[effect] = 0.0
 
 func take_turn():
 	super()
