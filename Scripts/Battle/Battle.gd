@@ -294,7 +294,7 @@ func next_turn():
 		HX_node.take_turn()
 
 func get_selected_ship():
-	if whose_turn_is_it_index == -1 or initiative_order.is_empty() or initiative_order[whose_turn_is_it_index].type != Battle.EntityType.SHIP:
+	if whose_turn_is_it_index == -1 or initiative_order.is_empty() or not is_instance_valid(initiative_order[whose_turn_is_it_index]) or initiative_order[whose_turn_is_it_index].type != Battle.EntityType.SHIP:
 		return null
 	return initiative_order[whose_turn_is_it_index]
 

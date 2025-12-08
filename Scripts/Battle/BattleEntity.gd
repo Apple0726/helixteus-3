@@ -269,9 +269,14 @@ func end_turn():
 			status_effects[Battle.StatusEffect.EXTRA_TURNS] = 0.0
 			$Info/StatusEffects/ExtraTurns.hide()
 	else:
+		if type == Battle.EntityType.SHIP:
+			print("end turn for ship ", turn_order)
+		elif type == Battle.EntityType.ENEMY:
+			print("end turn for enemy ", turn_order)
 		if is_instance_valid(turn_order_box):
 			turn_order_box.get_node("ChangeSizeAnim").play_backwards("ChangeSize")
 		if not turn_taken:
+			print("emit next_turn")
 			turn_taken = true
 			emit_signal("next_turn")
 

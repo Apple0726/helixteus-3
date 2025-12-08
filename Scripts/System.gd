@@ -510,6 +510,7 @@ func _input(event):
 			game.upgrade_panel.ids = []
 			game.upgrade_panel.planet = game.planet_data[planet_hovered]
 			game.toggle_panel(game.upgrade_panel)
+		game.hide_tooltip()
 	elif Input.is_action_just_released("X") and MS_constr_data.has("destroyable"):
 		if not MS_constr_data.has("confirm_destroy"):
 			MS_constr_data.confirm_destroy = true

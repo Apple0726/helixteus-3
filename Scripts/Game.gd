@@ -429,8 +429,7 @@ var bottom_info_action:String = ""
 var metal_textures:Dictionary = {}
 var game_tween:Tween
 var view_tween:Tween
-var tile_brightness:Array = []
-var tile_avg_mod:Array = []
+var tile_brightness:Array = [0.489, 0.427, 0.381, 0.372, 0.326, 0.478, 0.572, 0.504]
 
 var current_viewport_dimensions:Vector2
 #func update_viewport_dimensions():
@@ -519,28 +518,6 @@ func _ready():
 #	place_BG_sc_stars()
 	for i in range(3, 13):
 		planet_textures.append(load("res://Graphics/Planets/%s.png" % i))
-		if i <= 10:
-			if false:
-				var tile_texture = load("res://Graphics/Tiles/Mosaics/%sr.jpg" % i)
-				var tile_img = tile_texture.get_image()
-				var brightness:float = 0.0
-				var rgb = {"r":0, "g":0, "b":0}
-				for x in tile_img.get_width():
-					for y in tile_img.get_height():
-						var color:Color = tile_img.get_pixel(x, y)
-						brightness += color.r + color.g + color.b
-						rgb.r += color.r
-						rgb.g += color.g
-						rgb.b += color.b
-				var num_pixels = tile_img.get_width() * tile_img.get_height()
-				rgb.r /= num_pixels
-				rgb.g /= num_pixels
-				rgb.b /= num_pixels
-				tile_brightness.append(brightness)
-				tile_avg_mod.append(Color(rgb.r, rgb.g, rgb.b, 1.0))
-			else:
-				tile_brightness.append(1.0)
-				tile_avg_mod.append(Color.WHITE)
 	for i in range(0, 7):
 		galaxy_textures.append(load("res://Graphics/Galaxies/%s.png" % i))
 	for bldg in Building.names:

@@ -100,6 +100,11 @@ func update_ship_stats_after_class_change(ship_class: int):
 	allocated_defense = 0
 	allocated_accuracy = 0
 	allocated_agility = 0
+	$ClassAndStats/ShipStats/RemoveHP.disabled = true
+	$ClassAndStats/ShipStats/RemoveAttack.disabled = true
+	$ClassAndStats/ShipStats/RemoveDefense.disabled = true
+	$ClassAndStats/ShipStats/RemoveAccuracy.disabled = true
+	$ClassAndStats/ShipStats/RemoveAgility.disabled = true
 	update_ship_stats_display()
 
 func update_ship_stats_display():

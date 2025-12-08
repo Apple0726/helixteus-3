@@ -131,7 +131,6 @@ var hole_exits:Array = []#id of hole and exit on each floor
 
 var shaking:Vector2 = Vector2.ZERO
 var star_mod:Color = Color.WHITE
-var tile_avg_mod:Color = Color.WHITE
 var tile_brightness:float
 var brightness_mult:float
 var light_strength_mult:float
@@ -210,8 +209,19 @@ func _ready():
 	#$WorldEnvironment.environment.glow_enabled = game.enable_shaders
 	if not game.achievement_data.random.has("clear_out_cave_floor"):
 		$CheckAchievements.start()
-	tile_brightness = game.tile_brightness[p_i.type - 3]
-	tile_avg_mod = game.tile_avg_mod[p_i.type - 3]
+	var cave_type:String = ""
+	if tile.has("cave"):
+		cave_type = "cave"
+	elif tile.has("diamond_tower"):
+		cave_type = "diamond_tower"
+	num_floors = tile[cave_type].num_floors
+	cave_size = tile[cave_type].floor_size
+	seed(p_i.seed)
+	var surface_type = randi_range(1, 8)
+	tile_brightness = game.tile_brightness[surface_type]
+	cave_BG.texture = load("res://Graphics/Tiles/Mosaics/%sr.jpg" % surface_type)
+	cave_BG.region_rect.size = Vector2.ONE * cave_size * 200.0
+	cave_BG.material.set_shader_parameter("texture_zoom", randf_range(0.5, 2.0))
 	var lum:float = 0.0
 	for star in game.system_data[game.c_s].stars:
 		var sc:float = 0.5 * star.size / (p_i.distance / 500)
@@ -231,17 +241,6 @@ func _ready():
 	var contrast:float = sqrt(brightness)
 	#cave_BG.material.set_shader_parameter("brightness", min(brightness, 1.6))
 	#cave_BG.material.set_shader_parameter("contrast", 1.5)
-	var cave_type:String = ""
-	if tile.has("cave"):
-		cave_type = "cave"
-	elif tile.has("diamond_tower"):
-		cave_type = "diamond_tower"
-	num_floors = tile[cave_type].num_floors
-	cave_size = tile[cave_type].floor_size
-	seed(p_i.seed)
-	cave_BG.texture = load("res://Graphics/Tiles/Mosaics/%sr.jpg" % randi_range(1, 8))
-	cave_BG.scale = Vector2.ONE * cave_size / cave_BG.texture.get_size() * 200.0
-	cave_BG.material.set_shader_parameter("texture_zoom", randf_range(0.5, 2.0))
 	if not tile[cave_type].has("debris"):
 		tile[cave_type].debris = randf() + 0.2
 	if not tile[cave_type].has("period"):
@@ -483,14 +482,14 @@ func generate_cave(first_floor:bool, going_up:bool):
 	mining_laser.get_node("PointLight2D2").energy = (0.5 + pow(cave_darkness, 2) * 6) / pow(light_strength_mult, 2) * 1.0
 	var depth_modulate = Color.WHITE
 	if cave_floor >= 16:
-		depth_modulate = Color.PURPLE
+		depth_modulate = Color(2.5, 1.0, 2.5, 1.0)
 	elif cave_floor >= 8:
-		depth_modulate = Color.BLUE
+		depth_modulate = Color(1.0, 1.0, 2.5, 1.0)
 	cave_wall.modulate = star_mod * depth_modulate * (1.0 - cave_darkness) * (Color(0.5, 0.5, 1.0) if cave_floor >= 8 else Color.WHITE)
 	cave_wall.modulate.a = 1.0
 	var BG_mod = star_mod * (1.0 - cave_darkness)
 	BG_mod.a = 1.0
-	if p_i.has("lake"):
+	if tile.has("lake"):
 		BG_mod = Data.lake_colors[p_i.lake.element][p_i.lake.state]
 		cave_wall.modulate *= Data.lake_colors[p_i.lake.element][p_i.lake.state]
 		#cave_BG.material.set_shader_parameter("brightness", 1.1)
@@ -502,7 +501,7 @@ func generate_cave(first_floor:bool, going_up:bool):
 	if Settings.enable_shaders:
 		$Floor.material.set_shader_parameter("star_mod", lerp(star_mod, Color.WHITE, clamp(cave_floor * 0.125, 0, 1)))
 		$Floor.material.set_shader_parameter("strength", max(1.0, brightness_mult - 0.1 * (cave_floor - 1)))
-	rover_light.energy = cave_darkness * 0.6
+	rover_light.energy = cave_darkness * 2.6
 	$UI2/CaveInfo/Difficulty.text = "%s: %s" % [tr("DIFFICULTY"), Helper.format_num(difficulty, true)]
 	var rng = RandomNumberGenerator.new()
 	$UI2/CaveInfo/Floor.text = "B%sF" % [cave_floor]
@@ -549,7 +548,7 @@ func generate_cave(first_floor:bool, going_up:bool):
 					var debris = preload("res://Scenes/Debris.tscn").instantiate()
 					debris.sprite_frame = rng.randi_range(0, 5)
 					debris.time_speed = time_speed
-					var debris_mod = (star_mod * tile_avg_mod + Color(0.2, 0.2, 0.2, 1.0) * rng.randf_range(0.9, 1.1)) * (1.0 - cave_darkness)
+					var debris_mod = (star_mod + Color(0.2, 0.2, 0.2, 1.0) * rng.randf_range(0.9, 1.1)) * (1.0 - cave_darkness)
 					debris_mod.a = 1.0
 					debris.rotation_degrees = rng.randf_range(0, 360)
 					var rand_scale_x:float
@@ -725,7 +724,7 @@ func generate_cave(first_floor:bool, going_up:bool):
 		for j in cave_size:
 			var tile_id:int = get_tile_index(Vector2(i, j))
 			if tiles_mined[cave_floor - 1].has(tile_id):
-				minimap_cave.set_cell(Vector2i(i, j))
+				minimap_cave.set_cell(Vector2i(i, j), 0, Vector2i.ZERO)
 				astar_node.add_point(tile_id, Vector2(i, j))
 				connect_points(Vector2(i, j), true)
 				walls.erase(Vector2i(i, j))
@@ -1281,6 +1280,7 @@ func add_to_inventory(rsrc, content:float, remainders:Dictionary):
 		var slot = slots[i]
 		if inventory[i].is_empty():
 			inventory[i]["id"] = rsrc
+			inventory[i]["type"] = ""
 			if rsrc is int:
 				inventory[i]["type"] = Item.data[rsrc].type
 				slot.get_node("TextureRect").texture = load("res://Graphics/Items/%s/%s.png" % [Item.icon_directory(Item.data[rsrc].type), Item.data[rsrc].item_name])

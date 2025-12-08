@@ -9,6 +9,7 @@ func _ready():
 			get_node("Ship%s" % (i + 1)).visible = false
 		else:
 			get_node("Ship%s" % (i + 1)).visible = true
+			get_node("Ship%s/Label" % (i + 1)).text = "%s %s" % [tr("LV"), battle_scene.ship_data[i].lv]
 			get_node("Ship%s/XP/Label" % (i + 1)).text = "+ %s" % [round(battle_scene.XP_earned)]
 			get_node("Ship%s/XP/TextureProgressGained" % (i + 1)).max_value = battle_scene.ship_data[i].XP_to_lv
 			get_node("Ship%s/XP/TextureProgressGained" % (i + 1)).value = battle_scene.ship_data[i].XP

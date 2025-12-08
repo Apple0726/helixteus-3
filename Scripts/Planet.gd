@@ -51,7 +51,6 @@ var thread: Thread
 func _ready():
 	shadows.resize(wid * wid)
 	var tile_brightness:float = game.tile_brightness[p_i.type - 3]
-	#$PlanetTiles.material.shader = preload("res://Shaders/BCS.gdshader")
 	var lum:float = 0.0
 	for star in game.system_data[game.c_s].stars:
 		var sc:float = 0.5 * star.size / (p_i.distance / 500)
@@ -60,17 +59,17 @@ func _ready():
 			var mod_lum = star_mod.get_luminance()
 			if mod_lum < 0.2:
 				star_mod = star_mod.lightened(0.2 - mod_lum)
-			$PlanetTiles.modulate = star_mod
 			var strength_mult = 1.0
 			if p_i.temperature >= 1500:
 				strength_mult = min(remap(p_i.temperature, 1000, 3000, 1.2, 1.5), 1.5)
 			else:
 				strength_mult = min(remap(p_i.temperature, -273, 1000, 0.3, 1.2), 1.2)
-			#var brightness:float = remap(tile_brightness, 40000, 90000, 2.5, 1.1) * strength_mult
-			#var contrast:float = sqrt(brightness)
-			#$PlanetTiles.material.set_shader_parameter("brightness", min(brightness, 2.0))
-			#$PlanetTiles.material.set_shader_parameter("contrast", clamp(strength_mult, 1.0, 2.0))
-			#$PlanetTiles.material.set_shader_parameter("saturation", clamp(strength_mult, 1.0, 2.0))
+			var brightness:float = remap(tile_brightness, 0.0, 1.0, 2.5, 1.1) * strength_mult
+			var contrast:float = sqrt(brightness)
+			$PlanetTiles.material.set_shader_parameter("brightness", min(brightness, 2.0))
+			$PlanetTiles.material.set_shader_parameter("contrast", clamp(strength_mult, 1.0, 2.0))
+			$PlanetTiles.material.set_shader_parameter("saturation", clamp(strength_mult, 1.0, 2.0))
+			$PlanetTiles.material.set_shader_parameter("modulate_color", star_mod)
 			lum = star.luminosity
 	timer = Timer.new()
 	add_child(timer)
@@ -158,7 +157,7 @@ func _ready():
 				var volcano_sprite = Sprite2D.new()
 				volcano_sprite.texture = preload("res://Graphics/Tiles/Volcano.png")
 				volcano_sprite.position = Vector2(i, j) * 200 + Vector2.ONE * 100
-				volcano_sprite.scale *= 180.0/278.0
+				volcano_sprite.scale *= 180.0 / volcano_sprite.texture.get_width()
 				volcano_sprite.modulate = star_mod
 				add_child(volcano_sprite)
 				obstacle_nodes[Vector2i(i, j)] = volcano_sprite
@@ -210,7 +209,7 @@ func _ready():
 			aurora.modulate = Color.from_hsv(fmod(hue, 1.0), sat, 1.0) * max(log(tile.aurora) / 10.0, 1.0)
 			$Auroras.add_child(aurora)
 	$Shadow.size = Vector2.ONE * 200 * wid
-	$Shadow["theme_override_styles/panel"].shadow_color = game.tile_avg_mod[p_i.type - 3] * $PlanetTiles.modulate
+	#$Shadow["theme_override_styles/panel"].shadow_color = $PlanetTiles.modulate
 	var lake_state_id = {
 		"s":0,
 		"l":1,
@@ -226,7 +225,7 @@ func _ready():
 	$Lake.size = Vector2.ONE * 200.0 * wid
 	if p_i.has("lake"):
 		$Lake.show()
-		$Lake.modulate = Data.lake_colors[p_i.lake.element][p_i.lake.state]
+		$Lake.modulate = Data.lake_colors[p_i.lake.element][p_i.lake.state] * star_mod
 		if p_i.lake.state == "l":
 			$Lake.material.set_shader_parameter("should_render", true)
 			$Lake.material.set_shader_parameter("time_factor", 0.1)

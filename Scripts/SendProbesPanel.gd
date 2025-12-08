@@ -244,7 +244,7 @@ func _on_TP_value_changed(value:float, prop:String):
 		if prop == "time_speed":
 			var cave_battle_time_speed:float = Helper.get_logarithmic_time_speed(game.subject_levels.dimensional_power, $TP/VBox/time_speed/HSlider.value)
 			if cave_battle_time_speed != 1.0:
-				$TP/VBox/time_speed/Unit.text = " (%.2f in battles/caves)" % [cave_battle_time_speed]
+				$TP/VBox/time_speed/Unit.text = " (%.2f in caves)" % [cave_battle_time_speed]
 		if value >= 1:
 			point_distribution[prop] = (value - 1) * -game.physics_bonus[prop]
 		else:
