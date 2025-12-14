@@ -1,11 +1,11 @@
-[gd_resource type="Theme" load_steps=46 format=3 uid="uid://cp2u1kgj60ic"]
+[gd_resource type="Theme" load_steps=36 format=3 uid="uid://cp2u1kgj60ic"]
 
 [sub_resource type="SystemFont" id="SystemFont_xvdaj"]
 font_names = PackedStringArray("Sans-Serif")
 
-[sub_resource type="SystemFont" id="SystemFont_s3jam"]
+[sub_resource type="SystemFont" id="SystemFont_c5eyb"]
 fallbacks = Array[Font]([SubResource("SystemFont_xvdaj")])
-font_names = PackedStringArray("Ebrima")
+font_names = PackedStringArray("Noto Sans")
 multichannel_signed_distance_field = true
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_78575"]
@@ -73,11 +73,6 @@ border_blend = true
 shadow_size = 2
 shadow_offset = Vector2(1, 1)
 
-[sub_resource type="SystemFont" id="SystemFont_uf2dt"]
-fallbacks = Array[Font]([SubResource("SystemFont_xvdaj")])
-font_names = PackedStringArray("Ebrima")
-multichannel_signed_distance_field = true
-
 [sub_resource type="StyleBoxEmpty" id="5"]
 
 [sub_resource type="StyleBoxEmpty" id="6"]
@@ -87,11 +82,6 @@ multichannel_signed_distance_field = true
 [sub_resource type="StyleBoxEmpty" id="8"]
 
 [sub_resource type="StyleBoxEmpty" id="9"]
-
-[sub_resource type="SystemFont" id="SystemFont_wrwbd"]
-fallbacks = Array[Font]([SubResource("SystemFont_xvdaj")])
-font_names = PackedStringArray("Ebrima")
-multichannel_signed_distance_field = true
 
 [sub_resource type="StyleBoxFlat" id="10"]
 content_margin_left = 8.0
@@ -109,11 +99,6 @@ bg_color = Color(1, 1, 1, 0)
 fallbacks = Array[Font]([SubResource("SystemFont_xvdaj")])
 
 [sub_resource type="SystemFont" id="SystemFont_01v61"]
-fallbacks = Array[Font]([SubResource("SystemFont_xvdaj")])
-font_names = PackedStringArray("Ebrima")
-multichannel_signed_distance_field = true
-
-[sub_resource type="SystemFont" id="SystemFont_ve4h2"]
 fallbacks = Array[Font]([SubResource("SystemFont_xvdaj")])
 font_names = PackedStringArray("Ebrima")
 multichannel_signed_distance_field = true
@@ -178,21 +163,6 @@ border_color = Color(0.243137, 0.509804, 0.509804, 0)
 border_blend = true
 corner_detail = 5
 
-[sub_resource type="SystemFont" id="SystemFont_6dkr5"]
-fallbacks = Array[Font]([SubResource("SystemFont_xvdaj")])
-font_names = PackedStringArray("Ebrima")
-multichannel_signed_distance_field = true
-
-[sub_resource type="SystemFont" id="SystemFont_c5eyb"]
-fallbacks = Array[Font]([SubResource("SystemFont_xvdaj")])
-font_names = PackedStringArray("Ebrima")
-multichannel_signed_distance_field = true
-
-[sub_resource type="SystemFont" id="SystemFont_st2a7"]
-fallbacks = Array[Font]([SubResource("SystemFont_xvdaj")])
-font_names = PackedStringArray("Ebrima")
-multichannel_signed_distance_field = true
-
 [sub_resource type="StyleBoxFlat" id="19"]
 bg_color = Color(0.847059, 0.847059, 0.847059, 1)
 border_width_left = 2
@@ -200,16 +170,6 @@ border_width_top = 2
 border_width_right = 2
 border_width_bottom = 2
 border_color = Color(0.384314, 0.384314, 0.384314, 1)
-
-[sub_resource type="SystemFont" id="SystemFont_nacjo"]
-fallbacks = Array[Font]([SubResource("SystemFont_xvdaj")])
-font_names = PackedStringArray("Ebrima")
-multichannel_signed_distance_field = true
-
-[sub_resource type="SystemFont" id="SystemFont_5yoc4"]
-fallbacks = Array[Font]([SubResource("SystemFont_xvdaj")])
-font_names = PackedStringArray("Ebrima")
-multichannel_signed_distance_field = true
 
 [sub_resource type="StyleBoxFlat" id="20"]
 content_margin_left = 10.0
@@ -237,11 +197,6 @@ border_blend = true
 shadow_size = 2
 shadow_offset = Vector2(1, 1)
 
-[sub_resource type="SystemFont" id="SystemFont_p5i3r"]
-fallbacks = Array[Font]([SubResource("SystemFont_xvdaj")])
-font_names = PackedStringArray("Ebrima")
-multichannel_signed_distance_field = true
-
 [sub_resource type="StyleBoxFlat" id="22"]
 bg_color = Color(0, 0, 0, 1)
 
@@ -264,11 +219,6 @@ font_names = PackedStringArray("Ebrima")
 multichannel_signed_distance_field = true
 
 [sub_resource type="SystemFont" id="SystemFont_cr4fx"]
-fallbacks = Array[Font]([SubResource("SystemFont_xvdaj")])
-font_names = PackedStringArray("Ebrima")
-multichannel_signed_distance_field = true
-
-[sub_resource type="SystemFont" id="SystemFont_y8qt8"]
 fallbacks = Array[Font]([SubResource("SystemFont_xvdaj")])
 font_names = PackedStringArray("Ebrima")
 multichannel_signed_distance_field = true
@@ -306,7 +256,7 @@ Button/colors/font_color_hover = Color(1, 1, 1, 1)
 Button/colors/font_color_pressed = Color(1, 1, 1, 1)
 Button/colors/font_disabled_color = Color(0.505345, 0.505343, 0.505344, 1)
 Button/constants/hseparation = 3
-Button/fonts/font = SubResource("SystemFont_s3jam")
+Button/fonts/font = SubResource("SystemFont_c5eyb")
 Button/styles/disabled = SubResource("StyleBoxFlat_78575")
 Button/styles/focus = SubResource("StyleBoxFlat_ab6o6")
 Button/styles/hover = SubResource("StyleBoxFlat_ac0dv")
@@ -318,7 +268,7 @@ CheckBox/colors/font_color_hover = Color(1, 1, 1, 1)
 CheckBox/colors/font_color_hover_pressed = Color(1, 1, 1, 1)
 CheckBox/colors/font_color_pressed = Color(1, 1, 1, 1)
 CheckBox/constants/h_separation = 15
-CheckBox/fonts/font = SubResource("SystemFont_uf2dt")
+CheckBox/fonts/font = SubResource("SystemFont_c5eyb")
 CheckBox/icons/checked = null
 CheckBox/icons/radio_checked = null
 CheckBox/icons/radio_unchecked = null
@@ -336,7 +286,7 @@ CheckButton/colors/font_color_hover_pressed = Color(1, 1, 1, 1)
 CheckButton/colors/font_color_pressed = Color(1, 1, 1, 1)
 CheckButton/constants/check_vadjust = 0
 CheckButton/constants/hseparation = 4
-CheckButton/fonts/font = SubResource("SystemFont_wrwbd")
+CheckButton/fonts/font = SubResource("SystemFont_c5eyb")
 CheckButton/icons/off = null
 CheckButton/icons/off_disabled = null
 CheckButton/icons/on = null
@@ -373,7 +323,7 @@ ColorPickerButton/styles/pressed = null
 Dialogs/constants/button_margin = 32
 Dialogs/constants/margin = 8
 Fonts/fonts/large = SubResource("SystemFont_01v61")
-Fonts/fonts/normal = SubResource("SystemFont_ve4h2")
+Fonts/fonts/normal = SubResource("SystemFont_c5eyb")
 GraphEdit/colors/activity = Color(0, 0, 0, 1)
 GraphEdit/colors/grid_major = Color(0, 0, 0, 1)
 GraphEdit/colors/grid_minor = Color(0, 0, 0, 1)
@@ -440,7 +390,7 @@ ItemList/constants/hseparation = 4
 ItemList/constants/icon_margin = 4
 ItemList/constants/line_separation = 2
 ItemList/constants/vseparation = 2
-ItemList/fonts/font = SubResource("SystemFont_6dkr5")
+ItemList/fonts/font = SubResource("SystemFont_c5eyb")
 ItemList/styles/bg = null
 ItemList/styles/bg_focus = null
 ItemList/styles/cursor = null
@@ -465,7 +415,7 @@ LineEdit/colors/font_color_selected = Color(0.694118, 0.694118, 0.694118, 1)
 LineEdit/colors/font_color_uneditable = Color(0.521569, 0.521569, 0.521569, 1)
 LineEdit/colors/selection_color = Color(0, 0, 0, 1)
 LineEdit/constants/minimum_character_width = 0
-LineEdit/fonts/font = SubResource("SystemFont_st2a7")
+LineEdit/fonts/font = SubResource("SystemFont_c5eyb")
 LineEdit/icons/clear = null
 LineEdit/styles/focus = null
 LineEdit/styles/normal = SubResource("19")
@@ -485,7 +435,7 @@ MenuButton/colors/font_color_disabled = Color(0, 0, 0, 1)
 MenuButton/colors/font_color_hover = Color(1, 1, 1, 1)
 MenuButton/colors/font_color_pressed = Color(1, 1, 1, 1)
 MenuButton/constants/hseparation = 3
-MenuButton/fonts/font = SubResource("SystemFont_nacjo")
+MenuButton/fonts/font = SubResource("SystemFont_c5eyb")
 MenuButton/styles/disabled = null
 MenuButton/styles/focus = null
 MenuButton/styles/hover = null
@@ -495,7 +445,7 @@ OptionButton/colors/font_color = Color(0.917647, 0.917647, 0.917647, 1)
 OptionButton/colors/font_color_disabled = Color(0.380392, 0.380392, 0.380392, 1)
 OptionButton/colors/font_color_hover = Color(0.917647, 0.917647, 0.917647, 1)
 OptionButton/colors/font_color_pressed = Color(0.917647, 0.917647, 0.917647, 1)
-OptionButton/fonts/font = SubResource("SystemFont_5yoc4")
+OptionButton/fonts/font = SubResource("SystemFont_c5eyb")
 OptionButton/icons/arrow = null
 OptionButton/styles/disabled = null
 OptionButton/styles/focus = null
@@ -507,7 +457,7 @@ PanelContainer/styles/panel = SubResource("20")
 PopupMenu/styles/panel = SubResource("StyleBoxFlat_40j2p")
 ProgressBar/colors/font_color = Color(1, 1, 1, 1)
 ProgressBar/colors/font_color_shadow = Color(0.65098, 0.133333, 0.133333, 1)
-ProgressBar/fonts/font = SubResource("SystemFont_p5i3r")
+ProgressBar/fonts/font = SubResource("SystemFont_c5eyb")
 ProgressBar/styles/bg = SubResource("22")
 ProgressBar/styles/fg = SubResource("23")
 RichTextLabel/colors/default_color = Color(0.913725, 0.913725, 0.913725, 1)
@@ -524,7 +474,7 @@ RichTextLabel/fonts/bold_font = SubResource("SystemFont_biaqw")
 RichTextLabel/fonts/bold_italics_font = SubResource("SystemFont_mdnev")
 RichTextLabel/fonts/italics_font = SubResource("SystemFont_7ywt1")
 RichTextLabel/fonts/mono_font = SubResource("SystemFont_cr4fx")
-RichTextLabel/fonts/normal_font = SubResource("SystemFont_y8qt8")
+RichTextLabel/fonts/normal_font = SubResource("SystemFont_c5eyb")
 RichTextLabel/styles/focus = null
 RichTextLabel/styles/normal = null
 SpinBox/icons/updown = null
@@ -533,6 +483,7 @@ TextEdit/colors/caret_color = Color(0, 0, 0, 1)
 TextEdit/colors/font_color = Color(0, 0, 0, 1)
 TextEdit/colors/font_selected_color = Color(1, 1, 1, 1)
 TextEdit/colors/selection_color = Color(0, 0, 0, 1)
+TextEdit/fonts/font = SubResource("SystemFont_c5eyb")
 TextEdit/styles/normal = SubResource("StyleBoxFlat_s8f2h")
 TooltipLabel/colors/font_color = Color(1, 1, 1, 1)
 TooltipLabel/colors/font_color_shadow = Color(1, 1, 1, 0)

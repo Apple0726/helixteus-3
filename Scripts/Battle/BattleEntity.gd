@@ -378,21 +378,17 @@ func update_entity_HP(label_knockback: Vector2 = Vector2.ZERO, healed: bool = fa
 func update_info_labels():
 	$Info/StatusEffects.update()
 	$Info/Buffs/Attack.visible = attack_buff != 0
-	$Info/Buffs/AttackLabel.visible = attack_buff != 0
-	$Info/Buffs/AttackLabel.text = ("+%s" % Helper.format_num(attack_buff)) if attack_buff > 0 else Helper.format_num(attack_buff)
-	$Info/Buffs/AttackLabel["theme_override_colors/font_color"] = Color.GREEN if attack_buff > 0 else Color.RED
+	$Info/Buffs/Attack/Label.text = ("+%s" % Helper.format_num(attack_buff)) if attack_buff > 0 else Helper.format_num(attack_buff)
+	$Info/Buffs/Attack/Label.label_settings.font_color = Color.GREEN if attack_buff > 0 else Color.RED
 	$Info/Buffs/Defense.visible = defense_buff != 0
-	$Info/Buffs/DefenseLabel.visible = defense_buff != 0
-	$Info/Buffs/DefenseLabel.text = ("+%s" % Helper.format_num(defense_buff)) if defense_buff > 0 else Helper.format_num(defense_buff)
-	$Info/Buffs/DefenseLabel["theme_override_colors/font_color"] = Color.GREEN if defense_buff > 0 else Color.RED
+	$Info/Buffs/Defense/Label.text = ("+%s" % Helper.format_num(defense_buff)) if defense_buff > 0 else Helper.format_num(defense_buff)
+	$Info/Buffs/Defense/Label.label_settings.font_color = Color.GREEN if defense_buff > 0 else Color.RED
 	$Info/Buffs/Accuracy.visible = accuracy_buff != 0
-	$Info/Buffs/AccuracyLabel.visible = accuracy_buff != 0
-	$Info/Buffs/AccuracyLabel.text = ("+%s" % Helper.format_num(accuracy_buff)) if accuracy_buff > 0 else Helper.format_num(accuracy_buff)
-	$Info/Buffs/AccuracyLabel["theme_override_colors/font_color"] = Color.GREEN if accuracy_buff > 0 else Color.RED
+	$Info/Buffs/Accuracy/Label.text = ("+%s" % Helper.format_num(accuracy_buff)) if accuracy_buff > 0 else Helper.format_num(accuracy_buff)
+	$Info/Buffs/Accuracy/Label.label_settings.font_color = Color.GREEN if accuracy_buff > 0 else Color.RED
 	$Info/Buffs/Agility.visible = agility_buff != 0
-	$Info/Buffs/AgilityLabel.visible = agility_buff != 0
-	$Info/Buffs/AgilityLabel.text = ("+%s" % Helper.format_num(agility_buff)) if agility_buff > 0 else Helper.format_num(agility_buff)
-	$Info/Buffs/AgilityLabel["theme_override_colors/font_color"] = Color.GREEN if agility_buff > 0 else Color.RED
+	$Info/Buffs/Agility/Label.text = ("+%s" % Helper.format_num(agility_buff)) if agility_buff > 0 else Helper.format_num(agility_buff)
+	$Info/Buffs/Agility/Label.label_settings.font_color = Color.GREEN if agility_buff > 0 else Color.RED
 
 func entity_defeated_callback(knockback:Vector2 = Vector2.ZERO):
 	var entity_dying_tween = create_tween().set_parallel()
@@ -430,7 +426,7 @@ func collide_with_entity(collider: BattleEntity, collidee: BattleEntity):
 	var collider_mass = collider.get_mass()
 	var collider_weapon_data = {
 		"type":Battle.DamageType.PHYSICAL,
-		"damage": collider_mass * collider.velocity.length_squared() * 0.00003,
+		"damage": collider_mass * collider.velocity.length_squared() * 0.00002,
 		"shooter_attack":collider.attack,
 		"weapon_accuracy":collider.accuracy,
 		"orientation":collider.velocity.normalized(),
@@ -443,7 +439,7 @@ func collide_with_entity(collider: BattleEntity, collidee: BattleEntity):
 		if not collidee.moving_from_velocity:
 			var collidee_weapon_data = {
 				"type":Battle.DamageType.PHYSICAL,
-				"damage": collidee_mass * collider.velocity.length_squared() * 0.00003,
+				"damage": collidee_mass * collider.velocity.length_squared() * 0.00002,
 				"shooter_attack":collidee.attack,
 				"weapon_accuracy":INF,
 				"orientation":collidee.velocity.normalized(),

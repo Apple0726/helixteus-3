@@ -1,8 +1,10 @@
-[gd_scene load_steps=24 format=3 uid="uid://dmtuc03fuk5dc"]
+[gd_scene load_steps=26 format=3 uid="uid://dmtuc03fuk5dc"]
 
 [ext_resource type="Theme" uid="uid://cp2u1kgj60ic" path="res://Resources/default_theme.tres" id="1_ousv4"]
 [ext_resource type="Script" uid="uid://dsplquhp0nmmw" path="res://Scripts/Battle/BattleGUI.gd" id="1_phavr"]
+[ext_resource type="Texture2D" uid="uid://cq01wa1mq6mrr" path="res://Graphics/Planets/3.png" id="3_hjvsu"]
 [ext_resource type="Texture2D" uid="uid://blgh1lvsfpiu8" path="res://Graphics/GUI/Border.png" id="3_wyejc"]
+[ext_resource type="Texture2D" uid="uid://cvetejccba6ge" path="res://Graphics/Stars/Star.png" id="4_pv2pb"]
 [ext_resource type="Texture2D" uid="uid://bc6latfcdvj1t" path="res://Graphics/Weapons/bullet1.png" id="4_xdmes"]
 [ext_resource type="Texture2D" uid="uid://bblxs0wnkibch" path="res://Graphics/Weapons/laser1.png" id="5_lfxuw"]
 [ext_resource type="Texture2D" uid="uid://cyogaq3sj1anp" path="res://Graphics/Weapons/bomb1.png" id="6_xd3wr"]
@@ -82,6 +84,20 @@ mouse_filter = 2
 theme = ExtResource("1_ousv4")
 script = ExtResource("1_phavr")
 metadata/_edit_lock_ = true
+
+[node name="PlanetBG" type="Sprite2D" parent="."]
+modulate = Color(0.19, 0.19, 0.19, 1)
+light_mask = 4
+z_index = -1
+position = Vector2(1088, 336)
+texture = ExtResource("3_hjvsu")
+
+[node name="PointLight2D" type="PointLight2D" parent="PlanetBG"]
+position = Vector2(-496, 180)
+energy = 8.88
+range_item_cull_mask = 4
+texture = ExtResource("4_pv2pb")
+texture_scale = 2.39
 
 [node name="Back" type="Button" parent="."]
 layout_mode = 1

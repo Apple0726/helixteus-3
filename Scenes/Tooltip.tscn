@@ -6,12 +6,10 @@
 
 [sub_resource type="SystemFont" id="SystemFont_xvdaj"]
 font_names = PackedStringArray("Sans-Serif")
-subpixel_positioning = 0
 
-[sub_resource type="SystemFont" id="SystemFont_bckp1"]
+[sub_resource type="SystemFont" id="SystemFont_8m1ae"]
 fallbacks = Array[Font]([SubResource("SystemFont_xvdaj")])
-font_names = PackedStringArray("Ebrima")
-subpixel_positioning = 0
+font_names = PackedStringArray("Noto Sans")
 multichannel_signed_distance_field = true
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_sjq4l"]
@@ -80,7 +78,7 @@ clip_contents = false
 offset_right = 500.0
 offset_bottom = 33.0
 mouse_filter = 2
-theme_override_fonts/normal_font = SubResource("SystemFont_bckp1")
+theme_override_fonts/normal_font = SubResource("SystemFont_8m1ae")
 theme_override_styles/normal = SubResource("StyleBoxFlat_sjq4l")
 text = "a"
 scroll_active = false

@@ -1,4 +1,4 @@
-[gd_scene load_steps=49 format=3 uid="uid://cxykmxd6r2wgm"]
+[gd_scene load_steps=51 format=3 uid="uid://cxykmxd6r2wgm"]
 
 [ext_resource type="Texture2D" uid="uid://kr2fdk8dptv1" path="res://Graphics/Misc/BarUnder2.png" id="1"]
 [ext_resource type="Script" uid="uid://cfrufmr2v8ebl" path="res://Scripts/Battle/Ship.gd" id="2"]
@@ -6,6 +6,7 @@
 [ext_resource type="Shader" uid="uid://c17je4akgvnni" path="res://Shaders/Ship.gdshader" id="3_cptad"]
 [ext_resource type="Texture2D" uid="uid://7hkor7taf3iw" path="res://Graphics/Ships/Ship1 top down.png" id="5_fh3h1"]
 [ext_resource type="Texture2D" uid="uid://bx1hvetixqpwi" path="res://Graphics/Misc/Bar2.png" id="6"]
+[ext_resource type="Theme" uid="uid://cp2u1kgj60ic" path="res://Resources/default_theme.tres" id="6_ymlex"]
 [ext_resource type="Texture2D" uid="uid://yhdxrw2q1yep" path="res://Graphics/HX/Status effects/Stun.png" id="8"]
 [ext_resource type="PackedScene" uid="uid://m8wrm55x0xbe" path="res://Scenes/Battle/StatusEffects.tscn" id="8_ymlex"]
 [ext_resource type="PackedScene" uid="uid://ni58sxlrjgg4" path="res://Scenes/Battle/Buffs.tscn" id="9_0r8nl"]
@@ -279,6 +280,10 @@ _data = {
 [sub_resource type="CircleShape2D" id="CircleShape2D_fh3h1"]
 resource_local_to_scene = true
 radius = 36.0
+
+[sub_resource type="LabelSettings" id="LabelSettings_4hicg"]
+font_size = 14
+shadow_color = Color(0, 0, 0, 1)
 
 [sub_resource type="Shader" id="25"]
 code = "shader_type canvas_item;
@@ -614,14 +619,16 @@ anchors_preset = 0
 offset_right = 40.0
 offset_bottom = 40.0
 mouse_filter = 2
+theme = ExtResource("6_ymlex")
 
 [node name="Label" type="Label" parent="Info"]
 layout_mode = 0
 offset_left = -28.0
 offset_top = 52.0
 offset_right = 52.0
-offset_bottom = 76.0
+offset_bottom = 68.75
 text = "Lv 1"
+label_settings = SubResource("LabelSettings_4hicg")
 
 [node name="Icon" type="TextureRect" parent="Info"]
 custom_minimum_size = Vector2(24, 24)
@@ -653,20 +660,21 @@ offset_top = -72.0
 offset_right = 72.0
 offset_bottom = -49.0
 text = "Initiative: 10"
+label_settings = SubResource("LabelSettings_4hicg")
 horizontal_alignment = 1
 
 [node name="StatusEffects" parent="Info" instance=ExtResource("8_ymlex")]
 layout_mode = 0
-offset_left = -168.0
-offset_top = -108.0
-offset_right = -124.0
-offset_bottom = 104.0
+offset_left = -200.0
+offset_top = -40.0
+offset_right = -120.0
+offset_bottom = 44.0
 
 [node name="Buffs" parent="Info" instance=ExtResource("9_0r8nl")]
 layout_mode = 0
-offset_left = -52.0
+offset_left = -80.0
 offset_top = 84.0
-offset_right = 52.0
+offset_right = 60.0
 offset_bottom = 124.0
 
 [node name="Effects" type="Sprite2D" parent="."]

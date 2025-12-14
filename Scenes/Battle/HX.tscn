@@ -1,4 +1,4 @@
-[gd_scene load_steps=47 format=3 uid="uid://cpjo82l86k61"]
+[gd_scene load_steps=49 format=3 uid="uid://cpjo82l86k61"]
 
 [ext_resource type="Texture2D" uid="uid://7ffsf7xuvfw2" path="res://Graphics/Icons/attack.png" id="1"]
 [ext_resource type="Script" uid="uid://dhqip0etwjc1x" path="res://Scripts/Battle/HX.gd" id="1_3h40m"]
@@ -81,6 +81,14 @@ shader_parameter/progress = 1.0
 shader_parameter/y_offset = 0.0
 shader_parameter/fixed_edge_size = 0.05
 shader_parameter/noise_scale = Vector2(1, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_f8wif"]
+font_size = 14
+shadow_color = Color(0, 0, 0, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_vw23x"]
+font_size = 14
+shadow_color = Color(0, 0, 0, 1)
 
 [sub_resource type="Animation" id="6"]
 length = 0.5
@@ -487,6 +495,7 @@ anchor_right = 0.5
 anchor_bottom = 0.5
 grow_horizontal = 2
 grow_vertical = 2
+theme = ExtResource("2")
 
 [node name="Initiative" type="Label" parent="Info"]
 layout_mode = 0
@@ -495,6 +504,7 @@ offset_top = -44.0
 offset_right = 68.0
 offset_bottom = -21.0
 text = "Initiative: 10"
+label_settings = SubResource("LabelSettings_f8wif")
 horizontal_alignment = 1
 
 [node name="Icon" type="TextureRect" parent="Info"]
@@ -521,6 +531,7 @@ offset_bottom = 56.0
 grow_horizontal = 0
 theme = ExtResource("2")
 text = "15"
+label_settings = SubResource("LabelSettings_vw23x")
 
 [node name="HP" type="TextureProgressBar" parent="Info"]
 modulate = Color(0, 1, 0, 1)
@@ -539,15 +550,15 @@ texture_progress = ExtResource("6")
 [node name="StatusEffects" parent="Info" instance=ExtResource("13_lq603")]
 layout_mode = 0
 offset_left = 68.0
-offset_top = -72.0
-offset_right = 112.0
-offset_bottom = 68.0
+offset_top = -40.0
+offset_right = 148.0
+offset_bottom = 44.0
 
 [node name="Buffs" parent="Info" instance=ExtResource("14_f8wif")]
 layout_mode = 0
-offset_left = -56.0
+offset_left = -68.0
 offset_top = 52.0
-offset_right = 56.0
+offset_right = 72.0
 offset_bottom = 92.0
 
 [node name="HurtAnimation" type="AnimationPlayer" parent="."]

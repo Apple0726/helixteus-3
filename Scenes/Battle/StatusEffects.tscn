@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=3 uid="uid://m8wrm55x0xbe"]
+[gd_scene load_steps=12 format=3 uid="uid://m8wrm55x0xbe"]
 
 [ext_resource type="Theme" uid="uid://cp2u1kgj60ic" path="res://Resources/default_theme.tres" id="1_bn3ag"]
 [ext_resource type="Texture2D" uid="uid://buvqtd7v5l8m2" path="res://Graphics/Icons/Fire.png" id="2_jvqvk"]
@@ -10,119 +10,186 @@
 [ext_resource type="Texture2D" uid="uid://dtt8s3bhk46u6" path="res://Graphics/Icons/water.png" id="7_4ih1o"]
 [ext_resource type="Texture2D" uid="uid://brchrwf8vbxe3" path="res://Graphics/Icons/radioactive.png" id="8_pri0e"]
 
-[node name="StatusEffects" type="VBoxContainer"]
+[sub_resource type="SystemFont" id="SystemFont_pri0e"]
+font_names = PackedStringArray("Monospace")
+multichannel_signed_distance_field = true
+
+[sub_resource type="LabelSettings" id="LabelSettings_re712"]
+font = SubResource("SystemFont_pri0e")
+font_size = 14
+shadow_color = Color(0, 0, 0, 1)
+
+[node name="StatusEffects" type="GridContainer"]
+offset_right = 104.0
+offset_bottom = 88.0
 mouse_filter = 2
 theme = ExtResource("1_bn3ag")
-alignment = 1
+columns = 3
 script = ExtResource("2_lr2cs")
 
-[node name="Burn" type="HBoxContainer" parent="."]
+[node name="Burn" type="Control" parent="."]
+custom_minimum_size = Vector2(24, 24)
 layout_mode = 2
 
 [node name="Icon" type="TextureRect" parent="Burn"]
-custom_minimum_size = Vector2(30, 0)
-layout_mode = 2
+layout_mode = 0
+offset_right = 24.0
+offset_bottom = 24.0
 texture = ExtResource("2_jvqvk")
-expand_mode = 1
+expand_mode = 2
 stretch_mode = 5
 
 [node name="Label" type="Label" parent="Burn"]
-layout_mode = 2
+layout_mode = 0
+offset_top = 4.0
+offset_right = 24.0
+offset_bottom = 20.625
 text = "9"
+label_settings = SubResource("LabelSettings_re712")
+horizontal_alignment = 1
 
-[node name="Stun" type="HBoxContainer" parent="."]
+[node name="Stun" type="Control" parent="."]
+custom_minimum_size = Vector2(24, 24)
 layout_mode = 2
 
 [node name="Icon" type="TextureRect" parent="Stun"]
-custom_minimum_size = Vector2(30, 0)
-layout_mode = 2
+layout_mode = 0
+offset_right = 24.0
+offset_bottom = 24.0
 texture = ExtResource("3_lr2cs")
 expand_mode = 1
 stretch_mode = 5
 
 [node name="Label" type="Label" parent="Stun"]
-layout_mode = 2
+layout_mode = 0
+offset_top = 4.0
+offset_right = 24.0
+offset_bottom = 20.625
 text = "9"
+label_settings = SubResource("LabelSettings_re712")
+horizontal_alignment = 1
 
-[node name="Frozen" type="HBoxContainer" parent="."]
+[node name="Frozen" type="Control" parent="."]
+custom_minimum_size = Vector2(24, 24)
 layout_mode = 2
 
 [node name="Icon" type="TextureRect" parent="Frozen"]
-custom_minimum_size = Vector2(30, 0)
-layout_mode = 2
+layout_mode = 0
+offset_right = 24.0
+offset_bottom = 24.0
 texture = ExtResource("5_a6ky5")
 expand_mode = 1
 stretch_mode = 5
 
 [node name="Label" type="Label" parent="Frozen"]
-layout_mode = 2
+layout_mode = 0
+offset_top = 4.0
+offset_right = 24.0
+offset_bottom = 20.625
 text = "9"
+label_settings = SubResource("LabelSettings_re712")
+horizontal_alignment = 1
 
-[node name="Wet" type="HBoxContainer" parent="."]
+[node name="Wet" type="Control" parent="."]
+custom_minimum_size = Vector2(24, 24)
 layout_mode = 2
 
 [node name="Icon" type="TextureRect" parent="Wet"]
-custom_minimum_size = Vector2(30, 0)
-layout_mode = 2
+layout_mode = 0
+offset_right = 24.0
+offset_bottom = 24.0
 texture = ExtResource("7_4ih1o")
 expand_mode = 1
 stretch_mode = 5
 
 [node name="Label" type="Label" parent="Wet"]
-layout_mode = 2
+layout_mode = 0
+offset_top = 4.0
+offset_right = 24.0
+offset_bottom = 20.625
 text = "9"
+label_settings = SubResource("LabelSettings_re712")
+horizontal_alignment = 1
 
-[node name="Exposed" type="HBoxContainer" parent="."]
+[node name="Exposed" type="Control" parent="."]
+custom_minimum_size = Vector2(24, 24)
 layout_mode = 2
 
 [node name="Icon" type="TextureRect" parent="Exposed"]
-custom_minimum_size = Vector2(30, 0)
-layout_mode = 2
+layout_mode = 0
+offset_right = 24.0
+offset_bottom = 24.0
 expand_mode = 1
 stretch_mode = 5
 
 [node name="Label" type="Label" parent="Exposed"]
-layout_mode = 2
+layout_mode = 0
+offset_top = 4.0
+offset_right = 24.0
+offset_bottom = 20.625
 text = "9"
+label_settings = SubResource("LabelSettings_re712")
+horizontal_alignment = 1
 
-[node name="Corroding" type="HBoxContainer" parent="."]
+[node name="Corroding" type="Control" parent="."]
+custom_minimum_size = Vector2(24, 24)
 layout_mode = 2
 
 [node name="Icon" type="TextureRect" parent="Corroding"]
-custom_minimum_size = Vector2(30, 0)
-layout_mode = 2
+layout_mode = 0
+offset_right = 24.0
+offset_bottom = 24.0
 texture = ExtResource("6_4ih1o")
 expand_mode = 1
 stretch_mode = 5
 
 [node name="Label" type="Label" parent="Corroding"]
-layout_mode = 2
+layout_mode = 0
+offset_top = 4.0
+offset_right = 24.0
+offset_bottom = 20.625
 text = "9"
+label_settings = SubResource("LabelSettings_re712")
+horizontal_alignment = 1
 
-[node name="Radioactive" type="HBoxContainer" parent="."]
+[node name="Radioactive" type="Control" parent="."]
+custom_minimum_size = Vector2(24, 24)
 layout_mode = 2
 
 [node name="Icon" type="TextureRect" parent="Radioactive"]
-custom_minimum_size = Vector2(30, 0)
-layout_mode = 2
+layout_mode = 0
+offset_right = 24.0
+offset_bottom = 24.0
 texture = ExtResource("8_pri0e")
 expand_mode = 1
 stretch_mode = 5
 
 [node name="Label" type="Label" parent="Radioactive"]
-layout_mode = 2
+layout_mode = 0
+offset_top = 4.0
+offset_right = 24.0
+offset_bottom = 20.625
 text = "9"
+label_settings = SubResource("LabelSettings_re712")
+horizontal_alignment = 1
 
-[node name="ExtraTurns" type="HBoxContainer" parent="."]
+[node name="ExtraTurns" type="Control" parent="."]
+custom_minimum_size = Vector2(24, 24)
 layout_mode = 2
 
 [node name="Icon" type="TextureRect" parent="ExtraTurns"]
-custom_minimum_size = Vector2(30, 0)
-layout_mode = 2
+layout_mode = 0
+offset_right = 24.0
+offset_bottom = 24.0
 texture = ExtResource("4_jvqvk")
 expand_mode = 1
 stretch_mode = 5
 
 [node name="Label" type="Label" parent="ExtraTurns"]
-layout_mode = 2
+layout_mode = 0
+offset_top = 4.0
+offset_right = 24.0
+offset_bottom = 20.625
 text = "9"
+label_settings = SubResource("LabelSettings_re712")
+horizontal_alignment = 1

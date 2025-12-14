@@ -1,4 +1,4 @@
-extends VBoxContainer
+extends GridContainer
 
 @onready var game = get_node("/root/Game")
 var entity: BattleEntity

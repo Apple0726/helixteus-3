@@ -1,4 +1,4 @@
-[gd_scene load_steps=63 format=3 uid="uid://dt6rr51kda1rb"]
+[gd_scene load_steps=67 format=3 uid="uid://dt6rr51kda1rb"]
 
 [ext_resource type="Script" uid="uid://bd5yb7w0y4d8b" path="res://Scripts/Game.gd" id="2"]
 [ext_resource type="Texture2D" uid="uid://gcp7f61r2ee1" path="res://Graphics/Buttons/settings.png" id="3"]
@@ -66,6 +66,17 @@ border_blend = true
 shadow_size = 2
 shadow_offset = Vector2(1, 1)
 
+[sub_resource type="SystemFont" id="SystemFont_xvdaj"]
+font_names = PackedStringArray("Sans-Serif")
+
+[sub_resource type="SystemFont" id="SystemFont_rajel"]
+fallbacks = Array[Font]([SubResource("SystemFont_xvdaj")])
+font_names = PackedStringArray("Noto Sans")
+multichannel_signed_distance_field = true
+
+[sub_resource type="LabelSettings" id="LabelSettings_vvhu1"]
+font = SubResource("SystemFont_rajel")
+
 [sub_resource type="Animation" id="3"]
 resource_name = "Flashing"
 length = 0.3
@@ -125,7 +136,13 @@ _data = {
 &"RESET": SubResource("Animation_e6054")
 }
 
+[sub_resource type="SystemFont" id="SystemFont_lbihj"]
+fallbacks = Array[Font]([SubResource("SystemFont_xvdaj")])
+font_names = PackedStringArray("Noto Sans")
+multichannel_signed_distance_field = true
+
 [sub_resource type="LabelSettings" id="LabelSettings_ycps2"]
+font = SubResource("SystemFont_lbihj")
 font_size = 12
 
 [sub_resource type="Animation" id="21"]
@@ -499,6 +516,7 @@ visible = false
 layout_mode = 2
 size_flags_vertical = 1
 theme_override_styles/normal = SubResource("StyleBoxFlat_rfoca")
+label_settings = SubResource("LabelSettings_vvhu1")
 vertical_alignment = 1
 
 [node name="CloseButton" parent="UI/BottomInfo" instance=ExtResource("25")]
