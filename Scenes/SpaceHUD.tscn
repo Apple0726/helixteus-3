@@ -9,10 +9,10 @@
 [ext_resource type="Texture2D" uid="uid://bxbsgfw7reha5" path="res://Graphics/Atoms/O.png" id="5_e5li8"]
 [ext_resource type="Texture2D" uid="uid://d0i4bvt6quewi" path="res://Graphics/Atoms/H.png" id="6_jdctn"]
 [ext_resource type="Texture2D" uid="uid://i4ljifnvpt7i" path="res://Graphics/Buttons/Annotate.png" id="7"]
-[ext_resource type="PackedScene" uid="uid://b3nhmyabvl606" path="res://Scenes/Panels/ConstructionPanel.tscn" id="8_4lxnk"]
 [ext_resource type="Texture2D" uid="uid://fdvjy2q5bco" path="res://Graphics/Megastructures/DS_2.png" id="9_42r2j"]
 [ext_resource type="PackedScene" uid="uid://cobxcj7wuwecq" path="res://Scenes/Panels/StarPanel.tscn" id="10_cgit7"]
 [ext_resource type="Texture2D" uid="uid://ddomkxb4yqaya" path="res://Graphics/Galaxies/6.png" id="10_rxdnk"]
+[ext_resource type="PackedScene" uid="uid://ocbi5a4rgeyw" path="res://Scenes/Panels/MSConstructionPanel.tscn" id="12_rxdnk"]
 
 [sub_resource type="InputEventKey" id="InputEventKey_1bc5f"]
 device = -1
@@ -270,14 +270,9 @@ libraries = {
 &"": SubResource("AnimationLibrary_sslco")
 }
 
-[node name="ConstructPanel" parent="." instance=ExtResource("8_4lxnk")]
+[node name="MSConstructPanel" parent="." instance=ExtResource("12_rxdnk")]
 visible = false
-layout_mode = 0
-anchors_preset = 0
-anchor_right = 0.0
-anchor_bottom = 0.0
-grow_horizontal = 1
-grow_vertical = 1
+layout_mode = 1
 
 [node name="StarPanel" parent="." instance=ExtResource("10_cgit7")]
 visible = false

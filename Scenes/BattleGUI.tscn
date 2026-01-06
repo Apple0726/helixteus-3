@@ -1,4 +1,4 @@
-[gd_scene load_steps=26 format=3 uid="uid://dmtuc03fuk5dc"]
+[gd_scene load_steps=27 format=3 uid="uid://dmtuc03fuk5dc"]
 
 [ext_resource type="Theme" uid="uid://cp2u1kgj60ic" path="res://Resources/default_theme.tres" id="1_ousv4"]
 [ext_resource type="Script" uid="uid://dsplquhp0nmmw" path="res://Scripts/Battle/BattleGUI.gd" id="1_phavr"]
@@ -45,6 +45,10 @@ void vertex() {
 shader = SubResource("Shader_oca3i")
 shader_parameter/amplitude = 0.0
 shader_parameter/frequency = 10.0
+
+[sub_resource type="Curve" id="Curve_pv2pb"]
+_data = [Vector2(0, 0), 0.0, 0.0, 0, 0, Vector2(1, 1), 0.0, 0.0, 0, 0]
+point_count = 2
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_38hmk"]
 
@@ -360,6 +364,63 @@ uv = PackedVector2Array(403, -75, 410, -43)
 [node name="Polygon2D2" type="Polygon2D" parent="LightEmissionConePanel"]
 antialiased = true
 polygon = PackedVector2Array(164, 8, 168, 40, 172, 8)
+
+[node name="LaserConePanel" type="Panel" parent="."]
+visible = false
+layout_mode = 0
+offset_right = 200.0
+offset_bottom = 100.0
+
+[node name="ScrollUp" type="Label" parent="LaserConePanel"]
+layout_mode = 0
+offset_left = 24.0
+offset_top = 12.0
+offset_right = 140.0
+offset_bottom = 35.0
+text = "SCROLL_UP"
+horizontal_alignment = 2
+
+[node name="ScrollDown" type="Label" parent="LaserConePanel"]
+layout_mode = 0
+offset_left = 12.0
+offset_top = 56.0
+offset_right = 140.0
+offset_bottom = 79.0
+text = "SCROLL_DOWN"
+horizontal_alignment = 2
+
+[node name="Line2D4" type="Line2D" parent="LaserConePanel"]
+position = Vector2(0, 46)
+points = PackedVector2Array(172, 8, 172, 40)
+width = 2.0
+width_curve = SubResource("Curve_pv2pb")
+
+[node name="Line2D5" type="Line2D" parent="LaserConePanel"]
+position = Vector2(0, 46)
+points = PackedVector2Array(156, 14, 172, 40)
+width = 2.0
+width_curve = SubResource("Curve_pv2pb")
+
+[node name="Line2D6" type="Line2D" parent="LaserConePanel"]
+position = Vector2(0, 46)
+points = PackedVector2Array(188, 14, 172, 40)
+width = 2.0
+width_curve = SubResource("Curve_pv2pb")
+
+[node name="Line2D" type="Line2D" parent="LaserConePanel"]
+points = PackedVector2Array(172, 8, 172, 40)
+width = 2.0
+width_curve = SubResource("Curve_pv2pb")
+
+[node name="Line2D2" type="Line2D" parent="LaserConePanel"]
+points = PackedVector2Array(168, 12, 172, 40)
+width = 2.0
+width_curve = SubResource("Curve_pv2pb")
+
+[node name="Line2D3" type="Line2D" parent="LaserConePanel"]
+points = PackedVector2Array(176, 12, 172, 40)
+width = 2.0
+width_curve = SubResource("Curve_pv2pb")
 
 [node name="PushStrengthPanel" type="Panel" parent="."]
 visible = false

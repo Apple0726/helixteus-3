@@ -282,6 +282,7 @@ resource_local_to_scene = true
 radius = 36.0
 
 [sub_resource type="LabelSettings" id="LabelSettings_4hicg"]
+resource_local_to_scene = true
 font_size = 14
 shadow_color = Color(0, 0, 0, 1)
 
@@ -673,9 +674,9 @@ offset_bottom = 44.0
 [node name="Buffs" parent="Info" instance=ExtResource("9_0r8nl")]
 layout_mode = 0
 offset_left = -80.0
-offset_top = 84.0
+offset_top = 72.0
 offset_right = 60.0
-offset_bottom = 124.0
+offset_bottom = 112.0
 
 [node name="Effects" type="Sprite2D" parent="."]
 material = SubResource("28")

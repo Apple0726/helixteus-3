@@ -39,7 +39,6 @@ func _ready() -> void:
 	$MainPanel/Move.mouse_entered.connect(game.show_tooltip.bind(tr("BATTLE_MOVE_DESC")))
 	$MainPanel/Move.mouse_exited.connect(game.hide_tooltip)
 	$MainPanel/Push.mouse_exited.connect(game.hide_tooltip)
-	$LightEmissionConePanel.hide()
 	$Speedup.mouse_entered.connect(game.show_tooltip.bind(tr("SPEED_UP_ANIMATIONS") + " (%s)" % OS.get_keycode_string(DisplayServer.keyboard_get_keycode_from_physical(KEY_SPACE))))
 	$Speedup.mouse_exited.connect(game.hide_tooltip)
 	for weapon in ["Bullet", "Laser", "Bomb", "Light"]:
@@ -53,7 +52,7 @@ func _ready() -> void:
 	$PlanetBG.position.y = randf_range(180.0, 540.0)
 	$PlanetBG.texture = load("res://Graphics/Planets/%s.png" % p_i.type)
 	$PlanetBG/PointLight2D.position = -527.0 * Vector2.from_angle(p_i.angle)
-	$PlanetBG/PointLight2D.energy = clamp(remap(p_i.temperature, -250.0, 1000.0, 0.0, 16.0), 0.0, 16.0)
+	$PlanetBG/PointLight2D.energy = clamp(remap(p_i.temperature, -250.0, 600.0, 0.0, 16.0), 0.0, 10.0)
 	randomize()
 
 func show_weapon_tooltip(weapon: String, path: int, lv: int):
@@ -70,6 +69,7 @@ func _input(event: InputEvent) -> void:
 	if event is InputEventMouseMotion:
 		$PushStrengthPanel.position = Vector2(1280 - $PushStrengthPanel.size.x - 10, 720 - $PushStrengthPanel.size.y - 10).min(battle_scene.mouse_position_global)
 		$LightEmissionConePanel.position = Vector2(1280 - $LightEmissionConePanel.size.x - 10, 720 - $LightEmissionConePanel.size.y - 10).min(battle_scene.mouse_position_global)
+		$LaserConePanel.position = Vector2(1280 - $LaserConePanel.size.x - 10, 720 - $LaserConePanel.size.y - 10).min(battle_scene.mouse_position_global)
 	var ship_node = battle_scene.get_selected_ship()
 	if action_selected != NONE and is_instance_valid(ship_node):
 		if Input.is_action_just_pressed("cancel") and not ship_node.block_cancelling_action:
@@ -83,9 +83,10 @@ func _input(event: InputEvent) -> void:
 					action_selected = NONE
 					reset_GUI()
 			elif action_selected == MOVE:
-				ship_node.move()
-				action_selected = NONE
-				reset_GUI()
+				if not ship_node.forbid_movement:
+					ship_node.move()
+					action_selected = NONE
+					reset_GUI()
 			elif action_selected == PUSH:
 				pass
 	if action_selected == NONE and is_instance_valid(ship_node):
@@ -113,6 +114,21 @@ func _input(event: InputEvent) -> void:
 			game.block_scroll = true
 		elif Input.is_action_just_released("shift"):
 			game.block_scroll = false
+	elif action_selected == LASER:
+		if Data.battle_weapon_stats.laser.multishot[ship_node.laser_levels[0] - 1] > 1:
+			if Input.is_action_pressed("shift"):
+				if Input.is_action_just_pressed("scroll_down"):
+					ship_node.get_node("FireWeaponAim").multishot_angle = min(ship_node.get_node("FireWeaponAim").multishot_angle + PI / 64.0, 0.3 * PI)
+					override_enemy_tooltips()
+				if Input.is_action_just_pressed("scroll_up"):
+					ship_node.get_node("FireWeaponAim").multishot_angle = max(ship_node.get_node("FireWeaponAim").multishot_angle - PI / 64.0, PI / 64.0)
+					override_enemy_tooltips()
+			if Input.is_action_just_pressed("shift"):
+				game.block_scroll = true
+				$LaserConePanel.show()
+			elif Input.is_action_just_released("shift"):
+				game.block_scroll = false
+				$LaserConePanel.hide()
 	elif action_selected == LIGHT and is_instance_valid(ship_node):
 		if Input.is_action_pressed("shift"):
 			if Input.is_action_just_pressed("scroll_down"):
@@ -177,6 +193,7 @@ func reset_GUI():
 	$Info.hide()
 	$Info/TextureRect.texture = null
 	$LightEmissionConePanel.hide()
+	$LaserConePanel.hide()
 	$PushStrengthPanel.hide()
 	game.block_scroll = false
 	if turn_order_hbox.visible:
@@ -301,6 +318,7 @@ func _on_bullet_pressed() -> void:
 	ship_node.weapon_accuracy_mult = Data.battle_weapon_stats.bullet.accuracy
 	override_enemy_tooltips()
 	ship_node.fires_remaining = 1
+	ship_node.get_node("FireWeaponAim").multishot = 1
 	ship_node.get_node("FireWeaponAim").weapon_type = BULLET
 	ship_node.get_node("FireWeaponAim").show()
 	if ship_node.bullet_levels[1] >= 2:
@@ -321,6 +339,11 @@ func _on_laser_pressed() -> void:
 	ship_node.weapon_accuracy_mult = Data.battle_weapon_stats.laser.accuracy
 	override_enemy_tooltips()
 	ship_node.fires_remaining = Data.battle_weapon_stats.laser.consecutive_fires[ship_node.laser_levels[0] - 1]
+	ship_node.get_node("FireWeaponAim").multishot = Data.battle_weapon_stats.laser.multishot[ship_node.laser_levels[0] - 1]
+	if ship_node.get_node("FireWeaponAim").multishot > 1:
+		$Info.show()
+		$Info.text = tr("CHANGE_EMISSION_CONE")
+	ship_node.get_node("FireWeaponAim").multishot_angle = PI / 16.0
 	ship_node.get_node("FireWeaponAim").ship_node = ship_node
 	ship_node.get_node("FireWeaponAim").weapon_type = LASER
 	ship_node.get_node("FireWeaponAim").show()
@@ -341,6 +364,7 @@ func _on_bomb_pressed() -> void:
 	ship_node.fires_remaining = 1
 	ship_node.display_explosive_AoE = true
 	ship_node.queue_redraw()
+	ship_node.get_node("FireWeaponAim").multishot = 1
 	ship_node.get_node("FireWeaponAim").weapon_type = BOMB
 	ship_node.get_node("FireWeaponAim").show()
 	game.hide_tooltip()
@@ -433,9 +457,11 @@ func _on_speedup_pressed() -> void:
 	battle_scene.animations_sped_up = not battle_scene.animations_sped_up
 	if battle_scene.animations_sped_up:
 		Engine.physics_ticks_per_second = 500
+		Engine.max_physics_steps_per_frame = 48
 		$Speedup/Polygon2D.material.set_shader_parameter("amplitude", 3.0)
 		$Speedup/Polygon2D.color.a = 1.0
 	else:
 		Engine.physics_ticks_per_second = 60
+		Engine.max_physics_steps_per_frame = 8
 		$Speedup/Polygon2D.material.set_shader_parameter("amplitude", 0.0)
 		$Speedup/Polygon2D.color.a = 0.5

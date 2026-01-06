@@ -1,5 +1,6 @@
-[gd_scene load_steps=7 format=3 uid="uid://ni58sxlrjgg4"]
+[gd_scene load_steps=11 format=3 uid="uid://ni58sxlrjgg4"]
 
+[ext_resource type="Script" uid="uid://qsaxttyp4cwn" path="res://Scenes/Battle/Buffs.gd" id="1_7ashw"]
 [ext_resource type="Texture2D" uid="uid://7ffsf7xuvfw2" path="res://Graphics/Icons/attack.png" id="1_tid64"]
 [ext_resource type="Texture2D" uid="uid://bn520d6r5iwik" path="res://Graphics/Icons/accuracy.png" id="2_6s765"]
 [ext_resource type="Texture2D" uid="uid://cqiyti2xdxtcw" path="res://Graphics/Icons/defense.png" id="2_8eqwi"]
@@ -10,7 +11,26 @@ font_names = PackedStringArray("Monospace")
 subpixel_positioning = 0
 multichannel_signed_distance_field = true
 
-[sub_resource type="LabelSettings" id="LabelSettings_8eqwi"]
+[sub_resource type="LabelSettings" id="LabelSettings_7ashw"]
+resource_local_to_scene = true
+font = SubResource("SystemFont_pri0e")
+font_size = 14
+shadow_color = Color(0, 0, 0, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_hrsbp"]
+resource_local_to_scene = true
+font = SubResource("SystemFont_pri0e")
+font_size = 14
+shadow_color = Color(0, 0, 0, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_1tu0d"]
+resource_local_to_scene = true
+font = SubResource("SystemFont_pri0e")
+font_size = 14
+shadow_color = Color(0, 0, 0, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_b1bvq"]
+resource_local_to_scene = true
 font = SubResource("SystemFont_pri0e")
 font_size = 14
 shadow_color = Color(0, 0, 0, 1)
@@ -20,6 +40,7 @@ offset_right = 104.0
 offset_bottom = 32.0
 mouse_filter = 2
 alignment = 1
+script = ExtResource("1_7ashw")
 
 [node name="Attack" type="Control" parent="."]
 visible = false
@@ -41,7 +62,7 @@ offset_top = 8.0
 offset_right = 32.0
 offset_bottom = 24.625
 text = "+9"
-label_settings = SubResource("LabelSettings_8eqwi")
+label_settings = SubResource("LabelSettings_7ashw")
 horizontal_alignment = 1
 
 [node name="Defense" type="Control" parent="."]
@@ -64,7 +85,7 @@ offset_top = 8.0
 offset_right = 32.0
 offset_bottom = 24.625
 text = "+9"
-label_settings = SubResource("LabelSettings_8eqwi")
+label_settings = SubResource("LabelSettings_hrsbp")
 horizontal_alignment = 1
 
 [node name="Accuracy" type="Control" parent="."]
@@ -87,7 +108,7 @@ offset_top = 8.0
 offset_right = 32.0
 offset_bottom = 24.625
 text = "+9"
-label_settings = SubResource("LabelSettings_8eqwi")
+label_settings = SubResource("LabelSettings_1tu0d")
 horizontal_alignment = 1
 
 [node name="Agility" type="Control" parent="."]
@@ -110,5 +131,5 @@ offset_top = 8.0
 offset_right = 32.0
 offset_bottom = 24.625
 text = "+9"
-label_settings = SubResource("LabelSettings_8eqwi")
+label_settings = SubResource("LabelSettings_b1bvq")
 horizontal_alignment = 1

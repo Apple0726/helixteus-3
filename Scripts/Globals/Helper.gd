@@ -78,7 +78,12 @@ func put_rsrc(container, min_size, objs, remove:bool = true, show_available:bool
 				if not game.show.has("mining"):
 					tooltip += "\n%s" % [tr("STONE_HELP")]
 				mass_str = "kg"
-				format_text(text_node, texture, "Icons/stone", show_available, objs[obj], current_rsrc, mass_str)
+				var stone_amount
+				if objs[obj] is float:
+					stone_amount = objs[obj]
+				elif objs[obj] is Dictionary:
+					stone_amount = get_sum_of_dict(objs[obj])
+				format_text(text_node, texture, "Icons/stone", show_available, stone_amount, current_rsrc, mass_str)
 			elif obj == "time":
 				texture.texture_normal = Data.time_icon
 				text_node.text = time_to_str(objs[obj])

@@ -118,8 +118,8 @@ func initialize_battle():
 		entity.turn_order_box = turn_order_button
 		entity.turn_order = i
 		turn_order_button.pressed.connect(move_view_to_target.bind(entity))
-		turn_order_button.mouse_entered.connect(show_target_icon.bind(entity))
-		turn_order_button.mouse_exited.connect($Target.hide)
+		turn_order_button.mouse_entered.connect(highlight_entity.bind(entity))
+		turn_order_button.mouse_exited.connect(unhighlight_entity.bind(entity))
 	await get_tree().create_timer(min(0.6, 0.15 * len(initiative_order))).timeout
 	next_turn()
 
@@ -128,6 +128,7 @@ func move_view_to_target(entity: BattleEntity):
 		view_battlefield(2.0)
 	else:
 		view_entity(entity, 2.0)
+		print(ships_taking_turn)
 		if not ships_taking_turn.is_empty():
 			for ship_node in ships_taking_turn:
 				if ship_node == entity and not ship_node.turn_taken:
@@ -136,12 +137,19 @@ func move_view_to_target(entity: BattleEntity):
 					battle_GUI.fade_in_main_panel()
 					return
 
-func show_target_icon(entity: BattleEntity):
-	if entity.type != Battle.EntityType.BOUNDARY:
-		move_child($Target, get_child_count())
-		$Target.show()
-		$Target.position = entity.position
+func highlight_entity(entity: BattleEntity):
+	for ship in ship_nodes:
+		if ship != entity:
+			ship.get_node("TextureRect").material.set_shader_parameter("alpha", 0.2)
+	for HX in HX_nodes:
+		if HX != entity:
+			HX.get_node("TextureRect").material.set_shader_parameter("alpha", 0.2)
 
+func unhighlight_entity(entity: BattleEntity):
+	for ship in ship_nodes:
+		ship.get_node("TextureRect").material.set_shader_parameter("alpha", 1.0)
+	for HX in HX_nodes:
+		HX.get_node("TextureRect").material.set_shader_parameter("alpha", 1.0)
 
 func battle_victory_callback():
 	var victory_panel = preload("res://Scenes/Panels/VictoryPanel.tscn").instantiate()
@@ -242,7 +250,8 @@ func next_turn():
 	ships_taking_turn.clear()
 	$Selected.hide()
 	whose_turn_is_it_index += 1
-	# Update initiative_order and whose_turn_is_it_index if a ship or enemy has been defeated
+	# Update initiative_order, whose_turn_is_it_index and entities turn_orders
+	# if a ship or enemy has been defeated
 	for i in len(initiative_order):
 		if i >= len(initiative_order):
 			break
@@ -251,7 +260,8 @@ func next_turn():
 			if i < whose_turn_is_it_index:
 				whose_turn_is_it_index -= 1
 			for j in range(i, len(initiative_order) - 1):
-				initiative_order[j].turn_order -= 1
+				if is_instance_valid(initiative_order[j]):
+					initiative_order[j].turn_order -= 1
 			i -= 1
 	if initiative_order[whose_turn_is_it_index].type == Battle.EntityType.BOUNDARY:
 		scale_before_view_battlefield = game.view.scale.x

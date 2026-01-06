@@ -18,6 +18,7 @@ var fires_remaining:int = 1
 var light_cone
 var light_emission_cone_angle = PI / 4.0
 var display_move_path = false
+var forbid_movement = false
 var display_explosive_AoE = false
 var move_target_position:Vector2
 var move_additional_costs:float
@@ -62,6 +63,7 @@ var highlighted_targets = []
 func _draw() -> void:
 	super()
 	if display_move_path:
+		forbid_movement = false
 		$RayCast2D.clear_exceptions()
 		for target in highlighted_targets:
 			if is_instance_valid(target):
@@ -84,6 +86,8 @@ func _draw() -> void:
 				hit_target.draw_collision_shape = 2
 				highlighted_targets.append(hit_target)
 				if ray_movement_remaining <= 0.0:
+					if is_inf(hit_target.go_through_movement_cost):
+						forbid_movement = true
 					break
 				$RayCast2D.target_position = min(ray_travel_length + ray_movement_remaining, target_line_vector.length()) * target_line_vector.normalized()
 				move_additional_costs += hit_target.go_through_movement_cost
@@ -95,11 +99,15 @@ func _draw() -> void:
 		#var move_actual_distance = move_euclidean_distance / battle_scene.PIXELS_PER_METER + move_additional_costs # m
 		var line_vector = move_euclidean_distance * target_line_vector.normalized()
 		move_target_position = line_vector + position
-		draw_line(Vector2.ZERO, line_vector, Color.WHITE)
-		var dist_str = "%.1f m" % (move_euclidean_distance / battle_scene.PIXELS_PER_METER)
-		if move_additional_costs > 0.0:
-			dist_str += " (+ %.1f m)" % move_additional_costs
-		draw_string(SystemFont.new(), line_vector + 20.0 * Vector2.ONE, dist_str)
+		if forbid_movement:
+			draw_line(Vector2.ZERO, line_vector, Color.RED)
+			draw_string(SystemFont.new(), line_vector + 20.0 * Vector2.ONE, "-", 0, -1, 16, Color.RED)
+		else:
+			draw_line(Vector2.ZERO, line_vector, Color.WHITE)
+			var dist_str = "%.1f m" % (move_euclidean_distance / battle_scene.PIXELS_PER_METER)
+			if move_additional_costs > 0.0:
+				dist_str += " (+ %.1f m)" % move_additional_costs
+			draw_string(SystemFont.new(), line_vector + 20.0 * Vector2.ONE, dist_str)
 	if display_explosive_AoE:
 		draw_circle(battle_scene.mouse_position_local - position, Data.battle_weapon_stats.bomb.AoE_radius[bomb_levels[PATH_1] - 1], Color(1.0, 0.0, 0.0, 0.2))
 		for i in range(0, 32, 2):
@@ -267,17 +275,13 @@ func fire_weapon(weapon_type: int):
 				projectile.end_turn_ready = true
 				break
 	elif weapon_type == battle_GUI.LASER:
-		var laser = preload("res://Scenes/Battle/Weapons/Laser.tscn").instantiate()
-		laser.rotation = weapon_rotation
-		laser.damage = Data.battle_weapon_stats.laser.damage
-		laser.shooter = self
-		laser.weapon_accuracy = Data.battle_weapon_stats.laser.accuracy * accuracy
-		laser.position = position
-		laser.fade_delay = 0.2 if battle_scene.animations_sped_up else 0.5
-		laser.status_effects = {Battle.StatusEffect.STUN: Data.battle_weapon_stats.laser.status_effects[Battle.StatusEffect.STUN][laser_levels[PATH_2] - 1]}
-		battle_scene.add_child(laser)
-		if fires_remaining <= 0:
-			laser.tree_exited.connect(ending_turn)
+		fire_laser(weapon_rotation, true)
+		if $FireWeaponAim.multishot >= 3:
+			fire_laser(weapon_rotation - $FireWeaponAim.multishot_angle)
+			fire_laser(weapon_rotation + $FireWeaponAim.multishot_angle)
+		if $FireWeaponAim.multishot >= 5:
+			fire_laser(weapon_rotation - $FireWeaponAim.multishot_angle / 2.0)
+			fire_laser(weapon_rotation + $FireWeaponAim.multishot_angle / 2.0)
 	elif weapon_type == battle_GUI.BOMB:
 		var explosive = preload("res://Scenes/Battle/Weapons/Explosive.tscn").instantiate()
 		explosive.collision_layer = 8
@@ -307,6 +311,19 @@ func fire_weapon(weapon_type: int):
 		if fires_remaining <= 0:
 			light_cone.tree_exited.connect(ending_turn)
 		light_cone.fire_light(0.2 if battle_scene.animations_sped_up else 1.0)
+
+func fire_laser(angle: float, add_signal: bool = false):
+	var laser = preload("res://Scenes/Battle/Weapons/Laser.tscn").instantiate()
+	laser.rotation = angle
+	laser.damage = Data.battle_weapon_stats.laser.damage
+	laser.shooter = self
+	laser.weapon_accuracy = Data.battle_weapon_stats.laser.accuracy * accuracy
+	laser.position = position
+	laser.fade_delay = 0.2 if battle_scene.animations_sped_up else 0.5
+	laser.status_effects = {Battle.StatusEffect.STUN: Data.battle_weapon_stats.laser.status_effects[Battle.StatusEffect.STUN][laser_levels[PATH_2] - 1]}
+	battle_scene.add_child(laser)
+	if add_signal and fires_remaining <= 0:
+		laser.tree_exited.connect(ending_turn)
 
 
 func add_light_cone():

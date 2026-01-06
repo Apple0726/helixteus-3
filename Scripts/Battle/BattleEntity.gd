@@ -93,6 +93,7 @@ func _ready() -> void:
 		for effect in Battle.StatusEffect.N:
 			status_effects[effect] = 0.0
 	$Info/StatusEffects.entity = self
+	$Info/Buffs.entity = self
 	update_velocity_arrow()
 
 func _draw() -> void:
@@ -377,18 +378,7 @@ func update_entity_HP(label_knockback: Vector2 = Vector2.ZERO, healed: bool = fa
 
 func update_info_labels():
 	$Info/StatusEffects.update()
-	$Info/Buffs/Attack.visible = attack_buff != 0
-	$Info/Buffs/Attack/Label.text = ("+%s" % Helper.format_num(attack_buff)) if attack_buff > 0 else Helper.format_num(attack_buff)
-	$Info/Buffs/Attack/Label.label_settings.font_color = Color.GREEN if attack_buff > 0 else Color.RED
-	$Info/Buffs/Defense.visible = defense_buff != 0
-	$Info/Buffs/Defense/Label.text = ("+%s" % Helper.format_num(defense_buff)) if defense_buff > 0 else Helper.format_num(defense_buff)
-	$Info/Buffs/Defense/Label.label_settings.font_color = Color.GREEN if defense_buff > 0 else Color.RED
-	$Info/Buffs/Accuracy.visible = accuracy_buff != 0
-	$Info/Buffs/Accuracy/Label.text = ("+%s" % Helper.format_num(accuracy_buff)) if accuracy_buff > 0 else Helper.format_num(accuracy_buff)
-	$Info/Buffs/Accuracy/Label.label_settings.font_color = Color.GREEN if accuracy_buff > 0 else Color.RED
-	$Info/Buffs/Agility.visible = agility_buff != 0
-	$Info/Buffs/Agility/Label.text = ("+%s" % Helper.format_num(agility_buff)) if agility_buff > 0 else Helper.format_num(agility_buff)
-	$Info/Buffs/Agility/Label.label_settings.font_color = Color.GREEN if agility_buff > 0 else Color.RED
+	$Info/Buffs.update()
 
 func entity_defeated_callback(knockback:Vector2 = Vector2.ZERO):
 	var entity_dying_tween = create_tween().set_parallel()
@@ -426,7 +416,7 @@ func collide_with_entity(collider: BattleEntity, collidee: BattleEntity):
 	var collider_mass = collider.get_mass()
 	var collider_weapon_data = {
 		"type":Battle.DamageType.PHYSICAL,
-		"damage": collider_mass * collider.velocity.length_squared() * 0.00002,
+		"damage": collider_mass * collider.velocity.length_squared() * 0.000015,
 		"shooter_attack":collider.attack,
 		"weapon_accuracy":collider.accuracy,
 		"orientation":collider.velocity.normalized(),
@@ -439,7 +429,7 @@ func collide_with_entity(collider: BattleEntity, collidee: BattleEntity):
 		if not collidee.moving_from_velocity:
 			var collidee_weapon_data = {
 				"type":Battle.DamageType.PHYSICAL,
-				"damage": collidee_mass * collider.velocity.length_squared() * 0.00002,
+				"damage": collidee_mass * collider.velocity.length_squared() * 0.000015,
 				"shooter_attack":collidee.attack,
 				"weapon_accuracy":INF,
 				"orientation":collidee.velocity.normalized(),

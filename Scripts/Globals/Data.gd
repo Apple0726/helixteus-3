@@ -451,6 +451,7 @@ var battle_weapon_stats = {
 					Battle.StatusEffect.STUN:[[0.8, 1], [0.8, 1], [0.8, 2], [0.8, 2]],
 				},
 				"consecutive_fires":[1, 2, 2, 3],
+				"multishot":[1, 1, 3, 5],
 			},
 	"bomb": {	"damage":6.0,
 				"accuracy":0.65,

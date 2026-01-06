@@ -17,15 +17,14 @@ func _on_Overlay_pressed():
 	game.overlay.visible = not game.overlay.visible
 
 func _on_Megastructures_pressed():
-	if $ConstructPanel.visible:
-		$ConstructPanel.hide()
+	if $MSConstructPanel.visible:
+		$MSConstructPanel.hide()
 	else:
 		game.hide_tooltip()
-		$ConstructPanel.tab = "megastructures"
-		$ConstructPanel/AnimationPlayer.play("Fade")
-		$ConstructPanel.visible = true
-		$ConstructPanel.set_process_input(true)
-		$ConstructPanel.refresh()
+		$MSConstructPanel/AnimationPlayer.play("Fade")
+		$MSConstructPanel.visible = true
+		$MSConstructPanel.set_process_input(true)
+		$MSConstructPanel.refresh()
 	if $StarPanel.visible:
 		$StarPanel/AnimationPlayer.play_backwards("Fade")
 

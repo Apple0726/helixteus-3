@@ -283,11 +283,6 @@ value = 1.0
 alignment = 1
 update_on_text_changed = true
 
-[node name="BuildAll" type="CheckBox" parent="Panel/ScrollContainer/VBoxContainer"]
-layout_mode = 2
-text = "BUILD_ALL_AT_ONCE"
-text_overrun_behavior = 1
-
 [node name="Button" type="Button" parent="Panel/ScrollContainer/VBoxContainer"]
 custom_minimum_size = Vector2(0, 100)
 layout_mode = 2
@@ -328,7 +323,4 @@ libraries = {
 [connection signal="mouse_exited" from="Panel/VBoxContainer/Ancient" to="." method="_on_ancient_mouse_exited"]
 [connection signal="pressed" from="Panel/VBoxContainer/Ancient" to="." method="_on_tab_pressed" binds= ["Ancient"]]
 [connection signal="value_changed" from="Panel/ScrollContainer/VBoxContainer/HBoxContainer/Tier" to="." method="_on_tier_value_changed"]
-[connection signal="mouse_entered" from="Panel/ScrollContainer/VBoxContainer/BuildAll" to="." method="_on_build_all_mouse_entered"]
-[connection signal="mouse_exited" from="Panel/ScrollContainer/VBoxContainer/BuildAll" to="." method="_on_build_all_mouse_exited"]
-[connection signal="toggled" from="Panel/ScrollContainer/VBoxContainer/BuildAll" to="." method="_on_build_all_toggled"]
 [connection signal="animation_finished" from="AnimationPlayer" to="." method="_on_construct_panel_animation_animation_finished"]

@@ -7,6 +7,8 @@ var target_angle_max_deviation_visual:float
 var aim_accuracy_transparency:float
 var length:float
 var ship_node
+var multishot:int
+var multishot_angle:float
 
 func _process(delta: float) -> void:
 	queue_redraw()
@@ -32,3 +34,9 @@ func _draw() -> void:
 	draw_line(Vector2.ZERO, length * 1.3 * Vector2.from_angle(target_angle + target_angle_max_deviation_visual), Color(1.0, 1.0, 1.0, aim_accuracy_transparency * 0.5))
 	if is_instance_valid(ship_node) and ship_node.fires_remaining > 1:
 		draw_string(SystemFont.new(), length * 1.3 * Vector2.from_angle(target_angle), "x %d" % ship_node.fires_remaining, HORIZONTAL_ALIGNMENT_LEFT, -1, 16, Color(1.0, 1.0, 1.0, aim_accuracy_transparency))
+	if multishot >= 3:
+		draw_line(Vector2.ZERO, length * 1.3 * Vector2.from_angle(target_angle - multishot_angle), Color(1.0, 1.0, 1.0, aim_accuracy_transparency))
+		draw_line(Vector2.ZERO, length * 1.3 * Vector2.from_angle(target_angle + multishot_angle), Color(1.0, 1.0, 1.0, aim_accuracy_transparency))
+	if multishot >= 5:
+		draw_line(Vector2.ZERO, length * 1.3 * Vector2.from_angle(target_angle - multishot_angle / 2.0), Color(1.0, 1.0, 1.0, aim_accuracy_transparency))
+		draw_line(Vector2.ZERO, length * 1.3 * Vector2.from_angle(target_angle + multishot_angle / 2.0), Color(1.0, 1.0, 1.0, aim_accuracy_transparency))

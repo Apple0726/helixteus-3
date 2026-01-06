@@ -1,7 +1,6 @@
-[gd_scene load_steps=12 format=3 uid="uid://dwa665hyuis2m"]
+[gd_scene load_steps=11 format=3 uid="uid://dwa665hyuis2m"]
 
 [ext_resource type="Script" uid="uid://dpxy6ld61573q" path="res://Scripts/Battle/Battle.gd" id="1_ylili"]
-[ext_resource type="Texture2D" uid="uid://b8xut3yn8djrb" path="res://Graphics/Buttons/target.png" id="3_jew2s"]
 [ext_resource type="Shader" uid="uid://hfa3ri2g3507" path="res://Shaders/FloatAnimation.gdshader" id="4_n5aww"]
 [ext_resource type="Texture2D" uid="uid://47ckp0wuhpfy" path="res://Graphics/Icons/current.png" id="5_jb0nx"]
 [ext_resource type="Script" uid="uid://ba4b8qs3erkxr" path="res://Scripts/Battle/Boundary.gd" id="7_lc3cj"]
@@ -62,11 +61,6 @@ shape = SubResource("WorldBoundaryShape2D_n5aww")
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_bypyr")
-
-[node name="Target" type="Sprite2D" parent="."]
-visible = false
-scale = Vector2(0.42, 0.42)
-texture = ExtResource("3_jew2s")
 
 [node name="Selected" type="Sprite2D" parent="."]
 visible = false
