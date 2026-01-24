@@ -17,12 +17,6 @@ var reactions:Dictionary = {	"stone":{"MM":"", "atoms":["H", "He", "C", "N", "O"
 								"iron":{"MM":"mets", "atoms":["Fe"]},
 								"aluminium":{"MM":"mets", "atoms":["Al"]},
 								"silicon":{"MM":"mats", "atoms":["Si"]},
-								"amethyst":{"MM":"mets", "atoms":["Si", "O"]},
-								"emerald":{"MM":"mets", "atoms":["Al", "Si", "O"]},
-								"quartz":{"MM":"mets", "atoms":["Si", "O"]},
-								"topaz":{"MM":"mets", "atoms":["Al", "Si", "O", "F", "H"]},
-								"ruby":{"MM":"mets", "atoms":["Al", "O"]},
-								"sapphire":{"MM":"mets", "atoms":["Al", "O"]},
 								"titanium":{"MM":"mets", "atoms":["Ti"]},
 								"platinum":{"MM":"mets", "atoms":["Pt"]},
 								"diamond":{"MM":"mets", "atoms":["C"]},
@@ -88,53 +82,6 @@ func _on_silicon_pressed(_name:String, dict:Dictionary):
 	refresh()
 	$Control/Switch.visible = true
 
-func _on_aluminium_pressed(_name:String, dict:Dictionary):
-	reset_poses(_name, dict)
-	ratios = {"Al":1000.0 / 26.982}
-	rsrc_nodes_from = Helper.put_rsrc($Control2/ScrollContainer/From, 32, atom_costs, true, true)
-	rsrc_nodes_to = Helper.put_rsrc($Control2/To, 32, {"aluminium":0})
-	metal = "aluminium"
-	energy_cost = 60
-	difficulty = 0.07
-	refresh()
-	$Control/Switch.visible = true
-
-func _on_amethyst_pressed(_name:String, dict:Dictionary):
-	reset_poses(_name, dict)
-	ratios = {"Si":1000.0 / 28.085, "O":1000.0 / (15.999 * 2)}
-	atom_costs = {"Si":0, "O":0}
-	rsrc_nodes_from = Helper.put_rsrc($Control2/ScrollContainer/From, 32, atom_costs, true, true)
-	rsrc_nodes_to = Helper.put_rsrc($Control2/To, 32, {"amethyst":0})
-	metal = "amethyst"
-	energy_cost = 580
-	difficulty = 0.1
-	refresh()
-	$Control/Switch.visible = true
-
-func _on_emerald_pressed(_name:String, dict:Dictionary):
-	reset_poses(_name, dict)
-	ratios = {"Al":1000.0 / (26.982 * 2), "Si":1000.0 / (28.085 * 6), "O":1000.0 / (15.999 * 12)}
-	atom_costs = {"Al":0, "Si":0, "O":0}
-	rsrc_nodes_from = Helper.put_rsrc($Control2/ScrollContainer/From, 32, atom_costs, true, true)
-	rsrc_nodes_to = Helper.put_rsrc($Control2/To, 32, {"emerald":0})
-	metal = "emerald"
-	energy_cost = 580
-	difficulty = 0.1
-	refresh()
-	$Control/Switch.visible = true
-
-func _on_quartz_pressed(_name:String, dict:Dictionary):
-	reset_poses(_name, dict)
-	ratios = {"Si":1000.0 / 28.085, "O":1000.0 / (15.999 * 2)}
-	atom_costs = {"Si":0, "O":0}
-	rsrc_nodes_from = Helper.put_rsrc($Control2/ScrollContainer/From, 32, atom_costs, true, true)
-	rsrc_nodes_to = Helper.put_rsrc($Control2/To, 32, {"quartz":0})
-	metal = "quartz"
-	energy_cost = 590
-	difficulty = 0.1
-	refresh()
-	$Control/Switch.visible = true
-
 func _on_quillite_pressed(_name:String, dict:Dictionary):
 	reset_poses(_name, dict)
 	ratios = {"Si":1000.0 / 28.085, "O":1000.0 / (15.999 * 2), "Ne":1000.0 / 20.1797}
@@ -144,42 +91,6 @@ func _on_quillite_pressed(_name:String, dict:Dictionary):
 	metal = "quillite"
 	energy_cost = 1900000
 	difficulty = 3.2
-	refresh()
-	$Control/Switch.visible = true
-
-func _on_topaz_pressed(_name:String, dict:Dictionary):
-	reset_poses(_name, dict)
-	ratios = {"Al":1000.0 / (26.982 * 2), "Si":1000.0 / (28.085), "O":1000.0 / (15.999 * 6), "F":1000.0 / (18.998 * 2), "H":1000.0 / (1.008 * 2)}
-	atom_costs = {"Al":0, "Si":0, "O":0, "F":0, "H":0}
-	rsrc_nodes_from = Helper.put_rsrc($Control2/ScrollContainer/From, 32, atom_costs, true, true)
-	rsrc_nodes_to = Helper.put_rsrc($Control2/To, 32, {"topaz":0})
-	metal = "topaz"
-	energy_cost = 590
-	difficulty = 0.1
-	refresh()
-	$Control/Switch.visible = true
-
-func _on_ruby_pressed(_name:String, dict:Dictionary):
-	reset_poses(_name, dict)
-	ratios = {"Al":1000.0 / (26.982 * 2), "O":1000.0 / (15.999 * 3)}
-	atom_costs = {"Al":0, "O":0}
-	rsrc_nodes_from = Helper.put_rsrc($Control2/ScrollContainer/From, 32, atom_costs, true, true)
-	rsrc_nodes_to = Helper.put_rsrc($Control2/To, 32, {"ruby":0})
-	metal = "ruby"
-	energy_cost = 590
-	difficulty = 0.1
-	refresh()
-	$Control/Switch.visible = true
-
-func _on_sapphire_pressed(_name:String, dict:Dictionary):
-	reset_poses(_name, dict)
-	ratios = {"Al":1000.0 / (26.982 * 2), "O":1000.0 / (15.999 * 3)}
-	atom_costs = {"Al":0, "O":0}
-	rsrc_nodes_from = Helper.put_rsrc($Control2/ScrollContainer/From, 32, atom_costs, true, true)
-	rsrc_nodes_to = Helper.put_rsrc($Control2/To, 32, {"sapphire":0})
-	metal = "sapphire"
-	energy_cost = 600
-	difficulty = 0.1
 	refresh()
 	$Control/Switch.visible = true
 

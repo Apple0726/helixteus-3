@@ -98,7 +98,7 @@ size_flags_horizontal = 3
 button_text = "PARTICLES"
 
 [node name="Information" type="Label" parent="."]
-layout_mode = 2
+layout_mode = 0
 offset_left = 176.0
 offset_top = 120.0
 offset_right = 1088.0

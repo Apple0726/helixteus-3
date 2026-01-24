@@ -74,9 +74,6 @@ func refresh(type:String, _curr_cmp:String, _is_inventory:bool = false, _index:i
 			var l_metal = metal.to_lower()
 			if l_metal != "stone" and not l_metal == "gemstone" and not game.show.has(l_metal):
 				continue
-			if l_metal == "gemstone":
-				if not game.show.has("amethyst") and not game.show.has("emerald") and not game.show.has("quartz") and not game.show.has("ruby") and not game.show.has("sapphire") and not game.show.has("topaz"):
-					continue
 		var slot = preload("res://Scenes/InventorySlot.tscn").instantiate()
 		slot.get_node("TextureRect").texture = load("res://Graphics/Cave/%s/%s.png" % [dir, cmp])
 		slot.get_node("Button").connect("mouse_entered",Callable(self,"_on_Slot_mouse_entered").bind(type, cmp, metal))
