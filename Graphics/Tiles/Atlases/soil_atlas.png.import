@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://4e7bahmd3w14"
-path="res://.godot/imported/PlanetAtlas.png-f9d9db1ea5125b5be31619f88ba07b60.ctex"
+uid="uid://dyqh6w7uhykkx"
+path="res://.godot/imported/soil_atlas.png-9144d866a6213c75a35aa3647e9bb78a.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Graphics/Tiles/PlanetAtlas.png"
-dest_files=["res://.godot/imported/PlanetAtlas.png-f9d9db1ea5125b5be31619f88ba07b60.ctex"]
+source_file="res://Graphics/Tiles/Atlases/soil_atlas.png"
+dest_files=["res://.godot/imported/soil_atlas.png-9144d866a6213c75a35aa3647e9bb78a.ctex"]
 
 [params]
 

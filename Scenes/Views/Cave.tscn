@@ -12,7 +12,7 @@
 [ext_resource type="PackedScene" uid="uid://cpfkb4haasun3" path="res://Scenes/CaveHole.tscn" id="9"]
 [ext_resource type="Texture2D" uid="uid://yhdxrw2q1yep" path="res://Graphics/HX/Status effects/Stun.png" id="10"]
 [ext_resource type="Texture2D" uid="uid://64ywd74o1wk7" path="res://Graphics/Cave/Rover top down.png" id="11"]
-[ext_resource type="TileSet" uid="uid://c38qxbp5cjiy0" path="res://Resources/CaveWalls.tres" id="12"]
+[ext_resource type="TileSet" uid="uid://c38qxbp5cjiy0" path="res://Resources/CaveWallsTileSet.tres" id="12"]
 [ext_resource type="Texture2D" uid="uid://vj3h3by1epm8" path="res://Graphics/Cave/Objects/exit.png" id="13"]
 [ext_resource type="Shader" uid="uid://dose2l8hnixm6" path="res://Shaders/Fire.gdshader" id="14"]
 [ext_resource type="Texture2D" uid="uid://3aket0dmatt4" path="res://Graphics/Cave/minimap.png" id="15"]

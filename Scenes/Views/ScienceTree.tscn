@@ -1,4 +1,4 @@
-[gd_scene load_steps=64 format=3 uid="uid://duysnevbde4kj"]
+[gd_scene load_steps=63 format=3 uid="uid://duysnevbde4kj"]
 
 [ext_resource type="PackedScene" uid="uid://bhiykvhp7e82u" path="res://Scenes/ScienceButton.tscn" id="1"]
 [ext_resource type="Script" uid="uid://ww7r2r8gcxw3" path="res://Scripts/ScienceTree.gd" id="2"]
@@ -7,7 +7,6 @@
 [ext_resource type="Texture2D" uid="uid://dg25fshk35326" path="res://Graphics/Icons/SP.png" id="5_uvhfr"]
 [ext_resource type="Texture2D" uid="uid://cdqb8dr8jf33" path="res://Graphics/Buildings/mineral_silo.png" id="6_sbmbi"]
 [ext_resource type="Texture2D" uid="uid://dq0i6jjxj5nxl" path="res://Graphics/Pickaxes/iron_pickaxe.png" id="7_hknxr"]
-[ext_resource type="Texture2D" uid="uid://c02m0dq0w0k4g" path="res://Graphics/Science/ATM.png" id="8_fvdk8"]
 [ext_resource type="Texture2D" uid="uid://dwr1aw0b05sht" path="res://Graphics/Science/RC.png" id="9_evco7"]
 [ext_resource type="Texture2D" uid="uid://koi0aarpqj30" path="res://Graphics/Ships/Ship0.png" id="10_yvcl0"]
 [ext_resource type="Texture2D" uid="uid://di3sx4ynm6kot" path="res://Graphics/Science/CD.png" id="11_4oae0"]
@@ -212,7 +211,7 @@ offset_top = 560.0
 offset_right = 624.0
 offset_bottom = 624.0
 infinite_research = true
-icon_texture = ExtResource("8_fvdk8")
+icon_texture = ExtResource("12_vuk7d")
 
 [node name="Main" type="Control" parent="."]
 layout_mode = 3

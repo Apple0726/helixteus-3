@@ -146,8 +146,9 @@ var debris_amount:float
 
 func _ready():
 	if p_i.has("lake"):
-		cave_wall.tile_set.get_source(0).texture = preload("res://Graphics/Tiles/frozen_cave_wall_atlas.png")
-	$Ash.tile_set = ResourceFiles.ash_tile_set
+		cave_wall.tile_set.get_source(0).texture = preload("res://Graphics/Tiles/Atlases/frozen_cave_wall_atlas.png")
+	$Ash.tile_set = ResourceFiles.soil_tile_set
+	$Walls.tile_set = ResourceFiles.cave_walls_tile_set
 	camera.make_current()
 	$Exit/GPUParticles2D.emitting = true
 	$UI2/Controls.center_position = Vector2(640, 160)

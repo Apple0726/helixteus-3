@@ -1,6 +1,6 @@
 [gd_resource type="TileSet" load_steps=52 format=3 uid="uid://c38qxbp5cjiy0"]
 
-[ext_resource type="Texture2D" uid="uid://cxcyr8qa3cyxp" path="res://Graphics/Tiles/CaveSpritesheet.png" id="1_15al1"]
+[ext_resource type="Texture2D" uid="uid://cxcyr8qa3cyxp" path="res://Graphics/Tiles/Atlases/cave_wall_atlas.png" id="1_15al1"]
 [ext_resource type="Texture2D" uid="uid://6n3dlkawv1yf" path="res://Graphics/Tiles/Empty.jpg" id="2_mq400"]
 
 [sub_resource type="OccluderPolygon2D" id="OccluderPolygon2D_6ncgo"]
@@ -146,7 +146,7 @@ polygon = PackedVector2Array(100, 83.33333, 83.333336, 100, -83.33333, 100, -100
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_a4kio"]
 texture = ExtResource("1_15al1")
-texture_region_size = Vector2i(200, 200)
+texture_region_size = Vector2i(50, 50)
 0:0/0 = 0
 0:0/0/terrain_set = 0
 0:0/0/terrain = 0
@@ -579,7 +579,7 @@ texture_region_size = Vector2i(200, 200)
 0:0/0/physics_layer_0/polygon_0/points = PackedVector2Array(-100, -100, 100, -100, 100, 100, -100, 100)
 
 [resource]
-tile_size = Vector2i(200, 200)
+tile_size = Vector2i(50, 50)
 occlusion_layer_0/light_mask = 1
 physics_layer_0/collision_layer = 1
 terrain_set_0/mode = 0
