@@ -190,9 +190,6 @@ func refresh_options(index:int, recalculate:bool = true):
 	game.overlay_data[game.c_v].overlay = index
 	send_overlay_info(index)
 
-func e(n, e):
-	return n * pow(10, e)
-
 func send_overlay_info(index):
 	game.view.obj.change_overlay(index, $TextureRect.texture.gradient)
 

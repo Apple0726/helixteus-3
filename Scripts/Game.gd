@@ -296,14 +296,14 @@ var pickaxes_info = {"stick":{"speed":1.0, "durability":140, "costs":{"money":30
 					"copper_pickaxe":{"speed":7.4, "durability":600, "costs":{"money":580000}},
 					"iron_pickaxe":{"speed":11.2, "durability":900, "costs":{"money":4350000}},
 					"aluminium_pickaxe":{"speed":17.8, "durability":800, "costs":{"money":20500000}},
-					"silver_pickaxe":{"speed":28.7, "durability":1000, "costs":{"money":e(8, 7)}},
-					"gold_pickaxe":{"speed":190.0, "durability":150, "costs":{"money":e(6.25, 8)}},
-					#"gemstone_pickaxe":{"speed":85.0, "durability":1200, "costs":{"money":e(9.5, 8)}},
-					"titanium_pickaxe":{"speed":175.0, "durability":2500, "costs":{"money":e(8.2, 9)}},
-					"platinum_pickaxe":{"speed":330.0, "durability":1300, "costs":{"money":e(1.15, 10)}},
-					"diamond_pickaxe":{"speed":775.0, "durability":2000, "costs":{"money":e(5.4, 10)}},
-					"nanocrystal_pickaxe":{"speed":4980.0, "durability":770, "costs":{"money":e(3.25, 11)}},
-					"mythril_pickaxe":{"speed":19600.0, "durability":4000, "costs":{"money":e(6.4, 12)}},
+					"silver_pickaxe":{"speed":28.7, "durability":1000, "costs":{"money":8.0e7}},
+					"gold_pickaxe":{"speed":190.0, "durability":150, "costs":{"money":6.25e8}},
+					#"gemstone_pickaxe":{"speed":85.0, "durability":1200, "costs":{"money":9.5e8}},
+					"titanium_pickaxe":{"speed":175.0, "durability":2500, "costs":{"money":8.2e9}},
+					"platinum_pickaxe":{"speed":330.0, "durability":1300, "costs":{"money":1.15e10}},
+					"diamond_pickaxe":{"speed":775.0, "durability":2000, "costs":{"money":5.4e10}},
+					"nanocrystal_pickaxe":{"speed":4980.0, "durability":770, "costs":{"money":3.25e11}},
+					"mythril_pickaxe":{"speed":19600.0, "durability":4000, "costs":{"money":6.4e12}},
 }
 
 var seeds_produce = {"lead_seeds":{"costs":{"cellulose":0.05}, "produce":{"lead":0.1}},
@@ -341,7 +341,7 @@ var achievements:Dictionary = {
 		"3":tr("CONQUER_OBJECTIVE").format({"num":Helper.format_num(1000, false, 308), "object":tr("PLANETS")}),
 		"4":tr("CONQUER_OBJECTIVE").format({"num":Helper.format_num(10000, false, 308), "object":tr("PLANETS")}),
 		"5":tr("CONQUER_OBJECTIVE").format({"num":Helper.format_num(100000, false, 308), "object":tr("PLANETS")}),
-		"6":tr("CONQUER_OBJECTIVE").format({"num":Helper.format_num(e(1, 6), false, 308), "object":tr("PLANETS")}),
+		"6":tr("CONQUER_OBJECTIVE").format({"num":Helper.format_num(1.0e6, false, 308), "object":tr("PLANETS")}),
 		"fully_conquer_system":tr("FULLY_CONQUER_SYSTEM"),
 		"fully_conquer_galaxy":tr("FULLY_CONQUER_GALAXY"),
 		"fully_conquer_cluster":tr("FULLY_CONQUER_CLUSTER"),
@@ -349,10 +349,10 @@ var achievements:Dictionary = {
 	"construct":{
 		"0":tr("BUILD_OBJECTIVE").format({"num":100, "bldg":tr("BUILDINGS")}),
 		"1":tr("BUILD_OBJECTIVE").format({"num":Helper.format_num(10000, false, 308), "bldg":tr("BUILDINGS")}),
-		"2":tr("BUILD_OBJECTIVE").format({"num":Helper.format_num(e(1, 6), false, 308), "bldg":tr("BUILDINGS")}),
-		"3":tr("BUILD_OBJECTIVE").format({"num":Helper.format_num(e(1, 8), false, 308), "bldg":tr("BUILDINGS")}),
-		"4":tr("BUILD_OBJECTIVE").format({"num":Helper.format_num(e(1, 10), false, 308), "bldg":tr("BUILDINGS")}),
-		"5":tr("BUILD_OBJECTIVE").format({"num":Helper.format_num(e(1, 12), false, 308), "bldg":tr("BUILDINGS")}),
+		"2":tr("BUILD_OBJECTIVE").format({"num":Helper.format_num(1.0e6, false, 308), "bldg":tr("BUILDINGS")}),
+		"3":tr("BUILD_OBJECTIVE").format({"num":Helper.format_num(1.0e8, false, 308), "bldg":tr("BUILDINGS")}),
+		"4":tr("BUILD_OBJECTIVE").format({"num":Helper.format_num(1.0e10, false, 308), "bldg":tr("BUILDINGS")}),
+		"5":tr("BUILD_OBJECTIVE").format({"num":Helper.format_num(1.0e12, false, 308), "bldg":tr("BUILDINGS")}),
 	},
 	"exploration":{
 		"B_star":tr("FIND_CLASS_X_STAR") % "B",
@@ -834,7 +834,7 @@ func new_game(univ:int = 0, new_save:bool = false, DR_advantage = false):
 			achievement_data[ach] = {}
 		if subject_levels.dimensional_power <= 4:
 			universe_data = [{"id":0, "lv":1, "generated":true, "xp":0, "xp_to_lv":10, "shapes":[], "name":tr("UNIVERSE"), "cluster_num":1000, "view":{"pos":Vector2(640, 360), "zoom":1.0, "sc_mult":0.1}}]
-			universe_data[0].speed_of_light = 1.0#e(3.0, 8)#m/s
+			universe_data[0].speed_of_light = 1.0#3.0e8#m/s
 			universe_data[0].planck = 1.0#e(6.626, -34)#J.s
 			universe_data[0].boltzmann = 1.0#e(1.381, -23)#J/K
 			universe_data[0].gravitational = 1.0#e(6.674, -11)#m^3/kg/s^2
@@ -2733,7 +2733,7 @@ func generate_planets(id:int):#local id
 	var star_boundary = star_size_in_pixels(first_star.size / 2.0)
 	var max_star_temp = get_max_star_prop(id, "temperature")
 	var max_star_size = get_max_star_prop(id, "size")
-	var star_size_in_km = max_star_size * e(6.957, 5)
+	var star_size_in_km = max_star_size * 6.957e5
 	var center_star_r_in_pixels:float = star_size_in_pixels(first_star.size) / 2.0
 	var circles:Array = [[Vector2.ZERO, center_star_r_in_pixels]]
 	var N_stars = len(system_data[id].stars)
@@ -3810,9 +3810,6 @@ func add_resources(costs):
 			elif cost == "stone":
 				new_bldgs[Building.STONE_CRUSHER] = true
 
-func e(n, e):
-	return n * pow(10, e)
-
 var quadrant_top_left:PackedVector2Array = [Vector2(0, 0), Vector2(640, 0), Vector2(640, 360), Vector2(0, 360)]
 var quadrant_top_right:PackedVector2Array = [Vector2(640, 0), Vector2(1280, 0), Vector2(1280, 360), Vector2(640, 360)]
 var quadrant_bottom_left:PackedVector2Array = [Vector2(0, 360), Vector2(640, 360), Vector2(640, 720), Vector2(0, 720)]
@@ -4308,7 +4305,7 @@ func return_to_menu_confirm():
 
 func generate_new_univ_confirm():
 	universe_data.append({"id":0, "lv":1, "xp":0, "xp_to_lv":10, "shapes":[], "name":tr("UNIVERSE"), "cluster_num":1000, "view":{"pos":Vector2(640 * 0.5, 360 * 0.5), "zoom":2, "sc_mult":0.1}})
-	universe_data[0].speed_of_light = 1.0#e(3.0, 8)#m/s
+	universe_data[0].speed_of_light = 1.0#3.0e8#m/s
 	universe_data[0].planck = 1.0#e(6.626, -34)#J.s
 	universe_data[0].boltzmann = 1.0#e(1.381, -23)#J/K
 	universe_data[0].gravitational = 1.0#e(6.674, -11)#m^3/kg/s^2

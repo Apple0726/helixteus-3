@@ -147,9 +147,6 @@ func add_rsrc(v:Vector2, mod:Color, icon, id:int, sc:float = 1):
 	rsrcs[id] = rsrc
 	return rsrc
 
-func e(n, e):
-	return n * pow(10, e)
-
 func on_galaxy_over (id:int):
 	var g_i = game.galaxy_data[id]
 	var tooltip:String = g_i.name if g_i.has("name") else ("%s %s" % [tr("GALAXY"), id])
@@ -257,7 +254,7 @@ func change_overlay(overlay_id:int, gradient:Gradient, object:Dictionary = {}):
 				Helper.set_overlay_visibility(gradient, overlay, offset)
 		5:
 			for overlay in _overlays:
-				var offset = inverse_lerp(c_vl.left, c_vl.right, game.galaxy_data[overlay.id].B_strength * e(1, 9))
+				var offset = inverse_lerp(c_vl.left, c_vl.right, game.galaxy_data[overlay.id].B_strength * 1.0e9)
 				Helper.set_overlay_visibility(gradient, overlay, offset)
 		6:
 			for overlay in _overlays:

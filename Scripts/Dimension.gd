@@ -324,9 +324,6 @@ func on_univ_over(id:int):
 #	if game.subjects.dimensional_power.lv > 2:
 #		$UnivInfo.text += "\n%s: %s" % [tr("UNIVERSE_VALUE"), u_i.universe_value]
 
-func e(n, e):
-	return n * pow(10, e)
-
 func on_univ_press(id:int):
 	$UnivInfo/AnimationPlayer.play_backwards("Fade")
 	var u_i:Dictionary = game.universe_data[id]

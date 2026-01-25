@@ -86,8 +86,9 @@ func _ready():
 	rsrcs = []
 	rsrcs.resize(wid * wid)
 	dimensions = wid * 200
-	$Ash.tile_set = ResourceFiles.ash_tile_set
+	$Ash.tile_set = ResourceFiles.soil_tile_set
 	$PlanetTiles.tile_set = ResourceFiles.planet_tile_set
+	$PlanetTiles.scale = 200 * Vector2i.ONE / $PlanetTiles.tile_set.tile_size
 	$PlanetTiles.rendering_quadrant_size = wid
 	$Soil.tile_set = ResourceFiles.soil_tile_set
 	var nuclear_fusion_reactor_main_tiles = []
@@ -219,7 +220,7 @@ func _ready():
 	$Ash.set_cells_terrain_connect(ash_tiles, 0, 0)
 	seed(p_i.seed)
 	$PlanetTiles.material.set_shader_parameter("planet_texture", load("res://Graphics/Tiles/Mosaics/%sr.jpg" % randi_range(1, 8)))
-	$PlanetTiles.material.set_shader_parameter("texture_zoom", randf_range(0.5, 2.0))
+	$PlanetTiles.material.set_shader_parameter("texture_zoom", randf_range(0.5, 2.0) * 200.0 / $PlanetTiles.tile_set.tile_size.x)
 	$PlanetTiles.material.set_shader_parameter("texture_offset", Vector2(randf_range(0.0, 4000.0), randf_range(0.0, 4000.0)))
 	$PlanetTiles.set_cells_terrain_connect(planet_tiles, 0, 0)
 	$Lake.size = Vector2.ONE * 200.0 * wid
@@ -1508,7 +1509,7 @@ func add_time_bar(id2:int, type:String):
 func add_bldg_sprite(pos:Vector2, _name:int, texture, building_animation:bool = false, mod:Color = Color.WHITE, sc:float = 0.4, offset:Vector2 = Vector2(100, 100)):
 	var bldg = Sprite2D.new()
 	bldg.texture = texture
-	bldg.scale *= sc * 0.8
+	bldg.scale *= sc * 0.8 * 512.0 / texture.get_width()
 	bldg.position = pos + offset + Vector2.UP * 30.0
 	bldg.self_modulate = mod
 	if building_animation:
@@ -1784,7 +1785,7 @@ func place_gray_tiles_mining():
 	
 func put_shadow(spr:Sprite2D, texture, pos:Vector2 = Vector2.ZERO, sc:float = 0.4, offset:Vector2 = Vector2.ONE * 100):
 	spr.texture = texture
-	spr.scale *= sc * 0.8
+	spr.scale *= sc * 0.8 * 512.0 / texture.get_width()
 	spr.modulate.a = 0.5
 	spr.position = (floor(pos / 200) * 200).clamp(Vector2.ZERO, Vector2.ONE * wid * 200) + offset + Vector2.UP * 30.0
 	add_child(spr)

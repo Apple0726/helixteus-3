@@ -227,9 +227,6 @@ func _on_Send_pressed(send_all:bool = false):
 func _on_HSlider_value_changed(value):
 	refresh_energy()
 
-func e(n, e):
-	return n * pow(10, e)
-	
 func _on_TP_value_changed(value:float, prop:String):
 	var text_node:LineEdit = get_node("TP/VBox/%s/Label2" % prop)
 	if get_viewport().gui_get_focus_owner() is HSlider:
