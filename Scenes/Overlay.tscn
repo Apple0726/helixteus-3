@@ -1,4 +1,4 @@
-[gd_scene load_steps=17 format=3 uid="uid://c0yiufm0ffo3f"]
+[gd_scene format=3 uid="uid://c0yiufm0ffo3f"]
 
 [ext_resource type="Theme" uid="uid://cp2u1kgj60ic" path="res://Resources/default_theme.tres" id="1"]
 [ext_resource type="Script" uid="uid://d01mxaimy30tm" path="res://Scripts/Overlay.gd" id="2"]
@@ -40,7 +40,7 @@ border_width_top = 1
 border_width_right = 1
 border_width_bottom = 1
 
-[node name="Overlay" type="Control"]
+[node name="Overlay" type="Control" unique_id=752859766]
 layout_mode = 3
 anchors_preset = 7
 anchor_left = 0.5
@@ -57,21 +57,21 @@ theme = ExtResource("1")
 script = ExtResource("2")
 metadata/_edit_vertical_guides_ = [640.0]
 
-[node name="GUI" type="NinePatchRect" parent="."]
+[node name="GUI" type="NinePatchRect" parent="." unique_id=1407013579]
 layout_mode = 1
 offset_left = 264.0
 offset_top = 576.0
 offset_right = 1016.0
 offset_bottom = 720.0
 texture = SubResource("CompressedTexture2D_rqkrj")
-patch_margin_left = 408
-patch_margin_top = 80
-patch_margin_right = 80
-patch_margin_bottom = 64
+patch_margin_left = 15
+patch_margin_top = 11
+patch_margin_right = 15
+patch_margin_bottom = 11
 axis_stretch_horizontal = 1
 metadata/_edit_horizontal_guides_ = [596.0]
 
-[node name="TextureRect" type="TextureRect" parent="."]
+[node name="TextureRect" type="TextureRect" parent="." unique_id=2090229188]
 layout_mode = 1
 anchors_preset = 7
 anchor_left = 0.5
@@ -87,7 +87,7 @@ grow_vertical = 0
 texture = SubResource("1")
 expand_mode = 1
 
-[node name="Yes" type="Label" parent="."]
+[node name="Yes" type="Label" parent="." unique_id=1179671722]
 layout_mode = 1
 anchors_preset = 7
 anchor_left = 0.5
@@ -104,7 +104,7 @@ mouse_filter = 1
 text = "YES"
 horizontal_alignment = 1
 
-[node name="No" type="Label" parent="."]
+[node name="No" type="Label" parent="." unique_id=396066728]
 layout_mode = 1
 anchors_preset = 7
 anchor_left = 0.5
@@ -121,7 +121,7 @@ mouse_filter = 1
 text = "NO"
 horizontal_alignment = 1
 
-[node name="HBoxContainer" type="HBoxContainer" parent="."]
+[node name="HBoxContainer" type="HBoxContainer" parent="." unique_id=265413594]
 layout_mode = 1
 anchors_preset = 7
 anchor_left = 0.5
@@ -136,17 +136,17 @@ grow_horizontal = 2
 grow_vertical = 0
 theme_override_constants/separation = 15
 
-[node name="OptionButton" type="OptionButton" parent="HBoxContainer"]
+[node name="OptionButton" type="OptionButton" parent="HBoxContainer" unique_id=1396426480]
 layout_mode = 2
 size_flags_vertical = 4
 alignment = 1
 
-[node name="CheckBox" type="CheckBox" parent="HBoxContainer"]
+[node name="CheckBox" type="CheckBox" parent="HBoxContainer" unique_id=1024998791]
 layout_mode = 2
 shortcut = SubResource("Shortcut_ht0n8")
 shortcut_in_tooltip = false
 
-[node name="HSlider" type="HSlider" parent="HBoxContainer"]
+[node name="HSlider" type="HSlider" parent="HBoxContainer" unique_id=115093138]
 custom_minimum_size = Vector2(50, 0)
 layout_mode = 2
 size_flags_horizontal = 3
@@ -158,7 +158,7 @@ value = 0.5
 tick_count = 20
 ticks_on_borders = true
 
-[node name="LeftNumEdit" type="LineEdit" parent="."]
+[node name="LeftNumEdit" type="LineEdit" parent="." unique_id=947122644]
 layout_mode = 1
 anchors_preset = 7
 anchor_left = 0.5
@@ -179,7 +179,7 @@ alignment = 1
 caret_blink = true
 caret_blink_interval = 0.5
 
-[node name="RightNumEdit" type="LineEdit" parent="."]
+[node name="RightNumEdit" type="LineEdit" parent="." unique_id=1668482843]
 layout_mode = 1
 anchors_preset = 7
 anchor_left = 0.5
@@ -200,7 +200,7 @@ alignment = 1
 caret_blink = true
 caret_blink_interval = 0.5
 
-[node name="ClickToEdit" type="Control" parent="."]
+[node name="ClickToEdit" type="Control" parent="." unique_id=1730831539]
 layout_mode = 1
 anchors_preset = 7
 anchor_left = 0.5
@@ -214,7 +214,7 @@ offset_bottom = 610.0
 grow_horizontal = 2
 grow_vertical = 0
 
-[node name="TextureRect" type="TextureRect" parent="ClickToEdit"]
+[node name="TextureRect" type="TextureRect" parent="ClickToEdit" unique_id=690513266]
 modulate = Color(1, 1, 1, 0.572549)
 layout_mode = 1
 anchors_preset = 4
@@ -229,7 +229,7 @@ expand_mode = 1
 stretch_mode = 6
 flip_h = true
 
-[node name="TextureRect2" type="TextureRect" parent="ClickToEdit"]
+[node name="TextureRect2" type="TextureRect" parent="ClickToEdit" unique_id=1901854988]
 modulate = Color(1, 1, 1, 0.572549)
 layout_mode = 1
 anchors_preset = 6
@@ -247,7 +247,7 @@ texture = ExtResource("6")
 expand_mode = 1
 stretch_mode = 6
 
-[node name="Label" type="Label" parent="ClickToEdit"]
+[node name="Label" type="Label" parent="ClickToEdit" unique_id=630707037]
 layout_mode = 1
 anchors_preset = 4
 anchor_top = 0.5
@@ -259,7 +259,7 @@ offset_bottom = 9.0
 grow_vertical = 2
 text = "CLICK_TO_EDIT"
 
-[node name="Label2" type="Label" parent="ClickToEdit"]
+[node name="Label2" type="Label" parent="ClickToEdit" unique_id=1958468594]
 layout_mode = 1
 anchors_preset = 6
 anchor_left = 1.0
@@ -275,7 +275,7 @@ grow_vertical = 2
 text = "CLICK_TO_EDIT"
 horizontal_alignment = 2
 
-[node name="Reset" type="TextureButton" parent="."]
+[node name="Reset" type="TextureButton" parent="." unique_id=807575989]
 layout_mode = 1
 anchors_preset = 7
 anchor_left = 0.5
@@ -292,7 +292,7 @@ texture_normal = ExtResource("5")
 ignore_texture_size = true
 stretch_mode = 5
 
-[node name="Settings" type="TextureButton" parent="."]
+[node name="Settings" type="TextureButton" parent="." unique_id=1613254201]
 layout_mode = 0
 offset_left = 282.0
 offset_top = 590.0
@@ -302,26 +302,26 @@ texture_normal = ExtResource("9")
 ignore_texture_size = true
 stretch_mode = 5
 
-[node name="SettingsPanel" type="PanelContainer" parent="."]
+[node name="SettingsPanel" type="PanelContainer" parent="." unique_id=751139336]
 visible = false
 layout_mode = 0
 offset_top = -92.0
 offset_right = 380.0
 offset_bottom = -6.0
 
-[node name="VBox" type="VBoxContainer" parent="SettingsPanel"]
+[node name="VBox" type="VBoxContainer" parent="SettingsPanel" unique_id=1108440033]
 layout_mode = 2
 theme_override_constants/separation = 15
 
-[node name="Colorblind" type="CheckBox" parent="SettingsPanel/VBox"]
+[node name="Colorblind" type="CheckBox" parent="SettingsPanel/VBox" unique_id=1651968654]
 layout_mode = 2
 text = "COLORBLIND_MODE"
 
-[node name="HideObj" type="CheckBox" parent="SettingsPanel/VBox"]
+[node name="HideObj" type="CheckBox" parent="SettingsPanel/VBox" unique_id=2078276718]
 layout_mode = 2
 text = "HIDE_OUT_OF_RANGE_OBJECTS"
 
-[node name="CloseButton" type="TextureButton" parent="."]
+[node name="CloseButton" type="TextureButton" parent="." unique_id=2128523968]
 layout_mode = 0
 offset_left = 972.0
 offset_top = 590.0

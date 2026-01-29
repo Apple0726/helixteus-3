@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=3 uid="uid://cmh2bqka73geo"]
+[gd_scene format=3 uid="uid://cmh2bqka73geo"]
 
 [ext_resource type="PackedScene" uid="uid://1hq6qpr1oa3i" path="res://Scenes/AdvButton.tscn" id="1"]
 [ext_resource type="Theme" uid="uid://cp2u1kgj60ic" path="res://Resources/default_theme.tres" id="3"]
@@ -26,7 +26,7 @@ border_width_top = 4
 border_color = Color(0.192157, 0.192157, 0.192157, 1)
 border_blend = true
 
-[node name="Panel" type="Control"]
+[node name="Panel" type="Control" unique_id=1356881999]
 layout_mode = 3
 anchors_preset = 0
 offset_right = 40.0
@@ -34,16 +34,15 @@ offset_bottom = 40.0
 theme = ExtResource("3")
 script = ExtResource("4")
 
-[node name="GUI" type="TextureRect" parent="."]
+[node name="GUI" type="TextureRect" parent="." unique_id=1668956434]
 layout_mode = 0
 offset_left = 80.0
 offset_top = 52.0
 offset_right = 1204.0
 offset_bottom = 671.0
-mouse_filter = 2
 texture = ExtResource("3_ccyro")
 
-[node name="CloseButton" type="TextureButton" parent="."]
+[node name="CloseButton" type="TextureButton" parent="." unique_id=1424891662]
 layout_mode = 0
 offset_left = 1136.0
 offset_top = 67.0
@@ -52,7 +51,7 @@ offset_bottom = 116.0
 texture_normal = ExtResource("4_v8thl")
 texture_hover = ExtResource("5_wur6g")
 
-[node name="Title" type="Label" parent="."]
+[node name="Title" type="Label" parent="." unique_id=1322830995]
 custom_minimum_size = Vector2(0, 38)
 layout_mode = 1
 offset_left = 128.0
@@ -64,7 +63,7 @@ text = "INVENTORY"
 label_settings = SubResource("LabelSettings_td60h")
 vertical_alignment = 1
 
-[node name="TabBar" type="HBoxContainer" parent="."]
+[node name="TabBar" type="HBoxContainer" parent="." unique_id=140897578]
 layout_mode = 1
 offset_left = 144.0
 offset_top = 168.0
@@ -72,32 +71,32 @@ offset_right = 1120.0
 offset_bottom = 202.0
 theme_override_constants/separation = -1
 
-[node name="Items" parent="TabBar" instance=ExtResource("1")]
+[node name="Items" parent="TabBar" unique_id=38644487 instance=ExtResource("1")]
 layout_mode = 2
 size_flags_horizontal = 3
 button_text = "ITEMS"
 
-[node name="Materials" parent="TabBar" instance=ExtResource("1")]
+[node name="Materials" parent="TabBar" unique_id=1016764359 instance=ExtResource("1")]
 layout_mode = 2
 size_flags_horizontal = 3
 button_text = "MATERIALS"
 
-[node name="Metals" parent="TabBar" instance=ExtResource("1")]
+[node name="Metals" parent="TabBar" unique_id=1444941876 instance=ExtResource("1")]
 layout_mode = 2
 size_flags_horizontal = 3
 button_text = "METALS"
 
-[node name="Atoms" parent="TabBar" instance=ExtResource("1")]
+[node name="Atoms" parent="TabBar" unique_id=1657356390 instance=ExtResource("1")]
 layout_mode = 2
 size_flags_horizontal = 3
 button_text = "ATOMS"
 
-[node name="Particles" parent="TabBar" instance=ExtResource("1")]
+[node name="Particles" parent="TabBar" unique_id=1439151768 instance=ExtResource("1")]
 layout_mode = 2
 size_flags_horizontal = 3
 button_text = "PARTICLES"
 
-[node name="Information" type="Label" parent="."]
+[node name="Information" type="Label" parent="." unique_id=1287403413]
 layout_mode = 0
 offset_left = 176.0
 offset_top = 120.0
@@ -107,7 +106,7 @@ text = "Information"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="Control" type="Panel" parent="."]
+[node name="Control" type="Panel" parent="." unique_id=1783725380]
 layout_mode = 1
 offset_left = 144.0
 offset_top = 200.0
@@ -117,7 +116,7 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 theme_override_styles/panel = SubResource("StyleBoxFlat_vohlb")
 
-[node name="VBox" type="VBoxContainer" parent="Control"]
+[node name="VBox" type="VBoxContainer" parent="Control" unique_id=1534245317]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -129,45 +128,45 @@ offset_bottom = -8.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="Control" type="Control" parent="Control/VBox"]
+[node name="Control" type="Control" parent="Control/VBox" unique_id=1011189877]
 custom_minimum_size = Vector2(0, 5)
 layout_mode = 2
 
-[node name="GridContainer" type="GridContainer" parent="Control/VBox"]
+[node name="GridContainer" type="GridContainer" parent="Control/VBox" unique_id=92201185]
 layout_mode = 2
 size_flags_horizontal = 5
 theme_override_constants/v_separation = 30
 columns = 6
 
-[node name="Inventory" type="GridContainer" parent="Control/VBox"]
+[node name="Inventory" type="GridContainer" parent="Control/VBox" unique_id=874955917]
 layout_mode = 2
 size_flags_horizontal = 5
 theme_override_constants/h_separation = -1
 theme_override_constants/v_separation = -1
 columns = 15
 
-[node name="BuySell" type="Label" parent="Control/VBox"]
+[node name="BuySell" type="Label" parent="Control/VBox" unique_id=1036398916]
 custom_minimum_size = Vector2(0, 100)
 layout_mode = 2
 text = "CLICK_TO_BUY_SELL"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="ParticlesHBox" type="HBoxContainer" parent="Control"]
+[node name="ParticlesHBox" type="HBoxContainer" parent="Control" unique_id=1668857277]
 layout_mode = 0
 offset_left = 40.0
 offset_top = 48.0
 offset_right = 258.0
 offset_bottom = 88.0
 
-[node name="SubatomicParticleIcon" type="TextureRect" parent="Control/ParticlesHBox"]
+[node name="SubatomicParticleIcon" type="TextureRect" parent="Control/ParticlesHBox" unique_id=1406913454]
 custom_minimum_size = Vector2(40, 0)
 layout_mode = 2
 texture = ExtResource("5_duh3p")
 expand_mode = 1
 stretch_mode = 6
 
-[node name="SubatomicParticles" type="Label" parent="Control/ParticlesHBox"]
+[node name="SubatomicParticles" type="Label" parent="Control/ParticlesHBox" unique_id=1370820575]
 layout_mode = 2
 size_flags_horizontal = 3
 

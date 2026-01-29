@@ -1,4 +1,4 @@
-[gd_resource type="Theme" load_steps=36 format=3 uid="uid://cp2u1kgj60ic"]
+[gd_resource type="Theme" format=3 uid="uid://cp2u1kgj60ic"]
 
 [sub_resource type="SystemFont" id="SystemFont_xvdaj"]
 font_names = PackedStringArray("Sans-Serif")

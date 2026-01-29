@@ -1,4 +1,4 @@
-[gd_scene load_steps=14 format=3 uid="uid://d25bie4radplj"]
+[gd_scene format=3 uid="uid://d25bie4radplj"]
 
 [ext_resource type="Theme" uid="uid://cp2u1kgj60ic" path="res://Resources/default_theme.tres" id="1_fik65"]
 [ext_resource type="Texture2D" uid="uid://koi0aarpqj30" path="res://Graphics/Ships/Ship0.png" id="1_krjc3"]
@@ -24,7 +24,7 @@ border_width_top = 4
 border_color = Color(0.192157, 0.192157, 0.192157, 1)
 border_blend = true
 
-[node name="Control" type="Control"]
+[node name="Control" type="Control" unique_id=664554471]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -37,14 +37,14 @@ metadata/_edit_lock_ = true
 metadata/_edit_horizontal_guides_ = [360.0]
 metadata/_edit_vertical_guides_ = [640.0]
 
-[node name="Navigation" type="Panel" parent="."]
+[node name="Navigation" type="Panel" parent="." unique_id=427296607]
 layout_mode = 0
 offset_left = 112.0
 offset_top = 64.0
 offset_right = 416.0
 offset_bottom = 360.0
 
-[node name="Level" type="Label" parent="Navigation"]
+[node name="Level" type="Label" parent="Navigation" unique_id=1816330620]
 layout_mode = 0
 offset_left = 56.0
 offset_top = 16.0
@@ -54,7 +54,7 @@ text = "Lv 1"
 label_settings = SubResource("LabelSettings_tyega")
 horizontal_alignment = 1
 
-[node name="Ship" type="TextureRect" parent="Navigation"]
+[node name="Ship" type="TextureRect" parent="Navigation" unique_id=926456528]
 layout_mode = 1
 anchors_preset = 5
 anchor_left = 0.5
@@ -68,7 +68,7 @@ texture = ExtResource("1_krjc3")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="VBoxContainer" type="VBoxContainer" parent="Navigation"]
+[node name="VBoxContainer" type="VBoxContainer" parent="Navigation" unique_id=1041050292]
 layout_mode = 1
 anchors_preset = 12
 anchor_top = 1.0
@@ -81,17 +81,17 @@ offset_bottom = -16.0
 grow_horizontal = 2
 grow_vertical = 0
 
-[node name="ClassAndStats" parent="Navigation/VBoxContainer" instance=ExtResource("3_hi247")]
+[node name="ClassAndStats" parent="Navigation/VBoxContainer" unique_id=2143868124 instance=ExtResource("3_hi247")]
 custom_minimum_size = Vector2(0, 40)
 layout_mode = 2
 button_text = "CLASS_AND_STATS"
 
-[node name="WeaponLevels" parent="Navigation/VBoxContainer" instance=ExtResource("3_hi247")]
+[node name="WeaponLevels" parent="Navigation/VBoxContainer" unique_id=1710906227 instance=ExtResource("3_hi247")]
 custom_minimum_size = Vector2(0, 40)
 layout_mode = 2
 button_text = "WEAPON_LEVELS"
 
-[node name="Notification" type="TextureRect" parent="Navigation"]
+[node name="Notification" type="TextureRect" parent="Navigation" unique_id=1685012768]
 visible = false
 layout_mode = 0
 offset_left = 32.0
@@ -100,7 +100,7 @@ offset_right = 64.0
 offset_bottom = 276.0
 texture = ExtResource("5_djvhe")
 
-[node name="Actions" type="HBoxContainer" parent="."]
+[node name="Actions" type="HBoxContainer" parent="." unique_id=1860846226]
 layout_mode = 1
 offset_left = 512.0
 offset_top = 608.0
@@ -109,24 +109,24 @@ offset_bottom = 649.0
 theme_override_constants/separation = 25
 alignment = 2
 
-[node name="Cancel" type="Button" parent="Actions"]
+[node name="Cancel" type="Button" parent="Actions" unique_id=925589133]
 layout_mode = 2
 size_flags_horizontal = 3
 text = "CANCEL"
 
-[node name="Done" type="Button" parent="Actions"]
+[node name="Done" type="Button" parent="Actions" unique_id=493983391]
 layout_mode = 2
 size_flags_horizontal = 3
 disabled = true
 text = "CONFIRM"
 
-[node name="ClassAndStats" type="Control" parent="."]
+[node name="ClassAndStats" type="Control" parent="." unique_id=748324084]
 anchors_preset = 0
 offset_top = -96.0
 offset_right = 40.0
 offset_bottom = -56.0
 
-[node name="ShipClass" type="PanelContainer" parent="ClassAndStats"]
+[node name="ShipClass" type="PanelContainer" parent="ClassAndStats" unique_id=1164404233]
 layout_mode = 0
 offset_left = 540.0
 offset_top = 160.0
@@ -134,65 +134,65 @@ offset_right = 740.0
 offset_bottom = 554.0
 theme_override_styles/panel = SubResource("StyleBoxFlat_q0bap")
 
-[node name="VBox" type="VBoxContainer" parent="ClassAndStats/ShipClass"]
+[node name="VBox" type="VBoxContainer" parent="ClassAndStats/ShipClass" unique_id=8185339]
 layout_mode = 2
 size_flags_vertical = 4
 
-[node name="Label" type="Label" parent="ClassAndStats/ShipClass/VBox"]
+[node name="Label" type="Label" parent="ClassAndStats/ShipClass/VBox" unique_id=1669256900]
 custom_minimum_size = Vector2(0, 40)
 layout_mode = 2
 text = "SHIP_CLASS"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="VBox" type="VBoxContainer" parent="ClassAndStats/ShipClass/VBox"]
+[node name="VBox" type="VBoxContainer" parent="ClassAndStats/ShipClass/VBox" unique_id=1403427823]
 layout_mode = 2
 
-[node name="Standard" parent="ClassAndStats/ShipClass/VBox/VBox" instance=ExtResource("3_hi247")]
+[node name="Standard" parent="ClassAndStats/ShipClass/VBox/VBox" unique_id=1157160479 instance=ExtResource("3_hi247")]
 layout_mode = 2
 button_text = "STANDARD"
 
-[node name="Offensive" parent="ClassAndStats/ShipClass/VBox/VBox" instance=ExtResource("3_hi247")]
+[node name="Offensive" parent="ClassAndStats/ShipClass/VBox/VBox" unique_id=1347234255 instance=ExtResource("3_hi247")]
 layout_mode = 2
 button_text = "OFFENSIVE"
 
-[node name="Defensive" parent="ClassAndStats/ShipClass/VBox/VBox" instance=ExtResource("3_hi247")]
+[node name="Defensive" parent="ClassAndStats/ShipClass/VBox/VBox" unique_id=1704671896 instance=ExtResource("3_hi247")]
 layout_mode = 2
 button_text = "DEFENSIVE"
 
-[node name="Accurate" parent="ClassAndStats/ShipClass/VBox/VBox" instance=ExtResource("3_hi247")]
+[node name="Accurate" parent="ClassAndStats/ShipClass/VBox/VBox" unique_id=1737050439 instance=ExtResource("3_hi247")]
 layout_mode = 2
 button_text = "ACCURATE"
 
-[node name="Agile" parent="ClassAndStats/ShipClass/VBox/VBox" instance=ExtResource("3_hi247")]
+[node name="Agile" parent="ClassAndStats/ShipClass/VBox/VBox" unique_id=1410737248 instance=ExtResource("3_hi247")]
 layout_mode = 2
 button_text = "AGILE"
 
-[node name="Energetic" parent="ClassAndStats/ShipClass/VBox/VBox" instance=ExtResource("3_hi247")]
+[node name="Energetic" parent="ClassAndStats/ShipClass/VBox/VBox" unique_id=662317763 instance=ExtResource("3_hi247")]
 layout_mode = 2
 button_text = "ENERGETIC"
 
-[node name="Support" parent="ClassAndStats/ShipClass/VBox/VBox" instance=ExtResource("3_hi247")]
+[node name="Support" parent="ClassAndStats/ShipClass/VBox/VBox" unique_id=2002343848 instance=ExtResource("3_hi247")]
 layout_mode = 2
 button_text = "SUPPORT"
 
-[node name="Reckless" parent="ClassAndStats/ShipClass/VBox/VBox" instance=ExtResource("3_hi247")]
+[node name="Reckless" parent="ClassAndStats/ShipClass/VBox/VBox" unique_id=663590711 instance=ExtResource("3_hi247")]
 layout_mode = 2
 button_text = "RECKLESS"
 
-[node name="Impenetrable" parent="ClassAndStats/ShipClass/VBox/VBox" instance=ExtResource("3_hi247")]
+[node name="Impenetrable" parent="ClassAndStats/ShipClass/VBox/VBox" unique_id=1283318753 instance=ExtResource("3_hi247")]
 layout_mode = 2
 button_text = "IMPENETRABLE"
 
-[node name="Uber" parent="ClassAndStats/ShipClass/VBox/VBox" instance=ExtResource("3_hi247")]
+[node name="Uber" parent="ClassAndStats/ShipClass/VBox/VBox" unique_id=41232776 instance=ExtResource("3_hi247")]
 layout_mode = 2
 button_text = "UBER"
 
-[node name="Spacer" type="Control" parent="ClassAndStats/ShipClass/VBox"]
+[node name="Spacer" type="Control" parent="ClassAndStats/ShipClass/VBox" unique_id=842781091]
 custom_minimum_size = Vector2(0, 6)
 layout_mode = 2
 
-[node name="ShipStats" type="Panel" parent="ClassAndStats"]
+[node name="ShipStats" type="Panel" parent="ClassAndStats" unique_id=784322684]
 layout_mode = 0
 offset_left = 828.0
 offset_top = 160.0
@@ -200,7 +200,7 @@ offset_right = 1204.0
 offset_bottom = 544.0
 theme_override_styles/panel = SubResource("StyleBoxFlat_q0bap")
 
-[node name="Label" type="Label" parent="ClassAndStats/ShipStats"]
+[node name="Label" type="Label" parent="ClassAndStats/ShipStats" unique_id=387708881]
 layout_mode = 1
 anchors_preset = 10
 anchor_right = 1.0
@@ -210,7 +210,7 @@ grow_horizontal = 2
 text = "SHIP_STATS"
 horizontal_alignment = 1
 
-[node name="PointsAllocated" type="Label" parent="ClassAndStats/ShipStats"]
+[node name="PointsAllocated" type="Label" parent="ClassAndStats/ShipStats" unique_id=1877211122]
 layout_mode = 1
 anchors_preset = 10
 anchor_right = 1.0
@@ -220,7 +220,7 @@ grow_horizontal = 2
 text = "POINTS_ALLOCATED"
 horizontal_alignment = 1
 
-[node name="HPIcon" type="TextureRect" parent="ClassAndStats/ShipStats"]
+[node name="HPIcon" type="TextureRect" parent="ClassAndStats/ShipStats" unique_id=1019746092]
 layout_mode = 0
 offset_left = 40.0
 offset_top = 108.0
@@ -230,7 +230,7 @@ texture = ExtResource("5_elefb")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="HPLabel" type="Label" parent="ClassAndStats/ShipStats"]
+[node name="HPLabel" type="Label" parent="ClassAndStats/ShipStats" unique_id=335503462]
 layout_mode = 0
 offset_left = 244.0
 offset_top = 112.0
@@ -239,7 +239,7 @@ offset_bottom = 135.0
 text = "10"
 horizontal_alignment = 1
 
-[node name="HPLabel2" type="Label" parent="ClassAndStats/ShipStats"]
+[node name="HPLabel2" type="Label" parent="ClassAndStats/ShipStats" unique_id=1101498899]
 layout_mode = 0
 offset_left = 84.0
 offset_top = 112.0
@@ -247,7 +247,7 @@ offset_right = 238.0
 offset_bottom = 135.0
 text = "HEALTH_POINTS"
 
-[node name="AttackLabel2" type="Label" parent="ClassAndStats/ShipStats"]
+[node name="AttackLabel2" type="Label" parent="ClassAndStats/ShipStats" unique_id=484284427]
 layout_mode = 0
 offset_left = 84.0
 offset_top = 160.0
@@ -255,7 +255,7 @@ offset_right = 238.0
 offset_bottom = 183.0
 text = "ATTACK"
 
-[node name="DefenseLabel2" type="Label" parent="ClassAndStats/ShipStats"]
+[node name="DefenseLabel2" type="Label" parent="ClassAndStats/ShipStats" unique_id=1940884400]
 layout_mode = 0
 offset_left = 84.0
 offset_top = 212.0
@@ -263,7 +263,7 @@ offset_right = 238.0
 offset_bottom = 235.0
 text = "DEFENSE"
 
-[node name="AccuracyLabel2" type="Label" parent="ClassAndStats/ShipStats"]
+[node name="AccuracyLabel2" type="Label" parent="ClassAndStats/ShipStats" unique_id=276021390]
 layout_mode = 0
 offset_left = 84.0
 offset_top = 264.0
@@ -271,7 +271,7 @@ offset_right = 238.0
 offset_bottom = 287.0
 text = "ACCURACY"
 
-[node name="AgilityLabel2" type="Label" parent="ClassAndStats/ShipStats"]
+[node name="AgilityLabel2" type="Label" parent="ClassAndStats/ShipStats" unique_id=964511069]
 layout_mode = 0
 offset_left = 84.0
 offset_top = 312.0
@@ -279,7 +279,7 @@ offset_right = 238.0
 offset_bottom = 335.0
 text = "AGILITY"
 
-[node name="RemoveHP" type="Button" parent="ClassAndStats/ShipStats"]
+[node name="RemoveHP" type="Button" parent="ClassAndStats/ShipStats" unique_id=649042319]
 layout_mode = 0
 offset_left = 208.0
 offset_top = 108.0
@@ -289,7 +289,7 @@ focus_mode = 0
 disabled = true
 text = "-"
 
-[node name="AddHP" type="Button" parent="ClassAndStats/ShipStats"]
+[node name="AddHP" type="Button" parent="ClassAndStats/ShipStats" unique_id=758545182]
 layout_mode = 0
 offset_left = 308.0
 offset_top = 108.0
@@ -298,7 +298,7 @@ offset_bottom = 141.0
 focus_mode = 0
 text = "+"
 
-[node name="AttackIcon" type="TextureRect" parent="ClassAndStats/ShipStats"]
+[node name="AttackIcon" type="TextureRect" parent="ClassAndStats/ShipStats" unique_id=2042380471]
 layout_mode = 0
 offset_left = 40.0
 offset_top = 156.0
@@ -308,7 +308,7 @@ texture = ExtResource("6_5p6u7")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="AttackLabel" type="Label" parent="ClassAndStats/ShipStats"]
+[node name="AttackLabel" type="Label" parent="ClassAndStats/ShipStats" unique_id=1885218543]
 layout_mode = 0
 offset_left = 244.0
 offset_top = 160.0
@@ -317,7 +317,7 @@ offset_bottom = 183.0
 text = "10"
 horizontal_alignment = 1
 
-[node name="RemoveAttack" type="Button" parent="ClassAndStats/ShipStats"]
+[node name="RemoveAttack" type="Button" parent="ClassAndStats/ShipStats" unique_id=1612023269]
 layout_mode = 0
 offset_left = 208.0
 offset_top = 156.0
@@ -327,7 +327,7 @@ focus_mode = 0
 disabled = true
 text = "-"
 
-[node name="AddAttack" type="Button" parent="ClassAndStats/ShipStats"]
+[node name="AddAttack" type="Button" parent="ClassAndStats/ShipStats" unique_id=1267315850]
 layout_mode = 0
 offset_left = 308.0
 offset_top = 156.0
@@ -336,7 +336,7 @@ offset_bottom = 189.0
 focus_mode = 0
 text = "+"
 
-[node name="DefenseIcon" type="TextureRect" parent="ClassAndStats/ShipStats"]
+[node name="DefenseIcon" type="TextureRect" parent="ClassAndStats/ShipStats" unique_id=93887918]
 layout_mode = 0
 offset_left = 40.0
 offset_top = 208.0
@@ -346,7 +346,7 @@ texture = ExtResource("7_sfcj0")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="DefenseLabel" type="Label" parent="ClassAndStats/ShipStats"]
+[node name="DefenseLabel" type="Label" parent="ClassAndStats/ShipStats" unique_id=1872036363]
 layout_mode = 0
 offset_left = 244.0
 offset_top = 212.0
@@ -355,7 +355,7 @@ offset_bottom = 235.0
 text = "10"
 horizontal_alignment = 1
 
-[node name="RemoveDefense" type="Button" parent="ClassAndStats/ShipStats"]
+[node name="RemoveDefense" type="Button" parent="ClassAndStats/ShipStats" unique_id=444531431]
 layout_mode = 0
 offset_left = 208.0
 offset_top = 208.0
@@ -365,7 +365,7 @@ focus_mode = 0
 disabled = true
 text = "-"
 
-[node name="AddDefense" type="Button" parent="ClassAndStats/ShipStats"]
+[node name="AddDefense" type="Button" parent="ClassAndStats/ShipStats" unique_id=537695154]
 layout_mode = 0
 offset_left = 308.0
 offset_top = 208.0
@@ -374,7 +374,7 @@ offset_bottom = 241.0
 focus_mode = 0
 text = "+"
 
-[node name="AccuracyIcon" type="TextureRect" parent="ClassAndStats/ShipStats"]
+[node name="AccuracyIcon" type="TextureRect" parent="ClassAndStats/ShipStats" unique_id=2006444321]
 layout_mode = 0
 offset_left = 40.0
 offset_top = 260.0
@@ -384,7 +384,7 @@ texture = ExtResource("8_72tah")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="AccuracyLabel" type="Label" parent="ClassAndStats/ShipStats"]
+[node name="AccuracyLabel" type="Label" parent="ClassAndStats/ShipStats" unique_id=610729436]
 layout_mode = 0
 offset_left = 244.0
 offset_top = 264.0
@@ -393,7 +393,7 @@ offset_bottom = 287.0
 text = "10"
 horizontal_alignment = 1
 
-[node name="RemoveAccuracy" type="Button" parent="ClassAndStats/ShipStats"]
+[node name="RemoveAccuracy" type="Button" parent="ClassAndStats/ShipStats" unique_id=538020966]
 layout_mode = 0
 offset_left = 208.0
 offset_top = 260.0
@@ -403,7 +403,7 @@ focus_mode = 0
 disabled = true
 text = "-"
 
-[node name="AddAccuracy" type="Button" parent="ClassAndStats/ShipStats"]
+[node name="AddAccuracy" type="Button" parent="ClassAndStats/ShipStats" unique_id=1282133648]
 layout_mode = 0
 offset_left = 308.0
 offset_top = 260.0
@@ -412,7 +412,7 @@ offset_bottom = 293.0
 focus_mode = 0
 text = "+"
 
-[node name="AgilityIcon" type="TextureRect" parent="ClassAndStats/ShipStats"]
+[node name="AgilityIcon" type="TextureRect" parent="ClassAndStats/ShipStats" unique_id=740237314]
 layout_mode = 0
 offset_left = 40.0
 offset_top = 308.0
@@ -422,7 +422,7 @@ texture = ExtResource("9_cosga")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="AgilityLabel" type="Label" parent="ClassAndStats/ShipStats"]
+[node name="AgilityLabel" type="Label" parent="ClassAndStats/ShipStats" unique_id=2073492487]
 layout_mode = 0
 offset_left = 244.0
 offset_top = 312.0
@@ -431,7 +431,7 @@ offset_bottom = 335.0
 text = "10"
 horizontal_alignment = 1
 
-[node name="RemoveAgility" type="Button" parent="ClassAndStats/ShipStats"]
+[node name="RemoveAgility" type="Button" parent="ClassAndStats/ShipStats" unique_id=1998304930]
 layout_mode = 0
 offset_left = 208.0
 offset_top = 308.0
@@ -441,7 +441,7 @@ focus_mode = 0
 disabled = true
 text = "-"
 
-[node name="AddAgility" type="Button" parent="ClassAndStats/ShipStats"]
+[node name="AddAgility" type="Button" parent="ClassAndStats/ShipStats" unique_id=776167051]
 layout_mode = 0
 offset_left = 308.0
 offset_top = 308.0
@@ -450,7 +450,7 @@ offset_bottom = 341.0
 focus_mode = 0
 text = "+"
 
-[node name="Weapons" type="Panel" parent="."]
+[node name="Weapons" type="Panel" parent="." unique_id=1215159452]
 visible = false
 layout_mode = 0
 offset_left = 556.0
@@ -459,7 +459,7 @@ offset_right = 1116.0
 offset_bottom = 428.0
 theme_override_styles/panel = SubResource("StyleBoxFlat_q0bap")
 
-[node name="Next" type="Button" parent="Weapons"]
+[node name="Next" type="Button" parent="Weapons" unique_id=322217051]
 layout_mode = 1
 offset_left = 156.0
 offset_top = 12.0
@@ -467,7 +467,7 @@ offset_right = 188.0
 offset_bottom = 45.0
 text = ">"
 
-[node name="Previous" type="Button" parent="Weapons"]
+[node name="Previous" type="Button" parent="Weapons" unique_id=1673780726]
 layout_mode = 1
 offset_left = 12.0
 offset_top = 12.0
@@ -476,7 +476,7 @@ offset_bottom = 45.0
 disabled = true
 text = "<"
 
-[node name="CurrentWeapon" type="Label" parent="Weapons"]
+[node name="CurrentWeapon" type="Label" parent="Weapons" unique_id=271343068]
 layout_mode = 1
 offset_left = 40.0
 offset_top = 16.0
@@ -485,7 +485,7 @@ offset_bottom = 39.0
 text = "BULLET"
 horizontal_alignment = 1
 
-[node name="LvRemaining" type="Label" parent="Weapons"]
+[node name="LvRemaining" type="Label" parent="Weapons" unique_id=582997942]
 layout_mode = 1
 anchors_preset = 1
 anchor_left = 1.0
@@ -499,7 +499,7 @@ text = "Weapon level-ups remaining: 1"
 horizontal_alignment = 2
 vertical_alignment = 1
 
-[node name="ScrollContainer" type="ScrollContainer" parent="Weapons"]
+[node name="ScrollContainer" type="ScrollContainer" parent="Weapons" unique_id=536047638]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -510,110 +510,110 @@ offset_right = -4.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="Control" type="Control" parent="Weapons/ScrollContainer"]
+[node name="Control" type="Control" parent="Weapons/ScrollContainer" unique_id=727107563]
 custom_minimum_size = Vector2(456, 300)
 layout_mode = 2
 
-[node name="11" parent="Weapons/ScrollContainer/Control" instance=ExtResource("10_tyega")]
+[node name="11" parent="Weapons/ScrollContainer/Control" unique_id=1410288965 instance=ExtResource("10_tyega")]
 layout_mode = 0
 offset_left = 28.0
 offset_top = 12.0
 offset_right = 88.0
 offset_bottom = 72.0
 
-[node name="12" parent="Weapons/ScrollContainer/Control" instance=ExtResource("10_tyega")]
+[node name="12" parent="Weapons/ScrollContainer/Control" unique_id=465946287 instance=ExtResource("10_tyega")]
 layout_mode = 0
 offset_left = 180.0
 offset_top = 12.0
 offset_right = 240.0
 offset_bottom = 72.0
 
-[node name="13" parent="Weapons/ScrollContainer/Control" instance=ExtResource("10_tyega")]
+[node name="13" parent="Weapons/ScrollContainer/Control" unique_id=891632808 instance=ExtResource("10_tyega")]
 layout_mode = 0
 offset_left = 340.0
 offset_top = 12.0
 offset_right = 400.0
 offset_bottom = 72.0
 
-[node name="21" parent="Weapons/ScrollContainer/Control" instance=ExtResource("10_tyega")]
+[node name="21" parent="Weapons/ScrollContainer/Control" unique_id=1432538778 instance=ExtResource("10_tyega")]
 layout_mode = 0
 offset_left = 28.0
 offset_top = 112.0
 offset_right = 88.0
 offset_bottom = 172.0
 
-[node name="22" parent="Weapons/ScrollContainer/Control" instance=ExtResource("10_tyega")]
+[node name="22" parent="Weapons/ScrollContainer/Control" unique_id=229665415 instance=ExtResource("10_tyega")]
 layout_mode = 0
 offset_left = 180.0
 offset_top = 112.0
 offset_right = 240.0
 offset_bottom = 172.0
 
-[node name="23" parent="Weapons/ScrollContainer/Control" instance=ExtResource("10_tyega")]
+[node name="23" parent="Weapons/ScrollContainer/Control" unique_id=232488579 instance=ExtResource("10_tyega")]
 layout_mode = 0
 offset_left = 340.0
 offset_top = 112.0
 offset_right = 400.0
 offset_bottom = 172.0
 
-[node name="31" parent="Weapons/ScrollContainer/Control" instance=ExtResource("10_tyega")]
+[node name="31" parent="Weapons/ScrollContainer/Control" unique_id=275769195 instance=ExtResource("10_tyega")]
 layout_mode = 0
 offset_left = 28.0
 offset_top = 212.0
 offset_right = 88.0
 offset_bottom = 272.0
 
-[node name="32" parent="Weapons/ScrollContainer/Control" instance=ExtResource("10_tyega")]
+[node name="32" parent="Weapons/ScrollContainer/Control" unique_id=348486499 instance=ExtResource("10_tyega")]
 layout_mode = 0
 offset_left = 180.0
 offset_top = 212.0
 offset_right = 240.0
 offset_bottom = 272.0
 
-[node name="33" parent="Weapons/ScrollContainer/Control" instance=ExtResource("10_tyega")]
+[node name="33" parent="Weapons/ScrollContainer/Control" unique_id=1962670015 instance=ExtResource("10_tyega")]
 layout_mode = 0
 offset_left = 340.0
 offset_top = 212.0
 offset_right = 400.0
 offset_bottom = 272.0
 
-[node name="Line2D11" type="Line2D" parent="Weapons/ScrollContainer/Control"]
+[node name="Line2D11" type="Line2D" parent="Weapons/ScrollContainer/Control" unique_id=1803006187]
 position = Vector2(10, 14)
 points = PackedVector2Array(94, 30, 154, 30)
 width = 2.0
 default_color = Color(0.4, 0.886275, 1, 1)
 
-[node name="Line2D12" type="Line2D" parent="Weapons/ScrollContainer/Control"]
+[node name="Line2D12" type="Line2D" parent="Weapons/ScrollContainer/Control" unique_id=1978999143]
 position = Vector2(168, 14)
 points = PackedVector2Array(94, 30, 154, 30)
 width = 2.0
 default_color = Color(0.4, 0.886275, 1, 1)
 
-[node name="Line2D21" type="Line2D" parent="Weapons/ScrollContainer/Control"]
+[node name="Line2D21" type="Line2D" parent="Weapons/ScrollContainer/Control" unique_id=614814435]
 position = Vector2(10, 112)
 points = PackedVector2Array(94, 30, 154, 30)
 width = 2.0
 default_color = Color(0.4, 0.886275, 1, 1)
 
-[node name="Line2D22" type="Line2D" parent="Weapons/ScrollContainer/Control"]
+[node name="Line2D22" type="Line2D" parent="Weapons/ScrollContainer/Control" unique_id=239739617]
 position = Vector2(168, 112)
 points = PackedVector2Array(94, 30, 154, 30)
 width = 2.0
 default_color = Color(0.4, 0.886275, 1, 1)
 
-[node name="Line2D31" type="Line2D" parent="Weapons/ScrollContainer/Control"]
+[node name="Line2D31" type="Line2D" parent="Weapons/ScrollContainer/Control" unique_id=196429502]
 position = Vector2(10, 212)
 points = PackedVector2Array(94, 30, 154, 30)
 width = 2.0
 default_color = Color(0.4, 0.886275, 1, 1)
 
-[node name="Line2D32" type="Line2D" parent="Weapons/ScrollContainer/Control"]
+[node name="Line2D32" type="Line2D" parent="Weapons/ScrollContainer/Control" unique_id=853261774]
 position = Vector2(168, 212)
 points = PackedVector2Array(94, 30, 154, 30)
 width = 2.0
 default_color = Color(0, 0.433304, 0.509943, 1)
 
-[node name="Label" type="Label" parent="."]
+[node name="Label" type="Label" parent="." unique_id=1910745520]
 layout_mode = 0
 offset_left = 348.0
 offset_top = 500.0

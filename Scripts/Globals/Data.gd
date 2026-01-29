@@ -98,12 +98,12 @@ var MS_output = {	"DS_0":1.0e8,
 					"MB":1.5e12,
 }
 
-var MUs = {	"MV":{"base_cost":100, "pw":1.9},
-			"MSMB":{"base_cost":100, "pw":1.6},
-			"IS":{"base_cost":500, "pw":1.9},
-			"STMB":{"base_cost":600, "pw":1.6},
-			"SHSR":{"base_cost":2000, "pw":1.9},
-			"CHR":{"base_cost":2000, "pw":1.7},
+var MUs = {	"MV":{"base_cost":100.0, "pw":1.9},
+			"MSMB":{"base_cost":100.0, "pw":1.6},
+			"IS":{"base_cost":500.0, "pw":1.9},
+			"STMB":{"base_cost":600.0, "pw":1.6},
+			"SHSR":{"base_cost":2000.0, "pw":1.9},
+			"CHR":{"base_cost":2000.0, "pw":1.7},
 }
 
 var ambient_music = [
@@ -268,51 +268,51 @@ func reload():
 #Science for unlocking game features
 var science_unlocks = {	
 						#Agriculture sciences
-						"SA":{"cost":500, "parents":[]},
-						"PF":{"cost":90000, "parents":["SA"]},
+						"SA":{"cost":500.0, "parents":[]},
+						"PF":{"cost":90000.0, "parents":["SA"]},
 						
 						#Auto-sell minerals
-						"ASM":{"cost":100, "parents":[]},
-						"ASM2":{"cost":20000, "parents":["ASM"]},
+						"ASM":{"cost":100.0, "parents":[]},
+						"ASM2":{"cost":20000.0, "parents":["ASM"]},
 						
 						#Auto mining
-						"AM":{"cost":10000, "parents":[]},
+						"AM":{"cost":10000.0, "parents":[]},
 						
 						#Improved stone crusher
-						"ISC":{"cost":250, "parents":[]},
+						"ISC":{"cost":250.0, "parents":[]},
 						
 						#Improved spaceport
-						"ISP":{"cost":50000, "parents":[]},
+						"ISP":{"cost":50000.0, "parents":[]},
 						
 						#Compact items
-						"CI":{"cost":4800, "parents":[]},
+						"CI":{"cost":4800.0, "parents":[]},
 						"CI2":{"cost":4.8e6, "parents":["CI"]},
 						"CI3":{"cost":4.8e9, "parents":["CI2"]},
 						
 						#Atom manipulation
-						"ATM":{"cost":200000, "parents":[]},
-						"AMM":{"cost":1e13, "parents":["ATM"]},
-						"SAP":{"cost":12500000, "parents":["ATM"]},
+						"ATM":{"cost":200000.0, "parents":[]},
+						"AMM":{"cost":1.0e13, "parents":["ATM"]},
+						"SAP":{"cost":12500000.0, "parents":["ATM"]},
 						
 						#Rover sciences
-						"RC":{"cost":5, "parents":[]},
-						"OL":{"cost":1000, "parents":["RC"]},
-						"YL":{"cost":12000, "parents":["OL"]},
-						"GL":{"cost":70000, "parents":["YL"]},
-						"BL":{"cost":350000, "parents":["GL"]},
-						"PL":{"cost":2400000, "parents":["BL"]},
+						"RC":{"cost":5.0, "parents":[]},
+						"OL":{"cost":1000.0, "parents":["RC"]},
+						"YL":{"cost":12000.0, "parents":["OL"]},
+						"GL":{"cost":70000.0, "parents":["YL"]},
+						"BL":{"cost":350000.0, "parents":["GL"]},
+						"PL":{"cost":2400000.0, "parents":["BL"]},
 						"UVL":{"cost":2.8e7, "parents":["PL"]},
 						"XRL":{"cost":4.05e8, "parents":["UVL"]},
 						"GRL":{"cost":6.5e9, "parents":["XRL"]},
-						"UGRL":{"cost":1e12, "parents":["GRL"]},
+						"UGRL":{"cost":1.0e12, "parents":["GRL"]},
 						
-						"RMK2":{"cost":5e6, "parents":["RC"]},
-						"RMK3":{"cost":5e10, "parents":["RMK2"]},
+						"RMK2":{"cost":5.0e6, "parents":["RC"]},
+						"RMK3":{"cost":5.0e10, "parents":["RMK2"]},
 						
 						#Ship sciences
-						"SCT":{"cost":350, "parents":["RC"]},
-						"CD":{"cost":2400, "parents":["SCT"]},
-						"FTL":{"cost":128000, "parents":["SCT"]},
+						"SCT":{"cost":350.0, "parents":["RC"]},
+						"CD":{"cost":2400.0, "parents":["SCT"]},
+						"FTL":{"cost":128000.0, "parents":["SCT"]},
 						"IGD":{"cost":9.5e7, "parents":["FTL"]},
 						"FG":{"cost":3.45e9, "parents":["IGD"]},
 						"FG2":{"cost":1.4e19, "parents":["FG"]},
@@ -320,7 +320,7 @@ var science_unlocks = {
 						"PD":{"cost":1.2e12, "parents":["ID"]},
 						
 						#Megastructure sciences
-						"MAE":{"cost":100000, "parents":["SCT"]},
+						"MAE":{"cost":100000.0, "parents":["SCT"]},
 						"TF":{"cost":5.6e8, "parents":["MAE"]},
 						#Dyson sphere
 						"DS1":{"cost":1.2e11, "parents":["MAE"]},
@@ -330,7 +330,7 @@ var science_unlocks = {
 						#Matrioshka brain
 						"MB":{"cost":2.6e16, "parents":["DS4"]},
 						#Space elevator
-						"SE1":{"cost":700000, "parents":["MAE"]},
+						"SE1":{"cost":700000.0, "parents":["MAE"]},
 						
 						#Mega mineral extractor
 						"MME1":{"cost":1.7e9, "parents":["MAE"]},
@@ -347,61 +347,61 @@ var science_unlocks = {
 						"PK2":{"cost":3.4e16, "parents":["PK1"]},
 						
 						#Gigastructures
-						"GS":{"cost":1e19, "parents":["MB"]},
+						"GS":{"cost":1.0e19, "parents":["MB"]},
 						
 						#Triangulum probe
-						"TPCC":{"cost":1e23, "parents":["GS"]},
+						"TPCC":{"cost":1.0e23, "parents":["GS"]},
 }
 
-var infinite_research_sciences = {	"MEE":{"cost":250, "pw":6.8},
-									"EPE":{"cost":400, "pw":6.8},
-									"RLE":{"cost":1250, "pw":7.2},
-									"STE":{"cost":500, "pw":7.0},
-									"MMS":{"cost":150, "pw":6.0},
-									"PME":{"cost":1e7, "pw":6.8},
+var infinite_research_sciences = {	"MEE":{"cost":250.0, "pw":6.8},
+									"EPE":{"cost":400.0, "pw":6.8},
+									"RLE":{"cost":1250.0, "pw":7.2},
+									"STE":{"cost":500.0, "pw":7.0},
+									"MMS":{"cost":150.0, "pw":6.0},
+									"PME":{"cost":1.0e7, "pw":6.8},
 }
 
-var rover_armor = {	"stone_armor":{"HP":2, "defense":1, "costs":{"stone":200}},
-					"lead_armor":{"HP":5, "defense":2, "costs":{"lead":40}},
-					"copper_armor":{"HP":10, "defense":3, "costs":{"copper":50}},
-					"iron_armor":{"HP":15, "defense":4, "costs":{"iron":65}},
-					"aluminium_armor":{"HP":20, "defense":5, "costs":{"aluminium":90}},
-					"silver_armor":{"HP":30, "defense":7, "costs":{"silver":130}},
-					"gold_armor":{"HP":50, "defense":10, "costs":{"gold":190}},
-					"titanium_armor":{"HP":80, "defense":15, "costs":{"titanium":240}},
+var rover_armor = {	"stone_armor":{"HP":2, "defense":1, "costs":{"stone":200.0}},
+					"lead_armor":{"HP":5, "defense":2, "costs":{"lead":40.0}},
+					"copper_armor":{"HP":10, "defense":3, "costs":{"copper":50.0}},
+					"iron_armor":{"HP":15, "defense":4, "costs":{"iron":65.0}},
+					"aluminium_armor":{"HP":20, "defense":5, "costs":{"aluminium":90.0}},
+					"silver_armor":{"HP":30, "defense":7, "costs":{"silver":130.0}},
+					"gold_armor":{"HP":50, "defense":10, "costs":{"gold":190.0}},
+					"titanium_armor":{"HP":80, "defense":15, "costs":{"titanium":240.0}},
 					#"gemstone_armor":{"HP":85, "defense":22, "costs":{"amethyst":70, "quartz":70, "topaz":70, "sapphire":70, "emerald":70, "ruby":70}},
-					"platinum_armor":{"HP":130, "defense":40, "costs":{"platinum":600}},
-					"diamond_armor":{"HP":180, "defense":70, "costs":{"diamond":750}},
-					"nanocrystal_armor":{"HP":240, "defense":110, "costs":{"nanocrystal":1600}},
-					"mythril_armor":{"HP":400, "defense":250, "costs":{"mythril":3800}},
+					"platinum_armor":{"HP":130, "defense":40, "costs":{"platinum":600.0}},
+					"diamond_armor":{"HP":180, "defense":70, "costs":{"diamond":750.0}},
+					"nanocrystal_armor":{"HP":240, "defense":110, "costs":{"nanocrystal":1600.0}},
+					"mythril_armor":{"HP":400, "defense":250, "costs":{"mythril":3800.0}},
 }
-var rover_wheels = {	"stone_wheels":{"speed":1.0, "costs":{"stone":100}},
-						"lead_wheels":{"speed":1.05, "costs":{"lead":30}},
-						"copper_wheels":{"speed":1.1, "costs":{"copper":40}},
-						"iron_wheels":{"speed":1.15, "costs":{"iron":50}},
-						"aluminium_wheels":{"speed":1.2, "costs":{"aluminium":70}},
-						"silver_wheels":{"speed":1.25, "costs":{"silver":100}},
-						"gold_wheels":{"speed":1.3, "costs":{"gold":150}},
-						"titanium_wheels":{"speed":1.6, "costs":{"titanium":200}},
+var rover_wheels = {	"stone_wheels":{"speed":1.0, "costs":{"stone":100.0}},
+						"lead_wheels":{"speed":1.05, "costs":{"lead":30.0}},
+						"copper_wheels":{"speed":1.1, "costs":{"copper":40.0}},
+						"iron_wheels":{"speed":1.15, "costs":{"iron":50.0}},
+						"aluminium_wheels":{"speed":1.2, "costs":{"aluminium":70.0}},
+						"silver_wheels":{"speed":1.25, "costs":{"silver":100.0}},
+						"gold_wheels":{"speed":1.3, "costs":{"gold":150.0}},
+						"titanium_wheels":{"speed":1.6, "costs":{"titanium":200.0}},
 						#"gemstone_wheels":{"speed":1.7, "costs":{"amethyst":60, "quartz":60, "topaz":60, "sapphire":60, "emerald":60, "ruby":60}},
-						"platinum_wheels":{"speed":1.75, "costs":{"platinum":500}},
-						"diamond_wheels":{"speed":1.95, "costs":{"diamond":650}},
-						"nanocrystal_wheels":{"speed":2.2, "costs":{"nanocrystal":1100}},
-						"mythril_wheels":{"speed":2.5, "costs":{"mythril":1600}},
+						"platinum_wheels":{"speed":1.75, "costs":{"platinum":500.0}},
+						"diamond_wheels":{"speed":1.95, "costs":{"diamond":650.0}},
+						"nanocrystal_wheels":{"speed":2.2, "costs":{"nanocrystal":1100.0}},
+						"mythril_wheels":{"speed":2.5, "costs":{"mythril":1600.0}},
 }
-var rover_CC = {	"stone_CC":{"capacity":3000, "costs":{"stone":250}},
-					"lead_CC":{"capacity":5000, "costs":{"lead":70}},
-					"copper_CC":{"capacity":7000, "costs":{"copper":90}},
-					"iron_CC":{"capacity":10000, "costs":{"iron":110}},
-					"aluminium_CC":{"capacity":14000, "costs":{"aluminium":130}},
-					"silver_CC":{"capacity":20000, "costs":{"silver":150}},
-					"gold_CC":{"capacity":30000, "costs":{"gold":200}},
-					"titanium_CC":{"capacity":62000, "costs":{"titanium":250}},
+var rover_CC = {	"stone_CC":{"capacity":3000.0, "costs":{"stone":250.0}},
+					"lead_CC":{"capacity":5000.0, "costs":{"lead":70.0}},
+					"copper_CC":{"capacity":7000.0, "costs":{"copper":90.0}},
+					"iron_CC":{"capacity":10000.0, "costs":{"iron":110.0}},
+					"aluminium_CC":{"capacity":14000.0, "costs":{"aluminium":130.0}},
+					"silver_CC":{"capacity":20000.0, "costs":{"silver":150.0}},
+					"gold_CC":{"capacity":30000.0, "costs":{"gold":200.0}},
+					"titanium_CC":{"capacity":62000.0, "costs":{"titanium":250.0}},
 					#"gemstone_CC":{"capacity":75000, "costs":{"amethyst":75, "quartz":75, "topaz":75, "sapphire":75, "emerald":75, "ruby":75}},
-					"platinum_CC":{"capacity":90000, "costs":{"platinum":700}},
-					"diamond_CC":{"capacity":165000, "costs":{"diamond":1200}},
-					"nanocrystal_CC":{"capacity":450000, "costs":{"nanocrystal":2200}},
-					"mythril_CC":{"capacity":1250000, "costs":{"mythril":5000}},
+					"platinum_CC":{"capacity":90000.0, "costs":{"platinum":700.0}},
+					"diamond_CC":{"capacity":165000.0, "costs":{"diamond":1200.0}},
+					"nanocrystal_CC":{"capacity":450000.0, "costs":{"nanocrystal":2200.0}},
+					"mythril_CC":{"capacity":1250000.0, "costs":{"mythril":5000.0}},
 }
 var rover_weapons = {	"red_laser":{"damage":5, "cooldown":0.2, "costs":{"money":1000, "silicon":10}},
 						"orange_laser":{"damage":8, "cooldown":0.19, "costs":{"money":17000, "silicon":12}},

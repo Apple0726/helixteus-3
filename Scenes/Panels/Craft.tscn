@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=3 uid="uid://bcwoovqg4ygot"]
+[gd_scene format=3 uid="uid://bcwoovqg4ygot"]
 
 [ext_resource type="Theme" uid="uid://cp2u1kgj60ic" path="res://Resources/default_theme.tres" id="1_nvp2m"]
 [ext_resource type="Script" uid="uid://wo0x1074yc0c" path="res://Scripts/CraftPanel.gd" id="2_mcqm5"]
@@ -34,7 +34,7 @@ border_width_bottom = 2
 border_color = Color(0.105882, 0.196078, 0.305882, 1)
 border_blend = true
 
-[node name="Panel" type="Control"]
+[node name="Panel" type="Control" unique_id=991408926]
 layout_mode = 3
 anchors_preset = 0
 offset_right = 1024.0
@@ -43,16 +43,15 @@ mouse_filter = 2
 theme = ExtResource("1_nvp2m")
 script = ExtResource("2_mcqm5")
 
-[node name="GUI" type="TextureRect" parent="."]
+[node name="GUI" type="TextureRect" parent="." unique_id=1007793562]
 layout_mode = 0
 offset_left = 80.0
 offset_top = 52.0
 offset_right = 1204.0
 offset_bottom = 671.0
-mouse_filter = 2
 texture = ExtResource("3_kdk5l")
 
-[node name="CloseButton" type="TextureButton" parent="."]
+[node name="CloseButton" type="TextureButton" parent="." unique_id=1354075646]
 layout_mode = 0
 offset_left = 1136.0
 offset_top = 67.0
@@ -61,7 +60,7 @@ offset_bottom = 116.0
 texture_normal = ExtResource("4_c88uc")
 texture_hover = ExtResource("5_40q1n")
 
-[node name="Title" type="Label" parent="."]
+[node name="Title" type="Label" parent="." unique_id=863536387]
 custom_minimum_size = Vector2(0, 38)
 layout_mode = 1
 anchors_preset = 10
@@ -75,7 +74,7 @@ text = "Craft"
 label_settings = SubResource("LabelSettings_jee6n")
 vertical_alignment = 1
 
-[node name="Desc" type="Label" parent="."]
+[node name="Desc" type="Label" parent="." unique_id=1342168188]
 custom_minimum_size = Vector2(0, 38)
 layout_mode = 1
 anchors_preset = 10
@@ -89,7 +88,7 @@ text = "Mining too slow? These items make your pickaxe even more powerful."
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="Tabs" type="HBoxContainer" parent="."]
+[node name="Tabs" type="HBoxContainer" parent="." unique_id=1778010035]
 layout_mode = 0
 offset_left = 240.0
 offset_top = 353.0
@@ -97,17 +96,17 @@ offset_right = 544.0
 offset_bottom = 393.0
 theme_override_constants/separation = 15
 
-[node name="MiningButton" parent="Tabs" instance=ExtResource("5_wuk46")]
+[node name="MiningButton" parent="Tabs" unique_id=516541948 instance=ExtResource("5_wuk46")]
 layout_mode = 2
 size_flags_horizontal = 3
 button_text = "Mining"
 
-[node name="CaveButton" parent="Tabs" instance=ExtResource("5_wuk46")]
+[node name="CaveButton" parent="Tabs" unique_id=764283740 instance=ExtResource("5_wuk46")]
 layout_mode = 2
 size_flags_horizontal = 3
 button_text = "Cave"
 
-[node name="Items" type="ScrollContainer" parent="."]
+[node name="Items" type="ScrollContainer" parent="." unique_id=381239230]
 layout_mode = 1
 anchors_preset = 9
 anchor_bottom = 1.0
@@ -120,13 +119,13 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 theme_override_styles/panel = SubResource("StyleBoxFlat_bppng")
 
-[node name="Grid" type="GridContainer" parent="Items"]
+[node name="Grid" type="GridContainer" parent="Items" unique_id=1725170643]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 columns = 10
 
-[node name="ItemInfo" type="Panel" parent="."]
+[node name="ItemInfo" type="Panel" parent="." unique_id=1910298230]
 visible = false
 layout_mode = 0
 offset_left = 352.0
@@ -135,7 +134,7 @@ offset_right = 928.0
 offset_bottom = 624.0
 theme_override_styles/panel = SubResource("StyleBoxFlat_bppng")
 
-[node name="BuyAmount" type="SpinBox" parent="ItemInfo"]
+[node name="BuyAmount" type="SpinBox" parent="ItemInfo" unique_id=1801088872]
 layout_mode = 0
 offset_left = 248.0
 offset_top = 80.0
@@ -147,7 +146,7 @@ value = 1.0
 rounded = true
 update_on_text_changed = true
 
-[node name="Buy" type="Button" parent="ItemInfo"]
+[node name="Buy" type="Button" parent="ItemInfo" unique_id=505894852]
 layout_mode = 1
 anchors_preset = 7
 anchor_left = 0.5
@@ -168,7 +167,7 @@ text = "CRAFT"
 icon_alignment = 2
 expand_icon = true
 
-[node name="ItemName" type="Label" parent="ItemInfo"]
+[node name="ItemName" type="Label" parent="ItemInfo" unique_id=982817963]
 layout_mode = 1
 anchors_preset = 10
 anchor_right = 1.0
@@ -178,7 +177,7 @@ grow_horizontal = 2
 text = "Click on an item above to craft"
 horizontal_alignment = 1
 
-[node name="Panel" type="Panel" parent="ItemInfo"]
+[node name="Panel" type="Panel" parent="ItemInfo" unique_id=1469012334]
 custom_minimum_size = Vector2(64, 64)
 layout_mode = 0
 offset_left = 80.0
@@ -187,7 +186,7 @@ offset_right = 160.0
 offset_bottom = 136.0
 theme_override_styles/panel = SubResource("StyleBoxFlat_rngm8")
 
-[node name="TextureRect" type="TextureRect" parent="ItemInfo/Panel"]
+[node name="TextureRect" type="TextureRect" parent="ItemInfo/Panel" unique_id=2039817011]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -197,14 +196,14 @@ grow_vertical = 2
 expand_mode = 1
 stretch_mode = 5
 
-[node name="ScrollContainer" type="ScrollContainer" parent="ItemInfo"]
+[node name="ScrollContainer" type="ScrollContainer" parent="ItemInfo" unique_id=1702992439]
 layout_mode = 0
 offset_left = 384.0
 offset_top = 56.0
 offset_right = 568.0
 offset_bottom = 160.0
 
-[node name="Costs" type="VBoxContainer" parent="ItemInfo/ScrollContainer"]
+[node name="Costs" type="VBoxContainer" parent="ItemInfo/ScrollContainer" unique_id=1864282267]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3

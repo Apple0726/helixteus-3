@@ -1,4 +1,4 @@
-[gd_scene load_steps=17 format=3 uid="uid://bmmss4usqtscn"]
+[gd_scene format=3 uid="uid://bmmss4usqtscn"]
 
 [ext_resource type="PackedScene" uid="uid://dixixiv5ynvkf" path="res://Scenes/WhiteRect.tscn" id="1"]
 [ext_resource type="Shader" uid="uid://b587s4ws25jcn" path="res://Shaders/LiquidLake.gdshader" id="2_75ca2"]
@@ -85,15 +85,15 @@ void fragment() {
 [sub_resource type="ShaderMaterial" id="4"]
 shader = SubResource("3")
 
-[node name="Planet" type="Node2D"]
+[node name="Planet" type="Node2D" unique_id=1211169162]
 script = ExtResource("3")
 
-[node name="Shadow" type="Panel" parent="."]
+[node name="Shadow" type="Panel" parent="." unique_id=1323548516]
 visible = false
 mouse_filter = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_g1ur1")
 
-[node name="Lake" type="TextureRect" parent="."]
+[node name="Lake" type="TextureRect" parent="." unique_id=1367838776]
 material = SubResource("ShaderMaterial_3y52m")
 offset_right = 1280.0
 offset_bottom = 720.0
@@ -101,29 +101,29 @@ texture = ExtResource("2_fk4u5")
 expand_mode = 1
 stretch_mode = 1
 
-[node name="PlanetTiles" type="TileMapLayer" parent="."]
+[node name="PlanetTiles" type="TileMapLayer" parent="." unique_id=2081394310]
 material = SubResource("ShaderMaterial_2ub2g")
 tile_set = ExtResource("3_fk4u5")
 occlusion_enabled = false
 collision_enabled = false
 navigation_enabled = false
 
-[node name="Soil" type="TileMapLayer" parent="."]
+[node name="Soil" type="TileMapLayer" parent="." unique_id=1894322419]
 use_parent_material = true
 
-[node name="Ash" type="TileMapLayer" parent="."]
+[node name="Ash" type="TileMapLayer" parent="." unique_id=1764439096]
 use_parent_material = true
 
-[node name="BadApple" type="Node2D" parent="."]
+[node name="BadApple" type="Node2D" parent="." unique_id=1132585540]
 script = ExtResource("7_yxni4")
 
-[node name="Panel" type="Panel" parent="BadApple"]
+[node name="Panel" type="Panel" parent="BadApple" unique_id=1250251156]
 offset_top = -928.0
 offset_right = 2888.0
 offset_bottom = -56.0
 theme_override_styles/panel = SubResource("StyleBoxFlat_xv77e")
 
-[node name="Label" type="Label" parent="BadApple/Panel"]
+[node name="Label" type="Label" parent="BadApple/Panel" unique_id=586435872]
 layout_mode = 0
 offset_left = 64.0
 offset_top = 48.0
@@ -131,7 +131,7 @@ offset_right = 2927.0
 offset_bottom = 561.0
 label_settings = SubResource("LabelSettings_xv77e")
 
-[node name="HSliderP" type="HSlider" parent="BadApple/Panel"]
+[node name="HSliderP" type="HSlider" parent="BadApple/Panel" unique_id=1107243321]
 layout_mode = 0
 offset_left = 104.0
 offset_top = 520.0
@@ -141,7 +141,7 @@ max_value = 2.0
 step = 0.02
 value = 1.0
 
-[node name="Label" type="Label" parent="BadApple/Panel/HSliderP"]
+[node name="Label" type="Label" parent="BadApple/Panel/HSliderP" unique_id=904288972]
 layout_mode = 0
 offset_left = 1264.0
 offset_right = 1349.0
@@ -149,7 +149,7 @@ offset_bottom = 83.0
 text = "1.0"
 label_settings = SubResource("LabelSettings_fk4u5")
 
-[node name="Label2" type="Label" parent="BadApple/Panel/HSliderP"]
+[node name="Label2" type="Label" parent="BadApple/Panel/HSliderP" unique_id=999644034]
 visible = false
 layout_mode = 0
 offset_left = -80.0
@@ -158,7 +158,7 @@ offset_bottom = 83.0
 theme_override_font_sizes/font_size = 60
 text = "P"
 
-[node name="OptionButton" type="OptionButton" parent="BadApple/Panel/HSliderP"]
+[node name="OptionButton" type="OptionButton" parent="BadApple/Panel/HSliderP" unique_id=731508620]
 visible = false
 layout_mode = 0
 offset_left = 1416.0
@@ -177,7 +177,7 @@ popup/item_2/id = 2
 popup/item_3/text = "LFO3"
 popup/item_3/id = 3
 
-[node name="HSliderI" type="HSlider" parent="BadApple/Panel"]
+[node name="HSliderI" type="HSlider" parent="BadApple/Panel" unique_id=1442820698]
 visible = false
 layout_mode = 0
 offset_left = 104.0
@@ -187,7 +187,7 @@ offset_bottom = 720.0
 max_value = 1.0
 step = 0.01
 
-[node name="Label" type="Label" parent="BadApple/Panel/HSliderI"]
+[node name="Label" type="Label" parent="BadApple/Panel/HSliderI" unique_id=1552460804]
 layout_mode = 0
 offset_left = 1264.0
 offset_right = 1349.0
@@ -195,7 +195,7 @@ offset_bottom = 83.0
 text = "0.0"
 label_settings = SubResource("LabelSettings_fk4u5")
 
-[node name="Label2" type="Label" parent="BadApple/Panel/HSliderI"]
+[node name="Label2" type="Label" parent="BadApple/Panel/HSliderI" unique_id=1006261345]
 layout_mode = 0
 offset_left = -72.0
 offset_right = -24.0
@@ -203,7 +203,7 @@ offset_bottom = 83.0
 theme_override_font_sizes/font_size = 60
 text = "I"
 
-[node name="OptionButton" type="OptionButton" parent="BadApple/Panel/HSliderI"]
+[node name="OptionButton" type="OptionButton" parent="BadApple/Panel/HSliderI" unique_id=51580106]
 visible = false
 layout_mode = 0
 offset_left = 1416.0
@@ -222,7 +222,7 @@ popup/item_2/id = 2
 popup/item_3/text = "LFO3"
 popup/item_3/id = 3
 
-[node name="HSliderD" type="HSlider" parent="BadApple/Panel"]
+[node name="HSliderD" type="HSlider" parent="BadApple/Panel" unique_id=1273547030]
 visible = false
 layout_mode = 0
 offset_left = 104.0
@@ -232,7 +232,7 @@ offset_bottom = 840.0
 max_value = 1.0
 step = 0.01
 
-[node name="Label" type="Label" parent="BadApple/Panel/HSliderD"]
+[node name="Label" type="Label" parent="BadApple/Panel/HSliderD" unique_id=1746759603]
 layout_mode = 0
 offset_left = 1264.0
 offset_right = 1349.0
@@ -240,7 +240,7 @@ offset_bottom = 83.0
 text = "0.0"
 label_settings = SubResource("LabelSettings_fk4u5")
 
-[node name="Label2" type="Label" parent="BadApple/Panel/HSliderD"]
+[node name="Label2" type="Label" parent="BadApple/Panel/HSliderD" unique_id=395773674]
 layout_mode = 0
 offset_left = -80.0
 offset_right = -24.0
@@ -248,7 +248,7 @@ offset_bottom = 83.0
 theme_override_font_sizes/font_size = 60
 text = "D"
 
-[node name="OptionButton" type="OptionButton" parent="BadApple/Panel/HSliderD"]
+[node name="OptionButton" type="OptionButton" parent="BadApple/Panel/HSliderD" unique_id=475824465]
 visible = false
 layout_mode = 0
 offset_left = 1416.0
@@ -267,7 +267,7 @@ popup/item_2/id = 2
 popup/item_3/text = "LFO3"
 popup/item_3/id = 3
 
-[node name="OPButton" type="Button" parent="BadApple/Panel"]
+[node name="OPButton" type="Button" parent="BadApple/Panel" unique_id=1562456960]
 layout_mode = 0
 offset_left = 112.0
 offset_top = 664.0
@@ -276,7 +276,7 @@ offset_bottom = 779.0
 theme_override_font_sizes/font_size = 60
 text = "Are you an OP control systems engineer?"
 
-[node name="OPButton2" type="Button" parent="BadApple/Panel"]
+[node name="OPButton2" type="Button" parent="BadApple/Panel" unique_id=853274139]
 visible = false
 layout_mode = 0
 offset_left = 1816.0
@@ -286,7 +286,7 @@ offset_bottom = 731.0
 theme_override_font_sizes/font_size = 60
 text = "Also an OP sound engineer?"
 
-[node name="LFO" type="Control" parent="BadApple/Panel"]
+[node name="LFO" type="Control" parent="BadApple/Panel" unique_id=479123945]
 visible = false
 anchors_preset = 0
 offset_left = 192.0
@@ -294,7 +294,7 @@ offset_top = 32.0
 offset_right = 232.0
 offset_bottom = 72.0
 
-[node name="OptionButton" type="OptionButton" parent="BadApple/Panel/LFO"]
+[node name="OptionButton" type="OptionButton" parent="BadApple/Panel/LFO" unique_id=1709810463]
 layout_mode = 0
 offset_left = 1904.0
 offset_top = 400.0
@@ -311,7 +311,7 @@ popup/item_1/id = 1
 popup/item_2/text = "LFO 3"
 popup/item_2/id = 2
 
-[node name="LabelF" type="Label" parent="BadApple/Panel/LFO"]
+[node name="LabelF" type="Label" parent="BadApple/Panel/LFO" unique_id=1295158316]
 layout_mode = 0
 offset_left = 2208.0
 offset_top = 520.0
@@ -320,7 +320,7 @@ offset_bottom = 603.0
 text = "1.0 Hz"
 label_settings = SubResource("LabelSettings_fk4u5")
 
-[node name="LabelA" type="Label" parent="BadApple/Panel/LFO"]
+[node name="LabelA" type="Label" parent="BadApple/Panel/LFO" unique_id=1971738419]
 layout_mode = 0
 offset_left = 2208.0
 offset_top = 616.0
@@ -329,7 +329,7 @@ offset_bottom = 699.0
 text = "0.5 amplitude"
 label_settings = SubResource("LabelSettings_fk4u5")
 
-[node name="LabelO" type="Label" parent="BadApple/Panel/LFO"]
+[node name="LabelO" type="Label" parent="BadApple/Panel/LFO" unique_id=2039043863]
 layout_mode = 0
 offset_left = 2208.0
 offset_top = 712.0
@@ -338,7 +338,7 @@ offset_bottom = 795.0
 text = "0.5 offset"
 label_settings = SubResource("LabelSettings_fk4u5")
 
-[node name="HSliderF" type="HSlider" parent="BadApple/Panel/LFO"]
+[node name="HSliderF" type="HSlider" parent="BadApple/Panel/LFO" unique_id=1299624692]
 layout_mode = 0
 offset_left = 1704.0
 offset_top = 520.0
@@ -348,7 +348,7 @@ max_value = 10.0
 step = 0.1
 value = 1.0
 
-[node name="HSliderA" type="HSlider" parent="BadApple/Panel/LFO"]
+[node name="HSliderA" type="HSlider" parent="BadApple/Panel/LFO" unique_id=803054261]
 layout_mode = 0
 offset_left = 1704.0
 offset_top = 616.0
@@ -358,7 +358,7 @@ max_value = 2.0
 step = 0.05
 value = 0.5
 
-[node name="HSliderO" type="HSlider" parent="BadApple/Panel/LFO"]
+[node name="HSliderO" type="HSlider" parent="BadApple/Panel/LFO" unique_id=1166048580]
 layout_mode = 0
 offset_left = 1704.0
 offset_top = 712.0
@@ -368,22 +368,22 @@ max_value = 2.0
 step = 0.05
 value = 0.5
 
-[node name="icon" type="Sprite2D" parent="."]
+[node name="icon" type="Sprite2D" parent="." unique_id=2077263122]
 visible = false
 material = SubResource("4")
 position = Vector2(396, 400)
 scale = Vector2(12.375, 12.5)
 texture = ExtResource("12")
 
-[node name="WhiteRect" parent="." instance=ExtResource("1")]
+[node name="WhiteRect" parent="." unique_id=1617137608 instance=ExtResource("1")]
 
-[node name="BuildingShortcutTimer" type="Timer" parent="."]
+[node name="BuildingShortcutTimer" type="Timer" parent="." unique_id=462995663]
 wait_time = 0.7
 one_shot = true
 
-[node name="Buildings" type="Node2D" parent="."]
+[node name="Buildings" type="Node2D" parent="." unique_id=1312217404]
 
-[node name="Auroras" type="Node2D" parent="."]
+[node name="Auroras" type="Node2D" parent="." unique_id=1921611729]
 
 [connection signal="tree_exited" from="." to="." method="_on_Planet_tree_exited"]
 [connection signal="tree_exiting" from="BadApple" to="BadApple" method="_on_tree_exiting"]

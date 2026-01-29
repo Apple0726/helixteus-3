@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=3 uid="uid://ce00kfbdjl4rk"]
+[gd_scene format=3 uid="uid://ce00kfbdjl4rk"]
 
 [ext_resource type="Theme" uid="uid://cp2u1kgj60ic" path="res://Resources/default_theme.tres" id="1_ks4xu"]
 [ext_resource type="Script" uid="uid://rqnc5fltpr23" path="res://Scripts/ShopPanel.gd" id="2_adys4"]
@@ -26,16 +26,7 @@ border_width_top = 4
 border_color = Color(0.192157, 0.192157, 0.192157, 1)
 border_blend = true
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_rngm8"]
-bg_color = Color(0, 0, 0.164706, 1)
-border_width_left = 1
-border_width_top = 1
-border_width_right = 2
-border_width_bottom = 2
-border_color = Color(0.105882, 0.196078, 0.305882, 1)
-border_blend = true
-
-[node name="Panel" type="Control"]
+[node name="Panel" type="Control" unique_id=129863088]
 layout_mode = 3
 anchors_preset = 0
 offset_right = 1024.0
@@ -45,16 +36,15 @@ theme = ExtResource("1_ks4xu")
 script = ExtResource("2_adys4")
 metadata/_edit_lock_ = true
 
-[node name="GUI" type="TextureRect" parent="."]
+[node name="GUI" type="TextureRect" parent="." unique_id=769202431]
 layout_mode = 0
 offset_left = 80.0
 offset_top = 52.0
 offset_right = 1204.0
 offset_bottom = 671.0
-mouse_filter = 2
 texture = ExtResource("3_d1dka")
 
-[node name="CloseButton" type="TextureButton" parent="."]
+[node name="CloseButton" type="TextureButton" parent="." unique_id=444011075]
 layout_mode = 0
 offset_left = 1136.0
 offset_top = 67.0
@@ -63,7 +53,7 @@ offset_bottom = 116.0
 texture_normal = ExtResource("4_q0u5r")
 texture_hover = ExtResource("5_3b6lu")
 
-[node name="Title" type="Label" parent="."]
+[node name="Title" type="Label" parent="." unique_id=622681409]
 custom_minimum_size = Vector2(0, 38)
 layout_mode = 1
 anchors_preset = 10
@@ -77,7 +67,7 @@ text = "Shop"
 label_settings = SubResource("LabelSettings_jee6n")
 vertical_alignment = 1
 
-[node name="Desc" type="Label" parent="."]
+[node name="Desc" type="Label" parent="." unique_id=1042929457]
 custom_minimum_size = Vector2(0, 38)
 layout_mode = 1
 anchors_preset = 10
@@ -91,7 +81,7 @@ text = "Overclock items temporarily boost resource production of the affected bu
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="Tabs" type="HBoxContainer" parent="."]
+[node name="Tabs" type="HBoxContainer" parent="." unique_id=112046286]
 layout_mode = 0
 offset_left = 240.0
 offset_top = 353.0
@@ -99,17 +89,17 @@ offset_right = 544.0
 offset_bottom = 393.0
 theme_override_constants/separation = 15
 
-[node name="OverclocksButton" parent="Tabs" instance=ExtResource("5_ixx63")]
+[node name="OverclocksButton" parent="Tabs" unique_id=2042778188 instance=ExtResource("5_ixx63")]
 layout_mode = 2
 size_flags_horizontal = 3
 button_text = "OVERCLOCKS"
 
-[node name="PickaxesButton" parent="Tabs" instance=ExtResource("5_ixx63")]
+[node name="PickaxesButton" parent="Tabs" unique_id=1722759835 instance=ExtResource("5_ixx63")]
 layout_mode = 2
 size_flags_horizontal = 3
 button_text = "PICKAXES"
 
-[node name="Items" type="ScrollContainer" parent="."]
+[node name="Items" type="ScrollContainer" parent="." unique_id=1331962906]
 layout_mode = 1
 anchors_preset = 9
 anchor_bottom = 1.0
@@ -122,14 +112,13 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 theme_override_styles/panel = SubResource("StyleBoxFlat_bppng")
 
-[node name="Grid" type="GridContainer" parent="Items"]
+[node name="Grid" type="GridContainer" parent="Items" unique_id=378915964]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 columns = 10
 
-[node name="ItemInfo" type="Panel" parent="."]
-visible = false
+[node name="ItemInfo" type="Panel" parent="." unique_id=1986029831]
 layout_mode = 0
 offset_left = 352.0
 offset_top = 416.0
@@ -137,7 +126,7 @@ offset_right = 928.0
 offset_bottom = 624.0
 theme_override_styles/panel = SubResource("StyleBoxFlat_bppng")
 
-[node name="BuyAmount" type="SpinBox" parent="ItemInfo"]
+[node name="BuyAmount" type="SpinBox" parent="ItemInfo" unique_id=91204253]
 visible = false
 layout_mode = 0
 offset_left = 248.0
@@ -150,7 +139,7 @@ value = 1.0
 rounded = true
 update_on_text_changed = true
 
-[node name="Buy" type="Button" parent="ItemInfo"]
+[node name="Buy" type="Button" parent="ItemInfo" unique_id=270307450]
 layout_mode = 1
 anchors_preset = 7
 anchor_left = 0.5
@@ -171,7 +160,7 @@ text = "BUY"
 icon_alignment = 2
 expand_icon = true
 
-[node name="ItemName" type="Label" parent="ItemInfo"]
+[node name="ItemName" type="Label" parent="ItemInfo" unique_id=1089416309]
 layout_mode = 1
 anchors_preset = 10
 anchor_right = 1.0
@@ -180,33 +169,27 @@ offset_bottom = 38.0
 grow_horizontal = 2
 horizontal_alignment = 1
 
-[node name="Panel" type="Panel" parent="ItemInfo"]
-custom_minimum_size = Vector2(64, 64)
-layout_mode = 0
-offset_left = 80.0
-offset_top = 56.0
-offset_right = 160.0
-offset_bottom = 136.0
-theme_override_styles/panel = SubResource("StyleBoxFlat_rngm8")
-
-[node name="TextureRect" type="TextureRect" parent="ItemInfo/Panel"]
+[node name="TextureRect" type="TextureRect" parent="ItemInfo" unique_id=735165266]
 layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
+anchors_preset = -1
+anchor_left = 0.11111111
+anchor_top = 0.23076923
+anchor_right = 0.11111111
+anchor_bottom = 0.23107694
+offset_right = 96.0
+offset_bottom = 95.936
 expand_mode = 1
 stretch_mode = 5
+metadata/_edit_use_anchors_ = true
 
-[node name="ScrollContainer" type="ScrollContainer" parent="ItemInfo"]
+[node name="ScrollContainer" type="ScrollContainer" parent="ItemInfo" unique_id=1277229129]
 layout_mode = 0
 offset_left = 384.0
 offset_top = 56.0
 offset_right = 568.0
 offset_bottom = 136.0
 
-[node name="Costs" type="VBoxContainer" parent="ItemInfo/ScrollContainer"]
+[node name="Costs" type="VBoxContainer" parent="ItemInfo/ScrollContainer" unique_id=572021540]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3

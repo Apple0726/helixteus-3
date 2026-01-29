@@ -1,4 +1,4 @@
-[gd_resource type="TileSet" load_steps=3 format=3 uid="uid://dxm4qdrvyo005"]
+[gd_resource type="TileSet" format=3 uid="uid://dxm4qdrvyo005"]
 
 [ext_resource type="Texture2D" uid="uid://dyqh6w7uhykkx" path="res://Graphics/Tiles/Atlases/soil_atlas.png" id="1_kpmkd"]
 

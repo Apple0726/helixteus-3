@@ -120,17 +120,17 @@ func _on_InvSlot_pressed(index:int):
 	var inv:Dictionary = inventory[index]
 	if right_inv:
 		inv = right_inventory[index]
-	select_comp.get_node("OptionButton").clear()
+	select_comp.option_btn.clear()
 	var default_type:String = inv.type if inv.has("type") else ""
 	if not rover_weapons or inv.has("type") and inv.type == "rover_weapons":
-		select_comp.get_node("OptionButton").add_item(tr("WEAPONS"))
+		select_comp.option_btn.add_item(tr("WEAPONS"))
 		if default_type == "":
 			default_type = "rover_weapons"
 	if not rover_mining or inv.has("type") and inv.type == "rover_mining":
-		select_comp.get_node("OptionButton").add_item(tr("MINING_TOOLS"), 1)
+		select_comp.option_btn.add_item(tr("MINING_TOOLS"), 1)
 		if default_type == "":
 			default_type = "rover_mining"
-	if select_comp.get_node("OptionButton").get_item_count() == 0:
+	if select_comp.option_btn.get_item_count() == 0:
 		return
 	select_comp.visible = true
 	game.sub_panel = select_comp

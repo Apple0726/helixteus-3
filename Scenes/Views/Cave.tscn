@@ -1,4 +1,4 @@
-[gd_scene load_steps=99 format=3 uid="uid://biq34iioj6uf8"]
+[gd_scene format=3 uid="uid://biq34iioj6uf8"]
 
 [ext_resource type="Shader" uid="uid://gevhgabt3grd" path="res://Shaders/Laser.gdshader" id="1"]
 [ext_resource type="Script" uid="uid://2ovarm7fdxfj" path="res://Scripts/Cave/Cave.gd" id="2"]
@@ -12,7 +12,6 @@
 [ext_resource type="PackedScene" uid="uid://cpfkb4haasun3" path="res://Scenes/CaveHole.tscn" id="9"]
 [ext_resource type="Texture2D" uid="uid://yhdxrw2q1yep" path="res://Graphics/HX/Status effects/Stun.png" id="10"]
 [ext_resource type="Texture2D" uid="uid://64ywd74o1wk7" path="res://Graphics/Cave/Rover top down.png" id="11"]
-[ext_resource type="TileSet" uid="uid://c38qxbp5cjiy0" path="res://Resources/CaveWallsTileSet.tres" id="12"]
 [ext_resource type="Texture2D" uid="uid://vj3h3by1epm8" path="res://Graphics/Cave/Objects/exit.png" id="13"]
 [ext_resource type="Shader" uid="uid://dose2l8hnixm6" path="res://Shaders/Fire.gdshader" id="14"]
 [ext_resource type="Texture2D" uid="uid://3aket0dmatt4" path="res://Graphics/Cave/minimap.png" id="15"]
@@ -593,10 +592,10 @@ glow_levels/2 = 1.0
 glow_blend_mode = 0
 adjustment_enabled = true
 
-[node name="Cave" type="Node2D"]
+[node name="Cave" type="Node2D" unique_id=1454837089]
 script = ExtResource("2")
 
-[node name="Floor" type="Sprite2D" parent="."]
+[node name="Floor" type="Sprite2D" parent="." unique_id=637143610]
 z_index = -1
 texture_repeat = 2
 material = SubResource("ShaderMaterial_0yyna")
@@ -604,66 +603,65 @@ texture = ExtResource("2_yvdt3")
 centered = false
 region_enabled = true
 
-[node name="Lava" type="TileMapLayer" parent="."]
+[node name="Lava" type="TileMapLayer" parent="." unique_id=1154763132]
 rendering_quadrant_size = 100
 
-[node name="Ash" type="TileMapLayer" parent="."]
+[node name="Ash" type="TileMapLayer" parent="." unique_id=1662477646]
 rendering_quadrant_size = 100
 
-[node name="Walls" type="TileMapLayer" parent="."]
-tile_set = ExtResource("12")
+[node name="Walls" type="TileMapLayer" parent="." unique_id=1016247985]
 rendering_quadrant_size = 100
 
-[node name="Camera2D" type="Camera2D" parent="."]
+[node name="Camera2D" type="Camera2D" parent="." unique_id=1020749965]
 position_smoothing_enabled = true
 position_smoothing_speed = 10.0
 
-[node name="Screenshake" parent="Camera2D" instance=ExtResource("36")]
+[node name="Screenshake" parent="Camera2D" unique_id=468332233 instance=ExtResource("36")]
 
-[node name="Exit" type="Area2D" parent="."]
+[node name="Exit" type="Area2D" parent="." unique_id=1799236235]
 position = Vector2(212, 4)
 collision_layer = 32
 collision_mask = 2
 
-[node name="ExitColl" type="CollisionShape2D" parent="Exit"]
+[node name="ExitColl" type="CollisionShape2D" parent="Exit" unique_id=2104473906]
 position = Vector2(-0.277153, -97.738)
 rotation = 1.57108
 shape = SubResource("27")
 
-[node name="Sprite2D" type="Sprite2D" parent="Exit"]
+[node name="Sprite2D" type="Sprite2D" parent="Exit" unique_id=1662441151]
 modulate = Color(1, 1, 2, 1)
 texture = ExtResource("13")
 
-[node name="GoUpColl" type="CollisionShape2D" parent="Exit"]
+[node name="GoUpColl" type="CollisionShape2D" parent="Exit" unique_id=104287186]
 shape = SubResource("3")
 disabled = true
 
-[node name="GPUParticles2D" type="GPUParticles2D" parent="Exit"]
+[node name="GPUParticles2D" type="GPUParticles2D" parent="Exit" unique_id=865342844]
 emitting = false
 texture = ExtResource("19")
 lifetime = 2.0
 process_material = SubResource("25")
 
-[node name="Hole" parent="." instance=ExtResource("9")]
+[node name="Hole" parent="." unique_id=941425539 instance=ExtResource("9")]
 
-[node name="MiningParticles" type="GPUParticles2D" parent="."]
+[node name="MiningParticles" type="GPUParticles2D" parent="." unique_id=210433829]
 amount = 25
 lifetime = 0.2
 process_material = SubResource("4")
 
-[node name="Rover" type="CharacterBody2D" parent="."]
+[node name="Rover" type="CharacterBody2D" parent="." unique_id=1237360256]
 position = Vector2(220, 228)
 collision_layer = 2
 collision_mask = 37
 
-[node name="PointLight2D" type="PointLight2D" parent="Rover"]
+[node name="PointLight2D" type="PointLight2D" parent="Rover" unique_id=982111051]
 energy = 0.8
 shadow_enabled = true
 shadow_color = Color(0, 0, 0, 1)
 texture = ExtResource("31")
 texture_scale = 3.0
 
-[node name="HPBG" type="ColorRect" parent="Rover"]
+[node name="HPBG" type="ColorRect" parent="Rover" unique_id=48189733]
 light_mask = 0
 offset_left = -48.0
 offset_top = 76.0
@@ -671,7 +669,7 @@ offset_right = 48.0
 offset_bottom = 88.0
 color = Color(0, 0.4, 0, 1)
 
-[node name="InvBG" type="ColorRect" parent="Rover"]
+[node name="InvBG" type="ColorRect" parent="Rover" unique_id=1620283493]
 light_mask = 0
 offset_left = -48.0
 offset_top = 96.0
@@ -679,7 +677,7 @@ offset_right = 48.0
 offset_bottom = 108.0
 color = Color(0.321569, 0.164706, 0, 1)
 
-[node name="Bar" type="TextureProgressBar" parent="Rover"]
+[node name="Bar" type="TextureProgressBar" parent="Rover" unique_id=201456748]
 modulate = Color(0, 1, 0, 1)
 light_mask = 0
 offset_left = -48.0
@@ -690,7 +688,7 @@ value = 50.0
 nine_patch_stretch = true
 texture_progress = ExtResource("4")
 
-[node name="InvBar" type="TextureProgressBar" parent="Rover"]
+[node name="InvBar" type="TextureProgressBar" parent="Rover" unique_id=1846977235]
 modulate = Color(0.678431, 0.282353, 0, 1)
 light_mask = 0
 offset_left = -48.0
@@ -701,24 +699,24 @@ value = 50.0
 nine_patch_stretch = true
 texture_progress = ExtResource("4")
 
-[node name="AshParticles" type="GPUParticles2D" parent="Rover"]
+[node name="AshParticles" type="GPUParticles2D" parent="Rover" unique_id=358644271]
 emitting = false
 amount = 100
 process_material = SubResource("78")
 
-[node name="Glow" type="Sprite2D" parent="Rover"]
+[node name="Glow" type="Sprite2D" parent="Rover" unique_id=1129092727]
 modulate = Color(1, 1, 1, 0)
 light_mask = -2147483647
 position = Vector2(0, -1)
 scale = Vector2(0.8, 0.8)
 texture = ExtResource("30")
 
-[node name="Sprite2D" type="Sprite2D" parent="Rover"]
+[node name="Sprite2D" type="Sprite2D" parent="Rover" unique_id=393075934]
 light_mask = 0
 scale = Vector2(0.288352, 0.288352)
 texture = ExtResource("11")
 
-[node name="MiningLaser" type="Sprite2D" parent="Rover"]
+[node name="MiningLaser" type="Sprite2D" parent="Rover" unique_id=1137287356]
 light_mask = 2
 material = SubResource("28")
 scale = Vector2(14, 14)
@@ -726,63 +724,61 @@ texture = ExtResource("5")
 centered = false
 offset = Vector2(0, -8)
 
-[node name="PointLight2D" type="PointLight2D" parent="Rover/MiningLaser"]
+[node name="PointLight2D" type="PointLight2D" parent="Rover/MiningLaser" unique_id=84250140]
 position = Vector2(8.28572, -0.285713)
 scale = Vector2(0.131034, 0.131034)
 energy = 2.0
 texture = ExtResource("16_6cmh4")
 
-[node name="PointLight2D2" type="PointLight2D" parent="Rover/MiningLaser"]
+[node name="PointLight2D2" type="PointLight2D" parent="Rover/MiningLaser" unique_id=1819870141]
 position = Vector2(8.28572, -0.285713)
 scale = Vector2(0.131034, 0.131034)
 energy = 0.5
 texture = ExtResource("16_6cmh4")
 
-[node name="RayOfDoom" type="Area2D" parent="Rover"]
+[node name="RayOfDoom" type="Area2D" parent="Rover" unique_id=1789726445]
 visible = false
 collision_layer = 0
 collision_mask = 20
 monitoring = false
 monitorable = false
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Rover/RayOfDoom"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Rover/RayOfDoom" unique_id=981389710]
 position = Vector2(0, -32)
 shape = SubResource("87")
 
-[node name="CollisionShape2D2" type="CollisionShape2D" parent="Rover/RayOfDoom"]
+[node name="CollisionShape2D2" type="CollisionShape2D" parent="Rover/RayOfDoom" unique_id=3991781]
 position = Vector2(0, 32)
 shape = SubResource("87")
 
-[node name="Ray" type="RayCast2D" parent="Rover/RayOfDoom"]
+[node name="Ray" type="RayCast2D" parent="Rover/RayOfDoom" unique_id=122603972]
 enabled = false
 target_position = Vector2(100, 0)
 
-[node name="AnimationPlayer" type="AnimationPlayer" parent="Rover/RayOfDoom"]
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Rover/RayOfDoom" unique_id=319082626]
 root_node = NodePath("../Sprite2D")
-libraries = {
-&"": SubResource("AnimationLibrary_nn2up")
-}
+libraries/ = SubResource("AnimationLibrary_nn2up")
 
-[node name="Sprite2D" type="Sprite2D" parent="Rover/RayOfDoom"]
+[node name="Sprite2D" type="Sprite2D" parent="Rover/RayOfDoom" unique_id=642878859]
 material = SubResource("84")
 scale = Vector2(31, 1)
 texture = ExtResource("5")
 centered = false
 offset = Vector2(0, -8)
 
-[node name="Glow" type="Sprite2D" parent="Rover/RayOfDoom"]
+[node name="Glow" type="Sprite2D" parent="Rover/RayOfDoom" unique_id=2048325865]
 modulate = Color(1, 1, 1, 0)
 rotation = 1.5708
 scale = Vector2(2, 2)
 texture = ExtResource("38")
 
-[node name="RayCast2D" type="RayCast2D" parent="Rover"]
+[node name="RayCast2D" type="RayCast2D" parent="Rover" unique_id=2047211869]
 
-[node name="Stun" type="Node2D" parent="Rover"]
+[node name="Stun" type="Node2D" parent="Rover" unique_id=1812676397]
 visible = false
 position = Vector2(0, -6.29962)
 
-[node name="Sprite2D" type="Sprite2D" parent="Rover/Stun"]
+[node name="Sprite2D" type="Sprite2D" parent="Rover/Stun" unique_id=870139709]
 material = SubResource("20")
 position = Vector2(32, 38.2996)
 rotation = 0.496553
@@ -790,7 +786,7 @@ scale = Vector2(1.45224, 1.45224)
 texture = ExtResource("10")
 offset = Vector2(-21.4132, -17.9986)
 
-[node name="Sprite2" type="Sprite2D" parent="Rover/Stun"]
+[node name="Sprite2" type="Sprite2D" parent="Rover/Stun" unique_id=30991510]
 material = SubResource("21")
 position = Vector2(8, 30.2996)
 rotation = -0.583007
@@ -798,74 +794,72 @@ scale = Vector2(0.965229, 0.965229)
 texture = ExtResource("10")
 offset = Vector2(-21.4132, -17.9986)
 
-[node name="Burn" type="Sprite2D" parent="Rover"]
+[node name="Burn" type="Sprite2D" parent="Rover" unique_id=72079587]
 visible = false
 material = SubResource("22")
 position = Vector2(20, -48)
 scale = Vector2(7.6875, 7.6875)
 texture = ExtResource("18")
 
-[node name="AnimationPlayer" type="AnimationPlayer" parent="Rover"]
-libraries = {
-&"": SubResource("AnimationLibrary_qwwb7")
-}
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Rover" unique_id=733760674]
+libraries/ = SubResource("AnimationLibrary_qwwb7")
 
-[node name="EnergyBallTimer" type="Timer" parent="Rover"]
+[node name="EnergyBallTimer" type="Timer" parent="Rover" unique_id=1282297020]
 
-[node name="DashTimer" type="Timer" parent="Rover"]
+[node name="DashTimer" type="Timer" parent="Rover" unique_id=285526116]
 wait_time = 0.7
 one_shot = true
 
-[node name="SuffocationTimer" type="Timer" parent="Rover"]
+[node name="SuffocationTimer" type="Timer" parent="Rover" unique_id=1274786878]
 wait_time = 0.3
 
-[node name="BurnTimer" type="Timer" parent="Rover"]
+[node name="BurnTimer" type="Timer" parent="Rover" unique_id=1531038769]
 
-[node name="LavaTimer" type="Timer" parent="Rover"]
+[node name="LavaTimer" type="Timer" parent="Rover" unique_id=1603747167]
 
-[node name="InvincibilityCooldown" type="Timer" parent="Rover"]
+[node name="InvincibilityCooldown" type="Timer" parent="Rover" unique_id=726509460]
 wait_time = 2.0
 one_shot = true
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Rover"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Rover" unique_id=1329506536]
 shape = SubResource("86")
 
-[node name="BreakRocksWithDash" type="Area2D" parent="Rover"]
+[node name="BreakRocksWithDash" type="Area2D" parent="Rover" unique_id=1796575350]
 collision_layer = 0
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Rover/BreakRocksWithDash"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Rover/BreakRocksWithDash" unique_id=229844341]
 shape = SubResource("93")
 
-[node name="InteractArea" type="Area2D" parent="Rover"]
+[node name="InteractArea" type="Area2D" parent="Rover" unique_id=1657909781]
 collision_layer = 2
 collision_mask = 32
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Rover/InteractArea"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Rover/InteractArea" unique_id=1657479930]
 shape = SubResource("99")
 
-[node name="FloorCollisionDetector" type="Area2D" parent="Rover"]
+[node name="FloorCollisionDetector" type="Area2D" parent="Rover" unique_id=1302715914]
 collision_layer = 2
 collision_mask = 64
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Rover/FloorCollisionDetector"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Rover/FloorCollisionDetector" unique_id=949302637]
 shape = SubResource("30")
 
-[node name="CrackDetector" type="Area2D" parent="Rover"]
+[node name="CrackDetector" type="Area2D" parent="Rover" unique_id=1613618200]
 collision_layer = 128
 collision_mask = 0
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Rover/CrackDetector"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Rover/CrackDetector" unique_id=1688139548]
 shape = SubResource("155")
 
-[node name="RoDEffects" type="Node2D" parent="."]
+[node name="RoDEffects" type="Node2D" parent="." unique_id=2019073024]
 
-[node name="Sprite2D" type="Sprite2D" parent="RoDEffects"]
+[node name="Sprite2D" type="Sprite2D" parent="RoDEffects" unique_id=2000620859]
 visible = false
 material = SubResource("91")
 scale = Vector2(0.9, 0.9)
 texture = ExtResource("19")
 
-[node name="Particles" type="GPUParticles2D" parent="RoDEffects"]
+[node name="Particles" type="GPUParticles2D" parent="RoDEffects" unique_id=764850567]
 material = SubResource("92")
 scale = Vector2(3, 3)
 emitting = false
@@ -875,71 +869,67 @@ lifetime = 0.5
 randomness = 1.0
 process_material = SubResource("90")
 
-[node name="TileHighlightLeft" type="Sprite2D" parent="."]
+[node name="TileHighlightLeft" type="Sprite2D" parent="." unique_id=771399582]
 modulate = Color(1, 0.509804, 0.509804, 0.192157)
 light_mask = -2147483647
 material = SubResource("100")
 position = Vector2(0, -1)
 texture = ExtResource("22")
 
-[node name="AnimationPlayer" type="AnimationPlayer" parent="TileHighlightLeft"]
-libraries = {
-&"": SubResource("AnimationLibrary_0rm4p")
-}
-autoplay = "Flash"
+[node name="AnimationPlayer" type="AnimationPlayer" parent="TileHighlightLeft" unique_id=1431141025]
+libraries/ = SubResource("AnimationLibrary_0rm4p")
+autoplay = &"Flash"
 
-[node name="TileHighlightRight" type="Sprite2D" parent="."]
+[node name="TileHighlightRight" type="Sprite2D" parent="." unique_id=1383372479]
 modulate = Color(0.509804, 1, 0.509804, 0.192157)
 light_mask = -2147483647
 material = SubResource("101")
 position = Vector2(-208, 96)
 texture = ExtResource("22")
 
-[node name="AnimationPlayer" type="AnimationPlayer" parent="TileHighlightRight"]
-libraries = {
-&"": SubResource("AnimationLibrary_ukgm0")
-}
-autoplay = "Flash"
+[node name="AnimationPlayer" type="AnimationPlayer" parent="TileHighlightRight" unique_id=410867510]
+libraries/ = SubResource("AnimationLibrary_ukgm0")
+autoplay = &"Flash"
 
-[node name="UI" type="CanvasLayer" parent="."]
+[node name="UI" type="CanvasLayer" parent="." unique_id=968562353]
 
-[node name="UseItem" type="TextureButton" parent="UI"]
+[node name="UseItem" type="TextureButton" parent="UI" unique_id=1029630391]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 mouse_filter = 1
 metadata/_edit_lock_ = true
 
-[node name="Minimap" type="Sprite2D" parent="UI"]
+[node name="Minimap" type="Sprite2D" parent="UI" unique_id=875273010]
 self_modulate = Color(0, 0, 0, 1)
 clip_children = 2
 light_mask = -2147483647
 texture = ExtResource("15")
 centered = false
 
-[node name="Floor" type="TileMapLayer" parent="UI/Minimap"]
+[node name="Floor" type="TileMapLayer" parent="UI/Minimap" unique_id=1060057737]
 modulate = Color(0.46, 0.46, 0.46, 1)
 light_mask = -2147483647
 tile_set = SubResource("TileSet_yvdt3")
 
-[node name="Hole" type="Sprite2D" parent="UI/Minimap"]
+[node name="Hole" type="Sprite2D" parent="UI/Minimap" unique_id=1570377759]
 light_mask = -2147483647
 scale = Vector2(0.15, 0.15)
 texture = ExtResource("17")
 
-[node name="Exit" type="Sprite2D" parent="UI/Minimap"]
+[node name="Exit" type="Sprite2D" parent="UI/Minimap" unique_id=1201382416]
 light_mask = -2147483647
 scale = Vector2(0.15, 0.15)
 texture = ExtResource("21")
 
-[node name="MinimapBG" type="Sprite2D" parent="UI"]
+[node name="MinimapBG" type="Sprite2D" parent="UI" unique_id=835374783]
 visible = false
 self_modulate = Color(0, 0, 0, 1)
 light_mask = -2147483647
 texture = ExtResource("15")
 centered = false
 
-[node name="Error" type="Label" parent="UI"]
+[node name="Error" type="Label" parent="UI" unique_id=2143281118]
 visible = false
 offset_left = 1038.0
 offset_top = 100.0
@@ -949,18 +939,18 @@ text = "Error: high-energy electromagnetic waves in this cave are disrupting the
 horizontal_alignment = 1
 autowrap_mode = 3
 
-[node name="Rover" type="Sprite2D" parent="UI"]
+[node name="Rover" type="Sprite2D" parent="UI" unique_id=549946154]
 light_mask = -2147483647
 texture = ExtResource("16")
 
-[node name="UI2" type="CanvasLayer" parent="."]
+[node name="UI2" type="CanvasLayer" parent="." unique_id=1841666694]
 layer = 2
 
-[node name="RightClickSlot" parent="UI2" instance=ExtResource("20")]
+[node name="RightClickSlot" parent="UI2" unique_id=58043139 instance=ExtResource("20")]
 offset_top = 600.0
 offset_bottom = -60.0
 
-[node name="BottomLeft" type="HBoxContainer" parent="UI2"]
+[node name="BottomLeft" type="HBoxContainer" parent="UI2" unique_id=2120283013]
 anchors_preset = 2
 anchor_top = 1.0
 anchor_bottom = 1.0
@@ -970,28 +960,28 @@ mouse_filter = 2
 theme = ExtResource("29")
 theme_override_constants/separation = 0
 
-[node name="VBox" type="VBoxContainer" parent="UI2/BottomLeft"]
+[node name="VBox" type="VBoxContainer" parent="UI2/BottomLeft" unique_id=1301251353]
 layout_mode = 2
 mouse_filter = 2
 alignment = 2
 
-[node name="ActiveItem" type="Label" parent="UI2/BottomLeft/VBox"]
+[node name="ActiveItem" type="Label" parent="UI2/BottomLeft/VBox" unique_id=283439326]
 layout_mode = 2
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="InventorySlots" type="HBoxContainer" parent="UI2/BottomLeft/VBox"]
+[node name="InventorySlots" type="HBoxContainer" parent="UI2/BottomLeft/VBox" unique_id=170083540]
 custom_minimum_size = Vector2(0, 50)
 layout_mode = 2
 theme_override_constants/separation = 0
 
-[node name="Filter" type="Button" parent="UI2/BottomLeft"]
+[node name="Filter" type="Button" parent="UI2/BottomLeft" unique_id=1618263300]
 layout_mode = 2
 size_flags_horizontal = 0
 size_flags_vertical = 8
 text = "Filter"
 
-[node name="Filters" type="PanelContainer" parent="UI2"]
+[node name="Filters" type="PanelContainer" parent="UI2" unique_id=563866870]
 visible = false
 anchors_preset = 7
 anchor_left = 0.5
@@ -1007,30 +997,30 @@ grow_vertical = 0
 mouse_filter = 1
 theme = ExtResource("29")
 
-[node name="Grid" type="GridContainer" parent="UI2/Filters"]
+[node name="Grid" type="GridContainer" parent="UI2/Filters" unique_id=1820963768]
 layout_mode = 2
 columns = 4
 
-[node name="money" parent="UI2/Filters/Grid" instance=ExtResource("3")]
+[node name="money" parent="UI2/Filters/Grid" unique_id=6686181 instance=ExtResource("3")]
 layout_mode = 2
 texture = ExtResource("7")
 
-[node name="minerals" parent="UI2/Filters/Grid" instance=ExtResource("3")]
+[node name="minerals" parent="UI2/Filters/Grid" unique_id=1462238733 instance=ExtResource("3")]
 layout_mode = 2
 texture = ExtResource("6")
 
-[node name="stone" parent="UI2/Filters/Grid" instance=ExtResource("3")]
+[node name="stone" parent="UI2/Filters/Grid" unique_id=1475079955 instance=ExtResource("3")]
 layout_mode = 2
 texture = ExtResource("8")
 
-[node name="HP" type="Panel" parent="UI2"]
+[node name="HP" type="Panel" parent="UI2" unique_id=1015593930]
 offset_left = 1052.0
 offset_top = 616.0
 offset_right = 1276.0
 offset_bottom = 656.0
 theme = ExtResource("29")
 
-[node name="Bar" type="TextureProgressBar" parent="UI2/HP"]
+[node name="Bar" type="TextureProgressBar" parent="UI2/HP" unique_id=126057497]
 layout_mode = 0
 anchor_left = 1.0
 anchor_top = 0.5
@@ -1052,7 +1042,7 @@ tint_under = Color(0, 1, 0, 1)
 tint_over = Color(0, 1, 0, 1)
 tint_progress = Color(0, 1, 0, 1)
 
-[node name="HPIcon" type="TextureRect" parent="UI2/HP"]
+[node name="HPIcon" type="TextureRect" parent="UI2/HP" unique_id=773925791]
 layout_mode = 0
 anchor_top = 0.5
 anchor_bottom = 0.5
@@ -1064,7 +1054,7 @@ texture = ExtResource("23")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="Label" type="Label" parent="UI2/HP"]
+[node name="Label" type="Label" parent="UI2/HP" unique_id=2121450953]
 layout_mode = 0
 offset_left = 48.0
 offset_top = 8.0
@@ -1076,14 +1066,14 @@ text = "20 / 20"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="Inventory" type="Panel" parent="UI2"]
+[node name="Inventory" type="Panel" parent="UI2" unique_id=600876122]
 offset_left = 1052.0
 offset_top = 660.0
 offset_right = 1276.0
 offset_bottom = 700.0
 theme = ExtResource("29")
 
-[node name="Icon" type="TextureRect" parent="UI2/Inventory"]
+[node name="Icon" type="TextureRect" parent="UI2/Inventory" unique_id=1272967924]
 layout_mode = 0
 anchor_top = 0.5
 anchor_bottom = 0.5
@@ -1095,7 +1085,7 @@ texture = ExtResource("25")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="Bar" type="TextureProgressBar" parent="UI2/Inventory"]
+[node name="Bar" type="TextureProgressBar" parent="UI2/Inventory" unique_id=690797446]
 layout_mode = 0
 anchor_left = 1.0
 anchor_top = 0.5
@@ -1116,7 +1106,7 @@ tint_under = Color(0.670588, 0.376471, 0, 1)
 tint_over = Color(0.670588, 0.376471, 0, 1)
 tint_progress = Color(0.670588, 0.376471, 0, 1)
 
-[node name="Label" type="Label" parent="UI2/Inventory"]
+[node name="Label" type="Label" parent="UI2/Inventory" unique_id=2029789388]
 layout_mode = 0
 offset_left = 48.0
 offset_top = 8.0
@@ -1128,7 +1118,7 @@ text = "0 / 4000 kg"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="Panel" type="PanelContainer" parent="UI2"]
+[node name="Panel" type="PanelContainer" parent="UI2" unique_id=1470917666]
 visible = false
 offset_left = 1144.0
 offset_top = 392.0
@@ -1139,33 +1129,33 @@ grow_vertical = 2
 pivot_offset = Vector2(-96, 0)
 theme = ExtResource("29")
 
-[node name="VBoxContainer" type="VBoxContainer" parent="UI2/Panel"]
+[node name="VBoxContainer" type="VBoxContainer" parent="UI2/Panel" unique_id=1696332272]
 layout_mode = 2
 alignment = 1
 
-[node name="Timer" type="Timer" parent="UI2/Panel"]
+[node name="Timer" type="Timer" parent="UI2/Panel" unique_id=1671603235]
 
-[node name="CaveInfo" type="HBoxContainer" parent="UI2"]
+[node name="CaveInfo" type="HBoxContainer" parent="UI2" unique_id=729615587]
 offset_right = 319.0
 offset_bottom = 27.0
 theme = ExtResource("29")
 theme_override_constants/separation = 0
 
-[node name="Floor" type="Label" parent="UI2/CaveInfo"]
+[node name="Floor" type="Label" parent="UI2/CaveInfo" unique_id=254297655]
 layout_mode = 2
 mouse_filter = 1
 theme_override_font_sizes/font_size = 22
 theme_override_styles/normal = SubResource("StyleBoxFlat_fabes")
 text = "B1F"
 
-[node name="Difficulty" type="Label" parent="UI2/CaveInfo"]
+[node name="Difficulty" type="Label" parent="UI2/CaveInfo" unique_id=1510886607]
 layout_mode = 2
 size_flags_vertical = 0
 mouse_filter = 1
 theme_override_styles/normal = SubResource("StyleBoxFlat_2lgmg")
 text = "Difficulty: 1"
 
-[node name="Modifiers" type="Label" parent="UI2/CaveInfo"]
+[node name="Modifiers" type="Label" parent="UI2/CaveInfo" unique_id=1795726666]
 visible = false
 layout_mode = 2
 size_flags_vertical = 0
@@ -1174,7 +1164,7 @@ theme = ExtResource("29")
 theme_override_styles/normal = SubResource("StyleBoxFlat_2lgmg")
 text = "Modifiers"
 
-[node name="AvgDmg" type="Label" parent="UI2/CaveInfo"]
+[node name="AvgDmg" type="Label" parent="UI2/CaveInfo" unique_id=1450213877]
 layout_mode = 2
 size_flags_vertical = 0
 mouse_filter = 1
@@ -1182,7 +1172,7 @@ theme = ExtResource("29")
 theme_override_styles/normal = SubResource("StyleBoxFlat_2lgmg")
 text = "Average enemy damage: 1"
 
-[node name="Ctrls" type="Label" parent="UI2/CaveInfo"]
+[node name="Ctrls" type="Label" parent="UI2/CaveInfo" unique_id=140038103]
 layout_mode = 2
 size_flags_vertical = 0
 mouse_filter = 1
@@ -1190,7 +1180,7 @@ theme = ExtResource("29")
 theme_override_styles/normal = SubResource("StyleBoxFlat_2lgmg")
 text = "CONTROLS"
 
-[node name="Relic" type="TextureRect" parent="UI2"]
+[node name="Relic" type="TextureRect" parent="UI2" unique_id=1018894237]
 visible = false
 offset_left = 340.0
 offset_top = 36.0
@@ -1198,7 +1188,7 @@ offset_right = 940.0
 offset_bottom = 636.0
 texture = ExtResource("28")
 
-[node name="Text" type="Label" parent="UI2/Relic"]
+[node name="Text" type="Label" parent="UI2/Relic" unique_id=2061147426]
 layout_mode = 0
 offset_left = 156.0
 offset_top = 84.0
@@ -1206,40 +1196,40 @@ offset_right = 432.0
 offset_bottom = 504.0
 text = "RELIC_TEXT"
 
-[node name="Controls" parent="UI2" instance=ExtResource("47")]
+[node name="Controls" parent="UI2" unique_id=925865266 instance=ExtResource("47")]
 visible = false
 offset_left = 544.0
 offset_top = 125.0
 offset_right = 792.0
 offset_bottom = 285.0
 
-[node name="Dialogue" parent="UI2" instance=ExtResource("24")]
+[node name="Dialogue" parent="UI2" unique_id=944599911 instance=ExtResource("24")]
 layout_mode = 3
 anchors_preset = 0
 
-[node name="Ability" type="Panel" parent="UI2"]
+[node name="Ability" type="Panel" parent="UI2" unique_id=1049698812]
 offset_top = 40.0
 offset_right = 64.0
 offset_bottom = 104.0
 theme = ExtResource("29")
 
-[node name="Timer" type="Timer" parent="UI2/Ability"]
+[node name="Timer" type="Timer" parent="UI2/Ability" unique_id=627327876]
 one_shot = true
 
-[node name="TextureRect" type="TextureRect" parent="UI2/Ability"]
+[node name="TextureRect" type="TextureRect" parent="UI2/Ability" unique_id=1655445940]
 layout_mode = 0
 anchor_right = 1.0
 anchor_bottom = 1.0
 texture = ExtResource("35")
 
-[node name="Panel" type="Panel" parent="UI2/Ability"]
+[node name="Panel" type="Panel" parent="UI2/Ability" unique_id=986572114]
 show_behind_parent = true
 layout_mode = 0
 offset_left = 60.0
 offset_right = 88.0
 offset_bottom = 24.0
 
-[node name="Num" type="Label" parent="UI2/Ability/Panel"]
+[node name="Num" type="Label" parent="UI2/Ability/Panel" unique_id=1987949230]
 layout_mode = 0
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -1248,7 +1238,7 @@ text = "2"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="TextureProgressBar" type="TextureProgressBar" parent="UI2/Ability"]
+[node name="TextureProgressBar" type="TextureProgressBar" parent="UI2/Ability" unique_id=1840979046]
 visible = false
 modulate = Color(1, 1, 1, 0.423529)
 layout_mode = 0
@@ -1261,7 +1251,7 @@ fill_mode = 5
 nine_patch_stretch = true
 texture_progress = ExtResource("4")
 
-[node name="HurtTexture" type="TextureRect" parent="UI2"]
+[node name="HurtTexture" type="TextureRect" parent="UI2" unique_id=745140830]
 modulate = Color(1, 1, 1, 0)
 offset_right = 40.0
 offset_bottom = 40.0
@@ -1269,7 +1259,7 @@ mouse_filter = 2
 texture = ExtResource("40")
 metadata/_edit_lock_ = true
 
-[node name="Burning" type="TextureRect" parent="UI2"]
+[node name="Burning" type="TextureRect" parent="UI2" unique_id=1378056011]
 visible = false
 texture_repeat = 2
 material = SubResource("152")
@@ -1278,30 +1268,24 @@ offset_bottom = 720.0
 mouse_filter = 2
 texture = ExtResource("45")
 
-[node name="BurningAnim" type="AnimationPlayer" parent="UI2/Burning"]
-libraries = {
-&"": SubResource("AnimationLibrary_468jh")
-}
+[node name="BurningAnim" type="AnimationPlayer" parent="UI2/Burning" unique_id=767687237]
+libraries/ = SubResource("AnimationLibrary_468jh")
 
-[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
-libraries = {
-&"": SubResource("AnimationLibrary_jgan7")
-}
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=1222371986]
+libraries/ = SubResource("AnimationLibrary_jgan7")
 
-[node name="AuroraPlayer" type="AnimationPlayer" parent="."]
-libraries = {
-&"": SubResource("AnimationLibrary_bdome")
-}
+[node name="AuroraPlayer" type="AnimationPlayer" parent="." unique_id=1479649258]
+libraries/ = SubResource("AnimationLibrary_bdome")
 
-[node name="CanvasModulate" type="CanvasModulate" parent="."]
+[node name="CanvasModulate" type="CanvasModulate" parent="." unique_id=2016604463]
 
-[node name="AuroraModulate" type="Node2D" parent="."]
+[node name="AuroraModulate" type="Node2D" parent="." unique_id=1098801665]
 modulate = Color(0.705882, 1, 0.705882, 1)
 
-[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=1879415946]
 environment = SubResource("Environment_n75r6")
 
-[node name="CheckAchievements" type="Timer" parent="."]
+[node name="CheckAchievements" type="Timer" parent="." unique_id=1817436839]
 
 [connection signal="area_entered" from="Exit" to="." method="_on_Exit_area_entered"]
 [connection signal="area_exited" from="Exit" to="." method="_on_area_exited"]

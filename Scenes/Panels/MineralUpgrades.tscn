@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=3 uid="uid://ev7ll8hmf3xe"]
+[gd_scene format=3 uid="uid://ev7ll8hmf3xe"]
 
 [ext_resource type="Texture2D" uid="uid://dcvnyb0mloli2" path="res://Graphics/GUI/Panel.png" id="3_mwsw1"]
 [ext_resource type="Theme" uid="uid://cp2u1kgj60ic" path="res://Resources/default_theme.tres" id="5"]
@@ -26,7 +26,7 @@ border_width_top = 4
 border_color = Color(0.192157, 0.192157, 0.192157, 1)
 border_blend = true
 
-[node name="Panel" type="Control"]
+[node name="Panel" type="Control" unique_id=609925757]
 layout_mode = 3
 anchors_preset = 0
 offset_right = 1024.0
@@ -34,16 +34,15 @@ offset_bottom = 592.0
 theme = ExtResource("5")
 script = ExtResource("6")
 
-[node name="GUI" type="TextureRect" parent="."]
+[node name="GUI" type="TextureRect" parent="." unique_id=141558987]
 layout_mode = 1
 offset_left = 80.0
 offset_top = 52.0
 offset_right = 1204.0
 offset_bottom = 671.0
-mouse_filter = 2
 texture = ExtResource("3_mwsw1")
 
-[node name="CloseButton" type="TextureButton" parent="."]
+[node name="CloseButton" type="TextureButton" parent="." unique_id=2146204304]
 layout_mode = 0
 offset_left = 1136.0
 offset_top = 67.0
@@ -52,7 +51,7 @@ offset_bottom = 116.0
 texture_normal = ExtResource("5_q566h")
 texture_hover = ExtResource("6_suxbt")
 
-[node name="Title" type="Label" parent="."]
+[node name="Title" type="Label" parent="." unique_id=1836834587]
 custom_minimum_size = Vector2(0, 38)
 layout_mode = 1
 anchors_preset = 10
@@ -67,7 +66,7 @@ text = "MINERAL_UPGRADES"
 label_settings = SubResource("LabelSettings_c5lds")
 vertical_alignment = 1
 
-[node name="Desc" type="Label" parent="."]
+[node name="Desc" type="Label" parent="." unique_id=1318884829]
 layout_mode = 1
 anchors_preset = 10
 anchor_right = 1.0
@@ -80,7 +79,7 @@ text = "MU_DESC"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="PanelContainer" type="PanelContainer" parent="."]
+[node name="PanelContainer" type="PanelContainer" parent="." unique_id=1639105916]
 layout_mode = 0
 offset_left = 128.0
 offset_top = 176.0
@@ -88,35 +87,35 @@ offset_right = 1152.0
 offset_bottom = 616.0
 theme_override_styles/panel = SubResource("StyleBoxFlat_vo676")
 
-[node name="VBox" type="VBoxContainer" parent="PanelContainer"]
+[node name="VBox" type="VBoxContainer" parent="PanelContainer" unique_id=2024226137]
 layout_mode = 2
 
-[node name="Titles" type="HBoxContainer" parent="PanelContainer/VBox"]
+[node name="Titles" type="HBoxContainer" parent="PanelContainer/VBox" unique_id=1038796739]
 custom_minimum_size = Vector2(0, 50)
 layout_mode = 2
 
-[node name="Label" type="Label" parent="PanelContainer/VBox/Titles"]
+[node name="Label" type="Label" parent="PanelContainer/VBox/Titles" unique_id=388170026]
 custom_minimum_size = Vector2(450, 0)
 layout_mode = 2
 size_flags_horizontal = 2
 text = "UPGRADE_NOUN"
 
-[node name="Lv" type="Label" parent="PanelContainer/VBox/Titles"]
+[node name="Lv" type="Label" parent="PanelContainer/VBox/Titles" unique_id=861913380]
 layout_mode = 2
 size_flags_horizontal = 3
 text = "LEVEL"
 
-[node name="Info" type="Label" parent="PanelContainer/VBox/Titles"]
+[node name="Info" type="Label" parent="PanelContainer/VBox/Titles" unique_id=1583369806]
 layout_mode = 2
 size_flags_horizontal = 3
 text = "EFFECTS"
 
-[node name="Lv3" type="Label" parent="PanelContainer/VBox/Titles"]
+[node name="Lv3" type="Label" parent="PanelContainer/VBox/Titles" unique_id=1560560524]
 layout_mode = 2
 size_flags_horizontal = 3
 text = "UPGRADE"
 
-[node name="RichTextLabel" type="RichTextLabel" parent="PanelContainer/VBox/Titles"]
+[node name="RichTextLabel" type="RichTextLabel" parent="PanelContainer/VBox/Titles" unique_id=1574645328]
 layout_mode = 2
 
 [connection signal="pressed" from="CloseButton" to="." method="_on_close_button_pressed"]

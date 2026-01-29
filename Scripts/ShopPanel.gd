@@ -74,7 +74,7 @@ func set_item_info(_item_name:String, _item_costs:Dictionary, _item_texture, _it
 	$ItemInfo/ItemName.text = _item_name
 	item_selected.id = item_id # item_id can be an int (overclocks) or a string (pickaxe)
 	item_selected.costs = _item_costs.duplicate(true)
-	$ItemInfo/Panel/TextureRect.texture = _item_texture
+	$ItemInfo/TextureRect.texture = _item_texture
 	$ItemInfo/BuyAmount.visible = tab == OVERCLOCK
 	update_and_check_costs()
 

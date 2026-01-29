@@ -7,7 +7,8 @@ var s_cmp:String#lead_armor, copper_wheels etc. (s: specific)
 var curr_cmp:String
 var is_inventory
 var index:int = -1
-@onready var option_btn = $OptionButton
+@onready var option_btn = $VBoxContainer/OptionButton
+@onready var desc_txt = $VBoxContainer/Desc
 
 func _ready():
 	$Select.text = tr("SELECT") + " (S)"
@@ -18,10 +19,7 @@ func _ready():
 func refresh(type:String, _curr_cmp:String, _is_inventory:bool = false, _index:int = -1):
 	is_inventory = _is_inventory
 	index = _index
-	$Label.visible = not is_inventory
 	option_btn.visible = is_inventory
-	if not is_inventory:
-		$Label.text = tr("SELECT_X").format({"select":tr("SELECT"), "something":tr(type.split("_")[1].to_upper())})
 	for node in hbox.get_children():
 		node.queue_free()
 	var dir:String = ""
@@ -29,21 +27,21 @@ func refresh(type:String, _curr_cmp:String, _is_inventory:bool = false, _index:i
 		type = "rover_weapons"
 	if type == "rover_armor":
 		dir = "Armor"
-		$Desc.text = tr("ARMOR_DESC")
+		desc_txt.text = tr("ARMOR_DESC")
 	elif type == "rover_wheels":
 		dir = "Wheels"
-		$Desc.text = tr("WHEELS_DESC")
+		desc_txt.text = tr("WHEELS_DESC")
 	elif type == "rover_CC":
 		dir = "CargoContainer"
-		$Desc.text = tr("CC_DESC")
+		desc_txt.text = tr("CC_DESC")
 	elif type == "rover_weapons":
 		dir = "Weapons"
-		$Desc.text = tr("LASER_WEAPON_DESC")
-		$OptionButton.selected = 0
+		desc_txt.text = tr("LASER_WEAPON_DESC")
+		option_btn.selected = 0
 	elif type == "rover_mining":
 		dir = "Mining"
-		$Desc.text = tr("MINING_LASER_DESC")
-		$OptionButton.selected = 1
+		desc_txt.text = tr("MINING_LASER_DESC")
+		option_btn.selected = 1
 	g_cmp = type.split("_")[1]
 	curr_cmp = _curr_cmp
 	s_cmp = curr_cmp

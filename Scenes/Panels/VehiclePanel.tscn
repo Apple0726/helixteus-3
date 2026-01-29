@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=3 uid="uid://c8h07pagkspbb"]
+[gd_scene format=3 uid="uid://c8h07pagkspbb"]
 
 [ext_resource type="Script" uid="uid://bteffy74v8yeg" path="res://Scripts/VehiclePanel.gd" id="3"]
 [ext_resource type="Texture2D" uid="uid://dcvnyb0mloli2" path="res://Graphics/GUI/Panel.png" id="3_x1xxg"]
@@ -26,7 +26,7 @@ border_width_top = 4
 border_color = Color(0.192157, 0.192157, 0.192157, 1)
 border_blend = true
 
-[node name="Background" type="Control"]
+[node name="Background" type="Control" unique_id=630509925]
 layout_mode = 3
 anchors_preset = 0
 offset_right = 48.0
@@ -34,16 +34,15 @@ offset_bottom = 48.0
 theme = ExtResource("4")
 script = ExtResource("3")
 
-[node name="GUI" type="TextureRect" parent="."]
+[node name="GUI" type="TextureRect" parent="." unique_id=1274129183]
 layout_mode = 0
 offset_left = 80.0
 offset_top = 52.0
 offset_right = 1204.0
 offset_bottom = 671.0
-mouse_filter = 2
 texture = ExtResource("3_x1xxg")
 
-[node name="CloseButton" type="TextureButton" parent="."]
+[node name="CloseButton" type="TextureButton" parent="." unique_id=1044665807]
 layout_mode = 0
 offset_left = 1136.0
 offset_top = 67.0
@@ -52,7 +51,7 @@ offset_bottom = 116.0
 texture_normal = ExtResource("4_dyol1")
 texture_hover = ExtResource("5_71ifv")
 
-[node name="Title" type="Label" parent="."]
+[node name="Title" type="Label" parent="." unique_id=1992259775]
 custom_minimum_size = Vector2(0, 38)
 layout_mode = 1
 offset_left = 128.0
@@ -64,10 +63,10 @@ text = "VEHICLES"
 label_settings = SubResource("LabelSettings_i3vqf")
 vertical_alignment = 1
 
-[node name="Timer" type="Timer" parent="."]
+[node name="Timer" type="Timer" parent="." unique_id=961271618]
 one_shot = true
 
-[node name="HBoxContainer" type="HBoxContainer" parent="."]
+[node name="HBoxContainer" type="HBoxContainer" parent="." unique_id=2031375352]
 layout_mode = 0
 offset_left = 216.0
 offset_top = 512.0
@@ -75,22 +74,22 @@ offset_right = 672.0
 offset_bottom = 552.0
 theme_override_constants/separation = 20
 
-[node name="Rovers" parent="HBoxContainer" instance=ExtResource("6_8kohr")]
+[node name="Rovers" parent="HBoxContainer" unique_id=330632952 instance=ExtResource("6_8kohr")]
 custom_minimum_size = Vector2(130, 30)
 layout_mode = 2
 button_text = "ROVERS"
 
-[node name="Fighters" parent="HBoxContainer" instance=ExtResource("6_8kohr")]
+[node name="Fighters" parent="HBoxContainer" unique_id=1818182600 instance=ExtResource("6_8kohr")]
 custom_minimum_size = Vector2(130, 30)
 layout_mode = 2
 button_text = "FIGHTERS"
 
-[node name="Probes" parent="HBoxContainer" instance=ExtResource("6_8kohr")]
+[node name="Probes" parent="HBoxContainer" unique_id=2101236758 instance=ExtResource("6_8kohr")]
 custom_minimum_size = Vector2(130, 30)
 layout_mode = 2
 button_text = "PROBES"
 
-[node name="ScrollContainer" type="ScrollContainer" parent="."]
+[node name="ScrollContainer" type="ScrollContainer" parent="." unique_id=598106551]
 layout_mode = 0
 offset_left = 192.0
 offset_top = 192.0
@@ -98,7 +97,7 @@ offset_right = 1088.0
 offset_bottom = 512.0
 theme_override_styles/panel = SubResource("StyleBoxFlat_78r6f")
 
-[node name="VBoxContainer" type="VBoxContainer" parent="ScrollContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="ScrollContainer" unique_id=62872276]
 layout_mode = 2
 
 [connection signal="pressed" from="CloseButton" to="." method="_on_close_button_pressed"]

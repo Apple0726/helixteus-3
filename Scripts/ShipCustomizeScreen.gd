@@ -30,6 +30,7 @@ func _ready() -> void:
 	ship_data = game.ship_data[ship_id].duplicate(true)
 	if ship_data.lv == 1:
 		$Navigation/VBoxContainer.visible = false
+		$ClassAndStats/ShipStats.visible = false
 		$Navigation/Ship.position.y += 30.0
 	if respeccing:
 		ship_data.unallocated_weapon_levels = ship_data.lv / 2
@@ -106,6 +107,7 @@ func update_ship_stats_after_class_change(ship_class: int):
 	$ClassAndStats/ShipStats/RemoveAccuracy.disabled = true
 	$ClassAndStats/ShipStats/RemoveAgility.disabled = true
 	update_ship_stats_display()
+	$ClassAndStats/ShipStats.show()
 
 func update_ship_stats_display():
 	var ship_class:int = ship_data.ship_class
