@@ -51,12 +51,14 @@ var purple_texture = preload("res://Graphics/Cave/Projectiles/purple_bullet.png"
 @onready var use_item_node = $UI/UseItem
 @onready var ability_timer = $UI2/Ability/Timer
 @onready var crack_detector = $Rover/CrackDetector
-@onready var HX1_scene = preload("res://Scenes/Cave/HX.tscn")
-@onready var deposit_scene = preload("res://Scenes/Cave/MetalDeposit.tscn")
-@onready var enemy_icon_scene = preload("res://Graphics/Cave/MMIcons/Enemy.png")
-@onready var object_scene = preload("res://Scenes/Cave/Object.tscn")
-@onready var sq_bar_scene = preload("res://Scenes/SquareBar.tscn")
-@onready var filter_btn_scene = preload("res://Scenes/FilterButton.tscn")
+@onready var right_side_panel = $UI2/Panel
+@onready var right_side_vbox = $UI2/Panel/VBoxContainer
+var HX1_scene = preload("res://Scenes/Cave/HX.tscn")
+var deposit_scene = preload("res://Scenes/Cave/MetalDeposit.tscn")
+var enemy_icon_scene = preload("res://Graphics/Cave/MMIcons/Enemy.png")
+var object_scene = preload("res://Scenes/Cave/Object.tscn")
+var sq_bar_scene = preload("res://Scenes/SquareBar.tscn")
+var filter_btn_scene = preload("res://Scenes/FilterButton.tscn")
 
 var minimap_zoom:float = 0.02
 var minimap_center:Vector2 = Vector2(1150, 128)
@@ -301,11 +303,11 @@ func _ready():
 	for rsrc in game.show:
 		if game.show[rsrc]:
 			add_filter(rsrc)
-	$UI2/Filters/Grid/money.connect("pressed",Callable(self,"on_filter_pressed").bind("money", $UI2/Filters/Grid/money))
+	$UI2/Filters/Grid/money.pressed.connect(on_filter_pressed.bind("money", $UI2/Filters/Grid/money))
 	$UI2/Filters/Grid/money.set_mod(game.cave_filters.money)
-	$UI2/Filters/Grid/minerals.connect("pressed",Callable(self,"on_filter_pressed").bind("minerals", $UI2/Filters/Grid/minerals))
+	$UI2/Filters/Grid/minerals.pressed.connect(on_filter_pressed.bind("minerals", $UI2/Filters/Grid/minerals))
 	$UI2/Filters/Grid/minerals.set_mod(game.cave_filters.minerals)
-	$UI2/Filters/Grid/stone.connect("pressed",Callable(self,"on_filter_pressed").bind("stone", $UI2/Filters/Grid/stone))
+	$UI2/Filters/Grid/stone.pressed.connect(on_filter_pressed.bind("stone", $UI2/Filters/Grid/stone))
 	$UI2/Filters/Grid/stone.set_mod(game.cave_filters.stone)
 	
 	for w in i_w_w:
@@ -884,25 +886,29 @@ func enable_light(node):
 	node.get_node("PointLight2D").enabled = true
 	node.get_node("Shadow").visible = false
 
+var right_side_panel_tween
+
 func on_chest_entered(_area, tile:String):
 	var chest_rsrc = chests[tile].contents
 	active_chest = tile
 	active_type = "chest"
-	var vbox = $UI2/Panel/VBoxContainer
-	reset_panel_anim()
-	for child in vbox.get_children():
+	for child in right_side_vbox.get_children():
 		child.free()
 	var tier_txt = Label.new()
 	tier_txt.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	tier_txt.text = tr("TIER_X_CHEST") % [chests[tile].tier]
-	vbox.add_child(tier_txt)
-	Helper.put_rsrc(vbox, 32, chest_rsrc, false)
+	right_side_vbox.add_child(tier_txt)
+	Helper.put_rsrc(right_side_vbox, 32, chest_rsrc, false)
 	var take_all = Label.new()
 	take_all.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	take_all.text = tr("TAKE_ALL")
-	vbox.add_child(take_all)
-	$UI2/Panel.visible = true
-	$UI2/Panel.modulate.a = 1
+	right_side_vbox.add_child(take_all)
+	right_side_panel.show()
+	if right_side_panel_tween and right_side_panel_tween.is_running():
+		right_side_panel_tween.kill()
+	right_side_panel.modulate.a = 1.0
+	right_side_panel_tween = create_tween()
+	right_side_panel_tween.tween_property(right_side_panel, "modulate:a", 0.0, 0.5).set_delay(0.5 + 0.5 * right_side_vbox.get_child_count())
 
 func on_chest_exited(area:Area2D):
 	call_deferred("hide_panel", true)
@@ -912,14 +918,14 @@ func hide_panel(hiding_chest:bool = false):
 		active_type = ""
 		if hiding_chest:
 			active_chest = "-1"
-		$UI2/Panel.visible = false
+		right_side_panel.hide()
 	
 func on_relic_exited(_body):
 	$UI2/Relic.visible = false
 
 func on_map_exited(_body):
 	$UI2/Ship2Map.visible = false
-	$UI2/Panel.visible = false
+	right_side_panel.hide()
 	active_type = ""
 
 func generate_treasure(tier:int, rng:RandomNumberGenerator):
@@ -1200,8 +1206,8 @@ func _input(event):
 				if not remainders.is_empty():
 					chests[active_chest].contents = remainders.duplicate(true)
 					partially_looted_chests[cave_floor - 1][str(active_chest)] = remainders.duplicate(true)
-					Helper.put_rsrc($UI2/Panel/VBoxContainer, 32, remainders)
-					$UI2/Panel.visible = true
+					Helper.put_rsrc(right_side_vbox, 32, remainders)
+					right_side_panel.show()
 					if show_notif:
 						game.popup(tr("WEIGHT_INV_FULL_CHEST"), 1.7)
 				else:
@@ -1232,7 +1238,7 @@ func _input(event):
 				else:
 					difficulty /= 2.0
 				generate_cave(true if cave_floor == 1 else false, true)
-			$UI2/Panel.visible = false
+			right_side_panel.hide()
 		if Input.is_action_just_released("minus"):
 			minimap_zoom /= 1.5
 			minimap_cave.scale = Vector2.ONE * minimap_zoom
@@ -1678,19 +1684,18 @@ func filter_and_add(rsrc:Dictionary):
 			rsrc[r] *= game.u_i.planck
 			remainder += add_weight_rsrc(r, rsrc[r])
 	if not rsrc.is_empty():
-		var vbox = $UI2/Panel/VBoxContainer
 		var you_mined = Label.new()
 		you_mined.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 		you_mined.text = tr("YOU_MINED")
-		reset_panel_anim()
-		Helper.put_rsrc(vbox, 32, rsrc)
-		vbox.add_child(you_mined)
-		vbox.move_child(you_mined, 0)
-		$UI2/Panel.visible = true
-		$UI2/Panel.modulate.a = 1
-		var timer = $UI2/Panel/Timer
-		timer.wait_time = 0.5 + 0.5 * vbox.get_child_count()
-		timer.start()
+		Helper.put_rsrc(right_side_vbox, 32, rsrc)
+		right_side_vbox.add_child(you_mined)
+		right_side_vbox.move_child(you_mined, 0)
+		right_side_panel.show()
+		if right_side_panel_tween and right_side_panel_tween.is_running():
+			right_side_panel_tween.kill()
+		right_side_panel.modulate.a = 1.0
+		right_side_panel_tween = create_tween()
+		right_side_panel_tween.tween_property(right_side_panel, "modulate:a", 0.0, 0.5).set_delay(0.5 + 0.5 * right_side_vbox.get_child_count())
 	return remainder
 
 func mine_wall_complete(tile_pos:Vector2, tile_id:int):
@@ -1771,11 +1776,6 @@ func add_weight_rsrc(r, rsrc_amount):
 	inv_bar_tween.tween_property($UI2/Inventory/Bar, "tint_progress", Color(0.67, 0.37, 0.0), 1.0)
 	$UI2/Inventory/Bar
 	return max(diff, 0.0)
-
-func _on_Timer_timeout():
-	var tween = create_tween()
-	tween.tween_property($UI2/Panel, "modulate", Color(1, 1, 1, 0), 0.5)
-	$UI2/Panel/Timer.stop()
 
 func hit_player(damage:float, _status_effects:Dictionary = {}, passive:bool = false):
 	if HP <= 0:
@@ -1980,12 +1980,6 @@ func _physics_process(delta):
 	camera.position = rover.position + shaking
 	minimap_cave.position = minimap_center - rover.position * minimap_zoom
 
-func reset_panel_anim():
-	var timer = $UI2/Panel/Timer
-	timer.stop()
-	$UI2/Panel.visible = false
-	$UI2/Panel.modulate.a = 1
-
 func _on_Exit_area_entered(_body):
 	active_chest = "-1"
 	if cave_floor == 1:
@@ -2005,17 +1999,19 @@ func _on_Hole_area_entered(_body):
 	active_type = "go_down"
 
 func show_right_info(txt:String):
-	var vbox = $UI2/Panel/VBoxContainer
-	reset_panel_anim()
-	Helper.put_rsrc(vbox, 32, {})
+	Helper.put_rsrc(right_side_vbox, 32, {})
 	var info = Label.new()
 	info.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	info.text = txt
-	vbox.add_child(info)
-	$UI2/Panel.visible = true
+	right_side_vbox.add_child(info)
+	if right_side_panel_tween and right_side_panel_tween.is_running():
+		right_side_panel_tween.kill()
+	right_side_panel.show()
+	right_side_panel.modulate.a = 1.0
 
 func _on_area_exited(_body):
-	call_deferred("hide_panel")
+	if not right_side_panel_tween or not right_side_panel_tween.is_running():
+		call_deferred("hide_panel")
 
 func _on_Floor_mouse_entered():
 	game.show_tooltip(tr("CAVE_FLOOR") % [cave_floor])
@@ -2057,7 +2053,7 @@ func _on_Filter_pressed():
 		$UI2/Filters.position.y = 662 - $UI2/Filters/Grid.size.y
 		tween.tween_property($UI2/Filters, "modulate", Color.WHITE, 0.1)
 		tween.tween_property($UI2/Filters, "position", Vector2(rect_x, 658 - $UI2/Filters/Grid.size.y), 0.1)
-		$UI2/Filters.visible = true
+		$UI2/Filters.call_deferred("show")
 
 func _on_CheckAchievements_timeout():
 	if cave_wall.get_used_cells().is_empty() and chests.is_empty() and big_debris.is_empty() and get_tree().get_nodes_in_group("enemies").is_empty():

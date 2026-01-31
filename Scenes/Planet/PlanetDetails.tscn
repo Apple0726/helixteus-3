@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=3 uid="uid://djyt5bkyhitwy"]
+[gd_scene format=3 uid="uid://djyt5bkyhitwy"]
 
 [ext_resource type="Theme" uid="uid://cp2u1kgj60ic" path="res://Resources/default_theme.tres" id="1"]
 [ext_resource type="Script" uid="uid://fdil8fsc7awx" path="res://Scripts/PlanetDetails.gd" id="2"]
@@ -16,7 +16,7 @@ events = [SubResource("InputEventKey_q4d4x")]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_4q4fo"]
 
-[node name="Control" type="Control"]
+[node name="Control" type="Control" unique_id=1172356000]
 custom_minimum_size = Vector2(1280, 720)
 layout_mode = 3
 anchors_preset = 15
@@ -28,14 +28,14 @@ theme = ExtResource("1")
 script = ExtResource("2")
 metadata/_edit_use_anchors_ = true
 
-[node name="ColorRect2" type="ColorRect" parent="."]
+[node name="ColorRect2" type="ColorRect" parent="." unique_id=601816786]
 layout_mode = 0
 offset_right = 1280.0
 offset_bottom = 720.0
 focus_mode = 1
 color = Color(0, 0, 0, 1)
 
-[node name="Atmosphere" type="TextureButton" parent="."]
+[node name="Atmosphere" type="TextureButton" parent="." unique_id=872737082]
 layout_mode = 0
 offset_left = 224.0
 offset_top = 8.0
@@ -44,22 +44,23 @@ offset_bottom = 719.0
 texture_normal = ExtResource("6")
 stretch_mode = 5
 
-[node name="Planet" type="TextureButton" parent="."]
-custom_minimum_size = Vector2(640, 640)
-layout_mode = 0
+[node name="Planet" type="TextureButton" parent="." unique_id=14501956]
+layout_mode = 1
+anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -320.0
-offset_top = -320.0
-offset_right = 320.0
-offset_bottom = 320.0
-scale = Vector2(0.9, 0.9)
-pivot_offset = Vector2(320, 320)
+offset_left = -80.0
+offset_top = -64.0
+offset_right = 80.0
+offset_bottom = 96.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset_ratio = Vector2(0.5, 0.5)
 texture_normal = ExtResource("3")
 
-[node name="Back" type="Button" parent="."]
+[node name="Back" type="Button" parent="." unique_id=913874463]
 layout_mode = 0
 offset_top = 688.0
 offset_right = 128.0
@@ -68,7 +69,7 @@ shortcut = SubResource("2")
 shortcut_in_tooltip = false
 text = "<- Back (Z)"
 
-[node name="Name" type="LineEdit" parent="."]
+[node name="Name" type="LineEdit" parent="." unique_id=1919692739]
 layout_mode = 0
 anchor_left = 0.5
 anchor_right = 0.5
@@ -83,7 +84,7 @@ clear_button_enabled = true
 shortcut_keys_enabled = false
 caret_blink = true
 
-[node name="Diameter" type="Label" parent="."]
+[node name="Diameter" type="Label" parent="." unique_id=234681001]
 layout_mode = 0
 anchor_left = 0.5
 anchor_top = 1.0
@@ -96,22 +97,22 @@ offset_bottom = -16.0001
 text = "12000 km"
 horizontal_alignment = 1
 
-[node name="Arrow" type="Node2D" parent="."]
+[node name="Arrow" type="Node2D" parent="." unique_id=1522289264]
 position = Vector2(0, 10)
 
-[node name="Line2D" type="Line2D" parent="Arrow"]
+[node name="Line2D" type="Line2D" parent="Arrow" unique_id=1056629445]
 points = PackedVector2Array(355, 657, 925, 657)
 width = 2.0
 
-[node name="Line2D2" type="Line2D" parent="Arrow"]
+[node name="Line2D2" type="Line2D" parent="Arrow" unique_id=1122614173]
 points = PackedVector2Array(363, 648, 354, 657, 363, 666)
 width = 2.0
 
-[node name="Line2D3" type="Line2D" parent="Arrow"]
+[node name="Line2D3" type="Line2D" parent="Arrow" unique_id=1098683371]
 points = PackedVector2Array(916, 648, 925, 657, 916, 666)
 width = 2.0
 
-[node name="ScrollContainer" type="ScrollContainer" parent="."]
+[node name="ScrollContainer" type="ScrollContainer" parent="." unique_id=1948869722]
 layout_mode = 0
 anchor_left = 1.0
 anchor_top = 0.5
@@ -123,11 +124,11 @@ offset_bottom = 360.0
 grow_vertical = 2
 theme_override_styles/panel = SubResource("StyleBoxEmpty_4q4fo")
 
-[node name="VBoxContainer" type="VBoxContainer" parent="ScrollContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="ScrollContainer" unique_id=2029009532]
 layout_mode = 2
 alignment = 1
 
-[node name="VBoxContainer4" parent="ScrollContainer/VBoxContainer" instance=ExtResource("5")]
+[node name="VBoxContainer4" parent="ScrollContainer/VBoxContainer" unique_id=784571540 instance=ExtResource("5")]
 visible = false
 layout_mode = 2
 

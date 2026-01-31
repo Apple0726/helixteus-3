@@ -1,4 +1,4 @@
-[gd_scene load_steps=27 format=3 uid="uid://dmtuc03fuk5dc"]
+[gd_scene format=3 uid="uid://dmtuc03fuk5dc"]
 
 [ext_resource type="Theme" uid="uid://cp2u1kgj60ic" path="res://Resources/default_theme.tres" id="1_ousv4"]
 [ext_resource type="Script" uid="uid://dsplquhp0nmmw" path="res://Scripts/Battle/BattleGUI.gd" id="1_phavr"]
@@ -79,7 +79,7 @@ shadow_size = 16
 shadow_color = Color(0.403922, 0, 0, 0.552941)
 shadow_offset = Vector2(0, 0)
 
-[node name="BattleGUI" type="Control"]
+[node name="BattleGUI" type="Control" unique_id=240221385]
 layout_mode = 3
 anchors_preset = 0
 offset_right = 1280.0
@@ -89,21 +89,21 @@ theme = ExtResource("1_ousv4")
 script = ExtResource("1_phavr")
 metadata/_edit_lock_ = true
 
-[node name="PlanetBG" type="Sprite2D" parent="."]
-modulate = Color(0.19, 0.19, 0.19, 1)
+[node name="PlanetBG" type="Sprite2D" parent="." unique_id=813839640]
+modulate = Color(0.06, 0.06, 0.06, 1)
 light_mask = 4
 z_index = -1
 position = Vector2(1088, 336)
 texture = ExtResource("3_hjvsu")
 
-[node name="PointLight2D" type="PointLight2D" parent="PlanetBG"]
+[node name="PointLight2D" type="PointLight2D" parent="PlanetBG" unique_id=345747065]
 position = Vector2(-496, 180)
 energy = 8.88
 range_item_cull_mask = 4
 texture = ExtResource("4_pv2pb")
 texture_scale = 2.39
 
-[node name="Back" type="Button" parent="."]
+[node name="Back" type="Button" parent="." unique_id=302051613]
 layout_mode = 1
 anchors_preset = 2
 anchor_top = 1.0
@@ -114,7 +114,7 @@ grow_vertical = 0
 shortcut = SubResource("Shortcut_hjvsu")
 shortcut_in_tooltip = false
 
-[node name="Speedup" type="Button" parent="."]
+[node name="Speedup" type="Button" parent="." unique_id=203782000]
 layout_mode = 1
 anchors_preset = 6
 anchor_left = 1.0
@@ -129,13 +129,13 @@ grow_vertical = 2
 shortcut = SubResource("Shortcut_oca3i")
 shortcut_in_tooltip = false
 
-[node name="Polygon2D" type="Polygon2D" parent="Speedup"]
+[node name="Polygon2D" type="Polygon2D" parent="Speedup" unique_id=537901714]
 material = SubResource("ShaderMaterial_hjvsu")
 position = Vector2(16, 8)
 color = Color(1, 1, 1, 0.505882)
 polygon = PackedVector2Array(0, 0, 0, 32, 20, 16)
 
-[node name="MainPanel" type="NinePatchRect" parent="."]
+[node name="MainPanel" type="NinePatchRect" parent="." unique_id=1871469353]
 layout_mode = 0
 offset_left = 216.0
 offset_top = 616.0
@@ -149,7 +149,7 @@ patch_margin_bottom = 11
 axis_stretch_horizontal = 1
 axis_stretch_vertical = 1
 
-[node name="Bullet" type="Button" parent="MainPanel"]
+[node name="Bullet" type="Button" parent="MainPanel" unique_id=1517902186]
 layout_mode = 0
 offset_left = 84.0
 offset_top = 44.0
@@ -159,7 +159,7 @@ icon = ExtResource("4_xdmes")
 icon_alignment = 1
 expand_icon = true
 
-[node name="Laser" type="Button" parent="MainPanel"]
+[node name="Laser" type="Button" parent="MainPanel" unique_id=160809070]
 layout_mode = 0
 offset_left = 204.0
 offset_top = 44.0
@@ -169,7 +169,7 @@ icon = ExtResource("5_lfxuw")
 icon_alignment = 1
 expand_icon = true
 
-[node name="Bomb" type="Button" parent="MainPanel"]
+[node name="Bomb" type="Button" parent="MainPanel" unique_id=1333951764]
 layout_mode = 0
 offset_left = 324.0
 offset_top = 44.0
@@ -179,7 +179,7 @@ icon = ExtResource("6_xd3wr")
 icon_alignment = 1
 expand_icon = true
 
-[node name="Light" type="Button" parent="MainPanel"]
+[node name="Light" type="Button" parent="MainPanel" unique_id=1528665096]
 layout_mode = 0
 offset_left = 448.0
 offset_top = 44.0
@@ -189,7 +189,7 @@ icon = ExtResource("7_18k07")
 icon_alignment = 1
 expand_icon = true
 
-[node name="Move" type="Button" parent="MainPanel"]
+[node name="Move" type="Button" parent="MainPanel" unique_id=512116868]
 layout_mode = 0
 offset_left = 580.0
 offset_top = 44.0
@@ -199,7 +199,7 @@ icon = ExtResource("8_oca3i")
 icon_alignment = 1
 expand_icon = true
 
-[node name="Push" type="Button" parent="MainPanel"]
+[node name="Push" type="Button" parent="MainPanel" unique_id=1255722463]
 layout_mode = 0
 offset_left = 712.0
 offset_top = 44.0
@@ -209,7 +209,7 @@ icon = ExtResource("9_oca3i")
 icon_alignment = 1
 expand_icon = true
 
-[node name="BulletLabel" type="Label" parent="MainPanel"]
+[node name="BulletLabel" type="Label" parent="MainPanel" unique_id=450621177]
 layout_mode = 0
 offset_left = 68.0
 offset_top = 12.0
@@ -218,14 +218,14 @@ offset_bottom = 35.0
 text = "BULLET"
 horizontal_alignment = 1
 
-[node name="BulletLevels" parent="MainPanel" instance=ExtResource("10_hjvsu")]
+[node name="BulletLevels" parent="MainPanel" unique_id=2015051404 instance=ExtResource("10_hjvsu")]
 layout_mode = 0
 offset_left = 148.0
 offset_top = 44.0
 offset_right = 188.0
 offset_bottom = 84.0
 
-[node name="LaserLabel" type="Label" parent="MainPanel"]
+[node name="LaserLabel" type="Label" parent="MainPanel" unique_id=1464578258]
 layout_mode = 0
 offset_left = 188.0
 offset_top = 12.0
@@ -234,14 +234,14 @@ offset_bottom = 35.0
 text = "LASER"
 horizontal_alignment = 1
 
-[node name="LaserLevels" parent="MainPanel" instance=ExtResource("10_hjvsu")]
+[node name="LaserLevels" parent="MainPanel" unique_id=1106320758 instance=ExtResource("10_hjvsu")]
 layout_mode = 0
 offset_left = 268.0
 offset_top = 44.0
 offset_right = 308.0
 offset_bottom = 84.0
 
-[node name="BombLabel" type="Label" parent="MainPanel"]
+[node name="BombLabel" type="Label" parent="MainPanel" unique_id=2018487111]
 layout_mode = 0
 offset_left = 308.0
 offset_top = 12.0
@@ -250,14 +250,14 @@ offset_bottom = 35.0
 text = "BOMB"
 horizontal_alignment = 1
 
-[node name="BombLevels" parent="MainPanel" instance=ExtResource("10_hjvsu")]
+[node name="BombLevels" parent="MainPanel" unique_id=1178007523 instance=ExtResource("10_hjvsu")]
 layout_mode = 0
 offset_left = 388.0
 offset_top = 44.0
 offset_right = 428.0
 offset_bottom = 84.0
 
-[node name="LightLabel" type="Label" parent="MainPanel"]
+[node name="LightLabel" type="Label" parent="MainPanel" unique_id=1841128692]
 layout_mode = 0
 offset_left = 432.0
 offset_top = 12.0
@@ -266,14 +266,14 @@ offset_bottom = 35.0
 text = "LIGHT"
 horizontal_alignment = 1
 
-[node name="LightLevels" parent="MainPanel" instance=ExtResource("10_hjvsu")]
+[node name="LightLevels" parent="MainPanel" unique_id=2052017889 instance=ExtResource("10_hjvsu")]
 layout_mode = 0
 offset_left = 512.0
 offset_top = 44.0
 offset_right = 552.0
 offset_bottom = 84.0
 
-[node name="MoveLabel" type="Label" parent="MainPanel"]
+[node name="MoveLabel" type="Label" parent="MainPanel" unique_id=1731065614]
 layout_mode = 0
 offset_left = 564.0
 offset_top = 12.0
@@ -282,7 +282,7 @@ offset_bottom = 35.0
 text = "MOVE"
 horizontal_alignment = 1
 
-[node name="PushLabel" type="Label" parent="MainPanel"]
+[node name="PushLabel" type="Label" parent="MainPanel" unique_id=2083613900]
 layout_mode = 0
 offset_left = 696.0
 offset_top = 12.0
@@ -291,7 +291,7 @@ offset_bottom = 35.0
 text = "PUSH"
 horizontal_alignment = 1
 
-[node name="TurnOrderHBox" type="HBoxContainer" parent="."]
+[node name="TurnOrderHBox" type="HBoxContainer" parent="." unique_id=1897331951]
 layout_mode = 1
 anchors_preset = 5
 anchor_left = 0.5
@@ -303,7 +303,7 @@ grow_horizontal = 2
 theme_override_constants/separation = 10
 alignment = 1
 
-[node name="Info" type="Label" parent="."]
+[node name="Info" type="Label" parent="." unique_id=446688148]
 layout_mode = 0
 offset_left = 232.0
 offset_top = 648.0
@@ -311,7 +311,7 @@ offset_right = 1044.0
 offset_bottom = 671.0
 horizontal_alignment = 1
 
-[node name="TextureRect" type="TextureRect" parent="Info"]
+[node name="TextureRect" type="TextureRect" parent="Info" unique_id=678733446]
 layout_mode = 0
 offset_left = 376.0
 offset_top = -56.0
@@ -321,7 +321,7 @@ mouse_filter = 2
 expand_mode = 1
 stretch_mode = 5
 
-[node name="LightEmissionConePanel" type="Panel" parent="."]
+[node name="LightEmissionConePanel" type="Panel" parent="." unique_id=2113551757]
 visible = false
 layout_mode = 0
 offset_right = 200.0
@@ -329,15 +329,15 @@ offset_bottom = 100.0
 mouse_filter = 2
 theme = ExtResource("1_ousv4")
 
-[node name="Spotlight8S" type="Sprite2D" parent="LightEmissionConePanel"]
+[node name="Spotlight8S" type="Sprite2D" parent="LightEmissionConePanel" unique_id=1170412375]
 position = Vector2(168, 80)
 texture = ExtResource("10_38hmk")
 
-[node name="Spotlight8S2" type="Sprite2D" parent="LightEmissionConePanel"]
+[node name="Spotlight8S2" type="Sprite2D" parent="LightEmissionConePanel" unique_id=1217191162]
 position = Vector2(168, 36)
 texture = ExtResource("10_38hmk")
 
-[node name="ScrollUp" type="Label" parent="LightEmissionConePanel"]
+[node name="ScrollUp" type="Label" parent="LightEmissionConePanel" unique_id=1807114664]
 layout_mode = 0
 offset_left = 24.0
 offset_top = 12.0
@@ -346,7 +346,7 @@ offset_bottom = 35.0
 text = "SCROLL_UP"
 horizontal_alignment = 2
 
-[node name="ScrollDown" type="Label" parent="LightEmissionConePanel"]
+[node name="ScrollDown" type="Label" parent="LightEmissionConePanel" unique_id=1663559261]
 layout_mode = 0
 offset_left = 12.0
 offset_top = 56.0
@@ -355,23 +355,23 @@ offset_bottom = 79.0
 text = "SCROLL_DOWN"
 horizontal_alignment = 2
 
-[node name="Polygon2D" type="Polygon2D" parent="LightEmissionConePanel"]
+[node name="Polygon2D" type="Polygon2D" parent="LightEmissionConePanel" unique_id=771059689]
 color = Color(1, 1, 1, 0.270588)
 antialiased = true
 polygon = PackedVector2Array(152, 52, 168, 84, 184, 52)
 uv = PackedVector2Array(403, -75, 410, -43)
 
-[node name="Polygon2D2" type="Polygon2D" parent="LightEmissionConePanel"]
+[node name="Polygon2D2" type="Polygon2D" parent="LightEmissionConePanel" unique_id=371496163]
 antialiased = true
 polygon = PackedVector2Array(164, 8, 168, 40, 172, 8)
 
-[node name="LaserConePanel" type="Panel" parent="."]
+[node name="LaserConePanel" type="Panel" parent="." unique_id=810793746]
 visible = false
 layout_mode = 0
 offset_right = 200.0
 offset_bottom = 100.0
 
-[node name="ScrollUp" type="Label" parent="LaserConePanel"]
+[node name="ScrollUp" type="Label" parent="LaserConePanel" unique_id=488464626]
 layout_mode = 0
 offset_left = 24.0
 offset_top = 12.0
@@ -380,7 +380,7 @@ offset_bottom = 35.0
 text = "SCROLL_UP"
 horizontal_alignment = 2
 
-[node name="ScrollDown" type="Label" parent="LaserConePanel"]
+[node name="ScrollDown" type="Label" parent="LaserConePanel" unique_id=1611678467]
 layout_mode = 0
 offset_left = 12.0
 offset_top = 56.0
@@ -389,40 +389,40 @@ offset_bottom = 79.0
 text = "SCROLL_DOWN"
 horizontal_alignment = 2
 
-[node name="Line2D4" type="Line2D" parent="LaserConePanel"]
+[node name="Line2D4" type="Line2D" parent="LaserConePanel" unique_id=1002255313]
 position = Vector2(0, 46)
 points = PackedVector2Array(172, 8, 172, 40)
 width = 2.0
 width_curve = SubResource("Curve_pv2pb")
 
-[node name="Line2D5" type="Line2D" parent="LaserConePanel"]
+[node name="Line2D5" type="Line2D" parent="LaserConePanel" unique_id=2127162961]
 position = Vector2(0, 46)
 points = PackedVector2Array(156, 14, 172, 40)
 width = 2.0
 width_curve = SubResource("Curve_pv2pb")
 
-[node name="Line2D6" type="Line2D" parent="LaserConePanel"]
+[node name="Line2D6" type="Line2D" parent="LaserConePanel" unique_id=560937722]
 position = Vector2(0, 46)
 points = PackedVector2Array(188, 14, 172, 40)
 width = 2.0
 width_curve = SubResource("Curve_pv2pb")
 
-[node name="Line2D" type="Line2D" parent="LaserConePanel"]
+[node name="Line2D" type="Line2D" parent="LaserConePanel" unique_id=2063329438]
 points = PackedVector2Array(172, 8, 172, 40)
 width = 2.0
 width_curve = SubResource("Curve_pv2pb")
 
-[node name="Line2D2" type="Line2D" parent="LaserConePanel"]
+[node name="Line2D2" type="Line2D" parent="LaserConePanel" unique_id=2142533000]
 points = PackedVector2Array(168, 12, 172, 40)
 width = 2.0
 width_curve = SubResource("Curve_pv2pb")
 
-[node name="Line2D3" type="Line2D" parent="LaserConePanel"]
+[node name="Line2D3" type="Line2D" parent="LaserConePanel" unique_id=73740420]
 points = PackedVector2Array(176, 12, 172, 40)
 width = 2.0
 width_curve = SubResource("Curve_pv2pb")
 
-[node name="PushStrengthPanel" type="Panel" parent="."]
+[node name="PushStrengthPanel" type="Panel" parent="." unique_id=1547992910]
 visible = false
 layout_mode = 0
 offset_right = 136.0
@@ -431,14 +431,14 @@ mouse_filter = 2
 theme = ExtResource("1_ousv4")
 theme_override_styles/panel = SubResource("StyleBoxEmpty_38hmk")
 
-[node name="BarShadow" type="Panel" parent="PushStrengthPanel"]
+[node name="BarShadow" type="Panel" parent="PushStrengthPanel" unique_id=1496386970]
 layout_mode = 0
 offset_left = 56.0
 offset_top = 44.0
 offset_right = 72.0
 offset_bottom = 300.0
 
-[node name="Bar" type="TextureRect" parent="PushStrengthPanel"]
+[node name="Bar" type="TextureRect" parent="PushStrengthPanel" unique_id=732323989]
 material = SubResource("ShaderMaterial_oca3i")
 layout_mode = 0
 offset_left = 56.0
@@ -448,7 +448,7 @@ offset_bottom = 316.0
 rotation = -1.5708
 texture = SubResource("GradientTexture1D_oca3i")
 
-[node name="Label" type="Label" parent="PushStrengthPanel"]
+[node name="Label" type="Label" parent="PushStrengthPanel" unique_id=140321663]
 layout_mode = 0
 offset_left = -8.0
 offset_top = -28.0
@@ -457,7 +457,7 @@ offset_bottom = -5.0
 text = "MOVEMENT_USED"
 horizontal_alignment = 1
 
-[node name="MovementUsedLower" type="Label" parent="PushStrengthPanel"]
+[node name="MovementUsedLower" type="Label" parent="PushStrengthPanel" unique_id=151169810]
 layout_mode = 0
 offset_left = 36.0
 offset_top = 312.0
@@ -466,7 +466,7 @@ offset_bottom = 335.0
 text = "30.0 m"
 horizontal_alignment = 1
 
-[node name="MovementUsed" type="Label" parent="PushStrengthPanel"]
+[node name="MovementUsed" type="Label" parent="PushStrengthPanel" unique_id=548898484]
 layout_mode = 0
 offset_left = 84.0
 offset_top = 160.0
@@ -474,7 +474,7 @@ offset_right = 156.0
 offset_bottom = 183.0
 text = "30.0 m"
 
-[node name="MovementUsedUpper" type="Label" parent="PushStrengthPanel"]
+[node name="MovementUsedUpper" type="Label" parent="PushStrengthPanel" unique_id=46099615]
 layout_mode = 0
 offset_left = 32.0
 offset_top = 8.0
@@ -483,7 +483,7 @@ offset_bottom = 31.0
 text = "100.0 m"
 horizontal_alignment = 1
 
-[node name="ScreenFlash" type="ColorRect" parent="."]
+[node name="ScreenFlash" type="ColorRect" parent="." unique_id=412260835]
 visible = false
 layout_mode = 1
 anchors_preset = 15
@@ -494,7 +494,7 @@ grow_vertical = 2
 mouse_filter = 2
 color = Color(1, 1, 1, 0)
 
-[node name="Defeat" type="Label" parent="."]
+[node name="Defeat" type="Label" parent="." unique_id=820306650]
 visible = false
 modulate = Color(1, 1, 1, 0)
 layout_mode = 1

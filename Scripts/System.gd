@@ -75,14 +75,13 @@ func refresh_planets():
 		var planet_glow = planet.get_node("Glow")
 		planet_btn.texture_normal = game.planet_textures[p_i.type - 3]
 		add_child(planet)
-		planet_btn.connect("mouse_entered",Callable(self,"on_planet_over").bind(p_i.id, p_i.l_id))
-		planet_glow.connect("mouse_entered",Callable(self,"on_glow_planet_over").bind(p_i.id, p_i.l_id, planet_glow))
-		planet_btn.connect("mouse_exited",Callable(self,"on_btn_out"))
-		planet_glow.connect("mouse_exited",Callable(self,"on_btn_out"))
-		planet_btn.connect("pressed",Callable(self,"on_planet_click").bind(p_i["id"], p_i.l_id))
-		planet_glow.connect("pressed",Callable(self,"on_planet_click").bind(p_i["id"], p_i.l_id))
-		planet_btn.scale.x = p_i["size"] / PLANET_SCALE_DIV * scale_mult
-		planet_btn.scale.y = p_i["size"] / PLANET_SCALE_DIV * scale_mult
+		planet_btn.mouse_entered.connect(on_planet_over.bind(p_i.id, p_i.l_id))
+		planet_glow.mouse_entered.connect(on_glow_planet_over.bind(p_i.id, p_i.l_id, planet_glow))
+		planet_btn.mouse_exited.connect(on_btn_out)
+		planet_glow.mouse_exited.connect(on_btn_out)
+		planet_btn.pressed.connect(on_planet_click.bind(p_i["id"], p_i.l_id))
+		planet_glow.pressed.connect(on_planet_click.bind(p_i["id"], p_i.l_id))
+		planet_btn.scale *= p_i["size"] / PLANET_SCALE_DIV * scale_mult * 640.0 / planet_btn.texture_normal.get_width()
 		planet_glow.scale *= sc
 		if game.system_data[game.c_s].has("conquered"):
 			p_i.conquered = true

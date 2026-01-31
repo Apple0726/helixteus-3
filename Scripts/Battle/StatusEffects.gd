@@ -6,22 +6,26 @@ var entity: BattleEntity
 func _ready() -> void:
 	for effect in get_children():
 		effect.hide()
-	$Burn/Icon.mouse_entered.connect(game.show_tooltip.bind(tr("BURN_DESC")))
+	$Burn/Icon.mouse_entered.connect(show_tooltip.bind(tr("BURN_DESC"), Battle.StatusEffect.BURN))
 	$Burn/Icon.mouse_exited.connect(game.hide_tooltip)
-	$Stun/Icon.mouse_entered.connect(game.show_tooltip.bind(tr("STUN_DESC")))
+	$Stun/Icon.mouse_entered.connect(show_tooltip.bind(tr("STUN_DESC"), Battle.StatusEffect.STUN))
 	$Stun/Icon.mouse_exited.connect(game.hide_tooltip)
-	$Frozen/Icon.mouse_entered.connect(game.show_tooltip.bind(tr("FROZEN_DESC")))
+	$Frozen/Icon.mouse_entered.connect(show_tooltip.bind(tr("FROZEN_DESC"), Battle.StatusEffect.FROZEN))
 	$Frozen/Icon.mouse_exited.connect(game.hide_tooltip)
-	$Exposed/Icon.mouse_entered.connect(game.show_tooltip.bind(tr("EXPOSED_DESC")))
+	$Exposed/Icon.mouse_entered.connect(show_tooltip.bind(tr("EXPOSED_DESC"), Battle.StatusEffect.EXPOSED))
 	$Exposed/Icon.mouse_exited.connect(game.hide_tooltip)
-	$Corroding/Icon.mouse_entered.connect(game.show_tooltip.bind(tr("CORRODING_DESC")))
+	$Corroding/Icon.mouse_entered.connect(show_tooltip.bind(tr("CORRODING_DESC"), Battle.StatusEffect.CORRODING))
 	$Corroding/Icon.mouse_exited.connect(game.hide_tooltip)
-	$Radioactive/Icon.mouse_entered.connect(game.show_tooltip.bind(tr("RADIOACTIVE_DESC")))
+	$Radioactive/Icon.mouse_entered.connect(show_tooltip.bind(tr("RADIOACTIVE_DESC"), Battle.StatusEffect.RADIOACTIVE))
 	$Radioactive/Icon.mouse_exited.connect(game.hide_tooltip)
-	$Wet/Icon.mouse_entered.connect(game.show_tooltip.bind(tr("WET_DESC")))
+	$Wet/Icon.mouse_entered.connect(show_tooltip.bind(tr("WET_DESC"), Battle.StatusEffect.WET))
 	$Wet/Icon.mouse_exited.connect(game.hide_tooltip)
-	$ExtraTurns/Icon.mouse_entered.connect(game.show_tooltip.bind(tr("EXTRA_TURNS_LEFT")))
+	$ExtraTurns/Icon.mouse_entered.connect(show_tooltip.bind(tr("EXTRA_TURNS_LEFT"), Battle.StatusEffect.EXTRA_TURNS))
 	$ExtraTurns/Icon.mouse_exited.connect(game.hide_tooltip)
+
+func show_tooltip(desc:String, status:int):
+	var turn_number = int(ceil(entity.status_effects[status]))
+	game.show_tooltip("{desc} ({turnsLeft})".format({"desc": desc, "turnsLeft":tr_n("1_TURN_REMAINING", "X_TURNS_REMAINING", turn_number).format({"turnNumber":turn_number})}))
 
 func update():
 	$Burn.visible = entity.status_effects[Battle.StatusEffect.BURN] > 0

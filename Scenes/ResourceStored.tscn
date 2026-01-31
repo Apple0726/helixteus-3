@@ -19,7 +19,7 @@ border_width_right = 2
 border_width_bottom = 2
 
 [sub_resource type="SystemFont" id="SystemFont_m40e0"]
-font_names = PackedStringArray("Ebrima")
+font_names = PackedStringArray("Noto Sans")
 subpixel_positioning = 0
 multichannel_signed_distance_field = true
 

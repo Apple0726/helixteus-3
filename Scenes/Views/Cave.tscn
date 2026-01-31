@@ -1133,8 +1133,6 @@ theme = ExtResource("29")
 layout_mode = 2
 alignment = 1
 
-[node name="Timer" type="Timer" parent="UI2/Panel" unique_id=1671603235]
-
 [node name="CaveInfo" type="HBoxContainer" parent="UI2" unique_id=729615587]
 offset_right = 319.0
 offset_bottom = 27.0
@@ -1280,7 +1278,7 @@ libraries/ = SubResource("AnimationLibrary_bdome")
 [node name="CanvasModulate" type="CanvasModulate" parent="." unique_id=2016604463]
 
 [node name="AuroraModulate" type="Node2D" parent="." unique_id=1098801665]
-modulate = Color(0.705882, 1, 0.705882, 1)
+modulate = Color(0.784314, 1, 0.784314, 1)
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=1879415946]
 environment = SubResource("Environment_n75r6")
@@ -1310,7 +1308,6 @@ environment = SubResource("Environment_n75r6")
 [connection signal="mouse_exited" from="UI2/Filters/Grid/minerals" to="." method="on_filter_mouse_exited"]
 [connection signal="mouse_entered" from="UI2/Filters/Grid/stone" to="." method="on_filter_mouse_entered" binds= ["stone"]]
 [connection signal="mouse_exited" from="UI2/Filters/Grid/stone" to="." method="on_filter_mouse_exited"]
-[connection signal="timeout" from="UI2/Panel/Timer" to="." method="_on_Timer_timeout"]
 [connection signal="mouse_entered" from="UI2/CaveInfo/Floor" to="." method="_on_Floor_mouse_entered"]
 [connection signal="mouse_exited" from="UI2/CaveInfo/Floor" to="." method="_on_mouse_exited"]
 [connection signal="mouse_entered" from="UI2/CaveInfo/Difficulty" to="." method="_on_Difficulty_mouse_entered"]

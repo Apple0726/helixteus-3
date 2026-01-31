@@ -1,13 +1,13 @@
 {
     "en": {
-        "lines": 1606,
-        "words": 11328,
-        "chars": 69426
+        "lines": 1609,
+        "words": 11338,
+        "chars": 69512
     },
     "fr": {
-        "lines": 562,
-        "words": 2441,
-        "chars": 15392
+        "lines": 563,
+        "words": 2448,
+        "chars": 15449
     },
     "it": {
         "lines": 373,
@@ -20,9 +20,9 @@
         "chars": 19203
     },
     "de": {
-        "lines": 1620,
-        "words": 10155,
-        "chars": 74829
+        "lines": 1625,
+        "words": 10170,
+        "chars": 74948
     },
     "es": {
         "lines": 1324,

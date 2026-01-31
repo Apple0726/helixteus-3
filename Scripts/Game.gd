@@ -2836,7 +2836,8 @@ func generate_planets(id:int):#local id
 		p_i["core"] = make_planet_composition(temp, "core", p_i.size, gas_giant)
 		p_i["core_start_depth"] = round(randf_range(0.4, 0.46) * p_i.size * 1000)
 		p_i["surface"] = add_surface_materials(temp, p_i.crust)
-		if id + systems_generated == 0 and c_u == 0:#Only water in solar system
+		var is_starting_solar_system = planets_generated == 0
+		if is_starting_solar_system and c_u == 0:#Only water in solar system
 			if randf() < 0.2:
 				p_i["lake"] = {"element":"H2O"}
 		elif p_i.temperature <= 1000:
@@ -2862,9 +2863,9 @@ func generate_planets(id:int):#local id
 					_class += 1
 				if randf() < log(diff / 10000.0) / log(100) - 1.0:
 					_class += 1
-				if planets_generated == 0:
+				if is_starting_solar_system:
 					lv = min(lv, 4)
-					if i == 2:
+					if i == 2: # Only level 1 enemies on closest planet from starting planet
 						lv = 1
 				if num == total_num:
 					lv = max(1, 1 + log(2.0 * power_left) / log(1.3))
@@ -2883,7 +2884,7 @@ func generate_planets(id:int):#local id
 				var defense = stats[1]
 				var accuracy = stats[2]
 				var agility = stats[3]
-				if planets_generated == 0 and i == 2:
+				if is_starting_solar_system and i == 2:
 					while agility > 7:
 						agility -= 3
 						attack += 1
@@ -2914,12 +2915,13 @@ func generate_planets(id:int):#local id
 					"initial_position":initial_position,
 					"money":_money,
 					"XP":XP}
-				while randf() < 0.25:
-					var additional_passive_ability = randi() % Battle.PassiveAbility.N
-					if additional_passive_ability not in HX_data.passive_abilities:
-						HX_data.passive_abilities.append(additional_passive_ability)
-						HX_data.money *= 0.7 * len(HX_data.passive_abilities)
-						HX_data.XP *= 0.7 * len(HX_data.passive_abilities)
+				if not is_starting_solar_system:
+					while randf() < 0.25:
+						var additional_passive_ability = randi() % Battle.PassiveAbility.N
+						if additional_passive_ability not in HX_data.passive_abilities:
+							HX_data.passive_abilities.append(additional_passive_ability)
+							HX_data.money *= 0.7 * len(HX_data.passive_abilities)
+							HX_data.XP *= 0.7 * len(HX_data.passive_abilities)
 				p_i.HX_data.append(HX_data)
 				power_left -= 0.5 * pow(1.3, lv - 1)
 				if power_left <= 0.0:

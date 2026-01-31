@@ -4,14 +4,17 @@ extends HBoxContainer
 var entity: BattleEntity
 
 func _ready() -> void:
-	$Attack/Icon.mouse_entered.connect(game.show_tooltip.bind(tr("ATTACK")))
-	$Defense/Icon.mouse_entered.connect(game.show_tooltip.bind(tr("DEFENSE")))
-	$Accuracy/Icon.mouse_entered.connect(game.show_tooltip.bind(tr("ACCURACY")))
-	$Agility/Icon.mouse_entered.connect(game.show_tooltip.bind(tr("AGILITY")))
+	$Attack/Icon.mouse_entered.connect(show_tooltip.bind("Attack"))
+	$Defense/Icon.mouse_entered.connect(show_tooltip.bind("Defense"))
+	$Accuracy/Icon.mouse_entered.connect(show_tooltip.bind("Accuracy"))
+	$Agility/Icon.mouse_entered.connect(show_tooltip.bind("Agility"))
 	$Attack/Icon.mouse_exited.connect(game.hide_tooltip)
 	$Defense/Icon.mouse_exited.connect(game.hide_tooltip)
 	$Accuracy/Icon.mouse_exited.connect(game.hide_tooltip)
 	$Agility/Icon.mouse_exited.connect(game.hide_tooltip)
+
+func show_tooltip(stat:String):
+	game.show_tooltip("%s (%s)" % [tr(stat.to_upper()), get_node(stat + "/Label").text])
 
 func update():
 	$Attack.visible = entity.attack_buff != 0

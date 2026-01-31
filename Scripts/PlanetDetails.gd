@@ -16,6 +16,7 @@ func _ready():
 	$Planet.texture_normal = texture
 	$Planet.texture_hover = texture
 	$Planet.texture_focused = texture
+	$Planet.scale *= 640.0 * 0.9 / texture.get_width()
 	$Name.text = p_i.name
 	$Diameter.text = str(round(p_i.size)) + " km"
 	$Atmosphere.visible = not p_i.atmosphere.is_empty()
