@@ -104,6 +104,7 @@ func refresh_planets():
 				add_elements(p_i, v, sc)
 			else:
 				var HX_count = preload("res://Scenes/EntityCount.tscn").instantiate()
+				HX_count.alignment = HORIZONTAL_ALIGNMENT_CENTER
 				HX_count.get_node("Texture2D").mouse_entered.connect(on_entity_icon_over.bind(tr("ENEMIES")))
 				HX_count.get_node("Texture2D").mouse_exited.connect(on_entity_icon_out)
 				HX_count.scale *= sc * 3.0
@@ -281,7 +282,6 @@ func add_constr_costs(vbox:VBoxContainer, data):
 	else:
 		Helper.add_label(tr("CONSTRUCTION_COSTS"), 0)
 	game.get_node("UI/Panel").visible = true
-	game.get_node("UI/Panel/AnimationPlayer").play("Fade")
 	
 func show_DS_costs(star:Dictionary, base:bool = false):
 	var vbox = game.get_node("UI/Panel/VBox")
@@ -400,7 +400,6 @@ func show_planet_info(id:int, l_id:int):
 			call("show_%s_costs" % MS, p_i, true)
 	elif has_MS:
 		game.get_node("UI/Panel").visible = true
-		game.get_node("UI/Panel/AnimationPlayer").play("Fade")
 		Helper.put_rsrc(vbox, 32, {})
 		var stage:String
 		if p_i.has("repair_cost"):
@@ -466,10 +465,9 @@ func show_planet_info(id:int, l_id:int):
 					Helper.add_to_dict(bldgs, tile.bldg.name, 1)
 		if not bldgs.is_empty():
 			game.space_HUD.clear_bldg_info()
-			var bldg_info_node = game.space_HUD.get_node("BldgInfo")
+			var bldg_info_node = game.space_HUD.get_node("HBoxContainer/BldgInfo")
 			for bldg in bldgs:
 				var bldg_count = preload("res://Scenes/EntityCount.tscn").instantiate()
-				bldg_count.alignment = HORIZONTAL_ALIGNMENT_LEFT
 				#bldg_count.get_node("Texture2D").mouse_entered.connect(on_entity_icon_over.bind(tr("%s_NAME" % Building.names[bldg].to_upper())))
 				#bldg_count.get_node("Texture2D").mouse_exited.connect(on_entity_icon_out)
 				bldg_info_node.add_child(bldg_count)
@@ -583,7 +581,7 @@ func _input(event):
 				MS_constr_data.obj.erase("MS")
 				MS_constr_data.obj.erase("MS_lv")
 				game.popup(tr("MS_REKT"), 2.0)
-				game.get_node("UI/Panel/AnimationPlayer").play("FadeOut")
+				game.get_node("UI/Panel").hide()
 				MS_constr_data.clear()
 				refresh_planets()
 				refresh_stars()
@@ -678,7 +676,7 @@ func build_MS(obj:Dictionary, MS_to_build:String):
 						_star.cost_div_dict = {star_over_id:cost_div}
 			queue_redraw()
 		game.HUD.refresh()
-		game.get_node("UI/Panel/AnimationPlayer").play("FadeOut")
+		game.get_node("UI/Panel").hide()
 		MS_constr_data.clear()
 		game.space_HUD.get_node("StarPanel").refresh()
 		refresh_planets()
@@ -794,7 +792,6 @@ func show_MS_construct_info(star:Dictionary):
 	elif game.bottom_info_action == "building_MB":
 		if not has_MS or not star.MS == "MB":
 			game.get_node("UI/Panel").visible = true
-			game.get_node("UI/Panel/AnimationPlayer").play("Fade")
 			bldg_costs = Data.MS_costs.MB.duplicate(true)
 			for cost in bldg_costs:
 				bldg_costs[cost] = round(bldg_costs[cost] * pow(star.size, 2) / star.get("cost_div", 1.0))
@@ -809,7 +806,6 @@ func show_MS_construct_info(star:Dictionary):
 			show_PK_costs(star, true)
 	elif has_MS:
 		game.get_node("UI/Panel").visible = true
-		game.get_node("UI/Panel/AnimationPlayer").play("Fade")
 		Helper.put_rsrc(vbox, 32, {})
 		var stage:String
 		if star.has("repair_cost"):
@@ -906,7 +902,7 @@ func on_star_pressed (id:int):
 func on_btn_out ():
 	planet_hovered = -1
 	glow_over = null
-	game.get_node("UI/Panel/AnimationPlayer").play("FadeOut")
+	game.get_node("UI/Panel").hide()
 	game.hide_tooltip()
 	MS_constr_data.clear()
 	game.space_HUD.clear_bldg_info()

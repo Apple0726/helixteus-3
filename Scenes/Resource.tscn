@@ -1,17 +1,19 @@
-[gd_scene load_steps=3 format=3 uid="uid://bdp561gr6s0b8"]
+[gd_scene format=3 uid="uid://bdp561gr6s0b8"]
 
+[ext_resource type="Script" uid="uid://bfvugqcw8rg0c" path="res://Scripts/Resource.gd" id="1_gt285"]
 [ext_resource type="Texture2D" uid="uid://og56fmydqo8i" path="res://Graphics/Icons/Annotator/check.png" id="2_1iyfg"]
 [ext_resource type="Texture2D" uid="uid://b0brlrg52bjln" path="res://Graphics/Icons/money.png" id="2_gt285"]
 
-[node name="Resource" type="HBoxContainer"]
+[node name="Resource" type="HBoxContainer" unique_id=842182608]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 offset_right = -1152.0
 offset_bottom = -664.0
 theme_override_constants/separation = 10
+script = ExtResource("1_gt285")
 
-[node name="Texture2D" type="TextureButton" parent="."]
+[node name="Texture2D" type="TextureButton" parent="." unique_id=1404641256]
 custom_minimum_size = Vector2(24, 24)
 layout_mode = 2
 size_flags_vertical = 4
@@ -19,7 +21,7 @@ texture_normal = ExtResource("2_gt285")
 ignore_texture_size = true
 stretch_mode = 5
 
-[node name="IsEnough" type="TextureRect" parent="Texture2D"]
+[node name="IsEnough" type="TextureRect" parent="Texture2D" unique_id=1566464019]
 visible = false
 layout_mode = 1
 anchors_preset = 1
@@ -35,7 +37,7 @@ texture = ExtResource("2_1iyfg")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="Text" type="Label" parent="."]
+[node name="Text" type="Label" parent="." unique_id=1990337966]
 layout_mode = 2
 text = "0"
 vertical_alignment = 1

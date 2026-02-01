@@ -6,8 +6,8 @@
 [node name="HBox" type="HBoxContainer" unique_id=196240579]
 offset_right = 82.0
 offset_bottom = 30.0
+size_flags_horizontal = 3
 mouse_filter = 2
-alignment = 1
 
 [node name="Texture2D" type="TextureRect" parent="." unique_id=1188047581]
 custom_minimum_size = Vector2(40, 30)

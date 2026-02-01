@@ -1348,7 +1348,7 @@ func switch_view(new_view:String, other_params:Dictionary = {}):
 	_on_BottomInfo_close_button_pressed()
 	if $UI.has_node("BuildingShortcuts"):
 		$UI.get_node("BuildingShortcuts").queue_free()
-	$UI/Panel/AnimationPlayer.play("FadeOut")
+	$UI/Panel.hide()
 	var old_view:String = c_v
 	if view_tween and view_tween.is_running():
 		return
@@ -3818,7 +3818,6 @@ var quadrant_bottom_left:PackedVector2Array = [Vector2(0, 360), Vector2(640, 360
 var quadrant_bottom_right:PackedVector2Array = [Vector2(640, 360), Vector2(1280, 360), Vector2(1280, 720), Vector2(640, 720)]
 @onready var fps_text = $Tooltips/FPS
 var last_process_time = Time.get_unix_time_from_system()
-var update_rsrcs = []
 
 func _process(_delta):
 	if _delta == 0:
@@ -3859,17 +3858,6 @@ func _process(_delta):
 		if is_instance_valid(HUD) and is_ancestor_of(HUD):
 			HUD.update_minerals()
 			HUD.update_money_energy_SP()
-	for rsrc_dict in update_rsrcs:
-		var rsrc:float
-		if rsrc_dict.type != "":
-			rsrc = self[rsrc_dict.type][rsrc_dict.name]
-		elif rsrc_dict.name in ["money", "minerals", "energy", "SP"]:
-			rsrc = self[rsrc_dict.name]
-		elif rsrc_dict.name == "stone":
-			rsrc = Helper.get_sum_of_dict(stone)
-		if is_instance_valid(rsrc_dict.node):
-			Helper.format_text(rsrc_dict.node.get_node("Text"), rsrc_dict.node.get_node("Texture2D"), "", true, rsrc_dict.rsrcs_required, rsrc, rsrc_dict.mass_str)
-			rsrc_dict.node.get_node("Texture2D").material.set_shader_parameter("fill", rsrc / rsrc_dict.rsrcs_required)
 
 var mouse_pos = Vector2.ZERO
 @onready var item_cursor = $Tooltips/ItemCursor
@@ -3968,7 +3956,7 @@ func _input(event):
 		else:
 			help[help_str] = true
 		hide_tooltip()
-		$UI/Panel/AnimationPlayer.play("FadeOut")
+		$UI/Panel.hide()
 		if $UI.has_node("BuildingShortcuts"):
 			$UI.get_node("BuildingShortcuts").queue_free()
 	
@@ -4155,7 +4143,7 @@ func cancel_building():
 		tiles[id]._on_Button_button_out()
 
 func cancel_building_MS():
-	$UI/Panel/AnimationPlayer.play("FadeOut")
+	$UI/Panel.hide()
 	view.obj.finish_construct()
 
 func _on_Settings_mouse_entered():
@@ -4422,7 +4410,6 @@ func show_collect_info(info:Dictionary):
 	Helper.put_rsrc($UI/Panel/VBox, 32, info2)
 	Helper.add_label(tr("YOU_COLLECTED"), 0)
 	$UI/Panel.visible = true
-	$UI/Panel/AnimationPlayer.play("Fade")
 	$CollectPanelTimer.start(min(2.5, 0.5 + 0.3 * $UI/Panel/VBox.get_child_count()))
 	$CollectPanelAnim.stop()
 
@@ -4680,12 +4667,6 @@ func _on_MMTimer_timeout():
 		if is_instance_valid(HUD):
 			HUD.update_money_energy_SP()
 	$MMTimer.start()
-
-
-func _on_PanelAnimationPlayer_animation_finished(anim_name):
-	if anim_name == "FadeOut":
-		$UI/Panel.visible = false
-
 
 
 func _on_command_text_submitted(new_text):

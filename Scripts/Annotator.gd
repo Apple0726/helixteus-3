@@ -48,7 +48,7 @@ func on_Line_pressed():
 		if node.name != "Line":
 			node.get_node("Button").button_pressed = false
 	mode = "line"
-	game.get_node("UI/Panel/AnimationPlayer").play("FadeOut")
+	game.get_node("UI/Panel").hide()
 	game.view.annotate_icon.texture = null
 	$VBoxContainer.visible = false
 
@@ -57,7 +57,7 @@ func on_Rectangle_pressed():
 		if node.name != "Rectangle":
 			node.get_node("Button").button_pressed = false
 	mode = "rect"
-	game.get_node("UI/Panel/AnimationPlayer").play("FadeOut")
+	game.get_node("UI/Panel").hide()
 	game.view.annotate_icon.texture = null
 	$VBoxContainer.visible = false
 
@@ -66,7 +66,7 @@ func on_Circle_pressed():
 		if node.name != "Circle":
 			node.get_node("Button").button_pressed = false
 	mode = "circ"
-	game.get_node("UI/Panel/AnimationPlayer").play("FadeOut")
+	game.get_node("UI/Panel").hide()
 	game.view.annotate_icon.texture = null
 	$VBoxContainer.visible = false
 
@@ -75,7 +75,7 @@ func on_Eraser_pressed():
 		if node.name != "Eraser":
 			node.get_node("Button").button_pressed = false
 	mode = "eraser"
-	game.get_node("UI/Panel/AnimationPlayer").play("FadeOut")
+	game.get_node("UI/Panel").hide()
 	game.view.annotate_icon.texture = null
 	$VBoxContainer.visible = false
 
@@ -87,7 +87,6 @@ func on_Icons_pressed(manual:bool = false):
 	if not manual and not $HBoxContainer/Icons/Button.button_pressed:
 		$VBoxContainer.visible = not $VBoxContainer.visible
 	game.get_node("UI/Panel").visible = true
-	game.get_node("UI/Panel/AnimationPlayer").play("Fade")
 	Helper.put_rsrc(game.get_node("UI/Panel/VBox"), 32, {})
 	Helper.add_label(tr("KEYBOARD_SHORTCUTS"))
 	Helper.add_label(tr("ANNOTATE_SHORTCUTS"), -1, false)
@@ -144,4 +143,4 @@ func _on_Annotator_visibility_changed():
 	else:
 		game.sub_panel = null
 		game.view.annotate_icon.texture = null
-		game.get_node("UI/Panel/AnimationPlayer").play("FadeOut")
+		game.get_node("UI/Panel").hide()

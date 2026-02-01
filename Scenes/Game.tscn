@@ -1,4 +1,4 @@
-[gd_scene load_steps=67 format=3 uid="uid://dt6rr51kda1rb"]
+[gd_scene format=3 uid="uid://dt6rr51kda1rb"]
 
 [ext_resource type="Script" uid="uid://bd5yb7w0y4d8b" path="res://Scripts/Game.gd" id="2"]
 [ext_resource type="Texture2D" uid="uid://gcp7f61r2ee1" path="res://Graphics/Buttons/settings.png" id="3"]
@@ -144,60 +144,6 @@ multichannel_signed_distance_field = true
 [sub_resource type="LabelSettings" id="LabelSettings_ycps2"]
 font = SubResource("SystemFont_lbihj")
 font_size = 12
-
-[sub_resource type="Animation" id="21"]
-resource_name = "Fade"
-length = 0.1
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath(".:modulate")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0, 0.1),
-"transitions": PackedFloat32Array(1, 1),
-"update": 0,
-"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 1)]
-}
-
-[sub_resource type="Animation" id="23"]
-resource_name = "FadeOut"
-length = 0.1
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath(".:modulate")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0, 0.1),
-"transitions": PackedFloat32Array(1, 1),
-"update": 0,
-"values": [Color(1, 1, 1, 1), Color(1, 1, 1, 0)]
-}
-
-[sub_resource type="Animation" id="22"]
-length = 0.001
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath(".:modulate")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [Color(1, 1, 1, 0)]
-}
-
-[sub_resource type="AnimationLibrary" id="AnimationLibrary_dnrnq"]
-_data = {
-&"Fade": SubResource("21"),
-&"FadeOut": SubResource("23"),
-&"RESET": SubResource("22")
-}
 
 [sub_resource type="Gradient" id="7"]
 colors = PackedColorArray(0.230469, 0.230469, 0.230469, 1, 0.578125, 0.578125, 0.578125, 1)
@@ -452,10 +398,10 @@ _data = {
 shader = ExtResource("30")
 shader_parameter/amount = 0.0
 
-[node name="Game" type="Node2D"]
+[node name="Game" type="Node2D" unique_id=772411254]
 script = ExtResource("2")
 
-[node name="ShaderExport" type="SubViewportContainer" parent="."]
+[node name="ShaderExport" type="SubViewportContainer" parent="." unique_id=673711098]
 visible = false
 offset_top = 720.0
 offset_right = 1920.0
@@ -463,33 +409,33 @@ offset_bottom = 1800.0
 mouse_filter = 2
 stretch = true
 
-[node name="SubViewport" type="SubViewport" parent="ShaderExport"]
+[node name="SubViewport" type="SubViewport" parent="ShaderExport" unique_id=1592758284]
 disable_3d = true
 handle_input_locally = false
 size = Vector2i(1920, 1080)
 render_target_update_mode = 0
 
-[node name="Starfield" type="ColorRect" parent="ShaderExport/SubViewport"]
+[node name="Starfield" type="ColorRect" parent="ShaderExport/SubViewport" unique_id=798864660]
 material = SubResource("ShaderMaterial_fsurd")
 offset_right = 1920.0
 offset_bottom = 1080.0
 mouse_filter = 2
 
-[node name="ColorRect" type="ColorRect" parent="ShaderExport/SubViewport"]
+[node name="ColorRect" type="ColorRect" parent="ShaderExport/SubViewport" unique_id=766742959]
 visible = false
 material = SubResource("ShaderMaterial_tvths")
 offset_right = 512.0
 offset_bottom = 512.0
 
-[node name="click" type="AudioStreamPlayer" parent="."]
+[node name="click" type="AudioStreamPlayer" parent="." unique_id=1129675963]
 stream = ExtResource("8")
 volume_db = 14.116
 bus = &"SFX"
 
-[node name="Panels" type="CanvasLayer" parent="."]
+[node name="Panels" type="CanvasLayer" parent="." unique_id=1375824707]
 layer = 3
 
-[node name="Control" type="Control" parent="Panels"]
+[node name="Control" type="Control" parent="Panels" unique_id=739912279]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -498,10 +444,10 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 
-[node name="UI" type="CanvasLayer" parent="."]
+[node name="UI" type="CanvasLayer" parent="." unique_id=775074560]
 layer = 2
 
-[node name="BottomInfo" type="HBoxContainer" parent="UI"]
+[node name="BottomInfo" type="HBoxContainer" parent="UI" unique_id=1172836516]
 visible = false
 offset_top = 720.0
 offset_right = 1280.0
@@ -511,7 +457,7 @@ theme = ExtResource("7")
 theme_override_constants/separation = 0
 alignment = 1
 
-[node name="Text" type="Label" parent="UI/BottomInfo"]
+[node name="Text" type="Label" parent="UI/BottomInfo" unique_id=1796501512]
 visible = false
 layout_mode = 2
 size_flags_vertical = 1
@@ -519,23 +465,19 @@ theme_override_styles/normal = SubResource("StyleBoxFlat_rfoca")
 label_settings = SubResource("LabelSettings_vvhu1")
 vertical_alignment = 1
 
-[node name="CloseButton" parent="UI/BottomInfo" instance=ExtResource("25")]
+[node name="CloseButton" parent="UI/BottomInfo" unique_id=1137173290 instance=ExtResource("25")]
 custom_minimum_size = Vector2(35, 35)
 layout_mode = 2
 close_button_type = 2
 
-[node name="FlashAnim" type="AnimationPlayer" parent="UI/BottomInfo"]
-libraries = {
-&"": SubResource("AnimationLibrary_ci5uo")
-}
-autoplay = "Flashing"
+[node name="FlashAnim" type="AnimationPlayer" parent="UI/BottomInfo" unique_id=1382014029]
+libraries/ = SubResource("AnimationLibrary_ci5uo")
+autoplay = &"Flashing"
 
-[node name="MoveAnim" type="AnimationPlayer" parent="UI/BottomInfo"]
-libraries = {
-&"": SubResource("AnimationLibrary_nyjun")
-}
+[node name="MoveAnim" type="AnimationPlayer" parent="UI/BottomInfo" unique_id=333744483]
+libraries/ = SubResource("AnimationLibrary_nyjun")
 
-[node name="Version" type="Label" parent="UI"]
+[node name="Version" type="Label" parent="UI" unique_id=63835983]
 offset_left = 944.0
 offset_top = 696.0
 offset_right = 1280.0
@@ -544,15 +486,14 @@ label_settings = SubResource("LabelSettings_ycps2")
 horizontal_alignment = 2
 vertical_alignment = 2
 
-[node name="PopupBackground" type="ColorRect" parent="UI"]
+[node name="PopupBackground" type="ColorRect" parent="UI" unique_id=1534844771]
 visible = false
 offset_right = 1280.0
 offset_bottom = 720.0
 color = Color(0, 0, 0, 0.564706)
 
-[node name="Panel" type="PanelContainer" parent="UI"]
+[node name="Panel" type="PanelContainer" parent="UI" unique_id=1808386366]
 visible = false
-modulate = Color(1, 1, 1, 0)
 offset_left = 1008.0
 offset_top = 368.0
 offset_right = 1156.0
@@ -561,19 +502,14 @@ grow_horizontal = 0
 grow_vertical = 2
 theme = ExtResource("7")
 
-[node name="VBox" type="VBoxContainer" parent="UI/Panel"]
+[node name="VBox" type="VBoxContainer" parent="UI/Panel" unique_id=332843812]
 layout_mode = 2
 
-[node name="AnimationPlayer" type="AnimationPlayer" parent="UI/Panel"]
-libraries = {
-&"": SubResource("AnimationLibrary_dnrnq")
-}
-
-[node name="ClusterBG" parent="." instance=ExtResource("35")]
+[node name="ClusterBG" parent="." unique_id=827445502 instance=ExtResource("35")]
 visible = false
 color = Color(0.686275, 0, 1, 1)
 
-[node name="GrayscaleRect" type="TextureRect" parent="."]
+[node name="GrayscaleRect" type="TextureRect" parent="." unique_id=788157412]
 modulate = Color(1, 1, 1, 0)
 offset_top = 720.0
 offset_right = 720.0
@@ -584,26 +520,24 @@ texture = SubResource("8")
 expand_mode = 1
 metadata/_edit_lock_ = true
 
-[node name="AnimationPlayer" type="AnimationPlayer" parent="GrayscaleRect"]
-libraries = {
-&"": SubResource("AnimationLibrary_ju8om")
-}
+[node name="AnimationPlayer" type="AnimationPlayer" parent="GrayscaleRect" unique_id=992026056]
+libraries/ = SubResource("AnimationLibrary_ju8om")
 
-[node name="Tooltips" type="CanvasLayer" parent="."]
+[node name="Tooltips" type="CanvasLayer" parent="." unique_id=67989299]
 layer = 5
 
-[node name="FPS" type="Label" parent="Tooltips"]
+[node name="FPS" type="Label" parent="Tooltips" unique_id=1919394774]
 offset_right = 184.0
 offset_bottom = 23.0
 label_settings = SubResource("LabelSettings_ycps2")
 
-[node name="Command" type="LineEdit" parent="Tooltips"]
+[node name="Command" type="LineEdit" parent="Tooltips" unique_id=569374309]
 visible = false
 offset_top = 696.0
 offset_right = 336.0
 offset_bottom = 720.0
 
-[node name="CtrlShift" type="HBoxContainer" parent="Tooltips"]
+[node name="CtrlShift" type="HBoxContainer" parent="Tooltips" unique_id=337592791]
 offset_left = 4.0
 offset_top = 4.0
 offset_right = 89.0
@@ -612,52 +546,50 @@ grow_horizontal = 0
 mouse_filter = 2
 alignment = 2
 
-[node name="Ctrl" type="Label" parent="Tooltips/CtrlShift"]
+[node name="Ctrl" type="Label" parent="Tooltips/CtrlShift" unique_id=692779304]
 visible = false
 layout_mode = 2
 theme_override_styles/normal = SubResource("StyleBoxFlat_3xr3d")
 text = "Ctrl"
 
-[node name="Shift" type="Label" parent="Tooltips/CtrlShift"]
+[node name="Shift" type="Label" parent="Tooltips/CtrlShift" unique_id=649637287]
 visible = false
 layout_mode = 2
 theme_override_styles/normal = SubResource("StyleBoxFlat_5acvv")
 text = "Shift"
 
-[node name="Alt" type="Label" parent="Tooltips/CtrlShift"]
+[node name="Alt" type="Label" parent="Tooltips/CtrlShift" unique_id=1756644314]
 visible = false
 layout_mode = 2
 theme_override_styles/normal = SubResource("StyleBoxFlat_3pnlf")
 text = "Alt"
 
-[node name="ItemCursor" type="Node2D" parent="Tooltips"]
+[node name="ItemCursor" type="Node2D" parent="Tooltips" unique_id=1768190605]
 visible = false
 
-[node name="Sprite2D" type="Sprite2D" parent="Tooltips/ItemCursor"]
+[node name="Sprite2D" type="Sprite2D" parent="Tooltips/ItemCursor" unique_id=1554377473]
 position = Vector2(32, 32)
 scale = Vector2(0.25, 0.25)
 
-[node name="Polygon2D" type="Polygon2D" parent="Tooltips/ItemCursor"]
+[node name="Polygon2D" type="Polygon2D" parent="Tooltips/ItemCursor" unique_id=54543548]
 texture = SubResource("GradientTexture1D_b50pl")
 texture_rotation = -0.785398
 polygon = PackedVector2Array(0, 0, 0, 24, 24, 0)
 
-[node name="Num" type="Label" parent="Tooltips/ItemCursor"]
+[node name="Num" type="Label" parent="Tooltips/ItemCursor" unique_id=1198112830]
 offset_left = 56.0
 offset_top = 48.0
 offset_right = 96.0
 offset_bottom = 77.0
 label_settings = SubResource("LabelSettings_ubx28")
 
-[node name="MusicPlayer" type="AudioStreamPlayer" parent="."]
+[node name="MusicPlayer" type="AudioStreamPlayer" parent="." unique_id=1248171106]
 bus = &"Music"
 
-[node name="AnimationPlayer" type="AnimationPlayer" parent="MusicPlayer"]
-libraries = {
-&"": SubResource("AnimationLibrary_g33d0")
-}
+[node name="AnimationPlayer" type="AnimationPlayer" parent="MusicPlayer" unique_id=783020801]
+libraries/ = SubResource("AnimationLibrary_g33d0")
 
-[node name="ScienceTreeBG" type="ColorRect" parent="."]
+[node name="ScienceTreeBG" type="ColorRect" parent="." unique_id=658314139]
 visible = false
 modulate = Color(1, 1, 1, 0)
 material = SubResource("12")
@@ -665,7 +597,7 @@ offset_right = 1280.0
 offset_bottom = 720.0
 color = Color(0, 0, 0, 1)
 
-[node name="StarfieldUniverse" type="ColorRect" parent="."]
+[node name="StarfieldUniverse" type="ColorRect" parent="." unique_id=1465379148]
 visible = false
 modulate = Color(1, 1, 1, 0)
 material = SubResource("ShaderMaterial_ol7ro")
@@ -673,7 +605,7 @@ offset_right = 1280.0
 offset_bottom = 720.0
 mouse_filter = 2
 
-[node name="TitleBackground" type="TextureRect" parent="."]
+[node name="TitleBackground" type="TextureRect" parent="." unique_id=358574074]
 offset_right = 1280.0
 offset_bottom = 720.0
 mouse_filter = 2
@@ -681,13 +613,13 @@ texture = ExtResource("4")
 expand_mode = 1
 metadata/_edit_lock_ = true
 
-[node name="Title" type="Control" parent="."]
+[node name="Title" type="Control" parent="." unique_id=617922282]
 layout_mode = 3
 anchors_preset = 0
 offset_right = 40.0
 offset_bottom = 40.0
 
-[node name="Menu" type="PanelContainer" parent="Title"]
+[node name="Menu" type="PanelContainer" parent="Title" unique_id=1265217020]
 layout_mode = 0
 offset_left = 83.0
 offset_top = 432.0
@@ -696,43 +628,41 @@ offset_bottom = 614.0
 theme = ExtResource("7")
 theme_override_styles/panel = SubResource("StyleBoxFlat_3we6a")
 
-[node name="VBoxContainer" type="VBoxContainer" parent="Title/Menu"]
+[node name="VBoxContainer" type="VBoxContainer" parent="Title/Menu" unique_id=870828861]
 layout_mode = 2
 theme_override_constants/separation = 6
 alignment = 2
 
-[node name="Continue" type="Button" parent="Title/Menu/VBoxContainer"]
+[node name="Continue" type="Button" parent="Title/Menu/VBoxContainer" unique_id=163979397]
 visible = false
 custom_minimum_size = Vector2(0, 36)
 layout_mode = 2
 text = "Continue Save1"
 
-[node name="NewGame" type="Button" parent="Title/Menu/VBoxContainer"]
+[node name="NewGame" type="Button" parent="Title/Menu/VBoxContainer" unique_id=158765359]
 custom_minimum_size = Vector2(0, 36)
 layout_mode = 2
 text = "NEW_GAME"
 
-[node name="LoadGame" type="Button" parent="Title/Menu/VBoxContainer"]
+[node name="LoadGame" type="Button" parent="Title/Menu/VBoxContainer" unique_id=2136819336]
 custom_minimum_size = Vector2(0, 36)
 layout_mode = 2
 text = "LOAD_GAME"
 
-[node name="Settings" type="Button" parent="Title/Menu/VBoxContainer"]
+[node name="Settings" type="Button" parent="Title/Menu/VBoxContainer" unique_id=1410258520]
 custom_minimum_size = Vector2(0, 36)
 layout_mode = 2
 text = "SETTINGS"
 
-[node name="Mods" type="Button" parent="Title/Menu/VBoxContainer"]
+[node name="Mods" type="Button" parent="Title/Menu/VBoxContainer" unique_id=1105579111]
 custom_minimum_size = Vector2(0, 36)
 layout_mode = 2
 text = "MODS"
 
-[node name="AnimationPlayer" type="AnimationPlayer" parent="Title/Menu"]
-libraries = {
-&"": SubResource("AnimationLibrary_in6cd")
-}
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Title/Menu" unique_id=188580842]
+libraries/ = SubResource("AnimationLibrary_in6cd")
 
-[node name="Discord" type="TextureButton" parent="Title"]
+[node name="Discord" type="TextureButton" parent="Title" unique_id=994551793]
 layout_mode = 0
 offset_left = 841.0
 offset_top = 666.0
@@ -742,7 +672,7 @@ texture_normal = ExtResource("11")
 ignore_texture_size = true
 stretch_mode = 5
 
-[node name="GitHub" type="TextureButton" parent="Title"]
+[node name="GitHub" type="TextureButton" parent="Title" unique_id=1390906521]
 layout_mode = 0
 offset_left = 921.0
 offset_top = 666.0
@@ -752,7 +682,7 @@ texture_normal = ExtResource("6")
 ignore_texture_size = true
 stretch_mode = 5
 
-[node name="Godot" type="TextureButton" parent="Title"]
+[node name="Godot" type="TextureButton" parent="Title" unique_id=1890597678]
 layout_mode = 0
 offset_left = 1001.0
 offset_top = 666.0
@@ -762,7 +692,7 @@ texture_normal = ExtResource("5")
 ignore_texture_size = true
 stretch_mode = 5
 
-[node name="Languages" parent="Title" instance=ExtResource("9")]
+[node name="Languages" parent="Title" unique_id=831156007 instance=ExtResource("9")]
 layout_mode = 0
 anchors_preset = 0
 anchor_right = 0.0
@@ -773,17 +703,15 @@ grow_horizontal = 1
 grow_vertical = 1
 metadata/_edit_lock_ = true
 
-[node name="Autosave" type="Timer" parent="."]
+[node name="Autosave" type="Timer" parent="." unique_id=786789800]
 
-[node name="CollectPanelTimer" type="Timer" parent="."]
+[node name="CollectPanelTimer" type="Timer" parent="." unique_id=1149337831]
 one_shot = true
 
-[node name="CollectPanelAnim" type="AnimationPlayer" parent="."]
-libraries = {
-&"": SubResource("AnimationLibrary_0twxn")
-}
+[node name="CollectPanelAnim" type="AnimationPlayer" parent="." unique_id=1910063159]
+libraries/ = SubResource("AnimationLibrary_0twxn")
 
-[node name="Ship" type="TextureButton" parent="."]
+[node name="Ship" type="TextureButton" parent="." unique_id=1336021592]
 visible = false
 offset_right = 68.0
 offset_bottom = 44.0
@@ -792,16 +720,16 @@ texture_normal = ExtResource("26")
 ignore_texture_size = true
 stretch_mode = 5
 
-[node name="Fire" parent="Ship" instance=ExtResource("33")]
+[node name="Fire" parent="Ship" unique_id=805395075 instance=ExtResource("33")]
 show_behind_parent = true
 position = Vector2(8, 20)
 scale = Vector2(0.7, 0.7)
 local_coords = true
 
-[node name="Settings" type="CanvasLayer" parent="."]
+[node name="Settings" type="CanvasLayer" parent="." unique_id=1496934615]
 layer = 4
 
-[node name="Settings" type="TextureButton" parent="Settings"]
+[node name="Settings" type="TextureButton" parent="Settings" unique_id=731722659]
 offset_left = 1244.0
 offset_top = 4.0
 offset_right = 1276.0
@@ -812,18 +740,18 @@ texture_normal = ExtResource("3")
 ignore_texture_size = true
 stretch_mode = 5
 
-[node name="Star" type="Node2D" parent="."]
+[node name="Star" type="Node2D" parent="." unique_id=608223928]
 
-[node name="Sprite2D" type="Sprite2D" parent="Star"]
+[node name="Sprite2D" type="Sprite2D" parent="Star" unique_id=662016617]
 material = SubResource("18")
 position = Vector2(1084, 183)
 scale = Vector2(0.506222, 0.506222)
 texture = ExtResource("32")
 
-[node name="Stars" type="CanvasLayer" parent="."]
+[node name="Stars" type="CanvasLayer" parent="." unique_id=713435008]
 layer = -2
 
-[node name="Starfield" type="TextureRect" parent="Stars"]
+[node name="Starfield" type="TextureRect" parent="Stars" unique_id=550702297]
 modulate = Color(1, 1, 1, 0)
 offset_right = 1280.0
 offset_bottom = 720.0
@@ -832,29 +760,27 @@ expand_mode = 1
 stretch_mode = 5
 metadata/_edit_lock_ = true
 
-[node name="WhiteStars" type="Node2D" parent="Stars"]
+[node name="WhiteStars" type="Node2D" parent="Stars" unique_id=254598734]
 visible = false
 
-[node name="AnimationPlayer" type="AnimationPlayer" parent="Stars"]
-libraries = {
-&"": SubResource("AnimationLibrary_f72sx")
-}
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Stars" unique_id=841623461]
+libraries/ = SubResource("AnimationLibrary_f72sx")
 
-[node name="Stars" type="Node2D" parent="Stars"]
+[node name="Stars" type="Node2D" parent="Stars" unique_id=947199422]
 
-[node name="Camera2D" type="Camera2D" parent="."]
+[node name="Camera2D" type="Camera2D" parent="." unique_id=2113558490]
 position = Vector2(640, 360)
 
-[node name="Screenshake" parent="Camera2D" instance=ExtResource("36")]
+[node name="Screenshake" parent="Camera2D" unique_id=994485755 instance=ExtResource("36")]
 
-[node name="MMTimer" type="Timer" parent="."]
+[node name="MMTimer" type="Timer" parent="." unique_id=445352232]
 wait_time = 0.1
 one_shot = true
 autostart = true
 
-[node name="Blur" type="CanvasLayer" parent="."]
+[node name="Blur" type="CanvasLayer" parent="." unique_id=1678901885]
 
-[node name="BlurRect" type="ColorRect" parent="Blur"]
+[node name="BlurRect" type="ColorRect" parent="Blur" unique_id=1775542818]
 material = SubResource("1")
 anchors_preset = 15
 anchor_right = 1.0
@@ -868,7 +794,6 @@ metadata/_edit_lock_ = true
 [connection signal="close_button_out" from="UI/BottomInfo/CloseButton" to="." method="_on_CloseButton_close_button_out"]
 [connection signal="close_button_over" from="UI/BottomInfo/CloseButton" to="." method="_on_CloseButton_close_button_over"]
 [connection signal="close_button_pressed" from="UI/BottomInfo/CloseButton" to="." method="_on_BottomInfo_close_button_pressed"]
-[connection signal="animation_finished" from="UI/Panel/AnimationPlayer" to="." method="_on_PanelAnimationPlayer_animation_finished"]
 [connection signal="text_submitted" from="Tooltips/Command" to="." method="_on_command_text_submitted"]
 [connection signal="pressed" from="Title/Menu/VBoxContainer/Continue" to="." method="_on_continue_pressed"]
 [connection signal="pressed" from="Title/Menu/VBoxContainer/NewGame" to="." method="_on_NewGame_pressed"]

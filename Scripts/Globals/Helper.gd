@@ -56,8 +56,7 @@ func put_rsrc(container, min_size, rsrcs, remove:bool = true, show_available:boo
 		var real_time_update = false
 		var rsrc = preload("res://Scenes/Resource.tscn").instantiate()
 		var texture_node = rsrc.get_node("Texture2D")
-		var atom:bool = false
-		var tooltip = ""
+		var rsrc_display_name = ""
 		var text_node = rsrc.get_node("Text")
 		var is_enough_node = rsrc.get_node("Texture2D/IsEnough")
 		text_node.visible = collapse_threshold == -1 or len(rsrcs.keys()) <= collapse_threshold
@@ -66,20 +65,18 @@ func put_rsrc(container, min_size, rsrcs, remove:bool = true, show_available:boo
 		var mass_str = ""
 		var rsrc_type = ""
 		if rsrc_name is int:
-			tooltip = Item.name(rsrc_name)
+			rsrc_display_name = Item.name(rsrc_name)
 			texture_node.texture_normal = load("res://Graphics/Items/%s/%s.png" % [Item.icon_directory(Item.data[rsrc_name].type), Item.data[rsrc_name].item_name])
 			text_node.text = str(rsrcs[rsrc_name])
 		else:
-			tooltip = tr(rsrc_name.to_upper())
+			rsrc_display_name = tr(rsrc_name.to_upper())
 			if rsrc_name in ["money", "minerals", "energy", "SP"]:
 				current_rsrc = game[rsrc_name]
 				format_text(text_node, texture_node, "Icons/" + rsrc_name, show_available, rsrcs[rsrc_name], current_rsrc)
 			elif rsrc_name == "stone":
 				current_rsrc = get_sum_of_dict(game.stone)
-				if tooltip == "Stone" and Settings.op_cursor:
-					tooltip = "Rok"
-				if not game.show.has("mining"):
-					tooltip += "\n%s" % [tr("STONE_HELP")]
+				if rsrc_display_name == "Stone" and Settings.op_cursor:
+					rsrc_display_name = "Rok"
 				mass_str = "kg"
 				var stone_amount
 				if rsrcs[rsrc_name] is float:
@@ -93,8 +90,6 @@ func put_rsrc(container, min_size, rsrcs, remove:bool = true, show_available:boo
 			elif game.mats.has(rsrc_name):
 				rsrc_type = "mats"
 				current_rsrc = game.mats[rsrc_name]
-				if rsrc_name == "silicon" and not game.show.has("silicon"):
-					tooltip += "\n%s" % [tr("HOW2SILICON")]
 				mass_str = "kg"
 				format_text(text_node, texture_node, "Materials/" + rsrc_name, show_available, rsrcs[rsrc_name], current_rsrc, mass_str)
 			elif game.mets.has(rsrc_name):
@@ -105,8 +100,7 @@ func put_rsrc(container, min_size, rsrcs, remove:bool = true, show_available:boo
 			elif game.atoms.has(rsrc_name):
 				rsrc_type = "atoms"
 				current_rsrc = game.atoms[rsrc_name]
-				atom = true
-				tooltip = tr(("%s_NAME" % rsrc_name).to_upper())
+				rsrc_display_name = tr(("%s_NAME" % rsrc_name).to_upper())
 				mass_str = "mol"
 				format_text(text_node, texture_node, "Atoms/" + rsrc_name, show_available, rsrcs[rsrc_name], current_rsrc, mass_str)
 			elif game.particles.has(rsrc_name):
@@ -121,17 +115,17 @@ func put_rsrc(container, min_size, rsrcs, remove:bool = true, show_available:boo
 			if current_rsrc < rsrcs[rsrc_name]:
 				is_enough_node.texture = preload("res://Graphics/Icons/Annotator/cross.png")
 			real_time_update = true
-		if mouse_events:
-			if is_enough_node.visible:
-				tooltip += ": " + get_rsrc_available_text(current_rsrc, rsrcs[rsrc_name], mass_str, true)
-			rsrc.get_node("Texture2D").connect("mouse_entered", game.show_tooltip.bind(tooltip))
-			rsrc.get_node("Texture2D").connect("mouse_exited", game.hide_tooltip)
-		texture_node.custom_minimum_size = Vector2(1, 1) * min_size
 		container.add_child(rsrc)
+		if mouse_events:
+			rsrc.connect_mouse_events()
+		texture_node.custom_minimum_size = Vector2(1, 1) * min_size
 		data.append({"rsrc":rsrc, "name":rsrc_name})
-		if real_time_update:
-			game.update_rsrcs.append({"node":rsrc, "name":rsrc_name, "type":rsrc_type, "rsrcs_required":rsrcs[rsrc_name], "mass_str":mass_str})
-			rsrc.tree_exiting.connect(game.update_rsrcs.erase.bind(rsrc))
+		rsrc.rsrc_name = rsrc_name
+		rsrc.rsrc_display_name = rsrc_display_name
+		rsrc.rsrc_type = rsrc_type
+		rsrc.rsrcs_required = rsrcs[rsrc_name]
+		rsrc.mass_str = mass_str
+		rsrc.set_process(real_time_update)
 	return data
 
 #Converts time in seconds to string format

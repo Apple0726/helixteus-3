@@ -29,7 +29,7 @@ func set_tooltip_position():
 		position.y = max(game.mouse_pos.y - size.y - 5, 0)
 	else:
 		if tooltip_display_position_x == 0:
-			position.x = min(game.mouse_pos.x + 9, (1278 if game.get_node("UI/Panel").modulate.a == 0.0 else 900) - size.x)
+			position.x = min(game.mouse_pos.x + 9, (880 if game.get_node("UI/Panel").visible else 1278) - size.x)
 		elif tooltip_display_position_x == 1:
 			position.x = max(game.mouse_pos.x - size.x - 9, 0)
 		if tooltip_display_position_y == 0:
