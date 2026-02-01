@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=3 uid="uid://yyqlhh3cjdh6"]
+[gd_scene format=3 uid="uid://yyqlhh3cjdh6"]
 
 [ext_resource type="PackedScene" uid="uid://1hq6qpr1oa3i" path="res://Scenes/AdvButton.tscn" id="1"]
 [ext_resource type="Texture2D" uid="uid://ds6nct7g63284" path="res://Graphics/Icons/Arrow.png" id="2"]
@@ -31,7 +31,7 @@ shadow_size = 2
 shadow_color = Color(0, 0, 0, 0.372549)
 shadow_offset = Vector2(2, 2)
 
-[node name="UpgradePanel" type="Control"]
+[node name="UpgradePanel" type="Control" unique_id=1171966077]
 layout_mode = 3
 anchors_preset = 0
 offset_right = 252.0
@@ -43,7 +43,7 @@ metadata/_edit_lock_ = true
 metadata/_edit_vertical_guides_ = [640.0]
 metadata/_edit_horizontal_guides_ = [360.0]
 
-[node name="GUI" type="NinePatchRect" parent="."]
+[node name="GUI" type="NinePatchRect" parent="." unique_id=1629348157]
 layout_mode = 0
 offset_left = 356.0
 offset_top = 160.0
@@ -52,19 +52,19 @@ offset_bottom = 560.0
 texture = ExtResource("3_qfq0o")
 patch_margin_left = 408
 patch_margin_top = 80
-patch_margin_right = 80
+patch_margin_right = 160
 patch_margin_bottom = 64
 axis_stretch_horizontal = 1
 metadata/_edit_horizontal_guides_ = [596.0]
 
-[node name="Panel" type="Panel" parent="."]
+[node name="Panel" type="Panel" parent="." unique_id=1771068067]
 layout_mode = 0
 offset_left = 392.0
 offset_top = 292.0
 offset_right = 888.0
 offset_bottom = 524.0
 
-[node name="Building" type="TextureRect" parent="."]
+[node name="Building" type="TextureRect" parent="." unique_id=2091231954]
 modulate = Color(1, 1, 1, 0.286275)
 layout_mode = 0
 offset_left = 416.0
@@ -75,7 +75,7 @@ texture = ExtResource("4_kd7jk")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="CloseButton" type="TextureButton" parent="."]
+[node name="CloseButton" type="TextureButton" parent="." unique_id=1123948758]
 layout_mode = 0
 offset_left = 858.0
 offset_top = 176.0
@@ -84,7 +84,7 @@ offset_bottom = 225.0
 texture_normal = ExtResource("4_023v2")
 texture_hover = ExtResource("5_cj333")
 
-[node name="PathButtons" type="HBoxContainer" parent="."]
+[node name="PathButtons" type="HBoxContainer" parent="." unique_id=239807864]
 custom_minimum_size = Vector2(0, 35)
 layout_mode = 1
 offset_left = 392.0
@@ -94,19 +94,19 @@ offset_bottom = 291.0
 size_flags_horizontal = 3
 theme_override_constants/separation = 0
 
-[node name="Path1" parent="PathButtons" instance=ExtResource("1")]
+[node name="Path1" parent="PathButtons" unique_id=1077885950 instance=ExtResource("1")]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="Path2" parent="PathButtons" instance=ExtResource("1")]
+[node name="Path2" parent="PathButtons" unique_id=1688798454 instance=ExtResource("1")]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="Path3" parent="PathButtons" instance=ExtResource("1")]
+[node name="Path3" parent="PathButtons" unique_id=631645799 instance=ExtResource("1")]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="CurrentAndNext" type="RichTextLabel" parent="."]
+[node name="CurrentAndNext" type="RichTextLabel" parent="." unique_id=1791684315]
 clip_contents = false
 layout_mode = 1
 offset_left = 556.0
@@ -117,7 +117,7 @@ size_flags_horizontal = 3
 bbcode_enabled = true
 scroll_active = false
 
-[node name="Arrow" type="TextureRect" parent="."]
+[node name="Arrow" type="TextureRect" parent="." unique_id=2010253480]
 modulate = Color(1, 1, 1, 0.635294)
 layout_mode = 1
 offset_left = 692.0
@@ -129,7 +129,7 @@ size_flags_horizontal = 4
 size_flags_vertical = 4
 texture = ExtResource("2")
 
-[node name="CurrentLv" type="Label" parent="."]
+[node name="CurrentLv" type="Label" parent="." unique_id=1993759533]
 layout_mode = 1
 offset_left = 604.0
 offset_top = 324.0
@@ -139,7 +139,7 @@ text = "Level 1"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="DivBy" type="Label" parent="."]
+[node name="DivBy" type="Label" parent="." unique_id=412286801]
 layout_mode = 1
 offset_left = 416.0
 offset_top = 444.0
@@ -148,7 +148,7 @@ offset_bottom = 476.0
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="NextLv" type="SpinBox" parent="."]
+[node name="NextLv" type="SpinBox" parent="." unique_id=687276682]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -167,7 +167,7 @@ allow_greater = true
 alignment = 1
 select_all_on_focus = true
 
-[node name="ScrollContainer" type="ScrollContainer" parent="."]
+[node name="ScrollContainer" type="ScrollContainer" parent="." unique_id=367036740]
 layout_mode = 1
 offset_left = 396.0
 offset_top = 480.0
@@ -176,13 +176,13 @@ offset_bottom = 520.0
 theme_override_styles/panel = SubResource("StyleBoxFlat_xcyis")
 vertical_scroll_mode = 0
 
-[node name="Costs" type="HBoxContainer" parent="ScrollContainer"]
+[node name="Costs" type="HBoxContainer" parent="ScrollContainer" unique_id=1699963979]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 theme_override_constants/separation = 10
 
-[node name="Upgrade" type="Button" parent="."]
+[node name="Upgrade" type="Button" parent="." unique_id=13979739]
 layout_mode = 1
 offset_left = 764.0
 offset_top = 480.0
@@ -192,7 +192,7 @@ size_flags_horizontal = 3
 theme = ExtResource("3")
 text = "UPGRADE"
 
-[node name="Label" type="Label" parent="."]
+[node name="Label" type="Label" parent="." unique_id=956951671]
 custom_minimum_size = Vector2(0, 38)
 layout_mode = 1
 offset_left = 404.0

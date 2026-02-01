@@ -26,7 +26,8 @@ func get_rsrc_available_text(rsrc_available:float, rsrc_cost:float, mass_str:Str
 
 #put_rsrc helper function
 func format_text(text_node, texture, path:String, show_available:bool, rsrc_cost:float, rsrc_available:float, mass_str:String = ""):
-	texture.texture_normal = load("res://Graphics/" + path + ".png")
+	if path != "":
+		texture.texture_normal = load("res://Graphics/" + path + ".png")
 	var text:String
 	var color:Color = Color.WHITE
 	if show_available:
@@ -46,32 +47,34 @@ func format_text(text_node, texture, path:String, show_available:bool, rsrc_cost
 	text_node["theme_override_colors/font_color"] = color
 
 # collapse_threshold: number of icons beyond which the text is not displayed (only icons are displayed)
-func put_rsrc(container, min_size, objs, remove:bool = true, show_available:bool = false, mouse_events:bool = true, collapse_threshold:int = -1):
+func put_rsrc(container, min_size, rsrcs, remove:bool = true, show_available:bool = false, mouse_events:bool = true, collapse_threshold:int = -1):
 	if remove:
 		for child in container.get_children():
 			child.free()
 	var data = []
-	for obj in objs:
+	for rsrc_name in rsrcs:
+		var real_time_update = false
 		var rsrc = preload("res://Scenes/Resource.tscn").instantiate()
-		var texture = rsrc.get_node("Texture2D")
+		var texture_node = rsrc.get_node("Texture2D")
 		var atom:bool = false
 		var tooltip = ""
 		var text_node = rsrc.get_node("Text")
 		var is_enough_node = rsrc.get_node("Texture2D/IsEnough")
-		text_node.visible = collapse_threshold == -1 or len(objs.keys()) <= collapse_threshold
+		text_node.visible = collapse_threshold == -1 or len(rsrcs.keys()) <= collapse_threshold
 		is_enough_node.visible = not text_node.visible
 		var current_rsrc:float
 		var mass_str = ""
-		if obj is int:
-			tooltip = Item.name(obj)
-			texture.texture_normal = load("res://Graphics/Items/%s/%s.png" % [Item.icon_directory(Item.data[obj].type), Item.data[obj].item_name])
-			text_node.text = str(objs[obj])
+		var rsrc_type = ""
+		if rsrc_name is int:
+			tooltip = Item.name(rsrc_name)
+			texture_node.texture_normal = load("res://Graphics/Items/%s/%s.png" % [Item.icon_directory(Item.data[rsrc_name].type), Item.data[rsrc_name].item_name])
+			text_node.text = str(rsrcs[rsrc_name])
 		else:
-			tooltip = tr(obj.to_upper())
-			if obj in ["money", "minerals", "energy", "SP"]:
-				current_rsrc = game[obj]
-				format_text(text_node, texture, "Icons/" + obj, show_available, objs[obj], current_rsrc)
-			elif obj == "stone":
+			tooltip = tr(rsrc_name.to_upper())
+			if rsrc_name in ["money", "minerals", "energy", "SP"]:
+				current_rsrc = game[rsrc_name]
+				format_text(text_node, texture_node, "Icons/" + rsrc_name, show_available, rsrcs[rsrc_name], current_rsrc)
+			elif rsrc_name == "stone":
 				current_rsrc = get_sum_of_dict(game.stone)
 				if tooltip == "Stone" and Settings.op_cursor:
 					tooltip = "Rok"
@@ -79,48 +82,56 @@ func put_rsrc(container, min_size, objs, remove:bool = true, show_available:bool
 					tooltip += "\n%s" % [tr("STONE_HELP")]
 				mass_str = "kg"
 				var stone_amount
-				if objs[obj] is float:
-					stone_amount = objs[obj]
-				elif objs[obj] is Dictionary:
-					stone_amount = get_sum_of_dict(objs[obj])
-				format_text(text_node, texture, "Icons/stone", show_available, stone_amount, current_rsrc, mass_str)
-			elif obj == "time":
-				texture.texture_normal = Data.time_icon
-				text_node.text = time_to_str(objs[obj])
-			elif game.mats.has(obj):
-				current_rsrc = game.mats[obj]
-				if obj == "silicon" and not game.show.has("silicon"):
+				if rsrcs[rsrc_name] is float:
+					stone_amount = rsrcs[rsrc_name]
+				elif rsrcs[rsrc_name] is Dictionary:
+					stone_amount = get_sum_of_dict(rsrcs[rsrc_name])
+				format_text(text_node, texture_node, "Icons/stone", show_available, stone_amount, current_rsrc, mass_str)
+			elif rsrc_name == "time":
+				texture_node.texture_normal = Data.time_icon
+				text_node.text = time_to_str(rsrcs[rsrc_name])
+			elif game.mats.has(rsrc_name):
+				rsrc_type = "mats"
+				current_rsrc = game.mats[rsrc_name]
+				if rsrc_name == "silicon" and not game.show.has("silicon"):
 					tooltip += "\n%s" % [tr("HOW2SILICON")]
 				mass_str = "kg"
-				format_text(text_node, texture, "Materials/" + obj, show_available, objs[obj], current_rsrc, mass_str)
-			elif game.mets.has(obj):
-				current_rsrc = game.mets[obj]
+				format_text(text_node, texture_node, "Materials/" + rsrc_name, show_available, rsrcs[rsrc_name], current_rsrc, mass_str)
+			elif game.mets.has(rsrc_name):
+				rsrc_type = "mets"
+				current_rsrc = game.mets[rsrc_name]
 				mass_str = "kg"
-				format_text(text_node, texture, "Metals/" + obj, show_available, objs[obj], current_rsrc, mass_str)
-			elif game.atoms.has(obj):
-				current_rsrc = game.atoms[obj]
+				format_text(text_node, texture_node, "Metals/" + rsrc_name, show_available, rsrcs[rsrc_name], current_rsrc, mass_str)
+			elif game.atoms.has(rsrc_name):
+				rsrc_type = "atoms"
+				current_rsrc = game.atoms[rsrc_name]
 				atom = true
-				tooltip = tr(("%s_NAME" % obj).to_upper())
+				tooltip = tr(("%s_NAME" % rsrc_name).to_upper())
 				mass_str = "mol"
-				format_text(text_node, texture, "Atoms/" + obj, show_available, objs[obj], current_rsrc, mass_str)
-			elif game.particles.has(obj):
-				current_rsrc = game.particles[obj]
+				format_text(text_node, texture_node, "Atoms/" + rsrc_name, show_available, rsrcs[rsrc_name], current_rsrc, mass_str)
+			elif game.particles.has(rsrc_name):
+				rsrc_type = "particles"
+				current_rsrc = game.particles[rsrc_name]
 				mass_str = "mol"
-				format_text(text_node, texture, "Particles/" + obj, show_available, objs[obj], current_rsrc, mass_str)
-		if show_available and obj != "time":
-			texture.material = ShaderMaterial.new()
-			texture.material.shader = preload("res://Shaders/Resource.gdshader")
-			texture.material.set_shader_parameter("fill", current_rsrc / objs[obj])
-			if current_rsrc < objs[obj]:
+				format_text(text_node, texture_node, "Particles/" + rsrc_name, show_available, rsrcs[rsrc_name], current_rsrc, mass_str)
+		if show_available and rsrc_name != "time":
+			texture_node.material = ShaderMaterial.new()
+			texture_node.material.shader = preload("res://Shaders/Resource.gdshader")
+			texture_node.material.set_shader_parameter("fill", current_rsrc / rsrcs[rsrc_name])
+			if current_rsrc < rsrcs[rsrc_name]:
 				is_enough_node.texture = preload("res://Graphics/Icons/Annotator/cross.png")
+			real_time_update = true
 		if mouse_events:
 			if is_enough_node.visible:
-				tooltip += ": " + get_rsrc_available_text(current_rsrc, objs[obj], mass_str, true)
+				tooltip += ": " + get_rsrc_available_text(current_rsrc, rsrcs[rsrc_name], mass_str, true)
 			rsrc.get_node("Texture2D").connect("mouse_entered", game.show_tooltip.bind(tooltip))
 			rsrc.get_node("Texture2D").connect("mouse_exited", game.hide_tooltip)
-		texture.custom_minimum_size = Vector2(1, 1) * min_size
+		texture_node.custom_minimum_size = Vector2(1, 1) * min_size
 		container.add_child(rsrc)
-		data.append({"rsrc":rsrc, "name":obj})
+		data.append({"rsrc":rsrc, "name":rsrc_name})
+		if real_time_update:
+			game.update_rsrcs.append({"node":rsrc, "name":rsrc_name, "type":rsrc_type, "rsrcs_required":rsrcs[rsrc_name], "mass_str":mass_str})
+			rsrc.tree_exiting.connect(game.update_rsrcs.erase.bind(rsrc))
 	return data
 
 #Converts time in seconds to string format

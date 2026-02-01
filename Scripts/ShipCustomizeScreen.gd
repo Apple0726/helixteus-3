@@ -69,11 +69,11 @@ func _ready() -> void:
 		elif i == ShipClass.OFFENSIVE:
 			passive_ability_text = tr("OFFENSIVE_PASSIVE_ABILITY") % [3]
 		elif i == ShipClass.DEFENSIVE:
-			passive_ability_text = tr("DEFENSIVE_PASSIVE_ABILITY") % [2]
+			passive_ability_text = tr("DEFENSIVE_PASSIVE_ABILITY") % [3]
 		elif i == ShipClass.ACCURATE:
-			passive_ability_text = tr("ACCURATE_PASSIVE_ABILITY") % [2]
+			passive_ability_text = tr("ACCURATE_PASSIVE_ABILITY") % [3]
 		elif i == ShipClass.AGILE:
-			passive_ability_text = tr("AGILE_PASSIVE_ABILITY") % [2]
+			passive_ability_text = tr("AGILE_PASSIVE_ABILITY") % [3]
 		elif i == ShipClass.ENERGETIC:
 			passive_ability_text = tr("ENERGETIC_PASSIVE_ABILITY") % [30, 25]
 		elif i == ShipClass.SUPPORT:

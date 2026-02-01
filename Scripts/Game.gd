@@ -3818,6 +3818,7 @@ var quadrant_bottom_left:PackedVector2Array = [Vector2(0, 360), Vector2(640, 360
 var quadrant_bottom_right:PackedVector2Array = [Vector2(640, 360), Vector2(1280, 360), Vector2(1280, 720), Vector2(640, 720)]
 @onready var fps_text = $Tooltips/FPS
 var last_process_time = Time.get_unix_time_from_system()
+var update_rsrcs = []
 
 func _process(_delta):
 	if _delta == 0:
@@ -3858,6 +3859,17 @@ func _process(_delta):
 		if is_instance_valid(HUD) and is_ancestor_of(HUD):
 			HUD.update_minerals()
 			HUD.update_money_energy_SP()
+	for rsrc_dict in update_rsrcs:
+		var rsrc:float
+		if rsrc_dict.type != "":
+			rsrc = self[rsrc_dict.type][rsrc_dict.name]
+		elif rsrc_dict.name in ["money", "minerals", "energy", "SP"]:
+			rsrc = self[rsrc_dict.name]
+		elif rsrc_dict.name == "stone":
+			rsrc = Helper.get_sum_of_dict(stone)
+		if is_instance_valid(rsrc_dict.node):
+			Helper.format_text(rsrc_dict.node.get_node("Text"), rsrc_dict.node.get_node("Texture2D"), "", true, rsrc_dict.rsrcs_required, rsrc, rsrc_dict.mass_str)
+			rsrc_dict.node.get_node("Texture2D").material.set_shader_parameter("fill", rsrc / rsrc_dict.rsrcs_required)
 
 var mouse_pos = Vector2.ZERO
 @onready var item_cursor = $Tooltips/ItemCursor
