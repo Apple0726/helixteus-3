@@ -48,11 +48,13 @@ func _ready() -> void:
 				$MainPanel.get_node("%sLevels/Path%s/Level%s" % [weapon, path+1, lv+1]).mouse_exited.connect(game.hide_tooltip)
 	seed(p_i.seed)
 	$PlanetBG.texture = load("res://Graphics/Planets/%s.png" % p_i.type)
-	$PlanetBG.scale *= randf_range(0.6, 1.1) * 640.0 / $PlanetBG.texture.get_width()
+	var random_depth = randf_range(0.6, 1.1)
+	$PlanetBG.scale *= random_depth * 640.0 / $PlanetBG.texture.get_width()
+	$PlanetLight.scale *= 1.0 / $PlanetBG.scale.x
 	$PlanetBG.position.x = randf_range(180.0, 1100.0)
 	$PlanetBG.position.y = randf_range(180.0, 540.0)
-	$PlanetBG/PointLight2D.position = -527.0 * Vector2.from_angle(p_i.angle)
-	$PlanetBG/PointLight2D.energy = clamp(remap(p_i.temperature, -270.0, 600.0, 0.0, 22.0), 0.0, 22.0)
+	$PlanetLight.position = -200.0 * random_depth * Vector2.from_angle(p_i.angle) + $PlanetBG.position
+	$PlanetLight.energy = clamp(remap(p_i.temperature, -270.0, 600.0, 0.0, 8.0), 0.0, 8.0)
 	randomize()
 
 func show_weapon_tooltip(weapon: String, path: int, lv: int):

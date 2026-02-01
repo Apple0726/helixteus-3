@@ -1887,7 +1887,7 @@ func add_universe():
 		generate_clusters(c_u)
 		universe_data[c_u].discovered = true
 	add_obj("universe")
-	HUD.switch_btn.texture_normal = preload("res://Graphics/Buttons/DimensionView.png")
+	HUD.switch_btn_texture.texture = preload("res://Graphics/Buttons/DimensionView.png")
 
 func add_cluster():
 	if obj_exists("Clusters", c_c):
@@ -1916,7 +1916,7 @@ func add_cluster():
 		var hue:float = fmod(r + 300, 1000.0) / 1000.0
 		var sat:float = pow(fmod(th + PI, 10.0) / 10.0, 0.2)
 		$ClusterBG.change_color(Color.from_hsv(hue, sat, 0.6))
-	HUD.switch_btn.texture_normal = preload("res://Graphics/Buttons/UniverseView.png")
+	HUD.switch_btn_texture.texture = preload("res://Graphics/Clusters/universe.png")
 	if len(ship_data) == 3 and u_i.lv >= 60:
 		popup_window(tr("WANDERING_SHIP_DESC"), tr("WANDERING_SHIP"))
 		get_4th_ship()
@@ -1938,7 +1938,7 @@ func add_galaxy():
 			galaxy_data[c_g].name = "%s %s" % [tr("GALAXY"), c_g]
 		await start_system_generation()
 	add_obj("galaxy")
-	HUD.switch_btn.texture_normal = preload("res://Graphics/Buttons/ClusterView.png")
+	HUD.switch_btn_texture.texture = preload("res://Graphics/Clusters/0.png")
 	if len(ship_data) == 2 and u_i.lv >= 40:
 		popup_window(tr("WANDERING_SHIP_DESC"), tr("WANDERING_SHIP"))
 		get_3rd_ship()
@@ -2020,7 +2020,7 @@ func add_system():
 		generate_planets(c_s)
 	show.bookmarks = true
 	add_obj("system")
-	HUD.switch_btn.texture_normal = preload("res://Graphics/Buttons/GalaxyView.png")
+	HUD.switch_btn_texture.texture = load("res://Graphics/Galaxies/%s.png" % galaxy_data[c_g].type)
 	if len(ship_data) == 1 and u_i.lv >= 20:
 		popup_window(tr("WANDERING_SHIP_DESC"), tr("WANDERING_SHIP"))
 		get_2nd_ship()
@@ -2038,7 +2038,7 @@ func add_planet(new_game:bool = false):
 		generate_tiles(c_p)
 	planet_HUD = load("res://Scenes/Planet/PlanetHUD.tscn").instantiate()
 	$UI.add_child(planet_HUD)
-	HUD.switch_btn.texture_normal = preload("res://Graphics/Buttons/SystemView.png")
+	HUD.switch_btn_texture.texture = preload("res://Graphics/Buttons/SystemView.png")
 	if new_game:
 		planet_HUD.get_node("VBoxContainer/Construct").material.set_shader_parameter("color", Color(1.0, 0.75, 0.0, 1.0))
 		planet_HUD.get_node("VBoxContainer/Construct/AnimationPlayer").play("FlashRepeat")

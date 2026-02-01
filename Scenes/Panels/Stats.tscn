@@ -1,4 +1,4 @@
-[gd_scene load_steps=50 format=3 uid="uid://v1nifipd62vd"]
+[gd_scene format=3 uid="uid://v1nifipd62vd"]
 
 [ext_resource type="Script" uid="uid://dlrkm02n2didl" path="res://Scripts/StatsPanel.gd" id="1"]
 [ext_resource type="PackedScene" uid="uid://1hq6qpr1oa3i" path="res://Scenes/AdvButton.tscn" id="2"]
@@ -16,7 +16,6 @@
 [ext_resource type="Texture2D" uid="uid://c5xyhmopvy4na" path="res://Graphics/Achievements/HypergiantV.png" id="13"]
 [ext_resource type="Texture2D" uid="uid://c5vh2kqt84l7q" path="res://Graphics/Achievements/Hypergiant.png" id="14"]
 [ext_resource type="Texture2D" uid="uid://bs2osuaf27a1r" path="res://Graphics/Achievements/HypergiantXX.png" id="15"]
-[ext_resource type="Texture2D" uid="uid://bto3uh5bkcx83" path="res://Graphics/Achievements/20Planets.png" id="16"]
 [ext_resource type="Texture2D" uid="uid://b88a0f6tg5kqi" path="res://Graphics/Science/GS.png" id="17"]
 [ext_resource type="Texture2D" uid="uid://dxjlx3yjmlywi" path="res://Graphics/Ships/Ship2.png" id="18"]
 [ext_resource type="Texture2D" uid="uid://b8ga5o8bhm1hb" path="res://Graphics/Ships/Ship1.png" id="19"]
@@ -25,6 +24,7 @@
 [ext_resource type="Texture2D" uid="uid://cmyhmlmoai4wo" path="res://Graphics/Planets/Other/BG.png" id="22"]
 [ext_resource type="Texture2D" uid="uid://bpuwwlxltaow4" path="res://Graphics/Tiles/cave.png" id="23"]
 [ext_resource type="Texture2D" uid="uid://1300penq25d5" path="res://Graphics/Pickaxes/stick.png" id="24"]
+[ext_resource type="Texture2D" uid="uid://chrk4kwpyhk0l" path="res://Graphics/Buttons/SystemView.png" id="24_0kyuu"]
 [ext_resource type="Texture2D" uid="uid://dvwn4jgt0lyrx" path="res://Graphics/Ships/Probe2.png" id="25"]
 [ext_resource type="Texture2D" uid="uid://bwrgdgrthxh2q" path="res://Graphics/HX/2_4.png" id="26"]
 [ext_resource type="Texture2D" uid="uid://c0gbngpg4gt08" path="res://Graphics/Misc/Physics.png" id="27"]
@@ -60,7 +60,7 @@ shadow_size = 2
 shadow_color = Color(0, 0, 0, 0.372549)
 shadow_offset = Vector2(2, 2)
 
-[node name="StatsPanel" type="Control"]
+[node name="StatsPanel" type="Control" unique_id=1357801737]
 layout_mode = 3
 anchors_preset = 8
 anchor_left = 0.5
@@ -76,7 +76,7 @@ grow_vertical = 2
 theme = ExtResource("5")
 script = ExtResource("1")
 
-[node name="GUI" type="TextureRect" parent="."]
+[node name="GUI" type="TextureRect" parent="." unique_id=2105047738]
 layout_mode = 0
 offset_left = 80.0
 offset_top = 52.0
@@ -85,7 +85,7 @@ offset_bottom = 671.0
 mouse_filter = 2
 texture = ExtResource("3_0kyuu")
 
-[node name="CloseButton" type="TextureButton" parent="."]
+[node name="CloseButton" type="TextureButton" parent="." unique_id=1139866399]
 layout_mode = 0
 offset_left = 1136.0
 offset_top = 67.0
@@ -94,7 +94,7 @@ offset_bottom = 116.0
 texture_normal = ExtResource("4_jvqxs")
 texture_hover = ExtResource("5_878hh")
 
-[node name="Title" type="Label" parent="."]
+[node name="Title" type="Label" parent="." unique_id=2041486071]
 custom_minimum_size = Vector2(0, 38)
 layout_mode = 1
 anchors_preset = 10
@@ -108,7 +108,7 @@ theme_override_font_sizes/font_size = 18
 text = "Achievements & statistics"
 label_settings = SubResource("LabelSettings_vi1vb")
 
-[node name="TabBar" type="HBoxContainer" parent="."]
+[node name="TabBar" type="HBoxContainer" parent="." unique_id=2116808102]
 layout_mode = 0
 offset_left = 152.0
 offset_top = 160.0
@@ -117,22 +117,22 @@ offset_bottom = 194.0
 theme_override_constants/separation = 0
 alignment = 1
 
-[node name="Achievements" parent="TabBar" instance=ExtResource("2")]
+[node name="Achievements" parent="TabBar" unique_id=158584635 instance=ExtResource("2")]
 layout_mode = 2
 size_flags_horizontal = 3
 button_text = "ACHIEVEMENTS"
 
-[node name="Statistics" parent="TabBar" instance=ExtResource("2")]
+[node name="Statistics" parent="TabBar" unique_id=688210079 instance=ExtResource("2")]
 layout_mode = 2
 size_flags_horizontal = 3
 button_text = "STATISTICS"
 
-[node name="Achievements" type="Control" parent="."]
+[node name="Achievements" type="Control" parent="." unique_id=428058700]
 anchors_preset = 0
 offset_right = 40.0
 offset_bottom = 40.0
 
-[node name="Progress" type="Label" parent="Achievements"]
+[node name="Progress" type="Label" parent="Achievements" unique_id=1671157336]
 custom_minimum_size = Vector2(0, 38)
 layout_mode = 0
 offset_left = 488.0
@@ -143,20 +143,20 @@ text = "Achievements earned: 31/47"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="ScrollContainer" type="ScrollContainer" parent="Achievements"]
+[node name="ScrollContainer" type="ScrollContainer" parent="Achievements" unique_id=1335001039]
 layout_mode = 0
 offset_left = 152.0
 offset_top = 200.0
 offset_right = 1128.0
 offset_bottom = 640.0
 
-[node name="HBox" type="HBoxContainer" parent="Achievements/ScrollContainer"]
+[node name="HBox" type="HBoxContainer" parent="Achievements/ScrollContainer" unique_id=1561255408]
 layout_mode = 2
 
-[node name="Labels" type="VBoxContainer" parent="Achievements/ScrollContainer/HBox"]
+[node name="Labels" type="VBoxContainer" parent="Achievements/ScrollContainer/HBox" unique_id=2087280694]
 layout_mode = 2
 
-[node name="Money" type="Label" parent="Achievements/ScrollContainer/HBox/Labels"]
+[node name="Money" type="Label" parent="Achievements/ScrollContainer/HBox/Labels" unique_id=787022905]
 custom_minimum_size = Vector2(0, 60)
 layout_mode = 2
 size_flags_vertical = 1
@@ -164,35 +164,35 @@ text = "MONEY"
 horizontal_alignment = 2
 vertical_alignment = 1
 
-[node name="Conquest" type="Label" parent="Achievements/ScrollContainer/HBox/Labels"]
+[node name="Conquest" type="Label" parent="Achievements/ScrollContainer/HBox/Labels" unique_id=1440075577]
 custom_minimum_size = Vector2(0, 60)
 layout_mode = 2
 text = "CONQUEST"
 horizontal_alignment = 2
 vertical_alignment = 1
 
-[node name="Construct" type="Label" parent="Achievements/ScrollContainer/HBox/Labels"]
+[node name="Construct" type="Label" parent="Achievements/ScrollContainer/HBox/Labels" unique_id=283532343]
 custom_minimum_size = Vector2(0, 60)
 layout_mode = 2
 text = "CONSTRUCT"
 horizontal_alignment = 2
 vertical_alignment = 1
 
-[node name="Exploration" type="Label" parent="Achievements/ScrollContainer/HBox/Labels"]
+[node name="Exploration" type="Label" parent="Achievements/ScrollContainer/HBox/Labels" unique_id=101999757]
 custom_minimum_size = Vector2(0, 192)
 layout_mode = 2
 text = "EXPLORATION"
 horizontal_alignment = 2
 vertical_alignment = 1
 
-[node name="Progression" type="Label" parent="Achievements/ScrollContainer/HBox/Labels"]
+[node name="Progression" type="Label" parent="Achievements/ScrollContainer/HBox/Labels" unique_id=781091992]
 custom_minimum_size = Vector2(0, 60)
 layout_mode = 2
 text = "PROGRESSION"
 horizontal_alignment = 2
 vertical_alignment = 1
 
-[node name="Random" type="Label" parent="Achievements/ScrollContainer/HBox/Labels"]
+[node name="Random" type="Label" parent="Achievements/ScrollContainer/HBox/Labels" unique_id=347773407]
 custom_minimum_size = Vector2(0, 60)
 layout_mode = 2
 size_flags_vertical = 6
@@ -200,378 +200,377 @@ text = "RANDOM"
 horizontal_alignment = 2
 vertical_alignment = 1
 
-[node name="Slots" type="VBoxContainer" parent="Achievements/ScrollContainer/HBox"]
+[node name="Slots" type="VBoxContainer" parent="Achievements/ScrollContainer/HBox" unique_id=1935518586]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="money" type="GridContainer" parent="Achievements/ScrollContainer/HBox/Slots"]
+[node name="money" type="GridContainer" parent="Achievements/ScrollContainer/HBox/Slots" unique_id=1819810863]
 layout_mode = 2
 columns = 12
 
-[node name="0" parent="Achievements/ScrollContainer/HBox/Slots/money" instance=ExtResource("4")]
+[node name="0" parent="Achievements/ScrollContainer/HBox/Slots/money" unique_id=1622672622 instance=ExtResource("4")]
 layout_mode = 2
 achievement_icon = ExtResource("6")
 number = 1000.0
 
-[node name="1" parent="Achievements/ScrollContainer/HBox/Slots/money" instance=ExtResource("4")]
+[node name="1" parent="Achievements/ScrollContainer/HBox/Slots/money" unique_id=1777526909 instance=ExtResource("4")]
 layout_mode = 2
 achievement_icon = ExtResource("6")
 number = 1000000.0
 
-[node name="2" parent="Achievements/ScrollContainer/HBox/Slots/money" instance=ExtResource("4")]
+[node name="2" parent="Achievements/ScrollContainer/HBox/Slots/money" unique_id=1785994591 instance=ExtResource("4")]
 layout_mode = 2
 achievement_icon = ExtResource("6")
 number = 1000000000.0
 
-[node name="3" parent="Achievements/ScrollContainer/HBox/Slots/money" instance=ExtResource("4")]
+[node name="3" parent="Achievements/ScrollContainer/HBox/Slots/money" unique_id=214489985 instance=ExtResource("4")]
 layout_mode = 2
 achievement_icon = ExtResource("6")
 number = 1000000000000.0
 
-[node name="4" parent="Achievements/ScrollContainer/HBox/Slots/money" instance=ExtResource("4")]
+[node name="4" parent="Achievements/ScrollContainer/HBox/Slots/money" unique_id=2006319002 instance=ExtResource("4")]
 layout_mode = 2
 achievement_icon = ExtResource("6")
 number = 1e+15
 
-[node name="5" parent="Achievements/ScrollContainer/HBox/Slots/money" instance=ExtResource("4")]
+[node name="5" parent="Achievements/ScrollContainer/HBox/Slots/money" unique_id=353246700 instance=ExtResource("4")]
 layout_mode = 2
 achievement_icon = ExtResource("6")
 number = 1e+18
 
-[node name="6" parent="Achievements/ScrollContainer/HBox/Slots/money" instance=ExtResource("4")]
+[node name="6" parent="Achievements/ScrollContainer/HBox/Slots/money" unique_id=1274891956 instance=ExtResource("4")]
 layout_mode = 2
 achievement_icon = ExtResource("6")
 number = 1e+21
 
-[node name="7" parent="Achievements/ScrollContainer/HBox/Slots/money" instance=ExtResource("4")]
+[node name="7" parent="Achievements/ScrollContainer/HBox/Slots/money" unique_id=1284445968 instance=ExtResource("4")]
 layout_mode = 2
 achievement_icon = ExtResource("6")
 number = 1e+24
 
-[node name="8" parent="Achievements/ScrollContainer/HBox/Slots/money" instance=ExtResource("4")]
+[node name="8" parent="Achievements/ScrollContainer/HBox/Slots/money" unique_id=1655139577 instance=ExtResource("4")]
 layout_mode = 2
 achievement_icon = ExtResource("6")
 number = 1e+27
 
-[node name="9" parent="Achievements/ScrollContainer/HBox/Slots/money" instance=ExtResource("4")]
+[node name="9" parent="Achievements/ScrollContainer/HBox/Slots/money" unique_id=1235910822 instance=ExtResource("4")]
 layout_mode = 2
 achievement_icon = ExtResource("6")
 number = 1e+30
 
-[node name="conquest" type="GridContainer" parent="Achievements/ScrollContainer/HBox/Slots"]
+[node name="conquest" type="GridContainer" parent="Achievements/ScrollContainer/HBox/Slots" unique_id=1702370568]
 layout_mode = 2
 columns = 12
 
-[node name="0" parent="Achievements/ScrollContainer/HBox/Slots/conquest" instance=ExtResource("4")]
+[node name="0" parent="Achievements/ScrollContainer/HBox/Slots/conquest" unique_id=1150361388 instance=ExtResource("4")]
 layout_mode = 2
 achievement_icon = ExtResource("7")
 number = 2.0
 
-[node name="1" parent="Achievements/ScrollContainer/HBox/Slots/conquest" instance=ExtResource("4")]
+[node name="1" parent="Achievements/ScrollContainer/HBox/Slots/conquest" unique_id=308354693 instance=ExtResource("4")]
 layout_mode = 2
 achievement_icon = ExtResource("7")
 number = 10.0
 
-[node name="2" parent="Achievements/ScrollContainer/HBox/Slots/conquest" instance=ExtResource("4")]
+[node name="2" parent="Achievements/ScrollContainer/HBox/Slots/conquest" unique_id=874774531 instance=ExtResource("4")]
 layout_mode = 2
 achievement_icon = ExtResource("7")
 number = 100.0
 
-[node name="3" parent="Achievements/ScrollContainer/HBox/Slots/conquest" instance=ExtResource("4")]
+[node name="3" parent="Achievements/ScrollContainer/HBox/Slots/conquest" unique_id=1888022434 instance=ExtResource("4")]
 layout_mode = 2
 achievement_icon = ExtResource("7")
 number = 1000.0
 
-[node name="4" parent="Achievements/ScrollContainer/HBox/Slots/conquest" instance=ExtResource("4")]
+[node name="4" parent="Achievements/ScrollContainer/HBox/Slots/conquest" unique_id=1927739903 instance=ExtResource("4")]
 layout_mode = 2
 achievement_icon = ExtResource("7")
 number = 10000.0
 
-[node name="5" parent="Achievements/ScrollContainer/HBox/Slots/conquest" instance=ExtResource("4")]
+[node name="5" parent="Achievements/ScrollContainer/HBox/Slots/conquest" unique_id=1315381312 instance=ExtResource("4")]
 layout_mode = 2
 achievement_icon = ExtResource("7")
 number = 100000.0
 
-[node name="6" parent="Achievements/ScrollContainer/HBox/Slots/conquest" instance=ExtResource("4")]
+[node name="6" parent="Achievements/ScrollContainer/HBox/Slots/conquest" unique_id=1406825687 instance=ExtResource("4")]
 layout_mode = 2
 achievement_icon = ExtResource("7")
 number = 1000000.0
 
-[node name="fully_conquer_system" parent="Achievements/ScrollContainer/HBox/Slots/conquest" instance=ExtResource("4")]
+[node name="fully_conquer_system" parent="Achievements/ScrollContainer/HBox/Slots/conquest" unique_id=240391674 instance=ExtResource("4")]
 layout_mode = 2
-achievement_icon = ExtResource("16")
 
-[node name="fully_conquer_galaxy" parent="Achievements/ScrollContainer/HBox/Slots/conquest" instance=ExtResource("4")]
+[node name="fully_conquer_galaxy" parent="Achievements/ScrollContainer/HBox/Slots/conquest" unique_id=54693729 instance=ExtResource("4")]
 layout_mode = 2
 achievement_icon = ExtResource("29")
 
-[node name="fully_conquer_cluster" parent="Achievements/ScrollContainer/HBox/Slots/conquest" instance=ExtResource("4")]
+[node name="fully_conquer_cluster" parent="Achievements/ScrollContainer/HBox/Slots/conquest" unique_id=79184209 instance=ExtResource("4")]
 layout_mode = 2
 achievement_icon = ExtResource("28")
 
-[node name="construct" type="GridContainer" parent="Achievements/ScrollContainer/HBox/Slots"]
+[node name="construct" type="GridContainer" parent="Achievements/ScrollContainer/HBox/Slots" unique_id=1387179170]
 layout_mode = 2
 columns = 12
 
-[node name="0" parent="Achievements/ScrollContainer/HBox/Slots/construct" instance=ExtResource("4")]
+[node name="0" parent="Achievements/ScrollContainer/HBox/Slots/construct" unique_id=1578286678 instance=ExtResource("4")]
 layout_mode = 2
 achievement_icon = ExtResource("8")
 number = 100.0
 
-[node name="1" parent="Achievements/ScrollContainer/HBox/Slots/construct" instance=ExtResource("4")]
+[node name="1" parent="Achievements/ScrollContainer/HBox/Slots/construct" unique_id=1079228855 instance=ExtResource("4")]
 layout_mode = 2
 achievement_icon = ExtResource("8")
 number = 10000.0
 
-[node name="2" parent="Achievements/ScrollContainer/HBox/Slots/construct" instance=ExtResource("4")]
+[node name="2" parent="Achievements/ScrollContainer/HBox/Slots/construct" unique_id=910266654 instance=ExtResource("4")]
 layout_mode = 2
 achievement_icon = ExtResource("8")
 number = 1000000.0
 
-[node name="3" parent="Achievements/ScrollContainer/HBox/Slots/construct" instance=ExtResource("4")]
+[node name="3" parent="Achievements/ScrollContainer/HBox/Slots/construct" unique_id=1753230957 instance=ExtResource("4")]
 layout_mode = 2
 achievement_icon = ExtResource("8")
 number = 100000000.0
 
-[node name="4" parent="Achievements/ScrollContainer/HBox/Slots/construct" instance=ExtResource("4")]
+[node name="4" parent="Achievements/ScrollContainer/HBox/Slots/construct" unique_id=1536839649 instance=ExtResource("4")]
 layout_mode = 2
 achievement_icon = ExtResource("8")
 number = 10000000000.0
 
-[node name="5" parent="Achievements/ScrollContainer/HBox/Slots/construct" instance=ExtResource("4")]
+[node name="5" parent="Achievements/ScrollContainer/HBox/Slots/construct" unique_id=1021056395 instance=ExtResource("4")]
 layout_mode = 2
 achievement_icon = ExtResource("8")
 number = 1000000000000.0
 
-[node name="exploration" type="GridContainer" parent="Achievements/ScrollContainer/HBox/Slots"]
+[node name="exploration" type="GridContainer" parent="Achievements/ScrollContainer/HBox/Slots" unique_id=386475946]
 layout_mode = 2
 columns = 12
 
-[node name="B_star" parent="Achievements/ScrollContainer/HBox/Slots/exploration" instance=ExtResource("4")]
+[node name="B_star" parent="Achievements/ScrollContainer/HBox/Slots/exploration" unique_id=658826837 instance=ExtResource("4")]
 layout_mode = 2
 achievement_icon = ExtResource("34")
 
-[node name="O_star" parent="Achievements/ScrollContainer/HBox/Slots/exploration" instance=ExtResource("4")]
+[node name="O_star" parent="Achievements/ScrollContainer/HBox/Slots/exploration" unique_id=1917167257 instance=ExtResource("4")]
 layout_mode = 2
 achievement_icon = ExtResource("36")
 
-[node name="Q_star" parent="Achievements/ScrollContainer/HBox/Slots/exploration" instance=ExtResource("4")]
+[node name="Q_star" parent="Achievements/ScrollContainer/HBox/Slots/exploration" unique_id=1959381738 instance=ExtResource("4")]
 layout_mode = 2
 achievement_icon = ExtResource("37")
 
-[node name="R_star" parent="Achievements/ScrollContainer/HBox/Slots/exploration" instance=ExtResource("4")]
+[node name="R_star" parent="Achievements/ScrollContainer/HBox/Slots/exploration" unique_id=1934990339 instance=ExtResource("4")]
 layout_mode = 2
 achievement_icon = ExtResource("35")
 
-[node name="Z_star" parent="Achievements/ScrollContainer/HBox/Slots/exploration" instance=ExtResource("4")]
+[node name="Z_star" parent="Achievements/ScrollContainer/HBox/Slots/exploration" unique_id=347435818 instance=ExtResource("4")]
 layout_mode = 2
 achievement_icon = ExtResource("10")
 
-[node name="HG_star" parent="Achievements/ScrollContainer/HBox/Slots/exploration" instance=ExtResource("4")]
+[node name="HG_star" parent="Achievements/ScrollContainer/HBox/Slots/exploration" unique_id=1990843027 instance=ExtResource("4")]
 layout_mode = 2
 achievement_icon = ExtResource("14")
 
-[node name="HG_V_star" parent="Achievements/ScrollContainer/HBox/Slots/exploration" instance=ExtResource("4")]
+[node name="HG_V_star" parent="Achievements/ScrollContainer/HBox/Slots/exploration" unique_id=644379446 instance=ExtResource("4")]
 layout_mode = 2
 achievement_icon = ExtResource("13")
 
-[node name="HG_X_star" parent="Achievements/ScrollContainer/HBox/Slots/exploration" instance=ExtResource("4")]
+[node name="HG_X_star" parent="Achievements/ScrollContainer/HBox/Slots/exploration" unique_id=165952302 instance=ExtResource("4")]
 layout_mode = 2
 achievement_icon = ExtResource("12")
 
-[node name="HG_XX_star" parent="Achievements/ScrollContainer/HBox/Slots/exploration" instance=ExtResource("4")]
+[node name="HG_XX_star" parent="Achievements/ScrollContainer/HBox/Slots/exploration" unique_id=219179366 instance=ExtResource("4")]
 layout_mode = 2
 achievement_icon = ExtResource("15")
 
-[node name="HG_L_star" parent="Achievements/ScrollContainer/HBox/Slots/exploration" instance=ExtResource("4")]
+[node name="HG_L_star" parent="Achievements/ScrollContainer/HBox/Slots/exploration" unique_id=367608640 instance=ExtResource("4")]
 layout_mode = 2
 achievement_icon = ExtResource("11")
 
-[node name="20_planet_system" parent="Achievements/ScrollContainer/HBox/Slots/exploration" instance=ExtResource("4")]
+[node name="20_planet_system" parent="Achievements/ScrollContainer/HBox/Slots/exploration" unique_id=1358082676 instance=ExtResource("4")]
 layout_mode = 2
-achievement_icon = ExtResource("16")
+achievement_icon = ExtResource("24_0kyuu")
 number = 20.0
 
-[node name="25_planet_system" parent="Achievements/ScrollContainer/HBox/Slots/exploration" instance=ExtResource("4")]
+[node name="25_planet_system" parent="Achievements/ScrollContainer/HBox/Slots/exploration" unique_id=113581455 instance=ExtResource("4")]
 layout_mode = 2
-achievement_icon = ExtResource("16")
+achievement_icon = ExtResource("24_0kyuu")
 number = 25.0
 
-[node name="30_planet_system" parent="Achievements/ScrollContainer/HBox/Slots/exploration" instance=ExtResource("4")]
+[node name="30_planet_system" parent="Achievements/ScrollContainer/HBox/Slots/exploration" unique_id=2073167744 instance=ExtResource("4")]
 layout_mode = 2
-achievement_icon = ExtResource("16")
+achievement_icon = ExtResource("24_0kyuu")
 number = 30.0
 
-[node name="35_planet_system" parent="Achievements/ScrollContainer/HBox/Slots/exploration" instance=ExtResource("4")]
+[node name="35_planet_system" parent="Achievements/ScrollContainer/HBox/Slots/exploration" unique_id=859098417 instance=ExtResource("4")]
 layout_mode = 2
-achievement_icon = ExtResource("16")
+achievement_icon = ExtResource("24_0kyuu")
 number = 35.0
 
-[node name="40_planet_system" parent="Achievements/ScrollContainer/HBox/Slots/exploration" instance=ExtResource("4")]
+[node name="40_planet_system" parent="Achievements/ScrollContainer/HBox/Slots/exploration" unique_id=1296929307 instance=ExtResource("4")]
 layout_mode = 2
-achievement_icon = ExtResource("16")
+achievement_icon = ExtResource("24_0kyuu")
 number = 40.0
 
-[node name="45_planet_system" parent="Achievements/ScrollContainer/HBox/Slots/exploration" instance=ExtResource("4")]
+[node name="45_planet_system" parent="Achievements/ScrollContainer/HBox/Slots/exploration" unique_id=1584518582 instance=ExtResource("4")]
 layout_mode = 2
-achievement_icon = ExtResource("16")
+achievement_icon = ExtResource("24_0kyuu")
 number = 45.0
 
-[node name="50_planet_system" parent="Achievements/ScrollContainer/HBox/Slots/exploration" instance=ExtResource("4")]
+[node name="50_planet_system" parent="Achievements/ScrollContainer/HBox/Slots/exploration" unique_id=2017785853 instance=ExtResource("4")]
 layout_mode = 2
-achievement_icon = ExtResource("16")
+achievement_icon = ExtResource("24_0kyuu")
 number = 50.0
 
-[node name="diamond_crater" parent="Achievements/ScrollContainer/HBox/Slots/exploration" instance=ExtResource("4")]
+[node name="diamond_crater" parent="Achievements/ScrollContainer/HBox/Slots/exploration" unique_id=1950945677 instance=ExtResource("4")]
 layout_mode = 2
 achievement_icon = ExtResource("31")
 
-[node name="nanocrystal_crater" parent="Achievements/ScrollContainer/HBox/Slots/exploration" instance=ExtResource("4")]
+[node name="nanocrystal_crater" parent="Achievements/ScrollContainer/HBox/Slots/exploration" unique_id=1579937207 instance=ExtResource("4")]
 layout_mode = 2
 achievement_icon = ExtResource("30")
 
-[node name="mythril_crater" parent="Achievements/ScrollContainer/HBox/Slots/exploration" instance=ExtResource("4")]
+[node name="mythril_crater" parent="Achievements/ScrollContainer/HBox/Slots/exploration" unique_id=110984017 instance=ExtResource("4")]
 layout_mode = 2
 achievement_icon = ExtResource("32")
 
-[node name="reach_floor_8" parent="Achievements/ScrollContainer/HBox/Slots/exploration" instance=ExtResource("4")]
+[node name="reach_floor_8" parent="Achievements/ScrollContainer/HBox/Slots/exploration" unique_id=573714527 instance=ExtResource("4")]
 layout_mode = 2
 achievement_icon = ExtResource("23")
 number = 8.0
 
-[node name="reach_floor_16" parent="Achievements/ScrollContainer/HBox/Slots/exploration" instance=ExtResource("4")]
+[node name="reach_floor_16" parent="Achievements/ScrollContainer/HBox/Slots/exploration" unique_id=916626424 instance=ExtResource("4")]
 layout_mode = 2
 achievement_icon = ExtResource("23")
 number = 16.0
 
-[node name="reach_floor_24" parent="Achievements/ScrollContainer/HBox/Slots/exploration" instance=ExtResource("4")]
+[node name="reach_floor_24" parent="Achievements/ScrollContainer/HBox/Slots/exploration" unique_id=1953283351 instance=ExtResource("4")]
 layout_mode = 2
 achievement_icon = ExtResource("23")
 number = 24.0
 
-[node name="reach_floor_32" parent="Achievements/ScrollContainer/HBox/Slots/exploration" instance=ExtResource("4")]
+[node name="reach_floor_32" parent="Achievements/ScrollContainer/HBox/Slots/exploration" unique_id=872140567 instance=ExtResource("4")]
 layout_mode = 2
 achievement_icon = ExtResource("23")
 number = 32.0
 
-[node name="aurora_cave" parent="Achievements/ScrollContainer/HBox/Slots/exploration" instance=ExtResource("4")]
+[node name="aurora_cave" parent="Achievements/ScrollContainer/HBox/Slots/exploration" unique_id=806591945 instance=ExtResource("4")]
 layout_mode = 2
 achievement_icon = ExtResource("39")
 
-[node name="volcano_cave" parent="Achievements/ScrollContainer/HBox/Slots/exploration" instance=ExtResource("4")]
+[node name="volcano_cave" parent="Achievements/ScrollContainer/HBox/Slots/exploration" unique_id=707605053 instance=ExtResource("4")]
 layout_mode = 2
 achievement_icon = ExtResource("40")
 
-[node name="volcano_aurora_cave" parent="Achievements/ScrollContainer/HBox/Slots/exploration" instance=ExtResource("4")]
+[node name="volcano_aurora_cave" parent="Achievements/ScrollContainer/HBox/Slots/exploration" unique_id=680387665 instance=ExtResource("4")]
 layout_mode = 2
 achievement_icon = ExtResource("38")
 
-[node name="find_neon_lake" parent="Achievements/ScrollContainer/HBox/Slots/exploration" instance=ExtResource("4")]
+[node name="find_neon_lake" parent="Achievements/ScrollContainer/HBox/Slots/exploration" unique_id=385321491 instance=ExtResource("4")]
 layout_mode = 2
 achievement_icon = ExtResource("42")
 
-[node name="find_xenon_lake" parent="Achievements/ScrollContainer/HBox/Slots/exploration" instance=ExtResource("4")]
+[node name="find_xenon_lake" parent="Achievements/ScrollContainer/HBox/Slots/exploration" unique_id=1436471567 instance=ExtResource("4")]
 layout_mode = 2
 achievement_icon = ExtResource("43")
 
-[node name="planet_with_nothing" parent="Achievements/ScrollContainer/HBox/Slots/exploration" instance=ExtResource("4")]
+[node name="planet_with_nothing" parent="Achievements/ScrollContainer/HBox/Slots/exploration" unique_id=1733889106 instance=ExtResource("4")]
 layout_mode = 2
 
-[node name="tier_2_ancient_bldg" parent="Achievements/ScrollContainer/HBox/Slots/exploration" instance=ExtResource("4")]
+[node name="tier_2_ancient_bldg" parent="Achievements/ScrollContainer/HBox/Slots/exploration" unique_id=2036493653 instance=ExtResource("4")]
 layout_mode = 2
 achievement_icon = ExtResource("46")
 number = 2.0
 
-[node name="tier_3_ancient_bldg" parent="Achievements/ScrollContainer/HBox/Slots/exploration" instance=ExtResource("4")]
+[node name="tier_3_ancient_bldg" parent="Achievements/ScrollContainer/HBox/Slots/exploration" unique_id=1062772735 instance=ExtResource("4")]
 layout_mode = 2
 achievement_icon = ExtResource("46")
 number = 3.0
 
-[node name="tier_4_ancient_bldg" parent="Achievements/ScrollContainer/HBox/Slots/exploration" instance=ExtResource("4")]
+[node name="tier_4_ancient_bldg" parent="Achievements/ScrollContainer/HBox/Slots/exploration" unique_id=1424662807 instance=ExtResource("4")]
 layout_mode = 2
 achievement_icon = ExtResource("46")
 number = 4.0
 
-[node name="tier_5_ancient_bldg" parent="Achievements/ScrollContainer/HBox/Slots/exploration" instance=ExtResource("4")]
+[node name="tier_5_ancient_bldg" parent="Achievements/ScrollContainer/HBox/Slots/exploration" unique_id=1499969101 instance=ExtResource("4")]
 layout_mode = 2
 achievement_icon = ExtResource("46")
 number = 5.0
 
-[node name="find_all_ancient_bldgs" parent="Achievements/ScrollContainer/HBox/Slots/exploration" instance=ExtResource("4")]
+[node name="find_all_ancient_bldgs" parent="Achievements/ScrollContainer/HBox/Slots/exploration" unique_id=336154745 instance=ExtResource("4")]
 layout_mode = 2
 achievement_icon = ExtResource("47")
 
-[node name="progression" type="GridContainer" parent="Achievements/ScrollContainer/HBox/Slots"]
+[node name="progression" type="GridContainer" parent="Achievements/ScrollContainer/HBox/Slots" unique_id=261131075]
 layout_mode = 2
 columns = 12
 
-[node name="build_MS" parent="Achievements/ScrollContainer/HBox/Slots/progression" instance=ExtResource("4")]
+[node name="build_MS" parent="Achievements/ScrollContainer/HBox/Slots/progression" unique_id=127702579 instance=ExtResource("4")]
 layout_mode = 2
 achievement_icon = ExtResource("34_vrqdx")
 
-[node name="build_GS" parent="Achievements/ScrollContainer/HBox/Slots/progression" instance=ExtResource("4")]
+[node name="build_GS" parent="Achievements/ScrollContainer/HBox/Slots/progression" unique_id=428376538 instance=ExtResource("4")]
 layout_mode = 2
 achievement_icon = ExtResource("17")
 
-[node name="new_universe" parent="Achievements/ScrollContainer/HBox/Slots/progression" instance=ExtResource("4")]
+[node name="new_universe" parent="Achievements/ScrollContainer/HBox/Slots/progression" unique_id=264155773 instance=ExtResource("4")]
 layout_mode = 2
 achievement_icon = ExtResource("25")
 
-[node name="new_dimension" parent="Achievements/ScrollContainer/HBox/Slots/progression" instance=ExtResource("4")]
+[node name="new_dimension" parent="Achievements/ScrollContainer/HBox/Slots/progression" unique_id=947493498 instance=ExtResource("4")]
 layout_mode = 2
 achievement_icon = ExtResource("27")
 
-[node name="2nd_ship" parent="Achievements/ScrollContainer/HBox/Slots/progression" instance=ExtResource("4")]
+[node name="2nd_ship" parent="Achievements/ScrollContainer/HBox/Slots/progression" unique_id=417445214 instance=ExtResource("4")]
 layout_mode = 2
 achievement_icon = ExtResource("19")
 
-[node name="3rd_ship" parent="Achievements/ScrollContainer/HBox/Slots/progression" instance=ExtResource("4")]
+[node name="3rd_ship" parent="Achievements/ScrollContainer/HBox/Slots/progression" unique_id=1902244289 instance=ExtResource("4")]
 layout_mode = 2
 achievement_icon = ExtResource("18")
 
-[node name="4th_ship" parent="Achievements/ScrollContainer/HBox/Slots/progression" instance=ExtResource("4")]
+[node name="4th_ship" parent="Achievements/ScrollContainer/HBox/Slots/progression" unique_id=1824414011 instance=ExtResource("4")]
 layout_mode = 2
 achievement_icon = ExtResource("20")
 
-[node name="random" type="GridContainer" parent="Achievements/ScrollContainer/HBox/Slots"]
+[node name="random" type="GridContainer" parent="Achievements/ScrollContainer/HBox/Slots" unique_id=1506469342]
 layout_mode = 2
 columns = 12
 
-[node name="clear_out_cave_floor" parent="Achievements/ScrollContainer/HBox/Slots/random" instance=ExtResource("4")]
+[node name="clear_out_cave_floor" parent="Achievements/ScrollContainer/HBox/Slots/random" unique_id=374251693 instance=ExtResource("4")]
 layout_mode = 2
 achievement_icon = ExtResource("23")
 
-[node name="destroy_BBB" parent="Achievements/ScrollContainer/HBox/Slots/random" instance=ExtResource("4")]
+[node name="destroy_BBB" parent="Achievements/ScrollContainer/HBox/Slots/random" unique_id=1879490231 instance=ExtResource("4")]
 layout_mode = 2
 achievement_icon = ExtResource("41")
 
-[node name="reach_center_of_planet" parent="Achievements/ScrollContainer/HBox/Slots/random" instance=ExtResource("4")]
+[node name="reach_center_of_planet" parent="Achievements/ScrollContainer/HBox/Slots/random" unique_id=239487890 instance=ExtResource("4")]
 modulate = Color(1, 0.952941, 0.745098, 1)
 layout_mode = 2
 achievement_icon = ExtResource("22")
 
-[node name="1000_year_journey" parent="Achievements/ScrollContainer/HBox/Slots/random" instance=ExtResource("4")]
+[node name="1000_year_journey" parent="Achievements/ScrollContainer/HBox/Slots/random" unique_id=628850092 instance=ExtResource("4")]
 layout_mode = 2
 achievement_icon = ExtResource("21")
 
-[node name="build_tri_probe_in_slow_univ" parent="Achievements/ScrollContainer/HBox/Slots/random" instance=ExtResource("4")]
+[node name="build_tri_probe_in_slow_univ" parent="Achievements/ScrollContainer/HBox/Slots/random" unique_id=546518522 instance=ExtResource("4")]
 layout_mode = 2
 achievement_icon = ExtResource("25")
 
-[node name="use_stick_to_mine_from_surface_to_core" parent="Achievements/ScrollContainer/HBox/Slots/random" instance=ExtResource("4")]
+[node name="use_stick_to_mine_from_surface_to_core" parent="Achievements/ScrollContainer/HBox/Slots/random" unique_id=115604792 instance=ExtResource("4")]
 layout_mode = 2
 achievement_icon = ExtResource("24")
 
-[node name="rekt_enemy_30_levels_higher" parent="Achievements/ScrollContainer/HBox/Slots/random" instance=ExtResource("4")]
+[node name="rekt_enemy_30_levels_higher" parent="Achievements/ScrollContainer/HBox/Slots/random" unique_id=2054257388 instance=ExtResource("4")]
 layout_mode = 2
 achievement_icon = ExtResource("26")
 
-[node name="op_gh" parent="Achievements/ScrollContainer/HBox/Slots/random" instance=ExtResource("4")]
+[node name="op_gh" parent="Achievements/ScrollContainer/HBox/Slots/random" unique_id=1378782149 instance=ExtResource("4")]
 layout_mode = 2
 achievement_icon = ExtResource("46_0ykb7")
 
-[node name="Statistics" type="Control" parent="."]
+[node name="Statistics" type="Control" parent="." unique_id=901710092]
 visible = false
 anchors_preset = 0
 anchor_left = 0.5
@@ -583,7 +582,7 @@ offset_top = -464.0
 offset_right = 488.0
 offset_bottom = -24.0
 
-[node name="HBox" type="HBoxContainer" parent="Statistics"]
+[node name="HBox" type="HBoxContainer" parent="Statistics" unique_id=2000103162]
 visible = false
 layout_mode = 0
 anchor_right = 1.0
@@ -591,51 +590,51 @@ offset_top = -40.0
 offset_bottom = -6.0
 alignment = 1
 
-[node name="Prefix" type="Label" parent="Statistics/HBox"]
+[node name="Prefix" type="Label" parent="Statistics/HBox" unique_id=268979603]
 layout_mode = 2
 
-[node name="OptionButton" type="OptionButton" parent="Statistics/HBox"]
+[node name="OptionButton" type="OptionButton" parent="Statistics/HBox" unique_id=246020848]
 layout_mode = 2
 
-[node name="Suffix" type="Label" parent="Statistics/HBox"]
+[node name="Suffix" type="Label" parent="Statistics/HBox" unique_id=612019135]
 layout_mode = 2
 
-[node name="ScrollContainer" type="ScrollContainer" parent="Statistics"]
+[node name="ScrollContainer" type="ScrollContainer" parent="Statistics" unique_id=810153514]
 layout_mode = 0
 anchor_bottom = 1.0
 offset_right = 264.0
 
-[node name="VBoxContainer" type="VBoxContainer" parent="Statistics/ScrollContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="Statistics/ScrollContainer" unique_id=1158271136]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="General" parent="Statistics/ScrollContainer/VBoxContainer" instance=ExtResource("2")]
+[node name="General" parent="Statistics/ScrollContainer/VBoxContainer" unique_id=307046512 instance=ExtResource("2")]
 custom_minimum_size = Vector2(0, 45)
 layout_mode = 2
 button_text = "GENERAL"
 
-[node name="Records" parent="Statistics/ScrollContainer/VBoxContainer" instance=ExtResource("2")]
+[node name="Records" parent="Statistics/ScrollContainer/VBoxContainer" unique_id=16092986 instance=ExtResource("2")]
 custom_minimum_size = Vector2(0, 45)
 layout_mode = 2
 button_text = "RECORDS"
 
-[node name="StarClasses" parent="Statistics/ScrollContainer/VBoxContainer" instance=ExtResource("2")]
+[node name="StarClasses" parent="Statistics/ScrollContainer/VBoxContainer" unique_id=1503315210 instance=ExtResource("2")]
 custom_minimum_size = Vector2(0, 45)
 layout_mode = 2
 button_text = "STAR_CLASSES"
 
-[node name="StarTypes" parent="Statistics/ScrollContainer/VBoxContainer" instance=ExtResource("2")]
+[node name="StarTypes" parent="Statistics/ScrollContainer/VBoxContainer" unique_id=156551446 instance=ExtResource("2")]
 custom_minimum_size = Vector2(0, 45)
 layout_mode = 2
 button_text = "STAR_TYPES"
 
-[node name="UserInput" parent="Statistics/ScrollContainer/VBoxContainer" instance=ExtResource("2")]
+[node name="UserInput" parent="Statistics/ScrollContainer/VBoxContainer" unique_id=1161483076 instance=ExtResource("2")]
 custom_minimum_size = Vector2(0, 45)
 layout_mode = 2
 button_text = "USER_INPUT"
 
-[node name="Panel" type="Panel" parent="Statistics"]
+[node name="Panel" type="Panel" parent="Statistics" unique_id=1367964522]
 visible = false
 layout_mode = 0
 anchor_left = 1.0
@@ -643,7 +642,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 offset_left = -704.0
 
-[node name="Label" type="Label" parent="Statistics/Panel"]
+[node name="Label" type="Label" parent="Statistics/Panel" unique_id=105603150]
 layout_mode = 0
 offset_left = 24.0
 offset_top = 16.0
@@ -651,18 +650,18 @@ offset_right = 56.0
 offset_bottom = 40.0
 text = "asd"
 
-[node name="ScrollContainer2" type="ScrollContainer" parent="Statistics"]
+[node name="ScrollContainer2" type="ScrollContainer" parent="Statistics" unique_id=80457180]
 visible = false
 layout_mode = 0
 offset_left = 272.0
 offset_right = 976.0
 offset_bottom = 440.0
 
-[node name="Control" type="Control" parent="Statistics/ScrollContainer2"]
+[node name="Control" type="Control" parent="Statistics/ScrollContainer2" unique_id=1892316697]
 custom_minimum_size = Vector2(650, 400)
 layout_mode = 2
 
-[node name="HBox" type="HBoxContainer" parent="Statistics/ScrollContainer2/Control"]
+[node name="HBox" type="HBoxContainer" parent="Statistics/ScrollContainer2/Control" unique_id=687591507]
 layout_mode = 0
 offset_left = 46.0
 offset_top = 43.0
@@ -671,44 +670,44 @@ offset_bottom = 355.0
 size_flags_vertical = 3
 theme_override_constants/separation = 0
 
-[node name="VBoxContainer" type="VBoxContainer" parent="Statistics/ScrollContainer2/Control/HBox"]
+[node name="VBoxContainer" type="VBoxContainer" parent="Statistics/ScrollContainer2/Control/HBox" unique_id=1816225656]
 custom_minimum_size = Vector2(10, 0)
 layout_mode = 2
 
-[node name="ColorRect" type="ColorRect" parent="Statistics/ScrollContainer2/Control/HBox/VBoxContainer"]
+[node name="ColorRect" type="ColorRect" parent="Statistics/ScrollContainer2/Control/HBox/VBoxContainer" unique_id=734694384]
 custom_minimum_size = Vector2(0, 30)
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 10
 
-[node name="Label" type="Label" parent="Statistics/ScrollContainer2/Control/HBox/VBoxContainer"]
+[node name="Label" type="Label" parent="Statistics/ScrollContainer2/Control/HBox/VBoxContainer" unique_id=969246379]
 layout_mode = 2
 text = "0"
 
-[node name="VBoxContainer2" type="VBoxContainer" parent="Statistics/ScrollContainer2/Control/HBox"]
+[node name="VBoxContainer2" type="VBoxContainer" parent="Statistics/ScrollContainer2/Control/HBox" unique_id=83857400]
 custom_minimum_size = Vector2(10, 0)
 layout_mode = 2
 
-[node name="ColorRect" type="ColorRect" parent="Statistics/ScrollContainer2/Control/HBox/VBoxContainer2"]
+[node name="ColorRect" type="ColorRect" parent="Statistics/ScrollContainer2/Control/HBox/VBoxContainer2" unique_id=238557082]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="Label" type="Label" parent="Statistics/ScrollContainer2/Control/HBox/VBoxContainer2"]
+[node name="Label" type="Label" parent="Statistics/ScrollContainer2/Control/HBox/VBoxContainer2" unique_id=864185814]
 layout_mode = 2
 text = "1"
 
-[node name="Line2D" type="Line2D" parent="Statistics/ScrollContainer2/Control"]
+[node name="Line2D" type="Line2D" parent="Statistics/ScrollContainer2/Control" unique_id=1909393265]
 position = Vector2(18, 2)
 points = PackedVector2Array(28, 337, 28, 33, 20, 41)
 width = 2.0
 
-[node name="Line2D2" type="Line2D" parent="Statistics/ScrollContainer2/Control"]
+[node name="Line2D2" type="Line2D" parent="Statistics/ScrollContainer2/Control" unique_id=1186475332]
 position = Vector2(18, 2)
 points = PackedVector2Array(28, 33, 36, 41)
 width = 2.0
 
-[node name="MaxNum" type="Label" parent="Statistics/ScrollContainer2/Control"]
+[node name="MaxNum" type="Label" parent="Statistics/ScrollContainer2/Control" unique_id=1601576964]
 layout_mode = 0
 offset_left = -2.0
 offset_top = 35.0
@@ -717,7 +716,7 @@ offset_bottom = 59.0
 text = "24"
 horizontal_alignment = 2
 
-[node name="Zero" type="Label" parent="Statistics/ScrollContainer2/Control"]
+[node name="Zero" type="Label" parent="Statistics/ScrollContainer2/Control" unique_id=1060793063]
 layout_mode = 0
 offset_left = -2.0
 offset_top = 315.0
@@ -726,7 +725,7 @@ offset_bottom = 339.0
 text = "0"
 horizontal_alignment = 2
 
-[node name="ZoomLabel" type="Label" parent="Statistics/ScrollContainer2/Control"]
+[node name="ZoomLabel" type="Label" parent="Statistics/ScrollContainer2/Control" unique_id=220916383]
 layout_mode = 0
 offset_left = 38.0
 offset_top = 379.0
@@ -734,7 +733,7 @@ offset_right = 110.0
 offset_bottom = 403.0
 text = "ZOOM"
 
-[node name="Zoom" type="HSlider" parent="Statistics/ScrollContainer2/Control"]
+[node name="Zoom" type="HSlider" parent="Statistics/ScrollContainer2/Control" unique_id=725574582]
 layout_mode = 0
 offset_left = 134.0
 offset_top = 379.0

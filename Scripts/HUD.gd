@@ -27,6 +27,7 @@ extends Control
 @onready var cluster_b_btn = $Bookmarks/BookMarkButtons/Clusters
 @onready var dimension_btn = $Bottom/DimensionBtn
 @onready var switch_btn = $Bottom/SwitchBtn
+@onready var switch_btn_texture = $Bottom/SwitchBtn/TextureRect
 @onready var prev_btn = $Bottom/PrevView
 @onready var next_btn = $Bottom/NextView
 @onready var ships_btn = $Buttons/Ships

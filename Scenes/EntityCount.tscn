@@ -1,22 +1,22 @@
-[gd_scene load_steps=3 format=3 uid="uid://bq15rk6ckadv7"]
+[gd_scene format=3 uid="uid://bq15rk6ckadv7"]
 
 [ext_resource type="Theme" uid="uid://cp2u1kgj60ic" path="res://Resources/default_theme.tres" id="1"]
 [ext_resource type="Texture2D" uid="uid://ck8hhokxiy34p" path="res://Graphics/Icons/HX_icon.png" id="2"]
 
-[node name="HBox" type="HBoxContainer"]
+[node name="HBox" type="HBoxContainer" unique_id=196240579]
 offset_right = 82.0
 offset_bottom = 30.0
 mouse_filter = 2
 alignment = 1
 
-[node name="Texture2D" type="TextureRect" parent="."]
+[node name="Texture2D" type="TextureRect" parent="." unique_id=1188047581]
 custom_minimum_size = Vector2(40, 30)
 layout_mode = 2
 texture = ExtResource("2")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="Label" type="Label" parent="."]
+[node name="Label" type="Label" parent="." unique_id=640057553]
 layout_mode = 2
 theme = ExtResource("1")
 text = "x 12"

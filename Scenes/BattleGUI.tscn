@@ -90,14 +90,14 @@ script = ExtResource("1_phavr")
 metadata/_edit_lock_ = true
 
 [node name="PlanetBG" type="Sprite2D" parent="." unique_id=813839640]
-modulate = Color(0.06, 0.06, 0.06, 1)
+modulate = Color(0.09, 0.09, 0.09, 1)
 light_mask = 4
 z_index = -1
 position = Vector2(1088, 336)
 texture = ExtResource("3_hjvsu")
 
-[node name="PointLight2D" type="PointLight2D" parent="PlanetBG" unique_id=345747065]
-position = Vector2(-496, 180)
+[node name="PlanetLight" type="PointLight2D" parent="." unique_id=345747065]
+position = Vector2(1088, 336)
 energy = 8.88
 range_item_cull_mask = 4
 texture = ExtResource("4_pv2pb")

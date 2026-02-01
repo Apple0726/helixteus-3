@@ -1,4 +1,4 @@
-[gd_scene load_steps=23 format=3 uid="uid://cgbd1tgsqupqm"]
+[gd_scene format=3 uid="uid://cgbd1tgsqupqm"]
 
 [ext_resource type="Texture2D" uid="uid://bsienpo47qhrv" path="res://Graphics/Buttons/Overlay.png" id="1"]
 [ext_resource type="Script" uid="uid://b0vcns16qktoy" path="res://Scripts/SpaceHUD.gd" id="2"]
@@ -74,7 +74,7 @@ _data = {
 &"RESET": SubResource("Animation_wvq00")
 }
 
-[node name="SpaceHUD" type="Control"]
+[node name="SpaceHUD" type="Control" unique_id=531342234]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -86,7 +86,7 @@ theme = ExtResource("3")
 script = ExtResource("2")
 metadata/_edit_vertical_guides_ = [280.0]
 
-[node name="VBoxContainer" type="VBoxContainer" parent="."]
+[node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=316639980]
 layout_mode = 0
 offset_left = -51.8981
 offset_right = -3.8981209
@@ -95,7 +95,7 @@ mouse_filter = 2
 theme_override_constants/separation = 0
 alignment = 1
 
-[node name="Stars" type="TextureButton" parent="VBoxContainer"]
+[node name="Stars" type="TextureButton" parent="VBoxContainer" unique_id=41333011]
 custom_minimum_size = Vector2(0, 48)
 layout_mode = 2
 shortcut = SubResource("6")
@@ -106,7 +106,7 @@ ignore_texture_size = true
 stretch_mode = 5
 flip_h = true
 
-[node name="TextureRect" type="TextureRect" parent="VBoxContainer/Stars"]
+[node name="TextureRect" type="TextureRect" parent="VBoxContainer/Stars" unique_id=1522584395]
 layout_mode = 0
 offset_left = 4.0
 offset_top = 4.0
@@ -116,7 +116,7 @@ texture = ExtResource("4_xvq6k")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="ElementOverlay" type="TextureButton" parent="VBoxContainer"]
+[node name="ElementOverlay" type="TextureButton" parent="VBoxContainer" unique_id=1743300199]
 custom_minimum_size = Vector2(0, 48)
 layout_mode = 2
 shortcut = SubResource("2")
@@ -127,7 +127,7 @@ ignore_texture_size = true
 stretch_mode = 5
 flip_h = true
 
-[node name="TextureRect2" type="TextureRect" parent="VBoxContainer/ElementOverlay"]
+[node name="TextureRect2" type="TextureRect" parent="VBoxContainer/ElementOverlay" unique_id=957336274]
 layout_mode = 0
 offset_left = 19.898102
 offset_top = 10.0
@@ -137,7 +137,7 @@ texture = ExtResource("5_e5li8")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="TextureRect" type="TextureRect" parent="VBoxContainer/ElementOverlay"]
+[node name="TextureRect" type="TextureRect" parent="VBoxContainer/ElementOverlay" unique_id=1643482193]
 layout_mode = 0
 offset_left = 7.898102
 offset_top = 18.0
@@ -147,7 +147,7 @@ texture = ExtResource("6_jdctn")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="Overlay" type="TextureButton" parent="VBoxContainer"]
+[node name="Overlay" type="TextureButton" parent="VBoxContainer" unique_id=1730519324]
 custom_minimum_size = Vector2(0, 48)
 layout_mode = 2
 shortcut = SubResource("2")
@@ -158,7 +158,7 @@ ignore_texture_size = true
 stretch_mode = 5
 flip_h = true
 
-[node name="TextureRect" type="TextureRect" parent="VBoxContainer/Overlay"]
+[node name="TextureRect" type="TextureRect" parent="VBoxContainer/Overlay" unique_id=1214035678]
 layout_mode = 0
 offset_left = -0.10189819
 offset_top = 4.0
@@ -168,7 +168,7 @@ texture = ExtResource("1")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="TextureRect2" type="TextureRect" parent="VBoxContainer/Overlay"]
+[node name="TextureRect2" type="TextureRect" parent="VBoxContainer/Overlay" unique_id=389046371]
 layout_mode = 0
 offset_left = -0.10189819
 offset_top = 4.0
@@ -178,7 +178,7 @@ texture = ExtResource("1")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="Annotate" type="TextureButton" parent="VBoxContainer"]
+[node name="Annotate" type="TextureButton" parent="VBoxContainer" unique_id=2033907094]
 custom_minimum_size = Vector2(0, 48)
 layout_mode = 2
 shortcut = SubResource("4")
@@ -189,7 +189,7 @@ ignore_texture_size = true
 stretch_mode = 5
 flip_h = true
 
-[node name="TextureRect" type="TextureRect" parent="VBoxContainer/Annotate"]
+[node name="TextureRect" type="TextureRect" parent="VBoxContainer/Annotate" unique_id=1564751554]
 layout_mode = 0
 offset_left = 2.8981018
 offset_top = 4.0
@@ -199,7 +199,7 @@ texture = ExtResource("7")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="Megastructures" type="TextureButton" parent="VBoxContainer"]
+[node name="Megastructures" type="TextureButton" parent="VBoxContainer" unique_id=504509314]
 custom_minimum_size = Vector2(0, 48)
 layout_mode = 2
 shortcut = SubResource("6")
@@ -210,7 +210,7 @@ ignore_texture_size = true
 stretch_mode = 5
 flip_h = true
 
-[node name="TextureRect" type="TextureRect" parent="VBoxContainer/Megastructures"]
+[node name="TextureRect" type="TextureRect" parent="VBoxContainer/Megastructures" unique_id=460658780]
 layout_mode = 0
 offset_left = 2.8981018
 offset_top = 4.0
@@ -220,7 +220,7 @@ texture = ExtResource("9_42r2j")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="Gigastructures" type="TextureButton" parent="VBoxContainer"]
+[node name="Gigastructures" type="TextureButton" parent="VBoxContainer" unique_id=1775595908]
 custom_minimum_size = Vector2(0, 48)
 layout_mode = 2
 shortcut = SubResource("6")
@@ -231,7 +231,7 @@ ignore_texture_size = true
 stretch_mode = 5
 flip_h = true
 
-[node name="TextureRect" type="TextureRect" parent="VBoxContainer/Gigastructures"]
+[node name="TextureRect" type="TextureRect" parent="VBoxContainer/Gigastructures" unique_id=119649585]
 layout_mode = 0
 offset_left = 2.8981018
 offset_top = 4.0
@@ -241,7 +241,7 @@ texture = ExtResource("10_rxdnk")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="SendFighters" type="Button" parent="."]
+[node name="SendFighters" type="Button" parent="." unique_id=365096652]
 layout_mode = 0
 offset_left = 200.0
 offset_top = 688.0
@@ -249,7 +249,7 @@ offset_right = 360.0
 offset_bottom = 720.0
 text = "SEND_FIGHTERS"
 
-[node name="ConquerAll" type="Button" parent="."]
+[node name="ConquerAll" type="Button" parent="." unique_id=398785895]
 layout_mode = 0
 offset_left = 200.0
 offset_top = 688.0
@@ -257,7 +257,7 @@ offset_right = 360.0
 offset_bottom = 720.0
 text = "CONQUER_ALL"
 
-[node name="SendProbes" type="Button" parent="."]
+[node name="SendProbes" type="Button" parent="." unique_id=627852143]
 layout_mode = 0
 offset_left = 200.0
 offset_top = 688.0
@@ -265,18 +265,24 @@ offset_right = 360.0
 offset_bottom = 720.0
 text = "SEND_PROBES"
 
-[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
-libraries = {
-&"": SubResource("AnimationLibrary_sslco")
-}
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=88860969]
+libraries/ = SubResource("AnimationLibrary_sslco")
 
-[node name="MSConstructPanel" parent="." instance=ExtResource("12_rxdnk")]
+[node name="MSConstructPanel" parent="." unique_id=1453434250 instance=ExtResource("12_rxdnk")]
 visible = false
 layout_mode = 1
 
-[node name="StarPanel" parent="." instance=ExtResource("10_cgit7")]
+[node name="StarPanel" parent="." unique_id=1736156736 instance=ExtResource("10_cgit7")]
 visible = false
 layout_mode = 1
+
+[node name="BldgInfo" type="VBoxContainer" parent="." unique_id=1475406639]
+layout_mode = 0
+offset_left = 88.0
+offset_top = 108.0
+offset_right = 268.0
+offset_bottom = 332.0
+mouse_filter = 2
 
 [connection signal="mouse_entered" from="VBoxContainer/Stars" to="." method="_on_stars_mouse_entered"]
 [connection signal="mouse_exited" from="VBoxContainer/Stars" to="." method="_on_mouse_exited"]

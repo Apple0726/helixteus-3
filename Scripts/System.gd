@@ -99,38 +99,13 @@ func refresh_planets():
 					planet_glow.modulate = Color(0.8, 1, 0, 1)
 			if game.element_overlay_enabled:
 				add_elements(p_i, v, sc)
-			else:
-				var tile_data:Array = tile_datas[p_i.l_id]
-				var bldgs:Dictionary = {}
-				if p_i.has("tile_num") and p_i.bldg.has("name"):
-					Helper.add_to_dict(bldgs, p_i.bldg.name, p_i.tile_num)
-				else:
-					for tile in tile_data:
-						if tile and tile.has("bldg") and tile.bldg.has("name"):
-							Helper.add_to_dict(bldgs, tile.bldg.name, 1)
-				if not bldgs.is_empty():
-					var grid:GridContainer = GridContainer.new()
-					grid.mouse_filter = Control.MOUSE_FILTER_IGNORE
-					grid.columns = 3
-					grid.scale *= sc * 2.5
-					for bldg in bldgs:
-						var bldg_count = preload("res://Scenes/EntityCount.tscn").instantiate()
-						bldg_count.get_node("Texture2D").connect("mouse_entered",Callable(self,"on_entity_icon_over").bind(tr("%s_NAME" % Building.names[bldg].to_upper())))
-						bldg_count.get_node("Texture2D").connect("mouse_exited",Callable(self,"on_entity_icon_out"))
-						grid.add_child(bldg_count)
-						bldg_count.get_node("Texture2D").texture = game.bldg_textures[bldg]
-						bldg_count.get_node("Label").text = "x %s" % Helper.format_num(bldgs[bldg])
-					add_child(grid)
-					grid.add_to_group("info_nodes")
-					grid.position.x = v.x - grid.size.x / 2.0 * sc * 2.5
-					grid.position.y = v.y - (grid.size.y + 50) * sc * 2.5
 		else:
 			if game.element_overlay_enabled:
 				add_elements(p_i, v, sc)
 			else:
 				var HX_count = preload("res://Scenes/EntityCount.tscn").instantiate()
-				HX_count.get_node("Texture2D").connect("mouse_entered",Callable(self,"on_entity_icon_over").bind(tr("ENEMIES")))
-				HX_count.get_node("Texture2D").connect("mouse_exited",Callable(self,"on_entity_icon_out"))
+				HX_count.get_node("Texture2D").mouse_entered.connect(on_entity_icon_over.bind(tr("ENEMIES")))
+				HX_count.get_node("Texture2D").mouse_exited.connect(on_entity_icon_out)
 				HX_count.scale *= sc * 3.0
 				HX_count.get_node("Label").text = "x %s" % len(p_i.HX_data)
 				add_child(HX_count)
@@ -245,9 +220,9 @@ func refresh_stars():
 		star.scale.y = max(5.0 * star_info.size / game.STAR_SCALE_DIV, 0.008) * scale_mult
 		star.texture_click_mask = preload("res://Graphics/Misc/StarCM.png")
 		star.position = star_info.pos * scale_mult - Vector2(512, 512) * star.scale.x
-		star.connect("mouse_entered",Callable(self,"on_star_over").bind(i))
-		star.connect("mouse_exited",Callable(self,"on_btn_out"))
-		star.connect("pressed",Callable(self,"on_star_pressed").bind(i))
+		star.mouse_entered.connect(on_star_over.bind(i))
+		star.mouse_exited.connect(on_btn_out)
+		star.pressed.connect(on_star_pressed.bind(i))
 		star.material = ShaderMaterial.new()
 		star.material.shader = preload("res://Shaders/Star.gdshader")
 		star.material.set_shader_parameter("time_offset", 10.0 * randf())
@@ -463,7 +438,10 @@ func show_planet_info(id:int, l_id:int):
 		var tooltip:String = ""
 		var icons:Array = Data.desc_icons[p_i.bldg.name] if p_i.has("tile_num") and Data.desc_icons.has(p_i.bldg.name) else []
 		var additional_tooltip = ""
+		var tile_data:Array = tile_datas[p_i.l_id]
+		var bldgs:Dictionary = {}
 		if p_i.has("tile_num"):
+			Helper.add_to_dict(bldgs, p_i.bldg.name, p_i.tile_num)
 			if p_i.bldg.name in [Building.BORING_MACHINE, Building.GREENHOUSE, Building.ATOM_MANIPULATOR, Building.SUBATOMIC_PARTICLE_REACTOR]:
 				tooltip += "%s (%s %s)\n%s" %  [p_i.name, Helper.format_num(p_i.tile_num), tr("%s_NAME_S" % Building.names[p_i.bldg.name].to_upper()).to_lower(), Helper.get_bldg_tooltip(p_i, p_i, 1)]
 				if p_i.bldg.name == Building.BORING_MACHINE:
@@ -483,6 +461,20 @@ func show_planet_info(id:int, l_id:int):
 					additional_tooltip += tr("PRESS_F_TO_UPGRADE")
 			if game.help.has("planet_details"):
 				additional_tooltip += "\n%s" % [tr("MORE_DETAILS")]
+			for tile in tile_data:
+				if tile and tile.has("bldg") and tile.bldg.has("name"):
+					Helper.add_to_dict(bldgs, tile.bldg.name, 1)
+		if not bldgs.is_empty():
+			game.space_HUD.clear_bldg_info()
+			var bldg_info_node = game.space_HUD.get_node("BldgInfo")
+			for bldg in bldgs:
+				var bldg_count = preload("res://Scenes/EntityCount.tscn").instantiate()
+				bldg_count.alignment = HORIZONTAL_ALIGNMENT_LEFT
+				#bldg_count.get_node("Texture2D").mouse_entered.connect(on_entity_icon_over.bind(tr("%s_NAME" % Building.names[bldg].to_upper())))
+				#bldg_count.get_node("Texture2D").mouse_exited.connect(on_entity_icon_out)
+				bldg_info_node.add_child(bldg_count)
+				bldg_count.get_node("Texture2D").texture = game.bldg_textures[bldg]
+				bldg_count.get_node("Label").text = "x %s" % Helper.format_num(bldgs[bldg])
 		game.show_tooltip(tooltip, {"additional_text":additional_tooltip, "additional_text_delay":1.5, "imgs": Helper.flatten(icons)})
 
 var MS_constr_data:Dictionary = {}
@@ -917,6 +909,7 @@ func on_btn_out ():
 	game.get_node("UI/Panel/AnimationPlayer").play("FadeOut")
 	game.hide_tooltip()
 	MS_constr_data.clear()
+	game.space_HUD.clear_bldg_info()
 
 func _process(_delta):
 	for glow in glows:

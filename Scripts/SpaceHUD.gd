@@ -102,3 +102,7 @@ func _on_stars_pressed():
 	$StarPanel/AnimationPlayer.play("Fade")
 	$StarPanel.visible = true
 	$StarPanel.set_process_input(true)
+
+func clear_bldg_info():
+	for info in $BldgInfo.get_children():
+		info.queue_free()

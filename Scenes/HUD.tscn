@@ -1,4 +1,4 @@
-[gd_scene load_steps=78 format=3 uid="uid://cahlkepfiewe4"]
+[gd_scene format=3 uid="uid://cahlkepfiewe4"]
 
 [ext_resource type="Texture2D" uid="uid://b0brlrg52bjln" path="res://Graphics/Icons/money.png" id="2"]
 [ext_resource type="Texture2D" uid="uid://bm01hxs45q3ga" path="res://Graphics/Icons/energy.png" id="3"]
@@ -18,7 +18,9 @@
 [ext_resource type="Texture2D" uid="uid://4tf3teqmkahc" path="res://Graphics/Misc/Bar.png" id="16"]
 [ext_resource type="Texture2D" uid="uid://chpst12uvadli" path="res://Graphics/Buttons/HUDButton.png" id="16_ij8d5"]
 [ext_resource type="Texture2D" uid="uid://cbg7ol8hmg3w0" path="res://Graphics/Misc/bullet.png" id="18"]
+[ext_resource type="Texture2D" uid="uid://cpco137hhk4m6" path="res://Graphics/Buttons/SwitchView.png" id="20_ljo2x"]
 [ext_resource type="Texture2D" uid="uid://cwuyoxtq8q862" path="res://Graphics/Misc/HUD.png" id="21"]
+[ext_resource type="Texture2D" uid="uid://cy5gx6c6eewnc" path="res://Graphics/Buttons/SwitchViewOver.png" id="21_7gk6a"]
 [ext_resource type="PackedScene" uid="uid://di212twja6t76" path="res://Scenes/Dialogue.tscn" id="23"]
 [ext_resource type="Texture2D" uid="uid://8xmbgjeh4gj0" path="res://Graphics/Buttons/Wiki.png" id="25"]
 [ext_resource type="Texture2D" uid="uid://bqcnfk18r8y88" path="res://Graphics/Materials/glass.png" id="26"]
@@ -28,7 +30,7 @@
 [ext_resource type="Texture2D" uid="uid://bmn03dj3sb6bd" path="res://Graphics/Buttons/NotBookmarked.png" id="30"]
 [ext_resource type="Texture2D" uid="uid://uyvtci76f3tm" path="res://Graphics/Clusters/0.png" id="31"]
 [ext_resource type="Texture2D" uid="uid://di3l36g4r1dp3" path="res://Graphics/Buttons/Bookmarked.png" id="32"]
-[ext_resource type="Texture2D" uid="uid://5ce4ybodlut" path="res://Graphics/Buttons/DimensionView.png" id="33"]
+[ext_resource type="Texture2D" uid="uid://00skisx0co51" path="res://Graphics/Buttons/DimensionView.png" id="33"]
 [ext_resource type="Texture2D" uid="uid://d0cx2q2op61vi" path="res://Graphics/Materials/cellulose.png" id="34"]
 [ext_resource type="Texture2D" uid="uid://b78p7e1sqq6lc" path="res://Graphics/Buttons/Stats.png" id="35"]
 [ext_resource type="Texture2D" uid="uid://cdwo4dwo5gdl7" path="res://Easter eggs/nice.jpg" id="36_g5ll0"]
@@ -440,7 +442,7 @@ _data = {
 &"RESET": SubResource("36")
 }
 
-[node name="HUD" type="Control"]
+[node name="HUD" type="Control" unique_id=934829201]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -451,22 +453,20 @@ mouse_filter = 2
 theme = ExtResource("7")
 script = ExtResource("5")
 
-[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
-libraries = {
-&"": SubResource("AnimationLibrary_noa68")
-}
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=1162001255]
+libraries/ = SubResource("AnimationLibrary_noa68")
 
-[node name="MouseIn" type="Polygon2D" parent="."]
+[node name="MouseIn" type="Polygon2D" parent="." unique_id=976098554]
 visible = false
 polygon = PackedVector2Array(0, 110, 30, 110, 30, 232, 0, 232)
 
-[node name="MouseOut" type="Polygon2D" parent="."]
+[node name="MouseOut" type="Polygon2D" parent="." unique_id=1696718437]
 visible = false
 position = Vector2(0, -6.10526)
 scale = Vector2(1, 1.02632)
 polygon = PackedVector2Array(0, 80, 224, 79.9997, 224, 231.999, 0, 232)
 
-[node name="Bookmarks" type="Control" parent="."]
+[node name="Bookmarks" type="Control" parent="." unique_id=908502029]
 layout_mode = 1
 anchors_preset = 0
 offset_left = -180.0
@@ -475,7 +475,7 @@ offset_right = -180.0
 offset_bottom = 108.0
 mouse_filter = 1
 
-[node name="Bookmarked" type="TextureButton" parent="Bookmarks"]
+[node name="Bookmarked" type="TextureButton" parent="Bookmarks" unique_id=1626019730]
 layout_mode = 0
 offset_left = 180.0
 offset_top = -32.0
@@ -489,7 +489,7 @@ texture_pressed = ExtResource("32")
 ignore_texture_size = true
 stretch_mode = 5
 
-[node name="BookMarkButtons" type="VBoxContainer" parent="Bookmarks"]
+[node name="BookMarkButtons" type="VBoxContainer" parent="Bookmarks" unique_id=925140482]
 layout_mode = 0
 offset_left = 180.0
 offset_top = -4.0
@@ -497,11 +497,11 @@ offset_right = 216.0
 offset_bottom = 124.0
 theme_override_constants/separation = 0
 
-[node name="Planets" type="Button" parent="Bookmarks/BookMarkButtons"]
+[node name="Planets" type="Button" parent="Bookmarks/BookMarkButtons" unique_id=1909467212]
 custom_minimum_size = Vector2(32, 32)
 layout_mode = 2
 
-[node name="TextureRect" type="TextureRect" parent="Bookmarks/BookMarkButtons/Planets"]
+[node name="TextureRect" type="TextureRect" parent="Bookmarks/BookMarkButtons/Planets" unique_id=1411657045]
 custom_minimum_size = Vector2(20, 20)
 layout_mode = 1
 anchors_preset = 8
@@ -519,11 +519,11 @@ texture = ExtResource("27")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="Systems" type="Button" parent="Bookmarks/BookMarkButtons"]
+[node name="Systems" type="Button" parent="Bookmarks/BookMarkButtons" unique_id=248410572]
 custom_minimum_size = Vector2(32, 32)
 layout_mode = 2
 
-[node name="TextureRect" type="TextureRect" parent="Bookmarks/BookMarkButtons/Systems"]
+[node name="TextureRect" type="TextureRect" parent="Bookmarks/BookMarkButtons/Systems" unique_id=1497783199]
 modulate = Color(1, 1, 1, 0.501961)
 custom_minimum_size = Vector2(20, 20)
 layout_mode = 1
@@ -542,11 +542,11 @@ texture = ExtResource("28")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="Galaxies" type="Button" parent="Bookmarks/BookMarkButtons"]
+[node name="Galaxies" type="Button" parent="Bookmarks/BookMarkButtons" unique_id=372701975]
 custom_minimum_size = Vector2(32, 32)
 layout_mode = 2
 
-[node name="TextureRect" type="TextureRect" parent="Bookmarks/BookMarkButtons/Galaxies"]
+[node name="TextureRect" type="TextureRect" parent="Bookmarks/BookMarkButtons/Galaxies" unique_id=940273584]
 modulate = Color(1, 1, 1, 0.501961)
 custom_minimum_size = Vector2(20, 20)
 layout_mode = 1
@@ -565,11 +565,11 @@ texture = ExtResource("29")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="Clusters" type="Button" parent="Bookmarks/BookMarkButtons"]
+[node name="Clusters" type="Button" parent="Bookmarks/BookMarkButtons" unique_id=1262430773]
 custom_minimum_size = Vector2(32, 32)
 layout_mode = 2
 
-[node name="TextureRect" type="TextureRect" parent="Bookmarks/BookMarkButtons/Clusters"]
+[node name="TextureRect" type="TextureRect" parent="Bookmarks/BookMarkButtons/Clusters" unique_id=1855514607]
 modulate = Color(1, 1, 1, 0.501961)
 custom_minimum_size = Vector2(20, 20)
 layout_mode = 1
@@ -588,14 +588,14 @@ texture = ExtResource("31")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="BookmarksList" type="Panel" parent="Bookmarks"]
+[node name="BookmarksList" type="Panel" parent="Bookmarks" unique_id=2136708933]
 layout_mode = 0
 offset_left = -2.0
 offset_top = -4.0
 offset_right = 180.0
 offset_bottom = 124.0
 
-[node name="Buttons" type="ScrollContainer" parent="Bookmarks/BookmarksList"]
+[node name="Buttons" type="ScrollContainer" parent="Bookmarks/BookmarksList" unique_id=407592813]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -609,12 +609,12 @@ grow_vertical = 2
 theme_override_styles/panel = SubResource("StyleBoxEmpty_135og")
 horizontal_scroll_mode = 3
 
-[node name="VBoxContainer" type="VBoxContainer" parent="Bookmarks/BookmarksList/Buttons"]
+[node name="VBoxContainer" type="VBoxContainer" parent="Bookmarks/BookmarksList/Buttons" unique_id=206199459]
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_constants/separation = 0
 
-[node name="Buttons" type="VBoxContainer" parent="."]
+[node name="Buttons" type="VBoxContainer" parent="." unique_id=1962798273]
 layout_mode = 0
 offset_left = 1232.0
 offset_top = 48.0
@@ -624,7 +624,7 @@ mouse_filter = 2
 theme_override_constants/separation = 0
 alignment = 1
 
-[node name="Ships" type="TextureButton" parent="Buttons"]
+[node name="Ships" type="TextureButton" parent="Buttons" unique_id=312227813]
 material = SubResource("40")
 custom_minimum_size = Vector2(0, 48)
 layout_mode = 2
@@ -636,7 +636,7 @@ texture_hover = ExtResource("10_esw7j")
 ignore_texture_size = true
 stretch_mode = 5
 
-[node name="TextureRect" type="TextureRect" parent="Buttons/Ships"]
+[node name="TextureRect" type="TextureRect" parent="Buttons/Ships" unique_id=711345088]
 layout_mode = 0
 offset_left = 5.0
 offset_top = 11.0
@@ -647,7 +647,7 @@ texture = ExtResource("10_tvuu7")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="Vehicles" type="TextureButton" parent="Buttons"]
+[node name="Vehicles" type="TextureButton" parent="Buttons" unique_id=320251580]
 material = SubResource("ShaderMaterial_fio52")
 custom_minimum_size = Vector2(0, 48)
 layout_mode = 2
@@ -659,12 +659,10 @@ texture_hover = ExtResource("10_esw7j")
 ignore_texture_size = true
 stretch_mode = 5
 
-[node name="AnimationPlayer" type="AnimationPlayer" parent="Buttons/Vehicles"]
-libraries = {
-&"": SubResource("AnimationLibrary_bsw7h")
-}
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Buttons/Vehicles" unique_id=292466019]
+libraries/ = SubResource("AnimationLibrary_bsw7h")
 
-[node name="TextureRect" type="TextureRect" parent="Buttons/Vehicles"]
+[node name="TextureRect" type="TextureRect" parent="Buttons/Vehicles" unique_id=1512117021]
 layout_mode = 0
 offset_left = 8.0
 offset_top = 8.0
@@ -674,7 +672,7 @@ texture = ExtResource("10_eukkl")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="Craft" type="TextureButton" parent="Buttons"]
+[node name="Craft" type="TextureButton" parent="Buttons" unique_id=1651106379]
 custom_minimum_size = Vector2(0, 48)
 layout_mode = 2
 keep_pressed_outside = true
@@ -685,7 +683,7 @@ texture_hover = ExtResource("10_esw7j")
 ignore_texture_size = true
 stretch_mode = 5
 
-[node name="TextureRect" type="TextureRect" parent="Buttons/Craft"]
+[node name="TextureRect" type="TextureRect" parent="Buttons/Craft" unique_id=1320761029]
 layout_mode = 0
 offset_left = 8.0
 offset_top = 8.0
@@ -695,7 +693,7 @@ texture = ExtResource("11_tvuu7")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="Inventory" type="TextureButton" parent="Buttons"]
+[node name="Inventory" type="TextureButton" parent="Buttons" unique_id=828297440]
 custom_minimum_size = Vector2(0, 48)
 layout_mode = 2
 shortcut = SubResource("18")
@@ -705,7 +703,7 @@ texture_hover = ExtResource("10_esw7j")
 ignore_texture_size = true
 stretch_mode = 5
 
-[node name="TextureRect" type="TextureRect" parent="Buttons/Inventory"]
+[node name="TextureRect" type="TextureRect" parent="Buttons/Inventory" unique_id=297988315]
 layout_mode = 0
 offset_left = 8.0
 offset_top = 8.0
@@ -715,7 +713,7 @@ texture = ExtResource("12_esw7j")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="Shop" type="TextureButton" parent="Buttons"]
+[node name="Shop" type="TextureButton" parent="Buttons" unique_id=1715720264]
 custom_minimum_size = Vector2(0, 48)
 layout_mode = 2
 shortcut = SubResource("20")
@@ -725,7 +723,7 @@ texture_hover = ExtResource("10_esw7j")
 ignore_texture_size = true
 stretch_mode = 5
 
-[node name="TextureRect" type="TextureRect" parent="Buttons/Shop"]
+[node name="TextureRect" type="TextureRect" parent="Buttons/Shop" unique_id=1166212740]
 layout_mode = 0
 offset_left = 8.0
 offset_top = 8.0
@@ -735,7 +733,7 @@ texture = ExtResource("2")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="MineralUpgrades" type="TextureButton" parent="Buttons"]
+[node name="MineralUpgrades" type="TextureButton" parent="Buttons" unique_id=1149720442]
 custom_minimum_size = Vector2(0, 48)
 layout_mode = 2
 shortcut = SubResource("22")
@@ -745,7 +743,7 @@ texture_hover = ExtResource("10_esw7j")
 ignore_texture_size = true
 stretch_mode = 5
 
-[node name="TextureRect" type="TextureRect" parent="Buttons/MineralUpgrades"]
+[node name="TextureRect" type="TextureRect" parent="Buttons/MineralUpgrades" unique_id=621399617]
 layout_mode = 0
 offset_left = 8.0
 offset_top = 8.0
@@ -755,7 +753,7 @@ texture = ExtResource("4")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="ScienceTree" type="TextureButton" parent="Buttons"]
+[node name="ScienceTree" type="TextureButton" parent="Buttons" unique_id=685530710]
 custom_minimum_size = Vector2(0, 48)
 layout_mode = 2
 shortcut = SubResource("24")
@@ -765,7 +763,7 @@ texture_hover = ExtResource("10_esw7j")
 ignore_texture_size = true
 stretch_mode = 5
 
-[node name="TextureRect" type="TextureRect" parent="Buttons/ScienceTree"]
+[node name="TextureRect" type="TextureRect" parent="Buttons/ScienceTree" unique_id=1050677913]
 layout_mode = 0
 offset_left = 12.0
 offset_top = 12.0
@@ -775,7 +773,7 @@ texture = ExtResource("12")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="MainMenu" type="TextureButton" parent="Buttons"]
+[node name="MainMenu" type="TextureButton" parent="Buttons" unique_id=1201170310]
 custom_minimum_size = Vector2(0, 48)
 layout_mode = 2
 shortcut_in_tooltip = false
@@ -784,7 +782,7 @@ texture_hover = ExtResource("10_esw7j")
 ignore_texture_size = true
 stretch_mode = 5
 
-[node name="TextureRect" type="TextureRect" parent="Buttons/MainMenu"]
+[node name="TextureRect" type="TextureRect" parent="Buttons/MainMenu" unique_id=461634839]
 layout_mode = 0
 offset_left = 4.0
 offset_top = 4.0
@@ -794,25 +792,25 @@ texture = ExtResource("14")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="Bottom" type="Control" parent="."]
+[node name="Bottom" type="Control" parent="." unique_id=1762867113]
 anchors_preset = 0
 offset_right = 40.0
 offset_bottom = 40.0
 
-[node name="Panel" type="Panel" parent="Bottom"]
+[node name="Panel" type="Panel" parent="Bottom" unique_id=553269052]
 layout_mode = 0
 offset_left = 1220.0
 offset_top = 656.0
 offset_right = 1272.0
 offset_bottom = 704.0
 
-[node name="ColorRect" type="ColorRect" parent="Bottom/Panel"]
+[node name="ColorRect" type="ColorRect" parent="Bottom/Panel" unique_id=1625401619]
 layout_mode = 0
 anchor_right = 1.0
 anchor_bottom = 1.0
 color = Color(1, 1, 1, 0)
 
-[node name="ConvertMinerals" type="TextureButton" parent="Bottom/Panel"]
+[node name="ConvertMinerals" type="TextureButton" parent="Bottom/Panel" unique_id=1556530902]
 layout_mode = 0
 anchor_left = 0.5
 anchor_top = 0.5
@@ -828,12 +826,10 @@ texture_normal = ExtResource("15")
 ignore_texture_size = true
 stretch_mode = 5
 
-[node name="AnimationPlayer" type="AnimationPlayer" parent="Bottom/Panel"]
-libraries = {
-&"": SubResource("AnimationLibrary_4yly8")
-}
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Bottom/Panel" unique_id=1732532704]
+libraries/ = SubResource("AnimationLibrary_4yly8")
 
-[node name="DimensionBtn" type="TextureButton" parent="Bottom"]
+[node name="DimensionBtn" type="TextureButton" parent="Bottom" unique_id=1577414492]
 layout_mode = 0
 anchor_top = 1.0
 anchor_bottom = 1.0
@@ -841,11 +837,24 @@ offset_left = 48.0
 offset_top = 632.0
 offset_right = 96.0
 offset_bottom = 680.0
-texture_normal = ExtResource("33")
+texture_normal = ExtResource("20_ljo2x")
+texture_hover = ExtResource("21_7gk6a")
 ignore_texture_size = true
 stretch_mode = 5
 
-[node name="SwitchBtn" type="TextureButton" parent="Bottom"]
+[node name="TextureRect" type="TextureRect" parent="Bottom/DimensionBtn" unique_id=1668441562]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+texture = ExtResource("33")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="SwitchBtn" type="TextureButton" parent="Bottom" unique_id=391210438]
 layout_mode = 0
 anchor_top = 1.0
 anchor_bottom = 1.0
@@ -855,10 +864,23 @@ offset_bottom = 680.0
 shortcut = SubResource("30")
 shortcut_feedback = false
 shortcut_in_tooltip = false
+texture_normal = ExtResource("20_ljo2x")
+texture_hover = ExtResource("21_7gk6a")
 ignore_texture_size = true
 stretch_mode = 5
 
-[node name="PrevView" type="Button" parent="Bottom"]
+[node name="TextureRect" type="TextureRect" parent="Bottom/SwitchBtn" unique_id=184254654]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+expand_mode = 1
+stretch_mode = 5
+
+[node name="PrevView" type="Button" parent="Bottom" unique_id=1405866806]
 layout_mode = 0
 offset_top = 636.0
 offset_right = 36.0
@@ -867,7 +889,7 @@ shortcut = SubResource("32")
 shortcut_in_tooltip = false
 text = "<"
 
-[node name="NextView" type="Button" parent="Bottom"]
+[node name="NextView" type="Button" parent="Bottom" unique_id=1227825423]
 layout_mode = 0
 offset_left = 36.0
 offset_top = 636.0
@@ -877,7 +899,7 @@ shortcut = SubResource("34")
 shortcut_in_tooltip = false
 text = ">"
 
-[node name="Hotbar" type="HBoxContainer" parent="Bottom"]
+[node name="Hotbar" type="HBoxContainer" parent="Bottom" unique_id=1597170676]
 layout_mode = 0
 offset_top = 680.0
 offset_right = 1829.0
@@ -887,22 +909,22 @@ mouse_filter = 2
 alignment = 1
 metadata/_edit_lock_ = true
 
-[node name="ViewHistory" type="ScrollContainer" parent="Bottom"]
+[node name="ViewHistory" type="ScrollContainer" parent="Bottom" unique_id=670889755]
 visible = false
 layout_mode = 0
 offset_top = 516.0
 offset_right = 216.0
 offset_bottom = 628.0
 
-[node name="VBox" type="VBoxContainer" parent="Bottom/ViewHistory"]
+[node name="VBox" type="VBoxContainer" parent="Bottom/ViewHistory" unique_id=1977722240]
 layout_mode = 2
 
-[node name="Top" type="Control" parent="."]
+[node name="Top" type="Control" parent="." unique_id=1446625118]
 anchors_preset = 0
 offset_right = 40.0
 offset_bottom = 40.0
 
-[node name="Objectives" type="Control" parent="Top"]
+[node name="Objectives" type="Control" parent="Top" unique_id=86440952]
 anchors_preset = 0
 offset_left = 640.0
 offset_top = 4.0
@@ -910,7 +932,7 @@ offset_right = 680.0
 offset_bottom = 44.0
 mouse_filter = 1
 
-[node name="Label" type="Label" parent="Top/Objectives"]
+[node name="Label" type="Label" parent="Top/Objectives" unique_id=840844026]
 visible = false
 layout_mode = 0
 offset_left = -44.0
@@ -920,7 +942,7 @@ grow_horizontal = 2
 mouse_filter = 0
 text = "Build 5 mineral extractors"
 
-[node name="TextureProgressBar" type="TextureProgressBar" parent="Top/Objectives"]
+[node name="TextureProgressBar" type="TextureProgressBar" parent="Top/Objectives" unique_id=68781718]
 modulate = Color(1, 1, 1, 0.305882)
 layout_mode = 0
 offset_left = -44.0
@@ -930,21 +952,21 @@ mouse_filter = 2
 nine_patch_stretch = true
 texture_progress = ExtResource("16")
 
-[node name="Lv" type="VBoxContainer" parent="Top"]
+[node name="Lv" type="VBoxContainer" parent="Top" unique_id=980507248]
 layout_mode = 0
 offset_top = 38.0
 offset_right = 48.0
 offset_bottom = 77.0
 theme_override_constants/separation = 0
 
-[node name="Level" type="Label" parent="Top/Lv"]
+[node name="Level" type="Label" parent="Top/Lv" unique_id=43323047]
 layout_mode = 2
 mouse_filter = 0
 theme_override_styles/normal = SubResource("StyleBoxFlat_jjxme")
 text = "Lv 10"
 label_settings = SubResource("LabelSettings_uu53f")
 
-[node name="TextureProgressBar" type="TextureProgressBar" parent="Top/Lv"]
+[node name="TextureProgressBar" type="TextureProgressBar" parent="Top/Lv" unique_id=1810527173]
 modulate = Color(0, 1, 0, 1)
 custom_minimum_size = Vector2(0, 3)
 layout_mode = 2
@@ -954,14 +976,14 @@ value = 1.0
 nine_patch_stretch = true
 texture_progress = ExtResource("16")
 
-[node name="Name" type="HBoxContainer" parent="Top"]
+[node name="Name" type="HBoxContainer" parent="Top" unique_id=1742331215]
 layout_mode = 0
 offset_left = 144.0
 offset_top = 38.0
 offset_right = 201.0
 offset_bottom = 72.0
 
-[node name="Name" type="LineEdit" parent="Top/Name"]
+[node name="Name" type="LineEdit" parent="Top/Name" unique_id=1745081332]
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 1, 1, 1)
 theme_override_colors/font_selected_color = Color(0, 0, 0, 1)
@@ -976,25 +998,25 @@ select_all_on_focus = true
 caret_blink = true
 caret_blink_interval = 0.5
 
-[node name="TextureRect" type="TextureRect" parent="Top"]
+[node name="TextureRect" type="TextureRect" parent="Top" unique_id=640393901]
 layout_mode = 0
 offset_right = 1280.0
 offset_bottom = 45.0
 texture = ExtResource("21")
 
-[node name="Resources" type="HBoxContainer" parent="Top"]
+[node name="Resources" type="HBoxContainer" parent="Top" unique_id=2144324628]
 layout_mode = 0
 offset_top = 4.0
 offset_right = 1176.0
 offset_bottom = 36.0
 
-[node name="Money" type="Control" parent="Top/Resources"]
+[node name="Money" type="Control" parent="Top/Resources" unique_id=1738895474]
 custom_minimum_size = Vector2(40, 0)
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_stretch_ratio = 0.8
 
-[node name="Text" type="Label" parent="Top/Resources/Money"]
+[node name="Text" type="Label" parent="Top/Resources/Money" unique_id=1746719651]
 layout_mode = 0
 offset_left = 44.0
 offset_right = 77.0
@@ -1002,7 +1024,7 @@ offset_bottom = 32.0
 text = "100"
 vertical_alignment = 1
 
-[node name="Texture2D" type="TextureButton" parent="Top/Resources/Money"]
+[node name="Texture2D" type="TextureButton" parent="Top/Resources/Money" unique_id=930411078]
 layout_mode = 0
 offset_left = 10.0
 offset_right = 40.0
@@ -1012,13 +1034,13 @@ texture_normal = ExtResource("2")
 ignore_texture_size = true
 stretch_mode = 5
 
-[node name="Minerals" type="Control" parent="Top/Resources"]
+[node name="Minerals" type="Control" parent="Top/Resources" unique_id=782451320]
 custom_minimum_size = Vector2(40, 0)
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_stretch_ratio = 1.1
 
-[node name="Text" type="Label" parent="Top/Resources/Minerals"]
+[node name="Text" type="Label" parent="Top/Resources/Minerals" unique_id=1804684137]
 layout_mode = 0
 offset_left = 44.0
 offset_right = 116.0
@@ -1027,7 +1049,7 @@ mouse_filter = 1
 text = "100/100"
 vertical_alignment = 1
 
-[node name="Texture2D" type="TextureButton" parent="Top/Resources/Minerals"]
+[node name="Texture2D" type="TextureButton" parent="Top/Resources/Minerals" unique_id=225496605]
 layout_mode = 0
 offset_left = 4.0
 offset_right = 35.0
@@ -1036,12 +1058,12 @@ texture_normal = ExtResource("4")
 ignore_texture_size = true
 stretch_mode = 5
 
-[node name="Stone" type="Control" parent="Top/Resources"]
+[node name="Stone" type="Control" parent="Top/Resources" unique_id=1639978148]
 custom_minimum_size = Vector2(40, 0)
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="Text" type="Label" parent="Top/Resources/Stone"]
+[node name="Text" type="Label" parent="Top/Resources/Stone" unique_id=1983248994]
 layout_mode = 0
 offset_left = 44.0
 offset_right = 187.0
@@ -1050,7 +1072,7 @@ size_flags_horizontal = 3
 text = "100"
 vertical_alignment = 1
 
-[node name="Texture2D" type="TextureButton" parent="Top/Resources/Stone"]
+[node name="Texture2D" type="TextureButton" parent="Top/Resources/Stone" unique_id=1893690942]
 layout_mode = 0
 offset_left = -2.0
 offset_top = -4.0
@@ -1060,14 +1082,14 @@ scale = Vector2(0.14, 0.14)
 texture_normal = ExtResource("8")
 ignore_texture_size = true
 
-[node name="Soil" type="Control" parent="Top/Resources"]
+[node name="Soil" type="Control" parent="Top/Resources" unique_id=1323890795]
 visible = false
 custom_minimum_size = Vector2(40, 0)
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_stretch_ratio = 0.8
 
-[node name="Text" type="Label" parent="Top/Resources/Soil"]
+[node name="Text" type="Label" parent="Top/Resources/Soil" unique_id=27252475]
 layout_mode = 0
 offset_left = 44.0
 offset_top = 4.0
@@ -1076,7 +1098,7 @@ offset_bottom = 28.0
 size_flags_horizontal = 3
 text = "100"
 
-[node name="Texture2D" type="TextureButton" parent="Top/Resources/Soil"]
+[node name="Texture2D" type="TextureButton" parent="Top/Resources/Soil" unique_id=1771964133]
 layout_mode = 0
 offset_left = -2.0
 offset_top = -4.0
@@ -1086,13 +1108,13 @@ scale = Vector2(0.14, 0.14)
 texture_normal = ExtResource("11")
 ignore_texture_size = true
 
-[node name="Glass" type="Control" parent="Top/Resources"]
+[node name="Glass" type="Control" parent="Top/Resources" unique_id=1361228441]
 visible = false
 custom_minimum_size = Vector2(40, 0)
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="Text" type="Label" parent="Top/Resources/Glass"]
+[node name="Text" type="Label" parent="Top/Resources/Glass" unique_id=1334647608]
 layout_mode = 0
 offset_left = 44.0
 offset_top = 4.0
@@ -1101,7 +1123,7 @@ offset_bottom = 28.0
 size_flags_horizontal = 3
 text = "100"
 
-[node name="Texture2D" type="TextureButton" parent="Top/Resources/Glass"]
+[node name="Texture2D" type="TextureButton" parent="Top/Resources/Glass" unique_id=739299920]
 layout_mode = 0
 offset_left = -2.0
 offset_top = -4.0
@@ -1111,13 +1133,13 @@ scale = Vector2(0.14, 0.14)
 texture_normal = ExtResource("26")
 ignore_texture_size = true
 
-[node name="Cellulose" type="Control" parent="Top/Resources"]
+[node name="Cellulose" type="Control" parent="Top/Resources" unique_id=705222174]
 custom_minimum_size = Vector2(40, 0)
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_stretch_ratio = 0.8
 
-[node name="Text" type="Label" parent="Top/Resources/Cellulose"]
+[node name="Text" type="Label" parent="Top/Resources/Cellulose" unique_id=1675874200]
 layout_mode = 0
 offset_left = 44.0
 offset_right = 157.0
@@ -1126,7 +1148,7 @@ size_flags_horizontal = 3
 text = "100"
 vertical_alignment = 1
 
-[node name="Texture2D" type="TextureButton" parent="Top/Resources/Cellulose"]
+[node name="Texture2D" type="TextureButton" parent="Top/Resources/Cellulose" unique_id=1212744648]
 layout_mode = 0
 offset_left = -1.0
 offset_right = 31.0
@@ -1135,13 +1157,13 @@ texture_normal = ExtResource("34")
 ignore_texture_size = true
 stretch_mode = 5
 
-[node name="Energy" type="Control" parent="Top/Resources"]
+[node name="Energy" type="Control" parent="Top/Resources" unique_id=2112954579]
 custom_minimum_size = Vector2(40, 0)
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_stretch_ratio = 1.1
 
-[node name="Text" type="Label" parent="Top/Resources/Energy"]
+[node name="Text" type="Label" parent="Top/Resources/Energy" unique_id=336863166]
 layout_mode = 0
 offset_left = 44.0
 offset_right = 209.0
@@ -1149,7 +1171,7 @@ offset_bottom = 32.0
 text = "100"
 vertical_alignment = 1
 
-[node name="Texture2D" type="TextureButton" parent="Top/Resources/Energy"]
+[node name="Texture2D" type="TextureButton" parent="Top/Resources/Energy" unique_id=483700315]
 layout_mode = 0
 offset_left = 4.0
 offset_right = 35.0
@@ -1158,12 +1180,12 @@ texture_normal = ExtResource("3")
 ignore_texture_size = true
 stretch_mode = 5
 
-[node name="SP" type="Control" parent="Top/Resources"]
+[node name="SP" type="Control" parent="Top/Resources" unique_id=1733076344]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_stretch_ratio = 0.95
 
-[node name="Text" type="Label" parent="Top/Resources/SP"]
+[node name="Text" type="Label" parent="Top/Resources/SP" unique_id=1485195514]
 layout_mode = 0
 offset_left = 44.0
 offset_right = 84.0
@@ -1171,7 +1193,7 @@ offset_bottom = 32.0
 text = "100"
 vertical_alignment = 1
 
-[node name="Texture2D" type="TextureButton" parent="Top/Resources/SP"]
+[node name="Texture2D" type="TextureButton" parent="Top/Resources/SP" unique_id=278295025]
 layout_mode = 0
 offset_left = -6.0
 offset_top = 4.0
@@ -1181,7 +1203,7 @@ texture_normal = ExtResource("12")
 ignore_texture_size = true
 stretch_mode = 5
 
-[node name="AutosaveLight" type="TextureRect" parent="Top"]
+[node name="AutosaveLight" type="TextureRect" parent="Top" unique_id=1441581012]
 modulate = Color(0, 0.301961, 0, 1)
 layout_mode = 0
 offset_left = 1120.0
@@ -1192,7 +1214,7 @@ texture = ExtResource("18")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="Wiki" type="TextureButton" parent="Top"]
+[node name="Wiki" type="TextureButton" parent="Top" unique_id=775693568]
 layout_mode = 0
 offset_left = 1200.0
 offset_right = 1230.0
@@ -1201,7 +1223,7 @@ texture_normal = ExtResource("25")
 ignore_texture_size = true
 stretch_mode = 5
 
-[node name="Stats" type="TextureButton" parent="Top"]
+[node name="Stats" type="TextureButton" parent="Top" unique_id=1310110897]
 layout_mode = 0
 offset_left = 1156.0
 offset_right = 1186.0
@@ -1210,16 +1232,14 @@ texture_normal = ExtResource("35")
 ignore_texture_size = true
 stretch_mode = 5
 
-[node name="AnimationPlayer2" type="AnimationPlayer" parent="."]
-libraries = {
-&"": SubResource("AnimationLibrary_f72sx")
-}
+[node name="AnimationPlayer2" type="AnimationPlayer" parent="." unique_id=536407215]
+libraries/ = SubResource("AnimationLibrary_f72sx")
 
-[node name="Dialogue" parent="." instance=ExtResource("23")]
+[node name="Dialogue" parent="." unique_id=1458125333 instance=ExtResource("23")]
 anchors_preset = 0
 mouse_filter = 2
 
-[node name="Nice" type="TextureRect" parent="."]
+[node name="Nice" type="TextureRect" parent="." unique_id=192583790]
 visible = false
 layout_mode = 0
 offset_right = 40.0
