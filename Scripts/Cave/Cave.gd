@@ -178,11 +178,11 @@ func _ready():
 	right_inventory = rover_data.right_inventory
 	i_w_w = rover_data.i_w_w
 	enhancements = rover_data.get("enhancements", {})
-	if right_inventory[0].get("type") == "rover_weapons":
+	if right_inventory[0].get("type") == Item.Type.ROVER_WEAPON:
 		laser_name = right_inventory[0].id.split("_")[0]
 	else:
 		for i in len(inventory):
-			if inventory[i].get("type") == "rover_weapons":
+			if inventory[i].get("type") == Item.Type.ROVER_WEAPON:
 				laser_name = inventory[i].id.split("_")[0]
 	laser_damage = Data.rover_weapons[laser_name + "_laser"].damage * atk * rover_size * game.u_i.charge
 	if rover_data.MK == 2:
@@ -375,12 +375,12 @@ func on_filter_mouse_exited():
 	game.hide_tooltip()
 
 func set_slot_info(slot, _inv:Dictionary):
-	var rsrc = _inv.type
-	if rsrc == "":
+	var rsrc_type = _inv.type
+	if rsrc_type == "":
 		return
-	if rsrc == "rover_weapons":
+	if rsrc_type == Item.Type.ROVER_WEAPON:
 		slot.get_node("TextureRect").texture = load("res://Graphics/Cave/Weapons/" + _inv.id + ".png")
-	elif rsrc == "rover_mining":
+	elif rsrc_type == Item.Type.ROVER_MINING:
 		var c:Color = get_color(_inv.id.split("_")[0])
 		mining_laser.material["shader_parameter/outline_color"] = c
 		mining_laser.get_node("PointLight2D").color = c
@@ -388,7 +388,7 @@ func set_slot_info(slot, _inv:Dictionary):
 			mining_laser.get_node("PointLight2D").energy = 3
 		else:
 			mining_laser.get_node("PointLight2D").energy = 2
-		var speed = Data.rover_mining[_inv.id].speed
+		var speed = Item.data[_inv.id].speed
 		mining_p.amount = int(25 * pow(speed, 0.2) * pow(rover_size, 2 * 0.2) * time_speed)
 		mining_p.process_material.initial_velocity_min = 300 * pow(speed, 0.3) * pow(rover_size, 2 * 0.3) * time_speed
 		mining_p.process_material.initial_velocity_max = 500 * pow(speed, 0.3) * pow(rover_size, 2 * 0.3) * time_speed
@@ -396,7 +396,6 @@ func set_slot_info(slot, _inv:Dictionary):
 		slot.get_node("TextureRect").texture = load("res://Graphics/Cave/Mining/" + _inv.id + ".png")
 	else:
 		if _inv.id is int:
-			print(_inv)
 			slot.get_node("TextureRect").texture = load("res://Graphics/Items/%s/%s.png" % [Item.icon_directory(_inv.type), Item.data[_inv.id].item_name])
 		elif _inv.id == "money":
 			slot.get_node("TextureRect").texture = Data.money_icon
@@ -1000,15 +999,15 @@ var mining_debris:int = -1
 func update_ray():
 	var _inv:Dictionary
 	var _tile_highlight
-	var left_type:String = inventory[curr_slot].type if not inventory[curr_slot].is_empty() else ""
-	var right_type:String = right_inventory[0].type if not right_inventory[0].is_empty() else ""
-	ray.enabled = "rover_mining" in [left_type, right_type]
+	var left_type:int = inventory[curr_slot].get("type")
+	var right_type:int = right_inventory[0].get("type")
+	ray.enabled = Item.Type.ROVER_MINING in [left_type, right_type]
 	var holding_click:bool
-	if left_type == "rover_mining":
+	if left_type == Item.Type.ROVER_MINING:
 		_inv = inventory[curr_slot]
 		_tile_highlight = tile_highlight_left
 		holding_click = use_item_node.button_pressed
-	elif right_type == "rover_mining":
+	elif right_type == Item.Type.ROVER_MINING:
 		_inv = right_inventory[0]
 		_tile_highlight = tile_highlight_right
 		holding_click = Input.is_action_pressed("right_click")
@@ -1033,7 +1032,7 @@ func update_ray():
 		RoD_coll.shape.b.x = l
 		RoD_coll2.shape.b.x = l
 	if ray.enabled:
-		var laser_reach = Data.rover_mining[_inv.id].rnge
+		var laser_reach = Item.data[_inv.id].range
 		ray.target_position = (mouse_pos - rover.position).normalized() * laser_reach
 		var coll = ray.get_collider()
 		mining_p.emitting = holding_click if coll else false
@@ -1087,7 +1086,7 @@ func _input(event):
 		mouse_pos = global_mouse_pos + camera.position - Vector2(640, 360)
 		update_ray()
 		var alpha:float = clamp(remap((global_mouse_pos - Vector2(1280, 0)).length(), 0.0, 500.0, -1.0, 1.0), 0.0, 1.0)
-		if (inventory[curr_slot].is_empty() or inventory[curr_slot].type != "rover_weapons") and (right_inventory[0].is_empty() or right_inventory[0].type != "rover_weapons"):
+		if (inventory[curr_slot].is_empty() or inventory[curr_slot].type != Item.Type.ROVER_WEAPON) and (right_inventory[0].is_empty() or right_inventory[0].type != Item.Type.ROVER_WEAPON):
 			alpha = 1.0
 		for MM in $UI.get_children():
 			MM.modulate.a = alpha
@@ -1407,7 +1406,7 @@ func _process(delta):
 
 func use_item(item:Dictionary, _tile_highlight, delta):
 	var firing_RoD:bool = not ability_timer.is_stopped() and ability == "laser_2"
-	if item.type == "rover_weapons":
+	if item.type == Item.Type.ROVER_WEAPON:
 		var base_angle:float = atan2(mouse_pos.y - rover.position.y, mouse_pos.x - rover.position.x)
 		attack(base_angle)
 		if not ability_timer.is_stopped() and ability == "laser_8":
@@ -1427,24 +1426,24 @@ func use_item(item:Dictionary, _tile_highlight, delta):
 		if status_effects.has("invincible") and enhancements.has("armor_6") and not firing_RoD:
 			cooldown /= 3.0
 		cooldown(cooldown)
-	elif item.type == "rover_mining":
+	elif item.type == Item.Type.ROVER_MINING:
 		if tile_highlighted_for_mining != -1:
 			mine_wall(item, _tile_highlight, delta)
 		elif mining_debris != -1:
 			mine_debris(item, delta)
 		update_ray()
-	elif item.type == "consumable":
-		if item.name.substr(0, 17) == "portable_wormhole":
-			if cave_floor <= game.craft_cave_info[item.name].limit:
+	elif item.name is int:
+		if item.type == Item.Type.PORTABLE_WORMHOLE:
+			if cave_floor <= Item.data[item.name].limit:
 				remove_item(item, 1)
 				exit_cave()
 			else:
 				game.popup(tr("WH_ERROR"), 2.0)
-		elif item.name.substr(0, 5) == "drill":
+		if item.type == Item.Type.DRILL:
 			if tile.cave.has("special_cave"):
 				game.popup(tr("DRILL_ERROR"), 2.0)
 				return
-			if cave_floor >= game.craft_cave_info[item.name].limit:
+			if cave_floor >= Item.data[item.name].limit:
 				game.popup(tr("DRILL_ERROR3"), 1.5)
 				return
 			if cave_floor == num_floors:
@@ -1593,7 +1592,7 @@ func mine_wall(item:Dictionary, _tile_highlight, delta):
 		tile.bar = sq_bar
 	if st != "-1":
 		var sq_bar = tiles_touched_by_laser[st].bar
-		tiles_touched_by_laser[st].progress += Data.rover_mining[item.id].speed * delta * 60 * pow(rover_size, 2) * time_speed * game.u_i.charge
+		tiles_touched_by_laser[st].progress += Item.data[item.id].speed * delta * 60 * pow(rover_size, 2) * time_speed * game.u_i.charge
 		sq_bar.set_progress(tiles_touched_by_laser[st].progress)
 		if tiles_touched_by_laser[st].progress >= 100:
 			mine_wall_complete(_tile_highlight.position, tile_highlighted_for_mining)
@@ -1607,7 +1606,7 @@ func mine_debris(item:Dictionary, delta):
 			return
 		var aurora_factor:float = 1.0/debris.aurora_intensity if debris.aurora_intensity > 0.0 else 1.0
 		var volcano_factor:float = 1.0/debris.lava_intensity if debris.lava_intensity > 0.0 else 1.0
-		var add_progress = Data.rover_mining[item.id].speed * 90 * pow(rover_size, 2) * time_speed / pow(debris.scale.x * 2.0, 3) * aurora_factor * volcano_factor * game.u_i.charge
+		var add_progress = Item.data[item.id].speed * 90 * pow(rover_size, 2) * time_speed / pow(debris.scale.x * 2.0, 3) * aurora_factor * volcano_factor * game.u_i.charge
 		debris_touched_by_laser[mining_debris].progress += add_progress * debris.cracked_mining_factor * delta
 		circ_bar.color = Color(1.0, 0.6, 1.0) if debris.cracked_mining_factor > 1.0 else Color.GREEN
 		circ_bar.progress = debris_touched_by_laser[mining_debris].progress
@@ -1884,17 +1883,17 @@ func set_border(i:int):
 	if inventory[i].is_empty():
 		active_item.text = ""
 		return
-	if inventory[i].type == "rover_mining":
-		active_item.text = Helper.get_rover_mining_name(inventory[i].id)
-	elif inventory[i].type == "rover_weapons":
-		active_item.text = Helper.get_rover_weapon_name(inventory[i].id)
+	if inventory[i].type == Item.Type.ROVER_MINING:
+		active_item.text = tr(Item.data[inventory[i].id].name.to_upper()).format({"laser":tr("MINING_LASER")})
+	elif inventory[i].type == Item.Type.ROVER_WEAPON:
+		active_item.text = tr(Item.data[inventory[i].id].name.to_upper()).format({"laser":tr("LASER")})
 	elif inventory[i].has("id") and inventory[i].id is int:
 		active_item.text = Item.name(inventory[i].id)
 	else:
 		active_item.text = ""
 	if inventory[i].has("id") and inventory[i].id is int and Item.data[inventory[i].id].type == Item.Type.DRILL:
 		tile_highlight_left.visible = true
-	elif inventory[i].type != "rover_mining":
+	elif inventory[i].type != Item.Type.ROVER_MINING:
 		tile_highlight_left.visible = false
 
 func sort_size(a, b):

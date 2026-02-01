@@ -8,13 +8,13 @@ var HP:float = 20.0
 var atk:float = 5.0
 var def:float = 2.0
 var weight_cap:float = 5000.0
-var inventory = [{"type":"rover_weapons", "id":"red_laser"}, {}, {}, {}, {}, {}]
-var right_inventory = [{"type":"rover_mining", "id":"red_mining_laser"}]
+var inventory = [{"type":Item.Type.ROVER_WEAPON, "id":Item.RED_LASER}, {}, {}, {}, {}, {}]
+var right_inventory = [{"type":Item.Type.ROVER_MINING, "id":Item.RED_MINING_LASER}]
 var right_inv:bool = false
 var tile
 var rover_costs:Dictionary
 var slot_over:int = -1
-var cmp_over:String = ""
+var cmp_over:int = -1
 var mult:float
 var engi_mult:float
 var REPs:int = 0
@@ -30,12 +30,12 @@ var rover_mining:bool = true
 @onready var wheels_slot = $Stats/Wheels
 @onready var CC_slot = $Stats/CC#CC: Cargo Container
 @onready var right_slot = $Inventory/RightSlot
-var armor:String = "stone_armor"
+var armor:int = Item.STONE_ARMOR
 var HP_bonus:int
 var def_bonus:int
-var wheels:String = "stone_wheels"
+var wheels:int = Item.STONE_WHEELS
 var spd_bonus:float
-var CC:String = "stone_CC"
+var CC:int = Item.STONE_CC
 var cargo_bonus:int
 
 func _ready():
@@ -46,24 +46,24 @@ func _ready():
 	RE_panel = RE_scene.instantiate()
 	RE_panel.visible = false
 	add_child(RE_panel)
-	armor_slot.get_node("REP").connect("mouse_entered",Callable(self,"_on_REP_mouse_entered"))
-	armor_slot.get_node("REP").connect("mouse_exited",Callable(self,"_on_mouse_exited"))
-	armor_slot.get_node("REP").connect("pressed",Callable(self,"_on_REP_pressed").bind("Armor"))
-	armor_slot.get_node("Button").connect("mouse_entered",Callable(self,"_on_Slot_mouse_entered").bind("rover_armor"))
-	armor_slot.get_node("Button").connect("mouse_exited",Callable(self,"_on_Slot_mouse_exited"))
-	armor_slot.get_node("Button").connect("pressed",Callable(self,"_on_Slot_pressed").bind("rover_armor"))
-	wheels_slot.get_node("REP").connect("mouse_entered",Callable(self,"_on_REP_mouse_entered"))
-	wheels_slot.get_node("REP").connect("mouse_exited",Callable(self,"_on_mouse_exited"))
-	wheels_slot.get_node("REP").connect("pressed",Callable(self,"_on_REP_pressed").bind("Wheels"))
-	wheels_slot.get_node("Button").connect("mouse_entered",Callable(self,"_on_Slot_mouse_entered").bind("rover_wheels"))
-	wheels_slot.get_node("Button").connect("mouse_exited",Callable(self,"_on_Slot_mouse_exited"))
-	wheels_slot.get_node("Button").connect("pressed",Callable(self,"_on_Slot_pressed").bind("rover_wheels"))
-	CC_slot.get_node("REP").connect("mouse_entered",Callable(self,"_on_REP_mouse_entered"))
-	CC_slot.get_node("REP").connect("mouse_exited",Callable(self,"_on_mouse_exited"))
-	CC_slot.get_node("REP").connect("pressed",Callable(self,"_on_REP_pressed").bind("CC"))
-	CC_slot.get_node("Button").connect("mouse_entered",Callable(self,"_on_Slot_mouse_entered").bind("rover_CC"))
-	CC_slot.get_node("Button").connect("mouse_exited",Callable(self,"_on_Slot_mouse_exited"))
-	CC_slot.get_node("Button").connect("pressed",Callable(self,"_on_Slot_pressed").bind("rover_CC"))
+	armor_slot.get_node("REP").mouse_entered.connect(_on_REP_mouse_entered)
+	armor_slot.get_node("REP").mouse_exited.connect(_on_mouse_exited)
+	armor_slot.get_node("REP").pressed.connect(_on_REP_pressed.bind("Armor"))
+	armor_slot.get_node("Button").mouse_entered.connect(_on_Slot_mouse_entered.bind(Item.Type.ROVER_ARMOR))
+	armor_slot.get_node("Button").mouse_exited.connect(_on_Slot_mouse_exited)
+	armor_slot.get_node("Button").pressed.connect(_on_Slot_pressed.bind(Item.Type.ROVER_ARMOR))
+	wheels_slot.get_node("REP").mouse_entered.connect(_on_REP_mouse_entered)
+	wheels_slot.get_node("REP").mouse_exited.connect(_on_mouse_exited)
+	wheels_slot.get_node("REP").pressed.connect(_on_REP_pressed.bind("Wheels"))
+	wheels_slot.get_node("Button").mouse_entered.connect(_on_Slot_mouse_entered.bind(Item.Type.ROVER_WHEELS))
+	wheels_slot.get_node("Button").mouse_exited.connect(_on_Slot_mouse_exited)
+	wheels_slot.get_node("Button").pressed.connect(_on_Slot_pressed.bind(Item.Type.ROVER_WHEELS))
+	CC_slot.get_node("REP").mouse_entered.connect(_on_REP_mouse_entered)
+	CC_slot.get_node("REP").mouse_exited.connect(_on_mouse_exited)
+	CC_slot.get_node("REP").pressed.connect(_on_REP_pressed.bind("CC"))
+	CC_slot.get_node("Button").mouse_entered.connect(_on_Slot_mouse_entered.bind(Item.Type.ROVER_CC))
+	CC_slot.get_node("Button").mouse_exited.connect(_on_Slot_mouse_exited)
+	CC_slot.get_node("Button").pressed.connect(_on_Slot_pressed.bind(Item.Type.ROVER_CC))
 
 func _on_REP_mouse_entered():
 	game.show_tooltip(tr("ENHANCE"))
@@ -80,18 +80,29 @@ func _on_REP_pressed(type:String):
 	RE_panel.visible = true
 	game.hide_tooltip()
 
-func _on_Slot_mouse_entered(type:String):
+func _on_Slot_mouse_entered(type:int):
 	var txt:String = ""
-	var metal:String = tr(self[type.split("_")[1]].split("_")[0].to_upper())
-	var comp:String = tr(type.split("_")[1].to_upper())
-	var metal_comp:String = tr("METAL_COMP").format({"metal":metal, "comp":comp})
 	cmp_over = type
-	if type == "rover_armor" and armor != "":
-		txt = "%s\n+%s %s\n+%s %s" % [metal_comp, Data.rover_armor[armor].HP, tr("HEALTH_POINTS"), Data.rover_armor[armor].defense, tr("DEFENSE")]
-	elif type == "rover_wheels":
-		txt = "%s\n+%s %s" % [metal_comp, Data.rover_wheels[wheels].speed, tr("MOVEMENT_SPEED")]
-	elif type == "rover_CC" and CC != "":
-		txt = "%s\n+%s kg %s" % [metal_comp, round(Data.rover_CC[CC].capacity * game.u_i.planck), tr("CARGO_CAPACITY")]
+	if type == Item.Type.ROVER_ARMOR and armor != -1:
+		txt = "{armor_name}\n+{HP_bonus} {HP_bonus_text}\n+{defense_bonus} {defense_bonus_text}".format({
+			"armor_name":tr("METAL_COMP").format({"metal":tr(Item.data[armor].metal.to_upper()), "comp":tr("ARMOR")}),
+			"HP_bonus":Item.data[armor].HP,
+			"HP_bonus_text": tr("HEALTH_POINTS"),
+			"defense_bonus":Item.data[armor].defense,
+			"defense_bonus_text": tr("DEFENSE"),
+		})
+	elif type == Item.Type.ROVER_WHEELS:
+		txt = "{wheels_name}\n+{speed_bonus} {speed_bonus_text}".format({
+			"wheels_name":tr("METAL_COMP").format({"metal":tr(Item.data[wheels].metal.to_upper()), "comp":tr("WHEELS")}),
+			"speed_bonus":Item.data[wheels].speed,
+			"speed_bonus_text": tr("MOVEMENT_SPEED"),
+		})
+	elif type == Item.Type.ROVER_CC and CC != -1:
+		txt = "{CC_name}\n+{capacity_bonus} kg {capacity_bonus_text}".format({
+			"CC_name":tr("METAL_COMP").format({"metal":tr(Item.data[CC].metal.to_upper()), "comp":tr("CC")}),
+			"capacity_bonus":round(Item.data[CC].capacity * game.u_i.planck),
+			"capacity_bonus_text": tr("CARGO_CAPACITY"),
+		})
 	if txt != "":
 		game.help_str = "rover_inventory_shortcuts"
 		if game.help.has("rover_inventory_shortcuts"):
@@ -113,7 +124,7 @@ func _on_InvSlot_mouse_entered(txt:String, index:int, _right_inv:bool = false):
 
 func _on_Slot_mouse_exited():
 	slot_over = -1
-	cmp_over = ""
+	cmp_over = -1
 	game.hide_tooltip()
 
 func _on_InvSlot_pressed(index:int):
@@ -121,29 +132,29 @@ func _on_InvSlot_pressed(index:int):
 	if right_inv:
 		inv = right_inventory[index]
 	select_comp.option_btn.clear()
-	var default_type:String = inv.type if inv.has("type") else ""
-	if not rover_weapons or inv.has("type") and inv.type == "rover_weapons":
+	var default_type:int = inv.get("type", -1)
+	if not rover_weapons or inv.has("type") and inv.type == Item.Type.ROVER_WEAPON:
 		select_comp.option_btn.add_item(tr("WEAPONS"))
-		if default_type == "":
-			default_type = "rover_weapons"
-	if not rover_mining or inv.has("type") and inv.type == "rover_mining":
+		if default_type == -1:
+			default_type = Item.Type.ROVER_WEAPON
+	if not rover_mining or inv.has("type") and inv.type == Item.Type.ROVER_MINING:
 		select_comp.option_btn.add_item(tr("MINING_TOOLS"), 1)
-		if default_type == "":
-			default_type = "rover_mining"
+		if default_type == -1:
+			default_type = Item.Type.ROVER_MINING
 	if select_comp.option_btn.get_item_count() == 0:
 		return
 	select_comp.visible = true
 	game.sub_panel = select_comp
 	select_comp.refresh(default_type, inv.id if inv.has("id") else "", true, index)
 
-func _on_Slot_pressed(type:String):
+func _on_Slot_pressed(type:int):
 	select_comp.visible = true
 	game.sub_panel = select_comp
-	if type == "rover_armor":
+	if type == Item.Type.ROVER_ARMOR:
 		select_comp.refresh(type, armor)
-	elif type == "rover_wheels":
+	elif type == Item.Type.ROVER_WHEELS:
 		select_comp.refresh(type, wheels)
-	elif type == "rover_CC":
+	elif type == Item.Type.ROVER_CC:
 		select_comp.refresh(type, CC)
 
 func _on_Button_pressed():
@@ -229,32 +240,32 @@ func refresh():
 	engi_mult = game.engineering_bonus.RSM
 	mult = tile.bldg.path_1_value
 	rover_costs = Data.costs.rover.duplicate(true)
-	if armor != "":
-		for cost_key in Data.rover_armor[armor].costs.keys():
-			var cost = Data.rover_armor[armor].costs[cost_key]
+	if armor != -1:
+		for cost_key in Item.data[armor].costs.keys():
+			var cost = Item.data[armor].costs[cost_key]
 			if rover_costs.has(cost_key):
 				rover_costs[cost_key] += cost
 			else:
 				rover_costs[cost_key] = cost
-		HP_bonus = Data.rover_armor[armor].HP
-		def_bonus = Data.rover_armor[armor].defense
+		HP_bonus = Item.data[armor].HP
+		def_bonus = Item.data[armor].defense
 	else:
 		HP_bonus = 0
 		def_bonus = 0
-	for cost_key in Data.rover_wheels[wheels].costs.keys():
-		var cost = Data.rover_wheels[wheels].costs[cost_key]
+	for cost_key in Item.data[wheels].costs.keys():
+		var cost = Item.data[wheels].costs[cost_key]
 		if rover_costs.has(cost_key):
 			rover_costs[cost_key] += cost
 		else:
 			rover_costs[cost_key] = cost
-	if CC != "":
-		for cost_key in Data.rover_CC[CC].costs.keys():
-			var cost = Data.rover_CC[CC].costs[cost_key]
+	if CC != -1:
+		for cost_key in Item.data[CC].costs.keys():
+			var cost = Item.data[CC].costs[cost_key]
 			if rover_costs.has(cost_key):
 				rover_costs[cost_key] += cost
 			else:
 				rover_costs[cost_key] = cost
-		cargo_bonus = round(Data.rover_CC[CC].capacity * game.u_i.planck)
+		cargo_bonus = round(Item.data[CC].capacity * game.u_i.planck)
 	else:
 		cargo_bonus = 0
 	var i:int = 0
@@ -272,7 +283,7 @@ func refresh():
 	right_slot.position = Vector2(32, 84)
 	set_slot(right_inventory[0], right_slot, 0, true)
 	Helper.put_rsrc($ScrollContainer/Grid, 36, rover_costs, true, true)
-	spd_bonus = Data.rover_wheels[wheels].speed
+	spd_bonus = Item.data[wheels].speed
 	$Stats/HPText.text = Helper.format_num(round((HP + HP_bonus) * mult * engi_mult)) + "  [img]Graphics/Icons/help.png[/img]"
 	$Stats/AtkText.text = Helper.format_num(round(atk * mult * engi_mult)) + "  [img]Graphics/Icons/help.png[/img]"
 	$Stats/DefText.text = Helper.format_num(round(def + def_bonus)) + "  [img]Graphics/Icons/help.png[/img]"
@@ -289,38 +300,38 @@ func refresh():
 	$Stats/SpeedText.text = str(Helper.clever_round(spd_bonus)) + "  [img]Graphics/Icons/help.png[/img]"
 	$Stats/SpeedText.help_text = "%s + %s = %s" % [0, spd_bonus, Helper.clever_round((spd_bonus))]
 	$Stats/REPText.text = str(REPs - REPs_used) + "  [img]Graphics/Icons/help.png[/img]"
-	armor_slot.get_node("TextureRect").texture = null if armor == "" else load("res://Graphics/Cave/Armor/%s.png" % [armor])
-	wheels_slot.get_node("TextureRect").texture = load("res://Graphics/Cave/Wheels/%s.png" % [wheels])
-	CC_slot.get_node("TextureRect").texture = null if CC == "" else load("res://Graphics/Cave/CargoContainer/%s.png" % [CC])
+	armor_slot.get_node("TextureRect").texture = null if armor == -1 else load("res://Graphics/Cave/Armor/%s.png" % [Item.data[armor].item_name])
+	wheels_slot.get_node("TextureRect").texture = load("res://Graphics/Cave/Wheels/%s.png" % [Item.data[wheels].item_name])
+	CC_slot.get_node("TextureRect").texture = null if CC == -1 else load("res://Graphics/Cave/CargoContainer/%s.png" % [Item.data[CC].item_name])
 
 func set_slot(inv:Dictionary, slot, i:int, _right_inv:bool = false):
 	var btn = slot.get_node("Button")
 	if inv.is_empty():
-		btn.connect("mouse_entered",Callable(self,"_on_InvSlot_mouse_entered").bind("", i, _right_inv))
-	elif inv.type == "rover_weapons":
-		slot.get_node("TextureRect").texture = load("res://Graphics/Cave/Weapons/%s.png" % [inv.id])
-		btn.connect("mouse_entered",Callable(self,"_on_InvSlot_mouse_entered").bind("%s" % [Helper.get_rover_weapon_text(inv.id)], i, _right_inv))
+		btn.mouse_entered.connect(_on_InvSlot_mouse_entered.bind("", i, _right_inv))
+	elif inv.type == Item.Type.ROVER_WEAPON:
+		slot.get_node("TextureRect").texture = load("res://Graphics/Cave/Weapons/%s.png" % [Item.data[inv.id].item_name])
+		btn.mouse_entered.connect(_on_InvSlot_mouse_entered.bind("%s" % [Helper.get_rover_weapon_text(inv.id)], i, _right_inv))
 		slot.get_node("REP").visible = REPs != 0
-		slot.get_node("REP").connect("mouse_entered",Callable(self,"_on_REP_mouse_entered"))
-		slot.get_node("REP").connect("mouse_exited",Callable(self,"_on_mouse_exited"))
-		slot.get_node("REP").connect("pressed",Callable(self,"_on_REP_pressed").bind("Laser"))
-		for cost_key in Data.rover_weapons[inv.id].costs.keys():
-			var cost = Data.rover_weapons[inv.id].costs[cost_key]
+		slot.get_node("REP").mouse_entered.connect(_on_REP_mouse_entered)
+		slot.get_node("REP").mouse_exited.connect(_on_mouse_exited)
+		slot.get_node("REP").pressed.connect(_on_REP_pressed.bind("Laser"))
+		for cost_key in Item.data[inv.id].costs.keys():
+			var cost = Item.data[inv.id].costs[cost_key]
 			if rover_costs.has(cost_key):
 				rover_costs[cost_key] += cost
 			else:
 				rover_costs[cost_key] = cost
-	elif inv.type == "rover_mining":
-		slot.get_node("TextureRect").texture = load("res://Graphics/Cave/Mining/%s.png" % [inv.id])
-		btn.connect("mouse_entered",Callable(self,"_on_InvSlot_mouse_entered").bind("%s" % [Helper.get_rover_mining_text(inv.id)], i, _right_inv))
-		for cost_key in Data.rover_mining[inv.id].costs.keys():
-			var cost = Data.rover_mining[inv.id].costs[cost_key]
+	elif inv.type == Item.Type.ROVER_MINING:
+		slot.get_node("TextureRect").texture = load("res://Graphics/Cave/Mining/%s.png" % [Item.data[inv.id].item_name])
+		btn.mouse_entered.connect(_on_InvSlot_mouse_entered.bind("%s" % [Helper.get_rover_mining_text(inv.id)], i, _right_inv))
+		for cost_key in Item.data[inv.id].costs.keys():
+			var cost = Item.data[inv.id].costs[cost_key]
 			if rover_costs.has(cost_key):
 				rover_costs[cost_key] += cost
 			else:
 				rover_costs[cost_key] = cost
-	btn.connect("mouse_exited",Callable(self,"_on_Slot_mouse_exited"))
-	btn.connect("pressed",Callable(self,"_on_InvSlot_pressed").bind(i))
+	btn.mouse_exited.connect(_on_Slot_mouse_exited)
+	btn.pressed.connect(_on_InvSlot_pressed.bind(i))
 
 func _on_icon_mouse_entered(extra_arg_0):
 	game.show_tooltip(tr(extra_arg_0))
@@ -336,20 +347,22 @@ func _input(event):
 			if right_inv:
 				inv = right_inventory[slot_over]
 			if inv.has("type"):
-				if inv.type == "rover_weapons":
+				if inv.type == Item.Type.ROVER_WEAPON:
 					rover_weapons = false
-				elif inv.type == "rover_mining":
+				elif inv.type == Item.Type.ROVER_MINING:
 					rover_mining = false
 				inv.clear()
 				refresh()
 				game.hide_tooltip()
-		if cmp_over != "":
-			if cmp_over in ["rover_armor", "rover_CC"]:
-				self[cmp_over.split("_")[1]] = ""
-				refresh()
-				game.hide_tooltip()
-			else:
+		if cmp_over != -1:
+			if cmp_over == Item.Type.ROVER_WHEELS:
 				game.popup(tr("REMOVE_WHEELS_ATTEMPT"), 2.5)
+			elif cmp_over == Item.Type.ROVER_ARMOR:
+				armor = -1
+			elif cmp_over == Item.Type.ROVER_CC:
+				CC = -1
+			refresh()
+			game.hide_tooltip()
 
 func _on_Ability_mouse_entered():
 	game.show_tooltip(Helper.get_RE_info(ability))

@@ -112,7 +112,6 @@ func _ready():
 				var metal = Sprite2D.new()
 				metal.texture = game.metal_textures[tile.crater.metal]
 				metal.scale *= 0.4
-				add_child(metal)
 				metal.position = Vector2(i, j) * 200 + Vector2(100, 70)
 				var crater = Sprite2D.new()
 				if tile.crater.variant == 3:
@@ -123,6 +122,7 @@ func _ready():
 					crater.texture = preload("res://Graphics/Tiles/Crater/2.png")
 				crater.scale *= clamp(remap(tile.crater.init_depth, 10, 1000, 0.4, 1.0), 0.4, 1.0)
 				add_child(crater)
+				add_child(metal)
 				crater.position = Vector2(i, j) * 200 + Vector2(100, 100)
 			if tile.has("depth") and not tile.has("bridge") and not tile.has("crater"):
 				var hole_sprite = Sprite2D.new()

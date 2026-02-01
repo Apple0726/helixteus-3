@@ -10,6 +10,7 @@
 [ext_resource type="Texture2D" uid="uid://c1vwn7p5uxu1r" path="res://Graphics/GUI/CloseButtonHover.png" id="5_pwoab"]
 [ext_resource type="Texture2D" uid="uid://7ffsf7xuvfw2" path="res://Graphics/Icons/attack.png" id="6"]
 [ext_resource type="Texture2D" uid="uid://cqiyti2xdxtcw" path="res://Graphics/Icons/defense.png" id="7"]
+[ext_resource type="Texture2D" uid="uid://by5owi4dvg1i" path="res://Graphics/Misc/Glow.png" id="7_uuaj3"]
 [ext_resource type="Texture2D" uid="uid://bl07f3wef0muv" path="res://Graphics/Icons/HP.png" id="8"]
 [ext_resource type="Texture2D" uid="uid://crncbjr12yfpx" path="res://Graphics/Cave/Rover.png" id="9"]
 [ext_resource type="Script" uid="uid://bx8u5sng6cvqk" path="res://Scripts/RCPanel.gd" id="10"]
@@ -85,7 +86,7 @@ vertical_alignment = 1
 layout_mode = 0
 offset_left = 632.0
 offset_top = 144.0
-offset_right = 1104.0
+offset_right = 1152.0
 offset_bottom = 416.0
 size_flags_vertical = 3
 mouse_filter = 1
@@ -139,9 +140,19 @@ layout_mode = 0
 offset_left = 128.0
 offset_top = 144.0
 offset_right = 632.0
-offset_bottom = 616.0
+offset_bottom = 624.0
 size_flags_vertical = 3
 theme_override_styles/panel = SubResource("StyleBoxFlat_wro7v")
+
+[node name="Spotlight1" type="TextureRect" parent="Stats" unique_id=447330772]
+modulate = Color(1, 1, 1, 0.69803923)
+layout_mode = 0
+offset_left = 32.0
+offset_top = 184.0
+offset_right = 352.0
+offset_bottom = 304.0
+texture = ExtResource("7_uuaj3")
+expand_mode = 1
 
 [node name="Ability" parent="Stats" unique_id=1012303890 instance=ExtResource("11")]
 layout_mode = 0
@@ -303,21 +314,29 @@ offset_right = 272.0
 offset_bottom = 104.0
 help_text = "REP_DESC"
 
+[node name="Panel" type="Panel" parent="." unique_id=874079058]
+layout_mode = 0
+offset_left = 632.0
+offset_top = 416.0
+offset_right = 1152.0
+offset_bottom = 624.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_wro7v")
+
 [node name="Costs" type="Label" parent="." unique_id=576785531]
 layout_mode = 0
 offset_left = 664.0
 offset_top = 432.0
-offset_right = 1056.0
+offset_right = 1120.0
 offset_bottom = 456.0
 text = "COSTS"
 horizontal_alignment = 1
 
 [node name="Button" type="Button" parent="." unique_id=1030689045]
 layout_mode = 1
-offset_left = 1096.0
-offset_top = 592.0
-offset_right = 1175.0
-offset_bottom = 640.0
+offset_left = 1080.0
+offset_top = 568.0
+offset_right = 1143.0
+offset_bottom = 616.0
 theme = ExtResource("5")
 
 [node name="TextureRect" type="TextureRect" parent="Button" unique_id=1464529522]
@@ -337,14 +356,17 @@ stretch_mode = 5
 layout_mode = 0
 offset_left = 664.0
 offset_top = 472.0
-offset_right = 1056.0
+offset_right = 1144.0
 offset_bottom = 612.0
+mouse_filter = 2
+horizontal_scroll_mode = 0
 
 [node name="Grid" type="GridContainer" parent="ScrollContainer" unique_id=694305749]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
-columns = 2
+mouse_filter = 2
+columns = 3
 
 [connection signal="pressed" from="CloseButton" to="." method="_on_close_button_pressed"]
 [connection signal="mouse_entered" from="Stats/Ability" to="." method="_on_Ability_mouse_entered"]

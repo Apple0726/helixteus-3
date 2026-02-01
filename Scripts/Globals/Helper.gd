@@ -120,11 +120,12 @@ func put_rsrc(container, min_size, rsrcs, remove:bool = true, show_available:boo
 			rsrc.connect_mouse_events()
 		texture_node.custom_minimum_size = Vector2(1, 1) * min_size
 		data.append({"rsrc":rsrc, "name":rsrc_name})
-		rsrc.rsrc_name = rsrc_name
-		rsrc.rsrc_display_name = rsrc_display_name
-		rsrc.rsrc_type = rsrc_type
-		rsrc.rsrcs_required = rsrcs[rsrc_name]
-		rsrc.mass_str = mass_str
+		if rsrc_name is String:
+			rsrc.rsrc_name = rsrc_name
+			rsrc.rsrc_display_name = rsrc_display_name
+			rsrc.rsrc_type = rsrc_type
+			rsrc.rsrcs_required = rsrcs[rsrc_name]
+			rsrc.mass_str = mass_str
 		rsrc.set_process(real_time_update)
 	return data
 
@@ -370,19 +371,24 @@ func save_obj(type:String, id:int, arr:Array):
 	save.close()
 	DirAccess.copy_absolute(file_path + "~", file_path)
 
-func get_rover_weapon_text(_name:String):
-	return "%s\n%s\n%s" % [get_rover_weapon_name(_name), "%s: %s" % [tr("DAMAGE"), Data.rover_weapons[_name].damage], "%s: %s%s" % [tr("COOLDOWN"), Data.rover_weapons[_name].cooldown, tr("S_SECOND")]]
+func get_rover_weapon_text(id:int):
+	return "{laser_name}\n{damage_text}: {damage}\n{cooldown_text}: {cooldown}{secs}".format({
+		"laser_name":tr(Item.data[id].item_name.to_upper()),
+		"damage_text":tr("DAMAGE"),
+		"damage":Item.data[id].damage,
+		"cooldown_text":tr("COOLDOWN"),
+		"cooldown":Item.data[id].cooldown,
+		"secs": tr("S_SECOND"),
+	})
 
-func get_rover_weapon_name(_name:String):
-	var laser = _name.split("_")
-	return tr(laser[0].to_upper() + "_LASER").format({"laser":tr(laser[1])})
-
-func get_rover_mining_text(_name:String):
-	return "%s\n%s\n%s" % [get_rover_mining_name(_name), "%s: %s" % [tr("MINING_SPEED"), Data.rover_mining[_name].speed], "%s: %s" % [tr("RANGE"), Data.rover_mining[_name].rnge]]
-
-func get_rover_mining_name(_name:String):
-	var laser = _name.split("_", true, 1)
-	return tr(laser[0].to_upper() + "_LASER").format({"laser":tr(laser[1].to_upper())})
+func get_rover_mining_text(id:int):
+	return "{mining_laser_name}\n{mining_speed_text}: {mining_speed}\n{mining_range_text}: {mining_range}".format({
+		"mining_laser_name":tr(Item.data[id].item_name.to_upper()),
+		"mining_speed_text":tr("MINING_SPEED"),
+		"mining_speed":Item.data[id].speed,
+		"mining_range_text":tr("RANGE"),
+		"mining_range":Item.data[id].range,
+	})
 
 func set_back_btn(back_btn):
 	back_btn.text = "<- %s (%s)" % [tr("BACK"), OS.get_keycode_string(DisplayServer.keyboard_get_keycode_from_physical(KEY_Z))]
