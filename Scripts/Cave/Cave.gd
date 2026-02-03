@@ -631,6 +631,8 @@ func generate_cave(first_floor:bool, going_up:bool):
 					var met_spawned:String = "lead"
 					var base_rarity:float = 1.0
 					for met in game.met_info:
+						if met in ["nanocrystal", "mythril"] and game.c_g_g == 0:
+							continue
 						var rarity:float = game.met_info[met].rarity
 						if cave_floor >= 8:
 							rarity = pow(rarity, remap(cave_floor, 8, 32, 0.9, 0.6))

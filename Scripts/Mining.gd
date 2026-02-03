@@ -11,7 +11,6 @@ var contents:Dictionary
 var tile_tween
 var BG_tween
 var layer:String
-@onready var met_info = game.met_info
 var metal_sprites = []
 var circ_vel:Vector2 = Vector2.ONE
 var points:float#Points for minigame

@@ -285,8 +285,8 @@ var met_info = {	"lead":{"min_depth":0, "max_depth":500, "rarity":1, "density":1
 					"titanium":{"min_depth":1500, "max_depth":4000, "rarity":46.0, "density":4.51, "value":93590},
 					"platinum":{"min_depth":2400, "max_depth":6000, "rarity":79.5, "density":21.45, "value":212650},
 					"diamond":{"min_depth":5800, "max_depth":9000, "rarity":157.3, "density":4.20, "value":591850},
-					"nanocrystal":{"min_depth":9400, "max_depth":14000, "rarity":298.9, "density":1.5, "value":1550270},
-					"mythril":{"min_depth":23000, "max_depth":28000, "rarity":1586.4, "density":13.4, "value":18955720},
+					"nanocrystal":{"min_depth":70000, "max_depth":140000, "rarity":6000.0, "density":1.5, "value":2.4e7},
+					"mythril":{"min_depth":350000, "max_depth":2e6, "rarity":520000.0, "density":13.4, "value":3.5e9},
 }
 
 var pickaxes_info = {"stick":{"speed":1.0, "durability":140, "costs":{"money":300}},
@@ -3222,11 +3222,11 @@ func generate_tiles(id:int):
 				for met in met_info:
 					if met == "lead":
 						continue
+					if met_info[met].rarity > 8.0 and c_s_g == 0:
+						continue
+					if met_info[met].rarity > 50.0 and c_g_g == 0:
+						continue
 					if randf() < 0.3 / pow(met_info[met].rarity, 0.95) * sqrt(1 + u_i.cluster_data[c_c].pos.length() / 1000.0):
-						if c_s_g == 0 and met_info[met].rarity > 8:
-							continue
-						if c_g_g == 0 and met_info[met].rarity > 50:
-							continue
 						tile_data[t_id].crater.metal = met
 						if not achievement_data.exploration.has("diamond_crater") and met == "diamond":
 							earn_achievement("exploration", "diamond_crater")

@@ -568,6 +568,8 @@ func mass_generate_rock(tile:Dictionary, p_i:Dictionary, depth:int):
 		contents[mat] = amount
 		other_volume += amount / rho / 1000
 	for met in game.met_info:
+		if met in ["nanocrystal", "mythril"] and game.c_g_g == 0:
+			continue
 		var met_info = game.met_info[met]
 		var chance_mult:float = 0.25 * aurora_mult
 		var amount:float
@@ -584,7 +586,7 @@ func mass_generate_rock(tile:Dictionary, p_i:Dictionary, depth:int):
 			var num_tiles3:int = clamp(min(num_tiles, num_tiles2), 0, min(depth, met_end_depth - met_start_depth))
 			amount = randf_range(0.4, 0.45) * num_tiles3
 		amount *= 20 * chance_mult * aurora_mult * h_mult / pow(met_info.rarity, 0.5)
-		if amount < 1:
+		if amount < 0.001:
 			continue
 		contents[met] = amount
 		other_volume += amount / met_info.density / 1000 / h_mult
@@ -622,6 +624,8 @@ func generate_rock(tile:Dictionary, p_i:Dictionary):
 				other_volume += amount / rho / 1000 / h_mult
 	if get_layer(tile, p_i) != "surface" and not tile.has("current_deposit"):
 		for met in game.met_info:
+			if met in ["nanocrystal", "mythril"] and game.c_g_g == 0:
+				continue
 			var crater_metal = tile.has("crater") and tile.crater.has("init_depth") and met == tile.crater.metal
 			if game.met_info[met].min_depth < tile.depth - p_i.crust_start_depth and tile.depth - p_i.crust_start_depth < game.met_info[met].max_depth or crater_metal:
 				if randf() < 0.25 * (6 if crater_metal else 1) * aurora_mult / pow(game.met_info[met].rarity, 0.2):
