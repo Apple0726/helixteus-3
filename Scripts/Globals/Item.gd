@@ -292,6 +292,46 @@ func name(item_id:int):
 		return tr("HX_CORE") + " III"
 	elif item_id == HELIX_CORE4:
 		return tr("HX_CORE") + " IV"
+	elif item_id == RED_LASER:
+		return tr("RED_LASER")
+	elif item_id == ORANGE_LASER:
+		return tr("ORANGE_LASER")
+	elif item_id == YELLOW_LASER:
+		return tr("YELLOW_LASER")
+	elif item_id == GREEN_LASER:
+		return tr("GREEN_LASER")
+	elif item_id == BLUE_LASER:
+		return tr("BLUE_LASER")
+	elif item_id == PURPLE_LASER:
+		return tr("PURPLE_LASER")
+	elif item_id == UV_LASER:
+		return tr("UV_LASER")
+	elif item_id == XRAY_LASER:
+		return tr("XRAY_LASER")
+	elif item_id == GAMMARAY_LASER:
+		return tr("GAMMARAY_LASER")
+	elif item_id == ULTRAGAMMARAY_LASER:
+		return tr("ULTRAGAMMARAY_LASER")
+	elif item_id == RED_MINING_LASER:
+		return tr("RED_MINING_LASER")
+	elif item_id == ORANGE_MINING_LASER:
+		return tr("ORANGE_MINING_LASER")
+	elif item_id == YELLOW_MINING_LASER:
+		return tr("YELLOW_MINING_LASER")
+	elif item_id == GREEN_MINING_LASER:
+		return tr("GREEN_MINING_LASER")
+	elif item_id == BLUE_MINING_LASER:
+		return tr("BLUE_MINING_LASER")
+	elif item_id == PURPLE_MINING_LASER:
+		return tr("PURPLE_MINING_LASER")
+	elif item_id == UV_MINING_LASER:
+		return tr("UV_MINING_LASER")
+	elif item_id == XRAY_MINING_LASER:
+		return tr("XRAY_MINING_LASER")
+	elif item_id == GAMMARAY_MINING_LASER:
+		return tr("GAMMARAY_MINING_LASER")
+	elif item_id == ULTRAGAMMARAY_MINING_LASER:
+		return tr("ULTRAGAMMARAY_MINING_LASER")
 
 func description(item_id:int):
 	if data[item_id].type == Type.OVERCLOCK:

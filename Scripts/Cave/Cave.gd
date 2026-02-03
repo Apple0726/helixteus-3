@@ -98,7 +98,7 @@ var weight:float = 0.0
 var weight_cap:float = 1500.0
 var status_effects:Dictionary = {}
 var enhancements:Dictionary = {}
-var laser_name:String = ""
+var selected_laser:int = -1 # Weapon laser
 var laser_damage:float = 0.0
 var ability:String = ""
 var ability_num:int = 0
@@ -179,12 +179,13 @@ func _ready():
 	i_w_w = rover_data.i_w_w
 	enhancements = rover_data.get("enhancements", {})
 	if right_inventory[0].get("type") == Item.Type.ROVER_WEAPON:
-		laser_name = right_inventory[0].id.split("_")[0]
+		selected_laser = right_inventory[0].id
 	else:
 		for i in len(inventory):
 			if inventory[i].get("type") == Item.Type.ROVER_WEAPON:
-				laser_name = inventory[i].id.split("_")[0]
-	laser_damage = Data.rover_weapons[laser_name + "_laser"].damage * atk * rover_size * game.u_i.charge
+				selected_laser = inventory[i].id
+				break
+	laser_damage = Item.data[selected_laser].damage * atk * rover_size * game.u_i.charge
 	if rover_data.MK == 2:
 		$Rover/Sprite2D.texture = preload("res://Graphics/Cave/Rover top down 2.png")
 	elif rover_data.MK == 3:
@@ -375,16 +376,16 @@ func on_filter_mouse_exited():
 	game.hide_tooltip()
 
 func set_slot_info(slot, _inv:Dictionary):
-	var rsrc_type = _inv.type
-	if rsrc_type == "":
+	var rsrc_type:int = _inv.type
+	if rsrc_type == -1:
 		return
 	if rsrc_type == Item.Type.ROVER_WEAPON:
-		slot.get_node("TextureRect").texture = load("res://Graphics/Cave/Weapons/" + _inv.id + ".png")
+		slot.get_node("TextureRect").texture = load("res://Graphics/Cave/Weapons/" + Item.data[_inv.id].item_name + ".png")
 	elif rsrc_type == Item.Type.ROVER_MINING:
-		var c:Color = get_color(_inv.id.split("_")[0])
+		var c:Color = get_laser_color(_inv.id)
 		mining_laser.material["shader_parameter/outline_color"] = c
 		mining_laser.get_node("PointLight2D").color = c
-		if _inv.id.split("_")[0] in ["blue"]:
+		if _inv.id == Item.BLUE_LASER:
 			mining_laser.get_node("PointLight2D").energy = 3
 		else:
 			mining_laser.get_node("PointLight2D").energy = 2
@@ -393,7 +394,7 @@ func set_slot_info(slot, _inv:Dictionary):
 		mining_p.process_material.initial_velocity_min = 300 * pow(speed, 0.3) * pow(rover_size, 2 * 0.3) * time_speed
 		mining_p.process_material.initial_velocity_max = 500 * pow(speed, 0.3) * pow(rover_size, 2 * 0.3) * time_speed
 		mining_p.lifetime = 0.2 / time_speed
-		slot.get_node("TextureRect").texture = load("res://Graphics/Cave/Mining/" + _inv.id + ".png")
+		slot.get_node("TextureRect").texture = load("res://Graphics/Cave/Mining/" + Item.data[_inv.id].item_name + ".png")
 	else:
 		if _inv.id is int:
 			slot.get_node("TextureRect").texture = load("res://Graphics/Items/%s/%s.png" % [Item.icon_directory(_inv.type), Item.data[_inv.id].item_name])
@@ -1129,7 +1130,7 @@ func _input(event):
 					RoDray.enabled = true
 					if Settings.screen_shake:
 						$Camera2D/Screenshake.start(10.0 / time_speed, 15, 4)
-					$Rover/RayOfDoom/Sprite2D.material.set_shader_parameter("outline_color", get_color(laser_name))
+					$Rover/RayOfDoom/Sprite2D.material.set_shader_parameter("outline_color", get_laser_color(selected_laser))
 					$Rover/RayOfDoom/AnimationPlayer.play("RayFade", -1, time_speed)
 					ability_timer.start(10.0 / time_speed)
 				elif ability == "laser_8":
@@ -1322,14 +1323,15 @@ func exit_cave():
 	Helper.save_obj("Planets", game.c_p_g, game.tile_data)
 	save_cave_data()
 	for i in len(inventory):
-		if inventory[i].is_empty() or inventory[i].type == "consumable":
+		if inventory[i].is_empty():
 			continue
 		if inventory[i].id is int:
-			var remaining:int = game.add_items(inventory[i].id, inventory[i].num)
-			if remaining > 0:
-				inventory[i].num = remaining
-			else:
-				inventory[i].clear()
+			if inventory[i].has("num"):
+				var remaining:int = game.add_items(inventory[i].id, inventory[i].num)
+				if remaining > 0:
+					inventory[i].num = remaining
+				else:
+					inventory[i].clear()
 		elif inventory[i].id == "money":
 			game.add_resources({"money":inventory[i].num}) 
 			inventory[i].clear()
@@ -1422,7 +1424,7 @@ func use_item(item:Dictionary, _tile_highlight, delta):
 		if enhancements.has("laser_7"):
 			attack(base_angle - PI/16.0)
 			attack(base_angle + PI/16.0)
-		var cooldown:float = Data.rover_weapons[laser_name + "_laser"].cooldown / time_speed
+		var cooldown:float = Item.data[selected_laser].cooldown / time_speed
 		if status_effects.has("invincible") and enhancements.has("armor_6") and not firing_RoD:
 			cooldown /= 3.0
 		cooldown(cooldown)
@@ -1468,21 +1470,21 @@ func use_item(item:Dictionary, _tile_highlight, delta):
 			cooldown(0.5)
 
 func attack(angle:float):
-	if laser_name == "":
+	if selected_laser == -1:
 		return
-	var laser_color:Color = get_color(laser_name)
+	var laser_color:Color = get_laser_color(selected_laser)
 	if $WorldEnvironment.environment.glow_enabled:
 		laser_color *= 4.0
 	var proj_scale:float = 1.5
-	if laser_name in ["yellow", "green"]:
+	if selected_laser in [Item.YELLOW_LASER, Item.GREEN_LASER]:
 		proj_scale *= 1.2
-	elif laser_name in ["blue", "purple"]:
+	elif selected_laser in [Item.BLUE_LASER, Item.PURPLE_LASER]:
 		proj_scale *= 1.4
-	elif laser_name in ["UV", "xray"]:
+	elif selected_laser in [Item.UV_LASER, Item.XRAY_LASER]:
 		proj_scale *= 1.7
-	elif laser_name == "gammaray":
+	elif selected_laser == Item.GAMMARAY_LASER:
 		proj_scale *= 2.2
-	elif laser_name == "ultragammaray":
+	elif selected_laser == Item.ULTRAGAMMARAY_LASER:
 		proj_scale *= 3.0
 	add_proj(false, rover.position, 70.0, angle, laser_texture, laser_damage, {"mod":laser_color, "type":Data.ProjType.LASER, "size": proj_scale})
 
@@ -1557,28 +1559,27 @@ func add_proj(enemy:bool, pos:Vector2, spd:float, rot:float, texture, damage:flo
 				proj.pierce = 2
 		add_child(proj)
 
-func get_color(color:String):
-	match color:
-		"red":
-			return Color(1.0, 0.0, 0.0, 1.0)
-		"orange":
-			return Color(0.8, 0.4, 0.0, 1.0)
-		"yellow":
-			return Color(0.6, 0.6, 0.0, 1.0)
-		"green":
-			return Color(0.0, 1.0, 0.0, 1.0)
-		"blue":
-			return Color(0.0, 0.0, 1.0, 1.0)
-		"purple":
-			return Color.PURPLE
-		"UV":
-			return Color(1.0, 0.15, 1.0, 1.0)
-		"xray":
-			return Color.LIGHT_GRAY
-		"gammaray":
-			return Color.LIGHT_SEA_GREEN
-		"ultragammaray":
-			return Color.WHITE
+func get_laser_color(laser_id:int):
+	if laser_id in [Item.RED_LASER, Item.RED_MINING_LASER]:
+		return Color.RED
+	if laser_id in [Item.ORANGE_LASER, Item.ORANGE_MINING_LASER]:
+		return Color(0.8, 0.4, 0.0, 1.0)
+	if laser_id in [Item.YELLOW_LASER, Item.YELLOW_MINING_LASER]:
+		return Color(0.6, 0.6, 0.0, 1.0)
+	if laser_id in [Item.GREEN_LASER, Item.GREEN_MINING_LASER]:
+		return Color.GREEN
+	if laser_id in [Item.BLUE_LASER, Item.BLUE_MINING_LASER]:
+		return Color.BLUE
+	if laser_id in [Item.PURPLE_LASER, Item.PURPLE_MINING_LASER]:
+		return Color.PURPLE
+	if laser_id in [Item.UV_LASER, Item.UV_MINING_LASER]:
+		return Color(1.0, 0.15, 1.0, 1.0)
+	if laser_id in [Item.XRAY_LASER, Item.XRAY_MINING_LASER]:
+		return Color.LIGHT_GRAY
+	if laser_id in [Item.GAMMARAY_LASER, Item.GAMMARAY_MINING_LASER]:
+		return Color.LIGHT_SEA_GREEN
+	if laser_id in [Item.ULTRAGAMMARAY_LASER, Item.ULTRAGAMMARAY_MINING_LASER]:
+		return Color.WHITE
 
 func mine_wall(item:Dictionary, _tile_highlight, delta):
 	var st = str(tile_highlighted_for_mining)
@@ -1883,11 +1884,7 @@ func set_border(i:int):
 	if inventory[i].is_empty():
 		active_item.text = ""
 		return
-	if inventory[i].type == Item.Type.ROVER_MINING:
-		active_item.text = tr(Item.data[inventory[i].id].name.to_upper()).format({"laser":tr("MINING_LASER")})
-	elif inventory[i].type == Item.Type.ROVER_WEAPON:
-		active_item.text = tr(Item.data[inventory[i].id].name.to_upper()).format({"laser":tr("LASER")})
-	elif inventory[i].has("id") and inventory[i].id is int:
+	if inventory[i].has("id") and inventory[i].id is int:
 		active_item.text = Item.name(inventory[i].id)
 	else:
 		active_item.text = ""
