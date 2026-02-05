@@ -30,6 +30,12 @@ func _ready():
 	$GPUParticles2D.modulate = self_modulate
 	$Sprite2D.modulate = self_modulate
 	crack_threshold = 60 * randf() / pow(scale.x, 3)
+	$Area2D/CollisionPolygon2D.polygon = debris_collision_shape.polygon
+	$Area2D.body_entered.connect(remove_debris)
+
+func remove_debris(body: Node2D):
+	if body.get_class() == "TileMapLayer":
+		queue_free()
 
 func set_crack():
 	$Crack.monitoring = true
@@ -61,11 +67,8 @@ func destroy_rock():
 	$GPUParticles2D.emitting = true
 	var timer = Timer.new()
 	add_child(timer)
-	timer.connect("timeout",Callable(self,"remove_debris"))
+	timer.connect("timeout", queue_free)
 	timer.start(particle_lifetime)
-
-func remove_debris():
-	queue_free()
 
 
 func _on_Crack_area_entered(area):

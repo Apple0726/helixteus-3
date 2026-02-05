@@ -159,7 +159,12 @@ process_material = SubResource("3")
 [node name="LightOccluder2D" type="LightOccluder2D" parent="." unique_id=1779491911]
 occluder = SubResource("2")
 
+[node name="Area2D" type="Area2D" parent="." unique_id=555328243]
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Area2D" unique_id=106018803]
+
 [node name="0" type="StaticBody2D" parent="." unique_id=89039558]
+visible = false
 collision_mask = 0
 
 [node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="0" unique_id=1049468823]

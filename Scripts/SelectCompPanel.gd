@@ -85,7 +85,7 @@ func _on_Slot_mouse_entered(type:int, cmp:int):
 	var txt:String
 	if type == Item.Type.ROVER_ARMOR:
 		txt = "{armor_name}\n+{HP_bonus} {HP_bonus_text}\n+{defense_bonus} {defense_bonus_text}".format({
-			"armor_name":tr("METAL_COMP").format({"metal":tr(Item.data[cmp].metal), "comp":tr("ARMOR")}),
+			"armor_name":tr("METAL_COMP").format({"metal":tr(Item.data[cmp].metal.to_upper()), "comp":tr("ARMOR")}),
 			"HP_bonus":Item.data[cmp].HP,
 			"HP_bonus_text": tr("HEALTH_POINTS"),
 			"defense_bonus":Item.data[cmp].defense,
@@ -93,15 +93,15 @@ func _on_Slot_mouse_entered(type:int, cmp:int):
 		})
 	elif type == Item.Type.ROVER_WHEELS:
 		txt = "{wheels_name}\n+{speed_bonus} {speed_bonus_text}".format({
-			"wheels_name":tr("METAL_COMP").format({"metal":tr(Item.data[cmp].metal), "comp":tr("WHEELS")}),
+			"wheels_name":tr("METAL_COMP").format({"metal":tr(Item.data[cmp].metal.to_upper()), "comp":tr("WHEELS")}),
 			"speed_bonus":Item.data[cmp].speed,
 			"speed_bonus_text": tr("MOVEMENT_SPEED"),
 		})
 	elif type == Item.Type.ROVER_CC:
 		txt = "{CC_name}\n+{capacity_bonus} kg {capacity_bonus_text}".format({
-			"wheels_name":tr("METAL_COMP").format({"metal":tr(Item.data[cmp].metal), "comp":tr("CC")}),
-			"CC_bonus":round(Item.data[cmp].capacity * game.u_i.planck),
-			"CC_bonus_text": tr("CARGO_CAPACITY"),
+			"CC_name":tr("METAL_COMP").format({"metal":tr(Item.data[cmp].metal.to_upper()), "comp":tr("CC")}),
+			"capacity_bonus":round(Item.data[cmp].capacity * game.u_i.planck),
+			"capacity_bonus_text": tr("CARGO_CAPACITY"),
 		})
 	elif type == Item.Type.ROVER_WEAPON:
 		txt = Helper.get_rover_weapon_text(cmp)

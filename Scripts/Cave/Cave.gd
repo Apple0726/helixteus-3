@@ -114,7 +114,6 @@ var rooms:Array = []
 var HX_tiles:Array = []#Tile ids occupied by HX
 var deposits:Dictionary = {}#Random metal/material deposits
 var chests:Dictionary = {}#Random chests and their contents
-var active_chest:String = "-1"#Chest id of currently active chest (rover is touching it)
 var active_type:String = ""
 var tiles_touched_by_laser:Dictionary = {}
 var debris_touched_by_laser:Dictionary = {}
@@ -716,11 +715,11 @@ func generate_cave(first_floor:bool, going_up:bool):
 				chest.modulate *= (1.0 - cave_darkness)
 				chest.modulate.a = 1
 				chest.get_node("Sprite2D").texture = preload("res://Graphics/Cave/Objects/Chest.png")
-				chest.get_node("Area2D").connect("area_entered",Callable(self,"on_chest_entered").bind(str(tile)))
-				chest.get_node("Area2D").connect("area_exited",Callable(self,"on_chest_exited"))
+				chest.get_node("Area2D").area_entered.connect(on_chest_entered.bind(tile))
+				chest.get_node("Area2D").area_exited.connect(on_chest_exited)
 				chest.scale *= 0.8
 				chest.position = cave_wall.map_to_local(get_tile_pos(tile))
-				chests[str(tile)] = {"node":chest, "contents":contents, "tier":tier}
+				chests[tile] = {"node":chest, "contents":contents, "tier":tier}
 				add_child(chest)
 	#Remove already-mined tiles
 	for i in cave_size:
@@ -811,12 +810,12 @@ func generate_cave(first_floor:bool, going_up:bool):
 		big_debris[rand_hole].queue_free()
 	if big_debris.has(rand_spawn):
 		big_debris[rand_spawn].queue_free()
-	if chests.has(str(rand_hole)):
-		chests[str(rand_hole)].node.queue_free()
-		chests.erase(str(rand_hole))
-	if chests.has(str(rand_spawn)):
-		chests[str(rand_spawn)].node.queue_free()
-		chests.erase(str(rand_spawn))
+	if chests.has(rand_hole):
+		chests[rand_hole].node.queue_free()
+		chests.erase(rand_hole)
+	if chests.has(rand_spawn):
+		chests[rand_spawn].node.queue_free()
+		chests.erase(rand_spawn)
 	#A way to check whether cave has the relic for 2nd ship
 	if tile.cave.has("special_cave") and tile.cave.special_cave == 5 and cave_floor == 3:
 		var relic = object_scene.instantiate()
@@ -890,9 +889,8 @@ func enable_light(node):
 
 var right_side_panel_tween
 
-func on_chest_entered(_area, tile:String):
+func on_chest_entered(_area, tile:int):
 	var chest_rsrc = chests[tile].contents
-	active_chest = tile
 	active_type = "chest"
 	for child in right_side_vbox.get_children():
 		child.free()
@@ -900,17 +898,47 @@ func on_chest_entered(_area, tile:String):
 	tier_txt.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	tier_txt.text = tr("TIER_X_CHEST") % [chests[tile].tier]
 	right_side_vbox.add_child(tier_txt)
+	show_right_info(tr("TAKE_ALL"), take_all_from_chest, [tile])
 	Helper.put_rsrc(right_side_vbox, 32, chest_rsrc, false)
-	var take_all = Label.new()
-	take_all.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	take_all.text = tr("TAKE_ALL")
-	right_side_vbox.add_child(take_all)
-	right_side_panel.show()
-	if right_side_panel_tween and right_side_panel_tween.is_running():
-		right_side_panel_tween.kill()
-	right_side_panel.modulate.a = 1.0
-	right_side_panel_tween = create_tween()
-	right_side_panel_tween.tween_property(right_side_panel, "modulate:a", 0.0, 0.5).set_delay(0.5 + 0.5 * right_side_vbox.get_child_count())
+
+func take_all_from_chest(active_chest:int):
+	if chests.has(active_chest):
+		var remainders = {}
+		var show_notif = false
+		var contents = chests[active_chest].contents
+		for rsrc in contents:
+			if game.cave_filters.has(rsrc):
+				if game.cave_filters[rsrc]:
+					remainders[rsrc] = contents[rsrc]
+					continue
+			else:
+				game.cave_filters[rsrc] = false
+				game.show[rsrc] = true
+				add_filter(rsrc)
+			var has_weight = true
+			if rsrc is int or rsrc == "money" or rsrc == "minerals":
+				has_weight = false
+			if has_weight:
+				var remainder:float = round(add_weight_rsrc(rsrc, contents[rsrc]) * 100) / 100.0
+				if remainder != 0:
+					show_notif = true
+					remainders[rsrc] = remainder
+			else:
+				add_to_inventory(rsrc, contents[rsrc], remainders)
+		if not remainders.is_empty():
+			chests[active_chest].contents = remainders.duplicate(true)
+			partially_looted_chests[cave_floor - 1][active_chest] = remainders.duplicate(true)
+			Helper.put_rsrc(right_side_vbox, 32, remainders)
+			right_side_panel.show()
+			if show_notif:
+				game.popup(tr("WEIGHT_INV_FULL_CHEST"), 1.7)
+		else:
+			chests[active_chest].node.queue_free()
+			chests.erase(active_chest)
+			chests_looted[cave_floor - 1].append(active_chest)
+			game.stats_univ.chests_looted += 1
+			game.stats_dim.chests_looted += 1
+			game.stats_global.chests_looted += 1
 
 func on_chest_exited(area:Area2D):
 	call_deferred("hide_panel", true)
@@ -918,8 +946,6 @@ func on_chest_exited(area:Area2D):
 func hide_panel(hiding_chest:bool = false):
 	if len($Rover/InteractArea.get_overlapping_areas()) == 0:
 		active_type = ""
-		if hiding_chest:
-			active_chest = "-1"
 		right_side_panel.hide()
 	
 func on_relic_exited(_body):
@@ -1172,66 +1198,6 @@ func _input(event):
 				$AnimationPlayer.play("RoverSprint")
 			else:
 				$AnimationPlayer.play_backwards("RoverSprint")
-		if Input.is_action_just_released("F"):
-			if active_type == "chest" and chests.has(active_chest):
-				var remainders = {}
-				var show_notif = false
-				var contents = chests[active_chest].contents
-				for rsrc in contents:
-					if game.cave_filters.has(rsrc):
-						if game.cave_filters[rsrc]:
-							remainders[rsrc] = contents[rsrc]
-							continue
-					else:
-						game.cave_filters[rsrc] = false
-						game.show[rsrc] = true
-						add_filter(rsrc)
-					var has_weight = true
-					if rsrc is int or rsrc == "money" or rsrc == "minerals":
-						has_weight = false
-					if has_weight:
-						var remainder:float = round(add_weight_rsrc(rsrc, contents[rsrc]) * 100) / 100.0
-						if remainder != 0:
-							show_notif = true
-							remainders[rsrc] = remainder
-					else:
-						add_to_inventory(rsrc, contents[rsrc], remainders)
-				if not remainders.is_empty():
-					chests[active_chest].contents = remainders.duplicate(true)
-					partially_looted_chests[cave_floor - 1][str(active_chest)] = remainders.duplicate(true)
-					Helper.put_rsrc(right_side_vbox, 32, remainders)
-					right_side_panel.show()
-					if show_notif:
-						game.popup(tr("WEIGHT_INV_FULL_CHEST"), 1.7)
-				else:
-					var temp = active_chest
-					remove_child(chests[active_chest].node)
-					chests[temp].node.queue_free()
-					chests.erase(temp)
-					chests_looted[cave_floor - 1].append(int(temp))
-					game.stats_univ.chests_looted += 1
-					game.stats_dim.chests_looted += 1
-					game.stats_global.chests_looted += 1
-			elif active_type == "exit":
-				exit_cave()
-			elif active_type == "go_down":
-				go_down_cave()
-			elif active_type == "go_up":
-				remove_cave()
-				cave_floor -= 1
-				if not tile.has("ash"):
-					if cave_floor == 7:
-						game.switch_music(preload("res://Audio/cave1.ogg"), time_speed, 0.95 if tile.has("aurora") else 1.0)
-					if cave_floor == 15:
-						game.switch_music(preload("res://Audio/cave2.ogg"), time_speed, 0.95 if tile.has("aurora") else 1.0)
-				if volcano_mult > 1 and not artificial_volcano and is_aurora_cave:
-					difficulty /= 2.5
-				elif volcano_mult > 1 and not artificial_volcano or is_aurora_cave:
-					difficulty /= 2.25
-				else:
-					difficulty /= 2.0
-				generate_cave(true if cave_floor == 1 else false, true)
-			right_side_panel.hide()
 		if Input.is_action_just_released("minus"):
 			minimap_zoom /= 1.5
 			minimap_cave.scale = Vector2.ONE * minimap_zoom
@@ -1248,6 +1214,23 @@ func _input(event):
 			$UI2/Controls.refresh()
 			$UI2/CaveInfo/Ctrls.visible = true
 		update_ray()
+
+func go_up_cave():
+	remove_cave()
+	cave_floor -= 1
+	if not tile.has("ash"):
+		if cave_floor == 7:
+			game.switch_music(preload("res://Audio/cave1.ogg"), time_speed, 0.95 if tile.has("aurora") else 1.0)
+		if cave_floor == 15:
+			game.switch_music(preload("res://Audio/cave2.ogg"), time_speed, 0.95 if tile.has("aurora") else 1.0)
+	if volcano_mult > 1 and not artificial_volcano and is_aurora_cave:
+		difficulty /= 2.5
+	elif volcano_mult > 1 and not artificial_volcano or is_aurora_cave:
+		difficulty /= 2.25
+	else:
+		difficulty /= 2.0
+	generate_cave(true if cave_floor == 1 else false, true)
+
 
 func go_down_cave():
 	remove_cave()
@@ -1278,7 +1261,7 @@ func add_to_inventory(rsrc, content:float, remainders:Dictionary):
 		var slot = slots[i]
 		if inventory[i].is_empty():
 			inventory[i]["id"] = rsrc
-			inventory[i]["type"] = ""
+			inventory[i]["type"] = -1
 			if rsrc is int:
 				inventory[i]["type"] = Item.data[rsrc].type
 				slot.get_node("TextureRect").texture = load("res://Graphics/Items/%s/%s.png" % [Item.icon_directory(Item.data[rsrc].type), Item.data[rsrc].item_name])
@@ -1287,7 +1270,7 @@ func add_to_inventory(rsrc, content:float, remainders:Dictionary):
 			elif rsrc == "minerals":
 				slot.get_node("TextureRect").texture = Data.minerals_icon
 			slot.get_node("Label").text = Helper.format_num(content, false, 3)
-			inventory[i].num = content
+			inventory[i]["num"] = content
 			game.show[rsrc] = true
 			break
 		if inventory[i].has("id") and str(rsrc) == str(inventory[i].id):
@@ -1972,29 +1955,28 @@ func _physics_process(delta):
 	minimap_cave.position = minimap_center - rover.position * minimap_zoom
 
 func _on_Exit_area_entered(_body):
-	active_chest = "-1"
 	if cave_floor == 1:
-		show_right_info(tr("F_TO_EXIT"))
-		active_type = "exit"
+		show_right_info(tr("EXIT_CAVE"), exit_cave)
 	else:
-		show_right_info(tr("F_TO_GO_UP"))
+		show_right_info(tr("GO_UP"), go_up_cave)
 		active_type = "go_up"
 
 func on_WH_entered(_body):
-	show_right_info(tr("F_TO_EXIT"))
-	active_type = "exit"
+	show_right_info(tr("EXIT_CAVE"), exit_cave)
 
 func _on_Hole_area_entered(_body):
-	active_chest = "-1"
-	show_right_info(tr("F_TO_GO_DOWN"))
-	active_type = "go_down"
+	show_right_info(tr("GO_DOWN"), go_down_cave)
 
-func show_right_info(txt:String):
+func show_right_info(txt:String, action:Callable, action_params:Array = []):
 	Helper.put_rsrc(right_side_vbox, 32, {})
-	var info = Label.new()
-	info.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	info.text = txt
-	right_side_vbox.add_child(info)
+	var action_btn = Button.new()
+	action_btn.text = txt + " (F)"
+	action_btn.shortcut = Shortcut.new()
+	action_btn.shortcut.events.append(InputEventKey.new())
+	action_btn.shortcut.events[0].physical_keycode = Key.KEY_F
+	action_btn.shortcut_in_tooltip = false
+	action_btn.pressed.connect(action.bindv(action_params))
+	right_side_vbox.add_child(action_btn)
 	if right_side_panel_tween and right_side_panel_tween.is_running():
 		right_side_panel_tween.kill()
 	right_side_panel.show()
