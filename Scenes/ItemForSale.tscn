@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=3 uid="uid://dlqxgji41vl6b"]
+[gd_scene format=3 uid="uid://dlqxgji41vl6b"]
 
 [ext_resource type="Script" uid="uid://btynwymqgvm4k" path="res://Scripts/ItemForSale.gd" id="2"]
 [ext_resource type="Texture2D" uid="uid://vshnis3gqj4t" path="res://Graphics/Icons/Notification.png" id="3"]
@@ -55,7 +55,7 @@ _data = {
 &"RESET": SubResource("18")
 }
 
-[node name="ItemForSale" type="Panel"]
+[node name="ItemForSale" type="Panel" unique_id=1318442331]
 custom_minimum_size = Vector2(140, 212)
 offset_right = 140.0
 offset_bottom = 212.0
@@ -65,7 +65,7 @@ mouse_filter = 1
 theme_override_styles/panel = SubResource("StyleBoxFlat_lyvr3")
 script = ExtResource("2")
 
-[node name="LockItemInfo" type="Button" parent="."]
+[node name="LockItemInfo" type="Button" parent="." unique_id=1811444855]
 modulate = Color(1, 1, 1, 0)
 layout_mode = 1
 anchors_preset = 15
@@ -77,7 +77,7 @@ grow_vertical = 2
 mouse_filter = 1
 toggle_mode = true
 
-[node name="ItemTexture" type="TextureRect" parent="."]
+[node name="ItemTexture" type="TextureRect" parent="." unique_id=349137177]
 layout_mode = 1
 anchors_preset = 10
 anchor_right = 1.0
@@ -90,7 +90,7 @@ mouse_filter = 2
 expand_mode = 1
 stretch_mode = 5
 
-[node name="ItemTextureFull" type="TextureRect" parent="."]
+[node name="ItemTextureFull" type="TextureRect" parent="." unique_id=931330612]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -102,7 +102,7 @@ mouse_filter = 2
 expand_mode = 1
 stretch_mode = 5
 
-[node name="SmallButton" type="Button" parent="."]
+[node name="SmallButton" type="Button" parent="." unique_id=826675594]
 layout_mode = 1
 anchors_preset = 12
 anchor_top = 1.0
@@ -114,19 +114,17 @@ grow_vertical = 0
 mouse_filter = 1
 text = "BUY"
 
-[node name="ColorRect" type="ColorRect" parent="."]
+[node name="ColorRect" type="ColorRect" parent="." unique_id=1178353927]
 visible = false
 layout_mode = 0
 anchor_right = 1.0
 anchor_bottom = 1.0
 mouse_filter = 2
 
-[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
-libraries = {
-"": SubResource("AnimationLibrary_th1nx")
-}
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=1824325567]
+libraries/ = SubResource("AnimationLibrary_th1nx")
 
-[node name="New" type="TextureRect" parent="."]
+[node name="New" type="TextureRect" parent="." unique_id=708632129]
 visible = false
 layout_mode = 0
 anchor_left = 1.0

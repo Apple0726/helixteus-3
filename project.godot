@@ -8,10 +8,6 @@
 
 config_version=5
 
-[animation]
-
-compatibility/default_parent_skeleton_in_mesh_instance_3d=true
-
 [application]
 
 config/name="Helixteus 3"
@@ -24,7 +20,7 @@ config/icon="res://Graphics/Icons/HX3_mc.png"
 
 [audio]
 
-buses/default_bus_layout="res://Resources/default_bus_layout.tres"
+buses/default_bus_layout="uid://cl2340avn2kf"
 
 [autoload]
 

@@ -1,37 +1,37 @@
-[gd_scene load_steps=2 format=3 uid="uid://cspg47fs8k1vp"]
+[gd_scene format=3 uid="uid://cspg47fs8k1vp"]
 
 [ext_resource type="Script" uid="uid://4avr1ruac13f" path="res://Scenes/PhaseDiagrams/CO2.gd" id="1"]
 
-[node name="CO2" type="Node2D"]
+[node name="CO2" type="Node2D" unique_id=1693706599]
 script = ExtResource("1")
 
-[node name="Solid" type="Polygon2D" parent="."]
+[node name="Solid" type="Polygon2D" parent="." unique_id=1088939555]
 color = Color(0.682353, 0.866667, 1, 1)
 polygon = PackedVector2Array(0, 0, 800, 0, 800, 400, 0, 400)
 
-[node name="Liquid" type="Polygon2D" parent="."]
+[node name="Liquid" type="Polygon2D" parent="." unique_id=1155805646]
 color = Color(0.776471, 1, 0.8, 1)
 polygon = PackedVector2Array(176, 176, 180, 132, 248, 112, 248, 140)
 
-[node name="Gas" type="Polygon2D" parent="."]
+[node name="Gas" type="Polygon2D" parent="." unique_id=1199705624]
 color = Color(1, 0.839216, 0.564706, 1)
 polygon = PackedVector2Array(140, 400, 176, 176, 248, 140, 800, 140, 800, 400)
 
-[node name="Superfluid" type="Polygon2D" parent="."]
+[node name="Superfluid" type="Polygon2D" parent="." unique_id=1958516424]
 polygon = PackedVector2Array(248, 140, 248, 112, 800, 76, 800, 140)
 
-[node name="TriplePoint" type="Polygon2D" parent="."]
+[node name="TriplePoint" type="Polygon2D" parent="." unique_id=1446761597]
 color = Color(0.87451, 0, 1, 1)
 polygon = PackedVector2Array(0, 0, 3, 0, 3, 3, 0, 3)
 
-[node name="MeltPoint" type="Polygon2D" parent="."]
+[node name="MeltPoint" type="Polygon2D" parent="." unique_id=1853939843]
 color = Color(0, 0.529412, 1, 1)
 polygon = PackedVector2Array(0, 0, 3, 0, 3, 3, 0, 3)
 
-[node name="BoilPoint" type="Polygon2D" parent="."]
+[node name="BoilPoint" type="Polygon2D" parent="." unique_id=868495659]
 color = Color(1, 0, 0, 1)
 polygon = PackedVector2Array(0, 0, 3, 0, 3, 3, 0, 3)
 
-[node name="SuperPoint" type="Polygon2D" parent="."]
+[node name="SuperPoint" type="Polygon2D" parent="." unique_id=1502207315]
 color = Color(0.364706, 0.282353, 0, 1)
 polygon = PackedVector2Array(0, 0, 3, 0, 3, 3, 0, 3)

@@ -1,4 +1,4 @@
-[gd_scene load_steps=6 format=3 uid="uid://byh1hjd76sl65"]
+[gd_scene format=3 uid="uid://byh1hjd76sl65"]
 
 [ext_resource type="Script" uid="uid://b0v2ktsjl35hf" path="res://Scripts/StarButton.gd" id="1_vfiau"]
 [ext_resource type="Texture2D" uid="uid://t70si4f413j5" path="res://Graphics/Effects/spotlight_4.png" id="1_w4ys2"]
@@ -15,13 +15,13 @@ shader_parameter/amplitude = 0.1
 shader_parameter/alpha = 1.0
 shader_parameter/color = Color(1, 1, 1, 1)
 
-[node name="Button" type="Button"]
+[node name="Button" type="Button" unique_id=693680846]
 custom_minimum_size = Vector2(0, 100)
 offset_right = 352.0
 offset_bottom = 100.0
 script = ExtResource("1_vfiau")
 
-[node name="Star" type="TextureRect" parent="."]
+[node name="Star" type="TextureRect" parent="." unique_id=463013424]
 material = SubResource("ShaderMaterial_18mo0")
 layout_mode = 0
 offset_right = 102.0
@@ -31,7 +31,7 @@ texture = ExtResource("1_w4ys2")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="Temperature" type="Label" parent="."]
+[node name="Temperature" type="Label" parent="." unique_id=179582001]
 layout_mode = 0
 offset_left = 122.0
 offset_top = 56.0
@@ -39,7 +39,7 @@ offset_right = 186.0
 offset_bottom = 78.0
 text = "5500 K"
 
-[node name="ClassType" type="Label" parent="."]
+[node name="ClassType" type="Label" parent="." unique_id=2042547832]
 layout_mode = 0
 offset_left = 122.0
 offset_top = 20.0
@@ -47,7 +47,7 @@ offset_right = 270.0
 offset_bottom = 42.0
 text = "G2 Hypergiant"
 
-[node name="Mass" type="Label" parent="."]
+[node name="Mass" type="Label" parent="." unique_id=438392165]
 layout_mode = 0
 offset_left = 282.0
 offset_top = 40.0
@@ -56,7 +56,7 @@ offset_bottom = 64.0
 text = "1.0 M☉"
 vertical_alignment = 1
 
-[node name="Luminosity" type="Label" parent="."]
+[node name="Luminosity" type="Label" parent="." unique_id=1462094496]
 layout_mode = 0
 offset_left = 282.0
 offset_top = 64.0
@@ -65,7 +65,7 @@ offset_bottom = 88.0
 text = "1.0 L☉"
 vertical_alignment = 1
 
-[node name="Radius" type="Label" parent="."]
+[node name="Radius" type="Label" parent="." unique_id=86400574]
 layout_mode = 0
 offset_left = 282.0
 offset_top = 16.0
@@ -74,7 +74,7 @@ offset_bottom = 40.0
 text = "1.0 R☉"
 vertical_alignment = 1
 
-[node name="MS" type="TextureRect" parent="."]
+[node name="MS" type="TextureRect" parent="." unique_id=2079244330]
 layout_mode = 0
 offset_left = 64.0
 offset_top = 60.0

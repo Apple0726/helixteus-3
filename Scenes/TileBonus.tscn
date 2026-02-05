@@ -1,4 +1,4 @@
-[gd_scene load_steps=5 format=3 uid="uid://bxpp7ecqx57tq"]
+[gd_scene format=3 uid="uid://bxpp7ecqx57tq"]
 
 [ext_resource type="Theme" uid="uid://cp2u1kgj60ic" path="res://Resources/default_theme.tres" id="1_ikvkt"]
 [ext_resource type="Texture2D" uid="uid://dg25fshk35326" path="res://Graphics/Icons/SP.png" id="2_8plqd"]
@@ -17,7 +17,7 @@ corner_radius_top_right = 15
 corner_radius_bottom_right = 15
 corner_radius_bottom_left = 15
 
-[node name="Control" type="ColorRect"]
+[node name="Control" type="ColorRect" unique_id=1427270118]
 offset_right = 200.0
 offset_bottom = 200.0
 mouse_filter = 2
@@ -26,7 +26,7 @@ script = ExtResource("2_t0pjy")
 metadata/_edit_horizontal_guides_ = [200.0]
 metadata/_edit_vertical_guides_ = [200.0]
 
-[node name="TileBonus" type="Panel" parent="."]
+[node name="TileBonus" type="Panel" parent="." unique_id=1466739930]
 custom_minimum_size = Vector2(184, 72)
 layout_mode = 1
 offset_left = 8.0
@@ -38,7 +38,7 @@ mouse_filter = 2
 theme = ExtResource("1_ikvkt")
 theme_override_styles/panel = SubResource("StyleBoxFlat_ewgeq")
 
-[node name="TextureRect" type="TextureRect" parent="TileBonus"]
+[node name="TextureRect" type="TextureRect" parent="TileBonus" unique_id=627791418]
 layout_mode = 1
 anchors_preset = 4
 anchor_top = 0.5
@@ -52,7 +52,7 @@ texture = ExtResource("2_8plqd")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="Label" type="Label" parent="TileBonus"]
+[node name="Label" type="Label" parent="TileBonus" unique_id=1253577471]
 layout_mode = 1
 anchors_preset = 4
 anchor_top = 0.5

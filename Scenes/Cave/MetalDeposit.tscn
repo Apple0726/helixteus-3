@@ -1,6 +1,6 @@
-[gd_scene load_steps=2 format=3 uid="uid://qvhnlh8ytmxi"]
+[gd_scene format=3 uid="uid://qvhnlh8ytmxi"]
 
 [ext_resource type="Script" uid="uid://begldw53s2bya" path="res://Scripts/MetalDeposit.gd" id="1"]
 
-[node name="MetalDeposit" type="Node2D"]
+[node name="MetalDeposit" type="Node2D" unique_id=644005869]
 script = ExtResource("1")

@@ -1,6 +1,6 @@
-[gd_scene load_steps=3 format=3 uid="uid://chlumfyc825yv"]
+[gd_scene format=3 uid="uid://chlumfyc825yv"]
 
-[ext_resource type="Texture2D" uid="uid://b5765olv8kfqg" path="res://Graphics/Items/Overclocks/overclock1.png" id="1_3ugl1"]
+[ext_resource type="Texture2D" uid="uid://kcwaqvdl3yb8" path="res://Graphics/Items/Overclocks/overclock1.png" id="1_3ugl1"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_rngm8"]
 bg_color = Color(0, 0, 0.164706, 1)
@@ -11,11 +11,11 @@ border_width_bottom = 2
 border_color = Color(0.105882, 0.196078, 0.305882, 1)
 border_blend = true
 
-[node name="Panel" type="Panel"]
+[node name="Panel" type="Panel" unique_id=1083345622]
 custom_minimum_size = Vector2(76, 76)
 theme_override_styles/panel = SubResource("StyleBoxFlat_rngm8")
 
-[node name="Highlight" type="ColorRect" parent="."]
+[node name="Highlight" type="ColorRect" parent="." unique_id=789447142]
 visible = false
 layout_mode = 1
 anchors_preset = 15
@@ -25,7 +25,7 @@ grow_horizontal = 2
 grow_vertical = 2
 color = Color(1, 1, 1, 0.243137)
 
-[node name="TextureRect" type="TextureRect" parent="."]
+[node name="TextureRect" type="TextureRect" parent="." unique_id=1715529570]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -40,7 +40,7 @@ texture = ExtResource("1_3ugl1")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="TextureButton" type="TextureButton" parent="."]
+[node name="TextureButton" type="TextureButton" parent="." unique_id=1448646198]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0

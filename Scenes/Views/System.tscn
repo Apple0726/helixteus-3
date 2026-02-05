@@ -1,8 +1,8 @@
-[gd_scene load_steps=2 format=3 uid="uid://b5kurhdhjkjst"]
+[gd_scene format=3 uid="uid://b5kurhdhjkjst"]
 
 [ext_resource type="Script" uid="uid://bdk4sxparhmxo" path="res://Scripts/System.gd" id="1"]
 
-[node name="System" type="Node2D"]
+[node name="System" type="Node2D" unique_id=272457836]
 script = ExtResource("1")
 
 [connection signal="draw" from="." to="." method="_on_System_draw"]

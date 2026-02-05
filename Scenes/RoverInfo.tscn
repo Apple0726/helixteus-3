@@ -1,4 +1,4 @@
-[gd_scene load_steps=6 format=3 uid="uid://bn0axfrmbaj16"]
+[gd_scene format=3 uid="uid://bn0axfrmbaj16"]
 
 [ext_resource type="Theme" uid="uid://cp2u1kgj60ic" path="res://Resources/default_theme.tres" id="1_a5hlb"]
 [ext_resource type="Texture2D" uid="uid://crncbjr12yfpx" path="res://Graphics/Cave/Rover.png" id="2_j5p00"]
@@ -6,7 +6,7 @@
 [ext_resource type="Texture2D" uid="uid://bl07f3wef0muv" path="res://Graphics/Icons/HP.png" id="4_mpuki"]
 [ext_resource type="Texture2D" uid="uid://bpuwwlxltaow4" path="res://Graphics/Tiles/cave.png" id="4_rdkix"]
 
-[node name="Control" type="Control"]
+[node name="Control" type="Control" unique_id=1280980389]
 custom_minimum_size = Vector2(0, 96)
 layout_mode = 3
 anchors_preset = 10
@@ -16,7 +16,7 @@ grow_horizontal = 2
 size_flags_horizontal = 3
 theme = ExtResource("1_a5hlb")
 
-[node name="InventoryIcon" type="TextureRect" parent="."]
+[node name="InventoryIcon" type="TextureRect" parent="." unique_id=1679325852]
 layout_mode = 1
 offset_left = 268.0
 offset_top = 28.0
@@ -26,7 +26,7 @@ texture = ExtResource("2_p7e76")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="RoverIcon" type="TextureRect" parent="."]
+[node name="RoverIcon" type="TextureRect" parent="." unique_id=903878375]
 layout_mode = 0
 offset_left = 16.0
 offset_right = 144.0
@@ -35,7 +35,7 @@ texture = ExtResource("2_j5p00")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="HPIcon" type="TextureRect" parent="."]
+[node name="HPIcon" type="TextureRect" parent="." unique_id=581978310]
 layout_mode = 1
 offset_left = 164.0
 offset_top = 32.0
@@ -45,7 +45,7 @@ texture = ExtResource("4_mpuki")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="HPLabel" type="Label" parent="."]
+[node name="HPLabel" type="Label" parent="." unique_id=1045910875]
 layout_mode = 0
 offset_left = 204.0
 offset_top = 32.0
@@ -53,7 +53,7 @@ offset_right = 268.0
 offset_bottom = 55.0
 text = "200"
 
-[node name="InventoryLabel" type="Label" parent="."]
+[node name="InventoryLabel" type="Label" parent="." unique_id=657305255]
 layout_mode = 0
 offset_left = 312.0
 offset_top = 32.0
@@ -61,7 +61,7 @@ offset_right = 392.0
 offset_bottom = 55.0
 text = "200 kg"
 
-[node name="HBox" type="HBoxContainer" parent="."]
+[node name="HBox" type="HBoxContainer" parent="." unique_id=1594728501]
 layout_mode = 0
 offset_left = 400.0
 offset_top = 28.0
@@ -69,19 +69,19 @@ offset_right = 848.0
 offset_bottom = 61.0
 theme_override_constants/separation = 15
 
-[node name="TakeAll" type="Button" parent="HBox"]
+[node name="TakeAll" type="Button" parent="HBox" unique_id=346388328]
 layout_mode = 2
 text = "TAKE_ALL"
 
-[node name="SendItems" type="Button" parent="HBox"]
+[node name="SendItems" type="Button" parent="HBox" unique_id=1066856418]
 layout_mode = 2
 text = "SEND_ITEMS"
 
-[node name="Destroy" type="Button" parent="HBox"]
+[node name="Destroy" type="Button" parent="HBox" unique_id=1435949454]
 layout_mode = 2
 text = "DESTROY"
 
-[node name="Explore" type="Button" parent="HBox"]
+[node name="Explore" type="Button" parent="HBox" unique_id=836730294]
 layout_mode = 2
 size_flags_horizontal = 3
 text = "EXPLORE"

@@ -1,4 +1,4 @@
-[gd_scene load_steps=36 format=3 uid="uid://csljwgggftgxb"]
+[gd_scene format=3 uid="uid://csljwgggftgxb"]
 
 [ext_resource type="Script" uid="uid://chr84rkr56yr2" path="res://Scripts/ShipPanel.gd" id="3"]
 [ext_resource type="Texture2D" uid="uid://dcvnyb0mloli2" path="res://Graphics/GUI/Panel.png" id="3_xp52f"]
@@ -7,7 +7,7 @@
 [ext_resource type="Theme" uid="uid://cp2u1kgj60ic" path="res://Resources/default_theme.tres" id="7"]
 [ext_resource type="PackedScene" uid="uid://rkeuei54m30i" path="res://Scenes/Drives.tscn" id="8"]
 [ext_resource type="Shader" uid="uid://hfa3ri2g3507" path="res://Shaders/FloatAnimation.gdshader" id="9_aivc5"]
-[ext_resource type="Texture2D" uid="uid://ccwp7j6mkde7u" path="res://Graphics/Buttons/SystemView.png" id="9_dhoc8"]
+[ext_resource type="Texture2D" uid="uid://chrk4kwpyhk0l" path="res://Graphics/Buttons/SystemView.png" id="9_dhoc8"]
 [ext_resource type="Texture2D" uid="uid://47ckp0wuhpfy" path="res://Graphics/Icons/current.png" id="10_800g5"]
 [ext_resource type="Texture2D" uid="uid://bc6latfcdvj1t" path="res://Graphics/Weapons/bullet1.png" id="10_w02ne"]
 [ext_resource type="Texture2D" uid="uid://di3sx4ynm6kot" path="res://Graphics/Science/CD.png" id="11"]
@@ -75,7 +75,7 @@ shader_parameter/frequency = 6.0
 font_size = 14
 font_color = Color(0.585062, 0.585062, 0.585062, 1)
 
-[node name="Background" type="Control"]
+[node name="Background" type="Control" unique_id=1200622783]
 layout_mode = 3
 anchors_preset = 0
 offset_right = 40.0
@@ -84,7 +84,7 @@ theme = ExtResource("7")
 script = ExtResource("3")
 metadata/_edit_lock_ = true
 
-[node name="GUI" type="TextureRect" parent="."]
+[node name="GUI" type="TextureRect" parent="." unique_id=64531827]
 layout_mode = 0
 offset_left = 80.0
 offset_top = 52.0
@@ -93,7 +93,7 @@ offset_bottom = 671.0
 texture = ExtResource("3_xp52f")
 metadata/_edit_lock_ = true
 
-[node name="CloseButton" type="TextureButton" parent="."]
+[node name="CloseButton" type="TextureButton" parent="." unique_id=680082366]
 layout_mode = 0
 offset_left = 1136.0
 offset_top = 67.0
@@ -102,7 +102,7 @@ offset_bottom = 116.0
 texture_normal = ExtResource("4_ekxvq")
 texture_hover = ExtResource("5_5824e")
 
-[node name="Title" type="Label" parent="."]
+[node name="Title" type="Label" parent="." unique_id=348979618]
 custom_minimum_size = Vector2(0, 38)
 layout_mode = 1
 offset_left = 128.0
@@ -114,9 +114,9 @@ text = "SHIPS"
 label_settings = SubResource("LabelSettings_wweft")
 vertical_alignment = 1
 
-[node name="SpaceportTimer" type="Timer" parent="."]
+[node name="SpaceportTimer" type="Timer" parent="." unique_id=1205462051]
 
-[node name="Ships" type="Panel" parent="."]
+[node name="Ships" type="Panel" parent="." unique_id=1209156304]
 clip_contents = true
 layout_mode = 0
 offset_left = 604.0
@@ -125,7 +125,7 @@ offset_right = 1120.0
 offset_bottom = 620.0
 theme_override_styles/panel = SubResource("StyleBoxFlat_8pffm")
 
-[node name="DriveButton" type="TextureButton" parent="Ships"]
+[node name="DriveButton" type="TextureButton" parent="Ships" unique_id=258318824]
 layout_mode = 0
 offset_left = 156.0
 offset_top = 404.0
@@ -135,7 +135,7 @@ texture_normal = ExtResource("11")
 ignore_texture_size = true
 stretch_mode = 5
 
-[node name="GoToShips" type="TextureButton" parent="Ships"]
+[node name="GoToShips" type="TextureButton" parent="Ships" unique_id=29186299]
 layout_mode = 0
 offset_left = 312.0
 offset_top = 408.0
@@ -145,7 +145,7 @@ texture_normal = ExtResource("9_dhoc8")
 ignore_texture_size = true
 stretch_mode = 5
 
-[node name="Battlefield" type="Panel" parent="Ships"]
+[node name="Battlefield" type="Panel" parent="Ships" unique_id=322065651]
 layout_mode = 0
 offset_left = 32.0
 offset_top = 40.0
@@ -153,21 +153,21 @@ offset_right = 480.0
 offset_bottom = 392.0
 theme_override_styles/panel = SubResource("StyleBoxFlat_pdtjp")
 
-[node name="StaticBody2D" type="StaticBody2D" parent="Ships/Battlefield"]
+[node name="StaticBody2D" type="StaticBody2D" parent="Ships/Battlefield" unique_id=1297244414]
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Ships/Battlefield/StaticBody2D"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Ships/Battlefield/StaticBody2D" unique_id=176645259]
 shape = SubResource("SegmentShape2D_4vtgr")
 
-[node name="CollisionShape2D2" type="CollisionShape2D" parent="Ships/Battlefield/StaticBody2D"]
+[node name="CollisionShape2D2" type="CollisionShape2D" parent="Ships/Battlefield/StaticBody2D" unique_id=335755302]
 shape = SubResource("SegmentShape2D_ignkx")
 
-[node name="CollisionShape2D3" type="CollisionShape2D" parent="Ships/Battlefield/StaticBody2D"]
+[node name="CollisionShape2D3" type="CollisionShape2D" parent="Ships/Battlefield/StaticBody2D" unique_id=224490279]
 shape = SubResource("SegmentShape2D_54v24")
 
-[node name="CollisionShape2D4" type="CollisionShape2D" parent="Ships/Battlefield/StaticBody2D"]
+[node name="CollisionShape2D4" type="CollisionShape2D" parent="Ships/Battlefield/StaticBody2D" unique_id=1940002320]
 shape = SubResource("SegmentShape2D_yjbqr")
 
-[node name="InitialPositionsLabel" type="Label" parent="Ships/Battlefield"]
+[node name="InitialPositionsLabel" type="Label" parent="Ships/Battlefield" unique_id=554091070]
 layout_mode = 0
 offset_left = 8.0
 offset_top = 8.0
@@ -176,14 +176,14 @@ offset_bottom = 25.0
 text = "SHIP_INITIAL_POSITIONS"
 label_settings = SubResource("LabelSettings_aaq6n")
 
-[node name="Selected" type="Sprite2D" parent="Ships/Battlefield"]
+[node name="Selected" type="Sprite2D" parent="Ships/Battlefield" unique_id=709775305]
 visible = false
 material = SubResource("ShaderMaterial_pjijs")
 position = Vector2(68, 40)
 scale = Vector2(0.295, 0.295)
 texture = ExtResource("10_800g5")
 
-[node name="TravelTimeRemaining" type="Label" parent="Ships"]
+[node name="TravelTimeRemaining" type="Label" parent="Ships" unique_id=1152174843]
 layout_mode = 0
 offset_left = 32.0
 offset_top = 8.0
@@ -191,14 +191,14 @@ offset_right = 480.0
 offset_bottom = 31.0
 horizontal_alignment = 1
 
-[node name="ShipStats" type="Panel" parent="."]
+[node name="ShipStats" type="Panel" parent="." unique_id=1376717621]
 layout_mode = 0
 offset_left = 152.0
 offset_top = 148.0
 offset_right = 556.0
 offset_bottom = 620.0
 
-[node name="Label" type="Label" parent="ShipStats"]
+[node name="Label" type="Label" parent="ShipStats" unique_id=101178477]
 visible = false
 layout_mode = 1
 anchors_preset = 10
@@ -212,7 +212,7 @@ label_settings = SubResource("LabelSettings_sx08b")
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="ShipDetails" type="Control" parent="ShipStats"]
+[node name="ShipDetails" type="Control" parent="ShipStats" unique_id=1305776051]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -220,7 +220,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="Label" type="Label" parent="ShipStats/ShipDetails"]
+[node name="Label" type="Label" parent="ShipStats/ShipDetails" unique_id=1527038168]
 layout_mode = 1
 anchors_preset = 5
 anchor_left = 0.5
@@ -233,7 +233,7 @@ grow_horizontal = 2
 text = "Level 1 Standard Ship"
 horizontal_alignment = 1
 
-[node name="Respec" type="Button" parent="ShipStats/ShipDetails"]
+[node name="Respec" type="Button" parent="ShipStats/ShipDetails" unique_id=517604014]
 layout_mode = 1
 anchors_preset = 5
 anchor_left = 0.5
@@ -245,14 +245,14 @@ offset_bottom = 85.0
 grow_horizontal = 2
 text = "Respec (free)"
 
-[node name="Bullet" type="Control" parent="ShipStats/ShipDetails"]
+[node name="Bullet" type="Control" parent="ShipStats/ShipDetails" unique_id=2134917824]
 anchors_preset = 0
 offset_left = 32.0
 offset_top = 324.0
 offset_right = 72.0
 offset_bottom = 364.0
 
-[node name="Icon" type="TextureRect" parent="ShipStats/ShipDetails/Bullet"]
+[node name="Icon" type="TextureRect" parent="ShipStats/ShipDetails/Bullet" unique_id=1471086203]
 layout_mode = 0
 offset_top = 4.0
 offset_right = 28.0
@@ -261,21 +261,21 @@ texture = ExtResource("10_w02ne")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="WeaponLevels" parent="ShipStats/ShipDetails/Bullet" instance=ExtResource("11_xmdl6")]
+[node name="WeaponLevels" parent="ShipStats/ShipDetails/Bullet" unique_id=1050862918 instance=ExtResource("11_xmdl6")]
 layout_mode = 0
 offset_left = 32.0
 offset_top = -8.0
 offset_right = 72.0
 offset_bottom = 32.0
 
-[node name="Laser" type="Control" parent="ShipStats/ShipDetails"]
+[node name="Laser" type="Control" parent="ShipStats/ShipDetails" unique_id=29295324]
 anchors_preset = 0
 offset_left = 124.0
 offset_top = 324.0
 offset_right = 164.0
 offset_bottom = 364.0
 
-[node name="Icon" type="TextureRect" parent="ShipStats/ShipDetails/Laser"]
+[node name="Icon" type="TextureRect" parent="ShipStats/ShipDetails/Laser" unique_id=788962482]
 layout_mode = 0
 offset_right = 28.0
 offset_bottom = 20.0
@@ -283,21 +283,21 @@ texture = ExtResource("12_xmdl6")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="WeaponLevels" parent="ShipStats/ShipDetails/Laser" instance=ExtResource("11_xmdl6")]
+[node name="WeaponLevels" parent="ShipStats/ShipDetails/Laser" unique_id=519201823 instance=ExtResource("11_xmdl6")]
 layout_mode = 0
 offset_left = 32.0
 offset_top = -8.0
 offset_right = 72.0
 offset_bottom = 32.0
 
-[node name="Bomb" type="Control" parent="ShipStats/ShipDetails"]
+[node name="Bomb" type="Control" parent="ShipStats/ShipDetails" unique_id=818730690]
 anchors_preset = 0
 offset_left = 216.0
 offset_top = 324.0
 offset_right = 256.0
 offset_bottom = 364.0
 
-[node name="Icon" type="TextureRect" parent="ShipStats/ShipDetails/Bomb"]
+[node name="Icon" type="TextureRect" parent="ShipStats/ShipDetails/Bomb" unique_id=1798217973]
 layout_mode = 0
 offset_right = 28.0
 offset_bottom = 20.0
@@ -305,21 +305,21 @@ texture = ExtResource("13_k28a8")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="WeaponLevels" parent="ShipStats/ShipDetails/Bomb" instance=ExtResource("11_xmdl6")]
+[node name="WeaponLevels" parent="ShipStats/ShipDetails/Bomb" unique_id=939469018 instance=ExtResource("11_xmdl6")]
 layout_mode = 0
 offset_left = 32.0
 offset_top = -8.0
 offset_right = 72.0
 offset_bottom = 32.0
 
-[node name="Light" type="Control" parent="ShipStats/ShipDetails"]
+[node name="Light" type="Control" parent="ShipStats/ShipDetails" unique_id=1391057480]
 anchors_preset = 0
 offset_left = 304.0
 offset_top = 324.0
 offset_right = 344.0
 offset_bottom = 364.0
 
-[node name="Icon" type="TextureRect" parent="ShipStats/ShipDetails/Light"]
+[node name="Icon" type="TextureRect" parent="ShipStats/ShipDetails/Light" unique_id=356054492]
 layout_mode = 0
 offset_right = 28.0
 offset_bottom = 20.0
@@ -327,20 +327,20 @@ texture = ExtResource("14_qvlxj")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="WeaponLevels" parent="ShipStats/ShipDetails/Light" instance=ExtResource("11_xmdl6")]
+[node name="WeaponLevels" parent="ShipStats/ShipDetails/Light" unique_id=426790673 instance=ExtResource("11_xmdl6")]
 layout_mode = 0
 offset_left = 32.0
 offset_top = -8.0
 offset_right = 72.0
 offset_bottom = 32.0
 
-[node name="XP" type="Control" parent="ShipStats/ShipDetails"]
+[node name="XP" type="Control" parent="ShipStats/ShipDetails" unique_id=21203001]
 anchors_preset = 0
 offset_top = -16.0
 offset_right = 40.0
 offset_bottom = 24.0
 
-[node name="ColorRect" type="ColorRect" parent="ShipStats/ShipDetails/XP"]
+[node name="ColorRect" type="ColorRect" parent="ShipStats/ShipDetails/XP" unique_id=1437782757]
 layout_mode = 0
 offset_left = 76.0
 offset_top = 433.0
@@ -348,7 +348,7 @@ offset_right = 328.0
 offset_bottom = 453.0
 color = Color(0.59, 0.46669, 0.2537, 1)
 
-[node name="TextureProgressGained" type="TextureProgressBar" parent="ShipStats/ShipDetails/XP"]
+[node name="TextureProgressGained" type="TextureProgressBar" parent="ShipStats/ShipDetails/XP" unique_id=1472869627]
 modulate = Color(1, 0.819608, 0.611765, 1)
 layout_mode = 0
 offset_left = 76.0
@@ -361,7 +361,7 @@ nine_patch_stretch = true
 texture_under = ExtResource("11_s3b4g")
 texture_progress = ExtResource("12_3x4ks")
 
-[node name="TextureProgressBar" type="TextureProgressBar" parent="ShipStats/ShipDetails/XP"]
+[node name="TextureProgressBar" type="TextureProgressBar" parent="ShipStats/ShipDetails/XP" unique_id=398103399]
 modulate = Color(0.921569, 0.631373, 0.203922, 1)
 layout_mode = 0
 offset_left = 76.0
@@ -378,7 +378,7 @@ stretch_margin_bottom = 1
 texture_over = ExtResource("13_y4ybd")
 texture_progress = ExtResource("12_3x4ks")
 
-[node name="XPGained" type="Label" parent="ShipStats/ShipDetails/XP"]
+[node name="XPGained" type="Label" parent="ShipStats/ShipDetails/XP" unique_id=1368881433]
 layout_mode = 0
 offset_left = 340.0
 offset_top = 428.0
@@ -387,7 +387,7 @@ offset_bottom = 459.0
 scale = Vector2(0.9, 0.9)
 vertical_alignment = 1
 
-[node name="Label2" type="Label" parent="ShipStats/ShipDetails/XP"]
+[node name="Label2" type="Label" parent="ShipStats/ShipDetails/XP" unique_id=1313673949]
 layout_mode = 0
 offset_left = 76.0
 offset_top = 432.0
@@ -399,7 +399,7 @@ text = "0 / 20"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="Icon" type="TextureRect" parent="ShipStats/ShipDetails/XP"]
+[node name="Icon" type="TextureRect" parent="ShipStats/ShipDetails/XP" unique_id=1285337601]
 layout_mode = 0
 offset_left = 36.0
 offset_top = 428.0
@@ -409,7 +409,7 @@ texture = ExtResource("14_gqpul")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="Stats" type="Control" parent="ShipStats/ShipDetails"]
+[node name="Stats" type="Control" parent="ShipStats/ShipDetails" unique_id=1597708522]
 anchors_preset = 0
 offset_left = 56.0
 offset_top = 88.0
@@ -417,7 +417,7 @@ offset_right = 96.0
 offset_bottom = 128.0
 metadata/_edit_lock_ = true
 
-[node name="HPIcon" type="TextureRect" parent="ShipStats/ShipDetails/Stats"]
+[node name="HPIcon" type="TextureRect" parent="ShipStats/ShipDetails/Stats" unique_id=600122997]
 layout_mode = 0
 offset_left = -24.0
 offset_top = 24.0
@@ -426,7 +426,7 @@ texture = ExtResource("15_0livu")
 expand_mode = 1
 stretch_mode = 6
 
-[node name="AttackIcon" type="TextureRect" parent="ShipStats/ShipDetails/Stats"]
+[node name="AttackIcon" type="TextureRect" parent="ShipStats/ShipDetails/Stats" unique_id=759724717]
 layout_mode = 0
 offset_left = -24.0
 offset_top = 56.0
@@ -435,7 +435,7 @@ texture = ExtResource("16_grg2r")
 expand_mode = 1
 stretch_mode = 6
 
-[node name="DefenseIcon" type="TextureRect" parent="ShipStats/ShipDetails/Stats"]
+[node name="DefenseIcon" type="TextureRect" parent="ShipStats/ShipDetails/Stats" unique_id=975786532]
 layout_mode = 0
 offset_left = -24.0
 offset_top = 88.0
@@ -444,7 +444,7 @@ texture = ExtResource("17_uo1ep")
 expand_mode = 1
 stretch_mode = 6
 
-[node name="AccuracyIcon" type="TextureRect" parent="ShipStats/ShipDetails/Stats"]
+[node name="AccuracyIcon" type="TextureRect" parent="ShipStats/ShipDetails/Stats" unique_id=1454425789]
 layout_mode = 0
 offset_left = -24.0
 offset_top = 120.0
@@ -453,7 +453,7 @@ texture = ExtResource("18_befyh")
 expand_mode = 1
 stretch_mode = 6
 
-[node name="AgilityIcon" type="TextureRect" parent="ShipStats/ShipDetails/Stats"]
+[node name="AgilityIcon" type="TextureRect" parent="ShipStats/ShipDetails/Stats" unique_id=292245209]
 layout_mode = 0
 offset_left = -24.0
 offset_top = 152.0
@@ -462,7 +462,7 @@ texture = ExtResource("19_d6hw1")
 expand_mode = 1
 stretch_mode = 6
 
-[node name="HP" type="Label" parent="ShipStats/ShipDetails/Stats"]
+[node name="HP" type="Label" parent="ShipStats/ShipDetails/Stats" unique_id=76879977]
 layout_mode = 0
 offset_left = 188.0
 offset_top = 24.0
@@ -471,7 +471,7 @@ offset_bottom = 47.0
 text = "0"
 vertical_alignment = 1
 
-[node name="HPLabel" type="Label" parent="ShipStats/ShipDetails/Stats"]
+[node name="HPLabel" type="Label" parent="ShipStats/ShipDetails/Stats" unique_id=892623988]
 layout_mode = 0
 offset_left = 16.0
 offset_top = 24.0
@@ -480,7 +480,7 @@ offset_bottom = 47.0
 text = "HEALTH_POINTS"
 vertical_alignment = 1
 
-[node name="AttackLabel" type="Label" parent="ShipStats/ShipDetails/Stats"]
+[node name="AttackLabel" type="Label" parent="ShipStats/ShipDetails/Stats" unique_id=1935466495]
 layout_mode = 0
 offset_left = 16.0
 offset_top = 56.0
@@ -489,7 +489,7 @@ offset_bottom = 79.0
 text = "ATTACK"
 vertical_alignment = 1
 
-[node name="DefenseLabel" type="Label" parent="ShipStats/ShipDetails/Stats"]
+[node name="DefenseLabel" type="Label" parent="ShipStats/ShipDetails/Stats" unique_id=1525337874]
 layout_mode = 0
 offset_left = 16.0
 offset_top = 88.0
@@ -498,7 +498,7 @@ offset_bottom = 111.0
 text = "DEFENSE"
 vertical_alignment = 1
 
-[node name="AccuracyLabel" type="Label" parent="ShipStats/ShipDetails/Stats"]
+[node name="AccuracyLabel" type="Label" parent="ShipStats/ShipDetails/Stats" unique_id=2061089725]
 layout_mode = 0
 offset_left = 16.0
 offset_top = 120.0
@@ -507,7 +507,7 @@ offset_bottom = 143.0
 text = "ACCURACY"
 vertical_alignment = 1
 
-[node name="AgilityLabel" type="Label" parent="ShipStats/ShipDetails/Stats"]
+[node name="AgilityLabel" type="Label" parent="ShipStats/ShipDetails/Stats" unique_id=216483330]
 layout_mode = 0
 offset_left = 16.0
 offset_top = 152.0
@@ -516,7 +516,7 @@ offset_bottom = 175.0
 text = "AGILITY"
 vertical_alignment = 1
 
-[node name="Attack" type="Label" parent="ShipStats/ShipDetails/Stats"]
+[node name="Attack" type="Label" parent="ShipStats/ShipDetails/Stats" unique_id=1148427338]
 layout_mode = 0
 offset_left = 188.0
 offset_top = 56.0
@@ -525,7 +525,7 @@ offset_bottom = 79.0
 text = "0"
 vertical_alignment = 1
 
-[node name="Defense" type="Label" parent="ShipStats/ShipDetails/Stats"]
+[node name="Defense" type="Label" parent="ShipStats/ShipDetails/Stats" unique_id=1946483812]
 layout_mode = 0
 offset_left = 188.0
 offset_top = 88.0
@@ -534,7 +534,7 @@ offset_bottom = 111.0
 text = "0"
 vertical_alignment = 1
 
-[node name="Accuracy" type="Label" parent="ShipStats/ShipDetails/Stats"]
+[node name="Accuracy" type="Label" parent="ShipStats/ShipDetails/Stats" unique_id=1539340373]
 layout_mode = 0
 offset_left = 188.0
 offset_top = 120.0
@@ -543,7 +543,7 @@ offset_bottom = 143.0
 text = "0"
 vertical_alignment = 1
 
-[node name="Agility" type="Label" parent="ShipStats/ShipDetails/Stats"]
+[node name="Agility" type="Label" parent="ShipStats/ShipDetails/Stats" unique_id=710910183]
 layout_mode = 0
 offset_left = 188.0
 offset_top = 152.0
@@ -552,7 +552,7 @@ offset_bottom = 175.0
 text = "0"
 vertical_alignment = 1
 
-[node name="Drives" parent="." instance=ExtResource("8")]
+[node name="Drives" parent="." unique_id=436184121 instance=ExtResource("8")]
 visible = false
 layout_mode = 0
 offset_left = 332.0

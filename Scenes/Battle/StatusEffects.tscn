@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=3 uid="uid://m8wrm55x0xbe"]
+[gd_scene format=3 uid="uid://m8wrm55x0xbe"]
 
 [ext_resource type="Theme" uid="uid://cp2u1kgj60ic" path="res://Resources/default_theme.tres" id="1_bn3ag"]
 [ext_resource type="Texture2D" uid="uid://buvqtd7v5l8m2" path="res://Graphics/Icons/Fire.png" id="2_jvqvk"]
@@ -19,7 +19,7 @@ font = SubResource("SystemFont_pri0e")
 font_size = 14
 shadow_color = Color(0, 0, 0, 1)
 
-[node name="StatusEffects" type="GridContainer"]
+[node name="StatusEffects" type="GridContainer" unique_id=54541607]
 offset_right = 104.0
 offset_bottom = 88.0
 mouse_filter = 2
@@ -27,11 +27,11 @@ theme = ExtResource("1_bn3ag")
 columns = 3
 script = ExtResource("2_lr2cs")
 
-[node name="Burn" type="Control" parent="."]
+[node name="Burn" type="Control" parent="." unique_id=963613897]
 custom_minimum_size = Vector2(24, 24)
 layout_mode = 2
 
-[node name="Icon" type="TextureRect" parent="Burn"]
+[node name="Icon" type="TextureRect" parent="Burn" unique_id=1745980182]
 layout_mode = 0
 offset_right = 24.0
 offset_bottom = 24.0
@@ -39,7 +39,7 @@ texture = ExtResource("2_jvqvk")
 expand_mode = 2
 stretch_mode = 5
 
-[node name="Label" type="Label" parent="Burn"]
+[node name="Label" type="Label" parent="Burn" unique_id=1529808774]
 layout_mode = 0
 offset_top = 4.0
 offset_right = 24.0
@@ -48,11 +48,11 @@ text = "9"
 label_settings = SubResource("LabelSettings_re712")
 horizontal_alignment = 1
 
-[node name="Stun" type="Control" parent="."]
+[node name="Stun" type="Control" parent="." unique_id=750657200]
 custom_minimum_size = Vector2(24, 24)
 layout_mode = 2
 
-[node name="Icon" type="TextureRect" parent="Stun"]
+[node name="Icon" type="TextureRect" parent="Stun" unique_id=118214156]
 layout_mode = 0
 offset_right = 24.0
 offset_bottom = 24.0
@@ -60,7 +60,7 @@ texture = ExtResource("3_lr2cs")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="Label" type="Label" parent="Stun"]
+[node name="Label" type="Label" parent="Stun" unique_id=1870565478]
 layout_mode = 0
 offset_top = 4.0
 offset_right = 24.0
@@ -69,11 +69,11 @@ text = "9"
 label_settings = SubResource("LabelSettings_re712")
 horizontal_alignment = 1
 
-[node name="Frozen" type="Control" parent="."]
+[node name="Frozen" type="Control" parent="." unique_id=611764351]
 custom_minimum_size = Vector2(24, 24)
 layout_mode = 2
 
-[node name="Icon" type="TextureRect" parent="Frozen"]
+[node name="Icon" type="TextureRect" parent="Frozen" unique_id=1561129501]
 layout_mode = 0
 offset_right = 24.0
 offset_bottom = 24.0
@@ -81,7 +81,7 @@ texture = ExtResource("5_a6ky5")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="Label" type="Label" parent="Frozen"]
+[node name="Label" type="Label" parent="Frozen" unique_id=1817587863]
 layout_mode = 0
 offset_top = 4.0
 offset_right = 24.0
@@ -90,11 +90,11 @@ text = "9"
 label_settings = SubResource("LabelSettings_re712")
 horizontal_alignment = 1
 
-[node name="Wet" type="Control" parent="."]
+[node name="Wet" type="Control" parent="." unique_id=2030523280]
 custom_minimum_size = Vector2(24, 24)
 layout_mode = 2
 
-[node name="Icon" type="TextureRect" parent="Wet"]
+[node name="Icon" type="TextureRect" parent="Wet" unique_id=261411677]
 layout_mode = 0
 offset_right = 24.0
 offset_bottom = 24.0
@@ -102,7 +102,7 @@ texture = ExtResource("7_4ih1o")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="Label" type="Label" parent="Wet"]
+[node name="Label" type="Label" parent="Wet" unique_id=1083609256]
 layout_mode = 0
 offset_top = 4.0
 offset_right = 24.0
@@ -111,18 +111,18 @@ text = "9"
 label_settings = SubResource("LabelSettings_re712")
 horizontal_alignment = 1
 
-[node name="Exposed" type="Control" parent="."]
+[node name="Exposed" type="Control" parent="." unique_id=2137360604]
 custom_minimum_size = Vector2(24, 24)
 layout_mode = 2
 
-[node name="Icon" type="TextureRect" parent="Exposed"]
+[node name="Icon" type="TextureRect" parent="Exposed" unique_id=331886429]
 layout_mode = 0
 offset_right = 24.0
 offset_bottom = 24.0
 expand_mode = 1
 stretch_mode = 5
 
-[node name="Label" type="Label" parent="Exposed"]
+[node name="Label" type="Label" parent="Exposed" unique_id=154332569]
 layout_mode = 0
 offset_top = 4.0
 offset_right = 24.0
@@ -131,11 +131,11 @@ text = "9"
 label_settings = SubResource("LabelSettings_re712")
 horizontal_alignment = 1
 
-[node name="Corroding" type="Control" parent="."]
+[node name="Corroding" type="Control" parent="." unique_id=205498247]
 custom_minimum_size = Vector2(24, 24)
 layout_mode = 2
 
-[node name="Icon" type="TextureRect" parent="Corroding"]
+[node name="Icon" type="TextureRect" parent="Corroding" unique_id=814727737]
 layout_mode = 0
 offset_right = 24.0
 offset_bottom = 24.0
@@ -143,7 +143,7 @@ texture = ExtResource("6_4ih1o")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="Label" type="Label" parent="Corroding"]
+[node name="Label" type="Label" parent="Corroding" unique_id=1777065728]
 layout_mode = 0
 offset_top = 4.0
 offset_right = 24.0
@@ -152,11 +152,11 @@ text = "9"
 label_settings = SubResource("LabelSettings_re712")
 horizontal_alignment = 1
 
-[node name="Radioactive" type="Control" parent="."]
+[node name="Radioactive" type="Control" parent="." unique_id=767138517]
 custom_minimum_size = Vector2(24, 24)
 layout_mode = 2
 
-[node name="Icon" type="TextureRect" parent="Radioactive"]
+[node name="Icon" type="TextureRect" parent="Radioactive" unique_id=266018630]
 layout_mode = 0
 offset_right = 24.0
 offset_bottom = 24.0
@@ -164,7 +164,7 @@ texture = ExtResource("8_pri0e")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="Label" type="Label" parent="Radioactive"]
+[node name="Label" type="Label" parent="Radioactive" unique_id=1691643472]
 layout_mode = 0
 offset_top = 4.0
 offset_right = 24.0
@@ -173,11 +173,11 @@ text = "9"
 label_settings = SubResource("LabelSettings_re712")
 horizontal_alignment = 1
 
-[node name="ExtraTurns" type="Control" parent="."]
+[node name="ExtraTurns" type="Control" parent="." unique_id=1518720041]
 custom_minimum_size = Vector2(24, 24)
 layout_mode = 2
 
-[node name="Icon" type="TextureRect" parent="ExtraTurns"]
+[node name="Icon" type="TextureRect" parent="ExtraTurns" unique_id=1000673531]
 layout_mode = 0
 offset_right = 24.0
 offset_bottom = 24.0
@@ -185,7 +185,7 @@ texture = ExtResource("4_jvqvk")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="Label" type="Label" parent="ExtraTurns"]
+[node name="Label" type="Label" parent="ExtraTurns" unique_id=1561982028]
 layout_mode = 0
 offset_top = 4.0
 offset_right = 24.0

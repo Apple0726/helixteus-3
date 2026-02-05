@@ -1,4 +1,4 @@
-[gd_scene load_steps=3 format=3 uid="uid://dixqdp1o0moib"]
+[gd_scene format=3 uid="uid://dixqdp1o0moib"]
 
 [ext_resource type="Shader" uid="uid://fumn7c8bmy23" path="res://Shaders/Grayscale.gdshader" id="1_ilua1"]
 
@@ -6,6 +6,6 @@
 shader = ExtResource("1_ilua1")
 shader_parameter/amount = 0.0
 
-[node name="Polygon2D" type="Polygon2D"]
+[node name="Polygon2D" type="Polygon2D" unique_id=782976475]
 material = SubResource("ShaderMaterial_4y2vv")
 polygon = PackedVector2Array(0, 0, 0, 200, 200, 200, 200, 0)

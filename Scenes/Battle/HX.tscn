@@ -1,4 +1,4 @@
-[gd_scene load_steps=49 format=3 uid="uid://cpjo82l86k61"]
+[gd_scene format=3 uid="uid://cpjo82l86k61"]
 
 [ext_resource type="Texture2D" uid="uid://7ffsf7xuvfw2" path="res://Graphics/Icons/attack.png" id="1"]
 [ext_resource type="Script" uid="uid://dhqip0etwjc1x" path="res://Scripts/Battle/HX.gd" id="1_3h40m"]
@@ -419,32 +419,32 @@ _data = {
 &"LabelAnim": SubResource("23")
 }
 
-[node name="HX" type="Area2D"]
+[node name="HX" type="Area2D" unique_id=1524520358]
 collision_layer = 4
 collision_mask = 39
 script = ExtResource("1_3h40m")
 
-[node name="FireWeaponAim" parent="." instance=ExtResource("2_uyhlq")]
+[node name="FireWeaponAim" parent="." unique_id=1281615261 instance=ExtResource("2_uyhlq")]
 visible = false
 
-[node name="CollisionShapeFinder" type="Area2D" parent="."]
+[node name="CollisionShapeFinder" type="Area2D" parent="." unique_id=852741204]
 collision_layer = 0
 collision_mask = 39
 monitorable = false
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="CollisionShapeFinder"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="CollisionShapeFinder" unique_id=1879388046]
 shape = SubResource("CircleShape2D_1s5uh")
 debug_color = Color(0.533333, 0, 0.701961, 0)
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1248219929]
 rotation = 1.57413
 shape = SubResource("CircleShape2D_f8wif")
 
-[node name="Polygon2D" type="Polygon2D" parent="CollisionShape2D"]
+[node name="Polygon2D" type="Polygon2D" parent="CollisionShape2D" unique_id=832326736]
 color = Color(1, 1, 1, 0)
 polygon = PackedVector2Array(-23.9999, 0.0800094, -0.0800094, -23.9999, 23.9999, -0.0800094, 0.0800094, 23.9999)
 
-[node name="TextureRect" type="TextureRect" parent="."]
+[node name="TextureRect" type="TextureRect" parent="." unique_id=1485378024]
 material = SubResource("2")
 offset_left = -36.0
 offset_top = -36.0
@@ -455,18 +455,18 @@ texture = ExtResource("1_t5dxa")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="Fire" type="Sprite2D" parent="TextureRect"]
+[node name="Fire" type="Sprite2D" parent="TextureRect" unique_id=1535624745]
 visible = false
 material = SubResource("3")
 position = Vector2(48.8168, -97.6652)
 scale = Vector2(12, 12)
 texture = ExtResource("8")
 
-[node name="Stun" type="Node2D" parent="TextureRect"]
+[node name="Stun" type="Node2D" parent="TextureRect" unique_id=2001164991]
 visible = false
 position = Vector2(0, -6.29962)
 
-[node name="Sprite2D" type="Sprite2D" parent="TextureRect/Stun"]
+[node name="Sprite2D" type="Sprite2D" parent="TextureRect/Stun" unique_id=1772361822]
 material = SubResource("4")
 position = Vector2(47.1782, 64.5085)
 rotation = 0.496553
@@ -474,7 +474,7 @@ scale = Vector2(2.36037, 2.36037)
 texture = ExtResource("12")
 offset = Vector2(-21.4132, -17.9986)
 
-[node name="Sprite2" type="Sprite2D" parent="TextureRect/Stun"]
+[node name="Sprite2" type="Sprite2D" parent="TextureRect/Stun" unique_id=247205913]
 material = SubResource("5")
 position = Vector2(11.3541, 50.4711)
 rotation = -0.583007
@@ -482,11 +482,11 @@ scale = Vector2(1.67193, 1.67193)
 texture = ExtResource("12")
 offset = Vector2(-21.4132, -17.9986)
 
-[node name="RayCast2D" type="RayCast2D" parent="."]
+[node name="RayCast2D" type="RayCast2D" parent="." unique_id=378535530]
 enabled = false
 collision_mask = 39
 
-[node name="Info" type="Control" parent="."]
+[node name="Info" type="Control" parent="." unique_id=25904671]
 layout_mode = 3
 anchors_preset = 8
 anchor_left = 0.5
@@ -497,7 +497,7 @@ grow_horizontal = 2
 grow_vertical = 2
 theme = ExtResource("2")
 
-[node name="Initiative" type="Label" parent="Info"]
+[node name="Initiative" type="Label" parent="Info" unique_id=1103581102]
 layout_mode = 0
 offset_left = -68.0
 offset_top = -44.0
@@ -507,7 +507,7 @@ text = "Initiative: 10"
 label_settings = SubResource("LabelSettings_f8wif")
 horizontal_alignment = 1
 
-[node name="Icon" type="TextureRect" parent="Info"]
+[node name="Icon" type="TextureRect" parent="Info" unique_id=1411462508]
 visible = false
 custom_minimum_size = Vector2(24, 24)
 layout_mode = 0
@@ -519,7 +519,7 @@ texture = ExtResource("1")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="Label" type="Label" parent="Info"]
+[node name="Label" type="Label" parent="Info" unique_id=1709184364]
 layout_mode = 1
 anchors_preset = 1
 anchor_left = 1.0
@@ -533,7 +533,7 @@ theme = ExtResource("2")
 text = "15"
 label_settings = SubResource("LabelSettings_vw23x")
 
-[node name="HP" type="TextureProgressBar" parent="Info"]
+[node name="HP" type="TextureProgressBar" parent="Info" unique_id=124666701]
 modulate = Color(0, 1, 0, 1)
 light_mask = 0
 layout_mode = 0
@@ -547,38 +547,32 @@ nine_patch_stretch = true
 texture_under = ExtResource("3")
 texture_progress = ExtResource("6")
 
-[node name="StatusEffects" parent="Info" instance=ExtResource("13_lq603")]
+[node name="StatusEffects" parent="Info" unique_id=876176035 instance=ExtResource("13_lq603")]
 layout_mode = 0
 offset_left = 68.0
 offset_top = -40.0
 offset_right = 148.0
 offset_bottom = 44.0
 
-[node name="Buffs" parent="Info" instance=ExtResource("14_f8wif")]
+[node name="Buffs" parent="Info" unique_id=1571740819 instance=ExtResource("14_f8wif")]
 layout_mode = 0
 offset_left = -68.0
 offset_top = 52.0
 offset_right = 72.0
 offset_bottom = 92.0
 
-[node name="HurtAnimation" type="AnimationPlayer" parent="."]
-libraries = {
-&"": SubResource("AnimationLibrary_4bina")
-}
+[node name="HurtAnimation" type="AnimationPlayer" parent="." unique_id=1868509564]
+libraries/ = SubResource("AnimationLibrary_4bina")
 
-[node name="KnockbackAnimation" type="AnimationPlayer" parent="."]
-libraries = {
-&"": SubResource("AnimationLibrary_rpr20")
-}
+[node name="KnockbackAnimation" type="AnimationPlayer" parent="." unique_id=1541268942]
+libraries/ = SubResource("AnimationLibrary_rpr20")
 
-[node name="MissAnimation" type="AnimationPlayer" parent="."]
-libraries = {
-&"": SubResource("AnimationLibrary_ml7on")
-}
+[node name="MissAnimation" type="AnimationPlayer" parent="." unique_id=794301094]
+libraries/ = SubResource("AnimationLibrary_ml7on")
 
-[node name="VelocityArrow" parent="." instance=ExtResource("15_f8wif")]
+[node name="VelocityArrow" parent="." unique_id=220905690 instance=ExtResource("15_f8wif")]
 
-[node name="BulletParticles" type="GPUParticles2D" parent="."]
+[node name="BulletParticles" type="GPUParticles2D" parent="." unique_id=1402859033]
 emitting = false
 amount = 30
 texture = ExtResource("5")
@@ -587,7 +581,7 @@ one_shot = true
 explosiveness = 1.0
 process_material = SubResource("14")
 
-[node name="BombParticles" type="GPUParticles2D" parent="."]
+[node name="BombParticles" type="GPUParticles2D" parent="." unique_id=1445375475]
 scale = Vector2(2, 2)
 emitting = false
 amount = 150
@@ -597,7 +591,7 @@ explosiveness = 0.95
 randomness = 1.0
 process_material = SubResource("ParticleProcessMaterial_x45cj")
 
-[node name="LightParticles" type="GPUParticles2D" parent="."]
+[node name="LightParticles" type="GPUParticles2D" parent="." unique_id=24202273]
 emitting = false
 amount = 50
 texture = ExtResource("14")
@@ -606,10 +600,8 @@ explosiveness = 0.95
 randomness = 1.0
 process_material = SubResource("22")
 
-[node name="LabelAnimation" type="AnimationPlayer" parent="."]
-libraries = {
-&"": SubResource("AnimationLibrary_u6u7m")
-}
+[node name="LabelAnimation" type="AnimationPlayer" parent="." unique_id=1458712267]
+libraries/ = SubResource("AnimationLibrary_u6u7m")
 
 [connection signal="mouse_entered" from="." to="." method="_on_mouse_entered"]
 [connection signal="mouse_exited" from="." to="." method="_on_mouse_exited"]

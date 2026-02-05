@@ -1,8 +1,8 @@
-[gd_scene load_steps=2 format=3 uid="uid://biovx045yg01l"]
+[gd_scene format=3 uid="uid://biovx045yg01l"]
 
 [ext_resource type="Script" uid="uid://cwae7536jxy1v" path="res://Scripts/Universe.gd" id="1"]
 
-[node name="Cluster" type="Node2D"]
+[node name="Cluster" type="Node2D" unique_id=1978058773]
 script = ExtResource("1")
 
 [connection signal="tree_exited" from="." to="." method="_on_Cluster_tree_exited"]

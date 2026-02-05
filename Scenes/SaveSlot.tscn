@@ -1,17 +1,17 @@
-[gd_scene load_steps=2 format=3 uid="uid://c5nwag1jaidlq"]
+[gd_scene format=3 uid="uid://c5nwag1jaidlq"]
 
 [ext_resource type="Texture2D" uid="uid://bjbxy41mqpt1o" path="res://Graphics/Icons/Annotator/cross.png" id="1"]
 
-[node name="HBoxContainer" type="HBoxContainer"]
+[node name="HBoxContainer" type="HBoxContainer" unique_id=964346038]
 offset_right = 816.0
 offset_bottom = 40.0
 
-[node name="Button" type="Button" parent="."]
+[node name="Button" type="Button" parent="." unique_id=631964208]
 custom_minimum_size = Vector2(150, 40)
 layout_mode = 2
 text = "Save 1"
 
-[node name="Version" type="Label" parent="."]
+[node name="Version" type="Label" parent="." unique_id=797751330]
 custom_minimum_size = Vector2(140, 0)
 layout_mode = 2
 size_flags_horizontal = 5
@@ -19,22 +19,22 @@ mouse_filter = 1
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="Created" type="Label" parent="."]
+[node name="Created" type="Label" parent="." unique_id=1846134547]
 layout_mode = 2
 size_flags_horizontal = 3
 vertical_alignment = 1
 
-[node name="Saved" type="Label" parent="."]
+[node name="Saved" type="Label" parent="." unique_id=1087946425]
 layout_mode = 2
 size_flags_horizontal = 3
 vertical_alignment = 1
 
-[node name="Export" type="Button" parent="."]
+[node name="Export" type="Button" parent="." unique_id=1321338104]
 custom_minimum_size = Vector2(100, 40)
 layout_mode = 2
 text = "EXPORT"
 
-[node name="Delete" type="TextureButton" parent="."]
+[node name="Delete" type="TextureButton" parent="." unique_id=1525598565]
 custom_minimum_size = Vector2(32, 0)
 layout_mode = 2
 texture_normal = ExtResource("1")

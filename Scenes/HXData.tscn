@@ -1,4 +1,4 @@
-[gd_scene load_steps=6 format=3 uid="uid://cf8ryoyfgym8g"]
+[gd_scene format=3 uid="uid://cf8ryoyfgym8g"]
 
 [ext_resource type="Texture2D" uid="uid://cqiyti2xdxtcw" path="res://Graphics/Icons/defense.png" id="2"]
 [ext_resource type="Texture2D" uid="uid://7ffsf7xuvfw2" path="res://Graphics/Icons/attack.png" id="3"]
@@ -6,102 +6,102 @@
 [ext_resource type="Texture2D" uid="uid://bl07f3wef0muv" path="res://Graphics/Icons/HP.png" id="5"]
 [ext_resource type="Texture2D" uid="uid://bapj1r8e5pwia" path="res://Graphics/Icons/agility.png" id="5_p6m03"]
 
-[node name="Control" type="HBoxContainer"]
+[node name="Control" type="HBoxContainer" unique_id=945437283]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 offset_right = -1056.0
 offset_bottom = -670.0
 
-[node name="HX" type="TextureRect" parent="."]
+[node name="HX" type="TextureRect" parent="." unique_id=1703811056]
 custom_minimum_size = Vector2(50, 50)
 layout_mode = 2
 expand_mode = 1
 stretch_mode = 5
 
-[node name="Lv" type="Label" parent="."]
+[node name="Lv" type="Label" parent="." unique_id=115757282]
 layout_mode = 2
 text = "Lv 1"
 
-[node name="Control" type="Control" parent="."]
+[node name="Control" type="Control" parent="." unique_id=1465727240]
 custom_minimum_size = Vector2(30, 0)
 layout_mode = 2
 
-[node name="HPIcon" type="TextureRect" parent="."]
+[node name="HPIcon" type="TextureRect" parent="." unique_id=1593794932]
 custom_minimum_size = Vector2(22, 0)
 layout_mode = 2
 texture = ExtResource("5")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="HP" type="Label" parent="."]
+[node name="HP" type="Label" parent="." unique_id=576066527]
 layout_mode = 2
 text = "10"
 
-[node name="Control2" type="Control" parent="."]
+[node name="Control2" type="Control" parent="." unique_id=939982131]
 custom_minimum_size = Vector2(25, 0)
 layout_mode = 2
 
-[node name="VBoxContainer" type="VBoxContainer" parent="."]
+[node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=145794662]
 layout_mode = 2
 alignment = 1
 
-[node name="Attack" type="HBoxContainer" parent="VBoxContainer"]
+[node name="Attack" type="HBoxContainer" parent="VBoxContainer" unique_id=1874301507]
 layout_mode = 2
 
-[node name="TextureRect" type="TextureRect" parent="VBoxContainer/Attack"]
+[node name="TextureRect" type="TextureRect" parent="VBoxContainer/Attack" unique_id=703158942]
 custom_minimum_size = Vector2(20, 0)
 layout_mode = 2
 texture = ExtResource("3")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="Label" type="Label" parent="VBoxContainer/Attack"]
+[node name="Label" type="Label" parent="VBoxContainer/Attack" unique_id=1524836386]
 layout_mode = 2
 text = "10"
 
-[node name="Accuracy" type="HBoxContainer" parent="VBoxContainer"]
+[node name="Accuracy" type="HBoxContainer" parent="VBoxContainer" unique_id=560799993]
 layout_mode = 2
 
-[node name="TextureRect" type="TextureRect" parent="VBoxContainer/Accuracy"]
+[node name="TextureRect" type="TextureRect" parent="VBoxContainer/Accuracy" unique_id=1672177620]
 custom_minimum_size = Vector2(20, 0)
 layout_mode = 2
 texture = ExtResource("4")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="Label" type="Label" parent="VBoxContainer/Accuracy"]
+[node name="Label" type="Label" parent="VBoxContainer/Accuracy" unique_id=901911881]
 layout_mode = 2
 text = "10"
 
-[node name="VBoxContainer2" type="VBoxContainer" parent="."]
+[node name="VBoxContainer2" type="VBoxContainer" parent="." unique_id=149770220]
 layout_mode = 2
 alignment = 1
 
-[node name="Defense" type="HBoxContainer" parent="VBoxContainer2"]
+[node name="Defense" type="HBoxContainer" parent="VBoxContainer2" unique_id=1922292485]
 layout_mode = 2
 
-[node name="TextureRect" type="TextureRect" parent="VBoxContainer2/Defense"]
+[node name="TextureRect" type="TextureRect" parent="VBoxContainer2/Defense" unique_id=1475071378]
 custom_minimum_size = Vector2(20, 0)
 layout_mode = 2
 texture = ExtResource("2")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="Label" type="Label" parent="VBoxContainer2/Defense"]
+[node name="Label" type="Label" parent="VBoxContainer2/Defense" unique_id=222553832]
 layout_mode = 2
 text = "10"
 
-[node name="Agility" type="HBoxContainer" parent="VBoxContainer2"]
+[node name="Agility" type="HBoxContainer" parent="VBoxContainer2" unique_id=1797441185]
 layout_mode = 2
 
-[node name="TextureRect" type="TextureRect" parent="VBoxContainer2/Agility"]
+[node name="TextureRect" type="TextureRect" parent="VBoxContainer2/Agility" unique_id=1106085452]
 custom_minimum_size = Vector2(20, 0)
 layout_mode = 2
 texture = ExtResource("5_p6m03")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="Label" type="Label" parent="VBoxContainer2/Agility"]
+[node name="Label" type="Label" parent="VBoxContainer2/Agility" unique_id=1898817940]
 layout_mode = 2
 text = "10"

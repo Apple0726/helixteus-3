@@ -1,8 +1,8 @@
-[gd_scene load_steps=2 format=3 uid="uid://bx0a7iwx3qlo1"]
+[gd_scene format=3 uid="uid://bx0a7iwx3qlo1"]
 
 [ext_resource type="Script" uid="uid://bptcbehw617j2" path="res://Scripts/PieGraph.gd" id="2"]
 
-[node name="PieGraph" type="VBoxContainer"]
+[node name="PieGraph" type="VBoxContainer" unique_id=985623507]
 custom_minimum_size = Vector2(300, 318)
 offset_right = 300.0
 offset_bottom = 318.0
@@ -10,13 +10,13 @@ pivot_offset = Vector2(150, 168)
 mouse_filter = 2
 script = ExtResource("2")
 
-[node name="Title" type="Label" parent="."]
+[node name="Title" type="Label" parent="." unique_id=387274624]
 layout_mode = 2
 text = "Composition"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="Pies" type="Control" parent="."]
+[node name="Pies" type="Control" parent="." unique_id=1112795090]
 custom_minimum_size = Vector2(300, 300)
 layout_mode = 2
 mouse_filter = 2

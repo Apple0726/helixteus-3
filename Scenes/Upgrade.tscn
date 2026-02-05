@@ -1,4 +1,4 @@
-[gd_scene load_steps=20 format=3 uid="uid://c6q7hd1yqt88b"]
+[gd_scene format=3 uid="uid://c6q7hd1yqt88b"]
 
 [ext_resource type="Script" uid="uid://87tixefh6jkf" path="res://Scripts/UpgradeShips.gd" id="1"]
 [ext_resource type="Texture2D" uid="uid://cvetejccba6ge" path="res://Graphics/Stars/Star.png" id="2"]
@@ -20,535 +20,412 @@
 [ext_resource type="Texture2D" uid="uid://lxwiobldwv6t" path="res://Graphics/Buttons/charge.png" id="18"]
 [ext_resource type="Script" uid="uid://dmcj7ywmd5jq6" path="res://Scripts/AbilitySuperweapon.gd" id="19"]
 
-[node name="Upgrade" type="Panel"]
+[node name="Upgrade" type="Panel" unique_id=922366436]
 offset_top = 104.0
 offset_right = 1024.0
 offset_bottom = 600.0
 theme = ExtResource("7")
 script = ExtResource("1")
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
-[node name="Label" type="Label" parent="."]
+[node name="Label" type="Label" parent="." unique_id=1598646871]
+layout_mode = 0
 offset_left = 32.0
 offset_top = 4.0
 offset_right = 165.0
 offset_bottom = 48.0
 text = "SELECT_SHIP"
-valign = 1
-__meta__ = {
-"_edit_use_anchors_": false
-}
+vertical_alignment = 1
 
-[node name="OptionButton" type="OptionButton" parent="."]
+[node name="OptionButton" type="OptionButton" parent="." unique_id=1733062294]
+layout_mode = 0
 offset_left = 176.0
 offset_top = 8.0
 offset_right = 320.0
 offset_bottom = 40.0
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
-[node name="Ship" type="Panel" parent="."]
+[node name="Ship" type="Panel" parent="." unique_id=1617250937]
+layout_mode = 0
 offset_top = 48.0
 offset_right = 384.0
 offset_bottom = 496.0
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
-[node name="TextureRect" type="TextureRect" parent="Ship"]
+[node name="TextureRect" type="TextureRect" parent="Ship" unique_id=767126401]
 modulate = Color(1, 1, 1, 0.560784)
+layout_mode = 0
 offset_left = 8.0
 offset_top = 224.0
 offset_right = 375.0
 offset_bottom = 312.0
 texture = ExtResource("2")
-expand = true
+expand_mode = 1
 stretch_mode = 1
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
-[node name="Ship" type="TextureRect" parent="Ship"]
+[node name="Ship" type="TextureRect" parent="Ship" unique_id=331422041]
+layout_mode = 0
 offset_left = 32.0
 offset_top = 112.0
 offset_right = 352.0
 offset_bottom = 272.0
-expand = true
-__meta__ = {
-"_edit_use_anchors_": false
-}
+expand_mode = 1
 
-[node name="Label" type="Label" parent="Ship"]
+[node name="Label" type="Label" parent="Ship" unique_id=549302481]
+layout_mode = 0
 offset_left = 24.0
 offset_top = 312.0
 offset_right = 360.0
 offset_bottom = 344.0
-align = 1
-valign = 1
-__meta__ = {
-"_edit_use_anchors_": false
-}
+horizontal_alignment = 1
+vertical_alignment = 1
 
-[node name="Points" type="Label" parent="Ship"]
+[node name="Points" type="Label" parent="Ship" unique_id=150649065]
+layout_mode = 0
 offset_left = 24.0
 offset_top = 360.0
 offset_right = 360.0
 offset_bottom = 392.0
-align = 1
-__meta__ = {
-"_edit_use_anchors_": false
-}
+horizontal_alignment = 1
 
-[node name="Upgrades" type="Panel" parent="."]
+[node name="Upgrades" type="Panel" parent="." unique_id=288622535]
+layout_mode = 0
 offset_left = 384.0
 offset_top = 48.0
 offset_right = 720.0
 offset_bottom = 496.0
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
-[node name="HP" type="Control" parent="Upgrades"]
+[node name="HP" type="Control" parent="Upgrades" unique_id=760619438]
+anchors_preset = 0
 offset_right = 336.0
 offset_bottom = 72.0
 script = ExtResource("3")
-__meta__ = {
-"_edit_use_anchors_": false
-}
 type = "HP"
 
-[node name="Up" type="TextureButton" parent="Upgrades/HP"]
+[node name="Up" type="TextureButton" parent="Upgrades/HP" unique_id=405614838]
+layout_mode = 0
 offset_left = 276.0
 offset_top = 8.0
 offset_right = 300.0
 offset_bottom = 32.0
 texture_normal = ExtResource("4")
-expand = true
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
-[node name="Down" type="TextureButton" parent="Upgrades/HP"]
+[node name="Down" type="TextureButton" parent="Upgrades/HP" unique_id=307693106]
+layout_mode = 0
 offset_left = 276.0
 offset_top = 40.0
 offset_right = 300.0
 offset_bottom = 64.0
 texture_normal = ExtResource("5")
-expand = true
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
-[node name="TextureRect" type="TextureRect" parent="Upgrades/HP"]
+[node name="TextureRect" type="TextureRect" parent="Upgrades/HP" unique_id=1739993257]
+layout_mode = 0
 offset_left = 30.0
 offset_top = 16.0
 offset_right = 70.0
 offset_bottom = 56.0
 texture = ExtResource("6")
-expand = true
-__meta__ = {
-"_edit_use_anchors_": false
-}
+expand_mode = 1
 
-[node name="Boost" type="Label" parent="Upgrades/HP"]
+[node name="Boost" type="Label" parent="Upgrades/HP" unique_id=1808845886]
+layout_mode = 0
 offset_left = 116.0
 offset_top = 16.0
 offset_right = 220.0
 offset_bottom = 56.0
 text = "Boost: +0%"
-valign = 1
-__meta__ = {
-"_edit_use_anchors_": false
-}
+vertical_alignment = 1
 
-[node name="atk" type="Control" parent="Upgrades"]
+[node name="atk" type="Control" parent="Upgrades" unique_id=1311158719]
+anchors_preset = 0
 offset_top = 72.0
 offset_right = 336.0
 offset_bottom = 144.0
 script = ExtResource("3")
-__meta__ = {
-"_edit_use_anchors_": false
-}
 type = "atk"
 
-[node name="Up" type="TextureButton" parent="Upgrades/atk"]
+[node name="Up" type="TextureButton" parent="Upgrades/atk" unique_id=1072023204]
+layout_mode = 0
 offset_left = 276.0
 offset_top = 8.0
 offset_right = 300.0
 offset_bottom = 32.0
 texture_normal = ExtResource("4")
-expand = true
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
-[node name="Down" type="TextureButton" parent="Upgrades/atk"]
+[node name="Down" type="TextureButton" parent="Upgrades/atk" unique_id=462747894]
+layout_mode = 0
 offset_left = 276.0
 offset_top = 40.0
 offset_right = 300.0
 offset_bottom = 64.0
 texture_normal = ExtResource("5")
-expand = true
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
-[node name="TextureRect" type="TextureRect" parent="Upgrades/atk"]
+[node name="TextureRect" type="TextureRect" parent="Upgrades/atk" unique_id=1456604196]
+layout_mode = 0
 offset_left = 30.0
 offset_top = 16.0
 offset_right = 70.0
 offset_bottom = 56.0
 texture = ExtResource("11")
-expand = true
-__meta__ = {
-"_edit_use_anchors_": false
-}
+expand_mode = 1
 
-[node name="Boost" type="Label" parent="Upgrades/atk"]
+[node name="Boost" type="Label" parent="Upgrades/atk" unique_id=1378352132]
+layout_mode = 0
 offset_left = 116.0
 offset_top = 16.0
 offset_right = 220.0
 offset_bottom = 56.0
 text = "Boost: +0%"
-valign = 1
-__meta__ = {
-"_edit_use_anchors_": false
-}
+vertical_alignment = 1
 
-[node name="def" type="Control" parent="Upgrades"]
+[node name="def" type="Control" parent="Upgrades" unique_id=1728787883]
+anchors_preset = 0
 offset_top = 144.0
 offset_right = 336.0
 offset_bottom = 216.0
 script = ExtResource("3")
-__meta__ = {
-"_edit_use_anchors_": false
-}
 type = "def"
 
-[node name="Up" type="TextureButton" parent="Upgrades/def"]
+[node name="Up" type="TextureButton" parent="Upgrades/def" unique_id=594361961]
+layout_mode = 0
 offset_left = 276.0
 offset_top = 8.0
 offset_right = 300.0
 offset_bottom = 32.0
 texture_normal = ExtResource("4")
-expand = true
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
-[node name="Down" type="TextureButton" parent="Upgrades/def"]
+[node name="Down" type="TextureButton" parent="Upgrades/def" unique_id=1589138081]
+layout_mode = 0
 offset_left = 276.0
 offset_top = 40.0
 offset_right = 300.0
 offset_bottom = 64.0
 texture_normal = ExtResource("5")
-expand = true
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
-[node name="TextureRect" type="TextureRect" parent="Upgrades/def"]
+[node name="TextureRect" type="TextureRect" parent="Upgrades/def" unique_id=442190591]
+layout_mode = 0
 offset_left = 30.0
 offset_top = 16.0
 offset_right = 70.0
 offset_bottom = 56.0
 texture = ExtResource("9")
-expand = true
-__meta__ = {
-"_edit_use_anchors_": false
-}
+expand_mode = 1
 
-[node name="Boost" type="Label" parent="Upgrades/def"]
+[node name="Boost" type="Label" parent="Upgrades/def" unique_id=1589308558]
+layout_mode = 0
 offset_left = 116.0
 offset_top = 16.0
 offset_right = 220.0
 offset_bottom = 56.0
 text = "Boost: +0%"
-valign = 1
-__meta__ = {
-"_edit_use_anchors_": false
-}
+vertical_alignment = 1
 
-[node name="acc" type="Control" parent="Upgrades"]
+[node name="acc" type="Control" parent="Upgrades" unique_id=643931813]
+anchors_preset = 0
 offset_top = 216.0
 offset_right = 336.0
 offset_bottom = 288.0
 script = ExtResource("3")
-__meta__ = {
-"_edit_use_anchors_": false
-}
 type = "acc"
 
-[node name="Up" type="TextureButton" parent="Upgrades/acc"]
+[node name="Up" type="TextureButton" parent="Upgrades/acc" unique_id=466009279]
+layout_mode = 0
 offset_left = 276.0
 offset_top = 8.0
 offset_right = 300.0
 offset_bottom = 32.0
 texture_normal = ExtResource("4")
-expand = true
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
-[node name="Down" type="TextureButton" parent="Upgrades/acc"]
+[node name="Down" type="TextureButton" parent="Upgrades/acc" unique_id=1083877060]
+layout_mode = 0
 offset_left = 276.0
 offset_top = 40.0
 offset_right = 300.0
 offset_bottom = 64.0
 texture_normal = ExtResource("5")
-expand = true
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
-[node name="TextureRect" type="TextureRect" parent="Upgrades/acc"]
+[node name="TextureRect" type="TextureRect" parent="Upgrades/acc" unique_id=1917990075]
+layout_mode = 0
 offset_left = 30.0
 offset_top = 16.0
 offset_right = 70.0
 offset_bottom = 56.0
 texture = ExtResource("10")
-expand = true
-__meta__ = {
-"_edit_use_anchors_": false
-}
+expand_mode = 1
 
-[node name="Boost" type="Label" parent="Upgrades/acc"]
+[node name="Boost" type="Label" parent="Upgrades/acc" unique_id=351766864]
+layout_mode = 0
 offset_left = 116.0
 offset_top = 16.0
 offset_right = 220.0
 offset_bottom = 56.0
 text = "Boost: +0%"
-valign = 1
-__meta__ = {
-"_edit_use_anchors_": false
-}
+vertical_alignment = 1
 
-[node name="eva" type="Control" parent="Upgrades"]
+[node name="eva" type="Control" parent="Upgrades" unique_id=1205763410]
+anchors_preset = 0
 offset_top = 288.0
 offset_right = 336.0
 offset_bottom = 360.0
 script = ExtResource("3")
-__meta__ = {
-"_edit_use_anchors_": false
-}
 type = "eva"
 
-[node name="Up" type="TextureButton" parent="Upgrades/eva"]
+[node name="Up" type="TextureButton" parent="Upgrades/eva" unique_id=1679660281]
+layout_mode = 0
 offset_left = 276.0
 offset_top = 8.0
 offset_right = 300.0
 offset_bottom = 32.0
 texture_normal = ExtResource("4")
-expand = true
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
-[node name="Down" type="TextureButton" parent="Upgrades/eva"]
+[node name="Down" type="TextureButton" parent="Upgrades/eva" unique_id=1611053050]
+layout_mode = 0
 offset_left = 276.0
 offset_top = 40.0
 offset_right = 300.0
 offset_bottom = 64.0
 texture_normal = ExtResource("5")
-expand = true
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
-[node name="TextureRect" type="TextureRect" parent="Upgrades/eva"]
+[node name="TextureRect" type="TextureRect" parent="Upgrades/eva" unique_id=731861386]
+layout_mode = 0
 offset_left = 30.0
 offset_top = 16.0
 offset_right = 70.0
 offset_bottom = 56.0
 texture = ExtResource("12")
-expand = true
-__meta__ = {
-"_edit_use_anchors_": false
-}
+expand_mode = 1
 
-[node name="Boost" type="Label" parent="Upgrades/eva"]
+[node name="Boost" type="Label" parent="Upgrades/eva" unique_id=1933674428]
+layout_mode = 0
 offset_left = 116.0
 offset_top = 16.0
 offset_right = 220.0
 offset_bottom = 56.0
 text = "Boost: +0%"
-valign = 1
-__meta__ = {
-"_edit_use_anchors_": false
-}
+vertical_alignment = 1
 
-[node name="Specials" type="Panel" parent="."]
+[node name="Specials" type="Panel" parent="." unique_id=2117737106]
+layout_mode = 0
 offset_left = 721.0
 offset_top = 48.0
 offset_right = 1024.0
 offset_bottom = 496.0
 script = ExtResource("19")
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
-[node name="Abilities" type="Control" parent="Specials"]
+[node name="Abilities" type="Control" parent="Specials" unique_id=1765209983]
+anchors_preset = 0
 offset_right = 303.0
 offset_bottom = 216.0
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
-[node name="Label" type="Label" parent="Specials/Abilities"]
+[node name="Label" type="Label" parent="Specials/Abilities" unique_id=645864025]
+layout_mode = 0
 offset_right = 303.0
 offset_bottom = 24.0
 text = "Abilities"
-align = 1
-__meta__ = {
-"_edit_use_anchors_": false
-}
+horizontal_alignment = 1
 
-[node name="Label2" type="Label" parent="Specials/Abilities"]
+[node name="Label2" type="Label" parent="Specials/Abilities" unique_id=626813629]
+layout_mode = 0
 offset_top = 32.0
 offset_right = 152.0
 offset_bottom = 56.0
 text = "Selected: "
-align = 2
-__meta__ = {
-"_edit_use_anchors_": false
-}
+horizontal_alignment = 2
 
-[node name="Ability" type="Label" parent="Specials/Abilities"]
+[node name="Ability" type="Label" parent="Specials/Abilities" unique_id=272512725]
+layout_mode = 0
 offset_left = 153.0
 offset_top = 32.0
 offset_right = 304.0
 offset_bottom = 56.0
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
-[node name="Backing" type="Panel" parent="Specials/Abilities"]
+[node name="Backing" type="Panel" parent="Specials/Abilities" unique_id=1920826902]
+layout_mode = 0
 offset_top = 152.0
 offset_right = 303.0
 offset_bottom = 216.0
 
-[node name="HBoxContainer" type="HBoxContainer" parent="Specials/Abilities"]
+[node name="HBoxContainer" type="HBoxContainer" parent="Specials/Abilities" unique_id=1334759879]
+layout_mode = 0
 offset_left = -1.0
 offset_top = 152.0
 offset_right = 301.0
 offset_bottom = 216.0
 alignment = 1
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
-[node name="None" type="TextureButton" parent="Specials/Abilities/HBoxContainer"]
-offset_left = 17.0
-offset_right = 81.0
-offset_bottom = 64.0
+[node name="None" type="TextureButton" parent="Specials/Abilities/HBoxContainer" unique_id=206687848]
+layout_mode = 2
 texture_normal = ExtResource("15")
 
-[node name="Buff" type="TextureButton" parent="Specials/Abilities/HBoxContainer"]
-offset_left = 85.0
-offset_right = 149.0
-offset_bottom = 64.0
-grow_horizontal = 2
+[node name="Buff" type="TextureButton" parent="Specials/Abilities/HBoxContainer" unique_id=1145376368]
+layout_mode = 2
 size_flags_horizontal = 0
 size_flags_vertical = 0
 texture_normal = ExtResource("8")
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
-[node name="Debuff" type="TextureButton" parent="Specials/Abilities/HBoxContainer"]
-offset_left = 153.0
-offset_right = 217.0
-offset_bottom = 64.0
-grow_horizontal = 2
+[node name="Debuff" type="TextureButton" parent="Specials/Abilities/HBoxContainer" unique_id=1477298362]
+layout_mode = 2
 size_flags_horizontal = 0
 size_flags_vertical = 0
 texture_normal = ExtResource("14")
 
-[node name="Repair" type="TextureButton" parent="Specials/Abilities/HBoxContainer"]
-offset_left = 221.0
-offset_right = 285.0
-offset_bottom = 64.0
+[node name="Repair" type="TextureButton" parent="Specials/Abilities/HBoxContainer" unique_id=1605466955]
+layout_mode = 2
 texture_normal = ExtResource("17")
 
-[node name="Superweapons" type="Control" parent="Specials"]
+[node name="Superweapons" type="Control" parent="Specials" unique_id=1323920262]
+anchors_preset = 0
 offset_top = 216.0
 offset_right = 303.0
 offset_bottom = 448.0
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
-[node name="Label" type="Label" parent="Specials/Superweapons"]
+[node name="Label" type="Label" parent="Specials/Superweapons" unique_id=1417220981]
+layout_mode = 0
 offset_right = 303.0
 offset_bottom = 24.0
 text = "Superweapons"
-align = 1
-__meta__ = {
-"_edit_use_anchors_": false
-}
+horizontal_alignment = 1
 
-[node name="Label2" type="Label" parent="Specials/Superweapons"]
+[node name="Label2" type="Label" parent="Specials/Superweapons" unique_id=1117659968]
+layout_mode = 0
 offset_left = -1.0
 offset_top = 32.0
 offset_right = 151.0
 offset_bottom = 56.0
 text = "Selected: "
-align = 2
-__meta__ = {
-"_edit_use_anchors_": false
-}
+horizontal_alignment = 2
 
-[node name="Superweapon" type="Label" parent="Specials/Superweapons"]
+[node name="Superweapon" type="Label" parent="Specials/Superweapons" unique_id=261043528]
+layout_mode = 0
 offset_left = 152.0
 offset_top = 32.0
 offset_right = 303.0
 offset_bottom = 56.0
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
-[node name="Backing" type="Panel" parent="Specials/Superweapons"]
+[node name="Backing" type="Panel" parent="Specials/Superweapons" unique_id=1527962890]
+layout_mode = 0
 offset_top = 168.0
 offset_right = 303.0
 offset_bottom = 232.0
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
-[node name="HBoxContainer" type="HBoxContainer" parent="Specials/Superweapons"]
+[node name="HBoxContainer" type="HBoxContainer" parent="Specials/Superweapons" unique_id=405097937]
+layout_mode = 0
 offset_top = 168.0
 offset_right = 303.0
 offset_bottom = 232.0
 alignment = 1
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
-[node name="None2" type="TextureButton" parent="Specials/Superweapons/HBoxContainer"]
-offset_left = 17.0
-offset_right = 81.0
-offset_bottom = 64.0
+[node name="None2" type="TextureButton" parent="Specials/Superweapons/HBoxContainer" unique_id=1176072682]
+layout_mode = 2
 texture_normal = ExtResource("15")
 
-[node name="LOL" type="TextureButton" parent="Specials/Superweapons/HBoxContainer"]
-offset_left = 85.0
-offset_right = 149.0
-offset_bottom = 64.0
+[node name="LOL" type="TextureButton" parent="Specials/Superweapons/HBoxContainer" unique_id=799889390]
+layout_mode = 2
 texture_normal = ExtResource("16")
 
-[node name="Orb" type="TextureButton" parent="Specials/Superweapons/HBoxContainer"]
-offset_left = 153.0
-offset_right = 217.0
-offset_bottom = 64.0
+[node name="Orb" type="TextureButton" parent="Specials/Superweapons/HBoxContainer" unique_id=1263607455]
+layout_mode = 2
 texture_normal = ExtResource("13")
 
-[node name="Charge" type="TextureButton" parent="Specials/Superweapons/HBoxContainer"]
-offset_left = 221.0
-offset_right = 285.0
-offset_bottom = 64.0
+[node name="Charge" type="TextureButton" parent="Specials/Superweapons/HBoxContainer" unique_id=796646285]
+layout_mode = 2
 texture_normal = ExtResource("18")
 
 [connection signal="item_selected" from="OptionButton" to="." method="_on_OptionButton_item_selected"]

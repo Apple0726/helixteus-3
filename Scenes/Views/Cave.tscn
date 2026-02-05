@@ -1202,8 +1202,6 @@ offset_right = 792.0
 offset_bottom = 285.0
 
 [node name="Dialogue" parent="UI2" unique_id=944599911 instance=ExtResource("24")]
-layout_mode = 3
-anchors_preset = 0
 
 [node name="Ability" type="Panel" parent="UI2" unique_id=1049698812]
 offset_top = 40.0

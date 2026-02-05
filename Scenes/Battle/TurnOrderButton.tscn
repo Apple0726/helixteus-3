@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=3 uid="uid://deuvxdrynj6i2"]
+[gd_scene format=3 uid="uid://deuvxdrynj6i2"]
 
 [ext_resource type="Script" uid="uid://bdprke525ks2n" path="res://Scripts/Battle/TurnOrderButton.gd" id="1_j6ywd"]
 [ext_resource type="Texture2D" uid="uid://koi0aarpqj30" path="res://Graphics/Ships/Ship0.png" id="1_l4be8"]
@@ -165,7 +165,7 @@ _data = {
 &"ChangeSize": SubResource("Animation_idhyw")
 }
 
-[node name="Button" type="Button"]
+[node name="Button" type="Button" unique_id=1164256349]
 modulate = Color(1, 1, 1, 0)
 clip_contents = true
 custom_minimum_size = Vector2(0, 80)
@@ -183,7 +183,7 @@ grow_vertical = 2
 size_flags_vertical = 4
 script = ExtResource("1_j6ywd")
 
-[node name="TextureRect" type="TextureRect" parent="."]
+[node name="TextureRect" type="TextureRect" parent="." unique_id=1853977556]
 modulate = Color(1, 1, 1, 0.49803922)
 layout_mode = 1
 anchors_preset = 8
@@ -203,7 +203,7 @@ texture = ExtResource("1_l4be8")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="Panel" type="Panel" parent="."]
+[node name="Panel" type="Panel" parent="." unique_id=1147915892]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -213,17 +213,13 @@ grow_vertical = 2
 mouse_filter = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_sxfwn")
 
-[node name="FadeAnim" type="AnimationPlayer" parent="."]
-libraries = {
-&"": SubResource("AnimationLibrary_igr82")
-}
+[node name="FadeAnim" type="AnimationPlayer" parent="." unique_id=122529484]
+libraries/ = SubResource("AnimationLibrary_igr82")
 
-[node name="ChangeSizeAnim" type="AnimationPlayer" parent="."]
-libraries = {
-&"": SubResource("AnimationLibrary_oqdxe")
-}
+[node name="ChangeSizeAnim" type="AnimationPlayer" parent="." unique_id=1343183940]
+libraries/ = SubResource("AnimationLibrary_oqdxe")
 
-[node name="Initiative" type="Control" parent="."]
+[node name="Initiative" type="Control" parent="." unique_id=51968099]
 layout_mode = 1
 anchors_preset = 3
 anchor_left = 1.0
@@ -236,7 +232,7 @@ grow_horizontal = 0
 grow_vertical = 0
 mouse_filter = 2
 
-[node name="TextureRect" type="TextureRect" parent="Initiative"]
+[node name="TextureRect" type="TextureRect" parent="Initiative" unique_id=123321488]
 layout_mode = 0
 offset_left = -12.815
 offset_top = 4.0
@@ -246,7 +242,7 @@ texture = ExtResource("3_i1ewd")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="Label" type="Label" parent="Initiative"]
+[node name="Label" type="Label" parent="Initiative" unique_id=382834661]
 layout_mode = 0
 offset_left = 7.185
 offset_top = 4.0
@@ -255,7 +251,7 @@ offset_bottom = 27.0
 text = "15"
 horizontal_alignment = 1
 
-[node name="Highlight" type="TextureRect" parent="."]
+[node name="Highlight" type="TextureRect" parent="." unique_id=703624698]
 modulate = Color(1, 1, 1, 0)
 layout_mode = 1
 anchors_preset = 15

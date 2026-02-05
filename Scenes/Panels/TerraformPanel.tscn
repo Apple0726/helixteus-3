@@ -1,4 +1,4 @@
-[gd_scene load_steps=17 format=3 uid="uid://n0lnr888b50d"]
+[gd_scene format=3 uid="uid://n0lnr888b50d"]
 
 [ext_resource type="PackedScene" uid="uid://1hq6qpr1oa3i" path="res://Scenes/AdvButton.tscn" id="1"]
 [ext_resource type="Texture2D" uid="uid://d3kwtgk0sw40p" path="res://Graphics/Icons/minerals.png" id="2"]
@@ -30,7 +30,7 @@ Button/styles/pressed = null
 
 [sub_resource type="Shortcut" id="3"]
 
-[node name="TerraformPanel" type="Panel"]
+[node name="TerraformPanel" type="Panel" unique_id=1978083734]
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
@@ -45,7 +45,7 @@ grow_vertical = 2
 theme = ExtResource("6")
 script = ExtResource("7")
 
-[node name="Title" type="Label" parent="."]
+[node name="Title" type="Label" parent="." unique_id=1290169757]
 custom_minimum_size = Vector2(0, 38)
 layout_mode = 0
 anchor_right = 1.0
@@ -55,14 +55,14 @@ text = "TERRAFORM"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="CloseButton" parent="." instance=ExtResource("5")]
+[node name="CloseButton" parent="." unique_id=95480417 instance=ExtResource("5")]
 layout_mode = 1
 offset_left = -35.0
 offset_top = 8.0
 offset_right = -11.0
 offset_bottom = 32.0
 
-[node name="Desc" type="Label" parent="."]
+[node name="Desc" type="Label" parent="." unique_id=1363120183]
 layout_mode = 0
 offset_left = 24.0
 offset_top = 48.0
@@ -73,90 +73,90 @@ horizontal_alignment = 1
 vertical_alignment = 1
 autowrap_mode = 3
 
-[node name="ScrollContainer" type="ScrollContainer" parent="."]
+[node name="ScrollContainer" type="ScrollContainer" parent="." unique_id=367327835]
 layout_mode = 0
 offset_left = 24.0
 offset_top = 112.0
 offset_right = 384.0
 offset_bottom = 576.0
 
-[node name="VBoxContainer" type="VBoxContainer" parent="ScrollContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="ScrollContainer" unique_id=82141391]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 theme = SubResource("1")
 
-[node name="MineralExtraction" parent="ScrollContainer/VBoxContainer" instance=ExtResource("1")]
+[node name="MineralExtraction" parent="ScrollContainer/VBoxContainer" unique_id=1122222998 instance=ExtResource("1")]
 custom_minimum_size = Vector2(0, 40)
 layout_mode = 2
 expand_icon = true
 button_text = "MINERAL_EXTRACTION"
 icon_texture = ExtResource("2")
 
-[node name="EnergyProduction" parent="ScrollContainer/VBoxContainer" instance=ExtResource("1")]
+[node name="EnergyProduction" parent="ScrollContainer/VBoxContainer" unique_id=428740640 instance=ExtResource("1")]
 custom_minimum_size = Vector2(0, 40)
 layout_mode = 2
 expand_icon = true
 button_text = "ENERGY_PRODUCTION"
 icon_texture = ExtResource("4")
 
-[node name="MineralStorage" parent="ScrollContainer/VBoxContainer" instance=ExtResource("1")]
+[node name="MineralStorage" parent="ScrollContainer/VBoxContainer" unique_id=1301368285 instance=ExtResource("1")]
 custom_minimum_size = Vector2(0, 40)
 layout_mode = 2
 expand_icon = true
 button_text = "MINERAL_STORAGE"
 icon_texture = ExtResource("7_x2n7j")
 
-[node name="EnergyStorage" parent="ScrollContainer/VBoxContainer" instance=ExtResource("1")]
+[node name="EnergyStorage" parent="ScrollContainer/VBoxContainer" unique_id=617701628 instance=ExtResource("1")]
 custom_minimum_size = Vector2(0, 40)
 layout_mode = 2
 expand_icon = true
 button_text = "ENERGY_STORAGE"
 icon_texture = ExtResource("8_5blic")
 
-[node name="Research" parent="ScrollContainer/VBoxContainer" instance=ExtResource("1")]
+[node name="Research" parent="ScrollContainer/VBoxContainer" unique_id=1313011419 instance=ExtResource("1")]
 custom_minimum_size = Vector2(0, 40)
 layout_mode = 2
 expand_icon = true
 button_text = "RESEARCH"
 icon_texture = ExtResource("3")
 
-[node name="AtmosphereExtraction" parent="ScrollContainer/VBoxContainer" instance=ExtResource("1")]
+[node name="AtmosphereExtraction" parent="ScrollContainer/VBoxContainer" unique_id=766673311 instance=ExtResource("1")]
 custom_minimum_size = Vector2(0, 40)
 layout_mode = 2
 expand_icon = true
 button_text = "ATMOSPHERE_EXTRACTION"
 icon_texture = ExtResource("10_8yhhm")
 
-[node name="Mining" parent="ScrollContainer/VBoxContainer" instance=ExtResource("1")]
+[node name="Mining" parent="ScrollContainer/VBoxContainer" unique_id=1166115552 instance=ExtResource("1")]
 custom_minimum_size = Vector2(0, 40)
 layout_mode = 2
 expand_icon = true
 button_text = "MINING"
 icon_texture = ExtResource("11_t44yc")
 
-[node name="SpaceAgriculture" parent="ScrollContainer/VBoxContainer" instance=ExtResource("1")]
+[node name="SpaceAgriculture" parent="ScrollContainer/VBoxContainer" unique_id=1813338015 instance=ExtResource("1")]
 custom_minimum_size = Vector2(0, 40)
 layout_mode = 2
 expand_icon = true
 button_text = "SA_SC"
 icon_texture = ExtResource("12_1h162")
 
-[node name="AtomManipulation" parent="ScrollContainer/VBoxContainer" instance=ExtResource("1")]
+[node name="AtomManipulation" parent="ScrollContainer/VBoxContainer" unique_id=404479811 instance=ExtResource("1")]
 custom_minimum_size = Vector2(0, 40)
 layout_mode = 2
 expand_icon = true
 button_text = "ATM_SC"
 icon_texture = ExtResource("13_fkb41")
 
-[node name="SubatomicParticles" parent="ScrollContainer/VBoxContainer" instance=ExtResource("1")]
+[node name="SubatomicParticles" parent="ScrollContainer/VBoxContainer" unique_id=1781085045 instance=ExtResource("1")]
 custom_minimum_size = Vector2(0, 40)
 layout_mode = 2
 expand_icon = true
 button_text = "SAP_SC"
 icon_texture = ExtResource("14_7vv42")
 
-[node name="Panel" type="Panel" parent="."]
+[node name="Panel" type="Panel" parent="." unique_id=1769624489]
 visible = false
 layout_mode = 0
 offset_left = 392.0
@@ -164,14 +164,14 @@ offset_top = 112.0
 offset_right = 1040.0
 offset_bottom = 576.0
 
-[node name="Note" type="Label" parent="Panel"]
+[node name="Note" type="Label" parent="Panel" unique_id=743037848]
 layout_mode = 0
 offset_left = 48.0
 offset_top = 300.0
 offset_right = 636.0
 offset_bottom = 460.0
 
-[node name="TerraformingCosts" type="Label" parent="Panel"]
+[node name="TerraformingCosts" type="Label" parent="Panel" unique_id=2066134928]
 layout_mode = 0
 offset_left = 44.0
 offset_top = 32.0
@@ -179,14 +179,14 @@ offset_right = 312.0
 offset_bottom = 56.0
 text = "TERRAFORMING_COSTS"
 
-[node name="TCVBox" type="VBoxContainer" parent="Panel"]
+[node name="TCVBox" type="VBoxContainer" parent="Panel" unique_id=454593399]
 layout_mode = 0
 offset_left = 48.0
 offset_top = 64.0
 offset_right = 88.0
 offset_bottom = 104.0
 
-[node name="BuildingCosts" type="Label" parent="Panel"]
+[node name="BuildingCosts" type="Label" parent="Panel" unique_id=1730383985]
 layout_mode = 0
 offset_left = 48.0
 offset_top = 168.0
@@ -194,7 +194,7 @@ offset_right = 636.0
 offset_bottom = 192.0
 text = "BUILDING_COSTS"
 
-[node name="BCGrid" type="GridContainer" parent="Panel"]
+[node name="BCGrid" type="GridContainer" parent="Panel" unique_id=1292375045]
 layout_mode = 0
 offset_left = 48.0
 offset_top = 208.0
@@ -202,7 +202,7 @@ offset_right = 632.0
 offset_bottom = 284.0
 columns = 2
 
-[node name="CostMult" type="RichTextLabel" parent="Panel"]
+[node name="CostMult" type="RichTextLabel" parent="Panel" unique_id=555712019]
 layout_mode = 0
 offset_left = 352.0
 offset_top = 32.0
@@ -210,7 +210,7 @@ offset_right = 644.0
 offset_bottom = 152.0
 bbcode_enabled = true
 
-[node name="Terraform" type="Button" parent="Panel"]
+[node name="Terraform" type="Button" parent="Panel" unique_id=539248701]
 layout_mode = 0
 anchor_left = 1.0
 anchor_top = 1.0

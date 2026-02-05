@@ -2,10 +2,12 @@
 
 [sub_resource type="SystemFont" id="SystemFont_xvdaj"]
 font_names = PackedStringArray("Sans-Serif")
+subpixel_positioning = 0
 
 [sub_resource type="SystemFont" id="SystemFont_c5eyb"]
 fallbacks = Array[Font]([SubResource("SystemFont_xvdaj")])
 font_names = PackedStringArray("Noto Sans")
+subpixel_positioning = 0
 multichannel_signed_distance_field = true
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_78575"]
@@ -97,10 +99,12 @@ bg_color = Color(1, 1, 1, 0)
 
 [sub_resource type="SystemFont" id="SystemFont_ew3ep"]
 fallbacks = Array[Font]([SubResource("SystemFont_xvdaj")])
+subpixel_positioning = 0
 
 [sub_resource type="SystemFont" id="SystemFont_01v61"]
 fallbacks = Array[Font]([SubResource("SystemFont_xvdaj")])
 font_names = PackedStringArray("Noto Sans")
+subpixel_positioning = 0
 multichannel_signed_distance_field = true
 
 [sub_resource type="StyleBoxFlat" id="13"]
@@ -206,21 +210,25 @@ bg_color = Color(1, 1, 1, 1)
 [sub_resource type="SystemFont" id="SystemFont_biaqw"]
 fallbacks = Array[Font]([SubResource("SystemFont_xvdaj")])
 font_names = PackedStringArray("Noto Sans")
+subpixel_positioning = 0
 multichannel_signed_distance_field = true
 
 [sub_resource type="SystemFont" id="SystemFont_mdnev"]
 fallbacks = Array[Font]([SubResource("SystemFont_xvdaj")])
 font_names = PackedStringArray("Noto Sans")
+subpixel_positioning = 0
 multichannel_signed_distance_field = true
 
 [sub_resource type="SystemFont" id="SystemFont_7ywt1"]
 fallbacks = Array[Font]([SubResource("SystemFont_xvdaj")])
 font_names = PackedStringArray("Noto Sans")
+subpixel_positioning = 0
 multichannel_signed_distance_field = true
 
 [sub_resource type="SystemFont" id="SystemFont_cr4fx"]
 fallbacks = Array[Font]([SubResource("SystemFont_xvdaj")])
 font_names = PackedStringArray("Noto Sans")
+subpixel_positioning = 0
 multichannel_signed_distance_field = true
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_s8f2h"]
@@ -246,6 +254,7 @@ corner_detail = 5
 [sub_resource type="SystemFont" id="SystemFont_ny0d8"]
 fallbacks = Array[Font]([SubResource("SystemFont_xvdaj")])
 font_names = PackedStringArray("Noto Sans")
+subpixel_positioning = 0
 multichannel_signed_distance_field = true
 
 [resource]

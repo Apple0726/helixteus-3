@@ -1,40 +1,37 @@
-[gd_scene load_steps=2 format=3 uid="uid://cvsge5p1bhqy6"]
+[gd_scene format=3 uid="uid://cvsge5p1bhqy6"]
 
 [ext_resource type="Script" uid="uid://bf4o10ombarkv" path="res://Scenes/PhaseDiagrams/O.gd" id="1"]
 
-[node name="Oxygen" type="Node2D"]
+[node name="Oxygen" type="Node2D" unique_id=1956310836]
 script = ExtResource("1")
-__meta__ = {
-"_edit_vertical_guides_": [1112.0]
-}
 
-[node name="Solid" type="Polygon2D" parent="."]
+[node name="Solid" type="Polygon2D" parent="." unique_id=518557225]
 color = Color(0.682353, 0.866667, 1, 1)
 polygon = PackedVector2Array(0, 0, 800, 0, 800, 400, 0, 400)
 
-[node name="Liquid" type="Polygon2D" parent="."]
+[node name="Liquid" type="Polygon2D" parent="." unique_id=2076002395]
 color = Color(0.776471, 1, 0.8, 1)
 polygon = PackedVector2Array(44, 300, 44, 132, 108, 108, 108, 144)
 
-[node name="Gas" type="Polygon2D" parent="."]
+[node name="Gas" type="Polygon2D" parent="." unique_id=723208179]
 color = Color(1, 0.839216, 0.564706, 1)
 polygon = PackedVector2Array(32, 400, 44, 300, 108, 144, 800, 140, 800, 400)
 
-[node name="Superfluid" type="Polygon2D" parent="."]
+[node name="Superfluid" type="Polygon2D" parent="." unique_id=95857492]
 polygon = PackedVector2Array(108, 144, 108, 108, 800, 88, 800, 140)
 
-[node name="TriplePoint" type="Polygon2D" parent="."]
+[node name="TriplePoint" type="Polygon2D" parent="." unique_id=1393590670]
 color = Color(0.87451, 0, 1, 1)
 polygon = PackedVector2Array(0, 0, 3, 0, 3, 3, 0, 3)
 
-[node name="MeltPoint" type="Polygon2D" parent="."]
+[node name="MeltPoint" type="Polygon2D" parent="." unique_id=1547512595]
 color = Color(0, 0.529412, 1, 1)
 polygon = PackedVector2Array(0, 0, 3, 0, 3, 3, 0, 3)
 
-[node name="BoilPoint" type="Polygon2D" parent="."]
+[node name="BoilPoint" type="Polygon2D" parent="." unique_id=1265069683]
 color = Color(1, 0, 0, 1)
 polygon = PackedVector2Array(0, 0, 3, 0, 3, 3, 0, 3)
 
-[node name="SuperPoint" type="Polygon2D" parent="."]
+[node name="SuperPoint" type="Polygon2D" parent="." unique_id=164268712]
 color = Color(0.364706, 0.282353, 0, 1)
 polygon = PackedVector2Array(0, 0, 3, 0, 3, 3, 0, 3)

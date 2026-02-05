@@ -1,4 +1,4 @@
-[gd_scene load_steps=58 format=3 uid="uid://bg2sov0myafl8"]
+[gd_scene format=3 uid="uid://bg2sov0myafl8"]
 
 [ext_resource type="PackedScene" uid="uid://bx7irdxpbnhbb" path="res://Scenes/DimensionType.tscn" id="3"]
 [ext_resource type="PackedScene" uid="uid://5s56ablx84rs" path="res://Scenes/UniverseIcon.tscn" id="3_wld1s"]
@@ -35,7 +35,7 @@
 [ext_resource type="Texture2D" uid="uid://bxbsgfw7reha5" path="res://Graphics/Atoms/O.png" id="32"]
 [ext_resource type="Texture2D" uid="uid://brrod2d1fgtut" path="res://Graphics/Atoms/Ne.png" id="33"]
 [ext_resource type="Texture2D" uid="uid://gbbvl1ua0wyb" path="res://Graphics/Atoms/Xe.png" id="34"]
-[ext_resource type="PackedScene" path="res://Scenes/Plotter.tscn" id="35"]
+[ext_resource type="PackedScene" uid="uid://wkedpxaexn03" path="res://Scenes/Plotter.tscn" id="35"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_vyadf"]
 bg_color = Color(0.0745098, 0.0745098, 0.0745098, 1)
@@ -252,7 +252,7 @@ _data = {
 &"RESET": SubResource("9")
 }
 
-[node name="Dimension" type="Control"]
+[node name="Dimension" type="Control" unique_id=1880229774]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -263,12 +263,12 @@ mouse_filter = 2
 theme = ExtResource("9")
 script = ExtResource("8")
 
-[node name="Universes" type="Control" parent="."]
+[node name="Universes" type="Control" parent="." unique_id=1309808508]
 anchors_preset = 0
 offset_right = 40.0
 offset_bottom = 40.0
 
-[node name="Scroll" type="ScrollContainer" parent="Universes"]
+[node name="Scroll" type="ScrollContainer" parent="Universes" unique_id=1122335498]
 custom_minimum_size = Vector2(288, 0)
 layout_mode = 0
 offset_top = 84.0
@@ -276,15 +276,15 @@ offset_right = 288.0
 offset_bottom = 720.0
 theme_override_styles/panel = SubResource("StyleBoxFlat_vyadf")
 
-[node name="VBox" type="VBoxContainer" parent="Universes/Scroll"]
+[node name="VBox" type="VBoxContainer" parent="Universes/Scroll" unique_id=620579491]
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_constants/separation = 15
 
-[node name="UniverseIcon" parent="Universes/Scroll/VBox" instance=ExtResource("3_wld1s")]
+[node name="UniverseIcon" parent="Universes/Scroll/VBox" unique_id=1140247053 instance=ExtResource("3_wld1s")]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="Universes"]
+[node name="Label" type="Label" parent="Universes" unique_id=1586585475]
 layout_mode = 0
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -296,114 +296,108 @@ text = "DISCOVERED_UNIVERSES"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="SendProbes" type="Button" parent="Universes"]
+[node name="SendProbes" type="Button" parent="Universes" unique_id=48143485]
 layout_mode = 0
 offset_top = 684.0
 offset_right = 288.0
 offset_bottom = 720.0
 text = "SEND_PROBES"
 
-[node name="ColorRect" type="ColorRect" parent="Universes/SendProbes"]
+[node name="ColorRect" type="ColorRect" parent="Universes/SendProbes" unique_id=1384659321]
 layout_mode = 0
 anchor_right = 1.0
 anchor_bottom = 1.0
 mouse_filter = 2
 color = Color(1, 1, 1, 0)
 
-[node name="AnimationPlayer" type="AnimationPlayer" parent="Universes/SendProbes"]
-libraries = {
-"": SubResource("AnimationLibrary_v6efg")
-}
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Universes/SendProbes" unique_id=945680688]
+libraries/ = SubResource("AnimationLibrary_v6efg")
 
-[node name="Panel" type="Panel" parent="."]
+[node name="Panel" type="Panel" parent="." unique_id=1070319863]
 layout_mode = 0
 offset_left = 288.0
 offset_top = 48.0
 offset_right = 684.0
 offset_bottom = 720.0
 
-[node name="UnivInfo" type="Label" parent="."]
+[node name="UnivInfo" type="Label" parent="." unique_id=889938610]
 layout_mode = 0
 offset_left = 304.0
 offset_top = 64.0
 offset_right = 672.0
 offset_bottom = 656.0
 
-[node name="AnimationPlayer" type="AnimationPlayer" parent="UnivInfo"]
-libraries = {
-"": SubResource("AnimationLibrary_ak7dn")
-}
+[node name="AnimationPlayer" type="AnimationPlayer" parent="UnivInfo" unique_id=1247127464]
+libraries/ = SubResource("AnimationLibrary_ak7dn")
 
-[node name="Subjects" type="ScrollContainer" parent="."]
+[node name="Subjects" type="ScrollContainer" parent="." unique_id=6590652]
 layout_mode = 0
 offset_left = 684.0
 offset_top = 48.0
 offset_right = 1280.0
 offset_bottom = 720.0
 
-[node name="Grid" type="GridContainer" parent="Subjects"]
+[node name="Grid" type="GridContainer" parent="Subjects" unique_id=1038594951]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 mouse_filter = 2
 columns = 2
 
-[node name="Maths" parent="Subjects/Grid" instance=ExtResource("3")]
+[node name="Maths" parent="Subjects/Grid" unique_id=2053682290 instance=ExtResource("3")]
 layout_mode = 2
 texture = ExtResource("5")
 btn_text = "MODIFY_FORMULAS"
 subject = "maths"
 
-[node name="Physics" parent="Subjects/Grid" instance=ExtResource("3")]
+[node name="Physics" parent="Subjects/Grid" unique_id=523745650 instance=ExtResource("3")]
 layout_mode = 2
 texture = ExtResource("4")
 btn_text = "REWRITE_PHYSICS_LAWS"
 subject = "physics"
 
-[node name="Chemistry" parent="Subjects/Grid" instance=ExtResource("3")]
+[node name="Chemistry" parent="Subjects/Grid" unique_id=731676093 instance=ExtResource("3")]
 layout_mode = 2
 texture = ExtResource("7")
 btn_text = "EXPERIMENT_WITH_MOLECULES"
 subject = "chemistry"
 
-[node name="Biology" parent="Subjects/Grid" instance=ExtResource("3")]
+[node name="Biology" parent="Subjects/Grid" unique_id=464322590 instance=ExtResource("3")]
 layout_mode = 2
 texture = ExtResource("11")
 btn_text = "FIDDLE_WITH_DNA"
 subject = "biology"
 
-[node name="Philosophy" parent="Subjects/Grid" instance=ExtResource("3")]
+[node name="Philosophy" parent="Subjects/Grid" unique_id=1253118956 instance=ExtResource("3")]
 visible = false
 layout_mode = 2
 texture = ExtResource("14")
 subject = "philosophy"
 
-[node name="Engineering" parent="Subjects/Grid" instance=ExtResource("3")]
+[node name="Engineering" parent="Subjects/Grid" unique_id=2078109028 instance=ExtResource("3")]
 layout_mode = 2
 texture = ExtResource("10")
 btn_text = "DO_ENGINEERING"
 subject = "engineering"
 
-[node name="Dimensional_Power" parent="Subjects/Grid" instance=ExtResource("3")]
+[node name="Dimensional_Power" parent="Subjects/Grid" unique_id=1347137061 instance=ExtResource("3")]
 layout_mode = 2
 texture = ExtResource("6")
 subject = "dimensional_power"
 
-[node name="BlackRect" type="ColorRect" parent="."]
+[node name="BlackRect" type="ColorRect" parent="." unique_id=1451395097]
 visible = false
-layout_mode = 2
+layout_mode = 0
 offset_left = 448.0
 offset_top = 48.0
 offset_right = 1280.0
 offset_bottom = 720.0
 color = Color(0, 0, 0, 0)
 
-[node name="AnimationPlayer" type="AnimationPlayer" parent="BlackRect"]
-libraries = {
-"": SubResource("AnimationLibrary_a687h")
-}
+[node name="AnimationPlayer" type="AnimationPlayer" parent="BlackRect" unique_id=1402536799]
+libraries/ = SubResource("AnimationLibrary_a687h")
 
-[node name="DimBonusesInfo" type="Label" parent="."]
+[node name="DimBonusesInfo" type="Label" parent="." unique_id=1512073714]
 visible = false
 layout_mode = 0
 offset_left = 800.0
@@ -412,13 +406,13 @@ offset_right = 1248.0
 offset_bottom = 384.0
 text = "DIM_BONUSES_INFO"
 
-[node name="TopInfo" type="Control" parent="."]
+[node name="TopInfo" type="Control" parent="." unique_id=747841012]
 anchors_preset = 0
 anchor_right = 1.0
 anchor_bottom = 1.0
 offset_bottom = -680.0
 
-[node name="DimensionN" type="Label" parent="TopInfo"]
+[node name="DimensionN" type="Label" parent="TopInfo" unique_id=1728931357]
 layout_mode = 0
 offset_left = 16.0
 offset_right = 480.0
@@ -429,7 +423,7 @@ theme_override_font_sizes/font_size = 18
 text = "Dimension #1"
 vertical_alignment = 1
 
-[node name="DRs" parent="TopInfo" instance=ExtResource("12")]
+[node name="DRs" parent="TopInfo" unique_id=190709485 instance=ExtResource("12")]
 custom_minimum_size = Vector2(384, 0)
 layout_mode = 0
 offset_left = 448.0
@@ -443,7 +437,7 @@ adv_icons = [ExtResource("24")]
 icon_size = 80
 align = 1
 
-[node name="Reset" type="Button" parent="TopInfo"]
+[node name="Reset" type="Button" parent="TopInfo" unique_id=1867947891]
 layout_mode = 0
 offset_left = 1064.0
 offset_top = 8.0
@@ -452,17 +446,17 @@ offset_bottom = 42.0
 grow_horizontal = 0
 text = "New dimension"
 
-[node name="ModifyDimension" type="Control" parent="."]
+[node name="ModifyDimension" type="Control" parent="." unique_id=1199621657]
 anchors_preset = 0
 offset_right = 40.0
 offset_bottom = 40.0
 
-[node name="Reset" type="Control" parent="ModifyDimension"]
+[node name="Reset" type="Control" parent="ModifyDimension" unique_id=2100275160]
 anchors_preset = 0
 offset_right = 40.0
 offset_bottom = 40.0
 
-[node name="DimResetInfo" type="Label" parent="ModifyDimension/Reset"]
+[node name="DimResetInfo" type="Label" parent="ModifyDimension/Reset" unique_id=965175333]
 layout_mode = 0
 offset_left = 32.0
 offset_top = 104.0
@@ -471,7 +465,7 @@ offset_bottom = 172.0
 text = "DIM_JUST_RESET_INFO"
 autowrap_mode = 3
 
-[node name="Generate" type="Button" parent="ModifyDimension/Reset"]
+[node name="Generate" type="Button" parent="ModifyDimension/Reset" unique_id=1162153029]
 layout_mode = 0
 offset_left = 72.0
 offset_top = 272.0
@@ -479,7 +473,7 @@ offset_right = 348.0
 offset_bottom = 306.0
 text = "GENERATE_STARTING_UNIVERSE"
 
-[node name="Maths" type="ScrollContainer" parent="ModifyDimension"]
+[node name="Maths" type="ScrollContainer" parent="ModifyDimension" unique_id=700274371]
 visible = false
 custom_minimum_size = Vector2(388, 0)
 layout_mode = 0
@@ -490,19 +484,19 @@ offset_right = 376.0
 offset_bottom = 680.0
 theme_override_styles/panel = SubResource("StyleBoxFlat_mmkh4")
 
-[node name="Control" type="Control" parent="ModifyDimension/Maths"]
+[node name="Control" type="Control" parent="ModifyDimension/Maths" unique_id=759653401]
 custom_minimum_size = Vector2(300, 1200)
 layout_mode = 2
 mouse_filter = 1
 
-[node name="CostGrowthFactors" type="Panel" parent="ModifyDimension/Maths/Control"]
+[node name="CostGrowthFactors" type="Panel" parent="ModifyDimension/Maths/Control" unique_id=1690031384]
 layout_mode = 0
 offset_left = 16.0
 offset_top = 96.0
 offset_right = 392.0
 offset_bottom = 798.0
 
-[node name="CostGrowthFactor" type="TextureRect" parent="ModifyDimension/Maths/Control/CostGrowthFactors"]
+[node name="CostGrowthFactor" type="TextureRect" parent="ModifyDimension/Maths/Control/CostGrowthFactors" unique_id=1991065857]
 custom_minimum_size = Vector2(40, 0)
 layout_mode = 0
 offset_left = 52.0
@@ -513,7 +507,7 @@ texture = ExtResource("15")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="Label4" type="Label" parent="ModifyDimension/Maths/Control/CostGrowthFactors"]
+[node name="Label4" type="Label" parent="ModifyDimension/Maths/Control/CostGrowthFactors" unique_id=226928380]
 layout_mode = 0
 offset_left = 24.0
 offset_top = 16.0
@@ -521,7 +515,7 @@ offset_right = 368.0
 offset_bottom = 40.0
 text = "Cost growth factors"
 
-[node name="Label" type="Label" parent="ModifyDimension/Maths/Control/CostGrowthFactors"]
+[node name="Label" type="Label" parent="ModifyDimension/Maths/Control/CostGrowthFactors" unique_id=693698945]
 layout_mode = 0
 offset_left = 24.0
 offset_top = 107.0
@@ -529,7 +523,7 @@ offset_right = 338.0
 offset_bottom = 131.0
 text = "BUILDING_COSTS"
 
-[node name="Label2" type="Label" parent="ModifyDimension/Maths/Control/CostGrowthFactors"]
+[node name="Label2" type="Label" parent="ModifyDimension/Maths/Control/CostGrowthFactors" unique_id=1516560780]
 layout_mode = 0
 offset_left = 24.0
 offset_top = 143.0
@@ -538,7 +532,7 @@ offset_bottom = 175.0
 text = "q = "
 vertical_alignment = 1
 
-[node name="Label5" type="Label" parent="ModifyDimension/Maths/Control/CostGrowthFactors"]
+[node name="Label5" type="Label" parent="ModifyDimension/Maths/Control/CostGrowthFactors" unique_id=725152948]
 layout_mode = 0
 offset_left = 24.0
 offset_top = 259.0
@@ -547,7 +541,7 @@ offset_bottom = 291.0
 text = "q_MV = "
 vertical_alignment = 1
 
-[node name="Label6" type="Label" parent="ModifyDimension/Maths/Control/CostGrowthFactors"]
+[node name="Label6" type="Label" parent="ModifyDimension/Maths/Control/CostGrowthFactors" unique_id=1378920517]
 layout_mode = 0
 offset_left = 24.0
 offset_top = 308.0
@@ -556,7 +550,7 @@ offset_bottom = 340.0
 text = "q_MSMB = "
 vertical_alignment = 1
 
-[node name="BUCGF" parent="ModifyDimension/Maths/Control/CostGrowthFactors" instance=ExtResource("19")]
+[node name="BUCGF" parent="ModifyDimension/Maths/Control/CostGrowthFactors" unique_id=173526429 instance=ExtResource("19")]
 layout_mode = 0
 anchors_preset = 0
 anchor_right = 0.0
@@ -567,7 +561,7 @@ offset_right = 144.0
 offset_bottom = 175.0
 step = 0.0
 
-[node name="Label3" type="Label" parent="ModifyDimension/Maths/Control/CostGrowthFactors"]
+[node name="Label3" type="Label" parent="ModifyDimension/Maths/Control/CostGrowthFactors" unique_id=1580784482]
 layout_mode = 0
 offset_left = 24.0
 offset_top = 223.0
@@ -575,7 +569,7 @@ offset_right = 344.0
 offset_bottom = 247.0
 text = "MINERAL_UPGRADES"
 
-[node name="RichTextLabel" parent="ModifyDimension/Maths/Control/CostGrowthFactors" instance=ExtResource("12")]
+[node name="RichTextLabel" parent="ModifyDimension/Maths/Control/CostGrowthFactors" unique_id=2009296583 instance=ExtResource("12")]
 layout_mode = 0
 offset_left = 208.0
 offset_top = 262.0
@@ -583,7 +577,7 @@ offset_right = 248.0
 offset_bottom = 290.0
 help_text = "MV_NAME"
 
-[node name="RichTextLabel2" parent="ModifyDimension/Maths/Control/CostGrowthFactors" instance=ExtResource("12")]
+[node name="RichTextLabel2" parent="ModifyDimension/Maths/Control/CostGrowthFactors" unique_id=993809670 instance=ExtResource("12")]
 layout_mode = 0
 offset_left = 237.0
 offset_top = 311.0
@@ -591,7 +585,7 @@ offset_right = 276.0
 offset_bottom = 339.0
 help_text = "MSMB_NAME"
 
-[node name="MUCGF_MV" parent="ModifyDimension/Maths/Control/CostGrowthFactors" instance=ExtResource("19")]
+[node name="MUCGF_MV" parent="ModifyDimension/Maths/Control/CostGrowthFactors" unique_id=321634332 instance=ExtResource("19")]
 layout_mode = 0
 anchors_preset = 0
 anchor_right = 0.0
@@ -602,7 +596,7 @@ offset_right = 184.0
 offset_bottom = 291.0
 step = 0.01
 
-[node name="MUCGF_MSMB" parent="ModifyDimension/Maths/Control/CostGrowthFactors" instance=ExtResource("19")]
+[node name="MUCGF_MSMB" parent="ModifyDimension/Maths/Control/CostGrowthFactors" unique_id=1482585998 instance=ExtResource("19")]
 layout_mode = 0
 anchors_preset = 0
 anchor_right = 0.0
@@ -613,7 +607,7 @@ offset_right = 212.0
 offset_bottom = 340.0
 step = 0.01
 
-[node name="Label9" type="Label" parent="ModifyDimension/Maths/Control/CostGrowthFactors"]
+[node name="Label9" type="Label" parent="ModifyDimension/Maths/Control/CostGrowthFactors" unique_id=1002643673]
 layout_mode = 0
 offset_left = 24.0
 offset_top = 435.0
@@ -621,7 +615,7 @@ offset_right = 344.0
 offset_bottom = 459.0
 text = "SHIP_XP_REQ"
 
-[node name="Label12" type="Label" parent="ModifyDimension/Maths/Control/CostGrowthFactors"]
+[node name="Label12" type="Label" parent="ModifyDimension/Maths/Control/CostGrowthFactors" unique_id=1404179056]
 layout_mode = 0
 offset_left = 24.0
 offset_top = 526.0
@@ -629,7 +623,7 @@ offset_right = 344.0
 offset_bottom = 550.0
 text = "SHIP_STATS"
 
-[node name="Label10" type="Label" parent="ModifyDimension/Maths/Control/CostGrowthFactors"]
+[node name="Label10" type="Label" parent="ModifyDimension/Maths/Control/CostGrowthFactors" unique_id=560387768]
 layout_mode = 0
 offset_left = 24.0
 offset_top = 471.0
@@ -638,7 +632,7 @@ offset_bottom = 503.0
 text = "q = "
 vertical_alignment = 1
 
-[node name="SLUGF_XP" parent="ModifyDimension/Maths/Control/CostGrowthFactors" instance=ExtResource("19")]
+[node name="SLUGF_XP" parent="ModifyDimension/Maths/Control/CostGrowthFactors" unique_id=1897015942 instance=ExtResource("19")]
 layout_mode = 0
 anchors_preset = 0
 anchor_right = 0.0
@@ -649,7 +643,7 @@ offset_right = 144.0
 offset_bottom = 503.0
 step = 0.001
 
-[node name="Label11" type="Label" parent="ModifyDimension/Maths/Control/CostGrowthFactors"]
+[node name="Label11" type="Label" parent="ModifyDimension/Maths/Control/CostGrowthFactors" unique_id=1848717061]
 layout_mode = 0
 offset_left = 24.0
 offset_top = 562.0
@@ -658,7 +652,7 @@ offset_bottom = 594.0
 text = "q = "
 vertical_alignment = 1
 
-[node name="SLUGF_Stats" parent="ModifyDimension/Maths/Control/CostGrowthFactors" instance=ExtResource("19")]
+[node name="SLUGF_Stats" parent="ModifyDimension/Maths/Control/CostGrowthFactors" unique_id=888141883 instance=ExtResource("19")]
 layout_mode = 0
 anchors_preset = 0
 anchor_right = 0.0
@@ -669,7 +663,7 @@ offset_right = 144.0
 offset_bottom = 594.0
 step = 0.001
 
-[node name="Label14" type="Label" parent="ModifyDimension/Maths/Control/CostGrowthFactors"]
+[node name="Label14" type="Label" parent="ModifyDimension/Maths/Control/CostGrowthFactors" unique_id=519766459]
 layout_mode = 0
 offset_left = 24.0
 offset_top = 614.0
@@ -677,7 +671,7 @@ offset_right = 344.0
 offset_bottom = 638.0
 text = "UNIV_XP_REQ"
 
-[node name="Label15" type="Label" parent="ModifyDimension/Maths/Control/CostGrowthFactors"]
+[node name="Label15" type="Label" parent="ModifyDimension/Maths/Control/CostGrowthFactors" unique_id=605814914]
 layout_mode = 0
 offset_left = 24.0
 offset_top = 646.0
@@ -686,7 +680,7 @@ offset_bottom = 674.0
 text = "q = "
 vertical_alignment = 1
 
-[node name="ULUGF" parent="ModifyDimension/Maths/Control/CostGrowthFactors" instance=ExtResource("19")]
+[node name="ULUGF" parent="ModifyDimension/Maths/Control/CostGrowthFactors" unique_id=1346663738 instance=ExtResource("19")]
 layout_mode = 0
 anchors_preset = 0
 anchor_right = 0.0
@@ -697,7 +691,7 @@ offset_right = 144.0
 offset_bottom = 677.0
 step = 0.001
 
-[node name="Label7" type="Label" parent="ModifyDimension/Maths/Control"]
+[node name="Label7" type="Label" parent="ModifyDimension/Maths/Control" unique_id=1598728622]
 layout_mode = 0
 offset_left = 32.0
 offset_top = 816.0
@@ -705,7 +699,7 @@ offset_right = 352.0
 offset_bottom = 840.0
 text = "IRM"
 
-[node name="Label16" type="Label" parent="ModifyDimension/Maths/Control"]
+[node name="Label16" type="Label" parent="ModifyDimension/Maths/Control" unique_id=850941147]
 layout_mode = 0
 offset_left = 34.0
 offset_top = 912.0
@@ -713,7 +707,7 @@ offset_right = 365.0
 offset_bottom = 936.0
 text = "COSHEF"
 
-[node name="Label12" type="Label" parent="ModifyDimension/Maths/Control"]
+[node name="Label12" type="Label" parent="ModifyDimension/Maths/Control" unique_id=924756063]
 layout_mode = 0
 offset_left = 32.0
 offset_top = 1104.0
@@ -721,7 +715,7 @@ offset_right = 352.0
 offset_bottom = 1128.0
 text = "MMBSVR"
 
-[node name="Label18" type="Label" parent="ModifyDimension/Maths/Control"]
+[node name="Label18" type="Label" parent="ModifyDimension/Maths/Control" unique_id=2008541821]
 layout_mode = 0
 offset_left = 36.0
 offset_top = 852.0
@@ -730,7 +724,7 @@ offset_bottom = 880.0
 text = "IR_mult = "
 vertical_alignment = 1
 
-[node name="Label17" type="Label" parent="ModifyDimension/Maths/Control"]
+[node name="Label17" type="Label" parent="ModifyDimension/Maths/Control" unique_id=899599855]
 layout_mode = 0
 offset_left = 40.0
 offset_top = 1028.0
@@ -739,7 +733,7 @@ offset_bottom = 1056.0
 text = "a = "
 vertical_alignment = 1
 
-[node name="Label19" type="Label" parent="ModifyDimension/Maths/Control"]
+[node name="Label19" type="Label" parent="ModifyDimension/Maths/Control" unique_id=973102611]
 layout_mode = 0
 offset_left = 40.0
 offset_top = 1136.0
@@ -748,7 +742,7 @@ offset_bottom = 1164.0
 text = "r = "
 vertical_alignment = 1
 
-[node name="RichTextLabel4" parent="ModifyDimension/Maths/Control" instance=ExtResource("12")]
+[node name="RichTextLabel4" parent="ModifyDimension/Maths/Control" unique_id=274807350 instance=ExtResource("12")]
 layout_mode = 0
 offset_left = 240.0
 offset_top = 852.0
@@ -756,7 +750,7 @@ offset_right = 273.0
 offset_bottom = 880.0
 help_text = "IR_MULT_HELP"
 
-[node name="RichTextLabel5" parent="ModifyDimension/Maths/Control" instance=ExtResource("12")]
+[node name="RichTextLabel5" parent="ModifyDimension/Maths/Control" unique_id=1068762204 instance=ExtResource("12")]
 layout_mode = 0
 offset_left = 184.0
 offset_top = 1138.0
@@ -764,7 +758,7 @@ offset_right = 232.0
 offset_bottom = 1166.0
 help_text = "RATIO_HELP"
 
-[node name="ShipHitChance" type="TextureRect" parent="ModifyDimension/Maths/Control"]
+[node name="ShipHitChance" type="TextureRect" parent="ModifyDimension/Maths/Control" unique_id=1225884461]
 custom_minimum_size = Vector2(40, 0)
 layout_mode = 0
 offset_left = 42.0
@@ -775,7 +769,7 @@ texture = ExtResource("16")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="IRM" parent="ModifyDimension/Maths/Control" instance=ExtResource("19")]
+[node name="IRM" parent="ModifyDimension/Maths/Control" unique_id=2132925053 instance=ExtResource("19")]
 layout_mode = 0
 anchors_preset = 0
 anchor_right = 0.0
@@ -786,7 +780,7 @@ offset_right = 216.0
 offset_bottom = 880.0
 step = 0.001
 
-[node name="COSHEF" parent="ModifyDimension/Maths/Control" instance=ExtResource("19")]
+[node name="COSHEF" parent="ModifyDimension/Maths/Control" unique_id=342535235 instance=ExtResource("19")]
 layout_mode = 0
 anchors_preset = 0
 anchor_right = 0.0
@@ -796,7 +790,7 @@ offset_top = 1024.0
 offset_right = 160.0
 offset_bottom = 1056.0
 
-[node name="MMBSVR" parent="ModifyDimension/Maths/Control" instance=ExtResource("19")]
+[node name="MMBSVR" parent="ModifyDimension/Maths/Control" unique_id=1144639480 instance=ExtResource("19")]
 layout_mode = 0
 anchors_preset = 0
 anchor_right = 0.0
@@ -806,12 +800,12 @@ offset_top = 1132.0
 offset_right = 160.0
 offset_bottom = 1164.0
 
-[node name="Defaults" type="Control" parent="ModifyDimension/Maths/Control"]
+[node name="Defaults" type="Control" parent="ModifyDimension/Maths/Control" unique_id=889497082]
 anchors_preset = 0
 offset_right = 40.0
 offset_bottom = 40.0
 
-[node name="BUCGF" type="Label" parent="ModifyDimension/Maths/Control/Defaults"]
+[node name="BUCGF" type="Label" parent="ModifyDimension/Maths/Control/Defaults" unique_id=98127857]
 layout_mode = 0
 offset_left = 191.0
 offset_top = 243.0
@@ -820,7 +814,7 @@ offset_bottom = 267.0
 text = "(1.3)"
 vertical_alignment = 1
 
-[node name="BUCGF_Table" type="TextureRect" parent="ModifyDimension/Maths/Control/Defaults/BUCGF"]
+[node name="BUCGF_Table" type="TextureRect" parent="ModifyDimension/Maths/Control/Defaults/BUCGF" unique_id=1020201864]
 layout_mode = 0
 offset_left = 52.0
 offset_right = 80.0
@@ -829,7 +823,7 @@ texture = ExtResource("23")
 expand_mode = 1
 stretch_mode = 6
 
-[node name="MUCGF_MV" type="Label" parent="ModifyDimension/Maths/Control/Defaults"]
+[node name="MUCGF_MV" type="Label" parent="ModifyDimension/Maths/Control/Defaults" unique_id=541605781]
 layout_mode = 0
 offset_left = 263.296
 offset_top = 359.0
@@ -838,7 +832,7 @@ offset_bottom = 383.0
 text = "(1.9)"
 vertical_alignment = 1
 
-[node name="MUCGF_MV_Table" type="TextureRect" parent="ModifyDimension/Maths/Control/Defaults/MUCGF_MV"]
+[node name="MUCGF_MV_Table" type="TextureRect" parent="ModifyDimension/Maths/Control/Defaults/MUCGF_MV" unique_id=1331962544]
 layout_mode = 0
 offset_left = 53.704
 offset_top = -3.0
@@ -848,7 +842,7 @@ texture = ExtResource("23")
 expand_mode = 1
 stretch_mode = 6
 
-[node name="MUCGF_MSMB" type="Label" parent="ModifyDimension/Maths/Control/Defaults"]
+[node name="MUCGF_MSMB" type="Label" parent="ModifyDimension/Maths/Control/Defaults" unique_id=776344095]
 layout_mode = 0
 offset_left = 291.296
 offset_top = 408.0
@@ -857,7 +851,7 @@ offset_bottom = 432.0
 text = "(1.6)"
 vertical_alignment = 1
 
-[node name="MUCGF_MSMB_Table" type="TextureRect" parent="ModifyDimension/Maths/Control/Defaults/MUCGF_MSMB"]
+[node name="MUCGF_MSMB_Table" type="TextureRect" parent="ModifyDimension/Maths/Control/Defaults/MUCGF_MSMB" unique_id=1509495009]
 layout_mode = 0
 offset_left = 54.704
 offset_top = -3.0
@@ -867,7 +861,7 @@ texture = ExtResource("23")
 expand_mode = 1
 stretch_mode = 6
 
-[node name="IRM" type="Label" parent="ModifyDimension/Maths/Control/Defaults"]
+[node name="IRM" type="Label" parent="ModifyDimension/Maths/Control/Defaults" unique_id=801869193]
 layout_mode = 0
 offset_left = 277.0
 offset_top = 852.0
@@ -876,7 +870,7 @@ offset_bottom = 876.0
 text = "(1.2)"
 vertical_alignment = 1
 
-[node name="SLUGF_XP" type="Label" parent="ModifyDimension/Maths/Control/Defaults"]
+[node name="SLUGF_XP" type="Label" parent="ModifyDimension/Maths/Control/Defaults" unique_id=1496387872]
 layout_mode = 0
 offset_left = 187.0
 offset_top = 571.0
@@ -885,7 +879,7 @@ offset_bottom = 595.0
 text = "(1.3)"
 vertical_alignment = 1
 
-[node name="SLUGF_XP_Table" type="TextureRect" parent="ModifyDimension/Maths/Control/Defaults/SLUGF_XP"]
+[node name="SLUGF_XP_Table" type="TextureRect" parent="ModifyDimension/Maths/Control/Defaults/SLUGF_XP" unique_id=1363243984]
 layout_mode = 0
 offset_left = 55.0
 offset_top = -2.0
@@ -895,7 +889,7 @@ texture = ExtResource("23")
 expand_mode = 1
 stretch_mode = 6
 
-[node name="SLUGF_Stats" type="Label" parent="ModifyDimension/Maths/Control/Defaults"]
+[node name="SLUGF_Stats" type="Label" parent="ModifyDimension/Maths/Control/Defaults" unique_id=1163350611]
 layout_mode = 0
 offset_left = 187.0
 offset_top = 663.0
@@ -904,7 +898,7 @@ offset_bottom = 687.0
 text = "(1.15)"
 vertical_alignment = 1
 
-[node name="SLUGF_Stats_Table" type="TextureRect" parent="ModifyDimension/Maths/Control/Defaults/SLUGF_Stats"]
+[node name="SLUGF_Stats_Table" type="TextureRect" parent="ModifyDimension/Maths/Control/Defaults/SLUGF_Stats" unique_id=848546094]
 layout_mode = 0
 offset_left = 65.0
 offset_top = -2.0
@@ -914,7 +908,7 @@ texture = ExtResource("23")
 expand_mode = 1
 stretch_mode = 6
 
-[node name="COSHEF" type="Label" parent="ModifyDimension/Maths/Control/Defaults"]
+[node name="COSHEF" type="Label" parent="ModifyDimension/Maths/Control/Defaults" unique_id=1569733148]
 layout_mode = 0
 offset_left = 200.0
 offset_top = 1028.0
@@ -923,7 +917,7 @@ offset_bottom = 1052.0
 text = "(1.5)"
 vertical_alignment = 1
 
-[node name="MMBSVR" type="Label" parent="ModifyDimension/Maths/Control/Defaults"]
+[node name="MMBSVR" type="Label" parent="ModifyDimension/Maths/Control/Defaults" unique_id=1257406270]
 layout_mode = 0
 offset_left = 232.0
 offset_top = 1137.0
@@ -932,7 +926,7 @@ offset_bottom = 1161.0
 text = "(10)"
 vertical_alignment = 1
 
-[node name="ULUGF" type="Label" parent="ModifyDimension/Maths/Control/Defaults"]
+[node name="ULUGF" type="Label" parent="ModifyDimension/Maths/Control/Defaults" unique_id=1593115994]
 layout_mode = 0
 offset_left = 187.0
 offset_top = 747.0
@@ -941,7 +935,7 @@ offset_bottom = 771.0
 text = "(1.63)"
 vertical_alignment = 1
 
-[node name="ULUGF_Table" type="TextureRect" parent="ModifyDimension/Maths/Control/Defaults/ULUGF"]
+[node name="ULUGF_Table" type="TextureRect" parent="ModifyDimension/Maths/Control/Defaults/ULUGF" unique_id=2058318525]
 layout_mode = 0
 offset_left = 59.0
 offset_top = -3.0
@@ -951,7 +945,7 @@ texture = ExtResource("23")
 expand_mode = 1
 stretch_mode = 6
 
-[node name="Physics" type="ScrollContainer" parent="ModifyDimension"]
+[node name="Physics" type="ScrollContainer" parent="ModifyDimension" unique_id=1511022853]
 visible = false
 custom_minimum_size = Vector2(388, 672)
 layout_mode = 0
@@ -962,12 +956,12 @@ offset_right = 376.0
 offset_bottom = 680.0
 theme_override_styles/panel = SubResource("StyleBoxFlat_mmkh4")
 
-[node name="Control" type="Control" parent="ModifyDimension/Physics"]
+[node name="Control" type="Control" parent="ModifyDimension/Physics" unique_id=460062423]
 custom_minimum_size = Vector2(300, 1550)
 layout_mode = 2
 mouse_filter = 1
 
-[node name="Label3" type="Label" parent="ModifyDimension/Physics/Control"]
+[node name="Label3" type="Label" parent="ModifyDimension/Physics/Control" unique_id=253692393]
 layout_mode = 0
 offset_left = 30.0
 offset_top = 108.0
@@ -976,7 +970,7 @@ offset_bottom = 139.0
 text = "AURORAS"
 label_settings = SubResource("LabelSettings_3lwqu")
 
-[node name="Label7" type="Label" parent="ModifyDimension/Physics/Control"]
+[node name="Label7" type="Label" parent="ModifyDimension/Physics/Control" unique_id=1058225217]
 layout_mode = 0
 offset_left = 30.0
 offset_top = 164.0
@@ -984,7 +978,7 @@ offset_right = 349.0
 offset_bottom = 189.0
 text = "SPAWN_PROBABILITY"
 
-[node name="TextureRect" type="TextureRect" parent="ModifyDimension/Physics/Control"]
+[node name="TextureRect" type="TextureRect" parent="ModifyDimension/Physics/Control" unique_id=1772652405]
 layout_mode = 0
 offset_left = 30.0
 offset_top = 188.0
@@ -994,7 +988,7 @@ texture = ExtResource("18_drllu")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="Label8" type="Label" parent="ModifyDimension/Physics/Control"]
+[node name="Label8" type="Label" parent="ModifyDimension/Physics/Control" unique_id=818754278]
 layout_mode = 0
 offset_left = 38.0
 offset_top = 252.0
@@ -1002,7 +996,7 @@ offset_right = 74.0
 offset_bottom = 277.0
 text = "a = "
 
-[node name="aurora_spawn_probability" parent="ModifyDimension/Physics/Control" instance=ExtResource("19")]
+[node name="aurora_spawn_probability" parent="ModifyDimension/Physics/Control" unique_id=2141311213 instance=ExtResource("19")]
 layout_mode = 0
 anchors_preset = 0
 anchor_right = 0.0
@@ -1014,7 +1008,7 @@ offset_bottom = 280.0
 step = 0.01
 value = 0.35
 
-[node name="Label9" type="Label" parent="ModifyDimension/Physics/Control"]
+[node name="Label9" type="Label" parent="ModifyDimension/Physics/Control" unique_id=1494477385]
 layout_mode = 0
 offset_left = 30.0
 offset_top = 308.0
@@ -1022,7 +1016,7 @@ offset_right = 350.0
 offset_bottom = 333.0
 text = "AURORA_WIDTH_MULTIPLIER"
 
-[node name="Label5" type="Label" parent="ModifyDimension/Physics/Control"]
+[node name="Label5" type="Label" parent="ModifyDimension/Physics/Control" unique_id=1809521459]
 layout_mode = 0
 offset_left = 30.0
 offset_top = 508.0
@@ -1031,7 +1025,7 @@ offset_bottom = 539.0
 text = "STARS"
 label_settings = SubResource("LabelSettings_3lwqu")
 
-[node name="aurora_width_multiplier" parent="ModifyDimension/Physics/Control" instance=ExtResource("19")]
+[node name="aurora_width_multiplier" parent="ModifyDimension/Physics/Control" unique_id=125011795 instance=ExtResource("19")]
 layout_mode = 0
 anchors_preset = 0
 anchor_right = 0.0
@@ -1043,7 +1037,7 @@ offset_bottom = 380.0
 value = 1.0
 max_value = 3.0
 
-[node name="perpendicular_auroras" parent="ModifyDimension/Physics/Control" instance=ExtResource("19")]
+[node name="perpendicular_auroras" parent="ModifyDimension/Physics/Control" unique_id=195925319 instance=ExtResource("19")]
 layout_mode = 0
 anchors_preset = 0
 anchor_right = 0.0
@@ -1055,7 +1049,7 @@ offset_bottom = 472.0
 step = 0.005
 max_value = 1.0
 
-[node name="RichTextLabel3" parent="ModifyDimension/Physics/Control" instance=ExtResource("12")]
+[node name="RichTextLabel3" parent="ModifyDimension/Physics/Control" unique_id=1389344771 instance=ExtResource("12")]
 layout_mode = 0
 offset_left = 30.0
 offset_top = 400.0
@@ -1065,7 +1059,7 @@ text = "PERPENDICULAR_AURORAS [img]Graphics/Icons/help.png[/img]"
 label_text = "PERPENDICULAR_AURORAS"
 help_text = "PERPENDICULAR_AURORAS_DESC"
 
-[node name="Label2" type="Label" parent="ModifyDimension/Physics/Control"]
+[node name="Label2" type="Label" parent="ModifyDimension/Physics/Control" unique_id=405701024]
 layout_mode = 0
 offset_left = 30.0
 offset_top = 568.0
@@ -1073,7 +1067,7 @@ offset_right = 349.0
 offset_bottom = 593.0
 text = "INFLUENCE_OF_B_TO_MASS"
 
-[node name="BI" parent="ModifyDimension/Physics/Control" instance=ExtResource("19")]
+[node name="BI" parent="ModifyDimension/Physics/Control" unique_id=1807912290 instance=ExtResource("19")]
 layout_mode = 0
 anchors_preset = 0
 anchor_right = 0.0
@@ -1085,7 +1079,7 @@ offset_bottom = 644.0
 step = 0.01
 value = 0.3
 
-[node name="BInfluence" type="TextureRect" parent="ModifyDimension/Physics/Control"]
+[node name="BInfluence" type="TextureRect" parent="ModifyDimension/Physics/Control" unique_id=2060878506]
 layout_mode = 0
 offset_left = 136.0
 offset_top = 618.0
@@ -1095,7 +1089,7 @@ texture = ExtResource("25")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="Label4" type="Label" parent="ModifyDimension/Physics/Control"]
+[node name="Label4" type="Label" parent="ModifyDimension/Physics/Control" unique_id=824930550]
 layout_mode = 0
 offset_left = 16.0
 offset_top = 692.0
@@ -1103,7 +1097,7 @@ offset_right = 128.0
 offset_bottom = 717.0
 text = "AMOUNT"
 
-[node name="B" type="Label" parent="ModifyDimension/Physics/Control"]
+[node name="B" type="Label" parent="ModifyDimension/Physics/Control" unique_id=717322871]
 layout_mode = 0
 offset_left = 244.0
 offset_top = 696.0
@@ -1111,7 +1105,7 @@ offset_right = 380.0
 offset_bottom = 721.0
 text = "for B = 1 nT"
 
-[node name="BSlider" type="HSlider" parent="ModifyDimension/Physics/Control"]
+[node name="BSlider" type="HSlider" parent="ModifyDimension/Physics/Control" unique_id=2055863448]
 layout_mode = 0
 offset_left = 136.0
 offset_top = 700.0
@@ -1123,22 +1117,22 @@ step = 0.1
 value = 0.1
 exp_edit = true
 
-[node name="Line2D" type="Line2D" parent="ModifyDimension/Physics/Control"]
+[node name="Line2D" type="Line2D" parent="ModifyDimension/Physics/Control" unique_id=1784510065]
 position = Vector2(8, 502)
 points = PackedVector2Array(356, 412, 36, 412, 36, 232)
 width = 2.0
 
-[node name="Line2D2" type="Line2D" parent="ModifyDimension/Physics/Control"]
+[node name="Line2D2" type="Line2D" parent="ModifyDimension/Physics/Control" unique_id=564944462]
 position = Vector2(0, 498)
 points = PackedVector2Array(44, 236, 44, 224)
 width_curve = SubResource("11")
 
-[node name="Line2D3" type="Line2D" parent="ModifyDimension/Physics/Control"]
+[node name="Line2D3" type="Line2D" parent="ModifyDimension/Physics/Control" unique_id=118639770]
 position = Vector2(320, 678)
 points = PackedVector2Array(44, 236, 56, 236)
 width_curve = SubResource("11")
 
-[node name="StarGradient" type="TextureRect" parent="ModifyDimension/Physics/Control"]
+[node name="StarGradient" type="TextureRect" parent="ModifyDimension/Physics/Control" unique_id=1848191454]
 material = SubResource("ShaderMaterial_p6fsf")
 layout_mode = 0
 offset_left = 44.0
@@ -1148,14 +1142,14 @@ offset_bottom = 914.0
 texture = SubResource("13")
 expand_mode = 1
 
-[node name="PDFPlotter" parent="ModifyDimension/Physics/Control" instance=ExtResource("35")]
-anchors_preset = 0
+[node name="PDFPlotter" parent="ModifyDimension/Physics/Control" unique_id=1405873060 instance=ExtResource("35")]
+layout_mode = 0
 offset_left = 44.0
 offset_top = 750.0
 offset_right = 364.0
 offset_bottom = 914.0
 
-[node name="HBoxContainer" type="HBoxContainer" parent="ModifyDimension/Physics/Control"]
+[node name="HBoxContainer" type="HBoxContainer" parent="ModifyDimension/Physics/Control" unique_id=1872311793]
 layout_mode = 0
 offset_left = 66.0
 offset_top = 913.0
@@ -1163,47 +1157,47 @@ offset_right = 378.0
 offset_bottom = 953.0
 theme_override_constants/separation = 18
 
-[node name="Label" type="Label" parent="ModifyDimension/Physics/Control/HBoxContainer"]
+[node name="Label" type="Label" parent="ModifyDimension/Physics/Control/HBoxContainer" unique_id=1993899206]
 layout_mode = 2
 text = "M"
 
-[node name="Label2" type="Label" parent="ModifyDimension/Physics/Control/HBoxContainer"]
+[node name="Label2" type="Label" parent="ModifyDimension/Physics/Control/HBoxContainer" unique_id=871616245]
 layout_mode = 2
 text = "K"
 
-[node name="Label3" type="Label" parent="ModifyDimension/Physics/Control/HBoxContainer"]
+[node name="Label3" type="Label" parent="ModifyDimension/Physics/Control/HBoxContainer" unique_id=1561858892]
 layout_mode = 2
 text = "G"
 
-[node name="Label4" type="Label" parent="ModifyDimension/Physics/Control/HBoxContainer"]
+[node name="Label4" type="Label" parent="ModifyDimension/Physics/Control/HBoxContainer" unique_id=361446587]
 layout_mode = 2
 text = "F"
 
-[node name="Label5" type="Label" parent="ModifyDimension/Physics/Control/HBoxContainer"]
+[node name="Label5" type="Label" parent="ModifyDimension/Physics/Control/HBoxContainer" unique_id=1115321186]
 layout_mode = 2
 text = "A"
 
-[node name="Label6" type="Label" parent="ModifyDimension/Physics/Control/HBoxContainer"]
+[node name="Label6" type="Label" parent="ModifyDimension/Physics/Control/HBoxContainer" unique_id=477587431]
 layout_mode = 2
 text = "B"
 
-[node name="Label7" type="Label" parent="ModifyDimension/Physics/Control/HBoxContainer"]
+[node name="Label7" type="Label" parent="ModifyDimension/Physics/Control/HBoxContainer" unique_id=1367653946]
 layout_mode = 2
 text = "O"
 
-[node name="Label8" type="Label" parent="ModifyDimension/Physics/Control/HBoxContainer"]
+[node name="Label8" type="Label" parent="ModifyDimension/Physics/Control/HBoxContainer" unique_id=383037579]
 layout_mode = 2
 text = "Q"
 
-[node name="Label9" type="Label" parent="ModifyDimension/Physics/Control/HBoxContainer"]
+[node name="Label9" type="Label" parent="ModifyDimension/Physics/Control/HBoxContainer" unique_id=1882697135]
 layout_mode = 2
 text = "R"
 
-[node name="Label10" type="Label" parent="ModifyDimension/Physics/Control/HBoxContainer"]
+[node name="Label10" type="Label" parent="ModifyDimension/Physics/Control/HBoxContainer" unique_id=234547557]
 layout_mode = 2
 text = "Z"
 
-[node name="Label6" type="Label" parent="ModifyDimension/Physics/Control"]
+[node name="Label6" type="Label" parent="ModifyDimension/Physics/Control" unique_id=1077479343]
 layout_mode = 0
 offset_left = 30.0
 offset_top = 980.0
@@ -1212,7 +1206,7 @@ offset_bottom = 1011.0
 text = "UNIVERSES"
 label_settings = SubResource("LabelSettings_3lwqu")
 
-[node name="Label" type="Label" parent="ModifyDimension/Physics/Control"]
+[node name="Label" type="Label" parent="ModifyDimension/Physics/Control" unique_id=1829795914]
 layout_mode = 0
 offset_left = 30.0
 offset_top = 1032.0
@@ -1220,7 +1214,7 @@ offset_right = 349.0
 offset_bottom = 1057.0
 text = "MIN_VAL_OF_UNIV_PROPERTIES"
 
-[node name="RichTextLabel" parent="ModifyDimension/Physics/Control" instance=ExtResource("12")]
+[node name="RichTextLabel" parent="ModifyDimension/Physics/Control" unique_id=810148966 instance=ExtResource("12")]
 layout_mode = 0
 offset_left = 136.0
 offset_top = 1076.0
@@ -1228,7 +1222,7 @@ offset_right = 172.0
 offset_bottom = 1106.0
 help_text = "MIN_VAL_OF_UNIV_PROPERTIES_DESC"
 
-[node name="MVOUP" parent="ModifyDimension/Physics/Control" instance=ExtResource("19")]
+[node name="MVOUP" parent="ModifyDimension/Physics/Control" unique_id=1515396997 instance=ExtResource("19")]
 layout_mode = 0
 anchors_preset = 0
 anchor_right = 0.0
@@ -1241,7 +1235,7 @@ step = 0.05
 value = 0.5
 max_value = 1.0
 
-[node name="RichTextLabel2" parent="ModifyDimension/Physics/Control" instance=ExtResource("12")]
+[node name="RichTextLabel2" parent="ModifyDimension/Physics/Control" unique_id=1402505647 instance=ExtResource("12")]
 layout_mode = 0
 offset_left = 32.0
 offset_top = 1132.0
@@ -1251,7 +1245,7 @@ text = "COSTS_OF_UNIV_PROPERTIES [img]Graphics/Icons/help.png[/img]"
 label_text = "COSTS_OF_UNIV_PROPERTIES"
 help_text = "COSTS_OF_UNIV_PROPERTIES_DESC"
 
-[node name="UnivPropertiesLabel" type="Label" parent="ModifyDimension/Physics/Control"]
+[node name="UnivPropertiesLabel" type="Label" parent="ModifyDimension/Physics/Control" unique_id=1346334875]
 layout_mode = 0
 offset_left = 32.0
 offset_top = 1188.0
@@ -1267,7 +1261,7 @@ Difficulty
 Time speed
 Age of the universe"
 
-[node name="VBox" type="VBoxContainer" parent="ModifyDimension/Physics/Control"]
+[node name="VBox" type="VBoxContainer" parent="ModifyDimension/Physics/Control" unique_id=1611211823]
 layout_mode = 0
 offset_left = 268.0
 offset_top = 1188.0
@@ -1275,52 +1269,52 @@ offset_right = 344.0
 offset_bottom = 1540.0
 theme_override_constants/separation = 8
 
-[node name="speed_of_light" parent="ModifyDimension/Physics/Control/VBox" instance=ExtResource("19")]
+[node name="speed_of_light" parent="ModifyDimension/Physics/Control/VBox" unique_id=578586213 instance=ExtResource("19")]
 layout_mode = 2
 step = 1.0
 value = 10.0
 
-[node name="planck" parent="ModifyDimension/Physics/Control/VBox" instance=ExtResource("19")]
+[node name="planck" parent="ModifyDimension/Physics/Control/VBox" unique_id=1326715998 instance=ExtResource("19")]
 layout_mode = 2
 step = 1.0
 value = 20.0
 
-[node name="boltzmann" parent="ModifyDimension/Physics/Control/VBox" instance=ExtResource("19")]
+[node name="boltzmann" parent="ModifyDimension/Physics/Control/VBox" unique_id=330903996 instance=ExtResource("19")]
 layout_mode = 2
 step = 1.0
 value = 10.0
 
-[node name="gravitational" parent="ModifyDimension/Physics/Control/VBox" instance=ExtResource("19")]
+[node name="gravitational" parent="ModifyDimension/Physics/Control/VBox" unique_id=1718736285 instance=ExtResource("19")]
 layout_mode = 2
 step = 1.0
 value = 30.0
 
-[node name="charge" parent="ModifyDimension/Physics/Control/VBox" instance=ExtResource("19")]
+[node name="charge" parent="ModifyDimension/Physics/Control/VBox" unique_id=756782619 instance=ExtResource("19")]
 layout_mode = 2
 step = 1.0
 value = 25.0
 
-[node name="dark_energy" parent="ModifyDimension/Physics/Control/VBox" instance=ExtResource("19")]
+[node name="dark_energy" parent="ModifyDimension/Physics/Control/VBox" unique_id=757991061 instance=ExtResource("19")]
 layout_mode = 2
 step = 1.0
 value = 25.0
 
-[node name="difficulty" parent="ModifyDimension/Physics/Control/VBox" instance=ExtResource("19")]
+[node name="difficulty" parent="ModifyDimension/Physics/Control/VBox" unique_id=2022415554 instance=ExtResource("19")]
 layout_mode = 2
 step = 1.0
 value = 10.0
 
-[node name="time_speed" parent="ModifyDimension/Physics/Control/VBox" instance=ExtResource("19")]
+[node name="time_speed" parent="ModifyDimension/Physics/Control/VBox" unique_id=379806168 instance=ExtResource("19")]
 layout_mode = 2
 step = 1.0
 value = 50.0
 
-[node name="age" parent="ModifyDimension/Physics/Control/VBox" instance=ExtResource("19")]
+[node name="age" parent="ModifyDimension/Physics/Control/VBox" unique_id=294116964 instance=ExtResource("19")]
 layout_mode = 2
 step = 1.0
 value = 50.0
 
-[node name="VBox2" type="VBoxContainer" parent="ModifyDimension/Physics/Control"]
+[node name="VBox2" type="VBoxContainer" parent="ModifyDimension/Physics/Control" unique_id=1223421120]
 layout_mode = 0
 offset_left = 32.0
 offset_top = 1188.0
@@ -1328,12 +1322,12 @@ offset_right = 268.0
 offset_bottom = 1552.0
 theme_override_constants/separation = 8
 
-[node name="Defaults" type="Control" parent="ModifyDimension/Physics/Control"]
+[node name="Defaults" type="Control" parent="ModifyDimension/Physics/Control" unique_id=1210497778]
 anchors_preset = 0
 offset_right = 40.0
 offset_bottom = 40.0
 
-[node name="aurora_spawn_probability" type="Label" parent="ModifyDimension/Physics/Control/Defaults"]
+[node name="aurora_spawn_probability" type="Label" parent="ModifyDimension/Physics/Control/Defaults" unique_id=1655323087]
 layout_mode = 0
 offset_left = 186.0
 offset_top = 252.0
@@ -1341,7 +1335,7 @@ offset_right = 228.0
 offset_bottom = 277.0
 text = "(0.35)"
 
-[node name="aurora_width_multiplier" type="Label" parent="ModifyDimension/Physics/Control/Defaults"]
+[node name="aurora_width_multiplier" type="Label" parent="ModifyDimension/Physics/Control/Defaults" unique_id=467940842]
 layout_mode = 0
 offset_left = 186.0
 offset_top = 352.0
@@ -1349,7 +1343,7 @@ offset_right = 228.0
 offset_bottom = 377.0
 text = "(1)"
 
-[node name="perpendicular_auroras" type="Label" parent="ModifyDimension/Physics/Control/Defaults"]
+[node name="perpendicular_auroras" type="Label" parent="ModifyDimension/Physics/Control/Defaults" unique_id=1306300571]
 layout_mode = 0
 offset_left = 186.0
 offset_top = 444.0
@@ -1357,7 +1351,7 @@ offset_right = 228.0
 offset_bottom = 469.0
 text = "(0)"
 
-[node name="BI" type="Label" parent="ModifyDimension/Physics/Control/Defaults"]
+[node name="BI" type="Label" parent="ModifyDimension/Physics/Control/Defaults" unique_id=1119587410]
 layout_mode = 0
 offset_left = 176.0
 offset_top = 616.0
@@ -1365,7 +1359,7 @@ offset_right = 218.0
 offset_bottom = 641.0
 text = "(0.3)"
 
-[node name="MVOUP" type="Label" parent="ModifyDimension/Physics/Control/Defaults"]
+[node name="MVOUP" type="Label" parent="ModifyDimension/Physics/Control/Defaults" unique_id=965689871]
 layout_mode = 0
 offset_left = 176.0
 offset_top = 1075.0
@@ -1373,7 +1367,7 @@ offset_right = 218.0
 offset_bottom = 1100.0
 text = "(0.5)"
 
-[node name="speed_of_light" type="Label" parent="ModifyDimension/Physics/Control/Defaults"]
+[node name="speed_of_light" type="Label" parent="ModifyDimension/Physics/Control/Defaults" unique_id=1769042749]
 layout_mode = 0
 offset_left = 376.0
 offset_top = 1191.0
@@ -1381,7 +1375,7 @@ offset_right = 418.0
 offset_bottom = 1216.0
 text = "(25)"
 
-[node name="planck" type="Label" parent="ModifyDimension/Physics/Control/Defaults"]
+[node name="planck" type="Label" parent="ModifyDimension/Physics/Control/Defaults" unique_id=1908293997]
 layout_mode = 0
 offset_left = 376.0
 offset_top = 1231.0
@@ -1389,7 +1383,7 @@ offset_right = 418.0
 offset_bottom = 1256.0
 text = "(30)"
 
-[node name="boltzmann" type="Label" parent="ModifyDimension/Physics/Control/Defaults"]
+[node name="boltzmann" type="Label" parent="ModifyDimension/Physics/Control/Defaults" unique_id=751943967]
 layout_mode = 0
 offset_left = 376.0
 offset_top = 1270.0
@@ -1397,7 +1391,7 @@ offset_right = 418.0
 offset_bottom = 1295.0
 text = "(30)"
 
-[node name="gravitational" type="Label" parent="ModifyDimension/Physics/Control/Defaults"]
+[node name="gravitational" type="Label" parent="ModifyDimension/Physics/Control/Defaults" unique_id=153333417]
 layout_mode = 0
 offset_left = 376.0
 offset_top = 1310.0
@@ -1405,7 +1399,7 @@ offset_right = 418.0
 offset_bottom = 1335.0
 text = "(40)"
 
-[node name="charge" type="Label" parent="ModifyDimension/Physics/Control/Defaults"]
+[node name="charge" type="Label" parent="ModifyDimension/Physics/Control/Defaults" unique_id=782274077]
 layout_mode = 0
 offset_left = 376.0
 offset_top = 1351.0
@@ -1413,7 +1407,7 @@ offset_right = 418.0
 offset_bottom = 1376.0
 text = "(40)"
 
-[node name="dark_energy" type="Label" parent="ModifyDimension/Physics/Control/Defaults"]
+[node name="dark_energy" type="Label" parent="ModifyDimension/Physics/Control/Defaults" unique_id=1102892269]
 layout_mode = 0
 offset_left = 376.0
 offset_top = 1391.0
@@ -1421,7 +1415,7 @@ offset_right = 418.0
 offset_bottom = 1416.0
 text = "(40)"
 
-[node name="difficulty" type="Label" parent="ModifyDimension/Physics/Control/Defaults"]
+[node name="difficulty" type="Label" parent="ModifyDimension/Physics/Control/Defaults" unique_id=1467963656]
 layout_mode = 0
 offset_left = 376.0
 offset_top = 1431.0
@@ -1429,7 +1423,7 @@ offset_right = 418.0
 offset_bottom = 1456.0
 text = "(10)"
 
-[node name="time_speed" type="Label" parent="ModifyDimension/Physics/Control/Defaults"]
+[node name="time_speed" type="Label" parent="ModifyDimension/Physics/Control/Defaults" unique_id=181470624]
 layout_mode = 0
 offset_left = 376.0
 offset_top = 1471.0
@@ -1437,7 +1431,7 @@ offset_right = 418.0
 offset_bottom = 1496.0
 text = "(50)"
 
-[node name="age" type="Label" parent="ModifyDimension/Physics/Control/Defaults"]
+[node name="age" type="Label" parent="ModifyDimension/Physics/Control/Defaults" unique_id=1556052842]
 layout_mode = 0
 offset_left = 376.0
 offset_top = 1512.0
@@ -1445,7 +1439,7 @@ offset_right = 418.0
 offset_bottom = 1537.0
 text = "(15)"
 
-[node name="Chemistry" type="ScrollContainer" parent="ModifyDimension"]
+[node name="Chemistry" type="ScrollContainer" parent="ModifyDimension" unique_id=1280580292]
 visible = false
 custom_minimum_size = Vector2(388, 672)
 layout_mode = 0
@@ -1456,12 +1450,12 @@ offset_right = 376.0
 offset_bottom = 680.0
 theme_override_styles/panel = SubResource("StyleBoxFlat_mmkh4")
 
-[node name="Control" type="Control" parent="ModifyDimension/Chemistry"]
+[node name="Control" type="Control" parent="ModifyDimension/Chemistry" unique_id=1070052665]
 custom_minimum_size = Vector2(300, 650)
 layout_mode = 2
 mouse_filter = 1
 
-[node name="Label" type="Label" parent="ModifyDimension/Chemistry/Control"]
+[node name="Label" type="Label" parent="ModifyDimension/Chemistry/Control" unique_id=1253813546]
 layout_mode = 0
 offset_left = 32.0
 offset_top = 119.0
@@ -1469,7 +1463,7 @@ offset_right = 346.0
 offset_bottom = 144.0
 text = "EDIT_PHASE_DIAGRAMS"
 
-[node name="PDLabel" type="TextureRect" parent="ModifyDimension/Chemistry/Control"]
+[node name="PDLabel" type="TextureRect" parent="ModifyDimension/Chemistry/Control" unique_id=2001071317]
 layout_mode = 0
 offset_left = 286.0
 offset_top = 118.0
@@ -1479,14 +1473,14 @@ texture = ExtResource("25")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="LakeButtons" type="VBoxContainer" parent="ModifyDimension/Chemistry/Control"]
+[node name="LakeButtons" type="VBoxContainer" parent="ModifyDimension/Chemistry/Control" unique_id=853384214]
 layout_mode = 0
 offset_left = 42.0
 offset_top = 163.0
 offset_right = 118.0
 offset_bottom = 555.0
 
-[node name="H2O" type="Button" parent="ModifyDimension/Chemistry/Control/LakeButtons"]
+[node name="H2O" type="Button" parent="ModifyDimension/Chemistry/Control/LakeButtons" unique_id=449211051]
 custom_minimum_size = Vector2(0, 40)
 layout_mode = 2
 size_flags_horizontal = 3
@@ -1494,7 +1488,7 @@ icon = ExtResource("26")
 icon_alignment = 1
 expand_icon = true
 
-[node name="CH4" type="Button" parent="ModifyDimension/Chemistry/Control/LakeButtons"]
+[node name="CH4" type="Button" parent="ModifyDimension/Chemistry/Control/LakeButtons" unique_id=1315465526]
 custom_minimum_size = Vector2(0, 40)
 layout_mode = 2
 size_flags_horizontal = 3
@@ -1502,7 +1496,7 @@ icon = ExtResource("27")
 icon_alignment = 1
 expand_icon = true
 
-[node name="CO2" type="Button" parent="ModifyDimension/Chemistry/Control/LakeButtons"]
+[node name="CO2" type="Button" parent="ModifyDimension/Chemistry/Control/LakeButtons" unique_id=997029806]
 custom_minimum_size = Vector2(0, 40)
 layout_mode = 2
 size_flags_horizontal = 3
@@ -1510,7 +1504,7 @@ icon = ExtResource("28")
 icon_alignment = 1
 expand_icon = true
 
-[node name="NH3" type="Button" parent="ModifyDimension/Chemistry/Control/LakeButtons"]
+[node name="NH3" type="Button" parent="ModifyDimension/Chemistry/Control/LakeButtons" unique_id=1420251078]
 custom_minimum_size = Vector2(0, 40)
 layout_mode = 2
 size_flags_horizontal = 3
@@ -1518,7 +1512,7 @@ icon = ExtResource("31")
 icon_alignment = 1
 expand_icon = true
 
-[node name="H" type="Button" parent="ModifyDimension/Chemistry/Control/LakeButtons"]
+[node name="H" type="Button" parent="ModifyDimension/Chemistry/Control/LakeButtons" unique_id=1294480465]
 custom_minimum_size = Vector2(0, 40)
 layout_mode = 2
 size_flags_horizontal = 3
@@ -1526,7 +1520,7 @@ icon = ExtResource("30")
 icon_alignment = 1
 expand_icon = true
 
-[node name="He" type="Button" parent="ModifyDimension/Chemistry/Control/LakeButtons"]
+[node name="He" type="Button" parent="ModifyDimension/Chemistry/Control/LakeButtons" unique_id=569061004]
 custom_minimum_size = Vector2(0, 40)
 layout_mode = 2
 size_flags_horizontal = 3
@@ -1534,7 +1528,7 @@ icon = ExtResource("29")
 icon_alignment = 1
 expand_icon = true
 
-[node name="O" type="Button" parent="ModifyDimension/Chemistry/Control/LakeButtons"]
+[node name="O" type="Button" parent="ModifyDimension/Chemistry/Control/LakeButtons" unique_id=1942378550]
 custom_minimum_size = Vector2(0, 40)
 layout_mode = 2
 size_flags_horizontal = 3
@@ -1542,7 +1536,7 @@ icon = ExtResource("32")
 icon_alignment = 1
 expand_icon = true
 
-[node name="Ne" type="Button" parent="ModifyDimension/Chemistry/Control/LakeButtons"]
+[node name="Ne" type="Button" parent="ModifyDimension/Chemistry/Control/LakeButtons" unique_id=1531428380]
 custom_minimum_size = Vector2(0, 40)
 layout_mode = 2
 size_flags_horizontal = 3
@@ -1550,7 +1544,7 @@ icon = ExtResource("33")
 icon_alignment = 1
 expand_icon = true
 
-[node name="Xe" type="Button" parent="ModifyDimension/Chemistry/Control/LakeButtons"]
+[node name="Xe" type="Button" parent="ModifyDimension/Chemistry/Control/LakeButtons" unique_id=38028867]
 custom_minimum_size = Vector2(0, 40)
 layout_mode = 2
 size_flags_horizontal = 3
@@ -1558,68 +1552,68 @@ icon = ExtResource("34")
 icon_alignment = 1
 expand_icon = true
 
-[node name="OPMeters" type="VBoxContainer" parent="ModifyDimension/Chemistry/Control"]
+[node name="OPMeters" type="VBoxContainer" parent="ModifyDimension/Chemistry/Control" unique_id=556318834]
 layout_mode = 0
 offset_left = 136.0
 offset_top = 163.0
 offset_right = 328.0
 offset_bottom = 555.0
 
-[node name="H2O" type="Label" parent="ModifyDimension/Chemistry/Control/OPMeters"]
+[node name="H2O" type="Label" parent="ModifyDimension/Chemistry/Control/OPMeters" unique_id=544598476]
 custom_minimum_size = Vector2(0, 40)
 layout_mode = 2
 size_flags_horizontal = 3
 vertical_alignment = 1
 
-[node name="CH4" type="Label" parent="ModifyDimension/Chemistry/Control/OPMeters"]
+[node name="CH4" type="Label" parent="ModifyDimension/Chemistry/Control/OPMeters" unique_id=1193906066]
 custom_minimum_size = Vector2(0, 40)
 layout_mode = 2
 size_flags_horizontal = 3
 vertical_alignment = 1
 
-[node name="CO2" type="Label" parent="ModifyDimension/Chemistry/Control/OPMeters"]
+[node name="CO2" type="Label" parent="ModifyDimension/Chemistry/Control/OPMeters" unique_id=1946319137]
 custom_minimum_size = Vector2(0, 40)
 layout_mode = 2
 size_flags_horizontal = 3
 vertical_alignment = 1
 
-[node name="NH3" type="Label" parent="ModifyDimension/Chemistry/Control/OPMeters"]
+[node name="NH3" type="Label" parent="ModifyDimension/Chemistry/Control/OPMeters" unique_id=206213469]
 custom_minimum_size = Vector2(0, 40)
 layout_mode = 2
 size_flags_horizontal = 3
 vertical_alignment = 1
 
-[node name="H" type="Label" parent="ModifyDimension/Chemistry/Control/OPMeters"]
+[node name="H" type="Label" parent="ModifyDimension/Chemistry/Control/OPMeters" unique_id=168607738]
 custom_minimum_size = Vector2(0, 40)
 layout_mode = 2
 size_flags_horizontal = 3
 vertical_alignment = 1
 
-[node name="He" type="Label" parent="ModifyDimension/Chemistry/Control/OPMeters"]
+[node name="He" type="Label" parent="ModifyDimension/Chemistry/Control/OPMeters" unique_id=1710428193]
 custom_minimum_size = Vector2(0, 40)
 layout_mode = 2
 size_flags_horizontal = 3
 vertical_alignment = 1
 
-[node name="O" type="Label" parent="ModifyDimension/Chemistry/Control/OPMeters"]
+[node name="O" type="Label" parent="ModifyDimension/Chemistry/Control/OPMeters" unique_id=804381348]
 custom_minimum_size = Vector2(0, 40)
 layout_mode = 2
 size_flags_horizontal = 3
 vertical_alignment = 1
 
-[node name="Ne" type="Label" parent="ModifyDimension/Chemistry/Control/OPMeters"]
+[node name="Ne" type="Label" parent="ModifyDimension/Chemistry/Control/OPMeters" unique_id=419699766]
 custom_minimum_size = Vector2(0, 40)
 layout_mode = 2
 size_flags_horizontal = 3
 vertical_alignment = 1
 
-[node name="Xe" type="Label" parent="ModifyDimension/Chemistry/Control/OPMeters"]
+[node name="Xe" type="Label" parent="ModifyDimension/Chemistry/Control/OPMeters" unique_id=145724700]
 custom_minimum_size = Vector2(0, 40)
 layout_mode = 2
 size_flags_horizontal = 3
 vertical_alignment = 1
 
-[node name="Biology" type="ScrollContainer" parent="ModifyDimension"]
+[node name="Biology" type="ScrollContainer" parent="ModifyDimension" unique_id=2038894693]
 visible = false
 custom_minimum_size = Vector2(388, 672)
 layout_mode = 0
@@ -1630,12 +1624,12 @@ offset_right = 376.0
 offset_bottom = 680.0
 theme_override_styles/panel = SubResource("StyleBoxFlat_mmkh4")
 
-[node name="Control" type="Control" parent="ModifyDimension/Biology"]
+[node name="Control" type="Control" parent="ModifyDimension/Biology" unique_id=1434504655]
 custom_minimum_size = Vector2(300, 650)
 layout_mode = 2
 mouse_filter = 1
 
-[node name="Label" type="Label" parent="ModifyDimension/Biology/Control"]
+[node name="Label" type="Label" parent="ModifyDimension/Biology/Control" unique_id=59377633]
 layout_mode = 0
 offset_left = 34.0
 offset_top = 119.0
@@ -1643,7 +1637,7 @@ offset_right = 348.0
 offset_bottom = 144.0
 text = "PLANT_GROWTH_SPEED_MULTIPLIER"
 
-[node name="Label2" type="Label" parent="ModifyDimension/Biology/Control"]
+[node name="Label2" type="Label" parent="ModifyDimension/Biology/Control" unique_id=306622596]
 layout_mode = 0
 offset_left = 34.0
 offset_top = 215.0
@@ -1651,7 +1645,7 @@ offset_right = 348.0
 offset_bottom = 240.0
 text = "PLANT_YIELD_MULT"
 
-[node name="Label3" type="Label" parent="ModifyDimension/Biology/Control"]
+[node name="Label3" type="Label" parent="ModifyDimension/Biology/Control" unique_id=471804286]
 layout_mode = 0
 offset_left = 34.0
 offset_top = 335.0
@@ -1659,7 +1653,7 @@ offset_right = 348.0
 offset_bottom = 360.0
 text = "LAKES"
 
-[node name="PGSM" parent="ModifyDimension/Biology/Control" instance=ExtResource("19")]
+[node name="PGSM" parent="ModifyDimension/Biology/Control" unique_id=470137509 instance=ExtResource("19")]
 layout_mode = 0
 anchors_preset = 0
 anchor_right = 0.0
@@ -1671,7 +1665,7 @@ offset_bottom = 191.0
 value = 1.0
 min_value = 1.0
 
-[node name="PYM" parent="ModifyDimension/Biology/Control" instance=ExtResource("19")]
+[node name="PYM" parent="ModifyDimension/Biology/Control" unique_id=2036388106 instance=ExtResource("19")]
 layout_mode = 0
 anchors_preset = 0
 anchor_right = 0.0
@@ -1683,7 +1677,7 @@ offset_bottom = 287.0
 value = 1.0
 min_value = 1.0
 
-[node name="PGSMLabel" type="TextureRect" parent="ModifyDimension/Biology/Control"]
+[node name="PGSMLabel" type="TextureRect" parent="ModifyDimension/Biology/Control" unique_id=417857180]
 layout_mode = 0
 offset_left = 152.0
 offset_top = 166.0
@@ -1693,7 +1687,7 @@ texture = ExtResource("25")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="PYMLabel" type="TextureRect" parent="ModifyDimension/Biology/Control"]
+[node name="PYMLabel" type="TextureRect" parent="ModifyDimension/Biology/Control" unique_id=1599843687]
 layout_mode = 0
 offset_left = 152.0
 offset_top = 262.0
@@ -1703,7 +1697,7 @@ texture = ExtResource("25")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="LakeButtons" type="GridContainer" parent="ModifyDimension/Biology/Control"]
+[node name="LakeButtons" type="GridContainer" parent="ModifyDimension/Biology/Control" unique_id=866403324]
 layout_mode = 0
 offset_left = 32.0
 offset_top = 367.0
@@ -1711,7 +1705,7 @@ offset_right = 388.0
 offset_bottom = 455.0
 columns = 5
 
-[node name="H2O" type="Button" parent="ModifyDimension/Biology/Control/LakeButtons"]
+[node name="H2O" type="Button" parent="ModifyDimension/Biology/Control/LakeButtons" unique_id=1954697216]
 custom_minimum_size = Vector2(0, 40)
 layout_mode = 2
 size_flags_horizontal = 3
@@ -1719,7 +1713,7 @@ icon = ExtResource("26")
 icon_alignment = 1
 expand_icon = true
 
-[node name="CH4" type="Button" parent="ModifyDimension/Biology/Control/LakeButtons"]
+[node name="CH4" type="Button" parent="ModifyDimension/Biology/Control/LakeButtons" unique_id=172160553]
 custom_minimum_size = Vector2(0, 40)
 layout_mode = 2
 size_flags_horizontal = 3
@@ -1727,7 +1721,7 @@ icon = ExtResource("27")
 icon_alignment = 1
 expand_icon = true
 
-[node name="CO2" type="Button" parent="ModifyDimension/Biology/Control/LakeButtons"]
+[node name="CO2" type="Button" parent="ModifyDimension/Biology/Control/LakeButtons" unique_id=1937511597]
 custom_minimum_size = Vector2(0, 40)
 layout_mode = 2
 size_flags_horizontal = 3
@@ -1735,7 +1729,7 @@ icon = ExtResource("28")
 icon_alignment = 1
 expand_icon = true
 
-[node name="NH3" type="Button" parent="ModifyDimension/Biology/Control/LakeButtons"]
+[node name="NH3" type="Button" parent="ModifyDimension/Biology/Control/LakeButtons" unique_id=1053256248]
 custom_minimum_size = Vector2(0, 40)
 layout_mode = 2
 size_flags_horizontal = 3
@@ -1743,7 +1737,7 @@ icon = ExtResource("31")
 icon_alignment = 1
 expand_icon = true
 
-[node name="H" type="Button" parent="ModifyDimension/Biology/Control/LakeButtons"]
+[node name="H" type="Button" parent="ModifyDimension/Biology/Control/LakeButtons" unique_id=133132191]
 custom_minimum_size = Vector2(0, 40)
 layout_mode = 2
 size_flags_horizontal = 3
@@ -1751,7 +1745,7 @@ icon = ExtResource("30")
 icon_alignment = 1
 expand_icon = true
 
-[node name="He" type="Button" parent="ModifyDimension/Biology/Control/LakeButtons"]
+[node name="He" type="Button" parent="ModifyDimension/Biology/Control/LakeButtons" unique_id=1573272902]
 custom_minimum_size = Vector2(0, 40)
 layout_mode = 2
 size_flags_horizontal = 3
@@ -1759,7 +1753,7 @@ icon = ExtResource("29")
 icon_alignment = 1
 expand_icon = true
 
-[node name="O" type="Button" parent="ModifyDimension/Biology/Control/LakeButtons"]
+[node name="O" type="Button" parent="ModifyDimension/Biology/Control/LakeButtons" unique_id=800897531]
 custom_minimum_size = Vector2(0, 40)
 layout_mode = 2
 size_flags_horizontal = 3
@@ -1767,7 +1761,7 @@ icon = ExtResource("32")
 icon_alignment = 1
 expand_icon = true
 
-[node name="Ne" type="Button" parent="ModifyDimension/Biology/Control/LakeButtons"]
+[node name="Ne" type="Button" parent="ModifyDimension/Biology/Control/LakeButtons" unique_id=2110710711]
 custom_minimum_size = Vector2(0, 40)
 layout_mode = 2
 size_flags_horizontal = 3
@@ -1775,7 +1769,7 @@ icon = ExtResource("33")
 icon_alignment = 1
 expand_icon = true
 
-[node name="Xe" type="Button" parent="ModifyDimension/Biology/Control/LakeButtons"]
+[node name="Xe" type="Button" parent="ModifyDimension/Biology/Control/LakeButtons" unique_id=39896067]
 custom_minimum_size = Vector2(0, 40)
 layout_mode = 2
 size_flags_horizontal = 3
@@ -1783,7 +1777,7 @@ icon = ExtResource("34")
 icon_alignment = 1
 expand_icon = true
 
-[node name="Lake" type="Control" parent="ModifyDimension/Biology/Control"]
+[node name="Lake" type="Control" parent="ModifyDimension/Biology/Control" unique_id=925616549]
 custom_minimum_size = Vector2(0, 50)
 anchors_preset = 0
 offset_left = 32.0
@@ -1791,7 +1785,7 @@ offset_top = 487.0
 offset_right = 388.0
 offset_bottom = 537.0
 
-[node name="Operator" type="Label" parent="ModifyDimension/Biology/Control/Lake"]
+[node name="Operator" type="Label" parent="ModifyDimension/Biology/Control/Lake" unique_id=1393386329]
 layout_mode = 0
 offset_left = 20.0
 offset_top = -4.0
@@ -1799,7 +1793,7 @@ offset_right = 44.0
 offset_bottom = 24.0
 text = "x"
 
-[node name="Bonus" parent="ModifyDimension/Biology/Control/Lake" instance=ExtResource("19")]
+[node name="Bonus" parent="ModifyDimension/Biology/Control/Lake" unique_id=1409735796 instance=ExtResource("19")]
 layout_mode = 0
 anchors_preset = 0
 anchor_right = 0.0
@@ -1811,7 +1805,7 @@ offset_bottom = 24.0
 step = 0.5
 value = 1.0
 
-[node name="LakeDesc" type="RichTextLabel" parent="ModifyDimension/Biology/Control/Lake"]
+[node name="LakeDesc" type="RichTextLabel" parent="ModifyDimension/Biology/Control/Lake" unique_id=1609790567]
 layout_mode = 0
 offset_top = 48.0
 offset_right = 356.0
@@ -1819,7 +1813,7 @@ offset_bottom = 152.0
 mouse_filter = 1
 bbcode_enabled = true
 
-[node name="Engineering" type="ScrollContainer" parent="ModifyDimension"]
+[node name="Engineering" type="ScrollContainer" parent="ModifyDimension" unique_id=928904946]
 visible = false
 clip_contents = false
 custom_minimum_size = Vector2(388, 672)
@@ -1834,12 +1828,12 @@ grow_horizontal = 2
 grow_vertical = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_mmkh4")
 
-[node name="Control" type="Control" parent="ModifyDimension/Engineering"]
+[node name="Control" type="Control" parent="ModifyDimension/Engineering" unique_id=1646918336]
 custom_minimum_size = Vector2(300, 700)
 layout_mode = 2
 mouse_filter = 1
 
-[node name="Label" type="Label" parent="ModifyDimension/Engineering/Control"]
+[node name="Label" type="Label" parent="ModifyDimension/Engineering/Control" unique_id=404974679]
 layout_mode = 0
 offset_left = 32.0
 offset_top = 119.0
@@ -1847,7 +1841,7 @@ offset_right = 346.0
 offset_bottom = 144.0
 text = "BASE_COST_MULT"
 
-[node name="BCM" parent="ModifyDimension/Engineering/Control" instance=ExtResource("19")]
+[node name="BCM" parent="ModifyDimension/Engineering/Control" unique_id=169128488 instance=ExtResource("19")]
 layout_mode = 0
 anchors_preset = 0
 anchor_right = 0.0
@@ -1859,7 +1853,7 @@ offset_bottom = 191.0
 step = 0.02
 value = 1.0
 
-[node name="RichTextLabel" parent="ModifyDimension/Engineering/Control" instance=ExtResource("12")]
+[node name="RichTextLabel" parent="ModifyDimension/Engineering/Control" unique_id=1650674484 instance=ExtResource("12")]
 layout_mode = 0
 offset_left = 150.0
 offset_top = 163.0
@@ -1867,7 +1861,7 @@ offset_right = 186.0
 offset_bottom = 193.0
 help_text = "BASE_COST_MULT_DESC"
 
-[node name="Label2" type="Label" parent="ModifyDimension/Engineering/Control"]
+[node name="Label2" type="Label" parent="ModifyDimension/Engineering/Control" unique_id=1460659110]
 layout_mode = 0
 offset_left = 32.0
 offset_top = 215.0
@@ -1875,7 +1869,7 @@ offset_right = 346.0
 offset_bottom = 240.0
 text = "PICKAXE_SPEED_MULT"
 
-[node name="PS" parent="ModifyDimension/Engineering/Control" instance=ExtResource("19")]
+[node name="PS" parent="ModifyDimension/Engineering/Control" unique_id=1027720716 instance=ExtResource("19")]
 layout_mode = 0
 anchors_preset = 0
 anchor_right = 0.0
@@ -1887,7 +1881,7 @@ offset_bottom = 287.0
 step = 0.5
 value = 1.0
 
-[node name="Label3" type="Label" parent="ModifyDimension/Engineering/Control"]
+[node name="Label3" type="Label" parent="ModifyDimension/Engineering/Control" unique_id=1390214244]
 layout_mode = 0
 offset_left = 32.0
 offset_top = 315.0
@@ -1895,7 +1889,7 @@ offset_right = 346.0
 offset_bottom = 340.0
 text = "ROVER_STAT_MULT"
 
-[node name="RSM" parent="ModifyDimension/Engineering/Control" instance=ExtResource("19")]
+[node name="RSM" parent="ModifyDimension/Engineering/Control" unique_id=296880382 instance=ExtResource("19")]
 layout_mode = 0
 anchors_preset = 0
 anchor_right = 0.0
@@ -1907,7 +1901,7 @@ offset_bottom = 395.0
 step = 0.2
 value = 1.0
 
-[node name="RichTextLabel2" parent="ModifyDimension/Engineering/Control" instance=ExtResource("12")]
+[node name="RichTextLabel2" parent="ModifyDimension/Engineering/Control" unique_id=360939696 instance=ExtResource("12")]
 layout_mode = 0
 offset_left = 32.0
 offset_top = 424.0
@@ -1917,7 +1911,7 @@ text = "CONSTRUCT_ANCIENT_BUILDINGS [img]Graphics/Icons/help.png[/img]"
 label_text = "CONSTRUCT_ANCIENT_BUILDINGS"
 help_text = "CONSTRUCT_ANCIENT_BUILDINGS_DESC"
 
-[node name="Label4" type="Label" parent="ModifyDimension/Engineering/Control"]
+[node name="Label4" type="Label" parent="ModifyDimension/Engineering/Control" unique_id=689666735]
 layout_mode = 0
 offset_left = 32.0
 offset_top = 476.0
@@ -1925,7 +1919,7 @@ offset_right = 128.0
 offset_bottom = 501.0
 text = "MAX_TIER"
 
-[node name="max_ancient_building_tier" parent="ModifyDimension/Engineering/Control" instance=ExtResource("19")]
+[node name="max_ancient_building_tier" parent="ModifyDimension/Engineering/Control" unique_id=714737235 instance=ExtResource("19")]
 layout_mode = 0
 anchors_preset = 0
 anchor_right = 0.0
@@ -1937,7 +1931,7 @@ offset_bottom = 504.0
 step = 1.0
 is_integer = true
 
-[node name="AncientBuildingFormula" type="TextureRect" parent="ModifyDimension/Engineering/Control"]
+[node name="AncientBuildingFormula" type="TextureRect" parent="ModifyDimension/Engineering/Control" unique_id=1830585330]
 layout_mode = 0
 offset_left = 36.0
 offset_top = 524.0
@@ -1947,7 +1941,7 @@ texture = ExtResource("31_7v8j0")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="Label5" type="Label" parent="ModifyDimension/Engineering/Control"]
+[node name="Label5" type="Label" parent="ModifyDimension/Engineering/Control" unique_id=1316638246]
 layout_mode = 0
 offset_left = 80.0
 offset_top = 576.0
@@ -1955,7 +1949,7 @@ offset_right = 128.0
 offset_bottom = 601.0
 text = "a = "
 
-[node name="ancient_building_a_value" parent="ModifyDimension/Engineering/Control" instance=ExtResource("19")]
+[node name="ancient_building_a_value" parent="ModifyDimension/Engineering/Control" unique_id=1570802612 instance=ExtResource("19")]
 layout_mode = 0
 anchors_preset = 0
 anchor_right = 0.0
@@ -1965,7 +1959,7 @@ offset_top = 572.0
 offset_right = 181.479
 offset_bottom = 604.0
 
-[node name="Label7" type="Label" parent="ModifyDimension/Engineering/Control"]
+[node name="Label7" type="Label" parent="ModifyDimension/Engineering/Control" unique_id=1153585807]
 layout_mode = 0
 offset_left = 292.0
 offset_top = 576.0
@@ -1973,7 +1967,7 @@ offset_right = 412.0
 offset_bottom = 601.0
 text = "10^-a = "
 
-[node name="RichTextLabel3" parent="ModifyDimension/Engineering/Control" instance=ExtResource("12")]
+[node name="RichTextLabel3" parent="ModifyDimension/Engineering/Control" unique_id=1830568141 instance=ExtResource("12")]
 layout_mode = 0
 offset_left = 212.0
 offset_top = 576.0
@@ -1981,7 +1975,7 @@ offset_right = 248.0
 offset_bottom = 606.0
 help_text = "AB_FORMULA_A_DESC"
 
-[node name="Label6" type="Label" parent="ModifyDimension/Engineering/Control"]
+[node name="Label6" type="Label" parent="ModifyDimension/Engineering/Control" unique_id=1587403617]
 layout_mode = 0
 offset_left = 80.0
 offset_top = 624.0
@@ -1989,7 +1983,7 @@ offset_right = 132.0
 offset_bottom = 649.0
 text = "b = "
 
-[node name="ancient_building_b_value" parent="ModifyDimension/Engineering/Control" instance=ExtResource("19")]
+[node name="ancient_building_b_value" parent="ModifyDimension/Engineering/Control" unique_id=923697623 instance=ExtResource("19")]
 layout_mode = 0
 anchors_preset = 0
 anchor_right = 0.0
@@ -2001,7 +1995,7 @@ offset_bottom = 652.0
 step = 0.01
 value = 1.5
 
-[node name="RichTextLabel4" parent="ModifyDimension/Engineering/Control" instance=ExtResource("12")]
+[node name="RichTextLabel4" parent="ModifyDimension/Engineering/Control" unique_id=651936652 instance=ExtResource("12")]
 layout_mode = 0
 offset_left = 212.0
 offset_top = 624.0
@@ -2009,12 +2003,12 @@ offset_right = 248.0
 offset_bottom = 654.0
 help_text = "AB_FORMULA_B_DESC"
 
-[node name="Defaults" type="Control" parent="ModifyDimension/Engineering/Control"]
+[node name="Defaults" type="Control" parent="ModifyDimension/Engineering/Control" unique_id=2068617210]
 anchors_preset = 0
 offset_right = 40.0
 offset_bottom = 40.0
 
-[node name="ancient_building_a_value" type="Label" parent="ModifyDimension/Engineering/Control/Defaults"]
+[node name="ancient_building_a_value" type="Label" parent="ModifyDimension/Engineering/Control/Defaults" unique_id=630337983]
 layout_mode = 0
 offset_left = 244.0
 offset_top = 576.0
@@ -2022,7 +2016,7 @@ offset_right = 284.0
 offset_bottom = 601.0
 text = "(0.0)"
 
-[node name="ancient_building_b_value" type="Label" parent="ModifyDimension/Engineering/Control/Defaults"]
+[node name="ancient_building_b_value" type="Label" parent="ModifyDimension/Engineering/Control/Defaults" unique_id=82284049]
 layout_mode = 0
 offset_left = 244.0
 offset_top = 624.0
@@ -2030,7 +2024,7 @@ offset_right = 284.0
 offset_bottom = 649.0
 text = "(1.5)"
 
-[node name="Dimensional_Power" type="ScrollContainer" parent="ModifyDimension"]
+[node name="Dimensional_Power" type="ScrollContainer" parent="ModifyDimension" unique_id=1473965559]
 visible = false
 custom_minimum_size = Vector2(388, 672)
 layout_mode = 0
@@ -2041,12 +2035,12 @@ offset_right = 376.0
 offset_bottom = 680.0
 theme_override_styles/panel = SubResource("StyleBoxFlat_mmkh4")
 
-[node name="Control" type="Control" parent="ModifyDimension/Dimensional_Power"]
+[node name="Control" type="Control" parent="ModifyDimension/Dimensional_Power" unique_id=1682726250]
 custom_minimum_size = Vector2(300, 850)
 layout_mode = 2
 mouse_filter = 2
 
-[node name="Level" type="Label" parent="ModifyDimension/Dimensional_Power/Control"]
+[node name="Level" type="Label" parent="ModifyDimension/Dimensional_Power/Control" unique_id=1642562283]
 layout_mode = 0
 offset_left = 14.0
 offset_top = 19.0
@@ -2054,7 +2048,7 @@ offset_right = 82.0
 offset_bottom = 43.0
 text = "LEVEL"
 
-[node name="SpecialBonuses" type="Label" parent="ModifyDimension/Dimensional_Power/Control"]
+[node name="SpecialBonuses" type="Label" parent="ModifyDimension/Dimensional_Power/Control" unique_id=559098090]
 layout_mode = 0
 offset_left = 146.0
 offset_top = 19.0
@@ -2062,7 +2056,7 @@ offset_right = 322.0
 offset_bottom = 43.0
 text = "EFFECTS"
 
-[node name="VBoxContainer" type="VBoxContainer" parent="ModifyDimension/Dimensional_Power/Control"]
+[node name="VBoxContainer" type="VBoxContainer" parent="ModifyDimension/Dimensional_Power/Control" unique_id=1646562625]
 layout_mode = 0
 offset_left = 42.0
 offset_top = 72.0
@@ -2070,93 +2064,93 @@ offset_right = 82.0
 offset_bottom = 682.0
 theme_override_constants/separation = 68
 
-[node name="Label" type="Label" parent="ModifyDimension/Dimensional_Power/Control/VBoxContainer"]
+[node name="Label" type="Label" parent="ModifyDimension/Dimensional_Power/Control/VBoxContainer" unique_id=1489272747]
 layout_mode = 2
 text = "1"
 
-[node name="Label6" type="Label" parent="ModifyDimension/Dimensional_Power/Control/VBoxContainer"]
+[node name="Label6" type="Label" parent="ModifyDimension/Dimensional_Power/Control/VBoxContainer" unique_id=673431411]
 modulate = Color(0.831373, 0.690196, 1, 1)
 layout_mode = 2
 text = "2"
 
-[node name="Label2" type="Label" parent="ModifyDimension/Dimensional_Power/Control/VBoxContainer"]
+[node name="Label2" type="Label" parent="ModifyDimension/Dimensional_Power/Control/VBoxContainer" unique_id=826273956]
 modulate = Color(0.764706, 0.564706, 1, 1)
 layout_mode = 2
 text = "3"
 
-[node name="Label3" type="Label" parent="ModifyDimension/Dimensional_Power/Control/VBoxContainer"]
+[node name="Label3" type="Label" parent="ModifyDimension/Dimensional_Power/Control/VBoxContainer" unique_id=874133089]
 modulate = Color(0.654902, 0.368627, 1, 1)
 layout_mode = 2
 text = "4"
 
-[node name="Label4" type="Label" parent="ModifyDimension/Dimensional_Power/Control/VBoxContainer"]
+[node name="Label4" type="Label" parent="ModifyDimension/Dimensional_Power/Control/VBoxContainer" unique_id=1612246404]
 modulate = Color(0.572549, 0.215686, 1, 1)
 layout_mode = 2
 text = "5"
 
-[node name="Label5" type="Label" parent="ModifyDimension/Dimensional_Power/Control/VBoxContainer"]
+[node name="Label5" type="Label" parent="ModifyDimension/Dimensional_Power/Control/VBoxContainer" unique_id=575544986]
 modulate = Color(0.454902, 0, 1, 1)
 layout_mode = 2
 text = "6"
 
-[node name="Label7" type="Label" parent="ModifyDimension/Dimensional_Power/Control/VBoxContainer"]
+[node name="Label7" type="Label" parent="ModifyDimension/Dimensional_Power/Control/VBoxContainer" unique_id=1009950010]
 modulate = Color(0.454902, 0, 1, 1)
 layout_mode = 2
 text = "7"
 
-[node name="Label8" type="Label" parent="ModifyDimension/Dimensional_Power/Control/VBoxContainer"]
+[node name="Label8" type="Label" parent="ModifyDimension/Dimensional_Power/Control/VBoxContainer" unique_id=1868503973]
 modulate = Color(0.454902, 0, 1, 1)
 layout_mode = 2
 text = "8"
 
-[node name="Line2D" type="Line2D" parent="ModifyDimension/Dimensional_Power/Control"]
+[node name="Line2D" type="Line2D" parent="ModifyDimension/Dimensional_Power/Control" unique_id=1495698629]
 position = Vector2(-18, -9)
 points = PackedVector2Array(88, 92, 152, 92)
 width = 1.0
 
-[node name="Line2D2" type="Line2D" parent="ModifyDimension/Dimensional_Power/Control"]
+[node name="Line2D2" type="Line2D" parent="ModifyDimension/Dimensional_Power/Control" unique_id=304684271]
 modulate = Color(0.831373, 0.690196, 1, 1)
 position = Vector2(-18, 87)
 points = PackedVector2Array(88, 92, 148, 92)
 width = 1.0
 
-[node name="Line2D3" type="Line2D" parent="ModifyDimension/Dimensional_Power/Control"]
+[node name="Line2D3" type="Line2D" parent="ModifyDimension/Dimensional_Power/Control" unique_id=2111004547]
 modulate = Color(0.764706, 0.564706, 1, 1)
 position = Vector2(-18, 179)
 points = PackedVector2Array(88, 92, 152, 92)
 width = 1.0
 
-[node name="Line2D4" type="Line2D" parent="ModifyDimension/Dimensional_Power/Control"]
+[node name="Line2D4" type="Line2D" parent="ModifyDimension/Dimensional_Power/Control" unique_id=1937870180]
 modulate = Color(0.654902, 0.368627, 1, 1)
 position = Vector2(-18, 271)
 points = PackedVector2Array(88, 92, 152, 92)
 width = 1.0
 
-[node name="Line2D5" type="Line2D" parent="ModifyDimension/Dimensional_Power/Control"]
+[node name="Line2D5" type="Line2D" parent="ModifyDimension/Dimensional_Power/Control" unique_id=1484377636]
 modulate = Color(0.572549, 0.215686, 1, 1)
 position = Vector2(-18, 367)
 points = PackedVector2Array(88, 92, 152, 92)
 width = 1.0
 
-[node name="Line2D6" type="Line2D" parent="ModifyDimension/Dimensional_Power/Control"]
+[node name="Line2D6" type="Line2D" parent="ModifyDimension/Dimensional_Power/Control" unique_id=186926000]
 modulate = Color(0.454902, 0, 1, 1)
 position = Vector2(-18, 463)
 points = PackedVector2Array(88, 92, 152, 92)
 width = 1.0
 
-[node name="Line2D7" type="Line2D" parent="ModifyDimension/Dimensional_Power/Control"]
+[node name="Line2D7" type="Line2D" parent="ModifyDimension/Dimensional_Power/Control" unique_id=1812536535]
 modulate = Color(0.454902, 0, 1, 1)
 position = Vector2(-18, 554)
 points = PackedVector2Array(88, 92, 152, 92)
 width = 1.0
 
-[node name="Line2D8" type="Line2D" parent="ModifyDimension/Dimensional_Power/Control"]
+[node name="Line2D8" type="Line2D" parent="ModifyDimension/Dimensional_Power/Control" unique_id=37597557]
 modulate = Color(0.454902, 0, 1, 1)
 position = Vector2(-18, 644)
 points = PackedVector2Array(88, 92, 152, 92)
 width = 1.0
 
-[node name="TextureProgressBar" type="TextureProgressBar" parent="ModifyDimension/Dimensional_Power/Control"]
+[node name="TextureProgressBar" type="TextureProgressBar" parent="ModifyDimension/Dimensional_Power/Control" unique_id=387265084]
 layout_mode = 0
 offset_left = 94.0
 offset_top = 83.0
@@ -2171,7 +2165,7 @@ nine_patch_stretch = true
 texture_under = ExtResource("18")
 texture_progress = ExtResource("17")
 
-[node name="Label1" type="Label" parent="ModifyDimension/Dimensional_Power/Control"]
+[node name="Label1" type="Label" parent="ModifyDimension/Dimensional_Power/Control" unique_id=1060105948]
 layout_mode = 0
 offset_left = 146.0
 offset_top = 71.0
@@ -2182,7 +2176,7 @@ theme_override_colors/font_color = Color(0.635294, 0.635294, 0.635294, 1)
 text = "QOL_PERKS"
 autowrap_mode = 3
 
-[node name="Label2" type="Label" parent="ModifyDimension/Dimensional_Power/Control"]
+[node name="Label2" type="Label" parent="ModifyDimension/Dimensional_Power/Control" unique_id=1392634747]
 layout_mode = 0
 offset_left = 146.0
 offset_top = 167.0
@@ -2193,7 +2187,7 @@ theme_override_colors/font_color = Color(0.635294, 0.635294, 0.635294, 1)
 text = "UNLOCK_PHY_CHEM_BIO"
 autowrap_mode = 3
 
-[node name="Label3" type="Label" parent="ModifyDimension/Dimensional_Power/Control"]
+[node name="Label3" type="Label" parent="ModifyDimension/Dimensional_Power/Control" unique_id=1807421363]
 layout_mode = 0
 offset_left = 146.0
 offset_top = 259.0
@@ -2203,7 +2197,7 @@ theme_override_colors/font_color = Color(0.635294, 0.635294, 0.635294, 1)
 text = "MORE_OP_CAPACITY"
 autowrap_mode = 3
 
-[node name="Label4" type="Label" parent="ModifyDimension/Dimensional_Power/Control"]
+[node name="Label4" type="Label" parent="ModifyDimension/Dimensional_Power/Control" unique_id=293885208]
 layout_mode = 0
 offset_left = 146.0
 offset_top = 351.0
@@ -2214,7 +2208,7 @@ theme_override_colors/font_color = Color(0.635294, 0.635294, 0.635294, 1)
 text = "MODIFY_CAVE_BATTLE_TIME"
 autowrap_mode = 3
 
-[node name="Label5" type="Label" parent="ModifyDimension/Dimensional_Power/Control"]
+[node name="Label5" type="Label" parent="ModifyDimension/Dimensional_Power/Control" unique_id=1595557664]
 layout_mode = 0
 offset_left = 146.0
 offset_top = 447.0
@@ -2224,7 +2218,7 @@ theme_override_colors/font_color = Color(0.635294, 0.635294, 0.635294, 1)
 text = "MORE_PP"
 autowrap_mode = 3
 
-[node name="Label6" type="Label" parent="ModifyDimension/Dimensional_Power/Control"]
+[node name="Label6" type="Label" parent="ModifyDimension/Dimensional_Power/Control" unique_id=1332907549]
 layout_mode = 0
 offset_left = 146.0
 offset_top = 543.0
@@ -2234,7 +2228,7 @@ theme_override_colors/font_color = Color(0.635294, 0.635294, 0.635294, 1)
 text = "TP_COST_POWER_VARIES"
 autowrap_mode = 3
 
-[node name="Label7" type="Label" parent="ModifyDimension/Dimensional_Power/Control"]
+[node name="Label7" type="Label" parent="ModifyDimension/Dimensional_Power/Control" unique_id=2088200911]
 layout_mode = 0
 offset_left = 146.0
 offset_top = 636.0
@@ -2245,7 +2239,7 @@ theme_override_colors/font_color = Color(0.635294, 0.635294, 0.635294, 1)
 text = "CBD_SECOND_PATH_CHANGE"
 autowrap_mode = 3
 
-[node name="Label8" type="Label" parent="ModifyDimension/Dimensional_Power/Control"]
+[node name="Label8" type="Label" parent="ModifyDimension/Dimensional_Power/Control" unique_id=1679636818]
 layout_mode = 0
 offset_left = 146.0
 offset_top = 724.0
@@ -2255,7 +2249,7 @@ theme_override_colors/font_color = Color(0.635294, 0.635294, 0.635294, 1)
 text = "Unlock a special area to encounter the final boss (lol of course this area doesn't exist yet (nor the final boss))"
 autowrap_mode = 3
 
-[node name="EffectsHelp" type="TextureRect" parent="ModifyDimension/Dimensional_Power/Control"]
+[node name="EffectsHelp" type="TextureRect" parent="ModifyDimension/Dimensional_Power/Control" unique_id=1587297721]
 layout_mode = 0
 offset_left = 252.0
 offset_top = 20.0
@@ -2265,14 +2259,14 @@ texture = ExtResource("25")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="OPMeter" type="Panel" parent="ModifyDimension"]
+[node name="OPMeter" type="Panel" parent="ModifyDimension" unique_id=279900091]
 visible = false
 layout_mode = 0
 offset_top = 48.0
 offset_right = 416.0
 offset_bottom = 140.0
 
-[node name="OPMeterText" parent="ModifyDimension/OPMeter" instance=ExtResource("12")]
+[node name="OPMeterText" parent="ModifyDimension/OPMeter" unique_id=32795079 instance=ExtResource("12")]
 layout_mode = 0
 anchor_right = 1.0
 offset_top = 10.0
@@ -2283,7 +2277,7 @@ label_text = "THE_OPMETER"
 help_text = "THE_OPMETER_DESC"
 align = 1
 
-[node name="OPMeter" type="TextureProgressBar" parent="ModifyDimension/OPMeter"]
+[node name="OPMeter" type="TextureProgressBar" parent="ModifyDimension/OPMeter" unique_id=245866591]
 modulate = Color(1, 0.4, 0, 1)
 layout_mode = 0
 anchor_top = 0.5
@@ -2304,7 +2298,7 @@ texture_under = ExtResource("21")
 texture_over = ExtResource("22")
 texture_progress = ExtResource("20")
 
-[node name="TooOP" type="Label" parent="ModifyDimension/OPMeter"]
+[node name="TooOP" type="Label" parent="ModifyDimension/OPMeter" unique_id=1678402943]
 layout_mode = 0
 anchor_top = 1.0
 anchor_right = 1.0
@@ -2317,19 +2311,17 @@ text = "TOO_OP"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="ColorRect" type="ColorRect" parent="."]
+[node name="ColorRect" type="ColorRect" parent="." unique_id=464205813]
 visible = false
 layout_mode = 0
 offset_right = 1280.0
 offset_bottom = 720.0
 color = Color(0, 0, 0, 0)
 
-[node name="AnimationPlayer" type="AnimationPlayer" parent="ColorRect"]
-libraries = {
-"": SubResource("AnimationLibrary_dhvf2")
-}
+[node name="AnimationPlayer" type="AnimationPlayer" parent="ColorRect" unique_id=1743003458]
+libraries/ = SubResource("AnimationLibrary_dhvf2")
 
-[node name="Label" type="Label" parent="ColorRect"]
+[node name="Label" type="Label" parent="ColorRect" unique_id=1810971423]
 modulate = Color(1, 1, 1, 0)
 layout_mode = 0
 anchor_top = 0.5

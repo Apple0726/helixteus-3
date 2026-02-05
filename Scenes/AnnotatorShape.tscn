@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://bbgrbjt6243ku"]
 
-[node name="Slot" type="Control"]
+[node name="Slot" type="Control" unique_id=1216970033]
 custom_minimum_size = Vector2(60, 60)
 layout_mode = 3
 anchors_preset = 15
@@ -8,15 +8,17 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 offset_right = -1280.0
 offset_bottom = -720.0
+grow_horizontal = 2
+grow_vertical = 2
 mouse_filter = 1
 
-[node name="Button" type="Button" parent="."]
+[node name="Button" type="Button" parent="." unique_id=1810635041]
 layout_mode = 0
 offset_right = 64.0
 offset_bottom = 64.0
 mouse_filter = 1
 
-[node name="TextureRect" type="TextureRect" parent="."]
+[node name="TextureRect" type="TextureRect" parent="." unique_id=518448070]
 layout_mode = 0
 offset_left = 4.0
 offset_top = 4.0

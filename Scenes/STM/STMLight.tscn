@@ -1,4 +1,4 @@
-[gd_scene load_steps=4 format=3 uid="uid://dwmqt4jtl30pr"]
+[gd_scene format=3 uid="uid://dwmqt4jtl30pr"]
 
 [ext_resource type="Texture2D" uid="uid://4n4mmglc5vmr" path="res://Graphics/Decoratives/light.png" id="1_ncajc"]
 [ext_resource type="Script" uid="uid://d2n18c8b8hxk3" path="res://Scripts/STM/STMLight.gd" id="1_uixcx"]
@@ -6,16 +6,16 @@
 [sub_resource type="CircleShape2D" id="CircleShape2D_84t20"]
 radius = 284.703
 
-[node name="Area2D" type="Area2D"]
+[node name="Area2D" type="Area2D" unique_id=1727593615]
 scale = Vector2(0.01, 0.01)
 collision_layer = 8
 collision_mask = 4
 script = ExtResource("1_uixcx")
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=990693468]
 shape = SubResource("CircleShape2D_84t20")
 
-[node name="Sprite2D" type="Sprite2D" parent="."]
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=1757575778]
 texture = ExtResource("1_ncajc")
 
 [connection signal="area_entered" from="." to="." method="_on_area_entered"]

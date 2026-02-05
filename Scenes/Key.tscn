@@ -1,4 +1,4 @@
-[gd_scene load_steps=2 format=3 uid="uid://cy1jwsk8ofoys"]
+[gd_scene format=3 uid="uid://cy1jwsk8ofoys"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_guigi"]
 bg_color = Color(0, 0, 0, 1)
@@ -10,7 +10,7 @@ expand_margin_right = 5.0
 shadow_size = 1
 shadow_offset = Vector2(1, 1)
 
-[node name="Label" type="Label"]
+[node name="Label" type="Label" unique_id=466886537]
 custom_minimum_size = Vector2(0, 32)
 offset_right = 42.0
 offset_bottom = 32.0

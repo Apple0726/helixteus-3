@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=3 uid="uid://0dmltwoh2b5o"]
+[gd_scene format=3 uid="uid://0dmltwoh2b5o"]
 
 [ext_resource type="Theme" uid="uid://cp2u1kgj60ic" path="res://Resources/default_theme.tres" id="1"]
 [ext_resource type="Script" uid="uid://deyl4saso4s8q" path="res://Scripts/ShipTravelMinigame.gd" id="2"]
@@ -71,13 +71,13 @@ _data = {
 &"RESET": SubResource("Animation_bp777")
 }
 
-[node name="STM" type="Control"]
+[node name="STM" type="Control" unique_id=951408474]
 layout_mode = 3
 anchors_preset = 0
 theme = ExtResource("1")
 script = ExtResource("2")
 
-[node name="Back" type="Button" parent="."]
+[node name="Back" type="Button" parent="." unique_id=1779253040]
 layout_mode = 0
 offset_top = 688.0
 offset_right = 104.0
@@ -85,12 +85,12 @@ offset_bottom = 720.0
 shortcut = SubResource("2")
 shortcut_in_tooltip = false
 
-[node name="Ship" type="Sprite2D" parent="."]
+[node name="Ship" type="Sprite2D" parent="." unique_id=726413462]
 position = Vector2(-872, 364)
 scale = Vector2(0.1, 0.1)
 texture = ExtResource("3")
 
-[node name="Level" type="Label" parent="."]
+[node name="Level" type="Label" parent="." unique_id=113407284]
 layout_mode = 0
 offset_left = 544.0
 offset_top = 12.0
@@ -99,7 +99,7 @@ offset_bottom = 44.0
 text = "Level 1"
 horizontal_alignment = 1
 
-[node name="AccTime" type="Label" parent="."]
+[node name="AccTime" type="Label" parent="." unique_id=1214418912]
 layout_mode = 0
 offset_left = 112.0
 offset_top = 688.0
@@ -108,7 +108,7 @@ offset_bottom = 720.0
 text = "Travel accelerated by "
 vertical_alignment = 1
 
-[node name="Help" type="Label" parent="."]
+[node name="Help" type="Label" parent="." unique_id=245007174]
 modulate = Color(1, 1, 1, 0)
 layout_mode = 0
 offset_left = 192.0
@@ -118,35 +118,33 @@ offset_bottom = 428.0
 horizontal_alignment = 1
 autowrap_mode = 3
 
-[node name="AnimationPlayer" type="AnimationPlayer" parent="Help"]
-libraries = {
-"": SubResource("AnimationLibrary_hb4pr")
-}
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Help" unique_id=900984081]
+libraries/ = SubResource("AnimationLibrary_hb4pr")
 
-[node name="Point" type="Node2D" parent="."]
+[node name="Point" type="Node2D" parent="." unique_id=268565682]
 
-[node name="Point" type="Line2D" parent="Point"]
+[node name="Point" type="Line2D" parent="Point" unique_id=692848745]
 points = PackedVector2Array(0, -12, 0, 12)
 width = 1.0
 default_color = Color(1, 0, 0, 1)
 
-[node name="Point2" type="Line2D" parent="Point"]
+[node name="Point2" type="Line2D" parent="Point" unique_id=677843381]
 points = PackedVector2Array(12, 0, -12, 0)
 width = 1.0
 default_color = Color(1, 0, 0, 1)
 
-[node name="Point3" type="Line2D" parent="Point"]
+[node name="Point3" type="Line2D" parent="Point" unique_id=1939094743]
 position = Vector2(-0.5, 0)
 points = PackedVector2Array(0, 0, 1, 0)
 width = 1.0
 
-[node name="RedFlash" type="Polygon2D" parent="."]
+[node name="RedFlash" type="Polygon2D" parent="." unique_id=274466376]
 modulate = Color(1, 1, 1, 0)
 color = Color(1, 0, 0, 1)
 polygon = PackedVector2Array(0, 0, 1280, 0, 1280, 720, 0, 720)
 metadata/_edit_lock_ = true
 
-[node name="Timer" type="Timer" parent="."]
+[node name="Timer" type="Timer" parent="." unique_id=778463837]
 autostart = true
 
 [connection signal="pressed" from="Back" to="." method="_on_Back_pressed"]

@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=3 uid="uid://byfud1h1esrca"]
+[gd_scene format=3 uid="uid://byfud1h1esrca"]
 
 [ext_resource type="Script" uid="uid://b804ehub2ltoa" path="res://Scripts/GreenhousePanel.gd" id="1"]
 [ext_resource type="Texture2D" uid="uid://dcvnyb0mloli2" path="res://Graphics/GUI/Panel.png" id="3_btujq"]
@@ -19,7 +19,7 @@ shadow_size = 2
 shadow_color = Color(0, 0, 0, 0.372549)
 shadow_offset = Vector2(2, 2)
 
-[node name="GreenhousePanel" type="Control"]
+[node name="GreenhousePanel" type="Control" unique_id=400117700]
 layout_mode = 3
 anchors_preset = 8
 anchor_left = 0.5
@@ -36,7 +36,8 @@ theme = ExtResource("4")
 script = ExtResource("1")
 metadata/_edit_horizontal_guides_ = [360.0]
 
-[node name="GUI" type="NinePatchRect" parent="."]
+[node name="GUI" type="NinePatchRect" parent="." unique_id=1410223798]
+layout_mode = 0
 offset_left = 320.0
 offset_top = 196.0
 offset_right = 960.0
@@ -49,7 +50,8 @@ patch_margin_bottom = 64
 axis_stretch_horizontal = 1
 metadata/_edit_horizontal_guides_ = [596.0]
 
-[node name="CloseButton" type="TextureButton" parent="."]
+[node name="CloseButton" type="TextureButton" parent="." unique_id=988275328]
+layout_mode = 0
 offset_left = 894.0
 offset_top = 212.0
 offset_right = 943.0
@@ -57,7 +59,7 @@ offset_bottom = 261.0
 texture_normal = ExtResource("4_5drab")
 texture_hover = ExtResource("5_trt1m")
 
-[node name="Label" type="Label" parent="."]
+[node name="Label" type="Label" parent="." unique_id=210943312]
 custom_minimum_size = Vector2(0, 38)
 layout_mode = 1
 offset_left = 364.0
@@ -67,19 +69,19 @@ offset_bottom = 258.0
 text = "Select"
 label_settings = SubResource("LabelSettings_oro1x")
 
-[node name="Seeds" type="ScrollContainer" parent="."]
+[node name="Seeds" type="ScrollContainer" parent="." unique_id=1148302687]
 layout_mode = 0
 offset_left = 364.0
 offset_top = 300.0
 offset_right = 916.0
 offset_bottom = 360.0
 
-[node name="HBox" type="HBoxContainer" parent="Seeds"]
+[node name="HBox" type="HBoxContainer" parent="Seeds" unique_id=48086152]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="ProductionPerSec" type="Label" parent="."]
+[node name="ProductionPerSec" type="Label" parent="." unique_id=506550410]
 layout_mode = 0
 offset_left = 380.0
 offset_top = 400.0
@@ -87,14 +89,14 @@ offset_right = 684.0
 offset_bottom = 424.0
 text = "PRODUCTION_PER_SECOND"
 
-[node name="HBoxContainer" type="HBoxContainer" parent="."]
+[node name="HBoxContainer" type="HBoxContainer" parent="." unique_id=1073404708]
 layout_mode = 0
 offset_left = 380.0
 offset_top = 432.0
 offset_right = 752.0
 offset_bottom = 472.0
 
-[node name="UseFertilizer" type="CheckBox" parent="."]
+[node name="UseFertilizer" type="CheckBox" parent="." unique_id=1392379325]
 layout_mode = 0
 offset_left = 720.0
 offset_top = 400.0

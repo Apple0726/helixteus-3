@@ -1,4 +1,4 @@
-[gd_scene load_steps=13 format=3 uid="uid://bx7irdxpbnhbb"]
+[gd_scene format=3 uid="uid://bx7irdxpbnhbb"]
 
 [ext_resource type="PackedScene" uid="uid://c8jr3e5aiyj1n" path="res://Scenes/HelpText.tscn" id="2"]
 [ext_resource type="Script" uid="uid://bsiyhgj1nwvfw" path="res://Scripts/DimensionType.gd" id="3"]
@@ -112,7 +112,7 @@ _data = {
 &"RESET": SubResource("Animation_c4k7c")
 }
 
-[node name="Mathematics" type="Panel"]
+[node name="Mathematics" type="Panel" unique_id=1754588657]
 clip_contents = true
 custom_minimum_size = Vector2(250, 320)
 offset_right = 255.0
@@ -121,19 +121,17 @@ size_flags_horizontal = 3
 mouse_filter = 2
 script = ExtResource("3")
 
-[node name="Selected" type="Panel" parent="."]
+[node name="Selected" type="Panel" parent="." unique_id=1611242916]
 modulate = Color(1, 1, 1, 0)
 layout_mode = 0
 anchor_right = 1.0
 anchor_bottom = 1.0
 theme_override_styles/panel = SubResource("StyleBoxFlat_epxrv")
 
-[node name="AnimationPlayer" type="AnimationPlayer" parent="Selected"]
-libraries = {
-"": SubResource("AnimationLibrary_t74kk")
-}
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Selected" unique_id=1686457991]
+libraries/ = SubResource("AnimationLibrary_t74kk")
 
-[node name="RichTextLabel" parent="." instance=ExtResource("2")]
+[node name="RichTextLabel" parent="." unique_id=1499311694 instance=ExtResource("2")]
 layout_mode = 0
 anchor_right = 1.0
 offset_left = 8.0
@@ -144,7 +142,7 @@ text = "[center] [img]Graphics/Icons/help.png[/img][/center]"
 help_text = "_DESC"
 align = 1
 
-[node name="TextureRect" type="TextureRect" parent="."]
+[node name="TextureRect" type="TextureRect" parent="." unique_id=1269495435]
 custom_minimum_size = Vector2(150, 0)
 layout_mode = 0
 anchor_right = 1.0
@@ -156,7 +154,7 @@ size_flags_vertical = 3
 expand_mode = 1
 stretch_mode = 5
 
-[node name="Upgrade" type="Button" parent="."]
+[node name="Upgrade" type="Button" parent="." unique_id=1866629123]
 layout_mode = 1
 anchors_preset = 12
 anchor_top = 1.0
@@ -171,7 +169,7 @@ grow_vertical = 0
 text = "Upgrade (x DRs)"
 expand_icon = true
 
-[node name="Effects" type="Button" parent="."]
+[node name="Effects" type="Button" parent="." unique_id=771505426]
 layout_mode = 1
 anchors_preset = 12
 anchor_top = 1.0
@@ -185,7 +183,7 @@ grow_horizontal = 2
 grow_vertical = 0
 text = "Effects"
 
-[node name="ColorRect" type="ColorRect" parent="Effects"]
+[node name="ColorRect" type="ColorRect" parent="Effects" unique_id=108664041]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -195,12 +193,10 @@ grow_vertical = 2
 mouse_filter = 2
 color = Color(1, 1, 1, 0)
 
-[node name="AnimationPlayer" type="AnimationPlayer" parent="Effects"]
-libraries = {
-"": SubResource("AnimationLibrary_tnhku")
-}
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Effects" unique_id=1263024747]
+libraries/ = SubResource("AnimationLibrary_tnhku")
 
-[node name="OPMeter" type="TextureProgressBar" parent="."]
+[node name="OPMeter" type="TextureProgressBar" parent="." unique_id=57775677]
 visible = false
 modulate = Color(1, 0.4, 0, 1)
 layout_mode = 0

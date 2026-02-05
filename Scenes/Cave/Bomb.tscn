@@ -1,10 +1,10 @@
-[gd_scene load_steps=3 format=3 uid="uid://krbx64ho3hcr"]
+[gd_scene format=3 uid="uid://krbx64ho3hcr"]
 
 [ext_resource type="Script" uid="uid://s5lcdhmvetsv" path="res://Scripts/Cave/Bomb.gd" id="1"]
 [ext_resource type="Texture2D" uid="uid://cyogaq3sj1anp" path="res://Graphics/Weapons/bomb1.png" id="2"]
 
-[node name="Bomb" type="Node2D"]
+[node name="Bomb" type="Node2D" unique_id=2073409931]
 script = ExtResource("1")
 
-[node name="Sprite2D" type="Sprite2D" parent="."]
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=1205692964]
 texture = ExtResource("2")

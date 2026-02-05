@@ -1,90 +1,90 @@
-[gd_scene load_steps=2 format=3 uid="uid://bgrr0ylbsnodx"]
+[gd_scene format=3 uid="uid://bgrr0ylbsnodx"]
 
 [ext_resource type="Texture2D" uid="uid://cbg7ol8hmg3w0" path="res://Graphics/Misc/bullet.png" id="1_81b8f"]
 
-[node name="WeaponLevels" type="Control"]
+[node name="WeaponLevels" type="Control" unique_id=1318218282]
 layout_mode = 3
 anchors_preset = 0
 offset_right = 40.0
 offset_bottom = 40.0
 
-[node name="Path1" type="HBoxContainer" parent="."]
+[node name="Path1" type="HBoxContainer" parent="." unique_id=1871368408]
 layout_mode = 0
 offset_right = 40.0
 offset_bottom = 12.0
 theme_override_constants/separation = -2
 
-[node name="Level1" type="TextureRect" parent="Path1"]
+[node name="Level1" type="TextureRect" parent="Path1" unique_id=685260532]
 custom_minimum_size = Vector2(12, 0)
 layout_mode = 2
 texture = ExtResource("1_81b8f")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="Level2" type="TextureRect" parent="Path1"]
+[node name="Level2" type="TextureRect" parent="Path1" unique_id=2121881092]
 custom_minimum_size = Vector2(12, 0)
 layout_mode = 2
 texture = ExtResource("1_81b8f")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="Level3" type="TextureRect" parent="Path1"]
+[node name="Level3" type="TextureRect" parent="Path1" unique_id=588771714]
 custom_minimum_size = Vector2(12, 0)
 layout_mode = 2
 texture = ExtResource("1_81b8f")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="Path2" type="HBoxContainer" parent="."]
+[node name="Path2" type="HBoxContainer" parent="." unique_id=903071002]
 layout_mode = 0
 offset_top = 14.0
 offset_right = 40.0
 offset_bottom = 26.0
 theme_override_constants/separation = -2
 
-[node name="Level1" type="TextureRect" parent="Path2"]
+[node name="Level1" type="TextureRect" parent="Path2" unique_id=2082158182]
 custom_minimum_size = Vector2(12, 0)
 layout_mode = 2
 texture = ExtResource("1_81b8f")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="Level2" type="TextureRect" parent="Path2"]
+[node name="Level2" type="TextureRect" parent="Path2" unique_id=1626980100]
 custom_minimum_size = Vector2(12, 0)
 layout_mode = 2
 texture = ExtResource("1_81b8f")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="Level3" type="TextureRect" parent="Path2"]
+[node name="Level3" type="TextureRect" parent="Path2" unique_id=1126473197]
 custom_minimum_size = Vector2(12, 0)
 layout_mode = 2
 texture = ExtResource("1_81b8f")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="Path3" type="HBoxContainer" parent="."]
+[node name="Path3" type="HBoxContainer" parent="." unique_id=769337487]
 layout_mode = 0
 offset_top = 28.0
 offset_right = 40.0
 offset_bottom = 40.0
 theme_override_constants/separation = -2
 
-[node name="Level1" type="TextureRect" parent="Path3"]
+[node name="Level1" type="TextureRect" parent="Path3" unique_id=1214692800]
 custom_minimum_size = Vector2(12, 0)
 layout_mode = 2
 texture = ExtResource("1_81b8f")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="Level2" type="TextureRect" parent="Path3"]
+[node name="Level2" type="TextureRect" parent="Path3" unique_id=2055175373]
 custom_minimum_size = Vector2(12, 0)
 layout_mode = 2
 texture = ExtResource("1_81b8f")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="Level3" type="TextureRect" parent="Path3"]
+[node name="Level3" type="TextureRect" parent="Path3" unique_id=1419681480]
 custom_minimum_size = Vector2(12, 0)
 layout_mode = 2
 texture = ExtResource("1_81b8f")

@@ -1,4 +1,4 @@
-[gd_scene load_steps=47 format=3 uid="uid://cpfr5s4frfko3"]
+[gd_scene format=3 uid="uid://cpfr5s4frfko3"]
 
 [ext_resource type="Theme" uid="uid://cp2u1kgj60ic" path="res://Resources/default_theme.tres" id="1"]
 [ext_resource type="PackedScene" uid="uid://bv51d6mfcjqfn" path="res://Scenes/RESlot.tscn" id="3"]
@@ -89,7 +89,7 @@ border_width_bottom = 2
 border_color = Color(0.313726, 0.313726, 0.313726, 1)
 border_blend = true
 
-[node name="Control" type="Control"]
+[node name="Control" type="Control" unique_id=624473099]
 layout_mode = 3
 anchors_preset = 0
 offset_right = 64.0
@@ -98,7 +98,8 @@ theme = ExtResource("1")
 script = ExtResource("31")
 metadata/_edit_horizontal_guides_ = [360.0]
 
-[node name="GUI" type="NinePatchRect" parent="."]
+[node name="GUI" type="NinePatchRect" parent="." unique_id=1547654624]
+layout_mode = 0
 offset_left = 320.0
 offset_top = 160.0
 offset_right = 960.0
@@ -111,7 +112,7 @@ patch_margin_bottom = 64
 axis_stretch_horizontal = 1
 metadata/_edit_horizontal_guides_ = [596.0]
 
-[node name="BlackBG" type="ColorRect" parent="."]
+[node name="BlackBG" type="ColorRect" parent="." unique_id=2135642607]
 show_behind_parent = true
 layout_mode = 1
 anchors_preset = 8
@@ -127,7 +128,8 @@ grow_horizontal = 2
 grow_vertical = 2
 color = Color(0, 0, 0, 0.564706)
 
-[node name="CloseButton" type="TextureButton" parent="."]
+[node name="CloseButton" type="TextureButton" parent="." unique_id=1794613100]
+layout_mode = 0
 offset_left = 894.0
 offset_top = 176.0
 offset_right = 943.0
@@ -135,7 +137,7 @@ offset_bottom = 225.0
 texture_normal = ExtResource("4_fuhnu")
 texture_hover = ExtResource("5_rhkcu")
 
-[node name="Label" type="Label" parent="."]
+[node name="Label" type="Label" parent="." unique_id=708577037]
 custom_minimum_size = Vector2(0, 38)
 layout_mode = 1
 offset_left = 368.0
@@ -145,7 +147,7 @@ offset_bottom = 224.0
 label_settings = SubResource("LabelSettings_fuhnu")
 vertical_alignment = 1
 
-[node name="Armor" type="ScrollContainer" parent="."]
+[node name="Armor" type="ScrollContainer" parent="." unique_id=1654444828]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -160,11 +162,11 @@ grow_horizontal = 2
 grow_vertical = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_mcplm")
 
-[node name="Control" type="Control" parent="Armor"]
+[node name="Control" type="Control" parent="Armor" unique_id=528195786]
 custom_minimum_size = Vector2(450, 370)
 layout_mode = 2
 
-[node name="armor_0" parent="Armor/Control" instance=ExtResource("3")]
+[node name="armor_0" parent="Armor/Control" unique_id=509611168 instance=ExtResource("3")]
 layout_mode = 0
 offset_left = 22.0
 offset_top = 10.0
@@ -172,7 +174,7 @@ offset_right = 82.0
 offset_bottom = 70.0
 texture = ExtResource("4")
 
-[node name="armor_1" parent="Armor/Control" instance=ExtResource("3")]
+[node name="armor_1" parent="Armor/Control" unique_id=903193875 instance=ExtResource("3")]
 layout_mode = 0
 offset_left = 134.0
 offset_top = 10.0
@@ -180,7 +182,7 @@ offset_right = 194.0
 offset_bottom = 70.0
 texture = ExtResource("7")
 
-[node name="armor_2" parent="Armor/Control" instance=ExtResource("3")]
+[node name="armor_2" parent="Armor/Control" unique_id=1957900720 instance=ExtResource("3")]
 layout_mode = 0
 offset_left = 246.0
 offset_top = 10.0
@@ -188,7 +190,7 @@ offset_right = 306.0
 offset_bottom = 70.0
 texture = ExtResource("6")
 
-[node name="armor_3" parent="Armor/Control" instance=ExtResource("3")]
+[node name="armor_3" parent="Armor/Control" unique_id=1262446767 instance=ExtResource("3")]
 layout_mode = 0
 offset_left = 358.0
 offset_top = 10.0
@@ -196,7 +198,7 @@ offset_right = 418.0
 offset_bottom = 70.0
 texture = ExtResource("5")
 
-[node name="armor_4" parent="Armor/Control" instance=ExtResource("3")]
+[node name="armor_4" parent="Armor/Control" unique_id=978781766 instance=ExtResource("3")]
 layout_mode = 0
 offset_left = 22.0
 offset_top = 150.0
@@ -204,7 +206,7 @@ offset_right = 82.0
 offset_bottom = 210.0
 texture = ExtResource("9")
 
-[node name="armor_5" parent="Armor/Control" instance=ExtResource("3")]
+[node name="armor_5" parent="Armor/Control" unique_id=1097492320 instance=ExtResource("3")]
 layout_mode = 0
 offset_left = 134.0
 offset_top = 106.0
@@ -212,7 +214,7 @@ offset_right = 194.0
 offset_bottom = 166.0
 texture = ExtResource("10")
 
-[node name="armor_6" parent="Armor/Control" instance=ExtResource("3")]
+[node name="armor_6" parent="Armor/Control" unique_id=1540129486 instance=ExtResource("3")]
 layout_mode = 0
 offset_left = 246.0
 offset_top = 106.0
@@ -220,7 +222,7 @@ offset_right = 306.0
 offset_bottom = 166.0
 texture = ExtResource("8")
 
-[node name="armor_7" parent="Armor/Control" instance=ExtResource("3")]
+[node name="armor_7" parent="Armor/Control" unique_id=372822341 instance=ExtResource("3")]
 layout_mode = 0
 offset_left = 134.0
 offset_top = 202.0
@@ -228,7 +230,7 @@ offset_right = 194.0
 offset_bottom = 262.0
 texture = ExtResource("11")
 
-[node name="armor_8" parent="Armor/Control" instance=ExtResource("3")]
+[node name="armor_8" parent="Armor/Control" unique_id=8922977 instance=ExtResource("3")]
 layout_mode = 0
 offset_left = 246.0
 offset_top = 202.0
@@ -236,25 +238,25 @@ offset_right = 306.0
 offset_bottom = 262.0
 texture = ExtResource("12")
 
-[node name="L_armor_0" type="Line2D" parent="Armor/Control"]
+[node name="L_armor_0" type="Line2D" parent="Armor/Control" unique_id=1666126573]
 position = Vector2(6, -14)
 points = PackedVector2Array(84, 56, 120, 56)
 width = 2.0
 default_color = Color(0.4, 0.886275, 1, 1)
 
-[node name="L_armor_1" type="Line2D" parent="Armor/Control"]
+[node name="L_armor_1" type="Line2D" parent="Armor/Control" unique_id=94867578]
 position = Vector2(118, -14)
 points = PackedVector2Array(84, 56, 120, 56)
 width = 2.0
 default_color = Color(0.4, 0.886275, 1, 1)
 
-[node name="L_armor_2" type="Line2D" parent="Armor/Control"]
+[node name="L_armor_2" type="Line2D" parent="Armor/Control" unique_id=915525208]
 position = Vector2(230, -14)
 points = PackedVector2Array(84, 56, 120, 56)
 width = 2.0
 default_color = Color(0.4, 0.886275, 1, 1)
 
-[node name="armor_9" parent="Armor/Control" instance=ExtResource("3")]
+[node name="armor_9" parent="Armor/Control" unique_id=1467769438 instance=ExtResource("3")]
 layout_mode = 0
 offset_left = 22.0
 offset_top = 294.0
@@ -262,7 +264,7 @@ offset_right = 82.0
 offset_bottom = 354.0
 texture = ExtResource("32")
 
-[node name="armor_10" parent="Armor/Control" instance=ExtResource("3")]
+[node name="armor_10" parent="Armor/Control" unique_id=1594805837 instance=ExtResource("3")]
 layout_mode = 0
 offset_left = 134.0
 offset_top = 294.0
@@ -270,7 +272,7 @@ offset_right = 194.0
 offset_bottom = 354.0
 texture = ExtResource("34")
 
-[node name="armor_11" parent="Armor/Control" instance=ExtResource("3")]
+[node name="armor_11" parent="Armor/Control" unique_id=1896155762 instance=ExtResource("3")]
 layout_mode = 0
 offset_left = 246.0
 offset_top = 294.0
@@ -278,7 +280,7 @@ offset_right = 306.0
 offset_bottom = 354.0
 texture = ExtResource("33")
 
-[node name="armor_12" parent="Armor/Control" instance=ExtResource("3")]
+[node name="armor_12" parent="Armor/Control" unique_id=774622320 instance=ExtResource("3")]
 layout_mode = 0
 offset_left = 358.0
 offset_top = 294.0
@@ -286,51 +288,51 @@ offset_right = 418.0
 offset_bottom = 354.0
 texture = ExtResource("35")
 
-[node name="L_armor_9" type="Line2D" parent="Armor/Control"]
+[node name="L_armor_9" type="Line2D" parent="Armor/Control" unique_id=1405126285]
 position = Vector2(6, 270)
 points = PackedVector2Array(84, 56, 120, 56)
 width = 2.0
 default_color = Color(0.4, 0.886275, 1, 1)
 
-[node name="L_armor_10" type="Line2D" parent="Armor/Control"]
+[node name="L_armor_10" type="Line2D" parent="Armor/Control" unique_id=506984261]
 position = Vector2(118, 270)
 points = PackedVector2Array(84, 56, 120, 56)
 width = 2.0
 default_color = Color(0.4, 0.886275, 1, 1)
 
-[node name="L_armor_11" type="Line2D" parent="Armor/Control"]
+[node name="L_armor_11" type="Line2D" parent="Armor/Control" unique_id=1133288334]
 position = Vector2(230, 270)
 points = PackedVector2Array(84, 56, 120, 56)
 width = 2.0
 default_color = Color(0.4, 0.886275, 1, 1)
 
-[node name="L_armor_4" type="Node2D" parent="Armor/Control"]
+[node name="L_armor_4" type="Node2D" parent="Armor/Control" unique_id=312739295]
 
-[node name="Line2D4" type="Line2D" parent="Armor/Control/L_armor_4"]
+[node name="Line2D4" type="Line2D" parent="Armor/Control/L_armor_4" unique_id=2075152391]
 position = Vector2(6, 146)
 points = PackedVector2Array(84, 36, 120, -8)
 width = 2.0
 default_color = Color(0.4, 0.886275, 1, 1)
 
-[node name="Line2D5" type="Line2D" parent="Armor/Control/L_armor_4"]
+[node name="Line2D5" type="Line2D" parent="Armor/Control/L_armor_4" unique_id=1327696504]
 position = Vector2(6, 126)
 points = PackedVector2Array(84, 56, 120, 108)
 width = 2.0
 default_color = Color(0.4, 0.886275, 1, 1)
 
-[node name="L_armor_5" type="Line2D" parent="Armor/Control"]
+[node name="L_armor_5" type="Line2D" parent="Armor/Control" unique_id=729251497]
 position = Vector2(118, 82)
 points = PackedVector2Array(84, 56, 120, 56)
 width = 2.0
 default_color = Color(0.4, 0.886275, 1, 1)
 
-[node name="L_armor_7" type="Line2D" parent="Armor/Control"]
+[node name="L_armor_7" type="Line2D" parent="Armor/Control" unique_id=1157080391]
 position = Vector2(118, 178)
 points = PackedVector2Array(84, 56, 120, 56)
 width = 2.0
 default_color = Color(0.4, 0.886275, 1, 1)
 
-[node name="Wheels" type="ScrollContainer" parent="."]
+[node name="Wheels" type="ScrollContainer" parent="." unique_id=1882181316]
 visible = false
 layout_mode = 1
 anchors_preset = 8
@@ -346,11 +348,11 @@ grow_horizontal = 2
 grow_vertical = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_8qmu0")
 
-[node name="Control" type="Control" parent="Wheels"]
+[node name="Control" type="Control" parent="Wheels" unique_id=724999450]
 custom_minimum_size = Vector2(450, 450)
 layout_mode = 2
 
-[node name="wheels_0" parent="Wheels/Control" instance=ExtResource("3")]
+[node name="wheels_0" parent="Wheels/Control" unique_id=1822646914 instance=ExtResource("3")]
 layout_mode = 0
 offset_left = 22.0
 offset_top = 70.0
@@ -358,7 +360,7 @@ offset_right = 82.0
 offset_bottom = 130.0
 texture = ExtResource("17")
 
-[node name="wheels_1" parent="Wheels/Control" instance=ExtResource("3")]
+[node name="wheels_1" parent="Wheels/Control" unique_id=548305207 instance=ExtResource("3")]
 layout_mode = 0
 offset_left = 134.0
 offset_top = 10.0
@@ -366,7 +368,7 @@ offset_right = 194.0
 offset_bottom = 70.0
 texture = ExtResource("14")
 
-[node name="wheels_2" parent="Wheels/Control" instance=ExtResource("3")]
+[node name="wheels_2" parent="Wheels/Control" unique_id=1527242044 instance=ExtResource("3")]
 layout_mode = 0
 offset_left = 246.0
 offset_top = 10.0
@@ -374,7 +376,7 @@ offset_right = 306.0
 offset_bottom = 70.0
 texture = ExtResource("13")
 
-[node name="wheels_3" parent="Wheels/Control" instance=ExtResource("3")]
+[node name="wheels_3" parent="Wheels/Control" unique_id=893892099 instance=ExtResource("3")]
 layout_mode = 0
 offset_left = 134.0
 offset_top = 134.0
@@ -382,7 +384,7 @@ offset_right = 194.0
 offset_bottom = 194.0
 texture = ExtResource("15")
 
-[node name="wheels_4" parent="Wheels/Control" instance=ExtResource("3")]
+[node name="wheels_4" parent="Wheels/Control" unique_id=658417901 instance=ExtResource("3")]
 layout_mode = 0
 offset_left = 246.0
 offset_top = 134.0
@@ -390,7 +392,7 @@ offset_right = 306.0
 offset_bottom = 194.0
 texture = ExtResource("16")
 
-[node name="wheels_5" parent="Wheels/Control" instance=ExtResource("3")]
+[node name="wheels_5" parent="Wheels/Control" unique_id=1294096320 instance=ExtResource("3")]
 layout_mode = 0
 offset_left = 358.0
 offset_top = 134.0
@@ -398,7 +400,7 @@ offset_right = 418.0
 offset_bottom = 194.0
 texture = ExtResource("18")
 
-[node name="wheels_6" parent="Wheels/Control" instance=ExtResource("3")]
+[node name="wheels_6" parent="Wheels/Control" unique_id=1498629399 instance=ExtResource("3")]
 layout_mode = 0
 offset_left = 22.0
 offset_top = 246.0
@@ -406,7 +408,7 @@ offset_right = 82.0
 offset_bottom = 306.0
 texture = ExtResource("37")
 
-[node name="wheels_7" parent="Wheels/Control" instance=ExtResource("3")]
+[node name="wheels_7" parent="Wheels/Control" unique_id=1427090393 instance=ExtResource("3")]
 layout_mode = 0
 offset_left = 134.0
 offset_top = 246.0
@@ -414,7 +416,7 @@ offset_right = 194.0
 offset_bottom = 306.0
 texture = ExtResource("36")
 
-[node name="wheels_8" parent="Wheels/Control" instance=ExtResource("3")]
+[node name="wheels_8" parent="Wheels/Control" unique_id=817740284 instance=ExtResource("3")]
 layout_mode = 0
 offset_left = 22.0
 offset_top = 358.0
@@ -422,45 +424,45 @@ offset_right = 82.0
 offset_bottom = 418.0
 texture = ExtResource("38")
 
-[node name="L_wheels_0" type="Node2D" parent="Wheels/Control"]
+[node name="L_wheels_0" type="Node2D" parent="Wheels/Control" unique_id=1493425743]
 
-[node name="Line2D3" type="Line2D" parent="Wheels/Control/L_wheels_0"]
+[node name="Line2D3" type="Line2D" parent="Wheels/Control/L_wheels_0" unique_id=116855184]
 position = Vector2(10, 46)
 points = PackedVector2Array(80, 56, 116, -8)
 width = 2.0
 default_color = Color(0.4, 0.886275, 1, 1)
 
-[node name="Line2D5" type="Line2D" parent="Wheels/Control/L_wheels_0"]
+[node name="Line2D5" type="Line2D" parent="Wheels/Control/L_wheels_0" unique_id=1125278394]
 position = Vector2(10, 46)
 points = PackedVector2Array(80, 56, 116, 120)
 width = 2.0
 default_color = Color(0.4, 0.886275, 1, 1)
 
-[node name="L_wheels_1" type="Line2D" parent="Wheels/Control"]
+[node name="L_wheels_1" type="Line2D" parent="Wheels/Control" unique_id=1256485075]
 position = Vector2(10, 46)
 points = PackedVector2Array(192, -8, 228, -8)
 width = 2.0
 default_color = Color(0.4, 0.886275, 1, 1)
 
-[node name="L_wheels_3" type="Line2D" parent="Wheels/Control"]
+[node name="L_wheels_3" type="Line2D" parent="Wheels/Control" unique_id=419525064]
 position = Vector2(10, 174)
 points = PackedVector2Array(192, -8, 228, -8)
 width = 2.0
 default_color = Color(0.4, 0.886275, 1, 1)
 
-[node name="L_wheels_6" type="Line2D" parent="Wheels/Control"]
+[node name="L_wheels_6" type="Line2D" parent="Wheels/Control" unique_id=1227616894]
 position = Vector2(-102, 286)
 points = PackedVector2Array(192, -8, 228, -8)
 width = 2.0
 default_color = Color(0.4, 0.886275, 1, 1)
 
-[node name="L_wheels_4" type="Line2D" parent="Wheels/Control"]
+[node name="L_wheels_4" type="Line2D" parent="Wheels/Control" unique_id=731355732]
 position = Vector2(122, 174)
 points = PackedVector2Array(192, -8, 228, -8)
 width = 2.0
 default_color = Color(0.4, 0.886275, 1, 1)
 
-[node name="CC" type="ScrollContainer" parent="."]
+[node name="CC" type="ScrollContainer" parent="." unique_id=1435568797]
 visible = false
 layout_mode = 1
 anchors_preset = 8
@@ -476,11 +478,11 @@ grow_horizontal = 2
 grow_vertical = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_xkl76")
 
-[node name="Control" type="Control" parent="CC"]
+[node name="Control" type="Control" parent="CC" unique_id=2090698183]
 custom_minimum_size = Vector2(450, 200)
 layout_mode = 2
 
-[node name="CC_0" parent="CC/Control" instance=ExtResource("3")]
+[node name="CC_0" parent="CC/Control" unique_id=1613960851 instance=ExtResource("3")]
 layout_mode = 0
 offset_left = 22.0
 offset_top = 70.0
@@ -488,7 +490,7 @@ offset_right = 82.0
 offset_bottom = 130.0
 texture = ExtResource("20")
 
-[node name="CC_1" parent="CC/Control" instance=ExtResource("3")]
+[node name="CC_1" parent="CC/Control" unique_id=519917016 instance=ExtResource("3")]
 layout_mode = 0
 offset_left = 134.0
 offset_top = 70.0
@@ -496,7 +498,7 @@ offset_right = 194.0
 offset_bottom = 130.0
 texture = ExtResource("21")
 
-[node name="CC_2" parent="CC/Control" instance=ExtResource("3")]
+[node name="CC_2" parent="CC/Control" unique_id=1448563805 instance=ExtResource("3")]
 layout_mode = 0
 offset_left = 246.0
 offset_top = 70.0
@@ -504,19 +506,19 @@ offset_right = 306.0
 offset_bottom = 130.0
 texture = ExtResource("19")
 
-[node name="L_CC_0" type="Line2D" parent="CC/Control"]
+[node name="L_CC_0" type="Line2D" parent="CC/Control" unique_id=2033322532]
 position = Vector2(-102, 110)
 points = PackedVector2Array(192, -8, 228, -8)
 width = 2.0
 default_color = Color(0.4, 0.886275, 1, 1)
 
-[node name="L_CC_1" type="Line2D" parent="CC/Control"]
+[node name="L_CC_1" type="Line2D" parent="CC/Control" unique_id=247377271]
 position = Vector2(10, 110)
 points = PackedVector2Array(192, -8, 228, -8)
 width = 2.0
 default_color = Color(0.4, 0.886275, 1, 1)
 
-[node name="Laser" type="ScrollContainer" parent="."]
+[node name="Laser" type="ScrollContainer" parent="." unique_id=190608899]
 visible = false
 layout_mode = 1
 anchors_preset = 8
@@ -532,11 +534,11 @@ grow_horizontal = 2
 grow_vertical = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_nu83c")
 
-[node name="Control" type="Control" parent="Laser"]
+[node name="Control" type="Control" parent="Laser" unique_id=775464740]
 custom_minimum_size = Vector2(450, 300)
 layout_mode = 2
 
-[node name="laser_0" parent="Laser/Control" instance=ExtResource("3")]
+[node name="laser_0" parent="Laser/Control" unique_id=829819963 instance=ExtResource("3")]
 layout_mode = 0
 offset_left = 22.0
 offset_top = 22.0
@@ -544,7 +546,7 @@ offset_right = 82.0
 offset_bottom = 82.0
 texture = ExtResource("23")
 
-[node name="laser_1" parent="Laser/Control" instance=ExtResource("3")]
+[node name="laser_1" parent="Laser/Control" unique_id=545018766 instance=ExtResource("3")]
 layout_mode = 0
 offset_left = 138.0
 offset_top = 22.0
@@ -552,7 +554,7 @@ offset_right = 198.0
 offset_bottom = 82.0
 texture = ExtResource("24")
 
-[node name="laser_2" parent="Laser/Control" instance=ExtResource("3")]
+[node name="laser_2" parent="Laser/Control" unique_id=633667183 instance=ExtResource("3")]
 layout_mode = 0
 offset_left = 250.0
 offset_top = 22.0
@@ -560,19 +562,19 @@ offset_right = 310.0
 offset_bottom = 82.0
 texture = ExtResource("22")
 
-[node name="L_laser_0" type="Line2D" parent="Laser/Control"]
+[node name="L_laser_0" type="Line2D" parent="Laser/Control" unique_id=270018230]
 position = Vector2(-98, 62)
 points = PackedVector2Array(192, -8, 228, -8)
 width = 2.0
 default_color = Color(0.4, 0.886275, 1, 1)
 
-[node name="L_laser_1" type="Line2D" parent="Laser/Control"]
+[node name="L_laser_1" type="Line2D" parent="Laser/Control" unique_id=826745046]
 position = Vector2(14, 62)
 points = PackedVector2Array(192, -8, 228, -8)
 width = 2.0
 default_color = Color(0.4, 0.886275, 1, 1)
 
-[node name="laser_3" parent="Laser/Control" instance=ExtResource("3")]
+[node name="laser_3" parent="Laser/Control" unique_id=1098848559 instance=ExtResource("3")]
 layout_mode = 0
 offset_left = 22.0
 offset_top = 118.0
@@ -580,7 +582,7 @@ offset_right = 82.0
 offset_bottom = 178.0
 texture = ExtResource("25")
 
-[node name="laser_4" parent="Laser/Control" instance=ExtResource("3")]
+[node name="laser_4" parent="Laser/Control" unique_id=1445182865 instance=ExtResource("3")]
 layout_mode = 0
 offset_left = 138.0
 offset_top = 118.0
@@ -588,7 +590,7 @@ offset_right = 198.0
 offset_bottom = 178.0
 texture = ExtResource("26")
 
-[node name="laser_5" parent="Laser/Control" instance=ExtResource("3")]
+[node name="laser_5" parent="Laser/Control" unique_id=161684575 instance=ExtResource("3")]
 layout_mode = 0
 offset_left = 250.0
 offset_top = 118.0
@@ -596,19 +598,19 @@ offset_right = 310.0
 offset_bottom = 178.0
 texture = ExtResource("27")
 
-[node name="L_laser_3" type="Line2D" parent="Laser/Control"]
+[node name="L_laser_3" type="Line2D" parent="Laser/Control" unique_id=482954593]
 position = Vector2(-98, 158)
 points = PackedVector2Array(192, -8, 228, -8)
 width = 2.0
 default_color = Color(0.4, 0.886275, 1, 1)
 
-[node name="L_laser_4" type="Line2D" parent="Laser/Control"]
+[node name="L_laser_4" type="Line2D" parent="Laser/Control" unique_id=1544123142]
 position = Vector2(14, 158)
 points = PackedVector2Array(192, -8, 228, -8)
 width = 2.0
 default_color = Color(0.4, 0.886275, 1, 1)
 
-[node name="laser_6" parent="Laser/Control" instance=ExtResource("3")]
+[node name="laser_6" parent="Laser/Control" unique_id=1763706410 instance=ExtResource("3")]
 layout_mode = 0
 offset_left = 22.0
 offset_top = 214.0
@@ -616,7 +618,7 @@ offset_right = 82.0
 offset_bottom = 274.0
 texture = ExtResource("30")
 
-[node name="laser_7" parent="Laser/Control" instance=ExtResource("3")]
+[node name="laser_7" parent="Laser/Control" unique_id=639716885 instance=ExtResource("3")]
 layout_mode = 0
 offset_left = 138.0
 offset_top = 214.0
@@ -624,7 +626,7 @@ offset_right = 198.0
 offset_bottom = 274.0
 texture = ExtResource("29")
 
-[node name="laser_8" parent="Laser/Control" instance=ExtResource("3")]
+[node name="laser_8" parent="Laser/Control" unique_id=1370588580 instance=ExtResource("3")]
 layout_mode = 0
 offset_left = 250.0
 offset_top = 214.0
@@ -632,13 +634,13 @@ offset_right = 310.0
 offset_bottom = 274.0
 texture = ExtResource("28")
 
-[node name="L_laser_6" type="Line2D" parent="Laser/Control"]
+[node name="L_laser_6" type="Line2D" parent="Laser/Control" unique_id=888068764]
 position = Vector2(-98, 254)
 points = PackedVector2Array(192, -8, 228, -8)
 width = 2.0
 default_color = Color(0.4, 0.886275, 1, 1)
 
-[node name="L_laser_7" type="Line2D" parent="Laser/Control"]
+[node name="L_laser_7" type="Line2D" parent="Laser/Control" unique_id=2117616282]
 position = Vector2(14, 254)
 points = PackedVector2Array(192, -8, 228, -8)
 width = 2.0

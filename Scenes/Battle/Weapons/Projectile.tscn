@@ -1,4 +1,4 @@
-[gd_scene load_steps=4 format=3 uid="uid://dh7jnes2ghc7n"]
+[gd_scene format=3 uid="uid://dh7jnes2ghc7n"]
 
 [ext_resource type="Texture2D" uid="uid://xhuhh01nnaq3" path="res://Graphics/Battle/Projectiles/bullet.png" id="1_8sfff"]
 
@@ -10,21 +10,21 @@ _data = [Vector2(0, 0), 0.0, 0.0, 0, 0, Vector2(1, 1), 0.0, 0.0, 0, 0]
 point_count = 2
 metadata/_snap_enabled = true
 
-[node name="Projectile" type="Area2D"]
+[node name="Projectile" type="Area2D" unique_id=1606870808]
 collision_layer = 0
 collision_mask = 0
 monitorable = false
 
-[node name="Sprite2D" type="Sprite2D" parent="."]
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=1746614426]
 scale = Vector2(0.25, 0.25)
 texture = ExtResource("1_8sfff")
 flip_h = true
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=814811299]
 rotation = 1.5708
 shape = SubResource("CircleShape2D_6h4qi")
 
-[node name="Trail" type="Line2D" parent="."]
+[node name="Trail" type="Line2D" parent="." unique_id=1301356462]
 visible = false
 points = PackedVector2Array(-32, 0, 0, 0)
 width = 3.0

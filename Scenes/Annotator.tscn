@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=3 uid="uid://bl0hvwwc14dyi"]
+[gd_scene format=3 uid="uid://bl0hvwwc14dyi"]
 
 [ext_resource type="Theme" uid="uid://cp2u1kgj60ic" path="res://Resources/default_theme.tres" id="1"]
 [ext_resource type="PackedScene" uid="uid://bbgrbjt6243ku" path="res://Scenes/AnnotatorShape.tscn" id="2"]
@@ -8,7 +8,7 @@
 
 [sub_resource type="Shortcut" id="2"]
 
-[node name="Annotator" type="Panel"]
+[node name="Annotator" type="Panel" unique_id=996948246]
 anchors_preset = 7
 anchor_left = 0.5
 anchor_top = 1.0
@@ -20,7 +20,7 @@ offset_right = 384.0
 theme = ExtResource("1")
 script = ExtResource("3")
 
-[node name="HBoxContainer" type="HBoxContainer" parent="."]
+[node name="HBoxContainer" type="HBoxContainer" parent="." unique_id=460479459]
 layout_mode = 0
 offset_left = 48.0
 offset_top = 16.0
@@ -28,22 +28,22 @@ offset_right = 720.0
 offset_bottom = 76.0
 scale = Vector2(0.5, 0.5)
 
-[node name="Line" parent="HBoxContainer" instance=ExtResource("2")]
+[node name="Line" parent="HBoxContainer" unique_id=1762858086 instance=ExtResource("2")]
 layout_mode = 2
 
-[node name="Rectangle" parent="HBoxContainer" instance=ExtResource("2")]
+[node name="Rectangle" parent="HBoxContainer" unique_id=534599453 instance=ExtResource("2")]
 layout_mode = 2
 
-[node name="Circle" parent="HBoxContainer" instance=ExtResource("2")]
+[node name="Circle" parent="HBoxContainer" unique_id=1456922216 instance=ExtResource("2")]
 layout_mode = 2
 
-[node name="Icons" parent="HBoxContainer" instance=ExtResource("2")]
+[node name="Icons" parent="HBoxContainer" unique_id=1343556541 instance=ExtResource("2")]
 layout_mode = 2
 
-[node name="Eraser" parent="HBoxContainer" instance=ExtResource("2")]
+[node name="Eraser" parent="HBoxContainer" unique_id=2087525934 instance=ExtResource("2")]
 layout_mode = 2
 
-[node name="VBoxContainer" type="VBoxContainer" parent="."]
+[node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=648494538]
 visible = false
 layout_mode = 0
 offset_left = 141.311
@@ -54,47 +54,47 @@ grow_vertical = 0
 scale = Vector2(0.5, 0.5)
 alignment = 2
 
-[node name="Greenhouse" parent="VBoxContainer" instance=ExtResource("2")]
+[node name="Greenhouse" parent="VBoxContainer" unique_id=1156779601 instance=ExtResource("2")]
 layout_mode = 2
 
-[node name="Mining" parent="VBoxContainer" instance=ExtResource("2")]
+[node name="Mining" parent="VBoxContainer" unique_id=630494413 instance=ExtResource("2")]
 layout_mode = 2
 
-[node name="Cave" parent="VBoxContainer" instance=ExtResource("2")]
+[node name="Cave" parent="VBoxContainer" unique_id=1785236405 instance=ExtResource("2")]
 layout_mode = 2
 
-[node name="SP" parent="VBoxContainer" instance=ExtResource("2")]
+[node name="SP" parent="VBoxContainer" unique_id=1075851348 instance=ExtResource("2")]
 layout_mode = 2
 
-[node name="Energy" parent="VBoxContainer" instance=ExtResource("2")]
+[node name="Energy" parent="VBoxContainer" unique_id=995470078 instance=ExtResource("2")]
 layout_mode = 2
 
-[node name="Stone" parent="VBoxContainer" instance=ExtResource("2")]
+[node name="Stone" parent="VBoxContainer" unique_id=670360686 instance=ExtResource("2")]
 layout_mode = 2
 
-[node name="Minerals" parent="VBoxContainer" instance=ExtResource("2")]
+[node name="Minerals" parent="VBoxContainer" unique_id=425325907 instance=ExtResource("2")]
 layout_mode = 2
 
-[node name="Money" parent="VBoxContainer" instance=ExtResource("2")]
+[node name="Money" parent="VBoxContainer" unique_id=638612911 instance=ExtResource("2")]
 layout_mode = 2
 
-[node name="Arrow" parent="VBoxContainer" instance=ExtResource("2")]
+[node name="Arrow" parent="VBoxContainer" unique_id=1748339084 instance=ExtResource("2")]
 layout_mode = 2
 
-[node name="Cross" parent="VBoxContainer" instance=ExtResource("2")]
+[node name="Cross" parent="VBoxContainer" unique_id=156293372 instance=ExtResource("2")]
 layout_mode = 2
 
-[node name="Check" parent="VBoxContainer" instance=ExtResource("2")]
+[node name="Check" parent="VBoxContainer" unique_id=1770083171 instance=ExtResource("2")]
 layout_mode = 2
 
-[node name="CloseButton" parent="." instance=ExtResource("4")]
+[node name="CloseButton" parent="." unique_id=840424003 instance=ExtResource("4")]
 layout_mode = 1
 offset_left = -32.0
 offset_top = 8.0
 offset_right = -8.0
 offset_bottom = 32.0
 
-[node name="Panel" type="Panel" parent="."]
+[node name="Panel" type="Panel" parent="." unique_id=1605007950]
 layout_mode = 0
 offset_left = 520.0
 offset_top = 16.0
@@ -102,7 +102,7 @@ offset_right = 552.0
 offset_bottom = 48.0
 mouse_filter = 2
 
-[node name="ColorPickerBtn" type="TextureButton" parent="."]
+[node name="ColorPickerBtn" type="TextureButton" parent="." unique_id=382662812]
 layout_mode = 0
 offset_left = 524.0
 offset_top = 20.0
@@ -114,7 +114,7 @@ texture_normal = ExtResource("5")
 ignore_texture_size = true
 stretch_mode = 5
 
-[node name="ColorPicker" type="PanelContainer" parent="."]
+[node name="ColorPicker" type="PanelContainer" parent="." unique_id=1003655043]
 visible = false
 layout_mode = 1
 anchors_preset = -1
@@ -125,10 +125,10 @@ offset_top = -552.0
 offset_right = 231.936
 offset_bottom = -2.0
 
-[node name="ColorPicker" type="ColorPicker" parent="ColorPicker"]
+[node name="ColorPicker" type="ColorPicker" parent="ColorPicker" unique_id=1384074977]
 layout_mode = 2
 
-[node name="Thickness" type="HSlider" parent="."]
+[node name="Thickness" type="HSlider" parent="." unique_id=1067015253]
 layout_mode = 0
 offset_left = 240.0
 offset_top = 24.0
@@ -139,7 +139,7 @@ max_value = 500.0
 value = 10.0
 rounded = true
 
-[node name="ThicknessLabel" type="Label" parent="."]
+[node name="ThicknessLabel" type="Label" parent="." unique_id=734463104]
 visible = false
 layout_mode = 0
 offset_left = 488.0
@@ -148,15 +148,15 @@ offset_right = 548.0
 offset_bottom = 44.0
 text = "10"
 
-[node name="Polygon2D" type="Polygon2D" parent="."]
+[node name="Polygon2D" type="Polygon2D" parent="." unique_id=231031326]
 visible = false
 polygon = PackedVector2Array(0, 0, 768, 0, 768, 64, 0, 64)
 
-[node name="Polygon2D2" type="Polygon2D" parent="."]
+[node name="Polygon2D2" type="Polygon2D" parent="." unique_id=2096946359]
 visible = false
 polygon = PackedVector2Array(140, -324, 172, -324, 172, 16, 140, 16)
 
-[node name="Polygon2D3" type="Polygon2D" parent="."]
+[node name="Polygon2D3" type="Polygon2D" parent="." unique_id=413606225]
 visible = false
 polygon = PackedVector2Array(404, -484, 768, -484, 768, 0, 404, 0)
 

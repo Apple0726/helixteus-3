@@ -1,4 +1,4 @@
-[gd_scene load_steps=4 format=3 uid="uid://diyl3sm582vb8"]
+[gd_scene format=3 uid="uid://diyl3sm582vb8"]
 
 [ext_resource type="Texture2D" uid="uid://kr2fdk8dptv1" path="res://Graphics/Misc/BarUnder2.png" id="2"]
 [ext_resource type="Texture2D" uid="uid://bx1hvetixqpwi" path="res://Graphics/Misc/Bar2.png" id="3"]
@@ -12,12 +12,12 @@ border_blend = true
 shadow_size = 2
 shadow_offset = Vector2(1, 1)
 
-[node name="TimeLeft" type="Control"]
+[node name="TimeLeft" type="Control" unique_id=371840472]
 layout_mode = 3
 anchors_preset = 0
 mouse_filter = 1
 
-[node name="Background" type="Panel" parent="."]
+[node name="Background" type="Panel" parent="." unique_id=1686364647]
 layout_mode = 0
 offset_left = -90.0
 offset_top = -25.0
@@ -26,7 +26,7 @@ offset_bottom = 25.0
 mouse_filter = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_r87xj")
 
-[node name="TimeString" type="Label" parent="."]
+[node name="TimeString" type="Label" parent="." unique_id=152573584]
 layout_mode = 0
 offset_left = -88.0
 offset_top = -8.0
@@ -37,7 +37,7 @@ text = "00:00"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="Bar" type="TextureProgressBar" parent="."]
+[node name="Bar" type="TextureProgressBar" parent="." unique_id=1397839898]
 layout_mode = 0
 offset_left = -80.0
 offset_top = -16.0

@@ -1,4 +1,4 @@
-[gd_scene load_steps=4 format=3 uid="uid://bxeyt4nfuybpo"]
+[gd_scene format=3 uid="uid://bxeyt4nfuybpo"]
 
 [sub_resource type="Gradient" id="Gradient_t4lda"]
 offsets = PackedFloat32Array(0, 0.625, 1)
@@ -16,11 +16,11 @@ scale_min = 3.0
 scale_max = 3.0
 color_ramp = SubResource("GradientTexture1D_yly2m")
 
-[node name="GPUParticles2D" type="GPUParticles2D"]
+[node name="GPUParticles2D" type="GPUParticles2D" unique_id=641922908]
 modulate = Color(0.454902, 0.454902, 0.454902, 1)
 emitting = false
 amount = 16
-process_material = SubResource("ParticleProcessMaterial_0uipm")
 lifetime = 0.3
 one_shot = true
 explosiveness = 1.0
+process_material = SubResource("ParticleProcessMaterial_0uipm")

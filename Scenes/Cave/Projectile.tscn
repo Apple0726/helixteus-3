@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=3 uid="uid://bl3safj1kn3ek"]
+[gd_scene format=3 uid="uid://bl3safj1kn3ek"]
 
 [ext_resource type="Script" uid="uid://bok8yur4mafjd" path="res://Scripts/Projectile.gd" id="1"]
 [ext_resource type="Texture2D" uid="uid://bwe1knccfpjy3" path="res://Graphics/Cave/Projectiles/enemy_bullet.png" id="2"]
@@ -29,44 +29,44 @@ scale_min = 0.0
 scale_max = 3.0
 color_ramp = SubResource("GradientTexture1D_xrviq")
 
-[node name="Sprite2D" type="CharacterBody2D"]
+[node name="Sprite2D" type="CharacterBody2D" unique_id=394185586]
 collision_layer = 16
 collision_mask = 3
 script = ExtResource("1")
 
-[node name="Sprite2D" type="Sprite2D" parent="."]
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=390026532]
 light_mask = 0
 material = SubResource("3")
 texture = ExtResource("2")
 
-[node name="Round" type="CollisionShape2D" parent="."]
+[node name="Round" type="CollisionShape2D" parent="." unique_id=2138145701]
 shape = SubResource("1")
 
-[node name="Line" type="CollisionShape2D" parent="."]
+[node name="Line" type="CollisionShape2D" parent="." unique_id=1821360424]
 visible = false
 position = Vector2(-20, 0)
 shape = SubResource("2")
 disabled = true
 
-[node name="DeflectedParticles" type="GPUParticles2D" parent="."]
+[node name="DeflectedParticles" type="GPUParticles2D" parent="." unique_id=518484627]
 emitting = false
 amount = 40
-process_material = SubResource("6")
 texture = ExtResource("3")
 lifetime = 0.4
 one_shot = true
 explosiveness = 1.0
+process_material = SubResource("6")
 
-[node name="SeekingRay" type="RayCast2D" parent="."]
+[node name="SeekingRay" type="RayCast2D" parent="." unique_id=1057435003]
 collision_mask = 5
 
-[node name="PointLight2D" type="PointLight2D" parent="."]
+[node name="PointLight2D" type="PointLight2D" parent="." unique_id=1443318961]
 enabled = false
 range_item_cull_mask = 3
 texture = ExtResource("4_n3kqk")
 texture_scale = 4.0
 
-[node name="PointLight2D2" type="PointLight2D" parent="."]
+[node name="PointLight2D2" type="PointLight2D" parent="." unique_id=277081021]
 enabled = false
 range_item_cull_mask = 3
 texture = ExtResource("4_n3kqk")

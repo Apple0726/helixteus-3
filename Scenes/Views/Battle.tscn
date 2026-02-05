@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=3 uid="uid://dwa665hyuis2m"]
+[gd_scene format=3 uid="uid://dwa665hyuis2m"]
 
 [ext_resource type="Script" uid="uid://dpxy6ld61573q" path="res://Scripts/Battle/Battle.gd" id="1_ylili"]
 [ext_resource type="Shader" uid="uid://hfa3ri2g3507" path="res://Shaders/FloatAnimation.gdshader" id="4_n5aww"]
@@ -33,36 +33,36 @@ shader = ExtResource("4_n5aww")
 shader_parameter/amplitude = 10.0
 shader_parameter/frequency = 6.0
 
-[node name="Battle" type="Node2D"]
+[node name="Battle" type="Node2D" unique_id=651486836]
 script = ExtResource("1_ylili")
 
-[node name="Boundary" type="Area2D" parent="."]
+[node name="Boundary" type="Area2D" parent="." unique_id=1458587272]
 collision_mask = 0
 monitoring = false
 script = ExtResource("7_lc3cj")
 type = 2
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Boundary"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Boundary" unique_id=1575038901]
 shape = SubResource("WorldBoundaryShape2D_gv2s2")
 
-[node name="Polygon2D" type="Polygon2D" parent="Boundary/CollisionShape2D"]
+[node name="Polygon2D" type="Polygon2D" parent="Boundary/CollisionShape2D" unique_id=1498452169]
 color = Color(0.533333, 0, 0, 1)
 invert_border = 12.0
 polygon = PackedVector2Array(-640, -360, -640, -348, 1908, -348, 1908, 1068, -628, 1068, -628, -348, -640, -348, -640, 1080, 1920, 1080, 1920, -360)
 
-[node name="CollisionShape2D2" type="CollisionShape2D" parent="Boundary"]
+[node name="CollisionShape2D2" type="CollisionShape2D" parent="Boundary" unique_id=848755419]
 shape = SubResource("WorldBoundaryShape2D_jew2s")
 
-[node name="CollisionShape2D3" type="CollisionShape2D" parent="Boundary"]
+[node name="CollisionShape2D3" type="CollisionShape2D" parent="Boundary" unique_id=1252512279]
 shape = SubResource("WorldBoundaryShape2D_bypyr")
 
-[node name="CollisionShape2D4" type="CollisionShape2D" parent="Boundary"]
+[node name="CollisionShape2D4" type="CollisionShape2D" parent="Boundary" unique_id=1973543559]
 shape = SubResource("WorldBoundaryShape2D_n5aww")
 
-[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=1254362578]
 environment = SubResource("Environment_bypyr")
 
-[node name="Selected" type="Sprite2D" parent="."]
+[node name="Selected" type="Sprite2D" parent="." unique_id=1899065693]
 visible = false
 material = SubResource("ShaderMaterial_2b7va")
 scale = Vector2(0.295, 0.295)

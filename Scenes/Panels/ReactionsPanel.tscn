@@ -1,4 +1,4 @@
-[gd_scene load_steps=13 format=3 uid="uid://co61nnn5s8e4n"]
+[gd_scene format=3 uid="uid://co61nnn5s8e4n"]
 
 [ext_resource type="PackedScene" uid="uid://c8jr3e5aiyj1n" path="res://Scenes/HelpText.tscn" id="1"]
 [ext_resource type="Texture2D" uid="uid://kr2fdk8dptv1" path="res://Graphics/Misc/BarUnder2.png" id="2"]
@@ -26,7 +26,7 @@ Button/styles/pressed = null
 
 [sub_resource type="Shortcut" id="3"]
 
-[node name="ReactionsPanel" type="Panel"]
+[node name="ReactionsPanel" type="Panel" unique_id=412534564]
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
@@ -39,7 +39,7 @@ offset_bottom = 296.0
 pivot_offset = Vector2(533, 300)
 theme = ExtResource("6")
 
-[node name="Title" type="Label" parent="."]
+[node name="Title" type="Label" parent="." unique_id=1613714603]
 custom_minimum_size = Vector2(0, 38)
 layout_mode = 0
 offset_right = 1024.0
@@ -47,14 +47,14 @@ offset_bottom = 38.0
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="CloseButton" parent="." instance=ExtResource("5")]
+[node name="CloseButton" parent="." unique_id=853582063 instance=ExtResource("5")]
 layout_mode = 1
 offset_left = -32.0
 offset_top = 8.0
 offset_right = -8.0
 offset_bottom = 32.0
 
-[node name="Desc" type="Label" parent="."]
+[node name="Desc" type="Label" parent="." unique_id=5370865]
 layout_mode = 0
 anchor_right = 1.0
 offset_left = -2.0
@@ -64,33 +64,33 @@ offset_bottom = 100.0
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="ScrollContainer" type="ScrollContainer" parent="."]
+[node name="ScrollContainer" type="ScrollContainer" parent="." unique_id=26623442]
 layout_mode = 0
 offset_left = 22.0
 offset_top = 124.0
 offset_right = 385.0
 offset_bottom = 580.0
 
-[node name="VBoxContainer" type="VBoxContainer" parent="ScrollContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="ScrollContainer" unique_id=1691555023]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 theme = SubResource("1")
 
-[node name="Panel" type="Panel" parent="."]
+[node name="Panel" type="Panel" parent="." unique_id=24071072]
 layout_mode = 0
 offset_left = 408.0
 offset_top = 120.0
 offset_right = 1002.0
 offset_bottom = 572.0
 
-[node name="Control2" type="Control" parent="."]
+[node name="Control2" type="Control" parent="." unique_id=341604548]
 visible = false
 anchors_preset = 0
 offset_right = 40.0
 offset_bottom = 40.0
 
-[node name="Arrow" type="TextureRect" parent="Control2"]
+[node name="Arrow" type="TextureRect" parent="Control2" unique_id=1383062827]
 layout_mode = 0
 offset_left = 672.0
 offset_top = 240.0
@@ -100,7 +100,7 @@ texture = ExtResource("12")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="ScrollContainer" type="ScrollContainer" parent="Control2"]
+[node name="ScrollContainer" type="ScrollContainer" parent="Control2" unique_id=2111503666]
 custom_minimum_size = Vector2(0, 200)
 layout_mode = 0
 offset_left = 500.0
@@ -109,29 +109,29 @@ offset_right = 624.0
 offset_bottom = 436.0
 horizontal_scroll_mode = 0
 
-[node name="From" type="VBoxContainer" parent="Control2/ScrollContainer"]
+[node name="From" type="VBoxContainer" parent="Control2/ScrollContainer" unique_id=728026385]
 layout_mode = 2
 
-[node name="To" type="VBoxContainer" parent="Control2"]
+[node name="To" type="VBoxContainer" parent="Control2" unique_id=130052920]
 layout_mode = 0
 offset_left = 772.0
 offset_top = 240.0
 offset_right = 812.0
 offset_bottom = 280.0
 
-[node name="Control" type="Control" parent="."]
+[node name="Control" type="Control" parent="." unique_id=1639124424]
 anchors_preset = 0
 offset_right = 40.0
 offset_bottom = 40.0
 
-[node name="HSlider" type="HSlider" parent="Control"]
+[node name="HSlider" type="HSlider" parent="Control" unique_id=2064294778]
 layout_mode = 0
 offset_left = 512.0
 offset_top = 200.0
 offset_right = 888.0
 offset_bottom = 216.0
 
-[node name="EnergyCost" type="TextureRect" parent="Control"]
+[node name="EnergyCost" type="TextureRect" parent="Control" unique_id=1626440112]
 layout_mode = 0
 offset_left = 488.0
 offset_top = 456.0
@@ -141,7 +141,7 @@ texture = ExtResource("10")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="EnergyCostText" parent="Control" instance=ExtResource("1")]
+[node name="EnergyCostText" parent="Control" unique_id=747303207 instance=ExtResource("1")]
 layout_mode = 0
 offset_left = 552.0
 offset_top = 464.0
@@ -149,7 +149,7 @@ offset_right = 752.0
 offset_bottom = 494.0
 adv_help = true
 
-[node name="TimeCost" type="TextureRect" parent="Control"]
+[node name="TimeCost" type="TextureRect" parent="Control" unique_id=539358563]
 layout_mode = 0
 offset_left = 488.0
 offset_top = 512.0
@@ -159,7 +159,7 @@ texture = ExtResource("11")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="TimeCostText" type="Label" parent="Control"]
+[node name="TimeCostText" type="Label" parent="Control" unique_id=992241109]
 layout_mode = 0
 offset_left = 552.0
 offset_top = 512.0
@@ -168,7 +168,7 @@ offset_bottom = 544.0
 text = "0"
 vertical_alignment = 1
 
-[node name="Switch" type="TextureButton" parent="Control"]
+[node name="Switch" type="TextureButton" parent="Control" unique_id=56703630]
 layout_mode = 0
 offset_left = 684.0
 offset_top = 292.0
@@ -178,12 +178,12 @@ texture_normal = ExtResource("3")
 ignore_texture_size = true
 stretch_mode = 5
 
-[node name="Control3" type="Control" parent="."]
+[node name="Control3" type="Control" parent="." unique_id=730616483]
 anchors_preset = 0
 offset_right = 40.0
 offset_bottom = 40.0
 
-[node name="TextureProgressBar" type="TextureProgressBar" parent="Control3"]
+[node name="TextureProgressBar" type="TextureProgressBar" parent="Control3" unique_id=835416211]
 modulate = Color(0.65098, 0.27451, 1, 1)
 layout_mode = 0
 offset_left = 492.0
@@ -200,7 +200,7 @@ texture_under = ExtResource("2")
 texture_over = ExtResource("7")
 texture_progress = ExtResource("4")
 
-[node name="TimeRemainingIcon" type="TextureRect" parent="Control3"]
+[node name="TimeRemainingIcon" type="TextureRect" parent="Control3" unique_id=1927821402]
 layout_mode = 0
 offset_left = 864.0
 offset_top = 196.0
@@ -210,7 +210,7 @@ texture = ExtResource("11")
 expand_mode = 1
 stretch_mode = 6
 
-[node name="TimeRemainingText" type="Label" parent="Control3"]
+[node name="TimeRemainingText" type="Label" parent="Control3" unique_id=1867774212]
 layout_mode = 0
 offset_left = 900.0
 offset_top = 196.0
@@ -219,7 +219,7 @@ offset_bottom = 220.0
 text = "0"
 vertical_alignment = 1
 
-[node name="Transform3D" type="Button" parent="."]
+[node name="Transform3D" type="Button" parent="." unique_id=680625303]
 layout_mode = 0
 offset_left = 832.0
 offset_top = 536.0

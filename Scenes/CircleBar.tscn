@@ -1,6 +1,6 @@
-[gd_scene load_steps=2 format=3 uid="uid://drtif7ickt0bn"]
+[gd_scene format=3 uid="uid://drtif7ickt0bn"]
 
 [ext_resource type="Script" uid="uid://gyg154nph3r" path="res://Scripts/CircleBar.gd" id="1"]
 
-[node name="CircleBar" type="Sprite2D"]
+[node name="CircleBar" type="Sprite2D" unique_id=519574063]
 script = ExtResource("1")

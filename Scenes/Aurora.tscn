@@ -1,4 +1,4 @@
-[gd_scene load_steps=5 format=3 uid="uid://cfaqrjc0xlrh4"]
+[gd_scene format=3 uid="uid://cfaqrjc0xlrh4"]
 
 [ext_resource type="Texture2D" uid="uid://do1rshouc15o7" path="res://Graphics/Tiles/Aurora.png" id="1"]
 
@@ -16,10 +16,10 @@ emission_box_extents = Vector3(64, 64, 1)
 gravity = Vector3(0, 0, 0)
 color_ramp = SubResource("GradientTexture1D_jflvi")
 
-[node name="GPUParticles2D" type="GPUParticles2D"]
+[node name="GPUParticles2D" type="GPUParticles2D" unique_id=315205070]
 amount = 10
-process_material = SubResource("ParticleProcessMaterial_o4got")
 texture = ExtResource("1")
 lifetime = 3.0
 preprocess = 0.3
 local_coords = true
+process_material = SubResource("ParticleProcessMaterial_o4got")

@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=3 uid="uid://b8i2nx6456f0t"]
+[gd_scene format=3 uid="uid://b8i2nx6456f0t"]
 
 [ext_resource type="Script" uid="uid://dh30edm5xmv1l" path="res://Scripts/LoadPanel.gd" id="1"]
 [ext_resource type="Theme" uid="uid://cp2u1kgj60ic" path="res://Resources/default_theme.tres" id="3"]
@@ -18,7 +18,7 @@ shadow_size = 2
 shadow_color = Color(0, 0, 0, 0.372549)
 shadow_offset = Vector2(2, 2)
 
-[node name="LoadPanel" type="Control"]
+[node name="LoadPanel" type="Control" unique_id=1278116139]
 layout_mode = 3
 anchors_preset = 0
 offset_right = 32.0
@@ -28,7 +28,8 @@ theme = ExtResource("3")
 script = ExtResource("1")
 metadata/_edit_horizontal_guides_ = [360.0]
 
-[node name="GUI" type="NinePatchRect" parent="."]
+[node name="GUI" type="NinePatchRect" parent="." unique_id=1668252692]
+layout_mode = 0
 offset_left = 192.0
 offset_top = 192.0
 offset_right = 1088.0
@@ -41,7 +42,8 @@ patch_margin_bottom = 64
 axis_stretch_horizontal = 1
 metadata/_edit_horizontal_guides_ = [596.0]
 
-[node name="CloseButton" type="TextureButton" parent="."]
+[node name="CloseButton" type="TextureButton" parent="." unique_id=378724350]
+layout_mode = 0
 offset_left = 1022.0
 offset_top = 208.0
 offset_right = 1071.0
@@ -49,7 +51,7 @@ offset_bottom = 257.0
 texture_normal = ExtResource("4_b4wxd")
 texture_hover = ExtResource("5_jfijo")
 
-[node name="ScrollContainer" type="ScrollContainer" parent="."]
+[node name="ScrollContainer" type="ScrollContainer" parent="." unique_id=1769203718]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -61,11 +63,11 @@ offset_bottom = 416.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="VBox" type="VBoxContainer" parent="ScrollContainer"]
+[node name="VBox" type="VBoxContainer" parent="ScrollContainer" unique_id=441264159]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="Label" type="Label" parent="."]
+[node name="Label" type="Label" parent="." unique_id=1544785175]
 custom_minimum_size = Vector2(0, 38)
 layout_mode = 1
 offset_left = 236.0
@@ -78,7 +80,7 @@ label_settings = SubResource("LabelSettings_cla8g")
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="Import" type="FileDialog" parent="."]
+[node name="Import" type="FileDialog" parent="." unique_id=1736822414]
 title = "Import save"
 size = Vector2i(963, 400)
 ok_button_text = "Open"
@@ -87,13 +89,13 @@ file_mode = 0
 access = 2
 filters = PackedStringArray("*.hx3 ; HX3 save files")
 
-[node name="Export" type="FileDialog" parent="."]
+[node name="Export" type="FileDialog" parent="." unique_id=1090129413]
 size = Vector2i(898, 400)
 mode_overrides_title = false
 access = 2
 filters = PackedStringArray("*.hx3 ; HX3 save files")
 
-[node name="PopupBackground" type="ColorRect" parent="."]
+[node name="PopupBackground" type="ColorRect" parent="." unique_id=1320866463]
 visible = false
 layout_mode = 1
 anchors_preset = 15
@@ -105,7 +107,7 @@ grow_horizontal = 2
 grow_vertical = 2
 color = Color(0, 0, 0, 0.564706)
 
-[node name="HBoxContainer" type="HBoxContainer" parent="."]
+[node name="HBoxContainer" type="HBoxContainer" parent="." unique_id=1470312973]
 layout_mode = 0
 offset_left = 404.0
 offset_top = 476.0
@@ -114,11 +116,11 @@ offset_bottom = 516.0
 theme_override_constants/separation = 20
 alignment = 1
 
-[node name="ImportSave" type="Button" parent="HBoxContainer"]
+[node name="ImportSave" type="Button" parent="HBoxContainer" unique_id=1304227581]
 layout_mode = 2
 text = "IMPORT_SAVE"
 
-[node name="ShowInFileManager" type="Button" parent="HBoxContainer"]
+[node name="ShowInFileManager" type="Button" parent="HBoxContainer" unique_id=172646765]
 layout_mode = 2
 text = "SHOW_IN_FILE_MANAGER"
 

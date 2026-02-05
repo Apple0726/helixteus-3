@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=3 uid="uid://ni58sxlrjgg4"]
+[gd_scene format=3 uid="uid://ni58sxlrjgg4"]
 
 [ext_resource type="Script" uid="uid://qsaxttyp4cwn" path="res://Scenes/Battle/Buffs.gd" id="1_7ashw"]
 [ext_resource type="Texture2D" uid="uid://7ffsf7xuvfw2" path="res://Graphics/Icons/attack.png" id="1_tid64"]
@@ -35,19 +35,19 @@ font = SubResource("SystemFont_pri0e")
 font_size = 14
 shadow_color = Color(0, 0, 0, 1)
 
-[node name="Buffs" type="HBoxContainer"]
+[node name="Buffs" type="HBoxContainer" unique_id=1809892176]
 offset_right = 104.0
 offset_bottom = 32.0
 mouse_filter = 2
 alignment = 1
 script = ExtResource("1_7ashw")
 
-[node name="Attack" type="Control" parent="."]
+[node name="Attack" type="Control" parent="." unique_id=741581613]
 visible = false
 custom_minimum_size = Vector2(32, 0)
 layout_mode = 2
 
-[node name="Icon" type="TextureRect" parent="Attack"]
+[node name="Icon" type="TextureRect" parent="Attack" unique_id=1318699735]
 layout_mode = 0
 offset_left = 4.0
 offset_right = 28.0
@@ -56,7 +56,7 @@ texture = ExtResource("1_tid64")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="Label" type="Label" parent="Attack"]
+[node name="Label" type="Label" parent="Attack" unique_id=2092259915]
 layout_mode = 0
 offset_top = 8.0
 offset_right = 32.0
@@ -65,12 +65,12 @@ text = "+9"
 label_settings = SubResource("LabelSettings_7ashw")
 horizontal_alignment = 1
 
-[node name="Defense" type="Control" parent="."]
+[node name="Defense" type="Control" parent="." unique_id=867267316]
 visible = false
 custom_minimum_size = Vector2(32, 0)
 layout_mode = 2
 
-[node name="Icon" type="TextureRect" parent="Defense"]
+[node name="Icon" type="TextureRect" parent="Defense" unique_id=1004883992]
 layout_mode = 0
 offset_left = 4.0
 offset_right = 28.0
@@ -79,7 +79,7 @@ texture = ExtResource("2_8eqwi")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="Label" type="Label" parent="Defense"]
+[node name="Label" type="Label" parent="Defense" unique_id=1784174873]
 layout_mode = 0
 offset_top = 8.0
 offset_right = 32.0
@@ -88,12 +88,12 @@ text = "+9"
 label_settings = SubResource("LabelSettings_hrsbp")
 horizontal_alignment = 1
 
-[node name="Accuracy" type="Control" parent="."]
+[node name="Accuracy" type="Control" parent="." unique_id=1494505721]
 visible = false
 custom_minimum_size = Vector2(32, 0)
 layout_mode = 2
 
-[node name="Icon" type="TextureRect" parent="Accuracy"]
+[node name="Icon" type="TextureRect" parent="Accuracy" unique_id=1456399244]
 layout_mode = 0
 offset_left = 4.0
 offset_right = 29.0
@@ -102,7 +102,7 @@ texture = ExtResource("2_6s765")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="Label" type="Label" parent="Accuracy"]
+[node name="Label" type="Label" parent="Accuracy" unique_id=459210558]
 layout_mode = 0
 offset_top = 8.0
 offset_right = 32.0
@@ -111,12 +111,12 @@ text = "+9"
 label_settings = SubResource("LabelSettings_1tu0d")
 horizontal_alignment = 1
 
-[node name="Agility" type="Control" parent="."]
+[node name="Agility" type="Control" parent="." unique_id=1672254706]
 visible = false
 custom_minimum_size = Vector2(32, 0)
 layout_mode = 2
 
-[node name="Icon" type="TextureRect" parent="Agility"]
+[node name="Icon" type="TextureRect" parent="Agility" unique_id=270744598]
 layout_mode = 0
 offset_left = 4.0
 offset_right = 28.0
@@ -125,7 +125,7 @@ texture = ExtResource("4_7ashw")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="Label" type="Label" parent="Agility"]
+[node name="Label" type="Label" parent="Agility" unique_id=983429196]
 layout_mode = 0
 offset_top = 8.0
 offset_right = 32.0

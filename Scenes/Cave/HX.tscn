@@ -1,4 +1,4 @@
-[gd_scene load_steps=32 format=3 uid="uid://ckgd3ne8kedgu"]
+[gd_scene format=3 uid="uid://ckgd3ne8kedgu"]
 
 [ext_resource type="Shader" uid="uid://dldfqqvdqt4h0" path="res://Shaders/HX.gdshader" id="1_bfi0c"]
 [ext_resource type="Texture2D" uid="uid://dw4gx6xj2i5g7" path="res://Graphics/HX/1_1.png" id="1_t5dxa"]
@@ -179,41 +179,41 @@ initial_velocity_max = 300.0
 gravity = Vector3(0, 0, 0)
 color_ramp = SubResource("GradientTexture1D_ihuwx")
 
-[node name="HX" type="CharacterBody2D"]
+[node name="HX" type="CharacterBody2D" unique_id=18748368]
 collision_layer = 4
 collision_mask = 8
 
-[node name="SeekingProjSeekArea" type="Area2D" parent="."]
+[node name="SeekingProjSeekArea" type="Area2D" parent="." unique_id=2131414419]
 rotation = 1.57413
 collision_layer = 0
 collision_mask = 8
 monitoring = false
 monitorable = false
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="SeekingProjSeekArea"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="SeekingProjSeekArea" unique_id=697691071]
 shape = SubResource("24")
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1877779529]
 rotation = 1.57413
 shape = SubResource("1")
 
-[node name="Sprite2D" type="Sprite2D" parent="."]
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=1873531911]
 material = SubResource("2")
 position = Vector2(0, 6.29962)
 texture = ExtResource("1_t5dxa")
 
-[node name="Fire" type="Sprite2D" parent="Sprite2D"]
+[node name="Fire" type="Sprite2D" parent="Sprite2D" unique_id=386367830]
 visible = false
 material = SubResource("3")
 position = Vector2(48.8168, -97.6652)
 scale = Vector2(12, 12)
 texture = ExtResource("8")
 
-[node name="Stun" type="Node2D" parent="Sprite2D"]
+[node name="Stun" type="Node2D" parent="Sprite2D" unique_id=343604376]
 visible = false
 position = Vector2(0, -6.29962)
 
-[node name="Sprite2D" type="Sprite2D" parent="Sprite2D/Stun"]
+[node name="Sprite2D" type="Sprite2D" parent="Sprite2D/Stun" unique_id=1702453835]
 material = SubResource("4")
 position = Vector2(47.1782, 64.5085)
 rotation = 0.496553
@@ -221,7 +221,7 @@ scale = Vector2(2.36037, 2.36037)
 texture = ExtResource("12")
 offset = Vector2(-21.4132, -17.9986)
 
-[node name="Sprite2" type="Sprite2D" parent="Sprite2D/Stun"]
+[node name="Sprite2" type="Sprite2D" parent="Sprite2D/Stun" unique_id=1721063773]
 material = SubResource("5")
 position = Vector2(11.3541, 50.4711)
 rotation = -0.583007
@@ -229,7 +229,7 @@ scale = Vector2(1.67193, 1.67193)
 texture = ExtResource("12")
 offset = Vector2(-21.4132, -17.9986)
 
-[node name="GPUParticles2D" type="GPUParticles2D" parent="Sprite2D"]
+[node name="GPUParticles2D" type="GPUParticles2D" parent="Sprite2D" unique_id=2038913194]
 modulate = Color(2, 2, 2, 1)
 emitting = false
 amount = 24
@@ -237,10 +237,10 @@ texture = ExtResource("14")
 lifetime = 2.0
 process_material = SubResource("28")
 
-[node name="RayCast2D" type="RayCast2D" parent="."]
+[node name="RayCast2D" type="RayCast2D" parent="." unique_id=1121114995]
 collision_mask = 3
 
-[node name="Info" type="Control" parent="."]
+[node name="Info" type="Control" parent="." unique_id=1000278004]
 layout_mode = 3
 anchors_preset = 0
 offset_left = -121.549
@@ -249,7 +249,7 @@ offset_right = -19.5491
 offset_bottom = 118.749
 scale = Vector2(2.5, 2.5)
 
-[node name="HP" type="TextureProgressBar" parent="Info"]
+[node name="HP" type="TextureProgressBar" parent="Info" unique_id=1092856014]
 modulate = Color(0, 1, 0, 1)
 light_mask = 0
 layout_mode = 0
@@ -263,12 +263,10 @@ nine_patch_stretch = true
 texture_under = ExtResource("3")
 texture_progress = ExtResource("6")
 
-[node name="HurtAnimation" type="AnimationPlayer" parent="."]
-libraries = {
-&"": SubResource("AnimationLibrary_4bina")
-}
+[node name="HurtAnimation" type="AnimationPlayer" parent="." unique_id=112606095]
+libraries/ = SubResource("AnimationLibrary_4bina")
 
-[node name="BulletParticles" type="GPUParticles2D" parent="."]
+[node name="BulletParticles" type="GPUParticles2D" parent="." unique_id=1944044446]
 emitting = false
 amount = 30
 texture = ExtResource("5")
@@ -277,7 +275,7 @@ one_shot = true
 explosiveness = 1.0
 process_material = SubResource("14")
 
-[node name="BombParticles" type="GPUParticles2D" parent="."]
+[node name="BombParticles" type="GPUParticles2D" parent="." unique_id=934060250]
 scale = Vector2(2, 2)
 emitting = false
 amount = 150
@@ -287,7 +285,7 @@ explosiveness = 0.95
 randomness = 1.0
 process_material = SubResource("ParticleProcessMaterial_x45cj")
 
-[node name="LightParticles" type="GPUParticles2D" parent="."]
+[node name="LightParticles" type="GPUParticles2D" parent="." unique_id=338467010]
 emitting = false
 amount = 50
 texture = ExtResource("14")
@@ -296,5 +294,5 @@ explosiveness = 0.95
 randomness = 1.0
 process_material = SubResource("22")
 
-[node name="RoDTimer" type="Timer" parent="."]
+[node name="RoDTimer" type="Timer" parent="." unique_id=309738210]
 one_shot = true

@@ -1,6 +1,6 @@
-[gd_scene load_steps=2 format=3 uid="uid://fo4yl8v4ld8c"]
+[gd_scene format=3 uid="uid://fo4yl8v4ld8c"]
 
 [ext_resource type="Script" uid="uid://c4014yt5iylvp" path="res://Scripts/Battle/FireWeaponAim.gd" id="1_uoudc"]
 
-[node name="FireWeaponAim" type="Node2D"]
+[node name="FireWeaponAim" type="Node2D" unique_id=222997139]
 script = ExtResource("1_uoudc")

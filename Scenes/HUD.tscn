@@ -1236,7 +1236,7 @@ stretch_mode = 5
 libraries/ = SubResource("AnimationLibrary_f72sx")
 
 [node name="Dialogue" parent="." unique_id=1458125333 instance=ExtResource("23")]
-anchors_preset = 0
+layout_mode = 0
 mouse_filter = 2
 
 [node name="Nice" type="TextureRect" parent="." unique_id=192583790]

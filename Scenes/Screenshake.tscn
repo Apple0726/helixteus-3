@@ -1,13 +1,13 @@
-[gd_scene load_steps=2 format=3 uid="uid://ca730ks6x5s88"]
+[gd_scene format=3 uid="uid://ca730ks6x5s88"]
 
 [ext_resource type="Script" uid="uid://dvwoigedew72p" path="res://Scripts/Screenshake.gd" id="1"]
 
-[node name="Screenshake" type="Node"]
+[node name="Screenshake" type="Node" unique_id=1015675827]
 script = ExtResource("1")
 
-[node name="Frequency" type="Timer" parent="."]
+[node name="Frequency" type="Timer" parent="." unique_id=1896408171]
 
-[node name="Duration" type="Timer" parent="."]
+[node name="Duration" type="Timer" parent="." unique_id=1120940684]
 
 [connection signal="timeout" from="Frequency" to="." method="_on_Frequency_timeout"]
 [connection signal="timeout" from="Duration" to="." method="_on_Duration_timeout"]

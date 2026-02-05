@@ -1,4 +1,4 @@
-[gd_scene load_steps=24 format=3 uid="uid://b4u80l6nm3dei"]
+[gd_scene format=3 uid="uid://b4u80l6nm3dei"]
 
 [ext_resource type="Theme" uid="uid://cp2u1kgj60ic" path="res://Resources/default_theme.tres" id="1_ankd5"]
 [ext_resource type="Script" uid="uid://vh301c8h7ckx" path="res://Scripts/PlanetHUD.gd" id="2"]
@@ -137,7 +137,7 @@ _data = {
 [sub_resource type="LabelSettings" id="LabelSettings_1kyj1"]
 shadow_color = Color(0, 0, 0, 0.505882)
 
-[node name="PlanetHUD" type="Control"]
+[node name="PlanetHUD" type="Control" unique_id=220748502]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -148,7 +148,7 @@ mouse_filter = 2
 theme = ExtResource("1_ankd5")
 script = ExtResource("2")
 
-[node name="VBoxContainer" type="VBoxContainer" parent="."]
+[node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=29817597]
 layout_mode = 0
 offset_left = -48.0
 offset_top = 48.0
@@ -157,7 +157,7 @@ mouse_filter = 2
 theme_override_constants/separation = 0
 alignment = 1
 
-[node name="Terraform" type="TextureButton" parent="VBoxContainer"]
+[node name="Terraform" type="TextureButton" parent="VBoxContainer" unique_id=1478040118]
 custom_minimum_size = Vector2(0, 48)
 layout_mode = 2
 shortcut_in_tooltip = false
@@ -167,7 +167,7 @@ ignore_texture_size = true
 stretch_mode = 5
 flip_h = true
 
-[node name="TextureRect" type="TextureRect" parent="VBoxContainer/Terraform"]
+[node name="TextureRect" type="TextureRect" parent="VBoxContainer/Terraform" unique_id=1682321871]
 layout_mode = 0
 offset_left = 4.0
 offset_top = 4.0
@@ -177,7 +177,7 @@ texture = ExtResource("7")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="Mine" type="TextureButton" parent="VBoxContainer"]
+[node name="Mine" type="TextureButton" parent="VBoxContainer" unique_id=1653626750]
 custom_minimum_size = Vector2(0, 48)
 layout_mode = 2
 shortcut = SubResource("4")
@@ -188,7 +188,7 @@ ignore_texture_size = true
 stretch_mode = 5
 flip_h = true
 
-[node name="TextureRect" type="TextureRect" parent="VBoxContainer/Mine"]
+[node name="TextureRect" type="TextureRect" parent="VBoxContainer/Mine" unique_id=142412660]
 layout_mode = 0
 offset_top = 16.0
 offset_right = 40.0
@@ -198,7 +198,7 @@ texture = ExtResource("5_xysya")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="Construct" type="TextureButton" parent="VBoxContainer"]
+[node name="Construct" type="TextureButton" parent="VBoxContainer" unique_id=2138895779]
 material = SubResource("10")
 custom_minimum_size = Vector2(0, 48)
 layout_mode = 2
@@ -210,7 +210,7 @@ ignore_texture_size = true
 stretch_mode = 5
 flip_h = true
 
-[node name="New" type="TextureRect" parent="VBoxContainer/Construct"]
+[node name="New" type="TextureRect" parent="VBoxContainer/Construct" unique_id=520170149]
 visible = false
 layout_mode = 0
 anchor_left = 1.0
@@ -222,12 +222,10 @@ texture = ExtResource("4")
 expand_mode = 1
 stretch_mode = 6
 
-[node name="AnimationPlayer" type="AnimationPlayer" parent="VBoxContainer/Construct"]
-libraries = {
-&"": SubResource("AnimationLibrary_qi0uf")
-}
+[node name="AnimationPlayer" type="AnimationPlayer" parent="VBoxContainer/Construct" unique_id=1512388139]
+libraries/ = SubResource("AnimationLibrary_qi0uf")
 
-[node name="TextureRect" type="TextureRect" parent="VBoxContainer/Construct"]
+[node name="TextureRect" type="TextureRect" parent="VBoxContainer/Construct" unique_id=460017302]
 layout_mode = 0
 offset_left = 4.0
 offset_top = 6.0
@@ -237,13 +235,11 @@ texture = ExtResource("5_l6l0m")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="ButtonsAnimation" type="AnimationPlayer" parent="."]
-libraries = {
-&"": SubResource("AnimationLibrary_qgp35")
-}
-autoplay = "MoveButtons"
+[node name="ButtonsAnimation" type="AnimationPlayer" parent="." unique_id=1695086168]
+libraries/ = SubResource("AnimationLibrary_qgp35")
+autoplay = &"MoveButtons"
 
-[node name="MassBuild" type="Label" parent="."]
+[node name="MassBuild" type="Label" parent="." unique_id=1948382362]
 visible = false
 layout_mode = 0
 offset_left = 680.0
@@ -254,7 +250,7 @@ text = "HOLD_SHIFT_TO_MASS_BUILD"
 label_settings = SubResource("LabelSettings_1kyj1")
 horizontal_alignment = 2
 
-[node name="ConstructPanel" parent="." instance=ExtResource("7_cy5mr")]
+[node name="ConstructPanel" parent="." unique_id=858108911 instance=ExtResource("7_cy5mr")]
 visible = false
 layout_mode = 1
 

@@ -1,4 +1,4 @@
-[gd_scene load_steps=2 format=3 uid="uid://dmhr0laoikyct"]
+[gd_scene format=3 uid="uid://dmhr0laoikyct"]
 
 [sub_resource type="GDScript" id="1"]
 script/source = "extends Control
@@ -60,32 +60,27 @@ func _on_TextureButton_pressed():
 	emit_signal(\"button_pressed\")
 "
 
-[node name="Button" type="Control"]
+[node name="Button" type="Control" unique_id=1058444056]
+layout_mode = 3
+anchors_preset = 0
 script = SubResource("1")
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
-[node name="ColorRect" type="ColorRect" parent="."]
+[node name="ColorRect" type="ColorRect" parent="." unique_id=478979662]
+layout_mode = 0
 offset_left = -20.0
 offset_top = -20.0
 offset_right = 20.0
 offset_bottom = 20.0
 pivot_offset = Vector2(20, 20)
 color = Color(1, 1, 1, 0)
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
-[node name="TextureButton" type="TextureButton" parent="."]
+[node name="TextureButton" type="TextureButton" parent="." unique_id=671795424]
+layout_mode = 0
 offset_left = -20.0
 offset_top = -20.0
 offset_right = 20.0
 offset_bottom = 20.0
 pivot_offset = Vector2(20, 20)
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [connection signal="mouse_entered" from="TextureButton" to="." method="_on_TextureButton_mouse_entered"]
 [connection signal="mouse_exited" from="TextureButton" to="." method="_on_TextureButton_mouse_exited"]

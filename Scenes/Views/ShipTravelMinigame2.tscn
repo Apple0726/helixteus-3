@@ -1,4 +1,4 @@
-[gd_scene load_steps=34 format=3 uid="uid://ck487g2ydj8tn"]
+[gd_scene format=3 uid="uid://ck487g2ydj8tn"]
 
 [ext_resource type="Script" uid="uid://cyxjri20jsfpj" path="res://Scripts/ShipTravelMinigame2.gd" id="1_8lr8q"]
 [ext_resource type="Script" uid="uid://d4i3qiqt3kxlq" path="res://Scripts/STM/STMShip.gd" id="2_dfkgr"]
@@ -269,72 +269,70 @@ _data = {
 &"RESET": SubResource("Animation_dc1j2")
 }
 
-[node name="STM" type="Node2D"]
+[node name="STM" type="Node2D" unique_id=310072882]
 script = ExtResource("1_8lr8q")
 
-[node name="Ship" type="Node2D" parent="."]
+[node name="Ship" type="Node2D" parent="." unique_id=929468529]
 script = ExtResource("2_dfkgr")
 
-[node name="BulletTimer" type="Timer" parent="Ship"]
+[node name="BulletTimer" type="Timer" parent="Ship" unique_id=486123143]
 wait_time = 0.15
 
-[node name="LaserTimer" type="Timer" parent="Ship"]
+[node name="LaserTimer" type="Timer" parent="Ship" unique_id=1011597295]
 one_shot = true
 
-[node name="BombTimer" type="Timer" parent="Ship"]
+[node name="BombTimer" type="Timer" parent="Ship" unique_id=351792364]
 wait_time = 3.0
 one_shot = true
 
-[node name="LightTimer" type="Timer" parent="Ship"]
+[node name="LightTimer" type="Timer" parent="Ship" unique_id=1484272456]
 wait_time = 8.0
 one_shot = true
 
-[node name="StunTimer" type="Timer" parent="Ship"]
+[node name="StunTimer" type="Timer" parent="Ship" unique_id=1563441025]
 one_shot = true
 
-[node name="Sprite2D" type="Sprite2D" parent="Ship"]
+[node name="Sprite2D" type="Sprite2D" parent="Ship" unique_id=1646094743]
 material = SubResource("ShaderMaterial_nasxo")
 scale = Vector2(0.115, 0.115)
 texture = ExtResource("2_v17i1")
 
-[node name="Area2D" type="Area2D" parent="Ship"]
+[node name="Area2D" type="Area2D" parent="Ship" unique_id=1549281410]
 collision_layer = 2
 collision_mask = 16
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Ship/Area2D"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Ship/Area2D" unique_id=658083170]
 shape = SubResource("CircleShape2D_m5dak")
 
-[node name="LaserArea" type="Area2D" parent="Ship"]
+[node name="LaserArea" type="Area2D" parent="Ship" unique_id=1608596919]
 collision_layer = 0
 collision_mask = 4
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Ship/LaserArea"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Ship/LaserArea" unique_id=362886172]
 shape = SubResource("CircleShape2D_amlly")
 
-[node name="Bomb" type="Sprite2D" parent="Ship"]
+[node name="Bomb" type="Sprite2D" parent="Ship" unique_id=154697275]
 modulate = Color(1, 1, 1, 0)
 position = Vector2(-3.8147e-06, -3.8147e-06)
 scale = Vector2(0.281818, 0.281818)
 texture = ExtResource("10_yqhvw")
 
-[node name="AnimationPlayer" type="AnimationPlayer" parent="Ship/Bomb"]
-libraries = {
-"": SubResource("AnimationLibrary_6uf2k")
-}
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Ship/Bomb" unique_id=975827497]
+libraries/ = SubResource("AnimationLibrary_6uf2k")
 
-[node name="BombParticles" type="GPUParticles2D" parent="Ship"]
+[node name="BombParticles" type="GPUParticles2D" parent="Ship" unique_id=1211408784]
 position = Vector2(8, -24)
 scale = Vector2(0.281818, 0.281818)
 emitting = false
 amount = 32
 process_material = SubResource("ParticleProcessMaterial_ortqj")
 
-[node name="Stun" type="Node2D" parent="Ship"]
+[node name="Stun" type="Node2D" parent="Ship" unique_id=1897229828]
 visible = false
 position = Vector2(0, -6.29962)
 scale = Vector2(0.455, 0.455)
 
-[node name="Sprite2D" type="Sprite2D" parent="Ship/Stun"]
+[node name="Sprite2D" type="Sprite2D" parent="Ship/Stun" unique_id=1350495504]
 material = SubResource("ShaderMaterial_urlkg")
 position = Vector2(47.1782, 64.5085)
 rotation = 0.496553
@@ -342,7 +340,7 @@ scale = Vector2(2.36037, 2.36037)
 texture = ExtResource("6_us3u3")
 offset = Vector2(-21.4132, -17.9986)
 
-[node name="Sprite2" type="Sprite2D" parent="Ship/Stun"]
+[node name="Sprite2" type="Sprite2D" parent="Ship/Stun" unique_id=860438037]
 material = SubResource("ShaderMaterial_yb1pm")
 position = Vector2(11.3541, 50.4711)
 rotation = -0.583007
@@ -350,14 +348,14 @@ scale = Vector2(1.67193, 1.67193)
 texture = ExtResource("6_us3u3")
 offset = Vector2(-21.4132, -17.9986)
 
-[node name="Control" type="Control" parent="."]
+[node name="Control" type="Control" parent="." unique_id=2095135153]
 layout_mode = 3
 anchors_preset = 0
 offset_right = 40.0
 offset_bottom = 40.0
 theme = ExtResource("3_jfubh")
 
-[node name="Back" type="Button" parent="Control"]
+[node name="Back" type="Button" parent="Control" unique_id=257935650]
 layout_mode = 0
 offset_top = 688.0
 offset_right = 104.0
@@ -365,7 +363,7 @@ offset_bottom = 720.0
 shortcut = SubResource("Shortcut_8ju2g")
 shortcut_in_tooltip = false
 
-[node name="AccTime" type="Label" parent="Control"]
+[node name="AccTime" type="Label" parent="Control" unique_id=1517873209]
 layout_mode = 0
 offset_left = 112.0
 offset_top = 688.0
@@ -374,7 +372,7 @@ offset_bottom = 720.0
 text = "Travel accelerated by "
 vertical_alignment = 1
 
-[node name="BombActivateLabel" type="Label" parent="Control"]
+[node name="BombActivateLabel" type="Label" parent="Control" unique_id=1350286292]
 layout_mode = 0
 offset_left = 92.0
 offset_top = 304.0
@@ -383,7 +381,7 @@ offset_bottom = 336.0
 text = "Left click to activate"
 vertical_alignment = 1
 
-[node name="LightActivateLabel" type="Label" parent="Control"]
+[node name="LightActivateLabel" type="Label" parent="Control" unique_id=2009739332]
 layout_mode = 0
 offset_left = 92.0
 offset_top = 452.0
@@ -392,23 +390,23 @@ offset_bottom = 484.0
 text = "Right click to activate"
 vertical_alignment = 1
 
-[node name="EnemySpawnTimer" type="Timer" parent="."]
+[node name="EnemySpawnTimer" type="Timer" parent="." unique_id=1709614528]
 wait_time = 1.4
 autostart = true
 
-[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=2006903156]
 environment = SubResource("Environment_i0p4l")
 
-[node name="GlowLayer" type="CanvasLayer" parent="."]
+[node name="GlowLayer" type="CanvasLayer" parent="." unique_id=627925496]
 layer = -1
 
-[node name="Background" type="ColorRect" parent="GlowLayer"]
+[node name="Background" type="ColorRect" parent="GlowLayer" unique_id=766563899]
 material = SubResource("ShaderMaterial_sr1i2")
 offset_right = 1280.0
 offset_bottom = 720.0
 metadata/_edit_lock_ = true
 
-[node name="Laser" type="ColorRect" parent="GlowLayer"]
+[node name="Laser" type="ColorRect" parent="GlowLayer" unique_id=1035681050]
 visible = false
 material = SubResource("ShaderMaterial_vgp4n")
 offset_top = -332.0
@@ -416,19 +414,17 @@ offset_right = 664.0
 offset_bottom = 332.0
 pivot_offset = Vector2(0, 332)
 
-[node name="LaserAnimationPlayer" type="AnimationPlayer" parent="GlowLayer"]
+[node name="LaserAnimationPlayer" type="AnimationPlayer" parent="GlowLayer" unique_id=1365662397]
 root_node = NodePath("../../Ship")
-libraries = {
-"": SubResource("AnimationLibrary_ybdj0")
-}
+libraries/ = SubResource("AnimationLibrary_ybdj0")
 
-[node name="LaserTimerBar" type="Control" parent="."]
+[node name="LaserTimerBar" type="Control" parent="." unique_id=1692652353]
 layout_mode = 3
 anchors_preset = 0
 offset_right = 40.0
 offset_bottom = 40.0
 
-[node name="TextureProgressBar" type="TextureProgressBar" parent="LaserTimerBar"]
+[node name="TextureProgressBar" type="TextureProgressBar" parent="LaserTimerBar" unique_id=191199537]
 self_modulate = Color(1, 0.278431, 0.278431, 1)
 layout_mode = 0
 offset_left = 28.0
@@ -447,7 +443,7 @@ texture_under = ExtResource("5_6lon2")
 texture_over = ExtResource("6_8qal3")
 texture_progress = ExtResource("7_6fhtq")
 
-[node name="ColorRect" type="ColorRect" parent="LaserTimerBar/TextureProgressBar"]
+[node name="ColorRect" type="ColorRect" parent="LaserTimerBar/TextureProgressBar" unique_id=2078793505]
 visible = false
 layout_mode = 1
 anchors_preset = 15
@@ -456,7 +452,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="TextureRect" type="TextureRect" parent="LaserTimerBar"]
+[node name="TextureRect" type="TextureRect" parent="LaserTimerBar" unique_id=1187045709]
 layout_mode = 0
 offset_left = 48.0
 offset_top = 160.0
@@ -466,13 +462,13 @@ texture = ExtResource("8_rnocu")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="BombTimerBar" type="Control" parent="."]
+[node name="BombTimerBar" type="Control" parent="." unique_id=1733156349]
 layout_mode = 3
 anchors_preset = 0
 offset_right = 40.0
 offset_bottom = 40.0
 
-[node name="TextureProgressBar" type="TextureProgressBar" parent="BombTimerBar"]
+[node name="TextureProgressBar" type="TextureProgressBar" parent="BombTimerBar" unique_id=784787982]
 self_modulate = Color(0.431373, 0.431373, 0.431373, 1)
 layout_mode = 0
 offset_left = 28.0
@@ -491,7 +487,7 @@ texture_under = ExtResource("5_6lon2")
 texture_over = ExtResource("6_8qal3")
 texture_progress = ExtResource("7_6fhtq")
 
-[node name="ColorRect" type="ColorRect" parent="BombTimerBar/TextureProgressBar"]
+[node name="ColorRect" type="ColorRect" parent="BombTimerBar/TextureProgressBar" unique_id=125781761]
 visible = false
 layout_mode = 1
 anchors_preset = 15
@@ -500,7 +496,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="TextureRect" type="TextureRect" parent="BombTimerBar"]
+[node name="TextureRect" type="TextureRect" parent="BombTimerBar" unique_id=1339776084]
 layout_mode = 0
 offset_left = 48.0
 offset_top = 304.0
@@ -510,13 +506,13 @@ texture = ExtResource("10_yqhvw")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="LightTimerBar" type="Control" parent="."]
+[node name="LightTimerBar" type="Control" parent="." unique_id=345002262]
 layout_mode = 3
 anchors_preset = 0
 offset_right = 40.0
 offset_bottom = 40.0
 
-[node name="TextureProgressBar" type="TextureProgressBar" parent="LightTimerBar"]
+[node name="TextureProgressBar" type="TextureProgressBar" parent="LightTimerBar" unique_id=196810302]
 self_modulate = Color(1, 1, 0.698039, 1)
 layout_mode = 0
 offset_left = 28.0
@@ -535,7 +531,7 @@ texture_under = ExtResource("5_6lon2")
 texture_over = ExtResource("6_8qal3")
 texture_progress = ExtResource("7_6fhtq")
 
-[node name="ColorRect" type="ColorRect" parent="LightTimerBar/TextureProgressBar"]
+[node name="ColorRect" type="ColorRect" parent="LightTimerBar/TextureProgressBar" unique_id=74626298]
 visible = false
 layout_mode = 1
 anchors_preset = 15
@@ -544,7 +540,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="TextureRect" type="TextureRect" parent="LightTimerBar"]
+[node name="TextureRect" type="TextureRect" parent="LightTimerBar" unique_id=1180295803]
 layout_mode = 0
 offset_left = 48.0
 offset_top = 452.0
@@ -554,7 +550,7 @@ texture = ExtResource("11_1xlo5")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="WhiteRect" type="ColorRect" parent="."]
+[node name="WhiteRect" type="ColorRect" parent="." unique_id=1591582435]
 offset_right = 1280.0
 offset_bottom = 720.0
 mouse_filter = 2

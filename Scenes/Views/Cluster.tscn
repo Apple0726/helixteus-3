@@ -1,11 +1,11 @@
-[gd_scene load_steps=2 format=3 uid="uid://detb1207m3upi"]
+[gd_scene format=3 uid="uid://detb1207m3upi"]
 
 [ext_resource type="Script" uid="uid://c0u6ub4binw3j" path="res://Scripts/Cluster.gd" id="1"]
 
-[node name="Galaxy" type="Node2D"]
+[node name="Galaxy" type="Node2D" unique_id=1909199926]
 script = ExtResource("1")
 
-[node name="BuildingOverlayTimer" type="Timer" parent="."]
+[node name="BuildingOverlayTimer" type="Timer" parent="." unique_id=879135129]
 
 [connection signal="tree_exited" from="." to="." method="_on_Galaxy_tree_exited"]
 [connection signal="timeout" from="BuildingOverlayTimer" to="." method="on_bldg_overlay_timeout"]

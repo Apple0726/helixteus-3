@@ -1,54 +1,54 @@
-[gd_scene load_steps=3 format=3 uid="uid://tbn5cvb3uo5"]
+[gd_scene format=3 uid="uid://tbn5cvb3uo5"]
 
 [ext_resource type="Texture2D" uid="uid://irnrwmwb2qvs" path="res://Graphics/Buttons/Down.png" id="2"]
 [ext_resource type="Texture2D" uid="uid://baql2tlnb7ayd" path="res://Graphics/Buttons/Up.png" id="3"]
 
-[node name="HBoxContainer" type="HBoxContainer"]
+[node name="HBoxContainer" type="HBoxContainer" unique_id=1425730392]
 offset_right = 776.0
 offset_bottom = 44.0
 
-[node name="Name" type="Label" parent="."]
+[node name="Name" type="Label" parent="." unique_id=2039704166]
 custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_stretch_ratio = 1.1
 
-[node name="Version" type="Label" parent="."]
+[node name="Version" type="Label" parent="." unique_id=551075158]
 custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_stretch_ratio = 0.0
 
-[node name="Author" type="Label" parent="."]
+[node name="Author" type="Label" parent="." unique_id=1531763048]
 custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_stretch_ratio = 0.65
 
-[node name="Description" type="Label" parent="."]
+[node name="Description" type="Label" parent="." unique_id=1557952388]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_stretch_ratio = 1.5
 clip_text = true
 text_overrun_behavior = 3
 
-[node name="LoadOrder" type="VBoxContainer" parent="."]
+[node name="LoadOrder" type="VBoxContainer" parent="." unique_id=335496690]
 layout_mode = 2
 
-[node name="Up" type="TextureButton" parent="LoadOrder"]
+[node name="Up" type="TextureButton" parent="LoadOrder" unique_id=1045434061]
 custom_minimum_size = Vector2(20, 20)
 layout_mode = 2
 texture_normal = ExtResource("3")
 ignore_texture_size = true
 stretch_mode = 5
 
-[node name="Down" type="TextureButton" parent="LoadOrder"]
+[node name="Down" type="TextureButton" parent="LoadOrder" unique_id=952126362]
 custom_minimum_size = Vector2(20, 20)
 layout_mode = 2
 texture_normal = ExtResource("2")
 ignore_texture_size = true
 stretch_mode = 5
 
-[node name="Load" type="CheckBox" parent="."]
+[node name="Load" type="CheckBox" parent="." unique_id=1368238495]
 layout_mode = 2
 text = "Load"

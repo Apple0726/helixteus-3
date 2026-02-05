@@ -1,10 +1,10 @@
-[gd_scene load_steps=4 format=3 uid="uid://3ynx67vuxs2o"]
+[gd_scene format=3 uid="uid://3ynx67vuxs2o"]
 
 [ext_resource type="Theme" uid="uid://cp2u1kgj60ic" path="res://Resources/default_theme.tres" id="1"]
 [ext_resource type="Script" uid="uid://wx70ypg55ywi" path="res://Scripts/ElementOverlay.gd" id="2"]
 [ext_resource type="PackedScene" uid="uid://ddf2xjwcht77u" path="res://Scenes/CloseButton.tscn" id="4"]
 
-[node name="ElementOverlay" type="Panel"]
+[node name="ElementOverlay" type="Panel" unique_id=420779579]
 anchors_preset = 7
 anchor_left = 0.5
 anchor_top = 1.0
@@ -17,7 +17,7 @@ offset_bottom = 4.0
 theme = ExtResource("1")
 script = ExtResource("2")
 
-[node name="HBoxContainer" type="HBoxContainer" parent="."]
+[node name="HBoxContainer" type="HBoxContainer" parent="." unique_id=822946484]
 layout_mode = 0
 anchor_left = 0.5
 anchor_top = 1.0
@@ -28,28 +28,35 @@ offset_top = -104.0
 offset_right = 296.0
 offset_bottom = -70.0
 
-[node name="OverlayType" type="OptionButton" parent="HBoxContainer"]
+[node name="OverlayType" type="OptionButton" parent="HBoxContainer" unique_id=649905140]
 layout_mode = 2
 size_flags_vertical = 4
 
-[node name="ToggleOverlay" type="CheckBox" parent="HBoxContainer"]
+[node name="ToggleOverlay" type="CheckBox" parent="HBoxContainer" unique_id=1675421454]
 layout_mode = 2
 
-[node name="CloseButton" parent="." instance=ExtResource("4")]
+[node name="CloseButton" parent="." unique_id=1564005181 instance=ExtResource("4")]
 layout_mode = 0
 anchors_preset = 0
+anchor_left = 0.0
+anchor_right = 0.0
+offset_left = 0.0
+offset_top = 0.0
+offset_right = 24.0
+offset_bottom = 24.0
+grow_horizontal = 1
 
-[node name="ScrollContainer" type="ScrollContainer" parent="."]
+[node name="ScrollContainer" type="ScrollContainer" parent="." unique_id=1739054687]
 layout_mode = 0
 offset_left = 192.0
 offset_top = 56.0
 offset_right = 674.0
 offset_bottom = 104.0
 
-[node name="HBox" type="HBoxContainer" parent="ScrollContainer"]
+[node name="HBox" type="HBoxContainer" parent="ScrollContainer" unique_id=2096522736]
 layout_mode = 2
 
-[node name="LineEdit" type="LineEdit" parent="."]
+[node name="LineEdit" type="LineEdit" parent="." unique_id=2073469427]
 layout_mode = 0
 offset_left = 56.0
 offset_top = 64.0

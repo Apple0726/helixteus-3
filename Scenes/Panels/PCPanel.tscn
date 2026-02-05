@@ -1,11 +1,11 @@
-[gd_scene load_steps=5 format=3 uid="uid://bketiqkf5fyk0"]
+[gd_scene format=3 uid="uid://bketiqkf5fyk0"]
 
 [ext_resource type="Script" uid="uid://bqu05c7o863jx" path="res://Scripts/PCPanel.gd" id="1"]
 [ext_resource type="PackedScene" uid="uid://ddf2xjwcht77u" path="res://Scenes/CloseButton.tscn" id="3"]
 [ext_resource type="Theme" uid="uid://cp2u1kgj60ic" path="res://Resources/default_theme.tres" id="4"]
 [ext_resource type="Texture2D" uid="uid://if1usn38yajs" path="res://Graphics/Icons/craft.png" id="4_0fkbr"]
 
-[node name="PCPanel" type="Panel"]
+[node name="PCPanel" type="Panel" unique_id=1053262985]
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
@@ -18,7 +18,7 @@ offset_bottom = 136.0
 theme = ExtResource("4")
 script = ExtResource("1")
 
-[node name="Label" type="Label" parent="."]
+[node name="Label" type="Label" parent="." unique_id=1833749164]
 custom_minimum_size = Vector2(0, 38)
 layout_mode = 0
 anchor_right = 1.0
@@ -27,7 +27,7 @@ text = "PCC_NAME"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="ScrollContainer" type="ScrollContainer" parent="."]
+[node name="ScrollContainer" type="ScrollContainer" parent="." unique_id=481720197]
 layout_mode = 1
 anchors_preset = 2
 anchor_top = 1.0
@@ -39,19 +39,19 @@ offset_bottom = -8.0
 grow_vertical = 0
 vertical_scroll_mode = 3
 
-[node name="HBox" type="HBoxContainer" parent="ScrollContainer"]
+[node name="HBox" type="HBoxContainer" parent="ScrollContainer" unique_id=980020853]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="CloseButton" parent="." instance=ExtResource("3")]
+[node name="CloseButton" parent="." unique_id=895842089 instance=ExtResource("3")]
 layout_mode = 1
 offset_left = -32.0
 offset_top = 8.0
 offset_right = -8.0
 offset_bottom = 32.0
 
-[node name="TextureRect" type="TextureRect" parent="."]
+[node name="TextureRect" type="TextureRect" parent="." unique_id=315163272]
 layout_mode = 0
 offset_left = 44.0
 offset_top = 40.0
@@ -60,7 +60,7 @@ offset_bottom = 172.0
 expand_mode = 1
 stretch_mode = 5
 
-[node name="SpinBox" type="SpinBox" parent="."]
+[node name="SpinBox" type="SpinBox" parent="." unique_id=404502720]
 layout_mode = 0
 offset_left = 264.0
 offset_top = 96.0
@@ -70,7 +70,7 @@ max_value = 500.0
 value = 1.0
 rounded = true
 
-[node name="Construct" type="Button" parent="."]
+[node name="Construct" type="Button" parent="." unique_id=433031788]
 layout_mode = 1
 anchors_preset = 3
 anchor_left = 1.0
@@ -84,7 +84,7 @@ offset_bottom = -8.0
 grow_horizontal = 0
 grow_vertical = 0
 
-[node name="TextureRect" type="TextureRect" parent="Construct"]
+[node name="TextureRect" type="TextureRect" parent="Construct" unique_id=218799582]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0

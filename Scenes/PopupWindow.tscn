@@ -1,4 +1,4 @@
-[gd_scene load_steps=4 format=3 uid="uid://dh16brr2wpqra"]
+[gd_scene format=3 uid="uid://dh16brr2wpqra"]
 
 [ext_resource type="Theme" uid="uid://cp2u1kgj60ic" path="res://Resources/default_theme.tres" id="1_pqsff"]
 [ext_resource type="Script" uid="uid://cytp52slomkll" path="res://Scripts/PopupWindow.gd" id="2_7rwgw"]
@@ -16,7 +16,7 @@ border_blend = true
 shadow_size = 2
 shadow_offset = Vector2(1, 1)
 
-[node name="Control" type="ColorRect"]
+[node name="Control" type="ColorRect" unique_id=1255379435]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -26,7 +26,7 @@ theme = ExtResource("1_pqsff")
 color = Color(0, 0, 0, 0)
 script = ExtResource("2_7rwgw")
 
-[node name="Panel" type="PanelContainer" parent="."]
+[node name="Panel" type="PanelContainer" parent="." unique_id=435259330]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -41,21 +41,21 @@ grow_horizontal = 2
 grow_vertical = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_is2bl")
 
-[node name="VBoxContainer" type="VBoxContainer" parent="Panel"]
+[node name="VBoxContainer" type="VBoxContainer" parent="Panel" unique_id=1177170354]
 layout_mode = 2
 theme_override_constants/separation = 10
 
-[node name="Label" type="Label" parent="Panel/VBoxContainer"]
+[node name="Label" type="Label" parent="Panel/VBoxContainer" unique_id=1709113906]
 visible = false
 layout_mode = 2
 horizontal_alignment = 1
 
-[node name="HBoxContainer" type="HBoxContainer" parent="Panel/VBoxContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="Panel/VBoxContainer" unique_id=582836619]
 layout_mode = 2
 theme_override_constants/separation = 25
 alignment = 1
 
-[node name="OK" type="Button" parent="Panel/VBoxContainer/HBoxContainer"]
+[node name="OK" type="Button" parent="Panel/VBoxContainer/HBoxContainer" unique_id=1578611128]
 layout_mode = 2
 text = "OK"
 

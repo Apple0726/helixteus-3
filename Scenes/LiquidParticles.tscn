@@ -1,4 +1,4 @@
-[gd_scene load_steps=4 format=3 uid="uid://jvv1p6pen1hx"]
+[gd_scene format=3 uid="uid://jvv1p6pen1hx"]
 
 [sub_resource type="Gradient" id="1"]
 offsets = PackedFloat32Array(0, 0.525822, 1)
@@ -15,7 +15,7 @@ scale_min = 0.0
 scale_max = 0.0
 color_ramp = SubResource("2")
 
-[node name="GPUParticles2D" type="GPUParticles2D"]
+[node name="GPUParticles2D" type="GPUParticles2D" unique_id=68658141]
 amount = 30
 lifetime = 2.0
 randomness = 1.0

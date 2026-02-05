@@ -1,4 +1,4 @@
-[gd_scene load_steps=4 format=3 uid="uid://dw10adm0s0qaw"]
+[gd_scene format=3 uid="uid://dw10adm0s0qaw"]
 
 [sub_resource type="Gradient" id="Gradient_imv4j"]
 offsets = PackedFloat32Array(0, 0.157895, 0.585526, 1)
@@ -18,10 +18,10 @@ damping_max = 100.0
 scale_max = 4.0
 color_ramp = SubResource("GradientTexture1D_gb66n")
 
-[node name="GPUParticles2D" type="GPUParticles2D"]
+[node name="GPUParticles2D" type="GPUParticles2D" unique_id=243855190]
 emitting = false
 amount = 128
-process_material = SubResource("ParticleProcessMaterial_nd4bs")
 lifetime = 2.0
 one_shot = true
 explosiveness = 1.0
+process_material = SubResource("ParticleProcessMaterial_nd4bs")

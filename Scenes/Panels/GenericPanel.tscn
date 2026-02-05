@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=3 uid="uid://nd0pbk1f0ii2"]
+[gd_scene format=3 uid="uid://nd0pbk1f0ii2"]
 
 [ext_resource type="PackedScene" uid="uid://ddf2xjwcht77u" path="res://Scenes/CloseButton.tscn" id="3"]
 [ext_resource type="Texture2D" uid="uid://dcvnyb0mloli2" path="res://Graphics/GUI/Panel.png" id="3_2altr"]
@@ -104,7 +104,7 @@ func refresh():
 [sub_resource type="LabelSettings" id="LabelSettings_jee6n"]
 font_size = 18
 
-[node name="Panel" type="Panel"]
+[node name="Panel" type="Panel" unique_id=430628813]
 offset_right = 1024.0
 offset_bottom = 592.0
 mouse_filter = 2
@@ -112,14 +112,14 @@ theme = ExtResource("5")
 theme_override_styles/panel = SubResource("StyleBoxEmpty_cnj7i")
 script = SubResource("GDScript_c16sh")
 
-[node name="TextureRect" type="TextureRect" parent="."]
+[node name="TextureRect" type="TextureRect" parent="." unique_id=1722162364]
 layout_mode = 0
 offset_right = 1280.0
 offset_bottom = 720.0
 mouse_filter = 2
 texture = ExtResource("3_2altr")
 
-[node name="CloseButton" parent="." instance=ExtResource("3")]
+[node name="CloseButton" parent="." unique_id=1423726767 instance=ExtResource("3")]
 visible = false
 layout_mode = 1
 offset_left = 124.0
@@ -127,7 +127,7 @@ offset_top = 79.0
 offset_right = 148.0
 offset_bottom = 103.0
 
-[node name="Title" type="Label" parent="."]
+[node name="Title" type="Label" parent="." unique_id=1511719071]
 custom_minimum_size = Vector2(0, 38)
 layout_mode = 1
 anchors_preset = 10
@@ -141,7 +141,7 @@ text = "AS"
 label_settings = SubResource("LabelSettings_jee6n")
 vertical_alignment = 1
 
-[node name="Desc" type="Label" parent="."]
+[node name="Desc" type="Label" parent="." unique_id=1013444440]
 custom_minimum_size = Vector2(0, 38)
 layout_mode = 1
 anchors_preset = 10
@@ -154,7 +154,7 @@ grow_horizontal = 2
 text = "AS"
 vertical_alignment = 1
 
-[node name="VBox" type="VBoxContainer" parent="."]
+[node name="VBox" type="VBoxContainer" parent="." unique_id=1023440542]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -167,21 +167,21 @@ grow_horizontal = 2
 grow_vertical = 2
 theme_override_constants/separation = 3
 
-[node name="TabBar" type="HBoxContainer" parent="VBox"]
+[node name="TabBar" type="HBoxContainer" parent="VBox" unique_id=1033881914]
 custom_minimum_size = Vector2(0, 32)
 layout_mode = 2
 theme_override_constants/separation = -1
 alignment = 1
 
-[node name="CheckBox" type="CheckBox" parent="VBox"]
+[node name="CheckBox" type="CheckBox" parent="VBox" unique_id=380562702]
 visible = false
 layout_mode = 2
 
-[node name="HBox" type="Control" parent="VBox"]
+[node name="HBox" type="Control" parent="VBox" unique_id=742702154]
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="ItemInfo" type="Panel" parent="VBox/HBox"]
+[node name="ItemInfo" type="Panel" parent="VBox/HBox" unique_id=2008834728]
 modulate = Color(1, 1, 1, 0)
 layout_mode = 1
 anchors_preset = 15
@@ -191,7 +191,7 @@ offset_left = 664.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="Name" type="Label" parent="VBox/HBox/ItemInfo"]
+[node name="Name" type="Label" parent="VBox/HBox/ItemInfo" unique_id=682154279]
 custom_minimum_size = Vector2(0, 50)
 layout_mode = 0
 anchor_right = 1.0
@@ -200,7 +200,7 @@ text = "a"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="VBox" type="VBoxContainer" parent="VBox/HBox/ItemInfo"]
+[node name="VBox" type="VBoxContainer" parent="VBox/HBox/ItemInfo" unique_id=970916719]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -212,25 +212,25 @@ grow_horizontal = 2
 grow_vertical = 2
 theme_override_constants/separation = 40
 
-[node name="Desc" type="RichTextLabel" parent="VBox/HBox/ItemInfo/VBox"]
+[node name="Desc" type="RichTextLabel" parent="VBox/HBox/ItemInfo/VBox" unique_id=569289099]
 layout_mode = 2
 size_flags_horizontal = 3
 bbcode_enabled = true
 fit_content = true
 
-[node name="Costs" type="ScrollContainer" parent="VBox/HBox/ItemInfo/VBox"]
+[node name="Costs" type="ScrollContainer" parent="VBox/HBox/ItemInfo/VBox" unique_id=1943635051]
 custom_minimum_size = Vector2(0, 140)
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="VBox" type="VBoxContainer" parent="VBox/HBox/ItemInfo/VBox/Costs"]
+[node name="VBox" type="VBoxContainer" parent="VBox/HBox/ItemInfo/VBox/Costs" unique_id=1089435652]
 layout_mode = 2
 
-[node name="HBox" type="HBoxContainer" parent="VBox/HBox/ItemInfo/VBox"]
+[node name="HBox" type="HBoxContainer" parent="VBox/HBox/ItemInfo/VBox" unique_id=456112029]
 layout_mode = 2
 size_flags_stretch_ratio = 0.2
 
-[node name="BuyAmount" type="SpinBox" parent="VBox/HBox/ItemInfo/VBox/HBox"]
+[node name="BuyAmount" type="SpinBox" parent="VBox/HBox/ItemInfo/VBox/HBox" unique_id=1186061255]
 layout_mode = 2
 min_value = 1.0
 max_value = 10000.0
@@ -238,7 +238,7 @@ value = 1.0
 rounded = true
 update_on_text_changed = true
 
-[node name="Buy" type="Button" parent="VBox/HBox/ItemInfo/VBox/HBox"]
+[node name="Buy" type="Button" parent="VBox/HBox/ItemInfo/VBox/HBox" unique_id=1560766016]
 custom_minimum_size = Vector2(140, 0)
 layout_mode = 2
 size_flags_horizontal = 10
@@ -248,14 +248,14 @@ text = "BUY"
 icon_alignment = 2
 expand_icon = true
 
-[node name="Items" type="ScrollContainer" parent="VBox/HBox"]
+[node name="Items" type="ScrollContainer" parent="VBox/HBox" unique_id=1804556682]
 layout_mode = 0
 anchor_bottom = 1.0
 offset_right = 664.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="Items" type="GridContainer" parent="VBox/HBox/Items"]
+[node name="Items" type="GridContainer" parent="VBox/HBox/Items" unique_id=1701972585]
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_constants/h_separation = 0

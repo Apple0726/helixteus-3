@@ -1,4 +1,4 @@
-[gd_scene load_steps=16 format=3 uid="uid://cut1or30pxsib"]
+[gd_scene format=3 uid="uid://cut1or30pxsib"]
 
 [ext_resource type="Texture2D" uid="uid://kr2fdk8dptv1" path="res://Graphics/Misc/BarUnder2.png" id="1"]
 [ext_resource type="Texture2D" uid="uid://bx1hvetixqpwi" path="res://Graphics/Misc/Bar2.png" id="2"]
@@ -37,7 +37,7 @@ unicode = 103
 [sub_resource type="Shortcut" id="2"]
 events = [SubResource("InputEventKey_h3yc4")]
 
-[node name="SCPanel" type="Control"]
+[node name="SCPanel" type="Control" unique_id=364777016]
 layout_mode = 3
 anchors_preset = 0
 offset_right = 320.0
@@ -45,7 +45,8 @@ offset_bottom = 120.0
 theme = ExtResource("5")
 script = ExtResource("6")
 
-[node name="GUI" type="TextureRect" parent="."]
+[node name="GUI" type="TextureRect" parent="." unique_id=1474982439]
+layout_mode = 0
 offset_left = 80.0
 offset_top = 52.0
 offset_right = 1204.0
@@ -53,7 +54,7 @@ offset_bottom = 671.0
 mouse_filter = 2
 texture = ExtResource("5_0aci7")
 
-[node name="CloseButton" type="TextureButton" parent="."]
+[node name="CloseButton" type="TextureButton" parent="." unique_id=203585001]
 layout_mode = 0
 offset_left = 1136.0
 offset_top = 67.0
@@ -62,7 +63,7 @@ offset_bottom = 116.0
 texture_normal = ExtResource("3_6yfos")
 texture_hover = ExtResource("4_wkbos")
 
-[node name="Title" type="Label" parent="."]
+[node name="Title" type="Label" parent="." unique_id=679232419]
 custom_minimum_size = Vector2(0, 38)
 layout_mode = 1
 anchors_preset = -1
@@ -76,7 +77,7 @@ text = "STONE_CRUSHER_NAME"
 label_settings = SubResource("LabelSettings_1i2i7")
 vertical_alignment = 1
 
-[node name="Desc" type="Label" parent="."]
+[node name="Desc" type="Label" parent="." unique_id=309091339]
 layout_mode = 0
 offset_left = 112.0
 offset_top = 128.0
@@ -85,13 +86,13 @@ offset_bottom = 164.0
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="Control" type="Control" parent="."]
+[node name="Control" type="Control" parent="." unique_id=902816503]
 anchors_preset = 0
 offset_right = 40.0
 offset_bottom = 40.0
 metadata/_edit_lock_ = true
 
-[node name="Panel" type="Panel" parent="Control"]
+[node name="Panel" type="Panel" parent="Control" unique_id=250642787]
 layout_mode = 0
 offset_left = 184.0
 offset_top = 168.0
@@ -99,14 +100,14 @@ offset_right = 1096.0
 offset_bottom = 552.0
 theme_override_styles/panel = SubResource("StyleBoxFlat_sv8i4")
 
-[node name="PieGraph" parent="Control" instance=ExtResource("3")]
+[node name="PieGraph" parent="Control" unique_id=1481607143 instance=ExtResource("3")]
 layout_mode = 0
 offset_left = 208.0
 offset_top = 184.0
 offset_right = 508.0
 offset_bottom = 512.0
 
-[node name="Button" type="Button" parent="Control"]
+[node name="Button" type="Button" parent="Control" unique_id=646422764]
 layout_mode = 0
 offset_left = 872.0
 offset_top = 584.0
@@ -117,50 +118,50 @@ shortcut = SubResource("2")
 shortcut_in_tooltip = false
 text = "START_CRUSHING"
 
-[node name="HBoxContainer" type="HBoxContainer" parent="Control"]
+[node name="HBoxContainer" type="HBoxContainer" parent="Control" unique_id=1376716061]
 layout_mode = 0
 offset_left = 608.0
 offset_top = 192.0
 offset_right = 980.0
 offset_bottom = 232.0
 
-[node name="HSlider" type="HSlider" parent="Control/HBoxContainer"]
+[node name="HSlider" type="HSlider" parent="Control/HBoxContainer" unique_id=1867407674]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 1
 focus_mode = 0
 
-[node name="TextureRect" type="TextureRect" parent="Control/HBoxContainer"]
+[node name="TextureRect" type="TextureRect" parent="Control/HBoxContainer" unique_id=1875288137]
 custom_minimum_size = Vector2(40, 40)
 layout_mode = 2
 texture = ExtResource("7")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="Label" type="Label" parent="Control/HBoxContainer"]
+[node name="Label" type="Label" parent="Control/HBoxContainer" unique_id=9457041]
 layout_mode = 2
 vertical_alignment = 1
 
-[node name="VBoxContainer" type="VBoxContainer" parent="Control"]
+[node name="VBoxContainer" type="VBoxContainer" parent="Control" unique_id=401291432]
 layout_mode = 0
 offset_left = 608.0
 offset_top = 272.0
 offset_right = 648.0
 offset_bottom = 312.0
 
-[node name="Label" type="Label" parent="Control"]
+[node name="Label" type="Label" parent="Control" unique_id=1149108262]
 layout_mode = 0
 offset_left = 608.0
 offset_top = 240.0
 offset_right = 848.0
 offset_bottom = 264.0
 
-[node name="Control" type="Control" parent="Control"]
+[node name="Control" type="Control" parent="Control" unique_id=2144147943]
 anchors_preset = 0
 offset_right = 40.0
 offset_bottom = 40.0
 
-[node name="Time" type="Label" parent="Control/Control"]
+[node name="Time" type="Label" parent="Control/Control" unique_id=450787704]
 layout_mode = 0
 offset_left = 692.0
 offset_top = 592.0
@@ -169,7 +170,7 @@ offset_bottom = 616.0
 text = "00:00"
 vertical_alignment = 1
 
-[node name="TextureProgressBar" type="TextureProgressBar" parent="Control/Control"]
+[node name="TextureProgressBar" type="TextureProgressBar" parent="Control/Control" unique_id=688251223]
 modulate = Color(0.505882, 0.505882, 0.505882, 1)
 layout_mode = 0
 offset_left = 136.0
@@ -184,7 +185,7 @@ texture_under = ExtResource("1")
 texture_progress = ExtResource("2")
 tint_under = Color(0.478431, 0.478431, 0.478431, 1)
 
-[node name="TextureRect" type="TextureRect" parent="Control/Control"]
+[node name="TextureRect" type="TextureRect" parent="Control/Control" unique_id=795035865]
 layout_mode = 0
 offset_left = 656.0
 offset_top = 592.0
@@ -194,7 +195,7 @@ texture = ExtResource("10")
 expand_mode = 1
 stretch_mode = 6
 
-[node name="Stone" type="Label" parent="Control/Control"]
+[node name="Stone" type="Label" parent="Control/Control" unique_id=1502560403]
 layout_mode = 0
 offset_left = 136.0
 offset_top = 592.0

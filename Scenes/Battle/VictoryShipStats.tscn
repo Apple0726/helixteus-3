@@ -1,4 +1,4 @@
-[gd_scene load_steps=6 format=3 uid="uid://n8w5ffyg17o1"]
+[gd_scene format=3 uid="uid://n8w5ffyg17o1"]
 
 [ext_resource type="Texture2D" uid="uid://koi0aarpqj30" path="res://Graphics/Ships/Ship0.png" id="1_x27ah"]
 [ext_resource type="Texture2D" uid="uid://kr2fdk8dptv1" path="res://Graphics/Misc/BarUnder2.png" id="2_04ix3"]
@@ -6,22 +6,21 @@
 [ext_resource type="Texture2D" uid="uid://cxij5pk8nug0r" path="res://Graphics/Misc/BarOver.png" id="4_pff48"]
 [ext_resource type="Texture2D" uid="uid://csmhsuosfqrec" path="res://Graphics/Icons/XP.png" id="5_x2ol2"]
 
-[node name="Ship1" type="TextureRect"]
+[node name="Ship1" type="TextureRect" unique_id=501345136]
 offset_right = 120.0
 offset_bottom = 120.0
 texture = ExtResource("1_x27ah")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="XP" type="Control" parent="."]
-layout_mode = 3
+[node name="XP" type="Control" parent="." unique_id=2040862130]
 anchors_preset = 0
 offset_left = 120.0
 offset_top = 36.0
 offset_right = 132.0
 offset_bottom = 48.0
 
-[node name="ColorRect" type="ColorRect" parent="XP"]
+[node name="ColorRect" type="ColorRect" parent="XP" unique_id=2090028405]
 layout_mode = 0
 offset_left = 48.0
 offset_top = 13.0
@@ -29,7 +28,7 @@ offset_right = 300.0
 offset_bottom = 33.0
 color = Color(0.59, 0.46669, 0.2537, 1)
 
-[node name="TextureProgressGained" type="TextureProgressBar" parent="XP"]
+[node name="TextureProgressGained" type="TextureProgressBar" parent="XP" unique_id=2001006215]
 modulate = Color(1, 0.819608, 0.611765, 1)
 layout_mode = 0
 offset_left = 48.0
@@ -42,7 +41,7 @@ nine_patch_stretch = true
 texture_under = ExtResource("2_04ix3")
 texture_progress = ExtResource("3_3dm38")
 
-[node name="TextureProgressBar" type="TextureProgressBar" parent="XP"]
+[node name="TextureProgressBar" type="TextureProgressBar" parent="XP" unique_id=1549554840]
 modulate = Color(0.921569, 0.631373, 0.203922, 1)
 layout_mode = 0
 offset_left = 48.0
@@ -59,7 +58,7 @@ stretch_margin_bottom = 1
 texture_over = ExtResource("4_pff48")
 texture_progress = ExtResource("3_3dm38")
 
-[node name="Label" type="Label" parent="XP"]
+[node name="Label" type="Label" parent="XP" unique_id=153116218]
 layout_mode = 0
 offset_left = 312.0
 offset_top = 8.0
@@ -69,7 +68,7 @@ scale = Vector2(0.9, 0.9)
 text = "+ 5"
 vertical_alignment = 1
 
-[node name="Label2" type="Label" parent="XP"]
+[node name="Label2" type="Label" parent="XP" unique_id=1115521636]
 layout_mode = 0
 offset_left = 48.0
 offset_top = 12.0
@@ -81,7 +80,7 @@ text = "0 / 20"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="Icon" type="TextureRect" parent="XP"]
+[node name="Icon" type="TextureRect" parent="XP" unique_id=788788123]
 layout_mode = 0
 offset_left = 8.0
 offset_top = 8.0
@@ -91,7 +90,7 @@ texture = ExtResource("5_x2ol2")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="Label" type="Label" parent="."]
+[node name="Label" type="Label" parent="." unique_id=1879740332]
 layout_mode = 0
 offset_left = 24.0
 offset_right = 104.0

@@ -1,4 +1,4 @@
-[gd_scene load_steps=21 format=3 uid="uid://bvs7tmwu2go0"]
+[gd_scene format=3 uid="uid://bvs7tmwu2go0"]
 
 [ext_resource type="Texture2D" uid="uid://dilhlyh5sbfqs" path="res://Graphics/Cave/DebrisCave.png" id="1"]
 [ext_resource type="Script" uid="uid://c585sbmudu86y" path="res://Scripts/Cave/Debris.gd" id="2"]
@@ -129,23 +129,23 @@ _data = {
 &"RESET": SubResource("17")
 }
 
-[node name="Debris" type="Node2D"]
+[node name="Debris" type="Node2D" unique_id=1279317713]
 script = ExtResource("2")
 
-[node name="Lava" type="PointLight2D" parent="."]
+[node name="Lava" type="PointLight2D" parent="." unique_id=1305093223]
 enabled = false
 energy = 1.85
 range_item_cull_mask = 2
 texture = ExtResource("3")
 
-[node name="Sprite2D" type="Sprite2D" parent="."]
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=646558497]
 light_mask = 3
 z_index = -1
 material = SubResource("8")
 texture = ExtResource("1")
 hframes = 6
 
-[node name="GPUParticles2D" type="GPUParticles2D" parent="."]
+[node name="GPUParticles2D" type="GPUParticles2D" parent="." unique_id=1306704824]
 material = SubResource("4")
 emitting = false
 amount = 30
@@ -156,66 +156,66 @@ explosiveness = 1.0
 local_coords = true
 process_material = SubResource("3")
 
-[node name="LightOccluder2D" type="LightOccluder2D" parent="."]
+[node name="LightOccluder2D" type="LightOccluder2D" parent="." unique_id=1779491911]
 occluder = SubResource("2")
 
-[node name="0" type="StaticBody2D" parent="."]
+[node name="0" type="StaticBody2D" parent="." unique_id=89039558]
 collision_mask = 0
 
-[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="0"]
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="0" unique_id=1049468823]
 polygon = PackedVector2Array(-3, -50, 20, -50, 36, -48, 48, -41, 62, -36, 74, -30, 85, -20, 95, -6, 97, 7, 95, 19, 88, 29, 74, 38, 62, 43, 30, 48, -6, 51, -63, 52, -72, 47, -78, 39, -81, 29, -78, 16, -72, 7, -60, -3)
 disabled = true
 
-[node name="1" type="StaticBody2D" parent="."]
+[node name="1" type="StaticBody2D" parent="." unique_id=852602694]
 visible = false
 collision_mask = 0
 
-[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="1"]
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="1" unique_id=1636909074]
 polygon = PackedVector2Array(8, -54, 18, -54, 31, -46, 37, -44, 43, -40, 48, -32, 63, -16, 71, -2, 81, 18, 83, 29, 82, 46, 69, 62, 48, 66, 16, 66, -19, 58, -36, 49, -47, 39, -55, 28, -60, 14, -57, -7, -49, -25, -38, -35, -16, -46)
 disabled = true
 
-[node name="2" type="StaticBody2D" parent="."]
+[node name="2" type="StaticBody2D" parent="." unique_id=558042904]
 visible = false
 collision_mask = 0
 
-[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="2"]
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="2" unique_id=671253504]
 polygon = PackedVector2Array(-34, -28, -23, -43, -21, -50, -8, -65, 5, -73, 24, -74, 38, -67, 49, -55, 55, -44, 59, -31, 66, -7, 68, 14, 68, 36, 62, 53, 50, 61, 38, 63, 27, 60, 18, 60, -11, 52, -19, 52, -56, 36, -67, 25, -73, 11, -70, -4, -62, -16, -41, -26)
 disabled = true
 
-[node name="3" type="StaticBody2D" parent="."]
+[node name="3" type="StaticBody2D" parent="." unique_id=609888588]
 visible = false
 collision_mask = 0
 
-[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="3"]
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="3" unique_id=191727561]
 polygon = PackedVector2Array(-30, -56, 3, -57, 28, -36, 30, -26, 44, -16, 55, 15, 57, 50, 50, 63, 26, 74, 18, 83, 4, 85, -9, 80, -28, 51, -46, 47, -61, 34, -62, 7, -50, -44, -43, -50)
 disabled = true
 
-[node name="4" type="StaticBody2D" parent="."]
+[node name="4" type="StaticBody2D" parent="." unique_id=1333893051]
 visible = false
 collision_mask = 0
 
-[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="4"]
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="4" unique_id=148340993]
 polygon = PackedVector2Array(-59, -50, -44, -66, -38, -77, -8, -82, 12, -77, 24, -65, 30, -55, 32, -46, 45, -34, 55, -17, 63, -9, 68, 9, 68, 21, 60, 35, 56, 40, 38, 50, 21, 56, 0, 60, -18, 59, -37, 53, -54, 41, -64, 30, -72, 16, -72, -4, -65, -14, -69, -25, -66, -40)
 disabled = true
 
-[node name="5" type="StaticBody2D" parent="."]
+[node name="5" type="StaticBody2D" parent="." unique_id=212773046]
 visible = false
 collision_mask = 0
 
-[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="5"]
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="5" unique_id=523999695]
 polygon = PackedVector2Array(-35, -33, -19, -37, -1, -40, 33, -38, 45, -34, 57, -34, 72, -26, 79, -9, 75, 4, 65, 19, 57, 30, 39, 40, 0, 53, -11, 55, -31, 55, -56, 55, -80, 50, -83, 43, -83, 24, -81, 17, -77, 11, -69, 8, -63, -2, -58, -17, -47, -27)
 disabled = true
 
-[node name="Crack" type="Area2D" parent="."]
+[node name="Crack" type="Area2D" parent="." unique_id=1052096174]
 collision_layer = 0
 collision_mask = 128
 monitoring = false
 
-[node name="Sprite2D" type="Sprite2D" parent="Crack"]
+[node name="Sprite2D" type="Sprite2D" parent="Crack" unique_id=1005669287]
 modulate = Color(1, 1, 1, 0)
 texture = ExtResource("4")
 
-[node name="GPUParticles2D" type="GPUParticles2D" parent="Crack"]
+[node name="GPUParticles2D" type="GPUParticles2D" parent="Crack" unique_id=2060982569]
 material = SubResource("18")
 emitting = false
 amount = 20
@@ -223,15 +223,13 @@ texture = ExtResource("5")
 explosiveness = 0.77
 process_material = SubResource("14")
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Crack"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Crack" unique_id=1740792450]
 shape = SubResource("15")
 
-[node name="AnimationPlayer" type="AnimationPlayer" parent="Crack"]
-libraries = {
-&"": SubResource("AnimationLibrary_evmef")
-}
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Crack" unique_id=342114398]
+libraries/ = SubResource("AnimationLibrary_evmef")
 
-[node name="Timer" type="Timer" parent="Crack"]
+[node name="Timer" type="Timer" parent="Crack" unique_id=1161527676]
 one_shot = true
 
 [connection signal="area_entered" from="Crack" to="." method="_on_Crack_area_entered"]

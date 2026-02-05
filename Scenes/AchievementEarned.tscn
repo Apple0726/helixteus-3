@@ -1,4 +1,4 @@
-[gd_scene load_steps=6 format=3 uid="uid://dyofqhjrusaqd"]
+[gd_scene format=3 uid="uid://dyofqhjrusaqd"]
 
 [ext_resource type="Theme" uid="uid://cp2u1kgj60ic" path="res://Resources/default_theme.tres" id="1"]
 
@@ -57,7 +57,7 @@ _data = {
 &"RESET": SubResource("Animation_h3gig")
 }
 
-[node name="AchievementEarned" type="Control"]
+[node name="AchievementEarned" type="Control" unique_id=1458717406]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -67,14 +67,14 @@ grow_vertical = 2
 mouse_filter = 2
 theme = ExtResource("1")
 
-[node name="Panel" type="Panel" parent="."]
+[node name="Panel" type="Panel" parent="." unique_id=327279059]
 modulate = Color(1, 1, 1, 0)
 layout_mode = 0
 offset_top = 250.0
 offset_right = 328.0
 offset_bottom = 386.0
 
-[node name="AchievementGet" type="Label" parent="Panel"]
+[node name="AchievementGet" type="Label" parent="Panel" unique_id=245676194]
 layout_mode = 0
 anchor_right = 1.0
 offset_bottom = 32.0
@@ -83,7 +83,7 @@ text = "ACHIEVEMENT_EARNED"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="Type" type="Label" parent="Panel"]
+[node name="Type" type="Label" parent="Panel" unique_id=1698096107]
 layout_mode = 0
 anchor_right = 1.0
 offset_left = 112.0
@@ -91,7 +91,7 @@ offset_top = 40.0
 offset_bottom = 64.0
 text = "EXPLORATION"
 
-[node name="Desc" type="Label" parent="Panel"]
+[node name="Desc" type="Label" parent="Panel" unique_id=106731286]
 layout_mode = 0
 anchor_right = 1.0
 offset_left = 112.0
@@ -100,7 +100,7 @@ offset_bottom = 136.0
 text = "asdf"
 autowrap_mode = 3
 
-[node name="TextureRect" type="TextureRect" parent="Panel"]
+[node name="TextureRect" type="TextureRect" parent="Panel" unique_id=1737435309]
 layout_mode = 0
 anchor_top = 1.0
 anchor_bottom = 1.0
@@ -111,7 +111,5 @@ offset_bottom = -13.9996
 expand_mode = 1
 stretch_mode = 5
 
-[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
-libraries = {
-&"": SubResource("AnimationLibrary_2eexe")
-}
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=1732307889]
+libraries/ = SubResource("AnimationLibrary_2eexe")

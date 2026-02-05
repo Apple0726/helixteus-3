@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=3 uid="uid://0kc4gny5p56b"]
+[gd_scene format=3 uid="uid://0kc4gny5p56b"]
 
 [ext_resource type="Texture2D" uid="uid://ig3sukbbyuvi" path="res://Graphics/Effects/effect_4.png" id="1"]
 [ext_resource type="Texture2D" uid="uid://b1dcgxga387up" path="res://Graphics/Effects/spotlight_1.png" id="2"]
@@ -42,36 +42,36 @@ gravity = Vector3(0, 0, 0)
 scale_curve = SubResource("5")
 color_ramp = SubResource("GradientTexture1D_62mel")
 
-[node name="Node2D" type="Node2D"]
+[node name="Node2D" type="Node2D" unique_id=2080804808]
 
-[node name="Active" type="Node2D" parent="."]
+[node name="Active" type="Node2D" parent="." unique_id=250667059]
 
-[node name="Sprite2D" type="Sprite2D" parent="Active"]
+[node name="Sprite2D" type="Sprite2D" parent="Active" unique_id=1894062856]
 scale = Vector2(2, 2)
 texture = ExtResource("2")
 
-[node name="GPUParticles2D" type="GPUParticles2D" parent="Active"]
+[node name="GPUParticles2D" type="GPUParticles2D" parent="Active" unique_id=1646090994]
 material = SubResource("1")
 scale = Vector2(1.4, 1.4)
 amount = 3
-process_material = SubResource("6")
 texture = ExtResource("1")
 lifetime = 2.0
 local_coords = true
+process_material = SubResource("6")
 
-[node name="Inactive" type="Node2D" parent="."]
+[node name="Inactive" type="Node2D" parent="." unique_id=133790137]
 visible = false
 
-[node name="Sprite2D" type="Sprite2D" parent="Inactive"]
+[node name="Sprite2D" type="Sprite2D" parent="Inactive" unique_id=2008948995]
 modulate = Color(0, 0, 0, 1)
 scale = Vector2(2, 2)
 texture = ExtResource("2")
 
-[node name="GPUParticles2D" type="GPUParticles2D" parent="Inactive"]
+[node name="GPUParticles2D" type="GPUParticles2D" parent="Inactive" unique_id=1838465346]
 modulate = Color(0.247059, 0, 0.541176, 1)
 scale = Vector2(1.4, 1.4)
 amount = 2
-process_material = SubResource("8")
 texture = ExtResource("1")
 lifetime = 5.0
 local_coords = true
+process_material = SubResource("8")

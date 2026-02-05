@@ -1,78 +1,34 @@
-[gd_scene load_steps=6 format=3 uid="uid://di212twja6t76"]
+[gd_scene format=3 uid="uid://di212twja6t76"]
 
 [ext_resource type="Theme" uid="uid://cp2u1kgj60ic" path="res://Resources/default_theme.tres" id="1"]
 [ext_resource type="Script" uid="uid://cdo3l1b7jauja" path="res://Scripts/Dialogue.gd" id="2"]
 
-[sub_resource type="StyleBoxFlat" id="1"]
-bg_color = Color(0.192157, 0.192157, 0.192157, 1)
-border_width_left = 2
-border_width_top = 2
-border_width_right = 2
-border_width_bottom = 2
-border_color = Color(0.4, 0.501961, 1, 1)
-expand_margin_left = 10.0
-expand_margin_top = 5.0
-expand_margin_right = 10.0
-expand_margin_bottom = 5.0
-
-[sub_resource type="StyleBoxFlat" id="2"]
-bg_color = Color(0.192157, 0.192157, 0.192157, 1)
-border_width_left = 2
-border_width_top = 2
-border_width_right = 2
-border_width_bottom = 2
-border_color = Color(0.4, 0.501961, 1, 1)
-expand_margin_left = 20.0
-expand_margin_top = 10.0
-expand_margin_right = 20.0
-expand_margin_bottom = 10.0
-
-[sub_resource type="StyleBoxFlat" id="3"]
-bg_color = Color(0.192157, 0.192157, 0.192157, 1)
-border_width_left = 2
-border_width_top = 2
-border_width_right = 2
-border_width_bottom = 2
-border_color = Color(0.4, 0.501961, 1, 1)
-expand_margin_left = 10.0
-expand_margin_top = 5.0
-expand_margin_right = 10.0
-expand_margin_bottom = 5.0
-
-[node name="Dialogue" type="Control"]
+[node name="Dialogue" type="Control" unique_id=2033200539]
+layout_mode = 3
+anchors_preset = 0
 offset_right = 40.0
 offset_bottom = 40.0
 mouse_filter = 1
 theme = ExtResource("1")
 script = ExtResource("2")
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
-[node name="HBox" type="HBoxContainer" parent="."]
+[node name="HBox" type="HBoxContainer" parent="." unique_id=609856552]
 visible = false
+layout_mode = 0
 offset_left = 544.0
 offset_top = 112.0
 offset_right = 736.0
 offset_bottom = 152.0
 alignment = 1
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
-[node name="Label" type="Label" parent="HBox"]
-offset_top = 6.0
-offset_right = 192.0
-offset_bottom = 34.0
+[node name="Label" type="Label" parent="HBox" unique_id=1588230235]
+layout_mode = 2
 theme = ExtResource("1")
-custom_styles/normal = SubResource("1")
 text = "PRESS_F_TO_TALK"
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
-[node name="Text" type="Label" parent="."]
+[node name="Text" type="Label" parent="." unique_id=1656056328]
 visible = false
+layout_mode = 0
 anchor_left = 0.5
 anchor_top = 1.0
 anchor_right = 0.5
@@ -81,36 +37,22 @@ offset_left = 300.0
 offset_top = 560.0
 offset_right = 944.0
 offset_bottom = 668.0
-custom_styles/normal = SubResource("2")
-autowrap = true
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
-[node name="PanelContainer" type="PanelContainer" parent="."]
+[node name="PanelContainer" type="PanelContainer" parent="." unique_id=1782433332]
 visible = false
+layout_mode = 0
 offset_left = 608.0
 offset_top = 432.0
 offset_right = 672.0
 offset_bottom = 464.0
 grow_horizontal = 2
 mouse_filter = 1
-custom_styles/panel = SubResource("3")
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
-[node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer"]
-offset_left = 2.0
-offset_top = 2.0
-offset_right = 62.0
-offset_bottom = 30.0
-grow_horizontal = 2
-custom_constants/separation = 6
+[node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer" unique_id=1552498702]
+layout_mode = 2
 
-[node name="Button" type="Button" parent="PanelContainer/VBoxContainer"]
-offset_right = 60.0
-offset_bottom = 24.0
+[node name="Button" type="Button" parent="PanelContainer/VBoxContainer" unique_id=217866711]
+layout_mode = 2
 text = "Ab"
 
 [connection signal="pressed" from="PanelContainer/VBoxContainer/Button" to="." method="_on_Button_pressed"]

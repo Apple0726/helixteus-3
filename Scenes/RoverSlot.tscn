@@ -1,23 +1,23 @@
-[gd_scene load_steps=4 format=3 uid="uid://pbckpnc3olsx"]
+[gd_scene format=3 uid="uid://pbckpnc3olsx"]
 
 [ext_resource type="Texture2D" uid="uid://q7un3vpelvdi" path="res://Graphics/Icons/REP.png" id="1"]
 [ext_resource type="Theme" uid="uid://cp2u1kgj60ic" path="res://Resources/default_theme.tres" id="2"]
 [ext_resource type="Texture2D" uid="uid://bfr7vxpm5uds2" path="res://Graphics/Icons/REP_over.png" id="3"]
 
-[node name="Slot" type="Panel"]
+[node name="Slot" type="Panel" unique_id=953979802]
 custom_minimum_size = Vector2(60, 60)
 offset_right = 60.0
 offset_bottom = 60.0
 mouse_filter = 1
 theme = ExtResource("2")
 
-[node name="Button" type="Button" parent="."]
+[node name="Button" type="Button" parent="." unique_id=1114396273]
 layout_mode = 0
 anchor_right = 1.0
 anchor_bottom = 1.0
 mouse_filter = 1
 
-[node name="TextureRect" type="TextureRect" parent="."]
+[node name="TextureRect" type="TextureRect" parent="." unique_id=119283040]
 layout_mode = 0
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -29,7 +29,7 @@ mouse_filter = 2
 expand_mode = 1
 stretch_mode = 6
 
-[node name="REP" type="TextureButton" parent="."]
+[node name="REP" type="TextureButton" parent="." unique_id=1986947126]
 visible = false
 layout_mode = 0
 anchor_left = 1.0

@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=3 uid="uid://babu1swh21k4r"]
+[gd_scene format=3 uid="uid://babu1swh21k4r"]
 
 [ext_resource type="Script" uid="uid://e4ah4nehqecc" path="res://Scripts/ShipyardPanel.gd" id="1"]
 [ext_resource type="Texture2D" uid="uid://dcgeiryc4u16w" path="res://Graphics/Ships/Fighter.png" id="2"]
@@ -7,7 +7,7 @@
 [ext_resource type="Theme" uid="uid://cp2u1kgj60ic" path="res://Resources/default_theme.tres" id="4"]
 [ext_resource type="PackedScene" uid="uid://c8jr3e5aiyj1n" path="res://Scenes/HelpText.tscn" id="5"]
 
-[node name="ShipyardPanel" type="Panel"]
+[node name="ShipyardPanel" type="Panel" unique_id=1853077571]
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
@@ -20,7 +20,7 @@ offset_bottom = 136.0
 theme = ExtResource("4")
 script = ExtResource("1")
 
-[node name="Label" type="Label" parent="."]
+[node name="Label" type="Label" parent="." unique_id=365407694]
 custom_minimum_size = Vector2(0, 38)
 layout_mode = 0
 anchor_left = 0.5
@@ -32,7 +32,7 @@ text = "CONSTRUCT_FIGHTERS"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="Construct" type="Button" parent="."]
+[node name="Construct" type="Button" parent="." unique_id=71491529]
 layout_mode = 1
 anchors_preset = 3
 anchor_left = 1.0
@@ -46,7 +46,7 @@ offset_bottom = -8.0
 grow_horizontal = 0
 grow_vertical = 0
 
-[node name="TextureRect" type="TextureRect" parent="Construct"]
+[node name="TextureRect" type="TextureRect" parent="Construct" unique_id=521991608]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -59,7 +59,7 @@ texture = ExtResource("3_mjt7u")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="ScrollContainer" type="ScrollContainer" parent="."]
+[node name="ScrollContainer" type="ScrollContainer" parent="." unique_id=1814610594]
 layout_mode = 1
 anchors_preset = 2
 anchor_top = 1.0
@@ -71,19 +71,19 @@ offset_bottom = -8.0
 grow_vertical = 0
 vertical_scroll_mode = 3
 
-[node name="HBox" type="HBoxContainer" parent="ScrollContainer"]
+[node name="HBox" type="HBoxContainer" parent="ScrollContainer" unique_id=1413412927]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="CloseButton" parent="." instance=ExtResource("3")]
+[node name="CloseButton" parent="." unique_id=1542969395 instance=ExtResource("3")]
 layout_mode = 1
 offset_left = -32.0
 offset_top = 8.0
 offset_right = -8.0
 offset_bottom = 32.0
 
-[node name="TextureRect" type="TextureRect" parent="."]
+[node name="TextureRect" type="TextureRect" parent="." unique_id=713269260]
 layout_mode = 0
 offset_left = 24.0
 offset_top = 88.0
@@ -93,7 +93,7 @@ texture = ExtResource("2")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="SpinBox" type="SpinBox" parent="."]
+[node name="SpinBox" type="SpinBox" parent="." unique_id=1229929656]
 layout_mode = 0
 offset_left = 264.0
 offset_top = 112.0
@@ -103,7 +103,7 @@ value = 1.0
 rounded = true
 allow_greater = true
 
-[node name="Strength" parent="." instance=ExtResource("5")]
+[node name="Strength" parent="." unique_id=839345313 instance=ExtResource("5")]
 layout_mode = 0
 offset_left = 384.0
 offset_top = 112.0
@@ -111,7 +111,7 @@ offset_right = 632.0
 offset_bottom = 142.0
 help_text = "FLEET_STRENGTH_INFO"
 
-[node name="OptionButton" type="OptionButton" parent="."]
+[node name="OptionButton" type="OptionButton" parent="." unique_id=1476380309]
 layout_mode = 0
 offset_left = 48.0
 offset_top = 48.0

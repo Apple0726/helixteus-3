@@ -1,10 +1,10 @@
-[gd_scene load_steps=4 format=3 uid="uid://cq2nl2mljdwdf"]
+[gd_scene format=3 uid="uid://cq2nl2mljdwdf"]
 
 [ext_resource type="Theme" uid="uid://cp2u1kgj60ic" path="res://Resources/default_theme.tres" id="2"]
 [ext_resource type="Texture2D" uid="uid://dpnh07smc8bfk" path="res://Graphics/Icons/DropdownArrow.png" id="3"]
 [ext_resource type="Script" uid="uid://cs6xr5b8be4vv" path="res://Scripts/CustomSpinBox.gd" id="4"]
 
-[node name="CustomSpinBox" type="LineEdit"]
+[node name="CustomSpinBox" type="LineEdit" unique_id=1360659515]
 custom_minimum_size = Vector2(0, 32)
 anchors_preset = 15
 anchor_right = 1.0
@@ -18,14 +18,14 @@ caret_blink = true
 caret_blink_interval = 0.5
 script = ExtResource("4")
 
-[node name="Up" type="Button" parent="."]
+[node name="Up" type="Button" parent="." unique_id=2004984604]
 layout_mode = 0
 anchor_left = 1.0
 anchor_right = 1.0
 offset_right = 20.0
 offset_bottom = 16.0
 
-[node name="TextureRect" type="TextureRect" parent="Up"]
+[node name="TextureRect" type="TextureRect" parent="Up" unique_id=20993827]
 layout_mode = 0
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -36,7 +36,7 @@ expand_mode = 1
 stretch_mode = 6
 flip_v = true
 
-[node name="Down" type="Button" parent="."]
+[node name="Down" type="Button" parent="." unique_id=975814194]
 layout_mode = 0
 anchor_left = 1.0
 anchor_top = 1.0
@@ -45,7 +45,7 @@ anchor_bottom = 1.0
 offset_top = -16.0
 offset_right = 20.0
 
-[node name="TextureRect" type="TextureRect" parent="Down"]
+[node name="TextureRect" type="TextureRect" parent="Down" unique_id=15033175]
 layout_mode = 0
 anchor_right = 1.0
 anchor_bottom = 1.0

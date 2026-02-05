@@ -1,9 +1,9 @@
-[gd_scene load_steps=3 format=3 uid="uid://c78354pl3ti84"]
+[gd_scene format=3 uid="uid://c78354pl3ti84"]
 
 [ext_resource type="Theme" uid="uid://cp2u1kgj60ic" path="res://Resources/default_theme.tres" id="1_t3l4e"]
-[ext_resource type="Texture2D" uid="uid://73j3my60rh80" path="res://Graphics/Ships/Probe0.png" id="1_y0ggt"]
+[ext_resource type="Texture2D" uid="uid://0tkum5k543lo" path="res://Graphics/Ships/Probe0.png" id="1_y0ggt"]
 
-[node name="Control" type="Control"]
+[node name="Control" type="Control" unique_id=1148628709]
 custom_minimum_size = Vector2(0, 96)
 layout_mode = 3
 anchors_preset = 10
@@ -12,7 +12,7 @@ offset_bottom = 96.0
 grow_horizontal = 2
 theme = ExtResource("1_t3l4e")
 
-[node name="ProbeIcon" type="TextureRect" parent="."]
+[node name="ProbeIcon" type="TextureRect" parent="." unique_id=1747738476]
 layout_mode = 0
 offset_left = 44.0
 offset_right = 120.0
@@ -21,7 +21,8 @@ texture = ExtResource("1_y0ggt")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="LocationLabel" type="Label" parent="."]
+[node name="LocationLabel" type="Label" parent="." unique_id=1506729097]
+layout_mode = 0
 offset_left = 296.0
 offset_top = 16.0
 offset_right = 484.0
@@ -29,14 +30,16 @@ offset_bottom = 39.0
 text = "Universe"
 horizontal_alignment = 1
 
-[node name="GoTo" type="Button" parent="."]
+[node name="GoTo" type="Button" parent="." unique_id=858471475]
+layout_mode = 0
 offset_left = 352.0
 offset_top = 48.0
 offset_right = 428.0
 offset_bottom = 81.0
 text = "GO_TO"
 
-[node name="StatusLabel" type="Label" parent="."]
+[node name="StatusLabel" type="Label" parent="." unique_id=587727934]
+layout_mode = 0
 offset_left = 516.0
 offset_top = 32.0
 offset_right = 704.0
@@ -44,7 +47,8 @@ offset_bottom = 55.0
 text = "On standby"
 horizontal_alignment = 1
 
-[node name="Disband" type="Button" parent="."]
+[node name="Disband" type="Button" parent="." unique_id=748509532]
+layout_mode = 0
 offset_left = 728.0
 offset_top = 28.0
 offset_right = 856.0

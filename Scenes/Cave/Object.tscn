@@ -1,4 +1,4 @@
-[gd_scene load_steps=4 format=3 uid="uid://hey4xfsuu155"]
+[gd_scene format=3 uid="uid://hey4xfsuu155"]
 
 [ext_resource type="Texture2D" uid="uid://dkp5rp5lln777" path="res://Graphics/Cave/Objects/Chest.png" id="1"]
 [ext_resource type="Texture2D" uid="uid://cvetejccba6ge" path="res://Graphics/Stars/Star.png" id="2"]
@@ -6,28 +6,27 @@
 [sub_resource type="CircleShape2D" id="1"]
 radius = 60.0
 
-[node name="Node2D" type="Node2D"]
+[node name="Node2D" type="Node2D" unique_id=184396675]
 
-[node name="PointLight2D" type="PointLight2D" parent="."]
+[node name="PointLight2D" type="PointLight2D" parent="." unique_id=663696090]
 enabled = false
-texture = ExtResource("2")
 energy = 0.8
 shadow_enabled = true
 shadow_color = Color(0, 0, 0, 1)
-shadow_buffer_size = 512
+texture = ExtResource("2")
 
-[node name="Shadow" type="Sprite2D" parent="."]
+[node name="Shadow" type="Sprite2D" parent="." unique_id=2129813479]
 modulate = Color(0, 0, 0, 0.45098)
 position = Vector2(0, 48)
 scale = Vector2(0.44, 0.166771)
 texture = ExtResource("2")
 
-[node name="Sprite2D" type="Sprite2D" parent="."]
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=1309256099]
 texture = ExtResource("1")
 
-[node name="Area2D" type="Area2D" parent="."]
+[node name="Area2D" type="Area2D" parent="." unique_id=1675835859]
 collision_layer = 32
 collision_mask = 2
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D" unique_id=1626388887]
 shape = SubResource("1")

@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=3 uid="uid://c5qfs6oo128dp"]
+[gd_scene format=3 uid="uid://c5qfs6oo128dp"]
 
 [ext_resource type="Shader" uid="uid://bchk7n1pijb6p" path="res://Shaders/Nebula.gdshader" id="3"]
 [ext_resource type="Script" uid="uid://362ulhg8hbg6" path="res://Scripts/Nebula.gd" id="4"]
@@ -51,15 +51,13 @@ _data = {
 &"RESET": SubResource("Animation_c2ucc")
 }
 
-[node name="Nebula" type="Node2D"]
+[node name="Nebula" type="Node2D" unique_id=1032267237]
 script = ExtResource("4")
 
-[node name="Nebula" type="Sprite2D" parent="."]
+[node name="Nebula" type="Sprite2D" parent="." unique_id=1329731346]
 material = SubResource("1")
 scale = Vector2(6.4, 3.6)
 centered = false
 
-[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
-libraries = {
-&"": SubResource("AnimationLibrary_yqdgm")
-}
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=1376494738]
+libraries/ = SubResource("AnimationLibrary_yqdgm")

@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=3 uid="uid://c4filbuq4b5ct"]
+[gd_scene format=3 uid="uid://c4filbuq4b5ct"]
 
 [ext_resource type="Texture2D" uid="uid://bn8t8jmrkuvdk" path="res://Graphics/Icons/Time.png" id="1"]
 [ext_resource type="Texture2D" uid="uid://hjl8rhhr18ke" path="res://Graphics/Icons/help.png" id="2"]
@@ -31,7 +31,7 @@ LineEdit/styles/focus = null
 LineEdit/styles/normal = SubResource("1")
 LineEdit/styles/read_only = null
 
-[node name="SendProbesPanel" type="Panel"]
+[node name="SendProbesPanel" type="Panel" unique_id=533805489]
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
@@ -45,7 +45,7 @@ pivot_offset = Vector2(533, 300)
 theme = ExtResource("3")
 script = ExtResource("5")
 
-[node name="Title" type="Label" parent="."]
+[node name="Title" type="Label" parent="." unique_id=1853866638]
 custom_minimum_size = Vector2(0, 38)
 layout_mode = 0
 anchor_right = 1.0
@@ -54,21 +54,21 @@ text = "SEND_PROBES"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="CloseButton" parent="." instance=ExtResource("8")]
+[node name="CloseButton" parent="." unique_id=27301663 instance=ExtResource("8")]
 layout_mode = 1
 offset_left = -32.0
 offset_top = 8.0
 offset_right = -8.0
 offset_bottom = 32.0
 
-[node name="Control" type="Panel" parent="."]
+[node name="Control" type="Panel" parent="." unique_id=1878322498]
 layout_mode = 0
 offset_left = 24.0
 offset_top = 56.0
 offset_right = 1000.0
 offset_bottom = 568.0
 
-[node name="Label2" type="Label" parent="Control"]
+[node name="Label2" type="Label" parent="Control" unique_id=65466662]
 layout_mode = 0
 offset_left = 176.0
 offset_top = 272.0
@@ -76,7 +76,7 @@ offset_right = 320.0
 offset_bottom = 304.0
 text = "LESS_ENERGY"
 
-[node name="Label3" type="Label" parent="Control"]
+[node name="Label3" type="Label" parent="Control" unique_id=1695476385]
 layout_mode = 0
 offset_left = 664.0
 offset_top = 272.0
@@ -84,7 +84,7 @@ offset_right = 828.0
 offset_bottom = 304.0
 text = "FASTER_TRAVEL"
 
-[node name="HSlider" type="HSlider" parent="Control"]
+[node name="HSlider" type="HSlider" parent="Control" unique_id=1638193314]
 layout_mode = 0
 offset_left = 368.0
 offset_top = 280.0
@@ -92,7 +92,7 @@ offset_right = 608.0
 offset_bottom = 296.0
 value = 50.0
 
-[node name="TimeIcon" type="TextureRect" parent="Control"]
+[node name="TimeIcon" type="TextureRect" parent="Control" unique_id=948951659]
 layout_mode = 0
 offset_left = 472.0
 offset_top = 360.0
@@ -102,35 +102,35 @@ texture = ExtResource("1")
 expand_mode = 1
 stretch_mode = 6
 
-[node name="Costs" type="HBoxContainer" parent="Control"]
+[node name="Costs" type="HBoxContainer" parent="Control" unique_id=1388148739]
 layout_mode = 0
 offset_left = 40.0
 offset_top = 360.0
 offset_right = 424.0
 offset_bottom = 400.0
 
-[node name="Time" type="Label" parent="Control"]
+[node name="Time" type="Label" parent="Control" unique_id=1027520574]
 layout_mode = 0
 offset_left = 520.0
 offset_top = 368.0
 offset_right = 640.0
 offset_bottom = 392.0
 
-[node name="Label" type="Label" parent="."]
+[node name="Label" type="Label" parent="." unique_id=1837415612]
 layout_mode = 0
 offset_left = 56.0
 offset_top = 72.0
 offset_right = 1016.0
 offset_bottom = 284.0
 
-[node name="NoProbes" type="Label" parent="."]
+[node name="NoProbes" type="Label" parent="." unique_id=1867810973]
 layout_mode = 0
 offset_left = 56.0
 offset_top = 176.0
 offset_right = 992.0
 offset_bottom = 200.0
 
-[node name="TP" type="Panel" parent="."]
+[node name="TP" type="Panel" parent="." unique_id=633395910]
 layout_mode = 0
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -141,7 +141,7 @@ offset_bottom = -24.0
 mouse_filter = 2
 theme_override_styles/panel = SubResource("StyleBoxEmpty_cdiax")
 
-[node name="VBox" type="VBoxContainer" parent="TP"]
+[node name="VBox" type="VBoxContainer" parent="TP" unique_id=1103777396]
 layout_mode = 0
 offset_left = 24.0
 offset_top = 80.0
@@ -150,10 +150,10 @@ offset_bottom = 448.0
 theme = SubResource("2")
 theme_override_constants/separation = 10
 
-[node name="speed_of_light" type="HBoxContainer" parent="TP/VBox"]
+[node name="speed_of_light" type="HBoxContainer" parent="TP/VBox" unique_id=523399836]
 layout_mode = 2
 
-[node name="Label" type="RichTextLabel" parent="TP/VBox/speed_of_light"]
+[node name="Label" type="RichTextLabel" parent="TP/VBox/speed_of_light" unique_id=1122964993]
 custom_minimum_size = Vector2(300, 0)
 layout_mode = 2
 mouse_filter = 1
@@ -161,7 +161,7 @@ bbcode_enabled = true
 text = "Speed of light "
 scroll_active = false
 
-[node name="HSlider" type="HSlider" parent="TP/VBox/speed_of_light"]
+[node name="HSlider" type="HSlider" parent="TP/VBox/speed_of_light" unique_id=292648294]
 custom_minimum_size = Vector2(250, 0)
 layout_mode = 2
 size_flags_vertical = 1
@@ -171,27 +171,27 @@ step = 0.1
 value = 1.0
 allow_greater = true
 
-[node name="Label2" type="LineEdit" parent="TP/VBox/speed_of_light"]
+[node name="Label2" type="LineEdit" parent="TP/VBox/speed_of_light" unique_id=842697244]
 custom_minimum_size = Vector2(70, 0)
 layout_mode = 2
 text = "1"
 caret_blink = true
 caret_blink_interval = 0.5
 
-[node name="Unit" type="Label" parent="TP/VBox/speed_of_light"]
+[node name="Unit" type="Label" parent="TP/VBox/speed_of_light" unique_id=602742908]
 layout_mode = 2
 
-[node name="planck" type="HBoxContainer" parent="TP/VBox"]
+[node name="planck" type="HBoxContainer" parent="TP/VBox" unique_id=450263867]
 layout_mode = 2
 
-[node name="Label" type="RichTextLabel" parent="TP/VBox/planck"]
+[node name="Label" type="RichTextLabel" parent="TP/VBox/planck" unique_id=592547760]
 custom_minimum_size = Vector2(300, 0)
 layout_mode = 2
 mouse_filter = 1
 bbcode_enabled = true
 scroll_active = false
 
-[node name="HSlider" type="HSlider" parent="TP/VBox/planck"]
+[node name="HSlider" type="HSlider" parent="TP/VBox/planck" unique_id=405454123]
 custom_minimum_size = Vector2(250, 0)
 layout_mode = 2
 size_flags_vertical = 1
@@ -201,27 +201,27 @@ step = 0.1
 value = 1.0
 allow_greater = true
 
-[node name="Label2" type="LineEdit" parent="TP/VBox/planck"]
+[node name="Label2" type="LineEdit" parent="TP/VBox/planck" unique_id=899026499]
 custom_minimum_size = Vector2(70, 0)
 layout_mode = 2
 text = "1"
 caret_blink = true
 caret_blink_interval = 0.5
 
-[node name="Unit" type="Label" parent="TP/VBox/planck"]
+[node name="Unit" type="Label" parent="TP/VBox/planck" unique_id=1498617135]
 layout_mode = 2
 
-[node name="boltzmann" type="HBoxContainer" parent="TP/VBox"]
+[node name="boltzmann" type="HBoxContainer" parent="TP/VBox" unique_id=633673952]
 layout_mode = 2
 
-[node name="Label" type="RichTextLabel" parent="TP/VBox/boltzmann"]
+[node name="Label" type="RichTextLabel" parent="TP/VBox/boltzmann" unique_id=682975864]
 custom_minimum_size = Vector2(300, 0)
 layout_mode = 2
 mouse_filter = 1
 bbcode_enabled = true
 scroll_active = false
 
-[node name="HSlider" type="HSlider" parent="TP/VBox/boltzmann"]
+[node name="HSlider" type="HSlider" parent="TP/VBox/boltzmann" unique_id=1670642937]
 custom_minimum_size = Vector2(250, 0)
 layout_mode = 2
 size_flags_vertical = 1
@@ -231,45 +231,45 @@ step = 0.1
 value = 1.0
 allow_greater = true
 
-[node name="Label2" type="LineEdit" parent="TP/VBox/boltzmann"]
+[node name="Label2" type="LineEdit" parent="TP/VBox/boltzmann" unique_id=1511808143]
 custom_minimum_size = Vector2(70, 0)
 layout_mode = 2
 text = "1"
 caret_blink = true
 caret_blink_interval = 0.5
 
-[node name="Unit" type="Label" parent="TP/VBox/boltzmann"]
+[node name="Unit" type="Label" parent="TP/VBox/boltzmann" unique_id=1890530185]
 layout_mode = 2
 
-[node name="s_b" type="HBoxContainer" parent="TP/VBox"]
+[node name="s_b" type="HBoxContainer" parent="TP/VBox" unique_id=312007770]
 layout_mode = 2
 
-[node name="Label" type="RichTextLabel" parent="TP/VBox/s_b"]
+[node name="Label" type="RichTextLabel" parent="TP/VBox/s_b" unique_id=1428958176]
 custom_minimum_size = Vector2(300, 0)
 layout_mode = 2
 mouse_filter = 1
 bbcode_enabled = true
 scroll_active = false
 
-[node name="Label2" type="Label" parent="TP/VBox/s_b"]
+[node name="Label2" type="Label" parent="TP/VBox/s_b" unique_id=882297756]
 custom_minimum_size = Vector2(50, 0)
 layout_mode = 2
 text = "1"
 
-[node name="Unit" type="Label" parent="TP/VBox/s_b"]
+[node name="Unit" type="Label" parent="TP/VBox/s_b" unique_id=673716469]
 layout_mode = 2
 
-[node name="gravitational" type="HBoxContainer" parent="TP/VBox"]
+[node name="gravitational" type="HBoxContainer" parent="TP/VBox" unique_id=1294748041]
 layout_mode = 2
 
-[node name="Label" type="RichTextLabel" parent="TP/VBox/gravitational"]
+[node name="Label" type="RichTextLabel" parent="TP/VBox/gravitational" unique_id=414648874]
 custom_minimum_size = Vector2(300, 0)
 layout_mode = 2
 mouse_filter = 1
 bbcode_enabled = true
 scroll_active = false
 
-[node name="HSlider" type="HSlider" parent="TP/VBox/gravitational"]
+[node name="HSlider" type="HSlider" parent="TP/VBox/gravitational" unique_id=1371078709]
 custom_minimum_size = Vector2(250, 0)
 layout_mode = 2
 size_flags_vertical = 1
@@ -279,27 +279,27 @@ step = 0.1
 value = 1.0
 allow_greater = true
 
-[node name="Label2" type="LineEdit" parent="TP/VBox/gravitational"]
+[node name="Label2" type="LineEdit" parent="TP/VBox/gravitational" unique_id=1708873910]
 custom_minimum_size = Vector2(70, 0)
 layout_mode = 2
 text = "1"
 caret_blink = true
 caret_blink_interval = 0.5
 
-[node name="Unit" type="Label" parent="TP/VBox/gravitational"]
+[node name="Unit" type="Label" parent="TP/VBox/gravitational" unique_id=517418729]
 layout_mode = 2
 
-[node name="charge" type="HBoxContainer" parent="TP/VBox"]
+[node name="charge" type="HBoxContainer" parent="TP/VBox" unique_id=70007463]
 layout_mode = 2
 
-[node name="Label" type="RichTextLabel" parent="TP/VBox/charge"]
+[node name="Label" type="RichTextLabel" parent="TP/VBox/charge" unique_id=1039174175]
 custom_minimum_size = Vector2(300, 0)
 layout_mode = 2
 mouse_filter = 1
 bbcode_enabled = true
 scroll_active = false
 
-[node name="HSlider" type="HSlider" parent="TP/VBox/charge"]
+[node name="HSlider" type="HSlider" parent="TP/VBox/charge" unique_id=790006429]
 custom_minimum_size = Vector2(250, 0)
 layout_mode = 2
 size_flags_vertical = 1
@@ -309,27 +309,27 @@ step = 0.1
 value = 1.0
 allow_greater = true
 
-[node name="Label2" type="LineEdit" parent="TP/VBox/charge"]
+[node name="Label2" type="LineEdit" parent="TP/VBox/charge" unique_id=1091366427]
 custom_minimum_size = Vector2(70, 0)
 layout_mode = 2
 text = "1"
 caret_blink = true
 caret_blink_interval = 0.5
 
-[node name="Unit" type="Label" parent="TP/VBox/charge"]
+[node name="Unit" type="Label" parent="TP/VBox/charge" unique_id=1184021534]
 layout_mode = 2
 
-[node name="dark_energy" type="HBoxContainer" parent="TP/VBox"]
+[node name="dark_energy" type="HBoxContainer" parent="TP/VBox" unique_id=1415954606]
 layout_mode = 2
 
-[node name="Label" type="RichTextLabel" parent="TP/VBox/dark_energy"]
+[node name="Label" type="RichTextLabel" parent="TP/VBox/dark_energy" unique_id=348657935]
 custom_minimum_size = Vector2(300, 0)
 layout_mode = 2
 mouse_filter = 1
 bbcode_enabled = true
 scroll_active = false
 
-[node name="HSlider" type="HSlider" parent="TP/VBox/dark_energy"]
+[node name="HSlider" type="HSlider" parent="TP/VBox/dark_energy" unique_id=9378367]
 custom_minimum_size = Vector2(250, 0)
 layout_mode = 2
 size_flags_vertical = 1
@@ -339,27 +339,27 @@ step = 0.1
 value = 1.0
 allow_greater = true
 
-[node name="Label2" type="LineEdit" parent="TP/VBox/dark_energy"]
+[node name="Label2" type="LineEdit" parent="TP/VBox/dark_energy" unique_id=2139247727]
 custom_minimum_size = Vector2(70, 0)
 layout_mode = 2
 text = "1"
 caret_blink = true
 caret_blink_interval = 0.5
 
-[node name="Unit" type="Label" parent="TP/VBox/dark_energy"]
+[node name="Unit" type="Label" parent="TP/VBox/dark_energy" unique_id=554293854]
 layout_mode = 2
 
-[node name="difficulty" type="HBoxContainer" parent="TP/VBox"]
+[node name="difficulty" type="HBoxContainer" parent="TP/VBox" unique_id=961325024]
 layout_mode = 2
 
-[node name="Label" type="RichTextLabel" parent="TP/VBox/difficulty"]
+[node name="Label" type="RichTextLabel" parent="TP/VBox/difficulty" unique_id=141295341]
 custom_minimum_size = Vector2(300, 0)
 layout_mode = 2
 mouse_filter = 1
 bbcode_enabled = true
 scroll_active = false
 
-[node name="HSlider" type="HSlider" parent="TP/VBox/difficulty"]
+[node name="HSlider" type="HSlider" parent="TP/VBox/difficulty" unique_id=159008818]
 custom_minimum_size = Vector2(250, 0)
 layout_mode = 2
 size_flags_vertical = 1
@@ -369,27 +369,27 @@ step = 0.1
 value = 1.0
 allow_greater = true
 
-[node name="Label2" type="LineEdit" parent="TP/VBox/difficulty"]
+[node name="Label2" type="LineEdit" parent="TP/VBox/difficulty" unique_id=206147012]
 custom_minimum_size = Vector2(70, 0)
 layout_mode = 2
 text = "1"
 caret_blink = true
 caret_blink_interval = 0.5
 
-[node name="Unit" type="Label" parent="TP/VBox/difficulty"]
+[node name="Unit" type="Label" parent="TP/VBox/difficulty" unique_id=1425004724]
 layout_mode = 2
 
-[node name="time_speed" type="HBoxContainer" parent="TP/VBox"]
+[node name="time_speed" type="HBoxContainer" parent="TP/VBox" unique_id=1764518487]
 layout_mode = 2
 
-[node name="Label" type="RichTextLabel" parent="TP/VBox/time_speed"]
+[node name="Label" type="RichTextLabel" parent="TP/VBox/time_speed" unique_id=638457474]
 custom_minimum_size = Vector2(300, 0)
 layout_mode = 2
 mouse_filter = 1
 bbcode_enabled = true
 scroll_active = false
 
-[node name="HSlider" type="HSlider" parent="TP/VBox/time_speed"]
+[node name="HSlider" type="HSlider" parent="TP/VBox/time_speed" unique_id=541320792]
 custom_minimum_size = Vector2(250, 0)
 layout_mode = 2
 size_flags_vertical = 1
@@ -399,27 +399,27 @@ step = 0.1
 value = 1.0
 allow_greater = true
 
-[node name="Label2" type="LineEdit" parent="TP/VBox/time_speed"]
+[node name="Label2" type="LineEdit" parent="TP/VBox/time_speed" unique_id=679387436]
 custom_minimum_size = Vector2(70, 0)
 layout_mode = 2
 text = "1"
 caret_blink = true
 caret_blink_interval = 0.5
 
-[node name="Unit" type="Label" parent="TP/VBox/time_speed"]
+[node name="Unit" type="Label" parent="TP/VBox/time_speed" unique_id=537300942]
 layout_mode = 2
 
-[node name="age" type="HBoxContainer" parent="TP/VBox"]
+[node name="age" type="HBoxContainer" parent="TP/VBox" unique_id=863608935]
 layout_mode = 2
 
-[node name="Label" type="RichTextLabel" parent="TP/VBox/age"]
+[node name="Label" type="RichTextLabel" parent="TP/VBox/age" unique_id=2008596969]
 custom_minimum_size = Vector2(300, 0)
 layout_mode = 2
 mouse_filter = 1
 bbcode_enabled = true
 scroll_active = false
 
-[node name="HSlider" type="HSlider" parent="TP/VBox/age"]
+[node name="HSlider" type="HSlider" parent="TP/VBox/age" unique_id=1718489181]
 custom_minimum_size = Vector2(250, 0)
 layout_mode = 2
 size_flags_vertical = 1
@@ -429,32 +429,32 @@ step = 0.1
 value = 1.0
 allow_greater = true
 
-[node name="Label2" type="LineEdit" parent="TP/VBox/age"]
+[node name="Label2" type="LineEdit" parent="TP/VBox/age" unique_id=914339094]
 custom_minimum_size = Vector2(70, 0)
 layout_mode = 2
 text = "1"
 caret_blink = true
 caret_blink_interval = 0.5
 
-[node name="Unit" type="Label" parent="TP/VBox/age"]
+[node name="Unit" type="Label" parent="TP/VBox/age" unique_id=1928384963]
 layout_mode = 2
 
-[node name="TierDistribution" type="TextureButton" parent="TP/VBox/age"]
+[node name="TierDistribution" type="TextureButton" parent="TP/VBox/age" unique_id=1983319922]
 layout_mode = 2
 texture_normal = ExtResource("2")
 
-[node name="antimatter" type="HBoxContainer" parent="TP/VBox"]
+[node name="antimatter" type="HBoxContainer" parent="TP/VBox" unique_id=578858596]
 visible = false
 layout_mode = 2
 
-[node name="Label" type="RichTextLabel" parent="TP/VBox/antimatter"]
+[node name="Label" type="RichTextLabel" parent="TP/VBox/antimatter" unique_id=1528169249]
 custom_minimum_size = Vector2(300, 0)
 layout_mode = 2
 mouse_filter = 1
 bbcode_enabled = true
 scroll_active = false
 
-[node name="HSlider" type="HSlider" parent="TP/VBox/antimatter"]
+[node name="HSlider" type="HSlider" parent="TP/VBox/antimatter" unique_id=980819705]
 custom_minimum_size = Vector2(250, 0)
 layout_mode = 2
 size_flags_vertical = 1
@@ -462,17 +462,17 @@ max_value = 5.0
 step = 0.1
 allow_greater = true
 
-[node name="Label2" type="LineEdit" parent="TP/VBox/antimatter"]
+[node name="Label2" type="LineEdit" parent="TP/VBox/antimatter" unique_id=2062557206]
 custom_minimum_size = Vector2(70, 0)
 layout_mode = 2
 text = "0"
 caret_blink = true
 caret_blink_interval = 0.5
 
-[node name="Unit" type="Label" parent="TP/VBox/antimatter"]
+[node name="Unit" type="Label" parent="TP/VBox/antimatter" unique_id=441519224]
 layout_mode = 2
 
-[node name="Points" type="RichTextLabel" parent="TP"]
+[node name="Points" type="RichTextLabel" parent="TP" unique_id=616223173]
 layout_mode = 0
 anchor_left = 1.0
 anchor_right = 1.0
@@ -483,7 +483,7 @@ offset_bottom = 64.0
 mouse_filter = 1
 bbcode_enabled = true
 
-[node name="Label" type="Label" parent="TP"]
+[node name="Label" type="Label" parent="TP" unique_id=364775818]
 layout_mode = 0
 offset_left = 24.0
 offset_top = 24.0
@@ -491,7 +491,7 @@ offset_right = 672.0
 offset_bottom = 72.0
 text = "TP_INFO"
 
-[node name="Send" type="Button" parent="."]
+[node name="Send" type="Button" parent="." unique_id=1355520088]
 layout_mode = 0
 offset_left = 400.0
 offset_top = 512.0
@@ -499,7 +499,7 @@ offset_right = 624.0
 offset_bottom = 552.0
 text = "SEND_A_PROBE"
 
-[node name="SendAll" type="Button" parent="."]
+[node name="SendAll" type="Button" parent="." unique_id=1601650957]
 layout_mode = 0
 offset_left = 736.0
 offset_top = 512.0

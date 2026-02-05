@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=3 uid="uid://1hq6qpr1oa3i"]
+[gd_scene format=3 uid="uid://1hq6qpr1oa3i"]
 
 [ext_resource type="Theme" uid="uid://cp2u1kgj60ic" path="res://Resources/default_theme.tres" id="1"]
 [ext_resource type="Texture2D" uid="uid://t70si4f413j5" path="res://Graphics/Effects/spotlight_4.png" id="2"]
@@ -54,7 +54,7 @@ _data = {
 &"StarAnim": SubResource("1")
 }
 
-[node name="Button" type="Button"]
+[node name="Button" type="Button" unique_id=365304874]
 custom_minimum_size = Vector2(0, 30)
 anchors_preset = 15
 anchor_right = 1.0
@@ -64,7 +64,7 @@ offset_bottom = -680.0
 theme = ExtResource("1")
 script = ExtResource("3")
 
-[node name="Label" type="Label" parent="."]
+[node name="Label" type="Label" parent="." unique_id=599467819]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -81,7 +81,7 @@ theme_override_colors/font_color = Color(0, 0, 0, 1)
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="TextureRect" type="TextureRect" parent="Label"]
+[node name="TextureRect" type="TextureRect" parent="Label" unique_id=1393124554]
 visible = false
 modulate = Color(1.5, 1.5, 1.5, 1)
 layout_mode = 0
@@ -96,7 +96,7 @@ pivot_offset = Vector2(15, 15)
 texture = ExtResource("2")
 expand_mode = 1
 
-[node name="Notification" type="TextureRect" parent="Label"]
+[node name="Notification" type="TextureRect" parent="Label" unique_id=2062285733]
 visible = false
 layout_mode = 0
 anchor_left = 1.0
@@ -111,12 +111,10 @@ pivot_offset = Vector2(15, 15)
 texture = ExtResource("4")
 expand_mode = 1
 
-[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
-libraries = {
-"": SubResource("AnimationLibrary_j3tc0")
-}
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=427557444]
+libraries/ = SubResource("AnimationLibrary_j3tc0")
 
-[node name="Icon" type="TextureRect" parent="."]
+[node name="Icon" type="TextureRect" parent="." unique_id=260680723]
 custom_minimum_size = Vector2(24, 24)
 layout_mode = 1
 anchors_preset = 4

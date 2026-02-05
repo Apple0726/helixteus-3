@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=3 uid="uid://rkeuei54m30i"]
+[gd_scene format=3 uid="uid://rkeuei54m30i"]
 
 [ext_resource type="Texture2D" uid="uid://dwjcfkpu40hn8" path="res://Graphics/Buttons/IonDrive.png" id="3"]
 [ext_resource type="Texture2D" uid="uid://bixqswdd7ypgy" path="res://Graphics/Buttons/ChemicalDrive.png" id="4"]
@@ -7,14 +7,14 @@
 [ext_resource type="Texture2D" uid="uid://c2gvy8266bgkb" path="res://Graphics/Materials/coal.png" id="6_s6hk7"]
 [ext_resource type="Theme" uid="uid://cp2u1kgj60ic" path="res://Resources/default_theme.tres" id="7"]
 
-[node name="Drives" type="Panel"]
+[node name="Drives" type="Panel" unique_id=1705515687]
 offset_right = 624.0
 offset_bottom = 488.0
 theme = ExtResource("7")
 script = ExtResource("6")
 metadata/_edit_vertical_guides_ = [528.0]
 
-[node name="Label5" type="Label" parent="."]
+[node name="Label5" type="Label" parent="." unique_id=1357447517]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -31,7 +31,7 @@ text = "CLICK_DRIVE_TO_USE"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="Panel" type="PanelContainer" parent="."]
+[node name="Panel" type="PanelContainer" parent="." unique_id=1816628462]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -45,11 +45,11 @@ offset_bottom = -84.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="Drives" type="HBoxContainer" parent="Panel"]
+[node name="Drives" type="HBoxContainer" parent="Panel" unique_id=1959086438]
 layout_mode = 2
 alignment = 1
 
-[node name="CD" type="TextureButton" parent="Panel/Drives"]
+[node name="CD" type="TextureButton" parent="Panel/Drives" unique_id=1534230563]
 modulate = Color(1, 1, 1, 0.501961)
 custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
@@ -58,7 +58,7 @@ texture_normal = ExtResource("4")
 ignore_texture_size = true
 stretch_mode = 5
 
-[node name="ID" type="TextureButton" parent="Panel/Drives"]
+[node name="ID" type="TextureButton" parent="Panel/Drives" unique_id=2132959637]
 modulate = Color(1, 1, 1, 0.501961)
 custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
@@ -67,7 +67,7 @@ texture_normal = ExtResource("3")
 ignore_texture_size = true
 stretch_mode = 5
 
-[node name="Control" type="Control" parent="."]
+[node name="Control" type="Control" parent="." unique_id=55536350]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -77,14 +77,14 @@ grow_vertical = 2
 mouse_filter = 1
 metadata/_edit_lock_ = true
 
-[node name="Fuels" type="HBoxContainer" parent="Control"]
+[node name="Fuels" type="HBoxContainer" parent="Control" unique_id=132681561]
 layout_mode = 0
 offset_left = 296.0
 offset_top = 172.0
 offset_right = 440.0
 offset_bottom = 220.0
 
-[node name="HSlider" type="HSlider" parent="Control"]
+[node name="HSlider" type="HSlider" parent="Control" unique_id=393588709]
 layout_mode = 0
 offset_left = 184.0
 offset_top = 236.0
@@ -92,7 +92,7 @@ offset_right = 340.0
 offset_bottom = 252.0
 step = 0.0
 
-[node name="TextureRect" type="TextureRect" parent="Control"]
+[node name="TextureRect" type="TextureRect" parent="Control" unique_id=1416729545]
 layout_mode = 0
 offset_left = 356.0
 offset_top = 232.0
@@ -102,7 +102,7 @@ texture = ExtResource("6_s6hk7")
 expand_mode = 1
 stretch_mode = 6
 
-[node name="TimeIcon1" type="TextureRect" parent="Control"]
+[node name="TimeIcon1" type="TextureRect" parent="Control" unique_id=1141246424]
 layout_mode = 0
 offset_left = 368.0
 offset_top = 284.0
@@ -112,7 +112,7 @@ texture = ExtResource("5")
 expand_mode = 1
 stretch_mode = 6
 
-[node name="CooldownLabel" type="Label" parent="Control"]
+[node name="CooldownLabel" type="Label" parent="Control" unique_id=1125046799]
 layout_mode = 0
 offset_left = 184.0
 offset_top = 400.0
@@ -122,7 +122,7 @@ text = "COOLDOWN"
 horizontal_alignment = 2
 vertical_alignment = 1
 
-[node name="FuelAmount" type="Label" parent="Control"]
+[node name="FuelAmount" type="Label" parent="Control" unique_id=662679701]
 layout_mode = 0
 offset_left = 400.0
 offset_top = 228.0
@@ -131,7 +131,7 @@ offset_bottom = 260.0
 text = "0"
 vertical_alignment = 1
 
-[node name="Label2" type="Label" parent="Control"]
+[node name="Label2" type="Label" parent="Control" unique_id=1523414444]
 layout_mode = 0
 offset_left = 408.0
 offset_top = 284.0
@@ -140,7 +140,7 @@ offset_bottom = 316.0
 text = "0"
 vertical_alignment = 1
 
-[node name="TimeIcon2" type="TextureRect" parent="Control"]
+[node name="TimeIcon2" type="TextureRect" parent="Control" unique_id=130882953]
 layout_mode = 0
 offset_left = 320.0
 offset_top = 400.0
@@ -150,7 +150,7 @@ texture = ExtResource("5")
 expand_mode = 1
 stretch_mode = 6
 
-[node name="Cooldown" type="Label" parent="Control"]
+[node name="Cooldown" type="Label" parent="Control" unique_id=1913603584]
 layout_mode = 0
 offset_left = 360.0
 offset_top = 400.0
@@ -159,7 +159,7 @@ offset_bottom = 432.0
 text = "0"
 vertical_alignment = 1
 
-[node name="Label3" type="Label" parent="Control"]
+[node name="Label3" type="Label" parent="Control" unique_id=786936276]
 layout_mode = 0
 offset_left = 108.0
 offset_top = 284.0
@@ -169,7 +169,7 @@ text = "TIME_REDUCTION"
 horizontal_alignment = 2
 vertical_alignment = 1
 
-[node name="FuelsLabel" type="Label" parent="Control"]
+[node name="FuelsLabel" type="Label" parent="Control" unique_id=1448547928]
 layout_mode = 0
 offset_left = 164.0
 offset_top = 180.0
@@ -179,7 +179,7 @@ text = "FUEL"
 horizontal_alignment = 2
 vertical_alignment = 1
 
-[node name="UseDrive" type="Button" parent="Control"]
+[node name="UseDrive" type="Button" parent="Control" unique_id=7057425]
 layout_mode = 0
 offset_left = 188.0
 offset_top = 352.0
@@ -187,7 +187,7 @@ offset_right = 440.0
 offset_bottom = 388.0
 text = "SPEED_UP_SHIPS"
 
-[node name="BackButton" type="Button" parent="."]
+[node name="BackButton" type="Button" parent="." unique_id=508088053]
 layout_mode = 1
 anchors_preset = 2
 anchor_top = 1.0

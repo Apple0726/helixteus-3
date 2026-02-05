@@ -1,16 +1,16 @@
-[gd_scene load_steps=3 format=3 uid="uid://bbykejbtwsdag"]
+[gd_scene format=3 uid="uid://bbykejbtwsdag"]
 
 [ext_resource type="Script" uid="uid://dviacdqhkd61t" path="res://Scripts/KeyboardShortcuts.gd" id="1"]
 [ext_resource type="Theme" uid="uid://cp2u1kgj60ic" path="res://Resources/default_theme.tres" id="2"]
 
-[node name="Panel" type="Panel"]
+[node name="Panel" type="Panel" unique_id=101610632]
 offset_right = 248.0
 offset_bottom = 160.0
 mouse_filter = 1
 theme = ExtResource("2")
 script = ExtResource("1")
 
-[node name="KeyInfo" type="VBoxContainer" parent="."]
+[node name="KeyInfo" type="VBoxContainer" parent="." unique_id=1947150254]
 layout_mode = 0
 offset_left = 56.0
 offset_top = 44.0
@@ -18,7 +18,7 @@ offset_right = 156.0
 offset_bottom = 168.0
 mouse_filter = 2
 
-[node name="Keys" type="VBoxContainer" parent="."]
+[node name="Keys" type="VBoxContainer" parent="." unique_id=828781317]
 layout_mode = 0
 offset_left = 20.0
 offset_top = 44.0
@@ -26,7 +26,7 @@ offset_right = 24.0
 offset_bottom = 172.0
 mouse_filter = 2
 
-[node name="Label" type="Label" parent="."]
+[node name="Label" type="Label" parent="." unique_id=456155845]
 layout_mode = 1
 anchors_preset = 10
 anchor_right = 1.0

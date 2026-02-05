@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=3 uid="uid://diwt22234mpvu"]
+[gd_scene format=3 uid="uid://diwt22234mpvu"]
 
 [ext_resource type="Texture2D" uid="uid://cyogaq3sj1anp" path="res://Graphics/Weapons/bomb1.png" id="1_80p3e"]
 [ext_resource type="Texture2D" uid="uid://b1dcgxga387up" path="res://Graphics/Effects/spotlight_1.png" id="2_fh4sg"]
@@ -71,39 +71,37 @@ _data = {
 &"RESET": SubResource("Animation_d87bq")
 }
 
-[node name="Explosive" type="Area2D"]
+[node name="Explosive" type="Area2D" unique_id=624510545]
 collision_layer = 0
 collision_mask = 0
 monitorable = false
 
-[node name="Sprite2D" type="Sprite2D" parent="."]
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=1139417841]
 scale = Vector2(0.25, 0.25)
 texture = ExtResource("1_80p3e")
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=993451985]
 rotation = 1.5708
 shape = SubResource("CircleShape2D_6h4qi")
 
-[node name="ExplosionAoE" type="Area2D" parent="."]
+[node name="ExplosionAoE" type="Area2D" parent="." unique_id=466768597]
 collision_layer = 0
 collision_mask = 38
 monitorable = false
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="ExplosionAoE"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="ExplosionAoE" unique_id=305332778]
 shape = SubResource("CircleShape2D_80p3e")
 debug_color = Color(1, 0.70066, 0.970003, 0.0862745)
 
-[node name="Explosion1" type="Sprite2D" parent="."]
+[node name="Explosion1" type="Sprite2D" parent="." unique_id=639203129]
 modulate = Color(1, 1, 1, 0)
 scale = Vector2(2.375, 2.375)
 texture = ExtResource("2_fh4sg")
 
-[node name="Explosion2" type="Sprite2D" parent="."]
+[node name="Explosion2" type="Sprite2D" parent="." unique_id=1031627446]
 modulate = Color(1, 1, 1, 0)
 scale = Vector2(8.5, 8.5)
 texture = ExtResource("2_fh4sg")
 
-[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
-libraries = {
-&"": SubResource("AnimationLibrary_p0v3r")
-}
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=731641727]
+libraries/ = SubResource("AnimationLibrary_p0v3r")

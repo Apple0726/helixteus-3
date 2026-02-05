@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=3 uid="uid://cqief0tl3kt44"]
+[gd_scene format=3 uid="uid://cqief0tl3kt44"]
 
 [ext_resource type="Theme" uid="uid://cp2u1kgj60ic" path="res://Resources/default_theme.tres" id="1_nwmlw"]
 [ext_resource type="Script" uid="uid://bo53cafv17xus" path="res://Scripts/Popup.gd" id="2_dj1qj"]
@@ -64,7 +64,7 @@ _data = {
 &"RESET": SubResource("Animation_x0yr1")
 }
 
-[node name="Popup" type="Label"]
+[node name="Popup" type="Label" unique_id=119781619]
 modulate = Color(1, 1, 1, 0)
 offset_left = 490.0
 offset_top = 100.0
@@ -77,14 +77,12 @@ horizontal_alignment = 1
 vertical_alignment = 1
 script = ExtResource("2_dj1qj")
 
-[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
-libraries = {
-&"": SubResource("AnimationLibrary_rtolb")
-}
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=2077948150]
+libraries/ = SubResource("AnimationLibrary_rtolb")
 
-[node name="Timer" type="Timer" parent="."]
+[node name="Timer" type="Timer" parent="." unique_id=725367534]
 
-[node name="Panel" type="Panel" parent="."]
+[node name="Panel" type="Panel" parent="." unique_id=63653633]
 show_behind_parent = true
 layout_mode = 1
 anchors_preset = -1

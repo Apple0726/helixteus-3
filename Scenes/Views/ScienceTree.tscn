@@ -1,4 +1,4 @@
-[gd_scene load_steps=63 format=3 uid="uid://duysnevbde4kj"]
+[gd_scene format=3 uid="uid://duysnevbde4kj"]
 
 [ext_resource type="PackedScene" uid="uid://bhiykvhp7e82u" path="res://Scenes/ScienceButton.tscn" id="1"]
 [ext_resource type="Script" uid="uid://ww7r2r8gcxw3" path="res://Scripts/ScienceTree.gd" id="2"]
@@ -123,11 +123,11 @@ _data = {
 &"Fade": SubResource("3")
 }
 
-[node name="ScienceTree" type="Node2D"]
+[node name="ScienceTree" type="Node2D" unique_id=767229984]
 position = Vector2(64, 0)
 script = ExtResource("2")
 
-[node name="IR" type="Control" parent="."]
+[node name="IR" type="Control" parent="." unique_id=1821974562]
 visible = false
 modulate = Color(1, 1, 1, 0)
 layout_mode = 3
@@ -135,7 +135,7 @@ anchors_preset = 0
 offset_right = 40.0
 offset_bottom = 40.0
 
-[node name="MEE" parent="IR" instance=ExtResource("1")]
+[node name="MEE" parent="IR" unique_id=1294597030 instance=ExtResource("1")]
 custom_minimum_size = Vector2(336, 0)
 layout_mode = 0
 anchors_preset = 0
@@ -148,7 +148,7 @@ offset_bottom = 144.0
 infinite_research = true
 icon_texture = ExtResource("3_eu0ii")
 
-[node name="EPE" parent="IR" instance=ExtResource("1")]
+[node name="EPE" parent="IR" unique_id=1105960679 instance=ExtResource("1")]
 custom_minimum_size = Vector2(336, 0)
 layout_mode = 0
 anchors_preset = 0
@@ -161,7 +161,7 @@ offset_bottom = 240.0
 infinite_research = true
 icon_texture = ExtResource("4_rgsly")
 
-[node name="RLE" parent="IR" instance=ExtResource("1")]
+[node name="RLE" parent="IR" unique_id=540450220 instance=ExtResource("1")]
 custom_minimum_size = Vector2(336, 0)
 layout_mode = 0
 anchors_preset = 0
@@ -174,7 +174,7 @@ offset_bottom = 336.0
 infinite_research = true
 icon_texture = ExtResource("5_uvhfr")
 
-[node name="STE" parent="IR" instance=ExtResource("1")]
+[node name="STE" parent="IR" unique_id=1373012209 instance=ExtResource("1")]
 custom_minimum_size = Vector2(336, 0)
 layout_mode = 0
 anchors_preset = 0
@@ -187,7 +187,7 @@ offset_bottom = 432.0
 infinite_research = true
 icon_texture = ExtResource("6_sbmbi")
 
-[node name="MMS" parent="IR" instance=ExtResource("1")]
+[node name="MMS" parent="IR" unique_id=1185154452 instance=ExtResource("1")]
 custom_minimum_size = Vector2(336, 0)
 layout_mode = 0
 anchors_preset = 0
@@ -200,7 +200,7 @@ offset_bottom = 528.0
 infinite_research = true
 icon_texture = ExtResource("7_hknxr")
 
-[node name="PME" parent="IR" instance=ExtResource("1")]
+[node name="PME" parent="IR" unique_id=1577567818 instance=ExtResource("1")]
 custom_minimum_size = Vector2(336, 0)
 layout_mode = 0
 anchors_preset = 0
@@ -213,13 +213,13 @@ offset_bottom = 624.0
 infinite_research = true
 icon_texture = ExtResource("12_vuk7d")
 
-[node name="Main" type="Control" parent="."]
+[node name="Main" type="Control" parent="." unique_id=1344853528]
 layout_mode = 3
 anchors_preset = 0
 offset_right = 40.0
 offset_bottom = 40.0
 
-[node name="RC" parent="Main" instance=ExtResource("1")]
+[node name="RC" parent="Main" unique_id=1348331552 instance=ExtResource("1")]
 layout_mode = 0
 anchors_preset = 0
 anchor_top = 0.0
@@ -231,7 +231,7 @@ offset_bottom = 400.0
 size_flags_horizontal = 13
 icon_texture = ExtResource("9_evco7")
 
-[node name="SCT" parent="Main" instance=ExtResource("1")]
+[node name="SCT" parent="Main" unique_id=359924542 instance=ExtResource("1")]
 layout_mode = 0
 anchors_preset = 0
 anchor_top = 0.0
@@ -242,7 +242,7 @@ offset_right = 960.0
 offset_bottom = 400.0
 icon_texture = ExtResource("10_yvcl0")
 
-[node name="CD" parent="Main" instance=ExtResource("1")]
+[node name="CD" parent="Main" unique_id=1337422957 instance=ExtResource("1")]
 layout_mode = 0
 anchors_preset = 0
 anchor_top = 0.0
@@ -253,7 +253,7 @@ offset_right = 1440.0
 offset_bottom = -208.0
 icon_texture = ExtResource("11_4oae0")
 
-[node name="ATM" parent="Main" instance=ExtResource("1")]
+[node name="ATM" parent="Main" unique_id=895387985 instance=ExtResource("1")]
 layout_mode = 0
 anchors_preset = 0
 anchor_top = 0.0
@@ -264,7 +264,7 @@ offset_right = 1440.0
 offset_bottom = -304.0
 icon_texture = ExtResource("12_vuk7d")
 
-[node name="SAP" parent="Main" instance=ExtResource("1")]
+[node name="SAP" parent="Main" unique_id=1598174233 instance=ExtResource("1")]
 layout_mode = 0
 anchors_preset = 0
 anchor_top = 0.0
@@ -275,7 +275,7 @@ offset_right = 1856.0
 offset_bottom = -304.0
 icon_texture = ExtResource("13_pdb81")
 
-[node name="AMM" parent="Main" instance=ExtResource("1")]
+[node name="AMM" parent="Main" unique_id=418776381 instance=ExtResource("1")]
 layout_mode = 0
 anchors_preset = 0
 anchor_top = 0.0
@@ -286,7 +286,7 @@ offset_right = 1856.0
 offset_bottom = -400.0
 icon_texture = ExtResource("14_7q2bc")
 
-[node name="ID" parent="Main" instance=ExtResource("1")]
+[node name="ID" parent="Main" unique_id=2031808130 instance=ExtResource("1")]
 layout_mode = 0
 anchors_preset = 0
 anchor_top = 0.0
@@ -297,14 +297,14 @@ offset_right = 1856.0
 offset_bottom = -208.0
 icon_texture = ExtResource("15_ej63c")
 
-[node name="L_ID" type="Line2D" parent="Main"]
+[node name="L_ID" type="Line2D" parent="Main" unique_id=699340174]
 position = Vector2(1888, -240)
 points = PackedVector2Array(0, 20, 96, 20)
 width = 2.0
 default_color = Color(0.4, 1, 0.465625, 1)
 antialiased = true
 
-[node name="PD" parent="Main" instance=ExtResource("1")]
+[node name="PD" parent="Main" unique_id=1899330642 instance=ExtResource("1")]
 layout_mode = 0
 anchors_preset = 0
 anchor_top = 0.0
@@ -315,7 +315,7 @@ offset_right = 2272.0
 offset_bottom = -208.0
 icon_texture = ExtResource("16_4k12i")
 
-[node name="OL" parent="Main" instance=ExtResource("1")]
+[node name="OL" parent="Main" unique_id=1927536960 instance=ExtResource("1")]
 layout_mode = 0
 anchors_preset = 0
 anchor_top = 0.0
@@ -326,7 +326,7 @@ offset_right = 960.0
 offset_bottom = 756.0
 icon_texture = ExtResource("17_ibd5u")
 
-[node name="YL" parent="Main" instance=ExtResource("1")]
+[node name="YL" parent="Main" unique_id=203717940 instance=ExtResource("1")]
 layout_mode = 0
 anchors_preset = 0
 anchor_top = 0.0
@@ -337,14 +337,14 @@ offset_right = 1376.0
 offset_bottom = 756.0
 icon_texture = ExtResource("18_grmlu")
 
-[node name="L_OL" type="Line2D" parent="Main"]
+[node name="L_OL" type="Line2D" parent="Main" unique_id=948416718]
 position = Vector2(992, 724)
 points = PackedVector2Array(0, 20, 96, 20)
 width = 2.0
 default_color = Color(0.4, 1, 0.465625, 1)
 antialiased = true
 
-[node name="FTL" parent="Main" instance=ExtResource("1")]
+[node name="FTL" parent="Main" unique_id=812351716 instance=ExtResource("1")]
 layout_mode = 0
 anchors_preset = 0
 anchor_top = 0.0
@@ -355,14 +355,14 @@ offset_right = 1440.0
 offset_bottom = 44.0
 icon_texture = ExtResource("19_1f7c5")
 
-[node name="L_FTL" type="Line2D" parent="Main"]
+[node name="L_FTL" type="Line2D" parent="Main" unique_id=385640417]
 position = Vector2(1472, 16)
 points = PackedVector2Array(0, 20, 96, 20)
 width = 2.0
 default_color = Color(0.4, 1, 0.465625, 1)
 antialiased = true
 
-[node name="IGD" parent="Main" instance=ExtResource("1")]
+[node name="IGD" parent="Main" unique_id=1180001581 instance=ExtResource("1")]
 layout_mode = 0
 anchors_preset = 0
 anchor_top = 0.0
@@ -373,14 +373,14 @@ offset_right = 1856.0
 offset_bottom = 44.0
 icon_texture = ExtResource("20_uh24r")
 
-[node name="L_IGD" type="Line2D" parent="Main"]
+[node name="L_IGD" type="Line2D" parent="Main" unique_id=49723448]
 position = Vector2(1888, 16)
 points = PackedVector2Array(0, 20, 96, 20)
 width = 2.0
 default_color = Color(0.4, 1, 0.465625, 1)
 antialiased = true
 
-[node name="FG" parent="Main" instance=ExtResource("1")]
+[node name="FG" parent="Main" unique_id=1676062741 instance=ExtResource("1")]
 layout_mode = 0
 anchors_preset = 0
 anchor_top = 0.0
@@ -391,14 +391,14 @@ offset_right = 2272.0
 offset_bottom = 44.0
 icon_texture = ExtResource("21_d11gw")
 
-[node name="L_FG" type="Line2D" parent="Main"]
+[node name="L_FG" type="Line2D" parent="Main" unique_id=1804192096]
 position = Vector2(2304, 16)
 points = PackedVector2Array(0, 20, 96, 20)
 width = 2.0
 default_color = Color(0.4, 1, 0.465625, 1)
 antialiased = true
 
-[node name="FG2" parent="Main" instance=ExtResource("1")]
+[node name="FG2" parent="Main" unique_id=682044765 instance=ExtResource("1")]
 layout_mode = 0
 anchors_preset = 0
 anchor_top = 0.0
@@ -409,14 +409,14 @@ offset_right = 2688.0
 offset_bottom = 44.0
 icon_texture = ExtResource("22_e40yg")
 
-[node name="L_YL" type="Line2D" parent="Main"]
+[node name="L_YL" type="Line2D" parent="Main" unique_id=1241537908]
 position = Vector2(1408, 724)
 points = PackedVector2Array(0, 20, 96, 20)
 width = 2.0
 default_color = Color(0.4, 1, 0.465625, 1)
 antialiased = true
 
-[node name="GL" parent="Main" instance=ExtResource("1")]
+[node name="GL" parent="Main" unique_id=812459171 instance=ExtResource("1")]
 layout_mode = 0
 anchors_preset = 0
 anchor_top = 0.0
@@ -427,14 +427,14 @@ offset_right = 1792.0
 offset_bottom = 756.0
 icon_texture = ExtResource("23_d8iuo")
 
-[node name="L_GL" type="Line2D" parent="Main"]
+[node name="L_GL" type="Line2D" parent="Main" unique_id=1100318271]
 position = Vector2(1824, 724)
 points = PackedVector2Array(0, 20, 96, 20)
 width = 2.0
 default_color = Color(0.4, 1, 0.465625, 1)
 antialiased = true
 
-[node name="BL" parent="Main" instance=ExtResource("1")]
+[node name="BL" parent="Main" unique_id=1755139122 instance=ExtResource("1")]
 layout_mode = 0
 anchors_preset = 0
 anchor_top = 0.0
@@ -445,14 +445,14 @@ offset_right = 2208.0
 offset_bottom = 756.0
 icon_texture = ExtResource("24_6xxvc")
 
-[node name="L_BL" type="Line2D" parent="Main"]
+[node name="L_BL" type="Line2D" parent="Main" unique_id=13194796]
 position = Vector2(2240, 724)
 points = PackedVector2Array(0, 20, 96, 20)
 width = 2.0
 default_color = Color(0.4, 1, 0.465625, 1)
 antialiased = true
 
-[node name="PL" parent="Main" instance=ExtResource("1")]
+[node name="PL" parent="Main" unique_id=877783713 instance=ExtResource("1")]
 layout_mode = 0
 anchors_preset = 0
 anchor_top = 0.0
@@ -463,14 +463,14 @@ offset_right = 2624.0
 offset_bottom = 756.0
 icon_texture = ExtResource("25_vyf1n")
 
-[node name="L_PL" type="Line2D" parent="Main"]
+[node name="L_PL" type="Line2D" parent="Main" unique_id=481221104]
 position = Vector2(2656, 724)
 points = PackedVector2Array(0, 20, 96, 20)
 width = 2.0
 default_color = Color(0.4, 1, 0.465625, 1)
 antialiased = true
 
-[node name="UVL" parent="Main" instance=ExtResource("1")]
+[node name="UVL" parent="Main" unique_id=379259720 instance=ExtResource("1")]
 layout_mode = 0
 anchors_preset = 0
 anchor_top = 0.0
@@ -481,14 +481,14 @@ offset_right = 3048.0
 offset_bottom = 756.0
 icon_texture = ExtResource("26_gek8g")
 
-[node name="L_UVL" type="Line2D" parent="Main"]
+[node name="L_UVL" type="Line2D" parent="Main" unique_id=1195228055]
 position = Vector2(3072, 724)
 points = PackedVector2Array(0, 20, 96, 20)
 width = 2.0
 default_color = Color(0.4, 1, 0.465625, 1)
 antialiased = true
 
-[node name="XRL" parent="Main" instance=ExtResource("1")]
+[node name="XRL" parent="Main" unique_id=1551605332 instance=ExtResource("1")]
 layout_mode = 0
 anchors_preset = 0
 anchor_top = 0.0
@@ -499,14 +499,14 @@ offset_right = 3456.0
 offset_bottom = 756.0
 icon_texture = ExtResource("27_c4i7v")
 
-[node name="L_XRL" type="Line2D" parent="Main"]
+[node name="L_XRL" type="Line2D" parent="Main" unique_id=1077995194]
 position = Vector2(3488, 724)
 points = PackedVector2Array(0, 20, 96, 20)
 width = 2.0
 default_color = Color(0.4, 1, 0.465625, 1)
 antialiased = true
 
-[node name="GRL" parent="Main" instance=ExtResource("1")]
+[node name="GRL" parent="Main" unique_id=191875757 instance=ExtResource("1")]
 layout_mode = 0
 anchors_preset = 0
 anchor_top = 0.0
@@ -517,14 +517,14 @@ offset_right = 3872.0
 offset_bottom = 756.0
 icon_texture = ExtResource("28_xxlf2")
 
-[node name="L_GRL" type="Line2D" parent="Main"]
+[node name="L_GRL" type="Line2D" parent="Main" unique_id=2074304752]
 position = Vector2(3904, 724)
 points = PackedVector2Array(0, 20, 96, 20)
 width = 2.0
 default_color = Color(0.4, 1, 0.465625, 1)
 antialiased = true
 
-[node name="UGRL" parent="Main" instance=ExtResource("1")]
+[node name="UGRL" parent="Main" unique_id=1143224870 instance=ExtResource("1")]
 layout_mode = 0
 anchors_preset = 0
 anchor_top = 0.0
@@ -535,7 +535,7 @@ offset_right = 4288.0
 offset_bottom = 756.0
 icon_texture = ExtResource("29_yb5u7")
 
-[node name="RMK2" parent="Main" instance=ExtResource("1")]
+[node name="RMK2" parent="Main" unique_id=1344297022 instance=ExtResource("1")]
 layout_mode = 0
 anchors_preset = 0
 anchor_top = 0.0
@@ -546,14 +546,14 @@ offset_right = 960.0
 offset_bottom = 868.0
 icon_texture = ExtResource("30_i85as")
 
-[node name="L_RMK2" type="Line2D" parent="Main"]
+[node name="L_RMK2" type="Line2D" parent="Main" unique_id=1898946946]
 position = Vector2(992, 836)
 points = PackedVector2Array(0, 20, 96, 20)
 width = 2.0
 default_color = Color(0.4, 1, 0.465625, 1)
 antialiased = true
 
-[node name="RMK3" parent="Main" instance=ExtResource("1")]
+[node name="RMK3" parent="Main" unique_id=1585020017 instance=ExtResource("1")]
 layout_mode = 0
 anchors_preset = 0
 anchor_top = 0.0
@@ -564,7 +564,7 @@ offset_right = 1376.0
 offset_bottom = 868.0
 icon_texture = ExtResource("31_jmdj3")
 
-[node name="MAE" parent="Main" instance=ExtResource("1")]
+[node name="MAE" parent="Main" unique_id=1637379318 instance=ExtResource("1")]
 layout_mode = 0
 anchors_preset = 0
 anchor_top = 0.0
@@ -576,7 +576,7 @@ offset_bottom = 400.0
 size_flags_horizontal = 13
 icon_texture = ExtResource("32_rvgjl")
 
-[node name="TF" parent="Main" instance=ExtResource("1")]
+[node name="TF" parent="Main" unique_id=1201441014 instance=ExtResource("1")]
 layout_mode = 0
 anchors_preset = 0
 anchor_top = 0.0
@@ -588,7 +588,7 @@ offset_bottom = 276.0
 size_flags_horizontal = 13
 icon_texture = ExtResource("33_2cva5")
 
-[node name="DS1" parent="Main" instance=ExtResource("1")]
+[node name="DS1" parent="Main" unique_id=1384044330 instance=ExtResource("1")]
 layout_mode = 0
 anchors_preset = 0
 anchor_top = 0.0
@@ -600,21 +600,21 @@ offset_bottom = 436.0
 size_flags_horizontal = 13
 icon_texture = ExtResource("34_tu4u0")
 
-[node name="L_DS1" type="Line2D" parent="Main"]
+[node name="L_DS1" type="Line2D" parent="Main" unique_id=375559138]
 position = Vector2(1888, 404)
 points = PackedVector2Array(0, 20, 96, 20)
 width = 2.0
 default_color = Color(0.4, 1, 0.465625, 1)
 antialiased = true
 
-[node name="L_CBS1" type="Line2D" parent="Main"]
+[node name="L_CBS1" type="Line2D" parent="Main" unique_id=1004065872]
 position = Vector2(1888, 484)
 points = PackedVector2Array(0, 20, 96, 20)
 width = 2.0
 default_color = Color(0.4, 1, 0.465625, 1)
 antialiased = true
 
-[node name="DS2" parent="Main" instance=ExtResource("1")]
+[node name="DS2" parent="Main" unique_id=171375597 instance=ExtResource("1")]
 layout_mode = 0
 anchors_preset = 0
 anchor_top = 0.0
@@ -626,21 +626,21 @@ offset_bottom = 436.0
 size_flags_horizontal = 13
 icon_texture = ExtResource("35_lcsn0")
 
-[node name="L_DS2" type="Line2D" parent="Main"]
+[node name="L_DS2" type="Line2D" parent="Main" unique_id=36849088]
 position = Vector2(2304, 404)
 points = PackedVector2Array(0, 20, 96, 20)
 width = 2.0
 default_color = Color(0.4, 1, 0.465625, 1)
 antialiased = true
 
-[node name="L_CBS2" type="Line2D" parent="Main"]
+[node name="L_CBS2" type="Line2D" parent="Main" unique_id=231443272]
 position = Vector2(2304, 484)
 points = PackedVector2Array(0, 20, 96, 20)
 width = 2.0
 default_color = Color(0.4, 1, 0.465625, 1)
 antialiased = true
 
-[node name="DS3" parent="Main" instance=ExtResource("1")]
+[node name="DS3" parent="Main" unique_id=272323550 instance=ExtResource("1")]
 layout_mode = 0
 anchors_preset = 0
 anchor_top = 0.0
@@ -652,14 +652,14 @@ offset_bottom = 436.0
 size_flags_horizontal = 13
 icon_texture = ExtResource("36_x7igl")
 
-[node name="L_DS3" type="Line2D" parent="Main"]
+[node name="L_DS3" type="Line2D" parent="Main" unique_id=1599302448]
 position = Vector2(2720, 404)
 points = PackedVector2Array(0, 20, 96, 20)
 width = 2.0
 default_color = Color(0.4, 1, 0.465625, 1)
 antialiased = true
 
-[node name="DS4" parent="Main" instance=ExtResource("1")]
+[node name="DS4" parent="Main" unique_id=1977817606 instance=ExtResource("1")]
 layout_mode = 0
 anchors_preset = 0
 anchor_top = 0.0
@@ -671,14 +671,14 @@ offset_bottom = 436.0
 size_flags_horizontal = 13
 icon_texture = ExtResource("37_yfy5b")
 
-[node name="L_DS4" type="Line2D" parent="Main"]
+[node name="L_DS4" type="Line2D" parent="Main" unique_id=17797486]
 position = Vector2(3138, 404)
 points = PackedVector2Array(0, 20, 96, 20)
 width = 2.0
 default_color = Color(0.4, 1, 0.465625, 1)
 antialiased = true
 
-[node name="MB" parent="Main" instance=ExtResource("1")]
+[node name="MB" parent="Main" unique_id=1470761687 instance=ExtResource("1")]
 layout_mode = 0
 anchors_preset = 0
 anchor_top = 0.0
@@ -690,14 +690,14 @@ offset_bottom = 436.0
 size_flags_horizontal = 13
 icon_texture = ExtResource("38_f81mp")
 
-[node name="L_MB" type="Line2D" parent="Main"]
+[node name="L_MB" type="Line2D" parent="Main" unique_id=2085469046]
 position = Vector2(3568, 404)
 points = PackedVector2Array(0, 20, 96, 20)
 width = 2.0
 default_color = Color(0.4, 1, 0.465625, 1)
 antialiased = true
 
-[node name="GS" parent="Main" instance=ExtResource("1")]
+[node name="GS" parent="Main" unique_id=1743318485 instance=ExtResource("1")]
 layout_mode = 0
 anchors_preset = 0
 anchor_top = 0.0
@@ -709,14 +709,14 @@ offset_bottom = 436.0
 size_flags_horizontal = 13
 icon_texture = ExtResource("39_bhtpw")
 
-[node name="L_GS" type="Line2D" parent="Main"]
+[node name="L_GS" type="Line2D" parent="Main" unique_id=1880254626]
 position = Vector2(3984, 404)
 points = PackedVector2Array(0, 20, 96, 20)
 width = 2.0
 default_color = Color(0.4, 1, 0.465625, 1)
 antialiased = true
 
-[node name="TPCC" parent="Main" instance=ExtResource("1")]
+[node name="TPCC" parent="Main" unique_id=1519192503 instance=ExtResource("1")]
 layout_mode = 0
 anchors_preset = 0
 anchor_top = 0.0
@@ -728,7 +728,7 @@ offset_bottom = 436.0
 size_flags_horizontal = 13
 icon_texture = ExtResource("40_iwr5q")
 
-[node name="SE1" parent="Main" instance=ExtResource("1")]
+[node name="SE1" parent="Main" unique_id=118370244 instance=ExtResource("1")]
 layout_mode = 0
 anchors_preset = 0
 anchor_top = 0.0
@@ -740,7 +740,7 @@ offset_bottom = 196.0
 size_flags_horizontal = 13
 icon_texture = ExtResource("41_pukgx")
 
-[node name="PK1" parent="Main" instance=ExtResource("1")]
+[node name="PK1" parent="Main" unique_id=1361217449 instance=ExtResource("1")]
 layout_mode = 0
 anchors_preset = 0
 anchor_top = 0.0
@@ -752,7 +752,7 @@ offset_bottom = 596.0
 size_flags_horizontal = 13
 icon_texture = ExtResource("42_uyib1")
 
-[node name="CBS1" parent="Main" instance=ExtResource("1")]
+[node name="CBS1" parent="Main" unique_id=1627127316 instance=ExtResource("1")]
 layout_mode = 0
 anchors_preset = 0
 anchor_top = 0.0
@@ -764,7 +764,7 @@ offset_bottom = 516.0
 size_flags_horizontal = 13
 icon_texture = ExtResource("43_vfjdo")
 
-[node name="CBS2" parent="Main" instance=ExtResource("1")]
+[node name="CBS2" parent="Main" unique_id=1490765161 instance=ExtResource("1")]
 layout_mode = 0
 anchors_preset = 0
 anchor_top = 0.0
@@ -776,7 +776,7 @@ offset_bottom = 516.0
 size_flags_horizontal = 13
 icon_texture = ExtResource("44_pt0b8")
 
-[node name="CBS3" parent="Main" instance=ExtResource("1")]
+[node name="CBS3" parent="Main" unique_id=275755714 instance=ExtResource("1")]
 layout_mode = 0
 anchors_preset = 0
 anchor_top = 0.0
@@ -788,14 +788,14 @@ offset_bottom = 516.0
 size_flags_horizontal = 13
 icon_texture = ExtResource("45_lwlsd")
 
-[node name="L_PK1" type="Line2D" parent="Main"]
+[node name="L_PK1" type="Line2D" parent="Main" unique_id=1662579769]
 position = Vector2(1888, 556)
 points = PackedVector2Array(0, 20, 96, 20)
 width = 2.0
 default_color = Color(0.4, 1, 0.465625, 1)
 antialiased = true
 
-[node name="PK2" parent="Main" instance=ExtResource("1")]
+[node name="PK2" parent="Main" unique_id=2273741 instance=ExtResource("1")]
 layout_mode = 0
 anchors_preset = 0
 anchor_top = 0.0
@@ -807,7 +807,7 @@ offset_bottom = 596.0
 size_flags_horizontal = 13
 icon_texture = ExtResource("46_eu0ii")
 
-[node name="MME1" parent="Main" instance=ExtResource("1")]
+[node name="MME1" parent="Main" unique_id=1954383468 instance=ExtResource("1")]
 layout_mode = 0
 anchors_preset = 0
 anchor_top = 0.0
@@ -819,14 +819,14 @@ offset_bottom = 356.0
 size_flags_horizontal = 13
 icon_texture = ExtResource("47_polbn")
 
-[node name="L_MME2" type="Line2D" parent="Main"]
+[node name="L_MME2" type="Line2D" parent="Main" unique_id=4999783]
 position = Vector2(1888, 324)
 points = PackedVector2Array(0, 20, 96, 20)
 width = 2.0
 default_color = Color(0.4, 1, 0.465625, 1)
 antialiased = true
 
-[node name="MME2" parent="Main" instance=ExtResource("1")]
+[node name="MME2" parent="Main" unique_id=1639094291 instance=ExtResource("1")]
 layout_mode = 0
 anchors_preset = 0
 anchor_top = 0.0
@@ -838,14 +838,14 @@ offset_bottom = 356.0
 size_flags_horizontal = 13
 icon_texture = ExtResource("48_dr8cm")
 
-[node name="L_MME3" type="Line2D" parent="Main"]
+[node name="L_MME3" type="Line2D" parent="Main" unique_id=799657239]
 position = Vector2(2304, 324)
 points = PackedVector2Array(0, 20, 96, 20)
 width = 2.0
 default_color = Color(0.4, 1, 0.465625, 1)
 antialiased = true
 
-[node name="MME3" parent="Main" instance=ExtResource("1")]
+[node name="MME3" parent="Main" unique_id=125260862 instance=ExtResource("1")]
 layout_mode = 0
 anchors_preset = 0
 anchor_top = 0.0
@@ -857,7 +857,7 @@ offset_bottom = 356.0
 size_flags_horizontal = 13
 icon_texture = ExtResource("49_ic180")
 
-[node name="L_CD" type="Line2D" parent="Main"]
+[node name="L_CD" type="Line2D" parent="Main" unique_id=1773853979]
 position = Vector2(1484.25, -288)
 scale = Vector2(0.875, 1)
 points = PackedVector2Array(-14, 68, 96, 68)
@@ -865,23 +865,23 @@ width = 2.0
 default_color = Color(0.4, 1, 0.465625, 1)
 antialiased = true
 
-[node name="L_RC" type="Node2D" parent="Main"]
+[node name="L_RC" type="Node2D" parent="Main" unique_id=46061928]
 
-[node name="L_SCT" type="Line2D" parent="Main/L_RC"]
+[node name="L_SCT" type="Line2D" parent="Main/L_RC" unique_id=1137764144]
 position = Vector2(508, 768)
 points = PackedVector2Array(84, -380, 164, -380)
 width = 2.0
 default_color = Color(0.4, 1, 0.466667, 1)
 antialiased = true
 
-[node name="L_OL" type="Line2D" parent="Main/L_RC"]
+[node name="L_OL" type="Line2D" parent="Main/L_RC" unique_id=128408168]
 position = Vector2(510, 354)
 points = PackedVector2Array(2, 34, 81.5562, 34)
 width = 2.0
 default_color = Color(0.4, 1, 0.465625, 1)
 antialiased = true
 
-[node name="L_OL2" type="Line2D" parent="Main/L_RC"]
+[node name="L_OL2" type="Line2D" parent="Main/L_RC" unique_id=1576586292]
 position = Vector2(510, 354)
 points = PackedVector2Array(82, 34, 82, 506)
 width = 2.0
@@ -890,29 +890,29 @@ begin_cap_mode = 1
 end_cap_mode = 1
 antialiased = true
 
-[node name="L_OL3" type="Line2D" parent="Main/L_RC"]
+[node name="L_OL3" type="Line2D" parent="Main/L_RC" unique_id=976875544]
 position = Vector2(-576, 80)
 points = PackedVector2Array(1168, 664, 1248, 664)
 width = 2.0
 default_color = Color(0.4, 1, 0.465625, 1)
 
-[node name="L_RMK2" type="Line2D" parent="Main/L_RC"]
+[node name="L_RMK2" type="Line2D" parent="Main/L_RC" unique_id=596399898]
 position = Vector2(504, 576)
 points = PackedVector2Array(88, 284, 168, 284)
 width = 2.0
 default_color = Color(0.4, 1, 0.465625, 1)
 antialiased = true
 
-[node name="L_SCT" type="Node2D" parent="Main"]
+[node name="L_SCT" type="Node2D" parent="Main" unique_id=462025616]
 
-[node name="L_CD" type="Line2D" parent="Main/L_SCT"]
+[node name="L_CD" type="Line2D" parent="Main/L_SCT" unique_id=1461362966]
 position = Vector2(992, 368)
 points = PackedVector2Array(0, 20, 160, 20)
 width = 2.0
 default_color = Color(0.4, 1, 0.465625, 1)
 antialiased = true
 
-[node name="L_CD2" type="Line2D" parent="Main/L_SCT"]
+[node name="L_CD2" type="Line2D" parent="Main/L_SCT" unique_id=1328925291]
 position = Vector2(992, 80)
 points = PackedVector2Array(80, -300, 80, 308)
 width = 2.0
@@ -921,88 +921,88 @@ begin_cap_mode = 1
 end_cap_mode = 1
 antialiased = true
 
-[node name="L_YL" type="Line2D" parent="Main/L_SCT"]
+[node name="L_YL" type="Line2D" parent="Main/L_SCT" unique_id=1251005406]
 position = Vector2(992, -288)
 points = PackedVector2Array(80, 324, 160, 324)
 width = 2.0
 default_color = Color(0.4, 1, 0.465625, 1)
 antialiased = true
 
-[node name="L_MAE" type="Line2D" parent="Main/L_SCT"]
+[node name="L_MAE" type="Line2D" parent="Main/L_SCT" unique_id=2050402498]
 position = Vector2(984, -232)
 points = PackedVector2Array(88, 12, 168, 12)
 width = 2.0
 default_color = Color(0.4, 1, 0.465625, 1)
 antialiased = true
 
-[node name="L_MAE" type="Node2D" parent="Main"]
+[node name="L_MAE" type="Node2D" parent="Main" unique_id=983063129]
 
-[node name="L_TF2" type="Line2D" parent="Main/L_MAE"]
+[node name="L_TF2" type="Line2D" parent="Main/L_MAE" unique_id=1896620037]
 position = Vector2(1468, 388)
 points = PackedVector2Array(4, 0, 100, -200)
 width = 2.0
 default_color = Color(0.4, 1, 0.465625, 1)
 antialiased = true
 
-[node name="L_TF3" type="Line2D" parent="Main/L_MAE"]
+[node name="L_TF3" type="Line2D" parent="Main/L_MAE" unique_id=1482001228]
 position = Vector2(1468, 388)
 points = PackedVector2Array(4, 0, 100, -124)
 width = 2.0
 default_color = Color(0.4, 1, 0.465625, 1)
 antialiased = true
 
-[node name="L_TF4" type="Line2D" parent="Main/L_MAE"]
+[node name="L_TF4" type="Line2D" parent="Main/L_MAE" unique_id=381506753]
 position = Vector2(1468, 388)
 points = PackedVector2Array(4, 0, 100, -40)
 width = 2.0
 default_color = Color(0.4, 1, 0.465625, 1)
 antialiased = true
 
-[node name="L_TF5" type="Line2D" parent="Main/L_MAE"]
+[node name="L_TF5" type="Line2D" parent="Main/L_MAE" unique_id=1319395875]
 position = Vector2(1468, 388)
 points = PackedVector2Array(4, 0, 100, 40)
 width = 2.0
 default_color = Color(0.4, 1, 0.465625, 1)
 antialiased = true
 
-[node name="L_TF6" type="Line2D" parent="Main/L_MAE"]
+[node name="L_TF6" type="Line2D" parent="Main/L_MAE" unique_id=785301031]
 position = Vector2(1468, 388)
 points = PackedVector2Array(4, 0, 100, 196)
 width = 2.0
 default_color = Color(0.4, 1, 0.465625, 1)
 antialiased = true
 
-[node name="L_TF8" type="Line2D" parent="Main/L_MAE"]
+[node name="L_TF8" type="Line2D" parent="Main/L_MAE" unique_id=1805319916]
 position = Vector2(1468, 388)
 points = PackedVector2Array(4, 0, 100, 116)
 width = 2.0
 default_color = Color(0.4, 1, 0.465625, 1)
 antialiased = true
 
-[node name="L_ATM" type="Node2D" parent="Main"]
+[node name="L_ATM" type="Node2D" parent="Main" unique_id=1314793367]
 
-[node name="L_SAP" type="Line2D" parent="Main/L_ATM"]
+[node name="L_SAP" type="Line2D" parent="Main/L_ATM" unique_id=906947098]
 position = Vector2(1472, -288)
 points = PackedVector2Array(0, -28, 96, -28)
 width = 2.0
 default_color = Color(0.4, 1, 0.465625, 1)
 antialiased = true
 
-[node name="L_AMM" type="Line2D" parent="Main/L_ATM"]
+[node name="L_AMM" type="Line2D" parent="Main/L_ATM" unique_id=1901458904]
 position = Vector2(1472, -288)
 points = PackedVector2Array(0, -28, 96, -124)
 width = 2.0
 default_color = Color(0.4, 1, 0.465625, 1)
 antialiased = true
 
-[node name="L_ID_2" type="Line2D" parent="Main/L_ATM"]
+[node name="L_ID_2" type="Line2D" parent="Main/L_ATM" unique_id=1150838406]
 position = Vector2(1460, -336)
 points = PackedVector2Array(12, 20, 108, 100)
 width = 2.0
 default_color = Color(0.4, 1, 0.465625, 1)
 antialiased = true
 
-[node name="Other" type="Control" parent="."]
+[node name="Other" type="Control" parent="." unique_id=1220129931]
 visible = false
 modulate = Color(1, 1, 1, 0)
 layout_mode = 3
@@ -1010,7 +1010,7 @@ anchors_preset = 0
 offset_right = 40.0
 offset_bottom = 40.0
 
-[node name="ISP" parent="Other" instance=ExtResource("1")]
+[node name="ISP" parent="Other" unique_id=986565403 instance=ExtResource("1")]
 layout_mode = 0
 anchors_preset = 0
 anchor_top = 0.0
@@ -1021,7 +1021,7 @@ offset_right = 544.0
 offset_bottom = 704.0
 icon_texture = ExtResource("50_e0c5v")
 
-[node name="AM" parent="Other" instance=ExtResource("1")]
+[node name="AM" parent="Other" unique_id=1012368026 instance=ExtResource("1")]
 layout_mode = 0
 anchors_preset = 0
 anchor_top = 0.0
@@ -1032,7 +1032,7 @@ offset_right = 544.0
 offset_bottom = 592.0
 icon_texture = ExtResource("51_tnx5p")
 
-[node name="CI" parent="Other" instance=ExtResource("1")]
+[node name="CI" parent="Other" unique_id=1153513019 instance=ExtResource("1")]
 layout_mode = 0
 anchors_preset = 0
 anchor_top = 0.0
@@ -1043,14 +1043,14 @@ offset_right = 544.0
 offset_bottom = 144.0
 icon_texture = ExtResource("52_i5qg8")
 
-[node name="L_CI" type="Line2D" parent="Other"]
+[node name="L_CI" type="Line2D" parent="Other" unique_id=1418906146]
 position = Vector2(576, 92)
 points = PackedVector2Array(0, 20, 96, 20)
 width = 2.0
 default_color = Color(0.4, 1, 0.465625, 1)
 antialiased = true
 
-[node name="CI2" parent="Other" instance=ExtResource("1")]
+[node name="CI2" parent="Other" unique_id=1696297597 instance=ExtResource("1")]
 layout_mode = 0
 anchors_preset = 0
 anchor_top = 0.0
@@ -1061,14 +1061,14 @@ offset_right = 960.0
 offset_bottom = 144.0
 icon_texture = ExtResource("53_g6ehj")
 
-[node name="L_CI2" type="Line2D" parent="Other"]
+[node name="L_CI2" type="Line2D" parent="Other" unique_id=1420119869]
 position = Vector2(992, 92)
 points = PackedVector2Array(0, 20, 96, 20)
 width = 2.0
 default_color = Color(0.4, 1, 0.465625, 1)
 antialiased = true
 
-[node name="CI3" parent="Other" instance=ExtResource("1")]
+[node name="CI3" parent="Other" unique_id=1154439699 instance=ExtResource("1")]
 layout_mode = 0
 anchors_preset = 0
 anchor_top = 0.0
@@ -1079,7 +1079,7 @@ offset_right = 1376.0
 offset_bottom = 144.0
 icon_texture = ExtResource("54_kxk33")
 
-[node name="ISC" parent="Other" instance=ExtResource("1")]
+[node name="ISC" parent="Other" unique_id=1985379005 instance=ExtResource("1")]
 layout_mode = 0
 anchors_preset = 0
 anchor_top = 0.0
@@ -1090,7 +1090,7 @@ offset_right = 544.0
 offset_bottom = 480.0
 icon_texture = ExtResource("55_5nrgx")
 
-[node name="SA" parent="Other" instance=ExtResource("1")]
+[node name="SA" parent="Other" unique_id=1037773209 instance=ExtResource("1")]
 layout_mode = 0
 anchors_preset = 0
 anchor_top = 0.0
@@ -1101,7 +1101,7 @@ offset_right = 544.0
 offset_bottom = 256.0
 icon_texture = ExtResource("56_mlle1")
 
-[node name="ASM" parent="Other" instance=ExtResource("1")]
+[node name="ASM" parent="Other" unique_id=1879206773 instance=ExtResource("1")]
 layout_mode = 0
 anchors_preset = 0
 anchor_top = 0.0
@@ -1112,7 +1112,7 @@ offset_right = 544.0
 offset_bottom = 368.0
 icon_texture = ExtResource("3_eu0ii")
 
-[node name="ASM2" parent="Other" instance=ExtResource("1")]
+[node name="ASM2" parent="Other" unique_id=663879757 instance=ExtResource("1")]
 layout_mode = 0
 anchors_preset = 0
 anchor_top = 0.0
@@ -1123,21 +1123,21 @@ offset_right = 960.0
 offset_bottom = 368.0
 icon_texture = ExtResource("3_eu0ii")
 
-[node name="L_SA" type="Line2D" parent="Other"]
+[node name="L_SA" type="Line2D" parent="Other" unique_id=1264613926]
 position = Vector2(576, 204)
 points = PackedVector2Array(0, 20, 96, 20)
 width = 2.0
 default_color = Color(0.4, 1, 0.465625, 1)
 antialiased = true
 
-[node name="L_ASM" type="Line2D" parent="Other"]
+[node name="L_ASM" type="Line2D" parent="Other" unique_id=1100241481]
 position = Vector2(576, 316)
 points = PackedVector2Array(0, 20, 96, 20)
 width = 2.0
 default_color = Color(0.4, 1, 0.465625, 1)
 antialiased = true
 
-[node name="PF" parent="Other" instance=ExtResource("1")]
+[node name="PF" parent="Other" unique_id=118240704 instance=ExtResource("1")]
 layout_mode = 0
 anchors_preset = 0
 anchor_top = 0.0
@@ -1148,20 +1148,14 @@ offset_right = 960.0
 offset_bottom = 256.0
 icon_texture = ExtResource("57_2igf4")
 
-[node name="IRAnim" type="AnimationPlayer" parent="."]
-libraries = {
-&"": SubResource("AnimationLibrary_puiyp")
-}
+[node name="IRAnim" type="AnimationPlayer" parent="." unique_id=1806221500]
+libraries/ = SubResource("AnimationLibrary_puiyp")
 
-[node name="MainAnim" type="AnimationPlayer" parent="."]
-libraries = {
-&"": SubResource("AnimationLibrary_s0dhf")
-}
+[node name="MainAnim" type="AnimationPlayer" parent="." unique_id=2012524937]
+libraries/ = SubResource("AnimationLibrary_s0dhf")
 
-[node name="OtherAnim" type="AnimationPlayer" parent="."]
-libraries = {
-&"": SubResource("AnimationLibrary_lttvt")
-}
+[node name="OtherAnim" type="AnimationPlayer" parent="." unique_id=233844271]
+libraries/ = SubResource("AnimationLibrary_lttvt")
 
 [connection signal="tree_exited" from="." to="." method="_on_ScienceTree_tree_exited"]
 [connection signal="animation_finished" from="IRAnim" to="." method="_on_IRAnim_animation_finished"]

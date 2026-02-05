@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=3 uid="uid://gqfbuekl21pb"]
+[gd_scene format=3 uid="uid://gqfbuekl21pb"]
 
 [ext_resource type="Texture2D" uid="uid://hjl8rhhr18ke" path="res://Graphics/Icons/help.png" id="1"]
 [ext_resource type="Theme" uid="uid://cp2u1kgj60ic" path="res://Resources/default_theme.tres" id="3"]
@@ -8,7 +8,7 @@
 [ext_resource type="PackedScene" uid="uid://ddf2xjwcht77u" path="res://Scenes/CloseButton.tscn" id="8"]
 [ext_resource type="Texture2D" uid="uid://4tf3teqmkahc" path="res://Graphics/Misc/Bar.png" id="9"]
 
-[node name="SendFightersPanel" type="Panel"]
+[node name="SendFightersPanel" type="Panel" unique_id=1235703997]
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
@@ -24,7 +24,7 @@ pivot_offset = Vector2(533, 300)
 theme = ExtResource("3")
 script = ExtResource("5")
 
-[node name="Title" type="Label" parent="."]
+[node name="Title" type="Label" parent="." unique_id=1917376989]
 custom_minimum_size = Vector2(0, 38)
 layout_mode = 0
 anchor_right = 1.0
@@ -34,21 +34,21 @@ text = "SEND_FIGHTERS"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="CloseButton" parent="." instance=ExtResource("8")]
+[node name="CloseButton" parent="." unique_id=1047219528 instance=ExtResource("8")]
 layout_mode = 1
 offset_left = -37.5
 offset_top = 12.0
 offset_right = -13.5
 offset_bottom = 36.0
 
-[node name="Panel" type="Panel" parent="."]
+[node name="Panel" type="Panel" parent="." unique_id=1074206957]
 layout_mode = 0
 offset_left = 24.0
 offset_top = 60.0
 offset_right = 1040.0
 offset_bottom = 560.0
 
-[node name="Label" type="RichTextLabel" parent="."]
+[node name="Label" type="RichTextLabel" parent="." unique_id=524891592]
 layout_mode = 0
 offset_left = 52.0
 offset_top = 96.0
@@ -56,7 +56,7 @@ offset_right = 1016.0
 offset_bottom = 308.0
 theme_override_constants/line_separation = 10
 
-[node name="Send" type="Button" parent="."]
+[node name="Send" type="Button" parent="." unique_id=702074926]
 layout_mode = 0
 offset_left = 864.0
 offset_top = 512.0
@@ -64,12 +64,12 @@ offset_right = 1032.0
 offset_bottom = 552.0
 text = "SEND"
 
-[node name="Control" type="Control" parent="."]
+[node name="Control" type="Control" parent="." unique_id=431247785]
 anchors_preset = 0
 offset_right = 40.0
 offset_bottom = 40.0
 
-[node name="CheckBox" type="CheckBox" parent="Control"]
+[node name="CheckBox" type="CheckBox" parent="Control" unique_id=603864554]
 layout_mode = 0
 offset_left = 44.0
 offset_top = 352.0
@@ -78,7 +78,7 @@ offset_bottom = 380.0
 button_pressed = true
 text = "LEAST_DIFFICULT_FIRST"
 
-[node name="CheckBox2" type="CheckBox" parent="Control"]
+[node name="CheckBox2" type="CheckBox" parent="Control" unique_id=769308452]
 layout_mode = 0
 offset_left = 44.0
 offset_top = 400.0
@@ -86,7 +86,7 @@ offset_right = 325.0
 offset_bottom = 428.0
 text = "MOST_DIFFICULT_FIRST"
 
-[node name="Label2" type="Label" parent="Control"]
+[node name="Label2" type="Label" parent="Control" unique_id=850734246]
 layout_mode = 0
 offset_left = 373.0
 offset_top = 376.0
@@ -95,7 +95,7 @@ offset_bottom = 400.0
 text = "LESS_ENERGY"
 horizontal_alignment = 2
 
-[node name="EnergyCost" type="Label" parent="Control"]
+[node name="EnergyCost" type="Label" parent="Control" unique_id=1940934137]
 layout_mode = 0
 offset_left = 608.0
 offset_top = 520.0
@@ -103,7 +103,7 @@ offset_right = 752.0
 offset_bottom = 544.0
 text = "1111"
 
-[node name="Label5" type="Label" parent="Control"]
+[node name="Label5" type="Label" parent="Control" unique_id=758397337]
 layout_mode = 0
 offset_left = 192.0
 offset_top = 520.0
@@ -112,7 +112,7 @@ offset_bottom = 544.0
 text = "TOTAL_ENERGY_COST"
 horizontal_alignment = 2
 
-[node name="Label3" type="Label" parent="Control"]
+[node name="Label3" type="Label" parent="Control" unique_id=645820776]
 layout_mode = 0
 offset_left = 840.0
 offset_top = 376.0
@@ -120,7 +120,7 @@ offset_right = 1004.0
 offset_bottom = 400.0
 text = "FASTER_TRAVEL"
 
-[node name="HSlider" type="HSlider" parent="Control"]
+[node name="HSlider" type="HSlider" parent="Control" unique_id=708210730]
 layout_mode = 0
 offset_left = 580.0
 offset_top = 380.0
@@ -128,7 +128,7 @@ offset_right = 820.0
 offset_bottom = 396.0
 value = 50.0
 
-[node name="TextureRect" type="TextureRect" parent="Control"]
+[node name="TextureRect" type="TextureRect" parent="Control" unique_id=1907530478]
 layout_mode = 0
 offset_left = 544.0
 offset_top = 512.0
@@ -138,7 +138,7 @@ texture = ExtResource("4")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="SE_Hint" type="TextureRect" parent="Control"]
+[node name="SE_Hint" type="TextureRect" parent="Control" unique_id=2138592994]
 layout_mode = 0
 offset_left = 694.5
 offset_top = 522.0
@@ -148,12 +148,12 @@ texture = ExtResource("1")
 expand_mode = 1
 stretch_mode = 4
 
-[node name="Control2" type="Control" parent="."]
+[node name="Control2" type="Control" parent="." unique_id=140669212]
 anchors_preset = 0
 offset_right = 40.0
 offset_bottom = 40.0
 
-[node name="ColorRect" type="ColorRect" parent="Control2"]
+[node name="ColorRect" type="ColorRect" parent="Control2" unique_id=733932919]
 layout_mode = 0
 offset_left = 96.0
 offset_top = 196.0
@@ -161,7 +161,7 @@ offset_right = 576.0
 offset_bottom = 220.0
 color = Color(0.0901961, 0.0901961, 0.0901961, 1)
 
-[node name="TextureProgressBar" type="TextureProgressBar" parent="Control2"]
+[node name="TextureProgressBar" type="TextureProgressBar" parent="Control2" unique_id=66766908]
 modulate = Color(0.396078, 0.396078, 0.396078, 1)
 layout_mode = 0
 offset_left = 96.0
@@ -173,7 +173,7 @@ value = 50.0
 nine_patch_stretch = true
 texture_progress = ExtResource("9")
 
-[node name="TextureRect" type="TextureRect" parent="Control2"]
+[node name="TextureRect" type="TextureRect" parent="Control2" unique_id=396542509]
 layout_mode = 0
 offset_left = 248.0
 offset_top = 236.0
@@ -183,7 +183,7 @@ texture = ExtResource("7")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="TimeLeft" type="Label" parent="Control2"]
+[node name="TimeLeft" type="Label" parent="Control2" unique_id=34087598]
 layout_mode = 0
 offset_left = 294.0
 offset_top = 236.0
@@ -191,7 +191,7 @@ offset_right = 458.0
 offset_bottom = 268.0
 vertical_alignment = 1
 
-[node name="TimeLeft2" type="Label" parent="Control2"]
+[node name="TimeLeft2" type="Label" parent="Control2" unique_id=1201306172]
 layout_mode = 0
 offset_left = 96.0
 offset_top = 156.0

@@ -1,4 +1,4 @@
-[gd_scene load_steps=24 format=3 uid="uid://bx5co4ssobffh"]
+[gd_scene format=3 uid="uid://bx5co4ssobffh"]
 
 [ext_resource type="Texture2D" uid="uid://bwa11fyv3aesk" path="res://Graphics/Icons/Flags/nl.png" id="1"]
 [ext_resource type="Texture2D" uid="uid://b2ai640qkt2wc" path="res://Graphics/Icons/Flags/ko.png" id="2"]
@@ -122,7 +122,7 @@ void fragment() {
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_pd2cd"]
 shader = SubResource("Shader_2t816")
 
-[node name="Languages" type="Control"]
+[node name="Languages" type="Control" unique_id=341815753]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -133,35 +133,33 @@ mouse_filter = 2
 script = ExtResource("14")
 metadata/_edit_horizontal_guides_ = [720.0]
 
-[node name="ColorRect" type="ColorRect" parent="."]
+[node name="ColorRect" type="ColorRect" parent="." unique_id=352117204]
 layout_mode = 0
 anchor_right = 1.0
 anchor_bottom = 1.0
 mouse_filter = 2
 color = Color(0, 0, 0, 0)
 
-[node name="MouseOut" type="Polygon2D" parent="."]
+[node name="MouseOut" type="Polygon2D" parent="." unique_id=1679244365]
 color = Color(1, 1, 1, 0)
 polygon = PackedVector2Array(0, 608, 0, 720, 920, 720, 920, 608)
 
-[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=1010334755]
 root_node = NodePath("../Control")
-libraries = {
-&"": SubResource("AnimationLibrary_8wbkt")
-}
+libraries/ = SubResource("AnimationLibrary_8wbkt")
 
-[node name="MouseOver" type="Polygon2D" parent="."]
+[node name="MouseOver" type="Polygon2D" parent="." unique_id=1553608832]
 color = Color(1, 1, 1, 0)
 polygon = PackedVector2Array(0, 676, 0, 728, 52, 728, 52, 676)
 
-[node name="Control" type="Control" parent="."]
+[node name="Control" type="Control" parent="." unique_id=1670279233]
 anchors_preset = 0
 offset_top = 675.0
 offset_right = 912.0
 offset_bottom = 770.0
 mouse_filter = 2
 
-[node name="TranslatedBy" type="Label" parent="Control"]
+[node name="TranslatedBy" type="Label" parent="Control" unique_id=1183526255]
 visible = false
 layout_mode = 0
 offset_left = 68.0
@@ -170,7 +168,7 @@ offset_right = 452.0
 offset_bottom = 45.0
 theme = ExtResource("15")
 
-[node name="Panel" type="Panel" parent="Control"]
+[node name="Panel" type="Panel" parent="Control" unique_id=1928028063]
 layout_mode = 0
 offset_left = 3.0
 offset_top = 5.0
@@ -178,7 +176,7 @@ offset_right = 42.0
 offset_bottom = 43.0
 theme_override_styles/panel = SubResource("StyleBoxFlat_1ffxs")
 
-[node name="TextureRect" type="TextureRect" parent="Control/Panel"]
+[node name="TextureRect" type="TextureRect" parent="Control/Panel" unique_id=1798997333]
 layout_mode = 0
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -186,20 +184,20 @@ texture = ExtResource("13")
 expand_mode = 1
 stretch_mode = 6
 
-[node name="PanelContainer" type="PanelContainer" parent="Control"]
+[node name="PanelContainer" type="PanelContainer" parent="Control" unique_id=1877405812]
 layout_mode = 1
 offset_top = 45.0
 offset_right = 672.0
 offset_bottom = 141.0
 theme_override_styles/panel = SubResource("StyleBoxFlat_1h58w")
 
-[node name="Languages" type="GridContainer" parent="Control/PanelContainer"]
+[node name="Languages" type="GridContainer" parent="Control/PanelContainer" unique_id=874662890]
 layout_mode = 2
 theme_override_constants/h_separation = 40
 theme_override_constants/v_separation = 20
 columns = 7
 
-[node name="en" type="TextureButton" parent="Control/PanelContainer/Languages"]
+[node name="en" type="TextureButton" parent="Control/PanelContainer/Languages" unique_id=818502051]
 material = SubResource("ShaderMaterial_pd2cd")
 instance_shader_parameters/progress = 1.0
 custom_minimum_size = Vector2(60, 0)
@@ -210,7 +208,7 @@ texture_normal = ExtResource("3")
 ignore_texture_size = true
 stretch_mode = 5
 
-[node name="de" type="TextureButton" parent="Control/PanelContainer/Languages"]
+[node name="de" type="TextureButton" parent="Control/PanelContainer/Languages" unique_id=375752676]
 material = SubResource("ShaderMaterial_pd2cd")
 custom_minimum_size = Vector2(60, 0)
 layout_mode = 2
@@ -220,7 +218,7 @@ texture_normal = ExtResource("10")
 ignore_texture_size = true
 stretch_mode = 5
 
-[node name="zh" type="TextureButton" parent="Control/PanelContainer/Languages"]
+[node name="zh" type="TextureButton" parent="Control/PanelContainer/Languages" unique_id=1739742793]
 material = SubResource("ShaderMaterial_pd2cd")
 custom_minimum_size = Vector2(60, 0)
 layout_mode = 2
@@ -230,7 +228,7 @@ texture_normal = ExtResource("6")
 ignore_texture_size = true
 stretch_mode = 5
 
-[node name="hu" type="TextureButton" parent="Control/PanelContainer/Languages"]
+[node name="hu" type="TextureButton" parent="Control/PanelContainer/Languages" unique_id=1453844118]
 material = SubResource("ShaderMaterial_pd2cd")
 custom_minimum_size = Vector2(60, 0)
 layout_mode = 2
@@ -240,7 +238,7 @@ texture_normal = ExtResource("12")
 ignore_texture_size = true
 stretch_mode = 5
 
-[node name="es" type="TextureButton" parent="Control/PanelContainer/Languages"]
+[node name="es" type="TextureButton" parent="Control/PanelContainer/Languages" unique_id=1785226097]
 material = SubResource("ShaderMaterial_pd2cd")
 custom_minimum_size = Vector2(60, 0)
 layout_mode = 2
@@ -250,7 +248,7 @@ texture_normal = ExtResource("4")
 ignore_texture_size = true
 stretch_mode = 5
 
-[node name="ja" type="TextureButton" parent="Control/PanelContainer/Languages"]
+[node name="ja" type="TextureButton" parent="Control/PanelContainer/Languages" unique_id=1221702625]
 material = SubResource("ShaderMaterial_pd2cd")
 custom_minimum_size = Vector2(60, 0)
 layout_mode = 2
@@ -260,7 +258,7 @@ texture_normal = ExtResource("7")
 ignore_texture_size = true
 stretch_mode = 5
 
-[node name="nl" type="TextureButton" parent="Control/PanelContainer/Languages"]
+[node name="nl" type="TextureButton" parent="Control/PanelContainer/Languages" unique_id=1407523251]
 material = SubResource("ShaderMaterial_pd2cd")
 custom_minimum_size = Vector2(60, 0)
 layout_mode = 2
@@ -270,7 +268,7 @@ texture_normal = ExtResource("1")
 ignore_texture_size = true
 stretch_mode = 5
 
-[node name="ru" type="TextureButton" parent="Control/PanelContainer/Languages"]
+[node name="ru" type="TextureButton" parent="Control/PanelContainer/Languages" unique_id=127206768]
 material = SubResource("ShaderMaterial_pd2cd")
 custom_minimum_size = Vector2(60, 0)
 layout_mode = 2
@@ -280,7 +278,7 @@ texture_normal = ExtResource("11")
 ignore_texture_size = true
 stretch_mode = 5
 
-[node name="fr" type="TextureButton" parent="Control/PanelContainer/Languages"]
+[node name="fr" type="TextureButton" parent="Control/PanelContainer/Languages" unique_id=494363480]
 material = SubResource("ShaderMaterial_pd2cd")
 custom_minimum_size = Vector2(60, 0)
 layout_mode = 2
@@ -290,7 +288,7 @@ texture_normal = ExtResource("9")
 ignore_texture_size = true
 stretch_mode = 5
 
-[node name="it" type="TextureButton" parent="Control/PanelContainer/Languages"]
+[node name="it" type="TextureButton" parent="Control/PanelContainer/Languages" unique_id=1385049391]
 material = SubResource("ShaderMaterial_pd2cd")
 custom_minimum_size = Vector2(60, 0)
 layout_mode = 2
@@ -300,7 +298,7 @@ texture_normal = ExtResource("8")
 ignore_texture_size = true
 stretch_mode = 5
 
-[node name="ko" type="TextureButton" parent="Control/PanelContainer/Languages"]
+[node name="ko" type="TextureButton" parent="Control/PanelContainer/Languages" unique_id=674527357]
 material = SubResource("ShaderMaterial_pd2cd")
 custom_minimum_size = Vector2(60, 0)
 layout_mode = 2
@@ -310,7 +308,7 @@ texture_normal = ExtResource("2")
 ignore_texture_size = true
 stretch_mode = 5
 
-[node name="sv" type="TextureButton" parent="Control/PanelContainer/Languages"]
+[node name="sv" type="TextureButton" parent="Control/PanelContainer/Languages" unique_id=1281491588]
 material = SubResource("ShaderMaterial_pd2cd")
 custom_minimum_size = Vector2(60, 0)
 layout_mode = 2
@@ -320,7 +318,7 @@ texture_normal = ExtResource("5")
 ignore_texture_size = true
 stretch_mode = 5
 
-[node name="pl" type="TextureButton" parent="Control/PanelContainer/Languages"]
+[node name="pl" type="TextureButton" parent="Control/PanelContainer/Languages" unique_id=204604710]
 material = SubResource("ShaderMaterial_pd2cd")
 custom_minimum_size = Vector2(60, 0)
 layout_mode = 2

@@ -1,8 +1,8 @@
-[gd_scene load_steps=2 format=3 uid="uid://c8jr3e5aiyj1n"]
+[gd_scene format=3 uid="uid://c8jr3e5aiyj1n"]
 
 [ext_resource type="Script" uid="uid://beaqxkvmwnoxd" path="res://Scripts/HelpText.gd" id="1"]
 
-[node name="RichTextLabel" type="RichTextLabel"]
+[node name="RichTextLabel" type="RichTextLabel" unique_id=1511434500]
 offset_right = 200.0
 offset_bottom = 30.0
 bbcode_enabled = true

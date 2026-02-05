@@ -1,10 +1,10 @@
-[gd_scene load_steps=4 format=3 uid="uid://bg1d8jue3snl7"]
+[gd_scene format=3 uid="uid://bg1d8jue3snl7"]
 
 [ext_resource type="Texture2D" uid="uid://dcgeiryc4u16w" path="res://Graphics/Ships/Fighter.png" id="1_4kd4s"]
 [ext_resource type="Theme" uid="uid://cp2u1kgj60ic" path="res://Resources/default_theme.tres" id="1_qqt2u"]
 [ext_resource type="Texture2D" uid="uid://7ffsf7xuvfw2" path="res://Graphics/Icons/attack.png" id="3_k0jue"]
 
-[node name="Control" type="Control"]
+[node name="Control" type="Control" unique_id=1435017751]
 custom_minimum_size = Vector2(0, 96)
 layout_mode = 3
 anchors_preset = 10
@@ -13,7 +13,7 @@ offset_bottom = 96.0
 grow_horizontal = 2
 theme = ExtResource("1_qqt2u")
 
-[node name="FighterIcon" type="TextureRect" parent="."]
+[node name="FighterIcon" type="TextureRect" parent="." unique_id=1094495873]
 layout_mode = 0
 offset_left = 16.0
 offset_top = 4.0
@@ -23,7 +23,7 @@ texture = ExtResource("1_4kd4s")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="LocationLabel" type="Label" parent="."]
+[node name="LocationLabel" type="Label" parent="." unique_id=1851773118]
 layout_mode = 0
 offset_left = 280.0
 offset_top = 16.0
@@ -32,7 +32,7 @@ offset_bottom = 39.0
 text = "Milky Way"
 horizontal_alignment = 1
 
-[node name="StatusLabel" type="Label" parent="."]
+[node name="StatusLabel" type="Label" parent="." unique_id=649554300]
 layout_mode = 0
 offset_left = 472.0
 offset_top = 32.0
@@ -41,7 +41,7 @@ offset_bottom = 55.0
 text = "On standby"
 horizontal_alignment = 1
 
-[node name="NumberLabel" type="Label" parent="."]
+[node name="NumberLabel" type="Label" parent="." unique_id=210736438]
 layout_mode = 0
 offset_left = 132.0
 offset_top = 56.0
@@ -49,7 +49,7 @@ offset_right = 164.0
 offset_bottom = 79.0
 text = "x 2"
 
-[node name="StrengthLabel" type="Label" parent="."]
+[node name="StrengthLabel" type="Label" parent="." unique_id=215150534]
 layout_mode = 0
 offset_left = 228.0
 offset_top = 40.0
@@ -57,7 +57,7 @@ offset_right = 260.0
 offset_bottom = 63.0
 text = "100"
 
-[node name="GoTo" type="Button" parent="."]
+[node name="GoTo" type="Button" parent="." unique_id=1945724732]
 layout_mode = 0
 offset_left = 336.0
 offset_top = 48.0
@@ -65,7 +65,7 @@ offset_right = 412.0
 offset_bottom = 81.0
 text = "GO_TO"
 
-[node name="Disband" type="Button" parent="."]
+[node name="Disband" type="Button" parent="." unique_id=395609724]
 layout_mode = 0
 offset_left = 728.0
 offset_top = 28.0
@@ -73,7 +73,7 @@ offset_right = 856.0
 offset_bottom = 61.0
 text = "DISBAND"
 
-[node name="StrengthIcon" type="TextureRect" parent="."]
+[node name="StrengthIcon" type="TextureRect" parent="." unique_id=1920122377]
 layout_mode = 0
 offset_left = 188.0
 offset_top = 32.0

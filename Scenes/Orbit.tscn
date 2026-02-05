@@ -1,6 +1,6 @@
-[gd_scene load_steps=2 format=3 uid="uid://c4rau35kl5sjn"]
+[gd_scene format=3 uid="uid://c4rau35kl5sjn"]
 
 [ext_resource type="Script" uid="uid://cgx7vyarit6ix" path="res://Scripts/Orbit.gd" id="1"]
 
-[node name="Orbit" type="Node2D"]
+[node name="Orbit" type="Node2D" unique_id=108678325]
 script = ExtResource("1")

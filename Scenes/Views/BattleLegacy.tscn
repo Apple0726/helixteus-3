@@ -1,16 +1,12 @@
-[gd_scene load_steps=53 format=3 uid="uid://dkeiijs55u4pd"]
+[gd_scene format=3 uid="uid://dkeiijs55u4pd"]
 
 [ext_resource type="Script" uid="uid://c4ojmlng5dhoh" path="res://Scripts/Battle/BattleLegacy.gd" id="1"]
 [ext_resource type="Theme" uid="uid://cp2u1kgj60ic" path="res://Resources/default_theme.tres" id="2"]
-[ext_resource type="Texture2D" uid="uid://koi0aarpqj30" path="res://Graphics/Ships/Ship0.png" id="3"]
 [ext_resource type="Texture2D" uid="uid://47ckp0wuhpfy" path="res://Graphics/Icons/current.png" id="4"]
-[ext_resource type="Texture2D" uid="uid://b8ga5o8bhm1hb" path="res://Graphics/Ships/Ship1.png" id="6"]
-[ext_resource type="Texture2D" uid="uid://dxjlx3yjmlywi" path="res://Graphics/Ships/Ship2.png" id="7"]
 [ext_resource type="Shader" uid="uid://gevhgabt3grd" path="res://Shaders/Laser.gdshader" id="8"]
 [ext_resource type="Texture2D" uid="uid://4btqw773gw21" path="res://Graphics/Planets/BGs/9.png" id="9"]
 [ext_resource type="PackedScene" uid="uid://cy1jwsk8ofoys" path="res://Scenes/Key.tscn" id="11"]
 [ext_resource type="PackedScene" uid="uid://cxykmxd6r2wgm" path="res://Scenes/Battle/Ship.tscn" id="12"]
-[ext_resource type="Texture2D" uid="uid://wrc1em7frxle" path="res://Graphics/Ships/Ship3.png" id="13"]
 [ext_resource type="Texture2D" uid="uid://ck8hhokxiy34p" path="res://Graphics/Icons/HX_icon.png" id="14"]
 [ext_resource type="Shader" uid="uid://hfa3ri2g3507" path="res://Shaders/FloatAnimation.gdshader" id="15"]
 
@@ -370,8 +366,6 @@ background_mode = 4
 glow_enabled = true
 glow_levels/1 = 1.0
 glow_levels/2 = 1.0
-glow_levels/5 = 0.0
-glow_blend_mode = 1
 glow_hdr_scale = 1.13
 glow_hdr_luminance_cap = 1.01
 adjustment_enabled = true
@@ -430,41 +424,37 @@ _data = {
 &"SceneFade": SubResource("26")
 }
 
-[node name="Battle" type="Control"]
+[node name="Battle" type="Control" unique_id=1753888020]
 layout_mode = 3
 anchors_preset = 0
 pivot_offset = Vector2(-160, 36)
 theme = ExtResource("2")
 script = ExtResource("1")
 
-[node name="BG" type="Sprite2D" parent="."]
+[node name="BG" type="Sprite2D" parent="." unique_id=1985775011]
 material = SubResource("6")
 position = Vector2(658.397, 658.258)
 scale = Vector2(0.952953, 0.952953)
 texture = ExtResource("9")
 
-[node name="Ship0" parent="." instance=ExtResource("12")]
-texture = ExtResource("3")
+[node name="Ship0" parent="." unique_id=1516550018 instance=ExtResource("12")]
 
-[node name="Ship1" parent="." instance=ExtResource("12")]
+[node name="Ship1" parent="." unique_id=827138419 instance=ExtResource("12")]
 visible = false
-texture = ExtResource("6")
 
-[node name="Ship2" parent="." instance=ExtResource("12")]
+[node name="Ship2" parent="." unique_id=2130439331 instance=ExtResource("12")]
 visible = false
-texture = ExtResource("7")
 
-[node name="Ship3" parent="." instance=ExtResource("12")]
+[node name="Ship3" parent="." unique_id=1769665786 instance=ExtResource("12")]
 visible = false
-texture = ExtResource("13")
 
-[node name="Timer" type="Timer" parent="."]
+[node name="Timer" type="Timer" parent="." unique_id=802314065]
 one_shot = true
 
-[node name="ImmuneTimer" type="Timer" parent="."]
+[node name="ImmuneTimer" type="Timer" parent="." unique_id=1395018775]
 one_shot = true
 
-[node name="Help" type="Label" parent="."]
+[node name="Help" type="Label" parent="." unique_id=265853953]
 visible = false
 modulate = Color(1, 1, 1, 0)
 layout_mode = 0
@@ -474,14 +464,12 @@ offset_bottom = 348.0
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="AnimationPlayer" type="AnimationPlayer" parent="Help"]
-libraries = {
-"": SubResource("AnimationLibrary_nv61m")
-}
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Help" unique_id=1534360734]
+libraries/ = SubResource("AnimationLibrary_nv61m")
 
-[node name="UI" type="CanvasLayer" parent="."]
+[node name="UI" type="CanvasLayer" parent="." unique_id=885895442]
 
-[node name="FightPanel" type="Panel" parent="UI"]
+[node name="FightPanel" type="Panel" parent="UI" unique_id=840782195]
 anchors_preset = 7
 anchor_left = 0.5
 anchor_top = 1.0
@@ -494,7 +482,7 @@ offset_bottom = -6.0
 grow_horizontal = 2
 theme = ExtResource("2")
 
-[node name="Bullet" type="Button" parent="UI/FightPanel"]
+[node name="Bullet" type="Button" parent="UI/FightPanel" unique_id=41142369]
 layout_mode = 0
 offset_left = 56.0
 offset_top = 12.0
@@ -503,7 +491,7 @@ offset_bottom = 52.0
 shortcut = SubResource("28")
 shortcut_in_tooltip = false
 
-[node name="TextureRect" type="TextureRect" parent="UI/FightPanel/Bullet"]
+[node name="TextureRect" type="TextureRect" parent="UI/FightPanel/Bullet" unique_id=1696757051]
 custom_minimum_size = Vector2(40, 0)
 layout_mode = 0
 anchor_left = 0.5
@@ -518,7 +506,7 @@ size_flags_horizontal = 4
 expand_mode = 1
 stretch_mode = 5
 
-[node name="Label" type="Label" parent="UI/FightPanel/Bullet"]
+[node name="Label" type="Label" parent="UI/FightPanel/Bullet" unique_id=1477143800]
 layout_mode = 1
 anchors_preset = 3
 anchor_left = 1.0
@@ -536,7 +524,7 @@ size_flags_vertical = 8
 theme_override_font_sizes/font_size = 15
 text = "            1"
 
-[node name="Laser" type="Button" parent="UI/FightPanel"]
+[node name="Laser" type="Button" parent="UI/FightPanel" unique_id=27223578]
 layout_mode = 0
 offset_left = 188.0
 offset_top = 12.0
@@ -545,7 +533,7 @@ offset_bottom = 52.0
 shortcut = SubResource("30")
 shortcut_in_tooltip = false
 
-[node name="TextureRect" type="TextureRect" parent="UI/FightPanel/Laser"]
+[node name="TextureRect" type="TextureRect" parent="UI/FightPanel/Laser" unique_id=1348190465]
 custom_minimum_size = Vector2(40, 0)
 layout_mode = 0
 anchor_left = 0.5
@@ -560,7 +548,7 @@ size_flags_horizontal = 4
 expand_mode = 1
 stretch_mode = 5
 
-[node name="Label" type="Label" parent="UI/FightPanel/Laser"]
+[node name="Label" type="Label" parent="UI/FightPanel/Laser" unique_id=1177460159]
 layout_mode = 1
 anchors_preset = 3
 anchor_left = 1.0
@@ -578,7 +566,7 @@ size_flags_vertical = 8
 theme_override_font_sizes/font_size = 15
 text = "            2"
 
-[node name="Bomb" type="Button" parent="UI/FightPanel"]
+[node name="Bomb" type="Button" parent="UI/FightPanel" unique_id=1672228678]
 layout_mode = 0
 offset_left = 316.0
 offset_top = 12.0
@@ -587,7 +575,7 @@ offset_bottom = 52.0
 shortcut = SubResource("32")
 shortcut_in_tooltip = false
 
-[node name="TextureRect" type="TextureRect" parent="UI/FightPanel/Bomb"]
+[node name="TextureRect" type="TextureRect" parent="UI/FightPanel/Bomb" unique_id=1957311133]
 custom_minimum_size = Vector2(30, 0)
 layout_mode = 0
 anchor_left = 0.5
@@ -602,7 +590,7 @@ size_flags_horizontal = 4
 expand_mode = 1
 stretch_mode = 5
 
-[node name="Label" type="Label" parent="UI/FightPanel/Bomb"]
+[node name="Label" type="Label" parent="UI/FightPanel/Bomb" unique_id=115491268]
 layout_mode = 1
 anchors_preset = 3
 anchor_left = 1.0
@@ -620,7 +608,7 @@ size_flags_vertical = 8
 theme_override_font_sizes/font_size = 15
 text = "            3"
 
-[node name="Light" type="Button" parent="UI/FightPanel"]
+[node name="Light" type="Button" parent="UI/FightPanel" unique_id=1139364319]
 layout_mode = 0
 offset_left = 444.0
 offset_top = 12.0
@@ -629,7 +617,7 @@ offset_bottom = 52.0
 shortcut = SubResource("34")
 shortcut_in_tooltip = false
 
-[node name="TextureRect" type="TextureRect" parent="UI/FightPanel/Light"]
+[node name="TextureRect" type="TextureRect" parent="UI/FightPanel/Light" unique_id=1528505151]
 custom_minimum_size = Vector2(40, 0)
 layout_mode = 0
 anchor_left = 0.5
@@ -644,7 +632,7 @@ size_flags_horizontal = 4
 expand_mode = 1
 stretch_mode = 5
 
-[node name="Label" type="Label" parent="UI/FightPanel/Light"]
+[node name="Label" type="Label" parent="UI/FightPanel/Light" unique_id=2081038653]
 layout_mode = 1
 anchors_preset = 3
 anchor_left = 1.0
@@ -662,7 +650,7 @@ size_flags_vertical = 8
 theme_override_font_sizes/font_size = 15
 text = "            4"
 
-[node name="Ability" type="Button" parent="UI/FightPanel"]
+[node name="Ability" type="Button" parent="UI/FightPanel" unique_id=2110736514]
 layout_mode = 0
 offset_left = 572.0
 offset_top = 12.0
@@ -671,7 +659,7 @@ offset_bottom = 52.0
 shortcut = SubResource("Shortcut_hsns0")
 shortcut_in_tooltip = false
 
-[node name="TextureRect" type="TextureRect" parent="UI/FightPanel/Ability"]
+[node name="TextureRect" type="TextureRect" parent="UI/FightPanel/Ability" unique_id=99364584]
 custom_minimum_size = Vector2(40, 0)
 layout_mode = 0
 anchor_left = 0.5
@@ -686,7 +674,7 @@ size_flags_horizontal = 4
 expand_mode = 1
 stretch_mode = 5
 
-[node name="Label" type="Label" parent="UI/FightPanel/Ability"]
+[node name="Label" type="Label" parent="UI/FightPanel/Ability" unique_id=1369768122]
 layout_mode = 1
 anchors_preset = 3
 anchor_left = 1.0
@@ -704,7 +692,7 @@ size_flags_vertical = 8
 theme_override_font_sizes/font_size = 15
 text = "            5"
 
-[node name="Superweapon" type="Button" parent="UI/FightPanel"]
+[node name="Superweapon" type="Button" parent="UI/FightPanel" unique_id=1097290498]
 layout_mode = 0
 offset_left = 704.0
 offset_top = 12.0
@@ -713,17 +701,15 @@ offset_bottom = 52.0
 shortcut = SubResource("Shortcut_xbt1f")
 shortcut_in_tooltip = false
 
-[node name="Glow" type="Polygon2D" parent="UI/FightPanel/Superweapon"]
+[node name="Glow" type="Polygon2D" parent="UI/FightPanel/Superweapon" unique_id=630789782]
 modulate = Color(1, 1, 1, 0)
 color = Color(1, 1, 0, 1)
 polygon = PackedVector2Array(16, 4, 35.9863, -0.0164795, 56, 4, 72, 20, 56, 36, 36.0976, 39.9626, 16, 36, 0, 20)
 
-[node name="AnimationPlayer" type="AnimationPlayer" parent="UI/FightPanel/Superweapon/Glow"]
-libraries = {
-"": SubResource("AnimationLibrary_rurq5")
-}
+[node name="AnimationPlayer" type="AnimationPlayer" parent="UI/FightPanel/Superweapon/Glow" unique_id=1073854855]
+libraries/ = SubResource("AnimationLibrary_rurq5")
 
-[node name="TextureRect" type="TextureRect" parent="UI/FightPanel/Superweapon"]
+[node name="TextureRect" type="TextureRect" parent="UI/FightPanel/Superweapon" unique_id=1050818788]
 custom_minimum_size = Vector2(40, 0)
 layout_mode = 0
 anchor_left = 0.5
@@ -738,7 +724,7 @@ size_flags_horizontal = 4
 expand_mode = 1
 stretch_mode = 5
 
-[node name="Label" type="Label" parent="UI/FightPanel/Superweapon"]
+[node name="Label" type="Label" parent="UI/FightPanel/Superweapon" unique_id=148237383]
 layout_mode = 1
 anchors_preset = 3
 anchor_left = 1.0
@@ -756,19 +742,17 @@ size_flags_vertical = 8
 theme_override_font_sizes/font_size = 15
 text = "            6"
 
-[node name="AnimationPlayer" type="AnimationPlayer" parent="UI/FightPanel"]
-libraries = {
-"": SubResource("AnimationLibrary_wxx8k")
-}
+[node name="AnimationPlayer" type="AnimationPlayer" parent="UI/FightPanel" unique_id=465727946]
+libraries/ = SubResource("AnimationLibrary_wxx8k")
 
-[node name="Panel" type="Panel" parent="UI/FightPanel"]
+[node name="Panel" type="Panel" parent="UI/FightPanel" unique_id=1559097835]
 layout_mode = 0
 anchor_left = 1.0
 anchor_right = 1.0
 offset_left = -132.0
 offset_top = -32.0
 
-[node name="TextureRect" type="TextureRect" parent="UI/FightPanel/Panel"]
+[node name="TextureRect" type="TextureRect" parent="UI/FightPanel/Panel" unique_id=278255557]
 layout_mode = 0
 offset_left = 12.0
 offset_right = 44.0
@@ -777,7 +761,7 @@ texture = ExtResource("14")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="BattleProgress" type="Label" parent="UI/FightPanel/Panel"]
+[node name="BattleProgress" type="Label" parent="UI/FightPanel/Panel" unique_id=830108113]
 layout_mode = 0
 offset_left = 52.0
 offset_right = 132.0
@@ -786,7 +770,7 @@ text = "99 / 99"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="Help2" type="Panel" parent="UI"]
+[node name="Help2" type="Panel" parent="UI" unique_id=605274478]
 modulate = Color(1, 1, 1, 0)
 anchors_preset = 8
 anchor_left = 0.5
@@ -801,7 +785,7 @@ grow_horizontal = 2
 grow_vertical = 2
 theme = ExtResource("2")
 
-[node name="Label" type="Label" parent="UI/Help2"]
+[node name="Label" type="Label" parent="UI/Help2" unique_id=901218454]
 layout_mode = 0
 offset_left = 8.0
 offset_top = 24.0
@@ -810,7 +794,7 @@ offset_bottom = 56.0
 text = "CHOOSE_DIFF"
 horizontal_alignment = 1
 
-[node name="Loot" type="Label" parent="UI/Help2"]
+[node name="Loot" type="Label" parent="UI/Help2" unique_id=947467949]
 layout_mode = 0
 offset_left = 12.0
 offset_top = 132.0
@@ -818,7 +802,7 @@ offset_right = 372.0
 offset_bottom = 156.0
 horizontal_alignment = 1
 
-[node name="HBoxContainer" type="HBoxContainer" parent="UI/Help2"]
+[node name="HBoxContainer" type="HBoxContainer" parent="UI/Help2" unique_id=515984709]
 layout_mode = 0
 offset_left = 4.0
 offset_top = 92.0
@@ -826,27 +810,25 @@ offset_right = 380.0
 offset_bottom = 120.0
 alignment = 1
 
-[node name="Easy" type="Button" parent="UI/Help2/HBoxContainer"]
+[node name="Easy" type="Button" parent="UI/Help2/HBoxContainer" unique_id=913303786]
 layout_mode = 2
 size_flags_horizontal = 3
 text = "EASY"
 
-[node name="Normal" type="Button" parent="UI/Help2/HBoxContainer"]
+[node name="Normal" type="Button" parent="UI/Help2/HBoxContainer" unique_id=472915126]
 layout_mode = 2
 size_flags_horizontal = 3
 text = "NORMAL"
 
-[node name="Hard" type="Button" parent="UI/Help2/HBoxContainer"]
+[node name="Hard" type="Button" parent="UI/Help2/HBoxContainer" unique_id=1184322047]
 layout_mode = 2
 size_flags_horizontal = 3
 text = "HARD"
 
-[node name="AnimationPlayer" type="AnimationPlayer" parent="UI/Help2"]
-libraries = {
-"": SubResource("AnimationLibrary_3hocp")
-}
+[node name="AnimationPlayer" type="AnimationPlayer" parent="UI/Help2" unique_id=676663512]
+libraries/ = SubResource("AnimationLibrary_3hocp")
 
-[node name="Back" type="Button" parent="UI"]
+[node name="Back" type="Button" parent="UI" unique_id=1557005686]
 offset_top = 684.0
 offset_right = 136.0
 offset_bottom = 720.0
@@ -854,26 +836,26 @@ theme = ExtResource("2")
 shortcut = SubResource("20")
 shortcut_in_tooltip = false
 
-[node name="Current" type="Sprite2D" parent="UI"]
+[node name="Current" type="Sprite2D" parent="UI" unique_id=1622407102]
 material = SubResource("21")
 scale = Vector2(0.4, 0.4)
 texture = ExtResource("4")
 
-[node name="FadeOutRect" type="ColorRect" parent="UI"]
+[node name="FadeOutRect" type="ColorRect" parent="UI" unique_id=1583753746]
 offset_right = 1280.0
 offset_bottom = 720.0
 mouse_filter = 2
 color = Color(0, 0, 0, 0)
 metadata/_edit_lock_ = true
 
-[node name="WhiteRect" type="ColorRect" parent="UI"]
+[node name="WhiteRect" type="ColorRect" parent="UI" unique_id=713364213]
 offset_right = 1280.0
 offset_bottom = 720.0
 mouse_filter = 2
 color = Color(1, 1, 1, 0)
 metadata/_edit_lock_ = true
 
-[node name="ControlKeyboard" type="Control" parent="UI"]
+[node name="ControlKeyboard" type="Control" parent="UI" unique_id=512596201]
 visible = false
 modulate = Color(1, 1, 1, 0)
 layout_mode = 3
@@ -883,7 +865,7 @@ offset_right = 40.0
 offset_bottom = -24.0
 theme = ExtResource("2")
 
-[node name="GoUp" parent="UI/ControlKeyboard" instance=ExtResource("11")]
+[node name="GoUp" parent="UI/ControlKeyboard" unique_id=1222713829 instance=ExtResource("11")]
 layout_mode = 0
 offset_left = 548.0
 offset_top = 560.0
@@ -891,7 +873,7 @@ offset_right = 584.0
 offset_bottom = 594.0
 text = "W"
 
-[node name="GoDown" parent="UI/ControlKeyboard" instance=ExtResource("11")]
+[node name="GoDown" parent="UI/ControlKeyboard" unique_id=1231393357 instance=ExtResource("11")]
 layout_mode = 0
 offset_left = 548.0
 offset_top = 600.0
@@ -899,7 +881,7 @@ offset_right = 584.0
 offset_bottom = 634.0
 text = "S"
 
-[node name="Boost" parent="UI/ControlKeyboard" instance=ExtResource("11")]
+[node name="Boost" parent="UI/ControlKeyboard" unique_id=415178205 instance=ExtResource("11")]
 layout_mode = 0
 offset_left = 656.0
 offset_top = 600.0
@@ -907,12 +889,10 @@ offset_right = 706.0
 offset_bottom = 634.0
 text = "Shift"
 
-[node name="AnimationPlayer" type="AnimationPlayer" parent="UI/ControlKeyboard"]
-libraries = {
-"": SubResource("AnimationLibrary_dex2d")
-}
+[node name="AnimationPlayer" type="AnimationPlayer" parent="UI/ControlKeyboard" unique_id=426816210]
+libraries/ = SubResource("AnimationLibrary_dex2d")
 
-[node name="ControlMouse" type="Control" parent="UI"]
+[node name="ControlMouse" type="Control" parent="UI" unique_id=729918194]
 visible = false
 modulate = Color(1, 1, 1, 0)
 layout_mode = 3
@@ -921,72 +901,64 @@ offset_top = -56.0
 offset_right = 40.0
 offset_bottom = -16.0
 
-[node name="Boost2" type="Panel" parent="UI/ControlMouse"]
+[node name="Boost2" type="Panel" parent="UI/ControlMouse" unique_id=20308918]
 layout_mode = 0
 offset_left = 612.0
 offset_top = 544.0
 offset_right = 640.0
 offset_bottom = 576.0
 
-[node name="Boost3" type="Panel" parent="UI/ControlMouse"]
+[node name="Boost3" type="Panel" parent="UI/ControlMouse" unique_id=1319231539]
 layout_mode = 0
 offset_left = 640.0
 offset_top = 544.0
 offset_right = 668.0
 offset_bottom = 576.0
 
-[node name="Boost4" type="Panel" parent="UI/ControlMouse"]
+[node name="Boost4" type="Panel" parent="UI/ControlMouse" unique_id=1450914149]
 layout_mode = 0
 offset_left = 612.0
 offset_top = 544.0
 offset_right = 668.0
 offset_bottom = 628.0
 
-[node name="AnimationPlayer" type="AnimationPlayer" parent="UI/ControlMouse"]
-libraries = {
-"": SubResource("AnimationLibrary_gaiwo")
-}
+[node name="AnimationPlayer" type="AnimationPlayer" parent="UI/ControlMouse" unique_id=1697720940]
+libraries/ = SubResource("AnimationLibrary_gaiwo")
 
-[node name="Stars" type="CanvasLayer" parent="."]
+[node name="Stars" type="CanvasLayer" parent="." unique_id=1612334651]
 layer = -1
 
-[node name="Laser" type="Control" parent="."]
+[node name="Laser" type="Control" parent="." unique_id=2113327836]
 visible = false
 anchors_preset = 0
 offset_right = 40.0
 offset_bottom = 40.0
 
-[node name="Texture2D" type="ColorRect" parent="Laser"]
+[node name="Texture2D" type="ColorRect" parent="Laser" unique_id=1567994160]
 material = SubResource("22")
 layout_mode = 0
 offset_top = -332.0
 offset_right = 664.0
 offset_bottom = 332.0
 
-[node name="AnimationPlayer" type="AnimationPlayer" parent="Laser"]
-libraries = {
-"": SubResource("AnimationLibrary_ry58s")
-}
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Laser" unique_id=674091391]
+libraries/ = SubResource("AnimationLibrary_ry58s")
 
-[node name="CurrentPattern" type="Label" parent="."]
+[node name="CurrentPattern" type="Label" parent="." unique_id=1298554137]
 layout_mode = 0
 offset_left = 2.33598
 offset_top = 40.2633
 offset_right = 42.336
 offset_bottom = 64.2633
 
-[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=197115302]
 environment = SubResource("24")
 
-[node name="WorldAnim" type="AnimationPlayer" parent="."]
-libraries = {
-"": SubResource("AnimationLibrary_g31an")
-}
+[node name="WorldAnim" type="AnimationPlayer" parent="." unique_id=1445793729]
+libraries/ = SubResource("AnimationLibrary_g31an")
 
-[node name="InitialFade" type="AnimationPlayer" parent="."]
-libraries = {
-"": SubResource("AnimationLibrary_ox1th")
-}
+[node name="InitialFade" type="AnimationPlayer" parent="." unique_id=782496352]
+libraries/ = SubResource("AnimationLibrary_ox1th")
 
 [connection signal="tree_exited" from="." to="." method="_on_Battle_tree_exited"]
 [connection signal="timeout" from="Timer" to="." method="_on_Timer_timeout"]

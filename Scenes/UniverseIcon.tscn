@@ -1,11 +1,11 @@
-[gd_scene load_steps=4 format=3 uid="uid://5s56ablx84rs"]
+[gd_scene format=3 uid="uid://5s56ablx84rs"]
 
 [ext_resource type="Theme" uid="uid://cp2u1kgj60ic" path="res://Resources/default_theme.tres" id="1_8ivd7"]
 [ext_resource type="Texture2D" uid="uid://l588wyvd2qdq" path="res://Graphics/Clusters/universe.png" id="2_rveul"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_jl8q8"]
 
-[node name="UniverseIcon" type="TextureButton"]
+[node name="UniverseIcon" type="TextureButton" unique_id=1775135344]
 self_modulate = Color(1, 1, 1, 0.509804)
 material = SubResource("ShaderMaterial_jl8q8")
 custom_minimum_size = Vector2(260, 260)
@@ -14,7 +14,7 @@ texture_normal = ExtResource("2_rveul")
 ignore_texture_size = true
 stretch_mode = 5
 
-[node name="Level" type="Label" parent="."]
+[node name="Level" type="Label" parent="." unique_id=1286517391]
 layout_mode = 1
 anchors_preset = 5
 anchor_left = 0.5
@@ -29,7 +29,7 @@ theme_override_font_sizes/font_size = 22
 text = "Level 100"
 horizontal_alignment = 1
 
-[node name="DRs" type="Label" parent="."]
+[node name="DRs" type="Label" parent="." unique_id=1641790499]
 layout_mode = 1
 anchors_preset = 5
 anchor_left = 0.5
@@ -43,7 +43,7 @@ theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
 text = "7.04 DRs"
 horizontal_alignment = 1
 
-[node name="Props1" type="Label" parent="."]
+[node name="Props1" type="Label" parent="." unique_id=2013639929]
 layout_mode = 1
 anchors_preset = 5
 anchor_left = 0.5
@@ -58,7 +58,7 @@ theme_override_font_sizes/font_size = 15
 text = "8.8c/8.8h/8.8k/8.8G/8.8e/8.8*13.8Gy"
 horizontal_alignment = 1
 
-[node name="Props2" type="RichTextLabel" parent="."]
+[node name="Props2" type="RichTextLabel" parent="." unique_id=977183889]
 layout_mode = 1
 anchors_preset = 5
 anchor_left = 0.5

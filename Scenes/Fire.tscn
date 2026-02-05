@@ -1,4 +1,4 @@
-[gd_scene load_steps=5 format=3 uid="uid://dtk1md86gqsln"]
+[gd_scene format=3 uid="uid://dtk1md86gqsln"]
 
 [ext_resource type="Texture2D" uid="uid://cvetejccba6ge" path="res://Graphics/Stars/Star.png" id="1"]
 
@@ -21,8 +21,8 @@ scale_min = 0.02
 scale_max = 0.03
 color_ramp = SubResource("2")
 
-[node name="Fire" type="GPUParticles2D"]
+[node name="Fire" type="GPUParticles2D" unique_id=778384125]
 amount = 60
-process_material = SubResource("5")
 texture = ExtResource("1")
 lifetime = 0.3
+process_material = SubResource("5")

@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=3 uid="uid://decmehu30cj8j"]
+[gd_scene format=3 uid="uid://decmehu30cj8j"]
 
 [ext_resource type="Texture2D" uid="uid://43tk0leq150l" path="res://Graphics/Battle/Obstacles/asteroid.png" id="1_8rmj3"]
 [ext_resource type="Script" uid="uid://n327fjh85gr3" path="res://Scripts/Battle/Asteroid.gd" id="1_gcgyw"]
@@ -31,12 +31,12 @@ shader_parameter/flash_color = Color(1, 1, 1, 1)
 resource_local_to_scene = true
 radius = 84.0
 
-[node name="Node2D" type="Area2D"]
+[node name="Node2D" type="Area2D" unique_id=1809285436]
 collision_layer = 32
 collision_mask = 63
 script = ExtResource("1_gcgyw")
 
-[node name="TextureRect" type="TextureRect" parent="."]
+[node name="TextureRect" type="TextureRect" parent="." unique_id=1776811568]
 material = SubResource("ShaderMaterial_fg6fk")
 offset_left = -96.0
 offset_top = -96.0
@@ -47,24 +47,24 @@ texture = ExtResource("1_8rmj3")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1779661394]
 shape = SubResource("CircleShape2D_gcgyw")
 
-[node name="Polygon2D" type="Polygon2D" parent="CollisionShape2D"]
+[node name="Polygon2D" type="Polygon2D" parent="CollisionShape2D" unique_id=1533469464]
 color = Color(1, 1, 1, 0)
 polygon = PackedVector2Array(-163, -91)
 uv = PackedVector2Array(-163, -91)
 
-[node name="VelocityArrow" parent="." instance=ExtResource("3_wikyw")]
+[node name="VelocityArrow" parent="." unique_id=2026242660 instance=ExtResource("3_wikyw")]
 
-[node name="Info" type="Control" parent="."]
+[node name="Info" type="Control" parent="." unique_id=897616701]
 layout_mode = 3
 anchors_preset = 0
 offset_right = 40.0
 offset_bottom = 40.0
 mouse_filter = 2
 
-[node name="HP" type="TextureProgressBar" parent="Info"]
+[node name="HP" type="TextureProgressBar" parent="Info" unique_id=1924492810]
 modulate = Color(0, 1, 0, 1)
 layout_mode = 0
 offset_left = -130.0
@@ -77,14 +77,14 @@ nine_patch_stretch = true
 texture_under = ExtResource("3_ey2x8")
 texture_progress = ExtResource("4_fg6fk")
 
-[node name="Label" type="Label" parent="Info"]
+[node name="Label" type="Label" parent="Info" unique_id=1296170771]
 layout_mode = 0
 offset_left = -28.0
 offset_top = 90.0
 offset_right = 52.0
 offset_bottom = 114.0
 
-[node name="Icon" type="TextureRect" parent="Info"]
+[node name="Icon" type="TextureRect" parent="Info" unique_id=1902247382]
 custom_minimum_size = Vector2(24, 24)
 layout_mode = 0
 offset_left = -68.0
@@ -94,14 +94,14 @@ offset_bottom = 114.0
 expand_mode = 1
 stretch_mode = 6
 
-[node name="StatusEffects" parent="Info" instance=ExtResource("5_c5aoj")]
+[node name="StatusEffects" parent="Info" unique_id=2120886801 instance=ExtResource("5_c5aoj")]
 layout_mode = 0
 offset_left = -224.0
 offset_top = -40.0
 offset_right = -136.0
 offset_bottom = 40.0
 
-[node name="Buffs" parent="Info" instance=ExtResource("5_fg6fk")]
+[node name="Buffs" parent="Info" unique_id=871219607 instance=ExtResource("5_fg6fk")]
 layout_mode = 0
 offset_left = -68.0
 offset_top = 108.0

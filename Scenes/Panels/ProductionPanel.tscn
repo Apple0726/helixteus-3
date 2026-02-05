@@ -1,4 +1,4 @@
-[gd_scene load_steps=13 format=3 uid="uid://mkqstuts1rdm"]
+[gd_scene format=3 uid="uid://mkqstuts1rdm"]
 
 [ext_resource type="Texture2D" uid="uid://bn8t8jmrkuvdk" path="res://Graphics/Icons/Time.png" id="1"]
 [ext_resource type="Texture2D" uid="uid://dcvnyb0mloli2" path="res://Graphics/GUI/Panel.png" id="3_ou1ny"]
@@ -29,7 +29,7 @@ unicode = 103
 [sub_resource type="Shortcut" id="2"]
 events = [SubResource("InputEventKey_abv8r")]
 
-[node name="Background" type="Control"]
+[node name="Background" type="Control" unique_id=1387896042]
 layout_mode = 3
 anchors_preset = 0
 offset_right = 32.0
@@ -37,7 +37,7 @@ offset_bottom = 32.0
 theme = ExtResource("4")
 script = ExtResource("6")
 
-[node name="GUI" type="NinePatchRect" parent="."]
+[node name="GUI" type="NinePatchRect" parent="." unique_id=2078381750]
 layout_mode = 0
 offset_left = 320.0
 offset_top = 224.0
@@ -51,7 +51,7 @@ patch_margin_bottom = 64
 axis_stretch_horizontal = 1
 metadata/_edit_horizontal_guides_ = [596.0]
 
-[node name="CloseButton" type="TextureButton" parent="."]
+[node name="CloseButton" type="TextureButton" parent="." unique_id=2059452977]
 layout_mode = 0
 offset_left = 894.0
 offset_top = 240.0
@@ -60,7 +60,7 @@ offset_bottom = 289.0
 texture_normal = ExtResource("4_c1ogt")
 texture_hover = ExtResource("5_imc5e")
 
-[node name="Title" type="Label" parent="."]
+[node name="Title" type="Label" parent="." unique_id=317255963]
 custom_minimum_size = Vector2(0, 38)
 layout_mode = 1
 offset_left = 360.0
@@ -71,7 +71,7 @@ theme_override_font_sizes/font_size = 18
 label_settings = SubResource("LabelSettings_55eq0")
 vertical_alignment = 1
 
-[node name="NoRsrc" type="Label" parent="."]
+[node name="NoRsrc" type="Label" parent="." unique_id=727964771]
 visible = false
 layout_mode = 0
 offset_left = 344.0
@@ -82,12 +82,12 @@ text = "NO_SAND"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="Control" type="Control" parent="."]
+[node name="Control" type="Control" parent="." unique_id=16488324]
 anchors_preset = 0
 offset_right = 40.0
 offset_bottom = 40.0
 
-[node name="Texture2D" type="TextureRect" parent="Control"]
+[node name="Texture2D" type="TextureRect" parent="Control" unique_id=647713328]
 layout_mode = 0
 offset_left = 612.0
 offset_top = 384.0
@@ -97,7 +97,7 @@ texture = ExtResource("8")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="TimeTexture" type="TextureRect" parent="Control"]
+[node name="TimeTexture" type="TextureRect" parent="Control" unique_id=2028139059]
 layout_mode = 0
 offset_left = 620.0
 offset_top = 424.0
@@ -107,7 +107,7 @@ texture = ExtResource("1")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="AmountProduced" type="Label" parent="Control"]
+[node name="AmountProduced" type="Label" parent="Control" unique_id=1747659922]
 layout_mode = 0
 offset_left = 664.0
 offset_top = 392.0
@@ -116,7 +116,7 @@ offset_bottom = 416.0
 text = "0 kg"
 vertical_alignment = 1
 
-[node name="TimeRemaining" type="Label" parent="Control"]
+[node name="TimeRemaining" type="Label" parent="Control" unique_id=1446109028]
 layout_mode = 0
 offset_left = 664.0
 offset_top = 432.0
@@ -125,14 +125,14 @@ offset_bottom = 456.0
 text = "00:00"
 vertical_alignment = 1
 
-[node name="Expected" type="Label" parent="Control"]
+[node name="Expected" type="Label" parent="Control" unique_id=1859706754]
 layout_mode = 0
 offset_left = 376.0
 offset_top = 392.0
 offset_right = 616.0
 offset_bottom = 416.0
 
-[node name="Start" type="Button" parent="Control"]
+[node name="Start" type="Button" parent="Control" unique_id=1818704490]
 layout_mode = 1
 offset_left = 796.0
 offset_top = 436.0
@@ -142,7 +142,7 @@ shortcut = SubResource("2")
 shortcut_in_tooltip = false
 text = "START"
 
-[node name="HBox" type="HBoxContainer" parent="Control"]
+[node name="HBox" type="HBoxContainer" parent="Control" unique_id=604365753]
 layout_mode = 0
 offset_left = 368.0
 offset_top = 332.0
@@ -150,33 +150,33 @@ offset_right = 904.0
 offset_bottom = 372.0
 alignment = 1
 
-[node name="HSlider" type="HSlider" parent="Control/HBox"]
+[node name="HSlider" type="HSlider" parent="Control/HBox" unique_id=938168711]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 4
 
-[node name="Control" type="Control" parent="Control/HBox"]
+[node name="Control" type="Control" parent="Control/HBox" unique_id=828836169]
 custom_minimum_size = Vector2(30, 0)
 layout_mode = 2
 
-[node name="Texture2D" type="TextureRect" parent="Control/HBox"]
+[node name="Texture2D" type="TextureRect" parent="Control/HBox" unique_id=893060314]
 custom_minimum_size = Vector2(40, 0)
 layout_mode = 2
 texture = ExtResource("7")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="AmountInStorage" type="Label" parent="Control/HBox"]
+[node name="AmountInStorage" type="Label" parent="Control/HBox" unique_id=1825997142]
 layout_mode = 2
 text = "0 kg"
 vertical_alignment = 1
 
-[node name="Remaining" type="Label" parent="Control/HBox"]
+[node name="Remaining" type="Label" parent="Control/HBox" unique_id=9883903]
 visible = false
 layout_mode = 2
 text = "REMAINING"
 
-[node name="Control2" type="Control" parent="Control/HBox"]
+[node name="Control2" type="Control" parent="Control/HBox" unique_id=432434341]
 custom_minimum_size = Vector2(30, 0)
 layout_mode = 2
 

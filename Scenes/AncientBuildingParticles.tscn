@@ -1,4 +1,4 @@
-[gd_scene load_steps=5 format=3 uid="uid://cqfev7jrxdfyx"]
+[gd_scene format=3 uid="uid://cqfev7jrxdfyx"]
 
 [ext_resource type="Texture2D" uid="uid://t70si4f413j5" path="res://Graphics/Effects/spotlight_4.png" id="1"]
 
@@ -18,10 +18,10 @@ scale_min = 0.02
 scale_max = 0.05
 color_ramp = SubResource("2")
 
-[node name="GPUParticles2D" type="GPUParticles2D"]
+[node name="GPUParticles2D" type="GPUParticles2D" unique_id=1862966502]
 show_behind_parent = true
 amount = 40
-process_material = SubResource("3")
 texture = ExtResource("1")
 lifetime = 2.0
 local_coords = true
+process_material = SubResource("3")

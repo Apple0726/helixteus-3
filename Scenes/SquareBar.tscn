@@ -1,9 +1,9 @@
-[gd_scene load_steps=3 format=3 uid="uid://bwon75bhhf24u"]
+[gd_scene format=3 uid="uid://bwon75bhhf24u"]
 
 [ext_resource type="Texture2D" uid="uid://4tf3teqmkahc" path="res://Graphics/Misc/Bar.png" id="1"]
 [ext_resource type="Script" uid="uid://h1eakri2cafy" path="res://Scripts/SquareBar.gd" id="2"]
 
-[node name="SquareBar" type="Control"]
+[node name="SquareBar" type="Control" unique_id=5805852]
 light_mask = 0
 layout_mode = 3
 anchors_preset = 0
@@ -11,7 +11,7 @@ offset_right = 40.0
 offset_bottom = 40.0
 script = ExtResource("2")
 
-[node name="Bar1" type="TextureProgressBar" parent="."]
+[node name="Bar1" type="TextureProgressBar" parent="." unique_id=7316944]
 modulate = Color(0, 1, 0, 1)
 light_mask = 0
 layout_mode = 0
@@ -21,7 +21,7 @@ offset_bottom = 4.0
 mouse_filter = 2
 texture_progress = ExtResource("1")
 
-[node name="Bar2" type="TextureProgressBar" parent="."]
+[node name="Bar2" type="TextureProgressBar" parent="." unique_id=377431921]
 modulate = Color(0, 1, 0, 1)
 light_mask = 0
 layout_mode = 0
@@ -33,7 +33,7 @@ scale = Vector2(2, 1)
 mouse_filter = 2
 texture_progress = ExtResource("1")
 
-[node name="Bar3" type="TextureProgressBar" parent="."]
+[node name="Bar3" type="TextureProgressBar" parent="." unique_id=995990585]
 modulate = Color(0, 1, 0, 1)
 light_mask = 0
 layout_mode = 0
@@ -46,7 +46,7 @@ scale = Vector2(2, 1)
 mouse_filter = 2
 texture_progress = ExtResource("1")
 
-[node name="Bar4" type="TextureProgressBar" parent="."]
+[node name="Bar4" type="TextureProgressBar" parent="." unique_id=1878004252]
 modulate = Color(0, 1, 0, 1)
 light_mask = 0
 layout_mode = 0
@@ -58,7 +58,7 @@ scale = Vector2(2, 1)
 mouse_filter = 2
 texture_progress = ExtResource("1")
 
-[node name="Bar5" type="TextureProgressBar" parent="."]
+[node name="Bar5" type="TextureProgressBar" parent="." unique_id=766243721]
 modulate = Color(0, 1, 0, 1)
 light_mask = 0
 layout_mode = 0

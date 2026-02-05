@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=3 uid="uid://ocbi5a4rgeyw"]
+[gd_scene format=3 uid="uid://ocbi5a4rgeyw"]
 
 [ext_resource type="Script" uid="uid://b0wsq6ow31160" path="res://Scripts/MSConstructPanel.gd" id="1_8il4y"]
 [ext_resource type="Theme" uid="uid://cp2u1kgj60ic" path="res://Resources/default_theme.tres" id="2_se21b"]
@@ -92,7 +92,7 @@ _data = {
 &"RESET": SubResource("Animation_h6jf6")
 }
 
-[node name="Control" type="Control"]
+[node name="Control" type="Control" unique_id=1303888948]
 layout_mode = 3
 anchors_preset = 0
 offset_right = 1280.0
@@ -100,7 +100,7 @@ offset_bottom = 720.0
 mouse_filter = 2
 script = ExtResource("1_8il4y")
 
-[node name="BlackRect" type="ColorRect" parent="."]
+[node name="BlackRect" type="ColorRect" parent="." unique_id=1566176716]
 custom_minimum_size = Vector2(1280, 720)
 layout_mode = 0
 offset_right = 1280.0
@@ -108,7 +108,7 @@ offset_bottom = 720.0
 mouse_filter = 2
 color = Color(0, 0, 0, 0)
 
-[node name="Panel" type="Panel" parent="."]
+[node name="Panel" type="Panel" parent="." unique_id=1340891838]
 modulate = Color(1, 1, 1, 0)
 layout_mode = 1
 offset_top = 120.0
@@ -117,7 +117,7 @@ offset_bottom = 600.0
 mouse_filter = 1
 theme = ExtResource("2_se21b")
 
-[node name="ScrollContainer" type="ScrollContainer" parent="Panel"]
+[node name="ScrollContainer" type="ScrollContainer" parent="Panel" unique_id=819932456]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -128,18 +128,18 @@ mouse_filter = 0
 theme_override_styles/panel = SubResource("StyleBoxEmpty_seglp")
 horizontal_scroll_mode = 3
 
-[node name="VBoxContainer" type="VBoxContainer" parent="Panel/ScrollContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="Panel/ScrollContainer" unique_id=447995841]
 texture_filter = 4
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="BuildAll" type="CheckBox" parent="Panel/ScrollContainer/VBoxContainer"]
+[node name="BuildAll" type="CheckBox" parent="Panel/ScrollContainer/VBoxContainer" unique_id=98859864]
 layout_mode = 2
 text = "BUILD_ALL_AT_ONCE"
 text_overrun_behavior = 1
 
-[node name="Label" type="Label" parent="Panel"]
+[node name="Label" type="Label" parent="Panel" unique_id=1875130531]
 layout_mode = 0
 offset_top = -28.0
 offset_right = 178.0
@@ -147,10 +147,8 @@ offset_bottom = -3.0
 text = "CONSTRUCT"
 horizontal_alignment = 1
 
-[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
-libraries = {
-&"": SubResource("AnimationLibrary_bp5hg")
-}
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=1185369289]
+libraries/ = SubResource("AnimationLibrary_bp5hg")
 
 [connection signal="tree_exited" from="." to="." method="_on_tree_exited"]
 [connection signal="mouse_entered" from="Panel/ScrollContainer/VBoxContainer/BuildAll" to="." method="_on_build_all_mouse_entered"]

@@ -1,4 +1,4 @@
-[gd_scene load_steps=13 format=3 uid="uid://cvlkphcaskboq"]
+[gd_scene format=3 uid="uid://cvlkphcaskboq"]
 
 [ext_resource type="Theme" uid="uid://cp2u1kgj60ic" path="res://Resources/default_theme.tres" id="4"]
 [ext_resource type="Texture2D" uid="uid://baowebna7hgr5" path="res://Graphics/GUI/CloseButtonNormal.png" id="4_mojm2"]
@@ -23,7 +23,7 @@ shadow_size = 2
 shadow_color = Color(0, 0, 0, 0.372549)
 shadow_offset = Vector2(2, 2)
 
-[node name="VictoryPanel" type="Control"]
+[node name="VictoryPanel" type="Control" unique_id=764796480]
 layout_mode = 3
 anchors_preset = 8
 anchor_left = 0.5
@@ -39,7 +39,7 @@ grow_vertical = 2
 theme = ExtResource("4")
 script = ExtResource("11")
 
-[node name="GUI" type="TextureRect" parent="."]
+[node name="GUI" type="TextureRect" parent="." unique_id=140587853]
 layout_mode = 0
 offset_left = 80.0
 offset_top = 52.0
@@ -49,7 +49,7 @@ mouse_filter = 2
 texture = ExtResource("5_lcldk")
 metadata/_edit_lock_ = true
 
-[node name="CloseButton" type="TextureButton" parent="."]
+[node name="CloseButton" type="TextureButton" parent="." unique_id=1566091410]
 layout_mode = 0
 offset_left = 1138.0
 offset_top = 67.0
@@ -58,7 +58,7 @@ offset_bottom = 116.0
 texture_normal = ExtResource("4_mojm2")
 texture_hover = ExtResource("5_8pfal")
 
-[node name="Title" type="Label" parent="."]
+[node name="Title" type="Label" parent="." unique_id=578831535]
 custom_minimum_size = Vector2(0, 38)
 layout_mode = 0
 offset_left = 128.0
@@ -70,21 +70,21 @@ text = "VICTORY"
 label_settings = SubResource("LabelSettings_mojm2")
 vertical_alignment = 1
 
-[node name="Bonus" parent="." instance=ExtResource("5")]
+[node name="Bonus" parent="." unique_id=1730843608 instance=ExtResource("5")]
 layout_mode = 0
 offset_left = 144.0
 offset_top = 148.0
 offset_right = 541.0
 offset_bottom = 178.0
 
-[node name="Ship1" parent="." instance=ExtResource("7_go02j")]
+[node name="Ship1" parent="." unique_id=530040574 instance=ExtResource("7_go02j")]
 layout_mode = 0
 offset_left = 140.0
 offset_top = 232.0
 offset_right = 260.0
 offset_bottom = 352.0
 
-[node name="Ship2" parent="." instance=ExtResource("7_go02j")]
+[node name="Ship2" parent="." unique_id=304248782 instance=ExtResource("7_go02j")]
 layout_mode = 0
 offset_left = 680.0
 offset_top = 232.0
@@ -92,7 +92,7 @@ offset_right = 800.0
 offset_bottom = 352.0
 texture = ExtResource("8_8c7g3")
 
-[node name="Ship3" parent="." instance=ExtResource("7_go02j")]
+[node name="Ship3" parent="." unique_id=1319852178 instance=ExtResource("7_go02j")]
 layout_mode = 0
 offset_left = 140.0
 offset_top = 412.0
@@ -100,7 +100,7 @@ offset_right = 260.0
 offset_bottom = 532.0
 texture = ExtResource("8_3r33v")
 
-[node name="Ship4" parent="." instance=ExtResource("7_go02j")]
+[node name="Ship4" parent="." unique_id=1935496900 instance=ExtResource("7_go02j")]
 layout_mode = 0
 offset_left = 680.0
 offset_top = 412.0
@@ -108,7 +108,7 @@ offset_right = 800.0
 offset_bottom = 532.0
 texture = ExtResource("10_pobcv")
 
-[node name="Loot" type="Label" parent="."]
+[node name="Loot" type="Label" parent="." unique_id=1605849929]
 layout_mode = 0
 offset_left = 124.0
 offset_top = 604.0
@@ -116,7 +116,7 @@ offset_right = 167.0
 offset_bottom = 630.0
 text = "LOOT"
 
-[node name="HBoxContainer" type="HBoxContainer" parent="."]
+[node name="HBoxContainer" type="HBoxContainer" parent="." unique_id=822951033]
 layout_mode = 0
 offset_left = 196.0
 offset_top = 596.0

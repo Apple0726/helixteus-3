@@ -1,4 +1,4 @@
-[gd_scene load_steps=5 format=3 uid="uid://b3b68o5fd52pr"]
+[gd_scene format=3 uid="uid://b3b68o5fd52pr"]
 
 [ext_resource type="Script" uid="uid://cvlheedx4oedk" path="res://Scripts/Battle/VelocityArrow.gd" id="1_1ef5i"]
 
@@ -28,13 +28,11 @@ _data = {
 &"RESET": SubResource("Animation_vw23x")
 }
 
-[node name="VelocityArrow" type="Node2D"]
+[node name="VelocityArrow" type="Node2D" unique_id=7916998]
 script = ExtResource("1_1ef5i")
 
-[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
-libraries = {
-&"": SubResource("AnimationLibrary_makbt")
-}
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=280582120]
+libraries/ = SubResource("AnimationLibrary_makbt")
 
-[node name="Polygon2D" type="Polygon2D" parent="."]
+[node name="Polygon2D" type="Polygon2D" parent="." unique_id=861236842]
 polygon = PackedVector2Array(0, -2, 18, -2, 14, -8, 26, 0, 14, 8, 18, 2, 0, 2)

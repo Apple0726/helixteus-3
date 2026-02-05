@@ -1,4 +1,4 @@
-[gd_scene load_steps=4 format=3 uid="uid://2s0chovxmhln"]
+[gd_scene format=3 uid="uid://2s0chovxmhln"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_xippp"]
 bg_color = Color(7.52043e-10, 1.50409e-09, 0.0381053, 1)
@@ -22,7 +22,7 @@ border_width_bottom = 8
 border_color = Color(1, 0.74902, 0, 1)
 border_blend = true
 
-[node name="Slot" type="Panel"]
+[node name="Slot" type="Panel" unique_id=5583161]
 custom_minimum_size = Vector2(60, 60)
 anchors_preset = 15
 anchor_right = 1.0
@@ -32,13 +32,13 @@ offset_bottom = -660.0
 mouse_filter = 1
 theme_override_styles/panel = SubResource("StyleBoxFlat_xippp")
 
-[node name="Button" type="TextureButton" parent="."]
+[node name="Button" type="TextureButton" parent="." unique_id=768299319]
 layout_mode = 0
 anchor_right = 1.0
 anchor_bottom = 1.0
 mouse_filter = 1
 
-[node name="TextureRect" type="TextureRect" parent="."]
+[node name="TextureRect" type="TextureRect" parent="." unique_id=335270254]
 layout_mode = 0
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -50,7 +50,7 @@ mouse_filter = 2
 expand_mode = 1
 stretch_mode = 5
 
-[node name="Label" type="Label" parent="."]
+[node name="Label" type="Label" parent="." unique_id=468550235]
 layout_mode = 0
 anchor_top = 1.0
 anchor_right = 1.0
@@ -62,7 +62,7 @@ label_settings = SubResource("LabelSettings_xue0l")
 horizontal_alignment = 2
 vertical_alignment = 1
 
-[node name="Border" type="Panel" parent="."]
+[node name="Border" type="Panel" parent="." unique_id=1580556151]
 visible = false
 layout_mode = 0
 offset_right = 60.0

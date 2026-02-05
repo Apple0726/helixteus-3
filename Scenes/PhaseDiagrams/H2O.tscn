@@ -1,37 +1,37 @@
-[gd_scene load_steps=2 format=3 uid="uid://d07f6310m7xcq"]
+[gd_scene format=3 uid="uid://d07f6310m7xcq"]
 
 [ext_resource type="Script" uid="uid://df1veabna8ndt" path="res://Scenes/PhaseDiagrams/H2O.gd" id="1"]
 
-[node name="Water" type="Node2D"]
+[node name="Water" type="Node2D" unique_id=1987619610]
 script = ExtResource("1")
 
-[node name="Solid" type="Polygon2D" parent="."]
+[node name="Solid" type="Polygon2D" parent="." unique_id=1705025186]
 color = Color(0.682353, 0.866667, 1, 1)
 polygon = PackedVector2Array(0, 0, 800, 0, 800, 400, 0, 400)
 
-[node name="Liquid" type="Polygon2D" parent="."]
+[node name="Liquid" type="Polygon2D" parent="." unique_id=583304443]
 color = Color(0.776471, 1, 0.8, 1)
 polygon = PackedVector2Array(220, 276, 216, 124, 384, 96, 384, 124)
 
-[node name="Gas" type="Polygon2D" parent="."]
+[node name="Gas" type="Polygon2D" parent="." unique_id=1500501845]
 color = Color(1, 0.839216, 0.564706, 1)
 polygon = PackedVector2Array(192, 400, 220, 276, 384, 124, 800, 124, 800, 400)
 
-[node name="Superfluid" type="Polygon2D" parent="."]
+[node name="Superfluid" type="Polygon2D" parent="." unique_id=1010355746]
 polygon = PackedVector2Array(384, 124, 384, 96, 800, 68, 800, 124)
 
-[node name="TriplePoint" type="Polygon2D" parent="."]
+[node name="TriplePoint" type="Polygon2D" parent="." unique_id=220505061]
 color = Color(1, 0, 0, 1)
 polygon = PackedVector2Array(0, 0, 2, 0, 2, 2, 0, 2)
 
-[node name="MeltPoint" type="Polygon2D" parent="."]
+[node name="MeltPoint" type="Polygon2D" parent="." unique_id=895457833]
 color = Color(1, 0, 0, 1)
 polygon = PackedVector2Array(0, 0, 2, 0, 2, 2, 0, 2)
 
-[node name="BoilPoint" type="Polygon2D" parent="."]
+[node name="BoilPoint" type="Polygon2D" parent="." unique_id=866754057]
 color = Color(1, 0, 0, 1)
 polygon = PackedVector2Array(0, 0, 2, 0, 2, 2, 0, 2)
 
-[node name="SuperPoint" type="Polygon2D" parent="."]
+[node name="SuperPoint" type="Polygon2D" parent="." unique_id=1994678790]
 color = Color(1, 0, 0, 1)
 polygon = PackedVector2Array(0, 0, 2, 0, 2, 2, 0, 2)

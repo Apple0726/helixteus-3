@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=3 uid="uid://ba8tbwvf85ejf"]
+[gd_scene format=3 uid="uid://ba8tbwvf85ejf"]
 
 [ext_resource type="Theme" uid="uid://cp2u1kgj60ic" path="res://Resources/default_theme.tres" id="1"]
 [ext_resource type="Script" uid="uid://cvom3nske3315" path="res://Scripts/ScienceUI.gd" id="2"]
@@ -14,7 +14,7 @@ unicode = 122
 [sub_resource type="Shortcut" id="2"]
 events = [SubResource("InputEventKey_ekqg7")]
 
-[node name="Control" type="Control"]
+[node name="Control" type="Control" unique_id=1192147974]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -25,7 +25,7 @@ mouse_filter = 2
 theme = ExtResource("1")
 script = ExtResource("2")
 
-[node name="Back" type="Button" parent="."]
+[node name="Back" type="Button" parent="." unique_id=474024070]
 layout_mode = 0
 anchor_top = 1.0
 anchor_bottom = 1.0
@@ -34,7 +34,7 @@ offset_right = 112.0
 shortcut = SubResource("2")
 shortcut_in_tooltip = false
 
-[node name="Panel" type="Panel" parent="."]
+[node name="Panel" type="Panel" parent="." unique_id=1725909984]
 layout_mode = 0
 anchor_top = 0.5
 anchor_bottom = 0.5
@@ -42,7 +42,7 @@ offset_top = -68.0
 offset_right = 52.0
 offset_bottom = 72.0
 
-[node name="MainBranch" type="Button" parent="Panel"]
+[node name="MainBranch" type="Button" parent="Panel" unique_id=1165504323]
 layout_mode = 0
 anchor_top = 0.5
 anchor_bottom = 0.5
@@ -51,7 +51,7 @@ offset_top = -62.0
 offset_right = 44.0
 offset_bottom = -26.0
 
-[node name="TextureRect" type="TextureRect" parent="Panel/MainBranch"]
+[node name="TextureRect" type="TextureRect" parent="Panel/MainBranch" unique_id=389152906]
 modulate = Color(0, 1, 0, 1)
 layout_mode = 0
 anchor_right = 1.0
@@ -59,7 +59,7 @@ anchor_bottom = 1.0
 mouse_filter = 2
 texture = ExtResource("5")
 
-[node name="OtherBranches" type="Button" parent="Panel"]
+[node name="OtherBranches" type="Button" parent="Panel" unique_id=2109039707]
 layout_mode = 0
 anchor_top = 0.5
 anchor_bottom = 0.5
@@ -68,14 +68,14 @@ offset_top = -18.0
 offset_right = 44.0
 offset_bottom = 18.0
 
-[node name="TextureRect" type="TextureRect" parent="Panel/OtherBranches"]
+[node name="TextureRect" type="TextureRect" parent="Panel/OtherBranches" unique_id=892627662]
 layout_mode = 0
 anchor_right = 1.0
 anchor_bottom = 1.0
 mouse_filter = 2
 texture = ExtResource("3")
 
-[node name="InfiniteResearch" type="Button" parent="Panel"]
+[node name="InfiniteResearch" type="Button" parent="Panel" unique_id=73953475]
 layout_mode = 0
 anchor_top = 0.5
 anchor_bottom = 0.5
@@ -84,14 +84,14 @@ offset_top = 26.0
 offset_right = 44.0
 offset_bottom = 62.0
 
-[node name="TextureRect" type="TextureRect" parent="Panel/InfiniteResearch"]
+[node name="TextureRect" type="TextureRect" parent="Panel/InfiniteResearch" unique_id=541197542]
 layout_mode = 0
 anchor_right = 1.0
 anchor_bottom = 1.0
 mouse_filter = 2
 texture = ExtResource("4")
 
-[node name="ZoomHelp" type="Label" parent="."]
+[node name="ZoomHelp" type="Label" parent="." unique_id=1521543407]
 visible = false
 layout_mode = 0
 offset_top = 152.0

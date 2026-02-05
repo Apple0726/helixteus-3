@@ -1,4 +1,4 @@
-[gd_scene load_steps=13 format=3 uid="uid://cvpplfu35gnas"]
+[gd_scene format=3 uid="uid://cvpplfu35gnas"]
 
 [ext_resource type="PackedScene" uid="uid://c8jr3e5aiyj1n" path="res://Scenes/HelpText.tscn" id="1"]
 [ext_resource type="Theme" uid="uid://cp2u1kgj60ic" path="res://Resources/default_theme.tres" id="3"]
@@ -26,7 +26,7 @@ bg_color = Color(0.172549, 0.172549, 0.172549, 1)
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_w728i"]
 
-[node name="SendShipsPanel" type="Control"]
+[node name="SendShipsPanel" type="Control" unique_id=502004405]
 layout_mode = 3
 anchors_preset = 8
 anchor_left = 0.5
@@ -42,7 +42,7 @@ grow_vertical = 2
 theme = ExtResource("3")
 script = ExtResource("6")
 
-[node name="GUI" type="TextureRect" parent="."]
+[node name="GUI" type="TextureRect" parent="." unique_id=365427876]
 layout_mode = 0
 offset_left = 80.0
 offset_top = 52.0
@@ -51,7 +51,7 @@ offset_bottom = 671.0
 texture = ExtResource("3_46286")
 metadata/_edit_lock_ = true
 
-[node name="CloseButton" type="TextureButton" parent="."]
+[node name="CloseButton" type="TextureButton" parent="." unique_id=790382652]
 layout_mode = 0
 offset_left = 1138.0
 offset_top = 68.0
@@ -60,7 +60,7 @@ offset_bottom = 117.0
 texture_normal = ExtResource("7_5nkn3")
 texture_hover = ExtResource("8_vqg11")
 
-[node name="Title" type="Label" parent="."]
+[node name="Title" type="Label" parent="." unique_id=542366184]
 custom_minimum_size = Vector2(0, 38)
 layout_mode = 1
 offset_left = 128.0
@@ -73,7 +73,7 @@ label_settings = SubResource("LabelSettings_avvnr")
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="Enemies" type="Label" parent="."]
+[node name="Enemies" type="Label" parent="." unique_id=568387729]
 layout_mode = 0
 offset_left = 128.0
 offset_top = 140.0
@@ -83,7 +83,7 @@ text = "ENEMIES"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="Scroll" type="ScrollContainer" parent="."]
+[node name="Scroll" type="ScrollContainer" parent="." unique_id=1594852366]
 layout_mode = 0
 offset_left = 128.0
 offset_top = 180.0
@@ -92,12 +92,12 @@ offset_bottom = 620.0
 size_flags_vertical = 3
 theme_override_styles/panel = SubResource("StyleBoxFlat_nwrf5")
 
-[node name="Enemies" type="VBoxContainer" parent="Scroll"]
+[node name="Enemies" type="VBoxContainer" parent="Scroll" unique_id=792819734]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="TotalEnergyCost" type="Label" parent="."]
+[node name="TotalEnergyCost" type="Label" parent="." unique_id=62511841]
 layout_mode = 0
 offset_left = 580.0
 offset_top = 512.0
@@ -106,7 +106,7 @@ offset_bottom = 538.0
 text = "TOTAL_COST"
 horizontal_alignment = 2
 
-[node name="Send" type="Button" parent="."]
+[node name="Send" type="Button" parent="." unique_id=904466849]
 layout_mode = 0
 offset_left = 1056.0
 offset_top = 608.0
@@ -114,7 +114,7 @@ offset_right = 1180.0
 offset_bottom = 648.0
 text = "SEND"
 
-[node name="TotalEnergyCost2" type="Label" parent="."]
+[node name="TotalEnergyCost2" type="Label" parent="." unique_id=2066157649]
 layout_mode = 0
 offset_left = 936.0
 offset_top = 512.0
@@ -123,7 +123,7 @@ offset_bottom = 538.0
 text = "100"
 vertical_alignment = 1
 
-[node name="EnergyIcon3" type="TextureRect" parent="."]
+[node name="EnergyIcon3" type="TextureRect" parent="." unique_id=575707104]
 layout_mode = 0
 offset_left = 884.0
 offset_top = 508.0
@@ -133,7 +133,7 @@ texture = ExtResource("4")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="EnergyIcon2" type="TextureRect" parent="."]
+[node name="EnergyIcon2" type="TextureRect" parent="." unique_id=1115996945]
 layout_mode = 0
 offset_left = 884.0
 offset_top = 420.0
@@ -143,7 +143,7 @@ texture = ExtResource("4")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="EnergyCost2" parent="." instance=ExtResource("1")]
+[node name="EnergyCost2" parent="." unique_id=1771661689 instance=ExtResource("1")]
 layout_mode = 1
 anchors_preset = -1
 anchor_top = 0.00333333
@@ -155,7 +155,7 @@ offset_bottom = 452.0
 adv_help = true
 translate_help = false
 
-[node name="PlanetEECost" parent="." instance=ExtResource("1")]
+[node name="PlanetEECost" parent="." unique_id=1648636729 instance=ExtResource("1")]
 layout_mode = 0
 offset_left = 584.0
 offset_top = 424.0
@@ -166,7 +166,7 @@ label_text = "PLANET_EE_COST"
 help_text = "PLANET_EE_COST_DESC"
 align = 2
 
-[node name="Panel" type="Panel" parent="."]
+[node name="Panel" type="Panel" parent="." unique_id=453333371]
 layout_mode = 0
 offset_left = 592.0
 offset_top = 200.0
@@ -174,7 +174,7 @@ offset_right = 1160.0
 offset_bottom = 404.0
 theme_override_styles/panel = SubResource("StyleBoxEmpty_w728i")
 
-[node name="HSlider" type="HSlider" parent="Panel"]
+[node name="HSlider" type="HSlider" parent="Panel" unique_id=1117532158]
 layout_mode = 0
 anchor_left = 0.5
 anchor_top = 0.5
@@ -186,7 +186,7 @@ offset_right = 100.0
 offset_bottom = -38.0
 value = 50.0
 
-[node name="LessEnergy" type="Label" parent="Panel"]
+[node name="LessEnergy" type="Label" parent="Panel" unique_id=1108873607]
 layout_mode = 0
 anchor_top = 0.5
 anchor_bottom = 0.5
@@ -197,7 +197,7 @@ text = "LESS_ENERGY"
 horizontal_alignment = 2
 vertical_alignment = 1
 
-[node name="TravelCosts" type="Label" parent="Panel"]
+[node name="TravelCosts" type="Label" parent="Panel" unique_id=1695570538]
 layout_mode = 0
 offset_left = 40.0
 offset_top = 104.0
@@ -206,7 +206,7 @@ offset_bottom = 136.0
 text = "TRAVEL_COSTS"
 horizontal_alignment = 2
 
-[node name="FasterTravel" type="Label" parent="Panel"]
+[node name="FasterTravel" type="Label" parent="Panel" unique_id=1465307621]
 layout_mode = 0
 anchor_left = 1.0
 anchor_top = 0.5
@@ -218,7 +218,7 @@ offset_bottom = -18.0
 text = "FASTER_TRAVEL"
 vertical_alignment = 1
 
-[node name="EnergyCost" type="Label" parent="Panel"]
+[node name="EnergyCost" type="Label" parent="Panel" unique_id=490572721]
 layout_mode = 0
 offset_left = 344.0
 offset_top = 104.0
@@ -227,7 +227,7 @@ offset_bottom = 128.0
 text = "100"
 vertical_alignment = 1
 
-[node name="TimeCost" type="Label" parent="Panel"]
+[node name="TimeCost" type="Label" parent="Panel" unique_id=897480615]
 layout_mode = 0
 offset_left = 344.0
 offset_top = 152.0
@@ -236,7 +236,7 @@ offset_bottom = 176.0
 text = "01:12"
 vertical_alignment = 1
 
-[node name="EnergyIcon" type="TextureRect" parent="Panel"]
+[node name="EnergyIcon" type="TextureRect" parent="Panel" unique_id=1757003407]
 layout_mode = 0
 offset_left = 292.0
 offset_top = 100.0
@@ -246,7 +246,7 @@ texture = ExtResource("4")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="TimeIcon" type="TextureRect" parent="Panel"]
+[node name="TimeIcon" type="TextureRect" parent="Panel" unique_id=1547384320]
 layout_mode = 0
 offset_left = 292.0
 offset_top = 148.0
@@ -256,7 +256,7 @@ texture = ExtResource("5")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="Drive" type="OptionButton" parent="."]
+[node name="Drive" type="OptionButton" parent="." unique_id=1874892709]
 layout_mode = 0
 offset_left = 756.0
 offset_top = 156.0

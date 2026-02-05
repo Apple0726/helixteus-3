@@ -1,4 +1,4 @@
-[gd_scene load_steps=13 format=3 uid="uid://0xkqr6plocaj"]
+[gd_scene format=3 uid="uid://0xkqr6plocaj"]
 
 [ext_resource type="Texture2D" uid="uid://dw4gx6xj2i5g7" path="res://Graphics/HX/1_1.png" id="1_412vd"]
 [ext_resource type="Script" uid="uid://dse8cm5edf34r" path="res://Scripts/STM/STMHX.gd" id="1_iy65u"]
@@ -13,7 +13,7 @@ shader_parameter/amplitude = 6.0
 shader_parameter/frequency = 6.0
 shader_parameter/aurora = false
 shader_parameter/light = 1.0
-shader_parameter/modulate_color = Color(1, 1, 1, 1)
+shader_parameter/alpha = 1.0
 shader_parameter/flash = 0.0
 shader_parameter/flash_color = Color(1, 1, 1, 1)
 
@@ -140,18 +140,18 @@ _data = {
 &"RESET": SubResource("Animation_71e7h")
 }
 
-[node name="Node2D" type="Node2D"]
+[node name="Node2D" type="Node2D" unique_id=208703443]
 script = ExtResource("1_iy65u")
 
-[node name="Sprite2D" type="Sprite2D" parent="."]
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=480727741]
 material = SubResource("ShaderMaterial_yeviy")
 texture = ExtResource("1_412vd")
 
-[node name="Stun" type="Node2D" parent="Sprite2D"]
+[node name="Stun" type="Node2D" parent="Sprite2D" unique_id=576219670]
 visible = false
 position = Vector2(0, -6.29962)
 
-[node name="Sprite2D" type="Sprite2D" parent="Sprite2D/Stun"]
+[node name="Sprite2D" type="Sprite2D" parent="Sprite2D/Stun" unique_id=1704110467]
 material = SubResource("ShaderMaterial_il0bk")
 position = Vector2(47.1782, 64.5085)
 rotation = 0.496553
@@ -159,7 +159,7 @@ scale = Vector2(2.36037, 2.36037)
 texture = ExtResource("5_7hnfy")
 offset = Vector2(-21.4132, -17.9986)
 
-[node name="Sprite2" type="Sprite2D" parent="Sprite2D/Stun"]
+[node name="Sprite2" type="Sprite2D" parent="Sprite2D/Stun" unique_id=1202314682]
 material = SubResource("ShaderMaterial_aiw00")
 position = Vector2(11.3541, 50.4711)
 rotation = -0.583007
@@ -167,15 +167,15 @@ scale = Vector2(1.67193, 1.67193)
 texture = ExtResource("5_7hnfy")
 offset = Vector2(-21.4132, -17.9986)
 
-[node name="Area2D" type="Area2D" parent="."]
+[node name="Area2D" type="Area2D" parent="." unique_id=659513575]
 collision_layer = 4
 collision_mask = 8
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D" unique_id=1218790122]
 rotation = 1.5708
 shape = SubResource("CapsuleShape2D_j3r8e")
 
-[node name="HPBar" type="HBoxContainer" parent="."]
+[node name="HPBar" type="HBoxContainer" parent="." unique_id=1306234040]
 offset_left = -224.0
 offset_top = 73.0
 offset_right = 224.0
@@ -183,14 +183,12 @@ offset_bottom = 113.0
 theme_override_constants/separation = -16
 alignment = 1
 
-[node name="ShootTimer" type="Timer" parent="."]
+[node name="ShootTimer" type="Timer" parent="." unique_id=2018830654]
 
-[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
-libraries = {
-"": SubResource("AnimationLibrary_5u3l7")
-}
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=320714420]
+libraries/ = SubResource("AnimationLibrary_5u3l7")
 
-[node name="StunTimer" type="Timer" parent="."]
+[node name="StunTimer" type="Timer" parent="." unique_id=2027552600]
 one_shot = true
 
 [connection signal="tree_exited" from="." to="." method="_on_tree_exited"]
