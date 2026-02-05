@@ -545,7 +545,7 @@ func generate_cave(first_floor:bool, going_up:bool):
 			var tile_id:int = get_tile_index(Vector2(i, j))
 			if level > 0:
 				# Big boi rocks with collision detection
-				if not p_i.has("lake") and rng.randf() < debris_amount / 12.0:
+				if rng.randf() < debris_amount / 12.0:
 					var debris = preload("res://Scenes/Debris.tscn").instantiate()
 					debris.sprite_frame = rng.randi_range(0, 5)
 					debris.time_speed = time_speed
@@ -631,9 +631,9 @@ func generate_cave(first_floor:bool, going_up:bool):
 					var met_spawned:String = "lead"
 					var base_rarity:float = 1.0
 					for met in game.met_info:
-						if met in ["nanocrystal", "mythril"] and game.c_g_g == 0:
-							continue
 						var rarity:float = game.met_info[met].rarity
+						if pow(rarity, 1.5) * 3.0 > difficulty:
+							continue
 						if cave_floor >= 8:
 							rarity = pow(rarity, remap(cave_floor, 8, 32, 0.9, 0.6))
 						if is_aurora_cave:
@@ -952,8 +952,10 @@ func generate_treasure(tier:int, rng:RandomNumberGenerator):
 	if contents.has(Item.HELIX_CORE1) and contents[Item.HELIX_CORE1] == 0:
 		contents.erase(Item.HELIX_CORE1)
 	for met in game.met_info:
-		var met_value = game.met_info[met]
-		var rarity = met_value.rarity
+		var met_dict = game.met_info[met]
+		var rarity = met_dict.rarity
+		if pow(rarity, 1.5) * 3.0 > difficulty:
+			continue
 		if cave_floor >= 8:
 			rarity = pow(rarity, remap(cave_floor, 8, 32, 0.9, 0.6))
 		if is_aurora_cave:
@@ -964,20 +966,9 @@ func generate_treasure(tier:int, rng:RandomNumberGenerator):
 			contents[met] = Helper.clever_round(10 * rng.randf_range(0.5, 1.0) / rarity * pow(tier, 2.0) * difficulty * exp(cave_floor / 10.0) * treasure_mult * game.u_i.planck)
 	return contents
 
-func get_neighbor_tiles(tile:Vector2):
-	return [	tile + Vector2.RIGHT,
-				tile + Vector2.LEFT,
-				tile + Vector2.DOWN,
-				tile + Vector2.UP,
-				tile + Vector2.UP + Vector2.RIGHT,
-				tile + Vector2.RIGHT + Vector2.DOWN,
-				tile + Vector2.DOWN + Vector2.LEFT,
-				tile + Vector2.LEFT + Vector2.UP,
-			]
-
 func connect_points(tile:Vector2, bidir:bool = false):
 	var tile_index = get_tile_index(tile)
-	for neighbor_tile in get_neighbor_tiles(tile):
+	for neighbor_tile in cave_wall.get_surrounding_cells(tile):
 		var neighbor_tile_index = get_tile_index(neighbor_tile)
 		if not astar_node.has_point(neighbor_tile_index):
 			continue
@@ -1002,8 +993,8 @@ var mining_debris:int = -1
 func update_ray():
 	var _inv:Dictionary
 	var _tile_highlight
-	var left_type:int = inventory[curr_slot].get("type")
-	var right_type:int = right_inventory[0].get("type")
+	var left_type:int = inventory[curr_slot].get("type", -1)
+	var right_type:int = right_inventory[0].get("type", -1)
 	ray.enabled = Item.Type.ROVER_MINING in [left_type, right_type]
 	var holding_click:bool
 	if left_type == Item.Type.ROVER_MINING:
@@ -1646,8 +1637,10 @@ func mine_debris_complete(tile_id:int):
 		if randf() < 0.3 + debris.aurora_intensity / 10.0:
 			rsrc.quillite = Helper.clever_round(randf_range(0.1, 0.12) * difficulty * debris.aurora_intensity)
 	for met in game.met_info:
-		var met_value = game.met_info[met]
-		var rarity = met_value.rarity
+		var met_dict = game.met_info[met]
+		var rarity = met_dict.rarity
+		if pow(rarity, 1.5) * 3.0 > difficulty:
+			continue
 		if cave_floor >= 8:
 			rarity = pow(rarity, remap(cave_floor, 8, 32, 0.9, 0.6))
 		if debris.aurora_intensity > 0.0:
