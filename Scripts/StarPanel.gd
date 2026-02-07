@@ -14,12 +14,36 @@ func refresh():
 		btn.set_star_info(stars[i].type, stars[i]["class"], stars[i].temperature, stars[i].size, stars[i].mass, stars[i].luminosity)
 		$Panel/ScrollContainer/VBoxContainer.add_child(btn)
 		btn.get_node("MS").visible = stars[i].has("MS")
+		if stars[i].has("repair_cost"):
+			btn.get_node("Construct").text = tr("REPAIR") + " (F)"
+		elif stars[i].has("MS"):
+			btn.get_node("Construct").text = tr("UPGRADE") + " (F)"
+		else:
+			btn.get_node("Construct").text = tr("CONSTRUCT") + " (F)"
+		btn.get_node("Construct").visible = game.science_unlocked.has("MAE")
+		btn.get_node("Destroy").visible = game.science_unlocked.has("MAE") and stars[i].has("MS")
+		if not game.science_unlocked.has("MAE"):
+			btn.custom_minimum_size.y = 100.0
+		btn.get_node("Construct").disabled = not game.system_data[game.c_s].has("conquered")
+		btn.get_node("Destroy").disabled = not game.system_data[game.c_s].has("conquered")
+		if game.system_data[game.c_s].has("conquered"):
+			btn.get_node("Construct").pressed.connect(game.space_HUD.toggle_MS_construct_panel.bind(i))
+			btn.get_node("Destroy").pressed.connect(destroy_MS.bind(i))
+		else:
+			btn.get_node("Construct").mouse_entered.connect(game.show_tooltip.bind(tr("CONQUER_ALL_TO_BUILD_MS")))
+			btn.get_node("Construct").mouse_exited.connect(game.hide_tooltip)
+			btn.get_node("Destroy").mouse_entered.connect(game.show_tooltip.bind(tr("CONQUER_ALL_TO_BUILD_MS")))
+			btn.get_node("Destroy").mouse_exited.connect(game.hide_tooltip)
 		btn.get_node("MS").mouse_entered.connect(game.show_tooltip.bind(tr("STAR_HAS_MS")))
 		btn.get_node("MS").mouse_exited.connect(game.hide_tooltip)
 		btn.mouse_entered.connect(game.view.obj.show_MS_construct_info.bind(stars[i]))
 		btn.mouse_exited.connect(game.view.obj.on_btn_out)
 		btn.pressed.connect(self.zoom_to_star.bind(stars[i]))
 		btn.pressed.connect(game.view.obj.on_star_pressed.bind(i))
+
+
+func destroy_MS(star_index):
+	pass
 
 var tween
 

@@ -535,6 +535,7 @@ var default_help = {
 				"artificial_volcano":true,
 				"flash_send_probe_btn":true,
 				"hide_dimension_stuff":true,
+				"battle_help":true,
 		}
 
 var ancient_bldg_icons = {

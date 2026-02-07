@@ -2964,20 +2964,20 @@ func generate_planets(id:int):#local id
 				MSes.erase("MB")
 			var MS = MSes[randi() % len(MSes)]
 			if MS in ["DS", "MB"] and randf() < min(sqrt(star_temp) / pow(star_size, 1.5) / 100.0, 0.03):
-				star.MS = MS
+				star["MS"] = MS
 			elif randf() < min(pow(star_lum, 0.1) / 25.0, 0.03):
-				star.MS = MS
+				star["MS"] = MS
 			if star.has("MS"):
-				star.MS_lv = randi() % (Data.MS_num_stages[star.MS] + 1)
-				star.bldg = {}
+				star["MS_lv"] = randi() % (Data.MS_num_stages[star.MS] + 1)
+				star["bldg"] = {}
 				if star.MS == "MB":
-					star.repair_cost = Data.MS_costs[star.MS].money * 72 * randf_range(1, 3) * pow(star.size, 2)
+					star["repair_cost"] = Data.MS_costs[star.MS].money * 72 * randf_range(1, 3) * pow(star.size, 2)
 				elif star.MS == "DS":
-					star.repair_cost = Data.MS_costs[star.MS + "_" + str(star.MS_lv)].money * 24 * randf_range(1, 3) * pow(star.size, 2)
+					star["repair_cost"] = Data.MS_costs[star.MS + "_" + str(star.MS_lv)].money * 24 * randf_range(1, 3) * pow(star.size, 2)
 				elif star.MS == "CBS":
-					star.repair_cost = Data.MS_costs[star.MS + "_" + str(star.MS_lv)].money * 24 * randf_range(1, 3)
+					star["repair_cost"] = Data.MS_costs[star.MS + "_" + str(star.MS_lv)].money * 24 * randf_range(1, 3)
 				elif star.MS == "PK":
-					star.repair_cost = Data.MS_costs[star.MS + "_" + str(star.MS_lv)].money * 24 * randf_range(1, 3) * planet_data[-1].distance / 1000.0
+					star["repair_cost"] = Data.MS_costs[star.MS + "_" + str(star.MS_lv)].money * 24 * randf_range(1, 3) * planet_data[-1].distance / 1000.0
 				star.repair_cost *= engineering_bonus.BCM
 				system_data[id].has_MS = true
 		var view_zoom = 400.0 / planet_data[-1].distance * (planet_data[0].distance / 70)
@@ -3305,7 +3305,7 @@ func generate_tiles(id:int):
 					"tier": max(1, int(-log(randf() / u_i.age / (1.0 + u_i.cluster_data[c_c].pos.length() * u_i.dark_energy / 1000.0)) / 3.0 + 1)),
 				}
 				if randf() < 1.0 - 0.5 * exp(-pow(p_i.temperature - 273, 2) / 20000.0) / pow(obj.tier, 2):
-					obj.repair_cost = 250000 * pow(obj.tier, 20) * randf_range(1, 3) * Data.ancient_bldg_repair_cost_multipliers[ancient_bldg]
+					obj["repair_cost"] = 250000 * pow(obj.tier, 20) * randf_range(1, 3) * Data.ancient_bldg_repair_cost_multipliers[ancient_bldg]
 				if p_i.ancient_bldgs.has(ancient_bldg):
 					p_i.ancient_bldgs[ancient_bldg].append(obj)
 				else:

@@ -226,11 +226,13 @@ func view_entity(entity: BattleEntity, tween_speed: float = 1.0):
 			scale_before_view_battlefield = 1.0
 
 var ships_taking_turn = [] # Stores ship nodes that can take actions interchangeably
+var defeated = false
 
 func next_turn():
 	if ship_nodes.is_empty():
 		battle_GUI.get_node("Defeat").show()
 		create_tween().tween_property(battle_GUI.get_node("Defeat"), "modulate:a", 1.0, 1.0)
+		defeated = true
 		return
 	var all_enemies_defeated = true
 	for HX in HX_nodes:

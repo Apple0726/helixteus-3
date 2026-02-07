@@ -1,5 +1,6 @@
 [gd_scene format=3 uid="uid://byh1hjd76sl65"]
 
+[ext_resource type="Theme" uid="uid://cp2u1kgj60ic" path="res://Resources/default_theme.tres" id="1_6wj2k"]
 [ext_resource type="Script" uid="uid://b0v2ktsjl35hf" path="res://Scripts/StarButton.gd" id="1_vfiau"]
 [ext_resource type="Texture2D" uid="uid://t70si4f413j5" path="res://Graphics/Effects/spotlight_4.png" id="1_w4ys2"]
 [ext_resource type="Shader" uid="uid://u62js3345ubk" path="res://Shaders/Star.gdshader" id="2_dveyw"]
@@ -16,9 +17,10 @@ shader_parameter/alpha = 1.0
 shader_parameter/color = Color(1, 1, 1, 1)
 
 [node name="Button" type="Button" unique_id=693680846]
-custom_minimum_size = Vector2(0, 100)
-offset_right = 352.0
-offset_bottom = 100.0
+custom_minimum_size = Vector2(0, 140)
+offset_right = 416.0
+offset_bottom = 140.0
+theme = ExtResource("1_6wj2k")
 script = ExtResource("1_vfiau")
 
 [node name="Star" type="TextureRect" parent="." unique_id=463013424]
@@ -49,27 +51,27 @@ text = "G2 Hypergiant"
 
 [node name="Mass" type="Label" parent="." unique_id=438392165]
 layout_mode = 0
-offset_left = 282.0
+offset_left = 308.0
 offset_top = 40.0
-offset_right = 366.0
+offset_right = 392.0
 offset_bottom = 64.0
 text = "1.0 M☉"
 vertical_alignment = 1
 
 [node name="Luminosity" type="Label" parent="." unique_id=1462094496]
 layout_mode = 0
-offset_left = 282.0
+offset_left = 308.0
 offset_top = 64.0
-offset_right = 366.0
+offset_right = 392.0
 offset_bottom = 88.0
 text = "1.0 L☉"
 vertical_alignment = 1
 
 [node name="Radius" type="Label" parent="." unique_id=86400574]
 layout_mode = 0
-offset_left = 282.0
+offset_left = 308.0
 offset_top = 16.0
-offset_right = 366.0
+offset_right = 392.0
 offset_bottom = 40.0
 text = "1.0 R☉"
 vertical_alignment = 1
@@ -83,3 +85,19 @@ offset_bottom = 88.0
 texture = ExtResource("4_77icn")
 expand_mode = 1
 stretch_mode = 5
+
+[node name="Construct" type="Button" parent="." unique_id=646953395]
+layout_mode = 0
+offset_left = 68.0
+offset_top = 100.0
+offset_right = 185.0
+offset_bottom = 133.0
+text = "Construct (C)"
+
+[node name="Destroy" type="Button" parent="." unique_id=1555636640]
+layout_mode = 0
+offset_left = 248.0
+offset_top = 100.0
+offset_right = 350.0
+offset_bottom = 133.0
+text = "Destroy (X)"

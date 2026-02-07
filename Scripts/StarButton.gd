@@ -1,5 +1,8 @@
 extends Button
 
+func _ready() -> void:
+	$Construct.text = tr("CONSTRUCT") + " (C)"
+	$Destroy.text = tr("DESTROY") + " (X)"
 
 func set_star_info(type:int, _class:String, temperature:float, radius:float, mass:float, luminosity:float):
 	$Star.texture = load("res://Graphics/Effects/spotlight_%s.png" % [int(temperature) % 3 + 4])

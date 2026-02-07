@@ -59,7 +59,7 @@ func _ready() -> void:
 	average_starlight_color.a = 1.0
 	$PlanetLight.color = average_starlight_color
 	$PlanetLight.position = -350.0 * random_depth * Vector2.from_angle(p_i.angle) + $PlanetBG.position
-	$PlanetLight.energy = clamp(remap(p_i.temperature, -270.0, 600.0, 0.0, 8.0), 0.0, 8.0)
+	$PlanetLight.energy = clamp(remap(p_i.temperature, -270.0, 600.0, 0.0, 12.0), 0.0, 12.0)
 	randomize()
 
 func show_weapon_tooltip(weapon: String, path: int, lv: int):
@@ -242,6 +242,9 @@ func _on_back_pressed() -> void:
 		if game.ship_data[i].has("leveled_up"):
 			game.switch_view("ship_customize_screen", {"ship_id":i, "label_text":tr("SHIP_LEVELED_UP")})
 			return
+	if battle_scene.defeated and game.help.has("battle_lost"):
+		game.popup_window(tr("BATTLE_LOST_DESC"), tr("BATTLE_LOST"))
+		game.help.erase("battle_lost")
 	game.switch_view("system")
 
 

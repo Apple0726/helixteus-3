@@ -36,11 +36,14 @@ func refresh():
 	var dest_id:int
 	var coords:Dictionary = game.ships_travel_data.c_coords
 	var g_coords:Dictionary = game.ships_travel_data.c_g_coords
-	var g_s:int = game.ships_travel_data.c_g_coords.s
-	var file = FileAccess.open("user://%s/Univ%s/Systems/%s.hx3" % [game.c_sv, game.c_u, g_s], FileAccess.READ)
-	planets_in_depart_system = file.get_var()
-	file.close()
-	depart_planet_data = planets_in_depart_system[coords.p]
+	var g_s:int = game.ships_travel_data.c_g_coords.s # departure planet global system ID
+	if g_s == game.c_s_g:
+		depart_planet_data = game.planet_data[coords.p]
+	else:
+		var file = FileAccess.open("user://%s/Univ%s/Systems/%s.hx3" % [game.c_sv, game.c_u, g_s], FileAccess.READ)
+		planets_in_depart_system = file.get_var()
+		file.close()
+		depart_planet_data = planets_in_depart_system[coords.p]
 	if game.c_s_g == g_coords.s:
 		travel_view = "system"
 		depart_id = coords.p
