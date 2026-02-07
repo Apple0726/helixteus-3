@@ -43,6 +43,7 @@ func format_text(text_node, texture, path:String, show_available:bool, rsrc_cost
 		if rsrc_cost == 0:
 			num_str = "0"
 		text = "%s%s%s" % [minus, num_str, mass_str]
+		print(text)
 	text_node.text = text
 	text_node["theme_override_colors/font_color"] = color
 
@@ -66,8 +67,8 @@ func put_rsrc(container, min_size, rsrcs, remove:bool = true, show_available:boo
 		var rsrc_type = ""
 		if rsrc_name is int:
 			rsrc_display_name = Item.name(rsrc_name)
-			texture_node.texture_normal = load("res://Graphics/Items/%s/%s.png" % [Item.icon_directory(Item.data[rsrc_name].type), Item.data[rsrc_name].item_name])
-			text_node.text = str(rsrcs[rsrc_name])
+			texture_node.texture_normal = load("res://Graphics/%s/%s.png" % [Item.icon_directory(Item.data[rsrc_name].type), Item.data[rsrc_name].item_name])
+			text_node.text = Helper.format_num(floor(rsrcs[rsrc_name]))
 		else:
 			rsrc_display_name = tr(rsrc_name.to_upper())
 			if rsrc_name in ["money", "minerals", "energy", "SP"]:
@@ -1182,7 +1183,7 @@ func get_bldg_tooltip2(bldg:int, path_1_value, path_2_value, path_3_value):
 			return "%s\n%s\n%s" % [
 				Data.path_1[bldg].desc % clever_round(path_1_value),
 				Data.path_2[bldg].desc % path_2_value,
-				Data.path_3[bldg].desc % "{n}x{n}".format({"n":path_3_value})]
+				Data.path_3[bldg].desc % "{n}x{n}".format({"n":int(path_3_value)})]
 		_:
 			return ""
 

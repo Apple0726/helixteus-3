@@ -3,6 +3,8 @@ extends Node
 @onready var game = get_node("/root/Game")
 
 enum {
+	MONEY,
+	MINERALS,
 	OVERCLOCK1,
 	OVERCLOCK2,
 	OVERCLOCK3,
@@ -80,6 +82,7 @@ enum {
 }
 
 enum Type {
+	GENERIC,
 	OVERCLOCK,
 	MINING_LIQUID,
 	DRILL,
@@ -93,6 +96,10 @@ enum Type {
 }
 
 var data:Dictionary = {
+	MONEY:
+		{"item_name":"money", "type":Type.GENERIC},
+	MINERALS:
+		{"item_name":"minerals", "type":Type.GENERIC},
 	OVERCLOCK1:
 		{"item_name":"overclock1", "type":Type.OVERCLOCK, "costs":{"money":2800}, "mult":1.5, "duration":10 * 60}, # "duration" in seconds
 	OVERCLOCK2:
@@ -244,18 +251,24 @@ var data:Dictionary = {
 }
 
 func icon_directory(type:int):
-	if type == Type.OVERCLOCK:
-		return "Overclocks"
+	if type == Type.GENERIC:
+		return "Icons/"
+	elif type == Type.OVERCLOCK:
+		return "Items/Overclocks"
 	elif type == Type.MINING_LIQUID:
-		return "Mining liquids"
+		return "Items/Mining liquids"
 	elif type == Type.HELIX_CORE:
-		return "Helix cores"
+		return "Items/Helix cores"
 	elif type == Type.DRILL:
-		return "Drills"
+		return "Items/Drills"
 	elif type == Type.PORTABLE_WORMHOLE:
-		return "Portable wormholes"
+		return "Items/Portable wormholes"
 
 func name(item_id:int):
+	if item_id == MONEY:
+		return tr("MONEY")
+	if item_id == MINERALS:
+		return tr("MINERALS")
 	if item_id == OVERCLOCK1:
 		return tr("OVERCLOCK")
 	elif item_id == OVERCLOCK2:

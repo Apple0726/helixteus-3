@@ -314,7 +314,8 @@ func show_tooltip(tile, tile_id:int):
 		if tile.bldg.name == Building.BORING_MACHINE:
 			tooltip += "\n%s: %s m" % [tr("HOLE_DEPTH"), Helper.format_num(tile.depth)]
 		elif tile.bldg.name in [Building.GLASS_FACTORY, Building.STEAM_ENGINE, Building.STONE_CRUSHER]:
-			tooltip += "\n[color=#88CCFF]%s\nG: %s[/color]" % [tr("CLICK_TO_CONFIGURE"), tr("LOAD_UNLOAD")]
+			tooltip += "\n[color=#88CCFF]%s[/color]" % [tr("CLICK_TO_CONFIGURE")]
+		additional_tooltip = tr("RIGHT_CLICK_FOR_MORE_ACTIONS")
 	elif tile.has("ancient_bldg"):
 		tooltip += "[color=#%s]" % Data.ancient_bldg_tier_colors[tile.ancient_bldg.tier - 1].to_html(false)
 		var ancient_building_name = AncientBuilding.names[tile.ancient_bldg.name]

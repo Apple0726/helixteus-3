@@ -114,7 +114,6 @@ var rooms:Array = []
 var HX_tiles:Array = []#Tile ids occupied by HX
 var deposits:Dictionary = {}#Random metal/material deposits
 var chests:Dictionary = {}#Random chests and their contents
-var active_type:String = ""
 var tiles_touched_by_laser:Dictionary = {}
 var debris_touched_by_laser:Dictionary = {}
 
@@ -350,7 +349,7 @@ func add_filter(rsrc):
 func add_filter_slot(type:String, rsrc):
 	var filter_slot = filter_btn_scene.instantiate()
 	if rsrc is int:
-		filter_slot.texture = load("res://Graphics/%s/%s/%s.png" % ["Items", Item.icon_directory(Item.data[rsrc].type), Item.data[rsrc].item_name])
+		filter_slot.texture = load("res://Graphics/%s/%s.png" % [Item.icon_directory(Item.data[rsrc].type), Item.data[rsrc].item_name])
 	else:
 		filter_slot.texture = load("res://Graphics/%s/%s.png" % [type, rsrc])
 	$UI2/Filters/Grid.add_child(filter_slot)
@@ -395,12 +394,7 @@ func set_slot_info(slot, _inv:Dictionary):
 		mining_p.lifetime = 0.2 / time_speed
 		slot.get_node("TextureRect").texture = load("res://Graphics/Cave/Mining/" + Item.data[_inv.id].item_name + ".png")
 	else:
-		if _inv.id is int:
-			slot.get_node("TextureRect").texture = load("res://Graphics/Items/%s/%s.png" % [Item.icon_directory(_inv.type), Item.data[_inv.id].item_name])
-		elif _inv.id == "money":
-			slot.get_node("TextureRect").texture = Data.money_icon
-		elif _inv.id == "minerals":
-			slot.get_node("TextureRect").texture = Data.minerals_icon
+		slot.get_node("TextureRect").texture = load("res://Graphics/%s/%s.png" % [Item.icon_directory(_inv.type), Item.data[_inv.id].item_name])
 		if _inv.has("num"):
 			slot.get_node("Label").text = Helper.format_num(_inv.num, false, 3)
 	
@@ -409,7 +403,6 @@ func remove_cave():
 	rooms.clear()
 	tiles = []
 	HX_tiles.clear()
-	active_type = ""
 	cave_wall.clear()
 	minimap_cave.clear()
 	big_debris.clear()
@@ -891,15 +884,14 @@ var right_side_panel_tween
 
 func on_chest_entered(_area, tile:int):
 	var chest_rsrc = chests[tile].contents
-	active_type = "chest"
 	for child in right_side_vbox.get_children():
 		child.free()
 	var tier_txt = Label.new()
 	tier_txt.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	tier_txt.text = tr("TIER_X_CHEST") % [chests[tile].tier]
 	right_side_vbox.add_child(tier_txt)
-	show_right_info(tr("TAKE_ALL"), take_all_from_chest, [tile])
 	Helper.put_rsrc(right_side_vbox, 32, chest_rsrc, false)
+	show_right_info(tr("TAKE_ALL"), take_all_from_chest, [tile], false)
 
 func take_all_from_chest(active_chest:int):
 	if chests.has(active_chest):
@@ -916,7 +908,7 @@ func take_all_from_chest(active_chest:int):
 				game.show[rsrc] = true
 				add_filter(rsrc)
 			var has_weight = true
-			if rsrc is int or rsrc == "money" or rsrc == "minerals":
+			if rsrc is int:
 				has_weight = false
 			if has_weight:
 				var remainder:float = round(add_weight_rsrc(rsrc, contents[rsrc]) * 100) / 100.0
@@ -945,7 +937,6 @@ func on_chest_exited(area:Area2D):
 
 func hide_panel(hiding_chest:bool = false):
 	if len($Rover/InteractArea.get_overlapping_areas()) == 0:
-		active_type = ""
 		right_side_panel.hide()
 	
 func on_relic_exited(_body):
@@ -954,11 +945,10 @@ func on_relic_exited(_body):
 func on_map_exited(_body):
 	$UI2/Ship2Map.visible = false
 	right_side_panel.hide()
-	active_type = ""
 
 func generate_treasure(tier:int, rng:RandomNumberGenerator):
-	var contents = {	"money":round(rng.randf_range(1500, 1800) * pow(tier, 3.0) * difficulty * exp(cave_floor / 6.0)),
-						"minerals":round(rng.randf_range(100, 150) * pow(tier, 3.0) * difficulty * exp(cave_floor / 9.0)),
+	var contents = {	Item.MONEY:round(rng.randf_range(1500, 1800) * pow(tier, 3.0) * difficulty * exp(cave_floor / 6.0)),
+						Item.MINERALS:round(rng.randf_range(100, 150) * pow(tier, 3.0) * difficulty * exp(cave_floor / 9.0)),
 						Item.HELIX_CORE1:int(rng.randf_range(0.2, 0.6) * pow(tier, 1.8) * pow(difficulty, 0.7))}
 	if contents[Item.HELIX_CORE1] > 64:
 		contents[Item.HELIX_CORE2] = int(contents[Item.HELIX_CORE1] / 64.0)
@@ -969,12 +959,12 @@ func generate_treasure(tier:int, rng:RandomNumberGenerator):
 			contents[Item.HELIX_CORE3] = int(contents[Item.HELIX_CORE2] / 64.0)
 			contents[Item.HELIX_CORE2] %= 64
 			if contents[Item.HELIX_CORE2] == 0:
-				contents.erase("hx_core2")
+				contents.erase(Item.HELIX_CORE2)
 			if contents[Item.HELIX_CORE3] > 64:
 				contents[Item.HELIX_CORE4] = int(contents[Item.HELIX_CORE3] / 64.0)
 				contents[Item.HELIX_CORE3] %= 64
 				if contents[Item.HELIX_CORE3] == 0:
-					contents.erase("hx_core3")
+					contents.erase(Item.HELIX_CORE3)
 	if contents.has(Item.HELIX_CORE1) and contents[Item.HELIX_CORE1] == 0:
 		contents.erase(Item.HELIX_CORE1)
 	for met in game.met_info:
@@ -1256,24 +1246,18 @@ func go_down_cave():
 	if not game.achievement_data.exploration.has("reach_floor_32") and cave_floor == 32:
 		game.earn_achievement("exploration", "reach_floor_32")
 
-func add_to_inventory(rsrc, content:float, remainders:Dictionary):
+func add_to_inventory(rsrc:int, content:float, remainders:Dictionary):
 	for i in len(inventory):
 		var slot = slots[i]
 		if inventory[i].is_empty():
 			inventory[i]["id"] = rsrc
-			inventory[i]["type"] = -1
-			if rsrc is int:
-				inventory[i]["type"] = Item.data[rsrc].type
-				slot.get_node("TextureRect").texture = load("res://Graphics/Items/%s/%s.png" % [Item.icon_directory(Item.data[rsrc].type), Item.data[rsrc].item_name])
-			elif rsrc == "money":
-				slot.get_node("TextureRect").texture = Data.money_icon
-			elif rsrc == "minerals":
-				slot.get_node("TextureRect").texture = Data.minerals_icon
+			inventory[i]["type"] = Item.data[rsrc].type
+			slot.get_node("TextureRect").texture = load("res://Graphics/%s/%s.png" % [Item.icon_directory(Item.data[rsrc].type), Item.data[rsrc].item_name])
 			slot.get_node("Label").text = Helper.format_num(content, false, 3)
 			inventory[i]["num"] = content
 			game.show[rsrc] = true
 			break
-		if inventory[i].has("id") and str(rsrc) == str(inventory[i].id):
+		if inventory[i].has("id") and rsrc == inventory[i].id:
 			inventory[i].num += content
 			slot.get_node("Label").text = Helper.format_num(inventory[i].num, false, 3)
 			break
@@ -1301,19 +1285,18 @@ func exit_cave():
 	for i in len(inventory):
 		if inventory[i].is_empty():
 			continue
-		if inventory[i].id is int:
-			if inventory[i].has("num"):
-				var remaining:int = game.add_items(inventory[i].id, inventory[i].num)
-				if remaining > 0:
-					inventory[i].num = remaining
-				else:
-					inventory[i].clear()
-		elif inventory[i].id == "money":
+		if inventory[i].id == Item.MONEY:
 			game.add_resources({"money":inventory[i].num}) 
 			inventory[i].clear()
-		elif inventory[i].id == "minerals":
+		elif inventory[i].id == Item.MINERALS:
 			inventory[i].num = Helper.add_minerals(inventory[i].num).remainder
 			if inventory[i].num <= 0:
+				inventory[i].clear()
+		elif inventory[i].has("num"):
+			var remaining:int = game.add_items(inventory[i].id, inventory[i].num)
+			if remaining > 0:
+				inventory[i].num = remaining
+			else:
 				inventory[i].clear()
 	var i_w_w2 = i_w_w.duplicate(true)
 	if i_w_w.has("stone"):
@@ -1607,7 +1590,7 @@ func mine_debris_complete(tile_id:int):
 	var debris_aurora_mult = debris.aurora_intensity if debris.aurora_intensity > 0.0 else 1.0
 	var debris_volcano_mult = debris.lava_intensity if debris.lava_intensity > 0.0 else 1.0
 	var rsrc:Dictionary = {"stone":randf_range(800, 900),
-							"minerals":randf_range(42, 46) * difficulty * exp(cave_floor / 10.0) * debris_aurora_mult * debris_volcano_mult}
+							Item.MINERALS:randf_range(42, 46) * difficulty * exp(cave_floor / 10.0) * debris_aurora_mult * debris_volcano_mult}
 	for mat in p_i.surface.keys():
 		if randf() < p_i.surface[mat].chance / 2.5:
 			var amount = Helper.clever_round(p_i.surface[mat].amount * randf_range(0.2, 0.24) * difficulty * debris_aurora_mult * debris_volcano_mult)
@@ -1631,7 +1614,7 @@ func mine_debris_complete(tile_id:int):
 		if rarity < difficulty * 2.0 and randf() < 1 / (rarity + 1):
 			rsrc[met] = Helper.clever_round(5 * randf_range(0.2, 1.0) / rarity * difficulty * exp(cave_floor / 10.0) * debris_volcano_mult)
 	for r in rsrc.keys():
-		if r in ["stone", "minerals"]:
+		if r in ["stone", Item.MINERALS]:
 			rsrc[r] = round(rsrc[r] * pow(debris.scale.x, debris_exp))
 		else:
 			rsrc[r] = Helper.clever_round(rsrc[r] * pow(debris.scale.x, debris_exp))
@@ -1656,7 +1639,7 @@ func filter_and_add(rsrc:Dictionary):
 			game.cave_filters[r] = false
 			add_filter(r)
 		game.show[r] = true
-		if r == "minerals":
+		if r is int and r == Item.MINERALS:
 			add_to_inventory(r, rsrc[r], {})
 		else:
 			rsrc[r] *= game.u_i.planck
@@ -1959,7 +1942,6 @@ func _on_Exit_area_entered(_body):
 		show_right_info(tr("EXIT_CAVE"), exit_cave)
 	else:
 		show_right_info(tr("GO_UP"), go_up_cave)
-		active_type = "go_up"
 
 func on_WH_entered(_body):
 	show_right_info(tr("EXIT_CAVE"), exit_cave)
@@ -1967,8 +1949,9 @@ func on_WH_entered(_body):
 func _on_Hole_area_entered(_body):
 	show_right_info(tr("GO_DOWN"), go_down_cave)
 
-func show_right_info(txt:String, action:Callable, action_params:Array = []):
-	Helper.put_rsrc(right_side_vbox, 32, {})
+func show_right_info(txt:String, action:Callable, action_params:Array = [], empty_vbox:bool = true):
+	if empty_vbox:
+		Helper.put_rsrc(right_side_vbox, 32, {})
 	var action_btn = Button.new()
 	action_btn.text = txt + " (F)"
 	action_btn.shortcut = Shortcut.new()

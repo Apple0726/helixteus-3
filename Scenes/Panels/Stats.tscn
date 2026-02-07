@@ -33,6 +33,7 @@
 [ext_resource type="Texture2D" uid="uid://3o7q14gve2np" path="res://Graphics/Metals/nanocrystal.png" id="30"]
 [ext_resource type="Texture2D" uid="uid://clk5xvpyx2km2" path="res://Graphics/Metals/diamond.png" id="31"]
 [ext_resource type="Texture2D" uid="uid://bhugiwv7yf1qh" path="res://Graphics/Metals/mythril.png" id="32"]
+[ext_resource type="Texture2D" uid="uid://d1h1qihr5uwtl" path="res://Graphics/Tiles/supercritical.png" id="33_0kyuu"]
 [ext_resource type="Texture2D" uid="uid://px75jysdfgiv" path="res://Graphics/Achievements/BStar.png" id="34"]
 [ext_resource type="Texture2D" uid="uid://c18u442jl8cni" path="res://Graphics/Megastructures/DS_0.png" id="34_vrqdx"]
 [ext_resource type="Texture2D" uid="uid://be8boggsrt1hs" path="res://Graphics/Achievements/RStar.png" id="35"]
@@ -300,6 +301,7 @@ number = 1000000.0
 
 [node name="fully_conquer_system" parent="Achievements/ScrollContainer/HBox/Slots/conquest" unique_id=240391674 instance=ExtResource("4")]
 layout_mode = 2
+achievement_icon = ExtResource("24_0kyuu")
 
 [node name="fully_conquer_galaxy" parent="Achievements/ScrollContainer/HBox/Slots/conquest" unique_id=54693729 instance=ExtResource("4")]
 layout_mode = 2
@@ -476,6 +478,7 @@ achievement_icon = ExtResource("43")
 
 [node name="planet_with_nothing" parent="Achievements/ScrollContainer/HBox/Slots/exploration" unique_id=1733889106 instance=ExtResource("4")]
 layout_mode = 2
+achievement_icon = ExtResource("33_0kyuu")
 
 [node name="tier_2_ancient_bldg" parent="Achievements/ScrollContainer/HBox/Slots/exploration" unique_id=2036493653 instance=ExtResource("4")]
 layout_mode = 2

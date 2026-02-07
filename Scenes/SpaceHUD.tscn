@@ -279,9 +279,9 @@ layout_mode = 1
 [node name="HBoxContainer" type="HBoxContainer" parent="." unique_id=287622915]
 layout_mode = 0
 offset_left = 88.0
-offset_top = 132.0
+offset_top = 112.0
 offset_right = 404.0
-offset_bottom = 608.0
+offset_bottom = 588.0
 mouse_filter = 2
 
 [node name="BldgInfo" type="VBoxContainer" parent="HBoxContainer" unique_id=1475406639]

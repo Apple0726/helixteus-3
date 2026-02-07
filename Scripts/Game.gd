@@ -3699,7 +3699,7 @@ func use_item(item_id:int, send_to_rover:int = -1):
 			return
 	if active_panel == inventory:
 		toggle_panel("inventory")
-	show_item_cursor(load("res://Graphics/Items/%s/%s.png" % [Item.icon_directory(item_type), Item.data[item_id].item_name]))
+	show_item_cursor(load("res://Graphics/%s/%s.png" % [Item.icon_directory(item_type), Item.data[item_id].item_name]))
 
 func get_star_class (temp):
 	var cl = ""
