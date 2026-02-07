@@ -37,6 +37,7 @@ func refresh():
 			unit = "kg"
 		elif selected_fuel_type == "atoms":
 			unit = "mol"
+		$Control/HSlider.max_value = game[selected_fuel_type][fuel_selected]
 
 func use_drive():
 	if game.ships_travel_data.travel_view == "-":

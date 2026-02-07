@@ -36,7 +36,6 @@ func _ready() -> void:
 	$MainPanel/Laser.mouse_exited.connect(game.hide_tooltip)
 	$MainPanel/Bomb.mouse_exited.connect(game.hide_tooltip)
 	$MainPanel/Light.mouse_exited.connect(game.hide_tooltip)
-	$MainPanel/Move.mouse_entered.connect(game.show_tooltip.bind(tr("BATTLE_MOVE_DESC")))
 	$MainPanel/Move.mouse_exited.connect(game.hide_tooltip)
 	$MainPanel/Push.mouse_exited.connect(game.hide_tooltip)
 	$Speedup.mouse_entered.connect(game.show_tooltip.bind(tr("SPEED_UP_ANIMATIONS") + " (%s)" % OS.get_keycode_string(DisplayServer.keyboard_get_keycode_from_physical(KEY_SPACE))))
@@ -97,20 +96,7 @@ func _input(event: InputEvent) -> void:
 					reset_GUI()
 			elif action_selected == PUSH:
 				pass
-	if action_selected == NONE and is_instance_valid(ship_node):
-		if Input.is_action_just_pressed("1"):
-			_on_bullet_pressed()
-		elif Input.is_action_just_pressed("2"):
-			_on_laser_pressed()
-		elif Input.is_action_just_pressed("3"):
-			_on_bomb_pressed()
-		elif Input.is_action_just_pressed("4"):
-			_on_light_pressed()
-		elif Input.is_action_just_pressed("5"):
-			_on_move_pressed()
-		elif Input.is_action_just_pressed("6"):
-			_on_push_pressed()
-	elif action_selected == BULLET and is_instance_valid(ship_node):
+	if action_selected == BULLET and is_instance_valid(ship_node):
 		if ship_node.bullet_levels[1] >= 2 and Input.is_action_pressed("shift"):
 			if Input.is_action_just_pressed("scroll_down"):
 				bullet_2_selected_type = [BIG_BULLET, CORROSIVE_BULLET, AQUA_BULLET][(bullet_2_selected_type + 1) % 3]
@@ -262,25 +248,45 @@ func _on_back_pressed() -> void:
 func _on_bullet_mouse_entered() -> void:
 	var tooltip_txt = tr("BASE_DAMAGE") + ": " + str(Data.battle_weapon_stats.bullet.damage)
 	tooltip_txt += "\n" + tr("BASE_ACCURACY") + ": " + str(Data.battle_weapon_stats.bullet.accuracy)
-	game.show_tooltip(tooltip_txt, {"additional_text": tr("BULLET_DESC")})
+	var additional_text = "{desc}\n\n{shortcut_txt}: {shortcut}".format({
+		"desc":tr("BULLET_DESC"),
+		"shortcut_txt":tr("KEYBOARD_SHORTCUT"),
+		"shortcut": "1"})
+	game.show_tooltip(tooltip_txt, {"additional_text": additional_text})
 
 
 func _on_laser_mouse_entered() -> void:
 	var tooltip_txt = tr("BASE_DAMAGE") + ": " + str(Data.battle_weapon_stats.laser.damage)
 	tooltip_txt += "\n" + tr("BASE_ACCURACY") + ": " + str(Data.battle_weapon_stats.laser.accuracy)
-	game.show_tooltip(tooltip_txt, {"additional_text": tr("LASER_DESC")})
+	var additional_text = "{desc}\n\n{shortcut_txt}: {shortcut}".format({
+		"desc":tr("LASER_DESC"),
+		"shortcut_txt":tr("KEYBOARD_SHORTCUT"),
+		"shortcut": "2"})
+	game.show_tooltip(tooltip_txt, {"additional_text": additional_text})
 
 
 func _on_bomb_mouse_entered() -> void:
 	var tooltip_txt = tr("BASE_DAMAGE") + ": " + str(Data.battle_weapon_stats.bomb.damage)
 	tooltip_txt += "\n" + tr("BASE_ACCURACY") + ": " + str(Data.battle_weapon_stats.bomb.accuracy)
-	game.show_tooltip(tooltip_txt, {"additional_text": tr("BOMB_DESC")})
+	var additional_text = "{desc}\n\n{shortcut_txt}: {shortcut}".format({
+		"desc":tr("BOMB_DESC"),
+		"shortcut_txt":tr("KEYBOARD_SHORTCUT"),
+		"shortcut": "3"})
+	game.show_tooltip(tooltip_txt, {"additional_text": additional_text})
 
 
 func _on_light_mouse_entered() -> void:
 	var tooltip_txt = tr("BASE_DAMAGE") + ": " + str(Data.battle_weapon_stats.light.damage)
 	tooltip_txt += "\n" + tr("BASE_ACCURACY") + ": " + tr("PERFECT")
-	game.show_tooltip(tooltip_txt, {"additional_text": tr("LIGHT_DESC")})
+	var additional_text = "{desc}\n\n{shortcut_txt}: {shortcut}".format({
+		"desc":tr("LIGHT_DESC"),
+		"shortcut_txt":tr("KEYBOARD_SHORTCUT"),
+		"shortcut": "4"})
+	game.show_tooltip(tooltip_txt, {"additional_text": additional_text})
+
+
+func _on_move_mouse_entered() -> void:
+	game.show_tooltip(tr("BATTLE_MOVE_DESC"), {"additional_text": tr("KEYBOARD_SHORTCUT") + ": 5"})
 
 
 func _on_push_mouse_entered() -> void:
@@ -292,7 +298,11 @@ func _on_push_mouse_entered() -> void:
 		tooltip_txt += "\n[color=#FFAA00]" + tr("REQUIRES_MOVEMENT") + "[/color]"
 	if len(ship_node.pushable_entities) == 0:
 		tooltip_txt += "\n[color=#FFAA00]" + tr("NO_OBJECTS_NEAR_SHIP") + "[/color]"
-	game.show_tooltip(tooltip_txt, {"additional_text": tr("BATTLE_PUSH_HELP")})
+	var additional_text = "{desc}\n\n{shortcut_txt}: {shortcut}".format({
+		"desc":tr("BATTLE_PUSH_HELP"),
+		"shortcut_txt":tr("KEYBOARD_SHORTCUT"),
+		"shortcut": "6"})
+	game.show_tooltip(tooltip_txt, {"additional_text": additional_text})
 
 
 func fade_in_main_panel():

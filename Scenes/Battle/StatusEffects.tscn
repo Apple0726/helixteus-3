@@ -8,10 +8,12 @@
 [ext_resource type="Texture2D" uid="uid://bshcbtjw6w01j" path="res://Graphics/Icons/frozen.png" id="5_a6ky5"]
 [ext_resource type="Texture2D" uid="uid://ddk4tb7t6a6my" path="res://Graphics/Icons/corroding.png" id="6_4ih1o"]
 [ext_resource type="Texture2D" uid="uid://dtt8s3bhk46u6" path="res://Graphics/Icons/water.png" id="7_4ih1o"]
+[ext_resource type="Texture2D" uid="uid://0a2b44qb5s11" path="res://Graphics/Icons/exposed.png" id="7_re712"]
 [ext_resource type="Texture2D" uid="uid://brchrwf8vbxe3" path="res://Graphics/Icons/radioactive.png" id="8_pri0e"]
 
 [sub_resource type="SystemFont" id="SystemFont_pri0e"]
 font_names = PackedStringArray("Monospace")
+subpixel_positioning = 0
 multichannel_signed_distance_field = true
 
 [sub_resource type="LabelSettings" id="LabelSettings_re712"]
@@ -119,6 +121,7 @@ layout_mode = 2
 layout_mode = 0
 offset_right = 24.0
 offset_bottom = 24.0
+texture = ExtResource("7_re712")
 expand_mode = 1
 stretch_mode = 5
 

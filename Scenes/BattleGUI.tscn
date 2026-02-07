@@ -46,6 +46,54 @@ shader = SubResource("Shader_oca3i")
 shader_parameter/amplitude = 0.0
 shader_parameter/frequency = 10.0
 
+[sub_resource type="InputEventKey" id="InputEventKey_pv2pb"]
+device = -1
+physical_keycode = 49
+unicode = 49
+
+[sub_resource type="Shortcut" id="Shortcut_cgaef"]
+events = [SubResource("InputEventKey_pv2pb")]
+
+[sub_resource type="InputEventKey" id="InputEventKey_cgaef"]
+device = -1
+physical_keycode = 50
+unicode = 50
+
+[sub_resource type="Shortcut" id="Shortcut_hovds"]
+events = [SubResource("InputEventKey_cgaef")]
+
+[sub_resource type="InputEventKey" id="InputEventKey_hovds"]
+device = -1
+physical_keycode = 51
+unicode = 51
+
+[sub_resource type="Shortcut" id="Shortcut_hnnox"]
+events = [SubResource("InputEventKey_hovds")]
+
+[sub_resource type="InputEventKey" id="InputEventKey_hnnox"]
+device = -1
+physical_keycode = 52
+unicode = 52
+
+[sub_resource type="Shortcut" id="Shortcut_rr6bc"]
+events = [SubResource("InputEventKey_hnnox")]
+
+[sub_resource type="InputEventKey" id="InputEventKey_rr6bc"]
+device = -1
+physical_keycode = 53
+unicode = 53
+
+[sub_resource type="Shortcut" id="Shortcut_ypwpy"]
+events = [SubResource("InputEventKey_rr6bc")]
+
+[sub_resource type="InputEventKey" id="InputEventKey_ypwpy"]
+device = -1
+physical_keycode = 54
+unicode = 54
+
+[sub_resource type="Shortcut" id="Shortcut_yhfhx"]
+events = [SubResource("InputEventKey_ypwpy")]
+
 [sub_resource type="Curve" id="Curve_pv2pb"]
 _data = [Vector2(0, 0), 0.0, 0.0, 0, 0, Vector2(1, 1), 0.0, 0.0, 0, 0]
 point_count = 2
@@ -155,6 +203,8 @@ offset_left = 84.0
 offset_top = 44.0
 offset_right = 140.0
 offset_bottom = 84.0
+shortcut = SubResource("Shortcut_cgaef")
+shortcut_in_tooltip = false
 icon = ExtResource("4_xdmes")
 icon_alignment = 1
 expand_icon = true
@@ -165,6 +215,8 @@ offset_left = 204.0
 offset_top = 44.0
 offset_right = 260.0
 offset_bottom = 84.0
+shortcut = SubResource("Shortcut_hovds")
+shortcut_in_tooltip = false
 icon = ExtResource("5_lfxuw")
 icon_alignment = 1
 expand_icon = true
@@ -175,6 +227,8 @@ offset_left = 324.0
 offset_top = 44.0
 offset_right = 380.0
 offset_bottom = 84.0
+shortcut = SubResource("Shortcut_hnnox")
+shortcut_in_tooltip = false
 icon = ExtResource("6_xd3wr")
 icon_alignment = 1
 expand_icon = true
@@ -185,6 +239,8 @@ offset_left = 448.0
 offset_top = 44.0
 offset_right = 504.0
 offset_bottom = 84.0
+shortcut = SubResource("Shortcut_rr6bc")
+shortcut_in_tooltip = false
 icon = ExtResource("7_18k07")
 icon_alignment = 1
 expand_icon = true
@@ -195,6 +251,8 @@ offset_left = 580.0
 offset_top = 44.0
 offset_right = 636.0
 offset_bottom = 84.0
+shortcut = SubResource("Shortcut_ypwpy")
+shortcut_in_tooltip = false
 icon = ExtResource("8_oca3i")
 icon_alignment = 1
 expand_icon = true
@@ -205,6 +263,8 @@ offset_left = 712.0
 offset_top = 44.0
 offset_right = 768.0
 offset_bottom = 84.0
+shortcut = SubResource("Shortcut_yhfhx")
+shortcut_in_tooltip = false
 icon = ExtResource("9_oca3i")
 icon_alignment = 1
 expand_icon = true
@@ -521,6 +581,7 @@ horizontal_alignment = 1
 [connection signal="pressed" from="MainPanel/Bomb" to="." method="_on_bomb_pressed"]
 [connection signal="mouse_entered" from="MainPanel/Light" to="." method="_on_light_mouse_entered"]
 [connection signal="pressed" from="MainPanel/Light" to="." method="_on_light_pressed"]
+[connection signal="mouse_entered" from="MainPanel/Move" to="." method="_on_move_mouse_entered"]
 [connection signal="pressed" from="MainPanel/Move" to="." method="_on_move_pressed"]
 [connection signal="mouse_entered" from="MainPanel/Push" to="." method="_on_push_mouse_entered"]
 [connection signal="pressed" from="MainPanel/Push" to="." method="_on_push_pressed"]

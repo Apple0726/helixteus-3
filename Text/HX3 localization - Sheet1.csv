@@ -747,6 +747,7 @@ SHAPE_COLOR,Shape color,Couleur de la forme,Colore della forma,颜色,Form Farbe
 OUTLINE_THICKNESS,Outline thickness/icon size,Épaisseur du contour/taille des icônes,Spessore del contorno/dimensione delle icone,大小,Umrandungsdicke/Symbolgröße,Grosor del contorno/Tamaño del icono,,,Körvonal vastagsága/ikon mérete,輪郭の太さ/アイコンサイズ,Lijndikte/icoongrootte,,
 CLICK_TWICE_TO_CHANGE,Click twice to change icon,,,双击更改图标,Doppelklick um das Symbol zu ändern,Haz doble clic para cambiar el icono,,,Kattints duplán az ikon változtatásához,2回クリックするとアイコンが変更されます,Dubbelklik om icoon aan te passen,Двойно клик для смены иконки,
 ANNOTATE_SHORTCUTS,1: rotate left\n2: reset rotation\n3: rotate right\nQ: duplicate icon,,,1:向左旋转\n2:重置旋转\n3:向右旋转\nQ:复制图标,1: links drehen\n2: Rotation zurück setzen\n3: rechts drehen\nQ: Symbol verdoppeln,1: rotar a la izquierda\n2: restaurar rotación\n3: rotar a la derecha\nQ: duplicar icono,,,1: forgatás balra\n2: visszaforgatás alaphelyzetbe\n3: forgatás jobbra\nQ: ikon másolása,1: 左回転\n2: 回転リセット\n3: 右回転\nQ: アイコンを複製する。,1: links draaien\n2: reset rotatie\n3: rechts draaien\nQ: dupliceer icon,,
+KEYBOARD_SHORTCUT,Keyboard shortcut,Raccourci clavier,,,,,,,,,,,
 KEYBOARD_SHORTCUTS,Keyboard shortcuts,Raccourcis clavier,,快捷键,Hotkeys,Teclas de acceso rápido,,,Billenytűparancsok,キーボードショートカット,Hotkeys,,
 ATMOSPHERE_EXTRACTION,Atmosphere extraction,,,大气萃取业,Atmosphärensammlung,Extracción de atmósfera,,,Atmoszférakivonás,大気圧抽出,Atmosfeerextractie,,
 MINING,Mining,,,太空矿业,Abbau,Excavando,,,Bányászás,鉱業,Delven,Добыча,

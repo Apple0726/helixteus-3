@@ -893,11 +893,9 @@ func on_star_pressed (id:int):
 		else:
 			game.popup(tr("STAR_MS_ERROR"), 3.0)
 	elif star.has("MS"):
-		var t:String = game.item_to_use.type
-		if t == "":
-			if star.MS == "PK" and not star.has("repair_cost"):
-				game.planetkiller_panel.star = star
-				game.toggle_panel(game.planetkiller_panel)
+		if star.MS == "PK" and not star.has("repair_cost") and not game.item_to_use.has("type"):
+			game.planetkiller_panel.star = star
+			game.toggle_panel(game.planetkiller_panel)
 
 func on_btn_out ():
 	planet_hovered = -1
