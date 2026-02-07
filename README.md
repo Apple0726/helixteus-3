@@ -4,7 +4,7 @@
 </p>
 
 Helixteus 3 is a 2D space exploration game with incremental mechanics.
-You start on a planet on which you can construct buildings to produce resources. Eventually you will acquire the means necessary to explore other procedurally generated planets, systems, galaxies, and eventually entire universes. They are not undefended however: primitive alien lifeforms exist in every corner of the universe and will not appreciate you expanding into their land.
+You start on a planet on which you can construct buildings to produce resources. Eventually you will acquire the means necessary to explore other procedurally generated planets, systems, galaxies, and even entire universes. They are not undefended however: primitive alien lifeforms exist in every corner of the universe and will not appreciate you expanding into their land.
 
 [Play the game on itch.io](https://apple0726.itch.io/helixteus-3)
 
@@ -56,6 +56,10 @@ This game also uses shaders to add visual effects. Godot uses a [custom shader l
 
 ### Bug reports
 Found something that should probably not be happening? Please make a detailed [issue](https://github.com/Apple0726/helixteus-3/issues) with logs if possible, and information on how to reproduce the unintended behavior. You may also make a report in the `#bug-reports` channel of our [Discord server](https://discord.com/invite/gDHcDA3).
+
+## Generative AI disclaimer
+No generative AI was used in creating the assets (art, sounds, text) for Helixteus 3, and contributing such assets is strongly discouraged and will most certainly be rejected. However it may be used to generate a reference or a draft to aid you in creating the final asset, which must be done by yourself from scratch.
+Text translation is exempt from this rule, but please re-read everything the AI generates and correct if necessary.
 
 ## Support
 All contributions and kind words are very appreciated! This game will always be available for free on itch.io (only Steam version is paid, which will include higher quality audio and graphics). If you want to financially support the development, you can "buy" the game on itch.io with an amount you decide.
