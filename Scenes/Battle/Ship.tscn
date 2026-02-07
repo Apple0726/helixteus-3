@@ -447,23 +447,16 @@ script = ExtResource("2")
 [node name="FireWeaponAim" parent="." unique_id=894484458 instance=ExtResource("2_ogdx2")]
 visible = false
 
-[node name="TextureRect" type="TextureRect" parent="." unique_id=545483616]
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=485336625]
 light_mask = 3
 material = SubResource("4")
-offset_left = -52.0
-offset_top = -52.0
-offset_right = 52.0
-offset_bottom = 52.0
-pivot_offset = Vector2(52, 52)
 texture = ExtResource("5_fh3h1")
-expand_mode = 1
-stretch_mode = 5
 
-[node name="Ship1Lights" type="Node2D" parent="TextureRect" unique_id=531901869]
+[node name="Ship1Lights" type="Node2D" parent="Sprite2D" unique_id=531901869]
 visible = false
 position = Vector2(52, 52)
 
-[node name="Red" type="PointLight2D" parent="TextureRect/Ship1Lights" unique_id=1215199160]
+[node name="Red" type="PointLight2D" parent="Sprite2D/Ship1Lights" unique_id=1215199160]
 position = Vector2(-15, -45)
 scale = Vector2(0.5, 0.5)
 color = Color(1, 0, 0, 1)
@@ -471,7 +464,7 @@ energy = 3.0
 range_item_cull_mask = 2
 texture = ExtResource("10")
 
-[node name="Green" type="PointLight2D" parent="TextureRect/Ship1Lights" unique_id=2146927858]
+[node name="Green" type="PointLight2D" parent="Sprite2D/Ship1Lights" unique_id=2146927858]
 position = Vector2(-13, 46)
 scale = Vector2(0.5, 0.5)
 color = Color(0, 1, 0, 1)
@@ -479,66 +472,66 @@ energy = 3.0
 range_item_cull_mask = 2
 texture = ExtResource("10")
 
-[node name="White" type="PointLight2D" parent="TextureRect/Ship1Lights" unique_id=353661995]
+[node name="White" type="PointLight2D" parent="Sprite2D/Ship1Lights" unique_id=353661995]
 position = Vector2(-13, 1)
 scale = Vector2(0.77, 0.77)
 energy = 0.0
 range_item_cull_mask = 2
 texture = ExtResource("10")
 
-[node name="AnimationPlayer" type="AnimationPlayer" parent="TextureRect/Ship1Lights/White" unique_id=88003046]
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Sprite2D/Ship1Lights/White" unique_id=88003046]
 libraries/ = SubResource("AnimationLibrary_p3fke")
 autoplay = &"Blink"
 
-[node name="WhiteLeft" type="PointLight2D" parent="TextureRect/Ship1Lights" unique_id=1121275477]
+[node name="WhiteLeft" type="PointLight2D" parent="Sprite2D/Ship1Lights" unique_id=1121275477]
 position = Vector2(-33, -45)
 scale = Vector2(0.77, 0.77)
 energy = 0.0
 range_item_cull_mask = 2
 texture = ExtResource("10")
 
-[node name="AnimationPlayer" type="AnimationPlayer" parent="TextureRect/Ship1Lights/WhiteLeft" unique_id=1122466762]
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Sprite2D/Ship1Lights/WhiteLeft" unique_id=1122466762]
 libraries/ = SubResource("AnimationLibrary_4hicg")
 autoplay = &"Double blink"
 
-[node name="WhiteRight" type="PointLight2D" parent="TextureRect/Ship1Lights" unique_id=1272676768]
+[node name="WhiteRight" type="PointLight2D" parent="Sprite2D/Ship1Lights" unique_id=1272676768]
 position = Vector2(-33, 45)
 scale = Vector2(0.77, 0.77)
 energy = 0.0
 range_item_cull_mask = 2
 texture = ExtResource("10")
 
-[node name="AnimationPlayer" type="AnimationPlayer" parent="TextureRect/Ship1Lights/WhiteRight" unique_id=1296997773]
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Sprite2D/Ship1Lights/WhiteRight" unique_id=1296997773]
 libraries/ = SubResource("AnimationLibrary_4hicg")
 autoplay = &"Double blink"
 
-[node name="WhiteRearLeft" type="PointLight2D" parent="TextureRect/Ship1Lights" unique_id=1668284236]
+[node name="WhiteRearLeft" type="PointLight2D" parent="Sprite2D/Ship1Lights" unique_id=1668284236]
 position = Vector2(-49, -25)
 scale = Vector2(0.5, 0.5)
 energy = 0.0
 range_item_cull_mask = 2
 texture = ExtResource("10")
 
-[node name="AnimationPlayer" type="AnimationPlayer" parent="TextureRect/Ship1Lights/WhiteRearLeft" unique_id=481936880]
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Sprite2D/Ship1Lights/WhiteRearLeft" unique_id=481936880]
 libraries/ = SubResource("AnimationLibrary_4y570")
 autoplay = &"Blink"
 
-[node name="WhiteRearRight" type="PointLight2D" parent="TextureRect/Ship1Lights" unique_id=1818155031]
+[node name="WhiteRearRight" type="PointLight2D" parent="Sprite2D/Ship1Lights" unique_id=1818155031]
 position = Vector2(-49, 26)
 scale = Vector2(0.5, 0.5)
 energy = 0.0
 range_item_cull_mask = 2
 texture = ExtResource("10")
 
-[node name="AnimationPlayer" type="AnimationPlayer" parent="TextureRect/Ship1Lights/WhiteRearRight" unique_id=973216828]
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Sprite2D/Ship1Lights/WhiteRearRight" unique_id=973216828]
 libraries/ = SubResource("AnimationLibrary_4y570")
 autoplay = &"Blink"
 
-[node name="Ship2Lights" type="Node2D" parent="TextureRect" unique_id=367182497]
+[node name="Ship2Lights" type="Node2D" parent="Sprite2D" unique_id=367182497]
 visible = false
 position = Vector2(52, 52)
 
-[node name="Red" type="PointLight2D" parent="TextureRect/Ship2Lights" unique_id=380543574]
+[node name="Red" type="PointLight2D" parent="Sprite2D/Ship2Lights" unique_id=380543574]
 position = Vector2(-10, -32)
 scale = Vector2(0.5, 0.5)
 color = Color(1, 0, 0, 1)
@@ -546,7 +539,7 @@ energy = 3.0
 range_item_cull_mask = 2
 texture = ExtResource("10")
 
-[node name="Green" type="PointLight2D" parent="TextureRect/Ship2Lights" unique_id=1387478333]
+[node name="Green" type="PointLight2D" parent="Sprite2D/Ship2Lights" unique_id=1387478333]
 position = Vector2(-11, 32)
 scale = Vector2(0.5, 0.5)
 color = Color(0, 1, 0, 1)
@@ -554,40 +547,40 @@ energy = 3.0
 range_item_cull_mask = 2
 texture = ExtResource("10")
 
-[node name="White" type="PointLight2D" parent="TextureRect/Ship2Lights" unique_id=1528287064]
+[node name="White" type="PointLight2D" parent="Sprite2D/Ship2Lights" unique_id=1528287064]
 position = Vector2(31, 0)
 scale = Vector2(0.25, 0.25)
 energy = 0.0
 range_item_cull_mask = 2
 texture = ExtResource("10")
 
-[node name="AnimationPlayer" type="AnimationPlayer" parent="TextureRect/Ship2Lights/White" unique_id=8391029]
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Sprite2D/Ship2Lights/White" unique_id=8391029]
 libraries/ = SubResource("AnimationLibrary_vlg7s")
 autoplay = &"Blink"
 
-[node name="WhiteLeft" type="PointLight2D" parent="TextureRect/Ship2Lights" unique_id=1893573905]
+[node name="WhiteLeft" type="PointLight2D" parent="Sprite2D/Ship2Lights" unique_id=1893573905]
 position = Vector2(-47, -30)
 scale = Vector2(0.25, 0.25)
 energy = 0.0
 range_item_cull_mask = 2
 texture = ExtResource("10")
 
-[node name="AnimationPlayer" type="AnimationPlayer" parent="TextureRect/Ship2Lights/WhiteLeft" unique_id=874859061]
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Sprite2D/Ship2Lights/WhiteLeft" unique_id=874859061]
 libraries/ = SubResource("AnimationLibrary_itm55")
 autoplay = &"Blink"
 
-[node name="WhiteRight" type="PointLight2D" parent="TextureRect/Ship2Lights" unique_id=399049313]
+[node name="WhiteRight" type="PointLight2D" parent="Sprite2D/Ship2Lights" unique_id=399049313]
 position = Vector2(-47, 31)
 scale = Vector2(0.25, 0.25)
 energy = 0.0
 range_item_cull_mask = 2
 texture = ExtResource("10")
 
-[node name="Ship3Lights" type="Node2D" parent="TextureRect" unique_id=1895054737]
+[node name="Ship3Lights" type="Node2D" parent="Sprite2D" unique_id=1895054737]
 visible = false
 position = Vector2(52, 52)
 
-[node name="Ship4Lights" type="Node2D" parent="TextureRect" unique_id=1065715036]
+[node name="Ship4Lights" type="Node2D" parent="Sprite2D" unique_id=1065715036]
 visible = false
 position = Vector2(52, 52)
 

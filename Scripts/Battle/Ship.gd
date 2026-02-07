@@ -39,6 +39,7 @@ func _ready() -> void:
 	movement_remaining = (agility + agility_buff) * METERS_PER_AGILITY
 	total_movement_base = (agility + agility_buff) * METERS_PER_AGILITY
 	go_through_movement_cost = 30.0
+	$Sprite2D.scale *= 104.0 / $Sprite2D.texture.get_width()
 
 func initialize_stats(data: Dictionary):
 	super(data)
@@ -54,9 +55,9 @@ func initialize_stats(data: Dictionary):
 func turn_on_lights(index: int):
 	for i in 4:
 		if i == index:
-			get_node("TextureRect/Ship%sLights" % (i+1)).show()
+			get_node("Sprite2D/Ship%sLights" % (i+1)).show()
 		else:
-			get_node("TextureRect/Ship%sLights" % (i+1)).hide()
+			get_node("Sprite2D/Ship%sLights" % (i+1)).hide()
 
 var highlighted_targets = []
 
@@ -147,24 +148,24 @@ func move():
 	#
 	#		x <- move_angle_target
 	# (-PI) -------------O------------> (0.0)
-	#		x <- $TextureRect.rotation
+	#		x <- $Sprite2D.rotation
 	#
-	if move_angle_target < $TextureRect.rotation - PI:
-		move_angle_target -= snappedf(move_angle_target - $TextureRect.rotation, 2.0 * PI)
-	elif move_angle_target > $TextureRect.rotation + PI:
-		move_angle_target += snappedf(move_angle_target - $TextureRect.rotation, 2.0 * PI)
+	if move_angle_target < $Sprite2D.rotation - PI:
+		move_angle_target -= snappedf(move_angle_target - $Sprite2D.rotation, 2.0 * PI)
+	elif move_angle_target > $Sprite2D.rotation + PI:
+		move_angle_target += snappedf(move_angle_target - $Sprite2D.rotation, 2.0 * PI)
 	movement_remaining -= move_vector.length() / battle_scene.PIXELS_PER_METER
 	movement_remaining -= move_additional_costs
 	if battle_scene.animations_sped_up:
 		var move_tween = create_tween().set_parallel()
-		move_tween.tween_property($TextureRect, "rotation", move_angle_target, 0.2)
+		move_tween.tween_property($Sprite2D, "rotation", move_angle_target, 0.2)
 		move_tween.tween_property(self, "position", move_target_position, 0.2)
 		move_tween.tween_property(battle_scene.get_node("Selected"), "position", move_target_position + Vector2.UP * 80.0, 0.2)
 		move_tween.tween_callback(cancel_action).set_delay(0.2)
 	else:
-		var rotate_duration = max(0.4, abs((move_angle_target - $TextureRect.rotation) / PI))
+		var rotate_duration = max(0.4, abs((move_angle_target - $Sprite2D.rotation) / PI))
 		var move_tween = create_tween().set_parallel()
-		move_tween.tween_property($TextureRect, "rotation", move_angle_target, rotate_duration).set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_CUBIC)
+		move_tween.tween_property($Sprite2D, "rotation", move_angle_target, rotate_duration).set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_CUBIC)
 		move_tween.tween_property(self, "position", move_target_position, 1.0).set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_CUBIC).set_delay(rotate_duration)
 		move_tween.tween_property(battle_scene.get_node("Selected"), "position", move_target_position + Vector2.UP * 80.0, 1.0).set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_CUBIC).set_delay(rotate_duration)
 		move_tween.tween_callback(cancel_action).set_delay(rotate_duration + 1.0)
@@ -349,7 +350,7 @@ func cancel_action():
 	if is_instance_valid(light_cone):
 		light_cone.queue_free()
 	for pushable_entity in target_btns:
-		create_tween().tween_property(pushable_entity.get_node("TextureRect").material, "shader_parameter/alpha", 1.0, 0.2)
+		create_tween().tween_property(pushable_entity.get_node("Sprite2D").material, "shader_parameter/alpha", 1.0, 0.2)
 		target_btns[pushable_entity].queue_free()
 	game.block_scroll = false
 	target_btns.clear()
@@ -397,14 +398,14 @@ func add_target_buttons_for_push():
 		var push_success_chance = 100.0 * (1.0 - 1.0 / (1.0 + exp((agility_diff - push_difficulty_from_velocity + 9.2) / 5.8)))
 		target_btn.get_node("TextureButton").mouse_entered.connect(game.show_tooltip.bind(tr("PUSH_SUCCESS_CHANCE") + ": %.1f%%" % push_success_chance, {"additional_text":tr("PUSH_SUCCESS_CHANCE_HELP")}))
 		target_btn.get_node("TextureButton").mouse_exited.connect(game.hide_tooltip)
-		create_tween().tween_property(entity.get_node("TextureRect").material, "shader_parameter/alpha", 0.2, 0.2)
+		create_tween().tween_property(entity.get_node("Sprite2D").material, "shader_parameter/alpha", 0.2, 0.2)
 		entity.add_child(target_btn)
 		target_btns[entity] = target_btn
 
 func show_push_strength_panel(entity: BattleEntity):
 	entity_to_push = entity
 	for pushable_entity in target_btns:
-		create_tween().tween_property(pushable_entity.get_node("TextureRect").material, "shader_parameter/alpha", 1.0, 0.2)
+		create_tween().tween_property(pushable_entity.get_node("Sprite2D").material, "shader_parameter/alpha", 1.0, 0.2)
 		target_btns[pushable_entity].queue_free()
 	target_btns.clear()
 	battle_GUI.get_node("PushStrengthPanel/MovementUsedLower").text = "30.0 m"

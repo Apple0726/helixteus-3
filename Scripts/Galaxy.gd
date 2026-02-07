@@ -38,12 +38,12 @@ func _ready():
 			star_btn.material = ShaderMaterial.new()
 			star_btn.material.shader = preload("res://Shaders/Star.gdshader")
 			star_btn.material.set_shader_parameter("time_offset", 10.0 * randf())
-			star_btn.material.set_shader_parameter("color", get_star_modulate(star["class"]))
+			star_btn.material.set_shader_parameter("color", Helper.get_star_modulate(star["class"]))
 			star_btn.material.set_shader_parameter("alpha", 0.0)
 			var galaxy_tween = create_tween()
 			galaxy_tween.tween_property(star_btn.material, "shader_parameter/alpha", 1.0, 0.3)
 		else:
-			star_btn.modulate = get_star_modulate(star["class"])
+			star_btn.modulate = Helper.get_star_modulate(star["class"])
 		add_child(system)
 		system.add_child(star_btn)
 		obj_btns.append(star_btn)
@@ -212,50 +212,3 @@ func change_overlay(overlay_id:int, gradient:Gradient, object:Dictionary = {}):
 
 func _on_Galaxy_tree_exited():
 	queue_free()
-
-const Y9 = Color(0.098, 0.0, 0.0, 1.0)
-const Y0 = Color(0.259, 0.0, 0.0, 1.0)
-const T0 = Color(0.459, 0.0, 0.0, 1.0)
-const L0 = Color(0.741, 0.125, 0.090, 1.0)
-const M0 = Color(1.0, 0.710, 0.424, 1.0)
-const K0 = Color(1.0, 0.855, 0.710, 1.0)
-const G0 = Color(1.0, 0.929, 0.890, 1.0)
-const F0 = Color(0.976, 0.961, 1.0, 1.0)
-const A0 = Color(0.835, 0.878, 1.0, 1.0)
-const B0 = Color(0.635, 0.753, 1.0, 1.0)
-const O0 = Color(0.549, 0.694, 1.0, 1.0)
-const Q0 = Color(0.525, 1.0, 0.459, 1.0)
-const R0 = Color(1.0, 0.392, 1.0, 1.0)
-const Z0 = Color(0.392, 0.118, 1.0, 1.0)
-
-func get_star_modulate (star_class:String):
-	var w = int(star_class[1]) / 10.0#weight for lerps
-	var m:Color
-	match star_class[0]:
-		"Y":
-			m = lerp(Y0, Y9, w)
-		"T":
-			m = lerp(T0, Y0, w)
-		"L":
-			m = lerp(L0, T0, w)
-		"M":
-			m = lerp(M0, L0, w)
-		"K":
-			m = lerp(K0, M0, w)
-		"G":
-			m = lerp(G0, K0, w)
-		"F":
-			m = lerp(F0, G0, w)
-		"A":
-			m = lerp(A0, F0, w)
-		"B":
-			m = lerp(B0, A0, w)
-		"O":
-			m = lerp(O0, B0, w)
-		"Q":
-			m = lerp(Q0, O0, w)
-		"R":
-			m = lerp(R0, Q0, w)
-		"Z":
-			m = lerp(Z0, R0, w)
-	return m

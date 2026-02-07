@@ -1069,51 +1069,36 @@ func clever_round (num:float, sd:int = 3, st:bool = false, _floor:bool = false):
 			return round(num)
 	return snapped(num, pow(10, e - sd + 1))
 
-const Y9 = Color(25, 0, 0, 255) / 255.0
-const Y0 = Color(66, 0, 0, 255) / 255.0
-const T0 = Color(117, 0, 0, 255) / 255.0
-const L0 = Color(189, 32, 23, 255) / 255.0
-const M0 = Color(255, 181, 108, 255) / 255.0
-const K0 = Color(255, 218, 181, 255) / 255.0
-const G0 = Color(255, 237, 227, 255) / 255.0
-const F0 = Color(249, 245, 255, 255) / 255.0
-const A0 = Color(213, 224, 255, 255) / 255.0
-const B0 = Color(162, 192, 255, 255) / 255.0
-const O0 = Color(140, 177, 255, 255) / 255.0
-const Q0 = Color(134, 255, 117, 255) / 255.0
-const R0 = Color(255, 100, 255, 255) / 255.0
-const Z0 = Color(100, 30, 255, 255) / 255.0
-
 func get_star_modulate (star_class:String):
 	var w = int(star_class[1]) / 10.0#weight for lerps
 	var m:Color
 	match star_class[0]:
 		"Y":
-			m = lerp(Y0, Y9, w)
+			m = lerp(Data.star_color.Y0, Data.star_color.Y9, w)
 		"T":
-			m = lerp(T0, Y0, w)
+			m = lerp(Data.star_color.T0, Data.star_color.Y0, w)
 		"L":
-			m = lerp(L0, T0, w)
+			m = lerp(Data.star_color.L0, Data.star_color.T0, w)
 		"M":
-			m = lerp(M0, L0, w)
+			m = lerp(Data.star_color.M0, Data.star_color.L0, w)
 		"K":
-			m = lerp(K0, M0, w)
+			m = lerp(Data.star_color.K0, Data.star_color.M0, w)
 		"G":
-			m = lerp(G0, K0, w)
+			m = lerp(Data.star_color.G0, Data.star_color.K0, w)
 		"F":
-			m = lerp(F0, G0, w)
+			m = lerp(Data.star_color.F0, Data.star_color.G0, w)
 		"A":
-			m = lerp(A0, F0, w)
+			m = lerp(Data.star_color.A0, Data.star_color.F0, w)
 		"B":
-			m = lerp(B0, A0, w)
+			m = lerp(Data.star_color.B0, Data.star_color.A0, w)
 		"O":
-			m = lerp(O0, B0, w)
+			m = lerp(Data.star_color.O0, Data.star_color.B0, w)
 		"Q":
-			m = lerp(Q0, O0, w)
+			m = lerp(Data.star_color.Q0, Data.star_color.O0, w)
 		"R":
-			m = lerp(R0, Q0, w)
+			m = lerp(Data.star_color.R0, Data.star_color.Q0, w)
 		"Z":
-			m = lerp(Z0, R0, w)
+			m = lerp(Data.star_color.Z0, Data.star_color.R0, w)
 	return m
 
 func get_final_value(p_i:Dictionary, dict:Dictionary, path:int, n:int = 1):

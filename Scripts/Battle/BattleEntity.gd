@@ -105,28 +105,28 @@ func _draw() -> void:
 			elif draw_collision_shape == 2:
 				draw_circle(Vector2.ZERO, collision_shape_radius + ship_node.collision_shape_radius + 2.0, Color(1.0, 0.6, 0.0, 0.8), true, -1.0)
 
+func format_buff_tooltip(base, modifier):
+	if step_decimals(base) == 0:
+		base = int(base)
+	else:
+		base = snapped(base, 0.1)
+	if step_decimals(modifier) == 0:
+		modifier = int(modifier)
+	else:
+		modifier = snapped(modifier, 0.1)
+	default_tooltip_text += "\n@i \t%s" % (base)
+	if modifier > 0:
+		default_tooltip_text += " + %s = %s" % [modifier, base + modifier]
+	elif modifier < 0:
+		default_tooltip_text += " - %s = %s" % [abs(modifier), base + modifier]
+	
+	
 func refresh_default_tooltip_text():
 	default_tooltip_text = "@i \t%s / %s" % [HP, total_HP]
-	default_tooltip_text += "\n@i \t%.1f" % (attack)
-	if attack_buff > 0:
-		default_tooltip_text += " + %.1f = %.1f" % [attack_buff, attack + attack_buff]
-	elif attack_buff < 0:
-		default_tooltip_text += " - %.1f = %.1f" % [abs(attack_buff), attack + attack_buff]
-	default_tooltip_text += "\n@i \t%.1f" % (defense)
-	if defense_buff > 0:
-		default_tooltip_text += " + %.1f = %.1f" % [defense_buff, defense + defense_buff]
-	elif defense_buff < 0:
-		default_tooltip_text += " - %.1f = %.1f" % [abs(defense_buff), defense + defense_buff]
-	default_tooltip_text += "\n@i \t%.1f" % (accuracy)
-	if accuracy_buff > 0:
-		default_tooltip_text += " + %.1f = %.1f" % [accuracy_buff, accuracy + accuracy_buff]
-	elif accuracy_buff < 0:
-		default_tooltip_text += " - %.1f = %.1f" % [abs(accuracy_buff), accuracy + accuracy_buff]
-	default_tooltip_text += "\n@i \t%.1f" % (agility)
-	if agility_buff > 0:
-		default_tooltip_text += " + %.1f = %.1f" % [agility_buff, agility + agility_buff]
-	elif agility_buff < 0:
-		default_tooltip_text += " - %.1f = %.1f" % [abs(agility_buff), agility + agility_buff]
+	format_buff_tooltip(attack, attack_buff)
+	format_buff_tooltip(defense, defense_buff)
+	format_buff_tooltip(accuracy, accuracy_buff)
+	format_buff_tooltip(agility, agility_buff)
 	if velocity != Vector2.ZERO:
 		default_tooltip_text += "\nv = " + ("(%.1f, %.1f) m/s\n|v| = %.1f m/s" % [velocity.x, velocity.y, velocity.length()])
 	
@@ -359,22 +359,22 @@ var flash_tween
 
 func update_entity_HP(label_knockback: Vector2 = Vector2.ZERO, healed: bool = false):
 	$Info/HP.value = HP
-	if has_node("TextureRect"):
+	if has_node("Sprite2D"):
 		if healed:
-			$TextureRect.material.set_shader_parameter("flash_color", Color(0.7, 1.0, 0.7))
+			$Sprite2D.material.set_shader_parameter("flash_color", Color(0.7, 1.0, 0.7))
 		else:
-			$TextureRect.material.set_shader_parameter("flash_color", Color.RED)
-		$TextureRect.material.set_shader_parameter("flash", 1.0)
+			$Sprite2D.material.set_shader_parameter("flash_color", Color.RED)
+		$Sprite2D.material.set_shader_parameter("flash", 1.0)
 	if HP <= 0:
 		self.call_deferred("set_monitoring", false)
 		self.call_deferred("set_monitorable", false)
 		entity_defeated_callback(label_knockback)
 	else:
-		if has_node("TextureRect"):
+		if has_node("Sprite2D"):
 			if flash_tween and flash_tween.is_running():
 				flash_tween.kill()
 			flash_tween = create_tween()
-			flash_tween.tween_property($TextureRect.material, "shader_parameter/flash", 0.0, 0.4)
+			flash_tween.tween_property($Sprite2D.material, "shader_parameter/flash", 0.0, 0.4)
 
 func update_info_labels():
 	$Info/StatusEffects.update()
@@ -384,7 +384,7 @@ func entity_defeated_callback(knockback:Vector2 = Vector2.ZERO):
 	var entity_dying_tween = create_tween().set_parallel()
 	entity_dying_tween.tween_property($Info, "modulate:a", 0.0, 1.0)
 	entity_dying_tween.tween_property(self, "position", position + knockback, 2.0)
-	entity_dying_tween.tween_property($TextureRect.material, "shader_parameter/alpha", 0.0, 1.0).set_delay(1.0)
+	entity_dying_tween.tween_property($Sprite2D.material, "shader_parameter/alpha", 0.0, 1.0).set_delay(1.0)
 	entity_dying_tween.tween_callback(queue_free).set_delay(2.0)
 	if battle_scene.initiative_order[battle_scene.whose_turn_is_it_index-1] == self:
 		entity_dying_tween.tween_callback(end_turn).set_delay(2.0)

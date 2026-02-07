@@ -7,5 +7,8 @@ collision_mask = 39
 collide_with_areas = true
 collide_with_bodies = false
 
-[node name="Polygon2D" type="Polygon2D" parent="." unique_id=1790623598]
+[node name="LightPolygon" type="Polygon2D" parent="." unique_id=1790623598]
+color = Color(1, 1, 1, 0.231373)
+
+[node name="InnerLightPolygon" type="Polygon2D" parent="." unique_id=1572442578]
 color = Color(1, 1, 1, 0.231373)

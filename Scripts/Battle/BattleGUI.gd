@@ -50,10 +50,16 @@ func _ready() -> void:
 	$PlanetBG.texture = load("res://Graphics/Planets/%s.png" % p_i.type)
 	var random_depth = randf_range(0.6, 1.1)
 	$PlanetBG.scale *= random_depth * 640.0 / $PlanetBG.texture.get_width()
-	$PlanetLight.scale *= 1.0 / $PlanetBG.scale.x
+	$PlanetLight.scale *= $PlanetBG.scale.x * 0.2
 	$PlanetBG.position.x = randf_range(180.0, 1100.0)
 	$PlanetBG.position.y = randf_range(180.0, 540.0)
-	$PlanetLight.position = -200.0 * random_depth * Vector2.from_angle(p_i.angle) + $PlanetBG.position
+	var average_starlight_color:Color = Color.BLACK
+	for star in game.system_data[game.c_s].stars:
+		average_starlight_color += Helper.get_star_modulate(star.class) * star.luminosity
+	average_starlight_color /= max(average_starlight_color.r, average_starlight_color.g, average_starlight_color.b)
+	average_starlight_color.a = 1.0
+	$PlanetLight.color = average_starlight_color
+	$PlanetLight.position = -350.0 * random_depth * Vector2.from_angle(p_i.angle) + $PlanetBG.position
 	$PlanetLight.energy = clamp(remap(p_i.temperature, -270.0, 600.0, 0.0, 8.0), 0.0, 8.0)
 	randomize()
 
@@ -207,10 +213,6 @@ func reset_GUI():
 		turn_order_hbox.show()
 		turn_order_hbox_tween = create_tween()
 		turn_order_hbox_tween.tween_property(turn_order_hbox, "modulate:a", 1.0, 0.2)
-	for ship in battle_scene.ship_nodes:
-		ship.get_node("TextureRect").mouse_filter = MOUSE_FILTER_PASS
-	for HX in battle_scene.HX_nodes:
-		HX.get_node("TextureRect").mouse_filter = MOUSE_FILTER_PASS
 
 func refresh_GUI():
 	var ship_node = battle_scene.get_selected_ship()
@@ -398,10 +400,6 @@ func _on_move_pressed() -> void:
 	battle_scene.show_and_enlarge_collision_shapes()
 	ship_node.get_node("RayCast2D").enabled = true
 	ship_node.display_move_path = true
-	for ship in battle_scene.ship_nodes:
-		ship.get_node("TextureRect").mouse_filter = MOUSE_FILTER_IGNORE
-	for HX in battle_scene.HX_nodes:
-		HX.get_node("TextureRect").mouse_filter = MOUSE_FILTER_IGNORE
 	game.hide_tooltip()
 
 func fade_out_turn_order_box():
@@ -419,10 +417,6 @@ func _on_push_pressed() -> void:
 	fade_out_main_panel()
 	fade_out_turn_order_box()
 	ship_node.add_target_buttons_for_push()
-	for ship in battle_scene.ship_nodes:
-		ship.get_node("TextureRect").mouse_filter = MOUSE_FILTER_IGNORE
-	for HX in battle_scene.HX_nodes:
-		HX.get_node("TextureRect").mouse_filter = MOUSE_FILTER_IGNORE
 	game.hide_tooltip()
 
 func override_enemy_tooltips():

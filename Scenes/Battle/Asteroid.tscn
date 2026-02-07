@@ -36,16 +36,9 @@ collision_layer = 32
 collision_mask = 63
 script = ExtResource("1_gcgyw")
 
-[node name="TextureRect" type="TextureRect" parent="." unique_id=1776811568]
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=1431296579]
 material = SubResource("ShaderMaterial_fg6fk")
-offset_left = -96.0
-offset_top = -96.0
-offset_right = 96.0
-offset_bottom = 96.0
-pivot_offset = Vector2(96, 96)
 texture = ExtResource("1_8rmj3")
-expand_mode = 1
-stretch_mode = 5
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1779661394]
 shape = SubResource("CircleShape2D_gcgyw")

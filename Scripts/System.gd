@@ -122,10 +122,10 @@ func refresh_planets():
 			planet_glow.modulate = Color(0.6, 0.6, 0.6, 1)
 			var MS = Sprite2D.new()
 			MS.texture = load("res://Graphics/Megastructures/%s_%s.png" % [p_i.MS, p_i.MS_lv])
-			MS.scale *= 0.2
+			MS.scale *= 0.1 * 640.0 / planet_btn.texture_normal.get_width()
 			if p_i.MS == "SE":
-				MS.position.x = -50 * cos(p_i.angle) * scale_mult
-				MS.position.y = -50 * sin(p_i.angle) * scale_mult
+				MS.position.x = -6.25 * 640.0 / planet_btn.texture_normal.get_width() * cos(p_i.angle) * scale_mult
+				MS.position.y = -6.25 * 640.0 / planet_btn.texture_normal.get_width() * sin(p_i.angle) * scale_mult
 				MS.rotation = p_i.angle - PI / 2
 			elif p_i.MS == "MME":
 				MS.scale *= 0.25
