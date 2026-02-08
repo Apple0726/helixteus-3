@@ -221,8 +221,8 @@ func refresh_stars():
 		star.scale.y = max(5.0 * star_info.size / game.STAR_SCALE_DIV, 0.008) * scale_mult
 		star.texture_click_mask = preload("res://Graphics/Misc/StarCM.png")
 		star.position = star_info.pos * scale_mult - Vector2(512, 512) * star.scale.x
-		star.mouse_entered.connect(on_star_over.bind(i))
-		star.mouse_exited.connect(on_btn_out)
+		star.mouse_entered.connect(on_star_over.bind(i, star))
+		star.mouse_exited.connect(on_star_out.bind(star))
 		star.pressed.connect(on_star_pressed.bind(i))
 		star.material = ShaderMaterial.new()
 		star.material.shader = preload("res://Shaders/Star.gdshader")
@@ -253,20 +253,27 @@ func refresh_stars():
 			game.earn_achievement("exploration", "HG_L_star")
 		star.add_to_group("stars_system")
 		if star_info.has("MS"):
-			var MS = Sprite2D.new()
-			if star_info.MS == "MB":
-				MS.texture = preload("res://Graphics/Megastructures/MB_0.png")
-			else:
-				MS.texture = load("res://Graphics/Megastructures/%s_%s.png" % [star_info.MS, star_info.MS_lv])
-			MS.position = Vector2(512, 512)
-			if star_info.MS == "DS":
-				MS.scale *= 0.7
-			star.add_child(MS)
+			add_MS_sprite(star, star_info.MS, star_info.MS_lv)
 			if star_info.MS == "DS":
 				add_rsrc(star_info.pos * scale_mult, Color(0, 0.8, 0, 1), Data.energy_icon, i, true, max(star_info.size / 6.0, 0.5) * scale_mult)
 			elif star_info.MS == "MB":
 				add_rsrc(star_info.pos * scale_mult, Color(0, 0.8, 0, 1), Data.SP_icon, i, true, max(star_info.size / 6.0, 0.5) * scale_mult)
 
+func add_MS_sprite(node, MS:String, MS_lv:int):
+	if node.has_node("MS"):
+		return
+	var MS_sprite = Sprite2D.new()
+	if MS == "MB":
+		MS_sprite.texture = preload("res://Graphics/Megastructures/MB_0.png")
+	else:
+		MS_sprite.texture = load("res://Graphics/Megastructures/%s_%s.png" % [MS, MS_lv])
+	MS_sprite.position = Vector2(512, 512)
+	if MS == "DS":
+		MS_sprite.scale *= 0.7
+	node.add_child(MS_sprite)
+	MS_sprite.name = "MS"
+	return MS_sprite
+	
 var glow_over
 
 func on_planet_over (id:int, l_id:int):
@@ -394,11 +401,13 @@ func show_planet_info(id:int, l_id:int):
 	var building:bool = game.bottom_info_action in ["building-SE", "building-MME"]
 	var has_MS:bool = p_i.has("MS")
 	var vbox = game.get_node("UI/Panel/VBox")
-	if building:
-		var MS:String = game.bottom_info_action.split("-")[1]
-		if not has_MS:
-			call("show_%s_costs" % MS, p_i, true)
-	elif has_MS:
+	if not has_MS:
+		if game.bottom_info_action == "building-SE":
+			show_SE_costs(p_i, true)
+		elif game.bottom_info_action == "building-SE":
+			if p_i.type in [11, 12]:
+				show_SE_costs(p_i, true)
+	else:
 		game.get_node("UI/Panel").visible = true
 		Helper.put_rsrc(vbox, 32, {})
 		var stage:String
@@ -754,7 +763,7 @@ func on_planet_click (id:int, l_id:int):
 
 var star_over_id:int
 
-func on_star_over (id:int):
+func on_star_over (id:int, star_node):
 	var star = stars_info[id]
 	var star_type:int = star.type
 	var star_type_str:String = ""
@@ -780,18 +789,25 @@ func on_star_over (id:int):
 		tr("STAR_MASS") % (Helper.clever_round(star.mass, 3, true) if star.mass < 1000 else Helper.format_num(star.mass)),
 		tr("STAR_LUMINOSITY") % (Helper.clever_round(star.luminosity, 3, true) if star.luminosity < 1000 else Helper.format_num(star.luminosity))
 	]
-	show_MS_construct_info(star)
+	show_MS_construct_info(star, star_node)
 	game.show_tooltip(tooltip)
 
-func show_MS_construct_info(star:Dictionary):
+func on_star_out(node):
+	if node.has_node("MS"):
+		node.get_node("MS").queue_free()
+	on_btn_out()
+
+func show_MS_construct_info(star:Dictionary, star_node):
 	var has_MS:bool = star.has("MS")
 	var vbox = game.get_node("UI/Panel/VBox")
 	if game.bottom_info_action == "building_DS":
 		if not has_MS:
 			show_DS_costs(star, true)
+			add_MS_sprite(star_node, "DS", 0)
 	elif game.bottom_info_action == "building_CBS":
 		if not has_MS:
 			show_CBS_costs(star, true)
+			add_MS_sprite(star_node, "CBS", 0)
 	elif game.bottom_info_action == "building_MB":
 		if not has_MS or not star.MS == "MB":
 			game.get_node("UI/Panel").visible = true
@@ -807,6 +823,7 @@ func show_MS_construct_info(star:Dictionary):
 	elif game.bottom_info_action == "building_PK":
 		if not has_MS:
 			show_PK_costs(star, true)
+			add_MS_sprite(star_node, "PK", 0)
 	elif has_MS:
 		game.get_node("UI/Panel").visible = true
 		Helper.put_rsrc(vbox, 32, {})

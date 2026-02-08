@@ -1,6 +1,7 @@
 extends Control
 
 @onready var game = get_node("/root/Game")
+var selected_MS:String = ""
 
 func _ready():
 	set_process_input(false)
@@ -19,10 +20,10 @@ func refresh():
 		elif stars[i].has("MS"):
 			btn.get_node("Construct").text = tr("UPGRADE") + " (F)"
 		else:
-			btn.get_node("Construct").text = tr("CONSTRUCT") + " (F)"
-		btn.get_node("Construct").visible = game.science_unlocked.has("MAE")
+			btn.get_node("Construct").text = tr("CONSTRUCT")
+		btn.get_node("Construct").visible = game.science_unlocked.has("MAE") and selected_MS == ""
 		btn.get_node("Destroy").visible = game.science_unlocked.has("MAE") and stars[i].has("MS")
-		if not game.science_unlocked.has("MAE"):
+		if not btn.get_node("Construct").visible and not btn.get_node("Destroy").visible:
 			btn.custom_minimum_size.y = 100.0
 		btn.get_node("Construct").disabled = not game.system_data[game.c_s].has("conquered")
 		btn.get_node("Destroy").disabled = not game.system_data[game.c_s].has("conquered")
@@ -36,8 +37,9 @@ func refresh():
 			btn.get_node("Destroy").mouse_exited.connect(game.hide_tooltip)
 		btn.get_node("MS").mouse_entered.connect(game.show_tooltip.bind(tr("STAR_HAS_MS")))
 		btn.get_node("MS").mouse_exited.connect(game.hide_tooltip)
-		btn.mouse_entered.connect(game.view.obj.show_MS_construct_info.bind(stars[i]))
-		btn.mouse_exited.connect(game.view.obj.on_btn_out)
+		var star_node = get_tree().get_nodes_in_group("stars_system")[i]
+		btn.mouse_entered.connect(game.view.obj.show_MS_construct_info.bind(stars[i], star_node))
+		btn.mouse_exited.connect(game.view.obj.on_star_out.bind(star_node))
 		btn.pressed.connect(self.zoom_to_star.bind(stars[i]))
 		btn.pressed.connect(game.view.obj.on_star_pressed.bind(i))
 
@@ -81,3 +83,8 @@ func hide_panel():
 func _on_animation_player_animation_finished(anim_name):
 	if $Panel.modulate.a == 0.0:
 		visible = false
+
+
+func _on_visibility_changed() -> void:
+	if visible:
+		refresh()

@@ -113,9 +113,9 @@ color = Color(0, 0, 0, 0)
 [node name="Panel" type="Panel" parent="." unique_id=763275306]
 modulate = Color(1, 1, 1, 0)
 layout_mode = 1
-offset_top = 120.0
+offset_top = 156.0
 offset_right = 466.0
-offset_bottom = 600.0
+offset_bottom = 564.0
 mouse_filter = 1
 theme = ExtResource("2_2262v")
 
@@ -154,4 +154,5 @@ horizontal_alignment = 1
 libraries/ = SubResource("AnimationLibrary_bp5hg")
 
 [connection signal="tree_exited" from="." to="." method="_on_tree_exited"]
+[connection signal="visibility_changed" from="." to="." method="_on_visibility_changed"]
 [connection signal="animation_finished" from="AnimationPlayer" to="." method="_on_animation_player_animation_finished"]

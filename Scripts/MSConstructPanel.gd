@@ -24,6 +24,8 @@ func refresh():
 		if btn is Button and btn.name != "BuildAll":
 			btn.queue_free()
 	for MS in megastructures:
+		if star_selected != -1 and MS not in ["DS", "CBS", "MB", "PK"]:
+			continue
 		if MS != "MB" or game.science_unlocked.has("MB"):
 			var btn = Button.new()
 			btn.icon_alignment = HORIZONTAL_ALIGNMENT_CENTER
@@ -31,12 +33,20 @@ func refresh():
 			btn.icon = load("res://Graphics/Megastructures/%s_0.png" % MS)
 			btn.custom_minimum_size.y = 138.0
 			$Panel/ScrollContainer/VBoxContainer.add_child(btn)
-			btn.connect("mouse_entered", Callable(self, "on_MS_over").bind(MS))
-			btn.connect("mouse_exited", Callable(game, "hide_tooltip"))
-			btn.connect("pressed", Callable(self, "on_MS_click").bind(MS))
+			btn.mouse_entered.connect(on_MS_over.bind(MS))
+			btn.mouse_exited.connect(game.hide_tooltip)
+			btn.pressed.connect(on_MS_click.bind(MS))
 
 func on_MS_over(MS:String):
 	game.show_tooltip(tr("M_" + MS + "_DESC"))
+	if star_selected != -1:
+		var star:Dictionary = game.system_data[game.c_s].stars[star_selected]
+		if MS == "DS":
+			game.view.obj.show_DS_costs(star, not build_all)
+		elif MS == "CBS":
+			game.view.obj.show_CBS_costs(star, not build_all)
+		elif MS == "PK":
+			game.view.obj.show_PK_costs(star, not build_all)
 
 func on_MS_click(MS:String):
 	if MS == "" or game.c_v != "system":
@@ -50,24 +60,24 @@ func on_MS_click(MS:String):
 	if MS == "DS":
 		if not build_all or build_all and game.science_unlocked.has("DS1") and game.science_unlocked.has("DS2") and game.science_unlocked.has("DS3") and game.science_unlocked.has("DS4"):
 			game.put_bottom_info(tr("CLICK_STAR_TO_CONSTRUCT"), "building_DS", "cancel_building_MS")
-			game.space_HUD._on_stars_pressed()
+			game.space_HUD.show_stars_panel("DS")
 		else:
 			game.popup(tr("NOT_ALL_STAGES_UNLOCKED"), 2.0)
 			return
 	elif MS == "CBS":
 		if not build_all or build_all and game.science_unlocked.has("CBS1") and game.science_unlocked.has("CBS2") and game.science_unlocked.has("CBS3"):
 			game.put_bottom_info(tr("CLICK_STAR_TO_CONSTRUCT"), "building_CBS", "cancel_building_MS")
-			game.space_HUD._on_stars_pressed()
+			game.space_HUD.show_stars_panel("CBS")
 		else:
 			game.popup(tr("NOT_ALL_STAGES_UNLOCKED"), 2.0)
 			return
 	elif MS == "MB":
 		game.put_bottom_info(tr("CLICK_STAR_TO_CONSTRUCT"), "building_MB", "cancel_building_MS")
-		game.space_HUD._on_stars_pressed()
+		game.space_HUD.show_stars_panel("MB")
 	elif MS == "PK":
 		if not build_all or build_all and game.science_unlocked.has("PK1") and game.science_unlocked.has("PK2"):
 			game.put_bottom_info(tr("CLICK_STAR_TO_CONSTRUCT"), "building_PK", "cancel_building_MS")
-			game.space_HUD._on_stars_pressed()
+			game.space_HUD.show_stars_panel("PK")
 		else:
 			game.popup(tr("NOT_ALL_STAGES_UNLOCKED"), 2.0)
 			return

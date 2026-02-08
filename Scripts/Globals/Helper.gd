@@ -43,7 +43,6 @@ func format_text(text_node, texture, path:String, show_available:bool, rsrc_cost
 		if rsrc_cost == 0:
 			num_str = "0"
 		text = "%s%s%s" % [minus, num_str, mass_str]
-		print(text)
 	text_node.text = text
 	text_node["theme_override_colors/font_color"] = color
 
