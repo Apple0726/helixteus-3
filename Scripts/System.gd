@@ -323,11 +323,11 @@ func show_CBS_costs(star:Dictionary, base:bool = false):
 	var p_num:int = len(game.planet_data)
 	await get_tree().process_frame
 	if base and build_all_MS_stages:
-		Helper.add_label(tr("CBS_PATH_3") % [p_num, 100])
+		Helper.add_label(tr("CBS_PATH_3").format({"planetNum": p_num, "percent":100}))
 	elif base:
-		Helper.add_label(tr("CBS_PATH_3") % [ceil(p_num * 0.1), 10])
+		Helper.add_label(tr("CBS_PATH_3").format({"planetNum": int(ceil(p_num * 0.1)), "percent":10}))
 	else:
-		Helper.add_label(tr("CBS_PATH_3") % [ceil(p_num * stage * 0.333), round(stage * 33.3)])
+		Helper.add_label(tr("CBS_PATH_3").format({"planetNum": int(ceil(p_num * stage * 0.333)), "percent":int(round(stage * 33.3))}))
 
 func show_PK_costs(star:Dictionary, base:bool = false):
 	var vbox = game.get_node("UI/Panel/VBox")
@@ -479,6 +479,9 @@ var MS_constr_data:Dictionary = {}
 var current_MS_action = ""
 
 func _input(event):
+	if "building" in game.bottom_info_action and Input.is_action_just_pressed("right_click"):
+		game._on_BottomInfo_close_button_pressed()
+		return
 	if Input.is_action_just_released("F"):
 		if not MS_constr_data.is_empty():
 			if MS_constr_data.has("confirm_repair"):

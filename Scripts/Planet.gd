@@ -128,7 +128,7 @@ func _ready():
 				var hole_sprite = Sprite2D.new()
 				hole_sprite.texture = preload("res://Graphics/Tiles/Hole.png")
 				hole_sprite.position = Vector2(i, j) * 200 + Vector2.ONE * 100
-				add_child(hole_sprite)
+				$Holes.add_child(hole_sprite)
 				obstacle_nodes[Vector2i(i, j)] = hole_sprite
 			if tile.has("aurora"):
 				aurora_tiles.append(id2)

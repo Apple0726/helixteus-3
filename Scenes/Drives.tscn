@@ -197,6 +197,7 @@ offset_right = 88.0
 grow_vertical = 0
 text = "<- Back"
 
+[connection signal="visibility_changed" from="." to="." method="_on_visibility_changed"]
 [connection signal="pressed" from="Panel/Drives/CD" to="." method="_on_ChemicalDrive_pressed"]
 [connection signal="pressed" from="Panel/Drives/ID" to="." method="_on_IonDrive_pressed"]
 [connection signal="value_changed" from="Control/HSlider" to="." method="_on_h_slider_value_changed"]

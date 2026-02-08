@@ -88,6 +88,8 @@ func _on_DriveButton_pressed():
 			var fade_out_tween = create_tween().set_parallel()
 			fade_out_tween.tween_property($Ships, "modulate:a", 0.5, 0.2)
 			fade_out_tween.tween_property($ShipStats, "modulate:a", 0.5, 0.2)
+			for ship in ship_nodes:
+				fade_out_tween.tween_property(ship.get_node("TextureButton").material, "shader_parameter/alpha", 0.5, 0.2)
 			$Drives.visible = true
 			$ShipStats.visible = true
 			$Ships/DriveButton.visible = false
@@ -98,6 +100,8 @@ func hide_drive_panel():
 	var fade_out_tween = create_tween().set_parallel()
 	fade_out_tween.tween_property($Ships, "modulate:a", 1.0, 0.2)
 	fade_out_tween.tween_property($ShipStats, "modulate:a", 1.0, 0.2)
+	for ship in ship_nodes:
+		fade_out_tween.tween_property(ship.get_node("TextureButton").material, "shader_parameter/alpha", 1.0, 0.2)
 	$Ships.visible = true
 	$Drives.visible = false
 	$ShipStats.visible = true

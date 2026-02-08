@@ -135,3 +135,8 @@ func refresh_h_slider():
 
 func _on_back_button_pressed() -> void:
 	emit_signal("panel_closed")
+
+
+func _on_visibility_changed() -> void:
+	if visible:
+		refresh()

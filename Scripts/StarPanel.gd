@@ -30,9 +30,9 @@ func refresh():
 			btn.get_node("Construct").pressed.connect(game.space_HUD.toggle_MS_construct_panel.bind(i))
 			btn.get_node("Destroy").pressed.connect(destroy_MS.bind(i))
 		else:
-			btn.get_node("Construct").mouse_entered.connect(game.show_tooltip.bind(tr("CONQUER_ALL_TO_BUILD_MS")))
+			btn.get_node("Construct").mouse_entered.connect(game.show_tooltip.bind(tr("STAR_MS_ERROR")))
 			btn.get_node("Construct").mouse_exited.connect(game.hide_tooltip)
-			btn.get_node("Destroy").mouse_entered.connect(game.show_tooltip.bind(tr("CONQUER_ALL_TO_BUILD_MS")))
+			btn.get_node("Destroy").mouse_entered.connect(game.show_tooltip.bind(tr("STAR_MS_ERROR")))
 			btn.get_node("Destroy").mouse_exited.connect(game.hide_tooltip)
 		btn.get_node("MS").mouse_entered.connect(game.show_tooltip.bind(tr("STAR_HAS_MS")))
 		btn.get_node("MS").mouse_exited.connect(game.hide_tooltip)

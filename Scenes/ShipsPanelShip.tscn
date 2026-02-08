@@ -1,11 +1,16 @@
 [gd_scene format=3 uid="uid://luee38r6k4vl"]
 
+[ext_resource type="Shader" uid="uid://ca3oaddko7i2g" path="res://Shaders/Highlight.gdshader" id="1_tmh4v"]
 [ext_resource type="Texture2D" uid="uid://koi0aarpqj30" path="res://Graphics/Ships/Ship0.png" id="2_8uj1y"]
-[ext_resource type="Script" uid="uid://ddkbs03pslw6h" path="res://Scripts/Highlightable.gd" id="3_1x1wg"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_358nv"]
 radius = 16.0
 height = 112.0
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_0kdmo"]
+shader = ExtResource("1_tmh4v")
+shader_parameter/alpha = 1.0
+shader_parameter/highlight_strength = 0.0
 
 [node name="Ship" type="RigidBody2D" unique_id=1125180358]
 position = Vector2(320, 88)
@@ -18,13 +23,13 @@ rotation = 1.5708
 shape = SubResource("CapsuleShape2D_358nv")
 
 [node name="TextureButton" type="TextureButton" parent="." unique_id=1692768310]
+material = SubResource("ShaderMaterial_0kdmo")
 offset_left = -60.0
 offset_top = -28.0
 offset_right = 964.0
 offset_bottom = 484.0
 scale = Vector2(0.121, 0.121)
 texture_normal = ExtResource("2_8uj1y")
-script = ExtResource("3_1x1wg")
 
 [connection signal="mouse_entered" from="TextureButton" to="TextureButton" method="_on_mouse_entered"]
 [connection signal="mouse_exited" from="TextureButton" to="TextureButton" method="_on_mouse_exited"]

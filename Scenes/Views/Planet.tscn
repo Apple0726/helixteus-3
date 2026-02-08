@@ -59,6 +59,17 @@ shader_parameter/modulate_color = Color(1, 1, 1, 1)
 shader_parameter/texture_zoom = 1.265
 shader_parameter/texture_offset = Vector2(100, 0)
 
+[sub_resource type="Shader" id="Shader_844bs"]
+code = "shader_type canvas_item;
+
+void fragment() {
+	vec3 orig_color = texture(TEXTURE, UV).rgb;
+	COLOR.rgb = vec3((orig_color.r + orig_color.g + orig_color.b) / 3.0);
+}"
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_q33vf"]
+shader = SubResource("Shader_844bs")
+
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_xv77e"]
 bg_color = Color(0.241156, 0.241156, 0.241156, 1)
 
@@ -112,7 +123,7 @@ navigation_enabled = false
 use_parent_material = true
 
 [node name="Ash" type="TileMapLayer" parent="." unique_id=1764439096]
-use_parent_material = true
+material = SubResource("ShaderMaterial_q33vf")
 
 [node name="BadApple" type="Node2D" parent="." unique_id=1132585540]
 script = ExtResource("7_yxni4")
@@ -380,6 +391,8 @@ texture = ExtResource("12")
 [node name="BuildingShortcutTimer" type="Timer" parent="." unique_id=462995663]
 wait_time = 0.7
 one_shot = true
+
+[node name="Holes" type="Node2D" parent="." unique_id=701968994]
 
 [node name="Buildings" type="Node2D" parent="." unique_id=1312217404]
 
