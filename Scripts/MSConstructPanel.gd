@@ -21,8 +21,7 @@ func _unhandled_input(event):
 
 func refresh():
 	for btn in $Panel/ScrollContainer/VBoxContainer.get_children():
-		if btn is Button and btn.name != "BuildAll":
-			btn.queue_free()
+		btn.free()
 	for MS in megastructures:
 		if star_selected != -1 and MS not in ["DS", "CBS", "MB", "PK"]:
 			continue
@@ -33,8 +32,9 @@ func refresh():
 			btn.icon = load("res://Graphics/Megastructures/%s_0.png" % MS)
 			btn.custom_minimum_size.y = 138.0
 			$Panel/ScrollContainer/VBoxContainer.add_child(btn)
+			btn.name = MS
 			btn.mouse_entered.connect(on_MS_over.bind(MS))
-			btn.mouse_exited.connect(game.hide_tooltip)
+			btn.mouse_exited.connect(on_MS_out)
 			btn.pressed.connect(on_MS_click.bind(MS))
 
 func on_MS_over(MS:String):
@@ -47,6 +47,18 @@ func on_MS_over(MS:String):
 			game.view.obj.show_CBS_costs(star, not build_all)
 		elif MS == "PK":
 			game.view.obj.show_PK_costs(star, not build_all)
+		var star_node = get_tree().get_nodes_in_group("stars_system")[star_selected]
+		if build_all:
+			game.view.obj.add_MS_sprite(star_node, MS, Data.MS_num_stages[MS])
+		else:
+			game.view.obj.add_MS_sprite(star_node, MS, 0)
+
+func on_MS_out():
+	var star_node = get_tree().get_nodes_in_group("stars_system")[star_selected]
+	if star_node.has_node("MS"):
+		star_node.get_node("MS").free()
+	game.get_node("UI/Panel").hide()
+	game.hide_tooltip()
 
 func on_MS_click(MS:String):
 	if MS == "" or game.c_v != "system":
@@ -113,9 +125,10 @@ func _on_tree_exited():
 	game.block_scroll = false
 
 
-func _on_build_all_mouse_entered():
-	game.show_tooltip(tr("BUILD_ALL_AT_ONCE"))
-
-
-func _on_build_all_mouse_exited():
-	game.hide_tooltip()
+func _on_build_all_toggled(toggled_on: bool) -> void:
+	for btn in $Panel/ScrollContainer/VBoxContainer.get_children():
+		if toggled_on:
+			btn.visible = game.science_unlocked.has("{name}{stage}".format({"name":btn.name, "stage":Data.MS_num_stages[btn.name] if toggled_on else 0}))
+		else:
+			btn.show()
+		btn.icon = load("res://Graphics/Megastructures/{name}_{stage}.png".format({"name":btn.name, "stage":Data.MS_num_stages[btn.name] if toggled_on else 0}))

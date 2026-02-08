@@ -2,12 +2,13 @@
 
 [ext_resource type="Script" uid="uid://bod8haq3bx26s" path="res://Scripts/StarPanel.gd" id="1_n5bo0"]
 [ext_resource type="Theme" uid="uid://cp2u1kgj60ic" path="res://Resources/default_theme.tres" id="2_2262v"]
+[ext_resource type="Texture2D" uid="uid://blgh1lvsfpiu8" path="res://Graphics/GUI/Border.png" id="3_i36dw"]
 [ext_resource type="PackedScene" uid="uid://byh1hjd76sl65" path="res://Scenes/StarButton.tscn" id="3_pw7ua"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_seglp"]
-content_margin_left = 20.0
+content_margin_left = 25.0
 content_margin_top = 20.0
-content_margin_right = 20.0
+content_margin_right = 25.0
 content_margin_bottom = 20.0
 
 [sub_resource type="Animation" id="Animation_tg7hu"]
@@ -110,7 +111,7 @@ offset_bottom = 720.0
 mouse_filter = 2
 color = Color(0, 0, 0, 0)
 
-[node name="Panel" type="Panel" parent="." unique_id=763275306]
+[node name="Panel" type="NinePatchRect" parent="." unique_id=223977371]
 modulate = Color(1, 1, 1, 0)
 layout_mode = 1
 offset_top = 156.0
@@ -118,6 +119,11 @@ offset_right = 466.0
 offset_bottom = 564.0
 mouse_filter = 1
 theme = ExtResource("2_2262v")
+texture = ExtResource("3_i36dw")
+patch_margin_left = 15
+patch_margin_top = 11
+patch_margin_right = 15
+patch_margin_bottom = 11
 
 [node name="ScrollContainer" type="ScrollContainer" parent="Panel" unique_id=1596215521]
 layout_mode = 1

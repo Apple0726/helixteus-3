@@ -11,36 +11,43 @@ func refresh():
 		btn.queue_free()
 	var stars:Array = game.system_data[game.c_s].stars
 	for i in len(stars):
+		var star:Dictionary = stars[i]
 		var btn = preload("res://Scenes/StarButton.tscn").instantiate()
-		btn.set_star_info(stars[i].type, stars[i]["class"], stars[i].temperature, stars[i].size, stars[i].mass, stars[i].luminosity)
+		btn.set_star_info(star.type, star["class"], star.temperature, star.size, star.mass, star.luminosity)
 		$Panel/ScrollContainer/VBoxContainer.add_child(btn)
-		btn.get_node("MS").visible = stars[i].has("MS")
-		if stars[i].has("repair_cost"):
-			btn.get_node("Construct").text = tr("REPAIR") + " (F)"
-		elif stars[i].has("MS"):
-			btn.get_node("Construct").text = tr("UPGRADE") + " (F)"
+		btn.get_node("MS").visible = star.has("MS")
+		var construct_btn = btn.get_node("Construct")
+		var destroy_btn = btn.get_node("Destroy")
+		if star.has("repair_cost"):
+			construct_btn.text = tr("REPAIR") + " (F)"
+		elif star.has("MS"):
+			construct_btn.text = tr("UPGRADE") + " (F)"
 		else:
-			btn.get_node("Construct").text = tr("CONSTRUCT")
-		btn.get_node("Construct").visible = game.science_unlocked.has("MAE") and selected_MS == ""
-		btn.get_node("Destroy").visible = game.science_unlocked.has("MAE") and stars[i].has("MS")
-		if not btn.get_node("Construct").visible and not btn.get_node("Destroy").visible:
+			construct_btn.text = tr("CONSTRUCT")
+		construct_btn.visible = game.science_unlocked.has("MAE") and selected_MS == ""
+		destroy_btn.visible = game.science_unlocked.has("MAE") and star.has("MS")
+		if not construct_btn.visible and not destroy_btn.visible:
 			btn.custom_minimum_size.y = 100.0
-		btn.get_node("Construct").disabled = not game.system_data[game.c_s].has("conquered")
-		btn.get_node("Destroy").disabled = not game.system_data[game.c_s].has("conquered")
+		construct_btn.disabled = not game.system_data[game.c_s].has("conquered")
+		destroy_btn.disabled = not game.system_data[game.c_s].has("conquered")
 		if game.system_data[game.c_s].has("conquered"):
-			btn.get_node("Construct").pressed.connect(game.space_HUD.toggle_MS_construct_panel.bind(i))
-			btn.get_node("Destroy").pressed.connect(destroy_MS.bind(i))
+			construct_btn.pressed.connect(game.space_HUD.toggle_MS_construct_panel.bind(i))
+			destroy_btn.pressed.connect(destroy_MS.bind(i))
+			if star.MS_lv >= Data.MS_num_stages[star.MS] or not game.science_unlocked.has("{name}{stage}".format({"name":star.MS, "stage":star.MS_lv + 1})):
+				construct_btn.disabled = true
+				construct_btn.mouse_entered.connect(game.show_tooltip.bind(tr("NO_RESEARCH_TO_UPGRADE_MS")))
+				construct_btn.mouse_exited.connect(game.hide_tooltip)
 		else:
-			btn.get_node("Construct").mouse_entered.connect(game.show_tooltip.bind(tr("STAR_MS_ERROR")))
-			btn.get_node("Construct").mouse_exited.connect(game.hide_tooltip)
-			btn.get_node("Destroy").mouse_entered.connect(game.show_tooltip.bind(tr("STAR_MS_ERROR")))
-			btn.get_node("Destroy").mouse_exited.connect(game.hide_tooltip)
+			construct_btn.mouse_entered.connect(game.show_tooltip.bind(tr("STAR_MS_ERROR")))
+			construct_btn.mouse_exited.connect(game.hide_tooltip)
+			destroy_btn.mouse_entered.connect(game.show_tooltip.bind(tr("STAR_MS_ERROR")))
+			destroy_btn.mouse_exited.connect(game.hide_tooltip)
 		btn.get_node("MS").mouse_entered.connect(game.show_tooltip.bind(tr("STAR_HAS_MS")))
 		btn.get_node("MS").mouse_exited.connect(game.hide_tooltip)
 		var star_node = get_tree().get_nodes_in_group("stars_system")[i]
-		btn.mouse_entered.connect(game.view.obj.show_MS_construct_info.bind(stars[i], star_node))
+		btn.mouse_entered.connect(game.view.obj.show_MS_construct_info.bind(star, star_node))
 		btn.mouse_exited.connect(game.view.obj.on_star_out.bind(star_node))
-		btn.pressed.connect(self.zoom_to_star.bind(stars[i]))
+		btn.pressed.connect(zoom_to_star.bind(star))
 		btn.pressed.connect(game.view.obj.on_star_pressed.bind(i))
 
 

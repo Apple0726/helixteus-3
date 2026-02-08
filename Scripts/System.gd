@@ -438,7 +438,6 @@ func show_planet_info(id:int, l_id:int):
 				MS_constr_data.obj = p_i
 				MS_constr_data.confirm_upgrade = false
 				Helper.add_label(tr("PRESS_F_TO_CONTINUE_CONSTR"))
-		Helper.add_label(tr("PRESS_X_TO_DESTROY"))
 		MS_constr_data.destroyable = true
 	if Helper.ships_on_planet(l_id) and not p_i.has("conquered"):
 		game.show_tooltip(tr("CLICK_TO_BATTLE"))
@@ -793,7 +792,7 @@ func on_star_over (id:int, star_node):
 	game.show_tooltip(tooltip)
 
 func on_star_out(node):
-	if node.has_node("MS"):
+	if is_instance_valid(node) and node.has_node("MS"):
 		node.get_node("MS").queue_free()
 	on_btn_out()
 
@@ -865,9 +864,9 @@ func show_MS_construct_info(star:Dictionary, star_node):
 				var p_num:int = len(game.planet_data)
 				Helper.add_label(tr("CBD_PATH_1") % Helper.clever_round(1 + log(star.luminosity + 1)))
 				if star.MS_lv == 0:
-					Helper.add_label(tr("CBS_PATH_3") % [ceil(p_num * 0.1), 10])
+					Helper.add_label(tr("CBS_PATH_3").format({"planetNum": int(ceil(p_num * 0.1)), "percent":10}))
 				else:
-					Helper.add_label(tr("CBS_PATH_3") % [ceil(p_num * star.MS_lv * 0.333), round(star.MS_lv * 33.3)])
+					Helper.add_label(tr("CBS_PATH_3").format({"planetNum": int(ceil(p_num * star.MS_lv * 0.333)), "percent":int(round(star.MS_lv * 33.3))}))
 			if star.MS_lv < Data.MS_num_stages[star.MS]:
 				if star.MS == "DS" and game.science_unlocked.has("DS%s" % (star.MS_lv + 1)):
 					continue_upg(star)
@@ -876,7 +875,6 @@ func show_MS_construct_info(star:Dictionary, star_node):
 				elif star.MS == "CBS" and game.science_unlocked.has("CBS%s" % (star.MS_lv + 1)):
 					continue_upg(star)
 		if game.system_data[game.c_s].has("conquered"):
-			Helper.add_label(tr("PRESS_X_TO_DESTROY"))
 			MS_constr_data.destroyable = true
 
 func continue_upg(obj:Dictionary):

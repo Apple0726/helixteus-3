@@ -3,23 +3,11 @@
 [ext_resource type="Texture2D" uid="uid://ds6nct7g63284" path="res://Graphics/Icons/Arrow.png" id="1"]
 [ext_resource type="PackedScene" uid="uid://bdp561gr6s0b8" path="res://Scenes/Resource.tscn" id="2"]
 [ext_resource type="Script" uid="uid://dd27ovnjjjddh" path="res://Scripts/BuySellPanel.gd" id="3"]
+[ext_resource type="Texture2D" uid="uid://blgh1lvsfpiu8" path="res://Graphics/GUI/Border.png" id="3_myvxs"]
 [ext_resource type="Theme" uid="uid://cp2u1kgj60ic" path="res://Resources/default_theme.tres" id="4"]
 [ext_resource type="Texture2D" uid="uid://bnlcxaqltwepa" path="res://Graphics/Buttons/Switch.png" id="5"]
-[ext_resource type="Texture2D" uid="uid://dcvnyb0mloli2" path="res://Graphics/GUI/Panel.png" id="6_i8c0q"]
 [ext_resource type="Texture2D" uid="uid://baowebna7hgr5" path="res://Graphics/GUI/CloseButtonNormal.png" id="7_myvxs"]
 [ext_resource type="Texture2D" uid="uid://c1vwn7p5uxu1r" path="res://Graphics/GUI/CloseButtonHover.png" id="8_j4nfo"]
-
-[sub_resource type="SystemFont" id="SystemFont_l1il0"]
-font_names = PackedStringArray("Arial")
-subpixel_positioning = 0
-multichannel_signed_distance_field = true
-
-[sub_resource type="LabelSettings" id="LabelSettings_myvxs"]
-font = SubResource("SystemFont_l1il0")
-font_size = 20
-shadow_size = 2
-shadow_color = Color(0, 0, 0, 0.372549)
-shadow_offset = Vector2(2, 2)
 
 [sub_resource type="Animation" id="2"]
 resource_name = "Grow"
@@ -119,10 +107,11 @@ metadata/_edit_lock_ = true
 [node name="GUI" type="NinePatchRect" parent="." unique_id=975794284]
 layout_mode = 0
 offset_left = 384.0
-offset_top = 224.0
+offset_top = 256.0
 offset_right = 896.0
-offset_bottom = 496.0
-texture = ExtResource("6_i8c0q")
+offset_bottom = 464.0
+mouse_filter = 1
+texture = ExtResource("3_myvxs")
 patch_margin_left = 408
 patch_margin_top = 80
 patch_margin_right = 80
@@ -132,33 +121,35 @@ metadata/_edit_horizontal_guides_ = [596.0]
 
 [node name="CloseButton" type="TextureButton" parent="." unique_id=1643590698]
 layout_mode = 0
-offset_left = 830.0
-offset_top = 240.0
+offset_left = 852.0
+offset_top = 268.0
 offset_right = 879.0
-offset_bottom = 289.0
+offset_bottom = 295.0
 texture_normal = ExtResource("7_myvxs")
 texture_hover = ExtResource("8_j4nfo")
+ignore_texture_size = true
+stretch_mode = 5
 
 [node name="Label" type="Label" parent="." unique_id=1102026262]
 layout_mode = 1
-offset_left = 424.0
-offset_top = 248.0
-offset_right = 740.0
-offset_bottom = 282.0
+offset_left = 448.0
+offset_top = 272.0
+offset_right = 832.0
+offset_bottom = 295.0
 text = "Buy or sell"
-label_settings = SubResource("LabelSettings_myvxs")
+horizontal_alignment = 1
 
 [node name="Arrow" type="Sprite2D" parent="." unique_id=1723570898]
-position = Vector2(640, 380)
+position = Vector2(640, 376)
 scale = Vector2(0.8, 0.8)
 texture = ExtResource("1")
 
 [node name="HSlider" type="HSlider" parent="." unique_id=2090181157]
 layout_mode = 0
 offset_left = 480.0
-offset_top = 312.0
+offset_top = 308.0
 offset_right = 800.0
-offset_bottom = 360.0
+offset_bottom = 356.0
 ticks_on_borders = true
 
 [node name="Resource" parent="." unique_id=995192046 instance=ExtResource("2")]
@@ -167,9 +158,9 @@ anchors_preset = 0
 anchor_right = 0.0
 anchor_bottom = 0.0
 offset_left = 468.0
-offset_top = 364.0
+offset_top = 360.0
 offset_right = 512.0
-offset_bottom = 388.0
+offset_bottom = 384.0
 
 [node name="Resource2" parent="." unique_id=2142329803 instance=ExtResource("2")]
 layout_mode = 0
@@ -177,24 +168,24 @@ anchors_preset = 0
 anchor_right = 0.0
 anchor_bottom = 0.0
 offset_left = 720.0
-offset_top = 364.0
+offset_top = 360.0
 offset_right = 764.0
-offset_bottom = 388.0
+offset_bottom = 384.0
 
 [node name="Buy" type="Button" parent="." unique_id=2109531059]
 layout_mode = 0
-offset_left = 768.0
-offset_top = 432.0
-offset_right = 872.0
-offset_bottom = 472.0
+offset_left = 772.0
+offset_top = 415.0
+offset_right = 876.0
+offset_bottom = 448.0
 text = "BUY"
 
 [node name="TextureButton" type="TextureButton" parent="." unique_id=245353023]
 layout_mode = 0
 offset_left = 624.0
-offset_top = 416.0
+offset_top = 412.0
 offset_right = 656.0
-offset_bottom = 448.0
+offset_bottom = 444.0
 rotation = 3.14159
 pivot_offset = Vector2(16, 16)
 texture_normal = ExtResource("5")
