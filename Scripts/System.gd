@@ -120,18 +120,11 @@ func refresh_planets():
 		dimensions = v.length()
 		if p_i.has("MS"):
 			planet_glow.modulate = Color(0.6, 0.6, 0.6, 1)
-			var MS = Sprite2D.new()
-			MS.texture = load("res://Graphics/Megastructures/%s_%s.png" % [p_i.MS, p_i.MS_lv])
-			MS.scale *= 0.1 * 640.0 / planet_btn.texture_normal.get_width()
+			var MS_sprite = add_MS_sprite(planet, p_i)
 			if p_i.MS == "SE":
-				MS.position.x = -6.25 * 640.0 / planet_btn.texture_normal.get_width() * cos(p_i.angle) * scale_mult
-				MS.position.y = -6.25 * 640.0 / planet_btn.texture_normal.get_width() * sin(p_i.angle) * scale_mult
-				MS.rotation = p_i.angle - PI / 2
-			elif p_i.MS == "MME":
-				MS.scale *= 0.25
-				add_rsrc(v, Color(0, 0.5, 0.9, 1), Data.minerals_icon, p_i.l_id, false, sc)
-			MS.scale *= scale_mult
-			planet.add_child(MS)
+				MS_sprite.position.x = -6.25 * 640.0 / planet_btn.texture_normal.get_width() * cos(p_i.angle) * scale_mult
+				MS_sprite.position.y = -6.25 * 640.0 / planet_btn.texture_normal.get_width() * sin(p_i.angle) * scale_mult
+			add_rsrc(v, Color(0, 0.5, 0.9, 1), Data.minerals_icon, p_i.l_id, false, sc)
 		if p_i.has("tile_num") and p_i.bldg.has("name"):
 			planet.add_child(Helper.add_lv_boxes(p_i, Vector2.ZERO, sc))
 			match p_i.bldg.name:
@@ -222,7 +215,7 @@ func refresh_stars():
 		star.texture_click_mask = preload("res://Graphics/Misc/StarCM.png")
 		star.position = star_info.pos * scale_mult - Vector2(512, 512) * star.scale.x
 		star.mouse_entered.connect(on_star_over.bind(i, star))
-		star.mouse_exited.connect(on_star_out.bind(star))
+		star.mouse_exited.connect(on_star_out.bind(i, star))
 		star.pressed.connect(on_star_pressed.bind(i))
 		star.material = ShaderMaterial.new()
 		star.material.shader = preload("res://Shaders/Star.gdshader")
@@ -253,23 +246,28 @@ func refresh_stars():
 			game.earn_achievement("exploration", "HG_L_star")
 		star.add_to_group("stars_system")
 		if star_info.has("MS"):
-			add_MS_sprite(star, star_info.MS, star_info.MS_lv)
+			var MS_sprite = add_MS_sprite(star, star_info)
+			MS_sprite.position = Vector2.ONE * 512.0
 			if star_info.MS == "DS":
 				add_rsrc(star_info.pos * scale_mult, Color(0, 0.8, 0, 1), Data.energy_icon, i, true, max(star_info.size / 6.0, 0.5) * scale_mult)
 			elif star_info.MS == "MB":
 				add_rsrc(star_info.pos * scale_mult, Color(0, 0.8, 0, 1), Data.SP_icon, i, true, max(star_info.size / 6.0, 0.5) * scale_mult)
 
-func add_MS_sprite(node, MS:String, MS_lv:int):
+func add_MS_sprite(node, obj:Dictionary):
 	if node.has_node("MS"):
 		return
 	var MS_sprite = Sprite2D.new()
-	if MS == "MB":
+	if obj.MS == "MB":
 		MS_sprite.texture = preload("res://Graphics/Megastructures/MB_0.png")
 	else:
-		MS_sprite.texture = load("res://Graphics/Megastructures/%s_%s.png" % [MS, MS_lv])
-	MS_sprite.position = Vector2(512, 512)
-	if MS == "DS":
+		MS_sprite.texture = load("res://Graphics/Megastructures/%s_%s.png" % [obj.MS, obj.MS_lv])
+	if obj.MS == "SE":
+		MS_sprite.rotation = obj.angle - PI / 2
+	elif obj.MS == "MME":
+		MS_sprite.scale *= 0.25
+	elif obj.MS == "DS":
 		MS_sprite.scale *= 0.7
+	#MS_sprite.scale *= scale_mult
 	node.add_child(MS_sprite)
 	MS_sprite.name = "MS"
 	return MS_sprite
@@ -404,9 +402,9 @@ func show_planet_info(id:int, l_id:int):
 	if not has_MS:
 		if game.bottom_info_action == "building-SE":
 			show_SE_costs(p_i, true)
-		elif game.bottom_info_action == "building-SE":
+		elif game.bottom_info_action == "building-MME":
 			if p_i.type in [11, 12]:
-				show_SE_costs(p_i, true)
+				show_MME_costs(p_i, true)
 	else:
 		game.get_node("UI/Panel").visible = true
 		Helper.put_rsrc(vbox, 32, {})
@@ -447,6 +445,7 @@ func show_planet_info(id:int, l_id:int):
 		var additional_tooltip = ""
 		var tile_data:Array = tile_datas[p_i.l_id]
 		var bldgs:Dictionary = {}
+		var ancient_bldgs:Dictionary = {}
 		if p_i.has("tile_num"):
 			Helper.add_to_dict(bldgs, p_i.bldg.name, p_i.tile_num)
 			if p_i.bldg.name in [Building.BORING_MACHINE, Building.GREENHOUSE, Building.ATOM_MANIPULATOR, Building.SUBATOMIC_PARTICLE_REACTOR]:
@@ -460,7 +459,21 @@ func show_planet_info(id:int, l_id:int):
 			var temp_color:String = T_gradient.sample(inverse_lerp(0, 500, p_i.temperature)).to_html(false)
 			var P_gradient:Gradient = preload("res://Resources/IntensityGradient.tres")
 			var pressure_color:String = P_gradient.sample(inverse_lerp(1, 150, p_i.pressure)).to_html(false)
-			tooltip = "%s\n%s: %s km (%sx%s)\n%s: %s AU\n%s: [color=#%s]%s °C (%s K)[/color]\n%s: [color=#%s]%s bar[/color]" % [p_i.name, tr("DIAMETER"), Helper.format_num(round(p_i.size), false, 9), wid, wid, tr("DISTANCE_FROM_STAR"), Helper.format_num(p_i.distance / 569.25, true), tr("SURFACE_TEMPERATURE"), temp_color, Helper.clever_round(p_i.temperature - 273, 4), Helper.clever_round(p_i.temperature, 4), tr("ATMOSPHERE_PRESSURE"), pressure_color, Helper.clever_round(p_i.pressure, 4)]
+			tooltip = "{planetName}\n{diameterText}: {diameter} km {dims}\n{distFromStarText}: {distFromStar} AU\n{tempText}: [color=#{tempColor}]{tempC} °C ({tempK} K)[/color]\n{pressureText}: [color=#{pressureColor}]{pressure} bar[/color]".format({
+				"planetName": p_i.name,
+				"diameterText": tr("DIAMETER"),
+				"diameter": Helper.format_num(round(p_i.size), false, 9),
+				"dims": "" if p_i.type in [11, 12] else "({n}x{n})".format({"n":wid}),
+				"distFromStarText": tr("DISTANCE_FROM_STAR"),
+				"distFromStar": Helper.format_num(p_i.distance / 569.25, true),
+				"tempText": tr("SURFACE_TEMPERATURE"),
+				"tempColor": temp_color,
+				"tempC": Helper.clever_round(p_i.temperature - 273, 4),
+				"tempK": Helper.clever_round(p_i.temperature, 4),
+				"pressureText": tr("ATMOSPHERE_PRESSURE"),
+				"pressureColor": pressure_color,
+				"pressure": Helper.clever_round(p_i.pressure, 4),
+			})
 			additional_tooltip = tr("CLICK_TO_SEND_SHIPS")
 			if p_i.has("conquered"):
 				additional_tooltip = tr("CTRL_CLICK_TO_SEND_SHIPS")
@@ -469,18 +482,26 @@ func show_planet_info(id:int, l_id:int):
 			if game.help.has("planet_details"):
 				additional_tooltip += "\n%s" % [tr("MORE_DETAILS")]
 			for tile in tile_data:
-				if tile and tile.has("bldg") and tile.bldg.has("name"):
-					Helper.add_to_dict(bldgs, tile.bldg.name, 1)
+				if tile:
+					if tile.has("bldg") and tile.bldg.has("name"):
+						Helper.add_to_dict(bldgs, tile.bldg.name, 1)
+					if tile.has("ancient_bldg") and tile.ancient_bldg.has("name"):
+						Helper.add_to_dict(ancient_bldgs, tile.ancient_bldg.name, 1)
 		if not bldgs.is_empty():
 			game.space_HUD.clear_bldg_info()
 			var bldg_info_node = game.space_HUD.get_node("HBoxContainer/BldgInfo")
 			for bldg in bldgs:
 				var bldg_count = preload("res://Scenes/EntityCount.tscn").instantiate()
-				#bldg_count.get_node("Texture2D").mouse_entered.connect(on_entity_icon_over.bind(tr("%s_NAME" % Building.names[bldg].to_upper())))
-				#bldg_count.get_node("Texture2D").mouse_exited.connect(on_entity_icon_out)
 				bldg_info_node.add_child(bldg_count)
 				bldg_count.get_node("Texture2D").texture = game.bldg_textures[bldg]
 				bldg_count.get_node("Label").text = "x %s" % Helper.format_num(bldgs[bldg])
+		if not ancient_bldgs.is_empty():
+			var ancient_bldg_info_node = game.space_HUD.get_node("HBoxContainer/AncientBldgInfo")
+			for ancient_bldg in ancient_bldgs:
+				var ancient_bldg_count = preload("res://Scenes/EntityCount.tscn").instantiate()
+				ancient_bldg_info_node.add_child(ancient_bldg_count)
+				ancient_bldg_count.get_node("Texture2D").texture = game.ancient_bldg_textures[ancient_bldg]
+				ancient_bldg_count.get_node("Label").text = "x %s" % Helper.format_num(ancient_bldgs[ancient_bldg])
 		game.show_tooltip(tooltip, {"additional_text":additional_tooltip, "additional_text_delay":1.5, "imgs": Helper.flatten(icons)})
 
 var MS_constr_data:Dictionary = {}
@@ -791,9 +812,9 @@ func on_star_over (id:int, star_node):
 	show_MS_construct_info(star, star_node)
 	game.show_tooltip(tooltip)
 
-func on_star_out(node):
-	if is_instance_valid(node) and node.has_node("MS"):
-		node.get_node("MS").queue_free()
+func on_star_out(id:int, star_node):
+	if is_instance_valid(star_node) and star_node.has_node("MS") and not stars_info[id].has("MS"):
+		star_node.get_node("MS").queue_free()
 	on_btn_out()
 
 func show_MS_construct_info(star:Dictionary, star_node):
@@ -802,11 +823,11 @@ func show_MS_construct_info(star:Dictionary, star_node):
 	if game.bottom_info_action == "building_DS":
 		if not has_MS:
 			show_DS_costs(star, true)
-			add_MS_sprite(star_node, "DS", 0)
+			add_MS_sprite(star_node, {"MS":"DS", "MS_lv":0})
 	elif game.bottom_info_action == "building_CBS":
 		if not has_MS:
 			show_CBS_costs(star, true)
-			add_MS_sprite(star_node, "CBS", 0)
+			add_MS_sprite(star_node, {"MS":"CBS", "MS_lv":0})
 	elif game.bottom_info_action == "building_MB":
 		if not has_MS or not star.MS == "MB":
 			game.get_node("UI/Panel").visible = true
@@ -822,7 +843,7 @@ func show_MS_construct_info(star:Dictionary, star_node):
 	elif game.bottom_info_action == "building_PK":
 		if not has_MS:
 			show_PK_costs(star, true)
-			add_MS_sprite(star_node, "PK", 0)
+			add_MS_sprite(star_node, {"MS":"PK", "MS_lv":0})
 	elif has_MS:
 		game.get_node("UI/Panel").visible = true
 		Helper.put_rsrc(vbox, 32, {})

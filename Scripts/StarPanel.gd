@@ -33,7 +33,7 @@ func refresh():
 		if game.system_data[game.c_s].has("conquered"):
 			construct_btn.pressed.connect(game.space_HUD.toggle_MS_construct_panel.bind(i))
 			destroy_btn.pressed.connect(destroy_MS.bind(i))
-			if star.MS_lv >= Data.MS_num_stages[star.MS] or not game.science_unlocked.has("{name}{stage}".format({"name":star.MS, "stage":star.MS_lv + 1})):
+			if star.has("MS_lv") and (star.MS_lv >= Data.MS_num_stages[star.MS] or not game.science_unlocked.has("{name}{stage}".format({"name":star.MS, "stage":star.MS_lv + 1}))):
 				construct_btn.disabled = true
 				construct_btn.mouse_entered.connect(game.show_tooltip.bind(tr("NO_RESEARCH_TO_UPGRADE_MS")))
 				construct_btn.mouse_exited.connect(game.hide_tooltip)
@@ -46,7 +46,7 @@ func refresh():
 		btn.get_node("MS").mouse_exited.connect(game.hide_tooltip)
 		var star_node = get_tree().get_nodes_in_group("stars_system")[i]
 		btn.mouse_entered.connect(game.view.obj.show_MS_construct_info.bind(star, star_node))
-		btn.mouse_exited.connect(game.view.obj.on_star_out.bind(star_node))
+		btn.mouse_exited.connect(game.view.obj.on_star_out.bind(i, star_node))
 		btn.pressed.connect(zoom_to_star.bind(star))
 		btn.pressed.connect(game.view.obj.on_star_pressed.bind(i))
 

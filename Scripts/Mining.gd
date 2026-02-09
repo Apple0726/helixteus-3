@@ -117,16 +117,18 @@ func update_info(first_time:bool = false):
 		upper_depth = floor(p_i.core_start_depth / 1000.0)
 		lower_depth = floor(p_i.size / 2.0)
 		unit = "km"
-	$LayerInfo/Upper.text = "%s %s" % [upper_depth, unit]
-	$LayerInfo/Lower.text = "%s %s" % [lower_depth, unit]
 	$LayerInfo/Layer.text = "[center]%s: %s %s" % [tr("LAYER"), tr(layer.to_upper()), "[img]Graphics/Icons/help.png[/img]"]
 	$LayerInfo/Layer.help_text = layer.to_upper() + "_DESC"
 	if unit == "m":
 		$LayerInfo/Depth.position.y = remap(tile.depth, upper_depth, lower_depth, 172, 628)
-		$LayerInfo/Depth/Label.text = "%s %s" % [tile.depth, unit]
+		$LayerInfo/Depth/Label.text = "%d %s" % [tile.depth, unit]
+		$LayerInfo/Upper.text = "%d %s" % [upper_depth, unit]
+		$LayerInfo/Lower.text = "%d %s" % [lower_depth, unit]
 	else:
 		$LayerInfo/Depth.position.y = remap(floor(tile.depth / 1000.0), upper_depth, lower_depth, 172, 628)
 		$LayerInfo/Depth/Label.text = "%s %s" % [floor(tile.depth / 1000.0), unit]
+		$LayerInfo/Upper.text = "%.1f %s" % [upper_depth, unit]
+		$LayerInfo/Lower.text = "%.1f %s" % [lower_depth, unit]
 	$Tile/SquareBar.set_progress(progress)
 	$Tile/Cracks.frame = min(floor(progress / 20), 4)
 

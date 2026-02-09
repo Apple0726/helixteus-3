@@ -113,5 +113,7 @@ func _on_stars_pressed():
 func clear_bldg_info():
 	for info in $HBoxContainer/BldgInfo.get_children():
 		info.queue_free()
+	for info in $HBoxContainer/AncientBldgInfo.get_children():
+		info.queue_free()
 	for info in $HBoxContainer/MSInfo.get_children():
 		info.queue_free()
