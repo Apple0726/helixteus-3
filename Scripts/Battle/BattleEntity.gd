@@ -309,7 +309,7 @@ func damage_entity(weapon_data: Dictionary):
 		else:
 			damage_multiplier = 1.0 / (1.0 - 0.125 * attack_defense_difference)
 		var actual_damage:int = max(1, weapon_data.damage * damage_multiplier)
-		var crit_chance = weapon_data.get("crit_hit_chance", 0.02) * weapon_data.get("crit_hit_mult", 1.0) * (10.0 if status_effects[Battle.StatusEffect.EXPOSED] else 1.0)
+		var crit_chance = weapon_data.get("crit_hit_chance", 0.03) * weapon_data.get("crit_hit_mult", 1.0) * (10.0 if status_effects[Battle.StatusEffect.EXPOSED] else 1.0)
 		var critical = randf() < crit_chance
 		if critical:
 			actual_damage *= 2
@@ -383,10 +383,10 @@ func update_info_labels():
 
 func entity_defeated_callback(knockback:Vector2 = Vector2.ZERO):
 	var entity_dying_tween = create_tween().set_parallel()
-	entity_dying_tween.tween_property($Info, "modulate:a", 0.0, 1.0)
-	entity_dying_tween.tween_property(self, "position", position + knockback, 2.0)
-	entity_dying_tween.tween_property($Sprite2D.material, "shader_parameter/alpha", 0.0, 1.0).set_delay(1.0)
-	entity_dying_tween.tween_callback(queue_free).set_delay(2.0)
+	entity_dying_tween.tween_property($Info, "modulate:a", 0.0, 0.75)
+	entity_dying_tween.tween_property(self, "position", position + knockback, 1.5)
+	entity_dying_tween.tween_property($Sprite2D.material, "shader_parameter/alpha", 0.0, 1.0).set_delay(0.75)
+	entity_dying_tween.tween_callback(queue_free).set_delay(1.5)
 	if battle_scene.initiative_order[battle_scene.whose_turn_is_it_index-1] == self:
 		entity_dying_tween.tween_callback(end_turn).set_delay(2.0)
 	entity_dying_tween.set_speed_scale(5.0 if battle_scene.animations_sped_up else 1.0)

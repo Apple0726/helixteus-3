@@ -55,7 +55,7 @@ func on_MS_over(MS:String):
 
 func on_MS_out():
 	var star_node = get_tree().get_nodes_in_group("stars_system")[star_selected]
-	if star_node.has_node("MS"):
+	if star_node.has_node("MS") and not game.system_data[game.c_s].stars[star_selected].has("MS"):
 		star_node.get_node("MS").free()
 	game.get_node("UI/Panel").hide()
 	game.hide_tooltip()

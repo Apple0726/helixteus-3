@@ -247,7 +247,7 @@ func refresh_stars():
 		star.add_to_group("stars_system")
 		if star_info.has("MS"):
 			var MS_sprite = add_MS_sprite(star, star_info)
-			MS_sprite.position = Vector2.ONE * 512.0
+			MS_sprite.position = Vector2.ONE * MS_sprite.texture.get_width() * 2.0
 			if star_info.MS == "DS":
 				add_rsrc(star_info.pos * scale_mult, Color(0, 0.8, 0, 1), Data.energy_icon, i, true, max(star_info.size / 6.0, 0.5) * scale_mult)
 			elif star_info.MS == "MB":
@@ -263,8 +263,9 @@ func add_MS_sprite(node, obj:Dictionary):
 		MS_sprite.texture = load("res://Graphics/Megastructures/%s_%s.png" % [obj.MS, obj.MS_lv])
 	if obj.MS == "SE":
 		MS_sprite.rotation = obj.angle - PI / 2
+		MS_sprite.scale *= 0.0125 * 1024.0 / MS_sprite.texture.get_height()
 	elif obj.MS == "MME":
-		MS_sprite.scale *= 0.25
+		MS_sprite.scale *= 0.0125 * 1024.0 / MS_sprite.texture.get_height()
 	elif obj.MS == "DS":
 		MS_sprite.scale *= 0.7
 	#MS_sprite.scale *= scale_mult

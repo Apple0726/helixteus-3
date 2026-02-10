@@ -259,6 +259,7 @@ func next_turn():
 			break
 		if not is_instance_valid(initiative_order[i]) or initiative_order[i].type != Battle.EntityType.BOUNDARY and initiative_order[i].HP <= 0:
 			initiative_order.remove_at(i)
+			print("remove entity %s" % i)
 			if i < whose_turn_is_it_index:
 				whose_turn_is_it_index -= 1
 			for j in range(i, len(initiative_order) - 1):
@@ -376,7 +377,12 @@ func display_stats(type:String):
 		if type == "HP":
 			entity.get_node("Info/Label").text = "%s / %s" % [str(entity.HP), str(entity.total_HP)]
 		else:
-			entity.get_node("Info/Label").text = str(entity[type] + entity[type + "_buff"])
+			var stat = entity[type] + entity[type + "_buff"]
+			if step_decimals(stat) == 0:
+				stat = int(stat)
+			else:
+				stat = snapped(stat, 0.1)
+			entity.get_node("Info/Label").text = str(stat)
 
 func environment_take_turn():
 	while randf() < 2.0 / (len(obstacle_nodes) + 1):

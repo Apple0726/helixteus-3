@@ -432,7 +432,12 @@ func show_tooltip(tile, tile_id:int):
 				icons = [Data.SP_icon, Data.time_icon]
 	if tile.has("depth") and not tile.has("bldg") and not tile.has("crater") and not tile.has("bridge"):
 		tooltip += "%s: %s m\n%s" % [tr("HOLE_DEPTH"), Helper.format_num(tile.depth), tr("SHIFT_CLICK_TO_BRIDGE_HOLE")]
-	elif bldg_to_construct in [Building.MINERAL_EXTRACTOR, Building.RESEARCH_LAB, Building.SOLAR_PANEL] and tile.has("resource_production_bonus") and not tile.resource_production_bonus.is_empty() and (game.u_i.lv < 18 or view.scale.x < 0.25):
+	elif bldg_to_construct in [
+		Building.MINERAL_EXTRACTOR,
+		Building.POWER_PLANT,
+		Building.RESEARCH_LAB,
+		Building.SOLAR_PANEL,
+		] and tile.has("resource_production_bonus") and not tile.resource_production_bonus.is_empty():
 		tooltip = tr("BUILD_HERE_FOR_X_BONUS")
 		if bldg_to_construct == Building.MINERAL_EXTRACTOR and tile.resource_production_bonus.has("minerals"):
 			if view.scale.x < 0.25:
@@ -442,12 +447,17 @@ func show_tooltip(tile, tile_id:int):
 			if view.scale.x < 0.25:
 				tooltip += " (x %s)" % Helper.clever_round(tile.resource_production_bonus.SP)
 			icons = [Data.SP_icon]
-		elif bldg_to_construct == Building.SOLAR_PANEL and tile.resource_production_bonus.has("energy"):
+		elif bldg_to_construct in [Building.POWER_PLANT, Building.SOLAR_PANEL] and tile.resource_production_bonus.has("energy"):
 			if view.scale.x < 0.25:
 				tooltip += " (x %s)" % Helper.clever_round(tile.resource_production_bonus.energy)
 			icons = [Data.energy_icon]
 		else:
 			tooltip = ""
+	elif bldg_to_construct == Building.BORING_MACHINE and tile.has("mining_outpost_bonus"):
+		tooltip = tr("BUILD_HERE_FOR_X_BONUS")
+		if view.scale.x < 0.25:
+			tooltip += " (x %s)" % Helper.clever_round(tile.mining_outpost_bonus)
+		icons = [Data.stone_icon]
 	elif tile.has("aurora") and tooltip == "":
 		tooltip = tr("AURORA_INTENSITY") + ": %s" % [tile.aurora]
 		additional_tooltip = tr("AURORA_DESC")
@@ -1718,8 +1728,10 @@ func construct(type:int, costs:Dictionary):
 		rsrc = "minerals"
 	elif type == Building.RESEARCH_LAB:
 		rsrc = "SP"
-	elif type == Building.SOLAR_PANEL:
+	elif type in [Building.POWER_PLANT, Building.SOLAR_PANEL]:
 		rsrc = "energy"
+	elif type == Building.BORING_MACHINE:
+		rsrc = "stone"
 	var grayed_out_tile_positions:PackedVector2Array
 	for i in wid:
 		for j in wid:
@@ -1747,14 +1759,18 @@ func construct(type:int, costs:Dictionary):
 			if not is_inside_tree():
 				return
 			var tile = game.tile_data[id2]
-			if tile and tile.has("resource_production_bonus") and tile.resource_production_bonus.has(rsrc):
+			var rsrc_bonus = tile.has("resource_production_bonus") and tile.resource_production_bonus.has(rsrc)
+			if tile and (rsrc_bonus or tile.has("mining_outpost_bonus")):
 				if bldg_to_construct == -1:
 					return
 				var tile_bonus_node = preload("res://Scenes/TileBonus.tscn").instantiate()
 				tile_bonus_node.position = Vector2(i, j) * 200
 				add_child(tile_bonus_node)
 				tile_bonus_node.set_icon(bonus_rsrc_icon)
-				tile_bonus_node.set_multiplier(tile.resource_production_bonus[rsrc])
+				if rsrc_bonus:
+					tile_bonus_node.set_multiplier(tile.resource_production_bonus[rsrc])
+				elif tile.has("mining_outpost_bonus"):
+					tile_bonus_node.set_multiplier(tile.mining_outpost_bonus)
 				tile_bonus_node.modulate.a = 0
 				var tween2 = create_tween()
 				tween2.tween_property(tile_bonus_node, "modulate:a", 0.8, 0.2)

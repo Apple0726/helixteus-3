@@ -249,7 +249,11 @@ func format_num(num:float, clever_round:bool = false, threshold:int = 6):
 		elif p < OOM_gap * 11:
 			suff = "Q" if Settings.notation == "SI" else Data.standard_large_number_notations[9]
 		var div = max(pow(10, snapped(p - 1 - (OOM_gap - 2) / 2, OOM_gap)), 1)
-		return "%s%s%s" % [sgn, clever_round(num / div, 3), suff]
+		var final_num = clever_round(num / div, 3)
+		if step_decimals(final_num) == 0:
+			return "%s%d%s" % [sgn, final_num, suff]
+		else:
+			return "%s%s%s" % [sgn, final_num, suff]
 
 #Assumes that all values of dict are floats/integers
 func get_sum_of_dict(dict:Dictionary):
