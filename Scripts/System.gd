@@ -121,10 +121,12 @@ func refresh_planets():
 		if p_i.has("MS"):
 			planet_glow.modulate = Color(0.6, 0.6, 0.6, 1)
 			var MS_sprite = add_MS_sprite(planet, p_i)
+			MS_sprite.scale *= p_i.size / PLANET_SCALE_DIV
 			if p_i.MS == "SE":
 				MS_sprite.position.x = -6.25 * 640.0 / planet_btn.texture_normal.get_width() * cos(p_i.angle) * scale_mult
 				MS_sprite.position.y = -6.25 * 640.0 / planet_btn.texture_normal.get_width() * sin(p_i.angle) * scale_mult
-			add_rsrc(v, Color(0, 0.5, 0.9, 1), Data.minerals_icon, p_i.l_id, false, sc)
+			elif p_i.MS == "MME":
+				add_rsrc(v, Color(0, 0.5, 0.9, 1), Data.minerals_icon, p_i.l_id, false, sc)
 		if p_i.has("tile_num") and p_i.bldg.has("name"):
 			planet.add_child(Helper.add_lv_boxes(p_i, Vector2.ZERO, sc))
 			match p_i.bldg.name:
@@ -213,7 +215,7 @@ func refresh_stars():
 		star.scale.x = max(5.0 * star_info.size / game.STAR_SCALE_DIV, 0.008) * scale_mult
 		star.scale.y = max(5.0 * star_info.size / game.STAR_SCALE_DIV, 0.008) * scale_mult
 		star.texture_click_mask = preload("res://Graphics/Misc/StarCM.png")
-		star.position = star_info.pos * scale_mult - Vector2(512, 512) * star.scale.x
+		star.position = star_info.pos * scale_mult - star.texture_normal.get_size() * 0.5 * star.scale.x
 		star.mouse_entered.connect(on_star_over.bind(i, star))
 		star.mouse_exited.connect(on_star_out.bind(i, star))
 		star.pressed.connect(on_star_pressed.bind(i))
@@ -247,7 +249,7 @@ func refresh_stars():
 		star.add_to_group("stars_system")
 		if star_info.has("MS"):
 			var MS_sprite = add_MS_sprite(star, star_info)
-			MS_sprite.position = Vector2.ONE * MS_sprite.texture.get_width() * 2.0
+			MS_sprite.position = star.texture_normal.get_size() * 0.5
 			if star_info.MS == "DS":
 				add_rsrc(star_info.pos * scale_mult, Color(0, 0.8, 0, 1), Data.energy_icon, i, true, max(star_info.size / 6.0, 0.5) * scale_mult)
 			elif star_info.MS == "MB":
@@ -263,12 +265,12 @@ func add_MS_sprite(node, obj:Dictionary):
 		MS_sprite.texture = load("res://Graphics/Megastructures/%s_%s.png" % [obj.MS, obj.MS_lv])
 	if obj.MS == "SE":
 		MS_sprite.rotation = obj.angle - PI / 2
-		MS_sprite.scale *= 0.0125 * 1024.0 / MS_sprite.texture.get_height()
+		MS_sprite.scale *= 1024.0 / MS_sprite.texture.get_height()
 	elif obj.MS == "MME":
-		MS_sprite.scale *= 0.0125 * 1024.0 / MS_sprite.texture.get_height()
-	elif obj.MS == "DS":
-		MS_sprite.scale *= 0.7
-	#MS_sprite.scale *= scale_mult
+		MS_sprite.scale *= 1024.0 / MS_sprite.texture.get_height()
+	elif obj.MS in ["DS", "CBS"]:
+		MS_sprite.scale *= 3.0
+	MS_sprite.scale *= scale_mult * 2.5
 	node.add_child(MS_sprite)
 	MS_sprite.name = "MS"
 	return MS_sprite
@@ -424,7 +426,7 @@ func show_planet_info(id:int, l_id:int):
 				Helper.put_rsrc(vbox, 32, {"money":p_i.repair_cost}, false)
 				MS_constr_data.confirm_repair = true
 				bldg_costs = {"money":p_i.repair_cost}
-				Helper.add_label(tr("PRESS_F_TO_REPAIR"))
+				Helper.add_label("{key}: {repair}".format({"key":"F", "repair": tr("REPAIR")}))
 		else:
 			if p_i.MS == "SE":
 				Helper.add_label(tr("M_SE_%s_BENEFITS" % p_i.MS_lv), -1, false)
@@ -436,7 +438,7 @@ func show_planet_info(id:int, l_id:int):
 			if p_i.MS_lv < Data.MS_num_stages[p_i.MS] and game.science_unlocked.has("%s%s" % [p_i.MS, (p_i.MS_lv + 1)]):
 				MS_constr_data.obj = p_i
 				MS_constr_data.confirm_upgrade = false
-				Helper.add_label(tr("PRESS_F_TO_CONTINUE_CONSTR"))
+				Helper.add_label("{key}: {upgrade}".format({"key":"F", "upgrade": tr("UPGRADE")}))
 		MS_constr_data.destroyable = true
 	if Helper.ships_on_planet(l_id) and not p_i.has("conquered"):
 		game.show_tooltip(tr("CLICK_TO_BATTLE"))
@@ -484,9 +486,9 @@ func show_planet_info(id:int, l_id:int):
 				additional_tooltip += "\n%s" % [tr("MORE_DETAILS")]
 			for tile in tile_data:
 				if tile:
-					if tile.has("bldg") and tile.bldg.has("name"):
+					if tile.has("bldg"):
 						Helper.add_to_dict(bldgs, tile.bldg.name, 1)
-					if tile.has("ancient_bldg") and tile.ancient_bldg.has("name"):
+					elif tile.has("ancient_bldg"):
 						Helper.add_to_dict(ancient_bldgs, tile.ancient_bldg.name, 1)
 		if not bldgs.is_empty():
 			game.space_HUD.clear_bldg_info()
@@ -524,7 +526,7 @@ func _input(event):
 				call("show_%s_costs" % MS, MS_constr_data.obj)
 				MS_constr_data.confirm_upgrade = true
 				await get_tree().process_frame
-				Helper.add_label(tr("X_TO_CONFIRM") % "F")
+				Helper.add_label("{key}: {confirm}".format({"key":"F", "confirm": tr("CONFIRM")}))
 			elif current_MS_action == "upgrading":
 				build_MS(MS_constr_data.obj, MS_constr_data.obj.MS)
 				current_MS_action = ""
@@ -863,7 +865,7 @@ func show_MS_construct_info(star:Dictionary, star_node):
 				Helper.put_rsrc(vbox, 32, {"money":star.repair_cost}, false)
 				MS_constr_data.confirm_repair = true
 				bldg_costs = {"money":star.repair_cost}
-				Helper.add_label(tr("PRESS_F_TO_REPAIR"))
+				Helper.add_label("{key}: {repair}".format({"key":"F", "repair": tr("REPAIR")}))
 		else:
 			if star.MS == "DS":
 				Helper.add_label(tr("PRODUCTION_PER_SECOND"), -1, false)
@@ -902,7 +904,7 @@ func show_MS_construct_info(star:Dictionary, star_node):
 func continue_upg(obj:Dictionary):
 	MS_constr_data.obj = obj
 	MS_constr_data.confirm_upgrade = false
-	Helper.add_label(tr("PRESS_F_TO_CONTINUE_CONSTR"))
+	Helper.add_label("{key}: {upgrade}".format({"key":"F", "upgrade": tr("UPGRADE")}))
 
 func on_star_pressed (id:int):
 	star_over_id = id

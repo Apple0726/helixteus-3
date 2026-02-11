@@ -8,6 +8,7 @@ radius = 16.0
 height = 112.0
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_0kdmo"]
+resource_local_to_scene = true
 shader = ExtResource("1_tmh4v")
 shader_parameter/alpha = 1.0
 shader_parameter/highlight_strength = 0.0

@@ -145,6 +145,19 @@ multichannel_signed_distance_field = true
 font = SubResource("SystemFont_lbihj")
 font_size = 12
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_rajel"]
+content_margin_left = 15.0
+content_margin_top = 15.0
+content_margin_right = 15.0
+content_margin_bottom = 15.0
+bg_color = Color(0.129412, 0.129412, 0.129412, 1)
+border_width_left = 4
+border_width_top = 4
+border_color = Color(0.294118, 0.294118, 0.294118, 1)
+border_blend = true
+shadow_size = 2
+shadow_offset = Vector2(1, 1)
+
 [sub_resource type="Gradient" id="7"]
 colors = PackedColorArray(0.230469, 0.230469, 0.230469, 1, 0.578125, 0.578125, 0.578125, 1)
 
@@ -501,9 +514,11 @@ offset_bottom = 382.0
 grow_horizontal = 0
 grow_vertical = 2
 theme = ExtResource("7")
+theme_override_styles/panel = SubResource("StyleBoxFlat_rajel")
 
 [node name="VBox" type="VBoxContainer" parent="UI/Panel" unique_id=332843812]
 layout_mode = 2
+theme_override_constants/separation = 8
 
 [node name="ClusterBG" parent="." unique_id=827445502 instance=ExtResource("35")]
 visible = false

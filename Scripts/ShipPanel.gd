@@ -29,7 +29,7 @@ func show_weapon_tooltip(weapon: String, path: int, lv: int):
 func add_ship_node(id: int):
 	var ship = preload("res://Scenes/ShipsPanelShip.tscn").instantiate()
 	ship.get_node("TextureButton").mouse_entered.connect(_on_ship_mouse_entered.bind(id))
-	ship.get_node("TextureButton").mouse_exited.connect(_on_ship_mouse_exited)
+	ship.get_node("TextureButton").mouse_exited.connect(_on_ship_mouse_exited.bind(id))
 	ship.get_node("TextureButton").button_down.connect(_on_ship_button_down.bind(id))
 	ship.get_node("TextureButton").button_up.connect(_on_ship_button_up.bind(id))
 	ship.get_node("TextureButton").texture_normal = load("res://Graphics/Ships/Ship%s.png" % id)
@@ -174,13 +174,15 @@ func _physics_process(delta: float) -> void:
 		ship_nodes[i].apply_force(F)
 
 func _on_ship_mouse_entered(ship_id: int):
+	ship_nodes[ship_id].get_node("TextureButton").material.set_shader_parameter("highlight_strength", 0.15)
 	if game.item_to_use.id != -1 and Item.data[game.item_to_use.id].type == Item.Type.HELIX_CORE:
 		show_ship_stats(ship_id)
 		$ShipStats/ShipDetails/XP/TextureProgressGained.value = $ShipStats/ShipDetails/XP/TextureProgressBar.value + Item.data[game.item_to_use.id].XP * game.item_to_use.num
 		$ShipStats/ShipDetails/XP/XPGained.text = "+ " + str(Item.data[game.item_to_use.id].XP * game.item_to_use.num)
 		$ShipStats/ShipDetails/Respec.hide()
 
-func _on_ship_mouse_exited():
+func _on_ship_mouse_exited(ship_id: int):
+	ship_nodes[ship_id].get_node("TextureButton").material.set_shader_parameter("highlight_strength", 0.0)
 	if game.item_to_use.id != -1 and Item.data[game.item_to_use.id].type == Item.Type.HELIX_CORE:
 		$ShipStats/ShipDetails.hide()
 		$ShipStats/Label.show()

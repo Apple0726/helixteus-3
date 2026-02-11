@@ -106,6 +106,7 @@ func on_system_over (l_id:int):
 	
 	var planet_data:Array = game.open_obj("Systems", s_i.id)
 	var bldgs:Dictionary = {}
+	var ancient_bldgs:Dictionary = {}
 	var MSs:Dictionary = {}
 	for p_i in planet_data:
 		if p_i.is_empty():
@@ -116,12 +117,16 @@ func on_system_over (l_id:int):
 			Helper.add_to_dict(MSs, p_i.MS, 1)
 		var tile_data:Array = game.open_obj("Planets", p_i.id)
 		for tile in tile_data:
-			if tile and tile.has("bldg"):
-				Helper.add_to_dict(bldgs, tile.bldg.name, 1)
+			if tile:
+				if tile.has("bldg"):
+					Helper.add_to_dict(bldgs, tile.bldg.name, 1)
+				elif tile.has("ancient_bldg"):
+					Helper.add_to_dict(bldgs, tile.ancient_bldg.name, 1)
 	for _star in s_i.stars:
 		if _star.has("MS"):
 			Helper.add_to_dict(MSs, _star.MS, 1)
 	var bldg_info_node = game.space_HUD.get_node("HBoxContainer/BldgInfo")
+	var ancient_bldg_info_node = game.space_HUD.get_node("HBoxContainer/AncientBldgInfo")
 	var MS_info_node = game.space_HUD.get_node("HBoxContainer/MSInfo")
 	if not bldgs.is_empty():
 		for bldg in bldgs:
@@ -129,6 +134,12 @@ func on_system_over (l_id:int):
 			bldg_info_node.add_child(bldg_count)
 			bldg_count.get_node("Texture2D").texture = game.bldg_textures[bldg]
 			bldg_count.get_node("Label").text = "x %s" % Helper.format_num(bldgs[bldg])
+	if not ancient_bldgs.is_empty():
+		for ancient_bldg in ancient_bldgs:
+			var ancient_bldg_count = preload("res://Scenes/EntityCount.tscn").instantiate()
+			ancient_bldg_info_node.add_child(ancient_bldg_count)
+			ancient_bldg_count.get_node("Texture2D").texture = game.ancient_bldg_textures[ancient_bldg]
+			ancient_bldg_count.get_node("Label").text = "x %s" % Helper.format_num(ancient_bldgs[ancient_bldg])
 	if not MSs.is_empty():
 		for MS in MSs:
 			var MS_count = preload("res://Scenes/EntityCount.tscn").instantiate()
