@@ -95,9 +95,9 @@ metadata/_edit_lock_ = true
 
 [node name="CloseButton" type="TextureButton" parent="." unique_id=680082366]
 layout_mode = 0
-offset_left = 1136.0
+offset_left = 1138.0
 offset_top = 67.0
-offset_right = 1185.0
+offset_right = 1187.0
 offset_bottom = 116.0
 texture_normal = ExtResource("4_ekxvq")
 texture_hover = ExtResource("5_5824e")

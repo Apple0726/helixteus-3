@@ -17,6 +17,7 @@ func _ready():
 	set_polygon($GUI.size, $GUI.position)
 
 func refresh():
+	hslider.value = hslider.max_value
 	tile = game.tile_data[game.c_t]
 	expected_rsrc = {}
 	var is_crushing = tile.bldg.has("stone")

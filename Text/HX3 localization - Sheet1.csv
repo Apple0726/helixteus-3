@@ -754,6 +754,7 @@ BUILDING_COSTS,Building costs,,,建筑消费,Gebäude Kosten,Costos de construcc
 TF_COST_MULT,Terraforming cost multipliers,,,星球格式化成本加成,Terraforming Kostenmultiplikatoren,Multiplicadores del costo de terraformación,,,Áttalakítási árszorzó,テラフォーミングコスト倍率,Terravormingkost vermenigvuldigers,Множитель стоимости терраформинга,
 TF_SUCCESS,Planet successfully terraformed!,,,行星成功格式化！,Planet erfolgreich Terraformt!,¡Planeta terraformado exitosamente!,,,Bolygo sikeresen átalakítva!,惑星のテラフォーミングに成功!,Planeet succesvol geterraformeerd!,Планета успешно терраформирована!,
 NO_TF,This planet cannot be terraformed.,,,这颗行星不可能被格式化,Dieser Planet kann nicht Terraformt werden.,Este planeta no puede ser terraformado.,,,Ez a bolygó nem átalakítható.,この星はテラフォーミングができない。,Deze planeet kan niet geterraformeerd worden.,Эта планета не может быть терраформирована,
+NO_TF_HOME,This planet cannot be terraformed. It's your home!,,,,,,,,,,,,
 PLANT_V,Plant,Planter,Piantare,种植,Pflanzen,Plantar,심기,,Ültetés,工場,Plant,Растение,
 YOU_WILL_NEED_X_SEEDS,You will need {num} {seeds}.,,,你需要 {num} {seeds},Du benötigst {num} {seeds}.,Necesitarás {num} {seeds}.,,,{num} {seeds} szükséges.,{num} {Seeds}が必要です。,Je hebt {num} {seeds} nodig.,Вам нужно {num} {seeds}.,
 FULLSCREEN,Fullscreen,Plein écran,Schermo intero,全屏,Vollbildschirm,Pantalla completa,전체 화면,,Teljes képernyő,フルスクリーン,Volledig scherm,Полный экран,

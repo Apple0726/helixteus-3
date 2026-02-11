@@ -18,7 +18,7 @@ var ancient_bldg_bonus:float
 var ancient_bldg_bonus_cap:float
 
 func _ready():
-	set_polygon(size)
+	set_polygon($GUI.size, $GUI.position)
 
 func refresh():
 	p_i = game.planet_data[game.c_p]
@@ -41,20 +41,21 @@ func update_info():
 	var gradient:Gradient = preload("res://Resources/IntensityGradient.tres")
 	var pressure_mult_color = gradient.sample(inverse_lerp(1.0, 100.0, pressure_mult)).to_html(false)
 	var lake_mult_color = gradient.sample(inverse_lerp(1.0, 10.0, lake_mult)).to_html(false)
-	$Panel/CostMult.text = "%s:\n%s: x %s\n[color=#%s]%s: x %s[/color]\n[color=#%s]%s: x %s[/color]" % [tr("TF_COST_MULT"), tr("SURFACE_AREA"), Helper.format_num(surface), pressure_mult_color, tr("ATMOSPHERE_PRESSURE"), Helper.clever_round(pressure_mult), lake_mult_color, tr("LAKES"), Helper.clever_round(lake_mult)]
-	Helper.put_rsrc($Panel/TCVBox, 32, tf_costs, true, true)
-	Helper.put_rsrc($Panel/BCGrid, 32, costs, true, true)
+	$Panel/TerraformPanel/CostMult.text = "%s:\n%s: x %s\n[color=#%s]%s: x %s[/color]\n[color=#%s]%s: x %s[/color]" % [tr("TF_COST_MULT"), tr("SURFACE_AREA"), Helper.format_num(surface), pressure_mult_color, tr("ATMOSPHERE_PRESSURE"), Helper.clever_round(pressure_mult), lake_mult_color, tr("LAKES"), Helper.clever_round(lake_mult)]
+	Helper.put_rsrc($Panel/TerraformPanel/VBox, 32, tf_costs, true, true)
+	Helper.put_rsrc($Panel/BuildingPanel/VBox, 32, costs, true, true)
 	$Panel.visible = true
 
 func set_bldg_cost_txt():
 	ancient_bldg_id = -1
+	$Panel/BuildingPanel/TextureRect.texture = game.bldg_textures[tf_type]
 	if cost_div > 1.0:
-		$Panel/BuildingCosts.text = "%s (%s) (%s %s)" % [tr("BUILDING_COSTS"), tr("DIV_BY") % cost_div, Helper.format_num(surface), tr("%s_NAME_S" % Building.names[tf_type].to_upper()).to_lower()]
+		$Panel/BuildingPanel/Costs.text = "%s\n(%s)\n(%s %s)" % [tr("BUILDING_COSTS"), tr("DIV_BY") % cost_div, Helper.format_num(surface), tr("%s_NAME_S" % Building.names[tf_type].to_upper()).to_lower()]
 	else:
-		$Panel/BuildingCosts.text = "%s (%s %s)" % [tr("BUILDING_COSTS"), Helper.format_num(surface), tr("%s_NAME_S" % Building.names[tf_type].to_upper()).to_lower()]
+		$Panel/BuildingPanel/Costs.text = "%s\n(%s %s)" % [tr("BUILDING_COSTS"), Helper.format_num(surface), tr("%s_NAME_S" % Building.names[tf_type].to_upper()).to_lower()]
 
 func terraform_planet():
-	game.toggle_panel(self)
+	game.toggle_panel("terraform_panel")
 	game.deduct_resources(total_costs)
 	if p_i.has("bookmarked"):
 		game.bookmarks.planet.erase(str(game.c_p_g))
@@ -162,7 +163,7 @@ func _on_mineral_extractor_pressed():
 		st += tr("MIN_MULT_FROM_MR") + " " + str(Helper.clever_round(ancient_bldg_bonus))
 	if ash_mult > 1:
 		st += "\n" + tr("MIN_MULT_FROM_ASH") % ash_mult
-	$Panel/Note.text = st
+	$Panel/BuildingPanel/Note.text = st
 	update_info()
 
 
@@ -188,7 +189,7 @@ func _on_power_plant_pressed():
 		ancient_bldg_bonus_cap /= len(game.tile_data)
 		st += tr("ENERGY_MULT_FROM_SUBSTATION") + " " + str(Helper.clever_round(ancient_bldg_bonus))
 		st += "\n" + tr("ENERGY_STORAGE_BONUS_FROM_SUBSTATION") % Helper.time_to_str(ancient_bldg_bonus_cap)
-	$Panel/Note.text = st
+	$Panel/BuildingPanel/Note.text = st
 	update_info()
 
 
@@ -196,7 +197,7 @@ func _on_mineral_silo_pressed():
 	tf_type = Building.MINERAL_SILO
 	set_bldg_cost_txt()
 	costs = Data.costs[Building.MINERAL_SILO].duplicate(true)
-	$Panel/Note.text = ""
+	$Panel/BuildingPanel/Note.text = ""
 	update_info()
 
 
@@ -204,7 +205,7 @@ func _on_battery_pressed():
 	tf_type = Building.BATTERY
 	set_bldg_cost_txt()
 	costs = Data.costs[Building.BATTERY].duplicate(true)
-	$Panel/Note.text = ""
+	$Panel/BuildingPanel/Note.text = ""
 	update_info()
 
 
@@ -216,8 +217,8 @@ func _on_research_lab_pressed():
 	if SP_feature_mult > 1:
 		ancient_bldg_bonus = SP_feature_mult
 		ancient_bldg_id = AncientBuilding.OBSERVATORY
-		st += "\n" + tr("SP_MULT_FROM_FEATURES") + " " + str(Helper.clever_round(SP_feature_mult))
-	$Panel/Note.text = st
+		st += tr("SP_MULT_FROM_FEATURES") + " " + str(Helper.clever_round(SP_feature_mult))
+	$Panel/BuildingPanel/Note.text = st
 	update_info()
 
 
@@ -249,7 +250,7 @@ func _on_atmosphere_extractor_pressed():
 		else:
 			st += tr("WILL_PROVIDE_EXTRA_CELLULOSE")
 			ancient_bldg_id = AncientBuilding.CELLULOSE_SYNTHESIZER
-	$Panel/Note.text = st
+	$Panel/BuildingPanel/Note.text = st
 	update_info()
 
 
@@ -271,7 +272,7 @@ func _on_boring_machine_pressed():
 		if ancient_bldg_bonus > 1:
 			ancient_bldg_id = AncientBuilding.MINING_OUTPOST
 		st += tr("MINING_MULT_FROM_OUTPOST") + " " + str(Helper.clever_round(ancient_bldg_bonus))
-	$Panel/Note.text = st
+	$Panel/BuildingPanel/Note.text = st
 	update_info()
 
 
@@ -280,7 +281,7 @@ func _on_greenhouse_pressed():
 	set_bldg_cost_txt()
 	costs = Data.costs[Building.GREENHOUSE].duplicate(true)
 	costs.soil = 10
-	$Panel/Note.text = tr("MIN_MULT_FROM_ASH") % ash_mult
+	$Panel/BuildingPanel/Note.text = tr("MIN_MULT_FROM_ASH") % ash_mult
 	update_info()
 
 
@@ -288,7 +289,7 @@ func _on_atom_manipulator_pressed():
 	tf_type = Building.ATOM_MANIPULATOR
 	set_bldg_cost_txt()
 	costs = Data.costs[Building.ATOM_MANIPULATOR].duplicate(true)
-	$Panel/Note.text = ""
+	$Panel/BuildingPanel/Note.text = ""
 	update_info()
 
 
@@ -296,5 +297,5 @@ func _on_subatomic_particle_reactor_pressed():
 	tf_type = Building.SUBATOMIC_PARTICLE_REACTOR
 	set_bldg_cost_txt()
 	costs = Data.costs[Building.SUBATOMIC_PARTICLE_REACTOR].duplicate(true)
-	$Panel/Note.text = ""
+	$Panel/BuildingPanel/Note.text = ""
 	update_info()

@@ -55,10 +55,11 @@ func _on_mouse_exited():
 
 func _on_Terraform_pressed():
 	if game.c_p_g == 2:
-		game.popup(tr("NO_TF"), 1.5)
+		game.popup(tr("NO_TF_HOME"), 1.5)
 	elif game.planet_data[game.c_p].has("MS"):
-		game.popup("%s (%s)" % [tr("NO_TF"), tr("MS_EXISTS")], 2.0)
+		game.popup("%s (%s)" % [tr("NO_TF_MS"), tr("MS_EXISTS")], 2.0)
 	else:
+		game.toggle_panel("terraform_panel")
 		game.terraform_panel.pressure = game.planet_data[game.c_p]["pressure"]
 		var surface = 4 * PI * pow(game.planet_data[game.c_p].size / 8.0, 2)
 		game.terraform_panel.surface = round(surface)
@@ -88,7 +89,7 @@ func _on_Terraform_pressed():
 		game.terraform_panel.ash_mult = ash_mult
 		game.terraform_panel.SP_feature_mult = SP_feature_mult
 		game.terraform_panel.energy_feature_mult = energy_feature_mult
-		game.toggle_panel(game.terraform_panel)
+		game.terraform_panel.refresh()
 
 func _on_Terraform_mouse_entered():
 	game.show_tooltip(tr("TERRAFORM"))

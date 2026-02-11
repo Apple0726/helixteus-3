@@ -778,7 +778,9 @@ func on_planet_click (id:int, l_id:int):
 				if len(game.ship_data) > 0:
 					if not p_i.has("conquered") or Input.is_action_pressed("ctrl"):
 						if not is_instance_valid(game.send_ships_panel) or not game.send_ships_panel.visible:
-							game.fade_in_panel("send_ships_panel", {"dest_p_id": l_id})
+							game.fade_in_panel("send_ships_panel", false)
+							game.send_ships_panel.dest_p_id = l_id
+							game.send_ships_panel.refresh()
 				else:
 					game.popup_window(tr("NO_SHIPS_DESC"), tr("NO_SHIPS"))
 	if game.is_ancestor_of(game.HUD):

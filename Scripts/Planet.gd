@@ -660,7 +660,7 @@ func click_tile(tile, tile_id:int):
 	game.c_t = tile_id
 	match bldg:
 		Building.GREENHOUSE:
-			game.toggle_panel("greenhouse_panel")
+			game.toggle_panel("greenhouse_panel", false)
 			game.greenhouse_panel.c_v = "planet"
 			if tiles_selected.is_empty():
 				game.greenhouse_panel.tiles_selected = [tile_id]
@@ -675,11 +675,9 @@ func click_tile(tile, tile_id:int):
 		Building.SHIPYARD:
 			game.toggle_panel(game.shipyard_panel)
 		Building.PROBE_CONSTRUCTION_CENTER:
-			game.PC_panel.probe_tier = 0
 			game.toggle_panel(game.PC_panel)
 		Building.STONE_CRUSHER:
 			game.toggle_panel("SC_panel")
-			game.SC_panel.hslider.value = game.SC_panel.hslider.max_value
 		Building.GLASS_FACTORY:
 			game.toggle_panel("production_panel")
 			game.production_panel.refresh2(bldg, "sand", "glass", "mats", "mats")
@@ -1759,8 +1757,10 @@ func construct(type:int, costs:Dictionary):
 			if not is_inside_tree():
 				return
 			var tile = game.tile_data[id2]
+			if not tile:
+				continue
 			var rsrc_bonus = tile.has("resource_production_bonus") and tile.resource_production_bonus.has(rsrc)
-			if tile and (rsrc_bonus or tile.has("mining_outpost_bonus")):
+			if rsrc_bonus or tile.has("mining_outpost_bonus"):
 				if bldg_to_construct == -1:
 					return
 				var tile_bonus_node = preload("res://Scenes/TileBonus.tscn").instantiate()

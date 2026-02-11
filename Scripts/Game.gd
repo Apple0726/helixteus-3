@@ -93,6 +93,7 @@ var panel_var_name_to_file_name = {
 	"PD_panel":"PDPanel",
 	"production_panel":"ProductionPanel",
 	"greenhouse_panel":"GreenhousePanel",
+	"terraform_panel":"TerraformPanel",
 }
 #endregion
 
@@ -1233,20 +1234,15 @@ func put_bottom_info(txt:String, action:String, on_close:String = ""):
 	$UI/BottomInfo/CloseButton.on_close = on_close
 	$UI/BottomInfo/MoveAnim.play("MoveLabel")
 
-func fade_in_panel(panel_var_name:String, initialize_properties:Dictionary = {}):
+func fade_in_panel(panel_var_name:String, refresh_panel = true):
 	if is_instance_valid(self[panel_var_name]):
 		self[panel_var_name].show()
 		$Panels/Control.move_child(self[panel_var_name], $Panels/Control.get_child_count())
-		for prop in initialize_properties:
-			self[panel_var_name][prop] = initialize_properties[prop]
 	else:
 		self[panel_var_name] = load("res://Scenes/Panels/%s.tscn" % panel_var_name_to_file_name[panel_var_name]).instantiate()
 		self[panel_var_name].panel_var_name = panel_var_name
-		for prop in initialize_properties:
-			self[panel_var_name][prop] = initialize_properties[prop]
 		$Panels/Control.add_child(self[panel_var_name])
 	active_panel = self[panel_var_name]
-	self[panel_var_name].refresh()
 	if $UI.has_node("BuildingShortcuts"):
 		$UI.get_node("BuildingShortcuts").close()
 	elif c_v == "planet" and not viewing_dimension:
@@ -1257,6 +1253,8 @@ func fade_in_panel(panel_var_name:String, initialize_properties:Dictionary = {})
 		self[panel_var_name].tween.set_parallel(true)
 		self[panel_var_name].tween.tween_property($Blur/BlurRect.material, "shader_parameter/amount", 1.0, 0.2)
 	self[panel_var_name].tween.tween_property(self[panel_var_name], "modulate", Color(1, 1, 1, 1), 0.07)
+	if refresh_panel:
+		self[panel_var_name].refresh()
 	hide_tooltip()
 
 func fade_out_panel(panel:Control):
@@ -1268,13 +1266,13 @@ func fade_out_panel(panel:Control):
 		panel.tween = create_tween()
 		panel.tween.tween_property($Blur/BlurRect.material, "shader_parameter/amount", 0.0, 0.2)
 
-func toggle_panel(new_panel_var_name):
+func toggle_panel(new_panel_var_name, refresh_panel = true):
 	# If opening a panel different to currently open panel, close current panel
 	if is_instance_valid(active_panel) and active_panel != self[new_panel_var_name]:
 		fade_out_panel(active_panel)
 	# Check if the panel to open is already open. If it is open, close it
 	if not is_instance_valid(self[new_panel_var_name]) or not self[new_panel_var_name].visible:
-		fade_in_panel(new_panel_var_name)
+		fade_in_panel(new_panel_var_name, refresh_panel)
 	else:
 		fade_out_panel(self[new_panel_var_name])
 		active_panel = null
@@ -2797,7 +2795,7 @@ func generate_planets(id:int):#local id
 			p_i["conquered"] = true
 		if planets_generated == 0:# Starting solar system has smaller planets
 			p_i["size"] = int((2000 + randf_range(0, 7000) * (i + 1) / 2.0) * pow(u_i.gravitational, 0.5) * dark_matter)
-			p_i["pressure"] = pow(10, randf_range(-3, log(p_i.size / 5.0) / log(10) - 3)) * u_i.boltzmann
+			p_i["pressure"]  = pow(10, randf_range(-3, log(p_i.size / 5.0) / log(10) - 3)) * u_i.boltzmann
 		else:
 			p_i["size"] = int((2000 + randf_range(0, 12000) * (i + 1) / 2.0) * pow(u_i.gravitational, 0.5) * dark_matter)
 			p_i["pressure"] = pow(10, randf_range(-3, log(p_i.size) / log(10) - 2)) * u_i.boltzmann

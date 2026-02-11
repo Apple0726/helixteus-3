@@ -3,8 +3,10 @@
 [ext_resource type="PackedScene" uid="uid://1hq6qpr1oa3i" path="res://Scenes/AdvButton.tscn" id="1"]
 [ext_resource type="Texture2D" uid="uid://d3kwtgk0sw40p" path="res://Graphics/Icons/minerals.png" id="2"]
 [ext_resource type="Texture2D" uid="uid://dg25fshk35326" path="res://Graphics/Icons/SP.png" id="3"]
+[ext_resource type="Texture2D" uid="uid://dcvnyb0mloli2" path="res://Graphics/GUI/Panel.png" id="3_s2l54"]
 [ext_resource type="Texture2D" uid="uid://bm01hxs45q3ga" path="res://Graphics/Icons/energy.png" id="4"]
-[ext_resource type="PackedScene" uid="uid://ddf2xjwcht77u" path="res://Scenes/CloseButton.tscn" id="5"]
+[ext_resource type="Texture2D" uid="uid://baowebna7hgr5" path="res://Graphics/GUI/CloseButtonNormal.png" id="4_lngtd"]
+[ext_resource type="Texture2D" uid="uid://c1vwn7p5uxu1r" path="res://Graphics/GUI/CloseButtonHover.png" id="5_gm5rd"]
 [ext_resource type="Theme" uid="uid://cp2u1kgj60ic" path="res://Resources/default_theme.tres" id="6"]
 [ext_resource type="Script" uid="uid://dxl44srdf241g" path="res://Scripts/TerraformPanel.gd" id="7"]
 [ext_resource type="Texture2D" uid="uid://cdqb8dr8jf33" path="res://Graphics/Buildings/mineral_silo.png" id="7_x2n7j"]
@@ -14,6 +16,20 @@
 [ext_resource type="Texture2D" uid="uid://co7hd2o2d4khw" path="res://Graphics/Buildings/greenhouse.png" id="12_1h162"]
 [ext_resource type="Texture2D" uid="uid://ojno1tej7rhl" path="res://Graphics/Buildings/atom_manipulator.png" id="13_fkb41"]
 [ext_resource type="Texture2D" uid="uid://b0ccsrmvvm73t" path="res://Graphics/Buildings/subatomic_particle_reactor.png" id="14_7vv42"]
+[ext_resource type="Texture2D" uid="uid://cb4q7wfu4xa2i" path="res://Graphics/Buttons/Terraform.png" id="17_gm5rd"]
+[ext_resource type="Texture2D" uid="uid://nqbxkpmiwy3c" path="res://Graphics/Buildings/mineral_extractor.png" id="18_fk8sx"]
+
+[sub_resource type="SystemFont" id="SystemFont_l1il0"]
+font_names = PackedStringArray("Arial")
+subpixel_positioning = 0
+multichannel_signed_distance_field = true
+
+[sub_resource type="LabelSettings" id="LabelSettings_s3ae8"]
+font = SubResource("SystemFont_l1il0")
+font_size = 24
+shadow_size = 2
+shadow_color = Color(0, 0, 0, 0.372549)
+shadow_offset = Vector2(2, 2)
 
 [sub_resource type="Theme" id="1"]
 Button/colors/font_color = Color(0.88, 0.88, 0.88, 1)
@@ -28,46 +44,70 @@ Button/styles/hover = null
 Button/styles/normal = null
 Button/styles/pressed = null
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_lngtd"]
+content_margin_left = 10.0
+content_margin_top = 10.0
+content_margin_right = 10.0
+content_margin_bottom = 10.0
+bg_color = Color(0.06879827, 0.06879828, 0.06879828, 1)
+border_width_left = 4
+border_width_top = 4
+border_color = Color(0.294118, 0.294118, 0.294118, 1)
+border_blend = true
+shadow_size = 2
+shadow_offset = Vector2(1, 1)
+
 [sub_resource type="Shortcut" id="3"]
 
-[node name="TerraformPanel" type="Panel" unique_id=1978083734]
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -533.5
-offset_top = -300.0
-offset_right = 533.5
-offset_bottom = 300.0
-grow_horizontal = 2
-grow_vertical = 2
+[node name="TerraformPanel" type="Control" unique_id=1301642159]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
 theme = ExtResource("6")
 script = ExtResource("7")
+metadata/_edit_lock_ = true
+
+[node name="GUI" type="TextureRect" parent="." unique_id=1217905034]
+layout_mode = 0
+offset_left = 80.0
+offset_top = 52.0
+offset_right = 1204.0
+offset_bottom = 671.0
+texture = ExtResource("3_s2l54")
+metadata/_edit_lock_ = true
+
+[node name="CloseButton" type="TextureButton" parent="." unique_id=1103697649]
+layout_mode = 0
+offset_left = 1138.0
+offset_top = 67.0
+offset_right = 1187.0
+offset_bottom = 116.0
+texture_normal = ExtResource("4_lngtd")
+texture_hover = ExtResource("5_gm5rd")
 
 [node name="Title" type="Label" parent="." unique_id=1290169757]
 custom_minimum_size = Vector2(0, 38)
-layout_mode = 0
+layout_mode = 1
+anchors_preset = 10
 anchor_right = 1.0
-offset_bottom = 24.0
+offset_left = 124.0
+offset_top = 72.0
+offset_right = 227.0
+offset_bottom = 110.0
+grow_horizontal = 2
 theme_override_font_sizes/font_size = 18
 text = "TERRAFORM"
+label_settings = SubResource("LabelSettings_s3ae8")
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="CloseButton" parent="." unique_id=95480417 instance=ExtResource("5")]
-layout_mode = 1
-offset_left = -35.0
-offset_top = 8.0
-offset_right = -11.0
-offset_bottom = 32.0
-
 [node name="Desc" type="Label" parent="." unique_id=1363120183]
 layout_mode = 0
-offset_left = 24.0
-offset_top = 48.0
-offset_right = 1040.0
-offset_bottom = 112.0
+offset_left = 528.0
+offset_top = 324.0
+offset_right = 1156.0
+offset_bottom = 400.0
 text = "TERRAFORM_DESC"
 horizontal_alignment = 1
 vertical_alignment = 1
@@ -75,10 +115,10 @@ autowrap_mode = 3
 
 [node name="ScrollContainer" type="ScrollContainer" parent="." unique_id=367327835]
 layout_mode = 0
-offset_left = 24.0
-offset_top = 112.0
-offset_right = 384.0
-offset_bottom = 576.0
+offset_left = 124.0
+offset_top = 168.0
+offset_right = 484.0
+offset_bottom = 632.0
 
 [node name="VBoxContainer" type="VBoxContainer" parent="ScrollContainer" unique_id=82141391]
 layout_mode = 2
@@ -157,72 +197,115 @@ button_text = "SAP_SC"
 icon_texture = ExtResource("14_7vv42")
 
 [node name="Panel" type="Panel" parent="." unique_id=1769624489]
-visible = false
 layout_mode = 0
-offset_left = 392.0
-offset_top = 112.0
-offset_right = 1040.0
-offset_bottom = 576.0
-
-[node name="Note" type="Label" parent="Panel" unique_id=743037848]
-layout_mode = 0
-offset_left = 48.0
-offset_top = 300.0
-offset_right = 636.0
-offset_bottom = 460.0
-
-[node name="TerraformingCosts" type="Label" parent="Panel" unique_id=2066134928]
-layout_mode = 0
-offset_left = 44.0
-offset_top = 32.0
-offset_right = 312.0
-offset_bottom = 56.0
-text = "TERRAFORMING_COSTS"
-
-[node name="TCVBox" type="VBoxContainer" parent="Panel" unique_id=454593399]
-layout_mode = 0
-offset_left = 48.0
-offset_top = 64.0
-offset_right = 88.0
-offset_bottom = 104.0
-
-[node name="BuildingCosts" type="Label" parent="Panel" unique_id=1730383985]
-layout_mode = 0
-offset_left = 48.0
+offset_left = 508.0
 offset_top = 168.0
-offset_right = 636.0
-offset_bottom = 192.0
-text = "BUILDING_COSTS"
+offset_right = 1156.0
+offset_bottom = 604.0
+metadata/_edit_lock_ = true
 
-[node name="BCGrid" type="GridContainer" parent="Panel" unique_id=1292375045]
+[node name="TerraformPanel" type="Panel" parent="Panel" unique_id=842012718]
 layout_mode = 0
-offset_left = 48.0
-offset_top = 208.0
-offset_right = 632.0
-offset_bottom = 284.0
-columns = 2
+offset_left = 24.0
+offset_top = 16.0
+offset_right = 312.0
+offset_bottom = 384.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_lngtd")
 
-[node name="CostMult" type="RichTextLabel" parent="Panel" unique_id=555712019]
+[node name="TerraformingCosts" type="Label" parent="Panel/TerraformPanel" unique_id=2066134928]
 layout_mode = 0
-offset_left = 352.0
-offset_top = 32.0
-offset_right = 644.0
-offset_bottom = 152.0
+offset_left = 4.0
+offset_top = 16.0
+offset_right = 284.0
+offset_bottom = 40.0
+text = "TERRAFORMING_COSTS"
+horizontal_alignment = 1
+
+[node name="VBox" type="VBoxContainer" parent="Panel/TerraformPanel" unique_id=454593399]
+layout_mode = 0
+offset_left = 24.0
+offset_top = 100.0
+offset_right = 168.0
+offset_bottom = 136.0
+
+[node name="TextureRect" type="TextureRect" parent="Panel/TerraformPanel" unique_id=1318320352]
+modulate = Color(1, 1, 1, 0.35000002)
+layout_mode = 0
+offset_left = 176.0
+offset_top = 76.0
+offset_right = 277.0
+offset_bottom = 177.0
+texture = ExtResource("17_gm5rd")
+
+[node name="CostMult" type="RichTextLabel" parent="Panel/TerraformPanel" unique_id=555712019]
+layout_mode = 0
+offset_left = 20.0
+offset_top = 252.0
+offset_right = 268.0
+offset_bottom = 368.0
 bbcode_enabled = true
 
-[node name="Terraform" type="Button" parent="Panel" unique_id=539248701]
+[node name="BuildingPanel" type="Panel" parent="Panel" unique_id=642694873]
 layout_mode = 0
-anchor_left = 1.0
+offset_left = 332.0
+offset_top = 16.0
+offset_right = 620.0
+offset_bottom = 384.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_lngtd")
+
+[node name="Note" type="Label" parent="Panel/BuildingPanel" unique_id=743037848]
+layout_mode = 0
+offset_left = 24.0
+offset_top = 252.0
+offset_right = 272.0
+offset_bottom = 360.0
+autowrap_mode = 3
+
+[node name="Costs" type="Label" parent="Panel/BuildingPanel" unique_id=1730383985]
+layout_mode = 0
+offset_left = 24.0
+offset_top = 16.0
+offset_right = 268.0
+offset_bottom = 40.0
+text = "BUILDING_COSTS"
+horizontal_alignment = 1
+
+[node name="VBox" type="VBoxContainer" parent="Panel/BuildingPanel" unique_id=1098365664]
+layout_mode = 0
+offset_left = 24.0
+offset_top = 100.0
+offset_right = 280.0
+offset_bottom = 176.0
+
+[node name="TextureRect" type="TextureRect" parent="Panel/BuildingPanel" unique_id=418777301]
+modulate = Color(1, 1, 1, 0.35000002)
+layout_mode = 0
+offset_left = 180.0
+offset_top = 76.0
+offset_right = 276.0
+offset_bottom = 172.0
+texture = ExtResource("18_fk8sx")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Terraform" type="Button" parent="Panel" unique_id=539248701]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
 anchor_top = 1.0
-anchor_right = 1.0
+anchor_right = 0.5
 anchor_bottom = 1.0
-offset_left = -204.0
-offset_top = -36.0
+offset_left = -100.0
+offset_top = -44.0
+offset_right = 104.0
+offset_bottom = -8.0
+grow_horizontal = 2
+grow_vertical = 0
 shortcut = SubResource("3")
 shortcut_in_tooltip = false
 text = "TERRAFORM"
 
-[connection signal="close_button_pressed" from="CloseButton" to="." method="_on_close_button_pressed"]
+[connection signal="pressed" from="CloseButton" to="." method="_on_close_button_pressed"]
 [connection signal="pressed" from="ScrollContainer/VBoxContainer/MineralExtraction" to="." method="_on_mineral_extractor_pressed"]
 [connection signal="pressed" from="ScrollContainer/VBoxContainer/EnergyProduction" to="." method="_on_power_plant_pressed"]
 [connection signal="pressed" from="ScrollContainer/VBoxContainer/MineralStorage" to="." method="_on_mineral_silo_pressed"]
