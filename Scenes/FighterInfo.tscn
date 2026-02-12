@@ -43,17 +43,17 @@ horizontal_alignment = 1
 
 [node name="NumberLabel" type="Label" parent="." unique_id=210736438]
 layout_mode = 0
-offset_left = 132.0
-offset_top = 56.0
-offset_right = 164.0
-offset_bottom = 79.0
+offset_left = 136.0
+offset_top = 64.0
+offset_right = 168.0
+offset_bottom = 87.0
 text = "x 2"
 
 [node name="StrengthLabel" type="Label" parent="." unique_id=215150534]
 layout_mode = 0
-offset_left = 228.0
+offset_left = 248.0
 offset_top = 40.0
-offset_right = 260.0
+offset_right = 280.0
 offset_bottom = 63.0
 text = "100"
 
@@ -75,9 +75,9 @@ text = "DISBAND"
 
 [node name="StrengthIcon" type="TextureRect" parent="." unique_id=1920122377]
 layout_mode = 0
-offset_left = 188.0
+offset_left = 208.0
 offset_top = 32.0
-offset_right = 220.0
+offset_right = 240.0
 offset_bottom = 68.0
 texture = ExtResource("3_k0jue")
 expand_mode = 1

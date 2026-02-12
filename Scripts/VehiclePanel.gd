@@ -175,13 +175,15 @@ func _on_fighters_pressed():
 			continue
 		var fighter_info = game.fighter_data[i]
 		var fighter = preload("res://Scenes/FighterInfo.tscn").instantiate()
-		fighter.get_node("NumberLabel").text = "x %s" % [fighter_info.number]
+		fighter.get_node("NumberLabel").text = "x %d" % [fighter_info.number]
 		fighter.get_node("StrengthLabel").text = Helper.format_num(fighter_info.strength)
 		fighter.get_node("LocationLabel").text = fighter_info.location_name
+		fighter.get_node("StrengthIcon").mouse_entered.connect(game.show_tooltip.bind(tr("FLEET_STRENGTH")))
+		fighter.get_node("StrengthIcon").mouse_exited.connect(game.hide_tooltip)
 		if fighter_info.tier == 0:
-			fighter.get_node("FighterIcon").texture_normal = preload("res://Graphics/Ships/Fighter.png")
+			fighter.get_node("FighterIcon").texture = preload("res://Graphics/Ships/Fighter.png")
 		elif fighter_info.tier == 1:
-			fighter.get_node("FighterIcon").texture_normal = preload("res://Graphics/Ships/Fighter2.png")
+			fighter.get_node("FighterIcon").texture = preload("res://Graphics/Ships/Fighter2.png")
 		$ScrollContainer/VBoxContainer.add_child(fighter)
 		fighter.get_node("GoTo").pressed.connect(fighter_go_to.bind(i))
 		fighter.get_node("Disband").pressed.connect(fighter_disband.bind(i, fighter))

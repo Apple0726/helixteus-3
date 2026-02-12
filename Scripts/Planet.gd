@@ -673,7 +673,7 @@ func click_tile(tile, tile_id:int):
 		Building.ROVER_CONSTRUCTION_CENTER:
 			game.toggle_panel("RC_panel")
 		Building.SHIPYARD:
-			game.toggle_panel(game.shipyard_panel)
+			game.toggle_panel("shipyard_panel")
 		Building.PROBE_CONSTRUCTION_CENTER:
 			game.toggle_panel(game.PC_panel)
 		Building.STONE_CRUSHER:

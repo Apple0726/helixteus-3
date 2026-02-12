@@ -57,8 +57,8 @@ var send_fighters_panel:Control
 var send_probes_panel:Control
 var terraform_panel:Control
 var greenhouse_panel:Control
-var shipyard_panel:Panel
-var PC_panel:Panel
+var shipyard_panel:Control
+var PC_panel:Control
 var AMN_panel:Control
 var SPR_panel:Control
 var planetkiller_panel:Control
@@ -94,6 +94,8 @@ var panel_var_name_to_file_name = {
 	"production_panel":"ProductionPanel",
 	"greenhouse_panel":"GreenhousePanel",
 	"terraform_panel":"TerraformPanel",
+	"shipyard_panel":"ShipyardPanel",
+	"send_fighters_panel":"SendFightersPanel",
 }
 #endregion
 

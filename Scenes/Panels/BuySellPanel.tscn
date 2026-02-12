@@ -112,10 +112,10 @@ offset_right = 896.0
 offset_bottom = 464.0
 mouse_filter = 1
 texture = ExtResource("3_myvxs")
-patch_margin_left = 408
-patch_margin_top = 80
-patch_margin_right = 80
-patch_margin_bottom = 64
+patch_margin_left = 15
+patch_margin_top = 11
+patch_margin_right = 15
+patch_margin_bottom = 11
 axis_stretch_horizontal = 1
 metadata/_edit_horizontal_guides_ = [596.0]
 

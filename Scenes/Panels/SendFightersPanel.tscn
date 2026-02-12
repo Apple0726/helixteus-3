@@ -2,66 +2,99 @@
 
 [ext_resource type="Texture2D" uid="uid://hjl8rhhr18ke" path="res://Graphics/Icons/help.png" id="1"]
 [ext_resource type="Theme" uid="uid://cp2u1kgj60ic" path="res://Resources/default_theme.tres" id="3"]
+[ext_resource type="Texture2D" uid="uid://baowebna7hgr5" path="res://Graphics/GUI/CloseButtonNormal.png" id="3_artra"]
+[ext_resource type="Texture2D" uid="uid://dcvnyb0mloli2" path="res://Graphics/GUI/Panel.png" id="3_jg28v"]
 [ext_resource type="Texture2D" uid="uid://bm01hxs45q3ga" path="res://Graphics/Icons/energy.png" id="4"]
+[ext_resource type="Texture2D" uid="uid://c1vwn7p5uxu1r" path="res://Graphics/GUI/CloseButtonHover.png" id="4_8vafv"]
 [ext_resource type="Script" uid="uid://clc8nx7qyryp6" path="res://Scripts/SendFightersPanel.gd" id="5"]
 [ext_resource type="Texture2D" uid="uid://bn8t8jmrkuvdk" path="res://Graphics/Icons/Time.png" id="7"]
-[ext_resource type="PackedScene" uid="uid://ddf2xjwcht77u" path="res://Scenes/CloseButton.tscn" id="8"]
 [ext_resource type="Texture2D" uid="uid://4tf3teqmkahc" path="res://Graphics/Misc/Bar.png" id="9"]
 
-[node name="SendFightersPanel" type="Panel" unique_id=1235703997]
+[sub_resource type="SystemFont" id="SystemFont_l1il0"]
+font_names = PackedStringArray("Arial")
+subpixel_positioning = 0
+multichannel_signed_distance_field = true
+
+[sub_resource type="LabelSettings" id="LabelSettings_artra"]
+font = SubResource("SystemFont_l1il0")
+font_size = 24
+shadow_size = 2
+shadow_color = Color(0, 0, 0, 0.372549)
+shadow_offset = Vector2(2, 2)
+
+[node name="SendFightersPanel" type="Control" unique_id=1090577322]
+layout_mode = 3
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -533.5
-offset_top = -300.0
-offset_right = 533.5
-offset_bottom = 300.0
+offset_left = -640.0
+offset_top = -360.0
+offset_right = -600.0
+offset_bottom = -320.0
 grow_horizontal = 2
 grow_vertical = 2
 pivot_offset = Vector2(533, 300)
 theme = ExtResource("3")
 script = ExtResource("5")
+metadata/_edit_vertical_guides_ = [640.0]
+
+[node name="GUI" type="TextureRect" parent="." unique_id=73186535]
+layout_mode = 0
+offset_left = 80.0
+offset_top = 52.0
+offset_right = 1204.0
+offset_bottom = 671.0
+texture = ExtResource("3_jg28v")
+metadata/_edit_lock_ = true
+
+[node name="CloseButton" type="TextureButton" parent="." unique_id=648651461]
+layout_mode = 0
+offset_left = 1138.0
+offset_top = 67.0
+offset_right = 1187.0
+offset_bottom = 116.0
+texture_normal = ExtResource("3_artra")
+texture_hover = ExtResource("4_8vafv")
 
 [node name="Title" type="Label" parent="." unique_id=1917376989]
 custom_minimum_size = Vector2(0, 38)
-layout_mode = 0
+layout_mode = 1
+anchors_preset = 10
 anchor_right = 1.0
-offset_bottom = 24.0
+offset_left = 124.0
+offset_top = 72.0
+offset_right = 268.0
+offset_bottom = 110.0
+grow_horizontal = 2
 theme_override_font_sizes/font_size = 18
 text = "SEND_FIGHTERS"
+label_settings = SubResource("LabelSettings_artra")
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="CloseButton" parent="." unique_id=1047219528 instance=ExtResource("8")]
-layout_mode = 1
-offset_left = -37.5
-offset_top = 12.0
-offset_right = -13.5
-offset_bottom = 36.0
-
-[node name="Panel" type="Panel" parent="." unique_id=1074206957]
+[node name="Panel" type="Panel" parent="." unique_id=1275911922]
 layout_mode = 0
-offset_left = 24.0
-offset_top = 60.0
-offset_right = 1040.0
-offset_bottom = 560.0
+offset_left = 152.0
+offset_top = 172.0
+offset_right = 1136.0
+offset_bottom = 396.0
 
-[node name="Label" type="RichTextLabel" parent="." unique_id=524891592]
+[node name="Label" type="RichTextLabel" parent="Panel" unique_id=524891592]
 layout_mode = 0
-offset_left = 52.0
-offset_top = 96.0
-offset_right = 1016.0
-offset_bottom = 308.0
+offset_left = 20.0
+offset_top = 16.0
+offset_right = 984.0
+offset_bottom = 228.0
 theme_override_constants/line_separation = 10
 
 [node name="Send" type="Button" parent="." unique_id=702074926]
 layout_mode = 0
-offset_left = 864.0
-offset_top = 512.0
-offset_right = 1032.0
-offset_bottom = 552.0
+offset_left = 576.0
+offset_top = 584.0
+offset_right = 704.0
+offset_bottom = 620.0
 text = "SEND"
 
 [node name="Control" type="Control" parent="." unique_id=431247785]
@@ -69,81 +102,95 @@ anchors_preset = 0
 offset_right = 40.0
 offset_bottom = 40.0
 
-[node name="CheckBox" type="CheckBox" parent="Control" unique_id=603864554]
+[node name="ConquerOrderPanel" type="Panel" parent="Control" unique_id=1504750264]
 layout_mode = 0
-offset_left = 44.0
-offset_top = 352.0
-offset_right = 329.0
-offset_bottom = 380.0
+offset_left = 152.0
+offset_top = 440.0
+offset_right = 540.0
+offset_bottom = 552.0
+
+[node name="CheckBox" type="CheckBox" parent="Control/ConquerOrderPanel" unique_id=603864554]
+layout_mode = 0
+offset_left = 20.0
+offset_top = 16.0
+offset_right = 305.0
+offset_bottom = 44.0
 button_pressed = true
 text = "LEAST_DIFFICULT_FIRST"
 
-[node name="CheckBox2" type="CheckBox" parent="Control" unique_id=769308452]
+[node name="CheckBox2" type="CheckBox" parent="Control/ConquerOrderPanel" unique_id=769308452]
 layout_mode = 0
-offset_left = 44.0
-offset_top = 400.0
-offset_right = 325.0
-offset_bottom = 428.0
+offset_left = 20.0
+offset_top = 64.0
+offset_right = 301.0
+offset_bottom = 92.0
 text = "MOST_DIFFICULT_FIRST"
 
-[node name="Label2" type="Label" parent="Control" unique_id=850734246]
+[node name="EnergyPanel" type="Panel" parent="Control" unique_id=10544383]
 layout_mode = 0
-offset_left = 373.0
-offset_top = 376.0
-offset_right = 561.0
-offset_bottom = 400.0
+offset_left = 576.0
+offset_top = 440.0
+offset_right = 1136.0
+offset_bottom = 552.0
+
+[node name="Label2" type="Label" parent="Control/EnergyPanel" unique_id=45850694]
+layout_mode = 0
+offset_left = -51.0
+offset_top = 20.0
+offset_right = 137.0
+offset_bottom = 44.0
 text = "LESS_ENERGY"
 horizontal_alignment = 2
 
-[node name="EnergyCost" type="Label" parent="Control" unique_id=1940934137]
+[node name="EnergyCost" type="Label" parent="Control/EnergyPanel" unique_id=1388754632]
 layout_mode = 0
-offset_left = 608.0
-offset_top = 520.0
-offset_right = 752.0
-offset_bottom = 544.0
+offset_left = 312.0
+offset_top = 68.0
+offset_right = 456.0
+offset_bottom = 92.0
 text = "1111"
 
-[node name="Label5" type="Label" parent="Control" unique_id=758397337]
+[node name="Label5" type="Label" parent="Control/EnergyPanel" unique_id=418907558]
 layout_mode = 0
-offset_left = 192.0
-offset_top = 520.0
-offset_right = 512.0
-offset_bottom = 544.0
+offset_left = -100.0
+offset_top = 68.0
+offset_right = 220.0
+offset_bottom = 92.0
 text = "TOTAL_ENERGY_COST"
 horizontal_alignment = 2
 
-[node name="Label3" type="Label" parent="Control" unique_id=645820776]
+[node name="Label3" type="Label" parent="Control/EnergyPanel" unique_id=211140298]
 layout_mode = 0
-offset_left = 840.0
-offset_top = 376.0
-offset_right = 1004.0
-offset_bottom = 400.0
+offset_left = 416.0
+offset_top = 20.0
+offset_right = 580.0
+offset_bottom = 44.0
 text = "FASTER_TRAVEL"
 
-[node name="HSlider" type="HSlider" parent="Control" unique_id=708210730]
+[node name="HSlider" type="HSlider" parent="Control/EnergyPanel" unique_id=2090357751]
 layout_mode = 0
-offset_left = 580.0
-offset_top = 380.0
-offset_right = 820.0
-offset_bottom = 396.0
+offset_left = 156.0
+offset_top = 24.0
+offset_right = 396.0
+offset_bottom = 40.0
 value = 50.0
 
-[node name="TextureRect" type="TextureRect" parent="Control" unique_id=1907530478]
+[node name="TextureRect" type="TextureRect" parent="Control/EnergyPanel" unique_id=792123245]
 layout_mode = 0
-offset_left = 544.0
-offset_top = 512.0
-offset_right = 612.0
-offset_bottom = 548.0
+offset_left = 252.0
+offset_top = 60.0
+offset_right = 320.0
+offset_bottom = 96.0
 texture = ExtResource("4")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="SE_Hint" type="TextureRect" parent="Control" unique_id=2138592994]
+[node name="SE_Hint" type="TextureRect" parent="Control/EnergyPanel" unique_id=2003427951]
 layout_mode = 0
-offset_left = 694.5
-offset_top = 522.0
-offset_right = 716.5
-offset_bottom = 538.0
+offset_left = 402.5
+offset_top = 70.0
+offset_right = 424.5
+offset_bottom = 86.0
 texture = ExtResource("1")
 expand_mode = 1
 stretch_mode = 4
@@ -155,19 +202,19 @@ offset_bottom = 40.0
 
 [node name="ColorRect" type="ColorRect" parent="Control2" unique_id=733932919]
 layout_mode = 0
-offset_left = 96.0
-offset_top = 196.0
-offset_right = 576.0
-offset_bottom = 220.0
+offset_left = 204.0
+offset_top = 276.0
+offset_right = 684.0
+offset_bottom = 300.0
 color = Color(0.0901961, 0.0901961, 0.0901961, 1)
 
 [node name="TextureProgressBar" type="TextureProgressBar" parent="Control2" unique_id=66766908]
 modulate = Color(0.396078, 0.396078, 0.396078, 1)
 layout_mode = 0
-offset_left = 96.0
-offset_top = 196.0
-offset_right = 576.0
-offset_bottom = 220.0
+offset_left = 204.0
+offset_top = 276.0
+offset_right = 684.0
+offset_bottom = 300.0
 step = 0.0
 value = 50.0
 nine_patch_stretch = true
@@ -175,35 +222,32 @@ texture_progress = ExtResource("9")
 
 [node name="TextureRect" type="TextureRect" parent="Control2" unique_id=396542509]
 layout_mode = 0
-offset_left = 248.0
-offset_top = 236.0
-offset_right = 284.0
-offset_bottom = 268.0
+offset_left = 372.0
+offset_top = 316.0
+offset_right = 408.0
+offset_bottom = 348.0
 texture = ExtResource("7")
 expand_mode = 1
 stretch_mode = 5
 
 [node name="TimeLeft" type="Label" parent="Control2" unique_id=34087598]
 layout_mode = 0
-offset_left = 294.0
-offset_top = 236.0
-offset_right = 458.0
-offset_bottom = 268.0
+offset_left = 418.0
+offset_top = 316.0
+offset_right = 582.0
+offset_bottom = 348.0
 vertical_alignment = 1
 
 [node name="TimeLeft2" type="Label" parent="Control2" unique_id=1201306172]
 layout_mode = 0
-offset_left = 96.0
-offset_top = 156.0
-offset_right = 576.0
-offset_bottom = 180.0
+offset_left = 204.0
+offset_top = 236.0
+offset_right = 684.0
+offset_bottom = 260.0
 text = "TIME_TO_NEXT_CONQUER"
 horizontal_alignment = 1
 
-[connection signal="close_button_pressed" from="CloseButton" to="." method="_on_close_button_pressed"]
+[connection signal="pressed" from="CloseButton" to="." method="_on_close_button_pressed"]
 [connection signal="pressed" from="Send" to="." method="_on_Send_pressed"]
-[connection signal="pressed" from="Control/CheckBox" to="." method="_on_CheckBox_pressed"]
-[connection signal="pressed" from="Control/CheckBox2" to="." method="_on_CheckBox2_pressed"]
-[connection signal="value_changed" from="Control/HSlider" to="." method="_on_HSlider_value_changed"]
-[connection signal="mouse_entered" from="Control/SE_Hint" to="." method="_on_SE_Hint_mouse_entered"]
-[connection signal="mouse_exited" from="Control/SE_Hint" to="." method="_on_mouse_exited"]
+[connection signal="pressed" from="Control/ConquerOrderPanel/CheckBox" to="." method="_on_CheckBox_pressed"]
+[connection signal="pressed" from="Control/ConquerOrderPanel/CheckBox2" to="." method="_on_CheckBox2_pressed"]

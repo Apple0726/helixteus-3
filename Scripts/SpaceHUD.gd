@@ -50,11 +50,12 @@ func _on_Annotate_mouse_entered():
 
 
 func _on_SendFighters_pressed():
+	game.toggle_panel("send_fighters_panel", false)
 	if game.c_v == "galaxy":
 		game.send_fighters_panel.fighter_type = 0
-	if game.c_v == "cluster":
+	elif game.c_v == "cluster":
 		game.send_fighters_panel.fighter_type = 1
-	game.toggle_panel(game.send_fighters_panel)
+	game.send_fighters_panel.refresh()
 
 
 func _on_SendProbes_pressed():

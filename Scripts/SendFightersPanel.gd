@@ -12,18 +12,18 @@ var strength_required:float = 0
 var sorted_objs:Array = []
 var start_index:int = 0
 var fighter_type:int = 0
-@onready var RTL:RichTextLabel = $Label
+@onready var RTL:RichTextLabel = $Panel/Label
 @onready var time_left:Label = $Control2/TimeLeft
 @onready var progress:TextureProgressBar = $Control2/TextureProgressBar
 
 func _ready():
 	set_process(false)
-	set_polygon(size)
+	set_polygon($GUI.size, $GUI.position)
 
 func refresh_energy():
-	var slider_factor = pow(10, $Control/HSlider.value / 50.0 - 1) * 5.0
+	var slider_factor = pow(10, $Control/EnergyPanel/HSlider.value / 50.0 - 1) * 5.0
 	total_energy_cost = base_travel_costs * slider_factor + planet_exit_costs
-	$Control/EnergyCost.text = Helper.format_num(total_energy_cost)
+	$Control/EnergyPanel/EnergyCost.text = Helper.format_num(total_energy_cost)
 	if fighter_type == 0:
 		time_for_one_obj = 2 * 1.2 / slider_factor / game.u_i.time_speed / game.u_i.speed_of_light#Calculate time for one system/galaxy	
 		Helper.add_text_to_RTL(RTL, "%s: %s\n%s: %s\n%s: %s\n%s: %s\n%s: @i %s\n%s: @i %s" % [tr("COMBINED_STRENGTH_F1"), Helper.format_num(ceil(combined_strength)), tr("STRENGTH_REQUIRED_F1"), Helper.format_num(ceil(strength_required)), tr("NUMBER_OF_SYS_BEFORE_REKT"), obj_num, tr("NUMBER_OF_UNCONQUERED_SYS"), unconquered_obj, tr("PLANET_EXIT_COST"), Helper.format_num(planet_exit_costs), tr("TIME_TO_CONQUER_ALL_SYS"), Helper.time_to_str(time_for_one_obj * obj_num)], [Data.energy_icon, Data.time_icon], 19)
@@ -43,7 +43,7 @@ func refresh():
 	var fighter_num:int = 0
 	var combined_strength2:float = 0
 	if fighter_type == 0:
-		$Control/SE_Hint.visible = true
+		$Control/EnergyPanel/SE_Hint.visible = true
 		if game.galaxy_data[game.c_g].has("conquer_start_date"):
 			$Send.text = tr("DISBAND")
 			sort_systems(game.galaxy_data[game.c_g].conquer_order)
@@ -82,7 +82,7 @@ func refresh():
 				$Control.visible = false
 				return
 			combined_strength2 = combined_strength
-			sort_systems($Control/CheckBox.button_pressed)
+			sort_systems($Control/ConquerOrderPanel/CheckBox.button_pressed)
 			for system in sorted_objs:#Calculates the actual number of systems the fighters will conquer
 				if system.has("conquered"):
 					continue
@@ -99,7 +99,7 @@ func refresh():
 			if unconquered_obj == 0:
 				game.galaxy_data[game.c_g].conquered = true
 	elif fighter_type == 1:
-		$Control/SE_Hint.visible = false
+		$Control/EnergyPanel/SE_Hint.visible = false
 		if game.u_i.cluster_data[game.c_c].has("conquer_start_date"):
 			$Send.text = tr("DISBAND")
 			$Send.visible = true
@@ -139,7 +139,7 @@ func refresh():
 				$Control.visible = false
 				return
 			combined_strength2 = combined_strength
-			sort_galaxies($Control/CheckBox.button_pressed)
+			sort_galaxies($Control/ConquerOrderPanel/CheckBox.button_pressed)
 			for galaxy in sorted_objs:
 				if galaxy.is_empty() or galaxy.has("conquered"):
 					continue
@@ -203,13 +203,13 @@ func get_travel_cost_multiplier(lv:int):
 		return 0.75
 
 func _on_CheckBox_pressed():
-	$Control/CheckBox.button_pressed = true
-	$Control/CheckBox2.button_pressed = false
+	$Control/ConquerOrderPanel/CheckBox.button_pressed = true
+	$Control/ConquerOrderPanel/CheckBox2.button_pressed = false
 	refresh()
 
 func _on_CheckBox2_pressed():
-	$Control/CheckBox2.button_pressed = true
-	$Control/CheckBox.button_pressed = false
+	$Control/ConquerOrderPanel/CheckBox2.button_pressed = true
+	$Control/ConquerOrderPanel/CheckBox.button_pressed = false
 	refresh()
 
 func _on_Send_pressed():
@@ -230,7 +230,7 @@ func _on_Send_pressed():
 					game.galaxy_data[game.c_g].sys_num = obj_num
 					game.galaxy_data[game.c_g].sys_conquered = 0
 					game.galaxy_data[game.c_g].combined_strength = combined_strength
-					game.galaxy_data[game.c_g].conquer_order = $Control/CheckBox.button_pressed#true: ascending difficulty
+					game.galaxy_data[game.c_g].conquer_order = $Control/ConquerOrderPanel/CheckBox.button_pressed#true: ascending difficulty
 					game.HUD.refresh()
 				else:
 					game.popup(tr("NOT_ENOUGH_ENERGY"), 1.5)
@@ -253,7 +253,7 @@ func _on_Send_pressed():
 					game.u_i.cluster_data[game.c_c].gal_num = obj_num
 					game.u_i.cluster_data[game.c_c].gal_conquered = 0
 					game.u_i.cluster_data[game.c_c].combined_strength = combined_strength
-					game.u_i.cluster_data[game.c_c].conquer_order = $Control/CheckBox.button_pressed#true: ascending difficulty
+					game.u_i.cluster_data[game.c_c].conquer_order = $Control/ConquerOrderPanel/CheckBox.button_pressed#true: ascending difficulty
 					game.HUD.refresh()
 				else:
 					game.popup(tr("NOT_ENOUGH_ENERGY"), 1.5)

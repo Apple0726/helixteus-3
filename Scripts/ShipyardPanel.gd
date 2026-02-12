@@ -1,7 +1,7 @@
 extends "Panel.gd"
 
 var strength_mult:float
-var base_costs:Array = [{"money":1500000000}, {"money":1500000000*5000000, "mythril":2400000000}]
+var base_costs:Array = [{"money":1.5e9}, {"money":1.5e9*5000000, "mythril":240000000}]
 var costs:Dictionary
 var fighter_type:int = 0
 var strength:float
@@ -10,7 +10,7 @@ var strength_div:float = 1.0
 func _ready():
 	$OptionButton.add_item(tr("FIGHTER"))
 	$OptionButton.add_item(tr("FIGHTER_MK2"))
-	set_polygon(size)
+	set_polygon($GUI.size, $GUI.position)
 
 func refresh():
 	$OptionButton.visible = game.science_unlocked.has("FG2") and game.tile_data[game.c_t].bldg.path_1 >= 100
