@@ -2856,26 +2856,35 @@ func generate_planets(id:int):#local id
 			while num < total_num:
 				num += 1
 				var lv:int = randi_range(max(1, max_lv - 8), max_lv)
-				var _class:int = 1
-				if randf() < log(diff) / log(100) - 1.0:#difficulty < 100 = no green enemies, difficulty = 1000 = 50% chance of green enemies, difficulty > 10000 = no more red enemies, always green or higher
-					_class += 1
-				if randf() < log(diff / 100.0) / log(100) - 1.0:
-					_class += 1
-				if randf() < log(diff / 10000.0) / log(100) - 1.0:
-					_class += 1
+				# _class	1: red, damage dealer
+				#			2: green, status effects & debuffs inflicter
+				#			3: blue, pushes stuff around
+				#			4: purple, magic user, buffer, healer
+				var _class:int = randi() % 4 + 1
 				if is_starting_solar_system:
 					lv = min(lv, 4)
 					if i == 2: # Only level 1 enemies on closest planet from starting planet
 						lv = 1
+					_class = 1
 				if num == total_num:
 					lv = max(1, 1 + log(2.0 * power_left) / log(1.3))
 				var HP_power = 7.0 * (1.8 * randf() + 0.2)
 				var stat_power = 48.0 - 1.5 * HP_power + lv / 2
 				var HP = round(HP_power * (lv + 1.0))
+				var _money = round(randf_range(1, 2) * pow(1.3, lv - 1) * 50000)
+				var XP = round(pow(1.25, lv - 1) * 40)
 				if _class == 2:
-					HP = round(HP * randf_range(4.0, 6.0))
-				elif _class >= 3:
-					HP = round(HP * randf_range(8.0, 12.0))
+					HP = round(HP * 0.8)
+					_money = round(_money * 1.1)
+					XP = round(XP * 1.1)
+				elif _class == 3:
+					HP = round(HP * 1.2)
+					_money = round(_money * 1.1)
+					XP = round(XP * 1.1)
+				elif _class == 4:
+					HP = round(HP * 0.9)
+					_money = round(_money * 1.2)
+					XP = round(XP * 1.2)
 				var stats = [0.0, 0.0, 0.0, 0.0]
 				while stat_power > 0:
 					stats[randi() % 4] += 1
@@ -2890,8 +2899,6 @@ func generate_planets(id:int):#local id
 						attack += 1
 						defense += 1
 						accuracy += 1
-				var _money = round(randf_range(1, 2) * pow(1.3, lv - 1) * 50000)
-				var XP = round(pow(1.25, lv - 1) * 40)
 				var colliding = true
 				var initial_position:Vector2
 				while colliding:

@@ -191,6 +191,7 @@ func _on_fire_weapon_aim_visibility_changed() -> void:
 func _on_mouse_entered() -> void:
 	if battle_GUI.action_selected in [battle_GUI.MOVE, battle_GUI.PUSH]:
 		return
+	turn_order_box._on_mouse_entered()
 	if override_tooltip_text:
 		game.show_tooltip(override_tooltip_text)
 	else:
@@ -201,6 +202,7 @@ func _on_mouse_entered() -> void:
 
 
 func _on_mouse_exited() -> void:
+	turn_order_box._on_mouse_exited()
 	game.hide_tooltip()
 
 func fire_weapon(weapon_type: int):

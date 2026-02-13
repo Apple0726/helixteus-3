@@ -32,6 +32,13 @@ func _ready() -> void:
 		HX_data = Helper.get_conquer_all_data().HX_data
 	else:
 		HX_data = p_i.HX_data
+	var total_enemy_stats:float = 0.0
+	for HX in HX_data:
+		var total_stats = HX.HP + HX.attack + HX.defense + HX.accuracy + HX.agility
+		total_enemy_stats += total_stats
+		HX.total_stats = total_stats
+	HX_data.sort_custom(func(a, b): return a.lv > b.lv)
+	HX_data = HX_data.slice(0, 12)
 	ship_data = game.ship_data
 	if Settings.enemy_AI_difficulty == Settings.ENEMY_AI_DIFFICULTY_EASY:
 		enemy_AI_diff_mult = 0.8
@@ -141,15 +148,19 @@ func highlight_entity(entity: BattleEntity):
 	for ship in ship_nodes:
 		if ship != entity:
 			ship.get_node("Sprite2D").material.set_shader_parameter("alpha", 0.2)
+			ship.get_node("Info").modulate.a = 0.2
 	for HX in HX_nodes:
 		if HX != entity:
 			HX.get_node("Sprite2D").material.set_shader_parameter("alpha", 0.2)
+			HX.get_node("Info").modulate.a = 0.2
 
 func unhighlight_entity(entity: BattleEntity):
 	for ship in ship_nodes:
 		ship.get_node("Sprite2D").material.set_shader_parameter("alpha", 1.0)
+		ship.get_node("Info").modulate.a = 1.0
 	for HX in HX_nodes:
 		HX.get_node("Sprite2D").material.set_shader_parameter("alpha", 1.0)
+		HX.get_node("Info").modulate.a = 1.0
 
 func battle_victory_callback():
 	var victory_panel = preload("res://Scenes/Panels/VictoryPanel.tscn").instantiate()

@@ -7,7 +7,6 @@ extends Node2D
 #Used to prevent view from moving outside viewport
 var dimensions:float
 
-const PLANET_SCALE_DIV = 1200000.0
 var scale_mult = 1.0
 var glows = []
 var planet_plant_bars = []
@@ -61,7 +60,7 @@ func refresh_planets():
 		if p_i.is_empty():
 			tile_datas.append([])
 			continue
-		var sc:float = p_i["distance"] / 2400.0 * scale_mult
+		var sc:float = p_i["distance"] / 4800.0 * scale_mult
 		var tile_data_to_append:Array = game.open_obj("Planets", p_i.id)
 		tile_datas.append(tile_data_to_append)
 		
@@ -81,7 +80,7 @@ func refresh_planets():
 		planet_glow.mouse_exited.connect(on_btn_out)
 		planet_btn.pressed.connect(on_planet_click.bind(p_i["id"], p_i.l_id))
 		planet_glow.pressed.connect(on_planet_click.bind(p_i["id"], p_i.l_id))
-		planet_btn.scale *= p_i["size"] / PLANET_SCALE_DIV * scale_mult * 640.0 / planet_btn.texture_normal.get_width()
+		planet_btn.scale *= p_i["size"] * 0.0000003 * scale_mult * 640.0 / planet_btn.texture_normal.get_width()
 		planet_glow.scale *= sc
 		if game.system_data[game.c_s].has("conquered"):
 			p_i.conquered = true
@@ -120,12 +119,8 @@ func refresh_planets():
 		dimensions = v.length()
 		if p_i.has("MS"):
 			planet_glow.modulate = Color(0.6, 0.6, 0.6, 1)
-			var MS_sprite = add_MS_sprite(planet, p_i)
-			MS_sprite.scale *= p_i.size / PLANET_SCALE_DIV
-			if p_i.MS == "SE":
-				MS_sprite.position.x = -6.25 * 640.0 / planet_btn.texture_normal.get_width() * cos(p_i.angle) * scale_mult
-				MS_sprite.position.y = -6.25 * 640.0 / planet_btn.texture_normal.get_width() * sin(p_i.angle) * scale_mult
-			elif p_i.MS == "MME":
+			var MS_sprite = add_MS_sprite(planet_btn, p_i)
+			if p_i.MS == "MME":
 				add_rsrc(v, Color(0, 0.5, 0.9, 1), Data.minerals_icon, p_i.l_id, false, sc)
 		if p_i.has("tile_num") and p_i.bldg.has("name"):
 			planet.add_child(Helper.add_lv_boxes(p_i, Vector2.ZERO, sc))
@@ -249,7 +244,6 @@ func refresh_stars():
 		star.add_to_group("stars_system")
 		if star_info.has("MS"):
 			var MS_sprite = add_MS_sprite(star, star_info)
-			MS_sprite.position = star.texture_normal.get_size() * 0.5
 			if star_info.MS == "DS":
 				add_rsrc(star_info.pos * scale_mult, Color(0, 0.8, 0, 1), Data.energy_icon, i, true, max(star_info.size / 6.0, 0.5) * scale_mult)
 			elif star_info.MS == "MB":
@@ -265,12 +259,14 @@ func add_MS_sprite(node, obj:Dictionary):
 		MS_sprite.texture = load("res://Graphics/Megastructures/%s_%s.png" % [obj.MS, obj.MS_lv])
 	if obj.MS == "SE":
 		MS_sprite.rotation = obj.angle - PI / 2
+		MS_sprite.position.x = -520.0 * cos(obj.angle)
+		MS_sprite.position.y = -520.0 * sin(obj.angle)
 		MS_sprite.scale *= 1024.0 / MS_sprite.texture.get_height()
 	elif obj.MS == "MME":
 		MS_sprite.scale *= 1024.0 / MS_sprite.texture.get_height()
 	elif obj.MS in ["DS", "CBS"]:
 		MS_sprite.scale *= 3.0
-	MS_sprite.scale *= scale_mult * 2.5
+	MS_sprite.position += node.size * 0.5
 	node.add_child(MS_sprite)
 	MS_sprite.name = "MS"
 	return MS_sprite

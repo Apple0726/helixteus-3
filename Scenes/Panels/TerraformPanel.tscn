@@ -197,6 +197,7 @@ button_text = "SAP_SC"
 icon_texture = ExtResource("14_7vv42")
 
 [node name="Panel" type="Panel" parent="." unique_id=1769624489]
+visible = false
 layout_mode = 0
 offset_left = 508.0
 offset_top = 168.0

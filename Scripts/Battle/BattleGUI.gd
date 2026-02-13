@@ -47,11 +47,13 @@ func _ready() -> void:
 				$MainPanel.get_node("%sLevels/Path%s/Level%s" % [weapon, path+1, lv+1]).mouse_exited.connect(game.hide_tooltip)
 	seed(p_i.seed)
 	$PlanetBG.texture = load("res://Graphics/Planets/%s.png" % p_i.type)
-	var random_depth = randf_range(0.6, 1.1)
+	var random_depth = randf_range(0.6, 1.0)
 	$PlanetBG.scale *= random_depth * 640.0 / $PlanetBG.texture.get_width()
 	$PlanetLight.scale *= $PlanetBG.scale.x * 0.2
-	$PlanetBG.position.x = randf_range(180.0, 1100.0)
-	$PlanetBG.position.y = randf_range(180.0, 540.0)
+	while $PlanetBG.position.x > 440 and $PlanetBG.position.x < 840:
+		$PlanetBG.position.x = randf_range(180.0, 1100.0)
+	while $PlanetBG.position.y > 260 and $PlanetBG.position.y < 460:
+		$PlanetBG.position.y = randf_range(180.0, 540.0)
 	var average_starlight_color:Color = Color.BLACK
 	for star in game.system_data[game.c_s].stars:
 		average_starlight_color += Helper.get_star_modulate(star.class) * star.luminosity
@@ -59,7 +61,7 @@ func _ready() -> void:
 	average_starlight_color.a = 1.0
 	$PlanetLight.color = average_starlight_color
 	$PlanetLight.position = -350.0 * random_depth * Vector2.from_angle(p_i.angle) + $PlanetBG.position
-	$PlanetLight.energy = clamp(remap(p_i.temperature, -270.0, 600.0, 0.0, 12.0), 0.0, 12.0)
+	$PlanetLight.energy = clamp(remap(p_i.temperature, -270.0, 800.0, 0.0, 24.0), 0.0, 24.0)
 	randomize()
 
 func show_weapon_tooltip(weapon: String, path: int, lv: int):

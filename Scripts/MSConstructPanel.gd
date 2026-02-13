@@ -49,9 +49,9 @@ func on_MS_over(MS:String):
 			game.view.obj.show_PK_costs(star, not build_all)
 		var star_node = get_tree().get_nodes_in_group("stars_system")[star_selected]
 		if build_all:
-			game.view.obj.add_MS_sprite(star_node, MS, Data.MS_num_stages[MS])
+			game.view.obj.add_MS_sprite(star_node, {"MS":MS, "MS_lv": Data.MS_num_stages[MS]})
 		else:
-			game.view.obj.add_MS_sprite(star_node, MS, 0)
+			game.view.obj.add_MS_sprite(star_node, {"MS":MS, "MS_lv": 0})
 
 func on_MS_out():
 	var star_node = get_tree().get_nodes_in_group("stars_system")[star_selected]
