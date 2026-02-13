@@ -245,25 +245,25 @@ stretch_mode = 5
 [node name="SendFighters" type="Button" parent="." unique_id=365096652]
 layout_mode = 0
 offset_left = 200.0
-offset_top = 688.0
+offset_top = 684.0
 offset_right = 360.0
-offset_bottom = 720.0
+offset_bottom = 721.0
 text = "SEND_FIGHTERS"
 
 [node name="ConquerAll" type="Button" parent="." unique_id=398785895]
 layout_mode = 0
 offset_left = 200.0
-offset_top = 688.0
+offset_top = 684.0
 offset_right = 360.0
-offset_bottom = 720.0
+offset_bottom = 721.0
 text = "CONQUER_ALL"
 
 [node name="SendProbes" type="Button" parent="." unique_id=627852143]
 layout_mode = 0
 offset_left = 200.0
-offset_top = 688.0
+offset_top = 684.0
 offset_right = 360.0
-offset_bottom = 720.0
+offset_bottom = 721.0
 text = "SEND_PROBES"
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=88860969]

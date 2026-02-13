@@ -3147,8 +3147,8 @@ func generate_tiles(id:int):
 		for j in wid:
 			var level:float = noise.get_noise_2d(i / float(wid), j / float(wid))
 			var t_id = i % wid + j * wid
-			var cave_can_spawn = true
 			var is_lake = level > 0.5 and p_i.has("lake") and p_i.lake.state != "g"
+			var cave_can_spawn = not is_lake
 			if is_lake and not tile_data[t_id].has("ash"):
 				tile_data[t_id]["lake"] = true
 				tile_data[t_id].resource_production_bonus.clear()
@@ -3837,13 +3837,13 @@ func _process(_delta):
 		var energy_to_add = delta * (autocollect.MS.energy + autocollect.GS.energy + autocollect.rsrc.energy) * energy_mult
 		SP += delta * (autocollect.MS.SP + autocollect.GS.SP) * SP_mult
 		SP += autocollect.rsrc.SP * delta * SP_mult
+		for mat in autocollect.mats:
+			if mat == "minerals":
+				min_to_add += autocollect.mats[mat] * delta
+			else:
+				mats[mat] += autocollect.mats[mat] * delta
 		if mats.cellulose > 0:
 			if not autocollect.mats.has("soil") or is_zero_approx(autocollect.mats.soil) or mats.soil > 0:
-				for mat in autocollect.mats:
-					if mat == "minerals":
-						min_to_add += autocollect.mats[mat] * delta
-					else:
-						mats[mat] += autocollect.mats[mat] * delta
 				for met in autocollect.mets:
 					mets[met] += autocollect.mets[met] * delta
 		else:

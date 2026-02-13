@@ -531,9 +531,10 @@ func _input(event):
 				build_MS(MS_constr_data.obj, MS_constr_data.obj.MS)
 				current_MS_action = ""
 		elif planet_hovered != -1 and game.planet_data[planet_hovered].has("bldg") and game.planet_data[planet_hovered].bldg.has("name"):
+			game.toggle_panel("upgrade_panel", false)
 			game.upgrade_panel.ids = []
 			game.upgrade_panel.planet = game.planet_data[planet_hovered]
-			game.toggle_panel(game.upgrade_panel)
+			game.upgrade_panel.refresh()
 		game.hide_tooltip()
 	elif Input.is_action_just_released("X") and MS_constr_data.has("destroyable"):
 		if not MS_constr_data.has("confirm_destroy"):

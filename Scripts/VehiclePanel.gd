@@ -176,7 +176,7 @@ func _on_fighters_pressed():
 		var fighter_info = game.fighter_data[i]
 		var fighter = preload("res://Scenes/FighterInfo.tscn").instantiate()
 		fighter.get_node("NumberLabel").text = "x %d" % [fighter_info.number]
-		fighter.get_node("StrengthLabel").text = Helper.format_num(fighter_info.strength)
+		fighter.get_node("StrengthLabel").text = Helper.format_num(floor(fighter_info.strength))
 		fighter.get_node("LocationLabel").text = fighter_info.location_name
 		fighter.get_node("StrengthIcon").mouse_entered.connect(game.show_tooltip.bind(tr("FLEET_STRENGTH")))
 		fighter.get_node("StrengthIcon").mouse_exited.connect(game.hide_tooltip)

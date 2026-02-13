@@ -38,7 +38,7 @@ func refresh():
 			btn.pressed.connect(on_MS_click.bind(MS))
 
 func on_MS_over(MS:String):
-	game.show_tooltip(tr("M_" + MS + "_DESC"))
+	game.show_tooltip("[font_size=20]{MS_name}[/font_size]\n\n{MS_desc}".format({"MS_name":tr("M_" + MS + "_NAME"), "MS_desc":tr("M_" + MS + "_DESC")}))
 	if star_selected != -1:
 		var star:Dictionary = game.system_data[game.c_s].stars[star_selected]
 		if MS == "DS":

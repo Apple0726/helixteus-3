@@ -42,7 +42,7 @@ func format_text(text_node, texture, path:String, show_available:bool, rsrc_cost
 		var num_str:String = e_notation(rsrc_cost) if rsrc_cost < 0.0001 else format_num(clever_round(rsrc_cost, 3, false, true), 6)
 		if rsrc_cost == 0:
 			num_str = "0"
-		text = "%s%s%s" % [minus, num_str, mass_str]
+		text = "%s%s %s" % [minus, num_str, mass_str]
 	text_node.text = text
 	text_node["theme_override_colors/font_color"] = color
 
@@ -537,7 +537,7 @@ func get_rsrc_from_rock(contents:Dictionary, tile:Dictionary, p_i:Dictionary, ti
 	if tile.has("current_deposit") and tile.current_deposit.progress > tile.current_deposit.size - 1:
 		tile.erase("current_deposit")
 	if tile.has("crater") and tile.crater.has("init_depth") and tile.depth > 3 * tile.crater.init_depth:
-		remove_crater_bonuses(game.tile_data, tile_id, tile.crater.metal)
+		#remove_crater_bonuses(game.tile_data, tile_id, tile.crater.metal)
 		tile.erase("crater")
 
 func remove_crater_bonuses(tile_data:Array, tile_id:int, metal:String):
@@ -856,7 +856,7 @@ func add_autocollect(p_i:Dictionary, tile:Dictionary, mult_diff:float):
 			var base_prod:float = base * p_i.atmosphere[el]
 			Helper.add_atom_production(el, base_prod)
 		Helper.add_energy_from_NFR(p_i, base)
-		Helper.add_energy_from_CS(p_i, base)
+		Helper.add_cellulose_from_CS(p_i, base)
 	elif tile.bldg.name == Building.GREENHOUSE and tile.has("auto_GH"):
 		game.autocollect.mats.cellulose -= tile.auto_GH.cellulose_drain * (mult_diff - 1.0)
 		tile.auto_GH.cellulose_drain *= mult_diff
@@ -885,7 +885,7 @@ func add_energy_from_NFR(p_i:Dictionary, base:float):
 			game.autocollect.rsrc.energy += S
 			game.tile_data[nfr.tile].ancient_bldg.production = game.tile_data[nfr.tile].ancient_bldg.get("production", 0) + S
 
-func add_energy_from_CS(p_i:Dictionary, base:float):
+func add_cellulose_from_CS(p_i:Dictionary, base:float):
 	if not p_i.ancient_bldgs.has(AncientBuilding.CELLULOSE_SYNTHESIZER):
 		return
 	for cs in p_i.ancient_bldgs[AncientBuilding.CELLULOSE_SYNTHESIZER]:
@@ -1561,7 +1561,7 @@ func set_ancient_bldg_bonuses(p_i:Dictionary, ancient_bldg:Dictionary, tile_id:i
 				elif ancient_bldg.name == AncientBuilding.CELLULOSE_SYNTHESIZER:
 					mult = Helper.get_CS_prod_mult(ancient_bldg.tier)
 					base = tile.bldg.path_1_value * overclock_mult * mult
-					Helper.add_energy_from_CS(p_i, base)
+					Helper.add_cellulose_from_CS(p_i, base)
 	elif ancient_bldg.name == AncientBuilding.SPACEPORT:
 		if game.science_unlocked.has("ISP") and game.c_s_g == game.ships_travel_data.c_g_coords.s and game.c_p == game.ships_travel_data.c_coords.p:
 			game.autocollect.ship_XP = ancient_bldg.tier

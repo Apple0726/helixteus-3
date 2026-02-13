@@ -251,3 +251,4 @@ horizontal_alignment = 1
 [connection signal="pressed" from="Send" to="." method="_on_Send_pressed"]
 [connection signal="pressed" from="Control/ConquerOrderPanel/CheckBox" to="." method="_on_CheckBox_pressed"]
 [connection signal="pressed" from="Control/ConquerOrderPanel/CheckBox2" to="." method="_on_CheckBox2_pressed"]
+[connection signal="value_changed" from="Control/EnergyPanel/HSlider" to="." method="_on_h_slider_value_changed"]

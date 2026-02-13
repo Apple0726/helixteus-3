@@ -369,7 +369,7 @@ func _on_Upgrade_pressed():
 					for el in p_i.atmosphere:
 						Helper.add_atom_production(el, base_prod * p_i.atmosphere[el])
 					Helper.add_energy_from_NFR(p_i, base_prod)
-					Helper.add_energy_from_CS(p_i, base_prod)
+					Helper.add_cellulose_from_CS(p_i, base_prod)
 				elif tile.bldg.name == Building.MINERAL_SILO:
 					game.mineral_capacity += new_base_value - tile.bldg.path_1_value
 				elif tile.bldg.name == Building.BATTERY:
@@ -424,7 +424,7 @@ func _on_Upgrade_pressed():
 				for el in planet.atmosphere:
 					Helper.add_atom_production(el, base_prod * planet.atmosphere[el])
 				Helper.add_energy_from_NFR(planet, base_prod)
-				Helper.add_energy_from_CS(planet, base_prod)
+				Helper.add_cellulose_from_CS(planet, base_prod)
 			elif planet.bldg.name == Building.RESEARCH_LAB:
 				game.autocollect.rsrc.SP += diff * planet.resource_production_bonus.get("SP", 1.0)
 			elif planet.bldg.name == Building.MINERAL_EXTRACTOR:

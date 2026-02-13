@@ -1,7 +1,7 @@
 {
     "en": {
         "lines": 1618,
-        "words": 11347,
+        "words": 11367,
         "chars": 69646
     },
     "fr": {
@@ -16,17 +16,17 @@
     },
     "zh": {
         "lines": 1464,
-        "words": 1795,
+        "words": 1815,
         "chars": 19042
     },
     "de": {
         "lines": 1604,
-        "words": 10091,
+        "words": 10109,
         "chars": 74453
     },
     "es": {
         "lines": 1304,
-        "words": 9437,
+        "words": 9457,
         "chars": 60320
     },
     "ko": {
@@ -41,22 +41,22 @@
     },
     "hu": {
         "lines": 1543,
-        "words": 8273,
-        "chars": 61142
+        "words": 8286,
+        "chars": 61145
     },
     "ja": {
-        "lines": 1250,
-        "words": 1418,
-        "chars": 22845
+        "lines": 1249,
+        "words": 1433,
+        "chars": 22788
     },
     "nl": {
-        "lines": 1133,
-        "words": 6123,
-        "chars": 42524
+        "lines": 1132,
+        "words": 6115,
+        "chars": 42372
     },
     "ru": {
         "lines": 950,
-        "words": 3892,
+        "words": 3904,
         "chars": 29201
     },
     "pl": {

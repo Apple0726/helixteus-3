@@ -55,7 +55,7 @@ func refresh():
 				$Control.visible = false
 				$Control2.visible = false
 				$Send.visible = false
-				$Label.text = tr("GALAXY_FULLY_CONQUERED")
+				RTL.text = tr("GALAXY_FULLY_CONQUERED")
 				return
 			$Control.visible = true
 			$Control2.visible = false
@@ -112,7 +112,7 @@ func refresh():
 				$Control.visible = false
 				$Control2.visible = false
 				$Send.visible = false
-				$Label.text = tr("CLUSTER_FULLY_CONQUERED")
+				RTL.text = tr("CLUSTER_FULLY_CONQUERED")
 				return
 			$Control.visible = true
 			$Control2.visible = false
@@ -391,10 +391,6 @@ func _process(delta):
 					game.new_bldgs[Building.SOLAR_PANEL] = true
 		else:
 			time_left.text = Helper.time_to_str(game.u_i.cluster_data[game.c_c].time_for_one_gal - Time.get_unix_time_from_system() + game.u_i.cluster_data[game.c_c].conquer_start_date)
-	
-func _on_HSlider_value_changed(value):
-	refresh_energy()
-
 
 func _on_SE_Hint_mouse_entered():
 	game.show_tooltip(tr("SE_HINT"))
@@ -402,3 +398,7 @@ func _on_SE_Hint_mouse_entered():
 
 func _on_mouse_exited():
 	game.hide_tooltip()
+
+
+func _on_h_slider_value_changed(value: float) -> void:
+	refresh_energy()

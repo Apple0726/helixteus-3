@@ -609,7 +609,7 @@ func constr_bldg(tile_id:int, curr_time:int, _bldg_to_construct:int, mass_build:
 				game.show[el] = true
 				Helper.add_atom_production(el, base_prod)
 			Helper.add_energy_from_NFR(p_i, base)
-			Helper.add_energy_from_CS(p_i, base)
+			Helper.add_cellulose_from_CS(p_i, base)
 		tile.bldg["c_p_g"] = game.c_p_g
 		game.tile_data[tile_id] = tile
 		add_bldg(tile_id, _bldg_to_construct, true)
@@ -644,7 +644,7 @@ func overclock_bldg(tile, tile_id:int, curr_time):
 				var base_prod:float = base * p_i.atmosphere[el]
 				Helper.add_atom_production(el, base_prod)
 			Helper.add_energy_from_NFR(p_i, base)
-			Helper.add_energy_from_CS(p_i, base)
+			Helper.add_cellulose_from_CS(p_i, base)
 		elif tile.bldg.name == Building.BORING_MACHINE:
 			var tiles_mined = (curr_time - tile.bldg.collect_date) * tile.bldg.path_1_value * Helper.get_prod_mult(tile) * tile.get("mining_outpost_bonus", 1.0)
 			if tiles_mined >= 1:
@@ -757,7 +757,7 @@ func destroy_bldg(id2:int, mass:bool = false):
 			var base_prod:float = base * p_i.atmosphere[el]
 			Helper.add_atom_production(el, base_prod)
 		Helper.add_energy_from_NFR(p_i, base)
-		Helper.add_energy_from_CS(p_i, base)
+		Helper.add_cellulose_from_CS(p_i, base)
 	elif bldg == Building.CENTRAL_BUSINESS_DISTRICT:
 		var n:int = tile.bldg.path_3_value
 		var wid:int = tile.bldg.wid
@@ -1273,9 +1273,11 @@ func _unhandled_input(event):
 			return
 		if tile and tile.has("depth") and not tile.has("bldg") and bldg_to_construct == -1 and not tile.has("bridge"):
 			if Input.is_action_pressed("shift"):
-				game.tile_data[tile_id]["bridge"] = true
-				obstacle_nodes[Vector2i(x_pos, y_pos)].queue_free()
-				obstacle_nodes.erase(Vector2i(x_pos, y_pos))
+				var v = Vector2i(x_pos, y_pos)
+				if obstacle_nodes.has(v):
+					game.tile_data[tile_id]["bridge"] = true
+					obstacle_nodes[v].queue_free()
+					obstacle_nodes.erase(v)
 			else:
 				game.mine_tile(tile_id)
 		if tile and bldg_to_construct == -1:
@@ -1569,6 +1571,7 @@ func add_bldg(id2:int, type:int, building_animation:bool = false):
 				if tile.auto_GH.has("soil_drain"):
 					var fert = Sprite2D.new()
 					fert.texture = preload("res://Graphics/Agriculture/fertilizer.png")
+					fert.scale *= 0.3
 					bldgs[id2].add_child(fert)
 					fert.name = "Fertilizer"
 				add_rsrc(v, Color(0.41, 0.25, 0.16, 1), load("res://Graphics/Metals/%s.png" % tile.auto_GH.seed.split("_")[0]), id2)
@@ -1639,7 +1642,7 @@ func on_timeout():
 						var base_prod:float = base * p_i.atmosphere[el]
 						Helper.add_atom_production(el, base_prod)
 					Helper.add_energy_from_NFR(p_i, base)
-					Helper.add_energy_from_CS(p_i, base)
+					Helper.add_cellulose_from_CS(p_i, base)
 				tile.bldg.erase("overclock_date")
 				tile.bldg.erase("overclock_length")
 				tile.bldg.erase("overclock_mult")
