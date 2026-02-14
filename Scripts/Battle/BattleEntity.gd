@@ -84,6 +84,8 @@ var override_tooltip_dict:Dictionary
 var override_tooltip_icons = [Data.attack_icon, Data.defense_icon, Data.accuracy_icon, Data.agility_icon]
 
 func _ready() -> void:
+	battle_scene = get_parent()
+	battle_GUI = get_parent().battle_GUI
 	override_tooltip_dict = default_override_tooltip_dict.duplicate()
 	if has_node("Info/Initiative"):
 		$Info/Initiative.modulate.a = 0.0
@@ -184,7 +186,6 @@ func show_initiative(_initiative: int):
 
 func take_turn():
 	turn_number += 1
-	turn_taken = false
 	entities_already_collided.clear()
 	if is_instance_valid(turn_order_box):
 		turn_order_box.get_node("ChangeSizeAnim").play("ChangeSize")
@@ -447,7 +448,7 @@ func collide_with_entity(collider: BattleEntity, collidee: BattleEntity):
 		else:
 			collider.velocity -= collider.velocity.normalized() * velocity_loss
 
-# Needed for when 2 asteroids collide with each other and not deal double damage
+# Needed for when 2 entities collide with each other and not deal double damage
 var entities_already_collided = []
 
 func on_collide(area):

@@ -18,6 +18,7 @@ var HX_nodes = []
 var ship_nodes = []
 var mouse_position_global:Vector2
 var mouse_position_local:Vector2
+var asteroid_nodes = []
 var obstacle_nodes = []
 var view_tween
 var animations_sped_up = false
@@ -49,8 +50,6 @@ func _ready() -> void:
 		HX.METERS_PER_AGILITY = METERS_PER_AGILITY
 		HX.PIXELS_PER_METER = PIXELS_PER_METER
 		HX.initialize_stats(HX_data[i])
-		HX.battle_scene = self
-		HX.battle_GUI = battle_GUI
 		HX.HX_nodes = HX_nodes
 		HX.ship_nodes = ship_nodes
 		HX.type = Battle.EntityType.ENEMY
@@ -80,8 +79,6 @@ func _ready() -> void:
 		ship_node.turn_on_lights(i)
 		ship_node.roll_initiative()
 		ship_node.position = ship_data[i].initial_position
-		ship_node.battle_scene = self
-		ship_node.battle_GUI = battle_GUI
 		ship_node.next_turn.connect(next_turn)
 		ship_node.type = Battle.EntityType.SHIP
 		ship_node.ship_type = i
@@ -295,15 +292,18 @@ func next_turn():
 			if not animations_sped_up and not view_moved:
 				view_entity(ship_node)
 				view_moved = true
+			var skip_turn = ship_node.status_effects[Battle.StatusEffect.STUN] > 0 or ship_node.status_effects[Battle.StatusEffect.FROZEN] > 0 or ship_node.turn_taken
 			await ship_node.take_turn()
 			if ship_node.HP >= 0:
-				if not animations_sped_up and not ship_pos_before_moving.is_equal_approx(ship_node.position):
-					view_entity(ship_node)
-				if ship_node.status_effects[Battle.StatusEffect.STUN] <= 0 and ship_node.status_effects[Battle.StatusEffect.FROZEN] <= 0:
-					ships_taking_turn.append(ship_node)
-				else:
+				if skip_turn:
 					ship_node.turn_order_box.get_node("ChangeSizeAnim").play_backwards("ChangeSize")
 					ship_node.turn_taken = true
+				else:
+					if not animations_sped_up and not ship_pos_before_moving.is_equal_approx(ship_node.position):
+						view_entity(ship_node)
+					ships_taking_turn.append(ship_node)
+					if len(ships_taking_turn) == 1:
+						whose_turn_is_it_index = ship_turn
 			ship_turn += 1
 		if len(ships_taking_turn) > 0:
 			$Selected.show()
@@ -311,6 +311,7 @@ func next_turn():
 			battle_GUI.fade_in_main_panel()
 		else:
 			whose_turn_is_it_index = ship_turn - 1
+			next_turn()
 	elif initiative_order[whose_turn_is_it_index].type == Battle.EntityType.ENEMY:
 		var HX_node = initiative_order[whose_turn_is_it_index]
 		if not animations_sped_up:
@@ -396,7 +397,7 @@ func display_stats(type:String):
 			entity.get_node("Info/Label").text = str(stat)
 
 func environment_take_turn():
-	while randf() < 2.0 / (len(obstacle_nodes) + 1):
+	while randf() < 2.0 / (len(asteroid_nodes) + 1):
 		var asteroid_position = Vector2.ZERO
 		var scale_rand = randf()
 		var asteroid_scale:float = max(0.5 * scale_rand * pow(1.0 / (1.0 - scale_rand), 1.0 / 3.0), 0.1)
@@ -409,29 +410,25 @@ func environment_take_turn():
 			else:
 				asteroid_position.x = -640.0 if randf() < 0.5 else 1920.0
 				asteroid_position.y = randf_range(-1.0, 1.0) * 720.0 + 360.0
-			for obstacle in obstacle_nodes:
+			for obstacle in asteroid_nodes:
 				if is_instance_valid(obstacle) and Geometry2D.is_point_in_circle(asteroid_position, obstacle.position, (obstacle.scale.x + asteroid_scale) * 90.0):
 					colliding = true
 					break
-		var asteroid = preload("res://Scenes/Battle/Asteroid.tscn").instantiate()
+		var asteroid = preload("res://Scenes/Battle/Obstacle.tscn").instantiate()
 		asteroid.position = asteroid_position
-		asteroid.get_node("Sprite2D").scale = Vector2.ONE * asteroid_scale
 		if asteroid_scale > 1.0:
-			asteroid.get_node("Sprite2D").texture = preload("res://Graphics/Battle/Obstacles/asteroid_big.png")
+			asteroid.get_node("Sprite2D").texture = preload("res://Graphics/Battle/Obstacles/Asteroids/asteroid_big.png")
 		else:
-			asteroid.get_node("Sprite2D").texture = preload("res://Graphics/Battle/Obstacles/asteroid.png")
+			asteroid.get_node("Sprite2D").texture = preload("res://Graphics/Battle/Obstacles/Asteroids/asteroid.png")
+		asteroid.get_node("Sprite2D").scale = Vector2.ONE * asteroid_scale * 128.0 / asteroid.get_node("Sprite2D").texture.get_width()
 		asteroid.total_HP = pow(asteroid_scale, 3) * 10000
 		asteroid.HP = asteroid.total_HP
-		asteroid.get_node("Info/HP").max_value = asteroid.total_HP
-		asteroid.get_node("Info/HP").value = asteroid.HP
 		asteroid.attack = 10
 		asteroid.defense = 10
 		asteroid.accuracy = pow(asteroid_scale * 20.0, 1.5) + 1
 		asteroid.agility = pow(2.0 / asteroid_scale, 1.5) + 1
 		asteroid.go_through_movement_cost = asteroid_scale * 100.0
 		asteroid.collision_shape_radius = asteroid_scale * 84.0
-		asteroid.battle_GUI = battle_GUI
-		asteroid.type = Battle.EntityType.OBSTACLE
 		asteroid.velocity = -30.0 / asteroid_scale * Vector2(randf(), randf()) * sign(asteroid.position - Vector2(640.0, 360.0))
 		if not animations_sped_up:
 			asteroid.get_node("Sprite2D").material.set_shader_parameter("alpha", 0.0)
@@ -440,10 +437,9 @@ func environment_take_turn():
 			fade_in_tween.tween_property(asteroid.get_node("Sprite2D").material, "shader_parameter/alpha", 1.0, 0.5)
 			fade_in_tween.tween_property(asteroid.get_node("VelocityArrow"), "modulate:a", 1.0, 0.5)
 		asteroid.get_node("Sprite2D").rotation = randf_range(0.0, 2.0 * PI)
-		asteroid.battle_scene = self
-		asteroid.battle_GUI = battle_GUI
 		add_child(asteroid)
 		move_child(asteroid, 0)
+		asteroid_nodes.append(asteroid)
 		obstacle_nodes.append(asteroid)
 	if animations_sped_up:
 		await get_tree().create_timer(0.1).timeout
@@ -458,6 +454,12 @@ func environment_take_turn():
 		await get_tree().create_timer(1.2).timeout
 	initiative_order[whose_turn_is_it_index].turn_order_box.get_node("ChangeSizeAnim").play_backwards("ChangeSize")
 	whose_turn_is_it_index = -1
+	for HX in HX_nodes:
+		HX.turn_taken = false
+	for ship in ship_nodes:
+		ship.turn_taken = false
+	for obstacle in obstacle_nodes:
+		obstacle.turn_taken = false
 	next_turn()
 
 func show_and_enlarge_collision_shapes():

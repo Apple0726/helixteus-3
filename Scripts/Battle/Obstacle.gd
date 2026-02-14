@@ -3,18 +3,26 @@ extends "BattleEntity.gd"
 
 func _ready() -> void:
 	super()
+	type = Battle.EntityType.OBSTACLE
+	$Info/HP.max_value = total_HP
+	$Info/HP.value = HP
+	var sprite_width = $Sprite2D.texture.get_width() * $Sprite2D.scale.x
 	$CollisionShape2D.shape.radius = collision_shape_radius
-	$Info/HP.position.x = -$Sprite2D.scale.x * 90.0 + 90.0
-	$Info/Label.position.y = $Sprite2D.scale.x * 90.0 + 30.0
-	$Info/StatusEffects.position.y = -$Sprite2D.scale.x * 90.0 - 60.0
-	$Info/Buffs.position.y = $Sprite2D.scale.x * 90.0 + 60.0
-	$Info/Icon.position.y = $Sprite2D.scale.x * 90.0 + 30.0
+	$Info/HP.position.x = -sprite_width * 0.5 - 20.0
+	$Info/HP.position.y = sprite_width * 0.4
+	$Info/HP.size.x = sprite_width * 0.8
+	$Info/Label.position.y = sprite_width * 0.5 + 20
+	$Info/StatusEffects.position.x = -sprite_width * 0.5 - 11.0
+	$Info/StatusEffects.position.y = -sprite_width * 0.5
+	$Info/Buffs.position.y = sprite_width * 0.5 + 20
+	$Info/Icon.position.y = sprite_width * 0.5 + 20
+	$Info/Icon.texture = null
+	$Info/Label.text = ""
 	status_effect_resistances[Battle.StatusEffect.BURN] = 1.0
 	status_effect_resistances[Battle.StatusEffect.STUN] = 1.0
 	for effect in Battle.StatusEffect.N:
 		if not effect in status_effect_resistances:
 			status_effect_resistances[effect] = 0.0
-	$Sprite2D.scale *= 192.0 / $Sprite2D.texture.get_width()
 
 func take_turn():
 	super()

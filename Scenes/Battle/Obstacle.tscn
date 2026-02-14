@@ -1,12 +1,13 @@
 [gd_scene format=3 uid="uid://decmehu30cj8j"]
 
-[ext_resource type="Texture2D" uid="uid://43tk0leq150l" path="res://Graphics/Battle/Obstacles/asteroid.png" id="1_8rmj3"]
-[ext_resource type="Script" uid="uid://n327fjh85gr3" path="res://Scripts/Battle/Asteroid.gd" id="1_gcgyw"]
+[ext_resource type="Script" uid="uid://n327fjh85gr3" path="res://Scripts/Battle/Obstacle.gd" id="1_gcgyw"]
+[ext_resource type="Texture2D" uid="uid://bq8x02xtiddp1" path="res://Graphics/Cave/Projectiles/bubble.png" id="2_dayuw"]
 [ext_resource type="Texture2D" uid="uid://kr2fdk8dptv1" path="res://Graphics/Misc/BarUnder2.png" id="3_ey2x8"]
 [ext_resource type="PackedScene" uid="uid://b3b68o5fd52pr" path="res://Scenes/Battle/VelocityArrow.tscn" id="3_wikyw"]
 [ext_resource type="Texture2D" uid="uid://bx1hvetixqpwi" path="res://Graphics/Misc/Bar2.png" id="4_fg6fk"]
 [ext_resource type="PackedScene" uid="uid://m8wrm55x0xbe" path="res://Scenes/Battle/StatusEffects.tscn" id="5_c5aoj"]
 [ext_resource type="PackedScene" uid="uid://ni58sxlrjgg4" path="res://Scenes/Battle/Buffs.tscn" id="5_fg6fk"]
+[ext_resource type="Texture2D" uid="uid://7ffsf7xuvfw2" path="res://Graphics/Icons/attack.png" id="6_urlmv"]
 
 [sub_resource type="Shader" id="Shader_ey2x8"]
 code = "shader_type canvas_item;
@@ -38,7 +39,7 @@ script = ExtResource("1_gcgyw")
 
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=1431296579]
 material = SubResource("ShaderMaterial_fg6fk")
-texture = ExtResource("1_8rmj3")
+texture = ExtResource("2_dayuw")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1779661394]
 shape = SubResource("CircleShape2D_gcgyw")
@@ -72,18 +73,20 @@ texture_progress = ExtResource("4_fg6fk")
 
 [node name="Label" type="Label" parent="Info" unique_id=1296170771]
 layout_mode = 0
-offset_left = -28.0
-offset_top = 90.0
-offset_right = 52.0
-offset_bottom = 114.0
+offset_left = 4.0
+offset_top = 88.0
+offset_right = 84.0
+offset_bottom = 112.0
+text = "10"
 
 [node name="Icon" type="TextureRect" parent="Info" unique_id=1902247382]
 custom_minimum_size = Vector2(24, 24)
 layout_mode = 0
-offset_left = -68.0
-offset_top = 90.0
-offset_right = -44.0
-offset_bottom = 114.0
+offset_left = -28.0
+offset_top = 88.0
+offset_right = -4.0
+offset_bottom = 112.0
+texture = ExtResource("6_urlmv")
 expand_mode = 1
 stretch_mode = 6
 
@@ -97,9 +100,9 @@ offset_bottom = 40.0
 [node name="Buffs" parent="Info" unique_id=871219607 instance=ExtResource("5_fg6fk")]
 layout_mode = 0
 offset_left = -68.0
-offset_top = 108.0
+offset_top = 116.0
 offset_right = 68.0
-offset_bottom = 148.0
+offset_bottom = 156.0
 
 [connection signal="mouse_entered" from="." to="." method="_on_mouse_entered"]
 [connection signal="mouse_exited" from="." to="." method="_on_mouse_exited"]

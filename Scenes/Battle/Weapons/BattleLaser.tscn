@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://c85ho5kdv83p8"]
 
 [ext_resource type="Texture2D" uid="uid://dxr8x86jdcd2p" path="res://Graphics/Tiles/Highlight.jpg" id="1_11r1q"]
-[ext_resource type="Script" uid="uid://b6bysupl6nmty" path="res://Scripts/Battle/Weapons/ShipLaser.gd" id="1_c45pl"]
+[ext_resource type="Script" uid="uid://b6bysupl6nmty" path="res://Scripts/Battle/Weapons/BattleLaser.gd" id="1_c45pl"]
 
 [sub_resource type="Shader" id="Shader_cd4p5"]
 code = "shader_type canvas_item;
@@ -20,7 +20,7 @@ resource_local_to_scene = true
 shader = SubResource("Shader_cd4p5")
 shader_parameter/modulate = 1.0
 
-[node name="ShipLaser" type="Node2D" unique_id=1559069705]
+[node name="BattleLaser" type="Node2D" unique_id=1559069705]
 script = ExtResource("1_c45pl")
 
 [node name="ColorLaser" type="Sprite2D" parent="." unique_id=1739722649]

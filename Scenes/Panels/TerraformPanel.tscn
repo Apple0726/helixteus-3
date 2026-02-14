@@ -114,6 +114,7 @@ vertical_alignment = 1
 autowrap_mode = 3
 
 [node name="ScrollContainer" type="ScrollContainer" parent="." unique_id=367327835]
+clip_contents = false
 layout_mode = 0
 offset_left = 124.0
 offset_top = 168.0

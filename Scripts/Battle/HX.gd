@@ -42,6 +42,16 @@ func determine_target():
 		priorities.append(priority)
 	return priorities.find(max_priority)
 
+enum Attack {
+	NORMAL,
+	LASER,
+}
+var attack_type = Attack.NORMAL
+var attack_data = {
+	Attack.NORMAL:{"damage": 3.0, "accuracy": 1.0},
+	Attack.LASER:{"damage": 2.0, "accuracy": 1.8},
+}
+
 func take_turn():
 	await super()
 	if HP <= 0: # For example, if burned to death during super() call
@@ -52,6 +62,8 @@ func take_turn():
 		ending_turn()
 		return
 	decrement_status_effects_buffs()
+	if enemy_class == 2:
+		attack_type = Attack.LASER
 	var ship_target_id = determine_target()
 	target_position = ship_nodes[ship_target_id].position
 	position_preferences = {}
@@ -105,7 +117,8 @@ func calculate_position_preferences(pos:Vector2):
 	for HX in HX_nodes:
 		# Enemies try to move far from each other
 		HX_proximity_weight += 1.0e6 / max(pow(10.0 * PIXELS_PER_METER, 2), pos.distance_squared_to(HX.position))
-	var ship_target_distance = 40.0 + accuracy + accuracy_buff + 2.0 * max(0.0, accuracy + accuracy_buff - 12.0)
+	var final_accuracy = (accuracy + accuracy_buff) * attack_data[attack_type].accuracy
+	var ship_target_distance = 40.0 + final_accuracy + 2.0 * max(0.0, final_accuracy - 12.0)
 	for ship in ship_nodes:
 		# Try to get close to ships, but not too close or too far (ideal distance of ship_target_distance meters)
 		var r = pos.distance_squared_to(ship.position)
@@ -124,33 +137,83 @@ func move(target_pos:Vector2):
 		battle_scene.view_tween.tween_property(game.view, "position", Vector2(640, 360) - target_pos * game.view.scale.x, 1.5).set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_CUBIC)
 		await tween.finished
 
+func spawn_ball(angle:float, ball_HP:int, ball_size:float):
+	var ball = preload("res://Scenes/Battle/Obstacle.tscn").instantiate()
+	ball.position = ball_size * 3.0 * Vector2.from_angle(angle) + position
+	ball.get_node("Sprite2D").scale = Vector2.ONE * ball_size / 20.0
+	ball.get_node("Sprite2D").texture = preload("res://Graphics/Cave/Projectiles/bubble.png")
+	ball.total_HP = ball_HP
+	ball.HP = ball_HP
+	ball.attack = 10
+	ball.defense = 10
+	ball.accuracy = 10
+	ball.agility = 10
+	ball.go_through_movement_cost = 30.0
+	ball.collision_shape_radius = ball_size
+	ball.velocity = 80.0 * Vector2.from_angle(angle)
+	if not battle_scene.animations_sped_up:
+		ball.get_node("Sprite2D").material.set_shader_parameter("alpha", 0.0)
+		ball.get_node("VelocityArrow").modulate.a = 0.0
+		var fade_in_tween = create_tween().set_parallel()
+		fade_in_tween.tween_property(ball.get_node("Sprite2D").material, "shader_parameter/alpha", 1.0, 0.5)
+		fade_in_tween.tween_property(ball.get_node("VelocityArrow"), "modulate:a", 1.0, 0.5)
+	battle_scene.add_child(ball)
+	battle_scene.obstacle_nodes.append(ball)
+	
 func attack_target():
-	target_angle = atan2(target_position.y - position.y, target_position.x - position.x)
-	target_angle_max_deviation = 1.0 / (accuracy + accuracy_buff) / aim_mult
-	if battle_scene.animations_sped_up:
-		await get_tree().create_timer(0.1).timeout
+	if enemy_class == 3:
+		if turn_number % 3 == 1:
+			var angle_offset = randf() * 2.0 * PI / 8.0
+			for i in 8:
+				spawn_ball(i * 2.0 * PI / 8.0 + angle_offset, total_HP * 2, 20.0)
+		elif turn_number % 3 == 2:
+			for ship in ship_nodes:
+				spawn_ball(atan2(ship.position.y - position.y, ship.position.x - position.x), total_HP * 3, 35.0)
+		elif turn_number % 3 == 0:
+			var ship = ship_nodes.pick_random()
+			spawn_ball(atan2(ship.position.y - position.y, ship.position.x - position.x), total_HP * 5, 55.0)
+		ending_turn(0.05 if battle_scene.animations_sped_up else 0.5)
 	else:
-		$FireWeaponAim.show()
-		await get_tree().create_timer(0.7).timeout
-	var projectile = preload("res://Scenes/Battle/Weapons/Projectile.tscn").instantiate()
-	projectile.set_script(load("res://Scripts/Battle/Weapons/Bullet.gd"))
-	projectile.get_node("Sprite2D").texture = preload("res://Graphics/Battle/Projectiles/enemy_bullet.png")
-	projectile.trail_color = Color.RED
-	projectile.collision_layer = 16
-	projectile.collision_mask = 1 + 2 + 32
-	projectile.speed = 1000.0
-	projectile.mass = 1.0
-	projectile.velocity_process_modifier = 5.0 if battle_scene.animations_sped_up else 1.0
-	projectile.rotation = randf_range(target_angle - target_angle_max_deviation, target_angle + target_angle_max_deviation)
-	projectile.damage = 2.0
-	projectile.shooter = self
-	projectile.weapon_accuracy = 1.0 * accuracy
-	projectile.deflects_remaining = 0
-	projectile.position = position
-	projectile.ending_turn_delay = 1.0
-	projectile.end_turn_ready = true
-	battle_scene.add_child(projectile)
-	projectile.end_turn.connect(ending_turn)
+		target_angle = atan2(target_position.y - position.y, target_position.x - position.x)
+		target_angle_max_deviation = 1.0 / (accuracy + accuracy_buff) / aim_mult / attack_data[attack_type].accuracy
+		if battle_scene.animations_sped_up:
+			await get_tree().create_timer(0.1).timeout
+		else:
+			$FireWeaponAim.show()
+			await get_tree().create_timer(0.7).timeout
+		var projectile_angle = randf_range(target_angle - target_angle_max_deviation, target_angle + target_angle_max_deviation)
+		if attack_type == Attack.NORMAL:
+			var projectile = preload("res://Scenes/Battle/Weapons/Projectile.tscn").instantiate()
+			projectile.set_script(load("res://Scripts/Battle/Weapons/Bullet.gd"))
+			projectile.get_node("Sprite2D").texture = preload("res://Graphics/Battle/Projectiles/enemy_bullet.png")
+			projectile.trail_color = Color.RED
+			projectile.collision_layer = 16
+			projectile.collision_mask = 1 + 2 + 32
+			projectile.speed = 1000.0
+			projectile.mass = 1.0
+			projectile.velocity_process_modifier = 5.0 if battle_scene.animations_sped_up else 1.0
+			projectile.rotation = projectile_angle
+			projectile.damage = attack_data[attack_type].damage
+			projectile.shooter = self
+			projectile.weapon_accuracy = attack_data[attack_type].accuracy * accuracy
+			projectile.deflects_remaining = 0
+			projectile.position = position
+			projectile.ending_turn_delay = 1.0
+			projectile.end_turn_ready = true
+			battle_scene.add_child(projectile)
+			projectile.end_turn.connect(ending_turn)
+		elif attack_type == Attack.LASER:
+			var laser = preload("res://Scenes/Battle/Weapons/BattleLaser.tscn").instantiate()
+			laser.get_node("RayCast2D").collision_mask = 1 + 2 + 32
+			laser.rotation = projectile_angle
+			laser.damage = attack_data[attack_type].damage
+			laser.shooter = self
+			laser.weapon_accuracy = attack_data[attack_type].accuracy * accuracy
+			laser.position = position
+			laser.fade_delay = 0.2 if battle_scene.animations_sped_up else 0.5
+			laser.status_effects = {Battle.StatusEffect.STUN: [0.8, 1]}
+			battle_scene.add_child(laser)
+			laser.tree_exited.connect(ending_turn)
 
 
 func ending_turn(delay: float = 0.0):
@@ -177,6 +240,8 @@ func _on_fire_weapon_aim_visibility_changed() -> void:
 func _on_mouse_entered() -> void:
 	if battle_GUI.action_selected in [battle_GUI.MOVE, battle_GUI.PUSH]:
 		return
+	if is_instance_valid(turn_order_box):
+		turn_order_box._on_mouse_entered()
 	if override_tooltip_text:
 		game.show_tooltip(override_tooltip_text.format(override_tooltip_dict), {"imgs": override_tooltip_icons})
 	else:
@@ -188,4 +253,6 @@ func _on_mouse_entered() -> void:
 
 
 func _on_mouse_exited() -> void:
+	if is_instance_valid(turn_order_box):
+		turn_order_box._on_mouse_exited()
 	game.hide_tooltip()
