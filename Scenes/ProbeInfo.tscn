@@ -15,8 +15,9 @@ theme = ExtResource("1_t3l4e")
 [node name="ProbeIcon" type="TextureRect" parent="." unique_id=1747738476]
 layout_mode = 0
 offset_left = 44.0
+offset_top = 12.0
 offset_right = 120.0
-offset_bottom = 76.0
+offset_bottom = 88.0
 texture = ExtResource("1_y0ggt")
 expand_mode = 1
 stretch_mode = 5

@@ -66,7 +66,7 @@ func _ready():
 			discovered_gal.append(g_i)
 		await_counter += 1
 		if is_instance_valid(game.overlay):
-			change_overlay(game.overlay.option_btn.selected, game.overlay.get_node("TextureRect").texture.gradient, overlays[-1])
+			change_overlay(0, game.overlay.get_node("TextureRect").texture.gradient, overlays[-1])
 		galaxy_btn.visible = not game.overlay_data.cluster.visible
 		overlays[-1].circle.visible = game.overlay_data.cluster.visible
 		if await_counter % int(3000.0 / Engine.get_frames_per_second()) == 0:
@@ -174,10 +174,10 @@ func on_galaxy_click (id:int, l_id:int):
 	var view = self.get_parent()
 	if not view.dragged:
 		if g_i.has("GS"):
-#			if g_i.GS == "TP":
-#				game.PC_panel.probe_tier = 2
-#				game.toggle_panel(game.PC_panel)
-#				game.hide_tooltip()
+			if g_i.GS == "TP":
+				game.PC_panel.probe_tier = 2
+				game.toggle_panel("PC_panel")
+				game.hide_tooltip()
 			return
 		if game.bottom_info_action == "convert_to_GS":
 			if id == 0:

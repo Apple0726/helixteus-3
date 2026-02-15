@@ -64,10 +64,7 @@ func on_MS_click(MS:String):
 	if MS == "" or game.c_v != "system":
 		return
 	if star_selected != -1 and MS in ["DS", "CBS", "MB", "PK"]:
-		var MS_constr_data = {
-			"obj":game.system_data[game.c_s].stars[star_selected],
-		}
-		game.view.obj.build_MS(MS_constr_data, MS)
+		game.view.obj.build_MS(game.system_data[game.c_s].stars[star_selected], MS)
 		return
 	if MS == "DS":
 		if not build_all or build_all and game.science_unlocked.has("DS1") and game.science_unlocked.has("DS2") and game.science_unlocked.has("DS3") and game.science_unlocked.has("DS4"):

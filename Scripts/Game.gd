@@ -96,6 +96,7 @@ var panel_var_name_to_file_name = {
 	"terraform_panel":"TerraformPanel",
 	"shipyard_panel":"ShipyardPanel",
 	"send_fighters_panel":"SendFightersPanel",
+	"PC_panel":"PCPanel",
 }
 #endregion
 
@@ -2927,8 +2928,8 @@ func generate_planets(id:int):#local id
 						var additional_passive_ability = randi() % Battle.PassiveAbility.N
 						if additional_passive_ability not in HX_data.passive_abilities:
 							HX_data.passive_abilities.append(additional_passive_ability)
-							HX_data.money *= 0.7 * len(HX_data.passive_abilities)
-							HX_data.XP *= 0.7 * len(HX_data.passive_abilities)
+							HX_data.money *= 0.6 * len(HX_data.passive_abilities)
+							HX_data.XP *= 0.6 * len(HX_data.passive_abilities)
 				p_i.HX_data.append(HX_data)
 				power_left -= 0.5 * pow(1.3, lv - 1)
 				if power_left <= 0.0:

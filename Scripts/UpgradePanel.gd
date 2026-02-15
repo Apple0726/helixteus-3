@@ -191,7 +191,7 @@ func update(changing_paths:bool = false):
 		else:
 			calc_costs(planet.bldg.name, planet.bldg[path_str], next_lv_spinbox.value, planet.cost_div if planet.has("cost_div") else 1.0, planet.tile_num)
 	if same_lv:
-		current_lv_label.text = tr("LEVEL") + " %s" % [first_tile_bldg[path_str]]
+		current_lv_label.text = tr("LEVEL") + " %d" % [first_tile_bldg[path_str]]
 		current_and_next_label.text = ""
 		#set_bldg_value(first_tile_bldg_info, first_tile, first_tile_bldg[path_str], num, current, false)
 	else:

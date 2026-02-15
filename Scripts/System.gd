@@ -948,7 +948,7 @@ func on_btn_out ():
 
 func _process(_delta):
 	for glow in glows:
-		glow.modulate.a = clamp(0.6 / (view.scale.x * glow.scale.x) - 0.1, 0, 1)
+		glow.modulate.a = clamp(0.6 / (pow(view.scale.x, 2.0) * glow.scale.x) - 0.1, 0, 1)
 		if glow.modulate.a == 0 and glow.visible:
 			if glow == glow_over:
 				game.hide_tooltip()

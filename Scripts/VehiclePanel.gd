@@ -212,7 +212,7 @@ func _on_probes_pressed():
 		var probe_info:Dictionary = game.probe_data[i]
 		var probe = preload("res://Scenes/ProbeInfo.tscn").instantiate()
 		probe.get_node("LocationLabel").text = game.u_i.name
-		probe.get_node("ProbeIcon").texture_normal = load("res://Graphics/Ships/Probe%s.png" % probe_info.tier)
+		probe.get_node("ProbeIcon").texture = load("res://Graphics/Ships/Probe%s.png" % probe_info.tier)
 		$ScrollContainer/VBoxContainer.add_child(probe)
 		probe.get_node("GoTo").pressed.connect(probe_go_to.bind(probe_info.tier))
 		probe.get_node("Disband").pressed.connect(probe_disband.bind(i, probe))
@@ -222,7 +222,7 @@ func _on_probes_pressed():
 			time_bar.position = Vector2(30, 0)
 			probe.add_child(time_bar)
 			probe_time_bars.append({"node":time_bar, "i":i})
-	$Probes/Label.text = "%s (%s / %s)" % [tr("PROBES"), probe_num, 500]
+	#$Probes/Label.text = "%s (%s / %s)" % [tr("PROBES"), probe_num, 500]
 	for probe in game.probe_data:
 		if probe and probe.has("start_date"):
 			$Timer.start()
