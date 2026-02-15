@@ -59,7 +59,7 @@ func _on_SendFighters_pressed():
 
 
 func _on_SendProbes_pressed():
-	game.toggle_panel(game.send_probes_panel)
+	game.toggle_panel("send_probes_panel")
 
 
 func _on_Gigastructures_pressed():

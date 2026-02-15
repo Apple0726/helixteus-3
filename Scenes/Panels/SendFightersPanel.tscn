@@ -10,13 +10,13 @@
 [ext_resource type="Texture2D" uid="uid://bn8t8jmrkuvdk" path="res://Graphics/Icons/Time.png" id="7"]
 [ext_resource type="Texture2D" uid="uid://4tf3teqmkahc" path="res://Graphics/Misc/Bar.png" id="9"]
 
-[sub_resource type="SystemFont" id="SystemFont_l1il0"]
+[sub_resource type="SystemFont" id="SystemFont_artra"]
 font_names = PackedStringArray("Arial")
 subpixel_positioning = 0
 multichannel_signed_distance_field = true
 
 [sub_resource type="LabelSettings" id="LabelSettings_artra"]
-font = SubResource("SystemFont_l1il0")
+font = SubResource("SystemFont_artra")
 font_size = 24
 shadow_size = 2
 shadow_color = Color(0, 0, 0, 0.372549)
@@ -65,13 +65,12 @@ anchors_preset = 10
 anchor_right = 1.0
 offset_left = 124.0
 offset_top = 72.0
-offset_right = 268.0
+offset_right = 412.0
 offset_bottom = 110.0
 grow_horizontal = 2
 theme_override_font_sizes/font_size = 18
 text = "SEND_FIGHTERS"
 label_settings = SubResource("LabelSettings_artra")
-horizontal_alignment = 1
 vertical_alignment = 1
 
 [node name="Panel" type="Panel" parent="." unique_id=1275911922]

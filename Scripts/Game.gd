@@ -97,6 +97,7 @@ var panel_var_name_to_file_name = {
 	"shipyard_panel":"ShipyardPanel",
 	"send_fighters_panel":"SendFightersPanel",
 	"PC_panel":"PCPanel",
+	"send_probes_panel":"SendProbesPanel",
 }
 #endregion
 
@@ -554,9 +555,6 @@ func _ready():
 	for mod in Mods.mod_list:
 		var main = Mods.mod_list[mod]
 		main.phase_2()
-	send_probes_panel = preload("res://Scenes/Panels/SendProbesPanel.tscn").instantiate()
-	send_probes_panel.visible = false
-	$Panels/Control.add_child(send_probes_panel)
 
 func refresh_continue_button():
 	var config = ConfigFile.new()

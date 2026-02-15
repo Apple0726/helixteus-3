@@ -1,127 +1,123 @@
 [gd_scene format=3 uid="uid://c4filbuq4b5ct"]
 
 [ext_resource type="Texture2D" uid="uid://bn8t8jmrkuvdk" path="res://Graphics/Icons/Time.png" id="1"]
-[ext_resource type="Texture2D" uid="uid://hjl8rhhr18ke" path="res://Graphics/Icons/help.png" id="2"]
 [ext_resource type="Theme" uid="uid://cp2u1kgj60ic" path="res://Resources/default_theme.tres" id="3"]
+[ext_resource type="Texture2D" uid="uid://dcvnyb0mloli2" path="res://Graphics/GUI/Panel.png" id="3_fas0x"]
+[ext_resource type="Texture2D" uid="uid://baowebna7hgr5" path="res://Graphics/GUI/CloseButtonNormal.png" id="4_jl7m8"]
 [ext_resource type="Script" uid="uid://bfkt6ri6r6vye" path="res://Scripts/SendProbesPanel.gd" id="5"]
-[ext_resource type="PackedScene" uid="uid://ddf2xjwcht77u" path="res://Scenes/CloseButton.tscn" id="8"]
+[ext_resource type="Texture2D" uid="uid://c1vwn7p5uxu1r" path="res://Graphics/GUI/CloseButtonHover.png" id="5_0o8k3"]
 
-[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_cdiax"]
+[sub_resource type="SystemFont" id="SystemFont_l1il0"]
+font_names = PackedStringArray("Arial")
+subpixel_positioning = 0
+multichannel_signed_distance_field = true
 
-[sub_resource type="StyleBoxFlat" id="1"]
-bg_color = Color(0.317647, 0.317647, 0.317647, 1)
-border_width_left = 1
-border_width_top = 1
-border_width_right = 1
-border_width_bottom = 1
-border_color = Color(0.294118, 0.294118, 0.294118, 1)
+[sub_resource type="LabelSettings" id="LabelSettings_fas0x"]
+font = SubResource("SystemFont_l1il0")
+font_size = 24
+shadow_size = 2
+shadow_color = Color(0, 0, 0, 0.372549)
+shadow_offset = Vector2(2, 2)
 
-[sub_resource type="Theme" id="2"]
-LineEdit/colors/clear_button_color = Color(0.88, 0.88, 0.88, 1)
-LineEdit/colors/clear_button_color_pressed = Color(1, 1, 1, 1)
-LineEdit/colors/cursor_color = Color(0.917647, 0.917647, 0.917647, 1)
-LineEdit/colors/font_color = Color(1, 1, 1, 1)
-LineEdit/colors/font_color_selected = Color(0, 0, 0, 1)
-LineEdit/colors/font_color_uneditable = Color(0.88, 0.88, 0.88, 0.5)
-LineEdit/colors/selection_color = Color(0.545098, 0.545098, 0.545098, 1)
-LineEdit/constants/minimum_spaces = 12
-LineEdit/fonts/font = null
-LineEdit/icons/clear = null
-LineEdit/styles/focus = null
-LineEdit/styles/normal = SubResource("1")
-LineEdit/styles/read_only = null
-
-[node name="SendProbesPanel" type="Panel" unique_id=533805489]
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -512.0
-offset_top = -296.0
-offset_right = 512.0
-offset_bottom = 296.0
+[node name="SendProbesPanel" type="Control" unique_id=368901344]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
 pivot_offset = Vector2(533, 300)
 theme = ExtResource("3")
 script = ExtResource("5")
 
+[node name="GUI" type="TextureRect" parent="." unique_id=412626771]
+layout_mode = 0
+offset_left = 80.0
+offset_top = 52.0
+offset_right = 1204.0
+offset_bottom = 671.0
+texture = ExtResource("3_fas0x")
+metadata/_edit_lock_ = true
+
+[node name="CloseButton" type="TextureButton" parent="." unique_id=1293319745]
+layout_mode = 0
+offset_left = 1138.0
+offset_top = 67.0
+offset_right = 1187.0
+offset_bottom = 116.0
+texture_normal = ExtResource("4_jl7m8")
+texture_hover = ExtResource("5_0o8k3")
+
 [node name="Title" type="Label" parent="." unique_id=1853866638]
 custom_minimum_size = Vector2(0, 38)
-layout_mode = 0
-anchor_right = 1.0
-offset_bottom = 24.0
-text = "SEND_PROBES"
-horizontal_alignment = 1
-vertical_alignment = 1
-
-[node name="CloseButton" parent="." unique_id=27301663 instance=ExtResource("8")]
 layout_mode = 1
-offset_left = -32.0
-offset_top = 8.0
-offset_right = -8.0
-offset_bottom = 32.0
+offset_left = 120.0
+offset_top = 72.0
+offset_right = 459.0
+offset_bottom = 110.0
+text = "SEND_PROBES"
+label_settings = SubResource("LabelSettings_fas0x")
+vertical_alignment = 1
 
 [node name="Control" type="Panel" parent="." unique_id=1878322498]
 layout_mode = 0
-offset_left = 24.0
-offset_top = 56.0
-offset_right = 1000.0
-offset_bottom = 568.0
+offset_left = 152.0
+offset_top = 152.0
+offset_right = 1120.0
+offset_bottom = 608.0
 
 [node name="Label2" type="Label" parent="Control" unique_id=65466662]
 layout_mode = 0
 offset_left = 176.0
-offset_top = 272.0
+offset_top = 216.0
 offset_right = 320.0
-offset_bottom = 304.0
+offset_bottom = 248.0
 text = "LESS_ENERGY"
 
 [node name="Label3" type="Label" parent="Control" unique_id=1695476385]
 layout_mode = 0
 offset_left = 664.0
-offset_top = 272.0
+offset_top = 216.0
 offset_right = 828.0
-offset_bottom = 304.0
+offset_bottom = 248.0
 text = "FASTER_TRAVEL"
 
 [node name="HSlider" type="HSlider" parent="Control" unique_id=1638193314]
 layout_mode = 0
 offset_left = 368.0
-offset_top = 280.0
+offset_top = 224.0
 offset_right = 608.0
-offset_bottom = 296.0
+offset_bottom = 240.0
 value = 50.0
 
 [node name="TimeIcon" type="TextureRect" parent="Control" unique_id=948951659]
 layout_mode = 0
-offset_left = 472.0
-offset_top = 360.0
-offset_right = 512.0
-offset_bottom = 400.0
+offset_left = 520.0
+offset_top = 288.0
+offset_right = 552.0
+offset_bottom = 328.0
 texture = ExtResource("1")
 expand_mode = 1
-stretch_mode = 6
+stretch_mode = 5
 
 [node name="Costs" type="HBoxContainer" parent="Control" unique_id=1388148739]
 layout_mode = 0
-offset_left = 40.0
-offset_top = 360.0
-offset_right = 424.0
-offset_bottom = 400.0
+offset_left = 152.0
+offset_top = 288.0
+offset_right = 536.0
+offset_bottom = 328.0
 
 [node name="Time" type="Label" parent="Control" unique_id=1027520574]
 layout_mode = 0
-offset_left = 520.0
-offset_top = 368.0
-offset_right = 640.0
-offset_bottom = 392.0
+offset_left = 568.0
+offset_top = 296.0
+offset_right = 688.0
+offset_bottom = 320.0
 
 [node name="Label" type="Label" parent="." unique_id=1837415612]
 layout_mode = 0
-offset_left = 56.0
-offset_top = 72.0
-offset_right = 1016.0
-offset_bottom = 284.0
+offset_left = 176.0
+offset_top = 176.0
+offset_right = 1096.0
+offset_bottom = 388.0
 
 [node name="NoProbes" type="Label" parent="." unique_id=1867810973]
 layout_mode = 0
@@ -130,431 +126,23 @@ offset_top = 176.0
 offset_right = 992.0
 offset_bottom = 200.0
 
-[node name="TP" type="Panel" parent="." unique_id=633395910]
-visible = false
-layout_mode = 0
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = 32.0
-offset_top = 56.0
-offset_right = -16.0
-offset_bottom = -24.0
-mouse_filter = 2
-theme_override_styles/panel = SubResource("StyleBoxEmpty_cdiax")
-
-[node name="VBox" type="VBoxContainer" parent="TP" unique_id=1103777396]
-layout_mode = 0
-offset_left = 24.0
-offset_top = 80.0
-offset_right = 864.0
-offset_bottom = 448.0
-theme = SubResource("2")
-theme_override_constants/separation = 10
-
-[node name="speed_of_light" type="HBoxContainer" parent="TP/VBox" unique_id=523399836]
-layout_mode = 2
-
-[node name="Label" type="RichTextLabel" parent="TP/VBox/speed_of_light" unique_id=1122964993]
-custom_minimum_size = Vector2(300, 0)
-layout_mode = 2
-mouse_filter = 1
-bbcode_enabled = true
-text = "Speed of light "
-scroll_active = false
-
-[node name="HSlider" type="HSlider" parent="TP/VBox/speed_of_light" unique_id=292648294]
-custom_minimum_size = Vector2(250, 0)
-layout_mode = 2
-size_flags_vertical = 1
-min_value = 0.5
-max_value = 5.0
-step = 0.1
-value = 1.0
-allow_greater = true
-
-[node name="Label2" type="LineEdit" parent="TP/VBox/speed_of_light" unique_id=842697244]
-custom_minimum_size = Vector2(70, 0)
-layout_mode = 2
-text = "1"
-caret_blink = true
-caret_blink_interval = 0.5
-
-[node name="Unit" type="Label" parent="TP/VBox/speed_of_light" unique_id=602742908]
-layout_mode = 2
-
-[node name="planck" type="HBoxContainer" parent="TP/VBox" unique_id=450263867]
-layout_mode = 2
-
-[node name="Label" type="RichTextLabel" parent="TP/VBox/planck" unique_id=592547760]
-custom_minimum_size = Vector2(300, 0)
-layout_mode = 2
-mouse_filter = 1
-bbcode_enabled = true
-scroll_active = false
-
-[node name="HSlider" type="HSlider" parent="TP/VBox/planck" unique_id=405454123]
-custom_minimum_size = Vector2(250, 0)
-layout_mode = 2
-size_flags_vertical = 1
-min_value = 0.5
-max_value = 5.0
-step = 0.1
-value = 1.0
-allow_greater = true
-
-[node name="Label2" type="LineEdit" parent="TP/VBox/planck" unique_id=899026499]
-custom_minimum_size = Vector2(70, 0)
-layout_mode = 2
-text = "1"
-caret_blink = true
-caret_blink_interval = 0.5
-
-[node name="Unit" type="Label" parent="TP/VBox/planck" unique_id=1498617135]
-layout_mode = 2
-
-[node name="boltzmann" type="HBoxContainer" parent="TP/VBox" unique_id=633673952]
-layout_mode = 2
-
-[node name="Label" type="RichTextLabel" parent="TP/VBox/boltzmann" unique_id=682975864]
-custom_minimum_size = Vector2(300, 0)
-layout_mode = 2
-mouse_filter = 1
-bbcode_enabled = true
-scroll_active = false
-
-[node name="HSlider" type="HSlider" parent="TP/VBox/boltzmann" unique_id=1670642937]
-custom_minimum_size = Vector2(250, 0)
-layout_mode = 2
-size_flags_vertical = 1
-min_value = 0.5
-max_value = 5.0
-step = 0.1
-value = 1.0
-allow_greater = true
-
-[node name="Label2" type="LineEdit" parent="TP/VBox/boltzmann" unique_id=1511808143]
-custom_minimum_size = Vector2(70, 0)
-layout_mode = 2
-text = "1"
-caret_blink = true
-caret_blink_interval = 0.5
-
-[node name="Unit" type="Label" parent="TP/VBox/boltzmann" unique_id=1890530185]
-layout_mode = 2
-
-[node name="s_b" type="HBoxContainer" parent="TP/VBox" unique_id=312007770]
-layout_mode = 2
-
-[node name="Label" type="RichTextLabel" parent="TP/VBox/s_b" unique_id=1428958176]
-custom_minimum_size = Vector2(300, 0)
-layout_mode = 2
-mouse_filter = 1
-bbcode_enabled = true
-scroll_active = false
-
-[node name="Label2" type="Label" parent="TP/VBox/s_b" unique_id=882297756]
-custom_minimum_size = Vector2(50, 0)
-layout_mode = 2
-text = "1"
-
-[node name="Unit" type="Label" parent="TP/VBox/s_b" unique_id=673716469]
-layout_mode = 2
-
-[node name="gravitational" type="HBoxContainer" parent="TP/VBox" unique_id=1294748041]
-layout_mode = 2
-
-[node name="Label" type="RichTextLabel" parent="TP/VBox/gravitational" unique_id=414648874]
-custom_minimum_size = Vector2(300, 0)
-layout_mode = 2
-mouse_filter = 1
-bbcode_enabled = true
-scroll_active = false
-
-[node name="HSlider" type="HSlider" parent="TP/VBox/gravitational" unique_id=1371078709]
-custom_minimum_size = Vector2(250, 0)
-layout_mode = 2
-size_flags_vertical = 1
-min_value = 0.5
-max_value = 5.0
-step = 0.1
-value = 1.0
-allow_greater = true
-
-[node name="Label2" type="LineEdit" parent="TP/VBox/gravitational" unique_id=1708873910]
-custom_minimum_size = Vector2(70, 0)
-layout_mode = 2
-text = "1"
-caret_blink = true
-caret_blink_interval = 0.5
-
-[node name="Unit" type="Label" parent="TP/VBox/gravitational" unique_id=517418729]
-layout_mode = 2
-
-[node name="charge" type="HBoxContainer" parent="TP/VBox" unique_id=70007463]
-layout_mode = 2
-
-[node name="Label" type="RichTextLabel" parent="TP/VBox/charge" unique_id=1039174175]
-custom_minimum_size = Vector2(300, 0)
-layout_mode = 2
-mouse_filter = 1
-bbcode_enabled = true
-scroll_active = false
-
-[node name="HSlider" type="HSlider" parent="TP/VBox/charge" unique_id=790006429]
-custom_minimum_size = Vector2(250, 0)
-layout_mode = 2
-size_flags_vertical = 1
-min_value = 0.5
-max_value = 5.0
-step = 0.1
-value = 1.0
-allow_greater = true
-
-[node name="Label2" type="LineEdit" parent="TP/VBox/charge" unique_id=1091366427]
-custom_minimum_size = Vector2(70, 0)
-layout_mode = 2
-text = "1"
-caret_blink = true
-caret_blink_interval = 0.5
-
-[node name="Unit" type="Label" parent="TP/VBox/charge" unique_id=1184021534]
-layout_mode = 2
-
-[node name="dark_energy" type="HBoxContainer" parent="TP/VBox" unique_id=1415954606]
-layout_mode = 2
-
-[node name="Label" type="RichTextLabel" parent="TP/VBox/dark_energy" unique_id=348657935]
-custom_minimum_size = Vector2(300, 0)
-layout_mode = 2
-mouse_filter = 1
-bbcode_enabled = true
-scroll_active = false
-
-[node name="HSlider" type="HSlider" parent="TP/VBox/dark_energy" unique_id=9378367]
-custom_minimum_size = Vector2(250, 0)
-layout_mode = 2
-size_flags_vertical = 1
-min_value = 0.5
-max_value = 5.0
-step = 0.1
-value = 1.0
-allow_greater = true
-
-[node name="Label2" type="LineEdit" parent="TP/VBox/dark_energy" unique_id=2139247727]
-custom_minimum_size = Vector2(70, 0)
-layout_mode = 2
-text = "1"
-caret_blink = true
-caret_blink_interval = 0.5
-
-[node name="Unit" type="Label" parent="TP/VBox/dark_energy" unique_id=554293854]
-layout_mode = 2
-
-[node name="difficulty" type="HBoxContainer" parent="TP/VBox" unique_id=961325024]
-layout_mode = 2
-
-[node name="Label" type="RichTextLabel" parent="TP/VBox/difficulty" unique_id=141295341]
-custom_minimum_size = Vector2(300, 0)
-layout_mode = 2
-mouse_filter = 1
-bbcode_enabled = true
-scroll_active = false
-
-[node name="HSlider" type="HSlider" parent="TP/VBox/difficulty" unique_id=159008818]
-custom_minimum_size = Vector2(250, 0)
-layout_mode = 2
-size_flags_vertical = 1
-min_value = 0.5
-max_value = 5.0
-step = 0.1
-value = 1.0
-allow_greater = true
-
-[node name="Label2" type="LineEdit" parent="TP/VBox/difficulty" unique_id=206147012]
-custom_minimum_size = Vector2(70, 0)
-layout_mode = 2
-text = "1"
-caret_blink = true
-caret_blink_interval = 0.5
-
-[node name="Unit" type="Label" parent="TP/VBox/difficulty" unique_id=1425004724]
-layout_mode = 2
-
-[node name="time_speed" type="HBoxContainer" parent="TP/VBox" unique_id=1764518487]
-layout_mode = 2
-
-[node name="Label" type="RichTextLabel" parent="TP/VBox/time_speed" unique_id=638457474]
-custom_minimum_size = Vector2(300, 0)
-layout_mode = 2
-mouse_filter = 1
-bbcode_enabled = true
-scroll_active = false
-
-[node name="HSlider" type="HSlider" parent="TP/VBox/time_speed" unique_id=541320792]
-custom_minimum_size = Vector2(250, 0)
-layout_mode = 2
-size_flags_vertical = 1
-min_value = 0.5
-max_value = 5.0
-step = 0.1
-value = 1.0
-allow_greater = true
-
-[node name="Label2" type="LineEdit" parent="TP/VBox/time_speed" unique_id=679387436]
-custom_minimum_size = Vector2(70, 0)
-layout_mode = 2
-text = "1"
-caret_blink = true
-caret_blink_interval = 0.5
-
-[node name="Unit" type="Label" parent="TP/VBox/time_speed" unique_id=537300942]
-layout_mode = 2
-
-[node name="age" type="HBoxContainer" parent="TP/VBox" unique_id=863608935]
-layout_mode = 2
-
-[node name="Label" type="RichTextLabel" parent="TP/VBox/age" unique_id=2008596969]
-custom_minimum_size = Vector2(300, 0)
-layout_mode = 2
-mouse_filter = 1
-bbcode_enabled = true
-scroll_active = false
-
-[node name="HSlider" type="HSlider" parent="TP/VBox/age" unique_id=1718489181]
-custom_minimum_size = Vector2(250, 0)
-layout_mode = 2
-size_flags_vertical = 1
-min_value = 0.5
-max_value = 5.0
-step = 0.1
-value = 1.0
-allow_greater = true
-
-[node name="Label2" type="LineEdit" parent="TP/VBox/age" unique_id=914339094]
-custom_minimum_size = Vector2(70, 0)
-layout_mode = 2
-text = "1"
-caret_blink = true
-caret_blink_interval = 0.5
-
-[node name="Unit" type="Label" parent="TP/VBox/age" unique_id=1928384963]
-layout_mode = 2
-
-[node name="TierDistribution" type="TextureButton" parent="TP/VBox/age" unique_id=1983319922]
-layout_mode = 2
-texture_normal = ExtResource("2")
-
-[node name="antimatter" type="HBoxContainer" parent="TP/VBox" unique_id=578858596]
-visible = false
-layout_mode = 2
-
-[node name="Label" type="RichTextLabel" parent="TP/VBox/antimatter" unique_id=1528169249]
-custom_minimum_size = Vector2(300, 0)
-layout_mode = 2
-mouse_filter = 1
-bbcode_enabled = true
-scroll_active = false
-
-[node name="HSlider" type="HSlider" parent="TP/VBox/antimatter" unique_id=980819705]
-custom_minimum_size = Vector2(250, 0)
-layout_mode = 2
-size_flags_vertical = 1
-max_value = 5.0
-step = 0.1
-allow_greater = true
-
-[node name="Label2" type="LineEdit" parent="TP/VBox/antimatter" unique_id=2062557206]
-custom_minimum_size = Vector2(70, 0)
-layout_mode = 2
-text = "0"
-caret_blink = true
-caret_blink_interval = 0.5
-
-[node name="Unit" type="Label" parent="TP/VBox/antimatter" unique_id=441519224]
-layout_mode = 2
-
-[node name="Points" type="RichTextLabel" parent="TP" unique_id=616223173]
-layout_mode = 0
-anchor_left = 1.0
-anchor_right = 1.0
-offset_left = -280.0
-offset_top = 24.0
-offset_right = -8.0
-offset_bottom = 64.0
-mouse_filter = 1
-bbcode_enabled = true
-
-[node name="Label" type="Label" parent="TP" unique_id=364775818]
-layout_mode = 0
-offset_left = 24.0
-offset_top = 24.0
-offset_right = 672.0
-offset_bottom = 72.0
-text = "TP_INFO"
-
 [node name="Send" type="Button" parent="." unique_id=1355520088]
 layout_mode = 0
-offset_left = 400.0
-offset_top = 512.0
-offset_right = 624.0
-offset_bottom = 552.0
+offset_left = 352.0
+offset_top = 536.0
+offset_right = 576.0
+offset_bottom = 576.0
 text = "SEND_A_PROBE"
 
 [node name="SendAll" type="Button" parent="." unique_id=1601650957]
 layout_mode = 0
-offset_left = 736.0
-offset_top = 512.0
-offset_right = 984.0
-offset_bottom = 552.0
+offset_left = 688.0
+offset_top = 536.0
+offset_right = 936.0
+offset_bottom = 576.0
 
-[connection signal="close_button_pressed" from="CloseButton" to="." method="_on_close_button_pressed"]
+[connection signal="pressed" from="CloseButton" to="." method="_on_close_button_pressed"]
 [connection signal="value_changed" from="Control/HSlider" to="." method="_on_HSlider_value_changed"]
-[connection signal="mouse_entered" from="TP/VBox/speed_of_light/Label" to="." method="_on_Label_mouse_entered" binds= ["SPEED_OF_LIGHT_DESC"]]
-[connection signal="mouse_exited" from="TP/VBox/speed_of_light/Label" to="." method="_on_mouse_exited"]
-[connection signal="value_changed" from="TP/VBox/speed_of_light/HSlider" to="." method="_on_TP_value_changed" binds= ["speed_of_light"]]
-[connection signal="text_changed" from="TP/VBox/speed_of_light/Label2" to="." method="_on_Label2_text_changed" binds= ["speed_of_light"]]
-[connection signal="mouse_entered" from="TP/VBox/planck/Label" to="." method="_on_Label_mouse_entered" binds= ["PLANCK_DESC"]]
-[connection signal="mouse_exited" from="TP/VBox/planck/Label" to="." method="_on_mouse_exited"]
-[connection signal="value_changed" from="TP/VBox/planck/HSlider" to="." method="_on_TP_value_changed" binds= ["planck"]]
-[connection signal="text_changed" from="TP/VBox/planck/Label2" to="." method="_on_Label2_text_changed" binds= ["planck"]]
-[connection signal="mouse_entered" from="TP/VBox/boltzmann/Label" to="." method="_on_Label_mouse_entered" binds= ["BOLTZMANN_DESC"]]
-[connection signal="mouse_exited" from="TP/VBox/boltzmann/Label" to="." method="_on_mouse_exited"]
-[connection signal="value_changed" from="TP/VBox/boltzmann/HSlider" to="." method="_on_TP_value_changed" binds= ["boltzmann"]]
-[connection signal="text_changed" from="TP/VBox/boltzmann/Label2" to="." method="_on_Label2_text_changed" binds= ["boltzmann"]]
-[connection signal="mouse_entered" from="TP/VBox/s_b/Label" to="." method="_on_Label_mouse_entered" binds= ["S_B_CTE_DESC"]]
-[connection signal="mouse_exited" from="TP/VBox/s_b/Label" to="." method="_on_mouse_exited"]
-[connection signal="mouse_entered" from="TP/VBox/gravitational/Label" to="." method="_on_Label_mouse_entered" binds= ["GRAVITATIONAL_DESC"]]
-[connection signal="mouse_exited" from="TP/VBox/gravitational/Label" to="." method="_on_mouse_exited"]
-[connection signal="value_changed" from="TP/VBox/gravitational/HSlider" to="." method="_on_TP_value_changed" binds= ["gravitational"]]
-[connection signal="text_changed" from="TP/VBox/gravitational/Label2" to="." method="_on_Label2_text_changed" binds= ["gravitational"]]
-[connection signal="mouse_entered" from="TP/VBox/charge/Label" to="." method="_on_Label_mouse_entered" binds= ["CHARGE_DESC"]]
-[connection signal="mouse_exited" from="TP/VBox/charge/Label" to="." method="_on_mouse_exited"]
-[connection signal="value_changed" from="TP/VBox/charge/HSlider" to="." method="_on_TP_value_changed" binds= ["charge"]]
-[connection signal="text_changed" from="TP/VBox/charge/Label2" to="." method="_on_Label2_text_changed" binds= ["charge"]]
-[connection signal="mouse_entered" from="TP/VBox/dark_energy/Label" to="." method="_on_Label_mouse_entered" binds= ["DARK_ENERGY_DESC"]]
-[connection signal="mouse_exited" from="TP/VBox/dark_energy/Label" to="." method="_on_mouse_exited"]
-[connection signal="value_changed" from="TP/VBox/dark_energy/HSlider" to="." method="_on_TP_value_changed" binds= ["dark_energy"]]
-[connection signal="text_changed" from="TP/VBox/dark_energy/Label2" to="." method="_on_Label2_text_changed" binds= ["dark_energy"]]
-[connection signal="mouse_entered" from="TP/VBox/difficulty/Label" to="." method="_on_Label_mouse_entered" binds= ["DIFFICULTY_DESC"]]
-[connection signal="mouse_exited" from="TP/VBox/difficulty/Label" to="." method="_on_mouse_exited"]
-[connection signal="value_changed" from="TP/VBox/difficulty/HSlider" to="." method="_on_TP_value_changed" binds= ["difficulty"]]
-[connection signal="text_changed" from="TP/VBox/difficulty/Label2" to="." method="_on_Label2_text_changed" binds= ["difficulty"]]
-[connection signal="mouse_entered" from="TP/VBox/time_speed/Label" to="." method="_on_Label_mouse_entered" binds= ["TIME_SPEED_DESC"]]
-[connection signal="mouse_exited" from="TP/VBox/time_speed/Label" to="." method="_on_mouse_exited"]
-[connection signal="value_changed" from="TP/VBox/time_speed/HSlider" to="." method="_on_TP_value_changed" binds= ["time_speed"]]
-[connection signal="text_changed" from="TP/VBox/time_speed/Label2" to="." method="_on_Label2_text_changed" binds= ["time_speed"]]
-[connection signal="mouse_entered" from="TP/VBox/age/Label" to="." method="_on_Label_mouse_entered" binds= ["AGE_OF_THE_UNIVERSE_DESC"]]
-[connection signal="mouse_exited" from="TP/VBox/age/Label" to="." method="_on_mouse_exited"]
-[connection signal="value_changed" from="TP/VBox/age/HSlider" to="." method="_on_TP_value_changed" binds= ["age"]]
-[connection signal="text_changed" from="TP/VBox/age/Label2" to="." method="_on_Label2_text_changed" binds= ["age"]]
-[connection signal="mouse_entered" from="TP/VBox/age/TierDistribution" to="." method="_on_TierDistribution_mouse_entered"]
-[connection signal="mouse_exited" from="TP/VBox/age/TierDistribution" to="." method="_on_TierDistribution_mouse_exited"]
-[connection signal="mouse_entered" from="TP/VBox/antimatter/Label" to="." method="_on_Label_mouse_entered" binds= ["ANTIMATTER_DESC"]]
-[connection signal="mouse_exited" from="TP/VBox/antimatter/Label" to="." method="_on_mouse_exited"]
-[connection signal="value_changed" from="TP/VBox/antimatter/HSlider" to="." method="_on_TP_value_changed" binds= ["antimatter"]]
-[connection signal="text_changed" from="TP/VBox/antimatter/Label2" to="." method="_on_Label2_text_changed" binds= ["antimatter"]]
-[connection signal="mouse_entered" from="TP/Points" to="." method="_on_Points_mouse_entered"]
-[connection signal="mouse_exited" from="TP/Points" to="." method="_on_mouse_exited"]
 [connection signal="pressed" from="Send" to="." method="_on_Send_pressed"]
 [connection signal="mouse_entered" from="SendAll" to="." method="_on_SendAll_mouse_entered"]
 [connection signal="mouse_exited" from="SendAll" to="." method="_on_SendAll_mouse_exited"]

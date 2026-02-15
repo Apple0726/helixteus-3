@@ -1,0 +1,453 @@
+[gd_scene format=3 uid="uid://bbsss2waqvo7x"]
+
+[ext_resource type="Theme" uid="uid://cp2u1kgj60ic" path="res://Resources/default_theme.tres" id="1_3poek"]
+[ext_resource type="Texture2D" uid="uid://dcvnyb0mloli2" path="res://Graphics/GUI/Panel.png" id="1_qui0t"]
+[ext_resource type="Script" uid="uid://ca68pxwv8jtga" path="res://Scripts/CreateUniversePanel.gd" id="2_iiy6r"]
+[ext_resource type="Texture2D" uid="uid://baowebna7hgr5" path="res://Graphics/GUI/CloseButtonNormal.png" id="2_m1vnj"]
+[ext_resource type="Texture2D" uid="uid://c1vwn7p5uxu1r" path="res://Graphics/GUI/CloseButtonHover.png" id="3_3poek"]
+[ext_resource type="Texture2D" uid="uid://hjl8rhhr18ke" path="res://Graphics/Icons/help.png" id="4_m1vnj"]
+
+[sub_resource type="SystemFont" id="SystemFont_l1il0"]
+font_names = PackedStringArray("Arial")
+subpixel_positioning = 0
+multichannel_signed_distance_field = true
+
+[sub_resource type="LabelSettings" id="LabelSettings_iiy6r"]
+font = SubResource("SystemFont_l1il0")
+font_size = 24
+shadow_size = 2
+shadow_color = Color(0, 0, 0, 0.372549)
+shadow_offset = Vector2(2, 2)
+
+[sub_resource type="StyleBoxFlat" id="1"]
+bg_color = Color(0.317647, 0.317647, 0.317647, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.294118, 0.294118, 0.294118, 1)
+
+[sub_resource type="Theme" id="Theme_iiy6r"]
+LineEdit/colors/clear_button_color = Color(0.88, 0.88, 0.88, 1)
+LineEdit/colors/clear_button_color_pressed = Color(1, 1, 1, 1)
+LineEdit/colors/cursor_color = Color(0.917647, 0.917647, 0.917647, 1)
+LineEdit/colors/font_color = Color(1, 1, 1, 1)
+LineEdit/colors/font_color_selected = Color(0, 0, 0, 1)
+LineEdit/colors/font_color_uneditable = Color(0.88, 0.88, 0.88, 0.5)
+LineEdit/colors/selection_color = Color(0.545098, 0.545098, 0.545098, 1)
+LineEdit/constants/minimum_spaces = 12
+LineEdit/fonts/font = null
+LineEdit/icons/clear = null
+LineEdit/styles/focus = null
+LineEdit/styles/normal = SubResource("1")
+LineEdit/styles/read_only = null
+
+[node name="CreateUniversePanel" type="Control" unique_id=264605401]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+theme = ExtResource("1_3poek")
+script = ExtResource("2_iiy6r")
+
+[node name="GUI" type="TextureRect" parent="." unique_id=1751566898]
+layout_mode = 0
+offset_left = 80.0
+offset_top = 52.0
+offset_right = 1204.0
+offset_bottom = 671.0
+texture = ExtResource("1_qui0t")
+metadata/_edit_lock_ = true
+
+[node name="CloseButton" type="TextureButton" parent="." unique_id=952951322]
+layout_mode = 0
+offset_left = 1138.0
+offset_top = 67.0
+offset_right = 1187.0
+offset_bottom = 116.0
+texture_normal = ExtResource("2_m1vnj")
+texture_hover = ExtResource("3_3poek")
+
+[node name="Title" type="Label" parent="." unique_id=769802909]
+custom_minimum_size = Vector2(0, 38)
+layout_mode = 1
+offset_left = 124.0
+offset_top = 72.0
+offset_right = -799.0
+offset_bottom = 110.0
+theme_override_font_sizes/font_size = 18
+text = "SEND_PROBES"
+label_settings = SubResource("LabelSettings_iiy6r")
+vertical_alignment = 1
+
+[node name="TP" type="Panel" parent="." unique_id=2020388088]
+layout_mode = 0
+offset_left = 142.0
+offset_top = 148.0
+offset_right = 1140.0
+offset_bottom = 640.0
+
+[node name="VBox" type="VBoxContainer" parent="TP" unique_id=510952626]
+layout_mode = 0
+offset_left = 24.0
+offset_top = 64.0
+offset_right = 864.0
+offset_bottom = 456.0
+theme = SubResource("Theme_iiy6r")
+theme_override_constants/separation = 5
+
+[node name="speed_of_light" type="HBoxContainer" parent="TP/VBox" unique_id=890016419]
+layout_mode = 2
+
+[node name="Label" type="RichTextLabel" parent="TP/VBox/speed_of_light" unique_id=1907990693]
+custom_minimum_size = Vector2(300, 0)
+layout_mode = 2
+mouse_filter = 1
+bbcode_enabled = true
+text = "Speed of light "
+scroll_active = false
+
+[node name="HSlider" type="HSlider" parent="TP/VBox/speed_of_light" unique_id=736209358]
+custom_minimum_size = Vector2(250, 0)
+layout_mode = 2
+size_flags_vertical = 1
+min_value = 0.5
+max_value = 5.0
+step = 0.1
+value = 1.0
+allow_greater = true
+
+[node name="Label2" type="LineEdit" parent="TP/VBox/speed_of_light" unique_id=934585339]
+custom_minimum_size = Vector2(70, 0)
+layout_mode = 2
+text = "1"
+caret_blink = true
+caret_blink_interval = 0.5
+
+[node name="Unit" type="Label" parent="TP/VBox/speed_of_light" unique_id=1698386105]
+layout_mode = 2
+
+[node name="planck" type="HBoxContainer" parent="TP/VBox" unique_id=291579945]
+layout_mode = 2
+
+[node name="Label" type="RichTextLabel" parent="TP/VBox/planck" unique_id=218881316]
+custom_minimum_size = Vector2(300, 0)
+layout_mode = 2
+mouse_filter = 1
+bbcode_enabled = true
+scroll_active = false
+
+[node name="HSlider" type="HSlider" parent="TP/VBox/planck" unique_id=147057241]
+custom_minimum_size = Vector2(250, 0)
+layout_mode = 2
+size_flags_vertical = 1
+min_value = 0.5
+max_value = 5.0
+step = 0.1
+value = 1.0
+allow_greater = true
+
+[node name="Label2" type="LineEdit" parent="TP/VBox/planck" unique_id=1272008092]
+custom_minimum_size = Vector2(70, 0)
+layout_mode = 2
+text = "1"
+caret_blink = true
+caret_blink_interval = 0.5
+
+[node name="Unit" type="Label" parent="TP/VBox/planck" unique_id=1347485346]
+layout_mode = 2
+
+[node name="boltzmann" type="HBoxContainer" parent="TP/VBox" unique_id=1044724530]
+layout_mode = 2
+
+[node name="Label" type="RichTextLabel" parent="TP/VBox/boltzmann" unique_id=1339737191]
+custom_minimum_size = Vector2(300, 0)
+layout_mode = 2
+mouse_filter = 1
+bbcode_enabled = true
+scroll_active = false
+
+[node name="HSlider" type="HSlider" parent="TP/VBox/boltzmann" unique_id=958429397]
+custom_minimum_size = Vector2(250, 0)
+layout_mode = 2
+size_flags_vertical = 1
+min_value = 0.5
+max_value = 5.0
+step = 0.1
+value = 1.0
+allow_greater = true
+
+[node name="Label2" type="LineEdit" parent="TP/VBox/boltzmann" unique_id=301673539]
+custom_minimum_size = Vector2(70, 0)
+layout_mode = 2
+text = "1"
+caret_blink = true
+caret_blink_interval = 0.5
+
+[node name="Unit" type="Label" parent="TP/VBox/boltzmann" unique_id=760867507]
+layout_mode = 2
+
+[node name="s_b" type="HBoxContainer" parent="TP/VBox" unique_id=600010828]
+layout_mode = 2
+
+[node name="Label" type="RichTextLabel" parent="TP/VBox/s_b" unique_id=524524109]
+custom_minimum_size = Vector2(300, 0)
+layout_mode = 2
+mouse_filter = 1
+bbcode_enabled = true
+scroll_active = false
+
+[node name="Label2" type="Label" parent="TP/VBox/s_b" unique_id=829510023]
+custom_minimum_size = Vector2(50, 0)
+layout_mode = 2
+text = "1"
+
+[node name="Unit" type="Label" parent="TP/VBox/s_b" unique_id=330059180]
+layout_mode = 2
+
+[node name="gravitational" type="HBoxContainer" parent="TP/VBox" unique_id=139690001]
+layout_mode = 2
+
+[node name="Label" type="RichTextLabel" parent="TP/VBox/gravitational" unique_id=728434649]
+custom_minimum_size = Vector2(300, 0)
+layout_mode = 2
+mouse_filter = 1
+bbcode_enabled = true
+scroll_active = false
+
+[node name="HSlider" type="HSlider" parent="TP/VBox/gravitational" unique_id=1956891063]
+custom_minimum_size = Vector2(250, 0)
+layout_mode = 2
+size_flags_vertical = 1
+min_value = 0.5
+max_value = 5.0
+step = 0.1
+value = 1.0
+allow_greater = true
+
+[node name="Label2" type="LineEdit" parent="TP/VBox/gravitational" unique_id=2061326764]
+custom_minimum_size = Vector2(70, 0)
+layout_mode = 2
+text = "1"
+caret_blink = true
+caret_blink_interval = 0.5
+
+[node name="Unit" type="Label" parent="TP/VBox/gravitational" unique_id=125846770]
+layout_mode = 2
+
+[node name="charge" type="HBoxContainer" parent="TP/VBox" unique_id=1736722135]
+layout_mode = 2
+
+[node name="Label" type="RichTextLabel" parent="TP/VBox/charge" unique_id=57499180]
+custom_minimum_size = Vector2(300, 0)
+layout_mode = 2
+mouse_filter = 1
+bbcode_enabled = true
+scroll_active = false
+
+[node name="HSlider" type="HSlider" parent="TP/VBox/charge" unique_id=1093087979]
+custom_minimum_size = Vector2(250, 0)
+layout_mode = 2
+size_flags_vertical = 1
+min_value = 0.5
+max_value = 5.0
+step = 0.1
+value = 1.0
+allow_greater = true
+
+[node name="Label2" type="LineEdit" parent="TP/VBox/charge" unique_id=1272816274]
+custom_minimum_size = Vector2(70, 0)
+layout_mode = 2
+text = "1"
+caret_blink = true
+caret_blink_interval = 0.5
+
+[node name="Unit" type="Label" parent="TP/VBox/charge" unique_id=1491624424]
+layout_mode = 2
+
+[node name="dark_energy" type="HBoxContainer" parent="TP/VBox" unique_id=202295367]
+layout_mode = 2
+
+[node name="Label" type="RichTextLabel" parent="TP/VBox/dark_energy" unique_id=331482065]
+custom_minimum_size = Vector2(300, 0)
+layout_mode = 2
+mouse_filter = 1
+bbcode_enabled = true
+scroll_active = false
+
+[node name="HSlider" type="HSlider" parent="TP/VBox/dark_energy" unique_id=663985057]
+custom_minimum_size = Vector2(250, 0)
+layout_mode = 2
+size_flags_vertical = 1
+min_value = 0.5
+max_value = 5.0
+step = 0.1
+value = 1.0
+allow_greater = true
+
+[node name="Label2" type="LineEdit" parent="TP/VBox/dark_energy" unique_id=400227752]
+custom_minimum_size = Vector2(70, 0)
+layout_mode = 2
+text = "1"
+caret_blink = true
+caret_blink_interval = 0.5
+
+[node name="Unit" type="Label" parent="TP/VBox/dark_energy" unique_id=1104674776]
+layout_mode = 2
+
+[node name="difficulty" type="HBoxContainer" parent="TP/VBox" unique_id=249340644]
+layout_mode = 2
+
+[node name="Label" type="RichTextLabel" parent="TP/VBox/difficulty" unique_id=1557675686]
+custom_minimum_size = Vector2(300, 0)
+layout_mode = 2
+mouse_filter = 1
+bbcode_enabled = true
+scroll_active = false
+
+[node name="HSlider" type="HSlider" parent="TP/VBox/difficulty" unique_id=433491142]
+custom_minimum_size = Vector2(250, 0)
+layout_mode = 2
+size_flags_vertical = 1
+min_value = 0.5
+max_value = 5.0
+step = 0.1
+value = 1.0
+allow_greater = true
+
+[node name="Label2" type="LineEdit" parent="TP/VBox/difficulty" unique_id=1773293083]
+custom_minimum_size = Vector2(70, 0)
+layout_mode = 2
+text = "1"
+caret_blink = true
+caret_blink_interval = 0.5
+
+[node name="Unit" type="Label" parent="TP/VBox/difficulty" unique_id=96248358]
+layout_mode = 2
+
+[node name="time_speed" type="HBoxContainer" parent="TP/VBox" unique_id=873845908]
+layout_mode = 2
+
+[node name="Label" type="RichTextLabel" parent="TP/VBox/time_speed" unique_id=1943611530]
+custom_minimum_size = Vector2(300, 0)
+layout_mode = 2
+mouse_filter = 1
+bbcode_enabled = true
+scroll_active = false
+
+[node name="HSlider" type="HSlider" parent="TP/VBox/time_speed" unique_id=272630897]
+custom_minimum_size = Vector2(250, 0)
+layout_mode = 2
+size_flags_vertical = 1
+min_value = 0.5
+max_value = 5.0
+step = 0.1
+value = 1.0
+allow_greater = true
+
+[node name="Label2" type="LineEdit" parent="TP/VBox/time_speed" unique_id=1517180902]
+custom_minimum_size = Vector2(70, 0)
+layout_mode = 2
+text = "1"
+caret_blink = true
+caret_blink_interval = 0.5
+
+[node name="Unit" type="Label" parent="TP/VBox/time_speed" unique_id=704044815]
+layout_mode = 2
+
+[node name="age" type="HBoxContainer" parent="TP/VBox" unique_id=547283895]
+layout_mode = 2
+
+[node name="Label" type="RichTextLabel" parent="TP/VBox/age" unique_id=1837111557]
+custom_minimum_size = Vector2(300, 0)
+layout_mode = 2
+mouse_filter = 1
+bbcode_enabled = true
+scroll_active = false
+
+[node name="HSlider" type="HSlider" parent="TP/VBox/age" unique_id=110388988]
+custom_minimum_size = Vector2(250, 0)
+layout_mode = 2
+size_flags_vertical = 1
+min_value = 0.5
+max_value = 5.0
+step = 0.1
+value = 1.0
+allow_greater = true
+
+[node name="Label2" type="LineEdit" parent="TP/VBox/age" unique_id=1006319745]
+custom_minimum_size = Vector2(70, 0)
+layout_mode = 2
+text = "1"
+caret_blink = true
+caret_blink_interval = 0.5
+
+[node name="Unit" type="Label" parent="TP/VBox/age" unique_id=887744175]
+layout_mode = 2
+
+[node name="TierDistribution" type="TextureButton" parent="TP/VBox/age" unique_id=2091456281]
+layout_mode = 2
+texture_normal = ExtResource("4_m1vnj")
+
+[node name="antimatter" type="HBoxContainer" parent="TP/VBox" unique_id=1882136640]
+visible = false
+layout_mode = 2
+
+[node name="Label" type="RichTextLabel" parent="TP/VBox/antimatter" unique_id=165822106]
+custom_minimum_size = Vector2(300, 0)
+layout_mode = 2
+mouse_filter = 1
+bbcode_enabled = true
+scroll_active = false
+
+[node name="HSlider" type="HSlider" parent="TP/VBox/antimatter" unique_id=1498301503]
+custom_minimum_size = Vector2(250, 0)
+layout_mode = 2
+size_flags_vertical = 1
+max_value = 5.0
+step = 0.1
+allow_greater = true
+
+[node name="Label2" type="LineEdit" parent="TP/VBox/antimatter" unique_id=671051902]
+custom_minimum_size = Vector2(70, 0)
+layout_mode = 2
+text = "0"
+caret_blink = true
+caret_blink_interval = 0.5
+
+[node name="Unit" type="Label" parent="TP/VBox/antimatter" unique_id=2101739602]
+layout_mode = 2
+
+[node name="Points" type="RichTextLabel" parent="TP" unique_id=1019381621]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -280.0
+offset_top = 8.0
+offset_right = -8.0
+offset_bottom = 48.0
+grow_horizontal = 0
+mouse_filter = 1
+bbcode_enabled = true
+
+[node name="Label" type="Label" parent="TP" unique_id=1563957085]
+layout_mode = 0
+offset_left = 114.0
+offset_top = 12.0
+offset_right = 762.0
+offset_bottom = 60.0
+text = "TP_INFO"
+
+[node name="Send" type="Button" parent="." unique_id=680654751]
+layout_mode = 0
+offset_left = 528.0
+offset_top = 588.0
+offset_right = 752.0
+offset_bottom = 628.0
+text = "SEND_A_PROBE"
+
+[connection signal="pressed" from="CloseButton" to="." method="_on_close_button_pressed"]
+[connection signal="mouse_entered" from="TP/VBox/age/TierDistribution" to="." method="_on_tier_distribution_mouse_entered"]
+[connection signal="mouse_exited" from="TP/VBox/age/TierDistribution" to="." method="_on_tier_distribution_mouse_exited"]
+[connection signal="pressed" from="Send" to="." method="_on_send_pressed"]
