@@ -598,7 +598,7 @@ func generate_cave(first_floor:bool, going_up:bool):
 					HX_node.get_node("Sprite2D").texture = load("res://Graphics/HX/%s_%s.png" % [_class, type])
 					HX_node.get_node("Sprite2D").material.set_shader_parameter("aurora", is_aurora_cave)
 					if volcano_mult == 1:
-						HX_node.get_node("Sprite2D").material.set_shader_parameter("light", 1.0 - cave_darkness)
+						HX_node.get_node("Sprite2D").material.set_shader_parameter("light_amount", 1.0 - cave_darkness)
 					HX_node.total_HP = HX_node.HP
 					HX_node.cave_ref = self
 					HX_node.a_n = astar_node

@@ -17,6 +17,10 @@ func _ready() -> void:
 	movement_remaining = (agility + agility_buff) * METERS_PER_AGILITY
 	total_movement_base = (agility + agility_buff) * METERS_PER_AGILITY
 	go_through_movement_cost = 30.0
+	$Sprite2D.material.set_shader_parameter("starlight_enabled", true)
+	$Sprite2D.material.set_shader_parameter("starlight_angle", battle_scene.starlight_angle)
+	$Sprite2D.material.set_shader_parameter("starlight_color", battle_scene.average_starlight_color)
+	$Sprite2D.material.set_shader_parameter("starlight_energy", battle_scene.starlight_energy)
 
 func initialize_stats(data: Dictionary):
 	passive_abilities = data.passive_abilities
@@ -117,10 +121,15 @@ func calculate_position_preferences(pos:Vector2):
 		return
 	var HX_proximity_weight:float = 0.0 
 	var ship_proximity_weight:float = 0.0
+	var obstacle_proximity_weight:float = 0.0
+	var boundary_proximity_weight:float = 0.0
 	var distance_from_current_position_weight:float = 0.001 * pos.distance_squared_to(position)
 	for HX in HX_nodes:
 		# Enemies try to move far from each other
-		HX_proximity_weight += 1.0e6 / max(pow(10.0 * PIXELS_PER_METER, 2), pos.distance_squared_to(HX.position))
+		HX_proximity_weight += 2.0e6 / max(pow(10.0 * PIXELS_PER_METER, 2), pos.distance_squared_to(HX.position))
+	for obstacle in battle_scene.obstacle_nodes:
+		# Stay away from obstacles
+		obstacle_proximity_weight += 5.0e6 / max(pow(10.0 * PIXELS_PER_METER, 2), pos.distance_squared_to(obstacle.position))
 	var final_accuracy = (accuracy + accuracy_buff) * attack_data[attack_type].accuracy
 	var ship_target_distance = 40.0 + final_accuracy + 2.0 * max(0.0, final_accuracy - 12.0)
 	if enemy_class == 4:
@@ -129,7 +138,11 @@ func calculate_position_preferences(pos:Vector2):
 		# Try to get close to ships, but not too close or too far (ideal distance of ship_target_distance meters)
 		var r = pos.distance_squared_to(ship.position)
 		ship_proximity_weight += 1000.0 * (1.0 - exp(-pow(r - pow(ship_target_distance * PIXELS_PER_METER, 2), 2) / 4.0e9)) + 0.001 * abs(r - pow(ship_target_distance * PIXELS_PER_METER, 2))
-	position_preferences[pos] = HX_proximity_weight + ship_proximity_weight + distance_from_current_position_weight
+	boundary_proximity_weight += pow(max(-position.x - 440.0, 0.0), 2) * 0.1
+	boundary_proximity_weight += pow(max(position.x - 1720.0, 0.0), 2) * 0.1
+	boundary_proximity_weight += pow(max(-position.y - 160.0, 0.0), 2) * 0.1
+	boundary_proximity_weight += pow(max(position.y - 880.0, 0.0), 2) * 0.1
+	position_preferences[pos] = HX_proximity_weight + ship_proximity_weight + obstacle_proximity_weight + boundary_proximity_weight + distance_from_current_position_weight
 	
 func move(target_pos:Vector2):
 	if battle_scene.animations_sped_up:
@@ -145,7 +158,7 @@ func move(target_pos:Vector2):
 
 func spawn_ball(angle:float, ball_HP:int, ball_size:float):
 	var ball = preload("res://Scenes/Battle/Obstacle.tscn").instantiate()
-	ball.position = ball_size * 3.0 * Vector2.from_angle(angle) + position
+	ball.position = 60.0 * Vector2.from_angle(angle) + position
 	ball.get_node("Sprite2D").scale = Vector2.ONE * ball_size / 20.0
 	ball.get_node("Sprite2D").texture = preload("res://Graphics/Cave/Projectiles/bubble.png")
 	ball.total_HP = ball_HP
@@ -212,14 +225,14 @@ func fire_magic_bullets():
 
 func attack_target():
 	if enemy_class == 3:
-		if turn_number % 3 == 1:
+		if turn_number % 3 == 1 and len(battle_scene.obstacle_nodes) < 15:
 			var angle_offset = randf() * 2.0 * PI / 8.0
 			for i in 8:
 				spawn_ball(i * 2.0 * PI / 8.0 + angle_offset, total_HP * 2, 20.0)
 		elif turn_number % 3 == 2:
 			for ship in ship_nodes:
 				spawn_ball(atan2(ship.position.y - position.y, ship.position.x - position.x), total_HP * 3, 35.0)
-		elif turn_number % 3 == 0:
+		else:
 			var ship = ship_nodes.pick_random()
 			spawn_ball(atan2(ship.position.y - position.y, ship.position.x - position.x), total_HP * 5, 55.0)
 		ending_turn(0.05 if battle_scene.animations_sped_up else 0.5)

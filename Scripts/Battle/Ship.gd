@@ -40,6 +40,9 @@ func _ready() -> void:
 	total_movement_base = (agility + agility_buff) * METERS_PER_AGILITY
 	go_through_movement_cost = 30.0
 	$Sprite2D.scale *= 104.0 / $Sprite2D.texture.get_width()
+	$Sprite2D.material.set_shader_parameter("starlight_angle", battle_scene.starlight_angle)
+	$Sprite2D.material.set_shader_parameter("starlight_color", battle_scene.average_starlight_color)
+	$Sprite2D.material.set_shader_parameter("starlight_energy", battle_scene.starlight_energy)
 
 func initialize_stats(data: Dictionary):
 	super(data)
@@ -159,6 +162,7 @@ func move():
 	if battle_scene.animations_sped_up:
 		var move_tween = create_tween().set_parallel()
 		move_tween.tween_property($Sprite2D, "rotation", move_angle_target, 0.2)
+		move_tween.tween_property($Sprite2D.material, "shader_parameter/starlight_angle", battle_scene.starlight_angle - move_angle_target, 0.2)
 		move_tween.tween_property(self, "position", move_target_position, 0.2)
 		move_tween.tween_property(battle_scene.get_node("Selected"), "position", move_target_position + Vector2.UP * 80.0, 0.2)
 		move_tween.tween_callback(cancel_action).set_delay(0.2)
@@ -166,6 +170,7 @@ func move():
 		var rotate_duration = max(0.4, abs((move_angle_target - $Sprite2D.rotation) / PI))
 		var move_tween = create_tween().set_parallel()
 		move_tween.tween_property($Sprite2D, "rotation", move_angle_target, rotate_duration).set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_CUBIC)
+		move_tween.tween_property($Sprite2D.material, "shader_parameter/starlight_angle", battle_scene.starlight_angle - move_angle_target, rotate_duration).set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_CUBIC)
 		move_tween.tween_property(self, "position", move_target_position, 1.0).set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_CUBIC).set_delay(rotate_duration)
 		move_tween.tween_property(battle_scene.get_node("Selected"), "position", move_target_position + Vector2.UP * 80.0, 1.0).set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_CUBIC).set_delay(rotate_duration)
 		move_tween.tween_callback(cancel_action).set_delay(rotate_duration + 1.0)

@@ -25,10 +25,20 @@ var animations_sped_up = false
 var enemy_AI_diff_mult:float = 1.0
 var money_earned:float = 0.0
 var XP_earned:float = 0.0
+var average_starlight_color:Color = Color.BLACK
+var starlight_angle:float = 0.0
+var starlight_energy:float = 0.0
 
 func _ready() -> void:
 	time_speed = Helper.set_logarithmic_time_speed(game.subject_levels.dimensional_power, game.u_i.time_speed)
 	var p_i:Dictionary = game.planet_data[game.c_p]
+	for star in game.system_data[game.c_s].stars:
+		average_starlight_color += Helper.get_star_modulate(star.class) * star.luminosity
+	average_starlight_color /= max(average_starlight_color.r, average_starlight_color.g, average_starlight_color.b)
+	average_starlight_color.a = 1.0
+	starlight_angle = p_i.angle + PI
+	starlight_energy = clamp(remap(p_i.temperature, -270.0, 800.0, 0.0, 2.0), 0.0, 2.0)
+	battle_GUI.set_battlefield_BG()
 	if game.is_conquering_all:
 		HX_data = Helper.get_conquer_all_data().HX_data
 	else:
@@ -369,7 +379,6 @@ func _input(event: InputEvent) -> void:
 	if Input.is_action_just_released("A") or Input.is_action_just_released("D") or Input.is_action_just_released("C") or Input.is_action_just_released("G") or Input.is_action_just_released("H"):
 		var entities = HX_nodes.duplicate()
 		entities.append_array(ship_nodes)
-		entities.append_array(obstacle_nodes)
 		for entity in entities:
 			entity.get_node("Info/Icon").hide()
 			if entity.lv != 0:
@@ -381,7 +390,6 @@ func _input(event: InputEvent) -> void:
 func display_stats(type:String):
 	var entities = HX_nodes.duplicate()
 	entities.append_array(ship_nodes)
-	entities.append_array(obstacle_nodes)
 	for entity in entities:
 		entity.get_node("Info/Icon").show()
 		entity.get_node("Info/Icon").texture = load("res://Graphics/Icons/%s.png" % type)

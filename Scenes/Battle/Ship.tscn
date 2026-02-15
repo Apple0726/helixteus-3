@@ -4,7 +4,7 @@
 [ext_resource type="Script" uid="uid://cfrufmr2v8ebl" path="res://Scripts/Battle/Ship.gd" id="2"]
 [ext_resource type="PackedScene" uid="uid://fo4yl8v4ld8c" path="res://Scenes/Battle/FireWeaponAim.tscn" id="2_ogdx2"]
 [ext_resource type="Shader" uid="uid://c17je4akgvnni" path="res://Shaders/Ship.gdshader" id="3_cptad"]
-[ext_resource type="Texture2D" uid="uid://7hkor7taf3iw" path="res://Graphics/Ships/Ship1 top down.png" id="5_fh3h1"]
+[ext_resource type="Texture2D" uid="uid://c57w6sxs3iij0" path="res://Graphics/Ships/Ship2 top down.png" id="4_ymlex"]
 [ext_resource type="Texture2D" uid="uid://bx1hvetixqpwi" path="res://Graphics/Misc/Bar2.png" id="6"]
 [ext_resource type="Theme" uid="uid://cp2u1kgj60ic" path="res://Resources/default_theme.tres" id="6_ymlex"]
 [ext_resource type="Texture2D" uid="uid://yhdxrw2q1yep" path="res://Graphics/HX/Status effects/Stun.png" id="8"]
@@ -29,6 +29,9 @@ shader_parameter/frequency = 6.0
 shader_parameter/alpha = 1.0
 shader_parameter/flash = 0.0
 shader_parameter/flash_color = Color(1, 1, 1, 1)
+shader_parameter/starlight_angle = 0.0970000046075
+shader_parameter/starlight_color = Color(1, 1, 1, 1)
+shader_parameter/starlight_energy = 1.0
 
 [sub_resource type="Animation" id="Animation_mql8i"]
 resource_name = "Blink"
@@ -277,6 +280,128 @@ _data = {
 &"RESET": SubResource("Animation_n4bmm")
 }
 
+[sub_resource type="Animation" id="Animation_ymlex"]
+resource_name = "Blink"
+length = 1.5
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:energy")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.03333333, 0.06666666, 0.16666667, 1.5),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1),
+"update": 0,
+"values": [0.0, 0.0, 2.0, 0.0, 0.0]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("../WhiteRight:energy")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.03333333, 0.06666666, 0.16666667, 1.5),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1),
+"update": 0,
+"values": [0.0, 0.0, 2.0, 0.0, 0.0]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("../WhiteRearLeft:energy")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0, 0.73333335, 0.7666667, 0.86666673, 1.5),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1),
+"update": 0,
+"values": [0.0, 0.0, 2.0, 0.0, 0.0]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("../WhiteRearRight:energy")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0, 0.73333335, 0.7666667, 0.86666673, 1.5),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1),
+"update": 0,
+"values": [0.0, 0.0, 2.0, 0.0, 0.0]
+}
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("../WhiteFront:energy")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(0, 0.73333335, 0.7666667, 0.86666673, 1.5),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1),
+"update": 0,
+"values": [0.0, 0.0, 2.0, 0.0, 0.0]
+}
+
+[sub_resource type="Animation" id="Animation_itm55"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("../WhiteRight:energy")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [0.0]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("../WhiteRearLeft:energy")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [0.0]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("../WhiteRearRight:energy")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [0.0]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("../WhiteFront:energy")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [0.0]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_ikbbp"]
+_data = {
+&"Blink": SubResource("Animation_ymlex"),
+&"RESET": SubResource("Animation_itm55")
+}
+
 [sub_resource type="CircleShape2D" id="CircleShape2D_fh3h1"]
 resource_local_to_scene = true
 radius = 36.0
@@ -450,31 +575,28 @@ visible = false
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=485336625]
 light_mask = 3
 material = SubResource("4")
-texture = ExtResource("5_fh3h1")
+texture = ExtResource("4_ymlex")
 
 [node name="Ship1Lights" type="Node2D" parent="Sprite2D" unique_id=531901869]
 visible = false
-position = Vector2(52, 52)
+position = Vector2(-4, 0)
 
 [node name="Red" type="PointLight2D" parent="Sprite2D/Ship1Lights" unique_id=1215199160]
-position = Vector2(-15, -45)
-scale = Vector2(0.5, 0.5)
+position = Vector2(-80, -223)
 color = Color(1, 0, 0, 1)
-energy = 3.0
+energy = 1.5
 range_item_cull_mask = 2
 texture = ExtResource("10")
 
 [node name="Green" type="PointLight2D" parent="Sprite2D/Ship1Lights" unique_id=2146927858]
-position = Vector2(-13, 46)
-scale = Vector2(0.5, 0.5)
+position = Vector2(-73, 222)
 color = Color(0, 1, 0, 1)
-energy = 3.0
+energy = 1.5
 range_item_cull_mask = 2
 texture = ExtResource("10")
 
 [node name="White" type="PointLight2D" parent="Sprite2D/Ship1Lights" unique_id=353661995]
 position = Vector2(-13, 1)
-scale = Vector2(0.77, 0.77)
 energy = 0.0
 range_item_cull_mask = 2
 texture = ExtResource("10")
@@ -484,8 +606,7 @@ libraries/ = SubResource("AnimationLibrary_p3fke")
 autoplay = &"Blink"
 
 [node name="WhiteLeft" type="PointLight2D" parent="Sprite2D/Ship1Lights" unique_id=1121275477]
-position = Vector2(-33, -45)
-scale = Vector2(0.77, 0.77)
+position = Vector2(-165, -223)
 energy = 0.0
 range_item_cull_mask = 2
 texture = ExtResource("10")
@@ -495,8 +616,7 @@ libraries/ = SubResource("AnimationLibrary_4hicg")
 autoplay = &"Double blink"
 
 [node name="WhiteRight" type="PointLight2D" parent="Sprite2D/Ship1Lights" unique_id=1272676768]
-position = Vector2(-33, 45)
-scale = Vector2(0.77, 0.77)
+position = Vector2(-160, 222.99998)
 energy = 0.0
 range_item_cull_mask = 2
 texture = ExtResource("10")
@@ -506,8 +626,7 @@ libraries/ = SubResource("AnimationLibrary_4hicg")
 autoplay = &"Double blink"
 
 [node name="WhiteRearLeft" type="PointLight2D" parent="Sprite2D/Ship1Lights" unique_id=1668284236]
-position = Vector2(-49, -25)
-scale = Vector2(0.5, 0.5)
+position = Vector2(-231, -122)
 energy = 0.0
 range_item_cull_mask = 2
 texture = ExtResource("10")
@@ -517,8 +636,7 @@ libraries/ = SubResource("AnimationLibrary_4y570")
 autoplay = &"Blink"
 
 [node name="WhiteRearRight" type="PointLight2D" parent="Sprite2D/Ship1Lights" unique_id=1818155031]
-position = Vector2(-49, 26)
-scale = Vector2(0.5, 0.5)
+position = Vector2(-232, 125)
 energy = 0.0
 range_item_cull_mask = 2
 texture = ExtResource("10")
@@ -528,28 +646,24 @@ libraries/ = SubResource("AnimationLibrary_4y570")
 autoplay = &"Blink"
 
 [node name="Ship2Lights" type="Node2D" parent="Sprite2D" unique_id=367182497]
-visible = false
-position = Vector2(52, 52)
+position = Vector2(8, 0)
 
 [node name="Red" type="PointLight2D" parent="Sprite2D/Ship2Lights" unique_id=380543574]
-position = Vector2(-10, -32)
-scale = Vector2(0.5, 0.5)
+position = Vector2(-63, -172)
 color = Color(1, 0, 0, 1)
-energy = 3.0
+energy = 1.5
 range_item_cull_mask = 2
 texture = ExtResource("10")
 
 [node name="Green" type="PointLight2D" parent="Sprite2D/Ship2Lights" unique_id=1387478333]
-position = Vector2(-11, 32)
-scale = Vector2(0.5, 0.5)
+position = Vector2(-63, 170)
 color = Color(0, 1, 0, 1)
-energy = 3.0
+energy = 1.5
 range_item_cull_mask = 2
 texture = ExtResource("10")
 
 [node name="White" type="PointLight2D" parent="Sprite2D/Ship2Lights" unique_id=1528287064]
-position = Vector2(31, 0)
-scale = Vector2(0.25, 0.25)
+position = Vector2(147, 0)
 energy = 0.0
 range_item_cull_mask = 2
 texture = ExtResource("10")
@@ -559,8 +673,7 @@ libraries/ = SubResource("AnimationLibrary_vlg7s")
 autoplay = &"Blink"
 
 [node name="WhiteLeft" type="PointLight2D" parent="Sprite2D/Ship2Lights" unique_id=1893573905]
-position = Vector2(-47, -30)
-scale = Vector2(0.25, 0.25)
+position = Vector2(-248, -155)
 energy = 0.0
 range_item_cull_mask = 2
 texture = ExtResource("10")
@@ -570,15 +683,61 @@ libraries/ = SubResource("AnimationLibrary_itm55")
 autoplay = &"Blink"
 
 [node name="WhiteRight" type="PointLight2D" parent="Sprite2D/Ship2Lights" unique_id=399049313]
-position = Vector2(-47, 31)
-scale = Vector2(0.25, 0.25)
+position = Vector2(-246, 153)
 energy = 0.0
 range_item_cull_mask = 2
 texture = ExtResource("10")
 
 [node name="Ship3Lights" type="Node2D" parent="Sprite2D" unique_id=1895054737]
-visible = false
 position = Vector2(52, 52)
+
+[node name="Red" type="PointLight2D" parent="Sprite2D/Ship3Lights" unique_id=2049982308]
+position = Vector2(-187, -267)
+color = Color(1, 0, 0, 1)
+energy = 1.5
+range_item_cull_mask = 2
+texture = ExtResource("10")
+
+[node name="Green" type="PointLight2D" parent="Sprite2D/Ship3Lights" unique_id=431557267]
+position = Vector2(-187, 161)
+color = Color(0, 1, 0, 1)
+energy = 1.5
+range_item_cull_mask = 2
+texture = ExtResource("10")
+
+[node name="WhiteFront" type="PointLight2D" parent="Sprite2D/Ship3Lights" unique_id=1226395197]
+position = Vector2(186, -51)
+energy = 0.0
+range_item_cull_mask = 2
+texture = ExtResource("10")
+
+[node name="WhiteLeft" type="PointLight2D" parent="Sprite2D/Ship3Lights" unique_id=1135710939]
+position = Vector2(-191, -270)
+energy = 0.0
+range_item_cull_mask = 2
+texture = ExtResource("10")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Sprite2D/Ship3Lights/WhiteLeft" unique_id=2023553820]
+libraries/ = SubResource("AnimationLibrary_ikbbp")
+autoplay = &"Blink"
+
+[node name="WhiteRight" type="PointLight2D" parent="Sprite2D/Ship3Lights" unique_id=1133885473]
+position = Vector2(-189, 164)
+energy = 0.0
+range_item_cull_mask = 2
+texture = ExtResource("10")
+
+[node name="WhiteRearLeft" type="PointLight2D" parent="Sprite2D/Ship3Lights" unique_id=410205965]
+position = Vector2(-277, -91)
+energy = 0.0
+range_item_cull_mask = 2
+texture = ExtResource("10")
+
+[node name="WhiteRearRight" type="PointLight2D" parent="Sprite2D/Ship3Lights" unique_id=248796945]
+position = Vector2(-277, -14)
+energy = 0.0
+range_item_cull_mask = 2
+texture = ExtResource("10")
 
 [node name="Ship4Lights" type="Node2D" parent="Sprite2D" unique_id=1065715036]
 visible = false

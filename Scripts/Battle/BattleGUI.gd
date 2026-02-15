@@ -28,7 +28,6 @@ var main_panel_tween
 var turn_order_hbox_tween
 
 func _ready() -> void:
-	var p_i:Dictionary = game.planet_data[game.c_p]
 	Helper.set_back_btn($Back)
 	$MainPanel.hide()
 	$MainPanel.modulate.a = 0.0
@@ -45,6 +44,9 @@ func _ready() -> void:
 			for lv in 3:
 				$MainPanel.get_node("%sLevels/Path%s/Level%s" % [weapon, path+1, lv+1]).mouse_entered.connect(show_weapon_tooltip.bind(weapon.to_lower(), path, lv))
 				$MainPanel.get_node("%sLevels/Path%s/Level%s" % [weapon, path+1, lv+1]).mouse_exited.connect(game.hide_tooltip)
+
+func set_battlefield_BG():
+	var p_i:Dictionary = game.planet_data[game.c_p]
 	seed(p_i.seed)
 	$PlanetBG.texture = load("res://Graphics/Planets/%s.png" % p_i.type)
 	var random_depth = randf_range(0.6, 1.0)
@@ -54,16 +56,11 @@ func _ready() -> void:
 		$PlanetBG.position.x = randf_range(180.0, 1100.0)
 	while $PlanetBG.position.y > 260 and $PlanetBG.position.y < 460:
 		$PlanetBG.position.y = randf_range(180.0, 540.0)
-	var average_starlight_color:Color = Color.BLACK
-	for star in game.system_data[game.c_s].stars:
-		average_starlight_color += Helper.get_star_modulate(star.class) * star.luminosity
-	average_starlight_color /= max(average_starlight_color.r, average_starlight_color.g, average_starlight_color.b)
-	average_starlight_color.a = 1.0
-	$PlanetLight.color = average_starlight_color
+	$PlanetLight.color = battle_scene.average_starlight_color
 	$PlanetLight.position = -350.0 * random_depth * Vector2.from_angle(p_i.angle) + $PlanetBG.position
 	$PlanetLight.energy = clamp(remap(p_i.temperature, -270.0, 800.0, 0.0, 24.0), 0.0, 24.0)
 	randomize()
-
+	
 func show_weapon_tooltip(weapon: String, path: int, lv: int):
 	var ship_node = battle_scene.get_selected_ship()
 	if not ship_node:

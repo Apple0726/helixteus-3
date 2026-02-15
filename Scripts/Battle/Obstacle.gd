@@ -23,6 +23,9 @@ func _ready() -> void:
 	for effect in Battle.StatusEffect.N:
 		if not effect in status_effect_resistances:
 			status_effect_resistances[effect] = 0.0
+	$Sprite2D.material.set_shader_parameter("starlight_angle", battle_scene.starlight_angle - $Sprite2D.rotation)
+	$Sprite2D.material.set_shader_parameter("starlight_color", battle_scene.average_starlight_color)
+	$Sprite2D.material.set_shader_parameter("starlight_energy", battle_scene.starlight_energy)
 
 func take_turn():
 	super()
