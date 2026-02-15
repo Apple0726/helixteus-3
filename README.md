@@ -57,7 +57,7 @@ This game also uses shaders to add visual effects. Godot uses a [custom shader l
 ### Bug reports
 Found something that should probably not be happening? Please make a detailed [issue](https://github.com/Apple0726/helixteus-3/issues) with logs if possible, and information on how to reproduce the unintended behavior. You may also make a report in the `#bug-reports` channel of our [Discord server](https://discord.com/invite/gDHcDA3).
 
-## Generative AI disclaimer
+## Generative AI policy
 No generative AI was used in creating the assets (art, sounds, text) for Helixteus 3, and contributing such assets is strongly discouraged and will most certainly be rejected. However it may be used to generate a reference or a draft to aid you in creating the final asset, which must be done by yourself from scratch.
 Text translation is exempt from this rule, but please re-read everything the AI generates and correct if necessary.
 

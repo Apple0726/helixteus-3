@@ -10,6 +10,8 @@ func _ready() -> void:
 	$Trail.show()
 
 func _on_area_entered(area: Area2D) -> void:
+	if check_boundary(area):
+		return
 	var weapon_data = {
 		"type":Battle.DamageType.PHYSICAL,
 		"damage":damage,
@@ -36,9 +38,7 @@ func _on_area_entered(area: Area2D) -> void:
 			water_explosion.scale = Vector2.ONE * 0.5
 			water_explosion.play("water_explosion")
 			water_explosion.animation_finished.connect(water_explosion.queue_free)
-		if deflects_remaining == 0 or area.type == Battle.EntityType.BOUNDARY:
-			if area.type == Battle.EntityType.BOUNDARY:
-				ending_turn_delay = 0.0
+		if deflects_remaining == 0:
 			queue_free()
 		else:
 			# The bullet can now hit anything, regardless of the shooter
@@ -49,7 +49,7 @@ func _on_area_entered(area: Area2D) -> void:
 			var incidence_angle = atan2(position.y - area.position.y, position.x - area.position.x)
 			rotation = Vector2.from_angle(rotation).bounce(Vector2.from_angle(incidence_angle)).angle()
 			deflects_remaining -= 1
-		if area.type != Battle.EntityType.BOUNDARY and area.HP <= 0 and shooter.type == Battle.EntityType.SHIP and shooter.ship_class == ShipClass.OFFENSIVE:
+		if area.HP <= 0 and shooter.type == Battle.EntityType.SHIP and shooter.ship_class == ShipClass.OFFENSIVE:
 			shooter.buff_from_class_passive_ability("attack", 3)
 	else:
 		if shooter.type == Battle.EntityType.SHIP and shooter.ship_class == ShipClass.ACCURATE:

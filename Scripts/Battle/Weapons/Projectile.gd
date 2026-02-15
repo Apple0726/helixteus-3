@@ -34,3 +34,10 @@ func _physics_process(delta: float) -> void:
 	if (position - Vector2(640, 360)).length_squared() > pow(1280, 2) + pow(720, 2):
 		ending_turn_delay = 0.0
 		queue_free()
+
+func check_boundary(area):
+	if area.type == Battle.EntityType.BOUNDARY:
+		ending_turn_delay = 0.0
+		queue_free()
+		return true
+	return false

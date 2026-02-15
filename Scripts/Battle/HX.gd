@@ -45,11 +45,13 @@ func determine_target():
 enum Attack {
 	NORMAL,
 	LASER,
+	MAGIC_BULLET,
 }
 var attack_type = Attack.NORMAL
 var attack_data = {
 	Attack.NORMAL:{"damage": 3.0, "accuracy": 1.0},
 	Attack.LASER:{"damage": 2.0, "accuracy": 1.8},
+	Attack.MAGIC_BULLET:{"damage": 2.0, "accuracy": 1.5},
 }
 
 func take_turn():
@@ -64,6 +66,8 @@ func take_turn():
 	decrement_status_effects_buffs()
 	if enemy_class == 2:
 		attack_type = Attack.LASER
+	elif enemy_class == 4:
+		attack_type = Attack.MAGIC_BULLET
 	var ship_target_id = determine_target()
 	target_position = ship_nodes[ship_target_id].position
 	position_preferences = {}
@@ -119,6 +123,8 @@ func calculate_position_preferences(pos:Vector2):
 		HX_proximity_weight += 1.0e6 / max(pow(10.0 * PIXELS_PER_METER, 2), pos.distance_squared_to(HX.position))
 	var final_accuracy = (accuracy + accuracy_buff) * attack_data[attack_type].accuracy
 	var ship_target_distance = 40.0 + final_accuracy + 2.0 * max(0.0, final_accuracy - 12.0)
+	if enemy_class == 4:
+		ship_target_distance = 200.0
 	for ship in ship_nodes:
 		# Try to get close to ships, but not too close or too far (ideal distance of ship_target_distance meters)
 		var r = pos.distance_squared_to(ship.position)
@@ -159,7 +165,51 @@ func spawn_ball(angle:float, ball_HP:int, ball_size:float):
 		fade_in_tween.tween_property(ball.get_node("VelocityArrow"), "modulate:a", 1.0, 0.5)
 	battle_scene.add_child(ball)
 	battle_scene.obstacle_nodes.append(ball)
-	
+
+var projectiles = []
+func fire_magic_bullets():
+	var spawn_position:Vector2
+	var angle:float
+	var N = len(ship_nodes)
+	if N == 1:
+		spawn_position = 100.0 * Vector2.from_angle(randf() * 2.0 * PI) + ship_nodes[0].position
+	else:
+		var target1 = randi() % N
+		var target2 = randi() % N
+		while target2 == target1:
+			target2 = randi() % N
+		var pos_diff = ship_nodes[target1].position - ship_nodes[target2].position
+		spawn_position = pos_diff.normalized() * -100.0 + ship_nodes[target2].position
+		angle = atan2(pos_diff.y, pos_diff.x)
+	spawn_position.x = clamp(spawn_position.x, -620.0, 1900.0)
+	spawn_position.y = clamp(spawn_position.y, -340.0, 1060.0)
+	var projectile_num = 2
+	for i in projectile_num:
+		var magic_bullet = preload("res://Scenes/Battle/Weapons/Projectile.tscn").instantiate()
+		magic_bullet.set_script(load("res://Scripts/Battle/Weapons/MagicBullet.gd"))
+		magic_bullet.get_node("Sprite2D").texture = preload("res://Graphics/Cave/Projectiles/purple_bullet.png")
+		magic_bullet.trail_color = Color.PURPLE
+		magic_bullet.collision_layer = 16
+		magic_bullet.collision_mask = 1 + 2
+		magic_bullet.speed = 1400.0
+		magic_bullet.mass = 1.0
+		magic_bullet.velocity_process_modifier = 5.0 if battle_scene.animations_sped_up else 1.0
+		magic_bullet.rotation = angle
+		magic_bullet.damage = attack_data[attack_type].damage
+		magic_bullet.shooter = self
+		magic_bullet.weapon_accuracy = attack_data[attack_type].accuracy * accuracy
+		magic_bullet.position = spawn_position
+		magic_bullet.ending_turn_delay = 1.0
+		battle_scene.add_child(magic_bullet)
+		magic_bullet.end_turn.connect(ending_turn)
+		projectiles.append(magic_bullet)
+		if i < projectile_num - 1:
+			await get_tree().create_timer(0.4).timeout
+	for projectile in projectiles:
+		if is_instance_valid(projectile):
+			projectile.end_turn_ready = true
+			break
+
 func attack_target():
 	if enemy_class == 3:
 		if turn_number % 3 == 1:
@@ -173,6 +223,17 @@ func attack_target():
 			var ship = ship_nodes.pick_random()
 			spawn_ball(atan2(ship.position.y - position.y, ship.position.x - position.x), total_HP * 5, 55.0)
 		ending_turn(0.05 if battle_scene.animations_sped_up else 0.5)
+	elif enemy_class == 4:
+		var magic_star = Sprite2D.new()
+		magic_star.texture = preload("res://Graphics/Decoratives/Star2.png")
+		magic_star.position = position
+		battle_scene.add_child(magic_star)
+		var tween = create_tween().set_parallel()
+		tween.tween_property(magic_star, "modulate:a", 0.0, 0.4)
+		tween.tween_property(magic_star, "scale", Vector2.ONE * 2.0, 0.4)
+		tween.tween_property(magic_star, "rotation", 0.5 * PI, 0.4)
+		tween.tween_callback(magic_star.queue_free).set_delay(0.4)
+		tween.tween_callback(fire_magic_bullets).set_delay(0.4)
 	else:
 		target_angle = atan2(target_position.y - position.y, target_position.x - position.x)
 		target_angle_max_deviation = 1.0 / (accuracy + accuracy_buff) / aim_mult / attack_data[attack_type].accuracy

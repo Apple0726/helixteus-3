@@ -132,7 +132,6 @@ func move_view_to_target(entity: BattleEntity):
 		view_battlefield(2.0)
 	else:
 		view_entity(entity, 2.0)
-		print(ships_taking_turn)
 		if not ships_taking_turn.is_empty():
 			for ship_node in ships_taking_turn:
 				if ship_node == entity and not ship_node.turn_taken:
