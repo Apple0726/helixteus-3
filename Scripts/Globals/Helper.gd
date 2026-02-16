@@ -120,9 +120,9 @@ func put_rsrc(container, min_size, rsrcs, remove:bool = true, show_available:boo
 			rsrc.connect_mouse_events()
 		texture_node.custom_minimum_size = Vector2(1, 1) * min_size
 		data.append({"rsrc":rsrc, "name":rsrc_name})
-		if rsrc_name is String:
+		rsrc.rsrc_display_name = rsrc_display_name
+		if rsrc_name is String and real_time_update:
 			rsrc.rsrc_name = rsrc_name
-			rsrc.rsrc_display_name = rsrc_display_name
 			rsrc.rsrc_type = rsrc_type
 			rsrc.rsrcs_required = rsrcs[rsrc_name]
 			rsrc.mass_str = mass_str

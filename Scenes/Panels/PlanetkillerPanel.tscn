@@ -1,12 +1,26 @@
-[gd_scene load_steps=10 format=3 uid="uid://dxt4s5nnkkull"]
+[gd_scene format=3 uid="uid://dxt4s5nnkkull"]
 
 [ext_resource type="Script" uid="uid://cbdpyvjmvsy64" path="res://Scripts/TextEffects/AuroraText.gd" id="1"]
 [ext_resource type="Theme" uid="uid://cp2u1kgj60ic" path="res://Resources/default_theme.tres" id="3"]
+[ext_resource type="Texture2D" uid="uid://dcvnyb0mloli2" path="res://Graphics/GUI/Panel.png" id="3_cok7b"]
 [ext_resource type="Texture2D" uid="uid://bm01hxs45q3ga" path="res://Graphics/Icons/energy.png" id="4"]
+[ext_resource type="Texture2D" uid="uid://baowebna7hgr5" path="res://Graphics/GUI/CloseButtonNormal.png" id="4_oq3hu"]
 [ext_resource type="Texture2D" uid="uid://bn8t8jmrkuvdk" path="res://Graphics/Icons/Time.png" id="5"]
+[ext_resource type="Texture2D" uid="uid://c1vwn7p5uxu1r" path="res://Graphics/GUI/CloseButtonHover.png" id="5_uawhs"]
 [ext_resource type="Script" uid="uid://becgtvcmr5wsp" path="res://Scripts/PlanetkillerPanel.gd" id="6"]
 [ext_resource type="Texture2D" uid="uid://4tf3teqmkahc" path="res://Graphics/Misc/Bar.png" id="7"]
-[ext_resource type="PackedScene" uid="uid://ddf2xjwcht77u" path="res://Scenes/CloseButton.tscn" id="8"]
+
+[sub_resource type="SystemFont" id="SystemFont_artra"]
+font_names = PackedStringArray("Arial")
+subpixel_positioning = 0
+multichannel_signed_distance_field = true
+
+[sub_resource type="LabelSettings" id="LabelSettings_a0em1"]
+font = SubResource("SystemFont_artra")
+font_size = 24
+shadow_size = 2
+shadow_color = Color(0, 0, 0, 0.372549)
+shadow_offset = Vector2(2, 2)
 
 [sub_resource type="RichTextEffect" id="1"]
 script = ExtResource("1")
@@ -21,232 +35,257 @@ shadow_color = Color(0, 0, 0, 1)
 shadow_size = 4
 shadow_offset = Vector2(2, 2)
 
-[node name="SendShipsPanel" type="Panel"]
+[node name="SendShipsPanel" type="Control" unique_id=16910133]
+layout_mode = 3
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -512.0
-offset_top = -296.0
-offset_right = 512.0
-offset_bottom = 296.0
+offset_left = -640.0
+offset_top = -360.0
+offset_right = -600.0
+offset_bottom = -320.0
 pivot_offset = Vector2(533, 300)
 theme = ExtResource("3")
 script = ExtResource("6")
 
-[node name="Title" type="Label" parent="."]
-custom_minimum_size = Vector2(0, 38)
+[node name="GUI" type="TextureRect" parent="." unique_id=137565775]
 layout_mode = 0
+offset_left = 80.0
+offset_top = 52.0
+offset_right = 1204.0
+offset_bottom = 671.0
+texture = ExtResource("3_cok7b")
+metadata/_edit_lock_ = true
+
+[node name="CloseButton" type="TextureButton" parent="." unique_id=1173348321]
+layout_mode = 0
+offset_left = 1138.0
+offset_top = 68.0
+offset_right = 1187.0
+offset_bottom = 117.0
+texture_normal = ExtResource("4_oq3hu")
+texture_hover = ExtResource("5_uawhs")
+
+[node name="Title" type="Label" parent="." unique_id=1017908045]
+custom_minimum_size = Vector2(0, 38)
+layout_mode = 1
+anchors_preset = 10
 anchor_right = 1.0
-offset_bottom = 24.0
+offset_left = 120.0
+offset_top = 72.0
+offset_right = 404.0
+offset_bottom = 110.0
+grow_horizontal = 2
 theme_override_font_sizes/font_size = 18
 text = "M_PK_NAME"
-horizontal_alignment = 1
+label_settings = SubResource("LabelSettings_a0em1")
 vertical_alignment = 1
 
-[node name="CloseButton" parent="." instance=ExtResource("8")]
+[node name="Desc" type="Label" parent="." unique_id=1794444637]
 layout_mode = 1
-offset_left = -32.0
-offset_top = 8.0
-offset_right = -8.0
-offset_bottom = 32.0
-
-[node name="Desc" type="Label" parent="."]
-layout_mode = 0
+anchors_preset = 10
 anchor_right = 1.0
-offset_top = 40.0
-offset_bottom = 64.0
+offset_left = 856.0
+offset_top = 352.0
+offset_right = 883.0
+offset_bottom = 376.0
+grow_horizontal = 2
 text = "PK_DESC"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="Label" type="Label" parent="."]
+[node name="Label" type="Label" parent="." unique_id=412017272]
 layout_mode = 0
-offset_left = 24.0
-offset_top = 104.0
-offset_right = 452.0
-offset_bottom = 128.0
+offset_left = 156.0
+offset_top = 144.0
+offset_right = 584.0
+offset_bottom = 168.0
 text = "PLANETS"
 horizontal_alignment = 1
 
-[node name="StartCharging" type="Button" parent="."]
+[node name="StartCharging" type="Button" parent="." unique_id=1893990936]
 layout_mode = 0
-offset_left = 750.0
-offset_top = 528.0
-offset_right = 1002.0
-offset_bottom = 568.0
+offset_left = 756.0
+offset_top = 596.0
+offset_right = 1008.0
+offset_bottom = 636.0
 text = "START_CHARGING"
 
-[node name="Scroll" type="ScrollContainer" parent="."]
+[node name="Scroll" type="ScrollContainer" parent="." unique_id=1832943892]
 layout_mode = 0
-offset_left = 24.0
-offset_top = 136.0
-offset_right = 424.0
-offset_bottom = 568.0
+offset_left = 168.0
+offset_top = 180.0
+offset_right = 568.0
+offset_bottom = 612.0
 size_flags_vertical = 3
 
-[node name="Planets" type="VBoxContainer" parent="Scroll"]
+[node name="Planets" type="VBoxContainer" parent="Scroll" unique_id=1044119702]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="Control" type="Control" parent="."]
+[node name="Control" type="Control" parent="." unique_id=1501073056]
 anchors_preset = 0
-offset_right = 40.0
-offset_bottom = 40.0
+offset_left = 588.0
+offset_top = 140.0
+offset_right = 628.0
+offset_bottom = 180.0
 
-[node name="HSlider" type="HSlider" parent="Control"]
+[node name="HSlider" type="HSlider" parent="Control" unique_id=1711901812]
 layout_mode = 0
-offset_left = 760.0
-offset_top = 440.0
-offset_right = 872.0
-offset_bottom = 456.0
+offset_left = 332.0
+offset_top = 364.0
+offset_right = 444.0
+offset_bottom = 380.0
 max_value = 1.0
 step = 0.01
 
-[node name="LessEnergy" type="Label" parent="Control"]
+[node name="LessEnergy" type="Label" parent="Control" unique_id=867589135]
 layout_mode = 0
-offset_left = 480.0
-offset_top = 434.0
-offset_right = 704.0
-offset_bottom = 458.0
+offset_left = 52.0
+offset_top = 358.0
+offset_right = 276.0
+offset_bottom = 382.0
 text = "ACCELERATE_CHARGING"
 horizontal_alignment = 2
 
-[node name="EnergyCost" type="Label" parent="Control"]
+[node name="EnergyCost" type="Label" parent="Control" unique_id=1209732559]
 layout_mode = 0
-offset_left = 928.0
-offset_top = 432.0
-offset_right = 1024.0
-offset_bottom = 464.0
+offset_left = 500.0
+offset_top = 356.0
+offset_right = 596.0
+offset_bottom = 388.0
 text = "100"
 vertical_alignment = 1
 
-[node name="ChargingTime" type="Label" parent="Control"]
+[node name="ChargingTime" type="Label" parent="Control" unique_id=259605207]
 layout_mode = 0
-offset_left = 472.0
-offset_top = 392.0
-offset_right = 704.0
-offset_bottom = 424.0
+offset_left = 44.0
+offset_top = 316.0
+offset_right = 276.0
+offset_bottom = 348.0
 mouse_filter = 1
 text = "CHARGING_TIME"
 horizontal_alignment = 2
 vertical_alignment = 1
 
-[node name="MMM" type="RichTextLabel" parent="Control"]
+[node name="MMM" type="RichTextLabel" parent="Control" unique_id=1634910771]
 layout_mode = 0
-offset_left = 480.0
-offset_top = 480.0
-offset_right = 888.0
-offset_bottom = 508.0
+offset_left = 52.0
+offset_top = 404.0
+offset_right = 460.0
+offset_bottom = 432.0
 mouse_filter = 1
 bbcode_enabled = true
 custom_effects = [SubResource("1")]
 
-[node name="ChargingTime2" type="Label" parent="Control"]
+[node name="ChargingTime2" type="Label" parent="Control" unique_id=350834075]
 layout_mode = 0
-offset_left = 480.0
-offset_top = 104.0
-offset_right = 960.0
-offset_bottom = 128.0
+offset_left = 52.0
+offset_top = 28.0
+offset_right = 532.0
+offset_bottom = 52.0
 text = "EXPECTED_RESOURCES"
 horizontal_alignment = 1
 
-[node name="TimeCost" type="Label" parent="Control"]
+[node name="TimeCost" type="Label" parent="Control" unique_id=2030408421]
 layout_mode = 0
-offset_left = 792.0
-offset_top = 392.0
-offset_right = 976.0
-offset_bottom = 424.0
+offset_left = 364.0
+offset_top = 316.0
+offset_right = 548.0
+offset_bottom = 348.0
 text = "30:00"
 vertical_alignment = 1
 
-[node name="EnergyIcon" type="TextureRect" parent="Control"]
+[node name="EnergyIcon" type="TextureRect" parent="Control" unique_id=1114854734]
 layout_mode = 0
-offset_left = 888.0
-offset_top = 432.0
-offset_right = 920.0
-offset_bottom = 464.0
+offset_left = 460.0
+offset_top = 356.0
+offset_right = 492.0
+offset_bottom = 388.0
 texture = ExtResource("4")
 expand_mode = 1
 stretch_mode = 6
 
-[node name="TimeIcon" type="TextureRect" parent="Control"]
+[node name="TimeIcon" type="TextureRect" parent="Control" unique_id=247634414]
 layout_mode = 0
-offset_left = 752.0
-offset_top = 392.0
-offset_right = 784.0
-offset_bottom = 424.0
+offset_left = 324.0
+offset_top = 316.0
+offset_right = 356.0
+offset_bottom = 348.0
 texture = ExtResource("5")
 expand_mode = 1
 stretch_mode = 6
 
-[node name="ScrollContainer" type="ScrollContainer" parent="Control"]
+[node name="ScrollContainer" type="ScrollContainer" parent="Control" unique_id=531142589]
 layout_mode = 0
-offset_left = 480.0
-offset_top = 136.0
-offset_right = 960.0
-offset_bottom = 376.0
+offset_left = 52.0
+offset_top = 60.0
+offset_right = 532.0
+offset_bottom = 300.0
 theme_override_styles/panel = SubResource("StyleBoxFlat_v0h6q")
 
-[node name="GridContainer" type="GridContainer" parent="Control/ScrollContainer"]
+[node name="GridContainer" type="GridContainer" parent="Control/ScrollContainer" unique_id=1199889905]
 layout_mode = 2
 columns = 4
 
-[node name="Control2" type="Control" parent="."]
+[node name="Control2" type="Control" parent="." unique_id=626674374]
 visible = false
 anchors_preset = 0
-offset_right = 40.0
-offset_bottom = 40.0
+offset_left = 604.0
+offset_top = 220.0
+offset_right = 644.0
+offset_bottom = 260.0
 
-[node name="TimeCost" type="Label" parent="Control2"]
+[node name="TimeCost" type="Label" parent="Control2" unique_id=556445246]
 layout_mode = 0
-offset_left = 714.0
-offset_top = 268.0
-offset_right = 898.0
-offset_bottom = 292.0
+offset_left = 262.0
+offset_top = 120.0
+offset_right = 446.0
+offset_bottom = 144.0
 text = "30:00"
 
-[node name="Charging" type="Label" parent="Control2"]
+[node name="Charging" type="Label" parent="Control2" unique_id=847725969]
 layout_mode = 0
-offset_left = 498.0
-offset_top = 176.0
-offset_right = 968.0
-offset_bottom = 232.0
+offset_left = 46.0
+offset_top = 28.0
+offset_right = 516.0
+offset_bottom = 84.0
 text = "30:00"
 horizontal_alignment = 1
 
-[node name="TimeIcon" type="TextureRect" parent="Control2"]
+[node name="TimeIcon" type="TextureRect" parent="Control2" unique_id=1771339082]
 layout_mode = 0
-offset_left = 664.0
-offset_top = 264.0
-offset_right = 696.0
-offset_bottom = 296.0
+offset_left = 212.0
+offset_top = 116.0
+offset_right = 244.0
+offset_bottom = 148.0
 texture = ExtResource("5")
 expand_mode = 1
 stretch_mode = 6
 
-[node name="ColorRect" type="ColorRect" parent="Control2"]
+[node name="ColorRect" type="ColorRect" parent="Control2" unique_id=1457197381]
 layout_mode = 0
-offset_left = 496.0
-offset_top = 240.0
-offset_right = 968.0
-offset_bottom = 256.0
+offset_left = 44.0
+offset_top = 92.0
+offset_right = 516.0
+offset_bottom = 108.0
 color = Color(0, 0, 0, 1)
 
-[node name="TextureProgressBar" type="TextureProgressBar" parent="Control2"]
+[node name="TextureProgressBar" type="TextureProgressBar" parent="Control2" unique_id=829594933]
 modulate = Color(0.737255, 0.737255, 0.737255, 1)
 layout_mode = 0
-offset_left = 496.0
-offset_top = 240.0
-offset_right = 968.0
-offset_bottom = 256.0
+offset_left = 44.0
+offset_top = 92.0
+offset_right = 516.0
+offset_bottom = 108.0
 max_value = 1.0
 step = 0.0
 nine_patch_stretch = true
 texture_progress = ExtResource("7")
 
-[connection signal="close_button_pressed" from="CloseButton" to="." method="_on_close_button_pressed"]
+[connection signal="pressed" from="CloseButton" to="." method="_on_close_button_pressed"]
 [connection signal="pressed" from="StartCharging" to="." method="_on_StartCharging_pressed"]
 [connection signal="value_changed" from="Control/HSlider" to="." method="_on_HSlider_value_changed"]
 [connection signal="mouse_entered" from="Control/MMM" to="." method="_on_MMM_mouse_entered"]

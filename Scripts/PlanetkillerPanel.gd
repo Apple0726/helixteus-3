@@ -12,7 +12,7 @@ var c_s_g:int = -1
 
 func _ready():
 	set_process(false)
-	set_polygon(size)
+	set_polygon($GUI.size, $GUI.position)
 
 func select_planet(p_i:Dictionary, id:int, btn):
 	for child in $Scroll/Planets.get_children():
@@ -45,11 +45,11 @@ func refresh():
 			btn.get_node("HBoxContainer/Distance")["theme_override_colors/font_color"] = Color.RED
 		btn.get_node("TF").visible = p_i.has("tile_num")
 		btn.get_node("MS").visible = p_i.has("MS")
-		btn.connect("pressed",Callable(self,"select_planet").bind(p_i, i, btn))
-		btn.get_node("TF").connect("mouse_entered",Callable(self,"on_TF_over"))
-		btn.get_node("TF").connect("mouse_exited",Callable(self,"on_mouse_exit"))
-		btn.get_node("MS").connect("mouse_entered",Callable(self,"on_MS_over"))
-		btn.get_node("MS").connect("mouse_exited",Callable(self,"on_mouse_exit"))
+		btn.pressed.connect(select_planet.bind(p_i, i, btn))
+		btn.get_node("TF").mouse_entered.connect(on_TF_over)
+		btn.get_node("TF").mouse_exited.connect(on_mouse_exit)
+		btn.get_node("MS").mouse_entered.connect(on_MS_over)
+		btn.get_node("MS").mouse_exited.connect(on_mouse_exit)
 	if star.has("charging_time"):
 		target = game.planet_data[star.p_id]
 		set_process(true)
@@ -79,6 +79,7 @@ func refresh_planet_info():
 	charging_time = time_base * (1 - value)
 	additional_energy = time_base * star.luminosity * value * 1e15
 	$Control.visible = true
+	$Desc.hide()
 	$StartCharging.visible = true
 	$Control/EnergyCost.text = Helper.format_num(additional_energy)
 	if charging_time <= 1.0:
@@ -160,6 +161,7 @@ func _on_StartCharging_pressed():
 		star.erase("p_id")
 		star.erase("rsrc")
 		$Control.visible = true
+		$Desc.hide()
 		$Control2.visible = false
 		set_process(false)
 		$StartCharging.text = tr("START_CHARGING")
@@ -194,6 +196,7 @@ func _process(delta):
 	var progress = (curr_time - start_date) / float(length)
 	$Control2/TimeCost.text = Helper.time_to_str(length - (curr_time - start_date))
 	$Control2/TextureProgressBar.value = progress
+	$Control2/TimeIcon.visible = progress < 1
 	if progress <= 0.5:
 		$Control2/Charging.text = tr("PK_CHARGING_MESSAGE_1")
 	elif progress <= 0.9:
@@ -205,6 +208,7 @@ func _process(delta):
 		$Control2/Charging.text = tr("PLANET_READY_TO_BE_REKT") % target.name
 		set_process(false)
 		$StartCharging.visible = true
+		$Desc.hide()
 		$StartCharging.text = tr("FIRE")
 		rekt_planet = true
 

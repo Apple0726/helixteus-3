@@ -1,16 +1,16 @@
-[gd_scene load_steps=4 format=3 uid="uid://e54rxxfn6fpn"]
+[gd_scene format=3 uid="uid://e54rxxfn6fpn"]
 
 [ext_resource type="Texture2D" uid="uid://cq01wa1mq6mrr" path="res://Graphics/Planets/3.png" id="1"]
-[ext_resource type="Texture2D" uid="uid://cjhhf5s48iet" path="res://Graphics/Science/TF.png" id="2"]
+[ext_resource type="Texture2D" uid="uid://cb4q7wfu4xa2i" path="res://Graphics/Buttons/Terraform.png" id="2_q7ja5"]
 [ext_resource type="Texture2D" uid="uid://dn0b5qn5vtand" path="res://Graphics/Science/MAE.png" id="3"]
 
-[node name="Button" type="Button"]
+[node name="Button" type="Button" unique_id=1168142267]
 custom_minimum_size = Vector2(0, 80)
 offset_right = 416.0
 offset_bottom = 80.0
 toggle_mode = true
 
-[node name="HBoxContainer" type="HBoxContainer" parent="."]
+[node name="HBoxContainer" type="HBoxContainer" parent="." unique_id=540665520]
 custom_minimum_size = Vector2(300, 68)
 layout_mode = 1
 anchors_preset = 15
@@ -20,37 +20,37 @@ offset_left = 8.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="TextureRect" type="TextureRect" parent="HBoxContainer"]
+[node name="TextureRect" type="TextureRect" parent="HBoxContainer" unique_id=1825959088]
 custom_minimum_size = Vector2(70, 0)
 layout_mode = 2
 texture = ExtResource("1")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="Diameter" type="Label" parent="HBoxContainer"]
+[node name="Diameter" type="Label" parent="HBoxContainer" unique_id=569268308]
 layout_mode = 2
 size_flags_horizontal = 6
 size_flags_stretch_ratio = 1.58
 text = "4000 km"
 
-[node name="Distance" type="Label" parent="HBoxContainer"]
+[node name="Distance" type="Label" parent="HBoxContainer" unique_id=578451240]
 layout_mode = 2
 size_flags_horizontal = 6
 text = "1.05 AU"
 horizontal_alignment = 1
 
-[node name="TF" type="TextureRect" parent="."]
+[node name="TF" type="TextureRect" parent="." unique_id=613344106]
 visible = false
 layout_mode = 0
 offset_left = 56.0
 offset_top = 56.0
 offset_right = 80.0
 offset_bottom = 80.0
-texture = ExtResource("2")
+texture = ExtResource("2_q7ja5")
 expand_mode = 1
-stretch_mode = 6
+stretch_mode = 5
 
-[node name="MS" type="TextureRect" parent="."]
+[node name="MS" type="TextureRect" parent="." unique_id=1612533774]
 visible = false
 layout_mode = 0
 offset_left = 56.0
@@ -59,4 +59,4 @@ offset_right = 80.0
 offset_bottom = 80.0
 texture = ExtResource("3")
 expand_mode = 1
-stretch_mode = 6
+stretch_mode = 5

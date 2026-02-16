@@ -18,9 +18,9 @@
 [ext_resource type="Texture2D" uid="uid://vpc6k7xdnx6d" path="res://Graphics/Cave/Weapons/orange_laser.png" id="17_ibd5u"]
 [ext_resource type="Texture2D" uid="uid://bpscttnkws6m0" path="res://Graphics/Cave/Weapons/yellow_laser.png" id="18_grmlu"]
 [ext_resource type="Texture2D" uid="uid://p40d5ublgk66" path="res://Graphics/Science/FTL.png" id="19_1f7c5"]
+[ext_resource type="Texture2D" uid="uid://dcgeiryc4u16w" path="res://Graphics/Ships/Fighter.png" id="20_6v67o"]
 [ext_resource type="Texture2D" uid="uid://5wj20pa6uu11" path="res://Graphics/Science/IGD.png" id="20_uh24r"]
-[ext_resource type="Texture2D" uid="uid://cgqlv44bxqv66" path="res://Graphics/Science/FG.png" id="21_d11gw"]
-[ext_resource type="Texture2D" uid="uid://bishtjkknp4dj" path="res://Graphics/Science/FG2.png" id="22_e40yg"]
+[ext_resource type="Texture2D" uid="uid://3vlv3ltai1n7" path="res://Graphics/Ships/Fighter2.png" id="21_eu0ii"]
 [ext_resource type="Texture2D" uid="uid://2xe11vc7fxvi" path="res://Graphics/Cave/Weapons/green_laser.png" id="23_d8iuo"]
 [ext_resource type="Texture2D" uid="uid://dnvaxehoe8ad1" path="res://Graphics/Cave/Weapons/blue_laser.png" id="24_6xxvc"]
 [ext_resource type="Texture2D" uid="uid://c72ootsu33568" path="res://Graphics/Cave/Weapons/purple_laser.png" id="25_vyf1n"]
@@ -389,7 +389,7 @@ offset_left = 2016.0
 offset_top = -20.0
 offset_right = 2272.0
 offset_bottom = 44.0
-icon_texture = ExtResource("21_d11gw")
+icon_texture = ExtResource("20_6v67o")
 
 [node name="L_FG" type="Line2D" parent="Main" unique_id=1804192096]
 position = Vector2(2304, 16)
@@ -407,7 +407,7 @@ offset_left = 2432.0
 offset_top = -20.0
 offset_right = 2688.0
 offset_bottom = 44.0
-icon_texture = ExtResource("22_e40yg")
+icon_texture = ExtResource("21_eu0ii")
 
 [node name="L_YL" type="Line2D" parent="Main" unique_id=1241537908]
 position = Vector2(1408, 724)

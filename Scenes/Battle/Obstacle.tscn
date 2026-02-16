@@ -24,7 +24,7 @@ void fragment() {
 	vec2 center = 0.4 * vec2(cos(starlight_angle + 3.1415), sin(starlight_angle + 3.1415)) + vec2(0.5);
 	float shade = cos(starlight_angle) * 1.5 * (UV.x - center.x) + sin(starlight_angle) * 1.5 * (UV.y - center.y);
 	float shade2 = starlight_energy * smoothstep(0.0, 1.0, shade) + 0.1;
-	COLOR.rgb *= vec3(shade2) * mix(vec3(1.0), starlight_color, shade2);
+	COLOR.rgb *= vec3(shade2) * mix(vec3(1.0), starlight_color, shade2 * 0.8);
 	COLOR.rgb = mix(COLOR.rgb, flash_color, flash);
 }
 

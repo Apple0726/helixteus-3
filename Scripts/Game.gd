@@ -98,6 +98,7 @@ var panel_var_name_to_file_name = {
 	"send_fighters_panel":"SendFightersPanel",
 	"PC_panel":"PCPanel",
 	"send_probes_panel":"SendProbesPanel",
+	"planetkiller_panel":"PlanetkillerPanel",
 }
 #endregion
 

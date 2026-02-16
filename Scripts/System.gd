@@ -935,8 +935,9 @@ func on_star_pressed (id:int):
 			game.popup(tr("STAR_MS_ERROR"), 3.0)
 	elif star.has("MS"):
 		if star.MS == "PK" and not star.has("repair_cost") and not game.item_to_use.has("type"):
+			game.toggle_panel("planetkiller_panel", false)
 			game.planetkiller_panel.star = star
-			game.toggle_panel(game.planetkiller_panel)
+			game.planetkiller_panel.refresh()
 
 func on_btn_out ():
 	planet_hovered = -1
