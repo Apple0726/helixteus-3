@@ -49,9 +49,9 @@ texture_hover = ExtResource("5_0o8k3")
 [node name="Title" type="Label" parent="." unique_id=1853866638]
 custom_minimum_size = Vector2(0, 38)
 layout_mode = 1
-offset_left = 120.0
+offset_left = 128.0
 offset_top = 72.0
-offset_right = 459.0
+offset_right = 467.0
 offset_bottom = 110.0
 text = "SEND_PROBES"
 label_settings = SubResource("LabelSettings_fas0x")

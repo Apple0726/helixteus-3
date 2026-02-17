@@ -749,15 +749,17 @@ func on_planet_click (id:int, l_id:int):
 			if p_i.bldg.name == Building.GREENHOUSE:
 				toggle_GH(p_i, false)
 			elif p_i.bldg.name == Building.ATOM_MANIPULATOR:
+				game.toggle_panel("AMN_panel", false)
 				game.AMN_panel.tf = true
 				game.AMN_panel.obj = p_i
 				game.AMN_panel.tile_num = p_i.tile_num
-				game.toggle_panel(game.AMN_panel)
+				game.AMN_panel.refresh()
 			elif p_i.bldg.name == Building.SUBATOMIC_PARTICLE_REACTOR:
+				game.toggle_panel("SPR_panel", false)
 				game.SPR_panel.tf = true
 				game.SPR_panel.obj = p_i
 				game.SPR_panel.tile_num = p_i.tile_num
-				game.toggle_panel(game.SPR_panel)
+				game.SPR_panel.refresh()
 		if p_i.has("conquered") and not Input.is_action_pressed("ctrl"):
 			if not p_i.type in [11, 12]:
 				if not p_i.has("bldg") or not p_i.bldg.has("name"):
