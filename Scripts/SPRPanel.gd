@@ -34,7 +34,7 @@ var path_2_value:float = 1.0
 
 func _ready():
 	set_process(false)
-	set_polygon(size)
+	set_polygon($GUI.size, $GUI.position)
 	$Title.text = tr("SUBATOMIC_PARTICLE_REACTOR_NAME")
 	$Desc.text = tr("REACTIONS_PANEL_DESC")
 	for _name in reactions:

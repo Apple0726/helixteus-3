@@ -99,6 +99,8 @@ var panel_var_name_to_file_name = {
 	"PC_panel":"PCPanel",
 	"send_probes_panel":"SendProbesPanel",
 	"planetkiller_panel":"PlanetkillerPanel",
+	"AMN_panel":"AMNPanel",
+	"SPR_panel":"SPRPanel",
 }
 #endregion
 
@@ -292,7 +294,7 @@ var met_info = {	"lead":{"min_depth":0, "max_depth":500, "rarity":1, "density":1
 					"platinum":{"min_depth":2400, "max_depth":6000, "rarity":79.5, "density":21.45, "value":212650},
 					"diamond":{"min_depth":5800, "max_depth":9000, "rarity":157.3, "density":4.20, "value":591850},
 					"nanocrystal":{"min_depth":70000, "max_depth":140000, "rarity":6000.0, "density":1.5, "value":2.4e7},
-					"mythril":{"min_depth":350000, "max_depth":2e6, "rarity":520000.0, "density":13.4, "value":3.5e9},
+					"mythril":{"min_depth":350000, "max_depth":1e6, "rarity":520000.0, "density":13.4, "value":3.5e9},
 }
 
 var pickaxes_info = {"stick":{"speed":1.0, "durability":140, "costs":{"money":300}},

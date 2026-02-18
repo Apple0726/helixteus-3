@@ -685,11 +685,13 @@ func click_tile(tile, tile_id:int):
 			game.toggle_panel("production_panel")
 			game.production_panel.refresh2(bldg, "coal", "energy", "mats", "")
 		Building.ATOM_MANIPULATOR:
+			game.toggle_panel("AMN_panel", false)
 			game.AMN_panel.tf = false
-			game.toggle_panel(game.AMN_panel)
+			game.AMN_panel.refresh()
 		Building.SUBATOMIC_PARTICLE_REACTOR:
+			game.toggle_panel(game.SPR_panel, false)
 			game.SPR_panel.tf = false
-			game.toggle_panel(game.SPR_panel)
+			game.SPR_panel.refresh()
 			if tile.bldg.has("reaction"):
 				game.SPR_panel._on_Atom_pressed(tile.bldg.reaction)
 	hide_tooltip()

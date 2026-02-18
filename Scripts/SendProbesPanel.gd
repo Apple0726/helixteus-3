@@ -12,7 +12,7 @@ var dist_mult:float = 1
 var dist_exp:int
 
 func _ready():
-	set_polygon(size)
+	set_polygon($GUI.size, $GUI.position)
 
 func refresh():
 	probe_num = 0
