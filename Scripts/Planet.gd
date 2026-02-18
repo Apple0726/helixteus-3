@@ -689,7 +689,7 @@ func click_tile(tile, tile_id:int):
 			game.AMN_panel.tf = false
 			game.AMN_panel.refresh()
 		Building.SUBATOMIC_PARTICLE_REACTOR:
-			game.toggle_panel(game.SPR_panel, false)
+			game.toggle_panel("SPR_panel", false)
 			game.SPR_panel.tf = false
 			game.SPR_panel.refresh()
 			if tile.bldg.has("reaction"):

@@ -57,67 +57,71 @@ text = "SEND_PROBES"
 label_settings = SubResource("LabelSettings_fas0x")
 vertical_alignment = 1
 
-[node name="Control" type="Panel" parent="." unique_id=1878322498]
+[node name="Panel" type="Panel" parent="." unique_id=1878322498]
 layout_mode = 0
 offset_left = 152.0
 offset_top = 152.0
 offset_right = 1120.0
 offset_bottom = 608.0
 
-[node name="Label2" type="Label" parent="Control" unique_id=65466662]
+[node name="Label" type="Label" parent="Panel" unique_id=1837415612]
 layout_mode = 0
-offset_left = 176.0
-offset_top = 216.0
-offset_right = 320.0
-offset_bottom = 248.0
+offset_left = 24.0
+offset_top = 24.0
+offset_right = 944.0
+offset_bottom = 236.0
+
+[node name="Label2" type="Label" parent="Panel" unique_id=65466662]
+layout_mode = 0
+offset_left = 152.0
+offset_top = 208.0
+offset_right = 336.0
+offset_bottom = 240.0
 text = "LESS_ENERGY"
+horizontal_alignment = 2
+vertical_alignment = 1
 
-[node name="Label3" type="Label" parent="Control" unique_id=1695476385]
+[node name="Label3" type="Label" parent="Panel" unique_id=1695476385]
 layout_mode = 0
-offset_left = 664.0
-offset_top = 216.0
-offset_right = 828.0
-offset_bottom = 248.0
+offset_left = 640.0
+offset_top = 208.0
+offset_right = 804.0
+offset_bottom = 240.0
 text = "FASTER_TRAVEL"
+vertical_alignment = 1
 
-[node name="HSlider" type="HSlider" parent="Control" unique_id=1638193314]
+[node name="HSlider" type="HSlider" parent="Panel" unique_id=1638193314]
 layout_mode = 0
 offset_left = 368.0
-offset_top = 224.0
+offset_top = 216.0
 offset_right = 608.0
-offset_bottom = 240.0
+offset_bottom = 232.0
 value = 50.0
 
-[node name="TimeIcon" type="TextureRect" parent="Control" unique_id=948951659]
+[node name="TimeIcon" type="TextureRect" parent="Panel" unique_id=948951659]
 layout_mode = 0
-offset_left = 520.0
-offset_top = 288.0
-offset_right = 552.0
-offset_bottom = 328.0
+offset_left = 400.0
+offset_top = 328.0
+offset_right = 432.0
+offset_bottom = 368.0
 texture = ExtResource("1")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="Costs" type="HBoxContainer" parent="Control" unique_id=1388148739]
+[node name="Costs" type="HBoxContainer" parent="Panel" unique_id=1388148739]
 layout_mode = 0
-offset_left = 152.0
-offset_top = 288.0
-offset_right = 536.0
-offset_bottom = 328.0
+offset_left = 296.0
+offset_top = 264.0
+offset_right = 680.0
+offset_bottom = 304.0
+theme_override_constants/separation = 20
 
-[node name="Time" type="Label" parent="Control" unique_id=1027520574]
+[node name="Time" type="Label" parent="Panel" unique_id=1027520574]
 layout_mode = 0
-offset_left = 568.0
-offset_top = 296.0
-offset_right = 688.0
-offset_bottom = 320.0
-
-[node name="Label" type="Label" parent="." unique_id=1837415612]
-layout_mode = 0
-offset_left = 176.0
-offset_top = 176.0
-offset_right = 1096.0
-offset_bottom = 388.0
+offset_left = 448.0
+offset_top = 336.0
+offset_right = 568.0
+offset_bottom = 360.0
 
 [node name="NoProbes" type="Label" parent="." unique_id=1867810973]
 layout_mode = 0
@@ -129,20 +133,20 @@ offset_bottom = 200.0
 [node name="Send" type="Button" parent="." unique_id=1355520088]
 layout_mode = 0
 offset_left = 352.0
-offset_top = 536.0
+offset_top = 560.0
 offset_right = 576.0
-offset_bottom = 576.0
+offset_bottom = 600.0
 text = "SEND_A_PROBE"
 
 [node name="SendAll" type="Button" parent="." unique_id=1601650957]
 layout_mode = 0
 offset_left = 688.0
-offset_top = 536.0
+offset_top = 560.0
 offset_right = 936.0
-offset_bottom = 576.0
+offset_bottom = 600.0
 
 [connection signal="pressed" from="CloseButton" to="." method="_on_close_button_pressed"]
-[connection signal="value_changed" from="Control/HSlider" to="." method="_on_HSlider_value_changed"]
+[connection signal="value_changed" from="Panel/HSlider" to="." method="_on_HSlider_value_changed"]
 [connection signal="pressed" from="Send" to="." method="_on_Send_pressed"]
 [connection signal="mouse_entered" from="SendAll" to="." method="_on_SendAll_mouse_entered"]
 [connection signal="mouse_exited" from="SendAll" to="." method="_on_SendAll_mouse_exited"]

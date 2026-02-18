@@ -190,7 +190,7 @@ func e_notation(num:float, sd:int = 4):#e notation
 	if n2 == 10:
 		n2 = 1
 		e += 1
-	return "%se%s" %  [n2, e]
+	return "%se%d" %  [n2, e]
 
 
 func format_num(num:float, clever_round:bool = false, threshold:int = 6):

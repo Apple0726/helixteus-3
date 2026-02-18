@@ -44,15 +44,15 @@ func refresh():
 	if probe_num - exploring_probe_num <= 0:
 		$NoProbes.text = tr("NO_PROBES")
 		$NoProbes.visible = true
-		$Control.visible = false
+		$Panel.visible = false
 		$Send.visible = false
 		$SendAll.visible = false
 	else:
 		$NoProbes.visible = false
-		$Control.visible = true
+		$Panel.visible = true
 		$Send.visible = true
 		$SendAll.visible = true
-	$Label.text = "%s: %s\n%s: %s\n%s: %s" % [tr("PROBE_NUM_IN_SC"), probe_num, tr("EXPLORING_PROBE_NUM"), exploring_probe_num, tr("UNDISCOVERED_CLUSTER_NUM"), undiscovered_obj_num]
+	$Panel/Label.text = "%s: %s\n%s: %s\n%s: %s" % [tr("PROBE_NUM_IN_UNIV"), probe_num, tr("EXPLORING_PROBE_NUM"), exploring_probe_num, tr("UNDISCOVERED_CLUSTER_NUM"), undiscovered_obj_num]
 	refresh_energy()
 	$SendAll.text = "%s (x %s)" % [tr("SEND_ALL_PROBES"), min(probe_num - exploring_probe_num, undiscovered_obj_num - exploring_probe_num)]
 	
@@ -61,8 +61,8 @@ func refresh_energy(send_all:bool = false):
 	var costs2:Dictionary = costs.duplicate(true)
 	costs2.erase("time")
 	if not send_all:
-		Helper.put_rsrc($Control/Costs, 36, costs2, true, true)
-	$Control/Time.text = Helper.time_to_str(costs.time)
+		Helper.put_rsrc($Panel/Costs, 36, costs2, true, true)
+	$Panel/Time.text = Helper.time_to_str(costs.time)
 	
 func dist_sort(a:Dictionary, b:Dictionary):
 	if a.pos.length() < b.pos.length():
@@ -126,7 +126,7 @@ func _on_SendAll_pressed():
 	refresh()
 
 func fill_costs(_dist_mult:float):
-	var slider_factor = pow(10, $Control/HSlider.value / 25.0 - 2)
+	var slider_factor = pow(10, $Panel/HSlider.value / 25.0 - 2)
 	costs["energy"] = 2e18 * slider_factor * _dist_mult / game.u_i.speed_of_light
 	costs["Pu"] = 1000 * slider_factor * _dist_mult / game.u_i.speed_of_light
 	costs["time"] = 1500 / pow(slider_factor, 0.4) * _dist_mult / game.u_i.time_speed / game.u_i.speed_of_light
@@ -151,8 +151,8 @@ func _on_SendAll_mouse_entered():
 			min_time = costs.time
 		max_time = costs.time
 	costs2.erase("time")
-	Helper.put_rsrc($Control/Costs, 36, costs2, true, true)
-	$Control/Time.text = "%s - %s"% [Helper.time_to_str(min_time), Helper.time_to_str(max_time)]
+	Helper.put_rsrc($Panel/Costs, 36, costs2, true, true)
+	$Panel/Time.text = "%s - %s"% [Helper.time_to_str(min_time), Helper.time_to_str(max_time)]
 
 func _on_SendAll_mouse_exited():
 	refresh_energy()

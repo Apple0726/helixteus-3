@@ -36,13 +36,20 @@ func _ready():
 	$Title.text = tr("ATOM_MANIPULATOR_NAME")
 	$Desc.text = tr("REACTIONS_PANEL_DESC")
 	for _name in reactions:
-		var btn = preload("res://Scenes/AdvButton.tscn").instantiate()
+		var btn = Button.new()
 		if _name in ["nanocrystal", "mythril", "quillite"] and not game.science_unlocked.has("AMM"):
 			btn.visible = false
+		if _name == "stone":
+			btn.icon = Data.stone_icon
+		elif reactions[_name].type == "mats":
+			btn.icon = load("res://Graphics/Materials/%s.png" % _name)
+		elif reactions[_name].type == "mets":
+			btn.icon = load("res://Graphics/Metals/%s.png" % _name)
+		btn.expand_icon = true
 		btn.name = _name
 		btn.custom_minimum_size = Vector2(100.0, 100.0)
-		btn.icon_texture = Data.time_icon
-		btn.button_text = tr(_name.to_upper())
+		btn.mouse_entered.connect(game.show_tooltip.bind(tr(_name.to_upper())))
+		btn.mouse_exited.connect(game.hide_tooltip)
 		btn.pressed.connect(on_rsrc_pressed.bind(_name))
 		$ScrollContainer/GridContainer.add_child(btn)
 
@@ -97,7 +104,7 @@ func refresh():
 	$Panel/ReactionInProgress.visible = obj.bldg.has("qty") and reaction == obj.bldg.reaction
 	$Panel/Control.visible = not $Panel/ReactionInProgress.visible and reaction != ""
 	$Panel/Transform.visible = $Panel/ReactionInProgress.visible or $Panel/Control.visible
-	refresh_time_icon()
+	#refresh_time_icon()
 	$Panel/Control/TimeCostText.text = Helper.time_to_str(difficulty * $Panel/Control/HSlider.value / obj.bldg.path_1_value / tile_num / Helper.get_IR_mult(Building.ATOM_MANIPULATOR) / game.u_i.time_speed / obj.get("time_speed_bonus", 1.0))
 	for reaction_name in reactions:
 		var disabled:bool = false
@@ -138,22 +145,13 @@ func refresh():
 		$Panel/Transform.text = "%s (G)" % tr("TRANSFORM")
 
 func reset_poses(_name:String):
-	for btn in $ScrollContainer/GridContainer.get_children():
-		btn["theme_override_colors/font_color"] = null
-		btn["theme_override_colors/font_color_hover"] = null
-		btn["theme_override_colors/font_color_pressed"] = null
-		btn["theme_override_colors/font_color_disabled"] = null
-	$ScrollContainer/GridContainer.get_node(_name)["theme_override_colors/font_color"] = Color(0, 1, 1, 1)
-	$ScrollContainer/GridContainer.get_node(_name)["theme_override_colors/font_color_hover"] = Color(0, 1, 1, 1)
-	$ScrollContainer/GridContainer.get_node(_name)["theme_override_colors/font_color_pressed"] = Color(0, 1, 1, 1)
-	$ScrollContainer/GridContainer.get_node(_name)["theme_override_colors/font_color_disabled"] = Color(0, 1, 1, 1)
 	reaction = _name
 	if _name != "stone":
 		rsrc_type = reactions[_name].type
 	atom_to_rsrc = true
 	$Panel/Control2.visible = true
-	$Panel/Control2/ScrollContainer.position = Vector2(104.0, 176.0)
-	$Panel/Control2/To.position = Vector2(376.0, 180.0)
+	$Panel/Control2/ScrollContainer.position = Vector2(92.0, 128.0)
+	$Panel/Control2/To.position = Vector2(376.0, 132.0)
 	if not obj.is_empty():
 		$Panel/ReactionInProgress.visible = obj.bldg.has("qty") and obj.bldg.reaction == reaction
 		if $Panel/ReactionInProgress.visible and not obj.bldg.atom_to_rsrc and reaction != "stone":
@@ -218,7 +216,7 @@ func _on_Transform_pressed():
 		$Panel/Control.visible = true
 		$Panel/ReactionInProgress.visible = false
 		$Panel/Transform.text = "%s (G)" % tr("TRANSFORM")
-		refresh_time_icon()
+		#refresh_time_icon()
 		_on_HSlider_value_changed($Panel/Control/HSlider.value)
 	else:
 		var rsrc = $Panel/Control/HSlider.value
@@ -244,7 +242,7 @@ func _on_Transform_pressed():
 		$Panel/Control.visible = false
 		$Panel/ReactionInProgress.visible = true
 		$Panel/Transform.text = "%s (G)" % tr("STOP")
-		refresh_time_icon()
+		#refresh_time_icon()
 	game.HUD.refresh()
 
 func set_text_to_white():

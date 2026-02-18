@@ -2,7 +2,6 @@
 
 [ext_resource type="Script" uid="uid://bfvugqcw8rg0c" path="res://Scripts/Resource.gd" id="1_gt285"]
 [ext_resource type="Texture2D" uid="uid://og56fmydqo8i" path="res://Graphics/Icons/Annotator/check.png" id="2_1iyfg"]
-[ext_resource type="Texture2D" uid="uid://b0brlrg52bjln" path="res://Graphics/Icons/money.png" id="2_gt285"]
 
 [node name="Resource" type="HBoxContainer" unique_id=842182608]
 anchors_preset = 15
@@ -17,7 +16,6 @@ script = ExtResource("1_gt285")
 custom_minimum_size = Vector2(24, 24)
 layout_mode = 2
 size_flags_vertical = 4
-texture_normal = ExtResource("2_gt285")
 ignore_texture_size = true
 stretch_mode = 5
 

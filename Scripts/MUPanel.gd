@@ -47,7 +47,7 @@ func _ready():
 			btn_max.custom_minimum_size.x = 32
 			btn_max.name = "UpgradeMax"
 			btn_max.expand_icon = true
-			btn_max.icon = preload("res://Graphics/Science/UP2.png")
+			#btn_max.icon = preload("res://Graphics/Science/UP2.png")
 			hbox.add_child(btn_max)
 		$PanelContainer/VBox.add_child(hbox)
 

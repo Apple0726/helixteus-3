@@ -35,27 +35,30 @@ var path_2_value:float = 1.0
 func _ready():
 	set_process(false)
 	set_polygon($GUI.size, $GUI.position)
+	$Panel.hide()
 	$Title.text = tr("SUBATOMIC_PARTICLE_REACTOR_NAME")
 	$Desc.text = tr("REACTIONS_PANEL_DESC")
 	for _name in reactions:
-		var btn = preload("res://Scenes/AdvButton.tscn").instantiate()
+		var btn = Button.new()
 		if _name in ["Ta", "W", "Os"] and not game.science_unlocked.has("AMM"):
 			btn.visible = false
+		btn.icon = load("res://Graphics/Atoms/%s.png" % _name)
 		btn.name = _name
-		btn.custom_minimum_size.y = 30
-		btn.button_text = tr("%s_NAME" % _name.to_upper())
-		btn.connect("pressed",Callable(self,"_on_Atom_pressed").bind(_name))
-		btn.icon_texture = Data.time_icon
-		$ScrollContainer/VBoxContainer.add_child(btn)
+		btn.custom_minimum_size.y = 75
+		btn.mouse_entered.connect(game.show_tooltip.bind(tr("%s_NAME" % _name.to_upper())))
+		btn.mouse_exited.connect(game.hide_tooltip)
+		btn.pressed.connect(_on_Atom_pressed.bind(_name))
+		$ScrollContainer/GridContainer.add_child(btn)
 
 func _on_Atom_pressed(_name:String):
 	reset_poses(_name, reactions[_name].Z)
 	energy_cost = reactions[_name].energy_cost
 	difficulty = reactions[_name].difficulty
+	$Panel.show()
 	refresh()
 
 func refresh():
-	for btn in $ScrollContainer/VBoxContainer.get_children():
+	for btn in $ScrollContainer/GridContainer.get_children():
 		btn.visible = not btn.name in ["Ta", "W", "Os"] or game.science_unlocked.has("AMM")
 	if tf:
 		$Title.text = "%s %s" % [Helper.format_num(tile_num), tr("SUBATOMIC_PARTICLE_REACTOR_NAME_S").to_lower(),]
@@ -69,25 +72,25 @@ func refresh():
 		au_int = obj.get("aurora", 0.0)
 		au_mult = au_int + 1.0
 	path_2_value = obj.bldg.path_2_value * Helper.get_IR_mult(Building.SUBATOMIC_PARTICLE_REACTOR)
-	$Control/EnergyCostText.text = Helper.format_num(round(energy_cost * $Control/HSlider.value / au_mult / game.u_i.charge / path_2_value)) + "  [img]Graphics/Icons/help.png[/img]"
+	$Panel/Control/EnergyCostText.text = Helper.format_num(round(energy_cost * $Panel/Control/HSlider.value / au_mult / game.u_i.charge / path_2_value)) + "  [img]Graphics/Icons/help.png[/img]"
 	if au_mult > 1:
-		$Control/EnergyCostText.help_text = ("[aurora au_int=%s]" % au_int) + tr("MORE_ENERGY_EFFICIENT") % Helper.clever_round(au_mult)
+		$Panel/Control/EnergyCostText.help_text = ("[aurora au_int=%s]" % au_int) + tr("MORE_ENERGY_EFFICIENT") % Helper.clever_round(au_mult)
 	else:
-		$Control/EnergyCostText.help_text = tr("AMN_TIP")
-	$Control/TimeCostText.text = Helper.time_to_str(difficulty * $Control/HSlider.value / obj.bldg.path_1_value / Helper.get_IR_mult(Building.SUBATOMIC_PARTICLE_REACTOR) / tile_num / game.u_i.time_speed / obj.get("time_speed_bonus", 1.0) / game.u_i.charge)
-	$Control3.visible = obj.bldg.has("qty") and reaction == obj.bldg.reaction
-	$Control.visible = not $Control3.visible and reaction != ""
-	$Transform3D.visible = $Control3.visible or $Control.visible
+		$Panel/Control/EnergyCostText.help_text = tr("AMN_TIP")
+	$Panel/Control/TimeCostText.text = Helper.time_to_str(difficulty * $Panel/Control/HSlider.value / obj.bldg.path_1_value / Helper.get_IR_mult(Building.SUBATOMIC_PARTICLE_REACTOR) / tile_num / game.u_i.time_speed / obj.get("time_speed_bonus", 1.0) / game.u_i.charge)
+	$Panel/ReactionInProgress.visible = obj.bldg.has("qty") and reaction == obj.bldg.reaction
+	$Panel/Control.visible = not $Panel/ReactionInProgress.visible and reaction != ""
+	$Panel/Transform.visible = $Panel/ReactionInProgress.visible or $Panel/Control.visible
 	for reaction_name in reactions:
 		var disabled:bool = false
 		if is_zero_approx(game.particles.subatomic_particles):
 			disabled = true
 		disabled = disabled and is_zero_approx(game.atoms[reaction_name]) and (not obj.bldg.has("qty") or not obj.bldg.reaction == reaction_name)
-		$ScrollContainer/VBoxContainer.get_node(reaction_name).disabled = disabled
-	refresh_time_icon()
+		$ScrollContainer/GridContainer.get_node(reaction_name).disabled = disabled
+	#refresh_time_icon()
 	if reaction == "":
 		return
-	set_process($Control3.visible)
+	set_process($Panel/ReactionInProgress.visible)
 	var max_value:float = 0.0
 	if atom_to_p:
 		max_value = game.atoms[reaction]
@@ -95,57 +98,48 @@ func refresh():
 		var max_value2 = game.particles.subatomic_particles / Z
 		if max_value2 < max_value or max_value == 0.0:
 			max_value = max_value2
-	$Control/HSlider.max_value = min(game.energy * au_mult * game.u_i.charge / energy_cost * path_2_value, max_value)
-	$Control/HSlider.step = $Control/HSlider.max_value / 500.0
-	$Control/HSlider.visible = $Control/HSlider.max_value != 0
-	if $Control3.visible:
+	$Panel/Control/HSlider.max_value = min(game.energy * au_mult * game.u_i.charge / energy_cost * path_2_value, max_value)
+	$Panel/Control/HSlider.step = $Panel/Control/HSlider.max_value / 500.0
+	$Panel/Control/HSlider.visible = $Panel/Control/HSlider.max_value != 0
+	if $Panel/ReactionInProgress.visible:
 		set_text_to_white()
-		$Transform3D.visible = true
-		$Transform3D.text = "%s (G)" % tr("STOP")
+		$Panel/Transform.visible = true
+		$Panel/Transform.text = "%s (G)" % tr("STOP")
 	else:
-		$Transform3D.visible = $Control/HSlider.max_value != 0 and not obj.bldg.has("qty")
-		$Transform3D.text = "%s (G)" % tr("TRANSFORM")
-	var value = $Control/HSlider.value
+		$Panel/Transform.visible = $Panel/Control/HSlider.max_value != 0 and not obj.bldg.has("qty")
+		$Panel/Transform.text = "%s (G)" % tr("TRANSFORM")
+	var value = $Panel/Control/HSlider.value
 	var atom_dict = {}
 	var p_costs = {"subatomic_particles":value}
 	for particle in p_costs:
 		p_costs[particle] *= Z
 	atom_dict[reaction] = value
-	rsrc_nodes_from = Helper.put_rsrc($Control2/ScrollContainer/From, 32, atom_dict, true, atom_to_p)
-	rsrc_nodes_to = Helper.put_rsrc($Control2/To, 32, p_costs, true, not atom_to_p)
+	rsrc_nodes_from = Helper.put_rsrc($Panel/Control2/ScrollContainer/From, 32, atom_dict, true, atom_to_p)
+	rsrc_nodes_to = Helper.put_rsrc($Panel/Control2/To, 32, p_costs, true, not atom_to_p)
 
 func reset_poses(_name:String, _Z:int):
-	for btn in $ScrollContainer/VBoxContainer.get_children():
-		btn["theme_override_colors/font_color"] = null
-		btn["theme_override_colors/font_color_hover"] = null
-		btn["theme_override_colors/font_color_pressed"] = null
-		btn["theme_override_colors/font_color_disabled"] = null
-	$ScrollContainer/VBoxContainer.get_node(_name)["theme_override_colors/font_color"] = Color(0, 1, 1, 1)
-	$ScrollContainer/VBoxContainer.get_node(_name)["theme_override_colors/font_color_hover"] = Color(0, 1, 1, 1)
-	$ScrollContainer/VBoxContainer.get_node(_name)["theme_override_colors/font_color_pressed"] = Color(0, 1, 1, 1)
-	$ScrollContainer/VBoxContainer.get_node(_name)["theme_override_colors/font_color_disabled"] = Color(0, 1, 1, 1)
 	reaction = _name
 	Z = _Z
 	atom_to_p = true
-	$Control2/ScrollContainer.position = Vector2(480, 240)
-	$Control2/To.position = Vector2(772, 240)
-	$Control2.visible = true
-	$Control3.visible = obj.bldg.has("qty") and obj.bldg.reaction == reaction
-	$Control.visible = not $Control3.visible
-	if $Control3.visible and not obj.bldg.atom_to_p:
+	$Panel/Control2/ScrollContainer.position = Vector2(92.0, 128.0)
+	$Panel/Control2/To.position = Vector2(376.0, 132.0)
+	$Panel/Control2.visible = true
+	$Panel/ReactionInProgress.visible = obj.bldg.has("qty") and obj.bldg.reaction == reaction
+	$Panel/Control.visible = not $Panel/ReactionInProgress.visible
+	if $Panel/ReactionInProgress.visible and not obj.bldg.atom_to_p:
 		_on_Switch_pressed(false)
 
 func _on_Switch_pressed(refresh:bool = true):
-	var pos = $Control2/To.position
-	$Control2/To.position = $Control2/ScrollContainer.position
-	$Control2/ScrollContainer.position = pos
+	var pos = $Panel/Control2/To.position
+	$Panel/Control2/To.position = $Panel/Control2/ScrollContainer.position
+	$Panel/Control2/ScrollContainer.position = pos
 	atom_to_p = not atom_to_p
 	if refresh:
-		_on_HSlider_value_changed($Control/HSlider.value)
+		_on_HSlider_value_changed($Panel/Control/HSlider.value)
 
 func _on_HSlider_value_changed(value):
-	#rsrc_nodes_from = Helper.put_rsrc($Control2/ScrollContainer/From, 32, atom_dict, true, atom_to_p)
-	#rsrc_nodes_to = Helper.put_rsrc($Control2/To, 32, p_costs, true, not atom_to_p)
+	#rsrc_nodes_from = Helper.put_rsrc($Panel/Control2/ScrollContainer/From, 32, atom_dict, true, atom_to_p)
+	#rsrc_nodes_to = Helper.put_rsrc($Panel/Control2/To, 32, p_costs, true, not atom_to_p)
 	refresh()
 
 func _on_Transform_pressed():
@@ -169,13 +163,13 @@ func _on_Transform_pressed():
 		obj.bldg.erase("start_date")
 		obj.bldg.erase("reaction")
 		obj.bldg.erase("difficulty")
-		$Control.visible = true
-		$Control3.visible = false
-		refresh_time_icon()
-#		$Transform3D.text = "%s (G)" % tr("TRANSFORM")
-		#_on_HSlider_value_changed($Control/HSlider.value)
+		$Panel/Control.visible = true
+		$Panel/ReactionInProgress.visible = false
+		#refresh_time_icon()
+#		$Panel/Transform.text = "%s (G)" % tr("TRANSFORM")
+		#_on_HSlider_value_changed($Panel/Control/HSlider.value)
 	else:
-		var rsrc = $Control/HSlider.value
+		var rsrc = $Panel/Control/HSlider.value
 		if rsrc == 0:
 			return
 		var rsrc_to_deduct = {}
@@ -200,10 +194,10 @@ func _on_Transform_pressed():
 					break
 		set_text_to_white()
 		set_process(true)
-		$Control.visible = false
-		$Control3.visible = true
-		refresh_time_icon()
-#		$Transform3D.text = "%s (G)" % tr("STOP")
+		$Panel/Control.visible = false
+		$Panel/ReactionInProgress.visible = true
+		#refresh_time_icon()
+#		$Panel/Transform.text = "%s (G)" % tr("STOP")
 	refresh()
 	game.HUD.refresh()
 
@@ -217,7 +211,7 @@ func _process(delta):
 	var reaction_info = get_reaction_info(obj)
 	#MM produced or MM used
 	var MM_value = reaction_info.MM_value
-	$Control3/TextureProgressBar.value = reaction_info.progress
+	$Panel/ReactionInProgress/TextureProgressBar.value = reaction_info.progress
 	var MM_dict = {}
 	var atom_dict:Dictionary = {}
 	var num
@@ -232,15 +226,15 @@ func _process(delta):
 		hbox.rsrc.get_node("Text").text = "%s mol" % [Helper.format_num(atom_dict[hbox.name], true)]
 	for hbox in rsrc_nodes_to:
 		hbox.rsrc.get_node("Text").text = "%s mol" % [Helper.format_num(MM_dict[hbox.name], true)]
-	$Control3/TimeRemainingText.text = Helper.time_to_str(max(0, difficulty * (obj.bldg.qty - MM_value) / obj.bldg.path_1_value / Helper.get_IR_mult(Building.SUBATOMIC_PARTICLE_REACTOR) / tile_num / game.u_i.time_speed / obj.get("time_speed_bonus", 1.0) / game.u_i.charge))
+	$Panel/ReactionInProgress/TimeRemainingText.text = Helper.time_to_str(max(0, difficulty * (obj.bldg.qty - MM_value) / obj.bldg.path_1_value / Helper.get_IR_mult(Building.SUBATOMIC_PARTICLE_REACTOR) / tile_num / game.u_i.time_speed / obj.get("time_speed_bonus", 1.0) / game.u_i.charge))
 
 func refresh_time_icon():
-	for r in $ScrollContainer/VBoxContainer.get_children():
+	for r in $ScrollContainer/GridContainer.get_children():
 		r.get_node("Icon").visible = obj.bldg.has("reaction") and r.name == obj.bldg.reaction
 
 func _on_Max_pressed():
 	if atom_to_p:
-		$Control/HSlider.value = min(game.energy * au_mult * game.u_i.charge / energy_cost * path_2_value, game.atoms[reaction])
+		$Panel/Control/HSlider.value = min(game.energy * au_mult * game.u_i.charge / energy_cost * path_2_value, game.atoms[reaction])
 
 func _on_EnergyCostText_mouse_entered():
 	if au_mult > 1:

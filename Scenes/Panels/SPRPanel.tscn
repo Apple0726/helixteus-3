@@ -57,6 +57,7 @@ grow_vertical = 2
 pivot_offset = Vector2(533, 300)
 theme = ExtResource("1_gex3w")
 script = ExtResource("2_3ftvt")
+metadata/_edit_vertical_guides_ = [828.0]
 
 [node name="GUI" type="TextureRect" parent="." unique_id=2049732480]
 layout_mode = 0
@@ -90,26 +91,27 @@ vertical_alignment = 1
 layout_mode = 1
 anchors_preset = 10
 anchor_right = 1.0
-offset_left = 568.0
-offset_top = 96.0
-offset_right = 568.0
-offset_bottom = 144.0
+offset_left = 756.0
+offset_top = 332.0
+offset_right = 756.0
+offset_bottom = 380.0
 grow_horizontal = 2
 horizontal_alignment = 1
 vertical_alignment = 1
 
 [node name="ScrollContainer" type="ScrollContainer" parent="." unique_id=26623442]
 layout_mode = 0
-offset_left = 152.0
-offset_top = 148.0
-offset_right = 515.0
-offset_bottom = 604.0
+offset_left = 136.0
+offset_top = 160.0
+offset_right = 499.0
+offset_bottom = 608.0
 
-[node name="VBoxContainer" type="VBoxContainer" parent="ScrollContainer" unique_id=1691555023]
+[node name="GridContainer" type="GridContainer" parent="ScrollContainer" unique_id=1447989336]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 theme = SubResource("1")
+columns = 4
 
 [node name="Panel" type="Panel" parent="." unique_id=24071072]
 layout_mode = 0
@@ -118,110 +120,117 @@ offset_top = 160.0
 offset_right = 1126.0
 offset_bottom = 612.0
 
-[node name="Control2" type="Control" parent="." unique_id=341604548]
-visible = false
+[node name="Transform" type="Button" parent="Panel" unique_id=680625303]
+layout_mode = 0
+offset_left = 228.0
+offset_top = 408.0
+offset_right = 364.0
+offset_bottom = 445.0
+shortcut = SubResource("3")
+shortcut_in_tooltip = false
+text = "TRANSFORM"
+
+[node name="Control" type="Control" parent="Panel" unique_id=1639124424]
 anchors_preset = 0
 offset_right = 40.0
 offset_bottom = 40.0
 
-[node name="Arrow" type="TextureRect" parent="Control2" unique_id=1383062827]
+[node name="HSlider" type="HSlider" parent="Panel/Control" unique_id=2064294778]
 layout_mode = 0
-offset_left = 672.0
-offset_top = 240.0
-offset_right = 724.0
-offset_bottom = 278.0
-texture = ExtResource("5_erxk5")
-expand_mode = 1
-stretch_mode = 5
+offset_left = 108.0
+offset_top = 80.0
+offset_right = 484.0
+offset_bottom = 96.0
 
-[node name="ScrollContainer" type="ScrollContainer" parent="Control2" unique_id=2111503666]
-custom_minimum_size = Vector2(0, 200)
+[node name="EnergyCost" type="TextureRect" parent="Panel/Control" unique_id=1626440112]
 layout_mode = 0
-offset_left = 500.0
-offset_top = 236.0
-offset_right = 624.0
-offset_bottom = 436.0
-horizontal_scroll_mode = 0
-
-[node name="From" type="VBoxContainer" parent="Control2/ScrollContainer" unique_id=728026385]
-layout_mode = 2
-
-[node name="To" type="VBoxContainer" parent="Control2" unique_id=130052920]
-layout_mode = 0
-offset_left = 772.0
-offset_top = 240.0
-offset_right = 812.0
-offset_bottom = 280.0
-
-[node name="Control" type="Control" parent="." unique_id=1639124424]
-anchors_preset = 0
-offset_left = 124.0
-offset_top = 40.0
-offset_right = 164.0
-offset_bottom = 80.0
-
-[node name="HSlider" type="HSlider" parent="Control" unique_id=2064294778]
-layout_mode = 0
-offset_left = 512.0
-offset_top = 200.0
-offset_right = 888.0
-offset_bottom = 216.0
-
-[node name="EnergyCost" type="TextureRect" parent="Control" unique_id=1626440112]
-layout_mode = 0
-offset_left = 488.0
-offset_top = 456.0
-offset_right = 520.0
-offset_bottom = 496.0
+offset_left = 100.0
+offset_top = 292.0
+offset_right = 132.0
+offset_bottom = 332.0
 texture = ExtResource("6_7bp5m")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="EnergyCostText" parent="Control" unique_id=747303207 instance=ExtResource("7_miisb")]
+[node name="EnergyCostText" parent="Panel/Control" unique_id=747303207 instance=ExtResource("7_miisb")]
 layout_mode = 0
-offset_left = 552.0
-offset_top = 464.0
-offset_right = 752.0
-offset_bottom = 494.0
+offset_left = 164.0
+offset_top = 300.0
+offset_right = 364.0
+offset_bottom = 330.0
 adv_help = true
 
-[node name="TimeCost" type="TextureRect" parent="Control" unique_id=539358563]
+[node name="TimeCost" type="TextureRect" parent="Panel/Control" unique_id=539358563]
 layout_mode = 0
-offset_left = 488.0
-offset_top = 512.0
-offset_right = 520.0
-offset_bottom = 544.0
+offset_left = 100.0
+offset_top = 348.0
+offset_right = 132.0
+offset_bottom = 380.0
 texture = ExtResource("8_d3pn6")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="TimeCostText" type="Label" parent="Control" unique_id=992241109]
+[node name="TimeCostText" type="Label" parent="Panel/Control" unique_id=992241109]
 layout_mode = 0
-offset_left = 552.0
-offset_top = 512.0
-offset_right = 656.0
-offset_bottom = 544.0
+offset_left = 164.0
+offset_top = 348.0
+offset_right = 268.0
+offset_bottom = 380.0
 text = "0"
 vertical_alignment = 1
 
-[node name="Switch" type="TextureButton" parent="Control" unique_id=56703630]
+[node name="Switch" type="TextureButton" parent="Panel/Control" unique_id=56703630]
 layout_mode = 0
-offset_left = 684.0
-offset_top = 292.0
-offset_right = 712.0
-offset_bottom = 320.0
+offset_left = 284.0
+offset_top = 188.0
+offset_right = 312.0
+offset_bottom = 216.0
 texture_normal = ExtResource("9_147xw")
 ignore_texture_size = true
 stretch_mode = 5
 
-[node name="Control3" type="Control" parent="." unique_id=730616483]
+[node name="Control2" type="Control" parent="Panel" unique_id=341604548]
 anchors_preset = 0
-offset_left = 124.0
-offset_top = 40.0
-offset_right = 164.0
-offset_bottom = 80.0
+offset_right = 40.0
+offset_bottom = 40.0
 
-[node name="TextureProgressBar" type="TextureProgressBar" parent="Control3" unique_id=835416211]
+[node name="Arrow" type="TextureRect" parent="Panel/Control2" unique_id=1383062827]
+layout_mode = 0
+offset_left = 272.0
+offset_top = 128.0
+offset_right = 324.0
+offset_bottom = 166.0
+texture = ExtResource("5_erxk5")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="ScrollContainer" type="ScrollContainer" parent="Panel/Control2" unique_id=2111503666]
+custom_minimum_size = Vector2(0, 200)
+layout_mode = 0
+offset_left = 92.0
+offset_top = 116.0
+offset_right = 216.0
+offset_bottom = 316.0
+horizontal_scroll_mode = 0
+
+[node name="From" type="VBoxContainer" parent="Panel/Control2/ScrollContainer" unique_id=728026385]
+layout_mode = 2
+
+[node name="To" type="VBoxContainer" parent="Panel/Control2" unique_id=130052920]
+layout_mode = 0
+offset_left = 384.0
+offset_top = 120.0
+offset_right = 424.0
+offset_bottom = 160.0
+
+[node name="ReactionInProgress" type="Control" parent="Panel" unique_id=730616483]
+anchors_preset = 0
+offset_left = -408.0
+offset_top = -120.0
+offset_right = -368.0
+offset_bottom = -80.0
+
+[node name="TextureProgressBar" type="TextureProgressBar" parent="Panel/ReactionInProgress" unique_id=835416211]
 modulate = Color(0.65098, 0.27451, 1, 1)
 layout_mode = 0
 offset_left = 492.0
@@ -238,7 +247,7 @@ texture_under = ExtResource("10_g065t")
 texture_over = ExtResource("11_dtnhh")
 texture_progress = ExtResource("12_ysdh3")
 
-[node name="TimeRemainingIcon" type="TextureRect" parent="Control3" unique_id=1927821402]
+[node name="TimeRemainingIcon" type="TextureRect" parent="Panel/ReactionInProgress" unique_id=1927821402]
 layout_mode = 0
 offset_left = 864.0
 offset_top = 196.0
@@ -248,7 +257,7 @@ texture = ExtResource("8_d3pn6")
 expand_mode = 1
 stretch_mode = 6
 
-[node name="TimeRemainingText" type="Label" parent="Control3" unique_id=1867774212]
+[node name="TimeRemainingText" type="Label" parent="Panel/ReactionInProgress" unique_id=1867774212]
 layout_mode = 0
 offset_left = 900.0
 offset_top = 196.0
@@ -257,17 +266,7 @@ offset_bottom = 220.0
 text = "0"
 vertical_alignment = 1
 
-[node name="Transform3D" type="Button" parent="." unique_id=680625303]
-layout_mode = 0
-offset_left = 956.0
-offset_top = 576.0
-offset_right = 1116.0
-offset_bottom = 609.0
-shortcut = SubResource("3")
-shortcut_in_tooltip = false
-text = "TRANSFORM"
-
 [connection signal="pressed" from="CloseButton" to="." method="_on_close_button_pressed"]
-[connection signal="value_changed" from="Control/HSlider" to="." method="_on_HSlider_value_changed"]
-[connection signal="pressed" from="Control/Switch" to="." method="_on_Switch_pressed"]
-[connection signal="pressed" from="Transform3D" to="." method="_on_Transform_pressed"]
+[connection signal="pressed" from="Panel/Transform" to="." method="_on_Transform_pressed"]
+[connection signal="value_changed" from="Panel/Control/HSlider" to="." method="_on_HSlider_value_changed"]
+[connection signal="pressed" from="Panel/Control/Switch" to="." method="_on_Switch_pressed"]

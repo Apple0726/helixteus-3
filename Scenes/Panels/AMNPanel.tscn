@@ -52,9 +52,12 @@ offset_left = -640.0
 offset_top = -360.0
 offset_right = -600.0
 offset_bottom = -320.0
+grow_horizontal = 2
+grow_vertical = 2
 pivot_offset = Vector2(533, 300)
 theme = ExtResource("6")
 script = ExtResource("2_viy6l")
+metadata/_edit_vertical_guides_ = [828.0]
 
 [node name="GUI" type="TextureRect" parent="." unique_id=2049732480]
 layout_mode = 0
@@ -98,10 +101,10 @@ vertical_alignment = 1
 
 [node name="ScrollContainer" type="ScrollContainer" parent="." unique_id=26623442]
 layout_mode = 0
-offset_left = 132.0
+offset_left = 160.0
 offset_top = 172.0
-offset_right = 495.0
-offset_bottom = 500.0
+offset_right = 492.0
+offset_bottom = 616.0
 
 [node name="GridContainer" type="GridContainer" parent="ScrollContainer" unique_id=1339705563]
 layout_mode = 2
@@ -119,10 +122,10 @@ offset_bottom = 612.0
 
 [node name="Transform" type="Button" parent="Panel" unique_id=680625303]
 layout_mode = 0
-offset_left = 424.0
-offset_top = 416.0
-offset_right = 584.0
-offset_bottom = 449.0
+offset_left = 228.0
+offset_top = 408.0
+offset_right = 372.0
+offset_bottom = 445.0
 shortcut = SubResource("3")
 shortcut_in_tooltip = false
 text = "TRANSFORM"
@@ -175,17 +178,17 @@ offset_bottom = 40.0
 
 [node name="HSlider" type="HSlider" parent="Panel/Control" unique_id=2064294778]
 layout_mode = 0
-offset_left = 116.0
+offset_left = 108.0
 offset_top = 92.0
-offset_right = 492.0
+offset_right = 484.0
 offset_bottom = 108.0
 
 [node name="EnergyCost" type="TextureRect" parent="Panel/Control" unique_id=1626440112]
 layout_mode = 0
 offset_left = 92.0
-offset_top = 312.0
+offset_top = 296.0
 offset_right = 124.0
-offset_bottom = 352.0
+offset_bottom = 336.0
 texture = ExtResource("10")
 expand_mode = 1
 stretch_mode = 5
@@ -193,17 +196,17 @@ stretch_mode = 5
 [node name="EnergyCostText" parent="Panel/Control" unique_id=747303207 instance=ExtResource("1")]
 layout_mode = 0
 offset_left = 156.0
-offset_top = 320.0
+offset_top = 304.0
 offset_right = 356.0
-offset_bottom = 350.0
+offset_bottom = 334.0
 adv_help = true
 
 [node name="TimeCost" type="TextureRect" parent="Panel/Control" unique_id=539358563]
 layout_mode = 0
 offset_left = 92.0
-offset_top = 368.0
+offset_top = 352.0
 offset_right = 124.0
-offset_bottom = 400.0
+offset_bottom = 384.0
 texture = ExtResource("11")
 expand_mode = 1
 stretch_mode = 5
@@ -211,18 +214,18 @@ stretch_mode = 5
 [node name="TimeCostText" type="Label" parent="Panel/Control" unique_id=992241109]
 layout_mode = 0
 offset_left = 156.0
-offset_top = 368.0
+offset_top = 352.0
 offset_right = 260.0
-offset_bottom = 400.0
+offset_bottom = 384.0
 text = "0"
 vertical_alignment = 1
 
 [node name="Switch" type="TextureButton" parent="Panel/Control" unique_id=56703630]
 layout_mode = 0
-offset_left = 288.0
-offset_top = 236.0
-offset_right = 316.0
-offset_bottom = 264.0
+offset_left = 284.0
+offset_top = 188.0
+offset_right = 312.0
+offset_bottom = 216.0
 texture_normal = ExtResource("3")
 ignore_texture_size = true
 stretch_mode = 5
@@ -234,10 +237,10 @@ offset_bottom = 40.0
 
 [node name="Arrow" type="TextureRect" parent="Panel/Control2" unique_id=1383062827]
 layout_mode = 0
-offset_left = 276.0
-offset_top = 180.0
-offset_right = 328.0
-offset_bottom = 218.0
+offset_left = 272.0
+offset_top = 128.0
+offset_right = 324.0
+offset_bottom = 166.0
 texture = ExtResource("12")
 expand_mode = 1
 stretch_mode = 5
@@ -245,10 +248,10 @@ stretch_mode = 5
 [node name="ScrollContainer" type="ScrollContainer" parent="Panel/Control2" unique_id=2111503666]
 custom_minimum_size = Vector2(0, 200)
 layout_mode = 0
-offset_left = 104.0
-offset_top = 176.0
-offset_right = 228.0
-offset_bottom = 376.0
+offset_left = 92.0
+offset_top = 128.0
+offset_right = 216.0
+offset_bottom = 328.0
 horizontal_scroll_mode = 0
 
 [node name="From" type="VBoxContainer" parent="Panel/Control2/ScrollContainer" unique_id=728026385]
@@ -257,9 +260,9 @@ layout_mode = 2
 [node name="To" type="VBoxContainer" parent="Panel/Control2" unique_id=130052920]
 layout_mode = 0
 offset_left = 376.0
-offset_top = 180.0
+offset_top = 132.0
 offset_right = 416.0
-offset_bottom = 220.0
+offset_bottom = 172.0
 
 [connection signal="pressed" from="CloseButton" to="." method="_on_close_button_pressed"]
 [connection signal="pressed" from="Panel/Transform" to="." method="_on_Transform_pressed"]
