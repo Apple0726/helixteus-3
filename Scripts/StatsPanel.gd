@@ -38,7 +38,7 @@ func refresh():
 		$Statistics/HBox/OptionButton.add_item(tr("THIS_UNIVERSE"), 2)
 
 func on_ach_entered(ach_type:String, ach_id:String):
-	game.show_tooltip(game.achievements[ach_type.to_lower()][ach_id])
+	game.show_tooltip(Data.achievements[ach_type.to_lower()][ach_id])
 
 func on_ach_exited():
 	game.hide_tooltip()

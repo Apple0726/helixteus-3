@@ -4,7 +4,6 @@ const TEST:bool = false
 const DATE:String = ""
 const VERSION:String = "v0.30"
 const COMPATIBLE_SAVES = []
-const ANCIENT_BLDGS = 7
 
 #region Scenes
 #var upgrade_panel_scene = preload("res://Scenes/Panels/UpgradePanel.tscn")
@@ -327,99 +326,7 @@ var seeds_produce = {"lead_seeds":{"costs":{"cellulose":0.05}, "produce":{"lead"
 var element = {	"Si":{"density":2.329},
 				"O":{"density":1.429}}
 
-#region Achievements
 var achievement_data:Dictionary = {}
-var achievements:Dictionary = {
-	"money":{
-		"0":tr("SAVE_OBJECTIVE").format({"num":Helper.format_num(1000, false, 308), "rsrc":tr("MONEY")}),
-		"1":tr("SAVE_OBJECTIVE").format({"num":Helper.format_num(1e6, false, 308), "rsrc":tr("MONEY")}),
-		"2":tr("SAVE_OBJECTIVE").format({"num":Helper.format_num(1e9, false, 308), "rsrc":tr("MONEY")}),
-		"3":tr("SAVE_OBJECTIVE").format({"num":Helper.format_num(1e12, false, 308), "rsrc":tr("MONEY")}),
-		"4":tr("SAVE_OBJECTIVE").format({"num":Helper.format_num(1e15, false, 308), "rsrc":tr("MONEY")}),
-		"5":tr("SAVE_OBJECTIVE").format({"num":Helper.format_num(1e18, false, 308), "rsrc":tr("MONEY")}),
-		"6":tr("SAVE_OBJECTIVE").format({"num":Helper.format_num(1e21, false, 308), "rsrc":tr("MONEY")}),
-		"7":tr("SAVE_OBJECTIVE").format({"num":Helper.format_num(1e24, false, 308), "rsrc":tr("MONEY")}),
-		"8":tr("SAVE_OBJECTIVE").format({"num":Helper.format_num(1e27, false, 308), "rsrc":tr("MONEY")}),
-		"9":tr("SAVE_OBJECTIVE").format({"num":Helper.format_num(1e30, false, 308), "rsrc":tr("MONEY")}),
-	},
-	"conquest":{
-		"0":tr("CONQUER_OBJECTIVE").format({"num":2, "object":tr("PLANETS")}),
-		"1":tr("CONQUER_OBJECTIVE").format({"num":10, "object":tr("PLANETS")}),
-		"2":tr("CONQUER_OBJECTIVE").format({"num":100, "object":tr("PLANETS")}),
-		"3":tr("CONQUER_OBJECTIVE").format({"num":Helper.format_num(1000, false, 308), "object":tr("PLANETS")}),
-		"4":tr("CONQUER_OBJECTIVE").format({"num":Helper.format_num(10000, false, 308), "object":tr("PLANETS")}),
-		"5":tr("CONQUER_OBJECTIVE").format({"num":Helper.format_num(100000, false, 308), "object":tr("PLANETS")}),
-		"6":tr("CONQUER_OBJECTIVE").format({"num":Helper.format_num(1.0e6, false, 308), "object":tr("PLANETS")}),
-		"fully_conquer_system":tr("FULLY_CONQUER_SYSTEM"),
-		"fully_conquer_galaxy":tr("FULLY_CONQUER_GALAXY"),
-		"fully_conquer_cluster":tr("FULLY_CONQUER_CLUSTER"),
-	},
-	"construct":{
-		"0":tr("BUILD_OBJECTIVE").format({"num":100, "bldg":tr("BUILDINGS")}),
-		"1":tr("BUILD_OBJECTIVE").format({"num":Helper.format_num(10000, false, 308), "bldg":tr("BUILDINGS")}),
-		"2":tr("BUILD_OBJECTIVE").format({"num":Helper.format_num(1.0e6, false, 308), "bldg":tr("BUILDINGS")}),
-		"3":tr("BUILD_OBJECTIVE").format({"num":Helper.format_num(1.0e8, false, 308), "bldg":tr("BUILDINGS")}),
-		"4":tr("BUILD_OBJECTIVE").format({"num":Helper.format_num(1.0e10, false, 308), "bldg":tr("BUILDINGS")}),
-		"5":tr("BUILD_OBJECTIVE").format({"num":Helper.format_num(1.0e12, false, 308), "bldg":tr("BUILDINGS")}),
-	},
-	"exploration":{
-		"B_star":tr("FIND_CLASS_X_STAR") % "B",
-		"O_star":tr("FIND_CLASS_X_STAR") % "O",
-		"Q_star":tr("FIND_CLASS_X_STAR") % "Q",
-		"R_star":tr("FIND_CLASS_X_STAR") % "R",
-		"Z_star":tr("FIND_CLASS_X_STAR") % "Z",
-		"HG_star":tr("FIND_HYPERGIANT_STAR"),
-		"HG_V_star":tr("FIND_HYPERGIANT_X_STAR") % "V",
-		"HG_X_star":tr("FIND_HYPERGIANT_X_STAR") % "X",
-		"HG_XX_star":tr("FIND_HYPERGIANT_X_STAR") % "XX",
-		"HG_L_star":tr("FIND_HYPERGIANT_X_STAR") % "L",
-		"20_planet_system":tr("FIND_X_PLANET_SYSTEM") % 20,
-		"25_planet_system":tr("FIND_X_PLANET_SYSTEM") % 25,
-		"30_planet_system":tr("FIND_X_PLANET_SYSTEM") % 30,
-		"35_planet_system":tr("FIND_X_PLANET_SYSTEM") % 35,
-		"40_planet_system":tr("FIND_X_PLANET_SYSTEM") % 40,
-		"45_planet_system":tr("FIND_X_PLANET_SYSTEM") % 45,
-		"50_planet_system":tr("FIND_X_PLANET_SYSTEM") % 50,
-		"diamond_crater":tr("FIND_X_CRATER") % tr("DIAMOND"),
-		"nanocrystal_crater":tr("FIND_X_CRATER") % tr("NANOCRYSTAL"),
-		"mythril_crater":tr("FIND_X_CRATER") % tr("MYTHRIL"),
-		"aurora_cave":tr("FIND_AURORA_CAVE"),
-		"volcano_cave":tr("FIND_VOLCANO_CAVE"),
-		"volcano_aurora_cave":tr("FIND_VOLCANO_AURORA_CAVE"),
-		"find_neon_lake":tr("FIND_NEON_LAKE"),
-		"find_xenon_lake":tr("FIND_XENON_LAKE"),
-		"reach_floor_8":tr("REACH_FLOOR_X_CAVE") % 8,
-		"reach_floor_16":tr("REACH_FLOOR_X_CAVE") % 16,
-		"reach_floor_24":tr("REACH_FLOOR_X_CAVE") % 24,
-		"reach_floor_32":tr("REACH_FLOOR_X_CAVE") % 32,
-		"planet_with_nothing":tr("PLANET_WITH_NOTHING"),
-		"tier_2_ancient_bldg":tr("FIND_TIER_X_ANCIENT_BLDG") % 2,
-		"tier_3_ancient_bldg":tr("FIND_TIER_X_ANCIENT_BLDG") % 3,
-		"tier_4_ancient_bldg":tr("FIND_TIER_X_ANCIENT_BLDG") % 4,
-		"tier_5_ancient_bldg":tr("FIND_TIER_X_ANCIENT_BLDG") % 5,
-		"find_all_ancient_bldgs":tr("FIND_ALL_ANCIENT_BLDGS") % ANCIENT_BLDGS,
-	},
-	"progression":{
-		"build_MS":tr("BUILD_A_MS"),
-		"build_GS":tr("BUILD_A_GS"),
-		"new_universe":tr("DISCOVER_NEW_UNIV"),
-		"new_dimension":tr("RENEW_DIMENSION"),
-		"2nd_ship":tr("FIND_2ND_SHIP"),
-		"3rd_ship":tr("FIND_3RD_SHIP"),
-		"4th_ship":tr("FIND_4TH_SHIP"),
-	},
-	"random":{
-		"clear_out_cave_floor":tr("CLEAR_OUT_CAVE_FLOOR"),
-		"destroy_BBB":tr("DESTROY_BBB"),
-		"reach_center_of_planet":tr("REACH_CENTER_OF_PLANET"),
-		"1000_year_journey":tr("1000_YEAR_JOURNEY"),
-		"build_tri_probe_in_slow_univ":tr("BUILD_TRI_PROBE_IN_SLOW_UNIV"),
-		"use_stick_to_mine_from_surface_to_core":tr("USE_STICK_TO_MINE_FROM_SURFACE_TO_CORE"),
-		"rekt_enemy_30_levels_higher":tr("REKT_ENEMY_30_LEVELS_HIGHER"),
-		"op_gh":tr("OP_GH"),
-	}
-}
-#endregion
 
 #Holds informatopion of the tooltip that can be hidden by the player by pressing F7
 var help_str:String
@@ -468,7 +375,6 @@ func load_settings(config:ConfigFile):
 	Settings.notation = config.get_value("interface", "notation", "SI")
 	Settings.language = config.get_value("interface", "language", "en")
 	TranslationServer.set_locale(Settings.language)
-	$Title/Languages.change_language()
 	Settings.cave_gen_info = config.get_value("game", "cave_gen_info", false)
 	
 	# game
@@ -549,6 +455,7 @@ func _ready():
 		load_settings(config)
 	else:
 		printerr("Warning! Settings unable to be loaded")
+	$Title/Languages.change_language()
 	var OS_name = OS.get_name()
 	if Settings.op_cursor:
 		OS_name = OS_name.replace("ws", "ge")
@@ -723,7 +630,7 @@ func load_game():
 	engineering_bonus = save_info_dict.engineering_bonus
 	achievement_data = save_info_dict.get("achievement_data", {})
 	if achievement_data.is_empty() or achievement_data.money is Array:#Save migration
-		for ach in achievements:
+		for ach in Data.achievements:
 			achievement_data[ach] = {}
 	if save_info_dict.version != VERSION and not save_info_dict.version in COMPATIBLE_SAVES:
 		c_u = -1
@@ -835,7 +742,7 @@ func new_game(univ:int = 0, new_save:bool = false, DR_advantage = false):
 		if not DR_advantage:
 			help = Data.default_help.duplicate()
 			set_default_dim_bonuses()
-		for ach in achievements:
+		for ach in Data.achievements:
 			achievement_data[ach] = {}
 		if subject_levels.dimensional_power <= 4:
 			universe_data = [{"id":0, "lv":1, "generated":true, "xp":0, "xp_to_lv":10, "shapes":[], "name":tr("UNIVERSE"), "cluster_num":1000, "view":{"pos":Vector2(640, 360), "zoom":1.0, "sc_mult":0.1}}]
@@ -4531,7 +4438,7 @@ func get_4th_ship():
 func earn_achievement(type:String, ach_id:String):
 	var ach = preload("res://Scenes/AchievementEarned.tscn").instantiate()
 	ach.get_node("Panel/Type").text = type.capitalize()
-	ach.get_node("Panel/Desc").text = achievements[type.to_lower()][ach_id]
+	ach.get_node("Panel/Desc").text = Data.achievements[type.to_lower()][ach_id]
 	ach.get_node("Panel/TextureRect").texture = stats_panel.get_node("Achievements/ScrollContainer/HBox/Slots/%s/%s" % [type, ach_id]).achievement_icon
 	achievement_data[type][ach_id] = true
 	ach.add_to_group("achievement_nodes")
@@ -4545,7 +4452,7 @@ func on_ach_anim_finished(anin_name:String, node):
 	node.queue_free()
 
 func refresh_achievements():
-	for i in len(achievements.money):
+	for i in len(Data.achievements.money):
 		if not achievement_data.money.has(str(i)):
 			if money >= pow(10, (i+1) * 3):
 				earn_achievement("money", str(i))
@@ -4565,7 +4472,7 @@ func refresh_achievements():
 	if not achievement_data.conquest.has("fully_conquer_cluster"):
 		if stats_global.clusters_conquered >= 1:
 			earn_achievement("conquest", "fully_conquer_cluster")
-	for i in len(achievements.construct):
+	for i in len(Data.achievements.construct):
 		if not achievement_data.construct.has(str(i)):
 			if stats_global.bldgs_built >= pow(10, (i+1) * 2):
 				earn_achievement("construct", str(i))

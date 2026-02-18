@@ -228,6 +228,7 @@ var univ_prop_weights:Dictionary = {
 	}
 
 var standard_large_number_notations = []
+var achievements:Dictionary
 
 func reload():
 	standard_large_number_notations = tr("STANDARD_LARGE_NUMBER_NOTATION").split(" < ")
@@ -264,6 +265,96 @@ func reload():
 	path_3[Building.CENTRAL_BUSINESS_DISTRICT].desc = tr("CBD_PATH_3")
 	path_2[Building.ATOM_MANIPULATOR].desc = tr("DIVIDES_ENERGY_COSTS_BY")
 	path_2[Building.SUBATOMIC_PARTICLE_REACTOR].desc = tr("DIVIDES_ENERGY_COSTS_BY")
+	achievements = { 
+		"money":{
+			"0":tr("SAVE_OBJECTIVE").format({"num":Helper.format_num(1000, false, 308), "rsrc":tr("MONEY")}),
+			"1":tr("SAVE_OBJECTIVE").format({"num":Helper.format_num(1e6, false, 308), "rsrc":tr("MONEY")}),
+			"2":tr("SAVE_OBJECTIVE").format({"num":Helper.format_num(1e9, false, 308), "rsrc":tr("MONEY")}),
+			"3":tr("SAVE_OBJECTIVE").format({"num":Helper.format_num(1e12, false, 308), "rsrc":tr("MONEY")}),
+			"4":tr("SAVE_OBJECTIVE").format({"num":Helper.format_num(1e15, false, 308), "rsrc":tr("MONEY")}),
+			"5":tr("SAVE_OBJECTIVE").format({"num":Helper.format_num(1e18, false, 308), "rsrc":tr("MONEY")}),
+			"6":tr("SAVE_OBJECTIVE").format({"num":Helper.format_num(1e21, false, 308), "rsrc":tr("MONEY")}),
+			"7":tr("SAVE_OBJECTIVE").format({"num":Helper.format_num(1e24, false, 308), "rsrc":tr("MONEY")}),
+			"8":tr("SAVE_OBJECTIVE").format({"num":Helper.format_num(1e27, false, 308), "rsrc":tr("MONEY")}),
+			"9":tr("SAVE_OBJECTIVE").format({"num":Helper.format_num(1e30, false, 308), "rsrc":tr("MONEY")}),
+		},
+		"conquest":{
+			"0":tr("CONQUER_OBJECTIVE").format({"num":2, "object":tr("PLANETS")}),
+			"1":tr("CONQUER_OBJECTIVE").format({"num":10, "object":tr("PLANETS")}),
+			"2":tr("CONQUER_OBJECTIVE").format({"num":100, "object":tr("PLANETS")}),
+			"3":tr("CONQUER_OBJECTIVE").format({"num":Helper.format_num(1000, false, 308), "object":tr("PLANETS")}),
+			"4":tr("CONQUER_OBJECTIVE").format({"num":Helper.format_num(10000, false, 308), "object":tr("PLANETS")}),
+			"5":tr("CONQUER_OBJECTIVE").format({"num":Helper.format_num(100000, false, 308), "object":tr("PLANETS")}),
+			"6":tr("CONQUER_OBJECTIVE").format({"num":Helper.format_num(1.0e6, false, 308), "object":tr("PLANETS")}),
+			"fully_conquer_system":tr("FULLY_CONQUER_SYSTEM"),
+			"fully_conquer_galaxy":tr("FULLY_CONQUER_GALAXY"),
+			"fully_conquer_cluster":tr("FULLY_CONQUER_CLUSTER"),
+		},
+		"construct":{
+			"0":tr("BUILD_OBJECTIVE").format({"num":100, "bldg":tr("BUILDINGS")}),
+			"1":tr("BUILD_OBJECTIVE").format({"num":Helper.format_num(10000, false, 308), "bldg":tr("BUILDINGS")}),
+			"2":tr("BUILD_OBJECTIVE").format({"num":Helper.format_num(1.0e6, false, 308), "bldg":tr("BUILDINGS")}),
+			"3":tr("BUILD_OBJECTIVE").format({"num":Helper.format_num(1.0e8, false, 308), "bldg":tr("BUILDINGS")}),
+			"4":tr("BUILD_OBJECTIVE").format({"num":Helper.format_num(1.0e10, false, 308), "bldg":tr("BUILDINGS")}),
+			"5":tr("BUILD_OBJECTIVE").format({"num":Helper.format_num(1.0e12, false, 308), "bldg":tr("BUILDINGS")}),
+		},
+		"exploration":{
+			"B_star":tr("FIND_CLASS_X_STAR") % "B",
+			"O_star":tr("FIND_CLASS_X_STAR") % "O",
+			"Q_star":tr("FIND_CLASS_X_STAR") % "Q",
+			"R_star":tr("FIND_CLASS_X_STAR") % "R",
+			"Z_star":tr("FIND_CLASS_X_STAR") % "Z",
+			"HG_star":tr("FIND_HYPERGIANT_STAR"),
+			"HG_V_star":tr("FIND_HYPERGIANT_X_STAR") % "V",
+			"HG_X_star":tr("FIND_HYPERGIANT_X_STAR") % "X",
+			"HG_XX_star":tr("FIND_HYPERGIANT_X_STAR") % "XX",
+			"HG_L_star":tr("FIND_HYPERGIANT_X_STAR") % "L",
+			"20_planet_system":tr("FIND_X_PLANET_SYSTEM") % 20,
+			"25_planet_system":tr("FIND_X_PLANET_SYSTEM") % 25,
+			"30_planet_system":tr("FIND_X_PLANET_SYSTEM") % 30,
+			"35_planet_system":tr("FIND_X_PLANET_SYSTEM") % 35,
+			"40_planet_system":tr("FIND_X_PLANET_SYSTEM") % 40,
+			"45_planet_system":tr("FIND_X_PLANET_SYSTEM") % 45,
+			"50_planet_system":tr("FIND_X_PLANET_SYSTEM") % 50,
+			"diamond_crater":tr("FIND_X_CRATER") % tr("DIAMOND"),
+			"nanocrystal_crater":tr("FIND_X_CRATER") % tr("NANOCRYSTAL"),
+			"mythril_crater":tr("FIND_X_CRATER") % tr("MYTHRIL"),
+			"aurora_cave":tr("FIND_AURORA_CAVE"),
+			"volcano_cave":tr("FIND_VOLCANO_CAVE"),
+			"volcano_aurora_cave":tr("FIND_VOLCANO_AURORA_CAVE"),
+			"find_neon_lake":tr("FIND_NEON_LAKE"),
+			"find_xenon_lake":tr("FIND_XENON_LAKE"),
+			"reach_floor_8":tr("REACH_FLOOR_X_CAVE") % 8,
+			"reach_floor_16":tr("REACH_FLOOR_X_CAVE") % 16,
+			"reach_floor_24":tr("REACH_FLOOR_X_CAVE") % 24,
+			"reach_floor_32":tr("REACH_FLOOR_X_CAVE") % 32,
+			"planet_with_nothing":tr("PLANET_WITH_NOTHING"),
+			"tier_2_ancient_bldg":tr("FIND_TIER_X_ANCIENT_BLDG") % 2,
+			"tier_3_ancient_bldg":tr("FIND_TIER_X_ANCIENT_BLDG") % 3,
+			"tier_4_ancient_bldg":tr("FIND_TIER_X_ANCIENT_BLDG") % 4,
+			"tier_5_ancient_bldg":tr("FIND_TIER_X_ANCIENT_BLDG") % 5,
+			"find_all_ancient_bldgs":tr("FIND_ALL_ANCIENT_BLDGS") % 7,
+		},
+		"progression":{
+			"build_MS":tr("BUILD_A_MS"),
+			"build_GS":tr("BUILD_A_GS"),
+			"new_universe":tr("DISCOVER_NEW_UNIV"),
+			"new_dimension":tr("RENEW_DIMENSION"),
+			"2nd_ship":tr("FIND_2ND_SHIP"),
+			"3rd_ship":tr("FIND_3RD_SHIP"),
+			"4th_ship":tr("FIND_4TH_SHIP"),
+		},
+		"random":{
+			"clear_out_cave_floor":tr("CLEAR_OUT_CAVE_FLOOR"),
+			"destroy_BBB":tr("DESTROY_BBB"),
+			"reach_center_of_planet":tr("REACH_CENTER_OF_PLANET"),
+			"1000_year_journey":tr("1000_YEAR_JOURNEY"),
+			"build_tri_probe_in_slow_univ":tr("BUILD_TRI_PROBE_IN_SLOW_UNIV"),
+			"use_stick_to_mine_from_surface_to_core":tr("USE_STICK_TO_MINE_FROM_SURFACE_TO_CORE"),
+			"rekt_enemy_30_levels_higher":tr("REKT_ENEMY_30_LEVELS_HIGHER"),
+			"op_gh":tr("OP_GH"),
+		},
+	}
 
 #Science for unlocking game features
 var science_unlocks = {	
