@@ -2,7 +2,7 @@
 
 [ext_resource type="Theme" uid="uid://cp2u1kgj60ic" path="res://Resources/default_theme.tres" id="1"]
 [ext_resource type="Script" uid="uid://d01mxaimy30tm" path="res://Scripts/Overlay.gd" id="2"]
-[ext_resource type="Gradient" path="res://Resources/ColorblindOverlay.tres" id="3"]
+[ext_resource type="Gradient" uid="uid://bsfjuddjngtmp" path="res://Resources/GrayscaleOverlay.tres" id="3"]
 [ext_resource type="Texture2D" uid="uid://bqt15nl3bjdw0" path="res://Graphics/Buttons/Reset.png" id="5"]
 [ext_resource type="Texture2D" uid="uid://ds6nct7g63284" path="res://Graphics/Icons/Arrow.png" id="6"]
 [ext_resource type="Texture2D" uid="uid://baowebna7hgr5" path="res://Graphics/GUI/CloseButtonNormal.png" id="7_fg122"]
@@ -305,17 +305,18 @@ stretch_mode = 5
 [node name="SettingsPanel" type="PanelContainer" parent="." unique_id=751139336]
 visible = false
 layout_mode = 0
-offset_top = -92.0
-offset_right = 380.0
-offset_bottom = -6.0
+offset_left = 264.0
+offset_top = 488.0
+offset_right = 644.0
+offset_bottom = 575.0
 
 [node name="VBox" type="VBoxContainer" parent="SettingsPanel" unique_id=1108440033]
 layout_mode = 2
 theme_override_constants/separation = 15
 
-[node name="Colorblind" type="CheckBox" parent="SettingsPanel/VBox" unique_id=1651968654]
+[node name="Grayscale" type="CheckBox" parent="SettingsPanel/VBox" unique_id=1651968654]
 layout_mode = 2
-text = "COLORBLIND_MODE"
+text = "GRAYSCALE_MODE"
 
 [node name="HideObj" type="CheckBox" parent="SettingsPanel/VBox" unique_id=2078276718]
 layout_mode = 2
@@ -344,6 +345,6 @@ stretch_mode = 5
 [connection signal="mouse_entered" from="Settings" to="." method="_on_Settings_mouse_entered"]
 [connection signal="mouse_exited" from="Settings" to="." method="_on_Settings_mouse_exited"]
 [connection signal="pressed" from="Settings" to="." method="_on_Settings_pressed"]
-[connection signal="toggled" from="SettingsPanel/VBox/Colorblind" to="." method="_on_Colorblind_toggled"]
+[connection signal="toggled" from="SettingsPanel/VBox/Grayscale" to="." method="_on_grayscale_toggled"]
 [connection signal="toggled" from="SettingsPanel/VBox/HideObj" to="." method="_on_HideObj_toggled"]
 [connection signal="pressed" from="CloseButton" to="." method="_on_close_button_pressed"]

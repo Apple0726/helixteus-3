@@ -6,26 +6,31 @@ var rsrc_type:String
 var rsrc_name:String
 var rsrc_display_name:String
 var mass_str:String
-var rsrc:float
-var rsrcs_required:float
+var rsrc:float = 0.0
+var rsrcs_required:float = 0.0
+var show_available = false
 
 func _ready() -> void:
-	set_process(false)
+	update_info()
 
 func _process(delta: float) -> void:
-	if rsrc_type != "":
-		rsrc = game[rsrc_type][rsrc_name]
-	elif rsrc_name in ["money", "minerals", "energy", "SP"]:
-		rsrc = game[rsrc_name]
-	elif rsrc_name == "stone":
-		rsrc = Helper.get_sum_of_dict(game.stone)
-	Helper.format_text($Text, $Texture2D, "", true, rsrcs_required, rsrc, mass_str)
-	$Texture2D.material.set_shader_parameter("fill", rsrc / rsrcs_required)
-	if rsrc < rsrcs_required:
-		$Texture2D/IsEnough.texture = preload("res://Graphics/Icons/Annotator/cross.png")
-	else:
-		$Texture2D/IsEnough.texture = preload("res://Graphics/Icons/Annotator/check.png")
+	update_info()
 
+func update_info():
+	if show_available:
+		if rsrc_type != "":
+			rsrc = game[rsrc_type][rsrc_name]
+		elif rsrc_name in ["money", "minerals", "energy", "SP"]:
+			rsrc = game[rsrc_name]
+		elif rsrc_name == "stone":
+			rsrc = Helper.get_sum_of_dict(game.stone)
+		$Texture2D.material.set_shader_parameter("fill", rsrc / rsrcs_required)
+		if rsrc < rsrcs_required:
+			$Texture2D/IsEnough.texture = preload("res://Graphics/Icons/Annotator/cross.png")
+		else:
+			$Texture2D/IsEnough.texture = preload("res://Graphics/Icons/Annotator/check.png")
+	Helper.format_text($Text, $Texture2D, "", show_available, rsrcs_required, rsrc, mass_str)
+	
 func connect_mouse_events():
 	$Texture2D.mouse_entered.connect(show_tooltip)
 	$Texture2D.mouse_exited.connect(game.hide_tooltip)

@@ -138,9 +138,9 @@ offset_bottom = 40.0
 [node name="TextureProgressBar" type="TextureProgressBar" parent="Panel/ReactionInProgress" unique_id=835416211]
 modulate = Color(0.65098, 0.27451, 1, 1)
 layout_mode = 0
-offset_left = 56.0
+offset_left = 72.0
 offset_top = 96.0
-offset_right = 408.0
+offset_right = 424.0
 offset_bottom = 104.0
 max_value = 1.0
 step = 0.0
@@ -154,9 +154,9 @@ texture_progress = ExtResource("4")
 
 [node name="TimeRemainingIcon" type="TextureRect" parent="Panel/ReactionInProgress" unique_id=1927821402]
 layout_mode = 0
-offset_left = 428.0
+offset_left = 444.0
 offset_top = 88.0
-offset_right = 452.0
+offset_right = 468.0
 offset_bottom = 112.0
 texture = ExtResource("11")
 expand_mode = 1
@@ -164,9 +164,9 @@ stretch_mode = 6
 
 [node name="TimeRemainingText" type="Label" parent="Panel/ReactionInProgress" unique_id=1867774212]
 layout_mode = 0
-offset_left = 464.0
+offset_left = 480.0
 offset_top = 88.0
-offset_right = 560.0
+offset_right = 576.0
 offset_bottom = 112.0
 text = "0"
 vertical_alignment = 1

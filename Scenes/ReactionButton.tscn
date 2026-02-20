@@ -1,0 +1,41 @@
+[gd_scene format=3 uid="uid://b55tivasm40ja"]
+
+[ext_resource type="Texture2D" uid="uid://b7o54ylqdhn43" path="res://Graphics/Materials/silicon.png" id="1_s2dev"]
+[ext_resource type="Texture2D" uid="uid://bn8t8jmrkuvdk" path="res://Graphics/Icons/Time.png" id="2_udqu5"]
+
+[node name="Button" type="Button" unique_id=1181242966]
+offset_right = 128.0
+offset_bottom = 128.0
+
+[node name="TextureRect" type="TextureRect" parent="." unique_id=314967452]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 16.0
+offset_top = 16.0
+offset_right = -16.0
+offset_bottom = -16.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("1_s2dev")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Time" type="TextureRect" parent="." unique_id=1261887238]
+visible = false
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -36.0
+offset_top = -36.0
+offset_right = -4.0
+offset_bottom = -4.0
+grow_horizontal = 0
+grow_vertical = 0
+texture = ExtResource("2_udqu5")
+expand_mode = 1
+stretch_mode = 5

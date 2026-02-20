@@ -4,7 +4,7 @@ var is_int:bool = true
 var hovered_over:String = ""
 @onready var option_btn = $HBoxContainer/OptionButton
 @onready var toggle_btn = $HBoxContainer/CheckBox
-@onready var colorblind_btn = $SettingsPanel/VBox/Colorblind
+@onready var grayscale_btn = $SettingsPanel/VBox/Grayscale
 @onready var hide_obj_btn = $SettingsPanel/VBox/HideObj
 var config = ConfigFile.new()
 var err = config.load("user://settings.cfg")
@@ -40,10 +40,10 @@ func refresh_overlay():
 			option_btn.add_item(tr("IS_GIGASTRUCTURE"))
 	toggle_btn.button_pressed = game.overlay_data[game.c_v].visible
 	if err == OK:
-		colorblind_btn.button_pressed = config.get_value("misc", "colorblind", false)
+		grayscale_btn.button_pressed = config.get_value("misc", "grayscale", false)
 		hide_obj_btn.button_pressed = config.get_value("misc", "hide_obj", false)
-		if colorblind_btn.button_pressed:
-			$TextureRect.texture.gradient = load("res://Resources/ColorblindOverlay.tres")
+		if grayscale_btn.button_pressed:
+			$TextureRect.texture.gradient = load("res://Resources/GrayscaleOverlay.tres")
 		else:
 			$TextureRect.texture.gradient = load("res://Resources/DefaultOverlay.tres")
 	option_btn.selected = game.overlay_data[game.c_v].overlay
@@ -226,24 +226,8 @@ func _on_Overlay_visibility_changed():
 		game.sub_panel = null
 
 
-func _on_Colorblind_toggled(button_pressed):
-	if colorblind_btn.button_pressed and toggle_btn.button_pressed:
-		game.get_node("GrayscaleRect/AnimationPlayer").play("Fade")
-	else:
-		if game.get_node("GrayscaleRect").modulate.a > 0:
-			game.get_node("GrayscaleRect/AnimationPlayer").play_backwards("Fade")
-	if button_pressed:
-		$TextureRect.texture.gradient = load("res://Resources/ColorblindOverlay.tres")
-	else:
-		$TextureRect.texture.gradient = load("res://Resources/DefaultOverlay.tres")
-	if err == OK:
-		config.set_value("misc", "colorblind", button_pressed)
-		config.save("user://settings.cfg")
-	send_overlay_info(game.overlay_data[game.c_v].overlay)
-
-
 func _on_CheckBox_toggled(button_pressed):
-	if colorblind_btn.button_pressed:
+	if grayscale_btn.button_pressed:
 		if button_pressed:
 			game.get_node("GrayscaleRect/AnimationPlayer").play("Fade")
 		else:
@@ -296,3 +280,19 @@ func _on_HideObj_toggled(button_pressed):
 func _on_Settings_pressed():
 	game.hide_tooltip()
 	$SettingsPanel.visible = not $SettingsPanel.visible
+
+
+func _on_grayscale_toggled(toggled_on: bool) -> void:
+	if grayscale_btn.button_pressed and toggle_btn.button_pressed:
+		game.get_node("GrayscaleRect/AnimationPlayer").play("Fade")
+	else:
+		if game.get_node("GrayscaleRect").modulate.a > 0:
+			game.get_node("GrayscaleRect/AnimationPlayer").play_backwards("Fade")
+	if toggled_on:
+		$TextureRect.texture.gradient = load("res://Resources/GrayscaleOverlay.tres")
+	else:
+		$TextureRect.texture.gradient = load("res://Resources/DefaultOverlay.tres")
+	if err == OK:
+		config.set_value("misc", "grayscale", toggled_on)
+		config.save("user://settings.cfg")
+	send_overlay_info(game.overlay_data[game.c_v].overlay)

@@ -6,7 +6,7 @@ var tf:bool = false
 var atom_to_p:bool = true#MM: material or metal
 var difficulty:float#Amount of time per unit of atom/metal
 var energy_cost:float
-var reaction:String = ""
+var resource_selected:String = ""
 var au_mult:float
 var au_int:float
 var Z:int
@@ -39,12 +39,12 @@ func _ready():
 	$Title.text = tr("SUBATOMIC_PARTICLE_REACTOR_NAME")
 	$Desc.text = tr("REACTIONS_PANEL_DESC")
 	for _name in reactions:
-		var btn = Button.new()
+		var btn = preload("res://Scenes/ReactionButton.tscn").instantiate()
 		if _name in ["Ta", "W", "Os"] and not game.science_unlocked.has("AMM"):
-			btn.visible = false
-		btn.icon = load("res://Graphics/Atoms/%s.png" % _name)
+			btn.get_node("TextureRect").modulate = Color(0.2, 0.2, 0.2)
+		btn.get_node("TextureRect").texture = load("res://Graphics/Atoms/%s.png" % _name)
 		btn.name = _name
-		btn.custom_minimum_size.y = 75
+		btn.custom_minimum_size = Vector2.ONE * 75.0
 		btn.mouse_entered.connect(game.show_tooltip.bind(tr("%s_NAME" % _name.to_upper())))
 		btn.mouse_exited.connect(game.hide_tooltip)
 		btn.pressed.connect(_on_Atom_pressed.bind(_name))
@@ -58,8 +58,12 @@ func _on_Atom_pressed(_name:String):
 	refresh()
 
 func refresh():
+	refresh_time_icon()
 	for btn in $ScrollContainer/GridContainer.get_children():
-		btn.visible = not btn.name in ["Ta", "W", "Os"] or game.science_unlocked.has("AMM")
+		if btn.name not in ["Ta", "W", "Os"] or game.science_unlocked.has("AMM"):
+			btn.modulate = Color.WHITE
+		else:
+			btn.modulate = Color(0.2, 0.2, 0.2)
 	if tf:
 		$Title.text = "%s %s" % [Helper.format_num(tile_num), tr("SUBATOMIC_PARTICLE_REACTOR_NAME_S").to_lower(),]
 		var max_star_temp = game.get_max_star_prop(game.c_s, "temperature")
@@ -78,22 +82,21 @@ func refresh():
 	else:
 		$Panel/Control/EnergyCostText.help_text = tr("AMN_TIP")
 	$Panel/Control/TimeCostText.text = Helper.time_to_str(difficulty * $Panel/Control/HSlider.value / obj.bldg.path_1_value / Helper.get_IR_mult(Building.SUBATOMIC_PARTICLE_REACTOR) / tile_num / game.u_i.time_speed / obj.get("time_speed_bonus", 1.0) / game.u_i.charge)
-	$Panel/ReactionInProgress.visible = obj.bldg.has("qty") and reaction == obj.bldg.reaction
-	$Panel/Control.visible = not $Panel/ReactionInProgress.visible and reaction != ""
-	$Panel/Transform.visible = $Panel/ReactionInProgress.visible or $Panel/Control.visible
 	for reaction_name in reactions:
 		var disabled:bool = false
 		if is_zero_approx(game.particles.subatomic_particles):
 			disabled = true
 		disabled = disabled and is_zero_approx(game.atoms[reaction_name]) and (not obj.bldg.has("qty") or not obj.bldg.reaction == reaction_name)
 		$ScrollContainer/GridContainer.get_node(reaction_name).disabled = disabled
-	#refresh_time_icon()
-	if reaction == "":
+	if resource_selected == "":
 		return
+	$Panel/ReactionInProgress.visible = obj.bldg.has("qty") and resource_selected == obj.bldg.reaction
+	$Panel/Control.visible = not $Panel/ReactionInProgress.visible and resource_selected != ""
+	$Panel/Transform.visible = $Panel/ReactionInProgress.visible or $Panel/Control.visible
 	set_process($Panel/ReactionInProgress.visible)
 	var max_value:float = 0.0
 	if atom_to_p:
-		max_value = game.atoms[reaction]
+		max_value = game.atoms[resource_selected]
 	else:
 		var max_value2 = game.particles.subatomic_particles / Z
 		if max_value2 < max_value or max_value == 0.0:
@@ -113,18 +116,18 @@ func refresh():
 	var p_costs = {"subatomic_particles":value}
 	for particle in p_costs:
 		p_costs[particle] *= Z
-	atom_dict[reaction] = value
+	atom_dict[resource_selected] = value
 	rsrc_nodes_from = Helper.put_rsrc($Panel/Control2/ScrollContainer/From, 32, atom_dict, true, atom_to_p)
 	rsrc_nodes_to = Helper.put_rsrc($Panel/Control2/To, 32, p_costs, true, not atom_to_p)
 
 func reset_poses(_name:String, _Z:int):
-	reaction = _name
+	resource_selected = _name
 	Z = _Z
 	atom_to_p = true
 	$Panel/Control2/ScrollContainer.position = Vector2(92.0, 128.0)
 	$Panel/Control2/To.position = Vector2(376.0, 132.0)
 	$Panel/Control2.visible = true
-	$Panel/ReactionInProgress.visible = obj.bldg.has("qty") and obj.bldg.reaction == reaction
+	$Panel/ReactionInProgress.visible = obj.bldg.has("qty") and obj.bldg.reaction == resource_selected
 	$Panel/Control.visible = not $Panel/ReactionInProgress.visible
 	if $Panel/ReactionInProgress.visible and not obj.bldg.atom_to_p:
 		_on_Switch_pressed(false)
@@ -151,10 +154,10 @@ func _on_Transform_pressed():
 		var rsrc_to_add:Dictionary
 		var num
 		if obj.bldg.atom_to_p:
-			rsrc_to_add[reaction] = max(0, obj.bldg.qty - MM_value)
+			rsrc_to_add[resource_selected] = max(0, obj.bldg.qty - MM_value)
 			num = MM_value * Z
 		else:
-			rsrc_to_add[reaction] = MM_value
+			rsrc_to_add[resource_selected] = MM_value
 			num = max(0, obj.bldg.qty - MM_value) * Z
 		rsrc_to_add.subatomic_particles = num
 		rsrc_to_add.energy = round((1 - progress) * energy_cost / au_mult / game.u_i.charge * obj.bldg.qty / path_2_value)
@@ -165,7 +168,7 @@ func _on_Transform_pressed():
 		obj.bldg.erase("difficulty")
 		$Panel/Control.visible = true
 		$Panel/ReactionInProgress.visible = false
-		#refresh_time_icon()
+		refresh_time_icon()
 #		$Panel/Transform.text = "%s (G)" % tr("TRANSFORM")
 		#_on_HSlider_value_changed($Panel/Control/HSlider.value)
 	else:
@@ -174,7 +177,7 @@ func _on_Transform_pressed():
 			return
 		var rsrc_to_deduct = {}
 		if atom_to_p:
-			rsrc_to_deduct[reaction] = rsrc
+			rsrc_to_deduct[resource_selected] = rsrc
 		else:
 			rsrc_to_deduct = {"subatomic_particles":rsrc * Z}
 		rsrc_to_deduct.energy = round(energy_cost * rsrc / au_mult / game.u_i.charge / path_2_value)
@@ -184,19 +187,19 @@ func _on_Transform_pressed():
 		game.deduct_resources(rsrc_to_deduct)
 		obj.bldg.qty = rsrc
 		obj.bldg.start_date = Time.get_unix_time_from_system()
-		obj.bldg.reaction = reaction
+		obj.bldg.reaction = resource_selected
 		obj.bldg.difficulty = difficulty
 		obj.bldg.atom_to_p = atom_to_p
 		if not tf:
 			for i in len(game.view.obj.rsrcs):
 				if i == game.c_t:
-					game.view.obj.rsrcs[i].set_icon_texture(load("res://Graphics/Atoms/%s.png" % reaction))
+					game.view.obj.rsrcs[i].set_icon_texture(load("res://Graphics/Atoms/%s.png" % resource_selected))
 					break
 		set_text_to_white()
 		set_process(true)
 		$Panel/Control.visible = false
 		$Panel/ReactionInProgress.visible = true
-		#refresh_time_icon()
+		refresh_time_icon()
 #		$Panel/Transform.text = "%s (G)" % tr("STOP")
 	refresh()
 	game.HUD.refresh()
@@ -217,24 +220,29 @@ func _process(delta):
 	var num
 	if obj.bldg.atom_to_p:
 		num = MM_value * Z
-		atom_dict[reaction] = max(0, obj.bldg.qty - MM_value)
+		atom_dict[resource_selected] = max(0, obj.bldg.qty - MM_value)
 	else:
 		num = max(0, obj.bldg.qty - MM_value) * Z
-		atom_dict[reaction] = MM_value
+		atom_dict[resource_selected] = MM_value
 	MM_dict = {"subatomic_particles":num}
 	for hbox in rsrc_nodes_from:
-		hbox.rsrc.get_node("Text").text = "%s mol" % [Helper.format_num(atom_dict[hbox.name], true)]
+		hbox.rsrc.show_available = false
+		hbox.rsrc.rsrcs_required = atom_dict[hbox.name]
 	for hbox in rsrc_nodes_to:
-		hbox.rsrc.get_node("Text").text = "%s mol" % [Helper.format_num(MM_dict[hbox.name], true)]
+		hbox.rsrc.show_available = false
+		hbox.rsrc.rsrcs_required = MM_dict[hbox.name]
 	$Panel/ReactionInProgress/TimeRemainingText.text = Helper.time_to_str(max(0, difficulty * (obj.bldg.qty - MM_value) / obj.bldg.path_1_value / Helper.get_IR_mult(Building.SUBATOMIC_PARTICLE_REACTOR) / tile_num / game.u_i.time_speed / obj.get("time_speed_bonus", 1.0) / game.u_i.charge))
 
 func refresh_time_icon():
 	for r in $ScrollContainer/GridContainer.get_children():
-		r.get_node("Icon").visible = obj.bldg.has("reaction") and r.name == obj.bldg.reaction
+		if obj.bldg.has("reaction") and r.name == obj.bldg.reaction:
+			r.get_node("Time").show()
+		else:
+			r.get_node("Time").hide()
 
 func _on_Max_pressed():
 	if atom_to_p:
-		$Panel/Control/HSlider.value = min(game.energy * au_mult * game.u_i.charge / energy_cost * path_2_value, game.atoms[reaction])
+		$Panel/Control/HSlider.value = min(game.energy * au_mult * game.u_i.charge / energy_cost * path_2_value, game.atoms[resource_selected])
 
 func _on_EnergyCostText_mouse_entered():
 	if au_mult > 1:

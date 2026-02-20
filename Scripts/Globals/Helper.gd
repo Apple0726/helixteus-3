@@ -53,7 +53,6 @@ func put_rsrc(container, min_size, rsrcs, remove:bool = true, show_available:boo
 			child.free()
 	var data = []
 	for rsrc_name in rsrcs:
-		var real_time_update = false
 		var rsrc = preload("res://Scenes/Resource.tscn").instantiate()
 		var texture_node = rsrc.get_node("Texture2D")
 		var rsrc_display_name = ""
@@ -114,19 +113,18 @@ func put_rsrc(container, min_size, rsrcs, remove:bool = true, show_available:boo
 			texture_node.material.set_shader_parameter("fill", current_rsrc / rsrcs[rsrc_name])
 			if current_rsrc < rsrcs[rsrc_name]:
 				is_enough_node.texture = preload("res://Graphics/Icons/Annotator/cross.png")
-			real_time_update = true
 		container.add_child(rsrc)
 		if mouse_events:
 			rsrc.connect_mouse_events()
 		texture_node.custom_minimum_size = Vector2(1, 1) * min_size
 		data.append({"rsrc":rsrc, "name":rsrc_name})
 		rsrc.rsrc_display_name = rsrc_display_name
-		if rsrc_name is String and real_time_update:
+		if rsrc_name is String:
 			rsrc.rsrc_name = rsrc_name
 			rsrc.rsrc_type = rsrc_type
 			rsrc.rsrcs_required = rsrcs[rsrc_name]
 			rsrc.mass_str = mass_str
-		rsrc.set_process(real_time_update)
+			rsrc.show_available = show_available
 	return data
 
 #Converts time in seconds to string format

@@ -80,13 +80,15 @@ func _on_Materials_pressed():
 	particles_hbox.visible = false
 	hbox_data = Helper.put_rsrc(grid, 48, game.mats, true, false, false)
 	for mat in hbox_data:
-		if not game.show.has(mat.name):
-			mat.rsrc.visible = false
-			continue
 		var texture = mat.rsrc.get_node("Texture2D")
-		texture.connect("mouse_entered",Callable(self,"show_mat").bind(mat.name))
-		texture.connect("mouse_exited",Callable(self,"on_mouse_out"))
-		texture.connect("pressed",Callable(self,"show_buy_sell").bind("Materials", mat.name))
+		if not game.show.has(mat.name):
+			texture.modulate = Color(0.2, 0.2, 0.2)
+			mat.rsrc.get_node("Text")["theme_override_colors/font_color"] = Color.DIM_GRAY
+			mat.rsrc.get_node("Text").text = "?"
+			continue
+		texture.mouse_entered.connect(show_mat.bind(mat.name))
+		texture.mouse_exited.connect(game.hide_tooltip)
+		texture.pressed.connect(show_buy_sell.bind("Materials", mat.name))
 	$Control/VBox/BuySell.visible = true
 
 func _on_Metals_pressed():
@@ -102,9 +104,9 @@ func _on_Metals_pressed():
 			met.rsrc.visible = false
 			continue
 		var texture = met.rsrc.get_node("Texture2D")
-		texture.connect("mouse_entered",Callable(self,"show_met").bind(met.name))
-		texture.connect("mouse_exited",Callable(self,"on_mouse_out"))
-		texture.connect("pressed",Callable(self,"show_buy_sell").bind("Metals", met.name))
+		texture.mouse_entered.connect(show_met.bind(met.name))
+		texture.mouse_exited.connect(game.hide_tooltip)
+		texture.pressed.connect(show_buy_sell.bind("Metals", met.name))
 	$Control/VBox/BuySell.visible = true
 
 func _on_Atoms_pressed():
@@ -119,8 +121,8 @@ func _on_Atoms_pressed():
 		if not game.show.has(atom.name):
 			atom.rsrc.visible = false
 		var texture = atom.rsrc.get_node("Texture2D")
-		texture.connect("mouse_entered",Callable(self,"show_atom").bind(atom.name))
-		texture.connect("mouse_exited",Callable(self,"on_mouse_out"))
+		texture.mouse_entered.connect(show_atom.bind(atom.name))
+		texture.mouse_exited.connect(game.hide_tooltip)
 	$Control/VBox/BuySell.visible = false
 
 func _on_Particles_pressed():
@@ -172,9 +174,6 @@ func show_atom(atom:String):
 		st += "\n" + (tr("YOU_PRODUCE") if game.autocollect.atoms[atom] > 0 else tr("YOU_USE")) % ("%s mol/%s" % [Helper.format_num(abs(game.autocollect.atoms[atom]), true), tr("S_SECOND")])
 	game.show_tooltip(st)
 
-func on_mouse_out():
-	game.hide_tooltip()
-
 func show_met(met:String):
 	var st:String = "%s\n%s" % [get_str(met), get_str(met, "_DESC")]
 	if game.autocollect.mets.has(met) and not is_zero_approx(game.autocollect.mets[met]):
@@ -205,24 +204,6 @@ func _input(event):
 			else:
 				game.hotbar.erase(item_id)
 			game.HUD.update_hotbar()
-
-@onready var subatomic_particles_label = $Control/ParticlesHBox/SubatomicParticles
-
-func _process(delta):
-	if not visible:
-		set_process(false)
-	if tab == "materials":
-		for hbox in hbox_data:
-			hbox.rsrc.get_node("Text").text = "%s kg" % [Helper.format_num(game.mats[hbox.name], true)]
-	elif tab == "metals":
-		for hbox in hbox_data:
-			hbox.rsrc.get_node("Text").text = "%s kg" % [Helper.format_num(game.mets[hbox.name], true)]
-	elif tab == "atoms":
-		for hbox in hbox_data:
-			hbox.rsrc.get_node("Text").text = "%s mol" % [Helper.format_num(game.atoms[hbox.name], true)]
-	elif tab == "particles":
-		subatomic_particles_label.text = "%s mol" % [Helper.format_num(game.particles.subatomic_particles, true)]
-
 
 func show_part(_name:String):
 	var st:String = "%s\n%s" % [tr(_name.to_upper()), tr(_name.to_upper() + "_DESC")]

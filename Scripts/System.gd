@@ -264,7 +264,7 @@ func add_MS_sprite(node, obj:Dictionary):
 		MS_sprite.scale *= 1024.0 / MS_sprite.texture.get_height()
 	elif obj.MS == "MME":
 		MS_sprite.scale *= 1024.0 / MS_sprite.texture.get_height()
-	elif obj.MS in ["DS", "CBS"]:
+	elif obj.MS in ["DS", "CBS", "MB"]:
 		MS_sprite.scale *= 3.0
 	MS_sprite.position += node.size * 0.5
 	node.add_child(MS_sprite)

@@ -57,7 +57,7 @@ func on_cluster_over (id:int):
 			_name = tr("GALAXY_GROUP") + " %s" % id
 		else:
 			_name = tr("GALAXY_CLUSTER") + " %s" % id
-	var tooltip:String = "%s\n%s: %s\n%s: %s\n%s: %s" % [_name, tr("GALAXIES"), c_i.galaxy_num, tr("DIFFICULTY"), c_i.diff, tr("FERROMAGNETIC_MATERIALS"), c_i.FM]
+	var tooltip:String = "%s\n%s: %s\n%s: %s\n%s: %s" % [_name, tr("GALAXIES"), c_i.galaxy_num, tr("DIFFICULTY"), Helper.format_num(c_i.diff), tr("FERROMAGNETIC_MATERIALS"), c_i.FM]
 	var icons:Array = []
 	for el in c_i.rich_elements.keys():
 		tooltip += "\n" + tr("RICH_IN_X").format({"rsrc":tr(el.to_upper() + "_NAME"), "mult":Helper.clever_round(c_i.rich_elements[el])})
