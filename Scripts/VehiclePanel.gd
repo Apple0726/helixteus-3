@@ -39,7 +39,7 @@ func _on_Timer_timeout():
 		var i = dict.i
 		var probe = game.probe_data[i]
 		var bar = dict.node
-		if not probe.has("start_date"):
+		if not probe or not probe.has("start_date") or not is_instance_valid(bar):
 			continue
 		var start_date = probe.start_date
 		var length = probe.explore_length
@@ -204,6 +204,7 @@ func _on_probes_pressed():
 	tab = PROBES
 	for vehicle in $ScrollContainer/VBoxContainer.get_children():
 		vehicle.queue_free()
+	probe_time_bars.clear()
 	var probe_num:int = 0
 	for i in len(game.probe_data):
 		if game.probe_data[i] == null:
@@ -217,11 +218,16 @@ func _on_probes_pressed():
 		probe.get_node("GoTo").pressed.connect(probe_go_to.bind(probe_info.tier))
 		probe.get_node("Disband").pressed.connect(probe_disband.bind(i, probe))
 		if probe_info.has("start_date"):
-			var time_bar:Control = game.time_scene.instantiate()
-			time_bar.scale *= 0.5
-			time_bar.position = Vector2(30, 0)
+			var time_bar:Control = preload("res://Scenes/TimeLeft.tscn").instantiate()
+			time_bar.scale *= 0.7
+			time_bar.position = Vector2(255.0, 42.0)
 			probe.add_child(time_bar)
 			probe_time_bars.append({"node":time_bar, "i":i})
+			probe.get_node("StatusLabel").text = tr("EXPLORING")
+			probe.get_node("StatusLabel").position.x = 328.0
+		else:
+			probe.get_node("StatusLabel").text = tr("ON_STANDBY")
+			
 	#$Probes/Label.text = "%s (%s / %s)" % [tr("PROBES"), probe_num, 500]
 	for probe in game.probe_data:
 		if probe and probe.has("start_date"):

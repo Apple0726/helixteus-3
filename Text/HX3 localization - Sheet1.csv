@@ -1748,3 +1748,5 @@ GO_TO,Go to,,,,,,,,,,,,
 DECELERATE,Decelerate,,,,,,,,,,,,
 DECELERATE_DESC,"Use this ship's movement to bring it to a stop.
 One meter of movement removes 1 m/s of speed.",,,,,,,,,,,,
+ON_STANDBY,On standby,,,,,,,,,,,,
+EXPLORING,Exploring,,,,,,,,,,,,
