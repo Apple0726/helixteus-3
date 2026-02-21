@@ -184,6 +184,10 @@ func _on_fighters_pressed():
 			fighter.get_node("FighterIcon").texture = preload("res://Graphics/Ships/Fighter.png")
 		elif fighter_info.tier == 1:
 			fighter.get_node("FighterIcon").texture = preload("res://Graphics/Ships/Fighter2.png")
+		if fighter_info.has("exploring"):
+			fighter.get_node("StatusLabel").text = tr("EXPLORING")
+		else:
+			fighter.get_node("StatusLabel").text = tr("ON_STANDBY")
 		$ScrollContainer/VBoxContainer.add_child(fighter)
 		fighter.get_node("GoTo").pressed.connect(fighter_go_to.bind(i))
 		fighter.get_node("Disband").pressed.connect(fighter_disband.bind(i, fighter))

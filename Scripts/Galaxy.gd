@@ -13,11 +13,13 @@ var star_texture = [	preload("res://Graphics/Effects/spotlight_4.png"),
 						preload("res://Graphics/Effects/spotlight_6.png"),
 ]
 var discovered_sys:Array
+var g_i:Dictionary
 
 func _ready():
 	discovered_sys = []
 	queue_redraw()
 	var await_counter:int = 0
+	g_i = game.galaxy_data[game.c_g]
 	for s_i in game.system_data:
 		if not is_inside_tree():
 			return
@@ -25,8 +27,8 @@ func _ready():
 		for i in range(1, len(s_i.stars)):
 			if s_i.stars[i].luminosity > star.luminosity:
 				star = s_i.stars[i]
-		if game.galaxy_data[game.c_g].has("conquered") and not s_i.has("conquered"):
-			s_i.conquered = true
+		if g_i.has("conquered") and not s_i.has("conquered"):
+			s_i["conquered"] = true
 			game.stats_univ.planets_conquered += s_i.planet_num
 			game.stats_dim.planets_conquered += s_i.planet_num
 			game.stats_global.planets_conquered += s_i.planet_num
@@ -72,8 +74,8 @@ func _ready():
 	dimensions = dimensions_temp
 
 func _draw():
-	if game.galaxy_data[game.c_g].has("wormholes"):
-		for wh_data in game.galaxy_data[game.c_g].wormholes:
+	if g_i.has("wormholes"):
+		for wh_data in g_i.wormholes:
 			draw_line(game.system_data[wh_data.from].pos, game.system_data[wh_data.to].pos, Color(0.6, 0.4, 1.0, 1.0))
 
 func on_system_over (l_id:int):
@@ -223,3 +225,90 @@ func change_overlay(overlay_id:int, gradient:Gradient, object:Dictionary = {}):
 
 func _on_Galaxy_tree_exited():
 	queue_free()
+
+var sorted_systems:Array = []
+var system_conquer_start_index:int = 0
+
+func sort_systems(ascending:bool):
+	sorted_systems = game.system_data.duplicate(true)
+	sorted_systems.sort_custom(diff_sort)
+	if not ascending:
+		sorted_systems.reverse()
+
+func diff_sort(a:Dictionary, b:Dictionary):
+	return a.diff < b.diff
+
+func _process(delta: float) -> void:
+	if g_i.has("conquer_start_date"):
+		if sorted_systems.is_empty():
+			system_conquer_start_index = 0
+			sort_systems(g_i.conquer_order)
+		var curr_time = Time.get_unix_time_from_system()
+		var fighters_rekt = g_i.combined_strength <= 0
+		var galaxy_conquered = true
+		var breaker:int = 0
+		var progress = (curr_time - g_i.conquer_start_date) / g_i.time_for_one_sys * 100.0
+		while breaker < 100:
+			if fighters_rekt:
+				break
+			breaker += 1
+			if progress >= 100:
+				for i in range(system_conquer_start_index, len(sorted_systems)):
+					var system = sorted_systems[i]
+					if system.has("conquered"):
+						system_conquer_start_index = i
+						continue
+					galaxy_conquered = false
+					if g_i.combined_strength < system.diff:
+						g_i.combined_strength = 0
+						fighters_rekt = true
+						for j in len(game.fighter_data):
+							if game.fighter_data[j] and game.fighter_data[j].c_g_g == game.c_g_g:
+								game.fighter_data[j] = null
+						g_i.erase("conquer_start_date")
+						g_i.erase("time_for_one_sys")
+						g_i.erase("sys_num")
+						g_i.erase("sys_conquered")
+						g_i.erase("combined_strength")
+						g_i.erase("conquer_order")
+						breaker = 100
+						game.popup_window(tr("ALL_FIGHTERS_REKT"))
+						break
+					if not system.has("conquered"):
+						g_i.combined_strength -= system.diff
+						game.system_data[system.l_id].conquered = true
+						system.conquered = true
+						game.stats_univ.planets_conquered += system.planet_num
+						game.stats_dim.planets_conquered += system.planet_num
+						game.stats_global.planets_conquered += system.planet_num
+						game.stats_univ.systems_conquered += 1
+						game.stats_dim.systems_conquered += 1
+						game.stats_global.systems_conquered += 1
+						g_i.sys_conquered += 1
+						g_i.conquer_start_date += g_i.time_for_one_sys
+						progress = (curr_time - g_i.conquer_start_date) / g_i.time_for_one_sys * 100.0
+						break
+			else:
+				galaxy_conquered = false
+				break
+		if galaxy_conquered:
+			if not g_i.has("conquered"):
+				game.stats_univ.galaxies_conquered += 1
+				game.stats_dim.galaxies_conquered += 1
+				game.stats_global.galaxies_conquered += 1
+				g_i.conquered = true
+				g_i.erase("conquer_start_date")
+				g_i.erase("time_for_one_sys")
+				g_i.erase("sys_num")
+				g_i.erase("sys_conquered")
+				g_i.erase("combined_strength")
+				g_i.erase("conquer_order")
+				if not game.new_bldgs.has(Building.SOLAR_PANEL):
+					game.new_bldgs[Building.SOLAR_PANEL] = true
+				for j in len(game.fighter_data):
+					if game.fighter_data[j] and game.fighter_data[j].c_g_g == game.c_g_g:
+						game.fighter_data[j].erase("exploring")
+				game.popup_window(tr("CONQUERED_GALAXY"))
+			set_process(false)
+	else:
+		set_process(false)

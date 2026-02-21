@@ -11,11 +11,13 @@ var overlays:Array = []
 var rsrcs:Array = []
 var discovered_gal:Array = []
 var curr_bldg_overlay:int = 0
+var c_i:Dictionary
 
 func _ready():
 	rsrcs.resize(len(game.galaxy_data))
 	var conquered = true
 	var await_counter:int = 0
+	c_i = game.u_i.cluster_data[game.c_c]
 	for g_i in game.galaxy_data:
 		if g_i.is_empty():
 			continue
@@ -74,7 +76,7 @@ func _ready():
 	if is_instance_valid(game.overlay):
 		game.overlay.refresh_options(game.overlay_data[game.c_v].overlay)
 	if conquered:
-		game.u_i.cluster_data[game.c_c].conquered = true
+		c_i["conquered"] = true
 	dimensions = dimensions_temp
 
 
@@ -249,3 +251,87 @@ func _input(event):
 
 func _on_Galaxy_tree_exited():
 	queue_free()
+
+var sorted_galaxies:Array
+var galaxy_conquer_start_index:int = 0
+
+func sort_galaxies(ascending:bool):
+	sorted_galaxies = game.galaxy_data.duplicate(true)
+	sorted_galaxies.sort_custom(diff_sort)
+	if not ascending:
+		sorted_galaxies.reverse()
+
+func diff_sort(a:Dictionary, b:Dictionary):
+	return a.diff < b.diff
+
+func _process(delta: float) -> void:
+	if c_i.has("conquer_start_date"):
+		if sorted_galaxies.is_empty():
+			galaxy_conquer_start_index = 0
+			sort_galaxies(c_i.conquer_order)
+		var curr_time = Time.get_unix_time_from_system()
+		var fighters_rekt = c_i.combined_strength <= 0
+		var cluster_conquered = true
+		var breaker:int = 0
+		var progress = (curr_time - c_i.conquer_start_date) / c_i.time_for_one_gal * 100.0
+		while breaker < 100:
+			if fighters_rekt:
+				break
+			breaker += 1
+			if progress >= 100:
+				for i in range(galaxy_conquer_start_index, len(sorted_galaxies)):
+					var galaxy = sorted_galaxies[i]
+					if galaxy.is_empty() or galaxy.has("conquered"):
+						galaxy_conquer_start_index = i
+						continue
+					cluster_conquered = false
+					if c_i.combined_strength < galaxy.diff:
+						c_i.combined_strength = 0
+						fighters_rekt = true
+						for j in len(game.fighter_data):
+							if game.fighter_data[j] and game.fighter_data[j].c_c == game.c_c:
+								game.fighter_data[j] = null
+						c_i.erase("conquer_start_date")
+						c_i.erase("time_for_one_sys")
+						c_i.erase("sys_num")
+						c_i.erase("sys_conquered")
+						c_i.erase("combined_strength")
+						c_i.erase("conquer_order")
+						breaker = 100
+						game.popup_window(tr("ALL_FIGHTERS_REKT"))
+						break
+					if not galaxy.has("conquered"):
+						c_i.combined_strength -= galaxy.diff
+						game.galaxy_data[galaxy.l_id].conquered = true
+						galaxy.conquered = true
+						game.stats_univ.systems_conquered += galaxy.system_num
+						game.stats_dim.systems_conquered += galaxy.system_num
+						game.stats_global.systems_conquered += galaxy.system_num
+						c_i.gal_conquered += 1
+						c_i.conquer_start_date += c_i.time_for_one_gal
+						progress = (curr_time - c_i.conquer_start_date) / c_i.time_for_one_gal * 100.0
+						break
+			else:
+				cluster_conquered = false
+				break
+		if cluster_conquered:
+			if not c_i.has("conquered"):
+				game.stats_univ.clusters_conquered += 1
+				game.stats_dim.clusters_conquered += 1
+				game.stats_global.clusters_conquered += 1
+				c_i.conquered = true
+				c_i.erase("conquer_start_date")
+				c_i.erase("time_for_one_gal")
+				c_i.erase("gal_num")
+				c_i.erase("gal_conquered")
+				c_i.erase("combined_strength")
+				c_i.erase("conquer_order")
+				if not game.new_bldgs.has(Building.SOLAR_PANEL):
+					game.new_bldgs[Building.SOLAR_PANEL] = true
+				for j in len(game.fighter_data):
+					if game.fighter_data[j] and game.fighter_data[j].c_c == game.c_c:
+						game.fighter_data[j].erase("exploring")
+				game.popup_window(tr("CONQUERED_CLUSTER"))
+			set_process(false)
+	else:
+		set_process(false)

@@ -1110,7 +1110,7 @@ func popup(txt, delay):
 		popup.position.x = x_pos
 
 
-func popup_window(txt:String, title:String, other_buttons:Array = [], other_functions:Array = [], ok_txt:String = "OK", align:int = 1):
+func popup_window(txt:String, title:String = "", other_buttons:Array = [], other_functions:Array = [], ok_txt:String = "OK", align:int = 1):
 	hide_tooltip()
 	var popup = preload("res://Scenes/PopupWindow.tscn").instantiate()
 	$UI.add_child(popup)
@@ -2780,7 +2780,7 @@ func generate_planets(id:int):#local id
 				var HP_power = 7.0 * (1.8 * randf() + 0.2)
 				var stat_power = 48.0 - 1.5 * HP_power + lv / 2
 				var HP = round(HP_power * (lv + 1.0))
-				var _money = round(randf_range(1, 2) * pow(1.3, lv - 1) * 50000)
+				var _money = round(randf_range(1, 2) * pow(1.4, lv - 1) * 50000)
 				var XP = round(pow(1.25, lv - 1) * 40)
 				if _class == 2:
 					HP = round(HP * 0.8)
