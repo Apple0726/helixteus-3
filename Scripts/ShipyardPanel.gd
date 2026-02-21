@@ -1,7 +1,7 @@
 extends "Panel.gd"
 
 var strength_mult:float
-var base_costs:Array = [{"money":1.5e9}, {"money":1.5e9*5000000, "mythril":240000000}]
+var base_costs:Array = [{"money":1.5e9}, {"money":7.5e17, "mythril":2.4e10}]
 var costs:Dictionary
 var fighter_type:int = 0
 var strength:float
@@ -29,6 +29,12 @@ func _on_SpinBox_value_changed(value):
 	$Strength.text = "%s: %s  %s" % [tr("FLEET_STRENGTH"), Helper.format_num(strength, true), "[img]Graphics/Icons/help.png[/img]"]
 
 func _on_Construct_pressed():
+	if game.u_i.cluster_data[game.c_c].has("conquered"):
+		game.popup_window(tr("SHIPYARD_ERROR_2"), "")
+		return
+	elif fighter_type == 0 and game.galaxy_data[game.c_g].has("conquered"):
+		game.popup_window(tr("SHIPYARD_ERROR_1"), "")
+		return
 	if game.check_enough(costs):
 		game.deduct_resources(costs)
 		game.popup(tr("FIGHTERS_CONSTRUCTED"), 3)

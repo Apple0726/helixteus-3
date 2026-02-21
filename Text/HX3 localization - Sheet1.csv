@@ -1750,3 +1750,7 @@ DECELERATE_DESC,"Use this ship's movement to bring it to a stop.
 One meter of movement removes 1 m/s of speed.",,,,,,,,,,,,
 ON_STANDBY,On standby,,,,,,,,,,,,
 EXPLORING,Exploring,,,,,,,,,,,,
+SHIPYARD_ERROR_1,"This galaxy is completely conquered, so there is no point building fighters in this galaxy anymore (they cannot travel across galaxies).
+Construct a shipyard in another galaxy and build fighters there.",,,,,,,,,,,,
+SHIPYARD_ERROR_2,"This cluster is completely conquered, so there is no point building fighters in this cluster anymore (they cannot travel across clusters).
+Construct a shipyard in another cluster and build fighters there.",,,,,,,,,,,,

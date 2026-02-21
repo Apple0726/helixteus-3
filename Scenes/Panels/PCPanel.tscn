@@ -25,17 +25,17 @@ mouse_filter = 1
 texture = ExtResource("3_gkyax")
 patch_margin_left = 15
 patch_margin_top = 11
-patch_margin_right = 15
+patch_margin_right = 189
 patch_margin_bottom = 11
 axis_stretch_horizontal = 1
 metadata/_edit_horizontal_guides_ = [596.0]
 
 [node name="CloseButton" type="TextureButton" parent="." unique_id=1726956326]
 layout_mode = 0
-offset_left = 912.0
+offset_left = 908.0
 offset_top = 240.0
 offset_right = 939.0
-offset_bottom = 267.0
+offset_bottom = 272.0
 texture_normal = ExtResource("4_i06p3")
 texture_hover = ExtResource("5_8u7a3")
 ignore_texture_size = true
@@ -93,10 +93,10 @@ rounded = true
 
 [node name="Construct" type="Button" parent="." unique_id=433031788]
 layout_mode = 1
-offset_left = 860.0
-offset_top = 432.0
-offset_right = 940.0
-offset_bottom = 480.0
+offset_left = 884.0
+offset_top = 436.0
+offset_right = 936.0
+offset_bottom = 476.0
 
 [node name="TextureRect" type="TextureRect" parent="Construct" unique_id=218799582]
 layout_mode = 1

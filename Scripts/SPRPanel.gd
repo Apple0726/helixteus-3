@@ -58,7 +58,6 @@ func _on_Atom_pressed(_name:String):
 	refresh()
 
 func refresh():
-	refresh_time_icon()
 	for btn in $ScrollContainer/GridContainer.get_children():
 		if btn.name not in ["Ta", "W", "Os"] or game.science_unlocked.has("AMM"):
 			btn.modulate = Color.WHITE
@@ -75,13 +74,8 @@ func refresh():
 		obj = game.tile_data[game.c_t]
 		au_int = obj.get("aurora", 0.0)
 		au_mult = au_int + 1.0
+	refresh_time_icon()
 	path_2_value = obj.bldg.path_2_value * Helper.get_IR_mult(Building.SUBATOMIC_PARTICLE_REACTOR)
-	$Panel/Control/EnergyCostText.text = Helper.format_num(round(energy_cost * $Panel/Control/HSlider.value / au_mult / game.u_i.charge / path_2_value)) + "  [img]Graphics/Icons/help.png[/img]"
-	if au_mult > 1:
-		$Panel/Control/EnergyCostText.help_text = ("[aurora au_int=%s]" % au_int) + tr("MORE_ENERGY_EFFICIENT") % Helper.clever_round(au_mult)
-	else:
-		$Panel/Control/EnergyCostText.help_text = tr("AMN_TIP")
-	$Panel/Control/TimeCostText.text = Helper.time_to_str(difficulty * $Panel/Control/HSlider.value / obj.bldg.path_1_value / Helper.get_IR_mult(Building.SUBATOMIC_PARTICLE_REACTOR) / tile_num / game.u_i.time_speed / obj.get("time_speed_bonus", 1.0) / game.u_i.charge)
 	for reaction_name in reactions:
 		var disabled:bool = false
 		if is_zero_approx(game.particles.subatomic_particles):
@@ -90,10 +84,35 @@ func refresh():
 		$ScrollContainer/GridContainer.get_node(reaction_name).disabled = disabled
 	if resource_selected == "":
 		return
+	var max_slider_value = get_max_slider_value()
+	var rsrc_value = $Panel/Control/HSlider.value * max_slider_value
+	$Panel/Control/EnergyCostText.text = Helper.format_num(round(energy_cost * rsrc_value / au_mult / game.u_i.charge / path_2_value)) + "  [img]Graphics/Icons/help.png[/img]"
+	if au_mult > 1:
+		$Panel/Control/EnergyCostText.help_text = ("[aurora au_int=%s]" % au_int) + tr("MORE_ENERGY_EFFICIENT") % Helper.clever_round(au_mult)
+	else:
+		$Panel/Control/EnergyCostText.help_text = tr("AMN_TIP")
+	$Panel/Control/TimeCostText.text = Helper.time_to_str(difficulty * rsrc_value / obj.bldg.path_1_value / Helper.get_IR_mult(Building.SUBATOMIC_PARTICLE_REACTOR) / tile_num / game.u_i.time_speed / obj.get("time_speed_bonus", 1.0) / game.u_i.charge)
 	$Panel/ReactionInProgress.visible = obj.bldg.has("qty") and resource_selected == obj.bldg.reaction
 	$Panel/Control.visible = not $Panel/ReactionInProgress.visible and resource_selected != ""
 	$Panel/Transform.visible = $Panel/ReactionInProgress.visible or $Panel/Control.visible
 	set_process($Panel/ReactionInProgress.visible)
+	$Panel/Control/HSlider.visible = max_slider_value != 0
+	if $Panel/ReactionInProgress.visible:
+		set_text_to_white()
+		$Panel/Transform.visible = true
+		$Panel/Transform.text = "%s (G)" % tr("STOP")
+	else:
+		$Panel/Transform.visible = max_slider_value != 0 and not obj.bldg.has("qty")
+		$Panel/Transform.text = "%s (G)" % tr("TRANSFORM")
+	var atom_dict = {}
+	var p_costs = {"subatomic_particles":rsrc_value}
+	for particle in p_costs:
+		p_costs[particle] *= Z
+	atom_dict[resource_selected] = rsrc_value
+	rsrc_nodes_from = Helper.put_rsrc($Panel/Control2/ScrollContainer/From, 32, atom_dict, true, atom_to_p)
+	rsrc_nodes_to = Helper.put_rsrc($Panel/Control2/To, 32, p_costs, true, not atom_to_p)
+
+func get_max_slider_value():
 	var max_value:float = 0.0
 	if atom_to_p:
 		max_value = game.atoms[resource_selected]
@@ -101,24 +120,7 @@ func refresh():
 		var max_value2 = game.particles.subatomic_particles / Z
 		if max_value2 < max_value or max_value == 0.0:
 			max_value = max_value2
-	$Panel/Control/HSlider.max_value = min(game.energy * au_mult * game.u_i.charge / energy_cost * path_2_value, max_value)
-	$Panel/Control/HSlider.step = $Panel/Control/HSlider.max_value / 500.0
-	$Panel/Control/HSlider.visible = $Panel/Control/HSlider.max_value != 0
-	if $Panel/ReactionInProgress.visible:
-		set_text_to_white()
-		$Panel/Transform.visible = true
-		$Panel/Transform.text = "%s (G)" % tr("STOP")
-	else:
-		$Panel/Transform.visible = $Panel/Control/HSlider.max_value != 0 and not obj.bldg.has("qty")
-		$Panel/Transform.text = "%s (G)" % tr("TRANSFORM")
-	var value = $Panel/Control/HSlider.value
-	var atom_dict = {}
-	var p_costs = {"subatomic_particles":value}
-	for particle in p_costs:
-		p_costs[particle] *= Z
-	atom_dict[resource_selected] = value
-	rsrc_nodes_from = Helper.put_rsrc($Panel/Control2/ScrollContainer/From, 32, atom_dict, true, atom_to_p)
-	rsrc_nodes_to = Helper.put_rsrc($Panel/Control2/To, 32, p_costs, true, not atom_to_p)
+	return min(game.energy * au_mult * game.u_i.charge / energy_cost * path_2_value, max_value)
 
 func reset_poses(_name:String, _Z:int):
 	resource_selected = _name
@@ -172,20 +174,20 @@ func _on_Transform_pressed():
 #		$Panel/Transform.text = "%s (G)" % tr("TRANSFORM")
 		#_on_HSlider_value_changed($Panel/Control/HSlider.value)
 	else:
-		var rsrc = $Panel/Control/HSlider.value
-		if rsrc == 0:
+		var rsrc_value = $Panel/Control/HSlider.value * get_max_slider_value()
+		if rsrc_value == 0.0:
 			return
 		var rsrc_to_deduct = {}
 		if atom_to_p:
-			rsrc_to_deduct[resource_selected] = rsrc
+			rsrc_to_deduct[resource_selected] = rsrc_value
 		else:
-			rsrc_to_deduct = {"subatomic_particles":rsrc * Z}
-		rsrc_to_deduct.energy = round(energy_cost * rsrc / au_mult / game.u_i.charge / path_2_value)
+			rsrc_to_deduct = {"subatomic_particles":rsrc_value * Z}
+		rsrc_to_deduct.energy = round(energy_cost * rsrc_value / au_mult / game.u_i.charge / path_2_value)
 		if not game.check_enough(rsrc_to_deduct):
 			game.popup(tr("NOT_ENOUGH_RESOURCES"), 1.5)
 			return
 		game.deduct_resources(rsrc_to_deduct)
-		obj.bldg.qty = rsrc
+		obj.bldg.qty = rsrc_value
 		obj.bldg.start_date = Time.get_unix_time_from_system()
 		obj.bldg.reaction = resource_selected
 		obj.bldg.difficulty = difficulty
@@ -239,10 +241,6 @@ func refresh_time_icon():
 			r.get_node("Time").show()
 		else:
 			r.get_node("Time").hide()
-
-func _on_Max_pressed():
-	if atom_to_p:
-		$Panel/Control/HSlider.value = min(game.energy * au_mult * game.u_i.charge / energy_cost * path_2_value, game.atoms[resource_selected])
 
 func _on_EnergyCostText_mouse_entered():
 	if au_mult > 1:

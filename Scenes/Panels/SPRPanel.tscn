@@ -141,6 +141,8 @@ offset_left = 108.0
 offset_top = 80.0
 offset_right = 484.0
 offset_bottom = 96.0
+max_value = 1.0
+step = 0.01
 
 [node name="EnergyCost" type="TextureRect" parent="Panel/Control" unique_id=1626440112]
 layout_mode = 0

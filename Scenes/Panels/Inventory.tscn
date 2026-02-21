@@ -5,7 +5,6 @@
 [ext_resource type="Texture2D" uid="uid://dcvnyb0mloli2" path="res://Graphics/GUI/Panel.png" id="3_ccyro"]
 [ext_resource type="Script" uid="uid://4a5huwgb0jgi" path="res://Scripts/Inventory.gd" id="4"]
 [ext_resource type="Texture2D" uid="uid://baowebna7hgr5" path="res://Graphics/GUI/CloseButtonNormal.png" id="4_v8thl"]
-[ext_resource type="Texture2D" uid="uid://c464cktjcl0bt" path="res://Graphics/Particles/subatomic_particles.png" id="5_duh3p"]
 [ext_resource type="Texture2D" uid="uid://c1vwn7p5uxu1r" path="res://Graphics/GUI/CloseButtonHover.png" id="5_wur6g"]
 
 [sub_resource type="SystemFont" id="SystemFont_sxpbd"]
@@ -65,11 +64,11 @@ vertical_alignment = 1
 
 [node name="TabBar" type="HBoxContainer" parent="." unique_id=140897578]
 layout_mode = 1
-offset_left = 144.0
-offset_top = 168.0
-offset_right = 1120.0
-offset_bottom = 202.0
-theme_override_constants/separation = -1
+offset_left = 164.0
+offset_top = 542.0
+offset_right = 1104.0
+offset_bottom = 580.0
+theme_override_constants/separation = 60
 
 [node name="Items" parent="TabBar" unique_id=38644487 instance=ExtResource("1")]
 layout_mode = 2
@@ -99,9 +98,9 @@ button_text = "PARTICLES"
 [node name="Information" type="Label" parent="." unique_id=1287403413]
 layout_mode = 0
 offset_left = 176.0
-offset_top = 120.0
+offset_top = 124.0
 offset_right = 1088.0
-offset_bottom = 168.0
+offset_bottom = 172.0
 text = "Information"
 horizontal_alignment = 1
 vertical_alignment = 1
@@ -109,9 +108,9 @@ vertical_alignment = 1
 [node name="Control" type="Panel" parent="." unique_id=1783725380]
 layout_mode = 1
 offset_left = 144.0
-offset_top = 200.0
+offset_top = 176.0
 offset_right = 1120.0
-offset_bottom = 616.0
+offset_bottom = 544.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 theme_override_styles/panel = SubResource("StyleBoxFlat_vohlb")
@@ -135,9 +134,9 @@ layout_mode = 2
 [node name="GridContainer" type="GridContainer" parent="Control/VBox" unique_id=92201185]
 layout_mode = 2
 size_flags_horizontal = 5
-theme_override_constants/h_separation = 30
+theme_override_constants/h_separation = 60
 theme_override_constants/v_separation = 30
-columns = 6
+columns = 5
 
 [node name="Inventory" type="GridContainer" parent="Control/VBox" unique_id=874955917]
 layout_mode = 2
@@ -153,29 +152,9 @@ text = "CLICK_TO_BUY_SELL"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="ParticlesHBox" type="HBoxContainer" parent="Control" unique_id=1668857277]
-layout_mode = 0
-offset_left = 40.0
-offset_top = 48.0
-offset_right = 258.0
-offset_bottom = 88.0
-
-[node name="SubatomicParticleIcon" type="TextureRect" parent="Control/ParticlesHBox" unique_id=1406913454]
-custom_minimum_size = Vector2(40, 0)
-layout_mode = 2
-texture = ExtResource("5_duh3p")
-expand_mode = 1
-stretch_mode = 6
-
-[node name="SubatomicParticles" type="Label" parent="Control/ParticlesHBox" unique_id=1370820575]
-layout_mode = 2
-size_flags_horizontal = 3
-
 [connection signal="pressed" from="CloseButton" to="." method="_on_close_button_pressed"]
 [connection signal="pressed" from="TabBar/Items" to="." method="_on_Items_pressed"]
 [connection signal="pressed" from="TabBar/Materials" to="." method="_on_Materials_pressed"]
 [connection signal="pressed" from="TabBar/Metals" to="." method="_on_Metals_pressed"]
 [connection signal="pressed" from="TabBar/Atoms" to="." method="_on_Atoms_pressed"]
 [connection signal="pressed" from="TabBar/Particles" to="." method="_on_Particles_pressed"]
-[connection signal="mouse_entered" from="Control/ParticlesHBox/SubatomicParticleIcon" to="." method="show_part"]
-[connection signal="mouse_exited" from="Control/ParticlesHBox/SubatomicParticleIcon" to="." method="on_mouse_out"]

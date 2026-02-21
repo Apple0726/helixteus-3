@@ -78,7 +78,6 @@ func on_rsrc_pressed(rsrc:String):
 	refresh()
 
 func refresh():
-	refresh_time_icon()
 	for btn in $ScrollContainer/GridContainer.get_children():
 		if btn.name not in ["nanocrystal", "mythril", "quillite"] or game.science_unlocked.has("AMM"):
 			btn.modulate = Color.WHITE
@@ -95,6 +94,7 @@ func refresh():
 		obj = game.tile_data[game.c_t]
 		au_int = obj.get("aurora", 0.0)
 		au_mult = au_int + 1.0
+	refresh_time_icon()
 	path_2_value = obj.bldg.path_2_value * Helper.get_IR_mult(Building.ATOM_MANIPULATOR)
 	for reaction_name in reactions:
 		var disabled:bool = false
@@ -109,7 +109,9 @@ func refresh():
 		$ScrollContainer/GridContainer.get_node(reaction_name).disabled = disabled
 	if resource_selected == "":
 		return
-	$Panel/Control/EnergyCostText.text = Helper.format_num(round(reactions[resource_selected].energy_cost * $Panel/Control/HSlider.value / au_mult / path_2_value)) + "  [img]Graphics/Icons/help.png[/img]"
+	var max_slider_value = get_max_slider_value()
+	var rsrc_value = $Panel/Control/HSlider.value * max_slider_value
+	$Panel/Control/EnergyCostText.text = Helper.format_num(round(reactions[resource_selected].energy_cost * rsrc_value / au_mult / path_2_value)) + "  [img]Graphics/Icons/help.png[/img]"
 	if au_mult > 1:
 		$Panel/Control/EnergyCostText.help_text = ("[aurora au_int=%s]" % au_int) + tr("MORE_ENERGY_EFFICIENT") % Helper.clever_round(au_mult)
 	else:
@@ -117,8 +119,18 @@ func refresh():
 	$Panel/ReactionInProgress.visible = obj.bldg.has("qty") and resource_selected == obj.bldg.reaction
 	$Panel/Control.visible = not $Panel/ReactionInProgress.visible and resource_selected != ""
 	$Panel/Transform.visible = $Panel/ReactionInProgress.visible or $Panel/Control.visible
-	$Panel/Control/TimeCostText.text = Helper.time_to_str(difficulty * $Panel/Control/HSlider.value / obj.bldg.path_1_value / tile_num / Helper.get_IR_mult(Building.ATOM_MANIPULATOR) / game.u_i.time_speed / obj.get("time_speed_bonus", 1.0))
+	$Panel/Control/TimeCostText.text = Helper.time_to_str(difficulty * rsrc_value / obj.bldg.path_1_value / tile_num / Helper.get_IR_mult(Building.ATOM_MANIPULATOR) / game.u_i.time_speed / obj.get("time_speed_bonus", 1.0))
 	set_process($Panel/ReactionInProgress.visible)
+	$Panel/Control/HSlider.visible = not is_equal_approx(max_slider_value, 0.0)
+	if $Panel/ReactionInProgress.visible:
+		set_text_to_white()
+		$Panel/Transform.visible = true
+		$Panel/Transform.text = "%s (G)" % tr("STOP")
+	else:
+		$Panel/Transform.visible = $Panel/Control/HSlider.max_value != 0 and not obj.bldg.has("qty")
+		$Panel/Transform.text = "%s (G)" % tr("TRANSFORM")
+
+func get_max_slider_value():
 	var max_value:float = 0.0
 	if atom_to_rsrc:
 		for atom in ratios:
@@ -132,17 +144,8 @@ func refresh():
 			max_value = Helper.get_sum_of_dict(game.stone)
 		else:
 			max_value = game[rsrc_type][resource_selected]
-	$Panel/Control/HSlider.max_value = min(game.energy * au_mult / reactions[resource_selected].energy_cost * path_2_value, max_value)
-	$Panel/Control/HSlider.step = int($Panel/Control/HSlider.max_value / 500)
-	$Panel/Control/HSlider.visible = not is_equal_approx($Panel/Control/HSlider.max_value, 0)
-	if $Panel/ReactionInProgress.visible:
-		set_text_to_white()
-		$Panel/Transform.visible = true
-		$Panel/Transform.text = "%s (G)" % tr("STOP")
-	else:
-		$Panel/Transform.visible = $Panel/Control/HSlider.max_value != 0 and not obj.bldg.has("qty")
-		$Panel/Transform.text = "%s (G)" % tr("TRANSFORM")
-
+	return min(game.energy * au_mult / reactions[resource_selected].energy_cost * path_2_value, max_value)
+	
 func reset_poses(_name:String):
 	resource_selected = _name
 	if _name != "stone":
@@ -165,17 +168,18 @@ func _on_Switch_pressed(refresh:bool = true):
 	if refresh:
 		_on_HSlider_value_changed($Panel/Control/HSlider.value)
 
-func _on_HSlider_value_changed(value):
+func _on_HSlider_value_changed(value): # value is always between 0.0 and 1.0
+	var rsrc_value = value * get_max_slider_value()
 	var MM_dict = {}
 	if resource_selected == "stone":
 		var sum = Helper.get_sum_of_dict(game.stone)
 		for atom in atom_costs:
 			if game.stone.has(atom):
-				atom_costs[atom] = value * ratios[atom] * game.stone[atom] / sum if sum != 0 else 0
+				atom_costs[atom] = rsrc_value * ratios[atom] * game.stone[atom] / sum if sum != 0 else 0
 	else:
 		for atom in atom_costs:
-			atom_costs[atom] = value * ratios[atom]
-	MM_dict[resource_selected] = value
+			atom_costs[atom] = rsrc_value * ratios[atom]
+	MM_dict[resource_selected] = rsrc_value
 	rsrc_nodes_from = Helper.put_rsrc($Panel/Control2/ScrollContainer/From, 32, atom_costs, true, atom_to_rsrc)
 	rsrc_nodes_to = Helper.put_rsrc($Panel/Control2/To, 32, MM_dict, true, not atom_to_rsrc)
 	refresh()
@@ -221,6 +225,7 @@ func _on_Transform_pressed():
 		var rsrc = $Panel/Control/HSlider.value
 		if rsrc == 0:
 			return
+		rsrc *= get_max_slider_value()
 		var rsrc_to_deduct = {}
 		if atom_to_rsrc:
 			rsrc_to_deduct = atom_costs.duplicate(true)

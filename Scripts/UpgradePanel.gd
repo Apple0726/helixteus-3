@@ -55,7 +55,7 @@ func refresh():
 			path1._on_Button_pressed()
 		else:
 			game.popup(tr("NO_UPGRADE"), 1.5)
-			game.toggle_panel(self)
+			game.toggle_panel(panel_var_name)
 	$Building.texture = load("res://Graphics/Buildings/%s.png" % building_name)
 	
 func geo_seq(q:float, start_n:int, end_n:int):

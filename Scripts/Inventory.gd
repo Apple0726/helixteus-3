@@ -5,7 +5,6 @@ var buy_sell_scene = preload("res://Scenes/Panels/BuySellPanel.tscn")
 var buy_sell
 @onready var inventory_grid = $Control/VBox/Inventory
 @onready var grid = $Control/VBox/GridContainer
-@onready var particles_hbox = $Control/ParticlesHBox
 @onready var info = $Information
 var item_hovered:int = -1
 var hbox_data:Array = []
@@ -41,7 +40,6 @@ func _on_Items_pressed():
 	info.text = tr("INV_ITEMS_DESC")
 	inventory_grid.visible = true
 	grid.visible = false
-	particles_hbox.visible = false
 	for item in inventory_grid.get_children():
 		item.queue_free()
 	for i in len(game.items):
@@ -77,7 +75,6 @@ func _on_Materials_pressed():
 	info.text = tr("INV_MAT_DESC")
 	inventory_grid.visible = false
 	grid.visible = true
-	particles_hbox.visible = false
 	hbox_data = Helper.put_rsrc(grid, 48, game.mats, true, false, false)
 	for mat in hbox_data:
 		var texture = mat.rsrc.get_node("Texture2D")
@@ -85,6 +82,7 @@ func _on_Materials_pressed():
 			texture.modulate = Color(0.2, 0.2, 0.2)
 			mat.rsrc.get_node("Text")["theme_override_colors/font_color"] = Color.DIM_GRAY
 			mat.rsrc.get_node("Text").text = "?"
+			mat.rsrc.set_process(false)
 			continue
 		texture.mouse_entered.connect(show_mat.bind(mat.name))
 		texture.mouse_exited.connect(game.hide_tooltip)
@@ -97,13 +95,15 @@ func _on_Metals_pressed():
 	info.text = tr("INV_MET_DESC")
 	inventory_grid.visible = false
 	grid.visible = true
-	particles_hbox.visible = false
 	hbox_data = Helper.put_rsrc(grid, 48, game.mets, true, false, false)
 	for met in hbox_data:
-		if not game.show.has(met.name):
-			met.rsrc.visible = false
-			continue
 		var texture = met.rsrc.get_node("Texture2D")
+		if not game.show.has(met.name):
+			texture.modulate = Color(0.2, 0.2, 0.2)
+			met.rsrc.get_node("Text")["theme_override_colors/font_color"] = Color.DIM_GRAY
+			met.rsrc.get_node("Text").text = "?"
+			met.rsrc.set_process(false)
+			continue
 		texture.mouse_entered.connect(show_met.bind(met.name))
 		texture.mouse_exited.connect(game.hide_tooltip)
 		texture.pressed.connect(show_buy_sell.bind("Metals", met.name))
@@ -115,12 +115,15 @@ func _on_Atoms_pressed():
 	info.text = tr("INV_ATOMS_DESC")
 	inventory_grid.visible = false
 	grid.visible = true
-	particles_hbox.visible = false
 	hbox_data = Helper.put_rsrc(grid, 48, game.atoms, true, false, false)
 	for atom in hbox_data:
-		if not game.show.has(atom.name):
-			atom.rsrc.visible = false
 		var texture = atom.rsrc.get_node("Texture2D")
+		if not game.show.has(atom.name):
+			texture.modulate = Color(0.2, 0.2, 0.2)
+			atom.rsrc.get_node("Text")["theme_override_colors/font_color"] = Color.DIM_GRAY
+			atom.rsrc.get_node("Text").text = "?"
+			atom.rsrc.set_process(false)
+			continue
 		texture.mouse_entered.connect(show_atom.bind(atom.name))
 		texture.mouse_exited.connect(game.hide_tooltip)
 	$Control/VBox/BuySell.visible = false
@@ -130,8 +133,18 @@ func _on_Particles_pressed():
 	tab = "particles"
 	info.text = tr("INV_PARTICLES_DESC")
 	inventory_grid.visible = false
-	grid.visible = false
-	particles_hbox.visible = true
+	grid.visible = true
+	hbox_data = Helper.put_rsrc(grid, 48, game.particles, true, false, false)
+	for particles in hbox_data:
+		var texture = particles.rsrc.get_node("Texture2D")
+		if not game.show.has(particles.name):
+			texture.modulate = Color(0.2, 0.2, 0.2)
+			particles.rsrc.get_node("Text")["theme_override_colors/font_color"] = Color.DIM_GRAY
+			particles.rsrc.get_node("Text").text = "?"
+			particles.rsrc.set_process(false)
+			continue
+		texture.mouse_entered.connect(show_part.bind(particles.name))
+		texture.mouse_exited.connect(game.hide_tooltip)
 	$Control/VBox/BuySell.visible = false
 
 func show_buy_sell(type:String, obj:String):
