@@ -5,6 +5,7 @@
 [ext_resource type="Texture2D" uid="uid://t70si4f413j5" path="res://Graphics/Effects/spotlight_4.png" id="1_w4ys2"]
 [ext_resource type="Shader" uid="uid://u62js3345ubk" path="res://Shaders/Star.gdshader" id="2_dveyw"]
 [ext_resource type="Texture2D" uid="uid://dn0b5qn5vtand" path="res://Graphics/Science/MAE.png" id="4_77icn"]
+[ext_resource type="Texture2D" uid="uid://b8xut3yn8djrb" path="res://Graphics/Buttons/target.png" id="6_jgu31"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_18mo0"]
 resource_local_to_scene = true
@@ -16,7 +17,23 @@ shader_parameter/amplitude = 0.1
 shader_parameter/alpha = 1.0
 shader_parameter/color = Color(1, 1, 1, 1)
 
-[node name="Button" type="Button" unique_id=693680846]
+[sub_resource type="InputEventKey" id="InputEventKey_6wj2k"]
+device = -1
+physical_keycode = 70
+unicode = 102
+
+[sub_resource type="Shortcut" id="Shortcut_jgu31"]
+events = [SubResource("InputEventKey_6wj2k")]
+
+[sub_resource type="InputEventKey" id="InputEventKey_jgu31"]
+device = -1
+keycode = 88
+unicode = 120
+
+[sub_resource type="Shortcut" id="Shortcut_bbh3e"]
+events = [SubResource("InputEventKey_jgu31")]
+
+[node name="Button" type="Button" unique_id=41489719]
 custom_minimum_size = Vector2(0, 140)
 offset_right = 416.0
 offset_bottom = 140.0
@@ -92,6 +109,9 @@ offset_left = 68.0
 offset_top = 100.0
 offset_right = 185.0
 offset_bottom = 133.0
+mouse_filter = 1
+shortcut = SubResource("Shortcut_jgu31")
+shortcut_in_tooltip = false
 text = "Construct (C)"
 
 [node name="Destroy" type="Button" parent="." unique_id=1555636640]
@@ -100,4 +120,21 @@ offset_left = 248.0
 offset_top = 100.0
 offset_right = 350.0
 offset_bottom = 133.0
+mouse_filter = 1
+shortcut = SubResource("Shortcut_bbh3e")
+shortcut_in_tooltip = false
 text = "Destroy (X)"
+
+[node name="View" type="TextureButton" parent="." unique_id=1281057285]
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 12.0
+offset_top = -40.0
+offset_right = 40.0
+offset_bottom = -8.0
+grow_vertical = 0
+texture_normal = ExtResource("6_jgu31")
+ignore_texture_size = true
+stretch_mode = 5

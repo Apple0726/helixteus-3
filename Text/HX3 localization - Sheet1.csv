@@ -1754,3 +1754,4 @@ SHIPYARD_ERROR_1,"This galaxy is completely conquered, so there is no point buil
 Construct a shipyard in another galaxy and build fighters there.",,,,,,,,,,,,
 SHIPYARD_ERROR_2,"This cluster is completely conquered, so there is no point building fighters in this cluster anymore (they cannot travel across clusters).
 Construct a shipyard in another cluster and build fighters there.",,,,,,,,,,,,
+VIEW_STAR,View star,,,,,,,,,,,,

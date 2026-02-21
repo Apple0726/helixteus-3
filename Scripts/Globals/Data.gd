@@ -85,12 +85,12 @@ var MS_costs = {	"doom_ball":{"money":5.4e12, "stone":5.4e7, "silicon":400000, "
 					"PK_2":{"money":6.5e19, "stone":8.75e20, "iron":2.25e16, "aluminium":1.5e15},
 }
 
-var MS_output = {	"DS_0":1.0e8,
-					"DS_1":3.8e9,
-					"DS_2":1.5e11,
-					"DS_3":5.8e12,
-					"DS_4":2.2e14,
-					"DS_5":2.2e14,
+var MS_output = {	"DS_0":1.0e7,
+					"DS_1":3.8e8,
+					"DS_2":1.5e10,
+					"DS_3":5.8e11,
+					"DS_4":2.2e13,
+					"DS_5":2.2e13,
 					"MME_0":4800,
 					"MME_1":254000,
 					"MME_2":8.0e7,

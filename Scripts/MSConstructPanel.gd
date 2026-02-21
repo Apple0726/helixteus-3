@@ -63,7 +63,9 @@ func on_MS_out():
 func on_MS_click(MS:String):
 	if MS == "" or game.c_v != "system":
 		return
+	game.view.obj.build_all_MS_stages = build_all
 	if star_selected != -1 and MS in ["DS", "CBS", "MB", "PK"]:
+		game.view.obj.star_over_id = star_selected
 		game.view.obj.build_MS(game.system_data[game.c_s].stars[star_selected], MS)
 		return
 	if MS == "DS":
@@ -103,7 +105,6 @@ func on_MS_click(MS:String):
 			game.popup(tr("NOT_ALL_STAGES_UNLOCKED"), 2.0)
 			return
 	hide_panel()
-	game.view.obj.build_all_MS_stages = build_all
 
 
 func _on_construct_panel_animation_animation_finished(anim_name):
@@ -123,6 +124,7 @@ func _on_tree_exited():
 
 
 func _on_build_all_toggled(toggled_on: bool) -> void:
+	build_all = toggled_on
 	for btn in $Panel/ScrollContainer/VBoxContainer.get_children():
 		if toggled_on:
 			btn.visible = game.science_unlocked.has("{name}{stage}".format({"name":btn.name, "stage":Data.MS_num_stages[btn.name] if toggled_on else 0}))

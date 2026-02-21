@@ -1,8 +1,14 @@
 extends Button
 
+@onready var game = get_node("/root/Game")
+
 func _ready() -> void:
 	$Construct.text = tr("CONSTRUCT") + " (C)"
 	$Destroy.text = tr("DESTROY") + " (X)"
+	$MS.mouse_entered.connect(game.show_tooltip.bind(tr("STAR_HAS_MS")))
+	$MS.mouse_exited.connect(game.hide_tooltip)
+	$View.mouse_entered.connect(game.show_tooltip.bind(tr("VIEW_STAR")))
+	$View.mouse_exited.connect(game.hide_tooltip)
 
 func set_star_info(type:int, _class:String, temperature:float, radius:float, mass:float, luminosity:float):
 	$Star.texture = load("res://Graphics/Effects/spotlight_%s.png" % [int(temperature) % 3 + 4])

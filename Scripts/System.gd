@@ -506,27 +506,30 @@ func show_planet_info(id:int, l_id:int):
 var MS_constr_data:Dictionary = {}
 var current_MS_action = ""
 
+func upgrade_MS():
+	if MS_constr_data.is_empty():
+		return
+	if MS_constr_data.has("confirm_repair"):
+		build_MS(MS_constr_data.obj, MS_constr_data.obj.MS)
+		current_MS_action = ""
+		MS_constr_data.erase("confirm_repair")
+	elif MS_constr_data.has("confirm_upgrade") and not MS_constr_data.confirm_upgrade:
+		current_MS_action = "upgrading"
+		var MS:String = MS_constr_data.obj.MS
+		call("show_%s_costs" % MS, MS_constr_data.obj)
+		MS_constr_data.confirm_upgrade = true
+		await get_tree().process_frame
+		Helper.add_label("{key}: {confirm}".format({"key":"F", "confirm": tr("CONFIRM")}))
+	elif current_MS_action == "upgrading":
+		build_MS(MS_constr_data.obj, MS_constr_data.obj.MS)
+		current_MS_action = ""
+	
 func _input(event):
 	if "building" in game.bottom_info_action and Input.is_action_just_pressed("right_click"):
 		game._on_BottomInfo_close_button_pressed()
 		return
 	if Input.is_action_just_released("F"):
-		if not MS_constr_data.is_empty():
-			if MS_constr_data.has("confirm_repair"):
-				build_MS(MS_constr_data.obj, MS_constr_data.obj.MS)
-				current_MS_action = ""
-				MS_constr_data.erase("confirm_repair")
-			elif MS_constr_data.has("confirm_upgrade") and not MS_constr_data.confirm_upgrade:
-				current_MS_action = "upgrading"
-				var MS:String = MS_constr_data.obj.MS
-				call("show_%s_costs" % MS, MS_constr_data.obj)
-				MS_constr_data.confirm_upgrade = true
-				await get_tree().process_frame
-				Helper.add_label("{key}: {confirm}".format({"key":"F", "confirm": tr("CONFIRM")}))
-			elif current_MS_action == "upgrading":
-				build_MS(MS_constr_data.obj, MS_constr_data.obj.MS)
-				current_MS_action = ""
-		elif planet_hovered != -1 and game.planet_data[planet_hovered].has("bldg") and game.planet_data[planet_hovered].bldg.has("name"):
+		if planet_hovered != -1 and game.planet_data[planet_hovered].has("bldg") and game.planet_data[planet_hovered].bldg.has("name"):
 			game.toggle_panel("upgrade_panel", false)
 			game.upgrade_panel.ids = []
 			game.upgrade_panel.planet = game.planet_data[planet_hovered]
@@ -693,19 +696,19 @@ func build_MS(obj:Dictionary, MS_to_build:String):
 				var p_i:Dictionary = game.planet_data[i]
 				if p_i.is_empty():
 					continue
-				p_i.cost_div = max(p_i.get("cost_div", 1.0), cost_div)
+				p_i["cost_div"] = max(p_i.get("cost_div", 1.0), cost_div)
 				if p_i.has("cost_div_dict"):
 					p_i.cost_div_dict[star_over_id] = cost_div
 				else:
-					p_i.cost_div_dict = {star_over_id:cost_div}
+					p_i["cost_div_dict"] = {star_over_id:cost_div}
 			for i in len(stars_info):
 				if i != star_over_id:
 					var _star:Dictionary = stars_info[i]
-					_star.cost_div = max(_star.get("cost_div", 1.0), cost_div)
+					_star["cost_div"] = max(_star.get("cost_div", 1.0), cost_div)
 					if _star.has("cost_div_dict"):
 						_star.cost_div_dict[star_over_id] = cost_div
 					else:
-						_star.cost_div_dict = {star_over_id:cost_div}
+						_star["cost_div_dict"] = {star_over_id:cost_div}
 			queue_redraw()
 		game.HUD.refresh()
 		game.get_node("UI/Panel").hide()
@@ -827,11 +830,11 @@ func show_MS_construct_info(star:Dictionary, star_node):
 	if game.bottom_info_action == "building_DS":
 		if not has_MS:
 			show_DS_costs(star, true)
-			add_MS_sprite(star_node, {"MS":"DS", "MS_lv":0})
+			add_MS_sprite(star_node, {"MS":"DS", "MS_lv":Data.MS_num_stages.DS if build_all_MS_stages else 0})
 	elif game.bottom_info_action == "building_CBS":
 		if not has_MS:
 			show_CBS_costs(star, true)
-			add_MS_sprite(star_node, {"MS":"CBS", "MS_lv":0})
+			add_MS_sprite(star_node, {"MS":"CBS", "MS_lv":Data.MS_num_stages.CBS if build_all_MS_stages else 0})
 	elif game.bottom_info_action == "building_MB":
 		if not has_MS or not star.MS == "MB":
 			game.get_node("UI/Panel").visible = true
@@ -847,7 +850,7 @@ func show_MS_construct_info(star:Dictionary, star_node):
 	elif game.bottom_info_action == "building_PK":
 		if not has_MS:
 			show_PK_costs(star, true)
-			add_MS_sprite(star_node, {"MS":"PK", "MS_lv":0})
+			add_MS_sprite(star_node, {"MS":"PK", "MS_lv":Data.MS_num_stages.PK if build_all_MS_stages else 0})
 	elif has_MS:
 		game.get_node("UI/Panel").visible = true
 		Helper.put_rsrc(vbox, 32, {})
