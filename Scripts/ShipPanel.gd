@@ -35,6 +35,7 @@ func add_ship_node(id: int):
 	ship.get_node("TextureButton").texture_normal = load("res://Graphics/Ships/Ship%s.png" % id)
 	ship.get_node("TextureButton").texture_click_mask = load("res://Graphics/Ships/Ship%sCM.png" % id)
 	ship.position = game.ship_data[id].initial_position / 1.8
+	ship.get_node("TextureButton").scale *= 1000.0 / ship.get_node("TextureButton").texture_normal.get_width()
 	target_ship_positions.append(ship.position)
 	$Ships/Battlefield.add_child(ship)
 	ship_nodes.append(ship)
