@@ -4430,7 +4430,7 @@ func get_4th_ship():
 	if len(ship_data) == 3:
 		popup(tr("SHIP_CONTROL_SUCCESS"), 1.5)
 		add_new_ship_data()
-		Helper.add_ship_XP(3, 250000)
+		Helper.add_ship_XP(3, 200000)
 		if not achievement_data.progression.has("4th_ship"):
 			earn_achievement("progression", "4th_ship")
 		switch_view("ship_customize_screen", {"ship_id":3, "respeccing":true, "label_text":tr("CUSTOMIZE_NEW_SHIP")})

@@ -243,6 +243,9 @@ func change_overlay(overlay_id:int, gradient:Gradient, object:Dictionary = {}):
 				else:
 					overlay.circle.modulate = gradient.sample(1)
 
+func _input(event):
+	if game.bottom_info_action == "convert_to_GS" and Input.is_action_just_pressed("right_click"):
+		game._on_BottomInfo_close_button_pressed()
 
 func _on_Galaxy_tree_exited():
 	queue_free()

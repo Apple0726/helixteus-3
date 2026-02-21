@@ -12,7 +12,7 @@ func _ready() -> void:
 	$Info/HP.position.y = sprite_width * 0.4
 	$Info/HP.size.x = sprite_width * 0.8
 	$Info/Label.position.y = sprite_width * 0.5 + 20
-	$Info/StatusEffects.position.x = -sprite_width * 0.5 - 11.0
+	$Info/StatusEffects.position.x = -sprite_width * 0.5 - 80.0
 	$Info/StatusEffects.position.y = -sprite_width * 0.5
 	$Info/Buffs.position.y = sprite_width * 0.5 + 20
 	$Info/Icon.position.y = sprite_width * 0.5 + 20

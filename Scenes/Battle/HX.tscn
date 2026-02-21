@@ -535,9 +535,9 @@ label_settings = SubResource("LabelSettings_vw23x")
 modulate = Color(0, 1, 0, 1)
 light_mask = 0
 layout_mode = 0
-offset_left = 60.0
+offset_left = -60.0
 offset_top = 32.0
-offset_right = 124.0
+offset_right = 4.0
 offset_bottom = 37.0
 rotation = -1.5708
 value = 50.0
@@ -547,10 +547,11 @@ texture_progress = ExtResource("6")
 
 [node name="StatusEffects" parent="Info" unique_id=876176035 instance=ExtResource("13_lq603")]
 layout_mode = 0
-offset_left = 68.0
+offset_left = -124.0
 offset_top = -40.0
-offset_right = 148.0
-offset_bottom = 44.0
+offset_right = -44.0
+offset_bottom = 68.0
+columns = 2
 
 [node name="Buffs" parent="Info" unique_id=1571740819 instance=ExtResource("14_f8wif")]
 layout_mode = 0

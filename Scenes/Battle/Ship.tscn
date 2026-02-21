@@ -4,8 +4,9 @@
 [ext_resource type="Script" uid="uid://cfrufmr2v8ebl" path="res://Scripts/Battle/Ship.gd" id="2"]
 [ext_resource type="PackedScene" uid="uid://fo4yl8v4ld8c" path="res://Scenes/Battle/FireWeaponAim.tscn" id="2_ogdx2"]
 [ext_resource type="Shader" uid="uid://c17je4akgvnni" path="res://Shaders/Ship.gdshader" id="3_cptad"]
-[ext_resource type="Texture2D" uid="uid://c57w6sxs3iij0" path="res://Graphics/Ships/Ship2 top down.png" id="4_ymlex"]
+[ext_resource type="Texture2D" uid="uid://ctnki8fjf2n7" path="res://Graphics/Ships/Ship3 top down.png" id="4_4hicg"]
 [ext_resource type="Texture2D" uid="uid://bx1hvetixqpwi" path="res://Graphics/Misc/Bar2.png" id="6"]
+[ext_resource type="Texture2D" uid="uid://dvgpvly0jmhh1" path="res://Graphics/Ships/Ship2 light.png" id="6_4hicg"]
 [ext_resource type="Theme" uid="uid://cp2u1kgj60ic" path="res://Resources/default_theme.tres" id="6_ymlex"]
 [ext_resource type="Texture2D" uid="uid://yhdxrw2q1yep" path="res://Graphics/HX/Status effects/Stun.png" id="8"]
 [ext_resource type="PackedScene" uid="uid://m8wrm55x0xbe" path="res://Scenes/Battle/StatusEffects.tscn" id="8_ymlex"]
@@ -29,7 +30,7 @@ shader_parameter/frequency = 6.0
 shader_parameter/alpha = 1.0
 shader_parameter/flash = 0.0
 shader_parameter/flash_color = Color(1, 1, 1, 1)
-shader_parameter/starlight_angle = 0.0
+shader_parameter/starlight_angle = 0.37600001786
 shader_parameter/starlight_color = Color(1, 1, 1, 1)
 shader_parameter/starlight_energy = 1.0
 
@@ -402,6 +403,212 @@ _data = {
 &"RESET": SubResource("Animation_itm55")
 }
 
+[sub_resource type="Animation" id="Animation_ikbbp"]
+resource_name = "Blink"
+length = 2.0
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("WhiteRight:energy")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.23333333, 0.26666668, 0.46666667, 2),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1),
+"update": 0,
+"values": [0.0, 0.0, 2.0, 0.0, 0.0]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("WhiteLeft:energy")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.23333333, 0.26666668, 0.4666667, 2),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1),
+"update": 0,
+"values": [0.0, 0.0, 2.0, 0.0, 0.0]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("WhiteRight2:energy")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0, 0.9, 0.93333334, 1.1333332, 2),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1),
+"update": 0,
+"values": [0.0, 0.0, 2.0, 0.0, 0.0]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("WhiteLeft2:energy")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0, 0.9, 0.93333334, 1.1333332, 2),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1),
+"update": 0,
+"values": [0.0, 0.0, 2.0, 0.0, 0.0]
+}
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("WhiteRear:energy")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(0, 1.6, 1.6333333, 1.8333334, 2),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1),
+"update": 0,
+"values": [0.0, 0.0, 2.0, 0.0, 0.0]
+}
+tracks/5/type = "value"
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/path = NodePath("WhiteFront:energy")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/keys = {
+"times": PackedFloat32Array(0, 1.2666667, 1.3, 1.5, 2),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1),
+"update": 0,
+"values": [0.0, 0.0, 2.0, 0.0, 0.0]
+}
+tracks/6/type = "value"
+tracks/6/imported = false
+tracks/6/enabled = true
+tracks/6/path = NodePath("WhiteLeftWing:energy")
+tracks/6/interp = 1
+tracks/6/loop_wrap = true
+tracks/6/keys = {
+"times": PackedFloat32Array(0, 1.2666667, 1.3, 1.5, 2),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1),
+"update": 0,
+"values": [0.0, 0.0, 2.0, 0.0, 0.0]
+}
+tracks/7/type = "value"
+tracks/7/imported = false
+tracks/7/enabled = true
+tracks/7/path = NodePath("WhiteRightWing:energy")
+tracks/7/interp = 1
+tracks/7/loop_wrap = true
+tracks/7/keys = {
+"times": PackedFloat32Array(0, 1.2666667, 1.3, 1.5, 2),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1),
+"update": 0,
+"values": [0.0, 0.0, 2.0, 0.0, 0.0]
+}
+
+[sub_resource type="Animation" id="Animation_25wa2"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("WhiteRight:energy")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [0.0]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("WhiteLeft:energy")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [0.0]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("WhiteRight2:energy")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [0.0]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("WhiteLeft2:energy")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [0.0]
+}
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("WhiteRear:energy")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [0.0]
+}
+tracks/5/type = "value"
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/path = NodePath("WhiteFront:energy")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [0.0]
+}
+tracks/6/type = "value"
+tracks/6/imported = false
+tracks/6/enabled = true
+tracks/6/path = NodePath("WhiteLeftWing:energy")
+tracks/6/interp = 1
+tracks/6/loop_wrap = true
+tracks/6/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [0.0]
+}
+tracks/7/type = "value"
+tracks/7/imported = false
+tracks/7/enabled = true
+tracks/7/path = NodePath("WhiteRightWing:energy")
+tracks/7/interp = 1
+tracks/7/loop_wrap = true
+tracks/7/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [0.0]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_utm2p"]
+_data = {
+&"Blink": SubResource("Animation_ikbbp"),
+&"RESET": SubResource("Animation_25wa2")
+}
+
 [sub_resource type="CircleShape2D" id="CircleShape2D_fh3h1"]
 resource_local_to_scene = true
 radius = 36.0
@@ -575,11 +782,10 @@ visible = false
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=485336625]
 light_mask = 3
 material = SubResource("4")
-texture = ExtResource("4_ymlex")
+texture = ExtResource("4_4hicg")
 
 [node name="Ship1Lights" type="Node2D" parent="Sprite2D" unique_id=531901869]
 visible = false
-position = Vector2(-4, 0)
 
 [node name="Red" type="PointLight2D" parent="Sprite2D/Ship1Lights" unique_id=1215199160]
 position = Vector2(-80, -223)
@@ -646,7 +852,7 @@ libraries/ = SubResource("AnimationLibrary_4y570")
 autoplay = &"Blink"
 
 [node name="Ship2Lights" type="Node2D" parent="Sprite2D" unique_id=367182497]
-position = Vector2(8, 0)
+visible = false
 
 [node name="Red" type="PointLight2D" parent="Sprite2D/Ship2Lights" unique_id=380543574]
 position = Vector2(-63, -172)
@@ -689,30 +895,36 @@ range_item_cull_mask = 2
 texture = ExtResource("10")
 
 [node name="Ship3Lights" type="Node2D" parent="Sprite2D" unique_id=1895054737]
-position = Vector2(52, 52)
+visible = false
 
 [node name="Red" type="PointLight2D" parent="Sprite2D/Ship3Lights" unique_id=2049982308]
-position = Vector2(-187, -267)
+position = Vector2(-131, -214)
 color = Color(1, 0, 0, 1)
 energy = 1.5
 range_item_cull_mask = 2
 texture = ExtResource("10")
 
+[node name="Ship" type="PointLight2D" parent="Sprite2D/Ship3Lights" unique_id=1124859365]
+scale = Vector2(4, 4)
+energy = 0.89
+range_item_cull_mask = 2
+texture = ExtResource("6_4hicg")
+
 [node name="Green" type="PointLight2D" parent="Sprite2D/Ship3Lights" unique_id=431557267]
-position = Vector2(-187, 161)
+position = Vector2(-133, 213)
 color = Color(0, 1, 0, 1)
 energy = 1.5
 range_item_cull_mask = 2
 texture = ExtResource("10")
 
 [node name="WhiteFront" type="PointLight2D" parent="Sprite2D/Ship3Lights" unique_id=1226395197]
-position = Vector2(186, -51)
+position = Vector2(239, 0)
 energy = 0.0
 range_item_cull_mask = 2
 texture = ExtResource("10")
 
 [node name="WhiteLeft" type="PointLight2D" parent="Sprite2D/Ship3Lights" unique_id=1135710939]
-position = Vector2(-191, -270)
+position = Vector2(-116, -211)
 energy = 0.0
 range_item_cull_mask = 2
 texture = ExtResource("10")
@@ -722,26 +934,90 @@ libraries/ = SubResource("AnimationLibrary_ikbbp")
 autoplay = &"Blink"
 
 [node name="WhiteRight" type="PointLight2D" parent="Sprite2D/Ship3Lights" unique_id=1133885473]
-position = Vector2(-189, 164)
+position = Vector2(-120, 209)
 energy = 0.0
 range_item_cull_mask = 2
 texture = ExtResource("10")
 
 [node name="WhiteRearLeft" type="PointLight2D" parent="Sprite2D/Ship3Lights" unique_id=410205965]
-position = Vector2(-277, -91)
+position = Vector2(-226, -41)
 energy = 0.0
 range_item_cull_mask = 2
 texture = ExtResource("10")
 
 [node name="WhiteRearRight" type="PointLight2D" parent="Sprite2D/Ship3Lights" unique_id=248796945]
-position = Vector2(-277, -14)
+position = Vector2(-227, 37)
 energy = 0.0
 range_item_cull_mask = 2
 texture = ExtResource("10")
 
 [node name="Ship4Lights" type="Node2D" parent="Sprite2D" unique_id=1065715036]
-visible = false
-position = Vector2(52, 52)
+
+[node name="Red" type="PointLight2D" parent="Sprite2D/Ship4Lights" unique_id=2143853970]
+position = Vector2(-39, -183)
+color = Color(1, 0, 0, 1)
+energy = 1.5
+range_item_cull_mask = 2
+texture = ExtResource("10")
+
+[node name="Green" type="PointLight2D" parent="Sprite2D/Ship4Lights" unique_id=2138978049]
+position = Vector2(-35, 180)
+color = Color(0, 1, 0, 1)
+energy = 1.5
+range_item_cull_mask = 2
+texture = ExtResource("10")
+
+[node name="WhiteLeft" type="PointLight2D" parent="Sprite2D/Ship4Lights" unique_id=1577926001]
+position = Vector2(-90, -33)
+energy = 0.0
+range_item_cull_mask = 2
+texture = ExtResource("10")
+
+[node name="WhiteLeft2" type="PointLight2D" parent="Sprite2D/Ship4Lights" unique_id=997908105]
+position = Vector2(-164, -21)
+energy = 0.0
+range_item_cull_mask = 2
+texture = ExtResource("10")
+
+[node name="WhiteRight" type="PointLight2D" parent="Sprite2D/Ship4Lights" unique_id=684659336]
+position = Vector2(-90, 33)
+energy = 0.0
+range_item_cull_mask = 2
+texture = ExtResource("10")
+
+[node name="WhiteRight2" type="PointLight2D" parent="Sprite2D/Ship4Lights" unique_id=1238430807]
+position = Vector2(-167, 21)
+energy = 0.0
+range_item_cull_mask = 2
+texture = ExtResource("10")
+
+[node name="WhiteRear" type="PointLight2D" parent="Sprite2D/Ship4Lights" unique_id=1514116100]
+position = Vector2(-225, 0)
+energy = 0.0
+range_item_cull_mask = 2
+texture = ExtResource("10")
+
+[node name="WhiteFront" type="PointLight2D" parent="Sprite2D/Ship4Lights" unique_id=907436819]
+position = Vector2(234, 0)
+energy = 0.0
+range_item_cull_mask = 2
+texture = ExtResource("10")
+
+[node name="WhiteLeftWing" type="PointLight2D" parent="Sprite2D/Ship4Lights" unique_id=171341791]
+position = Vector2(-93, -180)
+energy = 0.0
+range_item_cull_mask = 2
+texture = ExtResource("10")
+
+[node name="WhiteRightWing" type="PointLight2D" parent="Sprite2D/Ship4Lights" unique_id=974899344]
+position = Vector2(-93, 180)
+energy = 0.0
+range_item_cull_mask = 2
+texture = ExtResource("10")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Sprite2D/Ship4Lights" unique_id=1100811973]
+libraries/ = SubResource("AnimationLibrary_utm2p")
+autoplay = &"Blink"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=126018853]
 visible = false
@@ -804,10 +1080,11 @@ horizontal_alignment = 1
 
 [node name="StatusEffects" parent="Info" unique_id=1258505592 instance=ExtResource("8_ymlex")]
 layout_mode = 0
-offset_left = -200.0
+offset_left = -173.0
 offset_top = -40.0
-offset_right = -120.0
-offset_bottom = 44.0
+offset_right = -93.0
+offset_bottom = 68.0
+columns = 2
 
 [node name="Buffs" parent="Info" unique_id=98842806 instance=ExtResource("9_0r8nl")]
 layout_mode = 0

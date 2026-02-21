@@ -59,6 +59,7 @@ func turn_on_lights(index: int):
 	for i in 4:
 		if i == index:
 			get_node("Sprite2D/Ship%sLights" % (i+1)).show()
+			get_node("Sprite2D/Ship%sLights" % (i+1)).scale *= $Sprite2D.texture.get_width() / 512.0
 		else:
 			get_node("Sprite2D/Ship%sLights" % (i+1)).hide()
 

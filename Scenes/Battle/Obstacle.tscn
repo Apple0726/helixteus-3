@@ -106,10 +106,11 @@ stretch_mode = 6
 
 [node name="StatusEffects" parent="Info" unique_id=2120886801 instance=ExtResource("5_c5aoj")]
 layout_mode = 0
-offset_left = -224.0
+offset_left = -188.0
 offset_top = -40.0
-offset_right = -136.0
-offset_bottom = 40.0
+offset_right = -100.0
+offset_bottom = 68.0
+columns = 2
 
 [node name="Buffs" parent="Info" unique_id=871219607 instance=ExtResource("5_fg6fk")]
 layout_mode = 0
