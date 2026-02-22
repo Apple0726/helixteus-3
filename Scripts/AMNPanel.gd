@@ -20,9 +20,9 @@ var reactions:Dictionary = {
 	"titanium":{"type":"mets", "atoms":{"Ti":1}, "energy_cost":12000.0, "difficulty":0.5},
 	"platinum":{"type":"mets", "atoms":{"Pt":1}, "energy_cost":40000.0, "difficulty":2.0},
 	"diamond":{"type":"mets", "atoms":{"C":1}, "energy_cost":85000.0, "difficulty":2.2},
-	"nanocrystal":{"type":"mets", "atoms":{"Si":1, "O":2, "Na":1}, "energy_cost":1.3e8, "difficulty":2.9},
-	"quillite":{"type":"mats", "atoms":{"Si":1, "O":2, "Ne":1}, "energy_cost":1.9e8, "difficulty":3.2},
-	"mythril":{"type":"mets", "atoms":{"W":2, "Os":1, "Ta":2}, "energy_cost":4.0e9, "difficulty":4.8},
+	"nanocrystal":{"type":"mets", "atoms":{"Si":1, "O":2, "Na":1}, "energy_cost":1.3e9, "difficulty":35.0},
+	"quillite":{"type":"mats", "atoms":{"Si":1, "O":2, "Ne":1}, "energy_cost":1.9e9, "difficulty":25.0},
+	"mythril":{"type":"mets", "atoms":{"W":2, "Os":1, "Ta":2}, "energy_cost":4.0e11, "difficulty":600.0},
 }
 var rsrc_nodes_from:Array
 var rsrc_nodes_to:Array
@@ -35,8 +35,6 @@ func _ready():
 	$Desc.text = tr("REACTIONS_PANEL_DESC")
 	for _name in reactions:
 		var btn = preload("res://Scenes/ReactionButton.tscn").instantiate()
-		if _name in ["nanocrystal", "mythril", "quillite"] and not game.science_unlocked.has("AMM"):
-			btn.get_node("TextureRect").modulate = Color(0.2, 0.2, 0.2)
 		if _name == "stone":
 			btn.get_node("TextureRect").texture = Data.stone_icon
 		elif reactions[_name].type == "mats":
@@ -45,11 +43,18 @@ func _ready():
 			btn.get_node("TextureRect").texture = load("res://Graphics/Metals/%s.png" % _name)
 		btn.name = _name
 		btn.custom_minimum_size = Vector2.ONE * 100.0
-		btn.mouse_entered.connect(game.show_tooltip.bind(tr(_name.to_upper())))
+		btn.mouse_entered.connect(show_recipe_tooltip.bind(_name))
 		btn.mouse_exited.connect(game.hide_tooltip)
 		btn.pressed.connect(on_rsrc_pressed.bind(_name))
 		btn.get_node("Label").label_settings.font_size = 14
 		$ScrollContainer/GridContainer.add_child(btn)
+
+func show_recipe_tooltip(rsrc:String):
+	if (rsrc in ["platinum", "diamond"] and not game.science_unlocked.has("AMM")
+	or rsrc in ["nanocrystal", "mythril", "quillite"] and not game.science_unlocked.has("EMM")):
+		game.show_tooltip(tr("LOCKED"))
+	else:
+		game.show_tooltip(tr(rsrc.to_upper()))
 
 func on_rsrc_pressed(rsrc:String):
 	reset_poses(rsrc)
@@ -79,10 +84,13 @@ func on_rsrc_pressed(rsrc:String):
 
 func refresh():
 	for btn in $ScrollContainer/GridContainer.get_children():
-		if btn.name not in ["nanocrystal", "mythril", "quillite"] or game.science_unlocked.has("AMM"):
-			btn.modulate = Color.WHITE
-		else:
+		if (btn.name in ["platinum", "diamond"] and not game.science_unlocked.has("AMM")
+			or btn.name in ["nanocrystal", "mythril", "quillite"] and not game.science_unlocked.has("EMM")):
 			btn.modulate = Color(0.2, 0.2, 0.2)
+			btn.disabled = true
+		else:
+			btn.modulate = Color.WHITE
+			btn.disabled = false
 	if tf:
 		$Title.text = "%s %s" % [Helper.format_num(tile_num), tr("ATOM_MANIPULATOR_NAME_S").to_lower(),]
 		var max_star_temp = game.get_max_star_prop(game.c_s, "temperature")
@@ -97,6 +105,8 @@ func refresh():
 	refresh_time_icon()
 	path_2_value = obj.bldg.path_2_value * Helper.get_IR_mult(Building.ATOM_MANIPULATOR)
 	for reaction_name in reactions:
+		if $ScrollContainer/GridContainer.get_node(reaction_name).disabled:
+			continue
 		var disabled:bool = false
 		for atom in reactions[reaction_name].atoms:
 			if game.atoms.has(atom) and game.atoms[atom] == 0:

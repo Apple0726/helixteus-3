@@ -382,7 +382,8 @@ var science_unlocks = {
 						
 						#Atom manipulation
 						"ATM":{"cost":200000.0, "parents":[]},
-						"AMM":{"cost":1.0e13, "parents":["ATM"]},
+						"AMM":{"cost":1.0e9, "parents":["ATM"]},
+						"EMM":{"cost":1.0e15, "parents":["AMM"]},
 						"SAP":{"cost":12500000.0, "parents":["ATM"]},
 						
 						#Rover sciences

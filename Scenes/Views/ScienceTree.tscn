@@ -11,6 +11,7 @@
 [ext_resource type="Texture2D" uid="uid://koi0aarpqj30" path="res://Graphics/Ships/Ship0.png" id="10_yvcl0"]
 [ext_resource type="Texture2D" uid="uid://di3sx4ynm6kot" path="res://Graphics/Science/CD.png" id="11_4oae0"]
 [ext_resource type="Texture2D" uid="uid://c02m0dq0w0k4g" path="res://Graphics/Science/ATM.png" id="12_vuk7d"]
+[ext_resource type="Texture2D" uid="uid://clk5xvpyx2km2" path="res://Graphics/Metals/diamond.png" id="13_eu0ii"]
 [ext_resource type="Texture2D" uid="uid://cv8g560m8rjmk" path="res://Graphics/Science/SAP.png" id="13_pdb81"]
 [ext_resource type="Texture2D" uid="uid://b8oy6e548ukc5" path="res://Graphics/Science/AMM.png" id="14_7q2bc"]
 [ext_resource type="Texture2D" uid="uid://h7n6peyduph2" path="res://Graphics/Science/ID.png" id="15_ej63c"]
@@ -283,6 +284,24 @@ anchor_bottom = 0.0
 offset_left = 1600.0
 offset_top = -464.0
 offset_right = 1856.0
+offset_bottom = -400.0
+icon_texture = ExtResource("13_eu0ii")
+
+[node name="L_AMM" type="Line2D" parent="Main" unique_id=180032997]
+position = Vector2(1888, -452)
+points = PackedVector2Array(0, 20, 96, 20)
+width = 2.0
+default_color = Color(0.4, 1, 0.465625, 1)
+antialiased = true
+
+[node name="EMM" parent="Main" unique_id=1451003925 instance=ExtResource("1")]
+layout_mode = 0
+anchors_preset = 0
+anchor_top = 0.0
+anchor_bottom = 0.0
+offset_left = 2016.0
+offset_top = -464.0
+offset_right = 2272.0
 offset_bottom = -400.0
 icon_texture = ExtResource("14_7q2bc")
 

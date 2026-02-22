@@ -39,16 +39,20 @@ func _ready():
 	$Desc.text = tr("REACTIONS_PANEL_DESC")
 	for _name in reactions:
 		var btn = preload("res://Scenes/ReactionButton.tscn").instantiate()
-		if _name in ["Ta", "W", "Os"] and not game.science_unlocked.has("AMM"):
-			btn.get_node("TextureRect").modulate = Color(0.2, 0.2, 0.2)
 		btn.get_node("TextureRect").texture = load("res://Graphics/Atoms/%s.png" % _name)
 		btn.name = _name
 		btn.custom_minimum_size = Vector2.ONE * 75.0
-		btn.mouse_entered.connect(game.show_tooltip.bind(tr("%s_NAME" % _name.to_upper())))
+		btn.mouse_entered.connect(show_recipe_tooltip.bind(_name))
 		btn.mouse_exited.connect(game.hide_tooltip)
 		btn.pressed.connect(_on_Atom_pressed.bind(_name))
 		btn.get_node("Label").label_settings.font_size = 12
 		$ScrollContainer/GridContainer.add_child(btn)
+
+func show_recipe_tooltip(rsrc:String):
+	if rsrc in ["Ta", "W", "Os"] and not game.science_unlocked.has("EMM"):
+		game.show_tooltip(tr("LOCKED"))
+	else:
+		game.show_tooltip(tr("%s_NAME" % rsrc.to_upper()))
 
 func _on_Atom_pressed(_name:String):
 	reset_poses(_name, reactions[_name].Z)
@@ -59,10 +63,12 @@ func _on_Atom_pressed(_name:String):
 
 func refresh():
 	for btn in $ScrollContainer/GridContainer.get_children():
-		if btn.name not in ["Ta", "W", "Os"] or game.science_unlocked.has("AMM"):
-			btn.modulate = Color.WHITE
-		else:
+		if btn.name in ["Ta", "W", "Os"] and not game.science_unlocked.has("EMM"):
 			btn.modulate = Color(0.2, 0.2, 0.2)
+			btn.disabled = true
+		else:
+			btn.modulate = Color.WHITE
+			btn.disabled = false
 	if tf:
 		$Title.text = "%s %s" % [Helper.format_num(tile_num), tr("SUBATOMIC_PARTICLE_REACTOR_NAME_S").to_lower(),]
 		var max_star_temp = game.get_max_star_prop(game.c_s, "temperature")
@@ -77,6 +83,8 @@ func refresh():
 	refresh_time_icon()
 	path_2_value = obj.bldg.path_2_value * Helper.get_IR_mult(Building.SUBATOMIC_PARTICLE_REACTOR)
 	for reaction_name in reactions:
+		if $ScrollContainer/GridContainer.get_node(reaction_name).disabled:
+			continue
 		var disabled:bool = false
 		if is_zero_approx(game.particles.subatomic_particles):
 			disabled = true
