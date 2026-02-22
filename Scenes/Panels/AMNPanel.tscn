@@ -171,6 +171,40 @@ offset_bottom = 112.0
 text = "0"
 vertical_alignment = 1
 
+[node name="Control2" type="Control" parent="Panel" unique_id=341604548]
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="Arrow" type="TextureRect" parent="Panel/Control2" unique_id=1383062827]
+layout_mode = 0
+offset_left = 272.0
+offset_top = 128.0
+offset_right = 324.0
+offset_bottom = 166.0
+texture = ExtResource("12")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="ScrollContainer" type="ScrollContainer" parent="Panel/Control2" unique_id=2111503666]
+custom_minimum_size = Vector2(0, 200)
+layout_mode = 0
+offset_left = 92.0
+offset_top = 128.0
+offset_right = 216.0
+offset_bottom = 328.0
+horizontal_scroll_mode = 0
+
+[node name="From" type="VBoxContainer" parent="Panel/Control2/ScrollContainer" unique_id=728026385]
+layout_mode = 2
+
+[node name="To" type="VBoxContainer" parent="Panel/Control2" unique_id=130052920]
+layout_mode = 0
+offset_left = 376.0
+offset_top = 132.0
+offset_right = 416.0
+offset_bottom = 172.0
+
 [node name="Control" type="Control" parent="Panel" unique_id=1639124424]
 anchors_preset = 0
 offset_right = 40.0
@@ -231,40 +265,6 @@ offset_bottom = 216.0
 texture_normal = ExtResource("3")
 ignore_texture_size = true
 stretch_mode = 5
-
-[node name="Control2" type="Control" parent="Panel" unique_id=341604548]
-anchors_preset = 0
-offset_right = 40.0
-offset_bottom = 40.0
-
-[node name="Arrow" type="TextureRect" parent="Panel/Control2" unique_id=1383062827]
-layout_mode = 0
-offset_left = 272.0
-offset_top = 128.0
-offset_right = 324.0
-offset_bottom = 166.0
-texture = ExtResource("12")
-expand_mode = 1
-stretch_mode = 5
-
-[node name="ScrollContainer" type="ScrollContainer" parent="Panel/Control2" unique_id=2111503666]
-custom_minimum_size = Vector2(0, 200)
-layout_mode = 0
-offset_left = 92.0
-offset_top = 128.0
-offset_right = 216.0
-offset_bottom = 328.0
-horizontal_scroll_mode = 0
-
-[node name="From" type="VBoxContainer" parent="Panel/Control2/ScrollContainer" unique_id=728026385]
-layout_mode = 2
-
-[node name="To" type="VBoxContainer" parent="Panel/Control2" unique_id=130052920]
-layout_mode = 0
-offset_left = 376.0
-offset_top = 132.0
-offset_right = 416.0
-offset_bottom = 172.0
 
 [connection signal="pressed" from="CloseButton" to="." method="_on_close_button_pressed"]
 [connection signal="pressed" from="Panel/Transform" to="." method="_on_Transform_pressed"]

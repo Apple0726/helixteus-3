@@ -33,7 +33,6 @@ var rsrc_nodes_to:Array
 var path_2_value:float = 1.0
 
 func _ready():
-	set_process(false)
 	set_polygon($GUI.size, $GUI.position)
 	$Panel.hide()
 	$Title.text = tr("SUBATOMIC_PARTICLE_REACTOR_NAME")
@@ -48,6 +47,7 @@ func _ready():
 		btn.mouse_entered.connect(game.show_tooltip.bind(tr("%s_NAME" % _name.to_upper())))
 		btn.mouse_exited.connect(game.hide_tooltip)
 		btn.pressed.connect(_on_Atom_pressed.bind(_name))
+		btn.get_node("Label").label_settings.font_size = 12
 		$ScrollContainer/GridContainer.add_child(btn)
 
 func _on_Atom_pressed(_name:String):
@@ -82,6 +82,10 @@ func refresh():
 			disabled = true
 		disabled = disabled and is_zero_approx(game.atoms[reaction_name]) and (not obj.bldg.has("qty") or not obj.bldg.reaction == reaction_name)
 		$ScrollContainer/GridContainer.get_node(reaction_name).disabled = disabled
+		if disabled:
+			$ScrollContainer/GridContainer.get_node(reaction_name).modulate = Color(0.4, 0.4, 0.4)
+		else:
+			$ScrollContainer/GridContainer.get_node(reaction_name).modulate = Color.WHITE
 	if resource_selected == "":
 		return
 	var max_slider_value = get_max_slider_value()
@@ -95,7 +99,6 @@ func refresh():
 	$Panel/ReactionInProgress.visible = obj.bldg.has("qty") and resource_selected == obj.bldg.reaction
 	$Panel/Control.visible = not $Panel/ReactionInProgress.visible and resource_selected != ""
 	$Panel/Transform.visible = $Panel/ReactionInProgress.visible or $Panel/Control.visible
-	set_process($Panel/ReactionInProgress.visible)
 	$Panel/Control/HSlider.visible = max_slider_value != 0
 	if $Panel/ReactionInProgress.visible:
 		set_text_to_white()
@@ -149,7 +152,6 @@ func _on_HSlider_value_changed(value):
 
 func _on_Transform_pressed():
 	if obj.bldg.has("qty"):
-		set_process(false)
 		var reaction_info = get_reaction_info(obj)
 		var MM_value = reaction_info.MM_value
 		var progress = reaction_info.progress
@@ -197,8 +199,6 @@ func _on_Transform_pressed():
 				if i == game.c_t:
 					game.view.obj.rsrcs[i].set_icon_texture(load("res://Graphics/Atoms/%s.png" % resource_selected))
 					break
-		set_text_to_white()
-		set_process(true)
 		$Panel/Control.visible = false
 		$Panel/ReactionInProgress.visible = true
 		refresh_time_icon()
@@ -210,8 +210,10 @@ func _process(delta):
 	if obj == null or obj.is_empty():
 		_on_close_button_pressed()
 		return
-	if not obj.bldg.has("start_date") or not visible:
-		set_process(false)
+	for btn in $ScrollContainer/GridContainer.get_children():
+		btn.get_node("Label").text = Helper.format_num(game.atoms[btn.name], true)
+	$SubatomicParticles.text = Helper.format_num(game.particles.subatomic_particles, true) + " mol"
+	if not obj.bldg.has("start_date") or not visible or obj.bldg.reaction != resource_selected:
 		return
 	var reaction_info = get_reaction_info(obj)
 	#MM produced or MM used

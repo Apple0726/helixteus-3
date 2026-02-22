@@ -17,22 +17,6 @@ shader_parameter/amplitude = 0.1
 shader_parameter/alpha = 1.0
 shader_parameter/color = Color(1, 1, 1, 1)
 
-[sub_resource type="InputEventKey" id="InputEventKey_6wj2k"]
-device = -1
-physical_keycode = 70
-unicode = 102
-
-[sub_resource type="Shortcut" id="Shortcut_jgu31"]
-events = [SubResource("InputEventKey_6wj2k")]
-
-[sub_resource type="InputEventKey" id="InputEventKey_jgu31"]
-device = -1
-keycode = 88
-unicode = 120
-
-[sub_resource type="Shortcut" id="Shortcut_bbh3e"]
-events = [SubResource("InputEventKey_jgu31")]
-
 [node name="Button" type="Button" unique_id=41489719]
 custom_minimum_size = Vector2(0, 140)
 offset_right = 416.0
@@ -110,8 +94,6 @@ offset_top = 100.0
 offset_right = 185.0
 offset_bottom = 133.0
 mouse_filter = 1
-shortcut = SubResource("Shortcut_jgu31")
-shortcut_in_tooltip = false
 text = "Construct (C)"
 
 [node name="Destroy" type="Button" parent="." unique_id=1555636640]
@@ -121,8 +103,6 @@ offset_top = 100.0
 offset_right = 350.0
 offset_bottom = 133.0
 mouse_filter = 1
-shortcut = SubResource("Shortcut_bbh3e")
-shortcut_in_tooltip = false
 text = "Destroy (X)"
 
 [node name="View" type="TextureButton" parent="." unique_id=1281057285]

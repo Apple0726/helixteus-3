@@ -523,7 +523,98 @@ func upgrade_MS():
 	elif current_MS_action == "upgrading":
 		build_MS(MS_constr_data.obj, MS_constr_data.obj.MS)
 		current_MS_action = ""
-	
+
+func destroy_MS():
+	if not MS_constr_data.has("destroyable"):
+		return
+	if not MS_constr_data.has("confirm_destroy"):
+		MS_constr_data.confirm_destroy = true
+		current_MS_action = "destroying"
+		var vbox = game.get_node("UI/Panel/VBox")
+		if MS_constr_data.obj.MS == "MB":
+			rsrc_salvaged = Data.MS_costs["MB"].duplicate(true)
+		else:
+			rsrc_salvaged = Data.MS_costs["%s_%s" % [MS_constr_data.obj.MS, MS_constr_data.obj.MS_lv]].duplicate(true)
+		rsrc_salvaged.erase("money")
+		rsrc_salvaged.erase("energy")
+		var MS_repair_cost_money = 0.0
+		var MS_repair_cost_energy = 0.0
+		for rsrc in rsrc_salvaged.keys():
+			if MS_constr_data.obj.MS in ["DS", "MB"]:
+				rsrc_salvaged[rsrc] *= pow(MS_constr_data.obj.size, 2)
+			elif MS_constr_data.obj.MS == "CBS":
+				rsrc_salvaged[rsrc] *= game.planet_data[-1].distance / 1000.0
+			elif MS_constr_data.obj.MS == "SE":
+				rsrc_salvaged[rsrc] *= MS_constr_data.obj.size / 12000.0
+			elif MS_constr_data.obj.MS == "MME":
+				rsrc_salvaged[rsrc] *= pow(MS_constr_data.obj.size / 13000.0, 2)
+			rsrc_salvaged[rsrc] = round(rsrc_salvaged[rsrc] * game.engineering_bonus.BCM * (0.25 if MS_constr_data.obj.has("repair_cost") else 0.5))
+			if rsrc == "stone":
+				MS_repair_cost_money += rsrc_salvaged[rsrc] * 2.0
+				MS_repair_cost_energy += rsrc_salvaged[rsrc]
+			else:
+				MS_repair_cost_money += rsrc_salvaged[rsrc] * 250.0
+				MS_repair_cost_energy += rsrc_salvaged[rsrc] * 50
+		rsrc_salvaged.erase("stone")
+		bldg_costs = {"money":MS_repair_cost_money, "energy":MS_repair_cost_energy}
+		Helper.put_rsrc(vbox, 32, bldg_costs, true, true)
+		Helper.put_rsrc(vbox, 32, rsrc_salvaged, false)
+		Helper.add_label(tr("DISMANTLING_COSTS"), 0)
+		Helper.add_label(tr("YOU_WILL_SALVAGE"), 3)
+		Helper.add_label(tr("X_TO_CONFIRM") % "X")
+	elif current_MS_action == "destroying":
+		if game.check_enough(bldg_costs):
+			game.deduct_resources(bldg_costs)
+			game.add_resources(rsrc_salvaged)
+			if not MS_constr_data.obj.has("repair_cost"):
+				if MS_constr_data.obj.MS == "DS":
+					game.autocollect.MS.energy -= Helper.get_DS_output(MS_constr_data.obj)
+					game.energy_capacity -= Helper.get_DS_capacity(MS_constr_data.obj)
+				elif MS_constr_data.obj.MS == "MB":
+					game.autocollect.MS.SP -= Helper.get_MB_output(MS_constr_data.obj)
+					game.energy_capacity -= Helper.get_DS_capacity(MS_constr_data.obj)
+				elif MS_constr_data.obj.MS == "CBS":
+					var p_num_total:int = len(game.planet_data)
+					var p_num:int = ceil(p_num_total * MS_constr_data.obj.MS_lv * 0.333)
+					if MS_constr_data.obj.MS_lv == 0:
+						p_num = ceil(p_num_total * 0.1)
+					for i in range(0, p_num):
+						game.planet_data[i].cost_div_dict.erase(star_over_id)
+						if game.planet_data[i].cost_div_dict.is_empty():
+							game.planet_data[i].erase("cost_div")
+							game.planet_data[i].erase("cost_div_dict")
+						else:
+							var div:float = 1.0
+							for st in game.planet_data[i].cost_div_dict.keys():
+								div = max(div, game.planet_data[i].cost_div_dict[st])
+							game.planet_data[i].cost_div = div
+					for i in len(stars_info):
+						if stars_info[i].hash() != MS_constr_data.obj.hash():
+							stars_info[i].cost_div_dict.erase(star_over_id)
+							if stars_info[i].cost_div_dict.is_empty():
+								stars_info[i].erase("cost_div")
+								stars_info[i].erase("cost_div_dict")
+							else:
+								var div:float = 1.0
+								for st in stars_info[i].cost_div_dict.keys():
+									div = max(div, stars_info[i].cost_div_dict[st])
+								stars_info[i].cost_div = div
+					queue_redraw()
+				elif MS_constr_data.obj.MS == "M_MMB":
+					game.autocollect.MS.minerals -= Helper.get_MME_output(MS_constr_data.obj)
+					game.mineral_capacity -= MS_constr_data.obj.min_cap_to_add
+			MS_constr_data.obj.erase("repair_cost")
+			MS_constr_data.obj.erase("MS")
+			MS_constr_data.obj.erase("MS_lv")
+			game.popup(tr("MS_REKT"), 2.0)
+			game.get_node("UI/Panel").hide()
+			MS_constr_data.clear()
+			refresh_planets()
+			refresh_stars()
+			game.space_HUD.get_node("StarPanel").refresh()
+		else:
+			game.popup(tr("NOT_ENOUGH_RESOURCES"), 1.5)
+
 func _input(event):
 	if "building" in game.bottom_info_action and Input.is_action_just_pressed("right_click"):
 		game._on_BottomInfo_close_button_pressed()
@@ -534,94 +625,11 @@ func _input(event):
 			game.upgrade_panel.ids = []
 			game.upgrade_panel.planet = game.planet_data[planet_hovered]
 			game.upgrade_panel.refresh()
+		else:
+			upgrade_MS()
 		game.hide_tooltip()
-	elif Input.is_action_just_released("X") and MS_constr_data.has("destroyable"):
-		if not MS_constr_data.has("confirm_destroy"):
-			MS_constr_data.confirm_destroy = true
-			current_MS_action = "destroying"
-			var vbox = game.get_node("UI/Panel/VBox")
-			if MS_constr_data.obj.MS == "MB":
-				rsrc_salvaged = Data.MS_costs["MB"].duplicate(true)
-			else:
-				rsrc_salvaged = Data.MS_costs["%s_%s" % [MS_constr_data.obj.MS, MS_constr_data.obj.MS_lv]].duplicate(true)
-			rsrc_salvaged.erase("money")
-			rsrc_salvaged.erase("energy")
-			var MS_repair_cost_money = 0.0
-			var MS_repair_cost_energy = 0.0
-			for rsrc in rsrc_salvaged.keys():
-				if MS_constr_data.obj.MS in ["DS", "MB"]:
-					rsrc_salvaged[rsrc] *= pow(MS_constr_data.obj.size, 2)
-				elif MS_constr_data.obj.MS == "CBS":
-					rsrc_salvaged[rsrc] *= game.planet_data[-1].distance / 1000.0
-				elif MS_constr_data.obj.MS == "SE":
-					rsrc_salvaged[rsrc] *= MS_constr_data.obj.size / 12000.0
-				elif MS_constr_data.obj.MS == "MME":
-					rsrc_salvaged[rsrc] *= pow(MS_constr_data.obj.size / 13000.0, 2)
-				rsrc_salvaged[rsrc] = round(rsrc_salvaged[rsrc] * game.engineering_bonus.BCM * (0.25 if MS_constr_data.obj.has("repair_cost") else 0.5))
-				if rsrc == "stone":
-					MS_repair_cost_money += rsrc_salvaged[rsrc] * 2.0
-					MS_repair_cost_energy += rsrc_salvaged[rsrc]
-				else:
-					MS_repair_cost_money += rsrc_salvaged[rsrc] * 250.0
-					MS_repair_cost_energy += rsrc_salvaged[rsrc] * 50
-			rsrc_salvaged.erase("stone")
-			bldg_costs = {"money":MS_repair_cost_money, "energy":MS_repair_cost_energy}
-			Helper.put_rsrc(vbox, 32, bldg_costs, true, true)
-			Helper.put_rsrc(vbox, 32, rsrc_salvaged, false)
-			Helper.add_label(tr("DISMANTLING_COSTS"), 0)
-			Helper.add_label(tr("YOU_WILL_SALVAGE"), 3)
-			Helper.add_label(tr("X_TO_CONFIRM") % "X")
-		elif current_MS_action == "destroying":
-			if game.check_enough(bldg_costs):
-				game.deduct_resources(bldg_costs)
-				game.add_resources(rsrc_salvaged)
-				if not MS_constr_data.obj.has("repair_cost"):
-					if MS_constr_data.obj.MS == "DS":
-						game.autocollect.MS.energy -= Helper.get_DS_output(MS_constr_data.obj)
-						game.energy_capacity -= Helper.get_DS_capacity(MS_constr_data.obj)
-					elif MS_constr_data.obj.MS == "MB":
-						game.autocollect.MS.SP -= Helper.get_MB_output(MS_constr_data.obj)
-						game.energy_capacity -= Helper.get_DS_capacity(MS_constr_data.obj)
-					elif MS_constr_data.obj.MS == "CBS":
-						var p_num_total:int = len(game.planet_data)
-						var p_num:int = ceil(p_num_total * MS_constr_data.obj.MS_lv * 0.333)
-						if MS_constr_data.obj.MS_lv == 0:
-							p_num = ceil(p_num_total * 0.1)
-						for i in range(0, p_num):
-							game.planet_data[i].cost_div_dict.erase(star_over_id)
-							if game.planet_data[i].cost_div_dict.is_empty():
-								game.planet_data[i].erase("cost_div")
-								game.planet_data[i].erase("cost_div_dict")
-							else:
-								var div:float = 1.0
-								for st in game.planet_data[i].cost_div_dict.keys():
-									div = max(div, game.planet_data[i].cost_div_dict[st])
-								game.planet_data[i].cost_div = div
-						for i in len(stars_info):
-							if stars_info[i].hash() != MS_constr_data.obj.hash():
-								stars_info[i].cost_div_dict.erase(star_over_id)
-								if stars_info[i].cost_div_dict.is_empty():
-									stars_info[i].erase("cost_div")
-									stars_info[i].erase("cost_div_dict")
-								else:
-									var div:float = 1.0
-									for st in stars_info[i].cost_div_dict.keys():
-										div = max(div, stars_info[i].cost_div_dict[st])
-									stars_info[i].cost_div = div
-						queue_redraw()
-					elif MS_constr_data.obj.MS == "M_MMB":
-						game.autocollect.MS.minerals -= Helper.get_MME_output(MS_constr_data.obj)
-						game.mineral_capacity -= MS_constr_data.obj.min_cap_to_add
-				MS_constr_data.obj.erase("repair_cost")
-				MS_constr_data.obj.erase("MS")
-				MS_constr_data.obj.erase("MS_lv")
-				game.popup(tr("MS_REKT"), 2.0)
-				game.get_node("UI/Panel").hide()
-				MS_constr_data.clear()
-				refresh_planets()
-				refresh_stars()
-			else:
-				game.popup(tr("NOT_ENOUGH_RESOURCES"), 1.5)
+	elif Input.is_action_just_released("X"):
+		destroy_MS()
 
 func build_MS(obj:Dictionary, MS_to_build:String):
 	if bldg_costs.is_empty():
@@ -642,7 +650,14 @@ func build_MS(obj:Dictionary, MS_to_build:String):
 				error = true
 		if error:
 			game.popup(tr("NO_SCIENCE_TO_REPAIR_MS"), 2.0)
-			return 
+			return
+	if MS_to_build == "MB":
+		if not obj.has("MS") or obj.MS != "DS":
+			game.popup(tr("MB_ERROR_1"), 3.0)
+			return
+		elif obj.MS_lv < 4:
+			game.popup(tr("MB_ERROR_2"), 3.0)
+			return
 	var curr_time = Time.get_unix_time_from_system()
 	if game.check_enough(bldg_costs):
 		game.deduct_resources(bldg_costs)
@@ -714,6 +729,7 @@ func build_MS(obj:Dictionary, MS_to_build:String):
 		game.get_node("UI/Panel").hide()
 		MS_constr_data.clear()
 		game.space_HUD.get_node("StarPanel").refresh()
+		game.space_HUD.get_node("MSConstructPanel").hide_panel()
 		refresh_planets()
 		refresh_stars()
 	else:
@@ -929,13 +945,7 @@ func on_star_pressed (id:int):
 			game.popup(tr("STAR_MS_ERROR"), 3.0)
 	elif game.bottom_info_action == "building_MB":
 		if game.system_data[game.c_s].has("conquered"):
-			if not star.has("MS") or star.MS != "DS":
-				game.popup(tr("MB_ERROR_1"), 3.0)
-			else:
-				if star.MS_lv == 4:
-					build_MS(star, "MB")
-				else:
-					game.popup(tr("MB_ERROR_2"), 3.0)
+			build_MS(star, "MB")
 		else:
 			game.popup(tr("STAR_MS_ERROR"), 3.0)
 	elif star.has("MS"):
@@ -975,7 +985,7 @@ func _process(_delta):
 			prod = Helper.get_DS_output(star) * Helper.get_IR_mult(Building.POWER_PLANT) * game.u_i.time_speed
 		elif star.MS == "MB":
 			prod = Helper.get_MB_output(star) * Helper.get_IR_mult(Building.RESEARCH_LAB) * game.u_i.time_speed
-		rsrc.set_text("%s/%s" % [Helper.format_num(prod), tr("S_SECOND")])
+		rsrc.set_text("%s/%s" % [Helper.format_num(prod, true), tr("S_SECOND")])
 	for rsrc_obj in planet_rsrcs:
 		var planet = game.planet_data[rsrc_obj.id]
 		var rsrc:ResourceStored = rsrc_obj.node

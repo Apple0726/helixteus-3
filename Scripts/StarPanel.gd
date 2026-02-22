@@ -35,7 +35,7 @@ func refresh():
 				construct_btn.pressed.connect(game.view.obj.upgrade_MS)
 			else:
 				construct_btn.pressed.connect(game.space_HUD.toggle_MS_construct_panel.bind(i))
-			destroy_btn.pressed.connect(destroy_MS.bind(i))
+			destroy_btn.pressed.connect(game.view.obj.destroy_MS)
 			if star.has("MS_lv") and (star.MS_lv >= Data.MS_num_stages[star.MS] or not game.science_unlocked.has("{name}{stage}".format({"name":star.MS, "stage":star.MS_lv + 1}))):
 				construct_btn.disabled = true
 				construct_btn.mouse_entered.connect(game.show_tooltip.bind(tr("NO_RESEARCH_TO_UPGRADE_MS")))
@@ -50,10 +50,6 @@ func refresh():
 		btn.mouse_exited.connect(game.view.obj.on_star_out.bind(i, star_node))
 		btn.pressed.connect(game.view.obj.on_star_pressed.bind(i))
 		btn.get_node("View").pressed.connect(zoom_to_star.bind(star))
-
-
-func destroy_MS(star_index):
-	pass
 
 var tween
 

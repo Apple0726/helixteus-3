@@ -13,6 +13,7 @@
 [ext_resource type="Texture2D" uid="uid://kr2fdk8dptv1" path="res://Graphics/Misc/BarUnder2.png" id="10_g065t"]
 [ext_resource type="Texture2D" uid="uid://cxij5pk8nug0r" path="res://Graphics/Misc/BarOver.png" id="11_dtnhh"]
 [ext_resource type="Texture2D" uid="uid://bx1hvetixqpwi" path="res://Graphics/Misc/Bar2.png" id="12_ysdh3"]
+[ext_resource type="Texture2D" uid="uid://c464cktjcl0bt" path="res://Graphics/Particles/subatomic_particles.png" id="14_3ftvt"]
 
 [sub_resource type="SystemFont" id="SystemFont_l1il0"]
 font_names = PackedStringArray("Arial")
@@ -101,9 +102,9 @@ vertical_alignment = 1
 
 [node name="ScrollContainer" type="ScrollContainer" parent="." unique_id=26623442]
 layout_mode = 0
-offset_left = 136.0
-offset_top = 160.0
-offset_right = 499.0
+offset_left = 152.0
+offset_top = 212.0
+offset_right = 479.0
 offset_bottom = 608.0
 
 [node name="GridContainer" type="GridContainer" parent="ScrollContainer" unique_id=1447989336]
@@ -129,6 +130,40 @@ offset_bottom = 445.0
 shortcut = SubResource("3")
 shortcut_in_tooltip = false
 text = "TRANSFORM"
+
+[node name="Control2" type="Control" parent="Panel" unique_id=341604548]
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="Arrow" type="TextureRect" parent="Panel/Control2" unique_id=1383062827]
+layout_mode = 0
+offset_left = 272.0
+offset_top = 128.0
+offset_right = 324.0
+offset_bottom = 166.0
+texture = ExtResource("5_erxk5")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="ScrollContainer" type="ScrollContainer" parent="Panel/Control2" unique_id=2111503666]
+custom_minimum_size = Vector2(0, 200)
+layout_mode = 0
+offset_left = 92.0
+offset_top = 116.0
+offset_right = 216.0
+offset_bottom = 316.0
+horizontal_scroll_mode = 0
+
+[node name="From" type="VBoxContainer" parent="Panel/Control2/ScrollContainer" unique_id=728026385]
+layout_mode = 2
+
+[node name="To" type="VBoxContainer" parent="Panel/Control2" unique_id=130052920]
+layout_mode = 0
+offset_left = 384.0
+offset_top = 120.0
+offset_right = 424.0
+offset_bottom = 160.0
 
 [node name="Control" type="Control" parent="Panel" unique_id=1639124424]
 anchors_preset = 0
@@ -191,40 +226,6 @@ texture_normal = ExtResource("9_147xw")
 ignore_texture_size = true
 stretch_mode = 5
 
-[node name="Control2" type="Control" parent="Panel" unique_id=341604548]
-anchors_preset = 0
-offset_right = 40.0
-offset_bottom = 40.0
-
-[node name="Arrow" type="TextureRect" parent="Panel/Control2" unique_id=1383062827]
-layout_mode = 0
-offset_left = 272.0
-offset_top = 128.0
-offset_right = 324.0
-offset_bottom = 166.0
-texture = ExtResource("5_erxk5")
-expand_mode = 1
-stretch_mode = 5
-
-[node name="ScrollContainer" type="ScrollContainer" parent="Panel/Control2" unique_id=2111503666]
-custom_minimum_size = Vector2(0, 200)
-layout_mode = 0
-offset_left = 92.0
-offset_top = 116.0
-offset_right = 216.0
-offset_bottom = 316.0
-horizontal_scroll_mode = 0
-
-[node name="From" type="VBoxContainer" parent="Panel/Control2/ScrollContainer" unique_id=728026385]
-layout_mode = 2
-
-[node name="To" type="VBoxContainer" parent="Panel/Control2" unique_id=130052920]
-layout_mode = 0
-offset_left = 384.0
-offset_top = 120.0
-offset_right = 424.0
-offset_bottom = 160.0
-
 [node name="ReactionInProgress" type="Control" parent="Panel" unique_id=730616483]
 anchors_preset = 0
 offset_left = -408.0
@@ -266,6 +267,25 @@ offset_top = 196.0
 offset_right = 1000.0
 offset_bottom = 220.0
 text = "0"
+vertical_alignment = 1
+
+[node name="SPTexture" type="TextureRect" parent="." unique_id=1407600108]
+layout_mode = 0
+offset_left = 252.0
+offset_top = 164.0
+offset_right = 292.0
+offset_bottom = 200.0
+texture = ExtResource("14_3ftvt")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="SubatomicParticles" type="Label" parent="." unique_id=1038243629]
+layout_mode = 0
+offset_left = 308.0
+offset_top = 164.0
+offset_right = 472.0
+offset_bottom = 200.0
+text = "0 mol"
 vertical_alignment = 1
 
 [connection signal="pressed" from="CloseButton" to="." method="_on_close_button_pressed"]

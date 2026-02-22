@@ -20,16 +20,15 @@ var reactions:Dictionary = {
 	"titanium":{"type":"mets", "atoms":{"Ti":1}, "energy_cost":12000.0, "difficulty":0.5},
 	"platinum":{"type":"mets", "atoms":{"Pt":1}, "energy_cost":40000.0, "difficulty":2.0},
 	"diamond":{"type":"mets", "atoms":{"C":1}, "energy_cost":85000.0, "difficulty":2.2},
-	"nanocrystal":{"type":"mets", "atoms":{"Si":1, "O":2, "Na":1}, "energy_cost":1.3e6, "difficulty":2.9},
-	"quillite":{"type":"mats", "atoms":{"Si":1, "O":2, "Ne":1}, "energy_cost":1.9e6, "difficulty":3.2},
-	"mythril":{"type":"mets", "atoms":{"W":2, "Os":1, "Ta":2}, "energy_cost":4.0e7, "difficulty":4.8},
+	"nanocrystal":{"type":"mets", "atoms":{"Si":1, "O":2, "Na":1}, "energy_cost":1.3e8, "difficulty":2.9},
+	"quillite":{"type":"mats", "atoms":{"Si":1, "O":2, "Ne":1}, "energy_cost":1.9e8, "difficulty":3.2},
+	"mythril":{"type":"mets", "atoms":{"W":2, "Os":1, "Ta":2}, "energy_cost":4.0e9, "difficulty":4.8},
 }
 var rsrc_nodes_from:Array
 var rsrc_nodes_to:Array
 var path_2_value:float = 1.0
 
 func _ready():
-	set_process(false)
 	set_polygon($GUI.size, $GUI.position)
 	$Panel.hide()
 	$Title.text = tr("ATOM_MANIPULATOR_NAME")
@@ -45,10 +44,11 @@ func _ready():
 		elif reactions[_name].type == "mets":
 			btn.get_node("TextureRect").texture = load("res://Graphics/Metals/%s.png" % _name)
 		btn.name = _name
-		btn.custom_minimum_size = Vector2(100.0, 100.0)
+		btn.custom_minimum_size = Vector2.ONE * 100.0
 		btn.mouse_entered.connect(game.show_tooltip.bind(tr(_name.to_upper())))
 		btn.mouse_exited.connect(game.hide_tooltip)
 		btn.pressed.connect(on_rsrc_pressed.bind(_name))
+		btn.get_node("Label").label_settings.font_size = 14
 		$ScrollContainer/GridContainer.add_child(btn)
 
 func on_rsrc_pressed(rsrc:String):
@@ -107,6 +107,10 @@ func refresh():
 		else:
 			disabled = disabled and game[reactions[reaction_name].type][reaction_name] == 0 and (not obj.bldg.has("qty") or not obj.bldg.reaction == reaction_name)
 		$ScrollContainer/GridContainer.get_node(reaction_name).disabled = disabled
+		if disabled:
+			$ScrollContainer/GridContainer.get_node(reaction_name).modulate = Color(0.4, 0.4, 0.4)
+		else:
+			$ScrollContainer/GridContainer.get_node(reaction_name).modulate = Color.WHITE
 	if resource_selected == "":
 		return
 	var max_slider_value = get_max_slider_value()
@@ -120,7 +124,6 @@ func refresh():
 	$Panel/Control.visible = not $Panel/ReactionInProgress.visible and resource_selected != ""
 	$Panel/Transform.visible = $Panel/ReactionInProgress.visible or $Panel/Control.visible
 	$Panel/Control/TimeCostText.text = Helper.time_to_str(difficulty * rsrc_value / obj.bldg.path_1_value / tile_num / Helper.get_IR_mult(Building.ATOM_MANIPULATOR) / game.u_i.time_speed / obj.get("time_speed_bonus", 1.0))
-	set_process($Panel/ReactionInProgress.visible)
 	$Panel/Control/HSlider.visible = not is_equal_approx(max_slider_value, 0.0)
 	if $Panel/ReactionInProgress.visible:
 		set_text_to_white()
@@ -186,7 +189,6 @@ func _on_HSlider_value_changed(value): # value is always between 0.0 and 1.0
 
 func _on_Transform_pressed():
 	if obj.bldg.has("qty"):
-		set_process(false)
 		var reaction_info = get_reaction_info(obj)
 		var MM_value = reaction_info.MM_value
 		var progress = reaction_info.progress
@@ -242,7 +244,6 @@ func _on_Transform_pressed():
 		obj.bldg.atom_to_rsrc = atom_to_rsrc
 		game.deduct_resources(rsrc_to_deduct)
 		set_text_to_white()
-		set_process(true)
 		$Panel/Control.visible = false
 		$Panel/ReactionInProgress.visible = true
 		$Panel/Transform.text = "%s (G)" % tr("STOP")
@@ -265,10 +266,13 @@ func refresh_time_icon():
 func _process(delta):
 	if obj == null or obj.is_empty():
 		_on_close_button_pressed()
-		set_process(false)
 		return
-	if not obj.bldg.has("start_date") or not visible:
-		set_process(false)
+	for btn in $ScrollContainer/GridContainer.get_children():
+		if btn.name == "stone":
+			btn.get_node("Label").text = Helper.format_num(Helper.get_sum_of_dict(game.stone), true)
+		else:
+			btn.get_node("Label").text = Helper.format_num(game[reactions[btn.name].type][btn.name], true)
+	if not obj.bldg.has("start_date") or not visible or obj.bldg.reaction != resource_selected:
 		return
 	var reaction_info = get_reaction_info(obj)
 	#MM produced or MM used

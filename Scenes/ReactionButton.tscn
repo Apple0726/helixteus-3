@@ -3,6 +3,8 @@
 [ext_resource type="Texture2D" uid="uid://b7o54ylqdhn43" path="res://Graphics/Materials/silicon.png" id="1_s2dev"]
 [ext_resource type="Texture2D" uid="uid://bn8t8jmrkuvdk" path="res://Graphics/Icons/Time.png" id="2_udqu5"]
 
+[sub_resource type="LabelSettings" id="LabelSettings_s2dev"]
+
 [node name="Button" type="Button" unique_id=1181242966]
 offset_right = 128.0
 offset_bottom = 128.0
@@ -21,6 +23,18 @@ grow_vertical = 2
 texture = ExtResource("1_s2dev")
 expand_mode = 1
 stretch_mode = 5
+
+[node name="Label" type="Label" parent="." unique_id=1192706345]
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 4.0
+offset_top = -18.0
+offset_right = 44.0
+offset_bottom = -1.0
+grow_vertical = 0
+label_settings = SubResource("LabelSettings_s2dev")
 
 [node name="Time" type="TextureRect" parent="." unique_id=1261887238]
 visible = false
