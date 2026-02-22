@@ -266,6 +266,13 @@ func add_MS_sprite(node, obj:Dictionary):
 		MS_sprite.scale *= 1024.0 / MS_sprite.texture.get_height()
 	elif obj.MS in ["DS", "CBS", "MB"]:
 		MS_sprite.scale *= 3.0
+	if obj.MS == "PK":
+		var turret = Sprite2D.new()
+		turret.texture = preload("res://Graphics/Megastructures/PK_turret.png")
+		turret.name = "Turret"
+		if obj.has("turret_angle"):
+			turret.rotation = obj.turret_angle
+		MS_sprite.add_child(turret)
 	MS_sprite.position += node.size * 0.5
 	node.add_child(MS_sprite)
 	MS_sprite.name = "MS"
@@ -926,7 +933,7 @@ func continue_upg(obj:Dictionary):
 	MS_constr_data.confirm_upgrade = false
 	Helper.add_label("{key}: {upgrade}".format({"key":"F", "upgrade": tr("UPGRADE")}))
 
-func on_star_pressed (id:int):
+func on_star_pressed (id:int, clicked_from_star_panel = false):
 	star_over_id = id
 	var curr_time = Time.get_unix_time_from_system()
 	var star = stars_info[id]
@@ -948,12 +955,17 @@ func on_star_pressed (id:int):
 			build_MS(star, "MB")
 		else:
 			game.popup(tr("STAR_MS_ERROR"), 3.0)
-	elif star.has("MS"):
+	elif star.has("MS") and not clicked_from_star_panel:
 		if star.MS == "PK" and not star.has("repair_cost") and not game.item_to_use.has("type"):
-			game.toggle_panel("planetkiller_panel", false)
-			game.planetkiller_panel.star = star
-			game.planetkiller_panel.refresh()
+			toggle_PK_panel(id)
 
+func toggle_PK_panel(id:int):
+	var star = stars_info[id]
+	game.toggle_panel("planetkiller_panel", false)
+	game.planetkiller_panel.star = star
+	game.planetkiller_panel.star_id = id
+	game.planetkiller_panel.refresh()
+	
 func on_btn_out ():
 	planet_hovered = -1
 	glow_over = null

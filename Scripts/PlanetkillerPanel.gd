@@ -3,6 +3,7 @@ extends "Panel.gd"
 var target:Dictionary = {}
 var p_id:int
 var star:Dictionary
+var star_id:int
 var planet_btn_scene = preload("res://Scenes/PlanetData.tscn")
 var additional_energy:float
 var charging_time:float
@@ -124,6 +125,10 @@ func _on_StartCharging_pressed():
 		if not p_i.is_empty():
 			if Settings.screen_shake:
 				game.get_node("Camera2D/Screenshake").start(2.0, 10, 5)
+			var BG_flash = game.get_node("BGFlash")
+			BG_flash.modulate.a = 0.6
+			var tween = create_tween()
+			tween.tween_property(BG_flash, "modulate:a", 0.0, 0.5)
 			game.popup(tr("PLANET_REKT") % target.name, 2.5)
 			if p_i.has("bookmarked"):
 				game.bookmarks.planet.erase(str(target.id))
@@ -148,7 +153,6 @@ func _on_StartCharging_pressed():
 			game.add_resources(star.rsrc)
 		star.erase("charging_time")
 		star.erase("charge_start_date")
-		star.erase("p_id")
 		star.erase("rsrc")
 		set_process(false)
 		$StartCharging.visible = false
@@ -158,7 +162,6 @@ func _on_StartCharging_pressed():
 	elif star.has("charging_time"):
 		star.erase("charging_time")
 		star.erase("charge_start_date")
-		star.erase("p_id")
 		star.erase("rsrc")
 		$Control.visible = true
 		$Desc.hide()
@@ -183,6 +186,9 @@ func _on_StartCharging_pressed():
 			$Control2.visible = true
 			$StartCharging.text = tr("CANCEL_CHARGING")
 			set_process(true)
+			var planet_pos = Vector2.from_angle(game.planet_data[p_id].angle)
+			star.turret_angle = atan2(planet_pos.y, planet_pos.x)
+			get_tree().get_nodes_in_group("stars_system")[star_id].get_node("MS/Turret").rotation = star.turret_angle
 			game.HUD.refresh()
 		else:
 			game.popup(tr("NOT_ENOUGH_ENERGY"), 1.5)

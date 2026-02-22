@@ -278,7 +278,7 @@ var mat_info = {	"coal":{"value":15},#One kg of coal = $15
 					"glass":{"value":1000},
 					"sand":{"value":8},
 					#"clay":{"value":12},
-					"quillite":{"value":2000000},
+					"quillite":{"value":2.0e7},
 					"soil":{"value":14},
 					"cellulose":{"value":70},
 					"silicon":{"value":80},

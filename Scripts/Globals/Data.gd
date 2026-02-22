@@ -79,7 +79,7 @@ var MS_costs = {	"doom_ball":{"money":5.4e12, "stone":5.4e7, "silicon":400000, "
 					"CBS_1":{"money":1.0e11*40, "stone":6.0e8*30, "silicon":1200000*40, "copper":750000*40, "iron":1400000*30, "platinum":90000*50},
 					"CBS_2":{"money":1.0e11*40*40, "stone":6.0e8*30*30, "silicon":1200000*40*30, "copper":750000*40*30, "iron":1400000*30*30, "platinum":90000*50*50},
 					"CBS_3":{"money":1.0e11*40*40*40, "stone":6.0e8*30*30*30, "silicon":1200000*40*30*30, "copper":750000*40*30*30, "iron":1400000*30*30*30, "platinum":90000*50*50*50},
-					"MB":{"money":5.5e17, "stone":1.0e13, "copper":3.0e11, "aluminium":2.0e12, "nanocrystal":8.0e11, "quillite":1.5e11},
+					"MB":{"money":5.5e17, "stone":1.0e13, "copper":3.0e11, "aluminium":2.0e12, "nanocrystal":8.0e10, "quillite":1.5e10},
 					"PK_0":{"money":2.0e15, "stone":4.0e14, "iron":1.0e11, "aluminium":1.75e10},
 					"PK_1":{"money":9.5e16, "stone":4.0e16, "iron":8.5e12, "aluminium":8.0e12},
 					"PK_2":{"money":6.5e19, "stone":8.75e20, "iron":2.25e16, "aluminium":1.5e15},

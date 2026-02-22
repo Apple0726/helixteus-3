@@ -33,6 +33,9 @@ func refresh():
 		if game.system_data[game.c_s].has("conquered"):
 			if star.has("MS"):
 				construct_btn.pressed.connect(game.view.obj.upgrade_MS)
+				if star.MS == "PK" and not star.has("repair_cost"):
+					btn.get_node("PK").show()
+					btn.get_node("PK").pressed.connect(toggle_PK_panel.bind(i))
 			else:
 				construct_btn.pressed.connect(game.space_HUD.toggle_MS_construct_panel.bind(i))
 			destroy_btn.pressed.connect(game.view.obj.destroy_MS)
@@ -52,9 +55,13 @@ func refresh():
 		var star_node = get_tree().get_nodes_in_group("stars_system")[i]
 		btn.mouse_entered.connect(game.view.obj.show_MS_construct_info.bind(star, star_node))
 		btn.mouse_exited.connect(game.view.obj.on_star_out.bind(i, star_node))
-		btn.pressed.connect(game.view.obj.on_star_pressed.bind(i))
+		btn.pressed.connect(game.view.obj.on_star_pressed.bind(i, true))
 		btn.get_node("View").pressed.connect(zoom_to_star.bind(star))
 
+func toggle_PK_panel(star_id:int):
+	game.view.obj.toggle_PK_panel(star_id)
+	hide_panel()
+	
 var tween
 
 func zoom_to_star(star:Dictionary):

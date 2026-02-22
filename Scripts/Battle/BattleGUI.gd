@@ -52,13 +52,15 @@ func set_battlefield_BG():
 	var random_depth = randf_range(0.6, 1.0)
 	$PlanetBG.scale *= random_depth * 640.0 / $PlanetBG.texture.get_width()
 	$PlanetLight.scale *= $PlanetBG.scale.x * 0.2
+	$PlanetBG.position.x = randf_range(90.0, 1190.0)
+	$PlanetBG.position.y = randf_range(90.0, 630.0)
 	while $PlanetBG.position.x > 440 and $PlanetBG.position.x < 840:
-		$PlanetBG.position.x = randf_range(180.0, 1100.0)
+		$PlanetBG.position.x = randf_range(90.0, 1190.0)
 	while $PlanetBG.position.y > 260 and $PlanetBG.position.y < 460:
-		$PlanetBG.position.y = randf_range(180.0, 540.0)
+		$PlanetBG.position.y = randf_range(90.0, 630.0)
 	$PlanetLight.color = battle_scene.average_starlight_color
 	$PlanetLight.position = -350.0 * random_depth * Vector2.from_angle(p_i.angle) + $PlanetBG.position
-	$PlanetLight.energy = clamp(remap(p_i.temperature, -270.0, 800.0, 0.0, 24.0), 0.0, 24.0)
+	$PlanetLight.energy = clamp(remap(p_i.temperature, -270.0, 1200.0, 0.0, 36.0), 0.0, 36.0)
 	randomize()
 	
 func show_weapon_tooltip(weapon: String, path: int, lv: int):
