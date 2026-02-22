@@ -63,6 +63,7 @@ func put_rsrc(container, min_size, rsrcs, remove:bool = true, show_available:boo
 		var current_rsrc:float
 		var mass_str = ""
 		var rsrc_type = ""
+		var rsrc_amount:float = 0.0
 		if rsrc_name is int:
 			rsrc_display_name = Item.name(rsrc_name)
 			texture_node.texture_normal = load("res://Graphics/%s/%s.png" % [Item.icon_directory(Item.data[rsrc_name].type), Item.data[rsrc_name].item_name])
@@ -71,47 +72,51 @@ func put_rsrc(container, min_size, rsrcs, remove:bool = true, show_available:boo
 			rsrc_display_name = tr(rsrc_name.to_upper())
 			if rsrc_name in ["money", "minerals", "energy", "SP"]:
 				current_rsrc = game[rsrc_name]
-				format_text(text_node, texture_node, "Icons/" + rsrc_name, show_available, rsrcs[rsrc_name], current_rsrc)
+				rsrc_amount = rsrcs[rsrc_name]
+				format_text(text_node, texture_node, "Icons/" + rsrc_name, show_available, rsrc_amount, current_rsrc)
 			elif rsrc_name == "stone":
 				current_rsrc = get_sum_of_dict(game.stone)
 				if rsrc_display_name == "Stone" and Settings.op_cursor:
 					rsrc_display_name = "Rok"
 				mass_str = "kg"
-				var stone_amount
 				if rsrcs[rsrc_name] is float:
-					stone_amount = rsrcs[rsrc_name]
+					rsrc_amount = rsrcs[rsrc_name]
 				elif rsrcs[rsrc_name] is Dictionary:
-					stone_amount = get_sum_of_dict(rsrcs[rsrc_name])
-				format_text(text_node, texture_node, "Icons/stone", show_available, stone_amount, current_rsrc, mass_str)
+					rsrc_amount = get_sum_of_dict(rsrcs[rsrc_name])
+				format_text(text_node, texture_node, "Icons/stone", show_available, rsrc_amount, current_rsrc, mass_str)
 			elif rsrc_name == "time":
 				texture_node.texture_normal = Data.time_icon
 				text_node.text = time_to_str(rsrcs[rsrc_name])
 			elif game.mats.has(rsrc_name):
 				rsrc_type = "mats"
 				current_rsrc = game.mats[rsrc_name]
+				rsrc_amount = rsrcs[rsrc_name]
 				mass_str = "kg"
-				format_text(text_node, texture_node, "Materials/" + rsrc_name, show_available, rsrcs[rsrc_name], current_rsrc, mass_str)
+				format_text(text_node, texture_node, "Materials/" + rsrc_name, show_available, rsrc_amount, current_rsrc, mass_str)
 			elif game.mets.has(rsrc_name):
 				rsrc_type = "mets"
 				current_rsrc = game.mets[rsrc_name]
+				rsrc_amount = rsrcs[rsrc_name]
 				mass_str = "kg"
-				format_text(text_node, texture_node, "Metals/" + rsrc_name, show_available, rsrcs[rsrc_name], current_rsrc, mass_str)
+				format_text(text_node, texture_node, "Metals/" + rsrc_name, show_available, rsrc_amount, current_rsrc, mass_str)
 			elif game.atoms.has(rsrc_name):
 				rsrc_type = "atoms"
 				current_rsrc = game.atoms[rsrc_name]
+				rsrc_amount = rsrcs[rsrc_name]
 				rsrc_display_name = tr(("%s_NAME" % rsrc_name).to_upper())
 				mass_str = "mol"
-				format_text(text_node, texture_node, "Atoms/" + rsrc_name, show_available, rsrcs[rsrc_name], current_rsrc, mass_str)
+				format_text(text_node, texture_node, "Atoms/" + rsrc_name, show_available, rsrc_amount, current_rsrc, mass_str)
 			elif game.particles.has(rsrc_name):
 				rsrc_type = "particles"
 				current_rsrc = game.particles[rsrc_name]
+				rsrc_amount = rsrcs[rsrc_name]
 				mass_str = "mol"
-				format_text(text_node, texture_node, "Particles/" + rsrc_name, show_available, rsrcs[rsrc_name], current_rsrc, mass_str)
+				format_text(text_node, texture_node, "Particles/" + rsrc_name, show_available, rsrc_amount, current_rsrc, mass_str)
 		if show_available and rsrc_name != "time":
 			texture_node.material = ShaderMaterial.new()
 			texture_node.material.shader = preload("res://Shaders/Resource.gdshader")
-			texture_node.material.set_shader_parameter("fill", current_rsrc / rsrcs[rsrc_name])
-			if current_rsrc < rsrcs[rsrc_name]:
+			texture_node.material.set_shader_parameter("fill", current_rsrc / rsrc_amount)
+			if current_rsrc < rsrc_amount:
 				is_enough_node.texture = preload("res://Graphics/Icons/Annotator/cross.png")
 		container.add_child(rsrc)
 		if mouse_events:
@@ -122,7 +127,7 @@ func put_rsrc(container, min_size, rsrcs, remove:bool = true, show_available:boo
 		if rsrc_name is String:
 			rsrc.rsrc_name = rsrc_name
 			rsrc.rsrc_type = rsrc_type
-			rsrc.rsrcs_required = rsrcs[rsrc_name]
+			rsrc.rsrcs_required = rsrc_amount
 			rsrc.mass_str = mass_str
 			rsrc.show_available = show_available
 	return data

@@ -71,9 +71,10 @@ func _on_Gigastructures_pressed():
 		elif not game.galaxy_data[game.c_g].has("conquered"):
 			game.popup(tr("NO_GS"), 2.0)
 		else:
+			game.toggle_panel("gigastructures_panel", false)
 			game.gigastructures_panel.g_i = game.galaxy_data[game.c_g]
 			game.gigastructures_panel.galaxy_id_g = game.c_g_g
-			game.toggle_panel(game.gigastructures_panel)
+			game.gigastructures_panel.refresh()
 
 
 func _on_Gigastructures_mouse_entered():

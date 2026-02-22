@@ -187,10 +187,11 @@ func on_galaxy_click (id:int, l_id:int):
 			elif not game.galaxy_data[l_id].has("conquered"):
 				game.popup(tr("NO_GS"), 2.0)
 			elif not game.galaxy_data[l_id].has("GS"):
+				game.toggle_panel("gigastructures_panel", false)
 				game._on_BottomInfo_close_button_pressed()
 				game.gigastructures_panel.g_i = game.galaxy_data[l_id]
 				game.gigastructures_panel.galaxy_id_g = id
-				game.toggle_panel(game.gigastructures_panel)
+				game.gigastructures_panel.refresh()
 		else:
 			if not g_i.has("discovered") and g_i.system_num > 9000:
 				game.show_YN_panel("op_galaxy", tr("OP_GALAXY_DESC"), [l_id, id], tr("OP_GALAXY"))

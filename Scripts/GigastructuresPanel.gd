@@ -15,13 +15,13 @@ const TRIANGULUM_PROBE = 9001
 const GALAXY_KILLER = 9002
 
 func _ready():
-	set_polygon(size)
+	set_polygon($GUI.size, $GUI.position)
 
 func refresh():
 	$ScrollContainer/VBoxContainer/TriangulumProbe.visible = game.science_unlocked.has("TPCC")
 	prod_cost_mult = g_i.system_num * game.u_i.gravitational * pow(g_i.dark_matter, 3) / 200.0
-	$Control/ProdCostMult.label_text = "%s: %s " % [tr("PRODUCTION_COST_MULT"), Helper.clever_round(prod_cost_mult)]
-	$Control/ProdCostMult.refresh()
+	$Panel/ProdCostMult.label_text = "%s: %s " % [tr("PRODUCTION_COST_MULT"), Helper.clever_round(prod_cost_mult)]
+	$Panel/ProdCostMult.refresh()
 	surface = 8.4e17 * prod_cost_mult
 	if bldg != -1:
 		update_info()
@@ -37,77 +37,77 @@ func update_info():
 			costs.energy *= prod_cost_mult
 	else:
 		costs = Data.costs[bldg].duplicate(true)
-	$Control/PPMult.visible = bldg == TRIANGULUM_PROBE and game.subject_levels.dimensional_power >= 6 and g_i.system_num >= 5000
-	$Control/PPMult.text = tr("PP_MULTIPLIER") + ": " + str(Helper.clever_round(log(prod_cost_mult + 1.0) / 2.0))
-	$Control/ProdCostMult.visible = bldg != TRIANGULUM_PROBE or game.subject_levels.dimensional_power >= 6 and g_i.system_num >= 5000
-	$Control/VBox/ProductionPerSec.visible = bldg != TRIANGULUM_PROBE
-	$Control/VBox/Production.visible = not bldg in [TRIANGULUM_PROBE, GALAXY_KILLER]
-	$Control/VBox/StoneMM.visible = bldg == GALAXY_KILLER
-	$Control/VBox/GalaxyInfo.visible = bldg in [TRIANGULUM_PROBE, GALAXY_KILLER]
+	$Panel/PPMult.visible = bldg == TRIANGULUM_PROBE and game.subject_levels.dimensional_power >= 6 and g_i.system_num >= 5000
+	$Panel/PPMult.text = tr("PP_MULTIPLIER") + ": " + str(Helper.clever_round(log(prod_cost_mult + 1.0) / 2.0))
+	$Panel/ProdCostMult.visible = bldg != TRIANGULUM_PROBE or game.subject_levels.dimensional_power >= 6 and g_i.system_num >= 5000
+	$Panel/VBox/ProductionPerSec.visible = bldg != TRIANGULUM_PROBE
+	$Panel/VBox/Production.visible = not bldg in [TRIANGULUM_PROBE, GALAXY_KILLER]
+	$Panel/VBox/StoneMM.visible = bldg == GALAXY_KILLER
+	$Panel/VBox/GalaxyInfo.visible = bldg in [TRIANGULUM_PROBE, GALAXY_KILLER]
 	var prod_mult = 1.0
 	if bldg in [Building.POWER_PLANT, Building.RESEARCH_LAB]:
 		var s_b:float = pow(game.u_i.boltzmann, 4) / pow(game.u_i.planck, 3) / pow(game.u_i.speed_of_light, 2)
 		prod_mult = sqrt(s_b) * g_i.B_strength * 1e9
-		$Control/ProdMult.label_text = "%s: %s " % [tr("PRODUCTION_MULTIPLIER"), Helper.clever_round(prod_mult)]
-		$Control/ProdMult.refresh()
-		$Control/ProdMult.visible = true
+		$Panel/ProdMult.label_text = "%s: %s " % [tr("PRODUCTION_MULTIPLIER"), Helper.clever_round(prod_mult)]
+		$Panel/ProdMult.refresh()
+		$Panel/ProdMult.visible = true
 	else:
-		$Control/ProdMult.visible = false
+		$Panel/ProdMult.visible = false
 	if galaxy_id_g == game.ships_travel_data.c_g_coords.g:
-		$Control/VBox/GalaxyInfo.visible = true
-		$Control/VBox/GalaxyInfo.text = tr("GS_ERROR3")
-		$Control/VBox/GalaxyInfo["theme_override_colors/font_color"] = Color.YELLOW
+		$Panel/VBox/GalaxyInfo.visible = true
+		$Panel/VBox/GalaxyInfo.text = tr("GS_ERROR3")
+		$Panel/VBox/GalaxyInfo["theme_override_colors/font_color"] = Color.YELLOW
 		error = true
 	if not error:
-		$Control/VBox/GalaxyInfo["theme_override_colors/font_color"] = Color.WHITE
+		$Panel/VBox/GalaxyInfo["theme_override_colors/font_color"] = Color.WHITE
 		if bldg == TRIANGULUM_PROBE:
 			if g_i.system_num <= 4999:
-				$Control/VBox/GalaxyInfo.text = tr("TP_ERROR")
+				$Panel/VBox/GalaxyInfo.text = tr("TP_ERROR")
 				error = true
 			else:
-				$Control/VBox/GalaxyInfo.text = tr("TP_CONFIRM")
+				$Panel/VBox/GalaxyInfo.text = tr("TP_CONFIRM")
 		elif bldg != GALAXY_KILLER:
-			$Control/VBox/Production.visible = true
-			$Control/VBox/GalaxyInfo.visible = false
-			costs.stone = PI * 100
+			$Panel/VBox/Production.visible = true
+			$Panel/VBox/GalaxyInfo.visible = false
+			costs["stone"] = PI * 100
 			if bldg == Building.MINERAL_EXTRACTOR:
-				costs.mythril = 1 / 240000.0
+				costs["mythril"] = 1 / 240000.0
 			elif bldg in [Building.MINERAL_SILO, Building.BATTERY, Building.POWER_PLANT]:
-				costs.mythril = 1 / 300000.0
+				costs["mythril"] = 1 / 300000.0
 			elif bldg == Building.RESEARCH_LAB:
-				costs.mythril = 1 / 120000.0
+				costs["mythril"] = 1 / 120000.0
 			if costs.has("energy"):
 				costs.energy *= 200.0
 			costs.erase("time")
 			for cost in costs.keys():
 				costs[cost] *= game.engineering_bonus.BCM * surface
 		else:
-			$Control/VBox/GalaxyInfo.text = tr("GALAXY_KILLER_DESC")
+			$Panel/VBox/GalaxyInfo.text = tr("GALAXY_KILLER_DESC")
 			for cost in costs.keys():
 				costs[cost] *= game.engineering_bonus.BCM * prod_cost_mult
 	if bldg == Building.MINERAL_EXTRACTOR:
-		$Control/VBox/ProductionPerSec.text = tr("PRODUCTION_PER_SECOND")
+		$Panel/VBox/ProductionPerSec.text = tr("PRODUCTION_PER_SECOND")
 		num = surface * 0.01
-		Helper.put_rsrc($Control/VBox/Production, 32, {"minerals":num * game.u_i.time_speed * Helper.get_IR_mult(Building.MINERAL_EXTRACTOR)})
+		Helper.put_rsrc($Panel/VBox/Production, 32, {"minerals":num * game.u_i.time_speed * Helper.get_IR_mult(Building.MINERAL_EXTRACTOR)})
 	elif bldg == Building.POWER_PLANT:
-		$Control/VBox/ProductionPerSec.text = tr("PRODUCTION_PER_SECOND")
+		$Panel/VBox/ProductionPerSec.text = tr("PRODUCTION_PER_SECOND")
 		num = surface * 20.0 * prod_mult
-		Helper.put_rsrc($Control/VBox/Production, 32, {"energy":num * game.u_i.time_speed * Helper.get_IR_mult(Building.POWER_PLANT)})
+		Helper.put_rsrc($Panel/VBox/Production, 32, {"energy":num * game.u_i.time_speed * Helper.get_IR_mult(Building.POWER_PLANT)})
 	elif bldg == Building.RESEARCH_LAB:
-		$Control/VBox/ProductionPerSec.text = tr("PRODUCTION_PER_SECOND")
+		$Panel/VBox/ProductionPerSec.text = tr("PRODUCTION_PER_SECOND")
 		num = surface * 0.5 * prod_mult
-		Helper.put_rsrc($Control/VBox/Production, 32, {"SP":num * game.u_i.time_speed * Helper.get_IR_mult(Building.RESEARCH_LAB)})
+		Helper.put_rsrc($Panel/VBox/Production, 32, {"SP":num * game.u_i.time_speed * Helper.get_IR_mult(Building.RESEARCH_LAB)})
 	elif bldg == Building.MINERAL_SILO:
-		$Control/VBox/ProductionPerSec.text = tr("STORAGE")
+		$Panel/VBox/ProductionPerSec.text = tr("STORAGE")
 		num = surface
-		Helper.put_rsrc($Control/VBox/Production, 32, {"minerals":num * Helper.get_IR_mult(Building.MINERAL_SILO)})
+		Helper.put_rsrc($Panel/VBox/Production, 32, {"minerals":num * Helper.get_IR_mult(Building.MINERAL_SILO)})
 	elif bldg == Building.BATTERY:
-		$Control/VBox/ProductionPerSec.text = tr("STORAGE")
+		$Panel/VBox/ProductionPerSec.text = tr("STORAGE")
 		num = surface * 60000.0 * game.u_i.charge
-		Helper.put_rsrc($Control/VBox/Production, 32, {"energy":num * Helper.get_IR_mult(Building.BATTERY)})
+		Helper.put_rsrc($Panel/VBox/Production, 32, {"energy":num * Helper.get_IR_mult(Building.BATTERY)})
 	elif bldg == GALAXY_KILLER:
 		var stone_from_GK = {}
-		$Control/VBox/ProductionPerSec.text = tr("EXPECTED_RESOURCES")
+		$Panel/VBox/ProductionPerSec.text = tr("EXPECTED_RESOURCES")
 		var num_planets = g_i.system_num * game.u_i.gravitational * pow(g_i.dark_matter, 3) * 8
 		var avg_planet_size = 30000
 		var R = avg_planet_size * 1000.0 / 2#in meters
@@ -134,11 +134,11 @@ func update_info():
 			rsrc_from_GK[mat] = num_planets * surface_volume * surface_mat_info[mat].chance * surface_mat_info[mat].amount * game.u_i.planck
 		for met in game.met_info.keys():
 			rsrc_from_GK[met] = num_planets * Helper.get_sph_V(R - game.met_info[met].min_depth, R - game.met_info[met].max_depth) / game.met_info[met].rarity * game.u_i.planck
-		Helper.put_rsrc($Control/VBox/StoneMM/GridContainer, 32, rsrc_from_GK)
-	$Control/Convert.visible = not error
-	$Control/VBox/Costs.visible = not error
-	$Control/VBox/CostsHBox.visible = not error
-	Helper.put_rsrc($Control/VBox/CostsHBox, 32, costs, true, true)
+		Helper.put_rsrc($Panel/VBox/StoneMM/GridContainer, 32, rsrc_from_GK)
+	$Panel/Convert.visible = not error
+	$Panel/VBox/Costs.visible = not error
+	$Panel/VBox/CostsHBox.visible = not error
+	Helper.put_rsrc($Panel/VBox/CostsHBox, 32, costs, true, true)
 
 func add_stone(stone:Dictionary, layer:Dictionary, amount:float):
 	for comp in layer:
@@ -154,11 +154,8 @@ func _on_GS_pressed(extra_arg_0):
 		bldg = TRIANGULUM_PROBE
 	else:
 		bldg = Building.names.find(extra_arg_0)
-	if $Control.modulate.a > 0:
-		$Control/AnimationPlayer.play_backwards("Fade")
-	else:
-		$Control/AnimationPlayer.play("Fade")
-		update_info()
+	$Panel.show()
+	update_info()
 
 func _on_Convert_pressed():
 	if game.check_enough(costs):
@@ -223,9 +220,3 @@ func _on_Convert_pressed():
 
 func _on_mouse_exited():
 	game.hide_tooltip()
-
-
-func _on_AnimationPlayer_animation_finished(anim_name):
-	if $Control.modulate.a == 0:
-		$Control/AnimationPlayer.play("Fade")
-		update_info()

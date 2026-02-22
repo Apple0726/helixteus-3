@@ -12,6 +12,8 @@ func _ready():
 	$Resource/Texture2D.custom_minimum_size = Vector2(36, 36)
 	$Resource2/Texture2D.custom_minimum_size = Vector2(36, 36)
 	$Resource2/Texture2D.texture_normal = preload("res://Graphics/Icons/money.png")
+	$Resource.set_process(false)
+	$Resource2.set_process(false)
 
 var max_value:float
 

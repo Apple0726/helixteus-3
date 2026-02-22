@@ -2,9 +2,23 @@
 
 [ext_resource type="PackedScene" uid="uid://1hq6qpr1oa3i" path="res://Scenes/AdvButton.tscn" id="1"]
 [ext_resource type="PackedScene" uid="uid://c8jr3e5aiyj1n" path="res://Scenes/HelpText.tscn" id="2"]
-[ext_resource type="PackedScene" uid="uid://ddf2xjwcht77u" path="res://Scenes/CloseButton.tscn" id="5"]
+[ext_resource type="Texture2D" uid="uid://dcvnyb0mloli2" path="res://Graphics/GUI/Panel.png" id="3_ynbwh"]
+[ext_resource type="Texture2D" uid="uid://baowebna7hgr5" path="res://Graphics/GUI/CloseButtonNormal.png" id="4_yyxvr"]
+[ext_resource type="Texture2D" uid="uid://c1vwn7p5uxu1r" path="res://Graphics/GUI/CloseButtonHover.png" id="5_r0bpa"]
 [ext_resource type="Theme" uid="uid://cp2u1kgj60ic" path="res://Resources/default_theme.tres" id="6"]
 [ext_resource type="Script" uid="uid://cfvrj70877b64" path="res://Scripts/GigastructuresPanel.gd" id="7"]
+
+[sub_resource type="SystemFont" id="SystemFont_l1il0"]
+font_names = PackedStringArray("Arial")
+subpixel_positioning = 0
+multichannel_signed_distance_field = true
+
+[sub_resource type="LabelSettings" id="LabelSettings_ynbwh"]
+font = SubResource("SystemFont_l1il0")
+font_size = 24
+shadow_size = 2
+shadow_color = Color(0, 0, 0, 0.372549)
+shadow_offset = Vector2(2, 2)
 
 [sub_resource type="Theme" id="1"]
 Button/colors/font_color = Color(0.88, 0.88, 0.88, 1)
@@ -30,94 +44,58 @@ border_blend = true
 
 [sub_resource type="Shortcut" id="3"]
 
-[sub_resource type="Animation" id="4"]
-resource_name = "Fade"
-length = 0.08
-step = 0.02
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath(".:modulate")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0, 0.08),
-"transitions": PackedFloat32Array(1, 1),
-"update": 0,
-"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 1)]
-}
-
-[sub_resource type="Animation" id="5"]
-length = 0.001
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath(".:modulate")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [Color(1, 1, 1, 0)]
-}
-
-[sub_resource type="AnimationLibrary" id="AnimationLibrary_5a0wr"]
-_data = {
-&"Fade": SubResource("4"),
-&"RESET": SubResource("5")
-}
-
-[node name="TerraformPanel" type="Panel" unique_id=632968873]
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -512.0
-offset_top = -296.0
-offset_right = 512.0
-offset_bottom = 296.0
+[node name="Control" type="Control" unique_id=529723800]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
 pivot_offset = Vector2(533, 300)
 theme = ExtResource("6")
 script = ExtResource("7")
 
+[node name="GUI" type="TextureRect" parent="." unique_id=1621859216]
+layout_mode = 0
+offset_left = 80.0
+offset_top = 52.0
+offset_right = 1204.0
+offset_bottom = 671.0
+texture = ExtResource("3_ynbwh")
+metadata/_edit_lock_ = true
+
+[node name="CloseButton" type="TextureButton" parent="." unique_id=829856315]
+layout_mode = 0
+offset_left = 1138.0
+offset_top = 68.0
+offset_right = 1187.0
+offset_bottom = 117.0
+texture_normal = ExtResource("4_yyxvr")
+texture_hover = ExtResource("5_r0bpa")
+
 [node name="Title" type="Label" parent="." unique_id=927824873]
 custom_minimum_size = Vector2(0, 38)
-layout_mode = 0
+layout_mode = 1
+anchors_preset = 10
 anchor_right = 1.0
-offset_bottom = 35.0
+offset_left = 120.0
+offset_top = 72.0
+offset_right = 424.0
+offset_bottom = 110.0
+grow_horizontal = 2
 theme_override_font_sizes/font_size = 18
 text = "GS_SC"
-horizontal_alignment = 1
+label_settings = SubResource("LabelSettings_ynbwh")
 vertical_alignment = 1
 
-[node name="CloseButton" parent="." unique_id=217737370 instance=ExtResource("5")]
-layout_mode = 1
-offset_left = -32.0
-offset_top = 8.0
-offset_right = -8.0
-offset_bottom = 32.0
-
-[node name="Desc" type="Label" parent="." unique_id=958163923]
-layout_mode = 0
-anchor_right = 1.0
-offset_left = 24.0
-offset_top = 56.0
-offset_right = -24.0
-offset_bottom = 96.0
-text = "GS_DESC"
-horizontal_alignment = 1
-autowrap_mode = 3
-
 [node name="ScrollContainer" type="ScrollContainer" parent="." unique_id=204979805]
-layout_mode = 0
+layout_mode = 1
+anchors_preset = 4
 anchor_top = 0.5
 anchor_bottom = 0.5
-offset_left = 24.0
-offset_top = -168.0
-offset_right = 400.0
-offset_bottom = 272.0
+offset_left = 144.0
+offset_top = 132.0
+offset_right = 504.0
+offset_bottom = 572.0
+grow_vertical = 2
 
 [node name="VBoxContainer" type="VBoxContainer" parent="ScrollContainer" unique_id=923529960]
 layout_mode = 2
@@ -161,108 +139,90 @@ layout_mode = 2
 button_text = "TRIANGULUM_PROBE"
 
 [node name="Panel" type="Panel" parent="." unique_id=2134937585]
+visible = false
 layout_mode = 0
-offset_left = 424.0
-offset_top = 128.0
-offset_right = 1000.0
-offset_bottom = 568.0
+offset_left = 544.0
+offset_top = 152.0
+offset_right = 1120.0
+offset_bottom = 592.0
 
-[node name="Control" type="Control" parent="." unique_id=883023916]
-modulate = Color(1, 1, 1, 0)
-layout_mode = 1
-anchors_preset = 6
-anchor_left = 1.0
-anchor_top = 0.5
-anchor_right = 1.0
-anchor_bottom = 0.5
-offset_left = -600.0
-offset_top = -160.0
-offset_right = -24.0
-offset_bottom = 272.0
-grow_horizontal = 0
-grow_vertical = 2
-mouse_filter = 1
-
-[node name="VBox" type="VBoxContainer" parent="Control" unique_id=1113787218]
+[node name="VBox" type="VBoxContainer" parent="Panel" unique_id=1113787218]
 layout_mode = 0
-offset_left = 20.0
-offset_top = 16.0
-offset_right = 520.0
-offset_bottom = 424.0
+offset_left = 40.0
+offset_top = 20.0
+offset_right = 540.0
+offset_bottom = 428.0
 theme_override_constants/separation = 15
 
-[node name="GalaxyInfo" type="Label" parent="Control/VBox" unique_id=470323327]
+[node name="GalaxyInfo" type="Label" parent="Panel/VBox" unique_id=470323327]
 layout_mode = 2
 autowrap_mode = 3
 
-[node name="Costs" type="Label" parent="Control/VBox" unique_id=1081084854]
+[node name="Costs" type="Label" parent="Panel/VBox" unique_id=1081084854]
 layout_mode = 2
 text = "COSTS"
 
-[node name="CostsHBox" type="GridContainer" parent="Control/VBox" unique_id=817930769]
+[node name="CostsHBox" type="GridContainer" parent="Panel/VBox" unique_id=817930769]
 layout_mode = 2
 columns = 3
 
-[node name="ProductionPerSec" type="Label" parent="Control/VBox" unique_id=284231015]
+[node name="ProductionPerSec" type="Label" parent="Panel/VBox" unique_id=284231015]
 layout_mode = 2
 text = "PRODUCTION_PER_SECOND"
 
-[node name="StoneMM" type="ScrollContainer" parent="Control/VBox" unique_id=1449695689]
+[node name="StoneMM" type="ScrollContainer" parent="Panel/VBox" unique_id=1449695689]
 visible = false
 custom_minimum_size = Vector2(0, 170)
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_8v1ds")
 
-[node name="GridContainer" type="GridContainer" parent="Control/VBox/StoneMM" unique_id=458285395]
+[node name="GridContainer" type="GridContainer" parent="Panel/VBox/StoneMM" unique_id=458285395]
 layout_mode = 2
 columns = 4
 
-[node name="Production" type="VBoxContainer" parent="Control/VBox" unique_id=2078759089]
+[node name="Production" type="VBoxContainer" parent="Panel/VBox" unique_id=2078759089]
 custom_minimum_size = Vector2(0, 100)
 layout_mode = 2
 
-[node name="ProdCostMult" parent="Control" unique_id=607154863 instance=ExtResource("2")]
+[node name="ProdCostMult" parent="Panel" unique_id=607154863 instance=ExtResource("2")]
 layout_mode = 0
-offset_left = 24.0
-offset_top = 384.0
-offset_right = 376.0
-offset_bottom = 414.0
+offset_left = 44.0
+offset_top = 388.0
+offset_right = 396.0
+offset_bottom = 418.0
 help_text = "PCM_DESC"
 
-[node name="ProdMult" parent="Control" unique_id=305871739 instance=ExtResource("2")]
+[node name="ProdMult" parent="Panel" unique_id=305871739 instance=ExtResource("2")]
 layout_mode = 0
-offset_left = 24.0
-offset_top = 340.0
-offset_right = 436.0
-offset_bottom = 370.0
+offset_left = 44.0
+offset_top = 344.0
+offset_right = 456.0
+offset_bottom = 374.0
 help_text = "GS_PROD_MULT_BY_X"
 
-[node name="Convert" type="Button" parent="Control" unique_id=615172921]
+[node name="Convert" type="Button" parent="Panel" unique_id=615172921]
 layout_mode = 0
 anchor_left = 1.0
 anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = -152.0
-offset_top = -50.0
-offset_right = -16.0
-offset_bottom = -16.0
+offset_left = -132.0
+offset_top = -54.0
+offset_right = 4.0
+offset_bottom = -20.0
 shortcut = SubResource("3")
 shortcut_in_tooltip = false
 text = "CONVERT"
 
-[node name="AnimationPlayer" type="AnimationPlayer" parent="Control" unique_id=736074936]
-libraries/ = SubResource("AnimationLibrary_5a0wr")
-
-[node name="PPMult" type="Label" parent="Control" unique_id=1227811528]
+[node name="PPMult" type="Label" parent="Panel" unique_id=1227811528]
 visible = false
 layout_mode = 0
-offset_left = 24.0
-offset_top = 320.0
-offset_right = 340.0
-offset_bottom = 342.0
+offset_left = 44.0
+offset_top = 324.0
+offset_right = 360.0
+offset_bottom = 347.0
 
-[connection signal="close_button_pressed" from="CloseButton" to="." method="_on_close_button_pressed"]
+[connection signal="pressed" from="CloseButton" to="." method="_on_close_button_pressed"]
 [connection signal="pressed" from="ScrollContainer/VBoxContainer/MineralExtraction" to="." method="_on_GS_pressed" binds= ["mineral_extractor"]]
 [connection signal="pressed" from="ScrollContainer/VBoxContainer/EnergyProduction" to="." method="_on_GS_pressed" binds= ["power_plant"]]
 [connection signal="pressed" from="ScrollContainer/VBoxContainer/MineralStorage" to="." method="_on_GS_pressed" binds= ["mineral_silo"]]
@@ -270,5 +230,4 @@ offset_bottom = 342.0
 [connection signal="pressed" from="ScrollContainer/VBoxContainer/Research" to="." method="_on_GS_pressed" binds= ["research_lab"]]
 [connection signal="pressed" from="ScrollContainer/VBoxContainer/GalaxyKiller" to="." method="_on_GS_pressed" binds= ["galaxy_killer"]]
 [connection signal="pressed" from="ScrollContainer/VBoxContainer/TriangulumProbe" to="." method="_on_GS_pressed" binds= ["triangulum_probe"]]
-[connection signal="pressed" from="Control/Convert" to="." method="_on_Convert_pressed"]
-[connection signal="animation_finished" from="Control/AnimationPlayer" to="." method="_on_AnimationPlayer_animation_finished"]
+[connection signal="pressed" from="Panel/Convert" to="." method="_on_Convert_pressed"]

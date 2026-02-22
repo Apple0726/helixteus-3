@@ -100,6 +100,7 @@ var panel_var_name_to_file_name = {
 	"planetkiller_panel":"PlanetkillerPanel",
 	"AMN_panel":"AMNPanel",
 	"SPR_panel":"SPRPanel",
+	"gigastructures_panel":"GigastructuresPanel",
 }
 #endregion
 
