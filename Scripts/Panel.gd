@@ -14,6 +14,7 @@ func set_polygon(v:Vector2, offset:Vector2 = Vector2.ZERO):
 	polygon = [offset, offset + Vector2.RIGHT * v.x, offset + v, offset + Vector2.DOWN * v.y]
 
 func _on_close_button_pressed():
+	set_process(false)
 	game.toggle_panel(panel_var_name)
 	game.active_panel = null
 

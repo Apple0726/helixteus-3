@@ -176,10 +176,6 @@ func on_galaxy_click (id:int, l_id:int):
 	var view = self.get_parent()
 	if not view.dragged:
 		if g_i.has("GS"):
-			if g_i.GS == "TP":
-				game.PC_panel.probe_tier = 2
-				game.toggle_panel("PC_panel")
-				game.hide_tooltip()
 			return
 		if game.bottom_info_action == "convert_to_GS":
 			if id == 0:

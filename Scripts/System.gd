@@ -561,7 +561,7 @@ func destroy_MS():
 		Helper.put_rsrc(vbox, 32, rsrc_salvaged, false)
 		Helper.add_label(tr("DISMANTLING_COSTS"), 0)
 		Helper.add_label(tr("YOU_WILL_SALVAGE"), 3)
-		Helper.add_label(tr("X_TO_CONFIRM") % "X")
+		Helper.add_label("{key}: {confirm}".format({"key":"X", "confirm": tr("CONFIRM")}))
 	elif current_MS_action == "destroying":
 		if game.check_enough(bldg_costs):
 			game.deduct_resources(bldg_costs)

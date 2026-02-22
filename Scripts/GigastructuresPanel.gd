@@ -76,8 +76,10 @@ func update_info():
 				costs["mythril"] = 1 / 300000.0
 			elif bldg == Building.RESEARCH_LAB:
 				costs["mythril"] = 1 / 120000.0
+			if costs.has("money"):
+				costs.money *= 100.0
 			if costs.has("energy"):
-				costs.energy *= 200.0
+				costs.energy *= 100.0
 			costs.erase("time")
 			for cost in costs.keys():
 				costs[cost] *= game.engineering_bonus.BCM * surface
@@ -175,7 +177,7 @@ func _on_Convert_pressed():
 			game.energy_capacity += num
 		elif bldg == Building.RESEARCH_LAB:
 			game.autocollect.GS.SP += num
-		game.toggle_panel(self)
+		game.toggle_panel(panel_var_name)
 		game.popup(tr("CONVERT_SUCCESS"), 2.0)
 		if not game.achievement_data.progression.has("build_GS"):
 			game.earn_achievement("progression", "build_GS")

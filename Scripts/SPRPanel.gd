@@ -62,6 +62,7 @@ func _on_Atom_pressed(_name:String):
 	refresh()
 
 func refresh():
+	set_process(true)
 	for btn in $ScrollContainer/GridContainer.get_children():
 		if btn.name in ["Ta", "W", "Os"] and not game.science_unlocked.has("EMM"):
 			btn.modulate = Color(0.2, 0.2, 0.2)

@@ -20,9 +20,9 @@ var reactions:Dictionary = {
 	"titanium":{"type":"mets", "atoms":{"Ti":1}, "energy_cost":12000.0, "difficulty":0.5},
 	"platinum":{"type":"mets", "atoms":{"Pt":1}, "energy_cost":40000.0, "difficulty":2.0},
 	"diamond":{"type":"mets", "atoms":{"C":1}, "energy_cost":85000.0, "difficulty":2.2},
-	"nanocrystal":{"type":"mets", "atoms":{"Si":1, "O":2, "Na":1}, "energy_cost":1.3e9, "difficulty":35.0},
-	"quillite":{"type":"mats", "atoms":{"Si":1, "O":2, "Ne":1}, "energy_cost":1.9e9, "difficulty":25.0},
-	"mythril":{"type":"mets", "atoms":{"W":2, "Os":1, "Ta":2}, "energy_cost":4.0e11, "difficulty":600.0},
+	"nanocrystal":{"type":"mets", "atoms":{"Si":1, "O":2, "Na":1}, "energy_cost":1.3e11, "difficulty":350.0},
+	"quillite":{"type":"mats", "atoms":{"Si":1, "O":2, "Ne":1}, "energy_cost":1.9e11, "difficulty":250.0},
+	"mythril":{"type":"mets", "atoms":{"W":2, "Os":1, "Ta":2}, "energy_cost":4.0e13, "difficulty":6000.0},
 }
 var rsrc_nodes_from:Array
 var rsrc_nodes_to:Array
@@ -83,6 +83,7 @@ func on_rsrc_pressed(rsrc:String):
 	refresh()
 
 func refresh():
+	set_process(true)
 	for btn in $ScrollContainer/GridContainer.get_children():
 		if (btn.name in ["platinum", "diamond"] and not game.science_unlocked.has("AMM")
 			or btn.name in ["nanocrystal", "mythril", "quillite"] and not game.science_unlocked.has("EMM")):

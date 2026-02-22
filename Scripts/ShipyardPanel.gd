@@ -55,7 +55,7 @@ func _on_Construct_pressed():
 			"strength":strength,
 			"number":$SpinBox.value,
 			"tier":1,
-			"location_name":game.cluster_data[game.c_c].name,
+			"location_name":game.u_i.cluster_data[game.c_c].name,
 			})
 		_on_close_button_pressed()
 	else:

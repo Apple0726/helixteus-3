@@ -187,9 +187,9 @@ layout_mode = 2
 [node name="ProdCostMult" parent="Panel" unique_id=607154863 instance=ExtResource("2")]
 layout_mode = 0
 offset_left = 44.0
-offset_top = 388.0
+offset_top = 392.0
 offset_right = 396.0
-offset_bottom = 418.0
+offset_bottom = 422.0
 help_text = "PCM_DESC"
 
 [node name="ProdMult" parent="Panel" unique_id=305871739 instance=ExtResource("2")]
@@ -201,15 +201,18 @@ offset_bottom = 374.0
 help_text = "GS_PROD_MULT_BY_X"
 
 [node name="Convert" type="Button" parent="Panel" unique_id=615172921]
-layout_mode = 0
+layout_mode = 1
+anchors_preset = 3
 anchor_left = 1.0
 anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = -132.0
-offset_top = -54.0
-offset_right = 4.0
-offset_bottom = -20.0
+offset_left = -156.0
+offset_top = -52.0
+offset_right = -20.0
+offset_bottom = -18.0
+grow_horizontal = 0
+grow_vertical = 0
 shortcut = SubResource("3")
 shortcut_in_tooltip = false
 text = "CONVERT"

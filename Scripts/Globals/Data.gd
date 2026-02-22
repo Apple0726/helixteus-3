@@ -95,7 +95,7 @@ var MS_output = {	"DS_0":1.0e7,
 					"MME_1":254000,
 					"MME_2":8.0e7,
 					"MME_3":3.0e9,
-					"MB":5.0e9,
+					"MB":2.0e10,
 }
 
 var MUs = {	"MV":{"base_cost":100.0, "pw":1.9},
