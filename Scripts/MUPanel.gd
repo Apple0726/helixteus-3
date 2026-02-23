@@ -32,22 +32,18 @@ func _ready():
 		btn.connect("mouse_entered",Callable(self,"_on_Upgrade_mouse_entered").bind(MU))
 		btn.connect("mouse_exited",Callable(self,"_on_Upgrade_mouse_exited").bind(MU))
 		btn.connect("pressed",Callable(self,"_on_Upgrade_pressed").bind(MU))
-		btn.custom_minimum_size.x = 190
+		btn.custom_minimum_size.x = 120
 		btn.expand_icon = true
 		btn.icon = Data.minerals_icon
 		btn.alignment = HORIZONTAL_ALIGNMENT_LEFT
 		hbox.name = MU
 		hbox.add_child(btn)
-		var spacer = Control.new()
-		hbox.add_child(spacer)
-		spacer.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		if game.achievement_data.progression.has("new_universe"):
 			var btn_max = Button.new()
 			btn_max.connect("pressed",Callable(self,"_on_UpgradeMax_pressed").bind(MU))
 			btn_max.custom_minimum_size.x = 32
 			btn_max.name = "UpgradeMax"
-			btn_max.expand_icon = true
-			#btn_max.icon = preload("res://Graphics/Science/UP2.png")
+			btn_max.text = "Max"
 			hbox.add_child(btn_max)
 		$PanelContainer/VBox.add_child(hbox)
 

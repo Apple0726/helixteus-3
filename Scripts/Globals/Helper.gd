@@ -118,9 +118,6 @@ func put_rsrc(container, min_size, rsrcs, remove:bool = true, show_available:boo
 			texture_node.material.set_shader_parameter("fill", current_rsrc / rsrc_amount)
 			if current_rsrc < rsrc_amount:
 				is_enough_node.texture = preload("res://Graphics/Icons/Annotator/cross.png")
-		container.add_child(rsrc)
-		if mouse_events:
-			rsrc.connect_mouse_events()
 		texture_node.custom_minimum_size = Vector2(1, 1) * min_size
 		data.append({"rsrc":rsrc, "name":rsrc_name})
 		rsrc.rsrc_display_name = rsrc_display_name
@@ -130,6 +127,9 @@ func put_rsrc(container, min_size, rsrcs, remove:bool = true, show_available:boo
 			rsrc.rsrcs_required = rsrc_amount
 			rsrc.mass_str = mass_str
 			rsrc.show_available = show_available
+		container.add_child(rsrc)
+		if mouse_events:
+			rsrc.connect_mouse_events()
 	return data
 
 #Converts time in seconds to string format
@@ -599,7 +599,7 @@ func mass_generate_rock(tile:Dictionary, p_i:Dictionary, depth:int):
 		other_volume += amount / met_info.density / 1000 / h_mult
 		#   									                          	    V Every km, rock density goes up by 0.01
 	var stone_amount = max(0, clever_round((depth - other_volume) * 1000 * (2.85 + (2 * min(tile.depth + depth, 1000.0 * p_i.size / 2.0)) / 200000.0) * h_mult))
-	contents.stone = get_stone_comp_from_amount(p_i[get_rock_layer(tile, p_i)], stone_amount)
+	contents["stone"] = get_stone_comp_from_amount(p_i[get_rock_layer(tile, p_i)], stone_amount)
 	return contents
 
 func get_stone_comp_from_amount(p_i_layer:Dictionary, amount:float):
@@ -650,9 +650,7 @@ func generate_rock(tile:Dictionary, p_i:Dictionary):
 		#   									                          	    V Every km, rock density goes up by 0.01
 	var stone_amount = max(0, clever_round((1 - other_volume) * 1000 * (2.85 + tile.depth / 100000.0) * h_mult))
 	if stone_amount != 0:
-		contents.stone = get_stone_comp_from_amount(p_i[get_rock_layer(tile, p_i)], stone_amount)
-	if tile.has("ship_locator_depth") and tile.depth >= tile.ship_locator_depth:
-		contents.ship_locator = 1
+		contents["stone"] = get_stone_comp_from_amount(p_i[get_rock_layer(tile, p_i)], stone_amount)
 	return contents
 
 func get_IR_mult(bldg_name):
@@ -808,7 +806,7 @@ func has_IR(bldg_name:String):
 func add_item_to_coll(dict:Dictionary, item:String, num):
 	if num is Dictionary:
 		if not dict.has("stone"):
-			dict.stone = {}
+			dict["stone"] = {}
 		for el in num:
 			if dict.stone.has(el):
 				dict.stone[el] += num[el]
@@ -1630,7 +1628,7 @@ func add_items_to_inventory(item_name, item_amount:int, item_base_costs:Dictiona
 	if game.HUD:
 		game.HUD.update_hotbar()
 
-func set_logarithmic_time_speed(dimensional_power:int, base_time_speed:float):
+func get_logarithmic_time_speed(dimensional_power:int, base_time_speed:float):
 	if dimensional_power >= 4:
 		return log(base_time_speed - 1.0 + exp(1.0))
 	else:

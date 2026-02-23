@@ -165,7 +165,7 @@ func _ready():
 		game.help_str = "cave_controls"
 	$UI2/Controls/Label.text = tr("CONTROLS")
 	$UI2/Controls.refresh()
-	time_speed = Helper.set_logarithmic_time_speed(game.subject_levels.dimensional_power, game.u_i.time_speed * tile.get("time_speed_bonus", 1.0))
+	time_speed = Helper.get_logarithmic_time_speed(game.subject_levels.dimensional_power, game.u_i.time_speed * tile.get("time_speed_bonus", 1.0))
 	HP = rover_data.HP
 	total_HP = rover_data.HP
 	atk = rover_data.atk

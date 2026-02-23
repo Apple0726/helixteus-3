@@ -289,7 +289,8 @@ func pickaxe_hit():
 			game.stats_global.tiles_mined_mining += 1
 			tile.depth += 1
 			generate_rock(true)
-	Helper.put_rsrc($Panel/VBoxContainer, 42, contents)
+	if rock_gen:
+		Helper.put_rsrc($Panel/VBoxContainer, 42, contents)
 	tile.mining_progress = progress
 	if rock_gen:
 		$MiningSound.pitch_scale = randf_range(0.8, 1.2)

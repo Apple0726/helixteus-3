@@ -16,8 +16,9 @@ var rsrc_nodes:Array
 func _ready():
 	set_polygon($GUI.size, $GUI.position)
 
-func refresh():
-	hslider.value = hslider.max_value
+func refresh(autoset_slider:bool = true):
+	if autoset_slider:
+		hslider.value = hslider.max_value
 	tile = game.tile_data[game.c_t]
 	expected_rsrc = {}
 	var is_crushing = tile.bldg.has("stone")
@@ -77,11 +78,11 @@ func _process(delta):
 	CC_bar.value = 1 - c_i.progress
 	CC_stone.text = "%s kg" % [c_i.qty_left]
 	CC_time.text = Helper.time_to_str(c_i.qty_left / c_i.crush_spd)
-	for hbox in rsrc_nodes:
-		hbox.rsrc.get_node("Text").text = "%s kg" % [Helper.format_num(tile.bldg.expected_rsrc[hbox.name] * (1 - CC_bar.value), true)]
+	for hbox_output in rsrc_nodes:
+		hbox_output.rsrc.rsrcs_required = tile.bldg.expected_rsrc[hbox_output.name] * (1 - CC_bar.value)
 
 func _on_h_slider_value_changed(value):
-	refresh()
+	refresh(false)
 
 
 func _on_h_slider_mouse_entered():

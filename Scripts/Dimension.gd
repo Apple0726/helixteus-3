@@ -120,7 +120,7 @@ func refresh_univs(reset:bool = false):
 	$Subjects/Grid.visible = not $DimBonusesInfo.visible
 	if len(game.universe_data) > 1:
 		for univ in game.universe_data:
-			if univ.lv >= 100:
+			if univ.lv >= 120:
 				$TopInfo/Reset.disabled = false
 				break
 	var lv_sum:int = 0
@@ -130,8 +130,8 @@ func refresh_univs(reset:bool = false):
 		var subject_level:int = game.subject_levels[node.name.to_lower()]
 		node.get_node("Upgrade").disabled = game.DRs <= subject_level
 	new_dim_DRs = floor(lv_sum / 10000.0 * DR_mult)
-	$TopInfo/Reset.text = "%s (+ %s %s)" % [tr("NEW_DIMENSION"), new_dim_DRs, tr("DR")]
-	$TopInfo/DRs.text = "[center]%s: %s  %s" % [tr("DR_TITLE"), game.DRs, "[img]Graphics/Icons/help.png[/img]"]
+	$TopInfo/Reset.text = "%s (+ %d %s)" % [tr("NEW_DIMENSION"), new_dim_DRs, tr("DR")]
+	$TopInfo/DRs.text = "[center]%s: %d  %s" % [tr("DR_TITLE"), game.DRs, "[img]Graphics/Icons/help.png[/img]"]
 	$TopInfo/DimensionN.text = "%s #%s" % [tr("DIMENSION"), game.dim_num]
 	for univ in $Universes/Scroll/VBox.get_children():
 		univ.queue_free()
@@ -283,7 +283,7 @@ func on_univ_over(id:int):
 			Helper.e_notation(6.626e-34),
 			tr("BOLTZMANN"),
 			Helper.e_notation(1.381e-23),
-			tr("S_B_CTE"),
+			tr("S_B"),
 			Helper.e_notation(5.67e-8),
 			tr("GRAVITATIONAL"),
 			Helper.e_notation(6.674e-11),
@@ -300,7 +300,7 @@ func on_univ_over(id:int):
 			u_i.planck,
 			tr("BOLTZMANN"),
 			u_i.boltzmann,
-			tr("S_B_CTE"),
+			tr("S_B"),
 			Helper.format_num(pow(u_i.boltzmann, 4) / pow(u_i.planck, 3) / pow(u_i.speed_of_light, 2), true),
 			tr("GRAVITATIONAL"),
 			u_i.gravitational,
@@ -345,7 +345,7 @@ func on_univ_press(id:int):
 func _on_SendProbes_pressed():
 	game.help.erase("flash_send_probe_btn")
 	$Universes/SendProbes/AnimationPlayer.play("RESET")
-	game.toggle_panel(game.send_probes_panel)
+	game.toggle_panel("create_universe_panel")
 
 func _on_mouse_exited():
 	game.hide_tooltip()
@@ -615,7 +615,7 @@ func set_bonuses():
 func _on_Generate_pressed():
 	if game.subject_levels.dimensional_power >= 5:
 		set_bonuses()
-		game.toggle_panel(game.send_probes_panel)
+		game.toggle_panel("create_universe_panel")
 	else:
 		game.show_YN_panel("generate_new_univ", tr("GENERATE_STARTING_UNIVERSE_CONFIRM"))
 

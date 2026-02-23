@@ -61,6 +61,7 @@ var PC_panel:Control
 var AMN_panel:Control
 var SPR_panel:Control
 var planetkiller_panel:Control
+var create_universe_panel:Control
 var inventory:Control
 var settings_panel:Control
 var dimension:Control
@@ -101,6 +102,7 @@ var panel_var_name_to_file_name = {
 	"AMN_panel":"AMNPanel",
 	"SPR_panel":"SPRPanel",
 	"gigastructures_panel":"GigastructuresPanel",
+	"create_universe_panel":"CreateUniversePanel",
 }
 #endregion
 

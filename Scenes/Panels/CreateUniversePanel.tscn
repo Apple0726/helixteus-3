@@ -198,11 +198,12 @@ bbcode_enabled = true
 scroll_active = false
 
 [node name="Label2" type="Label" parent="TP/VBox/s_b" unique_id=829510023]
-custom_minimum_size = Vector2(50, 0)
+custom_minimum_size = Vector2(50, 31)
 layout_mode = 2
 text = "1"
 
 [node name="Unit" type="Label" parent="TP/VBox/s_b" unique_id=330059180]
+custom_minimum_size = Vector2(0, 31)
 layout_mode = 2
 
 [node name="gravitational" type="HBoxContainer" parent="TP/VBox" unique_id=139690001]
@@ -387,6 +388,7 @@ layout_mode = 2
 
 [node name="TierDistribution" type="TextureButton" parent="TP/VBox/age" unique_id=2091456281]
 layout_mode = 2
+size_flags_vertical = 4
 texture_normal = ExtResource("4_m1vnj")
 
 [node name="antimatter" type="HBoxContainer" parent="TP/VBox" unique_id=1882136640]
@@ -423,21 +425,22 @@ layout_mode = 1
 anchors_preset = 1
 anchor_left = 1.0
 anchor_right = 1.0
-offset_left = -280.0
-offset_top = 8.0
-offset_right = -8.0
-offset_bottom = 48.0
+offset_left = -200.0
+offset_top = 32.0
+offset_right = -12.0
+offset_bottom = 72.0
 grow_horizontal = 0
 mouse_filter = 1
 bbcode_enabled = true
 
 [node name="Label" type="Label" parent="TP" unique_id=1563957085]
 layout_mode = 0
-offset_left = 114.0
-offset_top = 12.0
-offset_right = 762.0
-offset_bottom = 60.0
+offset_left = 174.0
+offset_top = 16.0
+offset_right = 822.0
+offset_bottom = 39.0
 text = "TP_INFO"
+horizontal_alignment = 1
 
 [node name="Send" type="Button" parent="." unique_id=680654751]
 layout_mode = 0

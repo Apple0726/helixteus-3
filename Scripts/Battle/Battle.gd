@@ -30,7 +30,7 @@ var starlight_angle:float = 0.0
 var starlight_energy:float = 0.0
 
 func _ready() -> void:
-	time_speed = Helper.set_logarithmic_time_speed(game.subject_levels.dimensional_power, game.u_i.time_speed)
+	time_speed = Helper.get_logarithmic_time_speed(game.subject_levels.dimensional_power, game.u_i.time_speed)
 	var p_i:Dictionary = game.planet_data[game.c_p]
 	for star in game.system_data[game.c_s].stars:
 		average_starlight_color += Helper.get_star_modulate(star.class) * star.luminosity

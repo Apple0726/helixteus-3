@@ -35,7 +35,6 @@ func refresh():
 	$TabBar/Particles.visible = game.show.has("particles")
 
 func _on_Items_pressed():
-	set_process(false)
 	tab = "items"
 	info.text = tr("INV_ITEMS_DESC")
 	inventory_grid.visible = true
@@ -70,7 +69,6 @@ func on_slot_pressed():
 	game.use_item(item_id, send_to_rover)
 
 func _on_Materials_pressed():
-	set_process(not game.autocollect.mats.is_empty())
 	tab = "materials"
 	info.text = tr("INV_MAT_DESC")
 	inventory_grid.visible = false
@@ -90,7 +88,6 @@ func _on_Materials_pressed():
 	$Control/VBox/BuySell.visible = true
 
 func _on_Metals_pressed():
-	set_process(not game.autocollect.mets.is_empty())
 	tab = "metals"
 	info.text = tr("INV_MET_DESC")
 	inventory_grid.visible = false
@@ -110,7 +107,6 @@ func _on_Metals_pressed():
 	$Control/VBox/BuySell.visible = true
 
 func _on_Atoms_pressed():
-	set_process(not game.autocollect.atoms.is_empty())
 	tab = "atoms"
 	info.text = tr("INV_ATOMS_DESC")
 	inventory_grid.visible = false
@@ -129,7 +125,6 @@ func _on_Atoms_pressed():
 	$Control/VBox/BuySell.visible = false
 
 func _on_Particles_pressed():
-	set_process(true)
 	tab = "particles"
 	info.text = tr("INV_PARTICLES_DESC")
 	inventory_grid.visible = false

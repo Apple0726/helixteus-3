@@ -97,7 +97,7 @@ layout_mode = 0
 offset_left = 184.0
 offset_top = 168.0
 offset_right = 1096.0
-offset_bottom = 552.0
+offset_bottom = 624.0
 theme_override_styles/panel = SubResource("StyleBoxFlat_sv8i4")
 
 [node name="PieGraph" parent="Control" unique_id=1481607143 instance=ExtResource("3")]
@@ -110,9 +110,9 @@ offset_bottom = 512.0
 [node name="Button" type="Button" parent="Control" unique_id=646422764]
 layout_mode = 0
 offset_left = 872.0
-offset_top = 584.0
-offset_right = 1152.0
-offset_bottom = 624.0
+offset_top = 568.0
+offset_right = 1080.0
+offset_bottom = 608.0
 theme = ExtResource("5")
 shortcut = SubResource("2")
 shortcut_in_tooltip = false
@@ -164,19 +164,19 @@ offset_bottom = 40.0
 [node name="Time" type="Label" parent="Control/Control" unique_id=450787704]
 layout_mode = 0
 offset_left = 692.0
-offset_top = 592.0
+offset_top = 576.0
 offset_right = 900.0
-offset_bottom = 616.0
+offset_bottom = 600.0
 text = "00:00"
 vertical_alignment = 1
 
 [node name="TextureProgressBar" type="TextureProgressBar" parent="Control/Control" unique_id=688251223]
 modulate = Color(0.505882, 0.505882, 0.505882, 1)
 layout_mode = 0
-offset_left = 136.0
-offset_top = 592.0
+offset_left = 224.0
+offset_top = 576.0
 offset_right = 612.0
-offset_bottom = 616.0
+offset_bottom = 600.0
 max_value = 1.0
 step = 0.0
 value = 0.5
@@ -188,19 +188,19 @@ tint_under = Color(0.478431, 0.478431, 0.478431, 1)
 [node name="TextureRect" type="TextureRect" parent="Control/Control" unique_id=795035865]
 layout_mode = 0
 offset_left = 656.0
-offset_top = 592.0
+offset_top = 576.0
 offset_right = 680.0
-offset_bottom = 616.0
+offset_bottom = 600.0
 texture = ExtResource("10")
 expand_mode = 1
 stretch_mode = 6
 
 [node name="Stone" type="Label" parent="Control/Control" unique_id=1502560403]
 layout_mode = 0
-offset_left = 136.0
-offset_top = 592.0
+offset_left = 224.0
+offset_top = 576.0
 offset_right = 612.0
-offset_bottom = 616.0
+offset_bottom = 600.0
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
 text = "1000 kg"
 horizontal_alignment = 1

@@ -33,11 +33,17 @@ var point_distribution:Dictionary = {
 
 func _ready() -> void:
 	set_polygon($GUI.size, $GUI.position)
+	for prop_hbox in $TP/VBox.get_children():
+		if prop_hbox.name == "age":
+			prop_hbox.get_node("Label").mouse_entered.connect(game.show_tooltip.bind(tr("AGE_OF_THE_UNIVERSE_DESC")))
+		else:
+			prop_hbox.get_node("Label").mouse_entered.connect(game.show_tooltip.bind(tr(prop_hbox.name.to_upper() + "_DESC")))
+		prop_hbox.get_node("Label").mouse_exited.connect(game.hide_tooltip)
+		if prop_hbox.name in ["s_b", "antimatter"]:
+			continue
+		prop_hbox.get_node("HSlider").value_changed.connect(_on_TP_value_changed.bind(prop_hbox.name))
+		prop_hbox.get_node("Label2").text_changed.connect(_on_Label2_text_changed.bind(prop_hbox.name))
 
-
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta: float) -> void:
-	pass
 
 func refresh():
 	for prop in point_distribution.keys():
@@ -46,7 +52,7 @@ func refresh():
 		else:
 			$TP/VBox.get_node(prop + "/Label").text = "%s [img]Graphics/Icons/help.png[/img]" % tr(prop.to_upper())
 		_on_TP_value_changed(float(get_node("TP/VBox/%s/Label2" % prop).text), prop)
-	$TP/VBox/s_b/Label.text = "%s [img]Graphics/Icons/help.png[/img]" % tr("S_B_CTE")
+	$TP/VBox/s_b/Label.text = "%s [img]Graphics/Icons/help.png[/img]" % tr("S_B")
 	init_PP = get_lv_sum()
 	if game.subject_levels.dimensional_power >= 5:
 		init_PP += 150
@@ -60,11 +66,8 @@ func refresh():
 			PP_multiplier = probe.get("PP_multiplier", 1.0)
 			break
 	PP = init_PP * PP_multiplier + Helper.get_sum_of_dict(point_distribution)
-	$Control.visible = false
 	$Send.visible = ok
-	$SendAll.visible = false
 	$TP.visible = ok
-	$Label.text = ""
 	if ok:
 		for prop in $TP/VBox.get_children():
 			prop.get_node("Unit").text = units[prop.name]
@@ -82,10 +85,8 @@ func refresh():
 					if value_range > 30:
 						prop.get_node("HSlider").step = 0.5
 		$TP/Points.text = "%s: %s [img]Graphics/Icons/help.png[/img]" % [tr("PROBE_POINTS"), Helper.format_num(PP, true)]
-		$NoProbes.visible = false
 	else:
-		$NoProbes.text = tr("NO_TRI_PROBES")
-		$NoProbes.visible = true
+		$Label.text = tr("NO_TRI_PROBES")
 
 
 func get_lv_sum():
@@ -156,7 +157,7 @@ func discover_univ():
 			game.chemistry_bonus[el] = game.PD_panel.bonuses[el]
 	game.dimension.refresh_univs()
 	if visible:
-		game.toggle_panel(self)
+		game.toggle_panel(panel_var_name)
 
 
 func _on_send_pressed() -> void:

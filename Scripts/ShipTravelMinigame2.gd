@@ -30,7 +30,7 @@ func _ready():
 	universe_time_speed = game.u_i.time_speed
 	laser_range = 200.0 * (1.0 + laser_lv / 5.0)
 	$Ship/LaserArea/CollisionShape2D.shape.radius = laser_range
-	minigame_time_speed = Helper.set_logarithmic_time_speed(game.subject_levels.dimensional_power, universe_time_speed)
+	minigame_time_speed = Helper.get_logarithmic_time_speed(game.subject_levels.dimensional_power, universe_time_speed)
 	$EnemySpawnTimer.wait_time = 1.4 / minigame_time_speed
 	$Ship/BulletTimer.wait_time = (0.17 - bullet_lv / 50.0) / minigame_time_speed
 	$Ship/LaserTimer.wait_time = (1.1 - laser_lv / 10.0) / minigame_time_speed

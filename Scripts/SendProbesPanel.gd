@@ -109,10 +109,6 @@ func _on_mouse_exited():
 	game.hide_tooltip()
 
 
-func _on_Label_mouse_entered(extra_arg_0):
-	game.show_tooltip(tr(extra_arg_0))
-
-
 func _on_SendAll_pressed():
 	refresh_energy()
 	while _on_Send_pressed(true):
