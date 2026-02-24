@@ -219,7 +219,7 @@ func _ready():
 	$Soil.set_cells_terrain_connect(soil_tiles, 0, 0)
 	$Ash.set_cells_terrain_connect(ash_tiles, 0, 0)
 	seed(p_i.seed)
-	$PlanetTiles.material.set_shader_parameter("planet_texture", load("res://Graphics/Tiles/Mosaics/%sr.jpg" % randi_range(1, 8)))
+	$PlanetTiles.material.set_shader_parameter("planet_texture", load("res://Graphics/Tiles/Mosaics/%s.jpg" % randi_range(1, 8)))
 	$PlanetTiles.material.set_shader_parameter("texture_zoom", randf_range(0.5, 2.0) * 200.0 / $PlanetTiles.tile_set.tile_size.x)
 	$PlanetTiles.material.set_shader_parameter("texture_offset", Vector2(randf_range(0.0, 4000.0), randf_range(0.0, 4000.0)))
 	$PlanetTiles.set_cells_terrain_connect(planet_tiles, 0, 0)

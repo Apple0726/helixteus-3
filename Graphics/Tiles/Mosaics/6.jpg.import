@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://pjhwyjnn6viy"
-path="res://.godot/imported/1.png-ee88146dfebbb406e4e10777a60006d3.ctex"
+uid="uid://br4i6y75iywy6"
+path="res://.godot/imported/6.jpg-284e5aa558b921f055a24988a4d6c80c.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Graphics/Plants/gold_seeds/1.png"
-dest_files=["res://.godot/imported/1.png-ee88146dfebbb406e4e10777a60006d3.ctex"]
+source_file="res://Graphics/Tiles/Mosaics/6.jpg"
+dest_files=["res://.godot/imported/6.jpg-284e5aa558b921f055a24988a4d6c80c.ctex"]
 
 [params]
 

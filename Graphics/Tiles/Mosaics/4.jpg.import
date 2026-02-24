@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://b1u23y5ldatt1"
-path="res://.godot/imported/M_SE.png-9c792e5fe465fe120dfd0e6a08198a7f.ctex"
+uid="uid://c4fo540xtknyu"
+path="res://.godot/imported/4.jpg-7b55e7361c31c0a0dfd8952611e43eac.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Graphics/Icons/Megastructures/M_SE.png"
-dest_files=["res://.godot/imported/M_SE.png-9c792e5fe465fe120dfd0e6a08198a7f.ctex"]
+source_file="res://Graphics/Tiles/Mosaics/4.jpg"
+dest_files=["res://.godot/imported/4.jpg-7b55e7361c31c0a0dfd8952611e43eac.ctex"]
 
 [params]
 

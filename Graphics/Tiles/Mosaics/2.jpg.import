@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://ishk64hxioki"
-path="res://.godot/imported/8r.jpg-493be3e0cc43e58bbf687f7d9a1fd824.ctex"
+uid="uid://c505u2l1lqy75"
+path="res://.godot/imported/2.jpg-e26ba31da891ae157522cb74ee735a87.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Graphics/Tiles/Mosaics/8r.jpg"
-dest_files=["res://.godot/imported/8r.jpg-493be3e0cc43e58bbf687f7d9a1fd824.ctex"]
+source_file="res://Graphics/Tiles/Mosaics/2.jpg"
+dest_files=["res://.godot/imported/2.jpg-e26ba31da891ae157522cb74ee735a87.ctex"]
 
 [params]
 

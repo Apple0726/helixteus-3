@@ -2,7 +2,7 @@
 
 [ext_resource type="Shader" uid="uid://gevhgabt3grd" path="res://Shaders/Laser.gdshader" id="1"]
 [ext_resource type="Script" uid="uid://2ovarm7fdxfj" path="res://Scripts/Cave/Cave.gd" id="2"]
-[ext_resource type="Texture2D" uid="uid://dxm42o1tfpvo1" path="res://Graphics/Tiles/Mosaics/1r.jpg" id="2_yvdt3"]
+[ext_resource type="Texture2D" uid="uid://dxm42o1tfpvo1" path="res://Graphics/Tiles/Mosaics/1.jpg" id="2_yvdt3"]
 [ext_resource type="PackedScene" uid="uid://bvyftln8m3hgm" path="res://Scenes/FilterButton.tscn" id="3"]
 [ext_resource type="Texture2D" uid="uid://4tf3teqmkahc" path="res://Graphics/Misc/Bar.png" id="4"]
 [ext_resource type="Texture2D" uid="uid://qbiggp0bodp1" path="res://Graphics/Cave/MiningLaser.png" id="5"]

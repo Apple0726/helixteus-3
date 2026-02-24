@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://n0uwdfu8cjsw"
-path="res://.godot/imported/1.png-46a44720465a9f0fa20eca05376d7b28.ctex"
+uid="uid://o0artlh6qd48"
+path="res://.godot/imported/ice.jpg-3d231c511afc873f0dee444cd94194a4.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Graphics/Plants/aluminium_seeds/1.png"
-dest_files=["res://.godot/imported/1.png-46a44720465a9f0fa20eca05376d7b28.ctex"]
+source_file="res://Graphics/Tiles/Mosaics/ice.jpg"
+dest_files=["res://.godot/imported/ice.jpg-3d231c511afc873f0dee444cd94194a4.ctex"]
 
 [params]
 

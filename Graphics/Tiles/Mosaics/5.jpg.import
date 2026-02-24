@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://c4fo540xtknyu"
-path="res://.godot/imported/4r.jpg-af86f0b93fc75fa0329903b0bf64f759.ctex"
+uid="uid://djbue1itojqqn"
+path="res://.godot/imported/5.jpg-85ae3f94dfe1c0bcec1876718d1e205a.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Graphics/Tiles/Mosaics/4r.jpg"
-dest_files=["res://.godot/imported/4r.jpg-af86f0b93fc75fa0329903b0bf64f759.ctex"]
+source_file="res://Graphics/Tiles/Mosaics/5.jpg"
+dest_files=["res://.godot/imported/5.jpg-85ae3f94dfe1c0bcec1876718d1e205a.ctex"]
 
 [params]
 

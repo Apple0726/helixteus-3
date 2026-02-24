@@ -8,7 +8,7 @@
 [ext_resource type="Texture2D" uid="uid://dj4mh887jy68d" path="res://Graphics/Spritesheets/cracks.png" id="6"]
 [ext_resource type="AudioStream" uid="uid://c8utjcp7ne3dn" path="res://Audio/SFX/mining_stone.ogg" id="7"]
 [ext_resource type="Texture2D" uid="uid://c2gvy8266bgkb" path="res://Graphics/Materials/coal.png" id="8"]
-[ext_resource type="Texture2D" uid="uid://djbue1itojqqn" path="res://Graphics/Tiles/Mosaics/5r.jpg" id="8_8uao7"]
+[ext_resource type="Texture2D" uid="uid://djbue1itojqqn" path="res://Graphics/Tiles/Mosaics/5.jpg" id="8_8uao7"]
 [ext_resource type="AudioStream" uid="uid://dvok0oof7xxj5" path="res://Audio/SFX/mining_metal.ogg" id="9"]
 [ext_resource type="PackedScene" uid="uid://bwon75bhhf24u" path="res://Scenes/SquareBar.tscn" id="10"]
 [ext_resource type="Texture2D" uid="uid://dwstl3xmwv5vh" path="res://Graphics/Icons/Circle.png" id="11"]

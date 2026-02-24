@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://byvwyvaps7uv8"
-path="res://.godot/imported/BuriedShipPart.png-359c669abc67461c7b65ebd5f815f60b.ctex"
+uid="uid://dpv3p5kphbej4"
+path="res://.godot/imported/3.jpg-a7d540c750b9304d62f5efe2277c5e06.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Graphics/Tiles/BuriedShipPart.png"
-dest_files=["res://.godot/imported/BuriedShipPart.png-359c669abc67461c7b65ebd5f815f60b.ctex"]
+source_file="res://Graphics/Tiles/Mosaics/3.jpg"
+dest_files=["res://.godot/imported/3.jpg-a7d540c750b9304d62f5efe2277c5e06.ctex"]
 
 [params]
 

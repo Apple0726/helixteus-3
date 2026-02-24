@@ -219,7 +219,7 @@ func _ready():
 	seed(p_i.seed)
 	var surface_type = randi_range(0, 7)
 	tile_brightness = game.tile_brightness[surface_type]
-	cave_BG.texture = load("res://Graphics/Tiles/Mosaics/%sr.jpg" % surface_type)
+	cave_BG.texture = load("res://Graphics/Tiles/Mosaics/%s.jpg" % surface_type)
 	cave_BG.region_rect.size = Vector2.ONE * cave_size * 200.0
 	cave_BG.material.set_shader_parameter("texture_zoom", randf_range(0.5, 2.0))
 	var lum:float = 0.0
