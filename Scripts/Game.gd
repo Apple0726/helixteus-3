@@ -4117,6 +4117,7 @@ func fade_out_title(fn:String):
 	tween.set_parallel(true)
 	tween.tween_property($Title, "modulate", Color(1, 1, 1, 0), 0.5)
 	tween.tween_property($TitleBackground, "modulate", Color(1, 1, 1, 0), 0.5)
+	tween.tween_property($TitleText, "modulate", Color(1, 1, 1, 0), 0.5)
 	tween.tween_property($Star/Sprite2D.material, "shader_parameter/brightness_offset", 0.0, 0.5)
 	tween.tween_property($Star, "modulate", Color(1, 1, 1, 0), 0.5)
 	tween.tween_property($Star/Sprite2D.material, "shader_parameter/alpha", 0.0, 0.5)

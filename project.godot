@@ -15,7 +15,7 @@ config/tags=PackedStringArray("2d", "game")
 run/main_scene="res://Scenes/Game.tscn"
 config/features=PackedStringArray("4.6")
 run/max_fps=60
-boot_splash/image="res://Splash screen.png"
+boot_splash/image="uid://xrhpyjx8lc5j"
 config/icon="res://Graphics/Icons/HX3_mc.png"
 
 [audio]
