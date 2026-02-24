@@ -1667,7 +1667,7 @@ func mine_wall_complete(tile_pos:Vector2, tile_id:int):
 	var map_pos = cave_wall.local_to_map(tile_pos)
 	var rsrc:Dictionary = {"stone":randi_range(150, 200)}
 	if volcano_mult > 1.0:
-		rsrc.minerals = round(randf_range(2, 3) * difficulty * exp(cave_floor / 9.0))
+		rsrc["minerals"] = round(randf_range(2, 3) * difficulty * exp(cave_floor / 9.0))
 	#var wall_type = cave_wall.get_cellv(map_pos)
 	for mat in p_i.surface.keys():
 		if randf() < p_i.surface[mat].chance / 2.5:

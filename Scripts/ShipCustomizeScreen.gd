@@ -58,9 +58,9 @@ func _ready() -> void:
 				$Weapons/ScrollContainer/Control.get_node("%s%s/Button" % [i+1, j+1]).mouse_exited.connect(game.hide_tooltip)
 				$Weapons/ScrollContainer/Control.get_node("%s%s/Button" % [i+1, j+1]).pressed.connect(check_weapon_points.bind(i))
 		update_weapons_panel()
+		$ClassAndStats/ShipClass/VBox/VBox.get_child(ship_data.ship_class)._on_Button_pressed()
 	$Navigation/Level.text = "%s %s" % [tr("LEVEL"), ship_data.lv]
 	allocatable_points = (ship_data.lv - 1) / 2 + 2
-	$ClassAndStats/ShipClass/VBox/VBox.get_child(ship_data.ship_class)._on_Button_pressed()
 	$Navigation/VBoxContainer/ClassAndStats._on_Button_pressed()
 	for i in ShipClass.N:
 		var passive_ability_text = ""

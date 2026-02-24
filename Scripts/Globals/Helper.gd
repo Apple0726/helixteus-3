@@ -66,6 +66,7 @@ func put_rsrc(container, min_size, rsrcs, remove:bool = true, show_available:boo
 		var rsrc_amount:float = 0.0
 		if rsrc_name is int:
 			rsrc_display_name = Item.name(rsrc_name)
+			rsrc_amount = rsrcs[rsrc_name]
 			texture_node.texture_normal = load("res://Graphics/%s/%s.png" % [Item.icon_directory(Item.data[rsrc_name].type), Item.data[rsrc_name].item_name])
 			text_node.text = Helper.format_num(floor(rsrcs[rsrc_name]))
 		else:
@@ -121,10 +122,10 @@ func put_rsrc(container, min_size, rsrcs, remove:bool = true, show_available:boo
 		texture_node.custom_minimum_size = Vector2(1, 1) * min_size
 		data.append({"rsrc":rsrc, "name":rsrc_name})
 		rsrc.rsrc_display_name = rsrc_display_name
+		rsrc.rsrcs_required = rsrc_amount
 		if rsrc_name is String:
 			rsrc.rsrc_name = rsrc_name
 			rsrc.rsrc_type = rsrc_type
-			rsrc.rsrcs_required = rsrc_amount
 			rsrc.mass_str = mass_str
 			rsrc.show_available = show_available
 		container.add_child(rsrc)

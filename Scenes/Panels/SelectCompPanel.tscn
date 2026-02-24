@@ -1,7 +1,6 @@
 [gd_scene format=3 uid="uid://c58wkb8ufo1id"]
 
 [ext_resource type="Script" uid="uid://bw1wmnqsgceks" path="res://Scripts/SelectCompPanel.gd" id="1"]
-[ext_resource type="PackedScene" uid="uid://bdp561gr6s0b8" path="res://Scenes/Resource.tscn" id="2"]
 [ext_resource type="Texture2D" uid="uid://blgh1lvsfpiu8" path="res://Graphics/GUI/Border.png" id="3_f0pvq"]
 [ext_resource type="Theme" uid="uid://cp2u1kgj60ic" path="res://Resources/default_theme.tres" id="4"]
 [ext_resource type="Texture2D" uid="uid://baowebna7hgr5" path="res://Graphics/GUI/CloseButtonNormal.png" id="4_f0pvq"]
@@ -78,9 +77,8 @@ offset_right = 812.0
 offset_bottom = 484.0
 vertical_scroll_mode = 0
 
-[node name="Cost" parent="ScrollContainer" unique_id=2122403554 instance=ExtResource("2")]
+[node name="Cost" type="HBoxContainer" parent="ScrollContainer" unique_id=1701320805]
 layout_mode = 2
-size_flags_vertical = 3
 
 [node name="Select" type="Button" parent="." unique_id=1025780494]
 layout_mode = 1

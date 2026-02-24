@@ -145,13 +145,13 @@ func _ready():
 						caves_data[id2] = len(cave_data.seeds)
 				var cave_sprite = Sprite2D.new()
 				cave_sprite.position = Vector2(i, j) * 200 + Vector2.ONE * 100
-				cave_sprite.scale *= 180.0/278.0
 				if tile.has("lake"):
 					cave_sprite.modulate = star_mod * Data.lake_colors[p_i.lake.element][p_i.lake.state]
 					cave_sprite.texture = preload("res://Graphics/Tiles/frozen_cave.png")
 				else:
 					cave_sprite.modulate = star_mod
 					cave_sprite.texture = preload("res://Graphics/Tiles/cave.png")
+				cave_sprite.scale *= 0.66 * 278.0 / cave_sprite.texture.get_width()
 				add_child(cave_sprite)
 				obstacle_nodes[Vector2i(i, j)] = cave_sprite
 			elif tile.has("volcano"):

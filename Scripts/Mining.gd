@@ -44,6 +44,8 @@ func _ready():
 	progress = tile.mining_progress
 	if game.pickaxe.has("name"):
 		$Pickaxe/Sprite2D.texture = load("res://Graphics/Pickaxes/" + game.pickaxe.name + ".png")
+		$Pickaxe/Sprite2D.scale *= 512.0 / $Pickaxe/Sprite2D.texture.get_width()
+		$Pickaxe/Sprite2D.offset *= $Pickaxe/Sprite2D.texture.get_width() / 512.0
 		update_pickaxe()
 	update_info(true)
 	generate_rock(false)

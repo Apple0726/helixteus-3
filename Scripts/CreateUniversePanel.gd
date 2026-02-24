@@ -67,7 +67,8 @@ func refresh():
 			break
 	PP = init_PP * PP_multiplier + Helper.get_sum_of_dict(point_distribution)
 	$Send.visible = ok
-	$TP.visible = ok
+	$TP/VBox.visible = ok
+	$TP/Points.visible = ok
 	if ok:
 		for prop in $TP/VBox.get_children():
 			prop.get_node("Unit").text = units[prop.name]
@@ -86,7 +87,7 @@ func refresh():
 						prop.get_node("HSlider").step = 0.5
 		$TP/Points.text = "%s: %s [img]Graphics/Icons/help.png[/img]" % [tr("PROBE_POINTS"), Helper.format_num(PP, true)]
 	else:
-		$Label.text = tr("NO_TRI_PROBES")
+		$TP/Label.text = tr("NO_TRI_PROBES")
 
 
 func get_lv_sum():
