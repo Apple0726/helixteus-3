@@ -33,7 +33,7 @@ func _ready() -> void:
 		$ClassAndStats/ShipStats.visible = false
 		$Navigation/Ship.position.y += 30.0
 	if respeccing:
-		ship_data.unallocated_weapon_levels = ship_data.lv / 2
+		ship_data.unallocated_weapon_levels = ship_data.lv / 3
 		ship_data.bullet = [1, 1, 1]
 		ship_data.laser = [1, 1, 1]
 		ship_data.bomb = [1, 1, 1]

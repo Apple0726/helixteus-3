@@ -253,6 +253,7 @@ func attack_target():
 		if battle_scene.animations_sped_up:
 			await get_tree().create_timer(0.1).timeout
 		else:
+			battle_scene.view_entity(self, 1.0, 200.0 * Vector2.from_angle(target_angle))
 			$FireWeaponAim.show()
 			await get_tree().create_timer(0.7).timeout
 		var projectile_angle = randf_range(target_angle - target_angle_max_deviation, target_angle + target_angle_max_deviation)

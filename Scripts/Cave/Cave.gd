@@ -217,7 +217,7 @@ func _ready():
 	num_floors = tile[cave_type].num_floors
 	cave_size = tile[cave_type].floor_size
 	seed(p_i.seed)
-	var surface_type = randi_range(0, 7)
+	var surface_type = randi_range(1, 8)
 	tile_brightness = game.tile_brightness[surface_type]
 	cave_BG.texture = load("res://Graphics/Tiles/Mosaics/%s.jpg" % surface_type)
 	cave_BG.region_rect.size = Vector2.ONE * cave_size * 200.0

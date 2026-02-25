@@ -8,10 +8,10 @@ var ach_num:int = 0
 func _ready():
 	set_polygon($GUI.size, $GUI.position)
 	var show_stats_for:Array = tr("SHOW_STATS_FOR").split("%s")
-	$Statistics/HBox/Prefix.text = show_stats_for[0]
-	$Statistics/HBox/Suffix.text = show_stats_for[1]
+	$Panel/Statistics/HBox/Prefix.text = show_stats_for[0]
+	$Panel/Statistics/HBox/Suffix.text = show_stats_for[1]
 	$TabBar/Achievements._on_Button_pressed()
-	for grid in $Achievements/ScrollContainer/HBox/Slots.get_children():
+	for grid in $Panel/Achievements/ScrollContainer/HBox/Slots.get_children():
 		for ach in grid.get_children():
 			ach_num += 1
 			ach.connect("mouse_entered",Callable(self,"on_ach_entered").bind(grid.name, ach.name))
@@ -19,7 +19,7 @@ func _ready():
 
 func refresh():
 	var ach_get:int = 0
-	for grid in $Achievements/ScrollContainer/HBox/Slots.get_children():
+	for grid in $Panel/Achievements/ScrollContainer/HBox/Slots.get_children():
 		for ach in grid.get_children():
 			if game.achievement_data[grid.name].has(ach.name):
 				ach.modulate = Color.WHITE
@@ -28,14 +28,14 @@ func refresh():
 			else:
 				ach.modulate = Color(0.2, 0.2, 0.2, 1.0)
 				ach.get_node("TextureRect").material.set_shader_parameter("gray", true)
-	$Achievements/Progress.text = "%s: %s / %s" % [tr("ACHIEVEMENTS_EARNED"), ach_get, ach_num]
-	$Statistics/HBox.visible = game.dim_num > 1 or len(game.universe_data) > 1
-	$Statistics/HBox/OptionButton.clear()
-	$Statistics/HBox/OptionButton.add_item(tr("THIS_SAVE"), 0)
+	$Panel/Achievements/Progress.text = "%s: %s / %s" % [tr("ACHIEVEMENTS_EARNED"), ach_get, ach_num]
+	$Panel/Statistics/HBox.visible = game.dim_num > 1 or len(game.universe_data) > 1
+	$Panel/Statistics/HBox/OptionButton.clear()
+	$Panel/Statistics/HBox/OptionButton.add_item(tr("THIS_SAVE"), 0)
 	if game.dim_num > 1:
-		$Statistics/HBox/OptionButton.add_item(tr("THIS_DIMENSION"), 1)
+		$Panel/Statistics/HBox/OptionButton.add_item(tr("THIS_DIMENSION"), 1)
 	if len(game.universe_data) > 1:
-		$Statistics/HBox/OptionButton.add_item(tr("THIS_UNIVERSE"), 2)
+		$Panel/Statistics/HBox/OptionButton.add_item(tr("THIS_UNIVERSE"), 2)
 
 func on_ach_entered(ach_type:String, ach_id:String):
 	game.show_tooltip(Data.achievements[ach_type.to_lower()][ach_id])
@@ -44,18 +44,17 @@ func on_ach_exited():
 	game.hide_tooltip()
 
 func _on_Achievements_pressed():
-	$Achievements.visible = true
-	$Statistics.visible = false
+	$Panel/Achievements.visible = true
+	$Panel/Statistics.visible = false
 
 func _on_Statistics_pressed():
-	$Achievements.visible = false
-	$Statistics.visible = true
+	$Panel/Achievements.visible = false
+	$Panel/Statistics.visible = true
 
 func _on_General_pressed():
 	curr_stat_tab = "_on_General_pressed"
-	$Statistics/Panel.visible = true
-	$Statistics/ScrollContainer2.visible = false
-	$Statistics/Panel/Label.text = "%s: %s\n%s: %s\n%s: %s\n%s: %s\n%s: %s\n%s: %s\n%s: %s\n%s: %s\n%s: %s\n%s: %s\n%s: %s" % [
+	$Panel/Statistics/Panel/ScrollContainer2.visible = false
+	$Panel/Statistics/Panel/Label.text = "%s: %s\n%s: %s\n%s: %s\n%s: %s\n%s: %s\n%s: %s\n%s: %s\n%s: %s\n%s: %s\n%s: %s\n%s: %s" % [
 		tr("TOTAL_MONEY_EARNED"), Helper.format_num(game["stats_%s" % stats_for].total_money_earned),
 		tr("BLDGS_BUILT"), Helper.format_num(game["stats_%s" % stats_for].bldgs_built),
 		tr("MS_CONSTRUCTED"), Helper.format_num(game["stats_%s" % stats_for].MS_constructed),
@@ -71,9 +70,8 @@ func _on_General_pressed():
 
 func _on_Records_pressed():
 	curr_stat_tab = "_on_Records_pressed"
-	$Statistics/Panel.visible = true
-	$Statistics/ScrollContainer2.visible = false
-	$Statistics/Panel/Label.text = "%s: %s km\n%s: %s %s\n%s: %s K\n%s: %s" % [
+	$Panel/Statistics/Panel/ScrollContainer2.visible = false
+	$Panel/Statistics/Panel/Label.text = "%s: %s km\n%s: %s %s\n%s: %s K\n%s: %s" % [
 		tr("BIGGEST_PLANET_DIAMETER"), Helper.format_num(game["stats_%s" % stats_for].biggest_planet),
 		tr("BIGGEST_STAR_SIZE"), Helper.format_num(game["stats_%s" % stats_for].biggest_star, true), tr("SOLAR_RADII"),
 		tr("HOTTEST_STAR_TEMPERATURE"), Helper.format_num(round(game["stats_%s" % stats_for].hottest_star)),
@@ -81,13 +79,13 @@ func _on_Records_pressed():
 	]
 
 func _on_StarClasses_pressed():
-	$Statistics/ScrollContainer2/Control/Zoom.visible = true
-	$Statistics/ScrollContainer2/Control/ZoomLabel.visible = true
+	$Panel/Statistics/Panel/ScrollContainer2/Control/Zoom.visible = true
+	$Panel/Statistics/Panel/ScrollContainer2/Control/ZoomLabel.visible = true
 	curr_stat_tab = "_on_StarClasses_pressed"
-	var graph:HBoxContainer = $Statistics/ScrollContainer2/Control/HBox
-	var max_label:Label = $Statistics/ScrollContainer2/Control/MaxNum
-	$Statistics/Panel.visible = false
-	$Statistics/ScrollContainer2.visible = true
+	var graph:HBoxContainer = $Panel/Statistics/Panel/ScrollContainer2/Control/HBox
+	var max_label:Label = $Panel/Statistics/Panel/ScrollContainer2/Control/MaxNum
+	$Panel/Statistics/Panel/ScrollContainer2.visible = true
+	$Panel/Statistics/Panel/Label.text = ""
 	for vbox in graph.get_children():
 		graph.remove_child(vbox)
 		vbox.queue_free()
@@ -124,7 +122,7 @@ func _on_StarClasses_pressed():
 		vbox.get_node("ColorRect").custom_minimum_size.y *= 288.0 / max_num
 	max_label.text = str(max_num)
 	await get_tree().process_frame
-	$Statistics/ScrollContainer2/Control.custom_minimum_size.x = graph.size.x + 100
+	$Panel/Statistics/Panel/ScrollContainer2/Control.custom_minimum_size.x = graph.size.x + 100
 
 func on_star_class_bar_entered(star_class:String, i:int):
 	game.show_tooltip("%s%s: %s" % [star_class, i, game["stats_%s" % stats_for].star_classes[star_class][i]])
@@ -137,13 +135,13 @@ func on_bar_exited():
 
 
 func _on_StarTypes_pressed():
-	$Statistics/ScrollContainer2/Control/Zoom.visible = false
-	$Statistics/ScrollContainer2/Control/ZoomLabel.visible = false
+	$Panel/Statistics/Panel/ScrollContainer2/Control/Zoom.visible = false
+	$Panel/Statistics/Panel/ScrollContainer2/Control/ZoomLabel.visible = false
 	curr_stat_tab = "_on_StarTypes_pressed"
-	var graph:HBoxContainer = $Statistics/ScrollContainer2/Control/HBox
-	var max_label:Label = $Statistics/ScrollContainer2/Control/MaxNum
-	$Statistics/Panel.visible = false
-	$Statistics/ScrollContainer2.visible = true
+	var graph:HBoxContainer = $Panel/Statistics/Panel/ScrollContainer2/Control/HBox
+	var max_label:Label = $Panel/Statistics/Panel/ScrollContainer2/Control/MaxNum
+	$Panel/Statistics/Panel/ScrollContainer2.visible = true
+	$Panel/Statistics/Panel/Label.text = ""
 	for vbox in graph.get_children():
 		graph.remove_child(vbox)
 		vbox.queue_free()
@@ -189,10 +187,10 @@ func _on_StarTypes_pressed():
 	for vbox in graph.get_children():
 		vbox.get_node("ColorRect").custom_minimum_size.y *= 288.0 / max_num
 	await get_tree().process_frame
-	$Statistics/ScrollContainer2/Control.custom_minimum_size.x = graph.size.x + 100
+	$Panel/Statistics/Panel/ScrollContainer2/Control.custom_minimum_size.x = graph.size.x + 100
 
 func _on_OptionButton_item_selected(index):
-	var id:int = $Statistics/HBox/OptionButton.get_item_id(index)
+	var id:int = $Panel/Statistics/HBox/OptionButton.get_item_id(index)
 	stats_for = {0:"global", 1:"dim", 2:"univ"}[id]
 	if curr_stat_tab != "":
 		call(curr_stat_tab)
@@ -204,9 +202,8 @@ func _on_Zoom_value_changed(value):
 
 func _on_UserInput_pressed():
 	curr_stat_tab = "_on_UserInput_pressed"
-	$Statistics/Panel.visible = true
-	$Statistics/ScrollContainer2.visible = false
-	$Statistics/Panel/Label.text = "%s: %s\n%s: %s\n%s: %s\n%s: %s %s\n%s: %s" % [
+	$Panel/Statistics/Panel/ScrollContainer2.visible = false
+	$Panel/Statistics/Panel/Label.text = "%s: %s\n%s: %s\n%s: %s\n%s: %s %s\n%s: %s" % [
 		tr("NUMBER_OF_CLICKS"), Helper.format_num(game["stats_%s" % stats_for].clicks),
 		tr("NUMBER_OF_RIGHT_CLICKS"), Helper.format_num(game["stats_%s" % stats_for].right_clicks),
 		tr("NUMBER_OF_SCROLLS"), Helper.format_num(game["stats_%s" % stats_for].scrolls),

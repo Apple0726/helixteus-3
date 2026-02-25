@@ -3827,7 +3827,7 @@ func _input(event):
 			stats_global.scrolls += 1
 			stats_dim.scrolls += 1
 			stats_univ.scrolls += 1
-	if is_instance_valid(stats_panel) and stats_panel.visible and stats_panel.get_node("Statistics").visible and stats_panel.curr_stat_tab == "_on_UserInput_pressed":
+	if is_instance_valid(stats_panel) and stats_panel.visible and stats_panel.get_node("Panel/Statistics").visible and stats_panel.curr_stat_tab == "_on_UserInput_pressed":
 		stats_panel._on_UserInput_pressed()
 	if is_instance_valid(tooltip):
 		tooltip.set_tooltip_position()

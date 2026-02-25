@@ -213,7 +213,7 @@ func battle_victory_callback():
 		game.popup_window(tr("NEW_BLDGS_UNLOCKED_DESC"), tr("NEW_BLDGS_UNLOCKED"))
 		game.help["SP"] = true
 
-var scale_before_view_battlefield = 1.0
+var scale_before_view_battlefield = 0.4
 var position_before_view_battlefield = Vector2.ZERO
 
 func view_battlefield(tween_speed: float = 1.0):
@@ -227,20 +227,17 @@ func view_battlefield(tween_speed: float = 1.0):
 		view_tween.tween_property(game.view, "scale", Vector2.ONE * 0.4, 1.0).set_trans(Tween.TRANS_CUBIC)
 		view_tween.tween_property(game.view, "position", Vector2(640, 360) * 0.6, 1.0).set_trans(Tween.TRANS_CUBIC)
 
-func view_entity(entity: BattleEntity, tween_speed: float = 1.0):
+func view_entity(entity: BattleEntity, tween_speed: float = 1.0, offset: Vector2 = Vector2.ZERO):
 	if game.view.is_view_changing():
 		return
-	if animations_sped_up:
-		game.view.position = Vector2(640, 360) - entity.position * game.view.scale.x
+	if scale_before_view_battlefield == 0.4:
+		var view_tween = create_tween().set_speed_scale(tween_speed)
+		view_tween.tween_property(game.view, "position", Vector2(640, 360) - (entity.position + offset) * game.view.scale.x, 0.5).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
 	else:
-		if scale_before_view_battlefield == 1.0:
-			var view_tween = create_tween().set_speed_scale(tween_speed)
-			view_tween.tween_property(game.view, "position", Vector2(640, 360) - entity.position * game.view.scale.x, 0.5).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
-		else:
-			var view_tween = create_tween().set_parallel().set_speed_scale(tween_speed)
-			view_tween.tween_property(game.view, "scale", Vector2.ONE * scale_before_view_battlefield, 0.5).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
-			view_tween.tween_property(game.view, "position", position_before_view_battlefield, 0.5).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
-			scale_before_view_battlefield = 1.0
+		var view_tween = create_tween().set_parallel().set_speed_scale(tween_speed)
+		view_tween.tween_property(game.view, "scale", Vector2.ONE * scale_before_view_battlefield, 0.5).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+		view_tween.tween_property(game.view, "position", position_before_view_battlefield, 0.5).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+		scale_before_view_battlefield = 0.4
 
 var ships_taking_turn = [] # Stores ship nodes that can take actions interchangeably
 var defeated = false
@@ -286,10 +283,10 @@ func next_turn():
 	if initiative_order[whose_turn_is_it_index].type == Battle.EntityType.BOUNDARY:
 		scale_before_view_battlefield = game.view.scale.x
 		position_before_view_battlefield = game.view.position
-		view_battlefield()
 		if animations_sped_up:
 			create_tween().tween_callback(environment_take_turn).set_delay(0.1)
 		else:
+			view_battlefield()
 			create_tween().tween_callback(environment_take_turn).set_delay(1.0)
 		initiative_order[whose_turn_is_it_index].turn_order_box.get_node("ChangeSizeAnim").play("ChangeSize")
 	elif initiative_order[whose_turn_is_it_index].type == Battle.EntityType.SHIP:
