@@ -304,7 +304,7 @@ func _ready():
 			add_filter(rsrc)
 	$UI2/Filters/Grid/money.pressed.connect(on_filter_pressed.bind("money", $UI2/Filters/Grid/money))
 	$UI2/Filters/Grid/money.set_mod(game.cave_filters.money)
-	$UI2/Filters/Grid/minerals.pressed.connect(on_filter_pressed.bind("minerals", $UI2/Filters/Grid/minerals))
+	$UI2/Filters/Grid/minerals.pressed.connect(on_filter_pressed.bind(Item.MINERALS, $UI2/Filters/Grid/minerals))
 	$UI2/Filters/Grid/minerals.set_mod(game.cave_filters.minerals)
 	$UI2/Filters/Grid/stone.pressed.connect(on_filter_pressed.bind("stone", $UI2/Filters/Grid/stone))
 	$UI2/Filters/Grid/stone.set_mod(game.cave_filters.stone)
@@ -366,7 +366,7 @@ func on_filter_mouse_entered(rsrc):
 	else:
 		game.show_tooltip(tr(rsrc.to_upper()))
 
-func on_filter_pressed(rsrc:String, filter_slot):
+func on_filter_pressed(rsrc, filter_slot):
 	game.cave_filters[rsrc] = not game.cave_filters[rsrc]
 	filter_slot.set_mod(game.cave_filters[rsrc])
 
@@ -1393,9 +1393,9 @@ func use_item(item:Dictionary, _tile_highlight, delta):
 		elif mining_debris != -1:
 			mine_debris(item, delta)
 		update_ray()
-	elif item.name is int:
+	elif item.id is int:
 		if item.type == Item.Type.PORTABLE_WORMHOLE:
-			if cave_floor <= Item.data[item.name].limit:
+			if cave_floor <= Item.data[item.id].limit:
 				remove_item(item, 1)
 				exit_cave()
 			else:
@@ -1404,7 +1404,7 @@ func use_item(item:Dictionary, _tile_highlight, delta):
 			if tile.cave.has("special_cave"):
 				game.popup(tr("DRILL_ERROR"), 2.0)
 				return
-			if cave_floor >= Item.data[item.name].limit:
+			if cave_floor >= Item.data[item.id].limit:
 				game.popup(tr("DRILL_ERROR3"), 1.5)
 				return
 			if cave_floor == num_floors:
@@ -1995,21 +1995,11 @@ func _on_Difficulty_mouse_entered():
 
 func _on_Filter_pressed():
 	if $UI2/Filters.visible:
-		var rect_x:int = $UI2/Filters.position.x
-		var tween = create_tween()
-		tween.set_parallel(true)
-		tween.tween_property($UI2/Filters, "modulate", Color(1, 1, 1, 0), 0.1)
-		tween.tween_property($UI2/Filters, "position", Vector2(rect_x, 662 - $UI2/Filters/Grid.size.y), 0.1)
-		tween.tween_callback($UI2/Filters.set_visible.bind(false)).set_delay(0.1)
-		tween.tween_callback(game.hide_tooltip).set_delay(0.1)
+		$UI2/Filters.hide()
 	else:
-		var tween = create_tween()
 		var rect_x:int = $UI2/BottomLeft/Filter.position.x
-		$UI2/Filters.position.x = rect_x
-		$UI2/Filters.position.y = 662 - $UI2/Filters/Grid.size.y
-		tween.tween_property($UI2/Filters, "modulate", Color.WHITE, 0.1)
-		tween.tween_property($UI2/Filters, "position", Vector2(rect_x, 658 - $UI2/Filters/Grid.size.y), 0.1)
-		$UI2/Filters.call_deferred("show")
+		$UI2/Filters.position = Vector2(rect_x, 662 - $UI2/Filters/Grid.size.y)
+		$UI2/Filters.show()
 
 func _on_CheckAchievements_timeout():
 	if cave_wall.get_used_cells().is_empty() and chests.is_empty() and big_debris.is_empty() and get_tree().get_nodes_in_group("enemies").is_empty():

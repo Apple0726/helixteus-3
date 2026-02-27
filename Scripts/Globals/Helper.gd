@@ -50,7 +50,7 @@ func format_text(text_node, texture, path:String, show_available:bool, rsrc_cost
 func put_rsrc(container, min_size, rsrcs, remove:bool = true, show_available:bool = false, mouse_events:bool = true, collapse_threshold:int = -1):
 	if remove:
 		for child in container.get_children():
-			child.free()
+			child.queue_free()
 	var data = []
 	for rsrc_name in rsrcs:
 		var rsrc = preload("res://Scenes/Resource.tscn").instantiate()

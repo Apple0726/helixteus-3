@@ -204,7 +204,14 @@ func _on_mouse_entered() -> void:
 	else:
 		refresh_default_tooltip_text()
 		default_tooltip_text += "\n" + tr("PASSIVE_ABILITY") + ":"
-		default_tooltip_text += "\n - " + tr("%s_PASSIVE_ABILITY" % ShipClass.names[ship_class].to_upper())
+		var args = []
+		if ship_class in [ShipClass.ACCURATE, ShipClass.OFFENSIVE, ShipClass.DEFENSIVE, ShipClass.AGILE]:
+			args = [3]
+		elif ship_class == ShipClass.ENERGETIC:
+			args = [30, 25]
+		elif ship_class == ShipClass.IMPENETRABLE:
+			args = [15, 20, 50]
+		default_tooltip_text += "\n - " + tr("%s_PASSIVE_ABILITY" % ShipClass.names[ship_class].to_upper()) % args
 		game.show_tooltip(default_tooltip_text, {"imgs": default_tooltip_icons})
 
 

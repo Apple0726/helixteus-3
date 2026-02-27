@@ -3574,9 +3574,9 @@ func use_item(item_id:int, send_to_rover:int = -1):
 				rover_has_inv_space = true
 				break
 			if not rover.inventory[i].has("id"):
-				rover.inventory[i].type = "consumable"
-				rover.inventory[i].id = item_id
-				rover.inventory[i].num = num
+				rover.inventory[i]["type"] = Item.data[item_id].type
+				rover.inventory[i]["id"] = item_id
+				rover.inventory[i]["num"] = num
 				rover_has_inv_space = true
 				break
 		if rover_has_inv_space:

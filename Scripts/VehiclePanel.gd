@@ -80,9 +80,7 @@ func _on_rovers_pressed():
 			var rover_has_items = false
 			var rover_has_space_for_items = false
 			for inv in rover.inventory:
-				#if not inv.is_empty() and not inv.has("type"):
-					#inv.clear()
-				if not inv.is_empty() and inv["type"] not in ["rover_weapons", "rover_mining", ""]:
+				if not inv.is_empty() and inv["type"] not in [Item.Type.ROVER_WEAPON, Item.Type.ROVER_MINING]:
 					rover_has_items = true
 				if inv.is_empty():
 					rover_has_space_for_items = true
@@ -115,7 +113,7 @@ func rover_take_all(rover_id:int):
 	var remaining:bool = false
 	var rover:Dictionary = game.rover_data[rover_id]
 	for i in len(rover.inventory):
-		if rover.inventory[i].is_empty() or rover.inventory[i].type in ["rover_weapons", "rover_mining"]:
+		if rover.inventory[i].is_empty() or rover.inventory[i].type in [Item.Type.ROVER_WEAPON, Item.Type.ROVER_MINING]:
 			continue
 		if rover.inventory[i].id is int:
 			var remainder:int = game.add_items(rover.inventory[i].id, rover.inventory[i].num)

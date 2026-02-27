@@ -290,14 +290,17 @@ func damage_entity_status_effect(damage: int):
 	battle_scene.add_damage_text(false, position + Vector2.UP * 80.0, damage, false, Vector2.UP * 150.0)
 	HP = max(HP - damage, 0)
 	update_entity_HP()
-	
+
 func heal_entity(amount: int):
 	battle_scene.add_damage_text(false, position + Vector2.UP * 80.0, -amount)
 	HP = min(HP + amount, total_HP)
 	update_entity_HP(Vector2.ZERO, true)
-	
+
 func damage_entity(weapon_data: Dictionary):
-	var dodged = 1.0 / (1.0 + exp((weapon_data.weapon_accuracy - agility - agility_buff - abs(0.1 * velocity.rotated(PI / 2.0).dot(weapon_data.get("orientation", Vector2.ZERO))) + 9.2) / 5.8)) > randf()
+	var total_agility = agility + agility_buff
+	if Battle.StatusEffect.STUN in status_effects or Battle.StatusEffect.FROZEN in status_effects:
+		total_agility = 0
+	var dodged = 1.0 / (1.0 + exp((weapon_data.weapon_accuracy - total_agility - abs(0.1 * velocity.rotated(PI / 2.0).dot(weapon_data.get("orientation", Vector2.ZERO))) + 9.2) / 5.8)) > randf()
 	if dodged:
 		battle_scene.add_damage_text(true, position)
 	else:
@@ -310,7 +313,7 @@ func damage_entity(weapon_data: Dictionary):
 		else:
 			damage_multiplier = 1.0 / (1.0 - 0.125 * attack_defense_difference)
 		var actual_damage:int = max(1, weapon_data.damage * damage_multiplier)
-		var crit_chance = weapon_data.get("crit_hit_chance", 0.03) * weapon_data.get("crit_hit_mult", 1.0) * (10.0 if status_effects[Battle.StatusEffect.EXPOSED] else 1.0)
+		var crit_chance = weapon_data.get("crit_hit_chance", 0.03) * weapon_data.get("crit_hit_mult", 1.0) * (10.0 if status_effects[Battle.StatusEffect.EXPOSED] > 0.0 else 1.0)
 		var critical = randf() < crit_chance
 		if critical:
 			actual_damage *= 2
