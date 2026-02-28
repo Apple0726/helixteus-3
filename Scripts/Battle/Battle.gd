@@ -44,8 +44,9 @@ func _ready() -> void:
 	else:
 		HX_data = p_i.HX_data
 	var total_enemy_stats:float = 0.0
+	var total_ship_stats:float = 0.0
 	for HX in HX_data:
-		var total_stats = HX.HP + HX.attack + HX.defense + HX.accuracy + HX.agility
+		var total_stats = HX.HP * 0.25 + HX.attack + HX.defense + HX.accuracy + HX.agility
 		total_enemy_stats += total_stats
 		HX.total_stats = total_stats
 	HX_data.sort_custom(func(a, b): return a.lv > b.lv)
@@ -55,6 +56,13 @@ func _ready() -> void:
 		enemy_AI_diff_mult = 0.8
 	elif Settings.enemy_AI_difficulty == Settings.ENEMY_AI_DIFFICULTY_HARD:
 		enemy_AI_diff_mult = 1.7
+	for ship in ship_data:
+		var total_stats = ship.HP * 0.25 + ship.attack + ship.defense + ship.accuracy + ship.agility
+		total_ship_stats += total_stats
+	total_ship_stats *= log(max(game.u_i.speed_of_light, game.u_i.planck) - 1.0 + exp(1.0))
+	hard_battle = total_enemy_stats > total_ship_stats * 1.25
+	if hard_battle:
+		game.switch_music(preload("res://Audio/op_battle.ogg"), game.u_i.time_speed)
 	for i in len(HX_data):
 		var HX = HX_scene.instantiate()
 		HX.METERS_PER_AGILITY = METERS_PER_AGILITY
@@ -111,9 +119,15 @@ func initialize_battle():
 		initiative_order.append(ship_node)
 	initiative_order.sort_custom(sort_initiative)
 	initiative_order.append($Boundary)
+	if hard_battle:
+		$Selected.material.set_shader_parameter("frequency", 12.0)
+		battle_GUI.get_node("MainPanel/ColorRect").show()
 	for i in len(initiative_order):
 		var turn_order_button = preload("res://Scenes/Battle/TurnOrderButton.tscn").instantiate()
-		create_tween().tween_callback(turn_order_button.get_node("FadeAnim").play.bind("InitialAnim")).set_delay(0.15 * i)
+		if hard_battle:
+			create_tween().tween_callback(turn_order_button.get_node("FadeAnim").play.bind("InitialAnim")).set_delay(0.15 * i)
+		else:
+			create_tween().tween_callback(turn_order_button.get_node("FadeAnim").play.bind("InitialAnim"))
 		battle_GUI.turn_order_hbox.add_child(turn_order_button)
 		var entity = initiative_order[i]
 		if entity.type == Battle.EntityType.BOUNDARY: # Environment always goes last
@@ -271,6 +285,7 @@ func next_turn():
 	for i in len(initiative_order):
 		if i >= len(initiative_order):
 			break
+		print("initiative_order[%s]: " % i + str(initiative_order[i]))
 		if not is_instance_valid(initiative_order[i]) or initiative_order[i].type != Battle.EntityType.BOUNDARY and initiative_order[i].HP <= 0:
 			initiative_order.remove_at(i)
 			print("remove entity %s" % i)

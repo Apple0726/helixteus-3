@@ -1735,12 +1735,12 @@ func hit_player(damage:float, _status_effects:Dictionary = {}, passive:bool = fa
 					status_effects["invincible"] = 0.5
 					$Rover/AnimationPlayer.play("Invincible")
 					$Rover/InvincibilityCooldown.start(2.0 / time_speed)
-			if enhancements.has("armor_8"):
-				for angle in 32:
-					attack(angle * 11.25 * PI / 180)
-			elif enhancements.has("armor_7"):
-				for angle in 16:
-					attack(angle * 22.5 * PI / 180)
+				if enhancements.has("armor_8"):
+					for angle in 32:
+						attack(angle * 11.25 * PI / 180)
+				elif enhancements.has("armor_7"):
+					for angle in 16:
+						attack(angle * 22.5 * PI / 180)
 	else:
 		return
 	damage *= armor_damage_mult

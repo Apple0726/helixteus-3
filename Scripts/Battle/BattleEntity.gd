@@ -330,6 +330,11 @@ func damage_entity(weapon_data: Dictionary):
 				agility_buff -= 2
 		if Battle.PassiveAbility.PHYSICAL_DAMAGE_RESISTANT in passive_abilities and weapon_data.type == Battle.DamageType.PHYSICAL:
 			actual_damage = ceil(actual_damage * 0.75)
+		if type != Battle.EntityType.SHIP:
+			if weapon_data.type == Battle.DamageType.PHYSICAL:
+				actual_damage = ceil(actual_damage * log(game.u_i.planck - 1.0 + exp(1.0)))
+			elif weapon_data.type == Battle.DamageType.EMG:
+				actual_damage = ceil(actual_damage * log(game.u_i.speed_of_light - 1.0 + exp(1.0)))
 		battle_scene.add_damage_text(false, position, actual_damage, critical, 0.3 * weapon_data.get("velocity", Vector2.ZERO) * sqrt(weapon_data.get("mass", 0.0)))
 		HP = max(HP - actual_damage, 0)
 		var knockback = weapon_data.get("knockback", Vector2.ZERO)
@@ -353,10 +358,11 @@ func damage_entity(weapon_data: Dictionary):
 					else:
 						base_turns = st
 					if randf() < base_probability * (1.0 - status_effect_resistances[effect]):
-						status_effects[effect] = base_turns * pow(status_effects[effect] + base_turns, 0.8) / pow(base_turns, 0.8)
+						status_effects[effect] = base_turns * pow((status_effects[effect] + base_turns) / base_turns, 0.8)
 			if weapon_data.has("buffs"):
 				for buff in weapon_data.buffs:
-					self["%s_buff" % buff] += weapon_data.buffs[buff]
+					var base_buff = weapon_data.buffs[buff]
+					self["%s_buff" % buff] = base_buff * pow((self["%s_buff" % buff] + base_buff) / base_buff, 0.8)
 			update_info_labels()
 	return not dodged
 
@@ -421,7 +427,7 @@ func collide_with_entity(collider: BattleEntity, collidee: BattleEntity):
 	var collider_mass = collider.get_mass()
 	var collider_weapon_data = {
 		"type":Battle.DamageType.PHYSICAL,
-		"damage": collider_mass * collider.velocity.length_squared() * 0.000015,
+		"damage": collider_mass * collider.velocity.length_squared() * 3.0e-6,
 		"shooter_attack":collider.attack,
 		"weapon_accuracy":collider.accuracy,
 		"orientation":collider.velocity.normalized(),
@@ -434,7 +440,7 @@ func collide_with_entity(collider: BattleEntity, collidee: BattleEntity):
 		if not collidee.moving_from_velocity:
 			var collidee_weapon_data = {
 				"type":Battle.DamageType.PHYSICAL,
-				"damage": collidee_mass * collider.velocity.length_squared() * 0.000015,
+				"damage": collidee_mass * collider.velocity.length_squared() * 3.0e-6,
 				"shooter_attack":collidee.attack,
 				"weapon_accuracy":INF,
 				"orientation":collidee.velocity.normalized(),

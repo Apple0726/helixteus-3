@@ -236,10 +236,12 @@ func debuff_attack():
 	var target_ship:BattleEntity = ship_nodes.pick_random()
 	if not battle_scene.animations_sped_up:
 		battle_scene.view_entity(target_ship, 1.0)
-	if lv >= 9:
-		target_ship.attack_buff -= 4
+	var buff:float
+	if lv >= 12:
+		buff = -4
 	else:
-		target_ship.attack_buff -= 3
+		buff = -3
+	target_ship.attack_buff = buff * pow((target_ship.attack_buff + buff) / buff, 0.8)
 	buff_animation(target_ship.position, Color.RED)
 	target_ship.update_info_labels()
 	
@@ -267,10 +269,12 @@ func buff_attack():
 	var target_HX:BattleEntity = HX_nodes.pick_random()
 	if not battle_scene.animations_sped_up:
 		battle_scene.view_entity(target_HX, 1.0)
-	if lv >= 9:
-		target_HX.attack_buff += 4
+	var buff:float
+	if lv >= 12:
+		buff = 4
 	else:
-		target_HX.attack_buff += 3
+		buff = 3
+	target_HX.attack_buff = buff * pow((target_HX.attack_buff + buff) / buff, 0.8)
 	buff_animation(target_HX.position, Color.WHITE)
 	target_HX.update_info_labels()
 
@@ -314,6 +318,19 @@ func normal_attack():
 		projectile.position = position
 		projectile.ending_turn_delay = 1.0
 		projectile.end_turn_ready = true
+		if lv >= 12:
+			projectile.buffs.defense = -4
+		elif lv >= 9:
+			projectile.buffs.defense = -3
+		elif lv >= 6:
+			projectile.buffs.defense = -2
+		elif lv >= 3:
+			projectile.buffs.defense = -1
+		if lv >= 3:
+			projectile.knockback = 15.0 + min(lv, 12) * 5.0
+		if lv >= 9:
+			projectile.scale *= 2.0
+			projectile.damage *= 2.0
 		battle_scene.add_child(projectile)
 		projectile.end_turn.connect(ending_turn)
 	elif attack_type == Attack.LASER:
@@ -325,7 +342,10 @@ func normal_attack():
 		laser.weapon_accuracy = attack_data[attack_type].accuracy * accuracy
 		laser.position = position
 		laser.fade_delay = 0.2 if battle_scene.animations_sped_up else 0.5
-		laser.status_effects = {Battle.StatusEffect.STUN: [0.8, 1]}
+		if lv < 12:
+			laser.status_effects = {Battle.StatusEffect.STUN: [min(0.5 + 0.1 * lv, 0.8), 1]}
+		else:
+			laser.status_effects = {Battle.StatusEffect.STUN: [0.8, 2]}
 		battle_scene.add_child(laser)
 		laser.tree_exited.connect(ending_turn)
 

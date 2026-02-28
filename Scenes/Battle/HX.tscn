@@ -404,6 +404,7 @@ color_ramp = SubResource("GradientTexture1D_ihuwx")
 [sub_resource type="Animation" id="23"]
 resource_name = "LabelAnim"
 length = 0.583
+loop_mode = 1
 step = 0.01
 tracks/0/type = "value"
 tracks/0/imported = false

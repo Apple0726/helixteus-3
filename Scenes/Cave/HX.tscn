@@ -255,7 +255,6 @@ scale = Vector2(2.5, 2.5)
 
 [node name="HP" type="TextureProgressBar" parent="Info" unique_id=1092856014]
 modulate = Color(0, 1, 0, 1)
-light_mask = 0
 layout_mode = 0
 offset_left = 103.02
 offset_top = -5.09968

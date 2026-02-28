@@ -46,6 +46,44 @@ shader = SubResource("Shader_oca3i")
 shader_parameter/amplitude = 0.0
 shader_parameter/frequency = 10.0
 
+[sub_resource type="Animation" id="Animation_pv2pb"]
+resource_name = "Blink"
+length = 0.6
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:color")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.3, 0.6),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 0.023529412), Color(1, 1, 1, 0)]
+}
+
+[sub_resource type="Animation" id="Animation_cgaef"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:color")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1, 1, 1, 0.15686275)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_hovds"]
+_data = {
+&"Blink": SubResource("Animation_pv2pb"),
+&"RESET": SubResource("Animation_cgaef")
+}
+
 [sub_resource type="InputEventKey" id="InputEventKey_pv2pb"]
 device = -1
 physical_keycode = 49
@@ -196,6 +234,20 @@ patch_margin_right = 15
 patch_margin_bottom = 11
 axis_stretch_horizontal = 1
 axis_stretch_vertical = 1
+
+[node name="ColorRect" type="ColorRect" parent="MainPanel" unique_id=2126065808]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(1, 1, 1, 0.15686275)
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="MainPanel/ColorRect" unique_id=2010984611]
+libraries/ = SubResource("AnimationLibrary_hovds")
+autoplay = &"Blink"
 
 [node name="Bullet" type="Button" parent="MainPanel" unique_id=1517902186]
 layout_mode = 0

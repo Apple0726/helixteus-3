@@ -253,7 +253,7 @@ func _on_back_pressed() -> void:
 
 
 func _on_bullet_mouse_entered() -> void:
-	var tooltip_txt = tr("BASE_DAMAGE") + ": " + str(Data.battle_weapon_stats.bullet.damage)
+	var tooltip_txt = tr("BASE_DAMAGE") + ": " + str(snapped(Data.battle_weapon_stats.bullet.damage * log(game.u_i.planck - 1.0 + exp(1.0)), 0.1))
 	tooltip_txt += "\n" + tr("BASE_ACCURACY") + ": " + str(Data.battle_weapon_stats.bullet.accuracy)
 	var additional_text = "{desc}\n\n{shortcut_txt}: {shortcut}".format({
 		"desc":tr("BULLET_DESC"),
@@ -263,7 +263,7 @@ func _on_bullet_mouse_entered() -> void:
 
 
 func _on_laser_mouse_entered() -> void:
-	var tooltip_txt = tr("BASE_DAMAGE") + ": " + str(Data.battle_weapon_stats.laser.damage)
+	var tooltip_txt = tr("BASE_DAMAGE") + ": " + str(snapped(Data.battle_weapon_stats.laser.damage * log(game.u_i.speed_of_light - 1.0 + exp(1.0)), 0.1))
 	tooltip_txt += "\n" + tr("BASE_ACCURACY") + ": " + str(Data.battle_weapon_stats.laser.accuracy)
 	var additional_text = "{desc}\n\n{shortcut_txt}: {shortcut}".format({
 		"desc":tr("LASER_DESC"),
@@ -273,7 +273,7 @@ func _on_laser_mouse_entered() -> void:
 
 
 func _on_bomb_mouse_entered() -> void:
-	var tooltip_txt = tr("BASE_DAMAGE") + ": " + str(Data.battle_weapon_stats.bomb.damage)
+	var tooltip_txt = tr("BASE_DAMAGE") + ": " + str(snapped(Data.battle_weapon_stats.bomb.damage * log(game.u_i.planck - 1.0 + exp(1.0)), 0.1))
 	tooltip_txt += "\n" + tr("BASE_ACCURACY") + ": " + str(Data.battle_weapon_stats.bomb.accuracy)
 	var additional_text = "{desc}\n\n{shortcut_txt}: {shortcut}".format({
 		"desc":tr("BOMB_DESC"),
@@ -283,7 +283,7 @@ func _on_bomb_mouse_entered() -> void:
 
 
 func _on_light_mouse_entered() -> void:
-	var tooltip_txt = tr("BASE_DAMAGE") + ": " + str(Data.battle_weapon_stats.light.damage)
+	var tooltip_txt = tr("BASE_DAMAGE") + ": " + str(snapped(Data.battle_weapon_stats.light.damage * log(game.u_i.speed_of_light - 1.0 + exp(1.0)), 0.1))
 	tooltip_txt += "\n" + tr("BASE_ACCURACY") + ": " + tr("PERFECT")
 	var additional_text = "{desc}\n\n{shortcut_txt}: {shortcut}".format({
 		"desc":tr("LIGHT_DESC"),

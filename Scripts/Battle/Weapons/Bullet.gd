@@ -29,6 +29,8 @@ func _on_area_entered(area: Area2D) -> void:
 		weapon_data.ignore_defense_buffs = true
 	if not status_effects.is_empty():
 		weapon_data.status_effects = status_effects
+	if not buffs.is_empty():
+		weapon_data.buffs = buffs
 	if area.damage_entity(weapon_data):
 		if status_effects.has(Battle.StatusEffect.WET):
 			var water_explosion = preload("res://Scenes/Battle/Explosion.tscn").instantiate()
