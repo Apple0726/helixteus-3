@@ -2,7 +2,6 @@
 
 [ext_resource type="Shader" uid="uid://gevhgabt3grd" path="res://Shaders/Laser.gdshader" id="1"]
 [ext_resource type="Script" uid="uid://2ovarm7fdxfj" path="res://Scripts/Cave/Cave.gd" id="2"]
-[ext_resource type="Texture2D" uid="uid://dxm42o1tfpvo1" path="res://Graphics/Tiles/Mosaics/1.jpg" id="2_yvdt3"]
 [ext_resource type="PackedScene" uid="uid://bvyftln8m3hgm" path="res://Scenes/FilterButton.tscn" id="3"]
 [ext_resource type="Texture2D" uid="uid://4tf3teqmkahc" path="res://Graphics/Misc/Bar.png" id="4"]
 [ext_resource type="Texture2D" uid="uid://qbiggp0bodp1" path="res://Graphics/Cave/MiningLaser.png" id="5"]
@@ -49,6 +48,8 @@ const float planet_texture_size = 4000.0;
 uniform float texture_zoom = 1.0;
 uniform vec2 texture_offset = vec2(0.0);
 uniform vec4 modulate_color = vec4(1.0);
+uniform float reflection_strength:hint_range(0.0, 3.0, 0.1) = 1.0;
+uniform float reflection_power:hint_range(1.0, 3.0, 0.1) = 1.0;
 
 varying vec2 WorldSpace;
 
@@ -59,6 +60,11 @@ void vertex() {
 void fragment() {
 	COLOR.rgb = texture(TEXTURE, WorldSpace / planet_texture_size * texture_zoom).rgb;
 	COLOR *= modulate_color;
+}
+
+void light() {
+	float reflection = pow(COLOR.r + COLOR.g + COLOR.b, reflection_power) * reflection_strength;
+	LIGHT = vec4(LIGHT_COLOR.rgb * LIGHT_ENERGY * reflection, LIGHT_COLOR.a);
 }"
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_0yyna"]
@@ -66,6 +72,8 @@ shader = SubResource("Shader_yslmc")
 shader_parameter/texture_zoom = 1.0
 shader_parameter/texture_offset = Vector2(0, 0)
 shader_parameter/modulate_color = Vector4(1, 1, 1, 1)
+shader_parameter/reflection_strength = 0.5000000074506
+shader_parameter/reflection_power = 2.0000000149012003
 
 [sub_resource type="CapsuleShape2D" id="27"]
 radius = 23.3054
@@ -612,7 +620,6 @@ script = ExtResource("2")
 z_index = -1
 texture_repeat = 2
 material = SubResource("ShaderMaterial_0yyna")
-texture = ExtResource("2_yvdt3")
 centered = false
 region_enabled = true
 
@@ -675,7 +682,6 @@ texture = ExtResource("31")
 texture_scale = 3.0
 
 [node name="HPBG" type="ColorRect" parent="Rover" unique_id=48189733]
-light_mask = 0
 offset_left = -48.0
 offset_top = 76.0
 offset_right = 48.0
@@ -683,7 +689,6 @@ offset_bottom = 88.0
 color = Color(0, 0.4, 0, 1)
 
 [node name="InvBG" type="ColorRect" parent="Rover" unique_id=1620283493]
-light_mask = 0
 offset_left = -48.0
 offset_top = 96.0
 offset_right = 48.0
@@ -692,7 +697,6 @@ color = Color(0.321569, 0.164706, 0, 1)
 
 [node name="Bar" type="TextureProgressBar" parent="Rover" unique_id=201456748]
 modulate = Color(0, 1, 0, 1)
-light_mask = 0
 offset_left = -48.0
 offset_top = 76.0
 offset_right = 48.0
@@ -703,7 +707,6 @@ texture_progress = ExtResource("4")
 
 [node name="InvBar" type="TextureProgressBar" parent="Rover" unique_id=1846977235]
 modulate = Color(0.678431, 0.282353, 0, 1)
-light_mask = 0
 offset_left = -48.0
 offset_top = 96.0
 offset_right = 48.0
@@ -725,7 +728,6 @@ scale = Vector2(0.8, 0.8)
 texture = ExtResource("30")
 
 [node name="Sprite2D" type="Sprite2D" parent="Rover" unique_id=393075934]
-light_mask = 0
 scale = Vector2(0.288352, 0.288352)
 texture = ExtResource("11")
 
@@ -1288,7 +1290,7 @@ libraries/ = SubResource("AnimationLibrary_bdome")
 [node name="CanvasModulate" type="CanvasModulate" parent="." unique_id=2016604463]
 
 [node name="AuroraModulate" type="Node2D" parent="." unique_id=1098801665]
-modulate = Color(0.784314, 1, 0.784314, 1)
+modulate = Color(0.705882, 1, 0.705882, 1)
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=1879415946]
 environment = SubResource("Environment_n75r6")

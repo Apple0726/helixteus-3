@@ -335,7 +335,7 @@ func damage_entity(weapon_data: Dictionary):
 		var knockback = weapon_data.get("knockback", Vector2.ZERO)
 		if knockback != Vector2.ZERO:
 			if critical:
-				velocity *= 2.0
+				velocity *= 1.2
 			velocity += knockback
 		var label_knockback = weapon_data.velocity.normalized() * weapon_data.get("mass", 0.0) * 5.0 / total_HP
 		if label_knockback.length() > weapon_data.velocity.length():

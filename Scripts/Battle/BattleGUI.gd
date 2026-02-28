@@ -222,13 +222,16 @@ func refresh_GUI():
 		$MainPanel/Bomb.icon = preload("res://Graphics/Battle/Projectiles/missile.png")
 	else:
 		$MainPanel/Bomb.icon = preload("res://Graphics/Weapons/bomb1.png")
-	$MainPanel/MoveLabel.text = "%s (%.1f m)" % [tr("MOVE"), ship_node.movement_remaining]
 	if is_zero_approx(ship_node.movement_remaining):
 		$MainPanel/MoveLabel["theme_override_colors/font_color"] = Color.DARK_GRAY
 		$MainPanel/Move.disabled = true
 	else:
 		$MainPanel/MoveLabel["theme_override_colors/font_color"] = Color.WHITE
 		$MainPanel/Move.disabled = false
+	if is_zero_approx(ship_node.velocity.length()):
+		$MainPanel/MoveLabel.text = "%s (%.1f m)" % [tr("MOVE"), ship_node.movement_remaining]
+	else:
+		$MainPanel/MoveLabel.text = "%s (%.1f m)" % [tr("DECELERATE"), ship_node.movement_remaining]
 	if len(ship_node.pushable_entities) == 0 or ship_node.movement_remaining < 30.0:
 		$MainPanel/PushLabel["theme_override_colors/font_color"] = Color.DARK_GRAY
 		$MainPanel/Push.disabled = true
@@ -290,7 +293,10 @@ func _on_light_mouse_entered() -> void:
 
 
 func _on_move_mouse_entered() -> void:
-	game.show_tooltip(tr("BATTLE_MOVE_DESC"), {"additional_text": tr("KEYBOARD_SHORTCUT") + ": 5"})
+	if is_zero_approx(battle_scene.get_selected_ship().velocity.length()):
+		game.show_tooltip(tr("BATTLE_MOVE_DESC"), {"additional_text": tr("KEYBOARD_SHORTCUT") + ": 5"})
+	else:
+		game.show_tooltip(tr("DECELERATE_DESC"), {"additional_text": tr("KEYBOARD_SHORTCUT") + ": 5"})
 
 
 func _on_push_mouse_entered() -> void:
@@ -408,13 +414,20 @@ func _on_move_pressed() -> void:
 	var ship_node = battle_scene.get_selected_ship()
 	if not ship_node:
 		return
-	action_selected = MOVE
-	fade_out_main_panel()
-	fade_out_turn_order_box()
-	battle_scene.show_and_enlarge_collision_shapes()
-	ship_node.get_node("RayCast2D").enabled = true
-	ship_node.display_move_path = true
-	game.hide_tooltip()
+	var V = ship_node.velocity.length()
+	if is_zero_approx(V):
+		action_selected = MOVE
+		fade_out_main_panel()
+		fade_out_turn_order_box()
+		battle_scene.show_and_enlarge_collision_shapes()
+		ship_node.get_node("RayCast2D").enabled = true
+		ship_node.display_move_path = true
+		game.hide_tooltip()
+	else:
+		var movement_used = min(ship_node.movement_remaining, V)
+		ship_node.velocity = ship_node.velocity.normalized() * max(0.0, V - ship_node.movement_remaining)
+		ship_node.movement_remaining -= movement_used
+		refresh_GUI()
 
 func fade_out_turn_order_box():
 	if turn_order_hbox_tween and turn_order_hbox_tween.is_running():

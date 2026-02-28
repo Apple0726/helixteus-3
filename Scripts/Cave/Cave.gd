@@ -384,9 +384,9 @@ func set_slot_info(slot, _inv:Dictionary):
 		mining_laser.material["shader_parameter/outline_color"] = c
 		mining_laser.get_node("PointLight2D").color = c
 		if _inv.id == Item.BLUE_LASER:
-			mining_laser.get_node("PointLight2D").energy = 3
+			mining_laser.get_node("PointLight2D").energy = 0.6
 		else:
-			mining_laser.get_node("PointLight2D").energy = 2
+			mining_laser.get_node("PointLight2D").energy = 0.5
 		var speed = Item.data[_inv.id].speed
 		mining_p.amount = int(25 * pow(speed, 0.2) * pow(rover_size, 2 * 0.2) * time_speed)
 		mining_p.process_material.initial_velocity_min = 300 * pow(speed, 0.3) * pow(rover_size, 2 * 0.3) * time_speed
@@ -472,29 +472,19 @@ func generate_cave(first_floor:bool, going_up:bool):
 		#game.objective.current += 1
 	rover.get_node("AshParticles").modulate = Color.WHITE * (1.0 - cave_darkness)
 	rover.get_node("AshParticles").modulate.a = 1.0
-	mining_laser.get_node("PointLight2D2").energy = (0.5 + pow(cave_darkness, 2) * 6) / pow(light_strength_mult, 2) * 1.0
+	mining_laser.get_node("PointLight2D2").energy = 1.0
 	var depth_modulate = Color.WHITE
 	if cave_floor >= 16:
 		depth_modulate = Color(2.5, 1.0, 2.5, 1.0)
 	elif cave_floor >= 8:
 		depth_modulate = Color(1.0, 1.0, 2.5, 1.0)
-	cave_wall.modulate = star_mod * depth_modulate * (1.0 - cave_darkness) * (Color(0.5, 0.5, 1.0) if cave_floor >= 8 else Color.WHITE)
-	cave_wall.modulate.a = 1.0
-	var BG_mod = star_mod * (1.0 - cave_darkness)
-	BG_mod.a = 1.0
-	if tile.has("lake"):
-		BG_mod = Data.lake_colors[p_i.lake.element][p_i.lake.state]
-		cave_wall.modulate *= Data.lake_colors[p_i.lake.element][p_i.lake.state]
-		#cave_BG.material.set_shader_parameter("brightness", 1.1)
-		#cave_BG.material.set_shader_parameter("contrast", 1.1)
-	cave_BG.material.set_shader_parameter("modulate_color", BG_mod)
-	hole.modulate = star_mod * (1.0 - cave_darkness)
-	hole.modulate.a = 1.0
-	$WorldEnvironment.environment.adjustment_saturation = (1.0 - cave_darkness)
-	if Settings.enable_shaders:
-		$Floor.material.set_shader_parameter("star_mod", lerp(star_mod, Color.WHITE, clamp(cave_floor * 0.125, 0, 1)))
-		$Floor.material.set_shader_parameter("strength", max(1.0, brightness_mult - 0.1 * (cave_floor - 1)))
-	rover_light.energy = cave_darkness * 2.6
+	canvas_mod.color = Color.WHITE * (1.0 - cave_darkness) * lerp(star_mod, Color.WHITE, clamp(cave_floor * 0.125, 0, 1))
+	canvas_mod.color.a = 1.0
+	if cave_floor >= 8:
+		cave_wall.modulate = Color.BLUE
+	else:
+		cave_wall.modulate = Color.WHITE
+	rover_light.energy = cave_darkness * 0.8
 	$UI2/CaveInfo/Difficulty.text = "%s: %s" % [tr("DIFFICULTY"), Helper.format_num(difficulty, true)]
 	var rng = RandomNumberGenerator.new()
 	$UI2/CaveInfo/Floor.text = "B%sF" % [cave_floor]
@@ -541,20 +531,16 @@ func generate_cave(first_floor:bool, going_up:bool):
 					var debris = preload("res://Scenes/Debris.tscn").instantiate()
 					debris.sprite_frame = rng.randi_range(0, 5)
 					debris.time_speed = time_speed
-					var debris_mod = (star_mod + Color(0.2, 0.2, 0.2, 1.0) * rng.randf_range(0.9, 1.1)) * (1.0 - cave_darkness)
-					debris_mod.a = 1.0
 					debris.rotation_degrees = rng.randf_range(0, 360)
 					var rand_scale_x:float
 					if volcano_mult > 1 and not artificial_volcano and rng.randf() < remap(cave_floor, 1, 16, 0.05, 1.0):
 						rand_scale_x = -log(rng.randf()) + 0.5
 						debris.lava_intensity = 1.0 + log(rng.randf_range(1.0, volcano_mult))
-						debris_mod = Color.WHITE * (0.9 + debris.lava_intensity / 10.0)
 					else:
 						rand_scale_x = -log(rng.randf()) / 1.2 + 0.5
 					debris.scale = Vector2.ONE * rand_scale_x
 					debris.position = Vector2(i, j) * 200 + Vector2(100, 100) + Vector2(rng.randf_range(-80, 80), rng.randf_range(-80, 80)) / debris.scale / 2.0
 					if is_aurora_cave and rng.randf() < 0.05:
-						debris_mod = Color.WHITE
 						debris.aurora_intensity = 1.0 + log(rng.randf_range(1.0, au_int + 1.0))
 					if debris_rekt[cave_floor - 1].has(tile_id):
 						debris.free()
@@ -563,7 +549,6 @@ func generate_cave(first_floor:bool, going_up:bool):
 						debris.id = tile_id
 						add_child(debris)
 						big_debris[tile_id] = debris
-						debris.get_node("Sprite2D").material.set_shader_parameter("modulate_color", debris_mod)
 				if volcano_mult > 1.0:
 					if cave_floor <= 8 and level < remap(cave_floor, 1, 8, 0.6, 0.0):
 						ash_tiles.append(Vector2(i, j))
@@ -597,8 +582,6 @@ func generate_cave(first_floor:bool, going_up:bool):
 						continue
 					HX_node.get_node("Sprite2D").texture = load("res://Graphics/HX/%s_%s.png" % [_class, type])
 					HX_node.get_node("Sprite2D").material.set_shader_parameter("aurora", is_aurora_cave)
-					if volcano_mult == 1:
-						HX_node.get_node("Sprite2D").material.set_shader_parameter("light_amount", 1.0 - cave_darkness)
 					HX_node.total_HP = HX_node.HP
 					HX_node.cave_ref = self
 					HX_node.a_n = astar_node
@@ -639,7 +622,7 @@ func generate_cave(first_floor:bool, going_up:bool):
 						var deposit = deposit_scene.instantiate()
 						deposit.rsrc_texture = game.metal_textures[met_spawned]
 						deposit.rsrc_name = met_spawned
-						deposit.amount = int(20 * rng.randf_range(0.1, 0.15) * min(5, pow(difficulty, 0.3)))
+						deposit.amount = int(3.0 * rng.randf_range(1.0, 1.5) * min(5.0, pow(difficulty, 0.3)))
 						add_child(deposit)
 						deposit.position = cave_wall.map_to_local(Vector2(i, j)) - Vector2(100, 100)
 						deposit.modulate *= log(base_rarity) / 6.5 + 1.0
@@ -705,8 +688,6 @@ func generate_cave(first_floor:bool, going_up:bool):
 					chest.modulate = Color(0.7, 0, 0.79, 1.0)
 				elif tier == 5:
 					chest.modulate = Color(0.85, 1.0, 0, 1.0)
-				chest.modulate *= (1.0 - cave_darkness)
-				chest.modulate.a = 1
 				chest.get_node("Sprite2D").texture = preload("res://Graphics/Cave/Objects/Chest.png")
 				chest.get_node("Area2D").area_entered.connect(on_chest_entered.bind(tile))
 				chest.get_node("Area2D").area_exited.connect(on_chest_exited)
@@ -765,7 +746,6 @@ func generate_cave(first_floor:bool, going_up:bool):
 						spawn_edge_tiles.append({"id":tile_id, "dir":PI})
 			j += 1
 		$Exit/Sprite2D.texture = preload("res://Graphics/Cave/Objects/exit.png")
-		$Exit/Sprite2D.modulate = star_mod * 1.5
 		$Exit/GPUParticles2D.emitting = false
 		$Exit/ExitColl.disabled = false
 		var rot = spawn_edge_tiles[0].dir
@@ -949,7 +929,7 @@ func on_map_exited(_body):
 func generate_treasure(tier:int, rng:RandomNumberGenerator):
 	var contents = {	Item.MONEY:round(rng.randf_range(1500, 1800) * pow(tier, 3.0) * difficulty * exp(cave_floor / 6.0)),
 						Item.MINERALS:round(rng.randf_range(100, 150) * pow(tier, 3.0) * difficulty * exp(cave_floor / 9.0)),
-						Item.HELIX_CORE1:int(rng.randf_range(0.2, 0.6) * pow(tier, 1.8) * pow(difficulty, 0.7))}
+						Item.HELIX_CORE1:int(0.05 * rng.randf_range(1.0, 3.0) * pow(tier, 1.8) * pow(difficulty, 0.7))}
 	if contents[Item.HELIX_CORE1] > 64:
 		contents[Item.HELIX_CORE2] = int(contents[Item.HELIX_CORE1] / 64.0)
 		contents[Item.HELIX_CORE1] %= 64
@@ -979,7 +959,7 @@ func generate_treasure(tier:int, rng:RandomNumberGenerator):
 		if volcano_mult > 1 and not artificial_volcano:
 			rarity = pow(rarity, 0.9)
 		if rng.randf() < 1 / (rarity + 1):
-			contents[met] = Helper.clever_round(10 * rng.randf_range(0.5, 1.0) / rarity * pow(tier, 2.0) * difficulty * exp(cave_floor / 10.0) * treasure_mult * game.u_i.planck)
+			contents[met] = Helper.clever_round(15.0 * rng.randf_range(0.5, 1.0) / rarity * pow(tier, 2.0) * difficulty * exp(cave_floor / 10.0) * treasure_mult * game.u_i.planck)
 	return contents
 
 func connect_points(tile:Vector2, bidir:bool = false):
@@ -1064,7 +1044,6 @@ func update_ray():
 				if not debris_touched_by_laser.has(mining_debris):
 					var circ_bar = preload("res://Scenes/CircleBar.tscn").instantiate()
 					add_child(circ_bar)
-					circ_bar.light_mask = 0
 					circ_bar.scale *= big_debris[mining_debris].scale.x
 					circ_bar.position = big_debris[mining_debris].position
 					debris_touched_by_laser[mining_debris] = {"bar":circ_bar, "progress":0}
@@ -1116,7 +1095,7 @@ func _input(event):
 				velocity = base_vel * 5.0
 			else:
 				velocity = base_vel * 3.0
-			status_effects.invincible = 0.3
+			status_effects["invincible"] = 0.3
 			if enhancements.has("wheels_3"):
 				rover.collision_mask = 32
 			else:
@@ -1342,7 +1321,6 @@ func _process(delta):
 			elif effect == "burn":
 				rover.get_node("Burn").visible = false
 				$Rover/BurnTimer.stop()
-				$Rover/Sprite2D.modulate = star_mod
 			elif effect == "invincible":
 				rover.collision_mask = 37
 				$Rover/AnimationPlayer.stop()
@@ -1357,7 +1335,7 @@ func _process(delta):
 	if not status_effects.has("stun") and Input.is_action_pressed("right_click") and right_inventory_ready[0] and not right_inventory[0].is_empty():
 		use_item(right_inventory[0], tile_highlight_right, delta)
 	if is_aurora_cave:
-		canvas_mod.color = aurora_mod.modulate
+		canvas_mod.color = aurora_mod.modulate * (1.0 - cave_darkness)
 		canvas_mod.color.a = 1
 	if MM.visible:
 		for enemy in get_tree().get_nodes_in_group("enemies"):
@@ -1454,7 +1432,7 @@ func add_enemy_proj(_class:int, rot:float, base_dmg:float, pos:Vector2, proj_spe
 		_status_effects.burn = volcano_mult / 1.5
 		glow = 1.2
 	if _class == 1:
-		add_proj(true, pos, 12.0 * proj_speed_mult, rot, bullet_texture, base_dmg, {"mod":Color.WHITE * 1.2 * glow, "status_effects":_status_effects})
+		add_proj(true, pos, 12.0 * proj_speed_mult, rot, bullet_texture, base_dmg, {"mod":Color.WHITE * 1.2 * glow, "type":Data.ProjType.STANDARD, "status_effects":_status_effects})
 	elif _class == 2:
 		_status_effects.stun = 0.7
 		add_proj(true, pos, 15.0 * proj_speed_mult, rot, laser_texture, base_dmg * 0.8, {"mod":Color(1.5, 1.5, 0.75) * glow, "type":Data.ProjType.LASER, "status_effects":_status_effects})
@@ -1474,6 +1452,10 @@ func add_proj(enemy:bool, pos:Vector2, spd:float, rot:float, texture, damage:flo
 	var size:float = other_data.get("size", 1.0)
 	if enemy:
 		proj.scale *= size * enemy_projectile_size
+		if other_data.type == Data.ProjType.LASER:
+			proj.get_node("PointLight2D").enabled = true
+			proj.get_node("PointLight2D").texture_scale = 2.0
+			proj.get_node("PointLight2D").energy = 1.0
 	else:
 		proj.get_node("Sprite2D").material = ShaderMaterial.new()
 		proj.get_node("Sprite2D").material.shader = preload("res://Shaders/RoverAttackLaser.gdshader")
@@ -1482,9 +1464,9 @@ func add_proj(enemy:bool, pos:Vector2, spd:float, rot:float, texture, damage:flo
 		if Settings.enable_shaders:
 			proj.get_node("PointLight2D").enabled = true
 			proj.get_node("PointLight2D").color = laser_color
-			proj.get_node("PointLight2D").energy = (0.6 + cave_darkness * 1) / pow(light_strength_mult, 2)
+			proj.get_node("PointLight2D").energy = 0.5
 			proj.get_node("PointLight2D2").enabled = true
-			proj.get_node("PointLight2D2").energy = (0.3 + cave_darkness * 1) / pow(light_strength_mult, 2)
+			proj.get_node("PointLight2D2").energy = 0.5
 		proj.scale *= size
 		proj.get_node("Sprite2D").light_mask = 2
 	proj.damage = damage
@@ -1600,8 +1582,8 @@ func mine_debris_complete(tile_id:int):
 		debris_exp += 0.2
 	if debris_aurora_mult > 1.0:
 		debris_exp += 0.2
-		if randf() < 0.3 + debris.aurora_intensity / 10.0:
-			rsrc.quillite = Helper.clever_round(randf_range(0.1, 0.12) * difficulty * debris.aurora_intensity)
+		if difficulty > 1000.0 and randf() < 0.4 + debris.aurora_intensity / 10.0:
+			rsrc["quillite"] = Helper.clever_round(randf_range(0.1, 0.12) * difficulty * debris.aurora_intensity)
 	for met in game.met_info:
 		var met_dict = game.met_info[met]
 		var rarity = met_dict.rarity
@@ -1746,11 +1728,11 @@ func hit_player(damage:float, _status_effects:Dictionary = {}, passive:bool = fa
 		if not passive:
 			if $Rover/InvincibilityCooldown.is_stopped():
 				if enhancements.has("armor_5"):
-					status_effects.invincible = 1.5
+					status_effects["invincible"] = 1.5
 					$Rover/AnimationPlayer.play("Invincible")
 					$Rover/InvincibilityCooldown.start(2.0 / time_speed)
 				elif enhancements.has("armor_4"):
-					status_effects.invincible = 0.5
+					status_effects["invincible"] = 0.5
 					$Rover/AnimationPlayer.play("Invincible")
 					$Rover/InvincibilityCooldown.start(2.0 / time_speed)
 			if enhancements.has("armor_8"):
@@ -1941,7 +1923,14 @@ func _on_Exit_area_entered(_body):
 	if cave_floor == 1:
 		show_right_info(tr("EXIT_CAVE"), exit_cave)
 	else:
-		show_right_info(tr("GO_UP"), go_up_cave)
+		if rover_data.MK >= 2 and cave_floor <= 8 or rover_data.MK >= 3 and cave_floor <= 16:
+			show_right_info(tr("GO_UP"), go_up_cave)
+			var action_btn = Button.new()
+			action_btn.text = tr("EXIT_CAVE")
+			action_btn.pressed.connect(exit_cave)
+			right_side_vbox.add_child(action_btn)
+		else:
+			show_right_info(tr("GO_UP"), go_up_cave)
 
 func on_WH_entered(_body):
 	show_right_info(tr("EXIT_CAVE"), exit_cave)

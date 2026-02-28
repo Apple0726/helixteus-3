@@ -19,7 +19,6 @@ void fragment() {
 	if (aurora) {
 		COLOR.rb += 0.3 * sin((UV.x + UV.y) * 6.0 + TIME * 10.0) + 0.3;
 	}
-	COLOR.rgb *= light_amount;
 	COLOR.a *= alpha;
 	if (starlight_enabled) {
 		vec2 center = 0.4 * vec2(cos(starlight_angle + 3.1415), sin(starlight_angle + 3.1415)) + vec2(0.5);

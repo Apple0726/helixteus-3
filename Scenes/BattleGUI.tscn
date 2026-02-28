@@ -335,9 +335,9 @@ offset_bottom = 84.0
 
 [node name="MoveLabel" type="Label" parent="MainPanel" unique_id=1731065614]
 layout_mode = 0
-offset_left = 564.0
+offset_left = 536.0
 offset_top = 12.0
-offset_right = 652.0
+offset_right = 680.0
 offset_bottom = 35.0
 text = "MOVE"
 horizontal_alignment = 1

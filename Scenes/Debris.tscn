@@ -21,6 +21,10 @@ void fragment() {
 		COLOR.b += (0.05 * sin((3.0 * UV.x + UV.y) * 8.0 + TIME * 10.0) + 0.15) * intensity;
 	}
 	COLOR *= modulate_color;
+}
+
+void light() {
+	LIGHT = vec4(LIGHT_COLOR.rgb * LIGHT_ENERGY, LIGHT_COLOR.a);
 }"
 
 [sub_resource type="ShaderMaterial" id="8"]

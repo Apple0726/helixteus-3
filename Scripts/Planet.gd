@@ -1321,11 +1321,12 @@ func _unhandled_input(event):
 			elif tile.has("cave"):
 				if game.bottom_info_action == "enter_cave":
 					game["c_t"] = tile_id
+					var cave_floors = game.tile_data[tile_id].cave.num_floors
 					game["rover_id"] = rover_selected
-					if game.rover_data[rover_selected].MK == 3:
-						game.popup_window("", "", [tr("GO_TO_FLOOR_X") % 16, tr("GO_TO_FLOOR_X") % 8, tr("START_AT_FLOOR_1")], [Callable(game, "switch_view").bind("cave", {"start_floor":16}), Callable(game, "switch_view").bind("cave", {"start_floor":8}), Callable(game, "switch_view").bind("cave")], tr("CANCEL"))
+					if game.rover_data[rover_selected].MK == 3 and cave_floors > 8:
+						game.popup_window("", "", [tr("GO_TO_FLOOR_X") % min(16, cave_floors), tr("GO_TO_FLOOR_X") % 8, tr("START_AT_FLOOR_1")], [Callable(game, "switch_view").bind("cave", {"start_floor":16}), Callable(game, "switch_view").bind("cave", {"start_floor":8}), Callable(game, "switch_view").bind("cave")], tr("CANCEL"))
 					elif game.rover_data[rover_selected].MK == 2:
-						game.popup_window("", "", [tr("GO_TO_FLOOR_X") % 8, tr("START_AT_FLOOR_1")], [Callable(game, "switch_view").bind("cave", {"start_floor":8}), Callable(game, "switch_view").bind("cave")], tr("CANCEL"))
+						game.popup_window("", "", [tr("GO_TO_FLOOR_X") % min(8, cave_floors), tr("START_AT_FLOOR_1")], [Callable(game, "switch_view").bind("cave", {"start_floor":8}), Callable(game, "switch_view").bind("cave")], tr("CANCEL"))
 					else:
 						game.switch_view("cave")
 				else:

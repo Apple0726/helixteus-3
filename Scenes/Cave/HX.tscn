@@ -24,10 +24,14 @@ shader = ExtResource("1_bfi0c")
 shader_parameter/amplitude = 6.0
 shader_parameter/frequency = 6.0
 shader_parameter/aurora = false
-shader_parameter/light = 1.0
+shader_parameter/light_amount = 1.0
 shader_parameter/alpha = 1.0
 shader_parameter/flash = 0.0
 shader_parameter/flash_color = Color(1, 1, 1, 1)
+shader_parameter/starlight_angle = 0.0
+shader_parameter/starlight_enabled = false
+shader_parameter/starlight_color = Color(1, 1, 1, 1)
+shader_parameter/starlight_energy = 1.0
 
 [sub_resource type="ShaderMaterial" id="3"]
 shader = ExtResource("7")
