@@ -153,6 +153,8 @@ func customize_next_ship():
 func _on_done_pressed() -> void:
 	game.ship_data[ship_id] = ship_data.duplicate()
 	if respeccing:
+		if game.ship_data[ship_id].respec_count > 0:
+			game.ship_data[ship_id].XP -= game.ship_data[ship_id].XP_to_lv * 0.5
 		game.ship_data[ship_id].respec_count += 1
 	else:
 		game.ship_data[ship_id].erase("leveled_up")
@@ -276,7 +278,7 @@ func _on_weapons_previous_pressed() -> void:
 	update_weapons_panel()
 
 func update_weapons_panel():
-	$Weapons/LvRemaining.text = tr("WEAPON_LV_UP_REMAINING") + " " + str(ship_data.unallocated_weapon_levels)
+	$Weapons/LvRemaining.text = tr("WEAPON_POINTS") + ": " + str(ship_data.unallocated_weapon_levels)
 	if weapon_selected == BULLET:
 		# Placeholder textures
 		for node_name in ["11", "12", "13", "21", "22", "23", "31", "32", "33"]:
@@ -319,13 +321,24 @@ func update_weapons_panel():
 
 
 func upgrade_ship_weapon(path: int):
-	if ship_data.unallocated_weapon_levels > 0:
-		ship_data[weapon_selected_str][path] += 1
-		ship_data.unallocated_weapon_levels -= 1
+	var lv = ship_data[weapon_selected_str][path]
+	if lv == 3:
+		if ship_data.unallocated_weapon_levels > 1:
+			ship_data[weapon_selected_str][path] += 1
+			ship_data.unallocated_weapon_levels -= 2
+	else:
+		if ship_data.unallocated_weapon_levels > 0:
+			ship_data[weapon_selected_str][path] += 1
+			ship_data.unallocated_weapon_levels -= 1
 	update_weapons_panel()
 
 func show_weapon_tooltip(path: int, lv: int):
-	game.show_tooltip(tr("%s_%s_%s_DESC" % [weapon_selected_str.to_upper(), path, lv]))
+	var tooltip = tr("{name}_{path}_{lv}_DESC".format({"name":weapon_selected_str.to_upper(), "path":path, "lv":lv}))
+	if lv == 3:
+		tooltip += "\n{costTxt}: {cost} {wpTxt}".format({"costTxt":tr("COST"), "cost":2, "wpTxt":tr("WEAPON_POINTS")})
+	else:
+		tooltip += "\n{costTxt}: {cost} {wpTxt}".format({"costTxt":tr("COST"), "cost":1, "wpTxt":tr("WEAPON_POINT")})
+	game.show_tooltip(tooltip)
 
 
 func _on_class_and_stats_pressed() -> void:

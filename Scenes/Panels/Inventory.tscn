@@ -134,7 +134,7 @@ layout_mode = 2
 [node name="GridContainer" type="GridContainer" parent="Control/VBox" unique_id=92201185]
 layout_mode = 2
 size_flags_horizontal = 5
-theme_override_constants/h_separation = 60
+theme_override_constants/h_separation = 30
 theme_override_constants/v_separation = 30
 columns = 5
 

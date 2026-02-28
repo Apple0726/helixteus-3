@@ -76,6 +76,7 @@ func _on_Materials_pressed():
 	hbox_data = Helper.put_rsrc(grid, 48, game.mats, true, false, false)
 	for mat in hbox_data:
 		var texture = mat.rsrc.get_node("Texture2D")
+		mat.rsrc.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		if not game.show.has(mat.name):
 			texture.modulate = Color(0.2, 0.2, 0.2)
 			mat.rsrc.get_node("Text")["theme_override_colors/font_color"] = Color.DIM_GRAY
@@ -95,6 +96,7 @@ func _on_Metals_pressed():
 	hbox_data = Helper.put_rsrc(grid, 48, game.mets, true, false, false)
 	for met in hbox_data:
 		var texture = met.rsrc.get_node("Texture2D")
+		met.rsrc.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		if not game.show.has(met.name):
 			texture.modulate = Color(0.2, 0.2, 0.2)
 			met.rsrc.get_node("Text")["theme_override_colors/font_color"] = Color.DIM_GRAY
@@ -114,6 +116,7 @@ func _on_Atoms_pressed():
 	hbox_data = Helper.put_rsrc(grid, 48, game.atoms, true, false, false)
 	for atom in hbox_data:
 		var texture = atom.rsrc.get_node("Texture2D")
+		atom.rsrc.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		if not game.show.has(atom.name):
 			texture.modulate = Color(0.2, 0.2, 0.2)
 			atom.rsrc.get_node("Text")["theme_override_colors/font_color"] = Color.DIM_GRAY
@@ -216,3 +219,17 @@ func _input(event):
 func show_part(_name:String):
 	var st:String = "%s\n%s" % [tr(_name.to_upper()), tr(_name.to_upper() + "_DESC")]
 	game.show_tooltip(st)
+
+func _process(delta):
+	if tab == "materials":
+		for hbox in hbox_data:
+			hbox.rsrc.rsrcs_required = game.mats[hbox.name]
+	elif tab == "metals":
+		for hbox in hbox_data:
+			hbox.rsrc.rsrcs_required = game.mets[hbox.name]
+	elif tab == "atoms":
+		for hbox in hbox_data:
+			hbox.rsrc.rsrcs_required = game.atoms[hbox.name]
+	elif tab == "particles":
+		for hbox in hbox_data:
+			hbox.rsrc.rsrcs_required = game.particles[hbox.name]

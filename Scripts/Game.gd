@@ -5,29 +5,6 @@ const DATE:String = ""
 const VERSION:String = "v0.30"
 const COMPATIBLE_SAVES = []
 
-#region Scenes
-#var upgrade_panel_scene = preload("res://Scenes/Panels/UpgradePanel.tscn")
-#var planet_HUD_scene = preload("res://Scenes/Planet/PlanetHUD.tscn")
-#var space_HUD_scene = preload("res://Scenes/SpaceHUD.tscn")
-#var planet_details_scene = preload("res://Scenes/Planet/PlanetDetails.tscn")
-#var mining_HUD_scene = preload("res://Scenes/Views/Mining.tscn")
-#var overlay_scene = preload("res://Scenes/Overlay.tscn")
-#var element_overlay_scene = preload("res://Scenes/ElementOverlay.tscn")
-#var annotator_scene = preload("res://Scenes/Annotator.tscn")
-#var rsrc_scene = preload("res://Scenes/Resource.tscn")
-#var cave_scene = preload("res://Scenes/Views/Cave.tscn")
-#var STM_scene = preload("res://Scenes/Views/ShipTravelMinigame2.tscn")
-#var battle_scene = preload("res://Scenes/Views/Battle.tscn")
-#var particles_scene = preload("res://Scenes/LiquidParticles.tscn")
-#var time_scene = preload("res://Scenes/TimeLeft.tscn")
-#var planet_TS = preload("res://Resources/PlanetTileSet.tres")
-#var lake_TS = preload("res://Resources/LakeTileSet.tres")
-#var obstacles_TS = preload("res://Resources/ObstaclesTileSet.tres")
-#var aurora_scene = preload("res://Scenes/Aurora.tscn")
-#var white_rect_scene = preload("res://Scenes/WhiteRect.tscn")
-#var mass_build_rect = preload("res://Scenes/MassBuildRect.tscn")
-#endregion
-
 #var surface_BG = preload("res://Graphics/Decoratives/Surface.jpg")
 #var crust_BG = preload("res://Graphics/Decoratives/Crust.jpg")
 #var star_texture = preload("res://Graphics/Effects/spotlight_8_s.png")
@@ -38,8 +15,6 @@ var bldg_textures:Array
 var ancient_bldg_textures:Array
 
 #region GUI nodes
-#var construct_panel:Control
-#var megastructures_panel:Control
 var gigastructures_panel:Control
 var shop_panel:Control
 var ships_panel:Control
@@ -996,106 +971,9 @@ func new_game(univ:int = 0, new_save:bool = false, DR_advantage = false):
 	add_planet(true)
 	$Autosave.start()
 	var init_time = Time.get_unix_time_from_system()
-	add_panels()
 	view.set_process(true)
 	set_c_sv(c_sv)
 
-func add_panels():
-	pass
-	#upgrade_panel = upgrade_panel_scene.instantiate()
-	#inventory = preload("res://Scenes/Panels/Inventory.tscn").instantiate()
-	#shop_panel = preload("res://Scenes/Panels/ShopPanel.tscn").instantiate()
-	#ships_panel = preload("res://Scenes/Panels/ShipPanel.tscn").instantiate()
-	#gigastructures_panel = preload("res://Scenes/Panels/GigastructuresPanel.tscn").instantiate()
-	#craft_panel = preload("res://Scenes/Panels/CraftPanel.tscn").instantiate()
-	#vehicle_panel = preload("res://Scenes/Panels/VehiclePanel.tscn").instantiate()
-	#RC_panel = preload("res://Scenes/Panels/RCPanel.tscn").instantiate()
-	#MU_panel = preload("res://Scenes/Panels/MUPanel.tscn").instantiate()
-	#SC_panel = preload("res://Scenes/Panels/SCPanel.tscn").instantiate()
-	#production_panel = preload("res://Scenes/Panels/ProductionPanel.tscn").instantiate()
-	#send_ships_panel = preload("res://Scenes/Panels/SendShipsPanel.tscn").instantiate()
-	#send_fighters_panel = preload("res://Scenes/Panels/SendFightersPanel.tscn").instantiate()
-	#terraform_panel = preload("res://Scenes/Panels/TerraformPanel.tscn").instantiate()
-	#greenhouse_panel = preload("res://Scenes/Panels/GreenhousePanel.tscn").instantiate()
-	#shipyard_panel = preload("res://Scenes/Panels/ShipyardPanel.tscn").instantiate()
-	#PC_panel = preload("res://Scenes/Panels/PCPanel.tscn").instantiate()
-	#AMN_panel = preload("res://Scenes/Panels/ReactionsPanel.tscn").instantiate()
-	#AMN_panel.set_script(load("Scripts/AMNPanel.gd"))
-	#SPR_panel = preload("res://Scenes/Panels/ReactionsPanel.tscn").instantiate()
-	#SPR_panel.set_script(load("Scripts/SPRPanel.gd"))
-	#planetkiller_panel = preload("res://Scenes/Panels/PlanetkillerPanel.tscn").instantiate()
-	#wiki = preload("res://Scenes/Panels/Wiki.tscn").instantiate()
-	#stats_panel = preload("res://Scenes/Panels/StatsPanel.tscn").instantiate()
-	#
-	#wiki.visible = false
-	#$Panels/Control.add_child(wiki)
-	#
-	#stats_panel.visible = false
-	#$Panels/Control.add_child(stats_panel)
-	#
-	#planetkiller_panel.visible = false
-	#$Panels/Control.add_child(planetkiller_panel)
-	#
-	#AMN_panel.visible = false
-	#$Panels/Control.add_child(AMN_panel)
-	#
-	#SPR_panel.visible = false
-	#$Panels/Control.add_child(SPR_panel)
-	#
-	#send_ships_panel.visible = false
-	#$Panels/Control.add_child(send_ships_panel)
-	#
-	#send_fighters_panel.visible = false
-	#$Panels/Control.add_child(send_fighters_panel)
-	#
-	#terraform_panel.visible = false
-	#$Panels/Control.add_child(terraform_panel)
-	#
-	#greenhouse_panel.visible = false
-	#$Panels/Control.add_child(greenhouse_panel)
-	#
-	#shipyard_panel.visible = false
-	#$Panels/Control.add_child(shipyard_panel)
-	#
-	#PC_panel.visible = false
-	#$Panels/Control.add_child(PC_panel)
-	#
-	#gigastructures_panel.visible = false
-	#$Panels/Control.add_child(gigastructures_panel)
-#
-	#shop_panel.visible = false
-	#$Panels/Control.add_child(shop_panel)
-#
-	#ships_panel.visible = false
-	#$Panels/Control.add_child(ships_panel)
-#
-	#craft_panel.visible = false
-	#$Panels/Control.add_child(craft_panel)
-#
-	#vehicle_panel.visible = false
-	#$Panels/Control.add_child(vehicle_panel)
-#
-	#RC_panel.visible = false
-	#$Panels/Control.add_child(RC_panel)
-#
-	#MU_panel.visible = false
-	#$Panels/Control.add_child(MU_panel)
-#
-	#SC_panel.visible = false
-	#$Panels/Control.add_child(SC_panel)
-#
-	#production_panel.visible = false
-	#$Panels/Control.add_child(production_panel)
-#
-	#inventory.visible = false
-	#$Panels/Control.add_child(inventory)
-#
-	#upgrade_panel.visible = false
-	#$Panels/Control.add_child(upgrade_panel)
-	#
-	#element_overlay = element_overlay_scene.instantiate()
-	#element_overlay.visible = false
-	#$UI.add_child(element_overlay)
 
 func popup(txt, delay):
 	if $Panels.has_node("Popup"):
@@ -4139,7 +4017,6 @@ func fade_out_title(fn:String):
 			switch_music(Data.ambient_music.pick_random(), u_i.time_speed)
 	else:
 		call(fn)
-		#add_panels()
 		$Autosave.start()
 		switch_music(Data.ambient_music.pick_random(), u_i.get("time_speed", 1.0))
 	

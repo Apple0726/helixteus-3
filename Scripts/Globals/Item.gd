@@ -209,27 +209,27 @@ var data:Dictionary = {
 	MYTHRIL_CC:
 		{"item_name":"mythril_CC", "type":Type.ROVER_CC, "capacity":1250000.0, "metal":"mythril", "costs":{"mythril":5000.0}},
 	RED_LASER:
-		{"item_name":"red_laser", "type":Type.ROVER_WEAPON, "damage":5, "cooldown":0.2, "costs":{"money":1000, "silicon":10}},
+		{"item_name":"red_laser", "type":Type.ROVER_WEAPON, "damage":5.0, "cooldown":0.2, "costs":{"money":1000, "silicon":10}},
 	ORANGE_LASER:
-		{"item_name":"orange_laser", "type":Type.ROVER_WEAPON, "damage":8, "cooldown":0.19, "costs":{"money":17000, "silicon":12}},
+		{"item_name":"orange_laser", "type":Type.ROVER_WEAPON, "damage":8.5, "cooldown":0.19, "costs":{"money":17000, "silicon":12}},
 	YELLOW_LASER:
-		{"item_name":"yellow_laser", "type":Type.ROVER_WEAPON, "damage":14, "cooldown":0.18, "costs":{"money":190000, "silicon":15}},
+		{"item_name":"yellow_laser", "type":Type.ROVER_WEAPON, "damage":15.0, "cooldown":0.18, "costs":{"money":190000, "silicon":15}},
 	GREEN_LASER:
-		{"item_name":"green_laser", "type":Type.ROVER_WEAPON, "damage":22, "cooldown":0.17, "costs":{"money":950000, "silicon":20}},
+		{"item_name":"green_laser", "type":Type.ROVER_WEAPON, "damage":27.0, "cooldown":0.17, "costs":{"money":950000, "silicon":20}},
 	BLUE_LASER:
-		{"item_name":"blue_laser", "type":Type.ROVER_WEAPON, "damage":40, "cooldown":0.16, "costs":{"money":5.2e6, "silicon":50, "gold":25}},
+		{"item_name":"blue_laser", "type":Type.ROVER_WEAPON, "damage":48.0, "cooldown":0.16, "costs":{"money":5.2e6, "silicon":50, "gold":25}},
 	PURPLE_LASER:
-		{"item_name":"purple_laser", "type":Type.ROVER_WEAPON, "damage":75, "cooldown":0.15, "costs":{"money":3.7e7, "silicon":100, "platinum":50}},
+		{"item_name":"purple_laser", "type":Type.ROVER_WEAPON, "damage":85.0, "cooldown":0.15, "costs":{"money":3.7e7, "silicon":100, "platinum":50}},
 	UV_LASER:
-		{"item_name":"UV_laser", "type":Type.ROVER_WEAPON, "damage":140, "cooldown":0.14, "costs":{"money":3.1e8, "silicon":200, "platinum":100}},
+		{"item_name":"UV_laser", "type":Type.ROVER_WEAPON, "damage":160.0, "cooldown":0.14, "costs":{"money":3.1e8, "silicon":200, "platinum":100}},
 	XRAY_LASER:
-		{"item_name":"xray_laser", "type":Type.ROVER_WEAPON, "damage":270, "cooldown":0.13, "costs":{"money":9.8e9, "silicon":500, "platinum":200}},
+		{"item_name":"xray_laser", "type":Type.ROVER_WEAPON, "damage":310.0, "cooldown":0.13, "costs":{"money":9.8e9, "silicon":500, "platinum":200}},
 	GAMMARAY_LASER:
-		{"item_name":"gammaray_laser", "type":Type.ROVER_WEAPON, "damage":525, "cooldown":0.12, "costs":{"money":2.5e11, "silicon":1000, "platinum":500}},
+		{"item_name":"gammaray_laser", "type":Type.ROVER_WEAPON, "damage":630.0, "cooldown":0.12, "costs":{"money":2.5e11, "silicon":1000, "platinum":500}},
 	ULTRAGAMMARAY_LASER:
-		{"item_name":"ultragammaray_laser", "type":Type.ROVER_WEAPON, "damage":900, "cooldown":0.1, "costs":{"money":1.5e13, "silicon":2500, "platinum":1000}},
+		{"item_name":"ultragammaray_laser", "type":Type.ROVER_WEAPON, "damage":2000.0, "cooldown":0.1, "costs":{"money":1.5e13, "silicon":2500, "platinum":1000}},
 	RED_MINING_LASER:
-		{"item_name":"red_mining_laser", "type":Type.ROVER_MINING, "speed":1, "range":250, "costs":{"money":1000, "silicon":10}},
+		{"item_name":"red_mining_laser", "type":Type.ROVER_MINING, "speed":1.0, "range":250, "costs":{"money":1000, "silicon":10}},
 	ORANGE_MINING_LASER:
 		{"item_name":"orange_mining_laser", "type":Type.ROVER_MINING, "speed":1.4, "range":260, "costs":{"money":17000, "silicon":12}},
 	YELLOW_MINING_LASER:
@@ -241,13 +241,13 @@ var data:Dictionary = {
 	PURPLE_MINING_LASER:
 		{"item_name":"purple_mining_laser", "type":Type.ROVER_MINING, "speed":4.3, "range":315, "costs":{"money":3.7e7, "silicon":100, "platinum":50}},
 	UV_MINING_LASER:
-		{"item_name":"UV_mining_laser", "type":Type.ROVER_MINING, "speed":6, "range":330, "costs":{"money":3.1e8, "silicon":200, "platinum":100}},
+		{"item_name":"UV_mining_laser", "type":Type.ROVER_MINING, "speed":6.0, "range":330, "costs":{"money":3.1e8, "silicon":200, "platinum":100}},
 	XRAY_MINING_LASER:
 		{"item_name":"xray_mining_laser", "type":Type.ROVER_MINING, "speed":9.1, "range":350, "costs":{"money":4.0e9, "silicon":500, "platinum":200}},
 	GAMMARAY_MINING_LASER:
-		{"item_name":"gammaray_mining_laser", "type":Type.ROVER_MINING, "speed":12, "range":380, "costs":{"money":9.4e10, "silicon":1000, "platinum":500}},
+		{"item_name":"gammaray_mining_laser", "type":Type.ROVER_MINING, "speed":12.0, "range":380, "costs":{"money":9.4e10, "silicon":1000, "platinum":500}},
 	ULTRAGAMMARAY_MINING_LASER:
-		{"item_name":"ultragammaray_mining_laser", "type":Type.ROVER_MINING, "speed":16, "range":500, "costs":{"money":1.0e12, "silicon":2500, "platinum":1000}},
+		{"item_name":"ultragammaray_mining_laser", "type":Type.ROVER_MINING, "speed":20.0, "range":500, "costs":{"money":1.0e12, "silicon":2500, "platinum":1000}},
 }
 
 func icon_directory(type:int):
