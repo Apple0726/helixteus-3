@@ -121,8 +121,8 @@ func refresh():
 	for particle in p_costs:
 		p_costs[particle] *= Z
 	atom_dict[resource_selected] = rsrc_value
-	rsrc_nodes_from = Helper.put_rsrc($Panel/Control2/ScrollContainer/From, 32, atom_dict, true, atom_to_p)
-	rsrc_nodes_to = Helper.put_rsrc($Panel/Control2/To, 32, p_costs, true, not atom_to_p)
+	rsrc_nodes_from = Helper.put_rsrc($Panel/Control2/ScrollContainer/From, 40, atom_dict, true, atom_to_p)
+	rsrc_nodes_to = Helper.put_rsrc($Panel/Control2/To, 40, p_costs, true, not atom_to_p)
 
 func get_max_slider_value():
 	var max_value:float = 0.0

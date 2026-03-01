@@ -75,8 +75,8 @@ func on_rsrc_pressed(rsrc:String):
 		for atom in reactions[rsrc].atoms:
 			ratios[atom] = 1000.0 / (Data.molar_mass[atom] * reactions[rsrc].atoms[atom])
 			atom_costs[atom] = 0.0
-			rsrc_nodes_from = Helper.put_rsrc($Panel/Control2/ScrollContainer/From, 32, atom_costs, true, true)
-			rsrc_nodes_to = Helper.put_rsrc($Panel/Control2/To, 32, {rsrc:0})
+			rsrc_nodes_from = Helper.put_rsrc($Panel/Control2/ScrollContainer/From, 40, atom_costs, true, true)
+			rsrc_nodes_to = Helper.put_rsrc($Panel/Control2/To, 40, {rsrc:0})
 		$Panel/Control/Switch.show()
 	_on_HSlider_value_changed(0.0)
 	$Panel.show()
@@ -194,8 +194,8 @@ func _on_HSlider_value_changed(value): # value is always between 0.0 and 1.0
 		for atom in atom_costs:
 			atom_costs[atom] = rsrc_value * ratios[atom]
 	MM_dict[resource_selected] = rsrc_value
-	rsrc_nodes_from = Helper.put_rsrc($Panel/Control2/ScrollContainer/From, 32, atom_costs, true, atom_to_rsrc)
-	rsrc_nodes_to = Helper.put_rsrc($Panel/Control2/To, 32, MM_dict, true, not atom_to_rsrc)
+	rsrc_nodes_from = Helper.put_rsrc($Panel/Control2/ScrollContainer/From, 40, atom_costs, true, atom_to_rsrc)
+	rsrc_nodes_to = Helper.put_rsrc($Panel/Control2/To, 40, MM_dict, true, not atom_to_rsrc)
 	refresh()
 
 func _on_Transform_pressed():
