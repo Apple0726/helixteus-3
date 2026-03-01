@@ -1547,13 +1547,11 @@ func add_obj(view_str):
 		"galaxy":
 			view.shapes_data = galaxy_data[c_g].get("shapes", [])
 			view.add_obj("Galaxy", galaxy_data[c_g].view.pos, galaxy_data[c_g].view.zoom)
-			add_space_HUD()
 			if ships_travel_data.c_g_coords.g == c_g_g:
 				galaxy_data[c_g].explored = true
 		"cluster":
 			view.shapes_data = u_i.cluster_data[c_c].shapes
 			view.add_obj("Cluster", u_i.cluster_data[c_c]["view"]["pos"], u_i.cluster_data[c_c]["view"]["zoom"])
-			add_space_HUD()
 			if ships_travel_data.c_coords.c == c_c:
 				u_i.cluster_data[c_c].explored = true
 		"universe":

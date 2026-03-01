@@ -9,7 +9,6 @@ const DIST_MULT = 200.0
 var obj_btns:Array = []
 var overlays:Array = []
 var rsrcs:Array = []
-var discovered_gal:Array = []
 var curr_bldg_overlay:int = 0
 var c_i:Dictionary
 
@@ -64,8 +63,6 @@ func _ready():
 					rsrc = null
 			if is_instance_valid(rsrc):
 				rsrc.set_text("%s/%s" % [Helper.format_num(g_i.prod_num * rsrc_mult), tr("S_SECOND")])
-		if g_i.has("discovered") and not g_i.has("GS"):
-			discovered_gal.append(g_i)
 		await_counter += 1
 		if is_instance_valid(game.overlay):
 			change_overlay(0, game.overlay.get_node("TextureRect").texture.gradient, overlays[-1])
@@ -73,6 +70,7 @@ func _ready():
 		overlays[-1].circle.visible = game.overlay_data.cluster.visible
 		if await_counter % int(3000.0 / Engine.get_frames_per_second()) == 0:
 			await get_tree().process_frame
+	game.add_space_HUD()
 	if is_instance_valid(game.overlay):
 		game.overlay.refresh_options(game.overlay_data[game.c_v].overlay)
 	if conquered:

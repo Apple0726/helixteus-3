@@ -108,14 +108,8 @@ func _draw() -> void:
 				draw_circle(Vector2.ZERO, collision_shape_radius + ship_node.collision_shape_radius + 2.0, Color(1.0, 0.6, 0.0, 0.8), true, -1.0)
 
 func format_buff_tooltip(base, modifier):
-	if step_decimals(base) == 0:
-		base = int(base)
-	else:
-		base = snapped(base, 0.1)
-	if step_decimals(modifier) == 0:
-		modifier = int(modifier)
-	else:
-		modifier = snapped(modifier, 0.1)
+	base = Helper.clever_snap(base)
+	modifier = Helper.clever_snap(modifier)
 	default_tooltip_text += "\n@i \t%s" % (base)
 	if modifier > 0:
 		default_tooltip_text += " + %s = %s" % [modifier, base + modifier]

@@ -1074,6 +1074,11 @@ func clever_round (num:float, sd:int = 3, st:bool = false, _floor:bool = false):
 			return round(num)
 	return snapped(num, pow(10, e - sd + 1))
 
+func clever_snap(num):
+	if step_decimals(num) == 0:
+		return int(num)
+	return snapped(num, 0.1)
+
 func get_star_modulate (star_class:String):
 	var w = int(star_class[1]) / 10.0#weight for lerps
 	var m:Color

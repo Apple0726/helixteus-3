@@ -927,8 +927,8 @@ func on_map_exited(_body):
 	right_side_panel.hide()
 
 func generate_treasure(tier:int, rng:RandomNumberGenerator):
-	var contents = {	Item.MONEY:round(rng.randf_range(1500, 1800) * pow(tier, 3.0) * difficulty * exp(cave_floor / 6.0)),
-						Item.MINERALS:round(rng.randf_range(100, 150) * pow(tier, 3.0) * difficulty * exp(cave_floor / 9.0)),
+	var contents = {	Item.MONEY:round(3000.0 * rng.randf_range(1.0, 1.3) * pow(tier, 3.0) * difficulty * exp(cave_floor / 6.0)),
+						Item.MINERALS:round(200.0 * rng.randf_range(1.0, 1.5) * pow(tier, 3.0) * difficulty * exp(cave_floor / 9.0)),
 						Item.HELIX_CORE1:int(0.05 * rng.randf_range(1.0, 3.0) * pow(tier, 1.8) * pow(difficulty, 0.7))}
 	if contents[Item.HELIX_CORE1] > 64:
 		contents[Item.HELIX_CORE2] = int(contents[Item.HELIX_CORE1] / 64.0)
@@ -959,7 +959,7 @@ func generate_treasure(tier:int, rng:RandomNumberGenerator):
 		if volcano_mult > 1 and not artificial_volcano:
 			rarity = pow(rarity, 0.9)
 		if rng.randf() < 1 / (rarity + 1):
-			contents[met] = Helper.clever_round(15.0 * rng.randf_range(0.5, 1.0) / rarity * pow(tier, 2.0) * difficulty * exp(cave_floor / 10.0) * treasure_mult * game.u_i.planck)
+			contents[met] = Helper.clever_round(60.0 * rng.randf_range(0.5, 1.0) / rarity * pow(tier, 2.0) * difficulty * exp(cave_floor / 10.0) * treasure_mult * game.u_i.planck)
 	return contents
 
 func connect_points(tile:Vector2, bidir:bool = false):
@@ -1594,7 +1594,7 @@ func mine_debris_complete(tile_id:int):
 		if debris.aurora_intensity > 0.0:
 			rarity = pow(rarity, remap(debris.aurora_intensity, 1.0, 8.0, 0.95, 0.6))
 		if rarity < difficulty * 2.0 and randf() < 1 / (rarity + 1):
-			rsrc[met] = Helper.clever_round(5 * randf_range(0.2, 1.0) / rarity * difficulty * exp(cave_floor / 10.0) * debris_volcano_mult)
+			rsrc[met] = Helper.clever_round(10.0 * randf_range(0.2, 1.0) / rarity * difficulty * exp(cave_floor / 10.0) * debris_volcano_mult)
 	for r in rsrc.keys():
 		if r in ["stone", Item.MINERALS]:
 			rsrc[r] = round(rsrc[r] * pow(debris.scale.x, debris_exp))
@@ -1657,7 +1657,7 @@ func mine_wall_complete(tile_pos:Vector2, tile_id:int):
 			rsrc[mat] = amount
 	if deposits.has(st):
 		var deposit = deposits[st]
-		rsrc[deposit.rsrc_name] = Helper.clever_round(deposit.amount * randf_range(0.95, 1.05) * difficulty / game.met_info[deposit.rsrc_name].rarity)
+		rsrc[deposit.rsrc_name] = Helper.clever_round(3.0 * deposit.amount * randf_range(0.95, 1.05) * difficulty / game.met_info[deposit.rsrc_name].rarity)
 		deposit.queue_free()
 		deposits.erase(st)
 	var remainder:float = filter_and_add(rsrc)

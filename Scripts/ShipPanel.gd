@@ -17,7 +17,6 @@ func _ready():
 			for lv in 3:
 				$ShipStats/ShipDetails.get_node("%s/WeaponLevels/Path%s/Level%s" % [weapon, path+1, lv+1]).mouse_entered.connect(show_weapon_tooltip.bind(weapon.to_lower(), path, lv))
 				$ShipStats/ShipDetails.get_node("%s/WeaponLevels/Path%s/Level%s" % [weapon, path+1, lv+1]).mouse_exited.connect(game.hide_tooltip)
-	refresh()
 	$Drives.panel_closed.connect(hide_drive_panel)
 
 func show_weapon_tooltip(weapon: String, path: int, lv: int):

@@ -185,29 +185,29 @@ var data:Dictionary = {
 	MYTHRIL_WHEELS:
 		{"item_name":"mythril_wheels", "type":Type.ROVER_WHEELS, "speed":2.5, "metal":"mythril", "costs":{"mythril":1600.0}},
 	STONE_CC:
-		{"item_name":"stone_CC", "type":Type.ROVER_CC, "capacity":3000.0, "metal":"stone", "costs":{"stone":250.0}},
+		{"item_name":"stone_CC", "type":Type.ROVER_CC, "capacity":5000.0, "metal":"stone", "costs":{"stone":250.0}},
 	LEAD_CC:
-		{"item_name":"lead_CC", "type":Type.ROVER_CC, "capacity":5000.0, "metal":"lead", "costs":{"lead":70.0}},
+		{"item_name":"lead_CC", "type":Type.ROVER_CC, "capacity":9000.0, "metal":"lead", "costs":{"lead":70.0}},
 	COPPER_CC:
-		{"item_name":"copper_CC", "type":Type.ROVER_CC, "capacity":7000.0, "metal":"copper", "costs":{"copper":90.0}},
+		{"item_name":"copper_CC", "type":Type.ROVER_CC, "capacity":17500.0, "metal":"copper", "costs":{"copper":90.0}},
 	IRON_CC:
-		{"item_name":"iron_CC", "type":Type.ROVER_CC, "capacity":10000.0, "metal":"iron", "costs":{"iron":110.0}},
+		{"item_name":"iron_CC", "type":Type.ROVER_CC, "capacity":35000.0, "metal":"iron", "costs":{"iron":110.0}},
 	ALUMINIUM_CC:
-		{"item_name":"aluminium_CC", "type":Type.ROVER_CC, "capacity":14000.0, "metal":"aluminium", "costs":{"aluminium":130.0}},
+		{"item_name":"aluminium_CC", "type":Type.ROVER_CC, "capacity":70000.0, "metal":"aluminium", "costs":{"aluminium":130.0}},
 	SILVER_CC:
-		{"item_name":"silver_CC", "type":Type.ROVER_CC, "capacity":20000.0, "metal":"silver", "costs":{"silver":150.0}},
+		{"item_name":"silver_CC", "type":Type.ROVER_CC, "capacity":150000.0, "metal":"silver", "costs":{"silver":150.0}},
 	GOLD_CC:
-		{"item_name":"gold_CC", "type":Type.ROVER_CC, "capacity":30000.0, "metal":"gold", "costs":{"gold":200.0}},
+		{"item_name":"gold_CC", "type":Type.ROVER_CC, "capacity":350000.0, "metal":"gold", "costs":{"gold":200.0}},
 	TITANIUM_CC:
-		{"item_name":"titanium_CC", "type":Type.ROVER_CC, "capacity":62000.0, "metal":"titanium", "costs":{"titanium":250.0}},
+		{"item_name":"titanium_CC", "type":Type.ROVER_CC, "capacity":750000.0, "metal":"titanium", "costs":{"titanium":250.0}},
 	PLATINUM_CC:
-		{"item_name":"platinum_CC", "type":Type.ROVER_CC, "capacity":90000.0, "metal":"platinum", "costs":{"platinum":700.0}},
+		{"item_name":"platinum_CC", "type":Type.ROVER_CC, "capacity":1.6e6, "metal":"platinum", "costs":{"platinum":700.0}},
 	DIAMOND_CC:
-		{"item_name":"diamond_CC", "type":Type.ROVER_CC, "capacity":165000.0, "metal":"diamond", "costs":{"diamond":1200.0}},
+		{"item_name":"diamond_CC", "type":Type.ROVER_CC, "capacity":3.5e6, "metal":"diamond", "costs":{"diamond":1200.0}},
 	NANOCRYSTAL_CC:
-		{"item_name":"nanocrystal_CC", "type":Type.ROVER_CC, "capacity":450000.0, "metal":"nanocrystal", "costs":{"nanocrystal":2200.0}},
+		{"item_name":"nanocrystal_CC", "type":Type.ROVER_CC, "capacity":1.0e7, "metal":"nanocrystal", "costs":{"nanocrystal":2200.0}},
 	MYTHRIL_CC:
-		{"item_name":"mythril_CC", "type":Type.ROVER_CC, "capacity":1250000.0, "metal":"mythril", "costs":{"mythril":5000.0}},
+		{"item_name":"mythril_CC", "type":Type.ROVER_CC, "capacity":1.0e8, "metal":"mythril", "costs":{"mythril":5000.0}},
 	RED_LASER:
 		{"item_name":"red_laser", "type":Type.ROVER_WEAPON, "damage":5.0, "cooldown":0.2, "costs":{"money":1000, "silicon":10}},
 	ORANGE_LASER:

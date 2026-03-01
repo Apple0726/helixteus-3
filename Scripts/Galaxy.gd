@@ -12,11 +12,9 @@ var star_texture = [	preload("res://Graphics/Effects/spotlight_4.png"),
 						preload("res://Graphics/Effects/spotlight_5.png"),
 						preload("res://Graphics/Effects/spotlight_6.png"),
 ]
-var discovered_sys:Array
 var g_i:Dictionary
 
 func _ready():
-	discovered_sys = []
 	queue_redraw()
 	var await_counter:int = 0
 	g_i = game.galaxy_data[game.c_g]
@@ -60,8 +58,6 @@ func _ready():
 		system.position = s_i["pos"]
 		dimensions_temp = max(dimensions_temp, s_i.pos.length())
 		Helper.add_overlay(system, self, "system", s_i, overlays)
-		if s_i.has("discovered"):
-			discovered_sys.append(s_i)
 		await_counter += 1
 		if is_instance_valid(game.overlay):
 			change_overlay(game.overlay.option_btn.selected, game.overlay.get_node("TextureRect").texture.gradient, overlays[-1])
@@ -69,6 +65,7 @@ func _ready():
 		overlays[-1].circle.visible = game.overlay_data.galaxy.visible
 		if await_counter % int(6000.0 / Engine.get_frames_per_second()) == 0:
 			await get_tree().process_frame
+	game.add_space_HUD()
 	if is_instance_valid(game.overlay):
 		game.overlay.refresh_options(game.overlay_data[game.c_v].overlay)
 	dimensions = dimensions_temp

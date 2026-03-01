@@ -285,7 +285,12 @@ func next_turn():
 	for i in len(initiative_order):
 		if i >= len(initiative_order):
 			break
-		print("initiative_order[%s]: " % i + str(initiative_order[i]))
+		if initiative_order[i].type == Battle.EntityType.BOUNDARY:
+			print("initiative_order[%s]: boundary" % i)
+		elif initiative_order[i].type == Battle.EntityType.ENEMY:
+			print("initiative_order[%s]: enemy" % i)
+		elif initiative_order[i].type == Battle.EntityType.SHIP:
+			print("initiative_order[%s]: ship" % i)
 		if not is_instance_valid(initiative_order[i]) or initiative_order[i].type != Battle.EntityType.BOUNDARY and initiative_order[i].HP <= 0:
 			initiative_order.remove_at(i)
 			print("remove entity %s" % i)
@@ -309,6 +314,7 @@ func next_turn():
 		var view_moved = false
 		while initiative_order[ship_turn].type == Battle.EntityType.SHIP:
 			var ship_node = initiative_order[ship_turn]
+			print("ship's turn (%s)" % ship_turn)
 			var ship_pos_before_moving:Vector2 = ship_node.position
 			if not animations_sped_up and not view_moved:
 				view_entity(ship_node)
@@ -332,6 +338,7 @@ func next_turn():
 			battle_GUI.fade_in_main_panel()
 		else:
 			whose_turn_is_it_index = ship_turn - 1
+			print("no available ships. whose_turn_is_it_index = " + str(whose_turn_is_it_index))
 			next_turn()
 	elif initiative_order[whose_turn_is_it_index].type == Battle.EntityType.ENEMY:
 		var HX_node = initiative_order[whose_turn_is_it_index]

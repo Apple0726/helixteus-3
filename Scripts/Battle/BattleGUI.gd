@@ -253,7 +253,7 @@ func _on_back_pressed() -> void:
 
 
 func _on_bullet_mouse_entered() -> void:
-	var tooltip_txt = tr("BASE_DAMAGE") + ": " + str(snapped(Data.battle_weapon_stats.bullet.damage * log(game.u_i.planck - 1.0 + exp(1.0)), 0.1))
+	var tooltip_txt = tr("BASE_DAMAGE") + ": " + str(Helper.clever_snap(Data.battle_weapon_stats.bullet.damage * log(game.u_i.planck - 1.0 + exp(1.0))))
 	tooltip_txt += "\n" + tr("BASE_ACCURACY") + ": " + str(Data.battle_weapon_stats.bullet.accuracy)
 	var additional_text = "{desc}\n\n{shortcut_txt}: {shortcut}".format({
 		"desc":tr("BULLET_DESC"),
@@ -263,7 +263,7 @@ func _on_bullet_mouse_entered() -> void:
 
 
 func _on_laser_mouse_entered() -> void:
-	var tooltip_txt = tr("BASE_DAMAGE") + ": " + str(snapped(Data.battle_weapon_stats.laser.damage * log(game.u_i.speed_of_light - 1.0 + exp(1.0)), 0.1))
+	var tooltip_txt = tr("BASE_DAMAGE") + ": " + str(Helper.clever_snap(Data.battle_weapon_stats.laser.damage * log(game.u_i.speed_of_light - 1.0 + exp(1.0))))
 	tooltip_txt += "\n" + tr("BASE_ACCURACY") + ": " + str(Data.battle_weapon_stats.laser.accuracy)
 	var additional_text = "{desc}\n\n{shortcut_txt}: {shortcut}".format({
 		"desc":tr("LASER_DESC"),
@@ -273,7 +273,7 @@ func _on_laser_mouse_entered() -> void:
 
 
 func _on_bomb_mouse_entered() -> void:
-	var tooltip_txt = tr("BASE_DAMAGE") + ": " + str(snapped(Data.battle_weapon_stats.bomb.damage * log(game.u_i.planck - 1.0 + exp(1.0)), 0.1))
+	var tooltip_txt = tr("BASE_DAMAGE") + ": " + str(Helper.clever_snap(Data.battle_weapon_stats.bomb.damage * log(game.u_i.planck - 1.0 + exp(1.0))))
 	tooltip_txt += "\n" + tr("BASE_ACCURACY") + ": " + str(Data.battle_weapon_stats.bomb.accuracy)
 	var additional_text = "{desc}\n\n{shortcut_txt}: {shortcut}".format({
 		"desc":tr("BOMB_DESC"),
@@ -283,7 +283,7 @@ func _on_bomb_mouse_entered() -> void:
 
 
 func _on_light_mouse_entered() -> void:
-	var tooltip_txt = tr("BASE_DAMAGE") + ": " + str(snapped(Data.battle_weapon_stats.light.damage * log(game.u_i.speed_of_light - 1.0 + exp(1.0)), 0.1))
+	var tooltip_txt = tr("BASE_DAMAGE") + ": " + str(Helper.clever_snap(Data.battle_weapon_stats.light.damage * log(game.u_i.speed_of_light - 1.0 + exp(1.0))))
 	tooltip_txt += "\n" + tr("BASE_ACCURACY") + ": " + tr("PERFECT")
 	var additional_text = "{desc}\n\n{shortcut_txt}: {shortcut}".format({
 		"desc":tr("LIGHT_DESC"),
@@ -457,9 +457,14 @@ func override_enemy_tooltips():
 			damage_multiplier = attack_defense_difference * 0.125 + 1.0
 		else:
 			damage_multiplier = 1.0 / (1.0 - 0.125 * attack_defense_difference)
-		var tooltip_txt = tr("DAMAGE_MULTIPLIER") + ": " + "%.2f (%s){light_intensity_mult}{light_intensity_mult_info}" % [damage_multiplier, tr("SHIP_ATK_VS_ENEMY_DEF") % [ship_node.attack + ship_node.attack_buff, HX_node.defense + HX_node.defense_buff]]
-		tooltip_txt += "\n" + tr("CHANCE_OF_HITTING") + ": " + "%.1f%% (%s)" % [(100.0 * (1.0 - 1.0 / (1.0 + exp(((ship_node.accuracy + ship_node.accuracy_buff) * ship_node.weapon_accuracy_mult - HX_node.agility - HX_node.agility_buff + 9.2) / 5.8)))),
-		tr("SHIP_ATK_VS_ENEMY_DEF") % [ship_node.accuracy + ship_node.accuracy_buff, HX_node.agility + HX_node.agility_buff]]
+		var attack = Helper.clever_snap(ship_node.attack + ship_node.attack_buff)
+		var defense = Helper.clever_snap(HX_node.defense + HX_node.defense_buff)
+		var accuracy = Helper.clever_snap((ship_node.accuracy + ship_node.accuracy_buff) * ship_node.weapon_accuracy_mult)
+		var agility = Helper.clever_snap(HX_node.agility + HX_node.agility_buff)
+		var tooltip_txt = tr("DAMAGE_MULTIPLIER") + ": " + "%.2f (%s)" % [damage_multiplier, tr("SHIP_ATK_VS_ENEMY_DEF") % [attack, defense]]
+		tooltip_txt += "\n" + tr("CHANCE_OF_HITTING") + ": " + "%.1f%%" % (100.0 * (1.0 - 1.0 / (1.0 + exp((accuracy - agility + 9.2) / 5.8))))
+		if is_finite(ship_node.weapon_accuracy_mult):
+			tooltip_txt += " (%s)" % [tr("SHIP_ATK_VS_ENEMY_DEF") % [accuracy, agility]]
 		HX_node.override_tooltip_text = tooltip_txt
 
 func restore_default_enemy_tooltips():
