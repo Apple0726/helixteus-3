@@ -1,7 +1,7 @@
 extends "Panel.gd"
 
 var strength_mult:float
-var base_costs:Array = [{"money":1.5e9}, {"money":7.5e17, "mythril":2.4e10}]
+var base_costs:Array = [{"money":4.5e9}, {"money":7.5e17, "mythril":2.4e10}]
 var costs:Dictionary
 var fighter_type:int = 0
 var strength:float

@@ -3415,11 +3415,12 @@ func add_items(item_id:int, num:int = 1):
 		cycles += 1
 	return num
 
-func remove_items(item_id:int, num:int = 1):
+func remove_items(item_id:int, num:int = 1, slot:int = 0):
 	if get_item_num(item_id) == 0:
 		return 0
 	while num > 0:
-		for item_slot in items:
+		for i in range(slot, len(items)):
+			var item_slot = items[i]
 			if item_slot != null and item_slot.id == item_id:
 				item_slot.num -= num
 				if item_slot.num <= 0:
@@ -3494,7 +3495,7 @@ func use_item(item_id:int, send_to_rover:int = -1):
 		else:
 			popup(tr("NO_SHIPS_2"), 1.5)
 			return
-	if active_panel == inventory:
+	if is_instance_valid(active_panel) and active_panel == inventory:
 		toggle_panel("inventory")
 	show_item_cursor(load("res://Graphics/%s/%s.png" % [Item.icon_directory(item_type), Item.data[item_id].item_name]))
 
@@ -3794,7 +3795,7 @@ func _unhandled_key_input(event):
 			if len(hotbar) > i and hotbar_presses[i]:
 				var _name = hotbar[i]
 				if get_item_num(_name) > 0:
-					inventory.on_slot_press(_name)
+					use_item(_name)
 
 func fn_save_game():
 	save_date = Time.get_unix_time_from_system()
@@ -3904,7 +3905,7 @@ func save_views(autosave:bool):
 		popup(tr("GAME_SAVED"), 1.2)
 
 func show_item_cursor(texture):
-	item_cursor.get_node("Sprite2D").texture = texture
+	item_cursor.get_node("TextureRect").texture = texture
 	item_cursor.get_node("Num").text = "x " + str(item_to_use.num)
 	#update_item_cursor()
 	Input.set_mouse_mode(Input.MOUSE_MODE_HIDDEN)
@@ -4320,7 +4321,7 @@ func earn_achievement(type:String, ach_id:String):
 	var ach = preload("res://Scenes/AchievementEarned.tscn").instantiate()
 	ach.get_node("Panel/Type").text = type.capitalize()
 	ach.get_node("Panel/Desc").text = Data.achievements[type.to_lower()][ach_id]
-	ach.get_node("Panel/TextureRect").texture = stats_panel.get_node("Achievements/ScrollContainer/HBox/Slots/%s/%s" % [type, ach_id]).achievement_icon
+	ach.get_node("Panel/TextureRect").texture = stats_panel.get_node("Panel/Achievements/ScrollContainer/HBox/Slots/%s/%s" % [type, ach_id]).achievement_icon
 	achievement_data[type][ach_id] = true
 	ach.add_to_group("achievement_nodes")
 	$UI.add_child(ach)

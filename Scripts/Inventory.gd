@@ -56,9 +56,8 @@ func _on_Items_pressed():
 func on_slot_over(item_slot:int):
 	item_hovered = item_slot
 	var item_id:int = game.items[item_hovered].id
-	var tooltip_txt = Item.name(item_id) + "\n" + Item.description(item_id)
-	tooltip_txt += "\n%s\n%s\n" % [tr("CLICK_TO_USE"), tr("RIGHT_CLICK_FOR_MORE_OPTIONS")]
-	game.show_tooltip(tooltip_txt)
+	var tooltip_txt = "{name} (x{amount})\n{desc}".format({"name":Item.name(item_id), "amount":game.items[item_hovered].num, "desc":Item.description(item_id)})
+	game.show_tooltip(tooltip_txt, {"additional_text": "{clickToUse}\n{moreActions}".format({"clickToUse":tr("CLICK_TO_USE"), "moreActions":tr("RIGHT_CLICK_FOR_MORE_ACTIONS")})})
 
 func on_slot_out():
 	item_hovered = -1
@@ -198,23 +197,48 @@ func _input(event):
 	super(event)
 	if item_hovered != -1:
 		var item_id:int = game.items[item_hovered].id
-		if Input.is_action_just_released("shift X"):
-			game.items[item_hovered] = null
-			_on_Items_pressed()
-			item_hovered = -1
-			game.hide_tooltip()
+		if Input.is_action_just_released("right_click"):
+			var throw_one_dict = {
+				"button_text":tr("THROW_ONE") + " (X)",
+				"button_callable":throw_one_callable.bind(item_hovered),
+				}
+			var throw_all_dict = {
+				"button_text":tr("THROW_ALL") + " (Shift X)",
+				"button_callable":throw_all_callable.bind(item_hovered),
+				}
+			var hotbar_dict = {
+				"button_text":tr("ADD_TO_HOTBAR") + " (H)",
+				"button_callable":add_remove_from_hotbar.bind(item_hovered),
+				}
+			game.add_right_click_menu([throw_one_dict, throw_all_dict, hotbar_dict])
+		elif Input.is_action_just_released("shift X"):
+			throw_all_callable(item_hovered)
 		elif Input.is_action_just_released("X"):
-			game.remove_items(item_id)
-			_on_Items_pressed()
-			if game.items[item_hovered] == null:
-				item_hovered = -1
-				game.hide_tooltip()
+			throw_one_callable(item_hovered)
 		if Input.is_action_just_released("H"):
-			if game.hotbar.find(item_id) == -1:
-				game.hotbar.append(item_id)
-			else:
-				game.hotbar.erase(item_id)
-			game.HUD.update_hotbar()
+			add_remove_from_hotbar(item_hovered)
+
+func throw_one_callable(_item_hovered:int):
+	game.remove_items(game.items[_item_hovered].id, 1, _item_hovered)
+	_on_Items_pressed()
+	if game.items[item_hovered] == null:
+		item_hovered = -1
+		game.hide_tooltip()
+
+func throw_all_callable(_item_hovered:int):
+	game.items[_item_hovered] = null
+	_on_Items_pressed()
+	item_hovered = -1
+	game.hide_tooltip()
+
+func add_remove_from_hotbar(_item_hovered:int):
+	var item_id = game.items[_item_hovered].id
+	if game.hotbar.find(item_id) == -1:
+		game.hotbar.append(item_id)
+	else:
+		game.hotbar.erase(item_id)
+	game.HUD.update_hotbar()
+	
 
 func show_part(_name:String):
 	var st:String = "%s\n%s" % [tr(_name.to_upper()), tr(_name.to_upper() + "_DESC")]

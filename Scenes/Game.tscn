@@ -204,8 +204,10 @@ colors = PackedColorArray(1, 1, 1, 1, 0, 0, 0, 1)
 gradient = SubResource("Gradient_i07u7")
 
 [sub_resource type="LabelSettings" id="LabelSettings_ubx28"]
-outline_size = 4
-outline_color = Color(0, 0, 0, 1)
+font_size = 20
+shadow_size = 2
+shadow_color = Color(0, 0, 0, 1)
+shadow_offset = Vector2(2, 2)
 
 [sub_resource type="Animation" id="Animation_g0rgc"]
 resource_name = "FadeMusic"
@@ -594,12 +596,19 @@ layout_mode = 2
 theme_override_styles/normal = SubResource("StyleBoxFlat_3pnlf")
 text = "Alt"
 
-[node name="ItemCursor" type="Node2D" parent="Tooltips" unique_id=1768190605]
+[node name="ItemCursor" type="Control" parent="Tooltips" unique_id=1714175047]
 visible = false
+layout_mode = 3
+anchors_preset = 0
 
-[node name="Sprite2D" type="Sprite2D" parent="Tooltips/ItemCursor" unique_id=1554377473]
-position = Vector2(32, 32)
-scale = Vector2(0.25, 0.25)
+[node name="TextureRect" type="TextureRect" parent="Tooltips/ItemCursor" unique_id=495076456]
+layout_mode = 0
+offset_left = 8.0
+offset_top = 8.0
+offset_right = 72.0
+offset_bottom = 72.0
+expand_mode = 1
+stretch_mode = 5
 
 [node name="Polygon2D" type="Polygon2D" parent="Tooltips/ItemCursor" unique_id=54543548]
 texture = SubResource("GradientTexture1D_b50pl")
@@ -607,10 +616,12 @@ texture_rotation = -0.785398
 polygon = PackedVector2Array(0, 0, 0, 24, 24, 0)
 
 [node name="Num" type="Label" parent="Tooltips/ItemCursor" unique_id=1198112830]
+layout_mode = 0
 offset_left = 56.0
-offset_top = 48.0
+offset_top = 52.0
 offset_right = 96.0
-offset_bottom = 77.0
+offset_bottom = 81.0
+theme = ExtResource("7")
 label_settings = SubResource("LabelSettings_ubx28")
 
 [node name="MusicPlayer" type="AudioStreamPlayer" parent="." unique_id=1248171106]

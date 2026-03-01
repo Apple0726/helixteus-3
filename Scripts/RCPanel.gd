@@ -104,10 +104,7 @@ func _on_Slot_mouse_entered(type:int):
 			"capacity_bonus_text": tr("CARGO_CAPACITY"),
 		})
 	if txt != "":
-		game.help_str = "rover_inventory_shortcuts"
-		if game.help.has("rover_inventory_shortcuts"):
-			txt += "\n%s\n%s\n%s" % [tr("CLICK_TO_CHANGE"), tr("X_TO_REMOVE"), tr("HIDE_SHORTCUTS")]
-		game.show_tooltip(txt)
+		game.show_tooltip(txt, {"additional_text": "{clickToChange}\n{XToRemove}".format({"clickToChange":tr("CLICK_TO_CHANGE"), "XToRemove":tr("X_TO_REMOVE")})})
 
 func _on_InvSlot_mouse_entered(txt:String, index:int, _right_inv:bool = false):
 	slot_over = index
@@ -115,9 +112,9 @@ func _on_InvSlot_mouse_entered(txt:String, index:int, _right_inv:bool = false):
 	game.help_str = "rover_inventory_shortcuts"
 	if game.help.has("rover_inventory_shortcuts"):
 		if txt != "":
-			game.show_tooltip(txt + "\n%s\n%s\n%s" % [tr("CLICK_TO_CHANGE"), tr("X_TO_REMOVE"), tr("HIDE_SHORTCUTS")])
+			game.show_tooltip(txt, {"additional_text": "{clickToChange}\n{XToRemove}".format({"clickToChange":tr("CLICK_TO_CHANGE"), "XToRemove":tr("X_TO_REMOVE")})})
 		else:
-			game.show_tooltip(txt + "%s\n%s" % [tr("CLICK_TO_CHANGE"), tr("HIDE_SHORTCUTS")])
+			game.show_tooltip(txt, {"additional_text": "{clickToChange}".format({"clickToChange":tr("CLICK_TO_CHANGE")})})
 	else:
 		if txt != "":
 			game.show_tooltip(txt)

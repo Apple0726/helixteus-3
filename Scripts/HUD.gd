@@ -388,7 +388,7 @@ func update_hotbar():
 		var slot = preload("res://Scenes/InventorySlot.tscn").instantiate()
 		var num = game.get_item_num(item)
 		slot.get_node("Label").text = str(num)
-		slot.get_node("TextureRect").texture = load("res://Graphics/" + Helper.get_dir_from_name(item)  + "/" + item + ".png")
+		slot.get_node("TextureRect").texture = load("res://Graphics/{dir}/{name}.png".format({"dir":Item.icon_directory(Item.data[item].type), "name":Item.data[item].item_name}))
 		slot.get_node("Button").connect("mouse_entered",Callable(self,"on_slot_over").bind(i))
 		slot.get_node("Button").connect("mouse_exited",Callable(self,"on_slot_out"))
 		if num > 0:
@@ -399,10 +399,9 @@ func update_hotbar():
 var slot_over = -1
 func on_slot_over(i:int):
 	slot_over = i
-	game.help_str = "hotbar_shortcuts"
-	var txt = ("\n" + tr("H_FOR_HOTBAR_REMOVE") + "\n" + tr("HIDE_SHORTCUTS")) if game.help.has("hotbar_shortcuts") else ""
 	var num = " (%s)" % [i + 1] if i < 10 else ""
-	game.show_tooltip(Helper.get_item_name(game.hotbar[i]) + num + txt)
+	var txt = "{name}\n{shortcutLabel}: {shortcut}".format({"name":Item.name(game.hotbar[i]), "shortcutLabel":tr("KEYBOARD_SHORTCUT"), "shortcut":str(i+1) if i < 10 else ""})
+	game.show_tooltip(txt, {"additional_text":"H: " + tr("REMOVE_FROM_HOTBAR")})
 
 func on_slot_out():
 	slot_over = -1
@@ -410,7 +409,7 @@ func on_slot_out():
 
 func on_slot_press(i:int):
 	var name = game.hotbar[i]
-	game.inventory.on_slot_press(name)
+	game.use_item(name)
 
 func _on_Label_mouse_exited():
 	emma_cave_shortcut = false
