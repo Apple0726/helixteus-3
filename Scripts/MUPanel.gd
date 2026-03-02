@@ -52,21 +52,11 @@ func refresh():
 	$PanelContainer/VBox/STMB.visible = game.STM_lv >= 1
 	$PanelContainer/VBox/SHSR.visible = game.stats_univ.planets_conquered >= 2
 	$PanelContainer/VBox/CHR.visible = game.stats_univ.planets_conquered >= 2
-	if game.MUs.SHSR >= 51:
-		var upgrade_btn = $PanelContainer/VBox/SHSR/Upgrade
-		upgrade_btn.modulate.a = 0.0
-		if upgrade_btn.is_connected("pressed",Callable(self,"_on_Upgrade_pressed")):
-			upgrade_btn.disconnect("mouse_entered",Callable(self,"_on_Upgrade_mouse_entered"))
-			upgrade_btn.disconnect("mouse_exited",Callable(self,"_on_Upgrade_mouse_exited"))
-			upgrade_btn.disconnect("pressed",Callable(self,"_on_Upgrade_pressed"))
+	$PanelContainer/VBox/SHSR/Upgrade.visible = game.MUs.SHSR < 50
 	if game.achievement_data.progression.has("new_universe"):
-		if game.MUs.SHSR >= 51:
-			var upgrade_max_btn = $PanelContainer/VBox/SHSR/UpgradeMax
-			upgrade_max_btn.modulate.a = 0.0
-			if upgrade_max_btn.is_connected("pressed",Callable(self,"_on_UpgradeMax_pressed")):
-				upgrade_max_btn.disconnect("pressed",Callable(self,"_on_UpgradeMax_pressed"))
-		$PanelContainer/VBox/CHR/UpgradeMax.visible = game.MUs.CHR < 90
-	$PanelContainer/VBox/CHR/Upgrade.visible = game.MUs.CHR < 90
+		$PanelContainer/VBox/SHSR/UpgradeMax.visible = game.MUs.SHSR < 50
+		$PanelContainer/VBox/CHR/UpgradeMax.visible = game.MUs.CHR < 94
+	$PanelContainer/VBox/CHR/Upgrade.visible = game.MUs.CHR < 94
 	for hbox in $PanelContainer/VBox.get_children():
 		if hbox.name != "Titles":
 			hbox.get_node("Lv").text = str(game.MUs[hbox.name])
@@ -86,7 +76,7 @@ func set_upg_text(MU:String, next_lv:int = 0):
 		"SHSR":
 			$PanelContainer/VBox/SHSR/Effects.text = "- %s %%" % (game.MUs.SHSR + next_lv - 1)
 		"CHR":
-			$PanelContainer/VBox/CHR/Effects.text = "%s %%" % (10 + game.MUs.CHR + next_lv - 1)
+			$PanelContainer/VBox/CHR/Effects.text = "%.1f %%" % (3.0 + (game.MUs.CHR + next_lv - 1) * 0.5)
 	if next_lv == 0:
 		get_node("PanelContainer/VBox/%s/Effects" % [MU])["theme_override_colors/%s" % ["default_color" if MU == "MV" else "font_color"]] = Color.WHITE
 	else:
@@ -98,7 +88,7 @@ func get_min_cost(upg:String):
 func _on_UpgradeMax_pressed(MU:String):
 	var min_cost = get_min_cost(MU)
 	while game.minerals >= min_cost:
-		if MU == "SHSR" and game.MUs.SHSR >= 51 or MU == "CHR" and game.MUs.CHR >= 90:
+		if MU == "SHSR" and game.MUs.SHSR >= 51 or MU == "CHR" and game.MUs.CHR >= 94:
 			break
 		game.minerals -= min_cost
 		game.MUs[MU] += 1

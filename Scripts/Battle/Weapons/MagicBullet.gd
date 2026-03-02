@@ -13,7 +13,7 @@ func _on_area_entered(area: Area2D) -> void:
 	var weapon_data = {
 		"type":Battle.DamageType.PHYSICAL,
 		"damage":damage,
-		"shooter_attack":shooter.attack + shooter.attack_buff,
+		"shooter":shooter,
 		"weapon_accuracy":weapon_accuracy,
 		"orientation":Vector2.from_angle(rotation),
 		"velocity":speed * Vector2.from_angle(rotation),

@@ -100,6 +100,9 @@ func _ready() -> void:
 		ship_node.next_turn.connect(next_turn)
 		ship_node.type = Battle.EntityType.SHIP
 		ship_node.ship_type = i
+		var scale_mult = 1.0 - (game.MUs.SHSR - 1) * 0.01
+		ship_node.get_node("Sprite2D").scale *= scale_mult
+		ship_node.get_node("CollisionShape2D").scale *= scale_mult
 		if Settings.op_cursor and i == 3:
 			ship_node.get_node("Sprite2D").texture = preload("res://Graphics/Ships/Ship3_op.png")
 		else:
@@ -272,7 +275,7 @@ func next_turn():
 		return
 	if not ships_taking_turn.is_empty():
 		for ship_node in ships_taking_turn:
-			if not ship_node.turn_taken:
+			if is_instance_valid(ship_node) and not ship_node.turn_taken:
 				whose_turn_is_it_index = ship_node.turn_order
 				$Selected.position = ship_node.position + Vector2.UP * 80.0
 				battle_GUI.fade_in_main_panel()
@@ -285,12 +288,13 @@ func next_turn():
 	for i in len(initiative_order):
 		if i >= len(initiative_order):
 			break
-		if initiative_order[i].type == Battle.EntityType.BOUNDARY:
-			print("initiative_order[%s]: boundary" % i)
-		elif initiative_order[i].type == Battle.EntityType.ENEMY:
-			print("initiative_order[%s]: enemy" % i)
-		elif initiative_order[i].type == Battle.EntityType.SHIP:
-			print("initiative_order[%s]: ship" % i)
+		if is_instance_valid(initiative_order[i]):
+			if initiative_order[i].type == Battle.EntityType.BOUNDARY:
+				print("initiative_order[%s]: boundary" % i)
+			elif initiative_order[i].type == Battle.EntityType.ENEMY:
+				print("initiative_order[%s]: enemy" % i)
+			elif initiative_order[i].type == Battle.EntityType.SHIP:
+				print("initiative_order[%s]: ship" % i)
 		if not is_instance_valid(initiative_order[i]) or initiative_order[i].type != Battle.EntityType.BOUNDARY and initiative_order[i].HP <= 0:
 			initiative_order.remove_at(i)
 			print("remove entity %s" % i)
@@ -321,7 +325,7 @@ func next_turn():
 				view_moved = true
 			var skip_turn = ship_node.status_effects[Battle.StatusEffect.STUN] > 0 or ship_node.status_effects[Battle.StatusEffect.FROZEN] > 0 or ship_node.turn_taken
 			await ship_node.take_turn()
-			if ship_node.HP >= 0:
+			if ship_node.HP > 0:
 				if skip_turn:
 					ship_node.turn_order_box.get_node("ChangeSizeAnim").play_backwards("ChangeSize")
 					ship_node.turn_taken = true

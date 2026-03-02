@@ -76,10 +76,10 @@ func add_weapon_data(hit_target, angle:float, inner_light:bool):
 			"type":Battle.DamageType.EMG,
 			"damage":damage / 200.0,
 			"light_rays":1,
-			"shooter_attack":shooter.attack + shooter.attack_buff,
+			"shooter":shooter,
 			"weapon_accuracy":INF,
 			"velocity":1.5 * Vector2.from_angle(angle),
-			"crit_hit_chance":0.0,
+			"crit_hit_chance_mult":0.0,
 			"status_effects":{},
 			"buffs":{"accuracy":-1},
 		}

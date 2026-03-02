@@ -299,7 +299,7 @@ func damage_entity(weapon_data: Dictionary):
 		battle_scene.add_damage_text(true, position)
 	else:
 		var damage_multiplier:float
-		var attack_defense_difference:int = weapon_data.shooter_attack - defense
+		var attack_defense_difference:int = weapon_data.shooter.attack + weapon_data.shooter.attack_buff - defense
 		if not weapon_data.has("ignore_defense_buffs") or defense_buff < 0:
 			attack_defense_difference -= defense_buff
 		if attack_defense_difference >= 0:
@@ -307,7 +307,10 @@ func damage_entity(weapon_data: Dictionary):
 		else:
 			damage_multiplier = 1.0 / (1.0 - 0.125 * attack_defense_difference)
 		var actual_damage:int = max(1, weapon_data.damage * damage_multiplier)
-		var crit_chance = weapon_data.get("crit_hit_chance", 0.03) * weapon_data.get("crit_hit_mult", 1.0) * (10.0 if status_effects[Battle.StatusEffect.EXPOSED] > 0.0 else 1.0)
+		var crit_hit_chance_base = 0.03
+		if weapon_data.shooter.type == Battle.EntityType.SHIP:
+			crit_hit_chance_base += (game.MUs.CHR - 1) * 0.005
+		var crit_chance = weapon_data.get("crit_hit_chance_mult", 1.0) * crit_hit_chance_base * weapon_data.get("crit_hit_mult", 1.0) * (10.0 if status_effects[Battle.StatusEffect.EXPOSED] > 0.0 else 1.0)
 		var critical = randf() < crit_chance
 		if critical:
 			actual_damage *= 2
@@ -324,7 +327,7 @@ func damage_entity(weapon_data: Dictionary):
 				agility_buff -= 2
 		if Battle.PassiveAbility.PHYSICAL_DAMAGE_RESISTANT in passive_abilities and weapon_data.type == Battle.DamageType.PHYSICAL:
 			actual_damage = ceil(actual_damage * 0.75)
-		if type != Battle.EntityType.SHIP:
+		if weapon_data.shooter.type == Battle.EntityType.SHIP:
 			if weapon_data.type == Battle.DamageType.PHYSICAL:
 				actual_damage = ceil(actual_damage * log(game.u_i.planck - 1.0 + exp(1.0)))
 			elif weapon_data.type == Battle.DamageType.EMG:
@@ -422,7 +425,7 @@ func collide_with_entity(collider: BattleEntity, collidee: BattleEntity):
 	var collider_weapon_data = {
 		"type":Battle.DamageType.PHYSICAL,
 		"damage": collider_mass * collider.velocity.length_squared() * 3.0e-6,
-		"shooter_attack":collider.attack,
+		"shooter":collider,
 		"weapon_accuracy":collider.accuracy,
 		"orientation":collider.velocity.normalized(),
 		"velocity":0.3 * collider.velocity,
@@ -435,7 +438,7 @@ func collide_with_entity(collider: BattleEntity, collidee: BattleEntity):
 			var collidee_weapon_data = {
 				"type":Battle.DamageType.PHYSICAL,
 				"damage": collidee_mass * collider.velocity.length_squared() * 3.0e-6,
-				"shooter_attack":collidee.attack,
+				"shooter":collidee,
 				"weapon_accuracy":INF,
 				"orientation":collidee.velocity.normalized(),
 				"velocity":Vector2.ZERO,

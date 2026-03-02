@@ -124,6 +124,8 @@ func on_system_over (l_id:int):
 	for _star in s_i.stars:
 		if _star.has("MS"):
 			Helper.add_to_dict(MSs, _star.MS, 1)
+	if not is_instance_valid(game.space_HUD):
+		return
 	var bldg_info_node = game.space_HUD.get_node("HBoxContainer/BldgInfo")
 	var ancient_bldg_info_node = game.space_HUD.get_node("HBoxContainer/AncientBldgInfo")
 	var MS_info_node = game.space_HUD.get_node("HBoxContainer/MSInfo")
@@ -154,7 +156,8 @@ func on_system_out ():
 		var tween = create_tween()
 		tween.tween_property(grid, "modulate", Color(1, 1, 1, 1), 0.1)
 	game.hide_tooltip()
-	game.space_HUD.clear_bldg_info()
+	if is_instance_valid(game.space_HUD):
+		game.space_HUD.clear_bldg_info()
 
 func on_system_click (id:int, l_id:int):
 	var view = self.get_parent()

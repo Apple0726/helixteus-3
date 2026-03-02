@@ -3788,7 +3788,7 @@ func _input(event):
 
 func _unhandled_key_input(event):
 	var hotbar_presses = [Input.is_action_just_released("1"), Input.is_action_just_released("2"), Input.is_action_just_released("3"), Input.is_action_just_released("4"), Input.is_action_just_released("5"), Input.is_action_just_released("6"), Input.is_action_just_released("7"), Input.is_action_just_released("8"), Input.is_action_just_released("9"), Input.is_action_just_released("0")]
-	if not c_v in ["battle", "cave", ""] and not viewing_dimension and not is_instance_valid(overlay):
+	if not c_v in ["battle", "cave", ""] and not viewing_dimension and not is_instance_valid(overlay) and not is_instance_valid(active_panel):
 		for i in 10:
 			if len(hotbar) > i and hotbar_presses[i]:
 				var _name = hotbar[i]
