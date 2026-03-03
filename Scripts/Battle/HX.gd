@@ -50,12 +50,14 @@ enum Attack {
 	NORMAL,
 	LASER,
 	MAGIC_BULLET,
+	CORRODING_BULLET,
 }
 var attack_type = Attack.NORMAL
 var attack_data = {
 	Attack.NORMAL:{"damage": 3.0, "accuracy": 1.0},
 	Attack.LASER:{"damage": 2.0, "accuracy": 1.8},
 	Attack.MAGIC_BULLET:{"damage": 2.0, "accuracy": 1.5},
+	Attack.CORRODING_BULLET:{"damage": 2.0, "accuracy": 1.0},
 }
 
 func take_turn():
@@ -69,7 +71,16 @@ func take_turn():
 		return
 	decrement_status_effects_buffs()
 	if enemy_class == 2:
-		attack_type = Attack.LASER
+		if randf() < 0.4 and lv >= 9:
+			attack_type = Attack.LASER
+		else:
+			attack_type = Attack.CORRODING_BULLET
+	elif enemy_class == 3:
+		var pushable_ships = get_pushable_ships()
+		if not pushable_ships.is_empty():
+			await get_tree().create_timer(0.5).timeout
+			push_ship(pushable_ships.pick_random())
+			return
 	elif enemy_class == 4:
 		attack_type = Attack.MAGIC_BULLET
 	var ship_target_id = determine_target()
@@ -81,6 +92,7 @@ func take_turn():
 		create_tween().tween_property(self, "velocity", velocity.normalized() * max(speed - movement_remaining_base, 0.0), 0.4).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
 		movement_remaining_base = max(movement_remaining_base - speed, 0.0)
 		await get_tree().create_timer(0.1).timeout
+	$CollisionShapeFinder/CollisionShape2D.shape.radius = movement_remaining_base
 	if movement_remaining_base > 0.0:
 		for j in range(64):
 			var th = lerp(0.0, 2.0 * PI, j / 64.0)
@@ -134,7 +146,9 @@ func calculate_position_preferences(pos:Vector2):
 		obstacle_proximity_weight += 5.0e6 / max(pow(10.0 * PIXELS_PER_METER, 2), pos.distance_squared_to(obstacle.position))
 	var final_accuracy = (accuracy + accuracy_buff) * attack_data[attack_type].accuracy
 	var ship_target_distance = 40.0 + final_accuracy + 2.0 * max(0.0, final_accuracy - 12.0)
-	if enemy_class == 4:
+	if enemy_class == 3:
+		ship_target_distance = 16.0
+	elif enemy_class == 4:
 		ship_target_distance = 150.0
 	for ship in ship_nodes:
 		# Try to get close to ships, but not too close or too far (ideal distance of ship_target_distance meters)
@@ -258,12 +272,15 @@ func buff_animation(pos:Vector2, mod:Color):
 	light.modulate = mod
 	battle_scene.add_child(light)
 	var tween = create_tween().set_parallel()
+	tween.tween_property(attack_icon, "modulate:a", 0.0, 0.4).set_delay(1.0)
+	tween.tween_callback(attack_icon.queue_free).set_delay(1.4)
 	tween.tween_property(light, "scale", Vector2.ONE, 0.3)
 	tween.tween_property(light, "modulate:a", 0.0, 0.3)
 	tween.tween_callback(light.queue_free).set_delay(0.3)
-	tween.tween_property(attack_icon, "modulate:a", 0.0, 0.4).set_delay(1.0)
-	tween.tween_callback(attack_icon.queue_free).set_delay(1.4)
-	tween.tween_callback(ending_turn).set_delay(1.5)
+	if battle_scene.animations_sped_up:
+		ending_turn()
+	else:
+		tween.tween_callback(ending_turn).set_delay(1.5)
 	
 func buff_attack():
 	var target_HX:BattleEntity = HX_nodes.pick_random()
@@ -290,6 +307,39 @@ func spawn_magic_star(callback):
 	tween.tween_callback(magic_star.queue_free).set_delay(0.4)
 	tween.tween_callback(callback).set_delay(0.4)
 
+func add_projectile(angle:float, modifiers:Dictionary):
+	var projectile = preload("res://Scenes/Battle/Weapons/Projectile.tscn").instantiate()
+	projectile.set_script(load("res://Scripts/Battle/Weapons/Bullet.gd"))
+	projectile.get_node("Sprite2D").texture = preload("res://Graphics/Battle/Projectiles/enemy_bullet.png")
+	projectile.trail_color = Color.RED
+	projectile.collision_layer = 16
+	projectile.collision_mask = 1 + 2 + 32
+	projectile.speed = 1000.0
+	projectile.mass = 1.0
+	projectile.velocity_process_modifier = 5.0 if battle_scene.animations_sped_up else 1.0
+	projectile.rotation = angle
+	projectile.damage = attack_data[attack_type].damage
+	projectile.shooter = self
+	projectile.weapon_accuracy = attack_data[attack_type].accuracy * accuracy
+	projectile.deflects_remaining = 0
+	projectile.position = position
+	projectile.ending_turn_delay = 1.0
+	projectile.end_turn_ready = true
+	if modifiers.has("buffs"):
+		projectile.buffs = modifiers.buffs
+	if modifiers.has("knockback"):
+		projectile.knockback = modifiers.knockback
+	if modifiers.has("scale_mult"):
+		projectile.scale *= modifiers.scale_mult
+	if modifiers.has("damage_mult"):
+		projectile.damage *= modifiers.damage_mult
+	if modifiers.has("status_effects"):
+		projectile.status_effects = modifiers.status_effects
+	if modifiers.has("trail_color"):
+		projectile.trail_color = modifiers.trail_color
+	battle_scene.add_child(projectile)
+	projectile.end_turn.connect(ending_turn)
+	
 func normal_attack():
 	target_angle = atan2(target_position.y - position.y, target_position.x - position.x)
 	target_angle_max_deviation = 1.0 / (accuracy + accuracy_buff) / aim_mult / attack_data[attack_type].accuracy
@@ -301,38 +351,42 @@ func normal_attack():
 		await get_tree().create_timer(0.7).timeout
 	var projectile_angle = randf_range(target_angle - target_angle_max_deviation, target_angle + target_angle_max_deviation)
 	if attack_type == Attack.NORMAL:
-		var projectile = preload("res://Scenes/Battle/Weapons/Projectile.tscn").instantiate()
-		projectile.set_script(load("res://Scripts/Battle/Weapons/Bullet.gd"))
-		projectile.get_node("Sprite2D").texture = preload("res://Graphics/Battle/Projectiles/enemy_bullet.png")
-		projectile.trail_color = Color.RED
-		projectile.collision_layer = 16
-		projectile.collision_mask = 1 + 2 + 32
-		projectile.speed = 1000.0
-		projectile.mass = 1.0
-		projectile.velocity_process_modifier = 5.0 if battle_scene.animations_sped_up else 1.0
-		projectile.rotation = projectile_angle
-		projectile.damage = attack_data[attack_type].damage
-		projectile.shooter = self
-		projectile.weapon_accuracy = attack_data[attack_type].accuracy * accuracy
-		projectile.deflects_remaining = 0
-		projectile.position = position
-		projectile.ending_turn_delay = 1.0
-		projectile.end_turn_ready = true
+		var buffs = {}
 		if lv >= 12:
-			projectile.buffs.defense = -4
+			buffs.defense = -4
 		elif lv >= 9:
-			projectile.buffs.defense = -3
+			buffs.defense = -3
 		elif lv >= 6:
-			projectile.buffs.defense = -2
+			buffs.defense = -2
 		elif lv >= 3:
-			projectile.buffs.defense = -1
+			buffs.defense = -1
+		var knockback = 0.0
 		if lv >= 3:
-			projectile.knockback = 15.0 + min(lv, 12) * 5.0
+			knockback = 15.0 + min(lv, 18) * 2.0
+		var scale_mult = 1.0
+		var damage_mult = 1.0
 		if lv >= 9:
-			projectile.scale *= 2.0
-			projectile.damage *= 2.0
-		battle_scene.add_child(projectile)
-		projectile.end_turn.connect(ending_turn)
+			scale_mult *= 2.0
+			damage_mult *= 2.0
+		add_projectile(projectile_angle,
+		{"buffs":buffs, "scale_mult":scale_mult, "damage_mult":damage_mult, "knockback":knockback})
+	elif attack_type == Attack.CORRODING_BULLET:
+		var proj_status_effects = {Battle.StatusEffect.CORRODING:2}
+		if lv >= 15:
+			proj_status_effects[Battle.StatusEffect.CORRODING] = 3
+		var scale_mult = 1.0
+		var damage_mult = 1.0
+		if lv >= 18:
+			scale_mult *= 2.0
+			damage_mult *= 2.0
+		var projectile_num = 2
+		if lv >= 12:
+			projectile_num = 3
+		for i in projectile_num:
+			add_projectile(projectile_angle,
+			{"status_effects":proj_status_effects, "scale_mult":scale_mult, "damage_mult":damage_mult, "trail_color":Color.YELLOW_GREEN})
+			if i < projectile_num-1:
+				await get_tree().create_timer(0.2).timeout
 	elif attack_type == Attack.LASER:
 		var laser = preload("res://Scenes/Battle/Weapons/BattleLaser.tscn").instantiate()
 		laser.get_node("RayCast2D").collision_mask = 1 + 2 + 32
@@ -342,12 +396,34 @@ func normal_attack():
 		laser.weapon_accuracy = attack_data[attack_type].accuracy * accuracy
 		laser.position = position
 		laser.fade_delay = 0.2 if battle_scene.animations_sped_up else 0.5
-		if lv < 12:
-			laser.status_effects = {Battle.StatusEffect.STUN: [min(0.5 + 0.1 * lv, 0.8), 1]}
+		if lv < 18:
+			laser.status_effects = {Battle.StatusEffect.STUN: [min(0.5 + 0.05 * (lv - 9), 0.8), 1]}
 		else:
 			laser.status_effects = {Battle.StatusEffect.STUN: [0.8, 2]}
 		battle_scene.add_child(laser)
 		laser.tree_exited.connect(ending_turn)
+
+func push_ship(ship:BattleEntity):
+	var push_success = push_entity_attempt(agility + agility_buff, ship.agility + ship.agility_buff, (position - ship.position).normalized(), velocity - ship.velocity)
+	ship.update_velocity_arrow()
+	if push_success:
+		create_tween().tween_property(ship, "velocity", ship.velocity + calculate_velocity_change(ship, movement_remaining), 0.4).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+	else:
+		battle_scene.add_damage_text(true, ship.position)
+	print("movement_remaining " + str(movement_remaining))
+	print("pusheed " + str(calculate_velocity_change(ship, movement_remaining)))
+	var push_tween = create_tween()
+	var orig_pos = position
+	push_tween.tween_property(self, "position", ship.position, 0.05).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
+	push_tween.tween_property(self, "position", orig_pos, 0.2).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_IN_OUT)
+	var push_effect = preload("res://Scenes/Battle/PushEffect.tscn").instantiate()
+	push_effect.scale = Vector2.ONE * remap(movement_remaining, 30.0, 100.0, 0.2, 0.5)
+	push_effect.rotation = atan2(ship.position.y - position.y, ship.position.x - position.x)
+	push_effect.position = position + 50.0 * Vector2.from_angle(push_effect.rotation)
+	battle_scene.add_child(push_effect)
+	push_effect.play("default")
+	push_effect.animation_finished.connect(ending_turn.bind(0.5))
+	push_effect.animation_finished.connect(push_effect.queue_free)
 
 func attack_target():
 	if enemy_class == 2:
@@ -356,26 +432,30 @@ func attack_target():
 		else:
 			normal_attack()
 	elif enemy_class == 3:
-		if turn_number % 3 == 1 and len(battle_scene.obstacle_nodes) < 15:
-			var angle_offset = randf() * 2.0 * PI / 8.0
-			var ball_number = 4
-			if lv >= 12:
-				ball_number += 3
-			elif lv >= 9:
-				ball_number += 3
-			elif lv >= 6:
-				ball_number += 2
-			elif lv >= 3:
-				ball_number += 1
-			for i in ball_number:
-				spawn_ball(i * 2.0 * PI / ball_number + angle_offset, total_HP * 2, 16.0)
-		elif turn_number % 3 == 2:
-			for ship in ship_nodes:
-				spawn_ball(atan2(ship.position.y - position.y, ship.position.x - position.x), total_HP * 3, 30.0)
+		var pushable_ships = get_pushable_ships()
+		if movement_remaining < 30.0 or pushable_ships.is_empty():
+			if turn_number % 3 == 1 and len(battle_scene.obstacle_nodes) < 15:
+				var angle_offset = randf() * 2.0 * PI / 8.0
+				var ball_number = 4
+				if lv >= 24:
+					ball_number = 8
+				elif lv >= 18:
+					ball_number = 7
+				elif lv >= 12:
+					ball_number = 6
+				elif lv >= 6:
+					ball_number = 5
+				for i in ball_number:
+					spawn_ball(i * 2.0 * PI / ball_number + angle_offset, total_HP * 0.8, 16.0)
+			elif turn_number % 3 == 2:
+				for ship in ship_nodes:
+					spawn_ball(atan2(ship.position.y - position.y, ship.position.x - position.x), total_HP * 1.5, 30.0)
+			else:
+				var ship = ship_nodes.pick_random()
+				spawn_ball(atan2(ship.position.y - position.y, ship.position.x - position.x), total_HP * 2.0, 50.0)
+			ending_turn(0.05 if battle_scene.animations_sped_up else 0.5)
 		else:
-			var ship = ship_nodes.pick_random()
-			spawn_ball(atan2(ship.position.y - position.y, ship.position.x - position.x), total_HP * 5, 50.0)
-		ending_turn(0.05 if battle_scene.animations_sped_up else 0.5)
+			push_ship(pushable_ships.pick_random())
 	elif enemy_class == 4:
 		var random_attack = randf()
 		if random_attack < 0.5 and lv >= 3:
@@ -385,6 +465,13 @@ func attack_target():
 	else:
 		normal_attack()
 
+func get_pushable_ships():
+	var pushable_ships = []
+	for ship in ship_nodes:
+		if (ship.position - position).length() < 144.0:
+			pushable_ships.append(ship)
+	return pushable_ships
+	
 
 func ending_turn(delay: float = 0.0):
 	create_tween().tween_callback(end_turn).set_delay(0.0 if battle_scene.animations_sped_up else delay)

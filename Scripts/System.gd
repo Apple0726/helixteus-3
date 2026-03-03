@@ -463,7 +463,7 @@ func show_planet_info(id:int, l_id:int):
 		else:
 			var T_gradient:Gradient = preload("res://Resources/TemperatureGradient.tres")
 			var temp_color:String = T_gradient.sample(inverse_lerp(0, 500, p_i.temperature)).to_html(false)
-			var P_gradient:Gradient = preload("res://Resources/IntensityGradient.tres")
+			var P_gradient:Gradient = Data.intensity_gradient
 			var pressure_color:String = P_gradient.sample(inverse_lerp(1, 150, p_i.pressure)).to_html(false)
 			tooltip = "{planetName}\n{diameterText}: {diameter} km {dims}\n{distFromStarText}: {distFromStar} AU\n{tempText}: [color=#{tempColor}]{tempC} °C ({tempK} K)[/color]\n{pressureText}: [color=#{pressureColor}]{pressure} bar[/color]".format({
 				"planetName": p_i.name,

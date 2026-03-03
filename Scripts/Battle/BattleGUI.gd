@@ -113,10 +113,10 @@ func _input(event: InputEvent) -> void:
 		if Data.battle_weapon_stats.laser.multishot[ship_node.laser_levels[0] - 1] > 1:
 			if Input.is_action_pressed("shift"):
 				if Input.is_action_just_pressed("scroll_down"):
-					ship_node.get_node("FireWeaponAim").multishot_angle = min(ship_node.get_node("FireWeaponAim").multishot_angle + PI / 64.0, 0.3 * PI)
+					ship_node.get_node("FireWeaponAim").multishot_angle = min(ship_node.get_node("FireWeaponAim").multishot_angle + PI / 128.0, 0.3 * PI)
 					override_enemy_tooltips()
 				if Input.is_action_just_pressed("scroll_up"):
-					ship_node.get_node("FireWeaponAim").multishot_angle = max(ship_node.get_node("FireWeaponAim").multishot_angle - PI / 64.0, PI / 64.0)
+					ship_node.get_node("FireWeaponAim").multishot_angle = max(ship_node.get_node("FireWeaponAim").multishot_angle - PI / 128.0, PI / 128.0)
 					override_enemy_tooltips()
 			if Input.is_action_just_pressed("shift"):
 				game.block_scroll = true
@@ -128,7 +128,7 @@ func _input(event: InputEvent) -> void:
 		if Input.is_action_pressed("shift"):
 			if Input.is_action_just_pressed("scroll_down"):
 				if ship_node.light_levels[1] >= 2:
-					ship_node.light_cone.emission_cone_angle = min(ship_node.light_cone.emission_cone_angle + PI / 64.0, 1.8 * PI)
+					ship_node.light_cone.emission_cone_angle = min(ship_node.light_cone.emission_cone_angle + PI / 64.0, 0.9 * PI)
 				else:
 					ship_node.light_cone.emission_cone_angle = min(ship_node.light_cone.emission_cone_angle + PI / 64.0, 0.3 * PI)
 				ship_node.light_emission_cone_angle = ship_node.light_cone.emission_cone_angle
@@ -228,7 +228,9 @@ func refresh_GUI():
 	else:
 		$MainPanel/MoveLabel["theme_override_colors/font_color"] = Color.WHITE
 		$MainPanel/Move.disabled = false
-	if is_zero_approx(ship_node.velocity.length()):
+	var V = ship_node.velocity.length()
+	$MainPanel/Move/TextureRect.modulate = Data.intensity_gradient.sample(inverse_lerp(0.0, 500.0, V)).to_html(false)
+	if is_zero_approx(V):
 		$MainPanel/MoveLabel.text = "%s (%.1f m)" % [tr("MOVE"), ship_node.movement_remaining]
 	else:
 		$MainPanel/MoveLabel.text = "%s (%.1f m)" % [tr("DECELERATE"), ship_node.movement_remaining]

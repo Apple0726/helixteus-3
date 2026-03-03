@@ -35,4 +35,5 @@ script = ExtResource("1_1ef5i")
 libraries/ = SubResource("AnimationLibrary_makbt")
 
 [node name="Polygon2D" type="Polygon2D" parent="." unique_id=861236842]
-polygon = PackedVector2Array(0, -2, 18, -2, 14, -8, 26, 0, 14, 8, 18, 2, 0, 2)
+antialiased = true
+polygon = PackedVector2Array(0, -1, 18, -1, 14, -8, 26, 0, 14, 8, 18, 1, 0, 1)

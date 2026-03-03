@@ -443,7 +443,7 @@ func push_entity():
 		push_success = push_entity_attempt(agility + agility_buff, entity_to_push.agility + entity_to_push.agility_buff, (position - entity_to_push.position).normalized(), velocity - entity_to_push.velocity)
 	entity_to_push.update_velocity_arrow()
 	if push_success:
-		create_tween().tween_property(entity_to_push, "velocity", entity_to_push.velocity + calculate_velocity_change(), 0.4).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+		create_tween().tween_property(entity_to_push, "velocity", entity_to_push.velocity + calculate_velocity_change(entity_to_push, push_movement_used), 0.4).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
 	else:
 		battle_scene.add_damage_text(true, entity_to_push.position)
 	movement_remaining -= push_movement_used
@@ -452,23 +452,19 @@ func push_entity():
 	var orig_pos = position
 	push_tween.tween_property(self, "position", entity_to_push.position, 0.05).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
 	push_tween.tween_property(self, "position", orig_pos, 0.2).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_IN_OUT)
-	$PushEffect.scale = Vector2.ONE * remap(push_movement_used, 30.0, 100.0, 0.2, 0.5)
-	$PushEffect.rotation = atan2(entity_to_push.position.y - position.y, entity_to_push.position.x - position.x)
-	$PushEffect.position = 50.0 * Vector2.from_angle($PushEffect.rotation)
-	$PushEffect.show()
+	var push_effect = preload("res://Scenes/Battle/PushEffect.tscn").instantiate()
+	push_effect.scale = Vector2.ONE * remap(push_movement_used, 30.0, 100.0, 0.2, 0.5)
+	push_effect.rotation = atan2(entity_to_push.position.y - position.y, entity_to_push.position.x - position.x)
+	push_effect.position = position + 50.0 * Vector2.from_angle(push_effect.rotation)
+	battle_scene.add_child(push_effect)
+	push_effect.play("default")
+	push_effect.animation_finished.connect(push_effect.queue_free)
 	cancel_action()
 
-func calculate_velocity_change():
-	return (entity_to_push.position - position).normalized() * push_movement_used * 2.0 * get_mass() / entity_to_push.get_mass()
-	
 func update_push_movement_used():
 	if is_instance_valid(entity_to_push):
 		battle_GUI.get_node("PushStrengthPanel/MovementUsed").text = "%.1f m" % push_movement_used
-		entity_to_push.update_velocity_arrow(calculate_velocity_change())
-
-
-func _on_push_effect_visibility_changed() -> void:
-	$PushEffect.play("default")
+		entity_to_push.update_velocity_arrow(calculate_velocity_change(entity_to_push, push_movement_used))
 
 
 var buffed_from_class_passive_ability = false

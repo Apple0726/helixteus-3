@@ -305,9 +305,24 @@ offset_right = 636.0
 offset_bottom = 84.0
 shortcut = SubResource("Shortcut_ypwpy")
 shortcut_in_tooltip = false
-icon = ExtResource("8_oca3i")
 icon_alignment = 1
 expand_icon = true
+
+[node name="TextureRect" type="TextureRect" parent="MainPanel/Move" unique_id=661031091]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 4.0
+offset_top = 4.0
+offset_right = -4.0
+offset_bottom = -4.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+texture = ExtResource("8_oca3i")
+expand_mode = 1
+stretch_mode = 5
 
 [node name="Push" type="Button" parent="MainPanel" unique_id=1255722463]
 layout_mode = 0

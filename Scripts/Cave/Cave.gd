@@ -451,8 +451,7 @@ func remove_cave():
 func set_avg_dmg():
 	var avg_dmg:float = 6.0 * difficulty / def / rover_size * armor_damage_mult
 	var dmg_to_HP_ratio:float = avg_dmg / total_HP
-	var gradient:Gradient = preload("res://Resources/IntensityGradient.tres")
-	var color:String = gradient.sample(inverse_lerp(0.005, 0.3, dmg_to_HP_ratio)).to_html(false)
+	var color:String = Data.intensity_gradient.sample(inverse_lerp(0.005, 0.3, dmg_to_HP_ratio)).to_html(false)
 	$UI2/CaveInfo/AvgDmg.text = "%s: %s" % [tr("AVERAGE_ENEMY_DAMAGE"), Helper.format_num(avg_dmg, true)]
 	$UI2/CaveInfo/AvgDmg["theme_override_colors/font_color"] = color
 	

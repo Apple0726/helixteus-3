@@ -15,11 +15,6 @@
 [ext_resource type="Texture2D" uid="uid://cdblvpftr6875" path="res://icon.png" id="12"]
 [ext_resource type="Shader" uid="uid://dose2l8hnixm6" path="res://Shaders/Fire.gdshader" id="13"]
 [ext_resource type="Shader" uid="uid://gevhgabt3grd" path="res://Shaders/Laser.gdshader" id="14"]
-[ext_resource type="Texture2D" uid="uid://cyas017smhbpo" path="res://Graphics/Effects/push_1.png" id="18_4hicg"]
-[ext_resource type="Texture2D" uid="uid://3ljlm33mxoww" path="res://Graphics/Effects/push_2.png" id="19_fh3h1"]
-[ext_resource type="Texture2D" uid="uid://dncbqa6a2j6e8" path="res://Graphics/Effects/push_3.png" id="20_mql8i"]
-[ext_resource type="Texture2D" uid="uid://do2jj66kerck5" path="res://Graphics/Effects/push_4.png" id="21_p0q1a"]
-[ext_resource type="Texture2D" uid="uid://dtler6yb7gbmd" path="res://Graphics/Effects/push_5.png" id="22_fh3h1"]
 [ext_resource type="PackedScene" uid="uid://b3b68o5fd52pr" path="res://Scenes/Battle/VelocityArrow.tscn" id="22_mql8i"]
 
 [sub_resource type="ShaderMaterial" id="4"]
@@ -708,32 +703,6 @@ color_ramp = SubResource("27")
 [sub_resource type="CircleShape2D" id="CircleShape2D_mql8i"]
 radius = 120.0
 
-[sub_resource type="SpriteFrames" id="SpriteFrames_p3fke"]
-animations = [{
-"frames": [{
-"duration": 1.0,
-"texture": ExtResource("18_4hicg")
-}, {
-"duration": 1.0,
-"texture": ExtResource("19_fh3h1")
-}, {
-"duration": 1.0,
-"texture": ExtResource("20_mql8i")
-}, {
-"duration": 1.0,
-"texture": ExtResource("21_p0q1a")
-}, {
-"duration": 1.0,
-"texture": ExtResource("22_fh3h1")
-}, {
-"duration": 1.0,
-"texture": null
-}],
-"loop": false,
-"name": &"default",
-"speed": 20.0
-}]
-
 [sub_resource type="Animation" id="Animation_4hicg"]
 resource_name = "Flash"
 length = 0.3
@@ -1148,13 +1117,6 @@ rotation = 1.5708
 shape = SubResource("CircleShape2D_mql8i")
 debug_color = Color(0.556863, 0.560784, 0, 0.0941176)
 
-[node name="PushEffect" type="AnimatedSprite2D" parent="." unique_id=812870274]
-visible = false
-position = Vector2(52, 0)
-scale = Vector2(0.5, 0.5)
-sprite_frames = SubResource("SpriteFrames_p3fke")
-offset = Vector2(-130, 0)
-
 [node name="VelocityArrow" parent="." unique_id=908545511 instance=ExtResource("22_mql8i")]
 
 [node name="FireProjectileFlash" type="PointLight2D" parent="." unique_id=1166325875]
@@ -1170,4 +1132,3 @@ libraries/ = SubResource("AnimationLibrary_mql8i")
 [connection signal="visibility_changed" from="FireWeaponAim" to="." method="_on_fire_weapon_aim_visibility_changed"]
 [connection signal="area_entered" from="PushArea" to="." method="_on_push_area_area_entered"]
 [connection signal="area_exited" from="PushArea" to="." method="_on_push_area_area_exited"]
-[connection signal="visibility_changed" from="PushEffect" to="." method="_on_push_effect_visibility_changed"]

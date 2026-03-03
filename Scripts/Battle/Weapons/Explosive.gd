@@ -26,7 +26,8 @@ func _on_area_entered(area: Area2D) -> void:
 	var weapon_data = {
 		"type":Battle.DamageType.PHYSICAL,
 		"damage":damage,
-		"shooter":shooter,
+		"shooter_attack":shooter.attack + shooter.attack_buff,
+		"shooter_type":shooter.type,
 		"weapon_accuracy":weapon_accuracy,
 		"orientation":Vector2.from_angle(rotation),
 		"velocity":speed * Vector2.from_angle(rotation),
@@ -45,7 +46,8 @@ func _on_area_entered(area: Area2D) -> void:
 				var AoE_weapon_data = {
 					"type":Battle.DamageType.PHYSICAL,
 					"damage":damage * remap(dist_from_point_blank, 0.0, AoE_radius, 1.0, 0.2),
-					"shooter":shooter,
+					"shooter_attack":shooter.attack + shooter.attack_buff,
+					"shooter_type":shooter.type,
 					"weapon_accuracy":INF,
 					"velocity":200.0 * (area_in_AoE.position - position).normalized(),
 					"knockback":30.0 * (area_in_AoE.position - position).normalized(),

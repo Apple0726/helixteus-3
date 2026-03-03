@@ -1259,8 +1259,7 @@ func get_modifier_string(modifiers:Dictionary, au_str:String, icons:Array):
 			var mod_color:String = ""
 			if cave_mod > 1.0:
 				if double_treasure_at > 1.0:
-					var gradient:Gradient = preload("res://Resources/IntensityGradient.tres")
-					mod_color = gradient.sample(inverse_lerp(1.0, double_treasure_at, cave_mod) / 2.0).to_html(false)
+					mod_color = Data.intensity_gradient.sample(inverse_lerp(1.0, double_treasure_at, cave_mod) / 2.0).to_html(false)
 					if not Data.cave_modifiers[modifier].has("no_treasure_mult"):
 						treasure_bonus_str = " (x%s %s@i%s)" % [clever_round(remap(cave_mod, 1.0, double_treasure_at, 0, 1) + 1.0), au_str_end, au_str]
 						icons.append(preload("res://Graphics/Icons/Inventory.png"))
@@ -1275,8 +1274,7 @@ func get_modifier_string(modifiers:Dictionary, au_str:String, icons:Array):
 				]
 			else:
 				if double_treasure_at < 1.0:
-					var gradient:Gradient = preload("res://Resources/IntensityGradient.tres")
-					mod_color = gradient.sample(inverse_lerp(1.0, double_treasure_at, cave_mod) / 2.0).to_html(false)
+					mod_color = Data.intensity_gradient.sample(inverse_lerp(1.0, double_treasure_at, cave_mod) / 2.0).to_html(false)
 					if not Data.cave_modifiers[modifier].has("no_treasure_mult"):
 						treasure_bonus_str = " (x%s %s@i%s)" % [clever_round(remap(1.0 / cave_mod, 1.0, 1.0 / double_treasure_at, 0, 1) + 1.0), au_str_end, au_str]
 						icons.append(preload("res://Graphics/Icons/Inventory.png"))

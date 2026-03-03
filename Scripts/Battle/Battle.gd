@@ -172,18 +172,31 @@ func highlight_entity(entity: BattleEntity):
 		if ship != entity:
 			ship.get_node("Sprite2D").material.set_shader_parameter("alpha", 0.2)
 			ship.get_node("Info").modulate.a = 0.2
+			ship.get_node("VelocityArrow").modulate.a = 0.2
 	for HX in HX_nodes:
 		if HX != entity:
 			HX.get_node("Sprite2D").material.set_shader_parameter("alpha", 0.2)
 			HX.get_node("Info").modulate.a = 0.2
+			HX.get_node("VelocityArrow").modulate.a = 0.2
+	for obstacle in obstacle_nodes:
+		if obstacle != entity:
+			obstacle.get_node("Sprite2D").material.set_shader_parameter("alpha", 0.2)
+			obstacle.get_node("Info").modulate.a = 0.2
+			obstacle.get_node("VelocityArrow").modulate.a = 0.2
 
 func unhighlight_entity(entity: BattleEntity):
 	for ship in ship_nodes:
 		ship.get_node("Sprite2D").material.set_shader_parameter("alpha", 1.0)
 		ship.get_node("Info").modulate.a = 1.0
+		ship.get_node("VelocityArrow").modulate.a = 1.0
 	for HX in HX_nodes:
 		HX.get_node("Sprite2D").material.set_shader_parameter("alpha", 1.0)
 		HX.get_node("Info").modulate.a = 1.0
+		HX.get_node("VelocityArrow").modulate.a = 1.0
+	for obstacle in obstacle_nodes:
+		obstacle.get_node("Sprite2D").material.set_shader_parameter("alpha", 1.0)
+		obstacle.get_node("Info").modulate.a = 1.0
+		obstacle.get_node("VelocityArrow").modulate.a = 1.0
 
 func battle_victory_callback():
 	var victory_panel = preload("res://Scenes/Panels/VictoryPanel.tscn").instantiate()
@@ -279,6 +292,7 @@ func next_turn():
 				whose_turn_is_it_index = ship_node.turn_order
 				$Selected.position = ship_node.position + Vector2.UP * 80.0
 				battle_GUI.fade_in_main_panel()
+				view_entity(ship_node)
 				return
 	ships_taking_turn.clear()
 	$Selected.hide()

@@ -26,7 +26,7 @@ func update_cone(_emission_cone_angle_visual: float):
 	var light_polygon:PackedVector2Array = [Vector2.ZERO]
 	var inner_light_polygon:PackedVector2Array = [Vector2.ZERO]
 	var mouse_pos = to_local(get_parent().battle_scene.mouse_position_global)
-	$LightPolygon.color.a = remap(emission_cone_angle_visual, 0.3 * PI, PI / 64.0, 0.1, 0.7)
+	$LightPolygon.color.a = clamp(remap(emission_cone_angle_visual, 0.3 * PI, PI / 64.0, 0.1, 0.7), 0.1, 0.7)
 	$InnerLightPolygon.color.a = $LightPolygon.color.a
 	for i in range(-100, 100):
 		var angle = atan2(mouse_pos.y, mouse_pos.x) + i * emission_cone_angle_visual / 100.0
@@ -76,7 +76,8 @@ func add_weapon_data(hit_target, angle:float, inner_light:bool):
 			"type":Battle.DamageType.EMG,
 			"damage":damage / 200.0,
 			"light_rays":1,
-			"shooter":shooter,
+			"shooter_attack":shooter.attack + shooter.attack_buff,
+			"shooter_type":shooter.type,
 			"weapon_accuracy":INF,
 			"velocity":1.5 * Vector2.from_angle(angle),
 			"crit_hit_chance_mult":0.0,

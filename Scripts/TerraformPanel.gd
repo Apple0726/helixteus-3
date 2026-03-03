@@ -38,7 +38,7 @@ func update_info():
 	costs.erase("time")
 	for cost in costs:
 		costs[cost] *= surface * game.engineering_bonus.BCM / cost_div
-	var gradient:Gradient = preload("res://Resources/IntensityGradient.tres")
+	var gradient:Gradient = Data.intensity_gradient
 	var pressure_mult_color = gradient.sample(inverse_lerp(1.0, 100.0, pressure_mult)).to_html(false)
 	var lake_mult_color = gradient.sample(inverse_lerp(1.0, 10.0, lake_mult)).to_html(false)
 	$Panel/TerraformPanel/CostMult.text = "%s:\n%s: x %s\n[color=#%s]%s: x %s[/color]\n[color=#%s]%s: x %s[/color]" % [tr("TF_COST_MULT"), tr("SURFACE_AREA"), Helper.format_num(surface), pressure_mult_color, tr("ATMOSPHERE_PRESSURE"), Helper.clever_round(pressure_mult), lake_mult_color, tr("LAKES"), Helper.clever_round(lake_mult)]

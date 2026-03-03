@@ -18,7 +18,8 @@ func _ready() -> void:
 			var weapon_data = {
 				"type":Battle.DamageType.EMG,
 				"damage":damage,
-				"shooter":shooter,
+				"shooter_attack":shooter.attack + shooter.attack_buff,
+				"shooter_type":shooter.type,
 				"weapon_accuracy":weapon_accuracy,
 				"orientation":Vector2.from_angle(rotation),
 				"velocity":100.0 * Vector2.from_angle(rotation),
