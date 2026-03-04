@@ -267,7 +267,7 @@ func _on_h_slider_value_changed(value):
 	$EnergyCost2.text = "%s  %s" % [Helper.format_num(entry_exit_cost), "[img]Graphics/Icons/help.png[/img]"]
 	var travel_cost_mult = spaceport_travel_cost_reduction * (get_travel_cost_multiplier(depart_planet_data.MS_lv) if has_SE(depart_planet_data) else 1.0)
 	travel_energy_cost = slider_factor * distance * 30 / game.u_i.speed_of_light * travel_cost_mult
-	time_cost = 5.0 / slider_factor * distance / game.u_i.speed_of_light / game.u_i.time_speed
+	time_cost = 5.0 / sqrt(slider_factor) * distance / game.u_i.speed_of_light / game.u_i.time_speed
 	if game.science_unlocked.has("FTL"):
 		time_cost /= 10.0
 	if game.science_unlocked.has("IGD"):

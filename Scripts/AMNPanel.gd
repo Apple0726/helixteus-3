@@ -75,12 +75,9 @@ func on_rsrc_pressed(rsrc:String):
 		for atom in reactions[rsrc].atoms:
 			ratios[atom] = 1000.0 / (Data.molar_mass[atom] * reactions[rsrc].atoms[atom])
 			atom_costs[atom] = 0.0
-			rsrc_nodes_from = Helper.put_rsrc($Panel/Control2/ScrollContainer/From, 40, atom_costs, true, true)
-			rsrc_nodes_to = Helper.put_rsrc($Panel/Control2/To, 40, {rsrc:0})
 		$Panel/Control/Switch.show()
-	_on_HSlider_value_changed(0.0)
+	_on_HSlider_value_changed($Panel/Control/HSlider.value)
 	$Panel.show()
-	refresh()
 
 func refresh():
 	set_process(true)
@@ -125,6 +122,7 @@ func refresh():
 	if resource_selected == "":
 		return
 	var max_slider_value = get_max_slider_value()
+	print("A")
 	var rsrc_value = $Panel/Control/HSlider.value * max_slider_value
 	$Panel/Control/EnergyCostText.text = Helper.format_num(round(reactions[resource_selected].energy_cost * rsrc_value / au_mult / path_2_value)) + "  [img]Graphics/Icons/help.png[/img]"
 	if au_mult > 1:
@@ -158,7 +156,7 @@ func get_max_slider_value():
 			max_value = Helper.get_sum_of_dict(game.stone)
 		else:
 			max_value = game[rsrc_type][resource_selected]
-	return min(game.energy * au_mult / reactions[resource_selected].energy_cost * path_2_value, max_value)
+	return min(game.energy * 0.999 * au_mult / reactions[resource_selected].energy_cost * path_2_value, max_value)
 	
 func reset_poses(_name:String):
 	resource_selected = _name
@@ -275,6 +273,9 @@ func refresh_time_icon():
 			r.get_node("Time").hide()
 
 func _process(delta):
+	if not visible:
+		set_process(false)
+		return
 	if obj == null or obj.is_empty():
 		_on_close_button_pressed()
 		return

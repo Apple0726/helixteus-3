@@ -692,3 +692,5 @@ var star_color = {
 	"R0":Color(1.0, 0.392, 1.0, 1.0),
 	"Z0":Color(0.392, 0.118, 1.0, 1.0),
 }
+
+var intensity_gradient = preload("res://Resources/IntensityGradient.tres")

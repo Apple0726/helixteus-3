@@ -31,15 +31,19 @@ func add_ship_node(id: int):
 	ship.get_node("TextureButton").mouse_exited.connect(_on_ship_mouse_exited.bind(id))
 	ship.get_node("TextureButton").button_down.connect(_on_ship_button_down.bind(id))
 	ship.get_node("TextureButton").button_up.connect(_on_ship_button_up.bind(id))
-	ship.get_node("TextureButton").texture_normal = load("res://Graphics/Ships/Ship%s.png" % id)
-	ship.get_node("TextureButton").texture_click_mask = load("res://Graphics/Ships/Ship%sCM.png" % id)
+	ship.get_node("TextureButton").texture_normal = load("res://Graphics/Ships/Ship%s top down.png" % id)
 	ship.position = game.ship_data[id].initial_position / 1.8
-	ship.get_node("TextureButton").scale *= 1000.0 / ship.get_node("TextureButton").texture_normal.get_width()
 	target_ship_positions.append(ship.position)
 	$Ships/Battlefield.add_child(ship)
 	ship_nodes.append(ship)
 
 func refresh():
+	for ship in ship_nodes:
+		ship.queue_free()
+	ship_nodes.clear()
+	target_ship_positions.clear()
+	for i in len(game.ship_data):
+		add_ship_node(i)
 	set_process(true)
 	$ShipStats/Label.text = tr("CLICK_SHIP_TO_VIEW_DETAILS")
 	$ShipStats/ShipDetails/XP/XPGained.text = ""

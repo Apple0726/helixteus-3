@@ -143,6 +143,8 @@ var enemy_attack_rate:float = 1.0
 var enemy_projectile_size:float = 1.0
 var treasure_mult:float = 1.0
 var debris_amount:float
+var possible_metal_spawns = []
+var rarity_exponent:float = 1.0
 
 func _ready():
 	$Ash.tile_set = ResourceFiles.soil_tile_set
@@ -456,6 +458,15 @@ func set_avg_dmg():
 	$UI2/CaveInfo/AvgDmg["theme_override_colors/font_color"] = color
 	
 func generate_cave(first_floor:bool, going_up:bool):
+	possible_metal_spawns.clear()
+	for met in game.met_info:
+		if pow(game.met_info[met].rarity, 1.4) * 3.0 < difficulty:
+			possible_metal_spawns.append(met)
+	rarity_exponent = remap(cave_floor, 8, 32, 0.9, 0.6)
+	if is_aurora_cave:
+		rarity_exponent = pow(rarity_exponent, 0.9)
+	if volcano_mult > 1 and not artificial_volcano:
+		rarity_exponent = pow(rarity_exponent, 0.9)
 	if enhancements.has("armor_12") and HP < total_HP * 0.2:
 		HP = total_HP * 0.2
 	set_avg_dmg()
@@ -599,33 +610,16 @@ func generate_cave(first_floor:bool, going_up:bool):
 			else:
 				walls.append(Vector2i(i, j))
 				var rand:float = rng.randf()
-				var rand2:float = rng.randf()
 				var ch = 0.02 * pow(pow(2, min(12, cave_floor) - 1) / 3.0, 0.4)
 				if rand < ch:
-					var met_spawned:String = "lead"
-					var base_rarity:float = 1.0
-					for met in game.met_info:
-						var rarity:float = game.met_info[met].rarity
-						if pow(rarity, 1.5) * 3.0 > difficulty:
-							continue
-						if cave_floor >= 8:
-							rarity = pow(rarity, remap(cave_floor, 8, 32, 0.9, 0.6))
-						if is_aurora_cave:
-							rarity = pow(rarity, 0.9)
-						if volcano_mult > 1 and not artificial_volcano:
-							rarity = pow(rarity, 0.9)
-						if rand2 < 1 / (rarity + 1):
-							base_rarity = game.met_info[met].rarity
-							met_spawned = met
-					if met_spawned != "":
-						var deposit = deposit_scene.instantiate()
-						deposit.rsrc_texture = game.metal_textures[met_spawned]
-						deposit.rsrc_name = met_spawned
-						deposit.amount = int(3.0 * rng.randf_range(1.0, 1.5) * min(5.0, pow(difficulty, 0.3)))
-						add_child(deposit)
-						deposit.position = cave_wall.map_to_local(Vector2(i, j)) - Vector2(100, 100)
-						deposit.modulate *= log(base_rarity) / 6.5 + 1.0
-						deposits[str(tile_id)] = deposit
+					var met_spawned = possible_metal_spawns.pick_random()
+					var deposit = deposit_scene.instantiate()
+					deposit.rsrc_texture = game.metal_textures[met_spawned]
+					deposit.rsrc_name = met_spawned
+					deposit.amount = int(3.0 * rng.randf_range(1.0, 1.5) * min(5.0, pow(difficulty, 0.3)))
+					add_child(deposit)
+					deposit.position = cave_wall.map_to_local(Vector2(i, j)) - Vector2(100, 100)
+					deposits[str(tile_id)] = deposit
 			if volcano_mult > 1.0:
 				var lava_level = lava_noise.get_noise_2d(i * 10.0, j * 10.0)
 				if lava_level > max(remap(cave_floor, 1, 16, 0.8, 0.0), 0.0) * clamp(remap(volcano_mult, 8, 14, 1.0, 0.3), 0.0, 1.0):
@@ -928,7 +922,7 @@ func on_map_exited(_body):
 func generate_treasure(tier:int, rng:RandomNumberGenerator):
 	var contents = {	Item.MONEY:round(3000.0 * rng.randf_range(1.0, 1.3) * pow(tier, 3.0) * difficulty * exp(cave_floor / 6.0)),
 						Item.MINERALS:round(200.0 * rng.randf_range(1.0, 1.5) * pow(tier, 3.0) * difficulty * exp(cave_floor / 9.0)),
-						Item.HELIX_CORE1:int(0.05 * rng.randf_range(1.0, 3.0) * pow(tier, 1.8) * pow(difficulty, 0.7))}
+						Item.HELIX_CORE1:int(0.05 * rng.randf_range(1.0, 3.0) * pow(tier, 1.8) * sqrt(difficulty))}
 	if contents[Item.HELIX_CORE1] > 64:
 		contents[Item.HELIX_CORE2] = int(contents[Item.HELIX_CORE1] / 64.0)
 		contents[Item.HELIX_CORE1] %= 64
@@ -946,19 +940,12 @@ func generate_treasure(tier:int, rng:RandomNumberGenerator):
 					contents.erase(Item.HELIX_CORE3)
 	if contents.has(Item.HELIX_CORE1) and contents[Item.HELIX_CORE1] == 0:
 		contents.erase(Item.HELIX_CORE1)
-	for met in game.met_info:
-		var met_dict = game.met_info[met]
-		var rarity = met_dict.rarity
-		if pow(rarity, 1.5) * 3.0 > difficulty:
+	while rng.randf() < 0.5:
+		var metal_spawned = possible_metal_spawns.pick_random()
+		if metal_spawned in contents.keys():
 			continue
-		if cave_floor >= 8:
-			rarity = pow(rarity, remap(cave_floor, 8, 32, 0.9, 0.6))
-		if is_aurora_cave:
-			rarity = pow(rarity, 0.9)
-		if volcano_mult > 1 and not artificial_volcano:
-			rarity = pow(rarity, 0.9)
-		if rng.randf() < 1 / (rarity + 1):
-			contents[met] = Helper.clever_round(60.0 * rng.randf_range(0.5, 1.0) / rarity * pow(tier, 2.0) * difficulty * exp(cave_floor / 10.0) * treasure_mult * game.u_i.planck)
+		var rarity = game.met_info[metal_spawned].rarity
+		contents[metal_spawned] = Helper.clever_round(60.0 * rng.randf_range(0.5, 1.0) / pow(rarity, rarity_exponent) * pow(tier, 2.0) * difficulty * exp(cave_floor / 10.0) * treasure_mult * game.u_i.planck)
 	return contents
 
 func connect_points(tile:Vector2, bidir:bool = false):
@@ -1583,17 +1570,13 @@ func mine_debris_complete(tile_id:int):
 		debris_exp += 0.2
 		if difficulty > 1000.0 and randf() < 0.4 + debris.aurora_intensity / 10.0:
 			rsrc["quillite"] = Helper.clever_round(randf_range(0.1, 0.12) * difficulty * debris.aurora_intensity)
-	for met in game.met_info:
-		var met_dict = game.met_info[met]
-		var rarity = met_dict.rarity
-		if pow(rarity, 1.5) * 3.0 > difficulty:
+	
+	while randf() < 0.5:
+		var metal_spawned = possible_metal_spawns.pick_random()
+		if metal_spawned in rsrc.keys():
 			continue
-		if cave_floor >= 8:
-			rarity = pow(rarity, remap(cave_floor, 8, 32, 0.9, 0.6))
-		if debris.aurora_intensity > 0.0:
-			rarity = pow(rarity, remap(debris.aurora_intensity, 1.0, 8.0, 0.95, 0.6))
-		if rarity < difficulty * 2.0 and randf() < 1 / (rarity + 1):
-			rsrc[met] = Helper.clever_round(10.0 * randf_range(0.2, 1.0) / rarity * difficulty * exp(cave_floor / 10.0) * debris_volcano_mult)
+		var rarity = game.met_info[metal_spawned].rarity
+		rsrc[metal_spawned] = Helper.clever_round(10.0 * randf_range(0.2, 1.0) / pow(rarity, rarity_exponent) * difficulty * exp(cave_floor / 10.0) * debris_volcano_mult)
 	for r in rsrc.keys():
 		if r in ["stone", Item.MINERALS]:
 			rsrc[r] = round(rsrc[r] * pow(debris.scale.x, debris_exp))
@@ -1656,7 +1639,7 @@ func mine_wall_complete(tile_pos:Vector2, tile_id:int):
 			rsrc[mat] = amount
 	if deposits.has(st):
 		var deposit = deposits[st]
-		rsrc[deposit.rsrc_name] = Helper.clever_round(3.0 * deposit.amount * randf_range(0.95, 1.05) * difficulty / game.met_info[deposit.rsrc_name].rarity)
+		rsrc[deposit.rsrc_name] = Helper.clever_round(3.0 * deposit.amount * randf_range(0.95, 1.05) * difficulty / pow(game.met_info[deposit.rsrc_name].rarity, rarity_exponent))
 		deposit.queue_free()
 		deposits.erase(st)
 	var remainder:float = filter_and_add(rsrc)

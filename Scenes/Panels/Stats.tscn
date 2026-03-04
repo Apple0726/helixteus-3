@@ -200,6 +200,7 @@ layout_mode = 2
 button_text = "USER_INPUT"
 
 [node name="Panel" type="Panel" parent="Panel/Statistics" unique_id=1367964522]
+visible = false
 layout_mode = 1
 anchors_preset = 11
 anchor_left = 1.0

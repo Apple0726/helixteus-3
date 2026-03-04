@@ -58,8 +58,8 @@ func _on_Atom_pressed(_name:String):
 	reset_poses(_name, reactions[_name].Z)
 	energy_cost = reactions[_name].energy_cost
 	difficulty = reactions[_name].difficulty
+	_on_HSlider_value_changed($Panel/Control/HSlider.value)
 	$Panel.show()
-	refresh()
 
 func refresh():
 	set_process(true)
@@ -132,7 +132,7 @@ func get_max_slider_value():
 		var max_value2 = game.particles.subatomic_particles / Z
 		if max_value2 < max_value or max_value == 0.0:
 			max_value = max_value2
-	return min(game.energy * au_mult * game.u_i.charge / energy_cost * path_2_value, max_value)
+	return min(game.energy * 0.999 * au_mult * game.u_i.charge / energy_cost * path_2_value, max_value)
 
 func reset_poses(_name:String, _Z:int):
 	resource_selected = _name
@@ -155,8 +155,6 @@ func _on_Switch_pressed(refresh:bool = true):
 		_on_HSlider_value_changed($Panel/Control/HSlider.value)
 
 func _on_HSlider_value_changed(value):
-	#rsrc_nodes_from = Helper.put_rsrc($Panel/Control2/ScrollContainer/From, 32, atom_dict, true, atom_to_p)
-	#rsrc_nodes_to = Helper.put_rsrc($Panel/Control2/To, 32, p_costs, true, not atom_to_p)
 	refresh()
 
 func _on_Transform_pressed():
