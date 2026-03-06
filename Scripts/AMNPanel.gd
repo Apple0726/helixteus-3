@@ -59,23 +59,6 @@ func show_recipe_tooltip(rsrc:String):
 func on_rsrc_pressed(rsrc:String):
 	reset_poses(rsrc)
 	resource_selected = rsrc
-	energy_cost = reactions[rsrc].energy_cost
-	difficulty = reactions[rsrc].difficulty
-	ratios.clear()
-	atom_costs.clear()
-	if rsrc == "stone":
-		for atom in Data.molar_mass:
-			ratios[atom] = 1000.0 / Data.molar_mass[atom]
-		for el in ratios:
-			if game.stone.has(el):
-				atom_costs[el] = 0
-		$Panel/Control/Switch.hide()
-		_on_Switch_pressed()
-	else:
-		for atom in reactions[rsrc].atoms:
-			ratios[atom] = 1000.0 / (Data.molar_mass[atom] * reactions[rsrc].atoms[atom])
-			atom_costs[atom] = 0.0
-		$Panel/Control/Switch.show()
 	_on_HSlider_value_changed($Panel/Control/HSlider.value)
 	$Panel.show()
 
@@ -121,9 +104,38 @@ func refresh():
 			$ScrollContainer/GridContainer.get_node(reaction_name).modulate = Color.WHITE
 	if resource_selected == "":
 		return
+	energy_cost = reactions[resource_selected].energy_cost
+	difficulty = reactions[resource_selected].difficulty
+	ratios.clear()
+	atom_costs.clear()
+	if resource_selected == "stone":
+		for atom in Data.molar_mass:
+			ratios[atom] = 1000.0 / Data.molar_mass[atom]
+		for el in ratios:
+			if game.stone.has(el):
+				atom_costs[el] = 0
+		$Panel/Control/Switch.hide()
+		if atom_to_rsrc:
+			_on_Switch_pressed()
+	else:
+		for atom in reactions[resource_selected].atoms:
+			ratios[atom] = 1000.0 / (Data.molar_mass[atom] * reactions[resource_selected].atoms[atom])
+			atom_costs[atom] = 0.0
+		$Panel/Control/Switch.show()
 	var max_slider_value = get_max_slider_value()
-	print("A")
 	var rsrc_value = $Panel/Control/HSlider.value * max_slider_value
+	var MM_dict = {}
+	if resource_selected == "stone":
+		var sum = Helper.get_sum_of_dict(game.stone)
+		for atom in atom_costs:
+			if game.stone.has(atom):
+				atom_costs[atom] = rsrc_value * ratios[atom] * game.stone[atom] / sum if sum != 0 else 0
+	else:
+		for atom in atom_costs:
+			atom_costs[atom] = rsrc_value * ratios[atom]
+	MM_dict[resource_selected] = rsrc_value
+	rsrc_nodes_from = Helper.put_rsrc($Panel/Control2/ScrollContainer/From, 40, atom_costs, true, atom_to_rsrc)
+	rsrc_nodes_to = Helper.put_rsrc($Panel/Control2/To, 40, MM_dict, true, not atom_to_rsrc)
 	$Panel/Control/EnergyCostText.text = Helper.format_num(round(reactions[resource_selected].energy_cost * rsrc_value / au_mult / path_2_value)) + "  [img]Graphics/Icons/help.png[/img]"
 	if au_mult > 1:
 		$Panel/Control/EnergyCostText.help_text = ("[aurora au_int=%s]" % au_int) + tr("MORE_ENERGY_EFFICIENT") % Helper.clever_round(au_mult)
@@ -181,19 +193,6 @@ func _on_Switch_pressed(refresh:bool = true):
 		_on_HSlider_value_changed($Panel/Control/HSlider.value)
 
 func _on_HSlider_value_changed(value): # value is always between 0.0 and 1.0
-	var rsrc_value = value * get_max_slider_value()
-	var MM_dict = {}
-	if resource_selected == "stone":
-		var sum = Helper.get_sum_of_dict(game.stone)
-		for atom in atom_costs:
-			if game.stone.has(atom):
-				atom_costs[atom] = rsrc_value * ratios[atom] * game.stone[atom] / sum if sum != 0 else 0
-	else:
-		for atom in atom_costs:
-			atom_costs[atom] = rsrc_value * ratios[atom]
-	MM_dict[resource_selected] = rsrc_value
-	rsrc_nodes_from = Helper.put_rsrc($Panel/Control2/ScrollContainer/From, 40, atom_costs, true, atom_to_rsrc)
-	rsrc_nodes_to = Helper.put_rsrc($Panel/Control2/To, 40, MM_dict, true, not atom_to_rsrc)
 	refresh()
 
 func _on_Transform_pressed():

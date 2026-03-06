@@ -65,6 +65,7 @@ vertical_alignment = 1
 
 [node name="Timer" type="Timer" parent="." unique_id=961271618]
 one_shot = true
+autostart = true
 
 [node name="HBoxContainer" type="HBoxContainer" parent="." unique_id=2031375352]
 layout_mode = 0

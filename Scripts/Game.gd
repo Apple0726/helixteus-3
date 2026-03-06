@@ -1663,7 +1663,7 @@ func add_universe():
 	if Settings.enable_shaders:
 		$StarfieldUniverse.material.set_shader_parameter("position", u_i.view.pos)
 		set_starfield_color($StarfieldUniverse.material, starfield_color_param)
-		$StarfieldUniverse.modulate.a = 1.0
+		$StarfieldUniverse.show()
 		if starfield_universe_tween:
 			starfield_universe_tween.kill()
 		starfield_universe_tween = create_tween()
@@ -1849,7 +1849,7 @@ func remove_dimension():
 	view.dragged = true
 
 func remove_universe():
-	$StarfieldUniverse.modulate.a = 0.0
+	$StarfieldUniverse.hide()
 	view.remove_obj("universe")
 
 func remove_cluster():
@@ -3686,6 +3686,10 @@ func _input(event):
 		$Tooltips/CtrlShift/Ctrl.visible = Input.is_action_pressed("ctrl")
 		$Tooltips/CtrlShift/Shift.visible = Input.is_action_pressed("shift")
 		$Tooltips/CtrlShift/Alt.visible = Input.is_action_pressed("alt")
+		#F3 to toggle overlay
+		if Input.is_action_just_pressed("toggle") and is_instance_valid(overlay):
+				overlay.toggle_btn.button_pressed = not overlay.toggle_btn.button_pressed
+			
 	elif event is InputEventMouseButton and not stats_global.is_empty() and c_u != -1:
 		if Input.is_action_just_pressed("left_click"):
 			stats_global.clicks += 1
@@ -3737,14 +3741,7 @@ func _input(event):
 				fade_out_panel(active_panel)
 			active_panel = null
 		hide_tooltip()
-	
-	#F3 to toggle overlay
-	if Input.is_action_just_pressed("toggle"):
-		if is_instance_valid(overlay) and not overlay.visible:
-			overlay.toggle_btn.button_pressed = not overlay.toggle_btn.button_pressed
-		elif c_v == "system" and not element_overlay.visible:
-			element_overlay.toggle_btn.button_pressed = not element_overlay.toggle_btn.button_pressed
-		
+
 	#J to hide help
 	if Input.is_action_just_released("J") and help_str != "":
 		if help.has(help_str):
@@ -4585,3 +4582,19 @@ func add_right_click_menu(items:Array, on_close_no_action_callable = null):
 	hide_tooltip()
 	$Panels/Control.add_child(right_click_menu)
 	return right_click_menu
+
+
+func _on_probe_timer_timeout() -> void:
+	var curr_time = Time.get_unix_time_from_system()
+	for i in len(probe_data):
+		var probe = probe_data[i]
+		if not probe or not probe.has("start_date"):
+			continue
+		var start_date = probe.start_date
+		var length = probe.explore_length
+		var progress = (curr_time - start_date) / float(length)
+		if progress >= 1:
+			if probe.tier == 0:
+				u_i.cluster_data[probe.obj_to_discover].visible = true
+				popup(tr("CLUSTER_DISCOVERED_BY_PROBE"), 3)
+			probe_data[i] = null

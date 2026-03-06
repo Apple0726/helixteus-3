@@ -73,7 +73,6 @@ func calc_prod_per_sec():
 				for p in tile_p.produce:
 					production[p] = tile_p.produce[p] * ((game.tile_data[tile].get("aurora", 0.0) + 1.0) if p in game.met_info.keys() else 1.0) + production.get(p, 0.0)
 				hbox.get_child(seed_to_index[tile_p.seed]).get_node("Border").show()
-				print("A")
 	Helper.put_rsrc($HBoxContainer, 32, production)
 	$ProductionPerSec.visible = $HBoxContainer.get_child_count() != 0
 	calculating = false

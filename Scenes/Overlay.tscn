@@ -15,13 +15,6 @@ load_path = "res://.godot/imported/Border.png-569a3cd703e420d6f1c10f433850073a.c
 [sub_resource type="GradientTexture2D" id="1"]
 gradient = ExtResource("3")
 
-[sub_resource type="InputEventKey" id="InputEventKey_t2q5b"]
-device = -1
-keycode = 4194334
-
-[sub_resource type="Shortcut" id="Shortcut_ht0n8"]
-events = [SubResource("InputEventKey_t2q5b")]
-
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_qywem"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_jhuhg"]
@@ -143,8 +136,6 @@ alignment = 1
 
 [node name="CheckBox" type="CheckBox" parent="HBoxContainer" unique_id=1024998791]
 layout_mode = 2
-shortcut = SubResource("Shortcut_ht0n8")
-shortcut_in_tooltip = false
 
 [node name="HSlider" type="HSlider" parent="HBoxContainer" unique_id=115093138]
 custom_minimum_size = Vector2(50, 0)

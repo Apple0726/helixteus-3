@@ -71,11 +71,11 @@ func update_info():
 			$Panel/VBox/GalaxyInfo.visible = false
 			costs["stone"] = PI * 100
 			if bldg == Building.MINERAL_EXTRACTOR:
-				costs["mythril"] = 1 / 240000.0
+				costs["mythril"] = 3.0e-6
 			elif bldg in [Building.MINERAL_SILO, Building.BATTERY, Building.POWER_PLANT]:
-				costs["mythril"] = 1 / 300000.0
+				costs["mythril"] = 2.4e-6
 			elif bldg == Building.RESEARCH_LAB:
-				costs["mythril"] = 1 / 120000.0
+				costs["mythril"] = 1.0e-5
 			if costs.has("money"):
 				costs.money *= 100.0
 			if costs.has("energy"):

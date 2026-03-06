@@ -31,7 +31,7 @@ func refresh():
 		_on_probes_pressed()
 
 func _on_Timer_timeout():
-	if not visible:
+	if not visible or tab != PROBES:
 		return
 	var curr_time = Time.get_unix_time_from_system()
 	var refresh:bool = false
@@ -46,13 +46,7 @@ func _on_Timer_timeout():
 		var progress = (curr_time - start_date) / float(length)
 		bar.get_node("TimeString").text = Helper.time_to_str(length - curr_time + start_date)
 		bar.get_node("Bar").value = progress
-		if progress >= 1:
-			if probe.tier == 0:
-				game.u_i.cluster_data[probe.obj_to_discover].visible = true
-				game.popup(tr("CLUSTER_DISCOVERED_BY_PROBE"), 3)
-				refresh = true
-			game.probe_data[i] = null
-	if refresh:
+	if tab == PROBES:
 		refresh()
 	await get_tree().process_frame
 	$Timer.start()
@@ -232,11 +226,6 @@ func _on_probes_pressed():
 			probe.get_node("StatusLabel").text = tr("ON_STANDBY")
 			
 	#$Probes/Label.text = "%s (%s / %s)" % [tr("PROBES"), probe_num, 500]
-	for probe in game.probe_data:
-		if probe and probe.has("start_date"):
-			$Timer.start()
-			_on_Timer_timeout()
-			break
 
 func probe_go_to(probe_tier:int):
 	_on_close_button_pressed()
