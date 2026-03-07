@@ -1,14 +1,11 @@
 extends "Panel.gd"
 
-var spaceport_tier:int
-
 var target_ship_positions:Array
 var ship_nodes = []
 var selected_ship_id:int = -1
 
 func _ready():
 	$ShipStats/ShipDetails.hide()
-	$ShipStats/Label.show()
 	for i in len(game.ship_data):
 		add_ship_node(i)
 	set_polygon($GUI.size, $GUI.position)
@@ -45,31 +42,19 @@ func refresh():
 	for i in len(game.ship_data):
 		add_ship_node(i)
 	set_process(true)
-	$ShipStats/Label.text = tr("CLICK_SHIP_TO_VIEW_DETAILS")
 	$ShipStats/ShipDetails/XP/XPGained.text = ""
 	if selected_ship_id != -1:
 		show_ship_stats(selected_ship_id)
-	#$Drives.refresh()
-	#if game.ships_travel_data.travel_view != "-":
-		#$SpaceportTimer.stop()
-		#spaceport_tier = -1
-		#$Panel/TravelETA["theme_override_colors/font_color"] = Color.WHITE
-		#$Battlefield/HBoxContainer/DriveButton.modulate.a = 1.0
-		#$Battlefield/HBoxContainer/DriveButton.disabled = false
-	#else:
-		#$Battlefield/HBoxContainer/DriveButton.disabled = true
-		#$Battlefield/HBoxContainer/DriveButton.modulate.a = 0.3
-		#if game.autocollect.has("ship_XP"):
-			#$Panel/TravelETA["theme_override_colors/font_color"] = Color.GREEN_YELLOW
-			#$Panel/TravelETA.text = tr("SHIPS_BENEFITING_FROM_SPACEPORT")
-			#spaceport_tier = game.autocollect.ship_XP
-			#if $SpaceportTimer.is_stopped():
-				#$SpaceportTimer.start(4.0 / spaceport_tier)
-		#else:
-			#$SpaceportTimer.stop()
-			#spaceport_tier = -1
-			#$Panel/TravelETA["theme_override_colors/font_color"] = Color.WHITE
-			#$Panel/TravelETA.text = ""
+	if game.ships_travel_data.travel_view != "-":
+		$SpaceportTimer.stop()
+	else:
+		if game.autocollect.has("passive_xp_tier"):
+			$Label.text = tr("SHIPS_BENEFITING_FROM_SPACEPORT")
+			if $SpaceportTimer.is_stopped():
+				$SpaceportTimer.start(4.0 / game.autocollect.passive_xp_tier)
+		else:
+			$Label.text = tr("CLICK_SHIP_TO_VIEW_DETAILS")
+			$SpaceportTimer.stop()
 
 func _process(delta):
 	if selected_ship_id != -1:
@@ -142,21 +127,18 @@ var bar_colors = {
 }
 
 func _on_SpaceportTimer_timeout():
-	var xp_mult = Helper.get_spaceport_xp_mult(spaceport_tier)
+	if not game.autocollect.has("passive_xp_tier"):
+		game.HUD.set_ship_btn_shader(false)
+		$SpaceportTimer.stop()
+		return
+	var xp_mult = Helper.get_spaceport_xp_mult(game.autocollect.passive_xp_tier)
 	for i in len(game.ship_data):
-		Helper.add_ship_XP(i, xp_mult * pow(1.15, game.u_i.lv) * game.u_i.time_speed)
-		if visible:
-			get_node("ShipDetails/XP/TextureProgress2" % (i+1)).value = 0
-			get_node("ShipDetails/Lv" % (i+1)).text = "%s %s" % [tr("LV"), game.ship_data[i].lv]
-			get_node("ShipDetails/XP/TextureProgressBar" % (i+1)).max_value = game.ship_data[i].XP_to_lv
-			get_node("ShipDetails/XP/TextureProgressBar" % (i+1)).modulate = Color.WHITE
-			var tween = create_tween()
-			tween.tween_property(get_node("ShipDetails/XP/TextureProgressBar" % (i+1)), "modulate", Color(0.92, 0.63, 0.2), 1.0)
-			get_node("ShipDetails/Stats/HP" % (i+1)).text = Helper.format_num(game.ship_data[i].HP * game.ship_data[i].HP_mult)
-			get_node("ShipDetails/Stats/Atk" % (i+1)).text = Helper.format_num(game.ship_data[i].atk * game.ship_data[i].atk_mult)
-			get_node("ShipDetails/Stats/Def" % (i+1)).text = Helper.format_num(game.ship_data[i].def * game.ship_data[i].def_mult)
-			get_node("ShipDetails/Stats/Acc" % (i+1)).text = Helper.format_num(game.ship_data[i].acc * game.ship_data[i].acc_mult)
-			get_node("ShipDetails/Stats/Eva" % (i+1)).text = Helper.format_num(game.ship_data[i].eva * game.ship_data[i].eva_mult)
+		Helper.add_ship_XP(i, xp_mult * game.autocollect.passive_xp_mult * game.u_i.time_speed)
+	if selected_ship_id != -1:
+		show_ship_stats(selected_ship_id)
+		$ShipStats/ShipDetails/XP/TextureProgressBar.modulate = Color.WHITE
+		var tween = create_tween()
+		tween.tween_property($ShipStats/ShipDetails/XP/TextureProgressBar, "modulate", Color(0.92, 0.63, 0.2), 1.0)
 
 var dragging_ship_id:int = -1
 var ship_mouse_offset:Vector2
@@ -189,7 +171,6 @@ func _on_ship_mouse_exited(ship_id: int):
 	ship_nodes[ship_id].get_node("TextureButton").material.set_shader_parameter("highlight_strength", 0.0)
 	if game.item_to_use.id != -1 and Item.data[game.item_to_use.id].type == Item.Type.HELIX_CORE:
 		$ShipStats/ShipDetails.hide()
-		$ShipStats/Label.show()
 	
 
 func _on_ship_button_down(ship_id: int) -> void:
@@ -218,8 +199,8 @@ func _on_ship_button_up(ship_id: int) -> void:
 
 func show_ship_stats(ship_id: int):
 	$ShipStats/ShipDetails.show()
-	$ShipStats/Label.hide()
 	var ship_info = game.ship_data[ship_id]
+	$ShipStats/ShipDetails/LevelUp.visible = ship_info.has("leveled_up")
 	$ShipStats/ShipDetails/Label.text = "%s %s %s" % [tr("LEVEL"), ship_info.lv, tr("%s_SHIP" % ShipClass.names[ship_info.ship_class].to_upper())]
 	if game.item_to_use.id == -1:
 		$ShipStats/ShipDetails/Respec.show()
@@ -254,11 +235,17 @@ func _on_weaponIcon_mouse_entered(weapon: String) -> void:
 		game.show_tooltip(tr(weapon.to_upper() + "_DESC"))
 
 
-func _on_weaponIcon_mouse_exited() -> void:
-	game.hide_tooltip()
-
-
 func _on_respec_pressed() -> void:
 	_on_close_button_pressed()
 	if selected_ship_id != -1:
 		game.switch_view("ship_customize_screen", {"ship_id":selected_ship_id, "respeccing":true})
+
+
+func _on_level_up_mouse_entered() -> void:
+	game.show_tooltip(tr("SHIP_LEVELED_UP"))
+
+
+func _on_level_up_pressed() -> void:
+	_on_close_button_pressed()
+	if selected_ship_id != -1:
+		game.switch_view("ship_customize_screen", {"ship_id":selected_ship_id})

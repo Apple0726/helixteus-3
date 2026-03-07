@@ -140,7 +140,7 @@ visible = false
 layout_mode = 1
 anchors_preset = 0
 offset_right = 976.0
-offset_bottom = 440.0
+offset_bottom = 412.0
 
 [node name="HBox" type="HBoxContainer" parent="Panel/Statistics" unique_id=2000103162]
 visible = false

@@ -102,12 +102,6 @@ func _on_Send_pressed(send_all:bool = false):
 func _on_HSlider_value_changed(value):
 	refresh_energy()
 
-func _on_Points_mouse_entered():
-	game.show_tooltip(tr("TP_POINTS_INFO"), {"imgs": [preload("res://Graphics/Formulas/PPs.png")], "size": 80})
-
-func _on_mouse_exited():
-	game.hide_tooltip()
-
 
 func _on_SendAll_pressed():
 	refresh_energy()

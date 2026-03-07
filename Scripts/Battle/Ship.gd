@@ -339,6 +339,7 @@ func fire_laser(angle: float, add_signal: bool = false):
 	laser.position = position
 	laser.fade_delay = 0.2 if battle_scene.animations_sped_up else 0.5
 	laser.status_effects = {Battle.StatusEffect.STUN: Data.battle_weapon_stats.laser.status_effects[Battle.StatusEffect.STUN][laser_levels[PATH_2] - 1]}
+	laser.pierce = Data.battle_weapon_stats.laser.pierce[laser_levels[PATH_2] - 1]
 	battle_scene.add_child(laser)
 	if add_signal and fires_remaining <= 0:
 		laser.tree_exited.connect(ending_turn)

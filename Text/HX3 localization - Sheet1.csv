@@ -1681,7 +1681,8 @@ PASSIVE_11,Gets increasingly powerful buffs as its HP gets lower.,,,,Mit Sinken 
 PASSIVE_12,"Takes 25% less damage from physical attacks (bullet, bomb etc., but not laser, light etc.)",,,,"25% weniger Schaden von physischen Angriffen ( Kugeln, Bomben, etc., nicht Laser, Licht, etc.)",,,,"25%-kal kevesebbet sebzik a fizikai támadások (pl. lövés, bomba... de nem lézer, fény...)",,,,
 DEFEAT,Defeat,,,,Niederlage,,,,Veszteség,,,,
 ISP_SC,Improved spaceport,,,,Verbesserter Weltraumhafen,,,,Felújított űrkikötő,,,,
-ISP_DESC,Spaceports also give passive XP to ships on the planet.,,,,Weltraumhäfen verteilen auch automatisch EXP an Schiffe im Orbit des Planeten.,,,,Az űrkikötők passzív XP-t adnak a bolygón lévő hajóknak is.,,,,
+ISP_DESC,"Spaceports also give passive XP to ships on the planet.
+Passive XP gain is proportional to the difficulty of the star system the spaceport is in.",,,,,,,,,,,,
 WEAPON_POINT,Weapon point,,,,,,,,,,,,
 WEAPON_POINTS,Weapon points,,,,,,,,,,,,
 BULLET_1_1_DESC,Fires 3 bullets instead of 2.,,,,Feuert 3 Kugeln anstatt 2.,,,,Hármat lö kettő helyett.,,,,

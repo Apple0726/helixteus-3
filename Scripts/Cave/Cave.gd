@@ -460,7 +460,7 @@ func set_avg_dmg():
 func generate_cave(first_floor:bool, going_up:bool):
 	possible_metal_spawns.clear()
 	for met in game.met_info:
-		if pow(game.met_info[met].rarity, 1.4) * 3.0 < difficulty:
+		if met == "lead" or pow(game.met_info[met].rarity, 1.4) * 3.0 < difficulty:
 			possible_metal_spawns.append(met)
 	rarity_exponent = remap(cave_floor, 8, 32, 0.9, 0.5)
 	if is_aurora_cave:
@@ -922,7 +922,7 @@ func on_map_exited(_body):
 func generate_treasure(tier:int, rng:RandomNumberGenerator):
 	var contents = {	Item.MONEY:round(3000.0 * rng.randf_range(1.0, 1.3) * pow(tier, 3.0) * difficulty * exp(cave_floor / 6.0)),
 						Item.MINERALS:round(200.0 * rng.randf_range(1.0, 1.5) * pow(tier, 3.0) * difficulty * exp(cave_floor / 9.0)),
-						Item.HELIX_CORE1:int(0.05 * rng.randf_range(1.0, 3.0) * pow(tier, 1.8) * sqrt(difficulty))}
+						Item.HELIX_CORE1:int(0.1 * rng.randf_range(1.0, 3.0) * pow(tier, 1.8) * sqrt(difficulty))}
 	if contents[Item.HELIX_CORE1] > 64:
 		contents[Item.HELIX_CORE2] = int(contents[Item.HELIX_CORE1] / 64.0)
 		contents[Item.HELIX_CORE1] %= 64

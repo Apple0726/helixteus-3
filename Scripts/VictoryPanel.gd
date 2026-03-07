@@ -10,7 +10,7 @@ func _ready():
 		else:
 			get_node("Ship%s" % (i + 1)).visible = true
 			get_node("Ship%s/Label" % (i + 1)).text = "%s %s" % [tr("LV"), battle_scene.ship_data[i].lv]
-			get_node("Ship%s/XP/Label" % (i + 1)).text = "+ %s" % [round(battle_scene.XP_earned)]
+			get_node("Ship%s/XP/Label" % (i + 1)).text = "+ %s" % [Helper.format_num(round(battle_scene.XP_earned))]
 			get_node("Ship%s/XP/TextureProgressGained" % (i + 1)).max_value = battle_scene.ship_data[i].XP_to_lv
 			get_node("Ship%s/XP/TextureProgressGained" % (i + 1)).value = battle_scene.ship_data[i].XP
 			get_node("Ship%s/XP/TextureProgressBar" % (i + 1)).max_value = battle_scene.ship_data[i].XP_to_lv

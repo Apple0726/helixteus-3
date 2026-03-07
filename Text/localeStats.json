@@ -1,8 +1,8 @@
 {
     "en": {
         "lines": 1631,
-        "words": 11489,
-        "chars": 70434
+        "words": 11505,
+        "chars": 70524
     },
     "fr": {
         "lines": 543,
@@ -20,9 +20,9 @@
         "chars": 18785
     },
     "de": {
-        "lines": 1595,
-        "words": 10000,
-        "chars": 73674
+        "lines": 1594,
+        "words": 9989,
+        "chars": 73596
     },
     "es": {
         "lines": 1297,
@@ -40,9 +40,9 @@
         "chars": 3243
     },
     "hu": {
-        "lines": 1534,
-        "words": 8204,
-        "chars": 60498
+        "lines": 1533,
+        "words": 8194,
+        "chars": 60439
     },
     "ja": {
         "lines": 1241,

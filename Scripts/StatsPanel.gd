@@ -52,6 +52,7 @@ func _on_Statistics_pressed():
 	$Panel/Statistics.visible = true
 
 func _on_General_pressed():
+	$Panel/Statistics/Panel.show()
 	curr_stat_tab = "_on_General_pressed"
 	$Panel/Statistics/Panel/ScrollContainer2.visible = false
 	$Panel/Statistics/Panel/Label.text = "%s: %s\n%s: %s\n%s: %s\n%s: %s\n%s: %s\n%s: %s\n%s: %s\n%s: %s\n%s: %s\n%s: %s\n%s: %s" % [
@@ -69,6 +70,7 @@ func _on_General_pressed():
 	]
 
 func _on_Records_pressed():
+	$Panel/Statistics/Panel.show()
 	curr_stat_tab = "_on_Records_pressed"
 	$Panel/Statistics/Panel/ScrollContainer2.visible = false
 	$Panel/Statistics/Panel/Label.text = "%s: %s km\n%s: %s %s\n%s: %s K\n%s: %s" % [
@@ -79,6 +81,7 @@ func _on_Records_pressed():
 	]
 
 func _on_StarClasses_pressed():
+	$Panel/Statistics/Panel.show()
 	$Panel/Statistics/Panel/ScrollContainer2/Control/Zoom.visible = true
 	$Panel/Statistics/Panel/ScrollContainer2/Control/ZoomLabel.visible = true
 	curr_stat_tab = "_on_StarClasses_pressed"
@@ -135,6 +138,7 @@ func on_bar_exited():
 
 
 func _on_StarTypes_pressed():
+	$Panel/Statistics/Panel.show()
 	$Panel/Statistics/Panel/ScrollContainer2/Control/Zoom.visible = false
 	$Panel/Statistics/Panel/ScrollContainer2/Control/ZoomLabel.visible = false
 	curr_stat_tab = "_on_StarTypes_pressed"
@@ -201,6 +205,7 @@ func _on_Zoom_value_changed(value):
 
 
 func _on_UserInput_pressed():
+	$Panel/Statistics/Panel.show()
 	curr_stat_tab = "_on_UserInput_pressed"
 	$Panel/Statistics/Panel/ScrollContainer2.visible = false
 	$Panel/Statistics/Panel/Label.text = "%s: %s\n%s: %s\n%s: %s\n%s: %s %s\n%s: %s" % [

@@ -23,15 +23,15 @@ func _on_area_entered(area: Area2D) -> void:
 		"mass":mass,
 	}
 	if crit_hit_mult != 1.0:
-		weapon_data.crit_hit_mult = crit_hit_mult
+		weapon_data["crit_hit_mult"] = crit_hit_mult
 	if knockback > 0.0:
-		weapon_data.knockback = knockback * Vector2.from_angle(rotation)
+		weapon_data["knockback"] = knockback * Vector2.from_angle(rotation)
 	if ignore_defense_buffs:
-		weapon_data.ignore_defense_buffs = true
+		weapon_data["ignore_defense_buffs"] = true
 	if not status_effects.is_empty():
-		weapon_data.status_effects = status_effects
+		weapon_data["status_effects"] = status_effects
 	if not buffs.is_empty():
-		weapon_data.buffs = buffs
+		weapon_data["buffs"] = buffs
 	if area.damage_entity(weapon_data):
 		if status_effects.has(Battle.StatusEffect.WET):
 			var water_explosion = preload("res://Scenes/Battle/Explosion.tscn").instantiate()

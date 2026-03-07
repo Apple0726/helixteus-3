@@ -516,10 +516,10 @@ func load_univ():
 		stack_size = 128
 	if not autocollect.is_empty():
 		var time_elapsed = max(Time.get_unix_time_from_system() - save_date, 0)
-		if autocollect.has("ship_XP"):
-			var xp_mult = Helper.get_spaceport_xp_mult(autocollect.ship_XP)
+		if autocollect.has("passive_xp_tier"):
+			var xp_mult = Helper.get_spaceport_xp_mult(autocollect.passive_xp_tier)
 			for i in len(ship_data):
-				Helper.add_ship_XP(i, xp_mult * pow(1.15, u_i.lv) * time_elapsed / (4.0 / autocollect.ship_XP) * u_i.time_speed)
+				Helper.add_ship_XP(i, xp_mult * autocollect.passive_xp_mult * time_elapsed / (4.0 / autocollect.passive_xp_tier) * u_i.time_speed)
 		var min_mult:float = pow(maths_bonus.IRM, infinite_research.MEE)
 		var energy_mult:float = pow(maths_bonus.IRM, infinite_research.EPE)
 		var SP_mult:float = pow(maths_bonus.IRM, infinite_research.RLE)
@@ -2870,53 +2870,57 @@ func generate_tiles(id:int):
 	var home_planet:bool = c_p_g == 2 and c_u == 0
 	var B_strength:float = galaxy_data[c_g].B_strength
 	for i in num_auroras:
-		if not home_planet and (randf() < physics_bonus.aurora_spawn_probability * pow(p_i.pressure, 0.15)):
-			#au_int: aurora_intensity
-			var au_int = Helper.clever_round(80000 * randf_range(1, 2) * B_strength * max_star_temp)
-			if tile_from == -1:
-				tile_from = randi() % wid
-				tile_to = randi() % wid
-			if rand < 0.5:#Vertical
-				for j in wid:
-					var x_pos:int = lerp(tile_from, tile_to, j / float(wid)) + diff + thiccness * amplitude * sin(j / float(wid) * 4 * pulsation * PI)
-					for k in range(x_pos - int(thiccness / 2) + diff, x_pos + int(ceil(thiccness / 2.0)) + diff):
-						if k < 0 or k > wid - 1:
-							continue
-						show.auroras = true
-						var id2:int = k + j * wid
-						if tile_data[id2].has("aurora"):
-							tile_data[id2].aurora *= au_int
-							tile_data[id2].resource_production_bonus.SP *= au_int
-							tile_data[id2].resource_production_bonus.energy *= au_int
-						else:
-							tile_data[id2]["aurora"] = au_int
-							tile_data[id2].resource_production_bonus["SP"] = tile_data[id2].resource_production_bonus.get("SP", 1.0) + au_int
-							tile_data[id2].resource_production_bonus["energy"] = tile_data[id2].resource_production_bonus.get("energy", 1.0) + au_int
-			else:#Horizontal
-				for j in wid:
-					var y_pos:int = lerp(tile_from, tile_to, j / float(wid)) + diff + thiccness * amplitude * sin(j / float(wid) * 4 * pulsation * PI)
-					for k in range(y_pos - int(thiccness / 2) + diff, y_pos + int(ceil(thiccness / 2.0)) + diff):
-						if k < 0 or k > wid - 1:
-							continue
-						show.auroras = true
-						var id2:int = j + k * wid
-						if tile_data[id2].has("aurora"):
-							tile_data[id2].aurora *= au_int
-							tile_data[id2].resource_production_bonus.SP *= au_int
-							tile_data[id2].resource_production_bonus.energy *= au_int
-						else:
-							tile_data[id2]["aurora"] = au_int
-							tile_data[id2].resource_production_bonus["SP"] = tile_data[id2].resource_production_bonus.get("SP", 1.0) + au_int
-							tile_data[id2].resource_production_bonus["energy"] = tile_data[id2].resource_production_bonus.get("energy", 1.0) + au_int
-			stats_global.highest_au_int = max(au_int, stats_global.highest_au_int)
-			stats_dim.highest_au_int = max(au_int, stats_dim.highest_au_int)
-			stats_univ.highest_au_int = max(au_int, stats_univ.highest_au_int)
-			if wid / 3 == 1:
-				diff = thiccness + 1
-			else:
-				diff = randi_range(thiccness + 1, wid / 3) * sign(randf_range(-69, 69))
-			if i == 0 and randf() < physics_bonus.perpendicular_auroras:
-				rand = 1.0 - rand
+		if home_planet:
+			continue
+		# Guaranteed aurora spawn on starting planet outside 1st universe
+		if (c_u == 0 or c_p_g != 2) and randf() > physics_bonus.aurora_spawn_probability * pow(p_i.pressure, 0.15):
+			continue
+		#au_int: aurora_intensity
+		var au_int = Helper.clever_round(80000 * randf_range(1, 2) * B_strength * max_star_temp)
+		if tile_from == -1:
+			tile_from = randi() % wid
+			tile_to = randi() % wid
+		if rand < 0.5:#Vertical
+			for j in wid:
+				var x_pos:int = lerp(tile_from, tile_to, j / float(wid)) + diff + thiccness * amplitude * sin(j / float(wid) * 4 * pulsation * PI)
+				for k in range(x_pos - int(thiccness / 2) + diff, x_pos + int(ceil(thiccness / 2.0)) + diff):
+					if k < 0 or k > wid - 1:
+						continue
+					show.auroras = true
+					var id2:int = k + j * wid
+					if tile_data[id2].has("aurora"):
+						tile_data[id2].aurora *= au_int
+						tile_data[id2].resource_production_bonus.SP *= au_int
+						tile_data[id2].resource_production_bonus.energy *= au_int
+					else:
+						tile_data[id2]["aurora"] = au_int
+						tile_data[id2].resource_production_bonus["SP"] = tile_data[id2].resource_production_bonus.get("SP", 1.0) + au_int
+						tile_data[id2].resource_production_bonus["energy"] = tile_data[id2].resource_production_bonus.get("energy", 1.0) + au_int
+		else:#Horizontal
+			for j in wid:
+				var y_pos:int = lerp(tile_from, tile_to, j / float(wid)) + diff + thiccness * amplitude * sin(j / float(wid) * 4 * pulsation * PI)
+				for k in range(y_pos - int(thiccness / 2) + diff, y_pos + int(ceil(thiccness / 2.0)) + diff):
+					if k < 0 or k > wid - 1:
+						continue
+					show.auroras = true
+					var id2:int = j + k * wid
+					if tile_data[id2].has("aurora"):
+						tile_data[id2].aurora *= au_int
+						tile_data[id2].resource_production_bonus.SP *= au_int
+						tile_data[id2].resource_production_bonus.energy *= au_int
+					else:
+						tile_data[id2]["aurora"] = au_int
+						tile_data[id2].resource_production_bonus["SP"] = tile_data[id2].resource_production_bonus.get("SP", 1.0) + au_int
+						tile_data[id2].resource_production_bonus["energy"] = tile_data[id2].resource_production_bonus.get("energy", 1.0) + au_int
+		stats_global.highest_au_int = max(au_int, stats_global.highest_au_int)
+		stats_dim.highest_au_int = max(au_int, stats_dim.highest_au_int)
+		stats_univ.highest_au_int = max(au_int, stats_univ.highest_au_int)
+		if wid / 3 == 1:
+			diff = thiccness + 1
+		else:
+			diff = randi_range(thiccness + 1, wid / 3) * sign(randf_range(-69, 69))
+		if i == 0 and randf() < physics_bonus.perpendicular_auroras:
+			rand = 1.0 - rand
 	#We assume that the star system's age is inversely proportional to the coldest star's temperature
 	#Age is a factor in crater rarity. Older systems have more craters
 	var coldest_star_temp = get_min_star_prop(c_s, "temperature")
@@ -3738,9 +3742,16 @@ func _input(event):
 				view.move_view = true
 				view.scroll_view = true
 			elif is_instance_valid(active_panel):
-				fade_out_panel(active_panel)
-			active_panel = null
+				if active_panel == inventory:
+					print(inventory.item_hovered)
+					if inventory.item_hovered == -1:
+						fade_out_panel(active_panel)
+						active_panel = null
+				else:
+					fade_out_panel(active_panel)
+					active_panel = null
 		hide_tooltip()
+		cmd_node.visible = false
 
 	#J to hide help
 	if Input.is_action_just_released("J") and help_str != "":
@@ -3759,10 +3770,6 @@ func _input(event):
 		cmd_node.text = "/"
 		cmd_node.call_deferred("grab_focus")
 		cmd_node.caret_column = 1
-	
-	if Input.is_action_just_released("cancel"):
-		hide_tooltip()
-		cmd_node.visible = false
 	
 	if Input.is_action_just_released("up") and len(cmd_history) > 0 and cmd_node.visible:
 		if cmd_history_index < len(cmd_history) - 1:
@@ -4211,6 +4218,7 @@ func _on_CollectPanelTimer_timeout():
 
 func _on_CollectPanelAnim_animation_finished(anim_name):
 	$UI/Panel.visible = false
+	$UI/Panel.modulate.a = 1.0
 
 func _on_Ship_pressed():
 	if Input.is_action_pressed("shift"):

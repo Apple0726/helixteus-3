@@ -353,13 +353,13 @@ func normal_attack():
 	if attack_type == Attack.NORMAL:
 		var buffs = {}
 		if lv >= 12:
-			buffs.defense = -4
+			buffs["defense"] = -4
 		elif lv >= 9:
-			buffs.defense = -3
+			buffs["defense"] = -3
 		elif lv >= 6:
-			buffs.defense = -2
+			buffs["defense"] = -2
 		elif lv >= 3:
-			buffs.defense = -1
+			buffs["defense"] = -1
 		var knockback = 0.0
 		if lv >= 3:
 			knockback = 15.0 + min(lv, 18) * 2.0

@@ -20,6 +20,7 @@ func _ready():
 
 func refresh():
 	if tab == "items":
+		$TabBar/Items._on_Button_pressed()
 		_on_Items_pressed()
 	elif tab == "materials":
 		_on_Materials_pressed()

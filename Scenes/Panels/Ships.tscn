@@ -9,6 +9,7 @@
 [ext_resource type="Shader" uid="uid://hfa3ri2g3507" path="res://Shaders/FloatAnimation.gdshader" id="9_aivc5"]
 [ext_resource type="Texture2D" uid="uid://chrk4kwpyhk0l" path="res://Graphics/Buttons/SystemView.png" id="9_dhoc8"]
 [ext_resource type="Texture2D" uid="uid://47ckp0wuhpfy" path="res://Graphics/Icons/current.png" id="10_800g5"]
+[ext_resource type="Texture2D" uid="uid://bu4pbsuqutf1m" path="res://Graphics/Buttons/Upgrade.png" id="10_to3oq"]
 [ext_resource type="Texture2D" uid="uid://bc6latfcdvj1t" path="res://Graphics/Weapons/bullet1.png" id="10_w02ne"]
 [ext_resource type="Texture2D" uid="uid://di3sx4ynm6kot" path="res://Graphics/Science/CD.png" id="11"]
 [ext_resource type="Texture2D" uid="uid://kr2fdk8dptv1" path="res://Graphics/Misc/BarUnder2.png" id="11_s3b4g"]
@@ -73,7 +74,6 @@ shader_parameter/frequency = 6.0
 
 [sub_resource type="LabelSettings" id="LabelSettings_sx08b"]
 font_size = 14
-font_color = Color(0.585062, 0.585062, 0.585062, 1)
 
 [node name="Background" type="Control" unique_id=1200622783]
 layout_mode = 3
@@ -191,26 +191,25 @@ offset_right = 480.0
 offset_bottom = 31.0
 horizontal_alignment = 1
 
+[node name="Label" type="Label" parent="." unique_id=101178477]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_left = 176.0
+offset_top = 292.0
+offset_right = 492.0
+offset_bottom = 432.0
+grow_horizontal = 2
+label_settings = SubResource("LabelSettings_sx08b")
+horizontal_alignment = 1
+vertical_alignment = 1
+
 [node name="ShipStats" type="Panel" parent="." unique_id=1376717621]
 layout_mode = 0
 offset_left = 152.0
 offset_top = 148.0
 offset_right = 556.0
 offset_bottom = 620.0
-
-[node name="Label" type="Label" parent="ShipStats" unique_id=101178477]
-visible = false
-layout_mode = 1
-anchors_preset = 10
-anchor_right = 1.0
-offset_left = 16.0
-offset_top = 8.0
-offset_right = -16.0
-offset_bottom = 148.0
-grow_horizontal = 2
-label_settings = SubResource("LabelSettings_sx08b")
-horizontal_alignment = 1
-vertical_alignment = 1
 
 [node name="ShipDetails" type="Control" parent="ShipStats" unique_id=1305776051]
 layout_mode = 1
@@ -244,6 +243,20 @@ offset_right = 60.0
 offset_bottom = 85.0
 grow_horizontal = 2
 text = "Respec (free)"
+
+[node name="LevelUp" type="Button" parent="ShipStats/ShipDetails" unique_id=1565562317]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = 118.0
+offset_top = 52.0
+offset_right = 154.0
+offset_bottom = 85.0
+grow_horizontal = 2
+icon = ExtResource("10_to3oq")
+icon_alignment = 1
+expand_icon = true
 
 [node name="Bullet" type="Control" parent="ShipStats/ShipDetails" unique_id=2134917824]
 anchors_preset = 0
@@ -569,11 +582,14 @@ offset_bottom = 624.0
 [connection signal="mouse_exited" from="Ships/GoToShips" to="." method="_on_mouse_exited"]
 [connection signal="pressed" from="Ships/GoToShips" to="." method="_on_GoToShips_pressed"]
 [connection signal="pressed" from="ShipStats/ShipDetails/Respec" to="." method="_on_respec_pressed"]
+[connection signal="mouse_entered" from="ShipStats/ShipDetails/LevelUp" to="." method="_on_level_up_mouse_entered"]
+[connection signal="mouse_exited" from="ShipStats/ShipDetails/LevelUp" to="." method="_on_mouse_exited"]
+[connection signal="pressed" from="ShipStats/ShipDetails/LevelUp" to="." method="_on_level_up_pressed"]
 [connection signal="mouse_entered" from="ShipStats/ShipDetails/Bullet/Icon" to="." method="_on_weaponIcon_mouse_entered" binds= ["bullet"]]
-[connection signal="mouse_exited" from="ShipStats/ShipDetails/Bullet/Icon" to="." method="_on_weaponIcon_mouse_exited"]
+[connection signal="mouse_exited" from="ShipStats/ShipDetails/Bullet/Icon" to="." method="_on_mouse_exited"]
 [connection signal="mouse_entered" from="ShipStats/ShipDetails/Laser/Icon" to="." method="_on_weaponIcon_mouse_entered" binds= ["laser"]]
-[connection signal="mouse_exited" from="ShipStats/ShipDetails/Laser/Icon" to="." method="_on_weaponIcon_mouse_exited"]
+[connection signal="mouse_exited" from="ShipStats/ShipDetails/Laser/Icon" to="." method="_on_mouse_exited"]
 [connection signal="mouse_entered" from="ShipStats/ShipDetails/Bomb/Icon" to="." method="_on_weaponIcon_mouse_entered" binds= ["bomb"]]
-[connection signal="mouse_exited" from="ShipStats/ShipDetails/Bomb/Icon" to="." method="_on_weaponIcon_mouse_exited"]
+[connection signal="mouse_exited" from="ShipStats/ShipDetails/Bomb/Icon" to="." method="_on_mouse_exited"]
 [connection signal="mouse_entered" from="ShipStats/ShipDetails/Light/Icon" to="." method="_on_weaponIcon_mouse_entered" binds= ["light"]]
-[connection signal="mouse_exited" from="ShipStats/ShipDetails/Light/Icon" to="." method="_on_weaponIcon_mouse_exited"]
+[connection signal="mouse_exited" from="ShipStats/ShipDetails/Light/Icon" to="." method="_on_mouse_exited"]

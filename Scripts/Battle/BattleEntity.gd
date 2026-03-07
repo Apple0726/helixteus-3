@@ -359,7 +359,10 @@ func damage_entity(weapon_data: Dictionary):
 			if weapon_data.has("buffs"):
 				for buff in weapon_data.buffs:
 					var base_buff = weapon_data.buffs[buff]
-					self["%s_buff" % buff] = base_buff * pow((self["%s_buff" % buff] + base_buff) / base_buff, 0.8)
+					if sign(self["%s_buff" % buff]) != sign(base_buff):
+						self["%s_buff" % buff] += base_buff
+					else:
+						self["%s_buff" % buff] = base_buff * pow(abs((self["%s_buff" % buff] + base_buff) / base_buff), 0.8)
 			update_info_labels()
 	return not dodged
 

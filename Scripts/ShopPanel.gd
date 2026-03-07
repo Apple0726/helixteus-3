@@ -131,6 +131,8 @@ func _on_buy_pressed():
 			game.deduct_resources(item_total_costs)
 			Helper.add_items_to_inventory(item_selected.id, $ItemInfo/BuyAmount.value, item_selected.costs, tr("NOT_ENOUGH_INV_SPACE_BUY"), tr("PURCHASE_SUCCESS"))
 			update_and_check_costs()
+			if is_instance_valid(game.inventory):
+				game.inventory.tab = "items"
 			game.HUD.refresh()
 	else:
 		game.popup(tr("NOT_ENOUGH_RESOURCES"), 1.5)

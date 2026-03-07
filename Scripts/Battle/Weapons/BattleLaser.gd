@@ -5,11 +5,13 @@ var damage:float
 var weapon_accuracy:int
 var fade_delay:float
 var status_effects = {}
+var pierce:int
 
 func _ready() -> void:
 	$RayCast2D.target_position.x = 5000.0
 	var laser_absorbed = false
 	var laser_length:float = 200.0
+	var pierce_remaining = pierce
 	while not laser_absorbed:
 		$RayCast2D.force_raycast_update()
 		var hit_target = $RayCast2D.get_collider()
@@ -26,8 +28,10 @@ func _ready() -> void:
 				"status_effects":status_effects,
 			}
 			if hit_target.damage_entity(weapon_data):
-				laser_absorbed = true
-				laser_length = hit_point.length()
+				pierce_remaining -= 1
+				if pierce_remaining <= 0:
+					laser_absorbed = true
+					laser_length = hit_point.length()
 			$RayCast2D.add_exception(hit_target)
 		else:
 			laser_absorbed = true

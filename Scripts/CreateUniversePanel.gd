@@ -86,6 +86,7 @@ func refresh():
 					if value_range > 30:
 						prop.get_node("HSlider").step = 0.5
 		$TP/Points.text = "%s: %s [img]Graphics/Icons/help.png[/img]" % [tr("PROBE_POINTS"), Helper.format_num(PP, true)]
+		$TP/Label.text = tr("TP_INFO")
 	else:
 		$TP/Label.text = tr("NO_TRI_PROBES")
 
@@ -187,5 +188,9 @@ func _on_tier_distribution_mouse_entered() -> void:
 	game.show_tooltip(st)
 
 
-func _on_tier_distribution_mouse_exited() -> void:
+func _on_mouse_exited():
 	game.hide_tooltip()
+
+
+func _on_points_mouse_entered() -> void:
+	game.show_tooltip(tr("TP_POINTS_INFO"), {"imgs": [preload("res://Graphics/Formulas/PPs.png")], "size": 80})

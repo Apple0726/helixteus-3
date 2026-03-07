@@ -25,8 +25,6 @@ func _ready():
 	$Drive.add_item(tr("PD_SC"))
 	$Panel/TravelCosts.text = "%s:" % [tr("TRAVEL_COSTS")]
 	$TotalEnergyCost.text = "%s:" % [tr("COSTS")]
-	if game.autocollect.has("ship_XP"):
-		game.HUD.set_ship_btn_shader(true, game.autocollect.ship_XP)
 
 func refresh():
 	$Drive.visible = game.science_unlocked.has("PD")
@@ -136,17 +134,18 @@ func send_ships():
 				game.ships_travel_data.dest_g_coords.g = game.c_g_g
 				game.ships_travel_data.c_coords.c = game.c_c
 				game.ships_travel_data.dest_coords.c = game.c_c
-				game.autocollect.erase("ship_XP")
+				game.autocollect.erase("passive_xp_tier")
 				game.HUD.set_ship_btn_shader(false)
 				game.view.obj.refresh_planets()
 				game.view.refresh()
 				var p_i = game.planet_data[game.ships_travel_data.c_coords.p]
 				if p_i.has("ancient_bldgs"):
 					if p_i.ancient_bldgs.has(AncientBuilding.SPACEPORT) and not p_i.ancient_bldgs[AncientBuilding.SPACEPORT][0].has("repair_cost"):
-						game.autocollect.ship_XP = p_i.ancient_bldgs[AncientBuilding.SPACEPORT][0].tier
+						game.autocollect["passive_xp_tier"] = p_i.ancient_bldgs[AncientBuilding.SPACEPORT][0].tier
+						game.autocollect["passive_xp_mult"] = game.system_data[game.c_s].diff
 						game.HUD.set_ship_btn_shader(true, p_i.ancient_bldgs[AncientBuilding.SPACEPORT][0].tier)
 					else:
-						game.autocollect.erase("ship_XP")
+						game.autocollect.erase("passive_xp_tier")
 						game.HUD.set_ship_btn_shader(false)
 				game.space_HUD.get_node("ConquerAll").visible = (game.u_i.lv >= 32 or game.subject_levels.dimensional_power >= 1) and not game.system_data[game.c_s].has("conquered")
 				game.HUD.refresh()
@@ -159,7 +158,7 @@ func send_ships():
 					if not game.achievement_data.random.has("1000_year_journey"):
 						game.earn_achievement("random", "1000_year_journey")
 				game.energy -= round(total_energy_cost)
-				game.autocollect.erase("ship_XP")
+				game.autocollect.erase("passive_xp_tier")
 				game.HUD.set_ship_btn_shader(false)
 				send_ships2(time_cost)
 				if game.c_v == travel_view:
@@ -245,7 +244,15 @@ func _on_send_pressed():
 
 
 func _on_h_slider_value_changed(value):
-	var slider_factor = pow(10, value / 25.0 - 1)
+	var slider_factor:float
+	if travel_view == "system":
+		slider_factor = pow(10, value / 33.0 - 1) * 10.0
+	elif travel_view == "galaxy":
+		slider_factor = pow(10, value / 30.0 - 1) * 50.0
+	elif travel_view == "cluster":
+		slider_factor = pow(10, value / 25.0 - 1) * 100.0
+	elif travel_view == "universe":
+		slider_factor = pow(10, value / 20.0 - 1) * 250.0
 	atm_exit_cost = get_atm_exit_cost(depart_planet_data.pressure)
 	gravity_exit_cost = get_grav_exit_cost(depart_planet_data.size)
 	spaceport_exit_cost_reduction = 1.0

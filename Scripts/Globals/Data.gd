@@ -477,6 +477,7 @@ var battle_weapon_stats = {
 				},
 				"consecutive_fires":[1, 2, 2, 3],
 				"multishot":[1, 1, 3, 5],
+				"pierce":[1, 2, 2, 2],
 			},
 	"bomb": {	"damage":6.0,
 				"accuracy":0.65,

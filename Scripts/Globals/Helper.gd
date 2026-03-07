@@ -833,10 +833,12 @@ func update_ship_travel():
 		game.ships_travel_data.travel_view = "-"
 		game.ships_travel_data.c_coords = game.ships_travel_data.dest_coords.duplicate(true)
 		game.ships_travel_data.c_g_coords = game.ships_travel_data.dest_g_coords.duplicate(true)
+		var s_i = game.open_obj("Galaxies", game.ships_travel_data.c_g_coords.g)[game.ships_travel_data.c_coords.s]
 		var p_i = game.open_obj("Systems", game.ships_travel_data.c_g_coords.s)[game.ships_travel_data.c_coords.p]
 		if p_i.has("ancient_bldgs") and p_i.ancient_bldgs.has(AncientBuilding.SPACEPORT) and not p_i.ancient_bldgs[AncientBuilding.SPACEPORT][0].has("repair_cost"):
 			var tier = p_i.ancient_bldgs[AncientBuilding.SPACEPORT][0].tier
-			game.autocollect.ship_XP = tier
+			game.autocollect["passive_xp_tier"] = tier
+			game.autocollect["passive_xp_mult"] = s_i.diff
 			if is_instance_valid(game.HUD):
 				game.HUD.set_ship_btn_shader(true, tier)
 	return progress
@@ -1569,7 +1571,8 @@ func set_ancient_bldg_bonuses(p_i:Dictionary, ancient_bldg:Dictionary, tile_id:i
 					Helper.add_cellulose_from_CS(p_i, base)
 	elif ancient_bldg.name == AncientBuilding.SPACEPORT:
 		if game.science_unlocked.has("ISP") and game.c_s_g == game.ships_travel_data.c_g_coords.s and game.c_p == game.ships_travel_data.c_coords.p:
-			game.autocollect.ship_XP = ancient_bldg.tier
+			game.autocollect["passive_xp_tier"] = ancient_bldg.tier
+			game.autocollect["passive_xp_mult"] = game.system_data[game.c_s].diff
 			game.HUD.set_ship_btn_shader(true, ancient_bldg.tier)
 			game.ship_panel.get_node("SpaceportTimer").start(4.0 / ancient_bldg.tier)
 
