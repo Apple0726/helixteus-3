@@ -39,9 +39,9 @@ metadata/_edit_horizontal_guides_ = [360.0]
 [node name="GUI" type="NinePatchRect" parent="." unique_id=1410223798]
 layout_mode = 0
 offset_left = 320.0
-offset_top = 196.0
+offset_top = 180.0
 offset_right = 960.0
-offset_bottom = 524.0
+offset_bottom = 540.0
 texture = ExtResource("3_btujq")
 patch_margin_left = 408
 patch_margin_top = 80
@@ -53,9 +53,9 @@ metadata/_edit_horizontal_guides_ = [596.0]
 [node name="CloseButton" type="TextureButton" parent="." unique_id=988275328]
 layout_mode = 0
 offset_left = 894.0
-offset_top = 212.0
+offset_top = 196.0
 offset_right = 943.0
-offset_bottom = 261.0
+offset_bottom = 245.0
 texture_normal = ExtResource("4_5drab")
 texture_hover = ExtResource("5_trt1m")
 
@@ -63,18 +63,18 @@ texture_hover = ExtResource("5_trt1m")
 custom_minimum_size = Vector2(0, 38)
 layout_mode = 1
 offset_left = 364.0
-offset_top = 220.0
+offset_top = 204.0
 offset_right = 648.0
-offset_bottom = 258.0
+offset_bottom = 242.0
 text = "Select"
 label_settings = SubResource("LabelSettings_oro1x")
 
 [node name="Seeds" type="ScrollContainer" parent="." unique_id=1148302687]
 layout_mode = 0
 offset_left = 364.0
-offset_top = 300.0
+offset_top = 272.0
 offset_right = 916.0
-offset_bottom = 360.0
+offset_bottom = 332.0
 
 [node name="HBox" type="HBoxContainer" parent="Seeds" unique_id=48086152]
 layout_mode = 2
@@ -84,27 +84,36 @@ size_flags_vertical = 3
 [node name="ProductionPerSec" type="Label" parent="." unique_id=506550410]
 layout_mode = 0
 offset_left = 380.0
-offset_top = 400.0
+offset_top = 360.0
 offset_right = 684.0
-offset_bottom = 424.0
+offset_bottom = 384.0
 text = "PRODUCTION_PER_SECOND"
 
 [node name="HBoxContainer" type="HBoxContainer" parent="." unique_id=1073404708]
 layout_mode = 0
 offset_left = 380.0
-offset_top = 432.0
+offset_top = 396.0
 offset_right = 752.0
-offset_bottom = 472.0
+offset_bottom = 436.0
+theme_override_constants/separation = 15
 
 [node name="UseFertilizer" type="CheckBox" parent="." unique_id=1392379325]
 layout_mode = 0
 offset_left = 720.0
-offset_top = 400.0
+offset_top = 468.0
 offset_right = 932.0
-offset_bottom = 428.0
+offset_bottom = 496.0
 text = "USE_FERTILIZER"
 icon = ExtResource("6")
 expand_icon = true
+
+[node name="ProdMult" type="Label" parent="." unique_id=1058091128]
+layout_mode = 0
+offset_left = 380.0
+offset_top = 468.0
+offset_right = 596.0
+offset_bottom = 491.0
+text = "PRODUCTION_MULTIPLIER"
 
 [connection signal="pressed" from="CloseButton" to="." method="_on_close_button_pressed"]
 [connection signal="mouse_entered" from="UseFertilizer" to="." method="_on_UseFertilizer_mouse_entered"]

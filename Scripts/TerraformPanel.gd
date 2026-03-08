@@ -102,6 +102,7 @@ func terraform_planet():
 		game.autocollect.rsrc.SP += Data.path_1[Building.RESEARCH_LAB].value * surface * p_i.resource_production_bonus.get("SP", 1)
 	elif tf_type == Building.GREENHOUSE:
 		p_i.ash = {"richness":ash_mult}
+		p_i["metal_mult"] = EE_mult
 	elif tf_type == Building.POWER_PLANT:
 		game.autocollect.rsrc.energy += Data.path_1[Building.POWER_PLANT].value * surface * p_i.resource_production_bonus.get("energy", 1)
 	elif tf_type == Building.MINERAL_EXTRACTOR:
@@ -284,7 +285,7 @@ func _on_greenhouse_pressed():
 	set_bldg_cost_txt()
 	costs = Data.costs[Building.GREENHOUSE].duplicate(true)
 	costs.soil = 10
-	$Panel/BuildingPanel/Note.text = tr("MIN_MULT_FROM_ASH") % ash_mult
+	$Panel/BuildingPanel/Note.text = tr("MIN_MULT_FROM_ASH") % ash_mult + "\n" + tr("METAL_MULT_FROM_AURORAS") + ": %.2f" % EE_mult
 	update_info()
 
 

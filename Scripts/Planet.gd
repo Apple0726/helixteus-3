@@ -226,7 +226,7 @@ func _ready():
 	$Lake.size = Vector2.ONE * 200.0 * wid
 	if p_i.has("lake"):
 		$Lake.show()
-		$Lake.modulate = Data.lake_colors[p_i.lake.element][p_i.lake.state] * star_mod
+		$Lake.modulate = (Data.lake_colors[p_i.lake.element][p_i.lake.state] * star_mod).lightened(0.7)
 		if p_i.lake.state == "l":
 			$Lake.material.set_shader_parameter("should_render", true)
 			$Lake.material.set_shader_parameter("time_factor", 0.1)
@@ -966,10 +966,7 @@ func destroy_building_callable():
 	hide_tooltip()
 	if tiles_selected.is_empty():
 		if game.tile_data[tile_over].bldg.name == Building.GREENHOUSE:
-			#var soil_tiles = $TileFeatures.get_used_cells(2)
-			#soil_tiles.erase(Vector2i(tile_over % wid, tile_over / wid))
-			$TileFeatures.erase_cell(2, Vector2i(tile_over % wid, tile_over / wid))
-			#$TileFeatures.set_cells_terrain_connect(2, soil_tiles, 0, 3)
+			$Soil.erase_cell(Vector2i(tile_over % wid, tile_over / wid))
 		destroy_bldg(tile_over)
 		game.HUD.refresh()
 	else:
@@ -1570,7 +1567,7 @@ func add_bldg(id2:int, type:int, building_animation:bool = false):
 				if tile.auto_GH.has("soil_drain"):
 					var fert = Sprite2D.new()
 					fert.texture = preload("res://Graphics/Agriculture/fertilizer.png")
-					fert.scale *= 0.3
+					fert.scale *= 0.3 * 256.0 / fert.texture.get_width()
 					bldgs[id2].add_child(fert)
 					fert.name = "Fertilizer"
 				add_rsrc(v, Color(0.41, 0.25, 0.16, 1), load("res://Graphics/Metals/%s.png" % tile.auto_GH.seed.split("_")[0]), id2)

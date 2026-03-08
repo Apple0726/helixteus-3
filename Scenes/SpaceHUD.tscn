@@ -12,7 +12,6 @@
 [ext_resource type="Texture2D" uid="uid://fdvjy2q5bco" path="res://Graphics/Megastructures/DS_2.png" id="9_42r2j"]
 [ext_resource type="PackedScene" uid="uid://cobxcj7wuwecq" path="res://Scenes/Panels/StarPanel.tscn" id="10_cgit7"]
 [ext_resource type="Texture2D" uid="uid://ddomkxb4yqaya" path="res://Graphics/Galaxies/6.png" id="10_rxdnk"]
-[ext_resource type="PackedScene" uid="uid://ocbi5a4rgeyw" path="res://Scenes/Panels/MSConstructionPanel.tscn" id="12_rxdnk"]
 
 [sub_resource type="InputEventKey" id="InputEventKey_1bc5f"]
 device = -1
@@ -268,10 +267,6 @@ text = "SEND_PROBES"
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=88860969]
 libraries/ = SubResource("AnimationLibrary_sslco")
-
-[node name="MSConstructPanel" parent="." unique_id=1453434250 instance=ExtResource("12_rxdnk")]
-visible = false
-layout_mode = 1
 
 [node name="StarPanel" parent="." unique_id=1736156736 instance=ExtResource("10_cgit7")]
 visible = false

@@ -40,7 +40,13 @@ Button/styles/hover = null
 Button/styles/normal = null
 Button/styles/pressed = null
 
-[sub_resource type="Shortcut" id="3"]
+[sub_resource type="InputEventKey" id="InputEventKey_viy6l"]
+device = -1
+physical_keycode = 71
+unicode = 103
+
+[sub_resource type="Shortcut" id="Shortcut_3ftvt"]
+events = [SubResource("InputEventKey_viy6l")]
 
 [node name="SPRPanel" type="Control" unique_id=1470302766]
 layout_mode = 3
@@ -127,7 +133,7 @@ offset_left = 228.0
 offset_top = 408.0
 offset_right = 364.0
 offset_bottom = 445.0
-shortcut = SubResource("3")
+shortcut = SubResource("Shortcut_3ftvt")
 shortcut_in_tooltip = false
 text = "TRANSFORM"
 

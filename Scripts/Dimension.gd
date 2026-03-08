@@ -5,7 +5,7 @@ var univ_icon = preload("res://Graphics/Misc/Universe.png")
 const DUR = 0.6
 const TWEEN_TYPE = Tween.TRANS_EXPO
 const TWEEN_EASE = Tween.EASE_OUT
-var new_dim_DRs = 0#DRs you will get once you renew dimensions
+var new_dim_DRs:int = 0#DRs you will get once you renew dimensions
 var maths_OP_points:float = 0
 var physics_OP_points:float = 0
 var chemistry_OP_points:float = 0
@@ -120,7 +120,7 @@ func refresh_univs(reset:bool = false):
 	$Subjects/Grid.visible = not $DimBonusesInfo.visible
 	if len(game.universe_data) > 1:
 		for univ in game.universe_data:
-			if univ.lv >= 120:
+			if univ.lv >= 110:
 				$TopInfo/Reset.disabled = false
 				break
 	var lv_sum:int = 0
@@ -129,7 +129,7 @@ func refresh_univs(reset:bool = false):
 	for node in $Subjects/Grid.get_children():
 		var subject_level:int = game.subject_levels[node.name.to_lower()]
 		node.get_node("Upgrade").disabled = game.DRs <= subject_level
-	new_dim_DRs = floor(lv_sum / 10000.0 * DR_mult)
+	new_dim_DRs = int(lv_sum / 10000.0 * DR_mult)
 	$TopInfo/Reset.text = "%s (+ %d %s)" % [tr("NEW_DIMENSION"), new_dim_DRs, tr("DR")]
 	$TopInfo/DRs.text = "[center]%s: %d  %s" % [tr("DR_TITLE"), game.DRs, "[img]Graphics/Icons/help.png[/img]"]
 	$TopInfo/DimensionN.text = "%s #%s" % [tr("DIMENSION"), game.dim_num]

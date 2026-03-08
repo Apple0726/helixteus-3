@@ -16,6 +16,7 @@ var ancient_bldg_textures:Array
 
 #region GUI nodes
 var gigastructures_panel:Control
+var MS_constr_panel:Control
 var shop_panel:Control
 var ships_panel:Control
 var upgrade_panel:Control
@@ -78,6 +79,7 @@ var panel_var_name_to_file_name = {
 	"SPR_panel":"SPRPanel",
 	"gigastructures_panel":"GigastructuresPanel",
 	"create_universe_panel":"CreateUniversePanel",
+	"MS_constr_panel":"MSConstructionPanel"
 }
 #endregion
 
@@ -639,8 +641,8 @@ func load_game():
 	else:
 		load_univ()
 		switch_view(c_v, {"first_time":true})
-		if not $UI.is_ancestor_of(HUD):
-			$UI.add_child(HUD)
+		if not is_ancestor_of(HUD):
+			$HUD.add_child(HUD)
 	set_c_sv(c_sv)
 
 func set_c_sv(_c_sv):
@@ -863,7 +865,7 @@ func new_game(univ:int = 0, new_save:bool = false, DR_advantage = false):
 		for met in met_info.keys():
 			show[met] = true
 	#Stores information of all objects discovered
-	u_i.cluster_data = [{"id":0, "visible":true, "type":0, "shapes":[], "class":ClusterType.GROUP, "name":tr("LOCAL_GROUP"), "pos":Vector2.ZERO, "redshift":u_i.dark_energy, "parent":0, "galaxy_num":55, "galaxies":[], "view":{"pos":Vector2(640, 360), "zoom":1 / 4.0}, "rich_elements":{}}]
+	u_i.cluster_data = [{"id":0, "visible":true, "type":0, "shapes":[], "class":ClusterType.GROUP, "name":tr("LOCAL_GROUP"), "pos":Vector2.ZERO, "redshift":0.0, "parent":0, "galaxy_num":55, "galaxies":[], "view":{"pos":Vector2(640, 360), "zoom":1 / 4.0}, "rich_elements":{}}]
 	galaxy_data = [{"id":0, "l_id":0, "type":0, "shapes":[], "name":tr("MILKY_WAY"), "pos":Vector2.ZERO, "rotation":0, "diff":u_i.difficulty, "B_strength":1e-9 * u_i.charge * u_i.dark_energy, "dark_matter":1.0, "parent":0, "system_num":400, "view":{"pos":Vector2(7500, 7500) * 0.5 + Vector2(640, 360), "zoom":0.5}}]
 	var s_b:float = pow(u_i.boltzmann, 4) / pow(u_i.planck, 3) / pow(u_i.speed_of_light, 2)
 	system_data = [{"id":0, "l_id":0, "name":tr("SOLAR_SYSTEM"), "pos":Vector2(-7500, -7500), "diff":u_i.difficulty, "parent":0, "planet_num":7, "planets":[], "view":{"pos":Vector2(640, 150), "zoom":2}, "stars":[{"type":StarType.MAIN_SEQUENCE, "class":"G2", "size":1, "temperature":5500, "mass":u_i.planck, "luminosity":s_b, "pos":Vector2(0, 0)}]}]
@@ -965,7 +967,7 @@ func new_game(univ:int = 0, new_save:bool = false, DR_advantage = false):
 	Helper.save_obj("Clusters", 0, galaxy_data)
 	fn_save_game()
 	if not is_ancestor_of(HUD):
-		$UI.add_child(HUD)
+		$HUD.add_child(HUD)
 	HUD.refresh()
 	update_starfield = true
 	add_planet(true)
@@ -1208,8 +1210,8 @@ func switch_view(new_view:String, other_params:Dictionary = {}):
 		fn_save_game()
 	if viewing_dimension:
 		remove_dimension()
-		if not $UI.is_ancestor_of(HUD):
-			$UI.add_child(HUD)
+		if not is_ancestor_of(HUD):
+			$HUD.add_child(HUD)
 		switch_music(Data.ambient_music.pick_random(), u_i.time_speed)
 	else:
 		if not other_params.has("first_time"):
@@ -1218,7 +1220,7 @@ func switch_view(new_view:String, other_params:Dictionary = {}):
 					remove_planet(not other_params.has("dont_save_zooms"))
 				"planet_details":
 					planet_details.queue_free()
-					$UI.add_child(HUD)
+					$HUD.add_child(HUD)
 				"system":
 					remove_system()
 					remove_space_HUD()
@@ -1236,22 +1238,22 @@ func switch_view(new_view:String, other_params:Dictionary = {}):
 				"science_tree":
 					remove_science_tree()
 				"cave":
-					$UI.add_child(HUD)
+					$HUD.add_child(HUD)
 					if is_instance_valid(cave):
 						cave.queue_free()
 					switch_music(Data.ambient_music.pick_random(), u_i.time_speed)
 				"STM":
-					$UI.add_child(HUD)
+					$HUD.add_child(HUD)
 					STM.queue_free()
 					switch_music(Data.ambient_music.pick_random(), u_i.time_speed)
 				"battle":
-					$UI.add_child(HUD)
+					$HUD.add_child(HUD)
 					Engine.physics_ticks_per_second = 60
 					view.move_with_keyboard = true
 					battle_scene.queue_free()
 					battle_GUI.queue_free()
 				"ship_customize_screen":
-					$UI.add_child(HUD)
+					$HUD.add_child(HUD)
 					ship_customize_screen.queue_free()
 			if c_v in ["science_tree", "STM", "planet_details"]:
 				c_v = l_v
@@ -1329,9 +1331,9 @@ func switch_view(new_view:String, other_params:Dictionary = {}):
 				add_planet()
 			"planet_details":
 				planet_details = load("res://Scenes/Planet/PlanetDetails.tscn").instantiate()
-				$UI.add_child(planet_details)
-				if is_instance_valid(HUD) and $UI.is_ancestor_of(HUD):
-					$UI.remove_child(HUD)
+				$HUD.add_child(planet_details)
+				if is_instance_valid(HUD) and is_ancestor_of(HUD):
+					$HUD.remove_child(HUD)
 			"system":
 				add_system()
 				add_space_HUD()
@@ -1348,8 +1350,8 @@ func switch_view(new_view:String, other_params:Dictionary = {}):
 			"science_tree":
 				add_science_tree()
 			"cave":
-				if is_instance_valid(HUD) and $UI.is_ancestor_of(HUD):
-					$UI.remove_child(HUD)
+				if is_instance_valid(HUD) and is_ancestor_of(HUD):
+					$HUD.remove_child(HUD)
 				cave = load("res://Scenes/Views/Cave.tscn").instantiate()
 				cave.rover_data = rover_data[rover_id]
 				cave.start_at_floor = other_params.get("start_floor", 1)
@@ -1365,8 +1367,8 @@ func switch_view(new_view:String, other_params:Dictionary = {}):
 			"STM":
 				$Ship.visible = false
 				view.queue_redraw()
-				if is_instance_valid(HUD) and $UI.is_ancestor_of(HUD):
-					$UI.remove_child(HUD)
+				if is_instance_valid(HUD) and is_ancestor_of(HUD):
+					$HUD.remove_child(HUD)
 				STM = load("res://Scenes/Views/ShipTravelMinigame2.tscn").instantiate()
 				add_child(STM)
 				if randf() < 0.5:
@@ -1375,8 +1377,8 @@ func switch_view(new_view:String, other_params:Dictionary = {}):
 					switch_music(preload("res://Audio/STM2.ogg"), u_i.time_speed)
 			"battle":
 				$Ship.visible = false
-				if is_instance_valid(HUD) and $UI.is_ancestor_of(HUD):
-					$UI.remove_child(HUD)
+				if is_instance_valid(HUD) and is_ancestor_of(HUD):
+					$HUD.remove_child(HUD)
 				view.scale = Vector2.ONE
 				view.position = Vector2.ZERO
 				view.move_with_keyboard = false
@@ -1397,8 +1399,8 @@ func switch_view(new_view:String, other_params:Dictionary = {}):
 				ship_customize_screen.respeccing = other_params.get("respeccing", false)
 				add_child(ship_customize_screen)
 				ship_customize_screen.get_node("Label").text = other_params.get("label_text", "")
-				if is_instance_valid(HUD) and $UI.is_ancestor_of(HUD):
-					$UI.remove_child(HUD)
+				if is_instance_valid(HUD) and is_ancestor_of(HUD):
+					$HUD.remove_child(HUD)
 		if c_v in ["planet", "system", "galaxy", "cluster", "universe", "mining", "science_tree"] and is_instance_valid(HUD) and is_ancestor_of(HUD):
 			HUD.refresh()
 		if c_v == "universe" and is_instance_valid(HUD) and HUD.dimension_btn.visible:
@@ -1572,9 +1574,9 @@ func add_obj(view_str):
 	view.queue_redraw()
 
 func add_space_HUD():
-	if not is_instance_valid(space_HUD) or not $UI.is_ancestor_of(space_HUD):
+	if not is_instance_valid(space_HUD) or not is_ancestor_of(space_HUD):
 		space_HUD = load("res://Scenes/SpaceHUD.tscn").instantiate()
-		$UI.add_child(space_HUD)
+		$HUD.add_child(space_HUD)
 		if c_v in ["galaxy", "cluster"]:
 			space_HUD.get_node("VBoxContainer/Overlay").visible = true
 			add_overlay()
@@ -1596,7 +1598,7 @@ func add_overlay():
 	overlay.refresh_overlay()
 
 func remove_overlay():
-	if is_instance_valid(overlay) and $UI.is_ancestor_of(overlay):
+	if is_instance_valid(overlay) and is_ancestor_of(overlay):
 		if $GrayscaleRect.modulate.a > 0:
 			$GrayscaleRect/AnimationPlayer.play_backwards("Fade")
 		overlay.queue_free()
@@ -1607,13 +1609,13 @@ func add_annotator():
 	$UI.add_child(annotator)
 
 func remove_annotator():
-	if is_instance_valid(annotator) and $UI.is_ancestor_of(annotator):
+	if is_instance_valid(annotator) and is_ancestor_of(annotator):
 		$UI.remove_child(annotator)
 		annotator.free()
 
 func remove_space_HUD():
-	if is_instance_valid(space_HUD) and $UI.is_ancestor_of(space_HUD):
-		$UI.remove_child(space_HUD)
+	if is_instance_valid(space_HUD) and is_ancestor_of(space_HUD):
+		$HUD.remove_child(space_HUD)
 		space_HUD.queue_free()
 	remove_overlay()
 	remove_annotator()
@@ -1623,8 +1625,8 @@ func add_dimension():
 		PD_panel = preload("res://Scenes/Panels/PDPanel.tscn").instantiate()
 		PD_panel.hide()
 		$Panels/Control.add_child(PD_panel)
-	if is_instance_valid(HUD) and $UI.is_ancestor_of(HUD):
-		$UI.remove_child(HUD)
+	if is_instance_valid(HUD) and is_ancestor_of(HUD):
+		$HUD.remove_child(HUD)
 	if is_instance_valid(dimension):
 		dimension.visible = true
 		dimension.refresh_univs()
@@ -1825,7 +1827,7 @@ func add_planet(new_game:bool = false):
 	if not planet_data[c_p].has("discovered") or open_obj("Planets", c_p_g).is_empty():
 		generate_tiles(c_p)
 	planet_HUD = load("res://Scenes/Planet/PlanetHUD.tscn").instantiate()
-	$UI.add_child(planet_HUD)
+	$HUD.add_child(planet_HUD)
 	HUD.switch_btn_texture.texture = preload("res://Graphics/Buttons/SystemView.png")
 	if new_game:
 		planet_HUD.get_node("VBoxContainer/Construct").material.set_shader_parameter("color", Color(1.0, 0.75, 0.0, 1.0))
@@ -1952,7 +1954,7 @@ func generate_clusters(parent_id:int):
 		pos = Vector2.from_angle(randf_range(0, 2 * PI)) * dist_from_center
 		c_i["pos"] = pos
 		var DE_factor = pos.length() * u_i.dark_energy
-		c_i["redshift"] = Helper.clever_round(1 + DE_factor / 1000.0)
+		c_i["redshift"] = Helper.clever_round(DE_factor / 1000.0)
 		u_i.cluster_data.append(c_i)
 	clusters_generated += total_clust_num
 	fn_save_game()
@@ -1990,13 +1992,13 @@ func generate_galaxies(id:int):
 		}
 		if g_i.type == 6:
 			g_i["system_num"] = int(5000 + 10000 * pow(randf(), 2))
-			g_i["B_strength"] = Helper.clever_round(1e-9 * randf_range(3, 5) * progress * u_i.charge)#Influences star classes
+			g_i["B_strength"] = Helper.clever_round(1e-9 * randf_range(3, 5) * redshift * u_i.charge)#Influences star classes
 			g_i.dark_matter -= 0.05
 		else:
 			g_i["system_num"] = int(pow(randf(), 2) * 8000) + 2000
-			g_i["B_strength"] = Helper.clever_round(1e-9 * randf_range(0.5, 4) * progress * u_i.charge)
+			g_i["B_strength"] = Helper.clever_round(1e-9 * randf_range(0.5, 4) * redshift * u_i.charge)
 			if randf() < 0.6: #Dwarf galaxy
-				g_i.system_num *= 0.1
+				g_i.system_num = int(g_i.system_num * 0.1)
 		var pos:Vector2
 		var N = obj_shapes.size()
 		if N >= total_gal_num / 6:
@@ -2035,9 +2037,9 @@ func generate_galaxies(id:int):
 			u_i.cluster_data[id]["galaxies"].append([0, 0])
 		else:
 			if id == 0:#if the galaxies are in starting cluster
-				g_i["diff"] = Helper.clever_round((1 + pos.distance_to(galaxy_data[0].pos) / 70) * u_i.cluster_data[id].redshift * 1000.0)
+				g_i["diff"] = Helper.clever_round((1 + pos.distance_to(galaxy_data[0].pos) / 70) * (u_i.cluster_data[id].redshift + 1.0) * 1000.0)
 			else:
-				g_i["diff"] = Helper.clever_round(u_i.cluster_data[id].redshift * 100000.0 * randf_range(1.2, 1.5) / max(100, pow(pos.length(), 0.5)))
+				g_i["diff"] = Helper.clever_round((u_i.cluster_data[id].redshift + 1.0) * 100000.0 * randf_range(1.2, 1.5) / max(100, pow(pos.length(), 0.5)))
 			u_i.cluster_data[id]["galaxies"].append([g_i.id, g_i.l_id])
 			galaxy_data.append(g_i)
 	if progress == 1:
@@ -3100,7 +3102,7 @@ func generate_tiles(id:int):
 					spaceport_spawned = true
 				var obj = {
 					"tile": t_id,
-					"tier": max(1, int(-log(randf() / u_i.age / (1.0 + u_i.cluster_data[c_c].redshift * u_i.dark_energy)) / 3.0 + 1)),
+					"tier": max(1, int(-log(randf() / u_i.age / (1.0 + u_i.cluster_data[c_c].redshift)) / 3.0 + 1)),
 				}
 				if randf() < 1.0 - 0.5 * exp(-pow(p_i.temperature - 273, 2) / 20000.0) / pow(obj.tier, 2):
 					obj["repair_cost"] = 250000 * pow(obj.tier, 20) * randf_range(1, 3) * Data.ancient_bldg_repair_cost_multipliers[ancient_bldg]

@@ -17,7 +17,7 @@
 [ext_resource type="Texture2D" uid="uid://4tf3teqmkahc" path="res://Graphics/Misc/Bar.png" id="17"]
 [ext_resource type="Texture2D" uid="uid://dqchg3okkvtsv" path="res://Graphics/Misc/BarUnder.png" id="18"]
 [ext_resource type="Texture2D" uid="uid://dfevqh5sw4lvg" path="res://Graphics/Formulas/AuroraSpawn.png" id="18_drllu"]
-[ext_resource type="Shader" uid="uid://cxlvuojtpdoj2" path="res://Shaders/StarGrdient.gdshader" id="18_tqqip"]
+[ext_resource type="Shader" uid="uid://cxlvuojtpdoj2" path="res://Shaders/StarGradient.gdshader" id="18_tqqip"]
 [ext_resource type="PackedScene" uid="uid://cq2nl2mljdwdf" path="res://Scenes/CustomSpinBox.tscn" id="19"]
 [ext_resource type="Texture2D" uid="uid://bx1hvetixqpwi" path="res://Graphics/Misc/Bar2.png" id="20"]
 [ext_resource type="Texture2D" uid="uid://kr2fdk8dptv1" path="res://Graphics/Misc/BarUnder2.png" id="21"]

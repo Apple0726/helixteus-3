@@ -255,6 +255,8 @@ func add_MS_sprite(node, obj:Dictionary):
 	var MS_sprite = Sprite2D.new()
 	if obj.MS == "MB":
 		MS_sprite.texture = preload("res://Graphics/Megastructures/MB_0.png")
+		MS_sprite.material = ShaderMaterial.new()
+		MS_sprite.material.shader = preload("res://Shaders/Glow.gdshader")
 	else:
 		MS_sprite.texture = load("res://Graphics/Megastructures/%s_%s.png" % [obj.MS, obj.MS_lv])
 	if obj.MS == "SE":
@@ -736,7 +738,8 @@ func build_MS(obj:Dictionary, MS_to_build:String):
 		game.get_node("UI/Panel").hide()
 		MS_constr_data.clear()
 		game.space_HUD.get_node("StarPanel").refresh()
-		game.space_HUD.get_node("MSConstructPanel").hide_panel()
+		if is_instance_valid(game.MS_constr_panel):
+			game.fade_out_panel(game.MS_constr_panel)
 		refresh_planets()
 		refresh_stars()
 	else:

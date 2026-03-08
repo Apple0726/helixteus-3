@@ -449,6 +449,9 @@ stream = ExtResource("8")
 volume_db = 14.116
 bus = &"SFX"
 
+[node name="HUD" type="CanvasLayer" parent="." unique_id=506348500]
+layer = 2
+
 [node name="Panels" type="CanvasLayer" parent="." unique_id=1375824707]
 layer = 3
 

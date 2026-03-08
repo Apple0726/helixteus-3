@@ -20,15 +20,9 @@ func _on_Megastructures_pressed():
 	toggle_MS_construct_panel(-1)
 
 func toggle_MS_construct_panel(star_selected:int = -1):
-	if $MSConstructPanel.visible:
-		$MSConstructPanel.hide()
-	else:
-		game.hide_tooltip()
-		$MSConstructPanel.star_selected = star_selected
-		$MSConstructPanel/AnimationPlayer.play("Fade")
-		$MSConstructPanel.visible = true
-		$MSConstructPanel.set_process_input(true)
-		$MSConstructPanel.refresh()
+	game.toggle_panel("MS_constr_panel", false)
+	game.MS_constr_panel.star_selected = star_selected
+	game.MS_constr_panel.refresh()
 	if $StarPanel.visible:
 		$StarPanel/AnimationPlayer.play_backwards("Fade")
 

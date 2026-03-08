@@ -1,41 +1,33 @@
-extends Control
+extends "Panel.gd"
 
-@onready var game = get_node("/root/Game")
 var megastructures:Array = ["DS", "SE", "MME", "CBS", "MB", "PK"]
 var build_all:bool = false
 var star_selected = -1
 
 func _ready():
-	set_process_input(false)
+	set_polygon($Panel.size, $Panel.position)
+	for MS in megastructures:
+		var btn = Button.new()
+		btn.icon_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		btn.expand_icon = true
+		btn.icon = load("res://Graphics/Megastructures/%s_0.png" % MS)
+		btn.custom_minimum_size.y = 138.0
+		$Panel/ScrollContainer/VBoxContainer.add_child(btn)
+		btn.name = MS
+		btn.mouse_entered.connect(on_MS_over.bind(MS))
+		btn.mouse_exited.connect(on_MS_out)
+		btn.pressed.connect(on_MS_click.bind(MS))
 
 func _input(event):
-	if event is InputEventMouseMotion:
-		var rect:Rect2 = Rect2($Panel.position, $Panel.size)
-		game.block_scroll = rect.has_point(event.position)
-	if visible and (Input.is_action_just_released("cancel") or Input.is_action_just_released("right_click")):
-		hide_panel()
+	super(event)
 
 func _unhandled_input(event):
 	if Input.is_action_just_released("left_click") and visible:
-		hide_panel()
+		game.toggle_panel(panel_var_name)
 
 func refresh():
-	for btn in $Panel/ScrollContainer/VBoxContainer.get_children():
-		btn.free()
 	for MS in megastructures:
-		if star_selected != -1 and MS not in ["DS", "CBS", "MB", "PK"]:
-			continue
-		if MS != "MB" or game.science_unlocked.has("MB"):
-			var btn = Button.new()
-			btn.icon_alignment = HORIZONTAL_ALIGNMENT_CENTER
-			btn.expand_icon = true
-			btn.icon = load("res://Graphics/Megastructures/%s_0.png" % MS)
-			btn.custom_minimum_size.y = 138.0
-			$Panel/ScrollContainer/VBoxContainer.add_child(btn)
-			btn.name = MS
-			btn.mouse_entered.connect(on_MS_over.bind(MS))
-			btn.mouse_exited.connect(on_MS_out)
-			btn.pressed.connect(on_MS_click.bind(MS))
+		$Panel/ScrollContainer/VBoxContainer.get_node(MS).visible = (star_selected == -1 or MS in ["DS", "CBS", "MB", "PK"]) and (MS != "MB" or game.science_unlocked.has("MB"))
 
 func on_MS_over(MS:String):
 	game.show_tooltip("[font_size=20]{MS_name}[/font_size]\n\n{MS_desc}".format({"MS_name":tr("M_" + MS + "_NAME"), "MS_desc":tr("M_" + MS + "_DESC")}))
@@ -104,23 +96,7 @@ func on_MS_click(MS:String):
 		else:
 			game.popup(tr("NOT_ALL_STAGES_UNLOCKED"), 2.0)
 			return
-	hide_panel()
-
-
-func _on_construct_panel_animation_animation_finished(anim_name):
-	if $Panel.modulate.a == 0.0:
-		visible = false
-
-func hide_panel():
-	if not $AnimationPlayer.is_playing():
-		$AnimationPlayer.play_backwards("Fade")
-		set_process_input(false)
-		await get_tree().process_frame
-		game.block_scroll = false
-
-
-func _on_tree_exited():
-	game.block_scroll = false
+	game.toggle_panel(panel_var_name)
 
 
 func _on_build_all_toggled(toggled_on: bool) -> void:
