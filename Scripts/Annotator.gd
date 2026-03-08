@@ -1,6 +1,5 @@
-extends Panel
+extends "Panel.gd"
 
-@onready var game = get_node("/root/Game")
 var mode:String = ""
 var shape_color:Color = Color.WHITE
 var thickness:int = 10
@@ -9,6 +8,7 @@ var changing_thickness = false
 var mouse_in_panel:bool = false
 
 func _ready():
+	set_polygon($GUI.size, $GUI.position)
 	for node in $HBoxContainer.get_children():
 		node.get_node("Button").toggle_mode = true
 		node.get_node("Button").connect("pressed",Callable(self,"on_%s_pressed" % node.name))
@@ -33,11 +33,11 @@ func _ready():
 
 func _input(event):
 	if event is InputEventMouseMotion:
-		mouse_in_panel = Geometry2D.is_point_in_polygon(event.position - Vector2(256, 656), $Polygon2D.polygon)
+		mouse_in_panel = Geometry2D.is_point_in_polygon(event.position, polygon)
 		if $VBoxContainer.visible:
-			mouse_in_panel = mouse_in_panel or Geometry2D.is_point_in_polygon(event.position - Vector2(256, 656), $Polygon2D2.polygon)
+			mouse_in_panel = mouse_in_panel or Geometry2D.is_point_in_polygon(event.position, $PolygonVBox.polygon)
 		if $ColorPicker.visible:
-			mouse_in_panel = mouse_in_panel or Geometry2D.is_point_in_polygon(event.position - Vector2(256, 656), $Polygon2D3.polygon)
+			mouse_in_panel = mouse_in_panel or Geometry2D.is_point_in_polygon(event.position, $PolygonColorPicker.polygon)
 
 func on_icon_pressed(_texture):
 	$HBoxContainer/Icons/TextureRect.texture = _texture
@@ -92,9 +92,6 @@ func on_Icons_pressed(manual:bool = false):
 	Helper.add_label(tr("ANNOTATE_SHORTCUTS"), -1, false)
 	game.view.annotate_icon.texture = $HBoxContainer/Icons/TextureRect.texture
 
-func _on_close_button_pressed():
-	visible = false
-
 func _on_ColorPickerBtn_mouse_entered():
 	game.show_tooltip("%s (C)" % tr("SHAPE_COLOR"))
 
@@ -144,3 +141,7 @@ func _on_Annotator_visibility_changed():
 		game.sub_panel = null
 		game.view.annotate_icon.texture = null
 		game.get_node("UI/Panel").hide()
+
+func _on_close_button_pressed():
+	visible = false
+	game.block_scroll = false

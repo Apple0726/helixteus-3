@@ -1,4 +1,5 @@
 extends "Panel.gd"
+
 var editable:bool = false
 var is_int:bool = true
 var hovered_over:String = ""

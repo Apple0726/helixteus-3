@@ -1862,6 +1862,7 @@ func remove_cluster():
 	Helper.save_obj("Clusters", c_c, galaxy_data)
 
 func remove_galaxy():
+	galaxy_data[c_g].shapes = view.shapes_data
 	view.remove_obj("galaxy")
 	Helper.save_obj("Clusters", c_c, galaxy_data)
 	Helper.save_obj("Galaxies", c_g_g, system_data)
@@ -1989,6 +1990,7 @@ func generate_galaxies(id:int):
 			"view": {"pos":Vector2(640, 360), "zoom": 0.2},
 			"id": g_id + galaxies_generated,
 			"l_id": g_id,
+			"shapes": [],
 		}
 		if g_i.type == 6:
 			g_i["system_num"] = int(5000 + 10000 * pow(randf(), 2))
@@ -2071,6 +2073,7 @@ func generate_paris_galaxy(file):
 			"name": arr[2],
 			"id": s_id + systems_generated,
 			"l_id": s_id, # local_id
+			"shapes": [],
 		}
 		#Solar masses
 		var mass:float = float(arr[3]) / star_mass_param / 1600000.0

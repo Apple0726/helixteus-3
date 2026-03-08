@@ -219,7 +219,7 @@ func _draw():
 	if ship.visible and dest_pos != null and curr_pos != null:
 		draw_line(dep_pos, dest_pos, Color.RED)
 		draw_line(dep_pos, curr_pos, Color.GREEN)
-	if is_instance_valid(game.annotator):
+	if game.c_v in ["galaxy", "cluster", "universe"]:
 		for shape in shapes_data:
 			if shape.shape == "line":
 				draw_line(shape.points.start,shape.points.end,shape.color,shape.width)
@@ -229,6 +229,7 @@ func _draw():
 				draw_rect(rect,shape.color,false,shape.width)# true) TODOGODOT4 Antialiasing argument is missing
 			elif shape.shape == "circ":
 				draw_arc(shape.points.start, shape.points.end, 0, 2*PI, 100, shape.color, shape.width, true)
+	if is_instance_valid(game.annotator):
 		var shift = Input.is_action_pressed("shift")
 		if drawing_shape:
 			var lmp:Vector2 = to_local(mouse_position)
@@ -318,18 +319,17 @@ func refresh():
 		icon.queue_free()
 	annotate_icons.clear()
 	await get_tree().create_timer(0.0).timeout#This yield is needed to display annotations
-	if is_instance_valid(game.annotator):
-		for i in len(shapes_data):
-			var shape = shapes_data[i]
-			if shape and shape.shape == "icon":
-				var icon = Sprite2D.new()
-				icon.texture = load(shape.texture)
-				icon.scale = shape.scale
-				icon.modulate = shape.color
-				icon.rotation = shape.rotation
-				icon.position = shape.position
-				annotate_icons.append({"node":icon, "data":shapes_data[i]})
-				add_child(icon)
+	for i in len(shapes_data):
+		var shape = shapes_data[i]
+		if shape and shape.shape == "icon":
+			var icon = Sprite2D.new()
+			icon.texture = load(shape.texture)
+			icon.scale = shape.scale
+			icon.modulate = shape.color
+			icon.rotation = shape.rotation
+			icon.position = shape.position
+			annotate_icons.append({"node":icon, "data":shapes_data[i]})
+			add_child(icon)
 	queue_redraw()
 
 func add_obj(obj_str:String, pos:Vector2, sc:float, s_m:float = 1.0):
