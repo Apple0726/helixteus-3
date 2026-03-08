@@ -22,11 +22,8 @@ func _ready():
 	debris_collision_shape.disabled = false
 	$LightOccluder2D.occluder.polygon = debris_collision_shape.polygon
 	$Sprite2D.material.set_shader_parameter("aurora", aurora_intensity > 0.0)
-	if lava_intensity > 0.0:
-		$Lava.enabled = true
-		$Lava.rotation = randf_range(0, 2 * PI)
-		$Lava.position.x = randf_range(-128, 128)
-		$Lava.position.y = randf_range(-128, 128)
+	$Sprite2D.material.set_shader_parameter("has_lava", lava_intensity > 0.0)
+	$Sprite2D/LavaLight.enabled = lava_intensity > 0.0
 	$GPUParticles2D.modulate = self_modulate
 	$Sprite2D.modulate = self_modulate
 	crack_threshold = 60 * randf() / pow(scale.x, 3)

@@ -27,7 +27,7 @@ func _ready():
 		if Settings.enable_shaders:
 			cluster_btn.material = ShaderMaterial.new()
 			cluster_btn.material.shader = preload("res://Shaders/Cluster.gdshader")
-			cluster_btn.material.set_shader_parameter("seed", int(c_i.diff))
+			cluster_btn.material.set_shader_parameter("seed", int(c_i.redshift))
 			cluster_btn.material.set_shader_parameter("alpha", 0.0)
 			cluster_btn.material.set_shader_parameter("color", Color.from_hsv(hue, sat, 1.0))
 			cluster_tween.tween_property(cluster_btn.material, "shader_parameter/alpha", 1.0, 0.15)

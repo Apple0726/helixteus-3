@@ -9,6 +9,7 @@ var tile_num:int
 var surface:float
 var lake_num:int
 var ash_mult:float
+var EE_mult:float
 var SP_feature_mult:float
 var energy_feature_mult:float
 var p_i:Dictionary
@@ -95,6 +96,8 @@ func terraform_planet():
 	if tf_type in [Building.GREENHOUSE, Building.ATOM_MANIPULATOR, Building.SUBATOMIC_PARTICLE_REACTOR]:
 		p_i.bldg.path_2 = 1
 		p_i.bldg.path_2_value = Data.path_2[tf_type].value
+	if tf_type in [Building.ATOM_MANIPULATOR, Building.SUBATOMIC_PARTICLE_REACTOR]:
+		p_i["EE_mult"] = EE_mult
 	if tf_type == Building.RESEARCH_LAB:
 		game.autocollect.rsrc.SP += Data.path_1[Building.RESEARCH_LAB].value * surface * p_i.resource_production_bonus.get("SP", 1)
 	elif tf_type == Building.GREENHOUSE:
@@ -289,7 +292,7 @@ func _on_atom_manipulator_pressed():
 	tf_type = Building.ATOM_MANIPULATOR
 	set_bldg_cost_txt()
 	costs = Data.costs[Building.ATOM_MANIPULATOR].duplicate(true)
-	$Panel/BuildingPanel/Note.text = ""
+	$Panel/BuildingPanel/Note.text = tr("ENERGY_EFFICIENCY_MULT") + ": %.2f" % EE_mult
 	update_info()
 
 
@@ -297,5 +300,5 @@ func _on_subatomic_particle_reactor_pressed():
 	tf_type = Building.SUBATOMIC_PARTICLE_REACTOR
 	set_bldg_cost_txt()
 	costs = Data.costs[Building.SUBATOMIC_PARTICLE_REACTOR].duplicate(true)
-	$Panel/BuildingPanel/Note.text = ""
+	$Panel/BuildingPanel/Note.text = tr("ENERGY_EFFICIENCY_MULT") + ": %.2f" % EE_mult
 	update_info()

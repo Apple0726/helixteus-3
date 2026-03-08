@@ -75,6 +75,17 @@ shader_parameter/modulate_color = Vector4(1, 1, 1, 1)
 shader_parameter/reflection_strength = 0.5000000074506
 shader_parameter/reflection_power = 2.0000000149012003
 
+[sub_resource type="Shader" id="Shader_844bs"]
+code = "shader_type canvas_item;
+
+void fragment() {
+	vec3 orig_color = texture(TEXTURE, UV).rgb;
+	COLOR.rgb = vec3((orig_color.r + orig_color.g + orig_color.b) / 3.0);
+}"
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_f1kta"]
+shader = SubResource("Shader_844bs")
+
 [sub_resource type="CapsuleShape2D" id="27"]
 radius = 23.3054
 height = 151.187
@@ -627,6 +638,8 @@ region_enabled = true
 rendering_quadrant_size = 100
 
 [node name="Ash" type="TileMapLayer" parent="." unique_id=1662477646]
+z_index = -1
+material = SubResource("ShaderMaterial_f1kta")
 rendering_quadrant_size = 100
 
 [node name="Walls" type="TileMapLayer" parent="." unique_id=1016247985]

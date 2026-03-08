@@ -1779,3 +1779,4 @@ SHIPYARD_ERROR_2,"This cluster is completely conquered, so there is no point bui
 Construct a shipyard in another cluster and build fighters there.",,,,,,,,,,,,
 VIEW_STAR,View star,,,,,,,,,,,,
 MS_FULLY_CONSTRUCTED,This megastructure is fully constructed.,,,,,,,,,,,,
+ENERGY_EFFICIENCY_MULT,Energy efficiency multiplier,,,,,,,,,,,,

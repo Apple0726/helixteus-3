@@ -9,7 +9,6 @@ var ratios:Dictionary
 var difficulty:float#Amount of time per unit of atom/metal
 var energy_cost:float
 var au_mult:float
-var au_int:float
 var rsrc_type:String
 var atom_costs:Dictionary = {}
 var reactions:Dictionary = {
@@ -74,15 +73,12 @@ func refresh():
 			btn.disabled = false
 	if tf:
 		$Title.text = "%s %s" % [Helper.format_num(tile_num), tr("ATOM_MANIPULATOR_NAME_S").to_lower(),]
-		var max_star_temp = game.get_max_star_prop(game.c_s, "temperature")
-		au_int = 12000.0 * game.galaxy_data[game.c_g].B_strength * max_star_temp
-		au_mult = 1.0 + au_int
+		au_mult = obj.get("EE_mult", 1.0)
 	else:
 		tile_num = 1
 		$Title.text = tr("ATOM_MANIPULATOR_NAME")
 		obj = game.tile_data[game.c_t]
-		au_int = obj.get("aurora", 0.0)
-		au_mult = au_int + 1.0
+		au_mult = obj.get("aurora", 0.0) + 1.0
 	refresh_time_icon()
 	path_2_value = obj.bldg.path_2_value * Helper.get_IR_mult(Building.ATOM_MANIPULATOR)
 	for reaction_name in reactions:
@@ -138,7 +134,7 @@ func refresh():
 	rsrc_nodes_to = Helper.put_rsrc($Panel/Control2/To, 40, MM_dict, true, not atom_to_rsrc)
 	$Panel/Control/EnergyCostText.text = Helper.format_num(round(reactions[resource_selected].energy_cost * rsrc_value / au_mult / path_2_value)) + "  [img]Graphics/Icons/help.png[/img]"
 	if au_mult > 1:
-		$Panel/Control/EnergyCostText.help_text = ("[aurora au_int=%s]" % au_int) + tr("MORE_ENERGY_EFFICIENT") % Helper.clever_round(au_mult)
+		$Panel/Control/EnergyCostText.help_text = ("[aurora au_int=%s]" % (au_mult - 1.0)) + tr("MORE_ENERGY_EFFICIENT") % Helper.clever_round(au_mult)
 	else:
 		$Panel/Control/EnergyCostText.help_text = tr("AMN_TIP")
 	$Panel/ReactionInProgress.visible = obj.bldg.has("qty") and resource_selected == obj.bldg.reaction
@@ -319,7 +315,7 @@ func get_reaction_info(obj):
 
 func _on_EnergyCostText_mouse_entered():
 	if au_mult > 1:
-		game.show_tooltip(("[aurora au_int=%s]" % au_int) + tr("MORE_ENERGY_EFFICIENT") % Helper.clever_round(au_mult))
+		game.show_tooltip(("[aurora au_int=%s]" % (au_mult - 1.0)) + tr("MORE_ENERGY_EFFICIENT") % Helper.clever_round(au_mult))
 
 
 func _on_EnergyCostText_mouse_exited():

@@ -50,7 +50,6 @@ func on_slot_out():
 var calculating = false# Used to prevent _on_UseFertilizer_toggled from firing when setting button state manually
 
 func calc_prod_per_sec():
-	print("B")
 	for slot in hbox.get_children():
 		slot.get_node("Border").hide()
 	calculating = true

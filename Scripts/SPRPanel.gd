@@ -8,7 +8,6 @@ var difficulty:float#Amount of time per unit of atom/metal
 var energy_cost:float
 var resource_selected:String = ""
 var au_mult:float
-var au_int:float
 var Z:int
 var atom_costs:Dictionary = {}
 var reactions:Dictionary = {	"H":{"Z":1, "energy_cost":2, "difficulty":0.00005},
@@ -72,15 +71,12 @@ func refresh():
 			btn.disabled = false
 	if tf:
 		$Title.text = "%s %s" % [Helper.format_num(tile_num), tr("SUBATOMIC_PARTICLE_REACTOR_NAME_S").to_lower(),]
-		var max_star_temp = game.get_max_star_prop(game.c_s, "temperature")
-		au_int = 12000.0 * game.galaxy_data[game.c_g].B_strength * max_star_temp
-		au_mult = 1.0 + au_int
+		au_mult = obj.get("EE_mult", 1.0)
 	else:
 		$Title.text = tr("SUBATOMIC_PARTICLE_REACTOR_NAME")
 		tile_num = 1
 		obj = game.tile_data[game.c_t]
-		au_int = obj.get("aurora", 0.0)
-		au_mult = au_int + 1.0
+		au_mult = obj.get("aurora", 0.0) + 1.0
 	refresh_time_icon()
 	path_2_value = obj.bldg.path_2_value * Helper.get_IR_mult(Building.SUBATOMIC_PARTICLE_REACTOR)
 	for reaction_name in reactions:
@@ -101,7 +97,7 @@ func refresh():
 	var rsrc_value = $Panel/Control/HSlider.value * max_slider_value
 	$Panel/Control/EnergyCostText.text = Helper.format_num(round(energy_cost * rsrc_value / au_mult / game.u_i.charge / path_2_value)) + "  [img]Graphics/Icons/help.png[/img]"
 	if au_mult > 1:
-		$Panel/Control/EnergyCostText.help_text = ("[aurora au_int=%s]" % au_int) + tr("MORE_ENERGY_EFFICIENT") % Helper.clever_round(au_mult)
+		$Panel/Control/EnergyCostText.help_text = ("[aurora au_int=%s]" % (au_mult - 1.0)) + tr("MORE_ENERGY_EFFICIENT") % Helper.clever_round(au_mult)
 	else:
 		$Panel/Control/EnergyCostText.help_text = tr("AMN_TIP")
 	$Panel/Control/TimeCostText.text = Helper.time_to_str(difficulty * rsrc_value / obj.bldg.path_1_value / Helper.get_IR_mult(Building.SUBATOMIC_PARTICLE_REACTOR) / tile_num / game.u_i.time_speed / obj.get("time_speed_bonus", 1.0) / game.u_i.charge)
@@ -253,7 +249,7 @@ func refresh_time_icon():
 
 func _on_EnergyCostText_mouse_entered():
 	if au_mult > 1:
-		game.show_tooltip(("[aurora au_int=%s]" % au_int) + tr("MORE_ENERGY_EFFICIENT") % Helper.clever_round(au_mult))
+		game.show_tooltip(("[aurora au_int=%s]" % (au_mult - 1.0)) + tr("MORE_ENERGY_EFFICIENT") % Helper.clever_round(au_mult))
 
 func get_reaction_info(obj):
 	var MM_value:float = clamp((Time.get_unix_time_from_system() - obj.bldg.start_date) / difficulty * obj.bldg.path_1_value * tile_num * Helper.get_IR_mult(Building.SUBATOMIC_PARTICLE_REACTOR) * game.u_i.time_speed * obj.get("time_speed_bonus", 1.0) * game.u_i.charge, 0, obj.bldg.qty)

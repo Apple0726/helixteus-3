@@ -4591,6 +4591,7 @@ func add_right_click_menu(items:Array, on_close_no_action_callable = null):
 
 func _on_probe_timer_timeout() -> void:
 	var curr_time = Time.get_unix_time_from_system()
+	var refresh = false
 	for i in len(probe_data):
 		var probe = probe_data[i]
 		if not probe or not probe.has("start_date"):
@@ -4603,3 +4604,6 @@ func _on_probe_timer_timeout() -> void:
 				u_i.cluster_data[probe.obj_to_discover].visible = true
 				popup(tr("CLUSTER_DISCOVERED_BY_PROBE"), 3)
 			probe_data[i] = null
+			refresh = true
+	if refresh and is_instance_valid(vehicle_panel) and vehicle_panel.tab == vehicle_panel.PROBES:
+		vehicle_panel.refresh()

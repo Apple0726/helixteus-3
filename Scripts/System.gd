@@ -743,11 +743,12 @@ func build_MS(obj:Dictionary, MS_to_build:String):
 		game.popup(tr("NOT_ENOUGH_RESOURCES"), 1.5)
 
 func toggle_GH(p_i:Dictionary, fertilizer:bool):
+	game.toggle_panel("greenhouse_panel", false)
 	game.greenhouse_panel.tile_num = p_i.tile_num
 	game.greenhouse_panel.p_i = p_i
 	game.greenhouse_panel.fertilizer = fertilizer
 	game.greenhouse_panel.c_v = "system"
-	game.toggle_panel(game.greenhouse_panel)
+	game.greenhouse_panel.refresh()
 
 func on_planet_click (id:int, l_id:int):
 	var p_i = game.planet_data[l_id]

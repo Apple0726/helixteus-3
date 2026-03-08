@@ -65,8 +65,6 @@ func update_info(first_time:bool = false):
 	var upper_depth
 	var lower_depth 
 	var unit:String = "m"
-	if is_instance_valid(BG_tween):
-		BG_tween.kill()
 	if tile.has("crater"):
 		layer = "crater"
 		upper_depth = tile.crater.init_depth
@@ -75,15 +73,16 @@ func update_info(first_time:bool = false):
 		layer = "surface"
 		upper_depth = 0
 		lower_depth = p_i.crust_start_depth
+		$CrustBG.modulate.a = 0.25
 	elif tile.depth <= p_i.mantle_start_depth:
 		if layer != "crust":
 			if first_time:
-				$SurfaceBG.modulate.a = 0
 				$CrustBG.modulate.a = 0.25
 			else:
+				if is_instance_valid(BG_tween) and BG_tween.is_running():
+					BG_tween.kill()
 				BG_tween = create_tween()
 				BG_tween.set_parallel(true)
-				BG_tween.tween_property($SurfaceBG, "modulate", Color(1, 1, 1, 0), 3)
 				BG_tween.tween_property($CrustBG, "modulate", Color(1, 1, 1, 0.25), 3)
 		layer = "crust"
 		upper_depth = p_i.crust_start_depth + 1
@@ -91,7 +90,6 @@ func update_info(first_time:bool = false):
 	elif tile.depth <= p_i.core_start_depth:
 		if layer != "mantle":
 			if first_time:
-				$SurfaceBG.modulate.a = 0
 				$CrustBG.modulate.a = 0
 				if Settings.enable_shaders:
 					$MantleBG.visible = true
@@ -100,13 +98,14 @@ func update_info(first_time:bool = false):
 					$MantleBGNoShader.visible = true
 					$MantleBGNoShader.modulate.a = 0.45
 			else:
+				if is_instance_valid(BG_tween) and BG_tween.is_running():
+					BG_tween.kill()
 				BG_tween = create_tween()
 				BG_tween.set_parallel(true)
-				BG_tween.tween_property($SurfaceBG, "modulate", Color(1, 1, 1, 0), 3)
-				BG_tween.tween_property($CrustBG, "modulate", Color(1, 1, 1, 0), 3)
+				BG_tween.tween_property($CrustBG, "modulate:a", 0.0, 3)
 				if Settings.enable_shaders:
 					$MantleBG.visible = true
-					BG_tween.tween_property($MantleBG, "modulate:a", 0.55, 3)
+					BG_tween.tween_property($MantleBG.material, "shader_parameter/alpha", 0.5, 3)
 				else:
 					$MantleBGNoShader.visible = true
 					BG_tween.tween_property($MantleBGNoShader, "modulate", Color(1, 1, 1, 0.45), 3)

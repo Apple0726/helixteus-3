@@ -34,7 +34,6 @@ func _on_Timer_timeout():
 	if not visible or tab != PROBES:
 		return
 	var curr_time = Time.get_unix_time_from_system()
-	var refresh:bool = false
 	for dict in probe_time_bars:
 		var i = dict.i
 		var probe = game.probe_data[i]
@@ -46,10 +45,6 @@ func _on_Timer_timeout():
 		var progress = (curr_time - start_date) / float(length)
 		bar.get_node("TimeString").text = Helper.time_to_str(length - curr_time + start_date)
 		bar.get_node("Bar").value = progress
-	if tab == PROBES:
-		refresh()
-	await get_tree().process_frame
-	$Timer.start()
 
 
 func _on_rovers_pressed():
@@ -224,7 +219,11 @@ func _on_probes_pressed():
 			probe.get_node("StatusLabel").position.x = 328.0
 		else:
 			probe.get_node("StatusLabel").text = tr("ON_STANDBY")
-			
+	if probe_num > 0:
+		_on_Timer_timeout()
+		$ProbeTimer.start()
+	else:
+		$ProbeTimer.stop()
 	#$Probes/Label.text = "%s (%s / %s)" % [tr("PROBES"), probe_num, 500]
 
 func probe_go_to(probe_tier:int):

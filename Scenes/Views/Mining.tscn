@@ -3,6 +3,7 @@
 [ext_resource type="Texture2D" uid="uid://ds6nct7g63284" path="res://Graphics/Icons/Arrow.png" id="1"]
 [ext_resource type="Theme" uid="uid://cp2u1kgj60ic" path="res://Resources/default_theme.tres" id="2"]
 [ext_resource type="Script" uid="uid://btbho1iojymrx" path="res://Scripts/Mining.gd" id="3"]
+[ext_resource type="Texture2D" uid="uid://dpv3p5kphbej4" path="res://Graphics/Tiles/Mosaics/3.jpg" id="3_jo4xf"]
 [ext_resource type="Texture2D" uid="uid://4tf3teqmkahc" path="res://Graphics/Misc/Bar.png" id="4"]
 [ext_resource type="AudioStream" uid="uid://djsyjnactuti8" path="res://Audio/SFX/break_rock.ogg" id="5"]
 [ext_resource type="Texture2D" uid="uid://dj4mh887jy68d" path="res://Graphics/Spritesheets/cracks.png" id="6"]
@@ -12,9 +13,7 @@
 [ext_resource type="AudioStream" uid="uid://dvok0oof7xxj5" path="res://Audio/SFX/mining_metal.ogg" id="9"]
 [ext_resource type="PackedScene" uid="uid://bwon75bhhf24u" path="res://Scenes/SquareBar.tscn" id="10"]
 [ext_resource type="Texture2D" uid="uid://dwstl3xmwv5vh" path="res://Graphics/Icons/Circle.png" id="11"]
-[ext_resource type="Texture2D" uid="uid://de22mr1khmw2" path="res://Graphics/Decoratives/Surface.jpg" id="12"]
 [ext_resource type="Texture2D" uid="uid://cverxuaowfm22" path="res://Graphics/Decoratives/Mantle.jpg" id="13"]
-[ext_resource type="Texture2D" uid="uid://ibqyp4tcqbub" path="res://Graphics/Decoratives/Crust.jpg" id="14"]
 [ext_resource type="Shader" uid="uid://duu7e1dd02poe" path="res://Shaders/Mantle.gdshader" id="15"]
 [ext_resource type="Script" uid="uid://cbdpyvjmvsy64" path="res://Scripts/TextEffects/AuroraText.gd" id="16"]
 [ext_resource type="Texture2D" uid="uid://dl0tbc2d816cj" path="res://Graphics/Misc/noise_combined.png" id="17"]
@@ -24,7 +23,7 @@
 shader = ExtResource("15")
 shader_parameter/color = Color(0.94902, 0.47451, 0, 1)
 shader_parameter/speed = 0.03
-shader_parameter/alpha = 0.25
+shader_parameter/alpha = 0.0
 
 [sub_resource type="Shader" id="Shader_mi8i0"]
 code = "shader_type canvas_item;
@@ -266,15 +265,12 @@ anchors_preset = 0
 theme = ExtResource("2")
 script = ExtResource("3")
 
-[node name="SurfaceBG" type="Sprite2D" parent="." unique_id=185335945]
-modulate = Color(1, 1, 1, 0.313726)
-texture = ExtResource("12")
-centered = false
-
 [node name="CrustBG" type="Sprite2D" parent="." unique_id=1898141693]
-modulate = Color(1, 1, 1, 0)
-texture = ExtResource("14")
+texture_repeat = 2
+texture = ExtResource("3_jo4xf")
 centered = false
+region_enabled = true
+region_rect = Rect2(0, 0, 1280, 720)
 
 [node name="MantleBG" type="Sprite2D" parent="." unique_id=1877095904]
 visible = false
@@ -412,11 +408,15 @@ stretch_mode = 6
 layout_mode = 2
 text = "100 kg"
 
-[node name="LayerInfo" type="Node2D" parent="." unique_id=1154658637]
+[node name="LayerInfo" type="Control" parent="." unique_id=1985535358]
 modulate = Color(1, 1, 1, 0)
-position = Vector2(-64.1282, 0)
+anchors_preset = 0
+offset_left = -64.1282
+offset_right = -64.1282
+theme = ExtResource("2")
 
 [node name="Layer" parent="LayerInfo" unique_id=1975625287 instance=ExtResource("18")]
+layout_mode = 0
 offset_left = -16.0
 offset_top = 120.0
 offset_right = 224.0
@@ -425,6 +425,7 @@ text = "[center] [img]Graphics/Icons/help.png[/img][/center]"
 align = 1
 
 [node name="Upper" type="Label" parent="LayerInfo" unique_id=91871963]
+layout_mode = 0
 offset_left = 112.0
 offset_top = 160.0
 offset_right = 304.0
@@ -432,6 +433,7 @@ offset_bottom = 184.0
 text = "0 m"
 
 [node name="Lower" type="Label" parent="LayerInfo" unique_id=1365555982]
+layout_mode = 0
 offset_left = 112.0
 offset_top = 616.0
 offset_right = 304.0
@@ -444,14 +446,19 @@ points = PackedVector2Array(116, 172, 116, 628)
 width = 5.0
 default_color = Color(0.694118, 0.694118, 0.694118, 1)
 
-[node name="Depth" type="Node2D" parent="LayerInfo" unique_id=1264038060]
-position = Vector2(92, 172)
+[node name="Depth" type="Control" parent="LayerInfo" unique_id=1754053364]
+anchors_preset = 0
+offset_left = 92.0
+offset_top = 172.0
+offset_right = 92.0
+offset_bottom = 172.0
 
 [node name="Arrow" type="Polygon2D" parent="LayerInfo/Depth" unique_id=1404568243]
 position = Vector2(-72, -184)
 polygon = PackedVector2Array(72, 184, 60, 172, 60, 196, 72, 184)
 
 [node name="Label" type="Label" parent="LayerInfo/Depth" unique_id=1636114423]
+layout_mode = 0
 offset_left = -88.0
 offset_top = -12.0
 offset_right = -20.0

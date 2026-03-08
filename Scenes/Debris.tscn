@@ -5,11 +5,14 @@
 [ext_resource type="Texture2D" uid="uid://cjmi7f8211uny" path="res://Graphics/Cave/DebrisLava.png" id="3"]
 [ext_resource type="Texture2D" uid="uid://b1dcgxga387up" path="res://Graphics/Effects/spotlight_1.png" id="4"]
 [ext_resource type="Texture2D" uid="uid://doyhcr5ker08v" path="res://Graphics/Cave/DebrisAnim.png" id="5"]
+[ext_resource type="Texture2D" uid="uid://cvetejccba6ge" path="res://Graphics/Stars/Star.png" id="6_cch3s"]
 
 [sub_resource type="Shader" id="7"]
 code = "shader_type canvas_item;
 
-uniform bool aurora = true;
+uniform sampler2D lava_texture: repeat_enable;
+uniform bool aurora = false;
+uniform bool has_lava = false;
 uniform float intensity: hint_range(1.0, 5.0);
 uniform vec4 modulate_color: source_color = vec4(1.0);
 
@@ -24,13 +27,20 @@ void fragment() {
 }
 
 void light() {
-	LIGHT = vec4(LIGHT_COLOR.rgb * LIGHT_ENERGY, LIGHT_COLOR.a);
+	if (has_lava) {
+		vec4 lava_color = texture(lava_texture, vec2(UV.x * 6.0, UV.y));
+		LIGHT = lava_color;
+	} else {
+		LIGHT = vec4(LIGHT_COLOR.rgb * LIGHT_ENERGY, LIGHT_COLOR.a);
+	}
 }"
 
 [sub_resource type="ShaderMaterial" id="8"]
 resource_local_to_scene = true
 shader = SubResource("7")
+shader_parameter/lava_texture = ExtResource("3")
 shader_parameter/aurora = false
+shader_parameter/has_lava = true
 shader_parameter/intensity = 1.0
 shader_parameter/modulate_color = Color(1, 1, 1, 1)
 
@@ -136,18 +146,17 @@ _data = {
 [node name="Debris" type="Node2D" unique_id=1279317713]
 script = ExtResource("2")
 
-[node name="Lava" type="PointLight2D" parent="." unique_id=1305093223]
-enabled = false
-energy = 1.85
-range_item_cull_mask = 2
-texture = ExtResource("3")
-
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=646558497]
-light_mask = 3
+light_mask = 2
 z_index = -1
 material = SubResource("8")
 texture = ExtResource("1")
 hframes = 6
+
+[node name="LavaLight" type="PointLight2D" parent="Sprite2D" unique_id=22819211]
+scale = Vector2(0.6, 0.6)
+range_item_cull_mask = 2
+texture = ExtResource("6_cch3s")
 
 [node name="GPUParticles2D" type="GPUParticles2D" parent="." unique_id=1306704824]
 material = SubResource("4")

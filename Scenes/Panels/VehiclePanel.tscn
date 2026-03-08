@@ -63,9 +63,7 @@ text = "VEHICLES"
 label_settings = SubResource("LabelSettings_i3vqf")
 vertical_alignment = 1
 
-[node name="Timer" type="Timer" parent="." unique_id=961271618]
-one_shot = true
-autostart = true
+[node name="ProbeTimer" type="Timer" parent="." unique_id=961271618]
 
 [node name="HBoxContainer" type="HBoxContainer" parent="." unique_id=2031375352]
 layout_mode = 0
@@ -102,7 +100,7 @@ theme_override_styles/panel = SubResource("StyleBoxFlat_78r6f")
 layout_mode = 2
 
 [connection signal="pressed" from="CloseButton" to="." method="_on_close_button_pressed"]
-[connection signal="timeout" from="Timer" to="." method="_on_Timer_timeout"]
+[connection signal="timeout" from="ProbeTimer" to="." method="_on_Timer_timeout"]
 [connection signal="pressed" from="HBoxContainer/Rovers" to="." method="_on_rovers_pressed"]
 [connection signal="pressed" from="HBoxContainer/Fighters" to="." method="_on_fighters_pressed"]
 [connection signal="pressed" from="HBoxContainer/Probes" to="." method="_on_probes_pressed"]

@@ -19,6 +19,7 @@ func _ready():
 	$TabBar/Items._on_Button_pressed()
 
 func refresh():
+	set_process(true)
 	if tab == "items":
 		$TabBar/Items._on_Button_pressed()
 		_on_Items_pressed()
