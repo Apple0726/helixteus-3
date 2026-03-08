@@ -93,10 +93,10 @@ custom_minimum_size = Vector2(0, 40)
 layout_mode = 2
 button_text = "B_STRENGTH"
 
-[node name="FM" parent="ScrollContainer/VBoxContainer" unique_id=619235885 instance=ExtResource("1")]
+[node name="Redshift" parent="ScrollContainer/VBoxContainer" unique_id=619235885 instance=ExtResource("1")]
 custom_minimum_size = Vector2(0, 40)
 layout_mode = 2
-button_text = "FERROMAGNETIC_MATERIALS"
+button_text = "REDSHIFT"
 
 [node name="DarkEnergy" parent="ScrollContainer/VBoxContainer" unique_id=1463567763 instance=ExtResource("1")]
 custom_minimum_size = Vector2(0, 40)
@@ -109,5 +109,5 @@ button_text = "DARK_ENERGY"
 [connection signal="pressed" from="ScrollContainer/VBoxContainer/LevelUnlocks" to="." method="_on_LevelUnlocks_pressed"]
 [connection signal="pressed" from="ScrollContainer/VBoxContainer/DarkMatter" to="." method="_on_DarkMatter_pressed"]
 [connection signal="pressed" from="ScrollContainer/VBoxContainer/B_strength" to="." method="_on_B_strength_pressed"]
-[connection signal="pressed" from="ScrollContainer/VBoxContainer/FM" to="." method="_on_FM_pressed"]
+[connection signal="pressed" from="ScrollContainer/VBoxContainer/Redshift" to="." method="_on_FM_pressed"]
 [connection signal="pressed" from="ScrollContainer/VBoxContainer/DarkEnergy" to="." method="_on_DarkEnergy_pressed"]

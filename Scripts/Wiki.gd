@@ -37,9 +37,9 @@ func _on_Aurora_pressed():
 			child.button_pressed = false
 
 func _on_FM_pressed():
-	$Panel/Text.text = tr("FM_DESC")
+	$Panel/Text.text = tr("REDSHIFT_DESC")
 	for child in vbox.get_children():
-		if child != $ScrollContainer/VBoxContainer/FM:
+		if child != $ScrollContainer/VBoxContainer/Redshift:
 			child.button_pressed = false
 
 

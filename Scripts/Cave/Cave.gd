@@ -462,7 +462,7 @@ func generate_cave(first_floor:bool, going_up:bool):
 	for met in game.met_info:
 		if met == "lead" or pow(game.met_info[met].rarity, 1.4) * 3.0 < difficulty:
 			possible_metal_spawns.append(met)
-	rarity_exponent = remap(cave_floor, 8, 32, 0.9, 0.5)
+	rarity_exponent = remap(cave_floor, 8, 32, 0.9, 0.5) / pow(game.u_i.cluster_data[game.c_c].redshift, 0.2)
 	if is_aurora_cave:
 		rarity_exponent *= 0.9
 	if volcano_mult > 1 and not artificial_volcano:
@@ -1639,7 +1639,7 @@ func mine_wall_complete(tile_pos:Vector2, tile_id:int):
 			rsrc[mat] = amount
 	if deposits.has(st):
 		var deposit = deposits[st]
-		rsrc[deposit.rsrc_name] = Helper.clever_round(3.0 * deposit.amount * randf_range(0.95, 1.05) * difficulty / pow(game.met_info[deposit.rsrc_name].rarity, rarity_exponent))
+		rsrc[deposit.rsrc_name] = Helper.clever_round(3.0 * deposit.amount * randf_range(0.95, 1.05) * difficulty * exp(cave_floor / 10.0) / pow(game.met_info[deposit.rsrc_name].rarity, rarity_exponent))
 		deposit.queue_free()
 		deposits.erase(st)
 	var remainder:float = filter_and_add(rsrc)

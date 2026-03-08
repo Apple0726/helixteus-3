@@ -31,42 +31,6 @@ text = "CLICK_DRIVE_TO_USE"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="Panel" type="PanelContainer" parent="." unique_id=1816628462]
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -204.0
-offset_top = -204.0
-offset_right = 204.0
-offset_bottom = -84.0
-grow_horizontal = 2
-grow_vertical = 2
-
-[node name="Drives" type="HBoxContainer" parent="Panel" unique_id=1959086438]
-layout_mode = 2
-alignment = 1
-
-[node name="CD" type="TextureButton" parent="Panel/Drives" unique_id=1534230563]
-modulate = Color(1, 1, 1, 0.501961)
-custom_minimum_size = Vector2(100, 0)
-layout_mode = 2
-theme = ExtResource("7")
-texture_normal = ExtResource("4")
-ignore_texture_size = true
-stretch_mode = 5
-
-[node name="ID" type="TextureButton" parent="Panel/Drives" unique_id=2132959637]
-modulate = Color(1, 1, 1, 0.501961)
-custom_minimum_size = Vector2(100, 0)
-layout_mode = 2
-theme = ExtResource("7")
-texture_normal = ExtResource("3")
-ignore_texture_size = true
-stretch_mode = 5
-
 [node name="Control" type="Control" parent="." unique_id=55536350]
 layout_mode = 1
 anchors_preset = 15
@@ -187,6 +151,42 @@ offset_right = 440.0
 offset_bottom = 388.0
 text = "SPEED_UP_SHIPS"
 
+[node name="Panel" type="PanelContainer" parent="." unique_id=1816628462]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -204.0
+offset_top = -204.0
+offset_right = 204.0
+offset_bottom = -84.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Drives" type="HBoxContainer" parent="Panel" unique_id=1959086438]
+layout_mode = 2
+alignment = 1
+
+[node name="CD" type="TextureButton" parent="Panel/Drives" unique_id=1534230563]
+modulate = Color(1, 1, 1, 0.501961)
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+theme = ExtResource("7")
+texture_normal = ExtResource("4")
+ignore_texture_size = true
+stretch_mode = 5
+
+[node name="ID" type="TextureButton" parent="Panel/Drives" unique_id=2132959637]
+modulate = Color(1, 1, 1, 0.501961)
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+theme = ExtResource("7")
+texture_normal = ExtResource("3")
+ignore_texture_size = true
+stretch_mode = 5
+
 [node name="BackButton" type="Button" parent="." unique_id=508088053]
 layout_mode = 1
 anchors_preset = 2
@@ -198,8 +198,8 @@ grow_vertical = 0
 text = "<- Back"
 
 [connection signal="visibility_changed" from="." to="." method="_on_visibility_changed"]
-[connection signal="pressed" from="Panel/Drives/CD" to="." method="_on_ChemicalDrive_pressed"]
-[connection signal="pressed" from="Panel/Drives/ID" to="." method="_on_IonDrive_pressed"]
 [connection signal="value_changed" from="Control/HSlider" to="." method="_on_h_slider_value_changed"]
 [connection signal="pressed" from="Control/UseDrive" to="." method="use_drive"]
+[connection signal="pressed" from="Panel/Drives/CD" to="." method="_on_ChemicalDrive_pressed"]
+[connection signal="pressed" from="Panel/Drives/ID" to="." method="_on_IonDrive_pressed"]
 [connection signal="pressed" from="BackButton" to="." method="_on_back_button_pressed"]

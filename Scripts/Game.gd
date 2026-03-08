@@ -863,7 +863,7 @@ func new_game(univ:int = 0, new_save:bool = false, DR_advantage = false):
 		for met in met_info.keys():
 			show[met] = true
 	#Stores information of all objects discovered
-	u_i.cluster_data = [{"id":0, "visible":true, "type":0, "shapes":[], "class":ClusterType.GROUP, "name":tr("LOCAL_GROUP"), "pos":Vector2.ZERO, "diff":u_i.difficulty, "FM":u_i.dark_energy, "parent":0, "galaxy_num":55, "galaxies":[], "view":{"pos":Vector2(640, 360), "zoom":1 / 4.0}, "rich_elements":{}}]
+	u_i.cluster_data = [{"id":0, "visible":true, "type":0, "shapes":[], "class":ClusterType.GROUP, "name":tr("LOCAL_GROUP"), "pos":Vector2.ZERO, "redshift":u_i.dark_energy, "parent":0, "galaxy_num":55, "galaxies":[], "view":{"pos":Vector2(640, 360), "zoom":1 / 4.0}, "rich_elements":{}}]
 	galaxy_data = [{"id":0, "l_id":0, "type":0, "shapes":[], "name":tr("MILKY_WAY"), "pos":Vector2.ZERO, "rotation":0, "diff":u_i.difficulty, "B_strength":1e-9 * u_i.charge * u_i.dark_energy, "dark_matter":1.0, "parent":0, "system_num":400, "view":{"pos":Vector2(7500, 7500) * 0.5 + Vector2(640, 360), "zoom":0.5}}]
 	var s_b:float = pow(u_i.boltzmann, 4) / pow(u_i.planck, 3) / pow(u_i.speed_of_light, 2)
 	system_data = [{"id":0, "l_id":0, "name":tr("SOLAR_SYSTEM"), "pos":Vector2(-7500, -7500), "diff":u_i.difficulty, "parent":0, "planet_num":7, "planets":[], "view":{"pos":Vector2(640, 150), "zoom":2}, "stars":[{"type":StarType.MAIN_SEQUENCE, "class":"G2", "size":1, "temperature":5500, "mass":u_i.planck, "luminosity":s_b, "pos":Vector2(0, 0)}]}]
@@ -1543,17 +1543,17 @@ func add_obj(view_str):
 		"system":
 			view.add_obj("System", system_data[c_s]["view"]["pos"], system_data[c_s]["view"]["zoom"])
 			if ships_travel_data.c_g_coords.s == c_s_g:
-				system_data[c_s].explored = true
+				system_data[c_s]["explored"] = true
 		"galaxy":
 			view.shapes_data = galaxy_data[c_g].get("shapes", [])
 			view.add_obj("Galaxy", galaxy_data[c_g].view.pos, galaxy_data[c_g].view.zoom)
 			if ships_travel_data.c_g_coords.g == c_g_g:
-				galaxy_data[c_g].explored = true
+				galaxy_data[c_g]["explored"] = true
 		"cluster":
 			view.shapes_data = u_i.cluster_data[c_c].shapes
 			view.add_obj("Cluster", u_i.cluster_data[c_c]["view"]["pos"], u_i.cluster_data[c_c]["view"]["zoom"])
 			if ships_travel_data.c_coords.c == c_c:
-				u_i.cluster_data[c_c].explored = true
+				u_i.cluster_data[c_c]["explored"] = true
 		"universe":
 			view.shapes_data = universe_data[c_u].shapes
 			view.add_obj("Universe", universe_data[c_u]["view"]["pos"], universe_data[c_u]["view"]["zoom"], universe_data[c_u]["view"]["sc_mult"])
@@ -1944,7 +1944,7 @@ func generate_clusters(parent_id:int):
 		if _i == 1:
 			dist_from_center = 200
 			c_i["class"] = ClusterType.GROUP
-			c_i.galaxy_num = randi_range(80, 100)
+			c_i["galaxy_num"] = randi_range(80, 100)
 		var _rich_elements = rich_element_list.duplicate()
 		_rich_elements.shuffle()
 		for j in range(0, int(remap(dist_from_center, 0, 12000, 1, 5))):
@@ -1952,8 +1952,7 @@ func generate_clusters(parent_id:int):
 		pos = Vector2.from_angle(randf_range(0, 2 * PI)) * dist_from_center
 		c_i["pos"] = pos
 		var DE_factor = pos.length() * u_i.dark_energy
-		c_i["FM"] = Helper.clever_round(1 + DE_factor / 1000.0)#Ferromagnetic materials
-		c_i["diff"] = Helper.clever_round((1 + DE_factor) * u_i.difficulty)
+		c_i["redshift"] = Helper.clever_round(1 + DE_factor / 1000.0)
 		u_i.cluster_data.append(c_i)
 	clusters_generated += total_clust_num
 	fn_save_game()
@@ -1977,7 +1976,7 @@ func generate_galaxies(id:int):
 	var galaxy_num = total_gal_num - u_i.cluster_data[id]["galaxies"].size()
 	var gal_num_to_load = min(500, galaxy_num)
 	var progress = 1 - (galaxy_num - gal_num_to_load) / float(total_gal_num)
-	var FM:float = u_i.cluster_data[id].FM
+	var redshift:float = u_i.cluster_data[id].redshift
 	for i in range(0, gal_num_to_load):
 		var g_id = galaxy_data.size()
 		var g_i = {
@@ -1991,11 +1990,11 @@ func generate_galaxies(id:int):
 		}
 		if g_i.type == 6:
 			g_i["system_num"] = int(5000 + 10000 * pow(randf(), 2))
-			g_i["B_strength"] = Helper.clever_round(1e-9 * randf_range(3, 5) * FM * u_i.charge)#Influences star classes
+			g_i["B_strength"] = Helper.clever_round(1e-9 * randf_range(3, 5) * progress * u_i.charge)#Influences star classes
 			g_i.dark_matter -= 0.05
 		else:
 			g_i["system_num"] = int(pow(randf(), 2) * 8000) + 2000
-			g_i["B_strength"] = Helper.clever_round(1e-9 * randf_range(0.5, 4) * FM * u_i.charge)
+			g_i["B_strength"] = Helper.clever_round(1e-9 * randf_range(0.5, 4) * progress * u_i.charge)
 			if randf() < 0.6: #Dwarf galaxy
 				g_i.system_num *= 0.1
 		var pos:Vector2
@@ -2036,9 +2035,9 @@ func generate_galaxies(id:int):
 			u_i.cluster_data[id]["galaxies"].append([0, 0])
 		else:
 			if id == 0:#if the galaxies are in starting cluster
-				g_i["diff"] = Helper.clever_round((1 + pos.distance_to(galaxy_data[0].pos) / 70) * u_i.cluster_data[id].diff)
+				g_i["diff"] = Helper.clever_round((1 + pos.distance_to(galaxy_data[0].pos) / 70) * u_i.cluster_data[id].redshift * 1000.0)
 			else:
-				g_i["diff"] = Helper.clever_round(u_i.cluster_data[id].diff * randf_range(120, 150) / max(100, pow(pos.length(), 0.5)))
+				g_i["diff"] = Helper.clever_round(u_i.cluster_data[id].redshift * 100000.0 * randf_range(1.2, 1.5) / max(100, pow(pos.length(), 0.5)))
 			u_i.cluster_data[id]["galaxies"].append([g_i.id, g_i.l_id])
 			galaxy_data.append(g_i)
 	if progress == 1:
@@ -2597,7 +2596,7 @@ func generate_planets(id:int):#local id
 		var dist_in_km = p_i.distance / 569.0 * 1.5e8#                                V bond albedo
 		var temp = max_star_temp * pow(star_size_in_km / (2 * dist_in_km), 0.5) * pow(1 - 0.1, 0.25)
 		p_i["temperature"] = temp# in K
-		var gas_giant:bool = c_s_g != 0 and p_i.size >= max(22000, 40000 * pow(combined_star_mass / u_i.planck, 0.5) / dark_matter)
+		var gas_giant:bool = c_s_g != 0 and randf() < atan((p_i.size - 22000.0) / 22000.0) * 2.0 / PI
 		if gas_giant:
 			p_i["crust_start_depth"] = 0
 			p_i["mantle_start_depth"] = 0
@@ -3025,7 +3024,7 @@ func generate_tiles(id:int):
 						continue
 					if met_info[met].rarity > 50.0 and c_g_g == 0:
 						continue
-					if randf() < 0.3 / pow(met_info[met].rarity, 0.95) * sqrt(1 + u_i.cluster_data[c_c].pos.length() / 1000.0):
+					if randf() < 0.3 / pow(met_info[met].rarity, 0.95) * sqrt(1 + u_i.cluster_data[c_c].redshift):
 						tile_data[t_id].crater.metal = met
 						if not achievement_data.exploration.has("diamond_crater") and met == "diamond":
 							earn_achievement("exploration", "diamond_crater")
@@ -3101,7 +3100,7 @@ func generate_tiles(id:int):
 					spaceport_spawned = true
 				var obj = {
 					"tile": t_id,
-					"tier": max(1, int(-log(randf() / u_i.age / (1.0 + u_i.cluster_data[c_c].pos.length() * u_i.dark_energy / 1000.0)) / 3.0 + 1)),
+					"tier": max(1, int(-log(randf() / u_i.age / (1.0 + u_i.cluster_data[c_c].redshift * u_i.dark_energy)) / 3.0 + 1)),
 				}
 				if randf() < 1.0 - 0.5 * exp(-pow(p_i.temperature - 273, 2) / 20000.0) / pow(obj.tier, 2):
 					obj["repair_cost"] = 250000 * pow(obj.tier, 20) * randf_range(1, 3) * Data.ancient_bldg_repair_cost_multipliers[ancient_bldg]
@@ -3300,14 +3299,13 @@ func make_atmosphere_composition(temp:float, pressure:float, list_of_element_pro
 func make_planet_composition(temp:float, depth:String, size:float, gas_giant:bool = false):
 	var elements = {}
 	var big_planet_factor:float = clamp(remap(size, 12500, 45000, 1, 5), 1, 5)
-	var FM:float = u_i.cluster_data[c_c].FM
 	if not gas_giant or depth == "core":
 		if depth == "crust":
 			var O = randf_range(1.0, 1.9)
 			elements = {	"O":O,
 							"Si":O * randf_range(3.9, 4),
 							"Al":0.05 * randf(),
-							"Fe":0.035 * FM * randf(),
+							"Fe":0.035 * randf(),
 							"Na":0.025 * randf(),
 							"Ti":0.005 * randf(),
 							"H":0.01 * big_planet_factor * randf(),
@@ -3327,8 +3325,8 @@ func make_planet_composition(temp:float, depth:String, size:float, gas_giant:boo
 							"He":0.003 * big_planet_factor * randf(),
 						}
 		else:
-			var x:float = randf_range(1, 10) * FM
-			var y:float = randf_range(0, 5) * FM
+			var x:float = randf_range(1, 10)
+			var y:float = randf_range(0, 5)
 			elements["Fe"] = x/(x+1)
 			elements["Ni"] = (1 - Helper.get_sum_of_dict(elements)) * y/(y+1)
 			elements["O"] = (1 - Helper.get_sum_of_dict(elements)) * randf_range(0, 0.19)
@@ -3347,7 +3345,7 @@ func make_planet_composition(temp:float, depth:String, size:float, gas_giant:boo
 			elements["C"] = (1 - Helper.get_sum_of_dict(elements)) * randf()
 			var r = 1 - Helper.get_sum_of_dict(elements)
 			elements["Al"] = r * 0.05 * randf()
-			elements["Fe"] = r * 0.035 * FM * randf()
+			elements["Fe"] = r * 0.035 * randf()
 			elements["Na"] = r * 0.025 * randf()
 			elements["Mg"] = r * 0.02 * randf()
 			elements["Ti"] = r * 0.005 * randf()
@@ -3743,7 +3741,6 @@ func _input(event):
 				view.scroll_view = true
 			elif is_instance_valid(active_panel):
 				if active_panel == inventory:
-					print(inventory.item_hovered)
 					if inventory.item_hovered == -1:
 						fade_out_panel(active_panel)
 						active_panel = null
