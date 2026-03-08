@@ -27,7 +27,7 @@
 [ext_resource type="Texture2D" uid="uid://chrk4kwpyhk0l" path="res://Graphics/Buttons/SystemView.png" id="24_0kyuu"]
 [ext_resource type="Texture2D" uid="uid://dvwn4jgt0lyrx" path="res://Graphics/Ships/Probe2.png" id="25"]
 [ext_resource type="Texture2D" uid="uid://bwrgdgrthxh2q" path="res://Graphics/HX/2_4.png" id="26"]
-[ext_resource type="Texture2D" uid="uid://c0gbngpg4gt08" path="res://Graphics/Misc/Physics.png" id="27"]
+[ext_resource type="Texture2D" uid="uid://c0gbngpg4gt08" path="res://Graphics/Icons/Physics.png" id="27"]
 [ext_resource type="Texture2D" uid="uid://cvetejccba6ge" path="res://Graphics/Stars/Star.png" id="28"]
 [ext_resource type="Texture2D" uid="uid://v6aqc616rfln" path="res://Graphics/Galaxies/1.png" id="29"]
 [ext_resource type="Texture2D" uid="uid://3o7q14gve2np" path="res://Graphics/Metals/nanocrystal.png" id="30"]

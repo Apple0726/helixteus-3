@@ -220,7 +220,7 @@ var univ_prop_weights:Dictionary = {
 	"boltzmann":30,
 	"gravitational":40,
 	"charge":40,
-	"dark_energy":40,
+	"dark_energy":100,
 	"age":15,
 	"difficulty":10,
 	"time_speed":50,

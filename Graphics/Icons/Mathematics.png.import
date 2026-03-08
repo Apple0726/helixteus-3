@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://c0gbngpg4gt08"
-path="res://.godot/imported/Physics.png-3bca39c415f9cb309b2e62db0275f11e.ctex"
+uid="uid://msw2mrevisf1"
+path="res://.godot/imported/Mathematics.png-cd7611f4dedf5311c2c1edf4fdae752b.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Graphics/Misc/Physics.png"
-dest_files=["res://.godot/imported/Physics.png-3bca39c415f9cb309b2e62db0275f11e.ctex"]
+source_file="res://Graphics/Icons/Mathematics.png"
+dest_files=["res://.godot/imported/Mathematics.png-cd7611f4dedf5311c2c1edf4fdae752b.ctex"]
 
 [params]
 
@@ -23,7 +23,7 @@ compress/rdo_quality_loss=0.0
 compress/hdr_compression=1
 compress/normal_map=0
 compress/channel_pack=0
-mipmaps/generate=false
+mipmaps/generate=true
 mipmaps/limit=-1
 roughness/mode=0
 roughness/src_normal=""

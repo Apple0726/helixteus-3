@@ -2,16 +2,16 @@
 
 [ext_resource type="PackedScene" uid="uid://bx7irdxpbnhbb" path="res://Scenes/DimensionType.tscn" id="3"]
 [ext_resource type="PackedScene" uid="uid://5s56ablx84rs" path="res://Scenes/UniverseIcon.tscn" id="3_wld1s"]
-[ext_resource type="Texture2D" uid="uid://c0gbngpg4gt08" path="res://Graphics/Misc/Physics.png" id="4"]
-[ext_resource type="Texture2D" uid="uid://msw2mrevisf1" path="res://Graphics/Misc/Mathematics.png" id="5"]
-[ext_resource type="Texture2D" uid="uid://pvvxdd2l5ygb" path="res://Graphics/Misc/DimensionalPower.png" id="6"]
-[ext_resource type="Texture2D" uid="uid://ecxdst7pxscm" path="res://Graphics/Misc/Chemistry.png" id="7"]
+[ext_resource type="Texture2D" uid="uid://c0gbngpg4gt08" path="res://Graphics/Icons/Physics.png" id="4"]
+[ext_resource type="Texture2D" uid="uid://msw2mrevisf1" path="res://Graphics/Icons/Mathematics.png" id="5"]
+[ext_resource type="Texture2D" uid="uid://pvvxdd2l5ygb" path="res://Graphics/Icons/DimensionalPower.png" id="6"]
+[ext_resource type="Texture2D" uid="uid://ecxdst7pxscm" path="res://Graphics/Icons/Chemistry.png" id="7"]
 [ext_resource type="Script" uid="uid://c0n8fyqh4jyv6" path="res://Scripts/Dimension.gd" id="8"]
 [ext_resource type="Theme" uid="uid://cp2u1kgj60ic" path="res://Resources/default_theme.tres" id="9"]
-[ext_resource type="Texture2D" uid="uid://3sf8hsnh7wdv" path="res://Graphics/Misc/Engineering.png" id="10"]
-[ext_resource type="Texture2D" uid="uid://d37q4ouoi8g0s" path="res://Graphics/Misc/Biology.png" id="11"]
+[ext_resource type="Texture2D" uid="uid://3sf8hsnh7wdv" path="res://Graphics/Icons/Engineering.png" id="10"]
+[ext_resource type="Texture2D" uid="uid://d37q4ouoi8g0s" path="res://Graphics/Icons/Biology.png" id="11"]
 [ext_resource type="PackedScene" uid="uid://c8jr3e5aiyj1n" path="res://Scenes/HelpText.tscn" id="12"]
-[ext_resource type="Texture2D" uid="uid://pt7gqtb4i3nf" path="res://Graphics/Misc/Philosophy.png" id="14"]
+[ext_resource type="Texture2D" uid="uid://pt7gqtb4i3nf" path="res://Graphics/Icons/Philosophy.png" id="14"]
 [ext_resource type="Texture2D" uid="uid://xofw3xp7bjgh" path="res://Graphics/Formulas/BuildingUpgrade.png" id="15"]
 [ext_resource type="Texture2D" uid="uid://dxfbwfqmfrwy8" path="res://Graphics/Formulas/ShipHitChance.png" id="16"]
 [ext_resource type="Texture2D" uid="uid://4tf3teqmkahc" path="res://Graphics/Misc/Bar.png" id="17"]
@@ -1413,7 +1413,7 @@ offset_left = 376.0
 offset_top = 1391.0
 offset_right = 418.0
 offset_bottom = 1416.0
-text = "(40)"
+text = "(100)"
 
 [node name="difficulty" type="Label" parent="ModifyDimension/Physics/Control/Defaults" unique_id=1467963656]
 layout_mode = 0
@@ -2323,14 +2323,17 @@ libraries/ = SubResource("AnimationLibrary_dhvf2")
 
 [node name="Label" type="Label" parent="ColorRect" unique_id=1810971423]
 modulate = Color(1, 1, 1, 0)
-layout_mode = 0
+layout_mode = 1
+anchors_preset = 14
 anchor_top = 0.5
 anchor_right = 1.0
 anchor_bottom = 0.5
-offset_left = 288.0
+offset_left = 64.0
 offset_top = -12.0
-offset_right = -288.0
+offset_right = -64.0
 offset_bottom = 12.0
+grow_horizontal = 2
+grow_vertical = 2
 text = "aw"
 horizontal_alignment = 1
 

@@ -494,10 +494,8 @@ func calc_OP_points():
 			return
 		else:
 			cost["theme_override_colors/font_color"] = Color.BLACK
-			if cost.value > Data.univ_prop_weights[cost.name]:
-				physics_OP_points += Data.univ_prop_weights[cost.name] / cost.value - 1.0
-			else:
-				physics_OP_points += pow(Data.univ_prop_weights[cost.name] / cost.value, 2) - 1.0
+			if cost.value < Data.univ_prop_weights[cost.name]:
+				physics_OP_points += pow(Data.univ_prop_weights[cost.name] / cost.value + 0.03 * (Data.univ_prop_weights[cost.name] - cost.value), 2) - 1.0
 		physics_defaults.get_node(NodePath(cost.name)).visible = not is_equal_approx(cost.value, float(physics_defaults.get_node(NodePath(cost.name)).text.substr(1)))
 	
 	biology_OP_points = 0
@@ -594,23 +592,23 @@ func calc_engi_points(node, OP_points):
 
 func set_bonuses():
 	for bonus in game.maths_bonus:
-		if $ModifyDimension/Maths/Control/CostGrowthFactors.has_node(bonus):
-			game.maths_bonus[bonus] = $ModifyDimension/Maths/Control/CostGrowthFactors.get_node(bonus).value
+		if $ModifyDimension/Maths/Control/CostGrowthFactors.has_node(NodePath(bonus)):
+			game.maths_bonus[bonus] = $ModifyDimension/Maths/Control/CostGrowthFactors.get_node(NodePath(bonus)).value
 		else:
-			game.maths_bonus[bonus] = $ModifyDimension/Maths/Control.get_node(bonus).value
+			game.maths_bonus[bonus] = $ModifyDimension/Maths/Control.get_node(NodePath(bonus)).value
 	for bonus in game.physics_bonus:
 		if bonus in ["MVOUP", "BI", "aurora_spawn_probability", "aurora_width_multiplier", "perpendicular_auroras"]:
-			game.physics_bonus[bonus] = $ModifyDimension/Physics/Control.get_node(bonus).value
+			game.physics_bonus[bonus] = $ModifyDimension/Physics/Control.get_node(NodePath(bonus)).value
 		elif bonus != "antimatter":
-			game.physics_bonus[bonus] = $ModifyDimension/Physics/Control/VBox.get_node(bonus).value
+			game.physics_bonus[bonus] = $ModifyDimension/Physics/Control/VBox.get_node(NodePath(bonus)).value
 	for bonus in game.biology_bonus:
-		if $ModifyDimension/Biology/Control.has_node(bonus):
-			game.biology_bonus[bonus] = $ModifyDimension/Biology/Control.get_node(bonus).value
-		elif $ModifyDimension/Biology/Control/LakeButtons.has_node(bonus):
+		if $ModifyDimension/Biology/Control.has_node(NodePath(bonus)):
+			game.biology_bonus[bonus] = $ModifyDimension/Biology/Control.get_node(NodePath(bonus)).value
+		elif $ModifyDimension/Biology/Control/LakeButtons.has_node(NodePath(bonus)):
 			game.biology_bonus[bonus] = lake_params[bonus].value
 	for bonus in game.engineering_bonus:
-		if $ModifyDimension/Engineering/Control.has_node(bonus):
-			game.engineering_bonus[bonus] = $ModifyDimension/Engineering/Control.get_node(bonus).value
+		if $ModifyDimension/Engineering/Control.has_node(NodePath(bonus)):
+			game.engineering_bonus[bonus] = $ModifyDimension/Engineering/Control.get_node(NodePath(bonus)).value
 
 func _on_Generate_pressed():
 	if game.subject_levels.dimensional_power >= 5:
@@ -691,7 +689,7 @@ func _on_Table_mouse_exited():
 
 
 func _on_HelpLabel_mouse_entered(extra_arg_0):
-	game.show_tooltip(extra_arg_0)
+	game.show_tooltip(tr(extra_arg_0))
 
 
 func _on_Lake_mouse_entered(extra_arg_0):
@@ -712,7 +710,7 @@ func update_lake_bonus_text(el:String):
 	if Data.lake_bonus_values[el].operator == "x":
 		$ModifyDimension/Biology/Control/Lake/LakeDesc.text = tr("%s_LAKE_BONUS" % el.to_upper()) % ("[color=#aeddff]%s[/color]/[color=#c6ffcc]%s[/color]/%s" % [Helper.clever_round(Data.lake_bonus_values[el].s * lake_params[el].value), Helper.clever_round(Data.lake_bonus_values[el].l * lake_params[el].value), Helper.clever_round(Data.lake_bonus_values[el].sc * lake_params[el].value)])
 	elif Data.lake_bonus_values[el].operator == "+":
-		$ModifyDimension/Biology/Control/Lake/LakeDesc.text = tr("%s_LAKE_BONUS" % el.to_upper()) % ("[color=#aeddff]%s[/color]/[color=#c6ffcc]%s[/color]/%s" % [Data.lake_bonus_values[el].s + lake_params[el].value, Data.lake_bonus_values[el].l + lake_params[el].value, Data.lake_bonus_values[el].sc + lake_params[el].value])
+		$ModifyDimension/Biology/Control/Lake/LakeDesc.text = tr("%s_LAKE_BONUS" % el.to_upper()) % ("[color=#aeddff]%d[/color]/[color=#c6ffcc]%d[/color]/%d" % [Data.lake_bonus_values[el].s + lake_params[el].value, Data.lake_bonus_values[el].l + lake_params[el].value, Data.lake_bonus_values[el].sc + lake_params[el].value])
 	elif Data.lake_bonus_values[el].operator == "÷":
 		$ModifyDimension/Biology/Control/Lake/LakeDesc.text = tr("%s_LAKE_BONUS" % el.to_upper()) % ("[color=#aeddff]%s[/color]/[color=#c6ffcc]%s[/color]/%s" % [Helper.clever_round(Data.lake_bonus_values[el].s / lake_params[el].value), Helper.clever_round(Data.lake_bonus_values[el].l / lake_params[el].value), Helper.clever_round(Data.lake_bonus_values[el].sc / lake_params[el].value)])
 

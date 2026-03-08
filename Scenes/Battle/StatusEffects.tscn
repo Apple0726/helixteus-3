@@ -4,7 +4,7 @@
 [ext_resource type="Texture2D" uid="uid://buvqtd7v5l8m2" path="res://Graphics/Icons/Fire.png" id="2_jvqvk"]
 [ext_resource type="Script" uid="uid://digen3xg35h4f" path="res://Scripts/Battle/StatusEffects.gd" id="2_lr2cs"]
 [ext_resource type="Texture2D" uid="uid://b642ran0hp7j4" path="res://Graphics/Icons/Stun.png" id="3_lr2cs"]
-[ext_resource type="Texture2D" uid="uid://pvvxdd2l5ygb" path="res://Graphics/Misc/DimensionalPower.png" id="4_jvqvk"]
+[ext_resource type="Texture2D" uid="uid://pvvxdd2l5ygb" path="res://Graphics/Icons/DimensionalPower.png" id="4_jvqvk"]
 [ext_resource type="Texture2D" uid="uid://bshcbtjw6w01j" path="res://Graphics/Icons/frozen.png" id="5_a6ky5"]
 [ext_resource type="Texture2D" uid="uid://ddk4tb7t6a6my" path="res://Graphics/Icons/corroding.png" id="6_4ih1o"]
 [ext_resource type="Texture2D" uid="uid://dtt8s3bhk46u6" path="res://Graphics/Icons/water.png" id="7_4ih1o"]

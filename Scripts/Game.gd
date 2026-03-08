@@ -492,7 +492,7 @@ func load_univ():
 	view_history_pos = -1
 	var save_game = FileAccess.open("user://%s/Univ%s/main.hx3" % [c_sv, c_u], FileAccess.READ)
 	if save_game == null:
-		save_game = FileAccess.open("user://%s/Univ%s/main~.hx3" % [c_sv, c_u], FileAccess.READ)
+		save_game = FileAccess.open("user://%s/Univ%s/main.hx3~" % [c_sv, c_u], FileAccess.READ)
 	var save_game_dict:Dictionary = save_game.get_var()
 	save_game.close()
 	for key in save_game_dict:
@@ -618,7 +618,7 @@ func load_game():
 		var lv_sum:int = 0
 		for univ in universe_data:
 			lv_sum += pow(univ.lv, 2.2)
-		DRs += floor(lv_sum / 10000.0) + 1
+		DRs += int(lv_sum / 10000.0) + 1
 		for i in len(universe_data):
 			Helper.remove_recursive("user://%s/Univ%s" % [c_sv, i])
 		universe_data.clear()
@@ -3825,6 +3825,7 @@ func fn_save_game():
 	var save_info_file = FileAccess.open("user://%s/save_info.hx3~" % [c_sv], FileAccess.WRITE)
 	save_info_file.store_var(save_info)
 	save_info_file.close()
+	DirAccess.copy_absolute("user://%s/save_info.hx3~" % [c_sv], "user://%s/save_info.hx3" % [c_sv])
 	if c_u == -1:
 		return
 	var save_game_dict = {
@@ -3887,7 +3888,6 @@ func fn_save_game():
 	save_game.close()
 	if c_v == "cave" and is_instance_valid(cave):
 		cave.save_cave_data()
-	DirAccess.copy_absolute("user://%s/save_info.hx3~" % [c_sv], "user://%s/save_info.hx3" % [c_sv])
 	DirAccess.copy_absolute("user://%s/Univ%s/main.hx3~" % [c_sv, c_u], "user://%s/Univ%s/main.hx3" % [c_sv, c_u])
 
 func save_views(autosave:bool):
@@ -4135,7 +4135,6 @@ func discover_univ_confirm():
 	send_probes_panel.discover_univ()
 
 func reset_dimension_confirm(DR_num:int):
-	c_u = -1
 	DRs += DR_num
 	for i in len(universe_data):
 		Helper.remove_recursive("user://%s/Univ%s" % [c_sv, i])
@@ -4150,6 +4149,7 @@ func reset_dimension_confirm(DR_num:int):
 	else:
 		dimension.refresh_univs(true)
 	stats_dim = Data.default_stats.duplicate(true)
+	c_u = -1
 	fn_save_game()
 
 func buy_pickaxe_confirm(_costs:Dictionary):

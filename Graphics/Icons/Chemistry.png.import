@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://pt7gqtb4i3nf"
-path="res://.godot/imported/Philosophy.png-3c7ecff98857576d638da9cbc917d065.ctex"
+uid="uid://ecxdst7pxscm"
+path="res://.godot/imported/Chemistry.png-a8f5640503035e705979f8e5ad3df334.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Graphics/Misc/Philosophy.png"
-dest_files=["res://.godot/imported/Philosophy.png-3c7ecff98857576d638da9cbc917d065.ctex"]
+source_file="res://Graphics/Icons/Chemistry.png"
+dest_files=["res://.godot/imported/Chemistry.png-a8f5640503035e705979f8e5ad3df334.ctex"]
 
 [params]
 
@@ -23,7 +23,7 @@ compress/rdo_quality_loss=0.0
 compress/hdr_compression=1
 compress/normal_map=0
 compress/channel_pack=0
-mipmaps/generate=false
+mipmaps/generate=true
 mipmaps/limit=-1
 roughness/mode=0
 roughness/src_normal=""

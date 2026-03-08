@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://pvvxdd2l5ygb"
-path="res://.godot/imported/DimensionalPower.png-0d4a0e54a2b19f7045c95b1bd752ca4d.ctex"
+uid="uid://c0gbngpg4gt08"
+path="res://.godot/imported/Physics.png-6f13f1f08c1aef42a5ca1fa13b9ad06c.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Graphics/Misc/DimensionalPower.png"
-dest_files=["res://.godot/imported/DimensionalPower.png-0d4a0e54a2b19f7045c95b1bd752ca4d.ctex"]
+source_file="res://Graphics/Icons/Physics.png"
+dest_files=["res://.godot/imported/Physics.png-6f13f1f08c1aef42a5ca1fa13b9ad06c.ctex"]
 
 [params]
 

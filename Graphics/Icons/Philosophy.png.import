@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://d37q4ouoi8g0s"
-path="res://.godot/imported/Biology.png-80d7cb625215d69b8d4d00807b9dca61.ctex"
+uid="uid://pt7gqtb4i3nf"
+path="res://.godot/imported/Philosophy.png-5857512fbde7457fef13caf1c18e217c.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Graphics/Misc/Biology.png"
-dest_files=["res://.godot/imported/Biology.png-80d7cb625215d69b8d4d00807b9dca61.ctex"]
+source_file="res://Graphics/Icons/Philosophy.png"
+dest_files=["res://.godot/imported/Philosophy.png-5857512fbde7457fef13caf1c18e217c.ctex"]
 
 [params]
 
