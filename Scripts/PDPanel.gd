@@ -15,7 +15,7 @@ var editable = false
 
 func _ready():
 	set_process_input(false)
-	set_polygon(size)
+	set_polygon($GUI.size, $GUI.position)
 
 func calc_OP_points():
 	for el in Data.lake_bonus_values.keys():
@@ -36,7 +36,7 @@ func refresh():
 	calc_OP_points()
 	for pt in get_tree().get_nodes_in_group("PD_points"):
 		pt.queue_free()
-	$Title.text = "%s (%s)" % [tr("PHASE_DIAGRAM_EDITOR"), tr(el.to_upper() + "_NAME")]
+	$Title2.text = tr(el.to_upper() + "_NAME")
 	default_l = load("res://Scenes/PhaseDiagrams/%s.tscn" % el).instantiate().get_node("Liquid").polygon
 	default_g = load("res://Scenes/PhaseDiagrams/%s.tscn" % el).instantiate().get_node("Gas").polygon
 	default_sc = load("res://Scenes/PhaseDiagrams/%s.tscn" % el).instantiate().get_node("Superfluid").polygon
@@ -48,6 +48,7 @@ func refresh():
 	$Gas.material.set_shader_parameter("modul",Data.lake_colors[el].s)
 	$Solid.modulate = Data.lake_colors[el].s
 	$Supercritical.polygon = default_sc
+	$Supercritical.material.set_shader_parameter("modul",Data.lake_colors[el].sc.lightened(0.3))
 	for i in 4:
 		var pt_default = TextureRect.new()
 		pt_default.texture = preload("res://Graphics/Icons/Circle.png")
@@ -105,7 +106,7 @@ func update_OP_points():
 		if op_points[el] != 0:
 			$OPPoints.text = "%s: %s" % [tr("CONTRIBUTION_TO_OPMETER"), Helper.clever_round(op_points[el])]
 		else:
-			$OPPoints.text = ""
+			$OPPoints.text = tr("PD_PANEL_HELP")
 	bonuses[el] = $Liquid.polygon
 	$Reset.visible = op_points[el] != 0 and editable
 

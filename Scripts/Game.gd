@@ -1623,6 +1623,7 @@ func remove_space_HUD():
 func add_dimension():
 	if not is_instance_valid(PD_panel):
 		PD_panel = preload("res://Scenes/Panels/PDPanel.tscn").instantiate()
+		PD_panel.panel_var_name = "PD_panel"
 		PD_panel.hide()
 		$Panels/Control.add_child(PD_panel)
 	if is_instance_valid(HUD) and is_ancestor_of(HUD):

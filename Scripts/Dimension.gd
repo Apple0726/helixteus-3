@@ -716,7 +716,7 @@ func update_lake_bonus_text(el:String):
 
 func _on_LakePD_pressed(el:String):
 	game.PD_panel.el = el
-	game.toggle_panel(game.PD_panel)
+	game.toggle_panel("PD_panel")
 
 
 func _on_LakeDesc_mouse_entered():

@@ -1,13 +1,13 @@
 {
     "en": {
-        "lines": 1633,
-        "words": 11511,
-        "chars": 70486
+        "lines": 1634,
+        "words": 11513,
+        "chars": 70476
     },
     "fr": {
-        "lines": 543,
-        "words": 2354,
-        "chars": 14917
+        "lines": 542,
+        "words": 2293,
+        "chars": 14532
     },
     "it": {
         "lines": 360,
@@ -16,8 +16,8 @@
     },
     "zh": {
         "lines": 1452,
-        "words": 1779,
-        "chars": 18595
+        "words": 1780,
+        "chars": 18574
     },
     "de": {
         "lines": 1590,
