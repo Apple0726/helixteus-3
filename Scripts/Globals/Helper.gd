@@ -839,8 +839,7 @@ func update_ship_travel():
 			var tier = p_i.ancient_bldgs[AncientBuilding.SPACEPORT][0].tier
 			game.autocollect["passive_xp_tier"] = tier
 			game.autocollect["passive_xp_mult"] = s_i.diff
-			if is_instance_valid(game.HUD):
-				game.HUD.set_ship_btn_shader(true, tier)
+			game.start_spaceport_timer(tier)
 	return progress
 
 func add_autocollect(p_i:Dictionary, tile:Dictionary, mult_diff:float):
@@ -1573,8 +1572,7 @@ func set_ancient_bldg_bonuses(p_i:Dictionary, ancient_bldg:Dictionary, tile_id:i
 		if game.science_unlocked.has("ISP") and game.c_s_g == game.ships_travel_data.c_g_coords.s and game.c_p == game.ships_travel_data.c_coords.p:
 			game.autocollect["passive_xp_tier"] = ancient_bldg.tier
 			game.autocollect["passive_xp_mult"] = game.system_data[game.c_s].diff
-			game.HUD.set_ship_btn_shader(true, ancient_bldg.tier)
-			game.ship_panel.get_node("SpaceportTimer").start(4.0 / ancient_bldg.tier)
+			game.start_spaceport_timer(ancient_bldg.tier)
 
 func update_CBD_affected_tiles(tile:Dictionary, tile_id:int, p_i:Dictionary):
 	var wid:int = sqrt(len(game.tile_data))

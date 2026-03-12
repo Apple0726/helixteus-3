@@ -120,7 +120,7 @@ var energy_capacity:float
 var capacity_bonus_from_substation:float
 var SP:float
 #Dimension remnants
-var DRs:float
+var DRs:int
 var dim_num:int = 1
 var subject_levels:Dictionary
 var maths_bonus:Dictionary
@@ -464,6 +464,7 @@ func animate_title_buttons():
 	$Title.modulate.a = 0.0
 	$Title/Menu/AnimationPlayer.play("Fade")
 	tween.tween_property($TitleBackground, "modulate", Color.WHITE, 1)
+	tween.tween_property($TitleText, "modulate", Color.WHITE, 1.0)
 	tween.tween_property($Title, "modulate", Color.WHITE, 1).set_delay(0.2)
 	tween.tween_property($Star/Sprite2D.material, "shader_parameter/brightness_offset", 0.8, 1.0).set_delay(0.5)
 	tween.tween_property($Star, "modulate", Color.WHITE, 1.2)
@@ -522,6 +523,7 @@ func load_univ():
 			var xp_mult = Helper.get_spaceport_xp_mult(autocollect.passive_xp_tier)
 			for i in len(ship_data):
 				Helper.add_ship_XP(i, xp_mult * autocollect.passive_xp_mult * time_elapsed / (4.0 / autocollect.passive_xp_tier) * u_i.time_speed)
+			call_deferred("start_spaceport_timer", autocollect.passive_xp_tier)
 		var min_mult:float = pow(maths_bonus.IRM, infinite_research.MEE)
 		var energy_mult:float = pow(maths_bonus.IRM, infinite_research.EPE)
 		var SP_mult:float = pow(maths_bonus.IRM, infinite_research.RLE)
@@ -3496,8 +3498,9 @@ func use_item(item_id:int, send_to_rover:int = -1):
 			toggle_panel("ships_panel")
 			ships_panel.get_node("Ships/Battlefield/Selected").hide()
 			ships_panel.get_node("ShipStats/ShipDetails").hide()
-			ships_panel.get_node("ShipStats/Label").show()
-			ships_panel.get_node("ShipStats/Label").text = tr("CLICK_SHIP_TO_GIVE_XP")
+			ships_panel.get_node("ShipStats").hide()
+			ships_panel.get_node("Label").show()
+			ships_panel.get_node("Label").text = tr("CLICK_SHIP_TO_GIVE_XP")
 		else:
 			popup(tr("NO_SHIPS_2"), 1.5)
 			return
@@ -4107,6 +4110,7 @@ func return_to_menu_confirm():
 	universe_data.clear()
 	view.queue_redraw()
 	dim_num = 1
+	autocollect.clear()
 
 func generate_new_univ_confirm():
 	universe_data.append({"id":0, "lv":1, "xp":0, "xp_to_lv":10, "shapes":[], "name":tr("UNIVERSE"), "cluster_num":1000, "view":{"pos":Vector2(640 * 0.5, 360 * 0.5), "zoom":2, "sc_mult":0.1}})
@@ -4613,3 +4617,22 @@ func _on_probe_timer_timeout() -> void:
 			refresh = true
 	if refresh and is_instance_valid(vehicle_panel) and vehicle_panel.tab == vehicle_panel.PROBES:
 		vehicle_panel.refresh()
+
+func start_spaceport_timer(tier:int):
+	if not science_unlocked.has("ISC"):
+		return
+	$SpaceportTimer.start(4.0 / tier)
+	if is_instance_valid(HUD):
+		HUD.set_ship_btn_shader(true, tier)
+
+func _on_spaceport_timer_timeout() -> void:
+	if not autocollect.has("passive_xp_tier"):
+		if is_instance_valid(HUD):
+			HUD.set_ship_btn_shader(false)
+		$SpaceportTimer.stop()
+		return
+	var xp_mult = Helper.get_spaceport_xp_mult(autocollect.passive_xp_tier)
+	for i in len(ship_data):
+		Helper.add_ship_XP(i, xp_mult * autocollect.passive_xp_mult * u_i.time_speed)
+	if is_instance_valid(ships_panel):
+		ships_panel.update_xp_bars()

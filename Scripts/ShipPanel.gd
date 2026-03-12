@@ -45,16 +45,11 @@ func refresh():
 	$ShipStats/ShipDetails/XP/XPGained.text = ""
 	if selected_ship_id != -1:
 		show_ship_stats(selected_ship_id)
-	if game.ships_travel_data.travel_view != "-":
-		$SpaceportTimer.stop()
-	else:
+	if game.ships_travel_data.travel_view == "-":
 		if game.autocollect.has("passive_xp_tier"):
 			$Label.text = tr("SHIPS_BENEFITING_FROM_SPACEPORT")
-			if $SpaceportTimer.is_stopped():
-				$SpaceportTimer.start(4.0 / game.autocollect.passive_xp_tier)
 		else:
 			$Label.text = tr("CLICK_SHIP_TO_VIEW_DETAILS")
-			$SpaceportTimer.stop()
 
 func _process(delta):
 	if selected_ship_id != -1:
@@ -126,14 +121,7 @@ var bar_colors = {
 	"light":Color(0.81, 0.81, 0.36),
 }
 
-func _on_SpaceportTimer_timeout():
-	if not game.autocollect.has("passive_xp_tier"):
-		game.HUD.set_ship_btn_shader(false)
-		$SpaceportTimer.stop()
-		return
-	var xp_mult = Helper.get_spaceport_xp_mult(game.autocollect.passive_xp_tier)
-	for i in len(game.ship_data):
-		Helper.add_ship_XP(i, xp_mult * game.autocollect.passive_xp_mult * game.u_i.time_speed)
+func update_xp_bars():
 	if selected_ship_id != -1:
 		show_ship_stats(selected_ship_id)
 		$ShipStats/ShipDetails/XP/TextureProgressBar.modulate = Color.WHITE
@@ -163,6 +151,7 @@ func _on_ship_mouse_entered(ship_id: int):
 	ship_nodes[ship_id].get_node("TextureButton").material.set_shader_parameter("highlight_strength", 0.15)
 	if game.item_to_use.id != -1 and Item.data[game.item_to_use.id].type == Item.Type.HELIX_CORE:
 		show_ship_stats(ship_id)
+		$ShipStats.show()
 		$ShipStats/ShipDetails/XP/TextureProgressGained.value = $ShipStats/ShipDetails/XP/TextureProgressBar.value + Item.data[game.item_to_use.id].XP * game.item_to_use.num
 		$ShipStats/ShipDetails/XP/XPGained.text = "+ " + str(Item.data[game.item_to_use.id].XP * game.item_to_use.num)
 		$ShipStats/ShipDetails/Respec.hide()
@@ -183,6 +172,7 @@ func _on_ship_button_up(ship_id: int) -> void:
 	game.view.move_view = true
 	dragging_ship_id = -1
 	selected_ship_id = ship_id
+	$ShipStats.show()
 	if game.item_to_use.id == -1 or Item.data[game.item_to_use.id].type != Item.Type.HELIX_CORE:
 		$Ships/Battlefield/Selected.show()
 		$Ships/Battlefield/Selected.position = ship_nodes[ship_id].position - Vector2(0, 40)

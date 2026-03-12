@@ -829,6 +829,8 @@ position = Vector2(640, 360)
 [node name="ProbeTimer" type="Timer" parent="." unique_id=172490870]
 autostart = true
 
+[node name="SpaceportTimer" type="Timer" parent="." unique_id=1008050411]
+
 [node name="MMTimer" type="Timer" parent="." unique_id=445352232]
 wait_time = 0.1
 one_shot = true
@@ -876,4 +878,5 @@ metadata/_edit_lock_ = true
 [connection signal="pressed" from="Settings/Settings" to="." method="_on_Settings_pressed"]
 [connection signal="animation_finished" from="Stars/AnimationPlayer" to="." method="_on_StarFade_animation_finished"]
 [connection signal="timeout" from="ProbeTimer" to="." method="_on_probe_timer_timeout"]
+[connection signal="timeout" from="SpaceportTimer" to="." method="_on_spaceport_timer_timeout"]
 [connection signal="timeout" from="MMTimer" to="." method="_on_MMTimer_timeout"]

@@ -132,7 +132,7 @@ func on_bldg_over(bldg:int):
 			txt += (Data.path_2[bldg].desc + "\n") % [Helper.format_num(Data.path_2[bldg].value * IR_mult, true)]
 	if Data.path_3.has(bldg):
 		if bldg == Building.CENTRAL_BUSINESS_DISTRICT:
-			txt += Data.path_3[bldg].desc.format({"n":Data.path_3[bldg].value}) + "\n"
+			txt += Data.path_3[bldg].desc % "{n}x{n}".format({"n":Data.path_3[bldg].value}) + "\n"
 		else:
 			txt += (Data.path_3[bldg].desc + "\n") % [Data.path_3[bldg].value]
 	if Data.desc_icons.has(bldg):

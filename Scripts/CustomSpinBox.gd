@@ -42,4 +42,7 @@ func _on_CustomSpinBox_text_changed(new_text):
 
 func set_value(_value:float):
 	value = _value
-	text = str(_value)
+	if is_integer:
+		text = str(int(_value))
+	else:
+		text = str(_value)

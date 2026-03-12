@@ -69,6 +69,7 @@ func update_info(first_time:bool = false):
 		layer = "crater"
 		upper_depth = tile.crater.init_depth
 		lower_depth = 3 * tile.crater.init_depth
+		$CrustBG.modulate.a = 0.25
 	elif tile.depth <= p_i.crust_start_depth:
 		layer = "surface"
 		upper_depth = 0
