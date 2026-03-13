@@ -92,7 +92,7 @@ func terraform_planet():
 	elif ancient_bldg_id == AncientBuilding.CELLULOSE_SYNTHESIZER:
 		for cs in p_i.ancient_bldgs[AncientBuilding.CELLULOSE_SYNTHESIZER]:
 			if not cs.has("repair_cost"):
-				Helper.add_cellulose_from_CS(p_i, p_i.bldg.path_1_value * Helper.get_CS_prod_mult(cs.tier))
+				Helper.add_cellulose_from_CS(p_i, p_i.bldg.path_1_value * Helper.get_CS_prod_mult(cs.tier) * p_i.pressure)
 	if tf_type in [Building.GREENHOUSE, Building.ATOM_MANIPULATOR, Building.SUBATOMIC_PARTICLE_REACTOR]:
 		p_i.bldg.path_2 = 1
 		p_i.bldg.path_2_value = Data.path_2[tf_type].value

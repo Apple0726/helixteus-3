@@ -878,13 +878,14 @@ func add_energy_from_NFR(p_i:Dictionary, base:float):
 		if not nfr.has("repair_cost"):
 			var S = 0.0
 			if p_i.atmosphere.has("NH3"):
-				S += base * prod_mult * 3 * p_i.atmosphere.NH3
+				S += 3 * p_i.atmosphere.NH3
 			if p_i.atmosphere.has("CH4"):
-				S += base * prod_mult * 4 * p_i.atmosphere.CH4
+				S += 4 * p_i.atmosphere.CH4
 			if p_i.atmosphere.has("H2O"):
-				S += base * prod_mult * 2 * p_i.atmosphere.H2O
+				S += 2 * p_i.atmosphere.H2O
 			if p_i.atmosphere.has("H"):
-				S += base * prod_mult * 1 * p_i.atmosphere.H
+				S += 1 * p_i.atmosphere.H
+			S *= base * prod_mult
 			game.autocollect.rsrc.energy += S
 			game.tile_data[nfr.tile].ancient_bldg.production = game.tile_data[nfr.tile].ancient_bldg.get("production", 0) + S
 
@@ -1558,15 +1559,12 @@ func set_ancient_bldg_bonuses(p_i:Dictionary, ancient_bldg:Dictionary, tile_id:i
 		for tile in game.tile_data:
 			if tile and tile.has("bldg") and tile.bldg.name == Building.ATMOSPHERE_EXTRACTOR:
 				var overclock_mult = tile.bldg.get("overclock_mult", 1.0)
-				var mult = 1.0
 				var base = 1.0
 				if ancient_bldg.name == AncientBuilding.NUCLEAR_FUSION_REACTOR:
-					mult = Helper.get_NFR_prod_mult(ancient_bldg.tier)
-					base = tile.bldg.path_1_value * overclock_mult * mult
+					base = tile.bldg.path_1_value * overclock_mult * p_i.pressure * tile.get("time_speed_bonus", 1.0)
 					Helper.add_energy_from_NFR(p_i, base)
 				elif ancient_bldg.name == AncientBuilding.CELLULOSE_SYNTHESIZER:
-					mult = Helper.get_CS_prod_mult(ancient_bldg.tier)
-					base = tile.bldg.path_1_value * overclock_mult * mult
+					base = tile.bldg.path_1_value * overclock_mult * p_i.pressure * tile.get("time_speed_bonus", 1.0)
 					Helper.add_cellulose_from_CS(p_i, base)
 	elif ancient_bldg.name == AncientBuilding.SPACEPORT:
 		if game.science_unlocked.has("ISP") and game.c_s_g == game.ships_travel_data.c_g_coords.s and game.c_p == game.ships_travel_data.c_coords.p:

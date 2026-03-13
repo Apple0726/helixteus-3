@@ -552,7 +552,7 @@ var cave_modifiers:Dictionary = {#tier 1 modifiers can apply to any cave (outsid
 	"minimap_disabled":{"treasure_if_true":3.0, "tier":2},
 }
 var lake_colors = {
-	"H2O":	{	"s":Color(0.71, 0.747, 0.78),
+	"H2O":	{	"s":Color(1.0, 1.0, 1.0, 1.0),
 				"l":Color(0.343, 0.71, 0.88, 1.0),
 				"sc":Color(0.68, 0.86, 1.0)},
 	"CO2":{ 	"s":Color(0.66, 0.66, 0.66),
@@ -561,7 +561,7 @@ var lake_colors = {
 	"CH4":{		"s":Color(0.63, 0.39, 0.13),
 				"l":Color(0.63, 0.39, 0.13),
 				"sc":Color(0.63, 0.39, 0.13)},
-	"H":{		"s":Color(0.85, 1, 0.85),
+	"H":{		"s":Color(0.7, 1.381, 0.7, 1.0),
 				"l":Color(0.7, 1, 0.7),
 				"sc":Color(0.85, 1, 0.85)},
 	"He":{		"s":Color(0.884, 0.71, 1.0, 1.0),
@@ -573,7 +573,7 @@ var lake_colors = {
 	"Xe":{		"s":Color(0.5, 0.25, 1.0),
 				"l":Color(0.5, 0.25, 1.0),
 				"sc":Color(0.5, 0.25, 1.0)},
-	"NH3":{		"s":Color(0.5, 0.45, 1.0),
+	"NH3":{		"s":Color(0.774, 0.724, 1.327, 1.0),
 				"l":Color(0.7, 0.65, 1.0),
 				"sc":Color(0.5, 0.45, 1.0)},
 	"O":{		"s":Color(0.8, 0.8, 1),

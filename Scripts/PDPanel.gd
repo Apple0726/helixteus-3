@@ -43,12 +43,13 @@ func refresh():
 	default_dP = default_sc[1].y - default_sc[2].y
 	default_dT = default_g[1].x - default_g[0].x
 	$Liquid.polygon = bonuses[el]
-	$Liquid.material.set_shader_parameter("modul",Data.lake_colors[el].l)
+	$Liquid.material.set_shader_parameter("modul", Data.lake_colors[el].l)
+	$Liquid.material.set_shader_parameter("modul:a", 0.8)
 	$Gas.polygon = default_g
-	$Gas.material.set_shader_parameter("modul",Data.lake_colors[el].s)
+	$Gas.material.set_shader_parameter("modul", Data.lake_colors[el].s)
 	$Solid.modulate = Data.lake_colors[el].s
 	$Supercritical.polygon = default_sc
-	$Supercritical.material.set_shader_parameter("modul",Data.lake_colors[el].sc.lightened(0.3))
+	$Supercritical.material.set_shader_parameter("modul", Data.lake_colors[el].sc.lightened(0.3))
 	for i in 4:
 		var pt_default = TextureRect.new()
 		pt_default.texture = preload("res://Graphics/Icons/Circle.png")

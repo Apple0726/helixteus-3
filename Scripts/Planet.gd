@@ -226,13 +226,16 @@ func _ready():
 	$Lake.size = Vector2.ONE * 200.0 * wid
 	if p_i.has("lake"):
 		$Lake.show()
-		$Lake.modulate = (Data.lake_colors[p_i.lake.element][p_i.lake.state] * star_mod).lightened(0.7)
+		$Lake.modulate = (Data.lake_colors[p_i.lake.element][p_i.lake.state] * star_mod).lightened(0.4)
 		if p_i.lake.state == "l":
-			$Lake.material.set_shader_parameter("should_render", true)
-			$Lake.material.set_shader_parameter("time_factor", 0.1)
-			$Lake.material.set_shader_parameter("shallow_color", Data.lake_colors[p_i.lake.element][p_i.lake.state])
+			$Lake.texture = preload("res://Graphics/Tiles/water.png")
+			$Lake.material = ShaderMaterial.new()
+			$Lake.material.shader = preload("res://Shaders/LiquidLake.gdshader")
+			$Lake.material.set_shader_parameter("modul", Data.lake_colors[p_i.lake.element][p_i.lake.state])
+			$Lake.material.set_shader_parameter("speed", game.u_i.time_speed)
 		elif p_i.lake.state == "sc":
 			$Lake.texture = preload("res://Graphics/Misc/noise_combined.png")
+			$Lake.material = ShaderMaterial.new()
 			$Lake.material.shader = preload("res://Shaders/Supercritical.gdshader")
 			$Lake.material.set_shader_parameter("color", Data.lake_colors[p_i.lake.element][p_i.lake.state].darkened(0.3))
 			$Lake.material.set_shader_parameter("speed", game.u_i.time_speed * 0.2)
@@ -754,7 +757,7 @@ func destroy_bldg(id2:int, mass:bool = false):
 		if game.autocollect.rsrc.SP < 0:
 			game.autocollect.rsrc["SP"] = 0
 	elif bldg == Building.ATMOSPHERE_EXTRACTOR:
-		var base = -tile.bldg.path_1_value * overclock_mult * p_i.pressure
+		var base = -tile.bldg.path_1_value * overclock_mult * p_i.pressure * tile.get("time_speed_bonus", 1.0)
 		for el in p_i.atmosphere:
 			var base_prod:float = base * p_i.atmosphere[el]
 			Helper.add_atom_production(el, base_prod)
@@ -1633,7 +1636,7 @@ func on_timeout():
 					var SP_prod = Helper.get_SP_production(p_i.temperature, tile.bldg.path_1_value * (mult - 1) * (tile.get("aurora", 0.0) + 1.0) * tile.resource_production_bonus.get("energy", 1.0))
 					game.autocollect.rsrc.energy -= SP_prod
 				elif tile.bldg.name == Building.ATMOSPHERE_EXTRACTOR:
-					var base = -tile.bldg.path_1_value * (mult - 1) * p_i.pressure
+					var base = -tile.bldg.path_1_value * (mult - 1) * p_i.pressure * tile.get("time_speed_bonus", 1.0)
 					for el in p_i.atmosphere:
 						var base_prod:float = base * p_i.atmosphere[el]
 						Helper.add_atom_production(el, base_prod)

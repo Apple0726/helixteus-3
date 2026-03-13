@@ -1,7 +1,6 @@
 [gd_scene format=3 uid="uid://bmmss4usqtscn"]
 
 [ext_resource type="PackedScene" uid="uid://dixixiv5ynvkf" path="res://Scenes/WhiteRect.tscn" id="1"]
-[ext_resource type="Shader" uid="uid://b587s4ws25jcn" path="res://Shaders/LiquidLake.gdshader" id="2_75ca2"]
 [ext_resource type="Texture2D" uid="uid://o0artlh6qd48" path="res://Graphics/Tiles/Mosaics/ice.jpg" id="2_fk4u5"]
 [ext_resource type="Script" uid="uid://djr5eelx8hx0" path="res://Scripts/Planet.gd" id="3"]
 [ext_resource type="TileSet" uid="uid://caaofgr7bjd7d" path="res://Resources/PlanetTileSet.tres" id="3_fk4u5"]
@@ -12,16 +11,6 @@
 draw_center = false
 shadow_color = Color(0, 0, 0, 1)
 shadow_size = 40
-
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_3y52m"]
-shader = ExtResource("2_75ca2")
-shader_parameter/u_time = -7.61
-shader_parameter/shallow_color = Color(0.3007891, 0.7696665, 0.99999994, 1)
-shader_parameter/deep_color = Color(0.10370001, 0.36528835, 0.61, 1)
-shader_parameter/reflection_color = Color(0.1, 0.3, 0.5, 1)
-shader_parameter/UV_scale = 15.0
-shader_parameter/should_render = false
-shader_parameter/time_factor = 0.1
 
 [sub_resource type="Shader" id="Shader_75ca2"]
 code = "shader_type canvas_item;
@@ -105,7 +94,6 @@ mouse_filter = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_g1ur1")
 
 [node name="Lake" type="TextureRect" parent="." unique_id=1367838776]
-material = SubResource("ShaderMaterial_3y52m")
 offset_right = 1280.0
 offset_bottom = 720.0
 texture = ExtResource("2_fk4u5")

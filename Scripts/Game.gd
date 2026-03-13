@@ -1997,11 +1997,11 @@ func generate_galaxies(id:int):
 		}
 		if g_i.type == 6:
 			g_i["system_num"] = int(5000 + 10000 * pow(randf(), 2))
-			g_i["B_strength"] = Helper.clever_round(1e-9 * randf_range(3, 5) * redshift * u_i.charge)#Influences star classes
+			g_i["B_strength"] = Helper.clever_round(1e-9 * randf_range(3, 5) * (redshift + 1.0) * u_i.charge)#Influences star classes
 			g_i.dark_matter -= 0.05
 		else:
 			g_i["system_num"] = int(pow(randf(), 2) * 8000) + 2000
-			g_i["B_strength"] = Helper.clever_round(1e-9 * randf_range(0.5, 4) * redshift * u_i.charge)
+			g_i["B_strength"] = Helper.clever_round(1e-9 * randf_range(0.5, 4) * (redshift + 1.0) * u_i.charge)
 			if randf() < 0.6: #Dwarf galaxy
 				g_i.system_num = int(g_i.system_num * 0.1)
 		var pos:Vector2
@@ -2042,9 +2042,9 @@ func generate_galaxies(id:int):
 			u_i.cluster_data[id]["galaxies"].append([0, 0])
 		else:
 			if id == 0:#if the galaxies are in starting cluster
-				g_i["diff"] = Helper.clever_round((1 + pos.distance_to(galaxy_data[0].pos) / 70) * (u_i.cluster_data[id].redshift + 1.0) * 1000.0)
+				g_i["diff"] = Helper.clever_round((1.0 + pos.distance_to(galaxy_data[0].pos) / 50.0) * (u_i.cluster_data[id].redshift * 1000.0 + 1.0) * u_i.difficulty)
 			else:
-				g_i["diff"] = Helper.clever_round((u_i.cluster_data[id].redshift + 1.0) * 100000.0 * randf_range(1.2, 1.5) / max(100, pow(pos.length(), 0.5)))
+				g_i["diff"] = Helper.clever_round((u_i.cluster_data[id].redshift * 100000.0 + 1.0) * u_i.difficulty * randf_range(1.2, 1.5) / max(100, pow(pos.length(), 0.5)))
 			u_i.cluster_data[id]["galaxies"].append([g_i.id, g_i.l_id])
 			galaxy_data.append(g_i)
 	if progress == 1:
@@ -3646,20 +3646,20 @@ func _process(_delta):
 		SP += autocollect.rsrc.SP * delta * SP_mult
 		for mat in autocollect.mats:
 			if mat == "minerals":
-				min_to_add += autocollect.mats[mat] * delta
+				min_to_add += autocollect.mats[mat] * delta * u_i.time_speed
 			else:
-				mats[mat] += autocollect.mats[mat] * delta
+				mats[mat] += autocollect.mats[mat] * delta * u_i.time_speed
 		if mats.cellulose > 0:
 			if not autocollect.mats.has("soil") or is_zero_approx(autocollect.mats.soil) or mats.soil > 0:
 				for met in autocollect.mets:
-					mets[met] += autocollect.mets[met] * delta
+					mets[met] += autocollect.mets[met] * delta * u_i.time_speed
 		else:
 			mats.cellulose = 0
 		if mats.soil < 0:
 			mats.soil = 0
 		if autocollect.has("atoms"):
 			for atom in autocollect.atoms:
-				atoms[atom] += autocollect.atoms[atom] * delta
+				atoms[atom] += autocollect.atoms[atom] * delta * u_i.time_speed
 		Helper.add_minerals(min_to_add)
 		Helper.add_energy(energy_to_add)
 		if is_instance_valid(HUD) and is_ancestor_of(HUD):
