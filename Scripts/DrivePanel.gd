@@ -59,7 +59,10 @@ func add_fuel(type: String, fuel: String, texture, also_select_this_fuel = false
 	var fuel_btn_node = preload("res://Scenes/ShopItem.tscn").instantiate()
 	fuel_btn_node.custom_minimum_size = Vector2.ONE * 48.0
 	fuel_btn_node.get_node("TextureRect").texture = texture
-	fuel_btn_node.get_node("TextureButton").mouse_entered.connect(game.show_tooltip.bind(tr(fuel.to_upper())))
+	if type == "atoms":
+		fuel_btn_node.get_node("TextureButton").mouse_entered.connect(game.show_tooltip.bind(tr(fuel.to_upper() + "_NAME")))
+	else:
+		fuel_btn_node.get_node("TextureButton").mouse_entered.connect(game.show_tooltip.bind(tr(fuel.to_upper())))
 	fuel_btn_node.get_node("TextureButton").mouse_exited.connect(game.hide_tooltip)
 	fuel_btn_node.get_node("TextureButton").pressed.connect(select_fuel.bind(type, fuel, texture, fuel_btn_node))
 	$Control/Fuels.add_child(fuel_btn_node)
@@ -80,7 +83,7 @@ func select_fuel(type: String, fuel: String, texture, fuel_btn_node):
 	elif fuel == "Ne":
 		energy_per_quantity_of_fuel = 60000
 	elif fuel == "Xe":
-		energy_per_quantity_of_fuel = 10000000
+		energy_per_quantity_of_fuel = 3.0e7
 	$Control/HSlider.max_value = game[selected_fuel_type][fuel_selected]
 	$Control/HSlider.value = 0
 	_on_h_slider_value_changed($Control/HSlider.value)
@@ -100,7 +103,6 @@ func _on_IonDrive_pressed():
 	add_fuel("atoms", "Xe", preload("res://Graphics/Atoms/Xe.png"))
 	$Control.visible = true
 	refresh()
-	reset_selected_drive_fuel()
 	$Panel/Drives/ID.modulate.a = 1
 
 

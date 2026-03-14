@@ -430,9 +430,9 @@ var science_unlocks = {
 						"MME3":{"cost":2.4e12, "parents":["MME2"]},
 						
 						#CBS
-						"CBS1":{"cost":8.5e11, "parents":["MAE"]},
-						"CBS2":{"cost":8.5e11*30, "parents":["CBS1"]},
-						"CBS3":{"cost":8.5e11*30*30, "parents":["CBS2"]},
+						"CBS1":{"cost":4.0e11, "parents":["MAE"]},
+						"CBS2":{"cost":4.0e11*35, "parents":["CBS1"]},
+						"CBS3":{"cost":4.0e11*35*35, "parents":["CBS2"]},
 						
 						#Planetkiller
 						"PK1":{"cost":5.25e14, "parents":["MAE"]},
@@ -558,7 +558,7 @@ var lake_colors = {
 	"CO2":{ 	"s":Color(0.66, 0.66, 0.66),
 				"l":Color(0.66, 0.66, 0.66),
 				"sc":Color(0.66, 0.66, 0.66)},
-	"CH4":{		"s":Color(0.63, 0.39, 0.13),
+	"CH4":{		"s":Color(0.77, 0.435, 0.077, 1.0),
 				"l":Color(0.63, 0.39, 0.13),
 				"sc":Color(0.63, 0.39, 0.13)},
 	"H":{		"s":Color(0.7, 1.381, 0.7, 1.0),

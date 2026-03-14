@@ -21,7 +21,7 @@ func _on_Back_pressed():
 
 
 func _on_MainBranch_mouse_entered():
-	game.show_tooltip(tr("MAIN_BRANCH"))
+	game.show_tooltip(tr("MAIN_BRANCH") + " (1)")
 
 
 func _on_mouse_exited():
@@ -29,11 +29,11 @@ func _on_mouse_exited():
 
 
 func _on_OtherBranches_mouse_entered():
-	game.show_tooltip(tr("OTHER_BRANCHES"))
+	game.show_tooltip(tr("OTHER_BRANCHES") + " (2)")
 
 
 func _on_InfiniteResearch_mouse_entered():
-	game.show_tooltip(tr("INFINITE_RESEARCH"))
+	game.show_tooltip(tr("INFINITE_RESEARCH") + " (3)")
 
 
 func _on_MainBranch_pressed():

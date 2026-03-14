@@ -45,6 +45,9 @@ func refresh():
 	$ShipStats/ShipDetails/XP/XPGained.text = ""
 	if selected_ship_id != -1:
 		show_ship_stats(selected_ship_id)
+		$Label.hide()
+	else:
+		$Label.show()
 	if game.ships_travel_data.travel_view == "-":
 		if game.autocollect.has("passive_xp_tier"):
 			$Label.text = tr("SHIPS_BENEFITING_FROM_SPACEPORT")

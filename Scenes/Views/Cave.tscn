@@ -675,6 +675,12 @@ texture = ExtResource("19")
 lifetime = 2.0
 process_material = SubResource("25")
 
+[node name="PointLight2D" type="PointLight2D" parent="Exit" unique_id=1179598820]
+position = Vector2(0, -98)
+enabled = false
+shadow_enabled = true
+texture = ExtResource("31")
+
 [node name="Hole" parent="." unique_id=941425539 instance=ExtResource("9")]
 
 [node name="MiningParticles" type="GPUParticles2D" parent="." unique_id=210433829]

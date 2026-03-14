@@ -144,7 +144,7 @@ func rover_explore(rover_id:int):
 		var rover_MK = game.rover_data[rover_id].MK
 		if rover_MK == 3 and cave_floors > 8:
 			game.popup_window("", "", [tr("GO_TO_FLOOR_X") % min(16, cave_floors), tr("GO_TO_FLOOR_X") % 8, tr("START_AT_FLOOR_1")], [Callable(game, "switch_view").bind("cave", {"start_floor":16}), Callable(game, "switch_view").bind("cave", {"start_floor":8}), Callable(game, "switch_view").bind("cave")], tr("CANCEL"))
-		elif rover_MK == 2:
+		elif rover_MK >= 2:
 			game.popup_window("", "", [tr("GO_TO_FLOOR_X") % min(8, cave_floors), tr("START_AT_FLOOR_1")], [Callable(game, "switch_view").bind("cave", {"start_floor":8}), Callable(game, "switch_view").bind("cave")], tr("CANCEL"))
 		else:
 			game.switch_view("cave")

@@ -166,22 +166,27 @@ func _on_StarTypes_pressed():
 		bar.name = "ColorRect"
 		bar.size_flags_vertical = 10
 		label["theme_override_fonts/font"] = max_label["theme_override_fonts/font"]
+		var original_text = ""
 		if star_type >= StarType.HYPERGIANT + 1:
-			label.text = "%s %s" % [tr("HYPERGIANT"), Helper.get_roman_num(star_type - StarType.HYPERGIANT)]
+			original_text = "%s %s" % [tr("HYPERGIANT"), Helper.get_roman_num(star_type - StarType.HYPERGIANT)]
 		else:
 			match star_type:
 				StarType.MAIN_SEQUENCE:
-					label.text = tr("MAIN_SEQUENCE")
+					original_text = tr("MAIN_SEQUENCE")
 				StarType.WHITE_DWARF:
-					label.text = tr("WHITE_DWARF")
+					original_text = tr("WHITE_DWARF")
 				StarType.BROWN_DWARF:
-					label.text = tr("BROWN_DWARF")
+					original_text = tr("BROWN_DWARF")
 				StarType.GIANT:
-					label.text = tr("GIANT")
+					original_text = tr("GIANT")
 				StarType.SUPERGIANT:
-					label.text = tr("SUPERGIANT")
-		bar.connect("mouse_entered",Callable(self,"on_star_type_bar_entered").bind(star_type, label.text))
-		label.connect("mouse_entered",Callable(self,"on_star_type_bar_entered").bind(star_type, label.text))
+					original_text = tr("SUPERGIANT")
+		if star_type > StarType.HYPERGIANT + 1:
+			label.text = "%s %s" % ["HG", Helper.get_roman_num(star_type - StarType.HYPERGIANT)]
+		else:
+			label.text = original_text
+		bar.connect("mouse_entered",Callable(self,"on_star_type_bar_entered").bind(star_type, original_text))
+		label.connect("mouse_entered",Callable(self,"on_star_type_bar_entered").bind(star_type, original_text))
 		bar.connect("mouse_exited",Callable(self,"on_bar_exited"))
 		label.connect("mouse_exited",Callable(self,"on_bar_exited"))
 		vbox.add_child(bar)

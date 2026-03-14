@@ -79,7 +79,7 @@ func _on_Terraform_pressed():
 				elif tile.has("ash"):
 					ash_mult += tile.ash.richness - 1.0
 				elif tile.has("aurora"):
-					EE_mult += tile.aurora - 1.0
+					EE_mult += tile.aurora
 				if tile.has("resource_production_bonus"):
 					if tile.resource_production_bonus.has("SP"):
 						SP_feature_mult += tile.resource_production_bonus.SP - 1.0

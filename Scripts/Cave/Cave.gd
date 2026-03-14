@@ -131,9 +131,9 @@ var hole_exits:Array = []#id of hole and exit on each floor
 
 var shaking:Vector2 = Vector2.ZERO
 var star_mod:Color = Color.WHITE
-var tile_brightness:float
-var brightness_mult:float
-var light_strength_mult:float
+#var tile_brightness:float
+#var brightness_mult:float
+#var light_strength_mult:float
 
 var big_debris:Dictionary = {}
 
@@ -220,29 +220,21 @@ func _ready():
 	cave_size = tile[cave_type].floor_size
 	seed(p_i.seed)
 	var surface_type = randi_range(1, 8)
-	tile_brightness = game.tile_brightness[surface_type]
+	#tile_brightness = game.tile_brightness[surface_type - 1]
 	cave_BG.texture = load("res://Graphics/Tiles/Mosaics/%s.jpg" % surface_type)
 	cave_BG.region_rect.size = Vector2.ONE * cave_size * 200.0
 	cave_BG.material.set_shader_parameter("texture_zoom", randf_range(0.5, 2.0))
-	var lum:float = 0.0
-	for star in game.system_data[game.c_s].stars:
-		var sc:float = 0.5 * star.size / (p_i.distance / 500)
-		if star.luminosity > lum:
-			star_mod = Helper.get_star_modulate(star["class"])
-			if star_mod.get_luminance() < 0.2:
-				star_mod = star_mod.lightened(0.2 - star_mod.get_luminance())
-			#$TileMap.material.set_shader_parameter("saturation", saturation)
-			lum = star.luminosity
 	#cave_BG.material.set_shader_parameter("modulate_color", star_mod)
-	light_strength_mult = 1.0
-	if p_i.temperature >= 1500:
-		light_strength_mult = min(remap(p_i.temperature, 1500, 3000, 1.2, 1.5), 1.5)
-	else:
-		light_strength_mult = min(remap(p_i.temperature, -273, 1500, 0.3, 1.2), 1.2)
-	var brightness:float = remap(tile_brightness, 40000, 90000, 2.5, 1.1) * light_strength_mult
-	var contrast:float = sqrt(brightness)
+	#light_strength_mult = 1.0
+	#if p_i.temperature >= 1500:
+		#light_strength_mult = min(remap(p_i.temperature, 1500, 3000, 1.2, 1.5), 1.5)
+	#else:
+		#light_strength_mult = min(remap(p_i.temperature, -273, 1500, 0.3, 1.2), 1.2)
+	#var brightness:float = remap(tile_brightness, 40000, 90000, 2.5, 1.1) * light_strength_mult
+	#var contrast:float = sqrt(brightness)
 	#cave_BG.material.set_shader_parameter("brightness", min(brightness, 1.6))
 	#cave_BG.material.set_shader_parameter("contrast", 1.5)
+	$Exit/PointLight2D.texture_scale = remap(p_i.temperature, -273.0, 3000.0, 0.0, 10.0)
 	if not tile[cave_type].has("debris"):
 		tile[cave_type].debris = randf() + 0.2
 	if not tile[cave_type].has("period"):
@@ -458,6 +450,7 @@ func set_avg_dmg():
 	$UI2/CaveInfo/AvgDmg["theme_override_colors/font_color"] = color
 	
 func generate_cave(first_floor:bool, going_up:bool):
+	$Exit/PointLight2D.enabled = cave_floor == 1
 	possible_metal_spawns.clear()
 	for met in game.met_info:
 		if met == "lead" or pow(game.met_info[met].rarity, 1.4) * 3.0 < difficulty:

@@ -1451,6 +1451,9 @@ func set_ancient_bldg_bonuses(p_i:Dictionary, ancient_bldg:Dictionary, tile_id:i
 		AncientBuilding.SUBSTATION:"energy",
 	}
 	if ancient_bldg.name in [AncientBuilding.MINERAL_REPLICATOR, AncientBuilding.OBSERVATORY]:
+		var mult = Helper.get_MR_Obs_Outpost_prod_mult(tier)
+		var rsrc = building_to_resource[ancient_bldg.name]
+		var bonus_name_str = "%s_bonus_dict" % AncientBuilding.names[ancient_bldg.name]
 		for i in n:
 			var x:int = x_pos + i - n / 2
 			if x < 0 or x >= wid:
@@ -1461,14 +1464,11 @@ func set_ancient_bldg_bonuses(p_i:Dictionary, ancient_bldg:Dictionary, tile_id:i
 					continue
 				var id:int = x + y * wid
 				var tile = game.tile_data[id]
-				var mult = Helper.get_MR_Obs_Outpost_prod_mult(tier)
-				var rsrc = building_to_resource[ancient_bldg.name]
-				var bonus_name_str = "%s_bonus_dict" % AncientBuilding.names[ancient_bldg.name]
 				if tile:
 					if tile.has(bonus_name_str):
 						var max_bonus = 1.0
-						for UB_id in tile[bonus_name_str].keys():
-							max_bonus = max(tile[bonus_name_str][UB_id], max_bonus)
+						for ancient_bldg_id in tile[bonus_name_str].keys():
+							max_bonus = max(tile[bonus_name_str][ancient_bldg_id], max_bonus)
 						tile[bonus_name_str][tile_id] = mult
 						mult = max(1.0, mult / max_bonus)
 					else:

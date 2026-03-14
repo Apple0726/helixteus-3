@@ -10,6 +10,10 @@ You start on a planet on which you can construct buildings to produce resources.
 
 [Wishlist the game on Steam](https://store.steampowered.com/app/1642730/Helixteus_3/)
 
+<p align="center">
+<img src="readme_screenshot2.jpg" alt="Game screenshot 2">
+</p>
+
 ## Community
 All active discussion is happening on our [Discord server](https://discord.com/invite/gDHcDA3). Come and say hi!
 

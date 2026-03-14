@@ -25,8 +25,9 @@ func set_align(align:int):
 func add_button(btn_str:String, callable):
 	var btn = Button.new()
 	btn.text = btn_str
-	btn.connect("pressed", callable)
-	btn.connect("pressed", Callable(self, "_on_ok_pressed"))
+	if callable:
+		btn.connect("pressed", callable)
+	btn.connect("pressed", _on_ok_pressed)
 	$Panel/VBoxContainer/HBoxContainer.add_child(btn)
 	$Panel/VBoxContainer/HBoxContainer.move_child(btn, 0)
 
