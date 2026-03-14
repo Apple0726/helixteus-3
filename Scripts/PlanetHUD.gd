@@ -57,7 +57,7 @@ func _on_Terraform_pressed():
 	if game.c_p_g == 2:
 		game.popup(tr("NO_TF_HOME"), 1.5)
 	elif game.planet_data[game.c_p].has("MS"):
-		game.popup("%s (%s)" % [tr("NO_TF_MS"), tr("MS_EXISTS")], 2.0)
+		game.popup("%s (%s)" % [tr("NO_TF"), tr("MS_EXISTS")], 2.0)
 	else:
 		game.toggle_panel("terraform_panel")
 		game.terraform_panel.pressure = game.planet_data[game.c_p]["pressure"]

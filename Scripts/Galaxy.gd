@@ -308,7 +308,7 @@ func _process(delta: float) -> void:
 				for j in len(game.fighter_data):
 					if game.fighter_data[j] and game.fighter_data[j].c_g_g == game.c_g_g:
 						game.fighter_data[j].erase("exploring")
-				game.popup_window(tr("CONQUERED_GALAXY"), "", [tr("DISBAND"), tr("KEEP")], [disband_fighters, null])
+				game.popup_window(tr("CONQUERED_GALAXY"), "", [tr("DISBAND")], [disband_fighters], tr("KEEP"))
 			set_process(false)
 	else:
 		set_process(false)

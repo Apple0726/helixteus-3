@@ -874,49 +874,51 @@ func add_energy_from_NFR(p_i:Dictionary, base:float):
 	if not p_i.ancient_bldgs.has(AncientBuilding.NUCLEAR_FUSION_REACTOR):
 		return
 	for nfr in p_i.ancient_bldgs[AncientBuilding.NUCLEAR_FUSION_REACTOR]:
+		if nfr.has("repair_cost"):
+			continue
 		var prod_mult = get_NFR_prod_mult(nfr.tier)
-		if not nfr.has("repair_cost"):
-			var S = 0.0
-			if p_i.atmosphere.has("NH3"):
-				S += 3 * p_i.atmosphere.NH3
-			if p_i.atmosphere.has("CH4"):
-				S += 4 * p_i.atmosphere.CH4
-			if p_i.atmosphere.has("H2O"):
-				S += 2 * p_i.atmosphere.H2O
-			if p_i.atmosphere.has("H"):
-				S += 1 * p_i.atmosphere.H
-			S *= base * prod_mult
-			game.autocollect.rsrc.energy += S
-			game.tile_data[nfr.tile].ancient_bldg.production = game.tile_data[nfr.tile].ancient_bldg.get("production", 0) + S
+		var S = 0.0
+		if p_i.atmosphere.has("NH3"):
+			S += 3.0 * p_i.atmosphere.NH3
+		if p_i.atmosphere.has("CH4"):
+			S += 4.0 * p_i.atmosphere.CH4
+		if p_i.atmosphere.has("H2O"):
+			S += 2.0 * p_i.atmosphere.H2O
+		if p_i.atmosphere.has("H"):
+			S += 1.0 * p_i.atmosphere.H
+		S *= base * prod_mult
+		game.autocollect.rsrc.energy += S
+		game.tile_data[nfr.tile].ancient_bldg.production = game.tile_data[nfr.tile].ancient_bldg.get("production", 0) + S
 
 func add_cellulose_from_CS(p_i:Dictionary, base:float):
 	if not p_i.ancient_bldgs.has(AncientBuilding.CELLULOSE_SYNTHESIZER):
 		return
 	for cs in p_i.ancient_bldgs[AncientBuilding.CELLULOSE_SYNTHESIZER]:
+		if cs.has("repair_cost"):
+			continue
 		var prod_mult = get_CS_prod_mult(cs.tier)
-		if not cs.has("repair_cost"):
-			var cellulose = {"C":0, "H":0, "O":0}
-			if p_i.atmosphere.has("NH3"):
-				cellulose.H += p_i.atmosphere.NH3 * 3
-			if p_i.atmosphere.has("CH4"):
-				cellulose.C += p_i.atmosphere.CH4
-				cellulose.H += p_i.atmosphere.CH4 * 4
-			if p_i.atmosphere.has("H2O"):
-				cellulose.H += p_i.atmosphere.H2O * 2
-				cellulose.O += p_i.atmosphere.H2O
-			if p_i.atmosphere.has("CO2"):
-				cellulose.C += p_i.atmosphere.CO2
-				cellulose.O += p_i.atmosphere.CO2 * 2
-			if p_i.atmosphere.has("H"):
-				cellulose.H += p_i.atmosphere.H
-			if p_i.atmosphere.has("O"):
-				cellulose.O += p_i.atmosphere.O
-			cellulose.C /= 6.0
-			cellulose.H /= 10.0
-			cellulose.O /= 5.0
-			var cellulose_molecules:float = [cellulose.C, cellulose.H, cellulose.O].min()
-			game.autocollect.mats.cellulose += base * prod_mult * cellulose_molecules
-			game.tile_data[cs.tile].ancient_bldg.production = game.tile_data[cs.tile].ancient_bldg.get("production", 0) + base * prod_mult * cellulose_molecules
+		var cellulose = {"C":0, "H":0, "O":0}
+		if p_i.atmosphere.has("NH3"):
+			cellulose.H += p_i.atmosphere.NH3 * 3
+		if p_i.atmosphere.has("CH4"):
+			cellulose.C += p_i.atmosphere.CH4
+			cellulose.H += p_i.atmosphere.CH4 * 4
+		if p_i.atmosphere.has("H2O"):
+			cellulose.H += p_i.atmosphere.H2O * 2
+			cellulose.O += p_i.atmosphere.H2O
+		if p_i.atmosphere.has("CO2"):
+			cellulose.C += p_i.atmosphere.CO2
+			cellulose.O += p_i.atmosphere.CO2 * 2
+		if p_i.atmosphere.has("H"):
+			cellulose.H += p_i.atmosphere.H
+		if p_i.atmosphere.has("O"):
+			cellulose.O += p_i.atmosphere.O
+		cellulose.C /= 6.0
+		cellulose.H /= 10.0
+		cellulose.O /= 5.0
+		var cellulose_molecules:float = [cellulose.C, cellulose.H, cellulose.O].min()
+		game.autocollect.mats.cellulose += base * prod_mult * cellulose_molecules
+		game.tile_data[cs.tile].ancient_bldg.production = game.tile_data[cs.tile].ancient_bldg.get("production", 0) + base * prod_mult * cellulose_molecules
 
 func add_atom_production(el:String, base_prod:float):
 	if el == "NH3":
@@ -1453,7 +1455,6 @@ func set_ancient_bldg_bonuses(p_i:Dictionary, ancient_bldg:Dictionary, tile_id:i
 	if ancient_bldg.name in [AncientBuilding.MINERAL_REPLICATOR, AncientBuilding.OBSERVATORY]:
 		var mult = Helper.get_MR_Obs_Outpost_prod_mult(tier)
 		var rsrc = building_to_resource[ancient_bldg.name]
-		var bonus_name_str = "%s_bonus_dict" % AncientBuilding.names[ancient_bldg.name]
 		for i in n:
 			var x:int = x_pos + i - n / 2
 			if x < 0 or x >= wid:
@@ -1465,18 +1466,10 @@ func set_ancient_bldg_bonuses(p_i:Dictionary, ancient_bldg:Dictionary, tile_id:i
 				var id:int = x + y * wid
 				var tile = game.tile_data[id]
 				if tile:
-					if tile.has(bonus_name_str):
-						var max_bonus = 1.0
-						for ancient_bldg_id in tile[bonus_name_str].keys():
-							max_bonus = max(tile[bonus_name_str][ancient_bldg_id], max_bonus)
-						tile[bonus_name_str][tile_id] = mult
-						mult = max(1.0, mult / max_bonus)
-					else:
-						tile[bonus_name_str] = {tile_id:mult}
 					if tile.has("resource_production_bonus"):
 						tile.resource_production_bonus[rsrc] = tile.resource_production_bonus.get(rsrc, 1.0) + (mult - 1.0)
 					else:
-						game.tile_data[id].resource_production_bonus = {rsrc:mult}
+						game.tile_data[id]["resource_production_bonus"] = {rsrc:mult}
 					if tile.has("bldg"):
 						var overclock_mult:float = tile.bldg.get("overclock_mult", 1.0)
 						var diff = tile.bldg.path_1_value * overclock_mult * (mult - 1.0)
@@ -1485,7 +1478,7 @@ func set_ancient_bldg_bonuses(p_i:Dictionary, ancient_bldg:Dictionary, tile_id:i
 						elif ancient_bldg.name == AncientBuilding.OBSERVATORY and tile.bldg.name == Building.RESEARCH_LAB:
 							game.autocollect.rsrc.SP += diff
 				else:
-					game.tile_data[id] = {"resource_production_bonus":{rsrc:mult}, bonus_name_str:{tile_id:mult}}
+					game.tile_data[id] = {"resource_production_bonus":{rsrc:mult}}
 	elif ancient_bldg.name == AncientBuilding.SUBSTATION:
 		for i in n:
 			var x:int = x_pos + i - n / 2
@@ -1499,19 +1492,11 @@ func set_ancient_bldg_bonuses(p_i:Dictionary, ancient_bldg:Dictionary, tile_id:i
 				var tile = game.tile_data[id]
 				var mult = Helper.get_substation_prod_mult(tier)
 				if tile:
-					if tile.has("substation_bonus_dict"):
-						var max_bonus = 1.0
-						for UB_id in tile["substation_bonus_dict"].keys():
-							max_bonus = max(tile["substation_bonus_dict"][UB_id], max_bonus)
-						tile["substation_bonus_dict"][tile_id] = mult
-						mult = max(1.0, mult / max_bonus)
-					else:
-						tile["substation_bonus_dict"] = {tile_id:mult}
 					if tile.has("resource_production_bonus"):
 						tile.resource_production_bonus.energy = tile.resource_production_bonus.get("energy", 1.0) + (mult - 1.0)
 					else:
-						game.tile_data[id].resource_production_bonus = {"energy":mult}
-					tile.substation_bonus = tile.get("substation_bonus", 1.0) + (mult - 1.0)
+						game.tile_data[id]["resource_production_bonus"] = {"energy":mult}
+					tile["substation_bonus"] = tile.get("substation_bonus", 1.0) + (mult - 1.0)
 					if tile.has("bldg"):
 						var overclock_mult:float = tile.bldg.get("overclock_mult", 1.0)
 						var base = tile.bldg.path_1_value * overclock_mult * mult
@@ -1519,18 +1504,18 @@ func set_ancient_bldg_bonuses(p_i:Dictionary, ancient_bldg:Dictionary, tile_id:i
 						var cap_bonus_mult = Helper.get_substation_capacity_bonus(tier)# 1200 seconds for tier 1, more for tier 2 etc.
 						if tile.bldg.name == Building.POWER_PLANT:
 							game.autocollect.rsrc.energy += diff
-							ancient_bldg.capacity_bonus = ancient_bldg.get("capacity_bonus", 0) + base * cap_bonus_mult
+							ancient_bldg["capacity_bonus"] = ancient_bldg.get("capacity_bonus", 0) + base * cap_bonus_mult
 							game.capacity_bonus_from_substation += ancient_bldg.capacity_bonus
 						elif tile.bldg.name == Building.SOLAR_PANEL:
 							var energy_prod = Helper.get_SP_production(p_i.temperature, diff * (tile.get("aurora", 0.0) + 1.0))
 							var energy_prod_base = Helper.get_SP_production(p_i.temperature, base * (tile.get("aurora", 0.0) + 1.0))
 							game.autocollect.rsrc.energy += energy_prod
-							ancient_bldg.capacity_bonus = ancient_bldg.get("capacity_bonus", 0) + energy_prod_base * cap_bonus_mult
+							ancient_bldg["capacity_bonus"] = ancient_bldg.get("capacity_bonus", 0) + energy_prod_base * cap_bonus_mult
 							game.capacity_bonus_from_substation += ancient_bldg.capacity_bonus
 				else:
-					game.tile_data[id] = {"resource_production_bonus":{"energy":mult}, "substation_bonus":mult, "substation_bonus_dict":{tile_id:mult}}
-				game.tile_data[id].substation_tile = tile_id
-				ancient_bldg.capacity_bonus = ancient_bldg.get("capacity_bonus", 0)
+					game.tile_data[id] = {"resource_production_bonus":{"energy":mult}, "substation_bonus":mult}
+				game.tile_data[id]["substation_tile"] = tile_id
+				ancient_bldg["capacity_bonus"] = ancient_bldg.get("capacity_bonus", 0)
 	elif ancient_bldg.name == AncientBuilding.MINING_OUTPOST:
 		for i in n:
 			var x:int = x_pos + i - n / 2
@@ -1544,17 +1529,9 @@ func set_ancient_bldg_bonuses(p_i:Dictionary, ancient_bldg:Dictionary, tile_id:i
 				var tile = game.tile_data[id]
 				var mult = Helper.get_MR_Obs_Outpost_prod_mult(tier)
 				if tile:
-					if tile.has("mining_outpost_bonus_dict"):
-						var max_bonus = 1.0
-						for UB_id in tile["mining_outpost_bonus_dict"].keys():
-							max_bonus = max(tile["mining_outpost_bonus_dict"][UB_id], max_bonus)
-						tile["mining_outpost_bonus_dict"][tile_id] = mult
-						mult = max(1.0, mult / max_bonus)
-					else:
-						tile["mining_outpost_bonus_dict"] = {tile_id:mult}
-					tile.mining_outpost_bonus = tile.get("mining_outpost_bonus", 1.0) * mult
+					tile["mining_outpost_bonus"] = tile.get("mining_outpost_bonus", 1.0) + (mult - 1.0)
 				else:
-					game.tile_data[id] = {"mining_outpost_bonus": mult, "mining_outpost_bonus_dict":{tile_id:mult}}
+					game.tile_data[id] = {"mining_outpost_bonus": mult}
 	elif ancient_bldg.name in [AncientBuilding.NUCLEAR_FUSION_REACTOR, AncientBuilding.CELLULOSE_SYNTHESIZER]:
 		for tile in game.tile_data:
 			if tile and tile.has("bldg") and tile.bldg.name == Building.ATMOSPHERE_EXTRACTOR:

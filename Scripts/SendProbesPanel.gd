@@ -67,14 +67,13 @@ func _on_Send_pressed(send_all:bool = false):
 	if game.check_enough(costs):
 		var curr_time = Time.get_unix_time_from_system()
 		var probe_sent:bool = false
-		if game.c_v == "universe":
-			for probe in game.probe_data:
-				if probe and probe.tier == 0 and not probe.has("start_date"):
-					probe.start_date = curr_time
-					probe.explore_length = costs.time
-					probe.obj_to_discover = obj_to_discover
-					probe_sent = true
-					break
+		for probe in game.probe_data:
+			if probe and probe.tier == 0 and not probe.has("start_date"):
+				probe.start_date = curr_time
+				probe.explore_length = costs.time
+				probe.obj_to_discover = obj_to_discover
+				probe_sent = true
+				break
 		if not probe_sent and send_all:
 			game.popup(tr("PROBE_SENT"), 1.5)
 			refresh()
@@ -106,7 +105,13 @@ func _on_HSlider_value_changed(value):
 func _on_SendAll_pressed():
 	refresh_energy()
 	while _on_Send_pressed(true):
-		pass
+		var no_more_probes = true
+		for probe in game.probe_data:
+			if probe and probe.tier == 0 and not probe.has("start_date"):
+				no_more_probes = false
+				break	
+		if no_more_probes:
+			break
 	refresh()
 
 func fill_costs(_dist_mult:float):

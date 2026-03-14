@@ -218,13 +218,20 @@ func _ready():
 		cave_type = "diamond_tower"
 	num_floors = tile[cave_type].num_floors
 	cave_size = tile[cave_type].floor_size
+	var lum:float = 0.0
+	for star in game.system_data[game.c_s].stars:
+		var sc:float = 0.5 * star.size / (p_i.distance / 500)
+		if star.luminosity > lum:
+			star_mod = Helper.get_star_modulate(star["class"])
+			var mod_lum = star_mod.get_luminance()
+			if mod_lum < 0.2:
+				star_mod = star_mod.lightened(0.2 - mod_lum)
 	seed(p_i.seed)
 	var surface_type = randi_range(1, 8)
 	#tile_brightness = game.tile_brightness[surface_type - 1]
 	cave_BG.texture = load("res://Graphics/Tiles/Mosaics/%s.jpg" % surface_type)
 	cave_BG.region_rect.size = Vector2.ONE * cave_size * 200.0
 	cave_BG.material.set_shader_parameter("texture_zoom", randf_range(0.5, 2.0))
-	#cave_BG.material.set_shader_parameter("modulate_color", star_mod)
 	#light_strength_mult = 1.0
 	#if p_i.temperature >= 1500:
 		#light_strength_mult = min(remap(p_i.temperature, 1500, 3000, 1.2, 1.5), 1.5)
@@ -235,6 +242,7 @@ func _ready():
 	#cave_BG.material.set_shader_parameter("brightness", min(brightness, 1.6))
 	#cave_BG.material.set_shader_parameter("contrast", 1.5)
 	$Exit/PointLight2D.texture_scale = remap(p_i.temperature, -273.0, 3000.0, 0.0, 10.0)
+	$Exit/PointLight2D.energy = remap(p_i.temperature, -273.0, 3000.0, 0.0, 1.0)
 	if not tile[cave_type].has("debris"):
 		tile[cave_type].debris = randf() + 0.2
 	if not tile[cave_type].has("period"):
@@ -1643,7 +1651,7 @@ func mine_wall_complete(tile_pos:Vector2, tile_id:int):
 	
 	cave_wall.set_cells_terrain_connect([map_pos], 0, -1)
 	cave_wall.set_cell(map_pos)
-	minimap_cave.set_cell(map_pos)
+	minimap_cave.set_cell(map_pos, 0, Vector2i.ZERO)
 	astar_node.add_point(tile_id, Vector2(map_pos.x, map_pos.y))
 	connect_points(map_pos, true)
 	if tiles_touched_by_laser.has(st):

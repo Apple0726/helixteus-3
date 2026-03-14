@@ -156,7 +156,7 @@ func _ready():
 				obstacle_nodes[Vector2i(i, j)] = cave_sprite
 			elif tile.has("volcano"):
 				var volcano_sprite = Sprite2D.new()
-				volcano_sprite.texture = preload("res://Graphics/Tiles/Volcano.png")
+				volcano_sprite.texture = load("res://Graphics/Tiles/Volcano%d.png" % (tile.volcano.get("type", 0) + 1))
 				volcano_sprite.position = Vector2(i, j) * 200 + Vector2.ONE * 100
 				volcano_sprite.scale *= 180.0 / volcano_sprite.texture.get_width()
 				volcano_sprite.modulate = star_mod
@@ -1327,8 +1327,10 @@ func _unhandled_input(event):
 						game.switch_view("cave")
 				else:
 					if (game.show.has("vehicles_button") or len(game.rover_data) > 0) and (not is_instance_valid(game.vehicle_panel) or not game.vehicle_panel.visible):
-						game.toggle_panel("vehicle_panel")
+						game.toggle_panel("vehicle_panel", false)
 						game.vehicle_panel.tile_id = tile_id
+						game.vehicle_panel.get_node("HBoxContainer/Rovers")._on_Button_pressed()
+						game.vehicle_panel._on_rovers_pressed()
 			elif tile.has("ship"):
 				if game.science_unlocked.has("SCT"):
 					if len(game.ship_data) == 0:

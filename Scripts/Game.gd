@@ -1563,7 +1563,7 @@ func add_obj(view_str):
 			view.add_obj("Universe", universe_data[c_u]["view"]["pos"], universe_data[c_u]["view"]["zoom"], universe_data[c_u]["view"]["sc_mult"])
 		"science_tree":
 			view.add_obj("ScienceTree", science_tree_view.pos, science_tree_view.zoom)
-			var sc_UI = preload("res://Scenes/ScienceUI.tscn").instantiate()
+			var sc_UI = load("res://Scenes/ScienceUI.tscn").instantiate()
 			sc_UI.modulate.a = 0.0
 			$UI.add_child(sc_UI)
 			sc_UI.sc_tree = view.obj
@@ -1624,7 +1624,7 @@ func remove_space_HUD():
 
 func add_dimension():
 	if not is_instance_valid(PD_panel):
-		PD_panel = preload("res://Scenes/Panels/PDPanel.tscn").instantiate()
+		PD_panel = load("res://Scenes/Panels/PDPanel.tscn").instantiate()
 		PD_panel.panel_var_name = "PD_panel"
 		PD_panel.hide()
 		$Panels/Control.add_child(PD_panel)
@@ -1635,7 +1635,7 @@ func add_dimension():
 		dimension.refresh_univs()
 		$Ship.visible = false
 	else:
-		dimension = preload("res://Scenes/Views/Dimension.tscn").instantiate()
+		dimension = load("res://Scenes/Views/Dimension.tscn").instantiate()
 		dimension.modulate.a = 0.0
 		add_child(dimension)
 	var tween = create_tween()
@@ -1958,7 +1958,7 @@ func generate_clusters(parent_id:int):
 		pos = Vector2.from_angle(randf_range(0, 2 * PI)) * dist_from_center
 		c_i["pos"] = pos
 		var DE_factor = pos.length() * u_i.dark_energy
-		c_i["redshift"] = Helper.clever_round(DE_factor / 1000.0)
+		c_i["redshift"] = Helper.clever_round(DE_factor * 0.002)
 		u_i.cluster_data.append(c_i)
 	clusters_generated += total_clust_num
 	fn_save_game()
@@ -2852,7 +2852,7 @@ func generate_volcano(t_id:int, VEI:float, artificial:bool = false):
 				earn_achievement("exploration", "volcano_aurora_cave")
 	if !tile_data[t_id]:
 		tile_data[t_id] = {}
-	tile_data[t_id]["volcano"] = {"VEI":VEI}
+	tile_data[t_id]["volcano"] = {"VEI":VEI, "type":randi() % 2}
 
 func generate_tiles(id:int):
 	tile_data.clear()
@@ -3866,7 +3866,6 @@ func fn_save_game():
 		"hotbar":hotbar,
 		"MUs":MUs,
 		"STM_lv":STM_lv,
-		"rover_id":rover_id,
 		"rover_data":rover_data,
 		"fighter_data":fighter_data,
 		"probe_data":probe_data,
