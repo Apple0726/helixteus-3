@@ -154,10 +154,8 @@ func move():
 	# (-PI) -------------O------------> (0.0)
 	#		x <- $Sprite2D.rotation
 	#
-	if move_angle_target < $Sprite2D.rotation - PI:
+	if move_angle_target < $Sprite2D.rotation - PI or move_angle_target > $Sprite2D.rotation + PI:
 		move_angle_target -= snappedf(move_angle_target - $Sprite2D.rotation, 2.0 * PI)
-	elif move_angle_target > $Sprite2D.rotation + PI:
-		move_angle_target += snappedf(move_angle_target - $Sprite2D.rotation, 2.0 * PI)
 	movement_remaining -= move_vector.length() / battle_scene.PIXELS_PER_METER
 	movement_remaining -= move_additional_costs
 	if battle_scene.animations_sped_up:

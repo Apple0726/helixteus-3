@@ -3433,7 +3433,7 @@ func remove_items(item_id:int, num:int = 1, slot:int = 0):
 				item_slot.num -= num
 				if item_slot.num <= 0:
 					num = -item_slot.num
-					items[items.find(item_slot)] = null
+					items[i] = null
 				else:
 					return get_item_num(item_id)
 	return get_item_num(item_id)
@@ -4307,7 +4307,6 @@ func get_2nd_ship():
 		Helper.add_ship_XP(1, 300)
 		if not achievement_data.progression.has("2nd_ship"):
 			earn_achievement("progression", "2nd_ship")
-		switch_view("ship_customize_screen", {"ship_id":1, "respeccing":true, "label_text":tr("CUSTOMIZE_NEW_SHIP")})
 
 func get_3rd_ship():
 	if len(ship_data) == 2:
@@ -4315,7 +4314,6 @@ func get_3rd_ship():
 		Helper.add_ship_XP(2, 15000)
 		if not achievement_data.progression.has("3rd_ship"):
 			earn_achievement("progression", "3rd_ship")
-		switch_view("ship_customize_screen", {"ship_id":2, "respeccing":true, "label_text":tr("CUSTOMIZE_NEW_SHIP")})
 
 func get_4th_ship():
 	if len(ship_data) == 3:
@@ -4324,7 +4322,6 @@ func get_4th_ship():
 		Helper.add_ship_XP(3, 200000)
 		if not achievement_data.progression.has("4th_ship"):
 			earn_achievement("progression", "4th_ship")
-		switch_view("ship_customize_screen", {"ship_id":3, "respeccing":true, "label_text":tr("CUSTOMIZE_NEW_SHIP")})
 
 func earn_achievement(type:String, ach_id:String):
 	var ach = preload("res://Scenes/AchievementEarned.tscn").instantiate()

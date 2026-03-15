@@ -141,14 +141,6 @@ func update_ship_stats_display():
 	$ClassAndStats/ShipStats/AddAccuracy.disabled = no_more_allocatable_points
 	$ClassAndStats/ShipStats/AddAgility.disabled = no_more_allocatable_points
 
-func customize_next_ship():
-	for i in len(game.ship_data):
-		if ship_id == i:
-			continue
-		if game.ship_data[i].has("leveled_up"):
-			game.switch_view("ship_customize_screen", {"ship_id":i})
-			return
-	game.switch_view(game.l_v)
 
 func _on_done_pressed() -> void:
 	game.ship_data[ship_id] = ship_data.duplicate()
@@ -158,11 +150,11 @@ func _on_done_pressed() -> void:
 		game.ship_data[ship_id].respec_count += 1
 	else:
 		game.ship_data[ship_id].erase("leveled_up")
-	customize_next_ship()
+	game.switch_view(game.l_v)
 
 
 func _on_cancel_pressed() -> void:
-	customize_next_ship()
+	game.switch_view(game.l_v)
 
 
 func _on_add_hp_pressed() -> void:

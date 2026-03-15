@@ -198,7 +198,7 @@ func update(changing_paths:bool = false):
 		current_lv_label.text = tr("VARYING_LEVELS")
 		current_and_next_label.text = "[center] %s" % tr("VARIES")
 	set_bldg_value(first_tile_bldg_info, first_tile, first_tile_bldg[path_str], next_lv_spinbox.value, num)
-	var icons = Helper.put_rsrc(cost_icons, 32, costs, true, true, true, 2)
+	var icons = Helper.put_rsrc(cost_icons, 32, costs, true, true, true, 3)
 
 func set_bldg_value(first_tile_bldg_info:Dictionary, first_tile:Dictionary, lv:int, next_lv:int, n:int):
 	var rsrc_icon = Data.desc_icons[bldg][path_selected - 1] if Data.desc_icons.has(bldg) and Data.desc_icons[bldg] else []

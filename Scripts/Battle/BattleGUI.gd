@@ -244,10 +244,6 @@ func refresh_GUI():
 func _on_back_pressed() -> void:
 	if battle_scene.hard_battle:
 		game.switch_music(load("res://Audio/ambient%s.ogg" % randi_range(1, 3)), game.u_i.time_speed)
-	for i in len(game.ship_data):
-		if game.ship_data[i].has("leveled_up"):
-			game.switch_view("ship_customize_screen", {"ship_id":i, "label_text":tr("SHIP_LEVELED_UP")})
-			return
 	if battle_scene.defeated and game.help.has("battle_lost"):
 		game.popup_window(tr("BATTLE_LOST_DESC"), tr("BATTLE_LOST"))
 		game.help.erase("battle_lost")

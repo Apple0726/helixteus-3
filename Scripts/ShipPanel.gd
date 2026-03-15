@@ -1,6 +1,5 @@
 extends "Panel.gd"
 
-var target_ship_positions:Array
 var ship_nodes = []
 var selected_ship_id:int = -1
 
@@ -23,14 +22,19 @@ func show_weapon_tooltip(weapon: String, path: int, lv: int):
 	game.show_tooltip(tooltip)
 
 func add_ship_node(id: int):
-	var ship = preload("res://Scenes/ShipsPanelShip.tscn").instantiate()
-	ship.get_node("TextureButton").mouse_entered.connect(_on_ship_mouse_entered.bind(id))
-	ship.get_node("TextureButton").mouse_exited.connect(_on_ship_mouse_exited.bind(id))
-	ship.get_node("TextureButton").button_down.connect(_on_ship_button_down.bind(id))
-	ship.get_node("TextureButton").button_up.connect(_on_ship_button_up.bind(id))
-	ship.get_node("TextureButton").texture_normal = load("res://Graphics/Ships/Ship%s top down.png" % id)
+	var ship = TextureButton.new()
+	ship.material = ShaderMaterial.new()
+	ship.material.shader = preload("res://Shaders/Highlight.gdshader")
+	ship.material.resource_local_to_scene = true
+	ship.mouse_entered.connect(_on_ship_mouse_entered.bind(id))
+	ship.mouse_exited.connect(_on_ship_mouse_exited.bind(id))
+	ship.button_down.connect(_on_ship_button_down.bind(id))
+	ship.button_up.connect(_on_ship_button_up.bind(id))
+	ship.texture_normal = load("res://Graphics/Ships/Ship%s top down.png" % id)
+	ship.ignore_texture_size = true
+	ship.stretch_mode = TextureButton.STRETCH_KEEP_ASPECT_CENTERED
+	ship.size = Vector2.ONE * 88.0
 	ship.position = game.ship_data[id].initial_position / 1.8
-	target_ship_positions.append(ship.position)
 	$Ships/Battlefield.add_child(ship)
 	ship_nodes.append(ship)
 
@@ -38,7 +42,6 @@ func refresh():
 	for ship in ship_nodes:
 		ship.queue_free()
 	ship_nodes.clear()
-	target_ship_positions.clear()
 	for i in len(game.ship_data):
 		add_ship_node(i)
 	set_process(true)
@@ -56,7 +59,7 @@ func refresh():
 
 func _process(delta):
 	if selected_ship_id != -1:
-		$Ships/Battlefield/Selected.position = ship_nodes[selected_ship_id].position - Vector2(0, 40)
+		$Ships/Battlefield/Selected.position = ship_nodes[selected_ship_id].position + Vector2(30.0, -40.0)
 	if game.ships_travel_data.travel_view != "-":
 		$Ships/TravelTimeRemaining.text = "%s: %s" % [tr("TRAVEL_TIME_REMAINING"), Helper.time_to_str(game.ships_travel_data.travel_length - Time.get_unix_time_from_system() + game.ships_travel_data.travel_start_date)]
 	if not visible:
@@ -76,7 +79,7 @@ func _on_DriveButton_pressed():
 			fade_out_tween.tween_property($Ships, "modulate:a", 0.5, 0.2)
 			fade_out_tween.tween_property($ShipStats, "modulate:a", 0.5, 0.2)
 			for ship in ship_nodes:
-				fade_out_tween.tween_property(ship.get_node("TextureButton").material, "shader_parameter/alpha", 0.5, 0.2)
+				fade_out_tween.tween_property(ship.material, "shader_parameter/alpha", 0.5, 0.2)
 			$Drives.visible = true
 			$ShipStats.visible = true
 			$Ships/DriveButton.visible = false
@@ -88,7 +91,7 @@ func hide_drive_panel():
 	fade_out_tween.tween_property($Ships, "modulate:a", 1.0, 0.2)
 	fade_out_tween.tween_property($ShipStats, "modulate:a", 1.0, 0.2)
 	for ship in ship_nodes:
-		fade_out_tween.tween_property(ship.get_node("TextureButton").material, "shader_parameter/alpha", 1.0, 0.2)
+		fade_out_tween.tween_property(ship.material, "shader_parameter/alpha", 1.0, 0.2)
 	$Ships.visible = true
 	$Drives.visible = false
 	$ShipStats.visible = true
@@ -140,18 +143,15 @@ func _input(event: InputEvent) -> void:
 	if event is InputEventMouseMotion:
 		mouse_position = event.position
 		if dragging_ship_id != -1:
-			var target_position = mouse_position - $Ships/Battlefield.global_position
-			target_ship_positions[dragging_ship_id] = target_position - ship_mouse_offset
-			game.ship_data[dragging_ship_id].initial_position = target_ship_positions[dragging_ship_id] * 1.8
+			var target_position = mouse_position - $Ships/Battlefield.global_position - ship_mouse_offset
+			target_position.x = clamp(target_position.x, 0.0, 360.0)
+			target_position.y = clamp(target_position.y, 0.0, 264.0)
+			ship_nodes[dragging_ship_id].position = target_position
+			game.ship_data[dragging_ship_id].initial_position = target_position * 1.8
 
-func _physics_process(delta: float) -> void:
-	for i in len(target_ship_positions):
-		var F:Vector2 = 1000 * (target_ship_positions[i] - ship_nodes[i].position)
-		F = F.clamp(-50000 * Vector2.ONE, 50000 * Vector2.ONE)
-		ship_nodes[i].apply_force(F)
 
 func _on_ship_mouse_entered(ship_id: int):
-	ship_nodes[ship_id].get_node("TextureButton").material.set_shader_parameter("highlight_strength", 0.15)
+	ship_nodes[ship_id].material.set_shader_parameter("highlight_strength", 0.15)
 	if game.item_to_use.id != -1 and Item.data[game.item_to_use.id].type == Item.Type.HELIX_CORE:
 		show_ship_stats(ship_id)
 		$ShipStats.show()
@@ -160,8 +160,9 @@ func _on_ship_mouse_entered(ship_id: int):
 		$ShipStats/ShipDetails/Respec.hide()
 
 func _on_ship_mouse_exited(ship_id: int):
-	ship_nodes[ship_id].get_node("TextureButton").material.set_shader_parameter("highlight_strength", 0.0)
+	ship_nodes[ship_id].material.set_shader_parameter("highlight_strength", 0.0)
 	if game.item_to_use.id != -1 and Item.data[game.item_to_use.id].type == Item.Type.HELIX_CORE:
+		$ShipStats/ShipDetails/XP/XPGained.text = ""
 		$ShipStats/ShipDetails.hide()
 	
 
@@ -178,17 +179,14 @@ func _on_ship_button_up(ship_id: int) -> void:
 	$ShipStats.show()
 	if game.item_to_use.id == -1 or Item.data[game.item_to_use.id].type != Item.Type.HELIX_CORE:
 		$Ships/Battlefield/Selected.show()
-		$Ships/Battlefield/Selected.position = ship_nodes[ship_id].position - Vector2(0, 40)
 		show_ship_stats(ship_id)
 	else:
 		Helper.add_ship_XP(ship_id, Item.data[game.item_to_use.id].XP * game.item_to_use.num)
-		game.remove_items(game.item_to_use.id, game.item_to_use.num)
+		game.item_to_use.num = game.remove_items(game.item_to_use.id, game.item_to_use.num)
 		game.update_item_cursor()
 		show_ship_stats(ship_id)
 		if game.item_to_use.id != -1 and Item.data[game.item_to_use.id].type == Item.Type.HELIX_CORE:
 			$ShipStats/ShipDetails/XP/TextureProgressGained.value = $ShipStats/ShipDetails/XP/TextureProgressBar.value + Item.data[game.item_to_use.id].XP * game.item_to_use.num
-		if game.ship_data[ship_id].has("leveled_up"):
-			game.switch_view("ship_customize_screen", {"ship_id":ship_id, "label_text":tr("SHIP_LEVELED_UP")})
 
 func show_ship_stats(ship_id: int):
 	$ShipStats/ShipDetails.show()

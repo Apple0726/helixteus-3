@@ -294,7 +294,7 @@ func add_particles(pos:Vector2):
 	add_child(particle)
 
 func show_tooltip(tile, tile_id:int):
-	if tile == null:
+	if tile == null or p_i == null:
 		return
 	var tooltip:String = ""
 	var different_orig_tooltip:String = ""
@@ -626,7 +626,7 @@ func overclock_bldg(tile, tile_id:int, curr_time):
 		var mult_diff:float
 		if not tile.bldg.has("overclock_mult"):
 			add_time_bar(tile_id, "overclock")
-			mult_diff = mult - 1
+			mult_diff = mult - 1.0
 		else:
 			mult_diff = mult - tile.bldg.overclock_mult
 		tile.bldg["overclock_date"] = curr_time
@@ -639,7 +639,7 @@ func overclock_bldg(tile, tile_id:int, curr_time):
 		elif tile.bldg.name == Building.POWER_PLANT:
 			game.autocollect.rsrc.energy += tile.bldg.path_1_value * mult_diff * tile.resource_production_bonus.get("energy", 1.0) * tile.get("time_speed_bonus", 1.0)
 		elif tile.bldg.name == Building.SOLAR_PANEL:
-			var SP_prod = Helper.get_SP_production(p_i.temperature, tile.bldg.path_1_value * mult_diff * (tile.get("aurora", 0.0) + 1.0) * tile.resource_production_bonus.get("energy", 1.0) * tile.get("time_speed_bonus", 1.0))
+			var SP_prod = Helper.get_SP_production(p_i.temperature, tile.bldg.path_1_value * mult_diff * tile.resource_production_bonus.get("energy", 1.0) * tile.get("time_speed_bonus", 1.0))
 			game.autocollect.rsrc.energy += SP_prod
 		elif tile.bldg.name == Building.ATMOSPHERE_EXTRACTOR:
 			var base = tile.bldg.path_1_value * mult_diff * p_i.pressure * tile.get("time_speed_bonus", 1.0)
@@ -742,12 +742,12 @@ func destroy_bldg(id2:int, mass:bool = false):
 			if game.capacity_bonus_from_substation < 0:
 				game["capacity_bonus_from_substation"] = 0
 	elif bldg == Building.SOLAR_PANEL:
-		var SP_prod = Helper.get_SP_production(p_i.temperature, tile.bldg.path_1_value * overclock_mult * (tile.get("aurora", 0.0) + 1.0))
+		var SP_prod = Helper.get_SP_production(p_i.temperature, tile.bldg.path_1_value * overclock_mult * tile.resource_production_bonus.get("energy", 1.0))
 		game.autocollect.rsrc.energy -= SP_prod
 		if game.autocollect.rsrc.energy < 0:
 			game.autocollect.rsrc["energy"] = 0
 		if tile.has("substation_tile"):
-			var cap_to_remove = Helper.get_SP_production(p_i.temperature, tile.bldg.path_1_value * (tile.get("aurora", 0.0) + 1.0)) * Helper.get_substation_capacity_bonus(game.tile_data[tile.substation_tile].ancient_bldg.tier)
+			var cap_to_remove = Helper.get_SP_production(p_i.temperature, tile.bldg.path_1_value * tile.resource_production_bonus.get("energy", 1.0)) * Helper.get_substation_capacity_bonus(game.tile_data[tile.substation_tile].ancient_bldg.tier)
 			game.tile_data[tile.substation_tile].ancient_bldg.capacity_bonus -= cap_to_remove
 			game.capacity_bonus_from_substation -= cap_to_remove
 			if game.capacity_bonus_from_substation < 0:
@@ -1635,7 +1635,7 @@ func on_timeout():
 				elif tile.bldg.name == Building.RESEARCH_LAB:
 					game.autocollect.rsrc.SP -= tile.bldg.path_1_value * (mult - 1) * tile.resource_production_bonus.get("SP", 1.0)
 				elif tile.bldg.name == Building.SOLAR_PANEL:
-					var SP_prod = Helper.get_SP_production(p_i.temperature, tile.bldg.path_1_value * (mult - 1) * (tile.get("aurora", 0.0) + 1.0) * tile.resource_production_bonus.get("energy", 1.0))
+					var SP_prod = Helper.get_SP_production(p_i.temperature, tile.bldg.path_1_value * (mult - 1) * tile.resource_production_bonus.get("energy", 1.0))
 					game.autocollect.rsrc.energy -= SP_prod
 				elif tile.bldg.name == Building.ATMOSPHERE_EXTRACTOR:
 					var base = -tile.bldg.path_1_value * (mult - 1) * p_i.pressure * tile.get("time_speed_bonus", 1.0)

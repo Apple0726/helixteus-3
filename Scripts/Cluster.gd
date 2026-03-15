@@ -142,6 +142,8 @@ func on_galaxy_over (id:int):
 				Helper.add_to_dict(MSs, _star.MS, 1)
 		#await get_tree().process_frame
 	var sc:float = pow(g_i["system_num"] / game.GALAXY_SCALE_DIV, 0.5)
+	if not is_instance_valid(game.space_HUD):
+		return
 	var bldg_info_node = game.space_HUD.get_node("HBoxContainer/BldgInfo")
 	var MS_info_node = game.space_HUD.get_node("HBoxContainer/MSInfo")
 	if not bldgs.is_empty():

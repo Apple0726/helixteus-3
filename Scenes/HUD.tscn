@@ -13,6 +13,7 @@
 [ext_resource type="Texture2D" uid="uid://if1usn38yajs" path="res://Graphics/Icons/craft.png" id="11_tvuu7"]
 [ext_resource type="Texture2D" uid="uid://dg25fshk35326" path="res://Graphics/Icons/SP.png" id="12"]
 [ext_resource type="Texture2D" uid="uid://d03u105amdf1c" path="res://Graphics/Icons/Inventory.png" id="12_esw7j"]
+[ext_resource type="Texture2D" uid="uid://bu4pbsuqutf1m" path="res://Graphics/Buttons/Upgrade.png" id="12_ljo2x"]
 [ext_resource type="Texture2D" uid="uid://bm03n6sxyvtsr" path="res://Graphics/Buttons/MainMenu.png" id="14"]
 [ext_resource type="Texture2D" uid="uid://d038cge3yomx0" path="res://Graphics/Buttons/convert_minerals.png" id="15"]
 [ext_resource type="Texture2D" uid="uid://4tf3teqmkahc" path="res://Graphics/Misc/Bar.png" id="16"]
@@ -644,6 +645,18 @@ offset_right = 41.0
 offset_bottom = 43.0
 rotation = -0.17765859
 texture = ExtResource("10_tvuu7")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Levelup" type="TextureRect" parent="Buttons/Ships" unique_id=1168865033]
+visible = false
+modulate = Color(1, 1, 1, 0.8117647)
+layout_mode = 0
+offset_left = 32.0
+offset_top = 4.0
+offset_right = 44.0
+offset_bottom = 16.0
+texture = ExtResource("12_ljo2x")
 expand_mode = 1
 stretch_mode = 5
 

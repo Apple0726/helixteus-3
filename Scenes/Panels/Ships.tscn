@@ -49,20 +49,6 @@ border_width_right = 1
 border_width_bottom = 1
 border_color = Color(0.372549, 0.372549, 1, 1)
 
-[sub_resource type="SegmentShape2D" id="SegmentShape2D_4vtgr"]
-b = Vector2(0, 352)
-
-[sub_resource type="SegmentShape2D" id="SegmentShape2D_ignkx"]
-a = Vector2(448, 352)
-b = Vector2(0, 352)
-
-[sub_resource type="SegmentShape2D" id="SegmentShape2D_54v24"]
-a = Vector2(448, 352)
-b = Vector2(448, 0)
-
-[sub_resource type="SegmentShape2D" id="SegmentShape2D_yjbqr"]
-b = Vector2(448, 0)
-
 [sub_resource type="LabelSettings" id="LabelSettings_aaq6n"]
 font_size = 13
 font_color = Color(0.52549, 0.52549, 1, 1)
@@ -151,20 +137,6 @@ offset_right = 480.0
 offset_bottom = 392.0
 theme_override_styles/panel = SubResource("StyleBoxFlat_pdtjp")
 
-[node name="StaticBody2D" type="StaticBody2D" parent="Ships/Battlefield" unique_id=1297244414]
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Ships/Battlefield/StaticBody2D" unique_id=176645259]
-shape = SubResource("SegmentShape2D_4vtgr")
-
-[node name="CollisionShape2D2" type="CollisionShape2D" parent="Ships/Battlefield/StaticBody2D" unique_id=335755302]
-shape = SubResource("SegmentShape2D_ignkx")
-
-[node name="CollisionShape2D3" type="CollisionShape2D" parent="Ships/Battlefield/StaticBody2D" unique_id=224490279]
-shape = SubResource("SegmentShape2D_54v24")
-
-[node name="CollisionShape2D4" type="CollisionShape2D" parent="Ships/Battlefield/StaticBody2D" unique_id=1940002320]
-shape = SubResource("SegmentShape2D_yjbqr")
-
 [node name="InitialPositionsLabel" type="Label" parent="Ships/Battlefield" unique_id=554091070]
 layout_mode = 0
 offset_left = 8.0
@@ -174,12 +146,18 @@ offset_bottom = 25.0
 text = "SHIP_INITIAL_POSITIONS"
 label_settings = SubResource("LabelSettings_aaq6n")
 
-[node name="Selected" type="Sprite2D" parent="Ships/Battlefield" unique_id=709775305]
+[node name="Selected" type="TextureRect" parent="Ships/Battlefield" unique_id=1979453905]
 visible = false
 material = SubResource("ShaderMaterial_pjijs")
-position = Vector2(68, 40)
+layout_mode = 0
+offset_left = 68.0
+offset_top = 40.0
+offset_right = 168.0
+offset_bottom = 140.0
 scale = Vector2(0.295, 0.295)
 texture = ExtResource("10_800g5")
+expand_mode = 1
+stretch_mode = 5
 
 [node name="TravelTimeRemaining" type="Label" parent="Ships" unique_id=1152174843]
 layout_mode = 0

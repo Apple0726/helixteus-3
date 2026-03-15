@@ -680,9 +680,11 @@ func add_ship_XP(id:int, XP:float):
 		ship_data[id].XP -= ship_data[id].XP_to_lv
 		ship_data[id].XP_to_lv = round(ship_data[id].XP_to_lv * game.maths_bonus.SLUGF_XP)
 		ship_data[id].lv += 1
-		if ship_data[id].lv % 3 == 0:
+		if ship_data[id].lv % 3 == 2:
 			ship_data[id].unallocated_weapon_levels = ship_data[id].get("unallocated_weapon_levels", 0) + 1
-		ship_data[id].leveled_up = true
+			ship_data[id]["leveled_up"] = true
+		if ship_data[id].lv % 2 == 1: # One more allocatable stat point
+			ship_data[id]["leveled_up"] = true
 		ship_data[id].HP += ShipClass.class_modifiers[ship_data[id].ship_class].HP_increase_on_levelup
 
 func calculate_total_ship_XP(id:int):
@@ -851,7 +853,7 @@ func add_autocollect(p_i:Dictionary, tile:Dictionary, mult_diff:float):
 	elif tile.bldg.name == Building.POWER_PLANT:
 		game.autocollect.rsrc.energy += tile.bldg.path_1_value * mult_diff * tile.resource_production_bonus.get("energy", 1.0) * overclock_mult
 	elif tile.bldg.name == Building.SOLAR_PANEL:
-		var SP_prod = Helper.get_SP_production(p_i.temperature, tile.bldg.path_1_value * mult_diff * (tile.get("aurora", 0.0) + 1.0) * tile.resource_production_bonus.get("energy", 1.0) * overclock_mult)
+		var SP_prod = Helper.get_SP_production(p_i.temperature, tile.bldg.path_1_value * mult_diff * tile.resource_production_bonus.get("energy", 1.0) * overclock_mult)
 		game.autocollect.rsrc.energy += SP_prod
 	elif tile.bldg.name == Building.ATMOSPHERE_EXTRACTOR:
 		var base = tile.bldg.path_1_value * mult_diff * p_i.pressure * overclock_mult
@@ -1122,7 +1124,7 @@ func get_final_value(p_i:Dictionary, dict:Dictionary, path:int, n:int = 1):
 		n = 1
 	if path == 1:
 		if bldg == Building.SOLAR_PANEL:
-			return clever_round(get_SP_production(p_i.temperature, dict.bldg.path_1_value * mult * (dict.get("aurora", 0.0) + 1.0) * dict.get("substation_bonus", 1.0)) * n)
+			return clever_round(get_SP_production(p_i.temperature, dict.bldg.path_1_value * mult * dict.resource_production_bonus.get("energy", 1.0) * dict.get("substation_bonus", 1.0)) * n)
 		elif bldg == Building.ATMOSPHERE_EXTRACTOR:
 			return clever_round(get_AE_production(p_i.pressure, dict.bldg.path_1_value) * n * mult)
 		elif bldg in [Building.MINERAL_SILO]:
@@ -1507,8 +1509,8 @@ func set_ancient_bldg_bonuses(p_i:Dictionary, ancient_bldg:Dictionary, tile_id:i
 							ancient_bldg["capacity_bonus"] = ancient_bldg.get("capacity_bonus", 0) + base * cap_bonus_mult
 							game.capacity_bonus_from_substation += ancient_bldg.capacity_bonus
 						elif tile.bldg.name == Building.SOLAR_PANEL:
-							var energy_prod = Helper.get_SP_production(p_i.temperature, diff * (tile.get("aurora", 0.0) + 1.0))
-							var energy_prod_base = Helper.get_SP_production(p_i.temperature, base * (tile.get("aurora", 0.0) + 1.0))
+							var energy_prod = Helper.get_SP_production(p_i.temperature, diff * tile.resource_production_bonus.get("energy", 1.0))
+							var energy_prod_base = Helper.get_SP_production(p_i.temperature, base * tile.resource_production_bonus.get("energy", 1.0))
 							game.autocollect.rsrc.energy += energy_prod
 							ancient_bldg["capacity_bonus"] = ancient_bldg.get("capacity_bonus", 0) + energy_prod_base * cap_bonus_mult
 							game.capacity_bonus_from_substation += ancient_bldg.capacity_bonus

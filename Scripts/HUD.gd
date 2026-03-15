@@ -309,6 +309,11 @@ func refresh():
 		var label = Label.new()
 		label.text = "%s p %s, s %s" % [view.view, view.c_p_g, view.c_s_g]
 		$Bottom/ViewHistory/VBox.add_child(label)
+	$Buttons/Ships/Levelup.hide()
+	for ship in game.ship_data:
+		if ship.has("leveled_up"):
+			$Buttons/Ships/Levelup.show()
+			break
 	await get_tree().process_frame
 	game.refresh_achievements()
 
