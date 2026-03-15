@@ -569,6 +569,7 @@ func destroy_MS():
 		Helper.put_rsrc(vbox, 32, bldg_costs, true, true)
 		Helper.put_rsrc(vbox, 32, rsrc_salvaged, false)
 		Helper.add_label(tr("DISMANTLING_COSTS"), 0)
+		await get_tree().process_frame
 		Helper.add_label(tr("YOU_WILL_SALVAGE"), 3)
 		Helper.add_label("{key}: {confirm}".format({"key":"X", "confirm": tr("CONFIRM")}))
 	elif current_MS_action == "destroying":

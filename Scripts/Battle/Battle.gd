@@ -244,7 +244,6 @@ func battle_victory_callback():
 		game.help["SP"] = true
 
 var scale_before_view_battlefield = 0.4
-var position_before_view_battlefield = Vector2.ZERO
 
 func view_battlefield(tween_speed: float = 1.0):
 	if game.view.is_view_changing():
@@ -266,7 +265,7 @@ func view_entity(entity: BattleEntity, tween_speed: float = 1.0, offset: Vector2
 	else:
 		var view_tween = create_tween().set_parallel().set_speed_scale(tween_speed)
 		view_tween.tween_property(game.view, "scale", Vector2.ONE * scale_before_view_battlefield, 0.5).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
-		view_tween.tween_property(game.view, "position", position_before_view_battlefield, 0.5).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+		view_tween.tween_property(game.view, "position", Vector2(640, 360) - (entity.position + offset) * scale_before_view_battlefield, 0.5).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
 		scale_before_view_battlefield = 0.4
 
 var ships_taking_turn = [] # Stores ship nodes that can take actions interchangeably
@@ -320,7 +319,6 @@ func next_turn():
 			i -= 1
 	if initiative_order[whose_turn_is_it_index].type == Battle.EntityType.BOUNDARY:
 		scale_before_view_battlefield = game.view.scale.x
-		position_before_view_battlefield = game.view.position
 		if animations_sped_up:
 			create_tween().tween_callback(environment_take_turn).set_delay(0.1)
 		else:
@@ -329,14 +327,10 @@ func next_turn():
 		initiative_order[whose_turn_is_it_index].turn_order_box.get_node("ChangeSizeAnim").play("ChangeSize")
 	elif initiative_order[whose_turn_is_it_index].type == Battle.EntityType.SHIP:
 		var ship_turn = whose_turn_is_it_index
-		var view_moved = false
 		while initiative_order[ship_turn].type == Battle.EntityType.SHIP:
 			var ship_node = initiative_order[ship_turn]
 			print("ship's turn (%s)" % ship_turn)
 			var ship_pos_before_moving:Vector2 = ship_node.position
-			if not animations_sped_up and not view_moved:
-				view_entity(ship_node)
-				view_moved = true
 			var skip_turn = ship_node.status_effects[Battle.StatusEffect.STUN] > 0 or ship_node.status_effects[Battle.StatusEffect.FROZEN] > 0 or ship_node.turn_taken
 			await ship_node.take_turn()
 			if ship_node.HP > 0:
@@ -344,8 +338,6 @@ func next_turn():
 					ship_node.turn_order_box.get_node("ChangeSizeAnim").play_backwards("ChangeSize")
 					ship_node.turn_taken = true
 				else:
-					if not animations_sped_up and not ship_pos_before_moving.is_equal_approx(ship_node.position):
-						view_entity(ship_node)
 					ships_taking_turn.append(ship_node)
 					if len(ships_taking_turn) == 1:
 						whose_turn_is_it_index = ship_turn
@@ -353,6 +345,7 @@ func next_turn():
 		if len(ships_taking_turn) > 0:
 			$Selected.show()
 			$Selected.position = ships_taking_turn[0].position + Vector2.UP * 80.0
+			view_entity(ships_taking_turn[0])
 			battle_GUI.fade_in_main_panel()
 		else:
 			whose_turn_is_it_index = ship_turn - 1

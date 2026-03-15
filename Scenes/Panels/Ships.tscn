@@ -546,9 +546,9 @@ vertical_alignment = 1
 visible = false
 layout_mode = 0
 offset_left = 332.0
-offset_top = 136.0
+offset_top = 189.0
 offset_right = 956.0
-offset_bottom = 624.0
+offset_bottom = 581.0
 
 [connection signal="pressed" from="CloseButton" to="." method="_on_close_button_pressed"]
 [connection signal="mouse_entered" from="Ships/DriveButton" to="." method="_on_DriveButton_mouse_entered"]

@@ -191,6 +191,14 @@ func take_turn():
 		damage_entity_status_effect(int(ceil(burn_turns * 0.05 * total_HP)))
 		if HP <= 0:
 			return
+	var wet_turns = status_effects[Battle.StatusEffect.WET]
+	if wet_turns > 0:
+		if game.planet_data[game.c_p].temperature > 373.0:
+			status_effects[Battle.StatusEffect.BURN] = wet_turns * clamp(remap(game.planet_data[game.c_p].temperature, 373.0, 3000.0, 1.0, 3.0), 1.0, 3.0)
+			status_effects[Battle.StatusEffect.WET] = 0.0
+		elif game.planet_data[game.c_p].temperature < 263.0:
+			status_effects[Battle.StatusEffect.FROZEN] = wet_turns * clamp(remap(game.planet_data[game.c_p].temperature, 263.0, 0.0, 1.0, 3.0), 1.0, 3.0)
+			status_effects[Battle.StatusEffect.WET] = 0.0
 	if status_effects[Battle.StatusEffect.CORRODING] > 0.0:
 		defense_buff -= 2
 		agility_buff -= 2

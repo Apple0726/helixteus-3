@@ -466,7 +466,7 @@ var battle_weapon_stats = {
 				"status_effects":{
 					Battle.StatusEffect.CORRODING:[0, 2, 3, 0],
 					Battle.StatusEffect.RADIOACTIVE:[0, 0, 0, 3],
-					Battle.StatusEffect.WET:[0, 2, 4, 0],
+					Battle.StatusEffect.WET:[0, 1, 2, 0],
 					Battle.StatusEffect.FROZEN:[0, 0, 0, 4],
 				},
 			},
