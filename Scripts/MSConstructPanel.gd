@@ -1,12 +1,11 @@
 extends "Panel.gd"
 
-var megastructures:Array = ["DS", "SE", "MME", "CBS", "MB", "PK"]
 var build_all:bool = false
 var star_selected = -1
 
 func _ready():
 	set_polygon($Panel.size, $Panel.position)
-	for MS in megastructures:
+	for MS in Megastructure.names:
 		var btn = Button.new()
 		btn.icon_alignment = HORIZONTAL_ALIGNMENT_CENTER
 		btn.expand_icon = true
@@ -26,7 +25,7 @@ func _unhandled_input(event):
 		game.toggle_panel(panel_var_name)
 
 func refresh():
-	for MS in megastructures:
+	for MS in Megastructure.names:
 		$Panel/ScrollContainer/VBoxContainer.get_node(MS).visible = (star_selected == -1 or MS in ["DS", "CBS", "MB", "PK"]) and (MS != "MB" or game.science_unlocked.has("MB"))
 
 func on_MS_over(MS:String):

@@ -1,38 +1,38 @@
 {
     "en": {
-        "lines": 1633,
-        "words": 11476,
-        "chars": 70193
+        "lines": 1637,
+        "words": 11499,
+        "chars": 70336
     },
     "fr": {
-        "lines": 542,
-        "words": 2293,
-        "chars": 14532
+        "lines": 541,
+        "words": 2291,
+        "chars": 14509
     },
     "it": {
-        "lines": 360,
-        "words": 1082,
-        "chars": 7274
+        "lines": 359,
+        "words": 1080,
+        "chars": 7258
     },
     "zh": {
-        "lines": 1450,
-        "words": 1778,
-        "chars": 18460
+        "lines": 1449,
+        "words": 1777,
+        "chars": 18456
     },
     "de": {
-        "lines": 1588,
-        "words": 9857,
-        "chars": 72447
+        "lines": 1587,
+        "words": 9855,
+        "chars": 72429
     },
     "es": {
-        "lines": 1291,
-        "words": 9161,
-        "chars": 58421
+        "lines": 1290,
+        "words": 9159,
+        "chars": 58400
     },
     "ko": {
-        "lines": 226,
-        "words": 415,
-        "chars": 1323
+        "lines": 225,
+        "words": 413,
+        "chars": 1314
     },
     "sv": {
         "lines": 183,
@@ -40,24 +40,24 @@
         "chars": 3243
     },
     "hu": {
-        "lines": 1527,
-        "words": 8070,
-        "chars": 59404
+        "lines": 1526,
+        "words": 8068,
+        "chars": 59387
     },
     "ja": {
-        "lines": 1235,
-        "words": 1388,
-        "chars": 21953
+        "lines": 1234,
+        "words": 1387,
+        "chars": 21941
     },
     "nl": {
-        "lines": 1122,
-        "words": 6004,
-        "chars": 41519
+        "lines": 1121,
+        "words": 6002,
+        "chars": 41501
     },
     "ru": {
-        "lines": 945,
-        "words": 3880,
-        "chars": 29052
+        "lines": 944,
+        "words": 3878,
+        "chars": 29033
     },
     "pl": {
         "lines": 132,

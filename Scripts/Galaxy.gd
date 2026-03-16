@@ -13,6 +13,9 @@ var star_texture = [	preload("res://Graphics/Effects/spotlight_4.png"),
 						preload("res://Graphics/Effects/spotlight_6.png"),
 ]
 var g_i:Dictionary
+var bldgs:Dictionary = {}
+var ancient_bldgs:Dictionary = {}
+var MSs:Dictionary = {}
 
 func _ready():
 	queue_redraw()
@@ -59,8 +62,41 @@ func _ready():
 		dimensions_temp = max(dimensions_temp, s_i.pos.length())
 		Helper.add_overlay(system, self, "system", s_i, overlays)
 		await_counter += 1
-		if is_instance_valid(game.overlay):
-			change_overlay(game.overlay.option_btn.selected, game.overlay.get_node("TextureRect").texture.gradient, overlays[-1])
+		var planet_data:Array = game.open_obj("Systems", s_i.id)
+		for p_i in planet_data:
+			if p_i.is_empty():
+				continue
+			if p_i.has("tile_num") and p_i.bldg.has("name"):
+				if bldgs.has(s_i.l_id):
+					bldgs[s_i.l_id][p_i.bldg.name] = bldgs[s_i.l_id].get(p_i.bldg.name, 0) + p_i.tile_num
+				else:
+					bldgs[s_i.l_id] = {p_i.bldg.name: p_i.tile_num}
+			if p_i.has("MS"):
+				if MSs.has(s_i.l_id):
+					MSs[s_i.l_id][p_i.MS] = MSs[s_i.l_id].get(p_i.MS, 0) + 1
+				else:
+					MSs[s_i.l_id] = {p_i.MS: 1}
+			var tile_data:Array = game.open_obj("Planets", p_i.id)
+			for tile in tile_data:
+				if tile:
+					if tile.has("bldg"):
+						if bldgs.has(s_i.l_id):
+							bldgs[s_i.l_id][tile.bldg.name] = bldgs[s_i.l_id].get(tile.bldg.name, 0) + 1
+						else:
+							bldgs[s_i.l_id] = {tile.bldg.name: 1}
+					elif tile.has("ancient_bldg"):
+						if ancient_bldgs.has(s_i.l_id):
+							ancient_bldgs[s_i.l_id][tile.ancient_bldg.name] = ancient_bldgs[s_i.l_id].get(tile.ancient_bldg.name, 0) + 1
+						else:
+							ancient_bldgs[s_i.l_id] = {tile.ancient_bldg.name: 1}
+		for _star in s_i.stars:
+			if _star.has("MS"):
+				if MSs.has(s_i.l_id):
+					MSs[s_i.l_id][_star.MS] = MSs[s_i.l_id].get(_star.MS, 0) + 1
+				else:
+					MSs[s_i.l_id] = {_star.MS: 1}
+		#if is_instance_valid(game.overlay):
+			#change_overlay(game.overlay.option_btn.selected, game.overlay.get_node("TextureRect").texture.gradient, overlays[-1])
 		star_btn.visible = not game.overlay_data.galaxy.visible
 		overlays[-1].circle.visible = game.overlay_data.galaxy.visible
 		if await_counter % int(6000.0 / Engine.get_frames_per_second()) == 0:
@@ -102,51 +138,29 @@ func on_system_over (l_id:int):
 			var tween = create_tween()
 			tween.tween_property(grid, "modulate", Color(1, 1, 1, 0), 0.1)
 	game.show_tooltip("%s\n%s: %s\n%s: %s" % [_name, tr("PLANETS"), s_i.planet_num, tr("DIFFICULTY"), Helper.format_num(s_i.diff)])
-	
-	var planet_data:Array = game.open_obj("Systems", s_i.id)
-	var bldgs:Dictionary = {}
-	var ancient_bldgs:Dictionary = {}
-	var MSs:Dictionary = {}
-	for p_i in planet_data:
-		if p_i.is_empty():
-			continue
-		if p_i.has("tile_num") and p_i.bldg.has("name"):
-			Helper.add_to_dict(bldgs, p_i.bldg.name, p_i.tile_num)
-		if p_i.has("MS"):
-			Helper.add_to_dict(MSs, p_i.MS, 1)
-		var tile_data:Array = game.open_obj("Planets", p_i.id)
-		for tile in tile_data:
-			if tile:
-				if tile.has("bldg"):
-					Helper.add_to_dict(bldgs, tile.bldg.name, 1)
-				elif tile.has("ancient_bldg"):
-					Helper.add_to_dict(bldgs, tile.ancient_bldg.name, 1)
-	for _star in s_i.stars:
-		if _star.has("MS"):
-			Helper.add_to_dict(MSs, _star.MS, 1)
 	if not is_instance_valid(game.space_HUD):
 		return
 	var bldg_info_node = game.space_HUD.get_node("HBoxContainer/BldgInfo")
 	var ancient_bldg_info_node = game.space_HUD.get_node("HBoxContainer/AncientBldgInfo")
 	var MS_info_node = game.space_HUD.get_node("HBoxContainer/MSInfo")
-	if not bldgs.is_empty():
-		for bldg in bldgs:
+	if bldgs.has(l_id):
+		for bldg in bldgs[l_id]:
 			var bldg_count = preload("res://Scenes/EntityCount.tscn").instantiate()
 			bldg_info_node.add_child(bldg_count)
 			bldg_count.get_node("Texture2D").texture = game.bldg_textures[bldg]
-			bldg_count.get_node("Label").text = "x %s" % Helper.format_num(bldgs[bldg])
-	if not ancient_bldgs.is_empty():
-		for ancient_bldg in ancient_bldgs:
+			bldg_count.get_node("Label").text = "x %s" % Helper.format_num(bldgs[l_id][bldg])
+	if ancient_bldgs.has(l_id):
+		for ancient_bldg in ancient_bldgs[l_id]:
 			var ancient_bldg_count = preload("res://Scenes/EntityCount.tscn").instantiate()
 			ancient_bldg_info_node.add_child(ancient_bldg_count)
 			ancient_bldg_count.get_node("Texture2D").texture = game.ancient_bldg_textures[ancient_bldg]
-			ancient_bldg_count.get_node("Label").text = "x %s" % Helper.format_num(ancient_bldgs[ancient_bldg])
-	if not MSs.is_empty():
-		for MS in MSs:
+			ancient_bldg_count.get_node("Label").text = "x %s" % Helper.format_num(ancient_bldgs[l_id][ancient_bldg])
+	if MSs.has(l_id):
+		for MS in MSs[l_id]:
 			var MS_count = preload("res://Scenes/EntityCount.tscn").instantiate()
 			MS_info_node.add_child(MS_count)
 			MS_count.get_node("Texture2D").texture = load("res://Graphics/Megastructures/%s_0.png" % MS)
-			MS_count.get_node("Label").text = "x %s" % Helper.format_num(MSs[MS])
+			MS_count.get_node("Label").text = "x %s" % Helper.format_num(MSs[l_id][MS])
 
 func on_system_out ():
 	for grid in get_tree().get_nodes_in_group("Grids"):
@@ -217,11 +231,50 @@ func change_overlay(overlay_id:int, gradient:Gradient, object:Dictionary = {}):
 				var offset = inverse_lerp(c_vl.left, c_vl.right, luminosity)
 				Helper.set_overlay_visibility(gradient, overlay, offset)
 		9:
+			var filter_text = game.overlay.filter_text.to_lower()
+			var matched_objs_display = []
+			var matched_objs = []
+			if len(filter_text) >= 2:
+				for i in len(Building.names):
+					var bldg_name = Building.names[i]
+					if filter_text in tr(bldg_name.to_upper() + "_NAME").to_lower():
+						matched_objs_display.append(tr(bldg_name.to_upper() + "_NAME_S"))
+						matched_objs.append(i)
+				for i in len(AncientBuilding.names):
+					var bldg_name = AncientBuilding.names[i]
+					if filter_text in tr(bldg_name.to_upper()).to_lower():
+						matched_objs_display.append(tr(bldg_name.to_upper()))
+						matched_objs.append(i)
+				for MS_name in Megastructure.names:
+					if filter_text in tr("M_" + MS_name + "_NAME").to_lower():
+						matched_objs_display.append(tr("M_" + MS_name + "_NAME"))
+						matched_objs.append(MS_name)
 			for overlay in _overlays:
-				if game.system_data[overlay.id].has("has_MS"):
+				var found = false
+				for obj in matched_objs:
+					if bldgs.has(overlay.id) and bldgs[overlay.id].has(obj):
+						found = true
+						break
+					if ancient_bldgs.has(overlay.id) and ancient_bldgs[overlay.id].has(obj):
+						found = true
+						break
+					if MSs.has(overlay.id) and MSs[overlay.id].has(obj):
+						found = true
+						break
+				if found:
 					overlay.circle.modulate = gradient.sample(0)
 				else:
 					overlay.circle.modulate = gradient.sample(1)
+			var filtered_obj_str = ""
+			for i in len(matched_objs_display):
+				var obj = matched_objs_display[i]
+				filtered_obj_str += obj
+				if i < len(matched_objs_display) - 1:
+					filtered_obj_str += ", "
+			if filtered_obj_str == "":
+				game.overlay.get_node("Filter/Label").text = ""
+			else:
+				game.overlay.get_node("Filter/Label").text = tr("SHOWING_X").format({"obj": filtered_obj_str})
 
 func _on_Galaxy_tree_exited():
 	queue_free()

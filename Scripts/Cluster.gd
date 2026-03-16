@@ -65,7 +65,7 @@ func _ready():
 				rsrc.set_text("%s/%s" % [Helper.format_num(g_i.prod_num * rsrc_mult), tr("S_SECOND")])
 		await_counter += 1
 		if is_instance_valid(game.overlay):
-			change_overlay(0, game.overlay.get_node("TextureRect").texture.gradient, overlays[-1])
+			change_overlay(0, game.overlay.get_node("Control/Gradient").texture.gradient, overlays[-1])
 		galaxy_btn.visible = not game.overlay_data.cluster.visible
 		overlays[-1].circle.visible = game.overlay_data.cluster.visible
 		if await_counter % int(3000.0 / Engine.get_frames_per_second()) == 0:

@@ -26,8 +26,13 @@ device = -1
 keycode = 79
 unicode = 111
 
+[sub_resource type="InputEventKey" id="InputEventKey_42r2j"]
+device = -1
+physical_keycode = 70
+unicode = 102
+
 [sub_resource type="Shortcut" id="2"]
-events = [SubResource("InputEventKey_o6e2x")]
+events = [SubResource("InputEventKey_o6e2x"), SubResource("InputEventKey_42r2j")]
 
 [sub_resource type="InputEventKey" id="InputEventKey_t3ovf"]
 device = -1

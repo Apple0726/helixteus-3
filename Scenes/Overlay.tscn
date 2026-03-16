@@ -12,8 +12,13 @@
 [sub_resource type="CompressedTexture2D" id="CompressedTexture2D_rqkrj"]
 load_path = "res://.godot/imported/Border.png-569a3cd703e420d6f1c10f433850073a.ctex"
 
-[sub_resource type="GradientTexture2D" id="1"]
-gradient = ExtResource("3")
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_fg122"]
+bg_color = Color(0.317647, 0.317647, 0.317647, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.294118, 0.294118, 0.294118, 1)
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_qywem"]
 
@@ -33,19 +38,14 @@ border_width_top = 1
 border_width_right = 1
 border_width_bottom = 1
 
+[sub_resource type="GradientTexture2D" id="1"]
+gradient = ExtResource("3")
+
 [node name="Overlay" type="Control" unique_id=752859766]
 layout_mode = 3
-anchors_preset = 7
-anchor_left = 0.5
-anchor_top = 1.0
-anchor_right = 0.5
-anchor_bottom = 1.0
-offset_left = -640.0
-offset_top = -720.0
-offset_right = -540.0
-offset_bottom = -620.0
-grow_horizontal = 2
-grow_vertical = 0
+anchors_preset = 0
+offset_right = 100.0
+offset_bottom = 100.0
 theme = ExtResource("1")
 script = ExtResource("2")
 metadata/_edit_vertical_guides_ = [640.0]
@@ -64,67 +64,13 @@ patch_margin_bottom = 11
 axis_stretch_horizontal = 1
 metadata/_edit_horizontal_guides_ = [596.0]
 
-[node name="TextureRect" type="TextureRect" parent="." unique_id=2090229188]
-layout_mode = 1
-anchors_preset = 7
-anchor_left = 0.5
-anchor_top = 1.0
-anchor_right = 0.5
-anchor_bottom = 1.0
-offset_left = 302.0
-offset_top = 544.0
-offset_right = 862.0
-offset_bottom = 560.0
-grow_horizontal = 2
-grow_vertical = 0
-texture = SubResource("1")
-expand_mode = 1
-
-[node name="Yes" type="Label" parent="." unique_id=1179671722]
-layout_mode = 1
-anchors_preset = 7
-anchor_left = 0.5
-anchor_top = 1.0
-anchor_right = 0.5
-anchor_bottom = 1.0
-offset_left = 262.0
-offset_top = 572.0
-offset_right = 342.0
-offset_bottom = 600.0
-grow_horizontal = 2
-grow_vertical = 0
-mouse_filter = 1
-text = "YES"
-horizontal_alignment = 1
-
-[node name="No" type="Label" parent="." unique_id=396066728]
-layout_mode = 1
-anchors_preset = 7
-anchor_left = 0.5
-anchor_top = 1.0
-anchor_right = 0.5
-anchor_bottom = 1.0
-offset_left = 822.0
-offset_top = 572.0
-offset_right = 902.0
-offset_bottom = 600.0
-grow_horizontal = 2
-grow_vertical = 0
-mouse_filter = 1
-text = "NO"
-horizontal_alignment = 1
-
 [node name="HBoxContainer" type="HBoxContainer" parent="." unique_id=265413594]
 layout_mode = 1
-anchors_preset = 7
-anchor_left = 0.5
-anchor_top = 1.0
-anchor_right = 0.5
-anchor_bottom = 1.0
-offset_left = 286.0
-offset_top = 496.0
-offset_right = 878.0
-offset_bottom = 528.0
+anchors_preset = -1
+offset_left = 336.0
+offset_top = 596.0
+offset_right = 928.0
+offset_bottom = 628.0
 grow_horizontal = 2
 grow_vertical = 0
 theme_override_constants/separation = 15
@@ -149,19 +95,39 @@ value = 0.5
 tick_count = 20
 ticks_on_borders = true
 
-[node name="LeftNumEdit" type="LineEdit" parent="." unique_id=947122644]
+[node name="Filter" type="LineEdit" parent="." unique_id=1731349160]
+layout_mode = 0
+offset_left = 336.0
+offset_top = 640.0
+offset_right = 540.0
+offset_bottom = 671.0
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/caret_color = Color(1, 1, 1, 1)
+theme_override_constants/caret_width = 2
+theme_override_styles/normal = SubResource("StyleBoxFlat_fg122")
+placeholder_text = "BUILDING_MEGASTRUCTURE"
+caret_blink = true
+caret_blink_interval = 0.5
+
+[node name="Label" type="Label" parent="Filter" unique_id=1349477196]
+layout_mode = 0
+offset_top = -100.0
+offset_right = 40.0
+offset_bottom = -77.0
+text = "Showing ..."
+
+[node name="Control" type="Control" parent="." unique_id=254489533]
+anchors_preset = 0
+offset_left = 336.0
+offset_top = 664.0
+offset_right = 940.0
+offset_bottom = 712.0
+
+[node name="LeftNumEdit" type="LineEdit" parent="Control" unique_id=947122644]
 layout_mode = 1
-anchors_preset = 7
-anchor_left = 0.5
-anchor_top = 1.0
-anchor_right = 0.5
-anchor_bottom = 1.0
-offset_left = 262.0
-offset_top = 568.0
-offset_right = 342.0
-offset_bottom = 599.0
-grow_horizontal = 2
-grow_vertical = 0
+offset_left = -42.0
+offset_right = 38.0
+offset_bottom = 31.0
 theme_override_colors/font_color = Color(1, 1, 1, 1)
 theme_override_styles/normal = SubResource("StyleBoxEmpty_qywem")
 theme_override_styles/focus = SubResource("StyleBoxFlat_jhuhg")
@@ -170,19 +136,15 @@ alignment = 1
 caret_blink = true
 caret_blink_interval = 0.5
 
-[node name="RightNumEdit" type="LineEdit" parent="." unique_id=1668482843]
+[node name="RightNumEdit" type="LineEdit" parent="Control" unique_id=1668482843]
 layout_mode = 1
-anchors_preset = 7
-anchor_left = 0.5
-anchor_top = 1.0
-anchor_right = 0.5
-anchor_bottom = 1.0
-offset_left = 822.0
-offset_top = 568.0
-offset_right = 902.0
-offset_bottom = 599.0
-grow_horizontal = 2
-grow_vertical = 0
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -42.0
+offset_right = 38.0
+offset_bottom = 31.0
+grow_horizontal = 0
 theme_override_colors/font_color = Color(1, 1, 1, 1)
 theme_override_styles/normal = SubResource("StyleBoxEmpty_165lm")
 theme_override_styles/focus = SubResource("StyleBoxFlat_che1j")
@@ -191,28 +153,28 @@ alignment = 1
 caret_blink = true
 caret_blink_interval = 0.5
 
-[node name="ClickToEdit" type="Control" parent="." unique_id=1730831539]
+[node name="ClickToEdit" type="Control" parent="Control" unique_id=1730831539]
 layout_mode = 1
-anchors_preset = 7
-anchor_left = 0.5
-anchor_top = 1.0
-anchor_right = 0.5
-anchor_bottom = 1.0
-offset_left = 350.0
-offset_top = 562.0
-offset_right = 865.0
-offset_bottom = 610.0
+anchors_preset = 14
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_left = 18.0
+offset_top = -24.0
+offset_right = -18.0
+offset_bottom = 12.0
 grow_horizontal = 2
-grow_vertical = 0
+grow_vertical = 2
 
-[node name="TextureRect" type="TextureRect" parent="ClickToEdit" unique_id=690513266]
+[node name="TextureRect" type="TextureRect" parent="Control/ClickToEdit" unique_id=690513266]
 modulate = Color(1, 1, 1, 0.572549)
 layout_mode = 1
 anchors_preset = 4
 anchor_top = 0.5
 anchor_bottom = 0.5
+offset_left = 20.0
 offset_top = -10.0
-offset_right = 32.0
+offset_right = 52.0
 offset_bottom = 6.0
 grow_vertical = 2
 texture = ExtResource("6")
@@ -220,7 +182,7 @@ expand_mode = 1
 stretch_mode = 6
 flip_h = true
 
-[node name="TextureRect2" type="TextureRect" parent="ClickToEdit" unique_id=1901854988]
+[node name="TextureRect2" type="TextureRect" parent="Control/ClickToEdit" unique_id=1901854988]
 modulate = Color(1, 1, 1, 0.572549)
 layout_mode = 1
 anchors_preset = 6
@@ -228,9 +190,9 @@ anchor_left = 1.0
 anchor_top = 0.5
 anchor_right = 1.0
 anchor_bottom = 0.5
-offset_left = -71.0
+offset_left = -56.0
 offset_top = -10.0
-offset_right = -39.00009
+offset_right = -24.000122
 offset_bottom = 6.0
 grow_horizontal = 0
 grow_vertical = 2
@@ -238,50 +200,87 @@ texture = ExtResource("6")
 expand_mode = 1
 stretch_mode = 6
 
-[node name="Label" type="Label" parent="ClickToEdit" unique_id=630707037]
+[node name="Label" type="Label" parent="Control/ClickToEdit" unique_id=630707037]
 layout_mode = 1
 anchors_preset = 4
 anchor_top = 0.5
 anchor_bottom = 0.5
-offset_left = 41.999992
+offset_left = 71.99999
 offset_top = -14.0
-offset_right = 195.00021
+offset_right = 225.00021
 offset_bottom = 9.0
 grow_vertical = 2
 text = "CLICK_TO_EDIT"
 
-[node name="Label2" type="Label" parent="ClickToEdit" unique_id=1958468594]
+[node name="Label2" type="Label" parent="Control/ClickToEdit" unique_id=1958468594]
 layout_mode = 1
 anchors_preset = 6
 anchor_left = 1.0
 anchor_top = 0.5
 anchor_right = 1.0
 anchor_bottom = 0.5
-offset_left = -237.0
+offset_left = -236.0
 offset_top = -14.0
-offset_right = -81.99951
+offset_right = -80.99951
 offset_bottom = 9.0
 grow_horizontal = 0
 grow_vertical = 2
 text = "CLICK_TO_EDIT"
 horizontal_alignment = 2
 
-[node name="Reset" type="TextureButton" parent="." unique_id=807575989]
+[node name="Reset" type="TextureButton" parent="Control" unique_id=807575989]
 layout_mode = 1
-anchors_preset = 7
+anchors_preset = 8
 anchor_left = 0.5
-anchor_top = 1.0
+anchor_top = 0.5
 anchor_right = 0.5
-anchor_bottom = 1.0
-offset_left = 578.0
-offset_top = 574.0
-offset_right = 602.0
-offset_bottom = 594.0
+anchor_bottom = 0.5
+offset_left = -12.0
+offset_top = -16.0
+offset_right = 12.0
+offset_bottom = 4.0
 grow_horizontal = 2
-grow_vertical = 0
+grow_vertical = 2
 texture_normal = ExtResource("5")
 ignore_texture_size = true
 stretch_mode = 5
+
+[node name="Yes" type="Label" parent="Control" unique_id=1179671722]
+layout_mode = 1
+offset_left = -42.0
+offset_top = 4.0
+offset_right = 38.0
+offset_bottom = 32.0
+mouse_filter = 1
+text = "YES"
+horizontal_alignment = 1
+
+[node name="No" type="Label" parent="Control" unique_id=396066728]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -42.0
+offset_top = 4.0
+offset_right = 38.0
+offset_bottom = 32.0
+grow_horizontal = 0
+mouse_filter = 1
+text = "NO"
+horizontal_alignment = 1
+
+[node name="Gradient" type="TextureRect" parent="Control" unique_id=2090229188]
+layout_mode = 1
+anchors_preset = 14
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_top = -48.0
+offset_bottom = -32.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = SubResource("1")
+expand_mode = 1
 
 [node name="Settings" type="TextureButton" parent="." unique_id=1613254201]
 layout_mode = 0
@@ -330,9 +329,12 @@ stretch_mode = 5
 [connection signal="mouse_entered" from="HBoxContainer/HSlider" to="." method="_on_HSlider_mouse_entered"]
 [connection signal="mouse_exited" from="HBoxContainer/HSlider" to="." method="_on_mouse_exited"]
 [connection signal="value_changed" from="HBoxContainer/HSlider" to="." method="_on_HSlider_value_changed"]
-[connection signal="text_submitted" from="LeftNumEdit" to="." method="_on_LeftNumEdit_text_entered"]
-[connection signal="text_submitted" from="RightNumEdit" to="." method="_on_RightNumEdit_text_entered"]
-[connection signal="pressed" from="Reset" to="." method="_on_Reset_pressed"]
+[connection signal="focus_entered" from="Filter" to="." method="_on_filter_focus_entered"]
+[connection signal="focus_exited" from="Filter" to="." method="_on_filter_focus_exited"]
+[connection signal="text_changed" from="Filter" to="." method="_on_filter_text_changed"]
+[connection signal="text_submitted" from="Control/LeftNumEdit" to="." method="_on_LeftNumEdit_text_entered"]
+[connection signal="text_submitted" from="Control/RightNumEdit" to="." method="_on_RightNumEdit_text_entered"]
+[connection signal="pressed" from="Control/Reset" to="." method="_on_Reset_pressed"]
 [connection signal="mouse_entered" from="Settings" to="." method="_on_Settings_mouse_entered"]
 [connection signal="mouse_exited" from="Settings" to="." method="_on_Settings_mouse_exited"]
 [connection signal="pressed" from="Settings" to="." method="_on_Settings_pressed"]

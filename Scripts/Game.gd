@@ -3699,7 +3699,7 @@ func _input(event):
 		$Tooltips/CtrlShift/Alt.visible = Input.is_action_pressed("alt")
 		#F3 to toggle overlay
 		if Input.is_action_just_pressed("toggle") and is_instance_valid(overlay):
-				overlay.toggle_btn.button_pressed = not overlay.toggle_btn.button_pressed
+			overlay.toggle_btn.button_pressed = not overlay.toggle_btn.button_pressed
 			
 	elif event is InputEventMouseButton and not stats_global.is_empty() and c_u != -1:
 		if Input.is_action_just_pressed("left_click"):

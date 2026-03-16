@@ -46,8 +46,6 @@ var star_mod:Color
 var caves_data:Dictionary = {}
 var obstacle_nodes = {}
 
-var thread: Thread
-
 func _ready():
 	shadows.resize(wid * wid)
 	var tile_brightness:float = game.tile_brightness[p_i.type - 3]

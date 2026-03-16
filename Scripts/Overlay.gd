@@ -13,7 +13,7 @@ var err = config.load("user://settings.cfg")
 func _ready():
 	set_polygon($GUI.size, $GUI.position)
 	toggle_btn.text = tr("TOGGLE") + " (F3)"
-	$ClickToEdit.visible = not game.help.has("overlay")
+	$Control/ClickToEdit.visible = not game.help.has("overlay")
 
 func refresh_overlay():
 	$HBoxContainer/HSlider.value = game.overlay_CS
@@ -29,7 +29,7 @@ func refresh_overlay():
 			option_btn.add_item(tr("HOTTEST_STAR_TEMPERATURE"))
 			option_btn.add_item(tr("BIGGEST_STAR_SIZE"))
 			option_btn.add_item(tr("BRIGHTEST_STAR_LUMINOSITY"))
-			option_btn.add_item(tr("HAS_MEGASTRUCTURE"))
+			option_btn.add_item(tr("HAS_X"))
 		"cluster":
 			option_btn.add_item(tr("NUMBER_OF_SYSTEMS"))
 			option_btn.add_item(tr("GALAXY_ENTERED"))
@@ -44,9 +44,9 @@ func refresh_overlay():
 		grayscale_btn.button_pressed = config.get_value("misc", "grayscale", false)
 		hide_obj_btn.button_pressed = config.get_value("misc", "hide_obj", false)
 		if grayscale_btn.button_pressed:
-			$TextureRect.texture.gradient = load("res://Resources/GrayscaleOverlay.tres")
+			$Control/Gradient.texture.gradient = load("res://Resources/GrayscaleOverlay.tres")
 		else:
-			$TextureRect.texture.gradient = load("res://Resources/DefaultOverlay.tres")
+			$Control/Gradient.texture.gradient = load("res://Resources/DefaultOverlay.tres")
 	option_btn.selected = game.overlay_data[game.c_v].overlay
 	refresh_options(game.overlay_data[game.c_v].overlay)
 
@@ -93,106 +93,114 @@ func get_star_num_min_max():
 func refresh_options(index:int, recalculate:bool = true):
 	var c_vl = game.overlay_data[game.c_v].custom_values[index]
 	var min_max:Dictionary
-	$Reset.visible = false if c_vl == null else c_vl.modified
+	$Control/Reset.visible = false if c_vl == null else c_vl.modified
 	var unit:String = ""
-	match game.c_v:
-		"galaxy":
-			match index:
-				0:
-					if recalculate and not c_vl.modified:
-						min_max = get_obj_min_max("system", "planet_num")
-						c_vl.left = min_max._min
-						c_vl.right = min_max._max
-					editable = true
-					unit = ""
-				1:
-					if recalculate and not c_vl.modified:
-						min_max = get_star_num_min_max()
-						c_vl.left = min_max._min
-						c_vl.right = min_max._max
-					editable = true
-					unit = ""
-				2, 3, 4, 9:
-					editable = false
-				5:
-					if recalculate and not c_vl.modified:
-						min_max = get_obj_min_max("system", "diff")
-						c_vl.left = min_max._min
-						c_vl.right = min_max._max
-					editable = true
-					is_int = false
-					unit = ""
-				6:
-					if recalculate and not c_vl.modified:
-						min_max = get_star_prop_min_max("temperature")
-						c_vl.left = min_max._min
-						c_vl.right = min_max._max
-					editable = true
-					is_int = false
-					unit = " K"
-				7:
-					if recalculate and not c_vl.modified:
-						min_max = get_star_prop_min_max("size")
-						c_vl.left = min_max._min
-						c_vl.right = min_max._max
-					editable = true
-					is_int = false
-					unit = ""
-				8:
-					if recalculate and not c_vl.modified:
-						min_max = get_star_prop_min_max("luminosity")
-						c_vl.left = min_max._min
-						c_vl.right = min_max._max
-					editable = true
-					is_int = false
-					unit = ""
-		"cluster":
-			match index:
-				0:
-					if recalculate and not c_vl.modified:
-						min_max = get_obj_min_max("galaxy", "system_num")
-						c_vl.left = min_max._min
-						c_vl.right = min_max._max
-					editable = true
-					unit = ""
-				1, 2, 3, 7:
-					editable = false
-				4:
-					if recalculate and not c_vl.modified:
-						min_max = get_obj_min_max("galaxy", "diff")
-						c_vl.left = min_max._min
-						c_vl.right = min_max._max
-					editable = true
-					is_int = false
-					unit = ""
-				5:
-					if recalculate and not c_vl.modified:
-						min_max = get_obj_min_max("galaxy", "B_strength")
-						c_vl.left = Helper.clever_round(min_max._min * 1e9)
-						c_vl.right = Helper.clever_round(min_max._max * 1e9)
-					editable = true
-					is_int = false
-					unit = " nT"
-				6:
-					if recalculate and not c_vl.modified:
-						min_max = get_obj_min_max("galaxy", "dark_matter")
-						c_vl.left = min_max._min
-						c_vl.right = min_max._max
-					editable = true
-					is_int = false
-					unit = ""
+	if game.c_v == "galaxy":
+		match index:
+			0:
+				if recalculate and not c_vl.modified:
+					min_max = get_obj_min_max("system", "planet_num")
+					c_vl.left = min_max._min
+					c_vl.right = min_max._max
+				editable = true
+				unit = ""
+			1:
+				if recalculate and not c_vl.modified:
+					min_max = get_star_num_min_max()
+					c_vl.left = min_max._min
+					c_vl.right = min_max._max
+				editable = true
+				unit = ""
+			2, 3, 4, 9:
+				editable = false
+			5:
+				if recalculate and not c_vl.modified:
+					min_max = get_obj_min_max("system", "diff")
+					c_vl.left = min_max._min
+					c_vl.right = min_max._max
+				editable = true
+				is_int = false
+				unit = ""
+			6:
+				if recalculate and not c_vl.modified:
+					min_max = get_star_prop_min_max("temperature")
+					c_vl.left = min_max._min
+					c_vl.right = min_max._max
+				editable = true
+				is_int = false
+				unit = " K"
+			7:
+				if recalculate and not c_vl.modified:
+					min_max = get_star_prop_min_max("size")
+					c_vl.left = min_max._min
+					c_vl.right = min_max._max
+				editable = true
+				is_int = false
+				unit = ""
+			8:
+				if recalculate and not c_vl.modified:
+					min_max = get_star_prop_min_max("luminosity")
+					c_vl.left = min_max._min
+					c_vl.right = min_max._max
+				editable = true
+				is_int = false
+				unit = ""
+		if index == 9:
+			$Control.position.x = 564.0
+			$Control.size.x = 376.0
+			$Filter.show()
+			$Filter.grab_focus()
+		else:
+			$Control.position.x = 336.0
+			$Control.size.x = 604.0
+			$Filter.hide()
+	elif game.c_v == "cluster":
+		match index:
+			0:
+				if recalculate and not c_vl.modified:
+					min_max = get_obj_min_max("galaxy", "system_num")
+					c_vl.left = min_max._min
+					c_vl.right = min_max._max
+				editable = true
+				unit = ""
+			1, 2, 3, 7:
+				editable = false
+			4:
+				if recalculate and not c_vl.modified:
+					min_max = get_obj_min_max("galaxy", "diff")
+					c_vl.left = min_max._min
+					c_vl.right = min_max._max
+				editable = true
+				is_int = false
+				unit = ""
+			5:
+				if recalculate and not c_vl.modified:
+					min_max = get_obj_min_max("galaxy", "B_strength")
+					c_vl.left = Helper.clever_round(min_max._min * 1e9)
+					c_vl.right = Helper.clever_round(min_max._max * 1e9)
+				editable = true
+				is_int = false
+				unit = " nT"
+			6:
+				if recalculate and not c_vl.modified:
+					min_max = get_obj_min_max("galaxy", "dark_matter")
+					c_vl.left = min_max._min
+					c_vl.right = min_max._max
+				editable = true
+				is_int = false
+				unit = ""
 	if editable:
-		$LeftNumEdit.text = "%s%s" % [Helper.e_notation(c_vl.left) if c_vl.left >= 1000000 else c_vl.left, unit]
-		$RightNumEdit.text = "%s%s" % [Helper.e_notation(c_vl.right) if c_vl.right >= 1000000 else c_vl.right, unit]
-	$LeftNumEdit.visible = editable
-	$RightNumEdit.visible = editable
-	$Yes.visible = not editable
-	$No.visible = not editable
+		$Control/LeftNumEdit.text = "%s%s" % [Helper.e_notation(c_vl.left) if c_vl.left >= 1000000 else c_vl.left, unit]
+		$Control/RightNumEdit.text = "%s%s" % [Helper.e_notation(c_vl.right) if c_vl.right >= 1000000 else c_vl.right, unit]
+	$Control/LeftNumEdit.visible = editable
+	$Control/RightNumEdit.visible = editable
+	$Control/Yes.visible = not editable
+	$Control/No.visible = not editable
 	game.overlay_data[game.c_v].overlay = index
 	send_overlay_info(index)
 
 func send_overlay_info(index):
-	game.view.obj.change_overlay(index, $TextureRect.texture.gradient)
+	game.view.obj.change_overlay(index, $Control/Gradient.texture.gradient)
 
 func _on_HSlider_mouse_entered():
 	game.show_tooltip(tr("CIRCLE_SIZE"))
@@ -247,9 +255,9 @@ func _on_LeftNumEdit_text_entered(new_text):
 		game.overlay_data[game.c_v].custom_values[option_btn.selected].left = float(new_text)
 	game.overlay_data[game.c_v].custom_values[option_btn.selected].modified = true
 	refresh_options(option_btn.selected, false)
-	$LeftNumEdit.release_focus()
+	$Control/LeftNumEdit.release_focus()
 	game.help.overlay = true
-	$ClickToEdit.visible = false
+	$Control/ClickToEdit.visible = false
 
 func _on_RightNumEdit_text_entered(new_text):
 	if is_int:
@@ -258,9 +266,9 @@ func _on_RightNumEdit_text_entered(new_text):
 		game.overlay_data[game.c_v].custom_values[option_btn.selected].right = float(new_text)
 	game.overlay_data[game.c_v].custom_values[option_btn.selected].modified = true
 	refresh_options(option_btn.selected, false)
-	$RightNumEdit.release_focus()
+	$Control/RightNumEdit.release_focus()
 	game.help.overlay = true
-	$ClickToEdit.visible = false
+	$Control/ClickToEdit.visible = false
 
 
 func _on_Settings_mouse_entered():
@@ -290,10 +298,23 @@ func _on_grayscale_toggled(toggled_on: bool) -> void:
 		if game.get_node("GrayscaleRect").modulate.a > 0:
 			game.get_node("GrayscaleRect/AnimationPlayer").play_backwards("Fade")
 	if toggled_on:
-		$TextureRect.texture.gradient = load("res://Resources/GrayscaleOverlay.tres")
+		$Control/Gradient.texture.gradient = load("res://Resources/GrayscaleOverlay.tres")
 	else:
-		$TextureRect.texture.gradient = load("res://Resources/DefaultOverlay.tres")
+		$Control/Gradient.texture.gradient = load("res://Resources/DefaultOverlay.tres")
 	if err == OK:
 		config.set_value("misc", "grayscale", toggled_on)
 		config.save("user://settings.cfg")
+	send_overlay_info(game.overlay_data[game.c_v].overlay)
+
+
+func _on_filter_focus_entered() -> void:
+	game.view.move_with_keyboard = false
+
+
+func _on_filter_focus_exited() -> void:
+	game.view.move_with_keyboard = true
+
+var filter_text:String = ""
+func _on_filter_text_changed(new_text: String) -> void:
+	filter_text = new_text
 	send_overlay_info(game.overlay_data[game.c_v].overlay)

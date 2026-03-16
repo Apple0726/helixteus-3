@@ -36,6 +36,7 @@ Item="*res://Scripts/Globals/Item.gd"
 ShipClass="*res://Scripts/Globals/ShipClass.gd"
 Constants="*res://Scripts/Globals/Constants.gd"
 Battle="*res://Scripts/Globals/Battle.gd"
+Megastructure="*uid://bp6rvfbosfccp"
 
 [debug]
 
@@ -485,6 +486,7 @@ limits/message_queue/max_size_kb=2048
 
 textures/canvas_textures/default_texture_filter=2
 renderer/rendering_method="mobile"
+textures/vram_compression/import_etc2_astc=true
 environment/defaults/default_clear_color=Color(0, 0, 0, 1)
 quality/driver/fallback_to_gles2=true
 quality/intended_usage/framebuffer_allocation.mobile=0

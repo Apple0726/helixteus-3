@@ -8,13 +8,25 @@ func _ready():
 	$AnimationPlayer.play("MoveButtons")
 
 func _on_Overlay_mouse_entered():
-	game.show_tooltip(tr("OVERLAY") + " (O)\n" + tr("OVERLAY_DESC"))
+	var tooltip = "{overlay} {shortcut}\n{desc}\n{shortcut_desc}".format({
+		"overlay":tr("OVERLAY"),
+		"shortcut":tr("(O, F)"),
+		"desc":tr("OVERLAY_DESC"),
+		"shortcut_desc":tr("F_TO_FIND_BLDG_MS"),
+	})
+	game.show_tooltip(tooltip)
 
 func _on_Overlay_mouse_exited():
 	game.hide_tooltip()
 
 func _on_Overlay_pressed():
-	game.overlay.visible = not game.overlay.visible
+	if Input.is_action_just_pressed("F"):
+		game.overlay.get_node("HBoxContainer/OptionButton").selected = 9
+		game.overlay.refresh_options(9)
+		game.overlay.toggle_btn.button_pressed = true
+		game.overlay.show()
+	else:
+		game.overlay.visible = not game.overlay.visible
 
 func _on_Megastructures_pressed():
 	toggle_MS_construct_panel(-1)
