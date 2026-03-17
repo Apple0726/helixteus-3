@@ -4,7 +4,7 @@
 [ext_resource type="Script" uid="uid://ww7r2r8gcxw3" path="res://Scripts/ScienceTree.gd" id="2"]
 [ext_resource type="Texture2D" uid="uid://d3kwtgk0sw40p" path="res://Graphics/Icons/minerals.png" id="3_eu0ii"]
 [ext_resource type="Texture2D" uid="uid://bm01hxs45q3ga" path="res://Graphics/Icons/energy.png" id="4_rgsly"]
-[ext_resource type="Texture2D" uid="uid://dg25fshk35326" path="res://Graphics/Icons/SP.png" id="5_uvhfr"]
+[ext_resource type="Texture2D" uid="uid://dg25fshk35326" path="res://Graphics/Icons/science_points.png" id="5_uvhfr"]
 [ext_resource type="Texture2D" uid="uid://cdqb8dr8jf33" path="res://Graphics/Buildings/mineral_silo.png" id="6_sbmbi"]
 [ext_resource type="Texture2D" uid="uid://dq0i6jjxj5nxl" path="res://Graphics/Pickaxes/iron_pickaxe.png" id="7_hknxr"]
 [ext_resource type="Texture2D" uid="uid://dwr1aw0b05sht" path="res://Graphics/Science/RC.png" id="9_evco7"]

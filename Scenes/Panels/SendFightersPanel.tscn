@@ -7,7 +7,7 @@
 [ext_resource type="Texture2D" uid="uid://bm01hxs45q3ga" path="res://Graphics/Icons/energy.png" id="4"]
 [ext_resource type="Texture2D" uid="uid://c1vwn7p5uxu1r" path="res://Graphics/GUI/CloseButtonHover.png" id="4_8vafv"]
 [ext_resource type="Script" uid="uid://clc8nx7qyryp6" path="res://Scripts/SendFightersPanel.gd" id="5"]
-[ext_resource type="Texture2D" uid="uid://bn8t8jmrkuvdk" path="res://Graphics/Icons/Time.png" id="7"]
+[ext_resource type="Texture2D" uid="uid://bn8t8jmrkuvdk" path="res://Graphics/Icons/time.png" id="7"]
 [ext_resource type="Texture2D" uid="uid://4tf3teqmkahc" path="res://Graphics/Misc/Bar.png" id="9"]
 
 [sub_resource type="SystemFont" id="SystemFont_artra"]

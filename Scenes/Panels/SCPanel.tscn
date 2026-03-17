@@ -9,7 +9,7 @@
 [ext_resource type="Texture2D" uid="uid://dcvnyb0mloli2" path="res://Graphics/GUI/Panel.png" id="5_0aci7"]
 [ext_resource type="Script" uid="uid://bxi1b8brolhn3" path="res://Scripts/SCPanel.gd" id="6"]
 [ext_resource type="Texture2D" uid="uid://hvuwdl8ox0yv" path="res://Graphics/Icons/stone.png" id="7"]
-[ext_resource type="Texture2D" uid="uid://bn8t8jmrkuvdk" path="res://Graphics/Icons/Time.png" id="10"]
+[ext_resource type="Texture2D" uid="uid://bn8t8jmrkuvdk" path="res://Graphics/Icons/time.png" id="10"]
 
 [sub_resource type="SystemFont" id="SystemFont_sxpbd"]
 font_names = PackedStringArray("Arial")

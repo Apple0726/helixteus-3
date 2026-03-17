@@ -11,7 +11,7 @@
 [ext_resource type="Texture2D" uid="uid://koi0aarpqj30" path="res://Graphics/Ships/Ship0.png" id="10_tvuu7"]
 [ext_resource type="Texture2D" uid="uid://bsulvp4xkwrwj" path="res://Graphics/Materials/soil.png" id="11"]
 [ext_resource type="Texture2D" uid="uid://if1usn38yajs" path="res://Graphics/Icons/craft.png" id="11_tvuu7"]
-[ext_resource type="Texture2D" uid="uid://dg25fshk35326" path="res://Graphics/Icons/SP.png" id="12"]
+[ext_resource type="Texture2D" uid="uid://dg25fshk35326" path="res://Graphics/Icons/science_points.png" id="12"]
 [ext_resource type="Texture2D" uid="uid://d03u105amdf1c" path="res://Graphics/Icons/Inventory.png" id="12_esw7j"]
 [ext_resource type="Texture2D" uid="uid://bu4pbsuqutf1m" path="res://Graphics/Buttons/Upgrade.png" id="12_ljo2x"]
 [ext_resource type="Texture2D" uid="uid://bm03n6sxyvtsr" path="res://Graphics/Buttons/MainMenu.png" id="14"]
@@ -1094,6 +1094,7 @@ offset_bottom = 252.0
 scale = Vector2(0.14, 0.14)
 texture_normal = ExtResource("8")
 ignore_texture_size = true
+stretch_mode = 5
 
 [node name="Soil" type="Control" parent="Top/Resources" unique_id=1323890795]
 visible = false

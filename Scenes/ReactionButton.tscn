@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://b55tivasm40ja"]
 
 [ext_resource type="Texture2D" uid="uid://b7o54ylqdhn43" path="res://Graphics/Materials/silicon.png" id="1_s2dev"]
-[ext_resource type="Texture2D" uid="uid://bn8t8jmrkuvdk" path="res://Graphics/Icons/Time.png" id="2_udqu5"]
+[ext_resource type="Texture2D" uid="uid://bn8t8jmrkuvdk" path="res://Graphics/Icons/time.png" id="2_udqu5"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_s2dev"]
 

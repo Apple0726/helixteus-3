@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://4n8uvxhjxbk8"
-path="res://.godot/imported/ice_asteroid.png-52a4cc5ce452da38cd72bd68584cb424.ctex"
+uid="uid://032x6eqsmrca"
+path="res://.godot/imported/dark_asteroid.png-18f4299a533942aa968c88c8d94d61e5.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Graphics/Battle/Obstacles/ice_asteroid.png"
-dest_files=["res://.godot/imported/ice_asteroid.png-52a4cc5ce452da38cd72bd68584cb424.ctex"]
+source_file="res://Graphics/Battle/Obstacles/Asteroids/dark_asteroid.png"
+dest_files=["res://.godot/imported/dark_asteroid.png-18f4299a533942aa968c88c8d94d61e5.ctex"]
 
 [params]
 

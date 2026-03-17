@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://43tk0leq150l"
-path="res://.godot/imported/asteroid.png-a6023038ff5754f86c811a54b17735d0.ctex"
+uid="uid://dbwkbfheei7ln"
+path="res://.godot/imported/PK_turret.png-e5dc51ca40fe54b25fd071a099179021.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Graphics/Battle/Obstacles/asteroid.png"
-dest_files=["res://.godot/imported/asteroid.png-a6023038ff5754f86c811a54b17735d0.ctex"]
+source_file="res://Graphics/Megastructures/PK_turret.png"
+dest_files=["res://.godot/imported/PK_turret.png-e5dc51ca40fe54b25fd071a099179021.ctex"]
 
 [params]
 

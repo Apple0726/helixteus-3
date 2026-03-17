@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://032x6eqsmrca"
-path="res://.godot/imported/dark_asteroid.png-2a9a2587d5a42e6a363c8fd2d5fb74a1.ctex"
+uid="uid://bhn0tpn24cexv"
+path="res://.godot/imported/molten_asteroid.png-d11bb6c9393fd5a55a2cdf5f7976468c.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Graphics/Battle/Obstacles/dark_asteroid.png"
-dest_files=["res://.godot/imported/dark_asteroid.png-2a9a2587d5a42e6a363c8fd2d5fb74a1.ctex"]
+source_file="res://Graphics/Battle/Obstacles/Asteroids/molten_asteroid.png"
+dest_files=["res://.godot/imported/molten_asteroid.png-d11bb6c9393fd5a55a2cdf5f7976468c.ctex"]
 
 [params]
 

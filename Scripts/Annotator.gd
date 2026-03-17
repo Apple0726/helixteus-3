@@ -19,14 +19,14 @@ func _ready():
 	$HBoxContainer/Icons/TextureRect.texture = load("res://Graphics/Icons/Annotator/check.png")
 	$VBoxContainer/Check/TextureRect.texture = load("res://Graphics/Icons/Annotator/check.png")
 	$VBoxContainer/Cross/TextureRect.texture = load("res://Graphics/Icons/Annotator/cross.png")
-	$VBoxContainer/Money/TextureRect.texture = load("res://Graphics/Icons/money.png")
-	$VBoxContainer/Minerals/TextureRect.texture = load("res://Graphics/Icons/minerals.png")
-	$VBoxContainer/Energy/TextureRect.texture = load("res://Graphics/Icons/energy.png")
-	$VBoxContainer/SP/TextureRect.texture = load("res://Graphics/Icons/SP.png")
+	$VBoxContainer/Money/TextureRect.texture = Data.money_icon
+	$VBoxContainer/Minerals/TextureRect.texture = Data.minerals_icon
+	$VBoxContainer/Energy/TextureRect.texture = Data.energy_icon
+	$VBoxContainer/SP/TextureRect.texture = Data.SP_icon
 	$VBoxContainer/Greenhouse/TextureRect.texture = load("res://Graphics/Buildings/greenhouse.png")
 	$VBoxContainer/Mining/TextureRect.texture = load("res://Graphics/Pickaxes/stone_pickaxe.png")
 	$VBoxContainer/Cave/TextureRect.texture = load("res://Graphics/Tiles/cave.png")
-	$VBoxContainer/Stone/TextureRect.texture = load("res://Graphics/Icons/stone.png")
+	$VBoxContainer/Stone/TextureRect.texture = Data.stone_icon
 	$VBoxContainer/Arrow/TextureRect.texture = load("res://Graphics/Icons/Arrow.png")
 	for node in $VBoxContainer.get_children():
 		node.get_node("Button").connect("pressed",Callable(self,"on_icon_pressed").bind(node.get_node("TextureRect").texture))
