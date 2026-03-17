@@ -53,7 +53,7 @@ metadata/_edit_vertical_guides_ = [640.0]
 [node name="GUI" type="NinePatchRect" parent="." unique_id=1407013579]
 layout_mode = 1
 offset_left = 264.0
-offset_top = 576.0
+offset_top = 580.0
 offset_right = 1016.0
 offset_bottom = 720.0
 texture = SubResource("CompressedTexture2D_rqkrj")
@@ -98,28 +98,28 @@ ticks_on_borders = true
 [node name="Filter" type="LineEdit" parent="." unique_id=1731349160]
 layout_mode = 0
 offset_left = 336.0
-offset_top = 640.0
+offset_top = 648.0
 offset_right = 540.0
-offset_bottom = 671.0
+offset_bottom = 679.0
 theme_override_colors/font_color = Color(1, 1, 1, 1)
 theme_override_colors/caret_color = Color(1, 1, 1, 1)
 theme_override_constants/caret_width = 2
 theme_override_styles/normal = SubResource("StyleBoxFlat_fg122")
-placeholder_text = "BUILDING_MEGASTRUCTURE"
+placeholder_text = "BUILDING_MEGASTRUCTURE_PLACEHOLDER"
 caret_blink = true
 caret_blink_interval = 0.5
 
 [node name="Label" type="Label" parent="Filter" unique_id=1349477196]
 layout_mode = 0
-offset_top = -100.0
-offset_right = 40.0
-offset_bottom = -77.0
+offset_top = -96.0
+offset_right = 82.0
+offset_bottom = -73.0
 text = "Showing ..."
 
 [node name="Control" type="Control" parent="." unique_id=254489533]
 anchors_preset = 0
 offset_left = 336.0
-offset_top = 664.0
+offset_top = 672.0
 offset_right = 940.0
 offset_bottom = 712.0
 
@@ -284,10 +284,10 @@ expand_mode = 1
 
 [node name="Settings" type="TextureButton" parent="." unique_id=1613254201]
 layout_mode = 0
-offset_left = 282.0
-offset_top = 590.0
-offset_right = 306.0
-offset_bottom = 614.0
+offset_left = 284.0
+offset_top = 596.0
+offset_right = 308.0
+offset_bottom = 620.0
 texture_normal = ExtResource("9")
 ignore_texture_size = true
 stretch_mode = 5
@@ -315,9 +315,9 @@ text = "HIDE_OUT_OF_RANGE_OBJECTS"
 [node name="CloseButton" type="TextureButton" parent="." unique_id=2128523968]
 layout_mode = 0
 offset_left = 972.0
-offset_top = 590.0
+offset_top = 596.0
 offset_right = 998.0
-offset_bottom = 616.0
+offset_bottom = 622.0
 texture_normal = ExtResource("7_fg122")
 texture_hover = ExtResource("8_56vda")
 ignore_texture_size = true

@@ -231,24 +231,9 @@ func change_overlay(overlay_id:int, gradient:Gradient, object:Dictionary = {}):
 				var offset = inverse_lerp(c_vl.left, c_vl.right, luminosity)
 				Helper.set_overlay_visibility(gradient, overlay, offset)
 		9:
-			var filter_text = game.overlay.filter_text.to_lower()
 			var matched_objs_display = []
 			var matched_objs = []
-			if len(filter_text) >= 2:
-				for i in len(Building.names):
-					var bldg_name = Building.names[i]
-					if filter_text in tr(bldg_name.to_upper() + "_NAME").to_lower():
-						matched_objs_display.append(tr(bldg_name.to_upper() + "_NAME_S"))
-						matched_objs.append(i)
-				for i in len(AncientBuilding.names):
-					var bldg_name = AncientBuilding.names[i]
-					if filter_text in tr(bldg_name.to_upper()).to_lower():
-						matched_objs_display.append(tr(bldg_name.to_upper()))
-						matched_objs.append(i)
-				for MS_name in Megastructure.names:
-					if filter_text in tr("M_" + MS_name + "_NAME").to_lower():
-						matched_objs_display.append(tr("M_" + MS_name + "_NAME"))
-						matched_objs.append(MS_name)
+			game.overlay.get_matched_objs(matched_objs_display, matched_objs)
 			for overlay in _overlays:
 				var found = false
 				for obj in matched_objs:
@@ -265,16 +250,7 @@ func change_overlay(overlay_id:int, gradient:Gradient, object:Dictionary = {}):
 					overlay.circle.modulate = gradient.sample(0)
 				else:
 					overlay.circle.modulate = gradient.sample(1)
-			var filtered_obj_str = ""
-			for i in len(matched_objs_display):
-				var obj = matched_objs_display[i]
-				filtered_obj_str += obj
-				if i < len(matched_objs_display) - 1:
-					filtered_obj_str += ", "
-			if filtered_obj_str == "":
-				game.overlay.get_node("Filter/Label").text = ""
-			else:
-				game.overlay.get_node("Filter/Label").text = tr("SHOWING_X").format({"obj": filtered_obj_str})
+			game.overlay.update_filter_text(matched_objs_display)
 
 func _on_Galaxy_tree_exited():
 	queue_free()

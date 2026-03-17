@@ -1,5 +1,7 @@
 extends "Panel.gd"
 
+static var filter_text:String = ""
+
 var editable:bool = false
 var is_int:bool = true
 var hovered_over:String = ""
@@ -29,7 +31,7 @@ func refresh_overlay():
 			option_btn.add_item(tr("HOTTEST_STAR_TEMPERATURE"))
 			option_btn.add_item(tr("BIGGEST_STAR_SIZE"))
 			option_btn.add_item(tr("BRIGHTEST_STAR_LUMINOSITY"))
-			option_btn.add_item(tr("HAS_X"))
+			option_btn.add_item(tr("HAS_BLDG_MS"))
 		"cluster":
 			option_btn.add_item(tr("NUMBER_OF_SYSTEMS"))
 			option_btn.add_item(tr("GALAXY_ENTERED"))
@@ -39,6 +41,7 @@ func refresh_overlay():
 			option_btn.add_item(tr("B_STRENGTH"))
 			option_btn.add_item(tr("DARK_MATTER"))
 			option_btn.add_item(tr("IS_GIGASTRUCTURE"))
+			option_btn.add_item(tr("HAS_BLDG_MS"))
 	toggle_btn.button_pressed = game.overlay_data[game.c_v].visible
 	if err == OK:
 		grayscale_btn.button_pressed = config.get_value("misc", "grayscale", false)
@@ -47,6 +50,7 @@ func refresh_overlay():
 			$Control/Gradient.texture.gradient = load("res://Resources/GrayscaleOverlay.tres")
 		else:
 			$Control/Gradient.texture.gradient = load("res://Resources/DefaultOverlay.tres")
+	$Filter.text = filter_text
 	option_btn.selected = game.overlay_data[game.c_v].overlay
 	refresh_options(game.overlay_data[game.c_v].overlay)
 
@@ -95,6 +99,7 @@ func refresh_options(index:int, recalculate:bool = true):
 	var min_max:Dictionary
 	$Control/Reset.visible = false if c_vl == null else c_vl.modified
 	var unit:String = ""
+	var show_filter = false
 	if game.c_v == "galaxy":
 		match index:
 			0:
@@ -145,15 +150,7 @@ func refresh_options(index:int, recalculate:bool = true):
 				editable = true
 				is_int = false
 				unit = ""
-		if index == 9:
-			$Control.position.x = 564.0
-			$Control.size.x = 376.0
-			$Filter.show()
-			$Filter.grab_focus()
-		else:
-			$Control.position.x = 336.0
-			$Control.size.x = 604.0
-			$Filter.hide()
+		show_filter = index == 9
 	elif game.c_v == "cluster":
 		match index:
 			0:
@@ -163,7 +160,7 @@ func refresh_options(index:int, recalculate:bool = true):
 					c_vl.right = min_max._max
 				editable = true
 				unit = ""
-			1, 2, 3, 7:
+			1, 2, 3, 7, 8:
 				editable = false
 			4:
 				if recalculate and not c_vl.modified:
@@ -189,6 +186,17 @@ func refresh_options(index:int, recalculate:bool = true):
 				editable = true
 				is_int = false
 				unit = ""
+		show_filter = index == 8
+	if show_filter:
+		$Control.position.x = 564.0
+		$Control.size.x = 376.0
+		$Filter.show()
+		$Filter.grab_focus()
+		$Filter.select(0)
+	else:
+		$Control.position.x = 336.0
+		$Control.size.x = 604.0
+		$Filter.hide()
 	if editable:
 		$Control/LeftNumEdit.text = "%s%s" % [Helper.e_notation(c_vl.left) if c_vl.left >= 1000000 else c_vl.left, unit]
 		$Control/RightNumEdit.text = "%s%s" % [Helper.e_notation(c_vl.right) if c_vl.right >= 1000000 else c_vl.right, unit]
@@ -314,7 +322,37 @@ func _on_filter_focus_entered() -> void:
 func _on_filter_focus_exited() -> void:
 	game.view.move_with_keyboard = true
 
-var filter_text:String = ""
 func _on_filter_text_changed(new_text: String) -> void:
 	filter_text = new_text
 	send_overlay_info(game.overlay_data[game.c_v].overlay)
+
+func get_matched_objs(matched_objs_display: Array, matched_objs: Array):
+	if filter_text == "*" or len(filter_text) >= 2:
+		for i in len(Building.names):
+			var bldg_name = Building.names[i]
+			if filter_text == "*" or filter_text in tr(bldg_name.to_upper() + "_NAME").to_lower():
+				matched_objs_display.append(tr(bldg_name.to_upper() + "_NAME_S"))
+				matched_objs.append(i)
+		for i in len(AncientBuilding.names):
+			var bldg_name = AncientBuilding.names[i]
+			if filter_text == "*" or filter_text in tr(bldg_name.to_upper()).to_lower():
+				matched_objs_display.append(tr(bldg_name.to_upper()))
+				matched_objs.append(i)
+		for MS_name in Megastructure.names:
+			if filter_text == "*" or filter_text in tr("M_" + MS_name + "_NAME").to_lower():
+				matched_objs_display.append(tr("M_" + MS_name + "_NAME"))
+				matched_objs.append(MS_name)
+
+func update_filter_text(matched_objs_display: Array):
+	var filtered_obj_str = ""
+	for i in len(matched_objs_display):
+		var obj = matched_objs_display[i]
+		filtered_obj_str += obj
+		if i < len(matched_objs_display) - 1:
+			filtered_obj_str += ", "
+	if filter_text == "*":
+		game.overlay.get_node("Filter/Label").text = tr("SHOWING_ALL")
+	elif filtered_obj_str == "":
+		game.overlay.get_node("Filter/Label").text = ""
+	else:
+		game.overlay.get_node("Filter/Label").text = tr("SHOWING_X").format({"obj": filtered_obj_str})

@@ -21,8 +21,12 @@ func _on_Overlay_mouse_exited():
 
 func _on_Overlay_pressed():
 	if Input.is_action_just_pressed("F"):
-		game.overlay.get_node("HBoxContainer/OptionButton").selected = 9
-		game.overlay.refresh_options(9)
+		if game.c_v == "galaxy":
+			game.overlay.get_node("HBoxContainer/OptionButton").selected = 9
+			game.overlay.refresh_options(9)
+		elif game.c_v == "cluster":
+			game.overlay.get_node("HBoxContainer/OptionButton").selected = 8
+			game.overlay.refresh_options(8)
 		game.overlay.toggle_btn.button_pressed = true
 		game.overlay.show()
 	else:

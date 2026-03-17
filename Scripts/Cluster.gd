@@ -11,6 +11,8 @@ var overlays:Array = []
 var rsrcs:Array = []
 var curr_bldg_overlay:int = 0
 var c_i:Dictionary
+var bldgs:Dictionary = {}
+var MSs:Dictionary = {}
 
 func _ready():
 	rsrcs.resize(len(game.galaxy_data))
@@ -63,6 +65,31 @@ func _ready():
 					rsrc = null
 			if is_instance_valid(rsrc):
 				rsrc.set_text("%s/%s" % [Helper.format_num(g_i.prod_num * rsrc_mult), tr("S_SECOND")])
+		else:
+			var system_data:Array = game.open_obj("Galaxies", g_i.id)
+			for s_i in system_data:
+				if not s_i.has("discovered"):
+					continue
+				var planet_data:Array = game.open_obj("Systems", s_i.id)
+				for p_i in planet_data:
+					if p_i.is_empty():
+						continue
+					if p_i.has("tile_num") and p_i.bldg.has("name"):
+						if bldgs.has(g_i.l_id):
+							bldgs[g_i.l_id][p_i.bldg.name] = bldgs[g_i.l_id].get(p_i.bldg.name, 0) + p_i.tile_num
+						else:
+							bldgs[g_i.l_id] = {p_i.bldg.name: p_i.tile_num}
+					if p_i.has("MS"):
+						if MSs.has(g_i.l_id):
+							MSs[g_i.l_id][p_i.MS] = MSs[g_i.l_id].get(p_i.MS, 0) + 1
+						else:
+							MSs[g_i.l_id] = {p_i.MS: 1}
+				for _star in s_i.stars:
+					if _star.has("MS"):
+						if MSs.has(g_i.l_id):
+							MSs[g_i.l_id][_star.MS] = MSs[g_i.l_id].get(_star.MS, 0) + 1
+						else:
+							MSs[g_i.l_id] = {_star.MS: 1}
 		await_counter += 1
 		if is_instance_valid(game.overlay):
 			change_overlay(0, game.overlay.get_node("Control/Gradient").texture.gradient, overlays[-1])
@@ -89,9 +116,9 @@ func add_rsrc(v:Vector2, mod:Color, icon, id:int, sc:float = 1):
 	rsrcs[id] = rsrc
 	return rsrc
 
-func on_galaxy_over (id:int):
-	var g_i = game.galaxy_data[id]
-	var tooltip:String = g_i.name if g_i.has("name") else ("%s %s" % [tr("GALAXY"), id])
+func on_galaxy_over (l_id:int):
+	var g_i = game.galaxy_data[l_id]
+	var tooltip:String = g_i.name if g_i.has("name") else ("%s %s" % [tr("GALAXY"), l_id])
 	var icons = []
 	if g_i.has("GS"):
 		tooltip += "\n"
@@ -112,62 +139,26 @@ func on_galaxy_over (id:int):
 			tooltip += Data.path_1[Building.RESEARCH_LAB].desc % Helper.format_num(g_i.prod_num * Helper.get_IR_mult(Building.RESEARCH_LAB) * game.u_i.time_speed)
 	else:
 		tooltip += "\n%s: %s\n%s: %s\n%s: %s nT\n%s: %s" % [tr("SYSTEMS"), g_i.system_num, tr("DIFFICULTY"), g_i.diff, tr("B_STRENGTH"), Helper.clever_round(g_i.B_strength * 1e9), tr("DARK_MATTER"), g_i.dark_matter]
-	for grid in get_tree().get_nodes_in_group("Grids"):
-		if grid.name != "Grid_%s" % g_i.l_id:
-			var tween = create_tween()
-			tween.tween_property(grid, "modulate", Color(1, 1, 1, 0), 0.1)
-			#grid.visible = false
-	for grid in get_tree().get_nodes_in_group("MSGrids"):
-		if grid.name != "MSGrid_%s" % g_i.l_id:
-			var tween = create_tween()
-			tween.tween_property(grid, "modulate", Color(1, 1, 1, 0), 0.1)
-			#grid.visible = false
 	game.show_tooltip(tooltip, {"imgs": icons})
-	var bldgs:Dictionary = {}
-	var MSs:Dictionary = {}
-	var system_data2:Array = game.open_obj("Galaxies", g_i.id)
-	for s_i in system_data2:
-		if not s_i.has("discovered"):
-			continue
-		var planet_data2:Array = game.open_obj("Systems", s_i.id)
-		for p_i in planet_data2:
-			if p_i.is_empty():
-				continue
-			if p_i.has("tile_num") and p_i.bldg.has("name"):
-				Helper.add_to_dict(bldgs, p_i.bldg.name, p_i.tile_num)
-			if p_i.has("MS"):
-				Helper.add_to_dict(MSs, p_i.MS, 1)
-		for _star in s_i.stars:
-			if _star.has("MS"):
-				Helper.add_to_dict(MSs, _star.MS, 1)
-		#await get_tree().process_frame
 	var sc:float = pow(g_i["system_num"] / game.GALAXY_SCALE_DIV, 0.5)
 	if not is_instance_valid(game.space_HUD):
 		return
 	var bldg_info_node = game.space_HUD.get_node("HBoxContainer/BldgInfo")
 	var MS_info_node = game.space_HUD.get_node("HBoxContainer/MSInfo")
-	if not bldgs.is_empty():
-		for bldg in bldgs:
+	if bldgs.has(l_id):
+		for bldg in bldgs[l_id]:
 			var bldg_count = preload("res://Scenes/EntityCount.tscn").instantiate()
 			bldg_info_node.add_child(bldg_count)
 			bldg_count.get_node("Texture2D").texture = game.bldg_textures[bldg]
-			bldg_count.get_node("Label").text = "x %s" % Helper.format_num(bldgs[bldg])
-	if not MSs.is_empty():
-		for MS in MSs:
+			bldg_count.get_node("Label").text = "x %s" % Helper.format_num(bldgs[l_id][bldg])
+	if MSs.has(l_id):
+		for MS in MSs[l_id]:
 			var MS_count = preload("res://Scenes/EntityCount.tscn").instantiate()
 			MS_info_node.add_child(MS_count)
 			MS_count.get_node("Texture2D").texture = load("res://Graphics/Megastructures/%s_0.png" % MS)
-			MS_count.get_node("Label").text = "x %s" % Helper.format_num(MSs[MS])
+			MS_count.get_node("Label").text = "x %s" % Helper.format_num(MSs[l_id][MS])
 
 func on_galaxy_out ():
-	for grid in get_tree().get_nodes_in_group("Grids"):
-		#grid.visible = true
-		var tween = create_tween()
-		tween.tween_property(grid, "modulate", Color(1, 1, 1, 1), 0.1)
-	for grid in get_tree().get_nodes_in_group("MSGrids"):
-		#grid.visible = true
-		var tween = create_tween()
-		tween.tween_property(grid, "modulate", Color(1, 1, 1, 1), 0.1)
 	game.hide_tooltip()
 	game.space_HUD.clear_bldg_info()
 
@@ -241,6 +232,24 @@ func change_overlay(overlay_id:int, gradient:Gradient, object:Dictionary = {}):
 					overlay.circle.modulate = gradient.sample(0)
 				else:
 					overlay.circle.modulate = gradient.sample(1)
+		8:
+			var matched_objs_display = []
+			var matched_objs = []
+			game.overlay.get_matched_objs(matched_objs_display, matched_objs)
+			for overlay in _overlays:
+				var found = false
+				for obj in matched_objs:
+					if bldgs.has(overlay.id) and bldgs[overlay.id].has(obj):
+						found = true
+						break
+					if MSs.has(overlay.id) and MSs[overlay.id].has(obj):
+						found = true
+						break
+				if found:
+					overlay.circle.modulate = gradient.sample(0)
+				else:
+					overlay.circle.modulate = gradient.sample(1)
+			game.overlay.update_filter_text(matched_objs_display)
 
 func _input(event):
 	if game.bottom_info_action == "convert_to_GS" and Input.is_action_just_pressed("right_click"):
