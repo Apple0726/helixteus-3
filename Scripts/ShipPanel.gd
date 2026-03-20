@@ -188,6 +188,8 @@ func _on_ship_button_up(ship_id: int) -> void:
 		show_ship_stats(ship_id)
 		if game.item_to_use.id != -1 and Item.data[game.item_to_use.id].type == Item.Type.HELIX_CORE:
 			$ShipStats/ShipDetails/XP/TextureProgressGained.value = $ShipStats/ShipDetails/XP/TextureProgressBar.value + Item.data[game.item_to_use.id].XP * game.item_to_use.num
+		else:
+			$ShipStats/ShipDetails/XP/XPGained.text = ""
 
 func show_ship_stats(ship_id: int):
 	$ShipStats/ShipDetails.show()

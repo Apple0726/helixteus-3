@@ -67,3 +67,8 @@ Text translation is exempt from this rule, but please re-read everything the AI 
 
 ## Support
 All contributions and kind words are very appreciated! This game will always be available for free on itch.io (only Steam version is paid, which will include higher quality audio and graphics). If you want to financially support the development, you can "buy" the game on itch.io with an amount you decide.
+
+
+<p align="center">
+<img src="readme_screenshot3.jpg" alt="Game screenshot 3">
+</p>

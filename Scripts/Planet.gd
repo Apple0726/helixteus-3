@@ -109,7 +109,7 @@ func _ready():
 			if tile.has("crater"):
 				var metal = Sprite2D.new()
 				metal.texture = game.metal_textures[tile.crater.metal]
-				metal.scale *= 0.4
+				metal.scale *= 0.4 * 256.0 / metal.texture.get_width()
 				metal.position = Vector2(i, j) * 200 + Vector2(100, 70)
 				var crater = Sprite2D.new()
 				if tile.crater.variant == 3:
@@ -272,17 +272,17 @@ func add_ancient_building_sprite(tile:Dictionary, tile_id:int, v:Vector2, buildi
 		elif ancient_building_name == AncientBuilding.SUBSTATION:
 			add_rsrc(v + Vector2(100, 100), Color(0, 0.8, 0, 1), Data.energy_icon, tile_id)
 	if tile.ancient_bldg.tier > 1 and bldgs[tile_id]:
-		var particle_props = [	{"c":Color(1.2, 2.4, 1.2), "amount":50, "lifetime":2.4},
-								{"c":Color(1.2, 1.2, 2.4), "amount":60, "lifetime":2.8},
-								{"c":Color(2.4, 1.2, 2.4), "amount":70, "lifetime":3.2},
-								{"c":Color(2.4, 1.8, 1.2), "amount":80, "lifetime":3.6},
-								{"c":Color(2.4, 2.4, 1.8), "amount":90, "lifetime":4.0},
-								{"c":Color(2.4, 1.2, 1.2), "amount":100, "lifetime":4.4}]
+		var particle_props = [	{"c":Color(0.0, 1.0, 0.0, 1.0), "amount":50, "lifetime":2.4},
+								{"c":Color(0.0, 0.0, 1.0, 1.0), "amount":60, "lifetime":2.8},
+								{"c":Color(1.0, 0.0, 1.0, 1.0), "amount":70, "lifetime":3.2},
+								{"c":Color(1.0, 0.5, 0.0, 1.0), "amount":80, "lifetime":3.6},
+								{"c":Color(1.0, 1.0, 0.742, 1.0), "amount":90, "lifetime":4.0},
+								{"c":Color(1.0, 0.485, 0.485, 1.0), "amount":100, "lifetime":4.4}]
 		var particles = preload("res://Scenes/AncientBuildingParticles.tscn").instantiate()
-		particles.modulate = particle_props[tile.ancient_bldg.tier - 2].c
 		particles.amount = particle_props[tile.ancient_bldg.tier - 2].amount
 		particles.lifetime = particle_props[tile.ancient_bldg.tier - 2].lifetime
 		particles.speed_scale = game.u_i.time_speed * tile.get("time_speed_bonus", 1.0)
+		particles.material.set_shader_parameter("color", particle_props[tile.ancient_bldg.tier - 2].c)
 		bldgs[tile_id].add_child(particles)
 
 func add_particles(pos:Vector2):
@@ -936,6 +936,8 @@ func collect_prod_bldgs(tile_id:int):
 			_tile.bldg.erase("expected_rsrc")
 
 func duplicate_ancient_building_callable():
+	if not game.tile_data[tile_over] or not game.tile_data[tile_over].has("ancient_bldg"):
+		return
 	var ancient_bldg = game.tile_data[tile_over].ancient_bldg
 	var tier:int = ancient_bldg.tier
 	game.put_bottom_info(tr("CLICK_TILE_TO_CONSTRUCT"), "building", "cancel_building")
@@ -947,6 +949,8 @@ func duplicate_ancient_building_callable():
 	initiate_ancient_building_construction(ancient_bldg.name, base_cost)
 	
 func duplicate_building_callable():
+	if not game.tile_data[tile_over] or not game.tile_data[tile_over].has("bldg"):
+		return
 	var bldg_name = game.tile_data[tile_over].bldg.name
 	game.put_bottom_info(tr("CLICK_TILE_TO_CONSTRUCT"), "building", "cancel_building")
 	var base_cost = Data.costs[bldg_name].duplicate(true)
@@ -1762,7 +1766,7 @@ func construct(type:int, costs:Dictionary):
 			if not tile:
 				continue
 			var rsrc_bonus = tile.has("resource_production_bonus") and tile.resource_production_bonus.has(rsrc)
-			if rsrc_bonus or tile.has("mining_outpost_bonus"):
+			if rsrc_bonus or tile.has("mining_outpost_bonus") and rsrc == "stone":
 				if bldg_to_construct == -1:
 					return
 				var tile_bonus_node = preload("res://Scenes/TileBonus.tscn").instantiate()

@@ -76,7 +76,6 @@ func _on_Send_pressed(send_all:bool = false):
 				break
 		if not probe_sent and send_all:
 			game.popup(tr("PROBE_SENT"), 1.5)
-			refresh()
 			return false
 		game.deduct_resources(costs)
 		if send_all:
@@ -111,6 +110,7 @@ func _on_SendAll_pressed():
 				no_more_probes = false
 				break	
 		if no_more_probes:
+			game.popup(tr("PROBE_SENT"), 1.5)
 			break
 	refresh()
 

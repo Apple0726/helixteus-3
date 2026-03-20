@@ -34,7 +34,7 @@ var block_cancelling_action = false
 func _ready() -> void:
 	super()
 	if ship_class == ShipClass.SUPPORT:
-		regen_per_turn = ceil(total_HP * 0.15)
+		regen_per_turn = ceil(total_HP * 0.1)
 	collision_shape_radius = 36.0
 	movement_remaining = (agility + agility_buff) * METERS_PER_AGILITY
 	total_movement_base = (agility + agility_buff) * METERS_PER_AGILITY

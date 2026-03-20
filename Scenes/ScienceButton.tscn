@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://bhiykvhp7e82u"]
 
-[ext_resource type="Texture2D" uid="uid://dg25fshk35326" path="res://Graphics/Icons/science_points.png" id="1"]
+[ext_resource type="Texture2D" uid="uid://dg25fshk35326" path="res://Graphics/Icons/SP.png" id="1"]
 [ext_resource type="Theme" uid="uid://cp2u1kgj60ic" path="res://Resources/default_theme.tres" id="2"]
 [ext_resource type="Script" uid="uid://dy27xrmeck1i4" path="res://Scripts/ScienceButton.gd" id="4"]
 

@@ -55,7 +55,7 @@ Here is some more fun stuff you can try:
 			LOD -= 1
 	wid_p2 = wid_p * LOD
 	var data
-	if wid_p2 > 120:
+	if wid_p2 > 120 and FileAccess.file_exists("res://Easter eggs/Bad apple/badappledata100"):
 		W = 480
 		H = 360
 		data = FileAccess.open_compressed("res://Easter eggs/Bad apple/badappledata100", FileAccess.READ, FileAccess.COMPRESSION_ZSTD)

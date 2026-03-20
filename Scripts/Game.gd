@@ -555,17 +555,11 @@ func load_univ():
 	galaxy_data = open_obj("Clusters", c_c)
 
 func load_game():
-	# Instantiate necessary panels on game load
-	if not is_instance_valid(stats_panel):
-		stats_panel = preload("res://Scenes/Panels/Stats.tscn").instantiate()
-		stats_panel.panel_var_name = "stats_panel"
-		stats_panel.hide()
-		$Panels/Control.add_child(stats_panel)
-	if not is_instance_valid(shop_panel):
-		shop_panel = preload("res://Scenes/Panels/Shop.tscn").instantiate()
-		shop_panel.panel_var_name = "shop_panel"
-		shop_panel.hide()
-		$Panels/Control.add_child(shop_panel)
+	#if not is_instance_valid(shop_panel):
+		#shop_panel = preload("res://Scenes/Panels/Shop.tscn").instantiate()
+		#shop_panel.panel_var_name = "shop_panel"
+		#shop_panel.hide()
+		#$Panels/Control.add_child(shop_panel)
 	var save_info = FileAccess.open("user://%s/save_info.hx3" % [c_sv], FileAccess.READ)
 	if save_info == null:
 		save_info = FileAccess.open("user://%s/save_info.hx3~" % [c_sv], FileAccess.READ)
@@ -653,6 +647,12 @@ func set_c_sv(_c_sv):
 	if err == OK:
 		config.set_value("game", "saved_c_sv", _c_sv)
 		config.save("user://settings.cfg")
+	# Instantiate necessary panels on game load
+	if not is_instance_valid(stats_panel):
+		stats_panel = preload("res://Scenes/Panels/Stats.tscn").instantiate()
+		stats_panel.panel_var_name = "stats_panel"
+		stats_panel.hide()
+		$Panels/Control.add_child(stats_panel)
 
 func set_default_dim_bonuses():
 	maths_bonus = {

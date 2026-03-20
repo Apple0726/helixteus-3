@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://dg25fshk35326"
-path="res://.godot/imported/science_points.png-36c1f16ba9e6935e586c06698185afb9.ctex"
+path="res://.godot/imported/SP.png-aee9011224fe263776f9d52b4fbeeb63.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Graphics/Icons/science_points.png"
-dest_files=["res://.godot/imported/science_points.png-36c1f16ba9e6935e586c06698185afb9.ctex"]
+source_file="res://Graphics/Icons/SP.png"
+dest_files=["res://.godot/imported/SP.png-aee9011224fe263776f9d52b4fbeeb63.ctex"]
 
 [params]
 

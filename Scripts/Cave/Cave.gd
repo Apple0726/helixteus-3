@@ -1858,23 +1858,23 @@ func _physics_process(delta):
 	if input_vector != Vector2.ZERO:
 		if input_vector.x > 0:
 			if input_vector.y > 0:
-				rover_sprite.rotation_degrees = move_toward(rover_sprite.rotation_degrees, snapped(rover_sprite.rotation_degrees - 45, 360) + 45, delta * 60.0 * 15.0)
+				rover_sprite.rotation_degrees = move_toward(rover_sprite.rotation_degrees, snapped(rover_sprite.rotation_degrees - 45, 360) + 45, delta * time_speed * 60.0 * 15.0)
 			elif input_vector.y < 0:
-				rover_sprite.rotation_degrees = move_toward(rover_sprite.rotation_degrees, snapped(rover_sprite.rotation_degrees + 45, 360) - 45, delta * 60.0 * 15.0)
+				rover_sprite.rotation_degrees = move_toward(rover_sprite.rotation_degrees, snapped(rover_sprite.rotation_degrees + 45, 360) - 45, delta * time_speed * 60.0 * 15.0)
 			else:
-				rover_sprite.rotation_degrees = move_toward(rover_sprite.rotation_degrees, snapped(rover_sprite.rotation_degrees, 360), delta * 60.0 * 15.0)
+				rover_sprite.rotation_degrees = move_toward(rover_sprite.rotation_degrees, snapped(rover_sprite.rotation_degrees, 360), delta * time_speed * 60.0 * 15.0)
 		elif input_vector.x < 0:
 			if input_vector.y > 0:
-				rover_sprite.rotation_degrees = move_toward(rover_sprite.rotation_degrees, snapped(rover_sprite.rotation_degrees - 135, 360) + 135, delta * 60.0 * 15.0)
+				rover_sprite.rotation_degrees = move_toward(rover_sprite.rotation_degrees, snapped(rover_sprite.rotation_degrees - 135, 360) + 135, delta * time_speed * 60.0 * 15.0)
 			elif input_vector.y < 0:
-				rover_sprite.rotation_degrees = move_toward(rover_sprite.rotation_degrees, snapped(rover_sprite.rotation_degrees + 135, 360) - 135, delta * 60.0 * 15.0)
+				rover_sprite.rotation_degrees = move_toward(rover_sprite.rotation_degrees, snapped(rover_sprite.rotation_degrees + 135, 360) - 135, delta * time_speed * 60.0 * 15.0)
 			else:
-				rover_sprite.rotation_degrees = move_toward(rover_sprite.rotation_degrees, snapped(rover_sprite.rotation_degrees - 180, 360) + 180, delta * 60.0 * 15.0)
+				rover_sprite.rotation_degrees = move_toward(rover_sprite.rotation_degrees, snapped(rover_sprite.rotation_degrees - 180, 360) + 180, delta * time_speed * 60.0 * 15.0)
 		else:
 			if input_vector.y > 0:
-				rover_sprite.rotation_degrees = move_toward(rover_sprite.rotation_degrees, snapped(rover_sprite.rotation_degrees - 90, 360) + 90, delta * 60.0 * 15.0)
+				rover_sprite.rotation_degrees = move_toward(rover_sprite.rotation_degrees, snapped(rover_sprite.rotation_degrees - 90, 360) + 90, delta * time_speed * 60.0 * 15.0)
 			elif input_vector.y < 0:
-				rover_sprite.rotation_degrees = move_toward(rover_sprite.rotation_degrees, snapped(rover_sprite.rotation_degrees + 90, 360) - 90, delta * 60.0 * 15.0)
+				rover_sprite.rotation_degrees = move_toward(rover_sprite.rotation_degrees, snapped(rover_sprite.rotation_degrees + 90, 360) - 90, delta * time_speed * 60.0 * 15.0)
 		$Rover/CollisionShape2D.rotation_degrees = rover_sprite.rotation_degrees
 		$Rover/AshParticles.emitting = on_ash
 		velocity = velocity.move_toward(input_vector * max_speed * speed_mult2, acceleration * speed_mult2 * acc_penalty)
