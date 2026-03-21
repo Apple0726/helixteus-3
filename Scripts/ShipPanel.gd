@@ -34,7 +34,7 @@ func add_ship_node(id: int):
 	ship.ignore_texture_size = true
 	ship.stretch_mode = TextureButton.STRETCH_KEEP_ASPECT_CENTERED
 	ship.size = Vector2.ONE * 88.0
-	ship.position = game.ship_data[id].initial_position / 1.8
+	ship.position = game.ship_data[id].initial_position / 2.2
 	$Ships/Battlefield.add_child(ship)
 	ship_nodes.append(ship)
 
@@ -148,7 +148,7 @@ func _input(event: InputEvent) -> void:
 			target_position.x = clamp(target_position.x, 0.0, 360.0)
 			target_position.y = clamp(target_position.y, 0.0, 264.0)
 			ship_nodes[dragging_ship_id].position = target_position
-			game.ship_data[dragging_ship_id].initial_position = target_position * 1.8
+			game.ship_data[dragging_ship_id].initial_position = target_position * 2.2
 
 
 func _on_ship_mouse_entered(ship_id: int):

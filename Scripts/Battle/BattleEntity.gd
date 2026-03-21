@@ -70,7 +70,6 @@ var random_buff_timer_initial = INF
 var random_buff_timer = INF
 var aim_mult = 1.0
 var physical_damage_mult = 1.0
-var extra_attacks = 0
 var turn_taken = false
 
 var default_tooltip_text:String
@@ -202,12 +201,7 @@ func take_turn():
 	if status_effects[Battle.StatusEffect.CORRODING] > 0.0:
 		defense_buff -= 2
 		agility_buff -= 2
-	if status_effects[Battle.StatusEffect.EXTRA_TURNS] > 0.0:
-		extra_attacks = 1
-		total_movement = total_movement_base * 1.25
-	else:
-		extra_attacks = 0
-		total_movement = total_movement_base
+	total_movement = total_movement_base
 	movement_remaining = total_movement
 	random_buff_timer -= 1
 	if Battle.PassiveAbility.BUFFS_AT_LOW_HP in passive_abilities and HP < 0.4:
@@ -267,11 +261,9 @@ func _physics_process(delta: float) -> void:
 
 
 func end_turn():
-	if extra_attacks > 0:
-		extra_attacks -= 1
-		if extra_attacks <= 0:
-			status_effects[Battle.StatusEffect.EXTRA_TURNS] = 0.0
-			$Info/StatusEffects/ExtraTurns.hide()
+	if status_effects[Battle.StatusEffect.EXTRA_TURNS] > 0.0:
+		status_effects[Battle.StatusEffect.EXTRA_TURNS] -= 1.0
+		$Info/StatusEffects.update()
 	else:
 		if type == Battle.EntityType.SHIP:
 			print("end turn for ship ", turn_order)

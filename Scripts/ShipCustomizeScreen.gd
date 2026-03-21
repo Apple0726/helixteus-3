@@ -14,7 +14,7 @@ var allocated_agility:int = 0
 
 func _ready() -> void:
 	$Navigation/Ship.texture = load("res://Graphics/Ships/Ship%s.png" % ship_id)
-	if game.subject_levels.dimensional_power < 5:
+	if game.dim_num == 1:
 		$ClassAndStats/ShipClass/VBox/VBox/Reckless.adv_button_disabled = true
 		$ClassAndStats/ShipClass/VBox/VBox/Reckless.button_text = tr("LOCKED")
 		$ClassAndStats/ShipClass/VBox/VBox/Reckless.mouse_entered.connect(game.show_tooltip.bind(tr("SHIP_CLASS_UNLOCK_INFO")))
@@ -27,6 +27,9 @@ func _ready() -> void:
 		$ClassAndStats/ShipClass/VBox/VBox/Uber.button_text = tr("LOCKED")
 		$ClassAndStats/ShipClass/VBox/VBox/Uber.mouse_entered.connect(game.show_tooltip.bind(tr("SHIP_CLASS_UNLOCK_INFO")))
 		$ClassAndStats/ShipClass/VBox/VBox/Uber.mouse_exited.connect(game.hide_tooltip)
+	elif not game.show.has("new_ship_classes"):
+		game.popup_window(tr("NEW_SHIP_CLASSES_UNLOCKED"))
+		game.show["new_ship_classes"] = true
 	ship_data = game.ship_data[ship_id].duplicate(true)
 	if ship_data.lv == 1:
 		$Navigation/VBoxContainer.visible = false

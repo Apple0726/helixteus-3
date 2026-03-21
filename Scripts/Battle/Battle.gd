@@ -317,6 +317,7 @@ func next_turn():
 				if is_instance_valid(initiative_order[j]):
 					initiative_order[j].turn_order -= 1
 			i -= 1
+	await get_tree().process_frame
 	if initiative_order[whose_turn_is_it_index].type == Battle.EntityType.BOUNDARY:
 		scale_before_view_battlefield = game.view.scale.x
 		if animations_sped_up:
@@ -331,8 +332,8 @@ func next_turn():
 			var ship_node = initiative_order[ship_turn]
 			print("ship's turn (%s)" % ship_turn)
 			var ship_pos_before_moving:Vector2 = ship_node.position
-			var skip_turn = ship_node.status_effects[Battle.StatusEffect.STUN] > 0 or ship_node.status_effects[Battle.StatusEffect.FROZEN] > 0 or ship_node.turn_taken
 			await ship_node.take_turn()
+			var skip_turn = ship_node.status_effects[Battle.StatusEffect.STUN] > 0 or ship_node.status_effects[Battle.StatusEffect.FROZEN] > 0 or ship_node.turn_taken
 			if ship_node.HP > 0:
 				if skip_turn:
 					ship_node.turn_order_box.get_node("ChangeSizeAnim").play_backwards("ChangeSize")

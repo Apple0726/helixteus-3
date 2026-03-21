@@ -4243,7 +4243,7 @@ func _on_mouse_exited():
 
 func mine_tile(tile_id:int = -1):
 	if pickaxe.has("name"):
-		if shop_panel.visible:
+		if is_instance_valid(shop_panel) and shop_panel.visible:
 			toggle_panel("shop_panel")
 		if tile_id == -1:
 			put_bottom_info(tr("START_MINE"), "about_to_mine")

@@ -119,27 +119,26 @@ func _draw() -> void:
 			draw_arc(battle_scene.mouse_position_local - position, Data.battle_weapon_stats.bomb.AoE_radius[bomb_levels[PATH_1] - 1], 2.0 * PI / 32.0 * i, 2.0 * PI / 32.0 * (i+1), 100, Color.RED)
 
 func take_turn():
-	movement_remaining = total_movement
 	buffed_from_class_passive_ability = false
 	if ship_class == ShipClass.ENERGETIC and randf() < 0.3:
 		status_effects[Battle.StatusEffect.EXTRA_TURNS] = 2
+		total_movement = total_movement_base * 1.25
 	await super()
 	if HP <= 0: # For example, if burned to death during super() call
 		return
 	if ship_class == ShipClass.RECKLESS:
 		if turn_number == 1:
-			extra_attacks = 2
+			status_effects[Battle.StatusEffect.EXTRA_TURNS] = 3
 		elif turn_number % 3 != 0: # Turn 2, 4, 5, 7, 8...
-			extra_attacks = 1
+			status_effects[Battle.StatusEffect.EXTRA_TURNS] = 2
 		else:
-			extra_attacks = 0
 			status_effects[Battle.StatusEffect.STUN] += 2
 	elif ship_class == ShipClass.UBER:
 		if turn_number % 2 == 1:
-			extra_attacks = 1
-		else:
-			extra_attacks = 0
+			status_effects[Battle.StatusEffect.EXTRA_TURNS] = 2
 	decrement_status_effects_buffs()
+	if status_effects[Battle.StatusEffect.STUN] > 0.0:
+		end_turn()
 
 func move():
 	display_move_path = false
@@ -356,7 +355,7 @@ func ending_turn(delay: float = 0.0):
 	create_tween().tween_callback(end_turn).set_delay(0.0 if battle_scene.animations_sped_up else delay)
 
 func end_turn():
-	if extra_attacks > 0:
+	if status_effects[Battle.StatusEffect.EXTRA_TURNS] > 0.0:
 		battle_GUI.fade_in_main_panel()
 	super()
 
@@ -405,7 +404,7 @@ func add_target_buttons_for_push():
 		var position_difference_normalized = (position - entity.position).normalized()
 		var velocity_difference = velocity - entity.velocity
 		var push_difficulty_from_velocity = abs(0.05 * position_difference_normalized.rotated(PI / 2.0).dot(velocity_difference))
-		print(push_difficulty_from_velocity)
+		prints("push_difficulty_from_velocity:", push_difficulty_from_velocity)
 		var agility_diff = 0.0
 		if entity.type == Battle.EntityType.ENEMY:
 			agility_diff = agility + agility_buff - entity.agility - entity.agility_buff

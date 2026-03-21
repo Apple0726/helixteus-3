@@ -349,8 +349,8 @@ func normal_attack():
 		battle_scene.view_entity(self, 1.0, 200.0 * Vector2.from_angle(target_angle))
 		$FireWeaponAim.show()
 		await get_tree().create_timer(0.7).timeout
-	var projectile_angle = randf_range(target_angle - target_angle_max_deviation, target_angle + target_angle_max_deviation)
 	if attack_type == Attack.NORMAL:
+		var projectile_angle = randf_range(target_angle - target_angle_max_deviation, target_angle + target_angle_max_deviation)
 		var buffs = {}
 		if lv >= 12:
 			buffs["defense"] = -4
@@ -383,11 +383,13 @@ func normal_attack():
 		if lv >= 12:
 			projectile_num = 3
 		for i in projectile_num:
+			var projectile_angle = randf_range(target_angle - target_angle_max_deviation, target_angle + target_angle_max_deviation)
 			add_projectile(projectile_angle,
 			{"status_effects":proj_status_effects, "scale_mult":scale_mult, "damage_mult":damage_mult, "trail_color":Color.YELLOW_GREEN})
 			if i < projectile_num-1:
 				await get_tree().create_timer(0.2).timeout
 	elif attack_type == Attack.LASER:
+		var projectile_angle = randf_range(target_angle - target_angle_max_deviation, target_angle + target_angle_max_deviation)
 		var laser = preload("res://Scenes/Battle/Weapons/BattleLaser.tscn").instantiate()
 		laser.get_node("RayCast2D").collision_mask = 1 + 2 + 32
 		laser.rotation = projectile_angle

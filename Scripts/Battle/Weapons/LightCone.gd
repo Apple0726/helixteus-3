@@ -33,7 +33,7 @@ func update_cone(_emission_cone_angle_visual: float):
 		$RayCast2D.target_position = 5000.0 * Vector2.from_angle(angle)
 		var hit_point:Vector2
 		$RayCast2D.clear_exceptions()
-		var inner_light = shooter.light_levels[0] >= 2 and i > -40 and i < 40
+		var inner_light = shooter.light_levels[0] >= 3 and i > -40 and i < 40
 		while true:
 			$RayCast2D.force_raycast_update()
 			hit_point = to_local($RayCast2D.get_collision_point())
