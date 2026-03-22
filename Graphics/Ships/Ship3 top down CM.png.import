@@ -1,0 +1,16 @@
+[remap]
+
+importer="bitmap"
+type="BitMap"
+uid="uid://cc3uj41lglkyb"
+path="res://.godot/imported/Ship3 top down CM.png-6864209b0867d61b18b61e7dec2b2559.res"
+
+[deps]
+
+source_file="res://Graphics/Ships/Ship3 top down CM.png"
+dest_files=["res://.godot/imported/Ship3 top down CM.png-6864209b0867d61b18b61e7dec2b2559.res"]
+
+[params]
+
+create_from=0
+threshold=0.5

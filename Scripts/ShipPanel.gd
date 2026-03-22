@@ -39,6 +39,7 @@ func add_ship_node(id: int):
 	ship.button_down.connect(_on_ship_button_down.bind(id))
 	ship.pressed.connect(_on_ship_button_up.bind(id))
 	ship.texture_normal = load("res://Graphics/Ships/Ship%s top down.png" % id)
+	ship.texture_click_mask = load("res://Graphics/Ships/Ship%s top down CM.png" % id)
 	ship.ignore_texture_size = true
 	ship.stretch_mode = TextureButton.STRETCH_KEEP_ASPECT_CENTERED
 	ship.size = Vector2.ONE * 88.0
