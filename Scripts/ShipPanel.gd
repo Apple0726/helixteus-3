@@ -27,9 +27,17 @@ func add_ship_node(id: int):
 	ship.material.shader = preload("res://Shaders/Highlight.gdshader")
 	ship.material.resource_local_to_scene = true
 	ship.mouse_entered.connect(_on_ship_mouse_entered.bind(id))
+	ship.mouse_entered.connect(game.show_tooltip.bind("", {
+		"additional_text": "{KBS_label}: {KBS}".format({"KBS_label":tr("KEYBOARD_SHORTCUT"), "KBS": str(id + 1)}),
+		"additional_text_delay": 1.0}))
 	ship.mouse_exited.connect(_on_ship_mouse_exited.bind(id))
+	ship.mouse_exited.connect(game.hide_tooltip)
+	ship.shortcut = Shortcut.new()
+	ship.shortcut.events.append(InputEventKey.new())
+	ship.shortcut.events[0].physical_keycode = KEY_1 + id
+	ship.shortcut_in_tooltip = false
 	ship.button_down.connect(_on_ship_button_down.bind(id))
-	ship.button_up.connect(_on_ship_button_up.bind(id))
+	ship.pressed.connect(_on_ship_button_up.bind(id))
 	ship.texture_normal = load("res://Graphics/Ships/Ship%s top down.png" % id)
 	ship.ignore_texture_size = true
 	ship.stretch_mode = TextureButton.STRETCH_KEEP_ASPECT_CENTERED

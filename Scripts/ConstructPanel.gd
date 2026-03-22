@@ -1,6 +1,5 @@
-extends Control
+extends "Panel.gd"
 
-@onready var game = get_node("/root/Game")
 var basic_bldgs:Array = [Building.MINERAL_EXTRACTOR, Building.POWER_PLANT, Building.RESEARCH_LAB, Building.BORING_MACHINE, Building.SOLAR_PANEL, Building.ATMOSPHERE_EXTRACTOR]
 var storage_bldgs:Array = [Building.MINERAL_SILO, Building.BATTERY]
 var production_bldgs:Array = [Building.STONE_CRUSHER, Building.GLASS_FACTORY, Building.STEAM_ENGINE, Building.ATOM_MANIPULATOR, Building.SUBATOMIC_PARTICLE_REACTOR, Building.GREENHOUSE]
@@ -10,7 +9,7 @@ var vehicles_bldgs:Array = [Building.ROVER_CONSTRUCTION_CENTER, Building.SHIPYAR
 var tab = "basic"
 
 func _ready():
-	set_process_input(false)
+	set_polygon($Panel.size, $Panel.position)
 	var added_buildings = Mods.added_buildings
 	for key in added_buildings:
 		match added_buildings[key].type:
@@ -26,15 +25,11 @@ func _ready():
 				vehicles_bldgs.append(key)
 
 func _input(event):
-	if event is InputEventMouseMotion:
-		var rect:Rect2 = Rect2($Panel.position, $Panel.size)
-		game.block_scroll = rect.has_point(event.position)
-	if visible and (Input.is_action_just_released("cancel") or Input.is_action_just_released("right_click")):
-		hide_panel()
+	super(event)
 
-func _unhandled_input(event):
+func _unhandled_input(event: InputEvent) -> void:
 	if Input.is_action_just_released("left_click") and visible:
-		hide_panel()
+		game.toggle_panel(panel_var_name)
 
 func refresh():
 	$Panel/VBoxContainer/Ancient.visible = game.engineering_bonus.max_ancient_building_tier > 0
@@ -77,7 +72,6 @@ func refresh():
 				btn.connect("pressed", Callable(self, "on_bldg_click").bind(bldg))
 
 func on_bldg_click(bldg:int):
-	hide_panel()
 	game.put_bottom_info(tr("CLICK_TILE_TO_CONSTRUCT"), "building", "cancel_building")
 	var base_cost = Data.costs[bldg].duplicate(true)
 	for cost in base_cost:
@@ -85,6 +79,7 @@ func on_bldg_click(bldg:int):
 	if bldg == Building.GREENHOUSE:
 		base_cost.energy = round(base_cost.energy * (1 + abs(game.planet_data[game.c_p].temperature - 273) / 10.0))
 	game.view.obj.construct(bldg, base_cost)
+	game.toggle_panel(panel_var_name)
 
 func on_bldg_over(bldg:int):
 	var time_speed = game.u_i.time_speed
@@ -142,47 +137,57 @@ func on_bldg_over(bldg:int):
 
 func _on_basic_mouse_entered():
 	tween_label($Panel/VBoxContainer/Basic/Label, 1.0)
+	show_KBS_tooltip("1")
 
 
 func _on_basic_mouse_exited():
 	if tab != "basic":
 		tween_label($Panel/VBoxContainer/Basic/Label, 0.0)
+	_on_mouse_exited()
 
 
 func _on_storage_mouse_entered():
 	tween_label($Panel/VBoxContainer/Storage/Label, 1.0)
+	show_KBS_tooltip("2")
 
 
 func _on_storage_mouse_exited():
 	if tab != "storage":
 		tween_label($Panel/VBoxContainer/Storage/Label, 0.0)
+	_on_mouse_exited()
 
 
 func _on_production_mouse_entered():
 	tween_label($Panel/VBoxContainer/Production/Label, 1.0)
+	show_KBS_tooltip("3")
 
 
 func _on_production_mouse_exited():
 	if tab != "production":
 		tween_label($Panel/VBoxContainer/Production/Label, 0.0)
+	_on_mouse_exited()
 
 
 func _on_support_mouse_entered():
 	tween_label($Panel/VBoxContainer/Support/Label, 1.0)
+	show_KBS_tooltip("4")
 
 
 func _on_support_mouse_exited():
 	if tab != "support":
 		tween_label($Panel/VBoxContainer/Support/Label, 0.0)
+	_on_mouse_exited()
 
 
 func _on_vehicles_mouse_entered():
 	tween_label($Panel/VBoxContainer/Vehicles/Label, 1.0)
+	show_KBS_tooltip("5")
 
 
 func _on_vehicles_mouse_exited():
 	if tab != "vehicles":
 		tween_label($Panel/VBoxContainer/Vehicles/Label, 0.0)
+	_on_mouse_exited()
 
 
 func _on_tab_pressed(extra_arg_0:String):
@@ -199,11 +204,13 @@ func tween_label(label, final_val):
 
 func _on_ancient_mouse_entered():
 	tween_label($Panel/VBoxContainer/Ancient/Label, 1.0)
+	show_KBS_tooltip("6")
 
 
 func _on_ancient_mouse_exited():
 	if tab != "ancient":
 		tween_label($Panel/VBoxContainer/Ancient/Label, 0.0)
+	_on_mouse_exited()
 
 func on_ancient_bldg_over(bldg:int):
 	var icons = []
@@ -242,7 +249,6 @@ func on_ancient_bldg_over(bldg:int):
 	game.show_tooltip(tooltip, {"imgs": icons})
 
 func on_ancient_bldg_click(bldg:int):
-	hide_panel()
 	var tier:int = $Panel/ScrollContainer/VBoxContainer/HBoxContainer/Tier.value
 	game.put_bottom_info(tr("CLICK_TILE_TO_CONSTRUCT"), "building", "cancel_building")
 	var base_cost = Data.ancient_building_costs[bldg].duplicate(true)
@@ -252,6 +258,7 @@ func on_ancient_bldg_click(bldg:int):
 		base_cost[cost] *= cost_multiplier
 	game.view.obj.constructing_ancient_building_tier = tier
 	game.view.obj.initiate_ancient_building_construction(bldg, base_cost)
+	game.toggle_panel(panel_var_name)
 
 
 func _on_tier_value_changed(value):
@@ -261,13 +268,6 @@ func _on_tier_value_changed(value):
 func _on_construct_panel_animation_animation_finished(anim_name):
 	if $Panel.modulate.a == 0.0:
 		visible = false
-
-func hide_panel():
-	if not $AnimationPlayer.is_playing():
-		$AnimationPlayer.play_backwards("Fade")
-		set_process_input(false)
-		await get_tree().process_frame
-		game.block_scroll = false
 
 
 func _on_tree_exited():

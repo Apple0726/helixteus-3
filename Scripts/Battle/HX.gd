@@ -204,6 +204,7 @@ func fire_magic_bullets():
 	if N == 1:
 		target_ship = ship_nodes[0]
 		spawn_position = 100.0 * Vector2.from_angle(randf() * 2.0 * PI) + target_ship.position
+		angle = atan2(target_ship.position.y, target_ship.position.x)
 	else:
 		var target1 = randi() % N
 		var target2 = randi() % N

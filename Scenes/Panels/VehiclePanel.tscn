@@ -19,6 +19,30 @@ shadow_size = 2
 shadow_color = Color(0, 0, 0, 0.372549)
 shadow_offset = Vector2(2, 2)
 
+[sub_resource type="InputEventKey" id="InputEventKey_s0e3r"]
+device = -1
+physical_keycode = 49
+unicode = 49
+
+[sub_resource type="Shortcut" id="Shortcut_55dlh"]
+events = [SubResource("InputEventKey_s0e3r")]
+
+[sub_resource type="InputEventKey" id="InputEventKey_x1mkm"]
+device = -1
+physical_keycode = 50
+unicode = 50
+
+[sub_resource type="Shortcut" id="Shortcut_rwedt"]
+events = [SubResource("InputEventKey_x1mkm")]
+
+[sub_resource type="InputEventKey" id="InputEventKey_55dlh"]
+device = -1
+keycode = 51
+unicode = 51
+
+[sub_resource type="Shortcut" id="Shortcut_x1mkm"]
+events = [SubResource("InputEventKey_55dlh")]
+
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_78r6f"]
 bg_color = Color(0.0509804, 0.0509804, 0.0509804, 1)
 border_width_left = 4
@@ -76,16 +100,22 @@ theme_override_constants/separation = 20
 [node name="Rovers" parent="HBoxContainer" unique_id=330632952 instance=ExtResource("6_8kohr")]
 custom_minimum_size = Vector2(130, 30)
 layout_mode = 2
+shortcut = SubResource("Shortcut_55dlh")
+shortcut_in_tooltip = false
 button_text = "ROVERS"
 
 [node name="Fighters" parent="HBoxContainer" unique_id=1818182600 instance=ExtResource("6_8kohr")]
 custom_minimum_size = Vector2(130, 30)
 layout_mode = 2
+shortcut = SubResource("Shortcut_rwedt")
+shortcut_in_tooltip = false
 button_text = "FIGHTERS"
 
 [node name="Probes" parent="HBoxContainer" unique_id=2101236758 instance=ExtResource("6_8kohr")]
 custom_minimum_size = Vector2(130, 30)
 layout_mode = 2
+shortcut = SubResource("Shortcut_x1mkm")
+shortcut_in_tooltip = false
 button_text = "PROBES"
 
 [node name="ScrollContainer" type="ScrollContainer" parent="." unique_id=598106551]
@@ -101,6 +131,12 @@ layout_mode = 2
 
 [connection signal="pressed" from="CloseButton" to="." method="_on_close_button_pressed"]
 [connection signal="timeout" from="ProbeTimer" to="." method="_on_Timer_timeout"]
+[connection signal="mouse_entered" from="HBoxContainer/Rovers" to="." method="show_KBS_tooltip" binds= ["1"]]
+[connection signal="mouse_exited" from="HBoxContainer/Rovers" to="." method="_on_mouse_exited"]
 [connection signal="pressed" from="HBoxContainer/Rovers" to="." method="_on_rovers_pressed"]
+[connection signal="mouse_entered" from="HBoxContainer/Fighters" to="." method="show_KBS_tooltip" binds= ["2"]]
+[connection signal="mouse_exited" from="HBoxContainer/Fighters" to="." method="_on_mouse_exited"]
 [connection signal="pressed" from="HBoxContainer/Fighters" to="." method="_on_fighters_pressed"]
+[connection signal="mouse_entered" from="HBoxContainer/Probes" to="." method="show_KBS_tooltip" binds= ["3"]]
+[connection signal="mouse_exited" from="HBoxContainer/Probes" to="." method="_on_mouse_exited"]
 [connection signal="pressed" from="HBoxContainer/Probes" to="." method="_on_probes_pressed"]

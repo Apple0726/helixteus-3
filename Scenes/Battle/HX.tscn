@@ -514,6 +514,7 @@ offset_left = -48.0
 offset_top = 32.0
 offset_right = -24.0
 offset_bottom = 56.0
+mouse_filter = 2
 texture = ExtResource("1")
 expand_mode = 1
 stretch_mode = 5

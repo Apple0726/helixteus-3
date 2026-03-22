@@ -19,6 +19,22 @@ shadow_size = 2
 shadow_color = Color(0, 0, 0, 0.372549)
 shadow_offset = Vector2(2, 2)
 
+[sub_resource type="InputEventKey" id="InputEventKey_nbc8u"]
+device = -1
+physical_keycode = 49
+unicode = 49
+
+[sub_resource type="Shortcut" id="Shortcut_mosj3"]
+events = [SubResource("InputEventKey_nbc8u")]
+
+[sub_resource type="InputEventKey" id="InputEventKey_mosj3"]
+device = -1
+physical_keycode = 50
+unicode = 50
+
+[sub_resource type="Shortcut" id="Shortcut_l3wko"]
+events = [SubResource("InputEventKey_mosj3")]
+
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_bppng"]
 bg_color = Color(0.0509804, 0.0509804, 0.0509804, 1)
 border_width_left = 4
@@ -92,11 +108,15 @@ theme_override_constants/separation = 15
 [node name="OverclocksButton" parent="Tabs" unique_id=2042778188 instance=ExtResource("5_ixx63")]
 layout_mode = 2
 size_flags_horizontal = 3
+shortcut = SubResource("Shortcut_mosj3")
+shortcut_in_tooltip = false
 button_text = "OVERCLOCKS"
 
 [node name="PickaxesButton" parent="Tabs" unique_id=1722759835 instance=ExtResource("5_ixx63")]
 layout_mode = 2
 size_flags_horizontal = 3
+shortcut = SubResource("Shortcut_l3wko")
+shortcut_in_tooltip = false
 button_text = "PICKAXES"
 
 [node name="Items" type="ScrollContainer" parent="." unique_id=1331962906]
@@ -196,7 +216,11 @@ size_flags_vertical = 3
 alignment = 1
 
 [connection signal="pressed" from="CloseButton" to="." method="_on_close_button_pressed"]
+[connection signal="mouse_entered" from="Tabs/OverclocksButton" to="." method="show_KBS_tooltip" binds= ["1"]]
+[connection signal="mouse_exited" from="Tabs/OverclocksButton" to="." method="_on_mouse_exited"]
 [connection signal="pressed" from="Tabs/OverclocksButton" to="." method="_on_overclocks_button_pressed"]
+[connection signal="mouse_entered" from="Tabs/PickaxesButton" to="." method="show_KBS_tooltip" binds= ["2"]]
+[connection signal="mouse_exited" from="Tabs/PickaxesButton" to="." method="_on_mouse_exited"]
 [connection signal="pressed" from="Tabs/PickaxesButton" to="." method="_on_pickaxes_button_pressed"]
 [connection signal="value_changed" from="ItemInfo/BuyAmount" to="." method="_on_buy_amount_value_changed"]
 [connection signal="pressed" from="ItemInfo/Buy" to="." method="_on_buy_pressed"]

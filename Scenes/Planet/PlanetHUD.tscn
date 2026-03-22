@@ -8,7 +8,6 @@
 [ext_resource type="Texture2D" uid="uid://b26c0halfcvvr" path="res://Graphics/Achievements/Construct.png" id="5_l6l0m"]
 [ext_resource type="Texture2D" uid="uid://1300penq25d5" path="res://Graphics/Pickaxes/stick.png" id="5_xysya"]
 [ext_resource type="Texture2D" uid="uid://cb4q7wfu4xa2i" path="res://Graphics/Buttons/Terraform.png" id="7"]
-[ext_resource type="PackedScene" uid="uid://b3nhmyabvl606" path="res://Scenes/Panels/ConstructionPanel.tscn" id="7_cy5mr"]
 
 [sub_resource type="InputEventKey" id="InputEventKey_gr57q"]
 device = -1
@@ -249,10 +248,6 @@ offset_bottom = 74.0
 text = "HOLD_SHIFT_TO_MASS_BUILD"
 label_settings = SubResource("LabelSettings_1kyj1")
 horizontal_alignment = 2
-
-[node name="ConstructPanel" parent="." unique_id=858108911 instance=ExtResource("7_cy5mr")]
-visible = false
-layout_mode = 1
 
 [connection signal="mouse_entered" from="VBoxContainer/Terraform" to="." method="_on_Terraform_mouse_entered"]
 [connection signal="mouse_exited" from="VBoxContainer/Terraform" to="." method="_on_mouse_exited"]

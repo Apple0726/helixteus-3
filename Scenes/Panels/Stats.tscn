@@ -61,6 +61,22 @@ shadow_size = 2
 shadow_color = Color(0, 0, 0, 0.372549)
 shadow_offset = Vector2(2, 2)
 
+[sub_resource type="InputEventKey" id="InputEventKey_0kyuu"]
+device = -1
+physical_keycode = 49
+unicode = 49
+
+[sub_resource type="Shortcut" id="Shortcut_jvqxs"]
+events = [SubResource("InputEventKey_0kyuu")]
+
+[sub_resource type="InputEventKey" id="InputEventKey_878hh"]
+device = -1
+physical_keycode = 50
+unicode = 50
+
+[sub_resource type="Shortcut" id="Shortcut_vi1vb"]
+events = [SubResource("InputEventKey_878hh")]
+
 [node name="StatsPanel" type="Control" unique_id=1357801737]
 layout_mode = 3
 anchors_preset = 8
@@ -121,11 +137,15 @@ alignment = 1
 [node name="Achievements" parent="TabBar" unique_id=158584635 instance=ExtResource("2")]
 layout_mode = 2
 size_flags_horizontal = 3
+shortcut = SubResource("Shortcut_jvqxs")
+shortcut_in_tooltip = false
 button_text = "ACHIEVEMENTS"
 
 [node name="Statistics" parent="TabBar" unique_id=688210079 instance=ExtResource("2")]
 layout_mode = 2
 size_flags_horizontal = 3
+shortcut = SubResource("Shortcut_vi1vb")
+shortcut_in_tooltip = false
 button_text = "STATISTICS"
 
 [node name="Panel" type="Panel" parent="." unique_id=1770603583]
@@ -761,7 +781,11 @@ layout_mode = 2
 achievement_icon = ExtResource("46_0ykb7")
 
 [connection signal="pressed" from="CloseButton" to="." method="_on_close_button_pressed"]
+[connection signal="mouse_entered" from="TabBar/Achievements" to="." method="show_KBS_tooltip" binds= ["1"]]
+[connection signal="mouse_exited" from="TabBar/Achievements" to="." method="_on_mouse_exited"]
 [connection signal="pressed" from="TabBar/Achievements" to="." method="_on_Achievements_pressed"]
+[connection signal="mouse_entered" from="TabBar/Statistics" to="." method="show_KBS_tooltip" binds= ["2"]]
+[connection signal="mouse_exited" from="TabBar/Statistics" to="." method="_on_mouse_exited"]
 [connection signal="pressed" from="TabBar/Statistics" to="." method="_on_Statistics_pressed"]
 [connection signal="item_selected" from="Panel/Statistics/HBox/OptionButton" to="." method="_on_OptionButton_item_selected"]
 [connection signal="pressed" from="Panel/Statistics/ScrollContainer/VBoxContainer/General" to="." method="_on_General_pressed"]

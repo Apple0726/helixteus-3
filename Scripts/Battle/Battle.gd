@@ -435,7 +435,7 @@ func display_stats(type:String):
 			entity.get_node("Info/Label").text = str(stat)
 
 func environment_take_turn():
-	while randf() < 2.0 / (len(asteroid_nodes) + 1):
+	while randf() < (1.7 + log(game.system_data[game.c_s].diff + 1.0)) / (len(asteroid_nodes) + 1):
 		var asteroid_position = Vector2.ZERO
 		var scale_rand = randf()
 		var asteroid_scale:float = clamp(0.5 * scale_rand * pow(1.0 / (1.0 - scale_rand), 1.0 / 3.0), 0.1, 5.0)

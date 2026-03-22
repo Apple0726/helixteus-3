@@ -18,6 +18,46 @@ shadow_size = 2
 shadow_color = Color(0, 0, 0, 0.372549)
 shadow_offset = Vector2(2, 2)
 
+[sub_resource type="InputEventKey" id="InputEventKey_nsba8"]
+device = -1
+physical_keycode = 49
+unicode = 49
+
+[sub_resource type="Shortcut" id="Shortcut_r71ax"]
+events = [SubResource("InputEventKey_nsba8")]
+
+[sub_resource type="InputEventKey" id="InputEventKey_r71ax"]
+device = -1
+physical_keycode = 50
+unicode = 50
+
+[sub_resource type="Shortcut" id="Shortcut_4it63"]
+events = [SubResource("InputEventKey_r71ax")]
+
+[sub_resource type="InputEventKey" id="InputEventKey_4it63"]
+device = -1
+physical_keycode = 51
+unicode = 51
+
+[sub_resource type="Shortcut" id="Shortcut_xx8it"]
+events = [SubResource("InputEventKey_4it63")]
+
+[sub_resource type="InputEventKey" id="InputEventKey_xx8it"]
+device = -1
+physical_keycode = 52
+unicode = 52
+
+[sub_resource type="Shortcut" id="Shortcut_030ye"]
+events = [SubResource("InputEventKey_xx8it")]
+
+[sub_resource type="InputEventKey" id="InputEventKey_030ye"]
+device = -1
+physical_keycode = 53
+unicode = 53
+
+[sub_resource type="Shortcut" id="Shortcut_y03jv"]
+events = [SubResource("InputEventKey_030ye")]
+
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_vohlb"]
 bg_color = Color(0.0509804, 0.0509804, 0.0509804, 1)
 border_width_left = 4
@@ -73,26 +113,36 @@ theme_override_constants/separation = 60
 [node name="Items" parent="TabBar" unique_id=38644487 instance=ExtResource("1")]
 layout_mode = 2
 size_flags_horizontal = 3
+shortcut = SubResource("Shortcut_r71ax")
+shortcut_in_tooltip = false
 button_text = "ITEMS"
 
 [node name="Materials" parent="TabBar" unique_id=1016764359 instance=ExtResource("1")]
 layout_mode = 2
 size_flags_horizontal = 3
+shortcut = SubResource("Shortcut_4it63")
+shortcut_in_tooltip = false
 button_text = "MATERIALS"
 
 [node name="Metals" parent="TabBar" unique_id=1444941876 instance=ExtResource("1")]
 layout_mode = 2
 size_flags_horizontal = 3
+shortcut = SubResource("Shortcut_xx8it")
+shortcut_in_tooltip = false
 button_text = "METALS"
 
 [node name="Atoms" parent="TabBar" unique_id=1657356390 instance=ExtResource("1")]
 layout_mode = 2
 size_flags_horizontal = 3
+shortcut = SubResource("Shortcut_030ye")
+shortcut_in_tooltip = false
 button_text = "ATOMS"
 
 [node name="Particles" parent="TabBar" unique_id=1439151768 instance=ExtResource("1")]
 layout_mode = 2
 size_flags_horizontal = 3
+shortcut = SubResource("Shortcut_y03jv")
+shortcut_in_tooltip = false
 button_text = "PARTICLES"
 
 [node name="Information" type="Label" parent="." unique_id=1287403413]
@@ -153,8 +203,18 @@ horizontal_alignment = 1
 vertical_alignment = 1
 
 [connection signal="pressed" from="CloseButton" to="." method="_on_close_button_pressed"]
+[connection signal="mouse_entered" from="TabBar/Items" to="." method="show_KBS_tooltip" binds= ["1"]]
+[connection signal="mouse_exited" from="TabBar/Items" to="." method="_on_mouse_exited"]
 [connection signal="pressed" from="TabBar/Items" to="." method="_on_Items_pressed"]
+[connection signal="mouse_entered" from="TabBar/Materials" to="." method="show_KBS_tooltip" binds= ["2"]]
+[connection signal="mouse_exited" from="TabBar/Materials" to="." method="_on_mouse_exited"]
 [connection signal="pressed" from="TabBar/Materials" to="." method="_on_Materials_pressed"]
+[connection signal="mouse_entered" from="TabBar/Metals" to="." method="show_KBS_tooltip" binds= ["3"]]
+[connection signal="mouse_exited" from="TabBar/Metals" to="." method="_on_mouse_exited"]
 [connection signal="pressed" from="TabBar/Metals" to="." method="_on_Metals_pressed"]
+[connection signal="mouse_entered" from="TabBar/Atoms" to="." method="show_KBS_tooltip" binds= ["4"]]
+[connection signal="mouse_exited" from="TabBar/Atoms" to="." method="_on_mouse_exited"]
 [connection signal="pressed" from="TabBar/Atoms" to="." method="_on_Atoms_pressed"]
+[connection signal="mouse_entered" from="TabBar/Particles" to="." method="show_KBS_tooltip" binds= ["5"]]
+[connection signal="mouse_exited" from="TabBar/Particles" to="." method="_on_mouse_exited"]
 [connection signal="pressed" from="TabBar/Particles" to="." method="_on_Particles_pressed"]

@@ -10,94 +10,59 @@
 [ext_resource type="Texture2D" uid="uid://crncbjr12yfpx" path="res://Graphics/Cave/Rover.png" id="7_nh4w1"]
 [ext_resource type="Texture2D" uid="uid://da22ie3xwunob" path="res://Graphics/Buildings/Ancient/mineral_replicator.png" id="8_2xax1"]
 
+[sub_resource type="InputEventKey" id="InputEventKey_011nl"]
+device = -1
+physical_keycode = 49
+unicode = 49
+
+[sub_resource type="Shortcut" id="Shortcut_fmpb7"]
+events = [SubResource("InputEventKey_011nl")]
+
+[sub_resource type="InputEventKey" id="InputEventKey_fmpb7"]
+device = -1
+physical_keycode = 50
+unicode = 50
+
+[sub_resource type="Shortcut" id="Shortcut_qnrsh"]
+events = [SubResource("InputEventKey_fmpb7")]
+
+[sub_resource type="InputEventKey" id="InputEventKey_qnrsh"]
+device = -1
+physical_keycode = 51
+unicode = 51
+
+[sub_resource type="Shortcut" id="Shortcut_3s1yl"]
+events = [SubResource("InputEventKey_qnrsh")]
+
+[sub_resource type="InputEventKey" id="InputEventKey_0pwsi"]
+device = -1
+physical_keycode = 52
+unicode = 52
+
+[sub_resource type="Shortcut" id="Shortcut_5gctx"]
+events = [SubResource("InputEventKey_0pwsi")]
+
+[sub_resource type="InputEventKey" id="InputEventKey_3s1yl"]
+device = -1
+physical_keycode = 53
+unicode = 53
+
+[sub_resource type="Shortcut" id="Shortcut_0pwsi"]
+events = [SubResource("InputEventKey_3s1yl")]
+
+[sub_resource type="InputEventKey" id="InputEventKey_5gctx"]
+device = -1
+physical_keycode = 54
+unicode = 54
+
+[sub_resource type="Shortcut" id="Shortcut_80jhv"]
+events = [SubResource("InputEventKey_5gctx")]
+
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_seglp"]
 content_margin_left = 20.0
 content_margin_top = 20.0
 content_margin_right = 20.0
 content_margin_bottom = 20.0
-
-[sub_resource type="Animation" id="Animation_tg7hu"]
-resource_name = "Fade"
-length = 0.3
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("BlackRect:color")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0, 0.3),
-"transitions": PackedFloat32Array(1, 1),
-"update": 0,
-"values": [Color(0, 0, 0, 0), Color(0, 0, 0, 0.192157)]
-}
-tracks/1/type = "bezier"
-tracks/1/imported = false
-tracks/1/enabled = true
-tracks/1/path = NodePath("Panel:position:x")
-tracks/1/interp = 1
-tracks/1/loop_wrap = true
-tracks/1/keys = {
-"handle_modes": PackedInt32Array(0, 0),
-"points": PackedFloat32Array(-60, -0.25, 0, 0.1, 53.3855, -2, -0.25, 0, 0.25, 0),
-"times": PackedFloat32Array(0, 0.3)
-}
-tracks/2/type = "value"
-tracks/2/imported = false
-tracks/2/enabled = true
-tracks/2/path = NodePath("Panel:modulate")
-tracks/2/interp = 1
-tracks/2/loop_wrap = true
-tracks/2/keys = {
-"times": PackedFloat32Array(0, 0.3),
-"transitions": PackedFloat32Array(1, 1),
-"update": 0,
-"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 1)]
-}
-
-[sub_resource type="Animation" id="Animation_h6jf6"]
-length = 0.001
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("BlackRect:color")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [Color(0, 0, 0, 0)]
-}
-tracks/1/type = "bezier"
-tracks/1/imported = false
-tracks/1/enabled = true
-tracks/1/path = NodePath("Panel:position:x")
-tracks/1/interp = 1
-tracks/1/loop_wrap = true
-tracks/1/keys = {
-"handle_modes": PackedInt32Array(0),
-"points": PackedFloat32Array(0, -0.25, 0, 0.25, 0),
-"times": PackedFloat32Array(0)
-}
-tracks/2/type = "value"
-tracks/2/imported = false
-tracks/2/enabled = true
-tracks/2/path = NodePath("Panel:modulate")
-tracks/2/interp = 1
-tracks/2/loop_wrap = true
-tracks/2/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [Color(1, 1, 1, 0)]
-}
-
-[sub_resource type="AnimationLibrary" id="AnimationLibrary_bp5hg"]
-_data = {
-&"Fade": SubResource("Animation_tg7hu"),
-&"RESET": SubResource("Animation_h6jf6")
-}
 
 [node name="Control" type="Control" unique_id=1531337071]
 layout_mode = 3
@@ -115,13 +80,13 @@ layout_mode = 0
 offset_right = 1280.0
 offset_bottom = 720.0
 mouse_filter = 2
-color = Color(0, 0, 0, 0)
+color = Color(0, 0, 0, 0.192157)
 
 [node name="Panel" type="Panel" parent="." unique_id=1706779863]
-modulate = Color(1, 1, 1, 0)
 layout_mode = 1
+offset_left = -2.0
 offset_top = 120.0
-offset_right = 140.0
+offset_right = 138.0
 offset_bottom = 600.0
 mouse_filter = 1
 theme = ExtResource("1_q53tt")
@@ -139,6 +104,8 @@ show_behind_parent = true
 texture_filter = 4
 custom_minimum_size = Vector2(0, 48)
 layout_mode = 2
+shortcut = SubResource("Shortcut_fmpb7")
+shortcut_in_tooltip = false
 icon = ExtResource("3_qlc6f")
 icon_alignment = 2
 expand_icon = true
@@ -157,6 +124,8 @@ show_behind_parent = true
 texture_filter = 4
 custom_minimum_size = Vector2(0, 48)
 layout_mode = 2
+shortcut = SubResource("Shortcut_qnrsh")
+shortcut_in_tooltip = false
 icon = ExtResource("4_pprlh")
 alignment = 0
 icon_alignment = 2
@@ -177,6 +146,8 @@ show_behind_parent = true
 texture_filter = 4
 custom_minimum_size = Vector2(0, 48)
 layout_mode = 2
+shortcut = SubResource("Shortcut_3s1yl")
+shortcut_in_tooltip = false
 icon = ExtResource("5_vrfgh")
 alignment = 0
 icon_alignment = 2
@@ -197,6 +168,8 @@ show_behind_parent = true
 texture_filter = 4
 custom_minimum_size = Vector2(0, 48)
 layout_mode = 2
+shortcut = SubResource("Shortcut_5gctx")
+shortcut_in_tooltip = false
 icon = ExtResource("6_uh0od")
 alignment = 0
 icon_alignment = 2
@@ -217,6 +190,8 @@ show_behind_parent = true
 texture_filter = 4
 custom_minimum_size = Vector2(0, 48)
 layout_mode = 2
+shortcut = SubResource("Shortcut_0pwsi")
+shortcut_in_tooltip = false
 icon = ExtResource("7_nh4w1")
 alignment = 0
 icon_alignment = 2
@@ -237,6 +212,8 @@ show_behind_parent = true
 texture_filter = 4
 custom_minimum_size = Vector2(0, 48)
 layout_mode = 2
+shortcut = SubResource("Shortcut_80jhv")
+shortcut_in_tooltip = false
 icon = ExtResource("8_2xax1")
 alignment = 0
 icon_alignment = 2
@@ -298,9 +275,6 @@ offset_bottom = -3.0
 text = "CONSTRUCT"
 horizontal_alignment = 1
 
-[node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=225117799]
-libraries/ = SubResource("AnimationLibrary_bp5hg")
-
 [connection signal="tree_exited" from="." to="." method="_on_tree_exited"]
 [connection signal="mouse_entered" from="Panel/VBoxContainer/Basic" to="." method="_on_basic_mouse_entered"]
 [connection signal="mouse_exited" from="Panel/VBoxContainer/Basic" to="." method="_on_basic_mouse_exited"]
@@ -321,4 +295,3 @@ libraries/ = SubResource("AnimationLibrary_bp5hg")
 [connection signal="mouse_exited" from="Panel/VBoxContainer/Ancient" to="." method="_on_ancient_mouse_exited"]
 [connection signal="pressed" from="Panel/VBoxContainer/Ancient" to="." method="_on_tab_pressed" binds= ["Ancient"]]
 [connection signal="value_changed" from="Panel/ScrollContainer/VBoxContainer/HBoxContainer/Tier" to="." method="_on_tier_value_changed"]
-[connection signal="animation_finished" from="AnimationPlayer" to="." method="_on_construct_panel_animation_animation_finished"]

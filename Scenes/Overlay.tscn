@@ -325,6 +325,8 @@ stretch_mode = 5
 
 [connection signal="visibility_changed" from="." to="." method="_on_Overlay_visibility_changed"]
 [connection signal="item_selected" from="HBoxContainer/OptionButton" to="." method="_on_OptionButton_item_selected"]
+[connection signal="mouse_entered" from="HBoxContainer/OptionButton" to="." method="show_KBS_tooltip" binds= ["1, 2, 3..."]]
+[connection signal="mouse_exited" from="HBoxContainer/OptionButton" to="." method="_on_mouse_exited"]
 [connection signal="toggled" from="HBoxContainer/CheckBox" to="." method="_on_CheckBox_toggled"]
 [connection signal="mouse_entered" from="HBoxContainer/HSlider" to="." method="_on_HSlider_mouse_entered"]
 [connection signal="mouse_exited" from="HBoxContainer/HSlider" to="." method="_on_mouse_exited"]

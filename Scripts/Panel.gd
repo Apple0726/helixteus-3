@@ -21,3 +21,11 @@ func _on_close_button_pressed():
 func _input(event):
 	if event is InputEventMouseMotion and visible:
 		game.block_scroll = Geometry2D.is_point_in_polygon(event.position, polygon)
+
+func show_KBS_tooltip(KBS:String):
+	game.show_tooltip("", {
+		"additional_text": "{KBS_label}: {KBS}".format({"KBS_label":tr("KEYBOARD_SHORTCUT"), "KBS": KBS}),
+		"additional_text_delay": 1.0})
+
+func _on_mouse_exited() -> void:
+	game.hide_tooltip()

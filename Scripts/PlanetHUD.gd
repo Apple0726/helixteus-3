@@ -26,16 +26,7 @@ func _input(event):
 
 func _on_Construct_pressed():
 	click_sound.play()
-	game.planet_HUD.get_node("VBoxContainer/Construct/AnimationPlayer").stop()
-	if $ConstructPanel.visible:
-		$ConstructPanel.hide_panel()
-	else:
-		game.hide_tooltip()
-		$ConstructPanel/AnimationPlayer.play("Fade")
-		$ConstructPanel.visible = true
-		$ConstructPanel.set_process_input(true)
-		$ConstructPanel.refresh()
-
+	game.toggle_panel("constr_panel")
 
 func _on_Mine_pressed():
 	click_sound.play()

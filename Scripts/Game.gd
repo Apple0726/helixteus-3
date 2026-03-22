@@ -17,6 +17,7 @@ var ancient_bldg_textures:Array
 #region GUI nodes
 var gigastructures_panel:Control
 var MS_constr_panel:Control
+var constr_panel:Control
 var shop_panel:Control
 var ships_panel:Control
 var upgrade_panel:Control
@@ -79,7 +80,8 @@ var panel_var_name_to_file_name = {
 	"SPR_panel":"SPRPanel",
 	"gigastructures_panel":"GigastructuresPanel",
 	"create_universe_panel":"CreateUniversePanel",
-	"MS_constr_panel":"MSConstructionPanel"
+	"MS_constr_panel":"MSConstructionPanel",
+	"constr_panel":"ConstructionPanel",
 }
 #endregion
 
@@ -3795,15 +3797,6 @@ func _input(event):
 		if c_v != "":
 			fn_save_game()
 			save_views(false)
-
-func _unhandled_key_input(event):
-	var hotbar_presses = [Input.is_action_just_released("1"), Input.is_action_just_released("2"), Input.is_action_just_released("3"), Input.is_action_just_released("4"), Input.is_action_just_released("5"), Input.is_action_just_released("6"), Input.is_action_just_released("7"), Input.is_action_just_released("8"), Input.is_action_just_released("9"), Input.is_action_just_released("0")]
-	if not c_v in ["battle", "cave", ""] and not viewing_dimension and not is_instance_valid(overlay) and not is_instance_valid(active_panel):
-		for i in 10:
-			if len(hotbar) > i and hotbar_presses[i]:
-				var _name = hotbar[i]
-				if get_item_num(_name) > 0:
-					use_item(_name)
 
 func fn_save_game():
 	save_date = Time.get_unix_time_from_system()

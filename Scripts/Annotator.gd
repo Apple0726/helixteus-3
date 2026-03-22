@@ -9,9 +9,17 @@ var mouse_in_panel:bool = false
 
 func _ready():
 	set_polygon($GUI.size, $GUI.position)
+	var i = 0
 	for node in $HBoxContainer.get_children():
 		node.get_node("Button").toggle_mode = true
-		node.get_node("Button").connect("pressed",Callable(self,"on_%s_pressed" % node.name))
+		node.get_node("Button").pressed.connect(Callable(self, "on_%s_pressed" % node.name))
+		node.get_node("Button").shortcut = Shortcut.new()
+		node.get_node("Button").shortcut.events.append(InputEventKey.new())
+		node.get_node("Button").shortcut.events[0].physical_keycode = KEY_1 + i
+		node.get_node("Button").shortcut_in_tooltip = false
+		node.get_node("Button").mouse_entered.connect(show_KBS_tooltip.bind(str(i+1)))
+		node.get_node("Button").mouse_exited.connect(_on_mouse_exited)
+		i += 1
 	$HBoxContainer/Line/TextureRect.texture = load("res://Graphics/Icons/Annotator/line.png")
 	$HBoxContainer/Rectangle/TextureRect.texture = load("res://Graphics/Icons/Annotator/rectangle.png")
 	$HBoxContainer/Circle/TextureRect.texture = load("res://Graphics/Icons/Annotator/circle.png")

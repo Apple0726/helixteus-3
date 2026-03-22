@@ -111,7 +111,7 @@ func _on_ElementOverlay_pressed():
 		game.get_node("UI").add_child(game.element_overlay)
 	
 func _on_stars_mouse_entered():
-	game.show_tooltip(tr("STARS"))
+	game.show_tooltip(tr("STARS") + " (Q)")
 
 func show_stars_panel(selected_MS:String = ""):
 	$StarPanel/AnimationPlayer.play("Fade")

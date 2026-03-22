@@ -450,7 +450,7 @@ func override_enemy_tooltips():
 		return
 	for HX_node in battle_scene.HX_nodes:
 		var damage_multiplier:float
-		var attack_defense_difference:int = ship_node.attack + ship_node.attack_buff - HX_node.defense - HX_node.defense_buff
+		var attack_defense_difference:float = ship_node.attack + ship_node.attack_buff - HX_node.defense - HX_node.defense_buff
 		if attack_defense_difference >= 0:
 			damage_multiplier = attack_defense_difference * 0.125 + 1.0
 		else:

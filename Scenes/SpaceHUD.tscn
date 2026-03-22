@@ -13,13 +13,13 @@
 [ext_resource type="PackedScene" uid="uid://cobxcj7wuwecq" path="res://Scenes/Panels/StarPanel.tscn" id="10_cgit7"]
 [ext_resource type="Texture2D" uid="uid://ddomkxb4yqaya" path="res://Graphics/Galaxies/6.png" id="10_rxdnk"]
 
-[sub_resource type="InputEventKey" id="InputEventKey_1bc5f"]
+[sub_resource type="InputEventKey" id="InputEventKey_rxdnk"]
 device = -1
-physical_keycode = 67
-unicode = 99
+physical_keycode = 81
+unicode = 113
 
-[sub_resource type="Shortcut" id="6"]
-events = [SubResource("InputEventKey_1bc5f")]
+[sub_resource type="Shortcut" id="Shortcut_ewh7e"]
+events = [SubResource("InputEventKey_rxdnk")]
 
 [sub_resource type="InputEventKey" id="InputEventKey_o6e2x"]
 device = -1
@@ -41,6 +41,14 @@ unicode = 110
 
 [sub_resource type="Shortcut" id="4"]
 events = [SubResource("InputEventKey_t3ovf")]
+
+[sub_resource type="InputEventKey" id="InputEventKey_1bc5f"]
+device = -1
+physical_keycode = 67
+unicode = 99
+
+[sub_resource type="Shortcut" id="6"]
+events = [SubResource("InputEventKey_1bc5f")]
 
 [sub_resource type="Animation" id="8"]
 resource_name = "MoveButtons"
@@ -102,7 +110,7 @@ alignment = 1
 [node name="Stars" type="TextureButton" parent="VBoxContainer" unique_id=41333011]
 custom_minimum_size = Vector2(0, 48)
 layout_mode = 2
-shortcut = SubResource("6")
+shortcut = SubResource("Shortcut_ewh7e")
 shortcut_in_tooltip = false
 texture_normal = ExtResource("3_xv04q")
 texture_hover = ExtResource("4_rxdnk")

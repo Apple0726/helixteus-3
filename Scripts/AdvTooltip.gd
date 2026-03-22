@@ -19,8 +19,9 @@ func _ready() -> void:
 	else:
 		tooltip_display_position_y = 0
 	set_tooltip_position()
-	var tween = create_tween()
-	tween.tween_property(self, "modulate", Color.WHITE, 0.0).set_delay(0.05)
+	if orig_text != "":
+		var tween = create_tween()
+		tween.tween_property(self, "modulate", Color.WHITE, 0.0).set_delay(0.05)
 
 
 func set_tooltip_position():
@@ -38,14 +39,16 @@ func set_tooltip_position():
 			position.y = max(game.mouse_pos.y - size.y - 9, 0)
 
 
-func show_additional_text(txt: String, delay: float = 1.0, different_orig_text: String = ""):
+func show_additional_text(txt: String, delay: float, different_orig_text: String = ""):
 	await get_tree().create_timer(delay).timeout
 	hide()
 	size.x = 500.0
+	var newlines = "\n\n" if orig_text != "" else ""
 	if different_orig_text == "":
-		Helper.add_text_to_RTL(self, orig_text + "\n\n" + txt, imgs, imgs_size, true)
+		Helper.add_text_to_RTL(self, orig_text + newlines + txt, imgs, imgs_size, true)
 	else:
-		Helper.add_text_to_RTL(self, different_orig_text + "\n\n" + txt, imgs, imgs_size, true)
+		Helper.add_text_to_RTL(self, different_orig_text + newlines + txt, imgs, imgs_size, true)
 	await get_tree().process_frame
 	set_tooltip_position()
+	modulate.a = 1.0
 	show()

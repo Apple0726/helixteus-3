@@ -1167,7 +1167,7 @@ func _unhandled_input(event):
 			var y_over:int = int(mouse_pos.y / 200)
 			tile_over = x_over % wid + y_over * wid
 			$WhiteRect.visible = not black_bg and get_tree().get_nodes_in_group("selected_white_rects").is_empty()
-			if tile_over != prev_tile_over and not_on_button and not game.item_cursor.visible and not black_bg and not game.active_panel and not game.planet_HUD.get_node("ConstructPanel").visible:
+			if tile_over != prev_tile_over and not_on_button and not game.item_cursor.visible and not black_bg and not game.active_panel:
 				hide_tooltip()
 				if not tiles_selected.is_empty() and not tile_over in tiles_selected:
 					remove_selected_tiles()

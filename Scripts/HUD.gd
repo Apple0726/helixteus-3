@@ -389,18 +389,22 @@ func _on_mouse_exited():
 func update_hotbar():
 	for child in $Bottom/Hotbar.get_children():
 		child.queue_free()
-	var i:int = 0
-	for item in game.hotbar:
+	for i in len(game.hotbar):
+		var item = game.hotbar[i]
 		var slot = preload("res://Scenes/InventorySlot.tscn").instantiate()
 		var num = game.get_item_num(item)
 		slot.get_node("Label").text = str(num)
 		slot.get_node("TextureRect").texture = load("res://Graphics/{dir}/{name}.png".format({"dir":Item.icon_directory(Item.data[item].type), "name":Item.data[item].item_name}))
-		slot.get_node("Button").connect("mouse_entered",Callable(self,"on_slot_over").bind(i))
-		slot.get_node("Button").connect("mouse_exited",Callable(self,"on_slot_out"))
+		var slot_btn = slot.get_node("Button")
+		slot_btn.shortcut = Shortcut.new()
+		slot_btn.shortcut.events.append(InputEventKey.new())
+		slot_btn.shortcut.events[0].physical_keycode = KEY_1 + i
+		slot_btn.shortcut_in_tooltip = false
+		slot_btn.mouse_entered.connect(on_slot_over.bind(i))
+		slot_btn.mouse_exited.connect(on_slot_out)
 		if num > 0:
-			slot.get_node("Button").connect("pressed",Callable(self,"on_slot_press").bind(i))
+			slot_btn.pressed.connect(on_slot_press.bind(i))
 		$Bottom/Hotbar.add_child(slot)
-		i += 1
 
 var slot_over = -1
 func on_slot_over(i:int):
@@ -414,8 +418,9 @@ func on_slot_out():
 	game.hide_tooltip()
 
 func on_slot_press(i:int):
-	var name = game.hotbar[i]
-	game.use_item(name)
+	if not is_instance_valid(game.overlay) or not game.overlay.visible:
+		var name = game.hotbar[i]
+		game.use_item(name)
 
 func _on_Label_mouse_exited():
 	emma_cave_shortcut = false
