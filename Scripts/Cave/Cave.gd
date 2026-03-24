@@ -409,7 +409,6 @@ func remove_cave():
 	minimap_cave.clear()
 	big_debris.clear()
 	$Ash.clear()
-	$Lava.clear()
 	for enemy in get_tree().get_nodes_in_group("enemies"):
 		enemy.remove_from_group("enemies")
 		enemy.free()
@@ -456,7 +455,58 @@ func set_avg_dmg():
 	var color:String = Data.intensity_gradient.sample(inverse_lerp(0.005, 0.3, dmg_to_HP_ratio)).to_html(false)
 	$UI2/CaveInfo/AvgDmg.text = "%s: %s" % [tr("AVERAGE_ENEMY_DAMAGE"), Helper.format_num(avg_dmg, true)]
 	$UI2/CaveInfo/AvgDmg["theme_override_colors/font_color"] = color
-	
+
+func add_lava_tile(pos:Vector2i):
+	var lava_tile = preload("res://Scenes/LavaTile.tscn").instantiate()
+	lava_tile.position = pos * Vector2i.ONE * 200
+	lava_tile.body_entered.connect(rover_in_lava_callback)
+	lava_tile.body_exited.connect(rover_outside_lava_callback)
+	$Lava.add_child(lava_tile)
+
+var burning_anim_tween
+
+func hide_burning_anim():
+	if burning_anim_tween and burning_anim_tween.is_running():
+		burning_anim_tween.kill()
+	burning_anim_tween = create_tween()
+	burning_anim_tween.tween_property($UI2/Burning.material, "shader_parameter/alpha", 0.0, 1.0 / time_speed)
+	burning_anim_tween.tween_callback(burning_anim_finished.bind(false))
+	if not $Rover/LavaTimer.is_stopped():
+		if enhancements.has("wheels_6"):
+			status_effects.burn = 5.0
+			$Rover/BurnTimer.start(2.0 / time_speed)
+		else:
+			status_effects.burn = 8.0
+			$Rover/BurnTimer.start(1.0 / time_speed)
+		$Rover/Sprite2D.modulate = Color.ORANGE_RED
+		$Rover/LavaTimer.stop()
+
+func show_burning_anim():
+	$UI2/Burning.visible = true
+	if burning_anim_tween and burning_anim_tween.is_running():
+		burning_anim_tween.kill()
+	burning_anim_tween = create_tween()
+	burning_anim_tween.tween_property($UI2/Burning.material, "shader_parameter/alpha", 1.0, 1.0 / time_speed)
+	burning_anim_tween.tween_callback(burning_anim_finished.bind(true))
+
+func rover_outside_lava_callback(body: Node2D):
+	if not $Rover/BurnTimer.is_inside_tree():
+		return
+	on_lava = false
+	if not on_ash:
+		max_speed = 1000
+	elif not enhancements.has("wheels_8"):
+		max_speed = 500
+	if $UI2/Burning.visible:
+		hide_burning_anim()
+
+func rover_in_lava_callback(body: Node2D):
+	if not enhancements.has("wheels_7"):
+		on_lava = true
+		if not on_ash and not enhancements.has("wheels_8"):
+			max_speed = 700
+			show_burning_anim()
+
 func generate_cave(first_floor:bool, going_up:bool):
 	$Exit/PointLight2D.enabled = cave_floor == 1
 	possible_metal_spawns.clear()
@@ -624,16 +674,14 @@ func generate_cave(first_floor:bool, going_up:bool):
 			if volcano_mult > 1.0:
 				var lava_level = lava_noise.get_noise_2d(i * 10.0, j * 10.0)
 				if lava_level > max(remap(cave_floor, 1, 16, 0.8, 0.0), 0.0) * clamp(remap(volcano_mult, 8, 14, 1.0, 0.3), 0.0, 1.0):
-					lava_tiles.append(Vector2i(i, j))
+					add_lava_tile(Vector2i(i, j))
 			elif cave_floor >= 12:
 				var lava_level = lava_noise.get_noise_2d(i * 10.0, j * 10.0)
 				if lava_level > max(remap(cave_floor, 12, 24, 0.8, 0.0), 0.0):
-					lava_tiles.append(Vector2i(i, j))
+					add_lava_tile(Vector2i(i, j))
 	
 	$Ash.set_cells_terrain_connect(ash_tiles, 0, 0)
-	#$Lava.set_cells_terrain_connect(lava_tiles, 0, 0)
 	$Ash.modulate = Color.WHITE
-	#$Lava.set_layer_modulate(0, star_mod * (1.0 - cave_darkness))
 	#Add unpassable tiles at the cave borders
 	for i in range(-1, cave_size + 1):
 		cave_wall.set_cell(Vector2i(i, -1), 1, Vector2i.ZERO)
@@ -1997,23 +2045,7 @@ func _on_FloorCollisionDetector_body_entered(body):
 			max_speed = 500
 		on_ash = true
 		if $UI2/Burning.visible:
-			$UI2/Burning/BurningAnim.play("Fade", -1, -time_speed, not $UI2/Burning/BurningAnim.is_playing() and $UI2/Burning.material["shader_parameter/alpha"] == 1.0)
-			if not $Rover/LavaTimer.is_stopped():
-				if enhancements.has("wheels_6"):
-					status_effects.burn = 5.0
-					$Rover/BurnTimer.start(2.0 / time_speed)
-				else:
-					status_effects.burn = 8.0
-					$Rover/BurnTimer.start(1.0 / time_speed)
-				$Rover/Sprite2D.modulate = Color.ORANGE_RED
-				$Rover/LavaTimer.stop()
-	elif body.name == "Lava" and not enhancements.has("wheels_7"):
-		on_lava = true
-		if not on_ash:
-			if not enhancements.has("wheels_8"):
-				max_speed = 700
-			$UI2/Burning.visible = true
-			$UI2/Burning/BurningAnim.play("Fade", -1, time_speed)
+			hide_burning_anim()
 
 func _on_FloorCollisionDetector_body_exited(body):
 	if body.name == "Ash":
@@ -2025,25 +2057,7 @@ func _on_FloorCollisionDetector_body_exited(body):
 		on_ash = false
 		if on_lava:
 			$UI2/Burning.visible = true
-			$UI2/Burning/BurningAnim.play("Fade", -1, time_speed)
-	elif body.name == "Lava":
-		on_lava = false
-		if not on_ash:
-			max_speed = 1000
-		else:
-			if not enhancements.has("wheels_8"):
-				max_speed = 500
-		if $UI2/Burning.visible:
-			$UI2/Burning/BurningAnim.play("Fade", -1, -time_speed, not $UI2/Burning/BurningAnim.is_playing() and $UI2/Burning.material["shader_parameter/alpha"] == 1.0)
-			if not $Rover/LavaTimer.is_stopped():
-				if enhancements.has("wheels_6"):
-					status_effects.burn = 5.0
-					$Rover/BurnTimer.start(2.0 / time_speed)
-				else:
-					status_effects.burn = 8.0
-					$Rover/BurnTimer.start(1.0 / time_speed)
-				$Rover/Sprite2D.modulate = Color.ORANGE_RED
-				$Rover/LavaTimer.stop()
+			show_burning_anim()
 
 
 func _on_Ability_mouse_entered():
@@ -2137,8 +2151,8 @@ func _on_LavaTimer_timeout():
 		hit_player(total_HP / 10.0, {}, true)
 
 
-func _on_BurningAnim_animation_finished(anim_name):
-	if $UI2/Burning.material["shader_parameter/alpha"] == 1.0:
+func burning_anim_finished(burning: bool):
+	if burning:
 		rover.get_node("Burn").visible = true
 		hit_player(total_HP / 10.0, {}, true)
 		$Rover/BurnTimer.stop()

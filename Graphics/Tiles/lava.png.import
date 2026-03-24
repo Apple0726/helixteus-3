@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://cfj7n8nxx840e"
-path="res://.godot/imported/lava_atlas.png-195f6f41aa401c9c8de72013a4c017f9.ctex"
+uid="uid://d3h4rm62m1sn1"
+path="res://.godot/imported/lava.png-b615d29b4841f01e05ece3f5c466d4e2.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Graphics/Tiles/Atlases/lava_atlas.png"
-dest_files=["res://.godot/imported/lava_atlas.png-195f6f41aa401c9c8de72013a4c017f9.ctex"]
+source_file="res://Graphics/Tiles/lava.png"
+dest_files=["res://.godot/imported/lava.png-b615d29b4841f01e05ece3f5c466d4e2.ctex"]
 
 [params]
 

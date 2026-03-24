@@ -44,7 +44,7 @@ func _input(event):
 		mouse_in_panel = Geometry2D.is_point_in_polygon(event.position, polygon)
 		if $VBoxContainer.visible:
 			mouse_in_panel = mouse_in_panel or Geometry2D.is_point_in_polygon(event.position, $PolygonVBox.polygon)
-		if $ColorPicker.visible:
+		if color_picker.visible:
 			mouse_in_panel = mouse_in_panel or Geometry2D.is_point_in_polygon(event.position, $PolygonColorPicker.polygon)
 
 func on_icon_pressed(_texture):

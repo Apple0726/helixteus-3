@@ -506,43 +506,7 @@ void fragment() {
 shader = SubResource("151")
 shader_parameter/color = Color(1, 0.556863, 0, 1)
 shader_parameter/speed = 0.1
-shader_parameter/alpha = 1.0
-
-[sub_resource type="Animation" id="153"]
-resource_name = "Fade"
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath(".:material:shader_parameter/alpha")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0, 1),
-"transitions": PackedFloat32Array(1, 1),
-"update": 0,
-"values": [0.0, 1.0]
-}
-
-[sub_resource type="Animation" id="154"]
-length = 0.001
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath(".:material:shader_parameter/alpha")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [1.0]
-}
-
-[sub_resource type="AnimationLibrary" id="AnimationLibrary_468jh"]
-_data = {
-&"Fade": SubResource("153"),
-&"RESET": SubResource("154")
-}
+shader_parameter/alpha = 0.0
 
 [sub_resource type="Animation" id="15"]
 length = 6.0
@@ -634,8 +598,7 @@ material = SubResource("ShaderMaterial_0yyna")
 centered = false
 region_enabled = true
 
-[node name="Lava" type="TileMapLayer" parent="." unique_id=1154763132]
-rendering_quadrant_size = 100
+[node name="Lava" type="Node2D" parent="." unique_id=1387510094]
 
 [node name="Ash" type="TileMapLayer" parent="." unique_id=1662477646]
 z_index = -1
@@ -1297,9 +1260,6 @@ offset_bottom = 720.0
 mouse_filter = 2
 texture = ExtResource("45")
 
-[node name="BurningAnim" type="AnimationPlayer" parent="UI2/Burning" unique_id=767687237]
-libraries/ = SubResource("AnimationLibrary_468jh")
-
 [node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=1222371986]
 libraries/ = SubResource("AnimationLibrary_jgan7")
 
@@ -1351,5 +1311,4 @@ environment = SubResource("Environment_n75r6")
 [connection signal="mouse_entered" from="UI2/Ability" to="." method="_on_Ability_mouse_entered"]
 [connection signal="mouse_exited" from="UI2/Ability" to="." method="_on_mouse_exited"]
 [connection signal="timeout" from="UI2/Ability/Timer" to="." method="_on_AbilityTimer_timeout"]
-[connection signal="animation_finished" from="UI2/Burning/BurningAnim" to="." method="_on_BurningAnim_animation_finished"]
 [connection signal="timeout" from="CheckAchievements" to="." method="_on_CheckAchievements_timeout"]
