@@ -47,15 +47,15 @@ Here is some more fun stuff you can try:
 	LOD = _LOD
 	show_delta = _show_delta
 #	var data = FileAccess.open("data100.txt", FileAccess.READ)
-	if OS.get_name() == "Web":
-		while wid_p * LOD > 120:
+	if FileAccess.file_exists("res://Easter eggs/Bad apple/badappledata100"):
+		while wid_p * LOD > 480:
 			LOD -= 1
 	else:
-		while wid_p * LOD > 480:
+		while wid_p * LOD > 120:
 			LOD -= 1
 	wid_p2 = wid_p * LOD
 	var data
-	if wid_p2 > 120 and FileAccess.file_exists("res://Easter eggs/Bad apple/badappledata100"):
+	if wid_p2 > 120:
 		W = 480
 		H = 360
 		data = FileAccess.open_compressed("res://Easter eggs/Bad apple/badappledata100", FileAccess.READ, FileAccess.COMPRESSION_ZSTD)

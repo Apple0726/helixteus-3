@@ -15,9 +15,11 @@ position = Vector2(100, 100)
 shape = SubResource("RectangleShape2D_6yh0e")
 
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=1837080274]
+light_mask = 4
 texture = ExtResource("1_6yh0e")
 centered = false
 
 [node name="PointLight2D" type="PointLight2D" parent="." unique_id=1936403791]
 position = Vector2(100, 100)
+range_item_cull_mask = 4
 texture = ExtResource("2_xxnrl")

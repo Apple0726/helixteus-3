@@ -211,7 +211,7 @@ func _on_Transform_pressed():
 
 func _process(delta):
 	if obj == null or obj.is_empty():
-		_on_close_button_pressed()
+		set_process(false)
 		return
 	for btn in $ScrollContainer/GridContainer.get_children():
 		btn.get_node("Label").text = Helper.format_num(game.atoms[btn.name], true)

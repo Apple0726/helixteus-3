@@ -148,7 +148,6 @@ script = ExtResource("2")
 
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=646558497]
 light_mask = 2
-z_index = -1
 material = SubResource("8")
 texture = ExtResource("1")
 hframes = 6

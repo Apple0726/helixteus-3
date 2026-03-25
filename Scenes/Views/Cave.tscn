@@ -601,9 +601,11 @@ region_enabled = true
 [node name="Lava" type="Node2D" parent="." unique_id=1387510094]
 
 [node name="Ash" type="TileMapLayer" parent="." unique_id=1662477646]
-z_index = -1
 material = SubResource("ShaderMaterial_f1kta")
+occlusion_enabled = false
 rendering_quadrant_size = 100
+
+[node name="Debris" type="Node2D" parent="." unique_id=779234761]
 
 [node name="Walls" type="TileMapLayer" parent="." unique_id=1016247985]
 rendering_quadrant_size = 100

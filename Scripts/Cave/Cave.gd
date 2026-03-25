@@ -608,7 +608,7 @@ func generate_cave(first_floor:bool, going_up:bool):
 					else:
 						debris.add_to_group("debris")
 						debris.id = tile_id
-						add_child(debris)
+						$Debris.add_child(debris)
 						big_debris[tile_id] = debris
 				if volcano_mult > 1.0:
 					if cave_floor <= 8 and level < remap(cave_floor, 1, 8, 0.6, 0.0):
@@ -681,7 +681,6 @@ func generate_cave(first_floor:bool, going_up:bool):
 					add_lava_tile(Vector2i(i, j))
 	
 	$Ash.set_cells_terrain_connect(ash_tiles, 0, 0)
-	$Ash.modulate = Color.WHITE
 	#Add unpassable tiles at the cave borders
 	for i in range(-1, cave_size + 1):
 		cave_wall.set_cell(Vector2i(i, -1), 1, Vector2i.ZERO)
