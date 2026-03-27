@@ -1132,9 +1132,8 @@ func _unhandled_input(event):
 		remove_selected_white_rects()
 		view.move_view = true
 		view.scroll_view = true
-		if tile_over != -1:
-			if game.tile_data[tile_over] and not is_instance_valid(game.active_panel) and not game.item_cursor.visible and not game.planet_HUD.get_node("ConstructPanel").visible:
-				show_tooltip(game.tile_data[tile_over], tile_over)
+		if tile_over != -1 and game.tile_data[tile_over] and not is_instance_valid(game.active_panel) and not game.item_cursor.visible:
+			show_tooltip(game.tile_data[tile_over], tile_over)
 	if not is_instance_valid(game.planet_HUD) or not is_instance_valid(game.HUD):
 		return
 	var not_on_button:bool = not game.planet_HUD.on_button and not game.HUD.on_button and not game.close_button_over

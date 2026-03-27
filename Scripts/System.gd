@@ -24,7 +24,7 @@ func _ready():
 	refresh_stars()
 
 func refresh_planets():
-	scale_mult = 70.0 / game.system_data[game.c_s].closest_planet_distance
+	scale_mult = 700.0 / game.system_data[game.c_s].closest_planet_distance
 	CBS_range = 0.0
 	broken_CBS_range = 0.0
 	var curr_time = Time.get_unix_time_from_system()
@@ -144,10 +144,10 @@ func refresh_planets():
 			broken_CBS_range = v.length() * 1.1
 
 func _draw():
-	draw_arc(Vector2.ZERO, CBS_range, 0, 2*PI, 100, Color(0.4, 0.4, 1.0, 0.8), -1)
-	draw_circle(Vector2.ZERO, CBS_range, Color(0.4, 0.4, 1.0, 0.15))
-	draw_arc(Vector2.ZERO, broken_CBS_range, 0, 2*PI, 100, Color(0.5, 0.5, 0.5, 0.8), -1)
-	draw_circle(Vector2.ZERO, broken_CBS_range, Color(0.5, 0.5, 0.5, 0.15))
+	draw_arc(Vector2.ZERO, CBS_range, 0, 2*PI, 100, Color(0.2, 0.2, 1.0, 0.4), -1)
+	draw_circle(Vector2.ZERO, CBS_range, Color(0.2, 0.2, 1.0, 0.1))
+	draw_arc(Vector2.ZERO, broken_CBS_range, 0, 2*PI, 100, Color(0.5, 0.5, 0.5, 0.4), -1)
+	draw_circle(Vector2.ZERO, broken_CBS_range, Color(0.5, 0.5, 0.5, 0.1))
 
 func add_elements(p_i:Dictionary, v:Vector2, sc:float):
 	var grid:GridContainer = GridContainer.new()
@@ -192,7 +192,7 @@ func on_entity_icon_out():
 	game.hide_tooltip()
 
 func refresh_stars():
-	scale_mult = 70.0 / game.system_data[game.c_s].closest_planet_distance
+	scale_mult = 700.0 / game.system_data[game.c_s].closest_planet_distance
 	for star in get_tree().get_nodes_in_group("stars_system"):
 		star.queue_free()
 	for rsrc in star_rsrcs:
@@ -989,7 +989,7 @@ func _process(_delta):
 		if glow.modulate.a != 0:
 			glow.visible = true
 	for orbit in get_tree().get_nodes_in_group("orbits"):
-		orbit.alpha = clamp(view.scale.x * orbit.radius / 300.0, 0.05, 0.6)
+		orbit.alpha = clamp(view.scale.x * orbit.radius * 0.002, 0.02, 0.3)
 		orbit.queue_redraw()
 	var curr_time = Time.get_unix_time_from_system()
 	for rsrc_obj in star_rsrcs:

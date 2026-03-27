@@ -557,11 +557,6 @@ func load_univ():
 	galaxy_data = open_obj("Clusters", c_c)
 
 func load_game():
-	#if not is_instance_valid(shop_panel):
-		#shop_panel = preload("res://Scenes/Panels/Shop.tscn").instantiate()
-		#shop_panel.panel_var_name = "shop_panel"
-		#shop_panel.hide()
-		#$Panels/Control.add_child(shop_panel)
 	var save_info = FileAccess.open("user://%s/save_info.hx3" % [c_sv], FileAccess.READ)
 	if save_info == null:
 		save_info = FileAccess.open("user://%s/save_info.hx3~" % [c_sv], FileAccess.READ)
@@ -872,7 +867,7 @@ func new_game(univ:int = 0, new_save:bool = false, DR_advantage = false):
 	u_i.cluster_data = [{"id":0, "visible":true, "type":0, "shapes":[], "class":ClusterType.GROUP, "name":tr("LOCAL_GROUP"), "pos":Vector2.ZERO, "redshift":0.0, "parent":0, "galaxy_num":55, "galaxies":[], "view":{"pos":Vector2(640, 360), "zoom":1 / 4.0}, "rich_elements":{}}]
 	galaxy_data = [{"id":0, "l_id":0, "type":0, "shapes":[], "name":tr("MILKY_WAY"), "pos":Vector2.ZERO, "rotation":0, "diff":u_i.difficulty, "B_strength":1e-9 * u_i.charge * u_i.dark_energy, "dark_matter":1.0, "parent":0, "system_num":400, "view":{"pos":Vector2(7500, 7500) * 0.5 + Vector2(640, 360), "zoom":0.5}}]
 	var s_b:float = pow(u_i.boltzmann, 4) / pow(u_i.planck, 3) / pow(u_i.speed_of_light, 2)
-	system_data = [{"id":0, "l_id":0, "name":tr("SOLAR_SYSTEM"), "pos":Vector2(-7500, -7500), "diff":u_i.difficulty, "parent":0, "planet_num":7, "planets":[], "view":{"pos":Vector2(640, 150), "zoom":2}, "stars":[{"type":StarType.MAIN_SEQUENCE, "class":"G2", "size":1, "temperature":5500, "mass":u_i.planck, "luminosity":s_b, "pos":Vector2(0, 0)}]}]
+	system_data = [{"id":0, "l_id":0, "name":tr("SOLAR_SYSTEM"), "pos":Vector2(-7500, -7500), "diff":u_i.difficulty, "parent":0, "planet_num":7, "planets":[], "view":{"pos":Vector2(640, -60), "zoom":0.46}, "stars":[{"type":StarType.MAIN_SEQUENCE, "class":"G2", "size":1, "temperature":5500, "mass":u_i.planck, "luminosity":s_b, "pos":Vector2(0, 0)}]}]
 	planet_data = []
 	tile_data = []
 	caves_generated = 0
@@ -2784,7 +2779,7 @@ func generate_planets(id:int):#local id
 					star["repair_cost"] = Data.MS_costs[star.MS + "_" + str(star.MS_lv)].money * 24 * randf_range(1, 3) * planet_data[-1].distance / 1000.0
 				star.repair_cost *= engineering_bonus.BCM
 				system_data[id].has_MS = true
-		var view_zoom = 400.0 / planet_data[-1].distance * (planet_data[0].distance / 70)
+		var view_zoom = 40.0 / planet_data[-1].distance * (planet_data[0].distance / 70)
 		system_data[id]["view"] = {"pos":Vector2(640, 360), "zoom":view_zoom}
 	system_data[id]["closest_planet_distance"] = planet_data[0].distance
 	system_data[id]["discovered"] = true
@@ -4089,6 +4084,7 @@ func return_to_menu_confirm():
 	$Autosave.stop()
 	await switch_view("")
 	c_v = ""
+	DRs = 0
 	$Title/Menu/VBoxContainer/Continue.connect("pressed",Callable(self,"_on_continue_pressed"))
 	refresh_continue_button()
 	switch_music(preload("res://Audio/Title.ogg"))
@@ -4610,7 +4606,7 @@ func _on_probe_timer_timeout() -> void:
 func start_spaceport_timer(tier:int):
 	if not science_unlocked.has("ISC"):
 		return
-	$SpaceportTimer.start(4.0 / tier)
+	$SpaceportTimer.start(max(4.0 / tier / u_i.time_speed, 0.25))
 	if is_instance_valid(HUD):
 		HUD.set_ship_btn_shader(true, tier)
 
@@ -4622,6 +4618,6 @@ func _on_spaceport_timer_timeout() -> void:
 		return
 	var xp_mult = Helper.get_spaceport_xp_mult(autocollect.passive_xp_tier)
 	for i in len(ship_data):
-		Helper.add_ship_XP(i, xp_mult * autocollect.passive_xp_mult * u_i.time_speed)
+		Helper.add_ship_XP(i, xp_mult * autocollect.passive_xp_mult * max(1.0, 0.25 / (4.0 / autocollect.passive_xp_tier / u_i.time_speed)))
 	if is_instance_valid(ships_panel):
 		ships_panel.update_xp_bars()

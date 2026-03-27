@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://7jk118066p12"]
 
 [ext_resource type="Texture2D" uid="uid://cq01wa1mq6mrr" path="res://Graphics/Planets/3.png" id="1"]
-[ext_resource type="Texture2D" uid="uid://by5owi4dvg1i" path="res://Graphics/Misc/Glow.png" id="2"]
+[ext_resource type="Texture2D" uid="uid://b1dcgxga387up" path="res://Graphics/Effects/spotlight_1.png" id="1_pcobn"]
 
 [node name="Control" type="Control" unique_id=2138809329]
 layout_mode = 3
@@ -21,7 +21,7 @@ offset_bottom = 500.0
 grow_horizontal = 2
 grow_vertical = 2
 pivot_offset_ratio = Vector2(0.5, 0.5)
-texture_normal = ExtResource("2")
+texture_normal = ExtResource("1_pcobn")
 stretch_mode = 5
 
 [node name="Button" type="TextureButton" parent="." unique_id=189356088]

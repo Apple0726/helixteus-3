@@ -91,7 +91,7 @@ func _process(delta):
 		elif game.c_v == "galaxy" and game.c_g_g == sh_c_g.g:
 			ship.position = to_global(game.system_data[sh_c.s].pos) - Vector2(32, 22)
 		elif game.c_v == "system" and game.c_s_g == sh_c_g.s:
-			var scale_mult = 70.0 / game.system_data[game.c_s].closest_planet_distance
+			var scale_mult = 700.0 / game.system_data[game.c_s].closest_planet_distance
 			ship.position = to_global(Vector2.from_angle(game.planet_data[sh_c.p].angle) * game.planet_data[sh_c.p].distance * scale_mult) - Vector2(32, 22)
 	if is_instance_valid(game.annotator):
 		annotate_icon.position = to_local(mouse_position)
