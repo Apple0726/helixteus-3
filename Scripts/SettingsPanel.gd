@@ -43,6 +43,7 @@ func _ready():
 	$TabContainer/GRAPHICS/SpaceLOD/StaticSpaceLOD.value = Settings.static_space_LOD
 	$TabContainer/GRAPHICS/SpaceLOD/DynamicSpaceLOD.value = Settings.dynamic_space_LOD
 	$TabContainer/MISC/OPCursor.button_pressed = Settings.op_cursor
+	$TabContainer/MISC/ShowFPS.button_pressed = Settings.show_fps
 	$TabContainer/MISC/Discord.button_pressed = Settings.discord
 	set_notation()
 
@@ -346,4 +347,12 @@ func _on_dynamic_space_lod_value_changed(value):
 	$TabContainer/GRAPHICS/SpaceLOD/DynamicSpaceLODValue.text = str(value)
 	if err == OK:
 		config.set_value("graphics", "dynamic_space_LOD", value)
+		config.save("user://settings.cfg")
+
+
+func _on_show_fps_toggled(toggled_on: bool) -> void:
+	Settings.show_fps = toggled_on
+	game.fps_text.visible = toggled_on
+	if err == OK:
+		config.set_value("misc", "show_fps", toggled_on)
 		config.save("user://settings.cfg")

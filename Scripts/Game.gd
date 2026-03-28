@@ -377,6 +377,8 @@ func load_settings(config:ConfigFile):
 	if Settings.op_cursor:
 		Input.set_custom_mouse_cursor(preload("res://Cursor.png"))
 	Settings.discord = config.get_value("misc", "discord", true)
+	Settings.show_fps = config.get_value("misc", "show_fps", false)
+	fps_text.visible = Settings.show_fps
 
 
 func _ready():
@@ -3686,7 +3688,8 @@ func _process(_delta):
 		Engine.max_fps = 8
 	var delta = (Time.get_unix_time_from_system() - last_process_time)
 	last_process_time = Time.get_unix_time_from_system()
-	fps_text.text = "%s FPS" % [Engine.get_frames_per_second()]
+	if fps_text.visible:
+		fps_text.text = "%d FPS" % [Engine.get_frames_per_second()]
 	if autocollect:
 		var min_mult:float = pow(maths_bonus.IRM, infinite_research.MEE) * u_i.time_speed
 		var energy_mult:float = pow(maths_bonus.IRM, infinite_research.EPE) * u_i.time_speed

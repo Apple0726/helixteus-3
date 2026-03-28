@@ -36,3 +36,4 @@ var cave_gen_info:bool = false
 # misc
 var discord = true
 var op_cursor:bool = false
+var show_fps:bool = false

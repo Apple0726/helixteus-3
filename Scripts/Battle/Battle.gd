@@ -16,6 +16,7 @@ var initiative_order = []
 var whose_turn_is_it_index:int = -1
 var HX_nodes = []
 var ship_nodes = []
+var max_level_ship:int
 var mouse_position_global:Vector2
 var mouse_position_local:Vector2
 var asteroid_nodes = []
@@ -45,10 +46,6 @@ func _ready() -> void:
 		HX_data = p_i.HX_data
 	var total_enemy_stats:float = 0.0
 	var total_ship_stats:float = 0.0
-	for HX in HX_data:
-		var total_stats = HX.HP * 0.25 + HX.attack + HX.defense + HX.accuracy + HX.agility
-		total_enemy_stats += total_stats
-		HX.total_stats = total_stats
 	HX_data.sort_custom(func(a, b): return a.lv > b.lv)
 	HX_data = HX_data.slice(0, 12)
 	ship_data = game.ship_data
@@ -56,13 +53,6 @@ func _ready() -> void:
 		enemy_AI_diff_mult = 0.8
 	elif Settings.enemy_AI_difficulty == Settings.ENEMY_AI_DIFFICULTY_HARD:
 		enemy_AI_diff_mult = 1.7
-	for ship in ship_data:
-		var total_stats = ship.HP * 0.25 + ship.attack + ship.defense + ship.accuracy + ship.agility
-		total_ship_stats += total_stats
-	total_ship_stats *= log(max(game.u_i.speed_of_light, game.u_i.planck) - 1.0 + exp(1.0))
-	hard_battle = total_enemy_stats > total_ship_stats * 1.25
-	if hard_battle:
-		game.switch_music(preload("res://Audio/op_battle.ogg"), game.u_i.time_speed)
 	for i in len(HX_data):
 		var HX = HX_scene.instantiate()
 		HX.METERS_PER_AGILITY = METERS_PER_AGILITY
@@ -89,6 +79,9 @@ func _ready() -> void:
 		HX.next_turn.connect(next_turn)
 		add_child(HX)
 		HX_nodes.append(HX)
+		var total_stats = HX_data[i].HP * 0.25 + HX_data[i].attack + HX_data[i].defense + HX_data[i].accuracy + HX_data[i].agility
+		total_enemy_stats += total_stats
+		HX_data[i].total_stats = total_stats
 	for i in len(ship_data):
 		var ship_node = preload("res://Scenes/Battle/Ship.tscn").instantiate()
 		ship_node.METERS_PER_AGILITY = METERS_PER_AGILITY
@@ -113,6 +106,13 @@ func _ready() -> void:
 		ship_node.get_node("Info/Label").text = "%s %s" % [tr("LV"), ship_data[i].lv]
 		add_child(ship_node)
 		ship_nodes.append(ship_node)
+		var total_stats = ship_data[i].HP * 0.25 + ship_data[i].attack + ship_data[i].defense + ship_data[i].accuracy + ship_data[i].agility
+		total_ship_stats += total_stats
+		max_level_ship = max(max_level_ship, ship_data[i].lv)
+	total_ship_stats *= log(max(game.u_i.speed_of_light, game.u_i.planck) - 1.0 + exp(1.0))
+	hard_battle = total_enemy_stats > total_ship_stats * 1.25
+	if hard_battle:
+		game.switch_music(preload("res://Audio/op_battle.ogg"), game.u_i.time_speed)
 
 
 func initialize_battle():

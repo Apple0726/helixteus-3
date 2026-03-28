@@ -33,10 +33,9 @@ layout_mode = 0
 offset_top = 60.0
 offset_right = 892.0
 offset_bottom = 576.0
-current_tab = 2
+current_tab = 0
 
 [node name="SFX" type="TabBar" parent="TabContainer" unique_id=208608145]
-visible = false
 layout_mode = 2
 metadata/_tab_index = 0
 
@@ -301,6 +300,7 @@ offset_bottom = 158.0
 text = "Keep window size"
 
 [node name="GAME" type="TabBar" parent="TabContainer" unique_id=523582965]
+visible = false
 layout_mode = 2
 metadata/_tab_index = 2
 
@@ -451,6 +451,14 @@ offset_bottom = 205.0
 button_pressed = true
 text = "Discord Rich Presence"
 
+[node name="ShowFPS" type="CheckBox" parent="TabContainer/MISC" unique_id=470689829]
+layout_mode = 0
+offset_left = 564.0
+offset_top = 165.0
+offset_right = 762.0
+offset_bottom = 205.0
+text = "Show FPS"
+
 [node name="HBoxContainer2" type="HBoxContainer" parent="TabContainer/MISC" unique_id=1788890095]
 layout_mode = 0
 offset_left = 72.0
@@ -516,6 +524,7 @@ horizontal_alignment = 1
 [connection signal="mouse_exited" from="TabContainer/MISC/OPCursor" to="." method="_on_OPCursor_mouse_exited"]
 [connection signal="toggled" from="TabContainer/MISC/OPCursor" to="." method="_on_OPCursor_toggled"]
 [connection signal="toggled" from="TabContainer/MISC/Discord" to="." method="_on_discord_toggled"]
+[connection signal="toggled" from="TabContainer/MISC/ShowFPS" to="." method="_on_show_fps_toggled"]
 [connection signal="mouse_entered" from="TabContainer/MISC/HBoxContainer2/Standard" to="." method="_on_Standard_mouse_entered"]
 [connection signal="mouse_exited" from="TabContainer/MISC/HBoxContainer2/Standard" to="." method="_on_mouse_exited"]
 [connection signal="pressed" from="TabContainer/MISC/HBoxContainer2/Standard" to="." method="_on_Standard_pressed"]

@@ -404,6 +404,8 @@ func entity_defeated_callback(knockback:Vector2 = Vector2.ZERO):
 		turn_order_box.get_node("FadeAnim").play("FadeOutAnim")
 	if type == Battle.EntityType.ENEMY:
 		battle_scene.HX_nodes.erase(self)
+		if lv >= battle_scene.max_lv_ship + 30 and not game.achievement_data.random.has("rekt_enemy_30_levels_higher"):
+			game.earn_achievement("random", "rekt_enemy_30_levels_higher")
 	elif type == Battle.EntityType.SHIP:
 		battle_scene.ship_nodes.erase(self)
 	elif type == Battle.EntityType.OBSTACLE:

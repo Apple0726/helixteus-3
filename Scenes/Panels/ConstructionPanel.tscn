@@ -255,6 +255,7 @@ text = "TIER"
 
 [node name="Tier" type="SpinBox" parent="Panel/ScrollContainer/VBoxContainer/HBoxContainer" unique_id=1219583566]
 layout_mode = 2
+size_flags_horizontal = 3
 min_value = 1.0
 value = 1.0
 alignment = 1
