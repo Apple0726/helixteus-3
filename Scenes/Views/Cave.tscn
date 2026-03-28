@@ -1158,7 +1158,7 @@ size_flags_vertical = 0
 mouse_filter = 1
 theme = ExtResource("29")
 theme_override_styles/normal = SubResource("StyleBoxFlat_2lgmg")
-text = "Modifiers"
+text = "MODIFIERS"
 
 [node name="AvgDmg" type="Label" parent="UI2/CaveInfo" unique_id=1450213877]
 layout_mode = 2

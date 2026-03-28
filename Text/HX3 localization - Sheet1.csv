@@ -924,9 +924,11 @@ SUCCESSFULLY_APPLIED,Item successfully applied,,,物品已成功淬炼！,Gegens
 CRAFT_MINING_DESC,Mining too slow? These items make your pickaxe even more powerful.,,,感觉挖的太慢？这瓶精华液会使你的矿镐更加锋利,Bergbau zu langsam? Diese Gegenstände machen deine Spitzhacke noch stärker.,Excavas muy lento? Estos objetos harán tu pico más poderoso.,,,Lassú a bámnyászás? Ezekkel felgyorsíthatod.,採掘が遅い？つるはしをより強力にするアイテムです。,Delven te traag? Deze items maken je pikhouweel nog effectiever!,,
 DRIVE_SUCCESSFULLY_ACTIVATED,Drive successfully activated,,,引擎已成功激活,Antrieb erfolgreich aktiviert,Drive exitosamente activado,,,Meghajtó sikeresen aktiválva,ドライブの起動に成功,Aandrijving succesvol geactiveerd,,
 INGAME_WIKI,In-game wiki,,,百科全书,Spiel-Wiki,Wiki dentro del juego,,,Játékwiki,ゲーム内wiki,Spelwiki,,
-DARK_MATTER_DESC,"Dark matter influences the number of planets and stars in a system.\nDark matter is first calculated by selecting a random number between 0.85 and 1.15.\nIf galaxy is spiral, subtract 0.05 from dark matter.\nThen raise dark matter to the power of -ln(random(0, 1))*dark_energy/2.5+1.",,,暗物质影响恒星系中行星和恒星的数量\n暗物质公式：暗物质=(a-b)^(-ln(c)*d/2.5+1)\na：0.85~1.15中的一个随机数；b：如多星系是螺旋形的，则为0.05，否则为0；c：0~1中的一个随机数；d：星系的暗能量,Dunkle Materie beeinflusst die Anzahl der Planeten und Sterne in einem System..\nDunkle Energie wird berechnet mithilfe einer Zahl zwischen 0.85 und 1.15\nwenn die Galaxie eine Spirale ist wird 0.05 abgezogen von der Dunklen Energie\nDannach wird die Dunkle Materie exponenziert mit (dem (natürlichen Logarithmus von einer Zufallszahl zwischen 0 und 1))mal (die Dunkle Energie durch 2.5)plus 1,"La materia oscura influye en el número de planetas y estrellas en un sistema.\nLa materia oscura se calcula seleccionando un número entre 0.85 y 1.15.\nSi una galaxia tiene forma de espiral, le se sustrae 0.05 de materia oscura.\nLuego incrementa la materia oscura a la potencia de -ln(random(0, 1))*dark_energy/2.5+1.",,,"A sötét anyag hatással van az egy rendszerben lévő bolygók számára.\nSötét anyag képlet: sötét_anyag = véletlen(0,85; 1,15) \n Ha a galaxis spirál alakú, akkor ebből vonj le 0,05-öt. Aztán ezt emeld az ennyiedik hatványra: -ln(véletlen(0; 1))*sötét_anyag/2,5+1","ダークマターは、惑星や星の数に影響を与える。\nダークマターの計算式。\ndark_matter = rand_range(0.8, 1.0) dark_energy - 1.0\nもし銀河系が渦巻きの場合は dark_matter から 0.1 を引く\nその後 20%の確率で dark_matter は 1.8 乗に、2%の確率で 2.5 乗に増加される。","Donkere materie beïnvloedt het aantal planeten en sterren in een systeem.\nDonkere materie-formule:\ndonkere_materie = rand_range(0.8, 1.0) + dark_energy - 1.0\nIn spiraalvormige heelallen, trek 0.1 af van donkere_materie.\nDan is er 20% kans dat donkere_materie tot de macht 1.8 wordt verheven, en 2% kans dat het tot de macht 2.5 wordt verheven.",,
-DARK_ENERGY_DESC,"Dark energy multiplies the influence of distance from the starting cluster on redshift of clusters.
-It also affects dark matter: the higher the dark energy, the more likely dark matter will be further from 1 (in both directions).",,,,,,,,,,,,
+DARK_MATTER_DESC,"Dark matter influences the number of planets and stars in a system.
+Dark matter is first calculated by selecting a random number between 0.85 and 1.15.
+If galaxy is spiral, subtract 0.05 from dark matter.
+Then raise dark matter to the power of -ln(random(0, 1)) * redshift^0.8 * 0.4 + 1.",,,,,,,,,,,,
+DARK_ENERGY_DESC,Dark energy multiplies the influence of distance from the starting cluster on redshift of clusters.,,,,,,,,,,,,
 B_STRENGTH_DESC,"Magnetic field strength influences temperatures of stars and the intensities of auroras.
 Magnetic field strength (B) formula:
 If galaxy is spiral: B = rand_range(3, 5) * redshift * elementary_charge nT
@@ -974,6 +976,7 @@ REDSHIFT,Redshift,,,,,,,,,,,,
 REDSHIFT_DESC,"Redshift influences the following:
 - Galaxy difficulty
 - Magnetic field strength of galaxies
+- Dark matter of galaxies
 - Ancient building tiers
 - Rarer metals become more common",,,,,,,,,,,,
 STAR_NUM,Number of stars,,,恒星数目,Anzahl an Sternen,Número de estrellas,,,Csillagok száma,星の数,Aantal sterren,Количество звезд,
@@ -1796,3 +1799,14 @@ F_TO_FIND_BLDG_MS,Pressing F is a shortcut to quickly find a building or a megas
 SHOWING_X,Showing {obj},,,,,,,,,,,,
 SHOWING_ALL,Showing all,,,,,,,,,,,,
 NEW_SHIP_CLASSES_UNLOCKED,You unlocked new ship classes! Use them to make battles a little more exciting.,,,,,,,,,,,,
+MORE_AURORAS,More auroras,,,,,,,,,,,,
+LOT_MORE_AURORAS,A lot more auroras,,,,,,,,,,,,
+MORE_VOLCANOES,More volcanoes,,,,,,,,,,,,
+LOT_MORE_VOLCANOES,A lot more volcanoes,,,,,,,,,,,,
+LESS_GAS_GIANTS,Less gas giants,,,,,,,,,,,,
+LOT_LESS_GAS_GIANTS,A lot less gas giants,,,,,,,,,,,,
+MORE_NOBLE_GAS_LAKES,"More noble gas (neon, xenon...) lakes",,,,,,,,,,,,
+LOT_MORE_NOBLE_GAS_LAKES,A lot more noble gas lakes,,,,,,,,,,,,
+MORE_ANCIENT_BLDGS,More ancient buildings,,,,,,,,,,,,
+LOT_MORE_ANCIENT_BLDGS,A lot more ancient buildings,,,,,,,,,,,,
+MODIFIERS,Modifiers,,,,,,,,,,,,

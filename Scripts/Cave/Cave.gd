@@ -513,11 +513,11 @@ func generate_cave(first_floor:bool, going_up:bool):
 	for met in game.met_info:
 		if met == "lead" or pow(game.met_info[met].rarity, 1.4) * 3.0 < difficulty:
 			possible_metal_spawns.append(met)
-	rarity_exponent = remap(cave_floor, 8, 32, 0.9, 0.5) / pow(game.u_i.cluster_data[game.c_c].redshift + 1.0, 0.2)
+	rarity_exponent = remap(cave_floor, 8, 32, 0.9, 0.4) / pow(game.u_i.cluster_data[game.c_c].redshift + 1.0, 0.2)
 	if is_aurora_cave:
-		rarity_exponent *= 0.9
+		rarity_exponent *= 0.8
 	if volcano_mult > 1 and not artificial_volcano:
-		rarity_exponent *= 0.9
+		rarity_exponent *= 0.8
 	if enhancements.has("armor_12") and HP < total_HP * 0.2:
 		HP = total_HP * 0.2
 	set_avg_dmg()

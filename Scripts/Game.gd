@@ -864,7 +864,7 @@ func new_game(univ:int = 0, new_save:bool = false, DR_advantage = false):
 		for met in met_info.keys():
 			show[met] = true
 	#Stores information of all objects discovered
-	u_i.cluster_data = [{"id":0, "visible":true, "type":0, "shapes":[], "class":ClusterType.GROUP, "name":tr("LOCAL_GROUP"), "pos":Vector2.ZERO, "redshift":0.0, "parent":0, "galaxy_num":55, "galaxies":[], "view":{"pos":Vector2(640, 360), "zoom":1 / 4.0}, "rich_elements":{}}]
+	u_i.cluster_data = [{"id":0, "visible":true, "type":0, "shapes":[], "class":ClusterType.GROUP, "name":tr("LOCAL_GROUP"), "pos":Vector2.ZERO, "redshift":0.0, "parent":0, "galaxy_num":55, "galaxies":[], "view":{"pos":Vector2(640, 360), "zoom":1 / 4.0}, "modifiers":[]}]
 	galaxy_data = [{"id":0, "l_id":0, "type":0, "shapes":[], "name":tr("MILKY_WAY"), "pos":Vector2.ZERO, "rotation":0, "diff":u_i.difficulty, "B_strength":1e-9 * u_i.charge * u_i.dark_energy, "dark_matter":1.0, "parent":0, "system_num":400, "view":{"pos":Vector2(7500, 7500) * 0.5 + Vector2(640, 360), "zoom":0.5}}]
 	var s_b:float = pow(u_i.boltzmann, 4) / pow(u_i.planck, 3) / pow(u_i.speed_of_light, 2)
 	system_data = [{"id":0, "l_id":0, "name":tr("SOLAR_SYSTEM"), "pos":Vector2(-7500, -7500), "diff":u_i.difficulty, "parent":0, "planet_num":7, "planets":[], "view":{"pos":Vector2(640, -60), "zoom":0.46}, "stars":[{"type":StarType.MAIN_SEQUENCE, "class":"G2", "size":1, "temperature":5500, "mass":u_i.planck, "luminosity":s_b, "pos":Vector2(0, 0)}]}]
@@ -1917,7 +1917,31 @@ func sort_shapes (a, b):
 		return true
 	return false
 
-var rich_element_list = ["Fe", "Al", "C", "Na", "Ti", "Ta", "W", "Os", "Ne", "Xe"]
+enum ClusterModifier {
+	MORE_AURORAS,
+	LOT_MORE_AURORAS,
+	MORE_VOLCANOES,
+	LOT_MORE_VOLCANOES,
+	LESS_GAS_GIANTS,
+	LOT_LESS_GAS_GIANTS,
+	MORE_NOBLE_GAS_LAKES,
+	LOT_MORE_NOBLE_GAS_LAKES,
+	MORE_ANCIENT_BLDGS,
+	LOT_MORE_ANCIENT_BLDGS,
+}
+
+var cluster_modifier_data = { # Probability factors. Higher value = rarer
+	ClusterModifier.MORE_AURORAS: {"p": 5.0, "name":"MORE_AURORAS", "category":"auroras"},
+	ClusterModifier.LOT_MORE_AURORAS: {"p": 40.0, "name":"LOT_MORE_AURORAS", "category":"auroras"}, 
+	ClusterModifier.MORE_VOLCANOES: {"p": 5.0, "name":"MORE_VOLCANOES", "category":"volcanoes"},
+	ClusterModifier.LOT_MORE_VOLCANOES: {"p": 40.0, "name":"LOT_MORE_VOLCANOES", "category":"volcanoes"},
+	ClusterModifier.LESS_GAS_GIANTS: {"p": 5.0, "name":"LESS_GAS_GIANTS", "category":"gas_giants"},
+	ClusterModifier.LOT_LESS_GAS_GIANTS: {"p": 40.0, "name":"LOT_LESS_GAS_GIANTS", "category":"gas_giants"},
+	ClusterModifier.MORE_NOBLE_GAS_LAKES: {"p": 40.0, "name":"MORE_NOBLE_GAS_LAKES", "category":"noble_gas_lakes"},
+	ClusterModifier.LOT_MORE_NOBLE_GAS_LAKES: {"p": 250.0, "name":"LOT_MORE_NOBLE_GAS_LAKES", "category":"noble_gas_lakes"},
+	ClusterModifier.MORE_ANCIENT_BLDGS: {"p": 5.0, "name":"MORE_ANCIENT_BLDGS", "category":"ancient_bldgs"},
+	ClusterModifier.LOT_MORE_ANCIENT_BLDGS: {"p": 40.0, "name":"LOT_MORE_ANCIENT_BLDGS", "category":"ancient_bldgs"},
+}
 
 func generate_clusters(parent_id:int):
 	randomize()
@@ -1935,7 +1959,7 @@ func generate_clusters(parent_id:int):
 			"visible": TEST,
 			"galaxies": [],
 			"shapes": [],
-			"rich_elements": {},
+			"modifiers": [],
 			"id": c_id + clusters_generated,
 		}
 		if c_i["class"] == ClusterType.GROUP:
@@ -1948,14 +1972,25 @@ func generate_clusters(parent_id:int):
 			dist_from_center = 200
 			c_i["class"] = ClusterType.GROUP
 			c_i["galaxy_num"] = randi_range(80, 100)
-		var _rich_elements = rich_element_list.duplicate()
-		_rich_elements.shuffle()
-		for j in range(0, int(remap(dist_from_center, 0, 12000, 1, 5))):
-			c_i.rich_elements[_rich_elements[j]] = 8 * (1 + randf()) * remap(dist_from_center, 0, 16000, 1, 40)
 		pos = Vector2.from_angle(randf_range(0, 2 * PI)) * dist_from_center
 		c_i["pos"] = pos
 		var DE_factor = pos.length() * u_i.dark_energy
 		c_i["redshift"] = Helper.clever_round(DE_factor * 0.002)
+		while c_i.modifiers.is_empty():
+			for mod_to_add in cluster_modifier_data:
+				# mod_to_add: ClusterModifier.MORE_AURORAS, ...
+				var r = c_i.redshift
+				var p = cluster_modifier_data[mod_to_add].p # probability factor
+				if randf() < (r + 1.0) / (r + p):
+					c_i.modifiers.append(mod_to_add)
+					# Erase inferior modifiers in same category
+					for mod_in_cl in cluster_modifier_data:
+						# mod_in_cl: ClusterModifier.MORE_AURORAS, ...
+						# Remove all modifiers that are more common than mod_to_add and that are in the same category
+						if cluster_modifier_data[mod_in_cl].category != cluster_modifier_data[mod_to_add].category:
+							continue
+						if c_i.modifiers.has(mod_in_cl) and cluster_modifier_data[mod_in_cl].p < cluster_modifier_data[mod_to_add].p:
+							c_i.modifiers.erase(mod_in_cl)
 		u_i.cluster_data.append(c_i)
 	clusters_generated += total_clust_num
 	fn_save_game()
@@ -1985,7 +2020,7 @@ func generate_galaxies(id:int):
 		var g_i = {
 			"parent": id,
 			"type": randi() % 7,
-			"dark_matter": Helper.clever_round(pow(randf_range(0.85, 1.15), -log(randf())*u_i.dark_energy/2.5 + 1)), # Influences planet numbers and size
+			"dark_matter": Helper.clever_round(pow(randf_range(0.85, 1.15), -log(randf()) * pow(redshift + 1.0, 0.6) * 0.4 + 1)), # Influences planet numbers and size
 			"rotation": randf_range(0.0, 2.0 * PI),
 			"view": {"pos":Vector2(640, 360), "zoom": 0.2},
 			"id": g_id + galaxies_generated,
@@ -2601,7 +2636,12 @@ func generate_planets(id:int):#local id
 		var dist_in_km = p_i.distance / 569.0 * 1.5e8#                                V bond albedo
 		var temp = max_star_temp * pow(star_size_in_km / (2 * dist_in_km), 0.5) * pow(1 - 0.1, 0.25)
 		p_i["temperature"] = temp# in K
-		var gas_giant:bool = c_s_g != 0 and randf() < atan((p_i.size - 22000.0) / 22000.0) * 2.0 / PI
+		var gas_giant_coeff = 1.0
+		if ClusterModifier.LOT_LESS_GAS_GIANTS in u_i.cluster_data[c_c].modifiers:
+			gas_giant_coeff = 0.25
+		elif ClusterModifier.LESS_GAS_GIANTS in u_i.cluster_data[c_c].modifiers:
+			gas_giant_coeff = 0.5
+		var gas_giant:bool = c_s_g != 0 and randf() < atan(gas_giant_coeff * (p_i.size - 22000.0) / 22000.0) * 2.0 / PI
 		if gas_giant:
 			p_i["crust_start_depth"] = 0
 			p_i["mantle_start_depth"] = 0
@@ -2615,13 +2655,6 @@ func generate_planets(id:int):#local id
 			p_i["crust_start_depth"] = randi_range(50, 450)
 			p_i["mantle_start_depth"] = round(randf_range(0.005, 0.02) * p_i.size * 1000)
 		var list_of_element_probabilities = Data.elements.duplicate()
-		if u_i.cluster_data[c_c].rich_elements.has("C"):
-			list_of_element_probabilities.CO2 *= (u_i.cluster_data[c_c].rich_elements.C - 1.0) / 2.0 + 1.0
-			list_of_element_probabilities.CH4 *= (u_i.cluster_data[c_c].rich_elements.C - 1.0) / 4.0 + 1.0
-		if u_i.cluster_data[c_c].rich_elements.has("Ne"):
-			list_of_element_probabilities.Ne *= u_i.cluster_data[c_c].rich_elements.Ne
-		if u_i.cluster_data[c_c].rich_elements.has("Xe"):
-			list_of_element_probabilities.Xe *= u_i.cluster_data[c_c].rich_elements.Xe
 		p_i["atmosphere"] = make_atmosphere_composition(temp, p_i.pressure, list_of_element_probabilities)
 		p_i["crust"] = make_planet_composition(temp, "crust", p_i.size, gas_giant)
 		p_i["mantle"] = make_planet_composition(temp, "mantle", p_i.size, gas_giant)
@@ -2633,7 +2666,14 @@ func generate_planets(id:int):#local id
 			if randf() < 0.2:
 				p_i["lake"] = {"element":"H2O"}
 		elif p_i.temperature <= 1000:
-			p_i["lake"] = {"element":get_random_element(list_of_element_probabilities)}
+			var lake_elements = list_of_element_probabilities.duplicate()
+			if ClusterModifier.LOT_MORE_NOBLE_GAS_LAKES in u_i.cluster_data[c_c].modifiers:
+				lake_elements.Ne *= 30.0
+				lake_elements.Xe *= 100.0
+			elif ClusterModifier.MORE_NOBLE_GAS_LAKES in u_i.cluster_data[c_c].modifiers:
+				lake_elements.Ne *= 10.0
+				lake_elements.Xe *= 10.0
+			p_i["lake"] = {"element":get_random_element(lake_elements)}
 		if p_i.has("lake"):
 			p_i["liq_seed"] = randi()
 			p_i["liq_period"] = randf_range(0.1, 1)
@@ -2871,13 +2911,21 @@ func generate_tiles(id:int):
 	var amplitude:float = 0.85
 	var max_star_temp = get_max_star_prop(c_s, "temperature")
 	var num_auroras:int = 2
+	var max_aurora_gap_size:int = wid / 3
+	var aurora_spawn_p_mult:float = 1.0
+	if ClusterModifier.LOT_MORE_AURORAS in u_i.cluster_data[c_c].modifiers:
+		num_auroras += 1
+		max_aurora_gap_size = wid / 5
+		aurora_spawn_p_mult = 2.0
+	elif ClusterModifier.MORE_AURORAS in u_i.cluster_data[c_c].modifiers:
+		aurora_spawn_p_mult = 1.5
 	var home_planet:bool = c_p_g == 2 and c_u == 0
 	var B_strength:float = galaxy_data[c_g].B_strength
 	for i in num_auroras:
 		if home_planet:
 			continue
 		# Guaranteed aurora spawn on starting planet outside 1st universe
-		if (c_u == 0 or c_p_g != 2) and randf() > physics_bonus.aurora_spawn_probability * pow(p_i.pressure, 0.15):
+		if (c_u == 0 or c_p_g != 2) and randf() > physics_bonus.aurora_spawn_probability * pow(p_i.pressure, 0.15) * aurora_spawn_p_mult:
 			continue
 		#au_int: aurora_intensity
 		var au_int = Helper.clever_round(80000 * randf_range(1, 2) * B_strength * max_star_temp)
@@ -2919,10 +2967,10 @@ func generate_tiles(id:int):
 		stats_global.highest_au_int = max(au_int, stats_global.highest_au_int)
 		stats_dim.highest_au_int = max(au_int, stats_dim.highest_au_int)
 		stats_univ.highest_au_int = max(au_int, stats_univ.highest_au_int)
-		if wid / 3 == 1:
+		if max_aurora_gap_size < thiccness + 1:
 			diff = thiccness + 1
 		else:
-			diff = randi_range(thiccness + 1, wid / 3) * sign(randf_range(-69, 69))
+			diff = randi_range(thiccness + 1, max_aurora_gap_size) * sign(randf_range(-69, 69))
 		if i == 0 and randf() < physics_bonus.perpendicular_auroras:
 			rand = 1.0 - rand
 	#We assume that the star system's age is inversely proportional to the coldest star's temperature
@@ -2941,8 +2989,13 @@ func generate_tiles(id:int):
 		p_i.lake.state = Helper.get_state(p_i.temperature, p_i.pressure, phase)
 		phase.free()
 	var volcano_probability:float = 0.0
-	if randf() < log(20.0 / sqrt(coldest_star_temp/u_i.gravitational) + 1.0):
-		volcano_probability = min(sqrt(u_i.gravitational) / sqrt(randf()) / N, 0.15)
+	var G_factor = u_i.gravitational
+	if ClusterModifier.LOT_MORE_VOLCANOES in u_i.cluster_data[c_c].modifiers:
+		G_factor *= 3.0
+	elif ClusterModifier.MORE_VOLCANOES in u_i.cluster_data[c_c].modifiers:
+		G_factor *= 2.0
+	if randf() < log(20.0 / sqrt(coldest_star_temp/G_factor) + 1.0):
+		volcano_probability = min(sqrt(G_factor) / sqrt(randf()) / N, 0.15)
 	var empty_tiles = []
 	var crater_num:int = 0
 	var total_VEI:float = 0.0
@@ -3006,7 +3059,7 @@ func generate_tiles(id:int):
 			if is_lake:
 				continue
 			if c_s_g != 0 and randf() < volcano_probability:
-				var VEI:float = log(1e6/(coldest_star_temp * u_i.gravitational * randf()) + exp(3.0))
+				var VEI:float = log(1e6/(coldest_star_temp * G_factor * randf()) + exp(3.0))
 				total_VEI += VEI
 				generate_volcano(t_id, VEI)
 				continue
@@ -3062,8 +3115,16 @@ func generate_tiles(id:int):
 		ancient_bldgs_list_without_NFR[ancient_bldg] /= S2
 	var nuclear_fusion_reactor_tiles = []
 	var base_ancient_bldg_probability = 0.0
-	if randf() < 500.0 / coldest_star_temp:
-		base_ancient_bldg_probability = 1 if p_i.temperature < 273 else -pow((p_i.temperature / 273.0 - 1), 2) + 1
+	var temperature_factor = 273.0
+	var AB_can_spawn_factor = 500.0
+	if ClusterModifier.LOT_MORE_ANCIENT_BLDGS in u_i.cluster_data[c_c].modifiers:
+		temperature_factor = 473.0
+		AB_can_spawn_factor = 1000.0
+	elif ClusterModifier.MORE_ANCIENT_BLDGS in u_i.cluster_data[c_c].modifiers:
+		temperature_factor = 373.0
+		AB_can_spawn_factor = 750.0
+	if randf() < AB_can_spawn_factor / coldest_star_temp:
+		base_ancient_bldg_probability = 1 if p_i.temperature < temperature_factor else -pow(p_i.temperature / temperature_factor - 1, 2) + 1
 	planet_data[id].ancient_bldgs = {}
 	if c_s_g != 0:
 		var spaceport_spawned = false
@@ -3355,9 +3416,6 @@ func make_planet_composition(temp:float, depth:String, size:float, gas_giant:boo
 			elements["Mg"] = r * 0.02 * randf()
 			elements["Ti"] = r * 0.005 * randf()
 			elements["H"] = r * 0.002 * randf()
-	for el in elements:
-		if u_i.cluster_data[c_c].rich_elements.has(el):
-			elements[el] *= u_i.cluster_data[c_c].rich_elements[el]
 	var S = Helper.get_sum_of_dict(elements)
 	for el in elements:
 		elements[el] /= S
@@ -4554,6 +4612,9 @@ func _on_command_text_submitted(new_text):
 					return
 			else:
 				are_costs_zero = not are_costs_zero
+		"showclusters":
+			for c_i in u_i.cluster_data:
+				c_i.visible = true
 		_:
 			fail = true
 	if not fail:

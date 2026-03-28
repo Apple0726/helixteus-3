@@ -20,10 +20,10 @@ func _ready():
 			continue
 		var cluster_btn = TextureButton.new()
 		cluster_btn.texture_normal = preload("res://Graphics/Clusters/0.png")
-		var r:float = (c_i.pos + c_i.pos).length()
+		var r:float = c_i.pos.length()
 		var th:float = atan2(c_i.pos.y, c_i.pos.x)
 		var hue:float = fmod(r + 300, 1000.0) / 1000.0
-		var sat:float = pow(fmod(th + PI, 10.0) / 10.0, 0.2)
+		var sat:float = 0.8
 		if Settings.enable_shaders:
 			cluster_btn.material = ShaderMaterial.new()
 			cluster_btn.material.shader = preload("res://Shaders/Cluster.gdshader")
@@ -58,11 +58,19 @@ func on_cluster_over (id:int):
 		else:
 			_name = tr("GALAXY_CLUSTER") + " %s" % id
 	var tooltip:String = "%s\n%s: %s\n%s: %s" % [_name, tr("GALAXIES"), c_i.galaxy_num, tr("REDSHIFT"), c_i.redshift]
-	var icons:Array = []
-	for el in c_i.rich_elements.keys():
-		tooltip += "\n" + tr("RICH_IN_X").format({"rsrc":tr(el.to_upper() + "_NAME"), "mult":Helper.clever_round(c_i.rich_elements[el])})
-		icons.append(load("res://Graphics/Atoms/%s.png" % el))
-	game.show_tooltip(tooltip, {"imgs": icons})
+	if not c_i.modifiers.is_empty():
+		tooltip += "\n{modifiers_label}: ".format({"modifiers_label": tr("MODIFIERS")})
+		for mod in c_i.modifiers:
+			var color = "ffffff"
+			if game.cluster_modifier_data[mod].p > 100.0:
+				color = "4444ff"
+			elif game.cluster_modifier_data[mod].p > 10.0:
+				color = "00ff00"
+			tooltip += "\n - [color=#{color}]{modifier}[/color]".format({
+				"color":color,
+				"modifier":tr(game.cluster_modifier_data[mod].name)
+			})
+	game.show_tooltip(tooltip)
 
 func on_cluster_out ():
 	game.hide_tooltip()
