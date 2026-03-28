@@ -2,7 +2,6 @@
 
 [ext_resource type="Script" uid="uid://bd5yb7w0y4d8b" path="res://Scripts/Game.gd" id="2"]
 [ext_resource type="Texture2D" uid="uid://gcp7f61r2ee1" path="res://Graphics/Buttons/settings.png" id="3"]
-[ext_resource type="Texture2D" uid="uid://bsvy7yk6ueecc" path="res://Graphics/Title screen/Background.png" id="4"]
 [ext_resource type="Texture2D" uid="uid://wamlqxf857g2" path="res://Graphics/Title screen/Godot.png" id="5"]
 [ext_resource type="Texture2D" uid="uid://cfoqvd83nesv4" path="res://Graphics/Title screen/GitHub.png" id="6"]
 [ext_resource type="Theme" uid="uid://cp2u1kgj60ic" path="res://Resources/default_theme.tres" id="7"]
@@ -13,12 +12,11 @@
 [ext_resource type="Shader" uid="uid://dyuhjqkup4nnm" path="res://Shaders/Starfield.gdshader" id="9_0dcpd"]
 [ext_resource type="Texture2D" uid="uid://crjpo3xaanqvb" path="res://Graphics/Title screen/Discord.png" id="11"]
 [ext_resource type="Texture2D" uid="uid://mo4yu6npin41" path="res://Graphics/Title screen/BGTitle.png" id="12_lbihj"]
+[ext_resource type="Texture2D" uid="uid://ckfk6bb4pmq0" path="res://Graphics/Planets/12.png" id="12_vvhu1"]
 [ext_resource type="Shader" uid="uid://cx4wx23pi5ith" path="res://Shaders/Cluster.gdshader" id="19_4v34t"]
 [ext_resource type="PackedScene" uid="uid://ddf2xjwcht77u" path="res://Scenes/CloseButton.tscn" id="25"]
 [ext_resource type="Texture2D" uid="uid://koi0aarpqj30" path="res://Graphics/Ships/Ship0.png" id="26"]
 [ext_resource type="Shader" uid="uid://dxhqjhwrfucit" path="res://Shaders/Blur.gdshader" id="30"]
-[ext_resource type="Shader" uid="uid://u62js3345ubk" path="res://Shaders/Star.gdshader" id="31"]
-[ext_resource type="Texture2D" uid="uid://t70si4f413j5" path="res://Graphics/Effects/spotlight_4.png" id="32"]
 [ext_resource type="PackedScene" uid="uid://dtk1md86gqsln" path="res://Scenes/Fire.tscn" id="33"]
 [ext_resource type="Shader" uid="uid://cp1b7vqtf0wsg" path="res://Shaders/ScienceTree.gdshader" id="34"]
 [ext_resource type="PackedScene" uid="uid://c5qfs6oo128dp" path="res://Scenes/Nebula.tscn" id="35"]
@@ -268,74 +266,39 @@ shader_parameter/red_p = 1.0
 shader_parameter/green_p = 2.0
 shader_parameter/blue_p = 4.0
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_3we6a"]
-content_margin_left = 10.0
-content_margin_top = 10.0
-content_margin_right = 10.0
-content_margin_bottom = 10.0
-bg_color = Color(0.129412, 0.129412, 0.129412, 1)
-border_color = Color(0.294118, 0.294118, 0.294118, 1)
-border_blend = true
-shadow_offset = Vector2(1, 1)
+[sub_resource type="Shader" id="Shader_vvhu1"]
+code = "shader_type canvas_item;
 
-[sub_resource type="Animation" id="Animation_6hy8q"]
-resource_name = "Fade"
-length = 1.5
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath(".:modulate")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0.5, 1.5),
-"transitions": PackedFloat32Array(1, 1),
-"update": 0,
-"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 1)]
-}
-tracks/1/type = "bezier"
-tracks/1/imported = false
-tracks/1/enabled = true
-tracks/1/path = NodePath(".:position:x")
-tracks/1/interp = 1
-tracks/1/loop_wrap = true
-tracks/1/keys = {
-"handle_modes": PackedInt32Array(0, 0),
-"points": PackedFloat32Array(83, -0.25, 0, 0.2, 24.6826, 120.137, -0.3, -2.51964, 0.25, 0),
-"times": PackedFloat32Array(0.5, 1.5)
-}
+uniform float alpha:hint_range(0.0, 1.0, 0.1) = 1.0;
+uniform float starlight_angle:hint_range(0.0, 2.0 * 3.1415) = 0.0;
+uniform vec3 starlight_color:source_color = vec3(1.0);
+uniform float starlight_energy:hint_range(0.0, 2.0) = 1.0;
 
-[sub_resource type="Animation" id="Animation_lflfc"]
-length = 0.001
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath(".:modulate")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [Color(1, 1, 1, 1)]
-}
-tracks/1/type = "bezier"
-tracks/1/imported = false
-tracks/1/enabled = true
-tracks/1/path = NodePath(".:position:x")
-tracks/1/interp = 1
-tracks/1/loop_wrap = true
-tracks/1/keys = {
-"handle_modes": PackedInt32Array(0),
-"points": PackedFloat32Array(83, -0.25, 0, 0.25, 0),
-"times": PackedFloat32Array(0)
-}
+void fragment() {
+	COLOR = texture(TEXTURE, UV);
+	COLOR.a *= alpha;
+	vec2 center = 0.4 * vec2(cos(starlight_angle + 3.1415), sin(starlight_angle + 3.1415)) + vec2(0.5);
+	float shade = cos(starlight_angle) * 1.5 * (UV.x - center.x) + sin(starlight_angle) * 1.5 * (UV.y - center.y);
+	float shade2 = starlight_energy * smoothstep(0.0, 1.0, shade) + 0.1;
+	COLOR.rgb *= vec3(shade2) * mix(vec3(1.0), starlight_color, shade2 * 0.8);
+}"
 
-[sub_resource type="AnimationLibrary" id="AnimationLibrary_in6cd"]
-_data = {
-&"Fade": SubResource("Animation_6hy8q"),
-&"RESET": SubResource("Animation_lflfc")
-}
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_lbihj"]
+shader = SubResource("Shader_vvhu1")
+shader_parameter/alpha = 1.0
+shader_parameter/starlight_angle = 3.822000181545
+shader_parameter/starlight_color = Color(1, 1, 1, 1)
+shader_parameter/starlight_energy = 2.0
+
+[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_rajel"]
+load_path = "res://.godot/imported/Background.png-4971a717328ff48d2a17022a2c61f185.ctex"
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_vvhu1"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_rajel"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_vvhu1"]
+bg_color = Color(1, 1, 1, 0.18100001)
 
 [sub_resource type="Animation" id="15"]
 length = 0.5
@@ -364,15 +327,6 @@ unicode = 112
 
 [sub_resource type="Shortcut" id="17"]
 events = [SubResource("InputEventKey_ptddw")]
-
-[sub_resource type="ShaderMaterial" id="18"]
-shader = ExtResource("31")
-shader_parameter/time_offset = 0.0
-shader_parameter/brightness_offset = 0.0
-shader_parameter/twinkle_speed = 1.0
-shader_parameter/amplitude = 0.08
-shader_parameter/alpha = 0.0
-shader_parameter/color = Color(0, 0, 0, 1)
 
 [sub_resource type="Animation" id="19"]
 length = 0.001
@@ -562,6 +516,7 @@ expand_mode = 1
 layer = 5
 
 [node name="FPS" type="Label" parent="Tooltips" unique_id=1919394774]
+visible = false
 offset_right = 184.0
 offset_bottom = 23.0
 label_settings = SubResource("LabelSettings_ycps2")
@@ -648,13 +603,21 @@ offset_right = 1280.0
 offset_bottom = 720.0
 mouse_filter = 2
 
-[node name="TitleBackground" type="TextureRect" parent="." unique_id=358574074]
-offset_right = 1280.0
-offset_bottom = 720.0
-mouse_filter = 2
-texture = ExtResource("4")
-expand_mode = 1
-metadata/_edit_lock_ = true
+[node name="TitleBackground" type="Node2D" parent="." unique_id=223377479]
+
+[node name="Planet" type="Sprite2D" parent="TitleBackground" unique_id=1732072700]
+modulate = Color(1, 1, 1, 0.70500004)
+show_behind_parent = true
+material = SubResource("ShaderMaterial_lbihj")
+position = Vector2(1064, 504)
+scale = Vector2(1.6, 1.6)
+texture = ExtResource("12_vvhu1")
+
+[node name="Main" type="Sprite2D" parent="TitleBackground" unique_id=1682833574]
+modulate = Color(1, 1, 1, 0.6)
+position = Vector2(640, 360)
+scale = Vector2(2.54, 2.54)
+texture = SubResource("CompressedTexture2D_rajel")
 
 [node name="TitleText" type="TextureRect" parent="." unique_id=1793583189]
 anchors_preset = 15
@@ -665,6 +628,7 @@ offset_bottom = 720.0
 grow_horizontal = 2
 grow_vertical = 2
 texture = ExtResource("12_lbihj")
+metadata/_edit_lock_ = true
 
 [node name="Title" type="Control" parent="." unique_id=617922282]
 layout_mode = 3
@@ -672,48 +636,70 @@ anchors_preset = 0
 offset_right = 40.0
 offset_bottom = 40.0
 
-[node name="Menu" type="PanelContainer" parent="Title" unique_id=1265217020]
+[node name="VBoxContainer" type="VBoxContainer" parent="Title" unique_id=870828861]
 layout_mode = 0
-offset_left = 83.0
-offset_top = 432.0
-offset_right = 264.0
-offset_bottom = 614.0
-theme = ExtResource("7")
-theme_override_styles/panel = SubResource("StyleBoxFlat_3we6a")
-
-[node name="VBoxContainer" type="VBoxContainer" parent="Title/Menu" unique_id=870828861]
-layout_mode = 2
-theme_override_constants/separation = 6
+offset_left = 536.0
+offset_top = 416.0
+offset_right = 744.0
+offset_bottom = 658.0
+theme_override_constants/separation = 18
 alignment = 2
 
-[node name="Continue" type="Button" parent="Title/Menu/VBoxContainer" unique_id=163979397]
+[node name="Continue" type="Button" parent="Title/VBoxContainer" unique_id=163979397]
 visible = false
 custom_minimum_size = Vector2(0, 36)
 layout_mode = 2
+theme_override_colors/font_outline_color = Color(0.19793725, 0.19793722, 0.19793722, 1)
+theme_override_constants/outline_size = 4
+theme_override_font_sizes/font_size = 20
+theme_override_styles/normal = SubResource("StyleBoxEmpty_vvhu1")
+theme_override_styles/pressed = SubResource("StyleBoxEmpty_rajel")
+theme_override_styles/hover = SubResource("StyleBoxFlat_vvhu1")
 text = "Continue Save1"
 
-[node name="NewGame" type="Button" parent="Title/Menu/VBoxContainer" unique_id=158765359]
+[node name="NewGame" type="Button" parent="Title/VBoxContainer" unique_id=158765359]
 custom_minimum_size = Vector2(0, 36)
 layout_mode = 2
+theme_override_colors/font_outline_color = Color(0.19793725, 0.19793722, 0.19793722, 1)
+theme_override_constants/outline_size = 4
+theme_override_font_sizes/font_size = 20
+theme_override_styles/normal = SubResource("StyleBoxEmpty_vvhu1")
+theme_override_styles/pressed = SubResource("StyleBoxEmpty_rajel")
+theme_override_styles/hover = SubResource("StyleBoxFlat_vvhu1")
 text = "NEW_GAME"
 
-[node name="LoadGame" type="Button" parent="Title/Menu/VBoxContainer" unique_id=2136819336]
+[node name="LoadGame" type="Button" parent="Title/VBoxContainer" unique_id=2136819336]
 custom_minimum_size = Vector2(0, 36)
 layout_mode = 2
+theme_override_colors/font_outline_color = Color(0.19793725, 0.19793722, 0.19793722, 1)
+theme_override_constants/outline_size = 4
+theme_override_font_sizes/font_size = 20
+theme_override_styles/normal = SubResource("StyleBoxEmpty_vvhu1")
+theme_override_styles/pressed = SubResource("StyleBoxEmpty_rajel")
+theme_override_styles/hover = SubResource("StyleBoxFlat_vvhu1")
 text = "LOAD_GAME"
 
-[node name="Settings" type="Button" parent="Title/Menu/VBoxContainer" unique_id=1410258520]
+[node name="Settings" type="Button" parent="Title/VBoxContainer" unique_id=1410258520]
 custom_minimum_size = Vector2(0, 36)
 layout_mode = 2
+theme_override_colors/font_outline_color = Color(0.19793725, 0.19793722, 0.19793722, 1)
+theme_override_constants/outline_size = 4
+theme_override_font_sizes/font_size = 20
+theme_override_styles/normal = SubResource("StyleBoxEmpty_vvhu1")
+theme_override_styles/pressed = SubResource("StyleBoxEmpty_rajel")
+theme_override_styles/hover = SubResource("StyleBoxFlat_vvhu1")
 text = "SETTINGS"
 
-[node name="Mods" type="Button" parent="Title/Menu/VBoxContainer" unique_id=1105579111]
+[node name="Mods" type="Button" parent="Title/VBoxContainer" unique_id=1105579111]
 custom_minimum_size = Vector2(0, 36)
 layout_mode = 2
+theme_override_colors/font_outline_color = Color(0.19793725, 0.19793722, 0.19793722, 1)
+theme_override_constants/outline_size = 4
+theme_override_font_sizes/font_size = 20
+theme_override_styles/normal = SubResource("StyleBoxEmpty_vvhu1")
+theme_override_styles/pressed = SubResource("StyleBoxEmpty_rajel")
+theme_override_styles/hover = SubResource("StyleBoxFlat_vvhu1")
 text = "MODS"
-
-[node name="AnimationPlayer" type="AnimationPlayer" parent="Title/Menu" unique_id=188580842]
-libraries/ = SubResource("AnimationLibrary_in6cd")
 
 [node name="Discord" type="TextureButton" parent="Title" unique_id=994551793]
 layout_mode = 0
@@ -793,14 +779,6 @@ texture_normal = ExtResource("3")
 ignore_texture_size = true
 stretch_mode = 5
 
-[node name="Star" type="Node2D" parent="." unique_id=608223928]
-
-[node name="Sprite2D" type="Sprite2D" parent="Star" unique_id=662016617]
-material = SubResource("18")
-position = Vector2(1084, 183)
-scale = Vector2(0.506222, 0.506222)
-texture = ExtResource("32")
-
 [node name="Stars" type="CanvasLayer" parent="." unique_id=713435008]
 layer = -2
 
@@ -853,11 +831,11 @@ metadata/_edit_lock_ = true
 [connection signal="close_button_over" from="UI/BottomInfo/CloseButton" to="." method="_on_CloseButton_close_button_over"]
 [connection signal="close_button_pressed" from="UI/BottomInfo/CloseButton" to="." method="_on_BottomInfo_close_button_pressed"]
 [connection signal="text_submitted" from="Tooltips/Command" to="." method="_on_command_text_submitted"]
-[connection signal="pressed" from="Title/Menu/VBoxContainer/Continue" to="." method="_on_continue_pressed"]
-[connection signal="pressed" from="Title/Menu/VBoxContainer/NewGame" to="." method="_on_NewGame_pressed"]
-[connection signal="pressed" from="Title/Menu/VBoxContainer/LoadGame" to="." method="_on_LoadGame_pressed"]
-[connection signal="pressed" from="Title/Menu/VBoxContainer/Settings" to="." method="_on_Settings_pressed"]
-[connection signal="pressed" from="Title/Menu/VBoxContainer/Mods" to="." method="_on_Mods_pressed"]
+[connection signal="pressed" from="Title/VBoxContainer/Continue" to="." method="_on_continue_pressed"]
+[connection signal="pressed" from="Title/VBoxContainer/NewGame" to="." method="_on_NewGame_pressed"]
+[connection signal="pressed" from="Title/VBoxContainer/LoadGame" to="." method="_on_LoadGame_pressed"]
+[connection signal="pressed" from="Title/VBoxContainer/Settings" to="." method="_on_Settings_pressed"]
+[connection signal="pressed" from="Title/VBoxContainer/Mods" to="." method="_on_Mods_pressed"]
 [connection signal="mouse_entered" from="Title/Discord" to="." method="_on_Discord_mouse_entered"]
 [connection signal="mouse_exited" from="Title/Discord" to="." method="_on_mouse_exited"]
 [connection signal="pressed" from="Title/Discord" to="." method="_on_Discord_pressed"]

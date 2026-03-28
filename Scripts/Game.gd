@@ -382,19 +382,6 @@ func load_settings(config:ConfigFile):
 func _ready():
 	Helper.setup_discord()
 	Helper.refresh_discord("In title screen")
-	$Star/Sprite2D.texture = load("res://Graphics/Effects/spotlight_%s.png" % [4, 5, 6].pick_random())
-	var op_star_colors = [
-		Color(0.6169, 0.9533, 0.7249, 1),
-		Color(0.7428, 0.9162, 0.7401, 1),
-		Color(0.6895, 0.5263, 0.965, 1),
-		Color(0.5061, 0.9214, 0.8825, 1),
-		Color(0.8829, 0.5799, 0.9917, 1),
-	]
-	var star_color = Color(randf_range(0.5, 1.0), randf_range(0.5, 1.0), randf_range(0.5, 1.0))
-	print(star_color)
-	$Star/Sprite2D.material["shader_parameter/color"] = star_color
-	var star_tween = create_tween()
-	star_tween.tween_property($Star/Sprite2D.material, "shader_parameter/alpha", 1.0, 2.0)
 	#current_viewport_dimensions = get_viewport().size
 	#get_viewport().connect("size_changed",Callable(self,"update_viewport_dimensions"))
 	for key in Mods.added_mats:
@@ -442,6 +429,9 @@ func _ready():
 	if Settings.op_cursor:
 		OS_name = OS_name.replace("ws", "ge")
 	$UI/Version.text = "Alpha %s (%s): %s" % [VERSION, OS_name, DATE]
+	$TitleBackground/Main.scale = Vector2.ONE * 2.54 * 506.0 / $TitleBackground/Main.texture.get_width()
+	$TitleBackground/Planet.texture = planet_textures.pick_random()
+	$TitleBackground/Planet.scale = Vector2.ONE * 1.6 * 160.0 / $TitleBackground/Planet.texture.get_width()
 	refresh_continue_button()
 	animate_title_buttons()
 	for mod in Mods.mod_list:
@@ -455,21 +445,27 @@ func refresh_continue_button():
 	if err == OK:
 		saved_c_sv = config.get_value("game", "saved_c_sv", "")
 	if saved_c_sv != "" and FileAccess.open("user://%s/save_info.hx3" % [saved_c_sv], FileAccess.READ) != null:
-		$Title/Menu/VBoxContainer/Continue.visible = true
-		$Title/Menu/VBoxContainer/Continue.text = tr("CONTINUE_X") % saved_c_sv
+		$Title/VBoxContainer/Continue.visible = true
+		$Title/VBoxContainer/Continue.text = tr("CONTINUE_X") % saved_c_sv
 	return saved_c_sv
 
 func animate_title_buttons():
 	var tween = create_tween()
 	tween.set_parallel(true)
-	$TitleBackground.modulate.a = 0.0
 	$Title.modulate.a = 0.0
-	$Title/Menu/AnimationPlayer.play("Fade")
-	tween.tween_property($TitleBackground, "modulate", Color.WHITE, 1)
-	tween.tween_property($TitleText, "modulate", Color.WHITE, 1.0)
-	tween.tween_property($Title, "modulate", Color.WHITE, 1).set_delay(0.2)
-	tween.tween_property($Star/Sprite2D.material, "shader_parameter/brightness_offset", 0.8, 1.0).set_delay(0.5)
-	tween.tween_property($Star, "modulate", Color.WHITE, 1.2)
+	$TitleBackground/Main.modulate.a = 0.0
+	$TitleBackground/Planet.material.set_shader_parameter("alpha", 0.0)
+	tween.tween_property($TitleText, "modulate:a", 1.0, 1.0)
+	tween.tween_property($TitleBackground/Main, "modulate:a", 0.5, 3.0)
+	tween.tween_property($TitleBackground/Planet.material, "shader_parameter/alpha", 0.6, 3.0).set_ease(Tween.EASE_IN).set_trans(Tween.TRANS_QUAD)
+	tween.tween_property($Title, "modulate:a", 1.0, 2.0).set_delay(0.2)
+	set_starfield_color($ShaderExport/SubViewport/Starfield.material, 0.5)
+	update_starfield = true
+	show_starfield({"position":Vector2.ONE * 1000.0})
+	if starfield_tween:
+		starfield_tween.kill()
+	starfield_tween = create_tween()
+	starfield_tween.tween_property($Stars/Starfield, "modulate:a", 0.6, 3.0).set_ease(Tween.EASE_IN).set_trans(Tween.TRANS_QUAD)
 	
 func switch_music(src, time_speed:float = 1.0, pitch_scale:float = 1.0):
 	#Music fading
@@ -4043,18 +4039,21 @@ func _on_CloseButton_close_button_out():
 	close_button_over = false
 
 func fade_out_title(fn:String):
-	$Title/Menu/VBoxContainer/NewGame.disconnect("pressed",Callable(self,"_on_NewGame_pressed"))
-	$Title/Menu/VBoxContainer/Continue.disconnect("pressed",Callable(self,"_on_continue_pressed"))
+	$Title/VBoxContainer/NewGame.disconnect("pressed",Callable(self,"_on_NewGame_pressed"))
+	$Title/VBoxContainer/Continue.disconnect("pressed",Callable(self,"_on_continue_pressed"))
 	var tween = create_tween()
 	tween.set_parallel(true)
-	tween.tween_property($Title, "modulate", Color(1, 1, 1, 0), 0.5)
-	tween.tween_property($TitleBackground, "modulate", Color(1, 1, 1, 0), 0.5)
-	tween.tween_property($TitleText, "modulate", Color(1, 1, 1, 0), 0.5)
-	tween.tween_property($Star/Sprite2D.material, "shader_parameter/brightness_offset", 0.0, 0.5)
-	tween.tween_property($Star, "modulate", Color(1, 1, 1, 0), 0.5)
-	tween.tween_property($Star/Sprite2D.material, "shader_parameter/alpha", 0.0, 0.5)
+	tween.tween_property($Title, "modulate:a", 0.0, 0.5)
+	tween.tween_property($TitleBackground/Main, "modulate:a", 0.0, 0.5)
+	tween.tween_property($TitleBackground/Planet.material, "shader_parameter/alpha", 0.0, 0.5)
+	tween.tween_property($TitleText, "modulate:a", 0.0, 0.5)
+	if starfield_tween:
+		starfield_tween.kill()
+	starfield_tween = create_tween()
+	starfield_tween.tween_property($Stars/Starfield, "modulate:a", 0.0, 0.5)
 	await tween.finished
-	$Star.visible = false
+	update_starfield = true
+	$TitleBackground.hide()
 	$Title.visible = false
 	$Settings/Settings.visible = true
 	HUD = preload("res://Scenes/HUD.tscn").instantiate()
@@ -4131,8 +4130,7 @@ func delete_save_confirm(save_str):
 	if err == OK:
 		saved_c_sv = config.get_value("game", "saved_c_sv", "")
 	if saved_c_sv == save_str:
-		$Title/Menu/VBoxContainer/Continue.visible = false
-		$Title/Menu.size.y = 0.0
+		$Title/VBoxContainer/Continue.visible = false
 		config.set_value("game", "saved_c_sv", "")
 		config.save("user://settings.cfg")
 	load_save_panel.on_delete_confirm(save_str)
@@ -4143,15 +4141,13 @@ func return_to_menu_confirm():
 	await switch_view("")
 	c_v = ""
 	DRs = 0
-	$Title/Menu/VBoxContainer/Continue.connect("pressed",Callable(self,"_on_continue_pressed"))
+	$Title/VBoxContainer/Continue.connect("pressed",Callable(self,"_on_continue_pressed"))
 	refresh_continue_button()
 	switch_music(preload("res://Audio/Title.ogg"))
 	HUD.queue_free()
-	var tween = create_tween()
-	tween.tween_property($Star/Sprite2D.material, "shader_parameter/alpha", 1.0, 1.0)
-	$Title/Menu/VBoxContainer/NewGame.connect("pressed",Callable(self,"_on_NewGame_pressed"))
+	$Title/VBoxContainer/NewGame.connect("pressed",Callable(self,"_on_NewGame_pressed"))
 	$Title.visible = true
-	$Star.visible = true
+	$TitleBackground.visible = true
 	animate_title_buttons()
 	universe_data.clear()
 	view.queue_redraw()
