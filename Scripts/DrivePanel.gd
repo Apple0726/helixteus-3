@@ -83,7 +83,7 @@ func select_fuel(type: String, fuel: String, texture, fuel_btn_node):
 	elif fuel == "Ne":
 		energy_per_quantity_of_fuel = 60000
 	elif fuel == "Xe":
-		energy_per_quantity_of_fuel = 3.0e7
+		energy_per_quantity_of_fuel = 9.0e7
 	$Control/HSlider.max_value = game[selected_fuel_type][fuel_selected]
 	$Control/HSlider.value = 0
 	_on_h_slider_value_changed($Control/HSlider.value)

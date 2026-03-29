@@ -269,7 +269,7 @@ func fire_weapon(weapon_type: int):
 			projectile.damage = Data.battle_weapon_stats.bullet.damage * Data.battle_weapon_stats.bullet.damage_multiplier[bullet_levels[PATH_2] - 1]
 			projectile.crit_hit_mult = Data.battle_weapon_stats.bullet.crit_hit_mult[bullet_levels[PATH_2] - 1]
 			projectile.shooter = self
-			projectile.weapon_accuracy = Data.battle_weapon_stats.bullet.accuracy * accuracy
+			projectile.weapon_accuracy = Data.battle_weapon_stats.bullet.accuracy * (accuracy + accuracy_buff)
 			projectile.deflects_remaining = Data.battle_weapon_stats.bullet.deflects[bullet_levels[PATH_2] - 1]
 			if battle_GUI.bullet_2_selected_type == battle_GUI.BIG_BULLET:
 				projectile.knockback = Data.battle_weapon_stats.bullet.knockback[bullet_levels[PATH_2] - 1]
@@ -285,6 +285,8 @@ func fire_weapon(weapon_type: int):
 			$FireProjectileFlash/AnimationPlayer.play("Flash")
 			if i < projectile_num-1:
 				await get_tree().create_timer(0.2).timeout
+		# Needed to prevent cases where ship turn ends early because of no bullets present
+		# but not all bullets have been fired
 		for projectile in projectiles:
 			if is_instance_valid(projectile):
 				projectile.end_turn_ready = true
@@ -298,30 +300,42 @@ func fire_weapon(weapon_type: int):
 			fire_laser(weapon_rotation - $FireWeaponAim.multishot_angle / 2.0)
 			fire_laser(weapon_rotation + $FireWeaponAim.multishot_angle / 2.0)
 	elif weapon_type == battle_GUI.BOMB:
-		var explosive = preload("res://Scenes/Battle/Weapons/Explosive.tscn").instantiate()
-		explosive.collision_layer = 8
-		explosive.collision_mask = 1 + 4 + 32
-		explosive.set_script(load("res://Scripts/Battle/Weapons/Explosive.gd"))
-		explosive.speed = 800.0
-		explosive.velocity_process_modifier = 5.0 if battle_scene.animations_sped_up else 1.0
-		explosive.damage = Data.battle_weapon_stats.bomb.damage * Data.battle_weapon_stats.bomb.damage_multiplier[bomb_levels[PATH_1] - 1]
-		explosive.AoE_radius = Data.battle_weapon_stats.bomb.AoE_radius[bomb_levels[PATH_1] - 1]
-		explosive.mass = Data.battle_weapon_stats.bomb.mass[bomb_levels[PATH_1] - 1]
-		explosive.knockback = Data.battle_weapon_stats.bomb.knockback[bomb_levels[PATH_1] - 1]
-		explosive.rotation = weapon_rotation
-		explosive.shooter = self
-		explosive.weapon_accuracy = Data.battle_weapon_stats.bomb.accuracy * accuracy
-		explosive.status_effects = {Battle.StatusEffect.BURN: Data.battle_weapon_stats.bomb.status_effects[Battle.StatusEffect.BURN][bomb_levels[PATH_2] - 1]}
-		var stun_turns = Data.battle_weapon_stats.bomb.status_effects[Battle.StatusEffect.STUN][bomb_levels[PATH_1] - 1]
-		if stun_turns > 0:
-			explosive.status_effects[Battle.StatusEffect.STUN] = stun_turns
-		explosive.position = position
-		explosive.battle_GUI = battle_GUI
-		explosive.ending_turn_delay = 1.0
-		explosive.end_turn_ready = true
-		battle_scene.add_child(explosive)
-		if fires_remaining <= 0:
-			explosive.end_turn.connect(ending_turn)
+		var projectiles = []
+		var projectile_num = Data.battle_weapon_stats.bomb.shots_fired[bullet_levels[PATH_3] - 1]
+		for i in projectile_num:
+			var explosive = preload("res://Scenes/Battle/Weapons/Explosive.tscn").instantiate()
+			explosive.collision_layer = 8
+			explosive.collision_mask = 1 + 4 + 32
+			explosive.set_script(load("res://Scripts/Battle/Weapons/Explosive.gd"))
+			explosive.speed = 800.0
+			explosive.velocity_process_modifier = 5.0 if battle_scene.animations_sped_up else 1.0
+			explosive.damage = Data.battle_weapon_stats.bomb.damage * Data.battle_weapon_stats.bomb.damage_multiplier[bomb_levels[PATH_1] - 1]
+			explosive.AoE_radius = Data.battle_weapon_stats.bomb.AoE_radius[bomb_levels[PATH_1] - 1]
+			explosive.mass = Data.battle_weapon_stats.bomb.mass[bomb_levels[PATH_1] - 1]
+			explosive.knockback = Data.battle_weapon_stats.bomb.knockback[bomb_levels[PATH_1] - 1]
+			explosive.rotation = weapon_rotation
+			explosive.shooter = self
+			explosive.weapon_accuracy = Data.battle_weapon_stats.bomb.accuracy * (accuracy + accuracy_buff)
+			explosive.status_effects = {Battle.StatusEffect.BURN: Data.battle_weapon_stats.bomb.status_effects[Battle.StatusEffect.BURN][bomb_levels[PATH_2] - 1]}
+			var stun_turns = Data.battle_weapon_stats.bomb.status_effects[Battle.StatusEffect.STUN][bomb_levels[PATH_1] - 1]
+			if stun_turns > 0:
+				explosive.status_effects[Battle.StatusEffect.STUN] = stun_turns
+			explosive.position = position
+			explosive.battle_scene = battle_scene
+			explosive.battle_GUI = battle_GUI
+			explosive.ending_turn_delay = 1.0
+			if bomb_levels[PATH_2] >= 3:
+				explosive.spawn_smaller_explosives = true
+			battle_scene.add_child(explosive)
+			if fires_remaining <= 0:
+				explosive.end_turn.connect(ending_turn)
+			if i < projectile_num-1:
+				await get_tree().create_timer(0.2).timeout
+			projectiles.append(explosive)
+		for projectile in projectiles:
+			if is_instance_valid(projectile):
+				projectile.end_turn_ready = true
+				break
 	elif weapon_type == battle_GUI.LIGHT:
 		if fires_remaining <= 0:
 			light_cone.tree_exited.connect(ending_turn)
@@ -332,7 +346,7 @@ func fire_laser(angle: float, add_signal: bool = false):
 	laser.rotation = angle
 	laser.damage = Data.battle_weapon_stats.laser.damage
 	laser.shooter = self
-	laser.weapon_accuracy = Data.battle_weapon_stats.laser.accuracy * accuracy
+	laser.weapon_accuracy = Data.battle_weapon_stats.laser.accuracy * (accuracy + accuracy_buff)
 	laser.position = position
 	laser.fade_delay = 0.2 if battle_scene.animations_sped_up else 0.5
 	laser.status_effects = {Battle.StatusEffect.STUN: Data.battle_weapon_stats.laser.status_effects[Battle.StatusEffect.STUN][laser_levels[PATH_2] - 1]}

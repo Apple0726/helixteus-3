@@ -202,6 +202,7 @@ rotation = 1.57413
 shape = SubResource("1")
 
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=1873531911]
+light_mask = 5
 material = SubResource("2")
 position = Vector2(0, 6.29962)
 texture = ExtResource("1_t5dxa")

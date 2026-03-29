@@ -2,6 +2,7 @@ extends "Projectile.gd"
 
 var entities_inside_explosion_AoE:Array = []
 var AoE_radius:float
+var spawn_smaller_explosives = false
 
 func _ready() -> void:
 	super()
@@ -67,3 +68,26 @@ func _on_area_entered(area: Area2D) -> void:
 		battle_GUI.flash_screen(0.3, 0.2)
 		set_physics_process(false)
 		$AnimationPlayer.animation_finished.connect(func(anim_name): queue_free())
+		if spawn_smaller_explosives:
+			for i in 8:
+				var explosive = preload("res://Scenes/Battle/Weapons/Explosive.tscn").instantiate()
+				explosive.collision_layer = 8
+				explosive.collision_mask = 1 + 4 + 32
+				explosive.set_script(load("res://Scripts/Battle/Weapons/Explosive.gd"))
+				explosive.speed = 800.0
+				explosive.velocity_process_modifier = 5.0 if battle_scene.animations_sped_up else 1.0
+				explosive.damage = 0.3 * Data.battle_weapon_stats.bomb.damage * Data.battle_weapon_stats.bomb.damage_multiplier[shooter.bomb_levels[0] - 1]
+				explosive.AoE_radius = 0.5 * Data.battle_weapon_stats.bomb.AoE_radius[shooter.bomb_levels[0] - 1]
+				explosive.mass = 0.5 * Data.battle_weapon_stats.bomb.mass[shooter.bomb_levels[0] - 1]
+				explosive.knockback = 0.5 * Data.battle_weapon_stats.bomb.knockback[shooter.bomb_levels[0] - 1]
+				explosive.rotation = rotation + (i + 0.5) / 8.0 * 2.0 * PI
+				explosive.shooter = shooter
+				explosive.weapon_accuracy = Data.battle_weapon_stats.bomb.accuracy * (shooter.accuracy + shooter.accuracy_buff)
+				explosive.status_effects = {Battle.StatusEffect.BURN: 0.5 * Data.battle_weapon_stats.bomb.status_effects[Battle.StatusEffect.BURN][shooter.bomb_levels[1] - 1]}
+				explosive.position = position + 50.0 * Vector2.from_angle(explosive.rotation)
+				explosive.battle_scene = battle_scene
+				explosive.battle_GUI = battle_GUI
+				explosive.ending_turn_delay = 1.0
+				explosive.end_turn.connect(shooter.ending_turn)
+				explosive.end_turn_ready = true
+				battle_scene.call_deferred("add_child", explosive)

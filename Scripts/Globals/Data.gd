@@ -123,7 +123,6 @@ var sand_icon = preload("res://Graphics/Materials/sand.png")
 var coal_icon = preload("res://Graphics/Materials/coal.png")
 var MM_icon = preload("res://Graphics/Icons/MM.png")
 var atom_icon = preload("res://Graphics/Science/ATM.png")
-var particle_icon = preload("res://Graphics/Science/SAP.png")
 var subatomic_particles_icon = preload("res://Graphics/Particles/subatomic_particles.png")
 
 var HP_icon = preload("res://Graphics/Icons/HP.png")
@@ -481,6 +480,7 @@ var battle_weapon_stats = {
 			},
 	"bomb": {	"damage":6.0,
 				"accuracy":0.65,
+				"shots_fired":[1, 1, 1, 3],
 				"AoE_radius":[100.0, 130.0, 180.0, 300.0],
 				"mass":[4.0, 6.0, 9.0, 15.0],
 				"knockback":[50.0, 60.0, 70.0, 100.0],

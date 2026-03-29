@@ -122,14 +122,15 @@ custom_minimum_size = Vector2(0, 38)
 layout_mode = 1
 anchors_preset = 10
 anchor_right = 1.0
-offset_left = 136.0
+offset_left = 128.0
 offset_top = 72.0
-offset_right = 432.0
-offset_bottom = 110.0
+offset_right = 424.0
+offset_bottom = 112.0
 grow_horizontal = 2
 theme_override_font_sizes/font_size = 18
 text = "Achievements & statistics"
 label_settings = SubResource("LabelSettings_vi1vb")
+vertical_alignment = 1
 
 [node name="TabBar" type="HBoxContainer" parent="." unique_id=2116808102]
 layout_mode = 0

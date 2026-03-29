@@ -28,7 +28,3 @@ void fragment() {
 	}
 	COLOR.rgb = mix(COLOR.rgb, flash_color, flash);
 }
-
-void light() {
-	LIGHT = vec4(LIGHT_COLOR.rgb * LIGHT_ENERGY, LIGHT_COLOR.a);
-}

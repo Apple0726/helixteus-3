@@ -164,7 +164,7 @@ func get_max_slider_value():
 			max_value = Helper.get_sum_of_dict(game.stone)
 		else:
 			max_value = game[rsrc_type][resource_selected]
-	return min(game.energy * 0.999 * au_mult / reactions[resource_selected].energy_cost * path_2_value, max_value)
+	return min(game.energy * 0.999 * au_mult / reactions[resource_selected].energy_cost * path_2_value, max_value * 0.999)
 	
 func reset_poses(_name:String):
 	resource_selected = _name

@@ -1,8 +1,8 @@
 {
     "en": {
-        "lines": 1652,
-        "words": 11551,
-        "chars": 70587
+        "lines": 1653,
+        "words": 11584,
+        "chars": 70808
     },
     "fr": {
         "lines": 541,
@@ -17,17 +17,17 @@
     "zh": {
         "lines": 1448,
         "words": 1776,
-        "chars": 18339
+        "chars": 18340
     },
     "de": {
         "lines": 1586,
         "words": 9799,
-        "chars": 72036
+        "chars": 72037
     },
     "es": {
         "lines": 1289,
         "words": 9111,
-        "chars": 58082
+        "chars": 58084
     },
     "ko": {
         "lines": 225,
@@ -42,22 +42,22 @@
     "hu": {
         "lines": 1525,
         "words": 8032,
-        "chars": 59127
+        "chars": 59128
     },
     "ja": {
         "lines": 1233,
         "words": 1369,
-        "chars": 21760
+        "chars": 21761
     },
     "nl": {
         "lines": 1120,
         "words": 5953,
-        "chars": 41154
+        "chars": 41155
     },
     "ru": {
         "lines": 944,
         "words": 3878,
-        "chars": 29033
+        "chars": 29034
     },
     "pl": {
         "lines": 132,

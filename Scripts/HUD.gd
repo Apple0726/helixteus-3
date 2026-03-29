@@ -314,6 +314,8 @@ func refresh():
 		if ship.has("leveled_up"):
 			$Buttons/Ships/Levelup.show()
 			break
+	$Top/ClusterInfo.visible = game.c_c != 0
+	$Top/ClusterInfo/Redshift.text = "%.2f" % game.u_i.cluster_data[game.c_c].redshift
 	await get_tree().process_frame
 	game.refresh_achievements()
 
@@ -784,3 +786,7 @@ func _on_name_focus_entered():
 
 func _on_name_focus_exited():
 	game.view.move_with_keyboard = true
+
+
+func _on_cluster_info_mouse_entered() -> void:
+	game.show_tooltip(Helper.get_cluster_tooltip(game.c_c))

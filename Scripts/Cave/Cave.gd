@@ -409,6 +409,8 @@ func remove_cave():
 	minimap_cave.clear()
 	big_debris.clear()
 	$Ash.clear()
+	for lava_tile in $Lava.get_children():
+		lava_tile.free()
 	for enemy in get_tree().get_nodes_in_group("enemies"):
 		enemy.remove_from_group("enemies")
 		enemy.free()
@@ -511,6 +513,8 @@ func generate_cave(first_floor:bool, going_up:bool):
 	$Exit/PointLight2D.enabled = cave_floor == 1
 	possible_metal_spawns.clear()
 	for met in game.met_info:
+		if met in ["nanocrystal", "mythril"] and game.c_g_g == 0:
+			continue
 		if met == "lead" or pow(game.met_info[met].rarity, 1.4) * 3.0 < difficulty:
 			possible_metal_spawns.append(met)
 	rarity_exponent = remap(cave_floor, 8, 32, 0.9, 0.4) / pow(game.u_i.cluster_data[game.c_c].redshift + 1.0, 0.2)
@@ -578,7 +582,6 @@ func generate_cave(first_floor:bool, going_up:bool):
 	$Rover.scale = Vector2.ONE * rover_size
 	var seeking_proj = enhancements.has("laser_3")
 	var ash_tiles = []
-	var lava_tiles = []
 	var walls = []
 	cave_BG.material.set_shader_parameter("texture_offset", Vector2(rng.randi_range(0.0, 4000.0), rng.randi_range(0.0, 4000.0)))
 	#Generate cave
@@ -970,7 +973,7 @@ func on_map_exited(_body):
 func generate_treasure(tier:int, rng:RandomNumberGenerator):
 	var contents = {	Item.MONEY:round(3000.0 * rng.randf_range(1.0, 1.3) * pow(tier, 3.0) * difficulty * exp(cave_floor / 6.0)),
 						Item.MINERALS:round(200.0 * rng.randf_range(1.0, 1.5) * pow(tier, 3.0) * difficulty * exp(cave_floor / 9.0)),
-						Item.HELIX_CORE1:int(0.1 * rng.randf_range(1.0, 3.0) * pow(tier, 1.8) * sqrt(difficulty))}
+						Item.HELIX_CORE1:int(0.2 * rng.randf_range(1.0, 3.0) * pow(tier, 1.8) * sqrt(difficulty))}
 	if contents[Item.HELIX_CORE1] > 64:
 		contents[Item.HELIX_CORE2] = int(contents[Item.HELIX_CORE1] / 64.0)
 		contents[Item.HELIX_CORE1] %= 64

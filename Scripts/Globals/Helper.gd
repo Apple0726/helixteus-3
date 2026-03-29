@@ -1616,6 +1616,31 @@ func get_logarithmic_time_speed(dimensional_power:int, base_time_speed:float):
 	else:
 		return base_time_speed
 
+func get_cluster_tooltip(c_id:int):
+	var c_i = game.u_i.cluster_data[c_id]
+	var _name:String
+	if c_i.has("name"):
+		_name = c_i.name
+	else:
+		if c_i["class"] == game.ClusterType.GROUP:
+			_name = tr("GALAXY_GROUP") + " %s" % c_id
+		else:
+			_name = tr("GALAXY_CLUSTER") + " %s" % c_id
+	var tooltip:String = "%s\n%s: %s\n%s: %s" % [_name, tr("GALAXIES"), c_i.galaxy_num, tr("REDSHIFT"), c_i.redshift]
+	if not c_i.modifiers.is_empty():
+		tooltip += "\n{modifiers_label}: ".format({"modifiers_label": tr("MODIFIERS")})
+		for mod in c_i.modifiers:
+			var color = "ffffff"
+			if game.cluster_modifier_data[mod].p > 100.0:
+				color = "4444ff"
+			elif game.cluster_modifier_data[mod].p > 10.0:
+				color = "00ff00"
+			tooltip += "\n - [color=#{color}]{modifier}[/color]".format({
+				"color":color,
+				"modifier":tr(game.cluster_modifier_data[mod].name)
+			})
+	return tooltip
+
 func add_text_to_RTL(RTL:RichTextLabel, txt:String, imgs:Array, size:int = 17, resize_RTL:bool = false):
 	RTL.text = ""
 	var arr = txt.split("@i")#@i: where images are placed

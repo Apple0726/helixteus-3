@@ -2,6 +2,7 @@ extends Area2D
 
 signal end_turn
 
+var battle_scene
 var battle_GUI
 static var amount:int = 0
 static var end_turn_ready = false

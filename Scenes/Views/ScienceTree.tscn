@@ -10,9 +10,9 @@
 [ext_resource type="Texture2D" uid="uid://dwr1aw0b05sht" path="res://Graphics/Science/RC.png" id="9_evco7"]
 [ext_resource type="Texture2D" uid="uid://koi0aarpqj30" path="res://Graphics/Ships/Ship0.png" id="10_yvcl0"]
 [ext_resource type="Texture2D" uid="uid://di3sx4ynm6kot" path="res://Graphics/Science/CD.png" id="11_4oae0"]
+[ext_resource type="Texture2D" uid="uid://c464cktjcl0bt" path="res://Graphics/Particles/subatomic_particles.png" id="12_eu0ii"]
 [ext_resource type="Texture2D" uid="uid://c02m0dq0w0k4g" path="res://Graphics/Science/ATM.png" id="12_vuk7d"]
 [ext_resource type="Texture2D" uid="uid://clk5xvpyx2km2" path="res://Graphics/Metals/diamond.png" id="13_eu0ii"]
-[ext_resource type="Texture2D" uid="uid://cv8g560m8rjmk" path="res://Graphics/Science/SAP.png" id="13_pdb81"]
 [ext_resource type="Texture2D" uid="uid://b8oy6e548ukc5" path="res://Graphics/Science/AMM.png" id="14_7q2bc"]
 [ext_resource type="Texture2D" uid="uid://h7n6peyduph2" path="res://Graphics/Science/ID.png" id="15_ej63c"]
 [ext_resource type="Texture2D" uid="uid://dtnykhifc2erl" path="res://Graphics/Science/PD.png" id="16_4k12i"]
@@ -274,7 +274,7 @@ offset_left = 1600.0
 offset_top = -368.0
 offset_right = 1856.0
 offset_bottom = -304.0
-icon_texture = ExtResource("13_pdb81")
+icon_texture = ExtResource("12_eu0ii")
 
 [node name="AMM" parent="Main" unique_id=418776381 instance=ExtResource("1")]
 layout_mode = 0

@@ -712,6 +712,7 @@ scale = Vector2(0.8, 0.8)
 texture = ExtResource("30")
 
 [node name="Sprite2D" type="Sprite2D" parent="Rover" unique_id=393075934]
+light_mask = 5
 scale = Vector2(0.288352, 0.288352)
 texture = ExtResource("11")
 
