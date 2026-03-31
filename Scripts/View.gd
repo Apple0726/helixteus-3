@@ -127,24 +127,28 @@ func _process(delta):
 		queue_redraw()
 	if is_instance_valid(obj):
 		if game.c_v == "planet":
-			if scale.x < 0.25 and not obj.icons_hidden:
-				for time_bar in obj.time_bars:
-					time_bar.node.visible = false
-				for rsrc in obj.rsrcs:
-					if is_instance_valid(rsrc):
-						rsrc.visible = false
-				for hbox in obj.hboxes:
-					if not hbox or not is_instance_valid(hbox):
-						continue
-					hbox.visible = false
-				obj.icons_hidden = true
-				obj.timer.wait_time = 1.0
-				if not get_tree().get_nodes_in_group("tile_bonus_nodes").is_empty():
-					for tile_bonus_node in get_tree().get_nodes_in_group("tile_bonus_nodes"):
-						var tween = create_tween()
-						tween.set_parallel(true)
-						tween.tween_property(tile_bonus_node, "color:a", 0.6, 0.1)
-						tween.tween_property(tile_bonus_node.get_node("TileBonus"), "modulate:a", 0.0, 0.1)
+			if scale.x < 0.25:
+				for glow in get_tree().get_nodes_in_group("ancient_bldg_glows"):
+					glow.scale = Vector2(0.5 / scale.x, 0.5 / scale.y)
+					glow.show()
+				if not obj.icons_hidden:
+					for time_bar in obj.time_bars:
+						time_bar.node.visible = false
+					for rsrc in obj.rsrcs:
+						if is_instance_valid(rsrc):
+							rsrc.visible = false
+					for hbox in obj.hboxes:
+						if not hbox or not is_instance_valid(hbox):
+							continue
+						hbox.visible = false
+					obj.icons_hidden = true
+					obj.timer.wait_time = 1.0
+					if not get_tree().get_nodes_in_group("tile_bonus_nodes").is_empty():
+						for tile_bonus_node in get_tree().get_nodes_in_group("tile_bonus_nodes"):
+							var tween = create_tween()
+							tween.set_parallel(true)
+							tween.tween_property(tile_bonus_node, "color:a", 0.6, 0.1)
+							tween.tween_property(tile_bonus_node.get_node("TileBonus"), "modulate:a", 0.0, 0.1)
 			elif scale.x >= 0.25 and obj.icons_hidden:
 				for time_bar in obj.time_bars:
 					time_bar.node.visible = true
@@ -155,6 +159,8 @@ func _process(delta):
 					if not hbox or not is_instance_valid(hbox):
 						continue
 					hbox.visible = true
+				for glow in get_tree().get_nodes_in_group("ancient_bldg_glows"):
+					glow.hide()
 				obj.icons_hidden = false
 				obj.timer.wait_time = 0.1
 				if not get_tree().get_nodes_in_group("tile_bonus_nodes").is_empty():

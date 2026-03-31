@@ -37,16 +37,16 @@ func _ready():
 		var system = Sprite2D.new()
 		star_btn.texture_normal = star_texture[int(star.temperature) % 3]
 		star_btn.texture_click_mask = preload("res://Graphics/Misc/StarCM.png")
-		if Settings.enable_shaders:
-			star_btn.material = ShaderMaterial.new()
-			star_btn.material.shader = preload("res://Shaders/Star.gdshader")
-			star_btn.material.set_shader_parameter("time_offset", 10.0 * randf())
-			star_btn.material.set_shader_parameter("color", Helper.get_star_modulate(star["class"]))
-			star_btn.material.set_shader_parameter("alpha", 0.0)
-			var galaxy_tween = create_tween()
-			galaxy_tween.tween_property(star_btn.material, "shader_parameter/alpha", 1.0, 0.3)
-		else:
-			star_btn.modulate = Helper.get_star_modulate(star["class"])
+		star_btn.self_modulate = Helper.get_star_modulate(star["class"])
+		var star2 = TextureRect.new()
+		star2.texture = star_texture[int(star.temperature) % 3]
+		star2.pivot_offset_ratio = Vector2.ONE * 0.5
+		star2.scale *= 0.5
+		var galaxy_tween = create_tween()
+		star_btn.modulate.a = 0.0
+		galaxy_tween.tween_property(star_btn, "modulate:a", 1.0, 0.3)
+		star2.modulate.a = 0.6
+		star_btn.add_child(star2)
 		add_child(system)
 		system.add_child(star_btn)
 		obj_btns.append(star_btn)
@@ -54,10 +54,10 @@ func _ready():
 		star_btn.mouse_exited.connect(on_system_out)
 		star_btn.pressed.connect(on_system_click.bind(s_i.id, s_i.l_id))
 		star_btn.rotation = sin(star.temperature) * 180
-		star_btn.position = Vector2(-1024 / 2, -1024 / 2)
-		star_btn.pivot_offset = Vector2(1024 / 2, 1024 / 2)
+		star_btn.position = -0.5 * Vector2.ONE * star_btn.texture_normal.get_width()
+		star_btn.pivot_offset_ratio = Vector2.ONE * 0.5
 		var radius = pow(star["size"] / game.SYSTEM_SCALE_DIV, 0.35)
-		star_btn.scale *= radius
+		star_btn.scale *= radius * 1024.0 / star_btn.texture_normal.get_width()
 		system.position = s_i["pos"]
 		dimensions_temp = max(dimensions_temp, s_i.pos.length())
 		Helper.add_overlay(system, self, "system", s_i, overlays)
@@ -292,7 +292,7 @@ func _process(delta: float) -> void:
 						g_i.combined_strength = 0
 						fighters_rekt = true
 						for j in len(game.fighter_data):
-							if game.fighter_data[j] and game.fighter_data[j].c_g_g == game.c_g_g:
+							if game.fighter_data[j] and game.fighter_data[j].get("c_g_g", -1) == game.c_g_g:
 								game.fighter_data[j] = null
 						g_i.erase("conquer_start_date")
 						g_i.erase("time_for_one_sys")
@@ -335,7 +335,7 @@ func _process(delta: float) -> void:
 				if not game.new_bldgs.has(Building.SOLAR_PANEL):
 					game.new_bldgs[Building.SOLAR_PANEL] = true
 				for j in len(game.fighter_data):
-					if game.fighter_data[j] and game.fighter_data[j].c_g_g == game.c_g_g:
+					if game.fighter_data[j] and game.fighter_data[j].get("c_g_g", -1) == game.c_g_g:
 						game.fighter_data[j].erase("exploring")
 				game.popup_window(tr("CONQUERED_GALAXY"), "", [tr("DISBAND")], [disband_fighters], tr("KEEP"))
 			set_process(false)
@@ -344,5 +344,5 @@ func _process(delta: float) -> void:
 
 func disband_fighters():
 	for i in len(game.fighter_data):
-		if game.fighter_data[i] and game.fighter_data[i].c_g_g == game.c_g_g:
+		if game.fighter_data[i] and game.fighter_data[i].get("c_g_g", -1) == game.c_g_g:
 			game.fighter_data[i] = null

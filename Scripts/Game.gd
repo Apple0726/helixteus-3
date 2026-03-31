@@ -1178,12 +1178,6 @@ func switch_view(new_view:String, other_params:Dictionary = {}):
 				for star in get_tree().get_nodes_in_group("stars_system"):
 					if is_instance_valid(star) and star.material != null:
 						tween2.tween_property(star.material, "shader_parameter/alpha", 0.0, 0.15)
-			if c_v == "galaxy":
-				var tween2 = create_tween()
-				tween2.set_parallel(true)
-				for system in view.obj.obj_btns:
-					if is_instance_valid(system) and system.material != null:
-						tween2.tween_property(system.material, "shader_parameter/alpha", 0.0, 0.15)
 			elif c_v == "universe":
 				var tween2 = create_tween()
 				tween2.set_parallel(true)
@@ -2912,13 +2906,18 @@ func generate_tiles(id:int):
 	var max_aurora_gap_size:int = wid / 3
 	var aurora_spawn_p_mult:float = 1.0
 	if ClusterModifier.LOT_MORE_AURORAS in u_i.cluster_data[c_c].modifiers:
-		num_auroras += 1
+		num_auroras += 2
 		max_aurora_gap_size = wid / 5
 		aurora_spawn_p_mult = 2.0
 	elif ClusterModifier.MORE_AURORAS in u_i.cluster_data[c_c].modifiers:
+		num_auroras += 1
 		aurora_spawn_p_mult = 1.5
 	var home_planet:bool = c_p_g == 2 and c_u == 0
 	var B_strength:float = galaxy_data[c_g].B_strength
+	if max_aurora_gap_size < thiccness + 1:
+		diff = thiccness + 1
+	else:
+		diff = randi_range(thiccness + 1, max_aurora_gap_size)
 	for i in num_auroras:
 		if home_planet:
 			continue
@@ -2932,8 +2931,8 @@ func generate_tiles(id:int):
 			tile_to = randi() % wid
 		if rand < 0.5:#Vertical
 			for j in wid:
-				var x_pos:int = lerp(tile_from, tile_to, j / float(wid)) + diff + thiccness * amplitude * sin(j / float(wid) * 4 * pulsation * PI)
-				for k in range(x_pos - int(thiccness / 2) + diff, x_pos + int(ceil(thiccness / 2.0)) + diff):
+				var x_pos:int = lerp(tile_from, tile_to, j / float(wid)) + diff * i + thiccness * amplitude * sin(j / float(wid) * 4 * pulsation * PI)
+				for k in range(x_pos - int(thiccness / 2) + diff * i, x_pos + int(ceil(thiccness / 2.0)) + diff * i):
 					if k < 0 or k > wid - 1:
 						continue
 					show.auroras = true
@@ -2948,8 +2947,8 @@ func generate_tiles(id:int):
 						tile_data[id2].resource_production_bonus["energy"] = tile_data[id2].resource_production_bonus.get("energy", 1.0) + au_int
 		else:#Horizontal
 			for j in wid:
-				var y_pos:int = lerp(tile_from, tile_to, j / float(wid)) + diff + thiccness * amplitude * sin(j / float(wid) * 4 * pulsation * PI)
-				for k in range(y_pos - int(thiccness / 2) + diff, y_pos + int(ceil(thiccness / 2.0)) + diff):
+				var y_pos:int = lerp(tile_from, tile_to, j / float(wid)) + diff * i + thiccness * amplitude * sin(j / float(wid) * 4 * pulsation * PI)
+				for k in range(y_pos - int(thiccness / 2) + diff * i, y_pos + int(ceil(thiccness / 2.0)) + diff * i):
 					if k < 0 or k > wid - 1:
 						continue
 					show.auroras = true
@@ -2965,10 +2964,6 @@ func generate_tiles(id:int):
 		stats_global.highest_au_int = max(au_int, stats_global.highest_au_int)
 		stats_dim.highest_au_int = max(au_int, stats_dim.highest_au_int)
 		stats_univ.highest_au_int = max(au_int, stats_univ.highest_au_int)
-		if max_aurora_gap_size < thiccness + 1:
-			diff = thiccness + 1
-		else:
-			diff = randi_range(thiccness + 1, max_aurora_gap_size) * sign(randf_range(-69, 69))
 		if i == 0 and randf() < physics_bonus.perpendicular_auroras:
 			rand = 1.0 - rand
 	#We assume that the star system's age is inversely proportional to the coldest star's temperature
@@ -3255,9 +3250,9 @@ func generate_tiles(id:int):
 			earn_achievement("exploration", "find_xenon_lake")
 	if p_i.has("lake"):
 		if p_i.lake.element == "Ne":
-			lake_au_int = Helper.clever_round(1.2e6 * (randf_range(1, 2)) * B_strength * max_star_temp)
+			lake_au_int = Helper.clever_round(3.6e3 * (randf_range(1, 2)))
 		elif p_i.lake.element == "Xe":
-			lake_au_int = Helper.clever_round(9.5e7 * (randf_range(1, 2)) * B_strength * max_star_temp)
+			lake_au_int = Helper.clever_round(1.5e5 * (randf_range(1, 2)))
 	for i in wid:
 		for j in wid:
 			var t_id = i % wid + j * wid
@@ -3275,15 +3270,15 @@ func generate_tiles(id:int):
 							continue
 						if lake_au_int > 0.0 and not _tile.has("lake"):
 							if _tile.has("aurora"):
-								if not _tile.has("lake_elements"):
+								if not _tile.has("lake_elements"): # Aurora does not come from lake
 									_tile.aurora += lake_au_int
 									_tile.resource_production_bonus["SP"] = _tile.resource_production_bonus.get("SP", 1.0) + lake_au_int
-								else:
+								else:# Aurora comes from lake
 									_tile.resource_production_bonus["SP"] = _tile.resource_production_bonus.get("SP", 1.0) + max(0, lake_au_int - _tile.aurora)
 									_tile.aurora = max(lake_au_int, _tile.aurora)
 							else:
 								_tile.resource_production_bonus["SP"] = _tile.resource_production_bonus.get("SP", 1.0) + lake_au_int
-								_tile.aurora = lake_au_int
+								_tile["aurora"] = lake_au_int
 						if _tile.has("lake_elements"):
 							_tile.lake_elements[lake_info.element] = lake_info.state
 						else:

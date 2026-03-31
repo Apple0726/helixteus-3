@@ -272,18 +272,23 @@ func add_ancient_building_sprite(tile:Dictionary, tile_id:int, v:Vector2, buildi
 		elif ancient_building_name == AncientBuilding.SUBSTATION:
 			add_rsrc(v + Vector2(100, 100), Color(0, 0.8, 0, 1), Data.energy_icon, tile_id)
 	if tile.ancient_bldg.tier > 1 and bldgs[tile_id]:
-		var particle_props = [	{"c":Color(0.0, 1.0, 0.0, 1.0), "amount":50, "lifetime":2.4},
-								{"c":Color(0.0, 0.0, 1.0, 1.0), "amount":60, "lifetime":2.8},
-								{"c":Color(1.0, 0.0, 1.0, 1.0), "amount":70, "lifetime":3.2},
-								{"c":Color(1.0, 0.5, 0.0, 1.0), "amount":80, "lifetime":3.6},
-								{"c":Color(1.0, 1.0, 0.742, 1.0), "amount":90, "lifetime":4.0},
-								{"c":Color(1.0, 0.485, 0.485, 1.0), "amount":100, "lifetime":4.4}]
-		var particles = preload("res://Scenes/AncientBuildingParticles.tscn").instantiate()
-		particles.amount = particle_props[tile.ancient_bldg.tier - 2].amount
-		particles.lifetime = particle_props[tile.ancient_bldg.tier - 2].lifetime
-		particles.speed_scale = game.u_i.time_speed * tile.get("time_speed_bonus", 1.0)
-		particles.material.set_shader_parameter("color", particle_props[tile.ancient_bldg.tier - 2].c)
-		bldgs[tile_id].add_child(particles)
+		var glow_colors = [Color(0.0, 1.0, 0.0, 1.0),
+							Color(0.0, 0.0, 1.0, 1.0),
+							Color(1.0, 0.0, 1.0, 1.0),
+							Color(1.0, 0.5, 0.0, 1.0),
+							Color(1.0, 1.0, 0.742, 1.0),
+							Color(1.0, 0.485, 0.485, 1.0),
+						]
+		var glow = Sprite2D.new()
+		glow.texture = preload("res://Graphics/Effects/spotlight_1.png")
+		glow.material = ShaderMaterial.new()
+		glow.material.shader = preload("res://Shaders/Star.gdshader")
+		glow.material.set_shader_parameter("amplitude", 0.8)
+		glow.material.set_shader_parameter("twinkle_speed", 0.0)
+		glow.material.set_shader_parameter("color", glow_colors[tile.ancient_bldg.tier - 2])
+		glow.material.resource_local_to_scene = true
+		bldgs[tile_id].add_child(glow)
+		glow.add_to_group("ancient_bldg_glows")
 
 func add_particles(pos:Vector2):
 	var particle:GPUParticles2D = game.particles_scene.instantiate()

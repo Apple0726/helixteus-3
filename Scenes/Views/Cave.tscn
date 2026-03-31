@@ -17,8 +17,8 @@
 [ext_resource type="Texture2D" uid="uid://csyq1ka6cgn87" path="res://Graphics/Cave/MMIcons/Rover.png" id="16"]
 [ext_resource type="Texture2D" uid="uid://dctvflbbcrqs4" path="res://Graphics/Cave/Projectiles/mining_laser_glow.png" id="16_6cmh4"]
 [ext_resource type="Texture2D" uid="uid://cslf5agen531d" path="res://Graphics/Cave/MMIcons/NextFloor.png" id="17"]
+[ext_resource type="Texture2D" uid="uid://uyvtci76f3tm" path="res://Graphics/Clusters/0.png" id="17_f1kta"]
 [ext_resource type="Texture2D" uid="uid://cdblvpftr6875" path="res://icon.png" id="18"]
-[ext_resource type="Texture2D" uid="uid://t70si4f413j5" path="res://Graphics/Effects/spotlight_4.png" id="19"]
 [ext_resource type="PackedScene" uid="uid://2s0chovxmhln" path="res://Scenes/InventorySlot.tscn" id="20"]
 [ext_resource type="Texture2D" uid="uid://cbployr7rnqpu" path="res://Graphics/Cave/MMIcons/Exit.png" id="21"]
 [ext_resource type="Texture2D" uid="uid://dxr8x86jdcd2p" path="res://Graphics/Tiles/Highlight.jpg" id="22"]
@@ -92,25 +92,6 @@ height = 151.187
 
 [sub_resource type="CircleShape2D" id="3"]
 radius = 52.0
-
-[sub_resource type="Gradient" id="23"]
-offsets = PackedFloat32Array(0, 0.534137, 1)
-colors = PackedColorArray(1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 0)
-
-[sub_resource type="GradientTexture2D" id="24"]
-gradient = SubResource("23")
-
-[sub_resource type="ParticleProcessMaterial" id="25"]
-emission_shape = 2
-emission_sphere_radius = 26.42
-direction = Vector3(0, -1, 0)
-spread = 21.58
-initial_velocity_min = 25.0
-initial_velocity_max = 25.0
-gravity = Vector3(0, 0, 0)
-scale_min = 0.02
-scale_max = 0.04
-color_ramp = SubResource("24")
 
 [sub_resource type="Gradient" id="Gradient_0vr4p"]
 colors = PackedColorArray(1, 1, 1, 1, 1, 1, 1, 0)
@@ -634,12 +615,6 @@ texture = ExtResource("13")
 shape = SubResource("3")
 disabled = true
 
-[node name="GPUParticles2D" type="GPUParticles2D" parent="Exit" unique_id=865342844]
-emitting = false
-texture = ExtResource("19")
-lifetime = 2.0
-process_material = SubResource("25")
-
 [node name="PointLight2D" type="PointLight2D" parent="Exit" unique_id=1179598820]
 position = Vector2(0, -98)
 enabled = false
@@ -857,7 +832,7 @@ shape = SubResource("155")
 visible = false
 material = SubResource("91")
 scale = Vector2(0.9, 0.9)
-texture = ExtResource("19")
+texture = ExtResource("17_f1kta")
 
 [node name="Particles" type="GPUParticles2D" parent="RoDEffects" unique_id=764850567]
 material = SubResource("92")

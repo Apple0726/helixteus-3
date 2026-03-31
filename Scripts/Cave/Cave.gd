@@ -578,7 +578,7 @@ func generate_cave(first_floor:bool, going_up:bool):
 	noise.frequency = 1.0 / tile.cave.period
 	lava_noise.fractal_octaves = 1
 	lava_noise.frequency = 1.0 / rng.randi_range(30, 120)
-	camera.zoom = Vector2.ONE * rover_size / 2.5
+	camera.zoom = Vector2.ONE / rover_size / 2.5
 	$Rover.scale = Vector2.ONE * rover_size
 	var seeking_proj = enhancements.has("laser_3")
 	var ash_tiles = []

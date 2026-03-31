@@ -295,7 +295,7 @@ func _process(delta: float) -> void:
 						c_i.combined_strength = 0
 						fighters_rekt = true
 						for j in len(game.fighter_data):
-							if game.fighter_data[j] and game.fighter_data[j].c_c == game.c_c:
+							if game.fighter_data[j] and game.fighter_data[j].get("c_c", -1) == game.c_c:
 								game.fighter_data[j] = null
 						c_i.erase("conquer_start_date")
 						c_i.erase("time_for_one_sys")
@@ -335,9 +335,14 @@ func _process(delta: float) -> void:
 				if not game.new_bldgs.has(Building.SOLAR_PANEL):
 					game.new_bldgs[Building.SOLAR_PANEL] = true
 				for j in len(game.fighter_data):
-					if game.fighter_data[j] and game.fighter_data[j].c_c == game.c_c:
+					if game.fighter_data[j] and game.fighter_data[j].get("c_c", -1) == game.c_c:
 						game.fighter_data[j].erase("exploring")
-				game.popup_window(tr("CONQUERED_CLUSTER"))
+				game.popup_window(tr("CONQUERED_CLUSTER"), "", [tr("DISBAND")], [Helper.disband_fighters], tr("KEEP"))
 			set_process(false)
 	else:
 		set_process(false)
+
+func disband_fighters():
+	for i in len(game.fighter_data):
+		if game.fighter_data[i] and game.fighter_data[i].get("c_c", -1) == game.c_c:
+			game.fighter_data[i] = null
