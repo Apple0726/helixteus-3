@@ -1316,7 +1316,7 @@ func exit_cave():
 				inventory[i].clear()
 	var i_w_w2 = i_w_w.duplicate(true)
 	if i_w_w.has("stone"):
-		i_w_w2.stone = Helper.get_stone_comp_from_amount(p_i.crust, i_w_w.stone)
+		i_w_w2["stone"] = Helper.get_stone_comp_from_amount(p_i.crust, i_w_w.stone)
 	i_w_w.clear()
 	game.switch_view("planet")
 	game.add_resources(i_w_w2)

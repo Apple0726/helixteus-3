@@ -432,7 +432,7 @@ func _ready():
 		OS_name = OS_name.replace("ws", "ge")
 	$UI/Version.text = "Alpha %s (%s): %s" % [VERSION, OS_name, DATE]
 	$TitleBackground/Main.scale = Vector2.ONE * 2.54 * 506.0 / $TitleBackground/Main.texture.get_width()
-	$TitleBackground/Planet.texture = planet_textures.pick_random()
+	$TitleBackground/Planet.texture = planet_textures[1]
 	$TitleBackground/Planet.scale = Vector2.ONE * 1.6 * 160.0 / $TitleBackground/Planet.texture.get_width()
 	refresh_continue_button()
 	animate_title_buttons()
@@ -458,7 +458,7 @@ func animate_title_buttons():
 	$TitleBackground/Main.modulate.a = 0.0
 	$TitleBackground/Planet.material.set_shader_parameter("alpha", 0.0)
 	tween.tween_property($TitleText, "modulate:a", 1.0, 1.0)
-	tween.tween_property($TitleBackground/Main, "modulate:a", 0.5, 3.0)
+	tween.tween_property($TitleBackground/Main, "modulate:a", 0.7, 3.0)
 	tween.tween_property($TitleBackground/Planet.material, "shader_parameter/alpha", 0.6, 3.0).set_ease(Tween.EASE_IN).set_trans(Tween.TRANS_QUAD)
 	tween.tween_property($Title, "modulate:a", 1.0, 2.0).set_delay(0.2)
 	set_starfield_color($ShaderExport/SubViewport/Starfield.material, 0.5)
@@ -3531,6 +3531,7 @@ func use_item(item_id:int, send_to_rover:int = -1):
 		remove_items(item_id)
 		pickaxe.liquid_id = item_id
 		pickaxe.liquid_durability = Item.data[item_id].durability
+		pickaxe.speed_mult = Item.data[item_id].speed_mult
 		if active_panel == inventory:
 			toggle_panel("inventory")
 		popup("SUCCESSFULLY_APPLIED", 1.5)

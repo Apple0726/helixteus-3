@@ -7,6 +7,9 @@ var bomb_ready = false
 var light_ready = false
 var areas_in_laser_range = []
 
+func _ready() -> void:
+	$Sprite2D.scale *= 245.0 * 4.0 / $Sprite2D.texture.get_width()
+
 func _draw():
 	if laser_ready:
 		draw_arc(Vector2.ZERO, STM_node.laser_range, 0, 2*PI, 100, Color(1.0, 0.0, 0.0, 0.3), -1)

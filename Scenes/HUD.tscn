@@ -1101,7 +1101,6 @@ ignore_texture_size = true
 stretch_mode = 5
 
 [node name="Soil" type="Control" parent="Top/Resources" unique_id=1323890795]
-visible = false
 custom_minimum_size = Vector2(40, 0)
 layout_mode = 2
 size_flags_horizontal = 3
@@ -1125,6 +1124,7 @@ offset_bottom = 252.0
 scale = Vector2(0.14, 0.14)
 texture_normal = ExtResource("11")
 ignore_texture_size = true
+stretch_mode = 5
 
 [node name="Glass" type="Control" parent="Top/Resources" unique_id=1361228441]
 visible = false

@@ -463,8 +463,9 @@ func _zoom_at_point_animate(zoom_change: float):
 	if game.c_v == "planet":
 		if is_instance_valid(obj) and obj.dimensions and scale.x >= 10000 / obj.dimensions and zoom_change > 1: #max zoom in
 			return
-	elif game.c_v == "universe":
-		if scale.x >= 25.0 and zoom_change > 1: #max zoom in
+	else:
+		if scale.x * zoom_change >= 25.0: #max zoom in
+			zoom_change = 25.0 / scale.x
 			return
 	if zoom_tween and zoom_tween.is_running():
 		zoom_tween.kill()

@@ -340,16 +340,16 @@ func get_matched_objs(matched_objs_display: Array, matched_objs: Array):
 	if filter_text == "*" or len(filter_text) >= 2:
 		for i in len(Building.names):
 			var bldg_name = Building.names[i]
-			if filter_text == "*" or filter_text in tr(bldg_name.to_upper() + "_NAME").to_lower():
+			if filter_text == "*" or filter_text.to_lower() in tr(bldg_name.to_upper() + "_NAME").to_lower():
 				matched_objs_display.append(tr(bldg_name.to_upper() + "_NAME_S"))
 				matched_objs.append(i)
 		for i in len(AncientBuilding.names):
 			var bldg_name = AncientBuilding.names[i]
-			if filter_text == "*" or filter_text in tr(bldg_name.to_upper()).to_lower():
+			if filter_text == "*" or filter_text.to_lower() in tr(bldg_name.to_upper()).to_lower():
 				matched_objs_display.append(tr(bldg_name.to_upper()))
 				matched_objs.append(i)
 		for MS_name in Megastructure.names:
-			if filter_text == "*" or filter_text in tr("M_" + MS_name + "_NAME").to_lower():
+			if filter_text == "*" or filter_text.to_lower() in tr("M_" + MS_name + "_NAME").to_lower():
 				matched_objs_display.append(tr("M_" + MS_name + "_NAME"))
 				matched_objs.append(MS_name)
 

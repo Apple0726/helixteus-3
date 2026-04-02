@@ -68,6 +68,7 @@ func on_slot_out():
 func on_slot_pressed():
 	var item_id:int = game.items[item_hovered].id
 	game.use_item(item_id, send_to_rover)
+	send_to_rover = -1
 
 func _on_Materials_pressed():
 	tab = "materials"
