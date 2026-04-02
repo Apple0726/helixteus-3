@@ -1,9 +1,9 @@
 extends Node2D
 
 const TEST:bool = false
-const DATE:String = "1 Apr 2026"
-const VERSION:String = "v0.30"
-const COMPATIBLE_SAVES = []
+const DATE:String = "2 Apr 2026"
+const VERSION:String = "v0.30.1"
+const COMPATIBLE_SAVES = ["v0.30"]
 
 #var surface_BG = preload("res://Graphics/Decoratives/Surface.jpg")
 #var crust_BG = preload("res://Graphics/Decoratives/Crust.jpg")
