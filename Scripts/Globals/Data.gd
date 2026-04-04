@@ -487,7 +487,7 @@ var battle_weapon_stats = {
 				"damage_multiplier":[1.0, 1.0, 1.5, 2.0],
 				"status_effects":{
 					Battle.StatusEffect.BURN:[1, 2, 2, 2],
-					Battle.StatusEffect.STUN:[0, 0, 1, 1],
+					Battle.StatusEffect.STUN:[0, 0, 0, [0.5, 1]],
 				},
 			},
 	"light": {	"damage":3.0,

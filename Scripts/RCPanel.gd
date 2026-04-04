@@ -31,11 +31,11 @@ var rover_mining:bool = true
 @onready var CC_slot = $Stats/CC#CC: Cargo Container
 @onready var right_slot = $Inventory/RightSlot
 var armor:int = Item.STONE_ARMOR
+var wheels:int = Item.STONE_WHEELS
+var CC:int = Item.STONE_CC
 var HP_bonus:int
 var def_bonus:int
-var wheels:int = Item.STONE_WHEELS
 var spd_bonus:float
-var CC:int = Item.STONE_CC
 var cargo_bonus:int
 
 func _ready():
@@ -158,7 +158,7 @@ func _on_Button_pressed():
 	if game.check_enough(rover_costs):
 		game.deduct_resources(rover_costs)
 		game.popup(tr("ROVER_CONSTRUCTED"), 1.5)
-		game.u_i.xp += round(rover_costs.money / 100.0)
+		game.u_i.xp += round(rover_costs.get("money", 0.0) / 100.0)
 		var rover_data:Dictionary = {
 			"c_p":game.c_p,
 			"ready":true,
@@ -193,6 +193,16 @@ func _on_Button_pressed():
 		game.HUD.get_node("Buttons/Vehicles/AnimationPlayer").play("Flash")
 	else:
 		game.popup(tr("NOT_ENOUGH_RESOURCES"), 1.5)
+
+func reset():
+	enhancements.clear()
+	armor = Item.STONE_ARMOR
+	wheels = Item.STONE_WHEELS
+	CC = Item.STONE_CC
+	ability = ""
+	REPs_used = 0
+	inventory = [{"type":Item.Type.ROVER_WEAPON, "id":Item.RED_LASER}, {}, {}, {}, {}, {}]
+	right_inventory = [{"type":Item.Type.ROVER_MINING, "id":Item.RED_MINING_LASER}]
 
 func refresh():
 	set_process_input(visible)

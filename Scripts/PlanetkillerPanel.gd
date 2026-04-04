@@ -103,6 +103,8 @@ func refresh_planet_info():
 	for mat in target.surface:
 		rsrc[mat] = surface_volume * target.surface[mat].chance * target.surface[mat].amount * au_mult * game.u_i.planck
 	for met in game.met_info:
+		if met in ["nanocrystal", "mythril"] and game.c_g_g == 0:
+			continue
 		rsrc[met] = Helper.get_sph_V(R - game.met_info[met].min_depth, R - game.met_info[met].max_depth) / game.met_info[met].rarity * au_mult * game.u_i.planck
 	Helper.put_rsrc($Control/ScrollContainer/GridContainer, 36, rsrc)
 

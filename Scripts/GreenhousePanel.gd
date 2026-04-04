@@ -24,6 +24,8 @@ func refresh():
 	if p_i.is_empty():
 		return
 	$UseFertilizer.visible = game.science_unlocked.has("PF")
+	if not $UseFertilizer.visible:
+		$UseFertilizer.button_pressed = false
 	if tile_num == 1:
 		$Label.text = tr("GREENHOUSE_NAME")
 	else:

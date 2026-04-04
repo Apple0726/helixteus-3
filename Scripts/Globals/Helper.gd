@@ -1146,7 +1146,7 @@ func get_final_value(p_i:Dictionary, dict:Dictionary, path:int, n:int = 1):
 	elif path == 2:
 		if bldg == Building.SUBATOMIC_PARTICLE_REACTOR:
 			return dict.bldg.path_2_value * mult * n * game.u_i.charge
-		elif bldg == Building.STEAM_ENGINE:
+		elif bldg in [Building.STEAM_ENGINE, Building.STONE_CRUSHER, Building.GLASS_FACTORY]:
 			return dict.bldg.path_2_value * n
 		else:
 			return dict.bldg.path_2_value * mult * n

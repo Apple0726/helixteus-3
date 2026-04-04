@@ -480,12 +480,13 @@ func update_push_movement_used():
 
 
 var buffed_from_class_passive_ability = false
-func buff_from_class_passive_ability(stat: String, amount: int):
+func buff_from_class_passive_ability(stat: String, amount: float, continue_buffing: bool = false):
 	if buffed_from_class_passive_ability:
 		return
-	self[stat + "_buff"] += amount
-	update_info_labels()
-	buffed_from_class_passive_ability = true
+	self[stat + "_buff"] = amount * pow(abs((self["%s_buff" % stat] + amount) / amount), 0.8)
+	if not continue_buffing:
+		update_info_labels()
+		buffed_from_class_passive_ability = true
 
 
 func damage_entity(weapon_data: Dictionary):
@@ -494,8 +495,13 @@ func damage_entity(weapon_data: Dictionary):
 	var hit = super(weapon_data)
 	if hit:
 		if ship_class == ShipClass.DEFENSIVE:
-			buff_from_class_passive_ability("defense", 3)
+			buff_from_class_passive_ability("defense", 3.0)
+		elif ship_class == ShipClass.UBER:
+			buff_from_class_passive_ability("attack", 3.0, true)
+			buff_from_class_passive_ability("defense", 3.0, true)
+			buff_from_class_passive_ability("accuracy", 3.0, true)
+			buff_from_class_passive_ability("agility", 3.0)
 	else:
 		if ship_class == ShipClass.AGILE:
-			buff_from_class_passive_ability("agility", 3)
+			buff_from_class_passive_ability("agility", 3.0)
 	return hit

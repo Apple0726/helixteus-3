@@ -34,7 +34,7 @@ func _ready():
 		galaxy_btn.pressed.connect(on_galaxy_click.bind(g_i.id, g_i.l_id))
 		var radius = pow(g_i["system_num"] / game.GALAXY_SCALE_DIV, 0.5)
 		galaxy_btn.position = Vector2(-galaxy_btn.texture_normal.get_width(), -galaxy_btn.texture_normal.get_height()) / 2.0 * radius
-		galaxy_btn.scale = Vector2.ONE * radius
+		galaxy_btn.scale = Vector2.ONE * radius * 256.0 / galaxy_btn.texture_normal.get_width()
 		galaxy.rotation = g_i.rotation
 		galaxy_btn.modulate = g_i.get("modulate", Color.WHITE)
 		galaxy_btn.modulate.a = 0.0

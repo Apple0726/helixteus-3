@@ -432,7 +432,7 @@ func _ready():
 		OS_name = OS_name.replace("ws", "ge")
 	$UI/Version.text = "Alpha %s (%s): %s" % [VERSION, OS_name, DATE]
 	$TitleBackground/Main.scale = Vector2.ONE * 2.54 * 506.0 / $TitleBackground/Main.texture.get_width()
-	$TitleBackground/Planet.texture = planet_textures[1]
+	$TitleBackground/Planet.texture = planet_textures.pick_random()
 	$TitleBackground/Planet.scale = Vector2.ONE * 1.6 * 160.0 / $TitleBackground/Planet.texture.get_width()
 	refresh_continue_button()
 	animate_title_buttons()
@@ -458,7 +458,7 @@ func animate_title_buttons():
 	$TitleBackground/Main.modulate.a = 0.0
 	$TitleBackground/Planet.material.set_shader_parameter("alpha", 0.0)
 	tween.tween_property($TitleText, "modulate:a", 1.0, 1.0)
-	tween.tween_property($TitleBackground/Main, "modulate:a", 0.7, 3.0)
+	tween.tween_property($TitleBackground/Main, "modulate:a", 0.5, 3.0)
 	tween.tween_property($TitleBackground/Planet.material, "shader_parameter/alpha", 0.6, 3.0).set_ease(Tween.EASE_IN).set_trans(Tween.TRANS_QUAD)
 	tween.tween_property($Title, "modulate:a", 1.0, 2.0).set_delay(0.2)
 	set_starfield_color($ShaderExport/SubViewport/Starfield.material, 0.5)
@@ -553,6 +553,10 @@ func load_univ():
 	planet_data = open_obj("Systems", c_s_g)
 	system_data = open_obj("Galaxies", c_g_g)
 	galaxy_data = open_obj("Clusters", c_c)
+	if is_instance_valid(ships_panel):
+		ships_panel.get_node("Drives").reset_selected_drive_fuel()
+	if is_instance_valid(RC_panel):
+		RC_panel.reset()
 
 func load_game():
 	var save_info = FileAccess.open("user://%s/save_info.hx3" % [c_sv], FileAccess.READ)
@@ -3696,17 +3700,18 @@ func _process(_delta):
 		SP += autocollect.rsrc.SP * delta * SP_mult
 		for mat in autocollect.mats:
 			if mat == "minerals":
-				min_to_add += autocollect.mats[mat] * delta * u_i.time_speed
+				if mats.cellulose > 0.0:
+					min_to_add += autocollect.mats[mat] * delta * u_i.time_speed
 			else:
 				mats[mat] += autocollect.mats[mat] * delta * u_i.time_speed
-		if mats.cellulose > 0:
+		if mats.cellulose > 0.0:
 			if not autocollect.mats.has("soil") or is_zero_approx(autocollect.mats.soil) or mats.soil > 0:
 				for met in autocollect.mets:
 					mets[met] += autocollect.mets[met] * delta * u_i.time_speed
 		else:
-			mats.cellulose = 0
-		if mats.soil < 0:
-			mats.soil = 0
+			mats.cellulose = 0.0
+		if mats.soil < 0.0:
+			mats.soil = 0.0
 		if autocollect.has("atoms"):
 			for atom in autocollect.atoms:
 				atoms[atom] += autocollect.atoms[atom] * delta * u_i.time_speed
@@ -4178,7 +4183,7 @@ func destroy_tri_probe_confirm(probe_id:int):
 	vehicle_panel.refresh()
 
 func discover_univ_confirm():
-	send_probes_panel.discover_univ()
+	create_universe_panel.discover_univ()
 
 func reset_dimension_confirm(DR_num:int):
 	DRs += DR_num
@@ -4570,6 +4575,7 @@ func _on_command_text_submitted(new_text):
 					var diff_time = probe.start_date + probe.explore_length - Time.get_unix_time_from_system()
 					probe.start_date -= diff_time
 					probe.explore_length = 1
+			ships_travel_data.travel_length = 1.0
 		"setmulv":
 			MUs[arr[1].to_upper()] = int(arr[2])
 		"setlv":
@@ -4674,6 +4680,6 @@ func _on_spaceport_timer_timeout() -> void:
 		return
 	var xp_mult = Helper.get_spaceport_xp_mult(autocollect.passive_xp_tier)
 	for i in len(ship_data):
-		Helper.add_ship_XP(i, xp_mult * autocollect.passive_xp_mult * max(1.0, 0.25 / (4.0 / autocollect.passive_xp_tier / u_i.time_speed)))
+		Helper.add_ship_XP(i, xp_mult * autocollect.passive_xp_mult * max(1.0, autocollect.passive_xp_tier * u_i.time_speed / 16.0))
 	if is_instance_valid(ships_panel):
 		ships_panel.update_xp_bars()

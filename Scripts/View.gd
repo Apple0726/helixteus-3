@@ -466,7 +466,6 @@ func _zoom_at_point_animate(zoom_change: float):
 	else:
 		if scale.x * zoom_change >= 25.0: #max zoom in
 			zoom_change = 25.0 / scale.x
-			return
 	if zoom_tween and zoom_tween.is_running():
 		zoom_tween.kill()
 	zoom_tween = create_tween().set_parallel(true)

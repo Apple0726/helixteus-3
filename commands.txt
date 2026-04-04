@@ -48,7 +48,7 @@ Commands list:
 - Example: /setpart subatomic_particles 1.5e6
 
 /speedup
-- Finish investigating any wormholes on current planet, and speeds up all probes
+- Finish investigating any wormholes on current planet, speeds up all probes and accelerates ship travel
 
 /setMULv [upgrade] [value]
 - Sets [upgrade]'s mineral upgrade level to [value]

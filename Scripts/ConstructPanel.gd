@@ -118,8 +118,10 @@ func on_bldg_over(bldg:int):
 		txt += (Data.path_1[bldg].desc + "\n") % [Helper.format_num(Helper.get_AE_production(game.planet_data[game.c_p].pressure, Data.path_1[bldg].value * IR_mult * time_speed), true)]
 	elif bldg == Building.BATTERY:
 		txt += (Data.path_1[bldg].desc + "\n") % [Helper.format_num(round(Data.path_1[bldg].value * IR_mult * game.u_i.charge))]
+	elif bldg == Building.ROVER_CONSTRUCTION_CENTER:
+		txt += (Data.path_1[bldg].desc + "\n") % [Helper.format_num(Data.path_1[bldg].value, true)]
 	elif Data.path_1.has(bldg):
-		txt += (Data.path_1[bldg].desc + "\n") % [Helper.format_num(Data.path_1[bldg].value * IR_mult * time_speed, true)]
+		txt += (Data.path_1[bldg].desc + "\n") % [Helper.format_num(Data.path_1[bldg].value * IR_mult * (time_speed if Data.path_1[bldg].has("time_based") else 1.0), true)]
 	if Data.path_2.has(bldg):
 		if Data.path_2[bldg].has("is_value_integer"):
 			txt += (Data.path_2[bldg].desc + "\n") % [Helper.format_num(round(Data.path_2[bldg].value * IR_mult))]

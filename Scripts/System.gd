@@ -661,7 +661,7 @@ func build_MS(obj:Dictionary, MS_to_build:String):
 		if error:
 			game.popup(tr("NO_SCIENCE_TO_REPAIR_MS"), 2.0)
 			return
-	if MS_to_build == "MB":
+	elif MS_to_build == "MB":
 		if not obj.has("MS") or obj.MS != "DS":
 			game.popup(tr("MB_ERROR_1"), 3.0)
 			return
@@ -704,7 +704,7 @@ func build_MS(obj:Dictionary, MS_to_build:String):
 		obj.MS = MS_to_build
 		game.system_data[game.c_s].has_MS = true
 		obj.bldg = {}
-		game.universe_data[game.c_u].xp += round(bldg_costs.money / 100.0)
+		game.universe_data[game.c_u].xp += round(bldg_costs.get("money", 0.0) / 100.0)
 		if obj.MS == "DS":
 			game.autocollect.MS.energy += Helper.get_DS_output(obj)
 		elif obj.MS == "MB":

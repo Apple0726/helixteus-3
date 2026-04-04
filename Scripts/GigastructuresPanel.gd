@@ -162,8 +162,7 @@ func _on_GS_pressed(extra_arg_0):
 func _on_Convert_pressed():
 	if game.check_enough(costs):
 		game.deduct_resources(costs)
-		if costs.has("money"):
-			game.u_i.xp += costs.money / 100.0
+		game.u_i.xp += costs.get("money", 0.0) * 0.01
 		g_i.GS = bldg
 		g_i.prod_num = num
 		g_i.surface = surface

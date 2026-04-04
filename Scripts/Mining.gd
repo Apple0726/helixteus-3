@@ -218,7 +218,7 @@ var help_counter = 0
 func pickaxe_hit():
 	if not game.pickaxe.has("name") or not tile.has("depth"):
 		return
-	var add_progress:float = 2 * game.pickaxe.speed * speed_mult * pow(game.maths_bonus.IRM, game.infinite_research.MMS) * (game.pickaxe.speed_mult if game.pickaxe.has("speed_mult") else 1.0) * (tile.mining_outpost_bonus if tile.has("mining_outpost_bonus") else 1.0)
+	var add_progress:float = 2 * game.pickaxe.speed * speed_mult * pow(game.maths_bonus.IRM, game.infinite_research.MMS) * (game.pickaxe.speed_mult if game.pickaxe.has("speed_mult") else 1.0) * (tile.mining_outpost_bonus if tile.has("mining_outpost_bonus") else 1.0) * max(1.0, game.u_i.time_speed * tile.get("time_speed_bonus", 1.0) * 0.1)
 	if tile.depth > floor(p_i.size * 500.0):
 		if not game.achievement_data.random.has("reach_center_of_planet"):
 			game.earn_achievement("random", "reach_center_of_planet")
@@ -370,12 +370,12 @@ func _on_Button_button_down():
 	if game.pickaxe.has("name"):
 		circ_disabled = false
 		$PickaxeAnim.get_animation("Pickaxe swing").loop_mode = true
-		$PickaxeAnim.play("Pickaxe swing", -1, game.u_i.time_speed * tile.get("time_speed_bonus", 1.0))
+		$PickaxeAnim.play("Pickaxe swing", -1, min(10.0, game.u_i.time_speed * tile.get("time_speed_bonus", 1.0)))
 
 func _on_Button_button_up():
 	circ_disabled = true
 	$PickaxeAnim.get_animation("Pickaxe swing").loop_mode = false
-	$PickaxeAnim.play("Pickaxe swing", -1, -game.u_i.time_speed * tile.get("time_speed_bonus", 1.0))
+	$PickaxeAnim.play("Pickaxe swing", -1, -min(10.0, game.u_i.time_speed * tile.get("time_speed_bonus", 1.0)))
 
 func _on_CheckBox_mouse_entered():
 	game.show_tooltip(tr("AUTO_REPLACE_DESC"))

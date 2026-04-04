@@ -43,7 +43,7 @@ func use_drive():
 	if game.ships_travel_data.travel_view == "-":
 		game.popup(tr("SHIPS_NEED_TO_BE_TRAVELLING"), 1.5)
 	else:
-		game.ships_travel_data.travel_length -= ships_time_reduction
+		game.ships_travel_data.travel_length = max(1.0, game.ships_travel_data.travel_length - ships_time_reduction)
 		game.ships_travel_data.travel_cost += cost * energy_per_quantity_of_fuel
 		game[selected_fuel_type][fuel_selected] -= cost
 		set_process(true)

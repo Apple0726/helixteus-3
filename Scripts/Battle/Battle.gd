@@ -301,6 +301,7 @@ func next_turn():
 	for i in len(initiative_order):
 		if i >= len(initiative_order):
 			break
+		print("initiative_order i = %s" % i)
 		if is_instance_valid(initiative_order[i]):
 			if initiative_order[i].type == Battle.EntityType.BOUNDARY:
 				print("initiative_order[%s]: boundary" % i)
@@ -313,9 +314,11 @@ func next_turn():
 			print("remove entity %s" % i)
 			if i < whose_turn_is_it_index:
 				whose_turn_is_it_index -= 1
+				print("decrement whose_turn_is_it_index %s -> %s" % [i+1, i])
 			for j in range(i, len(initiative_order) - 1):
 				if is_instance_valid(initiative_order[j]):
 					initiative_order[j].turn_order -= 1
+					print("decrement turn_order of entity %s: %s -> %s" % [j, i+1, i])
 			i -= 1
 	await get_tree().process_frame
 	if initiative_order[whose_turn_is_it_index].type == Battle.EntityType.BOUNDARY:

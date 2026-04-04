@@ -192,7 +192,7 @@ func _on_ship_button_up(ship_id: int) -> void:
 		show_ship_stats(ship_id)
 	else:
 		Helper.add_ship_XP(ship_id, Item.data[game.item_to_use.id].XP * game.item_to_use.num)
-		game.item_to_use.num = game.remove_items(game.item_to_use.id, game.item_to_use.num)
+		game.item_to_use.num = min(1, game.remove_items(game.item_to_use.id, game.item_to_use.num))
 		game.update_item_cursor()
 		show_ship_stats(ship_id)
 		if game.item_to_use.id != -1 and Item.data[game.item_to_use.id].type == Item.Type.HELIX_CORE:
