@@ -150,7 +150,6 @@ func _ready():
 	$Ash.tile_set = ResourceFiles.soil_tile_set
 	$Walls.tile_set = ResourceFiles.cave_walls_tile_set
 	camera.make_current()
-	$Exit/GPUParticles2D.emitting = true
 	$UI2/Controls.center_position = Vector2(640, 160)
 	$UI2/Controls.add_key("WASD", "MOVE_ROVER")
 	$UI2/Controls.add_key(tr("SCROLL_WHEEL"), "CHANGE_ACTIVE_ITEM")
@@ -790,7 +789,6 @@ func generate_cave(first_floor:bool, going_up:bool):
 						spawn_edge_tiles.append({"id":tile_id, "dir":PI})
 			j += 1
 		$Exit/Sprite2D.texture = preload("res://Graphics/Cave/Objects/exit.png")
-		$Exit/GPUParticles2D.emitting = false
 		$Exit/ExitColl.disabled = false
 		var rot = spawn_edge_tiles[0].dir
 		$Exit/GoUpColl.disabled = true
@@ -808,7 +806,6 @@ func generate_cave(first_floor:bool, going_up:bool):
 		MM_exit.rotation_degrees = 0
 		$Exit/Sprite2D.texture = preload("res://Graphics/Cave/Objects/go_up.png")
 		$Exit/Sprite2D.modulate = Color(1, 1, 3, 1)
-		$Exit/GPUParticles2D.emitting = true
 		$Exit/ExitColl.disabled = true
 		$Exit/GoUpColl.disabled = false
 		while rand_hole == rand_spawn:
@@ -2024,7 +2021,7 @@ func _on_Filter_pressed():
 		$UI2/Filters.show()
 
 func _on_CheckAchievements_timeout():
-	if cave_wall.get_used_cells().is_empty() and chests.is_empty() and big_debris.is_empty() and get_tree().get_nodes_in_group("enemies").is_empty():
+	if cave_wall.get_used_cells_by_id(0).is_empty() and chests.is_empty() and len(debris_rekt[cave_floor - 1]) == len(big_debris) and get_tree().get_nodes_in_group("enemies").is_empty():
 		game.earn_achievement("random", "clear_out_cave_floor")
 		$CheckAchievements.stop()
 		$CheckAchievements.disconnect("timeout",Callable(self,"_on_CheckAchievements_timeout"))

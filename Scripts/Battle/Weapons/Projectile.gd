@@ -14,9 +14,8 @@ var damage:float
 var shooter:BattleEntity
 var weapon_accuracy:float
 var ending_turn_delay:float
-var mass:float # For now only used to determine entity knockback when something is defeated by this projectile (so purely aesthetic)
+var mass:float # Used for determining how much projectiles with mass knock entities back
 var crit_hit_mult:float = 1.0
-var knockback:float = 0.0
 var status_effects = {}
 var buffs = {}
 var trail_color:Color = Color.WHITE

@@ -19,11 +19,10 @@ func _on_area_entered(area: Area2D) -> void:
 		"orientation":Vector2.from_angle(rotation),
 		"velocity":speed * Vector2.from_angle(rotation),
 		"mass":mass,
+		"knockback": mass * Vector2.from_angle(rotation),
 	}
 	if crit_hit_mult != 1.0:
 		weapon_data.crit_hit_mult = crit_hit_mult
-	if knockback > 0.0:
-		weapon_data.knockback = knockback * Vector2.from_angle(rotation)
 	if not status_effects.is_empty():
 		weapon_data.status_effects = status_effects
 	if area.damage_entity(weapon_data):

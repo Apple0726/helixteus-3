@@ -17,15 +17,15 @@ func _on_area_entered(area: Area2D) -> void:
 		"damage":damage,
 		"shooter_attack":shooter.attack + shooter.attack_buff,
 		"shooter_type":shooter.type,
+		"shooter_velocity":shooter.velocity,
 		"weapon_accuracy":weapon_accuracy,
 		"orientation":Vector2.from_angle(rotation),
 		"velocity":speed * Vector2.from_angle(rotation),
 		"mass":mass,
+		"knockback":mass * Vector2.from_angle(rotation),
 	}
 	if crit_hit_mult != 1.0:
 		weapon_data["crit_hit_mult"] = crit_hit_mult
-	if knockback > 0.0:
-		weapon_data["knockback"] = knockback * Vector2.from_angle(rotation)
 	if ignore_defense_buffs:
 		weapon_data["ignore_defense_buffs"] = true
 	if not status_effects.is_empty():

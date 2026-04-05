@@ -557,6 +557,8 @@ func load_univ():
 		ships_panel.get_node("Drives").reset_selected_drive_fuel()
 	if is_instance_valid(RC_panel):
 		RC_panel.reset()
+	if is_instance_valid(ships_panel):
+		ships_panel.get_node("Drives").hide()
 
 func load_game():
 	var save_info = FileAccess.open("user://%s/save_info.hx3" % [c_sv], FileAccess.READ)
@@ -1203,6 +1205,9 @@ func switch_view(new_view:String, other_params:Dictionary = {}):
 	if not other_params.has("first_time"):
 		save_views(true)
 		fn_save_game()
+	if is_instance_valid(active_panel):
+		fade_out_panel(active_panel)
+	active_panel = null
 	if viewing_dimension:
 		remove_dimension()
 		if not is_ancestor_of(HUD):
@@ -1869,9 +1874,6 @@ func remove_system():
 	Helper.save_obj("Systems", c_s_g, planet_data)
 
 func remove_planet(save_zooms:bool = true):
-	if is_instance_valid(active_panel):
-		fade_out_panel(active_panel)
-	active_panel = null
 	view.remove_obj("planet", save_zooms)
 	if is_instance_valid(vehicle_panel):
 		vehicle_panel.queue_free()
@@ -2016,7 +2018,7 @@ func generate_galaxies(id:int):
 		var g_i = {
 			"parent": id,
 			"type": randi() % 7,
-			"dark_matter": Helper.clever_round(pow(randf_range(0.85, 1.15), -log(randf()) * pow(redshift + 1.0, 0.6) * 0.4 + 1)), # Influences planet numbers and size
+			"dark_matter": Helper.clever_round(pow(randf_range(0.85, 1.15), -log(max(1e-7, randf())) * pow(redshift + 1.0, 0.6) * 0.4 + 1)), # Influences planet numbers and size
 			"rotation": randf_range(0.0, 2.0 * PI),
 			"view": {"pos":Vector2(640, 360), "zoom": 0.2},
 			"id": g_id + galaxies_generated,
@@ -2026,7 +2028,7 @@ func generate_galaxies(id:int):
 		if g_i.type == 6:
 			g_i["system_num"] = int(5000 + 10000 * pow(randf(), 2))
 			g_i["B_strength"] = Helper.clever_round(1e-9 * randf_range(3, 5) * (redshift + 1.0) * u_i.charge)#Influences star classes
-			g_i.dark_matter -= 0.05
+			g_i.dark_matter *= 0.9
 		else:
 			g_i["system_num"] = int(pow(randf(), 2) * 8000) + 2000
 			g_i["B_strength"] = Helper.clever_round(1e-9 * randf_range(0.5, 4) * (redshift + 1.0) * u_i.charge)

@@ -294,7 +294,8 @@ func damage_entity(weapon_data: Dictionary):
 	var total_agility = agility + agility_buff
 	if Battle.StatusEffect.STUN in status_effects or Battle.StatusEffect.FROZEN in status_effects:
 		total_agility = 0
-	var dodged = 1.0 / (1.0 + exp((weapon_data.weapon_accuracy - total_agility - abs(0.1 * velocity.rotated(PI / 2.0).dot(weapon_data.get("orientation", Vector2.ZERO))) + 9.2) / 5.8)) > randf()
+	var relative_velocity_accuracy_mod = abs(0.1 * velocity.rotated(PI / 2.0).dot(weapon_data.get("orientation", Vector2.ZERO)))
+	var dodged = 1.0 / (1.0 + exp((weapon_data.weapon_accuracy - total_agility - relative_velocity_accuracy_mod + 9.2) / 5.8)) > randf()
 	if dodged:
 		battle_scene.add_damage_text(true, position)
 	else:
@@ -332,14 +333,27 @@ func damage_entity(weapon_data: Dictionary):
 				actual_damage = ceil(actual_damage * log(game.u_i.planck - 1.0 + exp(1.0)))
 			elif weapon_data.type == Battle.DamageType.EMG:
 				actual_damage = ceil(actual_damage * log(game.u_i.speed_of_light - 1.0 + exp(1.0)))
-		battle_scene.add_damage_text(false, position, actual_damage, critical, 0.3 * weapon_data.get("velocity", Vector2.ZERO) * sqrt(weapon_data.get("mass", 0.0)))
-		HP = max(HP - actual_damage, 0)
+		var relative_velocity = velocity - weapon_data.get("shooter_velocity", Vector2.ZERO) # target relative to shooter
+		if weapon_data.type == Battle.DamageType.PHYSICAL:
+			# Increase or decrease damage depending on whether the projectile is moving in the same or opposite direction as the entity
+			var velocity_dot = relative_velocity.normalized().dot(weapon_data.velocity.normalized())
+			var velocity_damage_mult:float = 1.0
+			if velocity_dot < 0.0: # Opposite -> increase damage
+				velocity_damage_mult = 1.0 + -velocity_dot * relative_velocity.length() * 0.003
+			elif velocity_dot > 0.0: # Same -> decrease damage
+				velocity_damage_mult = 1.0 / (1.0 + velocity_dot * relative_velocity.length() * 0.003)
+			actual_damage *= velocity_damage_mult
 		var knockback = weapon_data.get("knockback", Vector2.ZERO)
 		if knockback != Vector2.ZERO:
+			if relative_velocity.dot(knockback) > 0.0: # Reduce effect of knockback if the entity is moving in the same direction as the knockback
+				knockback *= min(1.0, knockback.length() / relative_velocity.length())
+			knockback *= weapon_data.get("mass", 1.0) / get_mass()
 			if critical:
-				velocity *= 1.2
+				knockback *= 1.2
 			velocity += knockback
-		var label_knockback = weapon_data.velocity.normalized() * weapon_data.get("mass", 0.0) * 5.0 / total_HP
+		battle_scene.add_damage_text(false, position, actual_damage, critical, 0.06 * weapon_data.get("velocity", Vector2.ZERO) * sqrt(weapon_data.get("mass", 0.0)))
+		HP = max(HP - actual_damage, 0)
+		var label_knockback = weapon_data.velocity.normalized() * weapon_data.get("mass", 0.0) * 0.5 / total_HP
 		if label_knockback.length() > weapon_data.velocity.length():
 			label_knockback = label_knockback.normalized() * weapon_data.velocity.length()
 		update_entity_HP(label_knockback)

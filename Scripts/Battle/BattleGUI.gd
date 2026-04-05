@@ -460,6 +460,19 @@ func override_enemy_tooltips():
 		var accuracy = Helper.clever_snap((ship_node.accuracy + ship_node.accuracy_buff) * ship_node.weapon_accuracy_mult)
 		var agility = Helper.clever_snap(HX_node.agility + HX_node.agility_buff)
 		var tooltip_txt = tr("DAMAGE_MULTIPLIER") + ": " + "%.2f (%s)" % [damage_multiplier, tr("SHIP_ATK_VS_ENEMY_DEF") % [attack, defense]]
+		var relative_velocity = ship_node.velocity - HX_node.velocity
+		if relative_velocity != Vector2.ZERO and action_selected in [BULLET, BOMB]:
+			var velocity_dot = relative_velocity.normalized().dot((ship_node.position - HX_node.position).normalized())
+			var velocity_damage_mult:float = 1.0
+			if velocity_dot < 0.0: # Opposite -> increase damage
+				velocity_damage_mult = 1.0 + -velocity_dot * relative_velocity.length() * 0.003
+			elif velocity_dot > 0.0: # Same -> decrease damage
+				velocity_damage_mult = 1.0 / (1.0 + velocity_dot * relative_velocity.length() * 0.003)
+			tooltip_txt += " * {rel_vel_mult} ({rel_vel_desc}) = {total_mult}".format({
+				"rel_vel_mult": "%.2f" % velocity_damage_mult,
+				"rel_vel_desc": tr("RELATIVE_VELOCITY_MULT"),
+				"total_mult": "%.2f" % (damage_multiplier * velocity_damage_mult),
+			})
 		tooltip_txt += "\n" + tr("CHANCE_OF_HITTING") + ": " + "%.1f%%" % (100.0 * (1.0 - 1.0 / (1.0 + exp((accuracy - agility + 9.2) / 5.8))))
 		if is_finite(ship_node.weapon_accuracy_mult):
 			tooltip_txt += " (%s)" % [tr("SHIP_ATK_VS_ENEMY_DEF") % [accuracy, agility]]

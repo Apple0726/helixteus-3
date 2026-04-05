@@ -263,7 +263,6 @@ func fire_weapon(weapon_type: int):
 			projectile.get_node("Sprite2D").texture = bullet_texture
 			projectile.trail_color = trail_color
 			projectile.speed = 1000.0
-			projectile.mass = Data.battle_weapon_stats.bullet.mass[bullet_levels[PATH_2] - 1]
 			projectile.velocity_process_modifier = 5.0 if battle_scene.animations_sped_up else 1.0
 			projectile.rotation = randf_range(weapon_rotation_min, weapon_rotation_max)
 			projectile.damage = Data.battle_weapon_stats.bullet.damage * Data.battle_weapon_stats.bullet.damage_multiplier[bullet_levels[PATH_2] - 1]
@@ -272,7 +271,9 @@ func fire_weapon(weapon_type: int):
 			projectile.weapon_accuracy = Data.battle_weapon_stats.bullet.accuracy * (accuracy + accuracy_buff)
 			projectile.deflects_remaining = Data.battle_weapon_stats.bullet.deflects[bullet_levels[PATH_2] - 1]
 			if battle_GUI.bullet_2_selected_type == battle_GUI.BIG_BULLET:
-				projectile.knockback = Data.battle_weapon_stats.bullet.knockback[bullet_levels[PATH_2] - 1]
+				projectile.mass = Data.battle_weapon_stats.bullet.mass[bullet_levels[PATH_2] - 1]
+			else:
+				projectile.mass = 9.0
 			projectile.ignore_defense_buffs = Data.battle_weapon_stats.bullet.ignore_defense_buffs[bullet_levels[PATH_2] - 1]
 			projectile.status_effects = status_effects
 			projectile.position = position
@@ -301,7 +302,7 @@ func fire_weapon(weapon_type: int):
 			fire_laser(weapon_rotation + $FireWeaponAim.multishot_angle / 2.0)
 	elif weapon_type == battle_GUI.BOMB:
 		var projectiles = []
-		var projectile_num = Data.battle_weapon_stats.bomb.shots_fired[bullet_levels[PATH_3] - 1]
+		var projectile_num = Data.battle_weapon_stats.bomb.shots_fired[bomb_levels[PATH_3] - 1]
 		for i in projectile_num:
 			var explosive = preload("res://Scenes/Battle/Weapons/Explosive.tscn").instantiate()
 			explosive.collision_layer = 8
@@ -312,13 +313,15 @@ func fire_weapon(weapon_type: int):
 			explosive.damage = Data.battle_weapon_stats.bomb.damage * Data.battle_weapon_stats.bomb.damage_multiplier[bomb_levels[PATH_1] - 1]
 			explosive.AoE_radius = Data.battle_weapon_stats.bomb.AoE_radius[bomb_levels[PATH_1] - 1]
 			explosive.mass = Data.battle_weapon_stats.bomb.mass[bomb_levels[PATH_1] - 1]
-			explosive.knockback = Data.battle_weapon_stats.bomb.knockback[bomb_levels[PATH_1] - 1]
 			explosive.rotation = weapon_rotation
 			explosive.shooter = self
 			explosive.weapon_accuracy = Data.battle_weapon_stats.bomb.accuracy * (accuracy + accuracy_buff)
 			explosive.status_effects = {Battle.StatusEffect.BURN: Data.battle_weapon_stats.bomb.status_effects[Battle.StatusEffect.BURN][bomb_levels[PATH_2] - 1]}
 			var stun_turns = Data.battle_weapon_stats.bomb.status_effects[Battle.StatusEffect.STUN][bomb_levels[PATH_1] - 1]
-			if stun_turns > 0:
+			if stun_turns is Array:
+				if randf() < stun_turns[0]:
+					explosive.status_effects[Battle.StatusEffect.STUN] = stun_turns[1]
+			else:
 				explosive.status_effects[Battle.StatusEffect.STUN] = stun_turns
 			explosive.position = position
 			explosive.battle_scene = battle_scene

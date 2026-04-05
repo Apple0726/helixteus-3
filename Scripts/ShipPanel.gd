@@ -65,6 +65,7 @@ func refresh():
 			$Label.text = tr("SHIPS_BENEFITING_FROM_SPACEPORT")
 		else:
 			$Label.text = tr("CLICK_SHIP_TO_VIEW_DETAILS")
+	$Ships/TravelTimeRemaining.text = ""
 
 func _process(delta):
 	if selected_ship_id != -1:

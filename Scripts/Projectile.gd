@@ -84,7 +84,8 @@ func collide(collision:KinematicCollision2D):
 			if pierce <= 0:
 				queue_free()
 		else:#if the projectile comes from the enemy
-			if not cave_ref.ability_timer.is_stopped() and cave_ref.ability == "armor_3":
+			var dmg:float = damage / cave_ref.def / cave_ref.rover_size
+			if not cave_ref.ability_timer.is_stopped() and cave_ref.ability == "armor_3" and dmg < cave_ref.total_HP * 1000.0:
 				deflected = true
 			elif cave_ref.enhancements.has("armor_2"):
 				deflected = randf() < 0.3
@@ -101,7 +102,6 @@ func collide(collision:KinematicCollision2D):
 				$DeflectedParticles.emitting = true
 				rotation = direction.angle()
 			else:
-				var dmg:float = damage / cave_ref.def / cave_ref.rover_size
 				cave_ref.hit_player(dmg, status_effects)
 				queue_free()
 	else:

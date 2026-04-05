@@ -260,3 +260,8 @@ func _process(delta):
 	elif tab == "particles":
 		for hbox in hbox_data:
 			hbox.rsrc.rsrcs_required = game.particles[hbox.name]
+
+
+func _on_visibility_changed() -> void:
+	if not visible:
+		send_to_rover = -1

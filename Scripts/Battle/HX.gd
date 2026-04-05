@@ -229,7 +229,7 @@ func fire_magic_bullets():
 		magic_bullet.collision_layer = 16
 		magic_bullet.collision_mask = 1 + 2
 		magic_bullet.speed = 1400.0
-		magic_bullet.mass = 1.0
+		magic_bullet.mass = 6.0
 		magic_bullet.velocity_process_modifier = 5.0 if battle_scene.animations_sped_up else 1.0
 		magic_bullet.rotation = angle
 		magic_bullet.damage = attack_data[attack_type].damage
@@ -328,8 +328,8 @@ func add_projectile(angle:float, modifiers:Dictionary):
 	projectile.end_turn_ready = true
 	if modifiers.has("buffs"):
 		projectile.buffs = modifiers.buffs
-	if modifiers.has("knockback"):
-		projectile.knockback = modifiers.knockback
+	if modifiers.has("mass"):
+		projectile.mass = modifiers.mass
 	if modifiers.has("scale_mult"):
 		projectile.scale *= modifiers.scale_mult
 	if modifiers.has("damage_mult"):
@@ -361,16 +361,14 @@ func normal_attack():
 			buffs["defense"] = -2
 		elif lv >= 3:
 			buffs["defense"] = -1
-		var knockback = 0.0
-		if lv >= 3:
-			knockback = 15.0 + min(lv, 18) * 2.0
+		var mass = 15.0 + lv * 2.0
 		var scale_mult = 1.0
 		var damage_mult = 1.0
 		if lv >= 9:
 			scale_mult *= 2.0
 			damage_mult *= 2.0
 		add_projectile(projectile_angle,
-		{"buffs":buffs, "scale_mult":scale_mult, "damage_mult":damage_mult, "knockback":knockback})
+		{"buffs":buffs, "scale_mult":scale_mult, "damage_mult":damage_mult, "mass":mass})
 	elif attack_type == Attack.CORRODING_BULLET:
 		var proj_status_effects = {Battle.StatusEffect.CORRODING:2}
 		if lv >= 15:

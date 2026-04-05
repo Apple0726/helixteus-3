@@ -24,17 +24,21 @@ func _on_explosionAoE_exited(area: Area2D):
 
 
 func _on_area_entered(area: Area2D) -> void:
+	if not is_instance_valid(shooter):
+		queue_free()
+		return
 	var weapon_data = {
 		"type":Battle.DamageType.PHYSICAL,
 		"damage":damage,
 		"shooter_attack":shooter.attack + shooter.attack_buff,
 		"shooter_type":shooter.type,
+		"shooter_velocity":shooter.velocity,
 		"weapon_accuracy":weapon_accuracy,
 		"orientation":Vector2.from_angle(rotation),
 		"velocity":speed * Vector2.from_angle(rotation),
 		"mass":mass,
 		"status_effects":status_effects,
-		"knockback":knockback * Vector2.from_angle(rotation),
+		"knockback":mass * Vector2.from_angle(rotation),
 	}
 	if area.damage_entity(weapon_data):
 		if area.type == Battle.EntityType.BOUNDARY:
@@ -79,7 +83,6 @@ func _on_area_entered(area: Area2D) -> void:
 				explosive.damage = 0.3 * Data.battle_weapon_stats.bomb.damage * Data.battle_weapon_stats.bomb.damage_multiplier[shooter.bomb_levels[0] - 1]
 				explosive.AoE_radius = 0.5 * Data.battle_weapon_stats.bomb.AoE_radius[shooter.bomb_levels[0] - 1]
 				explosive.mass = 0.5 * Data.battle_weapon_stats.bomb.mass[shooter.bomb_levels[0] - 1]
-				explosive.knockback = 0.5 * Data.battle_weapon_stats.bomb.knockback[shooter.bomb_levels[0] - 1]
 				explosive.rotation = rotation + (i + 0.5) / 8.0 * 2.0 * PI
 				explosive.shooter = shooter
 				explosive.weapon_accuracy = Data.battle_weapon_stats.bomb.accuracy * (shooter.accuracy + shooter.accuracy_buff)

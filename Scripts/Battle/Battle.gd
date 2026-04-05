@@ -318,9 +318,16 @@ func next_turn():
 			for j in range(i, len(initiative_order) - 1):
 				if is_instance_valid(initiative_order[j]):
 					initiative_order[j].turn_order -= 1
-					print("decrement turn_order of entity %s: %s -> %s" % [j, i+1, i])
+					print("decrement turn_order of entity %s: %s -> %s" % [j, initiative_order[j].turn_order+1, initiative_order[j].turn_order])
 			i -= 1
 	await get_tree().process_frame
+	for i in len(initiative_order):
+		if i >= len(initiative_order):
+			break
+		if not is_instance_valid(initiative_order[i]):
+			print("removed 2")
+			initiative_order.remove_at(i)
+	whose_turn_is_it_index = min(whose_turn_is_it_index, len(initiative_order) - 1)
 	if initiative_order[whose_turn_is_it_index].type == Battle.EntityType.BOUNDARY:
 		scale_before_view_battlefield = game.view.scale.x
 		if animations_sped_up:
