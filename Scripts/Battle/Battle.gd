@@ -272,6 +272,7 @@ var ships_taking_turn = [] # Stores ship nodes that can take actions interchange
 var defeated = false
 
 func next_turn():
+	print("\n========== next turn start")
 	if ship_nodes.is_empty():
 		battle_GUI.get_node("Defeat").show()
 		create_tween().tween_property(battle_GUI.get_node("Defeat"), "modulate:a", 1.0, 1.0)
@@ -296,39 +297,11 @@ func next_turn():
 	ships_taking_turn.clear()
 	$Selected.hide()
 	whose_turn_is_it_index += 1
-	# Update initiative_order, whose_turn_is_it_index and entities turn_orders
-	# if a ship or enemy has been defeated
-	for i in len(initiative_order):
-		if i >= len(initiative_order):
-			break
-		print("initiative_order i = %s" % i)
-		if is_instance_valid(initiative_order[i]):
-			if initiative_order[i].type == Battle.EntityType.BOUNDARY:
-				print("initiative_order[%s]: boundary" % i)
-			elif initiative_order[i].type == Battle.EntityType.ENEMY:
-				print("initiative_order[%s]: enemy" % i)
-			elif initiative_order[i].type == Battle.EntityType.SHIP:
-				print("initiative_order[%s]: ship" % i)
-		if not is_instance_valid(initiative_order[i]) or initiative_order[i].type != Battle.EntityType.BOUNDARY and initiative_order[i].HP <= 0:
-			initiative_order.remove_at(i)
-			print("remove entity %s" % i)
-			if i < whose_turn_is_it_index:
-				whose_turn_is_it_index -= 1
-				print("decrement whose_turn_is_it_index %s -> %s" % [i+1, i])
-			for j in range(i, len(initiative_order) - 1):
-				if is_instance_valid(initiative_order[j]):
-					initiative_order[j].turn_order -= 1
-					print("decrement turn_order of entity %s: %s -> %s" % [j, initiative_order[j].turn_order+1, initiative_order[j].turn_order])
-			i -= 1
-	await get_tree().process_frame
-	for i in len(initiative_order):
-		if i >= len(initiative_order):
-			break
-		if not is_instance_valid(initiative_order[i]):
-			print("removed 2")
-			initiative_order.remove_at(i)
-	whose_turn_is_it_index = min(whose_turn_is_it_index, len(initiative_order) - 1)
+	while not is_instance_valid(initiative_order[whose_turn_is_it_index]) or initiative_order[whose_turn_is_it_index].type != Battle.EntityType.BOUNDARY and initiative_order[whose_turn_is_it_index].HP <= 0:
+		print("entity %s dead" % whose_turn_is_it_index)
+		whose_turn_is_it_index += 1
 	if initiative_order[whose_turn_is_it_index].type == Battle.EntityType.BOUNDARY:
+		print("environment's turn")
 		scale_before_view_battlefield = game.view.scale.x
 		if animations_sped_up:
 			create_tween().tween_callback(environment_take_turn).set_delay(0.1)
@@ -337,10 +310,10 @@ func next_turn():
 			create_tween().tween_callback(environment_take_turn).set_delay(1.0)
 		initiative_order[whose_turn_is_it_index].turn_order_box.get_node("ChangeSizeAnim").play("ChangeSize")
 	elif initiative_order[whose_turn_is_it_index].type == Battle.EntityType.SHIP:
+		print("ship's turn")
 		var ship_turn = whose_turn_is_it_index
-		while initiative_order[ship_turn].type == Battle.EntityType.SHIP:
+		while is_instance_valid(initiative_order[ship_turn]) and initiative_order[ship_turn].HP >= 0 and initiative_order[ship_turn].type == Battle.EntityType.SHIP:
 			var ship_node = initiative_order[ship_turn]
-			print("ship's turn (%s)" % ship_turn)
 			var ship_pos_before_moving:Vector2 = ship_node.position
 			await ship_node.take_turn()
 			var skip_turn = ship_node.status_effects[Battle.StatusEffect.STUN] > 0 or ship_node.status_effects[Battle.StatusEffect.FROZEN] > 0 or ship_node.turn_taken
@@ -354,19 +327,21 @@ func next_turn():
 						whose_turn_is_it_index = ship_turn
 			ship_turn += 1
 		if len(ships_taking_turn) > 0:
+			print("ship num: %s" % len(ships_taking_turn))
 			$Selected.show()
 			$Selected.position = ships_taking_turn[0].position + Vector2.UP * 80.0
 			view_entity(ships_taking_turn[0])
 			battle_GUI.fade_in_main_panel()
 		else:
-			whose_turn_is_it_index = ship_turn - 1
-			print("no available ships. whose_turn_is_it_index = " + str(whose_turn_is_it_index))
+			print("no available ships")
 			next_turn()
 	elif initiative_order[whose_turn_is_it_index].type == Battle.EntityType.ENEMY:
+		print("HX's turn")
 		var HX_node = initiative_order[whose_turn_is_it_index]
 		if not animations_sped_up:
 			view_entity(HX_node)
 		HX_node.take_turn()
+	print("========== next turn end")
 
 func get_selected_ship():
 	if whose_turn_is_it_index == -1 or initiative_order.is_empty() or not is_instance_valid(initiative_order[whose_turn_is_it_index]) or initiative_order[whose_turn_is_it_index].type != Battle.EntityType.SHIP:

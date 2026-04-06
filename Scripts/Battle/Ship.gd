@@ -256,6 +256,8 @@ func fire_weapon(weapon_type: int):
 			if frozen_turns > 0:
 				status_effects[Battle.StatusEffect.RADIOACTIVE] = frozen_turns
 		for i in projectile_num:
+			if HP <= 0:
+				break
 			var projectile = preload("res://Scenes/Battle/Weapons/Projectile.tscn").instantiate()
 			projectile.collision_layer = 8
 			projectile.collision_mask = 1 + 4 + 32
@@ -273,7 +275,7 @@ func fire_weapon(weapon_type: int):
 			if battle_GUI.bullet_2_selected_type == battle_GUI.BIG_BULLET:
 				projectile.mass = Data.battle_weapon_stats.bullet.mass[bullet_levels[PATH_2] - 1]
 			else:
-				projectile.mass = 9.0
+				projectile.mass = 3.0
 			projectile.ignore_defense_buffs = Data.battle_weapon_stats.bullet.ignore_defense_buffs[bullet_levels[PATH_2] - 1]
 			projectile.status_effects = status_effects
 			projectile.position = position
@@ -304,6 +306,8 @@ func fire_weapon(weapon_type: int):
 		var projectiles = []
 		var projectile_num = Data.battle_weapon_stats.bomb.shots_fired[bomb_levels[PATH_3] - 1]
 		for i in projectile_num:
+			if HP <= 0:
+				break
 			var explosive = preload("res://Scenes/Battle/Weapons/Explosive.tscn").instantiate()
 			explosive.collision_layer = 8
 			explosive.collision_mask = 1 + 4 + 32
@@ -372,7 +376,7 @@ func ending_turn(delay: float = 0.0):
 	create_tween().tween_callback(end_turn).set_delay(0.0 if battle_scene.animations_sped_up else delay)
 
 func end_turn():
-	if status_effects[Battle.StatusEffect.EXTRA_TURNS] > 0.0:
+	if status_effects[Battle.StatusEffect.EXTRA_TURNS] > 0.0 and HP > 0:
 		battle_GUI.fade_in_main_panel()
 	super()
 

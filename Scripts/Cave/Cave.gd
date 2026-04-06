@@ -1219,6 +1219,9 @@ func _input(event):
 		update_ray()
 
 func go_up_cave():
+	if not right_side_panel.visible:
+		return
+	right_side_panel.hide()
 	remove_cave()
 	cave_floor -= 1
 	if not tile.has("ash"):
@@ -1236,6 +1239,9 @@ func go_up_cave():
 
 
 func go_down_cave():
+	if not right_side_panel.visible:
+		return
+	right_side_panel.hide()
 	remove_cave()
 	cave_floor += 1
 	if not tile.has("ash"):
@@ -1960,7 +1966,7 @@ func _on_Exit_area_entered(_body):
 			action_btn.pressed.connect(exit_cave)
 			right_side_vbox.add_child(action_btn)
 		else:
-			show_right_info(tr("GO_UP"), go_up_cave)
+			call_deferred("show_right_info", tr("GO_UP"), go_up_cave)
 
 func on_WH_entered(_body):
 	show_right_info(tr("EXIT_CAVE"), exit_cave)

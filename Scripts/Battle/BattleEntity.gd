@@ -295,18 +295,19 @@ func damage_entity(weapon_data: Dictionary):
 	if Battle.StatusEffect.STUN in status_effects or Battle.StatusEffect.FROZEN in status_effects:
 		total_agility = 0
 	var relative_velocity_accuracy_mod = abs(0.1 * velocity.rotated(PI / 2.0).dot(weapon_data.get("orientation", Vector2.ZERO)))
-	var dodged = 1.0 / (1.0 + exp((weapon_data.weapon_accuracy - total_agility - relative_velocity_accuracy_mod + 9.2) / 5.8)) > randf()
+	var dodged = 1.0 / (1.0 + exp((weapon_data.get("weapon_accuracy", 10.0) - total_agility - relative_velocity_accuracy_mod + 9.2) / 5.8)) > randf()
 	if dodged:
 		battle_scene.add_damage_text(true, position)
 	else:
 		var damage_multiplier:float
-		var attack_defense_difference:int = weapon_data.shooter_attack - defense
-		if not weapon_data.has("ignore_defense_buffs") or defense_buff < 0:
-			attack_defense_difference -= defense_buff
-		if attack_defense_difference >= 0:
-			damage_multiplier = attack_defense_difference * 0.125 + 1.0
-		else:
-			damage_multiplier = 1.0 / (1.0 - 0.125 * attack_defense_difference)
+		if weapon_data.has("shooter_attack"):
+			var attack_defense_difference:int = weapon_data.shooter_attack - defense
+			if not weapon_data.has("ignore_defense_buffs") or defense_buff < 0:
+				attack_defense_difference -= defense_buff
+			if attack_defense_difference >= 0:
+				damage_multiplier = attack_defense_difference * 0.125 + 1.0
+			else:
+				damage_multiplier = 1.0 / (1.0 - 0.125 * attack_defense_difference)
 		var actual_damage:int = max(1, weapon_data.damage * damage_multiplier)
 		var crit_hit_chance_base = 0.03
 		if weapon_data.shooter_type == Battle.EntityType.SHIP:
@@ -347,11 +348,11 @@ func damage_entity(weapon_data: Dictionary):
 		if knockback != Vector2.ZERO:
 			if relative_velocity.dot(knockback) > 0.0: # Reduce effect of knockback if the entity is moving in the same direction as the knockback
 				knockback *= min(1.0, knockback.length() / relative_velocity.length())
-			knockback *= weapon_data.get("mass", 1.0) / get_mass()
+			knockback *= weapon_data.get("shooter_mass", 0.0) / get_mass()
 			if critical:
 				knockback *= 1.2
 			velocity += knockback
-		battle_scene.add_damage_text(false, position, actual_damage, critical, 0.06 * weapon_data.get("velocity", Vector2.ZERO) * sqrt(weapon_data.get("mass", 0.0)))
+		battle_scene.add_damage_text(false, position, actual_damage, critical, 0.03 * weapon_data.get("velocity", Vector2.ZERO) * sqrt(weapon_data.get("mass", 0.0)))
 		HP = max(HP - actual_damage, 0)
 		var label_knockback = weapon_data.velocity.normalized() * weapon_data.get("mass", 0.0) * 0.5 / total_HP
 		if label_knockback.length() > weapon_data.velocity.length():
@@ -405,14 +406,18 @@ func update_info_labels():
 	$Info/StatusEffects.update()
 	$Info/Buffs.update()
 
+var entity_dying_tween
+
 func entity_defeated_callback(knockback:Vector2 = Vector2.ZERO):
-	var entity_dying_tween = create_tween().set_parallel()
+	if entity_dying_tween:
+		return
+	entity_dying_tween = create_tween().set_parallel()
 	entity_dying_tween.tween_property($Info, "modulate:a", 0.0, 0.75)
 	entity_dying_tween.tween_property(self, "position", position + knockback, 1.5)
 	entity_dying_tween.tween_property($Sprite2D.material, "shader_parameter/alpha", 0.0, 1.0).set_delay(0.75)
-	entity_dying_tween.tween_callback(queue_free).set_delay(1.5)
-	if battle_scene.initiative_order[battle_scene.whose_turn_is_it_index-1] == self:
-		entity_dying_tween.tween_callback(end_turn).set_delay(2.0)
+	entity_dying_tween.tween_callback(queue_free).set_delay(2.0)
+	if battle_scene.initiative_order[battle_scene.whose_turn_is_it_index] == self:
+		entity_dying_tween.tween_callback(end_turn).set_delay(1.5)
 	entity_dying_tween.set_speed_scale(5.0 if battle_scene.animations_sped_up else 1.0)
 	if is_instance_valid(turn_order_box):
 		turn_order_box.get_node("FadeAnim").play("FadeOutAnim")
@@ -445,9 +450,7 @@ func collide_with_entity(collider: BattleEntity, collidee: BattleEntity):
 	var collider_weapon_data = {
 		"type":Battle.DamageType.PHYSICAL,
 		"damage": collider_mass * collider.velocity.length_squared() * 3.0e-6,
-		"shooter_attack":collider.attack + collider.attack_buff,
 		"shooter_type":collider.type,
-		"weapon_accuracy":collider.accuracy,
 		"orientation":collider.velocity.normalized(),
 		"velocity":0.3 * collider.velocity,
 	}
@@ -459,7 +462,6 @@ func collide_with_entity(collider: BattleEntity, collidee: BattleEntity):
 			var collidee_weapon_data = {
 				"type":Battle.DamageType.PHYSICAL,
 				"damage": collidee_mass * collider.velocity.length_squared() * 3.0e-6,
-				"shooter_attack":collidee.attack + collidee.attack_buff,
 				"shooter_type":collidee.type,
 				"weapon_accuracy":INF,
 				"orientation":collidee.velocity.normalized(),
@@ -469,7 +471,7 @@ func collide_with_entity(collider: BattleEntity, collidee: BattleEntity):
 			if collidee.velocity == Vector2.ZERO:
 				collidee.velocity = collider.velocity.normalized() * collidee_velocity_gain
 			else:
-				collidee.velocity += collidee.velocity.normalized() * collidee_velocity_gain
+				collidee.velocity += collider.velocity.normalized() * collidee_velocity_gain
 		var velocity_loss = sqrt(collidee_mass * pow(collidee_velocity_gain, 2) / collider_mass)
 		if velocity_loss > collider.velocity.length():
 			collider.velocity = Vector2.ZERO

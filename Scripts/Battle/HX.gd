@@ -229,7 +229,7 @@ func fire_magic_bullets():
 		magic_bullet.collision_layer = 16
 		magic_bullet.collision_mask = 1 + 2
 		magic_bullet.speed = 1400.0
-		magic_bullet.mass = 6.0
+		magic_bullet.mass = 5.0
 		magic_bullet.velocity_process_modifier = 5.0 if battle_scene.animations_sped_up else 1.0
 		magic_bullet.rotation = angle
 		magic_bullet.damage = attack_data[attack_type].damage
@@ -316,7 +316,6 @@ func add_projectile(angle:float, modifiers:Dictionary):
 	projectile.collision_layer = 16
 	projectile.collision_mask = 1 + 2 + 32
 	projectile.speed = 1000.0
-	projectile.mass = 1.0
 	projectile.velocity_process_modifier = 5.0 if battle_scene.animations_sped_up else 1.0
 	projectile.rotation = angle
 	projectile.damage = attack_data[attack_type].damage
@@ -361,7 +360,7 @@ func normal_attack():
 			buffs["defense"] = -2
 		elif lv >= 3:
 			buffs["defense"] = -1
-		var mass = 15.0 + lv * 2.0
+		var mass = 5.0 + lv * 1.5
 		var scale_mult = 1.0
 		var damage_mult = 1.0
 		if lv >= 9:

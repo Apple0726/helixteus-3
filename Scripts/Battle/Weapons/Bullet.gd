@@ -16,6 +16,7 @@ func _on_area_entered(area: Area2D) -> void:
 		"type":Battle.DamageType.PHYSICAL,
 		"damage":damage,
 		"shooter_attack":shooter.attack + shooter.attack_buff,
+		"shooter_mass":shooter.get_mass(),
 		"shooter_type":shooter.type,
 		"shooter_velocity":shooter.velocity,
 		"weapon_accuracy":weapon_accuracy,

@@ -456,7 +456,7 @@ var battle_weapon_stats = {
 	"bullet": {	"damage":3.5,
 				"accuracy":1.0,
 				"shots_fired":[2, 3, 6, 15],
-				"mass":[80.0, 80.0, 160.0, 280.0],
+				"mass":[8.0, 8.0, 16.0, 28.0],
 				"damage_multiplier":[1.0, 1.0, 1.4, 2.1],
 				"crit_hit_mult":[1.0, 1.5, 2.3, 3.4],
 				"deflects":[2, 2, 3, 4],

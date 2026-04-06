@@ -3256,9 +3256,13 @@ func generate_tiles(id:int):
 			earn_achievement("exploration", "find_xenon_lake")
 	if p_i.has("lake"):
 		if p_i.lake.element == "Ne":
-			lake_au_int = Helper.clever_round(3.6e3 * (randf_range(1, 2)))
+			lake_au_int = Helper.clever_round(1.8e3 * (randf_range(1, 2)))
 		elif p_i.lake.element == "Xe":
-			lake_au_int = Helper.clever_round(1.5e5 * (randf_range(1, 2)))
+			lake_au_int = Helper.clever_round(7.5e4 * (randf_range(1, 2)))
+		if p_i.lake.state == "sc":
+			lake_au_int *= 1.25
+		elif p_i.lake.state == "l":
+			lake_au_int *= 1.5
 	for i in wid:
 		for j in wid:
 			var t_id = i % wid + j * wid

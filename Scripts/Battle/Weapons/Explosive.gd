@@ -31,6 +31,7 @@ func _on_area_entered(area: Area2D) -> void:
 		"type":Battle.DamageType.PHYSICAL,
 		"damage":damage,
 		"shooter_attack":shooter.attack + shooter.attack_buff,
+		"shooter_mass":shooter.get_mass(),
 		"shooter_type":shooter.type,
 		"shooter_velocity":shooter.velocity,
 		"weapon_accuracy":weapon_accuracy,
@@ -49,13 +50,12 @@ func _on_area_entered(area: Area2D) -> void:
 			if area_in_AoE is BattleEntity and area_in_AoE != area:
 				var dist_from_point_blank = (area_in_AoE.position - position).length()
 				var AoE_weapon_data = {
-					"type":Battle.DamageType.PHYSICAL,
+					"type":Battle.DamageType.EMG,
 					"damage":damage * remap(dist_from_point_blank, 0.0, AoE_radius, 1.0, 0.2),
 					"shooter_attack":shooter.attack + shooter.attack_buff,
 					"shooter_type":shooter.type,
 					"weapon_accuracy":INF,
 					"velocity":200.0 * (area_in_AoE.position - position).normalized(),
-					"knockback":30.0 * (area_in_AoE.position - position).normalized(),
 					"status_effects":status_effects if shooter.type == Battle.EntityType.SHIP and shooter.bomb_levels[1] >= 2 else {},
 				}
 				area_in_AoE.damage_entity(AoE_weapon_data)

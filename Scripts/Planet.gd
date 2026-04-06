@@ -290,12 +290,6 @@ func add_ancient_building_sprite(tile:Dictionary, tile_id:int, v:Vector2, buildi
 		bldgs[tile_id].add_child(glow)
 		glow.add_to_group("ancient_bldg_glows")
 
-func add_particles(pos:Vector2):
-	var particle:GPUParticles2D = game.particles_scene.instantiate()
-	particle.position = pos + Vector2(30, 30)
-	particle.lifetime = 2.0 / game.u_i.time_speed
-	add_child(particle)
-
 func show_tooltip(tile, tile_id:int):
 	if tile == null or p_i == null:
 		return
@@ -329,26 +323,30 @@ func show_tooltip(tile, tile_id:int):
 			tooltip += tr("BROKEN_X").format({"building_name":tr(ancient_building_name.to_upper())})
 		else:
 			tooltip += tr(ancient_building_name.to_upper())
-		if tile.ancient_bldg.tier > 1:
-			tooltip += " " + Helper.get_roman_num(tile.ancient_bldg.tier)
+		var AB_tier = tile.ancient_bldg.tier
+		if AB_tier > 1:
+			tooltip += " " + Helper.get_roman_num(AB_tier)
 		tooltip += "[/color]"
 		tooltip += "\n"
 		additional_tooltip = tr("%s_DESC1" % ancient_building_name.to_upper())
 		var desc = tr("%s_DESC2" % ancient_building_name.to_upper())
 		match tile.ancient_bldg.name:
 			AncientBuilding.SPACEPORT:
-				desc = desc % [	Helper.get_spaceport_exit_cost_reduction(tile.ancient_bldg.tier) * 100,
-								Helper.get_spaceport_travel_cost_reduction(tile.ancient_bldg.tier) * 100]
+				desc = desc % [	Helper.get_spaceport_exit_cost_reduction(AB_tier) * 100,
+								Helper.get_spaceport_travel_cost_reduction(AB_tier) * 100]
+				if game.science_unlocked.has("ISP"):
+					var XP = Helper.format_num(Helper.get_spaceport_xp_mult(AB_tier) * game.system_data[game.c_s].diff * max(1.0, AB_tier * game.u_i.time_speed / 16.0), true)
+					desc += "\n" + tr("SPACEPORT_PASSIVE_XP_DESC").format({"XP":XP, "secs":Helper.format_num(max(4.0 / AB_tier / game.u_i.time_speed, 0.25), true)})
 			AncientBuilding.MINERAL_REPLICATOR, AncientBuilding.MINING_OUTPOST, AncientBuilding.OBSERVATORY:
-				desc = desc.format({"n":Helper.get_ancient_bldg_area(tile.ancient_bldg.tier)}) % Helper.get_MR_Obs_Outpost_prod_mult(tile.ancient_bldg.tier)
+				desc = desc.format({"n":Helper.get_ancient_bldg_area(AB_tier)}) % Helper.get_MR_Obs_Outpost_prod_mult(AB_tier)
 			AncientBuilding.SUBSTATION:
-				desc = desc.format({"n":Helper.get_ancient_bldg_area(tile.ancient_bldg.tier), "time":Helper.time_to_str(Helper.get_substation_capacity_bonus(tile.ancient_bldg.tier))}) % Helper.get_substation_prod_mult(tile.ancient_bldg.tier)
+				desc = desc.format({"n":Helper.get_ancient_bldg_area(AB_tier), "time":Helper.time_to_str(Helper.get_substation_capacity_bonus(AB_tier))}) % Helper.get_substation_prod_mult(AB_tier)
 #			"AURORA_GENERATOR":
-#				desc = desc.format({"intensity":Helper.get_AG_au_int_mult(tile.ancient_bldg.tier), "n":Helper.get_AG_num_auroras(tile.ancient_bldg.tier)})
+#				desc = desc.format({"intensity":Helper.get_AG_au_int_mult(AB_tier), "n":Helper.get_AG_num_auroras(AB_tier)})
 			AncientBuilding.NUCLEAR_FUSION_REACTOR:
-				desc = desc % Helper.format_num(Helper.get_NFR_prod_mult(tile.ancient_bldg.tier))
+				desc = desc % Helper.format_num(Helper.get_NFR_prod_mult(AB_tier))
 			AncientBuilding.CELLULOSE_SYNTHESIZER:
-				desc = desc % Helper.format_num(Helper.get_CS_prod_mult(tile.ancient_bldg.tier))
+				desc = desc % Helper.format_num(Helper.get_CS_prod_mult(AB_tier))
 		tooltip += desc
 		icons.append_array(Data.ancient_bldg_icons[tile.ancient_bldg.name])
 		if tile.ancient_bldg.has("repair_cost"):
@@ -930,11 +928,9 @@ func collect_prod_bldgs(tile_id:int):
 				for rsrc in rsrc_collected:
 					rsrc_collected[rsrc] = round(rsrc_collected[rsrc] * progress * 1000) / 1000
 					Helper.add_item_to_coll(items_collected, rsrc, rsrc_collected[rsrc])
-				game.add_resources(rsrc_collected)
 			else:
 				for rsrc in _tile.bldg.expected_rsrc:
 					Helper.add_item_to_coll(items_collected, rsrc, _tile.bldg.expected_rsrc[rsrc])
-				game.add_resources(_tile.bldg.expected_rsrc)
 			_tile.bldg.erase("stone")
 			_tile.bldg.erase("stone_qty")
 			_tile.bldg.erase("start_date")
