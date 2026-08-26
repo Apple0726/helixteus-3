@@ -300,6 +300,8 @@ func next_turn():
 	while not is_instance_valid(initiative_order[whose_turn_is_it_index]) or initiative_order[whose_turn_is_it_index].type != Battle.EntityType.BOUNDARY and initiative_order[whose_turn_is_it_index].HP <= 0:
 		print("entity %s dead" % whose_turn_is_it_index)
 		whose_turn_is_it_index += 1
+		if whose_turn_is_it_index >= len(initiative_order)-1:
+			break
 	if initiative_order[whose_turn_is_it_index].type == Battle.EntityType.BOUNDARY:
 		print("environment's turn")
 		scale_before_view_battlefield = game.view.scale.x

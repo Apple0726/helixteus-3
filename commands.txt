@@ -93,3 +93,7 @@ Commands list:
 
 /showclusters
 - Instantly show all clusters without having to send probes
+
+/setXP [amount]
+- Sets universe XP to [amount]
+- Example: `/setxp 0`

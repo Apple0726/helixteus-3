@@ -546,8 +546,8 @@ func destroy_MS():
 			rsrc_salvaged = Data.MS_costs["%s_%s" % [MS_constr_data.obj.MS, MS_constr_data.obj.MS_lv]].duplicate(true)
 		rsrc_salvaged.erase("money")
 		rsrc_salvaged.erase("energy")
-		var MS_repair_cost_money = 0.0
-		var MS_repair_cost_energy = 0.0
+		var MS_destroy_cost_money = 0.0
+		var MS_destroy_cost_energy = 0.0
 		for rsrc in rsrc_salvaged.keys():
 			if MS_constr_data.obj.MS in ["DS", "MB"]:
 				rsrc_salvaged[rsrc] *= pow(MS_constr_data.obj.size, 2)
@@ -557,15 +557,16 @@ func destroy_MS():
 				rsrc_salvaged[rsrc] *= MS_constr_data.obj.size / 12000.0
 			elif MS_constr_data.obj.MS == "MME":
 				rsrc_salvaged[rsrc] *= pow(MS_constr_data.obj.size / 13000.0, 2)
+			# Destroying broken MSes gives less resources
 			rsrc_salvaged[rsrc] = round(rsrc_salvaged[rsrc] * game.engineering_bonus.BCM * (0.25 if MS_constr_data.obj.has("repair_cost") else 0.5))
 			if rsrc == "stone":
-				MS_repair_cost_money += rsrc_salvaged[rsrc] * 2.0
-				MS_repair_cost_energy += rsrc_salvaged[rsrc]
+				MS_destroy_cost_money += rsrc_salvaged[rsrc] * 2.0
+				MS_destroy_cost_energy += rsrc_salvaged[rsrc]
 			else:
-				MS_repair_cost_money += rsrc_salvaged[rsrc] * 250.0
-				MS_repair_cost_energy += rsrc_salvaged[rsrc] * 50
+				MS_destroy_cost_money += rsrc_salvaged[rsrc] * 250.0
+				MS_destroy_cost_energy += rsrc_salvaged[rsrc] * 50
 		rsrc_salvaged.erase("stone")
-		bldg_costs = {"money":MS_repair_cost_money, "energy":MS_repair_cost_energy}
+		bldg_costs = {"money":MS_destroy_cost_money, "energy":MS_destroy_cost_energy}
 		Helper.put_rsrc(vbox, 32, bldg_costs, true, true)
 		Helper.put_rsrc(vbox, 32, rsrc_salvaged, false)
 		Helper.add_label(tr("DISMANTLING_COSTS"), 0)

@@ -1,9 +1,9 @@
 extends Node2D
 
 const TEST:bool = false
-const DATE:String = "6 Apr 2026"
-const VERSION:String = "v0.30.3"
-const COMPATIBLE_SAVES = ["v0.30", "v0.30.1", "v0.30.2"]
+const DATE:String = "13 Jun 2026"
+const VERSION:String = "v0.30.3a"
+const COMPATIBLE_SAVES = ["v0.30", "v0.30.1", "v0.30.2", "v0.30.3"]
 
 #var surface_BG = preload("res://Graphics/Decoratives/Surface.jpg")
 #var crust_BG = preload("res://Graphics/Decoratives/Crust.jpg")
@@ -4622,6 +4622,11 @@ func _on_command_text_submitted(new_text):
 		"showclusters":
 			for c_i in u_i.cluster_data:
 				c_i.visible = true
+		"setxp":
+			if c_u != -1:
+				u_i.xp = float(arr[1])
+				if is_instance_valid(HUD):
+					HUD.refresh()
 		_:
 			fail = true
 	if not fail:
