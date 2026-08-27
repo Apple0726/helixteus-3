@@ -3,7 +3,7 @@ extends Node2D
 const TEST:bool = false
 const DATE:String = "13 Jun 2026"
 const VERSION:String = "v0.30.3a"
-const COMPATIBLE_SAVES = ["v0.30", "v0.30.1", "v0.30.2", "v0.30.3"]
+const COMPATIBLE_VERSIONS = ["v0.30", "v0.30.1", "v0.30.2", "v0.30.3"]
 
 #var surface_BG = preload("res://Graphics/Decoratives/Surface.jpg")
 #var crust_BG = preload("res://Graphics/Decoratives/Crust.jpg")
@@ -609,7 +609,7 @@ func load_game():
 	if achievement_data.is_empty() or achievement_data.money is Array:#Save migration
 		for ach in Data.achievements:
 			achievement_data[ach] = {}
-	if save_info_dict.version != VERSION and not save_info_dict.version in COMPATIBLE_SAVES:
+	if save_info_dict.version != VERSION and not save_info_dict.version in COMPATIBLE_VERSIONS:
 		c_u = -1
 		var beginner_friendly = len(universe_data) == 1 and dim_num == 1
 		var lv_sum:int = 0

@@ -6,20 +6,8 @@ var save_to_export:String = ""
 func _ready():
 	$HBoxContainer/ShowInFileManager.visible = OS.get_name() in ["Windows", "Linux"]
 
-func on_version_over_ok():
-	game.show_tooltip(tr("SAME_VERSION"))
-
-func on_version_over_compatible():
-	game.show_tooltip(tr("VERSION_COMPATIBLE"))
-
-func on_version_over_not_ok():
-	game.show_tooltip(tr("VERSION_INCOMPATIBLE"))
-
-func on_mouse_exit():
-	game.hide_tooltip()
-
 func refresh():
-	for save in $ScrollContainer/VBox.get_children():
+	for save in $ScrollContainer/HBox.get_children():
 		save.queue_free()
 	var file = DirAccess.open("user://")
 	file.list_dir_begin() # TODOGODOT4 fill missing arguments https://github.com/godotengine/godot/pull/40547
@@ -48,33 +36,8 @@ func refresh():
 		save_info.close()
 		if correct_file_structure:
 			var save = save_slot_scene.instantiate()
-			var save_created = save_info_dict.save_created
-			var save_modified = save_info_dict.save_modified
-			save.get_node("Version").text = save_info_dict.version
-			save.get_node("Button").connect("pressed",Callable(self,"on_load").bind(next_dir))
-			save.get_node("Delete").connect("pressed",Callable(self,"on_delete").bind(next_dir))
-			save.get_node("Export").connect("pressed",Callable(self,"on_export").bind(next_dir))
-			save.get_node("Button").text = next_dir
-			if save_info_dict.version == game.VERSION:
-				save.get_node("Version").connect("mouse_entered",Callable(self,"on_version_over_ok"))
-				save.get_node("Version")["theme_override_colors/font_color"] = Color.GREEN
-			elif save_info_dict.version in game.COMPATIBLE_SAVES:
-				save.get_node("Version").connect("mouse_entered",Callable(self,"on_version_over_compatible"))
-				save.get_node("Version")["theme_override_colors/font_color"] = Color.YELLOW
-			else:
-				save.get_node("Version").connect("mouse_entered",Callable(self,"on_version_over_not_ok"))
-				save.get_node("Version")["theme_override_colors/font_color"] = Color.RED
-			save.get_node("Version").connect("mouse_exited",Callable(self,"on_mouse_exit"))
-			var now = Time.get_unix_time_from_system()
-			if now - save_created < 86400 * 2:
-				save.get_node("Created").text = "%s %s" % [tr("SAVE_CREATED"), tr("X_HOURS_AGO") % int((now - save_created) / 3600)]
-			else:
-				save.get_node("Created").text = "%s %s" % [tr("SAVE_CREATED"), tr("X_DAYS_AGO") % int((now - save_created) / 86400)]
-			if now - save_modified < 86400 * 2:
-				save.get_node("Saved").text = "%s %s" % [tr("SAVE_MODIFIED"), tr("X_HOURS_AGO") % int((now - save_modified) / 3600)]
-			else:
-				save.get_node("Saved").text = "%s %s" % [tr("SAVE_MODIFIED"), tr("X_DAYS_AGO") % int((now - save_modified) / 86400)]
-			$ScrollContainer/VBox.add_child(save)
+			$ScrollContainer/HBox.add_child(save)
+			save.initialize(save_info_dict, next_dir, on_load, on_delete, on_export)
 		next_dir = file.get_next()
 
 func on_export(save_str:String):
