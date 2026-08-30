@@ -1641,6 +1641,26 @@ func get_cluster_tooltip(c_id:int):
 			})
 	return tooltip
 
+func set_universe_btn_shader(univ_btn, univ_info:Dictionary):
+	univ_btn.material = ShaderMaterial.new()
+	univ_btn.material.shader = preload("res://Shaders/Cluster.gdshader")
+	univ_btn.material.resource_local_to_scene = true
+	var c:Color
+	if univ_info.lv < 100:
+		c = Color.WHITE
+	elif univ_info.lv < 120:
+		c = lerp(Color.WHITE, Color.GREEN, remap(univ_info.lv, 100, 120, 0.0, 1.0))
+	else:
+		var hue:float = 0.4 + log(univ_info.lv - 119) / 10.0
+		var sat:float = 1.0 - floor(hue - 0.4) / 5.0
+		c = Color.from_hsv(fmod(hue, 1.0), sat, 1.0)
+	univ_btn.material.set_shader_parameter("color", c)
+	univ_btn.material.set_shader_parameter("fog_size", 22 * sqrt(univ_info.dark_energy))
+	univ_btn.material.set_shader_parameter("fog_mvt_spd_2", 0.1 * univ_info.time_speed)
+	univ_btn.material.set_shader_parameter("seed", univ_info.id)
+	univ_btn.material.set_shader_parameter("alpha", 0.65)
+	univ_btn.material.set_shader_parameter("expo", min(0.27, remap(univ_info.lv, 1, 100, 0.12, 0.27)))
+
 func add_text_to_RTL(RTL:RichTextLabel, txt:String, imgs:Array, size:int = 17, resize_RTL:bool = false):
 	RTL.text = ""
 	var arr = txt.split("@i")#@i: where images are placed

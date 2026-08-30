@@ -169,7 +169,6 @@ func refresh_univs(reset:bool = false):
 		$Subjects.offset_left = 704
 		for univ_info in game.universe_data:
 			var univ = preload("res://Scenes/UniverseIcon.tscn").instantiate()
-			var id = univ_info["id"]
 			univ.get_node("Level").text = tr("LEVEL") + " " + str(univ_info.lv)
 			univ.get_node("DRs").text = str(Helper.clever_round(pow(univ_info.lv, 2.2) / 10000.0 * DR_mult)) + " " + tr("DR")
 			$Universes/Scroll/VBox.add_child(univ)
@@ -181,28 +180,11 @@ func refresh_univs(reset:bool = false):
 			univ.get_node("Props2").add_text("%.1f / " % univ_info.difficulty)
 			univ.get_node("Props2").add_image(Data.time_icon, 0, 17)
 			univ.get_node("Props2").add_text("%.1f" % univ_info.time_speed)
-			univ.connect("mouse_entered",Callable(self,"on_univ_over").bind(id))
-			univ.connect("mouse_exited",Callable(self,"on_univ_out"))
-			univ.connect("pressed",Callable(self,"on_univ_press").bind(id))
+			univ.mouse_entered.connect(on_univ_over.bind(univ_info["id"]))
+			univ.mouse_exited.connect(on_univ_out)
+			univ.pressed.connect(on_univ_press.bind(univ_info["id"]))
 			if Settings.enable_shaders:
-				univ.material = ShaderMaterial.new()
-				univ.material.shader = preload("res://Shaders/Cluster.gdshader")
-				univ.material.resource_local_to_scene = true
-				var c:Color
-				if univ_info.lv < 100:
-					c = Color.WHITE
-				elif univ_info.lv < 120:
-					c = lerp(Color.WHITE, Color.GREEN, remap(univ_info.lv, 100, 120, 0.0, 1.0))
-				else:
-					var hue:float = 0.4 + log(univ_info.lv - 119) / 10.0
-					var sat:float = 1.0 - floor(hue - 0.4) / 5.0
-					c = Color.from_hsv(fmod(hue, 1.0), sat, 1.0)
-				univ.material.set_shader_parameter("color", c)
-				univ.material.set_shader_parameter("fog_size", 22 * sqrt(univ_info.dark_energy))
-				univ.material.set_shader_parameter("fog_mvt_spd_2", 0.1 * univ_info.time_speed)
-				univ.material.set_shader_parameter("seed", id)
-				univ.material.set_shader_parameter("alpha", 0.65)
-				univ.material.set_shader_parameter("expo", min(0.27, remap(univ_info.lv, 1, 100, 0.12, 0.27)))
+				Helper.set_universe_btn_shader(univ, univ_info)
 	else:
 		$Subjects.offset_left = 448
 		for subj in $Subjects/Grid.get_children():

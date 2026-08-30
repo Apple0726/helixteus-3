@@ -58,14 +58,15 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 offset_left = 128.0
 offset_top = 152.0
-offset_right = 1056.0
-offset_bottom = 544.0
+offset_right = 1120.0
+offset_bottom = 568.0
 grow_horizontal = 2
 grow_vertical = 2
 
 [node name="HBox" type="HBoxContainer" parent="ScrollContainer" unique_id=329073522]
 layout_mode = 2
 size_flags_vertical = 3
+theme_override_constants/separation = 40
 
 [node name="Label" type="Label" parent="." unique_id=1544785175]
 custom_minimum_size = Vector2(0, 38)
@@ -109,10 +110,10 @@ color = Color(0, 0, 0, 0.564706)
 
 [node name="HBoxContainer" type="HBoxContainer" parent="." unique_id=1470312973]
 layout_mode = 0
-offset_left = 384.0
-offset_top = 600.0
-offset_right = 896.0
-offset_bottom = 640.0
+offset_left = 712.0
+offset_top = 88.0
+offset_right = 1120.0
+offset_bottom = 121.0
 theme_override_constants/separation = 20
 alignment = 1
 

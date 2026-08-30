@@ -1815,8 +1815,8 @@ bbcode_enabled = true
 
 [node name="Engineering" type="ScrollContainer" parent="ModifyDimension" unique_id=928904946]
 visible = false
-clip_contents = false
 custom_minimum_size = Vector2(388, 672)
+clip_contents = false
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0

@@ -1876,3 +1876,10 @@ RELATIVE_VELOCITY_MULT,Relative velocity multiplier,,,相对速度倍增,,,,,Rel
 SPACEPORT_PASSIVE_XP_DESC,Provides {XP} XP to all ships every {secs} seconds,,,每{secs}秒为所有飞船提供{XP}经验值,,,,,{XP} XP-t ad minden hajónak {secs} másodpercenként,,,,
 1_UNIVERSE,1 universe,,,,,,,,,,,,
 X_UNIVERSES,%d universes,,,,,,,,,,,,
+UNABLE_TO_READ_SAVE,"Unable to read save file.
+
+Try loading one of the backups to restore this save.",,,,,,,,,,,,
+VIEW_BACKUPS,View backups,,,,,,,,,,,,
+BACKUP_WILL_OVERWRITE_SAVE,Loading one of the backup saves will overwrite the main save. Continue?,,,,,,,,,,,,
+OVERWRITE,Overwrite,,,,,,,,,,,,
+DUPLICATE_AND_OVERWRITE,Duplicate save & overwrite,,,,,,,,,,,,

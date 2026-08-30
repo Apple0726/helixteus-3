@@ -32,12 +32,10 @@ func refresh():
 				if save_info_dict is not Dictionary:
 					next_dir = file.get_next()
 					continue
-		var correct_file_structure = save_info.get_length() == save_info.get_position()
 		save_info.close()
-		if correct_file_structure:
-			var save = save_slot_scene.instantiate()
-			$ScrollContainer/HBox.add_child(save)
-			save.initialize(save_info_dict, next_dir, on_load, on_delete, on_export)
+		var save = save_slot_scene.instantiate()
+		$ScrollContainer/HBox.add_child(save)
+		save.initialize(save_info_dict, next_dir, on_load, on_delete, on_export)
 		next_dir = file.get_next()
 
 func on_export(save_str:String):
