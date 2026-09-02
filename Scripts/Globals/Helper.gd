@@ -1661,6 +1661,82 @@ func set_universe_btn_shader(univ_btn, univ_info:Dictionary):
 	univ_btn.material.set_shader_parameter("alpha", 0.65)
 	univ_btn.material.set_shader_parameter("expo", min(0.27, remap(univ_info.lv, 1, 100, 0.12, 0.27)))
 
+func export_game(save_to_export:String, path:String):
+	var file = FileAccess.open(path, FileAccess.WRITE)
+	var success = true
+	if file:
+		var save_dict = {"univs":[]}
+		var file2 = FileAccess.open("user://%s/save_info.hx3" % save_to_export, FileAccess.READ)
+		if file2:
+			save_dict.save_info = file2.get_var()
+			file2.close()
+			var directory = DirAccess.open("user://%s" % save_to_export)
+			if directory:
+				directory.list_dir_begin() # TODOGODOT4 fill missing arguments https://github.com/godotengine/godot/pull/40547
+				var file_name = directory.get_next()
+				while file_name != "":
+					if directory.current_is_dir() and file_name.substr(0, 4) == "Univ":
+						var export_univ_res:Dictionary = export_univ(file_name, save_to_export)
+						if export_univ_res.error:
+							success = false
+							break
+						else:
+							save_dict.univs.append(export_univ_res.univ_data.duplicate(true))
+					file_name = directory.get_next()
+				if success:
+					file.store_var(save_dict)
+			else:
+				success = false
+		else:
+			success = false
+		file.close()
+	else:
+		success = false
+	return success
+	
+func export_univ(univ_str:String, save_to_export:String):
+	var error = false
+	var univ_data:Dictionary = {
+		"caves":{},
+		"clusters":{},
+		"galaxies":{},
+		"planets":{},
+		"systems":{},
+	}
+	var file = FileAccess.open("user://%s/%s/main.hx3" % [save_to_export, univ_str], FileAccess.READ)
+	if file:
+		univ_data.main = file.get_var()
+		file.close()
+	else:
+		error = true
+	if not error:
+		error = export_univ_folder(univ_data, univ_str, "Caves", save_to_export)
+	if not error:
+		error = export_univ_folder(univ_data, univ_str, "Clusters", save_to_export)
+	if not error:
+		error = export_univ_folder(univ_data, univ_str, "Galaxies", save_to_export)
+	if not error:
+		error = export_univ_folder(univ_data, univ_str, "Planets", save_to_export)
+	if not error:
+		error = export_univ_folder(univ_data, univ_str, "Systems", save_to_export)
+	return {"error":error, "univ_data":univ_data}
+
+func export_univ_folder(univ_data:Dictionary, univ_str:String, folder:String, save_to_export:String):
+	var error = false
+	var directory = DirAccess.open("user://%s/%s/%s" % [save_to_export, univ_str, folder])
+	if directory:
+		directory.list_dir_begin() # TODOGODOT4 fill missing arguments https://github.com/godotengine/godot/pull/40547
+		var file_name = directory.get_next()
+		while file_name != "":
+			if not directory.current_is_dir():
+				var file = FileAccess.open("user://%s/%s/%s/%s" % [save_to_export, univ_str, folder, file_name], FileAccess.READ)
+				if file:
+					univ_data[folder.to_lower()][file_name] = file.get_var()
+				else:
+					error = true
+				file.close()
+			file_name = directory.get_next()
+
 func add_text_to_RTL(RTL:RichTextLabel, txt:String, imgs:Array, size:int = 17, resize_RTL:bool = false):
 	RTL.text = ""
 	var arr = txt.split("@i")#@i: where images are placed

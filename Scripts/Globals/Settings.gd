@@ -33,6 +33,10 @@ var language:String = "en"
 var notation:String = "SI"
 var cave_gen_info:bool = false
 
+# save backup
+var backup_interval:int = 10 # seconds
+var max_backups:int = 20
+
 # misc
 var discord = true
 var op_cursor:bool = false

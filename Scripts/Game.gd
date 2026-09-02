@@ -371,6 +371,7 @@ func load_settings(config:ConfigFile):
 	Settings.autosave_interval = 10
 	Settings.enemy_AI_difficulty = config.get_value("game", "enemy_AI_difficulty", Settings.ENEMY_AI_DIFFICULTY_NORMAL)
 	$Autosave.wait_time = Settings.autosave_interval
+	$AutoBackup.wait_time = Settings.backup_interval
 	
 	# misc
 	Settings.op_cursor = config.get_value("misc", "op_cursor", false)
@@ -750,6 +751,7 @@ func new_game(univ:int = 0, new_save:bool = false, DR_advantage = false):
 	save_dir.make_dir("user://%s/Univ%s/Systems" % [c_sv, univ])
 	save_dir.make_dir("user://%s/Univ%s/Galaxies" % [c_sv, univ])
 	save_dir.make_dir("user://%s/Univ%s/Clusters" % [c_sv, univ])
+	save_dir.make_dir("user://%s/Backups" % [c_sv])
 	l_v = ""
 
 	#Player resources
@@ -975,6 +977,7 @@ func new_game(univ:int = 0, new_save:bool = false, DR_advantage = false):
 	update_starfield = true
 	add_planet(true)
 	$Autosave.start()
+	$AutoBackup.start()
 	var init_time = Time.get_unix_time_from_system()
 	view.set_process(true)
 	set_c_sv(c_sv)
@@ -4081,6 +4084,7 @@ func fade_out_title(fn:String):
 	else:
 		call(fn)
 		$Autosave.start()
+		$AutoBackup.start()
 		switch_music(Data.ambient_music.pick_random(), u_i.get("time_speed", 1.0))
 	
 func _on_NewGame_pressed():
@@ -4694,3 +4698,15 @@ func _on_spaceport_timer_timeout() -> void:
 		Helper.add_ship_XP(i, xp_mult * autocollect.passive_xp_mult * max(1.0, autocollect.passive_xp_tier * u_i.time_speed / 16.0))
 	if is_instance_valid(ships_panel):
 		ships_panel.update_xp_bars()
+
+
+func _on_auto_backup_timeout() -> void:
+	if c_v in ["universe", "cluster", "galaxy", "system", "planet"]:
+		var save_dir = DirAccess.open("user://")
+		var backup_dir_path = "user://%s/Backups" % [c_sv]
+		if not save_dir.dir_exists(backup_dir_path):
+			save_dir.make_dir(backup_dir_path)
+		print(Helper.export_game(c_sv, backup_dir_path + "/{save_name}_backup_{datetime_string}.hx3".format({
+			"save_name": c_sv,
+			"datetime_string":Time.get_datetime_string_from_system(),
+		})))

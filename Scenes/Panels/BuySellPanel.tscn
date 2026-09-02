@@ -136,7 +136,7 @@ offset_left = 448.0
 offset_top = 272.0
 offset_right = 832.0
 offset_bottom = 295.0
-text = "Buy or sell"
+text = "BUY_OR_SELL"
 horizontal_alignment = 1
 
 [node name="Arrow" type="Sprite2D" parent="." unique_id=1723570898]

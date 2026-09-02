@@ -638,17 +638,17 @@ offset_bottom = 40.0
 
 [node name="VBoxContainer" type="VBoxContainer" parent="Title" unique_id=870828861]
 layout_mode = 0
-offset_left = 536.0
+offset_left = 320.0
 offset_top = 416.0
-offset_right = 744.0
+offset_right = 960.0
 offset_bottom = 658.0
 theme_override_constants/separation = 18
 alignment = 2
 
 [node name="Continue" type="Button" parent="Title/VBoxContainer" unique_id=163979397]
-visible = false
-custom_minimum_size = Vector2(0, 36)
+custom_minimum_size = Vector2(200, 36)
 layout_mode = 2
+size_flags_horizontal = 4
 theme_override_colors/font_outline_color = Color(0.19793725, 0.19793722, 0.19793722, 1)
 theme_override_constants/outline_size = 4
 theme_override_font_sizes/font_size = 20
@@ -658,8 +658,9 @@ theme_override_styles/hover = SubResource("StyleBoxFlat_vvhu1")
 text = "Continue Save1"
 
 [node name="NewGame" type="Button" parent="Title/VBoxContainer" unique_id=158765359]
-custom_minimum_size = Vector2(0, 36)
+custom_minimum_size = Vector2(200, 36)
 layout_mode = 2
+size_flags_horizontal = 4
 theme_override_colors/font_outline_color = Color(0.19793725, 0.19793722, 0.19793722, 1)
 theme_override_constants/outline_size = 4
 theme_override_font_sizes/font_size = 20
@@ -669,8 +670,9 @@ theme_override_styles/hover = SubResource("StyleBoxFlat_vvhu1")
 text = "NEW_GAME"
 
 [node name="LoadGame" type="Button" parent="Title/VBoxContainer" unique_id=2136819336]
-custom_minimum_size = Vector2(0, 36)
+custom_minimum_size = Vector2(200, 36)
 layout_mode = 2
+size_flags_horizontal = 4
 theme_override_colors/font_outline_color = Color(0.19793725, 0.19793722, 0.19793722, 1)
 theme_override_constants/outline_size = 4
 theme_override_font_sizes/font_size = 20
@@ -680,8 +682,9 @@ theme_override_styles/hover = SubResource("StyleBoxFlat_vvhu1")
 text = "LOAD_GAME"
 
 [node name="Settings" type="Button" parent="Title/VBoxContainer" unique_id=1410258520]
-custom_minimum_size = Vector2(0, 36)
+custom_minimum_size = Vector2(200, 36)
 layout_mode = 2
+size_flags_horizontal = 4
 theme_override_colors/font_outline_color = Color(0.19793725, 0.19793722, 0.19793722, 1)
 theme_override_constants/outline_size = 4
 theme_override_font_sizes/font_size = 20
@@ -691,8 +694,9 @@ theme_override_styles/hover = SubResource("StyleBoxFlat_vvhu1")
 text = "SETTINGS"
 
 [node name="Mods" type="Button" parent="Title/VBoxContainer" unique_id=1105579111]
-custom_minimum_size = Vector2(0, 36)
+custom_minimum_size = Vector2(200, 36)
 layout_mode = 2
+size_flags_horizontal = 4
 theme_override_colors/font_outline_color = Color(0.19793725, 0.19793722, 0.19793722, 1)
 theme_override_constants/outline_size = 4
 theme_override_font_sizes/font_size = 20
@@ -743,6 +747,9 @@ grow_vertical = 1
 metadata/_edit_lock_ = true
 
 [node name="Autosave" type="Timer" parent="." unique_id=786789800]
+
+[node name="AutoBackup" type="Timer" parent="." unique_id=946211814]
+ignore_time_scale = true
 
 [node name="CollectPanelTimer" type="Timer" parent="." unique_id=1149337831]
 one_shot = true
@@ -846,6 +853,7 @@ metadata/_edit_lock_ = true
 [connection signal="mouse_exited" from="Title/Godot" to="." method="_on_mouse_exited"]
 [connection signal="pressed" from="Title/Godot" to="." method="_on_Godot_pressed"]
 [connection signal="timeout" from="Autosave" to="." method="_on_Autosave_timeout"]
+[connection signal="timeout" from="AutoBackup" to="." method="_on_auto_backup_timeout"]
 [connection signal="timeout" from="CollectPanelTimer" to="." method="_on_CollectPanelTimer_timeout"]
 [connection signal="animation_finished" from="CollectPanelAnim" to="." method="_on_CollectPanelAnim_animation_finished"]
 [connection signal="mouse_entered" from="Ship" to="." method="_on_Ship_mouse_entered"]

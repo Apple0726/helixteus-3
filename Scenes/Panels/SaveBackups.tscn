@@ -1,0 +1,63 @@
+[gd_scene format=3 uid="uid://dr16otvm32bbx"]
+
+[ext_resource type="Theme" uid="uid://cp2u1kgj60ic" path="res://Resources/default_theme.tres" id="1_oka3w"]
+[ext_resource type="Script" uid="uid://chxc2o3xfnbg1" path="res://Scripts/SaveBackups.gd" id="2_4xh5i"]
+[ext_resource type="Texture2D" uid="uid://blgh1lvsfpiu8" path="res://Graphics/GUI/Border.png" id="3_osj71"]
+[ext_resource type="Texture2D" uid="uid://baowebna7hgr5" path="res://Graphics/GUI/CloseButtonNormal.png" id="5_bbw4h"]
+[ext_resource type="Texture2D" uid="uid://c1vwn7p5uxu1r" path="res://Graphics/GUI/CloseButtonHover.png" id="6_mcair"]
+
+[node name="SaveBackups" type="Control" unique_id=1035928848]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 32.0
+offset_bottom = 32.0
+theme = ExtResource("1_oka3w")
+script = ExtResource("2_4xh5i")
+metadata/_edit_vertical_guides_ = [640.0]
+metadata/_edit_horizontal_guides_ = [360.0]
+
+[node name="BlackBG" type="ColorRect" parent="." unique_id=562256675]
+show_behind_parent = true
+layout_mode = 0
+offset_right = 1280.0
+offset_bottom = 720.0
+mouse_filter = 2
+color = Color(0, 0, 0, 0.564706)
+metadata/_edit_lock_ = true
+
+[node name="GUI" type="NinePatchRect" parent="." unique_id=975794284]
+layout_mode = 0
+offset_left = 384.0
+offset_top = 256.0
+offset_right = 896.0
+offset_bottom = 464.0
+mouse_filter = 1
+texture = ExtResource("3_osj71")
+patch_margin_left = 15
+patch_margin_top = 11
+patch_margin_right = 15
+patch_margin_bottom = 11
+axis_stretch_horizontal = 1
+metadata/_edit_horizontal_guides_ = [596.0]
+
+[node name="CloseButton" type="TextureButton" parent="." unique_id=1643590698]
+layout_mode = 0
+offset_left = 852.0
+offset_top = 268.0
+offset_right = 879.0
+offset_bottom = 295.0
+texture_normal = ExtResource("5_bbw4h")
+texture_hover = ExtResource("6_mcair")
+ignore_texture_size = true
+stretch_mode = 5
+
+[node name="Label" type="Label" parent="." unique_id=1102026262]
+layout_mode = 1
+offset_left = 448.0
+offset_top = 272.0
+offset_right = 832.0
+offset_bottom = 295.0
+text = "Backups"
+horizontal_alignment = 1
+
+[connection signal="pressed" from="CloseButton" to="." method="_on_close_button_pressed"]

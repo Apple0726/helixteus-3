@@ -41,12 +41,15 @@ func refresh():
 func on_export(save_str:String):
 	save_to_export = save_str
 	if OS.get_name() == "Web":
-		export_game("user://%s.hx3" % save_str)
-		var file = FileAccess.open("user://%s.hx3" % save_str, FileAccess.READ)
-		var L = file.get_length()
-		var buffer = file.get_buffer(L)
-		file.close()
-		JavaScriptBridge.download_buffer(buffer, save_str + ".hx3")
+		if Helper.export_game("user://%s.hx3" % save_str, "user://"):
+			game.popup(tr("EXPORT_SUCCESS") % save_to_export, 2.0)
+			var file = FileAccess.open("user://%s.hx3" % save_str, FileAccess.READ)
+			var L = file.get_length()
+			var buffer = file.get_buffer(L)
+			file.close()
+			JavaScriptBridge.download_buffer(buffer, save_str + ".hx3")
+		else:
+			game.popup(tr("EXPORT_FAILED").format({"save":save_to_export}), 2.0)
 	else:
 		$Export.current_file = save_str
 		$Export.title = tr("EXPORT_X") % save_str
@@ -72,78 +75,10 @@ func _on_ImportSave_pressed():
 	$Import.popup_centered()
 
 func _on_Export_file_selected(path):
-	export_game(path)
-
-func export_game(path:String = "user://"):
-	var file = FileAccess.open(path, FileAccess.WRITE)
-	var error2 = false
-	if file:
-		var save_dict = {"univs":[]}
-		var file2 = FileAccess.open("user://%s/save_info.hx3" % save_to_export, FileAccess.READ)
-		if file2:
-			save_dict.save_info = file2.get_var()
-			file2.close()
-			var directory = DirAccess.open("user://%s" % save_to_export)
-			if directory:
-				directory.list_dir_begin() # TODOGODOT4 fill missing arguments https://github.com/godotengine/godot/pull/40547
-				var file_name = directory.get_next()
-				while file_name != "":
-					if directory.current_is_dir():
-						var export_univ_res:Dictionary = export_univ(file_name)
-						if export_univ_res.error:
-							error2 = true
-							break
-						else:
-							save_dict.univs.append(export_univ_res.univ_data.duplicate(true))
-					file_name = directory.get_next()
-				if not error2:
-					file.store_var(save_dict)
-					game.popup(tr("EXPORT_SUCCESS") % save_to_export, 2.0)
-	file.close()
-	
-func export_univ(univ_str:String):
-	var error = false
-	var univ_data:Dictionary = {
-		"caves":{},
-		"clusters":{},
-		"galaxies":{},
-		"planets":{},
-		"superclusters":{},
-		"systems":{},
-	}
-	var file = FileAccess.open("user://%s/%s/main.hx3" % [save_to_export, univ_str], FileAccess.READ)
-	if file:
-		univ_data.main = file.get_var()
+	if Helper.export_game(save_to_export, path):
+		game.popup(tr("EXPORT_SUCCESS") % save_to_export, 2.0)
 	else:
-		error = true
-	file.close()
-	if not error:
-		error = export_univ_folder(univ_data, univ_str, "Caves")
-	if not error:
-		error = export_univ_folder(univ_data, univ_str, "Clusters")
-	if not error:
-		error = export_univ_folder(univ_data, univ_str, "Galaxies")
-	if not error:
-		error = export_univ_folder(univ_data, univ_str, "Planets")
-	if not error:
-		error = export_univ_folder(univ_data, univ_str, "Systems")
-	return {"error":error, "univ_data":univ_data}
-
-func export_univ_folder(univ_data:Dictionary, univ_str:String, folder:String):
-	var error = false
-	var directory = DirAccess.open("user://%s/%s/%s" % [save_to_export, univ_str, folder])
-	if directory:
-		directory.list_dir_begin() # TODOGODOT4 fill missing arguments https://github.com/godotengine/godot/pull/40547
-		var file_name = directory.get_next()
-		while file_name != "":
-			if not directory.current_is_dir():
-				var file = FileAccess.open("user://%s/%s/%s/%s" % [save_to_export, univ_str, folder, file_name], FileAccess.READ)
-				if file:
-					univ_data[folder.to_lower()][file_name] = file.get_var()
-				else:
-					error = true
-				file.close()
-			file_name = directory.get_next()
+		game.popup(tr("EXPORT_FAILED").format({"save":save_to_export}), 2.0)
 
 
 func _on_Import_file_selected(path):
