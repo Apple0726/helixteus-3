@@ -171,7 +171,7 @@ func _on_send_pressed() -> void:
 			if prop.get_node("Label2")["theme_override_colors/font_color"] == Color.RED:
 				game.popup(tr("INVALID_INPUT"), 1.5)
 		if PP >= 5:
-			game.show_YN_panel("discover_univ", tr("TP_CONFIRM2"))
+			game.show_YN_panel(discover_univ, tr("TP_CONFIRM2"))
 		else:
 			discover_univ()
 	else:

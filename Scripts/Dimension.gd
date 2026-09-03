@@ -339,9 +339,9 @@ func _on_Reset_mouse_entered():
 
 func _on_Reset_pressed():
 	if game.dim_num == 1:
-		game.show_YN_panel("reset_dimension", tr("RESET_1ST_DIM_CONFIRM").format({"DRnumber":new_dim_DRs, "DRs":tr("DRs")}), [new_dim_DRs])
+		game.show_YN_panel(game.reset_dimension, tr("RESET_1ST_DIM_CONFIRM").format({"DRnumber":new_dim_DRs, "DRs":tr("DRs")}), [new_dim_DRs])
 	else:
-		game.show_YN_panel("reset_dimension", tr("RENEW_DIMENSION_CONFIRM"), [new_dim_DRs])
+		game.show_YN_panel(game.reset_dimension, tr("RENEW_DIMENSION_CONFIRM"), [new_dim_DRs])
 
 func calc_math_points(node, default_value:float, op_factor:float, lower_limit:float = 0.0, upper_limit:float = INF):
 	if node.value <= lower_limit or node.value >= upper_limit:
@@ -597,7 +597,7 @@ func _on_Generate_pressed():
 		set_bonuses()
 		game.toggle_panel("create_universe_panel")
 	else:
-		game.show_YN_panel("generate_new_univ", tr("GENERATE_STARTING_UNIVERSE_CONFIRM"))
+		game.show_YN_panel(game.generate_new_univ, tr("GENERATE_STARTING_UNIVERSE_CONFIRM"))
 
 
 func _on_text_mouse_entered(text:String):

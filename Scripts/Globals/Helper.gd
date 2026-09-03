@@ -1081,6 +1081,7 @@ func clever_round (num:float, sd:int = 3, st:bool = false, _floor:bool = false):
 	return snapped(num, pow(10, e - sd + 1))
 
 func clever_snap(num):
+	# Used to avoid displaying ".0" in floats
 	if step_decimals(num) == 0:
 		return int(num)
 	return snapped(num, 0.1)
@@ -1736,6 +1737,33 @@ func export_univ_folder(univ_data:Dictionary, univ_str:String, folder:String, sa
 					error = true
 				file.close()
 			file_name = directory.get_next()
+
+func get_file_size_string(bytes:int):
+	var prefix:String = ""
+	var p:float = log(bytes) / log(10.0)
+	if is_equal_approx(p, ceil(p)):
+		p = ceil(p)
+	else:
+		p = int(p)
+	var base = float(bytes)
+	if p < 3:
+		prefix = ""
+	elif p < 6:
+		prefix = "K"
+		base /= 1024.0
+	elif p < 9:
+		prefix = "M"
+		base /= pow(1024.0, 2)
+	elif p < 12:
+		prefix = "G"
+		base /= pow(1024.0, 3)
+	else: # God forbid a save file grow this big
+		prefix = "T"
+		base /= pow(1024.0, 4)
+	return tr("FILE_SIZE_BYTES").format({
+		"bytes":clever_round(base),
+		"prefix":prefix,
+		"b_byte":tr("B_BYTE")})
 
 func add_text_to_RTL(RTL:RichTextLabel, txt:String, imgs:Array, size:int = 17, resize_RTL:bool = false):
 	RTL.text = ""

@@ -762,7 +762,7 @@ func _on_MainMenu_mouse_entered():
 
 
 func _on_MainMenu_pressed():
-	game.show_YN_panel("return_to_menu")
+	game.show_YN_panel(game.return_to_menu)
 
 func set_ship_btn_shader(active:bool, tier:int = -1):
 	ships_btn.material.set_shader_parameter("active", active)

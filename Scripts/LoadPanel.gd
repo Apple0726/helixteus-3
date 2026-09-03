@@ -35,8 +35,14 @@ func refresh():
 		save_info.close()
 		var save = save_slot_scene.instantiate()
 		$ScrollContainer/HBox.add_child(save)
+		save.open_backup_panel.connect(open_backup_panel.bind(next_dir))
 		save.initialize(save_info_dict, next_dir, on_load, on_delete, on_export)
 		next_dir = file.get_next()
+
+func open_backup_panel(save_name:String):
+	var save_backups_scene = preload("res://Scenes/Panels/SaveBackups.tscn").instantiate()
+	add_child(save_backups_scene)
+	save_backups_scene.load_backups(save_name)
 
 func on_export(save_str:String):
 	save_to_export = save_str
@@ -62,7 +68,7 @@ func on_load(sv:String):
 		game.fade_out_title("load_game")
 
 func on_delete(save_str:String):
-	game.show_YN_panel("delete_save", tr("ARE_YOU_SURE"), [save_str])
+	game.show_YN_panel(game.delete_save, tr("ARE_YOU_SURE"), [save_str])
 
 
 func on_delete_confirm(save_str:String):

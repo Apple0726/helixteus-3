@@ -1,5 +1,7 @@
 extends Panel
 
+signal open_backup_panel
+
 @onready var game = get_node("/root/Game")
 
 func _ready() -> void:
@@ -8,6 +10,7 @@ func _ready() -> void:
 	$Delete.mouse_entered.connect(game.show_tooltip.bind(tr("DELETE")))
 	$Delete.mouse_exited.connect(game.hide_tooltip)
 	$ViewBackups.mouse_entered.connect(game.show_tooltip.bind(tr("VIEW_BACKUPS")))
+	$ViewBackups.pressed.connect(emit_signal.bind("open_backup_panel"))
 	$ViewBackups.mouse_exited.connect(game.hide_tooltip)
 
 func initialize(save_info_dict, save_name:String, on_load: Callable, on_delete: Callable, on_export: Callable):

@@ -95,7 +95,7 @@ func _ready() -> void:
 
 func check_weapon_points(path: int):
 	if ship_data.unallocated_weapon_levels > 0:
-		game.show_YN_panel("upgrade_ship_weapon", tr("ARE_YOU_SURE"), [path])
+		game.show_YN_panel(upgrade_ship_weapon, tr("ARE_YOU_SURE"), [path])
 
 func update_ship_stats_after_class_change(ship_class: int):
 	ship_data.ship_class = ship_class

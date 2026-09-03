@@ -124,7 +124,7 @@ func _on_buy_pressed():
 	if game.check_enough(item_total_costs):
 		if tab == PICKAXE:
 			if game.pickaxe.has("name"):
-				game.show_YN_panel("buy_pickaxe", tr("REPLACE_PICKAXE") % [tr(game.pickaxe.name.to_upper()), tr(item_selected.id.to_upper())], [item_total_costs])
+				game.show_YN_panel(buy_pickaxe, tr("REPLACE_PICKAXE") % [tr(game.pickaxe.name.to_upper()), tr(item_selected.id.to_upper())], [item_total_costs])
 			else:
 				buy_pickaxe(item_total_costs)
 		elif tab == OVERCLOCK:

@@ -1,0 +1,23 @@
+[gd_scene format=3 uid="uid://n43gyftalk0r"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_ehtx8"]
+font_size = 13
+
+[node name="SaveBackup" type="HBoxContainer" unique_id=36504482]
+theme_override_constants/separation = 10
+
+[node name="Label" type="Label" parent="." unique_id=1991969036]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Save2_backup_2026-09-03T08:49:05.hx3"
+label_settings = SubResource("LabelSettings_ehtx8")
+
+[node name="Size" type="Label" parent="." unique_id=626142079]
+layout_mode = 2
+text = "5.4 MB"
+label_settings = SubResource("LabelSettings_ehtx8")
+
+[node name="Button" type="Button" parent="." unique_id=1432283005]
+layout_mode = 2
+theme_override_font_sizes/font_size = 13
+text = "Load"

@@ -7,6 +7,7 @@
 font_size = 12
 
 [sub_resource type="SystemFont" id="SystemFont_rili7"]
+subpixel_positioning = 0
 
 [sub_resource type="LabelSettings" id="LabelSettings_wkd82"]
 font = SubResource("SystemFont_rili7")

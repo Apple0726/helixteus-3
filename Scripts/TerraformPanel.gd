@@ -140,7 +140,7 @@ func _on_Terraform_pressed():
 			total_costs[cost] = tf_costs[cost]
 	if game.check_enough(total_costs):
 		if p_i.has("bookmarked"):
-			game.show_YN_panel("terraform_planet", tr("TF_CONFIRM"))
+			game.show_YN_panel(terraform_planet, tr("TF_CONFIRM"))
 		else:
 			terraform_planet()
 	else:

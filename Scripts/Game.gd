@@ -4114,7 +4114,7 @@ func _on_Autosave_timeout():
 		if not viewing_dimension:
 			save_views(true)
 
-func show_YN_panel(type:String, text:String = tr("ARE_YOU_SURE"), args:Array = []):
+func show_YN_panel(callable:Callable, text:String = tr("ARE_YOU_SURE"), args:Array = []):
 	if $Panels.has_node("YN_panel"):
 		$Panels.get_node("YN_panel").free()
 	var YN_panel = preload("res://Scenes/PopupWindow.tscn").instantiate()
@@ -4122,22 +4122,12 @@ func show_YN_panel(type:String, text:String = tr("ARE_YOU_SURE"), args:Array = [
 	YN_panel.set_OK_text(tr("NO"))
 	YN_panel.name = "YN_panel"
 	if args.is_empty():
-		YN_panel.add_button(tr("YES"), Callable(self,"%s_confirm" % type))
+		YN_panel.add_button(tr("YES"), callable)
 	else:
-		YN_panel.add_button(tr("YES"), Callable(self,"%s_confirm" % type).bindv(args))
+		YN_panel.add_button(tr("YES"), callable.bindv(args))
 	$Panels.add_child(YN_panel)
-	#if type in ["buy_pickaxe", "destroy_building", "destroy_buildings", "op_galaxy", "conquer_all", "destroy_tri_probe", "reset_dimension"]:
 
-func upgrade_ship_weapon_confirm(path: int):
-	ship_customize_screen.upgrade_ship_weapon(path)
-
-func destroy_rover_confirm(rover_destroy_callable: Callable):
-	rover_destroy_callable.call()
-
-func terraform_planet_confirm():
-	terraform_panel.terraform_planet()
-
-func delete_save_confirm(save_str):
+func delete_save(save_str):
 	var config = ConfigFile.new()
 	var err = config.load("user://settings.cfg")
 	var saved_c_sv = ""
@@ -4149,7 +4139,7 @@ func delete_save_confirm(save_str):
 		config.save("user://settings.cfg")
 	load_save_panel.on_delete_confirm(save_str)
 
-func return_to_menu_confirm():
+func return_to_menu():
 	$Ship.visible = false
 	$Autosave.stop()
 	await switch_view("")
@@ -4168,7 +4158,7 @@ func return_to_menu_confirm():
 	dim_num = 1
 	autocollect.clear()
 
-func generate_new_univ_confirm():
+func generate_new_univ():
 	universe_data.append({"id":0, "lv":1, "xp":0, "xp_to_lv":10, "shapes":[], "name":tr("UNIVERSE"), "cluster_num":1000, "view":{"pos":Vector2(640 * 0.5, 360 * 0.5), "zoom":2, "sc_mult":0.1}})
 	universe_data[0].speed_of_light = 1.0#3.0e8#m/s
 	universe_data[0].planck = 1.0#e(6.626, -34)#J.s
@@ -4187,15 +4177,7 @@ func generate_new_univ_confirm():
 		chemistry_bonus[el] = PD_panel.bonuses[el]
 	dimension.refresh_univs()
 
-func destroy_tri_probe_confirm(probe_id:int):
-	probe_data.remove_at(probe_id)
-	vehicle_panel.probe_over_id = -1
-	vehicle_panel.refresh()
-
-func discover_univ_confirm():
-	create_universe_panel.discover_univ()
-
-func reset_dimension_confirm(DR_num:int):
+func reset_dimension(DR_num:int):
 	DRs += DR_num
 	for i in len(universe_data):
 		Helper.remove_recursive("user://%s/Univ%s" % [c_sv, i])
@@ -4213,10 +4195,7 @@ func reset_dimension_confirm(DR_num:int):
 	c_u = -1
 	fn_save_game()
 
-func buy_pickaxe_confirm(_costs:Dictionary):
-	shop_panel.buy_pickaxe(_costs)
-
-func destroy_buildings_confirm(tile_ids:Array):
+func destroy_buildings(tile_ids:Array):
 	if tile_data[tile_ids[0]].bldg.name == Building.GREENHOUSE:
 		view.obj.get_node("TileFeatures").clear_layer(2)
 	for id in tile_ids:
@@ -4229,13 +4208,10 @@ func destroy_building_confirm(tile_over:int):
 	show_collect_info(view.obj.items_collected)
 	HUD.refresh()
 
-func send_ships_confirm():
-	send_ships_panel.send_ships()
-
-func op_galaxy_confirm(l_id:int, g_id:int):
+func op_galaxy(l_id:int, g_id:int):
 	switch_view("galaxy", {"fn":"set_custom_coords", "fn_args":[["c_g", "c_g_g"], [l_id, g_id]]})
 
-func conquer_all_confirm(energy_cost:float, insta_conquer:bool):
+func conquer_all(energy_cost:float, insta_conquer:bool):
 	if energy >= energy_cost:
 		energy -= energy_cost
 		if insta_conquer:
@@ -4706,7 +4682,7 @@ func _on_auto_backup_timeout() -> void:
 		var backup_dir_path = "user://%s/Backups" % [c_sv]
 		if not save_dir.dir_exists(backup_dir_path):
 			save_dir.make_dir(backup_dir_path)
-		print(Helper.export_game(c_sv, backup_dir_path + "/{save_name}_backup_{datetime_string}.hx3".format({
+		Helper.export_game(c_sv, backup_dir_path + "/{save_name}_backup_{datetime_string}.hx3".format({
 			"save_name": c_sv,
 			"datetime_string":Time.get_datetime_string_from_system(),
-		})))
+		}))
