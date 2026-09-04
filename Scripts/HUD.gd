@@ -179,11 +179,7 @@ func refresh():
 	switch_btn.visible = game.c_v in ["planet", "system", "galaxy", "cluster", "universe"]
 	if config.load("user://settings.cfg") == OK:
 		var autosave_light = config.get_value("saving", "autosave_light", false)
-		if config.get_value("saving", "enable_autosave", true):
-			set_process(autosave_light)
-		else:
-			$Top/AutosaveLight.modulate.g = 0.3
-			set_process(false)
+		set_process(autosave_light)
 		$Top/AutosaveLight.visible = autosave_light
 	update_money_energy_SP()
 	update_minerals()

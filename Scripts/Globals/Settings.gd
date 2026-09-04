@@ -16,7 +16,6 @@ var screen_shake:bool = true
 var enable_shaders:bool = true
 
 # game
-var enable_autosave:bool = true
 var autosave_light:bool = true
 var autosave_interval:int = 10
 var autosell:bool = true
@@ -34,7 +33,7 @@ var notation:String = "SI"
 var cave_gen_info:bool = false
 
 # save backup
-var backup_interval:int = 10 # seconds
+var backup_interval:int = 5 # minutes
 var max_backups:int = 20
 
 # misc

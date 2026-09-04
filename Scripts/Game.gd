@@ -364,14 +364,15 @@ func load_settings(config:ConfigFile):
 		popup_window("You're playing the browser version of Helixteus 3. While it's convenient, it has\nmany issues not present in the executables:\n\n - High RAM usage\n - Less FPS\n - Importing saves does not work\n - Audio glitches\n - Saving delay (5-10 seconds)", "Browser version", [], [], "I understand", 0)
 		config.set_value("misc", "HTML5", true)
 		config.save("user://settings.cfg")
-	Settings.enable_autosave = config.get_value("game", "enable_autosave", true)
 	Settings.autosell = config.get_value("game", "autosell", true)
 	Settings.auto_switch_buy_sell = config.get_value("game", "auto_switch_buy_sell", false)
 	Settings.autosave_light = config.get_value("game", "autosave_light", true)
-	Settings.autosave_interval = 10
+	Settings.autosave_interval = config.get_value("game", "autosave_interval", 10)
+	Settings.backup_interval = config.get_value("game", "backup_interval", 5)
+	Settings.max_backups = config.get_value("game", "max_backups", 20)
 	Settings.enemy_AI_difficulty = config.get_value("game", "enemy_AI_difficulty", Settings.ENEMY_AI_DIFFICULTY_NORMAL)
 	$Autosave.wait_time = Settings.autosave_interval
-	$AutoBackup.wait_time = Settings.backup_interval
+	$AutoBackup.wait_time = Settings.backup_interval * 60.0
 	
 	# misc
 	Settings.op_cursor = config.get_value("misc", "op_cursor", false)
@@ -4109,10 +4110,9 @@ func _on_LoadGame_pressed():
 	toggle_panel("load_save_panel")
 
 func _on_Autosave_timeout():
-	if Settings.enable_autosave:
-		fn_save_game()
-		if not viewing_dimension:
-			save_views(true)
+	fn_save_game()
+	if not viewing_dimension:
+		save_views(true)
 
 func show_YN_panel(callable:Callable, text:String = tr("ARE_YOU_SURE"), args:Array = []):
 	if $Panels.has_node("YN_panel"):
@@ -4677,12 +4677,18 @@ func _on_spaceport_timer_timeout() -> void:
 
 
 func _on_auto_backup_timeout() -> void:
-	if c_v in ["universe", "cluster", "galaxy", "system", "planet"]:
+	if Settings.max_backups > 0 and c_v in ["universe", "cluster", "galaxy", "system", "planet"]:
 		var save_dir = DirAccess.open("user://")
 		var backup_dir_path = "user://%s/Backups" % [c_sv]
 		if not save_dir.dir_exists(backup_dir_path):
 			save_dir.make_dir(backup_dir_path)
-		Helper.export_game(c_sv, backup_dir_path + "/{save_name}_backup_{datetime_string}.hx3".format({
+		
+		# Remove oldest backup
+		var backup_dir = DirAccess.open(backup_dir_path)
+		var files = backup_dir.get_files()
+		if len(files) >= Settings.max_backups:
+			backup_dir.remove(files[0])
+		Helper.export_save(c_sv, backup_dir_path + "/{save_name}_backup_{datetime_string}.hx3".format({
 			"save_name": c_sv,
 			"datetime_string":Time.get_datetime_string_from_system(),
 		}))

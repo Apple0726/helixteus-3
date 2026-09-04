@@ -307,48 +307,40 @@ metadata/_tab_index = 2
 [node name="AutosellMinerals" type="CheckButton" parent="TabContainer/GAME" unique_id=24641029]
 layout_mode = 0
 offset_left = 56.0
+offset_top = 29.0
+offset_right = 400.0
+offset_bottom = 69.0
+
+[node name="AutosellMineralsLabel" parent="TabContainer/GAME" unique_id=2087312894 instance=ExtResource("2_lx04k")]
+layout_mode = 0
+offset_left = 64.0
+offset_top = 37.0
+offset_right = 320.0
+offset_bottom = 67.0
+text = "AUTOSELL_MINERALS [img]Graphics/Icons/help.png[/img]"
+label_text = "AUTOSELL_MINERALS"
+help_text = "AUTOSELL_MINERALS_DESC"
+
+[node name="CaveGenInfo" type="CheckButton" parent="TabContainer/GAME" unique_id=876509700]
+layout_mode = 0
+offset_left = 56.0
 offset_top = 93.0
 offset_right = 400.0
 offset_bottom = 133.0
 
-[node name="AutosellMineralsLabel" parent="TabContainer/GAME" unique_id=2087312894 instance=ExtResource("2_lx04k")]
+[node name="AutoSwitch" type="CheckButton" parent="TabContainer/GAME" unique_id=2121173532]
+layout_mode = 0
+offset_left = 56.0
+offset_top = 153.0
+offset_right = 400.0
+offset_bottom = 193.0
+
+[node name="RichTextLabel2" parent="TabContainer/GAME" unique_id=894872641 instance=ExtResource("2_lx04k")]
 layout_mode = 0
 offset_left = 64.0
 offset_top = 101.0
 offset_right = 320.0
 offset_bottom = 131.0
-text = "AUTOSELL_MINERALS [img]Graphics/Icons/help.png[/img]"
-label_text = "AUTOSELL_MINERALS"
-help_text = "AUTOSELL_MINERALS_DESC"
-
-[node name="EnableAutosave" type="CheckButton" parent="TabContainer/GAME" unique_id=1418606674]
-layout_mode = 0
-offset_left = 58.0
-offset_top = 29.0
-offset_right = 400.0
-offset_bottom = 69.0
-text = "ENABLE_AUTOSAVE"
-
-[node name="CaveGenInfo" type="CheckButton" parent="TabContainer/GAME" unique_id=876509700]
-layout_mode = 0
-offset_left = 56.0
-offset_top = 157.0
-offset_right = 400.0
-offset_bottom = 197.0
-
-[node name="AutoSwitch" type="CheckButton" parent="TabContainer/GAME" unique_id=2121173532]
-layout_mode = 0
-offset_left = 56.0
-offset_top = 217.0
-offset_right = 400.0
-offset_bottom = 257.0
-
-[node name="RichTextLabel2" parent="TabContainer/GAME" unique_id=894872641 instance=ExtResource("2_lx04k")]
-layout_mode = 0
-offset_left = 64.0
-offset_top = 165.0
-offset_right = 320.0
-offset_bottom = 195.0
 text = "SHOW_CAVE_GEN_INFO [img]Graphics/Icons/help.png[/img]"
 label_text = "SHOW_CAVE_GEN_INFO"
 help_text = "SHOW_CAVE_GEN_INFO_DESC"
@@ -356,9 +348,9 @@ help_text = "SHOW_CAVE_GEN_INFO_DESC"
 [node name="RichTextLabel3" parent="TabContainer/GAME" unique_id=1581426805 instance=ExtResource("2_lx04k")]
 layout_mode = 0
 offset_left = 64.0
-offset_top = 225.0
+offset_top = 161.0
 offset_right = 320.0
-offset_bottom = 255.0
+offset_bottom = 191.0
 text = "AUTO_SWITCH_SELL_BUY [img]Graphics/Icons/help.png[/img]"
 label_text = "AUTO_SWITCH_SELL_BUY"
 help_text = "AUTO_SWITCH_SELL_BUY_DESC"
@@ -396,12 +388,32 @@ text = "HARD"
 [node name="Autosave" type="HSlider" parent="TabContainer/GAME" unique_id=1392513466]
 layout_mode = 0
 offset_left = 512.0
-offset_top = 173.0
+offset_top = 185.0
 offset_right = 752.0
-offset_bottom = 237.0
+offset_bottom = 225.0
 min_value = 1.0
 max_value = 60.0
 value = 30.0
+rounded = true
+
+[node name="BackupIntervalSlider" type="HSlider" parent="TabContainer/GAME" unique_id=410461669]
+layout_mode = 0
+offset_left = 512.0
+offset_top = 277.0
+offset_right = 752.0
+offset_bottom = 317.0
+min_value = 1.0
+max_value = 60.0
+value = 5.0
+rounded = true
+
+[node name="MaxBackupsSlider" type="HSlider" parent="TabContainer/GAME" unique_id=299000524]
+layout_mode = 0
+offset_left = 512.0
+offset_top = 365.0
+offset_right = 752.0
+offset_bottom = 405.0
+value = 20.0
 rounded = true
 
 [node name="Label2" type="Label" parent="TabContainer/GAME" unique_id=652321819]
@@ -413,6 +425,24 @@ offset_bottom = 177.0
 text = "AUTOSAVE_INTERVAL"
 horizontal_alignment = 1
 
+[node name="BackupIntervalLabel" type="Label" parent="TabContainer/GAME" unique_id=608686215]
+layout_mode = 0
+offset_left = 480.0
+offset_top = 241.0
+offset_right = 804.0
+offset_bottom = 267.0
+text = "BACKUP_INTERVAL"
+horizontal_alignment = 1
+
+[node name="MaxBackupsLabel" type="Label" parent="TabContainer/GAME" unique_id=1378291797]
+layout_mode = 0
+offset_left = 480.0
+offset_top = 329.0
+offset_right = 804.0
+offset_bottom = 355.0
+text = "MAX_BACKUPS"
+horizontal_alignment = 1
+
 [node name="Label3" type="Label" parent="TabContainer/GAME" unique_id=842430868]
 layout_mode = 0
 offset_left = 760.0
@@ -421,13 +451,21 @@ offset_right = 914.0
 offset_bottom = 223.0
 text = "30 s"
 
-[node name="ResetTooltips" type="Button" parent="TabContainer/GAME" unique_id=1578884439]
+[node name="BackupIntervalValue" type="Label" parent="TabContainer/GAME" unique_id=1471897477]
 layout_mode = 0
-offset_left = 328.0
-offset_top = 411.0
-offset_right = 553.0
-offset_bottom = 440.0
-text = "RESET_HIDDEN_TOOLTIPS"
+offset_left = 760.0
+offset_top = 285.0
+offset_right = 868.0
+offset_bottom = 311.0
+text = "5 minutes"
+
+[node name="MaxBackupsValue" type="Label" parent="TabContainer/GAME" unique_id=291458341]
+layout_mode = 0
+offset_left = 760.0
+offset_top = 373.0
+offset_right = 868.0
+offset_bottom = 399.0
+text = "20"
 
 [node name="MISC" type="TabBar" parent="TabContainer" unique_id=739482139]
 visible = false
@@ -506,7 +544,6 @@ horizontal_alignment = 1
 [connection signal="toggled" from="TabContainer/GRAPHICS/Screenshake" to="." method="_on_Screenshake_toggled"]
 [connection signal="item_selected" from="TabContainer/GRAPHICS/DisplayRes" to="." method="_on_DisplayRes_item_selected"]
 [connection signal="toggled" from="TabContainer/GAME/AutosellMinerals" to="." method="_on_AutosellMinerals_toggled"]
-[connection signal="toggled" from="TabContainer/GAME/EnableAutosave" to="." method="_on_EnableAutosave_toggled"]
 [connection signal="toggled" from="TabContainer/GAME/CaveGenInfo" to="." method="_on_CaveGenInfo_toggled"]
 [connection signal="toggled" from="TabContainer/GAME/AutoSwitch" to="." method="_on_auto_switch_toggled"]
 [connection signal="mouse_entered" from="TabContainer/GAME/HBoxContainer/Easy" to="." method="_on_Easy_mouse_entered"]
@@ -519,7 +556,8 @@ horizontal_alignment = 1
 [connection signal="mouse_exited" from="TabContainer/GAME/HBoxContainer/Hard" to="." method="_on_mouse_exited"]
 [connection signal="pressed" from="TabContainer/GAME/HBoxContainer/Hard" to="." method="_on_Hard_pressed"]
 [connection signal="value_changed" from="TabContainer/GAME/Autosave" to="." method="_on_Autosave_value_changed"]
-[connection signal="pressed" from="TabContainer/GAME/ResetTooltips" to="." method="_on_ResetTooltips_pressed"]
+[connection signal="value_changed" from="TabContainer/GAME/BackupIntervalSlider" to="." method="_on_backup_interval_slider_value_changed"]
+[connection signal="value_changed" from="TabContainer/GAME/MaxBackupsSlider" to="." method="_on_max_backups_slider_value_changed"]
 [connection signal="mouse_entered" from="TabContainer/MISC/OPCursor" to="." method="_on_OPCursor_mouse_entered"]
 [connection signal="mouse_exited" from="TabContainer/MISC/OPCursor" to="." method="_on_OPCursor_mouse_exited"]
 [connection signal="toggled" from="TabContainer/MISC/OPCursor" to="." method="_on_OPCursor_toggled"]

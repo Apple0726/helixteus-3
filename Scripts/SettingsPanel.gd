@@ -33,12 +33,13 @@ func _ready():
 	$TabContainer/GRAPHICS/AutosaveLight.button_pressed = Settings.autosave_light
 	$TabContainer/GRAPHICS/EnableShaders.button_pressed = Settings.enable_shaders
 	$TabContainer/GRAPHICS/Screenshake.button_pressed = Settings.screen_shake
-	$TabContainer/GAME/EnableAutosave.button_pressed = Settings.enable_autosave
 	$TabContainer/GAME/AutosellMinerals.button_pressed = Settings.autosell
 	$TabContainer/GAME/CaveGenInfo.button_pressed = Settings.cave_gen_info
 	$TabContainer/GRAPHICS/Fullscreen.set_pressed_no_signal(Settings.fullscreen)
 	$TabContainer/GAME/Autosave.value = Settings.autosave_interval
 	$TabContainer/GAME/AutoSwitch.button_pressed = Settings.auto_switch_buy_sell
+	$TabContainer/GAME/BackupIntervalSlider.value = Settings.backup_interval
+	$TabContainer/GAME/MaxBackupsSlider.value = Settings.max_backups
 	$TabContainer/GRAPHICS/FPS/FPS.value = Settings.max_fps
 	$TabContainer/GRAPHICS/SpaceLOD/StaticSpaceLOD.value = Settings.static_space_LOD
 	$TabContainer/GRAPHICS/SpaceLOD/DynamicSpaceLOD.value = Settings.dynamic_space_LOD
@@ -95,7 +96,7 @@ func _on_Autosave_value_changed(value):
 	if err == OK:
 		$TabContainer/GAME/Label3.text = "%s %s" % [value, tr("S_SECOND")]
 		Settings.autosave_interval = value
-		config.set_value("game", "autosave", value)
+		config.set_value("game", "autosave_interval", value)
 		config.save("user://settings.cfg")
 		if game.c_v != "":
 			game.get_node("Autosave").stop()
@@ -106,14 +107,6 @@ func _on_Autosave_value_changed(value):
 func _on_AutosaveLight_toggled(button_pressed):
 	if err == OK:
 		config.set_value("game", "autosave_light", button_pressed)
-		config.save("user://settings.cfg")
-		if is_instance_valid(game.HUD):
-			game.HUD.refresh()
-
-
-func _on_EnableAutosave_toggled(button_pressed):
-	if err == OK:
-		config.set_value("game", "enable_autosave", button_pressed)
 		config.save("user://settings.cfg")
 		if is_instance_valid(game.HUD):
 			game.HUD.refresh()
@@ -255,10 +248,6 @@ func _on_EnableShaders_toggled(button_pressed):
 		config.save("user://settings.cfg")
 
 
-func _on_ResetTooltips_pressed():
-	game.help = Data.default_help.duplicate()
-
-
 func _on_Screenshake_toggled(button_pressed):
 	if err == OK:
 		Settings.screen_shake = button_pressed
@@ -356,3 +345,21 @@ func _on_show_fps_toggled(toggled_on: bool) -> void:
 	if err == OK:
 		config.set_value("misc", "show_fps", toggled_on)
 		config.save("user://settings.cfg")
+
+
+func _on_backup_interval_slider_value_changed(value: float) -> void:
+	Settings.backup_interval = value
+	if is_equal_approx(value, 1.0):
+		$TabContainer/GAME/BackupIntervalValue.text = tr("1_MINUTE")
+	else:
+		$TabContainer/GAME/BackupIntervalValue.text = tr("X_MINUTES") % int(value)
+	if err == OK:
+		config.set_value("game", "backup_interval", value)
+		config.save("user://settings.cfg")
+
+
+func _on_max_backups_slider_value_changed(value: float) -> void:
+	Settings.max_backups = value
+	$TabContainer/GAME/MaxBackupsValue.text = str(int(value))
+	config.set_value("game", "max_backups", value)
+	config.save("user://settings.cfg")

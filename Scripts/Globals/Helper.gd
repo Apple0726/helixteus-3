@@ -1662,7 +1662,7 @@ func set_universe_btn_shader(univ_btn, univ_info:Dictionary):
 	univ_btn.material.set_shader_parameter("alpha", 0.65)
 	univ_btn.material.set_shader_parameter("expo", min(0.27, remap(univ_info.lv, 1, 100, 0.12, 0.27)))
 
-func export_game(save_to_export:String, path:String):
+func export_save(save_to_export:String, path:String):
 	var file = FileAccess.open(path, FileAccess.WRITE)
 	var success = true
 	if file:
@@ -1764,6 +1764,47 @@ func get_file_size_string(bytes:int):
 		"bytes":clever_round(base),
 		"prefix":prefix,
 		"b_byte":tr("B_BYTE")})
+
+func import_save(save_name:String, path:String):
+	var importing_file = FileAccess.open(path, FileAccess.READ)
+	if importing_file:
+		var save_dict:Dictionary = importing_file.get_var()
+		var directory = DirAccess.open("user://")
+		var final_save_name:String = save_name
+		if directory.dir_exists(save_name):
+			var dupl:int = 2
+			while DirAccess.open("user://%s%s" % [save_name, dupl]):
+				dupl += 1
+			final_save_name = "%s%s" % [save_name, dupl]
+		else:
+			final_save_name = save_name
+		if directory.make_dir(final_save_name) == OK:
+			var save_info_file = FileAccess.open("user://%s/save_info.hx3" % final_save_name, FileAccess.WRITE)
+			if save_info_file:
+				save_info_file.store_var(save_dict.save_info)
+				for i in len(save_dict.univs):
+					if directory.make_dir("user://%s/Univ%s" % [final_save_name, i]) == OK:
+						var univ_file = FileAccess.open("user://%s/Univ%s/main.hx3" % [final_save_name, i], FileAccess.WRITE)
+						if univ_file:
+							univ_file.store_var(save_dict.univs[i].main)
+						make_obj_dir(save_dict, i, "user://%s/Univ%s" % [final_save_name, i], "Caves")
+						make_obj_dir(save_dict, i, "user://%s/Univ%s" % [final_save_name, i], "Clusters")
+						make_obj_dir(save_dict, i, "user://%s/Univ%s" % [final_save_name, i], "Galaxies")
+						make_obj_dir(save_dict, i, "user://%s/Univ%s" % [final_save_name, i], "Planets")
+						make_obj_dir(save_dict, i, "user://%s/Univ%s" % [final_save_name, i], "Systems")
+						univ_file.close()
+						game.popup(tr("IMPORT_SUCCESS") % final_save_name, 2.0)
+			save_info_file.close()
+	importing_file.close()
+
+func make_obj_dir(save_dict:Dictionary, univ:int, path:String, obj:String):
+	var directory = DirAccess.open(path)
+	if directory.make_dir("%s/%s" % [path, obj]) == OK:
+		for obj_file_name in save_dict.univs[univ][obj.to_lower()].keys():
+			var file = FileAccess.open("%s/%s/%s" % [path, obj, obj_file_name], FileAccess.WRITE)
+			if file:
+				file.store_var(save_dict.univs[univ][obj.to_lower()][obj_file_name])
+			file.close()
 
 func add_text_to_RTL(RTL:RichTextLabel, txt:String, imgs:Array, size:int = 17, resize_RTL:bool = false):
 	RTL.text = ""

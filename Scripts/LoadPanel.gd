@@ -42,12 +42,13 @@ func refresh():
 func open_backup_panel(save_name:String):
 	var save_backups_scene = preload("res://Scenes/Panels/SaveBackups.tscn").instantiate()
 	add_child(save_backups_scene)
+	save_backups_scene.refresh_load_panel.connect(refresh)
 	save_backups_scene.load_backups(save_name)
 
 func on_export(save_str:String):
 	save_to_export = save_str
 	if OS.get_name() == "Web":
-		if Helper.export_game("user://%s.hx3" % save_str, "user://"):
+		if Helper.export_save("user://%s.hx3" % save_str, "user://"):
 			game.popup(tr("EXPORT_SUCCESS") % save_to_export, 2.0)
 			var file = FileAccess.open("user://%s.hx3" % save_str, FileAccess.READ)
 			var L = file.get_length()
@@ -81,55 +82,17 @@ func _on_ImportSave_pressed():
 	$Import.popup_centered()
 
 func _on_Export_file_selected(path):
-	if Helper.export_game(save_to_export, path):
+	if Helper.export_save(save_to_export, path):
 		game.popup(tr("EXPORT_SUCCESS") % save_to_export, 2.0)
 	else:
 		game.popup(tr("EXPORT_FAILED").format({"save":save_to_export}), 2.0)
 
 
 func _on_Import_file_selected(path):
-	var importing_file = FileAccess.open(path, FileAccess.READ)
 	var import_save_name:String = $Import.current_file.replace(".hx3", "")
-	if importing_file:
-		var save_dict:Dictionary = importing_file.get_var()
-		var directory = DirAccess.open("user://")
-		var final_save_name:String = import_save_name
-		if directory.dir_exists(import_save_name):
-			var dupl:int = 2
-			while DirAccess.open("user://%s%s" % [import_save_name, dupl]):
-				dupl += 1
-			final_save_name = "%s%s" % [import_save_name, dupl]
-		else:
-			final_save_name = import_save_name
-		if directory.make_dir(final_save_name) == OK:
-			var save_info_file = FileAccess.open("user://%s/save_info.hx3" % final_save_name, FileAccess.WRITE)
-			if save_info_file:
-				save_info_file.store_var(save_dict.save_info)
-				for i in len(save_dict.univs):
-					if directory.make_dir("user://%s/Univ%s" % [final_save_name, i]) == OK:
-						var univ_file = FileAccess.open("user://%s/Univ%s/main.hx3" % [final_save_name, i], FileAccess.WRITE)
-						if univ_file:
-							univ_file.store_var(save_dict.univs[i].main)
-						make_obj_dir(save_dict, i, "user://%s/Univ%s" % [final_save_name, i], "Caves")
-						make_obj_dir(save_dict, i, "user://%s/Univ%s" % [final_save_name, i], "Clusters")
-						make_obj_dir(save_dict, i, "user://%s/Univ%s" % [final_save_name, i], "Galaxies")
-						make_obj_dir(save_dict, i, "user://%s/Univ%s" % [final_save_name, i], "Planets")
-						make_obj_dir(save_dict, i, "user://%s/Univ%s" % [final_save_name, i], "Systems")
-						univ_file.close()
-						game.popup(tr("IMPORT_SUCCESS") % final_save_name, 2.0)
-			save_info_file.close()
-	importing_file.close()
+	Helper.import_save(import_save_name, path)
 	$PopupBackground.visible = false
 	refresh()
-
-func make_obj_dir(save_dict:Dictionary, univ:int, path:String, obj:String):
-	var directory = DirAccess.open(path)
-	if directory.make_dir("%s/%s" % [path, obj]) == OK:
-		for obj_file_name in save_dict.univs[univ][obj.to_lower()].keys():
-			var file = FileAccess.open("%s/%s/%s" % [path, obj, obj_file_name], FileAccess.WRITE)
-			if file:
-				file.store_var(save_dict.univs[univ][obj.to_lower()][obj_file_name])
-			file.close()
 
 func _on_export_visibility_changed():
 	$PopupBackground.visible = $Export.visible
