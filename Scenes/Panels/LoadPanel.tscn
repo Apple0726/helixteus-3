@@ -1,10 +1,10 @@
 [gd_scene format=3 uid="uid://b8i2nx6456f0t"]
 
-[ext_resource type="Script" uid="uid://dh30edm5xmv1l" path="res://Scripts/LoadPanel.gd" id="1"]
-[ext_resource type="Theme" uid="uid://cp2u1kgj60ic" path="res://Resources/default_theme.tres" id="3"]
-[ext_resource type="Texture2D" uid="uid://dcvnyb0mloli2" path="res://Graphics/GUI/Panel.png" id="3_cla8g"]
-[ext_resource type="Texture2D" uid="uid://baowebna7hgr5" path="res://Graphics/GUI/CloseButtonNormal.png" id="4_b4wxd"]
-[ext_resource type="Texture2D" uid="uid://c1vwn7p5uxu1r" path="res://Graphics/GUI/CloseButtonHover.png" id="5_jfijo"]
+[ext_resource type="Theme" uid="uid://cp2u1kgj60ic" path="res://Resources/default_theme.tres" id="1_ag2oi"]
+[ext_resource type="Script" uid="uid://dh30edm5xmv1l" path="res://Scripts/LoadPanel.gd" id="2_ffmmh"]
+[ext_resource type="Texture2D" uid="uid://dcvnyb0mloli2" path="res://Graphics/GUI/Panel.png" id="3_23g72"]
+[ext_resource type="Texture2D" uid="uid://baowebna7hgr5" path="res://Graphics/GUI/CloseButtonNormal.png" id="4_yhdsg"]
+[ext_resource type="Texture2D" uid="uid://c1vwn7p5uxu1r" path="res://Graphics/GUI/CloseButtonHover.png" id="5_ggvls"]
 
 [sub_resource type="SystemFont" id="SystemFont_l1il0"]
 font_names = PackedStringArray("Arial")
@@ -18,14 +18,17 @@ shadow_size = 2
 shadow_color = Color(0, 0, 0, 0.372549)
 shadow_offset = Vector2(2, 2)
 
+[sub_resource type="LabelSettings" id="LabelSettings_ag2oi"]
+font_size = 14
+
 [node name="LoadPanel" type="Control" unique_id=1278116139]
 layout_mode = 3
 anchors_preset = 0
 offset_right = 32.0
 offset_bottom = 32.0
 mouse_filter = 1
-theme = ExtResource("3")
-script = ExtResource("1")
+theme = ExtResource("1_ag2oi")
+script = ExtResource("2_ffmmh")
 metadata/_edit_horizontal_guides_ = [360.0]
 
 [node name="GUI" type="NinePatchRect" parent="." unique_id=1668252692]
@@ -34,7 +37,7 @@ offset_left = 80.0
 offset_top = 52.0
 offset_right = 1204.0
 offset_bottom = 671.0
-texture = ExtResource("3_cla8g")
+texture = ExtResource("3_23g72")
 patch_margin_left = 408
 patch_margin_top = 80
 patch_margin_right = 80
@@ -48,8 +51,8 @@ offset_left = 1139.0
 offset_top = 67.0
 offset_right = 1188.0
 offset_bottom = 116.0
-texture_normal = ExtResource("4_b4wxd")
-texture_hover = ExtResource("5_jfijo")
+texture_normal = ExtResource("4_yhdsg")
+texture_hover = ExtResource("5_ggvls")
 
 [node name="ScrollContainer" type="ScrollContainer" parent="." unique_id=1769203718]
 layout_mode = 1
@@ -59,7 +62,7 @@ anchor_bottom = 1.0
 offset_left = 128.0
 offset_top = 152.0
 offset_right = 1120.0
-offset_bottom = 568.0
+offset_bottom = 544.0
 grow_horizontal = 2
 grow_vertical = 2
 
@@ -124,6 +127,16 @@ text = "IMPORT_SAVE"
 [node name="ShowInFileManager" type="Button" parent="HBoxContainer" unique_id=172646765]
 layout_mode = 2
 text = "SHOW_IN_FILE_MANAGER"
+
+[node name="TotalFileSize" type="Label" parent="." unique_id=2056437533]
+layout_mode = 0
+offset_left = 312.0
+offset_top = 600.0
+offset_right = 972.0
+offset_bottom = 631.0
+text = "TOTAL_FILE_SIZE_OF_SAVE_FILES"
+label_settings = SubResource("LabelSettings_ag2oi")
+horizontal_alignment = 1
 
 [connection signal="pressed" from="CloseButton" to="." method="_on_close_button_pressed"]
 [connection signal="file_selected" from="Import" to="." method="_on_Import_file_selected"]

@@ -4,6 +4,7 @@ var save_slot_scene = preload("res://Scenes/SaveSlot.tscn")
 var save_to_export:String = ""
 
 func _ready():
+	set_polygon($GUI.size, $GUI.position)
 	$HBoxContainer/ShowInFileManager.visible = OS.get_name() in ["Windows", "Linux"]
 
 func refresh():
@@ -38,6 +39,7 @@ func refresh():
 		save.open_backup_panel.connect(open_backup_panel.bind(next_dir))
 		save.initialize(save_info_dict, next_dir, on_load, on_delete, on_export)
 		next_dir = file.get_next()
+	$TotalFileSize.text = tr("TOTAL_PERSISTENT_STORAGE_SIZE") + Helper.get_file_size_string(Helper.get_directory_size("user://"))
 
 func open_backup_panel(save_name:String):
 	var save_backups_scene = preload("res://Scenes/Panels/SaveBackups.tscn").instantiate()

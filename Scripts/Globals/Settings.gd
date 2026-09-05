@@ -35,6 +35,7 @@ var cave_gen_info:bool = false
 # save backup
 var backup_interval:int = 5 # minutes
 var max_backups:int = 20
+var backup_with_minimal_interruption:bool = true
 
 # misc
 var discord = true

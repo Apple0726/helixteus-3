@@ -1213,6 +1213,24 @@ func remove_recursive(path):
 	else:
 		print("Error removing " + path)
 
+func get_directory_size(path):
+	var total_size = 0
+	var directory = DirAccess.open(path)
+	if directory:
+		directory.list_dir_begin()
+		var file_name = directory.get_next()
+		while file_name != "":
+			var file_path = path + "/" + file_name
+			if directory.current_is_dir():
+				total_size += get_directory_size(file_path)
+			else:
+				var file = FileAccess.open(file_path, FileAccess.READ)
+				if file:
+					total_size += file.get_length()
+					file.close()
+			file_name = directory.get_next()
+	return total_size
+
 func get_SC_output(expected_rsrc:Dictionary, amount:float, path_3_value:float, total_stone:float):
 	for el in game.stone:
 		var item:String

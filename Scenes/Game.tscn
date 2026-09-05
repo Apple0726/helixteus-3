@@ -749,6 +749,7 @@ metadata/_edit_lock_ = true
 [node name="Autosave" type="Timer" parent="." unique_id=786789800]
 
 [node name="AutoBackup" type="Timer" parent="." unique_id=946211814]
+one_shot = true
 ignore_time_scale = true
 
 [node name="CollectPanelTimer" type="Timer" parent="." unique_id=1149337831]

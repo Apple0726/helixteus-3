@@ -357,20 +357,20 @@ help_text = "AUTO_SWITCH_SELL_BUY_DESC"
 
 [node name="Difficulty" type="Label" parent="TabContainer/GAME" unique_id=1582164056]
 layout_mode = 0
-offset_left = 480.0
-offset_top = 35.0
-offset_right = 832.0
-offset_bottom = 59.0
+offset_left = 48.0
+offset_top = 225.0
+offset_right = 400.0
+offset_bottom = 249.0
 mouse_filter = 1
 text = "ENEMY_DIFFICULTY"
 horizontal_alignment = 1
 
 [node name="HBoxContainer" type="HBoxContainer" parent="TabContainer/GAME" unique_id=537572648]
 layout_mode = 0
-offset_left = 490.218
-offset_top = 72.745
-offset_right = 819.218
-offset_bottom = 112.745
+offset_left = 58.217987
+offset_top = 262.745
+offset_right = 387.21802
+offset_bottom = 302.745
 alignment = 1
 
 [node name="Easy" type="CheckBox" parent="TabContainer/GAME/HBoxContainer" unique_id=1557194203]
@@ -387,10 +387,10 @@ text = "HARD"
 
 [node name="Autosave" type="HSlider" parent="TabContainer/GAME" unique_id=1392513466]
 layout_mode = 0
-offset_left = 512.0
-offset_top = 185.0
-offset_right = 752.0
-offset_bottom = 225.0
+offset_left = 504.0
+offset_top = 71.0
+offset_right = 744.0
+offset_bottom = 111.0
 min_value = 1.0
 max_value = 60.0
 value = 30.0
@@ -398,10 +398,10 @@ rounded = true
 
 [node name="BackupIntervalSlider" type="HSlider" parent="TabContainer/GAME" unique_id=410461669]
 layout_mode = 0
-offset_left = 512.0
-offset_top = 277.0
-offset_right = 752.0
-offset_bottom = 317.0
+offset_left = 504.0
+offset_top = 163.0
+offset_right = 744.0
+offset_bottom = 203.0
 min_value = 1.0
 max_value = 60.0
 value = 5.0
@@ -409,63 +409,71 @@ rounded = true
 
 [node name="MaxBackupsSlider" type="HSlider" parent="TabContainer/GAME" unique_id=299000524]
 layout_mode = 0
-offset_left = 512.0
-offset_top = 365.0
-offset_right = 752.0
-offset_bottom = 405.0
+offset_left = 504.0
+offset_top = 251.0
+offset_right = 744.0
+offset_bottom = 291.0
 value = 20.0
 rounded = true
 
 [node name="Label2" type="Label" parent="TabContainer/GAME" unique_id=652321819]
 layout_mode = 0
-offset_left = 480.0
-offset_top = 151.0
-offset_right = 804.0
-offset_bottom = 177.0
+offset_left = 472.0
+offset_top = 37.0
+offset_right = 796.0
+offset_bottom = 63.0
 text = "AUTOSAVE_INTERVAL"
 horizontal_alignment = 1
 
 [node name="BackupIntervalLabel" type="Label" parent="TabContainer/GAME" unique_id=608686215]
 layout_mode = 0
-offset_left = 480.0
-offset_top = 241.0
-offset_right = 804.0
-offset_bottom = 267.0
+offset_left = 472.0
+offset_top = 127.0
+offset_right = 796.0
+offset_bottom = 153.0
 text = "BACKUP_INTERVAL"
 horizontal_alignment = 1
 
 [node name="MaxBackupsLabel" type="Label" parent="TabContainer/GAME" unique_id=1378291797]
 layout_mode = 0
-offset_left = 480.0
-offset_top = 329.0
-offset_right = 804.0
-offset_bottom = 355.0
+offset_left = 472.0
+offset_top = 215.0
+offset_right = 796.0
+offset_bottom = 241.0
 text = "MAX_BACKUPS"
 horizontal_alignment = 1
 
 [node name="Label3" type="Label" parent="TabContainer/GAME" unique_id=842430868]
 layout_mode = 0
-offset_left = 760.0
-offset_top = 197.0
-offset_right = 914.0
-offset_bottom = 223.0
+offset_left = 752.0
+offset_top = 83.0
+offset_right = 864.0
+offset_bottom = 109.0
 text = "30 s"
 
 [node name="BackupIntervalValue" type="Label" parent="TabContainer/GAME" unique_id=1471897477]
 layout_mode = 0
-offset_left = 760.0
-offset_top = 285.0
-offset_right = 868.0
-offset_bottom = 311.0
+offset_left = 752.0
+offset_top = 171.0
+offset_right = 860.0
+offset_bottom = 197.0
 text = "5 minutes"
 
 [node name="MaxBackupsValue" type="Label" parent="TabContainer/GAME" unique_id=291458341]
 layout_mode = 0
-offset_left = 760.0
-offset_top = 373.0
-offset_right = 868.0
-offset_bottom = 399.0
+offset_left = 752.0
+offset_top = 259.0
+offset_right = 860.0
+offset_bottom = 285.0
 text = "20"
+
+[node name="BackupWithMinimalInterruption" type="CheckBox" parent="TabContainer/GAME" unique_id=1898836278]
+layout_mode = 0
+offset_left = 468.0
+offset_top = 313.0
+offset_right = 855.0
+offset_bottom = 353.0
+text = "BACKUP_WITH_MINIMAL_INTERRUPTION"
 
 [node name="MISC" type="TabBar" parent="TabContainer" unique_id=739482139]
 visible = false
@@ -558,6 +566,7 @@ horizontal_alignment = 1
 [connection signal="value_changed" from="TabContainer/GAME/Autosave" to="." method="_on_Autosave_value_changed"]
 [connection signal="value_changed" from="TabContainer/GAME/BackupIntervalSlider" to="." method="_on_backup_interval_slider_value_changed"]
 [connection signal="value_changed" from="TabContainer/GAME/MaxBackupsSlider" to="." method="_on_max_backups_slider_value_changed"]
+[connection signal="toggled" from="TabContainer/GAME/BackupWithMinimalInterruption" to="." method="_on_backup_with_minimal_interruption_toggled"]
 [connection signal="mouse_entered" from="TabContainer/MISC/OPCursor" to="." method="_on_OPCursor_mouse_entered"]
 [connection signal="mouse_exited" from="TabContainer/MISC/OPCursor" to="." method="_on_OPCursor_mouse_exited"]
 [connection signal="toggled" from="TabContainer/MISC/OPCursor" to="." method="_on_OPCursor_toggled"]
