@@ -1213,8 +1213,9 @@ func remove_recursive(path):
 	else:
 		print("Error removing " + path)
 
-func get_directory_size(path):
+func get_directory_properties(path, blacklist:Array = []):
 	var total_size = 0
+	var total_files = 0
 	var directory = DirAccess.open(path)
 	if directory:
 		directory.list_dir_begin()
@@ -1222,14 +1223,18 @@ func get_directory_size(path):
 		while file_name != "":
 			var file_path = path + "/" + file_name
 			if directory.current_is_dir():
-				total_size += get_directory_size(file_path)
+				if file_name not in blacklist:
+					var properties = get_directory_properties(file_path, blacklist)
+					total_size += properties.size
+					total_files += properties.files
 			else:
 				var file = FileAccess.open(file_path, FileAccess.READ)
 				if file:
 					total_size += file.get_length()
+					total_files += 1
 					file.close()
 			file_name = directory.get_next()
-	return total_size
+	return {"size": total_size, "files": total_files}
 
 func get_SC_output(expected_rsrc:Dictionary, amount:float, path_3_value:float, total_stone:float):
 	for el in game.stone:
@@ -1680,7 +1685,10 @@ func set_universe_btn_shader(univ_btn, univ_info:Dictionary):
 	univ_btn.material.set_shader_parameter("alpha", 0.65)
 	univ_btn.material.set_shader_parameter("expo", min(0.27, remap(univ_info.lv, 1, 100, 0.12, 0.27)))
 
+var export_save_files_exported = 0
+
 func export_save(save_to_export:String, path:String):
+	export_save_files_exported = 0
 	var file = FileAccess.open(path, FileAccess.WRITE)
 	var success = true
 	if file:
@@ -1695,7 +1703,7 @@ func export_save(save_to_export:String, path:String):
 				var file_name = directory.get_next()
 				while file_name != "":
 					if directory.current_is_dir() and file_name.substr(0, 4) == "Univ":
-						var export_univ_res:Dictionary = export_univ(file_name, save_to_export)
+						var export_univ_res:Dictionary = await export_univ(file_name, save_to_export)
 						if export_univ_res.error:
 							success = false
 							break
@@ -1729,19 +1737,21 @@ func export_univ(univ_str:String, save_to_export:String):
 	else:
 		error = true
 	if not error:
-		error = export_univ_folder(univ_data, univ_str, "Caves", save_to_export)
+		error = await export_univ_folder(univ_data, univ_str, "Caves", save_to_export)
 	if not error:
-		error = export_univ_folder(univ_data, univ_str, "Clusters", save_to_export)
+		error = await export_univ_folder(univ_data, univ_str, "Clusters", save_to_export)
 	if not error:
-		error = export_univ_folder(univ_data, univ_str, "Galaxies", save_to_export)
+		error = await export_univ_folder(univ_data, univ_str, "Galaxies", save_to_export)
 	if not error:
-		error = export_univ_folder(univ_data, univ_str, "Planets", save_to_export)
+		error = await export_univ_folder(univ_data, univ_str, "Planets", save_to_export)
 	if not error:
-		error = export_univ_folder(univ_data, univ_str, "Systems", save_to_export)
+		error = await export_univ_folder(univ_data, univ_str, "Systems", save_to_export)
 	return {"error":error, "univ_data":univ_data}
 
+var max_data_to_export_before_await = 1000000
+var export_save_data_exported = 0
+
 func export_univ_folder(univ_data:Dictionary, univ_str:String, folder:String, save_to_export:String):
-	var error = false
 	var directory = DirAccess.open("user://%s/%s/%s" % [save_to_export, univ_str, folder])
 	if directory:
 		directory.list_dir_begin() # TODOGODOT4 fill missing arguments https://github.com/godotengine/godot/pull/40547
@@ -1751,10 +1761,17 @@ func export_univ_folder(univ_data:Dictionary, univ_str:String, folder:String, sa
 				var file = FileAccess.open("user://%s/%s/%s/%s" % [save_to_export, univ_str, folder, file_name], FileAccess.READ)
 				if file:
 					univ_data[folder.to_lower()][file_name] = file.get_var()
+					export_save_data_exported += file.get_length()
+					file.close()
+					export_save_files_exported += 1
+					if export_save_data_exported > max_data_to_export_before_await:
+						await get_tree().process_frame
+						export_save_data_exported = 0
 				else:
-					error = true
-				file.close()
+					return true
 			file_name = directory.get_next()
+	else:
+		return true
 
 func get_file_size_string(bytes:int):
 	var prefix:String = ""

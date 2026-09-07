@@ -1890,11 +1890,14 @@ BACKUP_INTERVAL,Backup interval,,,,,,,,,,,,
 MAX_BACKUPS,Max backups,,,,,,,,,,,,
 1_MINUTE,1 minute,,,,,,,,,,,,
 X_MINUTES,%d minutes,,,,,,,,,,,,
-TOTAL_PERSISTENT_STORAGE_SIZE,"Total size of persistent storage (saves, backups, logs etc.) taken by the game: ",,,,,,,,,,,,
+PERSISTENT_STORAGE,Persistent storage: ,,,,,,,,,,,,
+PERSISTENT_STORAGE_DESC,"Total size of saves, backups, log files etc. generated and stored by the game.",,,,,,,,,,,,
 BACKUP_WITH_MINIMAL_INTERRUPTION,Auto-backup with minimal interruption,,,,,,,,,,,,
 BACKUP_WITH_MINIMAL_INTERRUPTION_DESC,"If enabled, save backups will only happen when:
 - The game has lost focus
-- You're switching views
+- No keyboard/mouse input for more than 30 seconds
 Once it is time to perform backup (defined by the backup time interval), the game will wait until one of the above 2 conditions are met before doing it.
 
 If disabled, the save will be backed up according to the backup time interval all the time.",,,,,,,,,,,,
+BACKUP_IN_PROGRESS,Backup in progress...,,,,,,,,,,,,
+EXPORTING,Exporting...,,,,,,,,,,,,

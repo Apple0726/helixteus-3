@@ -5,6 +5,7 @@
 [ext_resource type="Texture2D" uid="uid://dcvnyb0mloli2" path="res://Graphics/GUI/Panel.png" id="3_23g72"]
 [ext_resource type="Texture2D" uid="uid://baowebna7hgr5" path="res://Graphics/GUI/CloseButtonNormal.png" id="4_yhdsg"]
 [ext_resource type="Texture2D" uid="uid://c1vwn7p5uxu1r" path="res://Graphics/GUI/CloseButtonHover.png" id="5_ggvls"]
+[ext_resource type="PackedScene" uid="uid://c8jr3e5aiyj1n" path="res://Scenes/HelpText.tscn" id="6_ffmmh"]
 
 [sub_resource type="SystemFont" id="SystemFont_l1il0"]
 font_names = PackedStringArray("Arial")
@@ -17,9 +18,6 @@ font_size = 24
 shadow_size = 2
 shadow_color = Color(0, 0, 0, 0.372549)
 shadow_offset = Vector2(2, 2)
-
-[sub_resource type="LabelSettings" id="LabelSettings_ag2oi"]
-font_size = 14
 
 [node name="LoadPanel" type="Control" unique_id=1278116139]
 layout_mode = 3
@@ -128,15 +126,27 @@ text = "IMPORT_SAVE"
 layout_mode = 2
 text = "SHOW_IN_FILE_MANAGER"
 
-[node name="TotalFileSize" type="Label" parent="." unique_id=2056437533]
+[node name="TotalFileSize" parent="." unique_id=1511434500 instance=ExtResource("6_ffmmh")]
 layout_mode = 0
-offset_left = 312.0
+offset_left = 448.0
 offset_top = 600.0
-offset_right = 972.0
-offset_bottom = 631.0
-text = "TOTAL_FILE_SIZE_OF_SAVE_FILES"
-label_settings = SubResource("LabelSettings_ag2oi")
+offset_right = 832.0
+offset_bottom = 630.0
+text = "[center]PERSISTENT_STORAGE [img]Graphics/Icons/help.png[/img][/center]"
+label_text = "PERSISTENT_STORAGE"
+help_text = "PERSISTENT_STORAGE_DESC"
+align = 1
+
+[node name="ExportingLabel" type="Label" parent="." unique_id=1063705637]
+visible = false
+layout_mode = 0
+offset_left = 488.0
+offset_top = 88.0
+offset_right = 728.0
+offset_bottom = 120.0
+text = "EXPORTING"
 horizontal_alignment = 1
+vertical_alignment = 1
 
 [connection signal="pressed" from="CloseButton" to="." method="_on_close_button_pressed"]
 [connection signal="file_selected" from="Import" to="." method="_on_Import_file_selected"]

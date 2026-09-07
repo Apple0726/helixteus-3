@@ -1,11 +1,19 @@
 extends "Panel.gd"
 
+@onready var exporting_label = $ExportingLabel
+
 var save_slot_scene = preload("res://Scenes/SaveSlot.tscn")
 var save_to_export:String = ""
+var export_total_files:int
 
 func _ready():
 	set_polygon($GUI.size, $GUI.position)
 	$HBoxContainer/ShowInFileManager.visible = OS.get_name() in ["Windows", "Linux"]
+
+func _process(delta: float) -> void:
+	if exporting_label.visible:
+		#prints(Helper.export_save_files_exported, export_total_files)
+		exporting_label.text = tr("EXPORTING") + " (%d%%)" % int(Helper.export_save_files_exported * 100.0 / export_total_files)
 
 func refresh():
 	for save in $ScrollContainer/HBox.get_children():
@@ -39,7 +47,8 @@ func refresh():
 		save.open_backup_panel.connect(open_backup_panel.bind(next_dir))
 		save.initialize(save_info_dict, next_dir, on_load, on_delete, on_export)
 		next_dir = file.get_next()
-	$TotalFileSize.text = tr("TOTAL_PERSISTENT_STORAGE_SIZE") + Helper.get_file_size_string(Helper.get_directory_size("user://"))
+	$TotalFileSize.label_text = tr("PERSISTENT_STORAGE") + Helper.get_file_size_string(Helper.get_directory_properties("user://").size) + " "
+	$TotalFileSize.refresh()
 
 func open_backup_panel(save_name:String):
 	var save_backups_scene = preload("res://Scenes/Panels/SaveBackups.tscn").instantiate()
@@ -50,7 +59,7 @@ func open_backup_panel(save_name:String):
 func on_export(save_str:String):
 	save_to_export = save_str
 	if OS.get_name() == "Web":
-		if Helper.export_save("user://%s.hx3" % save_str, "user://"):
+		if await Helper.export_save("user://%s.hx3" % save_str, "user://"):
 			game.popup(tr("EXPORT_SUCCESS") % save_to_export, 2.0)
 			var file = FileAccess.open("user://%s.hx3" % save_str, FileAccess.READ)
 			var L = file.get_length()
@@ -84,10 +93,14 @@ func _on_ImportSave_pressed():
 	$Import.popup_centered()
 
 func _on_Export_file_selected(path):
-	if Helper.export_save(save_to_export, path):
+	export_total_files = Helper.get_directory_properties("user://%s" % save_to_export, ["Backups"]).files
+	$ExportingLabel.text = ""
+	$ExportingLabel.show()
+	if await Helper.export_save(save_to_export, path):
 		game.popup(tr("EXPORT_SUCCESS") % save_to_export, 2.0)
 	else:
 		game.popup(tr("EXPORT_FAILED").format({"save":save_to_export}), 2.0)
+	$ExportingLabel.hide()
 
 
 func _on_Import_file_selected(path):

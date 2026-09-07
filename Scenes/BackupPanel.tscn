@@ -1,0 +1,42 @@
+[gd_scene format=3 uid="uid://cv6s3gfjcs8ae"]
+
+[ext_resource type="Script" uid="uid://c8okxhxwn1ipk" path="res://Scripts/BackupPanel.gd" id="1_2u6wa"]
+[ext_resource type="Theme" uid="uid://cp2u1kgj60ic" path="res://Resources/default_theme.tres" id="1_f6uau"]
+
+[node name="BackupPanel" type="Panel" unique_id=196156599]
+offset_right = 204.0
+offset_bottom = 92.0
+theme = ExtResource("1_f6uau")
+script = ExtResource("1_2u6wa")
+
+[node name="Label" type="Label" parent="." unique_id=752273618]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_top = 8.0
+offset_bottom = 30.333334
+grow_horizontal = 2
+text = "BACKUP_IN_PROGRESS"
+horizontal_alignment = 1
+
+[node name="ProgressBar" type="ProgressBar" parent="." unique_id=1274598170]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -86.0
+offset_top = -44.0
+offset_right = 86.0
+offset_bottom = -21.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_font_sizes/font_size = 13
+value = 50.0
+
+[node name="Timer" type="Timer" parent="." unique_id=1624433230]
+one_shot = true
+ignore_time_scale = true
+
+[connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]

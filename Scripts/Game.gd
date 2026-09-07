@@ -642,6 +642,7 @@ func load_game():
 		switch_view(c_v, {"first_time":true})
 		if not is_ancestor_of(HUD):
 			$HUD.add_child(HUD)
+	$UI/BackupPanel.start_timer()
 	set_c_sv(c_sv)
 
 func set_c_sv(_c_sv):
@@ -978,7 +979,6 @@ func new_game(univ:int = 0, new_save:bool = false, DR_advantage = false):
 	update_starfield = true
 	add_planet(true)
 	$Autosave.start()
-	$AutoBackup.start(Settings.backup_interval * 60.0)
 	var init_time = Time.get_unix_time_from_system()
 	view.set_process(true)
 	set_c_sv(c_sv)
@@ -1432,8 +1432,6 @@ func switch_view(new_view:String, other_params:Dictionary = {}):
 			small_image_text = "Viewing " + u_i.name
 		Helper.refresh_discord("", state, c_v, small_image_text)
 	await get_tree().process_frame
-	if $AutoBackup.is_stopped():
-		perform_backup()
 	hide_tooltip()
 
 func add_science_tree():
@@ -3696,8 +3694,6 @@ func _process(_delta):
 		Engine.max_fps = Settings.max_fps
 	else:
 		Engine.max_fps = 8
-		if c_sv != "" and $AutoBackup.is_stopped():
-			perform_backup()
 	var delta = (Time.get_unix_time_from_system() - last_process_time)
 	last_process_time = Time.get_unix_time_from_system()
 	if fps_text.visible:
@@ -3858,9 +3854,9 @@ func _input(event):
 		cmd_node.text = cmd_history[cmd_history_index]
 		cmd_node.caret_column = cmd_node.text.length()
 	
-	if Input.is_action_just_pressed("S") and Input.is_action_pressed("ctrl"):
+	if Input.is_action_just_pressed("save_game") and c_sv != "" and not Input.is_action_pressed("shift"):
+		fn_save_game()
 		if c_v != "":
-			fn_save_game()
 			save_views(false)
 
 func fn_save_game():
@@ -4087,7 +4083,6 @@ func fade_out_title(fn:String):
 	else:
 		call(fn)
 		$Autosave.start()
-		$AutoBackup.start(Settings.backup_interval * 60.0)
 		switch_music(Data.ambient_music.pick_random(), u_i.get("time_speed", 1.0))
 	
 func _on_NewGame_pressed():
@@ -4676,28 +4671,3 @@ func _on_spaceport_timer_timeout() -> void:
 		Helper.add_ship_XP(i, xp_mult * autocollect.passive_xp_mult * max(1.0, autocollect.passive_xp_tier * u_i.time_speed / 16.0))
 	if is_instance_valid(ships_panel):
 		ships_panel.update_xp_bars()
-
-
-func _on_auto_backup_timeout() -> void:
-	if not Settings.backup_with_minimal_interruption:
-		perform_backup()
-
-func perform_backup():
-	if Settings.max_backups == 0:
-		return
-	var save_dir = DirAccess.open("user://")
-	var backup_dir_path = "user://%s/Backups" % [c_sv]
-	if not save_dir.dir_exists(backup_dir_path):
-		save_dir.make_dir(backup_dir_path)
-	
-	# Remove oldest backup
-	var backup_dir = DirAccess.open(backup_dir_path)
-	var files = backup_dir.get_files()
-	if len(files) >= Settings.max_backups:
-		backup_dir.remove(files[0])
-	
-	Helper.export_save(c_sv, backup_dir_path + "/{save_name}_backup_{datetime_string}.hx3".format({
-		"save_name": c_sv,
-		"datetime_string":Time.get_datetime_string_from_system(),
-	}))
-	$AutoBackup.start(Settings.backup_interval * 60.0)

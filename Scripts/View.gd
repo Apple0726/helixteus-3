@@ -61,7 +61,7 @@ func _process(delta):
 	if move_with_keyboard:
 		var input_vector = Vector2.ZERO
 		input_vector.x = Input.get_action_strength("A") - Input.get_action_strength("D")
-		input_vector.y = Input.get_action_strength("W") - Input.get_action_strength("S")
+		input_vector.y = Input.get_action_strength("W") - (Input.get_action_strength("S") if not Input.is_action_pressed("ctrl") else 0.0)
 		input_vector = input_vector.normalized()
 		position += input_vector * delta * 1000.0
 	var travel_view = game.ships_travel_data.travel_view

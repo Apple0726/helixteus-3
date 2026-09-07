@@ -5,6 +5,7 @@
 [ext_resource type="Texture2D" uid="uid://wamlqxf857g2" path="res://Graphics/Title screen/Godot.png" id="5"]
 [ext_resource type="Texture2D" uid="uid://cfoqvd83nesv4" path="res://Graphics/Title screen/GitHub.png" id="6"]
 [ext_resource type="Theme" uid="uid://cp2u1kgj60ic" path="res://Resources/default_theme.tres" id="7"]
+[ext_resource type="PackedScene" uid="uid://cv6s3gfjcs8ae" path="res://Scenes/BackupPanel.tscn" id="7_vvhu1"]
 [ext_resource type="AudioStream" uid="uid://dhpvp5nnsy2a1" path="res://Audio/SFX/click.ogg" id="8"]
 [ext_resource type="Shader" uid="uid://bgo11pvuyabnf" path="res://Shaders/StarField2.gdshader" id="8_axm3r"]
 [ext_resource type="Texture2D" uid="uid://dxr8x86jdcd2p" path="res://Graphics/Tiles/Highlight.jpg" id="8_vvhu1"]
@@ -481,6 +482,13 @@ theme_override_styles/panel = SubResource("StyleBoxFlat_rajel")
 layout_mode = 2
 theme_override_constants/separation = 8
 
+[node name="BackupPanel" parent="UI" unique_id=196156599 instance=ExtResource("7_vvhu1")]
+visible = false
+offset_left = 976.0
+offset_top = 112.0
+offset_right = 1180.0
+offset_bottom = 204.0
+
 [node name="ClusterBG" parent="." unique_id=827445502 instance=ExtResource("35")]
 visible = false
 color = Color(0.686275, 0, 1, 1)
@@ -748,10 +756,6 @@ metadata/_edit_lock_ = true
 
 [node name="Autosave" type="Timer" parent="." unique_id=786789800]
 
-[node name="AutoBackup" type="Timer" parent="." unique_id=946211814]
-one_shot = true
-ignore_time_scale = true
-
 [node name="CollectPanelTimer" type="Timer" parent="." unique_id=1149337831]
 one_shot = true
 
@@ -854,7 +858,6 @@ metadata/_edit_lock_ = true
 [connection signal="mouse_exited" from="Title/Godot" to="." method="_on_mouse_exited"]
 [connection signal="pressed" from="Title/Godot" to="." method="_on_Godot_pressed"]
 [connection signal="timeout" from="Autosave" to="." method="_on_Autosave_timeout"]
-[connection signal="timeout" from="AutoBackup" to="." method="_on_auto_backup_timeout"]
 [connection signal="timeout" from="CollectPanelTimer" to="." method="_on_CollectPanelTimer_timeout"]
 [connection signal="animation_finished" from="CollectPanelAnim" to="." method="_on_CollectPanelAnim_animation_finished"]
 [connection signal="mouse_entered" from="Ship" to="." method="_on_Ship_mouse_entered"]

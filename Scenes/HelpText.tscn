@@ -8,6 +8,7 @@ offset_bottom = 30.0
 bbcode_enabled = true
 text = " [img]Graphics/Icons/help.png[/img]"
 script = ExtResource("1")
+adv_help = false
 
 [connection signal="mouse_entered" from="." to="." method="_on_RichTextLabel_mouse_entered"]
 [connection signal="mouse_exited" from="." to="." method="_on_RichTextLabel_mouse_exited"]
