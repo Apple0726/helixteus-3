@@ -203,7 +203,7 @@ func _on_Transform_pressed():
 			rsrc_to_add[resource_selected] = MM_value
 		else:
 			var sum = Helper.get_sum_of_dict(obj.bldg.AMN_stone)
-			if sum != 0:
+			if not is_zero_approx(sum):
 				for atom in rsrc_to_add:
 					if obj.bldg.AMN_stone.has(atom):
 						rsrc_to_add[atom] = MM_value * ratios[atom] * obj.bldg.AMN_stone[atom] / sum
@@ -212,11 +212,11 @@ func _on_Transform_pressed():
 				for atom in rsrc_to_add:
 					if atom == "stone":
 						continue
-					if obj.bldg.AMN_stone.has(atom) and sum != 0:
-						rsrc_to_add[resource_selected][atom] = max(0, obj.bldg.qty - MM_value) * obj.bldg.AMN_stone[atom] / sum
+					if obj.bldg.AMN_stone.has(atom) and not is_zero_approx(sum):
+						rsrc_to_add[resource_selected][atom] = max(0.0, obj.bldg.qty - MM_value) * obj.bldg.AMN_stone[atom] / sum
 			else:
-				rsrc_to_add[resource_selected] = max(0, obj.bldg.qty - MM_value)
-		rsrc_to_add.energy = round((1 - progress) * reactions[resource_selected].energy_cost / au_mult * obj.bldg.qty / path_2_value)
+				rsrc_to_add[resource_selected] = max(0.0, obj.bldg.qty - MM_value)
+		rsrc_to_add.energy = round((1.0 - progress) * reactions[resource_selected].energy_cost / au_mult * obj.bldg.qty / path_2_value)
 		game.add_resources(rsrc_to_add)
 		obj.bldg.erase("qty")
 		obj.bldg.erase("start_date")

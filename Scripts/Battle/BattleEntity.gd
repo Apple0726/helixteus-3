@@ -261,20 +261,23 @@ func _physics_process(delta: float) -> void:
 
 
 func end_turn():
+	var type_str = ""
+	if type == Battle.EntityType.SHIP:
+		type_str = "ship"
+	elif type == Battle.EntityType.ENEMY:
+		type_str = "enemy"
+	battle_scene.logs += "\nend_turn() (%s %s)\n" % [type_str, turn_order]
 	if status_effects[Battle.StatusEffect.EXTRA_TURNS] > 0.0:
+		battle_scene.logs += "extra turn\n"
 		status_effects[Battle.StatusEffect.EXTRA_TURNS] -= 1.0
 		$Info/StatusEffects.update()
 	else:
-		if type == Battle.EntityType.SHIP:
-			print("end turn for ship ", turn_order)
-		elif type == Battle.EntityType.ENEMY:
-			print("end turn for enemy ", turn_order)
 		if is_instance_valid(turn_order_box):
 			turn_order_box.get_node("ChangeSizeAnim").play_backwards("ChangeSize")
 		if not turn_taken:
-			print("emit next_turn")
 			turn_taken = true
 			emit_signal("next_turn")
+	battle_scene.logs += "\nend_turn() end (%s %s)\n" % [type_str, turn_order]
 
 func agility_updated_callback():
 	if has_node("CollisionShapeFinder/CollisionShape2D"):
@@ -411,6 +414,12 @@ var entity_dying_tween
 func entity_defeated_callback(knockback:Vector2 = Vector2.ZERO):
 	if entity_dying_tween:
 		return
+	var type_str = ""
+	if type == Battle.EntityType.SHIP:
+		type_str = "ship"
+	elif type == Battle.EntityType.ENEMY:
+		type_str = "enemy"
+	battle_scene.logs += "\nentity_defeated_callback() (%s %s)\n" % [type_str, turn_order]
 	entity_dying_tween = create_tween().set_parallel()
 	entity_dying_tween.tween_property($Info, "modulate:a", 0.0, 0.75)
 	entity_dying_tween.tween_property(self, "position", position + knockback, 1.5)
@@ -429,6 +438,7 @@ func entity_defeated_callback(knockback:Vector2 = Vector2.ZERO):
 		battle_scene.ship_nodes.erase(self)
 	elif type == Battle.EntityType.OBSTACLE:
 		battle_scene.obstacle_nodes.erase(self)
+	battle_scene.logs += "\nentity_defeated_callback() end (%s %s)\n" % [type_str, turn_order]
 
 func update_velocity_arrow(offset: Vector2 = Vector2.ZERO):
 	var magnitude = (velocity + offset).length()

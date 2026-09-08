@@ -12,17 +12,15 @@ func _ready():
 
 func _process(delta: float) -> void:
 	if exporting_label.visible:
-		#prints(Helper.export_save_files_exported, export_total_files)
 		exporting_label.text = tr("EXPORTING") + " (%d%%)" % int(Helper.export_save_files_exported * 100.0 / export_total_files)
 
 func refresh():
 	for save in $ScrollContainer/HBox.get_children():
 		save.queue_free()
-	var file = DirAccess.open("user://")
-	file.list_dir_begin() # TODOGODOT4 fill missing arguments https://github.com/godotengine/godot/pull/40547
-	var next_dir:String = file.get_next()
-	while next_dir != "":
-		var save_info = FileAccess.open("user://%s/save_info.hx3" % [next_dir], FileAccess.READ)
+	var save_dir = DirAccess.open("user://")
+	var saves = save_dir.get_directories()
+	for save_name in saves:
+		var save_info = FileAccess.open("user://%s/save_info.hx3" % [save_name], FileAccess.READ)
 		var save_info_dict
 		var try_backup = false
 		if save_info == null:
@@ -32,21 +30,18 @@ func refresh():
 			if save_info_dict is not Dictionary:
 				try_backup = true
 		if try_backup:
-			save_info = FileAccess.open("user://%s/save_info.hx3~" % [next_dir], FileAccess.READ)
+			save_info = FileAccess.open("user://%s/save_info.hx3~" % [save_name], FileAccess.READ)
 			if save_info == null:
-				next_dir = file.get_next()
 				continue
 			else:
 				save_info_dict = save_info.get_var()
 				if save_info_dict is not Dictionary:
-					next_dir = file.get_next()
 					continue
 		save_info.close()
 		var save = save_slot_scene.instantiate()
 		$ScrollContainer/HBox.add_child(save)
-		save.open_backup_panel.connect(open_backup_panel.bind(next_dir))
-		save.initialize(save_info_dict, next_dir, on_load, on_delete, on_export)
-		next_dir = file.get_next()
+		save.open_backup_panel.connect(open_backup_panel.bind(save_name))
+		save.initialize(save_info_dict, save_name, on_load, on_delete, on_export)
 	$TotalFileSize.label_text = tr("PERSISTENT_STORAGE") + Helper.get_file_size_string(Helper.get_directory_properties("user://").size) + " "
 	$TotalFileSize.refresh()
 

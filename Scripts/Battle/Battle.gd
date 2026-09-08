@@ -8,12 +8,18 @@ const PIXELS_PER_METER = 5.0
 var battle_GUI:BattleGUI
 var HX_scene = preload("res://Scenes/Battle/HX.tscn")
 
+var logs = "Battle logs\n"
 var HX_data:Array
 var ship_data:Array
 var hard_battle:bool = false
 var time_speed:float = 1.0
 var initiative_order = []
-var whose_turn_is_it_index:int = -1
+var whose_turn_is_it_index:int = -1:
+	get:
+		return whose_turn_is_it_index
+	set(value):
+		logs += "whose_turn_is_it_index: %s -> %s\n" % [whose_turn_is_it_index, value]
+		whose_turn_is_it_index = value
 var HX_nodes = []
 var ship_nodes = []
 var max_level_ship:int
@@ -31,6 +37,7 @@ var starlight_angle:float = 0.0
 var starlight_energy:float = 0.0
 
 func _ready() -> void:
+	logs += "\n_ready()\n"
 	time_speed = Helper.get_logarithmic_time_speed(game.subject_levels.dimensional_power, game.u_i.time_speed)
 	var p_i:Dictionary = game.planet_data[game.c_p]
 	for star in game.system_data[game.c_s].stars:
@@ -77,11 +84,13 @@ func _ready() -> void:
 		if i == len(HX_data) - 1:
 			tween.finished.connect(initialize_battle)
 		HX.next_turn.connect(next_turn)
+		HX.name = "HX%s" % i
 		add_child(HX)
 		HX_nodes.append(HX)
 		var total_stats = HX_data[i].HP * 0.25 + HX_data[i].attack + HX_data[i].defense + HX_data[i].accuracy + HX_data[i].agility
 		total_enemy_stats += total_stats
 		HX_data[i].total_stats = total_stats
+	logs += "HX_data: " + str(HX_data) + "\n"
 	for i in len(ship_data):
 		var ship_node = preload("res://Scenes/Battle/Ship.tscn").instantiate()
 		ship_node.METERS_PER_AGILITY = METERS_PER_AGILITY
@@ -104,6 +113,7 @@ func _ready() -> void:
 		ship_node.get_node("Info/HP").max_value = ship_data[i].HP
 		ship_node.get_node("Info/HP").value = ship_data[i].HP
 		ship_node.get_node("Info/Label").text = "%s %s" % [tr("LV"), ship_data[i].lv]
+		ship_node.name = "ship%s" % i
 		add_child(ship_node)
 		ship_nodes.append(ship_node)
 		var total_stats = ship_data[i].HP * 0.25 + ship_data[i].attack + ship_data[i].defense + ship_data[i].accuracy + ship_data[i].agility
@@ -113,15 +123,19 @@ func _ready() -> void:
 	hard_battle = total_enemy_stats > total_ship_stats * 1.25
 	if hard_battle:
 		game.switch_music(preload("res://Audio/op_battle.ogg"), game.u_i.time_speed)
+	logs += "ship_data: " + str(ship_data) + "\n"
+	logs += "_ready() end\n"
 
 
 func initialize_battle():
+	logs += "\ninitialize_battle()\n"
 	for HX_node in HX_nodes:
 		initiative_order.append(HX_node)
 	for ship_node in ship_nodes:
 		initiative_order.append(ship_node)
 	initiative_order.sort_custom(sort_initiative)
 	initiative_order.append($Boundary)
+	logs += "initiative_order: " + str(initiative_order) + "\n"
 	if hard_battle:
 		$Selected.material.set_shader_parameter("frequency", 12.0)
 		battle_GUI.get_node("MainPanel/ColorRect").show()
@@ -153,6 +167,7 @@ func initialize_battle():
 		turn_order_button.mouse_exited.connect(unhighlight_entity.bind(entity))
 	await get_tree().create_timer(min(0.6, 0.15 * len(initiative_order))).timeout
 	next_turn()
+	logs += "initialize_battle() end\n"
 
 func move_view_to_target(entity: BattleEntity):
 	if entity.type == Battle.EntityType.BOUNDARY:
@@ -272,11 +287,12 @@ var ships_taking_turn = [] # Stores ship nodes that can take actions interchange
 var defeated = false
 
 func next_turn():
-	print("\n========== next turn start")
+	logs += "\nnext_turn()\n"
 	if ship_nodes.is_empty():
 		battle_GUI.get_node("Defeat").show()
 		create_tween().tween_property(battle_GUI.get_node("Defeat"), "modulate:a", 1.0, 1.0)
 		defeated = true
+		logs += "defeat"
 		return
 	var all_enemies_defeated = true
 	for HX in HX_nodes:
@@ -285,25 +301,28 @@ func next_turn():
 			break
 	if all_enemies_defeated:
 		battle_victory_callback()
+		logs += "victory"
 		return
 	if not ships_taking_turn.is_empty():
+		logs += "ships_taking_turn: " + str(ships_taking_turn) + "\n"
 		for ship_node in ships_taking_turn:
 			if is_instance_valid(ship_node) and not ship_node.turn_taken:
 				whose_turn_is_it_index = ship_node.turn_order
 				$Selected.position = ship_node.position + Vector2.UP * 80.0
 				battle_GUI.fade_in_main_panel()
 				view_entity(ship_node)
+				logs += "next_turn() end\n"
 				return
 	ships_taking_turn.clear()
 	$Selected.hide()
 	whose_turn_is_it_index += 1
 	while not is_instance_valid(initiative_order[whose_turn_is_it_index]) or initiative_order[whose_turn_is_it_index].type != Battle.EntityType.BOUNDARY and initiative_order[whose_turn_is_it_index].HP <= 0:
-		print("entity %s dead" % whose_turn_is_it_index)
+		logs += "entity %s dead\n" % whose_turn_is_it_index
 		whose_turn_is_it_index += 1
 		if whose_turn_is_it_index >= len(initiative_order)-1:
 			break
 	if initiative_order[whose_turn_is_it_index].type == Battle.EntityType.BOUNDARY:
-		print("environment's turn")
+		logs += "environment's turn\n"
 		scale_before_view_battlefield = game.view.scale.x
 		if animations_sped_up:
 			create_tween().tween_callback(environment_take_turn).set_delay(0.1)
@@ -312,7 +331,7 @@ func next_turn():
 			create_tween().tween_callback(environment_take_turn).set_delay(1.0)
 		initiative_order[whose_turn_is_it_index].turn_order_box.get_node("ChangeSizeAnim").play("ChangeSize")
 	elif initiative_order[whose_turn_is_it_index].type == Battle.EntityType.SHIP:
-		print("ship's turn")
+		logs += "ship's turn\n"
 		var ship_turn = whose_turn_is_it_index
 		while is_instance_valid(initiative_order[ship_turn]) and initiative_order[ship_turn].HP >= 0 and initiative_order[ship_turn].type == Battle.EntityType.SHIP:
 			var ship_node = initiative_order[ship_turn]
@@ -325,25 +344,25 @@ func next_turn():
 					ship_node.turn_taken = true
 				else:
 					ships_taking_turn.append(ship_node)
+					logs += "ship %s ready\n" % ship_turn
 					if len(ships_taking_turn) == 1:
 						whose_turn_is_it_index = ship_turn
 			ship_turn += 1
 		if len(ships_taking_turn) > 0:
-			print("ship num: %s" % len(ships_taking_turn))
 			$Selected.show()
 			$Selected.position = ships_taking_turn[0].position + Vector2.UP * 80.0
 			view_entity(ships_taking_turn[0])
 			battle_GUI.fade_in_main_panel()
 		else:
-			print("no available ships")
+			logs += "no available ships\n"
 			next_turn()
 	elif initiative_order[whose_turn_is_it_index].type == Battle.EntityType.ENEMY:
-		print("HX's turn")
+		logs += "enemy's turn\n"
 		var HX_node = initiative_order[whose_turn_is_it_index]
 		if not animations_sped_up:
 			view_entity(HX_node)
 		HX_node.take_turn()
-	print("========== next turn end")
+	logs += "next_turn() end\n"
 
 func get_selected_ship():
 	if whose_turn_is_it_index == -1 or initiative_order.is_empty() or not is_instance_valid(initiative_order[whose_turn_is_it_index]) or initiative_order[whose_turn_is_it_index].type != Battle.EntityType.SHIP:
@@ -403,6 +422,8 @@ func _input(event: InputEvent) -> void:
 				entity.get_node("Info/Label").text = "%s %s" % [tr("LV"), entity.lv]
 			else:
 				entity.get_node("Info/Label").text = ""
+	if Input.is_action_just_released("copy"):
+		DisplayServer.clipboard_set(logs)
 
 
 func display_stats(type:String):

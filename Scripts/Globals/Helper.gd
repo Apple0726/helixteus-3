@@ -261,7 +261,7 @@ func format_num(num:float, clever_round:bool = false, threshold:int = 6):
 
 #Assumes that all values of dict are floats/integers
 func get_sum_of_dict(dict:Dictionary):
-	var sum = 0
+	var sum = 0.0
 	for el in dict.values():
 		sum += el
 	return sum

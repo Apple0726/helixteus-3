@@ -3634,7 +3634,7 @@ func deduct_resources(costs):
 		elif cost == "SP":
 			SP -= costs.SP
 		elif cost == "stone":
-			var ratio:float = 1 - costs.stone / float(Helper.get_sum_of_dict(stone))
+			var ratio:float = 1.0 - costs.stone / Helper.get_sum_of_dict(stone)
 			for el in stone:
 				stone[el] *= ratio
 		elif mats.has(cost):

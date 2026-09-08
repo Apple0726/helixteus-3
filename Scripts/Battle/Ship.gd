@@ -287,7 +287,7 @@ func fire_weapon(weapon_type: int):
 			$FireProjectileFlash/AnimationPlayer.stop()
 			$FireProjectileFlash/AnimationPlayer.play("Flash")
 			if i < projectile_num-1:
-				await get_tree().create_timer(0.2).timeout
+				await get_tree().create_timer(0.04 if battle_scene.animations_sped_up else 0.2).timeout
 		# Needed to prevent cases where ship turn ends early because of no bullets present
 		# but not all bullets have been fired
 		for projectile in projectiles:
