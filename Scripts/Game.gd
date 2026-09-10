@@ -1648,6 +1648,7 @@ func add_dimension():
 		add_child(dimension)
 	var tween = create_tween()
 	tween.tween_property(dimension, "modulate", Color.WHITE, 0.2)
+	switch_music(preload("res://Audio/dimension1.ogg"))
 
 func set_starfield_color(_material, param:float):
 	_material.set_shader_parameter("stepsize", min(param, 0.3))
