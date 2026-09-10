@@ -338,10 +338,12 @@ func _on_Reset_mouse_entered():
 
 
 func _on_Reset_pressed():
+	var popup_text = ""
 	if game.dim_num == 1:
-		game.show_YN_panel(game.reset_dimension, tr("RESET_1ST_DIM_CONFIRM").format({"DRnumber":new_dim_DRs, "DRs":tr("DRs")}), [new_dim_DRs])
+		popup_text = tr("RESET_1ST_DIM_CONFIRM").format({"DRnumber":new_dim_DRs, "DRs":tr("DRs")})
 	else:
-		game.show_YN_panel(game.reset_dimension, tr("RENEW_DIMENSION_CONFIRM"), [new_dim_DRs])
+		popup_text = tr("RENEW_DIMENSION_CONFIRM")
+	game.show_YN_panel(game.reset_dimension.bind(new_dim_DRs), popup_text)
 
 func calc_math_points(node, default_value:float, op_factor:float, lower_limit:float = 0.0, upper_limit:float = INF):
 	if node.value <= lower_limit or node.value >= upper_limit:

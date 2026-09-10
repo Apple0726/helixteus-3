@@ -976,7 +976,7 @@ func destroy_building_callable():
 		destroy_bldg(tile_over)
 		game.HUD.refresh()
 	else:
-		game.show_YN_panel(game.destroy_buildings, tr("DESTROY_X_BUILDINGS") % [len(tiles_selected)], [tiles_selected.duplicate(true)])
+		game.show_YN_panel(game.destroy_buildings.bind(tiles_selected.duplicate(true)), tr("DESTROY_X_BUILDINGS") % [len(tiles_selected)])
 
 func collect_resources_callable():
 	items_collected.clear()

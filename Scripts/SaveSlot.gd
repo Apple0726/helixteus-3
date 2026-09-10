@@ -23,8 +23,8 @@ func initialize(save_info_dict, save_name:String, on_load: Callable, on_delete: 
 		var save_created = save_info_dict.save_created
 		var save_modified = save_info_dict.save_modified
 		$Version.text = save_info_dict.version
-		$LoadSave.pressed.connect(on_load.bind(save_name))
 		$Export.pressed.connect(on_export.bind(save_name))
+		var reset_dimension = false
 		if save_info_dict.version == game.VERSION:
 			$Version.mouse_entered.connect(game.show_tooltip.bind(tr("SAME_VERSION")))
 			$Version.label_settings.font_color = Color.GREEN
@@ -34,6 +34,8 @@ func initialize(save_info_dict, save_name:String, on_load: Callable, on_delete: 
 		else:
 			$Version.mouse_entered.connect(game.show_tooltip.bind(tr("VERSION_INCOMPATIBLE")))
 			$Version.label_settings.font_color = Color.ORANGE
+			reset_dimension = true
+		$LoadSave.pressed.connect(on_load.bind(save_name, reset_dimension))
 		$Version.mouse_exited.connect(game.hide_tooltip)
 		var univ_num = len(save_info_dict.universe_data)
 		var univ_txt = tr("1_UNIVERSE")

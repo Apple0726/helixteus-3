@@ -4,6 +4,7 @@
 [ext_resource type="Texture2D" uid="uid://ven17ibktuac" path="res://Graphics/Icons/export.png" id="2_rili7"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_rili7"]
+resource_local_to_scene = true
 font_size = 12
 
 [sub_resource type="SystemFont" id="SystemFont_rili7"]

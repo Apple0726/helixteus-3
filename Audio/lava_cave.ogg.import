@@ -12,7 +12,7 @@ dest_files=["res://.godot/imported/lava_cave.ogg-e8131f9f116978db824aeb31735f14c
 
 [params]
 
-loop=false
+loop=true
 loop_offset=0
 bpm=0
 beat_count=0

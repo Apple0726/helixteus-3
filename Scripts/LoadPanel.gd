@@ -20,24 +20,9 @@ func refresh():
 	var save_dir = DirAccess.open("user://")
 	var saves = save_dir.get_directories()
 	for save_name in saves:
-		var save_info = FileAccess.open("user://%s/save_info.hx3" % [save_name], FileAccess.READ)
-		var save_info_dict
-		var try_backup = false
-		if save_info == null:
-			try_backup = true
-		else:
-			save_info_dict = save_info.get_var()
-			if save_info_dict is not Dictionary:
-				try_backup = true
-		if try_backup:
-			save_info = FileAccess.open("user://%s/save_info.hx3~" % [save_name], FileAccess.READ)
-			if save_info == null:
-				continue
-			else:
-				save_info_dict = save_info.get_var()
-				if save_info_dict is not Dictionary:
-					continue
-		save_info.close()
+		var save_info_dict = Helper.get_save_info(save_name)
+		if not save_info_dict:
+			continue
 		var save = save_slot_scene.instantiate()
 		$ScrollContainer/HBox.add_child(save)
 		save.open_backup_panel.connect(open_backup_panel.bind(save_name))
@@ -54,7 +39,7 @@ func open_backup_panel(save_name:String):
 func on_export(save_str:String):
 	save_to_export = save_str
 	if OS.get_name() == "Web":
-		if await Helper.export_save("user://%s.hx3" % save_str, "user://"):
+		if await Helper.export_save(save_str, "user://%s.hx3" % save_str):
 			game.popup(tr("EXPORT_SUCCESS") % save_to_export, 2.0)
 			var file = FileAccess.open("user://%s.hx3" % save_str, FileAccess.READ)
 			var L = file.get_length()
@@ -68,14 +53,16 @@ func on_export(save_str:String):
 		$Export.title = tr("EXPORT_X") % save_str
 		$Export.popup_centered()
 
-func on_load(sv:String):
+func on_load(sv:String, reset_dimension:bool = false):
 	if modulate.a == 1:
-		game.c_sv = sv
-		game.toggle_panel(panel_var_name)
-		game.fade_out_title("load_game")
+		if reset_dimension:
+			game.show_YN_panel(on_load.bind(sv), tr("VERSION_INCOMPATIBLE"))
+		else:
+			game.toggle_panel(panel_var_name)
+			game.fade_out_title("load_game", sv)
 
 func on_delete(save_str:String):
-	game.show_YN_panel(game.delete_save, tr("ARE_YOU_SURE"), [save_str])
+	game.show_YN_panel(game.delete_save.bind(save_str), tr("ARE_YOU_SURE"))
 
 
 func on_delete_confirm(save_str:String):

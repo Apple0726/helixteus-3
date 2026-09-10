@@ -1,14 +1,10 @@
 extends Node2D
 
 const TEST:bool = false
-const DATE:String = "13 Jun 2026"
-const VERSION:String = "v0.30.3a"
-const COMPATIBLE_VERSIONS = ["v0.30", "v0.30.1", "v0.30.2", "v0.30.3"]
+const DATE:String = "8 Sep 2026"
+const VERSION:String = "v0.30.4"
+const COMPATIBLE_VERSIONS = ["v0.30", "v0.30.1", "v0.30.2", "v0.30.3", "v0.30.3a"]
 
-#var surface_BG = preload("res://Graphics/Decoratives/Surface.jpg")
-#var crust_BG = preload("res://Graphics/Decoratives/Crust.jpg")
-#var star_texture = preload("res://Graphics/Effects/spotlight_8_s.png")
-#var star_shader = preload("res://Shaders/Star.gdshader")
 var planet_textures:Array
 var galaxy_textures:Array
 var bldg_textures:Array
@@ -443,14 +439,25 @@ func _ready():
 		main.phase_2()
 
 func refresh_continue_button():
+	if $Title/VBoxContainer/Continue.pressed.is_connected(_on_continue_pressed):
+		$Title/VBoxContainer/Continue.pressed.disconnect(_on_continue_pressed)
 	var config = ConfigFile.new()
 	var err = config.load("user://settings.cfg")
 	var saved_c_sv = ""
 	if err == OK:
 		saved_c_sv = config.get_value("game", "saved_c_sv", "")
-	if saved_c_sv != "" and FileAccess.open("user://%s/save_info.hx3" % [saved_c_sv], FileAccess.READ) != null:
-		$Title/VBoxContainer/Continue.visible = true
+	var last_save_info = Helper.get_save_info(saved_c_sv)
+	if saved_c_sv != "" and last_save_info != null:
+		$Title/VBoxContainer/Continue.show()
 		$Title/VBoxContainer/Continue.text = tr("CONTINUE_X") % saved_c_sv
+		if last_save_info.version != VERSION and last_save_info.version not in COMPATIBLE_VERSIONS:
+			$Title/VBoxContainer/Continue.modulate = Color.ORANGE
+			$Title/VBoxContainer/Continue.pressed.connect(_on_continue_pressed.bind(saved_c_sv, true))
+		else:
+			$Title/VBoxContainer/Continue.modulate = Color.WHITE
+			$Title/VBoxContainer/Continue.pressed.connect(_on_continue_pressed.bind(saved_c_sv))
+	else:
+		$Title/VBoxContainer/Continue.hide()
 	return saved_c_sv
 
 func animate_title_buttons():
@@ -640,6 +647,7 @@ func load_game():
 	else:
 		load_univ()
 		switch_view(c_v, {"first_time":true})
+		switch_music(Data.ambient_music.pick_random(), u_i.get("time_speed", 1.0))
 		if not is_ancestor_of(HUD):
 			$HUD.add_child(HUD)
 	$UI/BackupPanel.start_timer()
@@ -4050,7 +4058,7 @@ func _on_CloseButton_close_button_over():
 func _on_CloseButton_close_button_out():
 	close_button_over = false
 
-func fade_out_title(fn:String):
+func fade_out_title(fn:String, sv:String = ""):
 	$Title/VBoxContainer/NewGame.disconnect("pressed",Callable(self,"_on_NewGame_pressed"))
 	$Title/VBoxContainer/Continue.disconnect("pressed",Callable(self,"_on_continue_pressed"))
 	var tween = create_tween()
@@ -4081,9 +4089,9 @@ func fade_out_title(fn:String):
 			new_game(0, true)
 			switch_music(Data.ambient_music.pick_random(), u_i.time_speed)
 	else:
+		c_sv = sv
 		call(fn)
 		$Autosave.start()
-		switch_music(Data.ambient_music.pick_random(), u_i.get("time_speed", 1.0))
 	
 func _on_NewGame_pressed():
 	if Settings.op_cursor and Input.is_action_pressed("ctrl"):
@@ -4111,17 +4119,14 @@ func _on_Autosave_timeout():
 	if not viewing_dimension:
 		save_views(true)
 
-func show_YN_panel(callable:Callable, text:String = tr("ARE_YOU_SURE"), args:Array = []):
+func show_YN_panel(callable:Callable, text:String = tr("ARE_YOU_SURE")):
 	if $Panels.has_node("YN_panel"):
 		$Panels.get_node("YN_panel").free()
 	var YN_panel = preload("res://Scenes/PopupWindow.tscn").instantiate()
 	YN_panel.set_text(text)
 	YN_panel.set_OK_text(tr("NO"))
 	YN_panel.name = "YN_panel"
-	if args.is_empty():
-		YN_panel.add_button(tr("YES"), callable)
-	else:
-		YN_panel.add_button(tr("YES"), callable.bindv(args))
+	YN_panel.add_button(tr("YES"), callable)
 	$Panels.add_child(YN_panel)
 
 func delete_save(save_str):
@@ -4142,7 +4147,6 @@ func return_to_menu():
 	await switch_view("")
 	c_v = ""
 	DRs = 0
-	$Title/VBoxContainer/Continue.connect("pressed",Callable(self,"_on_continue_pressed"))
 	refresh_continue_button()
 	switch_music(preload("res://Audio/Title.ogg"))
 	HUD.queue_free()
@@ -4614,10 +4618,11 @@ func _on_command_text_submitted(new_text):
 	HUD.refresh()
 
 
-func _on_continue_pressed():
-	c_sv = refresh_continue_button()
-	if c_sv != "":
-		fade_out_title("load_game")
+func _on_continue_pressed(sv:String, reset_dimension:bool = false):
+	if reset_dimension:
+		show_YN_panel(fade_out_title.bind("load_game", sv), tr("VERSION_INCOMPATIBLE"))
+	else:
+		fade_out_title("load_game", sv)
 
 var right_click_menu
 

@@ -181,7 +181,7 @@ func on_galaxy_click (id:int, l_id:int):
 				game.gigastructures_panel.refresh()
 		else:
 			if not g_i.has("discovered") and g_i.system_num > 9000:
-				game.show_YN_panel(game.op_galaxy, tr("OP_GALAXY_DESC"), [l_id, id])
+				game.show_YN_panel(game.op_galaxy.bind(l_id, id), tr("OP_GALAXY_DESC"))
 			else:
 				game.switch_view("galaxy", {"fn":"set_custom_coords", "fn_args":[["c_g", "c_g_g"], [l_id, id]]})
 	view.dragged = false

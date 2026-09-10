@@ -843,7 +843,6 @@ metadata/_edit_lock_ = true
 [connection signal="close_button_over" from="UI/BottomInfo/CloseButton" to="." method="_on_CloseButton_close_button_over"]
 [connection signal="close_button_pressed" from="UI/BottomInfo/CloseButton" to="." method="_on_BottomInfo_close_button_pressed"]
 [connection signal="text_submitted" from="Tooltips/Command" to="." method="_on_command_text_submitted"]
-[connection signal="pressed" from="Title/VBoxContainer/Continue" to="." method="_on_continue_pressed"]
 [connection signal="pressed" from="Title/VBoxContainer/NewGame" to="." method="_on_NewGame_pressed"]
 [connection signal="pressed" from="Title/VBoxContainer/LoadGame" to="." method="_on_LoadGame_pressed"]
 [connection signal="pressed" from="Title/VBoxContainer/Settings" to="." method="_on_Settings_pressed"]

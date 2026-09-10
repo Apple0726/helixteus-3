@@ -1841,6 +1841,27 @@ func make_obj_dir(save_dict:Dictionary, univ:int, path:String, obj:String):
 				file.store_var(save_dict.univs[univ][obj.to_lower()][obj_file_name])
 			file.close()
 
+func get_save_info(save_name:String):
+	var save_info = FileAccess.open("user://%s/save_info.hx3" % [save_name], FileAccess.READ)
+	var try_backup = false
+	var save_info_dict
+	if save_info == null:
+		try_backup = true
+	else:
+		save_info_dict = save_info.get_var()
+		if save_info_dict is not Dictionary:
+			try_backup = true
+	if try_backup:
+		save_info = FileAccess.open("user://%s/save_info.hx3~" % [save_name], FileAccess.READ)
+		if save_info == null:
+			return null
+		else:
+			save_info_dict = save_info.get_var()
+			if save_info_dict is not Dictionary:
+				return null
+	save_info.close()
+	return save_info_dict
+
 func add_text_to_RTL(RTL:RichTextLabel, txt:String, imgs:Array, size:int = 17, resize_RTL:bool = false):
 	RTL.text = ""
 	var arr = txt.split("@i")#@i: where images are placed

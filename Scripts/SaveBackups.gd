@@ -22,7 +22,7 @@ func load_backups(save_name:String):
 			backup_scene.get_node("Label").text = backup_file_name
 			var file_size = backup_file.get_length()
 			backup_scene.get_node("Size").text = Helper.get_file_size_string(file_size)
-			backup_scene.get_node("Button").pressed.connect(game.show_YN_panel.bind(load_backup, tr("BACKUP_WILL_CREATE_NEW_SAVE"), [backup_file_name, backup_file_path]))
+			backup_scene.get_node("Button").pressed.connect(game.show_YN_panel.bind(load_backup.bind(backup_file_name, backup_file_path), tr("BACKUP_WILL_CREATE_NEW_SAVE")))
 			total_files += 1
 			total_file_size += file_size
 	$Label.text = tr("BACKUPS_FOR_SAVE").format({"save":save_name}) + " (%s)" % tr("FILE_NUMBER_AND_SIZE").format({
