@@ -32,7 +32,7 @@ func _ready() -> void:
 	hit_sound_player.volume_db = -3.0
 	spawn_sound_player = AudioStreamPlayer2D.new()
 	add_child(spawn_sound_player)
-	spawn_sound_player.stream = preload("res://Audio/SFX/projectile_shoot.wav")
+	spawn_sound_player.stream = preload("res://Audio/SFX/projectile_shoot.ogg")
 	spawn_sound_player.bus = "SFX"
 	spawn_sound_player.max_polyphony = 8
 	hit_sound_player.volume_db = -9.0

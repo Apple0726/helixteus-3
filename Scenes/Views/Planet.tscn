@@ -4,9 +4,9 @@
 [ext_resource type="Texture2D" uid="uid://o0artlh6qd48" path="res://Graphics/Tiles/Mosaics/ice.jpg" id="2_fk4u5"]
 [ext_resource type="Script" uid="uid://djr5eelx8hx0" path="res://Scripts/Planet.gd" id="3"]
 [ext_resource type="TileSet" uid="uid://caaofgr7bjd7d" path="res://Resources/PlanetTileSet.tres" id="3_fk4u5"]
-[ext_resource type="AudioStream" uid="uid://bjspi4o722tk0" path="res://Audio/SFX/object_hit.wav" id="7_75ca2"]
+[ext_resource type="AudioStream" uid="uid://d11rdrgwnf5hr" path="res://Audio/SFX/object_hit.ogg" id="7_844bs"]
 [ext_resource type="Script" uid="uid://y0df6t08tenm" path="res://Scripts/BadApple.gd" id="7_yxni4"]
-[ext_resource type="AudioStream" uid="uid://bhyxj1lj6u70g" path="res://Audio/SFX/overclock.wav" id="8_844bs"]
+[ext_resource type="AudioStream" uid="uid://das6rwveoi8io" path="res://Audio/SFX/overclock.ogg" id="8_844bs"]
 [ext_resource type="Texture2D" uid="uid://cdblvpftr6875" path="res://icon.png" id="12"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_g1ur1"]
@@ -389,7 +389,7 @@ one_shot = true
 [node name="Auroras" type="Node2D" parent="." unique_id=1921611729]
 
 [node name="BuildingPlacedSound" type="AudioStreamPlayer" parent="." unique_id=2097601818]
-stream = ExtResource("7_75ca2")
+stream = ExtResource("7_844bs")
 volume_db = -12.0
 bus = &"SFX"
 

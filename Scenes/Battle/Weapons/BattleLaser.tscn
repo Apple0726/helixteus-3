@@ -2,7 +2,7 @@
 
 [ext_resource type="Texture2D" uid="uid://dxr8x86jdcd2p" path="res://Graphics/Tiles/Highlight.jpg" id="1_11r1q"]
 [ext_resource type="Script" uid="uid://b6bysupl6nmty" path="res://Scripts/Battle/Weapons/BattleLaser.gd" id="1_c45pl"]
-[ext_resource type="AudioStream" uid="uid://bht6slwbrv6vw" path="res://Audio/SFX/laser.wav" id="3_dwe2u"]
+[ext_resource type="AudioStream" uid="uid://8f3xetlywr8l" path="res://Audio/SFX/laser.ogg" id="3_dwe2u"]
 
 [sub_resource type="Shader" id="Shader_cd4p5"]
 code = "shader_type canvas_item;

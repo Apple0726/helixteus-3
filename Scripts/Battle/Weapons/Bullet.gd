@@ -8,7 +8,7 @@ func _ready() -> void:
 	area_entered.connect(_on_area_entered)
 	$Trail.default_color = trail_color
 	$Trail.show()
-	hit_sound_player.stream = preload("res://Audio/SFX/collision.wav")
+	hit_sound_player.stream = preload("res://Audio/SFX/collision.ogg")
 	spawn_sound_player.pitch_scale = randf_range(0.7, 1.4)
 	spawn_sound_player.play()
 

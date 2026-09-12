@@ -11,9 +11,9 @@
 [ext_resource type="PackedScene" uid="uid://cpfkb4haasun3" path="res://Scenes/CaveHole.tscn" id="9"]
 [ext_resource type="Texture2D" uid="uid://yhdxrw2q1yep" path="res://Graphics/HX/Status effects/Stun.png" id="10"]
 [ext_resource type="Texture2D" uid="uid://64ywd74o1wk7" path="res://Graphics/Cave/Rover top down.png" id="11"]
-[ext_resource type="AudioStream" uid="uid://bht6slwbrv6vw" path="res://Audio/SFX/laser.wav" id="12_8fs2k"]
-[ext_resource type="AudioStream" uid="uid://d3uecbto6liey" path="res://Audio/SFX/mining_laser_loop.wav" id="12_yvdt3"]
+[ext_resource type="AudioStream" uid="uid://bcj4nufp7rpc0" path="res://Audio/SFX/mining_laser_loop.ogg" id="12_yvdt3"]
 [ext_resource type="Texture2D" uid="uid://vj3h3by1epm8" path="res://Graphics/Cave/Objects/exit.png" id="13"]
+[ext_resource type="AudioStream" uid="uid://8f3xetlywr8l" path="res://Audio/SFX/laser.ogg" id="13_dfqh5"]
 [ext_resource type="Shader" uid="uid://dose2l8hnixm6" path="res://Shaders/Fire.gdshader" id="14"]
 [ext_resource type="Texture2D" uid="uid://3aket0dmatt4" path="res://Graphics/Cave/minimap.png" id="15"]
 [ext_resource type="Texture2D" uid="uid://csyq1ka6cgn87" path="res://Graphics/Cave/MMIcons/Rover.png" id="16"]
@@ -720,7 +720,7 @@ volume_db = -3.94
 bus = &"SFX"
 
 [node name="LaserSound" type="AudioStreamPlayer2D" parent="Rover/MiningLaser" unique_id=1023538754]
-stream = ExtResource("12_8fs2k")
+stream = ExtResource("13_dfqh5")
 volume_db = -5.516
 bus = &"SFX"
 

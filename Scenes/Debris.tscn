@@ -6,7 +6,7 @@
 [ext_resource type="Texture2D" uid="uid://b1dcgxga387up" path="res://Graphics/Effects/spotlight_1.png" id="4"]
 [ext_resource type="Texture2D" uid="uid://doyhcr5ker08v" path="res://Graphics/Cave/DebrisAnim.png" id="5"]
 [ext_resource type="Texture2D" uid="uid://cvetejccba6ge" path="res://Graphics/Stars/Star.png" id="6_cch3s"]
-[ext_resource type="AudioStream" uid="uid://dqpvlvh7lmu3b" path="res://Audio/SFX/collision.wav" id="7_t3let"]
+[ext_resource type="AudioStream" uid="uid://c7os7qndtqu84" path="res://Audio/SFX/collision.ogg" id="7_t3let"]
 
 [sub_resource type="Shader" id="7"]
 code = "shader_type canvas_item;

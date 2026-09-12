@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://b5kurhdhjkjst"]
 
 [ext_resource type="Script" uid="uid://bdk4sxparhmxo" path="res://Scripts/System.gd" id="1"]
-[ext_resource type="AudioStream" uid="uid://dqpvlvh7lmu3b" path="res://Audio/SFX/collision.wav" id="2_610h1"]
+[ext_resource type="AudioStream" uid="uid://c7os7qndtqu84" path="res://Audio/SFX/collision.ogg" id="2_610h1"]
 
 [node name="System" type="Node2D" unique_id=272457836]
 script = ExtResource("1")

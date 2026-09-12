@@ -100,7 +100,7 @@ func _ready() -> void:
 	update_velocity_arrow()
 	collision_sound_player = AudioStreamPlayer2D.new()
 	add_child(collision_sound_player)
-	collision_sound_player.stream = preload("res://Audio/SFX/collision.wav")
+	collision_sound_player.stream = preload("res://Audio/SFX/collision.ogg")
 	collision_sound_player.bus = "SFX"
 	collision_sound_player.max_polyphony = 8
 

@@ -43,7 +43,7 @@ The game's graphical assets are found in `/Graphics`. An artist paid out of pock
 
 ### Audio
 Are you a music producer, or sound designer? All of the game's music is stored in `/Audio`, while the sound effects are in `/Audio/SFX`.
-**Note:** Music should be in .ogg format, and SFX should be in .wav format.
+**Note:** Music, as well as sound effects (SFX), should be in .ogg format.
 
 ### Development
 Helixteus 3 is built using the [Godot game engine](https://godotengine.org/download). The biggest benefit of this is that it allows for the game to be easily cross-platform and portable.
