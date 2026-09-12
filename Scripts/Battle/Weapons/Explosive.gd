@@ -10,11 +10,10 @@ func _ready() -> void:
 	area_entered.connect(_on_area_entered)
 	$ExplosionAoE.area_entered.connect(_on_explosionAoE_entered)
 	$ExplosionAoE.area_exited.connect(_on_explosionAoE_exited)
-
-func decrement_amount():
-	amount -= 1
-	if amount <= 0:
-		emit_signal("end_turn", ending_turn_delay)
+	hit_sound_player.stream = preload("res://Audio/SFX/explosion.ogg")
+	hit_sound_player.volume_db = 0.0
+	spawn_sound_player.pitch_scale = randf_range(0.7, 1.4)
+	spawn_sound_player.play()
 
 func _on_explosionAoE_entered(area: Area2D):
 	entities_inside_explosion_AoE.append(area)
@@ -25,7 +24,7 @@ func _on_explosionAoE_exited(area: Area2D):
 
 func _on_area_entered(area: Area2D) -> void:
 	if not is_instance_valid(shooter):
-		queue_free()
+		remove_projectile()
 		return
 	var weapon_data = {
 		"type":Battle.DamageType.PHYSICAL,
@@ -44,7 +43,7 @@ func _on_area_entered(area: Area2D) -> void:
 	if area.damage_entity(weapon_data):
 		if area.type == Battle.EntityType.BOUNDARY:
 			ending_turn_delay = 0.0
-			queue_free()
+			remove_projectile()
 			return
 		for area_in_AoE in entities_inside_explosion_AoE:
 			if area_in_AoE is BattleEntity and area_in_AoE != area:
@@ -71,7 +70,7 @@ func _on_area_entered(area: Area2D) -> void:
 		$AnimationPlayer.play("Explode")
 		battle_GUI.flash_screen(0.3, 0.2)
 		set_physics_process(false)
-		$AnimationPlayer.animation_finished.connect(func(anim_name): queue_free())
+		$AnimationPlayer.animation_finished.connect(func(anim_name): remove_projectile())
 		if spawn_smaller_explosives:
 			for i in 8:
 				var explosive = preload("res://Scenes/Battle/Weapons/Explosive.tscn").instantiate()
@@ -94,3 +93,5 @@ func _on_area_entered(area: Area2D) -> void:
 				explosive.end_turn.connect(shooter.ending_turn)
 				explosive.end_turn_ready = true
 				battle_scene.call_deferred("add_child", explosive)
+		hit_sound_player.pitch_scale = randf_range(0.7, 1.4)
+		hit_sound_player.play()

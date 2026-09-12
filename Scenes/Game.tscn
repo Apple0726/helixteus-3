@@ -301,6 +301,14 @@ load_path = "res://.godot/imported/Background.png-4971a717328ff48d2a17022a2c61f1
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_vvhu1"]
 bg_color = Color(1, 1, 1, 0.18100001)
 
+[sub_resource type="InputEventKey" id="InputEventKey_vvhu1"]
+device = -1
+physical_keycode = 69
+unicode = 101
+
+[sub_resource type="Shortcut" id="Shortcut_75ca2"]
+events = [SubResource("InputEventKey_vvhu1")]
+
 [sub_resource type="Animation" id="15"]
 length = 0.5
 tracks/0/type = "value"
@@ -663,6 +671,9 @@ theme_override_font_sizes/font_size = 20
 theme_override_styles/normal = SubResource("StyleBoxEmpty_vvhu1")
 theme_override_styles/pressed = SubResource("StyleBoxEmpty_rajel")
 theme_override_styles/hover = SubResource("StyleBoxFlat_vvhu1")
+shortcut = SubResource("Shortcut_75ca2")
+shortcut_feedback = false
+shortcut_in_tooltip = false
 text = "Continue Save1"
 
 [node name="NewGame" type="Button" parent="Title/VBoxContainer" unique_id=158765359]

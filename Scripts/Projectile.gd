@@ -27,6 +27,8 @@ func _ready():
 	if type == Data.ProjType.LASER:
 		$Round.disabled = true
 		$Line.disabled = false
+		$LaserAudio.pitch_scale = randf_range(0.8, 1.2)
+		$LaserAudio.play()
 	elif type == Data.ProjType.BUBBLE:
 		timer = Timer.new()
 		add_child(timer)
@@ -44,7 +46,7 @@ func _physics_process(delta):
 		if fading:
 			modulate.a -= 0.03 * delta * 60
 			if modulate.a <= 0:
-				queue_free()
+				remove_projectile()
 	elif type == Data.ProjType.PURPLE:
 		speed += 0.35 * delta * 60.0
 	var collision = move_and_collide(speed * direction * time_speed)
@@ -82,7 +84,7 @@ func collide(collision:KinematicCollision2D):
 				pierce -= 1
 				dont_hit_again.append(body.spawn_tile)
 			if pierce <= 0:
-				queue_free()
+				remove_projectile()
 		else:#if the projectile comes from the enemy
 			var dmg:float = damage / cave_ref.def / cave_ref.rover_size
 			if not cave_ref.ability_timer.is_stopped() and cave_ref.ability == "armor_3" and dmg < cave_ref.total_HP * 1000.0:
@@ -92,7 +94,7 @@ func collide(collision:KinematicCollision2D):
 			elif cave_ref.enhancements.has("armor_0"):
 				deflected = randf() < 0.15
 			if deflected:
-				direction = -direction.reflect(Vector2.from_angle(collision.get_normal().angle() + PI/2))
+				direction = direction.reflect(Vector2.from_angle(collision.get_normal().angle() + PI/2))
 				speed *= 2.0
 				collision_layer = 8
 				collision_mask = 5
@@ -103,9 +105,17 @@ func collide(collision:KinematicCollision2D):
 				rotation = direction.angle()
 			else:
 				cave_ref.hit_player(dmg, status_effects)
-				queue_free()
+				remove_projectile()
 	else:
 		if type == Data.ProjType.BUBBLE:#Bubble projectiles reflect off of walls
 			direction = -direction.reflect(collision.get_normal())
 		else:#Other projectiles get destroyed
-			queue_free()
+			remove_projectile()
+
+func remove_projectile():
+	hide()
+	if has_node("LaserAudio") and $LaserAudio.playing:
+		await $LaserAudio.finished
+	if has_node("ObjectHitSound") and $ObjectHitSound.playing:
+		await $ObjectHitSound.finished
+	queue_free()

@@ -82,6 +82,8 @@ var default_tooltip_icons = [Data.HP_icon, Data.attack_icon, Data.defense_icon, 
 var override_tooltip_dict:Dictionary
 var override_tooltip_icons = [Data.attack_icon, Data.defense_icon, Data.accuracy_icon, Data.agility_icon]
 
+var collision_sound_player:AudioStreamPlayer2D
+
 func _ready() -> void:
 	battle_scene = get_parent()
 	battle_GUI = get_parent().battle_GUI
@@ -96,6 +98,11 @@ func _ready() -> void:
 	$Info/StatusEffects.entity = self
 	$Info/Buffs.entity = self
 	update_velocity_arrow()
+	collision_sound_player = AudioStreamPlayer2D.new()
+	add_child(collision_sound_player)
+	collision_sound_player.stream = preload("res://Audio/SFX/collision.wav")
+	collision_sound_player.bus = "SFX"
+	collision_sound_player.max_polyphony = 8
 
 func _draw() -> void:
 	if is_instance_valid(battle_scene) and type != Battle.EntityType.BOUNDARY:
@@ -487,6 +494,7 @@ func collide_with_entity(collider: BattleEntity, collidee: BattleEntity):
 			collider.velocity = Vector2.ZERO
 		else:
 			collider.velocity -= collider.velocity.normalized() * velocity_loss
+		collision_sound_player.play()
 
 # Needed for when 2 entities collide with each other and not deal double damage
 var entities_already_collided = []

@@ -11,6 +11,8 @@
 [ext_resource type="PackedScene" uid="uid://cpfkb4haasun3" path="res://Scenes/CaveHole.tscn" id="9"]
 [ext_resource type="Texture2D" uid="uid://yhdxrw2q1yep" path="res://Graphics/HX/Status effects/Stun.png" id="10"]
 [ext_resource type="Texture2D" uid="uid://64ywd74o1wk7" path="res://Graphics/Cave/Rover top down.png" id="11"]
+[ext_resource type="AudioStream" uid="uid://bht6slwbrv6vw" path="res://Audio/SFX/laser.wav" id="12_8fs2k"]
+[ext_resource type="AudioStream" uid="uid://d3uecbto6liey" path="res://Audio/SFX/mining_laser_loop.wav" id="12_yvdt3"]
 [ext_resource type="Texture2D" uid="uid://vj3h3by1epm8" path="res://Graphics/Cave/Objects/exit.png" id="13"]
 [ext_resource type="Shader" uid="uid://dose2l8hnixm6" path="res://Shaders/Fire.gdshader" id="14"]
 [ext_resource type="Texture2D" uid="uid://3aket0dmatt4" path="res://Graphics/Cave/minimap.png" id="15"]
@@ -19,6 +21,7 @@
 [ext_resource type="Texture2D" uid="uid://cslf5agen531d" path="res://Graphics/Cave/MMIcons/NextFloor.png" id="17"]
 [ext_resource type="Texture2D" uid="uid://uyvtci76f3tm" path="res://Graphics/Clusters/0.png" id="17_f1kta"]
 [ext_resource type="Texture2D" uid="uid://cdblvpftr6875" path="res://icon.png" id="18"]
+[ext_resource type="AudioStream" uid="uid://djsyjnactuti8" path="res://Audio/SFX/break_rock.ogg" id="18_dfqh5"]
 [ext_resource type="PackedScene" uid="uid://2s0chovxmhln" path="res://Scenes/InventorySlot.tscn" id="20"]
 [ext_resource type="Texture2D" uid="uid://cbployr7rnqpu" path="res://Graphics/Cave/MMIcons/Exit.png" id="21"]
 [ext_resource type="Texture2D" uid="uid://dxr8x86jdcd2p" path="res://Graphics/Tiles/Highlight.jpg" id="22"]
@@ -711,6 +714,16 @@ scale = Vector2(0.131034, 0.131034)
 energy = 0.5
 texture = ExtResource("16_6cmh4")
 
+[node name="LaserSoundLoop" type="AudioStreamPlayer2D" parent="Rover/MiningLaser" unique_id=991334468]
+stream = ExtResource("12_yvdt3")
+volume_db = -3.94
+bus = &"SFX"
+
+[node name="LaserSound" type="AudioStreamPlayer2D" parent="Rover/MiningLaser" unique_id=1023538754]
+stream = ExtResource("12_8fs2k")
+volume_db = -5.516
+bus = &"SFX"
+
 [node name="RayOfDoom" type="Area2D" parent="Rover" unique_id=1789726445]
 visible = false
 collision_layer = 0
@@ -825,6 +838,9 @@ collision_mask = 0
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Rover/CrackDetector" unique_id=1688139548]
 shape = SubResource("155")
+
+[node name="BreakRockSound" type="AudioStreamPlayer2D" parent="Rover" unique_id=394875908]
+stream = ExtResource("18_dfqh5")
 
 [node name="RoDEffects" type="Node2D" parent="." unique_id=2019073024]
 

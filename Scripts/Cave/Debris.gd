@@ -66,6 +66,7 @@ func destroy_rock():
 	add_child(timer)
 	timer.connect("timeout", queue_free)
 	timer.start(particle_lifetime)
+	$BreakSound.play()
 
 
 func _on_Crack_area_entered(area):

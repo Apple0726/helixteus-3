@@ -15,6 +15,7 @@
 [ext_resource type="Texture2D" uid="uid://cdblvpftr6875" path="res://icon.png" id="12"]
 [ext_resource type="Shader" uid="uid://dose2l8hnixm6" path="res://Shaders/Fire.gdshader" id="13"]
 [ext_resource type="Shader" uid="uid://gevhgabt3grd" path="res://Shaders/Laser.gdshader" id="14"]
+[ext_resource type="AudioStream" uid="uid://bhyxj1lj6u70g" path="res://Audio/SFX/overclock.wav" id="17_53138"]
 [ext_resource type="PackedScene" uid="uid://b3b68o5fd52pr" path="res://Scenes/Battle/VelocityArrow.tscn" id="22_mql8i"]
 
 [sub_resource type="ShaderMaterial" id="4"]
@@ -1127,6 +1128,10 @@ texture = ExtResource("10")
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="FireProjectileFlash" unique_id=1604517819]
 libraries/ = SubResource("AnimationLibrary_mql8i")
+
+[node name="ExtraTurnSound" type="AudioStreamPlayer2D" parent="." unique_id=150639459]
+stream = ExtResource("17_53138")
+bus = &"SFX"
 
 [connection signal="mouse_entered" from="." to="." method="_on_mouse_entered"]
 [connection signal="mouse_exited" from="." to="." method="_on_mouse_exited"]

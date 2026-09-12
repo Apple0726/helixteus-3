@@ -4,6 +4,7 @@
 [ext_resource type="Texture2D" uid="uid://bwe1knccfpjy3" path="res://Graphics/Cave/Projectiles/enemy_bullet.png" id="2"]
 [ext_resource type="Texture2D" uid="uid://dl452yovfklni" path="res://Graphics/Decoratives/BulletHit.jpg" id="3"]
 [ext_resource type="Texture2D" uid="uid://b1dcgxga387up" path="res://Graphics/Effects/spotlight_1.png" id="4_n3kqk"]
+[ext_resource type="AudioStream" uid="uid://h8ja7vney0g1" path="res://Audio/SFX/level1laser.ogg" id="5_rtd6i"]
 
 [sub_resource type="CanvasItemMaterial" id="3"]
 resource_local_to_scene = true
@@ -70,3 +71,10 @@ enabled = false
 range_item_cull_mask = 3
 texture = ExtResource("4_n3kqk")
 texture_scale = 4.0
+
+[node name="LaserAudio" type="AudioStreamPlayer2D" parent="." unique_id=22160251]
+stream = ExtResource("5_rtd6i")
+max_polyphony = 5
+bus = &"SFX"
+
+[connection signal="tree_exiting" from="." to="." method="_on_tree_exiting"]

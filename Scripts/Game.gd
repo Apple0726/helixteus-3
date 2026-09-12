@@ -437,6 +437,8 @@ func _ready():
 	for mod in Mods.mod_list:
 		var main = Mods.mod_list[mod]
 		main.phase_2()
+	$Title/VBoxContainer/Continue.mouse_entered.connect(show_tooltip.bind("", {"additional_text": tr("KEYBOARD_SHORTCUT") + ": E"}))
+	$Title/VBoxContainer/Continue.mouse_exited.connect(hide_tooltip)
 
 func refresh_continue_button():
 	if $Title/VBoxContainer/Continue.pressed.is_connected(_on_continue_pressed):
@@ -460,16 +462,20 @@ func refresh_continue_button():
 		$Title/VBoxContainer/Continue.hide()
 	return saved_c_sv
 
+var title_tween
+
 func animate_title_buttons():
-	var tween = create_tween()
-	tween.set_parallel(true)
+	if title_tween and title_tween.is_running():
+		title_tween.kill()
+	title_tween = create_tween()
+	title_tween.set_parallel(true)
 	$Title.modulate.a = 0.0
 	$TitleBackground/Main.modulate.a = 0.0
 	$TitleBackground/Planet.material.set_shader_parameter("alpha", 0.0)
-	tween.tween_property($TitleText, "modulate:a", 1.0, 1.0)
-	tween.tween_property($TitleBackground/Main, "modulate:a", 0.5, 3.0)
-	tween.tween_property($TitleBackground/Planet.material, "shader_parameter/alpha", 0.6, 3.0).set_ease(Tween.EASE_IN).set_trans(Tween.TRANS_QUAD)
-	tween.tween_property($Title, "modulate:a", 1.0, 2.0).set_delay(0.2)
+	title_tween.tween_property($TitleText, "modulate:a", 1.0, 1.0)
+	title_tween.tween_property($TitleBackground/Main, "modulate:a", 0.5, 3.0)
+	title_tween.tween_property($TitleBackground/Planet.material, "shader_parameter/alpha", 0.6, 3.0).set_ease(Tween.EASE_IN).set_trans(Tween.TRANS_QUAD)
+	title_tween.tween_property($Title, "modulate:a", 1.0, 2.0).set_delay(0.2)
 	set_starfield_color($ShaderExport/SubViewport/Starfield.material, 0.5)
 	update_starfield = true
 	show_starfield({"position":Vector2.ONE * 1000.0})
@@ -4062,17 +4068,19 @@ func _on_CloseButton_close_button_out():
 func fade_out_title(fn:String, sv:String = ""):
 	$Title/VBoxContainer/NewGame.disconnect("pressed",Callable(self,"_on_NewGame_pressed"))
 	$Title/VBoxContainer/Continue.disconnect("pressed",Callable(self,"_on_continue_pressed"))
-	var tween = create_tween()
-	tween.set_parallel(true)
-	tween.tween_property($Title, "modulate:a", 0.0, 0.5)
-	tween.tween_property($TitleBackground/Main, "modulate:a", 0.0, 0.5)
-	tween.tween_property($TitleBackground/Planet.material, "shader_parameter/alpha", 0.0, 0.5)
-	tween.tween_property($TitleText, "modulate:a", 0.0, 0.5)
+	if title_tween and title_tween.is_running():
+		title_tween.kill()
+	title_tween = create_tween()
+	title_tween.set_parallel(true)
+	title_tween.tween_property($Title, "modulate:a", 0.0, 0.5)
+	title_tween.tween_property($TitleBackground/Main, "modulate:a", 0.0, 0.5)
+	title_tween.tween_property($TitleBackground/Planet.material, "shader_parameter/alpha", 0.0, 0.5)
+	title_tween.tween_property($TitleText, "modulate:a", 0.0, 0.5)
 	if starfield_tween:
 		starfield_tween.kill()
 	starfield_tween = create_tween()
 	starfield_tween.tween_property($Stars/Starfield, "modulate:a", 0.0, 0.5)
-	await tween.finished
+	await title_tween.finished
 	update_starfield = true
 	$TitleBackground.hide()
 	$Title.visible = false

@@ -6,6 +6,7 @@
 [ext_resource type="Texture2D" uid="uid://b1dcgxga387up" path="res://Graphics/Effects/spotlight_1.png" id="4"]
 [ext_resource type="Texture2D" uid="uid://doyhcr5ker08v" path="res://Graphics/Cave/DebrisAnim.png" id="5"]
 [ext_resource type="Texture2D" uid="uid://cvetejccba6ge" path="res://Graphics/Stars/Star.png" id="6_cch3s"]
+[ext_resource type="AudioStream" uid="uid://dqpvlvh7lmu3b" path="res://Audio/SFX/collision.wav" id="7_t3let"]
 
 [sub_resource type="Shader" id="7"]
 code = "shader_type canvas_item;
@@ -248,6 +249,9 @@ libraries/ = SubResource("AnimationLibrary_evmef")
 
 [node name="Timer" type="Timer" parent="Crack" unique_id=1161527676]
 one_shot = true
+
+[node name="BreakSound" type="AudioStreamPlayer2D" parent="." unique_id=1574532761]
+stream = ExtResource("7_t3let")
 
 [connection signal="area_entered" from="Crack" to="." method="_on_Crack_area_entered"]
 [connection signal="area_exited" from="Crack" to="." method="_on_Crack_area_exited"]

@@ -1096,8 +1096,16 @@ func update_ray():
 			mining_laser.scale.x = laser_reach / 16.0
 			mining_laser.scale.y = 16.0
 			mining_laser.rotation = atan2(mouse_pos.y - rover.position.y, mouse_pos.x - rover.position.x)
+			if not mining_laser.visible:
+				#$Rover/MiningLaser/LaserSound.play()
+				$Rover/MiningLaser/LaserSoundLoop.play()
+		else:
+			#$Rover/MiningLaser/LaserSound.stop()
+			$Rover/MiningLaser/LaserSoundLoop.stop()
 		mining_laser.visible = holding_click
 	else:
+		#$Rover/MiningLaser/LaserSound.stop()
+		$Rover/MiningLaser/LaserSoundLoop.stop()
 		mining_laser.visible = false
 		mining_p.emitting = false
 
@@ -1701,6 +1709,8 @@ func mine_wall_complete(tile_pos:Vector2, tile_id:int):
 		game.popup(tr("WEIGHT_INV_FULL_MINING"), 1.7)
 	var walls = cave_wall.get_used_cells()
 	walls.erase(map_pos)
+	$Rover/BreakRockSound.pitch_scale = randf_range(0.8, 1.2)
+	$Rover/BreakRockSound.play()
 	
 	cave_wall.set_cells_terrain_connect([map_pos], 0, -1)
 	cave_wall.set_cell(map_pos)

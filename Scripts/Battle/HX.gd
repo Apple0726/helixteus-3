@@ -219,8 +219,10 @@ func fire_magic_bullets():
 	spawn_position.x = clamp(spawn_position.x, -620.0, 1900.0)
 	spawn_position.y = clamp(spawn_position.y, -340.0, 1060.0)
 	var projectile_num = 2
-	if lv >= 4:
+	if lv >= 4 and lv < 11:
 		projectile_num = 3
+	elif lv >= 12:
+		projectile_num = 4
 	for i in projectile_num:
 		var magic_bullet = preload("res://Scenes/Battle/Weapons/Projectile.tscn").instantiate()
 		magic_bullet.set_script(load("res://Scripts/Battle/Weapons/MagicBullet.gd"))
@@ -241,7 +243,7 @@ func fire_magic_bullets():
 		magic_bullet.end_turn.connect(ending_turn)
 		projectiles.append(magic_bullet)
 		if i < projectile_num - 1:
-			await get_tree().create_timer(0.4).timeout
+			await get_tree().create_timer(0.08 if battle_scene.animations_sped_up else 0.4).timeout
 	for projectile in projectiles:
 		if is_instance_valid(projectile):
 			projectile.end_turn_ready = true
@@ -385,7 +387,7 @@ func normal_attack():
 			add_projectile(projectile_angle,
 			{"status_effects":proj_status_effects, "scale_mult":scale_mult, "damage_mult":damage_mult, "trail_color":Color.YELLOW_GREEN})
 			if i < projectile_num-1:
-				await get_tree().create_timer(0.2).timeout
+				await get_tree().create_timer(0.04 if battle_scene.animations_sped_up else 0.2).timeout
 	elif attack_type == Attack.LASER:
 		var projectile_angle = randf_range(target_angle - target_angle_max_deviation, target_angle + target_angle_max_deviation)
 		var laser = preload("res://Scenes/Battle/Weapons/BattleLaser.tscn").instantiate()

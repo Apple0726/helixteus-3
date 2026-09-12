@@ -6,6 +6,8 @@ func _ready() -> void:
 	area_entered.connect(_on_area_entered)
 	$Trail.default_color = trail_color
 	$Trail.show()
+	spawn_sound_player.pitch_scale = randf_range(0.7, 1.4)
+	spawn_sound_player.play()
 
 func _on_area_entered(area: Area2D) -> void:
 	if check_boundary(area):

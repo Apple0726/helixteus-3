@@ -1,6 +1,7 @@
 [gd_scene format=3 uid="uid://dh7jnes2ghc7n"]
 
 [ext_resource type="Texture2D" uid="uid://xhuhh01nnaq3" path="res://Graphics/Battle/Projectiles/bullet.png" id="1_8sfff"]
+[ext_resource type="AudioStream" uid="uid://bfxcf6c0k64rp" path="res://Audio/SFX/projectile_shoot.wav" id="2_xjh8r"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_6h4qi"]
 radius = 4.0
@@ -29,3 +30,8 @@ visible = false
 points = PackedVector2Array(-32, 0, 0, 0)
 width = 3.0
 width_curve = SubResource("Curve_8sfff")
+
+[node name="SpawnSound" type="AudioStreamPlayer2D" parent="." unique_id=2139609424]
+stream = ExtResource("2_xjh8r")
+max_polyphony = 8
+bus = &"SFX"

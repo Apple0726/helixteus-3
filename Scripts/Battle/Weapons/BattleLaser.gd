@@ -37,6 +37,8 @@ func _ready() -> void:
 			laser_absorbed = true
 	$ColorLaser.scale.x = laser_length / 200.0
 	$WhiteLaser.scale.x = laser_length / 200.0
+	$ShootSound.pitch_scale = randf_range(0.7, 1.4)
+	$ShootSound.play()
 	var tween = create_tween().set_parallel()
 	tween.tween_property($WhiteLaser, "modulate:a", 0.0, fade_delay)
 	tween.tween_property($ColorLaser.material, "shader_parameter/modulate", 0.0, fade_delay)

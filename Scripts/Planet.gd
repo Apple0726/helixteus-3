@@ -656,6 +656,8 @@ func overclock_bldg(tile, tile_id:int, curr_time):
 				tile.bldg["collect_date"] = curr_time
 				tile.depth += int(tiles_mined)
 		game.item_to_use.num -= 1
+		$OverclockSound.pitch_scale = randf_range(0.9, 1.1)
+		$OverclockSound.play()
 
 func click_tile(tile, tile_id:int):
 	if not tile.has("bldg") or is_instance_valid(game.active_panel):
@@ -843,7 +845,7 @@ func add_shadows():
 			if is_instance_valid(shadows[id2]):
 				for cost in constr_costs.keys():
 					constr_costs_total[cost] += constr_costs[cost] / (tile.cost_div if tile and tile.has("cost_div") else 1.0)
-			
+	$BuildingPlacedSound.play()
 
 func remove_selected_tiles():
 	for white_rect in get_tree().get_nodes_in_group("white_rects"):

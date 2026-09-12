@@ -121,6 +121,7 @@ func _draw() -> void:
 func take_turn():
 	buffed_from_class_passive_ability = false
 	if ship_class == ShipClass.ENERGETIC and randf() < 0.3:
+		$ExtraTurnSound.play()
 		status_effects[Battle.StatusEffect.EXTRA_TURNS] = 2
 		total_movement = total_movement_base * 1.25
 	await super()
@@ -128,13 +129,16 @@ func take_turn():
 		return
 	if ship_class == ShipClass.RECKLESS:
 		if turn_number == 1:
+			$ExtraTurnSound.play()
 			status_effects[Battle.StatusEffect.EXTRA_TURNS] = 3
 		elif turn_number % 3 != 0: # Turn 2, 4, 5, 7, 8...
+			$ExtraTurnSound.play()
 			status_effects[Battle.StatusEffect.EXTRA_TURNS] = 2
 		else:
 			status_effects[Battle.StatusEffect.STUN] += 2
 	elif ship_class == ShipClass.UBER:
 		if turn_number % 2 == 1:
+			$ExtraTurnSound.play()
 			status_effects[Battle.StatusEffect.EXTRA_TURNS] = 2
 	decrement_status_effects_buffs()
 	if status_effects[Battle.StatusEffect.STUN] > 0.0:

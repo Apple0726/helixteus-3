@@ -20,25 +20,45 @@ var status_effects = {}
 var buffs = {}
 var trail_color:Color = Color.WHITE
 
-func _ready() -> void:
-	tree_exiting.connect(decrement_amount)
-	amount += 1
+var hit_sound_player:AudioStreamPlayer2D
+var spawn_sound_player:AudioStreamPlayer2D
 
-func decrement_amount():
-	amount -= 1
-	if amount <= 0 and end_turn_ready:
-		emit_signal("end_turn", ending_turn_delay)
-		end_turn_ready = false
+func _ready() -> void:
+	amount += 1
+	hit_sound_player = AudioStreamPlayer2D.new()
+	add_child(hit_sound_player)
+	hit_sound_player.bus = "SFX"
+	hit_sound_player.max_polyphony = 8
+	hit_sound_player.volume_db = -3.0
+	spawn_sound_player = AudioStreamPlayer2D.new()
+	add_child(spawn_sound_player)
+	spawn_sound_player.stream = preload("res://Audio/SFX/projectile_shoot.wav")
+	spawn_sound_player.bus = "SFX"
+	spawn_sound_player.max_polyphony = 8
+	hit_sound_player.volume_db = -9.0
 
 func _physics_process(delta: float) -> void:
 	position += speed * Vector2.from_angle(rotation) * delta * velocity_process_modifier
 	if (position - Vector2(640, 360)).length_squared() > pow(1280, 2) + pow(720, 2):
 		ending_turn_delay = 0.0
-		queue_free()
+		remove_projectile()
+		set_physics_process(false)
 
 func check_boundary(area):
 	if area.type == Battle.EntityType.BOUNDARY:
 		ending_turn_delay = 0.0
-		queue_free()
+		remove_projectile()
 		return true
 	return false
+
+func remove_projectile():
+	if not visible:
+		return
+	hide()
+	amount -= 1
+	if amount <= 0 and end_turn_ready:
+		emit_signal("end_turn", ending_turn_delay)
+		end_turn_ready = false
+	if hit_sound_player.playing:
+		await hit_sound_player.finished
+	queue_free()

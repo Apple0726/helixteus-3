@@ -1,9 +1,15 @@
 [gd_scene format=3 uid="uid://b5kurhdhjkjst"]
 
 [ext_resource type="Script" uid="uid://bdk4sxparhmxo" path="res://Scripts/System.gd" id="1"]
+[ext_resource type="AudioStream" uid="uid://dqpvlvh7lmu3b" path="res://Audio/SFX/collision.wav" id="2_610h1"]
 
 [node name="System" type="Node2D" unique_id=272457836]
 script = ExtResource("1")
+
+[node name="PlanetDestroyedSound" type="AudioStreamPlayer2D" parent="." unique_id=850734676]
+stream = ExtResource("2_610h1")
+max_distance = 10000.0
+bus = &"SFX"
 
 [connection signal="draw" from="." to="." method="_on_System_draw"]
 [connection signal="tree_exited" from="." to="." method="_on_System_tree_exited"]

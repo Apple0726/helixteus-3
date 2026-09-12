@@ -127,6 +127,7 @@ func _on_StartCharging_pressed():
 		if not p_i.is_empty():
 			if Settings.screen_shake:
 				game.get_node("Camera2D/Screenshake").start(2.0, 10, 5)
+			var planet_pos:Vector2 = Vector2.from_angle(p_i.angle) * p_i.distance * game.view.obj.scale_mult
 			var BG_flash = game.get_node("BGFlash")
 			BG_flash.modulate.a = 0.6
 			var tween = create_tween()
@@ -151,6 +152,8 @@ func _on_StartCharging_pressed():
 			if dir:
 				dir.remove("user://%s/Univ%s/Planets/%s.hx3" % [game.c_sv, game.c_u, target.id])
 			target.clear()
+			game.view.obj.position = planet_pos
+			game.view.obj.get_node("PlanetDestroyedSound").play()
 			game.view.obj.refresh_planets()
 			game.add_resources(star.rsrc)
 		star.erase("charging_time")
