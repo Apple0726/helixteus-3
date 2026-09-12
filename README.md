@@ -1,6 +1,6 @@
 <h1 align="center">Helixteus 3</h1>
 <p align="center">
-<img src="Graphics/Readme/readme_screenshot.jpg" alt="Game screenshot">
+<img src="Graphics/Screenshots/readme_screenshot.jpg" alt="Game screenshot">
 </p>
 
 Helixteus 3 is a 2D space exploration game with incremental mechanics.
@@ -11,7 +11,7 @@ You start on a planet on which you can construct buildings to produce resources.
 [Wishlist the game on Steam](https://store.steampowered.com/app/1642730/Helixteus_3/)
 
 <p align="center">
-<img src="Graphics/Readme/readme_screenshot2.jpg" alt="Game screenshot 2">
+<img src="Graphics/Screenshots/readme_screenshot2.jpg" alt="Game screenshot 2">
 </p>
 
 ## Community
@@ -70,5 +70,5 @@ All contributions and kind words are very appreciated! This game will always be 
 
 
 <p align="center">
-<img src="Graphics/Readme/readme_screenshot3.jpg" alt="Game screenshot 3">
+<img src="Graphics/Screenshots/readme_screenshot3.jpg" alt="Game screenshot 3">
 </p>
