@@ -18,7 +18,8 @@ You start on a planet on which you can construct buildings to produce resources.
 All active discussion is happening on our [Discord server](https://discord.com/invite/gDHcDA3). Come and say hi!
 
 ## Quick start for contributors
-- Clone this Git repository.
+- Clone this Git repository: `git clone https://github.com/Apple0726/helixteus-3`
+- Note: if you have no intention of browsing the game's entire commit history, add `--depth 1` to the command so you don't have to download and store an additional 550 MB of data for nothing: `git clone --depth 1 https://github.com/Apple0726/helixteus-3`
 - Download the [Godot game engine](https://godotengine.org/download).
 - Open Godot, select `Import` from the projects list.
 - Navigate to the location that you cloned the project, and import the `project.godot` file.

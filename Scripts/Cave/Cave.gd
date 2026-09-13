@@ -293,7 +293,7 @@ func _ready():
 	generate_cave(true, false)
 	if start_at_floor > 1:
 		for i in int(start_at_floor - 1):
-			go_down_cave()
+			go_down_cave(true)
 			var avg_dmg:float = 6.0 * difficulty / def / rover_size * armor_damage_mult
 			var dmg_to_HP_ratio:float = avg_dmg / total_HP
 			if cave_floor == num_floors or dmg_to_HP_ratio > 0.2:
@@ -1246,8 +1246,8 @@ func go_up_cave():
 	generate_cave(true if cave_floor == 1 else false, true)
 
 
-func go_down_cave():
-	if not right_side_panel.visible:
+func go_down_cave(initial_skip:bool = false):
+	if not initial_skip and not right_side_panel.visible:
 		return
 	right_side_panel.hide()
 	remove_cave()

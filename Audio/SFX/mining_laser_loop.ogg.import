@@ -12,7 +12,7 @@ dest_files=["res://.godot/imported/mining_laser_loop.ogg-1e5e1671d449012397292b4
 
 [params]
 
-loop=false
+loop=true
 loop_offset=0
 bpm=0
 beat_count=0

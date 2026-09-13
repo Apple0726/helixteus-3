@@ -288,16 +288,6 @@ texture_normal = ExtResource("9")
 ignore_texture_size = true
 stretch_mode = 5
 
-[node name="it" type="TextureButton" parent="Control/PanelContainer/Languages" unique_id=1385049391]
-material = SubResource("ShaderMaterial_pd2cd")
-custom_minimum_size = Vector2(60, 0)
-layout_mode = 2
-size_flags_vertical = 3
-mouse_filter = 1
-texture_normal = ExtResource("8")
-ignore_texture_size = true
-stretch_mode = 5
-
 [node name="ko" type="TextureButton" parent="Control/PanelContainer/Languages" unique_id=674527357]
 material = SubResource("ShaderMaterial_pd2cd")
 custom_minimum_size = Vector2(60, 0)
@@ -305,6 +295,16 @@ layout_mode = 2
 size_flags_vertical = 3
 mouse_filter = 1
 texture_normal = ExtResource("2")
+ignore_texture_size = true
+stretch_mode = 5
+
+[node name="it" type="TextureButton" parent="Control/PanelContainer/Languages" unique_id=1385049391]
+material = SubResource("ShaderMaterial_pd2cd")
+custom_minimum_size = Vector2(60, 0)
+layout_mode = 2
+size_flags_vertical = 3
+mouse_filter = 1
+texture_normal = ExtResource("8")
 ignore_texture_size = true
 stretch_mode = 5
 
@@ -355,12 +355,12 @@ stretch_mode = 5
 [connection signal="mouse_entered" from="Control/PanelContainer/Languages/fr" to="." method="_on_lg_mouse_entered" binds= ["fr"]]
 [connection signal="mouse_exited" from="Control/PanelContainer/Languages/fr" to="." method="_on_lg_mouse_exited"]
 [connection signal="pressed" from="Control/PanelContainer/Languages/fr" to="." method="_on_lg_pressed" binds= ["fr"]]
-[connection signal="mouse_entered" from="Control/PanelContainer/Languages/it" to="." method="_on_lg_mouse_entered" binds= ["it"]]
-[connection signal="mouse_exited" from="Control/PanelContainer/Languages/it" to="." method="_on_lg_mouse_exited"]
-[connection signal="pressed" from="Control/PanelContainer/Languages/it" to="." method="_on_lg_pressed" binds= ["it"]]
 [connection signal="mouse_entered" from="Control/PanelContainer/Languages/ko" to="." method="_on_lg_mouse_entered" binds= ["ko"]]
 [connection signal="mouse_exited" from="Control/PanelContainer/Languages/ko" to="." method="_on_lg_mouse_exited"]
 [connection signal="pressed" from="Control/PanelContainer/Languages/ko" to="." method="_on_lg_pressed" binds= ["ko"]]
+[connection signal="mouse_entered" from="Control/PanelContainer/Languages/it" to="." method="_on_lg_mouse_entered" binds= ["it"]]
+[connection signal="mouse_exited" from="Control/PanelContainer/Languages/it" to="." method="_on_lg_mouse_exited"]
+[connection signal="pressed" from="Control/PanelContainer/Languages/it" to="." method="_on_lg_pressed" binds= ["it"]]
 [connection signal="mouse_entered" from="Control/PanelContainer/Languages/sv" to="." method="_on_lg_mouse_entered" binds= ["sv"]]
 [connection signal="mouse_exited" from="Control/PanelContainer/Languages/sv" to="." method="_on_lg_mouse_exited"]
 [connection signal="pressed" from="Control/PanelContainer/Languages/sv" to="." method="_on_lg_pressed" binds= ["sv"]]

@@ -953,7 +953,7 @@ func on_star_pressed (id:int, clicked_from_star_panel = false):
 				elif game.bottom_info_action == "building_CBS":
 					build_MS(star, "CBS")
 			else:
-				game.popup(tr("MS_ALREADY_PRESENT"), 2.0)
+				game.popup(tr("STAR_HAS_MS"), 2.0)
 		else:
 			game.popup(tr("STAR_MS_ERROR"), 3.0)
 	elif game.bottom_info_action == "building_MB":
