@@ -1,67 +1,67 @@
 {
     "en": {
-        "lines": 1675,
-        "words": 11762,
-        "chars": 71859
+        "lines": 1573,
+        "words": 10949,
+        "chars": 66655
     },
     "fr": {
-        "lines": 541,
-        "words": 2291,
-        "chars": 14509
+        "lines": 510,
+        "words": 2107,
+        "chars": 13340
     },
     "it": {
-        "lines": 359,
-        "words": 1080,
-        "chars": 7258
+        "lines": 351,
+        "words": 1038,
+        "chars": 6971
     },
     "zh": {
-        "lines": 1652,
-        "words": 2132,
-        "chars": 22935
+        "lines": 1570,
+        "words": 2026,
+        "chars": 21575
     },
     "de": {
-        "lines": 1632,
-        "words": 9941,
-        "chars": 73012
+        "lines": 1530,
+        "words": 9233,
+        "chars": 67641
     },
     "es": {
-        "lines": 1287,
-        "words": 9096,
-        "chars": 57978
+        "lines": 1187,
+        "words": 8229,
+        "chars": 52313
     },
     "ko": {
-        "lines": 225,
-        "words": 413,
-        "chars": 1314
+        "lines": 489,
+        "words": 1144,
+        "chars": 3998
     },
     "sv": {
-        "lines": 183,
-        "words": 496,
-        "chars": 3243
+        "lines": 182,
+        "words": 494,
+        "chars": 3222
     },
     "hu": {
-        "lines": 1638,
-        "words": 8892,
-        "chars": 65337
+        "lines": 1538,
+        "words": 8279,
+        "chars": 60756
     },
     "ja": {
-        "lines": 1231,
-        "words": 1367,
-        "chars": 21713
+        "lines": 1127,
+        "words": 1242,
+        "chars": 19182
     },
     "nl": {
-        "lines": 1119,
-        "words": 5950,
-        "chars": 41130
+        "lines": 1019,
+        "words": 5209,
+        "chars": 35990
     },
     "ru": {
-        "lines": 943,
-        "words": 3875,
-        "chars": 29005
+        "lines": 871,
+        "words": 3468,
+        "chars": 26085
     },
     "pl": {
-        "lines": 132,
-        "words": 377,
-        "chars": 2738
+        "lines": 131,
+        "words": 375,
+        "chars": 2717
     }
 }
