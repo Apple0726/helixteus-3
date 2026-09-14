@@ -53,7 +53,7 @@ func initialize_stats(data: Dictionary):
 	light_levels = data.light
 	if ship_class == ShipClass.STANDARD:
 		for effect in Battle.StatusEffect.N:
-			status_effect_resistances[effect] = 0.2
+			status_effect_resistances[effect] = 0.25
 
 func turn_on_lights(index: int):
 	for i in 4:
@@ -141,8 +141,6 @@ func take_turn():
 			$ExtraTurnSound.play()
 			status_effects[Battle.StatusEffect.EXTRA_TURNS] = 2
 	decrement_status_effects_buffs()
-	if status_effects[Battle.StatusEffect.STUN] > 0.0:
-		end_turn()
 
 func move():
 	display_move_path = false
@@ -351,6 +349,7 @@ func fire_weapon(weapon_type: int):
 		if fires_remaining <= 0:
 			light_cone.tree_exited.connect(ending_turn)
 		light_cone.fire_light(0.2 if battle_scene.animations_sped_up else 1.0)
+	force_end_turn_timer.start()
 
 func fire_laser(angle: float, add_signal: bool = false):
 	var laser = preload("res://Scenes/Battle/Weapons/BattleLaser.tscn").instantiate()
@@ -462,11 +461,13 @@ func show_push_strength_panel(entity: BattleEntity):
 	
 func push_entity():
 	var push_success = true
+	var position_normalized = (position - entity_to_push.position).normalized()
+	var relative_velocity = velocity - entity_to_push.velocity
 	if entity_to_push.type == Battle.EntityType.ENEMY:
 		push_success = push_entity_attempt(agility + agility_buff, entity_to_push.agility + entity_to_push.agility_buff, (position - entity_to_push.position).normalized(), velocity - entity_to_push.velocity)
 	entity_to_push.update_velocity_arrow()
 	if push_success:
-		create_tween().tween_property(entity_to_push, "velocity", entity_to_push.velocity + calculate_velocity_change(entity_to_push, push_movement_used), 0.4).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+		create_tween().tween_property(entity_to_push, "velocity", entity_to_push.velocity + calculate_velocity_change(entity_to_push, push_movement_used, position_normalized, relative_velocity), 0.4).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
 	else:
 		battle_scene.add_damage_text(true, entity_to_push.position)
 	movement_remaining -= push_movement_used
@@ -487,7 +488,9 @@ func push_entity():
 func update_push_movement_used():
 	if is_instance_valid(entity_to_push):
 		battle_GUI.get_node("PushStrengthPanel/MovementUsed").text = "%.1f m" % push_movement_used
-		entity_to_push.update_velocity_arrow(calculate_velocity_change(entity_to_push, push_movement_used))
+		var position_normalized = (position - entity_to_push.position).normalized()
+		var relative_velocity = velocity - entity_to_push.velocity
+		entity_to_push.update_velocity_arrow(calculate_velocity_change(entity_to_push, push_movement_used, position_normalized, relative_velocity))
 
 
 var buffed_from_class_passive_ability = false

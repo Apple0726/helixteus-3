@@ -62,8 +62,8 @@ func initialize(save_info_dict, save_name:String, on_load: Callable, on_delete: 
 		else:
 			created_text = tr("SAVE_CREATED").format({"days_hours_ago":tr("X_DAYS_AGO") % int((now - save_created) / 86400)})
 		if now - save_modified < 86400 * 2:
-			created_text = tr("SAVE_MODIFIED").format({"days_hours_ago":tr("X_HOURS_AGO") % int((now - save_modified) / 3600)})
+			saved_text = tr("SAVE_MODIFIED").format({"days_hours_ago":tr("X_HOURS_AGO") % int((now - save_modified) / 3600)})
 		else:
-			created_text = tr("SAVE_MODIFIED").format({"days_hours_ago":tr("X_DAYS_AGO") % int((now - save_modified) / 86400)})
+			saved_text = tr("SAVE_MODIFIED").format({"days_hours_ago":tr("X_DAYS_AGO") % int((now - save_modified) / 86400)})
 		$CreatedSaved.text = "{created}\n{saved}".format({"created":created_text, "saved":saved_text})
 		$TotalMoneyEarned.text = "[center][font size=13]" + tr("TOTAL_MONEY_EARNED") + ": [img height=1em]res://Graphics/Icons/money.png[/img] " + Helper.format_num(save_info_dict.stats_global.total_money_earned, true, 9) + "[/font][/center]"

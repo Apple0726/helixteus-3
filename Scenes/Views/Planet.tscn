@@ -395,7 +395,7 @@ bus = &"SFX"
 
 [node name="OverclockSound" type="AudioStreamPlayer" parent="." unique_id=1597438164]
 stream = ExtResource("8_844bs")
-volume_db = -3.0
+volume_db = -4.0
 max_polyphony = 4
 bus = &"SFX"
 

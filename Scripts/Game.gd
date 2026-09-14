@@ -1,9 +1,9 @@
 extends Node2D
 
 const TEST:bool = false
-const DATE:String = "8 Sep 2026"
-const VERSION:String = "v0.30.4"
-const COMPATIBLE_VERSIONS = ["v0.30", "v0.30.1", "v0.30.2", "v0.30.3", "v0.30.3a"]
+const DATE:String = "14 Sep 2026"
+const VERSION:String = "v0.30.5"
+const COMPATIBLE_VERSIONS = ["v0.30", "v0.30.1", "v0.30.2", "v0.30.3", "v0.30.3a", "v0.30.4"]
 
 var planet_textures:Array
 var galaxy_textures:Array
@@ -2715,7 +2715,7 @@ func generate_planets(id:int):#local id
 					_class = 1
 				if num == total_num:
 					lv = max(1, 1 + log(2.0 * power_left) / log(1.3))
-				var HP_power = 7.0 * (1.8 * randf() + 0.2)
+				var HP_power = 7.0 * (1.2 * randf() + 0.2)
 				var stat_power = 48.0 - 1.5 * HP_power + lv / 2
 				var HP = round(HP_power * (lv + 1.0))
 				var _money = round(randf_range(1, 2) * pow(1.4, lv - 1) * 50000)

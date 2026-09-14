@@ -160,7 +160,8 @@ func on_galaxy_over (l_id:int):
 
 func on_galaxy_out ():
 	game.hide_tooltip()
-	game.space_HUD.clear_bldg_info()
+	if is_instance_valid(game.space_HUD):
+		game.space_HUD.clear_bldg_info()
 
 func on_galaxy_click (id:int, l_id:int):
 	var g_i:Dictionary = game.galaxy_data[l_id]

@@ -36,6 +36,8 @@ var velocity:Vector2 = Vector2.ZERO:
 		return velocity
 	set(value):
 		velocity = value
+		if velocity.length() < 3.0:
+			velocity = Vector2.ZERO
 		update_velocity_arrow()
 var movement_remaining:float # in meters
 var total_movement_base:float # in meters. Includes permanent/static modifications from passive abilities, but does not include temporary modifications from (de)buffs
@@ -84,6 +86,8 @@ var override_tooltip_icons = [Data.attack_icon, Data.defense_icon, Data.accuracy
 
 var collision_sound_player:AudioStreamPlayer2D
 
+var force_end_turn_timer:Timer
+
 func _ready() -> void:
 	battle_scene = get_parent()
 	battle_GUI = get_parent().battle_GUI
@@ -103,6 +107,10 @@ func _ready() -> void:
 	collision_sound_player.stream = preload("res://Audio/SFX/collision.ogg")
 	collision_sound_player.bus = "SFX"
 	collision_sound_player.max_polyphony = 8
+	force_end_turn_timer = Timer.new()
+	force_end_turn_timer.wait_time = 15.0
+	add_child(force_end_turn_timer)
+	force_end_turn_timer.timeout.connect(end_turn)
 
 func _draw() -> void:
 	if is_instance_valid(battle_scene) and type != Battle.EntityType.BOUNDARY:
@@ -141,7 +149,7 @@ func initialize_stats(data:Dictionary):
 	accuracy = data.accuracy
 	agility = data.agility
 	if Battle.PassiveAbility.MORE_MASS in passive_abilities:
-		mass_mult *= 2.0
+		mass_mult *= 1.5
 	if Battle.PassiveAbility.FASTER_DEBUFF_STATUS_DISAPPEAR in passive_abilities:
 		debuff_decay_rate = 2.0
 		status_effects_decay_rate = 2.0
@@ -268,6 +276,7 @@ func _physics_process(delta: float) -> void:
 
 
 func end_turn():
+	force_end_turn_timer.stop()
 	var type_str = ""
 	if type == Battle.EntityType.SHIP:
 		type_str = "ship"
@@ -454,19 +463,26 @@ func update_velocity_arrow(offset: Vector2 = Vector2.ZERO):
 	$VelocityArrow/Polygon2D.modulate = color
 	$VelocityArrow.rotation = (velocity + offset).angle()
 
-func push_entity_attempt(agility_pusher: int, agility_pushee: int, position_difference_normalized: Vector2, velocity_difference: Vector2):
-	return 1.0 / (1.0 + exp((agility_pusher - agility_pushee - abs(0.05 * position_difference_normalized.rotated(PI / 2.0).dot(velocity_difference)) + 9.2) / 5.8)) < randf()
+func push_entity_attempt(agility_pusher: int, agility_pushee: int, position_difference_normalized: Vector2, relative_velocity: Vector2):
+	return 1.0 / (1.0 + exp((agility_pusher - agility_pushee - abs(0.05 * position_difference_normalized.rotated(PI / 2.0).dot(relative_velocity)) + 9.2) / 5.8)) < randf()
 
-func calculate_velocity_change(entity_to_push:BattleEntity, movement:float):
-	return (entity_to_push.position - position).normalized() * movement * get_mass() / entity_to_push.get_mass()
-
+func calculate_velocity_change(entity_to_push:BattleEntity, movement:float, position_difference_normalized: Vector2, relative_velocity: Vector2):
+	var base_velocity_change:Vector2 = (entity_to_push.position - position).normalized() * movement * get_mass() / entity_to_push.get_mass()
+	var dot_product = position_difference_normalized.dot(relative_velocity.normalized()) # Between -1.0 and 1.0
+	if dot_product <= 0.0:
+		return base_velocity_change
+	# Nerf push effect if push strength is small compared to relative velocity
+	var velocity_push_strength_ratio = base_velocity_change.length() / relative_velocity.length()
+	# velocity_push_strength_ratio has more of an effect if pushing in the same direction as the entity's velocity
+	var push_effect_coefficient = pow(remap(velocity_push_strength_ratio, 0.5, 5.0, 0.2, 1.0), pow(dot_product, 3.0))
+	return base_velocity_change * push_effect_coefficient
 
 func collide_with_entity(collider: BattleEntity, collidee: BattleEntity):
 	var damage: float = 0.0
 	var collider_mass = collider.get_mass()
 	var collider_weapon_data = {
 		"type":Battle.DamageType.PHYSICAL,
-		"damage": collider_mass * collider.velocity.length_squared() * 3.0e-6,
+		"damage": collider_mass * collider.velocity.length_squared() * 4.0e-6,
 		"shooter_type":collider.type,
 		"orientation":collider.velocity.normalized(),
 		"velocity":0.3 * collider.velocity,
@@ -478,7 +494,7 @@ func collide_with_entity(collider: BattleEntity, collidee: BattleEntity):
 		if not collidee.moving_from_velocity:
 			var collidee_weapon_data = {
 				"type":Battle.DamageType.PHYSICAL,
-				"damage": collidee_mass * collider.velocity.length_squared() * 3.0e-6,
+				"damage": collidee_mass * collider.velocity.length_squared() * 4.0e-6,
 				"shooter_type":collidee.type,
 				"weapon_accuracy":INF,
 				"orientation":collidee.velocity.normalized(),

@@ -144,10 +144,10 @@ func refresh_planets():
 			broken_CBS_range = v.length() * 1.1
 
 func _draw():
-	draw_arc(Vector2.ZERO, CBS_range, 0, 2*PI, 100, Color(0.2, 0.2, 1.0, 0.4), -1)
-	draw_circle(Vector2.ZERO, CBS_range, Color(0.2, 0.2, 1.0, 0.1))
-	draw_arc(Vector2.ZERO, broken_CBS_range, 0, 2*PI, 100, Color(0.5, 0.5, 0.5, 0.4), -1)
-	draw_circle(Vector2.ZERO, broken_CBS_range, Color(0.5, 0.5, 0.5, 0.1))
+	draw_arc(Vector2.ZERO, CBS_range, 0, 2*PI, 100, Color(0.2, 0.2, 1.0, 0.5), -1)
+	draw_circle(Vector2.ZERO, CBS_range, Color(0.2, 0.2, 1.0, 0.15))
+	draw_arc(Vector2.ZERO, broken_CBS_range, 0, 2*PI, 100, Color(0.5, 0.5, 0.5, 0.5), -1)
+	draw_circle(Vector2.ZERO, broken_CBS_range, Color(0.5, 0.5, 0.5, 0.15))
 
 func add_elements(p_i:Dictionary, v:Vector2, sc:float):
 	var grid:GridContainer = GridContainer.new()
