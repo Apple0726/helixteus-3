@@ -96,16 +96,16 @@ func _ready():
 	var ash_tiles:Array = []
 	var soil_tiles:Array = []
 	var aurora_tiles:Array = []
-	var planet_tiles:Array = []
+	var ground_tiles:Array = []
 	for i in wid:
 		for j in wid:
 			var id2 = i % wid + j * wid
 			var tile = game.tile_data[id2]
 			if tile == null:
-				planet_tiles.append(Vector2i(i, j))
+				ground_tiles.append(Vector2i(i, j))
 				continue
 			if not tile.has("lake"):
-				planet_tiles.append(Vector2i(i, j))
+				ground_tiles.append(Vector2i(i, j))
 			if tile.has("crater"):
 				var metal = Sprite2D.new()
 				metal.texture = game.metal_textures[tile.crater.metal]
@@ -220,7 +220,7 @@ func _ready():
 	$PlanetTiles.material.set_shader_parameter("planet_texture", load("res://Graphics/Tiles/Mosaics/%s.jpg" % randi_range(1, 8)))
 	$PlanetTiles.material.set_shader_parameter("texture_zoom", randf_range(0.5, 2.0) * 200.0 / $PlanetTiles.tile_set.tile_size.x)
 	$PlanetTiles.material.set_shader_parameter("texture_offset", Vector2(randf_range(0.0, 4000.0), randf_range(0.0, 4000.0)))
-	$PlanetTiles.set_cells_terrain_connect(planet_tiles, 0, 0)
+	$PlanetTiles.set_cells_terrain_connect(ground_tiles, 0, 0)
 	$Lake.size = Vector2.ONE * 200.0 * wid
 	if p_i.has("lake"):
 		$Lake.show()
@@ -498,9 +498,8 @@ func construct_ancient_building(tile_id:int, ancient_building:int):
 		else:
 			p_i.ancient_bldgs[ancient_building] = [obj]
 		for j in ([tile_id, tile_id+1, tile_id+wid, tile_id+1+wid] if ancient_building == AncientBuilding.NUCLEAR_FUSION_REACTOR else [tile_id]):
-			if game.tile_data[j] == null:
-				game.tile_data[j] = {}
 			game.tile_data[j].ancient_bldg = {"name":ancient_building, "tier":constructing_ancient_building_tier, "id":tile_id}
+			game.tile_data_persistent[j].ancient_bldg = game.tile_data[j].ancient_bldg
 		game.ancient_building_counters[ancient_building][constructing_ancient_building_tier] = game.ancient_building_counters[ancient_building].get(constructing_ancient_building_tier, 0) + 1
 		game.u_i.xp += constr_costs_total.money / 100.0
 		constr_costs_total = Data.ancient_building_costs[ancient_building].duplicate(true)
@@ -523,31 +522,29 @@ func constr_bldg(tile_id:int, curr_time:int, _bldg_to_construct:int, mass_build:
 				game.popup(tr("NOT_ADJACENT_TO_LAKE"), 1.5)
 			return
 	if game.check_enough(constr_costs_total):
+		var tile_persistent = {}
 		var current_time = Time.get_unix_time_from_system()
 		game.deduct_resources(constr_costs_total)
 		game.stats_univ.bldgs_built += 1
 		game.stats_dim.bldgs_built += 1
 		game.stats_global.bldgs_built += 1
-		if game.stats_univ.bldgs_built >= 1 and not game.new_bldgs.has(Building.POWER_PLANT):
-			game.new_bldgs[Building.POWER_PLANT] = true
+		if game.stats_univ.bldgs_built >= 1 and not game.bldg_unlocked.has(Building.POWER_PLANT):
+			game.bldg_unlocked[Building.POWER_PLANT] = true
 			flash_construction_button()
-		if game.stats_univ.bldgs_built >= 5 and not game.new_bldgs.has(Building.MINERAL_SILO):
-			game.new_bldgs[Building.BATTERY] = true
-			game.new_bldgs[Building.MINERAL_SILO] = true
+		if game.stats_univ.bldgs_built >= 5 and not game.bldg_unlocked.has(Building.MINERAL_SILO):
+			game.bldg_unlocked[Building.BATTERY] = true
+			game.bldg_unlocked[Building.MINERAL_SILO] = true
 			flash_construction_button()
-		if game.stats_univ.bldgs_built >= 10 and not game.new_bldgs.has(Building.RESEARCH_LAB):
-			game.new_bldgs[Building.RESEARCH_LAB] = true
+		if game.stats_univ.bldgs_built >= 10 and not game.bldg_unlocked.has(Building.RESEARCH_LAB):
+			game.bldg_unlocked[Building.RESEARCH_LAB] = true
 			flash_construction_button()
-		if game.stats_univ.bldgs_built >= 18 and not game.new_bldgs.has(Building.CENTRAL_BUSINESS_DISTRICT):
-			game.new_bldgs[Building.CENTRAL_BUSINESS_DISTRICT] = true
+		if game.stats_univ.bldgs_built >= 18 and not game.bldg_unlocked.has(Building.CENTRAL_BUSINESS_DISTRICT):
+			game.bldg_unlocked[Building.CENTRAL_BUSINESS_DISTRICT] = true
 			flash_construction_button()
-		if tile == null:
-			tile = {}
-		if not tile.has("resource_production_bonus"):
-			tile["resource_production_bonus"] = {}
 		tile.bldg = {
 			"name": _bldg_to_construct,
 		}
+		tile_persistent.bldg = tile.bldg
 		if not game.show.has("minerals") and _bldg_to_construct == Building.MINERAL_EXTRACTOR:
 			game.show["minerals"] = true
 			game.show["shop"] = true
@@ -583,15 +580,15 @@ func constr_bldg(tile_id:int, curr_time:int, _bldg_to_construct:int, mass_build:
 		elif _bldg_to_construct == Building.POWER_PLANT:
 			var energy_prod = path_1_value * tile.resource_production_bonus.get("energy", 1.0)
 			game.autocollect.rsrc.energy += energy_prod * time_speed_bonus
-			if tile.has("substation_bonus"):
-				var cap_upgrade:float = energy_prod * tile.substation_bonus * Helper.get_substation_capacity_bonus(game.tile_data[tile.substation_tile].ancient_bldg.tier)
+			if tile.has("substation_data"):
+				var cap_upgrade:float = energy_prod * tile.substation_data.bonus * Helper.get_substation_capacity_bonus(game.tile_data[tile.substation_tile].ancient_bldg.tier)
 				game.tile_data[tile.substation_tile].ancient_bldg.capacity_bonus += cap_upgrade
 				game.capacity_bonus_from_substation += cap_upgrade
 		elif _bldg_to_construct == Building.SOLAR_PANEL:
 			var energy_prod = Helper.get_SP_production(p_i.temperature, path_1_value * tile.resource_production_bonus.get("energy", 1.0))
 			game.autocollect.rsrc.energy += energy_prod * time_speed_bonus
-			if tile.has("substation_bonus"):
-				var cap_upgrade:float = energy_prod * tile.substation_bonus * Helper.get_substation_capacity_bonus(game.tile_data[tile.substation_tile].ancient_bldg.tier)
+			if tile.has("substation_data"):
+				var cap_upgrade:float = energy_prod * tile.substation_data.bonus * Helper.get_substation_capacity_bonus(game.tile_data[tile.substation_tile].ancient_bldg.tier)
 				game.tile_data[tile.substation_tile].ancient_bldg.capacity_bonus += cap_upgrade
 				game.capacity_bonus_from_substation += cap_upgrade
 		elif _bldg_to_construct == Building.BATTERY:
@@ -615,7 +612,7 @@ func constr_bldg(tile_id:int, curr_time:int, _bldg_to_construct:int, mass_build:
 			Helper.add_energy_from_NFR(p_i, base)
 			Helper.add_cellulose_from_CS(p_i, base)
 		tile.bldg["c_p_g"] = game.c_p_g
-		game.tile_data[tile_id] = tile
+		game.tile_data_persistent[tile_id] = tile_persistent
 		add_bldg(tile_id, _bldg_to_construct, true)
 		shadow.visible = false
 	elif not mass_build:
@@ -700,7 +697,7 @@ func click_tile(tile, tile_id:int):
 			game.SPR_panel.refresh()
 			if tile.bldg.has("reaction"):
 				game.SPR_panel._on_Atom_pressed(tile.bldg.reaction)
-	hide_tooltip()
+	game.hide_tooltip()
 
 func destroy_bldg(id2:int, mass:bool = false):
 	var tile = game.tile_data[id2]
@@ -738,8 +735,8 @@ func destroy_bldg(id2:int, mass:bool = false):
 		game.autocollect.rsrc.energy -= tile.bldg.path_1_value * overclock_mult * tile.resource_production_bonus.get("energy", 1.0)
 		if game.autocollect.rsrc.energy < 0:
 			game.autocollect.rsrc["energy"] = 0
-		if tile.has("substation_tile"):
-			var cap_to_remove = tile.bldg.path_1_value * tile.substation_bonus * Helper.get_substation_capacity_bonus(game.tile_data[tile.substation_tile].ancient_bldg.tier)
+		if tile.has("substation_data"):
+			var cap_to_remove = tile.bldg.path_1_value * tile.substation_data.bonus * Helper.get_substation_capacity_bonus(game.tile_data[tile.substation_tile].ancient_bldg.tier)
 			game.tile_data[tile.substation_tile].ancient_bldg.capacity_bonus -= cap_to_remove
 			game.capacity_bonus_from_substation -= cap_to_remove
 			if game.capacity_bonus_from_substation < 0:
@@ -815,9 +812,11 @@ func destroy_bldg(id2:int, mass:bool = false):
 		if tile.auto_GH.has("soil_drain"):
 			game.autocollect.mats.soil += tile.auto_GH.soil_drain
 		tile.erase("auto_GH")
+		game.tile_data_persistent[id2].erase("auto_GH")
 	tile.erase("bldg")
-	if tile.is_empty():
-		game.tile_data[id2] = null
+	game.tile_data_persistent[id2].erase("bldg")
+	if game.tile_data_persistent[id2].is_empty():
+		game.tile_data_persistent[id2] = null
 	if not mass:
 		game.show_collect_info(items_collected)
 
@@ -971,7 +970,7 @@ func upgrade_building_callable(called_from_right_click = true):
 	game.toggle_panel("upgrade_panel")
 
 func destroy_building_callable():
-	hide_tooltip()
+	game.hide_tooltip()
 	if tiles_selected.is_empty():
 		if game.tile_data[tile_over].bldg.name == Building.GREENHOUSE:
 			$Soil.erase_cell(Vector2i(tile_over % wid, tile_over / wid))
@@ -1170,7 +1169,7 @@ func _unhandled_input(event):
 			tile_over = x_over % wid + y_over * wid
 			$WhiteRect.visible = not black_bg and get_tree().get_nodes_in_group("selected_white_rects").is_empty()
 			if tile_over != prev_tile_over and not_on_button and not game.item_cursor.visible and not black_bg and not game.active_panel:
-				hide_tooltip()
+				game.hide_tooltip()
 				if not tiles_selected.is_empty() and not tile_over in tiles_selected:
 					remove_selected_tiles()
 				if tile_over >= len(game.tile_data):
@@ -1199,7 +1198,7 @@ func _unhandled_input(event):
 			if tile_over != -1 and not_on_button:
 				tile_over = -1
 				prev_tile_over = -1
-			hide_tooltip()
+			game.hide_tooltip()
 		if is_instance_valid(shadow):
 			if constructing_ancient_building_tier != -1 and bldg_to_construct == AncientBuilding.NUCLEAR_FUSION_REACTOR:
 				shadow.position = floor(mouse_pos / 200) * 200 + Vector2.ONE * 200 + Vector2.UP * 30.0
@@ -1235,11 +1234,6 @@ func _unhandled_input(event):
 		shadow.visible = false
 	if mass_build:
 		return
-	#if (not Input.is_action_pressed("shift") and Input.is_action_just_released("left_click") or Input.is_action_pressed("shift") and Input.is_action_just_pressed("left_click") or event is InputEventScreenTouch) and not view.dragged and not_on_button and Geometry2D.is_point_in_polygon(mouse_pos, planet_bounds):
-		#var x_pos = int(mouse_pos.x / 200)
-		#var y_pos = int(mouse_pos.y / 200)
-		#var tile_id = get_tile_id_from_pos(mouse_pos)
-		#var tile = game.tile_data[tile_id]
 	if (Input.is_action_just_released("left_click") or event is InputEventScreenTouch) and not view.dragged and not_on_button and Geometry2D.is_point_in_polygon(mouse_pos, planet_bounds):
 		var curr_time = Time.get_unix_time_from_system()
 		var x_pos = int(mouse_pos.x / 200)
@@ -1254,8 +1248,6 @@ func _unhandled_input(event):
 					and game.tile_data[tile_id]
 					and game.tile_data[tile_id].has("bldg")
 					and game.tile_data[tile_id].bldg.name == Building.GREENHOUSE):
-						#var soil_tiles = $Soil.get_used_cells()
-						#soil_tiles.append(Vector2i(tile_id % wid, int(tile_id / wid)))
 						$Soil.set_cells_terrain_connect([Vector2i(tile_id % wid, int(tile_id / wid))], 0, 0)
 			else:
 				if bldg_to_construct == AncientBuilding.NUCLEAR_FUSION_REACTOR:
@@ -1428,9 +1420,7 @@ func on_wormhole_click(tile:Dictionary, tile_id:int):
 				Helper.save_obj("Planets", game.c_p_g, game.tile_data)#update current tile info (original wormhole)
 				game.c_p = wh_planet.l_id
 				game.c_p_g = wh_planet.id
-				if not wh_planet.has("discovered"):
-					game.generate_tiles(wh_planet.l_id)
-				game.tile_data = game.open_obj("Planets", wh_planet.id)
+				game.generate_tiles(wh_planet.l_id) # TODO
 				var wh_tile:int = randi() % len(game.tile_data)
 				while game.tile_data[wh_tile] and game.tile_data[wh_tile].has("cave"):
 					wh_tile = randi() % len(game.tile_data)
@@ -1477,11 +1467,6 @@ func on_wormhole_click(tile:Dictionary, tile_id:int):
 				add_time_bar(tile_id, "wormhole")
 			else:
 				game.popup(tr("NOT_ENOUGH_SP"), 1.5)
-
-func hide_tooltip():
-	game.hide_tooltip()
-	if game.help_str != "mass_build":
-		game.help_str = ""
 
 func is_obstacle(tile, bldg_is_obstacle:bool = true):
 	if tile == null:
@@ -1613,6 +1598,7 @@ func add_rsrc(v:Vector2, mod:Color, icon, id2:int, current_bar_visible = false):
 func on_timeout():
 	if game.c_v != "planet":
 		return
+	# Update time bars (overclock, wormhole investigation)
 	var curr_time = Time.get_unix_time_from_system()
 	for time_bar_obj in time_bars:
 		var time_bar = time_bar_obj.node
@@ -1623,7 +1609,7 @@ func on_timeout():
 		var length:float
 		var progress:float
 		if type == "overclock":
-			if tile == null or not tile.has("bldg") or not tile.bldg.has("overclock_date"):
+			if not tile.has("bldg") or not tile.bldg.has("overclock_date"):
 				time_bar.queue_free()
 				time_bars.erase(time_bar_obj)
 				continue
@@ -1669,9 +1655,8 @@ func on_timeout():
 		return
 	for i in len(rsrcs):
 		var tile = game.tile_data[i]
-		if tile == null or not tile.has("bldg") and not tile.has("ancient_bldg"):
-			continue
-		Helper.update_rsrc(p_i, tile, rsrcs[i])
+		if tile.has("bldg") or tile.has("ancient_bldg"):
+			Helper.update_rsrc(p_i, tile, rsrcs[i])
 	game.HUD.update_money_energy_SP()
 	game.HUD.update_minerals()
 
@@ -1765,8 +1750,6 @@ func construct(type:int, costs:Dictionary):
 			if not is_inside_tree():
 				return
 			var tile = game.tile_data[id2]
-			if not tile:
-				continue
 			var rsrc_bonus = tile.has("resource_production_bonus") and tile.resource_production_bonus.has(rsrc)
 			if rsrc_bonus or tile.has("mining_outpost_bonus") and rsrc == "stone":
 				if bldg_to_construct == -1:

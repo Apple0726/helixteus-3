@@ -1307,7 +1307,7 @@ func save_cave_data():
 	DirAccess.copy_absolute("user://%s/Univ%s/Caves/%s.hx3~" % [game.c_sv, game.c_u, id], "user://%s/Univ%s/Caves/%s.hx3" % [game.c_sv, game.c_u, id])
 	
 func exit_cave():
-	Helper.save_obj("Planets", game.c_p_g, game.tile_data)
+	Helper.save_obj("Planets", game.c_p_g, game.tile_data_persistent)
 	save_cave_data()
 	for i in len(inventory):
 		if inventory[i].is_empty():

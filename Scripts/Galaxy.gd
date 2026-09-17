@@ -332,8 +332,8 @@ func _process(delta: float) -> void:
 				g_i.erase("sys_conquered")
 				g_i.erase("combined_strength")
 				g_i.erase("conquer_order")
-				if not game.new_bldgs.has(Building.SOLAR_PANEL):
-					game.new_bldgs[Building.SOLAR_PANEL] = true
+				if not game.bldg_unlocked.has(Building.SOLAR_PANEL):
+					game.bldg_unlocked[Building.SOLAR_PANEL] = true
 				for j in len(game.fighter_data):
 					if game.fighter_data[j] and game.fighter_data[j].get("c_g_g", -1) == game.c_g_g:
 						game.fighter_data[j].erase("exploring")

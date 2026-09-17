@@ -532,12 +532,12 @@ func get_rsrc_from_rock(contents:Dictionary, tile:Dictionary, p_i:Dictionary, ti
 				game.popup_window(tr("ARTIFACT_FOUND_DESC"), tr("ARTIFACT_FOUND"))
 		if not game.show.has(content):
 			game.show[content] = true
-		if content == "sand" and not game.new_bldgs.has(Building.GLASS_FACTORY):
-			game.new_bldgs[Building.GLASS_FACTORY] = true
-		if content == "coal" and not game.new_bldgs.has(Building.STEAM_ENGINE):
-			game.new_bldgs[Building.STEAM_ENGINE] = true
-		if content == "stone" and not game.new_bldgs.has(Building.STONE_CRUSHER):
-			game.new_bldgs[Building.STONE_CRUSHER] = true
+		if content == "sand" and not game.bldg_unlocked.has(Building.GLASS_FACTORY):
+			game.bldg_unlocked[Building.GLASS_FACTORY] = true
+		if content == "coal" and not game.bldg_unlocked.has(Building.STEAM_ENGINE):
+			game.bldg_unlocked[Building.STEAM_ENGINE] = true
+		if content == "stone" and not game.bldg_unlocked.has(Building.STONE_CRUSHER):
+			game.bldg_unlocked[Building.STONE_CRUSHER] = true
 	if tile.has("current_deposit") and tile.current_deposit.progress > tile.current_deposit.size - 1:
 		tile.erase("current_deposit")
 	if tile.has("crater") and tile.crater.has("init_depth") and tile.depth > 3 * tile.crater.init_depth:
@@ -1125,7 +1125,7 @@ func get_final_value(p_i:Dictionary, dict:Dictionary, path:int, n:int = 1):
 		n = 1
 	if path == 1:
 		if bldg == Building.SOLAR_PANEL:
-			return clever_round(get_SP_production(p_i.temperature, dict.bldg.path_1_value * mult * dict.resource_production_bonus.get("energy", 1.0) * dict.get("substation_bonus", 1.0)) * n)
+			return clever_round(get_SP_production(p_i.temperature, dict.bldg.path_1_value * mult * dict.resource_production_bonus.get("energy", 1.0) * dict.get("substation_data", {}).get("bonus", 1.0)) * n)
 		elif bldg == Building.ATMOSPHERE_EXTRACTOR:
 			return clever_round(get_AE_production(p_i.pressure, dict.bldg.path_1_value) * n * mult)
 		elif bldg in [Building.MINERAL_SILO]:
@@ -1491,20 +1491,14 @@ func set_ancient_bldg_bonuses(p_i:Dictionary, ancient_bldg:Dictionary, tile_id:i
 					continue
 				var id:int = x + y * wid
 				var tile = game.tile_data[id]
-				if tile:
-					if tile.has("resource_production_bonus"):
-						tile.resource_production_bonus[rsrc] = tile.resource_production_bonus.get(rsrc, 1.0) + (mult - 1.0)
-					else:
-						game.tile_data[id]["resource_production_bonus"] = {rsrc:mult}
-					if tile.has("bldg"):
-						var overclock_mult:float = tile.bldg.get("overclock_mult", 1.0)
-						var diff = tile.bldg.path_1_value * overclock_mult * (mult - 1.0)
-						if ancient_bldg.name == AncientBuilding.MINERAL_REPLICATOR and tile.bldg.name == Building.MINERAL_EXTRACTOR:
-							game.autocollect.rsrc.minerals += diff
-						elif ancient_bldg.name == AncientBuilding.OBSERVATORY and tile.bldg.name == Building.RESEARCH_LAB:
-							game.autocollect.rsrc.SP += diff
-				else:
-					game.tile_data[id] = {"resource_production_bonus":{rsrc:mult}}
+				tile.resource_production_bonus[rsrc] = tile.resource_production_bonus.get(rsrc, 1.0) + (mult - 1.0)
+				if tile.has("bldg"):
+					var overclock_mult:float = tile.bldg.get("overclock_mult", 1.0)
+					var diff = tile.bldg.path_1_value * overclock_mult * (mult - 1.0)
+					if ancient_bldg.name == AncientBuilding.MINERAL_REPLICATOR and tile.bldg.name == Building.MINERAL_EXTRACTOR:
+						game.autocollect.rsrc.minerals += diff
+					elif ancient_bldg.name == AncientBuilding.OBSERVATORY and tile.bldg.name == Building.RESEARCH_LAB:
+						game.autocollect.rsrc.SP += diff
 	elif ancient_bldg.name == AncientBuilding.SUBSTATION:
 		for i in n:
 			var x:int = x_pos + i - n / 2
@@ -1517,30 +1511,33 @@ func set_ancient_bldg_bonuses(p_i:Dictionary, ancient_bldg:Dictionary, tile_id:i
 				var id:int = x + y * wid
 				var tile = game.tile_data[id]
 				var mult = Helper.get_substation_prod_mult(tier)
-				if tile:
-					if tile.has("resource_production_bonus"):
-						tile.resource_production_bonus.energy = tile.resource_production_bonus.get("energy", 1.0) + (mult - 1.0)
-					else:
-						game.tile_data[id]["resource_production_bonus"] = {"energy":mult}
-					tile["substation_bonus"] = tile.get("substation_bonus", 1.0) + (mult - 1.0)
-					if tile.has("bldg"):
-						var overclock_mult:float = tile.bldg.get("overclock_mult", 1.0)
-						var base = tile.bldg.path_1_value * overclock_mult * mult
-						var diff = tile.bldg.path_1_value * overclock_mult * (mult - 1.0)
-						var cap_bonus_mult = Helper.get_substation_capacity_bonus(tier)# 1200 seconds for tier 1, more for tier 2 etc.
-						if tile.bldg.name == Building.POWER_PLANT:
-							game.autocollect.rsrc.energy += diff
-							ancient_bldg["capacity_bonus"] = ancient_bldg.get("capacity_bonus", 0) + base * cap_bonus_mult
-							game.capacity_bonus_from_substation += ancient_bldg.capacity_bonus
-						elif tile.bldg.name == Building.SOLAR_PANEL:
-							var energy_prod = Helper.get_SP_production(p_i.temperature, diff * tile.resource_production_bonus.get("energy", 1.0))
-							var energy_prod_base = Helper.get_SP_production(p_i.temperature, base * tile.resource_production_bonus.get("energy", 1.0))
-							game.autocollect.rsrc.energy += energy_prod
-							ancient_bldg["capacity_bonus"] = ancient_bldg.get("capacity_bonus", 0) + energy_prod_base * cap_bonus_mult
-							game.capacity_bonus_from_substation += ancient_bldg.capacity_bonus
+				tile.resource_production_bonus.energy = tile.resource_production_bonus.get("energy", 0.0) + mult
+				if tile.has("substation_data"):
+					tile.substation_data.bonus += mult - 1.0
 				else:
-					game.tile_data[id] = {"resource_production_bonus":{"energy":mult}, "substation_bonus":mult}
-				game.tile_data[id]["substation_tile"] = tile_id
+					tile.substation_data = {
+						"bonus":mult,
+						"origin_tile_id":tile_id,
+					}
+					if game.tile_data_persistent[id] == null:
+						game.tile_data_persistent[id] = {"substation_data": tile.substation_data}
+					else:
+						game.tile_data_persistent[id].substation_data = tile.substation_data
+				if tile.has("bldg"):
+					var overclock_mult:float = tile.bldg.get("overclock_mult", 1.0)
+					var base = tile.bldg.path_1_value * overclock_mult * mult
+					var diff = tile.bldg.path_1_value * overclock_mult * (mult - 1.0)
+					var cap_bonus_mult = Helper.get_substation_capacity_bonus(tier)# 1200 seconds for tier 1, more for tier 2 etc.
+					if tile.bldg.name == Building.POWER_PLANT:
+						game.autocollect.rsrc.energy += diff
+						ancient_bldg["capacity_bonus"] = ancient_bldg.get("capacity_bonus", 0) + base * cap_bonus_mult
+						game.capacity_bonus_from_substation += ancient_bldg.capacity_bonus
+					elif tile.bldg.name == Building.SOLAR_PANEL:
+						var energy_prod = Helper.get_SP_production(p_i.temperature, diff * tile.resource_production_bonus.get("energy", 1.0))
+						var energy_prod_base = Helper.get_SP_production(p_i.temperature, base * tile.resource_production_bonus.get("energy", 1.0))
+						game.autocollect.rsrc.energy += energy_prod
+						ancient_bldg["capacity_bonus"] = ancient_bldg.get("capacity_bonus", 0) + energy_prod_base * cap_bonus_mult
+						game.capacity_bonus_from_substation += ancient_bldg.capacity_bonus
 				ancient_bldg["capacity_bonus"] = ancient_bldg.get("capacity_bonus", 0)
 	elif ancient_bldg.name == AncientBuilding.MINING_OUTPOST:
 		for i in n:
@@ -1554,10 +1551,12 @@ func set_ancient_bldg_bonuses(p_i:Dictionary, ancient_bldg:Dictionary, tile_id:i
 				var id:int = x + y * wid
 				var tile = game.tile_data[id]
 				var mult = Helper.get_MR_Obs_Outpost_prod_mult(tier)
-				if tile:
-					tile["mining_outpost_bonus"] = tile.get("mining_outpost_bonus", 1.0) + (mult - 1.0)
+				if tile.has("mining_outpost_bonus"):
+					tile["mining_outpost_bonus"] += mult - 1.0
+					game.tile_data_persistent[id]["mining_outpost_bonus"] += mult - 1.0
 				else:
-					game.tile_data[id] = {"mining_outpost_bonus": mult}
+					tile["mining_outpost_bonus"] = mult
+					game.tile_data_persistent[id] = {"mining_outpost_bonus": mult}
 	elif ancient_bldg.name in [AncientBuilding.NUCLEAR_FUSION_REACTOR, AncientBuilding.CELLULOSE_SYNTHESIZER]:
 		for tile in game.tile_data:
 			if tile and tile.has("bldg") and tile.bldg.name == Building.ATMOSPHERE_EXTRACTOR:
@@ -1795,7 +1794,7 @@ func get_file_size_string(bytes:int):
 	else: # God forbid a save file grow this big
 		prefix = "T"
 		base /= pow(1024.0, 4)
-	return tr("FILE_SIZE_BYTES").format({
+	return "{bytes} {prefix}{b_byte}".format({
 		"bytes":clever_round(base),
 		"prefix":prefix,
 		"b_byte":tr("B_BYTE")})

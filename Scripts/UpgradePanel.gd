@@ -351,8 +351,8 @@ func _on_Upgrade_pressed():
 				elif tile.bldg.name == Building.POWER_PLANT:
 					var energy_prod = (new_base_value - tile.bldg.path_1_value) * tile.resource_production_bonus.get("energy", 1.0)
 					game.autocollect.rsrc.energy += energy_prod * overclock_mult * time_speed_bonus
-					if tile.has("substation_tile"):
-						var cap_upgrade = energy_prod * tile.substation_bonus * Helper.get_substation_capacity_bonus(game.tile_data[tile.substation_tile].ancient_bldg.tier)
+					if tile.has("substation_data"):
+						var cap_upgrade = energy_prod * tile.substation_data.bonus * Helper.get_substation_capacity_bonus(game.tile_data[tile.substation_tile].ancient_bldg.tier)
 						game.tile_data[tile.substation_tile].ancient_bldg.capacity_bonus += cap_upgrade
 						game.capacity_bonus_from_substation += cap_upgrade
 				elif tile.bldg.name == Building.RESEARCH_LAB:
@@ -360,8 +360,8 @@ func _on_Upgrade_pressed():
 				elif tile.bldg.name == Building.SOLAR_PANEL:
 					var energy_prod = Helper.get_SP_production(p_i.temperature, (new_base_value - tile.bldg.path_1_value) * tile.resource_production_bonus.get("energy", 1.0))
 					game.autocollect.rsrc.energy += energy_prod * overclock_mult * time_speed_bonus
-					if tile.has("substation_tile"):
-						var cap_upgrade = energy_prod * tile.substation_bonus * Helper.get_substation_capacity_bonus(game.tile_data[tile.substation_tile].ancient_bldg.tier)
+					if tile.has("substation_data"):
+						var cap_upgrade = energy_prod * tile.substation_data.bonus * Helper.get_substation_capacity_bonus(game.tile_data[tile.substation_tile].ancient_bldg.tier)
 						game.tile_data[tile.substation_tile].ancient_bldg.capacity_bonus += cap_upgrade
 						game.capacity_bonus_from_substation += cap_upgrade
 				elif tile.bldg.name == Building.ATMOSPHERE_EXTRACTOR:

@@ -249,8 +249,8 @@ func battle_victory_callback():
 		game.stats_univ.systems_conquered += 1
 		game.stats_dim.systems_conquered += 1
 		game.stats_global.systems_conquered += 1
-	if not game.new_bldgs.has(Building.SOLAR_PANEL) and game.stats_univ.planets_conquered > 1:
-		game.new_bldgs[Building.SOLAR_PANEL] = true
+	if not game.bldg_unlocked.has(Building.SOLAR_PANEL) and game.stats_univ.planets_conquered > 1:
+		game.bldg_unlocked[Building.SOLAR_PANEL] = true
 	Helper.save_obj("Systems", game.c_s_g, game.planet_data)
 	if all_conquered:
 		Helper.save_obj("Galaxies", game.c_g_g, game.system_data)

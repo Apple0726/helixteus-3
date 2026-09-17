@@ -60,7 +60,7 @@ func refresh():
 				btn.connect("pressed", Callable(self, "on_ancient_bldg_click").bind(bldg))
 	else:
 		for bldg in self["%s_bldgs" % tab]:
-			if game.new_bldgs.has(bldg):
+			if game.bldg_unlocked.has(bldg):
 				var btn = Button.new()
 				btn.icon_alignment = HORIZONTAL_ALIGNMENT_CENTER
 				btn.expand_icon = true

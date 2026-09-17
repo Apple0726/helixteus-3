@@ -116,7 +116,7 @@ func update_XP():
 		if game.subject_levels.dimensional_power == 0 and game.u_i.lv == 32:
 			game.popup_window(tr("LEVEL_32_REACHED"), "%s 32" % tr("LEVEL"))
 		if game.u_i.lv == 60:
-			game.new_bldgs[Building.PROBE_CONSTRUCTION_CENTER] = true
+			game.bldg_unlocked[Building.PROBE_CONSTRUCTION_CENTER] = true
 			game.popup_window(tr("LEVEL_60_REACHED"), "%s 60" % tr("LEVEL"))
 	var d_u_info = ""
 	if game.dim_num > 1 or len(game.universe_data) > 1:
