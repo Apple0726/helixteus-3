@@ -457,37 +457,14 @@ func _on_Ships_pressed():
 func _on_Ships_mouse_entered():
 	game.show_tooltip("%s (%s)" % [tr("SHIPS"), OS.get_keycode_string(DisplayServer.keyboard_get_keycode_from_physical(KEY_Y))])
 
-
 func _on_AutosaveLight_mouse_entered():
 	game.show_tooltip(tr("AUTOSAVE_LIGHT_DESC"))
-
-func _on_ShipLocator_pressed():
-	if game.c_v == "galaxy":
-		game.put_bottom_info(tr("LOCATE_SHIP_HELP"), "locating_ship", "hide_ship_locator")
-		game.show_ship_locator()
-
-
-func _on_ShipLocator_mouse_entered():
-	if game.c_v == "galaxy":
-		game.show_tooltip(tr("LOCATE_SHIP"))
-	else:
-		game.show_tooltip(tr("SHIP_LOCATOR_ERROR"))
 
 func _on_MineralsText_mouse_entered():
 	game.show_tooltip(tr("FULL_MINERALS"))
 
 func _on_Ship2Map_mouse_entered():
 	game.show_tooltip(tr("GALAXY_MAP"))
-
-
-func _on_Ship2Map_pressed():
-	if is_instance_valid(ship2map):
-		remove_child(ship2map)
-		ship2map.queue_free()
-	else:
-		ship2map = load("res://Scenes/Ship2Map.tscn").instantiate()
-		add_child(ship2map)
-		ship2map.refresh()
 
 func _on_Vehicles_mouse_entered():
 	game.show_tooltip(tr("VEHICLES") + " (V)")
@@ -497,18 +474,11 @@ func _on_Vehicles_pressed():
 		click_sound.play()
 		game.toggle_panel("vehicle_panel")
 
-#func _on_ObjectivesLabel_mouse_entered():
-	#if game.objective.type == game.ObjectiveType.EMMA:
-		#emma_cave_shortcut = true
-
-
 func _on_Wiki_mouse_entered():
 	game.show_tooltip(tr("INGAME_WIKI"))
 
-
 func _on_Wiki_pressed():
 	game.toggle_panel("wiki")
-
 
 func _on_Dialogue_dialogue_finished(_NPC_id:int, _dialogue_id:int):
 	$Dialogue.NPC_id = -1

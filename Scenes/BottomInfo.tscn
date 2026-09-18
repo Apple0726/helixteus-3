@@ -1,0 +1,98 @@
+[gd_scene format=3 uid="uid://chnwuyht4ndxl"]
+
+[ext_resource type="Theme" uid="uid://cp2u1kgj60ic" path="res://Resources/default_theme.tres" id="1_xniay"]
+[ext_resource type="Texture2D" uid="uid://baowebna7hgr5" path="res://Graphics/GUI/CloseButtonNormal.png" id="2_abc2b"]
+[ext_resource type="Script" uid="uid://xn7hyu66bdli" path="res://Scripts/BottomInfo.gd" id="2_hati0"]
+[ext_resource type="Texture2D" uid="uid://c1vwn7p5uxu1r" path="res://Graphics/GUI/CloseButtonHover.png" id="3_hati0"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_rfoca"]
+content_margin_left = 10.0
+content_margin_right = 10.0
+bg_color = Color(0.329412, 0.329412, 0.329412, 1)
+border_width_left = 1
+border_width_top = 1
+border_color = Color(0.647059, 0.647059, 0.647059, 1)
+border_blend = true
+shadow_size = 2
+shadow_offset = Vector2(1, 1)
+
+[sub_resource type="SystemFont" id="SystemFont_xvdaj"]
+font_names = PackedStringArray("Sans-Serif")
+subpixel_positioning = 0
+
+[sub_resource type="SystemFont" id="SystemFont_rajel"]
+fallbacks = Array[Font]([SubResource("SystemFont_xvdaj")])
+font_names = PackedStringArray("Noto Sans")
+subpixel_positioning = 0
+multichannel_signed_distance_field = true
+
+[sub_resource type="LabelSettings" id="LabelSettings_vvhu1"]
+font = SubResource("SystemFont_rajel")
+
+[sub_resource type="Animation" id="3"]
+resource_name = "Flashing"
+length = 0.3
+loop_mode = 2
+step = 0.05
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Text:theme_override_styles/normal:bg_color")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.3),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(0.329412, 0.329412, 0.329412, 1), Color(0.129412, 0.129412, 0.129412, 1)]
+}
+
+[sub_resource type="Animation" id="Animation_e6054"]
+length = 0.001
+tracks/0/type = "bezier"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:position:y")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"handle_modes": PackedInt32Array(0),
+"points": PackedFloat32Array(720, -0.25, 0, 0.25, 0),
+"times": PackedFloat32Array(0)
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_ci5uo"]
+_data = {
+&"Flashing": SubResource("3"),
+&"RESET": SubResource("Animation_e6054")
+}
+
+[node name="BottomInfo" type="HBoxContainer" unique_id=131183691]
+offset_top = 720.0
+offset_right = 1280.0
+offset_bottom = 756.0
+mouse_filter = 2
+theme = ExtResource("1_xniay")
+theme_override_constants/separation = 0
+alignment = 1
+script = ExtResource("2_hati0")
+
+[node name="Text" type="Label" parent="." unique_id=969061726]
+visible = false
+layout_mode = 2
+size_flags_vertical = 1
+theme_override_styles/normal = SubResource("StyleBoxFlat_rfoca")
+label_settings = SubResource("LabelSettings_vvhu1")
+vertical_alignment = 1
+
+[node name="CloseButton" type="TextureButton" parent="." unique_id=1602477260]
+custom_minimum_size = Vector2(36, 0)
+layout_mode = 2
+texture_normal = ExtResource("2_abc2b")
+texture_hover = ExtResource("3_hati0")
+ignore_texture_size = true
+stretch_mode = 5
+
+[node name="FlashAnim" type="AnimationPlayer" parent="." unique_id=577463333]
+libraries/ = SubResource("AnimationLibrary_ci5uo")
+autoplay = &"Flashing"

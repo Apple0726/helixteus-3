@@ -101,9 +101,6 @@ func _ready():
 		for j in wid:
 			var id2 = i % wid + j * wid
 			var tile = game.tile_data[id2]
-			if tile == null:
-				ground_tiles.append(Vector2i(i, j))
-				continue
 			if not tile.has("lake"):
 				ground_tiles.append(Vector2i(i, j))
 			if tile.has("crater"):
@@ -112,12 +109,7 @@ func _ready():
 				metal.scale *= 0.4 * 256.0 / metal.texture.get_width()
 				metal.position = Vector2(i, j) * 200 + Vector2(100, 70)
 				var crater = Sprite2D.new()
-				if tile.crater.variant == 3:
-					tile.crater.variant = 2
-				if tile.crater.variant == 1:
-					crater.texture = preload("res://Graphics/Tiles/Crater/1.png")
-				else:
-					crater.texture = preload("res://Graphics/Tiles/Crater/2.png")
+				crater.texture = load("res://Graphics/Tiles/Crater/%s.png" % tile.crater.variant)
 				crater.scale *= clamp(remap(tile.crater.init_depth, 10, 1000, 0.4, 1.0), 0.4, 1.0)
 				add_child(crater)
 				add_child(metal)
@@ -304,7 +296,7 @@ func show_tooltip(tile, tile_id:int):
 		tooltip += Helper.get_bldg_tooltip(p_i, tile, 1)
 		icons.append_array(Helper.flatten(Data.desc_icons[tile.bldg.name]) if Data.desc_icons.has(tile.bldg.name) else [])
 		if bldg_to_construct == -1:
-			if not game.get_node("UI").has_node("BuildingShortcuts") and $BuildingShortcutTimer.is_stopped():
+			if $BuildingShortcutTimer.is_stopped():
 				if game.dim_num == 1 and game.c_u == 0:
 					$BuildingShortcutTimer.start(remap(game.u_i.lv, 1, 18, 0.5, 6.0))
 				else:
@@ -942,7 +934,7 @@ func duplicate_ancient_building_callable():
 		return
 	var ancient_bldg = game.tile_data[tile_over].ancient_bldg
 	var tier:int = ancient_bldg.tier
-	game.put_bottom_info(tr("CLICK_TILE_TO_CONSTRUCT"), "building", "cancel_building")
+	game.put_bottom_info(tr("CLICK_TILE_TO_CONSTRUCT"), "building", game.cancel_building)
 	var base_cost = Data.ancient_building_costs[ancient_bldg.name].duplicate(true)
 	var n = game.ancient_building_counters[ancient_bldg.name].get(tier, 0) + 1
 	for cost in base_cost:
@@ -954,7 +946,7 @@ func duplicate_building_callable():
 	if not game.tile_data[tile_over] or not game.tile_data[tile_over].has("bldg"):
 		return
 	var bldg_name = game.tile_data[tile_over].bldg.name
-	game.put_bottom_info(tr("CLICK_TILE_TO_CONSTRUCT"), "building", "cancel_building")
+	game.put_bottom_info(tr("CLICK_TILE_TO_CONSTRUCT"), "building", game.cancel_building)
 	var base_cost = Data.costs[bldg_name].duplicate(true)
 	for cost in base_cost:
 		base_cost[cost] *= game.engineering_bonus.BCM
@@ -1352,7 +1344,8 @@ func _unhandled_input(event):
 	if event is not InputEventMouseMotion and not action_performed and (Input.is_action_just_pressed("cancel_build") or Input.is_action_just_pressed("cancel")):
 		tiles_selected.clear()
 		remove_selected_white_rects()
-		game._on_BottomInfo_close_button_pressed()
+		if game.get_node("UI").has_node("BottomInfo"):
+			game.get_node("UI/BottomInfo").on_close_pressed()
 
 func on_wormhole_click(tile:Dictionary, tile_id:int):
 	if tile.wormhole.active:

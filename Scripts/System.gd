@@ -490,11 +490,12 @@ func show_planet_info(id:int, l_id:int):
 			if game.help.has("planet_details"):
 				additional_tooltip += "\n%s" % [tr("MORE_DETAILS")]
 			for tile in tile_data:
-				if tile:
-					if tile.has("bldg"):
-						Helper.add_to_dict(bldgs, tile.bldg.name, 1)
-					elif tile.has("ancient_bldg"):
-						Helper.add_to_dict(ancient_bldgs, tile.ancient_bldg.name, 1)
+				if tile == null:
+					continue
+				if tile.has("bldg"):
+					Helper.add_to_dict(bldgs, tile.bldg.name, 1)
+				elif tile.has("ancient_bldg"):
+					Helper.add_to_dict(ancient_bldgs, tile.ancient_bldg.name, 1)
 		if not bldgs.is_empty():
 			game.space_HUD.clear_bldg_info()
 			var bldg_info_node = game.space_HUD.get_node("HBoxContainer/BldgInfo")
@@ -1019,7 +1020,7 @@ func _on_System_tree_exited():
 	queue_free()
 
 func finish_construct():
-	pass
+	$UI/Panel.hide()
 
 func add_rsrc(v:Vector2, mod:Color, icon, id:int, is_star:bool, sc:float = 1, current_bar_visible = false):
 	var rsrc:ResourceStored = preload("res://Scenes/ResourceStored.tscn").instantiate()

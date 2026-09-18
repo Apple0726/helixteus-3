@@ -91,7 +91,7 @@ func refresh2(_bldg_type:int, _input:String, _output:String, _input_type:String,
 			refresh_values()
 
 func _process(delta):
-	if tile == null or tile.is_empty():
+	if not tile.has("bldg"):
 		_on_close_button_pressed()
 		set_process(false)
 		return

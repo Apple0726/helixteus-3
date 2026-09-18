@@ -6,8 +6,6 @@ extends Control
 @onready var id:int = game.c_t
 @onready var tile = game.tile_data[id]
 var tile_texture
-var progress = 0#Mining tile progress
-var contents:Dictionary
 var tile_tween
 var BG_tween
 var layer:String
@@ -24,24 +22,26 @@ var rsrc_mined:Dictionary = {}
 
 func _ready():
 	Helper.set_back_btn($Back)
-	if tile == null:
-		game.tile_data[id] = {}
-		tile = game.tile_data[id]
-	if not tile.has("mining_progress"):
-		tile["mining_progress"] = 0.0
+	tile = game.tile_data[id]
+	if not tile.has("mining"):
+		tile.mining = {
+			"progress": 0.0,
+		}
+		game.tile_data_persistent[id]["mining"] = tile.mining
 	if not tile.has("depth"):
 		tile["depth"] = 0
+		game.tile_data_persistent[id]["depth"] = 0.0
 	seed(p_i.seed)
 	tile_texture = load("res://Graphics/Tiles/Mosaics/%s.jpg" % randi_range(1, 8))
 	$Tile/TextureRect.texture = tile_texture
 	$Tile/TextureRect.material.set_shader_parameter("texture_zoom", randf_range(0.5, 2.0))
 	if tile.has("bridge"):
 		tile.erase("bridge")
+		game.tile_data_persistent[id].erase("bridge")
 	if tile.has("aurora"):
 		aurora_mult = tile.aurora + 1.0
 		$Mults/AuroraMult.visible = true
 		$Mults/AuroraMult.text = "[aurora au_int=%s][center]%s: x %s" % [tile.aurora, tr("AURORA_MULTIPLIER"), Helper.clever_round(aurora_mult)]
-	progress = tile.mining_progress
 	if game.pickaxe.has("name"):
 		$Pickaxe/Sprite2D.texture = load("res://Graphics/Pickaxes/" + game.pickaxe.name + ".png")
 		$Pickaxe/Sprite2D.scale *= 512.0 / $Pickaxe/Sprite2D.texture.get_width()
@@ -49,9 +49,7 @@ func _ready():
 		update_pickaxe()
 	update_info(true)
 	generate_rock(false)
-	Helper.put_rsrc($Panel/VBoxContainer, 42, contents)
-#	$Panel.visible = false
-#	$Panel.visible = true#A weird workaround to make sure Panel has the right rekt_size
+	Helper.put_rsrc($Panel/VBoxContainer, 42, tile.mining.contents)
 	$Help.visible = game.help.has("mining")
 	circ.visible = not game.help.has("mining")
 	$Help/Label.text = tr("MINE_HELP")
@@ -131,8 +129,8 @@ func update_info(first_time:bool = false):
 		$LayerInfo/Depth/Label.text = "%s %s" % [floor(tile.depth / 1000.0), unit]
 		$LayerInfo/Upper.text = "%.1f %s" % [upper_depth, unit]
 		$LayerInfo/Lower.text = "%.1f %s" % [lower_depth, unit]
-	$Tile/SquareBar.set_progress(progress)
-	$Tile/Cracks.frame = min(floor(progress / 20), 4)
+	$Tile/SquareBar.set_progress(tile.mining.progress)
+	$Tile/Cracks.frame = min(floor(tile.mining.progress / 20), 4)
 
 func update_pickaxe():
 	$HBox/Durability/Numbers.text = "%s / %s" % [game.pickaxe.durability, game.pickaxes_info[game.pickaxe.name].durability]
@@ -151,7 +149,6 @@ func generate_rock(new:bool):
 		seed(p_i.seed + int(tile.depth))
 		$Tile/TextureRect.material.set_shader_parameter("texture_offset", Vector2(id % wid, id / wid) * 200.0 + Vector2(randf_range(0.0, 4000.0), randf_range(0.0, 4000.0)))
 	var tile_sprite = $Tile
-	contents = {}
 	tile_sprite.scale = Vector2.ONE * 0.3
 	if is_instance_valid(tile_tween):
 		tile_tween.kill()
@@ -160,14 +157,11 @@ func generate_rock(new:bool):
 	for met_sprite in metal_sprites:
 		met_sprite.queue_free()
 	metal_sprites = []
-	if not tile.has("contents") or new:
-		contents = Helper.generate_rock(tile, p_i).duplicate(true)
-		tile.contents = contents
-	else:
-		contents = tile.contents
-	if tile.has("current_deposit"):
+	if not tile.mining.has("contents") or new:
+		tile.mining.contents = Helper.generate_rock(tile, p_i).duplicate(true)
+	if tile.mining.has("current_deposit"):
 		var met = tile.current_deposit.met
-		var amount = contents[met]
+		var amount = tile.mining.contents[met]
 		for i in clamp(round(amount / 2.0), 1, 80):
 			var met_sprite = Sprite2D.new()
 			met_sprite.texture = game.metal_textures[met]
@@ -218,12 +212,18 @@ var help_counter = 0
 func pickaxe_hit():
 	if not game.pickaxe.has("name") or not tile.has("depth"):
 		return
-	var add_progress:float = 2 * game.pickaxe.speed * speed_mult * pow(game.maths_bonus.IRM, game.infinite_research.MMS) * (game.pickaxe.speed_mult if game.pickaxe.has("speed_mult") else 1.0) * (tile.mining_outpost_bonus if tile.has("mining_outpost_bonus") else 1.0) * max(1.0, game.u_i.time_speed * tile.get("time_speed_bonus", 1.0) * 0.1)
+	var add_progress:float = 2.0 * game.pickaxe.speed
+	add_progress *= speed_mult
+	add_progress *= pow(game.maths_bonus.IRM, game.infinite_research.MMS)
+	add_progress *= game.pickaxe.get("speed_mult", 1.0)
+	add_progress *= tile.get("mining_outpost_bonus", 1.0)
+	add_progress *= max(1.0, game.u_i.time_speed * tile.get("time_speed_bonus", 1.0) * 0.1)
 	if tile.depth > floor(p_i.size * 500.0):
 		if not game.achievement_data.random.has("reach_center_of_planet"):
 			game.earn_achievement("random", "reach_center_of_planet")
 		var VEI:float = log(add_progress / 500.0 * randf_range(0.7, 1.3) + exp(3.0))
 		game.tile_data[id].erase("depth")
+		game.tile_data_persistent[id].erase("depth")
 		game.generate_volcano(id, VEI, true)
 		game.switch_view("planet")
 		if game.help.has("artificial_volcano"):
@@ -237,8 +237,8 @@ func pickaxe_hit():
 	if game.pickaxe.name == "stick" and add_progress * 100 > floor(p_i.size * 500.0):
 		if not game.achievement_data.random.has("use_stick_to_mine_from_surface_to_core"):
 			game.earn_achievement("random", "use_stick_to_mine_from_surface_to_core")
-	if tile.has("current_deposit"):
-		var amount_multiplier = -abs(2.0/tile.current_deposit.size * (tile.current_deposit.progress - 1) - 1) + 1
+	if tile.mining.has("current_deposit"):
+		var amount_multiplier = -abs(2.0/tile.mining.current_deposit.size * (tile.mining.current_deposit.progress - 1) - 1) + 1
 		$HitMetalSound.pitch_scale = randf_range(0.8, 1.2)
 		$HitMetalSound.volume_db = -3 - (1 - amount_multiplier) * 10
 		$HitRockSound.volume_db = -10 - (amount_multiplier) * 10
@@ -253,7 +253,7 @@ func pickaxe_hit():
 		if help_counter >= 10:
 			$HelpAnim.play("Help fade")
 	place_crumbles(3, 0.1, 1)
-	progress += add_progress
+	tile.mining.progress += add_progress
 	game.pickaxe.durability -= 1
 	if game.pickaxe.has("liquid_durability"):
 		game.pickaxe.liquid_durability -= 1
@@ -262,27 +262,28 @@ func pickaxe_hit():
 			game.pickaxe.erase("liquid_id")
 			game.pickaxe.erase("speed_mult")
 	var rock_gen:bool = false
-	if progress >= 100 and $LayerInfo.visible:
+	if tile.mining.progress >= 100 and $LayerInfo.visible:
 		$ResourcesMined.visible = true
-	if progress >= 1000:
-		add_rsrc_mined(contents)
-		Helper.get_rsrc_from_rock(contents, tile, p_i, id)
-		var new_contents:Dictionary = Helper.mass_generate_rock(tile, p_i, (progress - 100) / 100)
+	if tile.mining.progress >= 1000:
+		add_rsrc_mined(tile.mining.contents)
+		Helper.get_rsrc_from_rock(tile.mining.contents, tile, p_i, id)
+		var new_contents:Dictionary = Helper.mass_generate_rock(tile, p_i, (tile.mining.progress - 100) / 100)
 		add_rsrc_mined(new_contents)
 		game.add_resources(new_contents)
-		var tiles_mined:int = int(progress / 100)
+		var tiles_mined:int = int(tile.mining.progress / 100)
 		tile.depth += tiles_mined
+		game.tile_data_persistent[id].depth += tiles_mined
 		game.stats_univ.tiles_mined_mining += tiles_mined
 		game.stats_dim.tiles_mined_mining += tiles_mined
 		game.stats_global.tiles_mined_mining += tiles_mined
-		progress = fmod(progress, 100)
+		tile.mining.progress = fmod(tile.mining.progress, 100)
 		rock_gen = true
 		generate_rock(true)
 	else:
-		while progress >= 100:
-			add_rsrc_mined(contents)
-			Helper.get_rsrc_from_rock(contents, tile, p_i, id)
-			progress -= 100
+		while tile.mining.progress >= 100:
+			add_rsrc_mined(tile.mining.contents)
+			Helper.get_rsrc_from_rock(tile.mining.contents, tile, p_i, id)
+			tile.mining.progress -= 100
 			#if not game.objective.is_empty() and game.objective.type == game.ObjectiveType.MINE:
 				#game.objective.current += 1
 			rock_gen = true
@@ -290,10 +291,10 @@ func pickaxe_hit():
 			game.stats_dim.tiles_mined_mining += 1
 			game.stats_global.tiles_mined_mining += 1
 			tile.depth += 1
+			game.tile_data_persistent[id].depth += 1
 			generate_rock(true)
 	if rock_gen:
-		Helper.put_rsrc($Panel/VBoxContainer, 42, contents)
-	tile.mining_progress = progress
+		Helper.put_rsrc($Panel/VBoxContainer, 42, tile.mining.contents)
 	if rock_gen:
 		$MiningSound.pitch_scale = randf_range(0.8, 1.2)
 		$MiningSound.play()

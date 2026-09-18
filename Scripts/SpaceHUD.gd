@@ -74,7 +74,7 @@ func _on_SendProbes_pressed():
 
 func _on_Gigastructures_pressed():
 	if game.c_v == "cluster":
-		game.put_bottom_info(tr("SELECT_GALAXY_TO_CONVERT"), "convert_to_GS")
+		game.put_bottom_info(tr("SELECT_GALAXY_TO_CONVERT"), game.convert_to_GS)
 	elif game.c_v == "galaxy":
 		if game.c_g_g == 0:
 			game.popup(tr("GS_ERROR"), 1.5)

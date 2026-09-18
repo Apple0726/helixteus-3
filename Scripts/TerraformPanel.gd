@@ -63,7 +63,7 @@ func terraform_planet():
 		p_i.erase("bookmarked")
 		game.HUD.refresh_bookmarks()
 	for id in len(game.tile_data):
-		if game.tile_data[id] and game.tile_data[id].has("bldg"):
+		if game.tile_data[id].has("bldg"):
 			game.view.obj.destroy_bldg(id, true)
 	p_i.tile_num = surface
 	game.stats_univ.bldgs_built += floor(surface)

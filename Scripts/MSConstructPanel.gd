@@ -61,37 +61,37 @@ func on_MS_click(MS:String):
 		return
 	if MS == "DS":
 		if not build_all or build_all and game.science_unlocked.has("DS1") and game.science_unlocked.has("DS2") and game.science_unlocked.has("DS3") and game.science_unlocked.has("DS4"):
-			game.put_bottom_info(tr("CLICK_STAR_TO_CONSTRUCT"), "building_DS", "cancel_building_MS")
+			game.put_bottom_info(tr("CLICK_STAR_TO_CONSTRUCT"), "building_DS", game.view.obj.finish_construct)
 			game.space_HUD.show_stars_panel("DS")
 		else:
 			game.popup(tr("NOT_ALL_STAGES_UNLOCKED"), 2.0)
 			return
 	elif MS == "CBS":
 		if not build_all or build_all and game.science_unlocked.has("CBS1") and game.science_unlocked.has("CBS2") and game.science_unlocked.has("CBS3"):
-			game.put_bottom_info(tr("CLICK_STAR_TO_CONSTRUCT"), "building_CBS", "cancel_building_MS")
+			game.put_bottom_info(tr("CLICK_STAR_TO_CONSTRUCT"), "building_CBS", game.view.obj.finish_construct)
 			game.space_HUD.show_stars_panel("CBS")
 		else:
 			game.popup(tr("NOT_ALL_STAGES_UNLOCKED"), 2.0)
 			return
 	elif MS == "MB":
-		game.put_bottom_info(tr("CLICK_STAR_TO_CONSTRUCT"), "building_MB", "cancel_building_MS")
+		game.put_bottom_info(tr("CLICK_STAR_TO_CONSTRUCT"), "building_MB", game.view.obj.finish_construct)
 		game.space_HUD.show_stars_panel("MB")
 	elif MS == "PK":
 		if not build_all or build_all and game.science_unlocked.has("PK1") and game.science_unlocked.has("PK2"):
-			game.put_bottom_info(tr("CLICK_STAR_TO_CONSTRUCT"), "building_PK", "cancel_building_MS")
+			game.put_bottom_info(tr("CLICK_STAR_TO_CONSTRUCT"), "building_PK", game.view.obj.finish_construct)
 			game.space_HUD.show_stars_panel("PK")
 		else:
 			game.popup(tr("NOT_ALL_STAGES_UNLOCKED"), 2.0)
 			return
 	elif MS == "SE":
 		if not build_all or build_all and game.science_unlocked.has("SE1"):
-			game.put_bottom_info(tr("CLICK_PLANET_TO_CONSTRUCT"), "building-SE", "cancel_building_MS")
+			game.put_bottom_info(tr("CLICK_PLANET_TO_CONSTRUCT"), "building-SE", game.view.obj.finish_construct)
 		else:
 			game.popup(tr("NOT_ALL_STAGES_UNLOCKED"), 2.0)
 			return
 	elif MS == "MME":
 		if not build_all or build_all and game.science_unlocked.has("MME1") and game.science_unlocked.has("MME2") and game.science_unlocked.has("MME3"):
-			game.put_bottom_info(tr("CLICK_PLANET_TO_CONSTRUCT"), "building-MME", "cancel_building_MS")
+			game.put_bottom_info(tr("CLICK_PLANET_TO_CONSTRUCT"), "building-MME", game.view.obj.finish_construct)
 		else:
 			game.popup(tr("NOT_ALL_STAGES_UNLOCKED"), 2.0)
 			return

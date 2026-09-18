@@ -242,10 +242,6 @@ func _ready():
 	#cave_BG.material.set_shader_parameter("contrast", 1.5)
 	$Exit/PointLight2D.texture_scale = remap(p_i.temperature, -273.0, 3000.0, 0.0, 10.0)
 	$Exit/PointLight2D.energy = remap(p_i.temperature, -273.0, 3000.0, 0.0, 1.0)
-	if not tile[cave_type].has("debris"):
-		tile[cave_type].debris = randf() + 0.2
-	if not tile[cave_type].has("period"):
-		tile[cave_type].period = 65
 	debris_amount = tile[cave_type].debris
 	if tile[cave_type].has("modifiers"):
 		$UI2/CaveInfo/Modifiers.visible = true
@@ -287,6 +283,7 @@ func _ready():
 		id = game.caves_generated
 		tile[cave_type]["id"] = id
 		game.caves_generated += 1
+		Helper.save_obj("Planets", game.c_p_g, game.tile_data_persistent)
 	minimap_rover.position = minimap_center
 	minimap_cave.scale *= minimap_zoom
 	minimap_rover.scale *= 0.1
@@ -710,16 +707,16 @@ func generate_cave(first_floor:bool, going_up:bool):
 	#Generate treasure chests
 	for room in rooms:
 		var n = room.size
-		for tile in room.tiles:
+		for tile_id in room.tiles:
 			var rand = rng.randf()
-			var formula = 0.1 / pow(n, 0.9) * pow(cave_floor, 0.8) * (modifiers.chest_number if modifiers.has("chest_number") else 1.0)
+			var formula = 0.1 / pow(n, 0.9) * pow(cave_floor, 0.8) * modifiers.get("chest_number", 1.0)
 			if rand < formula:
 				var tier:int = min(-log(rand/formula) / 2.5 + 1, 5)
 				var contents:Dictionary = generate_treasure(tier, rng)
-				if contents.is_empty() or chests_looted[cave_floor - 1].has(int(tile)):
+				if contents.is_empty() or chests_looted[cave_floor - 1].has(int(tile_id)):
 					continue
-				if partially_looted_chests[cave_floor - 1].has(str(tile)):
-					contents = partially_looted_chests[cave_floor - 1][str(tile)].duplicate(true)
+				if partially_looted_chests[cave_floor - 1].has(str(tile_id)):
+					contents = partially_looted_chests[cave_floor - 1][str(tile_id)].duplicate(true)
 				var chest = object_scene.instantiate()
 				if tier == 1:
 					chest.modulate = Color(0.83, 0.4, 0.27, 1.0)
@@ -732,11 +729,11 @@ func generate_cave(first_floor:bool, going_up:bool):
 				elif tier == 5:
 					chest.modulate = Color(0.85, 1.0, 0, 1.0)
 				chest.get_node("Sprite2D").texture = preload("res://Graphics/Cave/Objects/Chest.png")
-				chest.get_node("Area2D").area_entered.connect(on_chest_entered.bind(tile))
+				chest.get_node("Area2D").area_entered.connect(on_chest_entered.bind(tile_id))
 				chest.get_node("Area2D").area_exited.connect(on_chest_exited)
 				chest.scale *= 0.8
-				chest.position = cave_wall.map_to_local(get_tile_pos(tile))
-				chests[tile] = {"node":chest, "contents":contents, "tier":tier}
+				chest.position = cave_wall.map_to_local(get_tile_pos(tile_id))
+				chests[tile_id] = {"node":chest, "contents":contents, "tier":tier}
 				add_child(chest)
 	#Remove already-mined tiles
 	for i in cave_size:
@@ -830,16 +827,6 @@ func generate_cave(first_floor:bool, going_up:bool):
 	if chests.has(rand_spawn):
 		chests[rand_spawn].node.queue_free()
 		chests.erase(rand_spawn)
-	#A way to check whether cave has the relic for 2nd ship
-	if tile.cave.has("special_cave") and tile.cave.special_cave == 5 and cave_floor == 3:
-		var relic = object_scene.instantiate()
-		relic.get_node("Sprite2D").texture = preload("res://Graphics/Cave/Objects/Relic.png")
-		relic.get_node("Area2D").connect("body_entered",Callable(self,"on_relic_entered"))
-		relic.get_node("Area2D").connect("body_exited",Callable(self,"on_relic_exited"))
-		var relic_tile = rooms[0].tiles[-1]
-		relic.position = cave_wall.map_to_local(get_tile_pos(relic_tile))
-		add_child(relic)
-		relic.add_to_group("misc_objects")
 	
 	#Wormhole
 	if cave_floor == num_floors:
@@ -996,9 +983,9 @@ func generate_treasure(tier:int, rng:RandomNumberGenerator):
 		contents[metal_spawned] = Helper.clever_round(60.0 * rng.randf_range(0.5, 1.0) / pow(rarity, rarity_exponent) * pow(tier, 2.0) * difficulty * exp(cave_floor / 10.0) * treasure_mult * game.u_i.planck)
 	return contents
 
-func connect_points(tile:Vector2, bidir:bool = false):
-	var tile_index = get_tile_index(tile)
-	for neighbor_tile in cave_wall.get_surrounding_cells(tile):
+func connect_points(tile_coords:Vector2, bidir:bool = false):
+	var tile_index = get_tile_index(tile_coords)
+	for neighbor_tile in cave_wall.get_surrounding_cells(tile_coords):
 		var neighbor_tile_index = get_tile_index(neighbor_tile)
 		if not astar_node.has_point(neighbor_tile_index):
 			continue
@@ -1307,7 +1294,6 @@ func save_cave_data():
 	DirAccess.copy_absolute("user://%s/Univ%s/Caves/%s.hx3~" % [game.c_sv, game.c_u, id], "user://%s/Univ%s/Caves/%s.hx3" % [game.c_sv, game.c_u, id])
 	
 func exit_cave():
-	Helper.save_obj("Planets", game.c_p_g, game.tile_data_persistent)
 	save_cave_data()
 	for i in len(inventory):
 		if inventory[i].is_empty():
@@ -1427,9 +1413,6 @@ func use_item(item:Dictionary, _tile_highlight, delta):
 			else:
 				game.popup(tr("WH_ERROR"), 2.0)
 		if item.type == Item.Type.DRILL:
-			if tile.cave.has("special_cave"):
-				game.popup(tr("DRILL_ERROR"), 2.0)
-				return
 			if cave_floor >= Item.data[item.id].limit:
 				game.popup(tr("DRILL_ERROR3"), 1.5)
 				return
@@ -1574,12 +1557,12 @@ func mine_wall(item:Dictionary, _tile_highlight, delta):
 	var st = str(tile_highlighted_for_mining)
 	if not tiles_touched_by_laser.has(st):
 		tiles_touched_by_laser[st] = {}
-		var tile = tiles_touched_by_laser[st]
-		tile.progress = 0
+		var tile_being_mined = tiles_touched_by_laser[st]
+		tile_being_mined.progress = 0
 		var sq_bar = sq_bar_scene.instantiate()
 		add_child(sq_bar)
 		sq_bar.position = cave_wall.map_to_local(get_tile_pos(tile_highlighted_for_mining)) - Vector2(100, 100)
-		tile.bar = sq_bar
+		tile_being_mined.bar = sq_bar
 	if st != "-1":
 		var sq_bar = tiles_touched_by_laser[st].bar
 		tiles_touched_by_laser[st].progress += Item.data[item.id].speed * delta * 60 * pow(rover_size, 2) * time_speed * game.u_i.charge

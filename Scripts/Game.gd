@@ -385,6 +385,8 @@ func load_settings(config:ConfigFile):
 	Settings.show_fps = config.get_value("misc", "show_fps", false)
 	fps_text.visible = Settings.show_fps
 
+#Used in planet view only
+var close_button_over:bool = false
 
 func _ready():
 	Helper.setup_discord()
@@ -571,7 +573,6 @@ func load_univ():
 	elif c_v == "battle":
 		c_v = "system"
 	view.set_process(true)
-	tile_data = open_obj("Planets", c_p_g)
 	planet_data = open_obj("Systems", c_s_g)
 	system_data = open_obj("Galaxies", c_g_g)
 	galaxy_data = open_obj("Clusters", c_c)
@@ -1036,24 +1037,19 @@ func open_shop_pickaxe():
 	shop_panel._on_btn_pressed(shop_panel.PICKAXE)
 	shop_panel.get_node("Tabs/PickaxesButton")._on_Button_pressed()
 
-var bottom_info_shown:bool = false
-func put_bottom_info(txt:String, action:String, on_close:String = ""):
-	if bottom_info_shown:
-		_on_BottomInfo_close_button_pressed(true)
-	$UI/BottomInfo.visible = true
-	bottom_info_shown = true
-	$UI.move_child($UI/BottomInfo, $UI.get_child_count())
-	var more_info = $UI/BottomInfo/Text
-	more_info.visible = false
-	more_info.text = txt
-	more_info.modulate.a = 0
-	more_info.visible = true
-	more_info.size.x = 0#This "trick" lets us resize the label to fit the text
-	more_info.position.x = -more_info.get_minimum_size().x / 2.0
-	more_info.modulate.a = 1
+func put_bottom_info(txt:String, action:String, on_close_callable = null):
+	if $UI.has_node("BottomInfo"):
+		$UI/BottomInfo.free()
+	var bottom_info = preload("res://Scenes/BottomInfo.tscn").instantiate()
+	bottom_info.info_text = txt
+	bottom_info.name = "BottomInfo"
+	if on_close_callable != null:
+		bottom_info.on_close_callable = on_close_callable
+	$UI.add_child(bottom_info)
+	$UI/BottomInfo/CloseButton.mouse_entered.connect(func(): close_button_over = true)
+	$UI/BottomInfo/CloseButton.mouse_exited.connect(func(): close_button_over = false)
+	bottom_info.position = Vector2(0, 684)
 	bottom_info_action = action
-	$UI/BottomInfo/CloseButton.on_close = on_close
-	$UI/BottomInfo/MoveAnim.play("MoveLabel")
 
 func fade_in_panel(panel_var_name:String, refresh_panel = true):
 	if is_instance_valid(self[panel_var_name]):
@@ -1064,10 +1060,6 @@ func fade_in_panel(panel_var_name:String, refresh_panel = true):
 		self[panel_var_name].panel_var_name = panel_var_name
 		$Panels/Control.add_child(self[panel_var_name])
 	active_panel = self[panel_var_name]
-	if $UI.has_node("BuildingShortcuts"):
-		$UI.get_node("BuildingShortcuts").close()
-	elif c_v == "planet" and not viewing_dimension:
-		view.obj.get_node("BuildingShortcutTimer").stop()
 	self[panel_var_name].modulate.a = 0.0
 	self[panel_var_name].tween = create_tween()
 	if panel_var_name != "settings_panel":
@@ -1164,9 +1156,8 @@ func delete_galaxy(_c_g:int):
 func switch_view(new_view:String, other_params:Dictionary = {}):
 	if is_generating:
 		return
-	_on_BottomInfo_close_button_pressed()
-	if $UI.has_node("BuildingShortcuts"):
-		$UI.get_node("BuildingShortcuts").queue_free()
+	if $UI.has_node("BottomInfo"):
+		$UI/BottomInfo.on_close_pressed()
 	$UI/Panel.hide()
 	var old_view:String = c_v
 	if view_tween and view_tween.is_running():
@@ -1898,7 +1889,8 @@ func remove_planet(save_zooms:bool = true):
 		vehicle_panel.queue_free()
 	Helper.save_obj("Systems", c_s_g, planet_data)
 	Helper.save_obj("Planets", c_p_g, tile_data_persistent)
-	_on_BottomInfo_close_button_pressed()
+	if $UI.has_node("BottomInfo"):
+		$UI/BottomInfo.on_close_pressed()
 	planet_HUD.queue_free()
 
 #Collision detection of systems, galaxies etc.
@@ -3365,10 +3357,12 @@ func generate_tiles(id:int, first_time:bool):
 		tile_data_persistent = open_obj("Planets", c_p_g)
 	for i in len(tile_data_persistent):
 		var tile_persistent = tile_data_persistent[i]
-		if not tile_persistent:
+		if tile_persistent == null:
 			continue
 		for key in tile_persistent.keys():
 			tile_data[i][key] = tile_persistent[key]
+		if tile_persistent.has("crater_removed"):
+			tile_data[i].erase("crater")
 	Helper.save_obj("Systems", c_s_g, planet_data)
 
 func erase_tile(tile:int):
@@ -3566,8 +3560,8 @@ func use_item(item_id:int, send_to_rover:int = -1):
 		else:
 			popup(tr("ROVERS_INV_FULL"), 2.0)
 		return
-	if $UI/BottomInfo.visible:
-		_on_BottomInfo_close_button_pressed(true)
+	if $UI.has_node("BottomInfo"):
+		$UI/BottomInfo.on_close_pressed()
 	item_to_use.id = item_id
 	item_to_use.num = num
 	var item_type:int = Item.data[item_id].type
@@ -3581,13 +3575,13 @@ func use_item(item_id:int, send_to_rover:int = -1):
 		popup("SUCCESSFULLY_APPLIED", 1.5)
 		return
 	elif item_type == Item.Type.DRILL:
-		put_bottom_info(tr("CLICK_ON_ROVER_TO_GIVE"), "give_rover_items", "hide_item_cursor")
+		put_bottom_info(tr("CLICK_ON_ROVER_TO_GIVE"), "give_rover_items", hide_item_cursor)
 		toggle_panel("vehicle_panel")
 	elif item_type == Item.Type.OVERCLOCK:
-		put_bottom_info(tr("USE_OVERCLOCK_INFO"), "use_overclock", "hide_item_cursor")
+		put_bottom_info(tr("USE_OVERCLOCK_INFO"), "use_overclock", hide_item_cursor)
 	elif item_type == Item.Type.HELIX_CORE:
 		if len(ship_data) > 0:
-			put_bottom_info(tr("CLICK_SHIP_TO_GIVE_XP"), "use_hx_core", "hide_item_cursor")
+			put_bottom_info(tr("CLICK_SHIP_TO_GIVE_XP"), "use_hx_core", hide_item_cursor)
 			toggle_panel("ships_panel")
 			ships_panel.get_node("Ships/Battlefield/Selected").hide()
 			ships_panel.get_node("ShipStats/ShipDetails").hide()
@@ -3862,8 +3856,6 @@ func _input(event):
 			help[help_str] = true
 		hide_tooltip()
 		$UI/Panel.hide()
-		if $UI.has_node("BuildingShortcuts"):
-			$UI.get_node("BuildingShortcuts").queue_free()
 	
 	#/ to type a command
 	if Input.is_action_just_released("command") and not cmd_node.visible and c_v != "":
@@ -4007,7 +3999,8 @@ func show_item_cursor(texture):
 
 func update_item_cursor():
 	if item_to_use.num <= 0:
-		_on_BottomInfo_close_button_pressed()
+		if $UI.has_node("BottomInfo"):
+			$UI/BottomInfo.on_close_pressed()
 		item_to_use.id = -1
 		item_to_use.num = 0
 	else:
@@ -4033,10 +4026,6 @@ func cancel_building():
 	for id in bldg_blueprints:
 		tiles[id]._on_Button_button_out()
 
-func cancel_building_MS():
-	$UI/Panel.hide()
-	view.obj.finish_construct()
-
 func _on_Settings_mouse_entered():
 	show_tooltip(tr("SETTINGS") + " (P)")
 
@@ -4047,40 +4036,8 @@ func _on_Settings_pressed():
 	$click.play()
 	toggle_panel("settings_panel")
 
-func _on_BottomInfo_close_button_pressed(direct:bool = false):
-	close_button_over = false
-	if bottom_info_shown:
-		bottom_info_shown = false
-		hide_tooltip()
-		if $UI/BottomInfo/CloseButton.on_close != "":
-			call($UI/BottomInfo/CloseButton.on_close)
-		$UI/BottomInfo/CloseButton.on_close = ""
-		bottom_info_action = ""
-		if not get_tree().get_nodes_in_group("gray_tiles").is_empty():
-			var tween = create_tween()
-			tween.set_parallel(true)
-			tween.tween_property(get_tree().get_first_node_in_group("gray_tiles").material, "shader_parameter/amount", 0.0, 0.2)
-			for gray_tile in get_tree().get_nodes_in_group("gray_tiles"):
-				tween.tween_callback(gray_tile.queue_free).set_delay(0.15)
-				gray_tile.remove_from_group("gray_tiles")
-		HUD.refresh()
-		if not direct:
-			$UI/BottomInfo/MoveAnim.play_backwards("MoveLabel")
-			await $UI/BottomInfo/MoveAnim.animation_finished
-		if not bottom_info_shown:
-			$UI/BottomInfo.visible = false
-
 func cancel_place_soil():
 	HUD.get_node("Top/Resources/Soil").visible = false
-
-#Used in planet view only
-var close_button_over:bool = false
-
-func _on_CloseButton_close_button_over():
-	close_button_over = true
-
-func _on_CloseButton_close_button_out():
-	close_button_over = false
 
 func fade_out_title(fn:String, sv:String = ""):
 	$Title/VBoxContainer/NewGame.disconnect("pressed",Callable(self,"_on_NewGame_pressed"))

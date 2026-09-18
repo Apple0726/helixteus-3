@@ -72,7 +72,7 @@ func refresh():
 				btn.connect("pressed", Callable(self, "on_bldg_click").bind(bldg))
 
 func on_bldg_click(bldg:int):
-	game.put_bottom_info(tr("CLICK_TILE_TO_CONSTRUCT"), "building", "cancel_building")
+	game.put_bottom_info(tr("CLICK_TILE_TO_CONSTRUCT"), "building", game.cancel_building)
 	var base_cost = Data.costs[bldg].duplicate(true)
 	for cost in base_cost:
 		base_cost[cost] *= game.engineering_bonus.BCM
@@ -252,7 +252,7 @@ func on_ancient_bldg_over(bldg:int):
 
 func on_ancient_bldg_click(bldg:int):
 	var tier:int = $Panel/ScrollContainer/VBoxContainer/HBoxContainer/Tier.value
-	game.put_bottom_info(tr("CLICK_TILE_TO_CONSTRUCT"), "building", "cancel_building")
+	game.put_bottom_info(tr("CLICK_TILE_TO_CONSTRUCT"), "building", game.cancel_building)
 	var base_cost = Data.ancient_building_costs[bldg].duplicate(true)
 	var n = game.ancient_building_counters[bldg].get(tier, 0) + 1
 	var cost_multiplier = pow(tier, 20) * pow(10, -game.engineering_bonus.ancient_building_a_value) * pow(n, tier * game.engineering_bonus.ancient_building_b_value)

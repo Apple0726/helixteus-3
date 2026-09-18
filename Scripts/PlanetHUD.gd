@@ -63,18 +63,16 @@ func _on_Terraform_pressed():
 			EE_mult += 1.0
 			SP_feature_mult += 1.0
 			energy_feature_mult += 1.0
-			if tile:
-				if tile.has("lake"):
-					lake_num += 1
-				elif tile.has("ash"):
-					ash_mult += tile.ash.richness - 1.0
-				elif tile.has("aurora"):
-					EE_mult += tile.aurora
-				if tile.has("resource_production_bonus"):
-					if tile.resource_production_bonus.has("SP"):
-						SP_feature_mult += tile.resource_production_bonus.SP - 1.0
-					if tile.resource_production_bonus.has("energy"):
-						energy_feature_mult += tile.resource_production_bonus.energy - 1.0
+			if tile.has("lake"):
+				lake_num += 1
+			elif tile.has("ash"):
+				ash_mult += tile.ash.richness - 1.0
+			elif tile.has("aurora"):
+				EE_mult += tile.aurora
+			if tile.resource_production_bonus.has("SP"):
+				SP_feature_mult += tile.resource_production_bonus.SP - 1.0
+			if tile.resource_production_bonus.has("energy"):
+				energy_feature_mult += tile.resource_production_bonus.energy - 1.0
 		ash_mult /= len(game.tile_data)
 		EE_mult /= len(game.tile_data)
 		SP_feature_mult /= len(game.tile_data)

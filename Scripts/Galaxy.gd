@@ -76,19 +76,20 @@ func _ready():
 					MSs[s_i.l_id][p_i.MS] = MSs[s_i.l_id].get(p_i.MS, 0) + 1
 				else:
 					MSs[s_i.l_id] = {p_i.MS: 1}
-			var tile_data:Array = game.open_obj("Planets", p_i.id)
-			for tile in tile_data:
-				if tile:
-					if tile.has("bldg"):
-						if bldgs.has(s_i.l_id):
-							bldgs[s_i.l_id][tile.bldg.name] = bldgs[s_i.l_id].get(tile.bldg.name, 0) + 1
-						else:
-							bldgs[s_i.l_id] = {tile.bldg.name: 1}
-					elif tile.has("ancient_bldg"):
-						if ancient_bldgs.has(s_i.l_id):
-							ancient_bldgs[s_i.l_id][tile.ancient_bldg.name] = ancient_bldgs[s_i.l_id].get(tile.ancient_bldg.name, 0) + 1
-						else:
-							ancient_bldgs[s_i.l_id] = {tile.ancient_bldg.name: 1}
+			var tile_data_persistent:Array = game.open_obj("Planets", p_i.id)
+			for tile_persistent in tile_data_persistent:
+				if tile_persistent == null:
+					continue
+				if tile_persistent.has("bldg"):
+					if bldgs.has(s_i.l_id):
+						bldgs[s_i.l_id][tile_persistent.bldg.name] = bldgs[s_i.l_id].get(tile_persistent.bldg.name, 0) + 1
+					else:
+						bldgs[s_i.l_id] = {tile_persistent.bldg.name: 1}
+				elif tile_persistent.has("ancient_bldg"):
+					if ancient_bldgs.has(s_i.l_id):
+						ancient_bldgs[s_i.l_id][tile_persistent.ancient_bldg.name] = ancient_bldgs[s_i.l_id].get(tile_persistent.ancient_bldg.name, 0) + 1
+					else:
+						ancient_bldgs[s_i.l_id] = {tile_persistent.ancient_bldg.name: 1}
 		for _star in s_i.stars:
 			if _star.has("MS"):
 				if MSs.has(s_i.l_id):

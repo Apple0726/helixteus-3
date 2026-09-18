@@ -65,8 +65,7 @@ func get_min_lv():
 	if planet.is_empty():
 		var min_lv = INF
 		for id in ids:
-			var tile = game.tile_data[id]
-			var lv_curr = tile.bldg[path_str]
+			var lv_curr = game.tile_data[id].bldg[path_str]
 			if lv_curr < min_lv:
 				min_lv = lv_curr
 		return min_lv
@@ -136,13 +135,12 @@ func update(changing_paths:bool = false):
 			var cost_div_sum:float = 0.0
 			for id in ids:
 				var tile = game.tile_data[id]
-				var tile_bldg:int = tile.bldg.name
 				var lv_curr = tile.bldg[path_str]
 				if lv_curr != first_tile_bldg[path_str]:
 					same_lv = false
 				if tile.bldg[path_str] >= next_lv_spinbox.value or Data[path_str][bldg].has("cap") and tile.bldg[path_str] >= Data[path_str][bldg].cap:
 					continue
-				calc_costs(tile_bldg, lv_curr, lv_to, tile.cost_div if tile.has("cost_div") else 1.0, 1)
+				calc_costs(tile.bldg.name, lv_curr, lv_to, tile.cost_div if tile.has("cost_div") else 1.0, 1)
 				cost_div_sum += tile.cost_div if tile.has("cost_div") else 1.0
 			cost_div_sum /= len(ids)
 			if cost_div_sum > 1.0:

@@ -538,11 +538,12 @@ func get_rsrc_from_rock(contents:Dictionary, tile:Dictionary, p_i:Dictionary, ti
 			game.bldg_unlocked[Building.STEAM_ENGINE] = true
 		if content == "stone" and not game.bldg_unlocked.has(Building.STONE_CRUSHER):
 			game.bldg_unlocked[Building.STONE_CRUSHER] = true
-	if tile.has("current_deposit") and tile.current_deposit.progress > tile.current_deposit.size - 1:
-		tile.erase("current_deposit")
+	if tile.mining.has("current_deposit") and tile.mining.current_deposit.progress > tile.mining.current_deposit.size - 1:
+		tile.mining.erase("current_deposit")
 	if tile.has("crater") and tile.crater.has("init_depth") and tile.depth > 3 * tile.crater.init_depth:
 		#remove_crater_bonuses(game.tile_data, tile_id, tile.crater.metal)
 		tile.erase("crater")
+		game.tile_data_persistent[tile_id]["crater_removed"] = true
 
 func remove_crater_bonuses(tile_data:Array, tile_id:int, metal:String):
 	var wid:int = sqrt(len(tile_data))
@@ -552,7 +553,7 @@ func remove_crater_bonuses(tile_data:Array, tile_id:int, metal:String):
 		for l in range(max(0, j - 1), min(j + 1 + 1, wid)):
 			var id2 = k % wid + l * wid
 			var _tile = tile_data[id2]
-			if _tile == null or Vector2(k, l) == Vector2(i, j) or _tile.has("cave") or _tile.has("volcano") or _tile.has("lake") or _tile.has("wormhole"):
+			if Vector2(k, l) == Vector2(i, j) or _tile.has("cave") or _tile.has("volcano") or _tile.has("lake") or _tile.has("wormhole"):
 				continue
 			if _tile.resource_production_bonus.has("SP"):
 				_tile.resource_production_bonus.SP -= game.met_info[metal].rarity - 0.8
@@ -630,24 +631,24 @@ func generate_rock(tile:Dictionary, p_i:Dictionary):
 					continue
 				contents[mat] = amount
 				other_volume += amount / rho / 1000 / h_mult
-	if get_layer(tile, p_i) != "surface" and not tile.has("current_deposit"):
+	if get_layer(tile, p_i) != "surface" and not tile.mining.has("current_deposit"):
 		for met in game.met_info:
 			if met in ["nanocrystal", "mythril"] and game.c_g_g == 0:
 				continue
 			var crater_metal = tile.has("crater") and tile.crater.has("init_depth") and met == tile.crater.metal
 			if game.met_info[met].min_depth < tile.depth - p_i.crust_start_depth and tile.depth - p_i.crust_start_depth < game.met_info[met].max_depth or crater_metal:
 				if randf() < 0.25 * (6 if crater_metal else 1) * aurora_mult / pow(game.met_info[met].rarity, 0.2):
-					tile.current_deposit = {"met":met, "size":randi_range(4, 10), "progress":1}
-	if tile.has("current_deposit"):
-		var met = tile.current_deposit.met
-		var size = tile.current_deposit.size
-		var progress2 = tile.current_deposit.progress
+					tile.mining.current_deposit = {"met":met, "size":randi_range(4, 10), "progress":1}
+	if tile.mining.has("current_deposit"):
+		var met = tile.mining.current_deposit.met
+		var size = tile.mining.current_deposit.size
+		var progress2 = tile.mining.current_deposit.progress
 		var amount_multiplier = -abs(2.0/size * progress2 - 1) + 1
 		var crater_metal = tile.has("crater") and tile.crater.has("init_depth") and met == tile.crater.metal
 		var amount = clever_round(20 * (3 if crater_metal else 1) * randf_range(0.4, 0.45) * amount_multiplier * aurora_mult * h_mult / pow(game.met_info[met].rarity, 0.3))
 		contents[met] = amount
 		other_volume += amount / game.met_info[met].density / 1000 / h_mult
-		tile.current_deposit.progress += 1
+		tile.mining.current_deposit.progress += 1
 		#   									                          	    V Every km, rock density goes up by 0.01
 	var stone_amount = max(0, clever_round((1 - other_volume) * 1000 * (2.85 + tile.depth / 100000.0) * h_mult))
 	if stone_amount != 0:
@@ -1520,9 +1521,8 @@ func set_ancient_bldg_bonuses(p_i:Dictionary, ancient_bldg:Dictionary, tile_id:i
 						"origin_tile_id":tile_id,
 					}
 					if game.tile_data_persistent[id] == null:
-						game.tile_data_persistent[id] = {"substation_data": tile.substation_data}
-					else:
-						game.tile_data_persistent[id].substation_data = tile.substation_data
+						game.tile_data_persistent[id] = {}
+					game.tile_data_persistent[id].substation_data = tile.substation_data
 				if tile.has("bldg"):
 					var overclock_mult:float = tile.bldg.get("overclock_mult", 1.0)
 					var base = tile.bldg.path_1_value * overclock_mult * mult
@@ -1551,15 +1551,13 @@ func set_ancient_bldg_bonuses(p_i:Dictionary, ancient_bldg:Dictionary, tile_id:i
 				var id:int = x + y * wid
 				var tile = game.tile_data[id]
 				var mult = Helper.get_MR_Obs_Outpost_prod_mult(tier)
-				if tile.has("mining_outpost_bonus"):
-					tile["mining_outpost_bonus"] += mult - 1.0
-					game.tile_data_persistent[id]["mining_outpost_bonus"] += mult - 1.0
-				else:
-					tile["mining_outpost_bonus"] = mult
-					game.tile_data_persistent[id] = {"mining_outpost_bonus": mult}
+				tile.mining_outpost_bonus = tile.get("mining_outpost_bonus", 0.0) + mult
+				if game.tile_data_persistent[id] == null:
+					game.tile_data_persistent[id] = {}
+				game.tile_data_persistent[id]["mining_outpost_bonus"] = tile["mining_outpost_bonus"]
 	elif ancient_bldg.name in [AncientBuilding.NUCLEAR_FUSION_REACTOR, AncientBuilding.CELLULOSE_SYNTHESIZER]:
 		for tile in game.tile_data:
-			if tile and tile.has("bldg") and tile.bldg.name == Building.ATMOSPHERE_EXTRACTOR:
+			if tile.has("bldg") and tile.bldg.name == Building.ATMOSPHERE_EXTRACTOR:
 				var overclock_mult = tile.bldg.get("overclock_mult", 1.0)
 				var base = 1.0
 				if ancient_bldg.name == AncientBuilding.NUCLEAR_FUSION_REACTOR:
@@ -1574,17 +1572,17 @@ func set_ancient_bldg_bonuses(p_i:Dictionary, ancient_bldg:Dictionary, tile_id:i
 			game.autocollect["passive_xp_mult"] = game.system_data[game.c_s].diff
 			game.start_spaceport_timer(ancient_bldg.tier)
 
-func update_CBD_affected_tiles(tile:Dictionary, tile_id:int, p_i:Dictionary):
+func update_CBD_affected_tiles(CBD_tile:Dictionary, CBD_tile_id:int, p_i:Dictionary):
 	var wid:int = sqrt(len(game.tile_data))
-	var x_pos:int = tile_id % wid
-	var y_pos:int = tile_id / wid
-	tile.bldg.x_pos = x_pos
-	tile.bldg.y_pos = y_pos
-	tile.bldg.wid = wid
+	var x_pos:int = CBD_tile_id % wid
+	var y_pos:int = CBD_tile_id / wid
+	CBD_tile.bldg.x_pos = x_pos
+	CBD_tile.bldg.y_pos = y_pos
+	CBD_tile.bldg.wid = wid
 	var second_path_str = "overclock"
 	if game.subject_levels.dimensional_power >= 7:
 		second_path_str = "time_speed"
-	var n:int = tile.bldg.path_3_value
+	var n:int = CBD_tile.bldg.path_3_value
 	for i in n:
 		var x:int = x_pos + i - n / 2
 		if x < 0 or x >= wid:
@@ -1593,31 +1591,30 @@ func update_CBD_affected_tiles(tile:Dictionary, tile_id:int, p_i:Dictionary):
 			var y:int = y_pos + j - n / 2
 			if y < 0 or y >= wid or x == x_pos and y == y_pos:
 				continue
-			var id:int = x % wid + y * wid
-			if game.tile_data[id] == null:
-				game.tile_data[id] = {}
-			var _tile = game.tile_data[id]
-			var id2 = game.tile_data.find(tile)
-			if not _tile.has("cost_div_dict"):
-				_tile.cost_div = tile.bldg.path_1_value
-				_tile.cost_div_dict = {}
+			var affected_tile_id = x % wid + y * wid
+			var affected_tile = game.tile_data[affected_tile_id]
+			if not affected_tile.has("cost_div_dict"):
+				affected_tile.cost_div = CBD_tile.bldg.path_1_value
+				affected_tile.cost_div_dict = {}
 			else:
-				_tile.cost_div = max(_tile.cost_div, tile.bldg.path_1_value)
-			_tile.cost_div_dict[id2] = tile.bldg.path_1_value
-			if not _tile.has("%s_dict" % second_path_str):
-				if second_path_str == "time_speed" and _tile.has("bldg"):
-					var old_time_speed = _tile.get("time_speed_bonus", 1.0)
-					Helper.add_autocollect(p_i, _tile, tile.bldg.path_2_value / old_time_speed)
-				_tile["%s_bonus" % second_path_str] = tile.bldg.path_2_value
-				_tile["%s_dict" % second_path_str] = {}
-			else:
-				var new_bonus = max(_tile["%s_bonus" % second_path_str], tile.bldg.path_2_value)
-				if second_path_str == "time_speed" and _tile.has("bldg"):
-					var old_time_speed = _tile.get("time_speed_bonus", 1.0)
-					if new_bonus > old_time_speed:
-						Helper.add_autocollect(p_i, _tile, new_bonus / old_time_speed)
-				_tile["%s_bonus" % second_path_str] = new_bonus
-			_tile["%s_dict" % second_path_str][id2] = tile.bldg.path_2_value
+				affected_tile.cost_div = max(affected_tile.cost_div, CBD_tile.bldg.path_1_value)
+			affected_tile.cost_div_dict[CBD_tile_id] = CBD_tile.bldg.path_1_value
+			
+			# Update CBD path 2 bonus to affected tile
+			var new_bonus = max(affected_tile.get("%s_bonus" % second_path_str, 1.0), CBD_tile.bldg.path_2_value)
+			if second_path_str == "time_speed" and affected_tile.has("bldg"):
+				var old_time_speed = affected_tile.get("time_speed_bonus", 1.0)
+				if new_bonus > old_time_speed:
+					Helper.add_autocollect(p_i, affected_tile, new_bonus / old_time_speed)
+			affected_tile["%s_bonus" % second_path_str] = new_bonus
+			affected_tile["%s_dict" % second_path_str][CBD_tile_id] = CBD_tile.bldg.path_2_value
+			
+			if game.tile_data_persistent[affected_tile_id] == null:
+				game.tile_data_persistent[affected_tile_id] = {}
+			game.tile_data_persistent[affected_tile_id].cost_div = affected_tile.cost_div
+			game.tile_data_persistent[affected_tile_id].cost_div_dict = affected_tile.cost_div_dict
+			game.tile_data_persistent[affected_tile_id]["%s_bonus" % second_path_str] = affected_tile["%s_bonus" % second_path_str]
+			game.tile_data_persistent[affected_tile_id]["%s_dict" % second_path_str] = affected_tile["%s_dict" % second_path_str]
 
 func add_items_to_inventory(item_name, item_amount:int, item_base_costs:Dictionary, no_space_in_inventory_string:String, add_item_success_string:String):
 	var items_left = game.add_items(item_name, item_amount)
