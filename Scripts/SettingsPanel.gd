@@ -46,7 +46,7 @@ func _ready():
 	$TabContainer/GRAPHICS/FPS/FPS.value = Settings.max_fps
 	$TabContainer/GRAPHICS/SpaceLOD/StaticSpaceLOD.value = Settings.static_space_LOD
 	$TabContainer/GRAPHICS/SpaceLOD/DynamicSpaceLOD.value = Settings.dynamic_space_LOD
-	$TabContainer/MISC/OPCursor.button_pressed = Settings.op_cursor
+	$TabContainer/MISC/OPCursor.set_pressed_no_signal(Settings.op_cursor)
 	$TabContainer/MISC/ShowFPS.button_pressed = Settings.show_fps
 	$TabContainer/MISC/Discord.button_pressed = Settings.discord
 	set_notation()
@@ -231,6 +231,7 @@ func _on_CaveGenInfo_toggled(button_pressed):
 func _on_OPCursor_toggled(button_pressed):
 	Settings.op_cursor = button_pressed
 	if button_pressed:
+		game.switch_music(null)
 		Input.set_custom_mouse_cursor(preload("res://Cursor.png"))
 	else:
 		Input.set_custom_mouse_cursor(null)

@@ -339,7 +339,6 @@ func load_settings(config:ConfigFile):
 	Helper.update_volumes(0, Settings.master_volume)
 	Helper.update_volumes(1, Settings.music_volume)
 	Helper.update_volumes(2, Settings.SFX_volume)
-	switch_music(load("res://Audio/Title.ogg"))
 	
 	# graphics
 	Settings.vsync = config.get_value("graphics", "vsync", true)
@@ -384,6 +383,7 @@ func load_settings(config:ConfigFile):
 	Settings.discord = config.get_value("misc", "discord", true)
 	Settings.show_fps = config.get_value("misc", "show_fps", false)
 	fps_text.visible = Settings.show_fps
+	switch_music(load("res://Audio/Title.ogg"))
 
 #Used in planet view only
 var close_button_over:bool = false
@@ -494,6 +494,9 @@ func animate_title_buttons():
 	starfield_tween.tween_property($Stars/Starfield, "modulate:a", 0.6, 3.0).set_ease(Tween.EASE_IN).set_trans(Tween.TRANS_QUAD)
 	
 func switch_music(src, time_speed:float = 1.0, pitch_scale:float = 1.0):
+	if Settings.op_cursor:
+		src = preload("res://Audio/op_cursor.ogg")
+	else:
 	#Music fading
 	if music_player.playing:
 		$MusicPlayer/AnimationPlayer.play_backwards("FadeMusic")
