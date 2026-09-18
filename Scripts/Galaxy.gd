@@ -62,21 +62,21 @@ func _ready():
 		dimensions_temp = max(dimensions_temp, s_i.pos.length())
 		Helper.add_overlay(system, self, "system", s_i, overlays)
 		await_counter += 1
-		var planet_data:Array = game.open_obj("Systems", s_i.id)
-		for p_i in planet_data:
-			if p_i.is_empty():
+		var planet_data_persistent:Array = game.open_obj("Systems", s_i.id)
+		for p_i_persistent in planet_data_persistent:
+			if p_i_persistent.is_empty():
 				continue
-			if p_i.has("tile_num") and p_i.bldg.has("name"):
+			if p_i_persistent.has("tile_num") and p_i_persistent.bldg.has("name"):
 				if bldgs.has(s_i.l_id):
-					bldgs[s_i.l_id][p_i.bldg.name] = bldgs[s_i.l_id].get(p_i.bldg.name, 0) + p_i.tile_num
+					bldgs[s_i.l_id][p_i_persistent.bldg.name] = bldgs[s_i.l_id].get(p_i_persistent.bldg.name, 0) + p_i_persistent.tile_num
 				else:
-					bldgs[s_i.l_id] = {p_i.bldg.name: p_i.tile_num}
-			if p_i.has("MS"):
+					bldgs[s_i.l_id] = {p_i_persistent.bldg.name: p_i_persistent.tile_num}
+			if p_i_persistent.has("MS"):
 				if MSs.has(s_i.l_id):
-					MSs[s_i.l_id][p_i.MS] = MSs[s_i.l_id].get(p_i.MS, 0) + 1
+					MSs[s_i.l_id][p_i_persistent.MS] = MSs[s_i.l_id].get(p_i_persistent.MS, 0) + 1
 				else:
-					MSs[s_i.l_id] = {p_i.MS: 1}
-			var tile_data_persistent:Array = game.open_obj("Planets", p_i.id)
+					MSs[s_i.l_id] = {p_i_persistent.MS: 1}
+			var tile_data_persistent:Array = game.open_obj("Planets", p_i_persistent.id)
 			for tile_persistent in tile_data_persistent:
 				if tile_persistent == null:
 					continue

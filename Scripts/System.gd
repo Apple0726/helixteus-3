@@ -82,8 +82,6 @@ func refresh_planets():
 		planet_glow.pressed.connect(on_planet_click.bind(p_i["id"], p_i.l_id))
 		planet_btn.scale *= p_i["size"] * 0.0000003 * scale_mult * 640.0 / planet_btn.texture_normal.get_width()
 		planet_glow.scale *= sc
-		if game.system_data[game.c_s].has("conquered"):
-			p_i.conquered = true
 		if p_i.has("conquered"):
 			if p_i.has("bldg"):
 				planet_glow.modulate = Color(0.2, 0.2, 1, 1)
@@ -728,6 +726,8 @@ func build_MS(obj:Dictionary, MS_to_build:String):
 					p_i.cost_div_dict[star_over_id] = cost_div
 				else:
 					p_i["cost_div_dict"] = {star_over_id:cost_div}
+					game.planet_data_persistent[i].cost_div_dict = p_i.cost_div_dict
+				game.planet_data_persistent[i].cost_div = p_i.cost_div
 			for i in len(stars_info):
 				if i != star_over_id:
 					var _star:Dictionary = stars_info[i]

@@ -222,9 +222,11 @@ func battle_victory_callback():
 		Helper.add_ship_XP(i, XP_earned)
 	var all_conquered = true
 	if game.is_conquering_all:
-		for planet in game.planet_data:
+		for i in len(game.planet_data):
+			var planet = game.planet_data[i]
 			if not planet.has("conquered") and planet.has("HX_data"):
 				planet["conquered"] = true
+				game.planet_data_persistent[i].conquered = true
 				game.stats_univ.enemies_rekt_in_battle += len(planet.HX_data)
 				game.stats_dim.enemies_rekt_in_battle += len(planet.HX_data)
 				game.stats_global.enemies_rekt_in_battle += len(planet.HX_data)

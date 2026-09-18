@@ -23,7 +23,7 @@ func _ready():
 
 func refresh():
 	p_i = game.planet_data[game.c_p]
-	cost_div = Helper.clever_round(p_i.cost_div) if p_i.has("cost_div") else 1.0
+	cost_div = Helper.clever_round(p_i.get("cost_div", 1.0))
 	$ScrollContainer/VBoxContainer/AtmosphereExtraction.visible = game.science_unlocked.has("ATM")
 	$ScrollContainer/VBoxContainer/AtomManipulation.visible = game.science_unlocked.has("ATM")
 	$ScrollContainer/VBoxContainer/SubatomicParticles.visible = game.science_unlocked.has("SAP")
@@ -61,20 +61,19 @@ func terraform_planet():
 	if p_i.has("bookmarked"):
 		game.bookmarks.planet.erase(str(game.c_p_g))
 		p_i.erase("bookmarked")
+		game.planet_data_persistent[game.c_p].erase("bookmarked")
 		game.HUD.refresh_bookmarks()
 	for id in len(game.tile_data):
 		if game.tile_data[id].has("bldg"):
 			game.view.obj.destroy_bldg(id, true)
 	p_i.tile_num = surface
+	game.planet_data_persistent[game.c_p].tile_num = surface
 	game.stats_univ.bldgs_built += floor(surface)
 	game.stats_dim.bldgs_built += floor(surface)
 	game.stats_global.bldgs_built += floor(surface)
 	p_i.resource_production_bonus = {}
-	p_i.bldg = {}
-	p_i.bldg.name = tf_type
+	p_i.bldg = {"name": tf_type, "path_1": 1, "path_1_value": Data.path_1[tf_type].value}
 	game.universe_data[game.c_u].xp += round(total_costs.get("money") / 100.0)
-	p_i.bldg.path_1 = 1
-	p_i.bldg.path_1_value = Data.path_1[tf_type].value
 	var building_to_resource = {
 		AncientBuilding.MINERAL_REPLICATOR:"minerals",
 		AncientBuilding.OBSERVATORY:"SP",
@@ -98,16 +97,20 @@ func terraform_planet():
 		p_i.bldg.path_2_value = Data.path_2[tf_type].value
 	if tf_type in [Building.ATOM_MANIPULATOR, Building.SUBATOMIC_PARTICLE_REACTOR]:
 		p_i["EE_mult"] = EE_mult
+		game.planet_data_persistent[game.c_p].EE_mult = p_i.EE_mult
 	if tf_type == Building.RESEARCH_LAB:
 		game.autocollect.rsrc.SP += Data.path_1[Building.RESEARCH_LAB].value * surface * p_i.resource_production_bonus.get("SP", 1)
 	elif tf_type == Building.GREENHOUSE:
 		p_i.ash = {"richness":ash_mult}
 		p_i["metal_mult"] = EE_mult
+		game.planet_data_persistent[game.c_p].ash = p_i.ash
+		game.planet_data_persistent[game.c_p].metal_mult = p_i.metal_mult
 	elif tf_type == Building.POWER_PLANT:
 		game.autocollect.rsrc.energy += Data.path_1[Building.POWER_PLANT].value * surface * p_i.resource_production_bonus.get("energy", 1)
 	elif tf_type == Building.MINERAL_EXTRACTOR:
 		game.autocollect.rsrc.minerals += Data.path_1[Building.MINERAL_EXTRACTOR].value * surface * p_i.resource_production_bonus.get("minerals", 1)
 		p_i.ash = {"richness":ash_mult}
+		game.planet_data_persistent[game.c_p].ash = p_i.ash
 	elif tf_type == Building.MINERAL_SILO:
 		game.mineral_capacity += Data.path_1[Building.MINERAL_SILO].value * surface
 	elif tf_type == Building.BATTERY:
@@ -120,15 +123,16 @@ func terraform_planet():
 	elif tf_type == Building.BORING_MACHINE and not p_i.has("depth"):
 		p_i.depth = 0
 		p_i.bldg.collect_date = Time.get_unix_time_from_system()
+		game.planet_data_persistent[game.c_p].depth = p_i.depth
 		game.boring_machine_data[game.c_p_g] = {"c_s_g":game.c_s_g, "c_p":game.c_p}
+	game.planet_data_persistent[game.c_p].bldg = p_i.bldg
+	game.planet_data_persistent[game.c_p].resource_production_bonus = p_i.resource_production_bonus
 	game.view_history.pop_back()
 	game.view_history_pos -= 1
 	game.switch_view("system")
 	var dir = DirAccess.open("user://%s/Univ%s/Planets" % [game.c_sv, game.c_u])
 	dir.remove("%s.hx3" % game.c_p_g)
 	game.popup(tr("TF_SUCCESS"), 2)
-	#if not game.objective.is_empty() and game.objective.type == game.ObjectiveType.TERRAFORM:
-		#game.objective.current += 1
 	game.HUD.refresh()
 
 func _on_Terraform_pressed():

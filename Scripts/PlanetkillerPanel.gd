@@ -1,6 +1,6 @@
 extends "Panel.gd"
 
-var target:Dictionary = {}
+var target_p_i:Dictionary = {}
 var p_id:int
 var star:Dictionary
 var star_id:int
@@ -22,7 +22,7 @@ func select_planet(p_i:Dictionary, id:int, btn):
 	if star.has("charging_time"):
 		return
 	p_id = id
-	target = p_i
+	target_p_i = p_i
 	refresh_planet_info()
 
 func refresh():
@@ -52,7 +52,7 @@ func refresh():
 		btn.get_node("MS").mouse_entered.connect(on_MS_over)
 		btn.get_node("MS").mouse_exited.connect(on_mouse_exit)
 	if star.has("charging_time"):
-		target = game.planet_data[star.p_id]
+		target_p_i = game.planet_data[star.p_id]
 		set_process(true)
 		$Control.visible = false
 		$Control2.visible = true
@@ -75,7 +75,7 @@ func on_mouse_exit():
 
 func refresh_planet_info():
 	var value = $Control/HSlider.value
-	var energy_cost = pow(target.size / 10000.0, 3) * 1e16
+	var energy_cost = pow(target_p_i.size / 10000.0, 3) * 1e16
 	var time_base = energy_cost / star.luminosity / 1e12
 	charging_time = time_base * (1 - value)
 	additional_energy = time_base * star.luminosity * value * 1e15
@@ -86,22 +86,22 @@ func refresh_planet_info():
 	if charging_time <= 1.0:
 		charging_time = 1.0
 	$Control/TimeCost.text = Helper.time_to_str(charging_time)
-	var R = target.size * 1000.0 / 2#in meters
-	var surface_volume = Helper.get_sph_V(R, R - target.crust_start_depth)#in m^3
-	var crust_volume = Helper.get_sph_V(R - target.crust_start_depth, R - target.mantle_start_depth)
-	var mantle_volume = Helper.get_sph_V(R - target.mantle_start_depth, R - target.core_start_depth)
-	var core_volume = Helper.get_sph_V(R - target.core_start_depth)
+	var R = target_p_i.size * 1000.0 / 2#in meters
+	var surface_volume = Helper.get_sph_V(R, R - target_p_i.crust_start_depth)#in m^3
+	var crust_volume = Helper.get_sph_V(R - target_p_i.crust_start_depth, R - target_p_i.mantle_start_depth)
+	var mantle_volume = Helper.get_sph_V(R - target_p_i.mantle_start_depth, R - target_p_i.core_start_depth)
+	var core_volume = Helper.get_sph_V(R - target_p_i.core_start_depth)
 	var stone = {}
-	add_stone(stone, target.crust, (surface_volume + crust_volume) * ((5600 + target.mantle_start_depth * 0.01) / 2.0))
-	add_stone(stone, target.mantle, mantle_volume * ((5690 + (target.mantle_start_depth + target.core_start_depth) * 0.01) / 2.0))
-	add_stone(stone, target.core, core_volume * ((5700 + (target.core_start_depth + R) * 0.01) / 2.0))
+	add_stone(stone, target_p_i.crust, (surface_volume + crust_volume) * ((5600 + target_p_i.mantle_start_depth * 0.01) / 2.0))
+	add_stone(stone, target_p_i.mantle, mantle_volume * ((5690 + (target_p_i.mantle_start_depth + target_p_i.core_start_depth) * 0.01) / 2.0))
+	add_stone(stone, target_p_i.core, core_volume * ((5700 + (target_p_i.core_start_depth + R) * 0.01) / 2.0))
 	rsrc = {"stone":stone}
 	var max_star_temp = game.get_max_star_prop(game.c_s, "temperature")
 	var au_int = 12000.0 * game.galaxy_data[game.c_g].B_strength * max_star_temp
 	var au_mult = 1.0 + au_int
 	$Control/MMM.text = "[aurora au_int=%s]%s: %s" % [au_int, tr("MAT_MET_MULT"), Helper.format_num(Helper.clever_round(au_mult, 4))]
-	for mat in target.surface:
-		rsrc[mat] = surface_volume * target.surface[mat].chance * target.surface[mat].amount * au_mult * game.u_i.planck
+	for mat in target_p_i.surface:
+		rsrc[mat] = surface_volume * target_p_i.surface[mat].chance * target_p_i.surface[mat].amount * au_mult * game.u_i.planck
 	for met in game.met_info:
 		if met in ["nanocrystal", "mythril"] and game.c_g_g == 0:
 			continue
@@ -123,35 +123,35 @@ func _on_StartCharging_pressed():
 	if rekt_planet:
 		if game.c_v != "system":
 			return
-		var p_i:Dictionary = game.planet_data[star.p_id]
-		if not p_i.is_empty():
+		target_p_i = game.planet_data[star.p_id]
+		if not target_p_i.is_empty():
 			if Settings.screen_shake:
 				game.get_node("Camera2D/Screenshake").start(2.0, 10, 5)
-			var planet_pos:Vector2 = Vector2.from_angle(p_i.angle) * p_i.distance * game.view.obj.scale_mult
+			var planet_pos:Vector2 = Vector2.from_angle(target_p_i.angle) * target_p_i.distance * game.view.obj.scale_mult
 			var BG_flash = game.get_node("BGFlash")
 			BG_flash.modulate.a = 0.6
 			var tween = create_tween()
 			tween.tween_property(BG_flash, "modulate:a", 0.0, 0.5)
-			game.popup(tr("PLANET_REKT") % target.name, 2.5)
-			if p_i.has("bookmarked"):
-				game.bookmarks.planet.erase(str(target.id))
-				game.HUD.planet_grid_btns.remove_child(game.HUD.planet_grid_btns.get_node(str(target.id)))
-				p_i.erase("bookmarked")
-			if p_i.has("MS") and p_i.MS == "MME":
-				game.autocollect.MS.minerals -= Helper.get_MME_output(p_i)
-			if p_i.has("tile_num"):
-				if p_i.bldg.name == "RL":
-					game.autocollect.rsrc.SP -= p_i.bldg.path_1_value * p_i.tile_num
-				elif p_i.bldg.name == "MS":
-					game.mineral_capacity -= p_i.bldg.path_1_value * p_i.tile_num
-				elif p_i.has("auto_GH"):
-					for p in p_i.auto_GH.produce:
-						game.autocollect.mets[p] -= p_i.auto_GH.produce[p]
-					game.autocollect.mats.cellulose += p_i.auto_GH.cellulose_drain
-			var dir = DirAccess.open("user://%s/Univ%s/Planets/%s.hx3" % [game.c_sv, game.c_u, target.id])
+			game.popup(tr("PLANET_REKT") % target_p_i.name, 2.5)
+			if target_p_i.has("bookmarked"):
+				game.bookmarks.planet.erase(str(target_p_i.id))
+				game.HUD.planet_grid_btns.remove_child(game.HUD.planet_grid_btns.get_node(str(target_p_i.id)))
+			if target_p_i.has("MS") and target_p_i.MS == "MME":
+				game.autocollect.MS.minerals -= Helper.get_MME_output(target_p_i)
+			if target_p_i.has("tile_num"):
+				if target_p_i.bldg.name == "RL":
+					game.autocollect.rsrc.SP -= target_p_i.bldg.path_1_value * target_p_i.tile_num
+				elif target_p_i.bldg.name == "MS":
+					game.mineral_capacity -= target_p_i.bldg.path_1_value * target_p_i.tile_num
+				elif target_p_i.has("auto_GH"):
+					for p in target_p_i.auto_GH.produce:
+						game.autocollect.mets[p] -= target_p_i.auto_GH.produce[p]
+					game.autocollect.mats.cellulose += target_p_i.auto_GH.cellulose_drain
+			var dir = DirAccess.open("user://%s/Univ%s/Planets/%s.hx3" % [game.c_sv, game.c_u, target_p_i.id])
 			if dir:
-				dir.remove("user://%s/Univ%s/Planets/%s.hx3" % [game.c_sv, game.c_u, target.id])
-			target.clear()
+				dir.remove("user://%s/Univ%s/Planets/%s.hx3" % [game.c_sv, game.c_u, target_p_i.id])
+			target_p_i.clear()
+			game.planet_data_persistent[star.p_id] = null
 			game.view.obj.position = planet_pos
 			game.view.obj.get_node("PlanetDestroyedSound").play()
 			game.view.obj.refresh_planets()
@@ -173,7 +173,7 @@ func _on_StartCharging_pressed():
 		$Control2.visible = false
 		set_process(false)
 		$StartCharging.text = tr("START_CHARGING")
-	elif star.MS_lv == 0 and target.size <= int(4000 * pow(game.u_i.gravitational, 0.5)) or star.MS_lv == 1 and target.size <= int(40000 * pow(game.u_i.gravitational, 0.5)) or star.MS_lv == 2:
+	elif star.MS_lv == 0 and target_p_i.size <= int(4000 * pow(game.u_i.gravitational, 0.5)) or star.MS_lv == 1 and target_p_i.size <= int(40000 * pow(game.u_i.gravitational, 0.5)) or star.MS_lv == 2:
 		if c_s_g == game.ships_travel_data.c_g_coords.s and p_id == game.ships_travel_data.c_coords.p:
 			game.popup(tr("PK_ERROR"), 2.0)
 			return
@@ -216,7 +216,7 @@ func _process(delta):
 		$Control2/Charging.text = tr("PK_CHARGING_MESSAGE_3")
 	elif progress >= 1:
 		$Control2/TimeCost.text = ""
-		$Control2/Charging.text = tr("PLANET_READY_TO_BE_REKT") % target.name
+		$Control2/Charging.text = tr("PLANET_READY_TO_BE_REKT") % target_p_i.name
 		set_process(false)
 		$StartCharging.visible = true
 		$Desc.hide()

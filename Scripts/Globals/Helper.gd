@@ -1009,7 +1009,6 @@ func get_conquer_all_data():
 	for planet in game.planet_data:
 		if planet.has("conquered") or not planet.has("HX_data"):
 			continue
-		#closest_unconquered_planet_distance = min(closest_unconquered_planet_distance, planet.distance)
 		furthest_unconquered_planet_distance = max(furthest_unconquered_planet_distance, planet.distance)
 		for HX in planet.HX_data:
 			if HX.lv > max_ship_lv - 5:
