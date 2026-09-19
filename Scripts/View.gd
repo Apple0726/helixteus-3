@@ -361,24 +361,23 @@ func remove_obj(obj_str:String, save_zooms:bool = true):
 func save_zooms(obj_str:String):
 	match obj_str:
 		"planet":
-			game.planet_data[game.c_p]["view"]["pos"] = self.position# / self.scale.x
-			game.planet_data[game.c_p]["view"]["zoom"] = self.scale.x
+			game.planet_data_persistent[game.c_p]["view"]["pos"] = self.position
+			game.planet_data_persistent[game.c_p]["view"]["zoom"] = self.scale.x
 		"system":
-			game.system_data[game.c_s].view.pos = self.position# / self.scale.x
-			game.system_data[game.c_s].view.zoom = self.scale.x
+			game.system_data_persistent[game.c_s].view.pos = self.position
+			game.system_data_persistent[game.c_s].view.zoom = self.scale.x
 		"galaxy":
-			game.galaxy_data[game.c_g].view.pos = self.position# / self.scale.x
+			game.galaxy_data[game.c_g].view.pos = self.position
 			game.galaxy_data[game.c_g].view.zoom = self.scale.x
 		"cluster":
 			if game.u_i.cluster_data[game.c_c].has("view"):
-				game.u_i.cluster_data[game.c_c]["view"]["pos"] = self.position# / self.scale.x
+				game.u_i.cluster_data[game.c_c]["view"]["pos"] = self.position
 				game.u_i.cluster_data[game.c_c]["view"]["zoom"] = self.scale.x
 		"universe":
-			game.universe_data[game.c_u]["view"]["pos"] = self.position# / self.scale.x
+			game.universe_data[game.c_u]["view"]["pos"] = self.position
 			game.universe_data[game.c_u]["view"]["zoom"] = self.scale.x
-			#game.universe_data[game.c_u]["view"]["sc_mult"] = scale_mult
 		"science_tree":
-			game.science_tree_view.pos = position# / scale.x
+			game.science_tree_view.pos = position
 			game.science_tree_view.zoom = scale.x
 
 var dragging:bool = false

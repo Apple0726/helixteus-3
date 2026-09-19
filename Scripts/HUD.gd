@@ -450,12 +450,14 @@ func _on_Bookmarked_pressed():
 				"c_g_g":game.c_g_g,
 				"c_c":game.c_c}
 			p_i.bookmarked = true
+			game.planet_data_persistent[game.c_p].bookmarked = true
 			game.bookmarks.planet[str(game.c_p_g)] = bookmark
 	elif game.c_v == "system":
 		var s_i:Dictionary = game.system_data[game.c_s]
 		if s_i.has("bookmarked"):
 			game.bookmarks.system.erase(str(game.c_s_g))
 			s_i.erase("bookmarked")
+			game.system_data_persistent[game.c_s].erase("bookmarked")
 		else:
 			var star:Dictionary = s_i.stars[0]
 			for i in range(1, len(s_i.stars)):
@@ -470,6 +472,7 @@ func _on_Bookmarked_pressed():
 				"c_g_g":game.c_g_g,
 				"c_c":game.c_c}
 			s_i.bookmarked = true
+			game.system_data_persistent[game.c_s].bookmarked = true
 			game.bookmarks.system[str(game.c_s_g)] = bookmark
 	elif game.c_v == "galaxy":
 		var g_i:Dictionary = game.galaxy_data[game.c_g]
@@ -541,6 +544,7 @@ func _on_Name_text_entered(new_text):
 			game.bookmarks.planet[str(game.c_p_g)].name = new_text
 	elif game.c_v == "system":
 		game.system_data[game.c_s].name = new_text
+		game.system_data_persistent[game.c_s].name = new_text
 		if game.bookmarks.system.has(str(game.c_s_g)):
 			game.bookmarks.system[str(game.c_s_g)].name = new_text
 	elif game.c_v == "galaxy":

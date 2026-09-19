@@ -307,6 +307,7 @@ func _process(delta: float) -> void:
 					if not system.has("conquered"):
 						g_i.combined_strength -= system.diff
 						game.system_data[system.l_id].conquered = true
+						game.system_data_persistent[system.l_id].conquered = true
 						system.conquered = true
 						game.stats_univ.planets_conquered += system.planet_num
 						game.stats_dim.planets_conquered += system.planet_num

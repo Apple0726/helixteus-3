@@ -341,41 +341,9 @@ func change_circle_size(value, overlays):
 		overlay.circle.scale.y = 2 * value
 
 func save_obj(type:String, id:int, arr:Array):
-	var properties:Array = []
-	if type == "Galaxies":
-		properties = ["id", "l_id", "name", "pos", "diff", "parent", "planet_num", "planets", "view", "stars", "discovered", "conquered", "closest_planet_distance"]
-	elif type == "Clusters":
-		properties = ["id", "l_id", "name", "pos", "diff", "parent", "system_num", "view", "type", "discovered", "conquered", "rotation", "B_strength", "dark_matter"]
-	var save:FileAccess
 	var file_path:String = "user://%s/Univ%s/%s/%s.hx3" % [game.c_sv, game.c_u, type, id]
-	if not properties.is_empty():
-		var arr_compressed = []
-		var star_properties = ["type", "class", "size", "pos", "temperature", "mass", "luminosity"]
-		for obj in arr:
-			var obj_copy = obj.duplicate(true)
-			var obj_compressed = []
-			for prop in properties:
-				if prop == "stars":
-					var stars_compressed = []
-					for star_info:Dictionary in obj_copy.stars:
-						var star_compressed = []
-						for star_prop in star_properties:
-							star_compressed.append(star_info[star_prop])
-							star_info.erase(star_prop)
-						star_compressed.append(star_info)
-						stars_compressed.append(star_compressed)
-					obj_compressed.append(stars_compressed)
-				else:
-					obj_compressed.append(obj_copy.get(prop))
-				obj_copy.erase(prop)
-			# Obj at this point will only have other attributes. Append it to obj_compressed
-			obj_compressed.append(obj_copy)
-			arr_compressed.append(obj_compressed)
-		save = FileAccess.open(file_path + "~", FileAccess.WRITE)
-		save.store_var(arr_compressed)
-	else:
-		save = FileAccess.open(file_path + "~", FileAccess.WRITE)
-		save.store_var(arr)
+	var save = FileAccess.open(file_path + "~", FileAccess.WRITE)
+	save.store_var(arr)
 	save.close()
 	DirAccess.copy_absolute(file_path + "~", file_path)
 

@@ -239,6 +239,7 @@ func battle_victory_callback():
 		game.stats_dim.enemies_rekt_in_battle += len(HX_data)
 		game.stats_global.enemies_rekt_in_battle += len(HX_data)
 		game.planet_data[game.c_p]["conquered"] = true
+		game.planet_data_persistent[game.c_p]["conquered"] = true
 		game.planet_data[game.c_p].erase("HX_data")
 		for planet in game.planet_data:
 			if not planet.has("conquered"):
@@ -248,14 +249,14 @@ func battle_victory_callback():
 		game.stats_global.planets_conquered += 1
 	if all_conquered:
 		game.system_data[game.c_s]["conquered"] = true
+		game.system_data_persistent[game.c_s]["conquered"] = true
+		Helper.save_obj("Galaxies", game.c_g_g, game.system_data_persistent)
 		game.stats_univ.systems_conquered += 1
 		game.stats_dim.systems_conquered += 1
 		game.stats_global.systems_conquered += 1
 	if not game.bldg_unlocked.has(Building.SOLAR_PANEL) and game.stats_univ.planets_conquered > 1:
 		game.bldg_unlocked[Building.SOLAR_PANEL] = true
 	Helper.save_obj("Systems", game.c_s_g, game.planet_data)
-	if all_conquered:
-		Helper.save_obj("Galaxies", game.c_g_g, game.system_data)
 	if not game.help.has("SP"):
 		game.popup_window(tr("NEW_BLDGS_UNLOCKED_DESC"), tr("NEW_BLDGS_UNLOCKED"))
 		game.help["SP"] = true

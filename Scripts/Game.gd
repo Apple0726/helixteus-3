@@ -580,7 +580,6 @@ func load_univ():
 	elif c_v == "battle":
 		c_v = "system"
 	view.set_process(true)
-	system_data = open_obj("Galaxies", c_g_g)
 	galaxy_data = open_obj("Clusters", c_c)
 	if is_instance_valid(ships_panel):
 		ships_panel.get_node("Drives").reset_selected_drive_fuel()
@@ -902,8 +901,7 @@ func new_game(univ:int = 0, new_save:bool = false, DR_advantage = false):
 	#Stores information of all objects discovered
 	u_i.cluster_data = [{"id":0, "visible":true, "type":0, "shapes":[], "class":ClusterType.GROUP, "name":tr("LOCAL_GROUP"), "pos":Vector2.ZERO, "redshift":0.0, "parent":0, "galaxy_num":55, "galaxies":[], "view":{"pos":Vector2(640, 360), "zoom":1 / 4.0}, "modifiers":[]}]
 	galaxy_data = [{"id":0, "l_id":0, "type":0, "shapes":[], "name":tr("MILKY_WAY"), "pos":Vector2.ZERO, "rotation":0, "diff":u_i.difficulty, "B_strength":1e-9 * u_i.charge * u_i.dark_energy, "dark_matter":1.0, "parent":0, "system_num":400, "seed":0, "view":{"pos":Vector2(7500, 7500) * 0.5 + Vector2(640, 360), "zoom":0.5}}]
-	var s_b:float = pow(u_i.boltzmann, 4) / pow(u_i.planck, 3) / pow(u_i.speed_of_light, 2)
-	system_data = [{"id":0, "l_id":0, "name":tr("SOLAR_SYSTEM"), "pos":Vector2(-7500, -7500), "diff":u_i.difficulty, "parent":0, "planet_num":7, "planets":[], "seed":0, "view":{"pos":Vector2(640, -60), "zoom":0.46}, "stars":[{"type":StarType.MAIN_SEQUENCE, "class":"G2", "size":1, "temperature":5500, "mass":u_i.planck, "luminosity":s_b, "pos":Vector2(0, 0)}]}]
+	system_data = []
 	planet_data = []
 	tile_data = []
 	caves_generated = 0
@@ -972,7 +970,6 @@ func new_game(univ:int = 0, new_save:bool = false, DR_advantage = false):
 	}
 	
 	c_v = "planet"
-	Helper.save_obj("Galaxies", 0, system_data)
 	Helper.save_obj("Clusters", 0, galaxy_data)
 	fn_save_game()
 	if not is_ancestor_of(HUD):
@@ -1111,8 +1108,6 @@ func set_bookmark_coords(bookmark:Dictionary):
 	if bookmark.has("c_g"):
 		c_g = bookmark.c_g
 		c_g_g = bookmark.c_g_g
-		system_data = open_obj("Galaxies", c_g_g)
-		galaxy_data = open_obj("Clusters", c_c)
 	return false#No error
 
 func set_custom_coords(coords:Array, coord_values:Array):#coords: ["c_p_g", "c_p"], coord_values: [1, 2]
@@ -1484,38 +1479,6 @@ func open_obj(type:String, id:int):
 			return []
 	var arr = save.get_var()
 	save.close()
-	if not arr.is_empty() and arr[0] is Array:
-		var arr_decompressed = []
-		var star_properties = ["type", "class", "size", "pos", "temperature", "mass", "luminosity"]
-		for compressed_obj in arr:
-			var decompressed_obj = {}
-			var properties:Array = []
-			if type == "Galaxies":
-				properties = ["id", "l_id", "name", "pos", "diff", "parent", "planet_num", "planets", "view", "stars", "discovered", "conquered", "closest_planet_distance"]
-			elif type == "Clusters":
-				properties = ["id", "l_id", "name", "pos", "diff", "parent", "system_num", "view", "type", "discovered", "conquered", "rotation", "B_strength", "dark_matter"]
-			for i in len(properties):
-				if compressed_obj[i] == null:
-					continue
-				if properties[i] == "stars":
-					var stars = []
-					for star_info:Array in compressed_obj[i]:
-						var star_dict = {}
-						for j in len(star_properties):
-							var star_prop:String = star_properties[j]
-							star_dict[star_prop] = star_info[j]
-						var attr_dict:Dictionary = star_info[-1]
-						for attr in attr_dict.keys():
-							star_dict[attr] = attr_dict[attr]
-						stars.append(star_dict)
-						decompressed_obj.stars = stars
-				else:
-					decompressed_obj[properties[i]] = compressed_obj[i]
-			var attr_dict:Dictionary = compressed_obj[-1]
-			for attr in attr_dict.keys():
-				decompressed_obj[attr] = attr_dict[attr]
-			arr_decompressed.append(decompressed_obj)
-		return arr_decompressed
 	return arr
 	
 func obj_exists(type:String, id:int):
@@ -1689,8 +1652,6 @@ func add_cluster():
 func add_galaxy():
 	if obj_exists("Clusters", c_c):
 		galaxy_data = open_obj("Clusters", c_c)
-	if obj_exists("Galaxies", c_g_g):
-		system_data = open_obj("Galaxies", c_g_g)
 	var generate_normal_galaxy = true
 	if c_g_g != 0 and galaxy_data[c_g].get("name") == "Paris" and not galaxy_data[c_g].has("baguette"):
 		var file = FileAccess.open("Easter eggs/Paris public transit/data.txt", FileAccess.READ)
@@ -1707,32 +1668,6 @@ func add_galaxy():
 	if len(ship_data) == 2 and u_i.lv >= 40:
 		popup_window(tr("WANDERING_SHIP_DESC"), tr("WANDERING_SHIP"))
 		get_3rd_ship()
-
-#func start_system_generation():
-#	reset_collisions()
-#	gc_remaining = floor(pow(galaxy_data[c_g]["system_num"], 0.8) / 250.0)
-#	if c_g_g != 0:
-#		system_data.clear()
-#	generate_systems(c_g)
-#	var N:int = galaxy_data[c_g].system_num
-#	var galaxy_generator = GalaxyGenerator.new()
-#	galaxy_generator.set_system_data(system_data)
-#	galaxy_generator.set_galaxy_properties(c_g_g, N, galaxy_data[c_g].diff)
-#	var res:Array = []
-#	if galaxy_data[c_g].type == 6:
-#		res = galaxy_generator.generate_spiral_galaxy_part()
-#	else:
-#		res = galaxy_generator.generate_cluster_galaxy()
-#	var system_positions = res[0]
-#	var system_difficulties = res[1]
-#	for i in N:
-#		system_data[i].pos = system_positions[i]
-#		system_data[i].diff = system_difficulties[i]
-#	systems_generated += N
-#	Helper.save_obj("Galaxies", c_g_g, system_data)
-#	Helper.save_obj("Clusters", c_c, galaxy_data)
-#	galaxy_generator.queue_free()
-
 
 var update_starfield:bool = false
 
@@ -1761,19 +1696,21 @@ var starfield_tween
 
 func add_system():
 	var starfield_color_param = 0.1 * pow(1.0 / pow(u_i.age, 0.25) / pow(1e-9 / galaxy_data[c_g].B_strength, physics_bonus.BI), 0.65)
-	if obj_exists("Galaxies", c_g_g):
-		system_data = open_obj("Galaxies", c_g_g)
 	set_starfield_color($ShaderExport/SubViewport/Starfield.material, starfield_color_param)
+	if system_data.is_empty():
+		generate_systems(c_g)
 	show_starfield({"position":system_data[c_s].pos / 10000.0})
 	if starfield_tween:
 		starfield_tween.kill()
 	starfield_tween = create_tween()
 	starfield_tween.tween_property($Stars/Starfield, "modulate:a", 0.35, 0.3)
-	generate_planets(c_s)
+	if planet_data.is_empty():
+		generate_planets(c_s)
 	show.bookmarks = true
 	view.add_obj("System", system_data[c_s]["view"]["pos"], system_data[c_s]["view"]["zoom"])
 	if ships_travel_data.c_g_coords.s == c_s_g:
 		system_data[c_s]["explored"] = true
+		system_data_persistent[c_s]["explored"] = true
 	HUD.switch_btn_texture.texture = load("res://Graphics/Galaxies/%s.png" % galaxy_data[c_g].type)
 	if len(ship_data) == 1 and u_i.lv >= 20:
 		popup_window(tr("WANDERING_SHIP_DESC"), tr("WANDERING_SHIP"))
@@ -1782,6 +1719,8 @@ func add_system():
 func add_planet(new_game:bool = false):
 	var starfield_color_param = 0.1 * pow(1.0 / pow(u_i.age, 0.25) / pow(1e-9 / galaxy_data[c_g].B_strength, physics_bonus.BI), 0.65)
 	set_starfield_color($ShaderExport/SubViewport/Starfield.material, starfield_color_param)
+	if system_data.is_empty():
+		generate_systems(c_g)
 	show_starfield({"position":system_data[c_s].pos / 10000.0})
 	if starfield_tween:
 		starfield_tween.kill()
@@ -1829,7 +1768,7 @@ func remove_galaxy():
 	galaxy_data[c_g].shapes = view.shapes_data
 	view.remove_obj("galaxy")
 	Helper.save_obj("Clusters", c_c, galaxy_data)
-	Helper.save_obj("Galaxies", c_g_g, system_data)
+	Helper.save_obj("Galaxies", c_g_g, system_data_persistent)
 
 func remove_system():
 	view.remove_obj("system")
@@ -1845,19 +1784,6 @@ func remove_planet(save_zooms:bool = true):
 	if $UI.has_node("BottomInfo"):
 		$UI/BottomInfo.on_close_pressed()
 	planet_HUD.queue_free()
-
-#For globular cluster generation
-var gc_remaining = 0
-var gc_stars_remaining = 0
-var gc_center = Vector2.ZERO
-#To not put gc near galactic core
-var gc_offset = 0
-
-
-func sort_shapes (a, b):
-	if a[2] < b[2]:
-		return true
-	return false
 
 enum ClusterModifier {
 	MORE_AURORAS,
@@ -2138,9 +2064,9 @@ func generate_spiral_galaxy_part(id:int, center:bool, generation_data:Dictionary
 	generation_data.N_init = N_fin
 
 func generate_systems(id:int):
-	gc_remaining = floor(pow(galaxy_data[id].system_num, 0.8) / 250.0)
-	if c_g_g != 0:
-		system_data.clear()
+	if c_g_g == 0:
+		var s_b:float = pow(u_i.boltzmann, 4) / pow(u_i.planck, 3) / pow(u_i.speed_of_light, 2)
+		system_data = [{"id":0, "l_id":0, "name":tr("SOLAR_SYSTEM"), "pos":Vector2(-7500, -7500), "diff":u_i.difficulty, "parent":0, "planet_num":7, "planets":[], "seed":0, "view":{"pos":Vector2(640, -60), "zoom":0.46}, "stars":[{"type":StarType.MAIN_SEQUENCE, "class":"G2", "size":1, "temperature":5500, "mass":u_i.planck, "luminosity":s_b, "pos":Vector2(0, 0)}]}]
 	
 	var N = galaxy_data[id].system_num
 	var spiral:bool = galaxy_data[id].type == 6
@@ -2175,7 +2101,7 @@ func generate_systems(id:int):
 		var stars = []
 		for _j in range(0, num_stars):
 			#Solar masses
-			var mass:float = -log(rng.randf()) / star_mass_param / (1.65 if gc_stars_remaining == 0 else 4.0)
+			var mass:float = -log(rng.randf()) / star_mass_param * 0.6
 			var star_size = 1
 			var star_class = ""
 			#Temperature in K
@@ -2278,71 +2204,81 @@ func generate_systems(id:int):
 			stats_dim.planets_conquered += planet_num
 			stats_global.planets_conquered += planet_num
 		system_data.append(s_i)
-	galaxy_data[id]["discovered"] = true
 	
-	if galaxy_data[c_g].type == 6:
+	if galaxy_data[id].type == 6:
 		var generation_data = {"max_outer_radius": 0.0, "N_init":0, "r":0.0, "th":0.0}
-		generate_spiral_galaxy_part(c_g, true, generation_data, rng)#Generate stars at the center
+		generate_spiral_galaxy_part(id, true, generation_data, rng)#Generate stars at the center
 		var init_th:float = randf_range(0, PI)
 		generation_data.r = N / 20.0
 		generation_data.r = init_th
 		var N_init:int = generation_data.N_init
 		while generation_data.N_init < (N + N_init) / 2.0:#Arm #1
 			var progress:float = inverse_lerp(N_init, (N + N_init) / 2.0, generation_data.N_init)
-			generate_spiral_galaxy_part(c_g, false, generation_data, rng)
+			generate_spiral_galaxy_part(id, false, generation_data, rng)
 			generation_data.th += 0.4 - lerp(0.0, 0.33, progress)
 			generation_data.r += (1.0 - lerp(0.0, 0.8, progress)) * 1280 * lerp(1.3, 4.0, inverse_lerp(5000, 20000, N))
 		generation_data.th = init_th + PI
 		generation_data.r = N / 20.0
 		while generation_data.N_init < N:#Arm #2
 			var progress:float = inverse_lerp((N + N_init) / 2.0, N, generation_data.N_init)
-			generate_spiral_galaxy_part(c_g, false, generation_data, rng)
+			generate_spiral_galaxy_part(id, false, generation_data, rng)
 			generation_data.th += 0.4 - lerp(0.0, 0.33, progress)
 			generation_data.r += (1.0 - lerp(0.0, 0.8, progress)) * 1280 * lerp(1.3, 4.0, inverse_lerp(5000, 20000, N))
-		if c_g != 0:
+		if id != 0:
 			var view_zoom = 500.0 / generation_data.max_outer_radius
-			galaxy_data[c_g]["view"] = {"pos":Vector2(640, 360), "zoom":view_zoom}
+			galaxy_data[id]["view"] = {"pos":Vector2(640, 360), "zoom":view_zoom}
 	else:
-		systems_collision_detection(c_g, rng)
-	systems_generated += galaxy_data[c_g].system_num
-	Helper.save_obj("Galaxies", c_g_g, system_data)
+		generate_elliptical_galaxy(id, rng)
+	if not galaxy_data[id].has("discovered"):
+		systems_generated += N
+		galaxy_data[id]["discovered"] = true
+	
+	system_data_persistent = open_obj("Galaxies", c_g_g)
+	if system_data_persistent.is_empty():
+		system_data_persistent.resize(N)
+		for i in N:
+			system_data_persistent[i] = {"id":system_data[i].id, "view":system_data[i].get("view", {})}
+	for i in N:
+		var s_i_persistent = system_data_persistent[i]
+		for key in s_i_persistent.keys():
+			system_data[i][key] = s_i_persistent[key]
 	Helper.save_obj("Clusters", c_c, galaxy_data)
 
-func systems_collision_detection(id:int, rng:RandomNumberGenerator):
+func generate_elliptical_galaxy(id:int, rng:RandomNumberGenerator):
 	var total_sys_num = galaxy_data[id].system_num
-	var min_dist_from_center = 0.0
-	var max_dist_from_center = 3000.0
+	
+	#For globular cluster generation
+	var gc_remaining = floor(pow(total_sys_num, 0.8) / 250.0)
+	var gc_stars_remaining = 0
+	var gc_center = Vector2.ZERO
+	#To not put gc near galactic core
+	var gc_offset = 0
+	
+	var max_dist_from_center = sqrt(total_sys_num) * 1000.0
 	var max_outer_radius = 0.0
 	for i in total_sys_num:
-		var s_i = system_data[i]
 		var starting_system = c_g_g == 0 and i == 0
-		#Whether to move on to a new "ring" for collision detection
+		if starting_system:
+			continue
 		if i >= total_sys_num / 8:
 			#								V this condition makes sure globular clusters don't spawn near the center
 			if gc_remaining > 0 and gc_offset > 1 + int(pow(total_sys_num, 0.1)):
 				gc_remaining -= 1
-				gc_stars_remaining = int(pow(total_sys_num, 0.5) * randf_range(1, 3))
-				gc_center = Vector2.from_angle(randf_range(0, 2 * PI)) * min_dist_from_center
-				max_dist_from_center = 100
+				gc_stars_remaining = int(pow(total_sys_num, 0.5) * rng.randf_range(1, 3))
+				gc_center = Vector2.from_angle(rng.randf_range(0, 2 * PI)) * max_dist_from_center
 			gc_offset += 1
-		
 		var biggest_star_size = get_max_star_prop(i, "size")
 		var radius = 320 * pow(biggest_star_size / SYSTEM_SCALE_DIV, 0.35)
-		var pos:Vector2
+		var dist_from_center:float
 		if gc_stars_remaining == 0:
 			gc_center = Vector2.ZERO
-			if min_dist_from_center == 0:
-				max_dist_from_center = 3000
-			else:
-				max_dist_from_center = min_dist_from_center * pow(total_sys_num, 0.04) * 1.1
-		var outer_radius
-		var radius_increase_counter = 0
-		max_outer_radius = max(outer_radius, max_outer_radius)
-		if starting_system:
-			radius = 320 * pow(1 / SYSTEM_SCALE_DIV, 0.3)
+			dist_from_center = rng.randf_range(radius, max_dist_from_center)
 		else:
-			s_i["pos"] = pos
-			s_i["diff"] = get_sys_diff(pos, id, s_i, rng)
+			dist_from_center = rng.randf_range(radius, 100.0)
+		max_outer_radius = max(max_outer_radius, radius + dist_from_center)
+		var pos = Vector2.from_angle(rng.randf_range(0, 2 * PI)) * dist_from_center + gc_center
+		system_data[i]["pos"] = pos
+		system_data[i]["diff"] = get_sys_diff(pos, id, system_data[i], rng)
 	if c_g_g != 0:
 		var view_zoom = 500.0 / max_outer_radius
 		galaxy_data[id]["view"] = {"pos":Vector2(640, 360), "zoom":view_zoom}
@@ -2392,6 +2328,7 @@ func generate_planets(id:int):#local id
 			5:
 				_name = "%s %s" % [tr("QUINTUPLE_SYSTEM"), id]
 		system_data[id].name = _name
+		system_data_persistent[id].name = _name
 	var first_star:Dictionary = system_data[id].stars[0]
 	var combined_star_mass = first_star.mass
 	var star_boundary = star_size_in_pixels(first_star.size / 2.0)
@@ -2428,7 +2365,6 @@ func generate_planets(id:int):#local id
 	while pow(1.3, j) * 240 < star_boundary * 2.63:
 		j += 1
 	var dark_matter = galaxy_data[c_g].dark_matter
-	system_data[id]["planets"].clear()
 	if not achievement_data.exploration.has("20_planet_system") and planet_num >= 20:
 		earn_achievement("exploration", "20_planet_system")
 	if not achievement_data.exploration.has("25_planet_system") and planet_num >= 25:
@@ -2443,7 +2379,7 @@ func generate_planets(id:int):#local id
 		earn_achievement("exploration", "45_planet_system")
 	if not achievement_data.exploration.has("50_planet_system") and planet_num >= 50:
 		earn_achievement("exploration", "50_planet_system")
-	planet_data.clear()
+	system_data[id]["planets"].clear()
 	for i in range(1, planet_num + 1):
 		var random_seed = rng.randi()
 		var p_id = planet_data.size()
@@ -2660,11 +2596,9 @@ func generate_planets(id:int):#local id
 				star.repair_cost *= engineering_bonus.BCM
 				system_data[id].has_MS = true
 		var view_zoom = 40.0 / planet_data[-1].distance * (planet_data[0].distance / 70)
-		system_data[id]["view"] = {"pos":Vector2(640, 360), "zoom":view_zoom}
+		system_data[id]["view"].pos = Vector2(640, 360)
+		system_data[id]["view"].zoom = view_zoom
 	system_data[id]["closest_planet_distance"] = planet_data[0].distance
-	
-	if not system_data[id].has("discovered"):
-		planets_generated += planet_num
 	
 	if c_u == 0:
 		#Home planet information
@@ -2691,20 +2625,24 @@ func generate_planets(id:int):#local id
 		if not system_data[id].has("discovered"):
 			stats_univ.biggest_planet = planet_data[2].size
 	
-	system_data[id]["discovered"] = true
+	if not system_data[id].has("discovered"):
+		planets_generated += planet_num
+		system_data[id]["discovered"] = true
+		system_data_persistent[id]["discovered"] = true
+		system_data_persistent[id]["planets"] = system_data[id]["planets"]
+		Helper.save_obj("Galaxies", c_g_g, system_data_persistent)
 	
 	planet_data_persistent = open_obj("Systems", c_s_g)
 	if planet_data_persistent.is_empty():
 		planet_data_persistent.resize(planet_num)
 		for i in planet_num:
-			planet_data_persistent[i] = {"id": planet_data[i].id}
+			planet_data_persistent[i] = {"id": planet_data[i].id, "view":planet_data[i].view}
 	for i in planet_num:
 		var p_i_persistent = planet_data_persistent[i]
 		for key in p_i_persistent.keys():
 			planet_data[i][key] = p_i_persistent[key]
 		if p_i_persistent.has("conquered"):
 			planet_data[i].erase("HX_data")
-	Helper.save_obj("Galaxies", c_g_g, system_data)
 
 func get_random_element(elements:Dictionary, rng:RandomNumberGenerator):
 	var S:float = 0.0
@@ -3850,10 +3788,10 @@ func save_views(autosave:bool):
 		Helper.save_obj("Systems", c_s_g, planet_data_persistent)
 	elif c_v == "system":
 		Helper.save_obj("Systems", c_s_g, planet_data_persistent)
-		Helper.save_obj("Galaxies", c_g_g, system_data)
+		Helper.save_obj("Galaxies", c_g_g, system_data_persistent)
 	elif c_v == "galaxy":
 		if is_instance_valid(send_probes_panel) and send_probes_panel.is_processing() or is_instance_valid(send_fighters_panel) and send_fighters_panel.is_processing():
-			Helper.save_obj("Galaxies", c_g_g, system_data)
+			Helper.save_obj("Galaxies", c_g_g, system_data_persistent)
 		Helper.save_obj("Clusters", c_c, galaxy_data)
 	elif c_v == "cluster":
 		Helper.save_obj("Clusters", c_c, galaxy_data)
@@ -4083,6 +4021,7 @@ func conquer_all(energy_cost:float, insta_conquer:bool):
 			if not bldg_unlocked.has(Building.SOLAR_PANEL):
 				bldg_unlocked[Building.SOLAR_PANEL] = true
 			system_data[c_s].conquered = true
+			system_data_persistent[c_s].conquered = true
 			view.obj.refresh_planets()
 			space_HUD.get_node("ConquerAll").visible = false
 		else:
