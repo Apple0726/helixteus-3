@@ -702,8 +702,15 @@ func build_MS(obj:Dictionary, MS_to_build:String):
 			game.stats_dim.MS_constructed += 1
 			game.stats_global.MS_constructed += 1
 		obj.MS = MS_to_build
-		game.system_data[game.c_s].has_MS = true
-		game.system_data_persistent[game.c_s].has_MS = true
+		var s_i:Dictionary = game.system_data[game.c_s]
+		var g_i:Dictionary = game.galaxy_data[game.c_g]
+		if not s_i.has("MS_count"):
+			s_i.MS_count = {}
+			game.system_data_persistent[game.c_s].MS_count = game.system_data[game.c_s].MS_count
+		if s_i.MS_count.has(g_i.l_id):
+			s_i.MS_count[g_i.l_id][MS_to_build] = s_i.MS_count[g_i.l_id].get(MS_to_build, 0) + 1
+		else:
+			s_i.MS_count[g_i.l_id] = {MS_to_build: 1}
 		obj.bldg = {}
 		game.universe_data[game.c_u].xp += round(bldg_costs.get("money", 0.0) / 100.0)
 		if obj.MS == "DS":

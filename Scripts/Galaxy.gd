@@ -21,15 +21,17 @@ func _ready():
 	queue_redraw()
 	var await_counter:int = 0
 	g_i = game.galaxy_data[game.c_g]
-	for s_i in game.system_data:
+	for i in len(game.system_data):
+		var s_i = game.system_data[i]
 		if not is_inside_tree():
 			return
 		var star:Dictionary = s_i.stars[0]
-		for i in range(1, len(s_i.stars)):
-			if s_i.stars[i].luminosity > star.luminosity:
-				star = s_i.stars[i]
+		for j in range(1, len(s_i.stars)):
+			if s_i.stars[j].luminosity > star.luminosity:
+				star = s_i.stars[j]
 		if g_i.has("conquered") and not s_i.has("conquered"):
 			s_i["conquered"] = true
+			game.system_data_persistent[i].conquered = true
 			game.stats_univ.planets_conquered += s_i.planet_num
 			game.stats_dim.planets_conquered += s_i.planet_num
 			game.stats_global.planets_conquered += s_i.planet_num
@@ -96,8 +98,6 @@ func _ready():
 					MSs[s_i.l_id][_star.MS] = MSs[s_i.l_id].get(_star.MS, 0) + 1
 				else:
 					MSs[s_i.l_id] = {_star.MS: 1}
-		#if is_instance_valid(game.overlay):
-			#change_overlay(game.overlay.option_btn.selected, game.overlay.get_node("TextureRect").texture.gradient, overlays[-1])
 		star_btn.visible = not game.overlay_data.galaxy.visible
 		overlays[-1].circle.visible = game.overlay_data.galaxy.visible
 		if await_counter % int(6000.0 / Engine.get_frames_per_second()) == 0:

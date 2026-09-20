@@ -479,6 +479,7 @@ func _on_Bookmarked_pressed():
 		if g_i.has("bookmarked"):
 			game.bookmarks.galaxy.erase(str(game.c_g_g))
 			g_i.erase("bookmarked")
+			game.galaxy_data_persistent[game.c_g].erase("bookmarked")
 		else:
 			var bookmark:Dictionary = {
 				"type":g_i.type,
@@ -487,6 +488,7 @@ func _on_Bookmarked_pressed():
 				"c_g_g":game.c_g_g,
 				"c_c":game.c_c}
 			g_i.bookmarked = true
+			game.galaxy_data_persistent[game.c_g].bookmarked = true
 			game.bookmarks.galaxy[str(game.c_g_g)] = bookmark
 	elif game.c_v == "cluster":
 		var c_i:Dictionary = game.u_i.cluster_data[game.c_c]
@@ -549,6 +551,7 @@ func _on_Name_text_entered(new_text):
 			game.bookmarks.system[str(game.c_s_g)].name = new_text
 	elif game.c_v == "galaxy":
 		game.galaxy_data[game.c_g].name = new_text
+		game.galaxy_data_persistent[game.c_g].name = new_text
 		if game.bookmarks.galaxy.has(str(game.c_g_g)):
 			game.bookmarks.galaxy[str(game.c_g_g)].name = new_text
 	elif game.c_v == "cluster":

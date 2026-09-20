@@ -286,8 +286,6 @@ func _draw():
 func refresh():
 	if game.c_v == "":
 		return
-	#if game.c_v not in ["universe", "cluster", "galaxy", "system", "planet"]:
-		#return
 	var show_ship = false
 	var sh_c:Dictionary = game.ships_travel_data.c_coords
 	if game.c_v == "universe":
@@ -338,9 +336,7 @@ func refresh():
 			add_child(icon)
 	queue_redraw()
 
-func add_obj(obj_str:String, pos:Vector2, sc:float, s_m:float = 1.0):
-	#scale_dec_threshold = 5 * pow(20, -2 - floor(Helper.log10(s_m)))
-	#scale_inc_threshold = 5 * pow(20, -1 - floor(Helper.log10(s_m)))
+func add_obj(obj_str:String, pos:Vector2, sc:float):
 	obj = load("res://Scenes/Views/" + obj_str + ".tscn").instantiate()
 	add_child(obj)
 	position = pos
@@ -361,11 +357,11 @@ func remove_obj(obj_str:String, save_zooms:bool = true):
 func save_zooms(obj_str:String):
 	match obj_str:
 		"planet":
-			game.planet_data_persistent[game.c_p]["view"]["pos"] = self.position
-			game.planet_data_persistent[game.c_p]["view"]["zoom"] = self.scale.x
+			game.planet_data[game.c_p]["view"]["pos"] = self.position
+			game.planet_data[game.c_p]["view"]["zoom"] = self.scale.x
 		"system":
-			game.system_data_persistent[game.c_s].view.pos = self.position
-			game.system_data_persistent[game.c_s].view.zoom = self.scale.x
+			game.system_data[game.c_s].view.pos = self.position
+			game.system_data[game.c_s].view.zoom = self.scale.x
 		"galaxy":
 			game.galaxy_data[game.c_g].view.pos = self.position
 			game.galaxy_data[game.c_g].view.zoom = self.scale.x

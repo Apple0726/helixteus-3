@@ -84,12 +84,12 @@ func _ready():
 							MSs[g_i.l_id][p_i.MS] = MSs[g_i.l_id].get(p_i.MS, 0) + 1
 						else:
 							MSs[g_i.l_id] = {p_i.MS: 1}
-				for _star in s_i.stars:
-					if _star.has("MS"):
+				if s_i.has("MS_count"):
+					for MS in s_i.MS_count:
 						if MSs.has(g_i.l_id):
-							MSs[g_i.l_id][_star.MS] = MSs[g_i.l_id].get(_star.MS, 0) + 1
+							MSs[g_i.l_id][MS] = MSs[g_i.l_id].get(MS, 0) + 1
 						else:
-							MSs[g_i.l_id] = {_star.MS: 1}
+							MSs[g_i.l_id] = {MS: 1}
 		await_counter += 1
 		if is_instance_valid(game.overlay):
 			change_overlay(0, game.overlay.get_node("Control/Gradient").texture.gradient, overlays[-1])
@@ -310,6 +310,7 @@ func _process(delta: float) -> void:
 					if not galaxy.has("conquered"):
 						c_i.combined_strength -= galaxy.diff
 						game.galaxy_data[galaxy.l_id].conquered = true
+						game.galaxy_data_persistent[galaxy.l_id].conquered = true
 						galaxy.conquered = true
 						game.stats_univ.systems_conquered += galaxy.system_num
 						game.stats_dim.systems_conquered += galaxy.system_num
