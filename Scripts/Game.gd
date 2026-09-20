@@ -524,9 +524,9 @@ func switch_music(src, time_speed:float = 1.0, pitch_scale:float = 1.0):
 func load_univ():
 	view_history.clear()
 	view_history_pos = -1
-	var save_game = FileAccess.open("user://%s/Univ%s/main.hx3" % [c_sv, c_u], FileAccess.READ)
+	var save_game = FileAccess.open_compressed("user://%s/Univ%s/main.hx3" % [c_sv, c_u], FileAccess.READ, FileAccess.COMPRESSION_ZSTD)
 	if save_game == null:
-		save_game = FileAccess.open("user://%s/Univ%s/main.hx3~" % [c_sv, c_u], FileAccess.READ)
+		save_game = FileAccess.open_compressed("user://%s/Univ%s/main.hx3~" % [c_sv, c_u], FileAccess.READ, FileAccess.COMPRESSION_ZSTD)
 	var save_game_dict:Dictionary = save_game.get_var()
 	save_game.close()
 	for key in save_game_dict:
@@ -590,9 +590,9 @@ func load_univ():
 		ships_panel.get_node("Drives").hide()
 
 func load_game():
-	var save_info = FileAccess.open("user://%s/save_info.hx3" % [c_sv], FileAccess.READ)
+	var save_info = FileAccess.open_compressed("user://%s/save_info.hx3" % [c_sv], FileAccess.READ, FileAccess.COMPRESSION_ZSTD)
 	if save_info == null:
-		save_info = FileAccess.open("user://%s/save_info.hx3~" % [c_sv], FileAccess.READ)
+		save_info = FileAccess.open_compressed("user://%s/save_info.hx3~" % [c_sv], FileAccess.READ, FileAccess.COMPRESSION_ZSTD)
 	var save_info_dict:Dictionary = save_info.get_var()
 	save_info.close()
 	save_created = save_info_dict.save_created
@@ -1468,9 +1468,9 @@ func remove_science_tree():
 
 func open_obj(type:String, id:int):
 	var file_path:String = "user://%s/Univ%s/%s/%s.hx3" % [c_sv, c_u, type, id]
-	var save = FileAccess.open(file_path, FileAccess.READ)
+	var save = FileAccess.open_compressed(file_path, FileAccess.READ, FileAccess.COMPRESSION_ZSTD)
 	if save == null or save.get_length() == 0:
-		save = FileAccess.open(file_path + "~", FileAccess.READ)
+		save = FileAccess.open_compressed(file_path + "~", FileAccess.READ, FileAccess.COMPRESSION_ZSTD)
 		if save == null:
 			return []
 		if save.get_length() == 0:
@@ -1930,7 +1930,9 @@ func generate_galaxies(id:int):
 	if galaxy_data_persistent.is_empty():
 		galaxy_data_persistent.resize(total_gal_num)
 		for i in total_gal_num:
-			galaxy_data_persistent[i] = {"id":galaxy_data[i].id, "view":galaxy_data[i].get("view", {})}
+			galaxy_data_persistent[i] = {"id":galaxy_data[i].id}
+			if galaxy_data[i].has("view"):
+				galaxy_data_persistent[i].view = galaxy_data[i].view
 	for i in total_gal_num:
 		var g_i_persistent = galaxy_data_persistent[i]
 		for key in g_i_persistent.keys():
@@ -2239,7 +2241,9 @@ func generate_systems(id:int):
 	if system_data_persistent.is_empty():
 		system_data_persistent.resize(N)
 		for i in N:
-			system_data_persistent[i] = {"id":system_data[i].id, "view":system_data[i].get("view", {})}
+			system_data_persistent[i] = {"id":system_data[i].id}
+			if system_data[i].has("view"):
+				system_data_persistent[i].view = system_data[i].view
 	for i in N:
 		var s_i_persistent = system_data_persistent[i]
 		for key in s_i_persistent.keys():
@@ -3714,7 +3718,7 @@ func fn_save_game():
 		"stats_dim":stats_dim,
 		"achievement_data":achievement_data,
 	}
-	var save_info_file = FileAccess.open("user://%s/save_info.hx3~" % [c_sv], FileAccess.WRITE)
+	var save_info_file = FileAccess.open_compressed("user://%s/save_info.hx3~" % [c_sv], FileAccess.WRITE, FileAccess.COMPRESSION_ZSTD)
 	save_info_file.store_var(save_info)
 	save_info_file.close()
 	DirAccess.copy_absolute("user://%s/save_info.hx3~" % [c_sv], "user://%s/save_info.hx3" % [c_sv])
@@ -3774,7 +3778,7 @@ func fn_save_game():
 		"caves_generated":caves_generated,
 		"boring_machine_data":boring_machine_data,
 	}
-	var save_game = FileAccess.open("user://%s/Univ%s/main.hx3~" % [c_sv, c_u], FileAccess.WRITE)
+	var save_game = FileAccess.open_compressed("user://%s/Univ%s/main.hx3~" % [c_sv, c_u], FileAccess.WRITE, FileAccess.COMPRESSION_ZSTD)
 	save_game.store_var(save_game_dict)
 	save_game.close()
 	if c_v == "cave" and is_instance_valid(cave):

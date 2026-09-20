@@ -342,7 +342,7 @@ func change_circle_size(value, overlays):
 
 func save_obj(type:String, id:int, arr:Array):
 	var file_path:String = "user://%s/Univ%s/%s/%s.hx3" % [game.c_sv, game.c_u, type, id]
-	var save = FileAccess.open(file_path + "~", FileAccess.WRITE)
+	var save = FileAccess.open_compressed(file_path + "~", FileAccess.WRITE, FileAccess.COMPRESSION_ZSTD)
 	save.store_var(arr)
 	save.close()
 	DirAccess.copy_absolute(file_path + "~", file_path)
@@ -1652,11 +1652,11 @@ var export_save_files_exported = 0
 
 func export_save(save_to_export:String, path:String):
 	export_save_files_exported = 0
-	var file = FileAccess.open(path, FileAccess.WRITE)
+	var file = FileAccess.open_compressed(path, FileAccess.WRITE, FileAccess.COMPRESSION_ZSTD)
 	var success = true
 	if file:
 		var save_dict = {"univs":[]}
-		var file2 = FileAccess.open("user://%s/save_info.hx3" % save_to_export, FileAccess.READ)
+		var file2 = FileAccess.open_compressed("user://%s/save_info.hx3" % save_to_export, FileAccess.READ, FileAccess.COMPRESSION_ZSTD)
 		if file2:
 			save_dict.save_info = file2.get_var()
 			file2.close()
@@ -1693,7 +1693,7 @@ func export_univ(univ_str:String, save_to_export:String):
 		"planets":{},
 		"systems":{},
 	}
-	var file = FileAccess.open("user://%s/%s/main.hx3" % [save_to_export, univ_str], FileAccess.READ)
+	var file = FileAccess.open_compressed("user://%s/%s/main.hx3" % [save_to_export, univ_str], FileAccess.READ, FileAccess.COMPRESSION_ZSTD)
 	if file:
 		univ_data.main = file.get_var()
 		file.close()
@@ -1721,7 +1721,7 @@ func export_univ_folder(univ_data:Dictionary, univ_str:String, folder:String, sa
 		var file_name = directory.get_next()
 		while file_name != "":
 			if not directory.current_is_dir():
-				var file = FileAccess.open("user://%s/%s/%s/%s" % [save_to_export, univ_str, folder, file_name], FileAccess.READ)
+				var file = FileAccess.open_compressed("user://%s/%s/%s/%s" % [save_to_export, univ_str, folder, file_name], FileAccess.READ, FileAccess.COMPRESSION_ZSTD)
 				if file:
 					univ_data[folder.to_lower()][file_name] = file.get_var()
 					export_save_data_exported += file.get_length()
@@ -1764,7 +1764,7 @@ func get_file_size_string(bytes:int):
 		"b_byte":tr("B_BYTE")})
 
 func import_save(save_name:String, path:String):
-	var importing_file = FileAccess.open(path, FileAccess.READ)
+	var importing_file = FileAccess.open_compressed(path, FileAccess.READ, FileAccess.COMPRESSION_ZSTD)
 	if importing_file:
 		var save_dict:Dictionary = importing_file.get_var()
 		var directory = DirAccess.open("user://")
@@ -1777,12 +1777,12 @@ func import_save(save_name:String, path:String):
 		else:
 			final_save_name = save_name
 		if directory.make_dir(final_save_name) == OK:
-			var save_info_file = FileAccess.open("user://%s/save_info.hx3" % final_save_name, FileAccess.WRITE)
+			var save_info_file = FileAccess.open_compressed("user://%s/save_info.hx3" % final_save_name, FileAccess.WRITE, FileAccess.COMPRESSION_ZSTD)
 			if save_info_file:
 				save_info_file.store_var(save_dict.save_info)
 				for i in len(save_dict.univs):
 					if directory.make_dir("user://%s/Univ%s" % [final_save_name, i]) == OK:
-						var univ_file = FileAccess.open("user://%s/Univ%s/main.hx3" % [final_save_name, i], FileAccess.WRITE)
+						var univ_file = FileAccess.open_compressed("user://%s/Univ%s/main.hx3" % [final_save_name, i], FileAccess.WRITE, FileAccess.COMPRESSION_ZSTD)
 						if univ_file:
 							univ_file.store_var(save_dict.univs[i].main)
 						make_obj_dir(save_dict, i, "user://%s/Univ%s" % [final_save_name, i], "Caves")
@@ -1799,13 +1799,13 @@ func make_obj_dir(save_dict:Dictionary, univ:int, path:String, obj:String):
 	var directory = DirAccess.open(path)
 	if directory.make_dir("%s/%s" % [path, obj]) == OK:
 		for obj_file_name in save_dict.univs[univ][obj.to_lower()].keys():
-			var file = FileAccess.open("%s/%s/%s" % [path, obj, obj_file_name], FileAccess.WRITE)
+			var file = FileAccess.open_compressed("%s/%s/%s" % [path, obj, obj_file_name], FileAccess.WRITE, FileAccess.COMPRESSION_ZSTD)
 			if file:
 				file.store_var(save_dict.univs[univ][obj.to_lower()][obj_file_name])
 			file.close()
 
 func get_save_info(save_name:String):
-	var save_info = FileAccess.open("user://%s/save_info.hx3" % [save_name], FileAccess.READ)
+	var save_info = FileAccess.open_compressed("user://%s/save_info.hx3" % [save_name], FileAccess.READ, FileAccess.COMPRESSION_ZSTD)
 	var try_backup = false
 	var save_info_dict
 	if save_info == null:
@@ -1815,7 +1815,7 @@ func get_save_info(save_name:String):
 		if save_info_dict is not Dictionary:
 			try_backup = true
 	if try_backup:
-		save_info = FileAccess.open("user://%s/save_info.hx3~" % [save_name], FileAccess.READ)
+		save_info = FileAccess.open_compressed("user://%s/save_info.hx3~" % [save_name], FileAccess.READ, 0)
 		if save_info == null:
 			return null
 		else:

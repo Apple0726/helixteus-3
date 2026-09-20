@@ -267,9 +267,9 @@ func _ready():
 			$UI/MinimapBG.visible = true
 	if tile[cave_type].has("id"):
 		id = tile.cave.id
-		var cave_data_file = FileAccess.open("user://%s/Univ%s/Caves/%s.hx3" % [game.c_sv, game.c_u, id], FileAccess.READ)
+		var cave_data_file = FileAccess.open_compressed("user://%s/Univ%s/Caves/%s.hx3" % [game.c_sv, game.c_u, id], FileAccess.READ, FileAccess.COMPRESSION_ZSTD)
 		if cave_data_file == null:
-			cave_data_file = FileAccess.open("user://%s/Univ%s/Caves/%s.hx3~" % [game.c_sv, game.c_u, id], FileAccess.READ)
+			cave_data_file = FileAccess.open_compressed("user://%s/Univ%s/Caves/%s.hx3~" % [game.c_sv, game.c_u, id], FileAccess.READ, FileAccess.COMPRESSION_ZSTD)
 		cave_data = cave_data_file.get_var()
 		cave_data_file.close()
 		seeds = cave_data.seeds
@@ -1279,7 +1279,7 @@ func add_to_inventory(rsrc:int, content:float, remainders:Dictionary):
 			remainders[rsrc] = content
 
 func save_cave_data():
-	var cave_data_file = FileAccess.open("user://%s/Univ%s/Caves/%s.hx3~" % [game.c_sv, game.c_u, id], FileAccess.WRITE)
+	var cave_data_file = FileAccess.open_compressed("user://%s/Univ%s/Caves/%s.hx3~" % [game.c_sv, game.c_u, id], FileAccess.WRITE, FileAccess.COMPRESSION_ZSTD)
 	var cave_data_dict = {
 		"seeds":seeds,
 		"tiles_mined":tiles_mined,
