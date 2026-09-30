@@ -759,7 +759,8 @@ func new_game(univ:int = 0, new_save:bool = false, DR_advantage = false):
 		for ach in Data.achievements:
 			achievement_data[ach] = {}
 		if subject_levels.dimensional_power <= 4:
-			universe_data = [{"id":0, "lv":1, "generated":true, "xp":0, "xp_to_lv":10, "shapes":[], "name":tr("UNIVERSE"), "cluster_num":1000, "view":{"pos":Vector2(640, 360), "zoom":1.0, "sc_mult":0.1}}]
+			universe_data = [Data.starting_universe_data.duplicate(true)]
+			universe_data[0].seed = 0
 			universe_data[0].speed_of_light = 1.0#3.0e8#m/s
 			universe_data[0].planck = 1.0#e(6.626, -34)#J.s
 			universe_data[0].boltzmann = 1.0#e(1.381, -23)#J/K
@@ -900,7 +901,8 @@ func new_game(univ:int = 0, new_save:bool = false, DR_advantage = false):
 		for met in met_info.keys():
 			show[met] = true
 	#Stores information of all objects discovered
-	u_i.cluster_data = [{"id":0, "visible":true, "type":0, "shapes":[], "class":ClusterType.GROUP, "name":tr("LOCAL_GROUP"), "pos":Vector2.ZERO, "redshift":0.0, "parent":0, "galaxy_num":55, "galaxies":[], "seed":0, "view":{"pos":Vector2(640, 360), "zoom":1 / 4.0}, "modifiers":[]}]
+	u_i.cluster_data = []
+	u_i.cluster_data_persistent = []
 	galaxy_data = []
 	system_data = []
 	planet_data = []
@@ -1420,15 +1422,24 @@ func switch_view(new_view:String, other_params:Dictionary = {}):
 
 func add_science_tree():
 	$ScienceTreeBG.visible = Settings.enable_shaders
-	var tween = create_tween()
-	tween.tween_property($ScienceTreeBG, "modulate", Color.WHITE, 0.5)
 	$ClusterBG.visible = false
 	HUD.get_node("Buttons").visible = false
 	HUD.get_node("Bottom/Panel").visible = false
 	HUD.get_node("Bottom/Hotbar").visible = false
 	HUD.get_node("Top/Lv").modulate.a = 0.5
 	HUD.get_node("Top/Name").modulate.a = 0.5
-	add_obj("science_tree")
+	view.add_obj("ScienceTree", science_tree_view.pos, science_tree_view.zoom)
+	var sc_UI = load("res://Scenes/ScienceUI.tscn").instantiate()
+	sc_UI.modulate.a = 0.0
+	$UI.add_child(sc_UI)
+	sc_UI.sc_tree = view.obj
+	view.obj.modulate.a = 0.0
+	sc_UI.name = "ScienceUI"
+	var tween = create_tween()
+	tween.set_parallel(true)
+	tween.tween_property($ScienceTreeBG, "modulate", Color.WHITE, 0.5)
+	tween.tween_property(sc_UI, "modulate", Color.WHITE, 0.2).set_delay(0.1)
+	tween.tween_property(view.obj, "modulate", Color.WHITE, 0.2).set_delay(0.1)
 	for rsrc in HUD.get_node("Top/Resources").get_children():
 		if rsrc.name != "SP":
 			rsrc.modulate.a = 0.5
@@ -1483,25 +1494,6 @@ func open_obj(type:String, id:int):
 func obj_exists(type:String, id:int):
 	var file_path:String = "user://%s/Univ%s/%s/%s.hx3" % [c_sv, c_u, type, id]
 	return FileAccess.open(file_path, FileAccess.READ) or FileAccess.open(file_path + "~", FileAccess.READ)
-
-func add_obj(view_str):
-	match view_str:
-		"universe":
-			view.shapes_data = universe_data[c_u].shapes
-			view.add_obj("Universe", universe_data[c_u]["view"]["pos"], universe_data[c_u]["view"]["zoom"], universe_data[c_u]["view"]["sc_mult"])
-		"science_tree":
-			view.add_obj("ScienceTree", science_tree_view.pos, science_tree_view.zoom)
-			var sc_UI = load("res://Scenes/ScienceUI.tscn").instantiate()
-			sc_UI.modulate.a = 0.0
-			$UI.add_child(sc_UI)
-			sc_UI.sc_tree = view.obj
-			view.obj.modulate.a = 0.0
-			sc_UI.name = "ScienceUI"
-			var tween = create_tween()
-			tween.set_parallel(true)
-			tween.tween_property(sc_UI, "modulate", Color.WHITE, 0.2).set_delay(0.1)
-			tween.tween_property(view.obj, "modulate", Color.WHITE, 0.2).set_delay(0.1)
-	view.queue_redraw()
 
 func add_space_HUD():
 	if not is_instance_valid(space_HUD) or not is_ancestor_of(space_HUD):
@@ -1604,19 +1596,24 @@ func add_universe():
 		starfield_universe_tween.set_parallel(true)
 		starfield_universe_tween.tween_property($StarfieldUniverse.material, "shader_parameter/brightness", 0.0015, 0.5)
 		starfield_universe_tween.tween_property($StarfieldUniverse.material, "shader_parameter/max_alpha", 0.6, 0.5)
-	if not universe_data[c_u].has("discovered"):
-		generate_clusters(c_u)
-		universe_data[c_u].discovered = true
-	add_obj("universe")
+	if not u_i.has("cluster_data"):
+		generate_clusters()
+	view.shapes_data = u_i.shapes
+	view.add_obj("Universe", u_i["view"]["pos"], u_i["view"]["zoom"])
 	HUD.switch_btn_texture.texture = preload("res://Graphics/Buttons/DimensionView.png")
 
 func add_cluster():
+	if not u_i.has("cluster_data"):
+		generate_clusters()
 	if galaxy_data.is_empty():
 		generate_galaxies(c_c)
 	view.shapes_data = u_i.cluster_data[c_c].shapes
 	view.add_obj("Cluster", u_i.cluster_data[c_c]["view"]["pos"], u_i.cluster_data[c_c]["view"]["zoom"])
 	if ships_travel_data.c_coords.c == c_c:
 		u_i.cluster_data[c_c]["explored"] = true
+		if u_i.cluster_data_persistent[c_c] == null:
+			u_i.cluster_data_persistent[c_c] = {}
+		u_i.cluster_data_persistent[c_c]["explored"] = true
 	$Stars/WhiteStars.visible = true
 	$Stars/AnimationPlayer.play("StarFade")
 	if Settings.enable_shaders:
@@ -1704,6 +1701,8 @@ func add_system():
 		get_2nd_ship()
 
 func add_planet(new_game:bool = false):
+	if u_i.cluster_data.is_empty():
+		generate_clusters()
 	if galaxy_data.is_empty():
 		generate_galaxies(c_g)
 	var starfield_color_param = 0.1 * pow(1.0 / pow(u_i.age, 0.25) / pow(1e-9 / galaxy_data[c_g].B_strength, physics_bonus.BI), 0.65)
@@ -1800,36 +1799,53 @@ var cluster_modifier_data = { # Probability factors. Higher value = rarer
 	ClusterModifier.LOT_MORE_ANCIENT_BLDGS: {"p": 40.0, "name":"LOT_MORE_ANCIENT_BLDGS", "category":"ancient_bldgs"},
 }
 
-func generate_clusters(parent_id:int):
-	randomize()
+func generate_clusters():
 	var total_clust_num = u_i.cluster_num
-	var max_dist_from_center = pow(total_clust_num, 0.5) * 500
+	u_i.cluster_data = []
+	u_i.cluster_data.resize(total_clust_num)
+	u_i.cluster_data[0] = {
+		"id":0,
+		"visible":true,
+		"type":0,
+		"shapes":[],
+		"class":ClusterType.GROUP,
+		"name":tr("LOCAL_GROUP"),
+		"pos":Vector2.ZERO,
+		"redshift":0.0,
+		"parent":0,
+		"galaxy_num":55,
+		"galaxies":[],
+		"seed":0,
+		"view":{"pos":Vector2(640, 360), "zoom":1 / 4.0},
+		"modifiers":[],
+	}
+	var max_dist_from_center = pow(total_clust_num, 0.5) * 500.0
 	show.c_bk_button = true
-	for _i in range(0, total_clust_num):
-		if parent_id == 0 and _i == 0:
-			continue
-		var c_id = u_i.cluster_data.size()
+	var rng = RandomNumberGenerator.new()
+	rng.seed = u_i.seed
+	for c_id in range(1, total_clust_num):
 		var c_i = {
 			"type": 0,
-			"class": ClusterType.GROUP if randf() < 0.5 else ClusterType.CLUSTER,
-			"parent": parent_id,
+			"class": ClusterType.GROUP if rng.randf() < 0.5 else ClusterType.CLUSTER,
+			"parent": c_u,
 			"visible": TEST,
 			"galaxies": [],
 			"shapes": [],
 			"modifiers": [],
 			"id": c_id + clusters_generated,
+			"seed":rng.randi()
 		}
 		if c_i["class"] == ClusterType.GROUP:
-			c_i["galaxy_num"] = randi_range(10, 100)
+			c_i["galaxy_num"] = rng.randi_range(10, 100)
 		else:
-			c_i["galaxy_num"] = randi_range(500, 5000)
+			c_i["galaxy_num"] = rng.randi_range(500, 5000)
 		var pos:Vector2
-		var dist_from_center = pow(randf(), 0.5) * max_dist_from_center + 160
-		if _i == 1:
+		var dist_from_center = pow(rng.randf(), 0.5) * max_dist_from_center + 160
+		if c_id == 1:
 			dist_from_center = 200
 			c_i["class"] = ClusterType.GROUP
-			c_i["galaxy_num"] = randi_range(80, 100)
-		pos = Vector2.from_angle(randf_range(0, 2 * PI)) * dist_from_center
+			c_i["galaxy_num"] = rng.randi_range(80, 100)
+		pos = Vector2.from_angle(rng.randf_range(0, 2 * PI)) * dist_from_center
 		c_i["pos"] = pos
 		var DE_factor = pos.length() * u_i.dark_energy
 		c_i["redshift"] = Helper.clever_round(DE_factor * 0.002)
@@ -1838,7 +1854,7 @@ func generate_clusters(parent_id:int):
 				# mod_to_add: ClusterModifier.MORE_AURORAS, ...
 				var r = c_i.redshift
 				var p = cluster_modifier_data[mod_to_add].p # probability factor
-				if randf() < (r + 1.0) / (r + p):
+				if rng.randf() < (r + 1.0) / (r + p):
 					c_i.modifiers.append(mod_to_add)
 					# Erase inferior modifiers in same category
 					for mod_in_cl in cluster_modifier_data:
@@ -1848,9 +1864,19 @@ func generate_clusters(parent_id:int):
 							continue
 						if c_i.modifiers.has(mod_in_cl) and cluster_modifier_data[mod_in_cl].p < cluster_modifier_data[mod_to_add].p:
 							c_i.modifiers.erase(mod_in_cl)
-		u_i.cluster_data.append(c_i)
-	clusters_generated += total_clust_num
-	fn_save_game()
+		u_i.cluster_data[c_id] = c_i
+	if not u_i.has("discovered"):
+		clusters_generated += total_clust_num
+		u_i.discovered = true
+		u_i.cluster_data_persistent = []
+		u_i.cluster_data_persistent.resize(total_clust_num)
+	for i in total_clust_num:
+		var c_i_persistent = u_i.cluster_data_persistent[i]
+		if c_i_persistent == null:
+			continue
+		for key in c_i_persistent.keys():
+			u_i.cluster_data[i][key] = c_i_persistent[key]
+	save_universe()
 
 func generate_galaxies(id:int):
 	var total_gal_num = u_i.cluster_data[id]["galaxy_num"]
@@ -1926,7 +1952,7 @@ func generate_galaxies(id:int):
 		else:
 			u_i.cluster_data[id].name = tr("GALAXY_CLUSTER") + " %s" % id
 	
-	galaxy_data_persistent = open_obj("Galaxies", c_g_g)
+	galaxy_data_persistent = open_obj("Clusters", c_c)
 	if galaxy_data_persistent.is_empty():
 		galaxy_data_persistent.resize(total_gal_num)
 		for i in total_gal_num:
@@ -2033,7 +2059,6 @@ func generate_spiral_galaxy_part(id:int, center:bool, generation_data:Dictionary
 		var s_i = system_data[i]
 		var starting_system = c_g_g == 0 and i == 0
 		var biggest_star_size = get_max_star_prop(i, "size")
-		#Collision detection
 		var radius = 320 * pow(biggest_star_size / SYSTEM_SCALE_DIV, 0.35)
 		var r2 = randf_range(0, circ_size)
 		var th2 = randf_range(0, 2 * PI)
@@ -2211,7 +2236,7 @@ func generate_systems(id:int):
 		generate_spiral_galaxy_part(id, true, generation_data, rng)#Generate stars at the center
 		var init_th:float = randf_range(0, PI)
 		generation_data.r = N / 20.0
-		generation_data.r = init_th
+		generation_data.th = init_th
 		var N_init:int = generation_data.N_init
 		while generation_data.N_init < (N + N_init) / 2.0:#Arm #1
 			var progress:float = inverse_lerp(N_init, (N + N_init) / 2.0, generation_data.N_init)
@@ -3697,14 +3722,15 @@ func _input(event):
 		if c_v != "":
 			save_views(false)
 
-func fn_save_game():
-	save_date = Time.get_unix_time_from_system()
+func save_universe():
+	var universe_data_to_save = universe_data.duplicate(true)
+	universe_data_to_save.erase("cluster_data")
 	var save_info:Dictionary = {
 		"save_created":save_created,
 		"save_modified":save_date,
 		"help":help,
 		"c_u":c_u,
-		"universe_data":universe_data,
+		"universe_data":universe_data_to_save,
 		"version":VERSION,
 		"DRs":DRs,
 		"dim_num":dim_num,
@@ -3722,6 +3748,10 @@ func fn_save_game():
 	save_info_file.store_var(save_info)
 	save_info_file.close()
 	DirAccess.copy_absolute("user://%s/save_info.hx3~" % [c_sv], "user://%s/save_info.hx3" % [c_sv])
+
+func fn_save_game():
+	save_date = Time.get_unix_time_from_system()
+	save_universe()
 	if c_u == -1:
 		return
 	var save_game_dict = {
@@ -3942,21 +3972,22 @@ func return_to_menu():
 	$Autosave.stop()
 	await switch_view("")
 	c_v = ""
+	c_sv = ""
 	DRs = 0
 	refresh_continue_button()
 	switch_music(preload("res://Audio/Title.ogg"))
 	HUD.queue_free()
-	$Title/VBoxContainer/NewGame.connect("pressed",Callable(self,"_on_NewGame_pressed"))
+	$Title/VBoxContainer/NewGame.pressed.connect(_on_NewGame_pressed)
 	$Title.visible = true
 	$TitleBackground.visible = true
 	animate_title_buttons()
-	universe_data.clear()
 	view.queue_redraw()
 	dim_num = 1
 	autocollect.clear()
 
 func generate_new_univ():
-	universe_data.append({"id":0, "lv":1, "xp":0, "xp_to_lv":10, "shapes":[], "name":tr("UNIVERSE"), "cluster_num":1000, "view":{"pos":Vector2(640 * 0.5, 360 * 0.5), "zoom":2, "sc_mult":0.1}})
+	universe_data[0] = Data.starting_universe_data.duplicate(true)
+	universe_data[0].seed = randi()
 	universe_data[0].speed_of_light = 1.0#3.0e8#m/s
 	universe_data[0].planck = 1.0#e(6.626, -34)#J.s
 	universe_data[0].boltzmann = 1.0#e(1.381, -23)#J/K

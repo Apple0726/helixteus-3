@@ -146,7 +146,8 @@ func discover_univ():
 				game.probe_data.erase(probe)
 				break
 	var id:int = len(game.universe_data)
-	var u_i:Dictionary = {"id":id, "lv":1, "xp":0, "xp_to_lv":10, "shapes":[], "name":"%s %s" % [tr("UNIVERSE"), id], "cluster_num":1000, "view":{"pos":Vector2(640, 360), "zoom":2, "sc_mult":0.1}}
+	var u_i:Dictionary = Data.starting_universe_data.duplicate(true)
+	u_i.name = "%s %s" % [tr("UNIVERSE"), id]
 	for prop in $TP/VBox.get_children():
 		if prop.name == "s_b":
 			continue

@@ -94,7 +94,7 @@ func _ready():
 		if is_instance_valid(game.overlay):
 			change_overlay(0, game.overlay.get_node("Control/Gradient").texture.gradient, overlays[-1])
 		galaxy_btn.visible = not game.overlay_data.cluster.visible
-		overlays[-1].circle.visible = game.overlay_data.cluster.visible
+		overlays[-1].obj.visible = game.overlay_data.cluster.visible
 		if await_counter % int(3000.0 / Engine.get_frames_per_second()) == 0:
 			await get_tree().process_frame
 	game.add_space_HUD()
@@ -200,21 +200,21 @@ func change_overlay(overlay_id:int, gradient:Gradient, object:Dictionary = {}):
 		1:
 			for overlay in _overlays:
 				if game.galaxy_data[overlay.id].has("discovered"):
-					overlay.circle.modulate = gradient.sample(0)
+					overlay.obj.modulate = gradient.sample(0)
 				else:
-					overlay.circle.modulate = gradient.sample(1)
+					overlay.obj.modulate = gradient.sample(1)
 		2:
 			for overlay in _overlays:
 				if game.galaxy_data[overlay.id].has("explored"):
-					overlay.circle.modulate = gradient.sample(0)
+					overlay.obj.modulate = gradient.sample(0)
 				else:
-					overlay.circle.modulate = gradient.sample(1)
+					overlay.obj.modulate = gradient.sample(1)
 		3:
 			for overlay in _overlays:
 				if game.galaxy_data[overlay.id].has("conquered"):
-					overlay.circle.modulate = gradient.sample(0)
+					overlay.obj.modulate = gradient.sample(0)
 				else:
-					overlay.circle.modulate = gradient.sample(1)
+					overlay.obj.modulate = gradient.sample(1)
 		4:
 			for overlay in _overlays:
 				var offset = inverse_lerp(c_vl.left, c_vl.right, game.galaxy_data[overlay.id].diff)
@@ -230,9 +230,9 @@ func change_overlay(overlay_id:int, gradient:Gradient, object:Dictionary = {}):
 		7:
 			for overlay in _overlays:
 				if game.galaxy_data[overlay.id].has("GS"):
-					overlay.circle.modulate = gradient.sample(0)
+					overlay.obj.modulate = gradient.sample(0)
 				else:
-					overlay.circle.modulate = gradient.sample(1)
+					overlay.obj.modulate = gradient.sample(1)
 		8:
 			var matched_objs_display = []
 			var matched_objs = []
@@ -247,9 +247,9 @@ func change_overlay(overlay_id:int, gradient:Gradient, object:Dictionary = {}):
 						found = true
 						break
 				if found:
-					overlay.circle.modulate = gradient.sample(0)
+					overlay.obj.modulate = gradient.sample(0)
 				else:
-					overlay.circle.modulate = gradient.sample(1)
+					overlay.obj.modulate = gradient.sample(1)
 			game.overlay.update_filter_text(matched_objs_display)
 
 func _input(event):

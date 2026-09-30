@@ -215,7 +215,8 @@ func refresh_options(index:int, recalculate:bool = true):
 	$Control/Yes.visible = not editable
 	$Control/No.visible = not editable
 	game.overlay_data[game.c_v].overlay = index
-	send_overlay_info(index)
+	if game.overlay_data[game.c_v].visible:
+		send_overlay_info(index)
 
 func send_overlay_info(index):
 	game.view.obj.change_overlay(index, $Control/Gradient.texture.gradient)
@@ -263,7 +264,7 @@ func _on_CheckBox_toggled(button_pressed):
 	if game.overlay_data[game.c_v].visible:
 		send_overlay_info(game.overlay_data[game.c_v].overlay)
 	toggle_btn.button_pressed = game.overlay_data[game.c_v].visible
-	Helper.toggle_overlay(game.view.obj.obj_btns, game.view.obj.overlays, button_pressed)
+	Helper.toggle_overlay(game.view.obj.overlays, button_pressed)
 
 
 func _on_LeftNumEdit_text_entered(new_text):
@@ -301,7 +302,8 @@ func _on_HideObj_toggled(button_pressed):
 	if err == OK:
 		config.set_value("misc", "hide_obj", button_pressed)
 		config.save("user://settings.cfg")
-	send_overlay_info(game.overlay_data[game.c_v].overlay)
+	if game.overlay_data[game.c_v].visible:
+		send_overlay_info(game.overlay_data[game.c_v].overlay)
 
 
 func _on_Settings_pressed():
@@ -322,7 +324,8 @@ func _on_grayscale_toggled(toggled_on: bool) -> void:
 	if err == OK:
 		config.set_value("misc", "grayscale", toggled_on)
 		config.save("user://settings.cfg")
-	send_overlay_info(game.overlay_data[game.c_v].overlay)
+	if game.overlay_data[game.c_v].visible:
+		send_overlay_info(game.overlay_data[game.c_v].overlay)
 
 
 func _on_filter_focus_entered() -> void:

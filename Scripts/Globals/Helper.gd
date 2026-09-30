@@ -315,30 +315,29 @@ func get_prod_info(tile_obj):
 	var progress = qty_made / tile_obj.bldg.qty2#1 = complete
 	return {"spd":spd, "progress":progress, "qty_made":qty_made, "qty_left":qty_left}
 
-var overlay_rsrc = preload("res://Graphics/Elements/Default.png")
+var overlay_texture = preload("res://Graphics/Elements/Default.png")
 func add_overlay(parent, self_node, c_v:String, obj_info:Dictionary, overlays:Array):
-	var overlay_texture = overlay_rsrc
-	var overlay = TextureButton.new()
-	overlay.texture_normal = overlay_texture
-	overlay.visible = false
-	parent.add_child(overlay)
-	overlays.append({"circle":overlay, "id":obj_info.l_id})
-	overlay.connect("mouse_entered",Callable(self_node,"on_%s_over" % [c_v]).bind(obj_info.l_id))
-	overlay.connect("mouse_exited",Callable(self_node,"on_%s_out" % [c_v]))
-	overlay.connect("pressed",Callable(self_node,"on_%s_click" % [c_v]).bind(obj_info.id, obj_info.l_id))
-	overlay.position = Vector2(-300 / 2, -300 / 2)
-	overlay.pivot_offset = Vector2(300 / 2, 300 / 2)
+	overlays.append({
+		"obj":parent,
+		"id":obj_info.l_id,
+		"original_texture":parent.texture_normal,
+		"original_clickmask":parent.texture_click_mask,
+		"original_scale":parent.scale})
 
-func toggle_overlay(obj_btns, overlays, overlay_visible):
-	for obj_btn in obj_btns:
-		obj_btn.visible = not overlay_visible
+func toggle_overlay(overlays, overlay_visible):
 	for overlay in overlays:
-		overlay.circle.visible = overlay_visible and overlay.circle.modulate.a == 1.0
+		if overlay_visible:
+			overlay.obj.texture_normal = overlay_texture
+			overlay.obj.scale = Vector2.ONE
+			overlay.obj.texture_click_mask = null
+		else:
+			overlay.obj.texture_normal = overlay.original_texture
+			overlay.obj.texture_click_mask = overlay.original_clickmask
+			overlay.obj.scale = overlay.original_scale
 
 func change_circle_size(value, overlays):
 	for overlay in overlays:
-		overlay.circle.scale.x = 2 * value
-		overlay.circle.scale.y = 2 * value
+		overlay.obj.scale = Vector2.ONE * 2 * value
 
 func save_obj(type:String, id:int, arr:Array):
 	var file_path:String = "user://%s/Univ%s/%s/%s.hx3" % [game.c_sv, game.c_u, type, id]
@@ -1158,9 +1157,9 @@ func get_bldg_tooltip2(bldg:int, path_1_value, path_2_value, path_3_value):
 			return ""
 
 func set_overlay_visibility(gradient:Gradient, overlay, offset:float):
-	overlay.circle.modulate = gradient.sample(offset)
-	overlay.circle.visible = game.overlay.toggle_btn.button_pressed and (not game.overlay.hide_obj_btn.button_pressed or offset >= 0 and offset <= 1)
-	overlay.circle.modulate.a = 1.0 if overlay.circle.visible else 0.0
+	overlay.obj.modulate = gradient.sample(offset)
+	overlay.obj.visible = (not game.overlay.hide_obj_btn.button_pressed or offset >= 0 and offset <= 1)
+	overlay.obj.modulate.a = 1.0 if overlay.obj.visible else 0.0
 
 func remove_recursive(path):
 	# Open directory

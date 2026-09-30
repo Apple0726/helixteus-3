@@ -6,7 +6,6 @@ var dimensions:float
 var dimensions_temp:float
 
 const DIST_MULT = 200.0
-var obj_btns = []
 var overlays = []
 var star_texture = [	preload("res://Graphics/Effects/spotlight_4.png"),
 						preload("res://Graphics/Effects/spotlight_5.png"),
@@ -36,33 +35,23 @@ func _ready():
 			game.stats_dim.planets_conquered += s_i.planet_num
 			game.stats_global.planets_conquered += s_i.planet_num
 		var star_btn = TextureButton.new()
-		var system = Sprite2D.new()
 		star_btn.texture_normal = star_texture[int(star.temperature) % 3]
 		star_btn.texture_click_mask = preload("res://Graphics/Misc/StarCM.png")
 		star_btn.self_modulate = Helper.get_star_modulate(star["class"])
-		var star2 = TextureRect.new()
-		star2.texture = star_texture[int(star.temperature) % 3]
-		star2.pivot_offset_ratio = Vector2.ONE * 0.5
-		star2.scale *= 0.5
 		var galaxy_tween = create_tween()
 		star_btn.modulate.a = 0.0
 		galaxy_tween.tween_property(star_btn, "modulate:a", 1.0, 0.3)
-		star2.modulate.a = 0.6
-		star_btn.add_child(star2)
-		add_child(system)
-		system.add_child(star_btn)
-		obj_btns.append(star_btn)
+		add_child(star_btn)
 		star_btn.mouse_entered.connect(on_system_over.bind(s_i.l_id))
 		star_btn.mouse_exited.connect(on_system_out)
 		star_btn.pressed.connect(on_system_click.bind(s_i.id, s_i.l_id))
 		star_btn.rotation = sin(star.temperature) * 180
-		star_btn.position = -0.5 * Vector2.ONE * star_btn.texture_normal.get_width()
 		star_btn.pivot_offset_ratio = Vector2.ONE * 0.5
 		var radius = pow(star["size"] / game.SYSTEM_SCALE_DIV, 0.35)
 		star_btn.scale *= radius * 1024.0 / star_btn.texture_normal.get_width()
-		system.position = s_i["pos"]
+		star_btn.position = s_i["pos"]
 		dimensions_temp = max(dimensions_temp, s_i.pos.length())
-		Helper.add_overlay(system, self, "system", s_i, overlays)
+		Helper.add_overlay(star_btn, self, "system", s_i, overlays)
 		await_counter += 1
 		var planet_data_persistent:Array = game.open_obj("Systems", s_i.id)
 		for p_i_persistent in planet_data_persistent:
@@ -98,8 +87,6 @@ func _ready():
 					MSs[s_i.l_id][_star.MS] = MSs[s_i.l_id].get(_star.MS, 0) + 1
 				else:
 					MSs[s_i.l_id] = {_star.MS: 1}
-		star_btn.visible = not game.overlay_data.galaxy.visible
-		overlays[-1].circle.visible = game.overlay_data.galaxy.visible
 		if await_counter % int(6000.0 / Engine.get_frames_per_second()) == 0:
 			await get_tree().process_frame
 	game.add_space_HUD()
@@ -197,21 +184,21 @@ func change_overlay(overlay_id:int, gradient:Gradient, object:Dictionary = {}):
 		2:
 			for overlay in _overlays:
 				if game.system_data[overlay.id].has("discovered"):
-					overlay.circle.modulate = gradient.sample(0)
+					overlay.obj.modulate = gradient.sample(0)
 				else:
-					overlay.circle.modulate = gradient.sample(1)
+					overlay.obj.modulate = gradient.sample(1)
 		3:
 			for overlay in _overlays:
 				if game.system_data[overlay.id].has("explored"):
-					overlay.circle.modulate = gradient.sample(0)
+					overlay.obj.modulate = gradient.sample(0)
 				else:
-					overlay.circle.modulate = gradient.sample(1)
+					overlay.obj.modulate = gradient.sample(1)
 		4:
 			for overlay in _overlays:
 				if game.system_data[overlay.id].has("conquered"):
-					overlay.circle.modulate = gradient.sample(0)
+					overlay.obj.modulate = gradient.sample(0)
 				else:
-					overlay.circle.modulate = gradient.sample(1)
+					overlay.obj.modulate = gradient.sample(1)
 		5:
 			for overlay in _overlays:
 				var offset = inverse_lerp(c_vl.left, c_vl.right, game.system_data[overlay.id].diff)
@@ -248,9 +235,9 @@ func change_overlay(overlay_id:int, gradient:Gradient, object:Dictionary = {}):
 						found = true
 						break
 				if found:
-					overlay.circle.modulate = gradient.sample(0)
+					overlay.obj.modulate = gradient.sample(0)
 				else:
-					overlay.circle.modulate = gradient.sample(1)
+					overlay.obj.modulate = gradient.sample(1)
 			game.overlay.update_filter_text(matched_objs_display)
 
 func _on_Galaxy_tree_exited():
