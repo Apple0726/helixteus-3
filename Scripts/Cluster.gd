@@ -24,30 +24,27 @@ func _ready():
 			continue
 		conquered = conquered and g_i.has("conquered")
 		var galaxy_btn = TextureButton.new()
-		var galaxy = Sprite2D.new()
 		galaxy_btn.texture_normal = game.galaxy_textures[g_i.type]
-		self.add_child(galaxy)
-		galaxy.add_child(galaxy_btn)
+		add_child(galaxy_btn)
 		obj_btns.append(galaxy_btn)
 		galaxy_btn.mouse_entered.connect(on_galaxy_over.bind(g_i.l_id))
 		galaxy_btn.mouse_exited.connect(on_galaxy_out)
 		galaxy_btn.pressed.connect(on_galaxy_click.bind(g_i.id, g_i.l_id))
 		var radius = pow(g_i["system_num"] / game.GALAXY_SCALE_DIV, 0.5)
-		galaxy_btn.position = Vector2(-galaxy_btn.texture_normal.get_width(), -galaxy_btn.texture_normal.get_height()) / 2.0 * radius
 		galaxy_btn.scale = Vector2.ONE * radius * 256.0 / galaxy_btn.texture_normal.get_width()
-		galaxy.rotation = g_i.rotation
+		galaxy_btn.rotation = g_i.rotation
 		galaxy_btn.modulate = g_i.get("modulate", Color.WHITE)
-		galaxy_btn.modulate.a = 0.0
+		galaxy_btn.self_modulate.a = 0.0
 		var tween = create_tween()
-		tween.tween_property(galaxy_btn, "modulate:a", 1.0, 0.15)
-		galaxy.position = g_i["pos"]
+		tween.tween_property(galaxy_btn, "self_modulate:a", 1.0, 0.15)
+		galaxy_btn.position = g_i["pos"]
 		dimensions_temp = max(dimensions_temp, g_i.pos.length())
-		Helper.add_overlay(galaxy, self, "galaxy", g_i, overlays)
+		Helper.add_overlay(galaxy_btn, self, "galaxy", g_i, overlays)
 		if g_i.has("GS"):
 			var GS_marker:Sprite2D = Sprite2D.new()
 			GS_marker.scale *= 2.0
 			GS_marker.texture = preload("res://Graphics/Effects/spotlight_8.png")
-			galaxy.add_child(GS_marker)
+			galaxy_btn.add_child(GS_marker)
 			var rsrc
 			var prod:float
 			var rsrc_mult:float = 1.0

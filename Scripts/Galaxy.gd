@@ -16,8 +16,19 @@ var bldgs:Dictionary = {}
 var ancient_bldgs:Dictionary = {}
 var MSs:Dictionary = {}
 
+static var star_btns = []
+
+var load_bldg_info_thread:Thread
+
 func _ready():
-	queue_redraw()
+	if star_btns.is_empty():
+		for i in 15000:
+			var star_btn = TextureButton.new()
+			star_btn.texture_click_mask = preload("res://Graphics/Misc/StarCM.png")
+			star_btn.pivot_offset_ratio = Vector2.ONE * 0.5
+			star_btns.append(star_btn)
+	load_bldg_info_thread = Thread.new()
+	load_bldg_info_thread.start(load_bldg_info)
 	var await_counter:int = 0
 	g_i = game.galaxy_data[game.c_g]
 	for i in len(game.system_data):
@@ -34,25 +45,33 @@ func _ready():
 			game.stats_univ.planets_conquered += s_i.planet_num
 			game.stats_dim.planets_conquered += s_i.planet_num
 			game.stats_global.planets_conquered += s_i.planet_num
-		var star_btn = TextureButton.new()
+		var star_btn = star_btns[i]
 		star_btn.texture_normal = star_texture[int(star.temperature) % 3]
-		star_btn.texture_click_mask = preload("res://Graphics/Misc/StarCM.png")
-		star_btn.self_modulate = Helper.get_star_modulate(star["class"])
+		star_btn.modulate = Helper.get_star_modulate(star["class"])
 		var galaxy_tween = create_tween()
-		star_btn.modulate.a = 0.0
-		galaxy_tween.tween_property(star_btn, "modulate:a", 1.0, 0.3)
+		star_btn.self_modulate.a = 0.0
+		galaxy_tween.tween_property(star_btn, "self_modulate:a", 1.0, 0.3)
 		add_child(star_btn)
 		star_btn.mouse_entered.connect(on_system_over.bind(s_i.l_id))
 		star_btn.mouse_exited.connect(on_system_out)
 		star_btn.pressed.connect(on_system_click.bind(s_i.id, s_i.l_id))
 		star_btn.rotation = sin(star.temperature) * 180
-		star_btn.pivot_offset_ratio = Vector2.ONE * 0.5
 		var radius = pow(star["size"] / game.SYSTEM_SCALE_DIV, 0.35)
-		star_btn.scale *= radius * 1024.0 / star_btn.texture_normal.get_width()
+		star_btn.scale = Vector2.ONE * radius * 1024.0 / star_btn.texture_normal.get_width()
 		star_btn.position = s_i["pos"]
 		dimensions_temp = max(dimensions_temp, s_i.pos.length())
 		Helper.add_overlay(star_btn, self, "system", s_i, overlays)
 		await_counter += 1
+		if await_counter % int(60000.0 / Engine.get_frames_per_second()) == 0:
+			await get_tree().process_frame
+	game.add_space_HUD()
+	if is_instance_valid(game.overlay):
+		game.overlay.refresh_options(game.overlay_data[game.c_v].overlay)
+	dimensions = dimensions_temp
+
+func load_bldg_info():
+	for i in len(game.system_data):
+		var s_i = game.system_data[i]
 		var planet_data_persistent:Array = game.open_obj("Systems", s_i.id)
 		for p_i_persistent in planet_data_persistent:
 			if p_i_persistent.is_empty():
@@ -87,12 +106,6 @@ func _ready():
 					MSs[s_i.l_id][_star.MS] = MSs[s_i.l_id].get(_star.MS, 0) + 1
 				else:
 					MSs[s_i.l_id] = {_star.MS: 1}
-		if await_counter % int(6000.0 / Engine.get_frames_per_second()) == 0:
-			await get_tree().process_frame
-	game.add_space_HUD()
-	if is_instance_valid(game.overlay):
-		game.overlay.refresh_options(game.overlay_data[game.c_v].overlay)
-	dimensions = dimensions_temp
 
 func _draw():
 	if g_i.has("wormholes"):
@@ -241,7 +254,7 @@ func change_overlay(overlay_id:int, gradient:Gradient, object:Dictionary = {}):
 			game.overlay.update_filter_text(matched_objs_display)
 
 func _on_Galaxy_tree_exited():
-	queue_free()
+	load_bldg_info_thread.wait_to_finish()
 
 var sorted_systems:Array = []
 var system_conquer_start_index:int = 0
@@ -335,3 +348,9 @@ func disband_fighters():
 	for i in len(game.fighter_data):
 		if game.fighter_data[i] and game.fighter_data[i].get("c_g_g", -1) == game.c_g_g:
 			game.fighter_data[i] = null
+
+
+func _on_tree_exiting() -> void:
+	for star_btn in star_btns:
+		if is_ancestor_of(star_btn):
+			remove_child(star_btn)

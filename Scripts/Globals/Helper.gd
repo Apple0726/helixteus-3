@@ -322,18 +322,20 @@ func add_overlay(parent, self_node, c_v:String, obj_info:Dictionary, overlays:Ar
 		"id":obj_info.l_id,
 		"original_texture":parent.texture_normal,
 		"original_clickmask":parent.texture_click_mask,
-		"original_scale":parent.scale})
+		"original_scale":parent.scale,
+		"original_modulate":parent.modulate})
 
 func toggle_overlay(overlays, overlay_visible):
 	for overlay in overlays:
 		if overlay_visible:
 			overlay.obj.texture_normal = overlay_texture
-			overlay.obj.scale = Vector2.ONE
 			overlay.obj.texture_click_mask = null
+			overlay.obj.scale = Vector2.ONE
 		else:
 			overlay.obj.texture_normal = overlay.original_texture
 			overlay.obj.texture_click_mask = overlay.original_clickmask
 			overlay.obj.scale = overlay.original_scale
+			overlay.obj.modulate = overlay.original_modulate
 
 func change_circle_size(value, overlays):
 	for overlay in overlays:

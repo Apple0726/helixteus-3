@@ -2250,7 +2250,7 @@ func generate_systems(id:int):
 			generate_spiral_galaxy_part(id, false, generation_data, rng)
 			generation_data.th += 0.4 - lerp(0.0, 0.33, progress)
 			generation_data.r += (1.0 - lerp(0.0, 0.8, progress)) * 1280 * lerp(1.3, 4.0, inverse_lerp(5000, 20000, N))
-		if id != 0:
+		if not galaxy_data[id].has("view"):
 			var view_zoom = 500.0 / generation_data.max_outer_radius
 			galaxy_data[id]["view"] = {"pos":Vector2(640, 360), "zoom":view_zoom}
 			galaxy_data_persistent[id]["view"] = galaxy_data[id].view
@@ -2260,7 +2260,7 @@ func generate_systems(id:int):
 		systems_generated += N
 		galaxy_data[id]["discovered"] = true
 		galaxy_data_persistent[id]["discovered"] = true
-		Helper.save_obj("Clusters", c_c, galaxy_data)
+		Helper.save_obj("Clusters", c_c, galaxy_data_persistent)
 	
 	system_data_persistent = open_obj("Galaxies", c_g_g)
 	if system_data_persistent.is_empty():
@@ -2309,7 +2309,7 @@ func generate_elliptical_galaxy(id:int, rng:RandomNumberGenerator):
 		var pos = Vector2.from_angle(rng.randf_range(0, 2 * PI)) * dist_from_center + gc_center
 		system_data[i]["pos"] = pos
 		system_data[i]["diff"] = get_sys_diff(pos, id, system_data[i], rng)
-	if c_g_g != 0:
+	if not galaxy_data[id].has("view"):
 		var view_zoom = 500.0 / max_outer_radius
 		galaxy_data[id]["view"] = {"pos":Vector2(640, 360), "zoom":view_zoom}
 		galaxy_data_persistent[id]["view"] = galaxy_data[id].view
@@ -2627,8 +2627,7 @@ func generate_planets(id:int):#local id
 				star.repair_cost *= engineering_bonus.BCM
 				system_data[id].has_MS = true
 		var view_zoom = 40.0 / planet_data[-1].distance * (planet_data[0].distance / 70)
-		system_data[id]["view"].pos = Vector2(640, 360)
-		system_data[id]["view"].zoom = view_zoom
+		system_data[id]["view"] = {"pos": Vector2(640, 360), "zoom": view_zoom}
 	elif c_u == 0:
 		#Home planet information
 		planet_data[2]["name"] = tr("HOME_PLANET")
