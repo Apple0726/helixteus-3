@@ -1679,6 +1679,8 @@ func update_starfield_BG():
 var starfield_tween
 
 func add_system():
+	if galaxy_data.is_empty():
+		generate_galaxies(c_c)
 	var starfield_color_param = 0.1 * pow(1.0 / pow(u_i.age, 0.25) / pow(1e-9 / galaxy_data[c_g].B_strength, physics_bonus.BI), 0.65)
 	set_starfield_color($ShaderExport/SubViewport/Starfield.material, starfield_color_param)
 	if system_data.is_empty():
@@ -1909,7 +1911,6 @@ func generate_galaxies(id:int):
 			"type": rng.randi() % 7,
 			"dark_matter": Helper.clever_round(pow(rng.randf_range(0.85, 1.15), -log(max(1e-7, rng.randf())) * pow(redshift + 1.0, 0.6) * 0.4 + 1)), # Influences planet numbers and size
 			"rotation": rng.randf_range(0.0, 2.0 * PI),
-			"view": {"pos":Vector2(640, 360), "zoom": 0.2},
 			"id": g_id + galaxies_generated,
 			"l_id": g_id,
 			"shapes": [],
@@ -1940,17 +1941,22 @@ func generate_galaxies(id:int):
 				g_i["diff"] = Helper.clever_round((u_i.cluster_data[id].redshift * 100000.0 + 1.0) * u_i.difficulty * rng.randf_range(1.2, 1.5) / max(100, pow(pos.length(), 0.5)))
 			u_i.cluster_data[id]["galaxies"].append([g_i.id, g_i.l_id])
 			galaxy_data[g_id] = g_i
+	if u_i.cluster_data_persistent[id] == null:
+		u_i.cluster_data_persistent[id] = {}
 	if id != 0:
 		var view_zoom = 500.0 / max_outer_radius
 		u_i.cluster_data[id]["view"] = {"pos":Vector2(640, 360), "zoom":view_zoom}
+		u_i.cluster_data_persistent[id]["view"] = u_i.cluster_data[id].view
 	
 	if not u_i.cluster_data[id].has("discovered"):
 		u_i.cluster_data[id]["discovered"] = true
+		u_i.cluster_data_persistent[id]["discovered"] = true
 		galaxies_generated += u_i.cluster_data[id].galaxy_num
 		if u_i.cluster_data[id]["class"] == ClusterType.GROUP:
 			u_i.cluster_data[id].name = tr("GALAXY_GROUP") + " %s" % id
 		else:
 			u_i.cluster_data[id].name = tr("GALAXY_CLUSTER") + " %s" % id
+		u_i.cluster_data_persistent[id].name = u_i.cluster_data[id].name
 	
 	galaxy_data_persistent = open_obj("Clusters", c_c)
 	if galaxy_data_persistent.is_empty():
@@ -2278,25 +2284,24 @@ func generate_elliptical_galaxy(id:int, rng:RandomNumberGenerator):
 	var total_sys_num = galaxy_data[id].system_num
 	
 	#For globular cluster generation
-	var gc_remaining = floor(pow(total_sys_num, 0.8) / 250.0)
+	var gc_remaining = int(pow(total_sys_num, 0.8) / 250.0)
 	var gc_stars_remaining = 0
+	var gc_size:float
 	var gc_center = Vector2.ZERO
-	#To not put gc near galactic core
-	var gc_offset = 0
 	
-	var max_dist_from_center = sqrt(total_sys_num) * 1000.0
+	var max_dist_from_center = sqrt(total_sys_num) * 800.0
 	var max_outer_radius = 0.0
+	var spawn_gc_threshold = total_sys_num / 8
 	for i in total_sys_num:
 		var starting_system = c_g_g == 0 and i == 0
 		if starting_system:
 			continue
-		if i >= total_sys_num / 8:
-			#								V this condition makes sure globular clusters don't spawn near the center
-			if gc_remaining > 0 and gc_offset > 1 + int(pow(total_sys_num, 0.1)):
-				gc_remaining -= 1
-				gc_stars_remaining = int(pow(total_sys_num, 0.5) * rng.randf_range(1, 3))
-				gc_center = Vector2.from_angle(rng.randf_range(0, 2 * PI)) * max_dist_from_center
-			gc_offset += 1
+		if i >= spawn_gc_threshold and gc_remaining > 0:
+			gc_remaining -= 1
+			gc_stars_remaining = int(sqrt(total_sys_num) * rng.randf_range(1, 5))
+			gc_size = sqrt(gc_stars_remaining) * 200.0
+			gc_center = Vector2.from_angle(rng.randf_range(0, 2 * PI)) * rng.randf_range(500.0, max_dist_from_center)
+			spawn_gc_threshold += total_sys_num / 8
 		var biggest_star_size = get_max_star_prop(i, "size")
 		var radius = 320 * pow(biggest_star_size / SYSTEM_SCALE_DIV, 0.35)
 		var dist_from_center:float
@@ -2304,7 +2309,8 @@ func generate_elliptical_galaxy(id:int, rng:RandomNumberGenerator):
 			gc_center = Vector2.ZERO
 			dist_from_center = rng.randf_range(radius, max_dist_from_center)
 		else:
-			dist_from_center = rng.randf_range(radius, 100.0)
+			dist_from_center = rng.randf_range(radius, gc_size)
+			gc_stars_remaining -= 1
 		max_outer_radius = max(max_outer_radius, radius + dist_from_center)
 		var pos = Vector2.from_angle(rng.randf_range(0, 2 * PI)) * dist_from_center + gc_center
 		system_data[i]["pos"] = pos

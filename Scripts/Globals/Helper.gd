@@ -330,16 +330,17 @@ func toggle_overlay(overlays, overlay_visible):
 		if overlay_visible:
 			overlay.obj.texture_normal = overlay_texture
 			overlay.obj.texture_click_mask = null
-			overlay.obj.scale = Vector2.ONE
+			overlay.obj.scale = Vector2.ONE * game.overlay_CS
 		else:
 			overlay.obj.texture_normal = overlay.original_texture
 			overlay.obj.texture_click_mask = overlay.original_clickmask
-			overlay.obj.scale = overlay.original_scale
+			overlay.obj.scale = overlay.original_scale / clamp(game.view.scale.x, 0.2, 2.0) / 5.0
 			overlay.obj.modulate = overlay.original_modulate
 
 func change_circle_size(value, overlays):
-	for overlay in overlays:
-		overlay.obj.scale = Vector2.ONE * 2 * value
+	if game.overlay_data[game.c_v].visible:
+		for overlay in overlays:
+			overlay.obj.scale = Vector2.ONE * value
 
 func save_obj(type:String, id:int, arr:Array):
 	var file_path:String = "user://%s/Univ%s/%s/%s.hx3" % [game.c_sv, game.c_u, type, id]

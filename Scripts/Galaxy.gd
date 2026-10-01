@@ -20,6 +20,17 @@ static var star_btns = []
 
 var load_bldg_info_thread:Thread
 
+func size_sort(a:Dictionary, b:Dictionary):
+	var star_a:Dictionary = a.stars[0]
+	var star_b:Dictionary = b.stars[0]
+	for i in range(1, len(a.stars)):
+		if a.stars[i].luminosity > star_a.luminosity:
+			star_a = a.stars[i]
+	for i in range(1, len(b.stars)):
+		if b.stars[i].luminosity > star_b.luminosity:
+			star_b = b.stars[i]
+	return star_a.size > star_b.size
+
 func _ready():
 	if star_btns.is_empty():
 		for i in 15000:
@@ -29,22 +40,28 @@ func _ready():
 			star_btns.append(star_btn)
 	load_bldg_info_thread = Thread.new()
 	load_bldg_info_thread.start(load_bldg_info)
-	var await_counter:int = 0
+	
 	g_i = game.galaxy_data[game.c_g]
 	for i in len(game.system_data):
 		var s_i = game.system_data[i]
-		if not is_inside_tree():
-			return
-		var star:Dictionary = s_i.stars[0]
-		for j in range(1, len(s_i.stars)):
-			if s_i.stars[j].luminosity > star.luminosity:
-				star = s_i.stars[j]
 		if g_i.has("conquered") and not s_i.has("conquered"):
 			s_i["conquered"] = true
 			game.system_data_persistent[i].conquered = true
 			game.stats_univ.planets_conquered += s_i.planet_num
 			game.stats_dim.planets_conquered += s_i.planet_num
 			game.stats_global.planets_conquered += s_i.planet_num
+	
+	var await_counter:int = 0
+	var sorted_systems_by_size = game.system_data.duplicate(true)
+	sorted_systems_by_size.sort_custom(size_sort)
+	for i in len(sorted_systems_by_size):
+		var s_i = sorted_systems_by_size[i]
+		if not is_inside_tree():
+			return
+		var star:Dictionary = s_i.stars[0]
+		for j in range(1, len(s_i.stars)):
+			if s_i.stars[j].luminosity > star.luminosity:
+				star = s_i.stars[j]
 		var star_btn = star_btns[i]
 		star_btn.texture_normal = star_texture[int(star.temperature) % 3]
 		star_btn.modulate = Helper.get_star_modulate(star["class"])
@@ -52,7 +69,7 @@ func _ready():
 		star_btn.self_modulate.a = 0.0
 		galaxy_tween.tween_property(star_btn, "self_modulate:a", 1.0, 0.3)
 		add_child(star_btn)
-		star_btn.mouse_entered.connect(on_system_over.bind(s_i.l_id))
+		star_btn.mouse_entered.connect(on_system_over.bind(s_i.l_id, star_btn))
 		star_btn.mouse_exited.connect(on_system_out)
 		star_btn.pressed.connect(on_system_click.bind(s_i.id, s_i.l_id))
 		star_btn.rotation = sin(star.temperature) * 180
@@ -61,6 +78,7 @@ func _ready():
 		star_btn.position = s_i["pos"]
 		dimensions_temp = max(dimensions_temp, s_i.pos.length())
 		Helper.add_overlay(star_btn, self, "system", s_i, overlays)
+		star_btn.scale /= clamp(get_parent().scale.x, 0.2, 2.0) * 5.0
 		await_counter += 1
 		if await_counter % int(60000.0 / Engine.get_frames_per_second()) == 0:
 			await get_tree().process_frame
@@ -112,7 +130,7 @@ func _draw():
 		for wh_data in g_i.wormholes:
 			draw_line(game.system_data[wh_data.from].pos, game.system_data[wh_data.to].pos, Color(0.6, 0.4, 1.0, 1.0))
 
-func on_system_over (l_id:int):
+func on_system_over (l_id:int, star_btn):
 	if l_id >= len(game.system_data):
 		return
 	var s_i = game.system_data[l_id]
@@ -256,21 +274,21 @@ func change_overlay(overlay_id:int, gradient:Gradient, object:Dictionary = {}):
 func _on_Galaxy_tree_exited():
 	load_bldg_info_thread.wait_to_finish()
 
-var sorted_systems:Array = []
+var sorted_systems_by_diff:Array = []
 var system_conquer_start_index:int = 0
 
 func sort_systems(ascending:bool):
-	sorted_systems = game.system_data.duplicate(true)
-	sorted_systems.sort_custom(diff_sort)
+	sorted_systems_by_diff = game.system_data.duplicate(true)
+	sorted_systems_by_diff.sort_custom(diff_sort)
 	if not ascending:
-		sorted_systems.reverse()
+		sorted_systems_by_diff.reverse()
 
 func diff_sort(a:Dictionary, b:Dictionary):
 	return a.diff < b.diff
 
 func _process(delta: float) -> void:
 	if g_i.has("conquer_start_date"):
-		if sorted_systems.is_empty():
+		if sorted_systems_by_diff.is_empty():
 			system_conquer_start_index = 0
 			sort_systems(g_i.conquer_order)
 		var curr_time = Time.get_unix_time_from_system()
@@ -283,8 +301,8 @@ func _process(delta: float) -> void:
 				break
 			breaker += 1
 			if progress >= 100:
-				for i in range(system_conquer_start_index, len(sorted_systems)):
-					var system = sorted_systems[i]
+				for i in range(system_conquer_start_index, len(sorted_systems_by_diff)):
+					var system = sorted_systems_by_diff[i]
 					if system.has("conquered"):
 						system_conquer_start_index = i
 						continue
@@ -349,8 +367,12 @@ func disband_fighters():
 		if game.fighter_data[i] and game.fighter_data[i].get("c_g_g", -1) == game.c_g_g:
 			game.fighter_data[i] = null
 
-
 func _on_tree_exiting() -> void:
 	for star_btn in star_btns:
 		if is_ancestor_of(star_btn):
 			remove_child(star_btn)
+
+func scale_stars(new_scale:float):
+	if new_scale > 0.2 and new_scale < 2.0 and not game.overlay_data[game.c_v].visible:
+		for i in len(game.system_data):
+			star_btns[i].scale = Vector2.ONE / new_scale / 5.0 * overlays[i].original_scale

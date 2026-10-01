@@ -338,10 +338,10 @@ func refresh():
 
 func add_obj(obj_str:String, pos:Vector2, sc:float):
 	obj = load("res://Scenes/Views/" + obj_str + ".tscn").instantiate()
-	add_child(obj)
 	position = pos
 	scale = Vector2(sc, sc)
 	obj_scaled = scale.x < 1.5
+	add_child(obj)
 	refresh()
 	limit_to_viewport = game.c_v in ["universe", "cluster", "galaxy", "system", "planet"]
 	queue_redraw()
@@ -366,9 +366,8 @@ func save_zooms(obj_str:String):
 			game.galaxy_data[game.c_g].view.pos = self.position
 			game.galaxy_data[game.c_g].view.zoom = self.scale.x
 		"cluster":
-			if game.u_i.cluster_data[game.c_c].has("view"):
-				game.u_i.cluster_data[game.c_c]["view"]["pos"] = self.position
-				game.u_i.cluster_data[game.c_c]["view"]["zoom"] = self.scale.x
+			game.u_i.cluster_data[game.c_c]["view"]["pos"] = self.position
+			game.u_i.cluster_data[game.c_c]["view"]["zoom"] = self.scale.x
 		"universe":
 			game.universe_data[game.c_u]["view"]["pos"] = self.position
 			game.universe_data[game.c_u]["view"]["zoom"] = self.scale.x
@@ -466,6 +465,8 @@ func _zoom_at_point_animate(zoom_change: float):
 		zoom_tween.kill()
 	zoom_tween = create_tween().set_parallel(true)
 	zoom_tween.tween_property(self, "scale", scale * zoom_change, 0.2).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_CIRC)
+	if game.c_v == "galaxy":
+		zoom_tween.tween_method(obj.scale_stars, scale.x, scale.x * zoom_change, 0.2).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_CIRC)
 	zoom_tween.tween_property(self, "position", position - to_local(mouse_position) * scale.x * (zoom_change - 1.0), 0.2).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_CIRC)
 
 func is_view_changing():

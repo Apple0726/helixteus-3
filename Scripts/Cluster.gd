@@ -14,8 +14,12 @@ var c_i:Dictionary
 var bldgs:Dictionary = {}
 var MSs:Dictionary = {}
 
+var load_bldg_info_thread:Thread
+
 func _ready():
 	rsrcs.resize(len(game.galaxy_data))
+	load_bldg_info_thread = Thread.new()
+	load_bldg_info_thread.start(load_bldg_info)
 	var conquered = true
 	var await_counter:int = 0
 	c_i = game.u_i.cluster_data[game.c_c]
@@ -25,6 +29,7 @@ func _ready():
 		conquered = conquered and g_i.has("conquered")
 		var galaxy_btn = TextureButton.new()
 		galaxy_btn.texture_normal = game.galaxy_textures[g_i.type]
+		galaxy_btn.pivot_offset_ratio = Vector2.ONE * 0.5
 		add_child(galaxy_btn)
 		obj_btns.append(galaxy_btn)
 		galaxy_btn.mouse_entered.connect(on_galaxy_over.bind(g_i.l_id))
@@ -62,45 +67,46 @@ func _ready():
 					rsrc = null
 			if is_instance_valid(rsrc):
 				rsrc.set_text("%s/%s" % [Helper.format_num(g_i.prod_num * rsrc_mult), tr("S_SECOND")])
-		else:
-			var system_data:Array = game.open_obj("Galaxies", g_i.id)
-			for s_i in system_data:
-				if not s_i.has("discovered"):
-					continue
-				var planet_data:Array = game.open_obj("Systems", s_i.id)
-				for p_i in planet_data:
-					if p_i.is_empty():
-						continue
-					if p_i.has("tile_num") and p_i.bldg.has("name"):
-						if bldgs.has(g_i.l_id):
-							bldgs[g_i.l_id][p_i.bldg.name] = bldgs[g_i.l_id].get(p_i.bldg.name, 0) + p_i.tile_num
-						else:
-							bldgs[g_i.l_id] = {p_i.bldg.name: p_i.tile_num}
-					if p_i.has("MS"):
-						if MSs.has(g_i.l_id):
-							MSs[g_i.l_id][p_i.MS] = MSs[g_i.l_id].get(p_i.MS, 0) + 1
-						else:
-							MSs[g_i.l_id] = {p_i.MS: 1}
-				if s_i.has("MS_count"):
-					for MS in s_i.MS_count:
-						if MSs.has(g_i.l_id):
-							MSs[g_i.l_id][MS] = MSs[g_i.l_id].get(MS, 0) + 1
-						else:
-							MSs[g_i.l_id] = {MS: 1}
 		await_counter += 1
-		if is_instance_valid(game.overlay):
-			change_overlay(0, game.overlay.get_node("Control/Gradient").texture.gradient, overlays[-1])
-		galaxy_btn.visible = not game.overlay_data.cluster.visible
-		overlays[-1].obj.visible = game.overlay_data.cluster.visible
-		if await_counter % int(3000.0 / Engine.get_frames_per_second()) == 0:
+		if await_counter % int(12000.0 / Engine.get_frames_per_second()) == 0:
 			await get_tree().process_frame
 	game.add_space_HUD()
 	if is_instance_valid(game.overlay):
 		game.overlay.refresh_options(game.overlay_data[game.c_v].overlay)
 	if conquered:
-		c_i["conquered"] = true
+		if game.u_i.cluster_data_persistent[game.c_c] == null:
+			game.u_i.cluster_data_persistent[game.c_c] = {}
+		game.u_i.cluster_data_persistent[game.c_c]["conquered"] = true
 	dimensions = dimensions_temp
 
+func load_bldg_info():
+	for g_i in game.galaxy_data:
+		if g_i.is_empty():
+			continue
+		var system_data:Array = game.open_obj("Galaxies", g_i.id)
+		for s_i in system_data:
+			if not s_i.has("discovered"):
+				continue
+			var planet_data:Array = game.open_obj("Systems", s_i.id)
+			for p_i in planet_data:
+				if p_i.is_empty():
+					continue
+				if p_i.has("tile_num") and p_i.bldg.has("name"):
+					if bldgs.has(g_i.l_id):
+						bldgs[g_i.l_id][p_i.bldg.name] = bldgs[g_i.l_id].get(p_i.bldg.name, 0) + p_i.tile_num
+					else:
+						bldgs[g_i.l_id] = {p_i.bldg.name: p_i.tile_num}
+				if p_i.has("MS"):
+					if MSs.has(g_i.l_id):
+						MSs[g_i.l_id][p_i.MS] = MSs[g_i.l_id].get(p_i.MS, 0) + 1
+					else:
+						MSs[g_i.l_id] = {p_i.MS: 1}
+			if s_i.has("MS_count"):
+				for MS in s_i.MS_count:
+					if MSs.has(g_i.l_id):
+						MSs[g_i.l_id][MS] = MSs[g_i.l_id].get(MS, 0) + 1
+					else:
+						MSs[g_i.l_id] = {MS: 1}
 
 func add_rsrc(v:Vector2, mod:Color, icon, id:int, sc:float = 1):
 	var rsrc:ResourceStored = preload("res://Scenes/ResourceStored.tscn").instantiate()
@@ -253,9 +259,6 @@ func _input(event):
 	if game.bottom_info_action == "convert_to_GS" and Input.is_action_just_pressed("right_click"):
 		game._on_BottomInfo_close_button_pressed()
 
-func _on_Galaxy_tree_exited():
-	queue_free()
-
 var sorted_galaxies:Array
 var galaxy_conquer_start_index:int = 0
 
@@ -345,3 +348,7 @@ func disband_fighters():
 	for i in len(game.fighter_data):
 		if game.fighter_data[i] and game.fighter_data[i].get("c_c", -1) == game.c_c:
 			game.fighter_data[i] = null
+
+
+func _on_tree_exited() -> void:
+	load_bldg_info_thread.wait_to_finish()
