@@ -334,7 +334,7 @@ func toggle_overlay(overlays, overlay_visible):
 		else:
 			overlay.obj.texture_normal = overlay.original_texture
 			overlay.obj.texture_click_mask = overlay.original_clickmask
-			overlay.obj.scale = overlay.original_scale / clamp(game.view.scale.x, 0.2, 2.0) / 5.0
+			overlay.obj.scale = overlay.original_scale / clamp(game.view.scale.x, game.view.obj.STAR_AUTOSCALE_MIN_THRESHOLD, 2.0) * game.view.obj.STAR_AUTOSCALE_MIN_THRESHOLD
 			overlay.obj.modulate = overlay.original_modulate
 
 func change_circle_size(value, overlays):

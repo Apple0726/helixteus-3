@@ -206,7 +206,6 @@ var rover_id:int#Rover id when in cave
 var planets_generated:int
 var systems_generated:int
 var galaxies_generated:int#Total number of galaxies generated
-var clusters_generated:int
 
 var stats_univ:Dictionary
 var stats_dim:Dictionary
@@ -901,8 +900,6 @@ func new_game(univ:int = 0, new_save:bool = false, DR_advantage = false):
 		for met in met_info.keys():
 			show[met] = true
 	#Stores information of all objects discovered
-	u_i.cluster_data = []
-	u_i.cluster_data_persistent = []
 	galaxy_data = []
 	system_data = []
 	planet_data = []
@@ -939,7 +936,6 @@ func new_game(univ:int = 0, new_save:bool = false, DR_advantage = false):
 	planets_generated = 0
 	systems_generated = 0
 	galaxies_generated = 0#Total number of galaxies generated
-	clusters_generated = 0
 
 	#objective = {}# = {"type":ObjectiveType.BUILD, "data":"PP", "current":0, "goal":0}
 	autocollect = {
@@ -1629,6 +1625,8 @@ func add_cluster():
 		get_4th_ship()
 
 func add_galaxy():
+	if not u_i.has("cluster_data"):
+		generate_clusters()
 	if galaxy_data.is_empty():
 		generate_galaxies(c_c)
 	var generate_normal_galaxy = true
@@ -1834,7 +1832,7 @@ func generate_clusters():
 			"galaxies": [],
 			"shapes": [],
 			"modifiers": [],
-			"id": c_id + clusters_generated,
+			"id": c_id,
 			"seed":rng.randi()
 		}
 		if c_i["class"] == ClusterType.GROUP:
@@ -1868,7 +1866,6 @@ func generate_clusters():
 							c_i.modifiers.erase(mod_in_cl)
 		u_i.cluster_data[c_id] = c_i
 	if not u_i.has("discovered"):
-		clusters_generated += total_clust_num
 		u_i.discovered = true
 		u_i.cluster_data_persistent = []
 		u_i.cluster_data_persistent.resize(total_clust_num)
@@ -1878,7 +1875,6 @@ func generate_clusters():
 			continue
 		for key in c_i_persistent.keys():
 			u_i.cluster_data[i][key] = c_i_persistent[key]
-	save_universe()
 
 func generate_galaxies(id:int):
 	var total_gal_num = u_i.cluster_data[id]["galaxy_num"]
@@ -1905,7 +1901,15 @@ func generate_galaxies(id:int):
 	var galaxy_num = total_gal_num - u_i.cluster_data[id]["galaxies"].size()
 	var redshift:float = u_i.cluster_data[id].redshift
 	var max_outer_radius:float
+	var dist_from_center = 0.0
+	var th = 0.0
+	var ring = 0
 	for g_id in total_gal_num:
+		if galaxy_data[g_id] != null:
+			if g_id == 0:
+				ring = 1
+				dist_from_center = 1000.0
+			continue
 		var g_i = {
 			"parent": id,
 			"type": rng.randi() % 7,
@@ -1925,9 +1929,21 @@ func generate_galaxies(id:int):
 			g_i["B_strength"] = Helper.clever_round(1e-9 * rng.randf_range(0.5, 4) * (redshift + 1.0) * u_i.charge)
 			if rng.randf() < 0.6: #Dwarf galaxy
 				g_i.system_num = int(g_i.system_num * 0.1)
-		var radius = 200.0 * pow(g_i.system_num / GALAXY_SCALE_DIV, 0.5)
-		var dist_from_center = rng.randf_range(200.0, 1000.0 * sqrt(total_gal_num))
-		var pos = Vector2.from_angle(rng.randf_range(0, 2 * PI)) * dist_from_center
+		var pos = Vector2.ZERO
+		var radius = 128.0 * pow(g_i.system_num / GALAXY_SCALE_DIV, 0.5)
+		if ring > 0:
+			var radius_angle = asin(2.0 * radius / dist_from_center)
+			var th_increment = PI / 3.0 / sqrt(ring)
+			var random_angle_limit = max(0.0, th_increment - radius_angle) / 2.0
+			pos = Vector2.from_angle(rng.randf_range(th - random_angle_limit, th + random_angle_limit)) * dist_from_center
+			th += th_increment
+			if th >= 2.0 * PI - th_increment / 2.0:
+				th = 0.0
+				dist_from_center += 1000.0
+				ring += 1
+		else:
+			ring += 1
+			dist_from_center = 1000.0
 		g_i["pos"] = pos
 		max_outer_radius = max(max_outer_radius, radius + dist_from_center)
 		var starting_galaxy = c_c == 0 and galaxy_num == total_gal_num and g_id == 0
@@ -1945,8 +1961,9 @@ func generate_galaxies(id:int):
 		u_i.cluster_data_persistent[id] = {}
 	if id != 0:
 		var view_zoom = 500.0 / max_outer_radius
-		u_i.cluster_data[id]["view"] = {"pos":Vector2(640, 360), "zoom":view_zoom}
-		u_i.cluster_data_persistent[id]["view"] = u_i.cluster_data[id].view
+		if not u_i.cluster_data[id].has("view"):
+			u_i.cluster_data[id]["view"] = {"pos":Vector2(640, 360), "zoom":view_zoom}
+			u_i.cluster_data_persistent[id]["view"] = u_i.cluster_data[id].view
 	
 	if not u_i.cluster_data[id].has("discovered"):
 		u_i.cluster_data[id]["discovered"] = true
@@ -3729,7 +3746,7 @@ func _input(event):
 
 func save_universe():
 	var universe_data_to_save = universe_data.duplicate(true)
-	universe_data_to_save.erase("cluster_data")
+	universe_data_to_save[c_u].erase("cluster_data")
 	var save_info:Dictionary = {
 		"save_created":save_created,
 		"save_modified":save_date,
@@ -3801,7 +3818,6 @@ func fn_save_game():
 		"planets_generated":planets_generated,
 		"systems_generated":systems_generated,
 		"galaxies_generated":galaxies_generated,
-		"clusters_generated":clusters_generated,
 		"stats_univ":stats_univ,
 		#"objective":objective,
 		"autocollect":autocollect,
@@ -3834,7 +3850,7 @@ func save_views(autosave:bool):
 			Helper.save_obj("Galaxies", c_g_g, system_data_persistent)
 		Helper.save_obj("Clusters", c_c, galaxy_data_persistent)
 	elif c_v == "cluster":
-		Helper.save_obj("Clusters", c_c, galaxy_data_persistent)
+		save_universe()
 	if not autosave:
 		popup(tr("GAME_SAVED"), 1.2)
 
@@ -4437,8 +4453,12 @@ func _on_command_text_submitted(new_text):
 			else:
 				are_costs_zero = not are_costs_zero
 		"showclusters":
-			for c_i in u_i.cluster_data:
-				c_i.visible = true
+			for i in len(u_i.cluster_data):
+				u_i.cluster_data[i].visible = true
+				if u_i.cluster_data_persistent[i] == null:
+					u_i.cluster_data_persistent[i] = {}
+				u_i.cluster_data_persistent[i].visible = true
+				
 		"setxp":
 			if c_u != -1:
 				u_i.xp = float(arr[1])
