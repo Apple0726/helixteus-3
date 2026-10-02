@@ -2872,11 +2872,12 @@ func generate_tiles(id:int, first_time:bool):
 	var empty_tiles = []
 	var crater_num:int = 0
 	var total_VEI:float = 0.0
+	var lake_coverage:float = pow(1.93 * rng.randf() - 1.15 + 3.9 * (ProcGenSettings.lake_coverage - 0.5), 3) + 0.5
 	for i in wid:
 		for j in wid:
 			var level:float = noise.get_noise_2d(i / float(wid), j / float(wid))
 			var t_id = i % wid + j * wid
-			var is_lake = level > 0.5 and p_i.has("lake") and p_i.lake.state != "g"
+			var is_lake = level > lake_coverage and p_i.has("lake") and p_i.lake.state != "g"
 			var cave_can_spawn = not is_lake
 			if is_lake and not tile_data[t_id].has("ash"):
 				tile_data[t_id]["lake"] = true

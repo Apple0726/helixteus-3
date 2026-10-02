@@ -1,0 +1,179 @@
+[gd_scene format=3 uid="uid://bch4200rw6v7q"]
+
+[ext_resource type="Theme" uid="uid://cp2u1kgj60ic" path="res://Resources/default_theme.tres" id="1_m2o25"]
+[ext_resource type="Script" uid="uid://c787sq7us7fst" path="res://Scripts/ProcGenSettingsPanel.gd" id="2_hte52"]
+[ext_resource type="Texture2D" uid="uid://blgh1lvsfpiu8" path="res://Graphics/GUI/Border.png" id="3_omqta"]
+[ext_resource type="PackedScene" uid="uid://c8jr3e5aiyj1n" path="res://Scenes/HelpText.tscn" id="4_nbk0x"]
+[ext_resource type="PackedScene" uid="uid://1hq6qpr1oa3i" path="res://Scenes/AdvButton.tscn" id="5_veju5"]
+
+[sub_resource type="StyleBoxFlat" id="1"]
+bg_color = Color(0.317647, 0.317647, 0.317647, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.294118, 0.294118, 0.294118, 1)
+
+[sub_resource type="Theme" id="Theme_veju5"]
+LineEdit/colors/clear_button_color = Color(0.88, 0.88, 0.88, 1)
+LineEdit/colors/clear_button_color_pressed = Color(1, 1, 1, 1)
+LineEdit/colors/cursor_color = Color(0.917647, 0.917647, 0.917647, 1)
+LineEdit/colors/font_color = Color(1, 1, 1, 1)
+LineEdit/colors/font_color_selected = Color(0, 0, 0, 1)
+LineEdit/colors/font_color_uneditable = Color(0.88, 0.88, 0.88, 0.5)
+LineEdit/colors/selection_color = Color(0.545098, 0.545098, 0.545098, 1)
+LineEdit/constants/minimum_spaces = 12
+LineEdit/fonts/font = null
+LineEdit/icons/clear = null
+LineEdit/styles/focus = null
+LineEdit/styles/normal = SubResource("1")
+LineEdit/styles/read_only = null
+
+[node name="ProcGenSettingsPanel" type="Control" unique_id=1035928848]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 32.0
+offset_bottom = 32.0
+theme = ExtResource("1_m2o25")
+script = ExtResource("2_hte52")
+metadata/_edit_vertical_guides_ = [640.0]
+metadata/_edit_horizontal_guides_ = [360.0]
+
+[node name="BlackBG" type="ColorRect" parent="." unique_id=562256675]
+show_behind_parent = true
+layout_mode = 0
+offset_right = 1280.0
+offset_bottom = 720.0
+mouse_filter = 2
+color = Color(0, 0, 0, 0.564706)
+metadata/_edit_lock_ = true
+
+[node name="GUI" type="NinePatchRect" parent="." unique_id=975794284]
+layout_mode = 0
+offset_left = 320.0
+offset_top = 136.0
+offset_right = 960.0
+offset_bottom = 584.0
+mouse_filter = 1
+texture = ExtResource("3_omqta")
+patch_margin_left = 15
+patch_margin_top = 11
+patch_margin_right = 15
+patch_margin_bottom = 11
+axis_stretch_horizontal = 1
+metadata/_edit_horizontal_guides_ = [596.0]
+
+[node name="Label" type="Label" parent="." unique_id=1102026262]
+layout_mode = 1
+offset_left = 448.0
+offset_top = 160.0
+offset_right = 832.0
+offset_bottom = 183.0
+text = "UNIVERSE_SETTINGS"
+horizontal_alignment = 1
+
+[node name="SeedLabel" type="Label" parent="." unique_id=298893708]
+layout_mode = 1
+offset_left = 544.0
+offset_top = 208.0
+offset_right = 616.0
+offset_bottom = 231.0
+text = "SEED"
+
+[node name="Seed" type="LineEdit" parent="." unique_id=1187044930]
+layout_mode = 0
+offset_left = 644.0
+offset_top = 204.0
+offset_right = 748.0
+offset_bottom = 235.0
+theme = SubResource("Theme_veju5")
+text = "1234"
+
+[node name="StartGame" type="Button" parent="." unique_id=2109531059]
+layout_mode = 0
+offset_left = 572.0
+offset_top = 532.0
+offset_right = 707.0
+offset_bottom = 565.0
+text = "START_GAME"
+
+[node name="AdvancedSettings" type="Button" parent="." unique_id=735800507]
+layout_mode = 0
+offset_left = 524.0
+offset_top = 464.0
+offset_right = 757.0
+offset_bottom = 497.0
+text = "ADVANCED_SETTINGS"
+
+[node name="SizeOfCOS" parent="." unique_id=1511434500 instance=ExtResource("4_nbk0x")]
+layout_mode = 0
+offset_left = 464.0
+offset_top = 264.0
+offset_right = 816.0
+offset_bottom = 294.0
+text = "[center]SIZE_OF_COS [img]Graphics/Icons/help.png[/img][/center]"
+label_text = "SIZE_OF_COS"
+help_text = "SIZE_OF_COS_DESC"
+align = 1
+
+[node name="DensityOfCOS" parent="." unique_id=1172558616 instance=ExtResource("4_nbk0x")]
+layout_mode = 0
+offset_left = 464.0
+offset_top = 356.0
+offset_right = 816.0
+offset_bottom = 386.0
+text = "[center]DENSITY_OF_COS [img]Graphics/Icons/help.png[/img][/center]"
+label_text = "DENSITY_OF_COS"
+help_text = "DENSITY_OF_COS_DESC"
+align = 1
+
+[node name="SizeOfCOSHBox" type="HBoxContainer" parent="." unique_id=751708622]
+layout_mode = 0
+offset_left = 384.0
+offset_top = 304.0
+offset_right = 896.0
+offset_bottom = 336.0
+theme_override_constants/separation = 50
+alignment = 1
+
+[node name="Small" parent="SizeOfCOSHBox" unique_id=365304874 instance=ExtResource("5_veju5")]
+layout_mode = 2
+size_flags_horizontal = 3
+button_text = "SMALL"
+
+[node name="Medium" parent="SizeOfCOSHBox" unique_id=1084089819 instance=ExtResource("5_veju5")]
+layout_mode = 2
+size_flags_horizontal = 3
+button_text = "MEDIUM"
+
+[node name="Large" parent="SizeOfCOSHBox" unique_id=1296256648 instance=ExtResource("5_veju5")]
+layout_mode = 2
+size_flags_horizontal = 3
+button_text = "LARGE"
+
+[node name="DensityOfCOSHBox" type="HBoxContainer" parent="." unique_id=172197113]
+layout_mode = 0
+offset_left = 384.0
+offset_top = 396.0
+offset_right = 896.0
+offset_bottom = 428.0
+theme_override_constants/separation = 50
+alignment = 1
+
+[node name="Sparse" parent="DensityOfCOSHBox" unique_id=1007872351 instance=ExtResource("5_veju5")]
+layout_mode = 2
+size_flags_horizontal = 3
+button_text = "SPARSE"
+
+[node name="Normal" parent="DensityOfCOSHBox" unique_id=2004086445 instance=ExtResource("5_veju5")]
+layout_mode = 2
+size_flags_horizontal = 3
+button_text = "NORMAL"
+
+[node name="Dense" parent="DensityOfCOSHBox" unique_id=903407942 instance=ExtResource("5_veju5")]
+layout_mode = 2
+size_flags_horizontal = 3
+button_text = "DENSE"
+
+[connection signal="pressed" from="StartGame" to="." method="_on_start_game_pressed"]
+[connection signal="pressed" from="AdvancedSettings" to="." method="_on_advanced_settings_pressed"]
