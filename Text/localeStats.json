@@ -1,8 +1,8 @@
 {
     "en": {
-        "lines": 1616,
-        "words": 11295,
-        "chars": 68775
+        "lines": 1622,
+        "words": 11366,
+        "chars": 69169
     },
     "fr": {
         "lines": 508,
@@ -30,9 +30,9 @@
         "chars": 52080
     },
     "ko": {
-        "lines": 532,
-        "words": 1303,
-        "chars": 4583
+        "lines": 573,
+        "words": 1411,
+        "chars": 4947
     },
     "sv": {
         "lines": 182,

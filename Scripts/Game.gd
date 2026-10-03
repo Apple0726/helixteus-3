@@ -738,6 +738,17 @@ func set_default_dim_bonuses():
 func new_game(univ:int = 0, new_save:bool = false, DR_advantage = false):
 	view_history.clear()
 	view_history_pos = -1
+	var procgen_settings_panel = load("res://Scenes/Panels/ProcGenSettingsPanel.tscn").instantiate()
+	procgen_settings_panel.modulate.a = 0.0
+	add_child(procgen_settings_panel)
+	var tween = create_tween()
+	tween.tween_property(procgen_settings_panel, "modulate:a", 1.0, 0.3)
+	tween.tween_await(procgen_settings_panel.done)
+	tween.tween_property(procgen_settings_panel, "modulate:a", 0.0, 0.3)
+	tween.tween_callback(start_game.bind(univ, new_save, DR_advantage))
+	tween.tween_callback(procgen_settings_panel.queue_free)
+
+func start_game(univ, new_save, DR_advantage):
 	stats_univ = Data.default_stats.duplicate(true)
 	var save_dir = DirAccess.open("user://")
 	if new_save:
@@ -979,6 +990,7 @@ func new_game(univ:int = 0, new_save:bool = false, DR_advantage = false):
 	var init_time = Time.get_unix_time_from_system()
 	view.set_process(true)
 	set_c_sv(c_sv)
+	switch_music(Data.ambient_music.pick_random(), u_i.time_speed)
 
 
 func popup(txt, delay):
@@ -1701,7 +1713,7 @@ func add_system():
 		get_2nd_ship()
 
 func add_planet(new_game:bool = false):
-	if u_i.cluster_data.is_empty():
+	if not u_i.has("cluster_data"):
 		generate_clusters()
 	if galaxy_data.is_empty():
 		generate_galaxies(c_g)
@@ -3935,7 +3947,6 @@ func fade_out_title(fn:String, sv:String = ""):
 			dimension.refresh_univs(true)
 		else:
 			new_game(0, true)
-			switch_music(Data.ambient_music.pick_random(), u_i.time_speed)
 	else:
 		c_sv = sv
 		call(fn)

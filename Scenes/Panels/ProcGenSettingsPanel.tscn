@@ -5,6 +5,17 @@
 [ext_resource type="Texture2D" uid="uid://blgh1lvsfpiu8" path="res://Graphics/GUI/Border.png" id="3_omqta"]
 [ext_resource type="PackedScene" uid="uid://c8jr3e5aiyj1n" path="res://Scenes/HelpText.tscn" id="4_nbk0x"]
 [ext_resource type="PackedScene" uid="uid://1hq6qpr1oa3i" path="res://Scenes/AdvButton.tscn" id="5_veju5"]
+[ext_resource type="Texture2D" uid="uid://om5aodqeg0nd" path="res://Graphics/Planets/4.png" id="6_ynih0"]
+[ext_resource type="Texture2D" uid="uid://bpuwwlxltaow4" path="res://Graphics/Tiles/cave.png" id="7_hfne4"]
+[ext_resource type="Texture2D" uid="uid://chrk4kwpyhk0l" path="res://Graphics/Buttons/SystemView.png" id="8_m2o25"]
+[ext_resource type="Texture2D" uid="uid://dmbcaoaa823d4" path="res://Graphics/Galaxies/0.png" id="9_ogrcn"]
+[ext_resource type="Texture2D" uid="uid://uyvtci76f3tm" path="res://Graphics/Clusters/0.png" id="10_omqta"]
+[ext_resource type="Texture2D" uid="uid://v6aqc616rfln" path="res://Graphics/Galaxies/1.png" id="11_afjgo"]
+[ext_resource type="Texture2D" uid="uid://00skisx0co51" path="res://Graphics/Buttons/DimensionView.png" id="11_eo4go"]
+[ext_resource type="Texture2D" uid="uid://ddomkxb4yqaya" path="res://Graphics/Galaxies/6.png" id="12_eo4go"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_kpmkd"]
+font_size = 20
 
 [sub_resource type="StyleBoxFlat" id="1"]
 bg_color = Color(0.317647, 0.317647, 0.317647, 1)
@@ -21,13 +32,21 @@ LineEdit/colors/cursor_color = Color(0.917647, 0.917647, 0.917647, 1)
 LineEdit/colors/font_color = Color(1, 1, 1, 1)
 LineEdit/colors/font_color_selected = Color(0, 0, 0, 1)
 LineEdit/colors/font_color_uneditable = Color(0.88, 0.88, 0.88, 0.5)
-LineEdit/colors/selection_color = Color(0.545098, 0.545098, 0.545098, 1)
+LineEdit/colors/selection_color = Color(0.13137859, 0.13137859, 0.13137859, 1)
 LineEdit/constants/minimum_spaces = 12
 LineEdit/fonts/font = null
 LineEdit/icons/clear = null
 LineEdit/styles/focus = null
 LineEdit/styles/normal = SubResource("1")
 LineEdit/styles/read_only = null
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_hfne4"]
+bg_color = Color(0.05414217, 0.054142185, 0.054142118, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.31246606, 0.31246614, 0.31246582, 1)
 
 [node name="ProcGenSettingsPanel" type="Control" unique_id=1035928848]
 layout_mode = 3
@@ -50,15 +69,15 @@ metadata/_edit_lock_ = true
 
 [node name="GUI" type="NinePatchRect" parent="." unique_id=975794284]
 layout_mode = 0
-offset_left = 320.0
-offset_top = 136.0
-offset_right = 960.0
-offset_bottom = 584.0
+offset_left = 192.0
+offset_top = 32.0
+offset_right = 1088.0
+offset_bottom = 688.0
 mouse_filter = 1
 texture = ExtResource("3_omqta")
 patch_margin_left = 15
 patch_margin_top = 11
-patch_margin_right = 15
+patch_margin_right = 156
 patch_margin_bottom = 11
 axis_stretch_horizontal = 1
 metadata/_edit_horizontal_guides_ = [596.0]
@@ -66,114 +85,933 @@ metadata/_edit_horizontal_guides_ = [596.0]
 [node name="Label" type="Label" parent="." unique_id=1102026262]
 layout_mode = 1
 offset_left = 448.0
-offset_top = 160.0
+offset_top = 52.0
 offset_right = 832.0
-offset_bottom = 183.0
-text = "UNIVERSE_SETTINGS"
+offset_bottom = 75.0
+text = "UNIVERSE_GENERATION_SETTINGS"
+label_settings = SubResource("LabelSettings_kpmkd")
 horizontal_alignment = 1
 
 [node name="SeedLabel" type="Label" parent="." unique_id=298893708]
 layout_mode = 1
-offset_left = 544.0
-offset_top = 208.0
-offset_right = 616.0
-offset_bottom = 231.0
-text = "SEED"
+offset_left = 456.0
+offset_top = 104.0
+offset_right = 577.0
+offset_bottom = 127.0
+text = "UNIVERSE_SEED"
+horizontal_alignment = 2
 
 [node name="Seed" type="LineEdit" parent="." unique_id=1187044930]
 layout_mode = 0
-offset_left = 644.0
-offset_top = 204.0
-offset_right = 748.0
-offset_bottom = 235.0
+offset_left = 616.0
+offset_top = 100.0
+offset_right = 740.0
+offset_bottom = 131.0
 theme = SubResource("Theme_veju5")
 text = "1234"
+select_all_on_focus = true
+caret_blink = true
+caret_blink_interval = 0.5
 
-[node name="StartGame" type="Button" parent="." unique_id=2109531059]
-layout_mode = 0
-offset_left = 572.0
-offset_top = 532.0
-offset_right = 707.0
-offset_bottom = 565.0
-text = "START_GAME"
+[node name="BasicSettingsGroup" type="Control" parent="." unique_id=927991925]
+visible = false
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
 
-[node name="AdvancedSettings" type="Button" parent="." unique_id=735800507]
+[node name="AdvancedSettings" type="Button" parent="BasicSettingsGroup" unique_id=735800507]
 layout_mode = 0
-offset_left = 524.0
-offset_top = 464.0
-offset_right = 757.0
-offset_bottom = 497.0
+offset_left = 532.0
+offset_top = 452.0
+offset_right = 748.0
+offset_bottom = 485.0
 text = "ADVANCED_SETTINGS"
 
-[node name="SizeOfCOS" parent="." unique_id=1511434500 instance=ExtResource("4_nbk0x")]
+[node name="SizeOfCOS" parent="BasicSettingsGroup" unique_id=1511434500 instance=ExtResource("4_nbk0x")]
 layout_mode = 0
 offset_left = 464.0
-offset_top = 264.0
+offset_top = 176.0
 offset_right = 816.0
-offset_bottom = 294.0
+offset_bottom = 206.0
 text = "[center]SIZE_OF_COS [img]Graphics/Icons/help.png[/img][/center]"
 label_text = "SIZE_OF_COS"
 help_text = "SIZE_OF_COS_DESC"
 align = 1
 
-[node name="DensityOfCOS" parent="." unique_id=1172558616 instance=ExtResource("4_nbk0x")]
+[node name="DensityOfCOS" parent="BasicSettingsGroup" unique_id=1172558616 instance=ExtResource("4_nbk0x")]
 layout_mode = 0
 offset_left = 464.0
-offset_top = 356.0
+offset_top = 304.0
 offset_right = 816.0
-offset_bottom = 386.0
+offset_bottom = 334.0
 text = "[center]DENSITY_OF_COS [img]Graphics/Icons/help.png[/img][/center]"
 label_text = "DENSITY_OF_COS"
 help_text = "DENSITY_OF_COS_DESC"
 align = 1
 
-[node name="SizeOfCOSHBox" type="HBoxContainer" parent="." unique_id=751708622]
+[node name="SizeOfCOSHBox" type="HBoxContainer" parent="BasicSettingsGroup" unique_id=751708622]
 layout_mode = 0
 offset_left = 384.0
-offset_top = 304.0
+offset_top = 216.0
 offset_right = 896.0
-offset_bottom = 336.0
+offset_bottom = 248.0
 theme_override_constants/separation = 50
 alignment = 1
 
-[node name="Small" parent="SizeOfCOSHBox" unique_id=365304874 instance=ExtResource("5_veju5")]
+[node name="Small" parent="BasicSettingsGroup/SizeOfCOSHBox" unique_id=365304874 instance=ExtResource("5_veju5")]
 layout_mode = 2
 size_flags_horizontal = 3
 button_text = "SMALL"
 
-[node name="Medium" parent="SizeOfCOSHBox" unique_id=1084089819 instance=ExtResource("5_veju5")]
+[node name="Medium" parent="BasicSettingsGroup/SizeOfCOSHBox" unique_id=1084089819 instance=ExtResource("5_veju5")]
 layout_mode = 2
 size_flags_horizontal = 3
 button_text = "MEDIUM"
 
-[node name="Large" parent="SizeOfCOSHBox" unique_id=1296256648 instance=ExtResource("5_veju5")]
+[node name="Large" parent="BasicSettingsGroup/SizeOfCOSHBox" unique_id=1296256648 instance=ExtResource("5_veju5")]
 layout_mode = 2
 size_flags_horizontal = 3
 button_text = "LARGE"
 
-[node name="DensityOfCOSHBox" type="HBoxContainer" parent="." unique_id=172197113]
+[node name="DensityOfCOSHBox" type="HBoxContainer" parent="BasicSettingsGroup" unique_id=172197113]
 layout_mode = 0
 offset_left = 384.0
-offset_top = 396.0
+offset_top = 344.0
 offset_right = 896.0
-offset_bottom = 428.0
+offset_bottom = 376.0
 theme_override_constants/separation = 50
 alignment = 1
 
-[node name="Sparse" parent="DensityOfCOSHBox" unique_id=1007872351 instance=ExtResource("5_veju5")]
+[node name="Sparse" parent="BasicSettingsGroup/DensityOfCOSHBox" unique_id=1007872351 instance=ExtResource("5_veju5")]
 layout_mode = 2
 size_flags_horizontal = 3
 button_text = "SPARSE"
 
-[node name="Normal" parent="DensityOfCOSHBox" unique_id=2004086445 instance=ExtResource("5_veju5")]
+[node name="Normal" parent="BasicSettingsGroup/DensityOfCOSHBox" unique_id=2004086445 instance=ExtResource("5_veju5")]
 layout_mode = 2
 size_flags_horizontal = 3
 button_text = "NORMAL"
 
-[node name="Dense" parent="DensityOfCOSHBox" unique_id=903407942 instance=ExtResource("5_veju5")]
+[node name="Dense" parent="BasicSettingsGroup/DensityOfCOSHBox" unique_id=903407942 instance=ExtResource("5_veju5")]
 layout_mode = 2
 size_flags_horizontal = 3
 button_text = "DENSE"
 
+[node name="AdvancedSettingsGroup" type="Control" parent="." unique_id=189125923]
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="ScrollContainer" type="ScrollContainer" parent="AdvancedSettingsGroup" unique_id=1872282129]
+layout_mode = 0
+offset_left = 252.0
+offset_top = 152.0
+offset_right = 1036.0
+offset_bottom = 616.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_hfne4")
+horizontal_scroll_mode = 0
+
+[node name="Control" type="Control" parent="AdvancedSettingsGroup/ScrollContainer" unique_id=1816025772]
+custom_minimum_size = Vector2(776, 1800)
+layout_mode = 2
+
+[node name="PlanetTexture" type="TextureRect" parent="AdvancedSettingsGroup/ScrollContainer/Control" unique_id=529625255]
+layout_mode = 0
+offset_left = 15.0
+offset_top = 15.0
+offset_right = 75.0
+offset_bottom = 75.0
+texture = ExtResource("6_ynih0")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Planet" type="Label" parent="AdvancedSettingsGroup/ScrollContainer/Control" unique_id=1794244809]
+layout_mode = 1
+offset_left = 111.0
+offset_top = 31.0
+offset_right = 495.0
+offset_bottom = 59.0
+text = "PLANETS"
+label_settings = SubResource("LabelSettings_kpmkd")
+
+[node name="Line2D" type="Line2D" parent="AdvancedSettingsGroup/ScrollContainer/Control" unique_id=456801908]
+modulate = Color(0.23753911, 0.23753914, 0.23753911, 1)
+position = Vector2(-1, 7)
+points = PackedVector2Array(15, 79, 747, 79)
+width = 2.0
+
+[node name="PlanetTileDimensionsLabel" parent="AdvancedSettingsGroup/ScrollContainer/Control" unique_id=1609706608 instance=ExtResource("4_nbk0x")]
+layout_mode = 0
+offset_left = 23.0
+offset_top = 107.0
+offset_right = 267.0
+offset_bottom = 131.0
+text = "PLANET_TILE_DIMENSIONS [img]Graphics/Icons/help.png[/img]"
+label_text = "PLANET_TILE_DIMENSIONS"
+help_text = "PLANET_TILE_DIMENSIONS_DESC"
+
+[node name="PlanetTileDimensionsMult" type="Label" parent="AdvancedSettingsGroup/ScrollContainer/Control" unique_id=335501148]
+layout_mode = 0
+offset_left = 387.0
+offset_top = 107.0
+offset_right = 403.0
+offset_bottom = 131.0
+text = "x"
+
+[node name="PlanetTileDimensions" type="LineEdit" parent="AdvancedSettingsGroup/ScrollContainer/Control" unique_id=361777168]
+layout_mode = 0
+offset_left = 407.0
+offset_top = 103.0
+offset_right = 459.0
+offset_bottom = 135.0
+theme = SubResource("Theme_veju5")
+text = "1.0"
+select_all_on_focus = true
+caret_blink = true
+caret_blink_interval = 0.5
+
+[node name="MaxPlanetTileDimensionsLabel" type="Label" parent="AdvancedSettingsGroup/ScrollContainer/Control" unique_id=1912585389]
+layout_mode = 0
+offset_left = 23.0
+offset_top = 163.0
+offset_right = 359.0
+offset_bottom = 187.0
+text = "MAX_PLANET_TILE_DIMENSIONS"
+
+[node name="MaxPlanetTileDimensionsLabel2" type="Label" parent="AdvancedSettingsGroup/ScrollContainer/Control" unique_id=920469489]
+layout_mode = 0
+offset_left = 499.0
+offset_top = 163.0
+offset_right = 671.0
+offset_bottom = 187.0
+text = "= 10,000 tiles"
+
+[node name="MaxPlanetTileDimensions" type="LineEdit" parent="AdvancedSettingsGroup/ScrollContainer/Control" unique_id=154751029]
+layout_mode = 0
+offset_left = 407.0
+offset_top = 159.0
+offset_right = 459.0
+offset_bottom = 191.0
+theme = SubResource("Theme_veju5")
+text = "100"
+select_all_on_focus = true
+caret_blink = true
+caret_blink_interval = 0.5
+
+[node name="LakeCoverageLabel" parent="AdvancedSettingsGroup/ScrollContainer/Control" unique_id=725775054 instance=ExtResource("4_nbk0x")]
+layout_mode = 0
+offset_left = 23.0
+offset_top = 219.0
+offset_right = 191.0
+offset_bottom = 243.0
+text = "LAKE_COVERAGE [img]Graphics/Icons/help.png[/img]"
+label_text = "LAKE_COVERAGE"
+help_text = "LAKE_COVERAGE_DESC"
+
+[node name="LakeCoverage" type="LineEdit" parent="AdvancedSettingsGroup/ScrollContainer/Control" unique_id=1841577509]
+layout_mode = 0
+offset_left = 407.0
+offset_top = 215.0
+offset_right = 459.0
+offset_bottom = 247.0
+theme = SubResource("Theme_veju5")
+text = "0.5"
+select_all_on_focus = true
+caret_blink = true
+caret_blink_interval = 0.5
+
+[node name="CaveSpawnFrequencyLabel" type="Label" parent="AdvancedSettingsGroup/ScrollContainer/Control" unique_id=431263623]
+layout_mode = 0
+offset_left = 23.0
+offset_top = 275.0
+offset_right = 359.0
+offset_bottom = 298.0
+text = "CAVE_SPAWN_FREQUENCY"
+
+[node name="CaveSpawnFrequencyMult" type="Label" parent="AdvancedSettingsGroup/ScrollContainer/Control" unique_id=344946734]
+layout_mode = 0
+offset_left = 387.0
+offset_top = 275.0
+offset_right = 403.0
+offset_bottom = 299.0
+text = "x"
+
+[node name="CaveSpawnFrequency" type="LineEdit" parent="AdvancedSettingsGroup/ScrollContainer/Control" unique_id=133405799]
+layout_mode = 0
+offset_left = 407.0
+offset_top = 271.0
+offset_right = 459.0
+offset_bottom = 302.0
+theme = SubResource("Theme_veju5")
+text = "1.0"
+select_all_on_focus = true
+caret_blink = true
+caret_blink_interval = 0.5
+
+[node name="CaveTexture" type="TextureRect" parent="AdvancedSettingsGroup/ScrollContainer/Control" unique_id=325523435]
+layout_mode = 0
+offset_left = 14.0
+offset_top = 335.0
+offset_right = 74.0
+offset_bottom = 395.0
+texture = ExtResource("7_hfne4")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Caves" type="Label" parent="AdvancedSettingsGroup/ScrollContainer/Control" unique_id=1333460436]
+layout_mode = 1
+offset_left = 110.0
+offset_top = 351.0
+offset_right = 494.0
+offset_bottom = 379.0
+text = "CAVES"
+label_settings = SubResource("LabelSettings_kpmkd")
+
+[node name="Line2D2" type="Line2D" parent="AdvancedSettingsGroup/ScrollContainer/Control" unique_id=973889090]
+modulate = Color(0.23753911, 0.23753914, 0.23753911, 1)
+position = Vector2(-2, 323)
+points = PackedVector2Array(15, 79, 747, 79)
+width = 2.0
+
+[node name="CaveTileDimensionsLabel" type="Label" parent="AdvancedSettingsGroup/ScrollContainer/Control" unique_id=2094874114]
+layout_mode = 0
+offset_left = 23.0
+offset_top = 427.0
+offset_right = 359.0
+offset_bottom = 450.0
+text = "CAVE_TILE_DIMENSIONS"
+
+[node name="CaveTileDimensionsMult" type="Label" parent="AdvancedSettingsGroup/ScrollContainer/Control" unique_id=1930756972]
+layout_mode = 0
+offset_left = 387.0
+offset_top = 427.0
+offset_right = 403.0
+offset_bottom = 451.0
+text = "x"
+
+[node name="CaveTileDimensions" type="LineEdit" parent="AdvancedSettingsGroup/ScrollContainer/Control" unique_id=848319036]
+layout_mode = 0
+offset_left = 407.0
+offset_top = 423.0
+offset_right = 459.0
+offset_bottom = 454.0
+theme = SubResource("Theme_veju5")
+text = "1.0"
+select_all_on_focus = true
+caret_blink = true
+caret_blink_interval = 0.5
+
+[node name="CaveDepthLabel" type="Label" parent="AdvancedSettingsGroup/ScrollContainer/Control" unique_id=1663014503]
+layout_mode = 0
+offset_left = 23.0
+offset_top = 483.0
+offset_right = 359.0
+offset_bottom = 506.0
+text = "CAVE_DEPTH"
+
+[node name="CaveDepthMult" type="Label" parent="AdvancedSettingsGroup/ScrollContainer/Control" unique_id=1538872058]
+layout_mode = 0
+offset_left = 387.0
+offset_top = 483.0
+offset_right = 403.0
+offset_bottom = 507.0
+text = "x"
+
+[node name="CaveDepth" type="LineEdit" parent="AdvancedSettingsGroup/ScrollContainer/Control" unique_id=995872599]
+layout_mode = 0
+offset_left = 407.0
+offset_top = 479.0
+offset_right = 459.0
+offset_bottom = 510.0
+theme = SubResource("Theme_veju5")
+text = "1.0"
+select_all_on_focus = true
+caret_blink = true
+caret_blink_interval = 0.5
+
+[node name="CaveFloorDifficultyLabel" parent="AdvancedSettingsGroup/ScrollContainer/Control" unique_id=1862129104 instance=ExtResource("4_nbk0x")]
+layout_mode = 0
+offset_left = 23.0
+offset_top = 539.0
+offset_right = 255.0
+offset_bottom = 563.0
+text = "CAVE_FLOOR_DIFFICULTY [img]Graphics/Icons/help.png[/img]"
+label_text = "CAVE_FLOOR_DIFFICULTY"
+help_text = "CAVE_FLOOR_DIFFICULTY_DESC"
+
+[node name="CaveFloorDifficultyMult" type="Label" parent="AdvancedSettingsGroup/ScrollContainer/Control" unique_id=1152544340]
+layout_mode = 0
+offset_left = 387.0
+offset_top = 539.0
+offset_right = 403.0
+offset_bottom = 563.0
+text = "x"
+
+[node name="CaveFloorDifficulty" type="LineEdit" parent="AdvancedSettingsGroup/ScrollContainer/Control" unique_id=1189126311]
+layout_mode = 0
+offset_left = 407.0
+offset_top = 535.0
+offset_right = 459.0
+offset_bottom = 566.0
+theme = SubResource("Theme_veju5")
+text = "2.0"
+select_all_on_focus = true
+caret_blink = true
+caret_blink_interval = 0.5
+
+[node name="CaveWallCoverageLabel" type="Label" parent="AdvancedSettingsGroup/ScrollContainer/Control" unique_id=1193676398]
+layout_mode = 0
+offset_left = 23.0
+offset_top = 595.0
+offset_right = 359.0
+offset_bottom = 618.0
+text = "CAVE_WALL_COVERAGE"
+
+[node name="CaveWallCoverage" type="LineEdit" parent="AdvancedSettingsGroup/ScrollContainer/Control" unique_id=1579788493]
+layout_mode = 0
+offset_left = 407.0
+offset_top = 591.0
+offset_right = 459.0
+offset_bottom = 622.0
+theme = SubResource("Theme_veju5")
+text = "0.5"
+select_all_on_focus = true
+caret_blink = true
+caret_blink_interval = 0.5
+
+[node name="StarSystemTexture" type="TextureRect" parent="AdvancedSettingsGroup/ScrollContainer/Control" unique_id=1940458687]
+layout_mode = 0
+offset_left = 15.0
+offset_top = 659.0
+offset_right = 75.0
+offset_bottom = 719.0
+texture = ExtResource("8_m2o25")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="StarSystems" type="Label" parent="AdvancedSettingsGroup/ScrollContainer/Control" unique_id=1634110895]
+layout_mode = 1
+offset_left = 111.0
+offset_top = 679.0
+offset_right = 495.0
+offset_bottom = 707.0
+text = "STAR_SYSTEMS"
+label_settings = SubResource("LabelSettings_kpmkd")
+
+[node name="Line2D3" type="Line2D" parent="AdvancedSettingsGroup/ScrollContainer/Control" unique_id=1350690550]
+modulate = Color(0.23753911, 0.23753914, 0.23753911, 1)
+position = Vector2(-1, 651)
+points = PackedVector2Array(15, 79, 747, 79)
+width = 2.0
+
+[node name="DistanceBetweenPlanetsLabel" type="Label" parent="AdvancedSettingsGroup/ScrollContainer/Control" unique_id=794642442]
+layout_mode = 0
+offset_left = 23.0
+offset_top = 751.0
+offset_right = 359.0
+offset_bottom = 774.0
+text = "DISTANCE_BETWEEN_PLANETS"
+
+[node name="DistanceBetweenPlanetsMult" type="Label" parent="AdvancedSettingsGroup/ScrollContainer/Control" unique_id=2020716736]
+layout_mode = 0
+offset_left = 387.0
+offset_top = 751.0
+offset_right = 403.0
+offset_bottom = 775.0
+text = "x"
+
+[node name="DistanceBetweenPlanets" type="LineEdit" parent="AdvancedSettingsGroup/ScrollContainer/Control" unique_id=417542523]
+layout_mode = 0
+offset_left = 407.0
+offset_top = 747.0
+offset_right = 459.0
+offset_bottom = 778.0
+theme = SubResource("Theme_veju5")
+text = "1.0"
+select_all_on_focus = true
+caret_blink = true
+caret_blink_interval = 0.5
+
+[node name="MaxPlanetsInSystemLabel" type="Label" parent="AdvancedSettingsGroup/ScrollContainer/Control" unique_id=2016979658]
+layout_mode = 0
+offset_left = 23.0
+offset_top = 807.0
+offset_right = 359.0
+offset_bottom = 830.0
+text = "MAX_PLANETS_IN_SYSTEM"
+
+[node name="MaxPlanetsInSystem" type="LineEdit" parent="AdvancedSettingsGroup/ScrollContainer/Control" unique_id=1125295160]
+layout_mode = 0
+offset_left = 407.0
+offset_top = 803.0
+offset_right = 459.0
+offset_bottom = 834.0
+theme = SubResource("Theme_veju5")
+text = "40"
+select_all_on_focus = true
+caret_blink = true
+caret_blink_interval = 0.5
+
+[node name="GalaxyTexture" type="TextureRect" parent="AdvancedSettingsGroup/ScrollContainer/Control" unique_id=1653050077]
+layout_mode = 0
+offset_left = 15.0
+offset_top = 867.0
+offset_right = 75.0
+offset_bottom = 927.0
+texture = ExtResource("9_ogrcn")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Galaxies" type="Label" parent="AdvancedSettingsGroup/ScrollContainer/Control" unique_id=1062334464]
+layout_mode = 1
+offset_left = 111.0
+offset_top = 883.0
+offset_right = 495.0
+offset_bottom = 911.0
+text = "GALAXIES"
+label_settings = SubResource("LabelSettings_kpmkd")
+
+[node name="Line2D4" type="Line2D" parent="AdvancedSettingsGroup/ScrollContainer/Control" unique_id=1979854667]
+modulate = Color(0.23753911, 0.23753914, 0.23753911, 1)
+position = Vector2(-1, 855)
+points = PackedVector2Array(15, 79, 747, 79)
+width = 2.0
+
+[node name="GalaxyTexture2" type="TextureRect" parent="AdvancedSettingsGroup/ScrollContainer/Control" unique_id=1744239186]
+layout_mode = 0
+offset_left = 15.0
+offset_top = 1239.0
+offset_right = 75.0
+offset_bottom = 1299.0
+texture = ExtResource("10_omqta")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Galaxies2" type="Label" parent="AdvancedSettingsGroup/ScrollContainer/Control" unique_id=1976425118]
+layout_mode = 1
+offset_left = 111.0
+offset_top = 1255.0
+offset_right = 495.0
+offset_bottom = 1283.0
+text = "CLUSTERS"
+label_settings = SubResource("LabelSettings_kpmkd")
+
+[node name="Line2D5" type="Line2D" parent="AdvancedSettingsGroup/ScrollContainer/Control" unique_id=979262035]
+modulate = Color(0.23753911, 0.23753914, 0.23753911, 1)
+position = Vector2(-1, 1227)
+points = PackedVector2Array(15, 79, 747, 79)
+width = 2.0
+
+[node name="GalaxyTexture3" type="TextureRect" parent="AdvancedSettingsGroup/ScrollContainer/Control" unique_id=1256684011]
+layout_mode = 0
+offset_left = 14.0
+offset_top = 1555.0
+offset_right = 74.0
+offset_bottom = 1615.0
+texture = ExtResource("11_eo4go")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Galaxies3" type="Label" parent="AdvancedSettingsGroup/ScrollContainer/Control" unique_id=1021519818]
+layout_mode = 1
+offset_left = 110.0
+offset_top = 1571.0
+offset_right = 494.0
+offset_bottom = 1599.0
+text = "UNIVERSE"
+label_settings = SubResource("LabelSettings_kpmkd")
+
+[node name="Line2D6" type="Line2D" parent="AdvancedSettingsGroup/ScrollContainer/Control" unique_id=2121248099]
+modulate = Color(0.23753911, 0.23753914, 0.23753911, 1)
+position = Vector2(-2, 1543)
+points = PackedVector2Array(15, 79, 747, 79)
+width = 2.0
+
+[node name="StarSystemDensityLabel" parent="AdvancedSettingsGroup/ScrollContainer/Control" unique_id=41511502 instance=ExtResource("4_nbk0x")]
+layout_mode = 0
+offset_left = 23.0
+offset_top = 959.0
+offset_right = 243.0
+offset_bottom = 983.0
+text = "STAR_SYSTEM_DENSITY [img]Graphics/Icons/help.png[/img]"
+label_text = "STAR_SYSTEM_DENSITY"
+help_text = "STAR_SYSTEM_DENSITY_DESC"
+
+[node name="StarSystemDensityMult" type="Label" parent="AdvancedSettingsGroup/ScrollContainer/Control" unique_id=1530715935]
+layout_mode = 0
+offset_left = 387.0
+offset_top = 959.0
+offset_right = 403.0
+offset_bottom = 983.0
+text = "x"
+
+[node name="StarSystemDensity" type="LineEdit" parent="AdvancedSettingsGroup/ScrollContainer/Control" unique_id=1691111651]
+layout_mode = 0
+offset_left = 407.0
+offset_top = 955.0
+offset_right = 459.0
+offset_bottom = 986.0
+theme = SubResource("Theme_veju5")
+text = "1.0"
+select_all_on_focus = true
+caret_blink = true
+caret_blink_interval = 0.5
+
+[node name="EllipticalGalaxy" type="TextureRect" parent="AdvancedSettingsGroup/ScrollContainer/Control" unique_id=123105091]
+layout_mode = 0
+offset_left = 33.11737
+offset_top = 999.0
+offset_right = 73.11737
+offset_bottom = 1039.0
+rotation = 0.7114526
+texture = ExtResource("11_afjgo")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="EllipticalGalaxySizeRangeLabel" type="Label" parent="AdvancedSettingsGroup/ScrollContainer/Control" unique_id=326292476]
+layout_mode = 0
+offset_left = 59.0
+offset_top = 1015.0
+offset_right = 319.0
+offset_bottom = 1038.0
+text = "ELLIPTICAL_GALAXY_SIZE_RANGE"
+
+[node name="EllipticalGalaxyMin" type="Label" parent="AdvancedSettingsGroup/ScrollContainer/Control" unique_id=2088702164]
+layout_mode = 0
+offset_left = 343.0
+offset_top = 1015.0
+offset_right = 398.0
+offset_bottom = 1038.0
+text = "MIN"
+horizontal_alignment = 2
+
+[node name="EllipticalGalaxyMinSize" type="LineEdit" parent="AdvancedSettingsGroup/ScrollContainer/Control" unique_id=1839668419]
+layout_mode = 0
+offset_left = 407.0
+offset_top = 1011.0
+offset_right = 459.0
+offset_bottom = 1042.0
+theme = SubResource("Theme_veju5")
+text = "2000"
+select_all_on_focus = true
+caret_blink = true
+caret_blink_interval = 0.5
+
+[node name="EllipticalGalaxySystems" type="Label" parent="AdvancedSettingsGroup/ScrollContainer/Control" unique_id=1613105268]
+layout_mode = 0
+offset_left = 467.0
+offset_top = 1015.0
+offset_right = 546.0
+offset_bottom = 1038.0
+text = "SYSTEMS"
+
+[node name="EllipticalGalaxyMax" type="Label" parent="AdvancedSettingsGroup/ScrollContainer/Control" unique_id=112951253]
+layout_mode = 0
+offset_left = 575.0
+offset_top = 1015.0
+offset_right = 630.0
+offset_bottom = 1038.0
+text = "MAX"
+horizontal_alignment = 2
+
+[node name="EllipticalGalaxyMaxSize" type="LineEdit" parent="AdvancedSettingsGroup/ScrollContainer/Control" unique_id=769630026]
+layout_mode = 0
+offset_left = 639.0
+offset_top = 1011.0
+offset_right = 691.0
+offset_bottom = 1042.0
+theme = SubResource("Theme_veju5")
+text = "10000"
+select_all_on_focus = true
+caret_blink = true
+caret_blink_interval = 0.5
+
+[node name="EllipticalGalaxySystems2" type="Label" parent="AdvancedSettingsGroup/ScrollContainer/Control" unique_id=174666520]
+layout_mode = 0
+offset_left = 699.0
+offset_top = 1015.0
+offset_right = 778.0
+offset_bottom = 1038.0
+text = "SYSTEMS"
+
+[node name="SpiralGalaxy" type="TextureRect" parent="AdvancedSettingsGroup/ScrollContainer/Control" unique_id=792988166]
+layout_mode = 0
+offset_left = 17.11737
+offset_top = 1063.0
+offset_right = 53.11737
+offset_bottom = 1099.0
+texture = ExtResource("12_eo4go")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="SpiralGalaxySizeRangeLabel" type="Label" parent="AdvancedSettingsGroup/ScrollContainer/Control" unique_id=1153230184]
+layout_mode = 0
+offset_left = 59.0
+offset_top = 1071.0
+offset_right = 319.0
+offset_bottom = 1094.0
+text = "SPIRAL_GALAXY_SIZE_RANGE"
+
+[node name="SpiralGalaxyMin" type="Label" parent="AdvancedSettingsGroup/ScrollContainer/Control" unique_id=2071427716]
+layout_mode = 0
+offset_left = 343.0
+offset_top = 1071.0
+offset_right = 398.0
+offset_bottom = 1094.0
+text = "MIN"
+horizontal_alignment = 2
+
+[node name="SpiralGalaxyMinSize" type="LineEdit" parent="AdvancedSettingsGroup/ScrollContainer/Control" unique_id=366111273]
+layout_mode = 0
+offset_left = 407.0
+offset_top = 1067.0
+offset_right = 459.0
+offset_bottom = 1098.0
+theme = SubResource("Theme_veju5")
+text = "5000"
+select_all_on_focus = true
+caret_blink = true
+caret_blink_interval = 0.5
+
+[node name="SpiralGalaxySystems" type="Label" parent="AdvancedSettingsGroup/ScrollContainer/Control" unique_id=644893599]
+layout_mode = 0
+offset_left = 467.0
+offset_top = 1071.0
+offset_right = 546.0
+offset_bottom = 1094.0
+text = "SYSTEMS"
+
+[node name="SpiralGalaxyMax" type="Label" parent="AdvancedSettingsGroup/ScrollContainer/Control" unique_id=836003011]
+layout_mode = 0
+offset_left = 575.0
+offset_top = 1071.0
+offset_right = 630.0
+offset_bottom = 1094.0
+text = "MAX"
+horizontal_alignment = 2
+
+[node name="SpiralGalaxyMaxSize" type="LineEdit" parent="AdvancedSettingsGroup/ScrollContainer/Control" unique_id=464379010]
+layout_mode = 0
+offset_left = 639.0
+offset_top = 1067.0
+offset_right = 691.0
+offset_bottom = 1098.0
+theme = SubResource("Theme_veju5")
+text = "15000"
+select_all_on_focus = true
+caret_blink = true
+caret_blink_interval = 0.5
+
+[node name="SpiralGalaxySystems2" type="Label" parent="AdvancedSettingsGroup/ScrollContainer/Control" unique_id=807429894]
+layout_mode = 0
+offset_left = 699.0
+offset_top = 1071.0
+offset_right = 778.0
+offset_bottom = 1094.0
+text = "SYSTEMS"
+
+[node name="DwarfEllipticalGalaxyRatioLabel" parent="AdvancedSettingsGroup/ScrollContainer/Control" unique_id=1555804727 instance=ExtResource("4_nbk0x")]
+layout_mode = 0
+offset_left = 23.0
+offset_top = 1127.0
+offset_right = 323.0
+offset_bottom = 1151.0
+text = "DWARF_ELLIPTICAL_GALAXY_RATIO [img]Graphics/Icons/help.png[/img]"
+label_text = "DWARF_ELLIPTICAL_GALAXY_RATIO"
+help_text = "DWARF_ELLIPTICAL_GALAXY_RATIO_DESC"
+
+[node name="DwarfEllipticalGalaxyRatio" type="LineEdit" parent="AdvancedSettingsGroup/ScrollContainer/Control" unique_id=1352692350]
+layout_mode = 0
+offset_left = 407.0
+offset_top = 1123.0
+offset_right = 459.0
+offset_bottom = 1154.0
+theme = SubResource("Theme_veju5")
+text = "0.4"
+select_all_on_focus = true
+caret_blink = true
+caret_blink_interval = 0.5
+
+[node name="EllipticalSpiralGalaxyRatioLabel" parent="AdvancedSettingsGroup/ScrollContainer/Control" unique_id=1332437802 instance=ExtResource("4_nbk0x")]
+layout_mode = 0
+offset_left = 23.0
+offset_top = 1183.0
+offset_right = 319.0
+offset_bottom = 1207.0
+text = "ELLIPTICAL_SPIRAL_GALAXY_RATIO [img]Graphics/Icons/help.png[/img]"
+label_text = "ELLIPTICAL_SPIRAL_GALAXY_RATIO"
+help_text = "ELLIPTICAL_SPIRAL_GALAXY_RATIO_DESC"
+
+[node name="EllipticalSpiralGalaxyRatio" type="LineEdit" parent="AdvancedSettingsGroup/ScrollContainer/Control" unique_id=639916579]
+layout_mode = 0
+offset_left = 407.0
+offset_top = 1179.0
+offset_right = 459.0
+offset_bottom = 1210.0
+theme = SubResource("Theme_veju5")
+text = "0.4"
+select_all_on_focus = true
+caret_blink = true
+caret_blink_interval = 0.5
+
+[node name="GalaxyDensityLabel" parent="AdvancedSettingsGroup/ScrollContainer/Control" unique_id=1638221034 instance=ExtResource("4_nbk0x")]
+layout_mode = 0
+offset_left = 23.0
+offset_top = 1335.0
+offset_right = 211.0
+offset_bottom = 1359.0
+text = "GALAXY_DENSITY [img]Graphics/Icons/help.png[/img]"
+label_text = "GALAXY_DENSITY"
+help_text = "GALAXY_DENSITY_DESC"
+
+[node name="GalaxyDensityMult" type="Label" parent="AdvancedSettingsGroup/ScrollContainer/Control" unique_id=459334894]
+layout_mode = 0
+offset_left = 387.0
+offset_top = 1335.0
+offset_right = 403.0
+offset_bottom = 1359.0
+text = "x"
+
+[node name="GalaxyDensity" type="LineEdit" parent="AdvancedSettingsGroup/ScrollContainer/Control" unique_id=737571377]
+layout_mode = 0
+offset_left = 407.0
+offset_top = 1331.0
+offset_right = 459.0
+offset_bottom = 1362.0
+theme = SubResource("Theme_veju5")
+text = "1.0"
+select_all_on_focus = true
+caret_blink = true
+caret_blink_interval = 0.5
+
+[node name="MinNumberOfGalaxiesLabel" type="Label" parent="AdvancedSettingsGroup/ScrollContainer/Control" unique_id=168668141]
+layout_mode = 0
+offset_left = 23.0
+offset_top = 1387.0
+offset_right = 283.0
+offset_bottom = 1410.0
+text = "MIN_NUMBER_OF_GALAXIES"
+
+[node name="MinNumberOfGalaxies" type="LineEdit" parent="AdvancedSettingsGroup/ScrollContainer/Control" unique_id=1364833094]
+layout_mode = 0
+offset_left = 407.0
+offset_top = 1384.0
+offset_right = 459.0
+offset_bottom = 1415.0
+theme = SubResource("Theme_veju5")
+text = "500"
+select_all_on_focus = true
+caret_blink = true
+caret_blink_interval = 0.5
+
+[node name="MaxNumberOfGalaxiesLabel" type="Label" parent="AdvancedSettingsGroup/ScrollContainer/Control" unique_id=556622731]
+layout_mode = 0
+offset_left = 23.0
+offset_top = 1442.0
+offset_right = 283.0
+offset_bottom = 1465.0
+text = "MAX_NUMBER_OF_GALAXIES"
+
+[node name="MaxNumberOfGalaxies" type="LineEdit" parent="AdvancedSettingsGroup/ScrollContainer/Control" unique_id=969179694]
+layout_mode = 0
+offset_left = 407.0
+offset_top = 1439.0
+offset_right = 459.0
+offset_bottom = 1470.0
+theme = SubResource("Theme_veju5")
+text = "5000"
+select_all_on_focus = true
+caret_blink = true
+caret_blink_interval = 0.5
+
+[node name="GalaxyGroupRatioLabel" parent="AdvancedSettingsGroup/ScrollContainer/Control" unique_id=1843494524 instance=ExtResource("4_nbk0x")]
+layout_mode = 0
+offset_left = 23.0
+offset_top = 1499.0
+offset_right = 247.0
+offset_bottom = 1523.0
+text = "GALAXY_GROUP_RATIO [img]Graphics/Icons/help.png[/img]"
+label_text = "GALAXY_GROUP_RATIO"
+help_text = "GALAXY_GROUP_RATIO_DESC"
+
+[node name="GalaxyGroupRatio" type="LineEdit" parent="AdvancedSettingsGroup/ScrollContainer/Control" unique_id=1837989197]
+layout_mode = 0
+offset_left = 407.0
+offset_top = 1495.0
+offset_right = 459.0
+offset_bottom = 1526.0
+theme = SubResource("Theme_veju5")
+text = "0.5"
+select_all_on_focus = true
+caret_blink = true
+caret_blink_interval = 0.5
+
+[node name="ClusterDensityLabel" parent="AdvancedSettingsGroup/ScrollContainer/Control" unique_id=1261208912 instance=ExtResource("4_nbk0x")]
+layout_mode = 0
+offset_left = 23.0
+offset_top = 1651.0
+offset_right = 211.0
+offset_bottom = 1675.0
+text = "GALAXY_DENSITY [img]Graphics/Icons/help.png[/img]"
+label_text = "CLUSTER_DENSITY"
+help_text = "CLUSTER_DENSITY_DESC"
+
+[node name="ClusterDensityMult" type="Label" parent="AdvancedSettingsGroup/ScrollContainer/Control" unique_id=858608353]
+layout_mode = 0
+offset_left = 387.0
+offset_top = 1651.0
+offset_right = 403.0
+offset_bottom = 1675.0
+text = "x"
+
+[node name="ClusterDensity" type="LineEdit" parent="AdvancedSettingsGroup/ScrollContainer/Control" unique_id=1347562026]
+layout_mode = 0
+offset_left = 407.0
+offset_top = 1647.0
+offset_right = 459.0
+offset_bottom = 1678.0
+theme = SubResource("Theme_veju5")
+text = "1.0"
+select_all_on_focus = true
+caret_blink = true
+caret_blink_interval = 0.5
+
+[node name="NumberOfClustersLabel" type="Label" parent="AdvancedSettingsGroup/ScrollContainer/Control" unique_id=1148848193]
+layout_mode = 0
+offset_left = 23.0
+offset_top = 1703.0
+offset_right = 283.0
+offset_bottom = 1726.0
+text = "NUMBER_OF_CLUSTERS"
+
+[node name="NumberOfClusters" type="LineEdit" parent="AdvancedSettingsGroup/ScrollContainer/Control" unique_id=434103446]
+layout_mode = 0
+offset_left = 407.0
+offset_top = 1703.0
+offset_right = 459.0
+offset_bottom = 1734.0
+theme = SubResource("Theme_veju5")
+text = "1000"
+select_all_on_focus = true
+caret_blink = true
+caret_blink_interval = 0.5
+
+[node name="BasicSettings" type="Button" parent="AdvancedSettingsGroup" unique_id=801505937]
+layout_mode = 0
+offset_left = 540.0
+offset_top = 632.0
+offset_right = 740.0
+offset_bottom = 665.0
+text = "BASIC_SETTINGS"
+
+[node name="StartGame" type="Button" parent="." unique_id=2109531059]
+layout_mode = 0
+offset_left = 928.0
+offset_top = 632.0
+offset_right = 1063.0
+offset_bottom = 665.0
+text = "START_GAME"
+
+[connection signal="pressed" from="BasicSettingsGroup/AdvancedSettings" to="." method="_on_advanced_settings_pressed"]
+[connection signal="pressed" from="AdvancedSettingsGroup/BasicSettings" to="." method="_on_basic_settings_pressed"]
 [connection signal="pressed" from="StartGame" to="." method="_on_start_game_pressed"]
-[connection signal="pressed" from="AdvancedSettings" to="." method="_on_advanced_settings_pressed"]
