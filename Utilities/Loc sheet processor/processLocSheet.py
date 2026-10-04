@@ -4,8 +4,10 @@ import sys
 
 if __name__ == "__main__":
     LOCALES_ROW = 0
-    TRANSLATORS_CREDITS_ROW = 1
-    TRANSLATORS_DISCORD_ROW = 2
+    LANGUAGE_NAME_ROW = 1
+    TRANSLATORS_CREDITS_ROW = 2
+    TRANSLATORS_DISCORD_ROW = 3
+    OUTDATED_TRANSLATIONS_ROW = 4
 
     file_name = sys.argv[1]
 
@@ -30,8 +32,14 @@ if __name__ == "__main__":
                         localeStats[locale]["chars"] = 0
                 new_rows.append(row)
                 continue
+            elif row_number == LANGUAGE_NAME_ROW:
+                for i in range(1, len(row)):
+                    if row[i] != "":
+                        localeStats[locales[i]]["name"] = row[i]
             elif row_number in [TRANSLATORS_CREDITS_ROW, TRANSLATORS_DISCORD_ROW]:
                 new_rows.append(row)
+                continue
+            elif row_number == OUTDATED_TRANSLATIONS_ROW:
                 continue
             
             # Process the rest of the csv
