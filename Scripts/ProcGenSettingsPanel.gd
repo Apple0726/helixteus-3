@@ -1,83 +1,97 @@
 extends Control
 
 @onready var game = get_node("/root/Game")
+@onready var planet_tile_dimensions_node = $AdvancedSettingsGroup/ScrollContainer/Control/PlanetTileDimensions
+@onready var max_planet_tile_dimensions_node = $AdvancedSettingsGroup/ScrollContainer/Control/MaxPlanetTileDimensions
+@onready var lake_coverage_node = $AdvancedSettingsGroup/ScrollContainer/Control/LakeCoverage
+@onready var cave_spawn_frequency_node = $AdvancedSettingsGroup/ScrollContainer/Control/CaveSpawnFrequency
+@onready var cave_tile_dimensions_node = $AdvancedSettingsGroup/ScrollContainer/Control/CaveTileDimensions
+@onready var cave_depth_node = $AdvancedSettingsGroup/ScrollContainer/Control/CaveDepth
+@onready var cave_floor_diff_node = $AdvancedSettingsGroup/ScrollContainer/Control/CaveFloorDifficulty
+@onready var cave_wall_coverage_node = $AdvancedSettingsGroup/ScrollContainer/Control/CaveWallCoverage
+@onready var distance_between_planets_node = $AdvancedSettingsGroup/ScrollContainer/Control/DistanceBetweenPlanets
+@onready var max_planets_in_system_node = $AdvancedSettingsGroup/ScrollContainer/Control/MaxPlanetsInSystem
+@onready var star_system_density_node = $AdvancedSettingsGroup/ScrollContainer/Control/StarSystemDensity
+@onready var elliptical_galaxy_min_size_node = $AdvancedSettingsGroup/ScrollContainer/Control/EllipticalGalaxyMinSize
+@onready var elliptical_galaxy_max_size_node = $AdvancedSettingsGroup/ScrollContainer/Control/EllipticalGalaxyMaxSize
+@onready var spiral_galaxy_min_size_node = $AdvancedSettingsGroup/ScrollContainer/Control/SpiralGalaxyMinSize
+@onready var spiral_galaxy_max_size_node = $AdvancedSettingsGroup/ScrollContainer/Control/SpiralGalaxyMaxSize
+@onready var dwarf_elliptical_galaxy_ratio_node = $AdvancedSettingsGroup/ScrollContainer/Control/DwarfEllipticalGalaxyRatio
+@onready var elliptical_spiral_galaxy_ratio_node = $AdvancedSettingsGroup/ScrollContainer/Control/EllipticalSpiralGalaxyRatio
+@onready var galaxy_density_node = $AdvancedSettingsGroup/ScrollContainer/Control/GalaxyDensity
+@onready var min_number_of_galaxies_node = $AdvancedSettingsGroup/ScrollContainer/Control/MinNumberOfGalaxies
+@onready var max_number_of_galaxies_node = $AdvancedSettingsGroup/ScrollContainer/Control/MaxNumberOfGalaxies
+@onready var galaxy_group_ratio_node = $AdvancedSettingsGroup/ScrollContainer/Control/GalaxyGroupRatio
+@onready var cluster_density_node = $AdvancedSettingsGroup/ScrollContainer/Control/ClusterDensity
+@onready var number_of_clusters_node = $AdvancedSettingsGroup/ScrollContainer/Control/NumberOfClusters
 
 signal done
 
+var min_max_values:Dictionary
+
 func _ready() -> void:
+	min_max_values = {
+		planet_tile_dimensions_node: {"min":0.0, "default": ProcGenSettings.planet_tile_dimensions},
+		max_planet_tile_dimensions_node: {"min":1, "rec_min":3, "rec_max":300, "default": ProcGenSettings.max_planet_tile_dimensions},
+		lake_coverage_node: {"min":0.0, "max":1.0, "default": ProcGenSettings.lake_coverage},
+		cave_spawn_frequency_node: {"min":0.0, "rec_max":20.0, "default": ProcGenSettings.cave_spawn_frequency},
+		cave_tile_dimensions_node: {"min":0.0, "rec_max":3.0, "default": ProcGenSettings.cave_tile_dimensions},
+		cave_depth_node: {"min":0.0, "default": ProcGenSettings.cave_depth},
+		cave_floor_diff_node: {"min":1.0, "default": ProcGenSettings.cave_floor_difficulty},
+		cave_wall_coverage_node: {"min":0.0, "max":1.0, "default": ProcGenSettings.cave_wall_coverage},
+		distance_between_planets_node: {"min":0.0, "rec_min":0.1, "rec_max":10.0, "default": ProcGenSettings.distance_between_planets},
+		max_planets_in_system_node: {"min":1, "rec_max":50, "default": ProcGenSettings.max_planets_in_system},
+		star_system_density_node: {"min":0.0, "rec_min":0.1, "rec_max":10.0, "default": ProcGenSettings.star_system_density},
+		elliptical_galaxy_min_size_node: {"min":1, "default": ProcGenSettings.min_number_of_systems_elliptical},
+		elliptical_galaxy_max_size_node: {"min":1, "rec_max":50000, "default": ProcGenSettings.max_number_of_systems_elliptical},
+		spiral_galaxy_min_size_node: {"min":1, "default": ProcGenSettings.min_number_of_systems_spiral},
+		spiral_galaxy_max_size_node: {"min":1, "rec_max":50000, "default": ProcGenSettings.max_number_of_systems_spiral},
+		dwarf_elliptical_galaxy_ratio_node: {"min":0.0, "max":1.0, "default": ProcGenSettings.dwarf_elliptical_galaxy_ratio},
+		elliptical_spiral_galaxy_ratio_node: {"min":0.0, "max":1.0, "default": ProcGenSettings.elliptical_spiral_galaxy_ratio},
+		galaxy_density_node: {"min":0.0, "rec_min":0.3, "rec_max":10.0, "default": ProcGenSettings.galaxy_density},
+		min_number_of_galaxies_node: {"min":1, "default": ProcGenSettings.min_number_of_galaxies},
+		max_number_of_galaxies_node: {"min":1, "rec_max":50000, "default": ProcGenSettings.max_number_of_galaxies},
+		galaxy_group_ratio_node: {"min":0.0, "max":1.0, "default": ProcGenSettings.galaxy_group_ratio},
+		cluster_density_node: {"min":0.0, "rec_min":0.1, "rec_max":10.0, "default": ProcGenSettings.cluster_density},
+		number_of_clusters_node: {"min":1, "rec_max":50000, "default": ProcGenSettings.number_of_clusters},
+	}
 	$Seed.text = str(int(Time.get_unix_time_from_system()))
 	$BasicSettingsGroup/SizeOfCOSHBox/Medium._on_Button_pressed()
 	$BasicSettingsGroup/DensityOfCOSHBox/Normal._on_Button_pressed()
-	var planet_tile_dimensions_node = $AdvancedSettingsGroup/ScrollContainer/Control/PlanetTileDimensions
-	planet_tile_dimensions_node.mouse_entered.connect(line_edit_show_tooltip.bind({"min":0.0}, planet_tile_dimensions_node))
-	planet_tile_dimensions_node.mouse_exited.connect(game.hide_tooltip)
-	var max_planet_tile_dimensions_node = $AdvancedSettingsGroup/ScrollContainer/Control/MaxPlanetTileDimensions
-	max_planet_tile_dimensions_node.mouse_entered.connect(line_edit_show_tooltip.bind({"rec_min":3, "rec_max":300}, max_planet_tile_dimensions_node))
-	max_planet_tile_dimensions_node.mouse_exited.connect(game.hide_tooltip)
+	for line_edit in $AdvancedSettingsGroup/ScrollContainer/Control.get_children():
+		if line_edit is not LineEdit:
+			continue
+		var warning_icon = TextureRect.new()
+		warning_icon.texture = load("res://Graphics/Icons/warning.png")
+		warning_icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+		warning_icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+		warning_icon.size = Vector2(20.0, 24.0)
+		warning_icon.position = Vector2(32.0, 4.0)
+		warning_icon.name = "Warning"
+		warning_icon.hide()
+		line_edit.add_child(warning_icon)
+		line_edit.text_changed.connect(check_value_validity.bind(line_edit))
+		line_edit.text_submitted.connect(check_value_validity2.bind(line_edit))
+		line_edit.focus_exited.connect(check_value_validity2.bind("", line_edit))
+		line_edit.mouse_entered.connect(line_edit_show_tooltip.bind(line_edit))
+		line_edit.mouse_exited.connect(game.hide_tooltip)
+		line_edit.text = str(min_max_values[line_edit].default)
 	max_planet_tile_dimensions_node.text_changed.connect(update_max_planet_tile_dimensions_label_2)
-	var lake_coverage_node = $AdvancedSettingsGroup/ScrollContainer/Control/LakeCoverage
-	lake_coverage_node.mouse_entered.connect(line_edit_show_tooltip.bind({"min":0.0, "max":1.0}, lake_coverage_node))
-	lake_coverage_node.mouse_exited.connect(game.hide_tooltip)
-	var cave_spawn_frequency_node = $AdvancedSettingsGroup/ScrollContainer/Control/CaveSpawnFrequency
-	cave_spawn_frequency_node.mouse_entered.connect(line_edit_show_tooltip.bind({"min":0.0, "rec_max":20.0}, cave_spawn_frequency_node))
-	cave_spawn_frequency_node.mouse_exited.connect(game.hide_tooltip)
-	var cave_tile_dimensions_node = $AdvancedSettingsGroup/ScrollContainer/Control/CaveTileDimensions
-	cave_tile_dimensions_node.mouse_entered.connect(line_edit_show_tooltip.bind({"min":0.0, "rec_max":3.0}, cave_tile_dimensions_node))
-	cave_tile_dimensions_node.mouse_exited.connect(game.hide_tooltip)
-	var cave_depth_node = $AdvancedSettingsGroup/ScrollContainer/Control/CaveDepth
-	cave_depth_node.mouse_entered.connect(line_edit_show_tooltip.bind({"min":0.0}, cave_depth_node))
-	cave_depth_node.mouse_exited.connect(game.hide_tooltip)
-	var cave_floor_diff_node = $AdvancedSettingsGroup/ScrollContainer/Control/CaveFloorDifficulty
-	cave_floor_diff_node.mouse_entered.connect(line_edit_show_tooltip.bind({"min":1.0}, cave_floor_diff_node))
-	cave_floor_diff_node.mouse_exited.connect(game.hide_tooltip)
-	var cave_wall_coverage_node = $AdvancedSettingsGroup/ScrollContainer/Control/CaveWallCoverage
-	cave_wall_coverage_node.mouse_entered.connect(line_edit_show_tooltip.bind({"min":0.0, "max":1.0}, cave_wall_coverage_node))
-	cave_wall_coverage_node.mouse_exited.connect(game.hide_tooltip)
-	var distance_between_planets_node = $AdvancedSettingsGroup/ScrollContainer/Control/DistanceBetweenPlanets
-	distance_between_planets_node.mouse_entered.connect(line_edit_show_tooltip.bind({"rec_min":0.1, "rec_max":10.0}, distance_between_planets_node))
-	distance_between_planets_node.mouse_exited.connect(game.hide_tooltip)
-	var max_planets_in_system_node = $AdvancedSettingsGroup/ScrollContainer/Control/MaxPlanetsInSystem
-	max_planets_in_system_node.mouse_entered.connect(line_edit_show_tooltip.bind({"min":1, "rec_max":50}, max_planets_in_system_node))
-	max_planets_in_system_node.mouse_exited.connect(game.hide_tooltip)
-	var star_system_density_node = $AdvancedSettingsGroup/ScrollContainer/Control/StarSystemDensity
-	star_system_density_node.mouse_entered.connect(line_edit_show_tooltip.bind({"min":0.0, "rec_min":0.1, "rec_max":10.0}, star_system_density_node))
-	star_system_density_node.mouse_exited.connect(game.hide_tooltip)
-	var elliptical_galaxy_min_size_node = $AdvancedSettingsGroup/ScrollContainer/Control/EllipticalGalaxyMinSize
-	elliptical_galaxy_min_size_node.mouse_entered.connect(line_edit_show_tooltip.bind({"min":1}, elliptical_galaxy_min_size_node))
-	elliptical_galaxy_min_size_node.mouse_exited.connect(game.hide_tooltip)
-	var elliptical_galaxy_max_size_node = $AdvancedSettingsGroup/ScrollContainer/Control/EllipticalGalaxyMaxSize
-	elliptical_galaxy_max_size_node.mouse_entered.connect(line_edit_show_tooltip.bind({"min":1, "rec_max":50000}, elliptical_galaxy_max_size_node))
-	elliptical_galaxy_max_size_node.mouse_exited.connect(game.hide_tooltip)
-	var spiral_galaxy_min_size_node = $AdvancedSettingsGroup/ScrollContainer/Control/SpiralGalaxyMinSize
-	spiral_galaxy_min_size_node.mouse_entered.connect(line_edit_show_tooltip.bind({"min":1}, spiral_galaxy_min_size_node))
-	spiral_galaxy_min_size_node.mouse_exited.connect(game.hide_tooltip)
-	var spiral_galaxy_max_size_node = $AdvancedSettingsGroup/ScrollContainer/Control/SpiralGalaxyMaxSize
-	spiral_galaxy_max_size_node.mouse_entered.connect(line_edit_show_tooltip.bind({"min":1, "rec_max":50000}, spiral_galaxy_max_size_node))
-	spiral_galaxy_max_size_node.mouse_exited.connect(game.hide_tooltip)
-	var dwarf_elliptical_galaxy_raito_node = $AdvancedSettingsGroup/ScrollContainer/Control/DwarfEllipticalGalaxyRatio
-	dwarf_elliptical_galaxy_raito_node.mouse_entered.connect(line_edit_show_tooltip.bind({"min":0.0, "max":1.0}, dwarf_elliptical_galaxy_raito_node))
-	dwarf_elliptical_galaxy_raito_node.mouse_exited.connect(game.hide_tooltip)
-	var elliptical_spiral_galaxy_ratio_node = $AdvancedSettingsGroup/ScrollContainer/Control/EllipticalSpiralGalaxyRatio
-	elliptical_spiral_galaxy_ratio_node.mouse_entered.connect(line_edit_show_tooltip.bind({"min":0.0, "max":1.0}, elliptical_spiral_galaxy_ratio_node))
-	elliptical_spiral_galaxy_ratio_node.mouse_exited.connect(game.hide_tooltip)
-	var galaxy_density_node = $AdvancedSettingsGroup/ScrollContainer/Control/GalaxyDensity
-	galaxy_density_node.mouse_entered.connect(line_edit_show_tooltip.bind({"min":0.0, "rec_min":0.3, "rec_max":10.0}, galaxy_density_node))
-	galaxy_density_node.mouse_exited.connect(game.hide_tooltip)
-	var min_number_of_galaxies_node = $AdvancedSettingsGroup/ScrollContainer/Control/MinNumberOfGalaxies
-	min_number_of_galaxies_node.mouse_entered.connect(line_edit_show_tooltip.bind({"min":1}, min_number_of_galaxies_node))
-	min_number_of_galaxies_node.mouse_exited.connect(game.hide_tooltip)
-	var max_number_of_galaxies_node = $AdvancedSettingsGroup/ScrollContainer/Control/MaxNumberOfGalaxies
-	max_number_of_galaxies_node.mouse_entered.connect(line_edit_show_tooltip.bind({"min":1, "rec_max":50000}, max_number_of_galaxies_node))
-	max_number_of_galaxies_node.mouse_exited.connect(game.hide_tooltip)
-	var galaxy_group_ratio_node = $AdvancedSettingsGroup/ScrollContainer/Control/GalaxyGroupRatio
-	galaxy_group_ratio_node.mouse_entered.connect(line_edit_show_tooltip.bind({"min":0.0, "max":1.0}, galaxy_group_ratio_node))
-	galaxy_group_ratio_node.mouse_exited.connect(game.hide_tooltip)
-	var cluster_density_node = $AdvancedSettingsGroup/ScrollContainer/Control/ClusterDensity
-	cluster_density_node.mouse_entered.connect(line_edit_show_tooltip.bind({"rec_min":0.1, "rec_max":10.0}, cluster_density_node))
-	cluster_density_node.mouse_exited.connect(game.hide_tooltip)
-	var number_of_clusters_node = $AdvancedSettingsGroup/ScrollContainer/Control/NumberOfClusters
-	number_of_clusters_node.mouse_entered.connect(line_edit_show_tooltip.bind({"min":1, "rec_max":50000}, number_of_clusters_node))
-	number_of_clusters_node.mouse_exited.connect(game.hide_tooltip)
+
+func check_value_validity(new_text:String, line_edit_node):
+	if new_text.is_valid_float() or new_text.is_valid_int():
+		if min_max_values[line_edit_node].has("min") and float(new_text) < min_max_values[line_edit_node].min:
+			line_edit_node.text = str(min_max_values[line_edit_node].min)
+		elif min_max_values[line_edit_node].has("max") and float(new_text) > min_max_values[line_edit_node].max:
+			line_edit_node.text = str(min_max_values[line_edit_node].max)
+		line_edit_node.get_node("Warning").visible = get_warning_text(line_edit_node) != ""
+
+func check_value_validity2(new_text:String, line_edit_node):
+	if new_text == "":
+		new_text = line_edit_node.text
+	if not new_text.is_valid_float() and not new_text.is_valid_int():
+		line_edit_node.text = str(min_max_values[line_edit_node].default)
+		check_value_validity("", line_edit_node)
 
 func update_max_planet_tile_dimensions_label_2(new_text:String):
 	$AdvancedSettingsGroup/ScrollContainer/Control/MaxPlanetTileDimensionsLabel2.text = "= " + tr("OBJECT_COUNT").format({
@@ -85,20 +99,25 @@ func update_max_planet_tile_dimensions_label_2(new_text:String):
 		"object":tr("TILES"),
 	})
 
-func line_edit_show_tooltip(min_max_values:Dictionary, line_edit_node):
+func line_edit_show_tooltip(line_edit_node):
 	var tooltip = ""
-	if min_max_values.has("min"):
-		tooltip += "{min_text}: {min}\n".format({"min_text":tr("MINIMUM"), "min":min_max_values.min})
-	if min_max_values.has("rec_min"):
-		tooltip += "{rec_min_text}: {min}\n".format({"rec_min_text":tr("RECOMMENDED_MINIMUM"), "min":min_max_values.rec_min})
-	if min_max_values.has("rec_max"):
-		tooltip += "{rec_max_text}: {max}\n".format({"rec_max_text":tr("RECOMMENDED_MAXIMUM"), "max":min_max_values.rec_max})
-	if min_max_values.has("max"):
-		tooltip += "{max_text}: {max}\n".format({"max_text":tr("MAXIMUM"), "max":min_max_values.max})
-	tooltip += get_warning_text(min_max_values.get("rec_min", NAN), min_max_values.get("rec_max", NAN), line_edit_node)
+	var _min_max_values = min_max_values[line_edit_node]
+	
+	if _min_max_values.has("min"):
+		tooltip += "{min_text}: {min}\n".format({"min_text":tr("MINIMUM"), "min":_min_max_values.min})
+	if _min_max_values.has("rec_min"):
+		tooltip += "{rec_min_text}: {min}\n".format({"rec_min_text":tr("RECOMMENDED_MINIMUM"), "min":_min_max_values.rec_min})
+	if _min_max_values.has("rec_max"):
+		tooltip += "{rec_max_text}: {max}\n".format({"rec_max_text":tr("RECOMMENDED_MAXIMUM"), "max":_min_max_values.rec_max})
+	if _min_max_values.has("max"):
+		tooltip += "{max_text}: {max}\n".format({"max_text":tr("MAXIMUM"), "max":_min_max_values.max})
+	
+	tooltip += get_warning_text(line_edit_node)
 	game.show_tooltip(tooltip)
 
-func get_warning_text(min_value:float, max_value:float, line_edit_node):
+func get_warning_text(line_edit_node):
+	var min_value = min_max_values[line_edit_node].get("rec_min", NAN)
+	var max_value = min_max_values[line_edit_node].get("rec_max", NAN)
 	if is_nan(min_value) and is_nan(max_value):
 		return ""
 	var current_value = float(line_edit_node.text)
@@ -110,6 +129,35 @@ func get_warning_text(min_value:float, max_value:float, line_edit_node):
 	return ""
 
 func _on_start_game_pressed() -> void:
+	ProcGenSettings.planet_tile_dimensions = float(planet_tile_dimensions_node.text)
+	ProcGenSettings.max_planet_tile_dimensions = int(max_planet_tile_dimensions_node.text)
+	ProcGenSettings.lake_coverage = float(lake_coverage_node.text)
+	ProcGenSettings.cave_spawn_frequency = float(cave_spawn_frequency_node.text)
+
+	ProcGenSettings.cave_tile_dimensions = float(cave_tile_dimensions_node.text)
+	ProcGenSettings.cave_depth = float(cave_depth_node.text)
+	ProcGenSettings.cave_floor_difficulty = float(cave_floor_diff_node.text)
+	ProcGenSettings.cave_wall_coverage = float(cave_wall_coverage_node.text)
+
+	ProcGenSettings.distance_between_planets = float(distance_between_planets_node.text)
+	ProcGenSettings.max_planets_in_system = int(max_planets_in_system_node.text)
+
+	ProcGenSettings.star_system_density = float(star_system_density_node.text)
+	ProcGenSettings.min_number_of_systems_elliptical = int(elliptical_galaxy_min_size_node.text)
+	ProcGenSettings.max_number_of_systems_elliptical = int(elliptical_galaxy_max_size_node.text)
+	ProcGenSettings.min_number_of_systems_spiral = int(spiral_galaxy_min_size_node.text)
+	ProcGenSettings.max_number_of_systems_spiral = int(spiral_galaxy_max_size_node.text)
+	ProcGenSettings.dwarf_elliptical_galaxy_ratio = float(dwarf_elliptical_galaxy_ratio_node.text)
+	ProcGenSettings.elliptical_spiral_galaxy_ratio = float(elliptical_spiral_galaxy_ratio_node.text)
+
+	ProcGenSettings.galaxy_density = float(galaxy_density_node.text)
+	ProcGenSettings.min_number_of_galaxies = int(min_number_of_galaxies_node.text)
+	ProcGenSettings.max_number_of_galaxies = int(max_number_of_galaxies_node.text)
+	ProcGenSettings.galaxy_group_ratio = float(galaxy_group_ratio_node.text)
+
+	ProcGenSettings.cluster_density = float(cluster_density_node.text)
+	ProcGenSettings.number_of_clusters = int(number_of_clusters_node.text)
+	ProcGenSettings.universe_seed = int($Seed.text)
 	emit_signal("done")
 
 

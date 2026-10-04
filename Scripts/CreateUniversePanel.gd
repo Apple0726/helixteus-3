@@ -148,6 +148,7 @@ func discover_univ():
 	var id:int = len(game.universe_data)
 	var u_i:Dictionary = Data.starting_universe_data.duplicate(true)
 	u_i.name = "%s %s" % [tr("UNIVERSE"), id]
+	u_i.cluster_num = ProcGenSettings.number_of_clusters
 	for prop in $TP/VBox.get_children():
 		if prop.name == "s_b":
 			continue

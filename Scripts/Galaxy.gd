@@ -34,7 +34,7 @@ func size_sort(a:Dictionary, b:Dictionary):
 
 func _ready():
 	if star_btns.is_empty():
-		for i in 15000:
+		for i in max(ProcGenSettings.max_number_of_systems_elliptical, ProcGenSettings.max_number_of_systems_spiral):
 			var star_btn = TextureButton.new()
 			star_btn.texture_click_mask = preload("res://Graphics/Misc/StarCM.png")
 			star_btn.pivot_offset_ratio = Vector2.ONE * 0.5

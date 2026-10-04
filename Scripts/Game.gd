@@ -543,6 +543,9 @@ func load_univ():
 			else:
 				stats_univ[stat] = val
 	u_i = universe_data[c_u]
+	for key in u_i.procgen_settings:
+		if key in ProcGenSettings:
+			ProcGenSettings[key] = u_i.procgen_settings[key]
 	if science_unlocked.has("CI"):
 		stack_size = 32
 	if science_unlocked.has("CI2"):
@@ -781,6 +784,7 @@ func start_game(univ, new_save, DR_advantage):
 			universe_data[0].difficulty = 1.0
 			universe_data[0].time_speed = 1.0
 			universe_data[0].antimatter = 0.0
+			universe_data[0].cluster_num = ProcGenSettings.number_of_clusters
 		else:
 			universe_data[0].generated = true
 	else:
@@ -1812,6 +1816,8 @@ var cluster_modifier_data = { # Probability factors. Higher value = rarer
 }
 
 func generate_clusters():
+	var rng = RandomNumberGenerator.new()
+	rng.seed = u_i.seed
 	var total_clust_num = u_i.cluster_num
 	u_i.cluster_data = []
 	u_i.cluster_data.resize(total_clust_num)
@@ -1825,20 +1831,18 @@ func generate_clusters():
 		"pos":Vector2.ZERO,
 		"redshift":0.0,
 		"parent":0,
-		"galaxy_num":55,
+		"galaxy_num":int((ProcGenSettings.min_number_of_galaxies + ProcGenSettings.max_number_of_galaxies) / 100.0),
 		"galaxies":[],
-		"seed":0,
+		"seed":rng.randi(),
 		"view":{"pos":Vector2(640, 360), "zoom":1 / 4.0},
 		"modifiers":[],
 	}
 	var max_dist_from_center = pow(total_clust_num, 0.5) * 500.0
 	show.c_bk_button = true
-	var rng = RandomNumberGenerator.new()
-	rng.seed = u_i.seed
 	for c_id in range(1, total_clust_num):
 		var c_i = {
 			"type": 0,
-			"class": ClusterType.GROUP if rng.randf() < 0.5 else ClusterType.CLUSTER,
+			"class": ClusterType.GROUP if rng.randf() < ProcGenSettings.galaxy_group_ratio else ClusterType.CLUSTER,
 			"parent": c_u,
 			"visible": TEST,
 			"galaxies": [],
@@ -1847,17 +1851,12 @@ func generate_clusters():
 			"id": c_id,
 			"seed":rng.randi()
 		}
+		c_i["galaxy_num"] = rng.randi_range(ProcGenSettings.min_number_of_galaxies, ProcGenSettings.max_number_of_galaxies)
 		if c_i["class"] == ClusterType.GROUP:
-			c_i["galaxy_num"] = rng.randi_range(10, 100)
-		else:
-			c_i["galaxy_num"] = rng.randi_range(500, 5000)
+			c_i["galaxy_num"] /= 50
 		var pos:Vector2
 		var dist_from_center = pow(rng.randf(), 0.5) * max_dist_from_center + 160
-		if c_id == 1:
-			dist_from_center = 200
-			c_i["class"] = ClusterType.GROUP
-			c_i["galaxy_num"] = rng.randi_range(80, 100)
-		pos = Vector2.from_angle(rng.randf_range(0, 2 * PI)) * dist_from_center
+		pos = Vector2.from_angle(rng.randf_range(0, 2 * PI)) * dist_from_center * ProcGenSettings.galaxy_density
 		c_i["pos"] = pos
 		var DE_factor = pos.length() * u_i.dark_energy
 		c_i["redshift"] = Helper.clever_round(DE_factor * 0.002)
@@ -1891,6 +1890,8 @@ func generate_clusters():
 func generate_galaxies(id:int):
 	var total_gal_num = u_i.cluster_data[id]["galaxy_num"]
 	galaxy_data.resize(total_gal_num)
+	var rng = RandomNumberGenerator.new()
+	rng.seed = u_i.cluster_data[id].seed
 	if c_c == 0:
 		galaxy_data[0] = {
 			"id":0,
@@ -1904,12 +1905,10 @@ func generate_galaxies(id:int):
 			"B_strength":1e-9 * u_i.charge * u_i.dark_energy,
 			"dark_matter":1.0,
 			"parent":0,
-			"system_num":400,
-			"seed":0,
+			"system_num":int((ProcGenSettings.min_number_of_systems_elliptical + ProcGenSettings.max_number_of_systems_elliptical) / 30.0),
+			"seed":rng.randi(),
 			"view":{"pos":Vector2(7500, 7500) * 0.5 + Vector2(640, 360), "zoom":0.5}
 		}
-	var rng = RandomNumberGenerator.new()
-	rng.seed = u_i.cluster_data[id].seed
 	var galaxy_num = total_gal_num - u_i.cluster_data[id]["galaxies"].size()
 	var redshift:float = u_i.cluster_data[id].redshift
 	var max_outer_radius:float
@@ -1924,7 +1923,7 @@ func generate_galaxies(id:int):
 			continue
 		var g_i = {
 			"parent": id,
-			"type": rng.randi() % 7,
+			"type": rng.randi() % 6,
 			"dark_matter": Helper.clever_round(pow(rng.randf_range(0.85, 1.15), -log(max(1e-7, rng.randf())) * pow(redshift + 1.0, 0.6) * 0.4 + 1)), # Influences planet numbers and size
 			"rotation": rng.randf_range(0.0, 2.0 * PI),
 			"id": g_id + galaxies_generated,
@@ -1932,14 +1931,16 @@ func generate_galaxies(id:int):
 			"shapes": [],
 			"seed": rng.randi(),
 		}
+		if rng.randf() < ProcGenSettings.elliptical_spiral_galaxy_ratio:
+			g_i.type = 6
 		if g_i.type == 6:
-			g_i["system_num"] = int(5000 + 10000 * pow(rng.randf(), 2))
+			g_i["system_num"] = int(ProcGenSettings.min_number_of_systems_spiral + (ProcGenSettings.max_number_of_systems_spiral - ProcGenSettings.min_number_of_systems_spiral) * pow(rng.randf(), 2))
 			g_i["B_strength"] = Helper.clever_round(1e-9 * rng.randf_range(3, 5) * (redshift + 1.0) * u_i.charge)#Influences star classes
 			g_i.dark_matter *= 0.9
 		else:
-			g_i["system_num"] = int(pow(rng.randf(), 2) * 8000) + 2000
+			g_i["system_num"] = int(ProcGenSettings.min_number_of_systems_elliptical + (ProcGenSettings.max_number_of_systems_elliptical - ProcGenSettings.min_number_of_systems_elliptical) * pow(rng.randf(), 2))
 			g_i["B_strength"] = Helper.clever_round(1e-9 * rng.randf_range(0.5, 4) * (redshift + 1.0) * u_i.charge)
-			if rng.randf() < 0.6: #Dwarf galaxy
+			if rng.randf() < ProcGenSettings.dwarf_elliptical_galaxy_ratio: #Dwarf galaxy
 				g_i.system_num = int(g_i.system_num * 0.1)
 		var pos = Vector2.ZERO
 		var radius = 128.0 * pow(g_i.system_num / GALAXY_SCALE_DIV, 0.5)
@@ -1947,7 +1948,7 @@ func generate_galaxies(id:int):
 			var radius_angle = asin(2.0 * radius / dist_from_center)
 			var th_increment = PI / 3.0 / sqrt(ring)
 			var random_angle_limit = max(0.0, th_increment - radius_angle) / 2.0
-			pos = Vector2.from_angle(rng.randf_range(th - random_angle_limit, th + random_angle_limit)) * dist_from_center
+			pos = Vector2.from_angle(rng.randf_range(th - random_angle_limit, th + random_angle_limit)) * dist_from_center * ProcGenSettings.galaxy_density
 			th += th_increment
 			if th >= 2.0 * PI - th_increment / 2.0:
 				th = 0.0
@@ -2087,7 +2088,7 @@ func generate_paris_galaxy(file):
 func generate_spiral_galaxy_part(id:int, center:bool, generation_data:Dictionary, rng:RandomNumberGenerator):
 	var N:int = galaxy_data[id].system_num
 	var circ_size = pow(N * 1.5, 0.95)
-	var N_fin:int = min(generation_data.N_init + lerp(100, 400, inverse_lerp(5000, 20000, N)), N)
+	var N_fin:int = min(generation_data.N_init + lerp(ProcGenSettings.min_number_of_systems_spiral / 50, ProcGenSettings.max_number_of_systems_spiral / 50, inverse_lerp(ProcGenSettings.min_number_of_systems_spiral, ProcGenSettings.max_number_of_systems_spiral, N)), N)
 	if center:
 		N_fin += circ_size / 20.0
 	for i in range(generation_data.N_init, N_fin):
@@ -2097,7 +2098,7 @@ func generate_spiral_galaxy_part(id:int, center:bool, generation_data:Dictionary
 		var radius = 320 * pow(biggest_star_size / SYSTEM_SCALE_DIV, 0.35)
 		var r2 = randf_range(0, circ_size)
 		var th2 = randf_range(0, 2 * PI)
-		var pos:Vector2 = Vector2.from_angle(generation_data.th) * generation_data.r + Vector2.from_angle(th2) * r2
+		var pos:Vector2 = Vector2.from_angle(generation_data.th) * generation_data.r + Vector2.from_angle(th2) * r2 * ProcGenSettings.star_system_density
 		generation_data.max_outer_radius = max(generation_data.max_outer_radius, pos.length())
 		if not starting_system:
 			s_i.pos = pos
@@ -2257,7 +2258,7 @@ func generate_systems(id:int):
 			combined_star_mass += star.mass
 		stars.sort_custom(sort_by_mass)
 		s_i["stars"] = stars
-		var planet_num:int = clamp(round(pow(combined_star_mass, 0.2) * rng.randf_range(3, 9) * pow(dark_matter, 0.25)), 2, 50)
+		var planet_num:int = clamp(round(pow(combined_star_mass, 0.2) * rng.randf_range(3, 9) * pow(dark_matter, 0.25)), 2, ProcGenSettings.max_planets_in_system)
 		s_i["planet_num"] = planet_num
 		if galaxy_data[id].has("conquered"):
 			s_i["conquered"] = true
@@ -2277,14 +2278,14 @@ func generate_systems(id:int):
 			var progress:float = inverse_lerp(N_init, (N + N_init) / 2.0, generation_data.N_init)
 			generate_spiral_galaxy_part(id, false, generation_data, rng)
 			generation_data.th += 0.4 - lerp(0.0, 0.33, progress)
-			generation_data.r += (1.0 - lerp(0.0, 0.8, progress)) * 1280 * lerp(1.3, 4.0, inverse_lerp(5000, 20000, N))
+			generation_data.r += (1.0 - lerp(0.0, 0.8, progress)) * 1280 * lerp(1.3, 4.0, inverse_lerp(ProcGenSettings.min_number_of_systems_spiral, ProcGenSettings.max_number_of_systems_spiral, N))
 		generation_data.th = init_th + PI
 		generation_data.r = N / 20.0
 		while generation_data.N_init < N:#Arm #2
 			var progress:float = inverse_lerp((N + N_init) / 2.0, N, generation_data.N_init)
 			generate_spiral_galaxy_part(id, false, generation_data, rng)
 			generation_data.th += 0.4 - lerp(0.0, 0.33, progress)
-			generation_data.r += (1.0 - lerp(0.0, 0.8, progress)) * 1280 * lerp(1.3, 4.0, inverse_lerp(5000, 20000, N))
+			generation_data.r += (1.0 - lerp(0.0, 0.8, progress)) * 1280 * lerp(1.3, 4.0, inverse_lerp(ProcGenSettings.min_number_of_systems_spiral, ProcGenSettings.max_number_of_systems_spiral, N))
 		if not galaxy_data[id].has("view"):
 			var view_zoom = 500.0 / generation_data.max_outer_radius
 			galaxy_data[id]["view"] = {"pos":Vector2(640, 360), "zoom":view_zoom}
@@ -2341,7 +2342,7 @@ func generate_elliptical_galaxy(id:int, rng:RandomNumberGenerator):
 			dist_from_center = rng.randf_range(radius, gc_size)
 			gc_stars_remaining -= 1
 		max_outer_radius = max(max_outer_radius, radius + dist_from_center)
-		var pos = Vector2.from_angle(rng.randf_range(0, 2 * PI)) * dist_from_center + gc_center
+		var pos = Vector2.from_angle(rng.randf_range(0, 2 * PI)) * dist_from_center + gc_center * ProcGenSettings.star_system_density
 		system_data[i]["pos"] = pos
 		system_data[i]["diff"] = get_sys_diff(pos, id, system_data[i], rng)
 	if not galaxy_data[id].has("view"):
@@ -2441,10 +2442,6 @@ func generate_planets(id:int):#local id
 		earn_achievement("exploration", "35_planet_system")
 	if not achievement_data.exploration.has("40_planet_system") and planet_num >= 40:
 		earn_achievement("exploration", "40_planet_system")
-	if not achievement_data.exploration.has("45_planet_system") and planet_num >= 45:
-		earn_achievement("exploration", "45_planet_system")
-	if not achievement_data.exploration.has("50_planet_system") and planet_num >= 50:
-		earn_achievement("exploration", "50_planet_system")
 	system_data[id]["planets"].clear()
 	for i in range(1, planet_num + 1):
 		var random_seed = rng.randi()
@@ -2455,7 +2452,7 @@ func generate_planets(id:int):#local id
 			"ring": i,
 			"type": rng.randi_range(3, 10),
 			"angle": rng.randf_range(0.0, 2.0 * PI),
-			"distance": pow(1.3,i + j) * rng.randf_range(240, 270),
+			"distance": pow(1.3,i + j) * rng.randf_range(240, 270) * ProcGenSettings.distance_between_planets,
 			"parent": id,
 			"view": {"pos":Vector2.ZERO, "zoom":1.0},
 			"tiles": [],
@@ -2898,9 +2895,9 @@ func generate_tiles(id:int, first_time:bool):
 					cave_can_spawn = false
 			if home_planet:
 				continue
-			if cave_can_spawn and rng.randf() < 0.1 / pow(wid, 0.9):
-				var floor_size:int = rng.randf_range(25 * min(wid / 8.0, 1), 40 * rng.randf_range(1, 1 + wid / 100.0))
-				var num_floors:int = rng.randi() % (int(wid / 2.5) + 1) + 3
+			if cave_can_spawn and rng.randf() < 0.1 * ProcGenSettings.cave_spawn_frequency / pow(wid, 0.9):
+				var floor_size:int = rng.randf_range(25 * min(wid / 8.0, 1), 40 * rng.randf_range(1, 1 + wid / 100.0)) * ProcGenSettings.cave_tile_dimensions
+				var num_floors:int = (rng.randi() % (int(wid / 2.5) + 1) + 3) * ProcGenSettings.cave_depth
 				var modifiers:Dictionary = {}
 				if c_s_g != 0:
 					var number_of_modifiers:int = log(1.0 / rng.randf() + 1.1) * log(system_data[c_s].diff) / log(10)
@@ -3061,52 +3058,38 @@ func generate_tiles(id:int, first_time:bool):
 					p_i.ancient_bldgs[ancient_bldg].append(obj)
 				else:
 					p_i.ancient_bldgs[ancient_bldg] = [obj]
-	if p_i.id == 6:#Guaranteed wormhole spawn on furthest planet in solar system
-		var random_tile:int = rng.randi() % len(tile_data)
-		erase_tile(random_tile)
-		var dest_id:int = rng.randi_range(1, galaxy_data[0].system_num - 1)#		local_destination_system_id		global_dest_s_id
-		tile_data[random_tile]["wormhole"] = {"active":false, "new":true, "l_dest_s_id":dest_id, "g_dest_s_id":dest_id}
-		p_i["wormhole"] = true
-	elif c_s_g != 0 and rng.randf() < 0.1:#10% chance to spawn a wormhole on a planet outside solar system
-		var random_tile:int = rng.randi() % len(tile_data)
-		erase_tile(random_tile)
-		var dest_id:int = rng.randi() % len(system_data)
-		tile_data[random_tile]["wormhole"] = {"active":false, "new":true, "l_dest_s_id":dest_id, "g_dest_s_id":dest_id + system_data[0].id}
-		p_i["wormhole"] = true#								new: whether the wormhole should generate a new wormhole on another planet
 	if p_i.has("lake") and p_i.lake.state == "g":
 		p_i.erase("lake")
 	planet_data[id]["discovered"] = true
 	planet_data_persistent[id]["discovered"] = true
-	if home_planet:
-		tile_data[41]["cave"] = {"num_floors":5, "floor_size":25, "period":65, "debris":0.3}
-		tile_data[215]["cave"] = {"num_floors":8, "floor_size":30, "period":50, "debris":0.4}
-		tile_data[115]["ship"] = true
-		p_i["ancient_bldgs"] = {AncientBuilding.SPACEPORT:[{"tile":116, "tier":1, "repair_cost":10000 * Data.ancient_bldg_repair_cost_multipliers[AncientBuilding.SPACEPORT]}],
-							AncientBuilding.MINERAL_REPLICATOR:[{"tile":102, "tier":1, "repair_cost":10000 * Data.ancient_bldg_repair_cost_multipliers[AncientBuilding.MINERAL_REPLICATOR]}]}
-	elif c_p_g == 2:
-		var random_tile:int = rng.randi() % N
-		erase_tile(random_tile)
-		var random_tile2:int = random_tile
-		while random_tile == random_tile2:
-			random_tile2 = rng.randi() % N
-		var random_tile3:int = random_tile
-		while random_tile == random_tile3 or random_tile2 == random_tile3:
-			random_tile3 = rng.randi() % N
-		erase_tile(random_tile2)
-		erase_tile(random_tile3)
-		tile_data[random_tile]["ship"] = true
-		var mineral_replicator = {"tile":random_tile3, "tier":max(1, int(-log(rng.randf() / u_i.age) / 3.0 + 1))}
-		var spaceport:Dictionary
-		mineral_replicator["repair_cost"] = 10000 * pow(mineral_replicator.tier, 20) * rng.randf_range(1, 5) * Data.ancient_bldg_repair_cost_multipliers[AncientBuilding.MINERAL_REPLICATOR]
-		if random_tile == N-1:
-			spaceport = {"tile":random_tile - 1, "tier":max(1, int(-log(rng.randf() / u_i.age) / 3.0 + 1))}
-			erase_tile(random_tile - 1)
-		else:
-			spaceport = {"tile":random_tile + 1, "tier":max(1, int(-log(rng.randf() / u_i.age) / 3.0 + 1))}
-			erase_tile(random_tile + 1)
-		spaceport["repair_cost"] = 10000 * pow(spaceport.tier, 20) * rng.randf_range(1, 5) * Data.ancient_bldg_repair_cost_multipliers[AncientBuilding.SPACEPORT]
-		p_i["ancient_bldgs"] = {AncientBuilding.SPACEPORT:[spaceport], AncientBuilding.MINERAL_REPLICATOR:[mineral_replicator]}
-		tile_data[random_tile2]["cave"] = {"num_floors":8, "floor_size":30, "period":50, "debris":0.4}
+	if c_p_g == 2:
+		empty_tiles.clear()
+		for i in len(tile_data):
+			if len(tile_data[i].keys()) == 1 and tile_data[i].resource_production_bonus.is_empty():
+				empty_tiles.append(i)
+		if len(empty_tiles) > 0:
+			var cave_1_tile_id = empty_tiles[rng.randi() % len(empty_tiles)]
+			tile_data[cave_1_tile_id]["cave"] = {"num_floors":5, "floor_size":25, "period":65, "debris":0.3}
+			empty_tiles.erase(cave_1_tile_id)
+		if len(empty_tiles) > 0:
+			var cave_2_tile_id = empty_tiles[rng.randi() % len(empty_tiles)]
+			tile_data[cave_2_tile_id]["cave"] = {"num_floors":8, "floor_size":30, "period":50, "debris":0.4}
+			empty_tiles.erase(cave_2_tile_id)
+		if len(empty_tiles) > 0:
+			var ship_tile_id = empty_tiles[rng.randi() % len(empty_tiles)]
+			tile_data[ship_tile_id]["ship"] = true
+			empty_tiles.erase(ship_tile_id)
+		if len(empty_tiles) > 0:
+			var spaceport_tile_id = empty_tiles[rng.randi() % len(empty_tiles)]
+			empty_tiles.erase(spaceport_tile_id)
+			var spaceport = {"tile":spaceport_tile_id, "tier":max(1, int(-log(rng.randf() / u_i.age) / 3.0 + 1))}
+			spaceport.repair_cost = 10000 * pow(spaceport.tier, 20) * rng.randf_range(1, 5) * Data.ancient_bldg_repair_cost_multipliers[AncientBuilding.SPACEPORT]
+			p_i.ancient_bldgs[AncientBuilding.SPACEPORT] = [spaceport]
+		if len(empty_tiles) > 0:
+			var min_replicator_tile_id = empty_tiles[rng.randi() % len(empty_tiles)]
+			var min_replicator = {"tile":min_replicator_tile_id, "tier":max(1, int(-log(rng.randf() / u_i.age) / 3.0 + 1)), "repair_cost":10000 * Data.ancient_bldg_repair_cost_multipliers[AncientBuilding.MINERAL_REPLICATOR]}
+			min_replicator.repair_cost = 10000 * pow(min_replicator.tier, 20) * rng.randf_range(1, 5) * Data.ancient_bldg_repair_cost_multipliers[AncientBuilding.MINERAL_REPLICATOR]
+			p_i.ancient_bldgs[AncientBuilding.MINERAL_REPLICATOR] = [min_replicator]
 	for bldg in p_i.ancient_bldgs.keys():
 		for i in len(p_i.ancient_bldgs[bldg]):
 			var tier:int = p_i.ancient_bldgs[bldg][i].tier
@@ -3760,6 +3743,37 @@ func _input(event):
 func save_universe():
 	var universe_data_to_save = universe_data.duplicate(true)
 	universe_data_to_save[c_u].erase("cluster_data")
+	universe_data_to_save[c_u].procgen_settings = {
+		"planet_tile_dimensions": ProcGenSettings.planet_tile_dimensions,
+		"max_planet_tile_dimensions": ProcGenSettings.max_planet_tile_dimensions,
+		"lake_coverage": ProcGenSettings.lake_coverage,
+		"cave_spawn_frequency": ProcGenSettings.cave_spawn_frequency,
+
+		"cave_tile_dimensions": ProcGenSettings.cave_tile_dimensions,
+		"cave_depth": ProcGenSettings.cave_depth,
+		"cave_floor_difficulty": ProcGenSettings.cave_floor_difficulty,
+		"cave_wall_coverage": ProcGenSettings.cave_wall_coverage,
+
+		"distance_between_planets": ProcGenSettings.distance_between_planets,
+		"max_planets_in_system": ProcGenSettings.max_planets_in_system,
+
+		"star_system_density": ProcGenSettings.star_system_density,
+		"min_number_of_systems_elliptical": ProcGenSettings.min_number_of_systems_elliptical,
+		"max_number_of_systems_elliptical": ProcGenSettings.max_number_of_systems_elliptical,
+		"min_number_of_systems_spiral": ProcGenSettings.min_number_of_systems_spiral,
+		"max_number_of_systems_spiral": ProcGenSettings.max_number_of_systems_spiral,
+		"dwarf_elliptical_galaxy_ratio": ProcGenSettings.dwarf_elliptical_galaxy_ratio,
+		"elliptical_spiral_galaxy_ratio": ProcGenSettings.elliptical_spiral_galaxy_ratio,
+
+		"galaxy_density": ProcGenSettings.galaxy_density,
+		"min_number_of_galaxies": ProcGenSettings.min_number_of_galaxies,
+		"max_number_of_galaxies": ProcGenSettings.max_number_of_galaxies,
+		"galaxy_group_ratio": ProcGenSettings.galaxy_group_ratio,
+
+		"cluster_density": ProcGenSettings.cluster_density,
+		"number_of_clusters": ProcGenSettings.number_of_clusters,
+		"universe_seed": ProcGenSettings.universe_seed,
+	}
 	var save_info:Dictionary = {
 		"save_created":save_created,
 		"save_modified":save_date,
@@ -4020,7 +4034,7 @@ func return_to_menu():
 
 func generate_new_univ():
 	universe_data[0] = Data.starting_universe_data.duplicate(true)
-	universe_data[0].seed = randi()
+	universe_data[0].seed = ProcGenSettings.universe_seed
 	universe_data[0].speed_of_light = 1.0#3.0e8#m/s
 	universe_data[0].planck = 1.0#e(6.626, -34)#J.s
 	universe_data[0].boltzmann = 1.0#e(1.381, -23)#J/K
@@ -4031,6 +4045,7 @@ func generate_new_univ():
 	universe_data[0].difficulty = 1.0
 	universe_data[0].time_speed = 1.0
 	universe_data[0].antimatter = 0.0
+	universe_data[0].cluster_num = ProcGenSettings.number_of_clusters
 	dimension.set_bonuses()
 	Data.MUs.MV.pw = maths_bonus.MUCGF_MV
 	Data.MUs.MSMB.pw = maths_bonus.MUCGF_MSMB

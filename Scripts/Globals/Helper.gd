@@ -183,7 +183,7 @@ func get_plant_name(name:String):
 	return tr("PLANT_TITLE").format({"metal":tr(name.split("_")[0].to_upper())})
 
 func get_wid(size:float):
-	return min(round(pow(size / 6000.0, 0.7) * 8.0) + 3, 100)
+	return min(round(pow(size / 6000.0, 0.7) * 8.0 * ProcGenSettings.planet_tile_dimensions) + 1, ProcGenSettings.max_planet_tile_dimensions)
 
 func e_notation(num:float, sd:int = 4):#e notation
 	if num == 0:
@@ -334,7 +334,10 @@ func toggle_overlay(overlays, overlay_visible):
 		else:
 			overlay.obj.texture_normal = overlay.original_texture
 			overlay.obj.texture_click_mask = overlay.original_clickmask
-			overlay.obj.scale = overlay.original_scale / clamp(game.view.scale.x, game.view.obj.STAR_AUTOSCALE_MIN_THRESHOLD, 2.0) * game.view.obj.STAR_AUTOSCALE_MIN_THRESHOLD
+			if game.c_v == "galaxy":
+				overlay.obj.scale = overlay.original_scale / clamp(game.view.scale.x, game.view.obj.STAR_AUTOSCALE_MIN_THRESHOLD, 2.0) * game.view.obj.STAR_AUTOSCALE_MIN_THRESHOLD
+			else:
+				overlay.obj.scale = overlay.original_scale
 			overlay.obj.modulate = overlay.original_modulate
 
 func change_circle_size(value, overlays):

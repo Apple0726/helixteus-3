@@ -952,7 +952,7 @@ offset_left = 23.0
 offset_top = 1651.0
 offset_right = 211.0
 offset_bottom = 1675.0
-text = "GALAXY_DENSITY [img]Graphics/Icons/help.png[/img]"
+text = "CLUSTER_DENSITY [img]Graphics/Icons/help.png[/img]"
 label_text = "CLUSTER_DENSITY"
 help_text = "CLUSTER_DENSITY_DESC"
 

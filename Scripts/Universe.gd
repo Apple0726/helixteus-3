@@ -7,24 +7,27 @@ var dimensions:float = 500.0
 
 var clusters_info = []
 var btns = []
+var visible_clusters = []
 
 func _ready():
-	btns.resize(len(game.u_i.cluster_data))
-	var cluster_tween
-	if Settings.enable_shaders:
-		cluster_tween = create_tween()
-		cluster_tween.set_parallel(true)
 	for i in len(game.u_i.cluster_data):
 		var c_i:Dictionary = game.u_i.cluster_data[i]
-		if not c_i.visible:
-			continue
+		if c_i.visible:
+			visible_clusters.append(c_i)
+	btns.resize(len(visible_clusters))
+	var cluster_tween
+	if Settings.enable_shaders and len(visible_clusters) <= 1000:
+		cluster_tween = create_tween()
+		cluster_tween.set_parallel(true)
+	for i in len(visible_clusters):
+		var c_i:Dictionary = visible_clusters[i]
 		var cluster_btn = TextureButton.new()
 		cluster_btn.texture_normal = preload("res://Graphics/Clusters/0.png")
 		var r:float = c_i.pos.length()
 		var th:float = atan2(c_i.pos.y, c_i.pos.x)
 		var hue:float = fmod(r + 300, 1000.0) / 1000.0
 		var sat:float = 0.8
-		if Settings.enable_shaders:
+		if Settings.enable_shaders and len(visible_clusters) <= 1000:
 			cluster_btn.material = ShaderMaterial.new()
 			cluster_btn.material.shader = preload("res://Shaders/Cluster.gdshader")
 			cluster_btn.material.set_shader_parameter("seed", int(c_i.redshift * 1000.0))
@@ -32,7 +35,7 @@ func _ready():
 			cluster_btn.material.set_shader_parameter("color", Color.from_hsv(hue, sat, 1.0))
 			cluster_tween.tween_property(cluster_btn.material, "shader_parameter/alpha", 1.0, 0.15)
 		else:
-			cluster_btn.modulate = Color.from_hsv(hue, sat, 1.0)
+			cluster_btn.modulate = Color.from_hsv(hue, sat, 1.0).lightened(0.8)
 		add_child(cluster_btn)
 		cluster_btn.connect("mouse_entered",Callable(self,"on_cluster_over").bind(c_i.id))
 		cluster_btn.connect("mouse_exited",Callable(self,"on_cluster_out"))
@@ -59,9 +62,7 @@ func on_cluster_click (id:int):
 
 func change_scale(sc:float):
 	for i in range(0, btns.size()):
-		var c_i:Dictionary = game.u_i.cluster_data[i]
-		if not c_i.visible or not btns[i]:
-			continue
+		var c_i:Dictionary = visible_clusters[i]
 		var radius = pow(c_i["galaxy_num"] / game.CLUSTER_SCALE_DIV, 0.3) * sc
 		btns[i].scale.x = radius
 		btns[i].scale.y = radius

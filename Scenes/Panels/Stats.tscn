@@ -628,16 +628,6 @@ layout_mode = 2
 achievement_icon = ExtResource("24_0kyuu")
 number = 40.0
 
-[node name="45_planet_system" parent="Panel/Achievements/ScrollContainer/HBox/Slots/exploration" unique_id=1584518582 instance=ExtResource("4")]
-layout_mode = 2
-achievement_icon = ExtResource("24_0kyuu")
-number = 45.0
-
-[node name="50_planet_system" parent="Panel/Achievements/ScrollContainer/HBox/Slots/exploration" unique_id=2017785853 instance=ExtResource("4")]
-layout_mode = 2
-achievement_icon = ExtResource("24_0kyuu")
-number = 50.0
-
 [node name="diamond_crater" parent="Panel/Achievements/ScrollContainer/HBox/Slots/exploration" unique_id=1950945677 instance=ExtResource("4")]
 layout_mode = 2
 achievement_icon = ExtResource("31")

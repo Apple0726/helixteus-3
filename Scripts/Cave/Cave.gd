@@ -585,7 +585,7 @@ func generate_cave(first_floor:bool, going_up:bool):
 		for j in cave_size:
 			var level = noise.get_noise_2d(i * 10.0, j * 10.0)
 			var tile_id:int = get_tile_index(Vector2(i, j))
-			if level > 0:
+			if level > (ProcGenSettings.cave_wall_coverage - 0.5) * 2.0:
 				# Big boi rocks with collision detection
 				if rng.randf() < debris_amount / 12.0:
 					var debris = preload("res://Scenes/Debris.tscn").instantiate()
@@ -1225,11 +1225,11 @@ func go_up_cave():
 		if cave_floor == 15:
 			game.switch_music(preload("res://Audio/cave2.ogg"), time_speed, 0.95 if tile.has("aurora") else 1.0)
 	if volcano_mult > 1 and not artificial_volcano and is_aurora_cave:
-		difficulty /= 2.5
+		difficulty /= ProcGenSettings.cave_floor_difficulty * 1.25
 	elif volcano_mult > 1 and not artificial_volcano or is_aurora_cave:
-		difficulty /= 2.25
+		difficulty /= ProcGenSettings.cave_floor_difficulty * 1.125
 	else:
-		difficulty /= 2.0
+		difficulty /= ProcGenSettings.cave_floor_difficulty
 	generate_cave(true if cave_floor == 1 else false, true)
 
 
@@ -1245,11 +1245,11 @@ func go_down_cave(initial_skip:bool = false):
 		elif cave_floor == 16:
 			game.switch_music(preload("res://Audio/cave3.ogg"), time_speed, 0.95 if tile.has("aurora") else 1.0)
 	if volcano_mult > 1 and not artificial_volcano and is_aurora_cave:
-		difficulty *= 2.5
+		difficulty *= ProcGenSettings.cave_floor_difficulty * 1.25
 	elif volcano_mult > 1 and not artificial_volcano or is_aurora_cave:
-		difficulty *= 2.25
+		difficulty *= ProcGenSettings.cave_floor_difficulty * 1.125
 	else:
-		difficulty *= 2.0
+		difficulty *= ProcGenSettings.cave_floor_difficulty
 	generate_cave(false, false)
 	if not game.achievement_data.exploration.has("reach_floor_8") and cave_floor == 8:
 		game.earn_achievement("exploration", "reach_floor_8")

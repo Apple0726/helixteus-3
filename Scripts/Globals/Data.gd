@@ -313,8 +313,6 @@ func reload():
 			"30_planet_system":tr("FIND_X_PLANET_SYSTEM") % 30,
 			"35_planet_system":tr("FIND_X_PLANET_SYSTEM") % 35,
 			"40_planet_system":tr("FIND_X_PLANET_SYSTEM") % 40,
-			"45_planet_system":tr("FIND_X_PLANET_SYSTEM") % 45,
-			"50_planet_system":tr("FIND_X_PLANET_SYSTEM") % 50,
 			"diamond_crater":tr("FIND_X_CRATER") % tr("DIAMOND"),
 			"nanocrystal_crater":tr("FIND_X_CRATER") % tr("NANOCRYSTAL"),
 			"mythril_crater":tr("FIND_X_CRATER") % tr("MYTHRIL"),
@@ -694,4 +692,4 @@ var star_color = {
 
 var intensity_gradient = preload("res://Resources/IntensityGradient.tres")
 
-var starting_universe_data = {"id":0, "lv":1, "xp":0, "xp_to_lv":10, "shapes":[], "name":tr("UNIVERSE"), "cluster_num":1000, "view":{"pos":Vector2(640 * 0.5, 360 * 0.5), "zoom":2, "sc_mult":0.1}}
+var starting_universe_data = {"id":0, "lv":1, "xp":0, "xp_to_lv":10, "shapes":[], "name":tr("UNIVERSE"), "view":{"pos":Vector2(640 * 0.5, 360 * 0.5), "zoom":2, "sc_mult":0.1}}
