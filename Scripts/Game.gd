@@ -583,7 +583,6 @@ func load_univ():
 		c_v = l_v
 	elif c_v == "battle":
 		c_v = "system"
-	view.set_process(true)
 	if is_instance_valid(ships_panel):
 		ships_panel.get_node("Drives").reset_selected_drive_fuel()
 	if is_instance_valid(RC_panel):
@@ -669,6 +668,7 @@ func load_game():
 	else:
 		load_univ()
 		switch_view(c_v, {"first_time":true})
+		view.set_process(true)
 		switch_music(Data.ambient_music.pick_random(), u_i.get("time_speed", 1.0))
 		if not is_ancestor_of(HUD):
 			$HUD.add_child(HUD)
@@ -773,7 +773,8 @@ func start_game(univ, new_save, DR_advantage):
 			achievement_data[ach] = {}
 		if subject_levels.dimensional_power <= 4:
 			universe_data = [Data.starting_universe_data.duplicate(true)]
-			universe_data[0].seed = 0
+			universe_data[0].cluster_num = ProcGenSettings.number_of_clusters
+			universe_data[0].seed = ProcGenSettings.universe_seed
 			universe_data[0].speed_of_light = 1.0#3.0e8#m/s
 			universe_data[0].planck = 1.0#e(6.626, -34)#J.s
 			universe_data[0].boltzmann = 1.0#e(1.381, -23)#J/K
@@ -784,7 +785,6 @@ func start_game(univ, new_save, DR_advantage):
 			universe_data[0].difficulty = 1.0
 			universe_data[0].time_speed = 1.0
 			universe_data[0].antimatter = 0.0
-			universe_data[0].cluster_num = ProcGenSettings.number_of_clusters
 		else:
 			universe_data[0].generated = true
 	else:
@@ -1108,6 +1108,8 @@ func set_bookmark_coords(bookmark:Dictionary):
 			popup(tr("BOOKMARK_P_ERROR"), 2.0)
 			return true#Error
 		c_p = bookmark.c_p
+		if c_p_g != bookmark.c_p_g:
+			planet_data.clear()
 		c_p_g = bookmark.c_p_g
 	if bookmark.has("c_s_g"):
 		var _planet_data = open_obj("Systems", bookmark.c_s_g)
@@ -1117,10 +1119,16 @@ func set_bookmark_coords(bookmark:Dictionary):
 			popup(tr("BOOKMARK_S_ERROR"), 2.0)
 			return true#Error
 		c_s = bookmark.c_s
+		if c_s_g != bookmark.c_s_g:
+			system_data.clear()
 		c_s_g = bookmark.c_s_g
+	if c_c != bookmark.c_c:
+		galaxy_data.clear()
 	c_c = bookmark.c_c
 	if bookmark.has("c_g"):
 		c_g = bookmark.c_g
+		if c_g_g != bookmark.c_g_g:
+			system_data.clear()
 		c_g_g = bookmark.c_g_g
 	return false#No error
 
@@ -1182,16 +1190,14 @@ func switch_view(new_view:String, other_params:Dictionary = {}):
 			starfield_universe_tween.tween_property($StarfieldUniverse.material, "shader_parameter/brightness", 0.0, 0.15)
 		if is_instance_valid(view.obj) and Settings.enable_shaders:
 			if c_v == "system":
-				var tween2 = create_tween()
-				tween2.set_parallel(true)
 				for star in get_tree().get_nodes_in_group("stars_system"):
 					if is_instance_valid(star) and star.material != null:
+						var tween2 = create_tween()
 						tween2.tween_property(star.material, "shader_parameter/alpha", 0.0, 0.15)
 			elif c_v == "universe":
-				var tween2 = create_tween()
-				tween2.set_parallel(true)
 				for cluster in view.obj.btns:
 					if is_instance_valid(cluster) and cluster.material != null:
+						var tween2 = create_tween()
 						tween2.tween_property(cluster.material, "shader_parameter/alpha", 0.0, 0.15)
 		if is_instance_valid(planet_HUD) and new_view != "planet":
 			var anim_player:AnimationPlayer = planet_HUD.get_node("ButtonsAnimation")
@@ -1720,7 +1726,7 @@ func add_planet(new_game:bool = false):
 	if not u_i.has("cluster_data"):
 		generate_clusters()
 	if galaxy_data.is_empty():
-		generate_galaxies(c_g)
+		generate_galaxies(c_c)
 	var starfield_color_param = 0.1 * pow(1.0 / pow(u_i.age, 0.25) / pow(1e-9 / galaxy_data[c_g].B_strength, physics_bonus.BI), 0.65)
 	set_starfield_color($ShaderExport/SubViewport/Starfield.material, starfield_color_param)
 	if system_data.is_empty():
@@ -1742,12 +1748,12 @@ func add_planet(new_game:bool = false):
 		await get_tree().create_timer(1.5).timeout
 	view.add_obj("Planet", planet_data[c_p]["view"]["pos"], planet_data[c_p]["view"]["zoom"])
 	if new_game:
-		view.scale = Vector2.ONE * 0.1
 		var wid = Helper.get_wid(planet_data[c_p].size)
-		view.position = Vector2(640-wid*100*0.1, 360-wid*100*0.1)
+		view.scale = Vector2.ONE * 3.0 / wid
+		view.position = Vector2(340, 80)
 		view.zoom_tween = create_tween().set_parallel()
-		view.zoom_tween.tween_property(view, "scale", Vector2.ONE * 0.5, 5.0).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_CIRC).set_delay(0.5)
-		view.zoom_tween.tween_property(view, "position", view.position - Vector2.ONE * 200.0 * 8.0 * view.scale.x * (5.0 - 1.0), 5.0).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_CIRC).set_delay(0.5)
+		view.zoom_tween.tween_property(view, "scale", Vector2.ONE * 6.0 / wid, 5.0).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_CIRC).set_delay(0.5)
+		view.zoom_tween.tween_property(view, "position", view.position - Vector2.ONE * 200.0 * wid / 2.0 * view.scale.x * (2.0 - 1.0), 5.0).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_CIRC).set_delay(0.5)
 		view.modulate.a = 0.0
 		create_tween().tween_property(view, "modulate:a", 1.0, 3.0).set_delay(0.5)
 	view.obj.icons_hidden = view.scale.x >= 0.25
@@ -1907,7 +1913,7 @@ func generate_galaxies(id:int):
 			"parent":0,
 			"system_num":int((ProcGenSettings.min_number_of_systems_elliptical + ProcGenSettings.max_number_of_systems_elliptical) / 30.0),
 			"seed":rng.randi(),
-			"view":{"pos":Vector2(7500, 7500) * 0.5 + Vector2(640, 360), "zoom":0.5}
+			"view":{"pos":Vector2(7500, 7500) * 0.5 * ProcGenSettings.star_system_density + Vector2(640, 360), "zoom":0.5}
 		}
 	var galaxy_num = total_gal_num - u_i.cluster_data[id]["galaxies"].size()
 	var redshift:float = u_i.cluster_data[id].redshift
@@ -1915,6 +1921,7 @@ func generate_galaxies(id:int):
 	var dist_from_center = 0.0
 	var th = 0.0
 	var ring = 0
+	var max_possible_galaxy_diameter = 256.0 * sqrt(max(ProcGenSettings.max_number_of_systems_elliptical, ProcGenSettings.max_number_of_systems_spiral) / GALAXY_SCALE_DIV)
 	for g_id in total_gal_num:
 		if galaxy_data[g_id] != null:
 			if g_id == 0:
@@ -1943,20 +1950,20 @@ func generate_galaxies(id:int):
 			if rng.randf() < ProcGenSettings.dwarf_elliptical_galaxy_ratio: #Dwarf galaxy
 				g_i.system_num = int(g_i.system_num * 0.1)
 		var pos = Vector2.ZERO
-		var radius = 128.0 * pow(g_i.system_num / GALAXY_SCALE_DIV, 0.5)
+		var radius = 128.0 * sqrt(g_i.system_num / GALAXY_SCALE_DIV)
 		if ring > 0:
 			var radius_angle = asin(2.0 * radius / dist_from_center)
-			var th_increment = PI / 3.0 / sqrt(ring)
+			var th_increment = PI / 1.5 / sqrt(ring)
 			var random_angle_limit = max(0.0, th_increment - radius_angle) / 2.0
 			pos = Vector2.from_angle(rng.randf_range(th - random_angle_limit, th + random_angle_limit)) * dist_from_center * ProcGenSettings.galaxy_density
 			th += th_increment
 			if th >= 2.0 * PI - th_increment / 2.0:
 				th = 0.0
-				dist_from_center += 1000.0
+				dist_from_center += max_possible_galaxy_diameter
 				ring += 1
 		else:
 			ring += 1
-			dist_from_center = 1000.0
+			dist_from_center = max_possible_galaxy_diameter
 		g_i["pos"] = pos
 		max_outer_radius = max(max_outer_radius, radius + dist_from_center)
 		var starting_galaxy = c_c == 0 and galaxy_num == total_gal_num and g_id == 0
@@ -2093,13 +2100,13 @@ func generate_spiral_galaxy_part(id:int, center:bool, generation_data:Dictionary
 		N_fin += circ_size / 20.0
 	for i in range(generation_data.N_init, N_fin):
 		var s_i = system_data[i]
-		var starting_system = c_g_g == 0 and i == 0
 		var biggest_star_size = get_max_star_prop(i, "size")
 		var radius = 320 * pow(biggest_star_size / SYSTEM_SCALE_DIV, 0.35)
 		var r2 = randf_range(0, circ_size)
 		var th2 = randf_range(0, 2 * PI)
-		var pos:Vector2 = Vector2.from_angle(generation_data.th) * generation_data.r + Vector2.from_angle(th2) * r2 * ProcGenSettings.star_system_density
+		var pos:Vector2 = (Vector2.from_angle(generation_data.th) * generation_data.r + Vector2.from_angle(th2) * r2) * ProcGenSettings.star_system_density
 		generation_data.max_outer_radius = max(generation_data.max_outer_radius, pos.length())
+		var starting_system = c_g_g == 0 and i == 0
 		if not starting_system:
 			s_i.pos = pos
 			s_i.diff = get_sys_diff(pos, id, s_i, rng)
@@ -2108,18 +2115,20 @@ func generate_spiral_galaxy_part(id:int, center:bool, generation_data:Dictionary
 func generate_systems(id:int):
 	var N = galaxy_data[id].system_num
 	system_data.resize(N)
+	var rng = RandomNumberGenerator.new()
+	rng.seed = galaxy_data[id].seed
 	if c_g_g == 0:
 		var s_b:float = pow(u_i.boltzmann, 4) / pow(u_i.planck, 3) / pow(u_i.speed_of_light, 2)
 		system_data[0] = {
 			"id":0,
 			"l_id":0,
 			"name":tr("SOLAR_SYSTEM"),
-			"pos":Vector2(-7500, -7500),
+			"pos":Vector2(-7500, -7500) * ProcGenSettings.star_system_density,
 			"diff":u_i.difficulty,
 			"parent":0,
 			"planet_num":7,
 			"planets":[],
-			"seed":0,
+			"seed":rng.randi(),
 			"view":{"pos":Vector2(640, -60), "zoom":0.46},
 			"stars":[{
 				"type":StarType.MAIN_SEQUENCE,
@@ -2133,8 +2142,6 @@ func generate_systems(id:int):
 		}
 	
 	var spiral:bool = galaxy_data[id].type == 6
-	var rng = RandomNumberGenerator.new()
-	rng.seed = galaxy_data[id].seed
 	
 	#For reference, globular clusters are tightly packed old stars (class G etc)
 	#Most of the stars in them are around the same temperature, but put some outliers
@@ -2319,12 +2326,11 @@ func generate_elliptical_galaxy(id:int, rng:RandomNumberGenerator):
 	var gc_size:float
 	var gc_center = Vector2.ZERO
 	
-	var max_dist_from_center = sqrt(total_sys_num) * 800.0
+	var max_dist_from_center = sqrt(total_sys_num) * 800.0 * ProcGenSettings.star_system_density
 	var max_outer_radius = 0.0
 	var spawn_gc_threshold = total_sys_num / 8
 	for i in total_sys_num:
-		var starting_system = c_g_g == 0 and i == 0
-		if starting_system:
+		if c_g_g == 0 and i == 0:
 			continue
 		if i >= spawn_gc_threshold and gc_remaining > 0:
 			gc_remaining -= 1
@@ -2342,7 +2348,7 @@ func generate_elliptical_galaxy(id:int, rng:RandomNumberGenerator):
 			dist_from_center = rng.randf_range(radius, gc_size)
 			gc_stars_remaining -= 1
 		max_outer_radius = max(max_outer_radius, radius + dist_from_center)
-		var pos = Vector2.from_angle(rng.randf_range(0, 2 * PI)) * dist_from_center + gc_center * ProcGenSettings.star_system_density
+		var pos = Vector2.from_angle(rng.randf_range(0, 2 * PI)) * dist_from_center + gc_center
 		system_data[i]["pos"] = pos
 		system_data[i]["diff"] = get_sys_diff(pos, id, system_data[i], rng)
 	if not galaxy_data[id].has("view"):
@@ -2429,7 +2435,7 @@ func generate_planets(id:int):#local id
 		circles.append([pos, radius_in_pixels])
 	var planet_num = system_data[id].planet_num
 	var j = 0
-	while pow(1.3, j) * 240 < star_boundary * 2.63:
+	while pow(1.0 + 0.3 * ProcGenSettings.distance_between_planets, j) * 240 < star_boundary * 2.63:
 		j += 1
 	var dark_matter = galaxy_data[c_g].dark_matter
 	if not achievement_data.exploration.has("20_planet_system") and planet_num >= 20:
@@ -2444,15 +2450,14 @@ func generate_planets(id:int):#local id
 		earn_achievement("exploration", "40_planet_system")
 	system_data[id]["planets"].clear()
 	for i in range(1, planet_num + 1):
-		var random_seed = rng.randi()
 		var p_id = planet_data.size()
 		# p_i = planet_info
 		var p_i = {
-			"seed": random_seed,
+			"seed": rng.randi(),
 			"ring": i,
 			"type": rng.randi_range(3, 10),
 			"angle": rng.randf_range(0.0, 2.0 * PI),
-			"distance": pow(1.3,i + j) * rng.randf_range(240, 270) * ProcGenSettings.distance_between_planets,
+			"distance": pow(1.0 + 0.3 * ProcGenSettings.distance_between_planets, i + j) * rng.randf_range(240, 270),
 			"parent": id,
 			"view": {"pos":Vector2.ZERO, "zoom":1.0},
 			"tiles": [],
@@ -2461,13 +2466,13 @@ func generate_planets(id:int):#local id
 		}
 		if system_data[id].has("conquered"):
 			p_i["conquered"] = true
-		if planets_generated == 0:# Starting solar system has smaller planets
+		if c_s_g == 0:# Starting solar system has smaller planets
 			p_i["size"] = int((2000 + rng.randf_range(0, 7000) * (i + 1) / 2.0) * pow(u_i.gravitational, 0.5) * dark_matter)
 			p_i["pressure"]  = pow(10, rng.randf_range(-3, log(p_i.size / 5.0) / log(10) - 3)) * u_i.boltzmann
 		else:
 			p_i["size"] = int((2000 + rng.randf_range(0, 12000) * (i + 1) / 2.0) * pow(u_i.gravitational, 0.5) * dark_matter)
 			p_i["pressure"] = pow(10, rng.randf_range(-3, log(p_i.size) / log(10) - 2)) * u_i.boltzmann
-		if planets_generated == 0 and i == 2:
+		if c_s_g == 0 and i == 2:
 			p_i["angle"] = rng.randf_range(PI/4, 3*PI/4)
 		system_data[id]["planets"].append({"local":p_i.l_id, "global":p_i.id})
 		# 1 solar radius = 2.63 px = 0.0046 AU
@@ -2500,9 +2505,8 @@ func generate_planets(id:int):#local id
 		p_i["core"] = make_planet_composition(temp, "core", p_i.size, gas_giant)
 		p_i["core_start_depth"] = round(rng.randf_range(0.4, 0.46) * p_i.size * 1000)
 		p_i["surface"] = add_surface_materials(temp, p_i.crust)
-		var is_starting_solar_system = planets_generated == 0
-		if is_starting_solar_system and c_u == 0:#Only water in solar system
-			if rng.randf() < 0.2:
+		if c_s_g == 0 and c_u == 0:#Only water in solar system
+			if c_p_g == 2 or rng.randf() < 0.2:
 				p_i["lake"] = {"element":"H2O"}
 		elif p_i.temperature <= 1000:
 			var lake_elements = list_of_element_probabilities.duplicate()
@@ -2532,7 +2536,7 @@ func generate_planets(id:int):#local id
 				#			3: blue, pushes stuff around
 				#			4: purple, magic user, buffer, healer
 				var _class:int = rng.randi() % 4 + 1
-				if is_starting_solar_system:
+				if c_s_g == 0:
 					lv = min(lv, 4)
 					if i == 2: # Only level 1 enemies on closest planet from starting planet
 						lv = 1
@@ -2564,7 +2568,7 @@ func generate_planets(id:int):#local id
 				var defense = stats[1]
 				var accuracy = stats[2]
 				var agility = stats[3]
-				if is_starting_solar_system and i == 2:
+				if c_s_g == 0 and i == 2:
 					while agility > 7:
 						agility -= 3
 						attack += 1
@@ -2593,7 +2597,7 @@ func generate_planets(id:int):#local id
 					"initial_position":initial_position,
 					"money":_money,
 					"XP":XP}
-				if not is_starting_solar_system:
+				if not c_s_g == 0:
 					while rng.randf() < 0.25:
 						var additional_passive_ability = rng.randi() % Battle.PassiveAbility.N
 						if additional_passive_ability not in HX_data.passive_abilities:
@@ -2608,7 +2612,7 @@ func generate_planets(id:int):#local id
 		var wid:int = Helper.get_wid(p_i.size)
 		var view_zoom = 3.0 / wid
 		p_i["view"] = {"pos":Vector2(340, 80), "zoom":view_zoom}
-		if c_u != 0 and planets_generated == 0 and i == 3:
+		if c_u != 0 and c_s_g == 0 and i == 3:
 			p_i["discovered"] = true
 			p_i["conquered"] = true
 			p_i["angle"] = PI / 2.0
@@ -2663,24 +2667,12 @@ func generate_planets(id:int):#local id
 	elif c_u == 0:
 		#Home planet information
 		planet_data[2]["name"] = tr("HOME_PLANET")
-		planet_data[2]["type"] = 3
 		planet_data[2]["conquered"] = true
 		planet_data[2]["size"] = round(rng.randf_range(12000, 12100))
-		planet_data[2]["view"] = {"pos":Vector2(340, 80), "zoom":3.0 / Helper.get_wid(planet_data[2].size)}
 		planet_data[2]["angle"] = PI / 2
 		planet_data[2]["tiles"] = []
 		planet_data[2]["pressure"] = 1
 		planet_data[2]["lake"] = {"element":"H2O"}
-		planet_data[2]["seed"] = 1
-		planet_data[2]["crust_start_depth"] = rng.randi_range(25, 30)
-		planet_data[2]["mantle_start_depth"] = rng.randi_range(25000, 30000)
-		planet_data[2]["core_start_depth"] = rng.randi_range(4000000, 4200000)
-		planet_data[2].surface.coal["chance"] = 0.5
-		planet_data[2].surface.coal["amount"] = 100
-		planet_data[2].surface.soil["chance"] = 0.6
-		planet_data[2].surface.soil["amount"] = 60
-		planet_data[2].surface.cellulose["chance"] = 0.4
-		planet_data[2].surface.cellulose["amount"] = 50
 		planet_data[2]["bookmarked"] = true
 		if not system_data[id].has("discovered"):
 			stats_univ.biggest_planet = planet_data[2].size
@@ -2881,12 +2873,14 @@ func generate_tiles(id:int, first_time:bool):
 	var empty_tiles = []
 	var crater_num:int = 0
 	var total_VEI:float = 0.0
-	var lake_coverage:float = pow(1.93 * rng.randf() - 1.15 + 3.9 * (ProcGenSettings.lake_coverage - 0.5), 3) + 0.5
+	var lake_coverage:float = pow(rng.randf() + (ProcGenSettings.lake_coverage - 0.5) * 4.0, 5)
+	if c_p_g == 2:
+		lake_coverage = -0.5
 	for i in wid:
 		for j in wid:
 			var level:float = noise.get_noise_2d(i / float(wid), j / float(wid))
 			var t_id = i % wid + j * wid
-			var is_lake = level > lake_coverage and p_i.has("lake") and p_i.lake.state != "g"
+			var is_lake = level < lake_coverage and p_i.has("lake") and p_i.lake.state != "g"
 			var cave_can_spawn = not is_lake
 			if is_lake and not tile_data[t_id].has("ash"):
 				tile_data[t_id]["lake"] = true
@@ -3068,24 +3062,24 @@ func generate_tiles(id:int, first_time:bool):
 			if len(tile_data[i].keys()) == 1 and tile_data[i].resource_production_bonus.is_empty():
 				empty_tiles.append(i)
 		if len(empty_tiles) > 0:
-			var cave_1_tile_id = empty_tiles[rng.randi() % len(empty_tiles)]
-			tile_data[cave_1_tile_id]["cave"] = {"num_floors":5, "floor_size":25, "period":65, "debris":0.3}
-			empty_tiles.erase(cave_1_tile_id)
-		if len(empty_tiles) > 0:
-			var cave_2_tile_id = empty_tiles[rng.randi() % len(empty_tiles)]
-			tile_data[cave_2_tile_id]["cave"] = {"num_floors":8, "floor_size":30, "period":50, "debris":0.4}
-			empty_tiles.erase(cave_2_tile_id)
-		if len(empty_tiles) > 0:
 			var ship_tile_id = empty_tiles[rng.randi() % len(empty_tiles)]
 			tile_data[ship_tile_id]["ship"] = true
 			empty_tiles.erase(ship_tile_id)
-		if len(empty_tiles) > 0:
+		if len(empty_tiles) > 4:
+			var cave_1_tile_id = empty_tiles[rng.randi() % len(empty_tiles)]
+			tile_data[cave_1_tile_id]["cave"] = {"num_floors":5, "floor_size":25, "period":65, "debris":0.3}
+			empty_tiles.erase(cave_1_tile_id)
+		if len(empty_tiles) > 10:
+			var cave_2_tile_id = empty_tiles[rng.randi() % len(empty_tiles)]
+			tile_data[cave_2_tile_id]["cave"] = {"num_floors":8, "floor_size":30, "period":50, "debris":0.4}
+			empty_tiles.erase(cave_2_tile_id)
+		if len(empty_tiles) > 4:
 			var spaceport_tile_id = empty_tiles[rng.randi() % len(empty_tiles)]
 			empty_tiles.erase(spaceport_tile_id)
 			var spaceport = {"tile":spaceport_tile_id, "tier":max(1, int(-log(rng.randf() / u_i.age) / 3.0 + 1))}
 			spaceport.repair_cost = 10000 * pow(spaceport.tier, 20) * rng.randf_range(1, 5) * Data.ancient_bldg_repair_cost_multipliers[AncientBuilding.SPACEPORT]
 			p_i.ancient_bldgs[AncientBuilding.SPACEPORT] = [spaceport]
-		if len(empty_tiles) > 0:
+		if len(empty_tiles) > 10:
 			var min_replicator_tile_id = empty_tiles[rng.randi() % len(empty_tiles)]
 			var min_replicator = {"tile":min_replicator_tile_id, "tier":max(1, int(-log(rng.randf() / u_i.age) / 3.0 + 1)), "repair_cost":10000 * Data.ancient_bldg_repair_cost_multipliers[AncientBuilding.MINERAL_REPLICATOR]}
 			min_replicator.repair_cost = 10000 * pow(min_replicator.tier, 20) * rng.randf_range(1, 5) * Data.ancient_bldg_repair_cost_multipliers[AncientBuilding.MINERAL_REPLICATOR]
@@ -3932,7 +3926,9 @@ func cancel_place_soil():
 	HUD.get_node("Top/Resources/Soil").visible = false
 
 func fade_out_title(fn:String, sv:String = ""):
-	$Title/VBoxContainer/NewGame.disconnect("pressed",Callable(self,"_on_NewGame_pressed"))
+	if not $Title/VBoxContainer/NewGame.pressed.is_connected(_on_NewGame_pressed):
+		return
+	$Title/VBoxContainer/NewGame.pressed.disconnect(_on_NewGame_pressed)
 	if title_tween and title_tween.is_running():
 		title_tween.kill()
 	title_tween = create_tween()
@@ -4031,9 +4027,15 @@ func return_to_menu():
 	view.queue_redraw()
 	dim_num = 1
 	autocollect.clear()
+	galaxy_data.clear()
+	system_data.clear()
+	planet_data.clear()
+	tile_data.clear()
+	view.set_process(false)
 
 func generate_new_univ():
 	universe_data[0] = Data.starting_universe_data.duplicate(true)
+	universe_data[0].cluster_num = ProcGenSettings.number_of_clusters
 	universe_data[0].seed = ProcGenSettings.universe_seed
 	universe_data[0].speed_of_light = 1.0#3.0e8#m/s
 	universe_data[0].planck = 1.0#e(6.626, -34)#J.s
@@ -4045,7 +4047,6 @@ func generate_new_univ():
 	universe_data[0].difficulty = 1.0
 	universe_data[0].time_speed = 1.0
 	universe_data[0].antimatter = 0.0
-	universe_data[0].cluster_num = ProcGenSettings.number_of_clusters
 	dimension.set_bonuses()
 	Data.MUs.MV.pw = maths_bonus.MUCGF_MV
 	Data.MUs.MSMB.pw = maths_bonus.MUCGF_MSMB

@@ -195,29 +195,6 @@ func _process(delta):
 					global_position.y = 100 - margin
 	if game.c_v == "universe":
 		game.get_node("StarfieldUniverse").material.set_shader_parameter("position", (-position + Vector2(640, 360)) / 20000.0 / sqrt(scale.x))
-		if not changed and not $AnimationPlayer.is_playing():
-			if obj_scaled and scale.x > CLUSTER_SCALE_THRESHOLD:
-				fade_out_clusters()
-			elif not obj_scaled and scale.x < CLUSTER_SCALE_THRESHOLD:
-				fade_out_clusters()
-
-func fade_out_clusters():
-	$AnimationPlayer.play("Fade")
-	if Settings.enable_shaders and len(obj.visible_clusters) <= 1000:
-		var tween = create_tween()
-		tween.set_parallel(true)
-		for cluster in obj.btns:
-			if is_instance_valid(cluster):
-				tween.tween_property(cluster.material, "shader_parameter/alpha", 0.0, 0.4)
-
-func fade_in_clusters():
-	$AnimationPlayer.play_backwards("Fade")
-	if Settings.enable_shaders and len(obj.visible_clusters) <= 1000:
-		var tween = create_tween()
-		tween.set_parallel(true)
-		for cluster in obj.btns:
-			if is_instance_valid(cluster):
-				tween.tween_property(cluster.material, "shader_parameter/alpha", 1.0, 0.4)
 
 func _draw():
 	if game.c_v == "STM":
@@ -456,7 +433,7 @@ func _zoom_at_point_animate(zoom_change: float):
 	if limit_to_viewport and is_instance_valid(obj) and obj.dimensions and scale.x < 250 / obj.dimensions and zoom_change < 1: #max zoom out
 		return
 	if game.c_v == "planet":
-		if is_instance_valid(obj) and obj.dimensions and scale.x >= 10000 / obj.dimensions and zoom_change > 1: #max zoom in
+		if is_instance_valid(obj) and obj.dimensions and scale.x >= 2.0 and zoom_change > 1: #max zoom in
 			return
 	else:
 		if scale.x * zoom_change >= 25.0: #max zoom in
@@ -465,22 +442,9 @@ func _zoom_at_point_animate(zoom_change: float):
 		zoom_tween.kill()
 	zoom_tween = create_tween().set_parallel(true)
 	zoom_tween.tween_property(self, "scale", scale * zoom_change, 0.2).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_CIRC)
-	if game.c_v == "galaxy":
-		zoom_tween.tween_method(obj.scale_stars, scale.x, scale.x * zoom_change, 0.2).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_CIRC)
+	if game.c_v in ["galaxy", "universe"]:
+		zoom_tween.tween_method(obj.scale_objects, scale.x, scale.x * zoom_change, 0.2).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_CIRC)
 	zoom_tween.tween_property(self, "position", position - to_local(mouse_position) * scale.x * (zoom_change - 1.0), 0.2).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_CIRC)
 
 func is_view_changing():
 	return zoom_tween and zoom_tween.is_running() or dragging
-
-func _on_AnimationPlayer_animation_finished(anim_name):
-	if not changed:
-		if scale.x < CLUSTER_SCALE_THRESHOLD:
-			obj_scaled = true
-			obj.change_scale(1.0)
-		else:
-			obj_scaled = false
-			obj.change_scale(0.1)
-		changed = true
-		fade_in_clusters()
-	else:
-		changed = false

@@ -58,7 +58,6 @@ func refresh_visibility():
 	ships.visible = len(game.ship_data) > 0
 	MU.visible = game.show.has("minerals")
 	$Top/Resources/Cellulose.visible = game.science_unlocked.has("SA")
-	$Top/ClusterInfo.visible = game.c_c != 0
 
 func refresh_bookmarks():
 	for btn in bookmark_btns.get_children():
@@ -228,6 +227,7 @@ func refresh():
 			$Buttons/Ships/Levelup.show()
 			break
 	$Top/ClusterInfo/Redshift.text = "%.2f" % game.u_i.cluster_data[game.c_c].redshift
+	$Top/ClusterInfo.visible = game.c_c != 0 and game.c_v != "universe"
 	await get_tree().process_frame
 	game.refresh_achievements()
 

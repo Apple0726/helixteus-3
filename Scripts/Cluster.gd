@@ -42,7 +42,7 @@ func _ready():
 		galaxy_btn.self_modulate.a = 0.0
 		var tween = create_tween()
 		tween.tween_property(galaxy_btn, "self_modulate:a", 1.0, 0.15)
-		galaxy_btn.position = g_i["pos"]
+		galaxy_btn.position = g_i["pos"] - galaxy_btn.texture_normal.get_size() / 2.0
 		dimensions_temp = max(dimensions_temp, g_i.pos.length())
 		Helper.add_overlay(galaxy_btn, self, "galaxy", g_i, overlays)
 		if g_i.has("GS"):

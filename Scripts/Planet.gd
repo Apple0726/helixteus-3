@@ -102,6 +102,8 @@ func _ready():
 			var id2 = i % wid + j * wid
 			var tile = game.tile_data[id2]
 			if not tile.has("lake"):
+				if wid > 50:
+					$PlanetTiles.set_cell(Vector2i(i, j), 0, Vector2i.ONE)
 				ground_tiles.append(Vector2i(i, j))
 			if tile.has("crater"):
 				var metal = Sprite2D.new()
@@ -200,7 +202,6 @@ func _ready():
 			aurora.modulate = Color.from_hsv(fmod(hue, 1.0), sat, 1.0) * max(log(tile.aurora) / 10.0, 1.0)
 			$Auroras.add_child(aurora)
 	$Shadow.size = Vector2.ONE * 200 * wid
-	#$Shadow["theme_override_styles/panel"].shadow_color = $PlanetTiles.modulate
 	var lake_state_id = {
 		"s":0,
 		"l":1,
@@ -212,7 +213,8 @@ func _ready():
 	$PlanetTiles.material.set_shader_parameter("planet_texture", load("res://Graphics/Tiles/Mosaics/%s.jpg" % randi_range(1, 8)))
 	$PlanetTiles.material.set_shader_parameter("texture_zoom", randf_range(0.5, 2.0) * 200.0 / $PlanetTiles.tile_set.tile_size.x)
 	$PlanetTiles.material.set_shader_parameter("texture_offset", Vector2(randf_range(0.0, 4000.0), randf_range(0.0, 4000.0)))
-	$PlanetTiles.set_cells_terrain_connect(ground_tiles, 0, 0)
+	if wid <= 50:
+		$PlanetTiles.set_cells_terrain_connect(ground_tiles, 0, 0)
 	$Lake.size = Vector2.ONE * 200.0 * wid
 	if p_i.has("lake"):
 		$Lake.show()
@@ -238,7 +240,7 @@ func _ready():
 		var i:int = id2 % wid
 		var j:int = id2 / wid
 		var tile = game.tile_data[id2]
-		if tile and tile.has("bldg"):
+		if tile.has("bldg"):
 			add_bldg(id2, tile.bldg.name)
 			bldgs[id2].modulate.a = 0
 			var tween = create_tween()

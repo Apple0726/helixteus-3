@@ -42,6 +42,9 @@ func refresh_overlay():
 			option_btn.add_item(tr("BIGGEST_STAR_SIZE"))
 			option_btn.add_item(tr("BRIGHTEST_STAR_LUMINOSITY"))
 			option_btn.add_item(tr("HAS_BLDG_MS"))
+			$HBoxContainer/HSlider.min_value = 0.1
+			$HBoxContainer/HSlider.max_value = 4.0
+			$HBoxContainer/HSlider.step = 0.1
 		"cluster":
 			option_btn.add_item(tr("NUMBER_OF_SYSTEMS"))
 			option_btn.add_item(tr("GALAXY_ENTERED"))
@@ -52,6 +55,9 @@ func refresh_overlay():
 			option_btn.add_item(tr("DARK_MATTER"))
 			option_btn.add_item(tr("IS_GIGASTRUCTURE"))
 			option_btn.add_item(tr("HAS_BLDG_MS"))
+			$HBoxContainer/HSlider.min_value = 0.5
+			$HBoxContainer/HSlider.max_value = 20.0
+			$HBoxContainer/HSlider.step = 0.5
 	toggle_btn.button_pressed = game.overlay_data[game.c_v].visible
 	if err == OK:
 		grayscale_btn.button_pressed = config.get_value("misc", "grayscale", false)

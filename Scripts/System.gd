@@ -196,10 +196,6 @@ func refresh_stars():
 	for rsrc in star_rsrcs:
 		rsrc.node.queue_free()
 	star_rsrcs.clear()
-	var star_tween
-	if Settings.enable_shaders:
-		star_tween = create_tween()
-		star_tween.set_parallel(true)
 	for i in len(stars_info):
 		var star_info:Dictionary = stars_info[i]
 		var star = TextureButton.new()
@@ -212,12 +208,14 @@ func refresh_stars():
 		star.mouse_entered.connect(on_star_over.bind(i, star))
 		star.mouse_exited.connect(on_star_out.bind(i, star))
 		star.pressed.connect(on_star_pressed.bind(i))
-		star.material = ShaderMaterial.new()
-		star.material.shader = preload("res://Shaders/Star.gdshader")
-		star.material.set_shader_parameter("time_offset", 10.0 * randf())
-		star.material.set_shader_parameter("color", Helper.get_star_modulate(star_info["class"]))
-		star.material.set_shader_parameter("alpha", 0.0)
-		star_tween.tween_property(star.material, "shader_parameter/alpha", 1.0, 0.3)
+		if Settings.enable_shaders:
+			star.material = ShaderMaterial.new()
+			star.material.shader = preload("res://Shaders/Star.gdshader")
+			star.material.set_shader_parameter("time_offset", 10.0 * randf())
+			star.material.set_shader_parameter("color", Helper.get_star_modulate(star_info["class"]))
+			star.material.set_shader_parameter("alpha", 0.0)
+			var star_tween = create_tween()
+			star_tween.tween_property(star.material, "shader_parameter/alpha", 1.0, 0.3)
 		star.modulate = Helper.get_star_modulate(star_info["class"])
 		if not game.achievement_data.exploration.has("B_star") and star_info["class"][0] == "B":
 			game.earn_achievement("exploration", "B_star")

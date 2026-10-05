@@ -1,8 +1,8 @@
 {
     "en": {
-        "lines": 1614,
-        "words": 11276,
-        "chars": 68644,
+        "lines": 1607,
+        "words": 11185,
+        "chars": 68129,
         "name": "English"
     },
     "fr": {
@@ -12,33 +12,33 @@
         "name": "Français"
     },
     "it": {
-        "lines": 1048,
-        "words": 7109,
-        "chars": 46764,
+        "lines": 1044,
+        "words": 7082,
+        "chars": 46567,
         "name": "Italiano"
     },
     "zh": {
-        "lines": 1552,
-        "words": 2006,
-        "chars": 21320,
+        "lines": 1548,
+        "words": 2002,
+        "chars": 21275,
         "name": "中文"
     },
     "de": {
-        "lines": 1513,
-        "words": 9112,
-        "chars": 66826,
+        "lines": 1509,
+        "words": 9089,
+        "chars": 66668,
         "name": "Deutsch"
     },
     "es": {
-        "lines": 1171,
-        "words": 8138,
-        "chars": 51664,
+        "lines": 1167,
+        "words": 8110,
+        "chars": 51491,
         "name": "Español"
     },
     "ko": {
-        "lines": 573,
-        "words": 1406,
-        "chars": 4928,
+        "lines": 605,
+        "words": 1494,
+        "chars": 5252,
         "name": "한국어"
     },
     "sv": {
@@ -48,27 +48,27 @@
         "name": "Svenska"
     },
     "hu": {
-        "lines": 1596,
-        "words": 8549,
-        "chars": 62932,
+        "lines": 1594,
+        "words": 8587,
+        "chars": 63120,
         "name": "Magyar"
     },
     "ja": {
-        "lines": 1110,
-        "words": 1217,
-        "chars": 18810,
+        "lines": 1104,
+        "words": 1206,
+        "chars": 18587,
         "name": "日本語"
     },
     "nl": {
-        "lines": 1002,
-        "words": 5077,
-        "chars": 35148,
+        "lines": 997,
+        "words": 5048,
+        "chars": 34938,
         "name": "Nederlands"
     },
     "ru": {
-        "lines": 859,
-        "words": 3373,
-        "chars": 25428,
+        "lines": 858,
+        "words": 3371,
+        "chars": 25413,
         "name": "Русский"
     },
     "pl": {

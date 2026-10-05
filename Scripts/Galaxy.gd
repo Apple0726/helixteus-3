@@ -6,7 +6,7 @@ var dimensions:float
 var dimensions_temp:float
 
 const DIST_MULT = 200.0
-const STAR_AUTOSCALE_MIN_THRESHOLD = 0.1
+const STAR_AUTOSCALE_MIN_THRESHOLD = 0.15
 var overlays = []
 var star_texture = [	preload("res://Graphics/Effects/spotlight_4.png"),
 						preload("res://Graphics/Effects/spotlight_5.png"),
@@ -76,7 +76,7 @@ func _ready():
 		star_btn.rotation = sin(star.temperature) * 180
 		var radius = pow(star["size"] / game.SYSTEM_SCALE_DIV, 0.35)
 		star_btn.scale = Vector2.ONE * radius * 1024.0 / star_btn.texture_normal.get_width()
-		star_btn.position = s_i["pos"]
+		star_btn.position = s_i["pos"] - star_btn.texture_normal.get_size() / 2.0
 		dimensions_temp = max(dimensions_temp, s_i.pos.length())
 		Helper.add_overlay(star_btn, self, "system", s_i, overlays)
 		star_btn.scale /= clamp(get_parent().scale.x, STAR_AUTOSCALE_MIN_THRESHOLD, 2.0) / STAR_AUTOSCALE_MIN_THRESHOLD
@@ -373,7 +373,7 @@ func _on_tree_exiting() -> void:
 		if is_ancestor_of(star_btn):
 			remove_child(star_btn)
 
-func scale_stars(new_scale:float):
+func scale_objects(new_scale:float):
 	if new_scale > STAR_AUTOSCALE_MIN_THRESHOLD and new_scale < 2.0 and not game.overlay_data[game.c_v].visible:
 		for i in len(game.system_data):
 			star_btns[i].scale = Vector2.ONE / new_scale * STAR_AUTOSCALE_MIN_THRESHOLD * overlays[i].original_scale

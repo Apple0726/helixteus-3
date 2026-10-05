@@ -627,16 +627,6 @@ position = Vector2(-2, 1543)
 points = PackedVector2Array(15, 79, 747, 79)
 width = 2.0
 
-[node name="StarSystemDensityLabel" parent="AdvancedSettingsGroup/ScrollContainer/Control" unique_id=41511502 instance=ExtResource("4_nbk0x")]
-layout_mode = 0
-offset_left = 23.0
-offset_top = 959.0
-offset_right = 243.0
-offset_bottom = 983.0
-text = "STAR_SYSTEM_DENSITY [img]Graphics/Icons/help.png[/img]"
-label_text = "STAR_SYSTEM_DENSITY"
-help_text = "STAR_SYSTEM_DENSITY_DESC"
-
 [node name="StarSystemDensityMult" type="Label" parent="AdvancedSettingsGroup/ScrollContainer/Control" unique_id=1530715935]
 layout_mode = 0
 offset_left = 387.0
@@ -644,6 +634,14 @@ offset_top = 959.0
 offset_right = 403.0
 offset_bottom = 983.0
 text = "x"
+
+[node name="StarSystemDensityLabel" type="Label" parent="AdvancedSettingsGroup/ScrollContainer/Control" unique_id=1403496018]
+layout_mode = 0
+offset_left = 23.0
+offset_top = 959.0
+offset_right = 283.0
+offset_bottom = 983.0
+text = "DISTANCE_BETWEEN_SYSTEMS"
 
 [node name="StarSystemDensity" type="LineEdit" parent="AdvancedSettingsGroup/ScrollContainer/Control" unique_id=1691111651]
 layout_mode = 0
@@ -854,16 +852,6 @@ select_all_on_focus = true
 caret_blink = true
 caret_blink_interval = 0.5
 
-[node name="GalaxyDensityLabel" parent="AdvancedSettingsGroup/ScrollContainer/Control" unique_id=1638221034 instance=ExtResource("4_nbk0x")]
-layout_mode = 0
-offset_left = 23.0
-offset_top = 1335.0
-offset_right = 211.0
-offset_bottom = 1359.0
-text = "GALAXY_DENSITY [img]Graphics/Icons/help.png[/img]"
-label_text = "GALAXY_DENSITY"
-help_text = "GALAXY_DENSITY_DESC"
-
 [node name="GalaxyDensityMult" type="Label" parent="AdvancedSettingsGroup/ScrollContainer/Control" unique_id=459334894]
 layout_mode = 0
 offset_left = 387.0
@@ -871,6 +859,14 @@ offset_top = 1335.0
 offset_right = 403.0
 offset_bottom = 1359.0
 text = "x"
+
+[node name="GalaxyDensityLabel" type="Label" parent="AdvancedSettingsGroup/ScrollContainer/Control" unique_id=620607221]
+layout_mode = 0
+offset_left = 23.0
+offset_top = 1335.0
+offset_right = 307.0
+offset_bottom = 1359.0
+text = "DISTANCE_BETWEEN_GALAXIES"
 
 [node name="GalaxyDensity" type="LineEdit" parent="AdvancedSettingsGroup/ScrollContainer/Control" unique_id=737571377]
 layout_mode = 0
@@ -946,16 +942,6 @@ select_all_on_focus = true
 caret_blink = true
 caret_blink_interval = 0.5
 
-[node name="ClusterDensityLabel" parent="AdvancedSettingsGroup/ScrollContainer/Control" unique_id=1261208912 instance=ExtResource("4_nbk0x")]
-layout_mode = 0
-offset_left = 23.0
-offset_top = 1651.0
-offset_right = 211.0
-offset_bottom = 1675.0
-text = "CLUSTER_DENSITY [img]Graphics/Icons/help.png[/img]"
-label_text = "CLUSTER_DENSITY"
-help_text = "CLUSTER_DENSITY_DESC"
-
 [node name="ClusterDensityMult" type="Label" parent="AdvancedSettingsGroup/ScrollContainer/Control" unique_id=858608353]
 layout_mode = 0
 offset_left = 387.0
@@ -963,6 +949,14 @@ offset_top = 1651.0
 offset_right = 403.0
 offset_bottom = 1675.0
 text = "x"
+
+[node name="ClusterDensityLabel" type="Label" parent="AdvancedSettingsGroup/ScrollContainer/Control" unique_id=1876919395]
+layout_mode = 0
+offset_left = 23.0
+offset_top = 1651.0
+offset_right = 303.0
+offset_bottom = 1675.0
+text = "DISTANCE_BETWEEN_CLUSTERS"
 
 [node name="ClusterDensity" type="LineEdit" parent="AdvancedSettingsGroup/ScrollContainer/Control" unique_id=1347562026]
 layout_mode = 0

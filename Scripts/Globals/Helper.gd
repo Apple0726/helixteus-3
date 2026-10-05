@@ -183,7 +183,7 @@ func get_plant_name(name:String):
 	return tr("PLANT_TITLE").format({"metal":tr(name.split("_")[0].to_upper())})
 
 func get_wid(size:float):
-	return min(round(pow(size / 6000.0, 0.7) * 8.0 * ProcGenSettings.planet_tile_dimensions) + 1, ProcGenSettings.max_planet_tile_dimensions)
+	return min(round(pow(size / 5000.0, 0.7) * 8.0 * ProcGenSettings.planet_tile_dimensions) + 1, ProcGenSettings.max_planet_tile_dimensions)
 
 func e_notation(num:float, sd:int = 4):#e notation
 	if num == 0:

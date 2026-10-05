@@ -4,5 +4,3 @@
 
 [node name="Universe" type="Node2D" unique_id=1978058773]
 script = ExtResource("1")
-
-[connection signal="tree_exited" from="." to="." method="_on_Cluster_tree_exited"]

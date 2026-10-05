@@ -31,31 +31,33 @@ var min_max_values:Dictionary
 
 func _ready() -> void:
 	min_max_values = {
-		planet_tile_dimensions_node: {"min":0.0, "default": ProcGenSettings.planet_tile_dimensions},
-		max_planet_tile_dimensions_node: {"min":1, "rec_min":3, "rec_max":300, "default": ProcGenSettings.max_planet_tile_dimensions},
-		lake_coverage_node: {"min":0.0, "max":1.0, "default": ProcGenSettings.lake_coverage},
-		cave_spawn_frequency_node: {"min":0.0, "rec_max":20.0, "default": ProcGenSettings.cave_spawn_frequency},
-		cave_tile_dimensions_node: {"min":0.0, "rec_max":3.0, "default": ProcGenSettings.cave_tile_dimensions},
-		cave_depth_node: {"min":0.0, "default": ProcGenSettings.cave_depth},
-		cave_floor_diff_node: {"min":1.0, "default": ProcGenSettings.cave_floor_difficulty},
-		cave_wall_coverage_node: {"min":0.0, "max":1.0, "default": ProcGenSettings.cave_wall_coverage},
-		distance_between_planets_node: {"min":0.0, "rec_min":0.1, "rec_max":10.0, "default": ProcGenSettings.distance_between_planets},
-		max_planets_in_system_node: {"min":1, "rec_max":50, "default": ProcGenSettings.max_planets_in_system},
-		star_system_density_node: {"min":0.0, "rec_min":0.1, "rec_max":10.0, "default": ProcGenSettings.star_system_density},
-		elliptical_galaxy_min_size_node: {"min":1, "default": ProcGenSettings.min_number_of_systems_elliptical},
-		elliptical_galaxy_max_size_node: {"min":1, "rec_max":50000, "default": ProcGenSettings.max_number_of_systems_elliptical},
-		spiral_galaxy_min_size_node: {"min":1, "default": ProcGenSettings.min_number_of_systems_spiral},
-		spiral_galaxy_max_size_node: {"min":1, "rec_max":50000, "default": ProcGenSettings.max_number_of_systems_spiral},
-		dwarf_elliptical_galaxy_ratio_node: {"min":0.0, "max":1.0, "default": ProcGenSettings.dwarf_elliptical_galaxy_ratio},
-		elliptical_spiral_galaxy_ratio_node: {"min":0.0, "max":1.0, "default": ProcGenSettings.elliptical_spiral_galaxy_ratio},
-		galaxy_density_node: {"min":0.0, "rec_min":0.3, "rec_max":10.0, "default": ProcGenSettings.galaxy_density},
-		min_number_of_galaxies_node: {"min":1, "default": ProcGenSettings.min_number_of_galaxies},
-		max_number_of_galaxies_node: {"min":1, "rec_max":50000, "default": ProcGenSettings.max_number_of_galaxies},
-		galaxy_group_ratio_node: {"min":0.0, "max":1.0, "default": ProcGenSettings.galaxy_group_ratio},
-		cluster_density_node: {"min":0.0, "rec_min":0.1, "rec_max":10.0, "default": ProcGenSettings.cluster_density},
-		number_of_clusters_node: {"min":1, "rec_max":50000, "default": ProcGenSettings.number_of_clusters},
+		planet_tile_dimensions_node: {"min":0.0, "default": ProcGenSettings.default_values.planet_tile_dimensions},
+		max_planet_tile_dimensions_node: {"min":1, "rec_min":3, "rec_max":250, "default": ProcGenSettings.default_values.max_planet_tile_dimensions},
+		lake_coverage_node: {"min":0.0, "max":1.0, "default": ProcGenSettings.default_values.lake_coverage},
+		cave_spawn_frequency_node: {"min":0.0, "rec_max":20.0, "default": ProcGenSettings.default_values.cave_spawn_frequency},
+		cave_tile_dimensions_node: {"min":0.0, "rec_max":3.0, "default": ProcGenSettings.default_values.cave_tile_dimensions},
+		cave_depth_node: {"min":0.0, "default": ProcGenSettings.default_values.cave_depth},
+		cave_floor_diff_node: {"min":1.0, "default": ProcGenSettings.default_values.cave_floor_difficulty},
+		cave_wall_coverage_node: {"min":0.0, "max":1.0, "default": ProcGenSettings.default_values.cave_wall_coverage},
+		distance_between_planets_node: {"min":0.0, "rec_min":0.1, "rec_max":10.0, "default": ProcGenSettings.default_values.distance_between_planets},
+		max_planets_in_system_node: {"min":1, "rec_max":50, "default": ProcGenSettings.default_values.max_planets_in_system},
+		star_system_density_node: {"min":0.0, "rec_min":0.1, "rec_max":10.0, "default": ProcGenSettings.default_values.star_system_density},
+		elliptical_galaxy_min_size_node: {"min":1, "default": ProcGenSettings.default_values.min_number_of_systems_elliptical},
+		elliptical_galaxy_max_size_node: {"min":1, "rec_max":50000, "default": ProcGenSettings.default_values.max_number_of_systems_elliptical},
+		spiral_galaxy_min_size_node: {"min":1, "default": ProcGenSettings.default_values.min_number_of_systems_spiral},
+		spiral_galaxy_max_size_node: {"min":1, "rec_max":50000, "default": ProcGenSettings.default_values.max_number_of_systems_spiral},
+		dwarf_elliptical_galaxy_ratio_node: {"min":0.0, "max":1.0, "default": ProcGenSettings.default_values.dwarf_elliptical_galaxy_ratio},
+		elliptical_spiral_galaxy_ratio_node: {"min":0.0, "max":1.0, "default": ProcGenSettings.default_values.elliptical_spiral_galaxy_ratio},
+		galaxy_density_node: {"min":0.0, "rec_min":0.3, "rec_max":10.0, "default": ProcGenSettings.default_values.galaxy_density},
+		min_number_of_galaxies_node: {"min":1, "default": ProcGenSettings.default_values.min_number_of_galaxies},
+		max_number_of_galaxies_node: {"min":1, "rec_max":50000, "default": ProcGenSettings.default_values.max_number_of_galaxies},
+		galaxy_group_ratio_node: {"min":0.0, "max":1.0, "default": ProcGenSettings.default_values.galaxy_group_ratio},
+		cluster_density_node: {"min":0.0, "rec_min":0.1, "rec_max":10.0, "default": ProcGenSettings.default_values.cluster_density},
+		number_of_clusters_node: {"min":1, "rec_max":50000, "default": ProcGenSettings.default_values.number_of_clusters},
 	}
 	$Seed.text = str(int(Time.get_unix_time_from_system()))
+	$Seed.text_submitted.connect(check_seed_validity)
+	$Seed.focus_exited.connect(check_seed_validity)
 	$BasicSettingsGroup/SizeOfCOSHBox/Medium._on_Button_pressed()
 	$BasicSettingsGroup/DensityOfCOSHBox/Normal._on_Button_pressed()
 	for line_edit in $AdvancedSettingsGroup/ScrollContainer/Control.get_children():
@@ -77,6 +79,35 @@ func _ready() -> void:
 		line_edit.mouse_exited.connect(game.hide_tooltip)
 		line_edit.text = str(min_max_values[line_edit].default)
 	max_planet_tile_dimensions_node.text_changed.connect(update_max_planet_tile_dimensions_label_2)
+	$BasicSettingsGroup/SizeOfCOSHBox/Small.pressed.connect(set_size_of_COs.bind(0.66))
+	$BasicSettingsGroup/SizeOfCOSHBox/Medium.pressed.connect(set_size_of_COs.bind(1.0))
+	$BasicSettingsGroup/SizeOfCOSHBox/Large.pressed.connect(set_size_of_COs.bind(2.0))
+	$BasicSettingsGroup/DensityOfCOSHBox/Sparse.pressed.connect(set_density_of_COs.bind(2.0))
+	$BasicSettingsGroup/DensityOfCOSHBox/Normal.pressed.connect(set_density_of_COs.bind(1.0))
+	$BasicSettingsGroup/DensityOfCOSHBox/Dense.pressed.connect(set_density_of_COs.bind(0.66))
+
+func set_size_of_COs(size_mult:float):
+	planet_tile_dimensions_node.text = str(size_mult)
+	cave_tile_dimensions_node.text = str(size_mult)
+	elliptical_galaxy_min_size_node.text = str(int(size_mult * ProcGenSettings.default_values.min_number_of_systems_elliptical))
+	elliptical_galaxy_max_size_node.text = str(int(size_mult * ProcGenSettings.default_values.max_number_of_systems_elliptical))
+	spiral_galaxy_min_size_node.text = str(int(size_mult * ProcGenSettings.default_values.min_number_of_systems_spiral))
+	spiral_galaxy_max_size_node.text = str(int(size_mult * ProcGenSettings.default_values.max_number_of_systems_spiral))
+	dwarf_elliptical_galaxy_ratio_node.text = str(snappedf(ProcGenSettings.default_values.dwarf_elliptical_galaxy_ratio / sqrt(size_mult), 0.01))
+	min_number_of_galaxies_node.text = str(int(size_mult * ProcGenSettings.default_values.min_number_of_galaxies))
+	max_number_of_galaxies_node.text = str(int(size_mult * ProcGenSettings.default_values.max_number_of_galaxies))
+	galaxy_group_ratio_node.text = str(snappedf(ProcGenSettings.default_values.galaxy_group_ratio / sqrt(size_mult), 0.01))
+	number_of_clusters_node.text = str(int(size_mult * ProcGenSettings.default_values.number_of_clusters))
+
+func set_density_of_COs(density_mult:float):
+	distance_between_planets_node.text = str(density_mult)
+	star_system_density_node.text = str(density_mult)
+	galaxy_density_node.text = str(density_mult)
+	cluster_density_node.text = str(density_mult)
+
+func check_seed_validity():
+	if not $Seed.text.is_valid_int():
+		$Seed.text = str(int(Time.get_unix_time_from_system()))
 
 func check_value_validity(new_text:String, line_edit_node):
 	if new_text.is_valid_float() or new_text.is_valid_int():

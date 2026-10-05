@@ -303,8 +303,6 @@ func on_univ_over(id:int):
 		]
 #	if game.subjects.dimensional_power.lv > 2:
 #		$UnivInfo.text += "\n%s: %s" % [tr("ANTIMATTER"), u_i.antimatter]
-#	if game.subjects.dimensional_power.lv > 2:
-#		$UnivInfo.text += "\n%s: %s" % [tr("UNIVERSE_VALUE"), u_i.universe_value]
 
 func on_univ_press(id:int):
 	$UnivInfo/AnimationPlayer.play_backwards("Fade")
