@@ -255,7 +255,7 @@ func battle_victory_callback():
 		game.stats_dim.systems_conquered += 1
 		game.stats_global.systems_conquered += 1
 	if not game.bldg_unlocked.has(Building.SOLAR_PANEL) and game.stats_univ.planets_conquered > 1:
-		game.bldg_unlocked[Building.SOLAR_PANEL] = true
+		Helper.show_bldg_unlocked_popup(Building.SOLAR_PANEL)
 	Helper.save_obj("Systems", game.c_s_g, game.planet_data)
 	if not game.help.has("SP"):
 		game.popup_window(tr("NEW_BLDGS_UNLOCKED_DESC"), tr("NEW_BLDGS_UNLOCKED"))

@@ -378,10 +378,6 @@ texture = ExtResource("12")
 
 [node name="WhiteRect" parent="." unique_id=1617137608 instance=ExtResource("1")]
 
-[node name="BuildingShortcutTimer" type="Timer" parent="." unique_id=462995663]
-wait_time = 0.7
-one_shot = true
-
 [node name="Holes" type="Node2D" parent="." unique_id=701968994]
 
 [node name="Buildings" type="Node2D" parent="." unique_id=1312217404]
@@ -410,4 +406,3 @@ bus = &"SFX"
 [connection signal="value_changed" from="BadApple/Panel/LFO/HSliderF" to="BadApple" method="_on_h_slider_f_value_changed"]
 [connection signal="value_changed" from="BadApple/Panel/LFO/HSliderA" to="BadApple" method="_on_h_slider_a_value_changed"]
 [connection signal="value_changed" from="BadApple/Panel/LFO/HSliderO" to="BadApple" method="_on_h_slider_o_value_changed"]
-[connection signal="timeout" from="BuildingShortcutTimer" to="." method="_on_building_shortcut_timer_timeout"]

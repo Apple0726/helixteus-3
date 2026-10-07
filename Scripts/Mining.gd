@@ -23,6 +23,8 @@ var rsrc_mined:Dictionary = {}
 func _ready():
 	Helper.set_back_btn($Back)
 	tile = game.tile_data[id]
+	if game.tile_data_persistent[id] == null:
+		game.tile_data_persistent[id] = {}
 	if not tile.has("mining"):
 		tile.mining = {
 			"progress": 0.0,

@@ -988,12 +988,12 @@ func start_game(univ, new_save, DR_advantage):
 	if not is_ancestor_of(HUD):
 		$HUD.add_child(HUD)
 	update_starfield = true
+	set_c_sv(c_sv)
 	add_planet(true)
 	HUD.refresh()
 	$Autosave.start()
 	var init_time = Time.get_unix_time_from_system()
 	view.set_process(true)
-	set_c_sv(c_sv)
 	switch_music(Data.ambient_music.pick_random(), u_i.time_speed)
 
 
@@ -4032,6 +4032,8 @@ func return_to_menu():
 	planet_data.clear()
 	tile_data.clear()
 	view.set_process(false)
+	if is_instance_valid(constr_panel):
+		constr_panel.queue_free()
 
 func generate_new_univ():
 	universe_data[0] = Data.starting_universe_data.duplicate(true)

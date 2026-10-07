@@ -505,18 +505,24 @@ func get_rsrc_from_rock(contents:Dictionary, tile:Dictionary, p_i:Dictionary, ti
 				game.popup_window(tr("ARTIFACT_FOUND_DESC"), tr("ARTIFACT_FOUND"))
 		if not game.show.has(content):
 			game.show[content] = true
-		if content == "sand" and not game.bldg_unlocked.has(Building.GLASS_FACTORY):
-			game.bldg_unlocked[Building.GLASS_FACTORY] = true
-		if content == "coal" and not game.bldg_unlocked.has(Building.STEAM_ENGINE):
-			game.bldg_unlocked[Building.STEAM_ENGINE] = true
-		if content == "stone" and not game.bldg_unlocked.has(Building.STONE_CRUSHER):
-			game.bldg_unlocked[Building.STONE_CRUSHER] = true
+		if content == "sand" and not game.bldg_unlocked.has(Building.GLASS_FACTORY) and game.mats.sand >= 1000.0:
+			show_bldg_unlocked_popup(Building.GLASS_FACTORY)
+		if content == "coal" and not game.bldg_unlocked.has(Building.STEAM_ENGINE) and game.mats.coal >= 1000.0:
+			show_bldg_unlocked_popup(Building.STEAM_ENGINE)
+		if content == "stone" and not game.bldg_unlocked.has(Building.STONE_CRUSHER) and get_sum_of_dict(game.stone) > 10000.0:
+			show_bldg_unlocked_popup(Building.STONE_CRUSHER)
 	if tile.mining.has("current_deposit") and tile.mining.current_deposit.progress > tile.mining.current_deposit.size - 1:
 		tile.mining.erase("current_deposit")
 	if tile.has("crater") and tile.crater.has("init_depth") and tile.depth > 3 * tile.crater.init_depth:
-		#remove_crater_bonuses(game.tile_data, tile_id, tile.crater.metal)
 		tile.erase("crater")
 		game.tile_data_persistent[tile_id]["crater_removed"] = true
+
+func show_bldg_unlocked_popup(bldg:int):
+	game.bldg_unlocked[bldg] = true
+	if game.dim_num == 1 and game.c_u == 0:
+		var bldg_unlocked_popup = load("res://Scenes/BuildingUnlockedPopup.tscn").instantiate()
+		bldg_unlocked_popup.setup(Building.POWER_PLANT)
+		game.get_node("UI").add_child(bldg_unlocked_popup)
 
 func remove_crater_bonuses(tile_data:Array, tile_id:int, metal:String):
 	var wid:int = sqrt(len(tile_data))

@@ -297,12 +297,6 @@ func show_tooltip(tile, tile_id:int):
 		tooltip = tr(Building.names[tile.bldg.name].to_upper() + "_NAME") + "\n"
 		tooltip += Helper.get_bldg_tooltip(p_i, tile, 1)
 		icons.append_array(Helper.flatten(Data.desc_icons[tile.bldg.name]) if Data.desc_icons.has(tile.bldg.name) else [])
-		if bldg_to_construct == -1:
-			if $BuildingShortcutTimer.is_stopped():
-				if game.dim_num == 1 and game.c_u == 0:
-					$BuildingShortcutTimer.start(remap(game.u_i.lv, 1, 18, 0.5, 6.0))
-				else:
-					$BuildingShortcutTimer.start(6.0)
 		if tile.has("overclock_bonus") and overclockable(tile.bldg.name):
 			tooltip += "\n[color=#EEEE00]" + tr("BENEFITS_FROM_OVERCLOCK") % tile.overclock_bonus + "[/color]"
 		if tile.bldg.name == Building.BORING_MACHINE:
@@ -511,7 +505,7 @@ func constr_bldg(tile_id:int, curr_time:int, _bldg_to_construct:int, mass_build:
 		return
 	var tile = game.tile_data[tile_id]
 	if _bldg_to_construct == Building.GREENHOUSE:
-		if tile == null or not tile.has("lake_elements"):
+		if not tile.has("lake_elements"):
 			if not mass_build:
 				game.popup(tr("NOT_ADJACENT_TO_LAKE"), 1.5)
 			return
@@ -522,19 +516,16 @@ func constr_bldg(tile_id:int, curr_time:int, _bldg_to_construct:int, mass_build:
 		game.stats_univ.bldgs_built += 1
 		game.stats_dim.bldgs_built += 1
 		game.stats_global.bldgs_built += 1
-		if game.stats_univ.bldgs_built >= 1 and not game.bldg_unlocked.has(Building.POWER_PLANT):
-			game.bldg_unlocked[Building.POWER_PLANT] = true
-			flash_construction_button()
-		if game.stats_univ.bldgs_built >= 5 and not game.bldg_unlocked.has(Building.MINERAL_SILO):
-			game.bldg_unlocked[Building.BATTERY] = true
-			game.bldg_unlocked[Building.MINERAL_SILO] = true
-			flash_construction_button()
-		if game.stats_univ.bldgs_built >= 10 and not game.bldg_unlocked.has(Building.RESEARCH_LAB):
-			game.bldg_unlocked[Building.RESEARCH_LAB] = true
-			flash_construction_button()
-		if game.stats_univ.bldgs_built >= 18 and not game.bldg_unlocked.has(Building.CENTRAL_BUSINESS_DISTRICT):
-			game.bldg_unlocked[Building.CENTRAL_BUSINESS_DISTRICT] = true
-			flash_construction_button()
+		game.planet_HUD.get_node("VBoxContainer/Construct/AnimationPlayer").stop()
+		if game.stats_univ.bldgs_built >= 5 and not game.bldg_unlocked.has(Building.POWER_PLANT):
+			Helper.show_bldg_unlocked_popup(Building.POWER_PLANT)
+		if game.stats_univ.bldgs_built >= 15 and not game.bldg_unlocked.has(Building.RESEARCH_LAB):
+			Helper.show_bldg_unlocked_popup(Building.RESEARCH_LAB)
+		if game.stats_univ.bldgs_built >= 30 and not game.bldg_unlocked.has(Building.MINERAL_SILO):
+			Helper.show_bldg_unlocked_popup(Building.BATTERY)
+			Helper.show_bldg_unlocked_popup(Building.MINERAL_SILO)
+		if game.stats_univ.bldgs_built >= 80 and not game.bldg_unlocked.has(Building.CENTRAL_BUSINESS_DISTRICT):
+			Helper.show_bldg_unlocked_popup(Building.CENTRAL_BUSINESS_DISTRICT)
 		tile.bldg = {
 			"name": _bldg_to_construct,
 		}

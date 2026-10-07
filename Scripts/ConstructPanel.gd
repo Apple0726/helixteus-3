@@ -60,16 +60,51 @@ func refresh():
 				btn.connect("pressed", Callable(self, "on_ancient_bldg_click").bind(bldg))
 	else:
 		for bldg in self["%s_bldgs" % tab]:
+			var btn = Button.new()
+			btn.icon_alignment = HORIZONTAL_ALIGNMENT_CENTER
+			btn.expand_icon = true
+			btn.icon = load("res://Graphics/Buildings/%s.png" % Building.names[bldg])
+			btn.custom_minimum_size.y = 100
+			btn.disabled = not game.bldg_unlocked.has(bldg)
 			if game.bldg_unlocked.has(bldg):
-				var btn = Button.new()
-				btn.icon_alignment = HORIZONTAL_ALIGNMENT_CENTER
-				btn.expand_icon = true
-				btn.icon = load("res://Graphics/Buildings/%s.png" % Building.names[bldg])
-				btn.custom_minimum_size.y = 100
-				$Panel/ScrollContainer/VBoxContainer.add_child(btn)
-				btn.connect("mouse_entered", Callable(self, "on_bldg_over").bind(bldg))
-				btn.connect("mouse_exited", Callable(game, "hide_tooltip"))
-				btn.connect("pressed", Callable(self, "on_bldg_click").bind(bldg))
+				btn.mouse_entered.connect(on_bldg_over.bind(bldg))
+			else:
+				btn.modulate = Color.DIM_GRAY
+				var unlock_str = "[color=#999999][font_size=20](%s) %s[/font_size]\n" % [tr("LOCKED"), tr("%s_NAME" % Building.names[bldg].to_upper())]
+				if bldg == Building.POWER_PLANT:
+					unlock_str += tr("UNLOCK_BY_CONSTRUCTING_X_BLDGS").format({"num": 5})
+				elif bldg == Building.RESEARCH_LAB:
+					unlock_str += tr("UNLOCK_BY_CONSTRUCTING_X_BLDGS").format({"num": 15})
+				elif bldg in [Building.BATTERY, Building.MINERAL_SILO]:
+					unlock_str += tr("UNLOCK_BY_CONSTRUCTING_X_BLDGS").format({"num": 30})
+				elif bldg == Building.CENTRAL_BUSINESS_DISTRICT:
+					unlock_str += tr("UNLOCK_BY_CONSTRUCTING_X_BLDGS").format({"num": 80})
+				elif bldg == Building.BORING_MACHINE:
+					unlock_str += tr("UNLOCK_BY_RESEARCHING_X").format({"science": tr("AM_SC")})
+				elif bldg == Building.ROVER_CONSTRUCTION_CENTER:
+					unlock_str += tr("UNLOCK_BY_RESEARCHING_X").format({"science": tr("RC_SC")})
+				elif bldg in [Building.ATOM_MANIPULATOR, Building.ATMOSPHERE_EXTRACTOR]:
+					unlock_str += tr("UNLOCK_BY_RESEARCHING_X").format({"science": tr("ATM_SC")})
+				elif bldg == Building.SUBATOMIC_PARTICLE_REACTOR:
+					unlock_str += tr("UNLOCK_BY_RESEARCHING_X").format({"science": tr("SAP_SC")})
+				elif bldg == Building.GREENHOUSE:
+					unlock_str += tr("UNLOCK_BY_RESEARCHING_X").format({"science": tr("EGH_SC")})
+				elif bldg == Building.SHIPYARD:
+					unlock_str += tr("UNLOCK_BY_RESEARCHING_X").format({"science": tr("FG_SC")})
+				elif bldg == Building.PROBE_CONSTRUCTION_CENTER:
+					unlock_str += tr("UNLOCK_BY_REACHING_LV_X").format({"lv": 60})
+				elif bldg == Building.SOLAR_PANEL:
+					unlock_str += tr("UNLOCK_BY_CONQUERING_A_PLANET")
+				elif bldg == Building.STONE_CRUSHER:
+					unlock_str += tr("UNLOCK_BY_MINING_X").format({"weight": 10000.0, "something": tr("STONE")})
+				elif bldg == Building.GLASS_FACTORY:
+					unlock_str += tr("UNLOCK_BY_MINING_X").format({"weight": 1000.0, "something": tr("SAND")})
+				elif bldg == Building.STEAM_ENGINE:
+					unlock_str += tr("UNLOCK_BY_MINING_X").format({"weight": 1000.0, "something": tr("COAL")})
+				btn.mouse_entered.connect(game.show_tooltip.bind(unlock_str))
+			$Panel/ScrollContainer/VBoxContainer.add_child(btn)
+			btn.mouse_exited.connect(game.hide_tooltip)
+			btn.pressed.connect(on_bldg_click.bind(bldg))
 
 func on_bldg_click(bldg:int):
 	game.put_bottom_info(tr("CLICK_TILE_TO_CONSTRUCT"), "building", game.cancel_building)
@@ -195,7 +230,9 @@ func _on_vehicles_mouse_exited():
 func _on_tab_pressed(extra_arg_0:String):
 	tab = extra_arg_0.to_lower()
 	for btn in $Panel/VBoxContainer.get_children():
-		if btn.name != extra_arg_0:
+		if btn.name == extra_arg_0:
+			btn.get_node("Label").modulate.a = 1.0
+		else:
 			tween_label(btn.get_node("Label"), 0.0)
 	refresh()
 

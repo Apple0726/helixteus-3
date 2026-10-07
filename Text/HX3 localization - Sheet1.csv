@@ -140,10 +140,14 @@ STORAGE,Storage,Stockage,Magazzino,存储设施,Lager,Almacenamiento,보관,Lage
 STORAGE_DESC,Buildings that increase the storage of a particular resource can be found here.,Les bâtiments qui augmentent la capacité de stockage d'une ressource sont ici.,Edifici che aumentano la capacità di immagazzinamento di una specifica risorsa.,增加水晶存储的建筑可以在这里找到。,"Gebäude, welche die Lagerkapazität von bestimmten Ressourcen erhöhen, können hier gefunden werden.",Los edificios que aumentan el almacenamiento de un recurso en particular se encuentran aquí.,,Byggnader som ökar lagringen av en viss resurs finns här.,"Épületek, amik megnövelik különböző anyagok táolási kapacitását.",リソースの貯蔵量を増やす建物はこちら。,"Gebouwen die de opslagcapaciteit voor bepaalde grondstoffen verhogen, zijn hier te vinden.","Здания, увеличивающие запасы того или иного ресурса, можно найти здесь.",
 MINERAL_EXTRACTOR_NAME,Mineral extractor,Extracteur de minéraux,Estrattore di minerali,水晶萃取机,Mineralienextraktor,Extractor de minerales,광물 추출기,Mineralextraherare,Ásványkivonó,鉱物抽出機,Mineraalontginner,Добытчик минералов,
 MINERAL_EXTRACTOR_NAME_S,Mineral extractors,Extracteurs de minéraux,Estrattori di minerali,水晶萃取机,Mineralienextraktoren,Extractores de minerales,광물 추출기,,Ásványkivonók,鉱物抽出機,Mineraalontginners,Добытчики минералов,
-MINERAL_EXTRACTOR_DESC,"Extracts minerals from the planet surface, giving you a constant supply of minerals.",Extrait des minéraux de la surface pour un approvisionnement constant des minéraux.,Estrae minerali dalla superficie per un guadagno costante di minerali.,只负责在行星地表提纯水晶矿物质，给你源源不断的水晶供应。,Extrahiert Mineralien aus der Planetenoberfläche um eine stetige Versorgung zu ermöglichen.,"Extrae minerales de la superficie, suministrando una cantidad constante de minerales.",,"Extraherar mineraler från planets yta, vilket ger dig en konstant tillförsel av mineraler.","Kivonja az ásványokat a bolygó felületéből, ezzel folytonosan genrálja neked az ásványokat.",惑星表面から鉱物を抽出し、常に鉱物を供給することができます。,Voorziet je van een constante toevoer van mineralen uit de planeetoppervlakte.,"Добывает минералы с поверхности планеты, обеспечивая вам постоянный запас минералов.",
+MINERAL_EXTRACTOR_DESC,"Extracts minerals from the planet surface, giving you a constant supply of minerals.
+
+Minerals can be sold for money, or for purchasing mineral upgrades.",,,,,,,,,,,,
 POWER_PLANT_NAME,Power plant,Centrale électrique,Centrale elettrica,发电厂,Kraftwerk,Planta de energía,발전소,Kraftvärk,Erőmű,発電所,Energiecentrale,Электростанция,
 POWER_PLANT_NAME_S,Power plants,Centrales électriques,Centrali elettriche,发电厂,Kraftwerke,Plantas de energía,발전소,,Erőművek,発電所,Energiecentrales,Электростанции,
-POWER_PLANT_DESC,Generates energy out of thin air,Produit de l'énergie de nulle part,Crea energia elettrica dal nulla,使用稀薄的空气，并将它们转换成能量。,Generiert Energie,Genera energía de la nada,,Genererar energi ur luften,Energiát csinál a semmiből,大気からエネルギーを生み出します。,Genereert energie uit de lucht.,Генерирует энергию из воздуха,
+POWER_PLANT_DESC,"Basic building that generates energy on its own.
+
+Energy is needed for constructing more buildings and for sending spaceships to other planets.",,,,,,,,,,,,
 UPGRADE,Upgrade,Améliorer,Potenzia,升级,Verbesserungen,Mejorar,업그레이드,Uppgradera,Feljesztés,アップグレード,Upgrade,Улучшить,
 LEVEL,Level,Niveau,Livello,等级,Level,Nivel,레벨,Level,Szint,レベル,Level,Уровень,
 SECOND,second,seconde,secondo,秒,Sekunde,segundo,초,Sekund,másodperc,秒,seconde,Секунда,
@@ -151,15 +155,30 @@ S_SECOND,s,s,s,秒,s,s,초,s,mp,秒,s,сек,
 X_CAPACITY,%s capacity,Capacité de %s,%s capacità,容纳%s,Lager %s,Almacena %s,저장 용량: %s,%s Kapasitet,%s kapacitás,容量 %s,%s capaciteit,%s вместимость,
 STORES_X,Stores %s,Stocke %s,Immagazzina %s,储存%s,Lager %s,Almacena %s,저장 용량: %s,Lagrar %s,Tárolja ezt: %s,容量 %s,Bewaart %s,Хранит %s,
 PATH,Path,Voie,Via,升级路线,Pfad,Camino,,Väg,Út,パス,Pad,Путь,
-COAL_DESC,The number 1 cause of climate change.,La principale du changement climatique.,La causa numero 1 del cambiamento climatico.,获取能量最原始的矿物,"Früher Biomasse, heute fast ausschließlich Kohlenstoff. Brennt Gut.",La causa número 1 del cambio climático.,,,Tüzelőanyag.,産業革命の第一歩。そして人類による気候変動の始まり。,Dé klassieke fossiele brandstof.,"Уголь, хорошее топливо для начала.",
-SAND_DESC,"Stone, but in very small pieces.",,"Pietra, ma in frammenti piccolissimi.",直径为毫米的颗粒,Körner mit weniger als 2mm Durchmesser.,Dicen que hay más de 180 estrellas por cada grano de arena.,,,Apró kvarcszemcsék.,石や鉱物の破片。,Het is ruw en kruipt overal tussen.,Рыхлая осадочная горная порода,
-CLAY_DESC,A rudiemntary sediment mixture.,Un mélange sédimentaire pour des bâtiments rudimentaires.,,用于简陋建筑的沉积混合物,Eine Sedimentmischung für Rudimentäre Gebäude.,Simple y rudimentaria arcilla.,,,,粘土は千の利用法がある,,Мелкозернистая осадочная горная порода,
-SOIL_DESC,One of the most underrated resources on Earth.,,Una delle risorse terrestri più sottovalutate.,一种在地球上被低估的资源,Gut als Acker.,Tierra común y corriente.,,,,地球上で最も過小評価されている資源の一つです。,Planten kunnen niet zonder.,Обычная почва,
-CELLULOSE_DESC,Uses photosynthesis to transform rocks and light into food.,,Sfrutta la fotosintesi per trasformare rocce e luce in cibo.,植物细胞的基本成分,Grundbaustein pflanzlicher Zellen.,Transforma rocas y luz en comida a través de la fotosíntesis.,,,Növények strukturális anyaga.,光合成で水や光を食べ物や燃料に変える。,Gebruikt fotosynthese om aarde en licht om te zetten in eten.,Органическое соединение,
-GLASS_DESC,Solid or liquid?,,Solido o liquido?,固体还是液体？,Wie eine durchsichtige Wand.,¿Por qué la vaca no puede comer vidrio? Porque saldría leche cortada.,,,"Törékeny, átlátszó anyag.",透明であることと理解を得られることは同じではない。,"Breekbaar, maar erg nuttig.","Один из самых древних и, благодаря разнообразию своих свойств, — универсальный материал в практике человека.",
-LEAD_DESC,Low-tier metal that is more harmful than useful.,,Metallo di bassa lega che è più dannoso che utile.,低价金属，即弊大于用,Ein giftiges Schwermetall.,"Plomo, ni se te ocurra manejarlo sin equipo adecuado.",,,"Alacsony minőségű anyag, de legalább olcsó...",安価で重い。そして毒性も強い。,Veelvoorkomend metaal. Niet geschikt om waterleidingen uit te maken!,"Простое вещество свинец — ковкий, сравнительно легкоплавкий тяжёлый металл серебристо-белого цвета с синеватым отливом.",
-COPPER_DESC,Conducts heat and electricity very well.,,Ottimo conduttore di calore ed elettricità.,柔软、流动性好、导电散热性好,"Weich, gut Strom und Wärme leitend.","Maleable, transmite el calor y la electricidad bastante bien.",,,"Jó vezető, markáns szín.",柔らかく、熱や電気をよく通す。,Uitstekende geleider voor warmte en elektriciteit.,Пластичный переходный металл золотисто-розового цвета,
-IRON_DESC,"A very abundant and durable metal that is transformed into many things to make our lives ""easier.""",,"Un metallo molto abbondante e durevole che può essere trasformato in diversi oggetti che ci rendono la vita ""più facile"".",这是一种非常丰富且耐用的金属，可以转化成许多东西，让我们的生活“更轻松”,Grundbaustein vieler Metalllegierungen.,"Hierro, sabe horrible.",,,A gépesítés alapja. ,非常に豊富で耐久性のある金属で、私たちの生活を「楽」にするために様々なものに変化しています。,De basis van zeer vele gereedschappen en constructies.,Ковкий переходный металл серебристо-белого цвета с высокой химической реакционной способностью,
+COAL_DESC,"Can be used in steam engines to generate a lot of energy.
+
+Can also speed up ship travel.",,,,,,,,,,,,
+COAL_DESC_2,,,,获取能量最原始的矿物,"Früher Biomasse, heute fast ausschließlich Kohlenstoff. Brennt Gut.",La causa número 1 del cambio climático.,,,Tüzelőanyag.,産業革命の第一歩。そして人類による気候変動の始まり。,Dé klassieke fossiele brandstof.,"Уголь, хорошее топливо для начала.",
+SAND_DESC,"Sand can be smelted into glass, which can be used to construct greenhouses.",,,,,,,,,,,,
+SAND_DESC_2,,,,直径为毫米的颗粒,Körner mit weniger als 2mm Durchmesser.,Dicen que hay más de 180 estrellas por cada grano de arena.,,,Apró kvarcszemcsék.,石や鉱物の破片。,Het is ruw en kruipt overal tussen.,Рыхлая осадочная горная порода,
+SOIL_DESC,"Soil is necessary to grow plants inside greenhouses.
+
+A constant supply of soil is also necessary for fertilized plants (extra metal production).",,,,,,,,,,,,
+SOIL_DESC_2,One of the most underrated resources on Earth.,,Una delle risorse terrestri più sottovalutate.,一种在地球上被低估的资源,Gut als Acker.,Tierra común y corriente.,,,,地球上で最も過小評価されている資源の一つです。,Planten kunnen niet zonder.,Обычная почва,
+CELLULOSE_DESC,Greenhouse plants need a constant supply of cellulose to grow metals.,,,,,,,,,,,,
+CELLULOSE_DESC_2,Uses photosynthesis to transform rocks and light into food.,,Sfrutta la fotosintesi per trasformare rocce e luce in cibo.,植物细胞的基本成分,Grundbaustein pflanzlicher Zellen.,Transforma rocas y luz en comida a través de la fotosíntesis.,,,Növények strukturális anyaga.,光合成で水や光を食べ物や燃料に変える。,Gebruikt fotosynthese om aarde en licht om te zetten in eten.,Органическое соединение,
+GLASS_DESC,Used to construct greenhouses.,,,,,,,,,,,,
+GLASS_DESC_2,Solid or liquid?,,Solido o liquido?,固体还是液体？,Wie eine durchsichtige Wand.,¿Por qué la vaca no puede comer vidrio? Porque saldría leche cortada.,,,"Törékeny, átlátszó anyag.",透明であることと理解を得られることは同じではない。,"Breekbaar, maar erg nuttig.","Один из самых древних и, благодаря разнообразию своих свойств, — универсальный материал в практике человека.",
+LEAD_DESC,Lead is needed to upgrade buildings past level 10.,,,,,,,,,,,,
+LEAD_DESC_2,A metal that is more harmful than useful.,,Metallo di bassa lega che è più dannoso che utile.,低价金属，即弊大于用,Ein giftiges Schwermetall.,"Plomo, ni se te ocurra manejarlo sin equipo adecuado.",,,"Alacsony minőségű anyag, de legalább olcsó...",安価で重い。そして毒性も強い。,Veelvoorkomend metaal. Niet geschikt om waterleidingen uit te maken!,"Простое вещество свинец — ковкий, сравнительно легкоплавкий тяжёлый металл серебристо-белого цвета с синеватым отливом.",
+COPPER_DESC,"Copper is needed to upgrade buildings past level 20.
+
+Some megastructures also require copper.",,,,,,,,,,,,
+COPPER_DESC_2,Conducts heat and electricity very well.,,Ottimo conduttore di calore ed elettricità.,柔软、流动性好、导电散热性好,"Weich, gut Strom und Wärme leitend.","Maleable, transmite el calor y la electricidad bastante bien.",,,"Jó vezető, markáns szín.",柔らかく、熱や電気をよく通す。,Uitstekende geleider voor warmte en elektriciteit.,Пластичный переходный металл золотисто-розового цвета,
+IRON_DESC,"Iron is needed to upgrade buildings past level 30.
+
+Some megastructures also require iron.",,,,,,,,,,,,
+IRON_DESC_2,"A very abundant and durable metal that is transformed into many things to make our lives ""easier.""",,"Un metallo molto abbondante e durevole che può essere trasformato in diversi oggetti che ci rendono la vita ""più facile"".",这是一种非常丰富且耐用的金属，可以转化成许多东西，让我们的生活“更轻松”,Grundbaustein vieler Metalllegierungen.,"Hierro, sabe horrible.",,,A gépesítés alapja. ,非常に豊富で耐久性のある金属で、私たちの生活を「楽」にするために様々なものに変化しています。,De basis van zeer vele gereedschappen en constructies.,Ковкий переходный металл серебристо-белого цвета с высокой химической реакционной способностью,
 MATHS_DESC,Modify math formulas used by the game.,Modifiez les formules mathématiques utilisées par le jeu.,Modifica le formule matematiche utilizzate dal gioco.,修改游戏中使用到的数学公式,Modifizierte Mathematikformeln auf denen das Spiel aufbaut.,Modifica las formulas mátematicas usadas por el juego.,,,Módosítja a játék által használt kepleteket.,ゲームで使用される計算式を修正する。,Pas de wiskundige formules aan die het spel gebruikt.,"Модифицировать математические формулы, используемые игрой.",
 PHYSICS_DESC,Allows you to change numbers to make discovering more exciting universes easier.,,"Ti permette di cambiare alcuni valori, per rendere pià facile la scoperta di universi interessanti.",允许你更改物理常量，以便更轻松地发现更壮观的宇宙,Erlaubt Änderungen an Konstanten um das Erkunden von spannenderen Universen zu erleichtern.,,,,"Módosítja azokat a paramétereket, amik érdekesebbé tehetik az univerzumokat.",数字を変更することで、よりエキサイティングな宇宙を簡単に発見することができます。,,Позволяет вам изменять числа чтобы исследовать более захватывающие вселенные легче.,
 CHEMISTRY_DESC,Modify the phase diagrams of various elements.,,Modifica il diagramma di fase di diversi elementi.,修改各种元素的相图,Modifiziert die Phasendiagramme von verschiedenen Elementen.,,,,Módosítja az anyagok halmazállapotábráit.,化学のレベルを上げるごとに、新しい金属（とその反物質形態）がアンロックされます。,,Модифицировать фазу диаграмм различных элементов,
@@ -233,16 +252,25 @@ CLICK_TO_HARVEST,Click to harvest,Cliquez pour récolter,Clicca per raccogliere,
 CRAFT_SUCCESS,Craft successful,Fabriqué avec succès,Fabbricazione riuscita,制作成功,Herstellung erfolgreich,Fabricación exitosa,제작 성공,,Barkácsolás sikeres,クラフト成功,Productie succesvol,Успешный крафт,
 SCIENCE_TREE,Science tree,Arbre de science,Albero dei potenziamenti Scienza,科技树,Forschungszweige,Árbol científico,과학 트리,,Tudományfa,サイエンスツリー,Technologieboom,Исследования,
 SA_SC,Space agriculture,Agriculture spatiale,Agricoltura spaziale,太空农业,Weltraumlandwirtschaft,Agricultura espacial,우주 농업,,Űrbéli agrikultúra,宇宙農業,Ruimte agricultuur,Космическое фермерство,
-SA_DESC,Unlocks greenhouses that allow you to grow metals.,,"Sblocca la serra, che consente di coltivare metalli.",解锁温室，可种植基本金属,Ermöglicht es Gewächshäuser zu bauen und Metalle anzubauen.,Desbloquea invernaderos que te permiten cultivar metales.,금속을 기를 수 있는 온실을 사용 가능하게 합니다.,,"Megnyitja az üvegházakat, ahol fémeket tudsz termeszteni.",基本的な鉱石を畑で育てることができるようになります。,Staat je toe basismetalen te verbouwen.,Открывает теплицы которые позволяют выращивать металлы.,
+SA_DESC,Unlocks greenhouses that allow you to grow metals.,,"Sblocca la serra, che consente di coltivare metalli.",解锁温室，可种植基本金属,Ermöglicht es Gewächshäuser zu bauen und Metalle anzubauen.,Desbloquea invernaderos que te permiten cultivar metales.,금속을 기를 수 있는 온실을 사용 가능하게 합니다.,,"Megnyitja az üvegházakat, ahol fémeket tudsz termeszteni.",,,,
 RESEARCH_SUCCESS,Research done,Recherche terminée,Ricerca completata,研究已完成！,Forschungsprojekt fertig,Investigación completa,연구 완료,,Kutatás kész,実施した研究,Ontwikkeling voltooid,Исследование завершено,
 USE_SPEEDUP_INFO,Click a building to accelerate construction,Cliquez un bâtiment pour accélerer sa construction,Clicca un edificio per accelerare la sua costruzione,点击施工中建筑来缩短建造时间,Klicke auf ein Gebäude um die Konstruktion zu beschleunigen ,Haz clic en un edificio para acelerar la construcción,가속화할 빌딩을 클릭하세요,,Kattints egy épületre az építkezés felgyorsításához,建設を加速する建物をクリック,Klik op een gebouw om de constructie te versnellen,Нажмите на здание чтобы ускорить строительство,
 USE_OVERCLOCK_INFO,Click a building to overclock,Cliquez un bâtiment à overclocker,Clicca un edificio per farlo entrare in overclock,点击生产型建筑来增产,Klicke auf ein Gebäude um es zu übertakten,Haz clic en un edificio para hacer overclock,오버클럭할 빌딩을 클릭하세요,,Kattints egy épületre a gyorsításhoz,オーバークロックする建物をクリック,Klik op een gebouw om te overclocken,Нажмите на здание для разгона,
 RESEARCH_LAB_NAME,Research lab,Labo de recherche,Laboratorio di ricerca,科技实验室,Forschungslabor,Laboratorio de investigación,연구소,,Kutatólabor,研究室,Onderzoekslab,Лаборатория,
 RESEARCH_LAB_NAME_S,Research labs,Labos de recherche,Laboratori di ricerca,科技实验室,Forschungslabore,Laboratorios de investigación,연구소,,Kutratólaborok,研究室,Onderzoekslabs,Лаборатории,
 RESEARCH_LAB_DESC,"Produces science points that can be used to research various technologies.
-Its production can be increased by building it near or on various tile features, such as lakes and auroras.",,"Produce punti Scienza, che possono essere utilizzati per sbloccare miglioramenti e nuove funzionalità. La produzione di \nlts può essere aumentata costruendo questo edificio accanto o sopra a diverse caselle, come laghi o aurore.",生成可用于推进游戏进程的科技点\n可以通过在各种特殊图块（如湖泊和极光）附近或上面建造来增加科学点产量,"Produziert Forschungspunkte, die zum freischalten von neuen Mechaniken genutzt werden können.\nDie Produktion ist erhöht wenn es nahe einigen Feldern(z.b. Seen und Polarlichter) gebaut wird","Produce puntos de ciencia que te permiten desbloquear mecánicas nuevas.
-\nSu producción puede ser incrementada construyéndolo en o cerca de características de casillas, como lagos y auroras.","다양한 기술들을 연구하기 위해 과학 포인트를 생산합니다.
-호수나 오로라를 비롯해 특별 타일 인근에 건설하면 생산량이 증가됩나다.",,"Kutatópontokat termel, amikkel játékelemeket tudsz megnyitni.\nA termelése magasabb, ha érdekes négyzetrek vannak a közelében, például tavak vagy aurórák.",,,,
+
+Its production can be increased by building it near or on various tile features, such as lakes and auroras.",,"Produce punti Scienza, che possono essere utilizzati per sbloccare miglioramenti e nuove funzionalità.
+
+La produzione può essere aumentata costruendo questo edificio accanto o sopra a diverse caselle, come laghi o aurore.",生成可用于推进游戏进程的科技点\n可以通过在各种特殊图块（如湖泊和极光）附近或上面建造来增加科学点产量,"Produziert Forschungspunkte, die zum freischalten von neuen Mechaniken genutzt werden können.
+
+Die Produktion ist erhöht wenn es nahe einigen Feldern(z.b. Seen und Polarlichter) gebaut wird","Produce puntos de ciencia que te permiten desbloquear mecánicas nuevas.
+
+Su producción puede ser incrementada construyéndolo en o cerca de características de casillas, como lagos y auroras.","다양한 기술들을 연구하기 위해 과학 포인트를 생산합니다.
+
+호수나 오로라를 비롯해 특별 타일 인근에 건설하면 생산량이 증가됩나다.",,"Kutatópontokat termel, amikkel játékelemeket tudsz megnyitni.
+
+A termelése magasabb, ha érdekes négyzetrek vannak a közelében, például tavak vagy aurórák.",,,,
 MINERAL_SILO_NAME,Mineral silo,Silo à minéraux,Magazzino di minerali,水晶仓库,Mineralien Silo,Silo de minerales,광물 사일로,,Ásványtároló,鉱物サイロ,Mineraal silo,Хранилище минералов,
 MINERAL_SILO_NAME_S,Mineral silos,Silos à minéraux,Magazzini di minerali,水晶仓库,Mineralien Silos,Silos de minerales,광물 사일로,,Ásványtárolók,鉱物サイロ,Mineraal silos,Хранилища минералов,
 MINERAL_SILO_DESC,Increases maximum storage of minerals,Augmente le stockage maximum de minéraux,Aumenta la capacità di immagazzinamento massima di minerali,增加水晶的最大库存,Erhöht das Lagervolumen von Mineralien,Incrementa el almacenamiento máximo de minerales,광물 저장 용량을 올립니다,,Megnöveli az ásványkapacitást,鉱物の最大貯蔵量を増加させる,Verhoogt de opslagcapaciteit van mineralen,Увеличивает максимальный запас минералов,
@@ -392,8 +420,8 @@ ID_SC,Ion drive,Moteur ionique,Propulsore ionico,等离子体加速引擎,Ionen 
 FTL_SC,FTL drive,Moteur FTL,Propulsore superluminale,超光速引擎,Überlicht Antriebe,Propulsión FTL,,,FTL meghajtó,FTLドライブ,Superluminale aanvoer,Сверхсветовой двигатель,
 IGD_SC,Intergalactic drive,Moteur intergalactique,Propulsore intergalattico,超光速波轮增压,Intergalaktische Antriebe,Vuelo intergaláctico,,,Intergalaktikus meghajtó,インターギャラクティックドライブ,Intergalactische aanvoer,Межгалактический двигатель,
 FD_SC,Fusion drive,Moteur à fusion,Propulsore a fusione,可控核聚变引擎,Fusions Antriebe,Propulsión de fusión,,,Fúziós meghajtó,フュージョンドライブ,Fusie aanvoer,Термоядерный двигатель,
-PD_SC,Plutonium drive,Moteur à plutonium,Propulsore a plutonio,钚引擎,Plutonium Antriebe,Propulsión Plutónica,,,Plútóniummeghajtó,パーティクルドライブ,Partikel-aanvoer,Плутониевый двигатель,
-PD_DESC,Uses plutonium to instantly teleport ships to places.,,Usa il plutonio per teletrasportare le navicelle.,利用钚来使飞船瞬间旅行,Nutze Plutonium um Raumschiffe sofort an einen Anderen Ort zu Transportieren.,Hace uso del plutonio para teletransportar la nave instantaneamente.,,,Plútóniummal azonnali utazást tesz lehetővé.,移動速度を最大化するために粒子を使用します。,Gebruikt deeltjes voor maximale reissnelheid.,Использует плутоний для телепортации кораблей.,
+PD_SC,Plutonium drive,Moteur à plutonium,Propulsore a plutonio,钚引擎,Plutonium Antriebe,Propulsión Plutónica,,,Plútóniummeghajtó,,,,
+PD_DESC,Uses plutonium to instantly teleport ships to places.,,Usa il plutonio per teletrasportare le navicelle.,利用钚来使飞船瞬间旅行,Nutze Plutonium um Raumschiffe sofort an einen Anderen Ort zu Transportieren.,Hace uso del plutonio para teletransportar la nave instantaneamente.,,,Plútóniummal azonnali utazást tesz lehetővé.,,,,
 WEAPONS,Weapons,Armes,Armi,武器,Waffen,Armas,무기,,Fegyverek,武器,Wapens,Оружие,
 MINING_TOOLS,Mining tools,Outils de minage,Strumenti da scavo,采矿工具,Abbauwerkzeuge,Herramientas de minería,채굴 도구,,Bányászeszközök,マイニングツール,Delfgereedschappen,Шахтерские инструменты,
 ARMOR_DESC,Armor protects the rover from cave hazards.,L'armure protège le rover contre les dangers dans les grottes.,L'armatura protegge il rover dai pericoli delle grotte.,装甲保护漫游车免受洞穴内的危险。,Rüstung schützt deinen Rover in Höhlen.,La armadura protege al rover de los peligros presentes en cuevas.,,,A páncélzat megvédi a róvert a barlang veszélyeitől.,洞窟の危険からローバーを守るアーマー。,Pantser beschermt de rover tegen gevaren in grotten.,Броня защищает ровер от опасностей в пещере.,
@@ -1871,7 +1899,7 @@ CAVE_WALL_COVERAGE_DESC,"Influences how much walls (that need to be mined) take 
 0 means no walls will appear at all, while 1 means all floors will be filled with walls.",,,,,,,,"A barlangokban lévő falak arányát adja meg.\n0-nál nem lesznek falak, 1-nél csak falak lesznek.",,,,
 DISTANCE_BETWEEN_PLANETS,Distance between planets,,,,,,,,Bolygók közötti távolság,,,,
 MAX_PLANETS_IN_SYSTEM,Maximum number of planets in star systems,,,,,,,,Maximum bolygó egy rendszerben,,,,
-DISTANCE_BETWEEN_SYSTEMS,Distance between star systems,,,,,,,,,,,,
+DISTANCE_BETWEEN_SYSTEMS,Distance between star systems,,,,,,,,Rendszerek közötti távolság,,,,
 ELLIPTICAL_GALAXY_SIZE_RANGE,Elliptical galaxy size range,,,,,,,,Eliptikus galaxis mérettartomány,,,,
 SPIRAL_GALAXY_SIZE_RANGE,Spiral galaxy size range,,,,,,,,Spirális galaxis mérettartomány,,,,
 MIN,Min,,,,,,,,Min,,,,
@@ -1881,15 +1909,24 @@ DWARF_ELLIPTICAL_GALAXY_RATIO_DESC,"Elliptical galaxies have a chance to be ""dw
 This number describes the ratio between dwarf and normal galaxies. (0: no dwarves, 1: only dwarves)",,,,,,,,"Az elliptikus galaxisok lehetnek törpék, ezekben tizedannyi csillag van. Ez az arányukat adja meg: 0-nál nincs, 1-nél csak azok.",,,,
 ELLIPTICAL_SPIRAL_GALAXY_RATIO,Elliptical/spiral galaxy ratio,,,,,,,,Elliptikus/spirális galaxisarány,,,,
 ELLIPTICAL_SPIRAL_GALAXY_RATIO_DESC,"Describes the ratio of elliptical galaxies to spiral galaxies. (0: only elliptical, 1: only spiral)",,,,,,,,"0: csak elliptikus, 1: csak spirális",,,,
-DISTANCE_BETWEEN_GALAXIES,Distance between galaxies,,,,,,,,,,,,
+DISTANCE_BETWEEN_GALAXIES,Distance between galaxies,,,,,,,,Galaxisok távolsága,,,,
 MIN_NUMBER_OF_GALAXIES,Minimum number of galaxies,,,,,,,,Minimum galaxisszám,,,,
 MAX_NUMBER_OF_GALAXIES,Maximum number of galaxies,,,,,,,,Maximum galaxisszám,,,,
 GALAXY_GROUP_RATIO,Galaxy group ratio,,,,,,,,Galaxiscsoport arány,,,,
 GALAXY_GROUP_RATIO_DESC,"Galaxy clusters have a chance to be small galaxy groups. These groups have 50 times less galaxies as clusters.
 This number describes the ratio between galaxy groups and clusters. (0: only clusters, 1: only groups)",,,,,,,,"A halmazok lehetnek csoportok is, ezekben 50-ed annyi galaxis van. Ez az arányukat adja meg: 0-nál nincs, 1-nél csak azok.",,,,
-DISTANCE_BETWEEN_CLUSTERS,Distance between clusters,,,,,,,,,,,,
+DISTANCE_BETWEEN_CLUSTERS,Distance between clusters,,,,,,,,Halmazok távolsága,,,,
 NUMBER_OF_CLUSTERS,Number of clusters,,,,,,,,Halmazok száma,,,,
 START_GAME,Start game,,,,,,,,Játék kezdése,,,,
 OBJECT_COUNT,{num} {object},,,,,,,,{num} {object},,,,
 TILES,Tiles,,,,,,,,Négyzetek,,,,
 CAVES,Caves,,,,,,,,Barlangok,,,,
+SAVE_OBJECTIVE,Save up {num} {rsrc},,,存入 {num} {rsrc},Besitze {num} {rsrc},Ahorra {num} {rsrc},,,Szerezz: {num} {rsrc},{num} {rsrc} を貯めましょう,Verzamel {num} {rsrc},Накопить {num} {rsrc},
+CONQUER_OBJECTIVE,Conquer {num} {object},Conquérir {num} {object},,统治 {num} 颗{object},Nehme {num} {object} ein,Conquista {num} {object},,,Foglalj el: {num} {object},{num} {object} を征服,Verover {num} {object},Завоевать {num} {object},
+BUILD_OBJECTIVE,Build {num} {bldg},Construire {num} {bldg},Costruire {num} {bldg},建造 {num} 座 {bldg} ,Konstruiere {num} {bldg},Construye {num} {bldg},{bldg} {num}개 건설하기,,Építs: {num} {bldg},建設 {num} {bldg},Bouw {num} {bldg},Построй {num} {bldg},
+NEW_BLDG_UNLOCKED,New building unlocked!,,,,,,,,,,,,
+UNLOCK_BY_CONSTRUCTING_X_BLDGS,Unlock by constructing {num} buildings,,,,,,,,,,,,
+UNLOCK_BY_RESEARCHING_X,Unlock by researching {science},,,,,,,,,,,,
+UNLOCK_BY_REACHING_LV_X,Unlock by reaching level {lv},,,,,,,,,,,,
+UNLOCK_BY_CONQUERING_A_PLANET,Unlock by conquering a planet,,,,,,,,,,,,
+UNLOCK_BY_MINING_X,Unlock by mining {weight} kg of {something},,,,,,,,,,,,
