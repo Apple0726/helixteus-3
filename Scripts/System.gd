@@ -22,6 +22,7 @@ var rsrc_salvaged:Dictionary
 
 func _ready():
 	refresh_stars()
+	refresh_planets()
 
 func refresh_planets():
 	scale_mult = 700.0 / game.system_data[game.c_s].closest_planet_distance
@@ -622,7 +623,6 @@ func destroy_MS():
 									div = max(div, stars_info[i].cost_div_dict[st])
 								stars_info[i].cost_div = div
 					MS_constr_data.obj.erase("furthest_planet_distance")
-					queue_redraw()
 				elif MS_constr_data.obj.MS == "MME":
 					game.autocollect.MS.minerals -= Helper.get_MME_output(MS_constr_data.obj)
 					game.mineral_capacity -= Helper.get_MME_capacity(MS_constr_data.obj)
@@ -748,7 +748,6 @@ func build_MS(obj:Dictionary, MS_to_build:String):
 						_star.cost_div_dict[star_over_id] = cost_div
 					else:
 						_star["cost_div_dict"] = {star_over_id:cost_div}
-			queue_redraw()
 		game.HUD.refresh()
 		game.get_node("UI/Panel").hide()
 		MS_constr_data.clear()
@@ -1046,6 +1045,3 @@ func add_rsrc(v:Vector2, mod:Color, icon, id:int, is_star:bool, sc:float = 1, cu
 		star_rsrcs.append({"node":rsrc, "id":id})
 	else:
 		planet_rsrcs.append({"node":rsrc, "id":id})
-
-func _on_System_draw():
-	refresh_planets()

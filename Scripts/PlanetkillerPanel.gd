@@ -153,7 +153,7 @@ func _on_StartCharging_pressed():
 			if dir:
 				dir.remove("user://%s/Univ%s/Planets/%s.hx3" % [game.c_sv, game.c_u, target.id])
 			target.clear()
-			game.view.obj.position = planet_pos
+			game.view.obj.get_node("PlanetDestroyedSound").position = planet_pos
 			game.view.obj.get_node("PlanetDestroyedSound").play()
 			game.view.obj.refresh_planets()
 			game.add_resources(star.rsrc)
