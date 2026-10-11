@@ -27,7 +27,8 @@ func _on_area_entered(area: Area2D) -> void:
 		weapon_data.crit_hit_mult = crit_hit_mult
 	if not status_effects.is_empty():
 		weapon_data.status_effects = status_effects
-	if area.damage_entity(weapon_data):
+	if area.damage_entity(weapon_data, shooter):
+		add_hit_sound(preload("res://Audio/SFX/object_hit.ogg"), -3.0)
 		if area.HP <= 0 and shooter.type == Battle.EntityType.SHIP and shooter.ship_class == ShipClass.OFFENSIVE:
 			shooter.buff_from_class_passive_ability("attack", 3)
 	else:

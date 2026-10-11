@@ -1131,6 +1131,7 @@ libraries/ = SubResource("AnimationLibrary_mql8i")
 
 [node name="ExtraTurnSound" type="AudioStreamPlayer2D" parent="." unique_id=150639459]
 stream = ExtResource("17_53138")
+volume_db = -15.0
 bus = &"SFX"
 
 [connection signal="mouse_entered" from="." to="." method="_on_mouse_entered"]

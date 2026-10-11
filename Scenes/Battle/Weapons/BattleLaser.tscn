@@ -48,5 +48,5 @@ collide_with_bodies = false
 
 [node name="ShootSound" type="AudioStreamPlayer2D" parent="." unique_id=1585588814]
 stream = ExtResource("3_dwe2u")
-volume_db = 2.364
+volume_db = -2.0
 bus = &"SFX"

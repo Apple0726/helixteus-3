@@ -10,9 +10,8 @@ func _ready() -> void:
 	area_entered.connect(_on_area_entered)
 	$ExplosionAoE.area_entered.connect(_on_explosionAoE_entered)
 	$ExplosionAoE.area_exited.connect(_on_explosionAoE_exited)
-	hit_sound_player.stream = preload("res://Audio/SFX/explosion.ogg")
-	hit_sound_player.volume_db = 0.0
 	spawn_sound_player.pitch_scale = randf_range(0.7, 1.4)
+	spawn_sound_player.volume_db = 0.0
 	spawn_sound_player.play()
 
 func _on_explosionAoE_entered(area: Area2D):
@@ -40,7 +39,7 @@ func _on_area_entered(area: Area2D) -> void:
 		"status_effects":status_effects,
 		"knockback":mass * Vector2.from_angle(rotation),
 	}
-	if area.damage_entity(weapon_data):
+	if area.damage_entity(weapon_data, shooter):
 		if area.type == Battle.EntityType.BOUNDARY:
 			ending_turn_delay = 0.0
 			queue_free()
@@ -57,7 +56,9 @@ func _on_area_entered(area: Area2D) -> void:
 					"velocity":200.0 * (area_in_AoE.position - position).normalized(),
 					"status_effects":status_effects if shooter.type == Battle.EntityType.SHIP and shooter.bomb_levels[1] >= 2 else {},
 				}
-				area_in_AoE.damage_entity(AoE_weapon_data)
+				area_in_AoE.damage_entity(AoE_weapon_data, shooter)
+				if area_in_AoE.HP <= 0 and shooter.type == Battle.EntityType.SHIP and shooter.ship_class == ShipClass.OFFENSIVE:
+					shooter.buff_from_class_passive_ability("attack", 3)
 		if Settings.screen_shake:
 			get_node("/root/Game/Camera2D/Screenshake").start(0.5,15,4)
 		var explosion = preload("res://Scenes/Battle/Explosion.tscn").instantiate()
@@ -93,5 +94,6 @@ func _on_area_entered(area: Area2D) -> void:
 				explosive.end_turn.connect(shooter.ending_turn)
 				explosive.end_turn_ready = true
 				battle_scene.call_deferred("add_child", explosive)
-		hit_sound_player.pitch_scale = randf_range(0.7, 1.4)
-		hit_sound_player.play()
+		add_hit_sound(preload("res://Audio/SFX/explosion.ogg"), -3.0)
+		if area.HP <= 0 and shooter.type == Battle.EntityType.SHIP and shooter.ship_class == ShipClass.OFFENSIVE:
+			shooter.buff_from_class_passive_ability("attack", 3)

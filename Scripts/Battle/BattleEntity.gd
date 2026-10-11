@@ -308,7 +308,7 @@ func heal_entity(amount: int):
 	HP = min(HP + amount, total_HP)
 	update_entity_HP(Vector2.ZERO, true)
 
-func damage_entity(weapon_data: Dictionary):
+func damage_entity(weapon_data: Dictionary, shooter: BattleEntity = null):
 	var total_agility = agility + agility_buff
 	if Battle.StatusEffect.STUN in status_effects or Battle.StatusEffect.FROZEN in status_effects:
 		total_agility = 0
@@ -397,6 +397,9 @@ func damage_entity(weapon_data: Dictionary):
 					else:
 						self["%s_buff" % buff] = base_buff * pow(abs((self["%s_buff" % buff] + base_buff) / base_buff), 0.8)
 			update_info_labels()
+		else:
+			if shooter != null and shooter.type == Battle.EntityType.SHIP and shooter.ship_class == ShipClass.OFFENSIVE:
+				shooter.buff_from_class_passive_ability("attack", 3)
 	return not dodged
 
 var flash_tween

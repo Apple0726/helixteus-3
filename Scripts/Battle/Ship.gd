@@ -361,10 +361,12 @@ func fire_laser(angle: float, add_signal: bool = false):
 	laser.shooter = self
 	laser.weapon_accuracy = Data.battle_weapon_stats.laser.accuracy * (accuracy + accuracy_buff)
 	laser.position = position
-	laser.fade_delay = 0.2 if battle_scene.animations_sped_up else 0.5
+	laser.fade_delay = 0.1 if battle_scene.animations_sped_up else 0.5
 	laser.status_effects = {Battle.StatusEffect.STUN: Data.battle_weapon_stats.laser.status_effects[Battle.StatusEffect.STUN][laser_levels[PATH_2] - 1]}
 	laser.pierce = Data.battle_weapon_stats.laser.pierce[laser_levels[PATH_2] - 1]
 	battle_scene.add_child(laser)
+	if add_signal:
+		laser.get_node("ShootSound").play()
 	if add_signal and fires_remaining <= 0:
 		laser.tree_exited.connect(ending_turn)
 
@@ -506,7 +508,7 @@ func buff_from_class_passive_ability(stat: String, amount: float, continue_buffi
 		buffed_from_class_passive_ability = true
 
 
-func damage_entity(weapon_data: Dictionary):
+func damage_entity(weapon_data: Dictionary, shooter: BattleEntity = null):
 	if ship_class == ShipClass.IMPENETRABLE:
 		weapon_data.nullify_damage_chance = 0.3
 	var hit = super(weapon_data)
