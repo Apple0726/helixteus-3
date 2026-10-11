@@ -623,9 +623,9 @@ func destroy_MS():
 								stars_info[i].cost_div = div
 					MS_constr_data.obj.erase("furthest_planet_distance")
 					queue_redraw()
-				elif MS_constr_data.obj.MS == "M_MMB":
+				elif MS_constr_data.obj.MS == "MME":
 					game.autocollect.MS.minerals -= Helper.get_MME_output(MS_constr_data.obj)
-					game.mineral_capacity -= MS_constr_data.obj.min_cap_to_add
+					game.mineral_capacity -= Helper.get_MME_capacity(MS_constr_data.obj)
 			MS_constr_data.obj.erase("repair_cost")
 			MS_constr_data.obj.erase("MS")
 			MS_constr_data.obj.erase("MS_lv")

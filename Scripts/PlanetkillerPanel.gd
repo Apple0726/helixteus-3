@@ -139,6 +139,7 @@ func _on_StartCharging_pressed():
 				p_i.erase("bookmarked")
 			if p_i.has("MS") and p_i.MS == "MME":
 				game.autocollect.MS.minerals -= Helper.get_MME_output(p_i)
+				game.mineral_capacity -= Helper.get_MME_capacity(p_i)
 			if p_i.has("tile_num"):
 				if p_i.bldg.name == "RL":
 					game.autocollect.rsrc.SP -= p_i.bldg.path_1_value * p_i.tile_num
