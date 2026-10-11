@@ -2808,6 +2808,7 @@ func generate_planets(id:int):#local id
 				system_data[id]["has_MS"] = true
 		planet_data.append(p_i)
 	if c_s_g != 0:
+		var furthest_planet_distance = planet_data[-1].distance
 		for i in range(0, N_stars):
 			var star = system_data[id].stars[i]
 			var star_size = star.size
@@ -2830,11 +2831,12 @@ func generate_planets(id:int):#local id
 					star["repair_cost"] = Data.MS_costs[star.MS + "_" + str(star.MS_lv)].money * 24 * randf_range(1, 3) * pow(star.size, 2)
 				elif star.MS == "CBS":
 					star["repair_cost"] = Data.MS_costs[star.MS + "_" + str(star.MS_lv)].money * 24 * randf_range(1, 3)
+					star.furthest_planet_distance = furthest_planet_distance
 				elif star.MS == "PK":
-					star["repair_cost"] = Data.MS_costs[star.MS + "_" + str(star.MS_lv)].money * 24 * randf_range(1, 3) * planet_data[-1].distance / 1000.0
+					star["repair_cost"] = Data.MS_costs[star.MS + "_" + str(star.MS_lv)].money * 24 * randf_range(1, 3) * furthest_planet_distance / 1000.0
 				star.repair_cost *= engineering_bonus.BCM
 				system_data[id].has_MS = true
-		var view_zoom = 40.0 / planet_data[-1].distance * (planet_data[0].distance / 70)
+		var view_zoom = 40.0 / furthest_planet_distance * (planet_data[0].distance / 70)
 		system_data[id]["view"] = {"pos":Vector2(640, 360), "zoom":view_zoom}
 	system_data[id]["closest_planet_distance"] = planet_data[0].distance
 	system_data[id]["discovered"] = true
