@@ -141,9 +141,9 @@ func _on_StartCharging_pressed():
 				game.autocollect.MS.minerals -= Helper.get_MME_output(p_i)
 				game.mineral_capacity -= Helper.get_MME_capacity(p_i)
 			if p_i.has("tile_num"):
-				if p_i.bldg.name == "RL":
+				if p_i.bldg.name == Building.RESEARCH_LAB:
 					game.autocollect.rsrc.SP -= p_i.bldg.path_1_value * p_i.tile_num
-				elif p_i.bldg.name == "MS":
+				elif p_i.bldg.name == Building.MINERAL_SILO:
 					game.mineral_capacity -= p_i.bldg.path_1_value * p_i.tile_num
 				elif p_i.has("auto_GH"):
 					for p in p_i.auto_GH.produce:
