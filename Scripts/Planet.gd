@@ -656,8 +656,8 @@ func overclock_bldg(tile, tile_id:int, curr_time):
 				tile.bldg["collect_date"] = curr_time
 				tile.depth += int(tiles_mined)
 		game.item_to_use.num -= 1
-		$OverclockSound.pitch_scale = randf_range(0.9, 1.1)
-		$OverclockSound.play()
+		return true
+	return false
 
 func click_tile(tile, tile_id:int):
 	if not tile.has("bldg") or is_instance_valid(game.active_panel):
@@ -1287,15 +1287,32 @@ func _unhandled_input(event):
 			if tile.has("bldg"):
 				if game.item_to_use.id != -1 and Item.data[game.item_to_use.id].type == Item.Type.OVERCLOCK:
 					var orig_num:int = game.item_to_use.num
+					var overclock_successful = false
+					var center_tile_pos = Vector2.ZERO
 					if tiles_selected.is_empty():
-						overclock_bldg(tile, tile_id, curr_time)
+						overclock_successful = overclock_bldg(tile, tile_id, curr_time)
+						center_tile_pos = Vector2(tile_id % wid, tile_id / wid) * 200.0 + Vector2.ONE * 100.0
 					else:
+						var num_tiles = 0
 						for _tile in tiles_selected:
-							overclock_bldg(game.tile_data[_tile], _tile, curr_time)
+							overclock_successful = overclock_bldg(game.tile_data[_tile], _tile, curr_time)
+							center_tile_pos += Vector2(_tile % wid, _tile / wid) * 200.0
+							num_tiles += 1
 							if game.item_to_use.num <= 0:
 								break
+						center_tile_pos = center_tile_pos / num_tiles + Vector2.ONE * 100.0
 					game.remove_items(game.item_to_use.id, orig_num - game.item_to_use.num)
 					game.update_item_cursor()
+					if overclock_successful:
+						var overclock_sound = AudioStreamPlayer2D.new()
+						overclock_sound.stream = preload("res://Audio/SFX/overclock.ogg")
+						overclock_sound.pitch_scale = randf_range(0.9, 1.1)
+						overclock_sound.volume_db = -4.0
+						overclock_sound.bus = "SFX"
+						overclock_sound.position = center_tile_pos
+						add_child(overclock_sound)
+						overclock_sound.play()
+						overclock_sound.finished.connect(overclock_sound.queue_free)
 				else:
 					click_tile(tile, tile_id)
 					mouse_pos = Vector2.ZERO
