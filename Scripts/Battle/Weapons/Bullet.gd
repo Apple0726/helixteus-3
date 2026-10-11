@@ -8,7 +8,7 @@ func _ready() -> void:
 	area_entered.connect(_on_area_entered)
 	$Trail.default_color = trail_color
 	$Trail.show()
-	hit_sound_player.stream = preload("res://Audio/SFX/collision.ogg")
+	hit_sound_player.stream = preload("res://Audio/SFX/object_hit.ogg")
 	spawn_sound_player.pitch_scale = randf_range(0.7, 1.4)
 	spawn_sound_player.play()
 
@@ -46,7 +46,7 @@ func _on_area_entered(area: Area2D) -> void:
 			water_explosion.play("water_explosion")
 			water_explosion.animation_finished.connect(water_explosion.queue_free)
 		if deflects_remaining == 0:
-			remove_projectile()
+			queue_free()
 		else:
 			# The bullet can now hit anything, regardless of the shooter
 			collision_mask = 1 + 2 + 4 + 32

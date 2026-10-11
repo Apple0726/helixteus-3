@@ -24,7 +24,7 @@ func _on_explosionAoE_exited(area: Area2D):
 
 func _on_area_entered(area: Area2D) -> void:
 	if not is_instance_valid(shooter):
-		remove_projectile()
+		queue_free()
 		return
 	var weapon_data = {
 		"type":Battle.DamageType.PHYSICAL,
@@ -43,7 +43,7 @@ func _on_area_entered(area: Area2D) -> void:
 	if area.damage_entity(weapon_data):
 		if area.type == Battle.EntityType.BOUNDARY:
 			ending_turn_delay = 0.0
-			remove_projectile()
+			queue_free()
 			return
 		for area_in_AoE in entities_inside_explosion_AoE:
 			if area_in_AoE is BattleEntity and area_in_AoE != area:
@@ -70,7 +70,7 @@ func _on_area_entered(area: Area2D) -> void:
 		$AnimationPlayer.play("Explode")
 		battle_GUI.flash_screen(0.3, 0.2)
 		set_physics_process(false)
-		$AnimationPlayer.animation_finished.connect(func(anim_name): remove_projectile())
+		$AnimationPlayer.animation_finished.connect(func(anim_name): queue_free())
 		if spawn_smaller_explosives:
 			for i in 8:
 				var explosive = preload("res://Scenes/Battle/Weapons/Explosive.tscn").instantiate()
