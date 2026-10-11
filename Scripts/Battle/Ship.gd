@@ -29,6 +29,9 @@ var push_movement_used:float:
 		push_movement_used = value
 		update_push_movement_used()
 var entity_to_push:BattleEntity
+
+# Used to prevent cancelling an action and displaying the battle GUI
+# while an action is in progress (e.g. firing 2 lasers independently)
 var block_cancelling_action = false
 
 func _ready() -> void:
@@ -227,6 +230,7 @@ func fire_weapon(weapon_type: int):
 	if fires_remaining <= 0:
 		$FireWeaponAim.fade_out()
 		block_cancelling_action = false
+		force_end_turn_timer.start(3.0 if battle_scene.animations_sped_up else 15.0)
 	else:
 		block_cancelling_action = true
 	var weapon_rotation_min = $FireWeaponAim.target_angle - $FireWeaponAim.target_angle_max_deviation
@@ -349,7 +353,6 @@ func fire_weapon(weapon_type: int):
 		if fires_remaining <= 0:
 			light_cone.tree_exited.connect(ending_turn)
 		light_cone.fire_light(0.2 if battle_scene.animations_sped_up else 1.0)
-	force_end_turn_timer.start()
 
 func fire_laser(angle: float, add_signal: bool = false):
 	var laser = preload("res://Scenes/Battle/Weapons/BattleLaser.tscn").instantiate()

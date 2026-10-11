@@ -131,7 +131,7 @@ func take_turn():
 				await get_tree().create_timer(0.5).timeout
 		await move(target_move_position)
 	attack_target()
-	force_end_turn_timer.start()
+	force_end_turn_timer.start(3.0 if battle_scene.animations_sped_up else 15.0)
 
 func calculate_position_preferences(pos:Vector2):
 	if position_preferences.has(pos):

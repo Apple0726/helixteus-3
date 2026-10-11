@@ -108,7 +108,6 @@ func _ready() -> void:
 	collision_sound_player.bus = "SFX"
 	collision_sound_player.max_polyphony = 8
 	force_end_turn_timer = Timer.new()
-	force_end_turn_timer.wait_time = 15.0
 	add_child(force_end_turn_timer)
 	force_end_turn_timer.timeout.connect(end_turn)
 
