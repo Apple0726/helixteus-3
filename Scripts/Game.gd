@@ -1860,6 +1860,8 @@ func add_planet(new_game:bool = false):
 		planet_HUD.get_node("VBoxContainer/Construct").material.set_shader_parameter("color", Color(1.0, 0.75, 0.0, 1.0))
 		planet_HUD.get_node("VBoxContainer/Construct/AnimationPlayer").play("FlashRepeat")
 		await get_tree().create_timer(1.5).timeout
+	if c_v != "planet":
+		return
 	add_obj("planet")
 	if new_game:
 		view.scale = Vector2.ONE * 0.1

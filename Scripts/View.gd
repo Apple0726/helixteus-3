@@ -350,6 +350,8 @@ func add_obj(obj_str:String, pos:Vector2, sc:float, s_m:float = 1.0):
 	limit_to_viewport = game.c_v in ["universe", "cluster", "galaxy", "system", "planet"]
 
 func remove_obj(obj_str:String, save_zooms:bool = true):
+	if not is_instance_valid(obj):
+		return
 	if save_zooms:
 		save_zooms(obj_str)
 	obj.set_process(false)
