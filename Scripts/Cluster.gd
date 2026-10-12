@@ -338,7 +338,7 @@ func _process(delta: float) -> void:
 				for j in len(game.fighter_data):
 					if game.fighter_data[j] and game.fighter_data[j].get("c_c", -1) == game.c_c:
 						game.fighter_data[j].erase("exploring")
-				game.popup_window(tr("CONQUERED_CLUSTER"), "", [tr("DISBAND")], [Helper.disband_fighters], tr("KEEP"))
+				game.popup_window(tr("CONQUERED_CLUSTER"), "", [tr("DISBAND")], [disband_fighters], tr("KEEP"))
 			set_process(false)
 	else:
 		set_process(false)
