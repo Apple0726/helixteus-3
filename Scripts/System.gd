@@ -253,7 +253,7 @@ func refresh_stars():
 				star_info.furthest_planet_distance = get_furthest_planet_distance()
 
 func add_MS_sprite(node, obj:Dictionary):
-	if node.has_node("MS"):
+	if not is_instance_valid(node) or node.has_node("MS"):
 		return
 	var MS_sprite = Sprite2D.new()
 	if obj.MS == "MB":

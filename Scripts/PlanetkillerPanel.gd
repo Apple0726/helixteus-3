@@ -124,7 +124,9 @@ func _on_StartCharging_pressed():
 		if game.c_v != "system":
 			return
 		var p_i:Dictionary = game.planet_data[star.p_id]
+		var p_id_g = -1
 		if not p_i.is_empty():
+			p_id_g = p_i.id
 			if Settings.screen_shake:
 				game.get_node("Camera2D/Screenshake").start(2.0, 10, 5)
 			var planet_pos:Vector2 = Vector2.from_angle(p_i.angle) * p_i.distance * game.view.obj.scale_mult
@@ -145,7 +147,7 @@ func _on_StartCharging_pressed():
 					game.autocollect.rsrc.SP -= p_i.bldg.path_1_value * p_i.tile_num
 				elif p_i.bldg.name == Building.MINERAL_SILO:
 					game.mineral_capacity -= p_i.bldg.path_1_value * p_i.tile_num
-				elif p_i.has("auto_GH"):
+				elif p_i.has("auto_GH"): # TODO TFed atom manipulators, boring machines, individual tiles
 					for p in p_i.auto_GH.produce:
 						game.autocollect.mets[p] -= p_i.auto_GH.produce[p]
 					game.autocollect.mats.cellulose += p_i.auto_GH.cellulose_drain
@@ -157,6 +159,7 @@ func _on_StartCharging_pressed():
 			game.view.obj.get_node("PlanetDestroyedSound").play()
 			game.view.obj.refresh_planets()
 			game.add_resources(star.rsrc)
+			update_view_history(p_id_g)
 		star.erase("charging_time")
 		star.erase("charge_start_date")
 		star.erase("rsrc")
@@ -200,6 +203,24 @@ func _on_StartCharging_pressed():
 			game.popup(tr("NOT_ENOUGH_ENERGY"), 1.5)
 	else:
 		game.popup(tr("PLANET_TOO_OP"), 2.0)
+
+func update_view_history(p_id_g:int):
+	var planet_rekt_dict = {
+		"view":"planet", 
+		"c_c":game.c_c,
+		"c_g_g":game.c_g_g,
+		"c_g":game.c_g,
+		"c_s_g":c_s_g,
+		"c_s":game.c_s,
+		"c_p_g":p_id_g,
+		"c_p":p_id,
+	}
+	for i in len(game.view_history):
+		if game.view_history[i].hash() == planet_rekt_dict.hash():
+			game.view_history.remove_at(i)
+			if game.view_history_pos >= i:
+				game.view_history_pos -= 1
+			return
 
 func _process(delta):
 	var curr_time = Time.get_unix_time_from_system()

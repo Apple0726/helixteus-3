@@ -168,11 +168,20 @@ func update_money_energy_SP():
 		cellulose_text["theme_override_colors/font_color"] = Color.WHITE if game.mats.cellulose > 0 else Color.RED
 	var total_stone:float = round(Helper.get_sum_of_dict(game.stone))
 	stone_text.text = Helper.format_num(total_stone) + " kg"
-	
+
+func remove_duplicate_view_data():
+	for i in range(len(game.view_history) - 1):
+		if game.view_history[i].hash() == game.view_history[i+1].hash():
+			game.view_history.remove_at(i+1)
+			if game.view_history_pos >= i+1:
+				game.view_history_pos -= 1
+
 func refresh():
 	if not game or not is_inside_tree():
 		return
 	$Top/Name/Name.caret_blink_interval = 0.5 / game.u_i.time_speed
+	if len(game.view_history) > 1:
+		remove_duplicate_view_data()
 	prev_btn.visible = game.view_history_pos > 0 and game.c_v in ["universe", "cluster", "galaxy", "system", "planet"]
 	next_btn.visible = game.view_history_pos != len(game.view_history) - 1 and game.c_v in ["universe", "cluster", "galaxy", "system", "planet"]
 	dimension_btn.visible = (len(game.universe_data) > 1 or not game.help.has("hide_dimension_stuff")) and game.c_v in ["cluster", "galaxy", "system", "planet"]

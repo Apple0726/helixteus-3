@@ -1329,6 +1329,15 @@ func switch_view(new_view:String, other_params:Dictionary = {}):
 					"c_p_g":c_p_g,
 					"c_p":c_p,
 				}
+				if new_view in ["galaxy", "system", "planet"]:
+					new_dict["c_g_g"] = c_g_g
+					new_dict["c_g"] = c_g
+				if new_view in ["system", "planet"]:
+					new_dict["c_s_g"] = c_s_g
+					new_dict["c_s"] = c_s
+				if new_view == "planet":
+					new_dict["c_p_g"] = c_p_g
+					new_dict["c_p"] = c_p
 		if other_params.has("shift"):
 			view_history_pos += other_params.shift
 			if view_history_pos < 0:
