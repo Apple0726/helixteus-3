@@ -839,6 +839,7 @@ shape = SubResource("155")
 
 [node name="BreakRockSound" type="AudioStreamPlayer2D" parent="Rover" unique_id=394875908]
 stream = ExtResource("18_dfqh5")
+bus = &"SFX"
 
 [node name="RoDEffects" type="Node2D" parent="." unique_id=2019073024]
 
