@@ -8,8 +8,8 @@ func _ready() -> void:
 	area_entered.connect(_on_area_entered)
 	$Trail.default_color = trail_color
 	$Trail.show()
-	hit_sound_player.stream = preload("res://Audio/SFX/collision.ogg")
 	spawn_sound_player.pitch_scale = randf_range(0.7, 1.4)
+	spawn_sound_player.volume_db = -3.0
 	spawn_sound_player.play()
 
 func _on_area_entered(area: Area2D) -> void:
@@ -36,7 +36,7 @@ func _on_area_entered(area: Area2D) -> void:
 		weapon_data["status_effects"] = status_effects
 	if not buffs.is_empty():
 		weapon_data["buffs"] = buffs
-	if area.damage_entity(weapon_data):
+	if area.damage_entity(weapon_data, shooter):
 		if status_effects.has(Battle.StatusEffect.WET):
 			var water_explosion = preload("res://Scenes/Battle/Explosion.tscn").instantiate()
 			battle_GUI.battle_scene.add_child(water_explosion)
@@ -46,7 +46,7 @@ func _on_area_entered(area: Area2D) -> void:
 			water_explosion.play("water_explosion")
 			water_explosion.animation_finished.connect(water_explosion.queue_free)
 		if deflects_remaining == 0:
-			remove_projectile()
+			queue_free()
 		else:
 			# The bullet can now hit anything, regardless of the shooter
 			collision_mask = 1 + 2 + 4 + 32
@@ -56,8 +56,7 @@ func _on_area_entered(area: Area2D) -> void:
 			var incidence_angle = atan2(position.y - area.position.y, position.x - area.position.x)
 			rotation = Vector2.from_angle(rotation).bounce(Vector2.from_angle(incidence_angle)).angle()
 			deflects_remaining -= 1
-			hit_sound_player.pitch_scale = randf_range(0.8, 1.2)
-			hit_sound_player.play()
+		add_hit_sound(preload("res://Audio/SFX/object_hit.ogg"), -3.0)
 		if area.HP <= 0 and shooter.type == Battle.EntityType.SHIP and shooter.ship_class == ShipClass.OFFENSIVE:
 			shooter.buff_from_class_passive_ability("attack", 3)
 	else:

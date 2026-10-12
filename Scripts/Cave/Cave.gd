@@ -300,10 +300,6 @@ func _ready():
 	for rsrc in game.show:
 		if game.show[rsrc]:
 			add_filter(rsrc)
-	$UI2/Filters/Grid/money.pressed.connect(on_filter_pressed.bind("money", $UI2/Filters/Grid/money))
-	$UI2/Filters/Grid/money.set_mod(game.cave_filters.money)
-	$UI2/Filters/Grid/minerals.pressed.connect(on_filter_pressed.bind(Item.MINERALS, $UI2/Filters/Grid/minerals))
-	$UI2/Filters/Grid/minerals.set_mod(game.cave_filters.minerals)
 	$UI2/Filters/Grid/stone.pressed.connect(on_filter_pressed.bind("stone", $UI2/Filters/Grid/stone))
 	$UI2/Filters/Grid/stone.set_mod(game.cave_filters.stone)
 	
@@ -348,6 +344,7 @@ func add_filter_slot(type:String, rsrc):
 	var filter_slot = filter_btn_scene.instantiate()
 	if rsrc is int:
 		filter_slot.texture = load("res://Graphics/%s/%s.png" % [Item.icon_directory(Item.data[rsrc].type), Item.data[rsrc].item_name])
+		filter_slot.name = Item.data[rsrc].item_name
 	else:
 		filter_slot.texture = load("res://Graphics/%s/%s.png" % [type, rsrc])
 	$UI2/Filters/Grid.add_child(filter_slot)

@@ -22,6 +22,7 @@ var rsrc_salvaged:Dictionary
 
 func _ready():
 	refresh_stars()
+	refresh_planets()
 
 func refresh_planets():
 	scale_mult = 700.0 / game.system_data[game.c_s].closest_planet_distance
@@ -244,9 +245,11 @@ func refresh_stars():
 				add_rsrc(star_info.pos * scale_mult, Color(0, 0.8, 0, 1), Data.energy_icon, i, true, max(star_info.size / 6.0, 0.5) * scale_mult)
 			elif star_info.MS == "MB":
 				add_rsrc(star_info.pos * scale_mult, Color(0, 0.8, 0, 1), Data.SP_icon, i, true, max(star_info.size / 6.0, 0.5) * scale_mult)
+			if star_info.MS == "CBS" and not star_info.has("furthest_planet_distance"): # TODO to be removed in v0.31
+				star_info.furthest_planet_distance = get_furthest_planet_distance()
 
 func add_MS_sprite(node, obj:Dictionary):
-	if node.has_node("MS"):
+	if not is_instance_valid(node) or node.has_node("MS"):
 		return
 	var MS_sprite = Sprite2D.new()
 	if obj.MS == "MB":
@@ -316,6 +319,14 @@ func show_DS_costs(star:Dictionary, base:bool = false):
 	else:
 		Helper.put_rsrc(vbox, 32, {"energy":Helper.get_DS_capacity(star, 1) * Helper.get_IR_mult(Building.BATTERY)}, false)
 
+func get_furthest_planet_distance():
+	var furthest_planet_distance = 100.0
+	for j in len(game.planet_data):
+		if game.planet_data[j].is_empty():
+			continue
+		furthest_planet_distance = game.planet_data[j].distance
+	return furthest_planet_distance
+
 func show_CBS_costs(star:Dictionary, base:bool = false):
 	var vbox = game.get_node("UI/Panel/VBox")
 	var stage:int = (star.MS_lv + 1) if not base else 0
@@ -324,8 +335,9 @@ func show_CBS_costs(star:Dictionary, base:bool = false):
 		Helper.add_dict_to_dict(bldg_costs, Data.MS_costs.CBS_1)
 		Helper.add_dict_to_dict(bldg_costs, Data.MS_costs.CBS_2)
 		Helper.add_dict_to_dict(bldg_costs, Data.MS_costs.CBS_3)
+	var furthest_planet_distance:float = get_furthest_planet_distance()
 	for cost in bldg_costs:
-		bldg_costs[cost] = round(bldg_costs[cost] * game.planet_data[-1].distance / 1000.0 * game.engineering_bonus.BCM / (star.cost_div if star.has("cost_div") else 1.0))
+		bldg_costs[cost] = round(bldg_costs[cost] * furthest_planet_distance / 1000.0 * game.engineering_bonus.BCM / (star.cost_div if star.has("cost_div") else 1.0))
 	Helper.put_rsrc(vbox, 32, bldg_costs, true, true)
 	add_constr_costs(vbox, star)
 	Helper.add_label(tr("CBD_PATH_1") % Helper.clever_round(1 + log(star.luminosity + 1)))
@@ -549,7 +561,7 @@ func destroy_MS():
 			if MS_constr_data.obj.MS in ["DS", "MB"]:
 				rsrc_salvaged[rsrc] *= pow(MS_constr_data.obj.size, 2)
 			elif MS_constr_data.obj.MS == "CBS":
-				rsrc_salvaged[rsrc] *= game.planet_data[-1].distance / 1000.0
+				rsrc_salvaged[rsrc] *= MS_constr_data.obj.furthest_planet_distance / 1000.0
 			elif MS_constr_data.obj.MS == "SE":
 				rsrc_salvaged[rsrc] *= MS_constr_data.obj.size / 12000.0
 			elif MS_constr_data.obj.MS == "MME":
@@ -607,10 +619,10 @@ func destroy_MS():
 								for st in stars_info[i].cost_div_dict.keys():
 									div = max(div, stars_info[i].cost_div_dict[st])
 								stars_info[i].cost_div = div
-					queue_redraw()
-				elif MS_constr_data.obj.MS == "M_MMB":
+					MS_constr_data.obj.erase("furthest_planet_distance")
+				elif MS_constr_data.obj.MS == "MME":
 					game.autocollect.MS.minerals -= Helper.get_MME_output(MS_constr_data.obj)
-					game.mineral_capacity -= MS_constr_data.obj.min_cap_to_add
+					game.mineral_capacity -= Helper.get_MME_capacity(MS_constr_data.obj)
 			MS_constr_data.obj.erase("repair_cost")
 			MS_constr_data.obj.erase("MS")
 			MS_constr_data.obj.erase("MS_lv")
@@ -734,6 +746,7 @@ func build_MS(obj:Dictionary, MS_to_build:String):
 					p_i["cost_div_dict"] = {star_over_id:cost_div}
 					game.planet_data_persistent[i].cost_div_dict = p_i.cost_div_dict
 				game.planet_data_persistent[i].cost_div = p_i.cost_div
+			obj.furthest_planet_distance = get_furthest_planet_distance()
 			for i in len(stars_info):
 				if i != star_over_id:
 					var _star:Dictionary = stars_info[i]
@@ -742,7 +755,6 @@ func build_MS(obj:Dictionary, MS_to_build:String):
 						_star.cost_div_dict[star_over_id] = cost_div
 					else:
 						_star["cost_div_dict"] = {star_over_id:cost_div}
-			queue_redraw()
 		game.HUD.refresh()
 		game.get_node("UI/Panel").hide()
 		MS_constr_data.clear()
@@ -1040,6 +1052,3 @@ func add_rsrc(v:Vector2, mod:Color, icon, id:int, is_star:bool, sc:float = 1, cu
 		star_rsrcs.append({"node":rsrc, "id":id})
 	else:
 		planet_rsrcs.append({"node":rsrc, "id":id})
-
-func _on_System_draw():
-	refresh_planets()

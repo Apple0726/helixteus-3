@@ -105,7 +105,7 @@ func _input(event: InputEvent) -> void:
 
 func fire_light(fade_delay: float):
 	for target in weapon_datas:
-		target.damage_entity(weapon_datas[target])
+		target.damage_entity(weapon_datas[target], shooter)
 	light_anim = create_tween()
 	$LightPolygon.color.a = 1.0
 	light_anim.tween_property($LightPolygon, "modulate:a", 0.0, fade_delay)

@@ -73,14 +73,18 @@ func refresh():
 		pt.add_to_group("PD_points")
 		pt.modulate = point_colors[i]
 		add_child(pt)
-	$Gas.polygon[1] = $Liquid.polygon[0]
-	$Gas.polygon[0].x = max($Liquid.polygon[0].x - default_dT, 0)
-	$Supercritical.polygon[1] = $Liquid.polygon[2]
-	$Supercritical.polygon[2].y = max($Liquid.polygon[2].y - default_dP, 0)
-	$Supercritical.polygon[0] = $Liquid.polygon[3]
-	$Supercritical.polygon[3].y = $Liquid.polygon[3].y
-	$Gas.polygon[2] = $Liquid.polygon[3]
-	$Gas.polygon[3].y = $Liquid.polygon[3].y
+	var gas_polygon = $Gas.polygon
+	var supercritical_polygon = $Supercritical.polygon
+	gas_polygon[1] = $Liquid.polygon[0]
+	gas_polygon[0].x = max($Liquid.polygon[0].x - default_dT, 0)
+	supercritical_polygon[1] = $Liquid.polygon[2]
+	supercritical_polygon[2].y = max($Liquid.polygon[2].y - default_dP, 0)
+	supercritical_polygon[0] = $Liquid.polygon[3]
+	supercritical_polygon[3].y = $Liquid.polygon[3].y
+	gas_polygon[2] = $Liquid.polygon[3]
+	gas_polygon[3].y = $Liquid.polygon[3].y
+	$Gas.polygon = gas_polygon
+	$Supercritical.polygon = supercritical_polygon
 	update_OP_points()
 
 var moving_l_index:int = -1
@@ -119,18 +123,24 @@ func _input(event):
 		if moving_l_index != -1:
 			pos.x = clamp(pos.x, 0, 800)
 			pos.y = clamp(pos.y, 0, 400)
-			$Liquid.polygon[moving_l_index] = pos
+			var liquid_polygon = $Liquid.polygon
+			var gas_polygon = $Gas.polygon
+			var supercritical_polygon = $Supercritical.polygon
+			liquid_polygon[moving_l_index] = pos
+			$Liquid.polygon = liquid_polygon
 			if moving_l_index == 0:
-				$Gas.polygon[1] = pos
-				$Gas.polygon[0].x = max(pos.x - default_dT, 0)
+				gas_polygon[1] = pos
+				gas_polygon[0].x = max(pos.x - default_dT, 0)
 			elif moving_l_index == 2:
-				$Supercritical.polygon[1] = pos
-				$Supercritical.polygon[2].y = max(pos.y - default_dP, 0)
+				supercritical_polygon[1] = pos
+				supercritical_polygon[2].y = max(pos.y - default_dP, 0)
 			elif moving_l_index == 3:
-				$Supercritical.polygon[0] = pos
-				$Supercritical.polygon[3].y = pos.y
-				$Gas.polygon[2] = pos
-				$Gas.polygon[3].y = pos.y
+				supercritical_polygon[0] = pos
+				supercritical_polygon[3].y = pos.y
+				gas_polygon[2] = pos
+				gas_polygon[3].y = pos.y
+			$Gas.polygon = gas_polygon
+			$Supercritical.polygon = supercritical_polygon
 			if moving_pt:
 				moving_pt.position = pos - Vector2(8, 8) + $Liquid.position
 			update_OP_points()

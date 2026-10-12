@@ -5,8 +5,6 @@
 [ext_resource type="PackedScene" uid="uid://bvyftln8m3hgm" path="res://Scenes/FilterButton.tscn" id="3"]
 [ext_resource type="Texture2D" uid="uid://4tf3teqmkahc" path="res://Graphics/Misc/Bar.png" id="4"]
 [ext_resource type="Texture2D" uid="uid://qbiggp0bodp1" path="res://Graphics/Cave/MiningLaser.png" id="5"]
-[ext_resource type="Texture2D" uid="uid://d3kwtgk0sw40p" path="res://Graphics/Icons/minerals.png" id="6"]
-[ext_resource type="Texture2D" uid="uid://b0brlrg52bjln" path="res://Graphics/Icons/money.png" id="7"]
 [ext_resource type="Texture2D" uid="uid://hvuwdl8ox0yv" path="res://Graphics/Icons/stone.png" id="8"]
 [ext_resource type="PackedScene" uid="uid://cpfkb4haasun3" path="res://Scenes/CaveHole.tscn" id="9"]
 [ext_resource type="Texture2D" uid="uid://yhdxrw2q1yep" path="res://Graphics/HX/Status effects/Stun.png" id="10"]
@@ -841,6 +839,7 @@ shape = SubResource("155")
 
 [node name="BreakRockSound" type="AudioStreamPlayer2D" parent="Rover" unique_id=394875908]
 stream = ExtResource("18_dfqh5")
+bus = &"SFX"
 
 [node name="RoDEffects" type="Node2D" parent="." unique_id=2019073024]
 
@@ -991,14 +990,6 @@ theme = ExtResource("29")
 [node name="Grid" type="GridContainer" parent="UI2/Filters" unique_id=1820963768]
 layout_mode = 2
 columns = 4
-
-[node name="money" parent="UI2/Filters/Grid" unique_id=6686181 instance=ExtResource("3")]
-layout_mode = 2
-texture = ExtResource("7")
-
-[node name="minerals" parent="UI2/Filters/Grid" unique_id=1462238733 instance=ExtResource("3")]
-layout_mode = 2
-texture = ExtResource("6")
 
 [node name="stone" parent="UI2/Filters/Grid" unique_id=1475079955 instance=ExtResource("3")]
 layout_mode = 2
@@ -1287,10 +1278,6 @@ environment = SubResource("Environment_n75r6")
 [connection signal="body_entered" from="Rover/FloorCollisionDetector" to="." method="_on_FloorCollisionDetector_body_entered"]
 [connection signal="body_exited" from="Rover/FloorCollisionDetector" to="." method="_on_FloorCollisionDetector_body_exited"]
 [connection signal="pressed" from="UI2/BottomLeft/Filter" to="." method="_on_Filter_pressed"]
-[connection signal="mouse_entered" from="UI2/Filters/Grid/money" to="." method="on_filter_mouse_entered" binds= ["money"]]
-[connection signal="mouse_exited" from="UI2/Filters/Grid/money" to="." method="on_filter_mouse_exited"]
-[connection signal="mouse_entered" from="UI2/Filters/Grid/minerals" to="." method="on_filter_mouse_entered" binds= ["minerals"]]
-[connection signal="mouse_exited" from="UI2/Filters/Grid/minerals" to="." method="on_filter_mouse_exited"]
 [connection signal="mouse_entered" from="UI2/Filters/Grid/stone" to="." method="on_filter_mouse_entered" binds= ["stone"]]
 [connection signal="mouse_exited" from="UI2/Filters/Grid/stone" to="." method="on_filter_mouse_exited"]
 [connection signal="mouse_entered" from="UI2/CaveInfo/Floor" to="." method="_on_Floor_mouse_entered"]

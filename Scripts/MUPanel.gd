@@ -38,13 +38,13 @@ func _ready():
 		btn.alignment = HORIZONTAL_ALIGNMENT_LEFT
 		hbox.name = MU
 		hbox.add_child(btn)
-		if game.achievement_data.progression.has("new_universe"):
-			var btn_max = Button.new()
-			btn_max.connect("pressed",Callable(self,"_on_UpgradeMax_pressed").bind(MU))
-			btn_max.custom_minimum_size.x = 32
-			btn_max.name = "UpgradeMax"
-			btn_max.text = "Max"
-			hbox.add_child(btn_max)
+		var btn_max = Button.new()
+		btn_max.connect("pressed",Callable(self,"_on_UpgradeMax_pressed").bind(MU))
+		btn_max.custom_minimum_size.x = 32
+		btn_max.name = "UpgradeMax"
+		btn_max.text = "Max"
+		btn_max.visible = game.achievement_data.progression.has("new_universe")
+		hbox.add_child(btn_max)
 		$PanelContainer/VBox.add_child(hbox)
 
 func refresh():
@@ -53,9 +53,8 @@ func refresh():
 	$PanelContainer/VBox/SHSR.visible = game.stats_univ.planets_conquered >= 2
 	$PanelContainer/VBox/CHR.visible = game.stats_univ.planets_conquered >= 2
 	$PanelContainer/VBox/SHSR/Upgrade.visible = game.MUs.SHSR < 50
-	if game.achievement_data.progression.has("new_universe"):
-		$PanelContainer/VBox/SHSR/UpgradeMax.visible = game.MUs.SHSR < 50
-		$PanelContainer/VBox/CHR/UpgradeMax.visible = game.MUs.CHR < 94
+	$PanelContainer/VBox/SHSR/UpgradeMax.visible = game.achievement_data.progression.has("new_universe") and game.MUs.SHSR < 50
+	$PanelContainer/VBox/CHR/UpgradeMax.visible = game.achievement_data.progression.has("new_universe") and game.MUs.CHR < 94
 	$PanelContainer/VBox/CHR/Upgrade.visible = game.MUs.CHR < 94
 	for hbox in $PanelContainer/VBox.get_children():
 		if hbox.name != "Titles":

@@ -324,6 +324,8 @@ func add_obj(obj_str:String, pos:Vector2, sc:float):
 	queue_redraw()
 
 func remove_obj(obj_str:String, save_zooms:bool = true):
+	if not is_instance_valid(obj):
+		return
 	if save_zooms:
 		save_zooms(obj_str)
 	obj.set_process(false)

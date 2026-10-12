@@ -963,7 +963,7 @@ func get_DS_output(star:Dictionary, next_lv:int = 0):
 	return Data.MS_output["DS_%s" % ((star.MS_lv + next_lv) if star.has("MS_lv") else next_lv - 1)] * star.luminosity * game.u_i.planck * 0.5
 
 func get_DS_capacity(star:Dictionary, next_lv:int = 0):
-	if next_lv == -1 and star.has(Building.MINERAL_SILO) and star.MS_lv == 0:
+	if next_lv == -1 and star.has("MS") and star.MS_lv == 0:
 		return 0
 	return Data.MS_output["DS_%s" % ((star.MS_lv + next_lv) if star.has("MS_lv") else next_lv - 1)] * pow(star.size, 2) * game.u_i.planck * 5000.0 * game.u_i.charge
 
@@ -974,7 +974,7 @@ func get_MME_output(p_i:Dictionary, next_lv:int = 0):
 	return Data.MS_output["MME_%s" % ((p_i.MS_lv + next_lv) if p_i.has("MS_lv") else next_lv - 1)] * pow(p_i.size / 12000.0, 2) * max(1, pow(p_i.pressure, 0.5))
 
 func get_MME_capacity(p_i:Dictionary, next_lv:int = 0):
-	if next_lv == -1 and p_i.has(Building.MINERAL_SILO) and p_i.MS_lv == 0:
+	if next_lv == -1 and p_i.has("MS") and p_i.MS_lv == 0:
 		return 0
 	return Data.MS_output["MME_%s" % ((p_i.MS_lv + next_lv) if p_i.has("MS_lv") else next_lv - 1)] * pow(p_i.size / 1200.0, 2)
 

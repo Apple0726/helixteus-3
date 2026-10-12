@@ -11,5 +11,4 @@ stream = ExtResource("2_610h1")
 max_distance = 10000.0
 bus = &"SFX"
 
-[connection signal="draw" from="." to="." method="_on_System_draw"]
 [connection signal="tree_exited" from="." to="." method="_on_System_tree_exited"]

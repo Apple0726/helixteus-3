@@ -6,7 +6,6 @@
 [ext_resource type="TileSet" uid="uid://caaofgr7bjd7d" path="res://Resources/PlanetTileSet.tres" id="3_fk4u5"]
 [ext_resource type="AudioStream" uid="uid://d11rdrgwnf5hr" path="res://Audio/SFX/object_hit.ogg" id="7_844bs"]
 [ext_resource type="Script" uid="uid://y0df6t08tenm" path="res://Scripts/BadApple.gd" id="7_yxni4"]
-[ext_resource type="AudioStream" uid="uid://das6rwveoi8io" path="res://Audio/SFX/overclock.ogg" id="8_844bs"]
 [ext_resource type="Texture2D" uid="uid://cdblvpftr6875" path="res://icon.png" id="12"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_g1ur1"]
@@ -387,12 +386,6 @@ texture = ExtResource("12")
 [node name="BuildingPlacedSound" type="AudioStreamPlayer" parent="." unique_id=2097601818]
 stream = ExtResource("7_844bs")
 volume_db = -12.0
-bus = &"SFX"
-
-[node name="OverclockSound" type="AudioStreamPlayer" parent="." unique_id=1597438164]
-stream = ExtResource("8_844bs")
-volume_db = -4.0
-max_polyphony = 4
 bus = &"SFX"
 
 [connection signal="tree_exited" from="." to="." method="_on_Planet_tree_exited"]

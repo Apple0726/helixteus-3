@@ -1320,6 +1320,15 @@ func switch_view(new_view:String, other_params:Dictionary = {}):
 					"c_p_g":c_p_g,
 					"c_p":c_p,
 				}
+				if new_view in ["galaxy", "system", "planet"]:
+					new_dict["c_g_g"] = c_g_g
+					new_dict["c_g"] = c_g
+				if new_view in ["system", "planet"]:
+					new_dict["c_s_g"] = c_s_g
+					new_dict["c_s"] = c_s
+				if new_view == "planet":
+					new_dict["c_p_g"] = c_p_g
+					new_dict["c_p"] = c_p
 		if other_params.has("shift"):
 			view_history_pos += other_params.shift
 			if view_history_pos < 0:
@@ -1746,6 +1755,8 @@ func add_planet(new_game:bool = false):
 		planet_HUD.get_node("VBoxContainer/Construct").material.set_shader_parameter("color", Color(1.0, 0.75, 0.0, 1.0))
 		planet_HUD.get_node("VBoxContainer/Construct/AnimationPlayer").play("FlashRepeat")
 		await get_tree().create_timer(1.5).timeout
+	if c_v != "planet":
+		return
 	view.add_obj("Planet", planet_data[c_p]["view"]["pos"], planet_data[c_p]["view"]["zoom"])
 	if new_game:
 		var wid = Helper.get_wid(planet_data[c_p].size)
@@ -2636,6 +2647,7 @@ func generate_planets(id:int):#local id
 				system_data[id]["has_MS"] = true
 		planet_data.append(p_i)
 	if c_s_g != 0:
+		var furthest_planet_distance = planet_data[-1].distance
 		for i in range(0, N_stars):
 			var star = system_data[id].stars[i]
 			var star_size = star.size
@@ -2658,11 +2670,12 @@ func generate_planets(id:int):#local id
 					star["repair_cost"] = Data.MS_costs[star.MS + "_" + str(star.MS_lv)].money * 24 * rng.randf_range(1, 3) * pow(star.size, 2)
 				elif star.MS == "CBS":
 					star["repair_cost"] = Data.MS_costs[star.MS + "_" + str(star.MS_lv)].money * 24 * rng.randf_range(1, 3)
+					star.furthest_planet_distance = furthest_planet_distance
 				elif star.MS == "PK":
 					star["repair_cost"] = Data.MS_costs[star.MS + "_" + str(star.MS_lv)].money * 24 * rng.randf_range(1, 3) * planet_data[-1].distance / 1000.0
 				star.repair_cost *= engineering_bonus.BCM
 				system_data[id].has_MS = true
-		var view_zoom = 40.0 / planet_data[-1].distance * (planet_data[0].distance / 70)
+		var view_zoom = 40.0 / furthest_planet_distance * (planet_data[0].distance / 70)
 		system_data[id]["view"] = {"pos": Vector2(640, 360), "zoom": view_zoom}
 	elif c_u == 0:
 		#Home planet information
