@@ -1,9 +1,9 @@
 extends Node2D
 
 const TEST:bool = false
-const DATE:String = "14 Sep 2026"
-const VERSION:String = "v0.30.5"
-const COMPATIBLE_VERSIONS = ["v0.30", "v0.30.1", "v0.30.2", "v0.30.3", "v0.30.3a", "v0.30.4"]
+const DATE:String = "12 Oct 2026"
+const VERSION:String = "v0.30.6"
+const COMPATIBLE_VERSIONS = ["v0.30", "v0.30.1", "v0.30.2", "v0.30.3", "v0.30.3a", "v0.30.4", "v0.30.5"]
 
 var planet_textures:Array
 var galaxy_textures:Array
