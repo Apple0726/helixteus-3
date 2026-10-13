@@ -147,7 +147,6 @@ func send_ships():
 						game.start_spaceport_timer(tier)
 					else:
 						game.autocollect.erase("passive_xp_tier")
-						game.HUD.set_ship_btn_shader(false)
 				game.space_HUD.get_node("ConquerAll").visible = (game.u_i.lv >= 32 or game.subject_levels.dimensional_power >= 1) and not game.system_data[game.c_s].has("conquered")
 				game.HUD.refresh()
 				game.toggle_panel(panel_var_name)

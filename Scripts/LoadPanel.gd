@@ -22,7 +22,10 @@ func refresh():
 	for save_name in saves:
 		var save_info_dict = Helper.get_save_info(save_name)
 		if not save_info_dict:
-			continue
+			# Read older saves
+			save_info_dict = Helper.get_save_info_old(save_name)
+			if not save_info_dict:
+				continue
 		var save = save_slot_scene.instantiate()
 		$ScrollContainer/HBox.add_child(save)
 		save.open_backup_panel.connect(open_backup_panel.bind(save_name))

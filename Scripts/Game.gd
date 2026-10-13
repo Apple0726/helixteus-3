@@ -558,7 +558,7 @@ func load_univ():
 			var xp_mult = Helper.get_spaceport_xp_mult(autocollect.passive_xp_tier)
 			for i in len(ship_data):
 				Helper.add_ship_XP(i, xp_mult * autocollect.passive_xp_mult * time_elapsed / (4.0 / autocollect.passive_xp_tier) * u_i.time_speed)
-			call_deferred("start_spaceport_timer", autocollect.passive_xp_tier)
+			start_spaceport_timer()
 		var min_mult:float = pow(maths_bonus.IRM, infinite_research.MEE)
 		var energy_mult:float = pow(maths_bonus.IRM, infinite_research.EPE)
 		var SP_mult:float = pow(maths_bonus.IRM, infinite_research.RLE)
@@ -594,6 +594,10 @@ func load_game():
 	var save_info = FileAccess.open_compressed("user://%s/save_info.hx3" % [c_sv], FileAccess.READ, FileAccess.COMPRESSION_ZSTD)
 	if save_info == null:
 		save_info = FileAccess.open_compressed("user://%s/save_info.hx3~" % [c_sv], FileAccess.READ, FileAccess.COMPRESSION_ZSTD)
+	if save_info == null: # Load older saves
+		save_info = FileAccess.open("user://%s/save_info.hx3" % [c_sv], FileAccess.READ)
+	if save_info == null:
+		save_info = FileAccess.open("user://%s/save_info.hx3~" % [c_sv], FileAccess.READ)
 	var save_info_dict:Dictionary = save_info.get_var()
 	save_info.close()
 	save_created = save_info_dict.save_created
@@ -667,7 +671,7 @@ func load_game():
 		dimension.refresh_univs(len(universe_data) == 0)
 	else:
 		load_univ()
-		switch_view(c_v, {"first_time":true})
+		await switch_view(c_v, {"first_time":true})
 		view.set_process(true)
 		switch_music(Data.ambient_music.pick_random(), u_i.get("time_speed", 1.0))
 		if not is_ancestor_of(HUD):
@@ -1708,6 +1712,8 @@ func update_starfield_BG():
 var starfield_tween
 
 func add_system():
+	if not u_i.has("cluster_data"):
+		generate_clusters()
 	if galaxy_data.is_empty():
 		generate_galaxies(c_c)
 	var starfield_color_param = 0.1 * pow(1.0 / pow(u_i.age, 0.25) / pow(1e-9 / galaxy_data[c_g].B_strength, physics_bonus.BI), 0.65)
@@ -1726,7 +1732,6 @@ func add_system():
 	if ships_travel_data.c_g_coords.s == c_s_g:
 		system_data[c_s]["explored"] = true
 		system_data_persistent[c_s]["explored"] = true
-	HUD.switch_btn_texture.texture = load("res://Graphics/Galaxies/%s.png" % galaxy_data[c_g].type)
 	if len(ship_data) == 1 and u_i.lv >= 20:
 		popup_window(tr("WANDERING_SHIP_DESC"), tr("WANDERING_SHIP"))
 		get_2nd_ship()
@@ -1750,7 +1755,6 @@ func add_planet(new_game:bool = false):
 	generate_tiles(c_p, not planet_data[c_p].has("discovered"))
 	planet_HUD = load("res://Scenes/Planet/PlanetHUD.tscn").instantiate()
 	$HUD.add_child(planet_HUD)
-	HUD.switch_btn_texture.texture = preload("res://Graphics/Buttons/SystemView.png")
 	if new_game:
 		planet_HUD.get_node("VBoxContainer/Construct").material.set_shader_parameter("color", Color(1.0, 0.75, 0.0, 1.0))
 		planet_HUD.get_node("VBoxContainer/Construct/AnimationPlayer").play("FlashRepeat")
@@ -3217,6 +3221,10 @@ func generate_tiles(id:int, first_time:bool):
 		for i in len(tile_data):
 			if not tile_data[i].resource_production_bonus.is_empty():
 				tile_data_persistent[i] = {"resource_production_bonus": tile_data[i].resource_production_bonus}
+			if tile_data[i].has("ancient_bldg"):
+				if tile_data_persistent[i] == null:
+					tile_data_persistent[i] = {}
+				tile_data_persistent[i].ancient_bldg = tile_data[i].ancient_bldg
 	else:
 		tile_data_persistent = open_obj("Planets", c_p_g)
 	for i in len(tile_data_persistent):
@@ -3227,6 +3235,9 @@ func generate_tiles(id:int, first_time:bool):
 			tile_data[i][key] = tile_persistent[key]
 		if tile_persistent.has("crater_removed"):
 			tile_data[i].erase("crater")
+		if tile_persistent.has("ancient_bldg") and tile_persistent.ancient_bldg.has("repaired"):
+			tile_data[i].ancient_bldg.erase("repair_cost")
+			Helper.set_ancient_bldg_bonuses(p_i, tile_data[i].ancient_bldg, i, wid)
 	Helper.save_obj("Systems", c_s_g, planet_data_persistent)
 
 func erase_tile(tile:int):
@@ -3749,38 +3760,39 @@ func _input(event):
 
 func save_universe():
 	var universe_data_to_save = universe_data.duplicate(true)
-	universe_data_to_save[c_u].erase("cluster_data")
-	universe_data_to_save[c_u].procgen_settings = {
-		"planet_tile_dimensions": ProcGenSettings.planet_tile_dimensions,
-		"max_planet_tile_dimensions": ProcGenSettings.max_planet_tile_dimensions,
-		"lake_coverage": ProcGenSettings.lake_coverage,
-		"cave_spawn_frequency": ProcGenSettings.cave_spawn_frequency,
+	if c_u != -1:
+		universe_data_to_save[c_u].erase("cluster_data")
+		universe_data_to_save[c_u].procgen_settings = {
+			"planet_tile_dimensions": ProcGenSettings.planet_tile_dimensions,
+			"max_planet_tile_dimensions": ProcGenSettings.max_planet_tile_dimensions,
+			"lake_coverage": ProcGenSettings.lake_coverage,
+			"cave_spawn_frequency": ProcGenSettings.cave_spawn_frequency,
 
-		"cave_tile_dimensions": ProcGenSettings.cave_tile_dimensions,
-		"cave_depth": ProcGenSettings.cave_depth,
-		"cave_floor_difficulty": ProcGenSettings.cave_floor_difficulty,
-		"cave_wall_coverage": ProcGenSettings.cave_wall_coverage,
+			"cave_tile_dimensions": ProcGenSettings.cave_tile_dimensions,
+			"cave_depth": ProcGenSettings.cave_depth,
+			"cave_floor_difficulty": ProcGenSettings.cave_floor_difficulty,
+			"cave_wall_coverage": ProcGenSettings.cave_wall_coverage,
 
-		"distance_between_planets": ProcGenSettings.distance_between_planets,
-		"max_planets_in_system": ProcGenSettings.max_planets_in_system,
+			"distance_between_planets": ProcGenSettings.distance_between_planets,
+			"max_planets_in_system": ProcGenSettings.max_planets_in_system,
 
-		"star_system_density": ProcGenSettings.star_system_density,
-		"min_number_of_systems_elliptical": ProcGenSettings.min_number_of_systems_elliptical,
-		"max_number_of_systems_elliptical": ProcGenSettings.max_number_of_systems_elliptical,
-		"min_number_of_systems_spiral": ProcGenSettings.min_number_of_systems_spiral,
-		"max_number_of_systems_spiral": ProcGenSettings.max_number_of_systems_spiral,
-		"dwarf_elliptical_galaxy_ratio": ProcGenSettings.dwarf_elliptical_galaxy_ratio,
-		"elliptical_spiral_galaxy_ratio": ProcGenSettings.elliptical_spiral_galaxy_ratio,
+			"star_system_density": ProcGenSettings.star_system_density,
+			"min_number_of_systems_elliptical": ProcGenSettings.min_number_of_systems_elliptical,
+			"max_number_of_systems_elliptical": ProcGenSettings.max_number_of_systems_elliptical,
+			"min_number_of_systems_spiral": ProcGenSettings.min_number_of_systems_spiral,
+			"max_number_of_systems_spiral": ProcGenSettings.max_number_of_systems_spiral,
+			"dwarf_elliptical_galaxy_ratio": ProcGenSettings.dwarf_elliptical_galaxy_ratio,
+			"elliptical_spiral_galaxy_ratio": ProcGenSettings.elliptical_spiral_galaxy_ratio,
 
-		"galaxy_density": ProcGenSettings.galaxy_density,
-		"min_number_of_galaxies": ProcGenSettings.min_number_of_galaxies,
-		"max_number_of_galaxies": ProcGenSettings.max_number_of_galaxies,
-		"galaxy_group_ratio": ProcGenSettings.galaxy_group_ratio,
+			"galaxy_density": ProcGenSettings.galaxy_density,
+			"min_number_of_galaxies": ProcGenSettings.min_number_of_galaxies,
+			"max_number_of_galaxies": ProcGenSettings.max_number_of_galaxies,
+			"galaxy_group_ratio": ProcGenSettings.galaxy_group_ratio,
 
-		"cluster_density": ProcGenSettings.cluster_density,
-		"number_of_clusters": ProcGenSettings.number_of_clusters,
-		"universe_seed": ProcGenSettings.universe_seed,
-	}
+			"cluster_density": ProcGenSettings.cluster_density,
+			"number_of_clusters": ProcGenSettings.number_of_clusters,
+			"universe_seed": ProcGenSettings.universe_seed,
+		}
 	var save_info:Dictionary = {
 		"save_created":save_created,
 		"save_modified":save_date,
@@ -4557,12 +4569,8 @@ func _on_probe_timer_timeout() -> void:
 	if refresh and is_instance_valid(vehicle_panel) and vehicle_panel.tab == vehicle_panel.PROBES:
 		vehicle_panel.refresh()
 
-func start_spaceport_timer(tier:int):
-	if not science_unlocked.has("ISC"):
-		return
-	$SpaceportTimer.start(max(4.0 / tier / u_i.time_speed, 0.25))
-	if is_instance_valid(HUD):
-		HUD.set_ship_btn_shader(true, tier)
+func start_spaceport_timer():
+	$SpaceportTimer.start(max(4.0 / autocollect.passive_xp_tier / u_i.time_speed, 0.25))
 
 func _on_spaceport_timer_timeout() -> void:
 	if not autocollect.has("passive_xp_tier"):

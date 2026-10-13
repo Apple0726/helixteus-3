@@ -487,7 +487,7 @@ func construct_ancient_building(tile_id:int, ancient_building:int):
 			p_i.ancient_bldgs[ancient_building] = [obj]
 		for j in ([tile_id, tile_id+1, tile_id+wid, tile_id+1+wid] if ancient_building == AncientBuilding.NUCLEAR_FUSION_REACTOR else [tile_id]):
 			game.tile_data[j].ancient_bldg = {"name":ancient_building, "tier":constructing_ancient_building_tier, "id":tile_id}
-			game.tile_data_persistent[j].ancient_bldg = game.tile_data[j].ancient_bldg
+			Helper.set_tile_data_persistent(j, "ancient_bldg", game.tile_data[j].ancient_bldg)
 		game.ancient_building_counters[ancient_building][constructing_ancient_building_tier] = game.ancient_building_counters[ancient_building].get(constructing_ancient_building_tier, 0) + 1
 		game.u_i.xp += constr_costs_total.money / 100.0
 		constr_costs_total = Data.ancient_building_costs[ancient_building].duplicate(true)
@@ -510,7 +510,6 @@ func constr_bldg(tile_id:int, curr_time:int, _bldg_to_construct:int, mass_build:
 				game.popup(tr("NOT_ADJACENT_TO_LAKE"), 1.5)
 			return
 	if game.check_enough(constr_costs_total):
-		var tile_persistent = {}
 		var current_time = Time.get_unix_time_from_system()
 		game.deduct_resources(constr_costs_total)
 		game.stats_univ.bldgs_built += 1
@@ -529,7 +528,6 @@ func constr_bldg(tile_id:int, curr_time:int, _bldg_to_construct:int, mass_build:
 		tile.bldg = {
 			"name": _bldg_to_construct,
 		}
-		tile_persistent.bldg = tile.bldg
 		if not game.show.has("minerals") and _bldg_to_construct == Building.MINERAL_EXTRACTOR:
 			game.show["minerals"] = true
 			game.show["shop"] = true
@@ -584,7 +582,7 @@ func constr_bldg(tile_id:int, curr_time:int, _bldg_to_construct:int, mass_build:
 			if not tile.has("depth"):
 				tile["depth"] = 0
 			if not game.boring_machine_data.has(game.c_p_g):
-				game.boring_machine_data[game.c_p_g] = {"tiles":[tile_id], "c_s_g":game.c_s_g, "c_p":game.c_p}
+				game.boring_machine_data[game.c_p_g] = {"tiles":[tile_id], "c_s_g":game.c_s_g, "c_p":p_id}
 			else:
 				game.boring_machine_data[game.c_p_g].tiles.append(tile_id)
 			tile.bldg["collect_date"] = current_time
@@ -597,7 +595,7 @@ func constr_bldg(tile_id:int, curr_time:int, _bldg_to_construct:int, mass_build:
 			Helper.add_energy_from_NFR(p_i, base)
 			Helper.add_cellulose_from_CS(p_i, base)
 		tile.bldg["c_p_g"] = game.c_p_g
-		game.tile_data_persistent[tile_id] = tile_persistent
+		Helper.set_tile_data_persistent(tile_id, "bldg", tile.bldg)
 		add_bldg(tile_id, _bldg_to_construct, true)
 		shadow.visible = false
 	elif not mass_build:
@@ -641,7 +639,7 @@ func overclock_bldg(tile, tile_id:int, curr_time):
 		return true
 	return false
 
-func click_tile(tile, tile_id:int):
+func click_bldg_tile(tile, tile_id:int):
 	if not tile.has("bldg") or is_instance_valid(game.active_panel):
 		return
 	var bldg:int = tile.bldg.name
@@ -1250,7 +1248,7 @@ func _unhandled_input(event):
 		if about_to_mine and available_for_mining(tile):
 			game.mine_tile(tile_id)
 			return
-		if tile and tile.has("depth") and not tile.has("bldg") and bldg_to_construct == -1 and not tile.has("bridge"):
+		if tile.has("depth") and not tile.has("bldg") and bldg_to_construct == -1 and not tile.has("bridge"):
 			if Input.is_action_pressed("shift"):
 				var v = Vector2i(x_pos, y_pos)
 				if obstacle_nodes.has(v):
@@ -1259,7 +1257,7 @@ func _unhandled_input(event):
 					obstacle_nodes.erase(v)
 			else:
 				game.mine_tile(tile_id)
-		if tile and bldg_to_construct == -1:
+		if bldg_to_construct == -1:
 			items_collected.clear()
 			if tile.has("bldg"):
 				if game.item_to_use.id != -1 and Item.data[game.item_to_use.id].type == Item.Type.OVERCLOCK:
@@ -1291,7 +1289,7 @@ func _unhandled_input(event):
 						overclock_sound.play()
 						overclock_sound.finished.connect(overclock_sound.queue_free)
 				else:
-					click_tile(tile, tile_id)
+					click_bldg_tile(tile, tile_id)
 					mouse_pos = Vector2.ZERO
 			elif tile.has("ancient_bldg"):
 				if tile.ancient_bldg.has("repair_cost"):
@@ -1302,12 +1300,15 @@ func _unhandled_input(event):
 							var tile_id2 = p_i.ancient_bldgs[tile.ancient_bldg.name][tile.ancient_bldg.id].tile
 							for j in [tile_id2, tile_id2+1, tile_id2+wid, tile_id2+wid+1]:
 								game.tile_data[j].ancient_bldg.erase("repair_cost")
+								game.tile_data_persistent[j].ancient_bldg["repaired"] = true
 							bldgs[tile_id2].self_modulate = Color.WHITE
 							Helper.set_ancient_bldg_bonuses(p_i, tile.ancient_bldg, tile_id2, wid)
 						else:
 							tile.ancient_bldg.erase("repair_cost")
+							game.tile_data_persistent[tile_id].ancient_bldg["repaired"] = true
 							bldgs[tile_id].self_modulate = Color.WHITE
 							Helper.set_ancient_bldg_bonuses(p_i, tile.ancient_bldg, tile_id, wid)
+							game.HUD.set_ship_btn_shader()
 						game.popup(tr("BUILDING_REPAIRED"), 1.5)
 						game.hide_tooltip()
 					else:
@@ -1333,6 +1334,7 @@ func _unhandled_input(event):
 				if game.science_unlocked.has("SCT"):
 					if len(game.ship_data) == 0:
 						game.tile_data[tile_id].erase("ship")
+						Helper.set_tile_data_persistent(tile_id, "ship_picked_up", true)
 						obstacle_nodes[Vector2i(x_pos, y_pos)].queue_free()
 						obstacle_nodes.erase(Vector2i(x_pos, y_pos))
 						game.popup(tr("SHIP_CONTROL_SUCCESS"), 1.5)

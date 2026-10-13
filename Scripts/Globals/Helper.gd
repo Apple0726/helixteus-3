@@ -521,7 +521,7 @@ func show_bldg_unlocked_popup(bldg:int):
 	game.bldg_unlocked[bldg] = true
 	if game.dim_num == 1 and game.c_u == 0:
 		var bldg_unlocked_popup = load("res://Scenes/BuildingUnlockedPopup.tscn").instantiate()
-		bldg_unlocked_popup.setup(Building.POWER_PLANT)
+		bldg_unlocked_popup.setup(bldg)
 		game.get_node("UI").add_child(bldg_unlocked_popup)
 
 func remove_crater_bonuses(tile_data:Array, tile_id:int, metal:String):
@@ -821,7 +821,8 @@ func update_ship_travel():
 			var tier = p_i.ancient_bldgs[AncientBuilding.SPACEPORT][0].tier
 			game.autocollect["passive_xp_tier"] = tier
 			game.autocollect["passive_xp_mult"] = s_i.diff
-			game.start_spaceport_timer(tier)
+			game.start_spaceport_timer()
+			game.HUD.set_ship_btn_shader()
 	return progress
 
 func add_autocollect(p_i:Dictionary, tile:Dictionary, mult_diff:float):
@@ -1548,7 +1549,7 @@ func set_ancient_bldg_bonuses(p_i:Dictionary, ancient_bldg:Dictionary, tile_id:i
 		if game.science_unlocked.has("ISP") and game.c_s_g == game.ships_travel_data.c_g_coords.s and game.c_p == game.ships_travel_data.c_coords.p:
 			game.autocollect["passive_xp_tier"] = ancient_bldg.tier
 			game.autocollect["passive_xp_mult"] = game.system_data[game.c_s].diff
-			game.start_spaceport_timer(ancient_bldg.tier)
+			game.start_spaceport_timer()
 
 func update_CBD_affected_tiles(CBD_tile:Dictionary, CBD_tile_id:int, p_i:Dictionary):
 	var wid:int = sqrt(len(game.tile_data))
@@ -1658,6 +1659,11 @@ func set_universe_btn_shader(univ_btn, univ_info:Dictionary):
 	univ_btn.material.set_shader_parameter("seed", univ_info.id)
 	univ_btn.material.set_shader_parameter("alpha", 0.65)
 	univ_btn.material.set_shader_parameter("expo", min(0.27, remap(univ_info.lv, 1, 100, 0.12, 0.27)))
+
+func set_tile_data_persistent(tile_id:int, key:String, value):
+	if game.tile_data_persistent[tile_id] == null:
+		game.tile_data_persistent[tile_id] = {}
+	game.tile_data_persistent[tile_id][key] = value
 
 var export_save_files_exported = 0
 
@@ -1826,7 +1832,28 @@ func get_save_info(save_name:String):
 		if save_info_dict is not Dictionary:
 			try_backup = true
 	if try_backup:
-		save_info = FileAccess.open_compressed("user://%s/save_info.hx3~" % [save_name], FileAccess.READ, 0)
+		save_info = FileAccess.open_compressed("user://%s/save_info.hx3~" % [save_name], FileAccess.READ, FileAccess.COMPRESSION_ZSTD)
+		if save_info == null:
+			return null
+		else:
+			save_info_dict = save_info.get_var()
+			if save_info_dict is not Dictionary:
+				return null
+	save_info.close()
+	return save_info_dict
+
+func get_save_info_old(save_name:String):
+	var save_info = FileAccess.open("user://%s/save_info.hx3" % [save_name], FileAccess.READ)
+	var try_backup = false
+	var save_info_dict
+	if save_info == null:
+		try_backup = true
+	else:
+		save_info_dict = save_info.get_var()
+		if save_info_dict is not Dictionary:
+			try_backup = true
+	if try_backup:
+		save_info = FileAccess.open("user://%s/save_info.hx3~" % [save_name], FileAccess.READ)
 		if save_info == null:
 			return null
 		else:

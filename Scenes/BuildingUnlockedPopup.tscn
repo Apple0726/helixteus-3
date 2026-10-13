@@ -30,9 +30,9 @@ metadata/_edit_lock_ = true
 [node name="GUI" type="NinePatchRect" parent="." unique_id=975794284]
 layout_mode = 0
 offset_left = 288.0
-offset_top = 160.0
+offset_top = 172.0
 offset_right = 992.0
-offset_bottom = 560.0
+offset_bottom = 548.0
 mouse_filter = 1
 texture = ExtResource("3_1pe36")
 patch_margin_left = 15
@@ -45,9 +45,9 @@ metadata/_edit_horizontal_guides_ = [596.0]
 [node name="Label" type="Label" parent="." unique_id=1102026262]
 layout_mode = 1
 offset_left = 448.0
-offset_top = 180.0
+offset_top = 192.0
 offset_right = 832.0
-offset_bottom = 208.0
+offset_bottom = 220.0
 text = "NEW_BLDG_UNLOCKED"
 label_settings = SubResource("LabelSettings_kpmkd")
 horizontal_alignment = 1
@@ -55,9 +55,9 @@ horizontal_alignment = 1
 [node name="Building" type="TextureRect" parent="." unique_id=1787682818]
 layout_mode = 0
 offset_left = 356.0
-offset_top = 216.0
+offset_top = 244.0
 offset_right = 576.0
-offset_bottom = 436.0
+offset_bottom = 464.0
 texture = ExtResource("4_fqqt0")
 expand_mode = 1
 stretch_mode = 5
@@ -68,14 +68,14 @@ layout_mode = 1
 offset_left = 600.0
 offset_top = 276.0
 offset_right = 948.0
-offset_bottom = 416.0
+offset_bottom = 468.0
 text = "POWER_PLANT_DESC"
 autowrap_mode = 3
 
 [node name="OK" type="Button" parent="." unique_id=2109531059]
 layout_mode = 0
 offset_left = 612.0
-offset_top = 508.0
+offset_top = 496.0
 offset_right = 668.0
-offset_bottom = 541.0
+offset_bottom = 529.0
 text = "OK"

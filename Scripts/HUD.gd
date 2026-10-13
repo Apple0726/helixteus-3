@@ -42,9 +42,8 @@ func _on_Button_pressed():
 	game.toggle_panel(game.settings)
 
 func _ready():
-	refresh_bookmarks()
-	refresh_visibility()
-	set_ship_btn_shader(game.autocollect.has("passive_xp_tier"))
+	refresh()
+	set_ship_btn_shader()
 
 func refresh_visibility():
 	minerals.visible = game.show.has("minerals")
@@ -207,10 +206,12 @@ func refresh():
 		$Bookmarks/Bookmarked.button_pressed = game.planet_data[game.c_p].has("bookmarked")
 		$Bookmarks/Bookmarked.visible = true
 		$Top/Name/Name.text = game.planet_data[game.c_p].name
+		switch_btn_texture.texture = preload("res://Graphics/Buttons/SystemView.png")
 	elif game.c_v == "system":
 		$Bookmarks/Bookmarked.button_pressed = game.system_data[game.c_s].has("bookmarked")
 		$Bookmarks/Bookmarked.visible = true
 		$Top/Name/Name.text = game.system_data[game.c_s].name
+		switch_btn_texture.texture = load("res://Graphics/Galaxies/%s.png" % game.galaxy_data[game.c_g].type)
 	elif game.c_v == "galaxy":
 		$Bookmarks/Bookmarked.button_pressed = game.galaxy_data[game.c_g].has("bookmarked")
 		$Bookmarks/Bookmarked.visible = true
@@ -236,6 +237,7 @@ func refresh():
 			break
 	$Top/ClusterInfo/Redshift.text = "%.2f" % game.u_i.cluster_data[game.c_c].redshift
 	$Top/ClusterInfo.visible = game.c_c != 0 and game.c_v != "universe"
+	set_ship_btn_shader()
 	await get_tree().process_frame
 	game.refresh_achievements()
 
@@ -663,9 +665,13 @@ func _on_MainMenu_mouse_entered():
 func _on_MainMenu_pressed():
 	game.show_YN_panel(game.return_to_menu)
 
-func set_ship_btn_shader(active:bool, tier:int = -1):
+func set_ship_btn_shader():
+	if not game.science_unlocked.has("ISC"):
+		return
+	var active = game.autocollect.has("passive_xp_tier")
 	ships_btn.material.set_shader_parameter("active", active)
-	if tier != -1:
+	if active:
+		var tier = game.autocollect.passive_xp_tier
 		ships_btn.material.set_shader_parameter("color", Data.ancient_bldg_tier_colors[tier - 1])
 		ships_btn.material.set_shader_parameter("speed", tier * game.u_i.time_speed)
 
