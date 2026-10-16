@@ -258,7 +258,6 @@ func battle_victory_callback():
 		Helper.show_bldg_unlocked_popup(Building.SOLAR_PANEL)
 	Helper.save_obj("Systems", game.c_s_g, game.planet_data)
 	if not game.help.has("SP"):
-		game.popup_window(tr("NEW_BLDGS_UNLOCKED_DESC"), tr("NEW_BLDGS_UNLOCKED"))
 		game.help["SP"] = true
 
 var scale_before_view_battlefield = 0.4

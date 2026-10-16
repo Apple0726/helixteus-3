@@ -1521,10 +1521,6 @@ func open_obj(type:String, id:int):
 	var arr = save.get_var()
 	save.close()
 	return arr
-	
-func obj_exists(type:String, id:int):
-	var file_path:String = "user://%s/Univ%s/%s/%s.hx3" % [c_sv, c_u, type, id]
-	return FileAccess.open(file_path, FileAccess.READ) or FileAccess.open(file_path + "~", FileAccess.READ)
 
 func add_space_HUD():
 	if not is_instance_valid(space_HUD) or not is_ancestor_of(space_HUD):
@@ -1631,7 +1627,6 @@ func add_universe():
 		generate_clusters()
 	view.shapes_data = u_i.shapes
 	view.add_obj("Universe", u_i["view"]["pos"], u_i["view"]["zoom"])
-	HUD.switch_btn_texture.texture = preload("res://Graphics/Buttons/DimensionView.png")
 
 func add_cluster():
 	if not u_i.has("cluster_data"):
@@ -1654,7 +1649,6 @@ func add_cluster():
 		var hue:float = fmod(r + 300, 1000.0) / 1000.0
 		var sat:float = pow(fmod(th + PI, 10.0) / 10.0, 0.2)
 		$ClusterBG.change_color(Color.from_hsv(hue, sat, 0.6))
-	HUD.switch_btn_texture.texture = preload("res://Graphics/Clusters/universe.png")
 	if len(ship_data) == 3 and u_i.lv >= 60:
 		popup_window(tr("WANDERING_SHIP_DESC"), tr("WANDERING_SHIP"))
 		get_4th_ship()
@@ -1681,7 +1675,6 @@ func add_galaxy():
 	if ships_travel_data.c_g_coords.g == c_g_g:
 		galaxy_data[c_g]["explored"] = true
 		galaxy_data_persistent[c_g]["explored"] = true
-	HUD.switch_btn_texture.texture = preload("res://Graphics/Clusters/0.png")
 	if len(ship_data) == 2 and u_i.lv >= 40:
 		popup_window(tr("WANDERING_SHIP_DESC"), tr("WANDERING_SHIP"))
 		get_3rd_ship()
@@ -2253,18 +2246,19 @@ func generate_systems(id:int):
 					star_size *= max(rng.randf_range(240000, 280000) / temp, rng.randf_range(1.2, 1.4))
 			star_class = get_star_class(temp)
 			var s_b:float = pow(u_i.boltzmann, 4) / pow(u_i.planck, 3) / pow(u_i.speed_of_light, 2)
-			stats_univ.biggest_star = max(star_size, stats_univ.biggest_star)
-			stats_dim.biggest_star = max(star_size, stats_dim.biggest_star)
-			stats_global.biggest_star = max(star_size, stats_global.biggest_star)
-			stats_univ.hottest_star = max(temp, stats_univ.hottest_star)
-			stats_dim.hottest_star = max(temp, stats_dim.hottest_star)
-			stats_global.hottest_star = max(temp, stats_global.hottest_star)
-			stats_univ.star_classes[star_class[0]][int(star_class[1])] += 1
-			stats_dim.star_classes[star_class[0]][int(star_class[1])] += 1
-			stats_global.star_classes[star_class[0]][int(star_class[1])] += 1
-			stats_univ.star_types[star_type] = stats_univ.star_types.get(star_type, 0) + 1
-			stats_dim.star_types[star_type] = stats_dim.star_types.get(star_type, 0) + 1
-			stats_global.star_types[star_type] = stats_global.star_types.get(star_type, 0) + 1
+			if not galaxy_data[id].has("discovered"):
+				stats_univ.biggest_star = max(star_size, stats_univ.biggest_star)
+				stats_dim.biggest_star = max(star_size, stats_dim.biggest_star)
+				stats_global.biggest_star = max(star_size, stats_global.biggest_star)
+				stats_univ.hottest_star = max(temp, stats_univ.hottest_star)
+				stats_dim.hottest_star = max(temp, stats_dim.hottest_star)
+				stats_global.hottest_star = max(temp, stats_global.hottest_star)
+				stats_univ.star_classes[star_class[0]][int(star_class[1])] += 1
+				stats_dim.star_classes[star_class[0]][int(star_class[1])] += 1
+				stats_global.star_classes[star_class[0]][int(star_class[1])] += 1
+				stats_univ.star_types[star_type] = stats_univ.star_types.get(star_type, 0) + 1
+				stats_dim.star_types[star_type] = stats_dim.star_types.get(star_type, 0) + 1
+				stats_global.star_types[star_type] = stats_global.star_types.get(star_type, 0) + 1
 			var star = {
 				"type": star_type,
 				"class": star_class,
@@ -2284,9 +2278,10 @@ func generate_systems(id:int):
 		s_i["planet_num"] = planet_num
 		if galaxy_data[id].has("conquered"):
 			s_i["conquered"] = true
-			stats_univ.planets_conquered += planet_num
-			stats_dim.planets_conquered += planet_num
-			stats_global.planets_conquered += planet_num
+			if not galaxy_data[id].has("discovered"):
+				stats_univ.planets_conquered += planet_num
+				stats_dim.planets_conquered += planet_num
+				stats_global.planets_conquered += planet_num
 		system_data[s_id] = s_i
 	
 	if galaxy_data[id].type == 6:
@@ -2514,10 +2509,10 @@ func generate_planets(id:int):#local id
 			p_i["crust_start_depth"] = rng.randi_range(50, 450)
 			p_i["mantle_start_depth"] = round(rng.randf_range(0.005, 0.02) * p_i.size * 1000)
 		var list_of_element_probabilities = Data.elements.duplicate()
-		p_i["atmosphere"] = make_atmosphere_composition(temp, p_i.pressure, list_of_element_probabilities)
-		p_i["crust"] = make_planet_composition(temp, "crust", p_i.size, gas_giant)
-		p_i["mantle"] = make_planet_composition(temp, "mantle", p_i.size, gas_giant)
-		p_i["core"] = make_planet_composition(temp, "core", p_i.size, gas_giant)
+		p_i["atmosphere"] = make_atmosphere_composition(temp, p_i.pressure, list_of_element_probabilities, rng)
+		p_i["crust"] = make_planet_composition(temp, "crust", p_i.size, rng, gas_giant)
+		p_i["mantle"] = make_planet_composition(temp, "mantle", p_i.size, rng, gas_giant)
+		p_i["core"] = make_planet_composition(temp, "core", p_i.size, rng, gas_giant)
 		p_i["core_start_depth"] = round(rng.randf_range(0.4, 0.46) * p_i.size * 1000)
 		p_i["surface"] = add_surface_materials(temp, p_i.crust)
 		if c_s_g == 0 and c_u == 0:#Only water in solar system
@@ -2781,7 +2776,7 @@ func generate_aurora(p_i:Dictionary, rng:RandomNumberGenerator):
 	var diff:int = 0
 	var tile_from:int = -1
 	var tile_to:int = -1
-	var rand:float = randf()
+	var rand:float = rng.randf()
 	var thiccness:int = ceil(rng.randf_range(1, 3) * wid / 50.0 * physics_bonus.aurora_width_multiplier)
 	var pulsation:float = rng.randf_range(0.4, 1)
 	var amplitude:float = 0.85
@@ -2805,13 +2800,13 @@ func generate_aurora(p_i:Dictionary, rng:RandomNumberGenerator):
 		if home_planet:
 			continue
 		# Guaranteed aurora spawn on starting planet outside 1st universe
-		if (c_u == 0 or c_p_g != 2) and randf() > physics_bonus.aurora_spawn_probability * pow(p_i.pressure, 0.15) * aurora_spawn_p_mult:
+		if (c_u == 0 or c_p_g != 2) and rng.randf() > physics_bonus.aurora_spawn_probability * pow(p_i.pressure, 0.15) * aurora_spawn_p_mult:
 			continue
 		#au_int: aurora_intensity
-		var au_int = Helper.clever_round(80000 * randf_range(1, 2) * B_strength * max_star_temp)
+		var au_int = Helper.clever_round(80000 * rng.randf_range(1, 2) * B_strength * max_star_temp)
 		if tile_from == -1:
-			tile_from = randi() % wid
-			tile_to = randi() % wid
+			tile_from = rng.randi() % wid
+			tile_to = rng.randi() % wid
 		if rand < 0.5:#Vertical
 			for j in wid:
 				var x_pos:int = lerp(tile_from, tile_to, j / float(wid)) + diff * i + thiccness * amplitude * sin(j / float(wid) * 4 * pulsation * PI)
@@ -2847,7 +2842,7 @@ func generate_aurora(p_i:Dictionary, rng:RandomNumberGenerator):
 		stats_global.highest_au_int = max(au_int, stats_global.highest_au_int)
 		stats_dim.highest_au_int = max(au_int, stats_dim.highest_au_int)
 		stats_univ.highest_au_int = max(au_int, stats_univ.highest_au_int)
-		if i == 0 and randf() < physics_bonus.perpendicular_auroras:
+		if i == 0 and rng.randf() < physics_bonus.perpendicular_auroras:
 			rand = 1.0 - rand
 
 func generate_tiles(id:int, first_time:bool):
@@ -2891,6 +2886,8 @@ func generate_tiles(id:int, first_time:bool):
 	var crater_num:int = 0
 	var total_VEI:float = 0.0
 	var lake_coverage:float = pow(rng.randf() + (ProcGenSettings.lake_coverage - 0.5) * 4.0, 5)
+	if c_s_g == 0 and lake_coverage > 0.0:
+		lake_coverage -= 0.5
 	if c_p_g == 2:
 		lake_coverage = -0.5
 	for i in wid:
@@ -3222,9 +3219,7 @@ func generate_tiles(id:int, first_time:bool):
 			if not tile_data[i].resource_production_bonus.is_empty():
 				tile_data_persistent[i] = {"resource_production_bonus": tile_data[i].resource_production_bonus}
 			if tile_data[i].has("ancient_bldg"):
-				if tile_data_persistent[i] == null:
-					tile_data_persistent[i] = {}
-				tile_data_persistent[i].ancient_bldg = tile_data[i].ancient_bldg
+				Helper.set_tile_data_persistent(i, "ancient_bldg", tile_data[i].ancient_bldg)
 	else:
 		tile_data_persistent = open_obj("Planets", c_p_g)
 	for i in len(tile_data_persistent):
@@ -3245,7 +3240,7 @@ func erase_tile(tile:int):
 		if not key in ["aurora", "ash", "resource_production_bonus"]:
 			tile_data[tile].erase(key)
 
-func make_atmosphere_composition(temp:float, pressure:float, list_of_element_probabilities:Dictionary):
+func make_atmosphere_composition(temp:float, pressure:float, list_of_element_probabilities:Dictionary, rng:RandomNumberGenerator):
 	var atm = {}
 	var S:float = 0
 	for el in list_of_element_probabilities.keys():
@@ -3253,7 +3248,7 @@ func make_atmosphere_composition(temp:float, pressure:float, list_of_element_pro
 		var phase = phase_scene.instantiate()
 		if chemistry_bonus.has(el):
 			phase.modify_PD(chemistry_bonus[el])
-		var rand = list_of_element_probabilities[el] / (1 - randf())
+		var rand = list_of_element_probabilities[el] / (1 - rng.randf())
 		var el_state = Helper.get_state(temp, pressure, phase)
 		if el_state == "l":
 			rand *= 0.2
@@ -3268,60 +3263,60 @@ func make_atmosphere_composition(temp:float, pressure:float, list_of_element_pro
 		atm[el] /= S
 	return atm
 
-func make_planet_composition(temp:float, depth:String, size:float, gas_giant:bool = false):
+func make_planet_composition(temp:float, depth:String, size:float, rng:RandomNumberGenerator, gas_giant:bool = false):
 	var elements = {}
 	var big_planet_factor:float = clamp(remap(size, 12500, 45000, 1, 5), 1, 5)
 	if not gas_giant or depth == "core":
 		if depth == "crust":
-			var O = randf_range(1.0, 1.9)
+			var O = rng.randf_range(1.0, 1.9)
 			elements = {	"O":O,
-							"Si":O * randf_range(3.9, 4),
-							"Al":0.05 * randf(),
-							"Fe":0.035 * randf(),
-							"Na":0.025 * randf(),
-							"Ti":0.005 * randf(),
-							"H":0.01 * big_planet_factor * randf(),
-							"C":0.01 * big_planet_factor * randf(),
-							"He":0.003 * big_planet_factor * randf(),
+							"Si":O * rng.randf_range(3.9, 4),
+							"Al":0.05 * rng.randf(),
+							"Fe":0.035 * rng.randf(),
+							"Na":0.025 * rng.randf(),
+							"Ti":0.005 * rng.randf(),
+							"H":0.01 * big_planet_factor * rng.randf(),
+							"C":0.01 * big_planet_factor * rng.randf(),
+							"He":0.003 * big_planet_factor * rng.randf(),
 						}
 		elif depth == "mantle":
-			var O = randf_range(1.5, 1.9)
+			var O = rng.randf_range(1.5, 1.9)
 			elements = {	"O":O,
-							"Si":O * randf_range(3.9, 4),
-							"Al":0.05 * randf(),
-							"Fe":0.035 * randf(),
-							"Na":0.025 * randf(),
-							"H":0.01 * big_planet_factor * randf(),
-							"C":0.01 * big_planet_factor * randf(),
-							"Ti":0.005 * randf(),
-							"He":0.003 * big_planet_factor * randf(),
+							"Si":O * rng.randf_range(3.9, 4),
+							"Al":0.05 * rng.randf(),
+							"Fe":0.035 * rng.randf(),
+							"Na":0.025 * rng.randf(),
+							"H":0.01 * big_planet_factor * rng.randf(),
+							"C":0.01 * big_planet_factor * rng.randf(),
+							"Ti":0.005 * rng.randf(),
+							"He":0.003 * big_planet_factor * rng.randf(),
 						}
 		else:
-			var x:float = randf_range(1, 10)
-			var y:float = randf_range(0, 5)
+			var x:float = rng.randf_range(1, 10)
+			var y:float = rng.randf_range(0, 5)
 			elements["Fe"] = x/(x+1)
 			elements["Ni"] = (1 - Helper.get_sum_of_dict(elements)) * y/(y+1)
-			elements["O"] = (1 - Helper.get_sum_of_dict(elements)) * randf_range(0, 0.19)
-			elements["Si"] = elements["O"] * randf_range(3.9, 4)
-			elements["Ta"] = 0.05 * randf()
-			elements["W"] = 0.05 * randf()
-			elements["Os"] = 0.025 * randf()
-			elements["Ti"] = 0.01 * randf()
+			elements["O"] = (1 - Helper.get_sum_of_dict(elements)) * rng.randf_range(0, 0.19)
+			elements["Si"] = elements["O"] * rng.randf_range(3.9, 4)
+			elements["Ta"] = 0.05 * rng.randf()
+			elements["W"] = 0.05 * rng.randf()
+			elements["Os"] = 0.025 * rng.randf()
+			elements["Ti"] = 0.01 * rng.randf()
 	else:
 		if depth == "crust":
 			return {}
 		if depth == "mantle":
-			elements["H"] = randf()
-			elements["N"] = (1 - Helper.get_sum_of_dict(elements)) * randf()
-			elements["He"] = (1 - Helper.get_sum_of_dict(elements)) * randf()
-			elements["C"] = (1 - Helper.get_sum_of_dict(elements)) * randf()
+			elements["H"] = rng.randf()
+			elements["N"] = (1 - Helper.get_sum_of_dict(elements)) * rng.randf()
+			elements["He"] = (1 - Helper.get_sum_of_dict(elements)) * rng.randf()
+			elements["C"] = (1 - Helper.get_sum_of_dict(elements)) * rng.randf()
 			var r = 1 - Helper.get_sum_of_dict(elements)
-			elements["Al"] = r * 0.05 * randf()
-			elements["Fe"] = r * 0.035 * randf()
-			elements["Na"] = r * 0.025 * randf()
-			elements["Mg"] = r * 0.02 * randf()
-			elements["Ti"] = r * 0.005 * randf()
-			elements["H"] = r * 0.002 * randf()
+			elements["Al"] = r * 0.05 * rng.randf()
+			elements["Fe"] = r * 0.035 * rng.randf()
+			elements["Na"] = r * 0.025 * rng.randf()
+			elements["Mg"] = r * 0.02 * rng.randf()
+			elements["Ti"] = r * 0.005 * rng.randf()
+			elements["H"] = r * 0.002 * rng.randf()
 	var S = Helper.get_sum_of_dict(elements)
 	for el in elements:
 		elements[el] /= S
@@ -4575,7 +4570,7 @@ func start_spaceport_timer():
 func _on_spaceport_timer_timeout() -> void:
 	if not autocollect.has("passive_xp_tier"):
 		if is_instance_valid(HUD):
-			HUD.set_ship_btn_shader(false)
+			HUD.set_ship_btn_shader()
 		$SpaceportTimer.stop()
 		return
 	var xp_mult = Helper.get_spaceport_xp_mult(autocollect.passive_xp_tier)

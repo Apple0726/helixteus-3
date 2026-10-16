@@ -6,6 +6,7 @@
 [ext_resource type="Texture2D" uid="uid://b1dcgxga387up" path="res://Graphics/Effects/spotlight_1.png" id="4"]
 [ext_resource type="Texture2D" uid="uid://doyhcr5ker08v" path="res://Graphics/Cave/DebrisAnim.png" id="5"]
 [ext_resource type="Texture2D" uid="uid://cvetejccba6ge" path="res://Graphics/Stars/Star.png" id="6_cch3s"]
+[ext_resource type="AudioStream" uid="uid://djsyjnactuti8" path="res://Audio/SFX/break_rock.ogg" id="7_elx3q"]
 [ext_resource type="AudioStream" uid="uid://c7os7qndtqu84" path="res://Audio/SFX/collision.ogg" id="7_t3let"]
 
 [sub_resource type="Shader" id="7"]
@@ -251,6 +252,9 @@ libraries/ = SubResource("AnimationLibrary_evmef")
 one_shot = true
 
 [node name="BreakSound" type="AudioStreamPlayer2D" parent="." unique_id=1574532761]
+stream = ExtResource("7_elx3q")
+
+[node name="BreakSoundBigBoulder" type="AudioStreamPlayer2D" parent="." unique_id=1444657241]
 stream = ExtResource("7_t3let")
 
 [connection signal="area_entered" from="Crack" to="." method="_on_Crack_area_entered"]

@@ -1208,7 +1208,7 @@ func get_directory_properties(path, blacklist:Array = []):
 					total_size += properties.size
 					total_files += properties.files
 			else:
-				var file = FileAccess.open(file_path, FileAccess.READ)
+				var file = FileAccess.open_compressed(file_path, FileAccess.READ, FileAccess.COMPRESSION_ZSTD)
 				if file:
 					total_size += file.get_length()
 					total_files += 1
@@ -1580,6 +1580,8 @@ func update_CBD_affected_tiles(CBD_tile:Dictionary, CBD_tile_id:int, p_i:Diction
 			affected_tile.cost_div_dict[CBD_tile_id] = CBD_tile.bldg.path_1_value
 			
 			# Update CBD path 2 bonus to affected tile
+			if not affected_tile.has("%s_dict" % second_path_str):
+				affected_tile["%s_dict" % second_path_str] = {}
 			var new_bonus = max(affected_tile.get("%s_bonus" % second_path_str, 1.0), CBD_tile.bldg.path_2_value)
 			if second_path_str == "time_speed" and affected_tile.has("bldg"):
 				var old_time_speed = affected_tile.get("time_speed_bonus", 1.0)

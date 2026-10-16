@@ -282,6 +282,7 @@ func _ready():
 	else:
 		id = game.caves_generated
 		tile[cave_type]["id"] = id
+		Helper.set_tile_data_persistent(game.c_t, cave_type, tile[cave_type])
 		game.caves_generated += 1
 		Helper.save_obj("Planets", game.c_p_g, game.tile_data_persistent)
 	minimap_rover.position = minimap_center

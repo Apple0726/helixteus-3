@@ -6,9 +6,7 @@
 [ext_resource type="Texture2D" uid="uid://dl452yovfklni" path="res://Graphics/Decoratives/BulletHit.jpg" id="5"]
 [ext_resource type="Texture2D" uid="uid://bx1hvetixqpwi" path="res://Graphics/Misc/Bar2.png" id="6"]
 [ext_resource type="Shader" uid="uid://dose2l8hnixm6" path="res://Shaders/Fire.gdshader" id="7"]
-[ext_resource type="Texture2D" uid="uid://cdblvpftr6875" path="res://icon.png" id="8"]
-[ext_resource type="Shader" uid="uid://gevhgabt3grd" path="res://Shaders/Laser.gdshader" id="11"]
-[ext_resource type="Texture2D" uid="uid://yhdxrw2q1yep" path="res://Graphics/HX/Status effects/Stun.png" id="12"]
+[ext_resource type="Texture2D" uid="uid://cdblvpftr6875" path="res://icon.png" id="12"]
 [ext_resource type="Texture2D" uid="uid://b1dcgxga387up" path="res://Graphics/Effects/spotlight_1.png" id="14"]
 
 [sub_resource type="CircleShape2D" id="24"]
@@ -39,44 +37,6 @@ shader_parameter/color = Color(1, 0, 0, 1)
 shader_parameter/fog_size = 6.0
 shader_parameter/fog_mvt_spd = 1.0
 shader_parameter/OCTAVES = 4
-
-[sub_resource type="ShaderMaterial" id="4"]
-shader = ExtResource("11")
-shader_parameter/beams = 1
-shader_parameter/energy = 20.0
-shader_parameter/roughness = 3
-shader_parameter/frequency = 10
-shader_parameter/speed = 1.0
-shader_parameter/thickness = 0.021
-shader_parameter/outline_thickness = 0.044
-shader_parameter/beam_difference = 0.0
-shader_parameter/glow = 0.0
-shader_parameter/outline_glow = 0.0
-shader_parameter/color = Color(0.91, 1.5, 1.5, 1)
-shader_parameter/outline_color = Color(0.501961, 1, 0.960784, 1)
-shader_parameter/progress = 1.0
-shader_parameter/y_offset = 0.0
-shader_parameter/fixed_edge_size = 0.05
-shader_parameter/noise_scale = Vector2(1, 1)
-
-[sub_resource type="ShaderMaterial" id="5"]
-shader = ExtResource("11")
-shader_parameter/beams = 1
-shader_parameter/energy = 10.0
-shader_parameter/roughness = 8
-shader_parameter/frequency = 15
-shader_parameter/speed = 1.0
-shader_parameter/thickness = 0.012
-shader_parameter/outline_thickness = 0.043
-shader_parameter/beam_difference = 0.0
-shader_parameter/glow = 0.0
-shader_parameter/outline_glow = 0.0
-shader_parameter/color = Color(0.91, 2, 2, 1)
-shader_parameter/outline_color = Color(0.5, 1, 0.96, 1)
-shader_parameter/progress = 1.0
-shader_parameter/y_offset = 0.0
-shader_parameter/fixed_edge_size = 0.05
-shader_parameter/noise_scale = Vector2(1, 1)
 
 [sub_resource type="Gradient" id="26"]
 offsets = PackedFloat32Array(0, 0.518692, 1)
@@ -212,27 +172,7 @@ visible = false
 material = SubResource("3")
 position = Vector2(48.8168, -97.6652)
 scale = Vector2(12, 12)
-texture = ExtResource("8")
-
-[node name="Stun" type="Node2D" parent="Sprite2D" unique_id=343604376]
-visible = false
-position = Vector2(0, -6.29962)
-
-[node name="Sprite2D" type="Sprite2D" parent="Sprite2D/Stun" unique_id=1702453835]
-material = SubResource("4")
-position = Vector2(47.1782, 64.5085)
-rotation = 0.496553
-scale = Vector2(2.36037, 2.36037)
 texture = ExtResource("12")
-offset = Vector2(-21.4132, -17.9986)
-
-[node name="Sprite2" type="Sprite2D" parent="Sprite2D/Stun" unique_id=1721063773]
-material = SubResource("5")
-position = Vector2(11.3541, 50.4711)
-rotation = -0.583007
-scale = Vector2(1.67193, 1.67193)
-texture = ExtResource("12")
-offset = Vector2(-21.4132, -17.9986)
 
 [node name="GPUParticles2D" type="GPUParticles2D" parent="Sprite2D" unique_id=2038913194]
 modulate = Color(2, 2, 2, 1)

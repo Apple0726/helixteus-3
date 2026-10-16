@@ -162,7 +162,7 @@ func generate_rock(new:bool):
 	if not tile.mining.has("contents") or new:
 		tile.mining.contents = Helper.generate_rock(tile, p_i).duplicate(true)
 	if tile.mining.has("current_deposit"):
-		var met = tile.current_deposit.met
+		var met = tile.mining.current_deposit.met
 		var amount = tile.mining.contents[met]
 		for i in clamp(round(amount / 2.0), 1, 80):
 			var met_sprite = Sprite2D.new()

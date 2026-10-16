@@ -216,14 +216,17 @@ func refresh():
 		$Bookmarks/Bookmarked.button_pressed = game.galaxy_data[game.c_g].has("bookmarked")
 		$Bookmarks/Bookmarked.visible = true
 		$Top/Name/Name.text = game.galaxy_data[game.c_g].name
+		switch_btn_texture.texture = preload("res://Graphics/Clusters/0.png")
 	elif game.c_v == "cluster":
 		$Bookmarks/Bookmarked.button_pressed = game.u_i.cluster_data[game.c_c].has("bookmarked")
 		$Bookmarks/Bookmarked.visible = true
 		$Top/Name/Name.text = game.u_i.cluster_data[game.c_c].name
+		switch_btn_texture.texture = preload("res://Graphics/Clusters/universe.png")
 	else:
 		$Bookmarks/Bookmarked.visible = false
 		if game.c_v == "universe":
 			$Top/Name/Name.text = game.u_i.name
+			switch_btn_texture.texture = preload("res://Graphics/Buttons/DimensionView.png")
 	for view in $Bottom/ViewHistory/VBox.get_children():
 		view.queue_free()
 	for view in game.view_history:

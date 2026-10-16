@@ -8,13 +8,9 @@
 [ext_resource type="Texture2D" uid="uid://bx1hvetixqpwi" path="res://Graphics/Misc/Bar2.png" id="6"]
 [ext_resource type="Texture2D" uid="uid://dvgpvly0jmhh1" path="res://Graphics/Ships/Ship2 light.png" id="6_4hicg"]
 [ext_resource type="Theme" uid="uid://cp2u1kgj60ic" path="res://Resources/default_theme.tres" id="6_ymlex"]
-[ext_resource type="Texture2D" uid="uid://yhdxrw2q1yep" path="res://Graphics/HX/Status effects/Stun.png" id="8"]
 [ext_resource type="PackedScene" uid="uid://m8wrm55x0xbe" path="res://Scenes/Battle/StatusEffects.tscn" id="8_ymlex"]
 [ext_resource type="PackedScene" uid="uid://ni58sxlrjgg4" path="res://Scenes/Battle/Buffs.tscn" id="9_0r8nl"]
 [ext_resource type="Texture2D" uid="uid://b1dcgxga387up" path="res://Graphics/Effects/spotlight_1.png" id="10"]
-[ext_resource type="Texture2D" uid="uid://cdblvpftr6875" path="res://icon.png" id="12"]
-[ext_resource type="Shader" uid="uid://dose2l8hnixm6" path="res://Shaders/Fire.gdshader" id="13"]
-[ext_resource type="Shader" uid="uid://gevhgabt3grd" path="res://Shaders/Laser.gdshader" id="14"]
 [ext_resource type="AudioStream" uid="uid://das6rwveoi8io" path="res://Audio/SFX/overclock.ogg" id="17_53138"]
 [ext_resource type="PackedScene" uid="uid://b3b68o5fd52pr" path="res://Scenes/Battle/VelocityArrow.tscn" id="22_mql8i"]
 
@@ -640,51 +636,6 @@ shader_parameter/frequency = 6.0
 shader_parameter/aurora = false
 shader_parameter/light = 1.0
 
-[sub_resource type="ShaderMaterial" id="29"]
-shader = ExtResource("13")
-shader_parameter/color = Color(1, 0, 0, 1)
-shader_parameter/fog_size = 6.0
-shader_parameter/fog_mvt_spd = 1.0
-shader_parameter/OCTAVES = 4
-
-[sub_resource type="ShaderMaterial" id="30"]
-shader = ExtResource("14")
-shader_parameter/beams = 1
-shader_parameter/energy = 20.0
-shader_parameter/roughness = 3
-shader_parameter/frequency = 10
-shader_parameter/speed = 1.0
-shader_parameter/thickness = 0.021
-shader_parameter/outline_thickness = 0.044
-shader_parameter/beam_difference = 0.0
-shader_parameter/glow = 0.0
-shader_parameter/outline_glow = 0.0
-shader_parameter/color = Color(0.91, 1.5, 1.5, 1)
-shader_parameter/outline_color = Color(0.501961, 1, 0.960784, 1)
-shader_parameter/progress = 1.0
-shader_parameter/y_offset = 0.0
-shader_parameter/fixed_edge_size = 0.05
-shader_parameter/noise_scale = Vector2(1, 1)
-
-[sub_resource type="ShaderMaterial" id="31"]
-shader = ExtResource("14")
-shader_parameter/beams = 1
-shader_parameter/energy = 10.0
-shader_parameter/roughness = 8
-shader_parameter/frequency = 15
-shader_parameter/speed = 1.0
-shader_parameter/thickness = 0.012
-shader_parameter/outline_thickness = 0.043
-shader_parameter/beam_difference = 0.0
-shader_parameter/glow = 0.0
-shader_parameter/outline_glow = 0.0
-shader_parameter/color = Color(0.91, 2, 2, 1)
-shader_parameter/outline_color = Color(0.5, 1, 0.96, 1)
-shader_parameter/progress = 1.0
-shader_parameter/y_offset = 0.0
-shader_parameter/fixed_edge_size = 0.05
-shader_parameter/noise_scale = Vector2(1, 1)
-
 [sub_resource type="Gradient" id="32"]
 offsets = PackedFloat32Array(0, 0.518692, 1)
 colors = PackedColorArray(1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 0)
@@ -1067,33 +1018,6 @@ offset_bottom = 112.0
 [node name="Effects" type="Sprite2D" parent="." unique_id=758978088]
 material = SubResource("28")
 position = Vector2(0, 6.29962)
-
-[node name="Fire" type="Sprite2D" parent="Effects" unique_id=1098131012]
-visible = false
-material = SubResource("29")
-position = Vector2(32, 31.2004)
-scale = Vector2(12, 12)
-texture = ExtResource("12")
-
-[node name="Stun" type="Node2D" parent="Effects" unique_id=1701011316]
-visible = false
-position = Vector2(0, -6.29962)
-
-[node name="Sprite2D" type="Sprite2D" parent="Effects/Stun" unique_id=515651972]
-material = SubResource("30")
-position = Vector2(47.1782, 64.5085)
-rotation = 0.496553
-scale = Vector2(2.36037, 2.36037)
-texture = ExtResource("8")
-offset = Vector2(-21.4132, -17.9986)
-
-[node name="Sprite2" type="Sprite2D" parent="Effects/Stun" unique_id=1808970815]
-material = SubResource("31")
-position = Vector2(11.3541, 50.4711)
-rotation = -0.583007
-scale = Vector2(1.67193, 1.67193)
-texture = ExtResource("8")
-offset = Vector2(-21.4132, -17.9986)
 
 [node name="GPUParticles2D" type="GPUParticles2D" parent="Effects" unique_id=485303394]
 visible = false

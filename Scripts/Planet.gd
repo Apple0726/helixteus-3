@@ -130,7 +130,7 @@ func _ready():
 			elif tile.has("cave"):
 				if tile.cave.has("id"):
 					var cave_file_path:String = "user://%s/Univ%s/Caves/%s.hx3" % [game.c_sv, game.c_u, tile.cave.id]
-					var cave_data_file = FileAccess.open(cave_file_path, FileAccess.READ)
+					var cave_data_file = FileAccess.open_compressed(cave_file_path, FileAccess.READ, FileAccess.COMPRESSION_ZSTD)
 					if cave_data_file:
 						var cave_data = cave_data_file.get_var()
 						cave_data_file.close()
@@ -210,7 +210,8 @@ func _ready():
 	$Soil.set_cells_terrain_connect(soil_tiles, 0, 0)
 	$Ash.set_cells_terrain_connect(ash_tiles, 0, 0)
 	seed(p_i.seed)
-	$PlanetTiles.material.set_shader_parameter("planet_texture", load("res://Graphics/Tiles/Mosaics/%s.jpg" % randi_range(1, 8)))
+	var surface_type = randi_range(1, 8)
+	$PlanetTiles.material.set_shader_parameter("planet_texture", load("res://Graphics/Tiles/Mosaics/%s.jpg" % surface_type))
 	$PlanetTiles.material.set_shader_parameter("texture_zoom", randf_range(0.5, 2.0) * 200.0 / $PlanetTiles.tile_set.tile_size.x)
 	$PlanetTiles.material.set_shader_parameter("texture_offset", Vector2(randf_range(0.0, 4000.0), randf_range(0.0, 4000.0)))
 	if wid <= 50:

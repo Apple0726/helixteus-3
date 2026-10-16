@@ -50,8 +50,9 @@ func set_battlefield_BG():
 	seed(p_i.seed)
 	$PlanetBG.texture = load("res://Graphics/Planets/%s.png" % p_i.type)
 	var random_depth = randf_range(0.6, 1.0)
-	$PlanetBG.scale *= random_depth * 640.0 / $PlanetBG.texture.get_width()
-	$PlanetLight.scale *= $PlanetBG.scale.x * 0.2
+	var random_scale = random_depth * 640.0
+	$PlanetBG.scale *= random_scale / $PlanetBG.texture.get_width()
+	$PlanetLight.texture_scale *= random_scale / 320.0
 	$PlanetBG.position.x = randf_range(90.0, 1190.0)
 	$PlanetBG.position.y = randf_range(90.0, 630.0)
 	while $PlanetBG.position.x > 440 and $PlanetBG.position.x < 840:

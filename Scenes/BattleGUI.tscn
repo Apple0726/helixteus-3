@@ -187,7 +187,6 @@ position = Vector2(1088, 336)
 energy = 8.88
 range_item_cull_mask = 4
 texture = ExtResource("4_pv2pb")
-texture_scale = 2.39
 
 [node name="Back" type="Button" parent="." unique_id=302051613]
 layout_mode = 1

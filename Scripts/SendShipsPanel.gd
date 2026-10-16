@@ -38,7 +38,7 @@ func refresh():
 	if g_s == game.c_s_g:
 		depart_planet_data = game.planet_data[coords.p]
 	else:
-		var file = FileAccess.open("user://%s/Univ%s/Systems/%s.hx3" % [game.c_sv, game.c_u, g_s], FileAccess.READ)
+		var file = FileAccess.open_compressed("user://%s/Univ%s/Systems/%s.hx3" % [game.c_sv, game.c_u, g_s], FileAccess.READ, FileAccess.COMPRESSION_ZSTD)
 		planets_in_depart_system = file.get_var()
 		file.close()
 		depart_planet_data = planets_in_depart_system[coords.p]
@@ -135,7 +135,6 @@ func send_ships():
 				game.ships_travel_data.c_coords.c = game.c_c
 				game.ships_travel_data.dest_coords.c = game.c_c
 				game.autocollect.erase("passive_xp_tier")
-				game.HUD.set_ship_btn_shader(false)
 				game.view.obj.refresh_planets()
 				game.view.refresh()
 				var p_i = game.planet_data[game.ships_travel_data.c_coords.p]
@@ -159,7 +158,6 @@ func send_ships():
 						game.earn_achievement("random", "1000_year_journey")
 				game.energy -= round(total_energy_cost)
 				game.autocollect.erase("passive_xp_tier")
-				game.HUD.set_ship_btn_shader(false)
 				send_ships2(time_cost)
 				if game.c_v == travel_view:
 					game.view.refresh()

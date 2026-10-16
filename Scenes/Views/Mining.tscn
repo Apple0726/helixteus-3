@@ -93,7 +93,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("9")
 }],
-"loop": true,
+"loop": 1,
 "name": &"default",
 "speed": 5.0
 }]
@@ -276,7 +276,7 @@ region_rect = Rect2(0, 0, 1280, 720)
 visible = false
 texture_repeat = 2
 material = SubResource("1")
-scale = Vector2(2.5, 1.40625)
+scale = Vector2(5, 2.8125)
 texture = ExtResource("17")
 centered = false
 

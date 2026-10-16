@@ -44,7 +44,7 @@ func on_export(save_str:String):
 	if OS.get_name() == "Web":
 		if await Helper.export_save(save_str, "user://%s.hx3" % save_str):
 			game.popup(tr("EXPORT_SUCCESS") % save_to_export, 2.0)
-			var file = FileAccess.open("user://%s.hx3" % save_str, FileAccess.READ)
+			var file = FileAccess.open_compressed("user://%s.hx3" % save_str, FileAccess.READ, FileAccess.COMPRESSION_ZSTD)
 			var L = file.get_length()
 			var buffer = file.get_buffer(L)
 			file.close()

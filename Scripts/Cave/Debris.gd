@@ -66,7 +66,11 @@ func destroy_rock():
 	add_child(timer)
 	timer.connect("timeout", queue_free)
 	timer.start(particle_lifetime)
+	$BreakSound.pitch_scale = randf_range(0.8, 1.2)
 	$BreakSound.play()
+	if scale.x > 1.5:
+		$BreakSoundBigBoulder.volume_db = clamp(remap(scale.x, 1.5, 10.0, -3.0, 2.0), -3.0, 2.0)
+		$BreakSoundBigBoulder.play()
 
 
 func _on_Crack_area_entered(area):

@@ -7,7 +7,6 @@
 [ext_resource type="Texture2D" uid="uid://qbiggp0bodp1" path="res://Graphics/Cave/MiningLaser.png" id="5"]
 [ext_resource type="Texture2D" uid="uid://hvuwdl8ox0yv" path="res://Graphics/Icons/stone.png" id="8"]
 [ext_resource type="PackedScene" uid="uid://cpfkb4haasun3" path="res://Scenes/CaveHole.tscn" id="9"]
-[ext_resource type="Texture2D" uid="uid://yhdxrw2q1yep" path="res://Graphics/HX/Status effects/Stun.png" id="10"]
 [ext_resource type="Texture2D" uid="uid://64ywd74o1wk7" path="res://Graphics/Cave/Rover top down.png" id="11"]
 [ext_resource type="AudioStream" uid="uid://bcj4nufp7rpc0" path="res://Audio/SFX/mining_laser_loop.ogg" id="12_yvdt3"]
 [ext_resource type="Texture2D" uid="uid://vj3h3by1epm8" path="res://Graphics/Cave/Objects/exit.png" id="13"]
@@ -18,7 +17,6 @@
 [ext_resource type="Texture2D" uid="uid://dctvflbbcrqs4" path="res://Graphics/Cave/Projectiles/mining_laser_glow.png" id="16_6cmh4"]
 [ext_resource type="Texture2D" uid="uid://cslf5agen531d" path="res://Graphics/Cave/MMIcons/NextFloor.png" id="17"]
 [ext_resource type="Texture2D" uid="uid://uyvtci76f3tm" path="res://Graphics/Clusters/0.png" id="17_f1kta"]
-[ext_resource type="Texture2D" uid="uid://cdblvpftr6875" path="res://icon.png" id="18"]
 [ext_resource type="AudioStream" uid="uid://djsyjnactuti8" path="res://Audio/SFX/break_rock.ogg" id="18_dfqh5"]
 [ext_resource type="PackedScene" uid="uid://2s0chovxmhln" path="res://Scenes/InventorySlot.tscn" id="20"]
 [ext_resource type="Texture2D" uid="uid://cbployr7rnqpu" path="res://Graphics/Cave/MMIcons/Exit.png" id="21"]
@@ -26,7 +24,7 @@
 [ext_resource type="Texture2D" uid="uid://bl07f3wef0muv" path="res://Graphics/Icons/HP.png" id="23"]
 [ext_resource type="PackedScene" uid="uid://di212twja6t76" path="res://Scenes/Dialogue.tscn" id="24"]
 [ext_resource type="Texture2D" uid="uid://d03u105amdf1c" path="res://Graphics/Icons/Inventory.png" id="25"]
-[ext_resource type="Texture2D" uid="uid://bxisftoek0j0e" path="res://Graphics/Cave/RelicDetails.png" id="28"]
+[ext_resource type="Texture2D" uid="uid://cdblvpftr6875" path="res://icon.png" id="28"]
 [ext_resource type="Theme" uid="uid://cp2u1kgj60ic" path="res://Resources/default_theme.tres" id="29"]
 [ext_resource type="Texture2D" uid="uid://by5owi4dvg1i" path="res://Graphics/Misc/Glow.png" id="30"]
 [ext_resource type="Texture2D" uid="uid://cvetejccba6ge" path="res://Graphics/Stars/Star.png" id="31"]
@@ -769,7 +767,7 @@ material = SubResource("20")
 position = Vector2(32, 38.2996)
 rotation = 0.496553
 scale = Vector2(1.45224, 1.45224)
-texture = ExtResource("10")
+texture = ExtResource("28")
 offset = Vector2(-21.4132, -17.9986)
 
 [node name="Sprite2" type="Sprite2D" parent="Rover/Stun" unique_id=30991510]
@@ -777,7 +775,7 @@ material = SubResource("21")
 position = Vector2(8, 30.2996)
 rotation = -0.583007
 scale = Vector2(0.965229, 0.965229)
-texture = ExtResource("10")
+texture = ExtResource("22")
 offset = Vector2(-21.4132, -17.9986)
 
 [node name="Burn" type="Sprite2D" parent="Rover" unique_id=72079587]
@@ -785,7 +783,7 @@ visible = false
 material = SubResource("22")
 position = Vector2(20, -48)
 scale = Vector2(7.6875, 7.6875)
-texture = ExtResource("18")
+texture = ExtResource("28")
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="Rover" unique_id=733760674]
 libraries/ = SubResource("AnimationLibrary_qwwb7")
@@ -1158,22 +1156,6 @@ mouse_filter = 1
 theme = ExtResource("29")
 theme_override_styles/normal = SubResource("StyleBoxFlat_2lgmg")
 text = "CONTROLS"
-
-[node name="Relic" type="TextureRect" parent="UI2" unique_id=1018894237]
-visible = false
-offset_left = 340.0
-offset_top = 36.0
-offset_right = 940.0
-offset_bottom = 636.0
-texture = ExtResource("28")
-
-[node name="Text" type="Label" parent="UI2/Relic" unique_id=2061147426]
-layout_mode = 0
-offset_left = 156.0
-offset_top = 84.0
-offset_right = 432.0
-offset_bottom = 504.0
-text = "RELIC_TEXT"
 
 [node name="Controls" parent="UI2" unique_id=925865266 instance=ExtResource("47")]
 visible = false

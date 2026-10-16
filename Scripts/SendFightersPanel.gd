@@ -70,7 +70,7 @@ func refresh():
 				if fighter == null or fighter.has("exploring"):
 					continue
 				if fighter.tier == 0 and fighter.c_g_g == game.c_g_g:
-					var file = FileAccess.open("user://%s/Univ%s/Systems/%s.hx3" % [game.c_sv, game.c_u, fighter.c_s_g], FileAccess.READ)
+					var file = FileAccess.open_compressed("user://%s/Univ%s/Systems/%s.hx3" % [game.c_sv, game.c_u, fighter.c_s_g], FileAccess.READ, FileAccess.COMPRESSION_ZSTD)
 					var planets_in_depart_system = file.get_var()
 					combined_strength += fighter.strength
 					fighter_num += fighter.number
