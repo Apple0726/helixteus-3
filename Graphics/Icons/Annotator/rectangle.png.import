@@ -15,7 +15,7 @@ dest_files=["res://.godot/imported/rectangle.png-52dfca584f3c3521eea4ddb5b571e21
 
 [params]
 
-compress/mode=0
+compress/mode=1
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/uastc_level=0

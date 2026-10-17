@@ -15,7 +15,7 @@ dest_files=["res://.godot/imported/mining_liquid.png-57e58c2b84402635efbd23c42c5
 
 [params]
 
-compress/mode=0
+compress/mode=1
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/uastc_level=0

@@ -15,7 +15,7 @@ dest_files=["res://.godot/imported/RMK3.png-5089d4edfad9551aede9b3530ec3b44c.cte
 
 [params]
 
-compress/mode=0
+compress/mode=1
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/uastc_level=0

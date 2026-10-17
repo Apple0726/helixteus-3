@@ -15,7 +15,7 @@ dest_files=["res://.godot/imported/soil.png-9e7953c0d0f3f87eebb2d6d361e48037.cte
 
 [params]
 
-compress/mode=0
+compress/mode=1
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/uastc_level=0

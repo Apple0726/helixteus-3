@@ -15,7 +15,7 @@ dest_files=["res://.godot/imported/Fighter2.png-8c811582381c90c79ca335cc231e02a8
 
 [params]
 
-compress/mode=0
+compress/mode=1
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/uastc_level=0

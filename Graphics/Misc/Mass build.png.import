@@ -15,7 +15,7 @@ dest_files=["res://.godot/imported/Mass build.png-77b5209b56e57bf5576741c3c204b8
 
 [params]
 
-compress/mode=0
+compress/mode=1
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/uastc_level=0

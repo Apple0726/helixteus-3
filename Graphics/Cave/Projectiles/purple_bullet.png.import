@@ -15,7 +15,7 @@ dest_files=["res://.godot/imported/purple_bullet.png-50d35d44dbe96c5db5cf2d56333
 
 [params]
 
-compress/mode=0
+compress/mode=1
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/uastc_level=0

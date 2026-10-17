@@ -15,7 +15,7 @@ dest_files=["res://.godot/imported/shipyard.png-b3812a2a44417f18b1e3e32596d18250
 
 [params]
 
-compress/mode=0
+compress/mode=1
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/uastc_level=0

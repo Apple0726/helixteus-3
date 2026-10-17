@@ -15,7 +15,7 @@ dest_files=["res://.godot/imported/CBS_1.png-8504571abc54e2db7c1e91e30e2f49e8.ct
 
 [params]
 
-compress/mode=0
+compress/mode=1
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/uastc_level=0

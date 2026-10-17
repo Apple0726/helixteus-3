@@ -15,7 +15,7 @@ dest_files=["res://.godot/imported/Terraform.png-b54a37932dd668efa124d2f9c13a220
 
 [params]
 
-compress/mode=0
+compress/mode=1
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/uastc_level=0

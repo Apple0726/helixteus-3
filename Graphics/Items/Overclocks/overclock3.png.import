@@ -15,7 +15,7 @@ dest_files=["res://.godot/imported/overclock3.png-bb7dc1cb0fa959167d1b911b5a8bbd
 
 [params]
 
-compress/mode=0
+compress/mode=1
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/uastc_level=0

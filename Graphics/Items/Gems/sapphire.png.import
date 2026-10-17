@@ -15,7 +15,7 @@ dest_files=["res://.godot/imported/sapphire.png-1277b645c48fa73a4c4485e3c23f259a
 
 [params]
 
-compress/mode=0
+compress/mode=1
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/uastc_level=0

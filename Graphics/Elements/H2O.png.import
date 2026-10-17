@@ -15,7 +15,7 @@ dest_files=["res://.godot/imported/H2O.png-dedc5f0e138e8a636cbb4f3c5e5fd0bf.ctex
 
 [params]
 
-compress/mode=0
+compress/mode=1
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/uastc_level=0

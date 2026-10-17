@@ -15,7 +15,7 @@ dest_files=["res://.godot/imported/MiningLaser.png-800e607a9409f47a48fea1b1edf0d
 
 [params]
 
-compress/mode=0
+compress/mode=1
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/uastc_level=0

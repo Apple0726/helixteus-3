@@ -15,7 +15,7 @@ dest_files=["res://.godot/imported/Annotate.png-e152fc9bf5a5572aee95b4d006ea7d5d
 
 [params]
 
-compress/mode=0
+compress/mode=1
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/uastc_level=0

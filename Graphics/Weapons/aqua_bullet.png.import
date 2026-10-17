@@ -15,7 +15,7 @@ dest_files=["res://.godot/imported/aqua_bullet.png-e5bc44c96a831ddb6053878238923
 
 [params]
 
-compress/mode=0
+compress/mode=1
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/uastc_level=0

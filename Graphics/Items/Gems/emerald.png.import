@@ -15,7 +15,7 @@ dest_files=["res://.godot/imported/emerald.png-0379187b7778274f7cf1412447d64046.
 
 [params]
 
-compress/mode=0
+compress/mode=1
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/uastc_level=0

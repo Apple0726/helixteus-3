@@ -15,7 +15,7 @@ dest_files=["res://.godot/imported/REP_over.png-353ef03a4ecd27486ff4eaade2a72548
 
 [params]
 
-compress/mode=0
+compress/mode=1
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/uastc_level=0

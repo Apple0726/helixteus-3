@@ -15,7 +15,7 @@ dest_files=["res://.godot/imported/battery.png-3c4c508f53bc2e3e5c3d3f35534ec60e.
 
 [params]
 
-compress/mode=0
+compress/mode=1
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/uastc_level=0

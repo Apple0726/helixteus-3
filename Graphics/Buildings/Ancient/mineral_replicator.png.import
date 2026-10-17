@@ -15,7 +15,7 @@ dest_files=["res://.godot/imported/mineral_replicator.png-75f2f6d580d617e2e3c9a8
 
 [params]
 
-compress/mode=0
+compress/mode=1
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/uastc_level=0

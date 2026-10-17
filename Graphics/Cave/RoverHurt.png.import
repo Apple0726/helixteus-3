@@ -15,7 +15,7 @@ dest_files=["res://.godot/imported/RoverHurt.png-9725f129d8bcc46d4301d565c50949d
 
 [params]
 
-compress/mode=0
+compress/mode=1
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/uastc_level=0

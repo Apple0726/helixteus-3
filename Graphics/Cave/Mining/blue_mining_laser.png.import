@@ -15,7 +15,7 @@ dest_files=["res://.godot/imported/blue_mining_laser.png-b0429cd829a5ada6d3299a2
 
 [params]
 
-compress/mode=0
+compress/mode=1
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/uastc_level=0

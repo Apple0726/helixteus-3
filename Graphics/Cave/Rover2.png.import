@@ -15,7 +15,7 @@ dest_files=["res://.godot/imported/Rover2.png-90b1a15da3bbbf8ce2ea013ddfd8ba58.c
 
 [params]
 
-compress/mode=0
+compress/mode=1
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/uastc_level=0

@@ -15,7 +15,7 @@ dest_files=["res://.godot/imported/stone_armor.png-5d0f0b7c1f492b2b6af10b2232b36
 
 [params]
 
-compress/mode=0
+compress/mode=1
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/uastc_level=0

@@ -15,7 +15,7 @@ dest_files=["res://.godot/imported/hx_core4.png-e2ef4e3211f184fe2cec946ca032fdcc
 
 [params]
 
-compress/mode=0
+compress/mode=1
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/uastc_level=0

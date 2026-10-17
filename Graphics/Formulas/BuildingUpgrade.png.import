@@ -15,7 +15,7 @@ dest_files=["res://.godot/imported/BuildingUpgrade.png-0dd81a8383cfb8aa976d9f9b9
 
 [params]
 
-compress/mode=0
+compress/mode=1
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/uastc_level=0

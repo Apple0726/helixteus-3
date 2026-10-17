@@ -15,7 +15,7 @@ dest_files=["res://.godot/imported/glass.png-24c1c0e82de96b6d57e441f52eb2300b.ct
 
 [params]
 
-compress/mode=0
+compress/mode=1
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/uastc_level=0

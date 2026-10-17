@@ -15,7 +15,7 @@ dest_files=["res://.godot/imported/N.png-6c4a98b7b896eea9240a7d521a9df8fb.ctex"]
 
 [params]
 
-compress/mode=0
+compress/mode=1
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/uastc_level=0

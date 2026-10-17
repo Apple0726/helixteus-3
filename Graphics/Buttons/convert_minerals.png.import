@@ -15,7 +15,7 @@ dest_files=["res://.godot/imported/convert_minerals.png-f2351ab4ee2fbc1155a5cc82
 
 [params]
 
-compress/mode=0
+compress/mode=1
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/uastc_level=0

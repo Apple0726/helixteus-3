@@ -15,7 +15,7 @@ dest_files=["res://.godot/imported/DebrisLava.png-da8e7b5d74d44e8a148ea9d7785701
 
 [params]
 
-compress/mode=0
+compress/mode=1
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/uastc_level=0

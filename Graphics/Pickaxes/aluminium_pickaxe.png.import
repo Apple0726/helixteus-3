@@ -15,7 +15,7 @@ dest_files=["res://.godot/imported/aluminium_pickaxe.png-9a5b2508e66e4b4430dd1db
 
 [params]
 
-compress/mode=0
+compress/mode=1
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/uastc_level=0

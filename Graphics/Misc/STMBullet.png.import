@@ -15,7 +15,7 @@ dest_files=["res://.godot/imported/STMBullet.png-a0084eb011c1bf2feef4b90dc5fa7bf
 
 [params]
 
-compress/mode=0
+compress/mode=1
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/uastc_level=0

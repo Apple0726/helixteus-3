@@ -15,7 +15,7 @@ dest_files=["res://.godot/imported/HUDButtonOver.png-fb597cc235a982c7db81e85e584
 
 [params]
 
-compress/mode=0
+compress/mode=1
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/uastc_level=0

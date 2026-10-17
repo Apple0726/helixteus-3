@@ -15,7 +15,7 @@ dest_files=["res://.godot/imported/mythril_pickaxe.png-5152c8af322d84f3b177f6111
 
 [params]
 
-compress/mode=0
+compress/mode=1
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/uastc_level=0

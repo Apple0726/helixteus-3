@@ -15,7 +15,7 @@ dest_files=["res://.godot/imported/effect_4.png-53065125a1844d2eb3e8d652630fa3c5
 
 [params]
 
-compress/mode=0
+compress/mode=1
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/uastc_level=0

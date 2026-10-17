@@ -15,7 +15,7 @@ dest_files=["res://.godot/imported/iron_wheels.png-83c620c34a208be246c916a2a7f4c
 
 [params]
 
-compress/mode=0
+compress/mode=1
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/uastc_level=0

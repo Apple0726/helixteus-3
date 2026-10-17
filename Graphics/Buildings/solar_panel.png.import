@@ -15,7 +15,7 @@ dest_files=["res://.godot/imported/solar_panel.png-17dbfeed4f47d37148f43ea3cc056
 
 [params]
 
-compress/mode=0
+compress/mode=1
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/uastc_level=0

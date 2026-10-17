@@ -15,7 +15,7 @@ dest_files=["res://.godot/imported/Glow.png-c4083536c2f2abd0f3843af8ef9eda4a.cte
 
 [params]
 
-compress/mode=0
+compress/mode=1
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/uastc_level=0

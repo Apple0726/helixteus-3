@@ -15,7 +15,7 @@ dest_files=["res://.godot/imported/cave_wall_atlas.png-39b318226c4fe5087e3d9d353
 
 [params]
 
-compress/mode=0
+compress/mode=1
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/uastc_level=0

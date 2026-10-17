@@ -15,7 +15,7 @@ dest_files=["res://.godot/imported/dark_asteroid.png-18f4299a533942aa968c88c8d94
 
 [params]
 
-compress/mode=0
+compress/mode=1
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/uastc_level=0

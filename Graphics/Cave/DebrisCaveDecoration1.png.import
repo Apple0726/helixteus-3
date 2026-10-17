@@ -15,7 +15,7 @@ dest_files=["res://.godot/imported/DebrisCaveDecoration1.png-7c26f56c46632c20f4c
 
 [params]
 
-compress/mode=0
+compress/mode=1
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/uastc_level=0

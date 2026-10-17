@@ -15,7 +15,7 @@ dest_files=["res://.godot/imported/universe.png-50d1fda0e980cc557ad1b25b2d0c1ced
 
 [params]
 
-compress/mode=0
+compress/mode=1
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/uastc_level=0

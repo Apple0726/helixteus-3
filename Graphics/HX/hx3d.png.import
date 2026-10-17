@@ -15,7 +15,7 @@ dest_files=["res://.godot/imported/hx3d.png-aedd313343bff226bbbaa713f2bce086.cte
 
 [params]
 
-compress/mode=0
+compress/mode=1
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/uastc_level=0

@@ -15,7 +15,7 @@ dest_files=["res://.godot/imported/fire_asteroid_big.png-95e282d58561c7348421a0e
 
 [params]
 
-compress/mode=0
+compress/mode=1
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/uastc_level=0

@@ -15,7 +15,7 @@ dest_files=["res://.godot/imported/stone_wheels.png-726f065a6fd4e6cef12681bc350a
 
 [params]
 
-compress/mode=0
+compress/mode=1
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/uastc_level=0

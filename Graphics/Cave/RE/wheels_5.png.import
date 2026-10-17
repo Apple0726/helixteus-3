@@ -15,7 +15,7 @@ dest_files=["res://.godot/imported/wheels_5.png-3e3e95442515059373eb6a551d326e91
 
 [params]
 
-compress/mode=0
+compress/mode=1
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/uastc_level=0

@@ -15,7 +15,7 @@ dest_files=["res://.godot/imported/MainBranch.png-19d6bc164cc2f07a4aa74b85b25c55
 
 [params]
 
-compress/mode=0
+compress/mode=1
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/uastc_level=0

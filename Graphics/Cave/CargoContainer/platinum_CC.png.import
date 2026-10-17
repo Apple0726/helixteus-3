@@ -15,7 +15,7 @@ dest_files=["res://.godot/imported/platinum_CC.png-a105fc2c63ad22f2efef68a4e175d
 
 [params]
 
-compress/mode=0
+compress/mode=1
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/uastc_level=0

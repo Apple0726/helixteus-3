@@ -15,7 +15,7 @@ dest_files=["res://.godot/imported/copper_armor.png-2bba8a0c9c311b20ec4ea5039fe5
 
 [params]
 
-compress/mode=0
+compress/mode=1
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/uastc_level=0

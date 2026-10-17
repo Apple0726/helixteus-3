@@ -15,7 +15,7 @@ dest_files=["res://.godot/imported/BGTitle.png-eec23900060390afd397f999d98987d7.
 
 [params]
 
-compress/mode=0
+compress/mode=1
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/uastc_level=0

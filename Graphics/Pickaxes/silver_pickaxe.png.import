@@ -15,7 +15,7 @@ dest_files=["res://.godot/imported/silver_pickaxe.png-98a3418bd3e596c3675fd3cac8
 
 [params]
 
-compress/mode=0
+compress/mode=1
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/uastc_level=0

@@ -15,7 +15,7 @@ dest_files=["res://.godot/imported/laser_3.png-0d4bb0e86facdd5261e0f04deea57271.
 
 [params]
 
-compress/mode=0
+compress/mode=1
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/uastc_level=0

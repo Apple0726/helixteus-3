@@ -15,7 +15,7 @@ dest_files=["res://.godot/imported/gemstone_armor.png-9035ff430a9b4b0d71fa7c06a9
 
 [params]
 
-compress/mode=0
+compress/mode=1
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/uastc_level=0

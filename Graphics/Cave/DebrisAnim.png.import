@@ -15,7 +15,7 @@ dest_files=["res://.godot/imported/DebrisAnim.png-c3583c281e023e51549b9c526acf9f
 
 [params]
 
-compress/mode=0
+compress/mode=1
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/uastc_level=0

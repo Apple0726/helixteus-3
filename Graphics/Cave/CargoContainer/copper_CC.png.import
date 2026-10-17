@@ -15,7 +15,7 @@ dest_files=["res://.godot/imported/copper_CC.png-b8eb9900890fb9a58b4e1a6dfe9ce0b
 
 [params]
 
-compress/mode=0
+compress/mode=1
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/uastc_level=0

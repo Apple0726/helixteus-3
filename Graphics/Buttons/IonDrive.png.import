@@ -15,7 +15,7 @@ dest_files=["res://.godot/imported/IonDrive.png-84c7324a8eb4d9a955bdb432dd1fb79f
 
 [params]
 
-compress/mode=0
+compress/mode=1
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/uastc_level=0

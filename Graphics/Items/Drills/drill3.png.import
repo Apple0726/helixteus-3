@@ -15,7 +15,7 @@ dest_files=["res://.godot/imported/drill3.png-30d0f6163cc2693af3b17f25bb582106.c
 
 [params]
 
-compress/mode=0
+compress/mode=1
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/uastc_level=0

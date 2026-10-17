@@ -15,7 +15,7 @@ dest_files=["res://.godot/imported/Ship2 light.png-c658b91459889a4dcfb0f812918f6
 
 [params]
 
-compress/mode=0
+compress/mode=1
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/uastc_level=0

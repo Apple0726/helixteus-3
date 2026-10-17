@@ -15,7 +15,7 @@ dest_files=["res://.godot/imported/quillite.png-2d96065fad2d94abac14530201e27701
 
 [params]
 
-compress/mode=0
+compress/mode=1
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/uastc_level=0

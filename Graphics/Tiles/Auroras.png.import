@@ -15,7 +15,7 @@ dest_files=["res://.godot/imported/Auroras.png-e8a0b94df823b1313a81df6b3030b8f1.
 
 [params]
 
-compress/mode=0
+compress/mode=1
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/uastc_level=0
