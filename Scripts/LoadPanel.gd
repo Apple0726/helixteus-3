@@ -15,10 +15,13 @@ func _process(delta: float) -> void:
 		exporting_label.text = tr("EXPORTING") + " (%d%%)" % int(Helper.export_save_files_exported * 100.0 / export_total_files)
 
 func refresh():
+	$ScrollContainer.hide()
+	$Loading.show()
 	for save in $ScrollContainer/HBox.get_children():
 		save.queue_free()
 	var save_dir = DirAccess.open("user://")
 	var saves = save_dir.get_directories()
+	var await_counter = 0
 	for save_name in saves:
 		var save_info_dict = Helper.get_save_info(save_name)
 		if not save_info_dict:
@@ -30,8 +33,13 @@ func refresh():
 		$ScrollContainer/HBox.add_child(save)
 		save.open_backup_panel.connect(open_backup_panel.bind(save_name))
 		save.initialize(save_info_dict, save_name, on_load, on_delete, on_export)
+		await_counter += 1
+		if await_counter % int(ceil(60.0 / Engine.get_frames_per_second())) == 0:
+			await get_tree().process_frame
 	$TotalFileSize.label_text = tr("PERSISTENT_STORAGE") + Helper.get_file_size_string(Helper.get_directory_properties("user://").size) + " "
 	$TotalFileSize.refresh()
+	$ScrollContainer.show()
+	$Loading.hide()
 
 func open_backup_panel(save_name:String):
 	var save_backups_scene = preload("res://Scenes/Panels/SaveBackups.tscn").instantiate()

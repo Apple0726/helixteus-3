@@ -148,6 +148,16 @@ text = "EXPORTING"
 horizontal_alignment = 1
 vertical_alignment = 1
 
+[node name="Loading" type="Label" parent="." unique_id=360104415]
+layout_mode = 0
+offset_left = 512.0
+offset_top = 344.0
+offset_right = 768.0
+offset_bottom = 376.0
+text = "LOADING"
+horizontal_alignment = 1
+vertical_alignment = 1
+
 [connection signal="pressed" from="CloseButton" to="." method="_on_close_button_pressed"]
 [connection signal="file_selected" from="Import" to="." method="_on_Import_file_selected"]
 [connection signal="visibility_changed" from="Import" to="." method="_on_import_visibility_changed"]

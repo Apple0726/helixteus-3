@@ -98,6 +98,10 @@ func set_size_of_COs(size_mult:float):
 	max_number_of_galaxies_node.text = str(int(size_mult * ProcGenSettings.default_values.max_number_of_galaxies))
 	galaxy_group_ratio_node.text = str(snappedf(ProcGenSettings.default_values.galaxy_group_ratio / sqrt(size_mult), 0.01))
 	number_of_clusters_node.text = str(int(size_mult * ProcGenSettings.default_values.number_of_clusters))
+	for line_edit in $AdvancedSettingsGroup/ScrollContainer/Control.get_children():
+		if line_edit is not LineEdit:
+			continue
+		check_value_validity(line_edit.text, line_edit)
 
 func set_density_of_COs(density_mult:float):
 	distance_between_planets_node.text = str(density_mult)
@@ -109,14 +113,16 @@ func check_seed_validity():
 	if not $Seed.text.is_valid_int():
 		$Seed.text = str(int(Time.get_unix_time_from_system()))
 
+# Check if entered value exceeds hard minimum/maximum
 func check_value_validity(new_text:String, line_edit_node):
 	if new_text.is_valid_float() or new_text.is_valid_int():
 		if min_max_values[line_edit_node].has("min") and float(new_text) < min_max_values[line_edit_node].min:
 			line_edit_node.text = str(min_max_values[line_edit_node].min)
 		elif min_max_values[line_edit_node].has("max") and float(new_text) > min_max_values[line_edit_node].max:
 			line_edit_node.text = str(min_max_values[line_edit_node].max)
-		line_edit_node.get_node("Warning").visible = get_warning_text(line_edit_node) != ""
+	line_edit_node.get_node("Warning").visible = get_warning_text(line_edit_node) != ""
 
+# Check if entered value is a valid number, otherwise reset it to default value
 func check_value_validity2(new_text:String, line_edit_node):
 	if new_text == "":
 		new_text = line_edit_node.text
@@ -190,6 +196,9 @@ func _on_start_game_pressed() -> void:
 	ProcGenSettings.number_of_clusters = int(number_of_clusters_node.text)
 	ProcGenSettings.universe_seed = int($Seed.text)
 	emit_signal("done")
+	var tween = create_tween()
+	tween.tween_property(self, "modulate:a", 0.0, 0.3)
+	tween.tween_callback(queue_free)
 
 
 func _on_advanced_settings_pressed() -> void:
@@ -200,3 +209,10 @@ func _on_advanced_settings_pressed() -> void:
 func _on_basic_settings_pressed() -> void:
 	$BasicSettingsGroup.show()
 	$AdvancedSettingsGroup.hide()
+
+
+func _on_return_to_menu_pressed() -> void:
+	var tween = create_tween()
+	tween.tween_property(self, "modulate:a", 0.0, 0.3)
+	tween.tween_callback(game.return_to_menu)
+	tween.tween_callback(queue_free)

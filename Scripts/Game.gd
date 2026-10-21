@@ -453,6 +453,10 @@ func _ready():
 		main.phase_2()
 	$Title/VBoxContainer/Continue.mouse_entered.connect(show_tooltip.bind("", {"additional_text": tr("KEYBOARD_SHORTCUT") + ": E"}))
 	$Title/VBoxContainer/Continue.mouse_exited.connect(hide_tooltip)
+	load_save_panel = preload("res://Scenes/Panels/LoadPanel.tscn").instantiate()
+	load_save_panel.panel_var_name = "load_save_panel"
+	load_save_panel.hide()
+	$Panels/Control.add_child(load_save_panel)
 
 func refresh_continue_button():
 	if $Title/VBoxContainer/Continue.pressed.is_connected(_on_continue_pressed):
@@ -750,10 +754,7 @@ func new_game(univ:int = 0, new_save:bool = false, DR_advantage = false):
 	add_child(procgen_settings_panel)
 	var tween = create_tween()
 	tween.tween_property(procgen_settings_panel, "modulate:a", 1.0, 0.3)
-	tween.tween_await(procgen_settings_panel.done)
-	tween.tween_property(procgen_settings_panel, "modulate:a", 0.0, 0.3)
-	tween.tween_callback(start_game.bind(univ, new_save, DR_advantage))
-	tween.tween_callback(procgen_settings_panel.queue_free)
+	procgen_settings_panel.done.connect(start_game.bind(univ, new_save, DR_advantage))
 
 func start_game(univ, new_save, DR_advantage):
 	stats_univ = Data.default_stats.duplicate(true)
@@ -4033,12 +4034,13 @@ func delete_save(save_str):
 func return_to_menu():
 	$Ship.visible = false
 	$Autosave.stop()
-	await switch_view("")
+	if c_sv != "":
+		await switch_view("")
+		switch_music(preload("res://Audio/Title.ogg"))
 	c_v = ""
 	c_sv = ""
 	DRs = 0
 	refresh_continue_button()
-	switch_music(preload("res://Audio/Title.ogg"))
 	HUD.queue_free()
 	$Title/VBoxContainer/NewGame.pressed.connect(_on_NewGame_pressed)
 	$Title.visible = true

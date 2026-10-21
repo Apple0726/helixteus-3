@@ -1008,6 +1008,15 @@ offset_right = 1063.0
 offset_bottom = 665.0
 text = "START_GAME"
 
+[node name="ReturnToMenu" type="Button" parent="." unique_id=1885187344]
+layout_mode = 0
+offset_left = 216.0
+offset_top = 632.0
+offset_right = 392.0
+offset_bottom = 665.0
+text = "RETURN_TO_MENU"
+
 [connection signal="pressed" from="BasicSettingsGroup/AdvancedSettings" to="." method="_on_advanced_settings_pressed"]
 [connection signal="pressed" from="AdvancedSettingsGroup/BasicSettings" to="." method="_on_basic_settings_pressed"]
 [connection signal="pressed" from="StartGame" to="." method="_on_start_game_pressed"]
+[connection signal="pressed" from="ReturnToMenu" to="." method="_on_return_to_menu_pressed"]

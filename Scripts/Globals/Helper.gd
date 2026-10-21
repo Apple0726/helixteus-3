@@ -563,7 +563,7 @@ func mass_generate_rock(tile:Dictionary, p_i:Dictionary, depth:int):
 		var amount:float
 		if tile.has("crater") and met == tile.crater.metal:
 			chance_mult = min(7.0 / (7.0 + 1 / (chance_mult * 6.0)), 1)
-			amount = randf_range(0.2, 0.225) * min(depth, 2 * tile.crater.init_depth)
+			amount = randf_range(0.5, 0.55) * min(depth, 2 * tile.crater.init_depth)
 		else:
 			chance_mult = min(7.0 / (7.0 + 1 / chance_mult), 1)
 			var end_depth:int = tile.depth + depth
@@ -572,7 +572,7 @@ func mass_generate_rock(tile:Dictionary, p_i:Dictionary, depth:int):
 			var num_tiles:int = end_depth - met_start_depth
 			var num_tiles2:int = met_end_depth - tile.depth
 			var num_tiles3:int = clamp(min(num_tiles, num_tiles2), 0, min(depth, met_end_depth - met_start_depth))
-			amount = randf_range(0.4, 0.45) * num_tiles3
+			amount = randf_range(1.0, 1.2) * num_tiles3
 		amount *= 20 * chance_mult * aurora_mult * h_mult / pow(met_info.rarity, 0.5)
 		if amount < 0.001:
 			continue
@@ -624,7 +624,7 @@ func generate_rock(tile:Dictionary, p_i:Dictionary):
 		var progress2 = tile.mining.current_deposit.progress
 		var amount_multiplier = -abs(2.0/size * progress2 - 1) + 1
 		var crater_metal = tile.has("crater") and tile.crater.has("init_depth") and met == tile.crater.metal
-		var amount = clever_round(20 * (3 if crater_metal else 1) * randf_range(0.4, 0.45) * amount_multiplier * aurora_mult * h_mult / pow(game.met_info[met].rarity, 0.3))
+		var amount = clever_round(20 * (2.0 if crater_metal else 1.0) * randf_range(1.0, 1.2) * amount_multiplier * aurora_mult * h_mult / pow(game.met_info[met].rarity, 0.5))
 		contents[met] = amount
 		other_volume += amount / game.met_info[met].density / 1000 / h_mult
 		tile.mining.current_deposit.progress += 1

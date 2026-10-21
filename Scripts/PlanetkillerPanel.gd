@@ -126,7 +126,7 @@ func _on_StartCharging_pressed():
 		target_p_i = game.planet_data[star.p_id]
 		var p_id_g = -1
 		if not target_p_i.is_empty():
-			p_id_g = p_i.id
+			p_id_g = target_p_i.id
 			if Settings.screen_shake:
 				game.get_node("Camera2D/Screenshake").start(2.0, 10, 5)
 			var planet_pos:Vector2 = Vector2.from_angle(target_p_i.angle) * target_p_i.distance * game.view.obj.scale_mult

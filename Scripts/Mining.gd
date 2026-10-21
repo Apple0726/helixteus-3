@@ -32,7 +32,8 @@ func _ready():
 		game.tile_data_persistent[id]["mining"] = tile.mining
 	if not tile.has("depth"):
 		tile["depth"] = 0
-		game.tile_data_persistent[id]["depth"] = 0.0
+	if not game.tile_data_persistent[id].has("depth"):
+		game.tile_data_persistent[id]["depth"] = tile.depth
 	seed(p_i.seed)
 	tile_texture = load("res://Graphics/Tiles/Mosaics/%s.jpg" % randi_range(1, 8))
 	$Tile/TextureRect.texture = tile_texture
@@ -286,8 +287,6 @@ func pickaxe_hit():
 			add_rsrc_mined(tile.mining.contents)
 			Helper.get_rsrc_from_rock(tile.mining.contents, tile, p_i, id)
 			tile.mining.progress -= 100
-			#if not game.objective.is_empty() and game.objective.type == game.ObjectiveType.MINE:
-				#game.objective.current += 1
 			rock_gen = true
 			game.stats_univ.tiles_mined_mining += 1
 			game.stats_dim.tiles_mined_mining += 1

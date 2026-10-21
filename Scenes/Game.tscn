@@ -13,7 +13,6 @@
 [ext_resource type="Shader" uid="uid://dyuhjqkup4nnm" path="res://Shaders/Starfield.gdshader" id="9_0dcpd"]
 [ext_resource type="Texture2D" uid="uid://crjpo3xaanqvb" path="res://Graphics/Title screen/Discord.png" id="11"]
 [ext_resource type="Texture2D" uid="uid://mo4yu6npin41" path="res://Graphics/Title screen/BGTitle.png" id="12_lbihj"]
-[ext_resource type="Texture2D" uid="uid://ckfk6bb4pmq0" path="res://Graphics/Planets/12.png" id="12_vvhu1"]
 [ext_resource type="Shader" uid="uid://cx4wx23pi5ith" path="res://Shaders/Cluster.gdshader" id="19_4v34t"]
 [ext_resource type="Texture2D" uid="uid://koi0aarpqj30" path="res://Graphics/Ships/Ship0.png" id="26"]
 [ext_resource type="Shader" uid="uid://dxhqjhwrfucit" path="res://Shaders/Blur.gdshader" id="30"]
@@ -517,8 +516,6 @@ modulate = Color(1, 1, 1, 0.70500004)
 show_behind_parent = true
 material = SubResource("ShaderMaterial_lbihj")
 position = Vector2(1064, 504)
-scale = Vector2(1.6, 1.6)
-texture = ExtResource("12_vvhu1")
 
 [node name="Main" type="Sprite2D" parent="TitleBackground" unique_id=1682833574]
 modulate = Color(1, 1, 1, 0.6)

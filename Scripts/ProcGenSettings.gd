@@ -9,7 +9,7 @@ var cave_spawn_frequency = 1.0
 # Cave
 var cave_tile_dimensions = 1.0
 var cave_depth = 1.0
-var cave_floor_difficulty = 1.0
+var cave_floor_difficulty = 2.0
 var cave_wall_coverage = 0.5
 
 # Star system
