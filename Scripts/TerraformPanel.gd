@@ -24,9 +24,9 @@ func _ready():
 func refresh():
 	p_i = game.planet_data[game.c_p]
 	cost_div = Helper.clever_round(p_i.get("cost_div", 1.0))
-	$ScrollContainer/VBoxContainer/AtmosphereExtraction.visible = game.science_unlocked.has("ATM")
-	$ScrollContainer/VBoxContainer/AtomManipulation.visible = game.science_unlocked.has("ATM")
-	$ScrollContainer/VBoxContainer/SubatomicParticles.visible = game.science_unlocked.has("SAP")
+	$ScrollContainer/VBoxContainer/AtmosphereExtraction.visible = game.science_level.has("ATM")
+	$ScrollContainer/VBoxContainer/AtomManipulation.visible = game.science_level.has("ATM")
+	$ScrollContainer/VBoxContainer/SubatomicParticles.visible = game.science_level.has("SAP")
 	if tf_type != -1:
 		call("_on_%s_pressed" % Building.names[tf_type])
 

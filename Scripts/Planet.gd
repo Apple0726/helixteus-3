@@ -323,7 +323,7 @@ func show_tooltip(tile, tile_id:int):
 			AncientBuilding.SPACEPORT:
 				desc = desc % [	Helper.get_spaceport_exit_cost_reduction(AB_tier) * 100,
 								Helper.get_spaceport_travel_cost_reduction(AB_tier) * 100]
-				if game.science_unlocked.has("ISP"):
+				if game.science_level.has("ISP"):
 					var XP = Helper.format_num(Helper.get_spaceport_xp_mult(AB_tier) * game.system_data[game.c_s].diff * max(1.0, AB_tier * game.u_i.time_speed / 16.0), true)
 					desc += "\n" + tr("SPACEPORT_PASSIVE_XP_DESC").format({"XP":XP, "secs":Helper.format_num(max(4.0 / AB_tier / game.u_i.time_speed, 0.25), true)})
 			AncientBuilding.MINERAL_REPLICATOR, AncientBuilding.MINING_OUTPOST, AncientBuilding.OBSERVATORY:
@@ -367,7 +367,7 @@ func show_tooltip(tile, tile_id:int):
 		else:
 			tooltip += tr("CAVE")
 		var floor_size:String = tr("FLOOR_SIZE").format({"size":tile.cave.floor_size})
-		if not game.science_unlocked.has("RC"):
+		if not game.science_level.has("RC"):
 			tooltip += "\n%s\n%s\n%s" % [tr("CAVE_DESC"), tr("NUM_FLOORS") % tile.cave.num_floors, floor_size]
 		else:
 			tooltip += "\n%s" % tr("NUM_FLOORS") % tile.cave.num_floors
@@ -408,7 +408,7 @@ func show_tooltip(tile, tile_id:int):
 		tooltip += "[/color]"
 	elif tile.has("ship"):
 		tooltip = tr("SPACESHIP") + "\n"
-		if game.science_unlocked.has("SCT"):
+		if game.science_level.has("SCT"):
 			tooltip += tr("CLICK_TO_CONTROL_SHIP")
 		else:
 			tooltip += "[color=#BBFFFF]" + tr("ABANDONED_SHIP")
@@ -1332,7 +1332,7 @@ func _unhandled_input(event):
 						game.vehicle_panel.get_node("HBoxContainer/Rovers")._on_Button_pressed()
 						game.vehicle_panel._on_rovers_pressed()
 			elif tile.has("ship"):
-				if game.science_unlocked.has("SCT"):
+				if game.science_level.has("SCT"):
 					if len(game.ship_data) == 0:
 						game.tile_data[tile_id].erase("ship")
 						Helper.set_tile_data_persistent(tile_id, "ship_picked_up", true)

@@ -1,62 +1,72 @@
 [gd_scene format=3 uid="uid://bhiykvhp7e82u"]
 
-[ext_resource type="Texture2D" uid="uid://dg25fshk35326" path="res://Graphics/Icons/SP.png" id="1"]
 [ext_resource type="Theme" uid="uid://cp2u1kgj60ic" path="res://Resources/default_theme.tres" id="2"]
 [ext_resource type="Script" uid="uid://dy27xrmeck1i4" path="res://Scripts/ScienceButton.gd" id="4"]
 
+[sub_resource type="LabelSettings" id="LabelSettings_ce5tw"]
+font_size = 10
+
 [node name="Panel" type="Panel" unique_id=1451003925]
 self_modulate = Color(0, 1, 0, 1)
-custom_minimum_size = Vector2(256, 0)
 anchors_preset = 4
 anchor_top = 0.5
 anchor_bottom = 0.5
 offset_top = -360.0
-offset_right = 256.0
-offset_bottom = -296.0
+offset_right = 100.0
+offset_bottom = -252.0
+grow_vertical = 2
 theme = ExtResource("2")
 script = ExtResource("4")
 
 [node name="Texture2D" type="TextureRect" parent="." unique_id=637003458]
 custom_minimum_size = Vector2(64, 0)
 layout_mode = 0
-offset_left = 4.0
-offset_top = 4.0
-offset_right = 68.0
-offset_bottom = 60.0
+offset_left = 8.0
+offset_top = 12.0
+offset_right = 92.0
+offset_bottom = 76.0
 mouse_filter = 2
 expand_mode = 1
 stretch_mode = 5
 
-[node name="Label" type="Label" parent="." unique_id=1453874517]
-layout_mode = 0
-offset_left = 72.0
-offset_top = 4.0
-offset_right = 254.0
-offset_bottom = 28.0
-text = "Panel_SC"
-vertical_alignment = 1
-clip_text = true
+[node name="HBoxContainer" type="HBoxContainer" parent="." unique_id=2072079894]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -42.0
+offset_top = -24.0
+offset_right = 42.0
+offset_bottom = -10.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_constants/separation = 12
+alignment = 1
 
-[node name="Texture2" type="TextureRect" parent="." unique_id=101440144]
-custom_minimum_size = Vector2(32, 24)
-layout_mode = 0
-offset_left = 72.0
-offset_top = 32.0
-offset_right = 104.0
-offset_bottom = 56.0
-mouse_filter = 2
-texture = ExtResource("1")
-expand_mode = 1
-stretch_mode = 5
+[node name="ColorRect" type="ColorRect" parent="HBoxContainer" unique_id=862523882]
+modulate = Color(0, 1, 0, 1)
+custom_minimum_size = Vector2(8, 8)
+layout_mode = 2
+size_flags_vertical = 4
 
-[node name="Text" type="Label" parent="." unique_id=517362299]
-layout_mode = 0
-offset_left = 112.0
-offset_top = 32.0
-offset_right = 220.0
-offset_bottom = 56.0
-text = "0"
-vertical_alignment = 1
+[node name="ColorRect2" type="ColorRect" parent="HBoxContainer" unique_id=1699775895]
+modulate = Color(0, 1, 0, 1)
+custom_minimum_size = Vector2(8, 8)
+layout_mode = 2
+size_flags_vertical = 4
 
-[connection signal="mouse_entered" from="." to="." method="_on_mouse_entered"]
-[connection signal="mouse_exited" from="." to="." method="_on_mouse_exited"]
+[node name="InfiniteResearch" type="Label" parent="HBoxContainer" unique_id=2122933259]
+modulate = Color(0, 1, 0, 1)
+layout_mode = 2
+text = "+1"
+label_settings = SubResource("LabelSettings_ce5tw")
+
+[node name="Research" type="TextureButton" parent="." unique_id=947663896]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2

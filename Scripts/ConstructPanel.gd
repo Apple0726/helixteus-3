@@ -80,17 +80,17 @@ func refresh():
 				elif bldg == Building.CENTRAL_BUSINESS_DISTRICT:
 					unlock_str += tr("UNLOCK_BY_CONSTRUCTING_X_BLDGS").format({"num": 80})
 				elif bldg == Building.BORING_MACHINE:
-					unlock_str += tr("UNLOCK_BY_RESEARCHING_X").format({"science": tr("AM_SC")})
+					unlock_str += tr("UNLOCK_BY_RESEARCHING_X").format({"science": tr("AUTO_MINING_SC")})
 				elif bldg == Building.ROVER_CONSTRUCTION_CENTER:
-					unlock_str += tr("UNLOCK_BY_RESEARCHING_X").format({"science": tr("RC_SC")})
+					unlock_str += tr("UNLOCK_BY_RESEARCHING_X").format({"science": tr("ROVER_CONSTRUCTION_SC")})
 				elif bldg in [Building.ATOM_MANIPULATOR, Building.ATMOSPHERE_EXTRACTOR]:
-					unlock_str += tr("UNLOCK_BY_RESEARCHING_X").format({"science": tr("ATM_SC")})
+					unlock_str += tr("UNLOCK_BY_RESEARCHING_X").format({"science": tr("ATOM_MANIPULATION_SC")})
 				elif bldg == Building.SUBATOMIC_PARTICLE_REACTOR:
-					unlock_str += tr("UNLOCK_BY_RESEARCHING_X").format({"science": tr("SAP_SC")})
+					unlock_str += tr("UNLOCK_BY_RESEARCHING_X").format({"science": tr("SUBATOMIC_PARTICLES_SC")})
 				elif bldg == Building.GREENHOUSE:
-					unlock_str += tr("UNLOCK_BY_RESEARCHING_X").format({"science": tr("EGH_SC")})
+					unlock_str += tr("UNLOCK_BY_RESEARCHING_X").format({"science": tr("SPACE_AGRICULTURE_SC")})
 				elif bldg == Building.SHIPYARD:
-					unlock_str += tr("UNLOCK_BY_RESEARCHING_X").format({"science": tr("FG_SC")})
+					unlock_str += tr("UNLOCK_BY_RESEARCHING_X").format({"science": tr("FIGHTERS_SC")})
 				elif bldg == Building.PROBE_CONSTRUCTION_CENTER:
 					unlock_str += tr("UNLOCK_BY_REACHING_LV_X").format({"lv": 60})
 				elif bldg == Building.SOLAR_PANEL:

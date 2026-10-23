@@ -154,8 +154,7 @@ var particles:Dictionary
 #Display help when players see/do things for the first time. true: show help
 var help:Dictionary = {}
 
-var science_unlocked:Dictionary
-var infinite_research:Dictionary
+var science_level:Dictionary
 var MUs:Dictionary#Levels of mineral upgrades
 #Measures to not overwhelm beginners. false: not visible
 var show:Dictionary
@@ -550,11 +549,11 @@ func load_univ():
 	for key in u_i.procgen_settings:
 		if key in ProcGenSettings:
 			ProcGenSettings[key] = u_i.procgen_settings[key]
-	if science_unlocked.has("CI"):
+	if science_level.has("CI"):
 		stack_size = 32
-	if science_unlocked.has("CI2"):
+	if science_level.has("CI2"):
 		stack_size = 64
-	if science_unlocked.has("CI3"):
+	if science_level.has("CI3"):
 		stack_size = 128
 	if not autocollect.is_empty():
 		var time_elapsed = max(Time.get_unix_time_from_system() - save_date, 0)
@@ -563,9 +562,9 @@ func load_univ():
 			for i in len(ship_data):
 				Helper.add_ship_XP(i, xp_mult * autocollect.passive_xp_mult * time_elapsed / (4.0 / autocollect.passive_xp_tier) * u_i.time_speed)
 			start_spaceport_timer()
-		var min_mult:float = pow(maths_bonus.IRM, infinite_research.MEE)
-		var energy_mult:float = pow(maths_bonus.IRM, infinite_research.EPE)
-		var SP_mult:float = pow(maths_bonus.IRM, infinite_research.RLE)
+		var min_mult:float = pow(maths_bonus.IRM, science_level[Science.MINERAL_EXTRACTION_EFFICIENCY])
+		var energy_mult:float = pow(maths_bonus.IRM, science_level[Science.ENERGY_PRODUCTION_EFFICIENCY])
+		var SP_mult:float = pow(maths_bonus.IRM, science_level[Science.RESEARCH_EFFICIENCY])
 		Helper.add_minerals(((autocollect.rsrc.minerals + autocollect.MS.minerals + autocollect.GS.minerals) * min_mult) * time_elapsed * u_i.time_speed)
 		energy += ((autocollect.rsrc.energy + autocollect.MS.energy + autocollect.GS.energy) * energy_mult) * time_elapsed * u_i.time_speed
 		SP += ((autocollect.rsrc.SP + autocollect.MS.SP + autocollect.GS.SP) * SP_mult) * time_elapsed * u_i.time_speed
@@ -813,10 +812,12 @@ func start_game(univ, new_save, DR_advantage):
 	energy_capacity = 7500
 	capacity_bonus_from_substation = 0
 	SP = 0
-	science_unlocked = {}
+	science_level = {}
+	for science_id in Science.N:
+		science_level[science_id] = 0
 	if subject_levels.dimensional_power >= 1:
-		science_unlocked.ASM = true
-		science_unlocked.ASM2 = true
+		science_level[Science.AUTOSELL_MINERALS] = 1
+		science_level[Science.AUTOSELL_EXCESS_MINERALS] = 1
 	cave_filters = {
 		"money":false,
 		"minerals":false,
@@ -853,8 +854,6 @@ func start_game(univ, new_save, DR_advantage):
 	#Stores information of the current pickaxe the player is holding
 	pickaxe = {}
 
-	for sc in Data.infinite_research_sciences:
-		infinite_research[sc] = 0
 	mats = {	"coal":0,
 				"glass":0,
 				"sand":0,
@@ -988,14 +987,13 @@ func start_game(univ, new_save, DR_advantage):
 		AncientBuilding.NUCLEAR_FUSION_REACTOR:{},
 	}
 	
-	c_v = "planet"
-	fn_save_game()
 	if not is_ancestor_of(HUD):
 		$HUD.add_child(HUD)
+	c_v = "planet"
+	fn_save_game()
 	update_starfield = true
 	set_c_sv(c_sv)
 	add_planet(true)
-	HUD.refresh()
 	$Autosave.start()
 	var init_time = Time.get_unix_time_from_system()
 	view.set_process(true)
@@ -1533,12 +1531,12 @@ func add_space_HUD():
 		if c_v in ["galaxy", "cluster", "universe"]:
 			space_HUD.get_node("VBoxContainer/Annotate").visible = true
 			add_annotator()
-		#space_HUD.get_node("VBoxContainer/ElementOverlay").visible = c_v == "system" and science_unlocked.has("ATM")
+		#space_HUD.get_node("VBoxContainer/ElementOverlay").visible = c_v == "system" and science_level.has("ATM")
 		space_HUD.get_node("VBoxContainer/Stars").visible = c_v == "system"
-		space_HUD.get_node("VBoxContainer/Megastructures").visible = c_v == "system" and science_unlocked.has("MAE")
-		space_HUD.get_node("VBoxContainer/Gigastructures").visible = c_v in ["galaxy", "cluster"] and science_unlocked.has("GS")
+		space_HUD.get_node("VBoxContainer/Megastructures").visible = c_v == "system" and science_level.has("MAE")
+		space_HUD.get_node("VBoxContainer/Gigastructures").visible = c_v in ["galaxy", "cluster"] and science_level.has("GS")
 		space_HUD.get_node("ConquerAll").visible = c_v == "system" and (u_i.lv >= 32 or subject_levels.dimensional_power >= 1) and not system_data[c_s].has("conquered") and len(ship_data) > 0 and ships_travel_data.c_g_coords.s == c_s_g
-		space_HUD.get_node("SendFighters").visible = c_v == "galaxy" and science_unlocked.has("FG") and not galaxy_data[c_g].has("conquered") or c_v == "cluster" and science_unlocked.has("FG2") and not u_i.cluster_data[c_c].has("conquered")
+		space_HUD.get_node("SendFighters").visible = c_v == "galaxy" and science_level.has("FG") and not galaxy_data[c_g].has("conquered") or c_v == "cluster" and science_level.has("FG2") and not u_i.cluster_data[c_c].has("conquered")
 		space_HUD.get_node("SendProbes").visible = c_v == "universe"
 
 func add_overlay():
@@ -2846,12 +2844,57 @@ func generate_aurora(p_i:Dictionary, rng:RandomNumberGenerator):
 		if i == 0 and rng.randf() < physics_bonus.perpendicular_auroras:
 			rand = 1.0 - rand
 
+func spawn_cave(p_i:Dictionary, t_id:int, rng:RandomNumberGenerator):
+	var wid:int = Helper.get_wid(p_i.size)
+	var floor_size:int = rng.randf_range(25 * min(wid / 8.0, 1), 40 * rng.randf_range(1, 1 + wid / 100.0)) * ProcGenSettings.cave_tile_dimensions
+	var num_floors:int = (rng.randi() % (int(wid / 2.5) + 1) + 3) * ProcGenSettings.cave_depth
+	var modifiers:Dictionary = {}
+	if c_s_g != 0:
+		var number_of_modifiers:int = log(1.0 / rng.randf() + 1.1) * log(system_data[c_s].diff) / log(10)
+		var modifiers2:Dictionary = Data.cave_modifiers.duplicate(true)
+		if c_g_g == 0:
+			number_of_modifiers = min(number_of_modifiers, 2)
+			for mod in modifiers2.keys():
+				if modifiers2[mod].tier == 2:
+					modifiers2.erase(mod)
+		if number_of_modifiers > len(modifiers2.keys()):
+			number_of_modifiers = len(modifiers2.keys())
+		for k in number_of_modifiers:
+			var modifier_keys:Array = modifiers2.keys()
+			modifier_keys.shuffle()
+			var key:String = modifier_keys[0]
+			if modifiers2[key].has("double_treasure_at"):
+				var mod_power:float = log(1.0 / rng.randf() + 0.5) / max(remap(log(system_data[c_s].diff) / log(20), 0.0, 4.0, 2.0, 1.0), 1.0)
+				var direction:float
+				if modifiers2[key].has("one_direction"):
+					direction = modifiers2[key].one_direction
+				else:
+					direction = sign(rng.randf() - 0.5)
+				modifiers[key] = pow(modifiers2[key].double_treasure_at, mod_power * direction)
+				if modifiers2[key].has("min") and modifiers[key] < modifiers2[key].min:
+					modifiers[key] = modifiers2[key].min
+				if modifiers2[key].has("max") and modifiers[key] > modifiers2[key].max:
+					modifiers[key] = modifiers2[key].max
+			elif rng.randf() < 0.5:
+				modifiers[key] = modifiers2[key].treasure_if_true
+			modifiers2.erase(key)
+	var period:int = 65 + sign(rng.randf() - 0.5) * rng.randf() * 40
+	tile_data[t_id]["cave"] = {"num_floors":num_floors, "floor_size":floor_size, "period":period, "debris":rng.randf() + 0.2}
+	if tile_data[t_id].has("ash") and not achievement_data.exploration.has("volcano_cave") and tile_data[t_id].has("cave"):
+		earn_achievement("exploration", "volcano_cave")
+	if not modifiers.is_empty():
+		tile_data[t_id].cave["modifiers"] = modifiers
+	if not achievement_data.exploration.has("aurora_cave") and tile_data[t_id].has("aurora"):
+		earn_achievement("exploration", "aurora_cave")
+	if not achievement_data.exploration.has("volcano_aurora_cave") and tile_data[t_id].has("ash") and tile_data[t_id].has("aurora"):
+		earn_achievement("exploration", "volcano_aurora_cave")
+
 func generate_tiles(id:int, first_time:bool):
 	var p_i:Dictionary = planet_data[id]
 	#wid is number of tiles horizontally/vertically
 	#So total number of tiles is wid squared
 	var wid:int = Helper.get_wid(p_i.size)
-	var home_planet:bool = c_p_g == 2 and c_u == 0
+	var home_planet:bool = c_p_g == 2 and c_u == 0 and dim_num == 1
 	var N:int = pow(wid, 2)
 	tile_data.resize(N)
 	for i in N:
@@ -2891,6 +2934,7 @@ func generate_tiles(id:int, first_time:bool):
 		lake_coverage -= 0.5
 	if c_p_g == 2:
 		lake_coverage = -0.5
+	var cave_tile_num = 0
 	for i in wid:
 		for j in wid:
 			var level:float = noise.get_noise_2d(i / float(wid), j / float(wid))
@@ -2902,51 +2946,11 @@ func generate_tiles(id:int, first_time:bool):
 				tile_data[t_id].resource_production_bonus.clear()
 				if p_i.lake.state != "s":
 					cave_can_spawn = false
-			if home_planet:
-				continue
 			if cave_can_spawn and rng.randf() < 0.1 * ProcGenSettings.cave_spawn_frequency / pow(wid, 0.9):
-				var floor_size:int = rng.randf_range(25 * min(wid / 8.0, 1), 40 * rng.randf_range(1, 1 + wid / 100.0)) * ProcGenSettings.cave_tile_dimensions
-				var num_floors:int = (rng.randi() % (int(wid / 2.5) + 1) + 3) * ProcGenSettings.cave_depth
-				var modifiers:Dictionary = {}
-				if c_s_g != 0:
-					var number_of_modifiers:int = log(1.0 / rng.randf() + 1.1) * log(system_data[c_s].diff) / log(10)
-					var modifiers2:Dictionary = Data.cave_modifiers.duplicate(true)
-					if c_g_g == 0:
-						number_of_modifiers = min(number_of_modifiers, 2)
-						for mod in modifiers2.keys():
-							if modifiers2[mod].tier == 2:
-								modifiers2.erase(mod)
-					if number_of_modifiers > len(modifiers2.keys()):
-						number_of_modifiers = len(modifiers2.keys())
-					for k in number_of_modifiers:
-						var modifier_keys:Array = modifiers2.keys()
-						modifier_keys.shuffle()
-						var key:String = modifier_keys[0]
-						if modifiers2[key].has("double_treasure_at"):
-							var mod_power:float = log(1.0 / rng.randf() + 0.5) / max(remap(log(system_data[c_s].diff) / log(20), 0.0, 4.0, 2.0, 1.0), 1.0)
-							var direction:float
-							if modifiers2[key].has("one_direction"):
-								direction = modifiers2[key].one_direction
-							else:
-								direction = sign(rng.randf() - 0.5)
-							modifiers[key] = pow(modifiers2[key].double_treasure_at, mod_power * direction)
-							if modifiers2[key].has("min") and modifiers[key] < modifiers2[key].min:
-								modifiers[key] = modifiers2[key].min
-							if modifiers2[key].has("max") and modifiers[key] > modifiers2[key].max:
-								modifiers[key] = modifiers2[key].max
-						elif rng.randf() < 0.5:
-							modifiers[key] = modifiers2[key].treasure_if_true
-						modifiers2.erase(key)
-				var period:int = 65 + sign(rng.randf() - 0.5) * rng.randf() * 40
-				tile_data[t_id]["cave"] = {"num_floors":num_floors, "floor_size":floor_size, "period":period, "debris":rng.randf() + 0.2}
-				if tile_data[t_id].has("ash") and not achievement_data.exploration.has("volcano_cave") and tile_data[t_id].has("cave"):
-					earn_achievement("exploration", "volcano_cave")
-				if not modifiers.is_empty():
-					tile_data[t_id].cave["modifiers"] = modifiers
-				if not achievement_data.exploration.has("aurora_cave") and tile_data[t_id].has("aurora"):
-					earn_achievement("exploration", "aurora_cave")
-				if not achievement_data.exploration.has("volcano_aurora_cave") and tile_data[t_id].has("ash") and tile_data[t_id].has("aurora"):
-					earn_achievement("exploration", "volcano_aurora_cave")
+				spawn_cave(p_i, t_id, rng)
+				cave_tile_num += 1
+				continue
+			if home_planet:
 				continue
 			if is_lake:
 				continue
@@ -3019,8 +3023,8 @@ func generate_tiles(id:int, first_time:bool):
 		base_ancient_bldg_probability = 1 if p_i.temperature < temperature_factor else -pow(p_i.temperature / temperature_factor - 1, 2) + 1
 	planet_data[id].ancient_bldgs = {}
 	planet_data_persistent[id].ancient_bldgs = planet_data[id].ancient_bldgs
+	var spaceport_spawned = false
 	if c_s_g != 0:
-		var spaceport_spawned = false
 		for t_id in empty_tiles:
 			if t_id in nuclear_fusion_reactor_tiles:
 				continue
@@ -3061,8 +3065,10 @@ func generate_tiles(id:int, first_time:bool):
 					"tile": t_id,
 					"tier": max(1, int(-log(rng.randf() / u_i.age / (1.0 + u_i.cluster_data[c_c].redshift)) / 3.0 + 1)),
 				}
+				if home_planet:
+					obj.tier = 1
 				if rng.randf() < 1.0 - 0.5 * exp(-pow(p_i.temperature - 273, 2) / 20000.0) / pow(obj.tier, 2):
-					obj["repair_cost"] = 250000 * pow(obj.tier, 20) * rng.randf_range(1, 3) * Data.ancient_bldg_repair_cost_multipliers[ancient_bldg]
+					obj["repair_cost"] = 100000.0 * pow(obj.tier, 20) * rng.randf_range(1, 3) * Data.ancient_bldg_repair_cost_multipliers[ancient_bldg]
 				if p_i.ancient_bldgs.has(ancient_bldg):
 					p_i.ancient_bldgs[ancient_bldg].append(obj)
 				else:
@@ -3080,15 +3086,15 @@ func generate_tiles(id:int, first_time:bool):
 			var ship_tile_id = empty_tiles[rng.randi() % len(empty_tiles)]
 			tile_data[ship_tile_id]["ship"] = true
 			empty_tiles.erase(ship_tile_id)
-		if len(empty_tiles) > 4:
+		if len(empty_tiles) > 4 and cave_tile_num < 1:
 			var cave_1_tile_id = empty_tiles[rng.randi() % len(empty_tiles)]
-			tile_data[cave_1_tile_id]["cave"] = {"num_floors":5, "floor_size":25, "period":65, "debris":0.3}
+			spawn_cave(p_i, cave_1_tile_id, rng)
 			empty_tiles.erase(cave_1_tile_id)
-		if len(empty_tiles) > 10:
+		if len(empty_tiles) > 10 and cave_tile_num < 2:
 			var cave_2_tile_id = empty_tiles[rng.randi() % len(empty_tiles)]
-			tile_data[cave_2_tile_id]["cave"] = {"num_floors":8, "floor_size":30, "period":50, "debris":0.4}
+			spawn_cave(p_i, cave_2_tile_id, rng)
 			empty_tiles.erase(cave_2_tile_id)
-		if len(empty_tiles) > 4:
+		if not spaceport_spawned and len(empty_tiles) > 4:
 			var spaceport_tile_id = empty_tiles[rng.randi() % len(empty_tiles)]
 			empty_tiles.erase(spaceport_tile_id)
 			var spaceport = {"tile":spaceport_tile_id, "tier":max(1, int(-log(rng.randf() / u_i.age) / 3.0 + 1))}
@@ -3596,9 +3602,9 @@ func _process(_delta):
 	if fps_text.visible:
 		fps_text.text = "%d FPS" % [Engine.get_frames_per_second()]
 	if autocollect:
-		var min_mult:float = pow(maths_bonus.IRM, infinite_research.MEE) * u_i.time_speed
-		var energy_mult:float = pow(maths_bonus.IRM, infinite_research.EPE) * u_i.time_speed
-		var SP_mult:float = pow(maths_bonus.IRM, infinite_research.RLE) * u_i.time_speed
+		var min_mult:float = pow(maths_bonus.IRM, science_level[Science.MINERAL_EXTRACTION_EFFICIENCY]) * u_i.time_speed
+		var energy_mult:float = pow(maths_bonus.IRM, science_level[Science.ENERGY_PRODUCTION_EFFICIENCY]) * u_i.time_speed
+		var SP_mult:float = pow(maths_bonus.IRM, science_level[Science.RESEARCH_EFFICIENCY]) * u_i.time_speed
 		var min_to_add:float = delta * (autocollect.MS.minerals + autocollect.GS.minerals + autocollect.rsrc.minerals) * min_mult
 		var energy_to_add = delta * (autocollect.MS.energy + autocollect.GS.energy + autocollect.rsrc.energy) * energy_mult
 		SP += delta * (autocollect.MS.SP + autocollect.GS.SP) * SP_mult
@@ -3840,8 +3846,7 @@ func fn_save_game():
 		"stack_size":stack_size,
 		"auto_replace":auto_replace,
 		"pickaxe":pickaxe,
-		"science_unlocked":science_unlocked,
-		"infinite_research":infinite_research,
+		"science_level":science_level,
 		"mats":mats,
 		"mets":mets,
 		"atoms":atoms,
@@ -3929,7 +3934,7 @@ func cancel_building():
 	HUD.get_node("Top/Resources/Stone").visible = show.has("stone")
 	HUD.get_node("Top/Resources/SP").visible = show.has("SP")
 	HUD.get_node("Top/Resources/Minerals").visible = show.has("minerals")
-	HUD.get_node("Top/Resources/Cellulose").visible = science_unlocked.has("SA")
+	HUD.get_node("Top/Resources/Cellulose").visible = science_level.has("SA")
 	for id in bldg_blueprints:
 		tiles[id]._on_Button_button_out()
 
@@ -4166,7 +4171,7 @@ func _on_Ship_pressed():
 	if Input.is_action_pressed("shift"):
 		switch_view("STM")#Ship travel minigame
 	else:
-		if science_unlocked.has("CD"):
+		if science_level.has("CD"):
 			if not is_instance_valid(ships_panel) or not ships_panel.visible:
 				toggle_panel("ships_panel")
 				ships_panel._on_DriveButton_pressed()

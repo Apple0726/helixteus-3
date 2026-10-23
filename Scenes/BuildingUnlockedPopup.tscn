@@ -54,9 +54,9 @@ horizontal_alignment = 1
 
 [node name="Building" type="TextureRect" parent="." unique_id=1787682818]
 layout_mode = 0
-offset_left = 356.0
+offset_left = 340.0
 offset_top = 244.0
-offset_right = 576.0
+offset_right = 560.0
 offset_bottom = 464.0
 texture = ExtResource("4_fqqt0")
 expand_mode = 1

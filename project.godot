@@ -38,6 +38,7 @@ Constants="*res://Scripts/Globals/Constants.gd"
 Battle="*res://Scripts/Globals/Battle.gd"
 Megastructure="*uid://bp6rvfbosfccp"
 ProcGenSettings="*uid://cp6i506t1e3tq"
+Science="*uid://byjf8agg6as6i"
 
 [debug]
 

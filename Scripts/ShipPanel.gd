@@ -81,7 +81,7 @@ func _on_CheckBox_toggled(button_pressed):
 		panel.set_visibility()
 
 func _on_DriveButton_pressed():
-	if game.science_unlocked.has("CD"):
+	if game.science_level.has("CD"):
 		if game.ships_travel_data.travel_view == "-":
 			game.popup(tr("SHIPS_NEED_TO_BE_TRAVELLING"), 1.5)
 		else:

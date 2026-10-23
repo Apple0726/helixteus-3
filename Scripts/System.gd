@@ -448,7 +448,7 @@ func show_planet_info(id:int, l_id:int):
 				Helper.put_rsrc(vbox, 32, {"minerals":Helper.get_MME_output(p_i) * Helper.get_IR_mult(Building.MINERAL_EXTRACTOR) * game.u_i.time_speed}, false)
 				Helper.add_label(tr("CAPACITY_INCREASE"), -1, false)
 				Helper.put_rsrc(vbox, 32, {"minerals":Helper.get_MME_capacity(p_i) * Helper.get_IR_mult(Building.MINERAL_SILO)}, false)
-			if p_i.MS_lv < Data.MS_num_stages[p_i.MS] and game.science_unlocked.has("%s%s" % [p_i.MS, (p_i.MS_lv + 1)]):
+			if p_i.MS_lv < Data.MS_num_stages[p_i.MS] and game.science_level.has("%s%s" % [p_i.MS, (p_i.MS_lv + 1)]):
 				MS_constr_data.obj = p_i
 				MS_constr_data.confirm_upgrade = false
 				Helper.add_label("{key}: {upgrade}".format({"key":"F", "upgrade": tr("UPGRADE")}))
@@ -660,13 +660,13 @@ func build_MS(obj:Dictionary, MS_to_build:String):
 	if obj.has("repair_cost"):
 		var error = false
 		if obj.MS == "MB":
-			if not game.science_unlocked.has("MB"):
+			if not game.science_level.has("MB"):
 				error = true
 		elif obj.MS_lv == 0:
-			if not game.science_unlocked.has("MAE"):
+			if not game.science_level.has("MAE"):
 				error = true
 		else:
-			if not game.science_unlocked.has(obj.MS + str(obj.MS_lv)):
+			if not game.science_level.has(obj.MS + str(obj.MS_lv)):
 				error = true
 		if error:
 			game.popup(tr("NO_SCIENCE_TO_REPAIR_MS"), 2.0)
@@ -944,11 +944,11 @@ func show_MS_construct_info(star:Dictionary, star_node):
 				else:
 					Helper.add_label(tr("CBS_PATH_3").format({"planetNum": int(ceil(p_num * star.MS_lv * 0.333)), "percent":int(round(star.MS_lv * 33.3))}))
 			if star.MS_lv < Data.MS_num_stages[star.MS]:
-				if star.MS == "DS" and game.science_unlocked.has("DS%s" % (star.MS_lv + 1)):
+				if star.MS == "DS" and game.science_level.has("DS%s" % (star.MS_lv + 1)):
 					continue_upg(star)
-				elif star.MS == "PK" and game.science_unlocked.has("PK%s" % (star.MS_lv + 1)):
+				elif star.MS == "PK" and game.science_level.has("PK%s" % (star.MS_lv + 1)):
 					continue_upg(star)
-				elif star.MS == "CBS" and game.science_unlocked.has("CBS%s" % (star.MS_lv + 1)):
+				elif star.MS == "CBS" and game.science_level.has("CBS%s" % (star.MS_lv + 1)):
 					continue_upg(star)
 		if game.system_data[game.c_s].has("conquered"):
 			MS_constr_data.destroyable = true

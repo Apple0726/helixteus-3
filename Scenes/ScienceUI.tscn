@@ -2,9 +2,6 @@
 
 [ext_resource type="Theme" uid="uid://cp2u1kgj60ic" path="res://Resources/default_theme.tres" id="1"]
 [ext_resource type="Script" uid="uid://cvom3nske3315" path="res://Scripts/ScienceUI.gd" id="2"]
-[ext_resource type="Texture2D" uid="uid://b7omnle8l88gv" path="res://Graphics/Icons/OtherBranches.png" id="3"]
-[ext_resource type="Texture2D" uid="uid://bhbgvau3rhu1a" path="res://Graphics/Icons/InfiniteResearch.png" id="4"]
-[ext_resource type="Texture2D" uid="uid://du65n8bkhrqdk" path="res://Graphics/Icons/MainBranch.png" id="5"]
 
 [sub_resource type="InputEventKey" id="InputEventKey_ekqg7"]
 device = -1
@@ -13,30 +10,6 @@ unicode = 122
 
 [sub_resource type="Shortcut" id="2"]
 events = [SubResource("InputEventKey_ekqg7")]
-
-[sub_resource type="InputEventKey" id="InputEventKey_jt2yf"]
-device = -1
-physical_keycode = 49
-unicode = 49
-
-[sub_resource type="Shortcut" id="Shortcut_8c2yh"]
-events = [SubResource("InputEventKey_jt2yf")]
-
-[sub_resource type="InputEventKey" id="InputEventKey_fn7e8"]
-device = -1
-physical_keycode = 50
-unicode = 50
-
-[sub_resource type="Shortcut" id="Shortcut_vrqqt"]
-events = [SubResource("InputEventKey_fn7e8")]
-
-[sub_resource type="InputEventKey" id="InputEventKey_leq2p"]
-device = -1
-physical_keycode = 51
-unicode = 51
-
-[sub_resource type="Shortcut" id="Shortcut_ekr2e"]
-events = [SubResource("InputEventKey_leq2p")]
 
 [node name="Control" type="Control" unique_id=1192147974]
 layout_mode = 3
@@ -58,85 +31,13 @@ offset_right = 112.0
 shortcut = SubResource("2")
 shortcut_in_tooltip = false
 
-[node name="Panel" type="Panel" parent="." unique_id=1725909984]
-layout_mode = 0
-anchor_top = 0.5
-anchor_bottom = 0.5
-offset_top = -68.0
-offset_right = 52.0
-offset_bottom = 72.0
-
-[node name="MainBranch" type="Button" parent="Panel" unique_id=1165504323]
-layout_mode = 0
-anchor_top = 0.5
-anchor_bottom = 0.5
-offset_left = 8.0
-offset_top = -62.0
-offset_right = 44.0
-offset_bottom = -26.0
-shortcut = SubResource("Shortcut_8c2yh")
-shortcut_in_tooltip = false
-
-[node name="TextureRect" type="TextureRect" parent="Panel/MainBranch" unique_id=389152906]
-modulate = Color(0, 1, 0, 1)
-layout_mode = 0
-anchor_right = 1.0
-anchor_bottom = 1.0
-mouse_filter = 2
-texture = ExtResource("5")
-
-[node name="OtherBranches" type="Button" parent="Panel" unique_id=2109039707]
-layout_mode = 0
-anchor_top = 0.5
-anchor_bottom = 0.5
-offset_left = 8.0
-offset_top = -18.0
-offset_right = 44.0
-offset_bottom = 18.0
-shortcut = SubResource("Shortcut_vrqqt")
-shortcut_in_tooltip = false
-
-[node name="TextureRect" type="TextureRect" parent="Panel/OtherBranches" unique_id=892627662]
-layout_mode = 0
-anchor_right = 1.0
-anchor_bottom = 1.0
-mouse_filter = 2
-texture = ExtResource("3")
-
-[node name="InfiniteResearch" type="Button" parent="Panel" unique_id=73953475]
-layout_mode = 0
-anchor_top = 0.5
-anchor_bottom = 0.5
-offset_left = 8.0
-offset_top = 26.0
-offset_right = 44.0
-offset_bottom = 62.0
-shortcut = SubResource("Shortcut_ekr2e")
-shortcut_in_tooltip = false
-
-[node name="TextureRect" type="TextureRect" parent="Panel/InfiniteResearch" unique_id=541197542]
-layout_mode = 0
-anchor_right = 1.0
-anchor_bottom = 1.0
-mouse_filter = 2
-texture = ExtResource("4")
-
 [node name="ZoomHelp" type="Label" parent="." unique_id=1521543407]
 visible = false
 layout_mode = 0
-offset_top = 152.0
+offset_top = 644.0
 offset_right = 1280.0
-offset_bottom = 171.0
+offset_bottom = 667.0
 horizontal_alignment = 1
 vertical_alignment = 1
 
 [connection signal="pressed" from="Back" to="." method="_on_Back_pressed"]
-[connection signal="mouse_entered" from="Panel/MainBranch" to="." method="_on_MainBranch_mouse_entered"]
-[connection signal="mouse_exited" from="Panel/MainBranch" to="." method="_on_mouse_exited"]
-[connection signal="pressed" from="Panel/MainBranch" to="." method="_on_MainBranch_pressed"]
-[connection signal="mouse_entered" from="Panel/OtherBranches" to="." method="_on_OtherBranches_mouse_entered"]
-[connection signal="mouse_exited" from="Panel/OtherBranches" to="." method="_on_mouse_exited"]
-[connection signal="pressed" from="Panel/OtherBranches" to="." method="_on_OtherBranches_pressed"]
-[connection signal="mouse_entered" from="Panel/InfiniteResearch" to="." method="_on_InfiniteResearch_mouse_entered"]
-[connection signal="mouse_exited" from="Panel/InfiniteResearch" to="." method="_on_mouse_exited"]
-[connection signal="pressed" from="Panel/InfiniteResearch" to="." method="_on_InfiniteResearch_pressed"]

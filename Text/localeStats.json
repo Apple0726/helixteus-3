@@ -1,44 +1,44 @@
 {
     "en": {
-        "lines": 1614,
-        "words": 11275,
-        "chars": 68694,
+        "lines": 1623,
+        "words": 11338,
+        "chars": 69116,
         "name": "English"
     },
     "fr": {
-        "lines": 501,
-        "words": 2024,
-        "chars": 12843,
+        "lines": 499,
+        "words": 2017,
+        "chars": 12804,
         "name": "Français"
     },
     "it": {
-        "lines": 1036,
-        "words": 7005,
+        "lines": 1037,
+        "words": 7004,
         "chars": 46078,
         "name": "Italiano"
     },
     "zh": {
-        "lines": 1541,
-        "words": 2001,
-        "chars": 21129,
+        "lines": 1542,
+        "words": 2002,
+        "chars": 21131,
         "name": "中文"
     },
     "de": {
-        "lines": 1502,
-        "words": 9020,
-        "chars": 66139,
+        "lines": 1503,
+        "words": 9017,
+        "chars": 66137,
         "name": "Deutsch"
     },
     "es": {
-        "lines": 1160,
-        "words": 8024,
-        "chars": 50920,
+        "lines": 1161,
+        "words": 8032,
+        "chars": 50944,
         "name": "Español"
     },
     "ko": {
-        "lines": 658,
-        "words": 1636,
-        "chars": 5731,
+        "lines": 657,
+        "words": 1634,
+        "chars": 5724,
         "name": "한국어"
     },
     "sv": {
@@ -48,27 +48,27 @@
         "name": "Svenska"
     },
     "hu": {
-        "lines": 1604,
-        "words": 8643,
-        "chars": 63584,
+        "lines": 1611,
+        "words": 8688,
+        "chars": 63959,
         "name": "Magyar"
     },
     "ja": {
-        "lines": 1092,
-        "words": 1198,
-        "chars": 18144,
+        "lines": 1093,
+        "words": 1199,
+        "chars": 18153,
         "name": "日本語"
     },
     "nl": {
         "lines": 988,
-        "words": 4971,
-        "chars": 34432,
+        "words": 4946,
+        "chars": 34264,
         "name": "Nederlands"
     },
     "ru": {
         "lines": 851,
-        "words": 3327,
-        "chars": 25071,
+        "words": 3309,
+        "chars": 24920,
         "name": "Русский"
     },
     "pl": {

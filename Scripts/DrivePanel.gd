@@ -31,7 +31,7 @@ func reset_selected_drive_fuel():
 	
 func refresh():
 	for drive in $Panel/Drives.get_children():
-		drive.visible = game.science_unlocked.has(drive.name)
+		drive.visible = game.science_level.has(drive.name)
 	if fuel_selected != "":
 		if selected_fuel_type == "mats":
 			unit = "kg"

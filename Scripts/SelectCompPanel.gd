@@ -48,23 +48,23 @@ func refresh(type:int, _curr_cmp:int, _is_inventory:bool = false, _index:int = -
 		if Item.data[cmp].type != type:
 			continue
 		if type in [Item.Type.ROVER_WEAPON, Item.Type.ROVER_MINING]:
-			if cmp in [Item.ORANGE_LASER, Item.ORANGE_MINING_LASER] and not game.science_unlocked.has("OL"):
+			if cmp in [Item.ORANGE_LASER, Item.ORANGE_MINING_LASER] and not game.science_level.has("OL"):
 				continue
-			if cmp in [Item.YELLOW_LASER, Item.YELLOW_MINING_LASER] and not game.science_unlocked.has("YL"):
+			if cmp in [Item.YELLOW_LASER, Item.YELLOW_MINING_LASER] and not game.science_level.has("YL"):
 				continue
-			if cmp in [Item.GREEN_LASER, Item.GREEN_MINING_LASER] and not game.science_unlocked.has("GL"):
+			if cmp in [Item.GREEN_LASER, Item.GREEN_MINING_LASER] and not game.science_level.has("GL"):
 				continue
-			if cmp in [Item.BLUE_LASER, Item.BLUE_MINING_LASER] and not game.science_unlocked.has("BL"):
+			if cmp in [Item.BLUE_LASER, Item.BLUE_MINING_LASER] and not game.science_level.has("BL"):
 				continue
-			if cmp in [Item.PURPLE_LASER, Item.PURPLE_MINING_LASER] and not game.science_unlocked.has("PL"):
+			if cmp in [Item.PURPLE_LASER, Item.PURPLE_MINING_LASER] and not game.science_level.has("PL"):
 				continue
-			if cmp in [Item.UV_LASER, Item.UV_MINING_LASER] and not game.science_unlocked.has("UVL"):
+			if cmp in [Item.UV_LASER, Item.UV_MINING_LASER] and not game.science_level.has("UVL"):
 				continue
-			if cmp in [Item.XRAY_LASER, Item.XRAY_MINING_LASER] and not game.science_unlocked.has("XRL"):
+			if cmp in [Item.XRAY_LASER, Item.XRAY_MINING_LASER] and not game.science_level.has("XRL"):
 				continue
-			if cmp in [Item.GAMMARAY_LASER, Item.GAMMARAY_MINING_LASER] and not game.science_unlocked.has("GRL"):
+			if cmp in [Item.GAMMARAY_LASER, Item.GAMMARAY_MINING_LASER] and not game.science_level.has("GRL"):
 				continue
-			if cmp in [Item.ULTRAGAMMARAY_LASER, Item.ULTRAGAMMARAY_MINING_LASER] and not game.science_unlocked.has("UGRL"):
+			if cmp in [Item.ULTRAGAMMARAY_LASER, Item.ULTRAGAMMARAY_MINING_LASER] and not game.science_level.has("UGRL"):
 				continue
 		else:
 			var metal:String = Item.data[cmp].metal

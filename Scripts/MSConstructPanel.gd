@@ -26,7 +26,7 @@ func _unhandled_input(event):
 
 func refresh():
 	for MS in Megastructure.names:
-		$Panel/ScrollContainer/VBoxContainer.get_node(MS).visible = (star_selected == -1 or MS in ["DS", "CBS", "MB", "PK"]) and (MS != "MB" or game.science_unlocked.has("MB"))
+		$Panel/ScrollContainer/VBoxContainer.get_node(MS).visible = (star_selected == -1 or MS in ["DS", "CBS", "MB", "PK"]) and (MS != "MB" or game.science_level.has("MB"))
 
 func on_MS_over(MS:String):
 	game.show_tooltip("[font_size=20]{MS_name}[/font_size]\n\n{MS_desc}".format({"MS_name":tr("M_" + MS + "_NAME"), "MS_desc":tr("M_" + MS + "_DESC")}))
@@ -60,14 +60,14 @@ func on_MS_click(MS:String):
 		game.view.obj.build_MS(game.system_data[game.c_s].stars[star_selected], MS)
 		return
 	if MS == "DS":
-		if not build_all or build_all and game.science_unlocked.has("DS1") and game.science_unlocked.has("DS2") and game.science_unlocked.has("DS3") and game.science_unlocked.has("DS4"):
+		if not build_all or build_all and game.science_level.has("DS1") and game.science_level.has("DS2") and game.science_level.has("DS3") and game.science_level.has("DS4"):
 			game.put_bottom_info(tr("CLICK_STAR_TO_CONSTRUCT"), "building_DS", game.view.obj.finish_construct)
 			game.space_HUD.show_stars_panel("DS")
 		else:
 			game.popup(tr("NOT_ALL_STAGES_UNLOCKED"), 2.0)
 			return
 	elif MS == "CBS":
-		if not build_all or build_all and game.science_unlocked.has("CBS1") and game.science_unlocked.has("CBS2") and game.science_unlocked.has("CBS3"):
+		if not build_all or build_all and game.science_level.has("CBS1") and game.science_level.has("CBS2") and game.science_level.has("CBS3"):
 			game.put_bottom_info(tr("CLICK_STAR_TO_CONSTRUCT"), "building_CBS", game.view.obj.finish_construct)
 			game.space_HUD.show_stars_panel("CBS")
 		else:
@@ -77,20 +77,20 @@ func on_MS_click(MS:String):
 		game.put_bottom_info(tr("CLICK_STAR_TO_CONSTRUCT"), "building_MB", game.view.obj.finish_construct)
 		game.space_HUD.show_stars_panel("MB")
 	elif MS == "PK":
-		if not build_all or build_all and game.science_unlocked.has("PK1") and game.science_unlocked.has("PK2"):
+		if not build_all or build_all and game.science_level.has("PK1") and game.science_level.has("PK2"):
 			game.put_bottom_info(tr("CLICK_STAR_TO_CONSTRUCT"), "building_PK", game.view.obj.finish_construct)
 			game.space_HUD.show_stars_panel("PK")
 		else:
 			game.popup(tr("NOT_ALL_STAGES_UNLOCKED"), 2.0)
 			return
 	elif MS == "SE":
-		if not build_all or build_all and game.science_unlocked.has("SE1"):
+		if not build_all or build_all and game.science_level.has("SE1"):
 			game.put_bottom_info(tr("CLICK_PLANET_TO_CONSTRUCT"), "building-SE", game.view.obj.finish_construct)
 		else:
 			game.popup(tr("NOT_ALL_STAGES_UNLOCKED"), 2.0)
 			return
 	elif MS == "MME":
-		if not build_all or build_all and game.science_unlocked.has("MME1") and game.science_unlocked.has("MME2") and game.science_unlocked.has("MME3"):
+		if not build_all or build_all and game.science_level.has("MME1") and game.science_level.has("MME2") and game.science_level.has("MME3"):
 			game.put_bottom_info(tr("CLICK_PLANET_TO_CONSTRUCT"), "building-MME", game.view.obj.finish_construct)
 		else:
 			game.popup(tr("NOT_ALL_STAGES_UNLOCKED"), 2.0)
@@ -102,7 +102,7 @@ func _on_build_all_toggled(toggled_on: bool) -> void:
 	build_all = toggled_on
 	for btn in $Panel/ScrollContainer/VBoxContainer.get_children():
 		if toggled_on:
-			btn.visible = game.science_unlocked.has("{name}{stage}".format({"name":btn.name, "stage":Data.MS_num_stages[btn.name] if toggled_on else 0}))
+			btn.visible = game.science_level.has("{name}{stage}".format({"name":btn.name, "stage":Data.MS_num_stages[btn.name] if toggled_on else 0}))
 		else:
 			btn.show()
 		btn.icon = load("res://Graphics/Megastructures/{name}_{stage}.png".format({"name":btn.name, "stage":Data.MS_num_stages[btn.name] if toggled_on else 0}))

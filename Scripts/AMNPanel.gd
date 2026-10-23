@@ -49,8 +49,8 @@ func _ready():
 		$ScrollContainer/GridContainer.add_child(btn)
 
 func show_recipe_tooltip(rsrc:String):
-	if (rsrc in ["platinum", "diamond"] and not game.science_unlocked.has("AMM")
-	or rsrc in ["nanocrystal", "mythril", "quillite"] and not game.science_unlocked.has("EMM")):
+	if (rsrc in ["platinum", "diamond"] and not game.science_level.has("AMM")
+	or rsrc in ["nanocrystal", "mythril", "quillite"] and not game.science_level.has("EMM")):
 		game.show_tooltip(tr("LOCKED"))
 	else:
 		game.show_tooltip(tr(rsrc.to_upper()))
@@ -64,8 +64,8 @@ func on_rsrc_pressed(rsrc:String):
 func refresh():
 	set_process(true)
 	for btn in $ScrollContainer/GridContainer.get_children():
-		if (btn.name in ["platinum", "diamond"] and not game.science_unlocked.has("AMM")
-			or btn.name in ["nanocrystal", "mythril", "quillite"] and not game.science_unlocked.has("EMM")):
+		if (btn.name in ["platinum", "diamond"] and not game.science_level.has("AMM")
+			or btn.name in ["nanocrystal", "mythril", "quillite"] and not game.science_level.has("EMM")):
 			btn.modulate = Color(0.2, 0.2, 0.2)
 			btn.disabled = true
 		else:

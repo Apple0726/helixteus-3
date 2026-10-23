@@ -19,11 +19,6 @@ var path_1 = {	Building.MINERAL_EXTRACTOR:			{"value":0.36, "pw":1.15, "time_bas
 				Building.SUBATOMIC_PARTICLE_REACTOR:{"value":1.0, "pw":1.16, "metal_costs":{"lead":270000, "copper":270000, "iron":270000, "aluminium":270000, "silver":270000, "gold":270000}},
 				Building.SHIPYARD:					{"value":1.0, "pw":1.16, "metal_costs":{"lead":640000, "copper":640000, "iron":640000, "aluminium":960000, "silver":960000, "gold":1280000}},
 				Building.CENTRAL_BUSINESS_DISTRICT:	{"value":1.111111, "pw":1.03, "cost_mult":1.5, "metal_costs":{"lead":2000, "copper":4000, "iron":8000, "aluminium":16000, "silver":32000, "gold":64000, "platinum":128000}},
-#				"PC":{"value":1000.0, "pw":1.15, "time_based":true, "metal_costs":{"lead":2000, "copper":3000, "iron":5000, "aluminium":8000, "silver":13000, "gold":21000, "platinum":34000}},
-#				"NC":{"value":1000.0, "pw":1.15, "time_based":true, "metal_costs":{"lead":2000, "copper":3000, "iron":5000, "aluminium":8000, "silver":13000, "gold":21000, "platinum":34000}},
-#				"EC":{"value":1000.0, "pw":1.15, "time_based":true, "metal_costs":{"lead":2000, "copper":3000, "iron":5000, "aluminium":8000, "silver":13000, "gold":21000, "platinum":34000}},
-#				"NSF":{"value":50000.0, "pw":1.15, "metal_costs":{"lead":2000, "copper":3000, "iron":5000, "aluminium":8000, "silver":13000, "gold":21000, "platinum":34000}},
-#				"ESF":{"value":50000.0, "pw":1.15, "metal_costs":{"lead":2000, "copper":3000, "iron":5000, "aluminium":8000, "silver":13000, "gold":21000, "platinum":34000}},
 }
 var path_2 = {	Building.STONE_CRUSHER:				{"value":4000, "pw":1.16, "is_value_integer":true, "metal_costs":{"lead":300, "copper":300, "iron":300, "aluminium":300, "silver":300, "gold":300}},
 				Building.GLASS_FACTORY:				{"value":600, "pw":1.16, "is_value_integer":true, "metal_costs":{"lead":350, "copper":350, "iron":350, "aluminium":350, "silver":350, "gold":350}},
@@ -60,11 +55,7 @@ var costs = {	Building.MINERAL_EXTRACTOR:			{"money":100.0, "energy":40.0},
 				"rover":{"money":2000.0, "energy":400.0},
 }
 
-var MS_costs = {	"doom_ball":{"money":5.4e12, "stone":5.4e7, "silicon":400000, "copper":250000, "iron":1600000, "aluminium":500000, "titanium":50000},
-					"notachicken_star":{"money":4.3e7, "chickens":8.0e8, "silicon":400000, "copper":250000, "iron":1600000, "aluminium":500000, "titanium":50000},
-					"moon_but_not":{"money":8.0e24, "moon_lords":2.1e8, "silicon":400000, "copper":250000, "iron":1600000, "aluminium":500000, "titanium":50000},
-					"killer_queen":{"money":7.8e13, "honey":7.8e8, "silicon":400000, "copper":250000, "iron":1600000, "aluminium":500000, "titanium":50000},
-					"DS_0":{"money":1.3e10, "stone":8.0e8, "silicon":400000, "copper":250000, "iron":1600000, "aluminium":500000, "titanium":50000},
+var MS_costs = {	"DS_0":{"money":1.3e10, "stone":8.0e8, "silicon":400000, "copper":250000, "iron":1600000, "aluminium":500000, "titanium":50000},
 					"DS_1":{"money":3.8e11, "stone":2.7e10, "silicon":1.5e7, "copper":1.2e7, "iron":8.0e7, "aluminium":2.2e7, "titanium":2.1e6},
 					"DS_2":{"money":1.5e13, "stone":9.6e11, "silicon":5.3e8, "copper":4.0e8, "iron":3.2e9, "aluminium":8.7e8, "titanium":8.8e7},
 					"DS_3":{"money":6.4e14, "stone":3.5e13, "silicon":2.5e10, "copper":1.5e10, "iron":1.4e11, "aluminium":3.0e10, "titanium":3.0e9},
@@ -140,11 +131,6 @@ var desc_icons = {	Building.MINERAL_EXTRACTOR:[[minerals_icon]],
 					Building.GLASS_FACTORY:[[glass_icon], [sand_icon], []],
 					Building.STEAM_ENGINE:[[energy_icon], [coal_icon], []],
 					Building.SOLAR_PANEL:[[energy_icon]],
-#					"PC":[[proton_icon]],
-#					"NC":[[neutron_icon]],
-#					"NSF":[[neutron_icon]],
-#					"EC":[[electron_icon]],
-#					"ESF":[[electron_icon]],
 					Building.CENTRAL_BUSINESS_DISTRICT:[[], [], []]
 }
 
@@ -159,11 +145,6 @@ var rsrc_icons = {	Building.MINERAL_EXTRACTOR:minerals_icon,
 					Building.ATMOSPHERE_EXTRACTOR:atom_icon,
 					Building.ATOM_MANIPULATOR:atom_icon,
 					Building.SUBATOMIC_PARTICLE_REACTOR:subatomic_particles_icon,
-#					"PC":proton_icon,
-#					"NC":neutron_icon,
-#					"NSF":neutron_icon,
-#					"EC":electron_icon,
-#					"ESF":electron_icon,
 }
 
 var default_stats:Dictionary = {
@@ -247,11 +228,6 @@ func reload():
 	path_1[Building.SOLAR_PANEL].desc = tr("GENERATES_X") % ["@i %s/" + tr("S_SECOND")]
 	path_1[Building.ATOM_MANIPULATOR].desc = "%s: %%s" % [tr("BASE_SPEED")]
 	path_1[Building.SUBATOMIC_PARTICLE_REACTOR].desc = "%s: %%s" % [tr("BASE_SPEED")]
-#	path_1.PC.desc = tr("COLLECTS_X") % ["@i %s/" + tr("S_SECOND")]
-#	path_1.NC.desc = tr("COLLECTS_X") % ["@i %s/" + tr("S_SECOND")]
-#	path_1.EC.desc = tr("COLLECTS_X") % ["@i %s/" + tr("S_SECOND")]
-#	path_1.NSF.desc = tr("STORES_X") % ["@i %s mol"]
-#	path_1.ESF.desc = tr("STORES_X") % ["@i %s mol"]
 	path_2[Building.STONE_CRUSHER].desc = tr("CAN_STORE_UP_TO") % [" @i %s kg"]
 	path_2[Building.GLASS_FACTORY].desc = tr("CAN_STORE_UP_TO") % [" @i %s kg"]
 	path_2[Building.STEAM_ENGINE].desc = tr("CAN_STORE_UP_TO") % [" @i %s kg"]
@@ -354,100 +330,60 @@ func reload():
 	}
 
 #Science for unlocking game features
-var science_unlocks = {	
-						#Agriculture sciences
-						"SA":{"cost":500.0, "parents":[]},
-						"PF":{"cost":90000.0, "parents":["SA"]},
-						
-						#Auto-sell minerals
-						"ASM":{"cost":100.0, "parents":[]},
-						"ASM2":{"cost":20000.0, "parents":["ASM"]},
-						
-						#Auto mining
-						"AM":{"cost":10000.0, "parents":[]},
-						
-						#Improved stone crusher
-						"ISC":{"cost":250.0, "parents":[]},
-						
-						#Improved spaceport
-						"ISP":{"cost":50000.0, "parents":[]},
-						
-						#Compact items
-						"CI":{"cost":4800.0, "parents":[]},
-						"CI2":{"cost":4.8e6, "parents":["CI"]},
-						"CI3":{"cost":4.8e9, "parents":["CI2"]},
-						
-						#Atom manipulation
-						"ATM":{"cost":200000.0, "parents":[]},
-						"AMM":{"cost":1.0e9, "parents":["ATM"]},
-						"EMM":{"cost":1.0e15, "parents":["AMM"]},
-						"SAP":{"cost":12500000.0, "parents":["ATM"]},
-						
-						#Rover sciences
-						"RC":{"cost":5.0, "parents":[]},
-						"OL":{"cost":1000.0, "parents":["RC"]},
-						"YL":{"cost":12000.0, "parents":["OL"]},
-						"GL":{"cost":70000.0, "parents":["YL"]},
-						"BL":{"cost":350000.0, "parents":["GL"]},
-						"PL":{"cost":2400000.0, "parents":["BL"]},
-						"UVL":{"cost":2.8e7, "parents":["PL"]},
-						"XRL":{"cost":4.05e8, "parents":["UVL"]},
-						"GRL":{"cost":6.5e9, "parents":["XRL"]},
-						"UGRL":{"cost":1.0e12, "parents":["GRL"]},
-						
-						"RMK2":{"cost":5.0e6, "parents":["RC"]},
-						"RMK3":{"cost":5.0e10, "parents":["RMK2"]},
-						
-						#Ship sciences
-						"SCT":{"cost":350.0, "parents":["RC"]},
-						"CD":{"cost":2400.0, "parents":["SCT"]},
-						"FTL":{"cost":128000.0, "parents":["SCT"]},
-						"IGD":{"cost":9.5e7, "parents":["FTL"]},
-						"FG":{"cost":3.45e9, "parents":["IGD"]},
-						"FG2":{"cost":1.4e19, "parents":["FG"]},
-						"ID":{"cost":4.5e6, "parents":["CD", "ATM"]},
-						"PD":{"cost":1.2e12, "parents":["ID"]},
-						
-						#Megastructure sciences
-						"MAE":{"cost":100000.0, "parents":["SCT"]},
-						"TF":{"cost":5.6e8, "parents":["MAE"]},
-						#Dyson sphere
-						"DS1":{"cost":1.2e11, "parents":["MAE"]},
-						"DS2":{"cost":4.8e12, "parents":["DS1"]},
-						"DS3":{"cost":2.1e14, "parents":["DS2"]},
-						"DS4":{"cost":8.0e15, "parents":["DS3"]},
-						#Matrioshka brain
-						"MB":{"cost":2.6e16, "parents":["DS4"]},
-						#Space elevator
-						"SE1":{"cost":700000.0, "parents":["MAE"]},
-						
-						#Mega mineral extractor
-						"MME1":{"cost":1.7e9, "parents":["MAE"]},
-						"MME2":{"cost":6.0e10, "parents":["MME1"]},
-						"MME3":{"cost":2.4e12, "parents":["MME2"]},
-						
-						#CBS
-						"CBS1":{"cost":4.0e11, "parents":["MAE"]},
-						"CBS2":{"cost":4.0e11*35, "parents":["CBS1"]},
-						"CBS3":{"cost":4.0e11*35*35, "parents":["CBS2"]},
-						
-						#Planetkiller
-						"PK1":{"cost":5.25e14, "parents":["MAE"]},
-						"PK2":{"cost":3.4e16, "parents":["PK1"]},
-						
-						#Gigastructures
-						"GS":{"cost":1.0e19, "parents":["MB"]},
-						
-						#Triangulum probe
-						"TPCC":{"cost":1.0e23, "parents":["GS"]},
-}
-
-var infinite_research_sciences = {	"MEE":{"cost":250.0, "pw":6.8},
-									"EPE":{"cost":400.0, "pw":6.8},
-									"RLE":{"cost":1250.0, "pw":7.2},
-									"STE":{"cost":500.0, "pw":7.0},
-									"MMS":{"cost":150.0, "pw":6.0},
-									"PME":{"cost":1.0e7, "pw":6.8},
+var science_unlocks = {
+	Science.ADVANCED_SPACE_CONSTRUCTION: {"cost": [5.0], "prereqs": {}},
+	Science.AUTOSELL_MINERALS: {"cost": [100.0], "prereqs": {}},
+	Science.AUTOSELL_EXCESS_MINERALS: {"cost": [20000.0], "prereqs": {Science.AUTOSELL_MINERALS: 1}},
+	Science.COMPACT_ITEMS: {"cost": [4800.0, 4.8e6, 4.8e9], "prereqs": {}},
+	Science.MINERAL_EXTRACTION_EFFICIENCY: {"cost": [], "prereqs": {}, "infinite_research": {"cost":250.0, "pw":6.8}},
+	Science.ENERGY_PRODUCTION_EFFICIENCY: {"cost": [], "prereqs": {}, "infinite_research": {"cost":400.0, "pw":6.8}},
+	Science.RESEARCH_EFFICIENCY: {"cost": [], "prereqs": {}, "infinite_research": {"cost":1250.0, "pw":7.2}},
+	Science.STORAGE_EFFICIENCY: {"cost": [], "prereqs": {}, "infinite_research": {"cost":500.0, "pw":7.0}},
+	Science.MANUAL_MINING_SPEED: {"cost": [], "prereqs": {}, "infinite_research": {"cost":150.0, "pw":6.0}},
+	Science.PARTICLE_MANIPULATION_EFFICIENCY: {"cost": [], "prereqs": {Science.SUBATOMIC_PARTICLES: 1}, "infinite_research": {"cost":1.0e8, "pw":6.6}},
+	
+	Science.ROVER_CONSTRUCTION: {"cost": [100.0, 5.0e6, 3.0e13], "prereqs": {Science.ADVANCED_SPACE_CONSTRUCTION: 1}, "infinite_research": {"cost":3.0e13, "pw":6.1}},
+	Science.SPACE_AGRICULTURE: {"cost": [500.0], "prereqs": {Science.ADVANCED_SPACE_CONSTRUCTION: 1}},
+	Science.PLANT_FERTILIZATION: {"cost": [90000.0], "prereqs": {Science.SPACE_AGRICULTURE: 1}},
+	Science.IMPROVED_STONE_CRUSHER: {"cost": [250.0], "prereqs": {Science.ADVANCED_SPACE_CONSTRUCTION: 1}},
+	Science.AUTO_MINING: {"cost": [10000.0], "prereqs": {Science.ADVANCED_SPACE_CONSTRUCTION: 1}},
+	Science.ATOM_MANIPULATION: {"cost": [200000.0], "prereqs": {Science.ADVANCED_SPACE_CONSTRUCTION: 1}},
+	
+	Science.SHIP_CONTROL: {"cost": [350.0], "prereqs": {Science.ROVER_CONSTRUCTION: 1}},
+	Science.IMPROVED_ROVER_LASERS: {"cost":
+		[1000.0, # Orange
+		12000.0, # Yellow
+		70000.0, # etc.
+		350000.0,
+		2.4e6,
+		2.8e7,
+		4.05e8,
+		6.5e9,
+		1.0e12]
+	, "prereqs": {Science.ROVER_CONSTRUCTION: 1}, "infinite_research": {"cost":2.5e14, "pw":5.8}},
+	
+	Science.IMPROVED_SPACEPORT: {"cost": [50000.0], "prereqs": {Science.SHIP_CONTROL: 1}},
+	Science.MACRO_ENGINEERING: {"cost": [100000.0], "prereqs": {Science.SHIP_CONTROL: 1}},
+	Science.FTL_DRIVE: {"cost": [128000.0, 9.5e7], "prereqs": {Science.SHIP_CONTROL: 1}},
+	Science.CHEMICAL_DRIVE: {"cost": [2400.0], "prereqs": {Science.SHIP_CONTROL: 1}},
+	Science.ION_DRIVE: {"cost": [4.5e6], "prereqs": {Science.CHEMICAL_DRIVE: 1}},
+	Science.PLUTONIUM_DRIVE: {"cost": [1.2e12], "prereqs": {Science.ION_DRIVE: 1}},
+	
+	Science.SUBATOMIC_PARTICLES: {"cost": [1.25e7], "prereqs": {Science.ATOM_MANIPULATION: 1}},
+	Science.ADVANCED_METAL_MANIPULATION: {"cost": [1.0e9], "prereqs": {Science.ATOM_MANIPULATION: 1}},
+	Science.EXOTIC_MATERIAL_MANIPULATION: {"cost": [1.0e15], "prereqs": {Science.ADVANCED_METAL_MANIPULATION: 1}},
+	
+	Science.FIGHTERS: {"cost": [3.45e9, 1.4e18], "prereqs": {Science.FTL_DRIVE: 2}, "infinite_research": {"cost":7.5e19, "pw":5.4}},
+	
+	Science.SPACE_ELEVATOR: {"cost": [700000.0], "prereqs": {Science.MACRO_ENGINEERING: 1}},
+	Science.TERRAFORMING: {"cost": [5.6e8], "prereqs": {Science.MACRO_ENGINEERING: 1}},
+	Science.MEGA_MINERAL_EXTRACTOR: {"cost": [1.7e9, 6.0e10, 2.4e12], "prereqs": {Science.MACRO_ENGINEERING: 1}},
+	Science.DYSON_SPHERE: {"cost": [1.2e11, 4.8e12, 2.1e14, 8.0e15], "prereqs": {Science.MACRO_ENGINEERING: 1}},
+	Science.CENTRAL_BUSINESS_SYSTEM: {"cost": [4.0e11, 1.4e13, 4.9e14], "prereqs": {Science.MACRO_ENGINEERING: 1}},
+	Science.PLANETKILLER: {"cost": [5.25e14, 3.4e16], "prereqs": {Science.MACRO_ENGINEERING: 1}},
+	Science.MATRIOSHKA_BRAIN: {"cost": [2.6e16], "prereqs": {Science.DYSON_SPHERE: 4}},
+	Science.GIGASTRUCTURE_CONSTRUCTION: {"cost": [1.0e19], "prereqs": {Science.MATRIOSHKA_BRAIN: 1}},
+	Science.TRIANGULUM_PROBE_CONSTRUCTION: {"cost": [1.0e23], "prereqs": {Science.GIGASTRUCTURE_CONSTRUCTION: 1}, "infinite_research": {"cost":5.0e24, "pw":6.1}},
 }
 
 var battle_weapon_stats = {

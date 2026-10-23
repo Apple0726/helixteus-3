@@ -13,7 +13,7 @@ func _ready():
 	set_polygon($GUI.size, $GUI.position)
 
 func refresh():
-	$OptionButton.visible = game.science_unlocked.has("FG2") and game.tile_data[game.c_t].bldg.path_1 >= 100
+	$OptionButton.visible = game.science_level.has("FG2") and game.tile_data[game.c_t].bldg.path_1 >= 100
 	if not $OptionButton.visible:
 		$OptionButton.select(0)
 		_on_OptionButton_item_selected(0)

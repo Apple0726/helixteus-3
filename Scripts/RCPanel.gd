@@ -206,13 +206,13 @@ func reset():
 
 func refresh():
 	set_process_input(visible)
-	if game.science_unlocked.has("RMK2") and len(inventory) == 5:
+	if game.science_level.has("RMK2") and len(inventory) == 5:
 		inventory.append({})
-	if game.science_unlocked.has("RMK3") and len(inventory) == 6:
+	if game.science_level.has("RMK3") and len(inventory) == 6:
 		inventory.append({})
 	tile = game.tile_data[game.c_t]
 	REPs = tile.bldg.path_1 / 20
-	if game.science_unlocked.has("RMK3"):
+	if game.science_level.has("RMK3"):
 		$Stats/Rover.texture = preload("res://Graphics/Cave/Rover3.png")
 		HP = 750.0
 		atk = 70.0
@@ -221,7 +221,7 @@ func refresh():
 		REPs += 2
 		ability_num = 4
 		MK = 3
-	elif game.science_unlocked.has("RMK2"):
+	elif game.science_level.has("RMK2"):
 		$Stats/Rover.texture = preload("res://Graphics/Cave/Rover2.png")
 		HP = 50.0
 		atk = 15.0

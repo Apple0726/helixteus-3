@@ -21,7 +21,7 @@ func _input(event):
 	super(event)
 
 func refresh():
-	$HBoxContainer/Fighters.visible = game.science_unlocked.has("FG")
+	$HBoxContainer/Fighters.visible = game.science_level.has("FG")
 	$HBoxContainer/Probes.visible = game.u_i.lv >= 60
 	if tab == ROVERS:
 		_on_rovers_pressed()
