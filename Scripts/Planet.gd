@@ -1080,9 +1080,10 @@ func _unhandled_input(event):
 					var right_click_info_list = [{
 						"button_text":tr("DUPLICATE") + " (Q)",
 						"button_callable":duplicate_building_callable,
-						},
-						upgrade_button_dict, destroy_button_dict
+						}, destroy_button_dict
 					]
+					if game.show.has("bldg_upgrade"):
+						right_click_info_list.insert(1, upgrade_button_dict)
 					var load_unload_button_dict = {}
 					if tile.bldg.name in [Building.STONE_CRUSHER, Building.GLASS_FACTORY, Building.STEAM_ENGINE]:
 						load_unload_button_dict = {
@@ -1105,7 +1106,7 @@ func _unhandled_input(event):
 				elif Input.is_action_just_pressed("Q"):
 					action_performed = true
 					duplicate_building_callable()
-				elif Input.is_action_just_pressed("F"):
+				elif Input.is_action_just_pressed("F") and game.show.has("bldg_upgrade"):
 					upgrade_building_callable(false)
 				elif Input.is_action_just_pressed("X") and game.active_panel == null:
 					destroy_building_callable()
@@ -1581,9 +1582,10 @@ func add_bldg(id2:int, type:int, building_animation:bool = false):
 		_:
 			if Mods.added_buildings.has(type):
 				add_rsrc(v, Mods.added_buildings[type].icon_color, Data.rsrc_icons[type], id2)
-	var hbox = Helper.add_lv_boxes(tile, v)
-	add_child(hbox)
-	hboxes[id2] = hbox
+	if game.show.has("bldg_upgrade"):
+		var hbox = Helper.add_lv_boxes(tile, v)
+		add_child(hbox)
+		hboxes[id2] = hbox
 	if tile.bldg.has("overclock_mult"):
 		add_time_bar(id2, "overclock")
 	Helper.update_rsrc(p_i, tile)

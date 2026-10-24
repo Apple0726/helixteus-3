@@ -15,7 +15,6 @@
 [ext_resource type="Texture2D" uid="uid://dg25fshk35326" path="res://Graphics/Icons/SP.png" id="7_jkx00"]
 [ext_resource type="Texture2D" uid="uid://bixqswdd7ypgy" path="res://Graphics/Buttons/ChemicalDrive.png" id="7_nwtyk"]
 [ext_resource type="Texture2D" uid="uid://c02m0dq0w0k4g" path="res://Graphics/Science/ATM.png" id="8_7vpdc"]
-[ext_resource type="Texture2D" uid="uid://dwjcfkpu40hn8" path="res://Graphics/Buttons/IonDrive.png" id="8_bg7uu"]
 [ext_resource type="Texture2D" uid="uid://cdqb8dr8jf33" path="res://Graphics/Buildings/mineral_silo.png" id="8_feb1f"]
 [ext_resource type="Texture2D" uid="uid://dtnykhifc2erl" path="res://Graphics/Science/PD.png" id="9_7vpdc"]
 [ext_resource type="Texture2D" uid="uid://koi0aarpqj30" path="res://Graphics/Ships/Ship0.png" id="9_bg7uu"]
@@ -41,304 +40,711 @@
 [node name="ScienceTree" type="Node2D" unique_id=767229984]
 script = ExtResource("2")
 
+[node name="Lines" type="Control" parent="." unique_id=691931927]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+metadata/_edit_use_anchors_ = true
+
+[node name="Line2D2" type="Line2D" parent="Lines" unique_id=2134935890]
+points = PackedVector2Array(808, 552, 752, 552)
+width = 1.0
+default_color = Color(0.50534403, 0.5053441, 0.50534403, 1)
+
+[node name="Line2D5" type="Line2D" parent="Lines" unique_id=958427784]
+position = Vector2(224, 0)
+points = PackedVector2Array(800, 440, 800, 488)
+width = 1.0
+default_color = Color(0.50534403, 0.5053441, 0.50534403, 1)
+
+[node name="Line2D6" type="Line2D" parent="Lines" unique_id=1240632201]
+points = PackedVector2Array(752, 552, 752, -152)
+width = 1.0
+default_color = Color(0.50534403, 0.5053441, 0.50534403, 1)
+
+[node name="Line2D26" type="Line2D" parent="Lines" unique_id=1004147716]
+points = PackedVector2Array(752, 200, 808, 200)
+width = 1.0
+default_color = Color(0.50534403, 0.5053441, 0.50534403, 1)
+
+[node name="Line2D32" type="Line2D" parent="Lines" unique_id=1932012044]
+points = PackedVector2Array(480, 376, 480, 488)
+width = 1.0
+default_color = Color(0.50534403, 0.5053441, 0.50534403, 1)
+
+[node name="Line2D35" type="Line2D" parent="Lines" unique_id=993446934]
+points = PackedVector2Array(0, 376, 0, 488)
+width = 1.0
+default_color = Color(0.50534403, 0.5053441, 0.50534403, 1)
+
+[node name="Line2D36" type="Line2D" parent="Lines" unique_id=1611777759]
+points = PackedVector2Array(-160, 376, -160, 488)
+width = 1.0
+default_color = Color(0.50534403, 0.5053441, 0.50534403, 1)
+
+[node name="Line2D33" type="Line2D" parent="Lines" unique_id=1970889002]
+points = PackedVector2Array(320, 264, 320, 488)
+width = 1.0
+default_color = Color(0.50534403, 0.5053441, 0.50534403, 1)
+
+[node name="Line2D34" type="Line2D" parent="Lines" unique_id=1170528857]
+points = PackedVector2Array(160, 264, 160, 488)
+width = 1.0
+default_color = Color(0.50534403, 0.5053441, 0.50534403, 1)
+
+[node name="Line2D7" type="Line2D" parent="Lines" unique_id=1116285502]
+points = PackedVector2Array(808, 24, 752, 24)
+width = 1.0
+default_color = Color(0.50534403, 0.5053441, 0.50534403, 1)
+
+[node name="Line2D37" type="Line2D" parent="Lines" unique_id=1449869621]
+points = PackedVector2Array(808, -152, 752, -152)
+width = 1.0
+default_color = Color(0.50534403, 0.5053441, 0.50534403, 1)
+
+[node name="Line2D3" type="Line2D" parent="Lines" unique_id=630768123]
+points = PackedVector2Array(968, 376, 696, 376)
+width = 1.0
+default_color = Color(0.50534403, 0.5053441, 0.50534403, 1)
+
+[node name="Line2D30" type="Line2D" parent="Lines" unique_id=1406011350]
+points = PackedVector2Array(-160, 376, 580, 376)
+width = 1.0
+default_color = Color(0.50534403, 0.5053441, 0.50534403, 1)
+
+[node name="Line2D13" type="Line2D" parent="Lines" unique_id=1108525164]
+points = PackedVector2Array(944, -152, 944, -328)
+width = 1.0
+default_color = Color(0.50534403, 0.5053441, 0.50534403, 1)
+
+[node name="Line2D15" type="Line2D" parent="Lines" unique_id=1953121995]
+points = PackedVector2Array(920, -152, 968, -152)
+width = 1.0
+default_color = Color(0.50534403, 0.5053441, 0.50534403, 1)
+
+[node name="Line2D31" type="Line2D" parent="Lines" unique_id=155314325]
+points = PackedVector2Array(968, -328, 944, -328)
+width = 1.0
+default_color = Color(0.50534403, 0.5053441, 0.50534403, 1)
+
+[node name="Line2D16" type="Line2D" parent="Lines" unique_id=1732256223]
+points = PackedVector2Array(1080, -152, 1128, -152)
+width = 1.0
+default_color = Color(0.50534403, 0.5053441, 0.50534403, 1)
+
+[node name="Line2D14" type="Line2D" parent="Lines" unique_id=691317967]
+points = PackedVector2Array(1080, -328, 1128, -328)
+width = 1.0
+default_color = Color(0.50534403, 0.5053441, 0.50534403, 1)
+
+[node name="Line2D8" type="Line2D" parent="Lines" unique_id=1856580236]
+position = Vector2(224, 0)
+points = PackedVector2Array(904, 376, 856, 376)
+width = 1.0
+default_color = Color(0.50534403, 0.5053441, 0.50534403, 1)
+
+[node name="Line2D18" type="Line2D" parent="Lines" unique_id=1524087973]
+position = Vector2(160, 0)
+points = PackedVector2Array(1280, 376, 1084, 376)
+width = 1.0
+default_color = Color(0.50534403, 0.5053441, 0.50534403, 1)
+
+[node name="Line2D4" type="Line2D" parent="Lines" unique_id=1839689842]
+points = PackedVector2Array(968, 200, 920, 200)
+width = 1.0
+default_color = Color(0.50534403, 0.5053441, 0.50534403, 1)
+
+[node name="Line2D9" type="Line2D" parent="Lines" unique_id=1508751759]
+position = Vector2(224, 32)
+points = PackedVector2Array(960, 628, 960, 584)
+width = 1.0
+default_color = Color(0.50534403, 0.5053441, 0.50534403, 1)
+
+[node name="Line2D10" type="Line2D" parent="Lines" unique_id=1096431097]
+position = Vector2(224, 32)
+points = PackedVector2Array(960, 456, 960, 408)
+width = 1.0
+default_color = Color(0.50534403, 0.5053441, 0.50534403, 1)
+
+[node name="Line2D17" type="Line2D" parent="Lines" unique_id=1430238326]
+position = Vector2(224, 32)
+points = PackedVector2Array(1120, 456, 1120, 344)
+width = 1.0
+default_color = Color(0.50534403, 0.5053441, 0.50534403, 1)
+
+[node name="Line2D11" type="Line2D" parent="Lines" unique_id=1617972007]
+position = Vector2(224, 32)
+points = PackedVector2Array(960, 280, 960, 232)
+width = 1.0
+default_color = Color(0.50534403, 0.5053441, 0.50534403, 1)
+
+[node name="Line2D19" type="Line2D" parent="Lines" unique_id=1818881611]
+points = PackedVector2Array(1616, -152, 1664, -152)
+width = 1.0
+default_color = Color(0.50534403, 0.5053441, 0.50534403, 1)
+
+[node name="Line2D20" type="Line2D" parent="Lines" unique_id=1079234476]
+position = Vector2(224, 32)
+points = PackedVector2Array(1392, -8, 1448, -8)
+width = 1.0
+default_color = Color(0.50534403, 0.5053441, 0.50534403, 1)
+
+[node name="Line2D22" type="Line2D" parent="Lines" unique_id=1036489180]
+position = Vector2(224, 0)
+points = PackedVector2Array(1448, 728, 1392, 728)
+width = 1.0
+default_color = Color(0.50534403, 0.5053441, 0.50534403, 1)
+
+[node name="Line2D24" type="Line2D" parent="Lines" unique_id=569493202]
+points = PackedVector2Array(1616, 728, 1616, -152)
+width = 1.0
+default_color = Color(0.50534403, 0.5053441, 0.50534403, 1)
+
+[node name="Line2D25" type="Line2D" parent="Lines" unique_id=736853025]
+points = PackedVector2Array(1672, 376, 1560, 376)
+width = 1.0
+default_color = Color(0.50534403, 0.5053441, 0.50534403, 1)
+
+[node name="Line2D27" type="Line2D" parent="Lines" unique_id=465362742]
+points = PackedVector2Array(1672, 552, 1616, 552)
+width = 1.0
+default_color = Color(0.50534403, 0.5053441, 0.50534403, 1)
+
+[node name="Line2D23" type="Line2D" parent="Lines" unique_id=671108871]
+points = PackedVector2Array(1832, 376, 1784, 376)
+width = 1.0
+default_color = Color(0.50534403, 0.5053441, 0.50534403, 1)
+
+[node name="Line2D28" type="Line2D" parent="Lines" unique_id=1149976418]
+points = PackedVector2Array(1992, 376, 1944, 376)
+width = 1.0
+default_color = Color(0.50534403, 0.5053441, 0.50534403, 1)
+
+[node name="Line2D29" type="Line2D" parent="Lines" unique_id=89545669]
+points = PackedVector2Array(2152, 376, 2104, 376)
+width = 1.0
+default_color = Color(0.50534403, 0.5053441, 0.50534403, 1)
+
+[node name="Line2D21" type="Line2D" parent="Lines" unique_id=801017820]
+position = Vector2(224, 32)
+points = PackedVector2Array(1392, 168, 1440, 168)
+width = 1.0
+default_color = Color(0.50534403, 0.5053441, 0.50534403, 1)
+
+[node name="Line2D12" type="Line2D" parent="Lines" unique_id=436159024]
+position = Vector2(224, 32)
+points = PackedVector2Array(960, 104, 960, 56)
+width = 1.0
+default_color = Color(0.50534403, 0.5053441, 0.50534403, 1)
+
 [node name="Control" type="Control" parent="." unique_id=773061513]
 layout_mode = 3
 anchors_preset = 0
 offset_right = 40.0
 offset_bottom = 40.0
+metadata/_edit_use_anchors_ = true
 
 [node name="advanced_space_construction" parent="Control" unique_id=562103153 instance=ExtResource("1")]
 layout_mode = 1
+anchors_preset = -1
+anchor_left = 13.2
+anchor_top = 6.9
+anchor_right = 13.2
+anchor_bottom = 6.9
 offset_left = 64.0
 offset_top = 44.0
 offset_right = 160.0
 offset_bottom = 156.0
 icon_texture = ExtResource("3_0eott")
+metadata/_edit_use_anchors_ = true
 
 [node name="autosell_minerals" parent="Control" unique_id=1451003925 instance=ExtResource("1")]
 layout_mode = 1
-offset_left = -224.0
-offset_top = 428.0
-offset_right = -128.0
-offset_bottom = 540.0
+anchors_preset = -1
+anchor_left = 18.0
+anchor_top = -8.3
+anchor_right = 18.0
+anchor_bottom = -8.3
+offset_left = -608.0
+offset_top = 476.0
+offset_right = -512.0
+offset_bottom = 588.0
 icon_texture = ExtResource("4_aceu7")
+metadata/_edit_use_anchors_ = true
 
 [node name="autosell_excess_minerals" parent="Control" unique_id=2096327902 instance=ExtResource("1")]
 layout_mode = 1
-offset_left = -96.0
-offset_top = 428.0
-offset_right = 0.0
-offset_bottom = 540.0
+anchors_preset = -1
+anchor_left = 14.8
+anchor_top = -12.7
+anchor_right = 14.8
+anchor_bottom = -12.7
+offset_left = -480.0
+offset_top = 476.0
+offset_right = -384.0
+offset_bottom = 588.0
 icon_texture = ExtResource("4_aceu7")
+metadata/_edit_use_anchors_ = true
 
 [node name="compact_items" parent="Control" unique_id=116933138 instance=ExtResource("1")]
 layout_mode = 1
-offset_left = -224.0
-offset_top = -516.0
-offset_right = -128.0
-offset_bottom = -404.0
+anchors_preset = -1
+anchor_left = 22.0
+anchor_top = -11.9
+anchor_right = 22.0
+anchor_bottom = -11.9
+offset_left = -608.0
+offset_top = 620.0
+offset_right = -512.0
+offset_bottom = 732.0
 icon_texture = ExtResource("4_fvplu")
+metadata/_edit_use_anchors_ = true
 
 [node name="mineral_extraction_efficiency" parent="Control" unique_id=134144880 instance=ExtResource("1")]
 layout_mode = 1
-offset_left = -224.0
-offset_top = -372.0
-offset_right = -128.0
-offset_bottom = -260.0
+anchors_preset = -1
+anchor_left = 10.0
+anchor_top = 7.7
+anchor_right = 10.0
+anchor_bottom = 7.7
+offset_left = -608.0
+offset_top = 188.0
+offset_right = -512.0
+offset_bottom = 300.0
 icon_texture = ExtResource("5_aceu7")
+metadata/_edit_use_anchors_ = true
 
 [node name="energy_production_efficiency" parent="Control" unique_id=1385620683 instance=ExtResource("1")]
 layout_mode = 1
-offset_left = -224.0
-offset_top = -228.0
-offset_right = -128.0
-offset_bottom = -116.0
+anchors_preset = -1
+anchor_left = 10.8
+anchor_top = 7.7
+anchor_right = 10.8
+anchor_bottom = 7.7
+offset_left = -480.0
+offset_top = 188.0
+offset_right = -384.0
+offset_bottom = 300.0
 icon_texture = ExtResource("6_tdgt3")
+metadata/_edit_use_anchors_ = true
 
 [node name="research_efficiency" parent="Control" unique_id=482471912 instance=ExtResource("1")]
 layout_mode = 1
-offset_left = -224.0
-offset_top = -84.0
-offset_right = -128.0
-offset_bottom = 28.0
+anchors_preset = -1
+anchor_left = 11.6
+anchor_top = 7.7
+anchor_right = 11.6
+anchor_bottom = 7.7
+offset_left = -352.0
+offset_top = 188.0
+offset_right = -256.0
+offset_bottom = 300.0
 icon_texture = ExtResource("7_jkx00")
+metadata/_edit_use_anchors_ = true
 
 [node name="storage_efficiency" parent="Control" unique_id=1343807891 instance=ExtResource("1")]
 layout_mode = 1
-offset_left = -224.0
-offset_top = 60.0
-offset_right = -128.0
-offset_bottom = 172.0
+anchors_preset = -1
+anchor_left = 22.0
+anchor_top = 4.1
+anchor_right = 22.0
+anchor_bottom = 4.1
+offset_left = -608.0
+offset_top = 332.0
+offset_right = -512.0
+offset_bottom = 444.0
 icon_texture = ExtResource("8_feb1f")
+metadata/_edit_use_anchors_ = true
 
 [node name="manual_mining_speed" parent="Control" unique_id=860989988 instance=ExtResource("1")]
 layout_mode = 1
-offset_left = -224.0
-offset_top = 204.0
-offset_right = -128.0
-offset_bottom = 316.0
+anchors_preset = -1
+anchor_left = 22.8
+anchor_top = 4.1
+anchor_right = 22.8
+anchor_bottom = 4.1
+offset_left = -480.0
+offset_top = 332.0
+offset_right = -384.0
+offset_bottom = 444.0
 icon_texture = ExtResource("9_oar7t")
+metadata/_edit_use_anchors_ = true
 
 [node name="rover_construction" parent="Control" unique_id=880232169 instance=ExtResource("1")]
 layout_mode = 1
+anchors_preset = -1
+anchor_left = 19.6
+anchor_top = 6.9
+anchor_right = 19.6
+anchor_bottom = 6.9
 offset_left = 192.0
 offset_top = 44.0
 offset_right = 288.0
 offset_bottom = 156.0
 icon_texture = ExtResource("4_0sdo3")
+metadata/_edit_use_anchors_ = true
 
 [node name="space_agriculture" parent="Control" unique_id=1237827604 instance=ExtResource("1")]
 layout_mode = 1
-offset_left = 192.0
+anchors_preset = -1
+anchor_left = 18.8
+anchor_top = -1.1
+anchor_right = 18.8
+anchor_bottom = -1.1
+offset_left = 64.0
 offset_top = 188.0
-offset_right = 288.0
+offset_right = 160.0
 offset_bottom = 300.0
 icon_texture = ExtResource("5_c2khb")
+metadata/_edit_use_anchors_ = true
 
 [node name="plant_fertilization" parent="Control" unique_id=272989778 instance=ExtResource("1")]
 layout_mode = 1
-offset_left = 320.0
-offset_top = 188.0
-offset_right = 416.0
-offset_bottom = 300.0
+anchors_preset = -1
+anchor_left = 22.8
+anchor_top = -4.7
+anchor_right = 22.8
+anchor_bottom = -4.7
+offset_left = 64.0
+offset_top = 332.0
+offset_right = 160.0
+offset_bottom = 444.0
 icon_texture = ExtResource("13_tdgt3")
+metadata/_edit_use_anchors_ = true
 
 [node name="improved_stone_crusher" parent="Control" unique_id=1677179415 instance=ExtResource("1")]
 layout_mode = 1
-offset_left = 192.0
-offset_top = 332.0
-offset_right = 288.0
-offset_bottom = 444.0
+anchors_preset = -1
+anchor_left = 22.0
+anchor_top = 7.7
+anchor_right = 22.0
+anchor_bottom = 7.7
+offset_left = -64.0
+offset_top = 188.0
+offset_right = 32.0
+offset_bottom = 300.0
 icon_texture = ExtResource("6_nwtyk")
+metadata/_edit_use_anchors_ = true
 
 [node name="auto_mining" parent="Control" unique_id=1430008921 instance=ExtResource("1")]
 layout_mode = 1
+anchors_preset = -1
+anchor_left = 15.6
+anchor_top = 1.7
+anchor_right = 15.6
+anchor_bottom = 1.7
 offset_left = 192.0
 offset_top = -100.0
 offset_right = 288.0
 offset_bottom = 12.0
 icon_texture = ExtResource("5_xxn2i")
+metadata/_edit_use_anchors_ = true
 
 [node name="atom_manipulation" parent="Control" unique_id=1734365615 instance=ExtResource("1")]
 layout_mode = 1
-offset_left = 192.0
-offset_top = -628.0
-offset_right = 288.0
-offset_bottom = -516.0
+anchors_preset = -1
+anchor_left = 18.8
+anchor_top = -2.7
+anchor_right = 18.8
+anchor_bottom = -2.7
+offset_left = 64.0
+offset_top = -100.0
+offset_right = 160.0
+offset_bottom = 12.0
 icon_texture = ExtResource("8_7vpdc")
+metadata/_edit_use_anchors_ = true
 
 [node name="ship_control" parent="Control" unique_id=854989687 instance=ExtResource("1")]
 layout_mode = 1
-offset_left = 448.0
+anchors_preset = -1
+anchor_left = 18.8
+anchor_top = 6.9
+anchor_right = 18.8
+anchor_bottom = 6.9
+offset_left = 384.0
 offset_top = 44.0
-offset_right = 544.0
+offset_right = 480.0
 offset_bottom = 156.0
 icon_texture = ExtResource("9_bg7uu")
+metadata/_edit_use_anchors_ = true
 
 [node name="improved_rover_lasers" parent="Control" unique_id=1093637523 instance=ExtResource("1")]
 layout_mode = 1
-offset_left = 320.0
-offset_top = -100.0
-offset_right = 416.0
-offset_bottom = 12.0
+anchors_preset = -1
+anchor_left = 19.6
+anchor_top = 7.7
+anchor_right = 19.6
+anchor_bottom = 7.7
+offset_left = 192.0
+offset_top = 188.0
+offset_right = 288.0
+offset_bottom = 300.0
 icon_texture = ExtResource("6_c2khb")
+metadata/_edit_use_anchors_ = true
 
 [node name="improved_spaceport" parent="Control" unique_id=366218519 instance=ExtResource("1")]
 layout_mode = 1
-offset_left = 192.0
-offset_top = 476.0
-offset_right = 288.0
-offset_bottom = 588.0
+anchors_preset = -1
+anchor_left = 19.6
+anchor_top = 7.7
+anchor_right = 19.6
+anchor_bottom = 7.7
+offset_left = 512.0
+offset_top = 188.0
+offset_right = 608.0
+offset_bottom = 300.0
 icon_texture = ExtResource("11_7vpdc")
+metadata/_edit_use_anchors_ = true
 
 [node name="macro_engineering" parent="Control" unique_id=1210276198 instance=ExtResource("1")]
 layout_mode = 1
-offset_left = 576.0
+anchors_preset = -1
+anchor_left = 17.2
+anchor_top = 6.9
+anchor_right = 17.2
+anchor_bottom = 6.9
+offset_left = 768.0
 offset_top = 44.0
-offset_right = 672.0
+offset_right = 864.0
 offset_bottom = 156.0
 icon_texture = ExtResource("12_20v8c")
+metadata/_edit_use_anchors_ = true
 
 [node name="ftl_drive" parent="Control" unique_id=562195139 instance=ExtResource("1")]
 layout_mode = 1
-offset_left = 448.0
+anchors_preset = -1
+anchor_left = 18.8
+anchor_top = 7.7
+anchor_right = 18.8
+anchor_bottom = 7.7
+offset_left = 384.0
 offset_top = 188.0
-offset_right = 544.0
+offset_right = 480.0
 offset_bottom = 300.0
 icon_texture = ExtResource("13_2b3xc")
+metadata/_edit_use_anchors_ = true
 
 [node name="chemical_drive" parent="Control" unique_id=1695371747 instance=ExtResource("1")]
 layout_mode = 1
-offset_left = 448.0
+anchors_preset = -1
+anchor_left = 18.8
+anchor_top = 6.1
+anchor_right = 18.8
+anchor_bottom = 6.1
+offset_left = 384.0
 offset_top = -100.0
-offset_right = 544.0
+offset_right = 480.0
 offset_bottom = 12.0
 icon_texture = ExtResource("7_nwtyk")
-
-[node name="ion_drive" parent="Control" unique_id=558760253 instance=ExtResource("1")]
-layout_mode = 1
-offset_left = 448.0
-offset_top = -244.0
-offset_right = 544.0
-offset_bottom = -132.0
-icon_texture = ExtResource("8_bg7uu")
+metadata/_edit_use_anchors_ = true
 
 [node name="plutonium_drive" parent="Control" unique_id=1591563376 instance=ExtResource("1")]
 layout_mode = 1
-offset_left = 448.0
+anchors_preset = -1
+anchor_left = 18.8
+anchor_top = 8.9
+anchor_right = 18.8
+anchor_bottom = 8.9
+offset_left = 384.0
 offset_top = -388.0
-offset_right = 544.0
+offset_right = 480.0
 offset_bottom = -276.0
 icon_texture = ExtResource("9_7vpdc")
+metadata/_edit_use_anchors_ = true
 
 [node name="subatomic_particles" parent="Control" unique_id=1682725139 instance=ExtResource("1")]
 layout_mode = 1
-offset_left = 320.0
-offset_top = -628.0
-offset_right = 416.0
-offset_bottom = -516.0
+anchors_preset = -1
+anchor_left = 22.8
+anchor_top = 0.9
+anchor_right = 22.8
+anchor_bottom = 0.9
+offset_left = 64.0
+offset_top = -244.0
+offset_right = 160.0
+offset_bottom = -132.0
 icon_texture = ExtResource("17_eu405")
+metadata/_edit_use_anchors_ = true
 
 [node name="advanced_metal_manipulation" parent="Control" unique_id=5192260 instance=ExtResource("1")]
 layout_mode = 1
-offset_left = 448.0
-offset_top = -772.0
-offset_right = 544.0
-offset_bottom = -660.0
+anchors_preset = -1
+anchor_left = 26.0
+anchor_top = -7.1
+anchor_right = 26.0
+anchor_bottom = -7.1
+offset_left = -64.0
+offset_top = -100.0
+offset_right = 32.0
+offset_bottom = 12.0
 icon_texture = ExtResource("18_q1pli")
+metadata/_edit_use_anchors_ = true
 
 [node name="particle_manipulation_efficiency" parent="Control" unique_id=1137229677 instance=ExtResource("1")]
 layout_mode = 1
-offset_left = 448.0
-offset_top = -628.0
-offset_right = 544.0
-offset_bottom = -516.0
+anchors_preset = -1
+anchor_left = 26.8
+anchor_top = 4.5
+anchor_right = 26.8
+anchor_bottom = 4.5
+offset_left = 64.0
+offset_top = -388.0
+offset_right = 160.0
+offset_bottom = -276.0
 icon_texture = ExtResource("8_7vpdc")
+metadata/_edit_use_anchors_ = true
 
 [node name="exotic_material_manipulation" parent="Control" unique_id=1771622370 instance=ExtResource("1")]
 layout_mode = 1
-offset_left = 576.0
-offset_top = -772.0
-offset_right = 672.0
-offset_bottom = -660.0
+anchors_preset = -1
+anchor_left = 33.2
+anchor_top = -7.1
+anchor_right = 33.2
+anchor_bottom = -7.1
+offset_left = -192.0
+offset_top = -100.0
+offset_right = -96.0
+offset_bottom = 12.0
 icon_texture = ExtResource("19_6xkeg")
+metadata/_edit_use_anchors_ = true
 
 [node name="fighters" parent="Control" unique_id=1006690088 instance=ExtResource("1")]
 layout_mode = 1
-offset_left = 448.0
+anchors_preset = -1
+anchor_left = 18.8
+anchor_top = 8.5
+anchor_right = 18.8
+anchor_bottom = 8.5
+offset_left = 384.0
 offset_top = 332.0
-offset_right = 544.0
+offset_right = 480.0
 offset_bottom = 444.0
 icon_texture = ExtResource("20_6v67o")
+metadata/_edit_use_anchors_ = true
 
 [node name="space_elevator" parent="Control" unique_id=457281187 instance=ExtResource("1")]
 layout_mode = 1
-offset_left = 704.0
-offset_top = -388.0
-offset_right = 800.0
-offset_bottom = -276.0
+anchors_preset = -1
+anchor_left = 26.0
+anchor_top = -2.7
+anchor_right = 26.0
+anchor_bottom = -2.7
+offset_left = 640.0
+offset_top = -100.0
+offset_right = 736.0
+offset_bottom = 12.0
 icon_texture = ExtResource("29_h0wvo")
+metadata/_edit_use_anchors_ = true
 
 [node name="terraforming" parent="Control" unique_id=1764602144 instance=ExtResource("1")]
 layout_mode = 1
-offset_left = 704.0
-offset_top = -244.0
-offset_right = 800.0
-offset_bottom = -132.0
+anchors_preset = -1
+anchor_left = 22.8
+anchor_top = 1.7
+anchor_right = 22.8
+anchor_bottom = 1.7
+offset_left = 768.0
+offset_top = -100.0
+offset_right = 864.0
+offset_bottom = 12.0
 icon_texture = ExtResource("30_yysdf")
+metadata/_edit_use_anchors_ = true
 
 [node name="mega_mineral_extractor" parent="Control" unique_id=1083836347 instance=ExtResource("1")]
 layout_mode = 1
-offset_left = 704.0
+anchors_preset = -1
+anchor_left = 19.6
+anchor_top = 6.1
+anchor_right = 19.6
+anchor_bottom = 6.1
+offset_left = 896.0
 offset_top = -100.0
-offset_right = 800.0
+offset_right = 992.0
 offset_bottom = 12.0
 icon_texture = ExtResource("31_1c67o")
+metadata/_edit_use_anchors_ = true
 
 [node name="dyson_sphere" parent="Control" unique_id=1054150460 instance=ExtResource("1")]
 layout_mode = 1
-offset_left = 704.0
+anchors_preset = -1
+anchor_left = 19.6
+anchor_top = 6.9
+anchor_right = 19.6
+anchor_bottom = 6.9
+offset_left = 896.0
 offset_top = 44.0
-offset_right = 800.0
+offset_right = 992.0
 offset_bottom = 156.0
 icon_texture = ExtResource("32_sexfo")
+metadata/_edit_use_anchors_ = true
 
 [node name="central_business_system" parent="Control" unique_id=1623187980 instance=ExtResource("1")]
 layout_mode = 1
-offset_left = 704.0
+anchors_preset = -1
+anchor_left = 19.6
+anchor_top = 7.7
+anchor_right = 19.6
+anchor_bottom = 7.7
+offset_left = 896.0
 offset_top = 188.0
-offset_right = 800.0
+offset_right = 992.0
 offset_bottom = 300.0
 icon_texture = ExtResource("33_ka82r")
+metadata/_edit_use_anchors_ = true
 
 [node name="planetkiller" parent="Control" unique_id=1238561166 instance=ExtResource("1")]
 layout_mode = 1
-offset_left = 704.0
-offset_top = 332.0
-offset_right = 800.0
-offset_bottom = 444.0
+anchors_preset = -1
+anchor_left = 22.8
+anchor_top = 12.1
+anchor_right = 22.8
+anchor_bottom = 12.1
+offset_left = 768.0
+offset_top = 188.0
+offset_right = 864.0
+offset_bottom = 300.0
 icon_texture = ExtResource("34_n2rmm")
+metadata/_edit_use_anchors_ = true
 
 [node name="matrioshka_brain" parent="Control" unique_id=1275526682 instance=ExtResource("1")]
 layout_mode = 1
-offset_left = 832.0
+anchors_preset = -1
+anchor_left = 20.4
+anchor_top = 6.9
+anchor_right = 20.4
+anchor_bottom = 6.9
+offset_left = 1024.0
 offset_top = 44.0
-offset_right = 928.0
+offset_right = 1120.0
 offset_bottom = 156.0
 icon_texture = ExtResource("35_xdbww")
+metadata/_edit_use_anchors_ = true
 
 [node name="gigastructure_construction" parent="Control" unique_id=806846458 instance=ExtResource("1")]
 layout_mode = 1
-offset_left = 960.0
+anchors_preset = -1
+anchor_left = 21.2
+anchor_top = 6.9
+anchor_right = 21.2
+anchor_bottom = 6.9
+offset_left = 1152.0
 offset_top = 44.0
-offset_right = 1056.0
+offset_right = 1248.0
 offset_bottom = 156.0
 icon_texture = ExtResource("36_eicqo")
+metadata/_edit_use_anchors_ = true
 
 [node name="triangulum_probe_construction" parent="Control" unique_id=362725984 instance=ExtResource("1")]
 layout_mode = 1
-offset_left = 1088.0
+anchors_preset = -1
+anchor_left = 22.0
+anchor_top = 6.9
+anchor_right = 22.0
+anchor_bottom = 6.9
+offset_left = 1280.0
 offset_top = 44.0
-offset_right = 1184.0
+offset_right = 1376.0
 offset_bottom = 156.0
 icon_texture = ExtResource("37_ms61k")
+metadata/_edit_use_anchors_ = true

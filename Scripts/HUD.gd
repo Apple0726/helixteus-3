@@ -296,9 +296,9 @@ func _on_Texture_mouse_entered(extra_arg_0):
 		if not is_zero_approx(game.autocollect.mats.soil):
 			tooltip += " (%s)" % tr("OUT_OF_X_IN").format({"rsrc":tr("SOIL"), "time":Helper.time_to_str(game.mats.soil / abs(game.autocollect.mats.soil))})
 	elif game.autocollect.has("rsrc"):
-		var min_mult:float = pow(game.maths_bonus.IRM, game.infinite_research.MEE) * game.u_i.time_speed
-		var energy_mult:float = pow(game.maths_bonus.IRM, game.infinite_research.EPE) * game.u_i.time_speed
-		var SP_mult:float = pow(game.maths_bonus.IRM, game.infinite_research.RLE) * game.u_i.time_speed
+		var min_mult:float = pow(game.maths_bonus.IRM, game.science_level[Science.MINERAL_EXTRACTION_EFFICIENCY]) * game.u_i.time_speed
+		var energy_mult:float = pow(game.maths_bonus.IRM, game.science_level[Science.ENERGY_PRODUCTION_EFFICIENCY]) * game.u_i.time_speed
+		var SP_mult:float = pow(game.maths_bonus.IRM, game.science_level[Science.RESEARCH_EFFICIENCY]) * game.u_i.time_speed
 		var rsrc_amount = 0.0
 		if extra_arg_0 == "MINERALS":
 			rsrc_amount = (game.autocollect.rsrc.minerals + game.autocollect.GS.minerals + game.autocollect.MS.minerals) * min_mult + (game.autocollect.mats.get("minerals", 0) if game.mats.cellulose > 0 else 0)

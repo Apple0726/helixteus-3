@@ -3,9 +3,6 @@
 [ext_resource type="Theme" uid="uid://cp2u1kgj60ic" path="res://Resources/default_theme.tres" id="2"]
 [ext_resource type="Script" uid="uid://dy27xrmeck1i4" path="res://Scripts/ScienceButton.gd" id="4"]
 
-[sub_resource type="LabelSettings" id="LabelSettings_ce5tw"]
-font_size = 10
-
 [node name="Panel" type="Panel" unique_id=1451003925]
 self_modulate = Color(0, 1, 0, 1)
 anchors_preset = 4
@@ -29,39 +26,20 @@ mouse_filter = 2
 expand_mode = 1
 stretch_mode = 5
 
-[node name="HBoxContainer" type="HBoxContainer" parent="." unique_id=2072079894]
+[node name="GridContainer" type="GridContainer" parent="." unique_id=467370158]
 layout_mode = 1
 anchors_preset = 7
 anchor_left = 0.5
 anchor_top = 1.0
 anchor_right = 0.5
 anchor_bottom = 1.0
-offset_left = -42.0
+offset_left = -6.0
 offset_top = -24.0
-offset_right = 42.0
+offset_right = 6.0
 offset_bottom = -10.0
 grow_horizontal = 2
 grow_vertical = 0
-theme_override_constants/separation = 12
-alignment = 1
-
-[node name="ColorRect" type="ColorRect" parent="HBoxContainer" unique_id=862523882]
-modulate = Color(0, 1, 0, 1)
-custom_minimum_size = Vector2(8, 8)
-layout_mode = 2
-size_flags_vertical = 4
-
-[node name="ColorRect2" type="ColorRect" parent="HBoxContainer" unique_id=1699775895]
-modulate = Color(0, 1, 0, 1)
-custom_minimum_size = Vector2(8, 8)
-layout_mode = 2
-size_flags_vertical = 4
-
-[node name="InfiniteResearch" type="Label" parent="HBoxContainer" unique_id=2122933259]
-modulate = Color(0, 1, 0, 1)
-layout_mode = 2
-text = "+1"
-label_settings = SubResource("LabelSettings_ce5tw")
+theme_override_constants/v_separation = 3
 
 [node name="Research" type="TextureButton" parent="." unique_id=947663896]
 layout_mode = 1

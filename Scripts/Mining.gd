@@ -217,7 +217,7 @@ func pickaxe_hit():
 		return
 	var add_progress:float = 2.0 * game.pickaxe.speed
 	add_progress *= speed_mult
-	add_progress *= pow(game.maths_bonus.IRM, game.infinite_research.MMS)
+	add_progress *= pow(game.maths_bonus.IRM, game.science_level[Science.MANUAL_MINING_SPEED])
 	add_progress *= game.pickaxe.get("speed_mult", 1.0)
 	add_progress *= tile.get("mining_outpost_bonus", 1.0)
 	add_progress *= max(1.0, game.u_i.time_speed * tile.get("time_speed_bonus", 1.0) * 0.1)

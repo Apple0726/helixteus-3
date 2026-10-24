@@ -332,14 +332,15 @@ func reload():
 #Science for unlocking game features
 var science_unlocks = {
 	Science.ADVANCED_SPACE_CONSTRUCTION: {"cost": [5.0], "prereqs": {}},
-	Science.AUTOSELL_MINERALS: {"cost": [100.0], "prereqs": {}},
+	
+	Science.AUTOSELL_MINERALS: {"cost": [100.0], "prereqs": {Science.ADVANCED_SPACE_CONSTRUCTION: 1}},
 	Science.AUTOSELL_EXCESS_MINERALS: {"cost": [20000.0], "prereqs": {Science.AUTOSELL_MINERALS: 1}},
-	Science.COMPACT_ITEMS: {"cost": [4800.0, 4.8e6, 4.8e9], "prereqs": {}},
-	Science.MINERAL_EXTRACTION_EFFICIENCY: {"cost": [], "prereqs": {}, "infinite_research": {"cost":250.0, "pw":6.8}},
-	Science.ENERGY_PRODUCTION_EFFICIENCY: {"cost": [], "prereqs": {}, "infinite_research": {"cost":400.0, "pw":6.8}},
-	Science.RESEARCH_EFFICIENCY: {"cost": [], "prereqs": {}, "infinite_research": {"cost":1250.0, "pw":7.2}},
-	Science.STORAGE_EFFICIENCY: {"cost": [], "prereqs": {}, "infinite_research": {"cost":500.0, "pw":7.0}},
-	Science.MANUAL_MINING_SPEED: {"cost": [], "prereqs": {}, "infinite_research": {"cost":150.0, "pw":6.0}},
+	Science.COMPACT_ITEMS: {"cost": [4800.0, 4.8e6, 4.8e9], "prereqs": {Science.ADVANCED_SPACE_CONSTRUCTION: 1}},
+	Science.MINERAL_EXTRACTION_EFFICIENCY: {"cost": [], "prereqs": {Science.ADVANCED_SPACE_CONSTRUCTION: 1}, "infinite_research": {"cost":250.0, "pw":6.8}},
+	Science.ENERGY_PRODUCTION_EFFICIENCY: {"cost": [], "prereqs": {Science.ADVANCED_SPACE_CONSTRUCTION: 1}, "infinite_research": {"cost":400.0, "pw":6.8}},
+	Science.RESEARCH_EFFICIENCY: {"cost": [], "prereqs": {Science.ADVANCED_SPACE_CONSTRUCTION: 1}, "infinite_research": {"cost":1250.0, "pw":7.2}},
+	Science.STORAGE_EFFICIENCY: {"cost": [], "prereqs": {Science.ADVANCED_SPACE_CONSTRUCTION: 1}, "infinite_research": {"cost":500.0, "pw":7.0}},
+	Science.MANUAL_MINING_SPEED: {"cost": [], "prereqs": {Science.ADVANCED_SPACE_CONSTRUCTION: 1}, "infinite_research": {"cost":150.0, "pw":6.0}},
 	Science.PARTICLE_MANIPULATION_EFFICIENCY: {"cost": [], "prereqs": {Science.SUBATOMIC_PARTICLES: 1}, "infinite_research": {"cost":1.0e8, "pw":6.6}},
 	
 	Science.ROVER_CONSTRUCTION: {"cost": [100.0, 5.0e6, 3.0e13], "prereqs": {Science.ADVANCED_SPACE_CONSTRUCTION: 1}, "infinite_research": {"cost":3.0e13, "pw":6.1}},
@@ -365,9 +366,8 @@ var science_unlocks = {
 	Science.IMPROVED_SPACEPORT: {"cost": [50000.0], "prereqs": {Science.SHIP_CONTROL: 1}},
 	Science.MACRO_ENGINEERING: {"cost": [100000.0], "prereqs": {Science.SHIP_CONTROL: 1}},
 	Science.FTL_DRIVE: {"cost": [128000.0, 9.5e7], "prereqs": {Science.SHIP_CONTROL: 1}},
-	Science.CHEMICAL_DRIVE: {"cost": [2400.0], "prereqs": {Science.SHIP_CONTROL: 1}},
-	Science.ION_DRIVE: {"cost": [4.5e6], "prereqs": {Science.CHEMICAL_DRIVE: 1}},
-	Science.PLUTONIUM_DRIVE: {"cost": [1.2e12], "prereqs": {Science.ION_DRIVE: 1}},
+	Science.CHEMICAL_DRIVE: {"cost": [2400.0, 4.5e6], "prereqs": {Science.SHIP_CONTROL: 1}},
+	Science.PLUTONIUM_DRIVE: {"cost": [1.2e12], "prereqs": {Science.CHEMICAL_DRIVE: 2}},
 	
 	Science.SUBATOMIC_PARTICLES: {"cost": [1.25e7], "prereqs": {Science.ATOM_MANIPULATION: 1}},
 	Science.ADVANCED_METAL_MANIPULATION: {"cost": [1.0e9], "prereqs": {Science.ATOM_MANIPULATION: 1}},
