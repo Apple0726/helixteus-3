@@ -15,7 +15,7 @@ func is_one_element_true(dict:Dictionary):
 	return res
 
 func refresh():
-	$VBoxContainer/Terraform.visible = game.science_level.has("TF")
+	$VBoxContainer/Terraform.visible = game.science_level[Science.TERRAFORMING]
 	$VBoxContainer/Mine.visible = game.show.has("mining") and game.pickaxe.has("name")
 	if $VBoxContainer/Mine.visible:
 		$VBoxContainer/Mine/TextureRect.texture = load("res://Graphics/Pickaxes/" + game.pickaxe.name + ".png")

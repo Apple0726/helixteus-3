@@ -1,9 +1,19 @@
 [gd_scene format=3 uid="uid://dixqdp1o0moib"]
 
-[ext_resource type="Shader" uid="uid://fumn7c8bmy23" path="res://Shaders/Grayscale.gdshader" id="1_ilua1"]
+[sub_resource type="Shader" id="Shader_ce5tw"]
+code = "shader_type canvas_item;
+
+uniform float amount: hint_range(0.0, 1.0) = 0.0;
+uniform sampler2D SCREEN_TEXTURE : hint_screen_texture, filter_linear_mipmap;
+
+void fragment() {
+	vec4 tex = textureLod(SCREEN_TEXTURE, SCREEN_UV, 0.0);
+	COLOR.rgb = mix(tex.rgb, vec3((tex.r + tex.g + tex.b) / 6.0), amount);
+}
+"
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_4y2vv"]
-shader = ExtResource("1_ilua1")
+shader = SubResource("Shader_ce5tw")
 shader_parameter/amount = 0.0
 
 [node name="Polygon2D" type="Polygon2D" unique_id=782976475]

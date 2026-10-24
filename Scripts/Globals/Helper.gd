@@ -409,12 +409,12 @@ func add_minerals(amount:float, add:bool = true):
 			game.minerals += amount
 		return {"added":amount, "remainder":0}
 	else:
-		if game.science_level.has("ASM2") and Settings.autosell:
+		if game.science_level[Science.AUTOSELL_EXCESS_MINERALS] and Settings.autosell:
 			if add:
 				game.add_resources({"money":(game.minerals + amount - min_cap) * (game.MUs.MV + 4)})
 				game.minerals = min_cap
 			return {"added":amount, "remainder":0}
-		elif game.science_level.has("ASM") and Settings.autosell:
+		elif game.science_level[Science.AUTOSELL_MINERALS] and Settings.autosell:
 			if add:
 				var diff:float = round(amount) - round(mineral_space_available)
 				game.minerals = fmod(diff, round(min_cap))
@@ -989,9 +989,9 @@ func get_conquer_all_data():
 			if HX.lv > max_ship_lv - 5:
 				HX_data.append(HX)
 	var energy_cost = 70000 * (furthest_unconquered_planet_distance) / pow(game.u_i.speed_of_light, 2)
-	if game.science_level.has("FTL"):
+	if game.science_level[Science.FTL_DRIVE] >= 1:
 		energy_cost /= 10.0
-	if game.science_level.has("IGD"):
+	if game.science_level[Science.FTL_DRIVE] >= 2:
 		energy_cost /= 100.0
 	return {"HX_data":HX_data, "energy_cost":round(energy_cost)}
 
@@ -1218,16 +1218,16 @@ func get_SC_output(expected_rsrc:Dictionary, amount:float, path_3_value:float, t
 		if el == "Si":
 			item = "silicon"
 			el_num = game.stone[el] * amount / total_stone / 30.0
-		elif el == "Fe" and game.science_level.has("ISC"):
+		elif el == "Fe" and game.science_level[Science.IMPROVED_STONE_CRUSHER]:
 			item = "iron"
 			el_num = game.stone[el] * amount / total_stone / 30.0
-		elif el == "Al" and game.science_level.has("ISC"):
+		elif el == "Al" and game.science_level[Science.IMPROVED_STONE_CRUSHER]:
 			item = "aluminium"
 			el_num = game.stone[el] * amount / total_stone / 50.0
 		elif el == "O":
 			item = "sand"
 			el_num = game.stone[el] * amount / total_stone / 2.0
-		elif el == "Ti" and game.science_level.has("ISC"):
+		elif el == "Ti" and game.science_level[Science.IMPROVED_STONE_CRUSHER]:
 			item = "titanium"
 			el_num = game.stone[el] * amount / total_stone / 500.0
 		el_num = snapped(el_num * path_3_value, 0.001)
@@ -1541,7 +1541,7 @@ func set_ancient_bldg_bonuses(p_i:Dictionary, ancient_bldg:Dictionary, tile_id:i
 					base = tile.bldg.path_1_value * overclock_mult * p_i.pressure * tile.get("time_speed_bonus", 1.0)
 					Helper.add_cellulose_from_CS(p_i, base)
 	elif ancient_bldg.name == AncientBuilding.SPACEPORT:
-		if game.science_level.has("ISP") and game.c_s_g == game.ships_travel_data.c_g_coords.s and game.c_p == game.ships_travel_data.c_coords.p:
+		if game.science_level[Science.IMPROVED_SPACEPORT] and game.c_s_g == game.ships_travel_data.c_g_coords.s and game.c_p == game.ships_travel_data.c_coords.p:
 			game.autocollect["passive_xp_tier"] = ancient_bldg.tier
 			game.autocollect["passive_xp_mult"] = game.system_data[game.c_s].diff
 			game.start_spaceport_timer()
@@ -1661,6 +1661,20 @@ func set_tile_data_persistent(tile_id:int, key:String, value):
 	if game.tile_data_persistent[tile_id] == null:
 		game.tile_data_persistent[tile_id] = {}
 	game.tile_data_persistent[tile_id][key] = value
+
+func get_science_from_MS(MS:String):
+	if MS == "DS":
+		return Science.DYSON_SPHERE
+	elif MS == "SE":
+		return Science.SPACE_ELEVATOR
+	elif MS == "MME":
+		return Science.MEGA_MINERAL_EXTRACTOR
+	elif MS == "CBS":
+		return Science.CENTRAL_BUSINESS_SYSTEM
+	elif MS == "MB":
+		return Science.MATRIOSHKA_BRAIN
+	elif MS == "PK":
+		return Science.PLANETKILLER
 
 var export_save_files_exported = 0
 

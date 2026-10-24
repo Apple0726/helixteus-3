@@ -1,7 +1,24 @@
 [gd_scene format=3 uid="uid://bhiykvhp7e82u"]
 
 [ext_resource type="Theme" uid="uid://cp2u1kgj60ic" path="res://Resources/default_theme.tres" id="2"]
+[ext_resource type="Shader" uid="uid://fumn7c8bmy23" path="res://Shaders/Grayscale.gdshader" id="3_ce5tw"]
 [ext_resource type="Script" uid="uid://dy27xrmeck1i4" path="res://Scripts/ScienceButton.gd" id="4"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ehtx8"]
+resource_local_to_scene = true
+draw_center = false
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 4
+border_color = Color(0.2, 0.6745098, 1, 1)
+border_blend = true
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_sa5ut"]
+resource_local_to_scene = true
+shader = ExtResource("3_ce5tw")
+shader_parameter/gray = false
+shader_parameter/darkness = 3.0
 
 [node name="Panel" type="Panel" unique_id=1451003925]
 self_modulate = Color(0, 1, 0, 1)
@@ -15,7 +32,19 @@ grow_vertical = 2
 theme = ExtResource("2")
 script = ExtResource("4")
 
+[node name="Highlight" type="Panel" parent="." unique_id=497623047]
+visible = false
+modulate = Color(1, 1, 1, 0.8117647)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_ehtx8")
+
 [node name="Texture2D" type="TextureRect" parent="." unique_id=637003458]
+material = SubResource("ShaderMaterial_sa5ut")
 custom_minimum_size = Vector2(64, 0)
 layout_mode = 0
 offset_left = 8.0

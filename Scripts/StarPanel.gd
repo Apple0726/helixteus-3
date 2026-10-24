@@ -24,8 +24,8 @@ func refresh():
 			construct_btn.text = tr("UPGRADE") + " (F)"
 		else:
 			construct_btn.text = tr("CONSTRUCT")
-		construct_btn.visible = game.science_level.has("MAE") and selected_MS == ""
-		destroy_btn.visible = game.science_level.has("MAE") and star.has("MS")
+		construct_btn.visible = game.science_level[Science.MACRO_ENGINEERING] and selected_MS == ""
+		destroy_btn.visible = game.science_level[Science.MACRO_ENGINEERING] and star.has("MS")
 		if not construct_btn.visible and not destroy_btn.visible:
 			btn.custom_minimum_size.y = 100.0
 		construct_btn.disabled = not game.system_data[game.c_s].has("conquered")
@@ -43,7 +43,8 @@ func refresh():
 				if star.MS_lv == Data.MS_num_stages[star.MS]:
 					construct_btn.mouse_entered.connect(game.show_tooltip.bind(tr("MS_FULLY_CONSTRUCTED")))
 					construct_btn.disabled = true
-				elif not game.science_level.has("{name}{stage}".format({"name":star.MS, "stage":star.MS_lv + 1})):
+				#elif not game.science_level.has("{name}{stage}".format({"name":star.MS, "stage":star.MS_lv + 1})):
+				elif game.science_level[Helper.get_science_from_MS(star.MS)] <= star.MS_lv:
 					construct_btn.mouse_entered.connect(game.show_tooltip.bind(tr("NO_RESEARCH_TO_UPGRADE_MS")))
 					construct_btn.disabled = true
 				construct_btn.mouse_exited.connect(game.hide_tooltip)

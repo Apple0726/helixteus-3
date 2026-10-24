@@ -56,7 +56,7 @@ func refresh_visibility():
 	craft.visible = game.show.has("materials")
 	ships.visible = len(game.ship_data) > 0
 	MU.visible = game.show.has("minerals")
-	$Top/Resources/Cellulose.visible = game.science_level.has("SA")
+	$Top/Resources/Cellulose.visible = game.science_level[Science.SPACE_AGRICULTURE]
 
 func refresh_bookmarks():
 	for btn in bookmark_btns.get_children():
@@ -126,7 +126,7 @@ func update_minerals():
 	var min_cap = round(200 + (game.mineral_capacity - 200) * Helper.get_IR_mult(Building.MINERAL_SILO))
 	minerals_text.text = "%s / %s" % [Helper.format_num(round(game.minerals)), Helper.format_num(min_cap)]
 	if game.minerals >= min_cap:
-		if not game.science_level.has("ASM") and not $Bottom/Panel/AnimationPlayer.is_playing():
+		if not game.science_level[Science.AUTOSELL_MINERALS] == 1 and not $Bottom/Panel/AnimationPlayer.is_playing():
 			$Bottom/Panel/AnimationPlayer.play("Flash")
 	else:
 		if $Top/Resources/Minerals/Text.is_connected("mouse_entered",Callable(self,"_on_MineralsText_mouse_entered")):
@@ -672,7 +672,7 @@ func _on_MainMenu_pressed():
 	game.show_YN_panel(game.return_to_menu)
 
 func set_ship_btn_shader():
-	if not game.science_level.has("ISC"):
+	if game.science_level[Science.IMPROVED_STONE_CRUSHER] == 0:
 		return
 	var active = game.autocollect.has("passive_xp_tier")
 	ships_btn.material.set_shader_parameter("active", active)

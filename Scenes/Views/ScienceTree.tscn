@@ -93,6 +93,11 @@ points = PackedVector2Array(160, 264, 160, 488)
 width = 1.0
 default_color = Color(0.50534403, 0.5053441, 0.50534403, 1)
 
+[node name="Line2D38" type="Line2D" parent="Lines" unique_id=502335579]
+points = PackedVector2Array(160, 88, 160, 136)
+width = 1.0
+default_color = Color(0.50534403, 0.5053441, 0.50534403, 1)
+
 [node name="Line2D7" type="Line2D" parent="Lines" unique_id=1116285502]
 points = PackedVector2Array(808, 24, 752, 24)
 width = 1.0

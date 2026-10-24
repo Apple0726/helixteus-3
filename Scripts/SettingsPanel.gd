@@ -72,7 +72,7 @@ func refresh():
 	$TabContainer/GAME/HBoxContainer/Easy.disabled = game.c_v == "battle"
 	$TabContainer/GAME/HBoxContainer/Normal.disabled = game.c_v == "battle"
 	$TabContainer/GAME/HBoxContainer/Hard.disabled = game.c_v == "battle"
-	if game.c_v != "" and game.science_level.has("ASM"):
+	if game.c_v != "" and game.science_level[Science.AUTOSELL_MINERALS] == 1:
 		$TabContainer/GAME/AutosellMinerals.disabled = false
 		$TabContainer/GAME/AutosellMineralsLabel.modulate = Color.WHITE
 	else:

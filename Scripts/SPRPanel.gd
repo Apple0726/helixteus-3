@@ -48,7 +48,7 @@ func _ready():
 		$ScrollContainer/GridContainer.add_child(btn)
 
 func show_recipe_tooltip(rsrc:String):
-	if rsrc in ["Ta", "W", "Os"] and not game.science_level.has("EMM"):
+	if rsrc in ["Ta", "W", "Os"] and not game.science_level[Science.EXOTIC_MATERIAL_MANIPULATION]:
 		game.show_tooltip(tr("LOCKED"))
 	else:
 		game.show_tooltip(tr("%s_NAME" % rsrc.to_upper()))
@@ -63,7 +63,7 @@ func _on_Atom_pressed(_name:String):
 func refresh():
 	set_process(true)
 	for btn in $ScrollContainer/GridContainer.get_children():
-		if btn.name in ["Ta", "W", "Os"] and not game.science_level.has("EMM"):
+		if btn.name in ["Ta", "W", "Os"] and not game.science_level[Science.EXOTIC_MATERIAL_MANIPULATION]:
 			btn.modulate = Color(0.2, 0.2, 0.2)
 			btn.disabled = true
 		else:

@@ -47,19 +47,25 @@ Here is some more fun stuff you can try:
 	LOD = _LOD
 	show_delta = _show_delta
 #	var data = FileAccess.open("data100.txt", FileAccess.READ)
-	if FileAccess.file_exists("res://Easter eggs/Bad apple/badappledata100"):
+	var full_res_data_exists = FileAccess.file_exists("res://Easter eggs/Bad apple/badappledata100")
+	if full_res_data_exists:
 		while wid_p * LOD > 480:
 			LOD -= 1
 	else:
 		while wid_p * LOD > 120:
 			LOD -= 1
+	LOD = max(1, LOD)
 	wid_p2 = wid_p * LOD
 	var data
-	if wid_p2 > 120:
+	if wid_p2 > 120 and full_res_data_exists:
+		if wid_p2 > 480:
+			wid_p2 = 480
 		W = 480
 		H = 360
 		data = FileAccess.open_compressed("res://Easter eggs/Bad apple/badappledata100", FileAccess.READ, FileAccess.COMPRESSION_ZSTD)
 	else:
+		#if wid_p2 > 120:
+			#wid_p2 = 120
 		W = 120
 		H = 90
 		data = FileAccess.open_compressed("res://Easter eggs/Bad apple/badappledata25", FileAccess.READ, FileAccess.COMPRESSION_ZSTD)

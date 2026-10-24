@@ -153,7 +153,7 @@ offset_bottom = 160.0
 layout_mode = 2
 alignment = 1
 
-[node name="CD" type="TextureButton" parent="Panel/Drives" unique_id=1534230563]
+[node name="ChemicalDrive" type="TextureButton" parent="Panel/Drives" unique_id=1534230563]
 modulate = Color(1, 1, 1, 0.501961)
 custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
@@ -162,7 +162,7 @@ texture_normal = ExtResource("4")
 ignore_texture_size = true
 stretch_mode = 5
 
-[node name="ID" type="TextureButton" parent="Panel/Drives" unique_id=2132959637]
+[node name="IonDrive" type="TextureButton" parent="Panel/Drives" unique_id=2132959637]
 modulate = Color(1, 1, 1, 0.501961)
 custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
@@ -184,6 +184,6 @@ text = "<- Back"
 [connection signal="visibility_changed" from="." to="." method="_on_visibility_changed"]
 [connection signal="value_changed" from="Control/HSlider" to="." method="_on_h_slider_value_changed"]
 [connection signal="pressed" from="Control/UseDrive" to="." method="use_drive"]
-[connection signal="pressed" from="Panel/Drives/CD" to="." method="_on_ChemicalDrive_pressed"]
-[connection signal="pressed" from="Panel/Drives/ID" to="." method="_on_IonDrive_pressed"]
+[connection signal="pressed" from="Panel/Drives/ChemicalDrive" to="." method="_on_ChemicalDrive_pressed"]
+[connection signal="pressed" from="Panel/Drives/IonDrive" to="." method="_on_IonDrive_pressed"]
 [connection signal="pressed" from="BackButton" to="." method="_on_back_button_pressed"]

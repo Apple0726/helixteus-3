@@ -18,7 +18,7 @@ func _ready():
 	set_polygon($GUI.size, $GUI.position)
 
 func refresh():
-	$ScrollContainer/VBoxContainer/TriangulumProbe.visible = game.science_level.has("TPCC")
+	$ScrollContainer/VBoxContainer/TriangulumProbe.visible = game.science_level[Science.TRIANGULUM_PROBE_CONSTRUCTION]
 	prod_cost_mult = g_i.system_num * game.u_i.gravitational * pow(g_i.dark_matter, 3) / 200.0
 	$Panel/ProdCostMult.label_text = "%s: %s " % [tr("PRODUCTION_COST_MULT"), Helper.clever_round(prod_cost_mult)]
 	$Panel/ProdCostMult.refresh()

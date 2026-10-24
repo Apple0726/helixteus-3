@@ -549,11 +549,11 @@ func load_univ():
 	for key in u_i.procgen_settings:
 		if key in ProcGenSettings:
 			ProcGenSettings[key] = u_i.procgen_settings[key]
-	if science_level.has("CI"):
+	if science_level[Science.COMPACT_ITEMS] >= 1:
 		stack_size = 32
-	if science_level.has("CI2"):
+	if science_level[Science.COMPACT_ITEMS] >= 2:
 		stack_size = 64
-	if science_level.has("CI3"):
+	if science_level[Science.COMPACT_ITEMS] >= 3:
 		stack_size = 128
 	if not autocollect.is_empty():
 		var time_elapsed = max(Time.get_unix_time_from_system() - save_date, 0)
@@ -1533,10 +1533,10 @@ func add_space_HUD():
 			add_annotator()
 		#space_HUD.get_node("VBoxContainer/ElementOverlay").visible = c_v == "system" and science_level.has("ATM")
 		space_HUD.get_node("VBoxContainer/Stars").visible = c_v == "system"
-		space_HUD.get_node("VBoxContainer/Megastructures").visible = c_v == "system" and science_level.has("MAE")
-		space_HUD.get_node("VBoxContainer/Gigastructures").visible = c_v in ["galaxy", "cluster"] and science_level.has("GS")
+		space_HUD.get_node("VBoxContainer/Megastructures").visible = c_v == "system" and science_level[Science.MACRO_ENGINEERING]
+		space_HUD.get_node("VBoxContainer/Gigastructures").visible = c_v in ["galaxy", "cluster"] and science_level[Science.GIGASTRUCTURE_CONSTRUCTION]
 		space_HUD.get_node("ConquerAll").visible = c_v == "system" and (u_i.lv >= 32 or subject_levels.dimensional_power >= 1) and not system_data[c_s].has("conquered") and len(ship_data) > 0 and ships_travel_data.c_g_coords.s == c_s_g
-		space_HUD.get_node("SendFighters").visible = c_v == "galaxy" and science_level.has("FG") and not galaxy_data[c_g].has("conquered") or c_v == "cluster" and science_level.has("FG2") and not u_i.cluster_data[c_c].has("conquered")
+		space_HUD.get_node("SendFighters").visible = c_v == "galaxy" and science_level[Science.FIGHTERS] and not galaxy_data[c_g].has("conquered") or c_v == "cluster" and science_level[Science.FIGHTERS] >= 2 and not u_i.cluster_data[c_c].has("conquered")
 		space_HUD.get_node("SendProbes").visible = c_v == "universe"
 
 func add_overlay():
@@ -1750,6 +1750,7 @@ func add_planet(new_game:bool = false):
 	if new_game:
 		planet_HUD.get_node("VBoxContainer/Construct").material.set_shader_parameter("color", Color(1.0, 0.75, 0.0, 1.0))
 		planet_HUD.get_node("VBoxContainer/Construct/AnimationPlayer").play("FlashRepeat")
+		HUD.refresh()
 		await get_tree().create_timer(1.5).timeout
 	if c_v != "planet":
 		return
@@ -3065,8 +3066,6 @@ func generate_tiles(id:int, first_time:bool):
 					"tile": t_id,
 					"tier": max(1, int(-log(rng.randf() / u_i.age / (1.0 + u_i.cluster_data[c_c].redshift)) / 3.0 + 1)),
 				}
-				if home_planet:
-					obj.tier = 1
 				if rng.randf() < 1.0 - 0.5 * exp(-pow(p_i.temperature - 273, 2) / 20000.0) / pow(obj.tier, 2):
 					obj["repair_cost"] = 100000.0 * pow(obj.tier, 20) * rng.randf_range(1, 3) * Data.ancient_bldg_repair_cost_multipliers[ancient_bldg]
 				if p_i.ancient_bldgs.has(ancient_bldg):
@@ -3098,11 +3097,15 @@ func generate_tiles(id:int, first_time:bool):
 			var spaceport_tile_id = empty_tiles[rng.randi() % len(empty_tiles)]
 			empty_tiles.erase(spaceport_tile_id)
 			var spaceport = {"tile":spaceport_tile_id, "tier":max(1, int(-log(rng.randf() / u_i.age) / 3.0 + 1))}
+			if home_planet:
+				spaceport.tier = 1
 			spaceport.repair_cost = 10000 * pow(spaceport.tier, 20) * rng.randf_range(1, 5) * Data.ancient_bldg_repair_cost_multipliers[AncientBuilding.SPACEPORT]
 			p_i.ancient_bldgs[AncientBuilding.SPACEPORT] = [spaceport]
 		if len(empty_tiles) > 10:
 			var min_replicator_tile_id = empty_tiles[rng.randi() % len(empty_tiles)]
 			var min_replicator = {"tile":min_replicator_tile_id, "tier":max(1, int(-log(rng.randf() / u_i.age) / 3.0 + 1)), "repair_cost":10000 * Data.ancient_bldg_repair_cost_multipliers[AncientBuilding.MINERAL_REPLICATOR]}
+			if home_planet:
+				min_replicator.tier = 1
 			min_replicator.repair_cost = 10000 * pow(min_replicator.tier, 20) * rng.randf_range(1, 5) * Data.ancient_bldg_repair_cost_multipliers[AncientBuilding.MINERAL_REPLICATOR]
 			p_i.ancient_bldgs[AncientBuilding.MINERAL_REPLICATOR] = [min_replicator]
 	for bldg in p_i.ancient_bldgs.keys():
@@ -3934,7 +3937,7 @@ func cancel_building():
 	HUD.get_node("Top/Resources/Stone").visible = show.has("stone")
 	HUD.get_node("Top/Resources/SP").visible = show.has("SP")
 	HUD.get_node("Top/Resources/Minerals").visible = show.has("minerals")
-	HUD.get_node("Top/Resources/Cellulose").visible = science_level.has("SA")
+	HUD.get_node("Top/Resources/Cellulose").visible = science_level[Science.SPACE_AGRICULTURE]
 	for id in bldg_blueprints:
 		tiles[id]._on_Button_button_out()
 
