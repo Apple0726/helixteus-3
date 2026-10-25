@@ -2,7 +2,7 @@
     "en": {
         "lines": 1622,
         "words": 11338,
-        "chars": 69119,
+        "chars": 69122,
         "name": "English"
     },
     "fr": {
@@ -36,9 +36,9 @@
         "name": "Español"
     },
     "ko": {
-        "lines": 656,
-        "words": 1627,
-        "chars": 5704,
+        "lines": 696,
+        "words": 1763,
+        "chars": 6245,
         "name": "한국어"
     },
     "sv": {

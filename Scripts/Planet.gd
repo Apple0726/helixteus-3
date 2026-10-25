@@ -1356,8 +1356,9 @@ func _unhandled_input(event):
 			tiles_selected.clear()
 			remove_selected_white_rects()
 	if event is not InputEventMouseMotion and not action_performed and (Input.is_action_just_pressed("cancel_build") or Input.is_action_just_pressed("cancel")):
-		tiles_selected.clear()
-		remove_selected_white_rects()
+		if not Input.is_action_just_pressed("right_click"):
+			tiles_selected.clear()
+			remove_selected_white_rects()
 		if game.get_node("UI").has_node("BottomInfo"):
 			game.get_node("UI/BottomInfo").on_close_pressed()
 

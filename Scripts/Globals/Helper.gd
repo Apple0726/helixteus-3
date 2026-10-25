@@ -509,7 +509,7 @@ func get_rsrc_from_rock(contents:Dictionary, tile:Dictionary, p_i:Dictionary, ti
 			show_bldg_unlocked_popup(Building.GLASS_FACTORY)
 		if content == "coal" and not game.bldg_unlocked.has(Building.STEAM_ENGINE) and game.mats.coal >= 1000.0:
 			show_bldg_unlocked_popup(Building.STEAM_ENGINE)
-		if content == "stone" and not game.bldg_unlocked.has(Building.STONE_CRUSHER) and get_sum_of_dict(game.stone) > 10000.0:
+		if content == "stone" and not game.bldg_unlocked.has(Building.STONE_CRUSHER) and get_sum_of_dict(game.stone) > 5000.0:
 			show_bldg_unlocked_popup(Building.STONE_CRUSHER)
 	if tile.mining.has("current_deposit") and tile.mining.current_deposit.progress > tile.mining.current_deposit.size - 1:
 		tile.mining.erase("current_deposit")
@@ -1467,6 +1467,7 @@ func set_ancient_bldg_bonuses(p_i:Dictionary, ancient_bldg:Dictionary, tile_id:i
 				var id:int = x + y * wid
 				var tile = game.tile_data[id]
 				tile.resource_production_bonus[rsrc] = tile.resource_production_bonus.get(rsrc, 1.0) + (mult - 1.0)
+				set_tile_data_persistent(id, "resource_production_bonus", tile.resource_production_bonus[rsrc])
 				if tile.has("bldg"):
 					var overclock_mult:float = tile.bldg.get("overclock_mult", 1.0)
 					var diff = tile.bldg.path_1_value * overclock_mult * (mult - 1.0)
@@ -1487,6 +1488,7 @@ func set_ancient_bldg_bonuses(p_i:Dictionary, ancient_bldg:Dictionary, tile_id:i
 				var tile = game.tile_data[id]
 				var mult = Helper.get_substation_prod_mult(tier)
 				tile.resource_production_bonus.energy = tile.resource_production_bonus.get("energy", 0.0) + mult
+				set_tile_data_persistent(id, "resource_production_bonus", tile.resource_production_bonus.energy)
 				if tile.has("substation_data"):
 					tile.substation_data.bonus += mult - 1.0
 				else:

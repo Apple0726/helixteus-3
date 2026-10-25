@@ -4,7 +4,7 @@ uniform float darkness = 9.0;
 
 void fragment() {
 	if (gray) {
-		COLOR = texture(TEXTURE, UV);
-		COLOR.rgb = vec3((COLOR.r + COLOR.g + COLOR.b) / darkness);
+		vec3 c = texture(TEXTURE, UV).rgb;
+		COLOR.rgb = vec3((c.r + c.g + c.b) / darkness);
 	}
 }

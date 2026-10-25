@@ -7,10 +7,10 @@
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ehtx8"]
 resource_local_to_scene = true
 draw_center = false
-border_width_left = 4
-border_width_top = 4
-border_width_right = 4
-border_width_bottom = 4
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
 border_color = Color(0.2, 0.6745098, 1, 1)
 border_blend = true
 

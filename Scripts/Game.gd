@@ -2847,8 +2847,8 @@ func generate_aurora(p_i:Dictionary, rng:RandomNumberGenerator):
 
 func spawn_cave(p_i:Dictionary, t_id:int, rng:RandomNumberGenerator):
 	var wid:int = Helper.get_wid(p_i.size)
-	var floor_size:int = rng.randf_range(25 * min(wid / 8.0, 1), 40 * rng.randf_range(1, 1 + wid / 100.0)) * ProcGenSettings.cave_tile_dimensions
-	var num_floors:int = (rng.randi() % (int(wid / 2.5) + 1) + 3) * ProcGenSettings.cave_depth
+	var floor_size:int = max(2, rng.randf_range(25 * min(wid / 8.0, 1), 40 * rng.randf_range(1, 1 + wid / 100.0)) * ProcGenSettings.cave_tile_dimensions)
+	var num_floors:int = max(1, (rng.randi() % (int(wid / 2.5) + 1) + 3) * ProcGenSettings.cave_depth)
 	var modifiers:Dictionary = {}
 	if c_s_g != 0:
 		var number_of_modifiers:int = log(1.0 / rng.randf() + 1.1) * log(system_data[c_s].diff) / log(10)
@@ -3242,7 +3242,6 @@ func generate_tiles(id:int, first_time:bool):
 			tile_data[i].erase("crater")
 		if tile_persistent.has("ancient_bldg") and tile_persistent.ancient_bldg.has("repaired"):
 			tile_data[i].ancient_bldg.erase("repair_cost")
-			Helper.set_ancient_bldg_bonuses(p_i, tile_data[i].ancient_bldg, i, wid)
 	Helper.save_obj("Systems", c_s_g, planet_data_persistent)
 
 func erase_tile(tile:int):
@@ -3579,12 +3578,6 @@ func add_resources(costs):
 			particles[cost] += costs[cost]
 		if not show.has(cost):
 			show[cost] = true
-			if cost == "sand":
-				bldg_unlocked[Building.GLASS_FACTORY] = true
-			elif cost == "coal":
-				bldg_unlocked[Building.STEAM_ENGINE] = true
-			elif cost == "stone":
-				bldg_unlocked[Building.STONE_CRUSHER] = true
 
 var quadrant_top_left:PackedVector2Array = [Vector2(0, 0), Vector2(640, 0), Vector2(640, 360), Vector2(0, 360)]
 var quadrant_top_right:PackedVector2Array = [Vector2(640, 0), Vector2(1280, 0), Vector2(1280, 360), Vector2(640, 360)]

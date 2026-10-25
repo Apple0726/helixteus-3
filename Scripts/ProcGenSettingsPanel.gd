@@ -34,7 +34,7 @@ func _ready() -> void:
 		planet_tile_dimensions_node: {"min":0.0, "default": ProcGenSettings.default_values.planet_tile_dimensions},
 		max_planet_tile_dimensions_node: {"min":1, "rec_min":3, "rec_max":250, "default": ProcGenSettings.default_values.max_planet_tile_dimensions},
 		lake_coverage_node: {"min":0.0, "max":1.0, "default": ProcGenSettings.default_values.lake_coverage},
-		cave_spawn_frequency_node: {"min":0.0, "rec_max":20.0, "default": ProcGenSettings.default_values.cave_spawn_frequency},
+		cave_spawn_frequency_node: {"min":0.0, "rec_max":100.0, "default": ProcGenSettings.default_values.cave_spawn_frequency},
 		cave_tile_dimensions_node: {"min":0.0, "rec_max":3.0, "default": ProcGenSettings.default_values.cave_tile_dimensions},
 		cave_depth_node: {"min":0.0, "default": ProcGenSettings.default_values.cave_depth},
 		cave_floor_diff_node: {"min":1.0, "default": ProcGenSettings.default_values.cave_floor_difficulty},

@@ -265,11 +265,12 @@ func _ready():
 			$UI/Error.visible = true
 			MM.visible = false
 			$UI/MinimapBG.visible = true
-	if tile[cave_type].has("id"):
+	var file_name = "user://%s/Univ%s/Caves/%s.hx3" % [game.c_sv, game.c_u, tile.cave.id]
+	if tile[cave_type].has("id") and FileAccess.file_exists(file_name):
 		id = tile.cave.id
-		var cave_data_file = FileAccess.open_compressed("user://%s/Univ%s/Caves/%s.hx3" % [game.c_sv, game.c_u, id], FileAccess.READ, FileAccess.COMPRESSION_ZSTD)
+		var cave_data_file = FileAccess.open_compressed(file_name, FileAccess.READ, FileAccess.COMPRESSION_ZSTD)
 		if cave_data_file == null:
-			cave_data_file = FileAccess.open_compressed("user://%s/Univ%s/Caves/%s.hx3~" % [game.c_sv, game.c_u, id], FileAccess.READ, FileAccess.COMPRESSION_ZSTD)
+			cave_data_file = FileAccess.open_compressed(file_name + "~", FileAccess.READ, FileAccess.COMPRESSION_ZSTD)
 		cave_data = cave_data_file.get_var()
 		cave_data_file.close()
 		seeds = cave_data.seeds
@@ -284,7 +285,6 @@ func _ready():
 		tile[cave_type]["id"] = id
 		Helper.set_tile_data_persistent(game.c_t, cave_type, tile[cave_type])
 		game.caves_generated += 1
-		Helper.save_obj("Planets", game.c_p_g, game.tile_data_persistent)
 	minimap_rover.position = minimap_center
 	minimap_cave.scale *= minimap_zoom
 	minimap_rover.scale *= 0.1
@@ -303,6 +303,7 @@ func _ready():
 			add_filter(rsrc)
 	$UI2/Filters/Grid/stone.pressed.connect(on_filter_pressed.bind("stone", $UI2/Filters/Grid/stone))
 	$UI2/Filters/Grid/stone.set_mod(game.cave_filters.stone)
+	Helper.save_obj("Planets", game.c_p_g, game.tile_data_persistent)
 	
 	for w in i_w_w:
 		weight += i_w_w[w]
@@ -452,9 +453,9 @@ func set_avg_dmg():
 	$UI2/CaveInfo/AvgDmg.text = "%s: %s" % [tr("AVERAGE_ENEMY_DAMAGE"), Helper.format_num(avg_dmg, true)]
 	$UI2/CaveInfo/AvgDmg["theme_override_colors/font_color"] = color
 
-func add_lava_tile(pos:Vector2i):
+func add_lava_tile(pos:Vector2):
 	var lava_tile = preload("res://Scenes/LavaTile.tscn").instantiate()
-	lava_tile.position = pos * Vector2i.ONE * 200
+	lava_tile.position = pos * Vector2.ONE * 200
 	lava_tile.body_entered.connect(rover_in_lava_callback)
 	lava_tile.body_exited.connect(rover_outside_lava_callback)
 	$Lava.add_child(lava_tile)
@@ -503,6 +504,38 @@ func rover_in_lava_callback(body: Node2D):
 			max_speed = 700
 			show_burning_anim()
 
+# Determines the tile where the entrance will be. It has to be adjacent to an unpassable tile
+func spawn_edge_tile(rng:RandomNumberGenerator, tile_list:Array = []):
+	var edge_tiles = [Vector2.ZERO, Vector2.ONE * cave_size]
+	for i in range(1, cave_size):
+		if tile_list.is_empty() or Vector2(i, 1) in tile_list:
+			edge_tiles.append(Vector2(i, 1))
+		if tile_list.is_empty() or Vector2(1, i) in tile_list:
+			edge_tiles.append(Vector2(1, i))
+		if tile_list.is_empty() or Vector2(cave_size-1, i) in tile_list:
+			edge_tiles.append(Vector2(cave_size-1, i))
+		if tile_list.is_empty() or Vector2(i, cave_size-1) in tile_list:
+			edge_tiles.append(Vector2(i, cave_size-1))
+	var edge_tile:Vector2 = edge_tiles[rng.randi_range(0, len(edge_tiles) - 1)]
+	while edge_tile in tiles:
+		edge_tile = edge_tiles[rng.randi_range(0, len(edge_tiles) - 1)]
+	var tile_id = get_tile_index(edge_tile)
+	add_tile_data(edge_tile)
+	return edge_tile
+
+func create_random_tile(rng:RandomNumberGenerator):
+	var tile_id:int = rng.randi_range(0, cave_size * cave_size - 1)
+	while get_tile_pos(tile_id) in tiles:
+		tile_id = rng.randi_range(0, cave_size * cave_size - 1)
+	var tile_pos = get_tile_pos(tile_id)
+	add_tile_data(tile_pos)
+	return tile_pos
+
+func add_tile_data(v:Vector2):
+	minimap_cave.set_cell(v, 0, Vector2.ZERO)
+	tiles.append(v)
+	astar_node.add_point(get_tile_index(v), v)
+
 func generate_cave(first_floor:bool, going_up:bool):
 	$Exit/PointLight2D.enabled = cave_floor == 1
 	possible_metal_spawns.clear()
@@ -527,8 +560,6 @@ func generate_cave(first_floor:bool, going_up:bool):
 	var darkness_mod:float = modifiers.get("darkness", 1.0)
 	cave_darkness *= darkness_mod
 	cave_darkness = clamp(cave_darkness, 0.0, 1.0 - ((0.2 / darkness_mod) if darkness_mod > 1.0 else 0.2))
-	#if not game.objective.is_empty() and game.objective.type == game.ObjectiveType.CAVE:
-		#game.objective.current += 1
 	rover.get_node("AshParticles").modulate = Color.WHITE * (1.0 - cave_darkness)
 	rover.get_node("AshParticles").modulate.a = 1.0
 	mining_laser.get_node("PointLight2D2").energy = 1.0
@@ -610,10 +641,8 @@ func generate_cave(first_floor:bool, going_up:bool):
 				if volcano_mult > 1.0:
 					if cave_floor <= 8 and level < remap(cave_floor, 1, 8, 0.6, 0.0):
 						ash_tiles.append(Vector2(i, j))
-				minimap_cave.set_cell(Vector2i(i, j), 0, Vector2i.ZERO)
-				tiles.append(Vector2(i, j))
-				astar_node.add_point(tile_id, Vector2(i, j))
-				if rng.randf() < 0.006 * min(5, cave_floor) * (modifiers.enemy_number if modifiers.has("enemy_number") else 1.0):
+				add_tile_data(Vector2(i, j))
+				if rng.randf() < 0.006 * min(5, cave_floor) * modifiers.get("enemy_number", 1.0):
 					var HX_node = HX1_scene.instantiate()
 					var type:int = rng.randi_range(1, 4)
 					HX_node.set_script(load("res://Scripts/Cave/HX%s.gd" % [type]))
@@ -656,11 +685,11 @@ func generate_cave(first_floor:bool, going_up:bool):
 					HX_node.MM_icon = enemy_icon
 					enemy_icon.add_to_group("enemy_icons")
 			else:
-				walls.append(Vector2i(i, j))
+				walls.append(Vector2(i, j))
 				var rand:float = rng.randf()
 				var ch = 0.02 * pow(pow(2, min(12, cave_floor) - 1) / 3.0, 0.4)
 				if rand < ch:
-					var met_spawned = possible_metal_spawns.pick_random()
+					var met_spawned = possible_metal_spawns[rng.randi_range(0, len(possible_metal_spawns) - 1)]
 					var deposit = deposit_scene.instantiate()
 					deposit.rsrc_texture = game.metal_textures[met_spawned]
 					deposit.rsrc_name = met_spawned
@@ -676,7 +705,15 @@ func generate_cave(first_floor:bool, going_up:bool):
 				var lava_level = lava_noise.get_noise_2d(i * 10.0, j * 10.0)
 				if lava_level > max(remap(cave_floor, 12, 24, 0.8, 0.0), 0.0):
 					add_lava_tile(Vector2i(i, j))
-	
+	if len(tiles) == 0:
+		walls.erase(create_random_tile(rng))
+	var edge_tile = -Vector2.ONE
+	if len(tiles) == 1:
+		if first_floor:
+			edge_tile = spawn_edge_tile(rng)
+			walls.erase(edge_tile)
+		else:
+			walls.erase(create_random_tile(rng))
 	$Ash.set_cells_terrain_connect(ash_tiles, 0, 0)
 	#Add unpassable tiles at the cave borders
 	for i in range(-1, cave_size + 1):
@@ -702,6 +739,7 @@ func generate_cave(first_floor:bool, going_up:bool):
 			tiles_remaining.remove_at(tiles_remaining.find(tile_index))
 		rooms.append({"tiles":room, "size":len(room)})
 	rooms.sort_custom(Callable(self,"sort_size"))
+	
 	#Generate treasure chests
 	for room in rooms:
 		var n = room.size
@@ -741,11 +779,10 @@ func generate_cave(first_floor:bool, going_up:bool):
 				minimap_cave.set_cell(Vector2i(i, j), 0, Vector2i.ZERO)
 				astar_node.add_point(tile_id, Vector2(i, j))
 				connect_points(Vector2(i, j), true)
-				walls.erase(Vector2i(i, j))
+				walls.erase(Vector2(i, j))
 				if deposits.has(str(tile_id)):
 					deposits[str(tile_id)].queue_free()
 					deposits.erase(str(tile_id))
-	cave_wall.set_cells_terrain_connect(walls, 0, 0)
 	#Assigns each enemy the room number they're in
 	for enemy in get_tree().get_nodes_in_group("enemies"):
 		var _id = get_tile_index(cave_wall.local_to_map(enemy.position))
@@ -754,48 +791,43 @@ func generate_cave(first_floor:bool, going_up:bool):
 			if _id in room.tiles:
 				enemy.room = i
 			i += 1
-	var pos:Vector2
-	var rand_hole:int = rooms[0].tiles[rng.randi_range(0, len(rooms[0].tiles) - 1)]
+	var exit_pos:Vector2
+	var rand_hole:int
 	var rand_spawn:int
 	if first_time:
-		rand_spawn = rand_hole
+		var rand_hole_tile_id:int = rng.randi_range(0, len(rooms[0].tiles) - 1)
+		rand_hole = rooms[0].tiles[rand_hole_tile_id]
+		rand_spawn = rand_hole # rand_spawn's value will be changed later
 		hole_exits[cave_floor - 1].hole = rand_hole
 	else:
 		rand_hole = hole_exits[cave_floor - 1].hole
 		rand_spawn = hole_exits[cave_floor - 1].exit
 	if first_floor:
-		#Determines the tile where the entrance will be. It has to be adjacent to an unpassable tile
-		var spawn_edge_tiles = []
-		var j = 0
-		while len(spawn_edge_tiles) == 0:
-			for tile_id in rooms[j].tiles:
-				if first_time or tile_id == rand_spawn:
-					var top = tile_id / cave_size == 0
-					var left = tile_id % cave_size == 0
-					var bottom = tile_id / cave_size == cave_size - 1
-					var right = tile_id % cave_size == cave_size - 1
-					if left:
-						spawn_edge_tiles.append({"id":tile_id, "dir":-PI/2})
-					elif right:
-						spawn_edge_tiles.append({"id":tile_id, "dir":PI/2})
-					elif top:
-						spawn_edge_tiles.append({"id":tile_id, "dir":0})
-					elif bottom:
-						spawn_edge_tiles.append({"id":tile_id, "dir":PI})
-			j += 1
 		$Exit/Sprite2D.texture = preload("res://Graphics/Cave/Objects/exit.png")
 		$Exit/ExitColl.disabled = false
-		var rot = spawn_edge_tiles[0].dir
 		$Exit/GoUpColl.disabled = true
-		var breaker:int = 0
-		while rand_hole == rand_spawn and breaker < 10:
-			breaker += 1
-			var rand_id = rng.randi_range(0, len(spawn_edge_tiles) - 1)
-			rand_spawn = spawn_edge_tiles[rand_id].id
-			rot = spawn_edge_tiles[rand_id].dir
-		pos = get_tile_pos(rand_spawn) * 200 + Vector2(100, 100)
-		exit.rotation = rot
-		MM_exit.rotation = rot
+		if edge_tile == -Vector2.ONE:
+			var room_N:int = 0
+			while edge_tile == -Vector2.ONE and room_N < len(rooms):
+				edge_tile = spawn_edge_tile(rng, rooms[room_N])
+				room_N += 1
+			if edge_tile == -Vector2.ONE:
+				edge_tile = spawn_edge_tile(rng)
+		walls.erase(edge_tile)
+		var direction:float
+		var edge_tile_id:int = get_tile_index(edge_tile)
+		if edge_tile_id % cave_size == 0:
+			direction = -PI/2
+		elif edge_tile_id % cave_size == cave_size - 1:
+			direction = PI/2
+		elif edge_tile_id / cave_size == 0:
+			direction = 0.0
+		elif edge_tile_id / cave_size == cave_size - 1:
+			direction = PI
+		exit.rotation = direction
+		MM_exit.rotation = direction
+		rand_spawn = get_tile_index(edge_tile)
+		exit_pos = edge_tile * 200 + Vector2(100, 100)
 	else:
 		exit.rotation = 0
 		MM_exit.rotation_degrees = 0
@@ -803,9 +835,13 @@ func generate_cave(first_floor:bool, going_up:bool):
 		$Exit/Sprite2D.modulate = Color(1, 1, 3, 1)
 		$Exit/ExitColl.disabled = true
 		$Exit/GoUpColl.disabled = false
+		var exit_unit_pos:Vector2
 		while rand_hole == rand_spawn:
-			rand_spawn = get_tile_index(tiles[rng.randi_range(0, len(tiles) - 1)])
-		pos = get_tile_pos(rand_spawn) * 200 + Vector2(100, 100)
+			exit_unit_pos = tiles[rng.randi_range(0, len(tiles) - 1)]
+			rand_spawn = get_tile_index(exit_unit_pos)
+		walls.erase(exit_unit_pos)
+		exit_pos = exit_unit_pos * 200 + Vector2(100, 100)
+	cave_wall.set_cells_terrain_connect(walls, 0, 0)
 	if cave_floor == num_floors:
 		hole.get_node("CollisionShape2D").disabled = true
 		hole.visible = false
@@ -852,9 +888,9 @@ func generate_cave(first_floor:bool, going_up:bool):
 		rover.position = hole_pos
 		camera.position = hole_pos
 	else:
-		rover.position = pos
-		camera.position = pos
-	exit.position = pos
+		rover.position = exit_pos
+		camera.position = exit_pos
+	exit.position = exit_pos
 	for enemy in get_tree().get_nodes_in_group("enemies"):
 		enemy.set_rand()
 	var cave_adjective = ""
@@ -873,6 +909,11 @@ func generate_cave(first_floor:bool, going_up:bool):
 	var state = "Floor %s / %s" % [cave_floor, num_floors]
 	var small_image_text = "Rover HP: %s / %s" % [Helper.format_num(HP), Helper.format_num(total_HP)]
 	Helper.refresh_discord(details, state, "rover", small_image_text)
+	# Needed to fix rover from spawning in wrong location due to collision detection
+	var _mask = rover.collision_mask
+	rover.collision_mask = 0
+	await get_tree().process_frame
+	rover.collision_mask = _mask
 
 func add_hole(id:int):
 	var drilled_hole = preload("res://Scenes/CaveHole.tscn").instantiate()
@@ -974,7 +1015,7 @@ func generate_treasure(tier:int, rng:RandomNumberGenerator):
 	if contents.has(Item.HELIX_CORE1) and contents[Item.HELIX_CORE1] == 0:
 		contents.erase(Item.HELIX_CORE1)
 	while rng.randf() < 0.5:
-		var metal_spawned = possible_metal_spawns.pick_random()
+		var metal_spawned = possible_metal_spawns[rng.randi_range(0, len(possible_metal_spawns) - 1)]
 		if metal_spawned in contents.keys():
 			continue
 		var rarity = game.met_info[metal_spawned].rarity
@@ -1277,7 +1318,8 @@ func add_to_inventory(rsrc:int, content:float, remainders:Dictionary):
 			remainders[rsrc] = content
 
 func save_cave_data():
-	var cave_data_file = FileAccess.open_compressed("user://%s/Univ%s/Caves/%s.hx3~" % [game.c_sv, game.c_u, id], FileAccess.WRITE, FileAccess.COMPRESSION_ZSTD)
+	var file_name = "user://%s/Univ%s/Caves/%s.hx3" % [game.c_sv, game.c_u, id]
+	var cave_data_file = FileAccess.open_compressed(file_name + "~", FileAccess.WRITE, FileAccess.COMPRESSION_ZSTD)
 	var cave_data_dict = {
 		"seeds":seeds,
 		"tiles_mined":tiles_mined,
@@ -1289,7 +1331,7 @@ func save_cave_data():
 	}
 	cave_data_file.store_var(cave_data_dict)
 	cave_data_file.close()
-	DirAccess.copy_absolute("user://%s/Univ%s/Caves/%s.hx3~" % [game.c_sv, game.c_u, id], "user://%s/Univ%s/Caves/%s.hx3" % [game.c_sv, game.c_u, id])
+	DirAccess.copy_absolute(file_name + "~", file_name)
 	
 func exit_cave():
 	save_cave_data()
@@ -1695,7 +1737,7 @@ func mine_wall_complete(tile_pos:Vector2, tile_id:int):
 	
 	cave_wall.set_cells_terrain_connect([map_pos], 0, -1)
 	cave_wall.set_cell(map_pos)
-	minimap_cave.set_cell(map_pos, 0, Vector2i.ZERO)
+	minimap_cave.set_cell(map_pos, 0, Vector2.ZERO)
 	astar_node.add_point(tile_id, Vector2(map_pos.x, map_pos.y))
 	connect_points(map_pos, true)
 	if tiles_touched_by_laser.has(st):

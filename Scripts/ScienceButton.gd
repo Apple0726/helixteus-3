@@ -12,6 +12,33 @@ var sc_cost:float
 var infinite_research
 var num_levels:int
 var max_level:bool
+var alternate_textures = {
+	Science.IMPROVED_ROVER_LASERS: [
+		"Cave/Weapons/orange_laser.png",
+		"Cave/Weapons/yellow_laser.png",
+		"Cave/Weapons/green_laser.png",
+		"Cave/Weapons/blue_laser.png",
+		"Cave/Weapons/purple_laser.png",
+		"Cave/Weapons/UV_laser.png",
+		"Cave/Weapons/xray_laser.png",
+		"Cave/Weapons/gammaray_laser.png",
+		"Cave/Weapons/ultragammaray_laser.png",
+	],
+	Science.FTL_DRIVE: [
+		"Science/IGD.png",
+	],
+	Science.CHEMICAL_DRIVE: [
+		"Science/ID.png",
+	],
+	Science.ROVER_CONSTRUCTION: [
+		"Science/RMK2.png",
+		"Science/RMK3.png",
+	],
+	Science.COMPACT_ITEMS: [
+		"Science/CI2.png",
+		"Science/CI3.png",
+	],
+}
 
 func _ready():
 	$Texture2D.texture = icon_texture
@@ -74,11 +101,13 @@ func show_tooltip():
 			"mult":Helper.clever_round(pow(game.maths_bonus.IRM, sc_lv - num_levels)),
 		})
 	elif sc_lv >= 1: # Some sciences have different names at different levels
-		var key = "%s_%s_SC" % [name.to_upper(), sc_lv]
-		if tr(key) != key:
-			sc_loc_name = tr(key)
-			sc_loc_desc = tr("%s_%s_SC_DESC" % [name.to_upper(), sc_lv])
+		var name_key = "%s_%s_SC" % [name.to_upper(), sc_lv + 1]
+		var desc_key = "%s_%s_SC_DESC" % [name.to_upper(), sc_lv + 1]
+		if tr(name_key) != name_key:
+			sc_loc_name = tr(name_key)
 			alternate_name = true
+		if tr(desc_key) != desc_key:
+			sc_loc_desc = tr(desc_key)
 	if not available:
 		var sc_to_research = ""
 		for p_sc in prereqs:
@@ -175,6 +204,8 @@ func refresh():
 	refresh_cost()
 	if sc_lv >= 1:
 		self_modulate = Color.GREEN
+		if alternate_textures.has(sc_id):
+			$Texture2D.texture = load("res://Graphics/%s" % alternate_textures[sc_id][min(len(alternate_textures[sc_id])-1, sc_lv)])
 	else:
 		self_modulate = Color.WHITE
 	if available:
@@ -196,13 +227,14 @@ func refresh():
 				get_node("GridContainer/%s" % (i + 1)).color = Color.GREEN
 			else:
 				get_node("GridContainer/%s" % (i + 1)).color = Color.DARK_GREEN
-			if infinite_research:
-				get_node("GridContainer/InfiniteResearch").color = Color.DARK_CYAN
 		else:
 			get_node("GridContainer/%s" % (i + 1)).color = Color.BLACK
-			if infinite_research:
-				get_node("GridContainer/InfiniteResearch").color = Color.BLACK
+	if infinite_research:
+		if sc_lv >= 1:
+			get_node("GridContainer/InfiniteResearch").color = Color.DARK_CYAN
+		else:
+			get_node("GridContainer/InfiniteResearch").color = Color.BLACK
 	if infinite_research:
 		var inf_lv:int = sc_lv - num_levels
-		if inf_lv >= 0:
+		if sc_lv > 0 and inf_lv >= 0:
 			$GridContainer/InfiniteResearch/Label.text = str(inf_lv)

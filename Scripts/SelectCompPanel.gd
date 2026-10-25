@@ -48,23 +48,23 @@ func refresh(type:int, _curr_cmp:int, _is_inventory:bool = false, _index:int = -
 		if Item.data[cmp].type != type:
 			continue
 		if type in [Item.Type.ROVER_WEAPON, Item.Type.ROVER_MINING]:
-			if cmp in [Item.ORANGE_LASER, Item.ORANGE_MINING_LASER] and not game.science_level[Science.IMPROVED_ROVER_LASERS] < 1:
+			if cmp in [Item.ORANGE_LASER, Item.ORANGE_MINING_LASER] and game.science_level[Science.IMPROVED_ROVER_LASERS] < 1:
 				continue
-			if cmp in [Item.YELLOW_LASER, Item.YELLOW_MINING_LASER] and not game.science_level[Science.IMPROVED_ROVER_LASERS] < 2:
+			if cmp in [Item.YELLOW_LASER, Item.YELLOW_MINING_LASER] and game.science_level[Science.IMPROVED_ROVER_LASERS] < 2:
 				continue
-			if cmp in [Item.GREEN_LASER, Item.GREEN_MINING_LASER] and not game.science_level[Science.IMPROVED_ROVER_LASERS] < 3:
+			if cmp in [Item.GREEN_LASER, Item.GREEN_MINING_LASER] and game.science_level[Science.IMPROVED_ROVER_LASERS] < 3:
 				continue
-			if cmp in [Item.BLUE_LASER, Item.BLUE_MINING_LASER] and not game.science_level[Science.IMPROVED_ROVER_LASERS] < 4:
+			if cmp in [Item.BLUE_LASER, Item.BLUE_MINING_LASER] and game.science_level[Science.IMPROVED_ROVER_LASERS] < 4:
 				continue
-			if cmp in [Item.PURPLE_LASER, Item.PURPLE_MINING_LASER] and not game.science_level[Science.IMPROVED_ROVER_LASERS] < 5:
+			if cmp in [Item.PURPLE_LASER, Item.PURPLE_MINING_LASER] and game.science_level[Science.IMPROVED_ROVER_LASERS] < 5:
 				continue
-			if cmp in [Item.UV_LASER, Item.UV_MINING_LASER] and not game.science_level[Science.IMPROVED_ROVER_LASERS] < 6:
+			if cmp in [Item.UV_LASER, Item.UV_MINING_LASER] and game.science_level[Science.IMPROVED_ROVER_LASERS] < 6:
 				continue
-			if cmp in [Item.XRAY_LASER, Item.XRAY_MINING_LASER] and not game.science_level[Science.IMPROVED_ROVER_LASERS] < 7:
+			if cmp in [Item.XRAY_LASER, Item.XRAY_MINING_LASER] and game.science_level[Science.IMPROVED_ROVER_LASERS] < 7:
 				continue
-			if cmp in [Item.GAMMARAY_LASER, Item.GAMMARAY_MINING_LASER] and not game.science_level[Science.IMPROVED_ROVER_LASERS] < 8:
+			if cmp in [Item.GAMMARAY_LASER, Item.GAMMARAY_MINING_LASER] and game.science_level[Science.IMPROVED_ROVER_LASERS] < 8:
 				continue
-			if cmp in [Item.ULTRAGAMMARAY_LASER, Item.ULTRAGAMMARAY_MINING_LASER] and not game.science_level[Science.IMPROVED_ROVER_LASERS] < 9:
+			if cmp in [Item.ULTRAGAMMARAY_LASER, Item.ULTRAGAMMARAY_MINING_LASER] and game.science_level[Science.IMPROVED_ROVER_LASERS] < 9:
 				continue
 		else:
 			var metal:String = Item.data[cmp].metal

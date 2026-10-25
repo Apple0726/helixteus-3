@@ -96,11 +96,11 @@ func refresh():
 				elif bldg == Building.SOLAR_PANEL:
 					unlock_str += tr("UNLOCK_BY_CONQUERING_A_PLANET")
 				elif bldg == Building.STONE_CRUSHER:
-					unlock_str += tr("UNLOCK_BY_MINING_X").format({"weight": 10000.0, "something": tr("STONE")})
+					unlock_str += tr("UNLOCK_BY_MINING_X").format({"weight": Helper.format_num(5000.0, true), "something": tr("STONE")})
 				elif bldg == Building.GLASS_FACTORY:
-					unlock_str += tr("UNLOCK_BY_MINING_X").format({"weight": 1000.0, "something": tr("SAND")})
+					unlock_str += tr("UNLOCK_BY_MINING_X").format({"weight": Helper.format_num(1000.0, true), "something": tr("SAND")})
 				elif bldg == Building.STEAM_ENGINE:
-					unlock_str += tr("UNLOCK_BY_MINING_X").format({"weight": 1000.0, "something": tr("COAL")})
+					unlock_str += tr("UNLOCK_BY_MINING_X").format({"weight": Helper.format_num(1000.0, true), "something": tr("COAL")})
 				btn.mouse_entered.connect(game.show_tooltip.bind(unlock_str))
 			$Panel/ScrollContainer/VBoxContainer.add_child(btn)
 			btn.mouse_exited.connect(game.hide_tooltip)
