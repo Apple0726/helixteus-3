@@ -317,7 +317,6 @@ func on_univ_press(id:int):
 	else:
 		game.remove_dimension()
 		game.new_game(id, game.dim_num == 1 and len(game.universe_data) == 1, game.dim_num == 1 and len(game.universe_data) == 1)
-		game.HUD.dimension_btn.visible = true
 		game.switch_music(load("res://Audio/ambient" + str(randi_range(1, 3)) + ".ogg"), game.u_i.time_speed)
 	game.HUD.refresh()
 

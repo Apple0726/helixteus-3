@@ -167,20 +167,28 @@ func _on_StarTypes_pressed():
 		bar.size_flags_vertical = 10
 		label["theme_override_fonts/font"] = max_label["theme_override_fonts/font"]
 		var original_text = ""
+		var bar_color:Color
 		if star_type >= StarType.HYPERGIANT + 1:
 			original_text = "%s %s" % [tr("HYPERGIANT"), Helper.get_roman_num(star_type - StarType.HYPERGIANT)]
+			bar_color = Color.RED.lightened((star_type - StarType.HYPERGIANT + 1) * 0.2)
 		else:
 			match star_type:
 				StarType.MAIN_SEQUENCE:
 					original_text = tr("MAIN_SEQUENCE")
+					bar_color = Color.ORANGE
 				StarType.WHITE_DWARF:
 					original_text = tr("WHITE_DWARF")
+					bar_color = Color.LIGHT_SKY_BLUE
 				StarType.BROWN_DWARF:
 					original_text = tr("BROWN_DWARF")
+					bar_color = Color.BROWN.darkened(0.6)
 				StarType.GIANT:
 					original_text = tr("GIANT")
+					bar_color = Color.ORANGE_RED
 				StarType.SUPERGIANT:
 					original_text = tr("SUPERGIANT")
+					bar_color = Color.RED
+		bar.color = bar_color
 		if star_type > StarType.HYPERGIANT + 1:
 			label.text = "%s %s" % ["HG", Helper.get_roman_num(star_type - StarType.HYPERGIANT)]
 		else:

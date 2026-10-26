@@ -8,7 +8,7 @@ extends Control
 @onready var cave_tile_dimensions_node = $AdvancedSettingsGroup/ScrollContainer/Control/CaveTileDimensions
 @onready var cave_depth_node = $AdvancedSettingsGroup/ScrollContainer/Control/CaveDepth
 @onready var cave_floor_diff_node = $AdvancedSettingsGroup/ScrollContainer/Control/CaveFloorDifficulty
-@onready var cave_wall_coverage_node = $AdvancedSettingsGroup/ScrollContainer/Control/CaveWallCoverage
+@onready var cave_traversable_space_node = $AdvancedSettingsGroup/ScrollContainer/Control/CaveTraversableSpace
 @onready var distance_between_planets_node = $AdvancedSettingsGroup/ScrollContainer/Control/DistanceBetweenPlanets
 @onready var max_planets_in_system_node = $AdvancedSettingsGroup/ScrollContainer/Control/MaxPlanetsInSystem
 @onready var star_system_density_node = $AdvancedSettingsGroup/ScrollContainer/Control/StarSystemDensity
@@ -38,7 +38,7 @@ func _ready() -> void:
 		cave_tile_dimensions_node: {"min":0.0, "rec_max":3.0, "default": ProcGenSettings.default_values.cave_tile_dimensions},
 		cave_depth_node: {"min":0.0, "default": ProcGenSettings.default_values.cave_depth},
 		cave_floor_diff_node: {"min":1.0, "default": ProcGenSettings.default_values.cave_floor_difficulty},
-		cave_wall_coverage_node: {"min":0.0, "max":1.0, "default": ProcGenSettings.default_values.cave_wall_coverage},
+		cave_traversable_space_node: {"min":0.0, "max":1.0, "default": ProcGenSettings.default_values.cave_traversable_space},
 		distance_between_planets_node: {"min":0.0, "rec_min":0.1, "rec_max":10.0, "default": ProcGenSettings.default_values.distance_between_planets},
 		max_planets_in_system_node: {"min":1, "rec_max":50, "default": ProcGenSettings.default_values.max_planets_in_system},
 		star_system_density_node: {"min":0.0, "rec_min":0.1, "rec_max":10.0, "default": ProcGenSettings.default_values.star_system_density},
@@ -87,7 +87,7 @@ func _ready() -> void:
 	$BasicSettingsGroup/DensityOfCOSHBox/Dense.pressed.connect(set_density_of_COs.bind(0.66))
 
 func set_size_of_COs(size_mult:float):
-	planet_tile_dimensions_node.text = str(size_mult)
+	planet_tile_dimensions_node.text = str(snappedf(sqrt(size_mult), 0.01))
 	cave_tile_dimensions_node.text = str(size_mult)
 	elliptical_galaxy_min_size_node.text = str(int(size_mult * ProcGenSettings.default_values.min_number_of_systems_elliptical))
 	elliptical_galaxy_max_size_node.text = str(int(size_mult * ProcGenSettings.default_values.max_number_of_systems_elliptical))
@@ -174,7 +174,7 @@ func _on_start_game_pressed() -> void:
 	ProcGenSettings.cave_tile_dimensions = float(cave_tile_dimensions_node.text)
 	ProcGenSettings.cave_depth = float(cave_depth_node.text)
 	ProcGenSettings.cave_floor_difficulty = float(cave_floor_diff_node.text)
-	ProcGenSettings.cave_wall_coverage = float(cave_wall_coverage_node.text)
+	ProcGenSettings.cave_traversable_space = float(cave_traversable_space_node.text)
 
 	ProcGenSettings.distance_between_planets = float(distance_between_planets_node.text)
 	ProcGenSettings.max_planets_in_system = int(max_planets_in_system_node.text)

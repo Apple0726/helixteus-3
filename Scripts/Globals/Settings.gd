@@ -30,7 +30,6 @@ var enemy_AI_difficulty:int = ENEMY_AI_DIFFICULTY_NORMAL
 # interface
 var language:String = "en"
 var notation:String = "SI"
-var cave_gen_info:bool = false
 
 # save backup
 var backup_interval:int = 5 # minutes

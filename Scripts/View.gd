@@ -432,7 +432,7 @@ func _input(event):
 var zoom_tween
 
 func _zoom_at_point_animate(zoom_change: float):
-	if limit_to_viewport and is_instance_valid(obj) and obj.dimensions and scale.x < 250 / obj.dimensions and zoom_change < 1: #max zoom out
+	if limit_to_viewport and is_instance_valid(obj) and obj.dimensions and scale.x < 600 / obj.dimensions and zoom_change < 1: #max zoom out
 		return
 	if game.c_v == "planet":
 		if is_instance_valid(obj) and obj.dimensions and scale.x >= 2.0 and zoom_change > 1: #max zoom in

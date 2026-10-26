@@ -34,7 +34,6 @@ func _ready():
 	$TabContainer/GRAPHICS/EnableShaders.button_pressed = Settings.enable_shaders
 	$TabContainer/GRAPHICS/Screenshake.button_pressed = Settings.screen_shake
 	$TabContainer/GAME/AutosellMinerals.button_pressed = Settings.autosell
-	$TabContainer/GAME/CaveGenInfo.button_pressed = Settings.cave_gen_info
 	$TabContainer/GRAPHICS/Fullscreen.set_pressed_no_signal(Settings.fullscreen)
 	$TabContainer/GAME/Autosave.value = Settings.autosave_interval
 	$TabContainer/GAME/AutoSwitch.button_pressed = Settings.auto_switch_buy_sell
@@ -223,10 +222,6 @@ func _on_Screenshake_toggled(button_pressed):
 	Settings.screen_shake = button_pressed
 	save_config("graphics", "screen_shake", button_pressed)
 
-
-func _on_CaveGenInfo_toggled(button_pressed):
-	Settings.cave_gen_info = button_pressed
-	save_config("game", "cave_gen_info", button_pressed)
 
 func _on_OPCursor_toggled(button_pressed):
 	Settings.op_cursor = button_pressed

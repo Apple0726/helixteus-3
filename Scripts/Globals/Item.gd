@@ -101,11 +101,11 @@ var data:Dictionary = {
 	MINERALS:
 		{"item_name":"minerals", "type":Type.GENERIC},
 	OVERCLOCK1:
-		{"item_name":"overclock1", "type":Type.OVERCLOCK, "costs":{"money":2800}, "mult":1.5, "duration":10 * 60}, # "duration" in seconds
+		{"item_name":"overclock1", "type":Type.OVERCLOCK, "costs":{"money":1200}, "mult":1.5, "duration":10 * 60}, # "duration" in seconds
 	OVERCLOCK2:
-		{"item_name":"overclock2", "type":Type.OVERCLOCK, "costs":{"money":17000}, "mult":2, "duration":30 * 60},
+		{"item_name":"overclock2", "type":Type.OVERCLOCK, "costs":{"money":10000}, "mult":2, "duration":30 * 60},
 	OVERCLOCK3:
-		{"item_name":"overclock3", "type":Type.OVERCLOCK, "costs":{"money":90000}, "mult":2.5, "duration":60 * 60},
+		{"item_name":"overclock3", "type":Type.OVERCLOCK, "costs":{"money":70000}, "mult":2.5, "duration":60 * 60},
 	OVERCLOCK4:
 		{"item_name":"overclock4", "type":Type.OVERCLOCK, "costs":{"money":340000}, "mult":3, "duration":2 * 60 * 60},
 	OVERCLOCK5:

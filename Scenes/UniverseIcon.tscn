@@ -6,7 +6,7 @@
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_jl8q8"]
 
 [node name="UniverseIcon" type="TextureButton" unique_id=1775135344]
-self_modulate = Color(1, 1, 1, 0.509804)
+self_modulate = Color(1, 1, 1, 0.61960787)
 material = SubResource("ShaderMaterial_jl8q8")
 custom_minimum_size = Vector2(260, 260)
 theme = ExtResource("1_8ivd7")

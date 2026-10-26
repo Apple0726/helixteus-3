@@ -10,7 +10,7 @@ var cave_spawn_frequency = 1.0
 var cave_tile_dimensions = 1.0
 var cave_depth = 1.0
 var cave_floor_difficulty = 2.0
-var cave_wall_coverage = 0.5
+var cave_traversable_space = 0.5
 
 # Star system
 var distance_between_planets = 1.0
@@ -45,7 +45,7 @@ var default_values = {
 	"cave_tile_dimensions": cave_tile_dimensions,
 	"cave_depth": cave_depth,
 	"cave_floor_difficulty": cave_floor_difficulty,
-	"cave_wall_coverage": cave_wall_coverage,
+	"cave_traversable_space": cave_traversable_space,
 
 	"distance_between_planets": distance_between_planets,
 	"max_planets_in_system": max_planets_in_system,

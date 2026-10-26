@@ -1467,7 +1467,9 @@ func set_ancient_bldg_bonuses(p_i:Dictionary, ancient_bldg:Dictionary, tile_id:i
 				var id:int = x + y * wid
 				var tile = game.tile_data[id]
 				tile.resource_production_bonus[rsrc] = tile.resource_production_bonus.get(rsrc, 1.0) + (mult - 1.0)
-				set_tile_data_persistent(id, "resource_production_bonus", tile.resource_production_bonus[rsrc])
+				if game.tile_data_persistent[id] == null:
+					game.tile_data_persistent[id] = {}
+				game.tile_data_persistent[id].resource_production_bonus = {rsrc: tile.resource_production_bonus[rsrc]}
 				if tile.has("bldg"):
 					var overclock_mult:float = tile.bldg.get("overclock_mult", 1.0)
 					var diff = tile.bldg.path_1_value * overclock_mult * (mult - 1.0)
@@ -1488,7 +1490,9 @@ func set_ancient_bldg_bonuses(p_i:Dictionary, ancient_bldg:Dictionary, tile_id:i
 				var tile = game.tile_data[id]
 				var mult = Helper.get_substation_prod_mult(tier)
 				tile.resource_production_bonus.energy = tile.resource_production_bonus.get("energy", 0.0) + mult
-				set_tile_data_persistent(id, "resource_production_bonus", tile.resource_production_bonus.energy)
+				if game.tile_data_persistent[id] == null:
+					game.tile_data_persistent[id] = {}
+				game.tile_data_persistent[id].resource_production_bonus = {"energy": tile.resource_production_bonus.energy}
 				if tile.has("substation_data"):
 					tile.substation_data.bonus += mult - 1.0
 				else:
@@ -1656,7 +1660,6 @@ func set_universe_btn_shader(univ_btn, univ_info:Dictionary):
 	univ_btn.material.set_shader_parameter("fog_size", 22 * sqrt(univ_info.dark_energy))
 	univ_btn.material.set_shader_parameter("fog_mvt_spd_2", 0.1 * univ_info.time_speed)
 	univ_btn.material.set_shader_parameter("seed", univ_info.id)
-	univ_btn.material.set_shader_parameter("alpha", 0.65)
 	univ_btn.material.set_shader_parameter("expo", min(0.27, remap(univ_info.lv, 1, 100, 0.12, 0.27)))
 
 func set_tile_data_persistent(tile_id:int, key:String, value):

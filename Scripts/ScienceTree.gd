@@ -21,9 +21,9 @@ func _process(delta: float) -> void:
 		if sc.available:
 			if not sc.infinite_research and sc.sc_lv >= sc.num_levels:
 				sc.get_node("Highlight").show()
-				sc.get_node("Highlight")["theme_override_styles/panel"].border_color = Color(0.2, 0.675, 1.0)
+				sc.get_node("Highlight")["theme_override_styles/panel"].border_color = Color.PURPLE
 			elif game.SP >= sc.sc_cost:
 				sc.get_node("Highlight").show()
-				sc.get_node("Highlight")["theme_override_styles/panel"].border_color = Color.GREEN_YELLOW
+				sc.get_node("Highlight")["theme_override_styles/panel"].border_color = Color(1.0, 1.0, 1.0, 0.5)
 			else:
 				sc.get_node("Highlight").hide()

@@ -24,14 +24,11 @@ func _ready():
 		var th:float = atan2(c_i.pos.y, c_i.pos.x)
 		var hue:float = fmod(r + 300, 1000.0) / 1000.0
 		var sat:float = 0.8
-		if Settings.enable_shaders and len(visible_clusters) <= 1000:
+		if Settings.enable_shaders:
 			cluster_btn.material = ShaderMaterial.new()
 			cluster_btn.material.shader = preload("res://Shaders/Cluster.gdshader")
 			cluster_btn.material.set_shader_parameter("seed", int(c_i.redshift * 1000.0))
-			cluster_btn.material.set_shader_parameter("alpha", 0.0)
 			cluster_btn.material.set_shader_parameter("color", Color.from_hsv(hue, sat, 1.0))
-			var cluster_tween = create_tween()
-			cluster_tween.tween_property(cluster_btn.material, "shader_parameter/alpha", 1.0, 0.15)
 		else:
 			cluster_btn.modulate = Color.from_hsv(hue, sat, 1.0).lightened(0.8)
 		cluster_btn.mouse_entered.connect(game.show_tooltip.bind(Helper.get_cluster_tooltip(c_i.id)))
@@ -42,7 +39,7 @@ func _ready():
 		var radius = pow(c_i["galaxy_num"] / game.CLUSTER_SCALE_DIV, 0.3)
 		cluster_btn.scale = Vector2.ONE * radius
 		cluster_btn.scale /= clamp(get_parent().scale.x, CLUSTER_AUTOSCALE_MIN_THRESHOLD, 2.0) / CLUSTER_AUTOSCALE_MIN_THRESHOLD
-		dimensions = max(dimensions, c_i.pos.length())
+		dimensions = max(dimensions, c_i.pos.length() * 2.0)
 		btns[i] = {"btn": cluster_btn, "original_scale": radius}
 		add_child(cluster_btn)
 

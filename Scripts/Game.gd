@@ -363,7 +363,6 @@ func load_settings(config:ConfigFile):
 	Settings.notation = config.get_value("interface", "notation", "SI")
 	Settings.language = config.get_value("interface", "language", "en")
 	TranslationServer.set_locale(Settings.language)
-	Settings.cave_gen_info = config.get_value("game", "cave_gen_info", false)
 	
 	# game
 	if OS.get_name() == "Web" and not config.get_value("misc", "HTML5", false):
@@ -652,7 +651,7 @@ func load_game():
 		var lv_sum:int = 0
 		for univ in universe_data:
 			lv_sum += pow(univ.lv, 2.2)
-		DRs += int(lv_sum / 10000.0) + 1
+		DRs += int(lv_sum / 10000.0) + 3
 		for i in len(universe_data):
 			Helper.remove_recursive("user://%s/Univ%s" % [c_sv, i])
 		universe_data.clear()
@@ -1191,17 +1190,6 @@ func switch_view(new_view:String, other_params:Dictionary = {}):
 				starfield_universe_tween.kill()
 			starfield_universe_tween = create_tween()
 			starfield_universe_tween.tween_property($StarfieldUniverse.material, "shader_parameter/brightness", 0.0, 0.15)
-		if is_instance_valid(view.obj) and Settings.enable_shaders:
-			if c_v == "system":
-				for star in get_tree().get_nodes_in_group("stars_system"):
-					if is_instance_valid(star) and star.material != null:
-						var tween2 = create_tween()
-						tween2.tween_property(star.material, "shader_parameter/alpha", 0.0, 0.15)
-			elif c_v == "universe":
-				for cluster in view.obj.btns:
-					if is_instance_valid(cluster) and cluster.material != null:
-						var tween2 = create_tween()
-						tween2.tween_property(cluster.material, "shader_parameter/alpha", 0.0, 0.15)
 		if is_instance_valid(planet_HUD) and new_view != "planet":
 			var anim_player:AnimationPlayer = planet_HUD.get_node("ButtonsAnimation")
 			anim_player.play_backwards("MoveButtons")
@@ -1424,8 +1412,6 @@ func switch_view(new_view:String, other_params:Dictionary = {}):
 					$HUD.remove_child(HUD)
 		if c_v in ["planet", "system", "galaxy", "cluster", "universe", "mining", "science_tree"] and is_instance_valid(HUD) and is_ancestor_of(HUD):
 			HUD.refresh()
-		if c_v == "universe" and is_instance_valid(HUD) and HUD.dimension_btn.visible:
-			HUD.switch_btn.visible = false
 	if not other_params.has("dont_fade_anim"):
 		view_tween = create_tween()
 		view_tween.tween_property(view, "modulate", Color(1.0, 1.0, 1.0, 1.0), 0.25)
@@ -1870,7 +1856,7 @@ func generate_clusters():
 			c_i["galaxy_num"] /= 50
 		var pos:Vector2
 		var dist_from_center = pow(rng.randf(), 0.5) * max_dist_from_center + 160
-		pos = Vector2.from_angle(rng.randf_range(0, 2 * PI)) * dist_from_center * ProcGenSettings.galaxy_density
+		pos = Vector2.from_angle(rng.randf_range(0, 2 * PI)) * dist_from_center * ProcGenSettings.cluster_density
 		c_i["pos"] = pos
 		var DE_factor = pos.length() * u_i.dark_energy
 		c_i["redshift"] = Helper.clever_round(DE_factor * 0.002)
@@ -2110,8 +2096,8 @@ func generate_spiral_galaxy_part(id:int, center:bool, generation_data:Dictionary
 		var s_i = system_data[i]
 		var biggest_star_size = get_max_star_prop(i, "size")
 		var radius = 320 * pow(biggest_star_size / SYSTEM_SCALE_DIV, 0.35)
-		var r2 = randf_range(0, circ_size)
-		var th2 = randf_range(0, 2 * PI)
+		var r2 = rng.randf_range(0, circ_size)
+		var th2 = rng.randf_range(0, 2 * PI)
 		var pos:Vector2 = (Vector2.from_angle(generation_data.th) * generation_data.r + Vector2.from_angle(th2) * r2) * ProcGenSettings.star_system_density
 		generation_data.max_outer_radius = max(generation_data.max_outer_radius, pos.length())
 		var starting_system = c_g_g == 0 and i == 0
@@ -2287,7 +2273,7 @@ func generate_systems(id:int):
 	if galaxy_data[id].type == 6:
 		var generation_data = {"max_outer_radius": 0.0, "N_init":0, "r":0.0, "th":0.0}
 		generate_spiral_galaxy_part(id, true, generation_data, rng)#Generate stars at the center
-		var init_th:float = randf_range(0, PI)
+		var init_th:float = rng.randf_range(0, PI)
 		generation_data.r = N / 20.0
 		generation_data.th = init_th
 		var N_init:int = generation_data.N_init
@@ -2879,8 +2865,22 @@ func spawn_cave(p_i:Dictionary, t_id:int, rng:RandomNumberGenerator):
 			elif rng.randf() < 0.5:
 				modifiers[key] = modifiers2[key].treasure_if_true
 			modifiers2.erase(key)
-	var period:int = 65 + sign(rng.randf() - 0.5) * rng.randf() * 40
-	tile_data[t_id]["cave"] = {"num_floors":num_floors, "floor_size":floor_size, "period":period, "debris":rng.randf() + 0.2}
+	var period:int = 50 + sign(rng.randf() - 0.5) * rng.randf() * 30
+	var traversable_space = 64.0 * pow(rng.randf() - 0.5, 7) + 0.5
+	if c_p_g == 2:
+		traversable_space = clamp(traversable_space, 0.4, 0.8)
+	elif c_s_g == 0:
+		traversable_space = clamp(traversable_space, 0.3, 0.9)
+	if ProcGenSettings.cave_traversable_space <= 0.5:
+		traversable_space *= ProcGenSettings.cave_traversable_space * 2.0
+	else:
+		traversable_space += (1.0 - traversable_space) * (ProcGenSettings.cave_traversable_space - 0.5) * 2.0
+	tile_data[t_id]["cave"] = {
+		"num_floors":num_floors,
+		"floor_size":floor_size,
+		"period":period,
+		"debris":rng.randf() + 0.2,
+		"traversable_space":traversable_space}
 	if tile_data[t_id].has("ash") and not achievement_data.exploration.has("volcano_cave") and tile_data[t_id].has("cave"):
 		earn_achievement("exploration", "volcano_cave")
 	if not modifiers.is_empty():
@@ -3242,6 +3242,8 @@ func generate_tiles(id:int, first_time:bool):
 			tile_data[i].erase("crater")
 		if tile_persistent.has("ancient_bldg") and tile_persistent.ancient_bldg.has("repaired"):
 			tile_data[i].ancient_bldg.erase("repair_cost")
+		if tile_persistent.has("ship_picked_up"):
+			tile_data[i].erase("ship")
 	Helper.save_obj("Systems", c_s_g, planet_data_persistent)
 
 func erase_tile(tile:int):
@@ -3769,7 +3771,7 @@ func save_universe():
 			"cave_tile_dimensions": ProcGenSettings.cave_tile_dimensions,
 			"cave_depth": ProcGenSettings.cave_depth,
 			"cave_floor_difficulty": ProcGenSettings.cave_floor_difficulty,
-			"cave_wall_coverage": ProcGenSettings.cave_wall_coverage,
+			"cave_traversable_space": ProcGenSettings.cave_traversable_space,
 
 			"distance_between_planets": ProcGenSettings.distance_between_planets,
 			"max_planets_in_system": ProcGenSettings.max_planets_in_system,
@@ -4059,7 +4061,8 @@ func return_to_menu():
 		constr_panel.queue_free()
 
 func generate_new_univ():
-	universe_data[0] = Data.starting_universe_data.duplicate(true)
+	universe_data = []
+	universe_data.append(Data.starting_universe_data.duplicate(true))
 	universe_data[0].cluster_num = ProcGenSettings.number_of_clusters
 	universe_data[0].seed = ProcGenSettings.universe_seed
 	universe_data[0].speed_of_light = 1.0#3.0e8#m/s

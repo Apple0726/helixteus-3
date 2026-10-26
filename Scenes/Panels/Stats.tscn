@@ -17,7 +17,7 @@
 [ext_resource type="Texture2D" uid="uid://wi6w3l6bnqsw" path="res://Graphics/Achievements/HypergiantX.png" id="12"]
 [ext_resource type="Texture2D" uid="uid://btx4g0lrjdbxk" path="res://Graphics/Planets/6.png" id="12_4hr0x"]
 [ext_resource type="Texture2D" uid="uid://c5xyhmopvy4na" path="res://Graphics/Achievements/HypergiantV.png" id="13"]
-[ext_resource type="Texture2D" uid="uid://dke3vqevvf17p" path="res://Graphics/Planets/7.png" id="13_4ag8n"]
+[ext_resource type="Texture2D" uid="uid://c05ro4wfpq4pc" path="res://Graphics/Planets/7.png" id="13_4ag8n"]
 [ext_resource type="Texture2D" uid="uid://c5vh2kqt84l7q" path="res://Graphics/Achievements/Hypergiant.png" id="14"]
 [ext_resource type="Texture2D" uid="uid://bjle4nss4yoy" path="res://Graphics/Planets/8.png" id="14_4teee"]
 [ext_resource type="Texture2D" uid="uid://bs2osuaf27a1r" path="res://Graphics/Achievements/HypergiantXX.png" id="15"]

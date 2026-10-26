@@ -118,7 +118,11 @@ func on_bldg_click(bldg:int):
 
 func on_bldg_over(bldg:int):
 	var time_speed = game.u_i.time_speed
-	var txt:String = "[font_size=20]%s[/font_size]\n%s\n\n%s\n" % [tr("%s_NAME" % Building.names[bldg].to_upper()), tr("%s_DESC" % Building.names[bldg].to_upper()), tr("COSTS")]
+	var txt:String = "[font_size=20]{name}[/font_size]\n{desc}\n\n{costs}".format({
+		"name": tr("%s_NAME" % Building.names[bldg].to_upper()),
+		"desc": tr("%s_DESC" % Building.names[bldg].to_upper()),
+		"costs": tr("COSTS") + ": ",
+	})
 	var costs = Data.costs[bldg].duplicate(true)
 	for cost in costs:
 		costs[cost] *= game.engineering_bonus.BCM
@@ -131,7 +135,7 @@ func on_bldg_over(bldg:int):
 			costs.time /= game.u_i.time_speed
 	var icons = []
 	for cost in costs.keys():
-		txt += "@i  \t"
+		txt += "@i "
 		if cost == "time":
 			txt += Helper.time_to_str(costs[cost])
 			icons.append(Data.time_icon)
@@ -144,8 +148,8 @@ func on_bldg_over(bldg:int):
 		else:
 			txt += Helper.format_num(costs[cost])
 			icons.append(Data["%s_icon" % cost])
-		txt += "\n"
-	txt += "\n"
+		txt += "\t\t"
+	txt += "\n\n"
 	var IR_mult = Helper.get_IR_mult(bldg)
 	if bldg == Building.SOLAR_PANEL:
 		txt += (Data.path_1[bldg].desc + "\n") % [Helper.format_num(Helper.get_SP_production(game.planet_data[game.c_p].temperature, Data.path_1[bldg].value * IR_mult * time_speed), true)]

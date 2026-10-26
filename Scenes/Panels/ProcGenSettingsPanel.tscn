@@ -197,12 +197,12 @@ size_flags_horizontal = 3
 button_text = "DENSE"
 
 [node name="AdvancedSettingsGroup" type="Control" parent="." unique_id=189125923]
-visible = false
 anchors_preset = 0
 offset_right = 40.0
 offset_bottom = 40.0
 
 [node name="ScrollContainer" type="ScrollContainer" parent="AdvancedSettingsGroup" unique_id=1872282129]
+clip_contents = false
 layout_mode = 0
 offset_left = 252.0
 offset_top = 152.0
@@ -439,16 +439,6 @@ text = "CAVE_FLOOR_DIFFICULTY [img]Graphics/Icons/help.png[/img]"
 label_text = "CAVE_FLOOR_DIFFICULTY"
 help_text = "CAVE_FLOOR_DIFFICULTY_DESC"
 
-[node name="CaveWallCoverageLabel" parent="AdvancedSettingsGroup/ScrollContainer/Control" unique_id=2038507973 instance=ExtResource("4_nbk0x")]
-layout_mode = 0
-offset_left = 23.0
-offset_top = 595.0
-offset_right = 255.0
-offset_bottom = 619.0
-text = "CAVE_WALL_COVERAGE [img]Graphics/Icons/help.png[/img]"
-label_text = "CAVE_WALL_COVERAGE"
-help_text = "CAVE_WALL_COVERAGE_DESC"
-
 [node name="CaveFloorDifficultyMult" type="Label" parent="AdvancedSettingsGroup/ScrollContainer/Control" unique_id=1152544340]
 layout_mode = 0
 offset_left = 387.0
@@ -469,7 +459,17 @@ select_all_on_focus = true
 caret_blink = true
 caret_blink_interval = 0.5
 
-[node name="CaveWallCoverage" type="LineEdit" parent="AdvancedSettingsGroup/ScrollContainer/Control" unique_id=1579788493]
+[node name="CaveTraversableSpaceLabel" parent="AdvancedSettingsGroup/ScrollContainer/Control" unique_id=2038507973 instance=ExtResource("4_nbk0x")]
+layout_mode = 0
+offset_left = 23.0
+offset_top = 595.0
+offset_right = 255.0
+offset_bottom = 619.0
+text = "CAVE_WALL_COVERAGE [img]Graphics/Icons/help.png[/img]"
+label_text = "CAVE_TRAVERSABLE_SPACE"
+help_text = "CAVE_TRAVERSABLE_SPACE_DESC"
+
+[node name="CaveTraversableSpace" type="LineEdit" parent="AdvancedSettingsGroup/ScrollContainer/Control" unique_id=1579788493]
 layout_mode = 0
 offset_left = 407.0
 offset_top = 591.0

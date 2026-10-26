@@ -65,6 +65,11 @@ func _ready():
 				star = s_i.stars[j]
 		var star_btn = star_btns[i]
 		star_btn.texture_normal = star_texture[int(star.temperature) % 3]
+		if Settings.enable_shaders:
+			star_btn.material = ShaderMaterial.new()
+			star_btn.material.shader = preload("res://Shaders/Star.gdshader")
+			star_btn.material.set_shader_parameter("time_offset", 10.0 * randf())
+			star_btn.material.set_shader_parameter("color", Helper.get_star_modulate(star["class"]))
 		star_btn.modulate = Helper.get_star_modulate(star["class"])
 		var galaxy_tween = create_tween()
 		star_btn.self_modulate.a = 0.0
@@ -77,7 +82,7 @@ func _ready():
 		var radius = pow(star["size"] / game.SYSTEM_SCALE_DIV, 0.35)
 		star_btn.scale = Vector2.ONE * radius * 1024.0 / star_btn.texture_normal.get_width()
 		star_btn.position = s_i["pos"] - star_btn.texture_normal.get_size() / 2.0
-		dimensions_temp = max(dimensions_temp, s_i.pos.length())
+		dimensions_temp = max(dimensions_temp, s_i.pos.length() * 2.0)
 		Helper.add_overlay(star_btn, self, "system", s_i, overlays)
 		star_btn.scale /= clamp(get_parent().scale.x, STAR_AUTOSCALE_MIN_THRESHOLD, 2.0) / STAR_AUTOSCALE_MIN_THRESHOLD
 		await_counter += 1

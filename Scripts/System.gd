@@ -115,7 +115,7 @@ func refresh_planets():
 				planet_glow.modulate = Color.BURLYWOOD
 			else:
 				planet_glow.modulate = Color.RED
-		dimensions = v.length()
+		dimensions = v.length() * 2.0
 		if p_i.has("MS"):
 			planet_glow.modulate = Color(0.6, 0.6, 0.6, 1)
 			var MS_sprite = add_MS_sprite(planet_btn, p_i)
@@ -214,9 +214,6 @@ func refresh_stars():
 			star.material.shader = preload("res://Shaders/Star.gdshader")
 			star.material.set_shader_parameter("time_offset", 10.0 * randf())
 			star.material.set_shader_parameter("color", Helper.get_star_modulate(star_info["class"]))
-			star.material.set_shader_parameter("alpha", 0.0)
-			var star_tween = create_tween()
-			star_tween.tween_property(star.material, "shader_parameter/alpha", 1.0, 0.3)
 		star.modulate = Helper.get_star_modulate(star_info["class"])
 		if not game.achievement_data.exploration.has("B_star") and star_info["class"][0] == "B":
 			game.earn_achievement("exploration", "B_star")

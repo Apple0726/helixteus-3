@@ -9,7 +9,6 @@ uniform float fog_mvt_spd = 0.0;
 uniform float fog_mvt_spd_2 = 0.0;
 uniform int OCTAVES = 4;
 uniform int seed = 1;
-uniform float alpha:hint_range(0.0, 1.0) = 1.0;
 uniform float expo:hint_range(0.1, 0.3) = 0.3;
 
 
@@ -52,10 +51,9 @@ void fragment() {
 	float final = fbm(coord + motion) + fbm(coord2) * 0.3;
 	COLOR.rgb = color.rgb;
 	//COLOR.a = max(final - 0.4, 0.0) * 2.5;
-	COLOR.a = final * 2.5;
 	//COLOR.r = COLOR.a * 2.0;
 	COLOR.rgb += 2.5 * (pow(0.708 - distance(UV, vec2(0.5, 0.5)), 2.5));
 	//COLOR.rgb += pow(COLOR.a * 1.0, 1.0);
 	//COLOR.b += pow(COLOR.a * 1.0, 2.0);
-	COLOR.a = max(0.0, pow(COLOR.a * 1.3, 1.2) * (1.0 - 1.2 * pow(distance(UV, vec2(0.5, 0.5)), expo))) * alpha;
+	COLOR.a *= max(0.0, pow(final * 2.5 * 1.3, 1.2) * (1.0 - 1.2 * pow(distance(UV, vec2(0.5, 0.5)), expo)));
 }

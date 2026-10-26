@@ -51,7 +51,6 @@ shader_parameter/fog_mvt_spd = 0.0
 shader_parameter/fog_mvt_spd_2 = 0.0
 shader_parameter/OCTAVES = 3
 shader_parameter/seed = 1
-shader_parameter/alpha = 1.0
 shader_parameter/expo = 0.3
 
 [sub_resource type="SystemFont" id="SystemFont_xvdaj"]

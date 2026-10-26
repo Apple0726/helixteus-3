@@ -380,8 +380,10 @@ func show_tooltip(tile, tile_id:int):
 			additional_tooltip = tr("CLICK_CAVE_TO_EXPLORE")
 		if tile.cave.has("modifiers"):
 			tooltip += Helper.get_modifier_string(tile.cave.modifiers, au_str, icons)
-		if Settings.cave_gen_info:
-			tooltip += "\n%s: %s\n%s: %.2f" % [tr("PERIOD"), tile.cave.get("period", 0), tr("AMOUNT_OF_DEBRIS"), tile.cave.get("debris", 0)]
+		tooltip += "\n{space_text}: {space}".format({
+			"space_text": tr("CAVE_TRAVERSABLE_SPACE"),
+			"space": "%.2f" % tile.cave.traversable_space,
+		})
 	elif tile.has("ash"):
 		tooltip = "%s\n%s: %s" % [tr("VOLCANIC_ASH"), tr("MINERAL_RICHNESS"), Helper.clever_round(tile.ash.richness)]
 	elif tile.has("lake"):
@@ -1166,7 +1168,7 @@ func _unhandled_input(event):
 				for white_rect in get_tree().get_nodes_in_group("AOE_white_rects"):
 					white_rect.queue_free()
 					white_rect.remove_from_group("AOE_white_rects")
-				if tile and (tile.has("bldg") and tile.bldg.name == Building.CENTRAL_BUSINESS_DISTRICT or tile.has("ancient_bldg") and tile.ancient_bldg.name in [AncientBuilding.MINERAL_REPLICATOR, AncientBuilding.OBSERVATORY, AncientBuilding.SUBSTATION, AncientBuilding.MINING_OUTPOST]):
+				if (tile.has("bldg") and tile.bldg.name == Building.CENTRAL_BUSINESS_DISTRICT or tile.has("ancient_bldg") and tile.ancient_bldg.name in [AncientBuilding.MINERAL_REPLICATOR, AncientBuilding.OBSERVATORY, AncientBuilding.SUBSTATION, AncientBuilding.MINING_OUTPOST]):
 					var n:int = tile.bldg.path_3_value if tile.has("bldg") else Helper.get_ancient_bldg_area(tile.ancient_bldg.tier)
 					for i in n:
 						var x:int = x_over + i - n / 2
@@ -1284,7 +1286,7 @@ func _unhandled_input(event):
 						var overclock_sound = AudioStreamPlayer2D.new()
 						overclock_sound.stream = preload("res://Audio/SFX/overclock.ogg")
 						overclock_sound.pitch_scale = randf_range(0.9, 1.1)
-						overclock_sound.volume_db = -4.0
+						overclock_sound.volume_db = -6.0
 						overclock_sound.bus = "SFX"
 						overclock_sound.position = center_tile_pos
 						add_child(overclock_sound)

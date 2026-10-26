@@ -8,6 +8,9 @@
 [sub_resource type="LabelSettings" id="LabelSettings_kpmkd"]
 font_size = 20
 
+[sub_resource type="LabelSettings" id="LabelSettings_fqqt0"]
+font_size = 18
+
 [node name="ProcGenSettingsPanel" type="Control" unique_id=1035928848]
 layout_mode = 3
 anchors_preset = 0
@@ -55,9 +58,9 @@ horizontal_alignment = 1
 [node name="Building" type="TextureRect" parent="." unique_id=1787682818]
 layout_mode = 0
 offset_left = 340.0
-offset_top = 244.0
+offset_top = 252.0
 offset_right = 560.0
-offset_bottom = 464.0
+offset_bottom = 456.0
 texture = ExtResource("4_fqqt0")
 expand_mode = 1
 stretch_mode = 5
@@ -70,6 +73,18 @@ offset_top = 276.0
 offset_right = 948.0
 offset_bottom = 468.0
 text = "POWER_PLANT_DESC"
+autowrap_mode = 3
+
+[node name="Name" type="Label" parent="." unique_id=505944927]
+custom_maximum_size = Vector2(348, -1)
+layout_mode = 1
+offset_left = 332.0
+offset_top = 468.0
+offset_right = 568.0
+offset_bottom = 496.0
+text = "POWER_PLANT_NAME"
+label_settings = SubResource("LabelSettings_fqqt0")
+horizontal_alignment = 1
 autowrap_mode = 3
 
 [node name="OK" type="Button" parent="." unique_id=2109531059]
