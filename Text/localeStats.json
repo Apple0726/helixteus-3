@@ -1,8 +1,8 @@
 {
     "en": {
-        "lines": 1621,
-        "words": 11363,
-        "chars": 69283,
+        "lines": 1629,
+        "words": 11480,
+        "chars": 69942,
         "name": "English"
     },
     "fr": {
@@ -12,33 +12,33 @@
         "name": "Français"
     },
     "it": {
-        "lines": 1033,
-        "words": 6966,
-        "chars": 45822,
+        "lines": 1032,
+        "words": 6961,
+        "chars": 45787,
         "name": "Italiano"
     },
     "zh": {
-        "lines": 1538,
-        "words": 1993,
-        "chars": 21054,
+        "lines": 1537,
+        "words": 1992,
+        "chars": 21050,
         "name": "中文"
     },
     "de": {
-        "lines": 1499,
-        "words": 8990,
-        "chars": 65914,
+        "lines": 1498,
+        "words": 8984,
+        "chars": 65882,
         "name": "Deutsch"
     },
     "es": {
-        "lines": 1157,
-        "words": 7992,
-        "chars": 50690,
+        "lines": 1156,
+        "words": 7986,
+        "chars": 50658,
         "name": "Español"
     },
     "ko": {
         "lines": 696,
-        "words": 1763,
-        "chars": 6245,
+        "words": 1772,
+        "chars": 6288,
         "name": "한국어"
     },
     "sv": {
@@ -48,27 +48,27 @@
         "name": "Svenska"
     },
     "hu": {
-        "lines": 1611,
-        "words": 8699,
-        "chars": 64037,
+        "lines": 1610,
+        "words": 8695,
+        "chars": 64009,
         "name": "Magyar"
     },
     "ja": {
-        "lines": 1089,
-        "words": 1195,
-        "chars": 18046,
+        "lines": 1088,
+        "words": 1194,
+        "chars": 18037,
         "name": "日本語"
     },
     "nl": {
-        "lines": 984,
-        "words": 4914,
-        "chars": 34036,
+        "lines": 983,
+        "words": 4908,
+        "chars": 34006,
         "name": "Nederlands"
     },
     "ru": {
-        "lines": 849,
-        "words": 3293,
-        "chars": 24813,
+        "lines": 848,
+        "words": 3289,
+        "chars": 24791,
         "name": "Русский"
     },
     "pl": {

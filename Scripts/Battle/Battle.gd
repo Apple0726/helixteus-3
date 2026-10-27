@@ -225,28 +225,18 @@ func battle_victory_callback():
 		for i in len(game.planet_data):
 			var planet = game.planet_data[i]
 			if not planet.has("conquered") and planet.has("HX_data"):
-				planet["conquered"] = true
-				game.planet_data_persistent[i].conquered = true
+				Helper.conquer_planet(i)
 				game.stats_univ.enemies_rekt_in_battle += len(planet.HX_data)
 				game.stats_dim.enemies_rekt_in_battle += len(planet.HX_data)
 				game.stats_global.enemies_rekt_in_battle += len(planet.HX_data)
-				planet.erase("HX_data")
-				game.stats_univ.planets_conquered += 1
-				game.stats_dim.planets_conquered += 1
-				game.stats_global.planets_conquered += 1
 	else:
 		game.stats_univ.enemies_rekt_in_battle += len(HX_data)
 		game.stats_dim.enemies_rekt_in_battle += len(HX_data)
 		game.stats_global.enemies_rekt_in_battle += len(HX_data)
-		game.planet_data[game.c_p]["conquered"] = true
-		game.planet_data_persistent[game.c_p]["conquered"] = true
-		game.planet_data[game.c_p].erase("HX_data")
+		Helper.conquer_planet(game.c_p)
 		for planet in game.planet_data:
 			if not planet.has("conquered"):
 				all_conquered = false
-		game.stats_univ.planets_conquered += 1
-		game.stats_dim.planets_conquered += 1
-		game.stats_global.planets_conquered += 1
 	if all_conquered:
 		game.system_data[game.c_s]["conquered"] = true
 		game.system_data_persistent[game.c_s]["conquered"] = true

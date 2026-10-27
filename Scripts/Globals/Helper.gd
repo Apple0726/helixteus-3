@@ -797,7 +797,7 @@ func add_item_to_coll(dict:Dictionary, item:String, num):
 			dict[item] = num
 
 func ships_on_planet(p_id:int):#local planet id
-	return game.c_c == game.ships_travel_data.c_coords.c and game.c_g == game.ships_travel_data.c_coords.g and game.c_s == game.ships_travel_data.c_coords.s and p_id == game.ships_travel_data.c_coords.p
+	return game.ships_travel_data.travel_view == "-" and game.c_c == game.ships_travel_data.c_coords.c and game.c_g == game.ships_travel_data.c_coords.g and game.c_s == game.ships_travel_data.c_coords.s and p_id == game.ships_travel_data.c_coords.p
 
 func update_ship_travel():
 	if game.ships_travel_data.travel_view == "-" or game.ships_travel_data.travel_length == NAN:
@@ -812,7 +812,9 @@ func update_ship_travel():
 		var s_g_id = game.ships_travel_data.c_g_coords.s
 		var p_id = game.ships_travel_data.c_coords.p
 		var s_i = game.open_obj("Galaxies", game.ships_travel_data.c_g_coords.g)[s_id]
-		game.generate_planets(s_g_id)
+		if game.c_s_g != s_g_id:
+			game.planet_data.clear()
+			game.generate_planets(s_id)
 		var p_i = game.planet_data[p_id]
 		game.planet_data_persistent[p_id] = p_i
 		if p_i.has("ancient_bldgs") and p_i.ancient_bldgs.has(AncientBuilding.SPACEPORT) and not p_i.ancient_bldgs[AncientBuilding.SPACEPORT][0].has("repair_cost"):
@@ -825,6 +827,7 @@ func update_ship_travel():
 		if game.c_s_g != s_g_id:
 			game.planet_data.clear()
 			game.planet_data_persistent.clear()
+			game.system_data[s_id]["planets"].clear()
 	return progress
 
 func add_autocollect(p_i:Dictionary, tile:Dictionary, mult_diff:float):
@@ -1001,6 +1004,16 @@ func get_conquer_all_data():
 	if game.science_level[Science.FTL_DRIVE] >= 2:
 		energy_cost /= 100.0
 	return {"HX_data":HX_data, "energy_cost":round(energy_cost)}
+
+func conquer_planet(p_id:int):
+	if game.planet_data[p_id].has("conquered"):
+		return
+	game.planet_data[p_id].conquered = true
+	game.planet_data_persistent[p_id].conquered = true
+	game.planet_data[p_id].erase("HX_data")
+	game.stats_univ.planets_conquered += 1
+	game.stats_dim.planets_conquered += 1
+	game.stats_global.planets_conquered += 1
 
 var hbox_theme = preload("res://Resources/default_theme.tres")
 var text_border_theme = preload("res://Resources/TextBorder.tres")

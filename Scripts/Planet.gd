@@ -380,9 +380,9 @@ func show_tooltip(tile, tile_id:int):
 			additional_tooltip = tr("CLICK_CAVE_TO_EXPLORE")
 		if tile.cave.has("modifiers"):
 			tooltip += Helper.get_modifier_string(tile.cave.modifiers, au_str, icons)
-		tooltip += "\n{space_text}: {space}".format({
+		tooltip += "\n{space_text}: {space}%".format({
 			"space_text": tr("CAVE_TRAVERSABLE_SPACE"),
-			"space": "%.2f" % tile.cave.traversable_space,
+			"space": "%d" % (snappedf(tile.cave.traversable_space, 0.01) * 100.0),
 		})
 	elif tile.has("ash"):
 		tooltip = "%s\n%s: %s" % [tr("VOLCANIC_ASH"), tr("MINERAL_RICHNESS"), Helper.clever_round(tile.ash.richness)]
@@ -584,7 +584,7 @@ func constr_bldg(tile_id:int, curr_time:int, _bldg_to_construct:int, mass_build:
 		elif _bldg_to_construct == Building.BORING_MACHINE:
 			if not tile.has("depth"):
 				tile.depth = 0
-				Helper.set_tile_data_persistent(tile_id, "depth", tile.depth)
+			Helper.set_tile_data_persistent(tile_id, "depth", tile.depth)
 			if not game.boring_machine_data.has(game.c_p_g):
 				game.boring_machine_data[game.c_p_g] = {"tiles":[tile_id], "c_s_g":game.c_s_g, "c_p":p_id}
 			else:

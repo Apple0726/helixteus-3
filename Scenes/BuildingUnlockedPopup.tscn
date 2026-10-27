@@ -11,7 +11,7 @@ font_size = 20
 [sub_resource type="LabelSettings" id="LabelSettings_fqqt0"]
 font_size = 18
 
-[node name="ProcGenSettingsPanel" type="Control" unique_id=1035928848]
+[node name="BuidingUnlockedPopup" type="Control" unique_id=1035928848]
 layout_mode = 3
 anchors_preset = 0
 offset_right = 32.0

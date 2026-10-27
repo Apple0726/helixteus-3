@@ -149,9 +149,9 @@ theme_override_styles/panel = SubResource("StyleBoxFlat_bppng")
 
 [node name="BuyAmount" type="SpinBox" parent="ItemInfo" unique_id=91204253]
 layout_mode = 0
-offset_left = 248.0
+offset_left = 256.0
 offset_top = 80.0
-offset_right = 325.479
+offset_right = 320.0
 offset_bottom = 112.0
 min_value = 1.0
 max_value = 10000.0
@@ -161,9 +161,9 @@ update_on_text_changed = true
 
 [node name="Help" type="TextureRect" parent="ItemInfo/BuyAmount" unique_id=1551005213]
 layout_mode = 0
-offset_left = -32.0
+offset_left = 80.0
 offset_top = 8.0
-offset_right = -16.0
+offset_right = 96.0
 offset_bottom = 24.0
 texture = ExtResource("7_mosj3")
 expand_mode = 1
@@ -214,9 +214,9 @@ metadata/_edit_use_anchors_ = true
 
 [node name="ScrollContainer" type="ScrollContainer" parent="ItemInfo" unique_id=1277229129]
 layout_mode = 0
-offset_left = 384.0
+offset_left = 388.0
 offset_top = 56.0
-offset_right = 568.0
+offset_right = 572.0
 offset_bottom = 136.0
 
 [node name="Costs" type="VBoxContainer" parent="ItemInfo/ScrollContainer" unique_id=572021540]

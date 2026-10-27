@@ -452,7 +452,7 @@ func show_planet_info(id:int, l_id:int):
 				Helper.add_label("{key}: {upgrade}".format({"key":"F", "upgrade": tr("UPGRADE")}))
 		MS_constr_data.destroyable = true
 	if Helper.ships_on_planet(l_id) and not p_i.has("conquered"):
-		game.show_tooltip(tr("CLICK_TO_BATTLE"))
+		game.show_tooltip(tr("SHIPS_READY_TO_TAKE_ACTION"))
 	else:
 		var tooltip:String = ""
 		var icons:Array = Data.desc_icons[p_i.bldg.name] if p_i.has("tile_num") and Data.desc_icons.has(p_i.bldg.name) else []
@@ -771,64 +771,67 @@ func toggle_GH(p_i:Dictionary, fertilizer:bool):
 	game.greenhouse_panel.refresh()
 
 func on_planet_click (id:int, l_id:int):
+	if view.dragged:
+		return
 	var p_i = game.planet_data[l_id]
-	if not view.dragged:
-		if Input.is_action_pressed("shift"):
-			game.c_p = l_id
-			game.c_p_g = id
-			game.switch_view("planet_details")
-			return
-		var building:bool = game.bottom_info_action in ["building-SE", "building-MME"]
-		if building:
-			if p_i.has("conquered"):
-				if not p_i.has("MS"):
-					var MS:String = game.bottom_info_action.split("-")[1]
-					if MS == "MME" and not p_i.type in [11, 12]:
-						game.popup(tr("ONLY_GAS_GIANT"), 2.0)
-					else:
-						call("build_MS", p_i, MS)
+	if Input.is_action_pressed("shift"):
+		game.c_p = l_id
+		game.c_p_g = id
+		game.switch_view("planet_details")
+		return
+	var building:bool = game.bottom_info_action in ["building-SE", "building-MME"]
+	if building:
+		if p_i.has("conquered"):
+			if not p_i.has("MS"):
+				var MS:String = game.bottom_info_action.split("-")[1]
+				if MS == "MME" and not p_i.type in [11, 12]:
+					game.popup(tr("ONLY_GAS_GIANT"), 2.0)
 				else:
-					game.popup(tr("MS_ALREADY_PRESENT_PLANET"), 2.0)
+					call("build_MS", p_i, MS)
 			else:
-				game.popup(tr("PLANET_MS_ERROR"), 2.5)
-			return
-		elif p_i.has("tile_num"):
-			if p_i.bldg.name == Building.GREENHOUSE:
-				toggle_GH(p_i, false)
-			elif p_i.bldg.name == Building.ATOM_MANIPULATOR:
-				game.toggle_panel("AMN_panel", false)
-				game.AMN_panel.tf = true
-				game.AMN_panel.obj = p_i
-				game.AMN_panel.tile_num = p_i.tile_num
-				game.AMN_panel.refresh()
-			elif p_i.bldg.name == Building.SUBATOMIC_PARTICLE_REACTOR:
-				game.toggle_panel("SPR_panel", false)
-				game.SPR_panel.tf = true
-				game.SPR_panel.obj = p_i
-				game.SPR_panel.tile_num = p_i.tile_num
-				game.SPR_panel.refresh()
-		if p_i.has("conquered") and not Input.is_action_pressed("ctrl"):
-			if not p_i.type in [11, 12]:
-				if not p_i.has("bldg") or not p_i.bldg.has("name"):
-					game.switch_view("planet", {"fn":"set_custom_coords", "fn_args":[["c_p", "c_p_g"], [l_id, id]]})
-					Helper.save_obj("Systems", game.c_s_g, game.planet_data)
-			else:
-				game.popup(tr("NO_ACTIVITY_ON_GAS_GIANT"), 2.0)
+				game.popup(tr("MS_ALREADY_PRESENT_PLANET"), 2.0)
 		else:
-			if Helper.ships_on_planet(l_id) and not p_i.has("conquered"):
-				game.c_p = l_id
-				game.c_p_g = id
-				game.is_conquering_all = false
-				game.switch_view("battle")
+			game.popup(tr("PLANET_MS_ERROR"), 2.5)
+		return
+	elif p_i.has("tile_num"):
+		if p_i.bldg.name == Building.GREENHOUSE:
+			toggle_GH(p_i, false)
+		elif p_i.bldg.name == Building.ATOM_MANIPULATOR:
+			game.toggle_panel("AMN_panel", false)
+			game.AMN_panel.tf = true
+			game.AMN_panel.obj = p_i
+			game.AMN_panel.tile_num = p_i.tile_num
+			game.AMN_panel.refresh()
+		elif p_i.bldg.name == Building.SUBATOMIC_PARTICLE_REACTOR:
+			game.toggle_panel("SPR_panel", false)
+			game.SPR_panel.tf = true
+			game.SPR_panel.obj = p_i
+			game.SPR_panel.tile_num = p_i.tile_num
+			game.SPR_panel.refresh()
+	if p_i.has("conquered") and not Input.is_action_pressed("ctrl"):
+		if not p_i.type in [11, 12]:
+			if not p_i.has("bldg") or not p_i.bldg.has("name"):
+				game.switch_view("planet", {"fn":"set_custom_coords", "fn_args":[["c_p", "c_p_g"], [l_id, id]]})
+				Helper.save_obj("Systems", game.c_s_g, game.planet_data)
+		else:
+			game.popup(tr("NO_ACTIVITY_ON_GAS_GIANT"), 2.0)
+	else:
+		if Helper.ships_on_planet(l_id) and not p_i.has("conquered"):
+			if not game.get_node("UI").has_node("FightOrNegotiate"):
+				var fight_or_negotiate = load("res://Scenes/FightOrNegotiate.tscn").instantiate()
+				fight_or_negotiate.l_id = l_id
+				fight_or_negotiate.id = id
+				game.get_node("UI").add_child(fight_or_negotiate)
+				game.hide_tooltip()
+		else:
+			if len(game.ship_data) > 0:
+				if not p_i.has("conquered") or Input.is_action_pressed("ctrl"):
+					if not is_instance_valid(game.send_ships_panel) or not game.send_ships_panel.visible:
+						game.fade_in_panel("send_ships_panel", false)
+						game.send_ships_panel.dest_p_id = l_id
+						game.send_ships_panel.refresh()
 			else:
-				if len(game.ship_data) > 0:
-					if not p_i.has("conquered") or Input.is_action_pressed("ctrl"):
-						if not is_instance_valid(game.send_ships_panel) or not game.send_ships_panel.visible:
-							game.fade_in_panel("send_ships_panel", false)
-							game.send_ships_panel.dest_p_id = l_id
-							game.send_ships_panel.refresh()
-				else:
-					game.popup_window(tr("NO_SHIPS_DESC"), tr("NO_SHIPS"))
+				game.popup_window(tr("NO_SHIPS_DESC"), tr("NO_SHIPS"))
 	if game.is_ancestor_of(game.HUD):
 		game.HUD.refresh()
 

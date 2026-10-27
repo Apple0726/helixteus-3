@@ -1004,12 +1004,12 @@ func start_game(univ, new_save, DR_advantage):
 
 
 func popup(txt, delay):
-	if $Panels.has_node("Popup"):
-		$Panels.get_node("Popup").free()
+	if $UI.has_node("Popup"):
+		$UI.get_node("Popup").free()
 	var popup = preload("res://Scenes/Popup.tscn").instantiate()
 	popup.delay = delay
 	popup.name = "Popup"
-	$Panels.add_child(popup)
+	$UI.add_child(popup)
 	popup.text = txt
 	popup.modulate.a = 0
 	await get_tree().process_frame
@@ -1160,6 +1160,8 @@ func delete_galaxy(_c_g:int):
 func switch_view(new_view:String, other_params:Dictionary = {}):
 	if $UI.has_node("BottomInfo"):
 		$UI/BottomInfo.on_close_pressed()
+	if $UI.has_node("FightOrNegotiate"):
+		$UI/FightOrNegotiate.queue_free()
 	$UI/Panel.hide()
 	var old_view:String = c_v
 	if view_tween and view_tween.is_running():
@@ -2524,7 +2526,7 @@ func generate_planets(id:int):#local id
 			p_i["liq_period"] = rng.randf_range(0.1, 1)
 		p_i["HX_data"] = []
 		var diff:float = system_data[id].diff
-		var power_left:float = diff * pow(p_i.size / 2500.0, 0.5) / 3.0
+		var power_left:float = diff * pow(p_i.size / 2500.0, 0.5) / 2.5
 		var max_lv:int = max(1, 1 + log(2.0 * power_left) / log(1.3))
 		var num:int = 0
 		var total_num:int = rng.randi() % 12 + 1
@@ -4128,13 +4130,7 @@ func conquer_all(energy_cost:float, insta_conquer:bool):
 		energy -= energy_cost
 		if insta_conquer:
 			for i in len(planet_data):
-				if not planet_data[i].has("conquered"):
-					planet_data[i].conquered = true
-					planet_data_persistent[i].conquered = true
-					planet_data[i].erase("HX_data")
-					stats_univ.planets_conquered += 1
-					stats_dim.planets_conquered += 1
-					stats_global.planets_conquered += 1
+				Helper.conquer_planet(i)
 			stats_univ.systems_conquered += 1
 			stats_dim.systems_conquered += 1
 			stats_global.systems_conquered += 1
