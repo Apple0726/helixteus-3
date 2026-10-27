@@ -6,6 +6,7 @@
 [ext_resource type="Texture2D" uid="uid://baowebna7hgr5" path="res://Graphics/GUI/CloseButtonNormal.png" id="4_q0u5r"]
 [ext_resource type="Texture2D" uid="uid://c1vwn7p5uxu1r" path="res://Graphics/GUI/CloseButtonHover.png" id="5_3b6lu"]
 [ext_resource type="PackedScene" uid="uid://1hq6qpr1oa3i" path="res://Scenes/AdvButton.tscn" id="5_ixx63"]
+[ext_resource type="Texture2D" uid="uid://hjl8rhhr18ke" path="res://Graphics/Icons/help.png" id="7_mosj3"]
 
 [sub_resource type="SystemFont" id="SystemFont_sxpbd"]
 font_names = PackedStringArray("Arial")
@@ -147,7 +148,6 @@ offset_bottom = 624.0
 theme_override_styles/panel = SubResource("StyleBoxFlat_bppng")
 
 [node name="BuyAmount" type="SpinBox" parent="ItemInfo" unique_id=91204253]
-visible = false
 layout_mode = 0
 offset_left = 248.0
 offset_top = 80.0
@@ -158,6 +158,16 @@ max_value = 10000.0
 value = 1.0
 rounded = true
 update_on_text_changed = true
+
+[node name="Help" type="TextureRect" parent="ItemInfo/BuyAmount" unique_id=1551005213]
+layout_mode = 0
+offset_left = -32.0
+offset_top = 8.0
+offset_right = -16.0
+offset_bottom = 24.0
+texture = ExtResource("7_mosj3")
+expand_mode = 1
+stretch_mode = 5
 
 [node name="Buy" type="Button" parent="ItemInfo" unique_id=270307450]
 layout_mode = 1

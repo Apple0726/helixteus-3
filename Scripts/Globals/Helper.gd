@@ -479,10 +479,8 @@ func get_rsrc_from_rock(contents:Dictionary, tile:Dictionary, p_i:Dictionary, ti
 				if is_instance_valid(game.inventory):
 					game.inventory.get_node("TabBar/Materials").visible = true
 		elif game.mets.has(content):
-			if not game.help.has("metals"):
-				game.popup_window(tr("YOU_MINED_METALS"), tr("METALS"))
-				game.help.metals = true
 			if not game.show.has("metals"):
+				game.popup_window(tr("YOU_MINED_METALS"), tr("METALS"))
 				game.show.metals = true
 				if is_instance_valid(game.inventory):
 					game.inventory.get_node("TabBar/Metals").visible = true
@@ -810,14 +808,23 @@ func update_ship_travel():
 		game.ships_travel_data.travel_view = "-"
 		game.ships_travel_data.c_coords = game.ships_travel_data.dest_coords.duplicate(true)
 		game.ships_travel_data.c_g_coords = game.ships_travel_data.dest_g_coords.duplicate(true)
-		var s_i = game.open_obj("Galaxies", game.ships_travel_data.c_g_coords.g)[game.ships_travel_data.c_coords.s]
-		var p_i = game.open_obj("Systems", game.ships_travel_data.c_g_coords.s)[game.ships_travel_data.c_coords.p]
+		var s_id = game.ships_travel_data.c_coords.s
+		var s_g_id = game.ships_travel_data.c_g_coords.s
+		var p_id = game.ships_travel_data.c_coords.p
+		var s_i = game.open_obj("Galaxies", game.ships_travel_data.c_g_coords.g)[s_id]
+		game.generate_planets(s_g_id)
+		var p_i = game.planet_data[p_id]
+		game.planet_data_persistent[p_id] = p_i
 		if p_i.has("ancient_bldgs") and p_i.ancient_bldgs.has(AncientBuilding.SPACEPORT) and not p_i.ancient_bldgs[AncientBuilding.SPACEPORT][0].has("repair_cost"):
 			var tier = p_i.ancient_bldgs[AncientBuilding.SPACEPORT][0].tier
 			game.autocollect["passive_xp_tier"] = tier
 			game.autocollect["passive_xp_mult"] = s_i.diff
 			game.start_spaceport_timer()
 			game.HUD.set_ship_btn_shader()
+		Helper.save_obj("Systems", s_g_id, game.planet_data_persistent)
+		if game.c_s_g != s_g_id:
+			game.planet_data.clear()
+			game.planet_data_persistent.clear()
 	return progress
 
 func add_autocollect(p_i:Dictionary, tile:Dictionary, mult_diff:float):

@@ -583,7 +583,8 @@ func constr_bldg(tile_id:int, curr_time:int, _bldg_to_construct:int, mass_build:
 			Helper.update_CBD_affected_tiles(tile, tile_id, p_i)
 		elif _bldg_to_construct == Building.BORING_MACHINE:
 			if not tile.has("depth"):
-				tile["depth"] = 0
+				tile.depth = 0
+				Helper.set_tile_data_persistent(tile_id, "depth", tile.depth)
 			if not game.boring_machine_data.has(game.c_p_g):
 				game.boring_machine_data[game.c_p_g] = {"tiles":[tile_id], "c_s_g":game.c_s_g, "c_p":p_id}
 			else:

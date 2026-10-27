@@ -16,7 +16,12 @@ func _ready():
 	$Title.text = tr("SHOP")
 	_on_overclocks_button_pressed()
 	$Tabs/OverclocksButton._on_Button_pressed()
-	
+	$ItemInfo/BuyAmount/Help.mouse_entered.connect(show_tooltip.bind("AUTO_SET_AMOUNT_TIP"))
+	$ItemInfo/BuyAmount/Help.mouse_exited.connect(game.hide_tooltip)
+
+func show_tooltip(key:String):
+	game.show_tooltip(tr(key))
+
 func change_tab(_tab:int):
 	for item in $Items/Grid.get_children():
 		item.free()

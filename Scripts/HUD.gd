@@ -155,7 +155,7 @@ func update_money_energy_SP():
 		energy_text["theme_override_colors/font_color"] = Color.WHITE
 		SP_text["theme_override_colors/font_color"] = Color.WHITE
 		money_text.text = Helper.format_num(floor(game.money))
-		energy_text.text = "%s / %s" % [Helper.format_num(floor(game.energy)), Helper.format_num(round(Helper.get_total_energy_cap()))]
+		energy_text.text = "%s / %s" % [Helper.format_num(floor(game.energy)), Helper.format_num(floor(Helper.get_total_energy_cap()))]
 		SP_text.text = Helper.format_num(floor(game.SP))
 		$Top/Resources/Soil.visible = game.autocollect.mats.has("soil")
 		soil_text.text = "%s kg" % Helper.format_num(game.mats.soil, true)

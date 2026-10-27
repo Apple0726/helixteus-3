@@ -455,6 +455,10 @@ func _ready():
 	load_save_panel.panel_var_name = "load_save_panel"
 	load_save_panel.hide()
 	$Panels/Control.add_child(load_save_panel)
+	shop_panel = preload("res://Scenes/Panels/Shop.tscn").instantiate()
+	shop_panel.panel_var_name = "shop_panel"
+	shop_panel.hide()
+	$Panels/Control.add_child(shop_panel)
 
 func refresh_continue_button():
 	if $Title/VBoxContainer/Continue.pressed.is_connected(_on_continue_pressed):
@@ -1698,6 +1702,7 @@ func add_system():
 	set_starfield_color($ShaderExport/SubViewport/Starfield.material, starfield_color_param)
 	if system_data.is_empty():
 		generate_systems(c_g)
+	system_data_persistent[c_s].diff = system_data[c_s].diff
 	show_starfield({"position":system_data[c_s].pos / 10000.0})
 	if starfield_tween:
 		starfield_tween.kill()
@@ -1730,6 +1735,7 @@ func add_planet(new_game:bool = false):
 	starfield_tween.tween_property($Stars/Starfield, "modulate:a", 0.65, 1.5 if new_game else 0.8)
 	if planet_data.is_empty():
 		generate_planets(c_s)
+	planet_data_persistent[c_p] = planet_data[c_p]
 	generate_tiles(c_p, not planet_data[c_p].has("discovered"))
 	planet_HUD = load("res://Scenes/Planet/PlanetHUD.tscn").instantiate()
 	$HUD.add_child(planet_HUD)
@@ -2492,7 +2498,7 @@ func generate_planets(id:int):#local id
 			p_i["name"] = "%s %s" % [tr("GAS_GIANT"), p_id]
 		else:
 			p_i["name"] = tr("PLANET") + " " + str(p_id)
-			p_i["crust_start_depth"] = rng.randi_range(50, 450)
+			p_i["crust_start_depth"] = rng.randi_range(20, 50)
 			p_i["mantle_start_depth"] = round(rng.randf_range(0.005, 0.02) * p_i.size * 1000)
 		var list_of_element_probabilities = Data.elements.duplicate()
 		p_i["atmosphere"] = make_atmosphere_composition(temp, p_i.pressure, list_of_element_probabilities, rng)
@@ -2672,6 +2678,7 @@ func generate_planets(id:int):#local id
 		planet_data[2]["pressure"] = 1
 		planet_data[2]["lake"] = {"element":"H2O"}
 		planet_data[2]["bookmarked"] = true
+		planet_data[2]["crust_start_depth"] = rng.randi_range(20, 25)
 		if not system_data[id].has("discovered"):
 			stats_univ.biggest_planet = planet_data[2].size
 	system_data[id]["closest_planet_distance"] = planet_data[0].distance
