@@ -171,7 +171,7 @@ func _process(delta):
 		if BG_alpha <= 0.0:
 			phase = 0
 			if music:
-				game.switch_music(Data.ambient_music.pick_random(), game.u_i.time_speed)
+				Helper.load_ambient_music()
 			set_process(false)
 			game.block_scroll = false
 
@@ -245,7 +245,7 @@ func change_pixels(x_from: int, x_to: int, y_coord: int):
 	
 func _on_tree_exiting() -> void:
 	if music:
-		game.switch_music(Data.ambient_music.pick_random(), game.u_i.time_speed)
+		Helper.load_ambient_music()
 
 
 func _on_h_slider_p_value_changed(value: float) -> void:

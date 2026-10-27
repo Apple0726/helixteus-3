@@ -675,7 +675,7 @@ func load_game():
 		load_univ()
 		await switch_view(c_v, {"first_time":true})
 		view.set_process(true)
-		switch_music(Data.ambient_music.pick_random(), u_i.get("time_speed", 1.0))
+		Helper.load_ambient_music()
 		if not is_ancestor_of(HUD):
 			$HUD.add_child(HUD)
 	$UI/BackupPanel.start_timer()
@@ -996,7 +996,7 @@ func start_game(univ, new_save, DR_advantage):
 	$Autosave.start()
 	var init_time = Time.get_unix_time_from_system()
 	view.set_process(true)
-	switch_music(Data.ambient_music.pick_random(), u_i.time_speed)
+	Helper.load_ambient_music()
 
 
 func popup(txt, delay):
@@ -1212,7 +1212,7 @@ func switch_view(new_view:String, other_params:Dictionary = {}):
 		remove_dimension()
 		if not is_ancestor_of(HUD):
 			$HUD.add_child(HUD)
-		switch_music(Data.ambient_music.pick_random(), u_i.time_speed)
+		Helper.load_ambient_music()
 	else:
 		if not other_params.has("first_time"):
 			match c_v:
@@ -1241,11 +1241,11 @@ func switch_view(new_view:String, other_params:Dictionary = {}):
 					$HUD.add_child(HUD)
 					if is_instance_valid(cave):
 						cave.queue_free()
-					switch_music(Data.ambient_music.pick_random(), u_i.time_speed)
+					Helper.load_ambient_music()
 				"STM":
 					$HUD.add_child(HUD)
 					STM.queue_free()
-					switch_music(Data.ambient_music.pick_random(), u_i.time_speed)
+					Helper.load_ambient_music()
 				"battle":
 					$HUD.add_child(HUD)
 					Engine.physics_ticks_per_second = 60
@@ -1572,7 +1572,7 @@ func add_dimension():
 		add_child(dimension)
 	var tween = create_tween()
 	tween.tween_property(dimension, "modulate", Color.WHITE, 0.2)
-	switch_music(preload("res://Audio/dimension1.ogg"))
+	switch_music(load("res://Audio/dimension%s.ogg" % [(dim_num - 1) % 2 + 1]))
 
 func set_starfield_color(_material, param:float):
 	_material.set_shader_parameter("stepsize", min(param, 0.3))

@@ -244,7 +244,7 @@ func refresh_GUI():
 
 func _on_back_pressed() -> void:
 	if battle_scene.hard_battle:
-		game.switch_music(load("res://Audio/ambient%s.ogg" % randi_range(1, 3)), game.u_i.time_speed)
+		Helper.load_ambient_music()
 	if battle_scene.defeated and game.help.has("battle_lost"):
 		game.popup_window(tr("BATTLE_LOST_DESC"), tr("BATTLE_LOST"))
 		game.help.erase("battle_lost")
