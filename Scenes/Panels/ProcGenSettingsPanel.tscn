@@ -197,12 +197,12 @@ size_flags_horizontal = 3
 button_text = "DENSE"
 
 [node name="AdvancedSettingsGroup" type="Control" parent="." unique_id=189125923]
+visible = false
 anchors_preset = 0
 offset_right = 40.0
 offset_bottom = 40.0
 
 [node name="ScrollContainer" type="ScrollContainer" parent="AdvancedSettingsGroup" unique_id=1872282129]
-clip_contents = false
 layout_mode = 0
 offset_left = 252.0
 offset_top = 152.0
@@ -465,7 +465,7 @@ offset_left = 23.0
 offset_top = 595.0
 offset_right = 255.0
 offset_bottom = 619.0
-text = "CAVE_WALL_COVERAGE [img]Graphics/Icons/help.png[/img]"
+text = "CAVE_TRAVERSABLE_SPACE [img]Graphics/Icons/help.png[/img]"
 label_text = "CAVE_TRAVERSABLE_SPACE"
 help_text = "CAVE_TRAVERSABLE_SPACE_DESC"
 

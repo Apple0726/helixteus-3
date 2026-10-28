@@ -29,6 +29,8 @@ func refresh():
 		_on_fighters_pressed()
 	elif tab == PROBES:
 		_on_probes_pressed()
+	for tab in $HBoxContainer.get_children():
+		tab.refresh_button_text()
 
 func _on_Timer_timeout():
 	if not visible or tab != PROBES:

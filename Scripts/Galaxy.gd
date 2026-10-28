@@ -70,6 +70,8 @@ func _ready():
 			star_btn.material.shader = preload("res://Shaders/Star.gdshader")
 			star_btn.material.set_shader_parameter("time_offset", 10.0 * randf())
 			star_btn.material.set_shader_parameter("color", Helper.get_star_modulate(star["class"]))
+		else:
+			star_btn.material = null
 		star_btn.modulate = Helper.get_star_modulate(star["class"])
 		var galaxy_tween = create_tween()
 		star_btn.self_modulate.a = 0.0

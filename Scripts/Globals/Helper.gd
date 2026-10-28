@@ -39,7 +39,7 @@ func format_text(text_node, texture, path:String, show_available:bool, rsrc_cost
 	else:
 		var minus:String = "-" if rsrc_cost < 0 else ""
 		rsrc_cost = abs(rsrc_cost)
-		var num_str:String = e_notation(rsrc_cost) if rsrc_cost < 0.0001 else format_num(clever_round(rsrc_cost, 3, false, true), 6)
+		var num_str:String = e_notation(rsrc_cost) if rsrc_cost < 0.0001 else format_num(clever_round(rsrc_cost, 3, false, true))
 		if rsrc_cost == 0:
 			num_str = "0"
 		text = "%s%s %s" % [minus, num_str, mass_str]
@@ -225,34 +225,31 @@ func format_num(num:float, clever_round:bool = false, threshold:int = 6):
 			p = ceil(p)
 		else:
 			p = int(p)
-		var OOM_gap:int = 3
-		if Settings.notation == "standard":
-			OOM_gap = int(tr("STANDARD_LARGE_NUMBER_NOTATION_OOM_GAP"))
-		if Settings.notation == "scientific" and p >= 3 or p >= OOM_gap * 11:
+		if Settings.notation == "scientific" and p >= 3 or p >= Data.OOM_gap * 11:
 			return e_notation(num, 3)
-		if p < OOM_gap:
+		if p < Data.OOM_gap:
 			suff = ""
-		elif p < OOM_gap * 2:
+		elif p < Data.OOM_gap * 2:
 			suff = "k" if Settings.notation == "SI" else Data.standard_large_number_notations[0]
-		elif p < OOM_gap * 3:
+		elif p < Data.OOM_gap * 3:
 			suff = "M" if Settings.notation == "SI" else Data.standard_large_number_notations[1]
-		elif p < OOM_gap * 4:
+		elif p < Data.OOM_gap * 4:
 			suff = "G" if Settings.notation == "SI" else Data.standard_large_number_notations[2]
-		elif p < OOM_gap * 5:
+		elif p < Data.OOM_gap * 5:
 			suff = "T" if Settings.notation == "SI" else Data.standard_large_number_notations[3]
-		elif p < OOM_gap * 6:
+		elif p < Data.OOM_gap * 6:
 			suff = "P" if Settings.notation == "SI" else Data.standard_large_number_notations[4]
-		elif p < OOM_gap * 7:
+		elif p < Data.OOM_gap * 7:
 			suff = "E" if Settings.notation == "SI" else Data.standard_large_number_notations[5]
-		elif p < OOM_gap * 8:
+		elif p < Data.OOM_gap * 8:
 			suff = "Z" if Settings.notation == "SI" else Data.standard_large_number_notations[6]
-		elif p < OOM_gap * 9:
+		elif p < Data.OOM_gap * 9:
 			suff = "Y" if Settings.notation == "SI" else Data.standard_large_number_notations[7]
-		elif p < OOM_gap * 10:
+		elif p < Data.OOM_gap * 10:
 			suff = "R" if Settings.notation == "SI" else Data.standard_large_number_notations[8]
-		elif p < OOM_gap * 11:
+		elif p < Data.OOM_gap * 11:
 			suff = "Q" if Settings.notation == "SI" else Data.standard_large_number_notations[9]
-		var div = max(pow(10, snapped(p - 1 - (OOM_gap - 2) / 2, OOM_gap)), 1)
+		var div = max(pow(10, snapped(p - 1 - (Data.OOM_gap - 2) / 2, Data.OOM_gap)), 1)
 		var final_num = clever_round(num / div, 3)
 		if step_decimals(final_num) == 0:
 			return "%s%d%s" % [sgn, final_num, suff]
@@ -331,6 +328,8 @@ func toggle_overlay(overlays, overlay_visible):
 			overlay.obj.texture_normal = overlay_texture
 			overlay.obj.texture_click_mask = null
 			overlay.obj.scale = Vector2.ONE * game.overlay_CS
+			if overlay.obj.material:
+				overlay.obj.material.set_shader_parameter("toggled", false)
 		else:
 			overlay.obj.texture_normal = overlay.original_texture
 			overlay.obj.texture_click_mask = overlay.original_clickmask
@@ -338,6 +337,8 @@ func toggle_overlay(overlays, overlay_visible):
 				overlay.obj.scale = overlay.original_scale / clamp(game.view.scale.x, game.view.obj.STAR_AUTOSCALE_MIN_THRESHOLD, 2.0) * game.view.obj.STAR_AUTOSCALE_MIN_THRESHOLD
 			else:
 				overlay.obj.scale = overlay.original_scale
+			if overlay.obj.material:
+				overlay.obj.material.set_shader_parameter("toggled", true)
 			overlay.obj.modulate = overlay.original_modulate
 
 func change_circle_size(value, overlays):
@@ -811,23 +812,17 @@ func update_ship_travel():
 		var s_id = game.ships_travel_data.c_coords.s
 		var s_g_id = game.ships_travel_data.c_g_coords.s
 		var p_id = game.ships_travel_data.c_coords.p
-		var s_i = game.open_obj("Galaxies", game.ships_travel_data.c_g_coords.g)[s_id]
+		var system_data = game.open_obj("Galaxies", game.ships_travel_data.c_g_coords.g)
+		var planet_data = game.planet_data
 		if game.c_s_g != s_g_id:
-			game.planet_data.clear()
-			game.generate_planets(s_id)
-		var p_i = game.planet_data[p_id]
-		game.planet_data_persistent[p_id] = p_i
+			planet_data = game.open_obj("Systems", s_g_id)
+		var p_i = planet_data[p_id]
 		if p_i.has("ancient_bldgs") and p_i.ancient_bldgs.has(AncientBuilding.SPACEPORT) and not p_i.ancient_bldgs[AncientBuilding.SPACEPORT][0].has("repair_cost"):
 			var tier = p_i.ancient_bldgs[AncientBuilding.SPACEPORT][0].tier
 			game.autocollect["passive_xp_tier"] = tier
-			game.autocollect["passive_xp_mult"] = s_i.diff
+			game.autocollect["passive_xp_mult"] = system_data[s_id].diff
 			game.start_spaceport_timer()
 			game.HUD.set_ship_btn_shader()
-		Helper.save_obj("Systems", s_g_id, game.planet_data_persistent)
-		if game.c_s_g != s_g_id:
-			game.planet_data.clear()
-			game.planet_data_persistent.clear()
-			game.system_data[s_id]["planets"].clear()
 	return progress
 
 func add_autocollect(p_i:Dictionary, tile:Dictionary, mult_diff:float):
@@ -987,8 +982,6 @@ func get_MME_capacity(p_i:Dictionary, next_lv:int = 0):
 func get_conquer_all_data():
 	var max_ship_lv:int = 0
 	var HX_data:Array = []
-	for ship in game.ship_data:
-		max_ship_lv = max(ship.lv, max_ship_lv)
 	var furthest_unconquered_planet_distance = 0
 	var closest_unconquered_planet_distance = INF
 	for planet in game.planet_data:
@@ -996,8 +989,10 @@ func get_conquer_all_data():
 			continue
 		furthest_unconquered_planet_distance = max(furthest_unconquered_planet_distance, planet.distance)
 		for HX in planet.HX_data:
-			if HX.lv > max_ship_lv - 5:
-				HX_data.append(HX)
+			HX_data.append(HX)
+	HX_data.sort_custom(func(a, b):return a.lv > b.lv)
+	if len(HX_data) > 12:
+		HX_data = HX_data.slice(0, 12)
 	var energy_cost = 70000 * (furthest_unconquered_planet_distance) / pow(game.u_i.speed_of_light, 2)
 	if game.science_level[Science.FTL_DRIVE] >= 1:
 		energy_cost /= 10.0
@@ -1856,7 +1851,7 @@ func import_save(save_name:String, path:String):
 						univ_file.close()
 						game.popup(tr("IMPORT_SUCCESS") % final_save_name, 2.0)
 			save_info_file.close()
-	importing_file.close()
+		importing_file.close()
 
 func make_obj_dir(save_dict:Dictionary, univ:int, path:String, obj:String):
 	var directory = DirAccess.open(path)

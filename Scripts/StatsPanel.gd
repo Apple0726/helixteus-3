@@ -36,6 +36,10 @@ func refresh():
 		$Panel/Statistics/HBox/OptionButton.add_item(tr("THIS_DIMENSION"), 1)
 	if len(game.universe_data) > 1:
 		$Panel/Statistics/HBox/OptionButton.add_item(tr("THIS_UNIVERSE"), 2)
+	for tab in $TabBar.get_children():
+		tab.refresh_button_text()
+	for tab in $Panel/Statistics/ScrollContainer/VBoxContainer.get_children():
+		tab.refresh_button_text()
 
 func on_ach_entered(ach_type:String, ach_id:String):
 	game.show_tooltip(Data.achievements[ach_type.to_lower()][ach_id])

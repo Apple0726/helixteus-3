@@ -51,7 +51,7 @@ func refresh():
 		distance = depart_pos.distance_to(dest_pos)
 	elif game.c_g_g == g_coords.g:
 		travel_view = "galaxy"
-		distance = 73
+		distance = 43
 		depart_id = coords.s
 		dest_id = game.planet_data[dest_p_id].parent
 		depart_pos = game.system_data[depart_id].pos
@@ -134,6 +134,7 @@ func send_ships():
 				game.ships_travel_data.dest_g_coords.g = game.c_g_g
 				game.ships_travel_data.c_coords.c = game.c_c
 				game.ships_travel_data.dest_coords.c = game.c_c
+				make_all_planet_data_persistent()
 				game.autocollect.erase("passive_xp_tier")
 				game.view.obj.refresh_planets()
 				game.view.refresh()
@@ -180,7 +181,12 @@ func send_ships2(_time):
 	game.ships_travel_data.travel_start_date = Time.get_unix_time_from_system()
 	game.ships_travel_data.travel_length = time_cost
 	game.ships_travel_data.travel_cost = travel_energy_cost
+	make_all_planet_data_persistent()
 	game.toggle_panel(panel_var_name)
+
+func make_all_planet_data_persistent():
+	game.planet_data_persistent[dest_p_id] = game.planet_data[dest_p_id]
+	Helper.save_obj("Systems", game.c_s_g, game.planet_data_persistent)
 
 func has_SE(p_i:Dictionary):
 	return p_i.get("MS") == "SE" and not p_i.has("repair_cost")

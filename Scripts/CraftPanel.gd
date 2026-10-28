@@ -16,7 +16,11 @@ func _ready():
 	$Title.text = tr("CRAFT")
 	_on_mining_button_pressed()
 	$Tabs/MiningButton._on_Button_pressed()
-	
+
+func refresh():
+	for tab in $Tabs.get_children():
+		tab.refresh_button_text()
+
 func change_tab(_tab:int):
 	for item in $Items/Grid.get_children():
 		item.free()

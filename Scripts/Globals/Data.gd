@@ -203,10 +203,15 @@ var univ_prop_weights:Dictionary = {
 	}
 
 var standard_large_number_notations = []
+var OOM_gap = 3
 var achievements:Dictionary
 
 func reload():
 	standard_large_number_notations = tr("STANDARD_LARGE_NUMBER_NOTATION").split(" < ")
+	if Settings.notation == "standard":
+		OOM_gap = int(tr("STANDARD_LARGE_NUMBER_NOTATION_OOM_GAP"))
+	else:
+		OOM_gap = 3
 	path_1[Building.MINERAL_EXTRACTOR].desc = tr("EXTRACTS_X") % ["@i %s/" + tr("S_SECOND")]
 	path_1[Building.ATMOSPHERE_EXTRACTOR].desc = tr("EXTRACTS_X") % ["%s mol/" + tr("S_SECOND")]
 	path_1[Building.POWER_PLANT].desc = tr("GENERATES_X") % ["@i %s/" + tr("S_SECOND")]
@@ -414,7 +419,7 @@ var battle_weapon_stats = {
 				"damage_multiplier":[1.0, 1.0, 1.5, 2.0],
 				"status_effects":{
 					Battle.StatusEffect.BURN:[1, 2, 2, 2],
-					Battle.StatusEffect.STUN:[0, 0, 0, [0.5, 1]],
+					Battle.StatusEffect.RADIOACTIVE:[0, 0, 0, 4],
 				},
 			},
 	"light": {	"damage":3.0,

@@ -38,3 +38,6 @@ func _on_Button_pressed():
 
 func _on_AnimationPlayer_animation_finished(anim_name):
 	$AnimationPlayer.play("StarAnim", -1, game.u_i.time_speed if game and not game.u_i.is_empty() else 1.0)
+
+func refresh_button_text():
+	$Label.text = tr(button_text)

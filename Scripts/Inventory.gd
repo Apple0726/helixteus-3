@@ -35,6 +35,8 @@ func refresh():
 	$TabBar/Metals.visible = game.show.has("metals")
 	$TabBar/Atoms.visible = game.show.has("atoms")
 	$TabBar/Particles.visible = game.show.has("particles")
+	for tab in $TabBar.get_children():
+		tab.refresh_button_text()
 
 func _on_Items_pressed():
 	tab = "items"

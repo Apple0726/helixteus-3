@@ -49,8 +49,11 @@ func _on_ConquerAll_mouse_entered():
 	game.show_tooltip(tr("CONQUER_ALL_DESC"))
 
 func _on_ConquerAll_pressed():
-	var info = Helper.get_conquer_all_data()
-	game.show_YN_panel(game.conquer_all.bind(info.energy_cost, len(info.HX_data) == 0), tr("CONQUER_ALL_INFO") % [min(12, len(info.HX_data)), Helper.format_num(info.energy_cost)])
+	if not game.get_node("UI").has_node("FightOrNegotiate"):
+		var fight_or_negotiate = load("res://Scenes/FightOrNegotiate.tscn").instantiate()
+		fight_or_negotiate.l_id = -1
+		fight_or_negotiate.id = -1
+		game.get_node("UI").add_child(fight_or_negotiate)
 
 func _on_Annotate_pressed():
 	game.annotator.visible = not game.annotator.visible

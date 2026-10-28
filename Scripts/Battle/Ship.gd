@@ -326,13 +326,13 @@ func fire_weapon(weapon_type: int):
 			explosive.rotation = weapon_rotation
 			explosive.shooter = self
 			explosive.weapon_accuracy = Data.battle_weapon_stats.bomb.accuracy * (accuracy + accuracy_buff)
-			explosive.status_effects = {Battle.StatusEffect.BURN: Data.battle_weapon_stats.bomb.status_effects[Battle.StatusEffect.BURN][bomb_levels[PATH_2] - 1]}
-			var stun_turns = Data.battle_weapon_stats.bomb.status_effects[Battle.StatusEffect.STUN][bomb_levels[PATH_1] - 1]
-			if stun_turns is Array:
-				if randf() < stun_turns[0]:
-					explosive.status_effects[Battle.StatusEffect.STUN] = stun_turns[1]
-			else:
-				explosive.status_effects[Battle.StatusEffect.STUN] = stun_turns
+			explosive.status_effects = {
+				Battle.StatusEffect.BURN: Data.battle_weapon_stats.bomb.status_effects[Battle.StatusEffect.BURN][bomb_levels[PATH_2] - 1],
+				Battle.StatusEffect.STUN: 0,
+			}
+			var radioactive_turns = Data.battle_weapon_stats.bomb.status_effects[Battle.StatusEffect.RADIOACTIVE][bomb_levels[PATH_1] - 1]
+			if radioactive_turns > 0:
+				explosive.status_effects[Battle.StatusEffect.RADIOACTIVE] = radioactive_turns
 			explosive.position = position
 			explosive.battle_scene = battle_scene
 			explosive.battle_GUI = battle_GUI

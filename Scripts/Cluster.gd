@@ -179,7 +179,8 @@ func on_galaxy_click (id:int, l_id:int):
 				game.popup(tr("NO_GS"), 2.0)
 			elif not game.galaxy_data[l_id].has("GS"):
 				game.toggle_panel("gigastructures_panel", false)
-				game._on_BottomInfo_close_button_pressed()
+				if game.get_node("UI").has_node("BottomInfo"):
+					game.get_node("UI/BottomInfo").on_close_pressed()
 				game.gigastructures_panel.g_i = game.galaxy_data[l_id]
 				game.gigastructures_panel.galaxy_id_g = id
 				game.gigastructures_panel.refresh()
@@ -257,7 +258,8 @@ func change_overlay(overlay_id:int, gradient:Gradient, object:Dictionary = {}):
 
 func _input(event):
 	if game.bottom_info_action == "convert_to_GS" and Input.is_action_just_pressed("right_click"):
-		game._on_BottomInfo_close_button_pressed()
+		if game.get_node("UI").has_node("BottomInfo"):
+			game.get_node("UI/BottomInfo").on_close_pressed()
 
 var sorted_galaxies:Array
 var galaxy_conquer_start_index:int = 0

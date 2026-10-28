@@ -455,6 +455,7 @@ func _ready():
 	load_save_panel.panel_var_name = "load_save_panel"
 	load_save_panel.hide()
 	$Panels/Control.add_child(load_save_panel)
+	await get_tree().process_frame # Needed to process Data.standard_large_number_notations called by shop_panel
 	shop_panel = preload("res://Scenes/Panels/Shop.tscn").instantiate()
 	shop_panel.panel_var_name = "shop_panel"
 	shop_panel.hide()
@@ -1114,7 +1115,7 @@ func set_bookmark_coords(bookmark:Dictionary):
 			popup(tr("BOOKMARK_P_ERROR"), 2.0)
 			return true#Error
 		c_p = bookmark.c_p
-		if c_p_g != bookmark.c_p_g:
+		if c_s_g != bookmark.c_s_g:
 			planet_data.clear()
 		c_p_g = bookmark.c_p_g
 	if bookmark.has("c_s_g"):
@@ -1125,7 +1126,7 @@ func set_bookmark_coords(bookmark:Dictionary):
 			popup(tr("BOOKMARK_S_ERROR"), 2.0)
 			return true#Error
 		c_s = bookmark.c_s
-		if c_s_g != bookmark.c_s_g:
+		if c_g_g != bookmark.c_g_g:
 			system_data.clear()
 		c_s_g = bookmark.c_s_g
 	if c_c != bookmark.c_c:
@@ -1133,8 +1134,8 @@ func set_bookmark_coords(bookmark:Dictionary):
 	c_c = bookmark.c_c
 	if bookmark.has("c_g"):
 		c_g = bookmark.c_g
-		if c_g_g != bookmark.c_g_g:
-			system_data.clear()
+		if c_c != bookmark.c_c:
+			galaxy_data.clear()
 		c_g_g = bookmark.c_g_g
 	return false#No error
 
@@ -1143,11 +1144,11 @@ func set_custom_coords(coords:Array, coord_values:Array):#coords: ["c_p_g", "c_p
 		if coords[i] in self:
 			if coords[i] == "c_p_g" and c_p_g != coord_values[i]:
 				tile_data.clear()
-			elif coords[i] == "c_s_g" and c_s_g != coord_values[i]:
+			if coords[i] == "c_s_g" and c_s_g != coord_values[i]:
 				planet_data.clear()
-			elif coords[i] == "c_g_g" and c_g_g != coord_values[i]:
+			if coords[i] == "c_g_g" and c_g_g != coord_values[i]:
 				system_data.clear()
-			elif coords[i] == "c_c" and c_c != coord_values[i]:
+			if coords[i] == "c_c" and c_c != coord_values[i]:
 				galaxy_data.clear()
 			self[coords[i]] = coord_values[i]
 
@@ -4125,21 +4126,24 @@ func destroy_building_confirm(tile_over:int):
 func op_galaxy(l_id:int, g_id:int):
 	switch_view("galaxy", {"fn":"set_custom_coords", "fn_args":[["c_g", "c_g_g"], [l_id, g_id]]})
 
+func conquer_all_planets():
+	for i in len(planet_data):
+		Helper.conquer_planet(i)
+	stats_univ.systems_conquered += 1
+	stats_dim.systems_conquered += 1
+	stats_global.systems_conquered += 1
+	if not bldg_unlocked.has(Building.SOLAR_PANEL):
+		Helper.show_bldg_unlocked_popup(Building.SOLAR_PANEL)
+	system_data[c_s].conquered = true
+	system_data_persistent[c_s].conquered = true
+	space_HUD.get_node("ConquerAll").visible = false
+
 func conquer_all(energy_cost:float, insta_conquer:bool):
 	if energy >= energy_cost:
 		energy -= energy_cost
 		if insta_conquer:
-			for i in len(planet_data):
-				Helper.conquer_planet(i)
-			stats_univ.systems_conquered += 1
-			stats_dim.systems_conquered += 1
-			stats_global.systems_conquered += 1
-			if not bldg_unlocked.has(Building.SOLAR_PANEL):
-				bldg_unlocked[Building.SOLAR_PANEL] = true
-			system_data[c_s].conquered = true
-			system_data_persistent[c_s].conquered = true
+			conquer_all_planets()
 			view.obj.refresh_planets()
-			space_HUD.get_node("ConquerAll").visible = false
 		else:
 			is_conquering_all = true
 			c_p = ships_travel_data.c_coords.p

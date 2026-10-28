@@ -5,6 +5,7 @@
 [ext_resource type="Texture2D" uid="uid://blgh1lvsfpiu8" path="res://Graphics/GUI/Border.png" id="3_f4oca"]
 [ext_resource type="Texture2D" uid="uid://baowebna7hgr5" path="res://Graphics/GUI/CloseButtonNormal.png" id="4_i05fy"]
 [ext_resource type="Texture2D" uid="uid://c1vwn7p5uxu1r" path="res://Graphics/GUI/CloseButtonHover.png" id="5_f4oca"]
+[ext_resource type="Texture2D" uid="uid://jd7bst8vigfy" path="res://Graphics/Icons/HX3_mc.png" id="6_f4oca"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_kpmkd"]
 font_size = 20
@@ -31,9 +32,9 @@ metadata/_edit_lock_ = true
 [node name="GUI" type="NinePatchRect" parent="." unique_id=975794284]
 layout_mode = 0
 offset_left = 384.0
-offset_top = 192.0
+offset_top = 184.0
 offset_right = 896.0
-offset_bottom = 528.0
+offset_bottom = 536.0
 mouse_filter = 1
 texture = ExtResource("3_f4oca")
 patch_margin_left = 15
@@ -46,9 +47,9 @@ metadata/_edit_horizontal_guides_ = [596.0]
 [node name="Label" type="Label" parent="." unique_id=1102026262]
 layout_mode = 1
 offset_left = 448.0
-offset_top = 212.0
+offset_top = 205.0
 offset_right = 832.0
-offset_bottom = 240.0
+offset_bottom = 233.0
 text = "CONQUER_THIS_PLANET"
 label_settings = SubResource("LabelSettings_kpmkd")
 horizontal_alignment = 1
@@ -56,40 +57,67 @@ horizontal_alignment = 1
 [node name="Fight" type="Button" parent="." unique_id=2109531059]
 layout_mode = 0
 offset_left = 576.0
-offset_top = 292.0
+offset_top = 272.0
 offset_right = 704.0
-offset_bottom = 325.0
+offset_bottom = 305.0
 text = "FIGHT"
 
 [node name="Negotiate" type="Button" parent="." unique_id=719266720]
 layout_mode = 0
 offset_left = 576.0
-offset_top = 396.0
+offset_top = 376.0
 offset_right = 704.0
-offset_bottom = 429.0
+offset_bottom = 409.0
 text = "NEGOTIATE"
 
 [node name="FightDesc" type="RichTextLabel" parent="." unique_id=183771825]
 layout_mode = 0
 offset_left = 448.0
-offset_top = 336.0
+offset_top = 316.0
 offset_right = 832.0
-offset_bottom = 388.0
+offset_bottom = 368.0
 
 [node name="NegotiateDesc" type="RichTextLabel" parent="." unique_id=946962181]
 layout_mode = 0
 offset_left = 448.0
-offset_top = 440.0
+offset_top = 420.0
 offset_right = 832.0
-offset_bottom = 488.0
+offset_bottom = 468.0
+
+[node name="EnergyCost" type="RichTextLabel" parent="." unique_id=1758456721]
+layout_mode = 0
+offset_left = 448.0
+offset_top = 488.0
+offset_right = 832.0
+offset_bottom = 516.0
 
 [node name="CloseButton" type="TextureButton" parent="." unique_id=67816407]
 layout_mode = 0
 offset_left = 851.0
-offset_top = 207.0
+offset_top = 200.0
 offset_right = 877.0
-offset_bottom = 233.0
+offset_bottom = 226.0
 texture_normal = ExtResource("4_i05fy")
 texture_hover = ExtResource("5_f4oca")
 ignore_texture_size = true
 stretch_mode = 5
+
+[node name="EnemyNumber" type="HBoxContainer" parent="." unique_id=1089367592]
+visible = false
+layout_mode = 0
+offset_left = 728.0
+offset_top = 272.0
+offset_right = 799.0
+offset_bottom = 304.0
+theme_override_constants/separation = 8
+
+[node name="TextureRect" type="TextureRect" parent="EnemyNumber" unique_id=402054301]
+custom_minimum_size = Vector2(32, 32)
+layout_mode = 2
+texture = ExtResource("6_f4oca")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Label" type="Label" parent="EnemyNumber" unique_id=2099621662]
+layout_mode = 2
+text = "x 12"

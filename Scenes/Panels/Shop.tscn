@@ -80,7 +80,7 @@ offset_top = 72.0
 offset_right = -576.0
 offset_bottom = 110.0
 grow_horizontal = 2
-text = "Shop"
+text = "SHOP"
 label_settings = SubResource("LabelSettings_jee6n")
 vertical_alignment = 1
 

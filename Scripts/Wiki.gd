@@ -1,8 +1,13 @@
 extends "Panel.gd"
 
 @onready var vbox = $ScrollContainer/VBoxContainer
+
 func _ready():
 	set_polygon(size)
+
+func refresh():
+	for tab in vbox.get_children():
+		tab.refresh_button_text()
 
 func _on_KeyboardShortcuts_pressed():
 	var battle_text:String = tr("BATTLE_HELP2") % [OS.get_keycode_string(DisplayServer.keyboard_get_keycode_from_physical(KEY_W)), OS.get_keycode_string(DisplayServer.keyboard_get_keycode_from_physical(KEY_S)), "Shift"]

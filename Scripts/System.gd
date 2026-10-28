@@ -635,7 +635,8 @@ func destroy_MS():
 
 func _input(event):
 	if "building" in game.bottom_info_action and Input.is_action_just_pressed("right_click"):
-		game._on_BottomInfo_close_button_pressed()
+		if game.get_node("UI").has_node("BottomInfo"):
+			game.get_node("UI/BottomInfo").on_close_pressed()
 		return
 	if Input.is_action_just_released("F"):
 		if planet_hovered != -1 and game.planet_data[planet_hovered].has("bldg") and game.planet_data[planet_hovered].bldg.has("name"):
@@ -1037,7 +1038,7 @@ func _on_System_tree_exited():
 	queue_free()
 
 func finish_construct():
-	$UI/Panel.hide()
+	game.get_node("UI/Panel").hide()
 
 func add_rsrc(v:Vector2, mod:Color, icon, id:int, is_star:bool, sc:float = 1, current_bar_visible = false):
 	var rsrc:ResourceStored = preload("res://Scenes/ResourceStored.tscn").instantiate()
