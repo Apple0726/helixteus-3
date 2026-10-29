@@ -2,64 +2,67 @@ extends "Panel.gd"
 
 var mod_slot_scene = preload("res://Scenes/ModSlot.tscn")
 
+func add_mod_slot(mod_name):
+	var mod_info_file = FileAccess.open("user://Mods/%s/info.json" % mod_name, FileAccess.READ)
+	var mod_info = JSON.parse_string(mod_info_file.get_as_text())
+	var mod_slot = mod_slot_scene.instantiate()
+	mod_slot.name = mod_name
+	var icon:ImageTexture
+	if FileAccess.file_exists("user://Mods/%s/icon.png" % mod_name):
+		icon = ImageTexture.create_from_image(Image.load_from_file("user://Mods/%s/icon.png" % mod_name))
+	elif FileAccess.file_exists("user://Mods/%s/icon.jpeg" % mod_name):
+		icon = ImageTexture.create_from_image(Image.load_from_file("user://Mods/%s/icon.jpeg" % mod_name))
+	mod_slot.get_node("Icon").texture = icon
+	mod_slot.get_node("Name").text = mod_info.name
+	mod_slot.get_node("Version").text = mod_info.version
+	mod_slot.get_node("Author").text = mod_info.author
+	mod_slot.get_node("Description").text = mod_info.description
+	mod_slot.get_node("Load").button_pressed = mod_name in Mods.enabled_mod_list
+	mod_slot.get_node("LoadOrder/Up").connect("pressed",Callable(self,"_on_up_pressed").bind(mod_slot))
+	mod_slot.get_node("LoadOrder/Down").connect("pressed",Callable(self,"_on_down_pressed").bind(mod_slot))
+	mod_slot.get_node("Load").connect("pressed",Callable(self,"_on_load_pressed").bind(mod_slot))
+	$ScrollContainer/VBox.add_child(mod_slot)
+
 func _ready():
 	$HBoxContainer/OpenModsFolder.visible = OS.get_name() in ["Windows", "Linux"]
-	for key in Mods.mod_list:
-		var mod = Mods.mod_list[key]
-		var mod_slot = mod_slot_scene.instantiate()
-		mod_slot.get_node("Name").text = mod.mod_info.name
-		mod_slot.get_node("Version").text = mod.mod_info.version
-		mod_slot.get_node("Author").text = mod.mod_info.author
-		mod_slot.get_node("Description").text = mod.mod_info.description
-		mod_slot.get_node("Load").button_pressed = !key in Mods.dont_load
-		mod_slot.get_node("LoadOrder/Up").connect("pressed",Callable(self,"on_up").bind(key, mod_slot))
-		mod_slot.get_node("LoadOrder/Down").connect("pressed",Callable(self,"on_down").bind(key, mod_slot))
-		mod_slot.get_node("Load").connect("pressed",Callable(self,"on_load").bind(key, mod_slot))
-		$ScrollContainer/VBox.add_child(mod_slot)
+	
+	# Add all of the enabled mods first in the order they were loaded
+	for mod_name in Mods.enabled_mod_list:
+		add_mod_slot(mod_name)
+	
+	# Add all of the disabled mods second
+	for mod_name in Mods.installed_mod_list:
+		if not mod_name in Mods.enabled_mod_list:
+			add_mod_slot(mod_name)
 
-func on_up(key, mod_slot):
-	var order = Mods.mod_load_order.find(key)
-	if !order in [-1, 0]:
-		var key2 = Mods.mod_load_order[order - 1]
-		Mods.mod_load_order[order] = key2
-		Mods.mod_load_order[order - 1] = key
-		var config = ConfigFile.new()
-		config.load("user://settings.cfg")
-		config.set_value("mods", "load_order", Mods.mod_load_order)
-		config.save("user://settings.cfg")
-		$ScrollContainer/VBox.move_child(mod_slot, order - 1)
-
-func on_down(key, mod_slot):
-	var order = Mods.mod_load_order.find(key)
-	if !order in [-1, Mods.mod_load_order.size() - 1]:
-		var key2 = Mods.mod_load_order[order + 1]
-		Mods.mod_load_order[order] = key2
-		Mods.mod_load_order[order + 1] = key
-		var config = ConfigFile.new()
-		config.load("user://settings.cfg")
-		config.set_value("mods", "load_order", Mods.mod_load_order)
-		config.save("user://settings.cfg")
-		$ScrollContainer/VBox.move_child(mod_slot, order + 1)
-
-func on_load(key, mod_slot):
+func update_mod_order():
+	var mod_slots = $ScrollContainer/VBox.get_children()
+	var enabled_mod_list = []
+	for mod_slot in mod_slots:
+		if mod_slot.get_node("Load").button_pressed:
+			enabled_mod_list.append(mod_slot.name)
 	var config = ConfigFile.new()
 	config.load("user://settings.cfg")
-	if mod_slot.get_node("Load").button_pressed:
-		Mods.dont_load.erase(key)
-		config.set_value("mods", "dont_load", Mods.dont_load)
-	else:
-		if Mods.dont_load == []:
-			Mods.dont_load = [key]
-			config.set_value("mods", "dont_load", Mods.dont_load)
-		else:
-			Mods.dont_load.append(key)
-			config.set_value("mods", "dont_load", Mods.dont_load)
+	config.set_value("mods", "enabled", enabled_mod_list)
 	config.save("user://settings.cfg")
 
+func _on_up_pressed(mod_slot):
+	var index = mod_slot.get_index()
+	if index > 0:
+		$ScrollContainer/VBox.move_child(mod_slot, index - 1)
+		update_mod_order()
+
+func _on_down_pressed(mod_slot):
+	var index = mod_slot.get_index()
+	if index < $ScrollContainer/VBox.get_child_count() - 1:
+		$ScrollContainer/VBox.move_child(mod_slot, index + 1)
+		update_mod_order()
+
+func _on_load_pressed(_mod_slot):
+	update_mod_order()
 
 func _on_wiki_pressed():
 	OS.shell_open("https://sites.google.com/view/helixteus3moddingwiki")
-
 
 func _on_open_mods_folder_pressed():
 	OS.shell_open(ProjectSettings.globalize_path("user://Mods"))

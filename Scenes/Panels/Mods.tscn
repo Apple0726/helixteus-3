@@ -12,7 +12,7 @@ anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
 offset_left = -448.0
-offset_top = -120.0
+offset_top = -159.0
 offset_right = 448.0
 offset_bottom = 172.0
 grow_horizontal = 2
@@ -34,37 +34,36 @@ vertical_alignment = 1
 [node name="Name" type="Label" parent="." unique_id=1826916596]
 custom_minimum_size = Vector2(100, 0)
 layout_mode = 0
-offset_left = 32.0
+offset_left = 70.0
 offset_top = 53.0
-offset_right = 200.0
-offset_bottom = 75.0
+offset_right = 270.0
+offset_bottom = 75.333336
 size_flags_horizontal = 3
 text = "NAME"
 
 [node name="Version" type="Label" parent="." unique_id=860635924]
 layout_mode = 0
-offset_left = 244.0
+offset_left = 274.0
 offset_top = 52.0
-offset_right = 340.0
-offset_bottom = 74.0
+offset_right = 374.0
+offset_bottom = 74.333336
 size_flags_horizontal = 3
 text = "VERSION"
 
 [node name="Author" type="Label" parent="." unique_id=1367642752]
-custom_minimum_size = Vector2(100, 0)
 layout_mode = 0
-offset_left = 350.0
+offset_left = 377.0
 offset_top = 52.0
-offset_right = 450.0
-offset_bottom = 74.0
+offset_right = 498.0
+offset_bottom = 74.333336
 text = "AUTHOR"
 
 [node name="Description" type="Label" parent="." unique_id=2081139218]
 layout_mode = 0
-offset_left = 476.0
+offset_left = 498.0
 offset_top = 52.0
-offset_right = 652.0
-offset_bottom = 74.0
+offset_right = 740.0
+offset_bottom = 74.333336
 text = "DESCRIPTION"
 
 [node name="ScrollContainer" type="ScrollContainer" parent="." unique_id=493799629]
@@ -75,7 +74,7 @@ anchor_bottom = 1.0
 offset_left = 24.0
 offset_top = 78.0
 offset_right = -24.0
-offset_bottom = -48.0
+offset_bottom = -69.0
 grow_horizontal = 2
 grow_vertical = 2
 

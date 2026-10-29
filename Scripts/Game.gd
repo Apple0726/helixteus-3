@@ -396,12 +396,6 @@ func _ready():
 	Helper.refresh_discord("In title screen")
 	#current_viewport_dimensions = get_viewport().size
 	#get_viewport().connect("size_changed",Callable(self,"update_viewport_dimensions"))
-	for key in Mods.added_mats:
-		mat_info[key] = Mods.added_mats[key]
-	for key in Mods.added_mets:
-		met_info[key] = Mods.added_mets[key]
-	for key in Mods.added_picks:
-		pickaxes_info[key] = Mods.added_picks[key]
 	
 #	place_BG_stars()
 #	place_BG_sc_stars()
@@ -446,9 +440,6 @@ func _ready():
 	$TitleBackground/Planet.scale = Vector2.ONE * 1.6 * 160.0 / $TitleBackground/Planet.texture.get_width()
 	refresh_continue_button()
 	animate_title_buttons()
-	for mod in Mods.mod_list:
-		var main = Mods.mod_list[mod]
-		main.phase_2()
 	$Title/VBoxContainer/Continue.mouse_entered.connect(show_tooltip.bind("", {"additional_text": tr("KEYBOARD_SHORTCUT") + ": E"}))
 	$Title/VBoxContainer/Continue.mouse_exited.connect(hide_tooltip)
 	load_save_panel = preload("res://Scenes/Panels/LoadPanel.tscn").instantiate()
@@ -460,6 +451,11 @@ func _ready():
 	shop_panel.panel_var_name = "shop_panel"
 	shop_panel.hide()
 	$Panels/Control.add_child(shop_panel)
+	
+	# Ready mods in order when the game has finished loading
+	for mod in Mods.mod_instances.values():
+		if mod.has_method("_mod_ready"):
+			mod.call("_mod_ready")
 
 func refresh_continue_button():
 	if $Title/VBoxContainer/Continue.pressed.is_connected(_on_continue_pressed):
