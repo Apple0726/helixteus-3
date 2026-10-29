@@ -43,15 +43,16 @@ func refresh():
 	var fighter_num:int = 0
 	var combined_strength2:float = 0
 	if fighter_type == 0:
+		var g_i = game.galaxy_data[game.c_g]
 		$Control/EnergyPanel/SE_Hint.visible = true
-		if game.galaxy_data[game.c_g].has("conquer_start_date"):
+		if g_i.has("conquer_data"):
 			$Send.hide()
-			sort_systems(game.galaxy_data[game.c_g].conquer_order)
+			sort_systems(g_i.conquer_data.conquer_order)
 			set_process(true)
 			$Control.visible = false
 			$Control2.visible = true
 		else:
-			if game.galaxy_data[game.c_g].has("conquered"):
+			if g_i.has("conquered"):
 				$Control.visible = false
 				$Control2.visible = false
 				$Send.visible = false
@@ -97,19 +98,20 @@ func refresh():
 			base_travel_costs *= obj_num
 			refresh_energy()
 			if unconquered_obj == 0:
-				game.galaxy_data[game.c_g].conquered = true
+				g_i.conquered = true
 				game.galaxy_data_persistent[game.c_g].conquered = true
 	elif fighter_type == 1:
 		$Control/EnergyPanel/SE_Hint.visible = false
-		if game.u_i.cluster_data[game.c_c].has("conquer_start_date"):
+		var c_i = game.u_i.cluster_data[game.c_c]
+		if c_i.has("conquer_data"):
 			$Send.text = tr("DISBAND")
 			$Send.visible = true
-			sort_galaxies(game.u_i.cluster_data[game.c_c].conquer_order)
+			sort_galaxies(c_i.conquer_data.conquer_order)
 			set_process(true)
 			$Control.visible = false
 			$Control2.visible = true
 		else:
-			if game.u_i.cluster_data[game.c_c].has("conquered"):
+			if c_i.has("conquered"):
 				$Control.visible = false
 				$Control2.visible = false
 				$Send.visible = false
@@ -155,7 +157,7 @@ func refresh():
 			base_travel_costs *= obj_num
 			refresh_energy()
 			if unconquered_obj == 0:
-				game.u_i.cluster_data[game.c_c].conquered = true
+				c_i.conquered = true
 
 func sort_systems(ascending:bool):
 	sorted_objs = game.system_data.duplicate(true)
@@ -238,19 +240,21 @@ func _on_Send_pressed():
 			else:
 				game.popup(tr("NOT_ENOUGH_ENERGY"), 1.5)
 	elif fighter_type == 1:
-		if not game.u_i.cluster_data[game.c_c].has("conquer_start_date"):
+		if not game.u_i.cluster_data[game.c_c].has("conquer_data"):
 			if game.energy >= total_energy_cost:
 				game.energy -= total_energy_cost
 				var curr_time = Time.get_unix_time_from_system()
 				for i in len(game.fighter_data):
 					if game.fighter_data[i] != null and game.fighter_data[i].tier == 1 and game.fighter_data[i].c_c == game.c_c:
 						game.fighter_data[i]["exploring"] = true
-				game.u_i.cluster_data[game.c_c].conquer_start_date = curr_time
-				game.u_i.cluster_data[game.c_c].time_for_one_gal = time_for_one_obj
-				game.u_i.cluster_data[game.c_c].gal_num = obj_num
-				game.u_i.cluster_data[game.c_c].gal_conquered = 0
-				game.u_i.cluster_data[game.c_c].combined_strength = combined_strength
-				game.u_i.cluster_data[game.c_c].conquer_order = $Control/ConquerOrderPanel/CheckBox.button_pressed#true: ascending difficulty
+				game.u_i.cluster_data[game.c_c].conquer_data = {
+					"start_date": curr_time,
+					"time_for_one_gal": time_for_one_obj,
+					"gal_num": obj_num,
+					"gal_conquered": 0,
+					"combined_strength": combined_strength,
+					"conquer_order": $Control/ConquerOrderPanel/CheckBox.button_pressed#true: ascending difficulty,
+				}
 				game.HUD.refresh()
 				game.view.obj.set_process(true)
 			else:
@@ -265,23 +269,23 @@ func _process(delta):
 		set_process(false)
 		refresh()
 		return
-	if game.c_v == "cluster" and not game.u_i.cluster_data[game.c_c].has("conquer_start_date"):
+	if game.c_v == "cluster" and not game.u_i.cluster_data[game.c_c].has("conquer_data"):
 		set_process(false)
 		refresh()
 		return
 	var curr_time = Time.get_unix_time_from_system()
 	if fighter_type == 0:
 		var g_i = game.galaxy_data[game.c_g]
-		progress.value = (curr_time - g_i.conquer_data.conquer_start_date) / g_i.conquer_data.time_for_one_sys * 100
+		progress.value = (curr_time - g_i.conquer_data.start_date) / g_i.conquer_data.time_for_one_sys * 100
 		RTL.text = "%s: %s / %s" % [tr("SYSTEMS_CONQUERED"), g_i.conquer_data.sys_conquered, g_i.conquer_data.sys_num]
 		$Control2/TimeLeft2.text = tr("TIME_TO_NEXT_CONQUER_F1")
-		time_left.text = Helper.time_to_str(g_i.conquer_data.time_for_one_sys - Time.get_unix_time_from_system() + g_i.conquer_data.conquer_start_date)
+		time_left.text = Helper.time_to_str(g_i.conquer_data.time_for_one_sys - Time.get_unix_time_from_system() + g_i.conquer_data.start_date)
 	elif fighter_type == 1:
 		var c_i = game.u_i.cluster_data[game.c_c]
-		progress.value = (curr_time - c_i.conquer_start_date) / c_i.time_for_one_gal * 100
+		progress.value = (curr_time - c_i.conquer_data.start_date) / c_i.time_for_one_gal * 100
 		RTL.text = "%s: %s / %s" % [tr("GALAXIES_CONQUERED"), c_i.gal_conquered, c_i.gal_num]
 		$Control2/TimeLeft2.text = tr("TIME_TO_NEXT_CONQUER_F2")
-		time_left.text = Helper.time_to_str(c_i.time_for_one_gal - Time.get_unix_time_from_system() + c_i.conquer_start_date)
+		time_left.text = Helper.time_to_str(c_i.time_for_one_gal - Time.get_unix_time_from_system() + c_i.conquer_data.start_date)
 
 
 func _on_mouse_exited():

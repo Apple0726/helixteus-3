@@ -225,10 +225,10 @@ func battle_victory_callback():
 		for i in len(game.planet_data):
 			var planet = game.planet_data[i]
 			if not planet.has("conquered") and planet.has("HX_data"):
-				Helper.conquer_planet(i)
 				game.stats_univ.enemies_rekt_in_battle += len(planet.HX_data)
 				game.stats_dim.enemies_rekt_in_battle += len(planet.HX_data)
 				game.stats_global.enemies_rekt_in_battle += len(planet.HX_data)
+				Helper.conquer_planet(i)
 	else:
 		game.stats_univ.enemies_rekt_in_battle += len(HX_data)
 		game.stats_dim.enemies_rekt_in_battle += len(HX_data)

@@ -343,7 +343,7 @@ var science_unlocks = {
 	Science.MANUAL_MINING_SPEED: {"cost": [], "prereqs": {Science.ADVANCED_SPACE_CONSTRUCTION: 1}, "infinite_research": {"cost":150.0, "pw":6.0}},
 	Science.PARTICLE_MANIPULATION_EFFICIENCY: {"cost": [], "prereqs": {Science.SUBATOMIC_PARTICLES: 1}, "infinite_research": {"cost":1.0e8, "pw":6.6}},
 	
-	Science.ROVER_CONSTRUCTION: {"cost": [100.0, 5.0e6, 3.0e13], "prereqs": {Science.ADVANCED_SPACE_CONSTRUCTION: 1}, "infinite_research": {"cost":3.0e13, "pw":6.1}},
+	Science.ROVER_CONSTRUCTION: {"cost": [100.0, 5.0e6, 5.0e10], "prereqs": {Science.ADVANCED_SPACE_CONSTRUCTION: 1}, "infinite_research": {"cost":3.0e13, "pw":6.1}},
 	Science.SPACE_AGRICULTURE: {"cost": [500.0], "prereqs": {Science.ADVANCED_SPACE_CONSTRUCTION: 1}},
 	Science.PLANT_FERTILIZATION: {"cost": [90000.0], "prereqs": {Science.SPACE_AGRICULTURE: 1}},
 	Science.IMPROVED_STONE_CRUSHER: {"cost": [250.0], "prereqs": {Science.ADVANCED_SPACE_CONSTRUCTION: 1}},

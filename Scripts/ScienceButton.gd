@@ -101,8 +101,8 @@ func show_tooltip():
 			"mult":Helper.clever_round(pow(game.maths_bonus.IRM, sc_lv - num_levels)),
 		})
 	elif sc_lv >= 1: # Some sciences have different names at different levels
-		var name_key = "%s_%s_SC" % [name.to_upper(), sc_lv + 1]
-		var desc_key = "%s_%s_SC_DESC" % [name.to_upper(), sc_lv + 1]
+		var name_key = "%s_%s_SC" % [name.to_upper(), min(sc_lv + 1, num_levels)]
+		var desc_key = "%s_%s_SC_DESC" % [name.to_upper(), min(sc_lv + 1, num_levels)]
 		if tr(name_key) != name_key:
 			sc_loc_name = tr(name_key)
 			alternate_name = true

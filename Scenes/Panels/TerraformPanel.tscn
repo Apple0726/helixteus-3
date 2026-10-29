@@ -180,21 +180,21 @@ icon_texture = ExtResource("11_t44yc")
 custom_minimum_size = Vector2(0, 40)
 layout_mode = 2
 expand_icon = true
-button_text = "SA_SC"
+button_text = "SPACE_AGRICULTURE_SC"
 icon_texture = ExtResource("12_1h162")
 
 [node name="AtomManipulation" parent="ScrollContainer/VBoxContainer" unique_id=404479811 instance=ExtResource("1")]
 custom_minimum_size = Vector2(0, 40)
 layout_mode = 2
 expand_icon = true
-button_text = "ATM_SC"
+button_text = "ATOM_MANIPULATION_SC"
 icon_texture = ExtResource("13_fkb41")
 
 [node name="SubatomicParticles" parent="ScrollContainer/VBoxContainer" unique_id=1781085045 instance=ExtResource("1")]
 custom_minimum_size = Vector2(0, 40)
 layout_mode = 2
 expand_icon = true
-button_text = "SAP_SC"
+button_text = "SUBATOMIC_PARTICLES_SC"
 icon_texture = ExtResource("14_7vv42")
 
 [node name="Panel" type="Panel" parent="." unique_id=1769624489]

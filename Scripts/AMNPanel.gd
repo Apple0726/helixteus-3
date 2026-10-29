@@ -49,11 +49,23 @@ func _ready():
 		$ScrollContainer/GridContainer.add_child(btn)
 
 func show_recipe_tooltip(rsrc:String):
-	if (rsrc in ["platinum", "diamond"] and not game.science_level[Science.ADVANCED_METAL_MANIPULATION]
-	or rsrc in ["nanocrystal", "mythril", "quillite"] and not game.science_level[Science.EXOTIC_MATERIAL_MANIPULATION]):
-		game.show_tooltip(tr("LOCKED"))
-	else:
+	var unlocked = true
+	var sc_to_unlock = ""
+	if rsrc in ["platinum", "diamond"] and not game.science_level[Science.ADVANCED_METAL_MANIPULATION]:
+		unlocked = false
+		sc_to_unlock = tr("UNLOCK_BY_RESEARCHING_X").format({"science": tr("ADVANCED_METAL_MANIPULATION_SC")})
+	if rsrc in ["nanocrystal", "mythril", "quillite"] and not game.science_level[Science.EXOTIC_MATERIAL_MANIPULATION]:
+		unlocked = false
+		sc_to_unlock = tr("UNLOCK_BY_RESEARCHING_X").format({"science": tr("EXOTIC_MATERIAL_MANIPULATION_SC")})
+	if unlocked:
 		game.show_tooltip(tr(rsrc.to_upper()))
+	else:
+		var st = "[color=#999999]({locked}) {metal}\n{details}".format({
+			"locked": tr("LOCKED"),
+			"metal": tr(rsrc.to_upper()),
+			"details": sc_to_unlock,
+		})
+		game.show_tooltip(st)
 
 func on_rsrc_pressed(rsrc:String):
 	reset_poses(rsrc)

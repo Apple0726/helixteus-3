@@ -15,6 +15,7 @@ void fragment() {
 	COLOR.b = random(uv.y, TIME * 0.2) * 2.0;
 	COLOR.rgb += razor(uv.y * 0.1 + TIME * 0.3) * 15.0;
 	COLOR.rgb *= pow(min(0.18, random(uv.y, TIME * 0.2)), 2);
+	COLOR.a *= 0.5;
 	//COLOR.b += random(uv.x, TIME) * pow(min(0.9, random2(uv.y)), 10);
 	//COLOR.b += sin(uv.y + TIME * 3.0) + sin(4.0 * TIME);
 }

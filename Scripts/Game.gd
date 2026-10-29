@@ -1090,21 +1090,26 @@ func toggle_panel(new_panel_var_name, refresh_panel = true):
 		active_panel = null
 
 func set_to_ship_coords():
-	var diff_cluster:bool = c_c != ships_travel_data.dest_coords.c
-	c_c = ships_travel_data.dest_coords.c
-	c_g_g = ships_travel_data.dest_g_coords.g
-	c_g = ships_travel_data.dest_coords.g
-	c_s_g = ships_travel_data.dest_g_coords.s
-	c_s = ships_travel_data.dest_coords.s
-	if diff_cluster:
+	if c_c != ships_travel_data.dest_coords.c:
 		galaxy_data.clear()
+		c_c = ships_travel_data.dest_coords.c
+	if c_g_g != ships_travel_data.dest_g_coords.g:
+		system_data.clear()
+		c_g_g = ships_travel_data.dest_g_coords.g
+		c_g = ships_travel_data.dest_coords.g
+	if c_s_g != ships_travel_data.dest_g_coords.s:
+		planet_data.clear()
+		c_s_g = ships_travel_data.dest_g_coords.s
+		c_s = ships_travel_data.dest_coords.s
 
 func set_to_fighter_coords(i:int):
-	c_c = fighter_data[i].c_c
-	c_c = fighter_data[i].c_c
+	if c_c != fighter_data[i].c_c:
+		c_c = fighter_data[i].c_c
+		galaxy_data.clear()
 	if fighter_data[i].has("c_g_g"):
-		c_g_g = fighter_data[i].c_g_g
-		c_g = fighter_data[i].c_g
+		if c_g_g != fighter_data[i].c_g_g:
+			c_g_g = fighter_data[i].c_g_g
+			c_g = fighter_data[i].c_g
 
 func set_bookmark_coords(bookmark:Dictionary):
 	if bookmark.has("c_p_g"):
@@ -1156,9 +1161,11 @@ func delete_galaxy(_c_g:int):
 	galaxy_data[_c_g].clear()
 	Helper.save_obj("Clusters", c_c, galaxy_data)
 
+var switching_view = false
 #															V function to execute after removing objects but before adding new ones
 #func switch_view(new_view:String, first_time:bool = false, fn:String = "", fn_args:Array = [], save_zooms:bool = true, fade_anim:bool = true):
 func switch_view(new_view:String, other_params:Dictionary = {}):
+	switching_view = true
 	if $UI.has_node("BottomInfo"):
 		$UI/BottomInfo.on_close_pressed()
 	if $UI.has_node("FightOrNegotiate"):
@@ -1442,6 +1449,7 @@ func switch_view(new_view:String, other_params:Dictionary = {}):
 			small_image_text = "Viewing " + u_i.name
 		Helper.refresh_discord("", state, c_v, small_image_text)
 	hide_tooltip()
+	switching_view = false
 
 func add_science_tree():
 	$ScienceTreeBG.visible = Settings.enable_shaders
@@ -1711,6 +1719,7 @@ func add_system():
 		starfield_tween.kill()
 	starfield_tween = create_tween()
 	starfield_tween.tween_property($Stars/Starfield, "modulate:a", 0.35, 0.3)
+	system_data_persistent[c_s].stars = system_data[c_s].stars
 	if planet_data.is_empty():
 		generate_planets(c_s)
 	show.bookmarks = true
@@ -1986,7 +1995,7 @@ func generate_galaxies(id:int):
 		var view_zoom = 500.0 / max_outer_radius
 		if not u_i.cluster_data[id].has("view"):
 			u_i.cluster_data[id]["view"] = {"pos":Vector2(640, 360), "zoom":view_zoom}
-			u_i.cluster_data_persistent[id]["view"] = u_i.cluster_data[id].view
+		u_i.cluster_data_persistent[id]["view"] = u_i.cluster_data[id].view
 	
 	if not u_i.cluster_data[id].has("discovered"):
 		u_i.cluster_data[id]["discovered"] = true
@@ -2301,7 +2310,7 @@ func generate_systems(id:int):
 		if not galaxy_data[id].has("view"):
 			var view_zoom = 500.0 / generation_data.max_outer_radius
 			galaxy_data[id]["view"] = {"pos":Vector2(640, 360), "zoom":view_zoom}
-			galaxy_data_persistent[id]["view"] = galaxy_data[id].view
+		galaxy_data_persistent[id]["view"] = galaxy_data[id].view
 	else:
 		generate_elliptical_galaxy(id, rng)
 	if not galaxy_data[id].has("discovered"):
@@ -2527,7 +2536,7 @@ func generate_planets(id:int):#local id
 			p_i["liq_period"] = rng.randf_range(0.1, 1)
 		p_i["HX_data"] = []
 		var diff:float = system_data[id].diff
-		var power_left:float = diff * pow(p_i.size / 2500.0, 0.5) / 2.5
+		var power_left:float = diff * pow(p_i.size / 2500.0, 0.6) / 2.5
 		var max_lv:int = max(1, 1 + log(2.0 * power_left) / log(1.3))
 		var num:int = 0
 		var total_num:int = rng.randi() % 12 + 1
@@ -2644,6 +2653,8 @@ func generate_planets(id:int):#local id
 		var furthest_planet_distance = planet_data[-1].distance
 		for i in range(0, N_stars):
 			var star = system_data[id].stars[i]
+			if star.has("MS"):
+				continue
 			var star_size = star.size
 			var star_temp = star.temperature
 			var star_lum = star.luminosity
@@ -2670,7 +2681,8 @@ func generate_planets(id:int):#local id
 				star.repair_cost *= engineering_bonus.BCM
 				system_data[id].has_MS = true
 		var view_zoom = 40.0 / furthest_planet_distance * (planet_data[0].distance / 70)
-		system_data[id]["view"] = {"pos": Vector2(640, 360), "zoom": view_zoom}
+		if not system_data[id].has("view"):
+			system_data[id]["view"] = {"pos": Vector2(640, 360), "zoom": view_zoom}
 	elif c_u == 0:
 		#Home planet information
 		planet_data[2]["name"] = tr("HOME_PLANET")
@@ -2684,6 +2696,7 @@ func generate_planets(id:int):#local id
 		planet_data[2]["crust_start_depth"] = rng.randi_range(20, 25)
 		if not system_data[id].has("discovered"):
 			stats_univ.biggest_planet = planet_data[2].size
+	system_data_persistent[id].view = system_data[id].view
 	system_data[id]["closest_planet_distance"] = planet_data[0].distance
 	
 	if not system_data[id].has("discovered"):
@@ -2876,7 +2889,7 @@ func spawn_cave(p_i:Dictionary, t_id:int, rng:RandomNumberGenerator):
 				modifiers[key] = modifiers2[key].treasure_if_true
 			modifiers2.erase(key)
 	var period:int = 50 + sign(rng.randf() - 0.5) * rng.randf() * 30
-	var traversable_space = 64.0 * pow(rng.randf() - 0.5, 7) + 0.5
+	var traversable_space = 16.0 * pow(rng.randf() - 0.5, 5) + 0.5
 	if c_p_g == 2:
 		traversable_space = clamp(traversable_space, 0.4, 0.8)
 	elif c_s_g == 0:
@@ -3126,8 +3139,6 @@ func generate_tiles(id:int, first_time:bool):
 				tile_data[j]["ancient_bldg"] = {"name":bldg, "tier":tier, "id":i}
 				if p_i.ancient_bldgs[bldg][i].has("repair_cost"):
 					tile_data[j].ancient_bldg["repair_cost"] = p_i.ancient_bldgs[bldg][i].repair_cost
-			if not p_i.ancient_bldgs[bldg][i].has("repair_cost"):
-				Helper.set_ancient_bldg_bonuses(p_i, tile_data[t_id].ancient_bldg, t_id, wid)
 			if first_time:
 				if not achievement_data.exploration.has("tier_2_ancient_bldg") and tier >= 2:
 					earn_achievement("exploration", "tier_2_ancient_bldg")
@@ -3239,7 +3250,10 @@ func generate_tiles(id:int, first_time:bool):
 			if not tile_data[i].resource_production_bonus.is_empty():
 				tile_data_persistent[i] = {"resource_production_bonus": tile_data[i].resource_production_bonus}
 			if tile_data[i].has("ancient_bldg"):
-				Helper.set_tile_data_persistent(i, "ancient_bldg", tile_data[i].ancient_bldg)
+				var ancient_bldg = tile_data[i].ancient_bldg
+				Helper.set_tile_data_persistent(i, "ancient_bldg", ancient_bldg)
+				if not ancient_bldg.has("repair_cost"):
+					Helper.set_ancient_bldg_bonuses(p_i, ancient_bldg, i, wid)
 	else:
 		tile_data_persistent = open_obj("Planets", c_p_g)
 	for i in len(tile_data_persistent):
@@ -4177,7 +4191,7 @@ func _on_Ship_pressed():
 	if Input.is_action_pressed("shift"):
 		switch_view("STM")#Ship travel minigame
 	else:
-		if science_level.has("CD"):
+		if science_level[Science.CHEMICAL_DRIVE]:
 			if not is_instance_valid(ships_panel) or not ships_panel.visible:
 				toggle_panel("ships_panel")
 				ships_panel._on_DriveButton_pressed()
@@ -4361,7 +4375,7 @@ func _on_MMTimer_timeout():
 			var p_i = open_obj("Systems", boring_machine_data[p].c_s_g)[boring_machine_data[p].c_p]
 			var _tile_data
 			if p == c_p_g:
-				_tile_data = tile_data
+				_tile_data = tile_data_persistent
 			else:
 				_tile_data = open_obj("Planets", p)
 			if len(_tile_data) == 0:
@@ -4370,8 +4384,12 @@ func _on_MMTimer_timeout():
 				return
 			var await_counter:int = 0
 			for t_id in boring_machine_data[p].tiles:
+				if switching_view:
+					curr_MM_p += 1
+					$MMTimer.start()
+					return
 				var tile = _tile_data[t_id]
-				if tile == null or not tile.has("bldg"):
+				if not tile or not tile.has("bldg"):
 					continue
 				var prod_mult = Helper.get_prod_mult(tile) * tile.get("mining_outpost_bonus", 1.0)
 				var tiles_mined = (curr_time - tile.bldg.collect_date) * tile.bldg.path_1_value * prod_mult
@@ -4380,26 +4398,28 @@ func _on_MMTimer_timeout():
 					tile.bldg.collect_date += int(tiles_mined) / tile.bldg.path_1_value / prod_mult
 					tile.depth += int(tiles_mined)
 					if tile.has("crater") and tile.crater.has("init_depth") and tile.depth > 3 * tile.crater.init_depth:
-						Helper.remove_crater_bonuses(_tile_data, t_id, tile.crater.metal)
 						tile.erase("crater")
 				await_counter += 1
 				if await_counter % int(1000.0 / Engine.get_frames_per_second()) == 0:
 					await get_tree().process_frame
 			if p != c_p_g:
-				Helper.save_obj("Planets", p, _tile_data) # TODO
+				Helper.save_obj("Planets", p, _tile_data)
 		else:
 			var _planet_data_persistent:Array
 			var p_i:Dictionary
-			if boring_machine_data[p].c_s_g == c_s_g:
+			if boring_machine_data[p].c_s_g == c_s_g and c_v == "system":
 				p_i = planet_data_persistent[boring_machine_data[p].c_p]
 			else:
 				_planet_data_persistent = open_obj("Systems", boring_machine_data[p].c_s_g)
 				if _planet_data_persistent.is_empty():
 					boring_machine_data.erase(p)
+					curr_MM_p += 1
 					$MMTimer.start()
 					return
 				p_i = _planet_data_persistent[boring_machine_data[p].c_p]
 				if p_i == null:
+					curr_MM_p += 1
+					$MMTimer.start()
 					return
 			var prod_mult = Helper.get_prod_mult(p_i) * p_i.get("mining_outpost_bonus", 1.0)
 			var tiles_mined = (curr_time - p_i.bldg.collect_date) * p_i.bldg.path_1_value * prod_mult

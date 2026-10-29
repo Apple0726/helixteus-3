@@ -274,7 +274,6 @@ func buff_animation(pos:Vector2, mod:Color):
 	var attack_icon = Sprite2D.new()
 	attack_icon.texture = preload("res://Graphics/Icons/attack.png")
 	attack_icon.position = pos + Vector2.UP * 90.0
-	attack_icon.scale *= 0.3
 	battle_scene.add_child(attack_icon)
 	var light = Sprite2D.new()
 	light.texture = preload("res://Graphics/Decoratives/light.png")

@@ -95,7 +95,7 @@ func _on_ChemicalDrive_pressed():
 	add_fuel("mats", "cellulose", preload("res://Graphics/Materials/cellulose.png"))
 	$Control.visible = true
 	refresh()
-	$Panel/Drives/CD.modulate.a = 1
+	$Panel/Drives/ChemicalDrive.modulate.a = 1
 
 func _on_IonDrive_pressed():
 	reset_selected_drive_fuel()
@@ -103,7 +103,7 @@ func _on_IonDrive_pressed():
 	add_fuel("atoms", "Xe", preload("res://Graphics/Atoms/Xe.png"))
 	$Control.visible = true
 	refresh()
-	$Panel/Drives/ID.modulate.a = 1
+	$Panel/Drives/IonDrive.modulate.a = 1
 
 
 func _on_h_slider_value_changed(value):

@@ -700,7 +700,7 @@ func generate_cave(first_floor:bool, going_up:bool):
 			else:
 				walls.append(Vector2(i, j))
 				var rand:float = rng.randf()
-				var ch = 0.02 * pow(pow(2, min(12, cave_floor) - 1) / 3.0, 0.4)
+				var ch = 0.02 * pow(pow(2, min(12, cave_floor) - 1) / 3.0, 0.4) * clamp(remap(level_threshold, 0.0, -1.0, 1.0, 3.0), 1.0, 2.0)
 				if rand < ch:
 					var met_spawned = possible_metal_spawns[rng.randi_range(0, len(possible_metal_spawns) - 1)]
 					var deposit = deposit_scene.instantiate()

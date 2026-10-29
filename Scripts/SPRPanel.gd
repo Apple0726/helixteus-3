@@ -10,8 +10,8 @@ var resource_selected:String = ""
 var au_mult:float
 var Z:int
 var atom_costs:Dictionary = {}
-var reactions:Dictionary = {	"H":{"Z":1, "energy_cost":2, "difficulty":0.00005},
-								"He":{"Z":2, "energy_cost":4, "difficulty":0.001},
+var reactions:Dictionary = {	"H":{"Z":1, "energy_cost":0.6, "difficulty":0.00005},
+								"He":{"Z":2, "energy_cost":1.5, "difficulty":0.001},
 								"C":{"Z":6, "energy_cost":7, "difficulty":0.0015},
 								"O":{"Z":8, "energy_cost":10, "difficulty":0.002},
 								"Ne":{"Z":10, "energy_cost":90, "difficulty":0.1},
@@ -48,10 +48,20 @@ func _ready():
 		$ScrollContainer/GridContainer.add_child(btn)
 
 func show_recipe_tooltip(rsrc:String):
+	var unlocked = true
+	var sc_to_unlock = ""
 	if rsrc in ["Ta", "W", "Os"] and not game.science_level[Science.EXOTIC_MATERIAL_MANIPULATION]:
-		game.show_tooltip(tr("LOCKED"))
-	else:
+		unlocked = false
+		sc_to_unlock = tr("UNLOCK_BY_RESEARCHING_X").format({"science": tr("EXOTIC_MATERIAL_MANIPULATION_SC")})
+	if unlocked:
 		game.show_tooltip(tr("%s_NAME" % rsrc.to_upper()))
+	else:
+		var st = "[color=#999999]({locked}) {atom}\n{details}".format({
+			"locked": tr("LOCKED"),
+			"atom": tr("%s_NAME" % rsrc.to_upper()),
+			"details": sc_to_unlock,
+		})
+		game.show_tooltip(st)
 
 func _on_Atom_pressed(_name:String):
 	reset_poses(_name, reactions[_name].Z)

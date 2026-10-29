@@ -242,8 +242,7 @@ func refresh_stars():
 				add_rsrc(star_info.pos * scale_mult, Color(0, 0.8, 0, 1), Data.energy_icon, i, true, max(star_info.size / 6.0, 0.5) * scale_mult)
 			elif star_info.MS == "MB":
 				add_rsrc(star_info.pos * scale_mult, Color(0, 0.8, 0, 1), Data.SP_icon, i, true, max(star_info.size / 6.0, 0.5) * scale_mult)
-			if star_info.MS == "CBS" and not star_info.has("furthest_planet_distance"): # TODO to be removed in v0.31
-				star_info.furthest_planet_distance = get_furthest_planet_distance()
+	queue_redraw()
 
 func add_MS_sprite(node, obj:Dictionary):
 	if not is_instance_valid(node) or node.has_node("MS"):

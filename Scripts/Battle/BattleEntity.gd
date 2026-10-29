@@ -200,6 +200,12 @@ func take_turn():
 	if regen_per_turn > 0:
 		heal_entity(regen_per_turn)
 	var burn_turns = status_effects[Battle.StatusEffect.BURN]
+	var radioactive_turns = status_effects[Battle.StatusEffect.RADIOACTIVE]
+	if radioactive_turns > 0.0:
+		attack_buff -= 2
+		defense_buff -= 2
+		accuracy_buff -= 2
+		agility_buff -= 2
 	if burn_turns > 0.0:
 		damage_entity_status_effect(int(ceil(burn_turns * 0.05 * total_HP)))
 		if HP <= 0:

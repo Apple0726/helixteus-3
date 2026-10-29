@@ -1453,7 +1453,7 @@ func on_wormhole_click(tile:Dictionary, tile_id:int):
 			game.ships_travel_data.dest_coords["s"] = game.c_s
 			game.ships_travel_data.c_g_coords["s"] = game.c_s_g
 			game.ships_travel_data.dest_g_coords["s"] = game.c_s_g
-			game.switch_view("planet", {"dont_save_zooms":true})
+			game.switch_view("planet", {"dont_repair_cost":true})
 		else:
 			if is_instance_valid(game.send_ships_panel):
 				game.send_ships_panel.dest_p_id = p_id

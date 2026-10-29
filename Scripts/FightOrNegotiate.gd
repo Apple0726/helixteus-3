@@ -33,16 +33,16 @@ func _ready() -> void:
 	if id == -1:
 		if total_enemy_stats / total_ship_stats < 0.5:
 			negotiated_text = tr("NEGOTIATED_ALL_EASY")
-		elif total_enemy_stats / total_ship_stats > 2.5:
+		elif total_enemy_stats / total_ship_stats > 5.0:
 			negotiated_text = tr("NEGOTIATED_ALL_HARD")
 		else:
 			negotiated_text = tr("NEGOTIATED_ALL_NORMAL")
 	else:
 		if total_enemy_stats / total_ship_stats < 0.5:
 			negotiated_text = tr("NEGOTIATED_EASY")
-		elif total_enemy_stats / total_ship_stats > 2.5:
+		elif total_enemy_stats / total_ship_stats > 5.0:
 			negotiated_text = tr("NEGOTIATED_HARD")
-	var money_to_negotiate = 5.0e5 * game.system_data[game.c_s].diff * pow(max(0.2, total_enemy_stats * 1.2 / total_ship_stats), 5)
+	var money_to_negotiate = money_earned * game.system_data[game.c_s].diff * pow(max(0.2, total_enemy_stats * 1.2 / total_ship_stats), 5)
 	Helper.add_text_to_RTL($FightDesc, "[center][font_size=13]" + tr("FIGHT_DESC").format({"money": Helper.format_num(money_earned, true), "XP": Helper.format_num(XP_earned, true)}), [Data.money_icon])
 	Helper.add_text_to_RTL($NegotiateDesc, "[center][font_size=13]" + tr("NEGOTIATE_DESC").format({"money": Helper.format_num(money_to_negotiate, true)}), [Data.money_icon])
 	$Fight.pressed.connect(initiate_battle)
