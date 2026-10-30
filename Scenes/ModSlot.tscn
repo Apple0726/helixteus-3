@@ -1,34 +1,47 @@
 [gd_scene format=3 uid="uid://tbn5cvb3uo5"]
 
-[ext_resource type="Texture2D" uid="uid://irnrwmwb2qvs" path="res://Graphics/Buttons/Down.png" id="2"]
+[ext_resource type="Script" uid="uid://csopg5gxr7qt1" path="res://Scripts/ModSlot.gd" id="1_thsrd"]
+[ext_resource type="Texture2D" uid="uid://ba37pys5xgmhs" path="res://Cursor.png" id="1_u0pje"]
 [ext_resource type="Texture2D" uid="uid://baql2tlnb7ayd" path="res://Graphics/Buttons/Up.png" id="3"]
 
 [node name="HBoxContainer" type="HBoxContainer" unique_id=1425730392]
 offset_right = 776.0
 offset_bottom = 44.0
+script = ExtResource("1_thsrd")
+
+[node name="Icon" type="TextureRect" parent="." unique_id=1290497375]
+custom_minimum_size = Vector2(44, 44)
+layout_mode = 2
+texture = ExtResource("1_u0pje")
+expand_mode = 1
+stretch_mode = 5
 
 [node name="Name" type="Label" parent="." unique_id=2039704166]
 custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_stretch_ratio = 1.1
+text = "Name"
 
 [node name="Version" type="Label" parent="." unique_id=551075158]
 custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_stretch_ratio = 0.0
+text = "Version"
 
 [node name="Author" type="Label" parent="." unique_id=1531763048]
 custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_stretch_ratio = 0.65
+text = "Author"
 
 [node name="Description" type="Label" parent="." unique_id=1557952388]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_stretch_ratio = 1.5
+text = "Description"
 clip_text = true
 text_overrun_behavior = 3
 
@@ -45,10 +58,11 @@ stretch_mode = 5
 [node name="Down" type="TextureButton" parent="LoadOrder" unique_id=952126362]
 custom_minimum_size = Vector2(20, 20)
 layout_mode = 2
-texture_normal = ExtResource("2")
+texture_normal = ExtResource("3")
 ignore_texture_size = true
 stretch_mode = 5
+flip_v = true
 
 [node name="Load" type="CheckBox" parent="." unique_id=1368238495]
 layout_mode = 2
-text = "Load"
+text = "Load "
