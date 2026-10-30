@@ -4,10 +4,10 @@
 [ext_resource type="Script" uid="uid://cytp52slomkll" path="res://Scripts/PopupWindow.gd" id="2_7rwgw"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_is2bl"]
-content_margin_left = 15.0
-content_margin_top = 15.0
-content_margin_right = 15.0
-content_margin_bottom = 10.0
+content_margin_left = 18.0
+content_margin_top = 18.0
+content_margin_right = 18.0
+content_margin_bottom = 18.0
 bg_color = Color(0.129412, 0.129412, 0.129412, 1)
 border_width_left = 4
 border_width_top = 4
@@ -43,7 +43,7 @@ theme_override_styles/panel = SubResource("StyleBoxFlat_is2bl")
 
 [node name="VBoxContainer" type="VBoxContainer" parent="Panel" unique_id=1177170354]
 layout_mode = 2
-theme_override_constants/separation = 10
+theme_override_constants/separation = 14
 
 [node name="Label" type="Label" parent="Panel/VBoxContainer" unique_id=1709113906]
 visible = false

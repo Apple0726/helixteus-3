@@ -1708,11 +1708,13 @@ func load_ambient_music():
 		"version": randi_range(1, song_N[univ_id]),
 	})), game.u_i.time_speed)
 
-func export_save(save_to_export:String, path:String):
+func export_save(save_to_export:String, path:String = ""): # Empty path = copy to clipboard
 	export_save_files_exported = 0
-	var file = FileAccess.open_compressed(path, FileAccess.WRITE, FileAccess.COMPRESSION_ZSTD)
+	var file:FileAccess
+	if path != "":
+		file = FileAccess.open_compressed(path, FileAccess.WRITE, FileAccess.COMPRESSION_ZSTD)
 	var success = true
-	if file:
+	if file or path == "":
 		var save_dict = {"univs":[]}
 		var file2 = FileAccess.open_compressed("user://%s/save_info.hx3" % save_to_export, FileAccess.READ, FileAccess.COMPRESSION_ZSTD)
 		if file2:
@@ -1732,12 +1734,17 @@ func export_save(save_to_export:String, path:String):
 							save_dict.univs.append(export_univ_res.univ_data.duplicate(true))
 					file_name = directory.get_next()
 				if success:
-					file.store_var(save_dict)
+					if path == "":
+						var base64_string = Marshalls.raw_to_base64(var_to_bytes(save_dict).compress(FileAccess.COMPRESSION_DEFLATE))
+						DisplayServer.clipboard_set(base64_string)
+					else:
+						file.store_var(save_dict)
 			else:
 				success = false
 		else:
 			success = false
-		file.close()
+		if file:
+			file.close()
 	else:
 		success = false
 	return success

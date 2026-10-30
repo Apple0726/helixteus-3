@@ -6,17 +6,14 @@ signal confirm
 @export var label_text = ""
 @export var error_text = ""
 @export var confirm_button_text = "CONFIRM"
-var check_input:Callable
+var check_input
 
 func _ready():
 	$Panel/Label.text = tr(label_text)
-	$Panel/Confirm.text = tr(confirm_button_text)
+	$Panel/HBoxContainer/Confirm.text = tr(confirm_button_text)
 	var tween = create_tween()
 	tween.tween_property(self, "color", Color(0, 0, 0, 0.4), 0.1)
 	$Panel/LineEdit.call_deferred("grab_focus")
-
-func _on_close_button_pressed():
-	visible = false
 
 func _on_confirm_pressed():
 	if check_input == null:
@@ -32,3 +29,7 @@ func _on_confirm_pressed():
 
 func _on_line_edit_text_submitted(new_text):
 	_on_confirm_pressed()
+
+
+func _on_cancel_pressed() -> void:
+	queue_free()

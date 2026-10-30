@@ -366,7 +366,7 @@ func load_settings(config:ConfigFile):
 	
 	# game
 	if OS.get_name() == "Web" and not config.get_value("misc", "HTML5", false):
-		popup_window("You're playing the browser version of Helixteus 3. While it's convenient, it has\nmany issues not present in the executables:\n\n - High RAM usage\n - Less FPS\n - Importing saves does not work\n - Audio glitches\n - Saving delay (5-10 seconds)", "Browser version", [], [], "I understand", 0)
+		popup_window("You're playing the browser version of Helixteus 3. While it's convenient,\nit has some issues not present in the executables:\n\n - High RAM usage\n - Some text (e.g. Chinese characters) may not display correctly\n\nThe executables also contain the complete game OST.", "Browser version", [], [], "I understand", 0)
 		config.set_value("misc", "HTML5", true)
 		config.save("user://settings.cfg")
 	Settings.autosell = config.get_value("game", "autosell", true)

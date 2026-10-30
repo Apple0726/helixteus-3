@@ -49,6 +49,9 @@ func open_backup_panel(save_name:String):
 
 func on_export(save_str:String):
 	save_to_export = save_str
+	game.popup_window(tr("CHOOSE_EXPORT_MEDIUM"), "", [tr("TEXT"), tr("HX3_FILE")], [export_string.bind(save_str), export_hx3.bind(save_str)], tr("CANCEL"))
+
+func export_hx3(save_str:String):
 	if OS.get_name() == "Web":
 		if await Helper.export_save(save_str, "user://%s.hx3" % save_str):
 			game.popup(tr("EXPORT_SUCCESS") % save_to_export, 2.0)
@@ -63,6 +66,10 @@ func on_export(save_str:String):
 		$Export.current_file = save_str
 		$Export.title = tr("EXPORT_X") % save_str
 		$Export.popup_centered()
+
+func export_string(save_str:String):
+	if await Helper.export_save(save_str, ""):
+		game.popup(tr("EXPORT_STRING_SUCCESS").format({"save": save_to_export}), 2.0)
 
 func on_load(sv:String, reset_dimension:bool = false):
 	if modulate.a == 1:
@@ -83,7 +90,21 @@ func on_delete_confirm(save_str:String):
 
 
 func _on_ImportSave_pressed():
-	$Import.popup_centered()
+	game.popup_window(tr("CHOOSE_IMPORT_MEDIUM"), "", [tr("TEXT"), tr("HX3_FILE")], [import_string_popup, $Import.popup_centered], tr("CANCEL"))
+
+func import_string_popup():
+	game.popup_window(tr("COPY_STRING_TO_CLIPBOARD"), "", [tr("OK")], [import_string], tr("CANCEL"))
+	
+func import_string():
+	var base64_string = DisplayServer.clipboard_get()
+	var bytes = Marshalls.base64_to_raw(base64_string).decompress_dynamic(-1, FileAccess.COMPRESSION_DEFLATE)
+	var file = FileAccess.open_compressed("user://Save1.hx3", FileAccess.WRITE, FileAccess.COMPRESSION_ZSTD)
+	file.store_var(bytes_to_var(bytes))
+	file.close()
+	Helper.import_save("Save1", "user://Save1.hx3")
+	var dir = DirAccess.open("user://")
+	dir.remove("Save1.hx3")
+	refresh()
 
 func _on_Export_file_selected(path):
 	export_total_files = Helper.get_directory_properties("user://%s" % save_to_export, ["Backups"]).files

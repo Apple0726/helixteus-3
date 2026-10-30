@@ -139,7 +139,7 @@ func _ready():
 				cave_sprite.position = Vector2(i, j) * 200 + Vector2.ONE * 100
 				if tile.has("lake"):
 					cave_sprite.modulate = star_mod * Data.lake_colors[p_i.lake.element][p_i.lake.state]
-					cave_sprite.texture = preload("res://Graphics/Tiles/frozen_cave.png")
+					#cave_sprite.texture = preload("res://Graphics/Tiles/frozen_cave.png")
 				else:
 					cave_sprite.modulate = star_mod
 					cave_sprite.texture = preload("res://Graphics/Tiles/cave.png")
@@ -1453,7 +1453,7 @@ func on_wormhole_click(tile:Dictionary, tile_id:int):
 			game.ships_travel_data.dest_coords["s"] = game.c_s
 			game.ships_travel_data.c_g_coords["s"] = game.c_s_g
 			game.ships_travel_data.dest_g_coords["s"] = game.c_s_g
-			game.switch_view("planet", {"dont_repair_cost":true})
+			game.switch_view("planet", {"dont_save_zooms":true})
 		else:
 			if is_instance_valid(game.send_ships_panel):
 				game.send_ships_panel.dest_p_id = p_id
