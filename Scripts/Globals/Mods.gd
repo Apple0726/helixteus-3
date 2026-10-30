@@ -15,23 +15,19 @@ func _ready():
 	# Detect mods
 	var mod_folder = DirAccess.open("user://Mods")
 	if mod_folder:
-		mod_folder.list_dir_begin()
-		var next = mod_folder.get_next()
-		while next != "":
-			installed_mod_list.append(next)
-			next = mod_folder.get_next()
-		mod_folder.list_dir_end()
+		installed_mod_list = mod_folder.get_directories()
 		
 		# Load mods in the order defined in the settings
 		for mod_name in settings_mod_list:
 			if installed_mod_list.has(mod_name):
 				enabled_mod_list.append(mod_name)
-				if FileAccess.file_exists("user://Mods/%s/resources.zip" % mod_name):
-					if ProjectSettings.load_resource_pack("user://Mods/%s/resources.zip" % mod_name, true):
-						if FileAccess.file_exists("res://%s/Main.gd" % mod_name):
-							var main = load("res://%s/Main.gd" % mod_name)
-							main = main.new()
-							mod_instances[mod_name] = main
+				if not FileAccess.file_exists("user://Mods/%s/resources.zip" % mod_name):
+					continue
+				var success = ProjectSettings.load_resource_pack("user://Mods/%s/resources.zip" % mod_name, true)
+				if success:
+					if FileAccess.file_exists("res://%s/Main.gd" % mod_name):
+						var main = load("res://%s/Main.gd" % mod_name).new()
+						mod_instances[mod_name] = main
 		
 		settings.load("user://settings.cfg")
 		settings.set_value("mods", "enabled", enabled_mod_list)

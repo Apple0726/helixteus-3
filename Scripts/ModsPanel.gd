@@ -3,21 +3,8 @@ extends "Panel.gd"
 var mod_slot_scene = preload("res://Scenes/ModSlot.tscn")
 
 func add_mod_slot(mod_name):
-	var mod_info_file = FileAccess.open("user://Mods/%s/info.json" % mod_name, FileAccess.READ)
-	var mod_info = JSON.parse_string(mod_info_file.get_as_text())
 	var mod_slot = mod_slot_scene.instantiate()
 	mod_slot.name = mod_name
-	var icon:ImageTexture
-	if FileAccess.file_exists("user://Mods/%s/icon.png" % mod_name):
-		icon = ImageTexture.create_from_image(Image.load_from_file("user://Mods/%s/icon.png" % mod_name))
-	elif FileAccess.file_exists("user://Mods/%s/icon.jpeg" % mod_name):
-		icon = ImageTexture.create_from_image(Image.load_from_file("user://Mods/%s/icon.jpeg" % mod_name))
-	mod_slot.get_node("Icon").texture = icon
-	mod_slot.get_node("Name").text = mod_info.name
-	mod_slot.get_node("Version").text = mod_info.version
-	mod_slot.get_node("Author").text = mod_info.author
-	mod_slot.get_node("Description").text = mod_info.description
-	mod_slot.get_node("Load").button_pressed = mod_name in Mods.enabled_mod_list
 	mod_slot.get_node("LoadOrder/Up").connect("pressed",Callable(self,"_on_up_pressed").bind(mod_slot))
 	mod_slot.get_node("LoadOrder/Down").connect("pressed",Callable(self,"_on_down_pressed").bind(mod_slot))
 	mod_slot.get_node("Load").connect("pressed",Callable(self,"_on_load_pressed").bind(mod_slot))
