@@ -1273,9 +1273,9 @@ func go_up_cave():
 	cave_floor -= 1
 	if not tile.has("ash"):
 		if cave_floor == 7:
-			game.switch_music(preload("res://Audio/cave1.ogg"), time_speed, 0.95 if tile.has("aurora") else 1.0)
+			game.switch_music("cave1.ogg", time_speed, 0.95 if tile.has("aurora") else 1.0)
 		if cave_floor == 15:
-			game.switch_music(preload("res://Audio/cave2.ogg"), time_speed, 0.95 if tile.has("aurora") else 1.0)
+			game.switch_music("cave2.ogg", time_speed, 0.95 if tile.has("aurora") else 1.0)
 	if volcano_mult > 1 and not artificial_volcano and is_aurora_cave:
 		difficulty /= ProcGenSettings.cave_floor_difficulty * 1.25
 	elif volcano_mult > 1 and not artificial_volcano or is_aurora_cave:
@@ -1293,9 +1293,9 @@ func go_down_cave(initial_skip:bool = false):
 	cave_floor += 1
 	if not tile.has("ash"):
 		if cave_floor == 8:
-			game.switch_music(preload("res://Audio/cave2.ogg"), time_speed, 0.95 if tile.has("aurora") else 1.0)
+			game.switch_music("cave2.ogg", time_speed, 0.95 if tile.has("aurora") else 1.0)
 		elif cave_floor == 16:
-			game.switch_music(preload("res://Audio/cave3.ogg"), time_speed, 0.95 if tile.has("aurora") else 1.0)
+			game.switch_music("cave3.ogg", time_speed, 0.95 if tile.has("aurora") else 1.0)
 	if volcano_mult > 1 and not artificial_volcano and is_aurora_cave:
 		difficulty *= ProcGenSettings.cave_floor_difficulty * 1.25
 	elif volcano_mult > 1 and not artificial_volcano or is_aurora_cave:

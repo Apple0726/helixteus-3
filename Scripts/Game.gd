@@ -386,7 +386,7 @@ func load_settings(config:ConfigFile):
 	Settings.discord = config.get_value("misc", "discord", true)
 	Settings.show_fps = config.get_value("misc", "show_fps", false)
 	fps_text.visible = Settings.show_fps
-	switch_music(load("res://Audio/Title.ogg"))
+	switch_music("Title.ogg")
 
 #Used in planet view only
 var close_button_over:bool = false
@@ -501,17 +501,23 @@ func animate_title_buttons():
 	starfield_tween = create_tween()
 	starfield_tween.tween_property($Stars/Starfield, "modulate:a", 0.6, 3.0).set_ease(Tween.EASE_IN).set_trans(Tween.TRANS_QUAD)
 	
-func switch_music(src, time_speed:float = 1.0, pitch_scale:float = 1.0):
+func switch_music(src_path:String, time_speed:float = 1.0, pitch_scale:float = 1.0):
 	if Settings.op_cursor:
-		src = preload("res://Audio/op_cursor.ogg")
+		src_path = "op_cursor.ogg"
 	else:
 		#Music fading
 		if music_player.playing:
 			$MusicPlayer/AnimationPlayer.play_backwards("FadeMusic")
 			await $MusicPlayer/AnimationPlayer.animation_finished
-	if not src:
+	if src_path == "":
 		return
-	music_player.stream = src
+	if FileAccess.file_exists("res://Audio/" + src_path):
+		var stream = load("res://Audio/" + src_path)
+		if music_player.stream != stream:
+			music_player.stream = stream
+			play_music(time_speed, pitch_scale)
+
+func play_music(time_speed:float = 1.0, pitch_scale:float = 1.0):
 	if Settings.pitch_affected:
 		if c_v in ["cave", "battle"] and subject_levels.dimensional_power >= 4:
 			music_player.pitch_scale = pitch_scale * log(time_speed - 1.0 + exp(1.0))
@@ -522,6 +528,7 @@ func switch_music(src, time_speed:float = 1.0, pitch_scale:float = 1.0):
 	$MusicPlayer/AnimationPlayer.play("FadeMusic")
 	await get_tree().process_frame
 	music_player.play()
+	
 
 func load_univ():
 	view_history.clear()
@@ -657,7 +664,7 @@ func load_game():
 			Helper.remove_recursive("user://%s/Univ%s" % [c_sv, i])
 		universe_data.clear()
 		dim_num += 1
-		switch_music(null)
+		switch_music("")
 		viewing_dimension = true
 		help.erase("hide_dimension_stuff")
 		add_dimension()
@@ -1376,12 +1383,12 @@ func switch_view(new_view:String, other_params:Dictionary = {}):
 				cave.start_at_floor = other_params.get("start_floor", 1)
 				var music_time_speed = u_i.time_speed * tile_data[c_t].get("time_speed_bonus", 1.0)
 				var music_pitch = 0.95 if tile_data[c_t].has("aurora") else 1.0
-				var music
-				if tile_data[c_t].has("ash"):
-					music = preload("res://Audio/lava_cave.ogg")
+				var music_path = ""
+				if tile_data[c_t].has("ash") and OS.get_name() != "Web":
+					music_path = "lava_cave.ogg"
 				else:
-					music = preload("res://Audio/cave1.ogg")
-				switch_music(music, music_time_speed, music_pitch)
+					music_path = "cave1.ogg"
+				switch_music(music_path, music_time_speed, music_pitch)
 				add_child(cave)
 			"STM":
 				$Ship.visible = false
@@ -1390,10 +1397,10 @@ func switch_view(new_view:String, other_params:Dictionary = {}):
 					$HUD.remove_child(HUD)
 				STM = load("res://Scenes/Views/ShipTravelMinigame2.tscn").instantiate()
 				add_child(STM)
-				if randf() < 0.5:
-					switch_music(preload("res://Audio/STM.ogg"), u_i.time_speed)
+				if randf() < 0.5 or OS.get_name() == "Web":
+					switch_music("STM.ogg", u_i.time_speed)
 				else:
-					switch_music(preload("res://Audio/STM2.ogg"), u_i.time_speed)
+					switch_music("STM2.ogg", u_i.time_speed)
 			"battle":
 				$Ship.visible = false
 				if is_instance_valid(HUD) and is_ancestor_of(HUD):
@@ -1583,7 +1590,10 @@ func add_dimension():
 		add_child(dimension)
 	var tween = create_tween()
 	tween.tween_property(dimension, "modulate", Color.WHITE, 0.2)
-	switch_music(load("res://Audio/dimension%s.ogg" % [(dim_num - 1) % 2 + 1]))
+	var song_N = 1
+	if OS.get_name() != "Web":
+		song_N = (dim_num - 1) % 2 + 1
+	switch_music("dimension%s.ogg" % song_N)
 
 func set_starfield_color(_material, param:float):
 	_material.set_shader_parameter("stepsize", min(param, 0.3))
@@ -3994,7 +4004,7 @@ func fade_out_title(fn:String, sv:String = ""):
 	HUD.hide()
 	if fn == "new_game":
 		if DRs > 0:
-			switch_music(null)
+			switch_music("")
 			viewing_dimension = true
 			set_default_dim_bonuses()
 			add_dimension()
@@ -4059,7 +4069,7 @@ func return_to_menu():
 	$Autosave.stop()
 	if c_sv != "":
 		await switch_view("")
-		switch_music(preload("res://Audio/Title.ogg"))
+		switch_music("Title.ogg")
 	c_v = ""
 	c_sv = ""
 	DRs = 0
@@ -4113,7 +4123,7 @@ func reset_dimension(DR_num:int):
 	dim_num += 1
 	if not help.has("DR_reset"):
 		dimension.get_node("ColorRect").visible = true
-		switch_music(null)
+		switch_music("")
 	else:
 		dimension.refresh_univs(true)
 	stats_dim = Data.default_stats.duplicate(true)

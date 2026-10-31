@@ -226,7 +226,7 @@ func _on_Screenshake_toggled(button_pressed):
 func _on_OPCursor_toggled(button_pressed):
 	Settings.op_cursor = button_pressed
 	if button_pressed:
-		game.switch_music(null)
+		game.switch_music("")
 		Input.set_custom_mouse_cursor(preload("res://Cursor.png"))
 	else:
 		Input.set_custom_mouse_cursor(null)

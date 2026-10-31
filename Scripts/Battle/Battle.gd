@@ -122,7 +122,7 @@ func _ready() -> void:
 	total_ship_stats *= log(max(game.u_i.speed_of_light, game.u_i.planck) - 1.0 + exp(1.0))
 	hard_battle = total_enemy_stats > total_ship_stats * 1.25
 	if hard_battle:
-		game.switch_music(preload("res://Audio/op_battle.ogg"), game.u_i.time_speed)
+		game.switch_music("op_battle.ogg", game.u_i.time_speed)
 	logs += "ship_data: " + str(ship_data) + "\n"
 	logs += "_ready() end\n"
 

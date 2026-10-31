@@ -1701,12 +1701,12 @@ var export_save_files_exported = 0
 func load_ambient_music():
 	var song_N = [3, 2]
 	var univ_id = 1
-	if game.c_u != -1:
+	if game.c_u != -1 and OS.get_name() != "Web":
 		univ_id = game.c_u % 2 + 1
-	game.switch_music(load("res://Audio/ambient{univ}_{version}.ogg".format({
+	game.switch_music("ambient{univ}_{version}.ogg".format({
 		"univ": univ_id,
 		"version": randi_range(1, song_N[univ_id]),
-	})), game.u_i.time_speed)
+	}), game.u_i.time_speed)
 
 func export_save(save_to_export:String, path:String = ""): # Empty path = copy to clipboard
 	export_save_files_exported = 0

@@ -10,19 +10,19 @@ var tab = "basic"
 
 func _ready():
 	set_polygon($Panel.size, $Panel.position)
-	var added_buildings = Mods.added_buildings
-	for key in added_buildings:
-		match added_buildings[key].type:
-			"basic":
-				basic_bldgs.append(key)
-			"storage":
-				storage_bldgs.append(key)
-			"production":
-				production_bldgs.append(key)
-			"support":
-				support_bldgs.append(key)
-			"vehicles":
-				vehicles_bldgs.append(key)
+	#var added_buildings = Mods.added_buildings
+	#for key in added_buildings:
+		#match added_buildings[key].type:
+			#"basic":
+				#basic_bldgs.append(key)
+			#"storage":
+				#storage_bldgs.append(key)
+			#"production":
+				#production_bldgs.append(key)
+			#"support":
+				#support_bldgs.append(key)
+			#"vehicles":
+				#vehicles_bldgs.append(key)
 
 func _input(event):
 	super(event)
