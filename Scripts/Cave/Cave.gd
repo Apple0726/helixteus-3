@@ -288,14 +288,24 @@ func _ready():
 	minimap_rover.position = minimap_center
 	minimap_cave.scale *= minimap_zoom
 	minimap_rover.scale *= 0.1
-	generate_cave(true, false)
 	if start_at_floor > 1:
-		for i in int(start_at_floor - 1):
+		for _i in int(start_at_floor - 1):
+			if cave_floor > len(seeds):
+				seeds.append(randi())
+				tiles_mined.append([])
+				enemies_rekt.append([])
+				debris_rekt.append([])
+				chests_looted.append([])
+				partially_looted_chests.append({})
+				hole_exits.append({"hole":-1, "exit":-1})
 			go_down_cave(true)
 			var avg_dmg:float = 6.0 * difficulty / def / rover_size * armor_damage_mult
 			var dmg_to_HP_ratio:float = avg_dmg / total_HP
 			if cave_floor == num_floors or dmg_to_HP_ratio > 0.2:
 				break
+		generate_cave(cave_floor == 1, false)
+	else:
+		generate_cave(true, false)
 	if is_aurora_cave:
 		$AuroraPlayer.play("Aurora", -1, 0.2)
 	for rsrc in game.show:
@@ -633,8 +643,7 @@ func generate_cave(first_floor:bool, going_up:bool):
 	$UI2/CaveInfo/Floor.text = "B%sF" % [cave_floor]
 	var noise = FastNoiseLite.new()
 	var lava_noise = FastNoiseLite.new()
-	var first_time:bool = cave_floor > len(seeds)
-	if first_time:
+	if cave_floor > len(seeds):
 		var sd = randi()
 		rng.set_seed(sd)
 		noise.seed = sd
@@ -803,7 +812,7 @@ func generate_cave(first_floor:bool, going_up:bool):
 	var rand_hole:int
 	var rand_spawn:int
 	var rand_hole_tile_id:int = rng.randi_range(0, len(rooms[0].tiles) - 1)
-	if first_time:
+	if hole_exits[cave_floor - 1].hole == -1:
 		rand_hole = rooms[0].tiles[rand_hole_tile_id]
 		rand_spawn = rand_hole # rand_spawn's value will be changed later
 		hole_exits[cave_floor - 1].hole = rand_hole
@@ -889,7 +898,7 @@ func generate_cave(first_floor:bool, going_up:bool):
 		if is_instance_valid(wormhole):
 			wormhole.free()
 	var hole_pos = get_tile_pos(rand_hole) * 200 + Vector2(100, 100)
-	if first_time:
+	if hole_exits[cave_floor - 1].exit == -1:
 		hole_exits[cave_floor - 1].exit = rand_spawn
 	if hole_exits[cave_floor - 1].has("drilled_holes"):
 		for id in hole_exits[cave_floor - 1].drilled_holes:
@@ -1302,7 +1311,8 @@ func go_down_cave(initial_skip:bool = false):
 		difficulty *= ProcGenSettings.cave_floor_difficulty * 1.125
 	else:
 		difficulty *= ProcGenSettings.cave_floor_difficulty
-	generate_cave(false, false)
+	if not initial_skip:
+		generate_cave(false, false)
 	if not game.achievement_data.exploration.has("reach_floor_8") and cave_floor == 8:
 		game.earn_achievement("exploration", "reach_floor_8")
 	if not game.achievement_data.exploration.has("reach_floor_16") and cave_floor == 16:

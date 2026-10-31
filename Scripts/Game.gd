@@ -501,21 +501,25 @@ func animate_title_buttons():
 	starfield_tween = create_tween()
 	starfield_tween.tween_property($Stars/Starfield, "modulate:a", 0.6, 3.0).set_ease(Tween.EASE_IN).set_trans(Tween.TRANS_QUAD)
 	
-func switch_music(src_path:String, time_speed:float = 1.0, pitch_scale:float = 1.0):
+func switch_music(src, time_speed:float = 1.0, pitch_scale:float = 1.0):
 	if Settings.op_cursor:
-		src_path = "op_cursor.ogg"
+		src = "op_cursor.ogg"
 	else:
 		#Music fading
 		if music_player.playing:
 			$MusicPlayer/AnimationPlayer.play_backwards("FadeMusic")
 			await $MusicPlayer/AnimationPlayer.animation_finished
-	if src_path == "":
+	if src == null:
 		return
-	if FileAccess.file_exists("res://Audio/" + src_path):
-		var stream = load("res://Audio/" + src_path)
-		if music_player.stream != stream:
-			music_player.stream = stream
-			play_music(time_speed, pitch_scale)
+	if src is String:
+		if FileAccess.file_exists("res://Audio/" + src):
+			var stream = load("res://Audio/" + src)
+			if music_player.stream != stream:
+				music_player.stream = stream
+				play_music(time_speed, pitch_scale)
+	else:
+		music_player.stream = src
+		play_music(time_speed, pitch_scale)
 
 func play_music(time_speed:float = 1.0, pitch_scale:float = 1.0):
 	if Settings.pitch_affected:
@@ -687,6 +691,7 @@ func load_game():
 		if not is_ancestor_of(HUD):
 			$HUD.add_child(HUD)
 	$UI/BackupPanel.start_timer()
+	$ProbeTimer.start()
 	set_c_sv(c_sv)
 
 func set_c_sv(_c_sv):
@@ -1858,10 +1863,10 @@ func generate_clusters():
 		"galaxy_num":int((ProcGenSettings.min_number_of_galaxies + ProcGenSettings.max_number_of_galaxies) / 100.0),
 		"galaxies":[],
 		"seed":rng.randi(),
-		"view":{"pos":Vector2(640, 360), "zoom":1 / 4.0},
+		"view":{"pos":Vector2(640, 360), "zoom":0.1},
 		"modifiers":[],
 	}
-	var max_dist_from_center = pow(total_clust_num, 0.5) * 500.0
+	var max_dist_from_center = pow(total_clust_num, 0.5) * 250.0
 	show.c_bk_button = true
 	for c_id in range(1, total_clust_num):
 		var c_i = {
@@ -1879,10 +1884,10 @@ func generate_clusters():
 		if c_i["class"] == ClusterType.GROUP:
 			c_i["galaxy_num"] /= 50
 		var pos:Vector2
-		var dist_from_center = pow(rng.randf(), 0.5) * max_dist_from_center + 160
+		var dist_from_center = pow(rng.randf(), 0.5) * max_dist_from_center + 80
 		pos = Vector2.from_angle(rng.randf_range(0, 2 * PI)) * dist_from_center * ProcGenSettings.cluster_density
 		c_i["pos"] = pos
-		var DE_factor = pos.length() * u_i.dark_energy
+		var DE_factor = pos.length() * u_i.dark_energy * 2.0
 		c_i["redshift"] = Helper.clever_round(DE_factor * 0.002)
 		while c_i.modifiers.is_empty():
 			for mod_to_add in cluster_modifier_data:
@@ -1904,10 +1909,10 @@ func generate_clusters():
 		u_i.discovered = true
 		u_i.cluster_data_persistent = []
 		u_i.cluster_data_persistent.resize(total_clust_num)
+		for i in total_clust_num:
+			u_i.cluster_data_persistent[i] = {"id": u_i.cluster_data[i].id}
 	for i in total_clust_num:
 		var c_i_persistent = u_i.cluster_data_persistent[i]
-		if c_i_persistent == null:
-			continue
 		for key in c_i_persistent.keys():
 			u_i.cluster_data[i][key] = c_i_persistent[key]
 
@@ -1931,7 +1936,7 @@ func generate_galaxies(id:int):
 			"parent":0,
 			"system_num":int((ProcGenSettings.min_number_of_systems_elliptical + ProcGenSettings.max_number_of_systems_elliptical) / 30.0),
 			"seed":rng.randi(),
-			"view":{"pos":Vector2(7500, 7500) * 0.5 * ProcGenSettings.star_system_density + Vector2(640, 360), "zoom":0.5}
+			"view":{"pos":Vector2(7500, 7500) * 0.1 * ProcGenSettings.star_system_density + Vector2(640, 360), "zoom":0.1}
 		}
 	var galaxy_num = total_gal_num - u_i.cluster_data[id]["galaxies"].size()
 	var redshift:float = u_i.cluster_data[id].redshift
@@ -2546,89 +2551,88 @@ func generate_planets(id:int):#local id
 		var max_lv:int = max(1, 1 + log(2.0 * power_left) / log(1.3))
 		var num:int = 0
 		var total_num:int = rng.randi() % 12 + 1
-		if not p_i.has("conquered"):
-			var enemy_positions:PackedVector2Array = []
-			while num < total_num:
-				num += 1
-				var lv:int = rng.randi_range(max(1, max_lv - 8), max_lv)
-				# _class	1: red, damage dealer
-				#			2: green, status effects & debuffs inflicter
-				#			3: blue, pushes stuff around
-				#			4: purple, magic user, buffer, healer
-				var _class:int = rng.randi() % 4 + 1
-				if c_s_g == 0:
-					lv = min(lv, 4)
-					if i == 2: # Only level 1 enemies on closest planet from starting planet
-						lv = 1
-					_class = 1
-				if num == total_num:
-					lv = max(1, 1 + log(2.0 * power_left) / log(1.3))
-				var HP_power = 7.0 * (1.2 * rng.randf() + 0.2)
-				var stat_power = 48.0 - 1.5 * HP_power + lv / 2
-				var HP = round(HP_power * (lv + 1.0))
-				var _money = round(rng.randf_range(1, 2) * pow(1.4, lv - 1) * 50000)
-				var XP = round(pow(1.25, lv - 1) * 40)
-				if _class == 2:
-					HP = round(HP * 0.8)
-					_money = round(_money * 1.1)
-					XP = round(XP * 1.1)
-				elif _class == 3:
-					HP = round(HP * 1.2)
-					_money = round(_money * 1.1)
-					XP = round(XP * 1.1)
-				elif _class == 4:
-					HP = round(HP * 0.9)
-					_money = round(_money * 1.2)
-					XP = round(XP * 1.2)
-				var stats = [0.0, 0.0, 0.0, 0.0]
-				while stat_power > 0:
-					stats[rng.randi() % 4] += 1
-					stat_power -= 1
-				var attack = stats[0]
-				var defense = stats[1]
-				var accuracy = stats[2]
-				var agility = stats[3]
-				if c_s_g == 0 and i == 2:
-					while agility > 7:
-						agility -= 3
-						attack += 1
-						defense += 1
-						accuracy += 1
-				var colliding = true
-				var initial_position:Vector2
-				while colliding:
-					colliding = false
-					initial_position = Vector2(rng.randf_range(640.0 - num * 10.0, 900.0 + num * 20.0), rng.randf_range(220.0 - num * 15.0, 500.0 + num * 15.0))
-					for pos in enemy_positions:
-						if Geometry2D.is_point_in_circle(initial_position, pos, 30.0):
-							colliding = true
-							break
-				enemy_positions.append(initial_position)
-				var HX_data = {
-					"class":_class,
-					"type":rng.randi() % 4 + 1,
-					"passive_abilities":[rng.randi() % Battle.PassiveAbility.N],
-					"lv":lv,
-					"HP":HP,
-					"attack":attack,
-					"defense":defense,
-					"accuracy":accuracy,
-					"agility":agility,
-					"initial_position":initial_position,
-					"money":_money,
-					"XP":XP}
-				if not c_s_g == 0:
-					while rng.randf() < 0.25:
-						var additional_passive_ability = rng.randi() % Battle.PassiveAbility.N
-						if additional_passive_ability not in HX_data.passive_abilities:
-							HX_data.passive_abilities.append(additional_passive_ability)
-							HX_data.money *= 0.6 * len(HX_data.passive_abilities)
-							HX_data.XP *= 0.6 * len(HX_data.passive_abilities)
-				p_i.HX_data.append(HX_data)
-				power_left -= 0.5 * pow(1.3, lv - 1)
-				if power_left <= 0.0:
-					break
-			p_i.HX_data.shuffle()
+		var enemy_positions:PackedVector2Array = []
+		while num < total_num:
+			num += 1
+			var lv:int = rng.randi_range(max(1, max_lv - 8), max_lv)
+			# _class	1: red, damage dealer
+			#			2: green, status effects & debuffs inflicter
+			#			3: blue, pushes stuff around
+			#			4: purple, magic user, buffer, healer
+			var _class:int = rng.randi() % 4 + 1
+			if c_s_g == 0:
+				lv = min(lv, 4)
+				if i == 2: # Only level 1 enemies on closest planet from starting planet
+					lv = 1
+				_class = 1
+			if num == total_num:
+				lv = max(1, 1 + log(2.0 * power_left) / log(1.3))
+			var HP_power = 7.0 * (1.2 * rng.randf() + 0.2)
+			var stat_power = 48.0 - 1.5 * HP_power + lv / 2
+			var HP = round(HP_power * (lv + 1.0))
+			var _money = round(rng.randf_range(1, 2) * pow(1.4, lv - 1) * 50000)
+			var XP = round(pow(1.25, lv - 1) * 40)
+			if _class == 2:
+				HP = round(HP * 0.8)
+				_money = round(_money * 1.1)
+				XP = round(XP * 1.1)
+			elif _class == 3:
+				HP = round(HP * 1.2)
+				_money = round(_money * 1.1)
+				XP = round(XP * 1.1)
+			elif _class == 4:
+				HP = round(HP * 0.9)
+				_money = round(_money * 1.2)
+				XP = round(XP * 1.2)
+			var stats = [0.0, 0.0, 0.0, 0.0]
+			while stat_power > 0:
+				stats[rng.randi() % 4] += 1
+				stat_power -= 1
+			var attack = stats[0]
+			var defense = stats[1]
+			var accuracy = stats[2]
+			var agility = stats[3]
+			if c_s_g == 0 and i == 2:
+				while agility > 7:
+					agility -= 3
+					attack += 1
+					defense += 1
+					accuracy += 1
+			var colliding = true
+			var initial_position:Vector2
+			while colliding:
+				colliding = false
+				initial_position = Vector2(rng.randf_range(640.0 - num * 10.0, 900.0 + num * 20.0), rng.randf_range(220.0 - num * 15.0, 500.0 + num * 15.0))
+				for pos in enemy_positions:
+					if Geometry2D.is_point_in_circle(initial_position, pos, 30.0):
+						colliding = true
+						break
+			enemy_positions.append(initial_position)
+			var HX_data = {
+				"class":_class,
+				"type":rng.randi() % 4 + 1,
+				"passive_abilities":[rng.randi() % Battle.PassiveAbility.N],
+				"lv":lv,
+				"HP":HP,
+				"attack":attack,
+				"defense":defense,
+				"accuracy":accuracy,
+				"agility":agility,
+				"initial_position":initial_position,
+				"money":_money,
+				"XP":XP}
+			if not c_s_g == 0:
+				while rng.randf() < 0.25:
+					var additional_passive_ability = rng.randi() % Battle.PassiveAbility.N
+					if additional_passive_ability not in HX_data.passive_abilities:
+						HX_data.passive_abilities.append(additional_passive_ability)
+						HX_data.money *= 0.6 * len(HX_data.passive_abilities)
+						HX_data.XP *= 0.6 * len(HX_data.passive_abilities)
+			p_i.HX_data.append(HX_data)
+			power_left -= 0.5 * pow(1.3, lv - 1)
+			if power_left <= 0.0:
+				break
+		p_i.HX_data.shuffle()
 		var wid:int = Helper.get_wid(p_i.size)
 		var view_zoom = 3.0 / wid
 		p_i["view"] = {"pos":Vector2(340, 80), "zoom":view_zoom}
@@ -2686,9 +2690,9 @@ func generate_planets(id:int):#local id
 					star["repair_cost"] = Data.MS_costs[star.MS + "_" + str(star.MS_lv)].money * 24 * rng.randf_range(1, 3) * planet_data[-1].distance / 1000.0
 				star.repair_cost *= engineering_bonus.BCM
 				system_data[id].has_MS = true
-		var view_zoom = 40.0 / furthest_planet_distance * (planet_data[0].distance / 70)
+		var system_view_zoom = 40.0 / furthest_planet_distance * (planet_data[0].distance / 70)
 		if not system_data[id].has("view"):
-			system_data[id]["view"] = {"pos": Vector2(640, 360), "zoom": view_zoom}
+			system_data[id]["view"] = {"pos": Vector2(640, 360), "zoom": system_view_zoom}
 	elif c_u == 0:
 		#Home planet information
 		planet_data[2]["name"] = tr("HOME_PLANET")
@@ -2721,8 +2725,6 @@ func generate_planets(id:int):#local id
 		var p_i_persistent = planet_data_persistent[i]
 		for key in p_i_persistent.keys():
 			planet_data[i][key] = p_i_persistent[key]
-		if p_i_persistent.has("conquered"):
-			planet_data[i].erase("HX_data")
 
 func get_random_element(elements:Dictionary, rng:RandomNumberGenerator):
 	var S:float = 0.0
@@ -4067,6 +4069,7 @@ func delete_save(save_str):
 func return_to_menu():
 	$Ship.visible = false
 	$Autosave.stop()
+	$ProbeTimer.stop()
 	if c_sv != "":
 		await switch_view("")
 		switch_music("Title.ogg")
@@ -4597,6 +4600,7 @@ func _on_probe_timer_timeout() -> void:
 		if progress >= 1:
 			if probe.tier == 0:
 				u_i.cluster_data[probe.obj_to_discover].visible = true
+				u_i.cluster_data_persistent[probe.obj_to_discover].visible = true
 				popup(tr("CLUSTER_DISCOVERED_BY_PROBE"), 3)
 			probe_data[i] = null
 			refresh = true

@@ -715,7 +715,6 @@ position = Vector2(640, 360)
 [node name="Screenshake" parent="Camera2D" unique_id=994485755 instance=ExtResource("36")]
 
 [node name="ProbeTimer" type="Timer" parent="." unique_id=172490870]
-autostart = true
 
 [node name="SpaceportTimer" type="Timer" parent="." unique_id=1008050411]
 

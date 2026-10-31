@@ -226,18 +226,21 @@ func change_overlay(overlay_id:int, gradient:Gradient, object:Dictionary = {}):
 					overlay.obj.modulate = gradient.sample(0)
 				else:
 					overlay.obj.modulate = gradient.sample(1)
+					overlay.obj.visible = not game.overlay.hide_obj_btn.button_pressed
 		3:
 			for overlay in _overlays:
 				if game.system_data[overlay.id].has("explored"):
 					overlay.obj.modulate = gradient.sample(0)
 				else:
 					overlay.obj.modulate = gradient.sample(1)
+					overlay.obj.visible = not game.overlay.hide_obj_btn.button_pressed
 		4:
 			for overlay in _overlays:
 				if game.system_data[overlay.id].has("conquered"):
 					overlay.obj.modulate = gradient.sample(0)
 				else:
 					overlay.obj.modulate = gradient.sample(1)
+					overlay.obj.visible = not game.overlay.hide_obj_btn.button_pressed
 		5:
 			for overlay in _overlays:
 				var offset = inverse_lerp(c_vl.left, c_vl.right, game.system_data[overlay.id].diff)
@@ -275,8 +278,10 @@ func change_overlay(overlay_id:int, gradient:Gradient, object:Dictionary = {}):
 						break
 				if found:
 					overlay.obj.modulate = gradient.sample(0)
+					overlay.obj.visible = true
 				else:
 					overlay.obj.modulate = gradient.sample(1)
+					overlay.obj.visible = not game.overlay.hide_obj_btn.button_pressed
 			game.overlay.update_filter_text(matched_objs_display)
 
 func _on_Galaxy_tree_exited():

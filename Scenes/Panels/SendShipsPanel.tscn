@@ -152,7 +152,6 @@ offset_left = 936.0
 offset_top = 422.0
 offset_right = 1108.0
 offset_bottom = 452.0
-adv_help = true
 translate_help = false
 
 [node name="PlanetEECost" parent="." unique_id=1648636729 instance=ExtResource("1")]

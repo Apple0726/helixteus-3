@@ -513,11 +513,13 @@ func _on_Bookmarked_pressed():
 		if c_i.has("bookmarked"):
 			game.bookmarks.cluster.erase(str(game.c_c))
 			c_i.erase("bookmarked")
+			game.u_i.cluster_data_persistent[game.c_c].erase("bookmarked")
 		else:
 			var bookmark:Dictionary = {
 				"name":c_i.name,
 				"c_c":game.c_c}
 			c_i.bookmarked = true
+			game.u_i.cluster_data_persistent[game.c_c].bookmarked = true
 			game.bookmarks.cluster[str(game.c_c)] = bookmark
 	refresh_bookmarks()
 

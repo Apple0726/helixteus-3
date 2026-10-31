@@ -97,9 +97,9 @@ func import_string_popup():
 	
 func import_string():
 	var base64_string = DisplayServer.clipboard_get()
-	var bytes = Marshalls.base64_to_raw(base64_string).decompress_dynamic(-1, FileAccess.COMPRESSION_DEFLATE)
+	var bytes = Marshalls.base64_to_raw(base64_string)
 	var file = FileAccess.open_compressed("user://Save1.hx3", FileAccess.WRITE, FileAccess.COMPRESSION_ZSTD)
-	file.store_var(bytes_to_var(bytes))
+	file.store_buffer(bytes)
 	file.close()
 	Helper.import_save("Save1", "user://Save1.hx3")
 	var dir = DirAccess.open("user://")

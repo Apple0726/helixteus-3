@@ -245,7 +245,7 @@ func refresh():
 	CC_slot.get_node("REP").visible = REPs != 0
 	$Stats/Ability.visible = ability != ""
 	engi_mult = game.engineering_bonus.RSM
-	mult = tile.bldg.path_1_value
+	mult = tile.bldg.path_1_value * Helper.get_IR_mult(Building.ROVER_CONSTRUCTION_CENTER)
 	rover_costs = Data.costs.rover.duplicate(true)
 	if armor != -1:
 		for cost_key in Item.data[armor].costs.keys():

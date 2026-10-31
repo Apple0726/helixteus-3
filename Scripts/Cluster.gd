@@ -207,18 +207,21 @@ func change_overlay(overlay_id:int, gradient:Gradient, object:Dictionary = {}):
 					overlay.obj.modulate = gradient.sample(0)
 				else:
 					overlay.obj.modulate = gradient.sample(1)
+					overlay.obj.visible = not game.overlay.hide_obj_btn.button_pressed
 		2:
 			for overlay in _overlays:
 				if game.galaxy_data[overlay.id].has("explored"):
 					overlay.obj.modulate = gradient.sample(0)
 				else:
 					overlay.obj.modulate = gradient.sample(1)
+					overlay.obj.visible = not game.overlay.hide_obj_btn.button_pressed
 		3:
 			for overlay in _overlays:
 				if game.galaxy_data[overlay.id].has("conquered"):
 					overlay.obj.modulate = gradient.sample(0)
 				else:
 					overlay.obj.modulate = gradient.sample(1)
+					overlay.obj.visible = not game.overlay.hide_obj_btn.button_pressed
 		4:
 			for overlay in _overlays:
 				var offset = inverse_lerp(c_vl.left, c_vl.right, game.galaxy_data[overlay.id].diff)
@@ -237,6 +240,7 @@ func change_overlay(overlay_id:int, gradient:Gradient, object:Dictionary = {}):
 					overlay.obj.modulate = gradient.sample(0)
 				else:
 					overlay.obj.modulate = gradient.sample(1)
+					overlay.obj.visible = not game.overlay.hide_obj_btn.button_pressed
 		8:
 			var matched_objs_display = []
 			var matched_objs = []
@@ -303,6 +307,7 @@ func _process(delta: float) -> void:
 						if game.fighter_data[j] and game.fighter_data[j].get("c_c", -1) == game.c_c:
 							game.fighter_data[j] = null
 					c_i.erase("conquer_data")
+					game.u_i.cluster_data_persistent[game.c_c].erase("conquer_data")
 					breaker = 100
 					game.popup_window(tr("ALL_FIGHTERS_REKT"))
 					break
@@ -328,6 +333,7 @@ func _process(delta: float) -> void:
 			game.stats_global.clusters_conquered += 1
 			c_i.conquered = true
 			c_i.erase("conquer_data")
+			game.u_i.cluster_data_persistent[game.c_c].erase("conquer_data")
 			if not game.bldg_unlocked.has(Building.SOLAR_PANEL):
 				game.bldg_unlocked[Building.SOLAR_PANEL] = true
 			for j in len(game.fighter_data):

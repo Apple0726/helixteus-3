@@ -140,8 +140,8 @@ func update(changing_paths:bool = false):
 					same_lv = false
 				if tile.bldg[path_str] >= next_lv_spinbox.value or Data[path_str][bldg].has("cap") and tile.bldg[path_str] >= Data[path_str][bldg].cap:
 					continue
-				calc_costs(tile.bldg.name, lv_curr, lv_to, tile.cost_div if tile.has("cost_div") else 1.0, 1)
-				cost_div_sum += tile.cost_div if tile.has("cost_div") else 1.0
+				calc_costs(tile.bldg.name, lv_curr, lv_to, tile.get("cost_div", 1.0), 1)
+				cost_div_sum += tile.get("cost_div", 1.0)
 			cost_div_sum /= len(ids)
 			if cost_div_sum > 1.0:
 				$DivBy.text = tr("DIV_BY") % Helper.clever_round(cost_div_sum, 4)

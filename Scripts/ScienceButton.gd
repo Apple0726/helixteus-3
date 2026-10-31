@@ -94,8 +94,9 @@ func show_tooltip():
 	var sc_loc_desc = tr("%s_SC_DESC" % name.to_upper())
 	var alternate_name = false
 	if infinite_research and max_level:
-		sc_loc_name = tr("%s_INF_SC" % [name.to_upper()])
-		sc_loc_desc = tr("%s_INF_SC_DESC" % [name.to_upper()]) % game.maths_bonus.IRM
+		if tr("%s_INF_SC" % name.to_upper()) != "%s_INF_SC" % name.to_upper():
+			sc_loc_name = tr("%s_INF_SC" % name.to_upper())
+		sc_loc_desc = tr("%s_INF_SC_DESC" % name.to_upper()) % game.maths_bonus.IRM
 		sc_loc_desc += "\n{current_mult}: {mult}".format({
 			"current_mult":tr("CURRENT_MULT"),
 			"mult":Helper.clever_round(pow(game.maths_bonus.IRM, sc_lv - num_levels)),
@@ -123,7 +124,7 @@ func show_tooltip():
 		return
 	var cost:float
 	if infinite_research and max_level:
-		cost = infinite_research.cost * pow(infinite_research.pw, sc_lv)
+		cost = infinite_research.cost * pow(infinite_research.pw, sc_lv - num_levels)
 	else:
 		if max_level:
 			cost = Data.science_unlocks[sc_id].cost[sc_lv-1]

@@ -366,7 +366,7 @@ layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 mouse_filter = 2
-columns = 3
+columns = 2
 
 [connection signal="pressed" from="CloseButton" to="." method="_on_close_button_pressed"]
 [connection signal="mouse_entered" from="Stats/Ability" to="." method="_on_Ability_mouse_entered"]

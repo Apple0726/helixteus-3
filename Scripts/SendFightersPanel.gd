@@ -158,6 +158,7 @@ func refresh():
 			refresh_energy()
 			if unconquered_obj == 0:
 				c_i.conquered = true
+				game.u_i.cluster_data_persistent[game.c_c].conquered = true
 
 func sort_systems(ascending:bool):
 	sorted_objs = game.system_data.duplicate(true)
@@ -255,6 +256,7 @@ func _on_Send_pressed():
 					"combined_strength": combined_strength,
 					"conquer_order": $Control/ConquerOrderPanel/CheckBox.button_pressed#true: ascending difficulty,
 				}
+				game.u_i.cluster_data_persistent[game.c_c].conquer_data = game.u_i.cluster_data[game.c_c].conquer_data
 				game.HUD.refresh()
 				game.view.obj.set_process(true)
 			else:

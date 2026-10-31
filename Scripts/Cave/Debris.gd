@@ -24,6 +24,8 @@ func _ready():
 	$Sprite2D.material.set_shader_parameter("aurora", aurora_intensity > 0.0)
 	$Sprite2D.material.set_shader_parameter("has_lava", lava_intensity > 0.0)
 	$Sprite2D/LavaLight.enabled = lava_intensity > 0.0
+	if lava_intensity == 0.0:
+		$Sprite2D.light_mask = 1
 	$GPUParticles2D.modulate = self_modulate
 	$Sprite2D.modulate = self_modulate
 	crack_threshold = 60 * randf() / pow(scale.x, 3)

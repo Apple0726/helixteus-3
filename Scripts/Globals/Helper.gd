@@ -340,6 +340,7 @@ func toggle_overlay(overlays, overlay_visible):
 			if overlay.obj.material:
 				overlay.obj.material.set_shader_parameter("toggled", true)
 			overlay.obj.modulate = overlay.original_modulate
+			overlay.obj.show()
 
 func change_circle_size(value, overlays):
 	if game.overlay_data[game.c_v].visible:
@@ -634,7 +635,7 @@ func generate_rock(tile:Dictionary, p_i:Dictionary):
 	return contents
 
 func get_IR_mult(bldg_name):
-	var sc:int
+	var sc:int = -1
 	if bldg_name in [Building.POWER_PLANT, Building.SOLAR_PANEL, Building.STEAM_ENGINE]:
 		sc = Science.ENERGY_PRODUCTION_EFFICIENCY
 	elif bldg_name in [Building.ATOM_MANIPULATOR, Building.SUBATOMIC_PARTICLE_REACTOR]:
@@ -645,7 +646,11 @@ func get_IR_mult(bldg_name):
 		sc = Science.RESEARCH_EFFICIENCY
 	elif bldg_name == Building.MINERAL_EXTRACTOR:
 		sc = Science.MINERAL_EXTRACTION_EFFICIENCY
-	return pow(game.maths_bonus.IRM, game.science_level[sc])
+	elif bldg_name == Building.ROVER_CONSTRUCTION_CENTER:
+		sc = Science.ROVER_CONSTRUCTION
+	if sc == -1:
+		return 1.0
+	return pow(game.maths_bonus.IRM, game.science_level[sc] - len(Data.science_unlocks[sc].cost))
 
 func add_ship_XP(id:int, XP:float):
 	var ship_data = game.ship_data
@@ -765,9 +770,9 @@ func update_rsrc(p_i, tile, rsrc = null, active:bool = false):
 		prod = tile.bldg.path_1_value * get_prod_mult(tile) * tile.get("mining_outpost_bonus", 1.0)
 		rsrc_text = "%s m/s" % format_num(prod, true)
 		current_bar_value = fposmod((curr_time - tile.bldg.collect_date) * prod, 1.0)
-	else:
-		if Mods.added_buildings.has(tile.bldg.name):
-			Mods.mod_list[Mods.added_buildings[tile.bldg.name].mod].calculate(p_i, tile, rsrc, curr_time)
+	#else:
+		#if Mods.added_buildings.has(tile.bldg.name):
+			#Mods.mod_list[Mods.added_buildings[tile.bldg.name].mod].calculate(p_i, tile, rsrc, curr_time)
 	if is_instance_valid(rsrc):
 		rsrc.set_current_bar_value(current_bar_value)
 		rsrc.set_capacity_bar_value(capacity_bar_value)
@@ -813,8 +818,8 @@ func update_ship_travel():
 		var s_g_id = game.ships_travel_data.c_g_coords.s
 		var p_id = game.ships_travel_data.c_coords.p
 		var system_data = game.open_obj("Galaxies", game.ships_travel_data.c_g_coords.g)
-		var planet_data = game.planet_data
-		if game.c_s_g != s_g_id:
+		var planet_data:Array = game.planet_data
+		if game.c_s_g != s_g_id or planet_data.is_empty():
 			planet_data = game.open_obj("Systems", s_g_id)
 		var p_i = planet_data[p_id]
 		if p_i.has("ancient_bldgs") and p_i.ancient_bldgs.has(AncientBuilding.SPACEPORT) and not p_i.ancient_bldgs[AncientBuilding.SPACEPORT][0].has("repair_cost"):
@@ -1005,7 +1010,6 @@ func conquer_planet(p_id:int):
 		return
 	game.planet_data[p_id].conquered = true
 	game.planet_data_persistent[p_id].conquered = true
-	game.planet_data[p_id].erase("HX_data")
 	game.stats_univ.planets_conquered += 1
 	game.stats_dim.planets_conquered += 1
 	game.stats_global.planets_conquered += 1
@@ -1182,7 +1186,6 @@ func get_bldg_tooltip2(bldg:int, path_1_value, path_2_value, path_3_value):
 func set_overlay_visibility(gradient:Gradient, overlay, offset:float):
 	overlay.obj.modulate = gradient.sample(offset)
 	overlay.obj.visible = (not game.overlay.hide_obj_btn.button_pressed or offset >= 0 and offset <= 1)
-	overlay.obj.modulate.a = 1.0 if overlay.obj.visible else 0.0
 
 func remove_recursive(path):
 	# Open directory
@@ -1734,11 +1737,12 @@ func export_save(save_to_export:String, path:String = ""): # Empty path = copy t
 							save_dict.univs.append(export_univ_res.univ_data.duplicate(true))
 					file_name = directory.get_next()
 				if success:
+					var packed_bytes = var_to_bytes(save_dict).compress(FileAccess.COMPRESSION_ZSTD)
 					if path == "":
-						var base64_string = Marshalls.raw_to_base64(var_to_bytes(save_dict).compress(FileAccess.COMPRESSION_DEFLATE))
+						var base64_string = Marshalls.raw_to_base64(packed_bytes)
 						DisplayServer.clipboard_set(base64_string)
 					else:
-						file.store_var(save_dict)
+						file.store_buffer(packed_bytes)
 			else:
 				success = false
 		else:
@@ -1824,14 +1828,17 @@ func get_file_size_string(bytes:int):
 		prefix = "T"
 		base /= pow(1024.0, 4)
 	return "{bytes} {prefix}{b_byte}".format({
-		"bytes":clever_round(base),
+		"bytes":Helper.format_num(base, true),
 		"prefix":prefix,
 		"b_byte":tr("B_BYTE")})
 
 func import_save(save_name:String, path:String):
 	var importing_file = FileAccess.open_compressed(path, FileAccess.READ, FileAccess.COMPRESSION_ZSTD)
 	if importing_file:
-		var save_dict:Dictionary = importing_file.get_var()
+		var file_size = importing_file.get_length()
+		var packed_bytes = importing_file.get_buffer(file_size)
+		var dec_bytes = packed_bytes.decompress(file_size * 1000, FileAccess.COMPRESSION_ZSTD)
+		var save_dict:Dictionary = bytes_to_var(dec_bytes)
 		var directory = DirAccess.open("user://")
 		var final_save_name:String = save_name
 		if directory.dir_exists(save_name):

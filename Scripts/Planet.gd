@@ -1583,9 +1583,9 @@ func add_bldg(id2:int, type:int, building_animation:bool = false):
 				add_rsrc(v, Color.WHITE, load("res://Graphics/Atoms/%s.png" % tile.bldg.reaction), id2)
 			else:
 				add_rsrc(v, Color.WHITE, Data.rsrc_icons[Building.SUBATOMIC_PARTICLE_REACTOR], id2)
-		_:
-			if Mods.added_buildings.has(type):
-				add_rsrc(v, Mods.added_buildings[type].icon_color, Data.rsrc_icons[type], id2)
+		#_:
+			#if Mods.added_buildings.has(type):
+				#add_rsrc(v, Mods.added_buildings[type].icon_color, Data.rsrc_icons[type], id2)
 	if game.show.has("bldg_upgrade"):
 		var hbox = Helper.add_lv_boxes(tile, v)
 		add_child(hbox)

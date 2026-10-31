@@ -28,7 +28,7 @@ func _ready():
 	$TabContainer/SFX/Master.value = Settings.master_volume
 	$TabContainer/SFX/Music.value = Settings.music_volume
 	$TabContainer/SFX/SFX.value = Settings.SFX_volume
-	$TabContainer/SFX/MusicPitch.button_pressed = Settings.pitch_affected
+	$TabContainer/SFX/MusicPitch.set_pressed_no_signal(Settings.pitch_affected)
 	$TabContainer/GRAPHICS/Vsync.button_pressed = Settings.vsync
 	$TabContainer/GRAPHICS/AutosaveLight.button_pressed = Settings.autosave_light
 	$TabContainer/GRAPHICS/EnableShaders.button_pressed = Settings.enable_shaders
@@ -204,6 +204,9 @@ func _on_MusicPitch_toggled(button_pressed):
 			game.music_player.pitch_scale = game.u_i.time_speed
 	else:
 		game.music_player.pitch_scale = 1.0
+	if game.c_v == "cave":
+		if game.tile_data[game.c_t].has("aurora"):
+			game.music_player.pitch_scale *= 0.95
 	save_config("audio", "pitch_affected", button_pressed)
 
 

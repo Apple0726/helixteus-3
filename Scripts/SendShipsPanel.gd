@@ -22,7 +22,7 @@ var spaceport_travel_cost_reduction:float = 1.0
 func _ready():
 	set_polygon($GUI.size, $GUI.position)
 	$Drive.add_item(tr("STANDARD_DRIVE"))
-	$Drive.add_item(tr("PD_SC"))
+	$Drive.add_item(tr("PLUTONIUM_DRIVE_SC"))
 	$Panel/TravelCosts.text = "%s:" % [tr("TRAVEL_COSTS")]
 	$TotalEnergyCost.text = "%s:" % [tr("COSTS")]
 

@@ -3,7 +3,8 @@ extends Node2D
 @onready var game = self.get_parent().get_parent()
 @onready var view = self.get_parent()
 
-const CLUSTER_AUTOSCALE_MIN_THRESHOLD = 0.1
+const CLUSTER_AUTOSCALE_MIN_THRESHOLD = 0.2
+const CLUSTER_AUTOSCALE_MAX_THRESHOLD = 0.8
 var dimensions:float = 500.0
 
 var clusters_info = []
@@ -27,6 +28,7 @@ func _ready():
 		if Settings.enable_shaders:
 			cluster_btn.material = ShaderMaterial.new()
 			cluster_btn.material.shader = preload("res://Shaders/Cluster.gdshader")
+			cluster_btn.material.set_shader_parameter("fog_size", 30.0 + (c_i.redshift + 1.0) * 0.1)
 			cluster_btn.material.set_shader_parameter("seed", int(c_i.redshift * 1000.0))
 			cluster_btn.material.set_shader_parameter("color", Color.from_hsv(hue, sat, 1.0))
 		else:
@@ -38,7 +40,7 @@ func _ready():
 		cluster_btn.pivot_offset_ratio = Vector2.ONE * 0.5
 		var radius = pow(c_i["galaxy_num"] / game.CLUSTER_SCALE_DIV, 0.3)
 		cluster_btn.scale = Vector2.ONE * radius
-		cluster_btn.scale /= clamp(get_parent().scale.x, CLUSTER_AUTOSCALE_MIN_THRESHOLD, 2.0) / CLUSTER_AUTOSCALE_MIN_THRESHOLD
+		cluster_btn.scale /= clamp(get_parent().scale.x, CLUSTER_AUTOSCALE_MIN_THRESHOLD, CLUSTER_AUTOSCALE_MAX_THRESHOLD) / CLUSTER_AUTOSCALE_MIN_THRESHOLD
 		dimensions = max(dimensions, c_i.pos.length() * 2.0)
 		btns[i] = {"btn": cluster_btn, "original_scale": radius}
 		add_child(cluster_btn)
@@ -48,6 +50,6 @@ func on_cluster_click (id:int):
 		game.switch_view("cluster", {"fn":"set_custom_coords", "fn_args":[["c_c"], [id]]})
 
 func scale_objects(new_scale:float):
-	if new_scale > CLUSTER_AUTOSCALE_MIN_THRESHOLD and new_scale < 2.0:
+	if new_scale > CLUSTER_AUTOSCALE_MIN_THRESHOLD and new_scale < CLUSTER_AUTOSCALE_MAX_THRESHOLD:
 		for i in len(btns):
 			btns[i].btn.scale = Vector2.ONE / new_scale * CLUSTER_AUTOSCALE_MIN_THRESHOLD * btns[i].original_scale

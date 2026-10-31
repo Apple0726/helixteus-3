@@ -630,5 +630,5 @@ var intensity_gradient = preload("res://Resources/IntensityGradient.tres")
 
 var starting_universe_data = {
 	"id":0, "lv":1, "xp":0, "xp_to_lv":10, "shapes":[], "name":tr("UNIVERSE"),
-	"view":{"pos":Vector2(640, 360), "zoom":2}
+	"view":{"pos":Vector2(640, 360), "zoom":5.0}
 }

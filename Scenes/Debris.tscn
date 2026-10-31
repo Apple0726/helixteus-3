@@ -43,7 +43,7 @@ shader = SubResource("7")
 shader_parameter/lava_texture = ExtResource("3")
 shader_parameter/aurora = false
 shader_parameter/has_lava = true
-shader_parameter/intensity = 1.0
+shader_parameter/intensity = 0.0
 shader_parameter/modulate_color = Color(1, 1, 1, 1)
 
 [sub_resource type="CanvasItemMaterial" id="4"]
@@ -155,7 +155,7 @@ texture = ExtResource("1")
 hframes = 6
 
 [node name="LavaLight" type="PointLight2D" parent="Sprite2D" unique_id=22819211]
-scale = Vector2(0.6, 0.6)
+scale = Vector2(0.335, 0.335)
 range_item_cull_mask = 2
 texture = ExtResource("6_cch3s")
 
