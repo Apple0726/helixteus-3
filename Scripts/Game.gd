@@ -281,8 +281,8 @@ var met_info = {	"lead":{"min_depth":0, "max_depth":500, "rarity":1, "density":1
 					"titanium":{"min_depth":1500, "max_depth":4000, "rarity":46.0, "density":4.51, "value":93590},
 					"platinum":{"min_depth":2400, "max_depth":6000, "rarity":79.5, "density":21.45, "value":212650},
 					"diamond":{"min_depth":5800, "max_depth":9000, "rarity":157.3, "density":4.20, "value":591850},
-					"nanocrystal":{"min_depth":70000, "max_depth":140000, "rarity":6000.0, "density":1.5, "value":2.4e7},
-					"mythril":{"min_depth":350000, "max_depth":1e6, "rarity":520000.0, "density":13.4, "value":3.5e9},
+					"nanocrystal":{"min_depth":70000, "max_depth":140000, "rarity":900000.0, "density":1.5, "value":2.4e7},
+					"mythril":{"min_depth":350000, "max_depth":1e6, "rarity":2.5e10, "density":13.4, "value":3.5e9},
 }
 
 var pickaxes_info = {"stick":{"speed":1.0, "durability":140, "costs":{"money":300}},
@@ -1141,6 +1141,7 @@ func set_bookmark_coords(bookmark:Dictionary):
 		c_s = bookmark.c_s
 		if c_g_g != bookmark.c_g_g:
 			system_data.clear()
+			planet_data.clear()
 		c_s_g = bookmark.c_s_g
 	if c_c != bookmark.c_c:
 		galaxy_data.clear()
@@ -1149,6 +1150,8 @@ func set_bookmark_coords(bookmark:Dictionary):
 		c_g = bookmark.c_g
 		if c_c != bookmark.c_c:
 			galaxy_data.clear()
+			system_data.clear()
+			planet_data.clear()
 		c_g_g = bookmark.c_g_g
 	return false#No error
 
@@ -1867,7 +1870,6 @@ func generate_clusters():
 		"modifiers":[],
 	}
 	var max_dist_from_center = pow(total_clust_num, 0.5) * 250.0
-	show.c_bk_button = true
 	for c_id in range(1, total_clust_num):
 		var c_i = {
 			"type": 0,
@@ -1938,7 +1940,7 @@ func generate_galaxies(id:int):
 			"seed":rng.randi(),
 			"view":{"pos":Vector2(7500, 7500) * 0.1 * ProcGenSettings.star_system_density + Vector2(640, 360), "zoom":0.1}
 		}
-	var galaxy_num = total_gal_num - u_i.cluster_data[id]["galaxies"].size()
+	u_i.cluster_data[id]["galaxies"].clear()
 	var redshift:float = u_i.cluster_data[id].redshift
 	var max_outer_radius:float
 	var dist_from_center = 0.0
@@ -1950,6 +1952,7 @@ func generate_galaxies(id:int):
 			if g_id == 0:
 				ring = 1
 				dist_from_center = 1000.0
+				u_i.cluster_data[id]["galaxies"].append([0, 0])
 			continue
 		var g_i = {
 			"parent": id,
@@ -1989,17 +1992,12 @@ func generate_galaxies(id:int):
 			dist_from_center = max_possible_galaxy_diameter
 		g_i["pos"] = pos
 		max_outer_radius = max(max_outer_radius, radius + dist_from_center)
-		var starting_galaxy = c_c == 0 and galaxy_num == total_gal_num and g_id == 0
-		if starting_galaxy:
-			show.g_bk_button = true
-			u_i.cluster_data[id]["galaxies"].append([0, 0])
+		if id == 0:#if the galaxies are in starting cluster
+			g_i["diff"] = Helper.clever_round((1.0 + pos.distance_to(galaxy_data[0].pos) / 50.0) * (u_i.cluster_data[id].redshift * 1000.0 + 1.0) * u_i.difficulty)
 		else:
-			if id == 0:#if the galaxies are in starting cluster
-				g_i["diff"] = Helper.clever_round((1.0 + pos.distance_to(galaxy_data[0].pos) / 50.0) * (u_i.cluster_data[id].redshift * 1000.0 + 1.0) * u_i.difficulty)
-			else:
-				g_i["diff"] = Helper.clever_round((u_i.cluster_data[id].redshift * 100000.0 + 1.0) * u_i.difficulty * rng.randf_range(1.2, 1.5) / max(100, pow(pos.length(), 0.5)))
-			u_i.cluster_data[id]["galaxies"].append([g_i.id, g_i.l_id])
-			galaxy_data[g_id] = g_i
+			g_i["diff"] = Helper.clever_round((u_i.cluster_data[id].redshift * 100000.0 + 1.0) * u_i.difficulty * rng.randf_range(1.2, 1.5) / max(100, pow(pos.length(), 0.5)))
+		u_i.cluster_data[id]["galaxies"].append([g_i.id, g_i.l_id])
+		galaxy_data[g_id] = g_i
 	if u_i.cluster_data_persistent[id] == null:
 		u_i.cluster_data_persistent[id] = {}
 	if id != 0:
@@ -2179,7 +2177,6 @@ func generate_systems(id:int):
 	var star_mass_param = pow(u_i.age, 0.25) * pow(1e-9 / B, physics_bonus.BI)
 	for s_id in N:
 		if c_g_g == 0 and s_id == 0:
-			show.s_bk_button = true
 			continue
 		var s_i:Dictionary = {
 			"parent": id,
@@ -2632,7 +2629,7 @@ func generate_planets(id:int):#local id
 			power_left -= 0.5 * pow(1.3, lv - 1)
 			if power_left <= 0.0:
 				break
-		p_i.HX_data.shuffle()
+		#p_i.HX_data.shuffle()
 		var wid:int = Helper.get_wid(p_i.size)
 		var view_zoom = 3.0 / wid
 		p_i["view"] = {"pos":Vector2(340, 80), "zoom":view_zoom}
@@ -2724,7 +2721,10 @@ func generate_planets(id:int):#local id
 	for i in planet_num:
 		var p_i_persistent = planet_data_persistent[i]
 		for key in p_i_persistent.keys():
-			planet_data[i][key] = p_i_persistent[key]
+			if key == "destroyed":
+				planet_data[i] = {"destroyed": true}
+			else:
+				planet_data[i][key] = p_i_persistent[key]
 
 func get_random_element(elements:Dictionary, rng:RandomNumberGenerator):
 	var S:float = 0.0
@@ -2742,7 +2742,7 @@ func get_random_element(elements:Dictionary, rng:RandomNumberGenerator):
 		chosen_el = els[k]
 	return chosen_el
 
-func generate_volcano(t_id:int, VEI:float, artificial:bool = false):
+func generate_volcano(t_id:int, VEI:float, rng:RandomNumberGenerator, artificial:bool = false):
 	var richness:float = VEI if VEI <= 7.0 else pow(VEI - 6.0, 1.6) + 6.0
 	var size:int = snapped(VEI - 2, 2) + 1
 	var half_size:int = size / 2
@@ -2776,14 +2776,14 @@ func generate_volcano(t_id:int, VEI:float, artificial:bool = false):
 				if current_tile.has("bldg") and building_to_resource.has(current_tile.bldg.name):
 					var rsrc = building_to_resource[current_tile.bldg.name]
 					autocollect.rsrc[rsrc] += (richness - 1.0) * current_tile.bldg.path_1_value * overclock_mult * current_tile.resource_production_bonus.get(rsrc, 1.0)
-				if artificial:
-					current_tile.ash["artificial"] = true
-					tile_data_persistent[current_tile_id]["ash"] = current_tile.ash
+			if artificial:
+				current_tile.ash["artificial"] = true
+				tile_data_persistent[current_tile_id].ash = current_tile.ash
 			if not achievement_data.exploration.has("volcano_cave") and current_tile.has("cave"):
 				earn_achievement("exploration", "volcano_cave")
 			if not achievement_data.exploration.has("volcano_aurora_cave") and current_tile.has("cave") and current_tile.has("aurora"):
 				earn_achievement("exploration", "volcano_aurora_cave")
-	tile_data[t_id]["volcano"] = {"VEI":VEI, "type":randi() % 2}
+	tile_data[t_id]["volcano"] = {"VEI":VEI, "type":rng.randi() % 2}
 	if artificial:
 		tile_data_persistent[t_id]["volcano"] = tile_data[t_id].volcano
 
@@ -2879,8 +2879,7 @@ func spawn_cave(p_i:Dictionary, t_id:int, rng:RandomNumberGenerator):
 			number_of_modifiers = len(modifiers2.keys())
 		for k in number_of_modifiers:
 			var modifier_keys:Array = modifiers2.keys()
-			modifier_keys.shuffle()
-			var key:String = modifier_keys[0]
+			var key:String = modifier_keys[rng.randi_range(0, len(modifier_keys) - 1)]
 			if modifiers2[key].has("double_treasure_at"):
 				var mod_power:float = log(1.0 / rng.randf() + 0.5) / max(remap(log(system_data[c_s].diff) / log(20), 0.0, 4.0, 2.0, 1.0), 1.0)
 				var direction:float
@@ -2989,7 +2988,7 @@ func generate_tiles(id:int, first_time:bool):
 			if c_s_g != 0 and rng.randf() < volcano_probability:
 				var VEI:float = log(1e6/(coldest_star_temp * G_factor * rng.randf()) + exp(3.0))
 				total_VEI += VEI
-				generate_volcano(t_id, VEI)
+				generate_volcano(t_id, VEI, rng)
 				continue
 			var crater_size = max(0.25, pow(p_i.pressure, 0.3))
 			if rng.randf() < 15 / crater_size / pow(coldest_star_temp, 0.8):
@@ -3165,7 +3164,6 @@ func generate_tiles(id:int, first_time:bool):
 							break
 					if all_discovered:
 						earn_achievement("exploration", "find_all_ancient_bldgs")
-	
 	#Give lake data to adjacent tiles
 	var lake_au_int:float = 0.0
 	if p_i.has("lake"):

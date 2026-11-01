@@ -86,7 +86,7 @@ func stun(duration:float):
 	var tween = create_tween()
 	tween.set_speed_scale(STM_node.minigame_time_speed)
 	tween.tween_property($Sprite2D.material, "shader_parameter/flash", 0.0, 0.3)
-	$Sprite2D/Stun.visible = true
+	#$Sprite2D/Stun.visible = true
 	$ShootTimer.paused = true
 	if move_tween:
 		move_tween.pause()
@@ -164,7 +164,7 @@ func _on_stun_timer_timeout():
 	if not is_inside_tree():
 		return
 	stunned = false
-	$Sprite2D/Stun.visible = false
+	#$Sprite2D/Stun.visible = false
 	$ShootTimer.paused = false
 	if move_tween:
 		move_tween.play()

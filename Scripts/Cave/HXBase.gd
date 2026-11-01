@@ -112,8 +112,8 @@ func _process(delta):
 		status_effects[effect] -= delta * cave_ref.time_speed
 		if status_effects[effect] < 0:
 			status_effects.erase(effect)
-			if effect == "stun":
-				$Sprite2D/Stun.visible = false
+			#if effect == "stun":
+				#$Sprite2D/Stun.visible = false
 
 func chase_player():
 	var not_chasing = aggressive_timer.is_stopped()

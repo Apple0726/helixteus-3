@@ -93,7 +93,7 @@ func _on_ImportSave_pressed():
 	game.popup_window(tr("CHOOSE_IMPORT_MEDIUM"), "", [tr("TEXT"), tr("HX3_FILE")], [import_string_popup, $Import.popup_centered], tr("CANCEL"))
 
 func import_string_popup():
-	game.popup_window(tr("COPY_STRING_TO_CLIPBOARD"), "", [tr("OK")], [import_string], tr("CANCEL"))
+	game.popup_window(tr("COPY_STRING_TO_CLIPBOARD"), "", [tr("IMPORT")], [import_string], tr("CANCEL"))
 	
 func import_string():
 	var base64_string = DisplayServer.clipboard_get()

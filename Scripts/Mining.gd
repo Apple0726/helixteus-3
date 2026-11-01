@@ -227,7 +227,9 @@ func pickaxe_hit():
 		var VEI:float = log(add_progress / 500.0 * randf_range(0.7, 1.3) + exp(3.0))
 		game.tile_data[id].erase("depth")
 		game.tile_data_persistent[id].erase("depth")
-		game.generate_volcano(id, VEI, true)
+		var rng = RandomNumberGenerator.new()
+		rng.seed = randi()
+		game.generate_volcano(id, VEI, rng, true)
 		game.switch_view("planet")
 		if game.help.has("artificial_volcano"):
 			game.popup_window(tr("CREATED_FIRST_ARTIFICIAL_VOLCANO") % Helper.clever_round(VEI), tr("ARTIFICIAL_VOLCANO"))

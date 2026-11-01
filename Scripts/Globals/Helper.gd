@@ -573,7 +573,7 @@ func mass_generate_rock(tile:Dictionary, p_i:Dictionary, depth:int):
 			var num_tiles2:int = met_end_depth - tile.depth
 			var num_tiles3:int = clamp(min(num_tiles, num_tiles2), 0, min(depth, met_end_depth - met_start_depth))
 			amount = randf_range(1.0, 1.2) * num_tiles3
-		amount *= 20 * chance_mult * aurora_mult * h_mult / pow(met_info.rarity, 0.5)
+		amount *= 20 * chance_mult * aurora_mult * h_mult / pow(met_info.rarity, 0.6)
 		if amount < 0.001:
 			continue
 		contents[met] = amount
@@ -624,7 +624,7 @@ func generate_rock(tile:Dictionary, p_i:Dictionary):
 		var progress2 = tile.mining.current_deposit.progress
 		var amount_multiplier = -abs(2.0/size * progress2 - 1) + 1
 		var crater_metal = tile.has("crater") and tile.crater.has("init_depth") and met == tile.crater.metal
-		var amount = clever_round(20 * (2.0 if crater_metal else 1.0) * randf_range(1.0, 1.2) * amount_multiplier * aurora_mult * h_mult / pow(game.met_info[met].rarity, 0.5))
+		var amount = clever_round(20 * (2.0 if crater_metal else 1.0) * randf_range(1.0, 1.2) * amount_multiplier * aurora_mult * h_mult / pow(game.met_info[met].rarity, 0.6))
 		contents[met] = amount
 		other_volume += amount / game.met_info[met].density / 1000 / h_mult
 		tile.mining.current_deposit.progress += 1
@@ -648,6 +648,8 @@ func get_IR_mult(bldg_name):
 		sc = Science.MINERAL_EXTRACTION_EFFICIENCY
 	elif bldg_name == Building.ROVER_CONSTRUCTION_CENTER:
 		sc = Science.ROVER_CONSTRUCTION
+	elif bldg_name == Building.SHIPYARD:
+		sc = Science.FIGHTERS
 	if sc == -1:
 		return 1.0
 	return pow(game.maths_bonus.IRM, game.science_level[sc] - len(Data.science_unlocks[sc].cost))
@@ -1222,6 +1224,8 @@ func get_directory_properties(path, blacklist:Array = []):
 					total_files += properties.files
 			else:
 				var file = FileAccess.open_compressed(file_path, FileAccess.READ, FileAccess.COMPRESSION_ZSTD)
+				if not file:
+					file = FileAccess.open(file_path, FileAccess.READ)
 				if file:
 					total_size += file.get_length()
 					total_files += 1

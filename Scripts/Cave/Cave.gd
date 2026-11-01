@@ -104,6 +104,7 @@ var ability:String = ""
 var ability_num:int = 0
 var travel_distance:float = 0#Only used for unique death message for now
 var armor_damage_mult:float = 1.0#For armor enhnacements
+var inf_sc_laser_bonus:float
 
 var moving_fast:bool = false
 var cave_floor:int = 1
@@ -184,7 +185,8 @@ func _ready():
 			if inventory[i].get("type") == Item.Type.ROVER_WEAPON:
 				selected_laser = inventory[i].id
 				break
-	laser_damage = Item.data[selected_laser].damage * atk * rover_size * game.u_i.charge
+	inf_sc_laser_bonus = pow(game.maths_bonus.IRM, game.science_level[Science.IMPROVED_ROVER_LASERS] - len(Data.science_unlocks[Science.IMPROVED_ROVER_LASERS].cost))
+	laser_damage = Item.data[selected_laser].damage * atk * rover_size * game.u_i.charge * inf_sc_laser_bonus
 	if rover_data.MK == 2:
 		$Rover/Sprite2D.texture = preload("res://Graphics/Cave/Rover top down 2.png")
 	elif rover_data.MK == 3:
@@ -368,14 +370,33 @@ func add_filter_slot(type:String, rsrc):
 	filter_slot.connect("pressed",Callable(self,"on_filter_pressed").bind(rsrc, filter_slot))
 
 func on_filter_mouse_entered(rsrc):
+	var tooltip = ""
 	if rsrc is int:
-		game.show_tooltip(Item.name(rsrc))
+		tooltip = Item.name(rsrc)
 	else:
-		game.show_tooltip(tr(rsrc.to_upper()))
+		tooltip = tr(rsrc.to_upper())
+	game.show_tooltip(tooltip, {"additional_text": tr("SELECT_ONLY_THIS_FILTER"), "additional_text_delay": 1.0})
 
 func on_filter_pressed(rsrc, filter_slot):
-	game.cave_filters[rsrc] = not game.cave_filters[rsrc]
-	filter_slot.set_mod(game.cave_filters[rsrc])
+	if Input.is_action_pressed("ctrl"):
+		var reset = true
+		for _rsrc in game.cave_filters:
+			var rsrc_is_same = str(_rsrc) == str(rsrc)
+			if game.cave_filters[_rsrc] == rsrc_is_same:
+				reset = false
+				break
+		if reset:
+			for _rsrc in game.cave_filters:
+				game.cave_filters[_rsrc] = false
+		else:
+			for _rsrc in game.cave_filters:
+				game.cave_filters[_rsrc] = str(_rsrc) != str(rsrc)
+		for _filter_slot in $UI2/Filters/Grid.get_children():
+			_filter_slot.set_mod(not reset)
+		filter_slot.set_mod(false)
+	else:
+		game.cave_filters[rsrc] = not game.cave_filters[rsrc]
+		filter_slot.set_mod(game.cave_filters[rsrc])
 
 func on_filter_mouse_exited():
 	game.hide_tooltip()
@@ -1628,7 +1649,7 @@ func mine_wall(item:Dictionary, _tile_highlight, delta):
 		tile_being_mined.bar = sq_bar
 	if st != "-1":
 		var sq_bar = tiles_touched_by_laser[st].bar
-		tiles_touched_by_laser[st].progress += Item.data[item.id].speed * delta * 60 * pow(rover_size, 2) * time_speed * game.u_i.charge
+		tiles_touched_by_laser[st].progress += Item.data[item.id].speed * delta * 60 * pow(rover_size, 2) * time_speed * game.u_i.charge * inf_sc_laser_bonus
 		sq_bar.set_progress(tiles_touched_by_laser[st].progress)
 		if tiles_touched_by_laser[st].progress >= 100:
 			mine_wall_complete(_tile_highlight.position, tile_highlighted_for_mining)
@@ -1642,7 +1663,7 @@ func mine_debris(item:Dictionary, delta):
 			return
 		var aurora_factor:float = 1.0/debris.aurora_intensity if debris.aurora_intensity > 0.0 else 1.0
 		var volcano_factor:float = 1.0/debris.lava_intensity if debris.lava_intensity > 0.0 else 1.0
-		var add_progress = Item.data[item.id].speed * 90 * pow(rover_size, 2) * time_speed / pow(debris.scale.x * 2.0, 3) * aurora_factor * volcano_factor * game.u_i.charge
+		var add_progress = Item.data[item.id].speed * 90 * pow(rover_size, 2) * time_speed / pow(debris.scale.x * 2.0, 3) * aurora_factor * volcano_factor * game.u_i.charge * inf_sc_laser_bonus
 		debris_touched_by_laser[mining_debris].progress += add_progress * debris.cracked_mining_factor * delta
 		circ_bar.color = Color(1.0, 0.6, 1.0) if debris.cracked_mining_factor > 1.0 else Color.GREEN
 		circ_bar.progress = debris_touched_by_laser[mining_debris].progress

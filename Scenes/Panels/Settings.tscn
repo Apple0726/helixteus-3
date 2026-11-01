@@ -33,9 +33,10 @@ layout_mode = 0
 offset_top = 60.0
 offset_right = 892.0
 offset_bottom = 576.0
-current_tab = 0
+current_tab = 2
 
 [node name="SFX" type="TabBar" parent="TabContainer" unique_id=208608145]
+visible = false
 layout_mode = 2
 metadata/_tab_index = 0
 
@@ -300,7 +301,6 @@ offset_bottom = 158.0
 text = "Keep window size"
 
 [node name="GAME" type="TabBar" parent="TabContainer" unique_id=523582965]
-visible = false
 layout_mode = 2
 metadata/_tab_index = 2
 
@@ -324,49 +324,19 @@ help_text = "AUTOSELL_MINERALS_DESC"
 [node name="AutoSwitch" type="CheckButton" parent="TabContainer/GAME" unique_id=2121173532]
 layout_mode = 0
 offset_left = 56.0
-offset_top = 153.0
+offset_top = 93.0
 offset_right = 400.0
-offset_bottom = 193.0
+offset_bottom = 133.0
 
 [node name="RichTextLabel3" parent="TabContainer/GAME" unique_id=1581426805 instance=ExtResource("2_lx04k")]
 layout_mode = 0
 offset_left = 64.0
-offset_top = 161.0
+offset_top = 101.0
 offset_right = 320.0
-offset_bottom = 191.0
+offset_bottom = 131.0
 text = "AUTO_SWITCH_SELL_BUY [img]Graphics/Icons/help.png[/img]"
 label_text = "AUTO_SWITCH_SELL_BUY"
 help_text = "AUTO_SWITCH_SELL_BUY_DESC"
-
-[node name="Difficulty" type="Label" parent="TabContainer/GAME" unique_id=1582164056]
-layout_mode = 0
-offset_left = 48.0
-offset_top = 225.0
-offset_right = 400.0
-offset_bottom = 249.0
-mouse_filter = 1
-text = "ENEMY_DIFFICULTY"
-horizontal_alignment = 1
-
-[node name="HBoxContainer" type="HBoxContainer" parent="TabContainer/GAME" unique_id=537572648]
-layout_mode = 0
-offset_left = 58.217987
-offset_top = 262.745
-offset_right = 387.21802
-offset_bottom = 302.745
-alignment = 1
-
-[node name="Easy" type="CheckBox" parent="TabContainer/GAME/HBoxContainer" unique_id=1557194203]
-layout_mode = 2
-text = "EASY"
-
-[node name="Normal" type="CheckBox" parent="TabContainer/GAME/HBoxContainer" unique_id=72429643]
-layout_mode = 2
-text = "NORMAL"
-
-[node name="Hard" type="CheckBox" parent="TabContainer/GAME/HBoxContainer" unique_id=689355541]
-layout_mode = 2
-text = "HARD"
 
 [node name="Autosave" type="HSlider" parent="TabContainer/GAME" unique_id=1392513466]
 layout_mode = 0
@@ -536,15 +506,6 @@ horizontal_alignment = 1
 [connection signal="item_selected" from="TabContainer/GRAPHICS/DisplayRes" to="." method="_on_DisplayRes_item_selected"]
 [connection signal="toggled" from="TabContainer/GAME/AutosellMinerals" to="." method="_on_AutosellMinerals_toggled"]
 [connection signal="toggled" from="TabContainer/GAME/AutoSwitch" to="." method="_on_auto_switch_toggled"]
-[connection signal="mouse_entered" from="TabContainer/GAME/HBoxContainer/Easy" to="." method="_on_Easy_mouse_entered"]
-[connection signal="mouse_exited" from="TabContainer/GAME/HBoxContainer/Easy" to="." method="_on_mouse_exited"]
-[connection signal="pressed" from="TabContainer/GAME/HBoxContainer/Easy" to="." method="_on_Easy_pressed"]
-[connection signal="mouse_entered" from="TabContainer/GAME/HBoxContainer/Normal" to="." method="_on_Normal_mouse_entered"]
-[connection signal="mouse_exited" from="TabContainer/GAME/HBoxContainer/Normal" to="." method="_on_mouse_exited"]
-[connection signal="pressed" from="TabContainer/GAME/HBoxContainer/Normal" to="." method="_on_Normal_pressed"]
-[connection signal="mouse_entered" from="TabContainer/GAME/HBoxContainer/Hard" to="." method="_on_Hard_mouse_entered"]
-[connection signal="mouse_exited" from="TabContainer/GAME/HBoxContainer/Hard" to="." method="_on_mouse_exited"]
-[connection signal="pressed" from="TabContainer/GAME/HBoxContainer/Hard" to="." method="_on_Hard_pressed"]
 [connection signal="value_changed" from="TabContainer/GAME/Autosave" to="." method="_on_Autosave_value_changed"]
 [connection signal="value_changed" from="TabContainer/GAME/BackupIntervalSlider" to="." method="_on_backup_interval_slider_value_changed"]
 [connection signal="value_changed" from="TabContainer/GAME/MaxBackupsSlider" to="." method="_on_max_backups_slider_value_changed"]

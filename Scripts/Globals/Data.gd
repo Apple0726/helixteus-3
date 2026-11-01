@@ -373,7 +373,7 @@ var science_unlocks = {
 	Science.ADVANCED_METAL_MANIPULATION: {"cost": [1.0e9], "prereqs": {Science.ATOM_MANIPULATION: 1}},
 	Science.EXOTIC_MATERIAL_MANIPULATION: {"cost": [1.0e15], "prereqs": {Science.ADVANCED_METAL_MANIPULATION: 1}},
 	
-	Science.FIGHTERS: {"cost": [3.45e9, 1.4e18], "prereqs": {Science.FTL_DRIVE: 2}, "infinite_research": {"cost":7.5e19, "pw":5.4}},
+	Science.FIGHTERS: {"cost": [3.45e9, 1.4e19], "prereqs": {Science.FTL_DRIVE: 2}, "infinite_research": {"cost":2.0e20, "pw":5.4}},
 	
 	Science.SPACE_ELEVATOR: {"cost": [700000.0], "prereqs": {Science.MACRO_ENGINEERING: 1}},
 	Science.TERRAFORMING: {"cost": [5.6e8], "prereqs": {Science.MACRO_ENGINEERING: 1}},

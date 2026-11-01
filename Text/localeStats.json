@@ -1,8 +1,8 @@
 {
     "en": {
-        "lines": 1634,
-        "words": 11535,
-        "chars": 70231,
+        "lines": 1636,
+        "words": 11548,
+        "chars": 70303,
         "name": "English"
     },
     "fr": {
@@ -48,9 +48,9 @@
         "name": "Svenska"
     },
     "hu": {
-        "lines": 1602,
-        "words": 8608,
-        "chars": 63356,
+        "lines": 1601,
+        "words": 8598,
+        "chars": 63275,
         "name": "Magyar"
     },
     "ja": {

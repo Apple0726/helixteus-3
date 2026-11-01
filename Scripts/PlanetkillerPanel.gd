@@ -34,7 +34,7 @@ func refresh():
 		child.free()
 	for i in len(game.planet_data):
 		var p_i = game.planet_data[i]
-		if p_i.is_empty():
+		if p_i.is_empty() or p_i.has("destroyed"):
 			continue
 		var btn = planet_btn_scene.instantiate()
 		$Scroll/Planets.add_child(btn)
@@ -105,7 +105,7 @@ func refresh_planet_info():
 	for met in game.met_info:
 		if met in ["nanocrystal", "mythril"] and game.c_g_g == 0:
 			continue
-		rsrc[met] = Helper.get_sph_V(R - game.met_info[met].min_depth, R - game.met_info[met].max_depth) / game.met_info[met].rarity * au_mult * game.u_i.planck
+		rsrc[met] = Helper.get_sph_V(R - game.met_info[met].min_depth, R - game.met_info[met].max_depth) / pow(game.met_info[met].rarity, 0.6) * au_mult * game.u_i.planck
 	Helper.put_rsrc($Control/ScrollContainer/GridContainer, 36, rsrc)
 
 func add_stone(stone:Dictionary, layer:Dictionary, amount:float):
@@ -125,7 +125,7 @@ func _on_StartCharging_pressed():
 			return
 		target_p_i = game.planet_data[star.p_id]
 		var p_id_g = -1
-		if not target_p_i.is_empty():
+		if not target_p_i.is_empty() and not target_p_i.has('destroyed'):
 			p_id_g = target_p_i.id
 			if Settings.screen_shake:
 				game.get_node("Camera2D/Screenshake").start(2.0, 10, 5)
@@ -153,8 +153,8 @@ func _on_StartCharging_pressed():
 			var dir = DirAccess.open("user://%s/Univ%s/Planets/%s.hx3" % [game.c_sv, game.c_u, target_p_i.id])
 			if dir:
 				dir.remove("user://%s/Univ%s/Planets/%s.hx3" % [game.c_sv, game.c_u, target_p_i.id])
-			target_p_i.clear()
-			game.planet_data_persistent[star.p_id] = null
+			game.planet_data[star.p_id] = {"destroyed":true}
+			game.planet_data_persistent[star.p_id] = game.planet_data[star.p_id]
 			game.view.obj.get_node("PlanetDestroyedSound").position = planet_pos
 			game.view.obj.get_node("PlanetDestroyedSound").play()
 			game.view.obj.refresh_planets()

@@ -78,8 +78,8 @@ func collide(collision:KinematicCollision2D):
 				for effect in status_effects:
 					if not body.status_effects.has(effect):
 						body.status_effects[effect] = status_effects[effect]
-						if effect == "stun":
-							body.get_node("Sprite2D/Stun").visible = true
+						#if effect == "stun":
+							#body.get_node("Sprite2D/Stun").visible = true
 				body.hit(dmg)
 				pierce -= 1
 				dont_hit_again.append(body.spawn_tile)

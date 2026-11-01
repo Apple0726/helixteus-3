@@ -58,7 +58,7 @@ func refresh_planets():
 					planets_affected_by_CBS = max(planets_affected_by_CBS, ceil(p_num * star_info.MS_lv * 0.333))
 	for i in p_num:
 		var p_i:Dictionary = game.planet_data[i]
-		if p_i.is_empty():
+		if p_i.is_empty() or p_i.has("destroyed"):
 			tile_datas.append([])
 			continue
 		var sc:float = p_i["distance"] / 4800.0 * scale_mult
@@ -733,7 +733,7 @@ func build_MS(obj:Dictionary, MS_to_build:String):
 			var cost_div = 1 + log(obj.luminosity + 1)
 			for i in range(0, p_num):
 				var p_i:Dictionary = game.planet_data[i]
-				if p_i.is_empty():
+				if p_i.is_empty() or p_i.has("destroyed"):
 					continue
 				p_i["cost_div"] = max(p_i.get("cost_div", 1.0), cost_div)
 				if p_i.has("cost_div_dict"):

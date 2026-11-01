@@ -284,10 +284,10 @@ func _process(delta):
 		time_left.text = Helper.time_to_str(g_i.conquer_data.time_for_one_sys - Time.get_unix_time_from_system() + g_i.conquer_data.start_date)
 	elif fighter_type == 1:
 		var c_i = game.u_i.cluster_data[game.c_c]
-		progress.value = (curr_time - c_i.conquer_data.start_date) / c_i.time_for_one_gal * 100
-		RTL.text = "%s: %s / %s" % [tr("GALAXIES_CONQUERED"), c_i.gal_conquered, c_i.gal_num]
+		progress.value = (curr_time - c_i.conquer_data.start_date) / c_i.conquer_data.time_for_one_gal * 100
+		RTL.text = "%s: %s / %s" % [tr("GALAXIES_CONQUERED"), c_i.conquer_data.gal_conquered, c_i.conquer_data.gal_num]
 		$Control2/TimeLeft2.text = tr("TIME_TO_NEXT_CONQUER_F2")
-		time_left.text = Helper.time_to_str(c_i.time_for_one_gal - Time.get_unix_time_from_system() + c_i.conquer_data.start_date)
+		time_left.text = Helper.time_to_str(c_i.conquer_data.time_for_one_gal - Time.get_unix_time_from_system() + c_i.conquer_data.start_date)
 
 
 func _on_mouse_exited():

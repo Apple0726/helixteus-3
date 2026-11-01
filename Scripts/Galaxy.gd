@@ -100,7 +100,7 @@ func load_bldg_info():
 		var s_i = game.system_data[i]
 		var planet_data_persistent:Array = game.open_obj("Systems", s_i.id)
 		for p_i_persistent in planet_data_persistent:
-			if p_i_persistent.is_empty():
+			if p_i_persistent.is_empty() or p_i_persistent.has("destroyed"):
 				continue
 			if p_i_persistent.has("tile_num") and p_i_persistent.bldg.has("name"):
 				if bldgs.has(s_i.l_id):

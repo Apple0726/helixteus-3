@@ -100,7 +100,7 @@ func _on_Slot_mouse_entered(type:int):
 	elif type == Item.Type.ROVER_CC and CC != -1:
 		txt = "{CC_name}\n+{capacity_bonus} kg {capacity_bonus_text}".format({
 			"CC_name":tr("METAL_COMP").format({"metal":tr(Item.data[CC].metal.to_upper()), "comp":tr("CC")}),
-			"capacity_bonus":round(Item.data[CC].capacity * game.u_i.planck),
+			"capacity_bonus":Helper.format_num(Item.data[CC].capacity * game.u_i.planck, true),
 			"capacity_bonus_text": tr("CARGO_CAPACITY"),
 		})
 	if txt != "":

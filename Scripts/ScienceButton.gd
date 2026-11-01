@@ -38,6 +38,32 @@ var alternate_textures = {
 		"Science/CI2.png",
 		"Science/CI3.png",
 	],
+	Science.CENTRAL_BUSINESS_SYSTEM: [
+		"Megastructures/CBS_1.png",
+		"Megastructures/CBS_2.png",
+		"Megastructures/CBS_3.png",
+	],
+	Science.DYSON_SPHERE: [
+		"Megastructures/DS_1.png",
+		"Megastructures/DS_2.png",
+		"Megastructures/DS_3.png",
+		"Megastructures/DS_4.png",
+	],
+	Science.MEGA_MINERAL_EXTRACTOR: [
+		"Megastructures/MME_1.png",
+		"Megastructures/MME_2.png",
+		"Megastructures/MME_3.png",
+	],
+	Science.PLANETKILLER: [
+		"Megastructures/PK_1.png",
+		"Megastructures/PK_2.png",
+	],
+	Science.SPACE_ELEVATOR: [
+		"Megastructures/SE_1.png",
+	],
+	Science.FIGHTERS: [
+		"Ships/Fighter2.png",
+	],
 }
 
 func _ready():

@@ -24,7 +24,6 @@ func _ready():
 	$TabContainer/GRAPHICS/DisplayRes.add_item("64 x 36", 10)
 	$TabContainer/GRAPHICS/DisplayRes.add_item("32 x 18", 11)
 	$TabContainer/GRAPHICS/DisplayRes.add_item("16 x 9", 12)
-	set_enemy_difficulty_checkboxes()
 	$TabContainer/SFX/Master.value = Settings.master_volume
 	$TabContainer/SFX/Music.value = Settings.music_volume
 	$TabContainer/SFX/SFX.value = Settings.SFX_volume
@@ -68,9 +67,6 @@ func refresh():
 		Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
 		game.STM.show_help("")
 		game.STM.set_process(false)
-	$TabContainer/GAME/HBoxContainer/Easy.disabled = game.c_v == "battle"
-	$TabContainer/GAME/HBoxContainer/Normal.disabled = game.c_v == "battle"
-	$TabContainer/GAME/HBoxContainer/Hard.disabled = game.c_v == "battle"
 	if game.c_v != "" and game.science_level[Science.AUTOSELL_MINERALS] == 1:
 		$TabContainer/GAME/AutosellMinerals.disabled = false
 		$TabContainer/GAME/AutosellMineralsLabel.modulate = Color.WHITE
@@ -79,7 +75,6 @@ func refresh():
 		$TabContainer/GAME/AutosellMineralsLabel.modulate = Color(0.5, 0.5, 0.5, 1.0)
 	$TabContainer/GRAPHICS/Fullscreen.text = "%s (F11)" % [tr("FULLSCREEN")]
 	$TabContainer/SFX/MusicPitchLabel.text = "%s  [img]Graphics/Icons/help.png[/img]" % tr("TIME_SPEED_AFFECTS_PITCH")
-	set_enemy_difficulty_checkboxes()
 
 func _on_Vsync_toggled(button_pressed):
 	DisplayServer.window_set_vsync_mode(DisplayServer.VSYNC_ENABLED if (button_pressed) else DisplayServer.VSYNC_DISABLED)
@@ -118,37 +113,6 @@ func _on_AutosellMinerals_toggled(button_pressed):
 	Settings.autosell = button_pressed
 	save_config("game", "autosell", button_pressed)
 
-func _on_Easy_mouse_entered():
-	game.show_tooltip("%s: x %s" % [tr("LOOT_XP_BONUS"), 0.8])
-
-
-func _on_Normal_mouse_entered():
-	game.show_tooltip("%s: x %s" % [tr("LOOT_XP_BONUS"), 1.0])
-
-
-func _on_Hard_mouse_entered():
-	game.show_tooltip("%s: x %s" % [tr("LOOT_XP_BONUS"), 1.7])
-
-
-func set_enemy_difficulty_checkboxes():
-	$TabContainer/GAME/HBoxContainer/Easy.button_pressed = Settings.enemy_AI_difficulty == Settings.ENEMY_AI_DIFFICULTY_EASY
-	$TabContainer/GAME/HBoxContainer/Normal.button_pressed = Settings.enemy_AI_difficulty == Settings.ENEMY_AI_DIFFICULTY_NORMAL
-	$TabContainer/GAME/HBoxContainer/Hard.button_pressed = Settings.enemy_AI_difficulty == Settings.ENEMY_AI_DIFFICULTY_HARD
-
-func _on_Easy_pressed():
-	Settings.enemy_AI_difficulty = Settings.ENEMY_AI_DIFFICULTY_EASY
-	set_enemy_difficulty_checkboxes()
-	save_config("game", "enemy_AI_difficulty", Settings.ENEMY_AI_DIFFICULTY_EASY)
-
-func _on_Normal_pressed():
-	Settings.enemy_AI_difficulty = Settings.ENEMY_AI_DIFFICULTY_NORMAL
-	set_enemy_difficulty_checkboxes()
-	save_config("game", "enemy_AI_difficulty", Settings.ENEMY_AI_DIFFICULTY_NORMAL)
-
-func _on_Hard_pressed():
-	Settings.enemy_AI_difficulty = Settings.ENEMY_AI_DIFFICULTY_HARD
-	set_enemy_difficulty_checkboxes()
-	save_config("game", "enemy_AI_difficulty", Settings.ENEMY_AI_DIFFICULTY_HARD)
 
 func _on_Fullscreen_toggled(button_pressed):
 	get_window().mode = Window.MODE_EXCLUSIVE_FULLSCREEN if (button_pressed) else Window.MODE_WINDOWED

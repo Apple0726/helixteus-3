@@ -17,7 +17,7 @@ func refresh():
 	if not $OptionButton.visible:
 		$OptionButton.select(0)
 		_on_OptionButton_item_selected(0)
-	strength_mult = game.tile_data[game.c_t].bldg.path_1_value
+	strength_mult = game.tile_data[game.c_t].bldg.path_1_value * Helper.get_IR_mult(Building.SHIPYARD)
 	_on_SpinBox_value_changed($SpinBox.value)
 
 func _on_SpinBox_value_changed(value):

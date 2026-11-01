@@ -82,7 +82,7 @@ offset_right = 424.0
 offset_bottom = 110.0
 grow_horizontal = 2
 theme_override_font_sizes/font_size = 18
-text = "GS_SC"
+text = "GIGASTRUCTURES"
 label_settings = SubResource("LabelSettings_ynbwh")
 vertical_alignment = 1
 

@@ -136,7 +136,7 @@ func update_info():
 		for mat in surface_mat_info.keys():
 			rsrc_from_GK[mat] = num_planets * surface_volume * surface_mat_info[mat].chance * surface_mat_info[mat].amount * game.u_i.planck
 		for met in game.met_info.keys():
-			rsrc_from_GK[met] = num_planets * Helper.get_sph_V(R - game.met_info[met].min_depth, R - game.met_info[met].max_depth) / game.met_info[met].rarity * game.u_i.planck
+			rsrc_from_GK[met] = num_planets * Helper.get_sph_V(R - game.met_info[met].min_depth, R - game.met_info[met].max_depth) / pow(game.met_info[met].rarity, 0.6) * game.u_i.planck
 		Helper.put_rsrc($Panel/VBox/StoneMM/GridContainer, 32, rsrc_from_GK)
 	$Panel/Convert.visible = not error
 	$Panel/VBox/Costs.visible = not error
@@ -185,6 +185,7 @@ func _on_Convert_pressed():
 			game.bookmarks.galaxy.erase(str(galaxy_id_g))
 			game.HUD.galaxy_grid_btns.remove_child(game.HUD.galaxy_grid_btns.get_node(str(galaxy_id_g)))
 			g_i.erase("bookmarked")
+		game.galaxy_data_persistent[g_i.l_id] = g_i
 		game.view_history.pop_back()
 		game.view_history_pos -= 1
 		if bldg == TRIANGULUM_PROBE:

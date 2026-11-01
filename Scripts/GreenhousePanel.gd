@@ -21,7 +21,7 @@ func _ready():
 	set_polygon($GUI.size, $GUI.position)
 	
 func refresh():
-	if p_i.is_empty():
+	if p_i.is_empty() or p_i.has("destroyed"):
 		return
 	$UseFertilizer.visible = game.science_level[Science.PLANT_FERTILIZATION]
 	if not $UseFertilizer.visible:

@@ -298,8 +298,10 @@ func next_turn():
 	if not ships_taking_turn.is_empty():
 		logs += "ships_taking_turn: " + str(ships_taking_turn) + "\n"
 		for ship_node in ships_taking_turn:
+			if not is_instance_valid(ship_node):
+				continue
 			var skip_turn = ship_node.status_effects[Battle.StatusEffect.STUN] > 0 or ship_node.status_effects[Battle.StatusEffect.FROZEN] > 0 or ship_node.turn_taken
-			if is_instance_valid(ship_node) and not skip_turn and ship_node.HP > 0:
+			if not skip_turn and ship_node.HP > 0:
 				whose_turn_is_it_index = ship_node.turn_order
 				$Selected.position = ship_node.position + Vector2.UP * 80.0
 				battle_GUI.fade_in_main_panel()
