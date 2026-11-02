@@ -47,7 +47,7 @@ func _ready():
 		Helper.add_overlay(galaxy_btn, self, "galaxy", g_i, overlays)
 		if g_i.has("GS"):
 			var GS_marker:Sprite2D = Sprite2D.new()
-			GS_marker.scale *= 4.0
+			GS_marker.scale *= 2.0
 			GS_marker.texture = preload("res://Graphics/Effects/spotlight_8.png")
 			GS_marker.position = galaxy_btn.texture_normal.get_size() / 2.0
 			galaxy_btn.add_child(GS_marker)

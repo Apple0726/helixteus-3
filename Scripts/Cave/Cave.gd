@@ -185,7 +185,7 @@ func _ready():
 			if inventory[i].get("type") == Item.Type.ROVER_WEAPON:
 				selected_laser = inventory[i].id
 				break
-	inf_sc_laser_bonus = pow(game.maths_bonus.IRM, game.science_level[Science.IMPROVED_ROVER_LASERS] - len(Data.science_unlocks[Science.IMPROVED_ROVER_LASERS].cost))
+	inf_sc_laser_bonus = pow(game.maths_bonus.IRM, max(0, game.science_level[Science.IMPROVED_ROVER_LASERS] - len(Data.science_unlocks[Science.IMPROVED_ROVER_LASERS].cost)))
 	laser_damage = Item.data[selected_laser].damage * atk * rover_size * game.u_i.charge * inf_sc_laser_bonus
 	if rover_data.MK == 2:
 		$Rover/Sprite2D.texture = preload("res://Graphics/Cave/Rover top down 2.png")

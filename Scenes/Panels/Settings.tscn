@@ -33,10 +33,9 @@ layout_mode = 0
 offset_top = 60.0
 offset_right = 892.0
 offset_bottom = 576.0
-current_tab = 2
+current_tab = 0
 
 [node name="SFX" type="TabBar" parent="TabContainer" unique_id=208608145]
-visible = false
 layout_mode = 2
 metadata/_tab_index = 0
 
@@ -301,6 +300,7 @@ offset_bottom = 158.0
 text = "Keep window size"
 
 [node name="GAME" type="TabBar" parent="TabContainer" unique_id=523582965]
+visible = false
 layout_mode = 2
 metadata/_tab_index = 2
 

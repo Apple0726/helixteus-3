@@ -45,6 +45,8 @@ func _ready():
 		aurora_mult = tile.aurora + 1.0
 		$Mults/AuroraMult.visible = true
 		$Mults/AuroraMult.text = "[aurora au_int=%s][center]%s: x %s" % [tile.aurora, tr("AURORA_MULTIPLIER"), Helper.clever_round(aurora_mult)]
+	else:
+		$Mults/AuroraMult.hide()
 	if game.pickaxe.has("name"):
 		$Pickaxe/Sprite2D.texture = load("res://Graphics/Pickaxes/" + game.pickaxe.name + ".png")
 		$Pickaxe/Sprite2D.scale *= 512.0 / $Pickaxe/Sprite2D.texture.get_width()

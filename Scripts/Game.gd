@@ -500,28 +500,36 @@ func animate_title_buttons():
 		starfield_tween.kill()
 	starfield_tween = create_tween()
 	starfield_tween.tween_property($Stars/Starfield, "modulate:a", 0.6, 3.0).set_ease(Tween.EASE_IN).set_trans(Tween.TRANS_QUAD)
-	
+
+var music_player_tween
+
 func switch_music(src, time_speed:float = 1.0, pitch_scale:float = 1.0):
+	var stream
 	if Settings.op_cursor:
 		src = "op_cursor.ogg"
-	else:
-		#Music fading
-		if music_player.playing:
-			$MusicPlayer/AnimationPlayer.play_backwards("FadeMusic")
-			await $MusicPlayer/AnimationPlayer.animation_finished
-	if src == null:
-		return
+	#Music fading
 	if src is String:
-		if FileAccess.file_exists("res://Audio/" + src):
-			var stream = load("res://Audio/" + src)
+		if src == "" or FileAccess.file_exists("res://Audio/" + src):
+			stream = load("res://Audio/" + src) if src != "" else null
 			if music_player.stream != stream:
-				music_player.stream = stream
-				play_music(time_speed, pitch_scale)
+				if music_player_tween and music_player_tween.is_running():
+					music_player_tween.kill()
+				music_player_tween = create_tween()
+				if music_player.playing:
+					music_player_tween.tween_property($MusicPlayer, "volume_db", -60.0, 1.0)
+				music_player_tween.tween_callback(play_music.bind(stream, time_speed, pitch_scale))
+			else:
+				if music_player_tween and music_player_tween.is_running():
+					music_player_tween.kill()
+				music_player_tween = create_tween()
+				music_player_tween.tween_property($MusicPlayer, "volume_db", 0.0, 1.0)
 	else:
-		music_player.stream = src
-		play_music(time_speed, pitch_scale)
+		stream = src
+		if music_player.stream != stream:
+			play_music(stream, time_speed, pitch_scale)
 
-func play_music(time_speed:float = 1.0, pitch_scale:float = 1.0):
+func play_music(stream, time_speed:float = 1.0, pitch_scale:float = 1.0):
+	music_player.stream = stream
 	if Settings.pitch_affected:
 		if c_v in ["cave", "battle"] and subject_levels.dimensional_power >= 4:
 			music_player.pitch_scale = pitch_scale * log(time_speed - 1.0 + exp(1.0))
@@ -529,8 +537,8 @@ func play_music(time_speed:float = 1.0, pitch_scale:float = 1.0):
 			music_player.pitch_scale = pitch_scale * time_speed
 	else:
 		music_player.pitch_scale = pitch_scale
-	$MusicPlayer/AnimationPlayer.play("FadeMusic")
-	await get_tree().process_frame
+	music_player_tween = create_tween()
+	music_player_tween.tween_property($MusicPlayer, "volume_db", 0.0, 1.0)
 	music_player.play()
 	
 
@@ -669,7 +677,6 @@ func load_game():
 		universe_data.clear()
 		dim_num += 1
 		switch_music("")
-		viewing_dimension = true
 		help.erase("hide_dimension_stuff")
 		add_dimension()
 		dimension.refresh_univs(true)
@@ -680,7 +687,6 @@ func load_game():
 		stats_dim = Data.default_stats.duplicate(true)
 		fn_save_game()
 	elif c_u == -1:
-		viewing_dimension = true
 		add_dimension()
 		dimension.refresh_univs(len(universe_data) == 0)
 	else:
@@ -762,6 +768,11 @@ func new_game(univ:int = 0, new_save:bool = false, DR_advantage = false):
 	view_history_pos = -1
 	var procgen_settings_panel = load("res://Scenes/Panels/ProcGenSettingsPanel.tscn").instantiate()
 	procgen_settings_panel.modulate.a = 0.0
+	if new_save:
+		procgen_settings_panel.back_button_callable = return_to_menu
+	else:
+		procgen_settings_panel.back_button_callable = add_dimension
+		procgen_settings_panel.get_node("Back").text = "<- " + tr("BACK")
 	add_child(procgen_settings_panel)
 	var tween = create_tween()
 	tween.tween_property(procgen_settings_panel, "modulate:a", 1.0, 0.3)
@@ -790,7 +801,6 @@ func start_game(univ, new_save, DR_advantage):
 		if subject_levels.dimensional_power <= 4:
 			universe_data = [Data.starting_universe_data.duplicate(true)]
 			universe_data[0].cluster_num = ProcGenSettings.number_of_clusters
-			universe_data[0].seed = ProcGenSettings.universe_seed
 			universe_data[0].speed_of_light = 1.0#3.0e8#m/s
 			universe_data[0].planck = 1.0#e(6.626, -34)#J.s
 			universe_data[0].boltzmann = 1.0#e(1.381, -23)#J/K
@@ -805,6 +815,37 @@ func start_game(univ, new_save, DR_advantage):
 			universe_data[0].generated = true
 	else:
 		universe_data[univ].generated = true
+	universe_data[univ].procgen_settings = {
+		"planet_tile_dimensions": ProcGenSettings.planet_tile_dimensions,
+		"max_planet_tile_dimensions": ProcGenSettings.max_planet_tile_dimensions,
+		"lake_coverage": ProcGenSettings.lake_coverage,
+		"cave_spawn_frequency": ProcGenSettings.cave_spawn_frequency,
+
+		"cave_tile_dimensions": ProcGenSettings.cave_tile_dimensions,
+		"cave_depth": ProcGenSettings.cave_depth,
+		"cave_floor_difficulty": ProcGenSettings.cave_floor_difficulty,
+		"cave_traversable_space": ProcGenSettings.cave_traversable_space,
+
+		"distance_between_planets": ProcGenSettings.distance_between_planets,
+		"max_planets_in_system": ProcGenSettings.max_planets_in_system,
+
+		"star_system_density": ProcGenSettings.star_system_density,
+		"min_number_of_systems_elliptical": ProcGenSettings.min_number_of_systems_elliptical,
+		"max_number_of_systems_elliptical": ProcGenSettings.max_number_of_systems_elliptical,
+		"min_number_of_systems_spiral": ProcGenSettings.min_number_of_systems_spiral,
+		"max_number_of_systems_spiral": ProcGenSettings.max_number_of_systems_spiral,
+		"dwarf_elliptical_galaxy_ratio": ProcGenSettings.dwarf_elliptical_galaxy_ratio,
+		"elliptical_spiral_galaxy_ratio": ProcGenSettings.elliptical_spiral_galaxy_ratio,
+
+		"galaxy_density": ProcGenSettings.galaxy_density,
+		"min_number_of_galaxies": ProcGenSettings.min_number_of_galaxies,
+		"max_number_of_galaxies": ProcGenSettings.max_number_of_galaxies,
+		"galaxy_group_ratio": ProcGenSettings.galaxy_group_ratio,
+
+		"cluster_density": ProcGenSettings.cluster_density,
+		"number_of_clusters": ProcGenSettings.number_of_clusters,
+		"universe_seed": ProcGenSettings.universe_seed,
+	}
 	u_i = universe_data[univ]
 	save_dir.make_dir("user://%s/Univ%s" % [c_sv, univ])
 	save_dir.make_dir("user://%s/Univ%s/Caves" % [c_sv, univ])
@@ -816,11 +857,11 @@ func start_game(univ, new_save, DR_advantage):
 	l_v = ""
 
 	#Player resources
-	money = 800
+	money = 100000.0 if subject_levels.dimensional_power >= 1 else 800.0
 	minerals = 0
 	mineral_capacity = 200
 	stone = {}
-	energy = 200
+	energy = 7500.0 if subject_levels.dimensional_power >= 1 else 200.0
 	energy_capacity = 7500
 	capacity_bonus_from_substation = 0
 	SP = 0
@@ -830,6 +871,7 @@ func start_game(univ, new_save, DR_advantage):
 	if subject_levels.dimensional_power >= 1:
 		science_level[Science.AUTOSELL_MINERALS] = 1
 		science_level[Science.AUTOSELL_EXCESS_MINERALS] = 1
+		science_level[Science.COMPACT_ITEMS] = 3
 	cave_filters = {
 		"money":false,
 		"minerals":false,
@@ -1046,6 +1088,7 @@ func open_shop_pickaxe():
 
 func put_bottom_info(txt:String, action:String, on_close_callable = null):
 	if $UI.has_node("BottomInfo"):
+		$UI/BottomInfo.on_close_callable.call()
 		$UI/BottomInfo.free()
 	var bottom_info = preload("res://Scenes/BottomInfo.tscn").instantiate()
 	bottom_info.info_text = txt
@@ -1289,7 +1332,6 @@ func switch_view(new_view:String, other_params:Dictionary = {}):
 					c_v = new_view
 				else:
 					$Ship.visible = false
-					viewing_dimension = true
 					add_dimension()
 	if other_params.has("fn"):
 		var fn:String = other_params.fn
@@ -1580,7 +1622,14 @@ func remove_space_HUD():
 	remove_overlay()
 	remove_annotator()
 
+func play_dimension_music():
+	var song_N = 1
+	if OS.get_name() != "Web":
+		song_N = (dim_num - 1) % 2 + 1
+	switch_music("dimension%s.ogg" % song_N)
+
 func add_dimension():
+	viewing_dimension = true
 	if not is_instance_valid(PD_panel):
 		PD_panel = load("res://Scenes/Panels/PDPanel.tscn").instantiate()
 		PD_panel.panel_var_name = "PD_panel"
@@ -1598,10 +1647,7 @@ func add_dimension():
 		add_child(dimension)
 	var tween = create_tween()
 	tween.tween_property(dimension, "modulate", Color.WHITE, 0.2)
-	var song_N = 1
-	if OS.get_name() != "Web":
-		song_N = (dim_num - 1) % 2 + 1
-	switch_music("dimension%s.ogg" % song_N)
+	play_dimension_music()
 
 func set_starfield_color(_material, param:float):
 	_material.set_shader_parameter("stepsize", min(param, 0.3))
@@ -1849,7 +1895,7 @@ var cluster_modifier_data = { # Probability factors. Higher value = rarer
 
 func generate_clusters():
 	var rng = RandomNumberGenerator.new()
-	rng.seed = u_i.seed
+	rng.seed = u_i.procgen_settings.universe_seed
 	var total_clust_num = u_i.cluster_num
 	u_i.cluster_data = []
 	u_i.cluster_data.resize(total_clust_num)
@@ -2000,11 +2046,10 @@ func generate_galaxies(id:int):
 		galaxy_data[g_id] = g_i
 	if u_i.cluster_data_persistent[id] == null:
 		u_i.cluster_data_persistent[id] = {}
-	if id != 0:
-		var view_zoom = 500.0 / max_outer_radius
-		if not u_i.cluster_data[id].has("view"):
-			u_i.cluster_data[id]["view"] = {"pos":Vector2(640, 360), "zoom":view_zoom}
-		u_i.cluster_data_persistent[id]["view"] = u_i.cluster_data[id].view
+	var view_zoom = 500.0 / max_outer_radius
+	if not u_i.cluster_data[id].has("view"):
+		u_i.cluster_data[id]["view"] = {"pos":Vector2(640, 360), "zoom":view_zoom}
+	u_i.cluster_data_persistent[id]["view"] = u_i.cluster_data[id].view
 	
 	if not u_i.cluster_data[id].has("discovered"):
 		u_i.cluster_data[id]["discovered"] = true
@@ -2638,6 +2683,11 @@ func generate_planets(id:int):#local id
 			p_i["conquered"] = true
 			p_i["angle"] = PI / 2.0
 			p_i["pressure"] = 1.0
+			p_i["size"] = round(rng.randf_range(12000, 12100))
+			p_i["bookmarked"] = true
+			p_i["crust_start_depth"] = rng.randi_range(20, 25)
+			if not system_data[id].has("discovered"):
+				stats_univ.biggest_planet = p_i.size
 		stats_univ.biggest_planet = max(p_i.size, stats_univ.biggest_planet)
 		stats_dim.biggest_planet = max(p_i.size, stats_dim.biggest_planet)
 		stats_global.biggest_planet = max(p_i.size, stats_global.biggest_planet)
@@ -2812,7 +2862,7 @@ func generate_aurora(p_i:Dictionary, rng:RandomNumberGenerator):
 	if max_aurora_gap_size < thiccness + 1:
 		diff = thiccness + 1
 	else:
-		diff = randi_range(thiccness + 1, max_aurora_gap_size)
+		diff = rng.randi_range(thiccness + 1, max_aurora_gap_size)
 	for i in num_auroras:
 		if home_planet:
 			continue
@@ -3473,8 +3523,6 @@ func use_item(item_id:int, send_to_rover:int = -1):
 		return
 	if $UI.has_node("BottomInfo"):
 		$UI/BottomInfo.on_close_pressed()
-	item_to_use.id = item_id
-	item_to_use.num = num
 	var item_type:int = Item.data[item_id].type
 	if item_type == Item.Type.MINING_LIQUID:
 		remove_items(item_id)
@@ -3504,6 +3552,8 @@ func use_item(item_id:int, send_to_rover:int = -1):
 			return
 	if is_instance_valid(active_panel) and active_panel == inventory:
 		toggle_panel("inventory")
+	item_to_use.id = item_id
+	item_to_use.num = num
 	show_item_cursor(load("res://Graphics/%s/%s.png" % [Item.icon_directory(item_type), Item.data[item_id].item_name]))
 
 func get_star_class (temp):
@@ -3792,37 +3842,6 @@ func save_universe():
 	var universe_data_to_save = universe_data.duplicate(true)
 	if c_u != -1:
 		universe_data_to_save[c_u].erase("cluster_data")
-		universe_data_to_save[c_u].procgen_settings = {
-			"planet_tile_dimensions": ProcGenSettings.planet_tile_dimensions,
-			"max_planet_tile_dimensions": ProcGenSettings.max_planet_tile_dimensions,
-			"lake_coverage": ProcGenSettings.lake_coverage,
-			"cave_spawn_frequency": ProcGenSettings.cave_spawn_frequency,
-
-			"cave_tile_dimensions": ProcGenSettings.cave_tile_dimensions,
-			"cave_depth": ProcGenSettings.cave_depth,
-			"cave_floor_difficulty": ProcGenSettings.cave_floor_difficulty,
-			"cave_traversable_space": ProcGenSettings.cave_traversable_space,
-
-			"distance_between_planets": ProcGenSettings.distance_between_planets,
-			"max_planets_in_system": ProcGenSettings.max_planets_in_system,
-
-			"star_system_density": ProcGenSettings.star_system_density,
-			"min_number_of_systems_elliptical": ProcGenSettings.min_number_of_systems_elliptical,
-			"max_number_of_systems_elliptical": ProcGenSettings.max_number_of_systems_elliptical,
-			"min_number_of_systems_spiral": ProcGenSettings.min_number_of_systems_spiral,
-			"max_number_of_systems_spiral": ProcGenSettings.max_number_of_systems_spiral,
-			"dwarf_elliptical_galaxy_ratio": ProcGenSettings.dwarf_elliptical_galaxy_ratio,
-			"elliptical_spiral_galaxy_ratio": ProcGenSettings.elliptical_spiral_galaxy_ratio,
-
-			"galaxy_density": ProcGenSettings.galaxy_density,
-			"min_number_of_galaxies": ProcGenSettings.min_number_of_galaxies,
-			"max_number_of_galaxies": ProcGenSettings.max_number_of_galaxies,
-			"galaxy_group_ratio": ProcGenSettings.galaxy_group_ratio,
-
-			"cluster_density": ProcGenSettings.cluster_density,
-			"number_of_clusters": ProcGenSettings.number_of_clusters,
-			"universe_seed": ProcGenSettings.universe_seed,
-		}
 	var save_info:Dictionary = {
 		"save_created":save_created,
 		"save_modified":save_date,
@@ -4005,7 +4024,6 @@ func fade_out_title(fn:String, sv:String = ""):
 	if fn == "new_game":
 		if DRs > 0:
 			switch_music("")
-			viewing_dimension = true
 			set_default_dim_bonuses()
 			add_dimension()
 			dimension.refresh_univs(true)
@@ -4095,7 +4113,6 @@ func generate_new_univ():
 	universe_data = []
 	universe_data.append(Data.starting_universe_data.duplicate(true))
 	universe_data[0].cluster_num = ProcGenSettings.number_of_clusters
-	universe_data[0].seed = ProcGenSettings.universe_seed
 	universe_data[0].speed_of_light = 1.0#3.0e8#m/s
 	universe_data[0].planck = 1.0#e(6.626, -34)#J.s
 	universe_data[0].boltzmann = 1.0#e(1.381, -23)#J/K
@@ -4127,9 +4144,11 @@ func reset_dimension(DR_num:int):
 		switch_music("")
 	else:
 		dimension.refresh_univs(true)
+		play_dimension_music()
 	stats_dim = Data.default_stats.duplicate(true)
 	c_u = -1
 	fn_save_game()
+	$Autosave.stop()
 
 func destroy_buildings(tile_ids:Array):
 	if tile_data[tile_ids[0]].bldg.name == Building.GREENHOUSE:

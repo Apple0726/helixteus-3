@@ -68,8 +68,11 @@ func export_hx3(save_str:String):
 		$Export.popup_centered()
 
 func export_string(save_str:String):
+	$ExportingLabel.text = ""
+	$ExportingLabel.show()
 	if await Helper.export_save(save_str, ""):
 		game.popup(tr("EXPORT_STRING_SUCCESS").format({"save": save_to_export}), 2.0)
+	$ExportingLabel.hide()
 
 func on_load(sv:String, reset_dimension:bool = false):
 	if modulate.a == 1:

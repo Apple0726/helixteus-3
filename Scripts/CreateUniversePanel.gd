@@ -147,6 +147,7 @@ func discover_univ():
 				break
 	var id:int = len(game.universe_data)
 	var u_i:Dictionary = Data.starting_universe_data.duplicate(true)
+	u_i.id = id
 	u_i.name = "%s %s" % [tr("UNIVERSE"), id]
 	u_i.cluster_num = ProcGenSettings.number_of_clusters
 	u_i.seed = ProcGenSettings.universe_seed

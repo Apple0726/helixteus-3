@@ -52,9 +52,9 @@ stretch_mode = 5
 
 [node name="Label" type="Label" parent="." unique_id=1102026262]
 layout_mode = 1
-offset_left = 448.0
+offset_left = 364.0
 offset_top = 208.0
-offset_right = 832.0
+offset_right = 916.0
 offset_bottom = 231.0
 text = "Backups"
 horizontal_alignment = 1

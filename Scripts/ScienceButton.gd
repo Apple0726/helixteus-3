@@ -182,7 +182,7 @@ func on_research():
 		game.SP -= sc_cost
 		sc_lv += 1
 		game.science_level[sc_id] = sc_lv
-		if sc_id == Science.ADVANCED_SPACE_CONSTRUCTION:
+		if sc_id == Science.ADVANCED_SPACE_CONSTRUCTION and game.c_u == 0 and game.dim_num == 1:
 			game.show.bldg_upgrade = true
 			game.popup_window(tr("YOU_MAY_NOW_UPGRADE_BLDGS"))
 		elif sc_id == Science.ROVER_CONSTRUCTION and sc_lv == 1:

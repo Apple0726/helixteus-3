@@ -913,7 +913,6 @@ TRIANGULUM_PROBE_CONSTRUCTION_INF_SC_DESC,Each research multiplies the amount of
 CONVERT,Convert,,Converti,衍化,Umwandeln,Convertir,,,Átalakítás,コンバート,Verbouw,,
 GS_ERROR,This galaxy cannot be converted.,,Questa galassia non può essere convertita.,此星系无法被衍化,Diese Galaxie kann nicht umgewandelt werden.,Esta galaxia no puede ser convertida.,,,Ezt a galaxist nem lehet átalakítani.,この銀河系は変換できません。,Dit heelal kan niet verbouwd worden.,,
 GS_ERROR2,All systems in this galaxy must be conquered before conversion is possible.,,Tutti i sistemi in questa galassia devono essere conquistati prima di poter effettuare una conversione.,星系中的所有恒星系都必须被统治才有衍化的可能,"Alle Systeme in dieser Galaxie müssen erobert werden, bevor eine Umwandlung möglich ist.",Todos los sistemas en esta galaxia deben ser conquistadas antes de que la conversión sea posible.,,,"Minden rendszert el kell foglalni, mielőtt a galaxis átalakítható",この銀河系のすべての星系を征服しなければ、変換は不可能です。,Alle systemen in dit heelal moeten veroverd zijn voor je kan verbouwen.,,
-TP_ERROR,Triangulum probes can only be built in galaxies with at least 5000 star systems.,,Le sonde Triangulum possono essere costruite soltanto in galassie con almeno 5000 sistemi stellari.,三角座探测器只能在至少有5000个恒星系的星系中建造,Triangulum-Sonden können nur in Galaxien mit mindestens 5000 Sternensystemen gebaut werden.,Las sondas de triangulación sólo pueden ser construidas en galaxiass con al menos 5000 sistemas estelares.,,,Triangulumkszondákat csak legalább 5000 rendszeres galaxisban lehet építeni.,トライアングルム・プローブは、5000個以上の星系を持つ銀河系にしか建設できない。,Triangulum-sondes kunnen enkel gebouwd worden in heelallen met minstens 5000 sterren.,,
 CONVERT_SUCCESS,Successfully converted!,,Conversione avvenuta con successo!,转化成功！,Erfolgreich umgewandelt!,Conversión exitosa!,,,Sikeresen átalakítva!,変換に成功!,Succesvol verbouwd!,,
 NO_MEGA_PROBES,You don't have any probes capable of discovering new superclusters. A certain megastructure allows their construction.,,Non hai a disposizione sonde capaci di scoprire nuovi superammassi. È necessaria una specifica megastruttura per poterle costruire.,你没有任何能够发现新超星系团的探测器。有一座特定的巨型结构能够研制它们,"Sie haben keine Sonden, die in der Lage sind, neue Supercluster zu entdecken. Eine bestimmte Megastruktur ermöglicht ihre Konstruktion.",No tienes sondas capaces de descubrir nuevos superclústers. Una cierta megaestructura te permitirá su construcción.,,,(Ez úgyse fog megjelenni mert kiszedték a szuperhlalmazokat a játékból LOLOLOL),新しい超銀河団を発見できる探査機はないのか。ある巨大構造物によって建設が可能になる。,Je hebt geen sondes die nieuwe superclusters kunnen ontdekken. Een bepaald megagebouw maakt hun constructie mogelijk.,,
 PROBE_NUM_IN_UNIV,Number of probes in this universe,,Numero di sonde in questo universo.,宇宙中的探测器数量,Anzahl der Sonden in diesem Universum,Número de sondas en este universo,,,Szondák ebben az univerzumban,この宇宙に存在するプローブの数,Aantal sondes in dit universum,,
@@ -1492,11 +1491,10 @@ LOAD_UNLOAD_ALL,Load/unload all,"Charger/décharger tout
 STANDARD_DRIVE,Standard drive,,,电能量引擎,Standard Antrieb,Propulción estandar,,,Standardmeghajtó,,,Стандартный двигатель,
 QOL_PERKS,Various quality-of-life perks (hover over for more info),"Divers avantages de qualité de vie (survolez pour plus d'informations)
 ",,各种游戏速度的加快（将鼠标悬停在上面以获取更多信息）,Verschieden Optionen ein angenehmeres Spielerlebnis ( Mouseover für mehr informationen),,,,Több különböző könnyítés (tartsd itt az egeret további infomációért),,,,
-QOL_PERKS_DESC," - Wormholes are instantly researched
- - Conquering an entire system with one click available right from the start
- - Start every universe with ""auto-sell excess minerals"" researched",,," - 虫洞会立即被研究
- - 从一开始就可以一键征服整个恒星系
- - “自动出售多余水晶”从一开始就已研究完成","- Wurmlöcher werden ohne Zeitaufwand erforscht\n -Das einnehmen ganzer Galaxien ist mit einem Klick möglich\n-Alle Materialien und Metalle im Inventar sind sofort aufgedeckt\n - Starte jedes Universum mit ""Mineralien automatisch verkaufen"" erforscht",,,,"- A féreglyukak azonnal használhatóak\n- Egy rendszer egyszerre elfoglalása elérhető a kezdettől\n- Minden anyag és fém látható az inventárban a kezdettől\n- Az ""Automatikus ásványeladás"" kutatás megvan az uiverzumok kezdetén ",,,,
+QOL_PERKS_DESC," - Conquering an entire system with one click available right from the start
+ - Start every universe with:
+\t - @i {money} and @i {energy}
+\t - ""Auto-sell excess minerals"" and ""Compact items 3"" researched",,,,,,,,,,,,
 UNLOCK_PHY_CHEM_BIO,"Unlock Physics, Chemistry and Biology","Débloquez la physique, la chimie et la biologie",,解锁物理、化学和生物学的修改,"Schaltet Physik, Chemie und Biologie frei",,,,"Megnyitja a fizikát, a kémiát, és a biológiát.",,,,
 MODIFY_CAVE_BATTLE_TIME,"""Time speed"" affects caves/battles a lot less","La ""vitesse du temps"" affecte beaucoup moins les grottes/batailles",,“时间速度”对洞穴和战斗的影响更小,Zeitgeschwindigkeit hat deutlich weniger Einfluss auf Höhlen und Kämpfe,,,,Az idősebesség hatása a csatákra és a barlangokra jóval kisebb.,,,Ускорение времени влияет на роверы/пещеры гораздо меньше,
 MODIFY_CAVE_BATTLE_TIME_DESC,"More precisely, the actual time speed in caves and in battles will be equal to ln(universe time speed - 1 + e). Everything else (building construction time, production etc.) is unaffected.","Plus précisément, la vitesse réelle du temps dans les grottes et dans les batailles sera égale à ln(universe time speed - 1 + e). Tout le reste (temps de construction du bâtiment, production, etc.) n'est pas affecté.
@@ -1957,3 +1955,5 @@ IMPORT,Import,,,,,,,,,,,,
 EXPORT_STRING_SUCCESS,{save} successfully copied to clipboard!,,,,,,,,,,,,
 SELECT_ONLY_THIS_FILTER,"Ctrl click to select only this filter
 Ctrl click again to reset",,,,,,,,,,,,
+PP_HELP,"Probe points determine how powerful of a universe you can make when discovering one.
+Using galaxies with less than 5000 star systems will give less probe points.",,,,,,,,,,,,

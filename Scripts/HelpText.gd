@@ -14,7 +14,7 @@ func _ready():
 	refresh()
 
 func refresh():
-	if not Engine.is_editor_hint():
+	if not Engine.is_editor_hint() and is_inside_tree():
 		game = get_node("/root/Game")
 	if align == 0:
 		text = "%s [img]Graphics/Icons/help.png[/img]" % tr(label_text)

@@ -1,8 +1,8 @@
 {
     "en": {
         "lines": 1636,
-        "words": 11548,
-        "chars": 70303,
+        "words": 11569,
+        "chars": 70406,
         "name": "English"
     },
     "fr": {
@@ -12,27 +12,27 @@
         "name": "Français"
     },
     "it": {
-        "lines": 1029,
-        "words": 6901,
-        "chars": 45415,
+        "lines": 1028,
+        "words": 6887,
+        "chars": 45316,
         "name": "Italiano"
     },
     "zh": {
-        "lines": 1529,
-        "words": 1984,
-        "chars": 20847,
+        "lines": 1527,
+        "words": 1977,
+        "chars": 20766,
         "name": "中文"
     },
     "de": {
-        "lines": 1491,
-        "words": 8898,
-        "chars": 65234,
+        "lines": 1489,
+        "words": 8855,
+        "chars": 64894,
         "name": "Deutsch"
     },
     "es": {
-        "lines": 1153,
-        "words": 7938,
-        "chars": 50366,
+        "lines": 1152,
+        "words": 7922,
+        "chars": 50260,
         "name": "Español"
     },
     "ko": {
@@ -48,21 +48,21 @@
         "name": "Svenska"
     },
     "hu": {
-        "lines": 1601,
-        "words": 8598,
-        "chars": 63275,
+        "lines": 1599,
+        "words": 8561,
+        "chars": 62973,
         "name": "Magyar"
     },
     "ja": {
-        "lines": 1085,
-        "words": 1191,
-        "chars": 17925,
+        "lines": 1084,
+        "words": 1190,
+        "chars": 17884,
         "name": "日本語"
     },
     "nl": {
-        "lines": 980,
-        "words": 4860,
-        "chars": 33672,
+        "lines": 979,
+        "words": 4849,
+        "chars": 33587,
         "name": "Nederlands"
     },
     "ru": {

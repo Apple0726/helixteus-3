@@ -127,40 +127,6 @@ shadow_size = 2
 shadow_color = Color(0, 0, 0, 1)
 shadow_offset = Vector2(2, 2)
 
-[sub_resource type="Animation" id="Animation_g0rgc"]
-resource_name = "FadeMusic"
-tracks/0/type = "bezier"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath(".:volume_db")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"handle_modes": PackedInt32Array(0, 0),
-"points": PackedFloat32Array(-40, -0.25, 0, 0.25, 0, 0, -0.2, -7.24913, 0.25, 0),
-"times": PackedFloat32Array(0, 1)
-}
-
-[sub_resource type="Animation" id="Animation_bbkxg"]
-length = 0.001
-tracks/0/type = "bezier"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath(".:volume_db")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"handle_modes": PackedInt32Array(0),
-"points": PackedFloat32Array(0, -0.25, 0, 0.25, 0),
-"times": PackedFloat32Array(0)
-}
-
-[sub_resource type="AnimationLibrary" id="AnimationLibrary_g33d0"]
-_data = {
-&"FadeMusic": SubResource("Animation_g0rgc"),
-&"RESET": SubResource("Animation_bbkxg")
-}
-
 [sub_resource type="ShaderMaterial" id="12"]
 shader = ExtResource("34")
 
@@ -488,10 +454,8 @@ theme = ExtResource("7")
 label_settings = SubResource("LabelSettings_ubx28")
 
 [node name="MusicPlayer" type="AudioStreamPlayer" parent="." unique_id=1248171106]
+volume_db = -40.0
 bus = &"Music"
-
-[node name="AnimationPlayer" type="AnimationPlayer" parent="MusicPlayer" unique_id=783020801]
-libraries/ = SubResource("AnimationLibrary_g33d0")
 
 [node name="ScienceTreeBG" type="ColorRect" parent="." unique_id=658314139]
 visible = false

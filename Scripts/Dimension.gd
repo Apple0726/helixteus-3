@@ -29,6 +29,15 @@ var lake_params:Dictionary = {
 	"Xe":{"min_value":0, "max_value":3, "value":0, "is_integer":true, "OP_factor":5, "pw":3},
 }
 func _ready():
+	$ModifyDimension/Dimensional_Power/Control/Label1.mouse_entered.connect(
+		game.show_tooltip.bind(
+			tr("QOL_PERKS_DESC").format({
+				"money": Helper.format_num(100000.0, true),
+				"energy": Helper.format_num(7500.0, true),
+			}),
+			{"imgs": [Data.money_icon, Data.energy_icon]}
+		)
+	)
 	$ModifyDimension/Engineering/Control/ancient_building_a_value.min_value = -INF
 	var prop_text:String = ""
 	$ModifyDimension/Maths/Control/CostGrowthFactors/BUCGF.step = 0.0005
@@ -315,8 +324,12 @@ func on_univ_press(id:int):
 		game.load_univ()
 		game.switch_view(game.c_v)
 	else:
-		game.remove_dimension()
-		game.new_game(id, game.dim_num == 1 and len(game.universe_data) == 1, game.dim_num == 1 and len(game.universe_data) == 1)
+		var tween = create_tween()
+		var new_save = game.dim_num == 1 and len(game.universe_data) == 1
+		tween.tween_property(game.view, "modulate", Color(1.0, 1.0, 1.0, 0.0), 0.15)
+		tween.tween_callback(game.remove_dimension)
+		tween.tween_callback(game.new_game.bind(id, new_save, new_save))
+		#tween.tween_property(game.view, "modulate", Color(1.0, 1.0, 1.0, 1.0), 0.15)
 	game.HUD.refresh()
 
 func _on_SendProbes_pressed():
@@ -620,6 +633,7 @@ func show_DR_help():
 	if DR_help_index == 5:
 		$ColorRect/AnimationPlayer.play("FadeOut")
 		game.help.DR_reset = true
+		game.play_dimension_music()
 	else:
 		if DR_help_index == 2:
 			$ColorRect/Label.text = tr("DR_HELP%s" % DR_help_index) % [Helper.format_num(game.stats_global.bldgs_built), Helper.format_num(game.stats_global.total_money_earned), Helper.format_num(game.stats_global.planets_conquered)]

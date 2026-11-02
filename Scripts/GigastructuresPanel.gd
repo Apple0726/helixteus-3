@@ -37,9 +37,11 @@ func update_info():
 			costs.energy *= prod_cost_mult
 	else:
 		costs = Data.costs[bldg].duplicate(true)
-	$Panel/PPMult.visible = bldg == TRIANGULUM_PROBE and game.subject_levels.dimensional_power >= 6 and g_i.system_num >= 5000
-	$Panel/PPMult.text = tr("PP_MULTIPLIER") + ": " + str(Helper.clever_round(log(prod_cost_mult + 1.0) / 2.0))
-	$Panel/ProdCostMult.visible = bldg != TRIANGULUM_PROBE or game.subject_levels.dimensional_power >= 6 and g_i.system_num >= 5000
+	var PP_mult = get_PP_mult()
+	$Panel/PPMult.visible = bldg == TRIANGULUM_PROBE and not is_equal_approx(PP_mult, 1.0)
+	$Panel/PPMult.label_text = tr("PP_MULTIPLIER") + ": " + str(Helper.clever_round(PP_mult))
+	$Panel/PPMult.refresh()
+	$Panel/ProdCostMult.visible = bldg != TRIANGULUM_PROBE or game.subject_levels.dimensional_power >= 6
 	$Panel/VBox/ProductionPerSec.visible = bldg != TRIANGULUM_PROBE
 	$Panel/VBox/Production.visible = not bldg in [TRIANGULUM_PROBE, GALAXY_KILLER]
 	$Panel/VBox/StoneMM.visible = bldg == GALAXY_KILLER
@@ -61,11 +63,7 @@ func update_info():
 	if not error:
 		$Panel/VBox/GalaxyInfo["theme_override_colors/font_color"] = Color.WHITE
 		if bldg == TRIANGULUM_PROBE:
-			if g_i.system_num <= 4999:
-				$Panel/VBox/GalaxyInfo.text = tr("TP_ERROR")
-				error = true
-			else:
-				$Panel/VBox/GalaxyInfo.text = tr("TP_CONFIRM")
+			$Panel/VBox/GalaxyInfo.text = tr("TP_CONFIRM")
 		elif bldg != GALAXY_KILLER:
 			$Panel/VBox/Production.visible = true
 			$Panel/VBox/GalaxyInfo.visible = false
@@ -160,6 +158,13 @@ func _on_GS_pressed(extra_arg_0):
 	$Panel.show()
 	update_info()
 
+func get_PP_mult():
+	var PP_mult = prod_cost_mult
+	if game.subject_levels.dimensional_power < 6:
+		PP_mult = clamp(remap(g_i.system_num, 1, 5000, 0.25, 1.0), 0.25, 1.0)
+	PP_mult *= pow(game.maths_bonus.IRM, game.science_level[Science.TRIANGULUM_PROBE_CONSTRUCTION] - 1)
+	return PP_mult
+
 func _on_Convert_pressed():
 	if game.check_enough(costs):
 		game.deduct_resources(costs)
@@ -192,9 +197,7 @@ func _on_Convert_pressed():
 			if not game.achievement_data.random.has("build_tri_probe_in_slow_univ") and game.u_i.time_speed <= 0.2:
 				game.earn_achievement("random", "build_tri_probe_in_slow_univ")
 			game.show.dimensions = true
-			var probe_data = {"tier":2}
-			if game.subject_levels.dimensional_power >= 6:
-				probe_data.PP_multiplier = log(prod_cost_mult + 1.0) / 2.0
+			var probe_data = {"tier":2, "PP_multiplier": get_PP_mult()}
 			game.probe_data.append(probe_data)
 			game.switch_view("cluster", {"fn":"delete_galaxy", "fn_args":[g_i.l_id]})
 		elif bldg == GALAXY_KILLER:

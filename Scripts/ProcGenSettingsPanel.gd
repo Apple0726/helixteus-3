@@ -28,6 +28,7 @@ extends Control
 signal done
 
 var min_max_values:Dictionary
+var back_button_callable
 
 func _ready() -> void:
 	min_max_values = {
@@ -211,8 +212,8 @@ func _on_basic_settings_pressed() -> void:
 	$AdvancedSettingsGroup.hide()
 
 
-func _on_return_to_menu_pressed() -> void:
+func _on_back_pressed() -> void:
 	var tween = create_tween()
 	tween.tween_property(self, "modulate:a", 0.0, 0.3)
-	tween.tween_callback(game.return_to_menu)
+	tween.tween_callback(back_button_callable)
 	tween.tween_callback(queue_free)

@@ -280,7 +280,7 @@ func refresh():
 	game.move_child(ship, game.get_child_count())
 	var progress = Helper.update_ship_travel()
 	travel_view = game.ships_travel_data.travel_view
-	if travel_view == "-":
+	if travel_view == "-" or travel_view != game.c_v:
 		ship.mouse_filter = TextureButton.MOUSE_FILTER_IGNORE
 	else:
 		ship.mouse_filter = TextureButton.MOUSE_FILTER_STOP
@@ -387,7 +387,7 @@ func _unhandled_input(event):
 
 #Executed once the receives any kind of input
 func _input(event):
-	if scroll_view and not game.block_scroll:
+	if scroll_view and not game.block_scroll and (is_instance_valid(obj) or game.c_v == "battle"):
 		if event.is_action_released("scroll_down"):
 			_zoom_at_point_animate(1.0 / 1.3)
 		elif event.is_action_released("scroll_up"):
@@ -437,7 +437,7 @@ func _zoom_at_point_animate(zoom_change: float):
 	if game.c_v == "planet":
 		if is_instance_valid(obj) and obj.dimensions and scale.x >= 2.0 and zoom_change > 1: #max zoom in
 			return
-	elif game.c_v == "science_tree":
+	elif game.c_v in ["science_tree", "battle"]:
 		if scale.x * zoom_change >= 3.0: #max zoom in
 			zoom_change = 3.0 / scale.x
 		elif scale.x * zoom_change <= 0.4: #max zoom out

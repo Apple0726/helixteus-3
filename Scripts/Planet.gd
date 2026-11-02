@@ -367,7 +367,7 @@ func show_tooltip(tile, tile_id:int):
 		else:
 			tooltip += tr("CAVE")
 		var floor_size:String = tr("FLOOR_SIZE").format({"size":tile.cave.floor_size})
-		if not game.science_level[Science.ROVER_CONSTRUCTION]:
+		if not game.science_level[Science.ROVER_CONSTRUCTION] and game.c_u == 0 and game.dim_num == 1:
 			tooltip += "\n%s\n%s\n%s" % [tr("CAVE_DESC"), tr("NUM_FLOORS") % tile.cave.num_floors, floor_size]
 		else:
 			tooltip += "\n%s" % tr("NUM_FLOORS") % tile.cave.num_floors

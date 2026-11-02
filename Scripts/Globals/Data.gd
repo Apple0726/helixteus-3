@@ -383,7 +383,7 @@ var science_unlocks = {
 	Science.PLANETKILLER: {"cost": [5.25e14, 3.4e16], "prereqs": {Science.MACRO_ENGINEERING: 1}},
 	Science.MATRIOSHKA_BRAIN: {"cost": [2.6e16], "prereqs": {Science.DYSON_SPHERE: 4}},
 	Science.GIGASTRUCTURE_CONSTRUCTION: {"cost": [1.0e19], "prereqs": {Science.MATRIOSHKA_BRAIN: 1}},
-	Science.TRIANGULUM_PROBE_CONSTRUCTION: {"cost": [1.0e23], "prereqs": {Science.GIGASTRUCTURE_CONSTRUCTION: 1}, "infinite_research": {"cost":5.0e24, "pw":6.1}},
+	Science.TRIANGULUM_PROBE_CONSTRUCTION: {"cost": [1.0e23], "prereqs": {Science.GIGASTRUCTURE_CONSTRUCTION: 1}, "infinite_research": {"cost":5.0e25, "pw":7.5}},
 }
 
 var battle_weapon_stats = {

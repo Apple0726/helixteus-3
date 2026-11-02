@@ -652,7 +652,7 @@ func get_IR_mult(bldg_name):
 		sc = Science.FIGHTERS
 	if sc == -1:
 		return 1.0
-	return pow(game.maths_bonus.IRM, game.science_level[sc] - len(Data.science_unlocks[sc].cost))
+	return pow(game.maths_bonus.IRM, max(0, game.science_level[sc] - len(Data.science_unlocks[sc].cost)))
 
 func add_ship_XP(id:int, XP:float):
 	var ship_data = game.ship_data
@@ -1710,9 +1710,10 @@ func load_ambient_music():
 	var univ_id = 1
 	if game.c_u != -1 and OS.get_name() != "Web":
 		univ_id = game.c_u % 2 + 1
+	var version = randi_range(1, song_N[univ_id-1])
 	game.switch_music("ambient{univ}_{version}.ogg".format({
 		"univ": univ_id,
-		"version": randi_range(1, song_N[univ_id]),
+		"version": version,
 	}), game.u_i.time_speed)
 
 func export_save(save_to_export:String, path:String = ""): # Empty path = copy to clipboard
