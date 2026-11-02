@@ -350,7 +350,7 @@ func change_circle_size(value, overlays):
 func save_obj(type:String, id:int, arr:Array):
 	var file_path:String = "user://%s/Univ%s/%s/%s.hx3" % [game.c_sv, game.c_u, type, id]
 	var save = FileAccess.open_compressed(file_path + "~", FileAccess.WRITE, FileAccess.COMPRESSION_ZSTD)
-	save.store_var(arr)
+	save.store_buffer(var_to_bytes(arr).compress(FileAccess.COMPRESSION_ZSTD))
 	save.close()
 	DirAccess.copy_absolute(file_path + "~", file_path)
 
@@ -473,7 +473,8 @@ func get_rsrc_from_rock(contents:Dictionary, tile:Dictionary, p_i:Dictionary, ti
 			if not game.show.has("plant_button") and content == "soil":
 				game.show.plant_button = true
 			if game.help.has("materials"):
-				game.popup_window(tr("YOU_MINED_MATERIALS"), tr("MATERIALS"))
+				if game.c_u == 0 and game.dim_num == 1:
+					game.popup_window(tr("YOU_MINED_MATERIALS"), tr("MATERIALS"))
 				game.help.erase("materials")
 			if not game.show.has("materials"):
 				game.show.materials = true
@@ -482,7 +483,8 @@ func get_rsrc_from_rock(contents:Dictionary, tile:Dictionary, p_i:Dictionary, ti
 					game.inventory.get_node("TabBar/Materials").visible = true
 		elif game.mets.has(content):
 			if not game.show.has("metals"):
-				game.popup_window(tr("YOU_MINED_METALS"), tr("METALS"))
+				if game.c_u == 0 and game.dim_num == 1:
+					game.popup_window(tr("YOU_MINED_METALS"), tr("METALS"))
 				game.show.metals = true
 				if is_instance_valid(game.inventory):
 					game.inventory.get_node("TabBar/Metals").visible = true
@@ -1726,7 +1728,7 @@ func export_save(save_to_export:String, path:String = ""): # Empty path = copy t
 		var save_dict = {"univs":[]}
 		var file2 = FileAccess.open_compressed("user://%s/save_info.hx3" % save_to_export, FileAccess.READ, FileAccess.COMPRESSION_ZSTD)
 		if file2:
-			save_dict.save_info = file2.get_var()
+			save_dict.save_info = Helper.decompress_hx3_file(file2)
 			file2.close()
 			var directory = DirAccess.open("user://%s" % save_to_export)
 			if directory:
@@ -1757,7 +1759,15 @@ func export_save(save_to_export:String, path:String = ""): # Empty path = copy t
 	else:
 		success = false
 	return success
-	
+
+func decompress_hx3_file(file:FileAccess):
+	var file_size = file.get_length()
+	var dec_bytes = file.get_buffer(file_size).decompress(file_size * 1000, FileAccess.COMPRESSION_ZSTD)
+	if dec_bytes.is_empty():
+		file.seek(0)
+		return file.get_var()
+	return bytes_to_var(dec_bytes)
+
 func export_univ(univ_str:String, save_to_export:String):
 	var error = false
 	var univ_data:Dictionary = {
@@ -1769,7 +1779,7 @@ func export_univ(univ_str:String, save_to_export:String):
 	}
 	var file = FileAccess.open_compressed("user://%s/%s/main.hx3" % [save_to_export, univ_str], FileAccess.READ, FileAccess.COMPRESSION_ZSTD)
 	if file:
-		univ_data.main = file.get_var()
+		univ_data.main = decompress_hx3_file(file)
 		file.close()
 	else:
 		error = true
@@ -1797,7 +1807,7 @@ func export_univ_folder(univ_data:Dictionary, univ_str:String, folder:String, sa
 			if not directory.current_is_dir():
 				var file = FileAccess.open_compressed("user://%s/%s/%s/%s" % [save_to_export, univ_str, folder, file_name], FileAccess.READ, FileAccess.COMPRESSION_ZSTD)
 				if file:
-					univ_data[folder.to_lower()][file_name] = file.get_var()
+					univ_data[folder.to_lower()][file_name] = Helper.decompress_hx3_file(file)
 					export_save_data_exported += file.get_length()
 					file.close()
 					export_save_files_exported += 1
@@ -1840,10 +1850,7 @@ func get_file_size_string(bytes:int):
 func import_save(save_name:String, path:String):
 	var importing_file = FileAccess.open_compressed(path, FileAccess.READ, FileAccess.COMPRESSION_ZSTD)
 	if importing_file:
-		var file_size = importing_file.get_length()
-		var packed_bytes = importing_file.get_buffer(file_size)
-		var dec_bytes = packed_bytes.decompress(file_size * 1000, FileAccess.COMPRESSION_ZSTD)
-		var save_dict:Dictionary = bytes_to_var(dec_bytes)
+		var save_dict:Dictionary = Helper.decompress_hx3_file(importing_file)
 		var directory = DirAccess.open("user://")
 		var final_save_name:String = save_name
 		if directory.dir_exists(save_name):
@@ -1856,12 +1863,12 @@ func import_save(save_name:String, path:String):
 		if directory.make_dir(final_save_name) == OK:
 			var save_info_file = FileAccess.open_compressed("user://%s/save_info.hx3" % final_save_name, FileAccess.WRITE, FileAccess.COMPRESSION_ZSTD)
 			if save_info_file:
-				save_info_file.store_var(save_dict.save_info)
+				save_info_file.store_buffer(var_to_bytes(save_dict.save_info).compress(FileAccess.COMPRESSION_ZSTD))
 				for i in len(save_dict.univs):
 					if directory.make_dir("user://%s/Univ%s" % [final_save_name, i]) == OK:
 						var univ_file = FileAccess.open_compressed("user://%s/Univ%s/main.hx3" % [final_save_name, i], FileAccess.WRITE, FileAccess.COMPRESSION_ZSTD)
 						if univ_file:
-							univ_file.store_var(save_dict.univs[i].main)
+							univ_file.store_buffer(var_to_bytes(save_dict.univs[i].main).compress(FileAccess.COMPRESSION_ZSTD))
 						make_obj_dir(save_dict, i, "user://%s/Univ%s" % [final_save_name, i], "Caves")
 						make_obj_dir(save_dict, i, "user://%s/Univ%s" % [final_save_name, i], "Clusters")
 						make_obj_dir(save_dict, i, "user://%s/Univ%s" % [final_save_name, i], "Galaxies")
@@ -1878,7 +1885,7 @@ func make_obj_dir(save_dict:Dictionary, univ:int, path:String, obj:String):
 		for obj_file_name in save_dict.univs[univ][obj.to_lower()].keys():
 			var file = FileAccess.open_compressed("%s/%s/%s" % [path, obj, obj_file_name], FileAccess.WRITE, FileAccess.COMPRESSION_ZSTD)
 			if file:
-				file.store_var(save_dict.univs[univ][obj.to_lower()][obj_file_name])
+				file.store_buffer(var_to_bytes(save_dict.univs[univ][obj.to_lower()][obj_file_name]).compress(FileAccess.COMPRESSION_ZSTD))
 			file.close()
 
 func get_save_info(save_name:String):
@@ -1888,7 +1895,7 @@ func get_save_info(save_name:String):
 	if save_info == null:
 		try_backup = true
 	else:
-		save_info_dict = save_info.get_var()
+		save_info_dict = Helper.decompress_hx3_file(save_info)
 		if save_info_dict is not Dictionary:
 			try_backup = true
 	if try_backup:
@@ -1896,7 +1903,7 @@ func get_save_info(save_name:String):
 		if save_info == null:
 			return null
 		else:
-			save_info_dict = save_info.get_var()
+			save_info_dict = Helper.decompress_hx3_file(save_info)
 			if save_info_dict is not Dictionary:
 				return null
 	save_info.close()

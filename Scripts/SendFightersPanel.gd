@@ -72,7 +72,7 @@ func refresh():
 					continue
 				if fighter.tier == 0 and fighter.c_g_g == game.c_g_g:
 					var file = FileAccess.open_compressed("user://%s/Univ%s/Systems/%s.hx3" % [game.c_sv, game.c_u, fighter.c_s_g], FileAccess.READ, FileAccess.COMPRESSION_ZSTD)
-					var planets_in_depart_system = file.get_var()
+					var planets_in_depart_system = Helper.decompress_hx3_file(file)
 					combined_strength += fighter.strength
 					fighter_num += fighter.number
 					planet_exit_costs += get_atm_exit_cost(planets_in_depart_system[fighter.c_p]) + get_grav_exit_cost(planets_in_depart_system[fighter.c_p]) * fighter.number

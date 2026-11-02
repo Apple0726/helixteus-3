@@ -39,7 +39,7 @@ func refresh():
 		depart_planet_data = game.planet_data[coords.p]
 	else:
 		var file = FileAccess.open_compressed("user://%s/Univ%s/Systems/%s.hx3" % [game.c_sv, game.c_u, g_s], FileAccess.READ, FileAccess.COMPRESSION_ZSTD)
-		planets_in_depart_system = file.get_var()
+		planets_in_depart_system = Helper.decompress_hx3_file(file)
 		file.close()
 		depart_planet_data = planets_in_depart_system[coords.p]
 	if game.c_s_g == g_coords.s:

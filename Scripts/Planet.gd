@@ -132,7 +132,7 @@ func _ready():
 					var cave_file_path:String = "user://%s/Univ%s/Caves/%s.hx3" % [game.c_sv, game.c_u, tile.cave.id]
 					var cave_data_file = FileAccess.open_compressed(cave_file_path, FileAccess.READ, FileAccess.COMPRESSION_ZSTD)
 					if cave_data_file:
-						var cave_data = cave_data_file.get_var()
+						var cave_data = Helper.decompress_hx3_file(cave_data_file)
 						cave_data_file.close()
 						caves_data[id2] = len(cave_data.seeds)
 				var cave_sprite = Sprite2D.new()

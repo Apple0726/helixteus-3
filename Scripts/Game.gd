@@ -548,7 +548,7 @@ func load_univ():
 	var save_game = FileAccess.open_compressed("user://%s/Univ%s/main.hx3" % [c_sv, c_u], FileAccess.READ, FileAccess.COMPRESSION_ZSTD)
 	if save_game == null:
 		save_game = FileAccess.open_compressed("user://%s/Univ%s/main.hx3~" % [c_sv, c_u], FileAccess.READ, FileAccess.COMPRESSION_ZSTD)
-	var save_game_dict:Dictionary = save_game.get_var()
+	var save_game_dict:Dictionary = Helper.decompress_hx3_file(save_game)
 	save_game.close()
 	for key in save_game_dict:
 		if key in self:
@@ -620,7 +620,7 @@ func load_game():
 		save_info = FileAccess.open("user://%s/save_info.hx3" % [c_sv], FileAccess.READ)
 	if save_info == null:
 		save_info = FileAccess.open("user://%s/save_info.hx3~" % [c_sv], FileAccess.READ)
-	var save_info_dict:Dictionary = save_info.get_var()
+	var save_info_dict:Dictionary = Helper.decompress_hx3_file(save_info)
 	save_info.close()
 	save_created = save_info_dict.save_created
 	help = save_info_dict.help
@@ -1571,7 +1571,7 @@ func open_obj(type:String, id:int):
 		if save.get_length() == 0:
 			save.close()
 			return []
-	var arr = save.get_var()
+	var arr = Helper.decompress_hx3_file(save)
 	save.close()
 	return arr
 
@@ -3862,7 +3862,7 @@ func save_universe():
 		"achievement_data":achievement_data,
 	}
 	var save_info_file = FileAccess.open_compressed("user://%s/save_info.hx3~" % [c_sv], FileAccess.WRITE, FileAccess.COMPRESSION_ZSTD)
-	save_info_file.store_var(save_info)
+	save_info_file.store_buffer(var_to_bytes(save_info).compress(FileAccess.COMPRESSION_ZSTD))
 	save_info_file.close()
 	DirAccess.copy_absolute("user://%s/save_info.hx3~" % [c_sv], "user://%s/save_info.hx3" % [c_sv])
 
@@ -3924,7 +3924,7 @@ func fn_save_game():
 		"boring_machine_data":boring_machine_data,
 	}
 	var save_game = FileAccess.open_compressed("user://%s/Univ%s/main.hx3~" % [c_sv, c_u], FileAccess.WRITE, FileAccess.COMPRESSION_ZSTD)
-	save_game.store_var(save_game_dict)
+	save_game.store_buffer(var_to_bytes(save_game_dict).compress(FileAccess.COMPRESSION_ZSTD))
 	save_game.close()
 	if c_v == "cave" and is_instance_valid(cave):
 		cave.save_cave_data()

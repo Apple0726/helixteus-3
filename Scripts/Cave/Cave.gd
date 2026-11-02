@@ -273,7 +273,7 @@ func _ready():
 		var cave_data_file = FileAccess.open_compressed(file_name, FileAccess.READ, FileAccess.COMPRESSION_ZSTD)
 		if cave_data_file == null:
 			cave_data_file = FileAccess.open_compressed(file_name + "~", FileAccess.READ, FileAccess.COMPRESSION_ZSTD)
-		cave_data = cave_data_file.get_var()
+		cave_data = Helper.decompress_hx3_file(cave_data_file)
 		cave_data_file.close()
 		seeds = cave_data.seeds
 		tiles_mined = cave_data.tiles_mined
@@ -1373,7 +1373,7 @@ func save_cave_data():
 		"partially_looted_chests":partially_looted_chests,
 		"hole_exits":hole_exits,
 	}
-	cave_data_file.store_var(cave_data_dict)
+	cave_data_file.store_buffer(var_to_bytes(cave_data_dict).compress(FileAccess.COMPRESSION_ZSTD))
 	cave_data_file.close()
 	DirAccess.copy_absolute(file_name + "~", file_name)
 	

@@ -125,7 +125,7 @@ func show_tooltip():
 		sc_loc_desc = tr("%s_INF_SC_DESC" % name.to_upper()) % game.maths_bonus.IRM
 		sc_loc_desc += "\n{current_mult}: {mult}".format({
 			"current_mult":tr("CURRENT_MULT"),
-			"mult":Helper.clever_round(pow(game.maths_bonus.IRM, sc_lv - num_levels)),
+			"mult":Helper.clever_round(pow(game.maths_bonus.IRM, sc_lv - num_levels), 4),
 		})
 	elif sc_lv >= 1: # Some sciences have different names at different levels
 		var name_key = "%s_%s_SC" % [name.to_upper(), min(sc_lv + 1, num_levels)]
@@ -182,9 +182,10 @@ func on_research():
 		game.SP -= sc_cost
 		sc_lv += 1
 		game.science_level[sc_id] = sc_lv
-		if sc_id == Science.ADVANCED_SPACE_CONSTRUCTION and game.c_u == 0 and game.dim_num == 1:
+		if sc_id == Science.ADVANCED_SPACE_CONSTRUCTION:
 			game.show.bldg_upgrade = true
-			game.popup_window(tr("YOU_MAY_NOW_UPGRADE_BLDGS"))
+			if game.c_u == 0 and game.dim_num == 1:
+				game.popup_window(tr("YOU_MAY_NOW_UPGRADE_BLDGS"))
 		elif sc_id == Science.ROVER_CONSTRUCTION and sc_lv == 1:
 			Helper.show_bldg_unlocked_popup(Building.ROVER_CONSTRUCTION_CENTER)
 			game.show.vehicles_button = true
