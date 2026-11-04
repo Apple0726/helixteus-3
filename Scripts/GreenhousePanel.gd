@@ -34,20 +34,15 @@ func refresh():
 		slot.free()
 	for _seed in game.seeds_produce:
 		var slot = preload("res://Scenes/InventorySlot.tscn").instantiate()
-		slot.get_node("TextureRect").texture = load("res://Graphics/Agriculture/" + _seed + ".png")
-		slot.get_node("Button").connect("mouse_entered",Callable(self,"on_slot_over").bind(_seed))
-		slot.get_node("Button").connect("mouse_exited",Callable(self,"on_slot_out"))
-		slot.get_node("Button").connect("pressed",Callable(self,"on_slot_press").bind(_seed))
+		var metal = game.seeds_produce[_seed].produce.keys()[0]
+		slot.get_node("TextureRect").texture = load("res://Graphics/Metals/" + metal + ".png")
+		slot.get_node("Button").mouse_entered.connect(game.show_tooltip.bind(tr(metal.to_upper())))
+		slot.get_node("Button").mouse_exited.connect(game.hide_tooltip)
+		slot.get_node("Button").pressed.connect(on_slot_press.bind(_seed))
 		hbox.add_child(slot)
 	calc_prod_per_sec()
 	if seeds_to_plant != "":
 		on_slot_press(seeds_to_plant)
-
-func on_slot_over (_name:String):
-	game.show_tooltip(Helper.get_item_name(_name))
-
-func on_slot_out():
-	game.hide_tooltip()
 
 var calculating = false# Used to prevent _on_UseFertilizer_toggled from firing when setting button state manually
 
@@ -89,62 +84,63 @@ func calc_prod_per_sec():
 		$ProdMult.text = tr("PRODUCTION_MULTIPLIER") + ": %.2f" % avg_prod_mult
 	Helper.put_rsrc($HBoxContainer, 32, production)
 	$ProductionPerSec.visible = not production.is_empty()
+	$Uproot.visible = $ProductionPerSec.visible
 	calculating = false
 
-func set_auto_harvest(obj:Dictionary, produce:Dictionary, _name:String, plant_new:bool = true):
-	if obj.has("auto_GH"):
-		Helper.remove_GH_produce_from_autocollect(obj.auto_GH.produce, obj.get("aurora", 0.0))
-		game.autocollect.mats.cellulose += obj.auto_GH.cellulose_drain
-		if obj.auto_GH.has("soil_drain"):
-			game.autocollect.mats.soil += obj.auto_GH.soil_drain
-		obj.erase("auto_GH")
-	if plant_new:
-		var cellulose_drain:float = game.seeds_produce[_name].costs.cellulose * obj.bldg.path_1_value * game.biology_bonus.PGSM * game.u_i.planck
-		if c_v == "system":
-			cellulose_drain *= tile_num
-		else:
-			if obj.lake_elements.has("CH4"):
-				cellulose_drain *= Data.lake_bonus_values.CH4[obj.lake_elements.CH4] / game.biology_bonus.CH4
-			if obj.lake_elements.has("CO2"):
-				produce.coal = cellulose_drain * Data.lake_bonus_values.CO2[obj.lake_elements.CO2] * game.biology_bonus.CO2
-			if obj.lake_elements.has("He"):
-				produce.minerals = cellulose_drain * Data.lake_bonus_values.He[obj.lake_elements.He] * game.biology_bonus.He
-			if obj.lake_elements.has("Ne"):
-				produce.quillite = cellulose_drain * Data.lake_bonus_values.Ne[obj.lake_elements.Ne] * game.biology_bonus.Ne
-		Helper.add_GH_produce_to_autocollect(produce, obj.get("aurora", 0.0))
-		obj.auto_GH = {
-			"produce":produce,
-			"cellulose_drain":cellulose_drain,
-			"seed":_name,
-		}
-		game.autocollect.mats["cellulose"] = game.autocollect.mats.get("cellulose", 0.0) - obj.auto_GH.cellulose_drain
+func uproot(obj:Dictionary):
+	Helper.remove_GH_produce_from_autocollect(obj.auto_GH.produce, obj.get("aurora", 0.0))
+	game.autocollect.mats.cellulose += obj.auto_GH.cellulose_drain
+	if obj.auto_GH.has("soil_drain"):
+		game.autocollect.mats.soil += obj.auto_GH.soil_drain
+	obj.erase("auto_GH")
+	
+func plant_seeds(obj:Dictionary, produce:Dictionary, _name:String):
+	var cellulose_drain:float = game.seeds_produce[_name].costs.cellulose * obj.bldg.path_1_value * game.biology_bonus.PGSM * game.u_i.planck
+	if c_v == "system":
+		cellulose_drain *= tile_num
+	else:
+		if obj.lake_elements.has("CH4"):
+			cellulose_drain *= Data.lake_bonus_values.CH4[obj.lake_elements.CH4] / game.biology_bonus.CH4
+		if obj.lake_elements.has("CO2"):
+			produce.coal = cellulose_drain * Data.lake_bonus_values.CO2[obj.lake_elements.CO2] * game.biology_bonus.CO2
+		if obj.lake_elements.has("He"):
+			produce.minerals = cellulose_drain * Data.lake_bonus_values.He[obj.lake_elements.He] * game.biology_bonus.He
+		if obj.lake_elements.has("Ne"):
+			produce.quillite = cellulose_drain * Data.lake_bonus_values.Ne[obj.lake_elements.Ne] * game.biology_bonus.Ne
+	Helper.add_GH_produce_to_autocollect(produce, obj.get("aurora", 0.0))
+	obj.auto_GH = {
+		"produce":produce,
+		"cellulose_drain":cellulose_drain,
+		"seed":_name,
+	}
+	game.autocollect.mats["cellulose"] = game.autocollect.mats.get("cellulose", 0.0) - obj.auto_GH.cellulose_drain
+	game.planet_data_persistent[p_i.l_id].auto_GH = obj.auto_GH
 
 func on_slot_press(_name:String):
 	if c_v == "system":
+		if p_i.has("auto_GH"):
+			uproot(p_i)
 		var produce:Dictionary = game.seeds_produce[_name].produce.duplicate(true)
 		for p in produce:
 			produce[p] *= tile_num * game.u_i.time_speed * game.u_i.planck * p_i.bldg.path_1_value * p_i.bldg.path_2_value * game.biology_bonus.PGSM * game.biology_bonus.PYM * (p_i.ash.richness if p_i.has("ash") else 1.0)
-		set_auto_harvest(p_i, produce, _name, not p_i.has("auto_GH"))
+		plant_seeds(p_i, produce, _name)
+		game.planet_data_persistent[p_i.l_id].auto_GH = p_i.auto_GH
 	elif c_v == "planet":
 		var harvest:bool = false
 		for tile_id in tiles_selected:
 			var tile:Dictionary = game.tile_data[tile_id]
 			if tile.has("auto_GH"):
-				harvest = true
-				break
-		for tile_id in tiles_selected:
-			var tile:Dictionary = game.tile_data[tile_id]
+				if tile.auto_GH.has("soil_drain") and game.view.obj.bldgs[tile_id].has_node("Fertilizer"):
+					game.view.obj.bldgs[tile_id].get_node("Fertilizer").queue_free()
+				game.view.obj.rsrcs[tile_id].set_icon_texture(null)
+				uproot(tile)
 			var produce:Dictionary = game.seeds_produce[_name].produce.duplicate(true)
 			var H2O_mult = (Data.lake_bonus_values.H2O[tile.lake_elements.H2O] * game.biology_bonus.H2O) if tile.lake_elements.has("H2O") else 1.0
 			for p in produce:
 				produce[p] *= game.u_i.time_speed * tile.get("time_speed_bonus", 1.0) * game.u_i.planck * tile.bldg.path_1_value * tile.bldg.path_2_value * game.biology_bonus.PGSM * game.biology_bonus.PYM * H2O_mult * (tile.ash.richness if tile.has("ash") else 1.0)
-			if harvest:
-				if tile.has("auto_GH") and tile.auto_GH.has("soil_drain"):
-					game.view.obj.bldgs[tile_id].get_node("Fertilizer").queue_free()
-				game.view.obj.rsrcs[tile_id].set_icon_texture(null)
-			else:
-				game.view.obj.rsrcs[tile_id].set_icon_texture(load("res://Graphics/Metals/%s.png" % _name.split("_")[0]))
-			set_auto_harvest(tile, produce, _name, not harvest)
+			game.view.obj.rsrcs[tile_id].set_icon_texture(load("res://Graphics/Metals/%s.png" % _name.split("_")[0]))
+			plant_seeds(tile, produce, _name)
+			game.tile_data_persistent[tile_id].auto_GH = tile.auto_GH
 	if $UseFertilizer.button_pressed:
 		_on_UseFertilizer_toggled(true)
 	calc_prod_per_sec()
@@ -232,3 +228,17 @@ func _on_UseFertilizer_mouse_entered():
 
 func _on_mouse_exited():
 	game.hide_tooltip()
+
+
+func _on_uproot_pressed() -> void:
+	if c_v == "system":
+		if p_i.has("auto_GH"):
+			uproot(p_i)
+			game.planet_data_persistent[p_i.l_id].erase("auto_GH")
+	elif c_v == "planet":
+		for tile_id in tiles_selected:
+			var tile:Dictionary = game.tile_data[tile_id]
+			if tile.has("auto_GH"):
+				uproot(tile)
+				game.tile_data_persistent[tile_id].erase("auto_GH")
+	refresh()

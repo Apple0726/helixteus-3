@@ -15,6 +15,8 @@ func _ready() -> void:
 
 func initialize(save_info_dict, save_name:String, on_load: Callable, on_delete: Callable, on_export: Callable):
 	$SaveName.text = save_name
+	if len(save_name) > 30:
+		$SaveName.text = save_name.substr(0, 15) + "(...)" + save_name.substr(len(save_name)-15)
 	$Delete.pressed.connect(on_delete.bind(save_name))
 	if save_info_dict is not Dictionary:
 		$LoadSave.disabled = true

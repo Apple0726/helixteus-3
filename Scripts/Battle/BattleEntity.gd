@@ -288,7 +288,7 @@ func end_turn():
 	elif type == Battle.EntityType.ENEMY:
 		type_str = "enemy"
 	battle_scene.logs += "\nend_turn() (%s %s)\n" % [type_str, turn_order]
-	if status_effects[Battle.StatusEffect.EXTRA_TURNS] > 0.0:
+	if status_effects[Battle.StatusEffect.EXTRA_TURNS] > 0.0 and HP > 0:
 		battle_scene.logs += "extra turn\n"
 		status_effects[Battle.StatusEffect.EXTRA_TURNS] -= 1.0
 		$Info/StatusEffects.update()

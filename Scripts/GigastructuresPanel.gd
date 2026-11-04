@@ -4,6 +4,7 @@ var GS_costs:Dictionary = {}
 var costs:Dictionary = {}
 var g_i:Dictionary
 var galaxy_id_g:int
+var galaxy_btn
 var tile_num:int
 var bldg:int = -1
 var surface:float
@@ -87,7 +88,7 @@ func update_info():
 				costs[cost] *= game.engineering_bonus.BCM * prod_cost_mult
 	if bldg == Building.MINERAL_EXTRACTOR:
 		$Panel/VBox/ProductionPerSec.text = tr("PRODUCTION_PER_SECOND")
-		num = surface * 0.01
+		num = surface * 0.04
 		Helper.put_rsrc($Panel/VBox/Production, 32, {"minerals":num * game.u_i.time_speed * Helper.get_IR_mult(Building.MINERAL_EXTRACTOR)})
 	elif bldg == Building.POWER_PLANT:
 		$Panel/VBox/ProductionPerSec.text = tr("PRODUCTION_PER_SECOND")
@@ -95,15 +96,15 @@ func update_info():
 		Helper.put_rsrc($Panel/VBox/Production, 32, {"energy":num * game.u_i.time_speed * Helper.get_IR_mult(Building.POWER_PLANT)})
 	elif bldg == Building.RESEARCH_LAB:
 		$Panel/VBox/ProductionPerSec.text = tr("PRODUCTION_PER_SECOND")
-		num = surface * 0.5 * prod_mult
+		num = surface * 0.2 * prod_mult
 		Helper.put_rsrc($Panel/VBox/Production, 32, {"SP":num * game.u_i.time_speed * Helper.get_IR_mult(Building.RESEARCH_LAB)})
 	elif bldg == Building.MINERAL_SILO:
 		$Panel/VBox/ProductionPerSec.text = tr("STORAGE")
-		num = surface
+		num = surface * 10.0
 		Helper.put_rsrc($Panel/VBox/Production, 32, {"minerals":num * Helper.get_IR_mult(Building.MINERAL_SILO)})
 	elif bldg == Building.BATTERY:
 		$Panel/VBox/ProductionPerSec.text = tr("STORAGE")
-		num = surface * 60000.0 * game.u_i.charge
+		num = surface * 10000.0 * game.u_i.charge
 		Helper.put_rsrc($Panel/VBox/Production, 32, {"energy":num * Helper.get_IR_mult(Building.BATTERY)})
 	elif bldg == GALAXY_KILLER:
 		var stone_from_GK = {}
@@ -191,21 +192,35 @@ func _on_Convert_pressed():
 			game.HUD.galaxy_grid_btns.remove_child(game.HUD.galaxy_grid_btns.get_node(str(galaxy_id_g)))
 			g_i.erase("bookmarked")
 		game.galaxy_data_persistent[g_i.l_id] = g_i
-		game.view_history.pop_back()
-		game.view_history_pos -= 1
+		if game.c_v == "galaxy":
+			game.view_history.pop_back()
+			game.view_history_pos -= 1
+		var destroy_galaxy = false
 		if bldg == TRIANGULUM_PROBE:
 			if not game.achievement_data.random.has("build_tri_probe_in_slow_univ") and game.u_i.time_speed <= 0.2:
 				game.earn_achievement("random", "build_tri_probe_in_slow_univ")
 			game.show.dimensions = true
 			var probe_data = {"tier":2, "PP_multiplier": get_PP_mult()}
 			game.probe_data.append(probe_data)
-			game.switch_view("cluster", {"fn":"delete_galaxy", "fn_args":[g_i.l_id]})
+			if game.c_v == "galaxy":
+				game.switch_view("cluster", {"fn":"delete_galaxy", "fn_args":[g_i.l_id]})
+			elif game.c_v == "cluster":
+				game.delete_galaxy(g_i.l_id)
+				destroy_galaxy = true
 		elif bldg == GALAXY_KILLER:
 			game.add_resources(rsrc_from_GK)
-			game.switch_view("cluster", {"fn":"delete_galaxy", "fn_args":[g_i.l_id]})
+			if game.c_v == "galaxy":
+				game.switch_view("cluster", {"fn":"delete_galaxy", "fn_args":[g_i.l_id]})
+			elif game.c_v == "cluster":
+				game.delete_galaxy(g_i.l_id)
+				destroy_galaxy = true
 		else:
-			game.switch_view("cluster")
-		await game.view_tween.finished
+			if game.c_v == "galaxy":
+				game.switch_view("cluster")
+		var refresh_galaxy_btn = true
+		if game.view_tween and game.view_tween.is_running():
+			await game.view_tween.finished
+			refresh_galaxy_btn = false
 		game.system_data = game.open_obj("Galaxies", galaxy_id_g)
 		for system in game.system_data:
 			if not system.has("discovered"):
@@ -221,6 +236,10 @@ func _on_Convert_pressed():
 		var dir2 = DirAccess.open("user://%s/Univ%s/Galaxies" % [game.c_sv, game.c_u])
 		dir2.remove("%s.hx3" % [galaxy_id_g])
 		game.HUD.refresh()
+		if destroy_galaxy:
+			galaxy_btn.queue_free()
+		elif refresh_galaxy_btn:
+			game.view.obj.add_GS_marker(g_i, galaxy_btn)
 	else:
 		game.popup(tr("NOT_ENOUGH_RESOURCES"), 1.5)
 

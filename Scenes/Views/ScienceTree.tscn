@@ -151,7 +151,7 @@ default_color = Color(0.50534403, 0.5053441, 0.50534403, 1)
 
 [node name="Line2D18" type="Line2D" parent="Lines" unique_id=1524087973]
 position = Vector2(160, 0)
-points = PackedVector2Array(1280, 376, 1084, 376)
+points = PackedVector2Array(1288, 376, 1080, 376)
 width = 1.0
 default_color = Color(0.50534403, 0.5053441, 0.50534403, 1)
 

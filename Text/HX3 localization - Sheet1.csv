@@ -1850,7 +1850,9 @@ BACKUP_WITH_MINIMAL_INTERRUPTION,Auto-backup with minimal interruption,,,,,,,,Bi
 BACKUP_WITH_MINIMAL_INTERRUPTION_DESC,"If enabled, save backups will only happen when:
 - The game has lost focus
 - No keyboard/mouse input for more than 30 seconds
-Once it is time to perform backup (defined by the backup time interval), the game will wait until one of the above 2 conditions are met before doing it.
+- Starting a planet conquest battle
+- Opening science tree
+Once it is time to perform backup (defined by the backup time interval), the game will wait until one of the above conditions are met before doing it.
 
 If disabled, the save will be backed up according to the backup time interval all the time.",,,"如果启用，存档备份仅在以下情况下发生：
 - 游戏失去焦点
@@ -1957,3 +1959,5 @@ SELECT_ONLY_THIS_FILTER,"Ctrl click to select only this filter
 Ctrl click again to reset",,,,,,,,,,,,
 PP_HELP,"Probe points determine how powerful of a universe you can make when discovering one.
 Using galaxies with less than 5000 star systems will give less probe points.",,,,,,,,,,,,
+SELECT_METAL_TO_GROW,Select a metal to grow:,,,,,,,,,,,,
+UPROOT,Uproot,,,,,,,,,,,,

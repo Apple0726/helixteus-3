@@ -1300,9 +1300,12 @@ func _unhandled_input(event):
 				if tile.ancient_bldg.has("repair_cost"):
 					if game.money >= tile.ancient_bldg.repair_cost:
 						game.money -= tile.ancient_bldg.repair_cost
-						p_i.ancient_bldgs[tile.ancient_bldg.name][tile.ancient_bldg.id].erase("repair_cost")
-						if tile.ancient_bldg.name == AncientBuilding.NUCLEAR_FUSION_REACTOR:
-							var tile_id2 = p_i.ancient_bldgs[tile.ancient_bldg.name][tile.ancient_bldg.id].tile
+						var AB_name = tile.ancient_bldg.name
+						var AB_id = tile.ancient_bldg.id
+						p_i.ancient_bldgs[AB_name][AB_id].erase("repair_cost")
+						game.planet_data_persistent[p_i.l_id].ancient_bldgs[AB_name][AB_id].repaired = true
+						if AB_name == AncientBuilding.NUCLEAR_FUSION_REACTOR:
+							var tile_id2 = p_i.ancient_bldgs[AB_name][AB_id].tile
 							for j in [tile_id2, tile_id2+1, tile_id2+wid, tile_id2+wid+1]:
 								game.tile_data[j].ancient_bldg.erase("repair_cost")
 								game.tile_data_persistent[j].ancient_bldg["repaired"] = true

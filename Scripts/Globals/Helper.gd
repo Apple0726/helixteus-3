@@ -123,7 +123,7 @@ func put_rsrc(container, min_size, rsrcs, remove:bool = true, show_available:boo
 		data.append({"rsrc":rsrc, "name":rsrc_name})
 		rsrc.rsrc_display_name = rsrc_display_name
 		rsrc.rsrcs_required = rsrc_amount
-		if rsrc_name is String:
+		if rsrc_name is not int:
 			rsrc.rsrc_name = rsrc_name
 			rsrc.rsrc_type = rsrc_type
 			rsrc.mass_str = mass_str
@@ -507,9 +507,9 @@ func get_rsrc_from_rock(contents:Dictionary, tile:Dictionary, p_i:Dictionary, ti
 				game.popup_window(tr("ARTIFACT_FOUND_DESC"), tr("ARTIFACT_FOUND"))
 		if not game.show.has(content):
 			game.show[content] = true
-		if content == "sand" and not game.bldg_unlocked.has(Building.GLASS_FACTORY) and game.mats.sand >= 1000.0:
+		if content == "sand" and not game.bldg_unlocked.has(Building.GLASS_FACTORY) and game.mats.sand >= 500.0:
 			show_bldg_unlocked_popup(Building.GLASS_FACTORY)
-		if content == "coal" and not game.bldg_unlocked.has(Building.STEAM_ENGINE) and game.mats.coal >= 1000.0:
+		if content == "coal" and not game.bldg_unlocked.has(Building.STEAM_ENGINE) and game.mats.coal >= 500.0:
 			show_bldg_unlocked_popup(Building.STEAM_ENGINE)
 		if content == "stone" and not game.bldg_unlocked.has(Building.STONE_CRUSHER) and get_sum_of_dict(game.stone) > 5000.0:
 			show_bldg_unlocked_popup(Building.STONE_CRUSHER)

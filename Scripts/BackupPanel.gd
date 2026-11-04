@@ -13,7 +13,7 @@ func start_timer():
 	$Timer.start(Settings.backup_interval * 60.0)
 	
 func _process(delta: float) -> void:
-	if not DisplayServer.window_is_focused(0) and ready_to_backup:
+	if ready_to_backup and (not DisplayServer.window_is_focused(0) or game.c_v in ["battle", "science_tree"]):
 		perform_backup()
 	if is_backing_up:
 		progress_bar.value = Helper.export_save_files_exported / float(backup_total_files) * 100.0
@@ -29,6 +29,7 @@ func _input(event):
 func perform_backup(manual:bool = false):
 	var c_sv:String = game.c_sv
 	if Settings.max_backups == 0 or c_sv == "":
+		ready_to_backup = false
 		return
 	is_backing_up = true
 	show()

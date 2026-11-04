@@ -318,7 +318,7 @@ func _process(delta: float) -> void:
 		if progress >= 100:
 			for i in range(system_conquer_start_index, len(sorted_systems_by_diff)):
 				var system = sorted_systems_by_diff[i]
-				if system.has("conquered"):
+				if game.system_data[system.l_id].has("conquered"):
 					system_conquer_start_index = i
 					continue
 				galaxy_conquered = false

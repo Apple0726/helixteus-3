@@ -34,7 +34,7 @@ func _ready():
 		obj_btns.append(galaxy_btn)
 		galaxy_btn.mouse_entered.connect(on_galaxy_over.bind(g_i.l_id))
 		galaxy_btn.mouse_exited.connect(on_galaxy_out)
-		galaxy_btn.pressed.connect(on_galaxy_click.bind(g_i.id, g_i.l_id))
+		galaxy_btn.pressed.connect(on_galaxy_click.bind(g_i.id, g_i.l_id, galaxy_btn))
 		var radius = pow(g_i["system_num"] / game.GALAXY_SCALE_DIV, 0.5)
 		galaxy_btn.scale = Vector2.ONE * radius * 256.0 / galaxy_btn.texture_normal.get_width()
 		galaxy_btn.rotation = g_i.rotation
@@ -46,28 +46,7 @@ func _ready():
 		dimensions_temp = max(dimensions_temp, g_i.pos.length() * 2.0)
 		Helper.add_overlay(galaxy_btn, self, "galaxy", g_i, overlays)
 		if g_i.has("GS"):
-			var GS_marker:Sprite2D = Sprite2D.new()
-			GS_marker.scale *= 2.0
-			GS_marker.texture = preload("res://Graphics/Effects/spotlight_8.png")
-			GS_marker.position = galaxy_btn.texture_normal.get_size() / 2.0
-			galaxy_btn.add_child(GS_marker)
-			var rsrc
-			var prod:float
-			var rsrc_mult:float = 1.0
-			match g_i.GS:
-				Building.MINERAL_EXTRACTOR:
-					rsrc_mult = Helper.get_IR_mult(Building.MINERAL_EXTRACTOR) * game.u_i.time_speed
-					rsrc = add_rsrc(g_i.pos, Color(0, 0.5, 0.9, 1), Data.rsrc_icons[Building.MINERAL_EXTRACTOR], g_i.l_id, radius * 10.0)
-				Building.POWER_PLANT:
-					rsrc_mult = Helper.get_IR_mult(Building.POWER_PLANT) * game.u_i.time_speed
-					rsrc = add_rsrc(g_i.pos, Color(0, 0.8, 0, 1), Data.rsrc_icons[Building.POWER_PLANT], g_i.l_id, radius * 10.0)
-				Building.RESEARCH_LAB:
-					rsrc_mult = Helper.get_IR_mult(Building.RESEARCH_LAB) * game.u_i.time_speed
-					rsrc = add_rsrc(g_i.pos, Color(0, 0.8, 0, 1), Data.rsrc_icons[Building.RESEARCH_LAB], g_i.l_id, radius * 10.0)
-				_:
-					rsrc = null
-			if is_instance_valid(rsrc):
-				rsrc.set_text("%s/%s" % [Helper.format_num(g_i.prod_num * rsrc_mult), tr("S_SECOND")])
+			add_GS_marker(g_i, galaxy_btn)
 		await_counter += 1
 		if await_counter % int(12000.0 / Engine.get_frames_per_second()) == 0:
 			await get_tree().process_frame
@@ -79,6 +58,32 @@ func _ready():
 			game.u_i.cluster_data_persistent[game.c_c] = {}
 		game.u_i.cluster_data_persistent[game.c_c]["conquered"] = true
 	dimensions = dimensions_temp
+
+func add_GS_marker(g_i:Dictionary, galaxy_btn):
+	var GS_marker:Sprite2D = Sprite2D.new()
+	GS_marker.scale *= 2.0
+	GS_marker.texture = preload("res://Graphics/Effects/spotlight_8.png")
+	GS_marker.position = galaxy_btn.texture_normal.get_size() / 2.0
+	galaxy_btn.add_child(GS_marker)
+	var rsrc
+	var prod:float
+	var rsrc_mult:float = 1.0
+	var radius = pow(g_i["system_num"] / game.GALAXY_SCALE_DIV, 0.5)
+	match g_i.GS:
+		Building.MINERAL_EXTRACTOR:
+			rsrc_mult = Helper.get_IR_mult(Building.MINERAL_EXTRACTOR) * game.u_i.time_speed
+			rsrc = add_rsrc(g_i.pos, Color(0, 0.5, 0.9, 1), Data.rsrc_icons[Building.MINERAL_EXTRACTOR], g_i.l_id, radius * 10.0)
+		Building.POWER_PLANT:
+			rsrc_mult = Helper.get_IR_mult(Building.POWER_PLANT) * game.u_i.time_speed
+			rsrc = add_rsrc(g_i.pos, Color(0, 0.8, 0, 1), Data.rsrc_icons[Building.POWER_PLANT], g_i.l_id, radius * 10.0)
+		Building.RESEARCH_LAB:
+			rsrc_mult = Helper.get_IR_mult(Building.RESEARCH_LAB) * game.u_i.time_speed
+			rsrc = add_rsrc(g_i.pos, Color(0, 0.8, 0, 1), Data.rsrc_icons[Building.RESEARCH_LAB], g_i.l_id, radius * 10.0)
+		_:
+			rsrc = null
+	if is_instance_valid(rsrc):
+		rsrc.set_text("%s/%s" % [Helper.format_num(g_i.prod_num * rsrc_mult), tr("S_SECOND")])
+	
 
 func load_bldg_info():
 	for g_i in game.galaxy_data:
@@ -167,7 +172,7 @@ func on_galaxy_out ():
 	if is_instance_valid(game.space_HUD):
 		game.space_HUD.clear_bldg_info()
 
-func on_galaxy_click (id:int, l_id:int):
+func on_galaxy_click (id:int, l_id:int, galaxy_btn):
 	var g_i:Dictionary = game.galaxy_data[l_id]
 	var view = self.get_parent()
 	if not view.dragged:
@@ -184,6 +189,7 @@ func on_galaxy_click (id:int, l_id:int):
 					game.get_node("UI/BottomInfo").on_close_pressed()
 				game.gigastructures_panel.g_i = game.galaxy_data[l_id]
 				game.gigastructures_panel.galaxy_id_g = id
+				game.gigastructures_panel.galaxy_btn = galaxy_btn
 				game.gigastructures_panel.refresh()
 		else:
 			if not g_i.has("discovered") and g_i.system_num > 9000:
@@ -297,7 +303,7 @@ func _process(delta: float) -> void:
 		if progress >= 100:
 			for i in range(galaxy_conquer_start_index, len(sorted_galaxies)):
 				var galaxy = sorted_galaxies[i]
-				if galaxy.is_empty() or galaxy.has("conquered"):
+				if game.galaxy_data[galaxy.l_id].is_empty() or game.galaxy_data[galaxy.l_id].has("conquered"):
 					galaxy_conquer_start_index = i
 					continue
 				cluster_conquered = false

@@ -1150,6 +1150,7 @@ offset_bottom = 252.0
 scale = Vector2(0.14, 0.14)
 texture_normal = ExtResource("26")
 ignore_texture_size = true
+stretch_mode = 5
 
 [node name="Cellulose" type="Control" parent="Top/Resources" unique_id=705222174]
 custom_minimum_size = Vector2(40, 0)

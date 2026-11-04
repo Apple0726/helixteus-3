@@ -14,7 +14,6 @@ var num_levels:int
 var max_level:bool
 var alternate_textures = {
 	Science.IMPROVED_ROVER_LASERS: [
-		"Cave/Weapons/orange_laser.png",
 		"Cave/Weapons/yellow_laser.png",
 		"Cave/Weapons/green_laser.png",
 		"Cave/Weapons/blue_laser.png",
@@ -233,7 +232,7 @@ func refresh():
 	if sc_lv >= 1:
 		self_modulate = Color.GREEN
 		if alternate_textures.has(sc_id):
-			$Texture2D.texture = load("res://Graphics/%s" % alternate_textures[sc_id][min(len(alternate_textures[sc_id])-1, sc_lv)])
+			$Texture2D.texture = load("res://Graphics/%s" % alternate_textures[sc_id][min(len(alternate_textures[sc_id])-1, sc_lv-1)])
 	else:
 		self_modulate = Color.WHITE
 	if available:

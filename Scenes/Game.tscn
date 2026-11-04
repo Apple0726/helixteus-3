@@ -503,16 +503,20 @@ anchors_preset = 0
 offset_right = 40.0
 offset_bottom = 40.0
 
-[node name="VBoxContainer" type="VBoxContainer" parent="Title" unique_id=870828861]
+[node name="CenterContainer" type="CenterContainer" parent="Title" unique_id=1463751006]
 layout_mode = 0
-offset_left = 320.0
-offset_top = 416.0
-offset_right = 960.0
-offset_bottom = 658.0
+offset_left = 640.0
+offset_top = 540.0
+offset_right = 640.0
+offset_bottom = 540.0
+use_top_left = true
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Title/CenterContainer" unique_id=870828861]
+layout_mode = 2
 theme_override_constants/separation = 18
 alignment = 2
 
-[node name="Continue" type="Button" parent="Title/VBoxContainer" unique_id=163979397]
+[node name="Continue" type="Button" parent="Title/CenterContainer/VBoxContainer" unique_id=163979397]
 custom_minimum_size = Vector2(200, 36)
 layout_mode = 2
 size_flags_horizontal = 4
@@ -527,7 +531,7 @@ shortcut_feedback = false
 shortcut_in_tooltip = false
 text = "Continue Save1"
 
-[node name="NewGame" type="Button" parent="Title/VBoxContainer" unique_id=158765359]
+[node name="NewGame" type="Button" parent="Title/CenterContainer/VBoxContainer" unique_id=158765359]
 custom_minimum_size = Vector2(200, 36)
 layout_mode = 2
 size_flags_horizontal = 4
@@ -539,7 +543,7 @@ theme_override_styles/pressed = SubResource("StyleBoxEmpty_rajel")
 theme_override_styles/hover = SubResource("StyleBoxFlat_vvhu1")
 text = "NEW_GAME"
 
-[node name="LoadGame" type="Button" parent="Title/VBoxContainer" unique_id=2136819336]
+[node name="LoadGame" type="Button" parent="Title/CenterContainer/VBoxContainer" unique_id=2136819336]
 custom_minimum_size = Vector2(200, 36)
 layout_mode = 2
 size_flags_horizontal = 4
@@ -551,7 +555,7 @@ theme_override_styles/pressed = SubResource("StyleBoxEmpty_rajel")
 theme_override_styles/hover = SubResource("StyleBoxFlat_vvhu1")
 text = "LOAD_GAME"
 
-[node name="Settings" type="Button" parent="Title/VBoxContainer" unique_id=1410258520]
+[node name="Settings" type="Button" parent="Title/CenterContainer/VBoxContainer" unique_id=1410258520]
 custom_minimum_size = Vector2(200, 36)
 layout_mode = 2
 size_flags_horizontal = 4
@@ -563,7 +567,7 @@ theme_override_styles/pressed = SubResource("StyleBoxEmpty_rajel")
 theme_override_styles/hover = SubResource("StyleBoxFlat_vvhu1")
 text = "SETTINGS"
 
-[node name="Mods" type="Button" parent="Title/VBoxContainer" unique_id=1105579111]
+[node name="Mods" type="Button" parent="Title/CenterContainer/VBoxContainer" unique_id=1105579111]
 custom_minimum_size = Vector2(200, 36)
 layout_mode = 2
 size_flags_horizontal = 4
@@ -701,10 +705,10 @@ color = Color(0.364706, 0.968627, 0.968627, 1)
 metadata/_edit_lock_ = true
 
 [connection signal="text_submitted" from="Tooltips/Command" to="." method="_on_command_text_submitted"]
-[connection signal="pressed" from="Title/VBoxContainer/NewGame" to="." method="_on_NewGame_pressed"]
-[connection signal="pressed" from="Title/VBoxContainer/LoadGame" to="." method="_on_LoadGame_pressed"]
-[connection signal="pressed" from="Title/VBoxContainer/Settings" to="." method="_on_Settings_pressed"]
-[connection signal="pressed" from="Title/VBoxContainer/Mods" to="." method="_on_Mods_pressed"]
+[connection signal="pressed" from="Title/CenterContainer/VBoxContainer/NewGame" to="." method="_on_NewGame_pressed"]
+[connection signal="pressed" from="Title/CenterContainer/VBoxContainer/LoadGame" to="." method="_on_LoadGame_pressed"]
+[connection signal="pressed" from="Title/CenterContainer/VBoxContainer/Settings" to="." method="_on_Settings_pressed"]
+[connection signal="pressed" from="Title/CenterContainer/VBoxContainer/Mods" to="." method="_on_Mods_pressed"]
 [connection signal="mouse_entered" from="Title/Discord" to="." method="_on_Discord_mouse_entered"]
 [connection signal="mouse_exited" from="Title/Discord" to="." method="_on_mouse_exited"]
 [connection signal="pressed" from="Title/Discord" to="." method="_on_Discord_pressed"]

@@ -440,8 +440,8 @@ func _ready():
 	$TitleBackground/Planet.scale = Vector2.ONE * 1.6 * 160.0 / $TitleBackground/Planet.texture.get_width()
 	refresh_continue_button()
 	animate_title_buttons()
-	$Title/VBoxContainer/Continue.mouse_entered.connect(show_tooltip.bind("", {"additional_text": tr("KEYBOARD_SHORTCUT") + ": E"}))
-	$Title/VBoxContainer/Continue.mouse_exited.connect(hide_tooltip)
+	$Title/CenterContainer/VBoxContainer/Continue.mouse_entered.connect(show_tooltip.bind("", {"additional_text": tr("KEYBOARD_SHORTCUT") + ": E"}))
+	$Title/CenterContainer/VBoxContainer/Continue.mouse_exited.connect(hide_tooltip)
 	load_save_panel = preload("res://Scenes/Panels/LoadPanel.tscn").instantiate()
 	load_save_panel.panel_var_name = "load_save_panel"
 	load_save_panel.hide()
@@ -456,10 +456,11 @@ func _ready():
 	for mod in Mods.mod_instances.values():
 		if mod.has_method("_mod_ready"):
 			mod.call("_mod_ready")
+		var save_dict = {"univs":[]}
 
 func refresh_continue_button():
-	if $Title/VBoxContainer/Continue.pressed.is_connected(_on_continue_pressed):
-		$Title/VBoxContainer/Continue.pressed.disconnect(_on_continue_pressed)
+	if $Title/CenterContainer/VBoxContainer/Continue.pressed.is_connected(_on_continue_pressed):
+		$Title/CenterContainer/VBoxContainer/Continue.pressed.disconnect(_on_continue_pressed)
 	var config = ConfigFile.new()
 	var err = config.load("user://settings.cfg")
 	var saved_c_sv = ""
@@ -467,16 +468,16 @@ func refresh_continue_button():
 		saved_c_sv = config.get_value("game", "saved_c_sv", "")
 	var last_save_info = Helper.get_save_info(saved_c_sv)
 	if saved_c_sv != "" and last_save_info != null:
-		$Title/VBoxContainer/Continue.show()
-		$Title/VBoxContainer/Continue.text = tr("CONTINUE_X") % saved_c_sv
+		$Title/CenterContainer/VBoxContainer/Continue.show()
+		$Title/CenterContainer/VBoxContainer/Continue.text = tr("CONTINUE_X") % saved_c_sv
 		if last_save_info.version != VERSION and last_save_info.version not in COMPATIBLE_VERSIONS:
-			$Title/VBoxContainer/Continue.modulate = Color.ORANGE
-			$Title/VBoxContainer/Continue.pressed.connect(_on_continue_pressed.bind(saved_c_sv, true))
+			$Title/CenterContainer/VBoxContainer/Continue.modulate = Color.ORANGE
+			$Title/CenterContainer/VBoxContainer/Continue.pressed.connect(_on_continue_pressed.bind(saved_c_sv, true))
 		else:
-			$Title/VBoxContainer/Continue.modulate = Color.WHITE
-			$Title/VBoxContainer/Continue.pressed.connect(_on_continue_pressed.bind(saved_c_sv))
+			$Title/CenterContainer/VBoxContainer/Continue.modulate = Color.WHITE
+			$Title/CenterContainer/VBoxContainer/Continue.pressed.connect(_on_continue_pressed.bind(saved_c_sv))
 	else:
-		$Title/VBoxContainer/Continue.hide()
+		$Title/CenterContainer/VBoxContainer/Continue.hide()
 	return saved_c_sv
 
 var title_tween
@@ -1088,7 +1089,8 @@ func open_shop_pickaxe():
 
 func put_bottom_info(txt:String, action:String, on_close_callable = null):
 	if $UI.has_node("BottomInfo"):
-		$UI/BottomInfo.on_close_callable.call()
+		if $UI/BottomInfo.on_close_callable:
+			$UI/BottomInfo.on_close_callable.call()
 		$UI/BottomInfo.free()
 	var bottom_info = preload("res://Scenes/BottomInfo.tscn").instantiate()
 	bottom_info.info_text = txt
@@ -1171,8 +1173,6 @@ func set_bookmark_coords(bookmark:Dictionary):
 			popup(tr("BOOKMARK_P_ERROR"), 2.0)
 			return true#Error
 		c_p = bookmark.c_p
-		if c_s_g != bookmark.c_s_g:
-			planet_data.clear()
 		c_p_g = bookmark.c_p_g
 	if bookmark.has("c_s_g"):
 		var _planet_data = open_obj("Systems", bookmark.c_s_g)
@@ -1182,8 +1182,7 @@ func set_bookmark_coords(bookmark:Dictionary):
 			popup(tr("BOOKMARK_S_ERROR"), 2.0)
 			return true#Error
 		c_s = bookmark.c_s
-		if c_g_g != bookmark.c_g_g:
-			system_data.clear()
+		if c_s_g != bookmark.c_s_g:
 			planet_data.clear()
 		c_s_g = bookmark.c_s_g
 	if c_c != bookmark.c_c:
@@ -1191,11 +1190,11 @@ func set_bookmark_coords(bookmark:Dictionary):
 	c_c = bookmark.c_c
 	if bookmark.has("c_g"):
 		c_g = bookmark.c_g
-		if c_c != bookmark.c_c:
-			galaxy_data.clear()
+		if c_g_g != bookmark.c_g_g:
 			system_data.clear()
-			planet_data.clear()
 		c_g_g = bookmark.c_g_g
+	if bookmark.has("c_c") and c_c != bookmark.c_c:
+		galaxy_data.clear()
 	return false#No error
 
 func set_custom_coords(coords:Array, coord_values:Array):#coords: ["c_p_g", "c_p"], coord_values: [1, 2]
@@ -1213,7 +1212,8 @@ func set_custom_coords(coords:Array, coord_values:Array):#coords: ["c_p_g", "c_p
 
 func delete_galaxy(_c_g:int):
 	galaxy_data[_c_g].clear()
-	Helper.save_obj("Clusters", c_c, galaxy_data)
+	galaxy_data_persistent[_c_g] = {"destroyed":true}
+	Helper.save_obj("Clusters", c_c, galaxy_data_persistent)
 
 var switching_view = false
 #															V function to execute after removing objects but before adding new ones
@@ -2071,7 +2071,10 @@ func generate_galaxies(id:int):
 	for i in total_gal_num:
 		var g_i_persistent = galaxy_data_persistent[i]
 		for key in g_i_persistent.keys():
-			galaxy_data[i][key] = g_i_persistent[key]
+			if key == "destroyed":
+				galaxy_data[i].clear()
+			else:
+				galaxy_data[i][key] = g_i_persistent[key]
 
 func generate_paris_galaxy(file):
 	var N:int = galaxy_data[c_g].system_num
@@ -2775,6 +2778,10 @@ func generate_planets(id:int):#local id
 				planet_data[i] = {"destroyed": true}
 			else:
 				planet_data[i][key] = p_i_persistent[key]
+		if p_i_persistent.has("ancient_bldg"):
+			for AB in p_i_persistent.ancient_bldg:
+				if p_i_persistent.ancient_bldg[AB].has("repaired"):
+					planet_data[i].ancient_bldg[AB].erase("repair_cost")
 
 func get_random_element(elements:Dictionary, rng:RandomNumberGenerator):
 	var S:float = 0.0
@@ -3321,6 +3328,11 @@ func generate_tiles(id:int, first_time:bool):
 		if tile_persistent.has("crater_removed"):
 			tile_data[i].erase("crater")
 		if tile_persistent.has("ancient_bldg") and tile_persistent.ancient_bldg.has("repaired"):
+			var AB = planet_data[id].ancient_bldgs[tile_data[i].ancient_bldg.name]
+			for j in len(AB):
+				if AB[j].tile == i:
+					AB[j].erase("repair_cost")
+					break
 			tile_data[i].ancient_bldg.erase("repair_cost")
 		if tile_persistent.has("ship_picked_up"):
 			tile_data[i].erase("ship")
@@ -3648,6 +3660,7 @@ func add_resources(costs):
 			for comp in costs.stone:
 				Helper.add_to_dict(stone, comp, costs.stone[comp])
 		elif mats.has(cost):
+			show.materials = true
 			mats[cost] += costs[cost]
 		elif mets.has(cost):
 			show.metals = true
@@ -3999,9 +4012,9 @@ func cancel_place_soil():
 	HUD.get_node("Top/Resources/Soil").visible = false
 
 func fade_out_title(fn:String, sv:String = ""):
-	if not $Title/VBoxContainer/NewGame.pressed.is_connected(_on_NewGame_pressed):
+	if not $Title/CenterContainer/VBoxContainer/NewGame.pressed.is_connected(_on_NewGame_pressed):
 		return
-	$Title/VBoxContainer/NewGame.pressed.disconnect(_on_NewGame_pressed)
+	$Title/CenterContainer/VBoxContainer/NewGame.pressed.disconnect(_on_NewGame_pressed)
 	if title_tween and title_tween.is_running():
 		title_tween.kill()
 	title_tween = create_tween()
@@ -4077,7 +4090,7 @@ func delete_save(save_str):
 	if err == OK:
 		saved_c_sv = config.get_value("game", "saved_c_sv", "")
 	if saved_c_sv == save_str:
-		$Title/VBoxContainer/Continue.visible = false
+		$Title/CenterContainer/VBoxContainer/Continue.visible = false
 		config.set_value("game", "saved_c_sv", "")
 		config.save("user://settings.cfg")
 	load_save_panel.on_delete_confirm(save_str)
@@ -4094,7 +4107,7 @@ func return_to_menu():
 	DRs = 0
 	refresh_continue_button()
 	HUD.queue_free()
-	$Title/VBoxContainer/NewGame.pressed.connect(_on_NewGame_pressed)
+	$Title/CenterContainer/VBoxContainer/NewGame.pressed.connect(_on_NewGame_pressed)
 	$Title.visible = true
 	$TitleBackground.visible = true
 	animate_title_buttons()
@@ -4400,7 +4413,7 @@ func _on_MMTimer_timeout():
 		if boring_machine_data[p].has("tiles"):
 			var p_i = open_obj("Systems", boring_machine_data[p].c_s_g)[boring_machine_data[p].c_p]
 			var _tile_data
-			if p == c_p_g:
+			if p == c_p_g and c_v == "planet":
 				_tile_data = tile_data_persistent
 			else:
 				_tile_data = open_obj("Planets", p)
@@ -4447,6 +4460,9 @@ func _on_MMTimer_timeout():
 					curr_MM_p += 1
 					$MMTimer.start()
 					return
+			if not p_i.has("bldg"):
+				curr_MM_p += 1
+				$MMTimer.start()
 			var prod_mult = Helper.get_prod_mult(p_i) * p_i.get("mining_outpost_bonus", 1.0)
 			var tiles_mined = (curr_time - p_i.bldg.collect_date) * p_i.bldg.path_1_value * prod_mult
 			if tiles_mined >= 1:
