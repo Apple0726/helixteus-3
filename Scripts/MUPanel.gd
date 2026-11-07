@@ -48,18 +48,17 @@ func _ready():
 		$PanelContainer/VBox.add_child(hbox)
 
 func refresh():
-	$PanelContainer/VBox/MSMB.visible = game.show.has("mining")
-	$PanelContainer/VBox/STMB.visible = game.STM_lv >= 1
-	$PanelContainer/VBox/SHSR.visible = game.stats_univ.planets_conquered >= 2
-	$PanelContainer/VBox/CHR.visible = game.stats_univ.planets_conquered >= 2
-	$PanelContainer/VBox/SHSR/Upgrade.visible = game.MUs.SHSR < 50
-	$PanelContainer/VBox/SHSR/UpgradeMax.visible = game.achievement_data.progression.has("new_universe") and game.MUs.SHSR < 50
-	$PanelContainer/VBox/CHR/UpgradeMax.visible = game.achievement_data.progression.has("new_universe") and game.MUs.CHR < 94
-	$PanelContainer/VBox/CHR/Upgrade.visible = game.MUs.CHR < 94
+	#$PanelContainer/VBox/MSMB.visible = game.show.has("mining")
+	#$PanelContainer/VBox/STMB.visible = game.STM_lv >= 1
+	#$PanelContainer/VBox/SHSR.visible = game.stats_univ.planets_conquered >= 2
+	#$PanelContainer/VBox/CHR.visible = game.stats_univ.planets_conquered >= 2
 	for hbox in $PanelContainer/VBox.get_children():
 		if hbox.name != "Titles":
 			hbox.get_node("Lv").text = str(game.MUs[hbox.name])
 			hbox.get_node("Upgrade").text = "  %s" % [Helper.format_num(get_min_cost(hbox.name))]
+			var max_level = Data.MUs[hbox.name].get("max_lv", INT32_MAX)
+			hbox.get_node("Upgrade").visible = game.MUs[hbox.name] < max_level
+			hbox.get_node("UpgradeMax").visible = game.achievement_data.progression.has("new_universe") and game.MUs[hbox.name] < max_level
 			set_upg_text(hbox.name)
 
 func set_upg_text(MU:String, next_lv:int = 0):
@@ -87,7 +86,7 @@ func get_min_cost(upg:String):
 func _on_UpgradeMax_pressed(MU:String):
 	var min_cost = get_min_cost(MU)
 	while game.minerals >= min_cost:
-		if MU == "SHSR" and game.MUs.SHSR >= 51 or MU == "CHR" and game.MUs.CHR >= 94:
+		if game.MUs[MU] >= Data.MUs[MU].get("max_lv", INT32_MAX):
 			break
 		game.minerals -= min_cost
 		game.MUs[MU] += 1

@@ -293,7 +293,7 @@ func add_constr_costs(vbox:VBoxContainer, data):
 	
 func show_DS_costs(star:Dictionary, base:bool = false):
 	var vbox = game.get_node("UI/Panel/VBox")
-	bldg_costs = Data.MS_costs["DS_%s" % ((star.MS_lv + 1) if not base else 0)].duplicate(true)
+	bldg_costs = Data.MS_costs["DS_%s" % ((star.get("MS_lv", 0) + 1) if not base else 0)].duplicate(true)
 	if base and build_all_MS_stages:
 		Helper.add_dict_to_dict(bldg_costs, Data.MS_costs.DS_1)
 		Helper.add_dict_to_dict(bldg_costs, Data.MS_costs.DS_2)
@@ -325,7 +325,7 @@ func get_furthest_planet_distance():
 
 func show_CBS_costs(star:Dictionary, base:bool = false):
 	var vbox = game.get_node("UI/Panel/VBox")
-	var stage:int = (star.MS_lv + 1) if not base else 0
+	var stage:int = (star.get("MS_lv", 0) + 1) if not base else 0
 	bldg_costs = Data.MS_costs["CBS_%s" % stage].duplicate(true)
 	if base and build_all_MS_stages:
 		Helper.add_dict_to_dict(bldg_costs, Data.MS_costs.CBS_1)
@@ -333,7 +333,7 @@ func show_CBS_costs(star:Dictionary, base:bool = false):
 		Helper.add_dict_to_dict(bldg_costs, Data.MS_costs.CBS_3)
 	var furthest_planet_distance:float = get_furthest_planet_distance()
 	for cost in bldg_costs:
-		bldg_costs[cost] = round(bldg_costs[cost] * furthest_planet_distance / 1000.0 * game.engineering_bonus.BCM / (star.cost_div if star.has("cost_div") else 1.0))
+		bldg_costs[cost] = round(bldg_costs[cost] * furthest_planet_distance / 1000.0 * game.engineering_bonus.BCM / star.get("cost_div", 1.0))
 	Helper.put_rsrc(vbox, 32, bldg_costs, true, true)
 	add_constr_costs(vbox, star)
 	Helper.add_label(tr("CBD_PATH_1") % Helper.clever_round(1 + log(star.luminosity + 1)))
@@ -348,12 +348,12 @@ func show_CBS_costs(star:Dictionary, base:bool = false):
 
 func show_PK_costs(star:Dictionary, base:bool = false):
 	var vbox = game.get_node("UI/Panel/VBox")
-	bldg_costs = Data.MS_costs["PK_%s" % ((star.MS_lv + 1) if not base else 0)].duplicate(true)
+	bldg_costs = Data.MS_costs["PK_%s" % ((star.get("MS_lv", 0) + 1) if not base else 0)].duplicate(true)
 	if base and build_all_MS_stages:
 		Helper.add_dict_to_dict(bldg_costs, Data.MS_costs.PK_1)
 		Helper.add_dict_to_dict(bldg_costs, Data.MS_costs.PK_2)
 	for cost in bldg_costs:
-		bldg_costs[cost] = round(bldg_costs[cost] * game.engineering_bonus.BCM / (star.cost_div if star.has("cost_div") else 1.0))
+		bldg_costs[cost] = round(bldg_costs[cost] * game.engineering_bonus.BCM / star.get("cost_div", 1.0))
 	Helper.put_rsrc(vbox, 32, bldg_costs, true, true)
 	add_constr_costs(vbox, star)
 	var max_diameter = 4000
@@ -375,9 +375,9 @@ func show_SE_costs(p_i:Dictionary, base:bool = false):
 		Helper.add_dict_to_dict(bldg_costs, Data.MS_costs.SE_1)
 	for cost in bldg_costs:
 		if cost != "energy":
-			bldg_costs[cost] = round(bldg_costs[cost] * p_i.size / 12000.0 * game.engineering_bonus.BCM / (p_i.cost_div if p_i.has("cost_div") else 1.0))
+			bldg_costs[cost] = round(bldg_costs[cost] * p_i.size / 12000.0 * game.engineering_bonus.BCM / p_i.get("cost_div", 1.0))
 		else:
-			bldg_costs["energy"] = round(bldg_costs["energy"] * p_i.size / 48000.0 * pow(max(0.25, p_i.pressure), 1.1)) * game.engineering_bonus.BCM / (p_i.cost_div if p_i.has("cost_div") else 1.0)
+			bldg_costs["energy"] = round(bldg_costs["energy"] * p_i.size / 48000.0 * pow(max(0.25, p_i.pressure), 1.1)) * game.engineering_bonus.BCM / p_i.get("cost_div", 1.0)
 	Helper.put_rsrc(vbox, 32, bldg_costs, true, true)
 	add_constr_costs(vbox, p_i)
 
@@ -454,6 +454,7 @@ func show_planet_info(id:int, l_id:int):
 		game.show_tooltip(tr("SHIPS_READY_TO_TAKE_ACTION"))
 	else:
 		var tooltip:String = ""
+		var different_orig_text = ""
 		var icons:Array = Data.desc_icons[p_i.bldg.name] if p_i.has("tile_num") and Data.desc_icons.has(p_i.bldg.name) else []
 		var additional_tooltip = ""
 		var tile_data:Array = tile_datas[p_i.l_id]
@@ -472,7 +473,8 @@ func show_planet_info(id:int, l_id:int):
 			var temp_color:String = T_gradient.sample(inverse_lerp(0, 500, p_i.temperature)).to_html(false)
 			var P_gradient:Gradient = Data.intensity_gradient
 			var pressure_color:String = P_gradient.sample(inverse_lerp(1, 150, p_i.pressure)).to_html(false)
-			tooltip = "{planetName}\n{diameterText}: {diameter} km {dims}\n{distFromStarText}: {distFromStar} AU\n{tempText}: [color=#{tempColor}]{tempC} °C ({tempK} K)[/color]\n{pressureText}: [color=#{pressureColor}]{pressure} bar[/color]".format({
+			var tooltip_format_str = "{planetName}\n{diameterText}: {diameter} km {dims}\n{distFromStarText}: {distFromStar} AU\n{tempText}: [color=#{tempColor}]{tempC} °C {tempK}[/color]\n{pressureText}: [color=#{pressureColor}]{pressure} bar[/color]"
+			var short_tooltip_format = {
 				"planetName": p_i.name,
 				"diameterText": tr("DIAMETER"),
 				"diameter": Helper.format_num(round(p_i.size), false, 9),
@@ -482,18 +484,21 @@ func show_planet_info(id:int, l_id:int):
 				"tempText": tr("SURFACE_TEMPERATURE"),
 				"tempColor": temp_color,
 				"tempC": Helper.clever_round(p_i.temperature - 273, 4),
-				"tempK": Helper.clever_round(p_i.temperature, 4),
+				"tempK": "",
 				"pressureText": tr("ATMOSPHERE_PRESSURE"),
 				"pressureColor": pressure_color,
 				"pressure": Helper.clever_round(p_i.pressure, 4),
-			})
+			}
+			tooltip = tooltip_format_str.format(short_tooltip_format)
+			var long_tooltip_format = short_tooltip_format.duplicate(true)
+			long_tooltip_format.tempK = "(%s K)" % Helper.clever_round(p_i.temperature, 4)
+			different_orig_text = tooltip_format_str.format(long_tooltip_format)
 			additional_tooltip = tr("CLICK_TO_SEND_SHIPS")
 			if p_i.has("conquered"):
 				additional_tooltip = tr("CTRL_CLICK_TO_SEND_SHIPS")
 				if p_i.has("tile_num"):
 					additional_tooltip += tr("PRESS_F_TO_UPGRADE")
-			if game.help.has("planet_details"):
-				additional_tooltip += "\n%s" % [tr("MORE_DETAILS")]
+			additional_tooltip += "\n%s" % [tr("MORE_DETAILS")]
 			for tile in tile_data:
 				if tile == null:
 					continue
@@ -516,7 +521,7 @@ func show_planet_info(id:int, l_id:int):
 				ancient_bldg_info_node.add_child(ancient_bldg_count)
 				ancient_bldg_count.get_node("Texture2D").texture = game.ancient_bldg_textures[ancient_bldg]
 				ancient_bldg_count.get_node("Label").text = "x %s" % Helper.format_num(ancient_bldgs[ancient_bldg])
-		game.show_tooltip(tooltip, {"additional_text":additional_tooltip, "additional_text_delay":1.5, "imgs": Helper.flatten(icons)})
+		game.show_tooltip(tooltip, {"additional_text":additional_tooltip, "additional_text_delay":2.0, "imgs": Helper.flatten(icons), "different_orig_text": different_orig_text})
 
 var MS_constr_data:Dictionary = {}
 var current_MS_action = ""
@@ -596,6 +601,8 @@ func destroy_MS():
 					if MS_constr_data.obj.MS_lv == 0:
 						p_num = ceil(p_num_total * 0.1)
 					for i in range(0, p_num):
+						if not game.planet_data[i].has("cost_div_dict"):
+							continue
 						game.planet_data[i].cost_div_dict.erase(star_over_id)
 						if game.planet_data[i].cost_div_dict.is_empty():
 							game.planet_data[i].erase("cost_div")

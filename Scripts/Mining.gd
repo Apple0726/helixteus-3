@@ -227,8 +227,6 @@ func pickaxe_hit():
 		if not game.achievement_data.random.has("reach_center_of_planet"):
 			game.earn_achievement("random", "reach_center_of_planet")
 		var VEI:float = log(add_progress / 500.0 * randf_range(0.7, 1.3) + exp(3.0))
-		game.tile_data[id].erase("depth")
-		game.tile_data_persistent[id].erase("depth")
 		var rng = RandomNumberGenerator.new()
 		rng.seed = randi()
 		game.generate_volcano(id, VEI, rng, true)

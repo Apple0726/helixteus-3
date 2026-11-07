@@ -316,22 +316,22 @@ func on_univ_over(id:int):
 func on_univ_press(id:int):
 	$UnivInfo/AnimationPlayer.play_backwards("Fade")
 	var u_i:Dictionary = game.universe_data[id]
-	if modulate.a == 1.0:
-		var tween = create_tween()
-		tween.tween_property(self, "modulate", Color(1, 1, 1, 0), 0.2)
+	var tween = create_tween()
+	tween.tween_property(self, "modulate", Color(1, 1, 1, 0), 0.2)
+	tween.tween_callback(load_univ.bind(id, u_i))
+
+func load_univ(id:int, u_i:Dictionary):
 	if u_i.has("generated") or u_i.lv > 1:
 		game.c_u = id
 		game.load_univ()
-		game.switch_view(game.c_v)
+		game.switch_view(game.c_v, {"first_time":true, "dont_fade_anim":true})
 	else:
 		var tween = create_tween()
 		var new_save = game.dim_num == 1 and len(game.universe_data) == 1
 		tween.tween_property(game.view, "modulate", Color(1.0, 1.0, 1.0, 0.0), 0.15)
 		tween.tween_callback(game.remove_dimension)
 		tween.tween_callback(game.new_game.bind(id, new_save, new_save))
-		#tween.tween_property(game.view, "modulate", Color(1.0, 1.0, 1.0, 1.0), 0.15)
-	game.HUD.refresh()
-
+	
 func _on_SendProbes_pressed():
 	game.help.erase("flash_send_probe_btn")
 	$Universes/SendProbes/AnimationPlayer.play("RESET")
@@ -412,9 +412,9 @@ func calc_OP_points():
 		el_node.text = "+ " + str(Helper.clever_round(game.PD_panel.op_points[el]))
 		chemistry_OP_points += game.PD_panel.op_points[el]
 	maths_OP_points = 0
-	calc_math_points($ModifyDimension/Maths/Control/CostGrowthFactors/BUCGF, 1.3, -3.0, 1.2)#Building upgrade cost
-	calc_math_points($ModifyDimension/Maths/Control/CostGrowthFactors/MUCGF_MV, 1.9, -2.0, 1.2)#Mineral value
-	calc_math_points($ModifyDimension/Maths/Control/CostGrowthFactors/MUCGF_MSMB, 1.6, -1.5, 1.2)#Mining speed multiplier
+	calc_math_points($ModifyDimension/Maths/Control/CostGrowthFactors/BUCGF, 1.3, -1.0, 1.2)#Building upgrade cost
+	calc_math_points($ModifyDimension/Maths/Control/CostGrowthFactors/MUCGF_MV, 1.9, -0.5, 1.1)#Mineral value
+	calc_math_points($ModifyDimension/Maths/Control/CostGrowthFactors/MUCGF_MSMB, 1.6, -0.3, 1.1)#Mining speed multiplier
 	calc_math_points($ModifyDimension/Maths/Control/IRM, 1.2, 300.0, 1.0, 3.0)#Infinite research
 	calc_math_points($ModifyDimension/Maths/Control/CostGrowthFactors/SLUGF_XP, 1.3, -1.3, 1.1)#Ship level up XP
 	calc_math_points($ModifyDimension/Maths/Control/CostGrowthFactors/SLUGF_Stats, 1.15, 150.0, 1.0, 3.0)#Ship stats
@@ -508,7 +508,7 @@ func calc_OP_points():
 	var b_value_node = $ModifyDimension/Engineering/Control/ancient_building_b_value
 	calc_engi_points(BCM_node, 7.0 * (1.0 / BCM_node.value - 1.0))
 	calc_engi_points(PS_node, 0.15 * (PS_node.value - 1.0))
-	calc_engi_points(RSM_node, 0.4 * (RSM_node.value - 1.0))
+	calc_engi_points(RSM_node, 0.25 * (RSM_node.value - 1.0))
 	engineering_OP_points += (pow(3, max_tier_node.value) - 1.0)
 	calc_engi_points(a_value_node, 4 * (pow(1.5, max(0, a_value_node.value)) - 1))
 	$ModifyDimension/Engineering/Control/Label7.text = "10^-a = " + str(Helper.clever_round(pow(10, -a_value_node.value), 3, true))
@@ -531,7 +531,7 @@ func calc_OP_points():
 				$Subjects/Grid.get_node(subj + "/Effects")["theme_override_colors/font_hover_color"] = Color(0.8, 0, 0) if num_errors.has(subj.to_lower()) else Color.WHITE
 				$Subjects/Grid.get_node(subj + "/Effects")["theme_override_colors/font_pressed_color"] = Color(0.8, 0, 0) if num_errors.has(subj.to_lower()) else Color.WHITE
 				$Subjects/Grid.get_node(subj + "/Effects")["theme_override_colors/font_focus_color"] = Color(0.8, 0, 0) if num_errors.has(subj.to_lower()) else Color.WHITE
-		else:
+		elif game.subject_levels[subj.to_lower()] > 0:
 			if self["%s_OP_points" % subj.to_lower()] > get_OP_cap(subj.to_lower()):
 				num_errors[subj.to_lower()] = true
 	refresh_OP_meters()

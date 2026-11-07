@@ -925,7 +925,10 @@ func collect_prod_bldgs(tile_id:int):
 			_tile.bldg.erase("expected_rsrc")
 
 func duplicate_ancient_building_callable():
-	if not game.tile_data[tile_over] or not game.tile_data[tile_over].has("ancient_bldg"):
+	if not game.tile_data[tile_over] or not game.tile_data[tile_over].has("ancient_bldg") or game.item_to_use.id != -1:
+		return
+	if game.get_node("UI").has_node("BottomInfo"):
+		game.get_node("UI/BottomInfo").on_close_pressed()
 		return
 	var ancient_bldg = game.tile_data[tile_over].ancient_bldg
 	var tier:int = ancient_bldg.tier
@@ -939,6 +942,9 @@ func duplicate_ancient_building_callable():
 	
 func duplicate_building_callable():
 	if not game.tile_data[tile_over] or not game.tile_data[tile_over].has("bldg"):
+		return
+	if game.get_node("UI").has_node("BottomInfo"):
+		game.get_node("UI/BottomInfo").on_close_pressed()
 		return
 	var bldg_name = game.tile_data[tile_over].bldg.name
 	game.put_bottom_info(tr("CLICK_TILE_TO_CONSTRUCT"), "building", game.cancel_building)

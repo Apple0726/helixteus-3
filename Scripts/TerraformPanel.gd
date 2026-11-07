@@ -127,6 +127,7 @@ func terraform_planet():
 		game.boring_machine_data[game.c_p_g] = {"c_s_g":game.c_s_g, "c_p":game.c_p}
 	game.planet_data_persistent[game.c_p].bldg = p_i.bldg
 	game.planet_data_persistent[game.c_p].resource_production_bonus = p_i.resource_production_bonus
+	Helper.save_obj("Systems", game.c_s_g, game.planet_data_persistent)
 	game.view_history.pop_back()
 	game.view_history_pos -= 1
 	game.switch_view("system")

@@ -106,22 +106,22 @@ func rover_take_all(rover_id:int):
 	for i in len(rover.inventory):
 		if rover.inventory[i].is_empty() or rover.inventory[i].type in [Item.Type.ROVER_WEAPON, Item.Type.ROVER_MINING]:
 			continue
-		if rover.inventory[i].id is int:
+		if rover.inventory[i].id == Item.MINERALS:
+			rover.inventory[i].num = Helper.add_minerals(rover.inventory[i].num).remainder
+			if rover.inventory[i].num <= 0:
+				rover.inventory[i].clear()
+			else:
+				remaining = true
+		elif rover.inventory[i].id == Item.MONEY:
+			game.money += rover.inventory[i].num
+			rover.inventory[i].clear()
+		elif rover.inventory[i].has("num"):
 			var remainder:int = game.add_items(rover.inventory[i].id, rover.inventory[i].num)
 			if remainder > 0:
 				remaining = true
 				rover.inventory[i].num = remainder
 			else:
 				rover.inventory[i].clear()
-		elif rover.inventory[i].id == "minerals":
-			rover.inventory[i].num = Helper.add_minerals(rover.inventory[i].num).remainder
-			if rover.inventory[i].num <= 0:
-				rover.inventory[i].clear()
-			else:
-				remaining = true
-		elif rover.inventory[i].id == "money":
-			game.money += rover.inventory[i].num
-			rover.inventory[i].clear()
 	if remaining:
 		game.popup(tr("NOT_ENOUGH_INV_SPACE_COLLECT"), 2)
 	else:

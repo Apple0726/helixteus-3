@@ -600,6 +600,10 @@ func load_univ():
 			mets[met] += autocollect.mets[met] * plant_time_elapsed * u_i.time_speed
 		for atom in autocollect.atoms:
 			atoms[atom] += autocollect.atoms[atom] * time_elapsed * u_i.time_speed
+	tile_data.clear()
+	planet_data.clear()
+	system_data.clear()
+	galaxy_data.clear()
 	if c_v == "mining" or c_v == "cave":
 		c_v = "planet"
 	elif c_v in ["science_tree", "STM", "planet_details", "ship_customize_screen"]:
@@ -668,7 +672,6 @@ func load_game():
 			achievement_data[ach] = {}
 	if save_info_dict.version != VERSION and not save_info_dict.version in COMPATIBLE_VERSIONS:
 		c_u = -1
-		var beginner_friendly = len(universe_data) == 1 and dim_num == 1
 		var lv_sum:int = 0
 		for univ in universe_data:
 			lv_sum += pow(univ.lv, 2.2)
@@ -681,10 +684,6 @@ func load_game():
 		help.erase("hide_dimension_stuff")
 		add_dimension()
 		dimension.refresh_univs(true)
-		dimension.get_node("Subjects/Grid/Maths").visible = not beginner_friendly
-		dimension.get_node("Subjects/Grid/Physics").visible = not beginner_friendly
-		dimension.get_node("Subjects/Grid/Biology").visible = not beginner_friendly
-		dimension.get_node("Subjects/Grid/Dimensional_Power").visible = not beginner_friendly
 		stats_dim = Data.default_stats.duplicate(true)
 		fn_save_game()
 	elif c_u == -1:
@@ -2574,7 +2573,7 @@ func generate_planets(id:int):#local id
 		p_i["mantle"] = make_planet_composition(temp, "mantle", p_i.size, rng, gas_giant)
 		p_i["core"] = make_planet_composition(temp, "core", p_i.size, rng, gas_giant)
 		p_i["core_start_depth"] = round(rng.randf_range(0.4, 0.46) * p_i.size * 1000)
-		p_i["surface"] = add_surface_materials(temp, p_i.crust)
+		p_i["surface"] = add_surface_materials(temp, p_i.crust, rng)
 		if c_s_g == 0 and c_u == 0:#Only water in solar system
 			if c_p_g == 2 or rng.randf() < 0.2:
 				p_i["lake"] = {"element":"H2O"}
@@ -2791,7 +2790,7 @@ func get_random_element(elements:Dictionary, rng:RandomNumberGenerator):
 		els.append(el)
 		numbers.append(elements[el] + S)
 		S += elements[el]
-	var rand = randf() * S
+	var rand = rng.randf() * S
 	var chosen_el:String = els[0]
 	for k in range(1, len(numbers)):
 		if rand < numbers[k - 1]:
@@ -2835,7 +2834,8 @@ func generate_volcano(t_id:int, VEI:float, rng:RandomNumberGenerator, artificial
 					autocollect.rsrc[rsrc] += (richness - 1.0) * current_tile.bldg.path_1_value * overclock_mult * current_tile.resource_production_bonus.get(rsrc, 1.0)
 			if artificial:
 				current_tile.ash["artificial"] = true
-				tile_data_persistent[current_tile_id].ash = current_tile.ash
+				Helper.set_tile_data_persistent(current_tile_id, "resource_production_bonus", current_tile.resource_production_bonus)
+				Helper.set_tile_data_persistent(current_tile_id, "ash", current_tile.ash)
 			if not achievement_data.exploration.has("volcano_cave") and current_tile.has("cave"):
 				earn_achievement("exploration", "volcano_cave")
 			if not achievement_data.exploration.has("volcano_aurora_cave") and current_tile.has("cave") and current_tile.has("aurora"):
@@ -3031,7 +3031,6 @@ func generate_tiles(id:int, first_time:bool):
 			var cave_can_spawn = not is_lake
 			if is_lake and not tile_data[t_id].has("ash"):
 				tile_data[t_id]["lake"] = true
-				tile_data[t_id].resource_production_bonus.clear()
 				if p_i.lake.state != "s":
 					cave_can_spawn = false
 			if cave_can_spawn and rng.randf() < 0.1 * ProcGenSettings.cave_spawn_frequency / pow(wid, 0.9):
@@ -3336,6 +3335,8 @@ func generate_tiles(id:int, first_time:bool):
 			tile_data[i].ancient_bldg.erase("repair_cost")
 		if tile_persistent.has("ship_picked_up"):
 			tile_data[i].erase("ship")
+		if tile_persistent.has("volcano"):
+			tile_data[i].erase("depth")
 	Helper.save_obj("Systems", c_s_g, planet_data_persistent)
 
 func erase_tile(tile:int):
@@ -3425,13 +3426,13 @@ func make_planet_composition(temp:float, depth:String, size:float, rng:RandomNum
 		elements[el] /= S
 	return elements
 
-func add_surface_materials(temp:float, crust_comp:Dictionary):#Amount in kg
+func add_surface_materials(temp:float, crust_comp:Dictionary, rng:RandomNumberGenerator):#Amount in kg
 	#temp in K
-	var surface_mat_info = {	"coal":{"chance":exp(-0.001 * pow(temp - 273, 2)), "amount":randf_range(50, 150)},
+	var surface_mat_info = {	"coal":{"chance":exp(-0.001 * pow(temp - 273, 2)), "amount":rng.randf_range(50, 150)},
 								"glass":{"chance":0.1, "amount":4},
 								"sand":{"chance":0.8, "amount":50},
-								"soil":{"chance":randf_range(0.1, 0.8), "amount":randf_range(30, 100)},
-								"cellulose":{"chance":exp(-0.001 * pow(temp - 273, 2)), "amount":randf_range(15, 45)}
+								"soil":{"chance":rng.randf_range(0.1, 0.8), "amount":rng.randf_range(30, 100)},
+								"cellulose":{"chance":exp(-0.001 * pow(temp - 273, 2)), "amount":rng.randf_range(15, 45)}
 	}
 	if abs(temp - 273) > 80:
 		surface_mat_info.erase("cellulose")

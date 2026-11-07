@@ -563,7 +563,7 @@ offset_left = 64.0
 offset_top = 143.0
 offset_right = 144.0
 offset_bottom = 175.0
-step = 0.0
+step = 0.001
 
 [node name="Label3" type="Label" parent="ModifyDimension/Maths/Control/CostGrowthFactors" unique_id=1580784482]
 layout_mode = 0

@@ -91,10 +91,10 @@ var MS_output = {	"DS_0":1.0e7,
 
 var MUs = {	"MV":{"base_cost":100.0, "pw":1.9},
 			"MSMB":{"base_cost":100.0, "pw":1.6},
-			"IS":{"base_cost":500.0, "pw":1.9},
+			"IS":{"base_cost":500.0, "pw":1.9, "max_lv":66},
 			"STMB":{"base_cost":600.0, "pw":1.6},
-			"SHSR":{"base_cost":2000.0, "pw":1.9},
-			"CHR":{"base_cost":2000.0, "pw":1.7},
+			"SHSR":{"base_cost":2000.0, "pw":1.9, "max_lv":51},
+			"CHR":{"base_cost":2000.0, "pw":1.7, "max_lv":95},
 }
 
 var money_icon = preload("res://Graphics/Icons/money.png")

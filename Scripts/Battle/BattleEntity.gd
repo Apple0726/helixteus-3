@@ -323,7 +323,7 @@ func damage_entity(weapon_data: Dictionary, shooter: BattleEntity = null):
 	if dodged:
 		battle_scene.add_damage_text(true, position)
 	else:
-		var damage_multiplier:float
+		var damage_multiplier:float = 1.0
 		if weapon_data.has("shooter_attack"):
 			var attack_defense_difference:int = weapon_data.shooter_attack - defense
 			if not weapon_data.has("ignore_defense_buffs") or defense_buff < 0:
