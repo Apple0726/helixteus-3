@@ -160,7 +160,7 @@ func _on_GS_pressed(extra_arg_0):
 	update_info()
 
 func get_PP_mult():
-	var PP_mult = prod_cost_mult
+	var PP_mult = log(prod_cost_mult + 1.0)
 	if game.subject_levels.dimensional_power < 6:
 		PP_mult = clamp(remap(g_i.system_num, 1, 5000, 0.25, 1.0), 0.25, 1.0)
 	PP_mult *= pow(game.maths_bonus.IRM, game.science_level[Science.TRIANGULUM_PROBE_CONSTRUCTION] - 1)

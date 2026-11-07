@@ -2002,7 +2002,7 @@ func generate_galaxies(id:int):
 		var g_i = {
 			"parent": id,
 			"type": rng.randi() % 6,
-			"dark_matter": Helper.clever_round(pow(rng.randf_range(0.85, 1.15), -log(max(1e-7, rng.randf())) * pow(redshift + 1.0, 0.6) * 0.4 + 1)), # Influences planet numbers and size
+			"dark_matter": Helper.clever_round(pow(rng.randf_range(0.85, 1.15), -log(max(1e-7, rng.randf())) * log(redshift + 1.0) * 0.8 + 1.0)), # Influences planet numbers and size
 			"rotation": rng.randf_range(0.0, 2.0 * PI),
 			"id": g_id + galaxies_generated,
 			"l_id": g_id,
