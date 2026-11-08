@@ -19,7 +19,6 @@ var enable_shaders:bool = true
 var autosave_light:bool = true
 var autosave_interval:int = 10
 var autosell:bool = true
-var auto_switch_buy_sell:bool = false
 enum {
 	ENEMY_AI_DIFFICULTY_EASY,
 	ENEMY_AI_DIFFICULTY_NORMAL,

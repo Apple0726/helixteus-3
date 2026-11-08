@@ -321,23 +321,6 @@ text = "AUTOSELL_MINERALS [img]Graphics/Icons/help.png[/img]"
 label_text = "AUTOSELL_MINERALS"
 help_text = "AUTOSELL_MINERALS_DESC"
 
-[node name="AutoSwitch" type="CheckButton" parent="TabContainer/GAME" unique_id=2121173532]
-layout_mode = 0
-offset_left = 56.0
-offset_top = 93.0
-offset_right = 400.0
-offset_bottom = 133.0
-
-[node name="RichTextLabel3" parent="TabContainer/GAME" unique_id=1581426805 instance=ExtResource("2_lx04k")]
-layout_mode = 0
-offset_left = 64.0
-offset_top = 101.0
-offset_right = 320.0
-offset_bottom = 131.0
-text = "AUTO_SWITCH_SELL_BUY [img]Graphics/Icons/help.png[/img]"
-label_text = "AUTO_SWITCH_SELL_BUY"
-help_text = "AUTO_SWITCH_SELL_BUY_DESC"
-
 [node name="Autosave" type="HSlider" parent="TabContainer/GAME" unique_id=1392513466]
 layout_mode = 0
 offset_left = 504.0
@@ -505,7 +488,6 @@ horizontal_alignment = 1
 [connection signal="toggled" from="TabContainer/GRAPHICS/Screenshake" to="." method="_on_Screenshake_toggled"]
 [connection signal="item_selected" from="TabContainer/GRAPHICS/DisplayRes" to="." method="_on_DisplayRes_item_selected"]
 [connection signal="toggled" from="TabContainer/GAME/AutosellMinerals" to="." method="_on_AutosellMinerals_toggled"]
-[connection signal="toggled" from="TabContainer/GAME/AutoSwitch" to="." method="_on_auto_switch_toggled"]
 [connection signal="value_changed" from="TabContainer/GAME/Autosave" to="." method="_on_Autosave_value_changed"]
 [connection signal="value_changed" from="TabContainer/GAME/BackupIntervalSlider" to="." method="_on_backup_interval_slider_value_changed"]
 [connection signal="value_changed" from="TabContainer/GAME/MaxBackupsSlider" to="." method="_on_max_backups_slider_value_changed"]

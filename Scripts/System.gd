@@ -627,7 +627,10 @@ func destroy_MS():
 				elif MS_constr_data.obj.MS == "MME":
 					game.autocollect.MS.minerals -= Helper.get_MME_output(MS_constr_data.obj)
 					game.mineral_capacity -= Helper.get_MME_capacity(MS_constr_data.obj)
-			MS_constr_data.obj.erase("repair_cost")
+			else:
+				if not MS_constr_data.obj.has("luminosity"):
+					game.planet_data_persistent[MS_constr_data.obj.l_id].natural_MS_destroyed = true
+				MS_constr_data.obj.erase("repair_cost")
 			MS_constr_data.obj.erase("MS")
 			MS_constr_data.obj.erase("MS_lv")
 			game.popup(tr("MS_REKT"), 2.0)

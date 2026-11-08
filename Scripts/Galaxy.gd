@@ -224,6 +224,7 @@ func change_overlay(overlay_id:int, gradient:Gradient, object:Dictionary = {}):
 			for overlay in _overlays:
 				if game.system_data[overlay.id].has("discovered"):
 					overlay.obj.modulate = gradient.sample(0)
+					overlay.obj.visible = true
 				else:
 					overlay.obj.modulate = gradient.sample(1)
 					overlay.obj.visible = not game.overlay.hide_obj_btn.button_pressed
@@ -231,6 +232,7 @@ func change_overlay(overlay_id:int, gradient:Gradient, object:Dictionary = {}):
 			for overlay in _overlays:
 				if game.system_data[overlay.id].has("explored"):
 					overlay.obj.modulate = gradient.sample(0)
+					overlay.obj.visible = true
 				else:
 					overlay.obj.modulate = gradient.sample(1)
 					overlay.obj.visible = not game.overlay.hide_obj_btn.button_pressed
@@ -238,6 +240,7 @@ func change_overlay(overlay_id:int, gradient:Gradient, object:Dictionary = {}):
 			for overlay in _overlays:
 				if game.system_data[overlay.id].has("conquered"):
 					overlay.obj.modulate = gradient.sample(0)
+					overlay.obj.visible = true
 				else:
 					overlay.obj.modulate = gradient.sample(1)
 					overlay.obj.visible = not game.overlay.hide_obj_btn.button_pressed

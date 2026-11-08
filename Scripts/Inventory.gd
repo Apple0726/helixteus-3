@@ -1,7 +1,7 @@
 extends "Panel.gd"
 
 var tab:String
-var buy_sell_scene = preload("res://Scenes/Panels/BuySellPanel.tscn")
+var buy_sell_scene = preload("res://Scenes/Panels/SellResourcePanel.tscn")
 var buy_sell
 @onready var inventory_grid = $Control/VBox/Inventory
 @onready var grid = $Control/VBox/GridContainer
@@ -55,7 +55,7 @@ func _on_Items_pressed():
 			slot.get_node("Button").mouse_exited.connect(on_slot_out)
 			slot.get_node("Button").pressed.connect(on_slot_pressed)
 		inventory_grid.add_child(slot)
-	$Control/VBox/BuySell.visible = false
+	$Control/VBox/Sell.visible = false
 
 func on_slot_over(item_slot:int):
 	item_hovered = item_slot
@@ -90,7 +90,7 @@ func _on_Materials_pressed():
 		texture.mouse_entered.connect(show_mat.bind(mat.name))
 		texture.mouse_exited.connect(game.hide_tooltip)
 		texture.pressed.connect(show_buy_sell.bind("Materials", mat.name))
-	$Control/VBox/BuySell.visible = true
+	$Control/VBox/Sell.visible = true
 
 func _on_Metals_pressed():
 	tab = "metals"
@@ -110,7 +110,7 @@ func _on_Metals_pressed():
 		texture.mouse_entered.connect(show_met.bind(met.name))
 		texture.mouse_exited.connect(game.hide_tooltip)
 		texture.pressed.connect(show_buy_sell.bind("Metals", met.name))
-	$Control/VBox/BuySell.visible = true
+	$Control/VBox/Sell.visible = true
 
 func _on_Atoms_pressed():
 	tab = "atoms"
@@ -129,7 +129,7 @@ func _on_Atoms_pressed():
 			continue
 		texture.mouse_entered.connect(show_atom.bind(atom.name))
 		texture.mouse_exited.connect(game.hide_tooltip)
-	$Control/VBox/BuySell.visible = false
+	$Control/VBox/Sell.visible = false
 
 func _on_Particles_pressed():
 	tab = "particles"
@@ -147,7 +147,7 @@ func _on_Particles_pressed():
 			continue
 		texture.mouse_entered.connect(show_part.bind(particles.name))
 		texture.mouse_exited.connect(game.hide_tooltip)
-	$Control/VBox/BuySell.visible = false
+	$Control/VBox/Sell.visible = false
 
 func show_buy_sell(type:String, obj:String):
 	var amount = 0
@@ -158,21 +158,6 @@ func show_buy_sell(type:String, obj:String):
 	elif type == "Metals":
 		amount = game.mets[obj]
 		value = game.met_info[obj].value
-	var forced = false
-	if game.money <= 0:
-		if amount <= 0:
-			game.popup("PURCHASE_SALE_IMPOSSIBLE", 1.5)
-			return
-		buy_sell.is_selling = true
-		forced = true
-	elif amount <= 0:
-		buy_sell.is_selling = false
-		forced = true
-	if not forced:
-		if Settings.auto_switch_buy_sell:
-			buy_sell.is_selling = game.money < amount * value * game.maths_bonus.MMBSVR * 5.0
-		else:
-			buy_sell.is_selling = true
 	buy_sell.visible = true
 	game.sub_panel = buy_sell
 	buy_sell.refresh(type, obj)

@@ -195,7 +195,7 @@ theme_override_constants/h_separation = -1
 theme_override_constants/v_separation = -1
 columns = 15
 
-[node name="BuySell" type="Label" parent="Control/VBox" unique_id=1036398916]
+[node name="Sell" type="Label" parent="Control/VBox" unique_id=1036398916]
 custom_minimum_size = Vector2(0, 100)
 layout_mode = 2
 text = "CLICK_TO_BUY_SELL"

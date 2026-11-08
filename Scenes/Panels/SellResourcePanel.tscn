@@ -1,0 +1,110 @@
+[gd_scene format=3 uid="uid://ceo4hlq5libn3"]
+
+[ext_resource type="Theme" uid="uid://cp2u1kgj60ic" path="res://Resources/default_theme.tres" id="1_pat6y"]
+[ext_resource type="Script" uid="uid://dd27ovnjjjddh" path="res://Scripts/SellResourcePanel.gd" id="2_yg686"]
+[ext_resource type="Texture2D" uid="uid://blgh1lvsfpiu8" path="res://Graphics/GUI/Border.png" id="3_1gk0g"]
+[ext_resource type="Texture2D" uid="uid://baowebna7hgr5" path="res://Graphics/GUI/CloseButtonNormal.png" id="4_lvtel"]
+[ext_resource type="Texture2D" uid="uid://c1vwn7p5uxu1r" path="res://Graphics/GUI/CloseButtonHover.png" id="5_40h3j"]
+[ext_resource type="Texture2D" uid="uid://ds6nct7g63284" path="res://Graphics/Icons/Arrow.png" id="6_317wu"]
+[ext_resource type="PackedScene" uid="uid://bdp561gr6s0b8" path="res://Scenes/Resource.tscn" id="7_bjwju"]
+
+[node name="SellResourcePanel" type="Control" unique_id=1035928848]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 32.0
+offset_bottom = 32.0
+theme = ExtResource("1_pat6y")
+script = ExtResource("2_yg686")
+metadata/_edit_vertical_guides_ = [640.0]
+metadata/_edit_horizontal_guides_ = [360.0]
+
+[node name="BlackBG" type="ColorRect" parent="." unique_id=562256675]
+show_behind_parent = true
+layout_mode = 0
+offset_right = 1280.0
+offset_bottom = 720.0
+mouse_filter = 2
+color = Color(0, 0, 0, 0.564706)
+metadata/_edit_lock_ = true
+
+[node name="GUI" type="NinePatchRect" parent="." unique_id=975794284]
+layout_mode = 0
+offset_left = 384.0
+offset_top = 256.0
+offset_right = 896.0
+offset_bottom = 464.0
+mouse_filter = 1
+texture = ExtResource("3_1gk0g")
+patch_margin_left = 15
+patch_margin_top = 11
+patch_margin_right = 15
+patch_margin_bottom = 11
+axis_stretch_horizontal = 1
+metadata/_edit_horizontal_guides_ = [596.0]
+
+[node name="CloseButton" type="TextureButton" parent="." unique_id=1643590698]
+layout_mode = 0
+offset_left = 852.0
+offset_top = 268.0
+offset_right = 879.0
+offset_bottom = 295.0
+texture_normal = ExtResource("4_lvtel")
+texture_hover = ExtResource("5_40h3j")
+ignore_texture_size = true
+stretch_mode = 5
+
+[node name="Label" type="Label" parent="." unique_id=1102026262]
+layout_mode = 1
+offset_left = 448.0
+offset_top = 272.0
+offset_right = 832.0
+offset_bottom = 295.0
+text = "SELL"
+horizontal_alignment = 1
+
+[node name="Arrow" type="Sprite2D" parent="." unique_id=1723570898]
+position = Vector2(640, 376)
+scale = Vector2(0.8, 0.8)
+texture = ExtResource("6_317wu")
+
+[node name="HSlider" type="HSlider" parent="." unique_id=2090181157]
+layout_mode = 0
+offset_left = 480.0
+offset_top = 308.0
+offset_right = 800.0
+offset_bottom = 356.0
+ticks_on_borders = true
+
+[node name="Object" parent="." unique_id=995192046 instance=ExtResource("7_bjwju")]
+layout_mode = 0
+anchors_preset = 0
+anchor_right = 0.0
+anchor_bottom = 0.0
+offset_left = 468.0
+offset_top = 360.0
+offset_right = 512.0
+offset_bottom = 384.0
+
+[node name="Money" parent="." unique_id=2142329803 instance=ExtResource("7_bjwju")]
+layout_mode = 0
+anchors_preset = 0
+anchor_right = 0.0
+anchor_bottom = 0.0
+offset_left = 720.0
+offset_top = 360.0
+offset_right = 764.0
+offset_bottom = 384.0
+
+[node name="Sell" type="Button" parent="." unique_id=2109531059]
+layout_mode = 0
+offset_left = 772.0
+offset_top = 415.0
+offset_right = 876.0
+offset_bottom = 448.0
+text = "SELL"
+
+[connection signal="pressed" from="CloseButton" to="." method="_on_close_button_pressed"]
+[connection signal="mouse_entered" from="HSlider" to="." method="_on_h_slider_mouse_entered"]
+[connection signal="mouse_exited" from="HSlider" to="." method="_on_h_slider_mouse_exited"]
+[connection signal="value_changed" from="HSlider" to="." method="_on_HSlider_value_changed"]
+[connection signal="pressed" from="Sell" to="." method="_on_Button_pressed"]

@@ -801,17 +801,6 @@ offset_top = 1024.0
 offset_right = 160.0
 offset_bottom = 1056.0
 
-[node name="MMBSVR" parent="ModifyDimension/Maths/Control" unique_id=1144639480 instance=ExtResource("19")]
-visible = false
-layout_mode = 0
-anchors_preset = 0
-anchor_right = 0.0
-anchor_bottom = 0.0
-offset_left = 84.0
-offset_top = 920.0
-offset_right = 160.0
-offset_bottom = 952.0
-
 [node name="Defaults" type="Control" parent="ModifyDimension/Maths/Control" unique_id=889497082]
 anchors_preset = 0
 offset_right = 40.0
@@ -928,16 +917,6 @@ offset_top = 984.0
 offset_right = 253.0
 offset_bottom = 1008.0
 text = "(1.5)"
-vertical_alignment = 1
-
-[node name="MMBSVR" type="Label" parent="ModifyDimension/Maths/Control/Defaults" unique_id=1257406270]
-visible = false
-layout_mode = 0
-offset_left = 232.0
-offset_top = 925.0
-offset_right = 285.0
-offset_bottom = 949.0
-text = "(10)"
 vertical_alignment = 1
 
 [node name="ULUGF" type="Label" parent="ModifyDimension/Maths/Control/Defaults" unique_id=1593115994]

@@ -370,7 +370,6 @@ func load_settings(config:ConfigFile):
 		config.set_value("misc", "HTML5", true)
 		config.save("user://settings.cfg")
 	Settings.autosell = config.get_value("game", "autosell", true)
-	Settings.auto_switch_buy_sell = config.get_value("game", "auto_switch_buy_sell", false)
 	Settings.autosave_light = config.get_value("game", "autosave_light", true)
 	Settings.autosave_interval = config.get_value("game", "autosave_interval", 10)
 	Settings.backup_interval = config.get_value("game", "backup_interval", 5)
@@ -722,7 +721,6 @@ func set_default_dim_bonuses():
 		"SLUGF_XP":1.3,
 		"SLUGF_Stats":1.15,
 		"COSHEF":1.5,
-		"MMBSVR":10,
 		"ULUGF":1.63,
 	}
 	physics_bonus = Data.univ_prop_weights.duplicate()
@@ -2712,7 +2710,7 @@ func generate_planets(id:int):#local id
 		var furthest_planet_distance = planet_data[-1].distance
 		for i in range(0, N_stars):
 			var star = system_data[id].stars[i]
-			if star.has("MS"):
+			if star.has("MS") or star.has("natural_MS_destroyed"):
 				continue
 			var star_size = star.size
 			var star_temp = star.temperature
@@ -2777,6 +2775,10 @@ func generate_planets(id:int):#local id
 				planet_data[i] = {"destroyed": true}
 			else:
 				planet_data[i][key] = p_i_persistent[key]
+			if key == "natural_MS_destroyed":
+				planet_data[i] .erase("repair_cost")
+				planet_data[i] .erase("MS")
+				planet_data[i] .erase("MS_lv")
 		if p_i_persistent.has("ancient_bldg"):
 			for AB in p_i_persistent.ancient_bldg:
 				if p_i_persistent.ancient_bldg[AB].has("repaired"):

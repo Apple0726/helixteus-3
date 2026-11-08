@@ -20,7 +20,7 @@ func _ready():
 
 func _input(event):
 	super(event)
-	if not $Filter.has_focus() and not $Control/LeftNumEdit.has_focus() and not $Control/RightNumEdit.has_focus():
+	if not $Filter.has_focus() and not $Control/LeftNumEdit.has_focus() and not $Control/RightNumEdit.has_focus() and game.active_panel == null:
 		for i in min(10, $HBoxContainer/OptionButton.item_count):
 			var j = (i + 1) % 10
 			if Input.is_action_just_pressed(str(j)):

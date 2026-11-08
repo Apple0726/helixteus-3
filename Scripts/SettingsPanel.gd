@@ -35,7 +35,6 @@ func _ready():
 	$TabContainer/GAME/AutosellMinerals.button_pressed = Settings.autosell
 	$TabContainer/GRAPHICS/Fullscreen.set_pressed_no_signal(Settings.fullscreen)
 	$TabContainer/GAME/Autosave.value = Settings.autosave_interval
-	$TabContainer/GAME/AutoSwitch.button_pressed = Settings.auto_switch_buy_sell
 	$TabContainer/GAME/BackupIntervalSlider.value = Settings.backup_interval
 	$TabContainer/GAME/MaxBackupsSlider.value = Settings.max_backups
 	$TabContainer/GAME/BackupWithMinimalInterruption.mouse_entered.connect(game.show_tooltip.bind(tr("BACKUP_WITH_MINIMAL_INTERRUPTION_DESC")))
@@ -231,11 +230,6 @@ func _on_discord_toggled(button_pressed):
 
 func _on_fps_pressed(extra_arg_0):
 	$TabContainer/GRAPHICS/FPS/FPS.set_value(extra_arg_0)
-
-
-func _on_auto_switch_toggled(button_pressed):
-	Settings.auto_switch_buy_sell = button_pressed
-	save_config("game", "auto_switch_buy_sell", button_pressed)
 
 
 func _on_static_space_lod_value_changed(value):
