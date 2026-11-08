@@ -57,6 +57,9 @@ border_blend = true
 shadow_size = 2
 shadow_offset = Vector2(1, 1)
 
+[sub_resource type="LabelSettings" id="LabelSettings_fk8sx"]
+font_size = 14
+
 [sub_resource type="Shortcut" id="3"]
 
 [node name="TerraformPanel" type="Control" unique_id=1301642159]
@@ -128,83 +131,81 @@ size_flags_vertical = 3
 theme = SubResource("1")
 
 [node name="MineralExtraction" parent="ScrollContainer/VBoxContainer" unique_id=1122222998 instance=ExtResource("1")]
-custom_minimum_size = Vector2(0, 40)
+custom_minimum_size = Vector2(0, 41)
 layout_mode = 2
 expand_icon = true
 button_text = "MINERAL_EXTRACTION"
 icon_texture = ExtResource("2")
 
 [node name="EnergyProduction" parent="ScrollContainer/VBoxContainer" unique_id=428740640 instance=ExtResource("1")]
-custom_minimum_size = Vector2(0, 40)
+custom_minimum_size = Vector2(0, 41)
 layout_mode = 2
 expand_icon = true
 button_text = "ENERGY_PRODUCTION"
 icon_texture = ExtResource("4")
 
 [node name="MineralStorage" parent="ScrollContainer/VBoxContainer" unique_id=1301368285 instance=ExtResource("1")]
-custom_minimum_size = Vector2(0, 40)
+custom_minimum_size = Vector2(0, 41)
 layout_mode = 2
 expand_icon = true
 button_text = "MINERAL_STORAGE"
 icon_texture = ExtResource("7_x2n7j")
 
 [node name="EnergyStorage" parent="ScrollContainer/VBoxContainer" unique_id=617701628 instance=ExtResource("1")]
-custom_minimum_size = Vector2(0, 40)
+custom_minimum_size = Vector2(0, 41)
 layout_mode = 2
 expand_icon = true
 button_text = "ENERGY_STORAGE"
 icon_texture = ExtResource("8_5blic")
 
 [node name="Research" parent="ScrollContainer/VBoxContainer" unique_id=1313011419 instance=ExtResource("1")]
-custom_minimum_size = Vector2(0, 40)
+custom_minimum_size = Vector2(0, 41)
 layout_mode = 2
 expand_icon = true
 button_text = "RESEARCH"
 icon_texture = ExtResource("3")
 
 [node name="AtmosphereExtraction" parent="ScrollContainer/VBoxContainer" unique_id=766673311 instance=ExtResource("1")]
-custom_minimum_size = Vector2(0, 40)
+custom_minimum_size = Vector2(0, 41)
 layout_mode = 2
 expand_icon = true
 button_text = "ATMOSPHERE_EXTRACTION"
 icon_texture = ExtResource("10_8yhhm")
 
 [node name="Mining" parent="ScrollContainer/VBoxContainer" unique_id=1166115552 instance=ExtResource("1")]
-custom_minimum_size = Vector2(0, 40)
+custom_minimum_size = Vector2(0, 41)
 layout_mode = 2
 expand_icon = true
 button_text = "MINING"
 icon_texture = ExtResource("11_t44yc")
 
 [node name="SpaceAgriculture" parent="ScrollContainer/VBoxContainer" unique_id=1813338015 instance=ExtResource("1")]
-custom_minimum_size = Vector2(0, 40)
+custom_minimum_size = Vector2(0, 41)
 layout_mode = 2
 expand_icon = true
 button_text = "SPACE_AGRICULTURE_SC"
 icon_texture = ExtResource("12_1h162")
 
 [node name="AtomManipulation" parent="ScrollContainer/VBoxContainer" unique_id=404479811 instance=ExtResource("1")]
-custom_minimum_size = Vector2(0, 40)
+custom_minimum_size = Vector2(0, 41)
 layout_mode = 2
 expand_icon = true
 button_text = "ATOM_MANIPULATION_SC"
 icon_texture = ExtResource("13_fkb41")
 
 [node name="SubatomicParticles" parent="ScrollContainer/VBoxContainer" unique_id=1781085045 instance=ExtResource("1")]
-custom_minimum_size = Vector2(0, 40)
+custom_minimum_size = Vector2(0, 41)
 layout_mode = 2
 expand_icon = true
 button_text = "SUBATOMIC_PARTICLES_SC"
 icon_texture = ExtResource("14_7vv42")
 
 [node name="Panel" type="Panel" parent="." unique_id=1769624489]
-visible = false
 layout_mode = 0
 offset_left = 508.0
 offset_top = 168.0
 offset_right = 1156.0
-offset_bottom = 604.0
-metadata/_edit_lock_ = true
+offset_bottom = 612.0
 
 [node name="TerraformPanel" type="Panel" parent="Panel" unique_id=842012718]
 layout_mode = 0
@@ -244,7 +245,7 @@ layout_mode = 0
 offset_left = 20.0
 offset_top = 252.0
 offset_right = 268.0
-offset_bottom = 368.0
+offset_bottom = 360.0
 bbcode_enabled = true
 
 [node name="BuildingPanel" type="Panel" parent="Panel" unique_id=642694873]
@@ -261,6 +262,7 @@ offset_left = 24.0
 offset_top = 252.0
 offset_right = 272.0
 offset_bottom = 360.0
+label_settings = SubResource("LabelSettings_fk8sx")
 autowrap_mode = 3
 
 [node name="Costs" type="Label" parent="Panel/BuildingPanel" unique_id=1730383985]

@@ -933,18 +933,24 @@ func start_game(univ, new_save, DR_advantage):
 				"C":0,
 				"N":0,
 				"O":0,
-				"F":0,
+				#"F":0,
 				"Ne":0,
 				"Na":0,
+				"Mg":0,
 				"Al":0,
 				"Si":0,
+				"P":0,
 				"Ti":0,
 				"Fe":0,
+				"Cu":0,
+				"Ag":0,
 				"Xe":0,
 				"Ta":0,
 				"W":0,
 				"Os":0,
 				"Pt":0,
+				"Au":0,
+				"Pb":0,
 				"Pu":0,
 	}
 
@@ -3067,7 +3073,7 @@ func generate_tiles(id:int, first_time:bool):
 						continue
 					if met_info[met].rarity > 50.0 and c_g_g == 0:
 						continue
-					if rng.randf() < 0.3 / pow(met_info[met].rarity, 0.95) * sqrt(1 + u_i.cluster_data[c_c].redshift):
+					if rng.randf() < 0.6 / sqrt(met_info[met].value / met_info.lead.value) * sqrt(1.0 + u_i.cluster_data[c_c].redshift):
 						tile_data[t_id].crater.metal = met
 						if not achievement_data.exploration.has("diamond_crater") and met == "diamond":
 							earn_achievement("exploration", "diamond_crater")
@@ -3401,7 +3407,7 @@ func make_planet_composition(temp:float, depth:String, size:float, rng:RandomNum
 			var x:float = rng.randf_range(1, 10)
 			var y:float = rng.randf_range(0, 5)
 			elements["Fe"] = x/(x+1)
-			elements["Ni"] = (1 - Helper.get_sum_of_dict(elements)) * y/(y+1)
+			#elements["Ni"] = (1 - Helper.get_sum_of_dict(elements)) * y/(y+1)
 			elements["O"] = (1 - Helper.get_sum_of_dict(elements)) * rng.randf_range(0, 0.19)
 			elements["Si"] = elements["O"] * rng.randf_range(3.9, 4)
 			elements["Ta"] = 0.05 * rng.randf()

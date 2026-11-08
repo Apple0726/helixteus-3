@@ -185,7 +185,7 @@ layout_mode = 2
 layout_mode = 2
 size_flags_horizontal = 5
 theme_override_constants/h_separation = 30
-theme_override_constants/v_separation = 30
+theme_override_constants/v_separation = 20
 columns = 5
 
 [node name="Inventory" type="GridContainer" parent="Control/VBox" unique_id=874955917]

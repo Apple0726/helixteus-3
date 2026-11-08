@@ -320,8 +320,8 @@ func _process(delta: float) -> void:
 		breaker += 1
 		if progress >= 100:
 			for i in range(system_conquer_start_index, len(sorted_systems_by_diff)):
-				var system = sorted_systems_by_diff[i]
-				if game.system_data[system.l_id].has("conquered"):
+				var system = game.system_data[sorted_systems_by_diff[i].l_id]
+				if system.has("conquered"):
 					system_conquer_start_index = i
 					continue
 				galaxy_conquered = false
@@ -338,7 +338,7 @@ func _process(delta: float) -> void:
 					break
 				if not system.has("conquered"):
 					g_i.conquer_data.combined_strength -= system.diff
-					game.system_data[system.l_id].conquered = true
+					system.conquered = true
 					game.system_data_persistent[system.l_id].conquered = true
 					game.stats_univ.planets_conquered += system.planet_num
 					game.stats_dim.planets_conquered += system.planet_num

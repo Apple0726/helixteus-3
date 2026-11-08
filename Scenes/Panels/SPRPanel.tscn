@@ -89,7 +89,7 @@ custom_minimum_size = Vector2(0, 38)
 layout_mode = 0
 offset_left = 128.0
 offset_top = 72.0
-offset_right = 496.0
+offset_right = 444.0
 offset_bottom = 110.0
 label_settings = SubResource("LabelSettings_v7luf")
 vertical_alignment = 1
@@ -112,13 +112,17 @@ offset_left = 152.0
 offset_top = 212.0
 offset_right = 479.0
 offset_bottom = 608.0
+horizontal_scroll_mode = 0
+vertical_scroll_mode = 0
 
 [node name="GridContainer" type="GridContainer" parent="ScrollContainer" unique_id=1447989336]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 theme = SubResource("1")
-columns = 4
+theme_override_constants/h_separation = 0
+theme_override_constants/v_separation = 0
+columns = 5
 
 [node name="Panel" type="Panel" parent="." unique_id=24071072]
 layout_mode = 0
@@ -187,38 +191,37 @@ step = 0.01
 
 [node name="EnergyCost" type="TextureRect" parent="Panel/Control" unique_id=1626440112]
 layout_mode = 0
-offset_left = 100.0
-offset_top = 292.0
-offset_right = 132.0
-offset_bottom = 332.0
+offset_left = 148.0
+offset_top = 340.0
+offset_right = 180.0
+offset_bottom = 380.0
 texture = ExtResource("6_7bp5m")
 expand_mode = 1
 stretch_mode = 5
 
 [node name="EnergyCostText" parent="Panel/Control" unique_id=747303207 instance=ExtResource("7_miisb")]
 layout_mode = 0
-offset_left = 164.0
-offset_top = 300.0
-offset_right = 364.0
-offset_bottom = 330.0
-adv_help = true
+offset_left = 200.0
+offset_top = 348.0
+offset_right = 400.0
+offset_bottom = 378.0
 
 [node name="TimeCost" type="TextureRect" parent="Panel/Control" unique_id=539358563]
 layout_mode = 0
-offset_left = 100.0
-offset_top = 348.0
-offset_right = 132.0
-offset_bottom = 380.0
+offset_left = 332.0
+offset_top = 344.0
+offset_right = 364.0
+offset_bottom = 376.0
 texture = ExtResource("8_d3pn6")
 expand_mode = 1
 stretch_mode = 5
 
 [node name="TimeCostText" type="Label" parent="Panel/Control" unique_id=992241109]
 layout_mode = 0
-offset_left = 164.0
-offset_top = 348.0
-offset_right = 268.0
-offset_bottom = 380.0
+offset_left = 376.0
+offset_top = 344.0
+offset_right = 480.0
+offset_bottom = 376.0
 text = "0"
 vertical_alignment = 1
 

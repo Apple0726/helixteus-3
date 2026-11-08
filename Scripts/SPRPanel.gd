@@ -10,22 +10,30 @@ var resource_selected:String = ""
 var au_mult:float
 var Z:int
 var atom_costs:Dictionary = {}
-var reactions:Dictionary = {	"H":{"Z":1, "energy_cost":0.6, "difficulty":0.00005},
-								"He":{"Z":2, "energy_cost":1.5, "difficulty":0.001},
-								"C":{"Z":6, "energy_cost":7, "difficulty":0.0015},
-								"O":{"Z":8, "energy_cost":10, "difficulty":0.002},
-								"Ne":{"Z":10, "energy_cost":90, "difficulty":0.1},
-								"Na":{"Z":11, "energy_cost":12, "difficulty":0.002},
-								"Al":{"Z":13, "energy_cost":10, "difficulty":0.01},
-								"Si":{"Z":14, "energy_cost":30, "difficulty":0.005},
-								"Ti":{"Z":22, "energy_cost":60, "difficulty":0.02},
-								"Fe":{"Z":26, "energy_cost":5, "difficulty":0.006},
-								"Xe":{"Z":54, "energy_cost":3000000, "difficulty":4000},
-								"Ta":{"Z":73, "energy_cost":100000, "difficulty":5},
-								"W":{"Z":74, "energy_cost":100000, "difficulty":5},
-								"Os":{"Z":76, "energy_cost":120000, "difficulty":5},
-								"Pt":{"Z":78, "energy_cost":180000, "difficulty":1.0},
-								"Pu":{"Z":94, "energy_cost":1.4e16, "difficulty":5.0e7},
+var reactions:Dictionary = {
+	"H":{"Z":1, "energy_cost":0.6, "difficulty":0.00005},
+	"He":{"Z":2, "energy_cost":1.5, "difficulty":0.001},
+	"C":{"Z":6, "energy_cost":7, "difficulty":0.0015},
+	"N":{"Z":7, "energy_cost":8.0, "difficulty":0.002},
+	"O":{"Z":8, "energy_cost":10, "difficulty":0.002},
+	"Ne":{"Z":10, "energy_cost":90, "difficulty":0.1},
+	"Na":{"Z":11, "energy_cost":12, "difficulty":0.002},
+	"Mg":{"Z":12, "energy_cost":14, "difficulty":0.002},
+	"Al":{"Z":13, "energy_cost":10.0, "difficulty":0.005},
+	"Si":{"Z":14, "energy_cost":30, "difficulty":0.005},
+	"P":{"Z":15, "energy_cost":20.0, "difficulty":0.004},
+	"Ti":{"Z":22, "energy_cost":60, "difficulty":0.02},
+	"Fe":{"Z":26, "energy_cost":4.0, "difficulty":0.003},
+	"Cu":{"Z":29, "energy_cost":3.0, "difficulty":0.0025},
+	"Ag":{"Z":47, "energy_cost":135.0, "difficulty":0.015},
+	"Xe":{"Z":54, "energy_cost":3000000, "difficulty":4000},
+	"Ta":{"Z":73, "energy_cost":100000, "difficulty":5},
+	"W":{"Z":74, "energy_cost":100000, "difficulty":5},
+	"Os":{"Z":76, "energy_cost":120000, "difficulty":5},
+	"Pt":{"Z":78, "energy_cost":180000, "difficulty":1.0},
+	"Au":{"Z":79, "energy_cost":15000.0, "difficulty":0.02},
+	"Pb":{"Z":82, "energy_cost":2.5, "difficulty":0.002},
+	"Pu":{"Z":94, "energy_cost":1.4e16, "difficulty":5.0e7},
 }
 var rsrc_nodes_from:Array
 var rsrc_nodes_to:Array
@@ -34,17 +42,16 @@ var path_2_value:float = 1.0
 func _ready():
 	set_polygon($GUI.size, $GUI.position)
 	$Panel.hide()
-	$Title.text = tr("SUBATOMIC_PARTICLE_REACTOR_NAME")
 	$Desc.text = tr("REACTIONS_PANEL_DESC")
 	for _name in reactions:
 		var btn = preload("res://Scenes/ReactionButton.tscn").instantiate()
 		btn.get_node("TextureRect").texture = load("res://Graphics/Atoms/%s.png" % _name)
 		btn.name = _name
-		btn.custom_minimum_size = Vector2.ONE * 75.0
+		btn.custom_minimum_size = Vector2.ONE * 65.0
 		btn.mouse_entered.connect(show_recipe_tooltip.bind(_name))
 		btn.mouse_exited.connect(game.hide_tooltip)
 		btn.pressed.connect(_on_Atom_pressed.bind(_name))
-		btn.get_node("Label").label_settings.font_size = 12
+		btn.get_node("Label").label_settings.font_size = 10
 		$ScrollContainer/GridContainer.add_child(btn)
 
 func show_recipe_tooltip(rsrc:String):
@@ -64,7 +71,10 @@ func show_recipe_tooltip(rsrc:String):
 		game.show_tooltip(st)
 
 func _on_Atom_pressed(_name:String):
-	reset_poses(_name, reactions[_name].Z)
+	if _name == resource_selected and atom_to_p:
+		_on_Switch_pressed(false)
+	else:
+		reset_poses(_name, reactions[_name].Z)
 	energy_cost = reactions[_name].energy_cost
 	difficulty = reactions[_name].difficulty
 	_on_HSlider_value_changed($Panel/Control/HSlider.value)
@@ -87,6 +97,11 @@ func refresh():
 		tile_num = 1
 		obj = game.tile_data[game.c_t]
 		au_mult = obj.get("aurora", 0.0) + 1.0
+	var string_size:Vector2 = $Title.label_settings.font.get_string_size($Title.text, HORIZONTAL_ALIGNMENT_LEFT, -1, 24)
+	if string_size.x > 316.0:
+		$Title.label_settings.font_size = 18
+	else:
+		$Title.label_settings.font_size = 24
 	refresh_time_icon()
 	path_2_value = obj.bldg.path_2_value * Helper.get_IR_mult(Building.SUBATOMIC_PARTICLE_REACTOR)
 	for reaction_name in reactions:

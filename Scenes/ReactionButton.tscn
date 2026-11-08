@@ -4,6 +4,8 @@
 [ext_resource type="Texture2D" uid="uid://bn8t8jmrkuvdk" path="res://Graphics/Icons/time.png" id="2_udqu5"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_s2dev"]
+resource_local_to_scene = true
+font_color = Color(0.92099476, 0.9209946, 0.9209946, 1)
 
 [node name="Button" type="Button" unique_id=1181242966]
 offset_right = 128.0
@@ -14,10 +16,10 @@ layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = 16.0
-offset_top = 16.0
-offset_right = -16.0
-offset_bottom = -16.0
+offset_left = 12.0
+offset_top = 12.0
+offset_right = -12.0
+offset_bottom = -12.0
 grow_horizontal = 2
 grow_vertical = 2
 texture = ExtResource("1_s2dev")
@@ -30,11 +32,12 @@ anchors_preset = 2
 anchor_top = 1.0
 anchor_bottom = 1.0
 offset_left = 4.0
-offset_top = -18.0
+offset_top = -24.0
 offset_right = 44.0
 offset_bottom = -1.0
 grow_vertical = 0
 label_settings = SubResource("LabelSettings_s2dev")
+vertical_alignment = 2
 
 [node name="Time" type="TextureRect" parent="." unique_id=1261887238]
 visible = false

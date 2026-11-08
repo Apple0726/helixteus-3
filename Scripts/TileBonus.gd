@@ -6,7 +6,7 @@ func set_icon(texture):
 	texture_rect.texture = texture
 
 func set_multiplier(mult:float):
-	label.text = "x %s" % Helper.clever_round(mult)
+	label.text = "x %s" % Helper.format_num(mult, true, 3)
 	var c:Color
 	if mult < 3.0:
 		c = lerp(Color.WHITE, Color.GREEN, (mult - 1.0) / 2.0)

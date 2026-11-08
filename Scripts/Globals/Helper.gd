@@ -277,8 +277,8 @@ func get_el_color(element:String):
 			return Color(0.69, 0.69, 0.53, 1)
 		"Na":
 			return Color(0.92, 0.98, 1, 1)
-		"Ni":
-			return Color(0.8, 0.8, 0.8, 1)
+		#"Ni":
+			#return Color(0.8, 0.8, 0.8, 1)
 		"H", "Fe":
 			return Color(0.9, 0.9, 0.9, 1)
 		"He":
@@ -574,8 +574,8 @@ func mass_generate_rock(tile:Dictionary, p_i:Dictionary, depth:int):
 			var num_tiles:int = end_depth - met_start_depth
 			var num_tiles2:int = met_end_depth - tile.depth
 			var num_tiles3:int = clamp(min(num_tiles, num_tiles2), 0, min(depth, met_end_depth - met_start_depth))
-			amount = randf_range(1.0, 1.2) * num_tiles3
-		amount *= 20 * chance_mult * aurora_mult * h_mult / pow(met_info.rarity, 0.6)
+			amount = randf_range(1.0, 1.2) * num_tiles3 / pow(met_info.rarity, 0.6)
+		amount *= 20 * chance_mult * aurora_mult * h_mult
 		if amount < 0.001:
 			continue
 		contents[met] = amount
@@ -617,8 +617,10 @@ func generate_rock(tile:Dictionary, p_i:Dictionary):
 			if met in ["nanocrystal", "mythril"] and game.c_g_g == 0:
 				continue
 			var crater_metal = tile.has("crater") and tile.crater.has("init_depth") and met == tile.crater.metal
-			if game.met_info[met].min_depth < tile.depth - p_i.crust_start_depth and tile.depth - p_i.crust_start_depth < game.met_info[met].max_depth or crater_metal:
-				if randf() < 0.25 * (6 if crater_metal else 1) * aurora_mult / pow(game.met_info[met].rarity, 0.2):
+			if crater_metal:
+				tile.mining.current_deposit = {"met":met, "size":randi_range(4, 10), "progress":1}
+			elif game.met_info[met].min_depth < tile.depth - p_i.crust_start_depth and tile.depth - p_i.crust_start_depth < game.met_info[met].max_depth:
+				if randf() < 0.25 * aurora_mult / pow(game.met_info[met].rarity, 0.2):
 					tile.mining.current_deposit = {"met":met, "size":randi_range(4, 10), "progress":1}
 	if tile.mining.has("current_deposit"):
 		var met = tile.mining.current_deposit.met
@@ -626,7 +628,7 @@ func generate_rock(tile:Dictionary, p_i:Dictionary):
 		var progress2 = tile.mining.current_deposit.progress
 		var amount_multiplier = -abs(2.0/size * progress2 - 1) + 1
 		var crater_metal = tile.has("crater") and tile.crater.has("init_depth") and met == tile.crater.metal
-		var amount = clever_round(20 * (2.0 if crater_metal else 1.0) * randf_range(1.0, 1.2) * amount_multiplier * aurora_mult * h_mult / pow(game.met_info[met].rarity, 0.6))
+		var amount = clever_round(20 * (2.0 if crater_metal else 1.0) * randf_range(1.0, 1.2) * amount_multiplier * aurora_mult * h_mult)
 		contents[met] = amount
 		other_volume += amount / game.met_info[met].density / 1000 / h_mult
 		tile.mining.current_deposit.progress += 1

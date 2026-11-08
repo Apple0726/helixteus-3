@@ -49,8 +49,15 @@ func update_info():
 	$Panel/VBox/GalaxyInfo.visible = bldg in [TRIANGULUM_PROBE, GALAXY_KILLER]
 	var prod_mult = 1.0
 	if bldg in [Building.POWER_PLANT, Building.RESEARCH_LAB]:
+		$Panel/ProdMult.help_text = "ENERGY_GS_PROD_MULT_BY_X"
 		var s_b:float = pow(game.u_i.boltzmann, 4) / pow(game.u_i.planck, 3) / pow(game.u_i.speed_of_light, 2)
 		prod_mult = sqrt(s_b) * g_i.B_strength * 1e9
+		$Panel/ProdMult.label_text = "%s: %s " % [tr("PRODUCTION_MULTIPLIER"), Helper.clever_round(prod_mult)]
+		$Panel/ProdMult.refresh()
+		$Panel/ProdMult.visible = true
+	elif bldg == Building.MINERAL_EXTRACTOR:
+		$Panel/ProdMult.help_text = "MINERAL_GS_PROD_MULT_BY_X"
+		prod_mult = game.u_i.age * g_i.dark_matter
 		$Panel/ProdMult.label_text = "%s: %s " % [tr("PRODUCTION_MULTIPLIER"), Helper.clever_round(prod_mult)]
 		$Panel/ProdMult.refresh()
 		$Panel/ProdMult.visible = true
@@ -88,7 +95,7 @@ func update_info():
 				costs[cost] *= game.engineering_bonus.BCM * prod_cost_mult
 	if bldg == Building.MINERAL_EXTRACTOR:
 		$Panel/VBox/ProductionPerSec.text = tr("PRODUCTION_PER_SECOND")
-		num = surface * 0.04
+		num = surface * 0.04 * prod_mult
 		Helper.put_rsrc($Panel/VBox/Production, 32, {"minerals":num * game.u_i.time_speed * Helper.get_IR_mult(Building.MINERAL_EXTRACTOR)})
 	elif bldg == Building.POWER_PLANT:
 		$Panel/VBox/ProductionPerSec.text = tr("PRODUCTION_PER_SECOND")

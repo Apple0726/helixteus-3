@@ -947,7 +947,8 @@ Dannach wird die Dunkle Materie exponenziert mit -ln(Zufallsbereich(0, 1)) * Rot
 La materia oscura se calcula seleccionando un número entre 0.85 y 1.15.
 Si una galaxia tiene forma de espiral, le se sustrae 0.05 de materia oscura.
 Luego incrementa la materia oscura a la potencia de -ln(random(0, 1)) * redshift^0.8 * 0.4 + 1.",,,"A sötét anyag hatással van az egy rendszerben lévő bolygók és csillagok számára.\nSötét anyag képlet: sötét_anyag = véletlen(0,85; 1,15) \n Ha a galaxis spirál alakú, akkor ebből vonj le 0,05-öt. Aztán ezt emeld az ennyiedik hatványra: -ln(véletlen(0; 1))*sötét_anyag/2,5+1",,,,
-DARK_ENERGY_DESC,Dark energy multiplies the influence of distance from the starting cluster on redshift of clusters.,,"L'energia oscura moltiplica l'influenza della distanza dal tuo cluster di origine sulla difficoltà, materiali ferromagnetici e il livello di specifiche strutture. \n Influenza anche la materia oscusa: maggiore l'energia oscura, maggiore la probabilità che il valore della materia oscura si allontani da 1 (in entrambe le direzioni).",暗能量会成倍放大起始星团距离对星团红移的影响。,Dunkle Energie multipliziert den Einfluss der Distanz von Startcluster auf die Rotverschiebung des Clusters.,,,,A sötét energia megszorozza a halmazok vöröseltolódásának függését a kezdő halmaztól való távolságtól.,,,,
+DARK_ENERGY_DESC,"Dark energy multiplies the influence of distance from the starting cluster on redshift of clusters.
+In other words, dark energy has no effect until you start exploring other clusters.",,,,,,,,,,,,
 B_STRENGTH_DESC,"Magnetic field strength influences temperatures of stars and the intensities of auroras.
 Magnetic field strength (B) formula:If galaxy is spiral: B = rand_range(3, 5) * redshift * elementary_charge nT
 Else: B = rand_range(0.5, 4) * redshift * elementary_charge nT
@@ -1453,6 +1454,7 @@ RE_WHEELS_8,Negates movement penalty when moving over ash or lava.,,,探测器�
 CAPACITY_INCREASE,Capacity increase:,,,储量增加：,Zusätzliche Kapazität:,Incremento de capacidad:,저장 용량 증가:,,Tárhelynövelés:,,,,
 PLANT_FERTILIZATION_SC,Plant fertilization,,,植物施肥,Fruchtbarkeit des Planeten,Incremento de capacidad:,,,Műtrágyázás,,,Удобрение растений,
 PLANT_FERTILIZATION_SC_DESC,Unlocks fertilizers that increase metal production at the cost of soil and extra cellulose.,,,允许对植物进行施肥，施肥会持续消耗黑土和更多的纤维素，但可以增加金属产量,Schaltet Dünger frei der die Metallproduktion anhebt zum preis von mehr Erde und Zellulose,Desbloquea fertilizantes que incrementan la producción de metal a costa de tierra y celulosa extra.,,,"Megnyitja a trágyákat, amik megnövelik a fémtermelést, de a föld- és cellulózszükségletet is.",,,,
+PLANT_FERTILIZATION_INF_SC_DESC,Each research multiplies fertilizer bonus production by %s.,,,,,,,,,,,,
 WH_ERROR,You are too deep in this cave for this wormhole to work!,,,虫洞无法在这么深的洞穴里使用,Du bist zu Tief in der höhle für dieses Wurmloch,¡Estás demasiado profundo para que este agujero de gusano funcione!,동굴에 너무 깊이 있어서 웜홀이 작동되지 않습니다.,,"Túl mélyen vagy ahhoz, hogy a féreglyuk működjön!",,,,
 EFFECT_ON_PLANTS,Effect on nearby plants:,,,对相邻植物的效果：,Effekt auf umliegende Pflanzen:,Efectos en plantas cercanas:,주변 식물에 주어지는 효과:,,Hatás a közeli növényekre:,,,Эффект на ближайшие планеты:,
 H2O_LAKE_BONUS,x %s metal production,,,%s倍金属产量,x %s Metallproduktion,x %s producción de metales,x %s 금속 생산,,x %s fémprodukció,,,,
@@ -1570,7 +1572,8 @@ REPAIR_NFR_TO_GET_ENERGY,Repair nuclear fusion reactors on this planet to get ex
 SHIPS_BENEFITING_FROM_SPACEPORT,Your ships are getting passive XP from a spaceport!,,,你的舰船正在获得由航天发射场提供的被动经验值,Deine Schiffe erhalten Passiv XP durch eine Weltraumhafen!,,,,A hajóid passzívan kapják az XP-t az űrkikötőben!,,,,
 NO_SCIENCE_TO_REPAIR_MS,You don't have the necessary science to repair this megastructure.,,,你目前的科技还不足以修复这个巨型结构,Du hast nicht die nötige Forschung um diese Megastruktur zu reparieren.,,,,Nincs meg a szükséges tudomány a megastruktúra megjavításához.,,,,
 REPAIR_COST,Repair costs,,,修复成本,Reperaturkosten,,,,Javítás ára: ,,,Стоимость починки,
-GS_PROD_MULT_BY_X,Production is affected by the galaxy's magnetic field strength and the Stefan-Boltzmann constant.,,,产量取决于星系的磁场强度和斯特凡-玻尔兹曼常数,Produktion ist beeinflusst durch die Magnetische Feldstärke der Galaxie und die Stefan-Boltzmann konstante. ,,,,Termeléséra hatással van a galaxis mágneses mezőerőssége és a Stefan-Boltzmann állandó.,,,,
+MINERAL_GS_PROD_MULT_BY_X,Production is multiplied by the galaxy's dark matter and the universe's age.,,,,,,,,,,,,
+ENERGY_GS_PROD_MULT_BY_X,Production is affected by the galaxy's magnetic field strength and the Stefan-Boltzmann constant.,,,产量取决于星系的磁场强度和斯特凡-玻尔兹曼常数,Produktion ist beeinflusst durch die Magnetische Feldstärke der Galaxie und die Stefan-Boltzmann konstante. ,,,,Termeléséra hatással van a galaxis mágneses mezőerőssége és a Stefan-Boltzmann állandó.,,,,
 ANCIENT_BLDG_TIER_DISTRIBUTION,Ancient building tier distribution (in starting cluster):,,,古代建筑等级分布（在初始星系/银河系中）：,Antike Gebäude Distribution(im initialen Cluster):,,,,Ősi épuletek szinteloszlása (a kezdő halmazban),,,,
 TIER_X,Tier %s,,,%s 阶,Stufe %s,,,,%s. szintű,,,,
 GALAXY_KILLER,Galaxy-killer,,,星系终结者,Galaxie-Anihilator,,,,Galaxispusztító,,,Убийца-галактик,
@@ -1990,3 +1993,8 @@ PP_HELP,"Probe points determine how powerful of a universe you can make when dis
 Using galaxies with less than 5000 star systems will give less probe points.",,,,,,,,"A szontapontok meghatározzák, hogy mennyire erős univerzumot fogsz felfedezni. Kevesebb, mint 5000 rendszert tartalmazó galaxis esetén kevesebb szondapontot kapsz.",,,,
 SELECT_METAL_TO_GROW,Select a metal to grow:,,,,,,,,Válaszd ki a növesztendő fémet:,,,,
 UPROOT,Uproot,,,,,,,,Kihúzás,,,,
+P_NAME,Phosphorus,,,,,,,,,,,,
+PB_NAME,Lead,,,,,,,,,,,,
+CU_NAME,Copper,,,,,,,,,,,,
+AG_NAME,Silver,,,,,,,,,,,,
+AU_NAME,Gold,,,,,,,,,,,,

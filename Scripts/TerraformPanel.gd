@@ -34,6 +34,10 @@ func update_info():
 	tf_costs = {"SP":2}
 	var pressure_mult = max(1, pressure)
 	var lake_mult = 1 + 9 * lake_num / float(tile_num)
+	var SA_mult = 1.0
+	if tf_type == Building.GREENHOUSE:
+		SA_mult = 50.0
+	tf_costs.SP *= SA_mult
 	for cost in tf_costs:
 		tf_costs[cost] *= surface * pressure_mult * lake_mult
 	costs.erase("time")
@@ -42,7 +46,28 @@ func update_info():
 	var gradient:Gradient = Data.intensity_gradient
 	var pressure_mult_color = gradient.sample(inverse_lerp(1.0, 100.0, pressure_mult)).to_html(false)
 	var lake_mult_color = gradient.sample(inverse_lerp(1.0, 10.0, lake_mult)).to_html(false)
-	$Panel/TerraformPanel/CostMult.text = "%s:\n%s: x %s\n[color=#%s]%s: x %s[/color]\n[color=#%s]%s: x %s[/color]" % [tr("TF_COST_MULT"), tr("SURFACE_AREA"), Helper.format_num(surface), pressure_mult_color, tr("ATMOSPHERE_PRESSURE"), Helper.clever_round(pressure_mult), lake_mult_color, tr("LAKES"), Helper.clever_round(lake_mult)]
+	var cost_mult_text = "[font_size=14]{tf_cost_mult}:\n{surface_text}: x {surface}".format({
+		"tf_cost_mult": tr("TF_COST_MULT"),
+		"surface_text": tr("SURFACE_AREA"),
+		"surface": Helper.format_num(surface),
+	})
+	if pressure_mult > 1.0:
+		cost_mult_text += "\n[color=#{color}]{pressure_text}: x {pressure}[/color]".format({
+			"color": pressure_mult_color,
+			"pressure_text": tr("ATMOSPHERE_PRESSURE"),
+			"pressure": Helper.clever_round(pressure_mult),
+		})
+	if lake_mult > 1.0:
+		cost_mult_text += "\n[color=#{color}]{lakes_text}: x {lakes}[/color]".format({
+			"color": lake_mult_color,
+			"lakes_text": tr("LAKES"),
+			"lakes": Helper.clever_round(lake_mult),
+		})
+	if tf_type == Building.GREENHOUSE:
+		cost_mult_text += "\n{space_agriculture_text}: x 50".format({
+			"space_agriculture_text": tr("SPACE_AGRICULTURE_SC"),
+		})
+	$Panel/TerraformPanel/CostMult.text = cost_mult_text
 	Helper.put_rsrc($Panel/TerraformPanel/VBox, 32, tf_costs, true, true)
 	Helper.put_rsrc($Panel/BuildingPanel/VBox, 32, costs, true, true)
 	$Panel.visible = true

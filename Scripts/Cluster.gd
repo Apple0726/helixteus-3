@@ -305,8 +305,8 @@ func _process(delta: float) -> void:
 		breaker += 1
 		if progress >= 100:
 			for i in range(galaxy_conquer_start_index, len(sorted_galaxies)):
-				var galaxy = sorted_galaxies[i]
-				if game.galaxy_data[galaxy.l_id].is_empty() or game.galaxy_data[galaxy.l_id].has("conquered"):
+				var galaxy = game.galaxy_data[sorted_galaxies[i].l_id]
+				if galaxy.is_empty() or galaxy.has("conquered"):
 					galaxy_conquer_start_index = i
 					continue
 				cluster_conquered = false
@@ -323,9 +323,8 @@ func _process(delta: float) -> void:
 					break
 				if not galaxy.has("conquered"):
 					c_i.conquer_data.combined_strength -= galaxy.diff
-					game.galaxy_data[galaxy.l_id].conquered = true
-					game.galaxy_data_persistent[galaxy.l_id].conquered = true
 					galaxy.conquered = true
+					game.galaxy_data_persistent[galaxy.l_id].conquered = true
 					game.stats_univ.systems_conquered += galaxy.system_num
 					game.stats_dim.systems_conquered += galaxy.system_num
 					game.stats_global.systems_conquered += galaxy.system_num
