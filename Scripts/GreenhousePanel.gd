@@ -160,7 +160,7 @@ func _on_UseFertilizer_toggled(button_pressed):
 					for p in tile.auto_GH.produce:
 						if p in game.met_info.keys():
 							game.autocollect.mets[p] += tile.auto_GH.produce[p] * (0.5 * fert_mult) * au_mult
-							tile.auto_GH.produce[p] *= 1.0 + 0.5 * fert_mult
+							tile.auto_GH.produce[p] *= 1.0 + (0.5 * fert_mult) * au_mult
 						else:
 							game.autocollect.mats[p] += tile.auto_GH.produce[p] * (0.5 * fert_cost_mult)
 							tile.auto_GH.produce[p] *= 1.0 + 0.5 * fert_cost_mult
@@ -182,7 +182,7 @@ func _on_UseFertilizer_toggled(button_pressed):
 					var fert_cost_mult = (Data.lake_bonus_values.NH3[tile.lake_elements.NH3] / game.biology_bonus.NH3) if tile.lake_elements.has("NH3") else 1.0
 					for p in tile.auto_GH.produce:
 						if p in game.met_info.keys():
-							tile.auto_GH.produce[p] /= 1.0 + 0.5 * fert_mult
+							tile.auto_GH.produce[p] /= 1.0 + 0.5 * fert_mult * au_mult
 							game.autocollect.mets[p] -= tile.auto_GH.produce[p] * (0.5 * fert_cost_mult) * au_mult
 						else:
 							tile.auto_GH.produce[p] /= 1.0 + 0.5 * fert_cost_mult

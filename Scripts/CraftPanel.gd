@@ -38,6 +38,7 @@ func _on_btn_pressed(_tab:int):
 		add_items_to_panel([Item.MINING_LIQUID, Item.PURPLE_MINING_LIQUID], "Mining liquids")
 	elif tab == CAVE:
 		add_items_to_panel([Item.DRILL1, Item.DRILL2, Item.DRILL3], "Drills")
+		add_items_to_panel([Item.PORTABLE_WORMHOLE1, Item.PORTABLE_WORMHOLE2, Item.PORTABLE_WORMHOLE3], "Portable wormholes")
 
 func add_items_to_panel(items:Array, items_directory:String):
 	for item_id in items:
@@ -85,7 +86,7 @@ func _on_buy_pressed():
 		item_total_costs[cost] *= $ItemInfo/BuyAmount.value
 	if game.check_enough(item_total_costs):
 		game.deduct_resources(item_total_costs)
-		Helper.add_items_to_inventory(item_selected.id, $ItemInfo/BuyAmount.value, item_selected.costs, tr("NOT_ENOUGH_INV_SPACE_BUY"), tr("PURCHASE_SUCCESS"))
+		Helper.add_items_to_inventory(item_selected.id, $ItemInfo/BuyAmount.value, item_selected.costs, tr("NOT_ENOUGH_INV_SPACE_CRAFT"), tr("CRAFT_SUCCESS"))
 		update_and_check_costs()
 		game.HUD.refresh()
 	else:

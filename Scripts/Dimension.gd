@@ -18,15 +18,15 @@ var DR_mult:float = 1.0
 var table
 
 var lake_params:Dictionary = {
-	"H2O":{"min_value":1, "max_value":INF, "value":1, "OP_factor":1.5},
-	"CH4":{"min_value":1, "max_value":INF, "value":1, "OP_factor":0.2},
-	"CO2":{"min_value":1, "max_value":INF, "value":1, "OP_factor":0.3},
-	"NH3":{"min_value":1, "max_value":INF, "value":1, "OP_factor":0.2},
-	"H":{"min_value":0, "max_value":3, "value":0, "is_integer":true, "OP_factor":0.8, "pw":2},
-	"He":{"min_value":1, "max_value":INF, "value":1, "OP_factor":0.3},
-	"O":{"min_value":1, "max_value":INF, "value":1, "OP_factor":0.5},
-	"Ne":{"min_value":1, "max_value":INF, "value":1, "OP_factor":0.3},
-	"Xe":{"min_value":0, "max_value":3, "value":0, "is_integer":true, "OP_factor":5, "pw":3},
+	"H2O":{"min_value":1, "max_value":INF, "value":1, "OP_factor":0.7},
+	"CH4":{"min_value":1, "max_value":INF, "value":1, "OP_factor":0.1},
+	"CO2":{"min_value":1, "max_value":INF, "value":1, "OP_factor":0.15},
+	"NH3":{"min_value":1, "max_value":INF, "value":1, "OP_factor":0.1},
+	"H":{"min_value":0, "max_value":3, "value":0, "is_integer":true, "OP_factor":0.4, "pw":2},
+	"He":{"min_value":1, "max_value":INF, "value":1, "OP_factor":0.15},
+	"O":{"min_value":1, "max_value":INF, "value":1, "OP_factor":0.25},
+	"Ne":{"min_value":1, "max_value":INF, "value":1, "OP_factor":0.15},
+	"Xe":{"min_value":0, "max_value":3, "value":0, "is_integer":true, "OP_factor":3, "pw":3},
 }
 func _ready():
 	$ModifyDimension/Dimensional_Power/Control/Label1.mouse_entered.connect(
@@ -40,8 +40,6 @@ func _ready():
 	)
 	$ModifyDimension/Engineering/Control/ancient_building_a_value.min_value = -INF
 	var prop_text:String = ""
-	$ModifyDimension/Maths/Control/CostGrowthFactors/BUCGF.step = 0.0005
-	$ModifyDimension/Maths/Control/CostGrowthFactors/ULUGF.step = 0.0005
 	$ModifyDimension/Maths.clip_contents = true
 	if game.c_u != -1 and game.help.has("flash_send_probe_btn") and game.universe_data[0].has("generated"):
 		$Universes/SendProbes/AnimationPlayer.play("FlashButton")
@@ -161,8 +159,9 @@ func refresh_univs(reset:bool = false):
 			$ModifyDimension/Maths/Control/CostGrowthFactors.get_node(maths_bonus).set_value(game.maths_bonus[maths_bonus])
 			$ModifyDimension/Maths/Control/CostGrowthFactors.get_node(maths_bonus).editable = reset
 		else:
-			$ModifyDimension/Maths/Control.get_node(maths_bonus).set_value(game.maths_bonus[maths_bonus])
-			$ModifyDimension/Maths/Control.get_node(maths_bonus).editable = reset
+			if $ModifyDimension/Maths/Control.has_node(maths_bonus):
+				$ModifyDimension/Maths/Control.get_node(maths_bonus).set_value(game.maths_bonus[maths_bonus])
+				$ModifyDimension/Maths/Control.get_node(maths_bonus).editable = reset
 	for engineering_bonus in game.engineering_bonus:
 		if $ModifyDimension/Engineering/Control.has_node(engineering_bonus):
 			$ModifyDimension/Engineering/Control.get_node(engineering_bonus).set_value(game.engineering_bonus[engineering_bonus])
@@ -416,17 +415,15 @@ func calc_OP_points():
 	calc_math_points($ModifyDimension/Maths/Control/CostGrowthFactors/MUCGF_MV, 1.9, -0.5, 1.1)#Mineral value
 	calc_math_points($ModifyDimension/Maths/Control/CostGrowthFactors/MUCGF_MSMB, 1.6, -0.3, 1.1)#Mining speed multiplier
 	calc_math_points($ModifyDimension/Maths/Control/IRM, 1.2, 300.0, 1.0, 3.0)#Infinite research
-	calc_math_points($ModifyDimension/Maths/Control/CostGrowthFactors/SLUGF_XP, 1.3, -1.3, 1.1)#Ship level up XP
-	calc_math_points($ModifyDimension/Maths/Control/CostGrowthFactors/SLUGF_Stats, 1.15, 150.0, 1.0, 3.0)#Ship stats
-	calc_math_points($ModifyDimension/Maths/Control/COSHEF, 1.5, 0.2)#Chance of ship hitting enemy
-	calc_math_points($ModifyDimension/Maths/Control/CostGrowthFactors/ULUGF, 1.63, -20.0, 1.15)#Universe level XP
+	calc_math_points($ModifyDimension/Maths/Control/CostGrowthFactors/SLUGF_XP, 1.3, -0.2, 1.1)#Ship level up XP
+	calc_math_points($ModifyDimension/Maths/Control/CostGrowthFactors/SLUGF_Stats, 1.15, 15.0, 1.0, 3.0)#Ship stats
+	calc_math_points($ModifyDimension/Maths/Control/CostGrowthFactors/ULUGF, 1.63, -5.0, 1.15)#Universe level XP
 	math_defaults.get_node("BUCGF").visible = not is_equal_approx($ModifyDimension/Maths/Control/CostGrowthFactors/BUCGF.value, float(math_defaults.get_node("BUCGF").text.substr(1)))
 	math_defaults.get_node("MUCGF_MV").visible = not is_equal_approx($ModifyDimension/Maths/Control/CostGrowthFactors/MUCGF_MV.value, float(math_defaults.get_node("MUCGF_MV").text.substr(1)))
 	math_defaults.get_node("MUCGF_MSMB").visible = not is_equal_approx($ModifyDimension/Maths/Control/CostGrowthFactors/MUCGF_MSMB.value, float(math_defaults.get_node("MUCGF_MSMB").text.substr(1)))
 	math_defaults.get_node("IRM").visible = not is_equal_approx($ModifyDimension/Maths/Control/IRM.value, float(math_defaults.get_node("IRM").text.substr(1)))
 	math_defaults.get_node("SLUGF_XP").visible = not is_equal_approx($ModifyDimension/Maths/Control/CostGrowthFactors/SLUGF_XP.value, float(math_defaults.get_node("SLUGF_XP").text.substr(1)))
 	math_defaults.get_node("SLUGF_Stats").visible = not is_equal_approx($ModifyDimension/Maths/Control/CostGrowthFactors/SLUGF_Stats.value, float(math_defaults.get_node("SLUGF_Stats").text.substr(1)))
-	math_defaults.get_node("COSHEF").visible = not is_equal_approx($ModifyDimension/Maths/Control/COSHEF.value, float(math_defaults.get_node("COSHEF").text.substr(1)))
 	math_defaults.get_node("ULUGF").visible = not is_equal_approx($ModifyDimension/Maths/Control/CostGrowthFactors/ULUGF.value, float(math_defaults.get_node("ULUGF").text.substr(1)))
 	physics_OP_points = 0
 	
@@ -442,7 +439,7 @@ func calc_OP_points():
 		num_errors.physics = true
 	else:
 		$ModifyDimension/Physics/Control/BI["theme_override_colors/font_color"] = Color.BLACK
-		physics_OP_points += pow(max(0, 9.0 * ($ModifyDimension/Physics/Control/BI.value - 0.3)), 1.5)
+		physics_OP_points += pow(max(0, 4.0 * ($ModifyDimension/Physics/Control/BI.value - 0.3)), 1.5)
 		
 	var aurora_spawn_probability_value = $ModifyDimension/Physics/Control/aurora_spawn_probability.value
 	if aurora_spawn_probability_value < 0:
@@ -451,7 +448,7 @@ func calc_OP_points():
 	else:
 		$ModifyDimension/Physics/Control/aurora_spawn_probability["theme_override_colors/font_color"] = Color.BLACK
 		if aurora_spawn_probability_value >= 0.35:
-			physics_OP_points += 10.0 * (aurora_spawn_probability_value - 0.35)
+			physics_OP_points += 5.0 * (aurora_spawn_probability_value - 0.35)
 		else:
 			physics_OP_points += 1.5 * (aurora_spawn_probability_value - 0.35)
 	
@@ -461,7 +458,7 @@ func calc_OP_points():
 		num_errors.physics = true
 	else:
 		$ModifyDimension/Physics/Control/aurora_width_multiplier["theme_override_colors/font_color"] = Color.BLACK
-		physics_OP_points += pow(2.0 * max(0.0, aurora_width_multiplier_value - 1.0), 1.8)
+		physics_OP_points += pow(1.5 * max(0.0, aurora_width_multiplier_value - 1.0), 1.8)
 	
 	var perpendicular_auroras_value = $ModifyDimension/Physics/Control/perpendicular_auroras.value
 	if perpendicular_auroras_value < 0:
@@ -489,8 +486,8 @@ func calc_OP_points():
 		physics_defaults.get_node(NodePath(cost.name)).visible = not is_equal_approx(cost.value, float(physics_defaults.get_node(NodePath(cost.name)).text.substr(1)))
 	
 	biology_OP_points = 0
-	calc_bio_points($ModifyDimension/Biology/Control/PGSM, 0.8)
-	calc_bio_points($ModifyDimension/Biology/Control/PYM, 1.2)
+	calc_bio_points($ModifyDimension/Biology/Control/PGSM, 0.3)
+	calc_bio_points($ModifyDimension/Biology/Control/PYM, 0.6)
 	if selected_element != "":
 		lake_params[selected_element].value = float($ModifyDimension/Biology/Control/Lake/Bonus.value)
 		update_lake_bonus_text(selected_element)
@@ -507,10 +504,10 @@ func calc_OP_points():
 	calc_engi_points(BCM_node, 7.0 * (1.0 / BCM_node.value - 1.0))
 	calc_engi_points(PS_node, 0.15 * (PS_node.value - 1.0))
 	calc_engi_points(RSM_node, 0.25 * (RSM_node.value - 1.0))
-	engineering_OP_points += (pow(3, max_tier_node.value) - 1.0)
+	engineering_OP_points += pow(max_tier_node.value, 2) * 0.5
 	calc_engi_points(a_value_node, 4 * (pow(1.5, max(0, a_value_node.value)) - 1))
 	$ModifyDimension/Engineering/Control/Label7.text = "10^-a = " + str(Helper.clever_round(pow(10, -a_value_node.value), 3, true))
-	calc_engi_points(b_value_node, max(0, 30.0 * (1.5 / b_value_node.value - 1.0)))
+	calc_engi_points(b_value_node, max(0, 15.0 * (1.5 / b_value_node.value - 1.0)))
 	for subj in ["Maths", "Physics", "Chemistry", "Biology", "Engineering"]:
 		if $ModifyDimension.get_node(subj).visible:
 			if is_zero_approx(self["%s_OP_points" % subj.to_lower()]):

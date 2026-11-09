@@ -605,6 +605,8 @@ func constr_bldg(tile_id:int, curr_time:int, _bldg_to_construct:int, mass_build:
 	elif not mass_build:
 		game.popup(tr("NOT_ENOUGH_RESOURCES"), 1.2)
 
+var overclock_sprite_num = 0
+
 func overclock_bldg(tile, tile_id:int, curr_time):
 	var mult:float = Item.data[game.item_to_use.id].mult * tile.get("overclock_bonus", 1.0)
 	if overclockable(tile.bldg.name) and (not tile.bldg.has("overclock_mult") or tile.bldg.overclock_mult < mult):
@@ -640,6 +642,18 @@ func overclock_bldg(tile, tile_id:int, curr_time):
 				tile.bldg["collect_date"] = curr_time
 				tile.depth += int(tiles_mined)
 		game.item_to_use.num -= 1
+		if overclock_sprite_num < 1000:
+			var overclock_sprite = Sprite2D.new()
+			overclock_sprite.texture = load("res://Graphics/Items/Overclocks/%s.png" % Item.data[game.item_to_use.id].item_name)
+			overclock_sprite.position = Vector2(tile_id % wid, tile_id / wid) * 200.0 + Vector2.ONE * 100.0
+			overclock_sprite.scale *= 192.0 / overclock_sprite.texture.get_width()
+			add_child(overclock_sprite)
+			var tween = create_tween().set_parallel(true)
+			tween.tween_property(overclock_sprite, "rotation", 10.0 * PI, 3.0).set_ease(Tween.EASE_IN).set_trans(Tween.TRANS_QUAD)
+			tween.tween_property(overclock_sprite, "modulate:a", 0.0, 3.0)
+			tween.tween_callback(overclock_sprite.queue_free).set_delay(3.0)
+			tween.tween_callback(func(): overclock_sprite_num -= 1).set_delay(3.0)
+			overclock_sprite_num += 1
 		return true
 	return false
 
@@ -702,7 +716,8 @@ func destroy_bldg(id2:int, mass:bool = false):
 	tween.tween_property(bldg_sprite.material, "shader_parameter/red", 1.0, 0.4)
 	tween.tween_property(bldg_sprite.material, "shader_parameter/progress", 1.0, 0.8).set_delay(0.2)
 	tween.tween_callback(bldg_sprite.queue_free).set_delay(1.0)
-	hboxes[id2].queue_free()
+	if is_instance_valid(hboxes[id2]):
+		hboxes[id2].queue_free()
 	if is_instance_valid(rsrcs[id2]):
 		rsrcs[id2].queue_free()
 	var overclock_mult:float = tile.bldg.get("overclock_mult", 1.0)

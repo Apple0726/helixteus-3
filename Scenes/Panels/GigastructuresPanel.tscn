@@ -196,7 +196,7 @@ help_text = "PCM_DESC"
 layout_mode = 0
 offset_left = 44.0
 offset_top = 344.0
-offset_right = 456.0
+offset_right = 284.0
 offset_bottom = 374.0
 help_text = "GS_PROD_MULT_BY_X"
 
@@ -221,7 +221,7 @@ text = "CONVERT"
 layout_mode = 0
 offset_left = 44.0
 offset_top = 392.0
-offset_right = 404.0
+offset_right = 272.0
 offset_bottom = 422.0
 help_text = "PP_HELP"
 

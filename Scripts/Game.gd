@@ -2706,9 +2706,9 @@ func generate_planets(id:int):#local id
 			if p_i.has("MS"):
 				p_i["MS_lv"] = rng.randi() % (Data.MS_num_stages[p_i.MS] + 1)
 				if p_i.MS == "MME":
-					p_i["repair_cost"] = Data.MS_costs[p_i.MS + "_" + str(p_i.MS_lv)].money * rng.randf_range(1, 3) * 24 * pow(p_i.size / 13000.0, 2)
+					p_i["repair_cost"] = Data.MS_costs[p_i.MS + "_" + str(p_i.MS_lv)].money * 12.0 * rng.randf_range(1, 1.5) * pow(p_i.size / 13000.0, 2)
 				elif p_i.MS == "SE":
-					p_i["repair_cost"] = Data.MS_costs[p_i.MS + "_" + str(p_i.MS_lv)].money * 24 * rng.randf_range(1, 3) * p_i.size / 12000.0
+					p_i["repair_cost"] = Data.MS_costs[p_i.MS + "_" + str(p_i.MS_lv)].money * 12.0 * rng.randf_range(1, 1.5) * p_i.size / 12000.0
 				p_i.repair_cost *= engineering_bonus.BCM
 				system_data[id]["has_MS"] = true
 		planet_data.append(p_i)
@@ -2733,14 +2733,14 @@ func generate_planets(id:int):#local id
 				star["MS_lv"] = rng.randi() % (Data.MS_num_stages[star.MS] + 1)
 				star["bldg"] = {}
 				if star.MS == "MB":
-					star["repair_cost"] = Data.MS_costs[star.MS].money * 72 * rng.randf_range(1, 3) * pow(star.size, 2)
+					star["repair_cost"] = Data.MS_costs[star.MS].money * 24.0 * rng.randf_range(1, 1.5) * pow(star.size, 2)
 				elif star.MS == "DS":
-					star["repair_cost"] = Data.MS_costs[star.MS + "_" + str(star.MS_lv)].money * 24 * rng.randf_range(1, 3) * pow(star.size, 2)
+					star["repair_cost"] = Data.MS_costs[star.MS + "_" + str(star.MS_lv)].money * 12.0 * rng.randf_range(1, 1.5) * pow(star.size, 2)
 				elif star.MS == "CBS":
-					star["repair_cost"] = Data.MS_costs[star.MS + "_" + str(star.MS_lv)].money * 24 * rng.randf_range(1, 3)
+					star["repair_cost"] = Data.MS_costs[star.MS + "_" + str(star.MS_lv)].money * 12.0 * rng.randf_range(1, 1.5)
 					star.furthest_planet_distance = furthest_planet_distance
 				elif star.MS == "PK":
-					star["repair_cost"] = Data.MS_costs[star.MS + "_" + str(star.MS_lv)].money * 24 * rng.randf_range(1, 3) * planet_data[-1].distance / 1000.0
+					star["repair_cost"] = Data.MS_costs[star.MS + "_" + str(star.MS_lv)].money * 12.0 * rng.randf_range(1, 1.5) * planet_data[-1].distance / 1000.0
 				star.repair_cost *= engineering_bonus.BCM
 				system_data[id].has_MS = true
 		var system_view_zoom = 40.0 / furthest_planet_distance * (planet_data[0].distance / 70)

@@ -619,6 +619,7 @@ func generate_rock(tile:Dictionary, p_i:Dictionary):
 			var crater_metal = tile.has("crater") and tile.crater.has("init_depth") and met == tile.crater.metal
 			if crater_metal:
 				tile.mining.current_deposit = {"met":met, "size":randi_range(4, 10), "progress":1}
+				break
 			elif game.met_info[met].min_depth < tile.depth - p_i.crust_start_depth and tile.depth - p_i.crust_start_depth < game.met_info[met].max_depth:
 				if randf() < 0.25 * aurora_mult / pow(game.met_info[met].rarity, 0.2):
 					tile.mining.current_deposit = {"met":met, "size":randi_range(4, 10), "progress":1}

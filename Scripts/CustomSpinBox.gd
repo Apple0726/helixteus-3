@@ -10,22 +10,27 @@ signal value_changed
 
 func _on_Up_pressed():
 	if editable:
-		var new_value:float
+		var new_value
 		if Input.is_action_pressed("shift"):
 			new_value = min(snapped(value + step * 10.0, step), max_value)
 		else:
 			new_value = min(snapped(value + step, step), max_value)
+		if is_integer:
+			new_value = int(new_value)
+			print(str(new_value))
 		text = str(new_value)
 		value = new_value
 		emit_signal("value_changed", new_value)
 
 func _on_Down_pressed():
 	if editable:
-		var new_value:float
+		var new_value
 		if Input.is_action_pressed("shift"):
 			new_value = max(snapped(value - step * 10.0, step), min_value)
 		else:
 			new_value = max(snapped(value - step, step), min_value)
+		if is_integer:
+			new_value = int(new_value)
 		text = str(new_value)
 		value = new_value
 		emit_signal("value_changed", new_value)
