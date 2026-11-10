@@ -4007,8 +4007,26 @@ func cancel_building():
 	for id in bldg_blueprints:
 		tiles[id]._on_Button_button_out()
 
+var settings_btn_position = 0
+
 func _on_Settings_mouse_entered():
 	show_tooltip(tr("SETTINGS") + " (P)")
+	if Settings.op_cursor:
+		var tween = create_tween().set_parallel()
+		settings_btn_position += 1
+		if settings_btn_position == 1:
+			tween.tween_property($Settings/Settings, "position", Vector2.ONE * 4.0, 0.5).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_CIRC)
+			tween.tween_property($Settings/Settings, "rotation", 4.0 * PI, 0.5).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_CIRC)
+		elif settings_btn_position == 2:
+			tween.tween_property($Settings/Settings, "position", Vector2(4.0, 684.0), 0.5).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_CIRC)
+			tween.tween_property($Settings/Settings, "rotation", 8.0 * PI, 0.5).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_CIRC)
+		elif settings_btn_position == 3:
+			tween.tween_property($Settings/Settings, "position", Vector2(1234.0, 684.0), 0.5).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_CIRC)
+			tween.tween_property($Settings/Settings, "rotation", 4.0 * PI, 0.5).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_CIRC)
+		elif settings_btn_position == 4:
+			tween.tween_property($Settings/Settings, "position", Vector2(1244.0, 4.0), 0.5).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_CIRC)
+			tween.tween_property($Settings/Settings, "rotation", 0.0, 0.5).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_CIRC)
+			settings_btn_position = 0
 
 func _on_Settings_mouse_exited():
 	hide_tooltip()

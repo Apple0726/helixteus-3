@@ -1,279 +1,393 @@
 [gd_scene format=3 uid="uid://blgeu8fsfvpi6"]
 
 [ext_resource type="Script" uid="uid://b8vxyycyol8r6" path="res://Scripts/SettingsPanel.gd" id="1_1rej2"]
+[ext_resource type="Theme" uid="uid://cp2u1kgj60ic" path="res://Resources/default_theme.tres" id="1_mphis"]
 [ext_resource type="PackedScene" uid="uid://c8jr3e5aiyj1n" path="res://Scenes/HelpText.tscn" id="2_lx04k"]
+[ext_resource type="Texture2D" uid="uid://dcvnyb0mloli2" path="res://Graphics/GUI/Panel.png" id="2_nlt2l"]
+[ext_resource type="Texture2D" uid="uid://baowebna7hgr5" path="res://Graphics/GUI/CloseButtonNormal.png" id="3_ixa8k"]
+[ext_resource type="Texture2D" uid="uid://c1vwn7p5uxu1r" path="res://Graphics/GUI/CloseButtonHover.png" id="4_m03oi"]
+[ext_resource type="PackedScene" uid="uid://1hq6qpr1oa3i" path="res://Scenes/AdvButton.tscn" id="5_m03oi"]
 
-[sub_resource type="LabelSettings" id="LabelSettings_0r7ov"]
-font_size = 18
+[sub_resource type="SystemFont" id="SystemFont_sxpbd"]
+font_names = PackedStringArray("Arial")
+multichannel_signed_distance_field = true
 
-[node name="Settings" type="Panel" unique_id=180707210]
+[sub_resource type="LabelSettings" id="LabelSettings_ixa8k"]
+font = SubResource("SystemFont_sxpbd")
+font_size = 24
+shadow_size = 2
+shadow_color = Color(0, 0, 0, 0.372549)
+shadow_offset = Vector2(2, 2)
+
+[sub_resource type="InputEventKey" id="InputEventKey_nsba8"]
+device = -1
+physical_keycode = 49
+unicode = 49
+
+[sub_resource type="Shortcut" id="Shortcut_mphis"]
+events = [SubResource("InputEventKey_nsba8")]
+
+[sub_resource type="InputEventKey" id="InputEventKey_r71ax"]
+device = -1
+physical_keycode = 50
+unicode = 50
+
+[sub_resource type="Shortcut" id="Shortcut_m03oi"]
+events = [SubResource("InputEventKey_r71ax")]
+
+[sub_resource type="InputEventKey" id="InputEventKey_4it63"]
+device = -1
+physical_keycode = 51
+unicode = 51
+
+[sub_resource type="Shortcut" id="Shortcut_a5vtj"]
+events = [SubResource("InputEventKey_4it63")]
+
+[sub_resource type="InputEventKey" id="InputEventKey_xx8it"]
+device = -1
+physical_keycode = 52
+unicode = 52
+
+[sub_resource type="Shortcut" id="Shortcut_t23b2"]
+events = [SubResource("InputEventKey_xx8it")]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_m03oi"]
+bg_color = Color(0.0509804, 0.0509804, 0.0509804, 1)
+border_width_left = 4
+border_width_top = 4
+border_color = Color(0.192157, 0.192157, 0.192157, 1)
+border_blend = true
+
+[node name="Settings" type="Control" unique_id=1730551417]
+layout_mode = 3
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -448.0
-offset_top = -288.0
-offset_right = 448.0
-offset_bottom = 288.0
+offset_left = -640.0
+offset_top = -360.0
+offset_right = -600.0
+offset_bottom = -320.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("1_mphis")
 script = ExtResource("1_1rej2")
+
+[node name="GUI" type="TextureRect" parent="." unique_id=1098361213]
+layout_mode = 0
+offset_left = 80.0
+offset_top = 52.0
+offset_right = 1204.0
+offset_bottom = 671.0
+texture = ExtResource("2_nlt2l")
+
+[node name="CloseButton" type="TextureButton" parent="." unique_id=1874296055]
+layout_mode = 0
+offset_left = 1136.0
+offset_top = 67.0
+offset_right = 1185.0
+offset_bottom = 116.0
+texture_normal = ExtResource("3_ixa8k")
+texture_hover = ExtResource("4_m03oi")
 
 [node name="Title" type="Label" parent="." unique_id=1688806520]
 layout_mode = 0
-offset_top = 12.0
-offset_right = 896.0
-offset_bottom = 68.0
+offset_left = 124.0
+offset_top = 76.0
+offset_right = 436.0
+offset_bottom = 109.5
 text = "SETTINGS"
-label_settings = SubResource("LabelSettings_0r7ov")
-horizontal_alignment = 1
-vertical_alignment = 1
+label_settings = SubResource("LabelSettings_ixa8k")
 
-[node name="TabContainer" type="TabContainer" parent="." unique_id=1973569208]
+[node name="TabBar" type="HBoxContainer" parent="." unique_id=668256283]
 layout_mode = 0
-offset_top = 60.0
-offset_right = 892.0
-offset_bottom = 576.0
-current_tab = 0
+offset_left = 164.0
+offset_top = 560.0
+offset_right = 1104.0
+offset_bottom = 598.0
+theme_override_constants/separation = 80
 
-[node name="SFX" type="TabBar" parent="TabContainer" unique_id=208608145]
+[node name="Sounds" parent="TabBar" unique_id=365304874 instance=ExtResource("5_m03oi")]
 layout_mode = 2
-metadata/_tab_index = 0
+size_flags_horizontal = 3
+shortcut = SubResource("Shortcut_mphis")
+shortcut_in_tooltip = false
+button_text = "SFX"
 
-[node name="Master" type="HSlider" parent="TabContainer/SFX" unique_id=1740914131]
+[node name="Graphics" parent="TabBar" unique_id=1960317391 instance=ExtResource("5_m03oi")]
+layout_mode = 2
+size_flags_horizontal = 3
+shortcut = SubResource("Shortcut_m03oi")
+shortcut_in_tooltip = false
+button_text = "GRAPHICS"
+
+[node name="Game" parent="TabBar" unique_id=1447094820 instance=ExtResource("5_m03oi")]
+layout_mode = 2
+size_flags_horizontal = 3
+shortcut = SubResource("Shortcut_a5vtj")
+shortcut_in_tooltip = false
+button_text = "GAME"
+
+[node name="Misc" parent="TabBar" unique_id=1524138830 instance=ExtResource("5_m03oi")]
+layout_mode = 2
+size_flags_horizontal = 3
+shortcut = SubResource("Shortcut_t23b2")
+shortcut_in_tooltip = false
+button_text = "MISCELLANEOUS"
+
+[node name="Panel" type="Panel" parent="." unique_id=984124862]
 layout_mode = 0
-offset_left = 64.0
-offset_top = 27.0
-offset_right = 384.0
-offset_bottom = 91.0
+offset_left = 144.0
+offset_top = 156.0
+offset_right = 1120.0
+offset_bottom = 560.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_m03oi")
+
+[node name="Sounds" type="Control" parent="Panel" unique_id=1875977112]
+visible = false
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="Master" type="HSlider" parent="Panel/Sounds" unique_id=960760620]
+layout_mode = 0
+offset_left = 336.0
+offset_top = 40.0
+offset_right = 640.0
+offset_bottom = 104.0
 min_value = -40.0
 max_value = 0.0
 
-[node name="Label" type="Label" parent="TabContainer/SFX/Master" unique_id=1230008698]
+[node name="Label" type="Label" parent="Panel/Sounds/Master" unique_id=722781796]
 layout_mode = 0
 offset_right = 320.0
 offset_bottom = 24.0
 text = "MASTER"
+horizontal_alignment = 1
 
-[node name="Music" type="HSlider" parent="TabContainer/SFX" unique_id=251406210]
+[node name="Music" type="HSlider" parent="Panel/Sounds" unique_id=557875454]
 layout_mode = 0
-offset_left = 64.0
-offset_top = 91.0
-offset_right = 384.0
-offset_bottom = 155.0
+offset_left = 336.0
+offset_top = 104.0
+offset_right = 640.0
+offset_bottom = 168.0
 min_value = -40.0
 max_value = 0.0
 
-[node name="Label" type="Label" parent="TabContainer/SFX/Music" unique_id=2127652033]
+[node name="Label" type="Label" parent="Panel/Sounds/Music" unique_id=1201581659]
 layout_mode = 0
 offset_right = 320.0
 offset_bottom = 24.0
 text = "MUSIC"
+horizontal_alignment = 1
 
-[node name="SFX" type="HSlider" parent="TabContainer/SFX" unique_id=654219151]
+[node name="SFX" type="HSlider" parent="Panel/Sounds" unique_id=48394955]
 layout_mode = 0
-offset_left = 64.0
-offset_top = 155.0
-offset_right = 384.0
-offset_bottom = 219.0
+offset_left = 336.0
+offset_top = 168.0
+offset_right = 640.0
+offset_bottom = 232.0
 min_value = -40.0
 max_value = 0.0
 
-[node name="Label" type="Label" parent="TabContainer/SFX/SFX" unique_id=197580360]
+[node name="Label" type="Label" parent="Panel/Sounds/SFX" unique_id=1149785170]
 layout_mode = 0
 offset_right = 320.0
 offset_bottom = 24.0
 text = "SFX"
+horizontal_alignment = 1
 
-[node name="MusicPitch" type="CheckButton" parent="TabContainer/SFX" unique_id=269725723]
+[node name="MusicPitch" type="CheckButton" parent="Panel/Sounds" unique_id=350775559]
 layout_mode = 0
-offset_left = 484.0
-offset_top = 27.0
-offset_right = 818.0
-offset_bottom = 67.0
+offset_left = 592.0
+offset_top = 276.0
+offset_right = 660.0
+offset_bottom = 316.0
 
-[node name="MusicPitchLabel" parent="TabContainer/SFX" unique_id=925166449 instance=ExtResource("2_lx04k")]
+[node name="MusicPitchLabel" parent="Panel/Sounds" unique_id=1511434500 instance=ExtResource("2_lx04k")]
 layout_mode = 0
-offset_left = 485.0
-offset_top = 35.0
-offset_right = 768.0
-offset_bottom = 65.0
+offset_left = 336.0
+offset_top = 284.0
+offset_right = 619.0
+offset_bottom = 314.0
 text = "TIME_SPEED_AFFECTS_PITCH [img]Graphics/Icons/help.png[/img]"
 label_text = "TIME_SPEED_AFFECTS_PITCH"
 help_text = "TIME_SPEED_AFFECTS_PITCH_DESC"
 
-[node name="GRAPHICS" type="TabBar" parent="TabContainer" unique_id=294681791]
-visible = false
-layout_mode = 2
-metadata/_tab_index = 1
+[node name="Graphics" type="Control" parent="Panel" unique_id=1768096875]
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
 
-[node name="Vsync" type="CheckButton" parent="TabContainer/GRAPHICS" unique_id=1123561515]
+[node name="Vsync" type="CheckButton" parent="Panel/Graphics" unique_id=274550171]
 layout_mode = 0
-offset_left = 448.0
-offset_top = 43.0
-offset_right = 772.0
-offset_bottom = 83.0
+offset_left = 556.0
+offset_top = 32.0
+offset_right = 880.0
+offset_bottom = 72.0
 text = "Vsync (requires restart)"
 
-[node name="Fullscreen" type="CheckButton" parent="TabContainer/GRAPHICS" unique_id=1370547237]
+[node name="Fullscreen" type="CheckButton" parent="Panel/Graphics" unique_id=1918333408]
 layout_mode = 0
-offset_left = 448.0
-offset_top = 107.0
-offset_right = 772.0
-offset_bottom = 147.0
+offset_left = 556.0
+offset_top = 88.0
+offset_right = 880.0
+offset_bottom = 128.0
 
-[node name="FPS" type="Control" parent="TabContainer/GRAPHICS" unique_id=682603999]
+[node name="FPS" type="Control" parent="Panel/Graphics" unique_id=1718530343]
 anchors_preset = 0
 offset_left = 168.0
 offset_top = 12.0
 offset_right = 208.0
 offset_bottom = 52.0
 
-[node name="Label" type="Label" parent="TabContainer/GRAPHICS/FPS" unique_id=1037318880]
+[node name="Label" type="Label" parent="Panel/Graphics/FPS" unique_id=671858322]
 layout_mode = 0
 offset_left = 5.68961
-offset_top = 39.129
+offset_top = 28.129002
 offset_right = 87.69
-offset_bottom = 63.129
+offset_bottom = 52.129
 text = "MAX_FPS"
 
-[node name="Label2" type="Label" parent="TabContainer/GRAPHICS/FPS" unique_id=1974072728]
+[node name="Label2" type="Label" parent="Panel/Graphics/FPS" unique_id=1016983695]
 layout_mode = 0
 offset_left = 152.0
-offset_top = 64.0
+offset_top = 53.0
 offset_right = 204.0
-offset_bottom = 88.0
+offset_bottom = 77.0
 text = "60"
 
-[node name="FPS" type="HSlider" parent="TabContainer/GRAPHICS/FPS" unique_id=1231743258]
+[node name="FPS" type="HSlider" parent="Panel/Graphics/FPS" unique_id=946124935]
 layout_mode = 0
 offset_left = -85.954
-offset_top = 68.367
-offset_right = 134.046
-offset_bottom = 84.367
+offset_top = 57.366997
+offset_right = 134.04599
+offset_bottom = 73.367
 min_value = 8.0
 max_value = 144.0
 value = 60.0
 rounded = true
 
-[node name="30FPS" type="Button" parent="TabContainer/GRAPHICS/FPS" unique_id=1901919421]
+[node name="30FPS" type="Button" parent="Panel/Graphics/FPS" unique_id=1534392834]
 layout_mode = 0
 offset_left = -96.0
-offset_top = 109.0
+offset_top = 88.0
 offset_right = -24.0
-offset_bottom = 149.0
+offset_bottom = 121.0
 text = "30 FPS"
 
-[node name="60FPS" type="Button" parent="TabContainer/GRAPHICS/FPS" unique_id=1466271214]
+[node name="60FPS" type="Button" parent="Panel/Graphics/FPS" unique_id=2057618256]
 layout_mode = 0
 offset_left = 8.0
-offset_top = 109.0
-offset_right = 76.0
-offset_bottom = 149.0
+offset_top = 88.0
+offset_right = 78.0
+offset_bottom = 121.0
 text = "60 FPS"
 
-[node name="120FPS" type="Button" parent="TabContainer/GRAPHICS/FPS" unique_id=1253926130]
+[node name="120FPS" type="Button" parent="Panel/Graphics/FPS" unique_id=1024270548]
 layout_mode = 0
 offset_left = 104.0
-offset_top = 109.0
+offset_top = 88.0
 offset_right = 184.0
-offset_bottom = 149.0
+offset_bottom = 121.0
 text = "120 FPS"
 
-[node name="SpaceLOD" type="Control" parent="TabContainer/GRAPHICS" unique_id=523514567]
+[node name="SpaceLOD" type="Control" parent="Panel/Graphics" unique_id=809191386]
 anchors_preset = 0
 offset_right = 40.0
 offset_bottom = 40.0
 
-[node name="StaticSpaceLODLabel" parent="TabContainer/GRAPHICS/SpaceLOD" unique_id=1046122720 instance=ExtResource("2_lx04k")]
+[node name="StaticSpaceLODLabel" parent="Panel/Graphics/SpaceLOD" unique_id=1322452511 instance=ExtResource("2_lx04k")]
 layout_mode = 0
 offset_left = 64.0
-offset_top = 181.0
+offset_top = 170.0
 offset_right = 384.0
-offset_bottom = 221.0
+offset_bottom = 210.0
 text = "[center]STATIC_SPACE_BACKGROUND_LOD [img]Graphics/Icons/help.png[/img][/center]"
 label_text = "STATIC_SPACE_BACKGROUND_LOD"
 help_text = "STATIC_SPACE_BACKGROUND_LOD_DESC"
 align = 1
 
-[node name="StaticSpaceLOD" type="HSlider" parent="TabContainer/GRAPHICS/SpaceLOD" unique_id=1613042967]
+[node name="StaticSpaceLOD" type="HSlider" parent="Panel/Graphics/SpaceLOD" unique_id=223756793]
 layout_mode = 0
 offset_left = 82.046
-offset_top = 225.0
+offset_top = 214.0
 offset_right = 302.046
-offset_bottom = 241.0
+offset_bottom = 230.0
 max_value = 30.0
 value = 15.0
 
-[node name="StaticSpaceLODValue" type="Label" parent="TabContainer/GRAPHICS/SpaceLOD" unique_id=1933895324]
+[node name="StaticSpaceLODValue" type="Label" parent="Panel/Graphics/SpaceLOD" unique_id=174191569]
 layout_mode = 0
 offset_left = 320.0
-offset_top = 221.0
+offset_top = 210.0
 offset_right = 372.0
-offset_bottom = 247.0
+offset_bottom = 236.0
 text = "15"
 
-[node name="DynamicSpaceLODLabel" parent="TabContainer/GRAPHICS/SpaceLOD" unique_id=965151972 instance=ExtResource("2_lx04k")]
+[node name="DynamicSpaceLODLabel" parent="Panel/Graphics/SpaceLOD" unique_id=1256405697 instance=ExtResource("2_lx04k")]
 layout_mode = 0
 offset_left = 64.0
-offset_top = 269.0
+offset_top = 258.0
 offset_right = 384.0
-offset_bottom = 309.0
+offset_bottom = 298.0
 text = "[center]DYNAMIC_SPACE_BACKGROUND_LOD [img]Graphics/Icons/help.png[/img][/center]"
 label_text = "DYNAMIC_SPACE_BACKGROUND_LOD"
 help_text = "DYNAMIC_SPACE_BACKGROUND_LOD_DESC"
 align = 1
 
-[node name="DynamicSpaceLOD" type="HSlider" parent="TabContainer/GRAPHICS/SpaceLOD" unique_id=715450667]
+[node name="DynamicSpaceLOD" type="HSlider" parent="Panel/Graphics/SpaceLOD" unique_id=803126417]
 layout_mode = 0
 offset_left = 82.046
-offset_top = 309.0
+offset_top = 298.0
 offset_right = 302.046
-offset_bottom = 325.0
+offset_bottom = 314.0
 max_value = 20.0
 value = 8.0
 
-[node name="DynamicSpaceLODValue" type="Label" parent="TabContainer/GRAPHICS/SpaceLOD" unique_id=1729449388]
+[node name="DynamicSpaceLODValue" type="Label" parent="Panel/Graphics/SpaceLOD" unique_id=1442145200]
 layout_mode = 0
 offset_left = 320.0
-offset_top = 305.0
+offset_top = 294.0
 offset_right = 372.0
-offset_bottom = 331.0
+offset_bottom = 320.0
 text = "8"
 
-[node name="EnableShaders" type="CheckButton" parent="TabContainer/GRAPHICS" unique_id=336419439]
+[node name="EnableShaders" type="CheckButton" parent="Panel/Graphics" unique_id=1864853408]
 layout_mode = 0
-offset_left = 492.0
-offset_top = 167.0
-offset_right = 772.0
-offset_bottom = 207.0
+offset_left = 600.0
+offset_top = 144.0
+offset_right = 880.0
+offset_bottom = 184.0
 
-[node name="EnableShadersLabel" parent="TabContainer/GRAPHICS" unique_id=462668461 instance=ExtResource("2_lx04k")]
+[node name="EnableShadersLabel" parent="Panel/Graphics" unique_id=1660393604 instance=ExtResource("2_lx04k")]
 layout_mode = 0
-offset_left = 453.0
-offset_top = 175.0
-offset_right = 692.0
-offset_bottom = 215.0
+offset_left = 556.0
+offset_top = 152.0
+offset_right = 795.0
+offset_bottom = 192.0
 text = "ENABLE_SHADERS [img]Graphics/Icons/help.png[/img]"
 label_text = "ENABLE_SHADERS"
 help_text = "ENABLE_SHADERS_DESC"
 
-[node name="AutosaveLight" type="CheckButton" parent="TabContainer/GRAPHICS" unique_id=1345007580]
+[node name="AutosaveLight" type="CheckButton" parent="Panel/Graphics" unique_id=1834859440]
 layout_mode = 0
-offset_left = 448.0
-offset_top = 227.0
-offset_right = 772.0
-offset_bottom = 267.0
+offset_left = 556.0
+offset_top = 200.0
+offset_right = 880.0
+offset_bottom = 240.0
 text = "AUTOSAVE_LIGHT"
 
-[node name="Screenshake" type="CheckButton" parent="TabContainer/GRAPHICS" unique_id=1064036076]
+[node name="Screenshake" type="CheckBox" parent="Panel/Graphics" unique_id=264865862]
 layout_mode = 0
-offset_left = 448.0
-offset_top = 287.0
-offset_right = 772.0
-offset_bottom = 327.0
+offset_left = 556.0
+offset_top = 284.0
+offset_right = 880.0
+offset_bottom = 324.0
 text = "ENABLE_SCREEN_SHAKE"
 
-[node name="DisplayRes" type="OptionButton" parent="TabContainer/GRAPHICS" unique_id=1465887640]
+[node name="DisplayRes" type="OptionButton" parent="Panel/Graphics" unique_id=1427769116]
 visible = false
 layout_mode = 0
 offset_left = 140.0
@@ -281,7 +395,7 @@ offset_top = 87.0
 offset_right = 272.0
 offset_bottom = 116.0
 
-[node name="Label" type="Label" parent="TabContainer/GRAPHICS" unique_id=667759132]
+[node name="Label" type="Label" parent="Panel/Graphics" unique_id=850700389]
 visible = false
 layout_mode = 0
 offset_left = 72.0
@@ -290,7 +404,7 @@ offset_right = 332.0
 offset_bottom = 74.0
 text = "Display resolution"
 
-[node name="KeepWindowSize" type="CheckBox" parent="TabContainer/GRAPHICS" unique_id=1031559161]
+[node name="KeepWindowSize" type="CheckBox" parent="Panel/Graphics" unique_id=1836832770]
 visible = false
 layout_mode = 0
 offset_left = 108.0
@@ -299,208 +413,172 @@ offset_right = 294.0
 offset_bottom = 158.0
 text = "Keep window size"
 
-[node name="GAME" type="TabBar" parent="TabContainer" unique_id=523582965]
+[node name="Game" type="Control" parent="Panel" unique_id=24318487]
 visible = false
-layout_mode = 2
-metadata/_tab_index = 2
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
 
-[node name="AutosellMinerals" type="CheckButton" parent="TabContainer/GAME" unique_id=24641029]
+[node name="AutosellMinerals" type="CheckBox" parent="Panel/Game" unique_id=2055470870]
 layout_mode = 0
-offset_left = 56.0
-offset_top = 29.0
-offset_right = 400.0
-offset_bottom = 69.0
+offset_left = 556.0
+offset_top = 32.0
+offset_right = 836.0
+offset_bottom = 72.0
+text = "AUTOSELL_MINERALS"
 
-[node name="AutosellMineralsLabel" parent="TabContainer/GAME" unique_id=2087312894 instance=ExtResource("2_lx04k")]
+[node name="Autosave" type="HSlider" parent="Panel/Game" unique_id=1441287747]
 layout_mode = 0
-offset_left = 64.0
-offset_top = 37.0
+offset_left = 80.0
+offset_top = 56.0
 offset_right = 320.0
-offset_bottom = 67.0
-text = "AUTOSELL_MINERALS [img]Graphics/Icons/help.png[/img]"
-label_text = "AUTOSELL_MINERALS"
-help_text = "AUTOSELL_MINERALS_DESC"
-
-[node name="Autosave" type="HSlider" parent="TabContainer/GAME" unique_id=1392513466]
-layout_mode = 0
-offset_left = 504.0
-offset_top = 71.0
-offset_right = 744.0
-offset_bottom = 111.0
+offset_bottom = 96.0
 min_value = 1.0
 max_value = 60.0
 value = 30.0
 rounded = true
 
-[node name="BackupIntervalSlider" type="HSlider" parent="TabContainer/GAME" unique_id=410461669]
+[node name="BackupIntervalSlider" type="HSlider" parent="Panel/Game" unique_id=1659214408]
 layout_mode = 0
-offset_left = 504.0
-offset_top = 163.0
-offset_right = 744.0
-offset_bottom = 203.0
+offset_left = 80.0
+offset_top = 142.0
+offset_right = 320.0
+offset_bottom = 182.0
 min_value = 1.0
 max_value = 60.0
 value = 5.0
 rounded = true
 
-[node name="MaxBackupsSlider" type="HSlider" parent="TabContainer/GAME" unique_id=299000524]
+[node name="MaxBackupsSlider" type="HSlider" parent="Panel/Game" unique_id=601378071]
 layout_mode = 0
-offset_left = 504.0
-offset_top = 251.0
-offset_right = 744.0
-offset_bottom = 291.0
+offset_left = 80.0
+offset_top = 230.0
+offset_right = 320.0
+offset_bottom = 270.0
 value = 20.0
 rounded = true
 
-[node name="Label2" type="Label" parent="TabContainer/GAME" unique_id=652321819]
+[node name="Label2" type="Label" parent="Panel/Game" unique_id=365618135]
 layout_mode = 0
-offset_left = 472.0
-offset_top = 37.0
-offset_right = 796.0
-offset_bottom = 63.0
+offset_left = 48.0
+offset_top = 36.0
+offset_right = 372.0
+offset_bottom = 62.0
 text = "AUTOSAVE_INTERVAL"
 horizontal_alignment = 1
 
-[node name="BackupIntervalLabel" type="Label" parent="TabContainer/GAME" unique_id=608686215]
+[node name="BackupIntervalLabel" type="Label" parent="Panel/Game" unique_id=948232529]
 layout_mode = 0
-offset_left = 472.0
-offset_top = 127.0
-offset_right = 796.0
-offset_bottom = 153.0
+offset_left = 48.0
+offset_top = 120.0
+offset_right = 372.0
+offset_bottom = 146.0
 text = "BACKUP_INTERVAL"
 horizontal_alignment = 1
 
-[node name="MaxBackupsLabel" type="Label" parent="TabContainer/GAME" unique_id=1378291797]
+[node name="MaxBackupsLabel" type="Label" parent="Panel/Game" unique_id=77325667]
 layout_mode = 0
-offset_left = 472.0
-offset_top = 215.0
-offset_right = 796.0
-offset_bottom = 241.0
+offset_left = 48.0
+offset_top = 208.0
+offset_right = 372.0
+offset_bottom = 234.0
 text = "MAX_BACKUPS"
 horizontal_alignment = 1
 
-[node name="Label3" type="Label" parent="TabContainer/GAME" unique_id=842430868]
+[node name="Label3" type="Label" parent="Panel/Game" unique_id=1490875052]
 layout_mode = 0
-offset_left = 752.0
-offset_top = 83.0
-offset_right = 864.0
-offset_bottom = 109.0
+offset_left = 328.0
+offset_top = 64.0
+offset_right = 440.0
+offset_bottom = 90.0
 text = "30 s"
 
-[node name="BackupIntervalValue" type="Label" parent="TabContainer/GAME" unique_id=1471897477]
+[node name="BackupIntervalValue" type="Label" parent="Panel/Game" unique_id=897681391]
 layout_mode = 0
-offset_left = 752.0
-offset_top = 171.0
-offset_right = 860.0
-offset_bottom = 197.0
+offset_left = 328.0
+offset_top = 150.0
+offset_right = 436.0
+offset_bottom = 176.0
 text = "5 minutes"
 
-[node name="MaxBackupsValue" type="Label" parent="TabContainer/GAME" unique_id=291458341]
+[node name="MaxBackupsValue" type="Label" parent="Panel/Game" unique_id=677051294]
 layout_mode = 0
-offset_left = 752.0
-offset_top = 259.0
-offset_right = 860.0
-offset_bottom = 285.0
+offset_left = 328.0
+offset_top = 238.0
+offset_right = 436.0
+offset_bottom = 264.0
 text = "20"
 
-[node name="BackupWithMinimalInterruption" type="CheckBox" parent="TabContainer/GAME" unique_id=1898836278]
+[node name="BackupWithMinimalInterruption" type="CheckBox" parent="Panel/Game" unique_id=1877642794]
 layout_mode = 0
-offset_left = 468.0
-offset_top = 313.0
-offset_right = 855.0
-offset_bottom = 353.0
+offset_left = 68.0
+offset_top = 316.0
+offset_right = 455.0
+offset_bottom = 356.0
 text = "BACKUP_WITH_MINIMAL_INTERRUPTION"
 
-[node name="MISC" type="TabBar" parent="TabContainer" unique_id=739482139]
+[node name="Misc" type="Control" parent="Panel" unique_id=393496529]
 visible = false
-layout_mode = 2
-metadata/_tab_index = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
 
-[node name="OPCursor" type="CheckBox" parent="TabContainer/MISC" unique_id=1003290968]
+[node name="OPCursor" type="CheckButton" parent="Panel/Misc" unique_id=160545759]
 layout_mode = 0
-offset_left = 576.0
-offset_top = 43.0
-offset_right = 695.0
-offset_bottom = 83.0
+offset_left = 404.0
+offset_top = 220.0
+offset_right = 602.0
+offset_bottom = 260.0
 text = "op cursor"
 
-[node name="Discord" type="CheckBox" parent="TabContainer/MISC" unique_id=587381444]
+[node name="ShowFPS" type="CheckButton" parent="Panel/Misc" unique_id=1029279478]
 layout_mode = 0
-offset_left = 139.0
-offset_top = 165.0
-offset_right = 337.0
-offset_bottom = 205.0
-button_pressed = true
-text = "Discord Rich Presence"
-
-[node name="ShowFPS" type="CheckBox" parent="TabContainer/MISC" unique_id=470689829]
-layout_mode = 0
-offset_left = 564.0
-offset_top = 165.0
-offset_right = 762.0
-offset_bottom = 205.0
+offset_left = 404.0
+offset_top = 160.0
+offset_right = 602.0
+offset_bottom = 200.0
 text = "Show FPS"
 
-[node name="HBoxContainer2" type="HBoxContainer" parent="TabContainer/MISC" unique_id=1788890095]
+[node name="HBoxContainer" type="HBoxContainer" parent="Panel/Misc" unique_id=200554180]
 layout_mode = 0
-offset_left = 72.0
-offset_top = 83.0
-offset_right = 401.0
-offset_bottom = 123.0
-alignment = 1
+offset_left = 328.0
+offset_top = 76.0
+offset_right = 716.0
+offset_bottom = 116.0
+theme_override_constants/separation = 31
 
-[node name="Standard" type="CheckBox" parent="TabContainer/MISC/HBoxContainer2" unique_id=743140207]
+[node name="Standard" type="CheckBox" parent="Panel/Misc/HBoxContainer" unique_id=346201746]
 layout_mode = 2
 text = "STANDARD"
 
-[node name="SI" type="CheckBox" parent="TabContainer/MISC/HBoxContainer2" unique_id=1756052503]
+[node name="SI" type="CheckBox" parent="Panel/Misc/HBoxContainer" unique_id=16369808]
+custom_minimum_size = Vector2(60, 0)
 layout_mode = 2
 text = "SI"
 
-[node name="Scientific" type="CheckBox" parent="TabContainer/MISC/HBoxContainer2" unique_id=2077417914]
+[node name="Scientific" type="CheckBox" parent="Panel/Misc/HBoxContainer" unique_id=146981715]
 layout_mode = 2
 text = "SCIENTIFIC"
 
-[node name="Difficulty2" type="Label" parent="TabContainer/MISC" unique_id=497507029]
+[node name="LargeNumberNotation" type="Label" parent="Panel/Misc" unique_id=1507285627]
 layout_mode = 0
-offset_left = 104.0
-offset_top = 50.0
-offset_right = 370.0
-offset_bottom = 76.0
+offset_left = 328.0
+offset_top = 40.0
+offset_right = 688.0
+offset_bottom = 66.0
 mouse_filter = 1
 text = "LARGE_NUMBER_NOTATION"
 horizontal_alignment = 1
 
-[connection signal="value_changed" from="TabContainer/SFX/Master" to="." method="_on_Main_audio_value_changed"]
-[connection signal="value_changed" from="TabContainer/SFX/Music" to="." method="_on_Music_value_changed"]
-[connection signal="value_changed" from="TabContainer/SFX/SFX" to="." method="_on_Sound_Effects_value_changed"]
-[connection signal="toggled" from="TabContainer/SFX/MusicPitch" to="." method="_on_MusicPitch_toggled"]
-[connection signal="toggled" from="TabContainer/GRAPHICS/Vsync" to="." method="_on_Vsync_toggled"]
-[connection signal="toggled" from="TabContainer/GRAPHICS/Fullscreen" to="." method="_on_Fullscreen_toggled"]
-[connection signal="value_changed" from="TabContainer/GRAPHICS/FPS/FPS" to="." method="_on_FPS_value_changed"]
-[connection signal="pressed" from="TabContainer/GRAPHICS/FPS/30FPS" to="." method="_on_fps_pressed" binds= [30]]
-[connection signal="pressed" from="TabContainer/GRAPHICS/FPS/60FPS" to="." method="_on_fps_pressed" binds= [60]]
-[connection signal="pressed" from="TabContainer/GRAPHICS/FPS/120FPS" to="." method="_on_fps_pressed" binds= [120]]
-[connection signal="value_changed" from="TabContainer/GRAPHICS/SpaceLOD/StaticSpaceLOD" to="." method="_on_static_space_lod_value_changed"]
-[connection signal="value_changed" from="TabContainer/GRAPHICS/SpaceLOD/DynamicSpaceLOD" to="." method="_on_dynamic_space_lod_value_changed"]
-[connection signal="toggled" from="TabContainer/GRAPHICS/EnableShaders" to="." method="_on_EnableShaders_toggled"]
-[connection signal="toggled" from="TabContainer/GRAPHICS/AutosaveLight" to="." method="_on_AutosaveLight_toggled"]
-[connection signal="toggled" from="TabContainer/GRAPHICS/Screenshake" to="." method="_on_Screenshake_toggled"]
-[connection signal="item_selected" from="TabContainer/GRAPHICS/DisplayRes" to="." method="_on_DisplayRes_item_selected"]
-[connection signal="toggled" from="TabContainer/GAME/AutosellMinerals" to="." method="_on_AutosellMinerals_toggled"]
-[connection signal="value_changed" from="TabContainer/GAME/Autosave" to="." method="_on_Autosave_value_changed"]
-[connection signal="value_changed" from="TabContainer/GAME/BackupIntervalSlider" to="." method="_on_backup_interval_slider_value_changed"]
-[connection signal="value_changed" from="TabContainer/GAME/MaxBackupsSlider" to="." method="_on_max_backups_slider_value_changed"]
-[connection signal="toggled" from="TabContainer/GAME/BackupWithMinimalInterruption" to="." method="_on_backup_with_minimal_interruption_toggled"]
-[connection signal="mouse_entered" from="TabContainer/MISC/OPCursor" to="." method="_on_OPCursor_mouse_entered"]
-[connection signal="mouse_exited" from="TabContainer/MISC/OPCursor" to="." method="_on_OPCursor_mouse_exited"]
-[connection signal="toggled" from="TabContainer/MISC/OPCursor" to="." method="_on_OPCursor_toggled"]
-[connection signal="toggled" from="TabContainer/MISC/Discord" to="." method="_on_discord_toggled"]
-[connection signal="toggled" from="TabContainer/MISC/ShowFPS" to="." method="_on_show_fps_toggled"]
-[connection signal="mouse_entered" from="TabContainer/MISC/HBoxContainer2/Standard" to="." method="_on_Standard_mouse_entered"]
-[connection signal="mouse_exited" from="TabContainer/MISC/HBoxContainer2/Standard" to="." method="_on_mouse_exited"]
-[connection signal="pressed" from="TabContainer/MISC/HBoxContainer2/Standard" to="." method="_on_Standard_pressed"]
-[connection signal="mouse_entered" from="TabContainer/MISC/HBoxContainer2/SI" to="." method="_on_SI_mouse_entered"]
-[connection signal="mouse_exited" from="TabContainer/MISC/HBoxContainer2/SI" to="." method="_on_mouse_exited"]
-[connection signal="pressed" from="TabContainer/MISC/HBoxContainer2/SI" to="." method="_on_SI_pressed"]
-[connection signal="pressed" from="TabContainer/MISC/HBoxContainer2/Scientific" to="." method="_on_Scientific_pressed"]
+[connection signal="mouse_entered" from="TabBar/Sounds" to="." method="show_KBS_tooltip" binds= ["1"]]
+[connection signal="mouse_exited" from="TabBar/Sounds" to="." method="_on_mouse_exited"]
+[connection signal="pressed" from="TabBar/Sounds" to="." method="_on_sounds_pressed"]
+[connection signal="mouse_entered" from="TabBar/Graphics" to="." method="show_KBS_tooltip" binds= ["2"]]
+[connection signal="mouse_exited" from="TabBar/Graphics" to="." method="_on_mouse_exited"]
+[connection signal="pressed" from="TabBar/Graphics" to="." method="_on_graphics_pressed"]
+[connection signal="mouse_entered" from="TabBar/Game" to="." method="show_KBS_tooltip" binds= ["3"]]
+[connection signal="mouse_exited" from="TabBar/Game" to="." method="_on_mouse_exited"]
+[connection signal="pressed" from="TabBar/Game" to="." method="_on_game_pressed"]
+[connection signal="mouse_entered" from="TabBar/Misc" to="." method="show_KBS_tooltip" binds= ["4"]]
+[connection signal="mouse_exited" from="TabBar/Misc" to="." method="_on_mouse_exited"]
+[connection signal="pressed" from="TabBar/Misc" to="." method="_on_misc_pressed"]

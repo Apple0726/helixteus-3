@@ -17,7 +17,6 @@ func _on_Up_pressed():
 			new_value = min(snapped(value + step, step), max_value)
 		if is_integer:
 			new_value = int(new_value)
-			print(str(new_value))
 		text = str(new_value)
 		value = new_value
 		emit_signal("value_changed", new_value)

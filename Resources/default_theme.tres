@@ -1,5 +1,8 @@
 [gd_resource type="Theme" format=3 uid="uid://cp2u1kgj60ic"]
 
+[ext_resource type="Texture2D" uid="uid://di1hdxvlk2a3x" path="res://Graphics/Buttons/CheckboxChecked.svg" id="1_ot8jh"]
+[ext_resource type="Texture2D" uid="uid://ct2rjsseglwlf" path="res://Graphics/Buttons/CheckboxUnhecked.svg" id="2_8fd2c"]
+
 [sub_resource type="SystemFont" id="SystemFont_xvdaj"]
 font_names = PackedStringArray("Sans-Serif")
 subpixel_positioning = 0
@@ -85,17 +88,13 @@ shadow_offset = Vector2(1, 1)
 
 [sub_resource type="StyleBoxEmpty" id="9"]
 
-[sub_resource type="StyleBoxFlat" id="10"]
-content_margin_left = 8.0
-bg_color = Color(1, 1, 1, 0)
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_xx8it"]
 
-[sub_resource type="StyleBoxFlat" id="11"]
-content_margin_left = 8.0
-bg_color = Color(1, 1, 1, 0.227451)
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_4it63"]
 
-[sub_resource type="StyleBoxFlat" id="12"]
-content_margin_left = 8.0
-bg_color = Color(1, 1, 1, 0)
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_nsba8"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_r71ax"]
 
 [sub_resource type="SystemFont" id="SystemFont_ew3ep"]
 fallbacks = Array[Font]([SubResource("SystemFont_xvdaj")])
@@ -269,6 +268,7 @@ Button/fonts/font = SubResource("SystemFont_c5eyb")
 Button/styles/disabled = SubResource("StyleBoxFlat_78575")
 Button/styles/focus = SubResource("StyleBoxFlat_ab6o6")
 Button/styles/hover = SubResource("StyleBoxFlat_ac0dv")
+Button/styles/hover_pressed = SubResource("StyleBoxFlat_ac0dv")
 Button/styles/normal = SubResource("StyleBoxFlat_tgbmf")
 Button/styles/pressed = SubResource("StyleBoxFlat_cxevd")
 CheckBox/colors/font_color = Color(1, 1, 1, 1)
@@ -278,34 +278,20 @@ CheckBox/colors/font_color_hover_pressed = Color(1, 1, 1, 1)
 CheckBox/colors/font_color_pressed = Color(1, 1, 1, 1)
 CheckBox/constants/h_separation = 15
 CheckBox/fonts/font = SubResource("SystemFont_c5eyb")
-CheckBox/icons/checked = null
+CheckBox/icons/checked = ExtResource("1_ot8jh")
 CheckBox/icons/radio_checked = null
 CheckBox/icons/radio_unchecked = null
-CheckBox/icons/unchecked = null
+CheckBox/icons/unchecked = ExtResource("2_8fd2c")
 CheckBox/styles/disabled = null
 CheckBox/styles/focus = SubResource("5")
 CheckBox/styles/hover = SubResource("6")
 CheckBox/styles/hover_pressed = SubResource("7")
 CheckBox/styles/normal = SubResource("8")
 CheckBox/styles/pressed = SubResource("9")
-CheckButton/colors/font_color = Color(1, 1, 1, 1)
-CheckButton/colors/font_color_disabled = Color(0.32549, 0.32549, 0.32549, 1)
-CheckButton/colors/font_color_hover = Color(1, 1, 1, 1)
-CheckButton/colors/font_color_hover_pressed = Color(1, 1, 1, 1)
-CheckButton/colors/font_color_pressed = Color(1, 1, 1, 1)
-CheckButton/constants/check_vadjust = 0
-CheckButton/constants/hseparation = 4
-CheckButton/fonts/font = SubResource("SystemFont_c5eyb")
-CheckButton/icons/off = null
-CheckButton/icons/off_disabled = null
-CheckButton/icons/on = null
-CheckButton/icons/on_disabled = null
-CheckButton/styles/disabled = null
-CheckButton/styles/focus = null
-CheckButton/styles/hover = SubResource("10")
-CheckButton/styles/hover_pressed = SubResource("11")
-CheckButton/styles/normal = SubResource("12")
-CheckButton/styles/pressed = SubResource("10")
+CheckButton/styles/hover = SubResource("StyleBoxEmpty_xx8it")
+CheckButton/styles/hover_pressed = SubResource("StyleBoxEmpty_4it63")
+CheckButton/styles/normal = SubResource("StyleBoxEmpty_nsba8")
+CheckButton/styles/pressed = SubResource("StyleBoxEmpty_r71ax")
 ColorPicker/constants/h_width = 30
 ColorPicker/constants/label_width = 10
 ColorPicker/constants/margin = 4

@@ -2,7 +2,7 @@
     "en": {
         "lines": 1640,
         "words": 11566,
-        "chars": 70418,
+        "chars": 70427,
         "name": "English"
     },
     "fr": {
@@ -18,9 +18,9 @@
         "name": "Italiano"
     },
     "zh": {
-        "lines": 1518,
-        "words": 1961,
-        "chars": 20432,
+        "lines": 1641,
+        "words": 2138,
+        "chars": 22821,
         "name": "中文"
     },
     "de": {
@@ -30,9 +30,9 @@
         "name": "Deutsch"
     },
     "es": {
-        "lines": 1148,
-        "words": 7869,
-        "chars": 49899,
+        "lines": 1147,
+        "words": 7868,
+        "chars": 49895,
         "name": "Español"
     },
     "ko": {

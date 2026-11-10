@@ -1,7 +1,6 @@
 @tool
 extends Button
 
-var game
 @export var button_text:String = "":
 	get:
 		return button_text
@@ -23,7 +22,6 @@ var adv_button_disabled:bool = false:
 @export var icon_texture:Texture2D
 
 func _ready():
-	game = get_node("/root/Game") if not Engine.is_editor_hint() else null
 	$Icon.texture = icon_texture
 	get_node("Label")["theme_override_colors/font_color"] = Color.WHITE
 
@@ -34,10 +32,10 @@ func _on_Button_pressed():
 		btn.get_node("Label")["theme_override_colors/font_color"] = Color.WHITE
 	$Label["theme_override_colors/font_color"] = Color.CYAN
 	$Label/TextureRect.visible = true
-	$AnimationPlayer.play("StarAnim", -1, game.u_i.time_speed if game and not game.u_i.is_empty() else 1.0)
+	$AnimationPlayer.play("StarAnim")
 
 func _on_AnimationPlayer_animation_finished(anim_name):
-	$AnimationPlayer.play("StarAnim", -1, game.u_i.time_speed if game and not game.u_i.is_empty() else 1.0)
+	$AnimationPlayer.play("StarAnim")
 
 func refresh_button_text():
 	$Label.text = tr(button_text)

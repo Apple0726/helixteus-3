@@ -651,6 +651,7 @@ offset_left = 1244.0
 offset_top = 4.0
 offset_right = 1276.0
 offset_bottom = 36.0
+pivot_offset_ratio = Vector2(0.5, 0.5)
 shortcut = SubResource("17")
 shortcut_in_tooltip = false
 texture_normal = ExtResource("3")
