@@ -17,7 +17,7 @@ dest_files=["res://.godot/imported/PK_1.png-2421e72c132ed35e445f199181c361f2.cte
 
 compress/mode=1
 compress/high_quality=false
-compress/lossy_quality=0.7
+compress/lossy_quality=0.3
 compress/uastc_level=0
 compress/rdo_quality_loss=0.0
 compress/hdr_compression=1

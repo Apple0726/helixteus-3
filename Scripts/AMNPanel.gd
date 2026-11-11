@@ -74,7 +74,7 @@ func show_recipe_tooltip(rsrc:String):
 		game.show_tooltip(st)
 
 func on_rsrc_pressed(rsrc:String):
-	if rsrc == resource_selected and atom_to_rsrc:
+	if rsrc == resource_selected and atom_to_rsrc and $Panel/Control/Switch.visible:
 		_on_Switch_pressed(false)
 	else:
 		reset_poses(rsrc)
@@ -178,6 +178,9 @@ func get_max_slider_value():
 			if ratios[atom] == 0 or not game.atoms.has(atom):
 				continue
 			var max_value2 = game.atoms[atom] / ratios[atom]
+			if is_zero_approx(game.atoms[atom]):
+				max_value = 0.0
+				break
 			if max_value2 < max_value or max_value == 0.0:
 				max_value = max_value2
 	else:
@@ -214,7 +217,7 @@ func _on_HSlider_value_changed(value): # value is always between 0.0 and 1.0
 
 func _on_Transform_pressed():
 	if obj.bldg.has("qty"):
-		var reaction_info = get_reaction_info(obj)
+		var reaction_info = Helper.get_reaction_info(obj, Building.ATOM_MANIPULATOR, tile_num)
 		var MM_value = reaction_info.MM_value
 		var progress = reaction_info.progress
 		var rsrc_to_add:Dictionary = atom_costs.duplicate(true)
@@ -242,6 +245,7 @@ func _on_Transform_pressed():
 		obj.bldg.erase("qty")
 		obj.bldg.erase("start_date")
 		obj.bldg.erase("reaction")
+		obj.bldg.erase("difficulty")
 		obj.bldg.erase("AMN_stone")
 		$Panel/Control.visible = true
 		$Panel/ReactionInProgress.visible = false
@@ -266,7 +270,18 @@ func _on_Transform_pressed():
 		obj.bldg.AMN_stone = game.stone.duplicate(true)
 		obj.bldg.start_date = Time.get_unix_time_from_system()
 		obj.bldg.reaction = resource_selected
+		obj.bldg.difficulty = difficulty
 		obj.bldg.atom_to_rsrc = atom_to_rsrc
+		if not tf:
+			for i in len(game.view.obj.rsrcs):
+				if i == game.c_t:
+					if not reactions[resource_selected].has("type"):
+						game.view.obj.rsrcs[i].set_icon_texture(Data.stone_icon)
+					elif reactions[resource_selected].type == "mats":
+						game.view.obj.rsrcs[i].set_icon_texture(load("res://Graphics/Materials/%s.png" % resource_selected))
+					elif reactions[resource_selected].type == "mets":
+						game.view.obj.rsrcs[i].set_icon_texture(load("res://Graphics/Metals/%s.png" % resource_selected))
+					break
 		game.deduct_resources(rsrc_to_deduct)
 		set_text_to_white()
 		$Panel/Control.visible = false
@@ -302,7 +317,7 @@ func _process(delta):
 			btn.get_node("Label").text = Helper.format_num(game[reactions[btn.name].type][btn.name], true)
 	if not obj.bldg.has("start_date") or not visible or obj.bldg.reaction != resource_selected:
 		return
-	var reaction_info = get_reaction_info(obj)
+	var reaction_info = Helper.get_reaction_info(obj, Building.ATOM_MANIPULATOR, tile_num)
 	#MM produced or MM used
 	var MM_value = reaction_info.MM_value
 	$Panel/ReactionInProgress/TextureProgressBar.value = reaction_info.progress
@@ -329,10 +344,6 @@ func _process(delta):
 		hbox.rsrc.show_available = false
 		hbox.rsrc.rsrcs_required = MM_dict[hbox.name]
 	$Panel/ReactionInProgress/TimeRemainingText.text = Helper.time_to_str(max(0, difficulty * (obj.bldg.qty - MM_value) / obj.bldg.path_1_value / tile_num / Helper.get_IR_mult(Building.ATOM_MANIPULATOR) / game.u_i.time_speed / obj.get("time_speed_bonus", 1.0)))
-
-func get_reaction_info(obj):
-	var MM_value:float = clamp((Time.get_unix_time_from_system() - obj.bldg.start_date) / difficulty * obj.bldg.path_1_value * tile_num * Helper.get_IR_mult(Building.ATOM_MANIPULATOR) * game.u_i.time_speed * obj.get("time_speed_bonus", 1.0), 0, obj.bldg.qty)
-	return {"MM_value":MM_value, "progress":MM_value / obj.bldg.qty}
 
 func _on_EnergyCostText_mouse_entered():
 	if au_mult > 1:

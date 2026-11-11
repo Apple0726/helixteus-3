@@ -17,7 +17,7 @@ dest_files=["res://.godot/imported/mining_outpost.png-47bc53dd348512b43d9efb90d3
 
 compress/mode=1
 compress/high_quality=false
-compress/lossy_quality=0.7
+compress/lossy_quality=0.3
 compress/uastc_level=0
 compress/rdo_quality_loss=0.0
 compress/hdr_compression=1

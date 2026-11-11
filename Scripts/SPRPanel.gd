@@ -71,7 +71,7 @@ func show_recipe_tooltip(rsrc:String):
 		game.show_tooltip(st)
 
 func _on_Atom_pressed(_name:String):
-	if _name == resource_selected and atom_to_p:
+	if _name == resource_selected and atom_to_p and $Panel/Control.visible:
 		_on_Switch_pressed(false)
 	else:
 		reset_poses(_name, reactions[_name].Z)
@@ -180,7 +180,7 @@ func _on_HSlider_value_changed(value):
 
 func _on_Transform_pressed():
 	if obj.bldg.has("qty"):
-		var reaction_info = get_reaction_info(obj)
+		var reaction_info = Helper.get_reaction_info(obj, Building.SUBATOMIC_PARTICLE_REACTOR, tile_num)
 		var MM_value = reaction_info.MM_value
 		var progress = reaction_info.progress
 		var rsrc_to_add:Dictionary
@@ -243,7 +243,7 @@ func _process(delta):
 	$SubatomicParticles.text = Helper.format_num(game.particles.subatomic_particles, true) + " mol"
 	if not obj.bldg.has("start_date") or not visible or obj.bldg.reaction != resource_selected:
 		return
-	var reaction_info = get_reaction_info(obj)
+	var reaction_info = Helper.get_reaction_info(obj, Building.SUBATOMIC_PARTICLE_REACTOR, tile_num)
 	#MM produced or MM used
 	var MM_value = reaction_info.MM_value
 	$Panel/ReactionInProgress/TextureProgressBar.value = reaction_info.progress
@@ -275,10 +275,6 @@ func refresh_time_icon():
 func _on_EnergyCostText_mouse_entered():
 	if au_mult > 1:
 		game.show_tooltip(("[aurora au_int=%s]" % (au_mult - 1.0)) + tr("MORE_ENERGY_EFFICIENT") % Helper.clever_round(au_mult))
-
-func get_reaction_info(obj):
-	var MM_value:float = clamp((Time.get_unix_time_from_system() - obj.bldg.start_date) / difficulty * obj.bldg.path_1_value * tile_num * Helper.get_IR_mult(Building.SUBATOMIC_PARTICLE_REACTOR) * game.u_i.time_speed * obj.get("time_speed_bonus", 1.0) * game.u_i.charge, 0, obj.bldg.qty)
-	return {"MM_value":MM_value, "progress":MM_value / obj.bldg.qty}
 
 func _on_EnergyCostText_mouse_exited():
 	if au_mult > 1:

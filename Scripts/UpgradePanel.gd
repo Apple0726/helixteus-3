@@ -272,7 +272,7 @@ func _on_Path2_pressed():
 		if len(ids) == 1:
 			if game.tile_data[ids[0]].bldg.path_2 >= Data.path_2[bldg].cap:
 				game.popup(tr("MAX_LV_REACHED"), 1.5)
-				$PathButtons.get_node("Path3D%s" % path_selected).call_deferred("_on_Button_pressed")
+				$PathButtons.get_node("Path%s" % path_selected).call_deferred("_on_Button_pressed")
 				return
 		else:
 			var all_capped = true
@@ -282,7 +282,7 @@ func _on_Path2_pressed():
 					break
 			if all_capped:
 				game.popup(tr("MAX_LV_REACHED"), 1.5)
-				$PathButtons.get_node("Path3D%s" % path_selected).call_deferred("_on_Button_pressed")
+				$PathButtons.get_node("Path%s" % path_selected).call_deferred("_on_Button_pressed")
 				return
 	path_selected = 2
 	path_str = "path_%s" % [path_selected]
@@ -294,7 +294,7 @@ func _on_Path3_pressed():
 		if len(ids) == 1:
 			if game.tile_data[ids[0]].bldg.path_3 >= Data.path_3[bldg].cap:
 				game.popup(tr("MAX_LV_REACHED"), 1.5)
-				$PathButtons.get_node("Path3D%s" % path_selected).call_deferred("_on_Button_pressed")
+				$PathButtons.get_node("Path%s" % path_selected).call_deferred("_on_Button_pressed")
 				return
 		else:
 			var all_capped = true
@@ -304,7 +304,7 @@ func _on_Path3_pressed():
 					break
 			if all_capped:
 				game.popup(tr("MAX_LV_REACHED"), 1.5)
-				$PathButtons.get_node("Path3D%s" % path_selected).call_deferred("_on_Button_pressed")
+				$PathButtons.get_node("Path%s" % path_selected).call_deferred("_on_Button_pressed")
 				return
 	path_selected = 3
 	path_str = "path_%s" % [path_selected]

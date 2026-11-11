@@ -570,6 +570,7 @@ mouse_filter = 1
 text = "LARGE_NUMBER_NOTATION"
 horizontal_alignment = 1
 
+[connection signal="pressed" from="CloseButton" to="." method="_on_close_button_pressed"]
 [connection signal="mouse_entered" from="TabBar/Sounds" to="." method="show_KBS_tooltip" binds= ["1"]]
 [connection signal="mouse_exited" from="TabBar/Sounds" to="." method="_on_mouse_exited"]
 [connection signal="pressed" from="TabBar/Sounds" to="." method="_on_sounds_pressed"]

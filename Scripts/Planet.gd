@@ -585,6 +585,7 @@ func constr_bldg(tile_id:int, curr_time:int, _bldg_to_construct:int, mass_build:
 			if not tile.has("depth"):
 				tile.depth = 0
 			Helper.set_tile_data_persistent(tile_id, "depth", tile.depth)
+			Helper.set_tile_data_persistent(tile_id, "crater", tile.crater)
 			if not game.boring_machine_data.has(game.c_p_g):
 				game.boring_machine_data[game.c_p_g] = {"tiles":[tile_id], "c_s_g":game.c_s_g, "c_p":p_id}
 			else:
@@ -646,7 +647,7 @@ func overclock_bldg(tile, tile_id:int, curr_time):
 			var overclock_sprite = Sprite2D.new()
 			overclock_sprite.texture = load("res://Graphics/Items/Overclocks/%s.png" % Item.data[game.item_to_use.id].item_name)
 			overclock_sprite.position = Vector2(tile_id % wid, tile_id / wid) * 200.0 + Vector2.ONE * 100.0
-			overclock_sprite.scale *= 192.0 / overclock_sprite.texture.get_width()
+			overclock_sprite.scale *= 168.0 / overclock_sprite.texture.get_width()
 			add_child(overclock_sprite)
 			var tween = create_tween().set_parallel(true)
 			tween.tween_property(overclock_sprite, "rotation", 10.0 * PI, 3.0).set_ease(Tween.EASE_IN).set_trans(Tween.TRANS_QUAD)
@@ -1279,6 +1280,7 @@ func _unhandled_input(event):
 				var v = Vector2i(x_pos, y_pos)
 				if obstacle_nodes.has(v):
 					game.tile_data[tile_id]["bridge"] = true
+					game.tile_data_persistent[tile_id]["bridge"] = true
 					obstacle_nodes[v].queue_free()
 					obstacle_nodes.erase(v)
 			else:

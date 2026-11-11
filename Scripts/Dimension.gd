@@ -18,7 +18,7 @@ var DR_mult:float = 1.0
 var table
 
 var lake_params:Dictionary = {
-	"H2O":{"min_value":1, "max_value":INF, "value":1, "OP_factor":0.7},
+	"H2O":{"min_value":1, "max_value":INF, "value":1, "OP_factor":0.9},
 	"CH4":{"min_value":1, "max_value":INF, "value":1, "OP_factor":0.1},
 	"CO2":{"min_value":1, "max_value":INF, "value":1, "OP_factor":0.15},
 	"NH3":{"min_value":1, "max_value":INF, "value":1, "OP_factor":0.1},
@@ -486,8 +486,8 @@ func calc_OP_points():
 		physics_defaults.get_node(NodePath(cost.name)).visible = not is_equal_approx(cost.value, float(physics_defaults.get_node(NodePath(cost.name)).text.substr(1)))
 	
 	biology_OP_points = 0
-	calc_bio_points($ModifyDimension/Biology/Control/PGSM, 0.3)
-	calc_bio_points($ModifyDimension/Biology/Control/PYM, 0.6)
+	calc_bio_points($ModifyDimension/Biology/Control/PGSM, 0.4)
+	calc_bio_points($ModifyDimension/Biology/Control/PYM, 0.8)
 	if selected_element != "":
 		lake_params[selected_element].value = float($ModifyDimension/Biology/Control/Lake/Bonus.value)
 		update_lake_bonus_text(selected_element)

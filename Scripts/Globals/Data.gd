@@ -42,7 +42,7 @@ var costs = {	Building.MINERAL_EXTRACTOR:			{"money":100.0, "energy":40.0},
 				Building.ROVER_CONSTRUCTION_CENTER:	{"money":5000.0, "energy":400.0},
 				Building.STONE_CRUSHER:				{"money":900.0, "energy":150.0},
 				Building.GLASS_FACTORY:				{"money":1500.0, "energy":1000.0},
-				Building.STEAM_ENGINE:				{"money":1500.0, "energy":500.0},
+				Building.STEAM_ENGINE:				{"money":1500.0, "energy":150.0},
 				Building.BORING_MACHINE:			{"money":13000.0, "energy":7000.0},
 				Building.GREENHOUSE:				{"money":10000.0, "energy":1500.0, "glass":50.0, "soil":100.0},
 				Building.SOLAR_PANEL:				{"money":4000.0},
@@ -369,7 +369,7 @@ var science_unlocks = {
 	Science.CHEMICAL_DRIVE: {"cost": [2400.0, 4.5e6], "prereqs": {Science.SHIP_CONTROL: 1}},
 	Science.PLUTONIUM_DRIVE: {"cost": [1.2e12], "prereqs": {Science.CHEMICAL_DRIVE: 2}},
 	
-	Science.SUBATOMIC_PARTICLES: {"cost": [1.25e7], "prereqs": {Science.ATOM_MANIPULATION: 1}},
+	Science.SUBATOMIC_PARTICLES: {"cost": [1.25e6], "prereqs": {Science.ATOM_MANIPULATION: 1}},
 	Science.ADVANCED_METAL_MANIPULATION: {"cost": [1.0e9], "prereqs": {Science.ATOM_MANIPULATION: 1}},
 	Science.EXOTIC_MATERIAL_MANIPULATION: {"cost": [1.0e15], "prereqs": {Science.ADVANCED_METAL_MANIPULATION: 1}},
 	
@@ -437,7 +437,7 @@ var elements = {
 	"O":0.014,
 	"H2O":0.15,
 	"Ne":0.01813,
-	"Xe":0.00022,
+	"Xe":0.00081,
 }
 
 var molar_mass = {

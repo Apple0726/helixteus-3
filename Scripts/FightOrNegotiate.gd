@@ -18,7 +18,8 @@ func _ready() -> void:
 		HX_data = conquer_all_data.HX_data
 		$EnemyNumber.show()
 		$EnemyNumber/Label.text = "x %d" % len(HX_data)
-		Helper.add_text_to_RTL($EnergyCost, "[center][font_size=13]" + tr("BOTH_ACTIONS_ALSO_COST_ENERGY").format({"energy": Helper.format_num(conquer_all_data.energy_cost, true)}), [Data.energy_icon])
+		energy_cost = conquer_all_data.energy_cost
+		Helper.add_text_to_RTL($EnergyCost, "[center][font_size=13]" + tr("BOTH_ACTIONS_ALSO_COST_ENERGY").format({"energy": Helper.format_num(energy_cost, true)}), [Data.energy_icon])
 	else:
 		HX_data = game.planet_data[l_id].HX_data
 	for i in len(HX_data):
@@ -50,15 +51,23 @@ func _ready() -> void:
 	$CloseButton.pressed.connect(queue_free)
 
 func initiate_battle():
-	if l_id == -1:
-		game.c_p = game.ships_travel_data.c_coords.p
-		game.is_conquering_all = true
+	if id == -1:
+		if game.energy >= energy_cost:
+			game.c_p = game.ships_travel_data.c_coords.p
+			game.is_conquering_all = true
+			game.switch_view("battle")
+			queue_free()
+		else:
+			var tween = create_tween()
+			tween.tween_property($EnergyCost/ColorRect, "color:a", 0.6, 0.4)
+			tween.tween_property($EnergyCost/ColorRect, "color:a", 0.0, 0.4)
+			game.popup(tr("NOT_ENOUGH_ENERGY"), 1.5)
 	else:
 		game.c_p = l_id
 		game.c_p_g = id
 		game.is_conquering_all = false
-	game.switch_view("battle")
-	queue_free()
+		game.switch_view("battle")
+		queue_free()
 
 func negotiate(money_to_negotiate:float, negotiated_text:String):
 	if game.money >= money_to_negotiate:
@@ -67,6 +76,9 @@ func negotiate(money_to_negotiate:float, negotiated_text:String):
 				game.energy -= energy_cost
 				game.conquer_all_planets()
 			else:
+				var tween = create_tween()
+				tween.tween_property($EnergyCost/ColorRect, "color:a", 0.6, 0.4)
+				tween.tween_property($EnergyCost/ColorRect, "color:a", 0.0, 0.4)
 				game.popup(tr("NOT_ENOUGH_ENERGY"), 1.5)
 				return
 		else:

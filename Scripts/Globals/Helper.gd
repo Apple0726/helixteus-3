@@ -755,7 +755,7 @@ func update_rsrc(p_i, tile, rsrc = null, active:bool = false):
 	elif tile.bldg.name == Building.GLASS_FACTORY:
 		if tile.bldg.has("qty1"):
 			var prod_i = get_prod_info(tile)
-			rsrc_text = "%s kg" % [prod_i.qty_made]
+			rsrc_text = "%s kg" % [format_num(prod_i.qty_made)]
 			capacity_bar_value = prod_i.progress
 		else:
 			rsrc_text = ""
@@ -777,6 +777,16 @@ func update_rsrc(p_i, tile, rsrc = null, active:bool = false):
 		prod = tile.bldg.path_1_value * get_prod_mult(tile) * tile.get("mining_outpost_bonus", 1.0)
 		rsrc_text = "%s m/s" % format_num(prod, true)
 		current_bar_value = fposmod((curr_time - tile.bldg.collect_date) * prod, 1.0)
+	elif tile.bldg.name in [Building.ATOM_MANIPULATOR, Building.SUBATOMIC_PARTICLE_REACTOR]:
+		if tile.bldg.has("qty"):
+			capacity_bar_value = Helper.get_reaction_info(tile, tile.bldg.name).progress
+			if capacity_bar_value == 1.0:
+				rsrc_text = tr("DONE")
+			else:
+				rsrc_text = tr("WORKING")
+		else:
+			rsrc_text = "-"
+			capacity_bar_value = 0.0
 	#else:
 		#if Mods.added_buildings.has(tile.bldg.name):
 			#Mods.mod_list[Mods.added_buildings[tile.bldg.name].mod].calculate(p_i, tile, rsrc, curr_time)
@@ -784,6 +794,13 @@ func update_rsrc(p_i, tile, rsrc = null, active:bool = false):
 		rsrc.set_current_bar_value(current_bar_value)
 		rsrc.set_capacity_bar_value(capacity_bar_value)
 		rsrc.set_text(rsrc_text)
+
+func get_reaction_info(obj, bldg:int, tile_num:int = 1):
+	var charge_mult = 1.0
+	if bldg == Building.SUBATOMIC_PARTICLE_REACTOR:
+		charge_mult = game.u_i.charge
+	var MM_value:float = clamp((Time.get_unix_time_from_system() - obj.bldg.start_date) / obj.bldg.difficulty * obj.bldg.path_1_value * tile_num * Helper.get_IR_mult(bldg) * game.u_i.time_speed * obj.get("time_speed_bonus", 1.0) * charge_mult, 0, obj.bldg.qty)
+	return {"MM_value":MM_value, "progress":MM_value / obj.bldg.qty}
 
 func get_prod_mult(tile):
 	var time_bonus = game.u_i.time_speed * tile.get("time_speed_bonus", 1.0)
@@ -930,10 +947,6 @@ func add_atom_production(el:String, base_prod:float):
 		game.autocollect.atoms.O = 1 * base_prod + game.autocollect.atoms.get("O", 0)
 	else:
 		game.autocollect.atoms[el] = 1 * base_prod + game.autocollect.atoms.get(el, 0)
-
-func get_reaction_info(tile):
-	var MM_value:float = clamp((Time.get_unix_time_from_system() - tile.bldg.start_date) / tile.bldg.difficulty * tile.bldg.path_1_value * get_IR_mult(tile.bldg.name) * game.u_i.time_speed * tile.get("time_speed_bonus", 1.0), 0, tile.bldg.qty)
-	return {"MM_value":MM_value, "progress":MM_value / tile.bldg.qty}
 
 func update_MS_rsrc(dict:Dictionary):
 	var curr_time = Time.get_unix_time_from_system()

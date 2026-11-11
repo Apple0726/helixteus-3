@@ -122,7 +122,7 @@ func on_slot_press(_name:String):
 			uproot(p_i)
 		var produce:Dictionary = game.seeds_produce[_name].produce.duplicate(true)
 		for p in produce:
-			produce[p] *= tile_num * game.u_i.time_speed * game.u_i.planck * p_i.bldg.path_1_value * p_i.bldg.path_2_value * game.biology_bonus.PGSM * game.biology_bonus.PYM * (p_i.ash.richness if p_i.has("ash") else 1.0)
+			produce[p] *= tile_num * game.u_i.planck * p_i.bldg.path_1_value * p_i.bldg.path_2_value * game.biology_bonus.PGSM * game.biology_bonus.PYM * (p_i.ash.richness if p_i.has("ash") else 1.0)
 		plant_seeds(p_i, produce, _name)
 		game.planet_data_persistent[p_i.l_id].auto_GH = p_i.auto_GH
 	elif c_v == "planet":
@@ -137,7 +137,7 @@ func on_slot_press(_name:String):
 			var produce:Dictionary = game.seeds_produce[_name].produce.duplicate(true)
 			var H2O_mult = (Data.lake_bonus_values.H2O[tile.lake_elements.H2O] * game.biology_bonus.H2O) if tile.lake_elements.has("H2O") else 1.0
 			for p in produce:
-				produce[p] *= game.u_i.time_speed * tile.get("time_speed_bonus", 1.0) * game.u_i.planck * tile.bldg.path_1_value * tile.bldg.path_2_value * game.biology_bonus.PGSM * game.biology_bonus.PYM * H2O_mult * (tile.ash.richness if tile.has("ash") else 1.0)
+				produce[p] *= tile.get("time_speed_bonus", 1.0) * game.u_i.planck * tile.bldg.path_1_value * tile.bldg.path_2_value * game.biology_bonus.PGSM * game.biology_bonus.PYM * H2O_mult * (tile.ash.richness if tile.has("ash") else 1.0)
 			game.view.obj.rsrcs[tile_id].set_icon_texture(load("res://Graphics/Metals/%s.png" % _name.split("_")[0]))
 			plant_seeds(tile, produce, _name)
 			game.tile_data_persistent[tile_id].auto_GH = tile.auto_GH

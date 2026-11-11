@@ -509,13 +509,13 @@ func switch_music(src, time_speed:float = 1.0, pitch_scale:float = 1.0):
 		src = "op_cursor.ogg"
 	#Music fading
 	if src is String:
-		if src == "" or FileAccess.file_exists("res://Audio/" + src):
+		if src == "" or ResourceLoader.exists("res://Audio/" + src):
 			stream = load("res://Audio/" + src) if src != "" else null
 			if music_player.stream != stream:
 				if music_player_tween and music_player_tween.is_running():
 					music_player_tween.kill()
 				music_player_tween = create_tween()
-				if music_player.playing:
+				if music_player.playing and not Settings.op_cursor:
 					music_player_tween.tween_property($MusicPlayer, "volume_db", -60.0, 1.0)
 				music_player_tween.tween_callback(play_music.bind(stream, time_speed, pitch_scale))
 			else:
@@ -3383,6 +3383,8 @@ func make_planet_composition(temp:float, depth:String, size:float, rng:RandomNum
 			var O = rng.randf_range(1.0, 1.9)
 			elements = {	"O":O,
 							"Si":O * rng.randf_range(3.9, 4),
+							"Mg":0.1 * rng.randf(),
+							"P":0.1 * rng.randf(),
 							"Al":0.05 * rng.randf(),
 							"Fe":0.035 * rng.randf(),
 							"Na":0.025 * rng.randf(),
@@ -4464,6 +4466,7 @@ func _on_MMTimer_timeout():
 					tile.bldg.collect_date += int(tiles_mined) / tile.bldg.path_1_value / prod_mult
 					tile.depth += int(tiles_mined)
 					if tile.has("crater") and tile.crater.has("init_depth") and tile.depth > 3 * tile.crater.init_depth:
+						tile.crater_removed = true
 						tile.erase("crater")
 				await_counter += 1
 				if await_counter % int(1000.0 / Engine.get_frames_per_second()) == 0:

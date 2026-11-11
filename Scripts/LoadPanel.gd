@@ -96,6 +96,8 @@ func _on_ImportSave_pressed():
 	game.popup_window(tr("CHOOSE_IMPORT_MEDIUM"), "", [tr("TEXT"), tr("HX3_FILE")], [import_string_popup, $Import.popup_centered], tr("CANCEL"))
 
 func import_string_popup():
+	if OS.get_name() == "Web":
+		DisplayServer.clipboard_get() # A way to make browsers read the clipboard
 	game.popup_window(tr("COPY_STRING_TO_CLIPBOARD"), "", [tr("IMPORT")], [import_string], tr("CANCEL"))
 	
 func import_string():

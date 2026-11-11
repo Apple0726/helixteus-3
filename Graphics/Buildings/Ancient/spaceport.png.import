@@ -17,7 +17,7 @@ dest_files=["res://.godot/imported/spaceport.png-6b4e63371b2de916e7ca96e9c2841a7
 
 compress/mode=1
 compress/high_quality=false
-compress/lossy_quality=0.7
+compress/lossy_quality=0.3
 compress/uastc_level=0
 compress/rdo_quality_loss=0.0
 compress/hdr_compression=1
