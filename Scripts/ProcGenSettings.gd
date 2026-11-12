@@ -14,6 +14,7 @@ var cave_traversable_space = 0.5
 
 # Star system
 var distance_between_planets = 1.0
+var number_of_planets = 1.0
 var max_planets_in_system = 40
 
 # Galaxy
@@ -48,6 +49,7 @@ var default_values = {
 	"cave_traversable_space": cave_traversable_space,
 
 	"distance_between_planets": distance_between_planets,
+	"number_of_planets": number_of_planets,
 	"max_planets_in_system": max_planets_in_system,
 
 	"star_system_density": star_system_density,

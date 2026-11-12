@@ -903,18 +903,27 @@ func generate_cave(first_floor:bool, going_up:bool):
 	
 	#Wormhole
 	if cave_floor == num_floors:
-		wormhole = object_scene.instantiate()
-		wormhole.get_node("Sprite2D").texture = null
-		var wormhole_texture = preload("res://Scenes/Wormhole.tscn").instantiate()
-		wormhole.add_child(wormhole_texture)
-		wormhole.get_node("Area2D").connect("area_entered",Callable(self,"on_WH_entered"))
-		wormhole.get_node("Area2D").connect("area_exited",Callable(self,"_on_area_exited"))
-		var wormhole_tile:int = rand_hole
-		while wormhole_tile in [rand_hole, rand_spawn]:
-			wormhole_tile = rooms[0].tiles[rng.randi_range(0, len(rooms[0].tiles) - 1)]
-		wormhole.position = cave_wall.map_to_local(get_tile_pos(wormhole_tile))
-		add_child(wormhole)
-		enable_light(wormhole)
+		var wormhole_tile:int = rand_spawn
+		var room_N = 0
+		var attempts = 0
+		while wormhole_tile == rand_spawn:
+			wormhole_tile = rooms[room_N].tiles[rng.randi_range(0, len(rooms[0].tiles) - 1)]
+			attempts += 1
+			if attempts > 3:
+				room_N += 1
+				attempts = 0
+				if room_N >= len(rooms):
+					break
+		if room_N < len(rooms):
+			wormhole = object_scene.instantiate()
+			wormhole.get_node("Sprite2D").texture = null
+			var wormhole_texture = preload("res://Scenes/Wormhole.tscn").instantiate()
+			wormhole.add_child(wormhole_texture)
+			wormhole.get_node("Area2D").connect("area_entered",Callable(self,"on_WH_entered"))
+			wormhole.get_node("Area2D").connect("area_exited",Callable(self,"_on_area_exited"))
+			wormhole.position = cave_wall.map_to_local(get_tile_pos(wormhole_tile))
+			add_child(wormhole)
+			enable_light(wormhole)
 	else:
 		if is_instance_valid(wormhole):
 			wormhole.free()

@@ -788,7 +788,7 @@ CONQUER_ALL,Conquer all,Conquérir tout,Conquista tutto,征服所有,Alle einneh
 CONQUER_ALL_DESC,Conquer all planets in this system.,,Conquista tutti i pianeti in questo sistema.,"征服此恒星系的所有行星。
 
 ",Nimmt alle Planeten in dem System ein.,Conquista todos los planetas en este sistema.,이 항성계에 있는 모든 행성 정복하기,,Elfoglalja az összes bolygót ebben a rendszerben.,この星系にあるすべての惑星を征服せよ。,Verover alle planeten in dit stelsel.,,
-LEVEL_32_REACHED,You reached level 32! You unlocked the system conquer all feature.,,"Hai raggiunto il livello 32! Hai sbloccato la funzione ""Conquista tutto"".",您到达32级了！您解锁了恒星系界面的“最后通牒”功能。,Du hast level 32 erreicht!Du kannst nun ganze Systeme einnehmen.,"¡Haz alcanzado el nivel 32! Haz desbloqueado la habilidad ""Conquistar todo"".",,,"Elérted a 32. szintet! MEgnyitottad az ""Öszzes elfoglalása"" opciót.",レベル32に到達しました。システムコンカーオール機能をアンロックしました。,Je hebt level 32 bereikt! Je hebt de 'verover alle' optie ontgrendeld voor sterrenstelsels.,,
+LEVEL_32_REACHED,You reached level 32! You unlocked the system conquer all feature.,,"Hai raggiunto il livello 32! Hai sbloccato la funzione ""Conquista tutto"".",您到达32级了！您解锁了恒星系界面的“征服所有”功能。,Du hast level 32 erreicht!Du kannst nun ganze Systeme einnehmen.,"¡Haz alcanzado el nivel 32! Haz desbloqueado la habilidad ""Conquistar todo"".",,,"Elérted a 32. szintet! MEgnyitottad az ""Öszzes elfoglalása"" opciót.",レベル32に到達しました。システムコンカーオール機能をアンロックしました。,Je hebt level 32 bereikt! Je hebt de 'verover alle' optie ontgrendeld voor sterrenstelsels.,,
 EASY,Easy,Facile,Facile,简单,Einfach,Fácil,쉬움,,Könnyű,イージー,Makkelijk,Легко,
 NORMAL,Normal,Moyenne,Media,中等,Normal,Normal,보통,,Közepes,通常,Normaal,Нормально,
 HARD,Hard,Difficile,Difficile,困难,Schwer,Difícil,어려움,,Nehéz,ハード,Moeilijk,Сложно,
@@ -1962,8 +1962,8 @@ CAVE_TRAVERSABLE_SPACE,Traversable space,,,可遍历空间,,,,,Bejárható terü
 CAVE_TRAVERSABLE_SPACE_DESC,"Influences the size of tunnels, chambers and other open spaces that can be traversed by rovers in caves, and where enemies, chests and other objects can spawn.
 0 means caves will have no traversable space at all, while 1 means the entire floor will have no minable walls.",,,"影响洞穴中漫游车可通行的隧道、洞穴及其他开放空间的尺寸，以及敌人、宝箱和其他物体可生成的位置。
 0 表示洞穴将完全没有可通行的空间，而 1 表示整个楼层将没有可开采的墙壁。",,,,,"A barlangokban lévő alagutak, kamrák, és egyéb nyílt terek méretét adja meg. Ezeken a helyeken tudnak ellenségek, kincs, stb. generálódni.\n0-nál nem lesz bejárható terület, 1-nél nem lesznek bányászható falak sehol.",,,,
-DISTANCE_BETWEEN_PLANETS,Distance between planets,,,行星之间的距离,,,,,Bolygók közötti távolság,,,,
-MAX_PLANETS_IN_SYSTEM,Maximum number of planets in star systems,,,恒星系中行星的最大数量,,,,,Maximum bolygó egy rendszerben,,,,
+DISTANCE_BETWEEN_PLANETS,Star-planet distance,,,,,,,,,,,,
+MAX_PLANETS_IN_SYSTEM,Maximum number of planets,,,恒星系中行星的最大数量,,,,,Maximum bolygó egy rendszerben,,,,
 DISTANCE_BETWEEN_SYSTEMS,Distance between star systems,,,恒星系之间的距离,,,,,Rendszerek közötti távolság,,,,
 ELLIPTICAL_GALAXY_SIZE_RANGE,Elliptical galaxy size range,,,椭圆星系大小范围,,,,,Eliptikus galaxis mérettartomány,,,,
 SPIRAL_GALAXY_SIZE_RANGE,Spiral galaxy size range,,,螺旋星系大小范围,,,,,Spirális galaxis mérettartomány,,,,

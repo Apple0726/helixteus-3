@@ -1,8 +1,8 @@
 {
     "en": {
         "lines": 1630,
-        "words": 11539,
-        "chars": 70249,
+        "words": 11535,
+        "chars": 70229,
         "name": "English"
     },
     "fr": {
@@ -18,9 +18,9 @@
         "name": "Italiano"
     },
     "zh": {
-        "lines": 1630,
-        "words": 2126,
-        "chars": 22746,
+        "lines": 1629,
+        "words": 2125,
+        "chars": 22739,
         "name": "中文"
     },
     "de": {
@@ -48,9 +48,9 @@
         "name": "Svenska"
     },
     "hu": {
-        "lines": 1609,
-        "words": 8634,
-        "chars": 63555,
+        "lines": 1608,
+        "words": 8631,
+        "chars": 63531,
         "name": "Magyar"
     },
     "ja": {

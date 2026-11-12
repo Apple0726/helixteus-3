@@ -10,6 +10,7 @@ extends Control
 @onready var cave_floor_diff_node = $AdvancedSettingsGroup/ScrollContainer/Control/CaveFloorDifficulty
 @onready var cave_traversable_space_node = $AdvancedSettingsGroup/ScrollContainer/Control/CaveTraversableSpace
 @onready var distance_between_planets_node = $AdvancedSettingsGroup/ScrollContainer/Control/DistanceBetweenPlanets
+@onready var number_of_planets_node = $AdvancedSettingsGroup/ScrollContainer/Control/NumberOfPlanets
 @onready var max_planets_in_system_node = $AdvancedSettingsGroup/ScrollContainer/Control/MaxPlanetsInSystem
 @onready var star_system_density_node = $AdvancedSettingsGroup/ScrollContainer/Control/StarSystemDensity
 @onready var elliptical_galaxy_min_size_node = $AdvancedSettingsGroup/ScrollContainer/Control/EllipticalGalaxyMinSize
@@ -40,6 +41,7 @@ func _ready() -> void:
 		cave_depth_node: {"min":0.0, "default": ProcGenSettings.default_values.cave_depth},
 		cave_floor_diff_node: {"min":1.0, "default": ProcGenSettings.default_values.cave_floor_difficulty},
 		cave_traversable_space_node: {"min":0.0, "max":1.0, "default": ProcGenSettings.default_values.cave_traversable_space},
+		number_of_planets_node: {"min":0.0, "default": ProcGenSettings.default_values.number_of_planets},
 		distance_between_planets_node: {"min":0.0, "rec_min":0.1, "rec_max":10.0, "default": ProcGenSettings.default_values.distance_between_planets},
 		max_planets_in_system_node: {"min":1, "rec_max":50, "default": ProcGenSettings.default_values.max_planets_in_system},
 		star_system_density_node: {"min":0.0, "rec_min":0.1, "rec_max":10.0, "default": ProcGenSettings.default_values.star_system_density},
@@ -178,6 +180,7 @@ func _on_start_game_pressed() -> void:
 	ProcGenSettings.cave_traversable_space = float(cave_traversable_space_node.text)
 
 	ProcGenSettings.distance_between_planets = float(distance_between_planets_node.text)
+	ProcGenSettings.number_of_planets = float(number_of_planets_node.text)
 	ProcGenSettings.max_planets_in_system = int(max_planets_in_system_node.text)
 
 	ProcGenSettings.star_system_density = float(star_system_density_node.text)

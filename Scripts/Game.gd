@@ -825,6 +825,7 @@ func start_game(univ, new_save, DR_advantage):
 		"cave_traversable_space": ProcGenSettings.cave_traversable_space,
 
 		"distance_between_planets": ProcGenSettings.distance_between_planets,
+		"number_of_planets": ProcGenSettings.number_of_planets,
 		"max_planets_in_system": ProcGenSettings.max_planets_in_system,
 
 		"star_system_density": ProcGenSettings.star_system_density,
@@ -894,8 +895,9 @@ func start_game(univ, new_save, DR_advantage):
 	c_g_g = 0
 	c_s = 0
 	c_s_g = 0
-	c_p = 2
-	c_p_g = 2
+	var home_planet_id = min(2, ProcGenSettings.max_planets_in_system - 1)
+	c_p = home_planet_id
+	c_p_g = home_planet_id
 	c_t = -1
 
 	#Number of items per stack
@@ -989,9 +991,9 @@ func start_game(univ, new_save, DR_advantage):
 	probe_data = []
 	ship_data = []
 	
-	ships_travel_data = {	"c_coords":{"c":0, "g":0, "s":0, "p":2}, # Local coords of the planet that the ships are on
+	ships_travel_data = {	"c_coords":{"c":0, "g":0, "s":0, "p":home_planet_id}, # Local coords of the planet that the ships are on
 							"c_g_coords":{"c":0, "g":0, "s":0}, # ship global coordinates (current)
-							"dest_coords":{"c":0, "g":0, "s":0, "p":2}, # Local coords of the destination planet
+							"dest_coords":{"c":0, "g":0, "s":0, "p":home_planet_id}, # Local coords of the destination planet
 							"dest_g_coords":{"c":0, "g":0, "s":0}, # ship global coordinates (destination)
 							"depart_pos":Vector2.ZERO, # Depart position of system/galaxy/etc. depending on view
 							"dest_pos":Vector2.ZERO, # Destination position of system/galaxy/etc. depending on view
@@ -2198,7 +2200,7 @@ func generate_systems(id:int):
 			"pos":Vector2(-7500, -7500) * ProcGenSettings.star_system_density,
 			"diff":u_i.difficulty,
 			"parent":0,
-			"planet_num":7,
+			"planet_num":min(int(7 * ProcGenSettings.number_of_planets), ProcGenSettings.max_planets_in_system),
 			"planets":[],
 			"seed":rng.randi(),
 			"view":{"pos":Vector2(640, -60), "zoom":0.46},
@@ -2337,7 +2339,7 @@ func generate_systems(id:int):
 			combined_star_mass += star.mass
 		stars.sort_custom(sort_by_mass)
 		s_i["stars"] = stars
-		var planet_num:int = clamp(round(pow(combined_star_mass, 0.2) * rng.randf_range(3, 9) * pow(dark_matter, 0.25)), 2, ProcGenSettings.max_planets_in_system)
+		var planet_num:int = clamp(round(pow(combined_star_mass, 0.2) * rng.randf_range(3, 9) * pow(dark_matter, 0.25) * ProcGenSettings.number_of_planets), 1, ProcGenSettings.max_planets_in_system)
 		s_i["planet_num"] = planet_num
 		if galaxy_data[id].has("conquered"):
 			s_i["conquered"] = true
@@ -2507,9 +2509,6 @@ func generate_planets(id:int):#local id
 		star_boundary = max(star_boundary, pos.length() + radius_in_pixels)
 		circles.append([pos, radius_in_pixels])
 	var planet_num = system_data[id].planet_num
-	var j = 0
-	while pow(1.0 + 0.3 * ProcGenSettings.distance_between_planets, j) * 240 < star_boundary * 2.63:
-		j += 1
 	var dark_matter = galaxy_data[c_g].dark_matter
 	if not achievement_data.exploration.has("20_planet_system") and planet_num >= 20:
 		earn_achievement("exploration", "20_planet_system")
@@ -2522,6 +2521,7 @@ func generate_planets(id:int):#local id
 	if not achievement_data.exploration.has("40_planet_system") and planet_num >= 40:
 		earn_achievement("exploration", "40_planet_system")
 	system_data[id]["planets"].clear()
+	var home_planet_id = min(2, ProcGenSettings.max_planets_in_system - 1)
 	for i in range(1, planet_num + 1):
 		var p_id = planet_data.size()
 		# p_i = planet_info
@@ -2530,7 +2530,7 @@ func generate_planets(id:int):#local id
 			"ring": i,
 			"type": rng.randi_range(3, 10),
 			"angle": rng.randf_range(0.0, 2.0 * PI),
-			"distance": pow(1.0 + 0.3 * ProcGenSettings.distance_between_planets, i + j) * rng.randf_range(240, 270),
+			"distance": pow(1.0 + 0.3 * ProcGenSettings.distance_between_planets, i) * rng.randf_range(20.0, 22.0) * star_boundary,
 			"parent": id,
 			"view": {"pos":Vector2.ZERO, "zoom":1.0},
 			"tiles": [],
@@ -2545,7 +2545,7 @@ func generate_planets(id:int):#local id
 		else:
 			p_i["size"] = int((2000 + rng.randf_range(0, 12000) * (i + 1) / 2.0) * pow(u_i.gravitational, 0.5) * dark_matter)
 			p_i["pressure"] = pow(10, rng.randf_range(-3, log(p_i.size) / log(10) - 2)) * u_i.boltzmann
-		if c_s_g == 0 and i == 2:
+		if c_s_g == 0 and i == home_planet_id:
 			p_i["angle"] = rng.randf_range(PI/4, 3*PI/4)
 		system_data[id]["planets"].append({"local":p_i.l_id, "global":p_i.id})
 		# 1 solar radius = 2.63 px = 0.0046 AU
@@ -2579,7 +2579,7 @@ func generate_planets(id:int):#local id
 		p_i["core_start_depth"] = round(rng.randf_range(0.4, 0.46) * p_i.size * 1000)
 		p_i["surface"] = add_surface_materials(temp, p_i.crust, rng)
 		if c_s_g == 0 and c_u == 0:#Only water in solar system
-			if c_p_g == 2 or rng.randf() < 0.2:
+			if c_p_g == home_planet_id or rng.randf() < 0.2:
 				p_i["lake"] = {"element":"H2O"}
 		elif p_i.temperature <= 1000:
 			var lake_elements = list_of_element_probabilities.duplicate()
@@ -2610,7 +2610,7 @@ func generate_planets(id:int):#local id
 			var _class:int = rng.randi() % 4 + 1
 			if c_s_g == 0:
 				lv = min(lv, 4)
-				if i == 2: # Only level 1 enemies on closest planet from starting planet
+				if i == home_planet_id: # Only level 1 enemies on closest planet from starting planet
 					lv = 1
 				_class = 1
 			if num == total_num:
@@ -2640,7 +2640,7 @@ func generate_planets(id:int):#local id
 			var defense = stats[1]
 			var accuracy = stats[2]
 			var agility = stats[3]
-			if c_s_g == 0 and i == 2:
+			if c_s_g == 0 and i == home_planet_id:
 				while agility > 7:
 					agility -= 3
 					attack += 1
@@ -2746,17 +2746,17 @@ func generate_planets(id:int):#local id
 			system_data[id]["view"] = {"pos": Vector2(640, 360), "zoom": system_view_zoom}
 	elif c_u == 0:
 		#Home planet information
-		planet_data[2]["name"] = tr("HOME_PLANET")
-		planet_data[2]["conquered"] = true
-		planet_data[2]["size"] = round(rng.randf_range(12000, 12100))
-		planet_data[2]["angle"] = PI / 2
-		planet_data[2]["tiles"] = []
-		planet_data[2]["pressure"] = 1
-		planet_data[2]["lake"] = {"element":"H2O"}
-		planet_data[2]["bookmarked"] = true
-		planet_data[2]["crust_start_depth"] = rng.randi_range(20, 25)
+		planet_data[home_planet_id]["name"] = tr("HOME_PLANET")
+		planet_data[home_planet_id]["conquered"] = true
+		planet_data[home_planet_id]["size"] = round(rng.randf_range(12000, 12100))
+		planet_data[home_planet_id]["angle"] = PI / 2
+		planet_data[home_planet_id]["tiles"] = []
+		planet_data[home_planet_id]["pressure"] = 1
+		planet_data[home_planet_id]["lake"] = {"element":"H2O"}
+		planet_data[home_planet_id]["bookmarked"] = true
+		planet_data[home_planet_id]["crust_start_depth"] = rng.randi_range(20, 25)
 		if not system_data[id].has("discovered"):
-			stats_univ.biggest_planet = planet_data[2].size
+			stats_univ.biggest_planet = planet_data[home_planet_id].size
 	system_data_persistent[id].view = system_data[id].view
 	system_data[id]["closest_planet_distance"] = planet_data[0].distance
 	
@@ -2850,9 +2850,8 @@ func generate_volcano(t_id:int, VEI:float, rng:RandomNumberGenerator, artificial
 	if artificial:
 		tile_data_persistent[t_id]["volcano"] = tile_data[t_id].volcano
 
-func generate_aurora(p_i:Dictionary, rng:RandomNumberGenerator):
+func generate_aurora(p_i:Dictionary, home_planet:bool, rng:RandomNumberGenerator):
 	var wid:int = Helper.get_wid(p_i.size)
-	var home_planet:bool = c_p_g == 2 and c_u == 0
 	var diff:int = 0
 	var tile_from:int = -1
 	var tile_to:int = -1
@@ -2876,11 +2875,12 @@ func generate_aurora(p_i:Dictionary, rng:RandomNumberGenerator):
 		diff = thiccness + 1
 	else:
 		diff = rng.randi_range(thiccness + 1, max_aurora_gap_size)
+	var home_planet_id = min(2, ProcGenSettings.max_planets_in_system - 1)
 	for i in num_auroras:
 		if home_planet:
 			continue
 		# Guaranteed aurora spawn on starting planet outside 1st universe
-		if (c_u == 0 or c_p_g != 2) and rng.randf() > physics_bonus.aurora_spawn_probability * pow(p_i.pressure, 0.15) * aurora_spawn_p_mult:
+		if (c_u == 0 or c_p_g != home_planet_id) and rng.randf() > physics_bonus.aurora_spawn_probability * pow(p_i.pressure, 0.15) * aurora_spawn_p_mult:
 			continue
 		#au_int: aurora_intensity
 		var au_int = Helper.clever_round(80000 * rng.randf_range(1, 2) * B_strength * max_star_temp)
@@ -2960,7 +2960,8 @@ func spawn_cave(p_i:Dictionary, t_id:int, rng:RandomNumberGenerator):
 			modifiers2.erase(key)
 	var period:int = 50 + sign(rng.randf() - 0.5) * rng.randf() * 30
 	var traversable_space = 16.0 * pow(rng.randf() - 0.5, 5) + 0.5
-	if c_p_g == 2:
+	var home_planet_id = min(2, ProcGenSettings.max_planets_in_system - 1)
+	if c_p_g == home_planet_id:
 		traversable_space = clamp(traversable_space, 0.4, 0.8)
 	elif c_s_g == 0:
 		traversable_space = clamp(traversable_space, 0.3, 0.9)
@@ -2988,7 +2989,8 @@ func generate_tiles(id:int, first_time:bool):
 	#wid is number of tiles horizontally/vertically
 	#So total number of tiles is wid squared
 	var wid:int = Helper.get_wid(p_i.size)
-	var home_planet:bool = c_p_g == 2 and c_u == 0 and dim_num == 1
+	var home_planet_id = min(2, ProcGenSettings.max_planets_in_system - 1)
+	var home_planet:bool = c_p_g == home_planet_id and c_u == 0 and dim_num == 1
 	var N:int = pow(wid, 2)
 	tile_data.resize(N)
 	for i in N:
@@ -2996,7 +2998,7 @@ func generate_tiles(id:int, first_time:bool):
 	
 	var rng = RandomNumberGenerator.new()
 	rng.seed = p_i.seed
-	generate_aurora(p_i, rng)
+	generate_aurora(p_i, home_planet, rng)
 	
 	#We assume that the star system's age is inversely proportional to the coldest star's temperature
 	#Age is a factor in crater rarity. Older systems have more craters
@@ -3026,7 +3028,7 @@ func generate_tiles(id:int, first_time:bool):
 	var lake_coverage:float = pow(rng.randf() + (ProcGenSettings.lake_coverage - 0.5) * 4.0, 5)
 	if c_s_g == 0 and lake_coverage > 0.0:
 		lake_coverage -= 0.5
-	if c_p_g == 2:
+	if c_p_g == home_planet_id:
 		lake_coverage = -0.5
 	var cave_tile_num = 0
 	for i in wid:
@@ -3168,7 +3170,7 @@ func generate_tiles(id:int, first_time:bool):
 		p_i.erase("lake")
 	planet_data[id]["discovered"] = true
 	planet_data_persistent[id]["discovered"] = true
-	if c_p_g == 2:
+	if c_p_g == home_planet_id:
 		empty_tiles.clear()
 		for i in len(tile_data):
 			if len(tile_data[i].keys()) == 1 and tile_data[i].resource_production_bonus.is_empty():

@@ -81,8 +81,8 @@ func refresh_planets():
 		planet_glow.mouse_exited.connect(on_btn_out)
 		planet_btn.pressed.connect(on_planet_click.bind(p_i["id"], p_i.l_id))
 		planet_glow.pressed.connect(on_planet_click.bind(p_i["id"], p_i.l_id))
-		planet_btn.scale *= p_i["size"] * 0.0000003 * scale_mult * 640.0 / planet_btn.texture_normal.get_width()
-		planet_glow.scale *= sc
+		planet_btn.scale *= p_i["size"] * 0.0000006 * scale_mult * 320.0 / planet_btn.texture_normal.get_width()
+		planet_glow.scale *= sc + 1.2 * planet_btn.scale.x
 		if p_i.has("conquered"):
 			if p_i.has("bldg"):
 				planet_glow.modulate = Color(0.2, 0.2, 1, 1)

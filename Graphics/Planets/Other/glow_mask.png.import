@@ -1,0 +1,16 @@
+[remap]
+
+importer="bitmap"
+type="BitMap"
+uid="uid://bhrhq5t7jn8n6"
+path="res://.godot/imported/glow_mask.png-46d73efb249e546a1789667d96dc42fb.res"
+
+[deps]
+
+source_file="res://Graphics/Planets/Other/glow_mask.png"
+dest_files=["res://.godot/imported/glow_mask.png-46d73efb249e546a1789667d96dc42fb.res"]
+
+[params]
+
+create_from=0
+threshold=0.5

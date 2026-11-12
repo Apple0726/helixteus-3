@@ -2,6 +2,7 @@
 
 [ext_resource type="Texture2D" uid="uid://cq01wa1mq6mrr" path="res://Graphics/Planets/3.png" id="1"]
 [ext_resource type="Texture2D" uid="uid://b1dcgxga387up" path="res://Graphics/Effects/spotlight_1.png" id="1_pcobn"]
+[ext_resource type="BitMap" uid="uid://bhrhq5t7jn8n6" path="res://Graphics/Planets/Other/glow_mask.png" id="3_3dst1"]
 
 [node name="Control" type="Control" unique_id=2138809329]
 layout_mode = 3
@@ -22,6 +23,7 @@ grow_horizontal = 2
 grow_vertical = 2
 pivot_offset_ratio = Vector2(0.5, 0.5)
 texture_normal = ExtResource("1_pcobn")
+texture_click_mask = ExtResource("3_3dst1")
 stretch_mode = 5
 
 [node name="Button" type="TextureButton" parent="." unique_id=189356088]
