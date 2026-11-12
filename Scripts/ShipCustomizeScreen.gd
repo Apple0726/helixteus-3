@@ -134,10 +134,8 @@ func update_ship_stats_display():
 	var no_more_allocatable_points = points_allocated >= allocatable_points
 	if no_more_allocatable_points:
 		$ClassAndStats/ShipStats/PointsAllocated["theme_override_colors/font_color"] = Color.WHITE
-		$Actions/Done.disabled = false
 	else:
 		$ClassAndStats/ShipStats/PointsAllocated["theme_override_colors/font_color"] = Color.YELLOW
-		$Actions/Done.disabled = true
 	$ClassAndStats/ShipStats/AddHP.disabled = no_more_allocatable_points
 	$ClassAndStats/ShipStats/AddAttack.disabled = no_more_allocatable_points
 	$ClassAndStats/ShipStats/AddDefense.disabled = no_more_allocatable_points
@@ -159,70 +157,47 @@ func _on_done_pressed() -> void:
 func _on_cancel_pressed() -> void:
 	game.switch_view(game.l_v)
 
+func allocate_stat(stat:String, sign:int, node):
+	for i in 5 if Input.is_action_pressed("shift") else 1:
+		self["allocated_%s" % stat] += sign
+		update_ship_stats_display()
+		if self["allocated_%s" % stat] <= 0:
+			node.disabled = true
+			break
+		elif sign == 1:
+			node.disabled = false
+		if allocated_HP + allocated_attack + allocated_defense + allocated_accuracy + allocated_agility >= allocatable_points:
+			break
 
 func _on_add_hp_pressed() -> void:
-	allocated_HP += 1
-	$ClassAndStats/ShipStats/RemoveHP.disabled = false
-	update_ship_stats_display()
-
+	allocate_stat("HP", 1, $ClassAndStats/ShipStats/RemoveHP)
 
 func _on_remove_hp_pressed() -> void:
-	allocated_HP -= 1
-	if allocated_HP <= 0:
-		$ClassAndStats/ShipStats/RemoveHP.disabled = true
-	update_ship_stats_display()
-
-
-func _on_remove_attack_pressed() -> void:
-	allocated_attack -= 1
-	if allocated_attack <= 0:
-		$ClassAndStats/ShipStats/RemoveAttack.disabled = true
-	update_ship_stats_display()
-
+	allocate_stat("HP", -1, $ClassAndStats/ShipStats/RemoveHP)
 
 func _on_add_attack_pressed() -> void:
-	allocated_attack += 1
-	$ClassAndStats/ShipStats/RemoveAttack.disabled = false
-	update_ship_stats_display()
+	allocate_stat("attack", 1, $ClassAndStats/ShipStats/RemoveAttack)
 
-
-func _on_remove_defense_pressed() -> void:
-	allocated_defense -= 1
-	if allocated_defense <= 0:
-		$ClassAndStats/ShipStats/RemoveDefense.disabled = true
-	update_ship_stats_display()
-
+func _on_remove_attack_pressed() -> void:
+	allocate_stat("attack", -1, $ClassAndStats/ShipStats/RemoveAttack)
 
 func _on_add_defense_pressed() -> void:
-	allocated_defense += 1
-	$ClassAndStats/ShipStats/RemoveDefense.disabled = false
-	update_ship_stats_display()
+	allocate_stat("defense", 1, $ClassAndStats/ShipStats/RemoveDefense)
 
-
-func _on_remove_accuracy_pressed() -> void:
-	allocated_accuracy -= 1
-	if allocated_accuracy <= 0:
-		$ClassAndStats/ShipStats/RemoveAccuracy.disabled = true
-	update_ship_stats_display()
-
+func _on_remove_defense_pressed() -> void:
+	allocate_stat("defense", -1, $ClassAndStats/ShipStats/RemoveDefense)
 
 func _on_add_accuracy_pressed() -> void:
-	allocated_accuracy += 1
-	$ClassAndStats/ShipStats/RemoveAccuracy.disabled = false
-	update_ship_stats_display()
+	allocate_stat("defense", 1, $ClassAndStats/ShipStats/RemoveAccuracy)
 
-
-func _on_remove_agility_pressed() -> void:
-	allocated_agility -= 1
-	if allocated_agility <= 0:
-		$ClassAndStats/ShipStats/RemoveAgility.disabled = true
-	update_ship_stats_display()
-
+func _on_remove_accuracy_pressed() -> void:
+	allocate_stat("defense", -1, $ClassAndStats/ShipStats/RemoveAccuracy)
 
 func _on_add_agility_pressed() -> void:
-	allocated_agility += 1
-	$ClassAndStats/ShipStats/RemoveAgility.disabled = false
-	update_ship_stats_display()
+	allocate_stat("defense", 1, $ClassAndStats/ShipStats/RemoveAgility)
+
+func _on_remove_agility_pressed() -> void:
+	allocate_stat("defense", -1, $ClassAndStats/ShipStats/RemoveAgility)
 
 
 func _on_hp_icon_mouse_entered() -> void:

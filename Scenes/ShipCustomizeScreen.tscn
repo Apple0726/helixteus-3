@@ -117,7 +117,6 @@ text = "CANCEL"
 [node name="Done" type="Button" parent="Actions" unique_id=493983391]
 layout_mode = 2
 size_flags_horizontal = 3
-disabled = true
 text = "CONFIRM"
 
 [node name="ClassAndStats" type="Control" parent="." unique_id=748324084]

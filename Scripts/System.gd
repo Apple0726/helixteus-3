@@ -480,7 +480,7 @@ func show_planet_info(id:int, l_id:int):
 				"diameter": Helper.format_num(round(p_i.size), false, 9),
 				"dims": "" if p_i.type in [11, 12] else "({n}x{n})".format({"n":wid}),
 				"distFromStarText": tr("DISTANCE_FROM_STAR"),
-				"distFromStar": Helper.format_num(p_i.distance / 569.25, true),
+				"distFromStar": Helper.format_num(p_i.distance / Constants.pixels_per_AU, true),
 				"tempText": tr("SURFACE_TEMPERATURE"),
 				"tempColor": temp_color,
 				"tempC": Helper.clever_round(p_i.temperature - 273, 4),
@@ -761,6 +761,9 @@ func build_MS(obj:Dictionary, MS_to_build:String):
 						_star.cost_div_dict[star_over_id] = cost_div
 					else:
 						_star["cost_div_dict"] = {star_over_id:cost_div}
+		if not obj.has("luminosity"):
+			game.planet_data_persistent[obj.l_id].MS = obj.MS
+			game.planet_data_persistent[obj.l_id].MS_lv = obj.MS_lv
 		game.HUD.refresh()
 		game.get_node("UI/Panel").hide()
 		MS_constr_data.clear()

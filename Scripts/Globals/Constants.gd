@@ -1,3 +1,4 @@
 extends Node
 
-var base_ship_XP_to_lv = 100
+const base_ship_XP_to_lv = 100
+const pixels_per_AU = 569.25

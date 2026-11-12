@@ -39,8 +39,8 @@ func refresh():
 		var btn = planet_btn_scene.instantiate()
 		$Scroll/Planets.add_child(btn)
 		btn.get_node("HBoxContainer/TextureRect").texture = game.planet_textures[p_i.type - 3]
-		btn.get_node("HBoxContainer/Diameter").text = "%s km" % [p_i.size]
-		btn.get_node("HBoxContainer/Distance").text = "%s AU" % [Helper.clever_round(p_i.distance / 569.25)]
+		btn.get_node("HBoxContainer/Diameter").text = "%s km" % [Helper.clever_round(p_i.size)]
+		btn.get_node("HBoxContainer/Distance").text = "%s AU" % [Helper.clever_round(p_i.distance / Constants.pixels_per_AU)]
 		if not (p_i.size <= int(4000 * pow(game.u_i.gravitational, 0.5)) or star.MS_lv == 1 and p_i.size <= int(40000 * pow(game.u_i.gravitational, 0.5)) or star.MS_lv == 2):
 			btn.get_node("HBoxContainer/Diameter")["theme_override_colors/font_color"] = Color.RED
 			btn.get_node("HBoxContainer/Distance")["theme_override_colors/font_color"] = Color.RED

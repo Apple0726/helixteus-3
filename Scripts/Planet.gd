@@ -585,7 +585,8 @@ func constr_bldg(tile_id:int, curr_time:int, _bldg_to_construct:int, mass_build:
 			if not tile.has("depth"):
 				tile.depth = 0
 			Helper.set_tile_data_persistent(tile_id, "depth", tile.depth)
-			Helper.set_tile_data_persistent(tile_id, "crater", tile.crater)
+			if tile.has("crater"):
+				Helper.set_tile_data_persistent(tile_id, "crater", tile.crater)
 			if not game.boring_machine_data.has(game.c_p_g):
 				game.boring_machine_data[game.c_p_g] = {"tiles":[tile_id], "c_s_g":game.c_s_g, "c_p":p_id}
 			else:
@@ -1606,9 +1607,9 @@ func add_bldg(id2:int, type:int, building_animation:bool = false):
 				add_rsrc(v, Color(0.41, 0.25, 0.16, 1), null, id2)
 		Building.SUBATOMIC_PARTICLE_REACTOR:
 			if tile.bldg.has("reaction"):
-				add_rsrc(v, Color.WHITE, load("res://Graphics/Atoms/%s.png" % tile.bldg.reaction), id2)
+				add_rsrc(v, Color.WEB_PURPLE, load("res://Graphics/Atoms/%s.png" % tile.bldg.reaction), id2)
 			else:
-				add_rsrc(v, Color.WHITE, Data.rsrc_icons[Building.SUBATOMIC_PARTICLE_REACTOR], id2)
+				add_rsrc(v, Color.WEB_PURPLE, Data.rsrc_icons[Building.SUBATOMIC_PARTICLE_REACTOR], id2)
 		#_:
 			#if Mods.added_buildings.has(type):
 				#add_rsrc(v, Mods.added_buildings[type].icon_color, Data.rsrc_icons[type], id2)

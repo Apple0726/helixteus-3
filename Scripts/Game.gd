@@ -2710,7 +2710,6 @@ func generate_planets(id:int):#local id
 				elif p_i.MS == "SE":
 					p_i["repair_cost"] = Data.MS_costs[p_i.MS + "_" + str(p_i.MS_lv)].money * 12.0 * rng.randf_range(1, 1.5) * p_i.size / 12000.0
 				p_i.repair_cost *= engineering_bonus.BCM
-				system_data[id]["has_MS"] = true
 		planet_data.append(p_i)
 	if c_s_g != 0:
 		var furthest_planet_distance = planet_data[-1].distance
@@ -2742,7 +2741,6 @@ func generate_planets(id:int):#local id
 				elif star.MS == "PK":
 					star["repair_cost"] = Data.MS_costs[star.MS + "_" + str(star.MS_lv)].money * 12.0 * rng.randf_range(1, 1.5) * planet_data[-1].distance / 1000.0
 				star.repair_cost *= engineering_bonus.BCM
-				system_data[id].has_MS = true
 		var system_view_zoom = 40.0 / furthest_planet_distance * (planet_data[0].distance / 70)
 		if not system_data[id].has("view"):
 			system_data[id]["view"] = {"pos": Vector2(640, 360), "zoom": system_view_zoom}
@@ -2782,9 +2780,9 @@ func generate_planets(id:int):#local id
 			else:
 				planet_data[i][key] = p_i_persistent[key]
 			if key == "natural_MS_destroyed":
-				planet_data[i] .erase("repair_cost")
-				planet_data[i] .erase("MS")
-				planet_data[i] .erase("MS_lv")
+				planet_data[i].erase("repair_cost")
+				planet_data[i].erase("MS")
+				planet_data[i].erase("MS_lv")
 		if p_i_persistent.has("ancient_bldg"):
 			for AB in p_i_persistent.ancient_bldg:
 				if p_i_persistent.ancient_bldg[AB].has("repaired"):
