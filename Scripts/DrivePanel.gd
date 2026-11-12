@@ -33,10 +33,6 @@ func refresh():
 	$Panel/Drives/ChemicalDrive.visible = game.science_level[Science.CHEMICAL_DRIVE] >= 1
 	$Panel/Drives/IonDrive.visible = game.science_level[Science.CHEMICAL_DRIVE] >= 2
 	if fuel_selected != "":
-		if selected_fuel_type == "mats":
-			unit = "kg"
-		elif selected_fuel_type == "atoms":
-			unit = "mol"
 		$Control/HSlider.max_value = game[selected_fuel_type][fuel_selected]
 
 func use_drive():
@@ -47,7 +43,7 @@ func use_drive():
 		game.ships_travel_data.travel_cost += cost * energy_per_quantity_of_fuel
 		game[selected_fuel_type][fuel_selected] -= cost
 		set_process(true)
-		game.ships_travel_data.drive_available_time = Time.get_unix_time_from_system() + 60 * pow(2, game.ships_travel_data.drives_used)
+		game.ships_travel_data.drive_available_time = Time.get_unix_time_from_system() + 60 * pow(2, game.ships_travel_data.drives_used) / game.u_i.time_speed
 		game.ships_travel_data.drives_used += 1
 		game.popup(tr("DRIVE_SUCCESSFULLY_ACTIVATED"), 1.5)
 	#refresh_h_slider()
@@ -78,12 +74,16 @@ func select_fuel(type: String, fuel: String, texture, fuel_btn_node):
 	fuel_selected = fuel
 	if fuel == "coal":
 		energy_per_quantity_of_fuel = 400
+		unit = "kg"
 	elif fuel == "cellulose":
+		unit = "kg"
 		energy_per_quantity_of_fuel = 2500
 	elif fuel == "Ne":
 		energy_per_quantity_of_fuel = 10000
+		unit = "mol"
 	elif fuel == "Xe":
 		energy_per_quantity_of_fuel = 9.0e7
+		unit = "mol"
 	$Control/HSlider.max_value = game[selected_fuel_type][fuel_selected]
 	$Control/HSlider.value = 0
 	_on_h_slider_value_changed($Control/HSlider.value)
@@ -113,7 +113,7 @@ func _on_h_slider_value_changed(value):
 		ships_time_remaining = 0
 	$Control/UseDrive.disabled = game.ships_travel_data.drive_available_time > Time.get_unix_time_from_system() or is_zero_approx(value)
 	if not is_processing():
-		$Control/Cooldown.text = Helper.time_to_str(60 * pow(2, game.ships_travel_data.drives_used))
+		$Control/Cooldown.text = Helper.time_to_str(60 * pow(2, game.ships_travel_data.drives_used) / game.u_i.time_speed)
 	cost = $Control/HSlider.value
 	ships_time_reduction = ships_time_remaining - ships_time_remaining * (game.ships_travel_data.travel_cost / (game.ships_travel_data.travel_cost + cost * energy_per_quantity_of_fuel))
 	$Control/FuelAmount.text = "%s / %s %s" % [Helper.format_num(cost, true), Helper.format_num(game[selected_fuel_type][fuel_selected], true), unit]
@@ -124,7 +124,7 @@ func _process(delta):
 	if Time.get_unix_time_from_system() > game.ships_travel_data.drive_available_time:
 		set_process(false)
 		$Control/UseDrive.disabled = false
-		$Control/Cooldown.text = Helper.time_to_str(60 * pow(2, game.ships_travel_data.drives_used))
+		$Control/Cooldown.text = Helper.time_to_str(60 * pow(2, game.ships_travel_data.drives_used) / game.u_i.time_speed)
 
 func refresh_h_slider():
 	if fuel_selected != "":

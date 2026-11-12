@@ -296,36 +296,6 @@ caret_blink_interval = 0.5
 [node name="Unit" type="Label" parent="TP/VBox/dark_energy" unique_id=1104674776]
 layout_mode = 2
 
-[node name="difficulty" type="HBoxContainer" parent="TP/VBox" unique_id=249340644]
-layout_mode = 2
-
-[node name="Label" type="RichTextLabel" parent="TP/VBox/difficulty" unique_id=1557675686]
-custom_minimum_size = Vector2(300, 0)
-layout_mode = 2
-mouse_filter = 1
-bbcode_enabled = true
-scroll_active = false
-
-[node name="HSlider" type="HSlider" parent="TP/VBox/difficulty" unique_id=433491142]
-custom_minimum_size = Vector2(250, 0)
-layout_mode = 2
-size_flags_vertical = 1
-min_value = 0.5
-max_value = 5.0
-step = 0.1
-value = 1.0
-allow_greater = true
-
-[node name="Label2" type="LineEdit" parent="TP/VBox/difficulty" unique_id=1773293083]
-custom_minimum_size = Vector2(70, 0)
-layout_mode = 2
-text = "1"
-caret_blink = true
-caret_blink_interval = 0.5
-
-[node name="Unit" type="Label" parent="TP/VBox/difficulty" unique_id=96248358]
-layout_mode = 2
-
 [node name="time_speed" type="HBoxContainer" parent="TP/VBox" unique_id=873845908]
 layout_mode = 2
 
@@ -390,6 +360,24 @@ layout_mode = 2
 layout_mode = 2
 size_flags_vertical = 4
 texture_normal = ExtResource("4_m1vnj")
+
+[node name="difficulty" type="HBoxContainer" parent="TP/VBox" unique_id=249340644]
+layout_mode = 2
+
+[node name="Label" type="RichTextLabel" parent="TP/VBox/difficulty" unique_id=1557675686]
+custom_minimum_size = Vector2(300, 0)
+layout_mode = 2
+mouse_filter = 1
+bbcode_enabled = true
+scroll_active = false
+
+[node name="Label2" type="Label" parent="TP/VBox/difficulty" unique_id=151737100]
+custom_minimum_size = Vector2(70, 0)
+layout_mode = 2
+text = "1"
+
+[node name="Unit" type="Label" parent="TP/VBox/difficulty" unique_id=96248358]
+layout_mode = 2
 
 [node name="antimatter" type="HBoxContainer" parent="TP/VBox" unique_id=1882136640]
 visible = false

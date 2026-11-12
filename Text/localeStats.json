@@ -1,8 +1,8 @@
 {
     "en": {
         "lines": 1630,
-        "words": 11532,
-        "chars": 70202,
+        "words": 11539,
+        "chars": 70249,
         "name": "English"
     },
     "fr": {
@@ -20,7 +20,7 @@
     "zh": {
         "lines": 1630,
         "words": 2126,
-        "chars": 22750,
+        "chars": 22746,
         "name": "中文"
     },
     "de": {
@@ -50,7 +50,7 @@
     "hu": {
         "lines": 1609,
         "words": 8634,
-        "chars": 63551,
+        "chars": 63555,
         "name": "Magyar"
     },
     "ja": {

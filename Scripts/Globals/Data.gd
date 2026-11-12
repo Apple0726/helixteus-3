@@ -197,7 +197,6 @@ var univ_prop_weights:Dictionary = {
 	"charge":40,
 	"dark_energy":50,
 	"age":15,
-	"difficulty":10,
 	"time_speed":50,
 	"antimatter":100,
 	}

@@ -1202,11 +1202,6 @@ layout_mode = 2
 step = 1.0
 value = 25.0
 
-[node name="difficulty" parent="ModifyDimension/Physics/Control/VBox" unique_id=2022415554 instance=ExtResource("19")]
-layout_mode = 2
-step = 1.0
-value = 10.0
-
 [node name="time_speed" parent="ModifyDimension/Physics/Control/VBox" unique_id=379806168 instance=ExtResource("19")]
 layout_mode = 2
 step = 1.0
@@ -1317,14 +1312,6 @@ offset_top = 1391.0
 offset_right = 418.0
 offset_bottom = 1416.0
 text = "(50)"
-
-[node name="difficulty" type="Label" parent="ModifyDimension/Physics/Control/Defaults" unique_id=1467963656]
-layout_mode = 0
-offset_left = 376.0
-offset_top = 1431.0
-offset_right = 418.0
-offset_bottom = 1456.0
-text = "(10)"
 
 [node name="time_speed" type="Label" parent="ModifyDimension/Physics/Control/Defaults" unique_id=181470624]
 layout_mode = 0

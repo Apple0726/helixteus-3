@@ -25,7 +25,6 @@ var point_distribution:Dictionary = {
 	"gravitational":0,
 	"charge":0,
 	"dark_energy":0,
-	"difficulty":0,
 	"time_speed":0,
 	"age":0,
 	"antimatter":0,
@@ -39,7 +38,7 @@ func _ready() -> void:
 		else:
 			prop_hbox.get_node("Label").mouse_entered.connect(game.show_tooltip.bind(tr(prop_hbox.name.to_upper() + "_DESC")))
 		prop_hbox.get_node("Label").mouse_exited.connect(game.hide_tooltip)
-		if prop_hbox.name in ["s_b", "antimatter"]:
+		if prop_hbox.name in ["s_b", "difficulty", "antimatter"]:
 			continue
 		prop_hbox.get_node("HSlider").value_changed.connect(_on_TP_value_changed.bind(prop_hbox.name))
 		prop_hbox.get_node("Label2").text_changed.connect(_on_Label2_text_changed.bind(prop_hbox.name))
@@ -53,6 +52,7 @@ func refresh():
 			$TP/VBox.get_node(prop + "/Label").text = "%s [img]Graphics/Icons/help.png[/img]" % tr(prop.to_upper())
 		_on_TP_value_changed(float(get_node("TP/VBox/%s/Label2" % prop).text), prop)
 	$TP/VBox/s_b/Label.text = "%s [img]Graphics/Icons/help.png[/img]" % tr("S_B")
+	$TP/VBox/difficulty/Label.text = "%s [img]Graphics/Icons/help.png[/img]" % tr("DIFFICULTY")
 	init_PP = get_lv_sum()
 	if game.subject_levels.dimensional_power >= 5:
 		init_PP += 150
@@ -112,15 +112,16 @@ func _on_TP_value_changed(value:float, prop:String):
 		value = float(text_node.text)
 		get_node("TP/VBox/%s/HSlider" % prop).value = value
 	if prop == "antimatter":
-		point_distribution.antimatter = value * -game.physics_bonus[prop]
+		point_distribution.antimatter = value * game.physics_bonus[prop]
 	else:
 		if prop == "time_speed" and game.subject_levels.dimensional_power >= 4:
 			update_cave_time_speed_text()
 		if value >= 1:
-			point_distribution[prop] = (value - 1) * -game.physics_bonus[prop]
+			point_distribution[prop] = (value - 1) * game.physics_bonus[prop]
 		else:
-			point_distribution[prop] = (1 / value - 1) * min(game.physics_bonus[prop], Data.univ_prop_weights[prop])
-	PP = init_PP * PP_multiplier + Helper.get_sum_of_dict(point_distribution)
+			point_distribution[prop] = -(1 / value - 1) * min(game.physics_bonus[prop], Data.univ_prop_weights[prop])
+	var PP_allocated = Helper.get_sum_of_dict(point_distribution)
+	PP = init_PP * PP_multiplier - PP_allocated
 	if is_equal_approx(PP, 0):
 		PP = 0
 	var s_b:float = pow(float($TP/VBox/boltzmann/Label2.text), 4) / pow(float($TP/VBox/planck/Label2.text), 3) / pow(float($TP/VBox/speed_of_light/Label2.text), 2)
@@ -128,6 +129,8 @@ func _on_TP_value_changed(value:float, prop:String):
 		$TP/VBox/s_b/Label2.text = Helper.format_num(round(s_b))
 	else:
 		$TP/VBox/s_b/Label2.text = str(Helper.clever_round(s_b))
+	var difficulty = PP_allocated * 0.02 + 1.0
+	$TP/VBox/difficulty/Label2.text = str(Helper.clever_round(difficulty))
 	$TP/Points.text = "%s: %s [img]Graphics/Icons/help.png[/img]" % [tr("PROBE_POINTS"), Helper.format_num(PP, true)]
 
 func _on_Label2_text_changed(new_text, prop:String):
@@ -152,7 +155,7 @@ func discover_univ():
 	u_i.cluster_num = ProcGenSettings.number_of_clusters
 	u_i.seed = ProcGenSettings.universe_seed
 	for prop in $TP/VBox.get_children():
-		if prop.name == "s_b":
+		if prop.name in "s_b":
 			continue
 		u_i[prop.name] = float(prop.get_node("Label2").text)
 	if not game.achievement_data.is_empty() and not game.achievement_data.progression.has("new_universe"):

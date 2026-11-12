@@ -46,8 +46,12 @@ if __name__ == "__main__":
             for i in range(1, len(row)):
                 # If the cell's translation is out-of-date (marked by a ! followed by two letters indicating the locale, then a new line)
                 # empty it to use the default language (English)
-                if row[i] != "" and row[i][0] == "!" and row[i][3] == "\n":
-                    row[i] = ""
+                if row[i] != "":
+                    outdated_marker = "!" + locales[i]
+                    if row[i][0:3] == outdated_marker:
+                        row[i] = ""
+                    elif outdated_marker in row[i]:
+                        row[i] = row[i][0:row[i].find(outdated_marker)-1]
                 if row[i] != "":
                     localeStats[locales[i]]["lines"] += 1
                     localeStats[locales[i]]["words"] += len(row[i].split())
