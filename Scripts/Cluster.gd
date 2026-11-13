@@ -28,7 +28,7 @@ func _ready():
 			continue
 		conquered = conquered and g_i.has("conquered")
 		var galaxy_btn = TextureButton.new()
-		galaxy_btn.texture_normal = game.galaxy_textures[g_i.type]
+		galaxy_btn.texture_normal = load("res://Graphics/Galaxies/%s.png" % g_i.type)
 		galaxy_btn.pivot_offset_ratio = Vector2.ONE * 0.5
 		add_child(galaxy_btn)
 		obj_btns.append(galaxy_btn)
@@ -39,6 +39,9 @@ func _ready():
 		galaxy_btn.scale = Vector2.ONE * radius * 256.0 / galaxy_btn.texture_normal.get_width()
 		galaxy_btn.rotation = g_i.rotation
 		galaxy_btn.modulate = g_i.get("modulate", Color.WHITE)
+		galaxy_btn.material = ShaderMaterial.new()
+		galaxy_btn.material.shader = preload("res://Shaders/HueShift.gdshader")
+		galaxy_btn.material.set_shader_parameter("shift_amount", g_i.seed % (90 if g_i.type == 6 else 360))
 		galaxy_btn.self_modulate.a = 0.0
 		var tween = create_tween()
 		tween.tween_property(galaxy_btn, "self_modulate:a", 1.0, 0.15)

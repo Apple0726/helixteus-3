@@ -213,7 +213,11 @@ func refresh():
 		$Bookmarks/Bookmarked.button_pressed = game.system_data[game.c_s].has("bookmarked")
 		$Bookmarks/Bookmarked.visible = true
 		$Top/Name/Name.text = game.system_data[game.c_s].name
-		switch_btn_texture.texture = load("res://Graphics/Galaxies/%s.png" % game.galaxy_data[game.c_g].type)
+		var g_i = game.galaxy_data[game.c_g]
+		switch_btn_texture.material = ShaderMaterial.new()
+		switch_btn_texture.material.shader = preload("res://Shaders/HueShift.gdshader")
+		switch_btn_texture.material.set_shader_parameter("shift_amount", g_i.seed % (90 if g_i.type == 6 else 360))
+		switch_btn_texture.texture = load("res://Graphics/Galaxies/%s.png" % g_i.type)
 	elif game.c_v == "galaxy":
 		$Bookmarks/Bookmarked.button_pressed = game.galaxy_data[game.c_g].has("bookmarked")
 		$Bookmarks/Bookmarked.visible = true

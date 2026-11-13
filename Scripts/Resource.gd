@@ -9,6 +9,7 @@ var mass_str:String
 var rsrc:float = 0.0
 var rsrcs_required:float = 0.0
 var show_available = false
+var limiting_rsrc = false
 
 func _ready() -> void:
 	update_info()
@@ -29,7 +30,7 @@ func update_info():
 			$Texture2D/IsEnough.texture = preload("res://Graphics/Icons/Annotator/cross.png")
 		else:
 			$Texture2D/IsEnough.texture = preload("res://Graphics/Icons/Annotator/check.png")
-	Helper.format_text($Text, $Texture2D, "", show_available, rsrcs_required, rsrc, mass_str)
+	Helper.format_text($Text, $Texture2D, "", show_available, rsrcs_required, rsrc, mass_str, limiting_rsrc)
 	
 func connect_mouse_events():
 	$Texture2D.mouse_entered.connect(show_tooltip)

@@ -9,7 +9,7 @@ extends Control
 @onready var cave_depth_node = $AdvancedSettingsGroup/ScrollContainer/Control/CaveDepth
 @onready var cave_floor_diff_node = $AdvancedSettingsGroup/ScrollContainer/Control/CaveFloorDifficulty
 @onready var cave_traversable_space_node = $AdvancedSettingsGroup/ScrollContainer/Control/CaveTraversableSpace
-@onready var distance_between_planets_node = $AdvancedSettingsGroup/ScrollContainer/Control/DistanceBetweenPlanets
+@onready var star_planet_distance_node = $AdvancedSettingsGroup/ScrollContainer/Control/DistanceBetweenPlanets
 @onready var number_of_planets_node = $AdvancedSettingsGroup/ScrollContainer/Control/NumberOfPlanets
 @onready var max_planets_in_system_node = $AdvancedSettingsGroup/ScrollContainer/Control/MaxPlanetsInSystem
 @onready var star_system_density_node = $AdvancedSettingsGroup/ScrollContainer/Control/StarSystemDensity
@@ -42,7 +42,7 @@ func _ready() -> void:
 		cave_floor_diff_node: {"min":1.0, "default": ProcGenSettings.default_values.cave_floor_difficulty},
 		cave_traversable_space_node: {"min":0.0, "max":1.0, "default": ProcGenSettings.default_values.cave_traversable_space},
 		number_of_planets_node: {"min":0.0, "default": ProcGenSettings.default_values.number_of_planets},
-		distance_between_planets_node: {"min":0.0, "rec_min":0.1, "rec_max":10.0, "default": ProcGenSettings.default_values.distance_between_planets},
+		star_planet_distance_node: {"min":0.0, "rec_min":0.1, "rec_max":10.0, "default": ProcGenSettings.default_values.star_planet_distance},
 		max_planets_in_system_node: {"min":1, "rec_max":50, "default": ProcGenSettings.default_values.max_planets_in_system},
 		star_system_density_node: {"min":0.0, "rec_min":0.1, "rec_max":10.0, "default": ProcGenSettings.default_values.star_system_density},
 		elliptical_galaxy_min_size_node: {"min":1, "default": ProcGenSettings.default_values.min_number_of_systems_elliptical},
@@ -51,7 +51,7 @@ func _ready() -> void:
 		spiral_galaxy_max_size_node: {"min":1, "rec_max":50000, "default": ProcGenSettings.default_values.max_number_of_systems_spiral},
 		dwarf_elliptical_galaxy_ratio_node: {"min":0.0, "max":1.0, "default": ProcGenSettings.default_values.dwarf_elliptical_galaxy_ratio},
 		elliptical_spiral_galaxy_ratio_node: {"min":0.0, "max":1.0, "default": ProcGenSettings.default_values.elliptical_spiral_galaxy_ratio},
-		galaxy_density_node: {"min":0.0, "rec_min":0.3, "rec_max":10.0, "default": ProcGenSettings.default_values.galaxy_density},
+		galaxy_density_node: {"min":0.0, "rec_max":10.0, "default": ProcGenSettings.default_values.galaxy_density},
 		min_number_of_galaxies_node: {"min":1, "default": ProcGenSettings.default_values.min_number_of_galaxies},
 		max_number_of_galaxies_node: {"min":1, "rec_max":50000, "default": ProcGenSettings.default_values.max_number_of_galaxies},
 		galaxy_group_ratio_node: {"min":0.0, "max":1.0, "default": ProcGenSettings.default_values.galaxy_group_ratio},
@@ -91,7 +91,8 @@ func _ready() -> void:
 
 func set_size_of_COs(size_mult:float):
 	planet_tile_dimensions_node.text = str(snappedf(sqrt(size_mult), 0.01))
-	cave_tile_dimensions_node.text = str(size_mult)
+	cave_tile_dimensions_node.text = str(snappedf(sqrt(size_mult), 0.01))
+	number_of_planets_node.text = str(snappedf(sqrt(size_mult), 0.01))
 	elliptical_galaxy_min_size_node.text = str(int(size_mult * ProcGenSettings.default_values.min_number_of_systems_elliptical))
 	elliptical_galaxy_max_size_node.text = str(int(size_mult * ProcGenSettings.default_values.max_number_of_systems_elliptical))
 	spiral_galaxy_min_size_node.text = str(int(size_mult * ProcGenSettings.default_values.min_number_of_systems_spiral))
@@ -107,7 +108,7 @@ func set_size_of_COs(size_mult:float):
 		check_value_validity(line_edit.text, line_edit)
 
 func set_density_of_COs(density_mult:float):
-	distance_between_planets_node.text = str(density_mult)
+	star_planet_distance_node.text = str(density_mult)
 	star_system_density_node.text = str(density_mult)
 	galaxy_density_node.text = str(density_mult)
 	cluster_density_node.text = str(density_mult)
@@ -179,7 +180,7 @@ func _on_start_game_pressed() -> void:
 	ProcGenSettings.cave_floor_difficulty = float(cave_floor_diff_node.text)
 	ProcGenSettings.cave_traversable_space = float(cave_traversable_space_node.text)
 
-	ProcGenSettings.distance_between_planets = float(distance_between_planets_node.text)
+	ProcGenSettings.star_planet_distance = float(star_planet_distance_node.text)
 	ProcGenSettings.number_of_planets = float(number_of_planets_node.text)
 	ProcGenSettings.max_planets_in_system = int(max_planets_in_system_node.text)
 

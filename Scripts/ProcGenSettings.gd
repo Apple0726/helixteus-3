@@ -13,7 +13,7 @@ var cave_floor_difficulty = 2.0
 var cave_traversable_space = 0.5
 
 # Star system
-var distance_between_planets = 1.0
+var star_planet_distance = 1.0
 var number_of_planets = 1.0
 var max_planets_in_system = 40
 
@@ -48,7 +48,7 @@ var default_values = {
 	"cave_floor_difficulty": cave_floor_difficulty,
 	"cave_traversable_space": cave_traversable_space,
 
-	"distance_between_planets": distance_between_planets,
+	"star_planet_distance": star_planet_distance,
 	"number_of_planets": number_of_planets,
 	"max_planets_in_system": max_planets_in_system,
 

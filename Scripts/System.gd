@@ -202,8 +202,7 @@ func refresh_stars():
 		var star = TextureButton.new()
 		star.texture_normal = load("res://Graphics/Effects/spotlight_%s.png" % [int(star_info.temperature) % 3 + 4])
 		self.add_child(star)
-		star.scale.x = max(5.0 * star_info.size / game.STAR_SCALE_DIV, 0.008) * scale_mult
-		star.scale.y = max(5.0 * star_info.size / game.STAR_SCALE_DIV, 0.008) * scale_mult
+		star.scale *= max(20.0 * star_info.size / game.STAR_SCALE_DIV, 0.008) * scale_mult
 		star.texture_click_mask = preload("res://Graphics/Misc/StarCM.png")
 		star.position = star_info.pos * scale_mult - star.texture_normal.get_size() * 0.5 * star.scale.x
 		star.mouse_entered.connect(on_star_over.bind(i, star))
@@ -261,8 +260,8 @@ func add_MS_sprite(node, obj:Dictionary):
 		MS_sprite.scale *= 1024.0 / MS_sprite.texture.get_height()
 	elif obj.MS == "MME":
 		MS_sprite.scale *= 1024.0 / MS_sprite.texture.get_height()
-	elif obj.MS in ["DS", "CBS", "MB"]:
-		MS_sprite.scale *= 3.0
+	elif obj.MS in ["DS", "MB"]:
+		MS_sprite.scale *= 0.6
 	if obj.MS == "PK":
 		var turret = Sprite2D.new()
 		turret.texture = preload("res://Graphics/Megastructures/PK_turret.png")

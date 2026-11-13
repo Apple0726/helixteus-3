@@ -6,7 +6,6 @@ const VERSION:String = "v0.31"
 const COMPATIBLE_VERSIONS = []
 
 var planet_textures:Array
-var galaxy_textures:Array
 var bldg_textures:Array
 var ancient_bldg_textures:Array
 
@@ -400,8 +399,6 @@ func _ready():
 #	place_BG_sc_stars()
 	for i in range(3, 13):
 		planet_textures.append(load("res://Graphics/Planets/%s.png" % i))
-	for i in range(0, 7):
-		galaxy_textures.append(load("res://Graphics/Galaxies/%s.png" % i))
 	for bldg in Building.names:
 		var dir_str = "res://Graphics/Buildings/%s.png" % bldg
 		if ResourceLoader.exists(dir_str):
@@ -824,7 +821,7 @@ func start_game(univ, new_save, DR_advantage):
 		"cave_floor_difficulty": ProcGenSettings.cave_floor_difficulty,
 		"cave_traversable_space": ProcGenSettings.cave_traversable_space,
 
-		"distance_between_planets": ProcGenSettings.distance_between_planets,
+		"star_planet_distance": ProcGenSettings.star_planet_distance,
 		"number_of_planets": ProcGenSettings.number_of_planets,
 		"max_planets_in_system": ProcGenSettings.max_planets_in_system,
 
@@ -2007,7 +2004,7 @@ func generate_galaxies(id:int):
 			continue
 		var g_i = {
 			"parent": id,
-			"type": rng.randi() % 6,
+			"type": [0, 1, 2, 6][rng.randi() % 4],
 			"dark_matter": Helper.clever_round(pow(rng.randf_range(0.85, 1.15), -log(max(1e-7, rng.randf())) * log(redshift + 1.0) * 0.8 + 1.0)), # Influences planet numbers and size
 			"rotation": rng.randf_range(0.0, 2.0 * PI),
 			"id": g_id + galaxies_generated,
@@ -2030,17 +2027,17 @@ func generate_galaxies(id:int):
 		var radius = 128.0 * sqrt(g_i.system_num / GALAXY_SCALE_DIV)
 		if ring > 0:
 			var radius_angle = asin(2.0 * radius / dist_from_center)
-			var th_increment = PI / 1.5 / sqrt(ring)
+			var th_increment = max(PI / 1.5 / sqrt(ring) * ProcGenSettings.galaxy_density, asin(max_possible_galaxy_diameter / dist_from_center))
 			var random_angle_limit = max(0.0, th_increment - radius_angle) / 2.0
-			pos = Vector2.from_angle(rng.randf_range(th - random_angle_limit, th + random_angle_limit)) * dist_from_center * ProcGenSettings.galaxy_density
+			pos = Vector2.from_angle(rng.randf_range(th - random_angle_limit, th + random_angle_limit)) * dist_from_center
 			th += th_increment
 			if th >= 2.0 * PI - th_increment / 2.0:
 				th = 0.0
-				dist_from_center += max_possible_galaxy_diameter
+				dist_from_center += max_possible_galaxy_diameter * max(ProcGenSettings.galaxy_density, 1.0)
 				ring += 1
 		else:
 			ring += 1
-			dist_from_center = max_possible_galaxy_diameter
+			dist_from_center = max_possible_galaxy_diameter * max(ProcGenSettings.galaxy_density, 1.0)
 		g_i["pos"] = pos
 		max_outer_radius = max(max_outer_radius, radius + dist_from_center)
 		if id == 0:#if the galaxies are in starting cluster
@@ -2522,6 +2519,7 @@ func generate_planets(id:int):#local id
 		earn_achievement("exploration", "40_planet_system")
 	system_data[id]["planets"].clear()
 	var home_planet_id = min(2, ProcGenSettings.max_planets_in_system - 1)
+	var first_planet_distance = rng.randf_range(19.0, 21.0) * max(2.0, star_boundary) * ProcGenSettings.star_planet_distance
 	for i in range(1, planet_num + 1):
 		var p_id = planet_data.size()
 		# p_i = planet_info
@@ -2530,7 +2528,7 @@ func generate_planets(id:int):#local id
 			"ring": i,
 			"type": rng.randi_range(3, 10),
 			"angle": rng.randf_range(0.0, 2.0 * PI),
-			"distance": pow(1.0 + 0.3 * ProcGenSettings.distance_between_planets, i) * rng.randf_range(20.0, 22.0) * star_boundary,
+			"distance": first_planet_distance + (pow(1.3, i) - 1.0) * first_planet_distance,
 			"parent": id,
 			"view": {"pos":Vector2.ZERO, "zoom":1.0},
 			"tiles": [],

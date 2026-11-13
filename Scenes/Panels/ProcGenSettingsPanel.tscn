@@ -512,7 +512,7 @@ offset_left = 23.0
 offset_top = 751.0
 offset_right = 359.0
 offset_bottom = 774.0
-text = "DISTANCE_BETWEEN_PLANETS"
+text = "STAR_PLANET_DISTANCE"
 
 [node name="DistanceBetweenPlanetsMult" type="Label" parent="AdvancedSettingsGroup/ScrollContainer/Control" unique_id=2020716736]
 layout_mode = 0

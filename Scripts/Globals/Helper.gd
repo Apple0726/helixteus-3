@@ -15,25 +15,31 @@ func set_btn_color(btn):
 	btn["theme_override_colors/font_color_hover"] = Color(0, 1, 1, 1)
 	btn["theme_override_colors/font_color_pressed"] = Color(0, 1, 1, 1)
 
-func get_rsrc_available_text(rsrc_available:float, rsrc_cost:float, mass_str:String = "", html:bool = false):
+func get_rsrc_available_text(rsrc_available:float, rsrc_cost:float, mass_str:String, html:bool):
+	var format = {
+		"available": format_num(clever_round(rsrc_available, 3, false, true), 3),
+		"cost": format_num(clever_round(rsrc_cost, 3, false, true), 3),
+		"mass_str": mass_str
+	}
 	if html:
 		if rsrc_available >= rsrc_cost:
-			return "[color=#00ff00]{cost} ({available})[/color]".format({"available": format_num(clever_round(rsrc_available, 3, false, true), 3), "cost": format_num(clever_round(rsrc_cost, 3, false, true), 3)}) + " " + mass_str
-		else:
-			return "[color=#ff0000]{cost} ({available})[/color]".format({"available": format_num(clever_round(rsrc_available, 3, false, true), 3), "cost": format_num(clever_round(rsrc_cost, 3, false, true), 3)}) + " " + mass_str
-	else:
-		return "{cost} ({available})".format({"available": format_num(clever_round(rsrc_available, 3, false, true), 3), "cost": format_num(clever_round(rsrc_cost, 3, false, true), 3)}) + " " + mass_str
+			return "[color=#00ff00]{cost} ({available}) {mass_str}[/color]".format(format)
+		return "[color=#ff0000]{cost} ({available}) {mass_str}[/color]".format(format)
+	return "{cost} ({available}) {mass_str}".format(format)
 
 #put_rsrc helper function
-func format_text(text_node, texture, path:String, show_available:bool, rsrc_cost:float, rsrc_available:float, mass_str:String = ""):
+func format_text(text_node, texture, path:String, show_available:bool, rsrc_cost:float, rsrc_available:float, mass_str:String = "", limiting_rsrc = false):
 	if path != "":
 		texture.texture_normal = load("res://Graphics/" + path + ".png")
 	var text:String
 	var color:Color = Color.WHITE
 	if show_available:
-		text = get_rsrc_available_text(rsrc_available, rsrc_cost, mass_str)
+		text = get_rsrc_available_text(rsrc_available, rsrc_cost, mass_str, false)
 		if rsrc_available >= rsrc_cost:
-			color = Color.GREEN
+			if limiting_rsrc:
+				color = Color.YELLOW
+			else:
+				color = Color.GREEN
 		else:
 			color = Color.RED
 	else:

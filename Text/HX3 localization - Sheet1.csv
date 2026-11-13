@@ -1962,7 +1962,7 @@ CAVE_TRAVERSABLE_SPACE,Traversable space,,,可遍历空间,,,,,Bejárható terü
 CAVE_TRAVERSABLE_SPACE_DESC,"Influences the size of tunnels, chambers and other open spaces that can be traversed by rovers in caves, and where enemies, chests and other objects can spawn.
 0 means caves will have no traversable space at all, while 1 means the entire floor will have no minable walls.",,,"影响洞穴中漫游车可通行的隧道、洞穴及其他开放空间的尺寸，以及敌人、宝箱和其他物体可生成的位置。
 0 表示洞穴将完全没有可通行的空间，而 1 表示整个楼层将没有可开采的墙壁。",,,,,"A barlangokban lévő alagutak, kamrák, és egyéb nyílt terek méretét adja meg. Ezeken a helyeken tudnak ellenségek, kincs, stb. generálódni.\n0-nál nem lesz bejárható terület, 1-nél nem lesznek bányászható falak sehol.",,,,
-DISTANCE_BETWEEN_PLANETS,Star-planet distance,,,,,,,,,,,,
+STAR_PLANET_DISTANCE,Star-planet distance,,,,,,,,,,,,
 MAX_PLANETS_IN_SYSTEM,Maximum number of planets,,,恒星系中行星的最大数量,,,,,Maximum bolygó egy rendszerben,,,,
 DISTANCE_BETWEEN_SYSTEMS,Distance between star systems,,,恒星系之间的距离,,,,,Rendszerek közötti távolság,,,,
 ELLIPTICAL_GALAXY_SIZE_RANGE,Elliptical galaxy size range,,,椭圆星系大小范围,,,,,Eliptikus galaxis mérettartomány,,,,

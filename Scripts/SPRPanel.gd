@@ -119,7 +119,11 @@ func refresh():
 	if resource_selected == "":
 		return
 	var max_slider_value = get_max_slider_value()
-	var rsrc_value = $Panel/Control/HSlider.value * max_slider_value
+	var rsrc_value = $Panel/Control/HSlider.value * max_slider_value.value
+	if max_slider_value.limiting_rsrc == "energy":
+		$Panel/Control/EnergyCostText["theme_override_colors/default_color"] = Color.YELLOW
+	else:
+		$Panel/Control/EnergyCostText["theme_override_colors/default_color"] = Color.GREEN
 	$Panel/Control/EnergyCostText.text = Helper.format_num(round(energy_cost * rsrc_value / au_mult / game.u_i.charge / path_2_value)) + "  [img]Graphics/Icons/help.png[/img]"
 	if au_mult > 1:
 		$Panel/Control/EnergyCostText.help_text = ("[aurora au_int=%s]" % (au_mult - 1.0)) + tr("MORE_ENERGY_EFFICIENT") % Helper.clever_round(au_mult)
@@ -129,13 +133,13 @@ func refresh():
 	$Panel/ReactionInProgress.visible = obj.bldg.has("qty") and resource_selected == obj.bldg.reaction
 	$Panel/Control.visible = not $Panel/ReactionInProgress.visible and resource_selected != ""
 	$Panel/Transform.visible = $Panel/ReactionInProgress.visible or $Panel/Control.visible
-	$Panel/Control/HSlider.visible = max_slider_value != 0
+	$Panel/Control/HSlider.visible = max_slider_value.value != 0
 	if $Panel/ReactionInProgress.visible:
 		set_text_to_white()
 		$Panel/Transform.visible = true
 		$Panel/Transform.text = "%s (G)" % tr("STOP")
 	else:
-		$Panel/Transform.visible = max_slider_value != 0 and not obj.bldg.has("qty")
+		$Panel/Transform.visible = max_slider_value.value != 0 and not obj.bldg.has("qty")
 		$Panel/Transform.text = "%s (G)" % tr("TRANSFORM")
 	var atom_dict = {}
 	var p_costs = {"subatomic_particles":rsrc_value}
@@ -147,13 +151,17 @@ func refresh():
 
 func get_max_slider_value():
 	var max_value:float = 0.0
+	var limiting_rsrc = ""
 	if atom_to_p:
 		max_value = game.atoms[resource_selected]
 	else:
 		var max_value2 = game.particles.subatomic_particles / Z
 		if max_value2 < max_value or max_value == 0.0:
 			max_value = max_value2
-	return min(game.energy * 0.999 * au_mult * game.u_i.charge / energy_cost * path_2_value, max_value)
+	var max_usable_energy = game.energy * au_mult * game.u_i.charge / energy_cost * path_2_value
+	if max_value >= max_usable_energy:
+		limiting_rsrc = "energy"
+	return {"value": min(max_usable_energy * 0.999, max_value), "limiting_rsrc": limiting_rsrc}
 
 func reset_poses(_name:String, _Z:int):
 	resource_selected = _name
@@ -204,7 +212,7 @@ func _on_Transform_pressed():
 #		$Panel/Transform.text = "%s (G)" % tr("TRANSFORM")
 		#_on_HSlider_value_changed($Panel/Control/HSlider.value)
 	else:
-		var rsrc_value = $Panel/Control/HSlider.value * get_max_slider_value()
+		var rsrc_value = $Panel/Control/HSlider.value * get_max_slider_value().value
 		if rsrc_value == 0.0:
 			return
 		var rsrc_to_deduct = {}

@@ -32,13 +32,19 @@ func size_sort(a:Dictionary, b:Dictionary):
 			star_b = b.stars[i]
 	return star_a.size > star_b.size
 
+func preload_star_btns(max_N:int):
+	star_btns.clear()
+	for i in max_N:
+		var star_btn = TextureButton.new()
+		star_btn.texture_click_mask = preload("res://Graphics/Misc/StarCM.png")
+		star_btn.pivot_offset_ratio = Vector2.ONE * 0.5
+		star_btns.append(star_btn)
+
 func _ready():
-	if star_btns.is_empty():
-		for i in max(ProcGenSettings.max_number_of_systems_elliptical, ProcGenSettings.max_number_of_systems_spiral):
-			var star_btn = TextureButton.new()
-			star_btn.texture_click_mask = preload("res://Graphics/Misc/StarCM.png")
-			star_btn.pivot_offset_ratio = Vector2.ONE * 0.5
-			star_btns.append(star_btn)
+	var max_N = max(ProcGenSettings.max_number_of_systems_elliptical, ProcGenSettings.max_number_of_systems_spiral)
+	if max_N != len(star_btns):
+		preload_star_btns(max_N)
+	
 	load_bldg_info_thread = Thread.new()
 	load_bldg_info_thread.start(load_bldg_info)
 	
