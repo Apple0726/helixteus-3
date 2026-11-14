@@ -13,15 +13,15 @@ var rsrc_type:String
 var atom_costs:Dictionary = {}
 var reactions:Dictionary = {
 	"stone":{"energy_cost":1.0, "difficulty":0.01, "atoms":["H", "He", "C", "N", "O", "F", "Ne", "Na", "Mg", "Al", "Si", "P", "S", "K", "Ca", "Ti", "Cr", "Mn", "Fe", "Co", "Ni", "Xe", "Ta", "W", "Os", "Ir", "U", "Np", "Pu"]},
+	"cellulose":{"type":"mats", "atoms":{"C":6, "H":10, "O":5}, "energy_cost":50.0, "difficulty":0.005},
+	"soil":{"type":"mats", "atoms":{"C":1, "H":9, "O":5, "Si":2, "Al":1, "Mg":1, "N":1, "P":1, "Fe":1}, "energy_cost":140.0, "difficulty":0.01},
+	"silicon":{"type":"mats", "atoms":{"Si":1}, "energy_cost":15.0, "difficulty":0.005},
 	"lead":{"type":"mets", "atoms":{"Pb":1}, "energy_cost":8.0, "difficulty":0.01},
 	"copper":{"type":"mets", "atoms":{"Cu":1}, "energy_cost":10.0, "difficulty":0.015},
 	"iron":{"type":"mets", "atoms":{"Fe":1}, "energy_cost":30.0, "difficulty":0.03},
 	"aluminium":{"type":"mets", "atoms":{"Al":1}, "energy_cost":30.0, "difficulty":0.03},
 	"silver":{"type":"mets", "atoms":{"Ag":1}, "energy_cost":100.0, "difficulty":0.06},
 	"gold":{"type":"mets", "atoms":{"Au":1}, "energy_cost":140.0, "difficulty":0.09},
-	"silicon":{"type":"mats", "atoms":{"Si":1}, "energy_cost":15.0, "difficulty":0.005},
-	"cellulose":{"type":"mats", "atoms":{"C":6, "H":10, "O":5}, "energy_cost":50.0, "difficulty":0.005},
-	"soil":{"type":"mats", "atoms":{"C":1, "H":9, "O":5, "Si":2, "Al":1, "Mg":1, "N":1, "P":1, "Fe":1}, "energy_cost":140.0, "difficulty":0.01},
 	"titanium":{"type":"mets", "atoms":{"Ti":1}, "energy_cost":12000.0, "difficulty":0.5},
 	"platinum":{"type":"mets", "atoms":{"Pt":1}, "energy_cost":40000.0, "difficulty":2.0},
 	"diamond":{"type":"mets", "atoms":{"C":1}, "energy_cost":85000.0, "difficulty":2.2},

@@ -43,3 +43,7 @@ func load_backup(save_name:String, path:String):
 
 func _on_close_button_pressed() -> void:
 	queue_free()
+
+
+func _on_hidden() -> void:
+	queue_free()

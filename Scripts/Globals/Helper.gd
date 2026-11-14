@@ -110,7 +110,7 @@ func put_rsrc(container, min_size, rsrcs, remove:bool = true, show_available:boo
 				rsrc_type = "atoms"
 				current_rsrc = game.atoms[rsrc_name]
 				rsrc_amount = rsrcs[rsrc_name]
-				rsrc_display_name = tr(("%s_NAME" % rsrc_name).to_upper())
+				rsrc_display_name = tr(("%s_ATOM_NAME" % rsrc_name).to_upper())
 				mass_str = "mol"
 				format_text(text_node, texture_node, "Atoms/" + rsrc_name, show_available, rsrc_amount, current_rsrc, mass_str)
 			elif game.particles.has(rsrc_name):
@@ -189,7 +189,7 @@ func get_plant_name(name:String):
 	return tr("PLANT_TITLE").format({"metal":tr(name.split("_")[0].to_upper())})
 
 func get_wid(size:float):
-	return min(round(pow(size / 5000.0, 0.7) * 8.0 * ProcGenSettings.planet_tile_dimensions) + 1, ProcGenSettings.max_planet_tile_dimensions)
+	return min(round(sqrt(size) * 0.14 * ProcGenSettings.planet_tile_dimensions) + 1, ProcGenSettings.max_planet_tile_dimensions)
 
 func e_notation(num:float, sd:int = 4):#e notation
 	if num == 0:
@@ -352,6 +352,9 @@ func change_circle_size(value, overlays):
 	if game.overlay_data[game.c_v].visible:
 		for overlay in overlays:
 			overlay.obj.scale = Vector2.ONE * value
+
+var planet_data_cache = {}
+var tile_data_cache = {}
 
 func save_obj(type:String, id:int, arr:Array):
 	var file_path:String = "user://%s/Univ%s/%s/%s.hx3" % [game.c_sv, game.c_u, type, id]
@@ -1546,9 +1549,7 @@ func set_ancient_bldg_bonuses(p_i:Dictionary, ancient_bldg:Dictionary, tile_id:i
 						"bonus":mult,
 						"origin_tile_id":tile_id,
 					}
-					if game.tile_data_persistent[id] == null:
-						game.tile_data_persistent[id] = {}
-					game.tile_data_persistent[id].substation_data = tile.substation_data
+					Helper.set_tile_data_persistent(id, "substation_data", tile.substation_data)
 				if tile.has("bldg"):
 					var overclock_mult:float = tile.bldg.get("overclock_mult", 1.0)
 					var base = tile.bldg.path_1_value * overclock_mult * mult
@@ -1578,9 +1579,7 @@ func set_ancient_bldg_bonuses(p_i:Dictionary, ancient_bldg:Dictionary, tile_id:i
 				var tile = game.tile_data[id]
 				var mult = Helper.get_MR_Obs_Outpost_prod_mult(tier)
 				tile.mining_outpost_bonus = tile.get("mining_outpost_bonus", 0.0) + mult
-				if game.tile_data_persistent[id] == null:
-					game.tile_data_persistent[id] = {}
-				game.tile_data_persistent[id]["mining_outpost_bonus"] = tile["mining_outpost_bonus"]
+				Helper.set_tile_data_persistent(id, "mining_outpost_bonus", tile.mining_outpost_bonus)
 	elif ancient_bldg.name in [AncientBuilding.NUCLEAR_FUSION_REACTOR, AncientBuilding.CELLULOSE_SYNTHESIZER]:
 		for tile in game.tile_data:
 			if tile.has("bldg") and tile.bldg.name == Building.ATMOSPHERE_EXTRACTOR:

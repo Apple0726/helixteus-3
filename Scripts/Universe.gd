@@ -21,6 +21,7 @@ func _ready():
 		var c_i:Dictionary = visible_clusters[i]
 		var cluster_btn = TextureButton.new()
 		cluster_btn.texture_normal = preload("res://Graphics/Clusters/0.png")
+		cluster_btn.texture_click_mask = preload("res://Graphics/Misc/StarCM.png")
 		var r:float = c_i.pos.length()
 		var th:float = atan2(c_i.pos.y, c_i.pos.x)
 		var hue:float = fmod(r + 300, 1000.0) / 1000.0

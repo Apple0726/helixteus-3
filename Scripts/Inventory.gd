@@ -170,7 +170,7 @@ func show_mat(mat:String):
 	game.show_tooltip(st)
 
 func show_atom(atom:String):
-	var st:String = get_str(atom, "_NAME")
+	var st:String = get_str(atom, "_ATOM_NAME")
 	if game.autocollect.atoms.has(atom) and not is_zero_approx(game.autocollect.atoms[atom]):
 		st += "\n" + (tr("YOU_PRODUCE") if game.autocollect.atoms[atom] > 0 else tr("YOU_USE")) % ("%s mol/%s" % [Helper.format_num(abs(game.autocollect.atoms[atom]), true), tr("S_SECOND")])
 	game.show_tooltip(st)

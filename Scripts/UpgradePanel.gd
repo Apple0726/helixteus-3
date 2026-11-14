@@ -350,8 +350,9 @@ func _on_Upgrade_pressed():
 					var energy_prod = (new_base_value - tile.bldg.path_1_value) * tile.resource_production_bonus.get("energy", 1.0)
 					game.autocollect.rsrc.energy += energy_prod * overclock_mult * time_speed_bonus
 					if tile.has("substation_data"):
-						var cap_upgrade = energy_prod * tile.substation_data.bonus * Helper.get_substation_capacity_bonus(game.tile_data[tile.substation_tile].ancient_bldg.tier)
-						game.tile_data[tile.substation_tile].ancient_bldg.capacity_bonus += cap_upgrade
+						var substation_tile_id = tile.substation_data.origin_tile_id
+						var cap_upgrade = energy_prod * tile.substation_data.bonus * Helper.get_substation_capacity_bonus(game.tile_data[substation_tile_id].ancient_bldg.tier)
+						game.tile_data[substation_tile_id].ancient_bldg.capacity_bonus += cap_upgrade
 						game.capacity_bonus_from_substation += cap_upgrade
 				elif tile.bldg.name == Building.RESEARCH_LAB:
 					game.autocollect.rsrc.SP += (new_base_value - tile.bldg.path_1_value) * overclock_mult * tile.resource_production_bonus.get("SP", 1.0) * time_speed_bonus
@@ -359,8 +360,9 @@ func _on_Upgrade_pressed():
 					var energy_prod = Helper.get_SP_production(p_i.temperature, (new_base_value - tile.bldg.path_1_value) * tile.resource_production_bonus.get("energy", 1.0))
 					game.autocollect.rsrc.energy += energy_prod * overclock_mult * time_speed_bonus
 					if tile.has("substation_data"):
-						var cap_upgrade = energy_prod * tile.substation_data.bonus * Helper.get_substation_capacity_bonus(game.tile_data[tile.substation_tile].ancient_bldg.tier)
-						game.tile_data[tile.substation_tile].ancient_bldg.capacity_bonus += cap_upgrade
+						var substation_tile_id = tile.substation_data.origin_tile_id
+						var cap_upgrade = energy_prod * tile.substation_data.bonus * Helper.get_substation_capacity_bonus(game.tile_data[substation_tile_id].ancient_bldg.tier)
+						game.tile_data[substation_tile_id].ancient_bldg.capacity_bonus += cap_upgrade
 						game.capacity_bonus_from_substation += cap_upgrade
 				elif tile.bldg.name == Building.ATMOSPHERE_EXTRACTOR:
 					var base_prod = (new_base_value - tile.bldg.path_1_value) * overclock_mult * p_i.pressure * time_speed_bonus

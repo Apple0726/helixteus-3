@@ -61,7 +61,7 @@ func show_recipe_tooltip(rsrc:String):
 		unlocked = false
 		sc_to_unlock = tr("UNLOCK_BY_RESEARCHING_X").format({"science": tr("EXOTIC_MATERIAL_MANIPULATION_SC")})
 	if unlocked:
-		game.show_tooltip(tr("%s_NAME" % rsrc.to_upper()))
+		game.show_tooltip(tr("%s_ATOM_NAME" % rsrc.to_upper()))
 	else:
 		var st = "[color=#999999]({locked}) {atom}\n{details}".format({
 			"locked": tr("LOCKED"),

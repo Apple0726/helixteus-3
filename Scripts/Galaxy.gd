@@ -17,7 +17,7 @@ var bldgs:Dictionary = {}
 var ancient_bldgs:Dictionary = {}
 var MSs:Dictionary = {}
 
-static var star_btns = []
+var star_btns = []
 
 var load_bldg_info_thread:Thread
 
@@ -34,17 +34,8 @@ func size_sort(a:Dictionary, b:Dictionary):
 
 func preload_star_btns(max_N:int):
 	star_btns.clear()
-	for i in max_N:
-		var star_btn = TextureButton.new()
-		star_btn.texture_click_mask = preload("res://Graphics/Misc/StarCM.png")
-		star_btn.pivot_offset_ratio = Vector2.ONE * 0.5
-		star_btns.append(star_btn)
 
 func _ready():
-	var max_N = max(ProcGenSettings.max_number_of_systems_elliptical, ProcGenSettings.max_number_of_systems_spiral)
-	if max_N != len(star_btns):
-		preload_star_btns(max_N)
-	
 	load_bldg_info_thread = Thread.new()
 	load_bldg_info_thread.start(load_bldg_info)
 	
@@ -60,7 +51,7 @@ func _ready():
 	
 	var await_counter:int = 0
 	var sorted_systems_by_size = game.system_data.duplicate(true)
-	sorted_systems_by_size.sort_custom(size_sort)
+	#sorted_systems_by_size.sort_custom(size_sort)
 	for i in len(sorted_systems_by_size):
 		var s_i = sorted_systems_by_size[i]
 		if not is_inside_tree():
@@ -69,15 +60,15 @@ func _ready():
 		for j in range(1, len(s_i.stars)):
 			if s_i.stars[j].luminosity > star.luminosity:
 				star = s_i.stars[j]
-		var star_btn = star_btns[i]
+		var star_btn = TextureButton.new()
+		star_btn.texture_click_mask = preload("res://Graphics/Misc/StarCM.png")
+		star_btn.pivot_offset_ratio = Vector2.ONE * 0.5
 		star_btn.texture_normal = star_texture[int(star.temperature) % 3]
 		if Settings.enable_shaders:
 			star_btn.material = ShaderMaterial.new()
 			star_btn.material.shader = preload("res://Shaders/Star.gdshader")
 			star_btn.material.set_shader_parameter("time_offset", 10.0 * randf())
 			star_btn.material.set_shader_parameter("color", Helper.get_star_modulate(star["class"]))
-		else:
-			star_btn.material = null
 		star_btn.modulate = Helper.get_star_modulate(star["class"])
 		var galaxy_tween = create_tween()
 		star_btn.self_modulate.a = 0.0
@@ -93,6 +84,7 @@ func _ready():
 		dimensions_temp = max(dimensions_temp, s_i.pos.length() * 2.0)
 		Helper.add_overlay(star_btn, self, "system", s_i, overlays)
 		star_btn.scale /= clamp(get_parent().scale.x, STAR_AUTOSCALE_MIN_THRESHOLD, 2.0) / STAR_AUTOSCALE_MIN_THRESHOLD
+		star_btns.append(star_btn)
 		await_counter += 1
 		if await_counter % int(60000.0 / Engine.get_frames_per_second()) == 0:
 			await get_tree().process_frame
@@ -380,11 +372,6 @@ func disband_fighters():
 	for i in len(game.fighter_data):
 		if game.fighter_data[i] and game.fighter_data[i].get("c_g_g", -1) == game.c_g_g:
 			game.fighter_data[i] = null
-
-func _on_tree_exiting() -> void:
-	for star_btn in star_btns:
-		if is_ancestor_of(star_btn):
-			remove_child(star_btn)
 
 func scale_objects(new_scale:float):
 	if new_scale > STAR_AUTOSCALE_MIN_THRESHOLD and new_scale < 2.0 and not game.overlay_data[game.c_v].visible:

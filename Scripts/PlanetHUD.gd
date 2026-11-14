@@ -58,6 +58,7 @@ func _on_Terraform_pressed():
 		var EE_mult:float = 0.0
 		var SP_feature_mult:float = 0.0
 		var energy_feature_mult:float = 0.0
+		var N = len(game.tile_data)
 		for tile in game.tile_data:
 			ash_mult += 1.0
 			EE_mult += 1.0
@@ -67,18 +68,18 @@ func _on_Terraform_pressed():
 				lake_num += 1
 			elif tile.has("ash"):
 				ash_mult += tile.ash.richness - 1.0
-			elif tile.has("aurora"):
+			if tile.has("aurora"):
 				EE_mult += tile.aurora
 			if tile.resource_production_bonus.has("SP"):
 				SP_feature_mult += tile.resource_production_bonus.SP - 1.0
 			if tile.resource_production_bonus.has("energy"):
 				energy_feature_mult += tile.resource_production_bonus.energy - 1.0
-		ash_mult /= len(game.tile_data)
-		EE_mult /= len(game.tile_data)
-		SP_feature_mult /= len(game.tile_data)
-		energy_feature_mult /= len(game.tile_data)
+		ash_mult /= N
+		EE_mult /= N
+		SP_feature_mult /= N
+		energy_feature_mult /= N
 		game.terraform_panel.lake_num = lake_num
-		game.terraform_panel.tile_num = len(game.tile_data)
+		game.terraform_panel.tile_num = N
 		game.terraform_panel.ash_mult = ash_mult
 		game.terraform_panel.EE_mult = EE_mult
 		game.terraform_panel.SP_feature_mult = SP_feature_mult

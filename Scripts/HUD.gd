@@ -204,6 +204,7 @@ func refresh():
 	system_b_btn.visible = game.u_i.lv >= 18
 	galaxy_b_btn.visible = game.u_i.lv >= 40
 	cluster_b_btn.visible = game.u_i.lv >= 60
+	switch_btn_texture.material = null
 	if game.c_v == "planet":
 		$Bookmarks/Bookmarked.button_pressed = game.planet_data[game.c_p].has("bookmarked")
 		$Bookmarks/Bookmarked.visible = true

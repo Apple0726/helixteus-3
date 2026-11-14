@@ -26,7 +26,7 @@ func _input(event):
 	if Input.is_action_just_released("backup_save") and not is_backing_up:
 		perform_backup(true)
 
-func perform_backup(manual:bool = false):
+func perform_backup(backup_name = "backup"):
 	var c_sv:String = game.c_sv
 	if Settings.max_backups == 0 or c_sv == "":
 		ready_to_backup = false
@@ -44,8 +44,9 @@ func perform_backup(manual:bool = false):
 	if len(files) >= Settings.max_backups:
 		backup_dir.remove(files[0])
 	backup_total_files = Helper.get_directory_properties("user://%s" % c_sv, ["Backups"]).files
-	await Helper.export_save(c_sv, backup_dir_path + "/{save_name}_backup_{datetime_string}.hx3".format({
+	await Helper.export_save(c_sv, backup_dir_path + "/{save_name}_{backup_name}_{datetime_string}.hx3".format({
 		"save_name": c_sv,
+		"backup_name": backup_name,
 		"datetime_string":Time.get_datetime_string_from_system(),
 	}))
 	$Timer.start(Settings.backup_interval * 60.0)

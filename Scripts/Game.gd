@@ -596,6 +596,8 @@ func load_univ():
 			mets[met] += autocollect.mets[met] * plant_time_elapsed * u_i.time_speed
 		for atom in autocollect.atoms:
 			atoms[atom] += autocollect.atoms[atom] * time_elapsed * u_i.time_speed
+	Helper.planet_data_cache.clear()
+	Helper.tile_data_cache.clear()
 	tile_data.clear()
 	planet_data.clear()
 	system_data.clear()
@@ -1564,17 +1566,23 @@ func remove_science_tree():
 	$UI.remove_child($UI.get_node("ScienceUI"))
 
 func open_obj(type:String, id:int):
+	if type == "Systems" and Helper.planet_data_cache.has(id):
+		return Helper.planet_data_cache[id]
+	if type == "Planets" and Helper.tile_data_cache.has(id):
+		return Helper.tile_data_cache[id]
 	var file_path:String = "user://%s/Univ%s/%s/%s.hx3" % [c_sv, c_u, type, id]
 	var save = FileAccess.open_compressed(file_path, FileAccess.READ, FileAccess.COMPRESSION_ZSTD)
+	var arr = []
 	if save == null or save.get_length() == 0:
 		save = FileAccess.open_compressed(file_path + "~", FileAccess.READ, FileAccess.COMPRESSION_ZSTD)
-		if save == null:
-			return []
-		if save.get_length() == 0:
-			save.close()
-			return []
-	var arr = Helper.decompress_hx3_file(save)
-	save.close()
+	if save != null and save.get_length() > 0:
+		arr = Helper.decompress_hx3_file(save)
+	if save != null:
+		save.close()
+	if type == "Systems":
+		Helper.planet_data_cache[id] = arr
+	elif type == "Planets":
+		Helper.tile_data_cache[id] = arr
 	return arr
 
 func add_space_HUD():
@@ -4171,6 +4179,7 @@ func generate_new_univ():
 	dimension.refresh_univs()
 
 func reset_dimension(DR_num:int):
+	await $UI/BackupPanel.perform_backup("new_dim")
 	DRs += DR_num
 	for i in len(universe_data):
 		Helper.remove_recursive("user://%s/Univ%s" % [c_sv, i])
@@ -4428,6 +4437,7 @@ func _on_Godot_mouse_entered():
 var curr_MM_p = 0
 
 func _on_MMTimer_timeout():
+	return
 	if is_instance_valid(HUD) and is_ancestor_of(HUD):
 		var curr_time = Time.get_unix_time_from_system()
 		var planets_with_MM:Array = boring_machine_data.keys()
@@ -4437,8 +4447,9 @@ func _on_MMTimer_timeout():
 		if curr_MM_p > len(planets_with_MM)-1:
 			curr_MM_p = 0
 		var p = planets_with_MM[curr_MM_p]
+		var boring_machine_c_s_g = boring_machine_data[p].c_s_g
 		if boring_machine_data[p].has("tiles"):
-			var p_i = open_obj("Systems", boring_machine_data[p].c_s_g)[boring_machine_data[p].c_p]
+			var p_i = open_obj("Systems", boring_machine_c_s_g)[boring_machine_data[p].c_p]
 			var _tile_data
 			if p == c_p_g and c_v == "planet":
 				_tile_data = tile_data_persistent
@@ -4474,10 +4485,10 @@ func _on_MMTimer_timeout():
 		else:
 			var _planet_data_persistent:Array
 			var p_i:Dictionary
-			if boring_machine_data[p].c_s_g == c_s_g and c_v == "system":
+			if boring_machine_c_s_g == c_s_g and c_v == "system":
 				p_i = planet_data_persistent[boring_machine_data[p].c_p]
 			else:
-				_planet_data_persistent = open_obj("Systems", boring_machine_data[p].c_s_g)
+				_planet_data_persistent = open_obj("Systems", boring_machine_c_s_g)
 				if _planet_data_persistent.is_empty():
 					boring_machine_data.erase(p)
 					curr_MM_p += 1

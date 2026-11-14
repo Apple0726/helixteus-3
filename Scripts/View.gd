@@ -2,6 +2,7 @@ extends Node2D
 
 @onready var game = get_node("/root/Game")
 @onready var ship:TextureButton = game.get_node("Ship")
+var galaxy_obj_cache
 var obj
 #var shapes = []
 var shapes_data = []
@@ -314,11 +315,19 @@ func refresh():
 	queue_redraw()
 
 func add_obj(obj_str:String, pos:Vector2, sc:float):
-	obj = load("res://Scenes/Views/" + obj_str + ".tscn").instantiate()
+	if obj_str == "Galaxy" and is_instance_valid(galaxy_obj_cache):
+		if galaxy_obj_cache.g_i.id == game.c_g_g:
+			galaxy_obj_cache.show()
+			obj = galaxy_obj_cache
+			game.add_space_HUD()
+		else:
+			galaxy_obj_cache.free()
+	if not is_instance_valid(obj) or obj.is_queued_for_deletion():
+		obj = load("res://Scenes/Views/" + obj_str + ".tscn").instantiate()
+		add_child(obj)
 	position = pos
 	scale = Vector2(sc, sc)
 	obj_scaled = scale.x < 1.5
-	add_child(obj)
 	refresh()
 	limit_to_viewport = game.c_v in ["universe", "cluster", "galaxy", "system", "planet"]
 	queue_redraw()
@@ -329,7 +338,12 @@ func remove_obj(obj_str:String, save_zooms:bool = true):
 	if save_zooms:
 		save_zooms(obj_str)
 	obj.set_process(false)
-	obj.queue_free()
+	if obj_str == "galaxy":
+		galaxy_obj_cache = obj
+		galaxy_obj_cache.hide()
+		obj = null
+	else:
+		obj.queue_free()
 	annotate_icon.texture = null
 	queue_redraw()
 

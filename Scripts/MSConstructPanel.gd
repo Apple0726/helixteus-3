@@ -25,6 +25,7 @@ func _unhandled_input(event):
 		game.toggle_panel(panel_var_name)
 
 func refresh():
+	game.view.obj.build_all_MS_stages = build_all
 	for MS in Megastructure.names:
 		$Panel/ScrollContainer/VBoxContainer.get_node(MS).visible = (star_selected == -1 or MS in ["DS", "CBS", "MB", "PK"]) and (MS != "MB" or game.science_level[Science.MATRIOSHKA_BRAIN])
 
@@ -32,11 +33,11 @@ func on_MS_over(MS:String, MS_btn):
 	if star_selected != -1:
 		var star:Dictionary = game.system_data[game.c_s].stars[star_selected]
 		if MS == "DS":
-			game.view.obj.show_DS_costs(star, not build_all)
+			game.view.obj.show_DS_costs(star, build_all)
 		elif MS == "CBS":
-			game.view.obj.show_CBS_costs(star, not build_all)
+			game.view.obj.show_CBS_costs(star, build_all)
 		elif MS == "PK":
-			game.view.obj.show_PK_costs(star, not build_all)
+			game.view.obj.show_PK_costs(star, build_all)
 		var star_node = get_tree().get_nodes_in_group("stars_system")[star_selected]
 		if build_all:
 			game.view.obj.add_MS_sprite(star_node, {"MS":MS, "MS_lv": Data.MS_num_stages[MS]})
@@ -62,7 +63,6 @@ func on_MS_out():
 func on_MS_click(MS:String):
 	if MS == "" or game.c_v != "system":
 		return
-	game.view.obj.build_all_MS_stages = build_all
 	if star_selected != -1 and MS in ["DS", "CBS", "MB", "PK"]:
 		game.view.obj.star_over_id = star_selected
 		game.view.obj.build_MS(game.system_data[game.c_s].stars[star_selected], MS)
@@ -108,6 +108,7 @@ func on_MS_click(MS:String):
 
 func _on_build_all_toggled(toggled_on: bool) -> void:
 	build_all = toggled_on
+	game.view.obj.build_all_MS_stages = build_all
 	for btn in $Panel/ScrollContainer/VBoxContainer.get_children():
 		if toggled_on:
 			btn.disabled = game.science_level[Helper.get_science_from_MS(btn.name)] < (Data.MS_num_stages[btn.name] if toggled_on else 0)

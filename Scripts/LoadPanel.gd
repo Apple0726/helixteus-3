@@ -46,6 +46,7 @@ func open_backup_panel(save_name:String):
 	add_child(save_backups_scene)
 	save_backups_scene.refresh_load_panel.connect(refresh)
 	save_backups_scene.load_backups(save_name)
+	game.sub_panel = save_backups_scene
 
 func on_export(save_str:String):
 	save_to_export = save_str

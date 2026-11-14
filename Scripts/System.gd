@@ -292,7 +292,10 @@ func add_constr_costs(vbox:VBoxContainer, data):
 	
 func show_DS_costs(star:Dictionary, base:bool = false):
 	var vbox = game.get_node("UI/Panel/VBox")
-	bldg_costs = Data.MS_costs["DS_%s" % ((star.get("MS_lv", 0) + 1) if not base else 0)].duplicate(true)
+	if base:
+		bldg_costs = Data.MS_costs.DS_0.duplicate(true)
+	else:
+		bldg_costs = Data.MS_costs["DS_%s" % (star.get("MS_lv", 0) + 1)].duplicate(true)
 	if base and build_all_MS_stages:
 		Helper.add_dict_to_dict(bldg_costs, Data.MS_costs.DS_1)
 		Helper.add_dict_to_dict(bldg_costs, Data.MS_costs.DS_2)
@@ -317,7 +320,7 @@ func show_DS_costs(star:Dictionary, base:bool = false):
 func get_furthest_planet_distance():
 	var furthest_planet_distance = 100.0
 	for j in len(game.planet_data):
-		if game.planet_data[j].is_empty():
+		if game.planet_data[j].is_empty() or game.planet_data[j].has("destroyed"):
 			continue
 		furthest_planet_distance = game.planet_data[j].distance
 	return furthest_planet_distance
