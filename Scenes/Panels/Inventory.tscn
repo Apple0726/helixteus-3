@@ -154,6 +154,7 @@ offset_bottom = 172.0
 text = "Information"
 horizontal_alignment = 1
 vertical_alignment = 1
+autowrap_mode = 3
 
 [node name="Control" type="Panel" parent="." unique_id=1783725380]
 layout_mode = 1

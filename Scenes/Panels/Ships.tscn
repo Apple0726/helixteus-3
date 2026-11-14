@@ -179,6 +179,7 @@ grow_horizontal = 2
 label_settings = SubResource("LabelSettings_sx08b")
 horizontal_alignment = 1
 vertical_alignment = 1
+autowrap_mode = 3
 
 [node name="ShipStats" type="Panel" parent="." unique_id=1376717621]
 visible = false

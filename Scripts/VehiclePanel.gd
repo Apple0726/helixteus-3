@@ -87,6 +87,9 @@ func _on_rovers_pressed():
 			rover_info.get_node("RoverIcon").mouse_exited.connect(game.hide_tooltip)
 			rover_info.get_node("HBox/Explore").pressed.connect(rover_explore.bind(i))
 			rover_info.get_node("HBox/Destroy").pressed.connect(game.show_YN_panel.bind(rover_destroy.bind(i, rover_info), tr("ARE_YOU_SURE")))
+			if rover_info.get_node("HBox").size.x > 448.0:
+				for btn in rover_info.get_node("HBox").get_children():
+					btn["theme_override_font_sizes/font_size"] = 13
 
 func rover_show_details(rover_id:int):
 	var rover = game.rover_data[rover_id]

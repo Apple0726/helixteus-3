@@ -2065,6 +2065,7 @@ offset_right = 386.0
 offset_bottom = 122.0
 mouse_filter = 1
 theme_override_colors/font_color = Color(0.635294, 0.635294, 0.635294, 1)
+theme_override_font_sizes/font_size = 14
 text = "QOL_PERKS"
 autowrap_mode = 3
 
@@ -2076,6 +2077,7 @@ offset_right = 386.0
 offset_bottom = 218.0
 mouse_filter = 1
 theme_override_colors/font_color = Color(0.635294, 0.635294, 0.635294, 1)
+theme_override_font_sizes/font_size = 14
 text = "UNLOCK_PHY_CHEM_BIO"
 autowrap_mode = 3
 
@@ -2086,6 +2088,7 @@ offset_top = 259.0
 offset_right = 386.0
 offset_bottom = 310.0
 theme_override_colors/font_color = Color(0.635294, 0.635294, 0.635294, 1)
+theme_override_font_sizes/font_size = 14
 text = "MORE_OP_CAPACITY"
 autowrap_mode = 3
 
@@ -2097,6 +2100,7 @@ offset_right = 386.0
 offset_bottom = 402.0
 mouse_filter = 1
 theme_override_colors/font_color = Color(0.635294, 0.635294, 0.635294, 1)
+theme_override_font_sizes/font_size = 14
 text = "MODIFY_CAVE_BATTLE_TIME"
 autowrap_mode = 3
 
@@ -2107,6 +2111,7 @@ offset_top = 447.0
 offset_right = 386.0
 offset_bottom = 498.0
 theme_override_colors/font_color = Color(0.635294, 0.635294, 0.635294, 1)
+theme_override_font_sizes/font_size = 14
 text = "MORE_PP"
 autowrap_mode = 3
 
@@ -2117,6 +2122,7 @@ offset_top = 543.0
 offset_right = 386.0
 offset_bottom = 594.0
 theme_override_colors/font_color = Color(0.635294, 0.635294, 0.635294, 1)
+theme_override_font_sizes/font_size = 14
 text = "TP_COST_POWER_VARIES"
 autowrap_mode = 3
 
@@ -2128,6 +2134,7 @@ offset_right = 386.0
 offset_bottom = 687.0
 mouse_filter = 1
 theme_override_colors/font_color = Color(0.635294, 0.635294, 0.635294, 1)
+theme_override_font_sizes/font_size = 14
 text = "CBD_SECOND_PATH_CHANGE"
 autowrap_mode = 3
 
@@ -2138,6 +2145,7 @@ offset_top = 724.0
 offset_right = 386.0
 offset_bottom = 856.0
 theme_override_colors/font_color = Color(0.635294, 0.635294, 0.635294, 1)
+theme_override_font_sizes/font_size = 14
 text = "Unlock a special area to encounter the final boss (lol of course this area doesn't exist yet (nor the final boss))"
 autowrap_mode = 3
 

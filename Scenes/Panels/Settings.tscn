@@ -198,22 +198,22 @@ offset_bottom = 24.0
 text = "SFX"
 horizontal_alignment = 1
 
-[node name="MusicPitch" type="CheckButton" parent="Panel/Sounds" unique_id=350775559]
-layout_mode = 0
-offset_left = 592.0
-offset_top = 276.0
-offset_right = 660.0
-offset_bottom = 316.0
-
 [node name="MusicPitchLabel" parent="Panel/Sounds" unique_id=1511434500 instance=ExtResource("2_lx04k")]
 layout_mode = 0
-offset_left = 336.0
+offset_left = 304.0
 offset_top = 284.0
-offset_right = 619.0
+offset_right = 676.0
 offset_bottom = 314.0
 text = "TIME_SPEED_AFFECTS_PITCH [img]Graphics/Icons/help.png[/img]"
 label_text = "TIME_SPEED_AFFECTS_PITCH"
 help_text = "TIME_SPEED_AFFECTS_PITCH_DESC"
+
+[node name="MusicPitch" type="CheckButton" parent="Panel/Sounds" unique_id=350775559]
+layout_mode = 0
+offset_left = 600.0
+offset_top = 276.0
+offset_right = 668.0
+offset_bottom = 316.0
 
 [node name="Graphics" type="Control" parent="Panel" unique_id=1768096875]
 anchors_preset = 0
@@ -328,9 +328,9 @@ text = "15"
 
 [node name="DynamicSpaceLODLabel" parent="Panel/Graphics/SpaceLOD" unique_id=1256405697 instance=ExtResource("2_lx04k")]
 layout_mode = 0
-offset_left = 64.0
+offset_left = 48.0
 offset_top = 258.0
-offset_right = 384.0
+offset_right = 400.0
 offset_bottom = 298.0
 text = "[center]DYNAMIC_SPACE_BACKGROUND_LOD [img]Graphics/Icons/help.png[/img][/center]"
 label_text = "DYNAMIC_SPACE_BACKGROUND_LOD"
