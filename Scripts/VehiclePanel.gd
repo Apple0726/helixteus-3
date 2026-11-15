@@ -211,6 +211,12 @@ func _on_probes_pressed():
 		var probe = preload("res://Scenes/ProbeInfo.tscn").instantiate()
 		probe.get_node("LocationLabel").text = game.u_i.name
 		probe.get_node("ProbeIcon").texture = load("res://Graphics/Ships/Probe%s.png" % probe_info.tier)
+		if probe_info.tier == 2:
+			probe.get_node("ProbeIcon").mouse_entered.connect(game.show_tooltip.bind("{PP_mult_text}: {PP_mult}".format({
+				"PP_mult_text": tr("PP_MULTIPLIER"),
+				"PP_mult": probe_info.PP_multiplier,
+			})))
+			probe.get_node("ProbeIcon").mouse_exited.connect(game.hide_tooltip)
 		$ScrollContainer/VBoxContainer.add_child(probe)
 		probe.get_node("GoTo").pressed.connect(probe_go_to.bind(probe_info.tier))
 		probe.get_node("Disband").pressed.connect(probe_disband.bind(i, probe))

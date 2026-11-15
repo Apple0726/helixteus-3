@@ -202,6 +202,12 @@ func _on_Convert_pressed():
 		if game.c_v == "galaxy":
 			game.view_history.pop_back()
 			game.view_history_pos -= 1
+		elif game.c_v == "cluster":
+			for i in len(game.view_history):
+				if game.view_history[i].hash() == g_i.hash():
+					game.view_history.remove_at(i)
+					if game.view_history_pos >= i:
+						game.view_history_pos -= 1
 		var destroy_galaxy = false
 		if bldg == TRIANGULUM_PROBE:
 			if not game.achievement_data.random.has("build_tri_probe_in_slow_univ") and game.u_i.time_speed <= 0.2:

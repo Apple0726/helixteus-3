@@ -202,9 +202,11 @@ horizontal_alignment = 1
 layout_mode = 0
 offset_left = 304.0
 offset_top = 284.0
-offset_right = 676.0
+offset_right = 544.0
 offset_bottom = 314.0
 text = "TIME_SPEED_AFFECTS_PITCH [img]Graphics/Icons/help.png[/img]"
+fit_content = true
+autowrap_mode = 0
 label_text = "TIME_SPEED_AFFECTS_PITCH"
 help_text = "TIME_SPEED_AFFECTS_PITCH_DESC"
 
@@ -300,11 +302,13 @@ offset_bottom = 40.0
 
 [node name="StaticSpaceLODLabel" parent="Panel/Graphics/SpaceLOD" unique_id=1322452511 instance=ExtResource("2_lx04k")]
 layout_mode = 0
-offset_left = 64.0
+offset_left = 76.0
 offset_top = 170.0
-offset_right = 384.0
+offset_right = 372.0
 offset_bottom = 210.0
 text = "[center]STATIC_SPACE_BACKGROUND_LOD [img]Graphics/Icons/help.png[/img][/center]"
+fit_content = true
+autowrap_mode = 0
 label_text = "STATIC_SPACE_BACKGROUND_LOD"
 help_text = "STATIC_SPACE_BACKGROUND_LOD_DESC"
 align = 1
@@ -328,11 +332,13 @@ text = "15"
 
 [node name="DynamicSpaceLODLabel" parent="Panel/Graphics/SpaceLOD" unique_id=1256405697 instance=ExtResource("2_lx04k")]
 layout_mode = 0
-offset_left = 48.0
+offset_left = 68.0
 offset_top = 258.0
-offset_right = 400.0
+offset_right = 380.0
 offset_bottom = 298.0
 text = "[center]DYNAMIC_SPACE_BACKGROUND_LOD [img]Graphics/Icons/help.png[/img][/center]"
+fit_content = true
+autowrap_mode = 0
 label_text = "DYNAMIC_SPACE_BACKGROUND_LOD"
 help_text = "DYNAMIC_SPACE_BACKGROUND_LOD_DESC"
 align = 1
@@ -356,7 +362,7 @@ text = "8"
 
 [node name="EnableShaders" type="CheckButton" parent="Panel/Graphics" unique_id=1864853408]
 layout_mode = 0
-offset_left = 600.0
+offset_left = 812.0
 offset_top = 144.0
 offset_right = 880.0
 offset_bottom = 184.0
@@ -365,9 +371,11 @@ offset_bottom = 184.0
 layout_mode = 0
 offset_left = 556.0
 offset_top = 152.0
-offset_right = 795.0
+offset_right = 716.0
 offset_bottom = 192.0
 text = "ENABLE_SHADERS [img]Graphics/Icons/help.png[/img]"
+fit_content = true
+autowrap_mode = 0
 label_text = "ENABLE_SHADERS"
 help_text = "ENABLE_SHADERS_DESC"
 

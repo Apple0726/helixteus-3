@@ -234,16 +234,6 @@ func battle_victory_callback():
 		game.stats_dim.enemies_rekt_in_battle += len(HX_data)
 		game.stats_global.enemies_rekt_in_battle += len(HX_data)
 		Helper.conquer_planet(game.c_p)
-		for planet in game.planet_data:
-			if not planet.has("conquered"):
-				all_conquered = false
-	if all_conquered:
-		game.system_data[game.c_s]["conquered"] = true
-		game.system_data_persistent[game.c_s]["conquered"] = true
-		Helper.save_obj("Galaxies", game.c_g_g, game.system_data_persistent)
-		game.stats_univ.systems_conquered += 1
-		game.stats_dim.systems_conquered += 1
-		game.stats_global.systems_conquered += 1
 	if not game.bldg_unlocked.has(Building.SOLAR_PANEL) and game.stats_univ.planets_conquered > 1:
 		Helper.show_bldg_unlocked_popup(Building.SOLAR_PANEL)
 	Helper.save_obj("Systems", game.c_s_g, game.planet_data)

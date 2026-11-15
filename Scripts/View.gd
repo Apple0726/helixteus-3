@@ -322,12 +322,12 @@ func add_obj(obj_str:String, pos:Vector2, sc:float):
 			game.add_space_HUD()
 		else:
 			galaxy_obj_cache.free()
-	if not is_instance_valid(obj) or obj.is_queued_for_deletion():
-		obj = load("res://Scenes/Views/" + obj_str + ".tscn").instantiate()
-		add_child(obj)
 	position = pos
 	scale = Vector2(sc, sc)
 	obj_scaled = scale.x < 1.5
+	if not is_instance_valid(obj) or obj.is_queued_for_deletion():
+		obj = load("res://Scenes/Views/" + obj_str + ".tscn").instantiate()
+		add_child(obj)
 	refresh()
 	limit_to_viewport = game.c_v in ["universe", "cluster", "galaxy", "system", "planet"]
 	queue_redraw()

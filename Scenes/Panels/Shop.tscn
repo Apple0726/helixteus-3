@@ -94,7 +94,7 @@ offset_top = 153.0
 offset_right = 40.0
 offset_bottom = 193.0
 grow_horizontal = 2
-text = "Overclock items temporarily boost resource production of the affected buildings."
+text = "OVERCLOCKS_DESC"
 horizontal_alignment = 1
 vertical_alignment = 1
 

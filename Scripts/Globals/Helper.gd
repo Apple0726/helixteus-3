@@ -1042,6 +1042,17 @@ func conquer_planet(p_id:int):
 	game.stats_univ.planets_conquered += 1
 	game.stats_dim.planets_conquered += 1
 	game.stats_global.planets_conquered += 1
+	var all_conquered = true
+	for planet in game.planet_data:
+		if not planet.has("conquered"):
+			all_conquered = false
+	if all_conquered:
+		game.system_data[game.c_s]["conquered"] = true
+		game.system_data_persistent[game.c_s]["conquered"] = true
+		Helper.save_obj("Galaxies", game.c_g_g, game.system_data_persistent)
+		game.stats_univ.systems_conquered += 1
+		game.stats_dim.systems_conquered += 1
+		game.stats_global.systems_conquered += 1
 
 var hbox_theme = preload("res://Resources/default_theme.tres")
 var text_border_theme = preload("res://Resources/TextBorder.tres")
@@ -1740,6 +1751,7 @@ func load_ambient_music():
 	}), game.u_i.time_speed)
 
 func export_save(save_to_export:String, path:String = ""): # Empty path = copy to clipboard
+	export_save_data_exported = 0
 	export_save_files_exported = 0
 	var file:FileAccess
 	if path != "":
@@ -1816,7 +1828,7 @@ func export_univ(univ_str:String, save_to_export:String):
 		error = await export_univ_folder(univ_data, univ_str, "Systems", save_to_export)
 	return {"error":error, "univ_data":univ_data}
 
-var max_data_to_export_before_await = 1000000
+var max_data_to_export_before_await = 100000
 var export_save_data_exported = 0
 
 func export_univ_folder(univ_data:Dictionary, univ_str:String, folder:String, save_to_export:String):

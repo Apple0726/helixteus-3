@@ -598,6 +598,7 @@ func load_univ():
 			atoms[atom] += autocollect.atoms[atom] * time_elapsed * u_i.time_speed
 	Helper.planet_data_cache.clear()
 	Helper.tile_data_cache.clear()
+	view.galaxy_obj_cache = null
 	tile_data.clear()
 	planet_data.clear()
 	system_data.clear()
@@ -665,9 +666,6 @@ func load_game():
 	biology_bonus = save_info_dict.biology_bonus
 	engineering_bonus = save_info_dict.engineering_bonus
 	achievement_data = save_info_dict.get("achievement_data", {})
-	if achievement_data.is_empty() or achievement_data.money is Array:#Save migration
-		for ach in Data.achievements:
-			achievement_data[ach] = {}
 	if save_info_dict.version != VERSION and not save_info_dict.version in COMPATIBLE_VERSIONS:
 		c_u = -1
 		var lv_sum:int = 0
@@ -1045,6 +1043,9 @@ func start_game(univ, new_save, DR_advantage):
 		AncientBuilding.CELLULOSE_SYNTHESIZER:{},
 		AncientBuilding.NUCLEAR_FUSION_REACTOR:{},
 	}
+	Helper.planet_data_cache.clear()
+	Helper.tile_data_cache.clear()
+	view.galaxy_obj_cache = null
 	
 	if not is_ancestor_of(HUD):
 		$HUD.add_child(HUD)
@@ -1208,10 +1209,16 @@ func set_custom_coords(coords:Array, coord_values:Array):#coords: ["c_p_g", "c_p
 				tile_data.clear()
 			if coords[i] == "c_s_g" and c_s_g != coord_values[i]:
 				planet_data.clear()
+				tile_data.clear()
 			if coords[i] == "c_g_g" and c_g_g != coord_values[i]:
 				system_data.clear()
+				planet_data.clear()
+				tile_data.clear()
 			if coords[i] == "c_c" and c_c != coord_values[i]:
 				galaxy_data.clear()
+				system_data.clear()
+				planet_data.clear()
+				tile_data.clear()
 			self[coords[i]] = coord_values[i]
 
 func delete_galaxy(_c_g:int):
@@ -2012,7 +2019,7 @@ func generate_galaxies(id:int):
 			continue
 		var g_i = {
 			"parent": id,
-			"type": [0, 1, 2, 6][rng.randi() % 4],
+			"type": [0, 1, 2][rng.randi() % 3],
 			"dark_matter": Helper.clever_round(pow(rng.randf_range(0.85, 1.15), -log(max(1e-7, rng.randf())) * log(redshift + 1.0) * 0.8 + 1.0)), # Influences planet numbers and size
 			"rotation": rng.randf_range(0.0, 2.0 * PI),
 			"id": g_id + galaxies_generated,
@@ -3319,7 +3326,8 @@ func generate_tiles(id:int, first_time:bool):
 				break
 		if not achievement_data.exploration.has("planet_with_nothing") and planet_with_nothing:
 			earn_achievement("exploration", "planet_with_nothing")
-	if open_obj("Planets", c_p_g).is_empty():
+	tile_data_persistent = open_obj("Planets", c_p_g)
+	if tile_data_persistent.is_empty():
 		tile_data_persistent.resize(N)
 		tile_data_persistent.fill(null)
 		for i in len(tile_data):
@@ -3330,8 +3338,6 @@ func generate_tiles(id:int, first_time:bool):
 				Helper.set_tile_data_persistent(i, "ancient_bldg", ancient_bldg)
 				if not ancient_bldg.has("repair_cost"):
 					Helper.set_ancient_bldg_bonuses(p_i, ancient_bldg, i, wid)
-	else:
-		tile_data_persistent = open_obj("Planets", c_p_g)
 	for i in len(tile_data_persistent):
 		var tile_persistent = tile_data_persistent[i]
 		if tile_persistent == null:
@@ -4227,19 +4233,6 @@ func conquer_all_planets():
 	system_data_persistent[c_s].conquered = true
 	space_HUD.get_node("ConquerAll").visible = false
 
-func conquer_all(energy_cost:float, insta_conquer:bool):
-	if energy >= energy_cost:
-		energy -= energy_cost
-		if insta_conquer:
-			conquer_all_planets()
-			view.obj.refresh_planets()
-		else:
-			is_conquering_all = true
-			c_p = ships_travel_data.c_coords.p
-			switch_view("battle")
-	else:
-		popup(tr("NOT_ENOUGH_ENERGY"), 2.0)
-
 func show_collect_info(info:Dictionary):
 	if info.has("stone") and Helper.get_sum_of_dict(info.stone) == 0:
 		info.erase("stone")
@@ -4437,7 +4430,6 @@ func _on_Godot_mouse_entered():
 var curr_MM_p = 0
 
 func _on_MMTimer_timeout():
-	return
 	if is_instance_valid(HUD) and is_ancestor_of(HUD):
 		var curr_time = Time.get_unix_time_from_system()
 		var planets_with_MM:Array = boring_machine_data.keys()

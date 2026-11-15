@@ -24,7 +24,7 @@ func _input(event):
 	if ready_to_backup and curr_time - last_input_timestamp > 30.0:
 		perform_backup()
 	if Input.is_action_just_released("backup_save") and not is_backing_up:
-		perform_backup(true)
+		perform_backup()
 
 func perform_backup(backup_name = "backup"):
 	var c_sv:String = game.c_sv

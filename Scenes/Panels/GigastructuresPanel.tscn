@@ -223,6 +223,8 @@ offset_left = 44.0
 offset_top = 392.0
 offset_right = 272.0
 offset_bottom = 422.0
+fit_content = true
+autowrap_mode = 0
 help_text = "PP_HELP"
 
 [connection signal="pressed" from="CloseButton" to="." method="_on_close_button_pressed"]

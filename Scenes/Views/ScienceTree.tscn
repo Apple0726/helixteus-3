@@ -49,199 +49,199 @@ metadata/_edit_use_anchors_ = true
 
 [node name="Line2D2" type="Line2D" parent="Lines" unique_id=2134935890]
 points = PackedVector2Array(808, 552, 752, 552)
-width = 1.0
-default_color = Color(0.50534403, 0.5053441, 0.50534403, 1)
+width = 2.0
+default_color = Color(0.39688924, 0.39688927, 0.3968891, 1)
 
 [node name="Line2D5" type="Line2D" parent="Lines" unique_id=958427784]
 position = Vector2(224, 0)
 points = PackedVector2Array(800, 440, 800, 488)
-width = 1.0
-default_color = Color(0.50534403, 0.5053441, 0.50534403, 1)
+width = 2.0
+default_color = Color(0.39688924, 0.39688927, 0.3968891, 1)
 
 [node name="Line2D6" type="Line2D" parent="Lines" unique_id=1240632201]
 points = PackedVector2Array(752, 552, 752, -152)
-width = 1.0
-default_color = Color(0.50534403, 0.5053441, 0.50534403, 1)
+width = 2.0
+default_color = Color(0.39688924, 0.39688927, 0.3968891, 1)
 
 [node name="Line2D26" type="Line2D" parent="Lines" unique_id=1004147716]
 points = PackedVector2Array(752, 200, 808, 200)
-width = 1.0
-default_color = Color(0.50534403, 0.5053441, 0.50534403, 1)
+width = 2.0
+default_color = Color(0.39688924, 0.39688927, 0.3968891, 1)
 
 [node name="Line2D32" type="Line2D" parent="Lines" unique_id=1932012044]
 points = PackedVector2Array(480, 376, 480, 488)
-width = 1.0
-default_color = Color(0.50534403, 0.5053441, 0.50534403, 1)
+width = 2.0
+default_color = Color(0.39688924, 0.39688927, 0.3968891, 1)
 
 [node name="Line2D35" type="Line2D" parent="Lines" unique_id=993446934]
 points = PackedVector2Array(0, 376, 0, 488)
-width = 1.0
-default_color = Color(0.50534403, 0.5053441, 0.50534403, 1)
+width = 2.0
+default_color = Color(0.39688924, 0.39688927, 0.3968891, 1)
 
 [node name="Line2D36" type="Line2D" parent="Lines" unique_id=1611777759]
 points = PackedVector2Array(-160, 376, -160, 488)
-width = 1.0
-default_color = Color(0.50534403, 0.5053441, 0.50534403, 1)
+width = 2.0
+default_color = Color(0.39688924, 0.39688927, 0.3968891, 1)
 
 [node name="Line2D33" type="Line2D" parent="Lines" unique_id=1970889002]
 points = PackedVector2Array(320, 264, 320, 488)
-width = 1.0
-default_color = Color(0.50534403, 0.5053441, 0.50534403, 1)
+width = 2.0
+default_color = Color(0.39688924, 0.39688927, 0.3968891, 1)
 
 [node name="Line2D34" type="Line2D" parent="Lines" unique_id=1170528857]
 points = PackedVector2Array(160, 264, 160, 488)
-width = 1.0
-default_color = Color(0.50534403, 0.5053441, 0.50534403, 1)
+width = 2.0
+default_color = Color(0.39688924, 0.39688927, 0.3968891, 1)
 
 [node name="Line2D38" type="Line2D" parent="Lines" unique_id=502335579]
 points = PackedVector2Array(160, 88, 160, 136)
-width = 1.0
-default_color = Color(0.50534403, 0.5053441, 0.50534403, 1)
+width = 2.0
+default_color = Color(0.39688924, 0.39688927, 0.3968891, 1)
 
 [node name="Line2D7" type="Line2D" parent="Lines" unique_id=1116285502]
 points = PackedVector2Array(808, 24, 752, 24)
-width = 1.0
-default_color = Color(0.50534403, 0.5053441, 0.50534403, 1)
+width = 2.0
+default_color = Color(0.39688924, 0.39688927, 0.3968891, 1)
 
 [node name="Line2D37" type="Line2D" parent="Lines" unique_id=1449869621]
 points = PackedVector2Array(808, -152, 752, -152)
-width = 1.0
-default_color = Color(0.50534403, 0.5053441, 0.50534403, 1)
+width = 2.0
+default_color = Color(0.39688924, 0.39688927, 0.3968891, 1)
 
 [node name="Line2D3" type="Line2D" parent="Lines" unique_id=630768123]
 points = PackedVector2Array(968, 376, 696, 376)
-width = 1.0
-default_color = Color(0.50534403, 0.5053441, 0.50534403, 1)
+width = 2.0
+default_color = Color(0.39688924, 0.39688927, 0.3968891, 1)
 
 [node name="Line2D30" type="Line2D" parent="Lines" unique_id=1406011350]
 points = PackedVector2Array(-160, 376, 580, 376)
-width = 1.0
-default_color = Color(0.50534403, 0.5053441, 0.50534403, 1)
+width = 2.0
+default_color = Color(0.39688924, 0.39688927, 0.3968891, 1)
 
 [node name="Line2D13" type="Line2D" parent="Lines" unique_id=1108525164]
 points = PackedVector2Array(944, -152, 944, -328)
-width = 1.0
-default_color = Color(0.50534403, 0.5053441, 0.50534403, 1)
+width = 2.0
+default_color = Color(0.39688924, 0.39688927, 0.3968891, 1)
 
 [node name="Line2D15" type="Line2D" parent="Lines" unique_id=1953121995]
 points = PackedVector2Array(920, -152, 968, -152)
-width = 1.0
-default_color = Color(0.50534403, 0.5053441, 0.50534403, 1)
+width = 2.0
+default_color = Color(0.39688924, 0.39688927, 0.3968891, 1)
 
 [node name="Line2D31" type="Line2D" parent="Lines" unique_id=155314325]
 points = PackedVector2Array(968, -328, 944, -328)
-width = 1.0
-default_color = Color(0.50534403, 0.5053441, 0.50534403, 1)
+width = 2.0
+default_color = Color(0.39688924, 0.39688927, 0.3968891, 1)
 
 [node name="Line2D16" type="Line2D" parent="Lines" unique_id=1732256223]
 points = PackedVector2Array(1080, -152, 1128, -152)
-width = 1.0
-default_color = Color(0.50534403, 0.5053441, 0.50534403, 1)
+width = 2.0
+default_color = Color(0.39688924, 0.39688927, 0.3968891, 1)
 
 [node name="Line2D14" type="Line2D" parent="Lines" unique_id=691317967]
 points = PackedVector2Array(1080, -328, 1128, -328)
-width = 1.0
-default_color = Color(0.50534403, 0.5053441, 0.50534403, 1)
+width = 2.0
+default_color = Color(0.39688924, 0.39688927, 0.3968891, 1)
 
 [node name="Line2D8" type="Line2D" parent="Lines" unique_id=1856580236]
 position = Vector2(224, 0)
 points = PackedVector2Array(904, 376, 856, 376)
-width = 1.0
-default_color = Color(0.50534403, 0.5053441, 0.50534403, 1)
+width = 2.0
+default_color = Color(0.39688924, 0.39688927, 0.3968891, 1)
 
 [node name="Line2D18" type="Line2D" parent="Lines" unique_id=1524087973]
 position = Vector2(160, 0)
 points = PackedVector2Array(1288, 376, 1080, 376)
-width = 1.0
-default_color = Color(0.50534403, 0.5053441, 0.50534403, 1)
+width = 2.0
+default_color = Color(0.39688924, 0.39688927, 0.3968891, 1)
 
 [node name="Line2D4" type="Line2D" parent="Lines" unique_id=1839689842]
 points = PackedVector2Array(968, 200, 920, 200)
-width = 1.0
-default_color = Color(0.50534403, 0.5053441, 0.50534403, 1)
+width = 2.0
+default_color = Color(0.39688924, 0.39688927, 0.3968891, 1)
 
 [node name="Line2D9" type="Line2D" parent="Lines" unique_id=1508751759]
 position = Vector2(224, 32)
 points = PackedVector2Array(960, 628, 960, 584)
-width = 1.0
-default_color = Color(0.50534403, 0.5053441, 0.50534403, 1)
+width = 2.0
+default_color = Color(0.39688924, 0.39688927, 0.3968891, 1)
 
 [node name="Line2D10" type="Line2D" parent="Lines" unique_id=1096431097]
 position = Vector2(224, 32)
 points = PackedVector2Array(960, 456, 960, 408)
-width = 1.0
-default_color = Color(0.50534403, 0.5053441, 0.50534403, 1)
+width = 2.0
+default_color = Color(0.39688924, 0.39688927, 0.3968891, 1)
 
 [node name="Line2D17" type="Line2D" parent="Lines" unique_id=1430238326]
 position = Vector2(224, 32)
 points = PackedVector2Array(1120, 456, 1120, 344)
-width = 1.0
-default_color = Color(0.50534403, 0.5053441, 0.50534403, 1)
+width = 2.0
+default_color = Color(0.39688924, 0.39688927, 0.3968891, 1)
 
 [node name="Line2D11" type="Line2D" parent="Lines" unique_id=1617972007]
 position = Vector2(224, 32)
 points = PackedVector2Array(960, 280, 960, 232)
-width = 1.0
-default_color = Color(0.50534403, 0.5053441, 0.50534403, 1)
+width = 2.0
+default_color = Color(0.39688924, 0.39688927, 0.3968891, 1)
 
 [node name="Line2D19" type="Line2D" parent="Lines" unique_id=1818881611]
 points = PackedVector2Array(1616, -152, 1664, -152)
-width = 1.0
-default_color = Color(0.50534403, 0.5053441, 0.50534403, 1)
+width = 2.0
+default_color = Color(0.39688924, 0.39688927, 0.3968891, 1)
 
 [node name="Line2D20" type="Line2D" parent="Lines" unique_id=1079234476]
 position = Vector2(224, 32)
 points = PackedVector2Array(1392, -8, 1448, -8)
-width = 1.0
-default_color = Color(0.50534403, 0.5053441, 0.50534403, 1)
+width = 2.0
+default_color = Color(0.39688924, 0.39688927, 0.3968891, 1)
 
 [node name="Line2D22" type="Line2D" parent="Lines" unique_id=1036489180]
 position = Vector2(224, 0)
 points = PackedVector2Array(1448, 728, 1392, 728)
-width = 1.0
-default_color = Color(0.50534403, 0.5053441, 0.50534403, 1)
+width = 2.0
+default_color = Color(0.39688924, 0.39688927, 0.3968891, 1)
 
 [node name="Line2D24" type="Line2D" parent="Lines" unique_id=569493202]
 points = PackedVector2Array(1616, 728, 1616, -152)
-width = 1.0
-default_color = Color(0.50534403, 0.5053441, 0.50534403, 1)
+width = 2.0
+default_color = Color(0.39688924, 0.39688927, 0.3968891, 1)
 
 [node name="Line2D25" type="Line2D" parent="Lines" unique_id=736853025]
 points = PackedVector2Array(1672, 376, 1560, 376)
-width = 1.0
-default_color = Color(0.50534403, 0.5053441, 0.50534403, 1)
+width = 2.0
+default_color = Color(0.39688924, 0.39688927, 0.3968891, 1)
 
 [node name="Line2D27" type="Line2D" parent="Lines" unique_id=465362742]
 points = PackedVector2Array(1672, 552, 1616, 552)
-width = 1.0
-default_color = Color(0.50534403, 0.5053441, 0.50534403, 1)
+width = 2.0
+default_color = Color(0.39688924, 0.39688927, 0.3968891, 1)
 
 [node name="Line2D23" type="Line2D" parent="Lines" unique_id=671108871]
 points = PackedVector2Array(1832, 376, 1784, 376)
-width = 1.0
-default_color = Color(0.50534403, 0.5053441, 0.50534403, 1)
+width = 2.0
+default_color = Color(0.39688924, 0.39688927, 0.3968891, 1)
 
 [node name="Line2D28" type="Line2D" parent="Lines" unique_id=1149976418]
 points = PackedVector2Array(1992, 376, 1944, 376)
-width = 1.0
-default_color = Color(0.50534403, 0.5053441, 0.50534403, 1)
+width = 2.0
+default_color = Color(0.39688924, 0.39688927, 0.3968891, 1)
 
 [node name="Line2D29" type="Line2D" parent="Lines" unique_id=89545669]
 points = PackedVector2Array(2152, 376, 2104, 376)
-width = 1.0
-default_color = Color(0.50534403, 0.5053441, 0.50534403, 1)
+width = 2.0
+default_color = Color(0.39688924, 0.39688927, 0.3968891, 1)
 
 [node name="Line2D21" type="Line2D" parent="Lines" unique_id=801017820]
 position = Vector2(224, 32)
 points = PackedVector2Array(1392, 168, 1440, 168)
-width = 1.0
-default_color = Color(0.50534403, 0.5053441, 0.50534403, 1)
+width = 2.0
+default_color = Color(0.39688924, 0.39688927, 0.3968891, 1)
 
 [node name="Line2D12" type="Line2D" parent="Lines" unique_id=436159024]
 position = Vector2(224, 32)
 points = PackedVector2Array(960, 104, 960, 56)
-width = 1.0
-default_color = Color(0.50534403, 0.5053441, 0.50534403, 1)
+width = 2.0
+default_color = Color(0.39688924, 0.39688927, 0.3968891, 1)
 
 [node name="Control" type="Control" parent="." unique_id=773061513]
 layout_mode = 3

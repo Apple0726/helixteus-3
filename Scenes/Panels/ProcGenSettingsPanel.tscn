@@ -212,7 +212,7 @@ theme_override_styles/panel = SubResource("StyleBoxFlat_hfne4")
 horizontal_scroll_mode = 0
 
 [node name="Control" type="Control" parent="AdvancedSettingsGroup/ScrollContainer" unique_id=1816025772]
-custom_minimum_size = Vector2(776, 1800)
+custom_minimum_size = Vector2(776, 1820)
 layout_mode = 2
 
 [node name="PlanetTexture" type="TextureRect" parent="AdvancedSettingsGroup/ScrollContainer/Control" unique_id=529625255]
@@ -247,6 +247,8 @@ offset_top = 107.0
 offset_right = 267.0
 offset_bottom = 131.0
 text = "PLANET_TILE_DIMENSIONS [img]Graphics/Icons/help.png[/img]"
+fit_content = true
+autowrap_mode = 0
 label_text = "PLANET_TILE_DIMENSIONS"
 help_text = "PLANET_TILE_DIMENSIONS_DESC"
 
@@ -305,6 +307,8 @@ offset_top = 219.0
 offset_right = 191.0
 offset_bottom = 243.0
 text = "LAKE_COVERAGE [img]Graphics/Icons/help.png[/img]"
+fit_content = true
+autowrap_mode = 0
 label_text = "LAKE_COVERAGE"
 help_text = "LAKE_COVERAGE_DESC"
 
@@ -436,6 +440,8 @@ offset_top = 539.0
 offset_right = 255.0
 offset_bottom = 563.0
 text = "CAVE_FLOOR_DIFFICULTY [img]Graphics/Icons/help.png[/img]"
+fit_content = true
+autowrap_mode = 0
 label_text = "CAVE_FLOOR_DIFFICULTY"
 help_text = "CAVE_FLOOR_DIFFICULTY_DESC"
 
@@ -466,6 +472,8 @@ offset_top = 595.0
 offset_right = 255.0
 offset_bottom = 619.0
 text = "CAVE_TRAVERSABLE_SPACE [img]Graphics/Icons/help.png[/img]"
+fit_content = true
+autowrap_mode = 0
 label_text = "CAVE_TRAVERSABLE_SPACE"
 help_text = "CAVE_TRAVERSABLE_SPACE_DESC"
 
@@ -845,6 +853,8 @@ offset_top = 1183.0
 offset_right = 323.0
 offset_bottom = 1207.0
 text = "DWARF_ELLIPTICAL_GALAXY_RATIO [img]Graphics/Icons/help.png[/img]"
+fit_content = true
+autowrap_mode = 0
 label_text = "DWARF_ELLIPTICAL_GALAXY_RATIO"
 help_text = "DWARF_ELLIPTICAL_GALAXY_RATIO_DESC"
 
@@ -867,6 +877,8 @@ offset_top = 1239.0
 offset_right = 319.0
 offset_bottom = 1263.0
 text = "ELLIPTICAL_SPIRAL_GALAXY_RATIO [img]Graphics/Icons/help.png[/img]"
+fit_content = true
+autowrap_mode = 0
 label_text = "ELLIPTICAL_SPIRAL_GALAXY_RATIO"
 help_text = "ELLIPTICAL_SPIRAL_GALAXY_RATIO_DESC"
 
@@ -957,6 +969,8 @@ offset_top = 1555.0
 offset_right = 247.0
 offset_bottom = 1579.0
 text = "GALAXY_GROUP_RATIO [img]Graphics/Icons/help.png[/img]"
+fit_content = true
+autowrap_mode = 0
 label_text = "GALAXY_GROUP_RATIO"
 help_text = "GALAXY_GROUP_RATIO_DESC"
 

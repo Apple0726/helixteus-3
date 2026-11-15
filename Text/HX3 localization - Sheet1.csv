@@ -45,8 +45,6 @@ VIEW_GALAXY,View the galaxy this system is in,Voir la galaxie contenant ce syst�
 VIEW_CLUSTER,View the cluster this galaxy is in,Voir l'amas contenant cette galaxie,Visualizza l'ammasso contenente questa galassia,查看这个星系所在的星系团,Entdeckte Cluster in dieser Galaxie anzeigen,Ver el cúmulo en donde se encuentra esta galaxia,이 은하가 있는 은하단 보기,Granska galaxens kluster,A galaxis halmazának megtekintése,この銀河系が属する銀河団を見る,Bekijk de omvattende cluster,Показать кластер в котором находится эта галактика,Podejrzyj gromadę w której znajduje się ta galaktyka
 VIEW_UNIVERSE,View the universe this cluster is in,Voir l'univers contenant ce amas,Visualizza l'universo contenente questo ammasso,查看这个星系团所在的宇宙,Entdeckte Supercluster in diesem Universen anzeigen,Ver el universo en donde se encuentra este supercúmulo,이 은하단이 있는 우주 보기,Granska supersklustrets universum,A szuperhalmaz univerzumának megtekintése,この超銀河団が属する宇宙を見る,Bekijk het omvattende universum,Показать вселенную в которой этот суперкластер,Podejrzyj wszechświat w którym znajduję się ta gromada
 VIEW_DIMENSION,View discovered universes in this dimension,Voir les univers découverts dans cette dimension,Visualizza gli universi scoperti in questa dimensione,查看这个宇宙所在的次元,Entdeckte Universen in dieser Dimension anzeigen,Ver universos descubiertos en esta dimensión,이 차원의 발견된 우주들 보기,Granska upptäkta universum i denna dimmention,Az ebben a dimenzióban felfedezett univerzumok megtekintése,この宇宙が属する次元を見る,Bekijk de ontdekte universums in deze dimensie,Показать найденные вселенные в этом измерении,Przejrzyj odkryte wszechświaty w tym wymiarze
-GENERATING_CLUSTER,Generating cluster... (%d / %d galaxies),Génération de l'amas... (%d / %d galaxies),Generazione dell'ammasso (%s / %s galassie),星系团生成中... (%d / %d 星系),Generiere Cluster... (%d / %d Galaxien),Generando clúster... (%d / %d galaxias),은하단 로딩 중... (은하 %d / %d),Genererar kluster... (%d / %d galaxer),Halmaz készítése... (%d / %d galaxis),銀河団の生成中...（%d / %d銀河系）,Cluster genereren... (%d / %d sterrenstelsels),Генерация кластера... (%d / %d галактик),Generuję gromady... (%d / %d galaktyk)
-GENERATING_GALAXY,Generating galaxy... (%d / %d systems),Génération de la galaxie (%d / %d systèmes),Generazione della galassia (%s / %s sistemi),星系生成中... (%d / %d 恒星系),Generiere Galaxie ... (%d / %d Systemen),Generando galaxia... (%d / %d sistemas solares) ,은하 로딩 중... (항성계 %d / %d),Genererar galax... (%d / %d system),Galaxis készítése... (%d / %d rendszer),銀河系の生成中...（%d / %d星系）,Heelal genereren... (%d / %d zonnestelsels),Генерация галактики... (%d / %d систем),Generuję galaktyki... (%d / %d układów)
 MINERAL_SOLD,You sold %s minerals for $%s!,Vous avez vendu %s minéraux pour $%s!,Hai venduto %s minerali per $%s!,你卖出了 %s 块水晶，获得了$%s ！,Du hast %s Mineralien für $%s verkauft!,Vendiste %s minerales por $%s!,%s 광물을 $%s로 팔았습니다,Du sålde %s mineraler för $%s!,Eladtál %s ásványt $%s-ért!,%s鉱石を$%sで販売しました！,Je verkocht %s mineralen voor $%s!,Продано %s минералов за $%s!,Sprzedałeś %s minerałów wartych $%s!
 DIAMETER,Diameter,Diamètre,Diametro,直径,Durchmesser,Diámetro,지름,Diameter,Átmérő,直径,Diameter,Диаметр,Średnica
 DISTANCE_FROM_STAR,Distance from star,Distance depuis l'étoile,Distanza dalla stella,距离恒星,Entfernung zum Stern,Distancia de la estrella,별과 거리,Distans från stjärna,Távolság a csillagtól,星からの距離,Afstand tot ster,Дистанция от звезды,Odległość od gwiazdy
@@ -82,7 +80,6 @@ TRACE,Trace,Traces,Traccia,微量元素,Spuren,Otros,미량,Spår,Nyomok,トレ�
 TRACE_ELEMENTS,Trace elements,Traces,Tracce di elementi,微量元素,Spurenelemente,Otros elementos,미량 원소,Spårämne,Nyomelemek,微量元素,Sporenelementen,Элементы,Śladowe ilości pierwiastków
 INV_MAT_DESC,"Materials are required to do various tasks in the game, including crafting, space agriculture and resource conversion.","Les matériaux sont utilisés partout: fabrication, agriculture spatiale, conversion de ressources etc.","I materiali hanno diverse funzioni: fabbricazione, agricoltura spaziale, conversione delle risorse ecc.",原料在游戏中用于完成各种任务，包括制造、太空农业和资源转换。,"Materialien werden benötigt um verschiedene Aufgaben im Spiel zu erfüllen, einschließlich Handwerk, Weltraumlandwirtschaft und Ressourcenumwandlung.","Los materiales son requeridos para hacer diversas tareas en el juego, incluyendo fabricación, agricultura espacial y conversión de recursos.",,"Material krävs för att utföra olika uppgifter i spelet, inklusive hantverk, rymdjordbruk och resursomvandling. ","Az anyagok mindenféle különböző dologhoz kellenek, például barkácsoláshoz, termeléshez, és átalakításhoz",材料は、クラフト、宇宙農業、資源変換など、ゲーム内のさまざまな作業を行うために必要です。,"Materialen zijn vereist voor verschillende taken in het spel, waaronder gereedschap maken, ruimte-landbouw, en grondstoffen omzetten.","Материалы необходимы для выполнения различных задач в игре, включая крафт, космические фермы и преобразование ресурсов.","Materiały są niezbędne do wykonania niektórych czynności w grze, takich jak wytwarzanie przedmiotów, kosmiczne rolnictwo, oraz wymiana surowców,"
 MATERIALS,Materials,Matériaux,Materiali,原料,Materialien,Materiales,재료,Matrial,Anyagok,素材,Materialen,Материалы,Materiały
-ACCELERATES_BY,Accelerates by %s,Accélère de %s,Accelera di %s,可加速建造 %s,Beschleunigt um %s,Acelera por %s,%s 가속화,Accelerar med %s,Ennyivel gyorsít:,加速(%s),Versnelt met %s,Ускоряется на %s,Przyspiesza o %s
 OVERCLOCKS,Overclocks,Overclocks,Overclock,超频器,Übertaktungen,Overclocks,오버클럭,Överklockningar,Gyorsítók,オーバークロック,Overclocks,Разгоны,Przyspieszenia
 OVERCLOCK,Overclock,Overclock,Overclock,超频器,Übertaktung,Overclock,오버클럭,Överklocka,Gyorsító,オーバークロック,Overclock,Разгон,Przyspieszenie
 OVERCLOCKS_DESC2,Production multiplier: %s\nDuration: %s,Multiplicateur de production: %s\nDurée: %s,Moltiplicatore di produzione: %s\nDurata: %s,增产倍数: %s\n持续时间: %s,Produktions Multiplikator um %s \n Dauer %s,Multiplicador de producción: %s\nDuración: %s,생산 배율: %s\n기간: %s,Produktionsmultiplikator: %s \ nLängd: %s,Termelési szorzó: %s\nIdőtartam: %s,生産乗数：%s\n持続時間：%s,Productie vermenigvuldiger:%s\nDuur: %s,Множитель производства: %s\nДлительность: %s,Mnożnik produkcji: %s\nCzas trwania: %s
@@ -93,7 +90,7 @@ PICKAXES_DESC,Pickaxes allow you to mine a planet for various resources.,Les pio
 STICK,Stick,Bâton,Bastone,小木棍,Stock,Palo,막대기,Pinne,Bot,枝,Stok,Палка,Patyk
 STICK_DESC,Use a stick to mine your very first rocks.,Utilisez un bâton pour miner vos premiers minerais.,Usa un bastone per minare le prime rocce.,用你手里的小木棍来挖掘人生中的第一枚石块儿,Nutze einen Stock um deinen ersten Stein abzubauen,Usa un palo para excavar tus primeras piedras.,막대기로 첫 돌들을 캐세요.,Use a stick to mine your very first rocks.,Használy egy botot az első köved bányászásához.,枝を使って、石を叩きます。最初はみんなこれ。,Gebruik een stok om je eerste stenen te delven.,"Используйте палку, чтобы добыть свои самые первые камни.",Użyj patyka aby wydobyć swoje pierwsze skały.
 NOT_ENOUGH_MONEY,You don't have enough money.,Vous n'avez pas assez d'argent.,Non hai abbastanza soldi.,你没有足够的资金,Du hast nicht genug Geld,No tienes suficiente dinero.,돈이 부족합니다.,Använd en pinne för att bryta dina allra första stenar.,Nincs elég pénzed.,資金が不足しています。,Je hebt niet voldoende geld.,Недостаточно денег,Nie posiadasz wystarczających środków
-REPLACE_PICKAXE,Replace your %s with a %s?,Remplacer %s par %s?,Vuoi ostituire il tuo %s con un %s?,将 %s 替换为 %s？,Deine %s mit einer %s ersetzen?,Deseas reemplazar tu %s por un %s?,%s를 %s로 바꾸겠습니까?,Ersätt din% s med en %s?,Helyettesíted a mostaní csákányodat (%s) ezzel: %s?,%sを%sに置き換えますか？,Wil je je %s vervangen door een %s?,Заменить %s на %s?,Wymienić %s na %s?
+REPLACE_PICKAXE,Replace your %s with a %s?,Remplacer %s par %s?,Vuoi ostituire il tuo %s con un %s?,将 %s 替换为 %s？,Deine %s mit einer %s ersetzen?,Deseas reemplazar tu %s por un %s?,%s를 %s로 바꾸겠습니까?,Ersätt din %s med en %s?,Helyettesíted a mostaní csákányodat (%s) ezzel: %s?,%sを%sに置き換えますか？,Wil je je %s vervangen door een %s?,Заменить %s на %s?,Wymienić %s na %s?
 BUY_PICKAXE,You bought a %s!,Vous avez acheté un(e) %s!,Hai comprato un %s!,你买下了%s！,Du hast eine %s gekauft!,Compraste un %s!,%s를 구입했습니다.,Du köpte en %s!,Megvetted ezt: %s!,%sを購入しました！,Je kocht een %s!,Вы купили %s!,Kupiono %s!
 PICKAXE_BROKE,Your pickaxe broke!,Votre pioche a cassé!,Il tuo piccone si è rotto!,矿镐损坏了！,Deine Spitzhacke ist Zerbrochen!,Tu pico se rompió!,곡괭이가 부서졌습니다.,Din hacka gick sönder!,Eltört a csákányod!,つるはしが壊れた！,Je pikhouweel brak!,Кирка сломалась!,Kilof się złamał!
 AUTO_REPLACE,Auto replace,Remplacement automatique,Sostituzione automatica,自动替换,Automatisch ersetzen,Reemplazar automáticamente,자동 교체,Autoersätt,Automatikus helyettesítés,自動交換,Automatisch vervangen,Автозамена,Automatyczna wymiana
@@ -258,7 +255,7 @@ ADD_TO_HOTBAR,Add to hotbar,,,添加到快捷栏,Zur Hotbar hinzuzufügen,,,,Hoz
 REMOVE_FROM_HOTBAR,Remove from hotbar,,Premi H per rimuovere dalla barra degli strumenti,从快捷栏移除,Aus der Hotbar entfernen,,,,Kivétel a gyorsmenüből,,,,
 YOU_MINED_MATERIALS,You mined materials! Check them out in your inventory. You also unlocked crafting.,Vous avez miné des matériaux! Jetez un coup d'œil à votre inventaire. Vous avez aussi débloqué la fabrication.,Hai dissotterrato dei materiali! Li puoi trovare nell' inventario. Hai anche sbloccato la fabbricazione.,你开采到了原料！在你的库存中检查一下。同时你也解锁了制作。,Du hast deine ersten Materialien abgebaut! Du findest sie nun in deinem Inventar. Dadurch hast auch das Craften freigeschaltet.,¡Haz excavado materiales! Revísalos en tu inventario. También has desbloqueado la fabricación.,,,Anyagokat bányásztál! Nézd meg őket az inventárban. Megnyitottad a barkácsolást is.,素材を採掘した!インベントリで確認してください。クラフトもアンロックされました。,Je hebt materialen gedolven! Bekijk ze in je inventaris. Je kan nu ook items maken.,Вы добыли материалы! Проверьте их в своем инвентаре. Вы также разблокировали крафт.,
 YOU_MINED_METALS,You mined metals! Check them out in your inventory.,Vous avez miné des métaux! Jetez un coup d'œil à ton inventaire.,Hai dissotterrato dei metalli! Li puo trovare nell' inventario.,你开采到了一些金属！他们会在你的库存中显示。,Du hast deine ersten Metalle abgebaut! Du findest sie in deinem Inventar .,¡Haz excavado metales! Revísalos en tu inventario.,,,Fémeket bányásztál! Nézd meg őket az inventárban.,金属を採掘した!インベントリで確認してください。,Je hebt metalen gedolven! Bekijk ze in je inventaris.,Вы добыли металлы! Проверьте их в своем инвентаре.,
-NOT_ADJACENT_TO_LAKE,Not adjacent to a lake,Non adjacent à un lac,Non è adiacente a un lago,只能在湖边种植,Nicht neben einem See,No adyacente a un lago,,,Nem egy tó mellett van,%sは湖に隣接していません。,Niet naast een %s meer,Не примыкает к  %s озеру,
+NOT_ADJACENT_TO_LAKE,Not adjacent to a lake,Non adjacent à un lac,Non è adiacente a un lago,只能在湖边种植,Nicht neben einem See,No adyacente a un lago,,,Nem egy tó mellett van,,,,
 SEEDS_DESC,Grows @i %s kg,Produit @i %s kg,Produce @i %s kg,@i 收成 %s kg,Wächst @i %s kg,Produce @i %s kg,@i %s kg를 자랍니다 ,,%s kg-ot termel ebből: @i,@i %s kg を収穫できます。,Groeit @i %s kg,Выращивает @i %s кг,
 FERTILIZER,Fertilizer,Engrais,Fertilizzante,金属化肥,Dünger,Fertilizante,비료,,Trágya,肥料,Meststof,Удобрение,
 NOT_ENOUGH_INV_SPACE_CRAFT,Inventory full: not all items were crafted,Inventaire plein: pas tous les objets étaient fabriqués,Inventario pieno: alcuni oggetti non sono stati fabbricati,库存已满：并非所有物品都被制作,Inventar voll: Nicht alle Gegenstände wurden hergestellt.,Inventario lleno: Algunos objetos no fueron fabricados.,,,Inventár megtelt - nem lett minden barkácsolva.,インベントリがいっぱい：すべてのアイテムが作成できなかった,Inventaris vol: niet alle items werden geproduceerd,Инвентарь заполнен: не все предметы были изготовлены,
@@ -465,8 +462,7 @@ X_TO_REMOVE,Press X to remove,Appuyez sur X pour enlever,Premi X per rimuovere,�
 RANGE,Range,Portée,Raggio,射程,Reichweite,Rango,범위,,Hatósugár,範囲,Bereik,Дальность,
 REMOVE_WHEELS_ATTEMPT,You can't remove wheels! (how else would your rover be able to move?),Impossible de retirer les roues (il se déplacerait comment sinon?),Non puoi rimuovere le ruote! (Altrimenti come farebbe il rover ad andare in giro?),你不能移除轮胎！(你的漫游车还怎么跑？),Du kannst die reifen nicht entfernen (Wie soll er sich dann bewegen ?),¡No puedes remover las ruedas! (¿De qué otra manera se podría mover tu rover?),,,A kereket nem tudud eltüntetni! (amúgy hogy mozogna a róver??),車輪は外せない!(そうでなければ、どうやってローバーは動くのでしょうか？）,Je kan je wielen niet verwijderen! (Hoe wil je anders rijden?),Вы не можете снять колеса! (Иначе как бы ваш ровер мог двигаться?),
 IMPROVED_ROVER_LASERS_SC,Improved rover lasers,,,"漫游车的激光武器改进
-","Verbesserte Rover Laser
-",,,,"Jobb róverlézerek
+",Verbesserte Rover Laser,,,,"Jobb róverlézerek
 ",,,,
 IMPROVED_ROVER_LASERS_SC_DESC,Red lasers too weak? Maybe decreasing the wavelength will help!,Lasers rouges pas assez forts? Et si on diminuait la longueur d'onde?,I laser rossi sono troppo deboli? Forse ridurre la lunghezza d'onda può essere d'aiuto!,红色激光太弱？也许降低波长会有帮助！,Roter Laser zu schwach? Vielleicht wird eine kleinere Wellenlänge helfen!,¿Los láseres rojos son muy débiles? ¡Tal vez disminuir la longitud de onda puede ayudar!,,,Túl gyenge a vörös lézer? Csökkentsük le a hullámhosszát!,赤色レーザーは弱すぎる？波長を短くすれば解決するかも！？,Rode laser te zwak? Misschien helpt het om de golflengte te verkleinen!,"Красные лазеры слишком слабые? Возможно, уменьшение длины волны поможет!",
 IMPROVED_ROVER_LASERS_2_SC_DESC,Orange lasers too weak? Why not decrease the wavelength even more?,Lasers oranges pas assez forts? Et si on diminuait la période?,I laser arancioni sono troppo deboli? Perché non ridurre la lunghezza d'onda ancora di più?,橙色激光太弱？为什么不进一步降低波长呢？,Oranger Laser zu schwach? Vielleicht wird eine noch kleinere Wellenlänge weiter helfen!,¿Los láseres naranjos son muy débiles? ¿Por qué no disminuyes la longitud de onda aún más?,,,Túl gyenge a narancs lézer? Csökkentsük le a hullámhosszát még egy kicsit!,オレンジ色のレーザーは弱すぎる？なぜもっと波長を短くしないのか？,Oranje laser te zwak? Waarom de golflengte niet verder verkorten?,Оранжевые лазеры слишком слабые? Почему бы не уменьшить длину волны еще больше?,
@@ -1182,7 +1178,7 @@ THE_OPMETER,The OP-meter,,L' OP-metro,过载表,Der OP-meter,El OP-metro,OP-미�
 THE_OPMETER_DESC,"This meter ensures that you don't become too OP (= overpowered) from adjusting numbers too much.
 The limit can be raised by leveling up %s.",,Questa misurazione fa in modo che tu non finisca per essere troppo forte tramite le modifiche ai parametri. \n Questo limite può essere aumentato facendo aumentare di livello %s,这个参数将告诉你什么样的数字会过载，这个限制可以被提升 %s,Dieser Meter hält dich davon ab zu stark zu werden.\n Das limit kann durch %s erhöht werden,Este medidor asegura que no te vuelvas demasiado OP por ajustar los valores muy alto.\nEl limite puede ser aumentado al subir de nivel %s.,"이 미터는 숫자들을 변경하다가 너무 OP (= overpowered)되지 않게 제한해줍니다.
 미터 한계는 %s 레벨업하면 증가됩니다.
-",,"Ez a méter biztosítja, hogy ne legyél túl OP. A hátárát magasabb szint elérésével növelheted.",このメーターは、数値の調整しすぎでオーバーパワーにならないようにするためのものです。\nレベルを%s上げると上限が上がります。,Deze meter zorgt dat je niet té machtig wordt.\nDe limiet kan verhoogd worden door %s te upgraden.,,
+",,,このメーターは、数値の調整しすぎでオーバーパワーにならないようにするためのものです。\nレベルを%s上げると上限が上がります。,Deze meter zorgt dat je niet té machtig wordt.\nDe limiet kan verhoogd worden door %s te upgraden.,,
 BUCGF,Building upgrade cost growth factor,,Fattore di crescita del costo di miglioramento degli edifici,建筑物升级成本增长参数,Gebäudeverbessungskostenwachstfaktor,Factor de crecimiento de las mejoras de construcción,,,Épületfeljesztések árának növekedési sebessége,建物更新コスト成長要因,Gebouw upgradekost groeifactor,,
 MUCGF,Mineral upgrade cost growth factors,,Fattore di crescita del costo di miglioramento dei minerali,矿物升级成本增长参数,Mineralienverbessungskostenwachstfaktor,Factor de crecimiento de las mejoras de minerales,,,Ásványfeljesztések árának növekedési sebessége,鉱物資源のアップグレードコスト成長要因,Mineraal upgradekost groeifactor,,
 IRM,Infinite research multiplier,,Moltiplicatore delle ricerche illimitate,无限研究倍率,Endlosforschungsmultiplikator,Multiplicador de investigación infinita,,,Végtelen kutatások erőssége,研究倍率無限大,Onbeperkt onderzoek vermenigvuldiger,,
@@ -1247,7 +1243,7 @@ STAR_CLASSES,Star classes,,Classi di stelle,恒星等级,Sternenklassen,Clases d
 STAR_TYPES,Star types,,Tipi di stelle,恒星类型,Sternentypen,Tipos de estrellas,별 종류,,Csillagtípusok,星型,Stertypes,Типы звезд,
 ACHIEVEMENTS_EARNED,Achievements earned,,Achievement ottenuti,成就完成,Erreichte Erfolge:,Logros obtenidos,달성한 도전 과제,,Eredmények megszerezve:,獲得した実績,Prestaties verdiend,Получено достижений,
 FIND_X_CRATER,Find a %s crater,,Trova un cratere %s,发现一个 %s 矿坑,Finde einen %skrater,Encuentra un cráter de %s,%s 분화구를 찾으세요,,Találj egy %skrátert,%sクレーターを探す,Vind een %s krater,Найти %s кратер,
-SHOW_STATS_FOR,Show statistics for %s,,Mostra statistiche di %s,显示 %s 数据,Statistik anzeigen für %s,Muestra estadisticas para %s,%s 통계 표시,,Statisztikák mutatása erre:,%sの統計情報を表示する,Toon statistieken voor %s,Показать статистику для %s,
+SHOW_STATS_FOR,Show statistics for %s,,Mostra statistiche di %s,显示 %s 数据,Statistik anzeigen für %s,Muestra estadisticas para %s,%s 통계 표시,,,%sの統計情報を表示する,Toon statistieken voor %s,Показать статистику для %s,
 THIS_UNIVERSE,This universe,,Questo universo,这个宇宙,Dieses Universum,Este universo,이 우주,,Ez az univerzum,この宇宙,Dit universum,Эта вселенная,
 THIS_DIMENSION,This dimension,,Questa dimensione,这个维度,Diese Dimension,Esta dimensión,이 차원,,Ez a dimenzió,この寸法,Deze dimensie,Это измерение,
 THIS_SAVE,This save,,Questo salvataggio,这个存档,Diesen Speicherstand,Esta partida,이 세이브,,Ez a játék,このセーブ,Dit spel,Это сохранение,
@@ -1691,7 +1687,7 @@ SHIP_ATTACK,Ship attack. Determines how much damage it deals to enemies.,,,飞�
 SHIP_DEFENSE,Ship defense. Determines how much damage is reduced from incoming attacks.,,,飞船防御。决定了可减少多少来袭攻击造成的伤害。,Verteidigung des Schiffes. Dies Entscheidet um wie viel der Schaden von eintreffenden Attacken reduziert wird.,,,,A hajó védekezőereje. Meghatározza a kapott támadások sebzését.,,,,
 SHIP_ACCURACY,"Ship accuracy. More accuracy means attacks miss less, deal more critical hits, and status effects are inflicted more often.",,,飞船精确。精确越高，攻击失误率越低，造成致命一击的几率越高，并且状态效果的发生频率也越高。,"Genauigkeit des Schiffes. Höhere Genauigkeit bedeutet weniger Fehlschüsse, mehr krititsche Treffer und häufigere Statuseffekte.",,,,"A hajó pontossága. Hatássl van a találat, kritikus találat, és a szátuszadás esélyére.",,,,
 SHIP_AGILITY,"Ship agility. More agile ships go first more often, can move further per turn, and dodge more attacks.",,,飞船敏捷。更敏捷的舰船更经常先发制人，每回合可以移动得更远，并躲避更多攻击。,"Agilität des Schiffes. Agilere Schiffe starten häufiger, können sich weiter bewegen und können mehr Angriffen ausweichen.",,,,"A hajó fürgesége. Hatással van az első lépés megkapására, a mozgás távolságára, és az eltalásának esélyére.",,,,
-AGILITY,Agility,,,灵敏度,Agilität,,,,Fürgeség,,,,
+AGILITY,Agility,,,灵敏度,Agilität,,민첩,,Fürgeség,,,,
 PASSIVE_ABILITY,Passive ability,,,被动能力,Passive Fähigkeit,,,,Passzív képesség,,,,
 STANDARD_PASSIVE_ABILITY,More resistant to status effects.,,,对减益的抗性更强。,Restienter zu Statuseffekten.,,,,A státuszok hatása kisebb a hajón.,,,,
 OFFENSIVE_PASSIVE_ABILITY,Get +%d attack buff every time the ship defeats an enemy. Can be triggered up to once per turn.,,,每次该飞船击败一名敌人时，获得 +%d 攻击增益，每回合最多触发一次,Erhalte +%d Angriffs Bonus immer wenn das Schiff einen Feind besiegt. Kann nur einmal pro Runde ausgelöst werden.,,,,+%d támadóerőt kap minden legyőzött ellenség után. Lépésenként egyszer aktiválódhat.,,,,
@@ -1714,22 +1710,22 @@ LOCKED,Locked,,,锁定,Gesperrt,,잠김,,Zárva,,,,
 SHIP_CLASS_UNLOCK_INFO,This class is unlocked much later in the game.,,,随游戏推进解锁,Dies Klasse wird viel später im Spiel freigeschaltet.,,,,Ez az osztály (jóval) később nyílik meg.,,,,
 WORDS,%s words,%s mots,,%s 词数,%s Wörter,,단어 %s개,,%s szó,,,,
 CHARACTERS,%s characters,%s caractères,,%s 字数,%s Zeichen,,문자 %s개,,%s karakter,,,,
-MOVE,Move,,,移动,Bewegung,,이동하기,,Mozgás,,,,
-BATTLE_MOVE_DESC,Move this ship to another position in the battlefield.,,,把这艘船移动到战场上的另一个位置,Dieses Schiff auf eine andere Position im Schlachtfeld ziehen.,,,,A hajó elmozdul egy másik helyre a csatamezőn.,,,,
+MOVE,Move,,,移动,Bewegung,,이동,,Mozgás,,,,
+BATTLE_MOVE_DESC,Move this ship to another position in the battlefield.,,,把这艘船移动到战场上的另一个位置,Dieses Schiff auf eine andere Position im Schlachtfeld ziehen.,,싸움터 안의 다른 위치로 이동시킵니다.,,A hajó elmozdul egy másik helyre a csatamezőn.,,,,
 MOVEMENT_REMAINING,Movement remaining,,,剩余移动力,Verbleibende Bewegung,,남은 동작,,Hátralévő mozgás,,,,
 PUSH,Push,,,推动,Schieben,,밀기,,Tolás,,,,
 BATTLE_PUSH_DESC,Push an object to a particular direction.,,,将物体推向特定方向,Ein Objekt in eine Richtung drücken,,물체를 특정 방향으로 밀기,,Eltol egy tárgyat egy adott irányba.,,,,
 BATTLE_PUSH_HELP," - The stronger you push, the more movement this action uses.\n - The target is pushed further if it has less health points.\n - Once pushed, the ship or the enemy needs to consume movement to come to a stop. They receive an accuracy penalty when attacking while in movement, but they will also be harder to hit.\n - The target will disappear if it is pushed outside the battlefield.",,,- 推力越强，该动作消耗的移动力越多。\n - 目标生命值越低，被推离的距离越远。\n - 被推离后，飞船或敌人需消耗移动力才能停稳。移动中发动攻击时会受到命中率惩罚，但同时更难被击中。\n - 若目标被推出战场外，则会直接消失,"- Je stärker du drückst, desto mehr Bewegung wird die Aktion kosten.\n - Das Ziel wird ferner gedrückt wenn es weniger Lebenspunkte hat.\n - Nachdem das Schiff/ Feind geschoben wurde wird es einen Bewegungspunkt ausgeben müssen um anzuhalten. Sie erhalten ein Genauigkeitsmalus während diese in Bewegung sind aber sie sind auch schwerer zu treffen.\n - Das Ziel wird verschwinden wenn es außerhalb des Schlachtfelds geschoben wird.",,,," - Minél erősebben tolsz, annál több mozgást használ fel.\n - A célpont jobban eltolódik, a kevesebb a hátralévő életereje.\n - Miután meg lett tolva, egy hajónak mozgást kell költenie a megállásra. Mozgás közben a pontossága lecsökken, de nehezebben is található el.\n - Ha a célpont elhagyja a cstatamezőt, akkor eltűnik.",,,,
 INITIATIVE,Initiative,,,先攻,Initiative,,,,Kezdemény,,,,
 DAMAGE_MULTIPLIER,Damage multiplier,,,伤害倍增,Schadenmultiplikator,,,,Sebzésszorzó,,,,
-LIGHT_INTENSITY,Light intensity,,,光线强度,Lichtintensität,,,,Fényerősség,,,,
-SHIP_ATK_VS_ENEMY_DEF,Ship @i %s vs enemy @i %s,,,飞船 @i %s vs 敌人 @i %s,Schiff @i %s vs Gegner @i %s,,,,Hajó: @i %s vs. ellenség: @i %s,,,,
+LIGHT_INTENSITY,Light intensity,,,光线强度,Lichtintensität,,빛 강도,,Fényerősség,,,,
+SHIP_ATK_VS_ENEMY_DEF,Ship @i %s vs enemy @i %s,,,飞船 @i %s vs 敌人 @i %s,Schiff @i %s vs Gegner @i %s,,우주선 @i %s vs 적 @i %s,,Hajó: @i %s vs. ellenség: @i %s,,,,
 CHANGE_EMISSION_CONE,Hold Shift to change emission cone,,,按住 Shift 键以改变发射锥体,Shift Halten um den Emissionskegel anzupassen,,,,Tartsd nyomva a Shiftet a kúp változtatásához,,,,
-SCROLL_UP,Scroll up,,,向上鼠标滚动,Hoch Scrollen,,,,Görgetés fel,,,,
-SCROLL_DOWN,Scroll down,,,向下鼠标滚动,Runter Scrollen,,,,Görgetés le,,,,
-MOVEMENT_USED,Movement used,,,,Genutzte Bewegung,,,,Használt mozgás,,,,
-REQUIRES_MOVEMENT,Requires at least 30.0 m of movement remaining to push objects.,,,需要至少30.0米的移动距离才能推动物体,"Benötigt mindestens 30,0 m Bewegung übrig um etwas zu schieben.",,,,"Legalább 30,0m mozgás szükséges a tárgyak tolásához.",,,,
-CHANGE_PUSH_STRENGTH,Scroll up or down to change push strength. Click anywhere to confirm.,,,向上或向下鼠标滚动以改变推动力度。点击任意位置确认,Hoch oder runter Scrollen um die Drückkraft zu Ändern. Klicken zum bestätigen.,,,,"Gögress a tolás erősségének állításához, kattints a véglegesítéshez.",,,,
+SCROLL_UP,Scroll up,,,向上鼠标滚动,Hoch Scrollen,,위로 스크롤,,Görgetés fel,,,,
+SCROLL_DOWN,Scroll down,,,向下鼠标滚动,Runter Scrollen,,아래로 스크롤,,Görgetés le,,,,
+MOVEMENT_USED,Movement used,,,,Genutzte Bewegung,,사용한 동작,,Használt mozgás,,,,
+REQUIRES_MOVEMENT,Requires at least 30.0 m of movement remaining to push objects.,,,需要至少30.0米的移动距离才能推动物体,"Benötigt mindestens 30,0 m Bewegung übrig um etwas zu schieben.",,물체를 밀려면 최소 30.0 m의 동작이 필요합니다.,,"Legalább 30,0m mozgás szükséges a tárgyak tolásához.",,,,
+CHANGE_PUSH_STRENGTH,Scroll up or down to change push strength. Click anywhere to confirm.,,,向上或向下鼠标滚动以改变推动力度。点击任意位置确认,Hoch oder runter Scrollen um die Drückkraft zu Ändern. Klicken zum bestätigen.,,위/아래로 스크롤하면 밀기 강도를 조절합니다. 아무데나 클릭하면 확인합니다.,,"Gögress a tolás erősségének állításához, kattints a véglegesítéshez.",,,,
 NO_OBJECTS_NEAR_SHIP,There are no objects near this ship. Move this ship closer to the target to push.,,,这艘船附近没有任何物体。把这艘船靠近目标才能推动,Es sind keine Objekte nahe dem Schiff. Bewege es näher zum Ziel zum Schieben.,,,,Nincsenek tárgyak a hajó közelében. Mozogj közelebb valamihez a toláshoz.,,,,
 PUSH_SUCCESS_CHANCE,Push success chance,,,推动成功率,Schieberfolgs Chance,,,,Tolás sikeresélye,,,,
 PUSH_SUCCESS_CHANCE_HELP," - If there is a velocity difference between the pusher and the object, it may be more difficult to succeed, depending on whether the pusher is pushing head-on or from the back (easiest) or from the side (hardest).\n - If pushing an enemy, the pusher also has to pass a check that depends on its agility as well as the enemy's.",,,- 如果推动者与物体之间存在速度差异，成功可能更难，取决于推人是正面推、从背后（最高）还是从侧面（最低）。 \n - 推动敌人时，推动者还需通过一个取决于自己的敏捷和敌人的敏捷,"-Wenn es einen Geschwindigkeitsunterschied wischen dem Schiebendem und Ziel gibt kann es schwieriger sein erfolgreich zu schieben, abhängig ob der Schiebende dies von Vorne (am einfachsten) oder von der Seite (am schwersten) eintrifft.\n - Beim schieben eines Gegners muss der Schiebende auch einen Test basierend auf der Agilität des Gegners bestehen.",,,," - Ha van sebességkülönbség a toló és a tárgy között, akkor nehezebb lesz a siker: kevésbe ha egyenesen a tolás iránya felé vagy el tőle, nehezebb ha attól oldalirányban.\n - Ha egy ellenséget tolsz, akkor van egy, a hajó és az ellenség fürgeségétől függő feltétel is.",,,,
@@ -1902,7 +1898,7 @@ B_BYTE,B,,,B,B,,,,B,,,,
 BACKUP_INTERVAL,Backup interval,,,自动备份间隔,Backup intervall,,,,Biztonsági mentési időköz,,,,
 MAX_BACKUPS,Max backups,,,最大备份,Maximale Anzahl Backups,,,,Max biztonsági mentések,,,,
 1_MINUTE,1 minute,,,1 分钟,1 Minute,,,,1 perc,,,,
-X_MINUTES,%d minutes,,,%d 分钟,%s Minuten,,,,%d perc,,,,
+X_MINUTES,%d minutes,,,%d 分钟,%d Minuten,,,,%d perc,,,,
 PERSISTENT_STORAGE,Persistent storage: ,,,总存储大小：,Permanenter Speicher;,,,,Maradandó tárhely:,,,,
 PERSISTENT_STORAGE_DESC,"Total size of saves, backups, log files etc. generated and stored by the game.",,,游戏生成并存储的存档、备份、日志文件等的总大小。,"Gesammtes Volumen aller Speicherstände, Backups, Logfiles usw. erzeugt und gespeichert durch das Spiel.",,,,"A játék által tárolt mentések, naplófáljok stb. összmérete.",,,,
 BACKUP_WITH_MINIMAL_INTERRUPTION,Auto-backup with minimal interruption,,,以最小中断进行自动备份,Automatische Backups mit minimalen Unterbrechungen,,,,Biztonsági mentés minimális zavarással,,,,
@@ -1971,20 +1967,22 @@ CAVE_SPAWN_FREQUENCY,Cave spawn frequency,,,洞穴生成频率,Höhlenhäufigkei
 CAVE_TILE_DIMENSIONS,Cave tile dimensions,,,洞穴瓦片尺寸,Höhlenkacheldimensionen,,,,Barlangok mérete,,,,
 CAVE_DEPTH,Cave depth,,,洞穴深度,Höhlentiefe,,,,Barlangok mélysége,,,,
 CAVE_FLOOR_DIFFICULTY,Cave floor difficulty,,,洞穴层数难度,Höhlenebenenschwierigkeit,,,,Barlangok nehézsége,,,,
-CAVE_FLOOR_DIFFICULTY_DESC,"Every time you go down a floor in a cave (with no auroras and volcanoes), the difficulty is multiplied by this value.",,,每次在洞穴中下降一层（无极光和火山时），难度都会乘以该数值。,,,,,A barlangok nehézségértéke szintenként ennyivel szorzódik meg (alapesetben),,,,
-CAVE_TRAVERSABLE_SPACE,Traversable space,,,可遍历空间,,,,,Bejárható terület,,,,
+CAVE_FLOOR_DIFFICULTY_DESC,"Every time you go down a floor in a cave (with no auroras and volcanoes), the difficulty is multiplied by this value.",,,每次在洞穴中下降一层（无极光和火山时），难度都会乘以该数值。,Jedes mal wenn du eine Ebene in einer Höhle absteigst (ohne Ploarlichter oder Vulkane) wird die Schwierigkeit mit diesem Wert multipliziert.,,,,A barlangok nehézségértéke szintenként ennyivel szorzódik meg (alapesetben),,,,
+CAVE_TRAVERSABLE_SPACE,Traversable space,,,可遍历空间,Befahrbare Fläche,,,,Bejárható terület,,,,
 CAVE_TRAVERSABLE_SPACE_DESC,"Influences the size of tunnels, chambers and other open spaces that can be traversed by rovers in caves, and where enemies, chests and other objects can spawn.
 0 means caves will have no traversable space at all, while 1 means the entire floor will have no minable walls.",,,"影响洞穴中漫游车可通行的隧道、洞穴及其他开放空间的尺寸，以及敌人、宝箱和其他物体可生成的位置。
-0 表示洞穴将完全没有可通行的空间，而 1 表示整个楼层将没有可开采的墙壁。",,,,,"A barlangokban lévő alagutak, kamrák, és egyéb nyílt terek méretét adja meg. Ezeken a helyeken tudnak ellenségek, kincs, stb. generálódni.\n0-nál nem lesz bejárható terület, 1-nél nem lesznek bányászható falak sehol.",,,,
-STAR_PLANET_DISTANCE,Star-planet distance,,,恒星与行星之间的距离,,,,,,,,,
+0 表示洞穴将完全没有可通行的空间，而 1 表示整个楼层将没有可开采的墙壁。","Beeinflusst die göße von Tunneln, Kammern und anderen Räumen die in Höhlen existiren, in diesen Räumen kann sich der Rover bewegen und Kisten, Gegener und andere Objekte können Spawnen.
+0 Bedeutet das es keine Begehbare Fläche gibt, 1 beideutet das die gesammte Ebene ohne Wände generiert wird.",,,,"A barlangokban lévő alagutak, kamrák, és egyéb nyílt terek méretét adja meg. Ezeken a helyeken tudnak ellenségek, kincs, stb. generálódni.\n0-nál nem lesz bejárható terület, 1-nél nem lesznek bányászható falak sehol.",,,,
+STAR_PLANET_DISTANCE,Star-planet distance,,,恒星与行星之间的距离,Stern-Planeten Distanz,,,,,,,,
 MAX_PLANETS_IN_SYSTEM,Maximum number of planets,,,"行星的最大数量
-",,,,,Maximum bolygó egy rendszerben,,,,
-DISTANCE_BETWEEN_SYSTEMS,Distance between star systems,,,恒星系之间的距离,,,,,Rendszerek közötti távolság,,,,
-ELLIPTICAL_GALAXY_SIZE_RANGE,Elliptical galaxy size range,,,椭圆星系大小范围,,,,,Eliptikus galaxis mérettartomány,,,,
-SPIRAL_GALAXY_SIZE_RANGE,Spiral galaxy size range,,,螺旋星系大小范围,,,,,Spirális galaxis mérettartomány,,,,
-MIN,Min,,,最小,,,,,Min,,,,
-MAX,Max,,,最大,,,,,Max,,,,
-DWARF_ELLIPTICAL_GALAXY_RATIO,Dwarf elliptical galaxy ratio,,,矮椭圆星系比率,,,,,Törpe elliptikus galaxis arány,,,,
+",Maximale anzahl an Planeten,,,,Maximum bolygó egy rendszerben,,,,
+DISTANCE_BETWEEN_SYSTEMS,Distance between star systems,,,恒星系之间的距离,Distantz zwischen Sternensystemen,,,,Rendszerek közötti távolság,,,,
+ELLIPTICAL_GALAXY_SIZE_RANGE,Elliptical galaxy size range,,,椭圆星系大小范围,Eliptische Galaxien größen varianz,,,,Eliptikus galaxis mérettartomány,,,,
+SPIRAL_GALAXY_SIZE_RANGE,Spiral galaxy size range,,,螺旋星系大小范围,"Spiral Galaxien größen varianz
+",,,,Spirális galaxis mérettartomány,,,,
+MIN,Min,,,最小,Min,,,,Min,,,,
+MAX,Max,,,最大,Max,,,,Max,,,,
+DWARF_ELLIPTICAL_GALAXY_RATIO,Dwarf elliptical galaxy ratio,,,矮椭圆星系比率,Zwerg eliptische Galaxien verhältniss,,,,Törpe elliptikus galaxis arány,,,,
 DWARF_ELLIPTICAL_GALAXY_RATIO_DESC,"Elliptical galaxies have a chance to be ""dwarves"". In these galaxies, the number of star systems is divided by 10.
 This number describes the ratio between dwarf and normal galaxies. (0: no dwarves, 1: only dwarves)",,,"椭圆星系有可能成为“矮星系”。在这些星系中，恒星系的数量除以10。
 该数值描述了矮星系与常规星系之间的比率。（0：无矮星系，1：仅矮星系）",,,,,"Az elliptikus galaxisok lehetnek törpék, ezekben tizedannyi csillag van. Ez az arányukat adja meg: 0-nál nincs, 1-nél csak azok.",,,,
@@ -2000,16 +1998,16 @@ This number describes the ratio between galaxy groups and clusters. (0: only clu
 DISTANCE_BETWEEN_CLUSTERS,Distance between clusters,,,星系团之间的距离,,,,,Halmazok távolsága,,,,
 NUMBER_OF_CLUSTERS,Number of clusters,,,星系团数量,,,,,Halmazok száma,,,,
 START_GAME,Start game,,,开始游戏,,,,,Játék kezdése,,,,
-OBJECT_COUNT,{num} {object},,,{num} {object},,,,,{num} {object},,,,
-TILES,Tiles,,,图格,,,,,Négyzetek,,,,
-CAVES,Caves,,,洞穴,,,,,Barlangok,,,,
+OBJECT_COUNT,{num} {object},,,{num} {object},{num} {object},,,,{num} {object},,,,
+TILES,Tiles,,,图格,Kacheln,,,,Négyzetek,,,,
+CAVES,Caves,,,洞穴,Höhlen,,,,Barlangok,,,,
 SAVE_OBJECTIVE,Save up {num} {rsrc},,,存入{num} {rsrc},Besitze {num} {rsrc},Ahorra {num} {rsrc},,,Szerezz: {num} {rsrc},{num} {rsrc} を貯めましょう,Verzamel {num} {rsrc},Накопить {num} {rsrc},
 CONQUER_OBJECTIVE,Conquer {num} {object},Conquérir {num} {object},,统治{num}颗{object},Nehme {num} {object} ein,Conquista {num} {object},,,Foglalj el: {num} {object},{num} {object} を征服,Verover {num} {object},Завоевать {num} {object},
 BUILD_OBJECTIVE,Build {num} {bldg},Construire {num} {bldg},Costruire {num} {bldg},建造{num}座{bldg} ,Konstruiere {num} {bldg},Construye {num} {bldg},{bldg} {num}개 건설하기,,Építs: {num} {bldg},建設 {num} {bldg},Bouw {num} {bldg},Построй {num} {bldg},
-UNLOCK_BY_CONSTRUCTING_X_BLDGS,Unlock by constructing {num} buildings,,,通过建造{num}座建筑来解锁,,,,,Megnyílik {num} épület építése után,,,,
-UNLOCK_BY_RESEARCHING_X,Unlock by researching {science},,,通过研究{science}来解锁,,,,,Mégnyílik a {science} kutatása után,,,,
-UNLOCK_BY_REACHING_LV_X,Unlock by reaching level {lv},,,通过提升等级至{lv}来解锁,,,,,Magnyílik a {lv}. szint elérése után,,,,
-UNLOCK_BY_CONQUERING_A_PLANET,Unlock by conquering a planet,,,通过征服一颗行星来解锁,,,,,Megnyílik egy bolygó elfoglalása után,,,,
+UNLOCK_BY_CONSTRUCTING_X_BLDGS,Unlock by constructing {num} buildings,,,通过建造{num}座建筑来解锁,Freigeschaltet durch die konstruktion von {num} Gebäuden,,,,Megnyílik {num} épület építése után,,,,
+UNLOCK_BY_RESEARCHING_X,Unlock by researching {science},,,通过研究{science}来解锁,Freigeschaltet durch das Erforschen von {num},,,,Mégnyílik a {science} kutatása után,,,,
+UNLOCK_BY_REACHING_LV_X,Unlock by reaching level {lv},,,通过提升等级至{lv}来解锁,Freigeschaltet durch die Forschungsstufe {num},,,,Magnyílik a {lv}. szint elérése után,,,,
+UNLOCK_BY_CONQUERING_A_PLANET,Unlock by conquering a planet,,,通过征服一颗行星来解锁,Freigeschaltet durch das einnehmen eines Planeten,,,,Megnyílik egy bolygó elfoglalása után,,,,
 UNLOCK_BY_MINING_X,Unlock by mining {weight} kg of {something},,,通过开采{weight}kg的{something}来解锁,,,,,Megnyílik {weight} kg {something} bányászása után,,,,
 LOADING,Loading...,,,加载中,,,,,Betöltés...,,,,
 ADVANCED_SPACE_CONSTRUCTION_SC,Advanced space construction,,,高级建设,,,,,Haladő űrépítkezés,,,,

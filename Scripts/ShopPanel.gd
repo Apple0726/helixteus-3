@@ -22,6 +22,7 @@ func _ready():
 func refresh():
 	$Tabs/OverclocksButton.refresh_button_text()
 	$Tabs/PickaxesButton.refresh_button_text()
+	_on_btn_pressed(tab)
 
 func show_tooltip(key:String):
 	game.show_tooltip(tr(key))
@@ -36,6 +37,7 @@ func _on_btn_pressed(_tab:int):
 	tab = _tab
 	change_tab(_tab)
 	if tab == OVERCLOCK:
+		$Desc.text = tr("OVERCLOCKS_DESC")
 		for item_id in [Item.OVERCLOCK1, Item.OVERCLOCK2, Item.OVERCLOCK3, Item.OVERCLOCK4, Item.OVERCLOCK5, Item.OVERCLOCK6]:
 			var item_name = Item.name(item_id)
 			var item_texture = load("res://Graphics/Items/Overclocks/%s.png" % Item.data[item_id].item_name)
@@ -56,6 +58,7 @@ func _on_btn_pressed(_tab:int):
 			item.get_node("TextureButton").pressed.connect(Callable(self, "set_item_info").bind(item_name, costs, item_texture, item, item_id))
 			$Items/Grid.add_child(item)
 	elif tab == PICKAXE:
+		$Desc.text = tr("PICKAXES_DESC")
 		for pickaxe_name in game.pickaxes_info:
 			var item_name = tr(pickaxe_name.to_upper())
 			var item_texture = load("res://Graphics//Pickaxes/%s.png" % pickaxe_name)
@@ -115,11 +118,9 @@ func buy_pickaxe(_costs:Dictionary):
 	game.popup(tr("BUY_PICKAXE") % [tr(item_selected.id.to_upper())], 1.0)
 
 func _on_overclocks_button_pressed():
-	$Desc.text = tr("OVERCLOCKS_DESC")
 	_on_btn_pressed(OVERCLOCK)
 
 func _on_pickaxes_button_pressed():
-	$Desc.text = tr("PICKAXES_DESC")
 	_on_btn_pressed(PICKAXE)
 
 

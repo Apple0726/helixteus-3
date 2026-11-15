@@ -81,6 +81,7 @@ func _ready() -> void:
 		line_edit.mouse_entered.connect(line_edit_show_tooltip.bind(line_edit))
 		line_edit.mouse_exited.connect(game.hide_tooltip)
 		line_edit.text = str(min_max_values[line_edit].default)
+	update_max_planet_tile_dimensions_label_2("100")
 	max_planet_tile_dimensions_node.text_changed.connect(update_max_planet_tile_dimensions_label_2)
 	$BasicSettingsGroup/SizeOfCOSHBox/Small.pressed.connect(set_size_of_COs.bind(0.66))
 	$BasicSettingsGroup/SizeOfCOSHBox/Medium.pressed.connect(set_size_of_COs.bind(1.0))

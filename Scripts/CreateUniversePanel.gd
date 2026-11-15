@@ -129,7 +129,7 @@ func _on_TP_value_changed(value:float, prop:String):
 		$TP/VBox/s_b/Label2.text = Helper.format_num(round(s_b))
 	else:
 		$TP/VBox/s_b/Label2.text = str(Helper.clever_round(s_b))
-	var difficulty = PP_allocated * 0.02 + 1.0
+	var difficulty = max(1.0, PP_allocated * 0.02 + 1.0)
 	$TP/VBox/difficulty/Label2.text = str(Helper.clever_round(difficulty))
 	$TP/Points.text = "%s: %s [img]Graphics/Icons/help.png[/img]" % [tr("PROBE_POINTS"), Helper.format_num(PP, true)]
 

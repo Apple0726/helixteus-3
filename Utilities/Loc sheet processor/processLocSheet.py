@@ -41,7 +41,9 @@ if __name__ == "__main__":
                 continue
             elif row_number == OUTDATED_TRANSLATIONS_ROW:
                 continue
-            
+            # Check %s and %d count consistency across all languages. Very important
+            percent_s_count = 0
+            percent_d_count = 0
             # Process the rest of the csv
             for i in range(1, len(row)):
                 # If the cell's translation is out-of-date (marked by a ! followed by two letters indicating the locale, then a new line)
@@ -52,6 +54,16 @@ if __name__ == "__main__":
                         row[i] = ""
                     elif outdated_marker in row[i]:
                         row[i] = row[i][0:row[i].find(outdated_marker)-1]
+                    if locales[i] == "en":
+                        percent_s_count = row[i].count("%s")
+                        percent_d_count = row[i].count("%d")
+                    elif row[i] != "":
+                        if percent_s_count != row[i].count("%s"):
+                            print(locales[i] + " " + str(row_number) + " %s count mismatch")
+                            row[i] == ""
+                        if percent_d_count != row[i].count("%d"):
+                            print(locales[i] + " " + str(row_number) + " %d count mismatch")
+                            row[i] == ""
                 if row[i] != "":
                     localeStats[locales[i]]["lines"] += 1
                     localeStats[locales[i]]["words"] += len(row[i].split())
