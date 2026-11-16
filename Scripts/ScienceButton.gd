@@ -209,6 +209,8 @@ func on_research():
 			Helper.show_bldg_unlocked_popup(Building.BORING_MACHINE)
 		elif sc_id == Science.FIGHTERS and sc_lv == 1:
 			Helper.show_bldg_unlocked_popup(Building.SHIPYARD)
+		elif sc_id == Science.IMPROVED_SPACEPORT:
+			Helper.update_spaceport_auto_xp()
 		game.popup(tr("RESEARCH_SUCCESS"), 1.5)
 		game.HUD.refresh()
 		game.hide_tooltip()

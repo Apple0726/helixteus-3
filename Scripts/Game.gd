@@ -513,13 +513,13 @@ func switch_music(src, time_speed:float = 1.0, pitch_scale:float = 1.0):
 					music_player_tween.kill()
 				music_player_tween = create_tween()
 				if music_player.playing and not Settings.op_cursor:
-					music_player_tween.tween_property($MusicPlayer, "volume_db", -60.0, 1.0)
+					music_player_tween.tween_property($MusicPlayer, "volume_db", -60.0, 0.8)
 				music_player_tween.tween_callback(play_music.bind(stream, time_speed, pitch_scale))
 			else:
 				if music_player_tween and music_player_tween.is_running():
 					music_player_tween.kill()
 				music_player_tween = create_tween()
-				music_player_tween.tween_property($MusicPlayer, "volume_db", 0.0, 1.0)
+				music_player_tween.tween_property($MusicPlayer, "volume_db", 0.0, 0.8)
 	else:
 		stream = src
 		if music_player.stream != stream:
@@ -535,7 +535,7 @@ func play_music(stream, time_speed:float = 1.0, pitch_scale:float = 1.0):
 	else:
 		music_player.pitch_scale = pitch_scale
 	music_player_tween = create_tween()
-	music_player_tween.tween_property($MusicPlayer, "volume_db", 0.0, 1.0)
+	music_player_tween.tween_property($MusicPlayer, "volume_db", 0.0, 0.8)
 	music_player.play()
 	
 
@@ -2568,10 +2568,10 @@ func generate_planets(id:int):#local id
 		p_i["temperature"] = temp# in K
 		var gas_giant_coeff = 1.0
 		if ClusterModifier.LOT_LESS_GAS_GIANTS in u_i.cluster_data[c_c].modifiers:
-			gas_giant_coeff = 0.25
+			gas_giant_coeff = 0.1
 		elif ClusterModifier.LESS_GAS_GIANTS in u_i.cluster_data[c_c].modifiers:
-			gas_giant_coeff = 0.5
-		var gas_giant:bool = c_s_g != 0 and rng.randf() < atan(gas_giant_coeff * (p_i.size - 22000.0) / 22000.0) * 2.0 / PI
+			gas_giant_coeff = 0.3
+		var gas_giant:bool = c_s_g != 0 and rng.randf() < atan(gas_giant_coeff * (p_i.size - 22000.0) / 22000.0 / pow(dark_matter, 0.25)) * 2.0 / PI
 		if gas_giant:
 			p_i["crust_start_depth"] = 0
 			p_i["mantle_start_depth"] = 0
@@ -3745,6 +3745,13 @@ func _process(_delta):
 		if is_instance_valid(HUD) and is_ancestor_of(HUD):
 			HUD.update_minerals()
 			HUD.update_money_energy_SP()
+	if not stats_global.is_empty():
+		stats_global.playtime += _delta
+		stats_dim.playtime += _delta
+		if c_u != -1:
+			stats_univ.playtime += _delta
+		if is_instance_valid(stats_panel) and stats_panel.visible and stats_panel.get_node("Panel/Statistics").visible and stats_panel.curr_stat_tab == "_on_General_pressed":
+			stats_panel._on_General_pressed()
 
 var mouse_pos = Vector2.ZERO
 @onready var item_cursor = $Tooltips/ItemCursor

@@ -7,17 +7,19 @@ var ach_num:int = 0
 
 func _ready():
 	set_polygon($GUI.size, $GUI.position)
-	var show_stats_for:Array = tr("SHOW_STATS_FOR").split("%s")
-	$Panel/Statistics/HBox/Prefix.text = show_stats_for[0]
-	$Panel/Statistics/HBox/Suffix.text = show_stats_for[1]
 	$TabBar/Achievements._on_Button_pressed()
 	for grid in $Panel/Achievements/ScrollContainer/HBox/Slots.get_children():
 		for ach in grid.get_children():
 			ach_num += 1
 			ach.connect("mouse_entered",Callable(self,"on_ach_entered").bind(grid.name, ach.name))
 			ach.connect("mouse_exited",Callable(self,"on_ach_exited"))
+	$Panel/Statistics/ScrollContainer/VBoxContainer/General._on_Button_pressed()
+	_on_General_pressed()
 
 func refresh():
+	var show_stats_for:Array = tr("SHOW_STATS_FOR").split("%s")
+	$Panel/Statistics/HBox/Prefix.text = show_stats_for[0]
+	$Panel/Statistics/HBox/Suffix.text = show_stats_for[1]
 	var ach_get:int = 0
 	for grid in $Panel/Achievements/ScrollContainer/HBox/Slots.get_children():
 		for ach in grid.get_children():
@@ -59,7 +61,8 @@ func _on_General_pressed():
 	$Panel/Statistics/Panel.show()
 	curr_stat_tab = "_on_General_pressed"
 	$Panel/Statistics/Panel/ScrollContainer2.visible = false
-	$Panel/Statistics/Panel/Label.text = "%s: %s\n%s: %s\n%s: %s\n%s: %s\n%s: %s\n%s: %s\n%s: %s\n%s: %s\n%s: %s\n%s: %s\n%s: %s" % [
+	$Panel/Statistics/Panel/Label.text = "%s: %s\n%s: %s\n%s: %s\n%s: %s\n%s: %s\n%s: %s\n%s: %s\n%s: %s\n%s: %s\n%s: %s\n%s: %s\n%s: %s" % [
+		tr("PLAYTIME"), Helper.time_to_str(game["stats_%s" % stats_for].playtime),
 		tr("TOTAL_MONEY_EARNED"), Helper.format_num(game["stats_%s" % stats_for].total_money_earned),
 		tr("BLDGS_BUILT"), Helper.format_num(game["stats_%s" % stats_for].bldgs_built),
 		tr("MS_CONSTRUCTED"), Helper.format_num(game["stats_%s" % stats_for].MS_constructed),
@@ -194,7 +197,7 @@ func _on_StarTypes_pressed():
 					bar_color = Color.RED
 		bar.color = bar_color
 		if star_type > StarType.HYPERGIANT + 1:
-			label.text = "%s %s" % ["HG", Helper.get_roman_num(star_type - StarType.HYPERGIANT)]
+			label.text = "%s %s" % [tr("HYPERGIANT_SHORT"), Helper.get_roman_num(star_type - StarType.HYPERGIANT)]
 		else:
 			label.text = original_text
 		bar.connect("mouse_entered",Callable(self,"on_star_type_bar_entered").bind(star_type, original_text))

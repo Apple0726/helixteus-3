@@ -143,6 +143,7 @@ var rsrc_icons = {	Building.MINERAL_EXTRACTOR:minerals_icon,
 }
 
 var default_stats:Dictionary = {
+		"playtime":0,
 		"bldgs_built":0,
 		"MS_constructed":0,
 		"total_money_earned":0,

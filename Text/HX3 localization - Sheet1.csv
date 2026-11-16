@@ -109,6 +109,7 @@ MAIN_SEQUENCE,Main sequence,De la séquence principale,Sequenza principale,主�
 GIANT,Giant,Géante,Gigante,巨星,Gigant,Gigante,거,Jätte,Óriás,巨星,Reus,Гигант,Olbrzym
 SUPERGIANT,Supergiant,Supergéante,Supergigante,超巨星,Supergigant,Supergigante,초거,Superjätte,Szuperóriás,超巨星,Superreus,Супергигант,Superolbrzym
 HYPERGIANT,Hypergiant,Hypergéante,Ipergigante,特超巨星,Hypergigant,Hipergigante,극대거,Hyperjätte,Hiperóriás,極超巨星,Hyperreus,Гипергигант,Hiperolbrzym
+HYPERGIANT_SHORT,HG,HG,IG,特超巨星,HG,HG,극대거,,,極超巨星,,,
 WHITE_DWARF,White dwarf,Naine blanche,Nana bianca,白矮星,Weißer Zwerg,Enana blanca,백색 왜성,Vit dvärj,Fehér törpe,白色矮星,Witte dwerg,Белый карлик,Biały karzeł
 BROWN_DWARF,Brown dwarf,Naine brune,Nana bruna,褐矮星,Brauner Zwerg,Enana marrón,갈색 왜성,Brun dvärj,Barna törpe,褐色矮星,Bruine dwerg,Коричневый карлик,Brązowy karzeł
 STAR_TITLE,Class {class} {type} star,Étoile {type} de classe {class},Stella {type} di classe {class},{class} {type} 恒星,{class} Klasse {type} Stern,Estrella {type} de clase {class},분광형 {class} {type}성,Klass {class} {type} stjärna,{class} osztályú {type} csillag,クラス {class} {type},Klasse {class} {type} ster,Класс {class} {type} звезда,Gwiazda klasy {class} typu {type}
@@ -1103,8 +1104,8 @@ TIME_SPEED_DESC,"Multiplies the rate at which time flows by this value. This aff
 ANTIMATTER_DESC,Multiplies the quantity of antimatter by this value.,,La quantità di antimateria viene moltiplicata per questo valore.,反物质的数量将乘以这个数值,Multipliziert die Menge an Antimaterie mit diesem Wert.,Multiplica la cantidad de antimateria por este valor.,,,Megszorozza az antianyag mennyiségét ennyivel.,反物質の量にこの値を乗じる。,Vermenigvuldigt de hoeveelheid antimaterie met deze waarde.,,
 NOT_ENOUGH_PP,Your points are in the negatives! Adjust the numbers to make it positive or zero.,,Hai una quantità di punti negativa! Sistema il numero per renderli uguali a 0 o superiori.,你的探测点小于0！调整数字使他大于0,Deine Punkte sind unter 0! Sie müssen mindestens 0 sein,Tus puntos están negativos! Ajusta los números para hacerlos positivos o cero.,,,Mínuszba mentek a pontjaid! Módosítsd a számokat amíg 0 vagy pozitív lesz.,あなたのポイントがマイナスになっている!数字を調整して、プラスまたはゼロにしてください。,Je hebt minder dan 0 punten over! Pas de waarden aan zodat je minstens 0 punten over hebt.,,
 INVALID_INPUT,One or more numbers are invalid.,,Uno o più numeri non sono validi,一个或多个数值不合规,Mindestens eine Nummer ist unzulässig,Uno o más números son inválidos.,,,Egy vagy több érték érvénytelen.,1つ以上の番号が無効である。,Een of meerdere waarden zijn ongeldig.,,
-SAVE_CREATED,Created {days_hours_ago},Créée {days_ago},,存档建造日期: {days_hours_ago},Erzeugt {days_hours_ago},Creado {days_hours_ago},{days_hours_ago} 생성,,Készítve {days_hours_ago},作成{days_hours_ago},Aangemaakt {days_hours_ago},Создано {days_hours_ago},
-SAVE_MODIFIED,Saved {days_hours_ago},Sauvegardée {days_ago},,"最后一次保存日期： {days_hours_ago}
+SAVE_CREATED,Created {days_hours_ago},Créée {days_hours_ago},,存档建造日期: {days_hours_ago},Erzeugt {days_hours_ago},Creado {days_hours_ago},{days_hours_ago} 생성,,Készítve {days_hours_ago},作成{days_hours_ago},Aangemaakt {days_hours_ago},Создано {days_hours_ago},
+SAVE_MODIFIED,Saved {days_hours_ago},Sauvegardée {days_hours_ago},,"最后一次保存日期： {days_hours_ago}
 
 ",Gespeichert {days_hours_ago},Guardado {days_hours_ago},{days_hours_ago} 저장,,Elmentve {days_hours_ago},前回の保存{days_hours_ago},Opgeslagen {days_hours_ago},Сохранено {days_hours_ago},
 X_HOURS_AGO,%s hours ago,il y a %s heures,,%s 小时以前,vor %s stunden,Hace %s horas atrás,%s 시간 전,,%s órája,%s時間前,%s uur geleden,%s часов назад,
@@ -1409,7 +1410,7 @@ DR_HELP4,You believe you can use those remnants to improve upon the previous dim
 VALUE,Value,,,值,Wert,Valor,값,,Érték,値,,,
 DEFAULT,Default,,,默认,Standard,Estándar,기본,,Alapértelmezett,デフォルト,,Стандартно,
 SHIP_XP_REQ,Ship XP requirement,,,飞船经验值需求,Schiffserfahrung benötigt,Requerimiento de experiencia de nave,,,Hajó XP-szükséglet,艦船のXP条件,,Требования опыта корабля,
-SHIP_STATS,Ship stats,,,飞船数据,Schiffsstatistik,Estadísticas de nave,,,Hajóstatisztika,艦船の統計情報,,Характеристики корабля,
+SHIP_STATS,Ship stats,,,飞船属性,Schiffsstatistik,Estadísticas de nave,,,Hajóstatisztika,艦船の統計情報,,Характеристики корабля,
 UNIV_XP_REQ,Universe XP requirement,,,宇宙经验值需求,Universum XP Voraussetzung,Requerimiento de Experiencia del universo,,,Univerzum XP-szükséglet,ユニバースXPの条件,,,
 ROVER_DEATH_MESSAGE_LAVA,"Your rover tried not to swim in lava. Alas, it did.",,,你的漫游车努力避免在岩浆中游泳，可惜，还是没能幸免。,"Dein Rover versuchte nicht in Lava zu schwimmen, er tat es trotzdem.","Tu róver intentó no nadar en lava. Uy, falló.",,,,あなたの探査機は、溶岩の中を泳がないようにしようとしました。残念ながら、泳いでしまいました。,,"Ваш ровер попытался плавать в лаве. Увы, не получилось.",
 ROVER_DEATH_MESSAGE_BURN,Your rover burned to death.,,,你的漫游车被烧毁了。,Dein Rover verbrannte,Tu róver fue calcinado.,로버가 불로 타서 죽었습니다.,,A róvered halálra égett.,あなたのローバーは焼け死んだ。,,Ваш ровер сгорел дотла.,
@@ -1819,7 +1820,8 @@ LIGHT_1_2_DESC,Adds a second smaller emission cone that deals 3x damage and stro
 LIGHT_1_3_DESC,"Inflicts ""exposed"" status effect (10x critical hit chance for 2 turns (smaller emission cone) or 1 turn (larger cone)).",,,施加“破绽”状态效果（10倍暴击几率，持续2回合（较小散发角度）或1回合（较大散发角度））,Fügt 'Ungeschützt' Status zu (10x kritische Trefferchance für 2 Runden (Kleiner Emissionskegel) oder 1 Runde (großer Emissionskegel)),,,,"""Feltárt"" státuszt ad (10x kritikus találat esély 2 (kicsi kúp) vagy 1 (nagy kúp) lépésre)",,,,
 LIGHT_2_1_DESC,Greatly increased maximum emission cone (to almost 360°!),,,最大发射散发角度大幅提升（近乎360°全方位！）,Vergrößert deutlich den Emissionskegel (zu fast 360°!),,,,Megnövelt (közel 360°-ig!) maximum kúpszög.,,,,
 LIGHT_2_2_DESC,"Light now penetrates through all objects, and deals more damage.",,,光线现可穿透一切物体，并造成更多伤害。,Licht durchdringt alles und macht mehr Schaden.,,,,"A fény minden tárgyon áthatol, és többet sebez.",,,,
-LIGHT_2_3_DESC,(To be implemented) ,,,（待实施）,,,,,jaj ne! befejezetlen játekelem!,,,,
+LIGHT_2_3_DESC,(To be implemented) ,,,（待实施）,"(Wird noch Implementiert)
+Licht bäckt dir nun ein Eis und ist auch noch bei Hempels unterm Sofa zu sehen ;)",,,,jaj ne! befejezetlen játekelem!,,,,
 LIGHT_3_1_DESC,(To be implemented) Emission is now maintained for 1 turn. Enemies inside the cone and firing towards the source will have an accuracy penality depending on light concentration.,,,（待实施）Emission持续1回合。处于范围内的敌人，若朝源头方向开火，将根据光线强度受到相应的精度惩罚。,Emission ist nun für eine Runde andauernd. Gegner im Kegel und beim feuern auf den Ursprung haben einen genauigkeit Malus basierend auf der Lichtdichte.,,,,A kibocsátás egy körön keresztül megy. A fényben kévő és a forrására célzó ellenségek pontossága csökkentett a fény erősségétől függően.,,,,
 LIGHT_3_2_DESC,"(To be implemented) Emission is maintained for 2 turns. Additionally, you can move the emission cone and adjust its angle without consuming an action.",,,（待实施）Emission持续2回合。此外，你可以无需消耗动作即可移动散发范围并调整其角度。,Emission ist für zwei Runden andauernd. Zusätzlich kannst du den Winkel anpassen ohne eine Aktion zu verbrauchen.,,,,"A kibocsátás két körön keresztül megy, és a kúp iránya és szöge mozgatható  lépés felhasználása nélkül.",,,,
 LIGHT_3_3_DESC,"(To be implemented) Emission maintained permanently. Turning it on consumes an action, but turning it off, or moving the cone or changing its angle, does not.",,,（待实施）“Emission永久持续。启动它需要消耗一个动作，但关闭它、移动散发范围或改变其角度则不需要。,Emission permanent Aktiv. Aktivieren verbraucht eine Aktion aber deaktivieren oder anpassen des Winkels verbraucht keie.,,,,"A kibocsátás folytonos, bekapcsolni felhasznlja a lépést, de azután szabadon mozgatható és kikapcsolható.",,,,
@@ -2005,8 +2007,8 @@ SAVE_OBJECTIVE,Save up {num} {rsrc},,,存入{num} {rsrc},Besitze {num} {rsrc},Ah
 CONQUER_OBJECTIVE,Conquer {num} {object},Conquérir {num} {object},,统治{num}颗{object},Nehme {num} {object} ein,Conquista {num} {object},,,Foglalj el: {num} {object},{num} {object} を征服,Verover {num} {object},Завоевать {num} {object},
 BUILD_OBJECTIVE,Build {num} {bldg},Construire {num} {bldg},Costruire {num} {bldg},建造{num}座{bldg} ,Konstruiere {num} {bldg},Construye {num} {bldg},{bldg} {num}개 건설하기,,Építs: {num} {bldg},建設 {num} {bldg},Bouw {num} {bldg},Построй {num} {bldg},
 UNLOCK_BY_CONSTRUCTING_X_BLDGS,Unlock by constructing {num} buildings,,,通过建造{num}座建筑来解锁,Freigeschaltet durch die konstruktion von {num} Gebäuden,,,,Megnyílik {num} épület építése után,,,,
-UNLOCK_BY_RESEARCHING_X,Unlock by researching {science},,,通过研究{science}来解锁,Freigeschaltet durch das Erforschen von {num},,,,Mégnyílik a {science} kutatása után,,,,
-UNLOCK_BY_REACHING_LV_X,Unlock by reaching level {lv},,,通过提升等级至{lv}来解锁,Freigeschaltet durch die Forschungsstufe {num},,,,Magnyílik a {lv}. szint elérése után,,,,
+UNLOCK_BY_RESEARCHING_X,Unlock by researching {science},,,通过研究{science}来解锁,Freigeschaltet durch das Erforschen von {science},,,,Mégnyílik a {science} kutatása után,,,,
+UNLOCK_BY_REACHING_LV_X,Unlock by reaching level {lv},,,通过提升等级至{lv}来解锁,Freigeschaltet durch die Forschungsstufe {lv},,,,Magnyílik a {lv}. szint elérése után,,,,
 UNLOCK_BY_CONQUERING_A_PLANET,Unlock by conquering a planet,,,通过征服一颗行星来解锁,Freigeschaltet durch das einnehmen eines Planeten,,,,Megnyílik egy bolygó elfoglalása után,,,,
 UNLOCK_BY_MINING_X,Unlock by mining {weight} kg of {something},,,通过开采{weight}kg的{something}来解锁,,,,,Megnyílik {weight} kg {something} bányászása után,,,,
 LOADING,Loading...,,,加载中,,,,,Betöltés...,,,,
@@ -2044,3 +2046,4 @@ SELECT_METAL_TO_GROW,Select a metal to grow:,,,选择金属来种植：,,,,,Vál
 UPROOT,Uproot,,,连根拔起,,,,,Kihúzás,,,,
 P_ATOM_NAME,Phosphorus atom,,,磷,,,,,,,,,
 WORKING,Working,,,,,,,,,,,,
+PLAYTIME,Playtime,,,,,,,,,,,,

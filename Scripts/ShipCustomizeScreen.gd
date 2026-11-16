@@ -161,7 +161,10 @@ func allocate_stat(stat:String, sign:int, node):
 	for i in 5 if Input.is_action_pressed("shift") else 1:
 		self["allocated_%s" % stat] += sign
 		update_ship_stats_display()
-		if self["allocated_%s" % stat] <= 0:
+		var min_allowed_stat = 0
+		if not respeccing:
+			min_allowed_stat = game.ship_data[ship_id]["allocated_%s" % stat]
+		if self["allocated_%s" % stat] <= min_allowed_stat:
 			node.disabled = true
 			break
 		elif sign == 1:

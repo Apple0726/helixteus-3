@@ -847,21 +847,24 @@ func update_ship_travel():
 		game.ships_travel_data.travel_view = "-"
 		game.ships_travel_data.c_coords = game.ships_travel_data.dest_coords.duplicate(true)
 		game.ships_travel_data.c_g_coords = game.ships_travel_data.dest_g_coords.duplicate(true)
-		var s_id = game.ships_travel_data.c_coords.s
-		var s_g_id = game.ships_travel_data.c_g_coords.s
-		var p_id = game.ships_travel_data.c_coords.p
-		var system_data = game.open_obj("Galaxies", game.ships_travel_data.c_g_coords.g)
-		var planet_data:Array = game.planet_data
-		if game.c_s_g != s_g_id or planet_data.is_empty():
-			planet_data = game.open_obj("Systems", s_g_id)
-		var p_i = planet_data[p_id]
-		if p_i.has("ancient_bldgs") and p_i.ancient_bldgs.has(AncientBuilding.SPACEPORT) and not p_i.ancient_bldgs[AncientBuilding.SPACEPORT][0].has("repair_cost"):
-			var tier = p_i.ancient_bldgs[AncientBuilding.SPACEPORT][0].tier
-			game.autocollect["passive_xp_tier"] = tier
-			game.autocollect["passive_xp_mult"] = system_data[s_id].diff
-			game.start_spaceport_timer()
-			game.HUD.set_ship_btn_shader()
+		update_spaceport_auto_xp()
 	return progress
+
+func update_spaceport_auto_xp():
+	var s_id = game.ships_travel_data.c_coords.s
+	var s_g_id = game.ships_travel_data.c_g_coords.s
+	var p_id = game.ships_travel_data.c_coords.p
+	var system_data = game.open_obj("Galaxies", game.ships_travel_data.c_g_coords.g)
+	var planet_data:Array = game.planet_data
+	if game.c_s_g != s_g_id or planet_data.is_empty():
+		planet_data = game.open_obj("Systems", s_g_id)
+	var p_i = planet_data[p_id]
+	if p_i.has("ancient_bldgs") and p_i.ancient_bldgs.has(AncientBuilding.SPACEPORT) and not p_i.ancient_bldgs[AncientBuilding.SPACEPORT][0].has("repair_cost"):
+		var tier = p_i.ancient_bldgs[AncientBuilding.SPACEPORT][0].tier
+		game.autocollect["passive_xp_tier"] = tier
+		game.autocollect["passive_xp_mult"] = system_data[s_id].diff
+		game.start_spaceport_timer()
+		game.HUD.set_ship_btn_shader()
 
 func add_autocollect(p_i:Dictionary, tile:Dictionary, mult_diff:float):
 	var overclock_mult:float = tile.bldg.get("overclock_mult", 1.0)

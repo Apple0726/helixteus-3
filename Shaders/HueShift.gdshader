@@ -3,6 +3,7 @@ shader_type canvas_item;
 // From https://godotshaders.com/shader/simple-hue-shift/
 
 uniform float shift_amount: hint_range(0.0, 360.0, 1.0) = 0.0;
+uniform bool toggled = true;
 
 vec3 rgb2hsv(vec3 rgb) {
 	float r = rgb.r;
@@ -57,7 +58,9 @@ vec3 hsv2rgb(vec3 hsv) {
 }
 
 void fragment() {
-	vec3 hsv_color = rgb2hsv(COLOR.rgb);
-	hsv_color.x = mod(hsv_color.x + shift_amount, 360.0);
-	COLOR.rgb = hsv2rgb(hsv_color);
+	if (toggled) {
+		vec3 hsv_color = rgb2hsv(COLOR.rgb);
+		hsv_color.x = mod(hsv_color.x + shift_amount, 360.0);
+		COLOR.rgb = hsv2rgb(hsv_color);
+	}
 }

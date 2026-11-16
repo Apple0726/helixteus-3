@@ -1,5 +1,6 @@
 import csv
 import json
+import re
 import sys
 
 if __name__ == "__main__":
@@ -44,6 +45,8 @@ if __name__ == "__main__":
             # Check %s and %d count consistency across all languages. Very important
             percent_s_count = 0
             percent_d_count = 0
+            # Check whether all keys for {} formatting are consistent across all languages
+            formats = []
             # Process the rest of the csv
             for i in range(1, len(row)):
                 # If the cell's translation is out-of-date (marked by a ! followed by two letters indicating the locale, then a new line)
@@ -57,6 +60,7 @@ if __name__ == "__main__":
                     if locales[i] == "en":
                         percent_s_count = row[i].count("%s")
                         percent_d_count = row[i].count("%d")
+                        formats = re.findall("\\{(\\w+)\\}", row[i])
                     elif row[i] != "":
                         if percent_s_count != row[i].count("%s"):
                             print(locales[i] + " " + str(row_number) + " %s count mismatch")
@@ -64,6 +68,13 @@ if __name__ == "__main__":
                         if percent_d_count != row[i].count("%d"):
                             print(locales[i] + " " + str(row_number) + " %d count mismatch")
                             row[i] == ""
+                        _formats = re.findall("\\{(\\w+)\\}", row[i])
+                        if len(formats) != len(_formats):
+                            print(locales[i] + " " + str(row_number) + " number of format keys inconsistent")
+                        for j in range(len(_formats)):
+                            key = _formats[j]
+                            if key not in formats:
+                                print(locales[i] + " " + str(row_number) + " format key '" + key + "' not present in original text")
                 if row[i] != "":
                     localeStats[locales[i]]["lines"] += 1
                     localeStats[locales[i]]["words"] += len(row[i].split())

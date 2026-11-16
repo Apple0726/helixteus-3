@@ -68,4 +68,12 @@ func initialize(save_info_dict, save_name:String, on_load: Callable, on_delete: 
 		else:
 			saved_text = tr("SAVE_MODIFIED").format({"days_hours_ago":tr("X_DAYS_AGO") % int((now - save_modified) / 86400)})
 		$CreatedSaved.text = "{created}\n{saved}".format({"created":created_text, "saved":saved_text})
-		$TotalMoneyEarned.text = "[center][font_size=13]" + tr("TOTAL_MONEY_EARNED") + ": [img height=1em]res://Graphics/Icons/money.png[/img] " + Helper.format_num(save_info_dict.stats_global.total_money_earned, true, 9) + "[/font_size][/center]"
+		$TotalMoneyEarned.text = "[center][font_size=13] [img height=1em]res://Graphics/Icons/money.png[/img] " + Helper.format_num(save_info_dict.stats_global.total_money_earned, true, 9) + "[/font_size][/center]"
+		$TotalMoneyEarned.mouse_entered.connect(game.show_tooltip.bind(tr("TOTAL_MONEY_EARNED")))
+		$TotalMoneyEarned.mouse_exited.connect(game.hide_tooltip)
+		var playtime_str = "-"
+		if save_info_dict.stats_global.has("playtime"):
+			playtime_str = Helper.time_to_str(save_info_dict.stats_global.playtime)
+		$Playtime.text = "[center][font_size=13] [img height=1em]res://Graphics/Icons/time.png[/img] " + playtime_str + "[/font_size][/center]"
+		$Playtime.mouse_entered.connect(game.show_tooltip.bind(tr("PLAYTIME")))
+		$Playtime.mouse_exited.connect(game.hide_tooltip)
