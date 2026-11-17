@@ -89,3 +89,8 @@ func negotiate(money_to_negotiate:float, negotiated_text:String):
 		queue_free()
 	else:
 		game.popup(tr("NOT_ENOUGH_MONEY"), 1.5)
+
+
+func _on_visibility_changed() -> void:
+	if not visible:
+		queue_free()

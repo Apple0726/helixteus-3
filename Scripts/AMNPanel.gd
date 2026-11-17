@@ -191,6 +191,7 @@ func get_max_slider_value():
 			var max_value2 = game.atoms[atom] / ratios[atom]
 			if is_zero_approx(game.atoms[atom]):
 				max_value = 0.0
+				limiting_rsrc = atom
 				break
 			if max_value2 < max_value or max_value == 0.0:
 				max_value = max_value2

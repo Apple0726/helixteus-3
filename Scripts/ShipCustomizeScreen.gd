@@ -191,16 +191,16 @@ func _on_remove_defense_pressed() -> void:
 	allocate_stat("defense", -1, $ClassAndStats/ShipStats/RemoveDefense)
 
 func _on_add_accuracy_pressed() -> void:
-	allocate_stat("defense", 1, $ClassAndStats/ShipStats/RemoveAccuracy)
+	allocate_stat("accuracy", 1, $ClassAndStats/ShipStats/RemoveAccuracy)
 
 func _on_remove_accuracy_pressed() -> void:
-	allocate_stat("defense", -1, $ClassAndStats/ShipStats/RemoveAccuracy)
+	allocate_stat("accuracy", -1, $ClassAndStats/ShipStats/RemoveAccuracy)
 
 func _on_add_agility_pressed() -> void:
-	allocate_stat("defense", 1, $ClassAndStats/ShipStats/RemoveAgility)
+	allocate_stat("agility", 1, $ClassAndStats/ShipStats/RemoveAgility)
 
 func _on_remove_agility_pressed() -> void:
-	allocate_stat("defense", -1, $ClassAndStats/ShipStats/RemoveAgility)
+	allocate_stat("agility", -1, $ClassAndStats/ShipStats/RemoveAgility)
 
 
 func _on_hp_icon_mouse_entered() -> void:

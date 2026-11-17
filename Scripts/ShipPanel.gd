@@ -92,6 +92,7 @@ func _on_DriveButton_pressed():
 				ship.material.set_shader_parameter("alpha", 1.0)
 				fade_out_tween.tween_property(ship.material, "shader_parameter/alpha", 0.5, 0.2)
 			$Drives.visible = true
+			game.sub_panel = $Drives
 			$ShipStats.visible = true
 			$Ships/DriveButton.visible = false
 	else:

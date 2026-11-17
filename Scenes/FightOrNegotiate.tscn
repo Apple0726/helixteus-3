@@ -131,3 +131,5 @@ stretch_mode = 5
 [node name="Label" type="Label" parent="EnemyNumber" unique_id=2099621662]
 layout_mode = 2
 text = "x 12"
+
+[connection signal="visibility_changed" from="." to="." method="_on_visibility_changed"]

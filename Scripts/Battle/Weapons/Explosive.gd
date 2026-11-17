@@ -86,7 +86,10 @@ func _on_area_entered(area: Area2D) -> void:
 				explosive.rotation = rotation + (i + 0.5) / 8.0 * 2.0 * PI
 				explosive.shooter = shooter
 				explosive.weapon_accuracy = Data.battle_weapon_stats.bomb.accuracy * (shooter.accuracy + shooter.accuracy_buff)
-				explosive.status_effects = {Battle.StatusEffect.BURN: 0.5 * Data.battle_weapon_stats.bomb.status_effects[Battle.StatusEffect.BURN][shooter.bomb_levels[1] - 1]}
+				explosive.status_effects = {
+					Battle.StatusEffect.BURN: 0.5 * Data.battle_weapon_stats.bomb.status_effects[Battle.StatusEffect.BURN][shooter.bomb_levels[1] - 1],
+					Battle.StatusEffect.STUN: 0,
+				}
 				explosive.position = position + 50.0 * Vector2.from_angle(explosive.rotation)
 				explosive.battle_scene = battle_scene
 				explosive.battle_GUI = battle_GUI

@@ -142,3 +142,5 @@ func _on_back_button_pressed() -> void:
 func _on_visibility_changed() -> void:
 	if visible:
 		refresh()
+	else:
+		emit_signal("panel_closed")

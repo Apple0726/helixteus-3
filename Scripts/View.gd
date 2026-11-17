@@ -266,16 +266,16 @@ func refresh():
 		return
 	var show_ship = false
 	var sh_c:Dictionary = game.ships_travel_data.c_coords
+	var travel_view = game.ships_travel_data.travel_view
 	if game.c_v == "universe":
 		show_ship = true
 		ship.position = to_global(game.u_i.cluster_data[sh_c.c].pos) - Vector2(32, 22)
 	elif game.c_v == "cluster":
-		show_ship = game.ships_travel_data.c_coords.c == game.c_c
+		show_ship = game.ships_travel_data.c_coords.c == game.c_c and travel_view in ["cluster", "galaxy", "system", "-"]
 	elif game.c_v == "galaxy":
-		show_ship = game.ships_travel_data.c_g_coords.g == game.c_g_g
+		show_ship = game.ships_travel_data.c_g_coords.g == game.c_g_g and travel_view in ["galaxy", "system", "-"]
 	elif game.c_v == "system":
-		show_ship = game.ships_travel_data.c_g_coords.s == game.c_s_g
-	var travel_view = game.ships_travel_data.travel_view
+		show_ship = game.ships_travel_data.c_g_coords.s == game.c_s_g and travel_view in ["system", "-"]
 	var show_lines = show_ship and travel_view == game.c_v and travel_view != ""
 	ship.visible = show_ship and len(game.ship_data) >= 1
 	game.move_child(ship, game.get_child_count())

@@ -53,6 +53,7 @@ func _on_ConquerAll_pressed():
 		var fight_or_negotiate = load("res://Scenes/FightOrNegotiate.tscn").instantiate()
 		fight_or_negotiate.l_id = -1
 		fight_or_negotiate.id = -1
+		game.sub_panel = fight_or_negotiate
 		game.get_node("UI").add_child(fight_or_negotiate)
 
 func _on_Annotate_pressed():

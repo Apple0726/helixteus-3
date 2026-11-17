@@ -836,6 +836,7 @@ func on_planet_click (id:int, l_id:int):
 				var fight_or_negotiate = load("res://Scenes/FightOrNegotiate.tscn").instantiate()
 				fight_or_negotiate.l_id = l_id
 				fight_or_negotiate.id = id
+				game.sub_panel = fight_or_negotiate
 				game.get_node("UI").add_child(fight_or_negotiate)
 				game.hide_tooltip()
 		else:
