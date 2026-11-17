@@ -48,26 +48,34 @@ material = SubResource("ShaderMaterial_sa5ut")
 custom_minimum_size = Vector2(64, 0)
 layout_mode = 0
 offset_left = 8.0
-offset_top = 12.0
+offset_top = 28.0
 offset_right = 92.0
-offset_bottom = 76.0
+offset_bottom = 80.0
 mouse_filter = 2
 expand_mode = 1
 stretch_mode = 5
 
-[node name="GridContainer" type="GridContainer" parent="." unique_id=467370158]
-layout_mode = 1
-anchors_preset = 7
-anchor_left = 0.5
-anchor_top = 1.0
-anchor_right = 0.5
-anchor_bottom = 1.0
-offset_left = -6.0
-offset_top = -24.0
-offset_right = 6.0
-offset_bottom = -10.0
-grow_horizontal = 2
-grow_vertical = 0
+[node name="CostLabel" type="RichTextLabel" parent="." unique_id=251782987]
+layout_mode = 0
+offset_left = 8.0
+offset_top = 88.0
+offset_right = 92.0
+offset_bottom = 104.0
+bbcode_enabled = true
+text = "0"
+scroll_active = false
+vertical_alignment = 1
+
+[node name="CenterContainer" type="CenterContainer" parent="." unique_id=1886461901]
+layout_mode = 0
+offset_left = 48.0
+offset_top = 16.0
+offset_right = 48.0
+offset_bottom = 16.0
+use_top_left = true
+
+[node name="GridContainer" type="GridContainer" parent="CenterContainer" unique_id=467370158]
+layout_mode = 2
 theme_override_constants/v_separation = 3
 
 [node name="Research" type="TextureButton" parent="." unique_id=947663896]

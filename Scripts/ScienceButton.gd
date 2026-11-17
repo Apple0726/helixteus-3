@@ -71,14 +71,14 @@ func _ready():
 	prereqs = Data.science_unlocks[sc_id].prereqs
 	infinite_research = Data.science_unlocks[sc_id].get("infinite_research", null)
 	num_levels = len(Data.science_unlocks[sc_id].cost)
-	var square_size = 12.0
+	var square_size = 10.0
 	var inf_research_offset = 0
 	if infinite_research:
 		var color_rect = create_color_rect(Vector2.ONE * square_size)
 		color_rect.color = Color.DARK_CYAN
 		color_rect.name = "InfiniteResearch"
 		var label = Label.new()
-		label["theme_override_font_sizes/font_size"] = 10
+		label["theme_override_font_sizes/font_size"] = 8
 		label["theme_override_colors/font_color"] = Color.LIGHT_CYAN
 		label["theme_override_colors/font_shadow_color"] = Color(0.0, 0.0, 0.0, 0.4)
 		label.name = "Label"
@@ -86,17 +86,18 @@ func _ready():
 		label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 		color_rect.add_child(label)
 		label.set_anchors_preset(Control.PRESET_FULL_RECT)
-		$GridContainer.add_child(color_rect)
+		$CenterContainer/GridContainer.add_child(color_rect)
 		inf_research_offset = 1
 	if num_levels + inf_research_offset > 5:
-		square_size = 8.0
+		square_size = 6.0
+		$CenterContainer.position.y += 4.0
 	for i in range(num_levels - 1, -1, -1):
 		var color_rect = create_color_rect(Vector2.ONE * square_size)
 		color_rect.name = str(i + 1)
-		$GridContainer.add_child(color_rect)
-		$GridContainer.move_child(color_rect, 0)
-	$GridContainer.columns = clamp(num_levels + inf_research_offset, 1, 6)
-	$GridContainer["theme_override_constants/h_separation"] = max(4, int(196.0 / (pow(num_levels + inf_research_offset, 2) + 10)))
+		$CenterContainer/GridContainer.add_child(color_rect)
+		$CenterContainer/GridContainer.move_child(color_rect, 0)
+	$CenterContainer/GridContainer.columns = clamp(num_levels + inf_research_offset, 1, 6)
+	$CenterContainer/GridContainer["theme_override_constants/h_separation"] = max(4, int(196.0 / (pow(num_levels + inf_research_offset, 2) + 10)))
 	$Research.mouse_entered.connect(show_tooltip)
 	$Research.mouse_exited.connect(game.hide_tooltip)
 	$Research.pressed.connect(on_research)
@@ -147,25 +148,20 @@ func show_tooltip():
 		})
 		game.show_tooltip(locked_st)
 		return
-	var cost:float
-	if infinite_research and max_level:
-		cost = infinite_research.cost * pow(infinite_research.pw, sc_lv - num_levels)
-	else:
-		if max_level:
-			cost = Data.science_unlocks[sc_id].cost[sc_lv-1]
-		else:
-			cost = Data.science_unlocks[sc_id].cost[sc_lv]
 	var display_sc_lv = sc_lv
 	if max_level and not infinite_research:
 		display_sc_lv -= 1
-	var st = "[font_size=20]{title} {N}[/font_size]\n\n{desc}\n\n{cost_text}: [img height=1em]res://Graphics/Icons/SP.png[/img] {cost}".format({
+	var tooltip:String = "[font_size=20]{title} {N}[/font_size]\n\n{desc}"
+	var format = {
 		"title":sc_loc_name,
 		"N":"" if alternate_name or display_sc_lv == 0 else str(display_sc_lv + 1),
 		"desc":sc_loc_desc,
-		"cost_text":tr("COST"),
-		"cost":Helper.format_num(cost, true)
-	})
-	game.show_tooltip(st)
+	}
+	if sc_cost > 0.0:
+		tooltip += "\n\n{cost_text}: [img height=1em]res://Graphics/Icons/SP.png[/img] {cost}"
+		format.cost_text = tr("COST")
+		format.cost = Helper.format_num(sc_cost, true)
+	game.show_tooltip(tooltip.format(format))
 
 func refresh_cost():
 	sc_cost = 0.0
@@ -238,10 +234,17 @@ func refresh():
 	else:
 		self_modulate = Color.WHITE
 	if available:
-		modulate = Color.WHITE
-		$Research.disabled = false
-		$Texture2D.material.set_shader_parameter("gray", sc_lv == 0)
-		$Texture2D.material.set_shader_parameter("darkness", 4.0)
+		$CostLabel.show()
+		if not infinite_research and sc_lv >= num_levels:
+			$Highlight.show()
+			$Highlight["theme_override_styles/panel"].border_color = Color.PURPLE
+			$CostLabel.text = "[center][img height=0.8em]res://Graphics/Icons/Annotator/check.png[/img]"
+		else:
+			$CostLabel.text = "[center][font_size=9][img height=1em]res://Graphics/Icons/SP.png[/img]  %s " % Helper.format_num(sc_cost, true)
+			modulate = Color.WHITE
+			$Research.disabled = false
+			$Texture2D.material.set_shader_parameter("gray", sc_lv == 0)
+			$Texture2D.material.set_shader_parameter("darkness", 4.0)
 	else:
 		if prereq_also_locked:
 			modulate = Color.BLACK
@@ -250,20 +253,21 @@ func refresh():
 			$Texture2D.material.set_shader_parameter("darkness", 12.0)
 			self_modulate = Color.DIM_GRAY
 		$Research.disabled = true
+		$CostLabel.hide()
 	for i in len(Data.science_unlocks[sc_id].cost):
 		if sc_lv >= 1:
 			if sc_lv >= i + 1:
-				get_node("GridContainer/%s" % (i + 1)).color = Color.GREEN
+				get_node("CenterContainer/GridContainer/%s" % (i + 1)).color = Color.GREEN
 			else:
-				get_node("GridContainer/%s" % (i + 1)).color = Color.DARK_GREEN
+				get_node("CenterContainer/GridContainer/%s" % (i + 1)).color = Color.DARK_GREEN
 		else:
-			get_node("GridContainer/%s" % (i + 1)).color = Color.BLACK
+			get_node("CenterContainer/GridContainer/%s" % (i + 1)).color = Color.BLACK
 	if infinite_research:
 		if sc_lv >= 1:
-			get_node("GridContainer/InfiniteResearch").color = Color.DARK_CYAN
+			get_node("CenterContainer/GridContainer/InfiniteResearch").color = Color.DARK_CYAN
 		else:
-			get_node("GridContainer/InfiniteResearch").color = Color.BLACK
+			get_node("CenterContainer/GridContainer/InfiniteResearch").color = Color.BLACK
 	if infinite_research:
 		var inf_lv:int = sc_lv - num_levels
 		if sc_lv > 0 and inf_lv >= 0:
-			$GridContainer/InfiniteResearch/Label.text = str(inf_lv)
+			$CenterContainer/GridContainer/InfiniteResearch/Label.text = str(inf_lv)
