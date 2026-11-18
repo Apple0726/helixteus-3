@@ -891,7 +891,7 @@ func add_autocollect(p_i:Dictionary, tile:Dictionary, mult_diff:float):
 		for rsrc in extra_produce.keys():
 			extra_produce[rsrc] *= mult_diff - 1.0
 			tile.auto_GH.produce[rsrc] *= mult_diff
-		add_GH_produce_to_autocollect(extra_produce, 1.0)
+		add_GH_produce_to_autocollect(extra_produce, tile.get("aurora", 0.0) + 1.0)
 		
 
 func add_energy_from_NFR(p_i:Dictionary, base:float):
@@ -1162,7 +1162,7 @@ func get_final_value(p_i:Dictionary, dict:Dictionary, path:int, n:int = 1):
 		n = 1
 	if path == 1:
 		if bldg == Building.SOLAR_PANEL:
-			return clever_round(get_SP_production(p_i.temperature, dict.bldg.path_1_value * mult * dict.resource_production_bonus.get("energy", 1.0) * dict.get("substation_data", {}).get("bonus", 1.0)) * n)
+			return clever_round(get_SP_production(p_i.temperature, dict.bldg.path_1_value * mult * dict.resource_production_bonus.get("energy", 1.0)) * n)
 		elif bldg == Building.ATMOSPHERE_EXTRACTOR:
 			return clever_round(get_AE_production(p_i.pressure, dict.bldg.path_1_value) * n * mult)
 		elif bldg in [Building.MINERAL_SILO]:
@@ -1393,24 +1393,24 @@ func get_RE_info(RE_name:String):
 	else:
 		return tr("RE_" + RE_name.to_upper())
 
-func remove_GH_produce_from_autocollect(produce:Dictionary, au_int:float):
+func remove_GH_produce_from_autocollect(produce:Dictionary, metal_mult:float):
 	for p in produce:
 		if p == "minerals":
 			game.autocollect.mats.minerals = max(game.autocollect.mats.minerals - produce[p], 0.0)
 		elif game.mat_info.has(p):
 			game.autocollect.mats[p] = max(game.autocollect.mats[p] - produce[p], 0.0)
 		elif game.met_info.has(p):
-			var met_prod = produce[p] * (au_int + 1.0)
+			var met_prod = produce[p] * metal_mult
 			game.autocollect.mets[p] = max(game.autocollect.mets[p] - met_prod, 0.0)
 
-func add_GH_produce_to_autocollect(produce:Dictionary, au_int:float):
+func add_GH_produce_to_autocollect(produce:Dictionary, metal_mult:float):
 	for p in produce:
 		if p == "minerals":
 			game.autocollect.mats.minerals = produce[p] + game.autocollect.mats.get(p, 0.0)
 		elif game.mat_info.has(p):
 			game.autocollect.mats[p] = produce[p] + game.autocollect.mats.get(p, 0.0)
 		elif game.met_info.has(p):
-			var met_prod = produce[p] * (au_int + 1.0)
+			var met_prod = produce[p] * metal_mult
 			game.autocollect.mets[p] = met_prod + game.autocollect.mets.get(p, 0.0)
 
 func set_resolution(index:int):
@@ -1529,7 +1529,7 @@ func set_ancient_bldg_bonuses(p_i:Dictionary, ancient_bldg:Dictionary, tile_id:i
 					continue
 				var id:int = x + y * wid
 				var tile = game.tile_data[id]
-				tile.resource_production_bonus[rsrc] = tile.resource_production_bonus.get(rsrc, 1.0) + (mult - 1.0)
+				tile.resource_production_bonus[rsrc] = tile.resource_production_bonus.get(rsrc, 1.0) * mult
 				if game.tile_data_persistent[id] == null:
 					game.tile_data_persistent[id] = {}
 				game.tile_data_persistent[id].resource_production_bonus = {rsrc: tile.resource_production_bonus[rsrc]}
@@ -1552,32 +1552,30 @@ func set_ancient_bldg_bonuses(p_i:Dictionary, ancient_bldg:Dictionary, tile_id:i
 				var id:int = x + y * wid
 				var tile = game.tile_data[id]
 				var mult = Helper.get_substation_prod_mult(tier)
-				tile.resource_production_bonus.energy = tile.resource_production_bonus.get("energy", 0.0) + mult
+				var prev_energy_production_bonus = tile.resource_production_bonus.get("energy", 1.0)
+				tile.resource_production_bonus.energy = prev_energy_production_bonus * mult
 				if game.tile_data_persistent[id] == null:
 					game.tile_data_persistent[id] = {}
 				game.tile_data_persistent[id].resource_production_bonus = {"energy": tile.resource_production_bonus.energy}
 				if tile.has("substation_data"):
-					tile.substation_data.bonus += mult - 1.0
+					tile.substation_data[tile_id] = mult
 				else:
-					tile.substation_data = {
-						"bonus":mult,
-						"origin_tile_id":tile_id,
-					}
+					tile.substation_data = {tile_id: mult}
 					Helper.set_tile_data_persistent(id, "substation_data", tile.substation_data)
 				if tile.has("bldg"):
 					var overclock_mult:float = tile.bldg.get("overclock_mult", 1.0)
-					var base = tile.bldg.path_1_value * overclock_mult * mult
-					var diff = tile.bldg.path_1_value * overclock_mult * (mult - 1.0)
+					var base = tile.bldg.path_1_value * overclock_mult * mult * prev_energy_production_bonus
+					var diff = tile.bldg.path_1_value * overclock_mult * (mult - 1.0) * prev_energy_production_bonus
 					var cap_bonus_mult = Helper.get_substation_capacity_bonus(tier)# 1200 seconds for tier 1, more for tier 2 etc.
 					if tile.bldg.name == Building.POWER_PLANT:
 						game.autocollect.rsrc.energy += diff
 						ancient_bldg["capacity_bonus"] = ancient_bldg.get("capacity_bonus", 0) + base * cap_bonus_mult
 						game.capacity_bonus_from_substation += ancient_bldg.capacity_bonus
 					elif tile.bldg.name == Building.SOLAR_PANEL:
-						var energy_prod = Helper.get_SP_production(p_i.temperature, diff * tile.resource_production_bonus.get("energy", 1.0))
-						var energy_prod_base = Helper.get_SP_production(p_i.temperature, base * tile.resource_production_bonus.get("energy", 1.0))
-						game.autocollect.rsrc.energy += energy_prod
-						ancient_bldg["capacity_bonus"] = ancient_bldg.get("capacity_bonus", 0) + energy_prod_base * cap_bonus_mult
+						base = Helper.get_SP_production(p_i.temperature, base)
+						diff = Helper.get_SP_production(p_i.temperature, diff)
+						game.autocollect.rsrc.energy += diff
+						ancient_bldg["capacity_bonus"] = ancient_bldg.get("capacity_bonus", 0) + base * cap_bonus_mult
 						game.capacity_bonus_from_substation += ancient_bldg.capacity_bonus
 				ancient_bldg["capacity_bonus"] = ancient_bldg.get("capacity_bonus", 0)
 	elif ancient_bldg.name == AncientBuilding.MINING_OUTPOST:
@@ -1610,6 +1608,18 @@ func set_ancient_bldg_bonuses(p_i:Dictionary, ancient_bldg:Dictionary, tile_id:i
 			game.autocollect["passive_xp_tier"] = ancient_bldg.tier
 			game.autocollect["passive_xp_mult"] = game.system_data[game.c_s].diff
 			game.start_spaceport_timer()
+
+func upgrade_energy_cap_bonus_from_substation(tile:Dictionary, energy_prod:float):
+	for substation_tile_id in tile.substation_data:
+		var cap_upgrade = energy_prod * tile.substation_data[substation_tile_id] * Helper.get_substation_capacity_bonus(game.tile_data[substation_tile_id].ancient_bldg.tier)
+		game.tile_data[substation_tile_id].ancient_bldg.capacity_bonus += cap_upgrade
+		game.capacity_bonus_from_substation += cap_upgrade
+
+func remove_energy_cap_bonus_from_substation(tile:Dictionary, energy_prod:float):
+	for substation_tile_id in tile.substation_data:
+		var cap_to_remove = energy_prod * tile.substation_data[substation_tile_id] * Helper.get_substation_capacity_bonus(game.tile_data[substation_tile_id].ancient_bldg.tier)
+		game.tile_data[substation_tile_id].ancient_bldg.capacity_bonus -= cap_to_remove
+		game.capacity_bonus_from_substation = max(0.0, game.capacity_bonus_from_substation - cap_to_remove)
 
 func update_CBD_affected_tiles(CBD_tile:Dictionary, CBD_tile_id:int, p_i:Dictionary):
 	var wid:int = sqrt(len(game.tile_data))

@@ -567,18 +567,12 @@ func constr_bldg(tile_id:int, curr_time:int, _bldg_to_construct:int, mass_build:
 			var energy_prod = path_1_value * tile.resource_production_bonus.get("energy", 1.0)
 			game.autocollect.rsrc.energy += energy_prod * time_speed_bonus
 			if tile.has("substation_data"):
-				var substation_tile_id = tile.substation_data.origin_tile_id
-				var cap_upgrade:float = energy_prod * tile.substation_data.bonus * Helper.get_substation_capacity_bonus(game.tile_data[substation_tile_id].ancient_bldg.tier)
-				game.tile_data[substation_tile_id].ancient_bldg.capacity_bonus += cap_upgrade
-				game.capacity_bonus_from_substation += cap_upgrade
+				Helper.upgrade_energy_cap_bonus_from_substation(tile, energy_prod)
 		elif _bldg_to_construct == Building.SOLAR_PANEL:
 			var energy_prod = Helper.get_SP_production(p_i.temperature, path_1_value * tile.resource_production_bonus.get("energy", 1.0))
 			game.autocollect.rsrc.energy += energy_prod * time_speed_bonus
 			if tile.has("substation_data"):
-				var substation_tile_id = tile.substation_data.origin_tile_id
-				var cap_upgrade:float = energy_prod * tile.substation_data.bonus * Helper.get_substation_capacity_bonus(game.tile_data[substation_tile_id].ancient_bldg.tier)
-				game.tile_data[substation_tile_id].ancient_bldg.capacity_bonus += cap_upgrade
-				game.capacity_bonus_from_substation += cap_upgrade
+				Helper.upgrade_energy_cap_bonus_from_substation(tile, energy_prod)
 		elif _bldg_to_construct == Building.BATTERY:
 			game.energy_capacity += path_1_value * game.u_i.charge
 		elif _bldg_to_construct == Building.CENTRAL_BUSINESS_DISTRICT:
@@ -738,28 +732,19 @@ func destroy_bldg(id2:int, mass:bool = false):
 		if game.autocollect.rsrc.minerals < 0:
 			game.autocollect.rsrc["minerals"] = 0
 	elif bldg == Building.POWER_PLANT:
-		game.autocollect.rsrc.energy -= tile.bldg.path_1_value * overclock_mult * tile.resource_production_bonus.get("energy", 1.0)
+		var energy_prod = tile.bldg.path_1_value * tile.resource_production_bonus.get("energy", 1.0)
+		game.autocollect.rsrc.energy -= energy_prod * overclock_mult
 		if game.autocollect.rsrc.energy < 0:
 			game.autocollect.rsrc["energy"] = 0
 		if tile.has("substation_data"):
-			var substation_tile_id = tile.substation_data.origin_tile_id
-			var cap_to_remove = tile.bldg.path_1_value * tile.substation_data.bonus * Helper.get_substation_capacity_bonus(game.tile_data[substation_tile_id].ancient_bldg.tier)
-			game.tile_data[substation_tile_id].ancient_bldg.capacity_bonus -= cap_to_remove
-			game.capacity_bonus_from_substation -= cap_to_remove
-			if game.capacity_bonus_from_substation < 0:
-				game["capacity_bonus_from_substation"] = 0
+			Helper.remove_energy_cap_bonus_from_substation(tile, energy_prod)
 	elif bldg == Building.SOLAR_PANEL:
-		var SP_prod = Helper.get_SP_production(p_i.temperature, tile.bldg.path_1_value * overclock_mult * tile.resource_production_bonus.get("energy", 1.0))
-		game.autocollect.rsrc.energy -= SP_prod
+		var energy_prod = Helper.get_SP_production(p_i.temperature, tile.bldg.path_1_value * tile.resource_production_bonus.get("energy", 1.0))
+		game.autocollect.rsrc.energy -= energy_prod * overclock_mult 
 		if game.autocollect.rsrc.energy < 0:
 			game.autocollect.rsrc["energy"] = 0
 		if tile.has("substation_data"):
-			var substation_tile_id = tile.substation_data.origin_tile_id
-			var cap_to_remove = Helper.get_SP_production(p_i.temperature, tile.bldg.path_1_value * tile.resource_production_bonus.get("energy", 1.0)) * Helper.get_substation_capacity_bonus(game.tile_data[substation_tile_id].ancient_bldg.tier)
-			game.tile_data[substation_tile_id].ancient_bldg.capacity_bonus -= cap_to_remove
-			game.capacity_bonus_from_substation -= cap_to_remove
-			if game.capacity_bonus_from_substation < 0:
-				game["capacity_bonus_from_substation"] = 0
+			Helper.remove_energy_cap_bonus_from_substation(tile, energy_prod)
 	elif bldg == Building.RESEARCH_LAB:
 		game.autocollect.rsrc.SP -= tile.bldg.path_1_value * overclock_mult * tile.resource_production_bonus.get("SP", 1.0)
 		if game.autocollect.rsrc.SP < 0:
@@ -815,7 +800,7 @@ func destroy_bldg(id2:int, mass:bool = false):
 		if game.boring_machine_data[game.c_p_g].tiles.is_empty():
 			game.boring_machine_data.erase(game.c_p_g)
 	if tile.has("auto_GH"):
-		Helper.remove_GH_produce_from_autocollect(tile.auto_GH.produce, tile.get("aurora", 0.0))
+		Helper.remove_GH_produce_from_autocollect(tile.auto_GH.produce, tile.get("aurora", 0.0) + 1.0)
 		game.autocollect.mats.cellulose += tile.auto_GH.cellulose_drain
 		if tile.auto_GH.has("soil_drain"):
 			game.autocollect.mats.soil += tile.auto_GH.soil_drain
