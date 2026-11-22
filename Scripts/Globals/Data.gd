@@ -242,16 +242,16 @@ func reload():
 	path_2[Building.SUBATOMIC_PARTICLE_REACTOR].desc = tr("DIVIDES_ENERGY_COSTS_BY")
 	achievements = { 
 		"money":{
-			"0":tr("SAVE_OBJECTIVE").format({"num":Helper.format_num(1000, false, 308), "rsrc":tr("MONEY")}),
-			"1":tr("SAVE_OBJECTIVE").format({"num":Helper.format_num(1e6, false, 308), "rsrc":tr("MONEY")}),
-			"2":tr("SAVE_OBJECTIVE").format({"num":Helper.format_num(1e9, false, 308), "rsrc":tr("MONEY")}),
-			"3":tr("SAVE_OBJECTIVE").format({"num":Helper.format_num(1e12, false, 308), "rsrc":tr("MONEY")}),
-			"4":tr("SAVE_OBJECTIVE").format({"num":Helper.format_num(1e15, false, 308), "rsrc":tr("MONEY")}),
-			"5":tr("SAVE_OBJECTIVE").format({"num":Helper.format_num(1e18, false, 308), "rsrc":tr("MONEY")}),
-			"6":tr("SAVE_OBJECTIVE").format({"num":Helper.format_num(1e21, false, 308), "rsrc":tr("MONEY")}),
-			"7":tr("SAVE_OBJECTIVE").format({"num":Helper.format_num(1e24, false, 308), "rsrc":tr("MONEY")}),
-			"8":tr("SAVE_OBJECTIVE").format({"num":Helper.format_num(1e27, false, 308), "rsrc":tr("MONEY")}),
-			"9":tr("SAVE_OBJECTIVE").format({"num":Helper.format_num(1e30, false, 308), "rsrc":tr("MONEY")}),
+			"0":tr("SAVE_OBJECTIVE").format({"num":Helper.format_num(1000, false, 308), "rsrc":"[img height=1em]Graphics/Icons/money.png[/img]"}),
+			"1":tr("SAVE_OBJECTIVE").format({"num":Helper.format_num(1e6, false, 308), "rsrc":"[img height=1em]Graphics/Icons/money.png[/img]"}),
+			"2":tr("SAVE_OBJECTIVE").format({"num":Helper.format_num(1e9, false, 308), "rsrc":"[img height=1em]Graphics/Icons/money.png[/img]"}),
+			"3":tr("SAVE_OBJECTIVE").format({"num":Helper.format_num(1e12, false, 308), "rsrc":"[img height=1em]Graphics/Icons/money.png[/img]"}),
+			"4":tr("SAVE_OBJECTIVE").format({"num":Helper.format_num(1e15, false, 308), "rsrc":"[img height=1em]Graphics/Icons/money.png[/img]"}),
+			"5":tr("SAVE_OBJECTIVE").format({"num":Helper.format_num(1e18, false, 308), "rsrc":"[img height=1em]Graphics/Icons/money.png[/img]"}),
+			"6":tr("SAVE_OBJECTIVE").format({"num":Helper.format_num(1e21, false, 308), "rsrc":"[img height=1em]Graphics/Icons/money.png[/img]"}),
+			"7":tr("SAVE_OBJECTIVE").format({"num":Helper.format_num(1e24, false, 308), "rsrc":"[img height=1em]Graphics/Icons/money.png[/img]"}),
+			"8":tr("SAVE_OBJECTIVE").format({"num":Helper.format_num(1e27, false, 308), "rsrc":"[img height=1em]Graphics/Icons/money.png[/img]"}),
+			"9":tr("SAVE_OBJECTIVE").format({"num":Helper.format_num(1e30, false, 308), "rsrc":"[img height=1em]Graphics/Icons/money.png[/img]"}),
 		},
 		"conquest":{
 			"0":tr("CONQUER_OBJECTIVE").format({"num":2, "object":tr("PLANETS")}),

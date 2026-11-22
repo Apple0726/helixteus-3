@@ -223,7 +223,7 @@ func _on_UseFertilizer_toggled(button_pressed):
 				p_i.auto_GH.cellulose_drain *= 1.5
 			elif not button_pressed and p_i.auto_GH.has("soil_drain"):
 				for p in p_i.auto_GH.produce:
-					var subtr_amount = p_i.auto_GH.produce[p] * 0.5
+					var subtr_amount = p_i.auto_GH.produce[p] / 3.0
 					p_i.auto_GH.produce[p] /= 1.5
 					if p in game.met_info.keys():
 						game.autocollect.mets[p] -= subtr_amount * metal_mult

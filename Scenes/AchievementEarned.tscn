@@ -91,14 +91,14 @@ offset_top = 40.0
 offset_bottom = 64.0
 text = "EXPLORATION"
 
-[node name="Desc" type="Label" parent="Panel" unique_id=106731286]
+[node name="Desc" type="RichTextLabel" parent="Panel" unique_id=44877830]
 layout_mode = 0
 anchor_right = 1.0
 offset_left = 112.0
 offset_top = 72.0
 offset_bottom = 136.0
+bbcode_enabled = true
 text = "asdf"
-autowrap_mode = 3
 
 [node name="TextureRect" type="TextureRect" parent="Panel" unique_id=1737435309]
 layout_mode = 0

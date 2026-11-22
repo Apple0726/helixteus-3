@@ -317,6 +317,7 @@ func refresh():
 func add_obj(obj_str:String, pos:Vector2, sc:float):
 	if obj_str == "Galaxy" and is_instance_valid(galaxy_obj_cache):
 		if galaxy_obj_cache.g_i.id == game.c_g_g:
+			galaxy_obj_cache.refresh()
 			galaxy_obj_cache.show()
 			obj = galaxy_obj_cache
 			game.add_space_HUD()

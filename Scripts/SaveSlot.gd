@@ -40,10 +40,7 @@ func initialize(save_info_dict, save_name:String, on_load: Callable, on_delete: 
 		$LoadSave.pressed.connect(on_load.bind(save_name, reset_dimension))
 		$Version.mouse_exited.connect(game.hide_tooltip)
 		var univ_num = len(save_info_dict.universe_data)
-		var univ_txt = tr("1_UNIVERSE")
-		if univ_num > 1:
-			univ_txt = tr("X_UNIVERSES") % univ_num
-		$Info.text = "{dim_txt} #{dim}\n{univ}".format({"dim_txt":tr("DIMENSION"), "dim":save_info_dict.dim_num, "univ":univ_txt})
+		$Info.text = "{dim_txt} #{dim}".format({"dim_txt":tr("DIMENSION"), "dim":save_info_dict.dim_num})
 		for i in univ_num:
 			var universe_icon = preload("res://Scenes/UniverseIcon.tscn").instantiate()
 			universe_icon.custom_minimum_size = Vector2.ONE * 100.0

@@ -7,13 +7,13 @@
 resource_local_to_scene = true
 font_size = 12
 
-[sub_resource type="SystemFont" id="SystemFont_rili7"]
-subpixel_positioning = 0
-
 [sub_resource type="LabelSettings" id="LabelSettings_wkd82"]
-font = SubResource("SystemFont_rili7")
 font_size = 11
 font_color = Color(0.5429818, 0.5429818, 0.5429816, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_dvmuk"]
+font_size = 14
+font_color = Color(0.8217887, 0.82178867, 0.82178867, 1)
 
 [sub_resource type="CompressedTexture2D" id="CompressedTexture2D_wkd82"]
 load_path = "res://.godot/imported/CloseButtonNormal.png-fd573ed4a9813078483097bb2a6e534e.ctex"
@@ -40,7 +40,7 @@ offset_right = 77.0
 offset_bottom = -8.0
 grow_horizontal = 2
 grow_vertical = 0
-text = "Load save"
+text = "LOAD"
 
 [node name="Version" type="Label" parent="." unique_id=797751330]
 layout_mode = 1
@@ -94,11 +94,12 @@ anchors_preset = 5
 anchor_left = 0.5
 anchor_right = 0.5
 offset_left = -124.0
-offset_top = 60.0
+offset_top = 76.0
 offset_right = 132.0
-offset_bottom = 128.0
+offset_bottom = 99.0
 grow_horizontal = 2
 size_flags_horizontal = 3
+label_settings = SubResource("LabelSettings_dvmuk")
 horizontal_alignment = 1
 
 [node name="Export" type="Button" parent="." unique_id=1321338104]

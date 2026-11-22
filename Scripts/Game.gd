@@ -2543,7 +2543,7 @@ func generate_planets(id:int):#local id
 			"ring": i,
 			"type": rng.randi_range(3, 10),
 			"angle": rng.randf_range(0.0, 2.0 * PI),
-			"distance": first_planet_distance + (pow(1.3, i) - 1.0) * first_planet_distance,
+			"distance": max(star_boundary, first_planet_distance) + (pow(1.3, i) - 1.0) * first_planet_distance,
 			"parent": id,
 			"view": {"pos":Vector2.ZERO, "zoom":1.0},
 			"tiles": [],
@@ -3823,7 +3823,7 @@ func _input(event):
 			config.set_value("graphics", "fullscreen", Settings.fullscreen)
 			config.save("user://settings.cfg")
 		if is_instance_valid(settings_panel):
-			settings_panel.get_node("TabContainer/GRAPHICS/Fullscreen").set_pressed_no_signal(Settings.fullscreen)
+			settings_panel.get_node("Panel/Graphics/Fullscreen").set_pressed_no_signal(Settings.fullscreen)
 
 	if Input.is_action_just_released("cancel"):
 		if item_cursor.visible and c_v not in ["STM", ""]:

@@ -8,6 +8,7 @@
 resource_local_to_scene = true
 shader = ExtResource("3_q11a2")
 shader_parameter/gray = false
+shader_parameter/darkness = 9.0
 
 [node name="Achievement" type="Panel" unique_id=1151842316]
 custom_minimum_size = Vector2(60, 60)
@@ -42,5 +43,6 @@ anchor_bottom = 1.0
 offset_left = -56.0
 offset_top = -19.0
 offset_right = -2.0
+offset_bottom = 4.0
 horizontal_alignment = 2
 vertical_alignment = 1

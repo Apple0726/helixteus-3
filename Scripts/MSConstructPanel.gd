@@ -27,7 +27,8 @@ func _unhandled_input(event):
 func refresh():
 	game.view.obj.build_all_MS_stages = build_all
 	for MS in Megastructure.names:
-		$Panel/ScrollContainer/VBoxContainer.get_node(MS).visible = (star_selected == -1 or MS in ["DS", "CBS", "MB", "PK"]) and (MS != "MB" or game.science_level[Science.MATRIOSHKA_BRAIN])
+		$Panel/ScrollContainer/VBoxContainer.get_node(MS).visible = star_selected == -1 or MS in ["DS", "CBS", "MB", "PK"]
+	$Panel/ScrollContainer/VBoxContainer/MB.disabled = game.science_level[Science.MATRIOSHKA_BRAIN] == 0
 
 func on_MS_over(MS:String, MS_btn):
 	if star_selected != -1:
@@ -46,17 +47,21 @@ func on_MS_over(MS:String, MS_btn):
 	if MS_btn.disabled:
 		var sc = Helper.get_science_from_MS(MS)
 		var sc_name = Science.names[sc]
+		var sc_lv_str = str(len(Data.science_unlocks[sc].cost))
+		if sc_lv_str == "1":
+			sc_lv_str = ""
 		game.show_tooltip("[color=#999999][font_size=20]({locked})[/font_size]\n{desc}".format({
 			"locked":tr("LOCKED"),
-			"desc":tr("UNLOCK_BY_RESEARCHING_X").format({"science": tr(sc_name.to_upper() + "_SC") + " " + str(len(Data.science_unlocks[sc].cost))})
+			"desc":tr("UNLOCK_BY_RESEARCHING_X").format({"science": tr(sc_name.to_upper() + "_SC") + " " + sc_lv_str})
 		}))
 	else:
 		game.show_tooltip("[font_size=20]{MS_name}[/font_size]\n\n{MS_desc}".format({"MS_name":tr("M_" + MS + "_NAME"), "MS_desc":tr("M_" + MS + "_DESC")}))
 
 func on_MS_out():
-	var star_node = get_tree().get_nodes_in_group("stars_system")[star_selected]
-	if star_node.has_node("MS") and not game.system_data[game.c_s].stars[star_selected].has("MS"):
-		star_node.get_node("MS").free()
+	if star_selected != -1:
+		var star_node = get_tree().get_nodes_in_group("stars_system")[star_selected]
+		if star_node.has_node("MS") and not game.system_data[game.c_s].stars[star_selected].has("MS"):
+			star_node.get_node("MS").free()
 	game.get_node("UI/Panel").hide()
 	game.hide_tooltip()
 
@@ -110,6 +115,8 @@ func _on_build_all_toggled(toggled_on: bool) -> void:
 	build_all = toggled_on
 	game.view.obj.build_all_MS_stages = build_all
 	for btn in $Panel/ScrollContainer/VBoxContainer.get_children():
+		if btn.name == "MB":
+			continue
 		if toggled_on:
 			btn.disabled = game.science_level[Helper.get_science_from_MS(btn.name)] < (Data.MS_num_stages[btn.name] if toggled_on else 0)
 		else:

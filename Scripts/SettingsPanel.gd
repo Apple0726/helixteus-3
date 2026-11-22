@@ -120,9 +120,10 @@ func _on_Autosave_value_changed(value):
 	save_config("game", "autosave_interval", value)
 
 func _on_AutosaveLight_toggled(button_pressed):
+	Settings.autosave_light = button_pressed
+	save_config("game", "autosave_light", button_pressed)
 	if is_instance_valid(game.HUD):
 		game.HUD.refresh()
-	save_config("game", "autosave_light", button_pressed)
 
 func _on_FPS_value_changed(value):
 	$Panel/Graphics/FPS/Label2.text = str(int(value))
@@ -186,6 +187,8 @@ func _on_EnableShaders_toggled(button_pressed):
 	Settings.enable_shaders = button_pressed
 	game.get_node("ClusterBG").visible = button_pressed
 	game.get_node("Stars/Starfield").visible = button_pressed
+	if game.c_v == "science_tree":
+		game.get_node("ScienceTreeBG").visible = button_pressed
 	save_config("graphics", "enable_shaders", button_pressed)
 
 func _on_Screenshake_toggled(button_pressed):

@@ -20,4 +20,4 @@ label_settings = SubResource("LabelSettings_ehtx8")
 [node name="Button" type="Button" parent="." unique_id=1432283005]
 layout_mode = 2
 theme_override_font_sizes/font_size = 13
-text = "Load"
+text = "LOAD"

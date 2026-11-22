@@ -43,10 +43,6 @@ func _ready():
 	aggressive_timer = Timer.new()
 	aggressive_timer.one_shot = true
 	add_child(aggressive_timer)
-	
-
-func on_tree_exited():
-	queue_free()
 
 func is_aggr():
 	return aggressive_timer and not aggressive_timer.is_stopped()
@@ -80,7 +76,7 @@ func move_HX():
 				break
 			target_tile = target_neighbours[randi() % m]
 			i += 1
-		if target_tile != curr_tile:
+		if curr_tile != -1 and target_tile != curr_tile:
 			cave_ref.HX_tiles.erase(curr_tile)
 			cave_ref.HX_tiles.append(target_tile)
 			move_path_v = a_n.get_point_path(curr_tile, target_tile)
@@ -96,15 +92,16 @@ func _process(delta):
 					move_path_v.remove_at(0)
 			else:
 				state = IDLE
-				move_timer.start()
+				if move_timer:
+					move_timer.start()
 		if ray.enabled and is_not_aggr():
 			ray.target_position = (cave_ref.rover.position - position).normalized() * ray_length
 			if ray.get_collider() is CharacterBody2D:
 				if not sees_player:
 					sees_player = true
-					if move_timer:
+					move_speed = atk_move_speed
+					if move_timer and len(move_path_v) == 0:
 						move_HX()
-						move_speed = atk_move_speed
 			else:
 				sees_player = false
 				move_speed = idle_move_speed
@@ -112,8 +109,6 @@ func _process(delta):
 		status_effects[effect] -= delta * cave_ref.time_speed
 		if status_effects[effect] < 0:
 			status_effects.erase(effect)
-			#if effect == "stun":
-				#$Sprite2D/Stun.visible = false
 
 func chase_player():
 	var not_chasing = aggressive_timer.is_stopped()
@@ -132,6 +127,7 @@ func check_distance():
 		AI_enabled = false
 		ray.enabled = false
 		aggressive_timer.stop()
+		state = IDLE
 		if move_timer:
 			move_timer.start()
 

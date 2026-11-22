@@ -185,10 +185,8 @@ func refresh():
 	switch_btn.visible = game.c_v in ["planet", "system", "galaxy", "cluster", "universe"]
 	if game.c_v == "universe" and dimension_btn.visible:
 		switch_btn.visible = false
-	if config.load("user://settings.cfg") == OK:
-		var autosave_light = config.get_value("saving", "autosave_light", false)
-		set_process(autosave_light)
-		$Top/AutosaveLight.visible = autosave_light
+	set_process(Settings.autosave_light)
+	$Top/AutosaveLight.visible = Settings.autosave_light
 	update_money_energy_SP()
 	update_minerals()
 	if $Top/Resources/Glass.visible:

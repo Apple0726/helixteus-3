@@ -1498,7 +1498,7 @@ func use_item(item:Dictionary, _tile_highlight, delta):
 		elif mining_debris != -1:
 			mine_debris(item, delta)
 		update_ray()
-	elif item.id is int:
+	elif item.id is int and item.has("type"):
 		if item.type == Item.Type.PORTABLE_WORMHOLE:
 			if cave_floor <= Item.data[item.id].limit:
 				remove_item(item, 1)

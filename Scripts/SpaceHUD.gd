@@ -118,7 +118,6 @@ func _on_stars_mouse_entered():
 	game.show_tooltip(tr("STARS") + " (Q)")
 
 func show_stars_panel(selected_MS:String = ""):
-	$StarPanel/AnimationPlayer.play("Fade")
 	$StarPanel.selected_MS = selected_MS
 	$StarPanel.visible = true
 	$StarPanel.set_process_input(true)

@@ -430,10 +430,10 @@ func _on_Upgrade_pressed():
 				for p in planet.auto_GH.produce:
 					var upgrade_mult:float = new_base_value / planet.bldg["%s_value" % path_str]
 					var metal_mult = planet.get("metal_mult", 1.0)
-					game.autocollect.mets[p] += planet.auto_GH.produce[p] * (upgrade_mult - 1) * metal_mult
-					planet.auto_GH.produce[p] *= upgrade_mult * metal_mult
+					game.autocollect.mets[p] += planet.auto_GH.produce[p] * (upgrade_mult - 1.0) * metal_mult
+					planet.auto_GH.produce[p] *= upgrade_mult
 					if path_selected == 1:
-						game.autocollect.mats.cellulose -= planet.auto_GH.cellulose_drain * (upgrade_mult - 1)
+						game.autocollect.mats.cellulose -= planet.auto_GH.cellulose_drain * (upgrade_mult - 1.0)
 						planet.auto_GH.cellulose_drain *= upgrade_mult
 						if planet.auto_GH.has("soil_drain"):
 							game.autocollect.mats.soil -= planet.auto_GH.soil_drain * (upgrade_mult - 1.0)

@@ -91,17 +91,9 @@ func _unhandled_input(event):
 		hide_panel()
 
 func hide_panel():
-	if not $AnimationPlayer.is_playing():
-		$AnimationPlayer.play_backwards("Fade")
-		set_process_input(false)
-		await get_tree().process_frame
-		game.block_scroll = false
-
-
-func _on_animation_player_animation_finished(anim_name):
-	if $Panel.modulate.a == 0.0:
-		visible = false
-
+	set_process_input(false)
+	game.block_scroll = false
+	hide()
 
 func _on_visibility_changed() -> void:
 	if visible:

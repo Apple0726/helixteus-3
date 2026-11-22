@@ -63,18 +63,18 @@ if __name__ == "__main__":
                         formats = re.findall("\\{(\\w+)\\}", row[i])
                     elif row[i] != "":
                         if percent_s_count != row[i].count("%s"):
-                            print(locales[i] + " " + str(row_number) + " %s count mismatch")
+                            print(locales[i] + " " + str(row_number+1) + " %s count mismatch")
                             row[i] == ""
                         if percent_d_count != row[i].count("%d"):
-                            print(locales[i] + " " + str(row_number) + " %d count mismatch")
+                            print(locales[i] + " " + str(row_number+1) + " %d count mismatch")
                             row[i] == ""
                         _formats = re.findall("\\{(\\w+)\\}", row[i])
                         if len(formats) != len(_formats):
-                            print(locales[i] + " " + str(row_number) + " number of format keys inconsistent")
+                            print(locales[i] + " " + str(row_number+1) + " number of format keys inconsistent")
                         for j in range(len(_formats)):
                             key = _formats[j]
                             if key not in formats:
-                                print(locales[i] + " " + str(row_number) + " format key '" + key + "' not present in original text")
+                                print(locales[i] + " " + str(row_number+1) + " format key '" + key + "' not present in original text")
                 if row[i] != "":
                     localeStats[locales[i]]["lines"] += 1
                     localeStats[locales[i]]["words"] += len(row[i].split())

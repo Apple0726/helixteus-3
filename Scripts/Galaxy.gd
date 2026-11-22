@@ -93,6 +93,15 @@ func _ready():
 		game.overlay.refresh_options(game.overlay_data[game.c_v].overlay)
 	dimensions = dimensions_temp
 
+func refresh():
+	if load_bldg_info_thread.is_alive():
+		load_bldg_info_thread.wait_to_finish()
+	MSs.clear()
+	bldgs.clear()
+	ancient_bldgs.clear()
+	load_bldg_info_thread = Thread.new()
+	load_bldg_info_thread.start(load_bldg_info)
+
 func load_bldg_info():
 	for i in len(game.system_data):
 		var s_i = game.system_data[i]
@@ -302,7 +311,6 @@ func diff_sort(a:Dictionary, b:Dictionary):
 
 func _process(delta: float) -> void:
 	if not g_i.has("conquer_data"):
-		set_process(false)
 		return
 	if sorted_systems_by_diff.is_empty():
 		system_conquer_start_index = 0

@@ -110,7 +110,7 @@ func load_bldg_info():
 						MSs[g_i.l_id][p_i.MS] = MSs[g_i.l_id].get(p_i.MS, 0) + 1
 					else:
 						MSs[g_i.l_id] = {p_i.MS: 1}
-			if s_i.has("MS_count"):
+			if s_i.has("MS_count") and s_i.MS_count.has(g_i.l_id):
 				for MS in s_i.MS_count[g_i.l_id]:
 					if MSs.has(g_i.l_id):
 						MSs[g_i.l_id][MS] = MSs[g_i.l_id].get(MS, 0) + 1

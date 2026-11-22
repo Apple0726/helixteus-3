@@ -12,7 +12,7 @@ ENERGY,Energy,Énergie,Energia,能量,Energie,Energía,에너지,Energi,Energia,
 SP,Science points,Points scientifiques,Punti Scienza,科技,Forschungspunkte,Puntos de ciencia,과학 포인트,Vetenskapspoäng,Tudománpontok,研究値,Onderzoekspunten,Очки науки,Punkty technologiczne
 MUTE,(Un)mute,(Dés)activer la musique,(Dis)attivare la musica,(取消)静音,Stummschalten,(Des)Activar la musica,음악 켜기/끄기,(O)dämpa,Hang be/ki,ミュート,(Ont)dempen,(Не)беззвучный,(Wyłącz) wyciszenie
 BACK,Back,Arrière,Indietro,返回,Zurück,Atrás,돌아가기,Tillbaka,Vissza,戻る,Terug,Назад,Wstecz
-SHOP,Shop,Boutique,Negozio,商城,Shop,Tienda,상점,Butik,Bolt,ショップ,Winkel,Магазин,Sklep
+SHOP,Shop,Boutique,Negozio,商店,Shop,Tienda,상점,Butik,Bolt,ショップ,Winkel,Магазин,Sklep
 INVENTORY,Inventory,Inventaire,Inventario,库存,Inventar,Inventario,인벤토리,Förråd,Inventár,インベントリ,Inventaris,Инвентарь,Ekwipunek
 CONSTRUCT,Construct,Construire,Costruisci,建造,Bauen,Construir,건설하기,Konstruera,Épít,建築,Bouwen,Построить,Buduj
 BUY,Buy,Acheter,Compra,购买,Kaufen,Comprar,구입하기,Köp,Megvesz,購入,Kopen,Купить,Kup
@@ -66,7 +66,7 @@ BIOLOGY,Biology,Biologie,Biologia,生物学,Biologie,Biología,생물학,Biologi
 PHILOSOPHY,Philosophy,Philosophie,Filosofia,哲学,Philosophie,Filosofía,철학,Filosofi,Filozófia,フィロソフィー,Filosofie,Философия,Filozofia
 ENGINEERING,Engineering,Ingénierie,Ingegneria,工程学,Ingenieurwesen,Ingeniería,공학,Teknik,Technika,エンジニアリング,Ingenieurswezen,Инженерия,Inżynieria
 DIMENSIONAL_POWER,Dimensional Power,Puissance dimensionnelle,Potenza dimensionale,次元能量,Dimensionale Kräfte,Poder dimensional,차원력,Dimensionell kraft,Dimenzióerő,次元パワー,Dimensionele Kracht,Сила измерения,Moc wymiaru
-LV,Lv,Nv,Lv,等级,Lvl,Nvl,Lv,Lvl,Lv,Lv,Lvl,Уровень,Poziom
+LV,Lv,Nv,Lv,等级,Lvl,Nvl,레벨,Lvl,Lv,Lv,Lvl,Уровень,Poziom
 INVEST,Invest,Investir,Investi,花费,Investieren,Invertir,투자,Investera,Befektetés,投資,Inversteer,Вложить,Zainwestuj
 LAYER,Layer,Couche,Strato,层级,Ebene,Capa,계층,Lager,Réteg,レイヤー,Laag,Слой,Warstwa
 SURFACE,Surface,Surface,Superficie,地表,Oberfläche,Superficie,표면,Yta,Felszín,表面,Oppervlakte,Поверхность,Powierzchnia
@@ -161,7 +161,7 @@ STORES_X,Stores %s,Stocke %s,Immagazzina %s,储存%s,Lager %s,Almacena %s,저장
 PATH,Path,Voie,Via,升级路线,Pfad,Camino,경로,Väg,Út,パス,Pad,Путь,
 COAL_DESC,"Can be used in steam engines to generate a lot of energy.
 
-Can also speed up ship travel.",,,"用于蒸汽引擎中以产生大量能量。
+Can also speed up ship travel.",,,"用于蒸汽机中以产生大量能量。
 
 还能加速飞船航行。","Kann genutzt werden um in Dampfturbinen viel Energie zu erzeugen.
 
@@ -294,10 +294,10 @@ A termelése magasabb, ha érdekes négyzetrek vannak a közelében, például t
 MINERAL_SILO_NAME,Mineral silo,Silo à minéraux,Magazzino di minerali,水晶仓库,Mineralien Silo,Silo de minerales,광물 사일로,,Ásványtároló,鉱物サイロ,Mineraal silo,Хранилище минералов,
 MINERAL_SILO_NAME_S,Mineral silos,Silos à minéraux,Magazzini di minerali,水晶仓库,Mineralien Silos,Silos de minerales,광물 사일로,,Ásványtárolók,鉱物サイロ,Mineraal silos,Хранилища минералов,
 MINERAL_SILO_DESC,Increases maximum storage of minerals.,Augmente le stockage maximum de minéraux,Aumenta la capacità di immagazzinamento massima di minerali,增加水晶的最大库存,Erhöht das Lagervolumen von Mineralien,Incrementa el almacenamiento máximo de minerales,광물 저장 용량을 올립니다,,Megnöveli az ásványkapacitást,鉱物の最大貯蔵量を増加させる,Verhoogt de opslagcapaciteit van mineralen,Увеличивает максимальный запас минералов,
-REACH_X_TO_UNLOCK,Reach %s to unlock,Atteindre %s pour débloquer,Raggiungi %s per sbloccare,达成%s来解锁,Erreiche %s zum freischalten,Alcanza %s para desbloquear,%s에 도달하면 잠금 해제,,Érd el ezt a megnyitáshoz: %s,%s でアンロックされます。,Bereik %s om te ontgrendelen,"Достигните %s, чтобы разблокировать",
+REACH_X_TO_UNLOCK,Reach %s to unlock,Atteindre %s pour débloquer,Raggiungi %s per sbloccare,达成%s来解锁,Erreiche %s zum freischalten,Alcanza %s para desbloquear,%s 도달하면 잠금 해제,,Érd el ezt a megnyitáshoz: %s,%s でアンロックされます。,Bereik %s om te ontgrendelen,"Достигните %s, чтобы разблокировать",
 GAME_SAVED,Game saved,Partie sauvegardée,Partita salvata,游戏保存成功,Spiel gespeichert,Juego guardado,게임을 저장했습니다,,Játék elmentve,セーブしました,Spel opgeslagen,Игра сохранена,
 CAVE,Cave,Grotte,Grotta,洞穴,Höhle,Cueva,동굴,,Barlang,洞窟,Grot,Пещера,
-CAVE_DESC,"You will need a rover to explore this cave. Start by constructing a research lab, then research the Rover construction science!","Il faut avoir un rover pour explorer cette grotte. D'abord il faut construire un labo de recherche, puis rechercher ""Construction des rovers"".","Ti serve un rover per esplorare questa grotta. Innanzitutto devi costruire un laboratorio di ricerca, poi devi ricercare ""Costruzione dei rover"".",你需要一个漫游车来探险这个洞穴。从建造一个科技实验室开始，然后研究“漫游车制作科学”！,"Du benötigst einen Rover um diese Höhle zu erkunden. Beginne mit der Konstruktion eines Forschungslabors um dann ""Roverkonstruktion"" zu erforschen.",Necesitas un rover para explorar esta cueva. Empieza por construir un laboratorio y luego investiga construcción de rover!,이 동굴을 탐헙하려면 로버가 필요합니다. 연구 실헙실을 건설하고 로버 건설 과학을 연구하세요.,,"Kell egy róver a barlang felfedezéséhez. Építs egy kutatólabort, es kutatd meg a ""Róverépités"" tudományt!",この洞窟を探検するには、ローバーが必要です。まずは研究所の建設から始めて、ローバー建設学を研究してみよう,"Je hebt een rover nodig om deze grot te verkennen. Bouw eerst een onderzoekslab, en onderzoek dan de Roverconstructie tech!","Для исследования этой пещеры вам понадобится ровер. Начните со строительства исследовательской лаборатории, а затем изучите строительство ровера!",
+CAVE_DESC,"You will need a rover to explore this cave. Start by constructing a research lab, then research the Rover construction science!","Il faut avoir un rover pour explorer cette grotte. D'abord il faut construire un labo de recherche, puis rechercher ""Construction des rovers"".","Ti serve un rover per esplorare questa grotta. Innanzitutto devi costruire un laboratorio di ricerca, poi devi ricercare ""Costruzione dei rover"".",你需要一个漫游车来探险这个洞穴。从建造一个科技实验室开始，然后研究“漫游车制作科学”！,"Du benötigst einen Rover um diese Höhle zu erkunden. Beginne mit der Konstruktion eines Forschungslabors um dann ""Roverkonstruktion"" zu erforschen.",Necesitas un rover para explorar esta cueva. Empieza por construir un laboratorio y luego investiga construcción de rover!,이 동굴을 탐헙하려면 로버가 필요합니다. 연구소을 건설하고 '로버 건설'를 연구하세요.,,"Kell egy róver a barlang felfedezéséhez. Építs egy kutatólabort, es kutatd meg a ""Róverépités"" tudományt!",この洞窟を探検するには、ローバーが必要です。まずは研究所の建設から始めて、ローバー建設学を研究してみよう,"Je hebt een rover nodig om deze grot te verkennen. Bouw eerst een onderzoekslab, en onderzoek dan de Roverconstructie tech!","Для исследования этой пещеры вам понадобится ровер. Начните со строительства исследовательской лаборатории, а затем изучите строительство ровера!",
 TAKE_ALL,Take all,,Premi F per raccogliere tutto,全部取走,Alles nehmen,,모두 가져가기,,Összes elvevése,,,,
 EXIT_CAVE,Exit cave,,Premi F per uscire dalla grotta,离开洞穴,Höhle verlassen,,둥굴 나가기,,Barlang elhagyása,,,,
 GO_DOWN,Go down,,Premi F per scendere,前往下一层,Runter,,내려가기,,Felmegy,,,,
@@ -474,7 +474,7 @@ IMPROVED_ROVER_LASERS_6_SC_DESC,Purple lasers too weak? Maybe try going outside 
 IMPROVED_ROVER_LASERS_7_SC_DESC,Ultraviolet lasers too weak? You know the drill.,Le rayon X est plus fort que l'ultraviolet. Voilà.,I laser ultravioletti sono troppo deboli? Sai già cosa devi fare.,紫外线还弱？升级工艺！你知道手段。,Ultravioletter Laser zu schwach? Du kennst das Spiel!,¿Los láseres ultravioleta son muy débiles? Ya sabes qué hacer.,,,Túl gyenge az ultraibolya lézer? Szerintem már tudod.,紫外線レーザーは弱すぎる？をご存じですか？,Ultravioletlaser te zwak? Je snapt het ondertussen.,Ультрафиолетовые лазеры слишком слабые? Ну вы поняли.,
 IMPROVED_ROVER_LASERS_8_SC_DESC,Xray lasers too weak? Decrease that wavelength once more!,Les rayons gamma sont les ondes électromagnétiques les plus énergétiques.,I laser a raggi X sono troppo deboli? Riduci la lunghezza d'onda ancora una volta!,X光还是弱？老规矩，你懂的！,Röntgen Laser zu schwach? Verringer die Wellenlänge noch weiter!,¿Los láseres de rayos X son muy débiles? ¡Disminuye una vez más la longitud de onda!,,,Túl gyenge a röntgenlézer? Csökkentsülk le a hullámhosszát még egyszer!,X線レーザーは弱すぎる？もう一度波長を下げてみてください。,Röngtelaster te zwak? Kortere. Golflengte.,Рентгеновские лазеры слишком слабые? Уменьшите длину волны еще раз!,
 IMPROVED_ROVER_LASERS_9_SC_DESC,Lasers too weak? Just vaporise all known matter and antimatter!,Les lasers sont trop faibles ? Vaporisez donc toutes matières et antimatières!,I laser sono troppo deboli? Allora vaporizza tutta la materia e antimateria conosciuta!,伽马射线都弱？做到把所有已知物质与反物质全都气化掉！,Laser zu schwach? Annihiliere Materie mit Antimaterie!,¿Los láseres son muy débiles? ¡Simplemente vaporiza toda la materia y antimateria conocida!,,,Még mindig túl gyenge a lézer?? Ez eltüntet minden ismert anyagot!,レーザーは弱すぎる？既知の物質と反物質をすべて蒸発させればいいんだ！,Lasers te zwak? Verdamp simpelweg alle gekende materie en antimaterie!,Лазеры слишком слабы? Просто испарите всю известную материю и антиматерию!,
-IMPROVED_ROVER_LASERS_INF_SC_DESC,Each research multiplies rover laser damage and mining laser speed by %s.,,,"每项研究使漫游车激光伤害和采矿激光速度乘以%s。
+IMPROVED_ROVER_LASERS_INF_SC_DESC,Each research multiplies rover laser damage and mining laser speed by %s.,,,"每次升级使漫游车激光伤害和采矿激光速度提高%s倍。
 ",Jede Forschungsstufe multiplizert den Schaden des Rover- und Abbaulasers um %s.,,,,"Mindegyik kutatás megszorozza a róver lézerének sebzését ás bányászási sebességét x%s
 ",,,,
 GLASS_FACTORY_NAME,Glass factory,Usine de verre,Fabbrica di vetro,玻璃工厂,Glasfabrik,Fábrica de cristal,유리 공장,,Üveggyár,ガラス工場,Glasfabriek,Стеклозавод,
@@ -611,7 +611,7 @@ RESET_TO_DEFAULT,Reset to default min/max values,,Resetta ai valori minimi e mas
 BIGGEST_STAR_SIZE,Biggest star size,,Dimensioni della stella più grande,最大的恒星,Höchste Sternen Größe,Tamaño de la estrella,가장 큰 별 크기,,Legnagyobb csillag mérete,最大のスターサイズ,Grootste ster omvang,Наибольший размер звезды,
 BRIGHTEST_STAR_LUMINOSITY,Brightest star luminosity,,Luminosità della stella più luminosa,最亮的恒星,Hellste Sternen Helligkeit,Luminosidad de la estrella,가장 밝은 별 광도,,Legfényesebb csillag fényereje,最も明るい星の光度,Helderste ster helderheid,Светимость ярчайшей звезды,
 PLATINUM,Platinum,Platine,Platino,铂金,Platin,Platino,백금,,Platina,プラチナ,Platinum,Платина,
-TITANIUM,Titanium,Titane,Titanio,钛金,Titan,Titanio,타이타늄,,Titán,チタン,Titanium,Титан,
+TITANIUM,Titanium,Titane,Titanio,钛,Titan,Titanio,타이타늄,,Titán,チタン,Titanium,Титан,
 DIAMOND,Diamond,Diamant,Diamante,钻石,Diamant,Diamante,다이아몬드,,Gyémánt,ダイヤモンド,Diamant,Алмаз,
 NANOCRYSTAL,Nanocrystal,Nanocristal,Nanocristallo,纳米晶,Nanokristall,Nanocristal,나노크리스탈,,Nanokristály,ナノクリスタル,Nanokristal,Нанокристалл,
 MYTHRIL,Mythril,Mithril,Mithril,秘银,Mithril,Mithril,미스릴,,Mithril,ミスリル,Mithril,Мифрил,
@@ -627,13 +627,13 @@ X_M_PER_SECOND,Mines %s m/%s,Mine %s m/%s,"Può scavare %s m/%s
 AUTO_MINING_SC,Auto mining,Minage automatique,Scavo automatico,深层矿业自动化,Automatischer Abbau,Excava casillas automáticamente.,자동 채굴,,Automatikus bányászás,オートマイニング,Automatisch delven,Авто добыча,
 AUTO_MINING_SC_DESC,Unlocks a building that automatically mines tiles.,Débloque un bâtiment qui mine automatiquement les tuiles.,Sblocca un edificio che scava nelle caselle automaticamente,研发一个可以在区块里自动深层采矿的建筑,"Schaltet ein Gebäude frei, welches automatisch Felder abbaut.",Desbloquea un edifico que excava casillas automáticamente.,자동 채굴 빌딩을 잠금 해제합니다.,,"Megnyit egy épületet, ami automatikusan bányászik egy négyzetet.",タイルを自動的に採掘する建物をアンロックする。,Ontgrendeld een gebouw dat automatisch velden delft.,Разблокирует здание которое автоматически ведёт раскопки,
 MINERAL_EXTRACTION_EFFICIENCY_INF_SC,Mineral extraction efficiency,,Efficienza di estrazione dei minerali,水晶萃取效率,Mineralien extraktionseffizienz,Eficiencia de extracción minera,광물 추출 효율,,Ásványkivonáshatékonyság,鉱物抽出器効率,Mineraaldelvers efficiëntie,Эффективность добычи минералов,
-MINERAL_EXTRACTION_EFFICIENCY_INF_SC_DESC,Each research multiplies mineral production from all sources by %s.,,Ogni ricerca moltiplica per %s la produzione di minerali.,每次升级都将所有水晶萃取机的速度提高%s倍。,Jede Forschung multipliziert die Geschwindigkeit aller Mineralien Quellen um %s,Cada investigación multiplica la producción minera de todas las fuentes por %s.,연구 할 때마다 모든 광물 생산을 x%s 늘립니다.,,Mindegyik kutatás megszorozza az összes ásványtermelést ennyivel: %s,各研究には、すべての鉱物抽出器の速度と容量に%sが掛けられます。,Ieder onderzoek vermendigvuldigt de snelheid en capaciteit van alle mineraaldelvers met %s.,Каждое исследнование умножает добычу минералов из всех источников на %s.,
+MINERAL_EXTRACTION_EFFICIENCY_INF_SC_DESC,Each research multiplies mineral production from all sources by %s.,,Ogni ricerca moltiplica per %s la produzione di minerali.,每次升级将所有来源的水晶产量提高%s倍。,Jede Forschung multipliziert die Geschwindigkeit aller Mineralien Quellen um %s,Cada investigación multiplica la producción minera de todas las fuentes por %s.,연구 할 때마다 모든 광물 생산을 x%s 늘립니다.,,Mindegyik kutatás megszorozza az összes ásványtermelést ennyivel: %s,各研究には、すべての鉱物抽出器の速度と容量に%sが掛けられます。,Ieder onderzoek vermendigvuldigt de snelheid en capaciteit van alle mineraaldelvers met %s.,Каждое исследнование умножает добычу минералов из всех источников на %s.,
 ENERGY_PRODUCTION_EFFICIENCY_INF_SC,Energy production efficiency,,Efficienza della produzione di energia,能量生成效率,Energie Produktionseffizienz,Eficiencia energética,에너지 생산 효율,,Energiatermelés-hatékonyság,エネルギー生産効率,Energieproductie efficiëntie,Эффективность производства энергии,
-ENERGY_PRODUCTION_EFFICIENCY_INF_SC_DESC,Each research multiplies energy production from all sources by %s.,,Ogni ricerca moltiplica per %s la produzione di energia da tutte le fonti.,每次升级都将所有发电厂和太阳能板的能源生产速度提高%s倍。,Jede Forschung multipliziert die Erzeugungsmenge aller Quellen um %s,Cada investigación multiplica la producción de energía de todas las fuentes por %s.,연구 할 때마다 모든 에너지 생산을 x%s 늘립니다.,,Mindegik kutatás megszorozza az összes energiatermelést ennyivel: %s,各研究は、すべての発電所とソーラーパネルのエネルギー生産速度とその容量に%sを掛けています。,Ieder onderzoek vermendigvuldigt de snelheid en capaciteit van alle energiecentrales en zonnepannelen met %s.,Каждое исследование умножает производство энергии из всех источников на %s.,
+ENERGY_PRODUCTION_EFFICIENCY_INF_SC_DESC,Each research multiplies energy production from all sources by %s.,,Ogni ricerca moltiplica per %s la produzione di energia da tutte le fonti.,每次升级将所有来源的能源产量提高%s倍。,Jede Forschung multipliziert die Erzeugungsmenge aller Quellen um %s,Cada investigación multiplica la producción de energía de todas las fuentes por %s.,연구 할 때마다 모든 에너지 생산을 x%s 늘립니다.,,Mindegik kutatás megszorozza az összes energiatermelést ennyivel: %s,各研究は、すべての発電所とソーラーパネルのエネルギー生産速度とその容量に%sを掛けています。,Ieder onderzoek vermendigvuldigt de snelheid en capaciteit van alle energiecentrales en zonnepannelen met %s.,Каждое исследование умножает производство энергии из всех источников на %s.,
 RESEARCH_EFFICIENCY_INF_SC,Research efficiency,,Efficienza della ricerca,实验室效率,Forschungs Effizienz,Eficiencia investigativa,연구 효율,,Kutatáshatékonyság,研究室の効率,Onderzoekslab efficiëntie,Эффективность исследования,
-RESEARCH_EFFICIENCY_INF_SC_DESC,Each research multiplies science point production from all sources by %s.,,Ogni ricerca moltiplica per %s la produzione di punti Scienza da tutte le fonti.,每次升级将所有科技实验室的速度提高%s倍。,Jede Forschung multipliziert die Geschwindigkeit aller Forschungspunkt Quellen um %s,Cada investigación multiplica la producción de puntos de ciencia de todas las fuentes por %s.,연구 할 때마다 모든 과학 포인트 생산을 x%s 늘립니다.,,Mindegik kutatás megszorozza az összes kutatóponttermelést ennyivel: %s,各研究には、すべての研究ラボの速度に%sが掛けられます。,Ieder onderzoek vermendigvuldigt de snelheid van alle onderzoekslabs met %s.,Каждое исследование умножает производство очков науки из всех источников на %s.,
-STORAGE_EFFICIENCY_INF_SC,Storage efficiency,,Efficienza dell'immagazzinamento,水晶仓库扩展,Mineraliensilo Effektvität,Eficiencia del almacenamiento,저장 효율,,Tároláshatékonyság,鉱物サイロ拡張,Mineraalsilo uitbreiding,Эффективность хранилища,
-STORAGE_EFFICIENCY_INF_SC_DESC,Each research multiplies all storage buildings' capacity by %s. This also affects megastructures' capacity.,,Ogni ricerca moltiplica per %s la capacità di ogni edificio adibito all'immagazzinamento. Ha effetto anche sulle megastrutture.,每次升级将所有水晶仓库的储量提高%s倍。,Jede Forschung multipliziert das Volumen aller Mineraliensilos um %s. Der Effekt gilt auch für Megastrukturen,Cada investigación mutltiplica la capacidad de todos los edificios de almacenamiento por %s. Esto también afecta la capacidad de las megaestructuras.,,,Mindegik kutatás megszorozza az összes tárolóépület tárhelyét ennyivel: %s. Ez a megastruktúrákra is hat.,各研究は、すべての鉱物サイロの容量に%sを掛けます。,Ieder onderzoek vermendigvuldigt de capaciteit van mineraalsilos met %s.,Каждое исследование умножает вместитимость всех хранилищ на %s. Так же это касается мегаструктур.,
+RESEARCH_EFFICIENCY_INF_SC_DESC,Each research multiplies science point production from all sources by %s.,,Ogni ricerca moltiplica per %s la produzione di punti Scienza da tutte le fonti.,每次升级将所有来源的科技点产量提高%s倍。,Jede Forschung multipliziert die Geschwindigkeit aller Forschungspunkt Quellen um %s,Cada investigación multiplica la producción de puntos de ciencia de todas las fuentes por %s.,연구 할 때마다 모든 과학 포인트 생산을 x%s 늘립니다.,,Mindegik kutatás megszorozza az összes kutatóponttermelést ennyivel: %s,各研究には、すべての研究ラボの速度に%sが掛けられます。,Ieder onderzoek vermendigvuldigt de snelheid van alle onderzoekslabs met %s.,Каждое исследование умножает производство очков науки из всех источников на %s.,
+STORAGE_EFFICIENCY_INF_SC,Storage efficiency,,Efficienza dell'immagazzinamento,容量扩展,Mineraliensilo Effektvität,Eficiencia del almacenamiento,저장 효율,,Tároláshatékonyság,鉱物サイロ拡張,Mineraalsilo uitbreiding,Эффективность хранилища,
+STORAGE_EFFICIENCY_INF_SC_DESC,Each research multiplies all storage buildings' capacity by %s. This also affects megastructures' capacity.,,Ogni ricerca moltiplica per %s la capacità di ogni edificio adibito all'immagazzinamento. Ha effetto anche sulle megastrutture.,每次升级使所有储存建筑的容量提高%s倍。这也会影响巨型结构的容量。,Jede Forschung multipliziert das Volumen aller Mineraliensilos um %s. Der Effekt gilt auch für Megastrukturen,Cada investigación mutltiplica la capacidad de todos los edificios de almacenamiento por %s. Esto también afecta la capacidad de las megaestructuras.,,,Mindegik kutatás megszorozza az összes tárolóépület tárhelyét ennyivel: %s. Ez a megastruktúrákra is hat.,各研究は、すべての鉱物サイロの容量に%sを掛けます。,Ieder onderzoek vermendigvuldigt de capaciteit van mineraalsilos met %s.,Каждое исследование умножает вместитимость всех хранилищ на %s. Так же это касается мегаструктур.,
 MANUAL_MINING_SPEED_INF_SC,Manual mining speed,,Velocità di scavo manuale,手动挖掘效率,Manuelle Abbaugeschwindigkeit,Velocidad de minería manual,수동 채굴 속도,,Kézi bányászsebesség,手動マイニング速度,Manuele delfsnelheid,Скорость ручной добычи,
 MANUAL_MINING_SPEED_INF_SC_DESC,Each research multiplies manual mining speed by %s.,,Ogni ricerca moltiplica per %s la velocità di scavo manuale,每次升级都将人工挖掘效率提高%s倍。,Jede Forschung multipliziert die manuelle Abbaugeschwindigkeit um %s,Cada investigación multiplica la velocidad de minería manual por %s.,연구 할때마다 수동 채굴 속도를 %s x 늘립니다.,,Mindegik kutatás megszorozza a kézi bányászás sebességét ennyivel: %s,各研究には、手動マイニング速度に%sを掛けます。,Ieder onderzoek vermendigvuldigt de manuele delfsnelheid met %s.,Каждое исследование умножает скорость ручной добычи на %s.,
 CURRENT_MULT,Current multiplier,,Moltiplicatore attuale,当前加成倍率,Momentaner Multiplikator,Multiplicador actual,현재 배율,,Mostani szorzó,電流倍率,Huidige vermenigvuldiger,Текущий множитель,
@@ -711,7 +711,7 @@ SUBATOMIC_PARTICLES_SC_DESC,"Allows you to decompose atoms into subatomic partic
 SUBATOMIC_PARTICLES,Subatomic particles,,Particelle subatomiche,亚原子技术突破,Subatomare Partikel,Partículas subatómicas,아원자 입자,,Szubatomi részecskék,素粒子,Subatomaire deeltjes,Субатомные частицы,
 SUBATOMIC_PARTICLES_DESC,"A mix of protons, neutrons and electrons that make up atoms.",,,构成原子的质子、中子和电子的混合物,"Ein Mix aus Protonen, Neutronen und Elektronen, welche Atome formen.",,,,"Protonok, neutronok, és elektronbok keveréke, amit atomokat építenek fel.",,,,
 PARTICLE_MANIPULATION_EFFICIENCY_INF_SC,Particle manipulation efficiency,,Efficienza della manipolazione delle particelle,粒子操作效率,Partikelmanipulationeffizienz,Eficiencia de la manipulación de particulas,,,Részecskemanipuláció-hatékonyság,粒子操作効率,Deeltjesmanipulatie efficiëntie,,
-PARTICLE_MANIPULATION_EFFICIENCY_INF_SC_DESC,Each research multiplies the speed and energy efficiency of atom manipulators and subatomic particle reactors by %s.,,Ogni ricerca moltiplica per %s l'efficienza in termini di velocità ed energia consumata dei manipolatori atomici e dei reattori di particelle subatomiche.,每项研究都将原子操纵仪和粒子反应器的速度提高%s倍。,Jede Forschung vervielfacht die Geschwindigkeit und Energieeffizienz von Atommanipulatoren und subatomaren Teilchenreaktoren um den Faktor %s.,Cada investigación multiplica la velocidad y eficiencia energetica de los manipuladores de átomos y los reactores de particulas subátomicas por %s.,,,Mindegyik kutatás megszorozza az atommanipulátorok és részecskereaktorok gyorsaságát és energiatakarékosságát ennyivel: %s,原子操作機や素粒子原子炉の速度とエネルギー効率を、1回の研究で%s倍にする。,Ieder onderzoek vermenigvuldigt de snelheid en energie-efficiëncie van atoommanipulators en subatomaire deeltjes reactors met %s.,,
+PARTICLE_MANIPULATION_EFFICIENCY_INF_SC_DESC,Each research multiplies the speed and energy efficiency of atom manipulators and subatomic particle reactors by %s.,,Ogni ricerca moltiplica per %s l'efficienza in termini di velocità ed energia consumata dei manipolatori atomici e dei reattori di particelle subatomiche.,每次升级都将原子操纵仪和粒子反应器的速度提高%s倍。,Jede Forschung vervielfacht die Geschwindigkeit und Energieeffizienz von Atommanipulatoren und subatomaren Teilchenreaktoren um den Faktor %s.,Cada investigación multiplica la velocidad y eficiencia energetica de los manipuladores de átomos y los reactores de particulas subátomicas por %s.,,,Mindegyik kutatás megszorozza az atommanipulátorok és részecskereaktorok gyorsaságát és energiatakarékosságát ennyivel: %s,原子操作機や素粒子原子炉の速度とエネルギー効率を、1回の研究で%s倍にする。,Ieder onderzoek vermenigvuldigt de snelheid en energie-efficiëncie van atoommanipulators en subatomaire deeltjes reactors met %s.,,
 INV_PARTICLES_DESC,Make exciting things with these particles.,,Puoi fare delle cose interessanti con queste particelle.,用这些粒子制造出令人惊奇的宝贝！,Erzeuge sensationelle dinge mit diesen Partikeln.,Fabrica cosas emocionantes con estas partículas.,입자를 사용해서 자극적인 것들을 만드세요.,,Készíts mindenféle érdekes dolgot ezekből a részecskékből.,この粒子でワクワクするものを作ってみよう。,Maak interessante dingen met deze deeltjes.,Создавай поразительные вещи при помощи этих частиц.,
 ATOM_MANIPULATOR_NAME,Atom manipulator,,Manipolatore atomico,原子操纵仪,Atom Manipulator,Manipulador de átomos,,,Atommanipulátor,原子マニピュレーター,Atoommanipulator,Атомный манипулятор,
 ATOM_MANIPULATOR_NAME_S,Atom manipulators,,Manipolatori atomici,原子操纵仪,Atom Manipulatoren,Manipuladores de átomos,,,Atommanipulátorok,原子マニピュレーター,Atoommanipulators,Атомные манипуляторы,
@@ -834,7 +834,7 @@ FIGHTERS_SC_DESC,Unlocks a shipyard that allows you to construct a new type of v
 FIGHTER_MK2,Fighter MK2,,Caccia MK2,战斗无人机MK2,Fighter MK2,Caza MK2,전투기 MK2,,Vadászűrhajó MK2,ファイターMK2,Jager MK2,Боец MK2,
 FIGHTERS_2_SC_DESC,"A cool and rad upgrade to the ordinary fighters, capable of travelling across galaxies.
 They can be constructed with level 100+ shipyards.",,"Un bel miglioramento ai normali caccia, ora capaci di viaggiare fra galassie. \n Possono essere costruiti con cantieri aeronautici di livello 100 o superiore.",对普通战斗机的酷炫升级，能够穿越星系。\n它们可以用 100 级以上的造船厂建造。,"Ein cooles und bombiges Upgrade der herkömmlichen Fighter, um dazu in der Lage zu sein, Galaxienübergreifend zu reisen. Diese können in einer Level 100+ Werft gebaut werden.","Una genial y radiante mejora a los cazas ordinarios, capaz de viajar entre galaxias.\nPueden ser construidos en astilleros espaciales de nivel 100+.",,,"Egy hihetetlenül menő fejlesztés a vadászűrhajóknak, amitől galaxisok között is tudnak majd mozogni. 100-as vagy magasabb szintű hajógyárakban tudsz fejéesztett hajóket építeni.",通常の戦闘機のクールでラッドなアップグレードで、銀河系を越えて移動することができる。\nレベル100の造船所で建造することができる。,"Een coole upgrade voor de originale jagers, die tussen heelallen kan reizen.\nZe kunnen gebouwd worden in scheepswerven van level 100+.",,
-FIGHTERS_INF_SC_DESC,Each research multiplies fighter strength and travel speed by %s.,,,"每项研究使战斗无人机强度与航行速度乘以 %s。
+FIGHTERS_INF_SC_DESC,Each research multiplies fighter strength and travel speed by %s.,,,"每次升级使战斗无人机强度与航行速度提高%s倍。
 ",Jedes Forschungslevel multipliziert die Fighter Stärke und Reisegeschwindigkeit mit %s.,,,,Mindegyik kutatés megszorozza a vadászhajók erejét és utazási sebességét x%s.,,,,
 CONSTRUCT_FIGHTERS,Construct fighters,,Costruisci combattenti,研制战斗无人机,Baut Raumjäger,Construir cazas,전투기 건설하기,,Vadászhajók épításe,コンストラクトファイター,Bouw jagers,Построить бойцов,
 FLEET_STRENGTH,Fleet strength,,Forza della flotta,舰队战斗力,Flottenstärke,Fuerza de la flota,,,Flottaerősség,艦隊の強さ,Vlootsterkte,Сила флота,
@@ -879,7 +879,7 @@ ROVER_MK2,Rover MK2,,Rover MK2,漫游车MK2,Rover Mk2,Rover MK2,로버 MK2,,Róv
 ROVER_MK3,Rover MK3,,Rover MK3,漫游车MK3,Rover Mk3,Rover MK3,로버 MK3,,Róver MK3,ローバー MK3,Rover MK3,Ровер MK3,
 ROVER_CONSTRUCTION_2_SC_DESC,"Adds many upgrades to rovers:\n - It can now instantly traverse the first 7 floors of a cave, if the enemies aren't too powerful\n - Increased base stats\n - Extra inventory slot\n - Brightens caves a bit",,"Garantisce al rover diversi miglioramenti: \n - Attraversa automaticamente i primi 7 piani di ona grotta, se i nemici non sono troppo forti. \n - Statistiche di combattimento aumentate \n - Slot dell'inventario aumentati \n - Illumina un poco le grotte",多方面增强漫游车：\n - 可以直接进入洞穴的第8层（除非敌人太强）\n - 增强矿车的基本统计数据\n - 增加一个额外的库存槽\n - 让洞穴变得明亮一些,"Verbessert viele Dinge:\nDer Rover kann nun die ersten 7 Ebenen überspringen, wenn die Feinde nicht zu Stark sind.\nVerbessert die Kerneigenschaften des Rovers.\n Zusätzliches Inventar\nErleuchtet auch die Höhle stärker.",Añade varias mejoras al róver\n - Ahora puede atravesar los primeros 7 pisos de una cueva si los enemigos no son tan poderosos\n - Estadísticas base incrementadas\n - Un espacio del inventario extra\n - Ilumina la cueva un poco,,,"Az újgenerávciós róver azonnal be tudja járni a barlangok első 7 szintjét, a fejlesztés ezen kívül megnöveli a róverek statisztikáit, és ad egy extra inventárhelyet. Egy kicsit fényésebbé teszi a barlangokat is.",ローバーの基本ステータスが上がり、インベントリスロットが1つ追加されます。また、洞窟が少し明るくなります。,"Verhoogt de basiswaarden van rovers, en voegt een extra inventarisplaats toe. Verlicht grotten ook een beetje.",,
 ROVER_CONSTRUCTION_3_SC_DESC,"Rover MK3s can instantly traverse the first 15 floors of a cave (if possible), have even higher stats, another inventory slot, and brighten caves a little more.",,"Il rover MK3 può attraversare automaticamente i primi 15 livelli di una grotta (quando possibile), ha statistiche ancora migliori, un ulteriore slot dell'inventario e illumina le grotte un po' di più.",漫游车MK3可以直接进入洞穴的第16层（如果可以），拥有更强的基本统计数据和一个额外的库存槽，也可以让洞穴变得更明亮一些,"Der Rover kann nun die ersten 15 Ebenen überspringen wenn die Feinde nicht zu Stark sind.\nVerbessert die Eigenschaften des Rovers noch weiter,und gibt erneut einen zusätzliche inventarplatz. Erleuchtet auch die Höhle noch etwas stärker.","Los Róver MK3 pueden atravesar los primeros 15 pisos de una cueva (en caso de ser posible), tienen estadísticas aún mayores, otro espacio del inventario e iluminan la cueva un poco más.",,,"A harmadik generáció az első 15 szintet azonnal bejárja, még tovább növeli a róverek statisztikáit, és ad még egy inventárhelyet. A barlangokat is még fényesebbé teszi.",ローバーの基本ステータスがさらに向上し、インベントリスロットが1つ追加されます。また、洞窟の明るさがさらに向上します。,"Verhoogt de basiswaarden van rovers verder, voegt nog een inventarisplaats toe, en verlicht grotten meer.",,
-ROVER_CONSTRUCTION_INF_SC_DESC,"Each research multiplies rover attack, health and cargo capacity by %s.",,,"每项研究使漫游车的攻击力、生命值和载货容量乘以%s。
+ROVER_CONSTRUCTION_INF_SC_DESC,"Each research multiplies rover attack, health and cargo capacity by %s.",,,"每次升级使漫游车的攻击力、生命值和载货容量提高%s倍。
 ","Jedes Forschungslevel multipliziert die Rover Angriff, Lebenspunkte und Stauraum um %s.",,,,"Mindegyik kutatás megszorozza a róverek támdésát, életerejét, és kapacitását x%s 
 
 ",,,,
@@ -933,7 +933,7 @@ TRIANGULUM_PROBE,Triangulum probe,,Sonda Triangulum,三角座探测器,Triangulu
 TRIANGULUM_PROBE_CONSTRUCTION_SC,Triangulum probe construction,,Costruzione di sonde Triangulum,三角座探测器建设,Triangulum-Sonden Fabrik,Centro de construcción de sendas de triangulación,,,Triangulumszonda építőközpont,トライアングルプローブ建設センター,Triangulum-sonde constructiecentrum,,
 TRIANGULUM_PROBE_CONSTRUCTION_SC_DESC,"The universe only has a finite number of stars and galaxies (in this game). What if you wanted more?
 This science unlocks a gigastructure that constructs triangulum probes, capable of discovering other universes. New, exciting and weird things await you.",,"L'universo ha una quantità limitata di stelle e galassie (almeno in questo gioco). Ma se ne volessi di più? \n Questo avanzamento scientifico sblocca una gigastruttura con cui costruire sonde Triangulum,  che possono scoprire altri universi. Nuove, emozionanti e strani scenari ti attendono.",宇宙中或许只有有限数量的行星与星系。如果你想要比无限还多呢？\n这项科学将构思出一座超级巨构，它可以研发三角座探测器，它能够让发现其它宇宙的未知科技成为可能。更多维度的、更多令人振奋与绮丽的异次元事件都将等待着你！！！,"Das Universum hat nur eine endliche Anzahl von Sternen und Galaxien (in diesem Spiel). Was wäre, wenn du mehr willst?\nDiese Wissenschaft schaltet eine Gigastruktur frei, die Triangulum-Sonden konstruiert, mit denen du andere Universen entdecken kannst. Neue, aufregende und seltsame Dinge erwarten dich.","El universo sólo tiene una cantidad finita de estrellas y galaxias (En este juego). Que pasaría si quisieras más?\nEsta ciencia desbloquea una gigaestructura que construye sendas de triangulación, capaz de descubrir otros universos. Nuevas, asombrosas y raras cosas te esperan.",,,"Az univerzunban ( legalább ebben a játékban) véges számu csillag és galkaxis van. Mi van, ha többet akarsz?\nEz a kutatás megnyit egy gigastruktúrát, ami triangulumszondákat épít, amik új univerzumokat fedeznek fel. Sok új és furcsa élmény vár rád.",宇宙には（このゲームでは）有限の数の星と銀河系しかありません。もっと欲しい場合はどうすればいい？\nこの科学は、他の宇宙を発見することができる三角形のプローブを構築するギガストラクチャーを解き放ちます。新しい、エキサイティングな、奇妙なことがあなたを待っています。,"Het universum heeft slechts een eindige hoeveelheid sterren (in dit spel). Wil je toch meer?\nDeze technologie ontwikkelt een gigastructuur die triangulum-sondes bouwt, waarmee je nieuwe universums kan ontdekken. Nieuwe, spannende en vreemde dingen staan je te wachten.",,
-TRIANGULUM_PROBE_CONSTRUCTION_INF_SC_DESC,Each research multiplies the amount of probe points when discovering new universes by %s.,,,"每项研究在发现新宇宙时，会将探测点的数量乘以%s。
+TRIANGULUM_PROBE_CONSTRUCTION_INF_SC_DESC,Each research multiplies the amount of probe points when discovering new universes by %s.,,,"每次升级在发现新宇宙时，会将探测点的数量提高%s倍。
 ",Jede Forschung vervielfacht die Anzahl der Probenpunkte beim Entdecken neuer Universen um den Faktor %s.,,,,"Mindegyik kutatás megszorozza a szerzett szondapontok számát egy új univerzum felfedezésekor x%s.
 ",,,,
 CONVERT,Convert,,Converti,衍化,Umwandeln,Convertir,,,Átalakítás,コンバート,Verbouw,,
@@ -946,7 +946,7 @@ MINING_LIQUID,Mining liquid,,,矿油,Bergbauflüssigkeit,Liquido minero,,,Bány�
 SUCCESSFULLY_APPLIED,Item successfully applied,,Oggetto utilizzato con successo,物品压缩,Gegenstand erfolgreich angewendet,Objeto exitosamente aplicado,,,Sikeresen alkalmazva,アイテムが正常に適用されました,Item toegediend,,
 CRAFT_MINING_DESC,Mining too slow? These items make your pickaxe even more powerful.,,Scavare richiede troppo tempo? Questi oggetti rendono il tuo piccone ancora più efficiente.,感觉挖的太慢？这瓶精华液会使你的矿镐更加锋利,Bergbau zu langsam? Diese Gegenstände machen deine Spitzhacke noch stärker.,Excavas muy lento? Estos objetos harán tu pico más poderoso.,,,Lassú a bámnyászás? Ezekkel felgyorsíthatod.,採掘が遅い？つるはしをより強力にするアイテムです。,Delven te traag? Deze items maken je pikhouweel nog effectiever!,,
 DRIVE_SUCCESSFULLY_ACTIVATED,Drive successfully activated,,Propulsore attivato con successo,引擎已成功激活,Antrieb erfolgreich aktiviert,Drive exitosamente activado,,,Meghajtó sikeresen aktiválva,ドライブの起動に成功,Aandrijving succesvol geactiveerd,,
-INGAME_WIKI,In-game wiki,,Wiki interna al gioco,游戏内维基,Spiel-Wiki,Wiki dentro del juego,게임 위키,,Játékwiki,ゲーム内wiki,Spelwiki,,
+INGAME_WIKI,In-game wiki,,Wiki interna al gioco,游戏百科,Spiel-Wiki,Wiki dentro del juego,게임 위키,,Játékwiki,ゲーム内wiki,Spelwiki,,
 DARK_MATTER_DESC,"Dark matter influences the number of planets and stars in a system.
 Dark matter is first calculated by selecting a random number between 0.85 and 1.15.
 If galaxy is spiral, subtract 0.05 from dark matter.
@@ -1137,11 +1137,11 @@ HIDE_OUT_OF_RANGE_OBJECTS,Hide out-of-range objects,,Nascondi gli oggetti fuori 
 MS_EXISTS,A megastructure already exists,,Una megastruttura è già presente,一个巨型结构已经存在,Eine Megastruktur existiert bereits,Una megaestructura ya existe,메가스트럭처가 이미 있습니다.,,Már létezik egy megastruktúra,メガストラクチャーはすでに存在する,Er bestaat reeds een megagebouw,,
 DELETE,Delete,,Elimina,删除,Gelöscht,Borrar,삭제,,Törlés,削除,Verwijder,Удалить,
 SAVE_DELETED,Save deleted,,Salvataggio eliminato,存档已删除,Speicherstand gelöscht,Partida borrada,세이브가 삭제되었습니다,,Játék törölve,削除済み保存,Spel verwijderd,Сохранение удалено,
-IMPORT_SAVE,Import save,,Importa salvataggio,导入存档,Speicherstand importieren,Importar partida,세이브 불러오기,,Játék importálása,セーブデータのインポート,Opgeslagen spel importeren,Импортировать сохранение,
+IMPORT_SAVE,Import save,,Importa salvataggio,导入存档,Speicherstand importieren,Importar partida,세이브 가져오기,,Játék importálása,セーブデータのインポート,Opgeslagen spel importeren,Импортировать сохранение,
 EXPORT,Export,,Esporta,导出存档,Exportieren,Exportar,내보내기,,Exportálás,セーブデータのエクスポート,Exporteren,Экспорт,
 EXPORT_X,Export %s,,Esporta %s,导出 %s,%s Exportieren,Exportar %s,%s 내보내기,,%s exportálása,%sをエクスポート,Exporteer %s,Экспорт %s,
-EXPORT_SUCCESS,%s successfully exported!,,%s esportato con successo!,%s 成功导出,%s erfolgreich Exportieren,%s exitosamente exportada!,%s 내보내기 성공,,%s sikeresen exportálva,「%s」のエクスポートに成功しました,%s geëxporteerd!,,
-IMPORT_SUCCESS,%s successfully imported!,,%s importato con successo!,%s 成功导入,%s erfolgreich Importieren,%s exitosamente importada!,%s 불러오기 성공,,%s sikeresen importálva,「%s」のインポートに成功しました,%s geïmporteerd!,,
+EXPORT_SUCCESS,%s successfully exported!,,%s esportato con successo!,%s 已成功导出,%s erfolgreich Exportieren,%s exitosamente exportada!,%s 내보내기 성공,,%s sikeresen exportálva,「%s」のエクスポートに成功しました,%s geëxporteerd!,,
+IMPORT_SUCCESS,%s successfully imported!,,%s importato con successo!,%s 已成功导入,%s erfolgreich Importieren,%s exitosamente importada!,%s 가져오기 성공,,%s sikeresen importálva,「%s」のインポートに成功しました,%s geïmporteerd!,,
 BURN_DESC,Takes damage proportional to its total HP and number of turns remaining.,,,根据自身总生命值和剩余回合数承受等比伤害,Schaden in Verhältniss zu Maximalen LP und der Anzahl an verbleibenden runden,,,,Sebződik a teljes HP-ja és a hátralévő lépések alapján.,,,,
 STUN_DESC,"Cannot take a turn or dodge attacks. Can still evade projectiles if this entity is in motion.
 Receiving explosive damage will remove this effect.",,,"无法行动或躲避攻击。若该实体处于运动状态，仍可躲避投射物。
@@ -1205,12 +1205,12 @@ DO_ENGINEERING,Do some engineering,,Approfondisci le conoscenze ingegneristiche,
 ENABLE_SCREEN_SHAKE,Enable screen shake,,Attiva la vibrazione delle schermate,启用屏幕震动,Screen shake aktivieren,Activa el movimiento de pantalla,,,Képernyőrázás bekapcsolása,画面ブレを有効にする,Schermschudden inschakelen,Включить тряску экрана,
 ACHIEVEMENTS,Achievements,,Achievement,成就,Erfolge,Logros,도전 과제,,Eredmények,実績,Prestaties,Достижения,
 STATISTICS,Statistics,,Statistiche,数据统计,Statistiken,Estadísticas,통계,,Statisztikák,統計情報,Statistieken,Статистика,
-FIND_2ND_SHIP,Find the 2nd ship,,Trova la 2a astronave,找到第二艘飞船,Finde das 2. Schiff,Encuentra la segunda nave,2번째 우주선 찾기,,Találd meg a második hajót,2隻目の艦船を探す,Vind het tweede schip,Найти второй корабль,
-FIND_3RD_SHIP,Find the 3rd ship,,Trova la 3a astronave,找到第三艘飞船,Finde das 3. Schiff,Encuentra la tercera nave,3번째 우주선 찾기,,Találd meg a harmadik hajót,3隻目の艦船を探す,Vind het derde schip,Найти третий корабль,
-FIND_4TH_SHIP,Find the 4th ship,,Trova la 4a astronave,找到第四艘飞船,Finde das 4. Schiff,Encuentra la cuarta nave,4번째 우주선 찾기,,Találd meg a negyedik hajót,4隻目の艦船を探す,Vind het vierde schip,Найти четвертый корабль,
-FIND_CLASS_X_STAR,Find a class %s star,,Trova una stella di classe %s,找到等级 %s 的恒星,Finde einen Klasse %s Stern,Encuentra una estrella clase %s,분광형 %s 별 찾기,,Találj egy %s osztályú csilllagot,クラス%sスターを探す,Vind een klasse %s ster,Найти класс %s зезды,
-REACH_CENTER_OF_PLANET,Reach the center of a planet in mining (and see what happens...),,"Scavando, raggiungi il centro di un pianeta (e scopri cosa succede...)",在挖矿中达到行星的中心（并看看会发生什么）,Erreiche den Kern eines Planeten (und erfahre die Konsequenzen),Alcanza el centro de un planeta excavando (Y ve qué pasa...),행성 중심까지 채굴하세요 (그리고 뭐가 일어나는지 보세요),,"Érd el egy bolygó közeopét bányászás közben (és tudd meg, hogy mi történik ott...)",採掘で惑星の中心に到達する（どうなるか...）。,Bereik het centrum van een planeet tijdens het delven (en ontdek de gevolgen...),,
-BUILD_X_BUILDINGS,Build %s buildings,,Costruisci %s edifici,建筑数量： %s,Konstruiere %s Gebäude,Construye %s edificios,빌딩 %s 건축하세요,,Építs %s épületet,%s棟のビルを建設,Bouw %s gebouwen,Строить %s зданий,
+FIND_2ND_SHIP,Find the 2nd ship,,Trova la 2a astronave,找到第二艘飞船,Finde das 2. Schiff,Encuentra la segunda nave,2번째 우주선을 찾으세요,,Találd meg a második hajót,2隻目の艦船を探す,Vind het tweede schip,Найти второй корабль,
+FIND_3RD_SHIP,Find the 3rd ship,,Trova la 3a astronave,找到第三艘飞船,Finde das 3. Schiff,Encuentra la tercera nave,3번째 우주선을 찾으세요,,Találd meg a harmadik hajót,3隻目の艦船を探す,Vind het derde schip,Найти третий корабль,
+FIND_4TH_SHIP,Find the 4th ship,,Trova la 4a astronave,找到第四艘飞船,Finde das 4. Schiff,Encuentra la cuarta nave,4번째 우주선을 찾으세요,,Találd meg a negyedik hajót,4隻目の艦船を探す,Vind het vierde schip,Найти четвертый корабль,
+FIND_CLASS_X_STAR,Find a class %s star,,Trova una stella di classe %s,找到等级 %s 的恒星,Finde einen Klasse %s Stern,Encuentra una estrella clase %s,분광형 %s 별을 찾으세요,,Találj egy %s osztályú csilllagot,クラス%sスターを探す,Vind een klasse %s ster,Найти класс %s зезды,
+REACH_CENTER_OF_PLANET,Reach the center of a planet in mining (and see what happens...),,"Scavando, raggiungi il centro di un pianeta (e scopri cosa succede...)",在挖矿中达到行星的中心（并看看会发生什么）,Erreiche den Kern eines Planeten (und erfahre die Konsequenzen),Alcanza el centro de un planeta excavando (Y ve qué pasa...),행성 중심까지 채굴하세요 (그리고 뭐가 일어나는지 보세요!),,"Érd el egy bolygó közeopét bányászás közben (és tudd meg, hogy mi történik ott...)",採掘で惑星の中心に到達する（どうなるか...）。,Bereik het centrum van een planeet tijdens het delven (en ontdek de gevolgen...),,
+BUILD_X_BUILDINGS,Build %s buildings,,Costruisci %s edifici,建筑数量： %s,Konstruiere %s Gebäude,Construye %s edificios,빌딩 %s개 건설하세요,,Építs %s épületet,%s棟のビルを建設,Bouw %s gebouwen,Строить %s зданий,
 BUILD_A_MS,Build a megastructure,,Costruisci una megastruttura,建造一个巨型结构,Baue eine Megastruktur,Construye una megaestructura,메가스트럭처를 건설하세요,,Építs egy megastruktúrát,メガストラクチャーを構築する,Bouw een megagebouw,Построить мегаструктуру,
 BUILD_A_GS,Build a gigastructure,,Costruisci una gigastruttura,建造一个超巨型结构,Baue eine Gigastruktur,Construye una gigaestructura,기가스트럭처를 건설하세요,,Építs egy gigastruktúrát,ギガストラクチャーの構築,Bouw een gigastructuur,Построить гигаструктуру,
 DISCOVER_NEW_UNIV,Discover a new universe for the first time,,Scopri un nuovo universo per la prima volta,第一次发现一个新宇宙,Entdecke ein neues Universum,Descubre un nuevo universo por primera vez,새로운 우주를 발견하세요,,Fedezz fel egy új univerzumot,新しい宇宙を初めて発見する,Ontdek voor het eerst een nieuw universum,Обнаружить новую вселенную в первый раз,
@@ -1473,7 +1473,7 @@ RE_WHEELS_8,Negates movement penalty when moving over ash or lava.,,,探测器�
 CAPACITY_INCREASE,Capacity increase:,,,储量增加：,Zusätzliche Kapazität:,Incremento de capacidad:,저장 용량 증가:,,Tárhelynövelés:,,,,
 PLANT_FERTILIZATION_SC,Plant fertilization,,,植物施肥,Fruchtbarkeit des Planeten,Incremento de capacidad:,,,Műtrágyázás,,,Удобрение растений,
 PLANT_FERTILIZATION_SC_DESC,Unlocks fertilizers that increase metal production at the cost of soil and extra cellulose.,,,允许对植物进行施肥，施肥会持续消耗黑土和更多的纤维素，但可以增加金属产量,Schaltet Dünger frei der die Metallproduktion anhebt zum preis von mehr Erde und Zellulose,Desbloquea fertilizantes que incrementan la producción de metal a costa de tierra y celulosa extra.,,,"Megnyitja a trágyákat, amik megnövelik a fémtermelést, de a föld- és cellulózszükségletet is.",,,,
-PLANT_FERTILIZATION_INF_SC_DESC,Each research multiplies fertilizer bonus production by %s.,,,"每项研究使肥料加成产量乘以%s。
+PLANT_FERTILIZATION_INF_SC_DESC,Each research multiplies fertilizer bonus production by %s.,,,"每次升级使肥料加成产量提高%s倍。
 ",Jede Forschung Multipliziert Dünger bonus Produktion um %s.,,,,,,,,
 WH_ERROR,You are too deep in this cave for this wormhole to work!,,,虫洞无法在这么深的洞穴里使用,Du bist zu Tief in der höhle für dieses Wurmloch,¡Estás demasiado profundo para que este agujero de gusano funcione!,동굴에 너무 깊이 있어서 웜홀이 작동되지 않습니다.,,"Túl mélyen vagy ahhoz, hogy a féreglyuk működjön!",,,,
 EFFECT_ON_PLANTS,Effect on nearby plants:,,,对相邻植物的效果：,Effekt auf umliegende Pflanzen:,Efectos en plantas cercanas:,주변 식물에 주어지는 효과:,,Hatás a közeli növényekre:,,,Эффект на ближайшие планеты:,
@@ -1547,9 +1547,9 @@ QOL_PERKS_DESC," - Conquering an entire system with one click available right fr
 \t - ""自动出售多余水晶"" 和 ""物品压缩3"" 已研究完毕","-Nimm ganze Systeme mit einem Klick von beginn an ein - Starte jedes Universum mit  \t - @i {money} and @i {energy}
 \t - Starte jedes Universum mit ""Mineralien automatisch verkaufen"" und ""Komprimiert Gegenstände 3""erforscht",,,,- Egy rendszer egyszerre elfoglalása elérhető a kezdettől\n - Az univerzumok kezdetén van nálad:\n\t - @i {money} és @i {energy}\n\t- Az automatikus ásványeladás és a kompaktifikáció kutatások,,,,
 UNLOCK_PHY_CHEM_BIO,"Unlock Physics, Chemistry and Biology","Débloquez la physique, la chimie et la biologie",,解锁物理、化学和生物学的修改,"Schaltet Physik, Chemie und Biologie frei",,,,"Megnyitja a fizikát, a kémiát, és a biológiát.",,,,
-MODIFY_CAVE_BATTLE_TIME,"""Time speed"" affects caves/battles a lot less","La ""vitesse du temps"" affecte beaucoup moins les grottes/batailles",,“时间速度”对洞穴和战斗的影响更小,Zeitgeschwindigkeit hat deutlich weniger Einfluss auf Höhlen und Kämpfe,,,,Az idősebesség hatása a csatákra és a barlangokra jóval kisebb.,,,Ускорение времени влияет на роверы/пещеры гораздо меньше,
-MODIFY_CAVE_BATTLE_TIME_DESC,"More precisely, the actual time speed in caves and in battles will be equal to ln(universe time speed - 1 + e). Everything else (building construction time, production etc.) is unaffected.","Plus précisément, la vitesse réelle du temps dans les grottes et dans les batailles sera égale à ln(universe time speed - 1 + e). Tout le reste (temps de construction du bâtiment, production, etc.) n'est pas affecté.
-",,更准确地说，洞穴和战斗中的实际时间速度将等于 ln(宇宙时间速度 - 1 + e)，其他一切（建筑施工时间、生产等）均不受影响,"Genauer wird der Zeitfluss in Höhlen und Kämpfen der natürliche Logarithmus von (Universumzeitgeschwindigkeit -1 + e). Alles andere (Gebäude, Konstruktionszeit und Produktionen usw.) werden nicht beeinflusst.",,,,"Pontosabban, a valódi idősebesség a barlangokabn és csatákban ln(idősebessség - 1 + e) lesz. Az idősebesség más esetekben változatlan.",,,,
+MODIFY_CAVE_BATTLE_TIME,"""Time speed"" affects caves a lot less","La ""vitesse du temps"" affecte beaucoup moins les grottes/batailles",,“时间速度”对洞穴的影响更小,Zeitgeschwindigkeit hat deutlich weniger Einfluss auf Höhlen und Kämpfe,,,,Az idősebesség hatása a csatákra és a barlangokra jóval kisebb.,,,Ускорение времени влияет на роверы/пещеры гораздо меньше,
+MODIFY_CAVE_BATTLE_TIME_DESC,"More precisely, the actual time speed in caves will be equal to ln(universe time speed - 1 + e). Everything else (building construction time, production etc.) is unaffected.","Plus précisément, la vitesse réelle du temps dans les grottes et dans les batailles sera égale à ln(universe time speed - 1 + e). Tout le reste (temps de construction du bâtiment, production, etc.) n'est pas affecté.
+",,更准确地说，洞穴中的实际时间速度将等于 ln(宇宙时间速度 - 1 + e)，其他一切（建筑施工时间、生产等）均不受影响,"Genauer wird der Zeitfluss in Höhlen und Kämpfen der natürliche Logarithmus von (Universumzeitgeschwindigkeit -1 + e). Alles andere (Gebäude, Konstruktionszeit und Produktionen usw.) werden nicht beeinflusst.",,,,"Pontosabban, a valódi idősebesség a barlangokabn és csatákban ln(idősebessség - 1 + e) lesz. Az idősebesség más esetekben változatlan.",,,,
 MORE_OP_CAPACITY,+50% capacity to all OP-meters,+50 % de capacité à tous les compteurs OP,,所有过载表的上限+50%, +50% Kapazität aller OP-Meter,,,,+50% kapacitás minden OP-méterhez,,,,
 SPACEPORT,Spaceport,,,航天发射场,Weltraumhafen,,,,Űrkikötő,,,Космодром,
 SPACEPORT_DESC1,An ancient building constructed by a former civilization to train spaceships and reduce the energy needed to send them to other planets.,,,由一些古代文明建造的独特建筑，用于训练飞船并减少飞船飞往其他行星所需的能量,Ein einzigartiges Gebäude das von einer alten Zivilisation benutzt wurde um Raumschiffe zu trainieren und diese mit weniger Energiekosten zu anderen Planeten zu senden.,,,,"Egy ősi civilizáció által épített egyéni épület, ami lecsökkenti az űrhajók energiaszükségletét.",,,,
@@ -1649,7 +1649,7 @@ SP_MULT_FROM_FEATURES,SP multiplier from tile features:,,,从特殊图块中获�
 SPACEPORT_ERROR,There can only be one spaceport per planet.,,,每个行星只能有一个航天发射场,Es kann nur einen Weltraumhafen pro Planeten geben.,,,,Csak egy űrkikötő lehet egy bolygón.,,,,
 TIME_FLOWS_X_FASTER_HERE,Time flows %s times faster here!,,,时间在这里加快了 %s 倍！,Zeit vergeht %s mal schneller hier,,여기는 시간이 %s배 빨리 흐릅니다!,,Itt %s-szer gyorsabb az idő!,,,,
 PP_MULTIPLIER,Probe point multiplier,,,探测点倍率,Sondenpunk Multiplikator,,탐사선 포인트 배율,,Szondapontszorzó,,,,
-TIME_SPEED_IN_CAVES,%.2f in caves,,,战斗中： %.2f,%.2f in Höhlen,,동굴에는 %.2f,,%.2f csatában,,,,
+TIME_SPEED_IN_CAVES,%.2f in caves,,,在洞穴中： %.2f,%.2f in Höhlen,,동굴에는 %.2f,,%.2f csatában,,,,
 STATIC_SPACE_BACKGROUND_LOD,Static space background LOD,,,静态星空背景细节,Statischer Weltraum Hintergrund LOD,,,,Statikus hátterek minősége,,,,
 STATIC_SPACE_BACKGROUND_LOD_DESC,"Backgrounds that don't animate, e.g. those found in planet and system view.",,,非动态的背景，比如在恒星系界面所看到的,"Hintergründe die nicht animiert sind, e.g. die in Planeten und Systemen.",,,,"Nem mozgó hátterek, mint pl. amelyik a bolygónézetben van.",,,,
 DYNAMIC_SPACE_BACKGROUND_LOD,Dynamic space background LOD,,,动态星空背景细节,Dynamischer Weltraum Hintergrund LOD,,,,Dinamikus hátterek minősége,,,,
@@ -1730,7 +1730,7 @@ CHANGE_PUSH_STRENGTH,Scroll up or down to change push strength. Click anywhere t
 NO_OBJECTS_NEAR_SHIP,There are no objects near this ship. Move this ship closer to the target to push.,,,这艘船附近没有任何物体。把这艘船靠近目标才能推动,Es sind keine Objekte nahe dem Schiff. Bewege es näher zum Ziel zum Schieben.,,,,Nincsenek tárgyak a hajó közelében. Mozogj közelebb valamihez a toláshoz.,,,,
 PUSH_SUCCESS_CHANCE,Push success chance,,,推动成功率,Schieberfolgs Chance,,,,Tolás sikeresélye,,,,
 PUSH_SUCCESS_CHANCE_HELP," - If there is a velocity difference between the pusher and the object, it may be more difficult to succeed, depending on whether the pusher is pushing head-on or from the back (easiest) or from the side (hardest).\n - If pushing an enemy, the pusher also has to pass a check that depends on its agility as well as the enemy's.",,,- 如果推动者与物体之间存在速度差异，成功可能更难，取决于推人是正面推、从背后（最高）还是从侧面（最低）。 \n - 推动敌人时，推动者还需通过一个取决于自己的敏捷和敌人的敏捷,"-Wenn es einen Geschwindigkeitsunterschied wischen dem Schiebendem und Ziel gibt kann es schwieriger sein erfolgreich zu schieben, abhängig ob der Schiebende dies von Vorne (am einfachsten) oder von der Seite (am schwersten) eintrifft.\n - Beim schieben eines Gegners muss der Schiebende auch einen Test basierend auf der Agilität des Gegners bestehen.",,,," - Ha van sebességkülönbség a toló és a tárgy között, akkor nehezebb lesz a siker: kevésbe ha egyenesen a tolás iránya felé vagy el tőle, nehezebb ha attól oldalirányban.\n - Ha egy ellenséget tolsz, akkor van egy, a hajó és az ellenség fürgeségétől függő feltétel is.",,,,
-SPEED_UP_ANIMATIONS,Speed up animations,,,加速行动,Beschleunigung Animationen,,,,Animációk felgyorsítása,,,,
+SPEED_UP_ANIMATIONS,Speed up animations,,,加速行动,Beschleunigung Animationen,,애니메이션 가속화,,Animációk felgyorsítása,,,,
 EXPOSED_DESC,Chance of receiving a critical hit multiplied by 10.,,,受到暴击的概率增加10倍,Chance das ein Kritischer Treffer mit 10 multipliziert wird.,,,,Kritikus találat szenvedésének esélye tízszeres.,,,,
 RADIOACTIVE_DESC,Receives a -1 debuff to every stat every turn.,,,每回合全属性获得-1减益,Erhält einen -1 Malus zu allen Eigenschaften jede Runde.,,,,-1 gyengülést kap minden statra lépésenkent.,,,,
 CORRODING_DESC,Gets a -1 defense and agility debuff every turn.,,,每回合获得防御和敏捷度-1的减益,Erhält einen -1 Malus zu Verteidigung und Beweglichkeit jede Runde.,,,,-1 gyengülést kap a védelemre és a fürgeségre lépésenként.,,,,
@@ -1749,13 +1749,13 @@ PASSIVE_9,"Has 1.5x the mass (which is a function of HP in this game), which red
 PASSIVE_10,Has greatly increased aim when shooting projectiles.,,,大幅提升射击类弹道武器的命中精准度,"Hat deutlich erhöhte Genauigkeit, beim schießen.",,,,Nagymértékben megnövelt pontossága van.,,,,
 PASSIVE_11,Gets increasingly powerful buffs as its HP gets lower.,,,HP越低，获得的增益效果越强,Mit Sinken LP wird der Bonus stärker.,,,,"Minél kevesebb a HP-ja, annál több erősödést kap.",,,,
 PASSIVE_12,"Takes 25% less damage from physical attacks (bullet, bomb etc., but not laser, light etc.)",,,物理攻击（如子弹、炸弹等，不包括激光、光束等）中受到的伤害降低25%,"25% weniger Schaden von physischen Angriffen ( Kugeln, Bomben, etc., nicht Laser, Licht, etc.)",,,,"25%-kal kevesebbet sebzik a fizikai támadások (pl. lövés, bomba... de nem lézer, fény...)",,,,
-DEFEAT,Defeat,,,战斗失败,Niederlage,,,,Veszteség,,,,
+DEFEAT,Defeat,,,战斗失败,Niederlage,,패배,,Veszteség,,,,
 IMPROVED_SPACEPORT_SC,Improved spaceport,,,太空港改进,Verbesserter Weltraumhafen,,,,Fejlesztett űrkikötő,,,,
 IMPROVED_SPACEPORT_SC_DESC,"Spaceports also give passive XP to ships on the planet.
 Passive XP gain is proportional to the difficulty of the star system the spaceport is in.",,,太空港会为所在行星上的舰船提供被动经验值。被动经验值的获取速率与太空港所处星系的难度等级成正比,"Weltraumhäfen verteilen auch automatisch EXP an Schiffe am Planeten.
 Passive EXP sind proportional zu der Schwierigkeit des Systems in dem der Weltraumhafen ist.",,,,"Az űrkikötők passzív XP-t adnak a bolygón lévő hajóknak is. A passzív XP mannyisége arányos a naprendszer nehézségével, ahol az űrkikötő van.",,,,
-WEAPON_POINT,Weapon point,,,武器升级点,Waffen Punkte,,,,Fegyverpont,,,,
-WEAPON_POINTS,Weapon points,,,武器升级点,Waffen Punkt,,,,Fegyverpontok,,,,
+WEAPON_POINT,Weapon point,,,武器升级点,Waffen Punkte,,무기 포인트,,Fegyverpont,,,,
+WEAPON_POINTS,Weapon points,,,武器升级点,Waffen Punkt,,무기 포인트,,Fegyverpontok,,,,
 BULLET_1_1_DESC,Fires 3 bullets instead of 2.,,,发射3发子弹，而不是2发,Feuert 3 Kugeln anstatt 2.,,,,Hármat lö kettő helyett.,,,,
 BULLET_1_2_DESC,Fires 6 bullets instead of 3.,,,发射6发子弹，而不是3发,Feuert 6 Kugeln anstatt 3.,,,,Hatot lő három helyett.,,,,
 BULLET_1_3_DESC,Fires 15 bullets instead of 6.,,,发射15发子弹，而不是6发,Feuert 15 Kugeln anstatt 6.,,,,Tizenötöt lő hat helyett.,,,,
@@ -1763,7 +1763,7 @@ BULLET_2_1_DESC,"Choose between 3 types of bullets:
 1) Big bullets with knockback and increased critical hit chance
 2) Corrosive bullets (""corrodes"" defense and agility of the target for 3 turns)
 3) Aqua bullets (wets targets. On the next turn, the wet status changes into freeze, burn, or nothing, depending on the temperature of the battlefield)",,,"在以下三种子弹中做出选择：
-1）重型弹：拥有强大击退和暴击率。
+1）大子弹：拥有强大击退和暴击率。
 2）腐蚀弹：腐蚀目标的防御与敏捷，持续 3 回合。
 3）水凝弹：使目标进入湿润状态。下一回合时，根据战场温度，湿润状态将转化为冰冻或灼烧或者无变化。","Wähle zwischen 3 Arten von Munition:
 1) Große Kugeln mit Rückstoß und erhöhter kritischen Trefferchance
@@ -1808,7 +1808,7 @@ LASER_3_2_DESC,(To be implemented) Laser sweeps 30° left to right.,,,（待实�
 LASER_3_3_DESC,(To be implemented) Laser sweeps 60° left to right to left.,,,（待实施）激光从左到右再回到左扫射60度。,Laser umfasst 60° Links nach Rechts nach Links.,,,,"A lézer 60°-ot söpör be, balról jobbról balra.",,,,
 BOMB_1_1_DESC,Bigger explosion radius & knockback,,,更大的爆炸半径和击退效果,Größere Explosion & Rückstoß,,,,Nagyobb robbanássugár és visszalökés.,,,,
 BOMB_1_2_DESC,"Greatly increased damage, knockback and explosion radius. Don't shoot it from too close!",,,大幅提高伤害、击退和爆炸半径。别在太近的距离发射它！,"Deutlich mehr schaden,größere Explosion und Rückstoß. Abstand halten!",,,,"Komolyan megnövelt sebzés, visszalökés, és robbanássugár. Nem ajánlott közeli célpontokra! ;)",,,,
-BOMB_1_3_DESC,Inflicts radioactive status to anything caught in the explosion.,,,对爆炸范围内的任何物体施加辐射状态,Alle Ziele in der Explosion erhalten den radioaktiven Status.,,,,A robbanást szenvedett célpontok radioaktív státuszt kapnak.,,,,
+BOMB_1_3_DESC,Inflicts radioactive status to anything caught in the explosion.,,,对爆炸范围内的任何敌人施加辐射状态,Alle Ziele in der Explosion erhalten den radioaktiven Status.,,,,A robbanást szenvedett célpontok radioaktív státuszt kapnak.,,,,
 BOMB_2_1_DESC,"The explosion itself also burns targets, and burn for longer.",,,爆炸本身也能灼烧目标，且灼烧效果持续更久,Die Explosion verbrennt Ziele und verbrennt länger.,,,,"A robbanás is éget, és az égés tovább tart.",,,,
 BOMB_2_2_DESC,"Upon exploding, shoots out 8 smaller bombs that also explode on their own.",,,引爆后，散射出8枚小型炸弹，各自独立引爆。,Erzeugt bei Explosion 8 kleine Bomben die auch explodieren.,,,,Röbbanásásal együtt 8 kisebb bombát is kilő.,,,,
 BOMB_2_3_DESC,"(To be implemented) Upon exploding, creates a large persisting fireball that lasts for 2 turns. Anything that starts its turn inside the fireball will be damaged and burned.",,,（待实施）引爆后，产生一个持续存在2回合的大型火球。任何在火球范围内开始其回合的单位，都将受到伤害并陷入灼烧状态。,Erzeugt bei Explosion einen Feuerball für 2 Runden. Alles was seine Runde im Feuerball beginnt wird nimmt Schaden und wird verbrannt.,,,,"Robbanása hátrahagy egy két lélésen át tartó tűzgolyót, ami sebzi és égeti a benne lévő tárgyakat (a lépés kezdetén)",,,,
@@ -1828,82 +1828,83 @@ LIGHT_3_3_DESC,"(To be implemented) Emission maintained permanently. Turning it 
 CUSTOMIZE_NEW_SHIP,Customize your new ship!,,,定制你的新飞船！,Passe dein Schiff an!,,,,Ted magadévá az új hajódat!,,,,
 MOLTEN_CAVE,Molten cave,,,熔岩洞穴,Geschmolzene Höhle,,,,Olvadt barlang,,,,
 FROZEN_CAVE,Frozen cave,,,冰冻洞穴,Gefrorene Höhle,,,,Fagyott barlang,,,,
-CLICK_SHIP_TO_GIVE_XP,Click on a ship to give it XP,,,点击飞船获得经验值,Klicke auf ein Schiff um EXP zu verteilen,,,,Kattints egy hajóra XP adásához,,,,
+CLICK_SHIP_TO_GIVE_XP,Click on a ship to give it XP,,,点击飞船获得经验值,Klicke auf ein Schiff um EXP zu verteilen,,우주선을 클릭하세요,,Kattints egy hajóra XP adásához,,,,
 CLICK_SHIP_TO_VIEW_DETAILS,"Click on a ship on the right to view details.
 Drag & drop a ship to change its initial position in battle.",,,"点击右侧的舰船以查看详情。
 拖放舰船可更改其在战斗中的初始位置。",Klicke auf ein Schiff rechts für Details. Verschiebe Schiffe um die Anfangsposition in der Schlacht anzupassen.,,,,Kattints egy hajóra a részletek megtekintéséhez.\nHúzd a hajókat a kezdeti helyzetük meghatározásához.,,,,
 SHIP_LEVELED_UP,This ship leveled up! Allocate points to weapons or stats to make it more powerful to your liking.,,,这艘船升级了！分配点数到武器或属性上，按你的喜好让它变得更强大。,Das Schiff ist aufgestiegen! Verteile Punkte zu Waffen oder Eigenschaften um es stärker zu machen.,,,,A hajó elérte a hövetkező szintet! Helyezd el a pontjait az ízlésed szerint.,,,,
 EXTRA_TURNS_LEFT,Extra turns left,,,额外回合剩余,Zusätzliche Runden verbleibend,,,,Hátralévö extra lépések,,,,
 CLASS_AND_STATS,Class and stats,,,职业和属性,Klassen und Eigenschaften,,,,Osztály és statisztika,,,,
-WEAPON_LEVELS,Weapon levels,,,武器等级,Waffenlevel,,,,Fegyverszintek,,,,
+WEAPON_LEVELS,Weapon levels,,,武器等级,Waffenlevel,,무기 레벨,,Fegyverszintek,,,,
 SCROLL_TO_SWITCH_BULLET,Shift + scroll to switch bullet type,,,Shift + 鼠标滚动 切换子弹类型,Shift +Scrollen um die Patronenart zu wechseln,,,,Shift+görgetés a lövedékfajta kiválasztásához,,,,
-PERFECT,Perfect,,,完美,Perfekt,,,,Tökéletes,,,,
+PERFECT,Perfect,,,完美,Perfekt,,완벽,,Tökéletes,,,,
 1_TURN_REMAINING,{turnNumber} turn remaining,,,{turnNumber} 剩余回合,{turnNumber} zug übrig,,,,{turnNumber} lépés van hátra,,,,
 X_TURNS_REMAINING,{turnNumber} turns remaining,,,{turnNumber} 剩余回合,{turnNumber} züge übrig,,,,{turnNumber} lépés van hátra,,,,
-RIGHT_CLICK_FOR_MORE_ACTIONS,Right click for more actions,,,右键单击以获取更多操作,Rechstklick für mehr Aktionen,,,,Jobb klikk további műveletekhez,,,,
-REPAIR,Repair,,,修复,Reparieren,,,,Megjavít,,,,
-NO_RESEARCH_TO_UPGRADE_MS,You don't have the research yet to continue construction of this megastructure.,,,你还没有进行研究，无法继续建造这个巨型建筑,Du hast noch nicht die Forschung abgeschlossen um die Konstruktion dieser Megastruktur fortzusetzen.,,,,Nincs meg a megastruktúra építéséhez szükséges kutatás.,,,,
-GO_TO,Go to,,,前往,Besuchen,,,,Idemegy,,,,
-DECELERATE,Decelerate,,,减速,Abbremsen,,,,Lassítás,,,,
+RIGHT_CLICK_FOR_MORE_ACTIONS,Right click for more actions,,,右键单击以获取更多操作,Rechstklick für mehr Aktionen,,오른쪽 클릭: 할 수 있는 행동 보기,,Jobb klikk további műveletekhez,,,,
+REPAIR,Repair,,,修复,Reparieren,,수리하기,,Megjavít,,,,
+NO_RESEARCH_TO_UPGRADE_MS,You don't have the research yet to continue construction of this megastructure.,,,你还没有进行研究，无法继续建造这个巨型建筑,Du hast noch nicht die Forschung abgeschlossen um die Konstruktion dieser Megastruktur fortzusetzen.,,이 메가스트럭처 건설을 진행하기 위한 연구가 아직 안 되었습니다.,,Nincs meg a megastruktúra építéséhez szükséges kutatás.,,,,
+GO_TO,Go to,,,前往,Besuchen,,가기,,Idemegy,,,,
+DECELERATE,Decelerate,,,减速,Abbremsen,,감속,,Lassítás,,,,
 DECELERATE_DESC,"Use this ship's movement to bring it to a stop.
 One meter of movement removes 1 m/s of speed.",,,利用这艘飞船的机动能力使其停下。每移动一米可减少1 米每秒的速度,"Bremst das Schiff bis zum Stillstand ab. Pro Meter Bewegung wird 1m/s abgebremst.
-",,,,"A hajó a mozgását a sebességének csökkentésére használja, 1 mozgás = 1 m/s",,,,
-ON_STANDBY,On standby,,,待机,Bereit,,,,Készen áll,,,,
-EXPLORING,Exploring,,,探索中,Erkundend,,,,Felfedez,,,,
+",,"우주선의 동작을 사용하여 감속합니다.
+동작 1 미터는 속도 1m/s를 줄입니다.",,"A hajó a mozgását a sebességének csökkentésére használja, 1 mozgás = 1 m/s",,,,
+ON_STANDBY,On standby,,,待机,Bereit,,대기,,Készen áll,,,,
+EXPLORING,Exploring,,,探索中,Erkundend,,탐험 중,,Felfedez,,,,
 SHIPYARD_ERROR_1,"This galaxy is completely conquered, so there is no point building fighters in this galaxy anymore (they cannot travel across galaxies).
 Construct a shipyard in another galaxy and build fighters there.",,,这个星系已经完全征服了，所以再在这个星系建造战斗无人机已经没有意义了（它们无法跨星系飞行）。在另一个星系建造一个船坞，并在那里建造战斗无人机。,"Die Galaxie wurde vollkommen eingenommen, also ist es Sinnlos in dieser Galaxie Fighter zu bauen (da sie nicht in andere Galxien reisen können).
 Baue eine Weltraumwerft in einer anderen Galaxie um dort Fighter zu bauen.",,,,"A galaxis teljesen el van foglalva, ezért nincs értelme vadászhajókat épteni ebben a galaxisban (azok nem tudnak galaxisok között utazni).\nÉpíts egy hajógyárat egy másik galaxisban és építs ott vadászhajókat. ",,,,
 SHIPYARD_ERROR_2,"This cluster is completely conquered, so there is no point building fighters in this cluster anymore (they cannot travel across clusters).
 Construct a shipyard in another cluster and build fighters there.",,,这个星系团已经完全征服了，所以再在这个星系团建造战斗无人机已经没有意义了（它们无法跨星系团飞行）。在另一个星系团建造一个船坞，并在那里建造战斗无人机。,"Dieses Cluster wurde vollkommen eingenommen, also ist es Sinnlos in diesem Cluster Fighter zu bauen (da sie nicht in andere Cluster reisen können).
 Baue eine Weltraumwerft in einem anderen Cluster um dort Fighter zu bauen.",,,,"A halmaz teljesen el van foglalva, ezért nincs értelme vadászhajókat épteni ebben a halmazban (azok nem tudnak halmazok között utazni).\nÉpíts egy hajógyárat egy másik halmazban és építs ott vadászhajókat. ",,,,
-VIEW_STAR,View star,,,查看恒星,Stern betrachten,,,,Csillag megtekintése,,,,
-MS_FULLY_CONSTRUCTED,This megastructure is fully constructed.,,,这座巨型结构已完全建成。,Die Konstruktion dieser Megastruktur ist abgeschlossen.,,,,Ez a megastruktúra teljesen fel van építve.,,,,
-ENERGY_EFFICIENCY_MULT,Energy efficiency multiplier,,,能量效率倍增,Energieeffiziensmultiplitkator,,,,Energiahatékonyságszorzó,,,,
-METAL_MULT_FROM_AURORAS,Metal multiplier from auroras,,,极光中的金属倍增,Metallmultiplikator von Polarlichtern,,,,Fémszorzó aurórákból,,,,
+VIEW_STAR,View star,,,查看恒星,Stern betrachten,,별 보기,,Csillag megtekintése,,,,
+MS_FULLY_CONSTRUCTED,This megastructure is fully constructed.,,,这座巨型结构已完全建成。,Die Konstruktion dieser Megastruktur ist abgeschlossen.,,이 메가스트럭처는 완전히 건설되었습니다.,,Ez a megastruktúra teljesen fel van építve.,,,,
+ENERGY_EFFICIENCY_MULT,Energy efficiency multiplier,,,能量效率倍增,Energieeffiziensmultiplitkator,,에너지 효율 배율,,Energiahatékonyságszorzó,,,,
+METAL_MULT_FROM_AURORAS,Metal multiplier from auroras,,,极光中的金属倍增,Metallmultiplikator von Polarlichtern,,오로라의 금속 배율,,Fémszorzó aurórákból,,,,
 PD_PANEL_HELP,Click and drag one of the 4 colored circles to modify the diagram.,,,点击并拖动四个彩色圆圈中的一个来修改图表,Klicke und Ziehe einen der 4 Farbigen Kreise um das Diagramm zu modifizieren.,,,,Húzd a négy színes kört a diagram módosításához.,,,,
-KEEP,Keep,,,保持,Behalten,,,,Megtart,,,,
-HAS_BLDG_MS,Has bldg/MS,,,有建筑/巨型结构,Hat Gbd/Ms,,,,Van épület/MS,,,,
-BUILDING_MEGASTRUCTURE_PLACEHOLDER,"Building, megastructure...",,,建筑、巨型结构...,"Gebäuide, Megastruktur...",,,,"Épület, megastruktúra,...",,,,
-F_TO_FIND_BLDG_MS,Pressing F is a shortcut to quickly find a building or a megastructure using the overlay.,,,按F键是在快捷键上快速查找建筑或巨型结构的快捷方式。,F zu drücken ist ein Hotkey um schnell ein Gebäude oder eine Megastruktur mit dem Overlay zu finden.,,,,Az F gombbal gyorsan kereshetzs épületre vagy megastruktúrákra,,,,
-SHOWING_X,Showing {obj},,,查看 {obj},Zeigt {obj},,,,Mutat: {obj},,,,
-SHOWING_ALL,Showing all,,,查看所有,Zeigt Alle,,,,Mindent mutat,,,,
+KEEP,Keep,,,保持,Behalten,,간직하기,,Megtart,,,,
+HAS_BLDG_MS,Has bldg/MS,,,有建筑/巨型结构,Hat Gbd/Ms,,빌딩/MS 있음,,Van épület/MS,,,,
+BUILDING_MEGASTRUCTURE_PLACEHOLDER,"Building, megastructure...",,,建筑、巨型结构...,"Gebäuide, Megastruktur...",,"빌딩, 메가스트럭처...",,"Épület, megastruktúra,...",,,,
+F_TO_FIND_BLDG_MS,Pressing F is a shortcut to quickly find a building or a megastructure using the overlay.,,,按F键是在快捷键上快速查找建筑或巨型结构的快捷方式。,F zu drücken ist ein Hotkey um schnell ein Gebäude oder eine Megastruktur mit dem Overlay zu finden.,,오비레이를 사용하여 빌딩이나 메가스트럭처를 빨리 찾으려면 F를 누르세요.,,Az F gombbal gyorsan kereshetzs épületre vagy megastruktúrákra,,,,
+SHOWING_X,Showing {obj},,,查看 {obj},Zeigt {obj},,{obj} 표시,,Mutat: {obj},,,,
+SHOWING_ALL,Showing all,,,查看所有,Zeigt Alle,,모두 표시,,Mindent mutat,,,,
 NEW_SHIP_CLASSES_UNLOCKED,You unlocked new ship classes! Use them to make battles a little more exciting.,,,你解锁了新的飞船职业！使用它们让战斗变得更刺激一些吧。,Du hast eine Schiffsklasse freigeschaltet! Nutze sie um Schlachten etwas spannender zu machen.,,,,Megnyitottad az összes hajóosztályt! Használd őket a csaták érdekesebbé tételéhez.,,,,
-MORE_AURORAS,More auroras,,,更多极光,Mehr Polarlichter,,,,Több auróra,,,,
-LOT_MORE_AURORAS,A lot more auroras,,,更多极光+,Viel mehr Polarlichter,,,,Sokkal több auróra,,,,
-MORE_VOLCANOES,More volcanoes,,,更多火山,Mehr Vulkane,,,,Több vulkán,,,,
-LOT_MORE_VOLCANOES,A lot more volcanoes,,,更多火山+,Viel mehr Vulkane,,,,Sokkal több vulkán,,,,
-LESS_GAS_GIANTS,Less gas giants,,,更少气态巨行星,Weniger Gasriesen,,,,Kevesebb gázóríás,,,,
-LOT_LESS_GAS_GIANTS,A lot less gas giants,,,更少气态巨行星+,Deutlich weniger Gasriesen,,,,Sokkal kevesebb gázóriás,,,,
+MORE_AURORAS,More auroras,,,更多极光,Mehr Polarlichter,,더 많은 오로라,,Több auróra,,,,
+LOT_MORE_AURORAS,A lot more auroras,,,更多极光+,Viel mehr Polarlichter,,훨씬 많은 오로라,,Sokkal több auróra,,,,
+MORE_VOLCANOES,More volcanoes,,,更多火山,Mehr Vulkane,,더 많은 화산,,Több vulkán,,,,
+LOT_MORE_VOLCANOES,A lot more volcanoes,,,更多火山+,Viel mehr Vulkane,,훨씬 많은 화산,,Sokkal több vulkán,,,,
+LESS_GAS_GIANTS,Less gas giants,,,更少气态巨行星,Weniger Gasriesen,,더 적은 거대 기체 행성,,Kevesebb gázóríás,,,,
+LOT_LESS_GAS_GIANTS,A lot less gas giants,,,更少气态巨行星+,Deutlich weniger Gasriesen,,훨씬 적은 거대 기체 행성,,Sokkal kevesebb gázóriás,,,,
 MORE_NOBLE_GAS_LAKES,"More noble gas (neon, xenon...) lakes",,,更多的惰性气体湖（氖、氙气等）,"Mehr Edelgas-(Neon,Xenon,...)seeen",,,,Több nemesgáztó,,,,
 LOT_MORE_NOBLE_GAS_LAKES,A lot more noble gas lakes,,,更多的惰性气体湖+,Viel mehr Edelgasseen,,,,Sokkal több nemesgáztó,,,,
-MORE_ANCIENT_BLDGS,More ancient buildings,,,更多古代建筑,Mehr antike Gebäude,,,,Több ősi épület,,,,
-LOT_MORE_ANCIENT_BLDGS,A lot more ancient buildings,,,更多古代建筑+,Viel mehr antike Gebäude,,,,Sokkal több ősi épület,,,,
+MORE_ANCIENT_BLDGS,More ancient buildings,,,更多古代建筑,Mehr antike Gebäude,,더 많은 고대 빌딩,,Több ősi épület,,,,
+LOT_MORE_ANCIENT_BLDGS,A lot more ancient buildings,,,更多古代建筑+,Viel mehr antike Gebäude,,훨씬 많은 고대 빌딩,,Sokkal több ősi épület,,,,
 MODIFIERS,Modifiers,,,修饰符,Modifikatoren,,,,Módosítók:,,,,
 RELATIVE_VELOCITY_MULT,Relative velocity multiplier,,,相对速度倍增,Relative Geschwindigkeit Multiplikator,,,,Relatív sebesség szorzó,,,,
-SPACEPORT_PASSIVE_XP_DESC,Provides {XP} XP to all ships every {secs} seconds,,,每{secs}秒为所有飞船提供{XP}经验值,Gibt {XP} EXP allen Schifffen alle {secs} Sekunden,,,,{XP} XP-t ad minden hajónak {secs} másodpercenként,,,,
-BUY_OR_SELL,Buy or sell,,,买入或卖出,Kaufen oder Verkaufen,,,,Vesz vagy elad,,,,
-1_UNIVERSE,1 universe,,,1 个宇宙,1 Universum,,,,1 univerzum,,,,
-X_UNIVERSES,%d universes,,,%d 个宇宙,%d Universen,,,,%d univerzum,,,,
+SPACEPORT_PASSIVE_XP_DESC,Provides {XP} XP to all ships every {secs} seconds,,,每{secs}秒为所有飞船提供{XP}经验值,Gibt {XP} EXP allen Schifffen alle {secs} Sekunden,,{secs}초마다 모든 우주선에게 {XP} XP 제공함,,{XP} XP-t ad minden hajónak {secs} másodpercenként,,,,
 UNABLE_TO_READ_SAVE,"Unable to read save file.
 
 Try loading one of the backups to restore this save.",,,"无法读取存档。
 
 请尝试加载其中一个备份以恢复此存档。","Speicherstand kann nicht gelesen werden.
 
-Versuche ein Backup zu laden um den Speicherstand zu reparieren.",,,,A mentésfájl nem olvasható.\n\nPróbájl megy egy bztnsági mentést betölteni.,,,,
-VIEW_BACKUPS,View backups,,,查看备份,Backups anzeigen,,,,Biztonsági mentések megtekintése,,,,
-BACKUPS_FOR_SAVE,Backups for {save},,,{save} 的备份,Backups von {save},,,,{save} biztonsági mentései,,,,
-BACKUP_WILL_CREATE_NEW_SAVE,"Loading a backup will create a new, separate save. Continue?",,,加载备份将创建一个新的独立存档。是否继续？,Das laden des Backups wir einen neuen seperaten Speicherstand erstelle. Fortsetzen?,,,,Egy biztonsági mentés betöltése egy új mentést fog létrehozni. Folytatod?,,,,
-EXPORT_FAILED,Failed to export {save}.,,,导出{save}失败,Fehler beim Export von  {save}.,,,,{save} exportálása sikertelen.,,,,
-FILE_NUMBER_AND_SIZE,"{file_num} files, {file_size_bytes} total",,,"{file_num}个备份, 总大小 {file_size_bytes}","{file_num} Dateien, {file_size_bytes} Gesammt",,,,"{file_num} fájl, összesen {file_size_bytes}",,,,
-B_BYTE,B,,,B,B,,,,B,,,,
-BACKUP_INTERVAL,Backup interval,,,自动备份间隔,Backup intervall,,,,Biztonsági mentési időköz,,,,
-MAX_BACKUPS,Max backups,,,最大备份,Maximale Anzahl Backups,,,,Max biztonsági mentések,,,,
-1_MINUTE,1 minute,,,1 分钟,1 Minute,,,,1 perc,,,,
-X_MINUTES,%d minutes,,,%d 分钟,%d Minuten,,,,%d perc,,,,
-PERSISTENT_STORAGE,Persistent storage: ,,,总存储大小：,Permanenter Speicher;,,,,Maradandó tárhely:,,,,
-PERSISTENT_STORAGE_DESC,"Total size of saves, backups, log files etc. generated and stored by the game.",,,游戏生成并存储的存档、备份、日志文件等的总大小。,"Gesammtes Volumen aller Speicherstände, Backups, Logfiles usw. erzeugt und gespeichert durch das Spiel.",,,,"A játék által tárolt mentések, naplófáljok stb. összmérete.",,,,
-BACKUP_WITH_MINIMAL_INTERRUPTION,Auto-backup with minimal interruption,,,以最小中断进行自动备份,Automatische Backups mit minimalen Unterbrechungen,,,,Biztonsági mentés minimális zavarással,,,,
+Versuche ein Backup zu laden um den Speicherstand zu reparieren.",,"세이브를 로드할 수 없습니다.
+
+복구하기 위해 백업 파일을 로드해보세요.
+",,A mentésfájl nem olvasható.\n\nPróbájl megy egy bztnsági mentést betölteni.,,,,
+VIEW_BACKUPS,View backups,,,查看备份,Backups anzeigen,,백업 보기,,Biztonsági mentések megtekintése,,,,
+BACKUPS_FOR_SAVE,Backups for {save},,,{save} 的备份,Backups von {save},,{save}의 백업 파일,,{save} biztonsági mentései,,,,
+BACKUP_WILL_CREATE_NEW_SAVE,"Loading a backup will create a new, separate save. Continue?",,,加载备份将创建一个新的独立存档。是否继续？,Das laden des Backups wir einen neuen seperaten Speicherstand erstelle. Fortsetzen?,,백업을 로드하면 새로운 세이브가 만들어집니다. 계속하시겠습니까?,,Egy biztonsági mentés betöltése egy új mentést fog létrehozni. Folytatod?,,,,
+EXPORT_FAILED,Failed to export {save}.,,,导出{save}失败,Fehler beim Export von  {save}.,,{save} 내보내기가 실패했습니다.,,{save} exportálása sikertelen.,,,,
+FILE_NUMBER_AND_SIZE,"{file_num} files, {file_size_bytes} total",,,"{file_num}个备份, 总大小 {file_size_bytes}","{file_num} Dateien, {file_size_bytes} Gesammt",,"파일 {file_num}개, 총 {file_size_bytes}",,"{file_num} fájl, összesen {file_size_bytes}",,,,
+B_BYTE,B,,,B,B,,B,,B,,,,
+BACKUP_INTERVAL,Backup interval,,,自动备份间隔,Backup intervall,,백업 간격,,Biztonsági mentési időköz,,,,
+MAX_BACKUPS,Max backups,,,最大备份,Maximale Anzahl Backups,,최대 백업,,Max biztonsági mentések,,,,
+1_MINUTE,1 minute,,,1 分钟,1 Minute,,1분,,1 perc,,,,
+X_MINUTES,%d minutes,,,%d 分钟,%d Minuten,,%d분,,%d perc,,,,
+PERSISTENT_STORAGE,Persistent data:,,,总存储大小：,Permanenter Speicher;,,영구 데이터:,,Maradandó tárhely:,,,,
+PERSISTENT_STORAGE_DESC,"Total size of saves, backups, log files etc. generated and stored by the game.",,,游戏生成并存储的存档、备份、日志文件等的总大小。,"Gesammtes Volumen aller Speicherstände, Backups, Logfiles usw. erzeugt und gespeichert durch das Spiel.",,"게임이 생성한 모든 세이브와 백업, 로그 파일 등의 총 크기를 가리킵니다.",,"A játék által tárolt mentések, naplófáljok stb. összmérete.",,,,
+BACKUP_WITH_MINIMAL_INTERRUPTION,Auto-backup with minimal interruption,,,以最小中断进行自动备份,Automatische Backups mit minimalen Unterbrechungen,,자동 백업 방해 최소화,,Biztonsági mentés minimális zavarással,,,,
 BACKUP_WITH_MINIMAL_INTERRUPTION_DESC,"If enabled, save backups will only happen when:
 - The game has lost focus
 - No keyboard/mouse input for more than 30 seconds
@@ -1926,32 +1927,33 @@ Wenn es zeit (definiert durch das Backup intervall) für ein Backup ist wird das
 
 Wenn deaktiviert, werden Backups periodisch nur nach dem eingestellten intervall erstellt. 
 ",,,,"Ha ez be van kapcsolva, akkor a játék csak akkor készít biztonsági mentést, amikor:\n - A játékelveszti a fókuszt\n - Nincs egér/billentyű bevitel 30 másodpercig\n - Csatát indítasz\n - Megnyitod a kutatásfát\nAmikor eljön a biztonsági mentés ideje, a játék megvárja ezen esetek közül az egyiket, és majd akkor végzi el.\n\nHa ez ki van kapcsolva, akkor a biztonsági mentés azonnal megtörténik, ha léjár az időköz.",,,,
-BACKUP_IN_PROGRESS,Backup in progress...,,,备份进行中...,Backup wird erstellt...,,,,,,,,
-EXPORTING,Exporting...,,,正在导出...,Exportiere...,,,,Exportálás...,,,,
-UNIVERSE_GENERATION_SETTINGS,Universe generation settings,,,宇宙生成设置,Universums generations eigenschaften,,,,Univerzumgenerálálsi beállítások,,,,
-UNIVERSE_SEED,Seed,,,种子,Seed,,,,Mag,,,,
-SIZE_OF_COS,Size of celestial objects,,,天体大小,Größe von Himmlischen Objekten ,,,,Űrbéli objektumok mérete,,,,
-SIZE_OF_COS_DESC,"General size of planets, caves, galaxies, clusters and the universe.",,,行星、洞穴、星系、星团及宇宙的总体大小,"Größe von Planeten, Hölen, Galaxien, Klustern und dem Universum.",,,,"A bolygók, barlangok, csillagok, galaxisok,halmazok, és az univerzum általános mérete",,,,
-SMALL,Small,,,小,Klein,,,,Kicsi,,,,
-MEDIUM,Medium,,,中,Mittel,,,,Közepes,,,,
-LARGE,Large,,,大,Groß,,,,Nagy,,,,
-DENSITY_OF_COS,Density of celestial objects,,,天体密度,Dicher Himmlischer Objekte,,,,Űrbéli objektumok sűrűsége,,,,
+BACKUP_IN_PROGRESS,Backup in progress...,,,备份进行中...,Backup wird erstellt...,,백업 중...,,,,,,
+EXPORTING,Exporting...,,,正在导出...,Exportiere...,,내보내는 중...,,Exportálás...,,,,
+UNIVERSE_GENERATION_SETTINGS,Universe generation settings,,,宇宙生成设置,Universums generations eigenschaften,,우주 생성 설정,,Univerzumgenerálálsi beállítások,,,,
+UNIVERSE_SEED,Seed,,,种子,Seed,,시드,,Mag,,,,
+SIZE_OF_COS,Size of celestial objects,,,天体大小,Größe von Himmlischen Objekten ,,천체 크기,,Űrbéli objektumok mérete,,,,
+SIZE_OF_COS_DESC,"General size of planets, caves, galaxies, clusters and the universe.",,,行星、洞穴、星系、星团及宇宙的总体大小,"Größe von Planeten, Hölen, Galaxien, Clustern und dem Universum.",,"행성, 동굴, 은하, 은하단, 우주의 크기를 가리킵니다.",,"A bolygók, barlangok, csillagok, galaxisok,halmazok, és az univerzum általános mérete",,,,
+SMALL,Small,,,小,Klein,,작음,,Kicsi,,,,
+MEDIUM,Medium,,,中,Mittel,,보통,,Közepes,,,,
+LARGE,Large,,,大,Groß,,큼,,Nagy,,,,
+DENSITY_OF_COS,Density of celestial objects,,,天体密度,Dicher Himmlischer Objekte,,천체 밀도,,Űrbéli objektumok sűrűsége,,,,
 DENSITY_OF_COS_DESC,"General density of planets, star systems, galaxies and clusters.
 Influences the amount of time and energy ships need to spend to travel to a destination.",,,"行星、恒星系、星系和星团的总体密度。
-影响飞船前往目的地所需花费的时间和能量。","Generelle dichte von Planeten,Sternensystemen, Galaxien und Klustern. 
+影响飞船前往目的地所需花费的时间和能量。","Generelle dichte von Planeten,Sternensystemen, Galaxien und Clustern. 
 Beinflusst die Zeit und Endergie Schiffe benötigen für reisen.
-",,,,"A bolygók, csillagok, galaxisok, és halmazok sűrűsége. Hatásaal lesz az utazási időkre",,,,
-SPARSE,Sparse,,,稀疏,Dünn,,,,Ritka,,,,
-NORMAL,Normal,,,常规,Nomal ,,,,Közepes,,,,
-DENSE,Dense,,,密集,Dicht,,,,Sűrű,,,,
-ADVANCED_SETTINGS,Advanced settings,,,高级设置,Erweiterte Einstellungen,,,,Haladó beállitások,,,,
-BASIC_SETTINGS,Basic settings,,,基础设置,Grundlegende Einstellungen,,,,Alapbeállítások,,,,
-MINIMUM,Minimum,,,最小值,Minimum,,,,Minimum,,,,
-RECOMMENDED_MINIMUM,Recommended minimum,,,推荐最小值,Empfohlenes Minimum,,,,Ajámlott minimum,,,,
-MAXIMUM,Maximum,,,最大值,Maximum,,,,Maximum,,,,
-RECOMMENDED_MAXIMUM,Recommended maximum,,,推荐最大值,Empfohlenes Maximum,,,,Ajánlott maximum,,,,
-LOWER_THAN_REC_MIN,This value is lower than the recommended minimum.,,,该值低于建议的最小值,Dieser Wert ist niedriger als das Empofohlene Minimum.,,,,Az érték kisebb az ajánlott minimumnál.,,,,
-HIGHER_THAN_REC_MAX,This value is higher than the recommended maximum.,,,该值高于建议的最大值,Dieser Wert ist höher als das Empofohlene Maximum.,,,,Az érték nagyobb az ajánlott maximumnál.,,,,
+",,"행성, 항성계, 은하, 은하단의 밀도를 가리킵니다.
+우주선이 목적지에 가는 에너지 비용에 영향을 줍니다.",,"A bolygók, csillagok, galaxisok, és halmazok sűrűsége. Hatásaal lesz az utazási időkre",,,,
+SPARSE,Sparse,,,稀疏,Dünn,,희박,,Ritka,,,,
+NORMAL,Normal,,,常规,Nomal ,,보통,,Közepes,,,,
+DENSE,Dense,,,密集,Dicht,,밀집,,Sűrű,,,,
+ADVANCED_SETTINGS,Advanced settings,,,高级设置,Erweiterte Einstellungen,,고급 설정,,Haladó beállitások,,,,
+BASIC_SETTINGS,Basic settings,,,基础设置,Grundlegende Einstellungen,,기본 설정,,Alapbeállítások,,,,
+MINIMUM,Minimum,,,最小值,Minimum,,최소값,,Minimum,,,,
+RECOMMENDED_MINIMUM,Recommended minimum,,,推荐最小值,Empfohlenes Minimum,,권장 최소값,,Ajámlott minimum,,,,
+MAXIMUM,Maximum,,,最大值,Maximum,,최대값,,Maximum,,,,
+RECOMMENDED_MAXIMUM,Recommended maximum,,,推荐最大值,Empfohlenes Maximum,,권장 최대값,,Ajánlott maximum,,,,
+LOWER_THAN_REC_MIN,This value is lower than the recommended minimum.,,,该值低于建议的最小值,Dieser Wert ist niedriger als das Empofohlene Minimum.,,이 값은 권장 최소값보다 닞습니다.,,Az érték kisebb az ajánlott minimumnál.,,,,
+HIGHER_THAN_REC_MAX,This value is higher than the recommended maximum.,,,该值高于建议的最大值,Dieser Wert ist höher als das Empofohlene Maximum.,,이 값은 권장 최대값보다 높습니다.,,Az érték nagyobb az ajánlott maximumnál.,,,,
 PROCGEN_ABSURD_VALUE_WARNING,"The developer is not responsible for any softlocks, game crashes, save corruptions, house fires etc. that may happen with absurd values like this one.",,,开发者不对因使用此类荒谬数值而可能发生的任何软锁、游戏崩溃、存档损坏、房屋火灾等情况承担责任。,"Der Entwickler ist nicht verantwortlich für Softlocks, Crashes, verlorene Speicherstände oder brennende Computer usw. die durch absurde Werte wie diese auftreten können.",,,,"A fejlesztő nem vállal felelősséget bármilyen lehetetlenségért, fájlkorrupcióért, tűzesetést stb. amit az ilyen abszurd értékek okozhatnak.",,,,
 PLANET_TILE_DIMENSIONS,Planet tile dimensions,,,行星图格尺寸,Planetenkachel Dimensionen,,,,Négyzetek mérete,,,,
 PLANET_TILE_DIMENSIONS_DESC,"The tile dimensions of a planet will be multiplied by this value.
@@ -1967,83 +1969,89 @@ LAKE_COVERAGE_DESC,"Influences how much lakes cover the surface of a planet.
 0 bedeutete keine Seen, 1 bedeutete das alle Planeten (die Seen haben können) vollkommen bedeckt sein werden.",,,,"A bolygókon tavakkal fedett terület aránaát adja meg.\n0-nál nem keltkeznek tavak, 1-nél a bolygók egész felületet tavakkal fedett, ahol az megengedett.",,,,
 CAVE_SPAWN_FREQUENCY,Cave spawn frequency,,,洞穴生成频率,Höhlenhäufigkeit,,,,Barlanggyakoriság,,,,
 CAVE_TILE_DIMENSIONS,Cave tile dimensions,,,洞穴瓦片尺寸,Höhlenkacheldimensionen,,,,Barlangok mérete,,,,
-CAVE_DEPTH,Cave depth,,,洞穴深度,Höhlentiefe,,,,Barlangok mélysége,,,,
-CAVE_FLOOR_DIFFICULTY,Cave floor difficulty,,,洞穴层数难度,Höhlenebenenschwierigkeit,,,,Barlangok nehézsége,,,,
+CAVE_DEPTH,Cave depth,,,洞穴深度,Höhlentiefe,,동굴 깊이,,Barlangok mélysége,,,,
+CAVE_FLOOR_DIFFICULTY,Cave floor difficulty,,,洞穴层数难度,Höhlenebenenschwierigkeit,,동굴 층 난이도,,Barlangok nehézsége,,,,
 CAVE_FLOOR_DIFFICULTY_DESC,"Every time you go down a floor in a cave (with no auroras and volcanoes), the difficulty is multiplied by this value.",,,每次在洞穴中下降一层（无极光和火山时），难度都会乘以该数值。,Jedes mal wenn du eine Ebene in einer Höhle absteigst (ohne Ploarlichter oder Vulkane) wird die Schwierigkeit mit diesem Wert multipliziert.,,,,A barlangok nehézségértéke szintenként ennyivel szorzódik meg (alapesetben),,,,
 CAVE_TRAVERSABLE_SPACE,Traversable space,,,可遍历空间,Befahrbare Fläche,,,,Bejárható terület,,,,
 CAVE_TRAVERSABLE_SPACE_DESC,"Influences the size of tunnels, chambers and other open spaces that can be traversed by rovers in caves, and where enemies, chests and other objects can spawn.
 0 means caves will have no traversable space at all, while 1 means the entire floor will have no minable walls.",,,"影响洞穴中漫游车可通行的隧道、洞穴及其他开放空间的尺寸，以及敌人、宝箱和其他物体可生成的位置。
 0 表示洞穴将完全没有可通行的空间，而 1 表示整个楼层将没有可开采的墙壁。","Beeinflusst die göße von Tunneln, Kammern und anderen Räumen die in Höhlen existiren, in diesen Räumen kann sich der Rover bewegen und Kisten, Gegener und andere Objekte können Spawnen.
 0 Bedeutet das es keine Begehbare Fläche gibt, 1 beideutet das die gesammte Ebene ohne Wände generiert wird.",,,,"A barlangokban lévő alagutak, kamrák, és egyéb nyílt terek méretét adja meg. Ezeken a helyeken tudnak ellenségek, kincs, stb. generálódni.\n0-nál nem lesz bejárható terület, 1-nél nem lesznek bányászható falak sehol.",,,,
-STAR_PLANET_DISTANCE,Star-planet distance,,,恒星与行星之间的距离,Stern-Planeten Distanz,,,,,,,,
+STAR_PLANET_DISTANCE,Star-planet distance,,,恒星与行星之间的距离,Stern-Planeten Distanz,,별-행성 거리,,,,,,
 MAX_PLANETS_IN_SYSTEM,Maximum number of planets,,,"行星的最大数量
-",Maximale anzahl an Planeten,,,,Maximum bolygó egy rendszerben,,,,
-DISTANCE_BETWEEN_SYSTEMS,Distance between star systems,,,恒星系之间的距离,Distantz zwischen Sternensystemen,,,,Rendszerek közötti távolság,,,,
+",Maximale anzahl an Planeten,,최대 행성 수,,Maximum bolygó egy rendszerben,,,,
+DISTANCE_BETWEEN_SYSTEMS,Distance between star systems,,,恒星系之间的距离,Distantz zwischen Sternensystemen,,항성계간 거리,,Rendszerek közötti távolság,,,,
 ELLIPTICAL_GALAXY_SIZE_RANGE,Elliptical galaxy size range,,,椭圆星系大小范围,Eliptische Galaxien größen varianz,,,,Eliptikus galaxis mérettartomány,,,,
 SPIRAL_GALAXY_SIZE_RANGE,Spiral galaxy size range,,,螺旋星系大小范围,"Spiral Galaxien größen varianz
 ",,,,Spirális galaxis mérettartomány,,,,
-MIN,Min,,,最小,Min,,,,Min,,,,
-MAX,Max,,,最大,Max,,,,Max,,,,
+MIN,Min,,,最小,Min,,최소,,Min,,,,
+MAX,Max,,,最大,Max,,최대,,Max,,,,
 DWARF_ELLIPTICAL_GALAXY_RATIO,Dwarf elliptical galaxy ratio,,,矮椭圆星系比率,Zwerg eliptische Galaxien verhältniss,,,,Törpe elliptikus galaxis arány,,,,
 DWARF_ELLIPTICAL_GALAXY_RATIO_DESC,"Elliptical galaxies have a chance to be ""dwarves"". In these galaxies, the number of star systems is divided by 10.
 This number describes the ratio between dwarf and normal galaxies. (0: no dwarves, 1: only dwarves)",,,"椭圆星系有可能成为“矮星系”。在这些星系中，恒星系的数量除以10。
-该数值描述了矮星系与常规星系之间的比率。（0：无矮星系，1：仅矮星系）",,,,,"Az elliptikus galaxisok lehetnek törpék, ezekben tizedannyi csillag van. Ez az arányukat adja meg: 0-nál nincs, 1-nél csak azok.",,,,
-ELLIPTICAL_SPIRAL_GALAXY_RATIO,Elliptical/spiral galaxy ratio,,,椭圆星系/螺旋星系比率,,,,,Elliptikus/spirális galaxisarány,,,,
-ELLIPTICAL_SPIRAL_GALAXY_RATIO_DESC,"Describes the ratio of elliptical galaxies to spiral galaxies. (0: only elliptical, 1: only spiral)",,,描述椭圆星系与螺旋星系的比率。（0：只有椭圆，1：只有螺旋）,,,,,"0: csak elliptikus, 1: csak spirális",,,,
-DISTANCE_BETWEEN_GALAXIES,Distance between galaxies,,,星系之间的距离,,,,,Galaxisok távolsága,,,,
-MIN_NUMBER_OF_GALAXIES,Minimum number of galaxies,,,最小星系数量,,,,,Minimum galaxisszám,,,,
-MAX_NUMBER_OF_GALAXIES,Maximum number of galaxies,,,最大星系数量,,,,,Maximum galaxisszám,,,,
-GALAXY_GROUP_RATIO,Galaxy group ratio,,,星系群比率,,,,,Galaxiscsoport arány,,,,
+该数值描述了矮星系与常规星系之间的比率。（0：无矮星系，1：仅矮星系）","Eliptische Galaxien haben eine Chance vom Typ ""Zwerg"" zu sein. In diesen Galaxien gibt es nur ein Zehtel der der Sternensysteme.
+Die Nummer beschreibt das verhältnis von Zwergen zu Regulären Galaxien. (0: Keine Zwerge, 1: Nur Zwerge)",,,,"Az elliptikus galaxisok lehetnek törpék, ezekben tizedannyi csillag van. Ez az arányukat adja meg: 0-nál nincs, 1-nél csak azok.",,,,
+ELLIPTICAL_SPIRAL_GALAXY_RATIO,Elliptical/spiral galaxy ratio,,,椭圆星系/螺旋星系比率,Eliptisch/Spiral Galaxien verhältniss,,,,Elliptikus/spirális galaxisarány,,,,
+ELLIPTICAL_SPIRAL_GALAXY_RATIO_DESC,"Describes the ratio of elliptical galaxies to spiral galaxies. (0: only elliptical, 1: only spiral)",,,描述椭圆星系与螺旋星系的比率。（0：只有椭圆，1：只有螺旋）,"Beschreibt das Verältnis zwischen Eliptischen und Spiral Galaxien.(0: Nur Eliptisch, 1: Nur Spiral)",,,,"0: csak elliptikus, 1: csak spirális",,,,
+DISTANCE_BETWEEN_GALAXIES,Distance between galaxies,,,星系之间的距离,Distanz zwischen Galaxien,,은하간 거리,,Galaxisok távolsága,,,,
+MIN_NUMBER_OF_GALAXIES,Minimum number of galaxies,,,最小星系数量,Minimale Anzahl an Galaxien,,최소 은하 수,,Minimum galaxisszám,,,,
+MAX_NUMBER_OF_GALAXIES,Maximum number of galaxies,,,最大星系数量,Maximale Anzahl an Galaxien,,최대 은하 수,,Maximum galaxisszám,,,,
+GALAXY_GROUP_RATIO,Galaxy group ratio,,,星系群比率,Galaxie Gruppenverhältniss,,은하군 비율,,Galaxiscsoport arány,,,,
 GALAXY_GROUP_RATIO_DESC,"Galaxy clusters have a chance to be small galaxy groups. These groups have 50 times less galaxies as clusters.
 This number describes the ratio between galaxy groups and clusters. (0: only clusters, 1: only groups)",,,"星系团有可能成为小星系团。这些星系群所拥有的星系数量比星系团少50倍。
-该数值描述星系群与星系团之间的比率。（0：仅星系团，1：仅星系群）",,,,,"A halmazok lehetnek csoportok is, ezekben 50-ed annyi galaxis van. Ez az arányukat adja meg: 0-nál nincs, 1-nél csak azok.",,,,
-DISTANCE_BETWEEN_CLUSTERS,Distance between clusters,,,星系团之间的距离,,,,,Halmazok távolsága,,,,
-NUMBER_OF_CLUSTERS,Number of clusters,,,星系团数量,,,,,Halmazok száma,,,,
-START_GAME,Start game,,,开始游戏,,,,,Játék kezdése,,,,
-OBJECT_COUNT,{num} {object},,,{num} {object},{num} {object},,,,{num} {object},,,,
-TILES,Tiles,,,图格,Kacheln,,,,Négyzetek,,,,
-CAVES,Caves,,,洞穴,Höhlen,,,,Barlangok,,,,
-SAVE_OBJECTIVE,Save up {num} {rsrc},,,存入{num} {rsrc},Besitze {num} {rsrc},Ahorra {num} {rsrc},,,Szerezz: {num} {rsrc},{num} {rsrc} を貯めましょう,Verzamel {num} {rsrc},Накопить {num} {rsrc},
-CONQUER_OBJECTIVE,Conquer {num} {object},Conquérir {num} {object},,统治{num}颗{object},Nehme {num} {object} ein,Conquista {num} {object},,,Foglalj el: {num} {object},{num} {object} を征服,Verover {num} {object},Завоевать {num} {object},
-BUILD_OBJECTIVE,Build {num} {bldg},Construire {num} {bldg},Costruire {num} {bldg},建造{num}座{bldg} ,Konstruiere {num} {bldg},Construye {num} {bldg},{bldg} {num}개 건설하기,,Építs: {num} {bldg},建設 {num} {bldg},Bouw {num} {bldg},Построй {num} {bldg},
-UNLOCK_BY_CONSTRUCTING_X_BLDGS,Unlock by constructing {num} buildings,,,通过建造{num}座建筑来解锁,Freigeschaltet durch die konstruktion von {num} Gebäuden,,,,Megnyílik {num} épület építése után,,,,
-UNLOCK_BY_RESEARCHING_X,Unlock by researching {science},,,通过研究{science}来解锁,Freigeschaltet durch das Erforschen von {science},,,,Mégnyílik a {science} kutatása után,,,,
-UNLOCK_BY_REACHING_LV_X,Unlock by reaching level {lv},,,通过提升等级至{lv}来解锁,Freigeschaltet durch die Forschungsstufe {lv},,,,Magnyílik a {lv}. szint elérése után,,,,
-UNLOCK_BY_CONQUERING_A_PLANET,Unlock by conquering a planet,,,通过征服一颗行星来解锁,Freigeschaltet durch das einnehmen eines Planeten,,,,Megnyílik egy bolygó elfoglalása után,,,,
-UNLOCK_BY_MINING_X,Unlock by mining {weight} kg of {something},,,通过开采{weight}kg的{something}来解锁,,,,,Megnyílik {weight} kg {something} bányászása után,,,,
-LOADING,Loading...,,,加载中,,,,,Betöltés...,,,,
-ADVANCED_SPACE_CONSTRUCTION_SC,Advanced space construction,,,高级建设,,,,,Haladő űrépítkezés,,,,
-ADVANCED_SPACE_CONSTRUCTION_SC_DESC,Allows you to upgrade buildings.,,,允许您升级建筑。,,,,,Megnyitja az épületek fejlesztését.,,,,
-YOU_MAY_NOW_UPGRADE_BLDGS,"You may now upgrade buildings! To do so, mouse over a building, right click, then press Upgrade.",,,您现在可以升级建筑了！操作方法：将鼠标悬停在建筑上，点击右键，然后按“升级”。,,,,,"Most már tudsz épületeket fejleszteni! Ehhez jobb kilkkelj egy épületre, és kattints a Fejlesztés gombra.",,,,
-AUTO_SET_AMOUNT_TIP,Tip: selecting all buildings of the same type (by right clicking a building or with the hotkey) will automatically enter the number of buildings selected in this field.,,,提示：选中所有同类型建筑（通过右键点击建筑或使用快捷键）。,,,,,"Tipp: Ha kiválasztod az összes ugyanolyan épületet (jobb klikk), akkor ide automatikusan beírja a számukat.",,,,
-CONQUER_THIS_PLANET,Conquer this planet,,,征服这个行星,,,,,Bolygó elfoglalása,,,,
-CONQUER_THIS_SYSTEM,Conquer this system,,,征服这个恒星系,,,,,Rendszer elfoglalása,,,,
-FIGHT,Fight,,,战斗,,,,,Csata,,,,
-FIGHT_DESC,Ships will earn {XP} XP each and you will earn @i {money}.,,,战斗胜利后每艘飞船将获得 {XP} 点经验值，您将获得@i {money}。,,,,,"A hajók {XP} XP-t kapnak, és szerzel @i {money}",,,,
-NEGOTIATE,Negotiate,,,谈判,,,,,Tárgyalás,,,,
-NEGOTIATE_DESC,You will pay @i {money} to the enemies to take control of this planet immediately.,,,您将向敌人支付@i {money}，以立即征服此行星。,,,,,,,,,
-NEGOTIATED_NORMAL,The enemies accept your money and leave the planet. It is all yours now!,,,敌人接受了你的金钱并离开了这个行星。现在这一切都属于你了！,,,,,,,,,
-NEGOTIATED_ALL_NORMAL,The enemies accept your money and leave the star system. All planets in this system are yours now!,,,敌人接受了您的金钱并离开了恒星系。此恒星系中的所有行星现在都归您所有！,,,,,,,,,
-NEGOTIATED_HARD,"The enemies were amazed by the amount of money you offered. Despite their superior strength relative to your ships, they could not refuse an amount of money that they had never seen before, and leave the planet.",,,敌人对你所提供的金钱数额感到震惊。尽管他们的实力相对于你的飞船而言更为强大，它们仍无法拒绝一笔他们此前从未见过的金钱数额，并离开该行星。,,,,,,,,,
-NEGOTIATED_ALL_HARD,"The enemies on each planet were all amazed by the amount of money you offered. Despite their superior strength relative to your ships, they could not refuse an amount of money that they had never seen before, and leave the star system together.",,,每颗行星上的敌人对你所提供的金钱数额感到震惊。尽管他们的实力相对于你的飞船而言更为强大，它们仍无法拒绝一笔他们此前从未见过的金钱数额，并一同离开了恒星系。,,,,,,,,,
-NEGOTIATED_EASY,"The enemies, intimidated by the strength of your ships, humbly accept what little money you offered to leave the planet immediately.",,,敌人因你舰船的强大而心生畏惧，谦卑地接受了你所提供的少量金钱，立即离开了这颗行星。,,,,,,,,,
-NEGOTIATED_ALL_EASY,"Your ships visit each planet one by one, intimidating the enemies with their overwhelming strength. A small sum of money seems to be enough to convince all of them to leave the star system immediately.",,,你的飞船逐一造访各行星，以压倒性的力量威慑敌人。一笔少量金钱似乎便足以说服他们全部立即离开该星系。,,,,,,,,,
-BOTH_ACTIONS_ALSO_COST_ENERGY,Both actions will also cost @i {energy},,,这两个行动也将消耗 @i {energy},,,,,MIndkét lehetőség felhasznál @i {energy}-t is.,,,,
-CHOOSE_EXPORT_MEDIUM,Choose export medium:,,,选择导出类型：,,,,,Válassz exportformátumot:,,,,
-CHOOSE_IMPORT_MEDIUM,Choose import medium:,,,选择导入类型：,,,,,Válassz importformátumot:,,,,
-HX3_FILE,.hx3 file,,,.hx3 文档,,,,,.hx3 fájl,,,,
-TEXT,Text,,,文本,,,,,Szöveg,,,,
-COPY_STRING_TO_CLIPBOARD,"Copy text to the clipboard, then press Import.",,,将文本复制到剪贴板，然后按“导入”。,,,,,Másold ide a szöveget majd kattints az importálásra.,,,,
-IMPORT,Import,,,导入,,,,,Importálás,,,,
-EXPORT_STRING_SUCCESS,{save} successfully copied to clipboard!,,,{save} 已成功复制到剪贴板！,,,,,{save} sikeresen másolva a vágólapra.,,,,
+该数值描述星系群与星系团之间的比率。（0：仅星系团，1：仅星系群）","Galaxie Cluster haben eine Chance eine Kleine Gruppe an Galaxien zu sein. Diese Gruppe hat nur ein Fünfzigstel der Galaxien im Cluster.
+Die Nummer beschreibt das verhältnis von Kleinen Gruppen und Clustern.(0: Nur Cluster,1: Nur kleine Gruppen)",,,,"A halmazok lehetnek csoportok is, ezekben 50-ed annyi galaxis van. Ez az arányukat adja meg: 0-nál nincs, 1-nél csak azok.",,,,
+DISTANCE_BETWEEN_CLUSTERS,Distance between clusters,,,星系团之间的距离,Distanz zwischen Clustern,,은하단간 거리,,Halmazok távolsága,,,,
+NUMBER_OF_CLUSTERS,Number of clusters,,,星系团数量,Anzahl an Clustern,,은하단 수,,Halmazok száma,,,,
+START_GAME,Start game,,,开始游戏,Spiel Starten,,게임 시작하기,,Játék kezdése,,,,
+OBJECT_COUNT,{num} {object},,,{num} {object},{num} {object},,{object} {num}개,,{num} {object},,,,
+TILES,Tiles,,,图格,Kacheln,,타일,,Négyzetek,,,,
+CAVES,Caves,,,洞穴,Höhlen,,동굴,,Barlangok,,,,
+SAVE_OBJECTIVE,Save up {rsrc} {num},,,存入{rsrc} {num},Besitze {rsrc} {num},Ahorra {rsrc} {num},{rsrc} {num} 모으세요,,Szerezz: {rsrc} {num},{rsrc} {num} を貯めましょう,Verzamel {rsrc} {num},Накопить {rsrc} {num},
+CONQUER_OBJECTIVE,Conquer {num} {object},Conquérir {num} {object},,统治{num}颗{object},Nehme {num} {object} ein,Conquista {num} {object},{object} {num}개 정복하세요,,Foglalj el: {num} {object},{num} {object} を征服,Verover {num} {object},Завоевать {num} {object},
+BUILD_OBJECTIVE,Build {num} {bldg},Construire {num} {bldg},Costruire {num} {bldg},建造{num}座{bldg} ,Konstruiere {num} {bldg},Construye {num} {bldg},{bldg} {num}개 건설하세요,,Építs: {num} {bldg},建設 {num} {bldg},Bouw {num} {bldg},Построй {num} {bldg},
+UNLOCK_BY_CONSTRUCTING_X_BLDGS,Unlock by constructing {num} buildings,,,通过建造{num}座建筑来解锁,Freigeschaltet durch die konstruktion von {num} Gebäuden,,빌딩 {num}개 건설하면 잠금 해제,,Megnyílik {num} épület építése után,,,,
+UNLOCK_BY_RESEARCHING_X,Unlock by researching {science},,,通过研究{science}来解锁,Freigeschaltet durch das Erforschen von {science},,{science} 연구하면 잠금 해제,,Mégnyílik a {science} kutatása után,,,,
+UNLOCK_BY_REACHING_LV_X,Unlock by reaching level {lv},,,通过提升等级至{lv}来解锁,Freigeschaltet durch die Forschungsstufe {lv},,레벨 {lv} 도달하면 잠금 해제,,Magnyílik a {lv}. szint elérése után,,,,
+UNLOCK_BY_CONQUERING_A_PLANET,Unlock by conquering a planet,,,通过征服一颗行星来解锁,Freigeschaltet durch das einnehmen eines Planeten,,행성 정복하면 잠금 해제,,Megnyílik egy bolygó elfoglalása után,,,,
+UNLOCK_BY_MINING_X,Unlock by mining {weight} kg of {something},,,通过开采{weight}kg的{something}来解锁,Freigeschaltet durch den Abbau von {weight} kg {something},,{something} {weight} kg 채취하면 잠금 해제,,Megnyílik {weight} kg {something} bányászása után,,,,
+LOADING,Loading...,,,加载中,Laden...,,로딩 중...,,Betöltés...,,,,
+ADVANCED_SPACE_CONSTRUCTION_SC,Advanced space construction,,,高级建设,Erweiterte Weltraumkonstruktion,,고급 우주 건설,,Haladő űrépítkezés,,,,
+ADVANCED_SPACE_CONSTRUCTION_SC_DESC,Allows you to upgrade buildings.,,,允许您升级建筑。,Ermöglicht es dir Gebäude zu verbessern.,,빌딩 업그레이드를 허용합니다.,,Megnyitja az épületek fejlesztését.,,,,
+YOU_MAY_NOW_UPGRADE_BLDGS,"You may now upgrade buildings! To do so, mouse over a building, right click, then press Upgrade.",,,您现在可以升级建筑了！操作方法：将鼠标悬停在建筑上，点击右键，然后按“升级”。,"Du kannst nun Gebäude verbessern! Ziele dafür auf ein Gebäude, Recktsklick und drücke Verbessern.",,이제 빌딩 업그레이드를 할 수 있습니다! 빌딩 위에 마우스를 움직이고 오를쪽 클릭 -> 업그레이드를 누르시면 됩니다.,,"Most már tudsz épületeket fejleszteni! Ehhez jobb kilkkelj egy épületre, és kattints a Fejlesztés gombra.",,,,
+AUTO_SET_AMOUNT_TIP,Tip: selecting all buildings of the same type (by right clicking a building or with the hotkey) will automatically enter the number of buildings selected in this field.,,,提示：选中所有同类型建筑（通过右键点击建筑或使用快捷键）。,Tip: Wähle alle Gebäude der gleichen Art (Rechstklick auf ein Gebäude oder per Hotkey) wird automatisch die Anzahl an Gebäuden in dieser Kachel auswählen.,,,,"Tipp: Ha kiválasztod az összes ugyanolyan épületet (jobb klikk), akkor ide automatikusan beírja a számukat.",,,,
+CONQUER_THIS_PLANET,Conquer this planet,,,征服这个行星,Nimm diesen Planeten ein,,행성 정복하기,,Bolygó elfoglalása,,,,
+CONQUER_THIS_SYSTEM,Conquer this system,,,征服这个恒星系,Nimm dieses System ein,,항성계 정복하기,,Rendszer elfoglalása,,,,
+FIGHT,Fight,,,战斗,Kämpfen,,싸우기,,Csata,,,,
+FIGHT_DESC,Ships will earn {XP} XP each and you will earn @i {money}.,,,战斗胜利后每艘飞船将获得 {XP} 点经验值，您将获得@i {money}。,Schiffe erhalten {XP} EXP jewails und du erhält @i {money},,우주선들은 {XP} XP를 얻고 @i {money} 받습니다,,"A hajók {XP} XP-t kapnak, és szerzel @i {money}",,,,
+NEGOTIATE,Negotiate,,,谈判,Verhandeln,,협상하기,,Tárgyalás,,,,
+NEGOTIATE_DESC,You will pay @i {money} to the enemies to take control of this planet immediately.,,,您将向敌人支付@i {money}，以立即征服此行星。,Du zahlst @i {money} den Gegnern um sofort kontrolle über den Planeten zu erhalten.,,적들에게 @i {money} 주고 행성을 바로 통제하기,,,,,,
+NEGOTIATED_NORMAL,The enemies accept your money and leave the planet. It is all yours now!,,,敌人接受了你的金钱并离开了这个行星。现在这一切都属于你了！,Die Gegener nehmen das Geld und verlassen den Planeten. Er gehört nun dir!,,,,,,,,
+NEGOTIATED_ALL_NORMAL,The enemies accept your money and leave the star system. All planets in this system are yours now!,,,敌人接受了您的金钱并离开了恒星系。此恒星系中的所有行星现在都归您所有！,Die Gegener nehmen das Geld und verlassen das Sternensystem. Alle Planeten gehören nun dir!,,,,,,,,
+NEGOTIATED_HARD,"The enemies were amazed by the amount of money you offered. Despite their superior strength relative to your ships, they could not refuse an amount of money that they had never seen before, and leave the planet.",,,敌人对你所提供的金钱数额感到震惊。尽管他们的实力相对于你的飞船而言更为强大，它们仍无法拒绝一笔他们此前从未见过的金钱数额，并离开该行星。,"Die Gegner wurden beeindruckt von der menge an Geld die du angeboten hast. Troz ihrer überwältigenden stärke, konnten sie zu diese riesen menge an Geld nein sagen, und verlassen den Planeten.",,,,,,,,
+NEGOTIATED_ALL_HARD,"The enemies on each planet were all amazed by the amount of money you offered. Despite their superior strength relative to your ships, they could not refuse an amount of money that they had never seen before, and leave the star system together.",,,每颗行星上的敌人对你所提供的金钱数额感到震惊。尽管他们的实力相对于你的飞船而言更为强大，它们仍无法拒绝一笔他们此前从未见过的金钱数额，并一同离开了恒星系。,"Die Gegner auf jedem Planeten wurden beeindruckt von der menge an Geld die du angeboten hast. Troz ihrer überwältigenden stärke, konnten sie zu diese riesen menge an Geld nein sagen, und verlassen das Sternensystem.",,,,,,,,
+NEGOTIATED_EASY,"The enemies, intimidated by the strength of your ships, humbly accept what little money you offered to leave the planet immediately.",,,敌人因你舰船的强大而心生畏惧，谦卑地接受了你所提供的少量金钱，立即离开了这颗行星。,"Die Gegner sind beindruckt von der Stärke deiner Schiffe, nehmen die kleien menge an Geld und verlassen umgehend den Planeten.",,,,,,,,
+NEGOTIATED_ALL_EASY,"Your ships visit each planet one by one, intimidating the enemies with their overwhelming strength. A small sum of money seems to be enough to convince all of them to leave the star system immediately.",,,你的飞船逐一造访各行星，以压倒性的力量威慑敌人。一笔少量金钱似乎便足以说服他们全部立即离开该星系。,Deine Schiffe besuchen jeden Planmeten wo jewails die Gegener beindruckt sind von der Stärke deiner Schiffe. Eine  kleien menge an Geld ist ausreichen um sie alle dazu zu bewegen das Sternensystem zu  verlassen.,,,,,,,,
+BOTH_ACTIONS_ALSO_COST_ENERGY,Both actions will also cost @i {energy},,,这两个行动也将消耗 @i {energy},Beide Aktionen kostet auch @i {energy},,두 가지 행동는 추가 비용 @i {energy} 이 있습니다,,MIndkét lehetőség felhasznál @i {energy}-t is.,,,,
+CHOOSE_EXPORT_MEDIUM,Choose export medium:,,,选择导出类型：,Wähle ein Exportart:,,내보내기 방법을 선택하세요:,,Válassz exportformátumot:,,,,
+CHOOSE_IMPORT_MEDIUM,Choose import medium:,,,选择导入类型：,Wähle ein Importart:,,가져오기 방법을 선택하세요:,,Válassz importformátumot:,,,,
+HX3_FILE,.hx3 file,,,.hx3 文档,.hx3 Datei,,.hx3 파일,,.hx3 fájl,,,,
+TEXT,Text,,,文本,Text,,텍스트,,Szöveg,,,,
+COPY_STRING_TO_CLIPBOARD,"Copy text to the clipboard, then press Import.",,,将文本复制到剪贴板，然后按“导入”。,"Kopiere den Text in die Zwischenablage, und drücke dannach Importieren.",,"텍스트를 클립보드에 복사한 다음, '가져오기'를 누르세요.",,Másold ide a szöveget majd kattints az importálásra.,,,,
+IMPORT,Import,,,导入,Importieren,,가져오기,,Importálás,,,,
+EXPORT_STRING_SUCCESS,{save} successfully copied to clipboard!,,,{save} 已成功复制到剪贴板！,{save} Erfolgreich in die Zwischenablage kopiert!,,{save} 클립보드에 복사 성공!,,{save} sikeresen másolva a vágólapra.,,,,
 SELECT_ONLY_THIS_FILTER,"Ctrl click to select only this filter
 Ctrl click again to reset",,,"按住 Ctrl 键单击以仅选择此筛选器
-再次按住 Ctrl 键单击以重置",,,,,Ctrl+kattints csak ezen fiter kiválasztásához\nCtrl+kattints megint a visszállításhoz,,,,
+再次按住 Ctrl 键单击以重置","Strg Klick für nur diesen Filter
+Strg Klick erneut zum zurücksetzen",,"Ctrl 클릭: 이 필터만 선택
+다시 Ctrl 클릭: 필터 초기화",,Ctrl+kattints csak ezen fiter kiválasztásához\nCtrl+kattints megint a visszállításhoz,,,,
 PP_HELP,"Probe points determine how powerful of a universe you can make when discovering one.
 Using galaxies with less than 5000 star systems will give less probe points.",,,"探测点决定你在发现宇宙时能创造多强大的宇宙。
-使用恒星系少于5000个的星系将获得较少的探测点。",,,,,"A szontapontok meghatározzák, hogy mennyire erős univerzumot fogsz felfedezni. Kevesebb, mint 5000 rendszert tartalmazó galaxis esetén kevesebb szondapontot kapsz.",,,,
-SELECT_METAL_TO_GROW,Select a metal to grow:,,,选择金属来种植：,,,,,Válaszd ki a növesztendő fémet:,,,,
-UPROOT,Uproot,,,连根拔起,,,,,Kihúzás,,,,
-P_ATOM_NAME,Phosphorus atom,,,磷,,,,,,,,,
-WORKING,Working,,,,,,,,,,,,
-PLAYTIME,Playtime,,,,,,,,,,,,
+使用恒星系少于5000个的星系将获得较少的探测点。","Probenpunkte entschieden wie Stark du Universen machen kannst wenn du eine Neues Entdeckst.
+Galaxien mit weniger als 5000 Sternenssystemen geben weniger Probenpunkten.",,,,"A szontapontok meghatározzák, hogy mennyire erős univerzumot fogsz felfedezni. Kevesebb, mint 5000 rendszert tartalmazó galaxis esetén kevesebb szondapontot kapsz.",,,,
+SELECT_METAL_TO_GROW,Select a metal to grow:,,,选择金属来种植：,Wähle ein Metall zum anbau:,,자랄 금속 선택:,,Válaszd ki a növesztendő fémet:,,,,
+UPROOT,Uproot,,,连根拔起,Entwurzeln,,뽑기,,Kihúzás,,,,
+P_ATOM_NAME,Phosphorus atom,,,磷,Phosphor Atom,,인 원자,,,,,,
+WORKING,Working,,,运行中,Arbeitet,,작동 중,,,,,,
+PLAYTIME,Playtime,,,游玩时长,Spielzeit,,플레이 시간,,,,,,
+LOAD,Load,,,,,,불러오기,,,,,,
