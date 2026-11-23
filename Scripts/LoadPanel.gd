@@ -36,7 +36,7 @@ func refresh():
 		await_counter += 1
 		if await_counter % int(ceil(60.0 / Engine.get_frames_per_second())) == 0:
 			await get_tree().process_frame
-	$TotalFileSize.label_text = tr("PERSISTENT_STORAGE") + " " + Helper.get_file_size_string(Helper.get_directory_properties("user://").size) + " "
+	$TotalFileSize.label_text = tr("PERSISTENT_DATA") + " " + Helper.get_file_size_string(Helper.get_directory_properties("user://").size) + " "
 	$TotalFileSize.refresh()
 	$ScrollContainer.show()
 	$Loading.hide()

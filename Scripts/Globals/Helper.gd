@@ -1506,6 +1506,33 @@ func get_NFR_prod_mult(tier:int):
 func get_CS_prod_mult(tier:int):
 	return 10 * pow(4, tier-1)
 
+func add_rsrc_prod_bonus(tile_id:int, mult:float, rsrc:String):
+	var tile = game.tile_data[tile_id]
+	if tile.has("resource_production_bonus_list"):
+		tile.resource_production_bonus_list[rsrc] = tile.resource_production_bonus_list.get(rsrc, []) + [mult]
+	else:
+		tile.resource_production_bonus_list = {rsrc: [mult]}
+	recalculate_rsrc_prod_bonus(tile_id, rsrc)
+
+func update_rsrc_prod_bonus(tile_id:int, old_mult:float, new_mult:float, rsrc:String):
+	var tile = game.tile_data[tile_id]
+	var mult_index = tile.resource_production_bonus_list[rsrc].find(old_mult)
+	if mult_index != -1:
+		tile.resource_production_bonus_list[rsrc][mult_index] = new_mult
+	recalculate_rsrc_prod_bonus(tile_id, rsrc)
+
+func recalculate_rsrc_prod_bonus(tile_id:int, rsrc:String):
+	var tile = game.tile_data[tile_id]
+	tile.resource_production_bonus_list[rsrc].sort()
+	tile.resource_production_bonus_list[rsrc].reverse() # Descending order
+	var final_mult = tile.resource_production_bonus_list[rsrc][0]
+	for i in range(1, len(tile.resource_production_bonus_list[rsrc])):
+		final_mult *= pow(tile.resource_production_bonus_list[rsrc][i], 1.0 / i) # Third multiplier will be raised to the power of 1/2, the 4th to 1/3, 5th to 1/4 etc.
+	if tile.has("resource_production_bonus"):
+		tile.resource_production_bonus[rsrc] = final_mult
+	else:
+		tile.resource_production_bonus = {rsrc: final_mult}
+
 func set_ancient_bldg_bonuses(p_i:Dictionary, ancient_bldg:Dictionary, tile_id:int, wid:int):
 	var x_pos = tile_id % wid
 	var y_pos = tile_id / wid
@@ -1528,11 +1555,10 @@ func set_ancient_bldg_bonuses(p_i:Dictionary, ancient_bldg:Dictionary, tile_id:i
 				if y < 0 or y >= wid or x == x_pos and y == y_pos:
 					continue
 				var id:int = x + y * wid
+				add_rsrc_prod_bonus(id, mult, rsrc)
 				var tile = game.tile_data[id]
-				tile.resource_production_bonus[rsrc] = tile.resource_production_bonus.get(rsrc, 1.0) * mult
-				if game.tile_data_persistent[id] == null:
-					game.tile_data_persistent[id] = {}
-				game.tile_data_persistent[id].resource_production_bonus = {rsrc: tile.resource_production_bonus[rsrc]}
+				Helper.set_tile_data_persistent(id, "resource_production_bonus", tile.resource_production_bonus)
+				Helper.set_tile_data_persistent(id, "resource_production_bonus_list", tile.resource_production_bonus_list)
 				if tile.has("bldg"):
 					var overclock_mult:float = tile.bldg.get("overclock_mult", 1.0)
 					var diff = tile.bldg.path_1_value * overclock_mult * (mult - 1.0)
@@ -1553,10 +1579,9 @@ func set_ancient_bldg_bonuses(p_i:Dictionary, ancient_bldg:Dictionary, tile_id:i
 				var tile = game.tile_data[id]
 				var mult = Helper.get_substation_prod_mult(tier)
 				var prev_energy_production_bonus = tile.resource_production_bonus.get("energy", 1.0)
-				tile.resource_production_bonus.energy = prev_energy_production_bonus * mult
-				if game.tile_data_persistent[id] == null:
-					game.tile_data_persistent[id] = {}
-				game.tile_data_persistent[id].resource_production_bonus = {"energy": tile.resource_production_bonus.energy}
+				add_rsrc_prod_bonus(id, mult, "energy")
+				Helper.set_tile_data_persistent(id, "resource_production_bonus", tile.resource_production_bonus)
+				Helper.set_tile_data_persistent(id, "resource_production_bonus_list", tile.resource_production_bonus_list)
 				if tile.has("substation_data"):
 					tile.substation_data[tile_id] = mult
 				else:

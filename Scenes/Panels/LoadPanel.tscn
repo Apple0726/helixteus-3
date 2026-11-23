@@ -132,9 +132,8 @@ offset_left = 448.0
 offset_top = 600.0
 offset_right = 832.0
 offset_bottom = 630.0
-text = "[center]PERSISTENT_STORAGE [img]Graphics/Icons/help.png[/img][/center]"
-label_text = "PERSISTENT_STORAGE"
-help_text = "PERSISTENT_STORAGE_DESC"
+text = "[center] [img]Graphics/Icons/help.png[/img][/center]"
+help_text = "PERSISTENT_DATA_DESC"
 align = 1
 
 [node name="ExportingLabel" type="Label" parent="." unique_id=1063705637]

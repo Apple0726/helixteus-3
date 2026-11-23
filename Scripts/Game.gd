@@ -2837,23 +2837,25 @@ func generate_volcano(t_id:int, VEI:float, rng:RandomNumberGenerator, artificial
 			var overclock_mult = current_tile.bldg.get("overclock_mult", 1.0) if current_tile.has("bldg") else 1.0
 			if current_tile.has("ash"):
 				if not current_tile.has("cave"):
-					var diff = max(richness - current_tile.ash.richness, 0)
-					if current_tile.has("bldg") and building_to_resource.has(current_tile.bldg.name):
-						var rsrc = building_to_resource[current_tile.bldg.name]
-						autocollect.rsrc[rsrc] += diff * current_tile.bldg.path_1_value * overclock_mult * current_tile.resource_production_bonus.get(rsrc, 1.0)
-					current_tile.ash.richness = max(richness, current_tile.ash.richness)
-					current_tile.resource_production_bonus.minerals = current_tile.resource_production_bonus.get("minerals", 1.0) + diff
-					current_tile.resource_production_bonus.SP = current_tile.resource_production_bonus.get("SP", 1.0) + diff / 2.0
+					var diff = richness - current_tile.ash.richness
+					if diff > 0.0:
+						if current_tile.has("bldg") and building_to_resource.has(current_tile.bldg.name):
+							var rsrc = building_to_resource[current_tile.bldg.name]
+							autocollect.rsrc[rsrc] += diff * current_tile.bldg.path_1_value * overclock_mult * current_tile.resource_production_bonus.get(rsrc, 1.0)
+						current_tile.ash.richness = richness
+						Helper.update_rsrc_prod_bonus(current_tile_id, current_tile.ash.richness, richness, "minerals")
+						Helper.update_rsrc_prod_bonus(current_tile_id, current_tile.ash.richness * 0.5, richness * 0.5, "SP")
 			else:
 				current_tile["ash"] = {"richness":richness}
-				current_tile.resource_production_bonus.minerals = current_tile.resource_production_bonus.get("minerals", 1.0) + (richness - 1.0)
-				current_tile.resource_production_bonus.SP = current_tile.resource_production_bonus.get("SP", 1.0) + (richness - 1.0) / 2.0
+				Helper.add_rsrc_prod_bonus(current_tile_id, richness, "minerals")
+				Helper.add_rsrc_prod_bonus(current_tile_id, richness * 0.5, "SP")
 				if current_tile.has("bldg") and building_to_resource.has(current_tile.bldg.name):
 					var rsrc = building_to_resource[current_tile.bldg.name]
 					autocollect.rsrc[rsrc] += (richness - 1.0) * current_tile.bldg.path_1_value * overclock_mult * current_tile.resource_production_bonus.get(rsrc, 1.0)
 			if artificial:
 				current_tile.ash["artificial"] = true
 				Helper.set_tile_data_persistent(current_tile_id, "resource_production_bonus", current_tile.resource_production_bonus)
+				Helper.set_tile_data_persistent(current_tile_id, "resource_production_bonus_list", current_tile.resource_production_bonus_list)
 				Helper.set_tile_data_persistent(current_tile_id, "ash", current_tile.ash)
 			if not achievement_data.exploration.has("volcano_cave") and current_tile.has("cave"):
 				earn_achievement("exploration", "volcano_cave")
@@ -2910,12 +2912,8 @@ func generate_aurora(p_i:Dictionary, home_planet:bool, rng:RandomNumberGenerator
 					var id2:int = k + j * wid
 					if tile_data[id2].has("aurora"):
 						tile_data[id2].aurora *= au_int
-						tile_data[id2].resource_production_bonus.SP *= au_int
-						tile_data[id2].resource_production_bonus.energy *= au_int
 					else:
 						tile_data[id2]["aurora"] = au_int
-						tile_data[id2].resource_production_bonus["SP"] = tile_data[id2].resource_production_bonus.get("SP", 1.0) + au_int
-						tile_data[id2].resource_production_bonus["energy"] = tile_data[id2].resource_production_bonus.get("energy", 1.0) + au_int
 		else:#Horizontal
 			for j in wid:
 				var y_pos:int = lerp(tile_from, tile_to, j / float(wid)) + diff * i + thiccness * amplitude * sin(j / float(wid) * 4 * pulsation * PI)
@@ -2926,12 +2924,8 @@ func generate_aurora(p_i:Dictionary, home_planet:bool, rng:RandomNumberGenerator
 					var id2:int = j + k * wid
 					if tile_data[id2].has("aurora"):
 						tile_data[id2].aurora *= au_int
-						tile_data[id2].resource_production_bonus.SP *= au_int
-						tile_data[id2].resource_production_bonus.energy *= au_int
 					else:
 						tile_data[id2]["aurora"] = au_int
-						tile_data[id2].resource_production_bonus["SP"] = tile_data[id2].resource_production_bonus.get("SP", 1.0) + au_int
-						tile_data[id2].resource_production_bonus["energy"] = tile_data[id2].resource_production_bonus.get("energy", 1.0) + au_int
 		stats_global.highest_au_int = max(au_int, stats_global.highest_au_int)
 		stats_dim.highest_au_int = max(au_int, stats_dim.highest_au_int)
 		stats_univ.highest_au_int = max(au_int, stats_univ.highest_au_int)
@@ -3269,41 +3263,20 @@ func generate_tiles(id:int, first_time:bool):
 							continue
 						if lake_au_int > 0.0 and not _tile.has("lake"):
 							if _tile.has("aurora"):
-								if not _tile.has("lake_elements"): # Aurora does not come from lake
+								if not _tile.has("lake_elements"): # If aurora does not come from lake
 									_tile.aurora += lake_au_int
-									_tile.resource_production_bonus["SP"] = _tile.resource_production_bonus.get("SP", 1.0) + lake_au_int
-								else:# Aurora comes from lake
-									_tile.resource_production_bonus["SP"] = _tile.resource_production_bonus.get("SP", 1.0) + max(0, lake_au_int - _tile.aurora)
+								else:# If aurora comes from lake
 									_tile.aurora = max(lake_au_int, _tile.aurora)
 							else:
-								_tile.resource_production_bonus["SP"] = _tile.resource_production_bonus.get("SP", 1.0) + lake_au_int
 								_tile["aurora"] = lake_au_int
 						if _tile.has("lake_elements"):
 							_tile.lake_elements[lake_info.element] = lake_info.state
 						else:
 							_tile["lake_elements"] = {lake_info.element:lake_info.state}
-			elif tile.has("crater"):
-				for k in range(max(0, i - 1), min(i + 1 + 1, wid)):
-					for l in range(max(0, j - 1), min(j + 1 + 1, wid)):
-						var id2 = k % wid + l * wid
-						var _tile = tile_data[id2]
-						if Vector2(k, l) == Vector2(i, j):
-							continue
-						_tile.resource_production_bonus["SP"] = _tile.resource_production_bonus.get("SP", 1.0) + pow(met_info[tile.crater.metal].rarity, 0.6) - 0.8
-			elif tile.has("wormhole"):
-				for k in range(max(0, i - 2), min(i + 2 + 1, wid)):
-					for l in range(max(0, j - 2), min(j + 2 + 1, wid)):
-						var id2 = k % wid + l * wid
-						var _tile = tile_data[id2]
-						if Vector2(k, l) == Vector2(i, j):
-							continue
-						_tile.resource_production_bonus["SP"] = _tile.resource_production_bonus.get("SP", 1.0) + 7.0
-	# Give science point production bonus to tiles surrounding lakes
-	for i in len(tile_data):
-		var tile = tile_data[i]
-		if tile.has("cave") or tile.has("volcano") or tile.has("lake") or tile.has("wormhole"):
-			tile.resource_production_bonus.clear()
-		elif tile.has("lake_elements"):
+	# Calculate resource production bonuses
+	for tile_id in len(tile_data):
+		var tile = tile_data[tile_id]
+		if tile.has("lake_elements"):
 			for el in tile.lake_elements.keys():
 				var state_multiplier = 1.0
 				var state = tile.lake_elements[el]
@@ -3311,7 +3284,20 @@ func generate_tiles(id:int, first_time:bool):
 					state_multiplier = 2.0
 				elif state == "sc":
 					state_multiplier = 1.5
-				tile.resource_production_bonus["SP"] = tile.resource_production_bonus.get("SP", 1.0) + Data.lake_SP_bonus[el] * state_multiplier
+				Helper.add_rsrc_prod_bonus(tile_id, (Data.lake_SP_bonus[el] + 1.0) * state_multiplier, "SP")
+		if tile.has("aurora"):
+			Helper.add_rsrc_prod_bonus(tile_id, tile.aurora, "SP")
+			Helper.add_rsrc_prod_bonus(tile_id, tile.aurora, "energy")
+		if tile.has("crater"):
+			var i = tile_id % wid
+			var j = tile_id / wid
+			for k in range(max(0, i - 1), min(i + 1 + 1, wid)):
+				for l in range(max(0, j - 1), min(j + 1 + 1, wid)):
+					var id2 = k % wid + l * wid
+					var _tile = tile_data[id2]
+					if tile_id == id2:
+						continue
+					Helper.add_rsrc_prod_bonus(id2, pow(met_info[tile.crater.metal].rarity, 0.6) + 0.2, "SP")
 	if first_time:
 		if not achievement_data.exploration.has("find_neon_lake"):
 			if p_i.has("lake") and p_i.lake.element == "Ne":

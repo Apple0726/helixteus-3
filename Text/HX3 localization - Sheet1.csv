@@ -1902,8 +1902,8 @@ BACKUP_INTERVAL,Backup interval,,,自动备份间隔,Backup intervall,,백업 �
 MAX_BACKUPS,Max backups,,,最大备份,Maximale Anzahl Backups,,최대 백업,,Max biztonsági mentések,,,,
 1_MINUTE,1 minute,,,1 分钟,1 Minute,,1분,,1 perc,,,,
 X_MINUTES,%d minutes,,,%d 分钟,%d Minuten,,%d분,,%d perc,,,,
-PERSISTENT_STORAGE,Persistent data:,,,总存储大小：,Permanenter Speicher;,,영구 데이터:,,Maradandó tárhely:,,,,
-PERSISTENT_STORAGE_DESC,"Total size of saves, backups, log files etc. generated and stored by the game.",,,游戏生成并存储的存档、备份、日志文件等的总大小。,"Gesammtes Volumen aller Speicherstände, Backups, Logfiles usw. erzeugt und gespeichert durch das Spiel.",,"게임이 생성한 모든 세이브와 백업, 로그 파일 등의 총 크기를 가리킵니다.",,"A játék által tárolt mentések, naplófáljok stb. összmérete.",,,,
+PERSISTENT_DATA,Persistent data:,,,总存储大小：,Permanenter Speicher;,,영구 데이터:,,Maradandó tárhely:,,,,
+PERSISTENT_DATA_DESC,"Total size of saves, backups, log files etc. generated and stored by the game.",,,游戏生成并存储的存档、备份、日志文件等的总大小。,"Gesammtes Volumen aller Speicherstände, Backups, Logfiles usw. erzeugt und gespeichert durch das Spiel.",,"게임이 생성한 모든 세이브와 백업, 로그 파일 등의 총 크기를 가리킵니다.",,"A játék által tárolt mentések, naplófáljok stb. összmérete.",,,,
 BACKUP_WITH_MINIMAL_INTERRUPTION,Auto-backup with minimal interruption,,,以最小中断进行自动备份,Automatische Backups mit minimalen Unterbrechungen,,자동 백업 방해 최소화,,Biztonsági mentés minimális zavarással,,,,
 BACKUP_WITH_MINIMAL_INTERRUPTION_DESC,"If enabled, save backups will only happen when:
 - The game has lost focus
