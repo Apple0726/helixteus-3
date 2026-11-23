@@ -3286,8 +3286,8 @@ func generate_tiles(id:int, first_time:bool):
 					state_multiplier = 1.5
 				Helper.add_rsrc_prod_bonus(tile_id, (Data.lake_SP_bonus[el] + 1.0) * state_multiplier, "SP")
 		if tile.has("aurora"):
-			Helper.add_rsrc_prod_bonus(tile_id, tile.aurora, "SP")
-			Helper.add_rsrc_prod_bonus(tile_id, tile.aurora, "energy")
+			Helper.add_rsrc_prod_bonus(tile_id, tile.aurora + 1.0, "SP")
+			Helper.add_rsrc_prod_bonus(tile_id, tile.aurora + 1.0, "energy")
 		if tile.has("crater"):
 			var i = tile_id % wid
 			var j = tile_id / wid
@@ -3298,6 +3298,10 @@ func generate_tiles(id:int, first_time:bool):
 					if tile_id == id2:
 						continue
 					Helper.add_rsrc_prod_bonus(id2, pow(met_info[tile.crater.metal].rarity, 0.6) + 0.2, "SP")
+	for tile_id in len(tile_data):
+		var tile = tile_data[tile_id]
+		if tile.has("cave") or tile.has("volcano"):
+			tile.resource_production_bonus.clear()
 	if first_time:
 		if not achievement_data.exploration.has("find_neon_lake"):
 			if p_i.has("lake") and p_i.lake.element == "Ne":

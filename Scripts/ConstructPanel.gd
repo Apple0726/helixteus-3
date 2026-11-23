@@ -48,16 +48,28 @@ func refresh():
 			$Panel/ScrollContainer/VBoxContainer/HBoxContainer/Label.text = tier_arr[0]
 		var selected_tier:int = $Panel/ScrollContainer/VBoxContainer/HBoxContainer/Tier.value
 		for bldg in len(AncientBuilding.names):
-			if bldg in game.ancient_bldgs_discovered.keys() and selected_tier in game.ancient_bldgs_discovered[bldg].keys():
-				var btn = Button.new()
-				btn.icon_alignment = HORIZONTAL_ALIGNMENT_CENTER
-				btn.expand_icon = true
-				btn.icon = load("res://Graphics/Buildings/Ancient/%s.png" % AncientBuilding.names[bldg])
-				btn.custom_minimum_size.y = 100
-				$Panel/ScrollContainer/VBoxContainer.add_child(btn)
-				btn.connect("mouse_entered", Callable(self, "on_ancient_bldg_over").bind(bldg))
-				btn.connect("mouse_exited", Callable(game, "hide_tooltip"))
-				btn.connect("pressed", Callable(self, "on_ancient_bldg_click").bind(bldg))
+			var btn = Button.new()
+			btn.icon_alignment = HORIZONTAL_ALIGNMENT_CENTER
+			btn.expand_icon = true
+			btn.icon = load("res://Graphics/Buildings/Ancient/%s.png" % AncientBuilding.names[bldg])
+			btn.custom_minimum_size.y = 100
+			var locked = true
+			for tier in game.ancient_bldgs_discovered[bldg].keys():
+				if tier >= selected_tier:
+					locked = false
+					break
+			btn.disabled = locked
+			$Panel/ScrollContainer/VBoxContainer.add_child(btn)
+			if btn.disabled:
+				btn.modulate = Color.DIM_GRAY
+				var ancient_bldg_name = tr(AncientBuilding.names[bldg].to_upper())
+				var unlock_str = "[color=#999999][font_size=20](%s) %s[/font_size]\n" % [tr("LOCKED"), ancient_bldg_name]
+				unlock_str += tr("UNLOCK_ANCIENT_BLDG_CONSTR_DESC").format({"tier": selected_tier, "ancient_bldg": ancient_bldg_name})
+				btn.mouse_entered.connect(game.show_tooltip.bind(unlock_str))
+			else:
+				btn.mouse_entered.connect(on_ancient_bldg_over.bind(bldg))
+			btn.mouse_exited.connect(game.hide_tooltip)
+			btn.pressed.connect(on_ancient_bldg_click.bind(bldg))
 	else:
 		for bldg in self["%s_bldgs" % tab]:
 			var btn = Button.new()
