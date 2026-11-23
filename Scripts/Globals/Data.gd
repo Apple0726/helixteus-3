@@ -202,12 +202,13 @@ var univ_prop_weights:Dictionary = {
 	"antimatter":100,
 	}
 
-var standard_large_number_notations = []
+var large_number_notations = {"standard":[], "SI":["", "k", "M", "G", "T", "P", "E", "Z", "Y", "R", "Q"]}
 var OOM_gap = 3
 var achievements:Dictionary
 
 func reload():
-	standard_large_number_notations = tr("STANDARD_LARGE_NUMBER_NOTATION").split(" < ")
+	large_number_notations.standard = tr("STANDARD_LARGE_NUMBER_NOTATION").split(" < ")
+	large_number_notations.standard.insert(0, "")
 	if Settings.notation == "standard":
 		OOM_gap = int(tr("STANDARD_LARGE_NUMBER_NOTATION_OOM_GAP"))
 	else:

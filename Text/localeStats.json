@@ -1,8 +1,8 @@
 {
     "en": {
-        "lines": 1632,
-        "words": 11526,
-        "chars": 70173,
+        "lines": 1633,
+        "words": 11527,
+        "chars": 70175,
         "name": "English"
     },
     "fr": {
@@ -36,9 +36,9 @@
         "name": "Español"
     },
     "ko": {
-        "lines": 897,
-        "words": 2393,
-        "chars": 8608,
+        "lines": 899,
+        "words": 2400,
+        "chars": 8650,
         "name": "한국어"
     },
     "sv": {

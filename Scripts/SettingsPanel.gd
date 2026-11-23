@@ -141,11 +141,13 @@ func _on_Fullscreen_toggled(button_pressed):
 func _on_Standard_pressed():
 	Settings.notation = "standard"
 	set_notation()
+	Data.OOM_gap = int(tr("STANDARD_LARGE_NUMBER_NOTATION_OOM_GAP"))
 	save_config("interface", "notation", "standard")
 
 func _on_SI_pressed():
 	Settings.notation = "SI"
 	set_notation()
+	Data.OOM_gap = 3
 	save_config("interface", "notation", "SI")
 
 func _on_Scientific_pressed():

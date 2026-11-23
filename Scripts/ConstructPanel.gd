@@ -53,12 +53,7 @@ func refresh():
 			btn.expand_icon = true
 			btn.icon = load("res://Graphics/Buildings/Ancient/%s.png" % AncientBuilding.names[bldg])
 			btn.custom_minimum_size.y = 100
-			var locked = true
-			for tier in game.ancient_bldgs_discovered[bldg].keys():
-				if tier >= selected_tier:
-					locked = false
-					break
-			btn.disabled = locked
+			btn.disabled = not Helper.is_ancient_bldg_unlocked(bldg, selected_tier)
 			$Panel/ScrollContainer/VBoxContainer.add_child(btn)
 			if btn.disabled:
 				btn.modulate = Color.DIM_GRAY

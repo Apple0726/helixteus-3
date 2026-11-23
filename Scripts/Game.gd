@@ -442,7 +442,7 @@ func _ready():
 	load_save_panel.panel_var_name = "load_save_panel"
 	load_save_panel.hide()
 	$Panels/Control.add_child(load_save_panel)
-	await get_tree().process_frame # Needed to process Data.standard_large_number_notations called by shop_panel
+	await get_tree().process_frame # Needed to process Data.large_number_notations called by shop_panel
 	shop_panel = preload("res://Scenes/Panels/Shop.tscn").instantiate()
 	shop_panel.panel_var_name = "shop_panel"
 	shop_panel.hide()
@@ -2842,9 +2842,9 @@ func generate_volcano(t_id:int, VEI:float, rng:RandomNumberGenerator, artificial
 						if current_tile.has("bldg") and building_to_resource.has(current_tile.bldg.name):
 							var rsrc = building_to_resource[current_tile.bldg.name]
 							autocollect.rsrc[rsrc] += diff * current_tile.bldg.path_1_value * overclock_mult * current_tile.resource_production_bonus.get(rsrc, 1.0)
-						current_tile.ash.richness = richness
 						Helper.update_rsrc_prod_bonus(current_tile_id, current_tile.ash.richness, richness, "minerals")
 						Helper.update_rsrc_prod_bonus(current_tile_id, current_tile.ash.richness * 0.5, richness * 0.5, "SP")
+						current_tile.ash.richness = richness
 			else:
 				current_tile["ash"] = {"richness":richness}
 				Helper.add_rsrc_prod_bonus(current_tile_id, richness, "minerals")

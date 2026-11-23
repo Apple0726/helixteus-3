@@ -1064,71 +1064,69 @@ func _unhandled_input(event):
 	view.scroll_view = not mass_build
 	if tile_over != -1 and game.bottom_info_action != "building" and tile_over < len(game.tile_data):
 		var tile = game.tile_data[tile_over]
-		if tile:
-			if (tile.has("ancient_bldg")
-			and tile.ancient_bldg.name != AncientBuilding.SPACEPORT
-			and game.engineering_bonus.max_ancient_building_tier >= int(tile.ancient_bldg.tier)
-			and tile.ancient_bldg.name in game.ancient_bldgs_discovered.keys()
-			and int(tile.ancient_bldg.tier) in game.ancient_bldgs_discovered[tile.ancient_bldg.name].keys()):
-				if Input.is_action_just_pressed("right_click"):
-					right_clicked_tile = tile_over
-					var right_click_info_list = [{
-						"button_text":tr("DUPLICATE") + " (Q)",
-						"button_callable":duplicate_ancient_building_callable,
-						}]
-					right_click_menu = game.add_right_click_menu(right_click_info_list, on_right_click_menu_closed)
+		if (tile.has("ancient_bldg")
+		and tile.ancient_bldg.name != AncientBuilding.SPACEPORT
+		and game.engineering_bonus.max_ancient_building_tier >= int(tile.ancient_bldg.tier)
+		and Helper.is_ancient_bldg_unlocked(tile.ancient_bldg.name, tile.ancient_bldg.tier)):
+			if Input.is_action_just_pressed("right_click"):
+				right_clicked_tile = tile_over
+				var right_click_info_list = [{
+					"button_text":tr("DUPLICATE") + " (Q)",
+					"button_callable":duplicate_ancient_building_callable,
+					}]
+				right_click_menu = game.add_right_click_menu(right_click_info_list, on_right_click_menu_closed)
+				add_white_rect(Vector2(tile_over % wid, tile_over / wid) * 200, "selected_white_rects")
+			elif Input.is_action_just_pressed("Q"):
+				duplicate_ancient_building_callable()
+				action_performed = true
+		elif tile.has("bldg"):
+			if Input.is_action_just_pressed("right_click"):
+				right_clicked_tile = tile_over
+				var upgrade_button_dict = {
+					"button_text":tr("UPGRADE") + " (F)",
+					"button_callable":upgrade_building_callable,
+					}
+				var destroy_button_dict = {
+					"button_text":tr("DESTROY") + " (X)",
+					"button_callable":destroy_building_callable,
+					}
+				var right_click_info_list = [{
+					"button_text":tr("DUPLICATE") + " (Q)",
+					"button_callable":duplicate_building_callable,
+					}, destroy_button_dict
+				]
+				if game.show.has("bldg_upgrade"):
+					right_click_info_list.insert(1, upgrade_button_dict)
+				var load_unload_button_dict = {}
+				if tile.bldg.name in [Building.STONE_CRUSHER, Building.GLASS_FACTORY, Building.STEAM_ENGINE]:
+					load_unload_button_dict = {
+					"button_text":tr("LOAD_UNLOAD") + " (G)",
+					"button_callable":collect_resources_callable,
+					}
+					right_click_info_list.append(load_unload_button_dict)
+				if tiles_selected.is_empty():
+					right_click_info_list.append({
+					"button_text":tr("SELECT_ALL_OF_SAME_TYPE") + " (Shift)",
+					"button_callable":select_all_of_same_type_callable,
+					})
 					add_white_rect(Vector2(tile_over % wid, tile_over / wid) * 200, "selected_white_rects")
-				elif Input.is_action_just_pressed("Q"):
-					duplicate_ancient_building_callable()
-					action_performed = true
-			elif tile.has("bldg"):
-				if Input.is_action_just_pressed("right_click"):
-					right_clicked_tile = tile_over
-					var upgrade_button_dict = {
-						"button_text":tr("UPGRADE") + " (F)",
-						"button_callable":upgrade_building_callable,
-						}
-					var destroy_button_dict = {
-						"button_text":tr("DESTROY") + " (X)",
-						"button_callable":destroy_building_callable,
-						}
-					var right_click_info_list = [{
-						"button_text":tr("DUPLICATE") + " (Q)",
-						"button_callable":duplicate_building_callable,
-						}, destroy_button_dict
-					]
-					if game.show.has("bldg_upgrade"):
-						right_click_info_list.insert(1, upgrade_button_dict)
-					var load_unload_button_dict = {}
-					if tile.bldg.name in [Building.STONE_CRUSHER, Building.GLASS_FACTORY, Building.STEAM_ENGINE]:
-						load_unload_button_dict = {
-						"button_text":tr("LOAD_UNLOAD") + " (G)",
-						"button_callable":collect_resources_callable,
-						}
-						right_click_info_list.append(load_unload_button_dict)
-					if tiles_selected.is_empty():
-						right_click_info_list.append({
-						"button_text":tr("SELECT_ALL_OF_SAME_TYPE") + " (Shift)",
-						"button_callable":select_all_of_same_type_callable,
-						})
-						add_white_rect(Vector2(tile_over % wid, tile_over / wid) * 200, "selected_white_rects")
-					else:
-						upgrade_button_dict.button_text = tr("UPGRADE_ALL") + " (F)"
-						destroy_button_dict.button_text = tr("DESTROY_ALL") + " (X)"
-						if not load_unload_button_dict.is_empty():
-							load_unload_button_dict.button_text = tr("LOAD_UNLOAD_ALL") + " (G)"
-					right_click_menu = game.add_right_click_menu(right_click_info_list, on_right_click_menu_closed)
-				elif Input.is_action_just_pressed("Q"):
-					action_performed = true
-					duplicate_building_callable()
-				elif Input.is_action_just_pressed("F") and game.show.has("bldg_upgrade"):
-					upgrade_building_callable(false)
-				elif Input.is_action_just_pressed("X") and game.active_panel == null:
-					destroy_building_callable()
-				elif Input.is_action_just_pressed("G") and game.active_panel == null:
-					collect_resources_callable()
-			if not is_instance_valid(game.active_panel) and Input.is_action_just_pressed("shift"):
-				select_all_of_same_type_callable(false)
+				else:
+					upgrade_button_dict.button_text = tr("UPGRADE_ALL") + " (F)"
+					destroy_button_dict.button_text = tr("DESTROY_ALL") + " (X)"
+					if not load_unload_button_dict.is_empty():
+						load_unload_button_dict.button_text = tr("LOAD_UNLOAD_ALL") + " (G)"
+				right_click_menu = game.add_right_click_menu(right_click_info_list, on_right_click_menu_closed)
+			elif Input.is_action_just_pressed("Q"):
+				action_performed = true
+				duplicate_building_callable()
+			elif Input.is_action_just_pressed("F") and game.show.has("bldg_upgrade"):
+				upgrade_building_callable(false)
+			elif Input.is_action_just_pressed("X") and game.active_panel == null:
+				destroy_building_callable()
+			elif Input.is_action_just_pressed("G") and game.active_panel == null:
+				collect_resources_callable()
+		if not is_instance_valid(game.active_panel) and Input.is_action_just_pressed("shift"):
+			select_all_of_same_type_callable(false)
 	if Input.is_action_just_released("shift"):
 		tiles_selected.clear()
 		remove_selected_white_rects()

@@ -226,35 +226,13 @@ func format_num(num:float, clever_round:bool = false, threshold:int = 6):
 		return sgn + res + decimals
 	else:
 		var suff:String = ""
-		var p:float = log(num) / log(10)
+		var p = log(num) / log(10)
 		if is_equal_approx(p, ceil(p)):
 			p = ceil(p)
-		else:
-			p = int(p)
+		p = int(p)
 		if Settings.notation == "scientific" and p >= 3 or p >= Data.OOM_gap * 11:
 			return e_notation(num, 3)
-		if p < Data.OOM_gap:
-			suff = ""
-		elif p < Data.OOM_gap * 2:
-			suff = "k" if Settings.notation == "SI" else Data.standard_large_number_notations[0]
-		elif p < Data.OOM_gap * 3:
-			suff = "M" if Settings.notation == "SI" else Data.standard_large_number_notations[1]
-		elif p < Data.OOM_gap * 4:
-			suff = "G" if Settings.notation == "SI" else Data.standard_large_number_notations[2]
-		elif p < Data.OOM_gap * 5:
-			suff = "T" if Settings.notation == "SI" else Data.standard_large_number_notations[3]
-		elif p < Data.OOM_gap * 6:
-			suff = "P" if Settings.notation == "SI" else Data.standard_large_number_notations[4]
-		elif p < Data.OOM_gap * 7:
-			suff = "E" if Settings.notation == "SI" else Data.standard_large_number_notations[5]
-		elif p < Data.OOM_gap * 8:
-			suff = "Z" if Settings.notation == "SI" else Data.standard_large_number_notations[6]
-		elif p < Data.OOM_gap * 9:
-			suff = "Y" if Settings.notation == "SI" else Data.standard_large_number_notations[7]
-		elif p < Data.OOM_gap * 10:
-			suff = "R" if Settings.notation == "SI" else Data.standard_large_number_notations[8]
-		elif p < Data.OOM_gap * 11:
-			suff = "Q" if Settings.notation == "SI" else Data.standard_large_number_notations[9]
+		suff = Data.large_number_notations[Settings.notation][p / Data.OOM_gap]
 		var div = max(pow(10, snapped(p - 1 - (Data.OOM_gap - 2) / 2, Data.OOM_gap)), 1)
 		var final_num = clever_round(num / div, 3)
 		if step_decimals(final_num) == 0:
@@ -851,10 +829,13 @@ func update_ship_travel():
 	return progress
 
 func update_spaceport_auto_xp():
+	var g_g_id = game.ships_travel_data.c_g_coords.g
 	var s_id = game.ships_travel_data.c_coords.s
 	var s_g_id = game.ships_travel_data.c_g_coords.s
 	var p_id = game.ships_travel_data.c_coords.p
-	var system_data = game.open_obj("Galaxies", game.ships_travel_data.c_g_coords.g)
+	var system_data = game.system_data
+	if game.c_g_g != g_g_id or system_data.is_empty():
+		system_data = game.open_obj("Galaxies", g_g_id)
 	var planet_data:Array = game.planet_data
 	if game.c_s_g != s_g_id or planet_data.is_empty():
 		planet_data = game.open_obj("Systems", s_g_id)
@@ -1533,6 +1514,12 @@ func recalculate_rsrc_prod_bonus(tile_id:int, rsrc:String):
 	else:
 		tile.resource_production_bonus = {rsrc: final_mult}
 
+func is_ancient_bldg_unlocked(bldg, selected_tier:int):
+	for tier in game.ancient_bldgs_discovered[bldg].keys():
+		if tier >= selected_tier:
+			return true
+	return false
+
 func set_ancient_bldg_bonuses(p_i:Dictionary, ancient_bldg:Dictionary, tile_id:int, wid:int):
 	var x_pos = tile_id % wid
 	var y_pos = tile_id / wid
@@ -1800,29 +1787,27 @@ func export_save(save_to_export:String, path:String = ""): # Empty path = copy t
 		var file2 = FileAccess.open_compressed("user://%s/save_info.hx3" % save_to_export, FileAccess.READ, FileAccess.COMPRESSION_ZSTD)
 		if file2:
 			save_dict.save_info = Helper.decompress_hx3_file(file2)
+			var univ_n = len(save_dict.save_info.universe_data)
 			file2.close()
-			var directory = DirAccess.open("user://%s" % save_to_export)
-			if directory:
-				directory.list_dir_begin() # TODOGODOT4 fill missing arguments https://github.com/godotengine/godot/pull/40547
-				var file_name = directory.get_next()
-				while file_name != "":
-					if directory.current_is_dir() and file_name.substr(0, 4) == "Univ":
-						var export_univ_res:Dictionary = await export_univ(file_name, save_to_export)
-						if export_univ_res.error:
-							success = false
-							break
-						else:
-							save_dict.univs.append(export_univ_res.univ_data.duplicate(true))
-					file_name = directory.get_next()
-				if success:
-					var packed_bytes = var_to_bytes(save_dict).compress(FileAccess.COMPRESSION_ZSTD)
-					if path == "":
-						var base64_string = Marshalls.raw_to_base64(packed_bytes)
-						DisplayServer.clipboard_set(base64_string)
+			for i in univ_n:
+				var directory = DirAccess.open("user://%s/Univ%s" % [save_to_export, i])
+				if directory:
+					var export_univ_res:Dictionary = await export_univ("Univ" + str(i), save_to_export)
+					if export_univ_res.error:
+						success = false
+						break
 					else:
-						file.store_buffer(packed_bytes)
-			else:
-				success = false
+						save_dict.univs.append(export_univ_res.univ_data.duplicate(true))
+				else:
+					success = false
+					break
+			if success:
+				var packed_bytes = var_to_bytes(save_dict).compress(FileAccess.COMPRESSION_ZSTD)
+				if path == "":
+					var base64_string = Marshalls.raw_to_base64(packed_bytes)
+					DisplayServer.clipboard_set(base64_string)
+				else:
+					file.store_buffer(packed_bytes)
 		else:
 			success = false
 		if file:

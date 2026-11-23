@@ -94,6 +94,7 @@ func _process(delta):
 				state = IDLE
 				if move_timer:
 					move_timer.start()
+		sees_player = false
 		if ray.enabled and is_not_aggr():
 			ray.target_position = (cave_ref.rover.position - position).normalized() * ray_length
 			if ray.get_collider() is CharacterBody2D:
@@ -103,7 +104,6 @@ func _process(delta):
 					if move_timer and len(move_path_v) == 0:
 						move_HX()
 			else:
-				sees_player = false
 				move_speed = idle_move_speed
 	for effect in status_effects.keys():
 		status_effects[effect] -= delta * cave_ref.time_speed
@@ -112,7 +112,7 @@ func _process(delta):
 
 func chase_player():
 	var not_chasing = aggressive_timer.is_stopped()
-	aggressive_timer.wait_time = 8.0
+	aggressive_timer.wait_time = 8.0 / cave_ref.time_speed
 	aggressive_timer.start()
 	if not_chasing:
 		move_HX()

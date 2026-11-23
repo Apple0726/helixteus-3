@@ -967,7 +967,7 @@ theme_override_constants/separation = 0
 layout_mode = 2
 size_flags_horizontal = 0
 size_flags_vertical = 8
-text = "Filter"
+text = "FILTER"
 
 [node name="Filters" type="PanelContainer" parent="UI2" unique_id=563866870]
 visible = false
