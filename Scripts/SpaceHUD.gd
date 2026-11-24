@@ -39,8 +39,6 @@ func toggle_MS_construct_panel(star_selected:int = -1):
 	game.toggle_panel("MS_constr_panel", false)
 	game.MS_constr_panel.star_selected = star_selected
 	game.MS_constr_panel.refresh()
-	if $StarPanel.visible:
-		$StarPanel/AnimationPlayer.play_backwards("Fade")
 
 func _on_Megastructures_mouse_entered():
 	game.show_tooltip(tr("MEGASTRUCTURES") + " (C)")

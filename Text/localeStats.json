@@ -18,9 +18,9 @@
         "name": "Italiano"
     },
     "zh": {
-        "lines": 1631,
-        "words": 2120,
-        "chars": 22643,
+        "lines": 1634,
+        "words": 2124,
+        "chars": 22686,
         "name": "中文"
     },
     "de": {
@@ -48,9 +48,9 @@
         "name": "Svenska"
     },
     "hu": {
-        "lines": 1604,
-        "words": 8596,
-        "chars": 63304,
+        "lines": 1612,
+        "words": 8675,
+        "chars": 63860,
         "name": "Magyar"
     },
     "ja": {

@@ -1,7 +1,7 @@
 extends Node2D
 
 const TEST:bool = false
-const DATE:String = ""
+const DATE:String = "24 Nov 2026"
 const VERSION:String = "v0.31"
 const COMPATIBLE_VERSIONS = []
 
@@ -617,14 +617,18 @@ func load_univ():
 		ships_panel.get_node("Drives").hide()
 
 func load_game():
+	var save_info_dict:Dictionary = {}
 	var save_info = FileAccess.open_compressed("user://%s/save_info.hx3" % [c_sv], FileAccess.READ, FileAccess.COMPRESSION_ZSTD)
 	if save_info == null:
 		save_info = FileAccess.open_compressed("user://%s/save_info.hx3~" % [c_sv], FileAccess.READ, FileAccess.COMPRESSION_ZSTD)
+	if save_info != null:
+		save_info_dict = Helper.decompress_hx3_file(save_info)
 	if save_info == null: # Load older saves
 		save_info = FileAccess.open("user://%s/save_info.hx3" % [c_sv], FileAccess.READ)
 	if save_info == null:
 		save_info = FileAccess.open("user://%s/save_info.hx3~" % [c_sv], FileAccess.READ)
-	var save_info_dict:Dictionary = Helper.decompress_hx3_file(save_info)
+	if save_info != null and save_info_dict.is_empty():
+		save_info_dict = save_info.get_var()
 	save_info.close()
 	save_created = save_info_dict.save_created
 	help = save_info_dict.help
@@ -3250,29 +3254,30 @@ func generate_tiles(id:int, first_time:bool):
 		for j in wid:
 			var t_id = i % wid + j * wid
 			var tile = tile_data[t_id]
-			if tile.has("lake"):
-				var lake_info = p_i.lake
-				var distance_from_lake:int = 1
-				if lake_info.element in ["H", "Xe"]:
-					distance_from_lake += Data.lake_bonus_values[lake_info.element][lake_info.state] + biology_bonus[lake_info.element]
-				for k in range(max(0, i - distance_from_lake), min(i + distance_from_lake + 1, wid)):
-					for l in range(max(0, j - distance_from_lake), min(j + distance_from_lake + 1, wid)):
-						var id2 = k % wid + l * wid
-						var _tile = tile_data[id2]
-						if Vector2(k, l) == Vector2(i, j):
-							continue
-						if lake_au_int > 0.0 and not _tile.has("lake"):
-							if _tile.has("aurora"):
-								if not _tile.has("lake_elements"): # If aurora does not come from lake
-									_tile.aurora += lake_au_int
-								else:# If aurora comes from lake
-									_tile.aurora = max(lake_au_int, _tile.aurora)
-							else:
-								_tile["aurora"] = lake_au_int
-						if _tile.has("lake_elements"):
-							_tile.lake_elements[lake_info.element] = lake_info.state
+			if not tile.has("lake"):
+				continue
+			var lake_info = p_i.lake
+			var distance_from_lake:int = 1
+			if lake_info.element in ["H", "Xe"]:
+				distance_from_lake += Data.lake_bonus_values[lake_info.element][lake_info.state] + biology_bonus[lake_info.element]
+			for k in range(max(0, i - distance_from_lake), min(i + distance_from_lake + 1, wid)):
+				for l in range(max(0, j - distance_from_lake), min(j + distance_from_lake + 1, wid)):
+					var id2 = k % wid + l * wid
+					var _tile = tile_data[id2]
+					if t_id == id2 or _tile.has("lake"):
+						continue
+					if lake_au_int > 0.0:
+						if _tile.has("aurora"):
+							if not _tile.has("lake_elements"): # If aurora does not come from lake
+								_tile.aurora += lake_au_int
+							else:# If aurora comes from lake
+								_tile.aurora = max(lake_au_int, _tile.aurora)
 						else:
-							_tile["lake_elements"] = {lake_info.element:lake_info.state}
+							_tile["aurora"] = lake_au_int
+					if _tile.has("lake_elements"):
+						_tile.lake_elements[lake_info.element] = lake_info.state
+					else:
+						_tile["lake_elements"] = {lake_info.element:lake_info.state}
 	# Calculate resource production bonuses
 	for tile_id in len(tile_data):
 		var tile = tile_data[tile_id]
