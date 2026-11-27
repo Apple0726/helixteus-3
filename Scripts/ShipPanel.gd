@@ -139,12 +139,15 @@ var bar_colors = {
 	"light":Color(0.81, 0.81, 0.36),
 }
 
+var XP_bar_tween
 func update_xp_bars():
 	if selected_ship_id != -1:
 		show_ship_stats(selected_ship_id)
 		$ShipStats/ShipDetails/XP/TextureProgressBar.modulate = Color.WHITE
-		var tween = create_tween()
-		tween.tween_property($ShipStats/ShipDetails/XP/TextureProgressBar, "modulate", Color(0.92, 0.63, 0.2), 1.0)
+		if XP_bar_tween and XP_bar_tween.is_running():
+			XP_bar_tween.kill()
+		XP_bar_tween = create_tween()
+		XP_bar_tween.tween_property($ShipStats/ShipDetails/XP/TextureProgressBar, "modulate", Color(0.92, 0.63, 0.2), 1.0)
 
 var dragging_ship_id:int = -1
 var ship_mouse_offset:Vector2

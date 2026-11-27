@@ -79,7 +79,7 @@ func move_HX():
 		if curr_tile != -1 and target_tile != curr_tile:
 			cave_ref.HX_tiles.erase(curr_tile)
 			cave_ref.HX_tiles.append(target_tile)
-			move_path_v = a_n.get_point_path(curr_tile, target_tile)
+			move_path_v = a_n.get_point_path(curr_tile, target_tile, true)
 			state = MOVE
 		
 func _process(delta):

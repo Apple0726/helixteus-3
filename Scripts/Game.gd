@@ -1,9 +1,9 @@
 extends Node2D
 
 const TEST:bool = false
-const DATE:String = "24 Nov 2026"
-const VERSION:String = "v0.31"
-const COMPATIBLE_VERSIONS = []
+const DATE:String = "27 Nov 2026"
+const VERSION:String = "v0.31.1"
+const COMPATIBLE_VERSIONS = ["v0.31"]
 
 var planet_textures:Array
 var bldg_textures:Array
@@ -271,17 +271,17 @@ var mat_info = {	"coal":{"value":15},#One kg of coal = $15
 					"silicon":{"value":80},
 }
 #Changing length of met_info changes cave rng!
-var met_info = {	"lead":{"min_depth":0, "max_depth":500, "rarity":1, "density":11.34, "value":300},
-					"copper":{"min_depth":100, "max_depth":750, "rarity":1.7, "density":8.96, "value":660},
-					"iron":{"min_depth":200, "max_depth":1000, "rarity":2.8, "density":7.87, "value":1400},
-					"aluminium":{"min_depth":300, "max_depth":1500, "rarity":5.0, "density":2.7, "value":3350},
-					"silver":{"min_depth":400, "max_depth":1750, "rarity":8.5, "density":10.49, "value":7430},
-					"gold":{"min_depth":600, "max_depth":2500, "rarity":15.3, "density":19.3, "value":17950},
-					"titanium":{"min_depth":1500, "max_depth":4000, "rarity":46.0, "density":4.51, "value":93590},
-					"platinum":{"min_depth":2400, "max_depth":6000, "rarity":79.5, "density":21.45, "value":212650},
-					"diamond":{"min_depth":5800, "max_depth":9000, "rarity":157.3, "density":4.20, "value":591850},
-					"nanocrystal":{"min_depth":70000, "max_depth":140000, "rarity":900000.0, "density":1.5, "value":2.4e7},
-					"mythril":{"min_depth":350000, "max_depth":1e6, "rarity":2.5e10, "density":13.4, "value":3.5e9},
+var met_info = {	"lead":{"min_depth":0, "max_depth":500, "rarity":1, "density":11.34, "value":300, "crater_SP_mult": 1.5},
+					"copper":{"min_depth":100, "max_depth":750, "rarity":1.7, "density":8.96, "value":660, "crater_SP_mult": 2.0},
+					"iron":{"min_depth":200, "max_depth":1000, "rarity":2.8, "density":7.87, "value":1400, "crater_SP_mult": 2.5},
+					"aluminium":{"min_depth":300, "max_depth":1500, "rarity":5.0, "density":2.7, "value":3350, "crater_SP_mult": 3.0},
+					"silver":{"min_depth":400, "max_depth":1750, "rarity":8.5, "density":10.49, "value":7430, "crater_SP_mult": 4.0},
+					"gold":{"min_depth":600, "max_depth":2500, "rarity":15.3, "density":19.3, "value":17950, "crater_SP_mult": 6.0},
+					"titanium":{"min_depth":1500, "max_depth":4000, "rarity":46.0, "density":4.51, "value":93590, "crater_SP_mult": 8.0},
+					"platinum":{"min_depth":2400, "max_depth":6000, "rarity":79.5, "density":21.45, "value":212650, "crater_SP_mult": 14.0},
+					"diamond":{"min_depth":5800, "max_depth":9000, "rarity":157.3, "density":4.20, "value":591850, "crater_SP_mult": 25.0},
+					"nanocrystal":{"min_depth":70000, "max_depth":140000, "rarity":900000.0, "density":1.5, "value":2.4e7, "crater_SP_mult": 300.0},
+					"mythril":{"min_depth":350000, "max_depth":1e6, "rarity":2.5e10, "density":13.4, "value":3.5e9, "crater_SP_mult": 1200.0},
 }
 
 var pickaxes_info = {"stick":{"speed":1.0, "durability":140, "costs":{"money":300}},
@@ -721,7 +721,6 @@ func set_default_dim_bonuses():
 		"IRM":1.2,
 		"SLUGF_XP":1.3,
 		"SLUGF_Stats":1.15,
-		"COSHEF":1.5,
 		"ULUGF":1.63,
 	}
 	physics_bonus = Data.univ_prop_weights.duplicate()
@@ -872,6 +871,9 @@ func start_game(univ, new_save, DR_advantage):
 		science_level[Science.AUTOSELL_MINERALS] = 1
 		science_level[Science.AUTOSELL_EXCESS_MINERALS] = 1
 		science_level[Science.COMPACT_ITEMS] = 3
+		stack_size = 128
+	else:
+		stack_size = 16
 	cave_filters = {
 		"money":false,
 		"minerals":false,
@@ -900,9 +902,6 @@ func start_game(univ, new_save, DR_advantage):
 	c_p = home_planet_id
 	c_p_g = home_planet_id
 	c_t = -1
-
-	#Number of items per stack
-	stack_size = 16
 
 	auto_replace = false
 
@@ -3243,9 +3242,9 @@ func generate_tiles(id:int, first_time:bool):
 	var lake_au_int:float = 0.0
 	if p_i.has("lake"):
 		if p_i.lake.element == "Ne":
-			lake_au_int = Helper.clever_round(1.8e3 * (rng.randf_range(1, 2)))
+			lake_au_int = Helper.clever_round(1.8e2 * (rng.randf_range(1, 2)))
 		elif p_i.lake.element == "Xe":
-			lake_au_int = Helper.clever_round(7.5e4 * (rng.randf_range(1, 2)))
+			lake_au_int = Helper.clever_round(7.5e3 * (rng.randf_range(1, 2)))
 		if p_i.lake.state == "sc":
 			lake_au_int *= 1.25
 		elif p_i.lake.state == "l":
@@ -3302,7 +3301,7 @@ func generate_tiles(id:int, first_time:bool):
 					var _tile = tile_data[id2]
 					if tile_id == id2:
 						continue
-					Helper.add_rsrc_prod_bonus(id2, pow(met_info[tile.crater.metal].rarity, 0.6) + 0.2, "SP")
+					Helper.add_rsrc_prod_bonus(id2, met_info[tile.crater.metal].crater_SP_mult, "SP")
 	for tile_id in len(tile_data):
 		var tile = tile_data[tile_id]
 		if tile.has("cave") or tile.has("volcano"):
@@ -3677,9 +3676,15 @@ func add_resources(costs):
 		elif cost == "stone":
 			for comp in costs.stone:
 				Helper.add_to_dict(stone, comp, costs.stone[comp])
+			if not bldg_unlocked.has(Building.STONE_CRUSHER) and Helper.get_sum_of_dict(stone) > 5000.0:
+				Helper.show_bldg_unlocked_popup(Building.STONE_CRUSHER)
 		elif mats.has(cost):
 			show.materials = true
 			mats[cost] += costs[cost]
+			if cost == "sand" and not bldg_unlocked.has(Building.GLASS_FACTORY) and mats.sand >= 500.0:
+				Helper.show_bldg_unlocked_popup(Building.GLASS_FACTORY)
+			if cost == "coal" and not bldg_unlocked.has(Building.STEAM_ENGINE) and mats.coal >= 500.0:
+				Helper.show_bldg_unlocked_popup(Building.STEAM_ENGINE)
 		elif mets.has(cost):
 			show.metals = true
 			mets[cost] += costs[cost]
@@ -4194,6 +4199,7 @@ func reset_dimension(DR_num:int):
 	if not achievement_data.progression.has("new_dimension"):
 		earn_achievement("progression", "new_dimension")
 	universe_data.clear()
+	probe_data.clear()
 	help.erase("hide_dimension_stuff")
 	dim_num += 1
 	if not help.has("DR_reset"):
@@ -4209,7 +4215,7 @@ func reset_dimension(DR_num:int):
 
 func destroy_buildings(tile_ids:Array):
 	if tile_data[tile_ids[0]].bldg.name == Building.GREENHOUSE:
-		view.obj.get_node("TileFeatures").clear_layer(2)
+		view.obj.get_node("Soil").clear()
 	for id in tile_ids:
 		view.obj.destroy_bldg(id, true)
 	show_collect_info(view.obj.items_collected)
@@ -4496,6 +4502,7 @@ func _on_MMTimer_timeout():
 			if not p_i.has("bldg"):
 				curr_MM_p += 1
 				$MMTimer.start()
+				return
 			var prod_mult = Helper.get_prod_mult(p_i) * p_i.get("mining_outpost_bonus", 1.0)
 			var tiles_mined = (curr_time - p_i.bldg.collect_date) * p_i.bldg.path_1_value * prod_mult
 			if tiles_mined >= 1:

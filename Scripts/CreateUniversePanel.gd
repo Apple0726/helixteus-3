@@ -65,7 +65,7 @@ func refresh():
 			ok = true
 			PP_multiplier = probe.get("PP_multiplier", 1.0)
 			break
-	PP = init_PP * PP_multiplier + Helper.get_sum_of_dict(point_distribution)
+	PP = init_PP * PP_multiplier - Helper.get_sum_of_dict(point_distribution)
 	$Send.visible = ok
 	$TP/VBox.visible = ok
 	$TP/Points.visible = ok

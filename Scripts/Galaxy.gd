@@ -382,6 +382,8 @@ func disband_fighters():
 			game.fighter_data[i] = null
 
 func scale_objects(new_scale:float):
-	if new_scale > STAR_AUTOSCALE_MIN_THRESHOLD and new_scale < 2.0 and not game.overlay_data[game.c_v].visible:
+	if game.c_v != "galaxy":
+		return
+	if new_scale > STAR_AUTOSCALE_MIN_THRESHOLD and new_scale < 2.0 and not game.overlay_data.galaxy.visible:
 		for i in len(game.system_data):
 			star_btns[i].scale = Vector2.ONE / new_scale * STAR_AUTOSCALE_MIN_THRESHOLD * overlays[i].original_scale

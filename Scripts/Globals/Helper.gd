@@ -494,12 +494,6 @@ func get_rsrc_from_rock(contents:Dictionary, tile:Dictionary, p_i:Dictionary, ti
 				game.popup_window(tr("ARTIFACT_FOUND_DESC"), tr("ARTIFACT_FOUND"))
 		if not game.show.has(content):
 			game.show[content] = true
-		if content == "sand" and not game.bldg_unlocked.has(Building.GLASS_FACTORY) and game.mats.sand >= 500.0:
-			show_bldg_unlocked_popup(Building.GLASS_FACTORY)
-		if content == "coal" and not game.bldg_unlocked.has(Building.STEAM_ENGINE) and game.mats.coal >= 500.0:
-			show_bldg_unlocked_popup(Building.STEAM_ENGINE)
-		if content == "stone" and not game.bldg_unlocked.has(Building.STONE_CRUSHER) and get_sum_of_dict(game.stone) > 5000.0:
-			show_bldg_unlocked_popup(Building.STONE_CRUSHER)
 	if tile.mining.has("current_deposit") and tile.mining.current_deposit.progress > tile.mining.current_deposit.size - 1:
 		tile.mining.erase("current_deposit")
 	if tile.has("crater") and tile.crater.has("init_depth") and tile.depth > 3 * tile.crater.init_depth:

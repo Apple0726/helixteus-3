@@ -7,7 +7,6 @@
 [ext_resource type="Shader" uid="uid://gevhgabt3grd" path="res://Shaders/Laser.gdshader" id="5_4dc0n"]
 [ext_resource type="Texture2D" uid="uid://kr2fdk8dptv1" path="res://Graphics/Misc/BarUnder2.png" id="5_6lon2"]
 [ext_resource type="Texture2D" uid="uid://cxij5pk8nug0r" path="res://Graphics/Misc/BarOver.png" id="6_8qal3"]
-[ext_resource type="Texture2D" uid="uid://yhdxrw2q1yep" path="res://Graphics/HX/Status effects/Stun.png" id="6_us3u3"]
 [ext_resource type="Texture2D" uid="uid://bx1hvetixqpwi" path="res://Graphics/Misc/Bar2.png" id="7_6fhtq"]
 [ext_resource type="Texture2D" uid="uid://bf11oh7v1a2eo" path="res://Graphics/Cave/Weapons/red_laser.png" id="8_rnocu"]
 [ext_resource type="Texture2D" uid="uid://cyogaq3sj1anp" path="res://Graphics/Weapons/bomb1.png" id="10_yqhvw"]
@@ -337,7 +336,6 @@ material = SubResource("ShaderMaterial_urlkg")
 position = Vector2(47.1782, 64.5085)
 rotation = 0.496553
 scale = Vector2(2.36037, 2.36037)
-texture = ExtResource("6_us3u3")
 offset = Vector2(-21.4132, -17.9986)
 
 [node name="Sprite2" type="Sprite2D" parent="Ship/Stun" unique_id=860438037]
@@ -345,7 +343,6 @@ material = SubResource("ShaderMaterial_yb1pm")
 position = Vector2(11.3541, 50.4711)
 rotation = -0.583007
 scale = Vector2(1.67193, 1.67193)
-texture = ExtResource("6_us3u3")
 offset = Vector2(-21.4132, -17.9986)
 
 [node name="Control" type="Control" parent="." unique_id=2095135153]

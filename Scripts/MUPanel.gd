@@ -48,10 +48,16 @@ func _ready():
 		$PanelContainer/VBox.add_child(hbox)
 
 func refresh():
-	#$PanelContainer/VBox/MSMB.visible = game.show.has("mining")
-	#$PanelContainer/VBox/STMB.visible = game.STM_lv >= 1
-	#$PanelContainer/VBox/SHSR.visible = game.stats_univ.planets_conquered >= 2
-	#$PanelContainer/VBox/CHR.visible = game.stats_univ.planets_conquered >= 2
+	if game.dim_num == 1 and game.c_u == 0:
+		$PanelContainer/VBox/MSMB.visible = game.show.has("mining")
+		$PanelContainer/VBox/STMB.visible = game.STM_lv >= 1
+		$PanelContainer/VBox/SHSR.visible = game.stats_univ.planets_conquered >= 2
+		$PanelContainer/VBox/CHR.visible = game.stats_univ.planets_conquered >= 2
+	else:
+		$PanelContainer/VBox/MSMB.visible = true
+		$PanelContainer/VBox/STMB.visible = true
+		$PanelContainer/VBox/SHSR.visible = true
+		$PanelContainer/VBox/CHR.visible = true
 	for hbox in $PanelContainer/VBox.get_children():
 		if hbox.name != "Titles":
 			hbox.get_node("Lv").text = str(game.MUs[hbox.name])

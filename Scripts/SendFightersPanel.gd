@@ -30,6 +30,7 @@ func refresh_energy():
 	elif fighter_type == 1:
 		time_for_one_obj = 50 * 1.2 / sqrt(slider_factor) / game.u_i.time_speed / game.u_i.speed_of_light#Calculate time for one system/galaxy	
 		Helper.add_text_to_RTL(RTL, "%s: %s\n%s: %s\n%s: %s\n%s: %s\n%s: @i %s" % [tr("COMBINED_STRENGTH_F2"), Helper.format_num(ceil(combined_strength)), tr("STRENGTH_REQUIRED_F2"), Helper.format_num(ceil(strength_required)), tr("NUMBER_OF_GAL_BEFORE_REKT"), obj_num, tr("NUMBER_OF_UNCONQUERED_GAL"), unconquered_obj, tr("TIME_TO_CONQUER_ALL_GAL"), Helper.time_to_str(time_for_one_obj * obj_num)], [Data.time_icon], 19)
+	time_for_one_obj /= Helper.get_IR_mult(Building.SHIPYARD)
 
 func refresh():
 	planet_exit_costs = 0
@@ -123,7 +124,7 @@ func refresh():
 			$Send.visible = true
 			set_process(false)
 			for gal in game.galaxy_data:
-				if gal.is_empty():
+				if gal.is_empty() or gal.has("destroyed"):
 					continue
 				if not gal.has("conquered"):
 					strength_required += gal.diff
@@ -173,9 +174,9 @@ func sort_galaxies(ascending:bool):
 		sorted_objs.reverse()
 
 func diff_sort(a:Dictionary, b:Dictionary):
-	if b.is_empty():
+	if b.is_empty() or b.has("destroyed"):
 		return false
-	if a.is_empty() or a.diff < b.diff:
+	if a.is_empty() or a.has("destroyed") or a.diff < b.diff:
 		return true
 	return false
 
@@ -217,8 +218,6 @@ func _on_CheckBox2_pressed():
 	refresh()
 
 func _on_Send_pressed():
-	if obj_num <= 0:
-		return
 	if fighter_type == 0:
 		if not game.galaxy_data[game.c_g].has("conquer_data"):
 			if game.energy >= total_energy_cost:
@@ -240,6 +239,13 @@ func _on_Send_pressed():
 				game.view.obj.set_process(true)
 			else:
 				game.popup(tr("NOT_ENOUGH_ENERGY"), 1.5)
+		else:
+			game.galaxy_data[game.c_g].conquer_data.erase("conquer_data")
+			game.galaxy_data_persistent[game.c_g].conquer_data.erase("conquer_data")
+			for i in len(game.fighter_data):
+				if game.fighter_data[i] != null and game.fighter_data[i].tier == 0 and game.fighter_data[i].c_g == game.c_g:
+					game.fighter_data[i] = null
+			set_process(false)
 	elif fighter_type == 1:
 		if not game.u_i.cluster_data[game.c_c].has("conquer_data"):
 			if game.energy >= total_energy_cost:
@@ -261,6 +267,13 @@ func _on_Send_pressed():
 				game.view.obj.set_process(true)
 			else:
 				game.popup(tr("NOT_ENOUGH_ENERGY"), 1.5)
+		else:
+			game.u_i.cluster_data[game.c_c].erase("conquer_data")
+			game.u_i.cluster_data_persistent[game.c_c].erase("conquer_data")
+			for i in len(game.fighter_data):
+				if game.fighter_data[i] != null and game.fighter_data[i].tier == 1 and game.fighter_data[i].c_c == game.c_c:
+					game.fighter_data[i] = null
+			set_process(false)
 	refresh()
 
 func _process(delta):

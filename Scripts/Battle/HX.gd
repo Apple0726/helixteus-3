@@ -266,7 +266,10 @@ func debuff_attack():
 		buff = -4
 	else:
 		buff = -3
-	target_ship.attack_buff = buff * pow((target_ship.attack_buff + buff) / buff, 0.8)
+	if target_ship.attack_buff > 0.0:
+		target_ship.attack_buff += buff
+	else:
+		target_ship.attack_buff = buff * pow((target_ship.attack_buff + buff) / buff, 0.8)
 	buff_animation(target_ship.position, Color.RED)
 	target_ship.update_info_labels()
 	
